@@ -1,0 +1,37 @@
+<%args>
+$object
+$collection_name
+$collection_title => undef
+$disclosed => 1
+</%args>
+
+% if ($error) {
+  <% $error %>
+% } else {
+  <& list.mhtml, rs => $rs,
+     list_title => $collection_title, disclosed => $disclosed &>
+% }
+
+<%init>
+my $error;
+my $collection_table_name;
+my $rs;
+
+my $type = $object->table();
+
+eval {
+  my $collection_type = 
+    PomCur::DB::class_name_of_relationship($object, $collection_name);
+  $collection_table_name = PomCur::DB::table_name_of_class($collection_type);
+  $rs = $object->$collection_name();
+
+  if (! defined $collection_title) {
+    $collection_title = ucfirst $collection_name;
+  }
+};
+if ($@) {
+  $error = qq(Can't find a collection named "$collection_name" )
+    . qq(in object of type "$type" - $@);
+}
+
+</%init>

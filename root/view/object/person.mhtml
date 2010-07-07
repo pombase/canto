@@ -1,0 +1,23 @@
+<%args>
+$object
+</%args>
+
+<& /view/object/object_top.mhtml, object => $object, 
+  field_labels => [qw(username organisation first_name last_name)] &>
+
+<div id="collections">
+  <& /view/collection.mhtml, object => $object, collection_title => 'Projects',
+    collection_name => 'pipeprojects' &>
+  <& /view/collection.mhtml, object => $object, collection_title =>
+  'Biosamples created by this user',
+    collection_name => 'biosamples' &>
+  <& /view/list.mhtml, type => 'Biosample', rs => $biosamples_rs,
+    list_title => "The biosample$biosample_plu from all projects of this user", disclosed => 0 &>
+</div>
+  
+<%init>
+my $biosamples_rs = 
+  $object->search_related('pipeprojects')->search_related('biosample_pipeprojects')->search_related('biosample');
+my $biosamples_count = $biosamples_rs->count();
+my $biosample_plu = ($biosamples_count != 1) ? 's' : '';
+</%init>

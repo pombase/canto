@@ -1,0 +1,258 @@
+body
+{
+  padding: 0;
+  margin: 0;
+}
+
+a:link { color:#049; text-decoration:none }
+a:visited { color:#049; text-decoration:none }
+a:link:hover { color:#CF4D23; text-decoration:underline }
+a:visited:hover { color:#CF4D23; text-decoration:underline }
+a:link:active { color:#58e; text-decoration:none }
+
+img {
+    border-width: 0px;
+}
+
+#heading a {
+    color: white;
+}
+#heading {
+    background-color: #227;
+    color: white;
+    font-size: 180%;
+    font-weight: bold;
+}
+
+#logo {
+    height: 40px;
+    float: left;
+}
+div#footer {
+    padding-top: 40px;
+}
+div#footer .sponsor {
+    float: right;
+    padding-right: 25px;
+    padding-left: 25px;
+}
+#heading-text {
+    padding: 5px;
+}
+
+#error-mesage {
+    padding: 2px;
+    margin: 0px;
+    border: 2px solid red;
+    background-color: #fff;
+    clear: left;
+}
+
+#message {
+    padding: 2px;
+    margin: 0px;
+    border: 2px solid green;
+    background-color: #fff;
+    clear: left;
+}
+
+#content {
+    margin: 20px;
+    clear: left;
+}
+
+#page-description {
+    background-color: #ddd;
+    color: #227;
+    font-size: 130%;
+    font-weight: bold;
+    padding: 2px 5px 1px 5px;
+}
+
+.field-list {
+    padding-bottom: 20px;
+    margin: 10px 0px 5px 0px;
+}
+
+#front-page {
+    font-size: 130%;
+    padding: 10px;
+}
+
+table.list {
+    margin: 10px;
+    border-width: 1px;
+    border-spacing: 5px;
+    border-style: outset;
+    border-color: gray;
+    border-collapse: collapse;
+    font-size: 75%;
+}
+table.list thead tr td {
+    padding: 3px;
+    background-color: #e0e0c6;
+    color: black;
+    font-weight: bold;
+}
+table.list tr.odd {
+    background-color: #f5f5e5;
+}
+table.list tr td {
+    border-width: 1px;
+    padding: 3px;
+    border-style: solid;
+    border-color: #bbb;
+}
+
+.attribute-field {
+    font-weight: bold;
+}
+
+.sect .sect-title {
+    background-color: #ddd;
+    color: #227;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 1px 5px 1px 5px;
+    margin: 3px;
+}
+.undisclosed-title {
+    background-image: url('../static/images/undisclosed.png');
+    background-repeat: no-repeat;
+    background-position: center left
+}
+.disclosed-title {
+    background-image: url('../static/images/disclosed.png');
+    background-repeat: no-repeat;
+    background-position: center left
+}
+
+.sect .sect-title a {
+    margin-left: 9px;
+}
+
+.sect {
+  margin: 10px 0px 10px 0px;
+}
+
+.infobox {
+    padding: 8px 0px 8px 0px;
+}
+
+.infobox table.list {
+    font-size: 95%;
+}
+
+.infobox .title {
+    background-color: #ddd;
+    color: #227;
+    font-size: 110%;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 1px 5px 1px 5px;
+}
+
+/* front page: */
+.actionlist {
+    margin: 5px;
+    border: 1px solid #999;
+    clear: right;
+}
+
+.actionlist .label {
+    font-size: 110%;
+    background-color: #eef;
+    padding: 3px;
+}
+
+.actionlist ul {
+    padding: 8px;
+    margin: 1em;
+}
+
+
+/* editing: */
+div.submit {
+    float: right;
+}
+
+div.edit_link {
+    float: right;
+}
+
+span.error_constraint_required {
+    color: red;
+    font-size: 90%;
+}
+
+/* page navigation */
+.page_nav_summary {
+    font-size: 90%;
+    margin: 10px 0px 5px 0px;
+}
+.page_nav_links {
+    font-size: 90%;
+}
+.page_nav_current {
+    font-weight: bold;
+    font-size: 110%;
+}
+
+
+fieldset .button label,
+fieldset .contentbutton label,
+fieldset .checkbox label,
+fieldset .date label,
+fieldset .file label,
+fieldset .image label,
+fieldset .multi label,
+fieldset .password label,
+fieldset .radio label,
+fieldset .radiogroup label,
+fieldset .recaptcha label,
+fieldset .select label,
+fieldset .text label,
+fieldset .textarea label
+{
+    display: inline;
+    float: left;
+    width: 12em;
+    text-align: right;
+    padding-right: 1em;
+}
+
+fieldset .checkboxgroup span {
+    display: block;
+}
+
+.checkboxgroup {
+   display: inline;
+   float: left;
+}
+
+fieldset .checkboxgroup > span {
+    height: 15em;
+    overflow: auto;
+}
+
+#login {
+    padding: 10px;
+    float: right;
+}
+#logout {
+    padding: 10px;
+    float: right;
+}
+
+div.tracking-tabs {
+  width: 60em;
+}
+
+.seqbases {
+  font-family: monospace;
+  font-size: 120%;
+}
+
+.user-login {
+  font-size: 80%;
+}

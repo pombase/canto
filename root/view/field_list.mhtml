@@ -1,0 +1,40 @@
+<%args>
+$object
+@field_labels
+</%args>
+
+<div class="field_list">
+  <table>
+% for my $field_label (@field_labels) {
+%   my $col_conf = $field_infos{$field_label};
+%   $col_conf = { name => $field_label } if !defined $col_conf;
+    <tr>
+      <td><% $_get_display_name_code->($field_label) %>:</td>
+      <td><& /view/field.mhtml, object => $object, col_conf => $col_conf &></td>
+    </tr>
+% }
+  </table>
+</div>
+
+<%init>
+
+my $type = $object->table();
+
+my %field_infos = ();
+
+if (defined $c->config()->{class_info}->{$type}->{field_infos}) {
+  %field_infos = %{$c->config()->{class_info}->{$type}->{field_infos}};
+}
+
+my $_get_display_name_code = sub {
+  my $field_label = shift;
+
+  my $display_field_label = undef;
+
+  if (!defined $display_field_label) {
+    ($display_field_label = $field_label) =~ s/_/ /g;
+  }
+
+  return ucfirst $display_field_label;
+};
+</%init>

@@ -1,0 +1,88 @@
+<%doc>
+This component renders the value one field of an object.  If the field contains
+the id of another object it will be rendered as a link to the
+referenced object.  If the field is the primary id key of the current object,
+it will be rendered as a 'details' link.
+</%doc>
+
+<%args>
+$object
+$col_conf
+</%args>
+
+<span class="field_value">
+% if ($field_type eq 'table_id') {
+  <span class="this_id_field">
+    <a href='<% $c->uri_for("/view/object", $type, PomCur::DB::id_of_object($object)) %>'>[details&nbsp;...]</a>
+  </span>
+% } else {
+%   if ($field_type eq 'foreign_key' && $field_value && defined $ref_display_key) {
+  <span class="ref_field">
+  <a href='<% $c->uri_for("/view/object", $referenced_object->table(), PomCur::DB::id_of_object($field_value)) %>'>
+    <& field.mhtml, object => $referenced_object, col_conf => { name => $ref_display_key } &>
+  </a>
+  </span>
+%   } else {
+%     if ($field_type eq 'key_field') {
+  <span class="attribute_field">
+    <span class="display_key">
+      <a href='<% $c->uri_for("/view/object", $type, PomCur::DB::id_of_object($object)) %>'>
+        <% $field_value %>
+      </a>
+    </span>
+%     } else {
+    <% format_field_value($col_conf, $field_value) %>
+%     }
+  </span>
+%   }
+% }
+</span>
+
+<%init>
+use PomCur::DB;
+use PomCur::WebUtil;
+
+use Number::Format;
+
+sub format_field_value
+{
+  my $col_conf = shift;
+  my $field_value = shift;
+
+  my $fmt = Number::Format->new();
+
+  if (defined $field_value && defined $col_conf->{format}) {
+    if ($col_conf->{format} eq 'integer') {
+      if ($field_value =~ /^\d+$/) {
+        return $fmt->format_number($field_value);
+      } else {
+        return 0;
+      }
+    } else {
+      if ($col_conf->{format} =~ /\%/) {
+        return 0 unless $field_value;
+        return sprintf $col_conf->{format}, $field_value;
+      } else {
+        die "unknown column format: ", $col_conf->{format}, "\n";
+      }
+    }
+  }
+
+  return $field_value;
+}
+
+my ($field_value, $field_type, $ref_display_key) =
+  PomCur::WebUtil::get_field_value($c, $object, $col_conf);
+
+my $type = $object->table();
+
+my $referenced_object = undef;
+
+if ($field_type eq 'foreign_key') {
+  $referenced_object = $field_value;
+}
+
+if (!defined $field_value) {
+  $field_value = '';
+}
+</%init>

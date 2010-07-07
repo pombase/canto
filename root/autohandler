@@ -1,0 +1,55 @@
+<%args>
+$title
+$error => undef
+$message => undef
+</%args>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+  <head>
+    <& head.mhtml, title => $title &>
+  </head>
+  <body>
+    <& header.mhtml &>
+
+<div id="error-list">
+% if (defined $error) {
+<div class="error">
+<% $error %>
+</div>
+% }
+</div>
+
+<div id="message-list">
+% if (defined $message) {
+<div class="message">
+<% $message %>
+</div>
+% }
+</div>
+
+<& /user.mhtml &>
+
+      <div id="content">
+        <div>
+          <span id="page-description">
+            <% $title %>
+          </span>
+        </div>
+% $m->call_next;
+      </div>
+    </div>
+    <div id="footer">
+      <div class="sponsor">
+        <a href="http://www.wellcome.ac.uk">
+          <img src="<% $c->uri_for('/static/images/wt_logo.png') %>" border="0"/>
+        </a>
+      </div>
+      <div class="sponsor">
+        <a href="http://www.cam.ac.uk">
+          <img src="<% $c->uri_for('/static/images/uni_of_cam.png') %>" border="0"/>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

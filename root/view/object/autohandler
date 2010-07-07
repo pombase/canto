@@ -1,0 +1,68 @@
+<%args>
+$type
+$object
+</%args>
+
+% if ($c->user_exists()) {
+%   if (0 && $c->user()->role()->name() eq 'admin') {
+<div id="deleteDialog" title="Confirmation Required">
+  Delete this <% PomCur::DB::display_name($type) %>?
+</div>
+%   }
+
+<div class="actionlist" style="float: right">
+  <div class="label">
+    Actions
+  </div>
+  <div>
+    <ul>
+%  if ($editable) {
+      <li>
+        <a href="<% $c->uri_for('/edit/object/' . $type . '/' . $object_id) %>">Edit</a>
+      </li>
+%  }
+
+%  if (0 && $c->user_exists() && $c->user()->role()->name() eq 'admin') {
+      <li>
+<a id="confirmDelete" href="<% $c->uri_for('/delete/object/' . $type . '/' . $object_id) %>">Delete</a>
+
+<script type="text/javascript">
+  $("#confirmDelete").click(function(e) {
+    e.preventDefault();
+    var targetUrl = $(this).attr("href");
+
+    $("#deleteDialog").dialog({
+      autoOpen: false,
+      modal: true,
+      buttons : {
+        "Confirm" : function() {
+          window.location.href = targetUrl;
+        },
+        "Cancel" : function() {
+          $(this).dialog("close");
+        }
+      }
+    });
+
+    $("#deleteDialog").dialog("open");
+  });
+
+  $("#deleteDialog").hide();
+</script>
+
+      </li>
+%  }
+    </ul>
+  </div>
+</div>
+% }
+
+% $m->call_next;
+
+<%init>
+# multi-column primary keys aren't supported
+my $table_pk_field = ($object->primary_columns())[0];
+my $object_id = $object->$table_pk_field();
+
+my $editable = $c->config()->{class_info}->{$type}->{editable};
+</%init>

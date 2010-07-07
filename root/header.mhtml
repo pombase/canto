@@ -1,0 +1,31 @@
+<div id="heading">
+  <a href="<% $c->uri_for('/') %>"><img src="<% $c->uri_for('/static/images/header.png') %>" border="0" id="logo"/>
+    <div id="heading_text"> <% $c->config->{long_name} %> </div> 
+  </a>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".sect .sect-title").each(function(i) {
+              $(this).click(function() {
+                      $(this).next().toggle();
+                      $(this).toggleClass('undisclosed-title');
+                      $(this).toggleClass('disclosed-title');
+                      $.sparkline_display_visible();
+                      return false;
+                  }
+              );
+              if ($(this).is(".undisclosed-title")) {
+                  $(this).next().hide();
+              } else {
+                  $(this).next().show();
+              }
+            }
+          )
+        }
+    );
+</script>
+
+<%flags>
+inherit => undef
+</%flags>

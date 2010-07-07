@@ -1,0 +1,81 @@
+<%args>
+$rs
+$list_title
+$disclosed => 1  # true will make the list default to visible
+@column_confs => ()
+</%args>
+
+<div class="sect">
+% if ($list_title ne '') {
+<span class="sect-title <% $disclosed_style %>"><a href="#"> <% $list_title %> </a> </span>
+% }
+<div class="sect-content">
+% if (@rows == 0) {
+    [none]
+% } else {
+  <table class="list">
+    <thead>
+      <tr>
+%   for my $head_col (@column_headings) {
+        <td><span class="field_label"><% ucfirst $head_col %></span></td>
+%   }
+      <td>&nbsp;</td>
+      </tr>
+    </thead>
+%   my $row_count = 0;
+%   for my $object (@rows) {
+    <tr class="<% $row_count % 2 == 0 ? 'even' : 'odd' %>">
+%     for my $col_conf (@column_confs) {
+        <td><& field.mhtml, object => $object, col_conf => $col_conf &></td>
+%     }
+    <td><& field.mhtml, object => $object, col_conf => { name => "${type}_id" } &></td>
+    </tr>
+%     $row_count++;
+%   }
+  </table>
+% }
+</div>
+</div>
+
+<%init>
+use PomCur::WebUtil;
+
+my @column_headings = ();
+my @rows = ();
+my $first = 1;
+
+my $type = undef;
+
+while (my $obj = $rs->next()) {
+  if ($first) {
+    $type = $obj->table();
+
+    if (@column_confs == 0) {
+      @column_confs = PomCur::WebUtil::get_column_confs_from_object($c->config(), $obj);
+    }
+
+    for my $col_conf (@column_confs) {
+      my $column_name = $col_conf->{name};
+      next if $column_name eq 'created_stamp' or $column_name eq "${type}_id";
+
+      my $column_type = PomCur::DB::column_type($col_conf, $type, $column_name);
+
+      next if $column_type eq 'collection';
+
+      my $column_heading = $column_name;
+      $column_heading =~ s/_/ /g;
+
+      push @column_headings, ucfirst $column_heading;
+    }
+    $first = 0;
+  }
+  push @rows, $obj;
+}
+
+my $disclosed_style = 'undisclosed-title';
+
+if ($disclosed) {
+  $disclosed_style = 'disclosed-title';
+}
+
+</%init>
