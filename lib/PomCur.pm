@@ -21,8 +21,13 @@ __PACKAGE__->config(name => 'PomCur',
                     'View::Graphics::Primitive' => {
                       driver => 'Cairo',
                       driver_args => { format => 'pdf' },
-                      content_type => 'application/pdf'
-                   }
+                      content_type => 'application/pdf',
+                    },
+                    static => {
+                      dirs => [
+                        'static'
+                       ],
+                    },
                    );
 
 # Start the application
