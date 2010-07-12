@@ -35,7 +35,7 @@ __PACKAGE__->setup();
 
 my $config = __PACKAGE__->config();
 
-# this is hacky, but allow us to call methods on the config object
+# this is hacky, but allows us to call methods on the config object
 bless $config, 'PomCur::Config';
 
 use PomCur::Config;
