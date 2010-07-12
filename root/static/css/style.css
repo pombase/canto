@@ -4,131 +4,155 @@ body
   margin: 0;
 }
 
-a:link { color:#049; text-decoration:none }
-a:visited { color:#049; text-decoration:none }
-a:link:hover { color:#CF4D23; text-decoration:underline }
-a:visited:hover { color:#CF4D23; text-decoration:underline }
-a:link:active { color:#58e; text-decoration:none }
+a:link { color:#026; text-decoration:none }
+a:visited { color:#502; text-decoration:none }
+a:link:hover { color:#723; text-decoration:underline }
+a:visited:hover { color:#723; text-decoration:underline }
+a:link:active { color:#944; text-decoration:none }
 
 img {
-    border-width: 0px;
+  border-width: 0px;
 }
 
 #heading a {
-    color: white;
 }
 #heading {
-    background-color: #227;
-    color: white;
-    font-size: 180%;
-    font-weight: bold;
+  float: left;
 }
 
 #logo {
-    height: 40px;
-    float: left;
 }
 div#footer {
-    padding-top: 40px;
+  padding-top: 40px;
 }
 div#footer .sponsor {
-    float: right;
-    padding-right: 25px;
-    padding-left: 25px;
+  float: right;
+  padding-right: 25px;
+  padding-left: 25px;
 }
 #heading-text {
-    padding: 5px;
+  padding: 5px;
 }
 
 #error-mesage {
-    padding: 2px;
-    margin: 0px;
-    border: 2px solid red;
-    background-color: #fff;
-    clear: left;
+  padding: 2px;
+  margin: 0px;
+  border: 2px solid red;
+  background-color: #fff;
+  clear: left;
 }
 
 #message {
-    padding: 2px;
-    margin: 0px;
-    border: 2px solid green;
-    background-color: #fff;
-    clear: left;
+  padding: 2px;
+  margin: 0px;
+  border: 2px solid green;
+  background-color: #fff;
+  clear: left;
+}
+
+#menu {
+  float: right;
+  background-color: #228;
+  color: #fff;
+}
+#menu a {
+  color: #fff;
+}
+#menu {
+  background-color: #333;
+}
+#menu ul {
+  margin: 0; padding: 0;
+}
+#menu ul li {
+  display: inline;
+}
+#menu ul li a {
+  float: left; text-decoration: none;
+  color: white;
+  padding: 10.5px 10px;
+}
+#menu ul li a:visited {
+  color: white;
+}
+#menu ul li a:hover, .menu ul li .current {
+  color: #fff;
+  background-color:#0b75b2;
 }
 
 #content {
-    margin: 20px;
-    clear: left;
+  margin: 20px;
+  clear: both;
 }
 
 #page-description {
-    background-color: #ddd;
-    color: #227;
-    font-size: 130%;
-    font-weight: bold;
-    padding: 2px 5px 1px 5px;
+  background-color: #ddd;
+  color: #227;
+  font-size: 130%;
+  font-weight: bold;
+  padding: 2px 5px 1px 5px;
 }
 
 .field-list {
-    padding-bottom: 20px;
-    margin: 10px 0px 5px 0px;
+  padding-bottom: 20px;
+  margin: 10px 0px 5px 0px;
 }
 
 #front-page {
-    font-size: 130%;
-    padding: 10px;
+  font-size: 130%;
+  padding: 10px;
 }
 
 table.list {
-    margin: 10px;
-    border-width: 1px;
-    border-spacing: 5px;
-    border-style: outset;
-    border-color: gray;
-    border-collapse: collapse;
-    font-size: 75%;
+  margin: 10px;
+  border-width: 1px;
+  border-spacing: 5px;
+  border-style: outset;
+  border-color: gray;
+  border-collapse: collapse;
+  font-size: 75%;
 }
 table.list thead tr td {
-    padding: 3px;
-    background-color: #e0e0c6;
-    color: black;
-    font-weight: bold;
+  padding: 3px;
+  background-color: #e0e0c6;
+  color: black;
+  font-weight: bold;
 }
 table.list tr.odd {
-    background-color: #f5f5e5;
+  background-color: #f5f5e5;
 }
 table.list tr td {
-    border-width: 1px;
-    padding: 3px;
-    border-style: solid;
-    border-color: #bbb;
+  border-width: 1px;
+  padding: 3px;
+  border-style: solid;
+  border-color: #bbb;
 }
 
 .attribute-field {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .sect .sect-title {
-    background-color: #ddd;
-    color: #227;
-    font-weight: bold;
-    margin-bottom: 10px;
-    padding: 1px 5px 1px 5px;
-    margin: 3px;
+  background-color: #ddd;
+  color: #227;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding: 1px 5px 1px 5px;
+  margin: 3px;
 }
 .undisclosed-title {
-    background-image: url('../static/images/undisclosed.png');
-    background-repeat: no-repeat;
-    background-position: center left
+  background-image: url('../static/images/undisclosed.png');
+  background-repeat: no-repeat;
+  background-position: center left
 }
 .disclosed-title {
-    background-image: url('../static/images/disclosed.png');
-    background-repeat: no-repeat;
-    background-position: center left
+  background-image: url('../static/images/disclosed.png');
+  background-repeat: no-repeat;
+  background-position: center left
 }
 
 .sect .sect-title a {
-    margin-left: 9px;
+  margin-left: 9px;
 }
 
 .sect {
@@ -136,7 +160,7 @@ table.list tr td {
 }
 
 .infobox {
-    padding: 8px 0px 8px 0px;
+  padding: 8px 0px 8px 0px;
 }
 
 .infobox table.list {

@@ -1,0 +1,10 @@
+<div id="menu">
+  <ul>
+    <li>
+      <a href="<% $c->uri_for('/login') %>">Log in</a>
+    </li>
+    <li>
+      <a href="<% $c->uri_for('/help') %>">Help</a>
+    </li>
+  </ul>
+</div>
