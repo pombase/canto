@@ -28,8 +28,6 @@ $message => undef
 % }
 </div>
 
-<& /user.mhtml &>
-
       <div id="content">
         <div>
           <span id="page-description">
