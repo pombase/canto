@@ -48,7 +48,7 @@ use strict;
 use warnings;
 use Carp;
 
-use Mouse;
+use Moose;
 
 #has 'schema' => (is => 'ro', isa => 'PomCur::DB', required => 1);
 
