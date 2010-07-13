@@ -1,0 +1,47 @@
+<p>MANAGE index page</p>
+
+<div id="front-page">
+  <table width="80%">
+    <tr>
+      <td class="actionlist" width="30%" valign="top">
+        <div>
+          <div class="label">
+            View ...
+          </div>
+          <ul>
+            <li>
+              <a href="<% $c->uri_for('/view/list/person') %>">People</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/view/list/pub') %>">Publications</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/view/list/curs') %>">Curation sessions</a>
+            </li>
+          </ul>
+        </div>
+      </td>
+%  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+      <td class="actionlist" width="30%" valign="top">
+        <div class="label">
+          Add a ...
+        </div>
+        <div>
+          <ul>
+            <li>
+              <a href="<% $c->uri_for('/new/object/person') %>">Person</a>
+            </li>
+            <li>
+            <li>
+              <a href="<% $c->uri_for('/new/object/pub') %>">Publication</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/new/object/curs') %>">Curation session</a>
+            </li>
+          </ul>
+        </div>
+      </td>
+% }
+    </tr>
+  </table>
+</div>
