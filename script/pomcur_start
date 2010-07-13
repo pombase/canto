@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Carp;
+use Plack::Runner;
+
+BEGIN {
+  push @INC, 'lib', '../lib/';
+}
+
+use PomCur;
+
+PomCur->setup_engine('PSGI');
+my $app = sub { PomCur->run(@_) };
+
+my $runner = Plack::Runner->new;
+
+$runner->parse_options(@ARGV);
+$runner->run($app);
