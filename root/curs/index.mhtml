@@ -1,0 +1,7 @@
+<%args>
+$token
+</%args>
+
+<p style="color: red">CURS INDEX</p>
+
+<p>CODE: <% $token %></p>
