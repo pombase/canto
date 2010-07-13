@@ -46,10 +46,15 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("person_id");
 __PACKAGE__->add_unique_constraint("networkaddress_unique", ["networkaddress"]);
+__PACKAGE__->has_many(
+  "curs",
+  "PomCur::TrackDB::Curs",
+  { "foreign.community_curator" => "self.person_id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ziwjnEWnqPtA70JoDtE/vQ
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2010-07-13 18:09:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0CW5820Hte/0YAmeMy51qg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

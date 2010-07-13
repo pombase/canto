@@ -22,79 +22,7 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => undef,
   },
-  "volumetitle",
-  {
-    data_type => "text",
-    default_value => undef,
-    is_nullable => 1,
-    size => undef,
-  },
-  "volume",
-  {
-    data_type => "text",
-    default_value => undef,
-    is_nullable => 1,
-    size => undef,
-  },
-  "series_name",
-  {
-    data_type => "text",
-    default_value => undef,
-    is_nullable => 1,
-    size => undef,
-  },
-  "issue",
-  {
-    data_type => "text",
-    default_value => undef,
-    is_nullable => 1,
-    size => undef,
-  },
-  "pyear",
-  {
-    data_type => "text",
-    default_value => undef,
-    is_nullable => 1,
-    size => undef,
-  },
-  "pages",
-  {
-    data_type => "text",
-    default_value => undef,
-    is_nullable => 1,
-    size => undef,
-  },
-  "miniref",
-  {
-    data_type => "text",
-    default_value => undef,
-    is_nullable => 1,
-    size => undef,
-  },
-  "uniquename",
-  {
-    data_type => "text",
-    default_value => undef,
-    is_nullable => 0,
-    size => undef,
-  },
-  "type_id",
-  { data_type => "int", default_value => undef, is_nullable => 0, size => undef },
-  "is_obsolete",
-  {
-    data_type => "booleantext",
-    default_value => "'false'",
-    is_nullable => 1,
-    size => undef,
-  },
-  "publisher",
-  {
-    data_type => "text",
-    default_value => undef,
-    is_nullable => 1,
-    size => undef,
-  },
-  "pubplace",
+  "authors",
   {
     data_type => "text",
     default_value => undef,
@@ -103,7 +31,6 @@ __PACKAGE__->add_columns(
   },
 );
 __PACKAGE__->set_primary_key("pub_id");
-__PACKAGE__->belongs_to("type", "PomCur::TrackDB::Cvterm", { cvterm_id => "type_id" });
 __PACKAGE__->has_many(
   "pubstatuses",
   "PomCur::TrackDB::Pubstatus",
@@ -111,8 +38,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zxTXIg+envS8qB890kQV5Q
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2010-07-13 18:09:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FGzcEbXVGPafNdEAOHLdqw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

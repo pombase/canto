@@ -95,9 +95,8 @@ sub get_field_value
   }
 
   my $name = $col_conf->{name};
-
-  my $parent_class_name = PomCur::DB::class_name_of_table($type);
-
+  my $schema = $c->schema();
+  my $parent_class_name = $schema->class_name_of_table($type);
   my $field_db_column = $name;
 
   my $source = $col_conf->{source};

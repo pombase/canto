@@ -42,4 +42,16 @@ use PomCur::Config;
 
 $config->setup();
 
+# shortcut to the schema
+sub schema
+{
+  my $self = shift;
+  return $self->model($self->model_name())->schema();
+}
+
+sub model_name {
+  my $self = shift;
+  return "TrackModel";
+}
+
 1;

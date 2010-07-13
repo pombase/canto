@@ -55,7 +55,7 @@ sub get_object_by_id_or_name
   my $type = shift;
   my $object_key = shift;
 
-  my $class_name = PomCur::DB::class_name_of_table($type);
+  my $class_name = $c->schema()->class_name_of_table($type);
 
   if ($object_key =~ /^\d+$/) {
     return $c->schema()->find_with_type($class_name, $object_key);
@@ -118,7 +118,7 @@ sub list : Local {
     $st->{template} = 'view/list_page.mhtml';
     $st->{type} = $type;
 
-    my $class_name = PomCur::DB::class_name_of_table($type);
+    my $class_name = $c->schema()->class_name_of_table($type);
     my $class_info = $c->config()->{class_info}->{$type};
 
     # default: order by id
@@ -209,7 +209,7 @@ sub report : Local {
 
     $st->{type} = $type;
 
-    my $class_name = PomCur::DB::class_name_of_table($type);
+    my $class_name = $c->schema()->class_name_of_table($type);
     my $params = { order_by => $self->_get_order_by_field($c, $type) };
 
     my $prefetch_conf = $report_conf->{prefetch};
@@ -248,7 +248,7 @@ sub list_collection : LocalRegex('^list/(.+?)/(\d+?)/(.+?)$') {
   $st->{title} = "List view of $collection_name for $type with id $object_id";
   $st->{template} = 'view/collection.mhtml';
   $st->{type} = $type;
-  my $class_name = PomCur::DB::class_name_of_table($type);
+  my $class_name = $c->schema()->class_name_of_table($type);
   my $object =
     $c->schema()->find_with_type($class_name, "${type}_id" => $object_id);
 
