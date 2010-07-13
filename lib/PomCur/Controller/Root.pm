@@ -42,6 +42,13 @@ sub end : Private {
   $c->forward('PomCur::View::Mason');
 }
 
+sub start :Global("/manage/index") {
+  my ($self, $c) = @_;
+
+  $c->stash->{title} = 'Start page';
+  $c->stash->{template} = 'manage/index.mhtml';
+}
+
 =head1 LICENSE
 
 This library is free software. You can redistribute it and/or modify

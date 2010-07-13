@@ -5,7 +5,6 @@ CREATE TABLE pub (
        title text,
        authors text
 );
-CREATE INDEX pub_idx1 ON pub (type_id);
 
 CREATE TABLE cv (
        cv_id integer not null primary key,
@@ -38,4 +37,9 @@ CREATE TABLE person (
        longname text NOT NULL,
        networkaddress text NOT NULL UNIQUE,
        password text
+);
+
+CREATE TABLE curs (
+       curs_id integer NOT NULL PRIMARY KEY,
+       community_curator integer NOT NULL REFERENCES person (person_id)
 );
