@@ -34,20 +34,20 @@ div#footer .sponsor {
   padding: 5px;
 }
 
-#error-mesage {
+#error-list .error {
   padding: 2px;
   margin: 0px;
   border: 2px solid red;
   background-color: #fff;
-  clear: left;
+  clear: both;
 }
 
-#message {
+#message-list .message {
   padding: 2px;
   margin: 0px;
   border: 2px solid green;
   background-color: #fff;
-  clear: left;
+  clear: both;
 }
 
 #menu {
