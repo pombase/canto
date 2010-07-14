@@ -1,0 +1,8 @@
+*~
+Makefile
+blib/
+pm_to_blib
+META.yml
+Makefile.old
+pipeline.yaml
+pipeline-example-config.yaml
