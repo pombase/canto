@@ -1,13 +1,15 @@
 <div id="heading">
-  <a href="<% $c->uri_for('/') %>">
-    <div id="logo">
-      <img src="<% $c->uri_for('/static/images/site_logo.png') %>" border="0"/>
-    </div>
-    <div id="text"> <% $c->config->{long_name} %> </div>
-  </a>
+  <div id="banner">
+    <a href="<% $c->uri_for('/') %>">
+      <div id="logo">
+        <img src="<% $c->uri_for('/static/images/site_logo.png') %>" border="0"/>
+      </div>
+      <div id="text"> <% $c->config->{long_name} %> </div>
+    </a>
+  </div>
+  <& /menu.mhtml &>
 </div>
 
-<& /menu.mhtml &>
 
 <%flags>
 inherit => undef

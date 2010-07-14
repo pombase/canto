@@ -2,6 +2,10 @@ body
 {
   padding: 0;
   margin: 0;
+  max-width: 1000px;
+  min-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 a:link { color:#026; text-decoration:none }
@@ -17,7 +21,17 @@ img {
 #heading a {
 }
 #heading {
+  padding: 5px;
+  position: relative;
+  -moz-box-shadow: 0px 4px 3px #666;
+  -webkit-box-shadow: 0px 4px 3px #666;
+  box-shadow: 0px 4px 3px #666;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+banner {
   float: left;
+  width: 10%;
 }
 
 #logo {
@@ -26,7 +40,7 @@ div#footer {
   padding-top: 40px;
 }
 div#footer .sponsor {
-  float: right;
+  float: left;
   padding-right: 25px;
   padding-left: 25px;
 }
@@ -51,7 +65,10 @@ div#footer .sponsor {
 }
 
 #menu {
+  position: absolute;
   float: right;
+  right: 0px;
+  top: 0px;
   background-color: #228;
   color: #fff;
 }
@@ -60,6 +77,7 @@ div#footer .sponsor {
 }
 #menu {
   background-color: #333;
+  font-size: 90%;
 }
 #menu ul {
   margin: 0; padding: 0;
@@ -70,7 +88,7 @@ div#footer .sponsor {
 #menu ul li a {
   float: left; text-decoration: none;
   color: white;
-  padding: 10.5px 10px;
+  padding: 4px 10px;
 }
 #menu ul li a:visited {
   color: white;
@@ -81,7 +99,8 @@ div#footer .sponsor {
 }
 
 #content {
-  margin: 20px;
+  padding: 30px 10px 30px 10px;
+  margin: 0px;
   clear: both;
 }
 
