@@ -10,6 +10,21 @@ requires 'Catalyst::Runtime' => '5.80022';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
+requires 'Catalyst::Plugin::Config::Multi'
+requires 'DBD::Pg';
+requires 'DBIx::Class';
+requires 'DBIx::Class::Schema';
+requires 'DBIx::Class::ResultSet::Data::Pageset';
+requires 'Params::Validate';
+requires 'YAML';
+requires 'DBIx::Class';
+#requires 'Text::CSV';
+#requires 'IO::All';
+#requires 'DateTime';
+#requires 'File::Copy::Recursive';
+#requires 'Data::Compare';
+#requires 'Pod::Usage';
+
 requires 'parent';
 requires 'Config::General'; # This should reflect the config file format you've chosen
                  # See Catalyst::Plugin::ConfigLoader for supported formats
