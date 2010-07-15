@@ -43,3 +43,9 @@ CREATE TABLE curs (
        curs_id integer NOT NULL PRIMARY KEY,
        community_curator integer NOT NULL REFERENCES person (person_id)
 );
+
+CREATE TABLE sessions (
+       session_id   text PRIMARY KEY,
+       session_data text,
+       expires      integer
+);

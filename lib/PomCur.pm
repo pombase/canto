@@ -12,13 +12,22 @@ use Catalyst qw/-Debug
                 Authentication
                 Config::Multi
                 Session
-                Session::Store::FastMmap
                 Session::State::Cookie
+                Session::Store::DBI
+                Session::PerUser
                 Static::Simple/;
 our $VERSION = '0.01';
 
 __PACKAGE__->config(name => 'PomCur',
                     session => { flash_to_stash => 1 },
+                    'Plugin::Session' => {
+                      expires   => 3600,
+                      dbi_dbh   => 'TrackModel',
+                      dbi_table => 'sessions',
+                      dbi_id_field => 'session_id',
+                      dbi_data_field => 'session_data',
+                      dbi_expires_field => 'expires',
+                    },
                     'View::Graphics::Primitive' => {
                       driver => 'Cairo',
                       driver_args => { format => 'pdf' },
