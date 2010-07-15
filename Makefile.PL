@@ -9,6 +9,7 @@ all_from 'lib/PomCur.pm';
 requires 'Catalyst::Runtime' => '5.80022';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
+requires 'Catalyst::Plugin::Session::PerUser';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Plugin::Config::Multi'
 requires 'DBD::Pg';
