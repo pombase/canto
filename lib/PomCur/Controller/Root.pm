@@ -42,11 +42,11 @@ sub end : Private {
   $c->forward('PomCur::View::Mason');
 }
 
-sub start :Global("/manage/index") {
+sub front :Path :Args(0) {
   my ($self, $c) = @_;
 
-  $c->stash->{title} = 'Start page';
-  $c->stash->{template} = 'manage/index.mhtml';
+  $c->response->redirect($c->uri_for('/manage', $c->request->path));
+  $c->detach();
 }
 
 =head1 LICENSE
