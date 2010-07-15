@@ -1,4 +1,4 @@
-package PomCur::DB::ResultSet;
+package PomCur::ResultSet;
 
 =head1 NAME
 

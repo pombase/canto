@@ -7,9 +7,10 @@ use base 'DBIx::Class::Schema';
 
 __PACKAGE__->load_classes;
 
-
-# Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6MXa2PCFbpoh2+Fkr5IYsw
+for my $source (__PACKAGE__->sources()) {
+  warn "$source\n";
+  __PACKAGE__->source($source)->resultset_class('PomCur::DB::ResultSet');
+}
 
 =head1 AUTHOR
 
@@ -81,12 +82,11 @@ sub new
                         })
 }
 
-use PomCur::DB::ResultSet;
-
 sub initialise {
   my $self = shift;
-  for my $source (__PACKAGE__->sources()) {
-    __PACKAGE__->source($source)->resultset_class('PomCur::DB::ResultSet');
+
+  for my $source ($self->sources()) {
+    $self->source($source)->resultset_class('PomCur::ResultSet');
   }
 }
 
