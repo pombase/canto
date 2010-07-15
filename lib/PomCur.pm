@@ -10,6 +10,7 @@ use Catalyst qw/-Debug
                 ConfigLoader
                 StackTrace
                 Authentication
+                Config::Multi
                 Session
                 Session::Store::FastMmap
                 Session::State::Cookie
@@ -22,6 +23,10 @@ __PACKAGE__->config(name => 'PomCur',
                       driver => 'Cairo',
                       driver_args => { format => 'pdf' },
                       content_type => 'application/pdf',
+                    },
+                    'Plugin::Config::Multi' => {
+                      dir => __PACKAGE__->path_to("./"),
+                      app_name => 'pomcur',
                     },
                     static => {
                       dirs => [
