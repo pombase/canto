@@ -2,8 +2,8 @@ package TestUtil;
 
 =head1 DESCRIPTION
 
-Utility code for testing.  use()ing this module creates a test database in
-/tmp/
+Utility code for testing.  use()ing this module will create a test
+database in /tmp/
 
 =cut
 
@@ -39,6 +39,16 @@ sub import
             };
 
   _create_dbs();
+}
+
+sub root_dir
+{
+  return $_store->{root_dir};
+}
+
+sub config
+{
+  return $_store->{config};
 }
 
 sub _check_dir
