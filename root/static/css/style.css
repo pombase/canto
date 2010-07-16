@@ -40,7 +40,8 @@ div#footer {
   padding-top: 40px;
 }
 div#footer .sponsor {
-  float: left;
+  float: right;
+  margin-top:30px;
   padding-right: 25px;
   padding-left: 25px;
 }
@@ -147,6 +148,13 @@ table.list tr td {
   border-color: #bbb;
 }
 
+.field-label {
+  color: #226;
+}
+.field-value {
+  color: #332;
+  font-size: 95%;
+}
 .attribute-field {
   font-weight: bold;
 }

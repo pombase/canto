@@ -10,13 +10,13 @@
           </div>
           <ul>
             <li>
-              <a href="<% $c->uri_for('/view/list/person') %>">People</a>
+              <a href="<% $c->uri_for('/view/list/person', { model => 'manage'} ) %>">People</a>
             </li>
             <li>
-              <a href="<% $c->uri_for('/view/list/pub') %>">Publications</a>
+              <a href="<% $c->uri_for('/view/list/pub', { model => 'manage'} ) %>">Publications</a>
             </li>
             <li>
-              <a href="<% $c->uri_for('/view/list/curs') %>">Curation sessions</a>
+              <a href="<% $c->uri_for('/view/list/curs', { model => 'manage'} ) %>">Curation sessions</a>
             </li>
           </ul>
         </div>
@@ -29,14 +29,14 @@
         <div>
           <ul>
             <li>
-              <a href="<% $c->uri_for('/new/object/person') %>">Person</a>
+              <a href="<% $c->uri_for('/new/object/person', { model => 'manage'} ) %>">Person</a>
             </li>
             <li>
             <li>
-              <a href="<% $c->uri_for('/new/object/pub') %>">Publication</a>
+              <a href="<% $c->uri_for('/new/object/pub', { model => 'manage'} ) %>">Publication</a>
             </li>
             <li>
-              <a href="<% $c->uri_for('/new/object/curs') %>">Curation session</a>
+              <a href="<% $c->uri_for('/new/object/curs', { model => 'manage'} ) %>">Curation session</a>
             </li>
           </ul>
         </div>

@@ -13,12 +13,15 @@ $col_conf
 <span class="field_value">
 % if ($field_type eq 'table_id') {
   <span class="this_id_field">
-    <a href='<% $c->uri_for("/view/object", $type, PomCur::DB::id_of_object($object)) %>'>[details&nbsp;...]</a>
+    <a href='<% $c->uri_for("/view/object", $type,
+                   PomCur::DB::id_of_object($object),
+                   { model => $model_name } ) %>'>[details&nbsp;...]</a>
   </span>
 % } else {
 %   if ($field_type eq 'foreign_key' && $field_value && defined $ref_display_key) {
   <span class="ref_field">
-  <a href='<% $c->uri_for("/view/object", $referenced_object->table(), PomCur::DB::id_of_object($field_value)) %>'>
+  <a href='<% $c->uri_for("/view/object", $referenced_object->table(), PomCur::DB::id_of_object($field_value),
+                   { model => $model_name } ) %>'>
     <& field.mhtml, object => $referenced_object, col_conf => { name => $ref_display_key } &>
   </a>
   </span>
@@ -26,7 +29,8 @@ $col_conf
 %     if ($field_type eq 'key_field') {
   <span class="attribute_field">
     <span class="display_key">
-      <a href='<% $c->uri_for("/view/object", $type, PomCur::DB::id_of_object($object)) %>'>
+      <a href='<% $c->uri_for("/view/object", $type, PomCur::DB::id_of_object($object),
+                   { model => $model_name } ) %>'>
         <% $field_value %>
       </a>
     </span>
@@ -85,4 +89,6 @@ if ($field_type eq 'foreign_key') {
 if (!defined $field_value) {
   $field_value = '';
 }
+
+my $model_name = $c->request()->param('model');
 </%init>
