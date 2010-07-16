@@ -21,7 +21,7 @@
           </ul>
         </div>
       </td>
-%  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+%  if ($c->user_exists() && $c->user()->role() eq 'admin') {
       <td class="actionlist" width="30%" valign="top">
         <div class="label">
           Add a ...

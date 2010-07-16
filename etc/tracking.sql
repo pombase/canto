@@ -36,6 +36,7 @@ CREATE TABLE person (
        shortname text,
        longname text NOT NULL,
        networkaddress text NOT NULL UNIQUE,
+       role text NOT NULL,
        password text
 );
 

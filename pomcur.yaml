@@ -16,5 +16,4 @@ authentication:
         password_type: 'clear'
       store:
         class: DBIx::Class
-        user_class: PomCurModel::Person
-        id_field: username
+        user_class: TrackModel::Person

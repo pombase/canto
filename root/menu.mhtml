@@ -1,7 +1,18 @@
 <div id="menu">
   <ul>
     <li>
-      <a href="<% $c->uri_for('/login') %>">Log in</a>
+% if ($c->user_exists()) {
+  <div class="networkaddress"> <% $c->user()->networkaddress() %> </div>
+% }
+    </li>
+    <li>
+% if ($c->user_exists()) {
+      <a href="<% $c->uri_for('/logout') %>">Logout</a>
+% } else {
+      <a href="<% $c->uri_for('/account', { 
+               return_path => $c->uri_for($c->req->uri()->path(),
+               $c->req()->params()) } ) %>">Log in</a>
+% }
     </li>
     <li>
       <a href="<% $c->uri_for('/help') %>">Help</a>

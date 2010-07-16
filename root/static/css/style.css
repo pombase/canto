@@ -70,17 +70,24 @@ div#footer .sponsor {
   float: right;
   right: 0px;
   top: 0px;
-  background-color: #228;
-  color: #fff;
 }
 #menu a {
-  color: #fff;
+  background-color: #333;
 }
 #menu {
-  background-color: #333;
   font-size: 90%;
 }
+#menu .networkaddress {
+  margin: 0; padding: 0;
+  display: inline;
+  float: left;
+  text-decoration: none;
+  padding: 4px 10px;
+  color: black;
+}
 #menu ul {
+  background-color: #228;
+  color: #fff;
   margin: 0; padding: 0;
 }
 #menu ul li {
@@ -288,11 +295,9 @@ fieldset .checkboxgroup > span {
 
 #login {
     padding: 10px;
-    float: right;
 }
 #logout {
     padding: 10px;
-    float: right;
 }
 
 div.tracking-tabs {

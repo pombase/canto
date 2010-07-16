@@ -36,6 +36,13 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => undef,
   },
+  "role",
+  {
+    data_type => "text",
+    default_value => undef,
+    is_nullable => 0,
+    size => undef,
+  },
   "password",
   {
     data_type => "text",
@@ -54,7 +61,7 @@ __PACKAGE__->has_many(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nMYECx5/PNRiDFtjDV+Bjg
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:a6dqrf4gemc1zacLd3AFiA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

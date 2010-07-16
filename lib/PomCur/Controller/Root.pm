@@ -53,6 +53,71 @@ sub front :Path :Args(0)
   $c->detach();
 }
 
+=head2 account
+
+ User page for logins
+
+=cut
+sub account :Global
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash;
+
+  $st->{title} = "Account details";
+  $st->{template} = 'account.mhtml';
+
+  $st->{return_path} = $c->req()->param("return_path");
+}
+
+=head2 login
+
+ Try to authenticate a user based on networkaddress and password parameters
+
+=cut
+sub login : Global {
+  my ( $self, $c ) = @_;
+  my $networkaddress = $c->req->param('networkaddress');
+  my $password = $c->req->param('password');
+
+  my $return_path = $c->req->param('return_path');
+
+  warn "LOGIN: $networkaddress $password $return_path\n";
+
+  if ($c->authenticate({networkaddress => $networkaddress, password => $password})) {
+    warn "AUTHENTICATED\n";
+    if ($return_path =~ m:logout:) {
+      $c->forward('front');
+      return 0;
+    }
+  } else {
+    $c->flash->{error} = "log in failed";
+    $c->res->redirect($return_path, 302);
+    $c->detach();
+    return 0;
+  }
+
+  $c->res->redirect($return_path, 302);
+  $c->detach();
+  return 0;
+}
+
+=head2 logout
+
+ Log out the user and return to the front page.
+
+=cut
+
+sub logout : Global {
+  my ( $self, $c ) = @_;
+  $c->logout;
+
+  $c->stash->{message} = "Logged out";
+  $c->forward('manage/index');
+}
+
+
+
 =head1 LICENSE
 
 This library is free software. You can redistribute it and/or modify
