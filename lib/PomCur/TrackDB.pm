@@ -8,8 +8,8 @@ use base 'DBIx::Class::Schema';
 __PACKAGE__->load_classes;
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2010-07-15 12:23:17
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MutO2PZ3iejwwPaoTmoNNw
+# Created by DBIx::Class::Schema::Loader v0.04006
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1L7yVllyeVoNp9Qc9q63vg
 
 use base 'PomCur::DB';
 
