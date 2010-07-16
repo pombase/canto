@@ -56,16 +56,16 @@ use PomCur::Config;
 
 $config->setup();
 
+my %_model_map = ( manage => "TrackModel",
+                   meta => "MetaModel" );
+
 # shortcut to the schema
 sub schema
 {
   my $self = shift;
-  return $self->model($self->model_name())->schema();
-}
+  my $model_name = shift || $self->req()->param('model');
 
-sub model_name {
-  my $self = shift;
-  return "TrackModel";
+  return $self->model($_model_map{$model_name})->schema();
 }
 
 1;
