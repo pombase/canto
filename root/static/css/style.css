@@ -51,17 +51,17 @@ div#footer .sponsor {
 
 #error-list .error {
   padding: 2px;
-  margin: 0px;
+  margin: 10px 0px 0px 0px;
   border: 2px solid red;
-  background-color: #fff;
+  background-color: #ffd;
   clear: both;
 }
 
 #message-list .message {
   padding: 2px;
-  margin: 0px;
+  margin: 10px 0px 0px 0px;
   border: 2px solid green;
-  background-color: #fff;
+  background-color: #ffd;
   clear: both;
 }
 
