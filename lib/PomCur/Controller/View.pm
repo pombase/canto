@@ -55,18 +55,21 @@ sub get_object_by_id_or_name
   my $type = shift;
   my $object_key = shift;
 
-  my $class_name = $c->schema()->class_name_of_table($type);
+  my $st = $c->stash;
+  my $schema = $c->schema();
+
+  my $class_name = $schema->class_name_of_table($type);
 
   if ($object_key =~ /^\d+$/) {
-    return $c->schema()->find_with_type($class_name, $object_key);
+    return $schema->find_with_type($class_name, $object_key);
   } else {
     # try looking up by display name
     my $class_info = $c->config()->{class_info}->{$type};
     if (defined $class_info) {
       if (defined $class_info->{display_field}) {
-        return $c->schema()->find_with_type($class_name,
-                                            $class_info->{display_field} =>
-                                              $object_key);
+        return $schema->find_with_type($class_name,
+                                       $class_info->{display_field} =>
+                                         $object_key);
       }
     }
   }
@@ -81,7 +84,8 @@ sub get_object_by_id_or_name
            $object_key - the id or primary key of an object to render
 
 =cut
-sub object : Local {
+sub object : Local
+{
   my ($self, $c, $type, $object_key) = @_;
 
   my $st = $c->stash;
@@ -92,7 +96,11 @@ sub object : Local {
 
     $st->{type} = $type;
 
+    warn "OBJ: $object_key\n";
+
     my $object = get_object_by_id_or_name($c, $type, $object_key);
+
+    warn "O: $object\n";
 
     $st->{object} = $object;
   };
@@ -108,17 +116,19 @@ sub object : Local {
  Args    : $type - the object class from the URL
 
 =cut
-sub list : Local {
+sub list : Local
+{
   my ($self, $c, $type) = @_;
 
   my $st = $c->stash;
+  my $schema = $c->schema();
 
   eval {
     $st->{title} = 'List of all ' . to_PL($type);
     $st->{template} = 'view/list_page.mhtml';
     $st->{type} = $type;
 
-    my $class_name = $c->schema()->class_name_of_table($type);
+    my $class_name = $schema->class_name_of_table($type);
     my $class_info = $c->config()->{class_info}->{$type};
 
     # default: order by id
@@ -144,7 +154,7 @@ sub list : Local {
 
     my $params = { order_by => $order_by };
 
-    $st->{rs} = $c->schema->resultset($class_name)->search(undef, $params);
+    $st->{rs} = $schema->resultset($class_name)->search(undef, $params);
 
     $st->{page} = $c->req->param('page') || 1;
     $st->{numrows} = $c->req->param('numrows') || 20;
@@ -194,10 +204,12 @@ sub _get_order_by_field
  Args    : $report_name - the report name, used to find the configuration
 
 =cut
-sub report : Local {
+sub report : Local
+{
   my ($self, $c, $report_name) = @_;
 
   my $st = $c->stash;
+  my $schema = $c->schema();
 
   eval {
     my $report_conf = $c->config()->{reports}->{$report_name};
@@ -209,7 +221,7 @@ sub report : Local {
 
     $st->{type} = $type;
 
-    my $class_name = $c->schema()->class_name_of_table($type);
+    my $class_name = $schema->class_name_of_table($type);
     my $params = { order_by => $self->_get_order_by_field($c, $type) };
 
     my $prefetch_conf = $report_conf->{prefetch};
@@ -218,7 +230,7 @@ sub report : Local {
       $params->{prefetch} = eval "$prefetch_conf";
     }
 
-    $st->{rs} = $c->schema->resultset($class_name)->search({ }, $params);
+    $st->{rs} = $schema->resultset($class_name)->search({ }, $params);
     $st->{column_confs} = $report_conf->{columns};
 
     $st->{page} = $c->req->param('page') || 1;
@@ -238,24 +250,24 @@ sub report : Local {
            $collection_name - the collection/relation to render
 
 =cut
-sub list_collection : LocalRegex('^list/(.+?)/(\d+?)/(.+?)$') {
+sub collection : Local
+{
   my ($self, $c) = @_;
 
   my ($type, $object_id, $collection_name) = @{$c->req->captures()};
 
   my $st = $c->stash;
+  my $schema = $c->schema();
 
   $st->{title} = "List view of $collection_name for $type with id $object_id";
   $st->{template} = 'view/collection.mhtml';
   $st->{type} = $type;
-  my $class_name = $c->schema()->class_name_of_table($type);
+  my $class_name = $schema->class_name_of_table($type);
   my $object =
-    $c->schema()->find_with_type($class_name, "${type}_id" => $object_id);
+    $schema->find_with_type($class_name, "${type}_id" => $object_id);
 
   $st->{object} = $object;
   $st->{collection_name} = $collection_name;
 }
-
-my $index_manager_cache = {};
 
 1;

@@ -14,7 +14,8 @@ PomCur::Controller::Root - Root Controller for PomCur tracking application
 
 =cut
 
-sub default :Path {
+sub default :Path
+{
   my ($self, $c) = @_;
 
   $c->response->body( 'Page not found' );
@@ -27,7 +28,8 @@ sub default :Path {
 
 =cut
 
-sub end : Private {
+sub end : Private
+{
   my $self = shift;
   my $c = shift;
 
@@ -42,7 +44,9 @@ sub end : Private {
   $c->forward('PomCur::View::Mason');
 }
 
-sub front :Path :Args(0) {
+# In development use, redirect to the manager
+sub front :Path :Args(0)
+{
   my ($self, $c) = @_;
 
   $c->response->redirect($c->uri_for('/manage', $c->request->path));
