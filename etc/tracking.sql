@@ -45,7 +45,7 @@ CREATE TABLE curs (
 );
 
 CREATE TABLE sessions (
-       session_id   text PRIMARY KEY,
+       id   text PRIMARY KEY,
        session_data text,
        expires      integer
 );
