@@ -3,9 +3,6 @@ package PomCur::Model::TrackModel;
 use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
-__PACKAGE__->config(
-    schema_class => 'PomCur::TrackDB',
-);
 
 =head1 NAME
 
