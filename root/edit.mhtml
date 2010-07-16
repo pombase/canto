@@ -1,0 +1,1 @@
+<% $c->stash->{form}->render() %>
