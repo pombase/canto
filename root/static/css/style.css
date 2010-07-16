@@ -251,12 +251,30 @@ span.error_constraint_required {
     font-size: 90%;
     margin: 10px 0px 5px 0px;
 }
-.page_nav_links {
+.page_nav_actions {
     font-size: 90%;
+}
+.page_nav_actions a:visited {
+  color:#026; text-decoration:none;
+}
+
+.page_nav_no_link {
+  color: #777;
+}
+.page_nav_link {
 }
 .page_nav_current {
     font-weight: bold;
-    font-size: 110%;
+}
+
+.page_nav_number_link {
+  border: 1px solid #aaa;
+  background-color: #ddf;
+}
+.page_nav_number_current {
+  font-weight: bold;
+  border: 1px solid #666;
+  background-color: #ddf;
 }
 
 

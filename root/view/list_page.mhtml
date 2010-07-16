@@ -24,8 +24,11 @@ Number of rows to display
 </select>
 </div>
 
+<& /view/list.mhtml, type => $type, rs => $page_rs, list_title => '',
+  numrows => $numrows, page => $page, column_confs => [@field_info_list] &>
+
 % if ($pager->last_page() > 1) {
-<div class="page_nav_action">
+<div class="page_nav_actions">
 <b>Go to page:</b>  
 
 % if ($page != $pager->first_page()) {
@@ -47,9 +50,9 @@ Number of rows to display
 
 <a href='<% $c->request->uri_with({page => $pager->first_page()}) %>'>
 % if ($page == $pager->first_page()) {
-  <span class="page_nav_current">1</span>
+  <span class="page_nav_number_current">1</span>
 % } else {
-  <span class="page_nav_link">1</span>
+  <span class="page_nav_number_link">1</span>
 % }
 </a>
 
@@ -61,9 +64,9 @@ Number of rows to display
 %   if ($jump != 1 && $jump != 1 && $jump != $pager->last_page()) {
 <a href='<% $c->request->uri_with({page => $jump}) %>'>
 %     if ($jump == $pager->current_page()) {
-  <span class="page_nav_current"><% $jump %></span>
+  <span class="page_nav_number_current"><% $jump %></span>
 %     } else {
-  <span class="page_nav_link"><% $jump %></span>
+  <span class="page_nav_number_link"><% $jump %></span>
 %     }
 %   }
 </a>
@@ -75,9 +78,9 @@ Number of rows to display
 
 <a href='<% $c->request->uri_with({page => $pager->last_page()}) %>'>
 % if ($page == $pager->last_page()) {
-  <span class="page_nav_current"><% $pager->last_page() %></span>
+  <span class="page_nav_number_current"><% $pager->last_page() %></span>
 % } else {
-  <span class="page_nav_link"><% $pager->last_page() %></span>
+  <span class="page_nav_number_link"><% $pager->last_page() %></span>
 % }
 </a>
 
@@ -101,9 +104,6 @@ Number of rows to display
 % }
 % }
 
-</%perl>
-  <& /view/list.mhtml, type => $type, rs => $page_rs, list_title => '',
-    numrows => $numrows, page => $page, column_confs => [@field_info_list] &>
 </div>
 
 <%init>
