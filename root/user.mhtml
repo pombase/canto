@@ -14,7 +14,7 @@
           User ID: <input id="username" name="username" maxlength="20" size="20"/>
         </div>
         <div>
-          Password: <input type=password id="password" name="password"/>
+          Password: <input type="password" id="password" name="password"/>
         </div>
         <input type="hidden" name="return_path" 
                value="<% $c->uri_for($c->req->uri()->path()) %>"/>
