@@ -30,7 +30,7 @@ $message => undef
 
       <div id="content">
         <div>
-          <span id="page-description">
+          <div id="page-description">
             <% $title %>
           </span>
         </div>

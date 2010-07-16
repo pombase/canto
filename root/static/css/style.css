@@ -113,11 +113,11 @@ div#footer .sponsor {
 }
 
 #page-description {
-  background-color: #ddd;
-  color: #227;
-  font-size: 130%;
+  font-size: 140%;
   font-weight: bold;
-  padding: 2px 5px 1px 5px;
+  display: inline;
+  padding: 2px 0px 2px 0px;
+  border-bottom: 1px solid black;
 }
 
 .field-list {
@@ -126,7 +126,6 @@ div#footer .sponsor {
 }
 
 #front-page {
-  font-size: 130%;
   padding: 10px;
 }
 
@@ -213,21 +212,25 @@ table.list tr td {
 /* front page: */
 .actionlist {
     margin: 5px;
-    border: 1px solid #999;
+    font-weight: bold;
+    border: 0px solid #ff;
     clear: right;
 }
 
 .actionlist .label {
     font-size: 110%;
-    background-color: #eef;
-    padding: 3px;
+    display: inline;
+    padding: 2px 0px 2px 0px;
+    border-bottom: 1px solid black;
 }
 
 .actionlist ul {
     padding: 8px;
     margin: 1em;
 }
-
+.actionlist ul li {
+    list-style: none;
+}
 
 /* editing: */
 div.submit {
