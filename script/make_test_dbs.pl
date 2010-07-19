@@ -21,5 +21,6 @@ my $schema = PomCur::TrackDB->new($config);
 $schema->create_with_type('Person', { networkaddress => 'x@x',
                                       longname => 'xx',
                                       shortname => 'x',
-                                      role => 'user' });
+                                      role => 'user',
+                                      password => 'x' });
 
