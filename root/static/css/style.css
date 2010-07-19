@@ -278,58 +278,9 @@ span.error_constraint_required {
 }
 
 
-fieldset .button label,
-fieldset .contentbutton label,
-fieldset .checkbox label,
-fieldset .date label,
-fieldset .file label,
-fieldset .image label,
-fieldset .multi label,
-fieldset .password label,
-fieldset .radio label,
-fieldset .radiogroup label,
-fieldset .recaptcha label,
-fieldset .select label,
-fieldset .text label,
-fieldset .textarea label
-{
-    display: inline;
-    float: left;
-    width: 12em;
-    text-align: right;
-    padding-right: 1em;
-}
-
-fieldset .checkboxgroup span {
-    display: block;
-}
-
-.checkboxgroup {
-   display: inline;
-   float: left;
-}
-
-fieldset .checkboxgroup > span {
-    height: 15em;
-    overflow: auto;
-}
-
 #login {
     padding: 10px;
 }
 #logout {
     padding: 10px;
-}
-
-div.tracking-tabs {
-  width: 60em;
-}
-
-.seqbases {
-  font-family: monospace;
-  font-size: 120%;
-}
-
-.user-login {
-  font-size: 80%;
 }
