@@ -79,6 +79,7 @@ $message => undef
 </html>
 
 <%init>
+# flash_to_stash doesn't seem to work, so:
 $error ||= $c->flash->{error};
 $message ||= $c->flash->{message};
 </%init>
