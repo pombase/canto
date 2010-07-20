@@ -49,20 +49,25 @@ div#footer .sponsor {
   padding: 5px;
 }
 
-#error-list .error {
-  padding: 2px;
-  margin: 10px 0px 0px 0px;
-  border: 2px solid red;
-  background-color: #ffd;
+#error-list .error, #message-list .message {
+  padding: 10px;
+  margin: 20px 0px 10px 5px;
+  width: 62%;
   clear: both;
 }
 
+#error-list .error {
+  border: 2px solid red;
+  background-color: #fff2f2;
+}
+
 #message-list .message {
-  padding: 2px;
-  margin: 10px 0px 0px 0px;
   border: 2px solid green;
-  background-color: #ffd;
-  clear: both;
+  background-color: #fff;
+}
+
+#message-list .message .title, #error-list .error .title {
+  font-weight: bold;
 }
 
 #menu {

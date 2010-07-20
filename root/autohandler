@@ -15,7 +15,20 @@ $message => undef
 <div id="error-list">
 % if (defined $error) {
 <div class="error">
-<% $error %>
+% if (ref $error) {
+  <strong>
+    <% $error->{title} %>
+  </strong>
+%   if (exists $error->{text}) {
+  <div>
+    <% $error->{text} %>
+  </div>
+%   }
+% } else {
+  <strong>
+    <% $error %>
+  </strong>
+% }
 </div>
 % }
 </div>
@@ -23,7 +36,20 @@ $message => undef
 <div id="message-list">
 % if (defined $message) {
 <div class="message">
-<% $message %>
+% if (ref $message) {
+  <strong>
+    <% $message->{title} %>
+  </strong>
+%   if (exists $message->{text}) {
+  <div>
+    <% $message->{text} %>
+  </div>
+%   }
+% } else {
+  <strong>
+    <% $message %>
+  </strong>
+% }
 </div>
 % }
 </div>
@@ -51,3 +77,8 @@ $message => undef
     </div>
   </body>
 </html>
+
+<%init>
+$error ||= $c->flash->{error};
+$message ||= $c->flash->{message};
+</%init>

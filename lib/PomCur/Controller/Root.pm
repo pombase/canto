@@ -82,17 +82,19 @@ sub login : Global {
 
   my $return_path = $c->req->param('return_path');
 
-  warn "LOGIN: $networkaddress $password $return_path\n";
-
   if ($c->authenticate({networkaddress => $networkaddress, password => $password})) {
-    warn "AUTHENTICATED\n";
-    if ($return_path =~ m:logout:) {
-      $c->forward('front');
+    $c->flash->{message} =
+      { title => "Login successful" };
+
+    if ($return_path =~ m/logout|login/) {
+      $c->forward('/manage/index');
       return 0;
     }
   } else {
-    $c->flash->{error} = "log in failed";
-    $c->res->redirect($return_path, 302);
+    $c->flash->{error} =
+      { title => "Login error",
+        text => "Incorrect user name or password, please try again" };
+    $c->forward('account');
     $c->detach();
     return 0;
   }
