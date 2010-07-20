@@ -3,7 +3,11 @@
 use strict;
 use warnings;
 use Carp;
+
 use Plack::Runner;
+use Plack::Builder;
+use Plack::Middleware::ReverseProxy;
+
 
 BEGIN {
   push @INC, 'lib', '../lib/';
@@ -13,6 +17,8 @@ use PomCur;
 
 PomCur->setup_engine('PSGI');
 my $app = sub { PomCur->run(@_) };
+
+$app = Plack::Middleware::ReverseProxy->wrap($app);
 
 my $runner = Plack::Runner->new;
 
