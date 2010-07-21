@@ -181,13 +181,14 @@ table.list tr td {
   padding: 1px 5px 1px 5px;
   margin: 3px;
 }
+
 .undisclosed-title {
-  background-image: url('../static/images/undisclosed.png');
+  background-image: url('../images/undisclosed.png');
   background-repeat: no-repeat;
   background-position: center left
 }
 .disclosed-title {
-  background-image: url('../static/images/disclosed.png');
+  background-image: url('../images/disclosed.png');
   background-repeat: no-repeat;
   background-position: center left
 }
