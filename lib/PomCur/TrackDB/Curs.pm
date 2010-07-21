@@ -22,6 +22,13 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => undef,
   },
+  "curs_key",
+  {
+    data_type => "text",
+    default_value => undef,
+    is_nullable => 0,
+    size => undef,
+  },
 );
 __PACKAGE__->set_primary_key("curs_id");
 __PACKAGE__->belongs_to(
@@ -32,7 +39,7 @@ __PACKAGE__->belongs_to(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3hXytvsahyY2O4Jr++C4kw
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H7CcrXpFSKI8cZBis9FddQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

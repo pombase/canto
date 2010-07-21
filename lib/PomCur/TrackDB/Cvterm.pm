@@ -31,8 +31,6 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => undef,
   },
-  "dbxref_id",
-  { data_type => "int", default_value => undef, is_nullable => 0, size => undef },
   "is_obsolete",
   { data_type => "int", default_value => 0, is_nullable => 0, size => undef },
   "is_relationshiptype",
@@ -48,7 +46,7 @@ __PACKAGE__->has_many(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LNNZ4No7vXwTuIjRAvtBgQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LZ6Um1BXzua8vQQ1pP4HFQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
