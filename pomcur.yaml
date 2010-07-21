@@ -72,6 +72,7 @@ class_info:
       - name: lab_head
         editable: 1
       - name: people
+        is_collection: 1
         editable: 1
   pub:
     display_field: title
