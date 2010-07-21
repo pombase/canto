@@ -13,3 +13,74 @@ authentication:
       store:
         class: DBIx::Class
         user_class: TrackModel::Person
+class_info:
+  cv:
+    editable: 1
+    display_field: name
+    field_info_list:
+      - name: name
+        editable: 1
+      - name: definition
+        editable: 1
+  cvterm:
+    editable: 1
+    display_field: name
+    field_info_list:
+      - name: name
+        editable: 1
+      - name: definition
+        editable: 1
+      - name: cv_id
+        editable: 1
+  organism:
+    editable: 1
+    display_field: full_name
+    order_by:
+      - genus
+      - species
+    field_info_list:
+      - name: genus
+        editable: 1
+      - name: species
+        editable: 1
+      - name: ecotypes
+        editable: 1
+  person:
+    editable: 1
+    display_field: longname
+    order_by: longname
+    field_info_list:
+      - name: shortname
+        editable: 1
+      - name: longname
+        editable: 1
+      - name: networkaddress
+        editable: 1
+      - name: role
+        default_value: "'user'"
+        editable: 1
+        admin_only: 1
+      - name: lab
+        editable: 1
+  lab:
+    editable: 1
+    display_field: name
+    order_by: name
+    field_info_list:
+      - name: name
+        editable: 1
+      - name: lab_head
+        editable: 1
+      - name: people
+        editable: 1
+  pub:
+    display_field: title
+    editable: 1
+    field_info_list:
+      - name: Pubmed ID
+        source: pubmedid
+        editable: 1
+      - name: title
+        editable: 1
+      - name: authors
+        editable: 1
