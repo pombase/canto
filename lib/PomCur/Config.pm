@@ -81,6 +81,7 @@ sub setup
   for my $class_name (keys %{$self->{class_info}}) {
     my $class_info = $self->{class_info}->{$class_name};
     for my $field_info (@{$class_info->{field_info_list}}) {
+      $field_info->{source} ||= $field_info->{name};
       my $name = $field_info->{name};
       if (!defined $name) {
         die "config loading failed: field_info with no name in $class_name\n";
