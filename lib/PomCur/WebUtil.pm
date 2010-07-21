@@ -128,10 +128,15 @@ sub get_field_value
       my $referenced_class_name = $info{class};
       my $referenced_table = PomCur::DB::table_name_of_class($referenced_class_name);
 
-      my $primary_key_name = $c->config()->{class_info}->{$referenced_table}->{display_field};
+      my $ref_table_conf = $c->config()->{class_info}->{$referenced_table};
+      if (!defined $ref_table_conf) {
+        die "no class_info configuration for $referenced_table\n";
+      }
+
+      my $primary_key_name = $ref_table_conf->{display_field};
 
       if (!defined $primary_key_name) {
-        die "no class_info/display_field configuration for $referenced_table\n";
+        die "no display_field configuration for $referenced_table\n";
       }
 
       return ($field_value, 'foreign_key', $primary_key_name);
