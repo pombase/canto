@@ -128,10 +128,15 @@ sub get_field_value
       my $referenced_class_name = $info{class};
       my $referenced_table = PomCur::DB::table_name_of_class($referenced_class_name);
 
-      my $primary_key_name = $c->config()->{class_info}->{$referenced_table}->{display_field};
+      my $ref_table_conf = $c->config()->{class_info}->{$referenced_table};
+      if (!defined $ref_table_conf) {
+        die "no class_info configuration for $referenced_table\n";
+      }
+
+      my $primary_key_name = $ref_table_conf->{display_field};
 
       if (!defined $primary_key_name) {
-        die "no class_info/display_field configuration for $referenced_table\n";
+        die "no display_field configuration for $referenced_table\n";
       }
 
       return ($field_value, 'foreign_key', $primary_key_name);
@@ -152,11 +157,12 @@ sub get_field_value
 =head2
 
  Usage   : my @column_confs =
-             PomCur::WebUtil::get_column_confs_from_object($config, $object)
+             PomCur::WebUtil::get_column_confs_from_object($config, $user_role, $object)
  Function: Return the column configuration for displaying the given object, from
            the configuration file (if columns are configured for this type) or
            by creating a default configuration
  Args    : $c - the Catalyst context
+           $user_role - the role of the current user
            $object - the object
  Return  : column configurations in the same format as described in
            get_field_value() above
@@ -165,13 +171,24 @@ sub get_field_value
 sub get_column_confs_from_object
 {
   my $config = shift;
+  my $user_role = shift;
   my $object = shift;
 
   my $table = $object->table();
 
-  my @column_confs = grep {
-                         !$_->{is_collection}
-                     } @{$config->{class_info}->{$table}->{field_info_list}};
+  my @column_confs = ();
+
+  for my $conf (@{$config->{class_info}->{$table}->{field_info_list}}) {
+    my $field_db_column = $conf->{source} || $conf->{name};
+
+    next unless $object->has_column($field_db_column);
+
+    if ($conf->{admin_only}) {
+      next unless defined $user_role && $user_role eq 'admin';
+    }
+
+    push @column_confs, $conf;
+  }
 
   if (!@column_confs) {
     for my $column_name ($object->columns()) {
@@ -185,6 +202,5 @@ sub get_column_confs_from_object
 
   return @column_confs;
 }
-
 
 1;

@@ -1,4 +1,4 @@
-package PomCur::TrackDB::Curs;
+package PomCur::TrackDB::PubOrganism;
 
 use strict;
 use warnings;
@@ -6,40 +6,41 @@ use warnings;
 use base 'DBIx::Class';
 
 __PACKAGE__->load_components("Core");
-__PACKAGE__->table("curs");
+__PACKAGE__->table("pub_organism");
 __PACKAGE__->add_columns(
-  "curs_id",
+  "pub_organism_id",
   {
     data_type => "integer",
     default_value => undef,
     is_nullable => 0,
     size => undef,
   },
-  "community_curator",
+  "pub",
   {
     data_type => "integer",
     default_value => undef,
     is_nullable => 0,
     size => undef,
   },
-  "curs_key",
+  "organism",
   {
-    data_type => "text",
+    data_type => "integer",
     default_value => undef,
     is_nullable => 0,
     size => undef,
   },
 );
-__PACKAGE__->set_primary_key("curs_id");
+__PACKAGE__->set_primary_key("pub_organism_id");
+__PACKAGE__->belongs_to("pub", "PomCur::TrackDB::Pub", { pub_id => "pub" });
 __PACKAGE__->belongs_to(
-  "community_curator",
-  "PomCur::TrackDB::Person",
-  { person_id => "community_curator" },
+  "organism",
+  "PomCur::TrackDB::Organism",
+  { organism_id => "organism" },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H7CcrXpFSKI8cZBis9FddQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SEupkw4EAorXE+WuZgXoMw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

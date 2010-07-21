@@ -51,25 +51,25 @@ use Carp;
  Usage   : my $schema = PomCur::DB->new($c->config());
  Function: Return a new database connection (schema)
  Args    : $config - if null use the config file from the current directory
-                     or some other default location (eg. /etc/smallrna.yaml)
+                     or some other default location (eg. /etc/pomcur.yaml)
 
 =cut
 sub new
 {
   my $self = shift;
-  my $smallrna_config = shift;
+  my $config = shift;
 
-  if (!defined $smallrna_config) {
+  if (!defined $config) {
     croak "schema() needs a config hash as argument\n";
   }
 
   my $config_key = $self;
 
-  my $config = $smallrna_config->{$config_key}{connect_info};
+  my $config = $config->{$config_key}{connect_info};
 
   if (!defined $config) {
     $config_key =~ s/.*::(.*)DB/Model::${1}Model/;
-    $config = $smallrna_config->{$config_key}{connect_info};
+    $config = $config->{$config_key}{connect_info};
     if (!defined $config) {
       die "can't find configuration for $self\n";
     }

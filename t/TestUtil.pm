@@ -32,6 +32,8 @@ sub import
   my $config = PomCur::Config->new("$root_dir/t/test_properties.yaml");
 
   my $trackdb_conf = $config->{"Model::TrackModel"};
+  push @{$trackdb_conf->{connect_info}},
+    "dbi:SQLite:dbname=t/scratch/track_test.sqlite3";
 
   $_store = { config => $config,
               root_dir => $root_dir,
@@ -65,7 +67,7 @@ sub _create_dbs
 
   unlink $sqlite_db_file_name;
 
-  copy ($_store->{config}->{tracking_db_template}, $sqlite_db_file_name);
+  copy ($_store->{config}->{track_db_template}, $sqlite_db_file_name);
 }
 
 1;

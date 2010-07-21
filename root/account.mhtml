@@ -1,0 +1,23 @@
+<%args>
+$return_path
+</%args>
+
+<div id="login">
+  <form name="login" method="get" action="<% $c->uri_for('/login') %>">
+    <div>
+      User ID: <input id="networkaddress" name="networkaddress" maxlength="20" size="20"/>
+    </div>
+    <div>
+      Password: <input type="password" id="password" name="password"/>
+    </div>
+    <input type="hidden" name="return_path" 
+           value="<% $return_path %>"/>
+    <input id="submit" name="submit" type="submit" value="login"/>
+  </form>
+</div>
+
+<%init>
+
+my $model_name = 'manage';
+
+</%init>

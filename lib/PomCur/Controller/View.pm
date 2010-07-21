@@ -96,13 +96,18 @@ sub object : Local
 
     $st->{type} = $type;
 
-    warn "OBJ: $object_key\n";
-
     my $object = get_object_by_id_or_name($c, $type, $object_key);
 
-    warn "O: $object\n";
-
     $st->{object} = $object;
+
+    my $object_id = PomCur::DB::id_of_object($object);
+    my $template_path = $c->path_to("root", "view", "object", "$type.mhtml");
+
+    if (defined $template_path->stat()) {
+      $c->stash()->{template} = "view/object/$type.mhtml";
+    } else {
+      $c->stash()->{template} = "view/object/generic.mhtml";
+    }
   };
   if ($@ || !defined $st->{object}) {
     $c->stash->{error} = qq(No object type "$type" and key = $object_key - $@);

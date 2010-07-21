@@ -49,9 +49,76 @@ sub front :Path :Args(0)
 {
   my ($self, $c) = @_;
 
-  $c->response->redirect($c->uri_for('/manage', $c->request->path));
+  $c->forward('/manage/index');
   $c->detach();
 }
+
+=head2 account
+
+ User page for logins
+
+=cut
+sub account :Global
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash;
+
+  $st->{title} = "Account details";
+  $st->{template} = 'account.mhtml';
+
+  $st->{return_path} = $c->req()->param("return_path");
+}
+
+=head2 login
+
+ Try to authenticate a user based on networkaddress and password parameters
+
+=cut
+sub login : Global {
+  my ( $self, $c ) = @_;
+  my $networkaddress = $c->req->param('networkaddress');
+  my $password = $c->req->param('password');
+
+  my $return_path = $c->req->param('return_path');
+
+  if ($c->authenticate({networkaddress => $networkaddress, password => $password})) {
+    $c->flash->{message} =
+      { title => "Login successful" };
+
+    if ($return_path =~ m/logout|login/) {
+      $c->forward('/manage/index');
+      return 0;
+    }
+  } else {
+    $c->flash->{error} =
+      { title => "Login error",
+        text => "Incorrect user name or password, please try again" };
+    $c->forward('account');
+    $c->detach();
+    return 0;
+  }
+
+  $c->res->redirect($return_path, 302);
+  $c->detach();
+  return 0;
+}
+
+=head2 logout
+
+ Log out the user and return to the front page.
+
+=cut
+
+sub logout : Global {
+  my ( $self, $c ) = @_;
+  $c->logout;
+
+  $c->stash->{message} = "Logged out";
+  $c->forward('manage/index');
+}
+
+
 
 =head1 LICENSE
 

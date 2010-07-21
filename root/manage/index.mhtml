@@ -1,5 +1,3 @@
-<p>MANAGE index page</p>
-
 <div id="front-page">
   <table width="80%">
     <tr>
@@ -13,6 +11,9 @@
               <a href="<% $c->uri_for('/view/list/person', { model => 'manage'} ) %>">People</a>
             </li>
             <li>
+              <a href="<% $c->uri_for('/view/list/lab', { model => 'manage'} ) %>">Labs</a>
+            </li>
+            <li>
               <a href="<% $c->uri_for('/view/list/pub', { model => 'manage'} ) %>">Publications</a>
             </li>
             <li>
@@ -21,7 +22,7 @@
           </ul>
         </div>
       </td>
-%  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+%  if ($c->user_exists() && $c->user()->role() eq 'admin') {
       <td class="actionlist" width="30%" valign="top">
         <div class="label">
           Add a ...

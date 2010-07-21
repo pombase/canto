@@ -199,18 +199,15 @@ sub _init_form_field
   my $class_name = PomCur::DB::class_name_of_table($type);
   my $db_source = $c->schema()->source($class_name);
 
-  my $info_ref;
+  my $info_ref = $class_name->relationship_info($field_db_column);
 
-  if (!$field_info->{is_collection}) {
-    $info_ref = $class_name->relationship_info($field_db_column);
-    #to handle Chado style foreign keys like "type_id" (rather than "type")
-    if (!defined $info_ref) {
-      (my $field_without_id = $field_db_column) =~ s/_id//;
-      $info_ref = $class_name->relationship_info($field_without_id);
-    }
+  #to handle Chado style foreign keys like "type_id" (rather than "type")
+  if (!defined $info_ref) {
+    (my $field_without_id = $field_db_column) =~ s/_id//;
+    $info_ref = $class_name->relationship_info($field_without_id);
   }
 
-  if (defined $info_ref) {
+  if (defined $info_ref && $info_ref->{attrs}->{is_foreign_key_constraint}) {
     my %info = %{$info_ref};
     my $referenced_class_name = $info{class};
 
@@ -253,8 +250,15 @@ sub _init_form_field
       unshift @{$elem->{options}}, [0, ''];
     }
   } else {
-    if ($field_info->{is_collection}) {
-      my $referenced_class_name = $field_info->{referenced_class};
+    if ($field_info->{is_collection} ||
+          (defined $info_ref && $info_ref->{attrs}->{join_type})) {
+      my $referenced_class_name;
+
+      if (defined $info_ref) {
+        $referenced_class_name = $info_ref->{class};
+      } else {
+        $referenced_class_name = $field_info->{referenced_class};
+      }
 
       my $referenced_table = PomCur::DB::table_name_of_class($referenced_class_name);
 
@@ -472,9 +476,16 @@ sub _update_object {
       $value = undef;
     }
 
-    if ($field_info{is_collection}) {
+    if (PomCur::DB::column_type(\%field_info, $type, $field_db_column) eq 'collection') {
       # special case for collections, we need to look up the objects
-      my $referenced_class_name = $field_info{referenced_class};
+      my $referenced_class_name;
+
+      if (defined $info_ref) {
+        $referenced_class_name = $info_ref->{class};
+      } else {
+        $referenced_class_name = $field_info{referenced_class};
+      }
+
       my $referenced_table = PomCur::DB::table_name_of_class($referenced_class_name);
 
       my @values;

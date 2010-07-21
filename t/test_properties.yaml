@@ -1,0 +1,20 @@
+# PomCur config file  -*- conf -*-
+name: PomCur
+long_name: Pombe community curation application
+
+"Model::TrackModel":
+  schema_class: 'PomCur::TrackDB'
+authentication:
+  default_realm: 'members'
+  realms:
+    members:
+      credential:
+        class: 'Password'
+        password_field: 'password'
+        password_type: 'clear'
+      store:
+        class: DBIx::Class
+        user_class: PomCurModel::Person
+        id_field: username
+track_db_template: "t/data/track_test.sqlite3"
+track_empty_db_template: "t/data/track_test_empty.sqlite3"

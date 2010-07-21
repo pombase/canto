@@ -26,7 +26,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc SmallRNA::DBResultSet
+    perldoc PomCur::ResultSet
 
 =over 4
 

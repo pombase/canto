@@ -10,16 +10,16 @@ $object
 $col_conf
 </%args>
 
-<span class="field_value">
+<span class="field-value">
 % if ($field_type eq 'table_id') {
-  <span class="this_id_field">
+  <span class="this-id-field">
     <a href='<% $c->uri_for("/view/object", $type,
                    PomCur::DB::id_of_object($object),
                    { model => $model_name } ) %>'>[details&nbsp;...]</a>
   </span>
 % } else {
 %   if ($field_type eq 'foreign_key' && $field_value && defined $ref_display_key) {
-  <span class="ref_field">
+  <span class="ref-field">
   <a href='<% $c->uri_for("/view/object", $referenced_object->table(), PomCur::DB::id_of_object($field_value),
                    { model => $model_name } ) %>'>
     <& field.mhtml, object => $referenced_object, col_conf => { name => $ref_display_key } &>
@@ -27,8 +27,8 @@ $col_conf
   </span>
 %   } else {
 %     if ($field_type eq 'key_field') {
-  <span class="attribute_field">
-    <span class="display_key">
+  <span class="attribute-field">
+    <span class="display-key">
       <a href='<% $c->uri_for("/view/object", $type, PomCur::DB::id_of_object($object),
                    { model => $model_name } ) %>'>
         <% $field_value %>
