@@ -76,5 +76,24 @@ sub new
 sub setup
 {
   my $self = shift;
+
+  # make the field_infos available as a hash in the config
+  for my $class_name (keys %{$self->{class_info}}) {
+    my $class_info = $self->{class_info}->{$class_name};
+    for my $field_info (@{$class_info->{field_info_list}}) {
+      my $name = $field_info->{name};
+      if (!defined $name) {
+        die "config loading failed: field_info with no name in $class_name\n";
+      }
+      $self->{class_info}->{$class_name}->{field_infos}->{$name} = $field_info;
+    }
+  }
+
+  # make the reports available as a hash (by report name)
+  for my $report (@{$self->{report_list}}) {
+    my $name = $report->{name};
+    $self->{reports}->{$name} = $report;
+  }
 }
+
 1;
