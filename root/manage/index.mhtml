@@ -11,6 +11,9 @@
               <a href="<% $c->uri_for('/view/list/person', { model => 'manage'} ) %>">People</a>
             </li>
             <li>
+              <a href="<% $c->uri_for('/view/list/lab', { model => 'manage'} ) %>">Labs</a>
+            </li>
+            <li>
               <a href="<% $c->uri_for('/view/list/pub', { model => 'manage'} ) %>">Publications</a>
             </li>
             <li>
