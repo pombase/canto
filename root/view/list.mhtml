@@ -51,7 +51,16 @@ while (my $obj = $rs->next()) {
     $type = $obj->table();
 
     if (@column_confs == 0) {
-      @column_confs = PomCur::WebUtil::get_column_confs_from_object($c->config(), $obj);
+      my $user_role = undef;
+
+      if ($c->user_exists()) {
+        $user_role = $c->user()->role()->name();
+      }
+
+      @column_confs =
+        PomCur::WebUtil::get_column_confs_from_object($c->config(),
+                                                      $user_role,
+                                                      $obj);
     }
 
     for my $col_conf (@column_confs) {
