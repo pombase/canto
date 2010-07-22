@@ -10,7 +10,6 @@ use Catalyst qw/-Debug
                 ConfigLoader
                 StackTrace
                 Authentication
-                Config::Multi
                 Session
                 Session::State::Cookie
                 Session::Store::DBI

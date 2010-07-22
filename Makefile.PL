@@ -11,7 +11,6 @@ requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Session::PerUser';
 requires 'Catalyst::Action::RenderView';
-requires 'Catalyst::Plugin::Config::Multi';
 requires 'Plack::Middleware::ReverseProxy';
 requires 'DBD::Pg';
 requires 'DBIx::Class';
