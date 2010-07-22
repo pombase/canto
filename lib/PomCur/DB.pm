@@ -82,6 +82,13 @@ sub new
                         })
 }
 
+=head2 initialise
+
+ Usage   : use base 'PomCur::DB';   __PACKAGE__->initialise();
+ Function: Initialise the ResultSet of DB sub-classes
+ Note    : Must be called by sub-classes
+
+=cut
 sub initialise {
   my $self = shift;
 
