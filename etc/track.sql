@@ -2,7 +2,7 @@ PRAGMA foreign_keys=ON;
 
 CREATE TABLE pub (
        pub_id integer NOT NULL PRIMARY KEY,
-       pubmedid text,
+       pubmedid text UNIQUE,
        title text,
        authors text
 );

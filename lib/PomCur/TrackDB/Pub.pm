@@ -38,6 +38,7 @@ __PACKAGE__->add_columns(
   },
 );
 __PACKAGE__->set_primary_key("pub_id");
+__PACKAGE__->add_unique_constraint("pubmedid_unique", ["pubmedid"]);
 __PACKAGE__->has_many(
   "pub_organisms",
   "PomCur::TrackDB::PubOrganism",
@@ -51,7 +52,7 @@ __PACKAGE__->has_many(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rLvFemEiSOl8Nq04ENx8/Q
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:At9jq/SzyweQd3N7JZFIHw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
