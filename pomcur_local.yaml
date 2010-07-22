@@ -1,7 +1,3 @@
-# PomCur config file  -*- conf -*-
-name: PomCur
-long_name: Pombe community curation application
-
 "Model::TrackModel":
   schema_class: 'PomCur::TrackDB'
   connect_info:
