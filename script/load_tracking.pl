@@ -53,11 +53,13 @@ sub get_lab
 
   my $lab_head_name = $lab_head->longname();
 
+  (my $lab_head_surname = $lab_head_name) =~ s/.* //;
+
   if (!exists $labs{$lab_head_name}) {
     my $lab = $schema->create_with_type('Lab',
                                         {
                                           lab_head => $lab_head,
-                                          name => "Lab of $lab_head_name"
+                                          name => "$lab_head_surname Lab"
                                          });
 
     $labs{$lab_head_name} = $lab;
