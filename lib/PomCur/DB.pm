@@ -65,17 +65,17 @@ sub new
 
   my $config_key = $self;
 
-  my $config = $config->{$config_key}{connect_info};
+  my $con_info = $config->{$config_key}{connect_info};
 
-  if (!defined $config) {
+  if (!defined $con_info) {
     $config_key =~ s/.*::(.*)DB/Model::${1}Model/;
-    $config = $config->{$config_key}{connect_info};
-    if (!defined $config) {
+    $con_info = $config->{$config_key}{connect_info};
+    if (!defined $con_info) {
       die "can't find configuration for $self\n";
     }
   }
 
-  return $self->connect($config->[0], $config->[1], $config->[2],
+  return $self->connect($con_info->[0], $con_info->[1], $con_info->[2],
                         {
                          RaiseError => 1,
                          AutoCommit => 1
