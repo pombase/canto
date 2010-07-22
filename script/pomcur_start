@@ -66,6 +66,10 @@ if ($ENV{POMCUR_CONFIG_LOCAL_SUFFIX} eq 'deploy') {
 EOF
 
     close $deploy_config_fh or die "can't close $deploy_config_file_name: $!\n";
+
+    print "Initialisation succesful\n";
+
+    exit (0);
   } else {
     if (!-f $deploy_config_file_name) {
       die "$0: Error - application not initialised
