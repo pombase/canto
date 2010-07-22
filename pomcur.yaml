@@ -85,3 +85,4 @@ class_info:
         editable: 1
       - name: authors
         editable: 1
+track_db_template_file: db_templates/track_test_empty.sqlite3
