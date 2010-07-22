@@ -1,5 +1,9 @@
 #!/usr/bin/env perl
 
+BEGIN {
+  $ENV{MYAPP_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+}
+
 use Catalyst::ScriptRunner;
 Catalyst::ScriptRunner->run('PomCur', 'CGI');
 

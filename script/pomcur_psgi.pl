@@ -1,5 +1,10 @@
 #!/usr/bin/env perl
 use strict;
+
+BEGIN {
+  $ENV{MYAPP_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+}
+
 use PomCur;
 
 use Plack::Builder;

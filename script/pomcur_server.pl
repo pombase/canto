@@ -1,7 +1,8 @@
 #!/usr/bin/env perl
 
 BEGIN {
-    $ENV{CATALYST_SCRIPT_GEN} = 40;
+  $ENV{MYAPP_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+  $ENV{CATALYST_SCRIPT_GEN} = 40;
 }
 
 use Catalyst::ScriptRunner;
