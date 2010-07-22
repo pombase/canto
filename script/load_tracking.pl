@@ -36,9 +36,7 @@ sub get_pub
   if (!exists $pubs{$pubmed_id}) {
     my $pub = $schema->create_with_type('Pub',
                                         {
-                                          pubmedid => $pubmed_id,
-                                          title => "Title of: $pubmed_id",
-                                          authors => "Authors of: $pubmed_id"
+                                          pubmedid => $pubmed_id
                                          });
 
     $pubs{$pubmed_id} = $pub;
