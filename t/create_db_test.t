@@ -18,5 +18,5 @@ my $select_result = <$pipe>;
 chomp $select_result;
 close $pipe;
 
-is($select_result, "1");
+is($select_result, "17");
 
