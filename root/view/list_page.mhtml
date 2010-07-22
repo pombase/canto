@@ -1,4 +1,4 @@
-g<%args>
+<%args>
 $type
 $rs
 $numrows => 20
