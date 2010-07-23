@@ -1,4 +1,4 @@
 "Model::TrackModel":
   schema_class: 'PomCur::TrackDB'
   connect_info:
-     - "dbi:SQLite:dbname=t/scratch/track_test.sqlite3"
+     - "dbi:SQLite:dbname=t/scratch/tracking/track.sqlite3"
