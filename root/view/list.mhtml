@@ -54,7 +54,7 @@ while (my $obj = $rs->next()) {
       my $user_role = undef;
 
       if ($c->user_exists()) {
-        $user_role = $c->user()->role()->name();
+        $user_role = $c->user()->role();
       }
 
       @column_confs =
