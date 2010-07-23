@@ -3,7 +3,7 @@ package TestUtil;
 =head1 DESCRIPTION
 
 Utility code for testing.  use()ing this module will create a test
-database in /tmp/
+database in t/scratch/
 
 =cut
 
@@ -20,8 +20,6 @@ use PomCur::Config;
 use PomCur::Meta::Util;
 
 my $_store;
-
-my $_app_name = 'pomcur';
 
 sub import
 {
@@ -80,7 +78,9 @@ sub import
 
   my $test_config = "$root_dir/t/test_config.yaml";
 
-  my $config = PomCur::Config->new("$root_dir/$_app_name.yaml", $test_config);
+  my $app_name = PomCur::Config::get_app_name();
+
+  my $config = PomCur::Config->new("$root_dir/$app_name.yaml", $test_config);
 
   if (!$use_empty_template_db) {
     $config->{track_db_template_file} =
@@ -97,7 +97,7 @@ sub import
                                      'test');
   chdir $cwd;
 
-  $config->merge_config("$root_dir/${_app_name}_test.yaml");
+  $config->merge_config("$root_dir/${app_name}_test.yaml");
 }
 
 sub root_dir

@@ -119,6 +119,12 @@ sub setup
   }
 }
 
+sub get_application_name
+{
+  (my $app_name = __PACKAGE__) =~ s/(.*?)::.*/$1/;
+  return $app_name;
+}
+
 =head2 get_config
 
  Usage   : $config = PomCur::Config::get_config();
@@ -128,9 +134,7 @@ sub setup
 =cut
 sub get_config
 {
-  (my $app_name = __PACKAGE__) =~ s/(.*?)::.*/$1/;
-
-  $app_name = lc $app_name;
+  my $app_name = get_application_name();
   my $uc_app_name = uc $app_name;
 
   my $suffix = $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"};
