@@ -4,11 +4,14 @@ use strict;
 use warnings;
 use Carp;
 use File::Basename;
-use File::Path;
-use File::Copy qw(copy);
 use Getopt::Long;
 
+use PomCur::Meta::Util;
+
 $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+
+my $app_name = 'pomcur';
+
 
 my $script_name = basename $0;
 
@@ -18,60 +21,16 @@ if (-f $script_name && ! -d "etc") {
 }
 
 if ($ENV{POMCUR_CONFIG_LOCAL_SUFFIX} eq 'deploy') {
-  my $deploy_config_file_name = 'pomcur_deploy.yml';
   my $init_dir = undef;
 
   GetOptions ("initialise=s" => \$init_dir);
 
   if ($init_dir) {
-    if (-d $init_dir) {
-      opendir DIR, $init_dir or die "can't read directory $init_dir: $!\n";
-      while (my $entry = readdir DIR) {
-        next if($entry =~ /^\.\.?$/);
-        closedir DIR;
-        die "$0: directory ($init_dir) not empty, won't initialise\n";
-      }
-      closedir DIR;
-    } else {
-      if (-e $init_dir) {
-        die "$0: $init_dir exists, but isn't an empty directory, won't initialise\n";
-      }
-
-      mkpath ($init_dir, {error => \my $err});
-      if (@$err) {
-        for my $diag (@$err) {
-          my ($file, $message) = %$diag;
-          warn "error: $message\n";
-        }
-        exit (1);
-      }
-    }
-
-    use PomCur::Config;
-
-    my $config = PomCur::Config->new('pomcur.yaml');
-    my $track_db_template_file = $config->{track_db_template_file};
-    my $dest_file = "$init_dir/track.sqlite3";
-
-    copy ($track_db_template_file, $dest_file);
-
-    open my $deploy_config_fh, '>', $deploy_config_file_name or
-      die "can't open $deploy_config_file_name for writing: $!\n";
-
-    print $deploy_config_fh <<"EOF";
-"Model::TrackModel":
-  schema_class: 'PomCur::TrackDB'
-  connect_info:
-     - "dbi:SQLite:dbname=$dest_file"
-EOF
-
-    close $deploy_config_fh or die "can't close $deploy_config_file_name: $!\n";
-
+    PomCur::Meta::Util::initialise_app($app_name, $init_dir);
     print "Initialisation succesful\n";
-
     exit (0);
   } else {
-    if (!-f $deploy_config_file_name) {
+    if (!PomCur::Meta::Util::app_initialised($app_name)) {
       die "$0: Error - application not initialised
 
 Run with --initialise <some_directory>
@@ -79,7 +38,7 @@ Run with --initialise <some_directory>
 <some_directory> must be empty\n";
     }
   }
-} else {
+}else {
   # we're testing
 }
 
