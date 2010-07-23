@@ -11,7 +11,7 @@ use PomCur::Config;
 
 my $spreadsheet_file = shift;
 
-my $config = PomCur::Config->new("PomCur.yaml", "t/pomcur_loading_config.yaml");
+my $config = PomCur::Config->new("pomcur.yaml", "t/pomcur_loading_config.yaml");
 my $schema = PomCur::TrackDB->new($config);
 
 my $csv = Text::CSV->new({binary => 1});
