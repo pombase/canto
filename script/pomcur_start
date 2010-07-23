@@ -12,7 +12,6 @@ $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
 my $app_name = 'pomcur';
 
-
 my $script_name = basename $0;
 
 if (-f $script_name && ! -d "etc") {
@@ -26,7 +25,8 @@ if ($ENV{POMCUR_CONFIG_LOCAL_SUFFIX} eq 'deploy') {
   GetOptions ("initialise=s" => \$init_dir);
 
   if ($init_dir) {
-    PomCur::Meta::Util::initialise_app($app_name, $init_dir);
+    my $config = PomCur::Config->new("${app_name}.yaml");
+    PomCur::Meta::Util::initialise_app($config, $init_dir);
     print "Initialisation succesful\n";
     exit (0);
   } else {
