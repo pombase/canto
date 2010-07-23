@@ -1,4 +1,4 @@
-package TestUtil;
+package PomCur::TestUtil;
 
 =head1 DESCRIPTION
 
@@ -78,7 +78,7 @@ sub import
 
   my $test_config = "$root_dir/t/test_config.yaml";
 
-  my $app_name = PomCur::Config::get_app_name();
+  my $app_name = lc PomCur::Config::get_application_name();
 
   my $config = PomCur::Config->new("$root_dir/$app_name.yaml", $test_config);
 
@@ -98,6 +98,13 @@ sub import
   chdir $cwd;
 
   $config->merge_config("$root_dir/${app_name}_test.yaml");
+
+  my $connect_info = $config->{"Model::TrackModel"}->{connect_info}->[0];
+
+  (my $db_file_name = $connect_info) =~ s/dbi:SQLite:dbname=(.*)/$1/;
+
+  $_store->{track_connect_string} = $connect_info;
+  $_store->{track_db_file_name} = $db_file_name
 }
 
 sub root_dir
@@ -108,6 +115,11 @@ sub root_dir
 sub config
 {
   return $_store->{config};
+}
+
+sub track_db_file_name
+{
+  return $_store->{track_db_file_name};
 }
 
 sub _check_dir
