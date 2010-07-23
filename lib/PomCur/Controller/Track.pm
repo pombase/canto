@@ -1,4 +1,4 @@
-package PomCur::Controller::Manage;
+package PomCur::Controller::Track;
 
 use parent 'Catalyst::Controller';
 
@@ -45,7 +45,7 @@ sub index :Path :Args(0) {
   my ($self, $c) = @_;
 
   $c->stash->{title} = 'Start page';
-  $c->stash->{template} = 'manage/index.mhtml';
+  $c->stash->{template} = 'track/index.mhtml';
 }
 
 1;

@@ -44,12 +44,12 @@ sub end : Private
   $c->forward('PomCur::View::Mason');
 }
 
-# In development use, redirect to the manager
+# In development use, redirect to the tracking application
 sub front :Path :Args(0)
 {
   my ($self, $c) = @_;
 
-  $c->forward('/manage/index');
+  $c->forward('/track/index');
   $c->detach();
 }
 
