@@ -50,8 +50,7 @@ use Carp;
 
  Usage   : my $schema = PomCur::DB->new($c->config());
  Function: Return a new database connection (schema)
- Args    : $config - if null use the config file from the current directory
-                     or some other default location (eg. /etc/pomcur.yaml)
+ Args    : $config - The configuration object
 
 =cut
 sub new
