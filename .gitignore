@@ -6,5 +6,6 @@ META.yml
 Makefile.old
 pipeline.yaml
 pipeline-example-config.yaml
-t/scratch/track_test.sqlite3
-pomcur_deploy.yml
+t/scratch/
+pomcur_deploy.yaml
+pomcur_test.yaml

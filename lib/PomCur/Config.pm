@@ -56,15 +56,37 @@ $VERSION = '0.01';
 sub new
 {
   my $class = shift;
-  my $config_file_name = shift;
+  my @config_file_names = @_;
 
-  my $self = LoadFile($config_file_name);
+  my $self = LoadFile(shift @config_file_names);
 
   bless $self, $class;
+
+  for my $config_file_name (@config_file_names) {
+    # merge new config
+    $self->append_config($config_file_name);
+  }
 
   $self->setup();
 
   return $self;
+}
+
+=head2 append_config
+
+ Usage   : $config->append_config($config_file_name);
+ Function: merge the another config file into a Config object
+
+=cut
+sub merge_config
+{
+  my $self = shift;
+  my $file_name = shift;
+
+  my %new_config = %{LoadFile($file_name)};
+  while (my($key, $value) = each %new_config) {
+    $self->{$key} = $value;
+  }
 }
 
 =head2 setup

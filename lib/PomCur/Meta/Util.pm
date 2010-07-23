@@ -40,6 +40,7 @@ under the same terms as Perl itself.
 use strict;
 use warnings;
 use Carp;
+use PomCur::Config;
 
 use File::Path;
 use File::Copy qw(copy);
@@ -55,7 +56,7 @@ sub app_initialised
 {
   my $app_name = shift;
 
-  my $deploy_config_file_name = $app_name . '_deploy.yml';
+  my $deploy_config_file_name = $app_name . '_deploy.yaml';
 
   return -f $deploy_config_file_name;
 }
@@ -68,16 +69,20 @@ sub app_initialised
                        files
            $init_dir - the directory to create for holding database files and
                        the tracking sqlite3 database
-           $suffix - use to change the config file name for testing
-
+           $suffix - used to change the config file name for testing, defaults
+                     to "deploy"
+           $config_dir - for testing, set the directory to write the config file
 =cut
 sub initialise_app
 {
-  my $app_name = shift;
+  my $config = shift;
   my $init_dir = shift;
   my $suffix = shift // 'deploy';
+  my $config_dir = shift // '.';
 
-  my $deploy_config_file_name = $app_name . '_' . $suffix . '.yml';
+  my $app_name = lc $config->{name};
+
+  my $deploy_config_file_name = $app_name . '_' . $suffix . '.yaml';
 
   if (-d $init_dir) {
     opendir DIR, $init_dir or die "can't read directory $init_dir: $!\n";
@@ -103,16 +108,13 @@ sub initialise_app
     }
   }
 
-  use PomCur::Config;
-
-  my $config_file_name = $app_name . '.yaml';
-  my $config = PomCur::Config->new($config_file_name);
   my $track_db_template_file = $config->{track_db_template_file};
   my $dest_file = "$init_dir/track.sqlite3";
 
   copy ($track_db_template_file, $dest_file);
 
-  open my $deploy_config_fh, '>', $deploy_config_file_name or
+  open (my $deploy_config_fh, '>',
+        "$config_dir/$deploy_config_file_name") or
     die "can't open $deploy_config_file_name for writing: $!\n";
 
   print $deploy_config_fh <<"EOF";
