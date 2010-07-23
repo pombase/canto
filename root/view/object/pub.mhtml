@@ -1,0 +1,15 @@
+<%args>
+$object
+</%args>
+
+<&| /view/object/object_top.mhtml, object => $object &>
+% if ($c->user_exists()) {
+<div>
+  <a href="<% $c->uri_for('/new/object/curs',
+                          { 'pub.id' => $object->pub_id() }) %>">
+    Create a new curation session for this publication ...
+  </a>
+</div>
+% }
+</&>
+

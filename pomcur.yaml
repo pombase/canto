@@ -85,6 +85,16 @@ class_info:
         editable: 1
       - name: authors
         editable: 1
+  curs:
+    display_field: pubmedid
+    editable: 1
+    field_info_list:
+      - name: community_curator
+        editable: 1
+      - name: publication
+        source: pub
+      - name: curs_key
+        editable: 0
 track_db_template_file: db_templates/track_db_template.sqlite3
 external_sources:
   pubmed_query_url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id="
