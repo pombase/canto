@@ -19,6 +19,8 @@ requires 'DBIx::Class::ResultSet::Data::Pageset';
 requires 'Params::Validate';
 requires 'YAML';
 requires 'DBIx::Class';
+requires 'XML::Rules';
+requires 'LWP::Simple;
 
 requires 'parent';
 requires 'Config::General'; # This should reflect the config file format you've chosen

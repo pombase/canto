@@ -86,3 +86,5 @@ class_info:
       - name: authors
         editable: 1
 track_db_template_file: db_templates/track_db_template.sqlite3
+external_sources:
+  pubmed_query_url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id="
