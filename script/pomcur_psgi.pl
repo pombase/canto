@@ -2,7 +2,7 @@
 use strict;
 
 BEGIN {
-  $ENV{MYAPP_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+  $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 }
 
 use PomCur;

@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 BEGIN {
-  $ENV{MYAPP_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+  $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
   $ENV{CATALYST_SCRIPT_GEN} = 40;
 }
 
