@@ -28,6 +28,8 @@ sub import
   my $package = shift;
   my $arg = shift;
 
+  $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
+
   my $root_dir = getcwd();
 
   if (!_check_dir($root_dir)) {
