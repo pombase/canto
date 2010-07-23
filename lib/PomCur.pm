@@ -34,10 +34,6 @@ __PACKAGE__->config(name => 'PomCur',
                       driver_args => { format => 'pdf' },
                       content_type => 'application/pdf',
                     },
-                    'Plugin::Config::Multi' => {
-                      dir => __PACKAGE__->path_to("./"),
-                      app_name => 'pomcur',
-                    },
                     static => {
                       dirs => [
                         'static'
