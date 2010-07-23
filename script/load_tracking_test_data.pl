@@ -9,14 +9,9 @@ use Text::CSV;
 use PomCur::TrackDB;
 use PomCur::Config;
 
-my $db_filename = "t/data/track_test.sqlite3";
-
-my $config = PomCur::Config->new("t/test_properties.yaml");
-my $trackdb_conf = $config->{"Model::TrackModel"};
-push @{$trackdb_conf->{connect_info}}, "dbi:SQLite:dbname=$db_filename";
-
 my $spreadsheet_file = shift;
 
+my $config = PomCur::Config->new("PomCur.yaml", "t/pomcur_loading_config.yaml");
 my $schema = PomCur::TrackDB->new($config);
 
 my $csv = Text::CSV->new({binary => 1});
