@@ -119,4 +119,32 @@ sub setup
   }
 }
 
+=head2 get_config
+
+ Usage   : $config = PomCur::Config::get_config();
+ Function: Get a config object as Catalyst would, by looking for appname.yaml
+           and merging the contents with appname_<suffix>.yaml, where <suffix>
+           comes from the environment variable APPNAME_CONFIG_LOCAL_SUFFIX
+=cut
+sub get_config
+{
+  (my $app_name = __PACKAGE__) =~ s/(.*?)::.*/$1/;
+
+  $app_name = lc $app_name;
+  my $uc_app_name = uc $app_name;
+
+  my $suffix = $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"};
+
+  my $file_name = "$app_name.yaml";
+  my $config = __PACKAGE__->new($file_name);
+
+  if (defined $suffix) {
+    my $local_file_name = "${app_name}_$suffix.yaml";
+
+    $config->merge_config($local_file_name);
+  }
+
+  return $config;
+}
+
 1;
