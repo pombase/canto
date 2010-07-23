@@ -22,6 +22,13 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => undef,
   },
+  "pub",
+  {
+    data_type => "integer",
+    default_value => undef,
+    is_nullable => 0,
+    size => undef,
+  },
   "curs_key",
   {
     data_type => "text",
@@ -36,10 +43,11 @@ __PACKAGE__->belongs_to(
   "PomCur::TrackDB::Person",
   { person_id => "community_curator" },
 );
+__PACKAGE__->belongs_to("pub", "PomCur::TrackDB::Pub", { pub_id => "pub" });
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H7CcrXpFSKI8cZBis9FddQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Hm0Th43fhsKolU04aF+cKg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
