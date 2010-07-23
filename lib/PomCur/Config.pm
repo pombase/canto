@@ -136,15 +136,15 @@ sub get_application_name
 sub get_config
 {
   my $lc_app_name = lc get_application_name();
-  my $uc_app_name = uc $app_name;
+  my $uc_app_name = uc $lc_app_name;
 
   my $suffix = $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"};
 
-  my $file_name = "$app_name.yaml";
+  my $file_name = "$lc_app_name.yaml";
   my $config = __PACKAGE__->new($file_name);
 
   if (defined $suffix) {
-    my $local_file_name = "${app_name}_$suffix.yaml";
+    my $local_file_name = "${lc_app_name}_$suffix.yaml";
 
     $config->merge_config($local_file_name);
   }
