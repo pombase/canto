@@ -64,7 +64,7 @@ sub new
 
   for my $config_file_name (@config_file_names) {
     # merge new config
-    $self->append_config($config_file_name);
+    $self->merge_config($config_file_name);
   }
 
   $self->setup();
