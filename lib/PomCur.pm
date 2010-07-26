@@ -62,6 +62,8 @@ sub schema
   my $self = shift;
   my $model_name = shift || $self->req()->param('model');
 
+  die "no model passed to schema()\n" unless defined $model_name;
+
   return $self->model($_model_map{$model_name})->schema();
 }
 
