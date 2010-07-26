@@ -350,8 +350,14 @@ sub _initialise_form
      };
   }
 
+  my $model_element = {
+    name => 'model_name', type => 'Hidden', name => 'model_name',
+    value => $c->request()->param('model')
+  };
+
   $form->elements([
                     @elements,
+                    $model_element,
                     $separator_block,
                     map { {
                       name => $_, type => 'Submit', value => ucfirst $_
@@ -378,7 +384,7 @@ sub _create_object {
   my %object_params = ();
 
   for my $name (keys %form_params) {
-    if (grep { $_ eq $name } @INPUT_BUTTON_NAMES) {
+    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model_name')) {
       next;
     }
 
@@ -458,7 +464,7 @@ sub _update_object {
   }
 
   for my $name (@form_fields) {
-    if (grep { $_ eq $name } @INPUT_BUTTON_NAMES) {
+    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model_name')) {
       next;
     }
 
@@ -577,6 +583,8 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 
   my $form = $self->form;
 
+  my $model_name = $c->req()->param('model_name');
+
   _initialise_form($c, $object, $type, $form);
 
   $form->process;
@@ -588,7 +596,10 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
       $c->res->redirect($c->uri_for("/"));
       $c->detach();
     } else {
-      $c->res->redirect($c->uri_for("/view/object/$type/$object_id"));
+      $c->res->redirect($c->uri_for("/view/object/$type/$object_id",
+                                      {
+                                        model => $model_name
+                                      }));
       $c->detach();
     }
   }
@@ -622,7 +633,10 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
                            });
     }
 
-    $c->res->redirect($c->uri_for("/view/object/$type/$object_id"));
+    $c->res->redirect($c->uri_for("/view/object/$type/$object_id",
+                                 {
+                                  model => $model_name
+                                 }));
     $c->detach();
   }
 }
