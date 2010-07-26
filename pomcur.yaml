@@ -54,7 +54,8 @@ class_info:
         editable: 1
       - name: longname
         editable: 1
-      - name: networkaddress
+      - name: Email address
+        source: networkaddress
         editable: 1
       - name: role
         default_value: "'user'"
