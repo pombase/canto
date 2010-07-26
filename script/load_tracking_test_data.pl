@@ -65,6 +65,7 @@ sub get_person
 {
   my $longname = shift;
   my $networkaddress = shift;
+  my $role_cvterm = shift;
 
   if (!defined $networkaddress || length $networkaddress == 0) {
     die "email not set for $longname\n";
@@ -78,8 +79,9 @@ sub get_person
                                            {
                                              longname => $longname,
                                              networkaddress => $networkaddress,
-                                             role => 'user'
-                                         });
+                                             password => $networkaddress,
+                                             role => $role_cvterm,
+                                           });
 
     $people{$longname} = $person;
   }
@@ -99,22 +101,23 @@ sub fix_lab
 
 sub process_row
 {
-  my ($pubmed_id, $lab_head_name, $submitter_name, $date_sent, $status,
-      $lab_head_email, $submitter_email) = @_;
+  my $columns_ref = shift;
+  my $user_cvterm = shift;
 
-  print "@_\n";
+  my ($pubmed_id, $lab_head_name, $submitter_name, $date_sent, $status,
+      $lab_head_email, $submitter_email) = @{$columns_ref};
 
   my $pub = get_pub($pubmed_id);
-  my $lab_head = get_person($lab_head_name, $lab_head_email);
+  my $lab_head = get_person($lab_head_name, $lab_head_email, $user_cvterm);
   my $lab = get_lab($lab_head);
   my $submitter = undef;
 
   if ($submitter || $submitter_email) {
-    $submitter = get_person($submitter_name, $submitter_email);
+    $submitter = get_person($submitter_name, $submitter_email, $user_cvterm);
   }
 
   if (!defined ($submitter)) {
-   $submitter = $lab_head;
+    $submitter = $lab_head;
   }
 
   fix_lab($lab_head, $lab);
@@ -123,8 +126,18 @@ sub process_row
 
 sub process
 {
+  my $cv = $schema->create_with_type('Cv', { name => 'pomcur user types' });
+  my $user_cvterm = $schema->create_with_type('Cvterm', { cv => $cv,
+                                                          name => 'user',
+                                                        });
+  my $admin_cvterm = $schema->create_with_type('Cvterm', { cv => $cv,
+                                                           name => 'admin',
+                                                         });
+
+  my $admin = get_person('Val Wood', 'val@sanger.ac.uk', $admin_cvterm);
+
   while (my $columns_ref = $csv->getline($io)) {
-    process_row(@$columns_ref);
+    process_row($columns_ref, $user_cvterm);
   }
 }
 

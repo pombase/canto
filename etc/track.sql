@@ -49,7 +49,7 @@ CREATE TABLE person (
        shortname text,
        longname text NOT NULL,
        networkaddress text NOT NULL UNIQUE,
-       role text NOT NULL,
+       role integer REFERENCES cvterm(cvterm_id) DEFERRABLE INITIALLY DEFERRED  NOT NULL,
        lab INTEGER REFERENCES lab (lab_id),
        session_data text,
        password text
