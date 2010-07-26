@@ -1,1 +1,4 @@
 test_mode: 1
+test_config:
+  scratch_dir: "t/scratch/"
+  tracking_scratch: "t/scratch/tracking"

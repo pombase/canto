@@ -2,11 +2,9 @@ package PomCur::TestUtil;
 
 =head1 DESCRIPTION
 
-Utility code for testing.  use()ing this module will create a test
-database in t/scratch/
+Utility code for testing.
 
 =cut
-
 
 use strict;
 use warnings;
@@ -15,15 +13,23 @@ use Cwd qw(abs_path getcwd);
 use File::Copy;
 use File::Path qw(make_path remove_tree);
 use File::Basename;
+use YAML qw(LoadFile);
 
 use PomCur::Config;
 use PomCur::Meta::Util;
 
-my $_store;
+=head2
 
-sub import
+ Usage   : my $utils = PomCur::TestUtil->new($flag);
+ Function: set up the test environment, calling new() will create a test
+           database and configuration
+ Args    : $flag - (optional) pass "empty_db" to set up the tests with an empty
+                   tracking database
+
+=cut
+sub new
 {
-  my $package = shift;
+  my $class = shift;
   my $arg = shift;
 
   $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
@@ -46,15 +52,21 @@ sub import
   my $use_empty_template_db = 0;
 
   if (defined $arg){
-    if ($arg eq ':db_empty') {
+    if ($arg eq 'empty_db') {
       $use_empty_template_db = 1;
     } else {
-      die "unknown argument ($arg) to import of ". __PACKAGE__ . "\n";
+      die "unknown argument ($arg) ". __PACKAGE__ . "::new()\n";
     }
   }
 
-  my $scratch_dir = "$root_dir/t/scratch/";
-  my $tracking_scratch_dir = "$scratch_dir/tracking";
+  my $test_config_file_name = "$root_dir/t/test_config.yaml";
+
+  my $test_config = LoadFile($test_config_file_name);
+
+  my $scratch_dir =
+    "$root_dir/" . $test_config->{test_config}->{scratch_dir};
+  my $tracking_scratch_dir =
+    "$root_dir/" . $test_config->{test_config}->{tracking_scratch};
 
   remove_tree($scratch_dir, { error => \my $rm_err } );
 
@@ -76,24 +88,19 @@ sub import
     exit (1);
   }
 
-  my $test_config = "$root_dir/t/test_config.yaml";
-
   my $app_name = lc PomCur::Config::get_application_name();
 
-  my $config = PomCur::Config->new("$root_dir/$app_name.yaml", $test_config);
+  my $config = PomCur::Config->new("$root_dir/$app_name.yaml",
+                                   $test_config_file_name);
 
   if (!$use_empty_template_db) {
     $config->{track_db_template_file} =
       "$root_dir/t/data/track_db_test_template.sqlite3";
   }
 
-  $_store = { config => $config,
-              root_dir => $root_dir
-            };
-
   my $cwd = getcwd();
   chdir ($root_dir);
-  PomCur::Meta::Util::initialise_app($_store->{config}, $tracking_scratch_dir,
+  PomCur::Meta::Util::initialise_app($config, $tracking_scratch_dir,
                                      'test');
   chdir $cwd;
 
@@ -103,23 +110,32 @@ sub import
 
   (my $db_file_name = $connect_info) =~ s/dbi:SQLite:dbname=(.*)/$1/;
 
-  $_store->{track_connect_string} = $connect_info;
-  $_store->{track_db_file_name} = $db_file_name
+  my $self = {
+    config => $config,
+    root_dir => $root_dir,
+    track_connect_string => $connect_info,
+    track_db_file_name => $db_file_name,
+  };
+
+  return bless $self, $class;
 }
 
 sub root_dir
 {
-  return $_store->{root_dir};
+  my $self = shift;
+  return $self->{root_dir};
 }
 
 sub config
 {
-  return $_store->{config};
+  my $self = shift;
+  return $self->{config};
 }
 
 sub track_db_file_name
 {
-  return $_store->{track_db_file_name};
+  my $self = shift;
+  return $self->{track_db_file_name};
 }
 
 sub _check_dir
