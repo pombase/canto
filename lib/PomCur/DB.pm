@@ -312,6 +312,7 @@ sub id_of_object
 =cut
 sub display_name
 {
+  my $self = shift;
   my $arg = shift;
 
   if (ref $arg) {
