@@ -600,6 +600,18 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 
                              # get the id so we can redirect below
                              $object_id = $object->$table_pk_field();
+
+                             my $class_info_ref =
+                               $c->config()->{class_info}->{$type};
+
+                             if (defined $class_info_ref) {
+                               my $pre_create_hook =
+                                 $class_info_ref->{pre_create_hook};
+
+                               if (defined $pre_create_hook) {
+                                 &{$pre_create_hook}($c);
+                               }
+                             }
                            });
     } else {
       $c->schema()->txn_do(sub {

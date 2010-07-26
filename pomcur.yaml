@@ -88,6 +88,7 @@ class_info:
         editable: 1
       - name: authors
         editable: 1
+    pre_create_hook: PomCur::Track::Util::create_curs
   curs:
     display_field: pubmedid
     editable: 1
