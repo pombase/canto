@@ -87,7 +87,7 @@ sub login : Global {
       { title => "Login successful" };
 
     if ($return_path =~ m/logout|login/) {
-      $c->forward('/manage/index');
+      $c->forward('/track/index');
       return 0;
     }
   } else {
@@ -115,7 +115,7 @@ sub logout : Global {
   $c->logout;
 
   $c->stash->{message} = "Logged out";
-  $c->forward('manage/index');
+  $c->forward('track/index');
 }
 
 
