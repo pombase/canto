@@ -96,6 +96,7 @@ class_info:
       - name: community_curator
         editable: 1
       - name: publication
+        editable: 0
         source: pub
       - name: curs_key
         editable: 0

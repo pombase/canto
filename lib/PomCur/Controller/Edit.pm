@@ -44,6 +44,8 @@ use base 'Catalyst::Controller::HTML::FormFu';
 
 use PomCur::DBLayer::Path;
 
+my $MAX_VALUE_LENGTH = 50;
+
 sub _get_field_values
 {
   my $c = shift;
@@ -85,8 +87,14 @@ sub _get_field_values
     # multi-column primary keys aren't supported
     my $table_pk_column = ($row->primary_columns())[0];
 
-    my $option = { value => $row->$table_pk_column(),
-                   label => $row->$field_name() };
+    my $value = $row->$table_pk_column();
+    my $label = $row->$field_name();
+
+    if (defined $label && length $label > $MAX_VALUE_LENGTH) {
+      $label =~ s/(.{$MAX_VALUE_LENGTH}).*/$1 .../;
+    }
+
+    my $option = { value => $value, label => $label };
 
     if (grep { $row->$table_pk_column() eq $_ } @$select_values) {
       if ($type eq 'Select') {
@@ -186,8 +194,6 @@ sub _init_form_field
   my $display_field_label = $field_label;
   $display_field_label =~ s/_/ /g;
 
-  return unless $field_info->{editable};
-
   my $field_db_column = $field_label;
 
   if (defined $field_info->{source}) {
@@ -197,6 +203,10 @@ sub _init_form_field
   my $elem = {
     name => $field_label, label => $display_field_label
   };
+
+  if (!$field_info->{editable}) {
+    $elem->{attributes}->{disabled} = 1;
+  }
 
   my $class_name = $schema->class_name_of_table($type);
   my $db_source = $schema->source($class_name);
@@ -220,6 +230,7 @@ sub _init_form_field
     }
 
     $elem->{type} = 'Select';
+
     my $current_value = undef;
     if (defined $object && defined $object->$field_db_column()) {
       my $other_object = $object->$field_db_column();
@@ -355,15 +366,15 @@ sub _initialise_form
     value => $c->request()->param('model')
   };
 
-  $form->elements([
-                    @elements,
-                    $model_element,
-                    $separator_block,
-                    map { {
-                      name => $_, type => 'Submit', value => ucfirst $_
-                    } } @INPUT_BUTTON_NAMES,
-                  ]);
+  my @all_elements = (@elements,
+                      $model_element,
+                      $separator_block,
+                      map { {
+                        name => $_, type => 'Submit', value => ucfirst $_
+                      } } @INPUT_BUTTON_NAMES,
+                     );
 
+  $form->elements([@all_elements]);
 }
 
 sub _create_object {
