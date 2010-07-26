@@ -18,7 +18,8 @@ $object
     <ul>
 %  if ($editable) {
       <li>
-        <a href="<% $c->uri_for('/edit/object/' . $type . '/' . $object_id) %>">Edit</a>
+        <a href="<% $c->uri_for('/edit/object/' . $type . '/' . $object_id, {
+        model => $model_name }) %>">Edit</a>
       </li>
 %  }
 
@@ -65,4 +66,6 @@ my $table_pk_field = ($object->primary_columns())[0];
 my $object_id = $object->$table_pk_field();
 
 my $editable = $c->config()->{class_info}->{$type}->{editable};
+
+my $model_name = $c->request()->param('model');
 </%init>
