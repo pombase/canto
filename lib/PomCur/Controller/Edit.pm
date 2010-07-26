@@ -179,6 +179,8 @@ sub _init_form_field
   my $object = shift;
   my $type = shift;
 
+  my $schema = $c->schema();
+
   my $field_label = $field_info->{name};
 
   my $display_field_label = $field_label;
@@ -196,8 +198,8 @@ sub _init_form_field
     name => $field_label, label => $display_field_label
   };
 
-  my $class_name = PomCur::DB::class_name_of_table($type);
-  my $db_source = $c->schema()->source($class_name);
+  my $class_name = $schema->class_name_of_table($type);
+  my $db_source = $schema->source($class_name);
 
   my $info_ref = $class_name->relationship_info($field_db_column);
 
@@ -326,7 +328,7 @@ sub _initialise_form
 
   for my $field_info (@field_infos) {
     if (!$field_info->{admin_only} ||
-          $c->user_exists() && $c->user()->role()->name() eq 'admin') {
+          $c->user_exists() && $c->user()->role() eq 'admin') {
       push @elements, _init_form_field($c, $field_info, $object, $type);
     }
   }
@@ -365,7 +367,7 @@ sub _create_object {
 
   my $schema = $c->schema();
 
-  my $class_name = PomCur::DB::class_name_of_table($table_name);
+  my $class_name = $schema->class_name_of_table($table_name);
 
   my $class_info_ref = $c->config()->{class_info}->{$table_name};
   if (!defined $class_info_ref) {
@@ -431,10 +433,12 @@ sub _update_object {
   my $object = shift;
   my $form = shift;
 
+  my $schema = $c->schema();
+
   my %form_params = %{$form->params()};
 
   my $type = $object->table();
-  my $class_name = PomCur::DB::class_name_of_table($type);
+  my $class_name = $schema->class_name_of_table($type);
 
   my $class_info_ref = $c->config()->{class_info}->{$type};
 
@@ -476,7 +480,7 @@ sub _update_object {
       $value = undef;
     }
 
-    if (PomCur::DB::column_type(\%field_info, $type, $field_db_column) eq 'collection') {
+    if ($schema->column_type(\%field_info, $type, $field_db_column) eq 'collection') {
       # special case for collections, we need to look up the objects
       my $referenced_class_name;
 
@@ -543,9 +547,8 @@ sub _update_object {
 
 sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
   my ($self, $c) = @_;
-
   my ($req_type, $type, $object_id) = @{$c->req->captures()};
-
+  my $schema = $c->schema();
   my $object = undef;
 
   my $st = $c->stash;
@@ -558,11 +561,11 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
   }
 
   if (defined $object_id) {
-    my $class_name = PomCur::DB::class_name_of_table($type);
+    my $class_name = $schema->class_name_of_table($type);
     $object = $c->schema()->find_with_type($class_name, "${type}_id" => $object_id);
   }
 
-  my $display_type_name = PomCur::DB::display_name($type);
+  my $display_type_name = $schema->display_name($type);
 
   if ($req_type eq 'new') {
     $st->{title} = "New $display_type_name";
