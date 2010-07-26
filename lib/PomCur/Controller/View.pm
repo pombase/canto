@@ -111,7 +111,7 @@ sub object : Local
   };
   if ($@ || !defined $st->{object}) {
     $c->stash->{error} = qq(No object type "$type" and key = $object_key - $@);
-    $c->forward('/start');
+    $c->forward('/front');
   }
 }
 
@@ -166,7 +166,7 @@ sub list : Local
   };
   if ($@) {
     $c->stash->{error} = qq(No objects with type: $type - $@);
-    $c->forward('/start');
+    $c->forward('/front');
   }
 
 }
@@ -243,7 +243,7 @@ sub report : Local
   };
   if ($@) {
     $c->stash->{error} = qq(Can't display report for: $report_name - $@);
-    $c->forward('/start');
+    $c->forward('/front');
   }
 }
 

@@ -68,7 +68,7 @@ sub object : Local {
     $st->{message} = "Deleted: $type $object_id";
   }
 
-  $c->forward('/start');
+  $c->forward('/front');
   $c->detach();
 }
 1;

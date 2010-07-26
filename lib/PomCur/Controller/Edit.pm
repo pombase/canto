@@ -552,7 +552,7 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 
   if (!defined $c->user()) {
     $st->{error} = "Log in to allow editing";
-    $c->forward('/start');
+    $c->forward('/front');
     $c->detach();
     return;
   }
