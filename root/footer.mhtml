@@ -1,0 +1,19 @@
+    <div id="footer">
+      <div class="sponsor">
+        <a href="http://www.wellcome.ac.uk">
+          <img src="<% $c->uri_for('/static/images/wt_logo.png') %>" border="0"/>
+        </a>
+      </div>
+      <div class="sponsor">
+        <a href="http://www.cam.ac.uk">
+          <img src="<% $c->uri_for('/static/images/uni_of_cam.png') %>" border="0"/>
+        </a>
+      </div>
+    </div>
+
+% my $min_flag = '';
+% $min_flag = '.min' unless $c->debug();
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery<% $min_flag %>.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui<% $min_flag %>.js"></script>
+
+<script type="text/javascript" src="<% $c->uri_for('/static/js/pomcur.js') %>"></script>
