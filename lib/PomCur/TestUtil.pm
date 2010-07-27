@@ -20,19 +20,15 @@ use PomCur::Meta::Util;
 
 =head2
 
- Usage   : my $utils = PomCur::TestUtil->new($flag);
- Function: set up the test environment, calling new() will create a test
-           database and configuration
- Args    : $flag - (optional) pass "empty_db" to set up the tests with an empty
-                   tracking database
+ Usage   : my $utils = PomCur::TestUtil->new();
+ Function: Create a new TestUtil object
+ Args    : none
 
 =cut
 sub new
 {
   my $class = shift;
   my $arg = shift;
-
-  $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
 
   my $root_dir = getcwd();
 
@@ -49,6 +45,29 @@ sub new
     }
   }
 
+  my $self = {
+    root_dir => $root_dir,
+  };
+
+  return bless $self, $class;
+}
+
+=head2
+
+ Usage   : $test_util->init_test();
+ Function: set up the test environment by creating a test database and
+           configuration
+ Args    : $flag - (optional) pass "empty_db" to set up the tests with an empty
+                   tracking database
+
+=cut
+sub init_test
+{
+  my $self = shift;
+  my $arg = shift;
+
+  local $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
+
   my $use_empty_template_db = 0;
 
   if (defined $arg){
@@ -59,6 +78,7 @@ sub new
     }
   }
 
+  my $root_dir = $self->{root_dir};
   my $test_config_file_name = "$root_dir/t/test_config.yaml";
 
   my $test_config = LoadFile($test_config_file_name);
@@ -67,6 +87,7 @@ sub new
     "$root_dir/" . $test_config->{test_config}->{scratch_dir};
   my $tracking_scratch_dir =
     "$root_dir/" . $test_config->{test_config}->{tracking_scratch};
+
 
   remove_tree($scratch_dir, { error => \my $rm_err } );
 
@@ -100,9 +121,14 @@ sub new
 
   my $cwd = getcwd();
   chdir ($root_dir);
-  PomCur::Meta::Util::initialise_app($config, $tracking_scratch_dir,
-                                     'test');
+  eval {
+    PomCur::Meta::Util::initialise_app($config, $tracking_scratch_dir,
+                                       'test');
+  };
   chdir $cwd;
+  if ($@) {
+    die "failed to initialise application: $@\n";
+  }
 
   $config->merge_config("$root_dir/${app_name}_test.yaml");
 
@@ -110,14 +136,7 @@ sub new
 
   (my $db_file_name = $connect_info) =~ s/dbi:SQLite:dbname=(.*)/$1/;
 
-  my $self = {
-    config => $config,
-    root_dir => $root_dir,
-    track_connect_string => $connect_info,
-    track_db_file_name => $db_file_name,
-  };
-
-  return bless $self, $class;
+  return (track_db_file_name => $db_file_name);
 }
 
 sub root_dir
@@ -130,12 +149,6 @@ sub config
 {
   my $self = shift;
   return $self->{config};
-}
-
-sub track_db_file_name
-{
-  my $self = shift;
-  return $self->{track_db_file_name};
 }
 
 sub _check_dir
