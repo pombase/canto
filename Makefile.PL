@@ -21,6 +21,7 @@ requires 'YAML';
 requires 'DBIx::Class';
 requires 'XML::Rules';
 requires 'LWP::Simple';
+requires 'File::Copy::Recursive';
 
 requires 'parent';
 requires 'Config::General'; # This should reflect the config file format you've chosen
