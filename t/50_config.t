@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use PomCur::Config;
 use PomCur::TestUtil;
@@ -39,7 +39,7 @@ my $config_no_suffix = PomCur::Config::get_config();
 is($config_no_suffix->{name}, "PomCur");
 # only in <app_name>_local.yaml:
 ok(not defined $config_no_suffix->{"Model::TrackModel"});
-
+ok(keys %{$config_no_suffix->{class_info}} > 1);
 
 $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"} = 'local';
 
