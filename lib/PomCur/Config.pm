@@ -119,6 +119,13 @@ sub setup
   }
 }
 
+=head2
+
+ Usage    : $app_name = PomCur::Config::get_application_name();
+ Funcation: return the name of this application, based on the Config.pm package
+            name (eg. "PomCur")
+
+=cut
 sub get_application_name
 {
   (my $app_name = __PACKAGE__) =~ s/(.*?)::.*/$1/;
