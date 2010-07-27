@@ -8,8 +8,7 @@ use feature ':5.10';
 use Catalyst::Runtime 5.80;
 
 use parent qw/Catalyst/;
-use Catalyst qw/-Debug
-                ConfigLoader
+use Catalyst qw/ConfigLoader
                 StackTrace
                 Authentication
                 Session
@@ -40,6 +39,11 @@ __PACKAGE__->config(name => 'PomCur',
                        ],
                     },
                    );
+
+sub debug
+{
+  return $ENV{POMCUR_DEBUG};
+}
 
 # Start the application
 __PACKAGE__->setup();
