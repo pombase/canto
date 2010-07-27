@@ -19,11 +19,13 @@ my $app = Plack::Util::load_psgi($psgi_script_name);
 test_psgi $app, sub {
     my $cb = shift;
 
-    my $req = HTTP::Request->new(GET => 'http://localhost:5000/');
+    my $url = 'http://localhost:5000/view/object/person/1?model=manage';
+    my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
     is $res->code, 200;
-    ok ($res->content() =~ /Start page/);
+    ok ($res->content() =~ /Details for/);
+    ok ($res->content() =~ /Val Wood/);
 };
 
 done_testing;
