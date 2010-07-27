@@ -12,7 +12,15 @@ my $config = PomCur::Config->new('pomcur.yaml');
 
 my $deploy_dir = 't/scratch/tracking';
 
-remove_tree $deploy_dir;
+remove_tree ($deploy_dir, { error => \my $rm_err } );
+
+if (@$rm_err) {
+  for my $diag (@$rm_err) {
+    my ($file, $message) = %$diag;
+    warn "error: $message\n";
+  }
+  exit (1);
+}
 
 PomCur::Meta::Util::initialise_app($config, $deploy_dir, 'test');
 
