@@ -7,14 +7,12 @@ name 'PomCur';
 all_from 'lib/PomCur.pm';
 
 requires 'Catalyst::Runtime' => '5.80022';
-requires 'Catalyst::Task';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Session::PerUser';
 requires 'Catalyst::Action::RenderView';
 requires 'File::Copy::Recursive';
 requires 'Plack::Middleware::ReverseProxy';
-#requires 'DBD::Pg';
 requires 'DBD::SQLite';
 requires 'DBIx::Class';
 requires 'DBIx::Class::Schema';
