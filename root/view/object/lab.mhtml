@@ -8,5 +8,5 @@ $object
 
 <div id="collections">
   <& /view/collection.mhtml, object => $object, collection_name => 'people',
-     collection_title => "Members of this lab group" &>
+     collection_title => "Lab members" &>
 </div>
