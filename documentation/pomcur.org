@@ -1,0 +1,35 @@
+# -*- org -*-
+###+INFOJS_OPT: view:content toc:t ltoc:t mouse:#dddddd
+#+OPTIONS:     H:5
+#+STYLE: <style type="text/css">  html { font-family: Times, serif; font-size: 16pt; }</style>
+
+PomCur Documenation
+
+* Introduction
+* Requirements
+  - Linux, BSB or UNIX
+  - Perl
+* Getting the code
+  Currently the easiest way to get the code is via GitHub.  Run this command
+  to get a copy of the code:
+#+BEGIN_SRC sh
+  git clone git://github.com/kimrutherford/pomcur.git pomcur
+#+END_SRC
+  This creates a directory called "pomcur".  The directory can be updated
+  later with the command:
+#+BEGIN_SRC sh
+  git pull
+#+END_SRC
+* Installation
+** Debian
+   - libfile-copy-recursive-perl
+   - libcatalyst-perl
+   - libcatalyst-modules-perl
+   - libdbd-sqlite3-perl
+   - libdbix-class-perl
+   - libdbix-class-schema-loader-perl
+   - libparams-validate-perl
+   - libxml-simple-perl
+* Configuration
+* Database structure
+* Implementation
