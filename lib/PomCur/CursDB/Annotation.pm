@@ -29,6 +29,13 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => undef,
   },
+  "type",
+  {
+    data_type => "text",
+    default_value => undef,
+    is_nullable => 0,
+    size => undef,
+  },
   "data",
   {
     data_type => "text",
@@ -37,12 +44,12 @@ __PACKAGE__->add_columns(
     size => undef,
   },
 );
-__PACKAGE__->set_primary_key("annotation_id", "status");
+__PACKAGE__->set_primary_key("annotation_id", "status", "type");
 __PACKAGE__->belongs_to("pub", "PomCur::CursDB::Pub", { pub_id => "pub_id" });
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:d0te2s/L0vWLIClrT9medQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zzytifWKeu09+/RMXphh0g
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
