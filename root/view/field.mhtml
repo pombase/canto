@@ -26,8 +26,8 @@ $col_conf
   </a>
   </span>
 %   } else {
-%     if ($field_type eq 'key_field') {
   <span class="attribute-field">
+%     if ($field_type eq 'key_field') {
     <span class="display-key">
       <a href='<% $c->uri_for("/view/object", $type, PomCur::DB::id_of_object($object),
                    { model => $model_name } ) %>'>
