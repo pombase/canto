@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 6;
 
 use PomCur::TestUtil;
 use PomCur::WebUtil;
@@ -55,7 +55,10 @@ is($field_type, 'key_field');
 
 
 my $col_conf_networkaddress =
-  $config->{class_info}->{person}->{field_infos}->{networkaddress};
+  $config->{class_info}->{person}->{field_infos}->{"Email address"};
+
+use Data::Dumper;
+#warn Dumper([$config]);
 
 ok(defined $col_conf_networkaddress);
 
@@ -63,4 +66,4 @@ ok(defined $col_conf_networkaddress);
   PomCur::WebUtil::get_field_value($mock_c, $person, $col_conf_networkaddress);
 
 is($field_value, $val_email);
-is($field_type, 'key_field');
+is($field_type, 'attribute');
