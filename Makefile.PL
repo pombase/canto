@@ -7,6 +7,7 @@ name 'PomCur';
 all_from 'lib/PomCur.pm';
 
 requires 'Catalyst::Runtime' => '5.80022';
+requires 'Catalyst::Task';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Session::PerUser';
