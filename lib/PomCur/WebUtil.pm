@@ -52,14 +52,14 @@ use PomCur::DB;
            $object - the object
            $col_conf - configuration of this column
                        eg.  { name => 'Sample name',
-                              conf => 'name',   # the name field of the sample
+                              source => 'name',   # use the name column of sample
                             }
                        or   { name => 'Half size',
-                              conf => { perl => '$object->size() / 2' },  # Perl code
+                              source => { perl => '$object->size() / 2' },  # Perl code
                               format => '%6.2f'              # format with sprintf
                             }
                        or   { name => 'Big count',
-                              conf => { perl => '$object->count() + 100' },
+                              source => { perl => '$object->count() + 100' },
                               format => integer   # format as integer and right align
                             }
 
