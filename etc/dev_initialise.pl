@@ -1,12 +1,15 @@
 #!/usr/bin/perl -w
 
-# recreate the database classes by reading the database schema
+# create empty template database from the schemas and recreate the
+# database classes
 
 BEGIN {
   push @INC, "lib";
 }
 
 use strict;
+use warnings;
+use Carp;
 
 use DBIx::Class::Schema::Loader qw(make_schema_at);
 
