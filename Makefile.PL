@@ -23,6 +23,7 @@ requires 'Params::Validate';
 requires 'YAML';
 requires 'XML::Simple';
 requires 'LWP::Simple';
+requires 'Plack';
 
 requires 'parent';
 requires 'Config::General';

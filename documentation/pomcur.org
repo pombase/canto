@@ -30,6 +30,8 @@ PomCur Documenation
    - libdbix-class-schema-loader-perl
    - libparams-validate-perl
    - libxml-simple-perl
+   - liburi-perl
+   - libmodule-install-perl
 * Configuration
 * Database structure
 * Implementation
