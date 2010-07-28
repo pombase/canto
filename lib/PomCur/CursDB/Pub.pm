@@ -27,12 +27,12 @@ __PACKAGE__->set_primary_key("pub_id");
 __PACKAGE__->has_many(
   "annotations",
   "PomCur::CursDB::Annotation",
-  { "foreign.pub_id" => "self.pub_id" },
+  { "foreign.pub" => "self.pub_id" },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4qFSNxTkPeOdelqWLDkS+Q
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+w8h/Y7rBwS+nUH5uFzDBw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

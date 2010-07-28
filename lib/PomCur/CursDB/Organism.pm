@@ -27,12 +27,12 @@ __PACKAGE__->set_primary_key("organism_id");
 __PACKAGE__->has_many(
   "genes",
   "PomCur::CursDB::Gene",
-  { "foreign.organism_id" => "self.organism_id" },
+  { "foreign.organism" => "self.organism_id" },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PuymW2AztFGKYWnOW7ZRWA
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TA2or8XaJRQnXg7oKI9gww
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

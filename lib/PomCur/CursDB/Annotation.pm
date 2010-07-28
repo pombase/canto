@@ -12,7 +12,7 @@ __PACKAGE__->add_columns(
   {
     data_type => "integer",
     default_value => undef,
-    is_nullable => 0,
+    is_nullable => 1,
     size => undef,
   },
   "status",
@@ -22,7 +22,7 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => undef,
   },
-  "pub_id",
+  "pub",
   {
     data_type => "integer",
     default_value => undef,
@@ -44,12 +44,16 @@ __PACKAGE__->add_columns(
     size => undef,
   },
 );
-__PACKAGE__->set_primary_key("annotation_id", "status", "type");
-__PACKAGE__->belongs_to("pub", "PomCur::CursDB::Pub", { pub_id => "pub_id" });
+__PACKAGE__->set_primary_key("annotation_id");
+__PACKAGE__->add_unique_constraint(
+  "annotation_id_status_type_unique",
+  ["annotation_id", "status", "type"],
+);
+__PACKAGE__->belongs_to("pub", "PomCur::CursDB::Pub", { pub_id => "pub" });
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zzytifWKeu09+/RMXphh0g
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:w3NhVm4J4B4Vs8fIFmfI5g
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
