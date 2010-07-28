@@ -1,0 +1,17 @@
+PMID,Laboratory,"Submitter, if different","date sent out",Status,"PI e-mail","completer email"
+19056896,"Fred Winston","Dom Helmlinger",2009/01/04,pending,fred.winston@genetics.med.harvard.edu,dom@genetics.med.harvard.edu
+19041767,"Peter Espenshade","John Burg",2009/01/04,DONE,peter.espenshade@jhmi.edu,John.Burg@jhmi.edu
+18556659,"Kevin Hardwick",,2009/01/06,DONE,kevin.hardwick@ed.ac.uk,
+18430926,"Charles Hoffman",,2009/01/06,DONE,hoffmacs@bc.edu,
+17304215,"Hiroshi Iwasaki",,2009/01/06,DONE,iwasaki@tsurumi.yokohama-cu.ac.jp,
+18426916,"Hiro Yamano",,2009/01/06,DONE,h.yamano@mcri.ac.uk,
+19037101,"Nick Rhind","Nicholas Willis",2009/01/06,DONE,nick.rhind@umassmed.edu,Nicholas.Willis@umassmed.edu
+19351719,"Luis Rokeach","Pascale Beauregard",2009/04/20,DONE,Luis.Rokeach@umontreal.ca,Pascale.Beauregard@umontreal.ca
+19160458,"Ken Sawin",,2009/04/20,pending,Ken.Sawin@ed.ac.uk,
+19211838,"Nick Rhind","Mary Porter-Goff",2009/04/20,DONE,nick.rhind@umassmed.edu,Mary.Porter-Goff@umassmed.edu
+7518718,"Wayne Wahls",,,DONE,wahlswaynep@uams.edu,
+7958849,"Wayne Wahls",,,pending,wahlswaynep@uams.edu,
+19436749,"Wayne Wahls",,2009/11/23,pending,wahlswaynep@uams.edu,
+19627505,"Henar Valdivieso",,2009/11/23,DONE,henar@usal.es,
+19664060,"Stuart Macneill",,2009/11/23,pending,stuart.macneill@st-andrews.ac.uk,
+19686603,"Stuart Macneill",,2009/11/23,pending,stuart.macneill@st-andrews.ac.uk,

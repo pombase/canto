@@ -1,18 +1,39 @@
 #!/usr/bin/perl -w
 
+# script to set up the test database
+
 use strict;
 use warnings;
 use Carp;
 
 use Text::CSV;
+use File::Copy qw(copy);
+
+BEGIN {
+  push @INC, "lib";
+}
 
 use PomCur::TrackDB;
 use PomCur::Config;
 
-my $spreadsheet_file = shift;
+my $config = PomCur::Config->new("pomcur.yaml", "t/test_config.yaml");
 
-my $config = PomCur::Config->new("pomcur.yaml", "t/pomcur_loading_config.yaml",
-                                 "t/test_config.yaml");
+my $spreadsheet_file = $config->{test_config}->{curation_spreadsheet};
+
+my $track_test_db =
+  $config->{test_config}->{track_test_db};
+
+my $track_db_template_file = $config->{track_db_template_file};
+
+unlink $track_test_db;
+
+copy $track_db_template_file, $track_test_db;
+
+%{$config->{"Model::TrackModel"}} = (
+  schema_class => 'PomCur::TrackDB',
+  connect_info => ["dbi:SQLite:dbname=$track_test_db"],
+);
+
 my $schema = PomCur::TrackDB->new($config);
 
 my $csv = Text::CSV->new({binary => 1});
@@ -33,7 +54,7 @@ sub get_pub
     my $pub = $schema->create_with_type('Pub',
                                         {
                                           pubmedid => $pubmed_id
-                                         });
+                                        });
 
     $pubs{$pubmed_id} = $pub;
   }
