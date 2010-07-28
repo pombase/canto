@@ -26,3 +26,11 @@ CREATE TABLE pub (
        pub_id integer primary key,
        data text NOT NULL
 );
+
+CREATE TABLE metadata (
+       metadata_id integer PRIMARY KEY,
+       key text NOT NULL,
+       value text
+);
+
+
