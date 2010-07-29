@@ -91,7 +91,7 @@ class_info:
         editable: 1
     pre_create_hook: PomCur::Track::Util::create_curs
   curs:
-    display_field: pubmedid
+    display_field: curs_key
     editable: 1
     field_info_list:
       - name: community_curator
