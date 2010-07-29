@@ -38,7 +38,7 @@ Run with --initialise <some_directory>
 <some_directory> must be empty\n";
     }
   }
-}else {
+} else {
   # we're testing
 }
 
