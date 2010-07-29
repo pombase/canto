@@ -93,7 +93,7 @@ sub login : Global {
   } else {
     $c->flash->{error} =
       { title => "Login error",
-        text => "Incorrect user name or password, please try again" };
+        text => "Incorrect email address or password, please try again" };
     $c->forward('account');
     $c->detach();
     return 0;
