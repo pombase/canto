@@ -6,11 +6,16 @@ use PomCur::TestUtil;
 use PomCur::WebUtil;
 use PomCur::TrackDB;
 
+my $test_util = PomCur::TestUtil->new();
+
+my @config_file_names =
+  ($test_util->root_dir() . '/pomcur_test.yaml',
+   $test_util->root_dir() . '/t/data/50_config_1.yaml');
+
 my $lc_app_name = lc PomCur::Config::get_application_name();
 my $uc_app_name = uc $lc_app_name;
-$ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"} = 'local';
 
-my $config = PomCur::Config::get_config();
+my $config = PomCur::Config->new(@config_file_names);
 
 my $mock_c = { };
 
@@ -42,28 +47,27 @@ my $person = $schema->find_with_type('Person',
                                        networkaddress => $val_email
                                      });
 
-my $col_conf_longname =
-  $config->{class_info}->{person}->{field_infos}->{longname};
-
-ok(defined $col_conf_longname);
-
 my ($field_value, $field_type) =
-  PomCur::WebUtil::get_field_value($mock_c, $person, $col_conf_longname);
+  PomCur::WebUtil::get_field_value($mock_c, $person, 'longname');
 
 is($field_value, 'Val Wood');
 is($field_type, 'key_field');
 
 
-my $col_conf_networkaddress =
-  $config->{class_info}->{person}->{field_infos}->{"Email address"};
-
-use Data::Dumper;
-#warn Dumper([$config]);
-
-ok(defined $col_conf_networkaddress);
-
 ($field_value, $field_type) =
-  PomCur::WebUtil::get_field_value($mock_c, $person, $col_conf_networkaddress);
+  PomCur::WebUtil::get_field_value($mock_c, $person, 'Email address');
 
 is($field_value, $val_email);
 is($field_type, 'attribute');
+
+
+my $lab = $schema->find_with_type('Lab',
+                                  {
+                                    name => 'Rhind Lab',
+                                  });
+
+($field_value, $field_type) =
+  PomCur::WebUtil::get_field_value($mock_c, $lab, 'people');
+
+ok(!defined $field_value);
+is($field_type, 'collection');

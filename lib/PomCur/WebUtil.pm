@@ -50,19 +50,7 @@ use PomCur::DB;
            in the source key of the configuration.
  Args    : $c - the Catalyst context
            $object - the object
-           $col_conf - configuration of this column
-                       eg.  { name => 'Sample name',
-                              source => 'name',   # use the name column of sample
-                            }
-                       or   { name => 'Half size',
-                              source => { perl => '$object->size() / 2' },  # Perl code
-                              format => '%6.2f'              # format with sprintf
-                            }
-                       or   { name => 'Big count',
-                              source => { perl => '$object->count() + 100' },
-                              format => integer   # format as integer and right align
-                            }
-
+           $field_name - The name of the field to look up
  Return  : $field_value - the value of the field or display or use.  If it is a
                           foreign key the whole object that is returned
            $field_type - can be:
@@ -74,14 +62,32 @@ use PomCur::DB;
            $ref_display_key - the display key of the referenced object
                               (or undef)
 
+ Note    : This function uses the field_infos section of the configuration and
+           uses the source field (if present) to get the field value
+              eg.  { name => 'longname' }  # read from the longname column
+              eg.  { name => 'Sample name',
+                     source => 'samplename',   # use the samplename column
+                   }
+              or   { name => 'Half size',
+                     source => { perl => '$object->size() / 2' },  # Perl code
+                     format => '%6.2f'              # format with sprintf
+                   }
+              or   { name => 'Big count',
+                     source => { perl => '$object->count() + 100' },
+                     format => integer   # format as integer and right align
+                   }
+
 =cut
 sub get_field_value
 {
   my $c = shift;
   my $object = shift;
-  my $col_conf = shift;
+  my $field_name = shift;
 
   my $type = $object->table();
+
+  my $class_infos = $c->config()->{class_info};
+  my $col_conf = $class_infos->{$type}->{field_infos}->{$field_name};
 
   if (defined $col_conf->{source} && $col_conf->{source} =~ /[\$\-<>\';]/) {
     # it looks like Perl code, so eval it
@@ -94,7 +100,6 @@ sub get_field_value
     return ($field_value, 'attribute', undef);
   }
 
-  my $name = $col_conf->{name};
   my $schema = $c->schema();
   my $parent_class_name = $schema->class_name_of_table($type);
 
@@ -102,11 +107,11 @@ sub get_field_value
     return (undef, 'collection');
   }
 
-  my $field_db_column = $col_conf->{source};
-
-  if (defined $field_db_column && $field_db_column eq "${type}_id") {
-    return ($object->$field_db_column(), 'table_id', undef);
+  if ($field_name eq "${type}_id") {
+    return ($object->$field_name(), 'table_id', undef);
   }
+
+  my $field_db_column = $col_conf->{source};
 
   $field_db_column =~ s/_id$//;
 
@@ -128,7 +133,7 @@ sub get_field_value
       my $referenced_class_name = $info{class};
       my $referenced_table = PomCur::DB::table_name_of_class($referenced_class_name);
 
-      my $ref_table_conf = $c->config()->{class_info}->{$referenced_table};
+      my $ref_table_conf = $class_infos->{$referenced_table};
       if (!defined $ref_table_conf) {
         die "no class_info configuration for $referenced_table\n";
       }
@@ -144,7 +149,7 @@ sub get_field_value
       return (undef, 'foreign_key', undef);
     }
   } else {
-    my $display_key_field = $c->config()->{class_info}->{$type}->{display_field};
+    my $display_key_field = $class_infos->{$type}->{display_field};
 
     if (defined $display_key_field && $field_db_column eq $display_key_field) {
       return ($field_value, 'key_field', undef);

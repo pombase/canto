@@ -7,7 +7,7 @@ it will be rendered as a 'details' link.
 
 <%args>
 $object
-$col_conf
+$field_name
 </%args>
 
 <span class="field-value">
@@ -22,7 +22,7 @@ $col_conf
   <span class="ref-field">
   <a href='<% $c->uri_for("/view/object", $referenced_object->table(), PomCur::DB::id_of_object($field_value),
                    { model => $model_name } ) %>'>
-    <& field.mhtml, object => $referenced_object, col_conf => { name => $ref_display_key } &>
+    <& field.mhtml, object => $referenced_object, field_name => $ref_display_key &>
   </a>
   </span>
 %   } else {
@@ -75,8 +75,11 @@ sub format_field_value
   return $field_value;
 }
 
+my $class_info = $c->config()->{class_info}->{$object->table()};
+my $col_conf = $class_info->{field_infos}->{$field_name};
+
 my ($field_value, $field_type, $ref_display_key) =
-  PomCur::WebUtil::get_field_value($c, $object, $col_conf);
+  PomCur::WebUtil::get_field_value($c, $object, $field_name);
 
 my $type = $object->table();
 

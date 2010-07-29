@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 15;
 
 use PomCur::Config;
 use PomCur::TestUtil;
@@ -15,12 +15,26 @@ my $config_single = PomCur::Config->new($config_yaml_1);
 is($config_single->{some_key}, 'some_value_1');
 is(keys %{$config_single}, 4);
 
+
+my $lab_classinfo = $config_single->{class_info}->{lab};
+
+# check that source defaults to name
+is($lab_classinfo->{field_info_list}->[1]->{source},
+   'lab_head');
+
+# check that the field_infos hash is populated from the field_info_list
+ok($lab_classinfo->{field_infos}->{people}->{is_collection});
+
+
+# test loading two config files
 my $config_two = PomCur::Config->new($config_yaml_1, $config_yaml_2);
 
 is($config_two->{some_key}, 'some_value_1');
 is($config_two->{some_key_for_overriding}, 'overidden_value');
 is(keys %{$config_two}, 4);
 
+
+# test loading then merging
 my $config_merge = PomCur::Config->new($config_yaml_1);
 $config_merge->merge_config($config_yaml_2);
 
@@ -41,6 +55,7 @@ is($config_no_suffix->{name}, "PomCur");
 ok(not defined $config_no_suffix->{"Model::TrackModel"});
 ok(keys %{$config_no_suffix->{class_info}} > 1);
 
+
 $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"} = 'local';
 
 my $config_with_suffix = PomCur::Config::get_config();
@@ -48,3 +63,4 @@ my $config_with_suffix = PomCur::Config::get_config();
 is($config_with_suffix->{name}, "PomCur");
 # only in <app_name>_local.yaml:
 ok(defined $config_with_suffix->{"Model::TrackModel"});
+

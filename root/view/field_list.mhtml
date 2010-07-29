@@ -10,7 +10,7 @@ $object
 %   $col_conf = { name => $field_label } if !defined $col_conf;
     <tr>
       <td><span class="field_label"><% $_get_display_name_code->($field_label) %></span>:</td>
-      <td><& /view/field.mhtml, object => $object, col_conf => $col_conf &></td>
+      <td><& /view/field.mhtml, object => $object, field_name => $col_conf->{name} &></td>
     </tr>
 % }
   </table>
