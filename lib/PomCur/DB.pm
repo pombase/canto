@@ -330,8 +330,7 @@ sub display_name
 
 =head2 column_type
 
- Usage   : my $column_type = SmallRNA::DB::column_type($field_info, $table_name,
-                                                       $column_name);
+ Usage   : my $column_type = SmallRNA::DB::column_type($field_info, $table_name);
  Function: Return 'attribute' if a field is a plain attribute or 'collection'
            if it is a collection.
 
@@ -340,10 +339,14 @@ sub column_type {
   my $self = shift;
   my $field_info = shift;
   my $table_name = shift;
-  my $column_name = shift;
 
   my $class_name = $self->class_name_of_table($table_name);
-  my $info_ref = $class_name->relationship_info($column_name);
+
+  my $column_name = $field_info->{source};
+  my $info_ref;
+  if (defined $column_name) {
+    $info_ref = $class_name->relationship_info($column_name);
+  }
 
   if ($field_info->{is_collection} ||
         (defined $info_ref && $info_ref->{attrs}->{join_type})) {

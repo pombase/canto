@@ -497,7 +497,7 @@ sub _update_object {
       $value = undef;
     }
 
-    if ($schema->column_type(\%field_info, $type, $field_db_column) eq 'collection') {
+    if ($schema->column_type(\%field_info, $type) eq 'collection') {
       # special case for collections, we need to look up the objects
       my $referenced_class_name;
 

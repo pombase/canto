@@ -97,14 +97,14 @@ sub get_field_value
   my $name = $col_conf->{name};
   my $schema = $c->schema();
   my $parent_class_name = $schema->class_name_of_table($type);
-  my $field_db_column = $name;
 
-  my $source = $col_conf->{source};
-  if (defined $source) {
-    $field_db_column = $source;
+  if ($schema->column_type($col_conf, $type) eq 'collection') {
+    return (undef, 'collection');
   }
 
-  if ($field_db_column eq "${type}_id") {
+  my $field_db_column = $col_conf->{source};
+
+  if (defined $field_db_column && $field_db_column eq "${type}_id") {
     return ($object->$field_db_column(), 'table_id', undef);
   }
 

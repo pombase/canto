@@ -67,7 +67,7 @@ while (my $obj = $rs->next()) {
       my $column_name = $col_conf->{name};
       next if $column_name eq 'created_stamp' or $column_name eq "${type}_id";
 
-      my $column_type = $c->schema()->column_type($col_conf, $type, $column_name);
+      my $column_type = $c->schema()->column_type($col_conf, $type);
 
       next if $column_type eq 'collection';
 
