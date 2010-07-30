@@ -111,7 +111,9 @@ sub initialise_app
   my $track_db_template_file = $config->{track_db_template_file};
   my $dest_file = "$init_dir/track.sqlite3";
 
-  copy ($track_db_template_file, $dest_file);
+  if (!copy ($track_db_template_file, $dest_file)) {
+    croak "Failed to copy $track_db_template_file to $dest_file: $!\n";
+  }
 
   open (my $deploy_config_fh, '>',
         "$config_dir/$deploy_config_file_name") or
