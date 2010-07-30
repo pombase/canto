@@ -55,9 +55,7 @@ sub make_connect_string
   my $config = shift;
   my $curs_key = shift;
 
-  my $data_directory = $config->{data_directory};
-
-  my $file_name = "$data_directory/curs_${curs_key}.sqlite3";
+  my $file_name = make_db_file_name($config, $curs_key);
 
   my $connect_string = "dbi:SQLite:dbname=$file_name";
 
@@ -66,6 +64,27 @@ sub make_connect_string
   } else {
     return $connect_string;
   }
+}
+
+
+=head2 make_db_file_name
+
+ Usage   : my $curs_db_file_name = PomCur::Curs::make_db_file_name($config,
+                                                                   $curs_key);
+ Function: For the given curs key, return the full path of the corresponding
+           SQLite file
+ Args    : $config - the Config object
+           $curs_key - the key (as a string) of the curation session
+
+=cut
+sub make_db_file_name
+{
+  my $config = shift;
+  my $curs_key = shift;
+
+  my $data_directory = $config->{data_directory};
+
+  return "$data_directory/curs_${curs_key}.sqlite3";
 }
 
 =head2 create_curs_key
