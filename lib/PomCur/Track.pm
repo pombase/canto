@@ -40,7 +40,10 @@ use warnings;
 use Carp;
 use Moose;
 
+use File::Copy qw(copy);
+
 use PomCur::Config;
+use PomCur::Curs;
 
 =head2
 
@@ -67,6 +70,54 @@ sub create_template_dbs
     system "sqlite3 $model_files{$model_name} < etc/$model_name.sql";
   }
 
+}
+
+=head2 create_curs
+
+ Usage   : PomCur::Track::create_curs_db($config, $curs_object);
+ Function: Create a database for a curs, using the curs_key field of the object
+           to create the database (file)name.
+ Args    : $config - the Config object
+           $curs - the Curs object
+ Return  : none, die()s on failure
+
+=cut
+sub create_curs_db
+{
+  my $config = shift;
+  my $curs = shift;
+
+  my $pubmedid = $curs->pub()->pubmedid();
+  my $curs_key = $curs->curs_key();
+
+  my $exists_flag = 1;
+
+  my $db_file_name = PomCur::Curs::make_db_file_name($config, $curs_key);
+
+  if (-e $db_file_name) {
+    die "Internal error: database already exists\n";
+  }
+
+  my $curs_db_template_file = $config->{curs_db_template_file};
+
+  copy($curs_db_template_file, $db_file_name);
+}
+
+=head2 create_curs_db_hook
+
+ Usage   : PomCur::Track::create_curs_db_hook($config, $curs_object);
+ Function: Wrapper for create_curs_db() to be called from Edit::object()
+ Args    : $c - the Catalyst object
+           $curs - the Curs object
+
+=cut
+
+sub create_curs_db_hook
+{
+ my $c = shift;
+  my $curs = shift;
+
+  create_curs_db($c->config(), $curs);
 }
 
 1;
