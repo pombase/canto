@@ -42,12 +42,12 @@ use Moose;
 
 =head2 make_connect_string
 
- Usage    : my ($connect_string, $exists_flag) =
-              PomCur::Curs::make_connect_string($config, $curs_key, $pubmedid);
- Function : Make a connect string to use for a curation session db and report
-            if the database exists
- Args     : $config - the Config object
-            $curs_key - the key (as a string) of the curation session
+ Usage   : my ($connect_string, $exists_flag) =
+             PomCur::Curs::make_connect_string($config, $curs_key, $pubmedid);
+ Function: Make a connect string to use for a curation session db and report
+           if the database exists
+ Args    : $config - the Config object
+           $curs_key - the key (as a string) of the curation session
 
 =cut
 sub make_connect_string
