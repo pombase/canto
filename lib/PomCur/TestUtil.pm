@@ -135,9 +135,9 @@ sub init_test
 
   $config->merge_config("$root_dir/${app_name}_test.yaml");
 
-  my $connect_info = $config->{"Model::TrackModel"}->{connect_info}->[0];
+  my $connect_string = $config->model_connect_string('Track');
 
-  (my $db_file_name = $connect_info) =~ s/dbi:SQLite:dbname=(.*)/$1/;
+  (my $db_file_name = $connect_string) =~ s/dbi:SQLite:dbname=(.*)/$1/;
 
   return (track_db_file_name => $db_file_name);
 }
