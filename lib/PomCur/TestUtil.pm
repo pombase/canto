@@ -18,6 +18,8 @@ use YAML qw(LoadFile);
 use PomCur::Config;
 use PomCur::Meta::Util;
 
+use File::Temp qw(tempdir);
+
 =head2
 
  Usage   : my $utils = PomCur::TestUtil->new();
@@ -149,6 +151,13 @@ sub config
 {
   my $self = shift;
   return $self->{config};
+}
+
+sub temp_dir
+{
+  (my $test_name = $0) =~ s:.*/(.*)\.t:$1:;
+
+  return tempdir("/tmp/pomcur_test_${test_name}_$$.XXXXX", CLEANUP => 0);;
 }
 
 sub _check_dir
