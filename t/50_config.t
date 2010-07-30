@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use PomCur::Config;
 use PomCur::TestUtil;
@@ -63,4 +63,6 @@ my $config_with_suffix = PomCur::Config::get_config();
 is($config_with_suffix->{name}, "PomCur");
 # only in <app_name>_local.yaml:
 ok(defined $config_with_suffix->{"Model::TrackModel"});
+
+ok(defined $config_with_suffix->model_connect_string('Track'));
 
