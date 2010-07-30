@@ -133,6 +133,25 @@ sub get_application_name
   return $app_name;
 }
 
+=head2 model_connect_string
+
+ Usage   : my $connect_string = $config->model_connect_string('Track');
+ Function: Return the connect string for the given model from the configuration
+ Args    : $model_name - the model name to look up
+
+=cut
+sub model_connect_string
+{
+  my $self = shift;
+  my $model_name = shift;
+
+  if (!defined $model_name) {
+    croak("no model_name passed to function\n");
+  }
+
+  return $self->{"Model::${model_name}Model"}->{connect_info}->[0];
+}
+
 =head2 get_config
 
  Usage   : $config = PomCur::Config::get_config();
