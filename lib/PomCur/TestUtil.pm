@@ -115,6 +115,8 @@ sub init_test
   my $config = PomCur::Config->new("$root_dir/$app_name.yaml",
                                    $test_config_file_name);
 
+  $self->{config} = $config;
+
   if (!$use_empty_template_db) {
     $config->{track_db_template_file} =
       "$root_dir/t/data/track_db_test_template.sqlite3";
