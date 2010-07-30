@@ -10,7 +10,6 @@ use strict;
 use warnings;
 use Carp;
 use Cwd qw(abs_path getcwd);
-use File::Copy;
 use File::Path qw(make_path remove_tree);
 use File::Basename;
 use YAML qw(LoadFile);
