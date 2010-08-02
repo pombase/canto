@@ -24,14 +24,32 @@ test_psgi $app, sub {
   $encoded_return_path =~ s/\?/%3F/g;
   $encoded_return_path =~ s/=/%3D/g;
   my $url = "http://localhost:5000/account?return_path=$encoded_return_path";
-  my $req = HTTP::Request->new(GET => $url);
-  my $res = $cb->($req);
 
-  is $res->code, 200;
-  ok ($res->content() =~ /Account details/);
-  ok ($res->content() =~ /User ID/);
+  # test visiting account page
+  {
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
 
-  ok ($res->content() =~ /\Q$return_path/);
+    is $res->code, 200;
+    ok ($res->content() =~ /Account details/);
+    ok ($res->content() =~ /User ID/);
+
+    ok ($res->content() =~ /\Q$return_path/);
+  }
+
+  # test login
+  {
+    my $uri = new URI('http://localhost:5000/login');
+    $uri->query_form(networkaddress => 'nick.rhind@umassmed.edu',
+                     password => 'nick.rhind@umassmed.edu',
+                     return_path => $return_path);
+
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    is ($res->code, 302);
+    is ($res->header('location'), $return_path);
+  }
 };
 
 done_testing;
