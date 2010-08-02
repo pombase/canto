@@ -114,7 +114,7 @@ sub create_curs_db
 
 sub create_curs_db_hook
 {
- my $c = shift;
+  my $c = shift;
   my $curs = shift;
 
   create_curs_db($c->config(), $curs);
