@@ -339,7 +339,7 @@ sub _initialise_form
 
   for my $field_info (@field_infos) {
     if (!$field_info->{admin_only} ||
-          $c->user_exists() && $c->user()->role() eq 'admin') {
+          $c->user_exists() && $c->user()->role()->name() eq 'admin') {
       push @elements, _init_form_field($c, $field_info, $object, $type);
     }
   }
