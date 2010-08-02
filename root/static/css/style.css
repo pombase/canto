@@ -79,10 +79,8 @@ div#footer .sponsor {
   right: 0px;
   top: 0px;
 }
-#menu a {
-  background-color: #333;
-}
 #menu {
+  background-color: #333;
   font-size: 90%;
 }
 #menu .networkaddress {
@@ -92,6 +90,8 @@ div#footer .sponsor {
   text-decoration: none;
   padding: 4px 10px;
   color: black;
+  background-color: #fff;
+
 }
 #menu ul {
   background-color: #228;
@@ -104,6 +104,11 @@ div#footer .sponsor {
 #menu ul li a {
   float: left; text-decoration: none;
   color: white;
+  padding: 4px 10px;
+}
+#menu ul li span {
+  float: left; text-decoration: none;
+  color: grey;
   padding: 4px 10px;
 }
 #menu ul li a:visited {
