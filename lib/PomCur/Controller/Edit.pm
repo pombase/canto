@@ -143,7 +143,7 @@ sub _get_default_ref_value
   my $field_info = shift;
   my $referenced_class_name = shift;
 
-  my $referenced_table = $c->schema()->table_name_of_class($referenced_class_name);
+  my $referenced_table = PomCur::DB::table_name_of_class($referenced_class_name);
 
   # try to find the default value from the configuration file
   my $default_value = _get_default_value($c, $field_info);
