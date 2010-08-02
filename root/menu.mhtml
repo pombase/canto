@@ -9,9 +9,14 @@
 % if ($c->user_exists()) {
       <a href="<% $c->uri_for('/logout') %>">Logout</a>
 % } else {
-      <a href="<% $c->uri_for('/account', { 
-               return_path => $c->uri_for($c->req->uri()->path(),
-               $c->req()->params()) } ) %>">Log in</a>
+%   if ($current_path !~ m:/account:) {
+      <a href="<% $c->uri_for('/account', { return_path => $return_path_uri }
+      ) %>">
+        Log in
+      </a>
+%   } else {
+      <span>Log in</span>
+%   }
 % }
     </li>
     <li>
@@ -19,3 +24,9 @@
     </li>
   </ul>
 </div>
+
+<%init>
+my $current_path = $c->req->uri()->path();
+my $return_path_uri = 
+  $c->uri_for($current_path, $c->req()->params());
+</%init>
