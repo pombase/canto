@@ -153,7 +153,8 @@ sub list : Local
         }
       }
       if (@order_by_fields) {
-        $order_by = \@order_by_fields;
+        my $field_infos = $class_info->{field_infos};
+        $order_by = [map { $field_infos->{$_}->{source} } @order_by_fields];
       }
     }
 

@@ -47,8 +47,8 @@ class_info:
         editable: 1
   person:
     editable: 1
-    display_field: longname
-    order_by: longname
+    display_field: name
+    order_by: name
     field_info_list:
       - name: name
         source: longname
