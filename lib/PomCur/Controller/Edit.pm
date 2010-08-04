@@ -364,7 +364,9 @@ sub _initialise_form
   my @model_names = $c->request()->param('model');
 
   my $model_element = {
-    type => 'Hidden', name => 'model',
+    # must be "model_name" rather than "model" or FormFu will conclude that
+    # the form has been submitted
+    type => 'Hidden', name => 'model_name',
     value => $model_names[0]
   };
 
@@ -398,7 +400,7 @@ sub _create_object {
   my %object_params = ();
 
   for my $name (keys %form_params) {
-    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model')) {
+    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model_name')) {
       next;
     }
 
@@ -478,7 +480,7 @@ sub _update_object {
   }
 
   for my $name (@form_fields) {
-    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model')) {
+    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model_name')) {
       next;
     }
 
@@ -597,7 +599,8 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 
   my $form = $self->form;
 
-  my $model_name = $c->req()->param('model');
+  my $model_name =
+    $c->req()->param('model') || $form->param_value('model_name');
 
   _initialise_form($c, $object, $type, $form);
 
