@@ -86,8 +86,16 @@ sub get_field_value
 
   my $type = $object->table();
 
+  if ($field_name eq "${type}_id") {
+    return ($object->$field_name(), 'table_id', undef);
+  }
+
   my $class_infos = $c->config()->{class_info};
   my $col_conf = $class_infos->{$type}->{field_infos}->{$field_name};
+
+  if (!defined $col_conf) {
+    croak "no field_info configured for field '$field_name' of $type\n";
+  }
 
   if (defined $col_conf->{source} && $col_conf->{source} =~ /[\$\-<>\';]/) {
     # it looks like Perl code, so eval it
@@ -105,10 +113,6 @@ sub get_field_value
 
   if ($schema->column_type($col_conf, $type) eq 'collection') {
     return (undef, 'collection');
-  }
-
-  if ($field_name eq "${type}_id") {
-    return ($object->$field_name(), 'table_id', undef);
   }
 
   my $field_db_column = $col_conf->{source};
