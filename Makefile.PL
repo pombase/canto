@@ -22,6 +22,7 @@ requires 'YAML';
 requires 'XML::Simple';
 requires 'LWP::Simple';
 requires 'Plack';
+requires 'LWP';
 
 requires 'parent';
 requires 'Config::General';

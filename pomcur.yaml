@@ -50,9 +50,8 @@ class_info:
     display_field: longname
     order_by: longname
     field_info_list:
-      - name: shortname
-        editable: 1
-      - name: longname
+      - name: name
+        source: longname
         editable: 1
       - name: Email address
         source: networkaddress

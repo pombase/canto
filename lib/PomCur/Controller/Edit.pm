@@ -361,16 +361,19 @@ sub _initialise_form
      };
   }
 
+  my @model_names = $c->request()->param('model');
+
   my $model_element = {
-    name => 'model_name', type => 'Hidden', name => 'model_name',
-    value => $c->request()->param('model')
+    type => 'Hidden', name => 'model',
+    value => $model_names[0]
   };
 
   my @all_elements = (@elements,
                       $model_element,
                       $separator_block,
                       map { {
-                        name => $_, type => 'Submit', value => ucfirst $_
+                        name => $_, type => 'Submit', value => ucfirst $_,
+                        attributes => { class => 'button' },
                       } } @INPUT_BUTTON_NAMES,
                      );
 
@@ -395,7 +398,7 @@ sub _create_object {
   my %object_params = ();
 
   for my $name (keys %form_params) {
-    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model_name')) {
+    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model')) {
       next;
     }
 
@@ -475,7 +478,7 @@ sub _update_object {
   }
 
   for my $name (@form_fields) {
-    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model_name')) {
+    if (grep { $_ eq $name } (@INPUT_BUTTON_NAMES, 'model')) {
       next;
     }
 
@@ -594,7 +597,7 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 
   my $form = $self->form;
 
-  my $model_name = $c->req()->param('model_name');
+  my $model_name = $c->req()->param('model');
 
   _initialise_form($c, $object, $type, $form);
 
