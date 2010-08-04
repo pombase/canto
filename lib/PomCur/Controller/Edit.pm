@@ -49,13 +49,16 @@ my $MAX_VALUE_LENGTH = 50;
 sub _get_field_values
 {
   my $c = shift;
-  my $table_name = shift;
-  my $class_name = shift;
+  my $referenced_table_name = shift;
+  my $referenced_class_name = shift;
   my $select_values = shift;
   my $field_info = shift;
   my $type = shift;
 
-  my $field_name = $c->config()->{class_info}->{$table_name}->{display_field};
+  my $class_info = $c->config()->{class_info}->{$referenced_table_name};
+  my $field_name = $class_info->{display_field};
+
+  my $db_field_column = $class_info->{field_infos}->{$field_name}->{source};
 
   my $values_constraint = $field_info->{values_constraint};
 
@@ -74,7 +77,7 @@ sub _get_field_values
     }
   }
 
-  my $rs = $c->schema()->resultset($class_name);
+  my $rs = $c->schema()->resultset($referenced_class_name);
 
   my @res = ();
 
@@ -88,7 +91,7 @@ sub _get_field_values
     my $table_pk_column = ($row->primary_columns())[0];
 
     my $value = $row->$table_pk_column();
-    my $label = $row->$field_name();
+    my $label = $row->$db_field_column();
 
     if (defined $label && length $label > $MAX_VALUE_LENGTH) {
       $label =~ s/(.{$MAX_VALUE_LENGTH}).*/$1 .../;
