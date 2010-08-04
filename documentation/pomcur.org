@@ -1,11 +1,8 @@
-# -*- org -*-
-###+INFOJS_OPT: view:content toc:t ltoc:t mouse:#dddddd
-#+OPTIONS:     H:5
-#+STYLE: <style type="text/css">  html { font-family: Times, serif; font-size: 16pt; }</style>
-
-PomCur Documenation
+PomCur installation and maintainence.
 
 * Introduction
+  PomCur is a generic gene annotation with a focus on community curation.
+  This document describes PomCur from the adminstrators perspective.
 * Requirements
   - Linux, BSB or UNIX
   - Perl
@@ -32,6 +29,33 @@ PomCur Documenation
    - libxml-simple-perl
    - liburi-perl
    - libmodule-install-perl
+* Quick start guide
+** Initialising the data directory
+   (in the pomcur directory)
+   =./script/pomcur_start --init <some_directory>=
+** Running the server
+   =./script/pomcur_start=
+** Visit the application start page 
+   http://localhost:5000
 * Configuration
-* Database structure
-* Implementation
+** =pomcur.yaml=
+* Implementation details
+** Structure
+   There are two parts to the system.
+
+   "Track" run is the part that the adminstrator uses to add people,
+   publications and curation sessions to the database.
+
+   "Curs" handles the curation sessions that are seen 
+*** Track
+    This 
+** Databases
+** Database structure
+** Code
+   PomCur is written in Perl, implemented using the Catalyst framework and
+   running on a Plack server.
+
+
+###+INFOJS_OPT: view:content toc:t ltoc:t mouse:#dddddd
+#+OPTIONS:     H:5
+#+STYLE: <style type="text/css">  html { font-family: Times, serif; font-size: 16pt; }</style>
