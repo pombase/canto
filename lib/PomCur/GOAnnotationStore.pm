@@ -1,4 +1,4 @@
-package PomCur::GOAnnotationSource
+package PomCur::GOAnnotationStore
 
 =head1 NAME
 
@@ -18,7 +18,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc %( (insert perl-insert-name) %)
+    perldoc PomCur::GOAnnotationStore
 
 =over 4
 

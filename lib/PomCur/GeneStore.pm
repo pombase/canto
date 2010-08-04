@@ -1,8 +1,8 @@
-package PomCur::GeneInfoSource.pm
+package PomCur::GeneStore.pm
 
 =head1 NAME
 
-PomCur::GeneInfoSource -
+PomCur::GeneStore - A role describing gene lookup services
 
 =head1 SYNOPSIS
 
@@ -18,7 +18,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc %( (insert perl-insert-name) %)
+    perldoc PomCur::GeneStore
 
 =over 4
 
@@ -39,7 +39,7 @@ use strict;
 use warnings;
 use Carp;
 
-use Moose;
+use Moose::Role;
 
 =head2
 
