@@ -205,7 +205,7 @@ sub _init_form_field
   };
 
   if (!$field_info->{editable}) {
-    $elem->{attributes}->{disabled} = 1;
+    $elem->{attributes}->{readonly} = 1;
   }
 
   my $class_name = $schema->class_name_of_table($type);
