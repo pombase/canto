@@ -643,7 +643,15 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
                                  $class_info_ref->{pre_create_hook};
 
                                if (defined $pre_create_hook) {
-                                 &{$pre_create_hook}($c);
+                                 no strict 'refs';
+                                 (my $hook_class_name = $pre_create_hook) =~
+                                   s/(.*)::.*/$1/;
+                                 eval "require $hook_class_name";
+                                 if ($@) {
+                                   croak "couldn't find class ($hook_class_name)"
+                                     . " for pre_create_hook: $pre_create_hook\n";
+                                 }
+                                 &{$pre_create_hook}($c, $object);
                                }
                              }
                            });

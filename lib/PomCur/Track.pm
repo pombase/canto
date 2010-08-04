@@ -100,7 +100,7 @@ sub create_curs_db
 
   my $curs_db_template_file = $config->{curs_db_template_file};
 
-  copy($curs_db_template_file, $db_file_name);
+  copy($curs_db_template_file, $db_file_name) or die "$!\n";
 }
 
 =head2 create_curs_db_hook

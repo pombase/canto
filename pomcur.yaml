@@ -88,7 +88,6 @@ class_info:
         editable: 1
       - name: authors
         editable: 1
-    pre_create_hook: PomCur::Track::Util::create_curs
   curs:
     display_field: curs_key
     editable: 1
@@ -100,6 +99,8 @@ class_info:
         source: pub
       - name: curs_key
         editable: 0
+# if the hook dies the creation fails
+    pre_create_hook: 'PomCur::Track::create_curs_db_hook'
 track_db_template_file: db_templates/track_db_template.sqlite3
 curs_db_template_file: db_templates/curs_db_template.sqlite3
 external_sources:
