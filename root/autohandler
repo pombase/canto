@@ -58,9 +58,9 @@ $message => undef
         <div>
           <div id="page-description">
             <% $title %>
-          </span>
-        </div>
+          </div>
 % $m->call_next;
+        </div>
       </div>
     </div>
     <& footer.mhtml &>
