@@ -38,6 +38,7 @@ banner {
 }
 
 #logo {
+  font-size: 150%;
 }
 div#footer {
   padding-top: 40px;
@@ -83,7 +84,7 @@ div#footer .sponsor {
   background-color: #333;
   font-size: 90%;
 }
-#menu .networkaddress {
+#menu .useridentifier {
   margin: 0; padding: 0;
   display: inline;
   float: left;

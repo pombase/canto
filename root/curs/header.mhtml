@@ -1,0 +1,24 @@
+<div id="heading">
+  <div id="banner">
+    <a href="<% $start_path %>">
+      <div id="logo">
+        <img src="<% $c->uri_for('/static/images/site_logo.png') %>" border="0"/>
+        CURS
+      </div>
+      <div id="text"> <% $c->config->{long_name} %> </div>
+    </a>
+  </div>
+  <& menu.mhtml &>
+</div>
+
+
+<%flags>
+inherit => undef
+</%flags>
+
+<%init>
+my $controller_name = $c->stash()->{controller_name};
+my $curs_key = $c->stash()->{curs_key};
+
+my $start_path = $c->uri_for("/$controller_name/$curs_key");
+</%init>

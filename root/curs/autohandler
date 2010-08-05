@@ -1,7 +1,1 @@
-<div id="curs">
-% $m->call_next;
-</div>
-
-<%flags>
-inherit => undef
-</%flags>
+../autohandler

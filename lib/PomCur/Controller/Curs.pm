@@ -41,13 +41,31 @@ use strict;
 use warnings;
 use Carp;
 
+=head2 begin
+
+ Action to set up stash contents for curs
+
+=cut
+sub begin : Private
+{
+  my ($self, $c) = @_;
+
+  my $path = $c->req->uri()->path();
+
+  (my $controller_name = __PACKAGE__) =~ s/.*::(.*)/\L$1/;
+
+  $c->stash->{controller_name} = $controller_name;
+
+  if ($path =~ m:$controller_name/([0-9a-f]{8}):) {
+    $c->stash->{curs_key} = $1;
+  }
+}
+
 sub start : LocalRegex('^([0-9a-f]{8})') {
   my ($self, $c) = @_;
 
   $c->stash->{title} = 'TEST';
   $c->stash->{template} = 'curs/index.mhtml';
-
-  $c->stash->{token} = $c->req->captures->[0];
 }
 
 1;

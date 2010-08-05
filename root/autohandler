@@ -72,3 +72,7 @@ $message => undef
 $error ||= $c->flash->{error};
 $message ||= $c->flash->{message};
 </%init>
+
+<%flags>
+inherit => undef
+</%flags>

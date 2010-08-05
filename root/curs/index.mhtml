@@ -1,7 +1,7 @@
 <%args>
-$token
+$curs_key
 </%args>
 
 <p style="color: red">CURS INDEX</p>
 
-<p>CODE: <% $token %></p>
+<p>CODE: <% $curs_key %></p>

@@ -1,0 +1,10 @@
+<div id="menu">
+  <ul>
+    <li>
+      <div class="useridentifier"> <% $c->stash()->{curs_key} %> </div>
+    </li>
+    <li>
+      <a href="<% $c->uri_for('/help') %>">Help</a>
+    </li>
+  </ul>
+</div>
