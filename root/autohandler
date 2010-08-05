@@ -55,12 +55,10 @@ $message => undef
 </div>
 
       <div id="content">
-        <div>
-          <div id="page-description">
-            <% $title %>
-          </div>
-% $m->call_next;
+        <div id="page-description">
+          <% $title %>
         </div>
+% $m->call_next;
       </div>
     </div>
     <& footer.mhtml &>

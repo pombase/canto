@@ -2,6 +2,4 @@
 $curs_key
 </%args>
 
-<p style="color: red">CURS INDEX</p>
-
-<p>CODE: <% $curs_key %></p>
+KEY: <% $curs_key %>

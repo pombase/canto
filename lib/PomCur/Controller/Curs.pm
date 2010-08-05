@@ -46,28 +46,31 @@ use PomCur::Curs::Util;
  Action to set up stash contents for curs
 
 =cut
-sub dispatch : LocalRegex('^([0-9a-f]{8})(:?/([^/]+)?)?')
+sub dispatch : LocalRegex('^([0-9a-f]{8})(?:/([^/]+)?)?')
 {
   my ($self, $c) = @_;
   my ($curs_key, $module_name) = @{$c->req->captures()};
 
+  $c->stash()->{curs_key} = $curs_key;
+  $module_name ||= 'root';
+  $c->stash()->{current_module} = $module_name;
+
   my $path = $c->req->uri()->path();
   (my $controller_name = __PACKAGE__) =~ s/.*::(.*)/\L$1/;
-  $c->stash->{curs_key} = $1;
   $c->stash->{controller_name} = $controller_name;
 
-  my $start_path = $c->uri_for("/$controller_name/$curs_key");
-  $c->stash->{curs_start_path} = $start_path;
+  my $root_path = $c->uri_for("/$controller_name/$curs_key");
+  $c->stash->{curs_root_path} = $root_path;
 
   @{$c->stash->{module_names}} = keys %{$c->config()->{annotation_modules}};
 
-  if (!defined $module_name || $module_name eq 'start') {
+  if ($module_name eq 'root') {
     $c->stash->{title} = 'Start';
     $c->stash->{template} = 'curs/main.mhtml';
   } else {
     my $module_display_name =
       PomCur::Curs::Util::module_display_name($module_name);
-    $c->stash->{title} = 'TEST ' . $module_display_name;
+    $c->stash->{title} = 'Module: ' . $module_display_name;
     $c->stash->{template} = "curs/modules/$module_name.mhtml";
   }
 }

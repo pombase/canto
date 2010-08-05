@@ -1,11 +1,18 @@
-<div class="curs_controls">
+<div class="curs-controls">
   <ul>
+% if ($current_module eq 'root') {
+    <li class="current-module">
+      <a href="<% $start_path %>">Start</a>
+    </li>
+% } else {
     <li>
       <a href="<% $start_path %>">Start</a>
     </li>
+% }
 % for my $module_name (@module_names) {
 %   my $module_path = $start_path . '/' . $module_name;
-    <li>
+%   my $class = $module_name eq $current_module ? 'current-module' : 'not-current-module';
+    <li class="<% $class %>">
       <a href="<% $module_path %>">
         <% PomCur::Curs::Util::module_display_name($module_name) %>
       </a>
@@ -18,6 +25,7 @@
 use PomCur::Curs::Util;
 
 my @module_names = @{$c->stash()->{module_names}};
-my $start_path = $c->stash()->{curs_start_path};
+my $start_path = $c->stash()->{curs_root_path};
+my $current_module = $c->stash()->{current_module};
 </%init>
 

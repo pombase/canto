@@ -1,8 +1,12 @@
-  <div>
-    <& controls.mhtml &>
+<div class="curs-content">
+
+<& controls.mhtml &>
 
 % $m->call_next;
-  </div>
+
+</div>
+<div class="clearall"/>
+
 
 <%flags>
 inherit => '/curs/page_template.mhtml'
