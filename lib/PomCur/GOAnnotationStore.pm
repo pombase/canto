@@ -2,7 +2,8 @@ package PomCur::GOAnnotationStore
 
 =head1 NAME
 
-PomCur::GOAnnotationSource -
+PomCur::GOAnnotationSource - methods to retrieve information about the current
+                             GO annotations
 
 =head1 SYNOPSIS
 
@@ -35,10 +36,7 @@ under the same terms as Perl itself.
 
 =cut
 
-use strict;
-use warnings;
 use Carp;
-
 use Moose;
 
 =head2 annotation_of_genes
