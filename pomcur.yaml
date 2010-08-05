@@ -106,5 +106,6 @@ curs_db_template_file: db_templates/curs_db_template.sqlite3
 external_sources:
   pubmed_query_url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id="
 implementation_classes:
-  gene_info: PomCur::Track::GeneInfo
-  annotation_info: PomCur::Track::AnnotationInfo
+  gene_store: PomCur::Track::GeneStore
+  go_annotation_store: PomCur::Track::GOAnnotationStore
+  go_store: PomCur::Track::GOStore
