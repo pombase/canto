@@ -41,7 +41,7 @@ use strict;
 use warnings;
 use Carp;
 
-sub start : Regex('^z([0-9a-f]{5,})') {
+sub start : LocalRegex('^([0-9a-f]{8})') {
   my ($self, $c) = @_;
 
   $c->stash->{title} = 'TEST';
