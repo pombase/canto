@@ -37,35 +37,40 @@ under the same terms as Perl itself.
 
 =cut
 
-use strict;
-use warnings;
 use Carp;
+
+use PomCur::Curs::Util;
 
 =head2 begin
 
  Action to set up stash contents for curs
 
 =cut
-sub begin : Private
+sub dispatch : LocalRegex('^([0-9a-f]{8})(:?/([^/]+)?)?')
 {
   my ($self, $c) = @_;
+  my ($curs_key, $module_name) = @{$c->req->captures()};
 
   my $path = $c->req->uri()->path();
-
   (my $controller_name = __PACKAGE__) =~ s/.*::(.*)/\L$1/;
-
+  $c->stash->{curs_key} = $1;
   $c->stash->{controller_name} = $controller_name;
 
-  if ($path =~ m:$controller_name/([0-9a-f]{8}):) {
-    $c->stash->{curs_key} = $1;
+  my $start_path = $c->uri_for("/$controller_name/$curs_key");
+  $c->stash->{curs_start_path} = $start_path;
+
+  @{$c->stash->{module_names}} = keys %{$c->config()->{annotation_modules}};
+
+  if (!defined $module_name || $module_name eq 'start') {
+    $c->stash->{title} = 'Start';
+    $c->stash->{template} = 'curs/main.mhtml';
+  } else {
+    my $module_display_name =
+      PomCur::Curs::Util::module_display_name($module_name);
+    $c->stash->{title} = 'TEST ' . $module_display_name;
+    $c->stash->{template} = "curs/modules/$module_name.mhtml";
   }
 }
 
-sub start : LocalRegex('^([0-9a-f]{8})') {
-  my ($self, $c) = @_;
-
-  $c->stash->{title} = 'TEST';
-  $c->stash->{template} = 'curs/index.mhtml';
-}
 
 1;

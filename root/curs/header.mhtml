@@ -17,8 +17,5 @@ inherit => undef
 </%flags>
 
 <%init>
-my $controller_name = $c->stash()->{controller_name};
-my $curs_key = $c->stash()->{curs_key};
-
-my $start_path = $c->uri_for("/$controller_name/$curs_key");
+my $start_path = $c->stash()->{curs_start_path};
 </%init>

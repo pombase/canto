@@ -1,0 +1,23 @@
+<div class="curs_controls">
+  <ul>
+    <li>
+      <a href="<% $start_path %>">Start</a>
+    </li>
+% for my $module_name (@module_names) {
+%   my $module_path = $start_path . '/' . $module_name;
+    <li>
+      <a href="<% $module_path %>">
+        <% PomCur::Curs::Util::module_display_name($module_name) %>
+      </a>
+    </li>
+% }
+  </ul>
+</div>
+
+<%init>
+use PomCur::Curs::Util;
+
+my @module_names = @{$c->stash()->{module_names}};
+my $start_path = $c->stash()->{curs_start_path};
+</%init>
+

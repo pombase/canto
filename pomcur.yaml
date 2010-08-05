@@ -113,3 +113,18 @@ implementation_classes:
   gene_store: PomCur::Track::GeneStore
   go_annotation_store: PomCur::Track::GOAnnotationStore
   go_store: PomCur::Track::GOStore
+
+annotation_modules:
+  go_function:
+    class: 'PomCur::CurModules::GOModule'
+    constructor_args:
+      ontologies:
+        - function
+        - process
+  go_component:
+    class: 'PomCur::CurModules::GOModule'
+    constructor_args:
+      ontologies:
+        - component
+  phenotype:
+    class: 'PomCur::CurModules::PhentypeModule'

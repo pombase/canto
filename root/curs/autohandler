@@ -1,1 +1,9 @@
-../autohandler
+  <div>
+    <& controls.mhtml &>
+
+% $m->call_next;
+  </div>
+
+<%flags>
+inherit => '/curs/page_template.mhtml'
+</%flags>
