@@ -14,7 +14,7 @@ my $key2 = PomCur::Curs::make_curs_key();
 
 ok(defined $key1);
 
-like($key1, qr/^[0-9a-f]{16}$/);
+like($key1, qr/^[0-9a-f]+$/);
 
 ok(defined $key2);
 

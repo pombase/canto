@@ -95,9 +95,8 @@ sub make_db_file_name
 =cut
 sub make_curs_key
 {
-  my $key_int1 = int(rand 2**32);
-  my $key_int2 = int(rand 2**32);
-  return sprintf("%.8x%.8x", $key_int1, $key_int2);
+  my $key_int = int(rand 2**32);
+  return sprintf("%.8x", $key_int);
 }
 
 1;
