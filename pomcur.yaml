@@ -13,6 +13,7 @@ authentication:
       store:
         class: DBIx::Class
         user_class: TrackModel::Person
+
 class_info:
   cv:
     editable: 1
@@ -101,10 +102,13 @@ class_info:
         editable: 0
 # if the hook dies the creation fails
     pre_create_hook: 'PomCur::Track::create_curs_db_hook'
+
 track_db_template_file: db_templates/track_db_template.sqlite3
 curs_db_template_file: db_templates/curs_db_template.sqlite3
+
 external_sources:
   pubmed_query_url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id="
+
 implementation_classes:
   gene_store: PomCur::Track::GeneStore
   go_annotation_store: PomCur::Track::GOAnnotationStore
