@@ -60,7 +60,14 @@ $config->setup();
 my %_model_map = ( manage => "TrackModel",
                    meta => "MetaModel" );
 
-# shortcut to the schema
+=head2 schema
+
+ Usage   : my $schema = $c->schema();
+ Function: Return the appropriate schema object, based on the model parameter
+           of the request, or explicitly if a model_name is pass as an argument.
+ Args    : $model_name - the name of model to return (optional)
+
+=cut
 sub schema
 {
   my $self = shift;
