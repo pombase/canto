@@ -1,4 +1,4 @@
-package PomCur::GeneStore.pm
+package PomCur::GeneStore;
 
 =head1 NAME
 
@@ -35,19 +35,23 @@ under the same terms as Perl itself.
 
 =cut
 
-use strict;
-use warnings;
 use Carp;
-
 use Moose::Role;
+
+with 'PomCur::Configurable';
 
 =head2
 
- Returns   : an array: [{ identifier => 'spbc...', name => 'cdc11',
+ Usage     : my @results = lookup(\@search_terms, { lookup_type => 'name,identifier' });
+ Function  : look up information about genes
+ Returns   : an array: ({ primary_identifier => 'spbc...', name => 'cdc11',
                           chromosome => 'chr1', length => ..., ....},
-                        { identifier => ... }]
+                        { primary_identifier => ... })
+ Args      : $search_terms - an array references of identifiers to search for,
+                             genes that match of the terms will be returned
+           : $options - a hash ref of options.
 
 =cut
-method gene_lookup(\@search_terms, { lookup_type => 'name,identifier'|'all' });
+requires 'lookup';
 
 1;

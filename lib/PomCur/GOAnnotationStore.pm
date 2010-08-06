@@ -37,7 +37,9 @@ under the same terms as Perl itself.
 =cut
 
 use Carp;
-use Moose;
+use Moose::Role;
+
+with 'PomCur::Configurable';
 
 =head2 annotation_of_genes
 

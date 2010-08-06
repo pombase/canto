@@ -1,8 +1,8 @@
-package PomCur::GOStore;
+package PomCur::Configurable;
 
 =head1 NAME
 
-PomCur::GOStore - methods to query the Gene Ontology
+PomCur::Configurable - A role consumed by classes that need configuration
 
 =head1 SYNOPSIS
 
@@ -18,7 +18,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::GOStore
+    perldoc PomCur::Configurable
 
 =over 4
 
@@ -36,17 +36,11 @@ under the same terms as Perl itself.
 =cut
 
 use Carp;
-
 use Moose::Role;
 
-with 'PomCur::Configurable';
-
-=head2 lookup
-
- Usage  : my $go_term = lookup($identifier);
-
-=cut
-
-requires 'lookup';
+has config => (
+  is => 'ro',
+  isa => 'PomCur::Config',
+);
 
 1;
