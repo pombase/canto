@@ -112,8 +112,10 @@ external_sources:
 implementation_classes:
   gene_store: PomCur::Track::GeneStore
   go_annotation_store: PomCur::Track::GOAnnotationStore
-  go_store: PomCur::Track::GOStore
+  go_store: PomCur::Track::GOStore  # for ontology information
 
+# each class needs to set up the stash for forwarding to a template
+# page based on the module name, eg. go_function.html
 annotation_modules:
   go_function:
     class: 'PomCur::CurModules::GOModule'
