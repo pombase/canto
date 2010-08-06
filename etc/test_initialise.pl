@@ -19,6 +19,7 @@ use PomCur::Config;
 my $config = PomCur::Config->new("pomcur.yaml", "t/test_config.yaml");
 
 my $spreadsheet_file = $config->{test_config}->{curation_spreadsheet};
+my $genes_file = $config->{test_config}->{test_genes_file};
 
 my $track_test_db =
   $config->{test_config}->{track_test_db};
@@ -36,11 +37,13 @@ copy $track_db_template_file, $track_test_db;
 
 my $schema = PomCur::TrackDB->new($config);
 
-my $csv = Text::CSV->new({binary => 1});
+my $curation_csv = Text::CSV->new({binary => 1});
+open my $curation_io, '<', $spreadsheet_file or die;
+$curation_csv->column_names ($curation_csv->getline($curation_io));
 
-open my $io, '<', $spreadsheet_file or die;
-
-$csv->column_names ($csv->getline($io));
+my $genes_csv = Text::CSV->new({binary => 1});
+open my $genes_io, '<', $genes_file or die;
+$genes_csv->column_names ($genes_csv->getline($genes_io));
 
 my %people = ();
 my %labs = ();
@@ -163,6 +166,19 @@ sub process_row
   fix_lab($submitter, $lab);
 }
 
+sub process_gene_row
+{
+  my $columns_ref = shift;
+  my ($primary_name, $product, $name) = @{$columns_ref};
+
+  $schema->create_with_type('Gene',
+                            {
+                              primary_identifier => $primary_name,
+                              product => $product,
+                              name => $name,
+                            });
+}
+
 sub process
 {
   my $cv = $schema->create_with_type('Cv', { name => 'pomcur user types' });
@@ -175,8 +191,12 @@ sub process
 
   my $admin = get_person('Val Wood', 'val@sanger.ac.uk', $admin_cvterm);
 
-  while (my $columns_ref = $csv->getline($io)) {
+  while (my $columns_ref = $curation_csv->getline($curation_io)) {
     process_row($columns_ref, $user_cvterm);
+  }
+
+  while (my $columns_ref = $genes_csv->getline($genes_io)) {
+    process_gene_row($columns_ref, $user_cvterm);
   }
 }
 

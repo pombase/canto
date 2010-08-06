@@ -4,3 +4,4 @@ test_config:
   tracking_scratch: "t/scratch/tracking"
   track_test_db: "t/data/track_db_test_template.sqlite3"
   curation_spreadsheet: "t/data/community_curation_stats_small.txt"
+  test_genes_file: "t/data/pombe_genes.txt"

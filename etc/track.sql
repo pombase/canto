@@ -73,3 +73,11 @@ CREATE TABLE sessions (
        session_data text,
        expires      INTEGER
 );
+
+CREATE TABLE gene (
+       gene_id integer NOT NULL PRIMARY KEY,
+       primary_identifier text NOT NULL,
+       secondary_identifier text,
+       product text,
+       name text
+);
