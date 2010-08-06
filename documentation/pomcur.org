@@ -29,6 +29,7 @@ PomCur installation and maintainence.
    - libxml-simple-perl
    - liburi-perl
    - libmodule-install-perl
+   - libmoose-perl
 * Quick start guide
 ** Initialising the data directory
    (in the pomcur directory)
