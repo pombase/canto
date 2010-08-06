@@ -43,4 +43,12 @@ has 'config' => (
   isa => 'PomCur::Config',
 );
 
+=head2 annotation_count
+
+ Usage   : my ($old, $new) = $mod->annotation_count();
+ Function: returns the number of annotations made before this curs started and
+           the number of new annotations
+
+=cut
+requires 'annotation_count';
 1;

@@ -45,4 +45,42 @@ has 'ontologies' => (
   isa => 'ArrayRef[Str]',
 );
 
+has 'go_store' => (
+  is => 'ro',
+  lazy_build => 1,
+  init_arg => undef,
+);
+
+has 'annotation_store' => (
+  is => 'ro',
+  lazy_build => 1,
+  init_arg => undef,
+);
+
+sub _build_go_store
+{
+  my $self = shift;
+
+  my $config = $self->config();
+  my $go_store = $config->{implementation_classes}->{go_store};
+
+  die "GOT HERE!"
+
+  return $go_store->new();
+}
+
+=head2 annotation_count
+
+ Usage   : my ($old, $new) = $mod->annotation_count();
+ Function: returns the number of annotations made before this curs started and
+           the number of new annotations
+
+=cut
+sub annotation_count
+{
+  my $existing_count = 0;
+
+  return ($existing_count, 0);
+}
+
 1;
