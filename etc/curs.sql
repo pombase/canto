@@ -1,8 +1,8 @@
 PRAGMA foreign_keys=ON;
 
 CREATE TABLE organism (
-	organism_id integer PRIMARY KEY,
-        data text NOT NULL
+       organism_id integer PRIMARY KEY,
+       data text NOT NULL
 );
 
 CREATE TABLE gene (
