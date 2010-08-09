@@ -36,10 +36,10 @@ under the same terms as Perl itself.
 =cut
 
 use Carp;
-use Moose;
+use Moose::Role;
 
 has 'config' => (
-  is => 'ro,
+  is => 'ro',
   isa => 'PomCur::Config',
 );
 
@@ -51,4 +51,5 @@ has 'config' => (
 
 =cut
 requires 'annotation_count';
+
 1;

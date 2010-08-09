@@ -129,4 +129,4 @@ annotation_modules:
       ontologies:
         - component
   phenotype:
-    class: 'PomCur::CurModules::PhentypeModule'
+    class: 'PomCur::CurModules::PhenotypeModule'

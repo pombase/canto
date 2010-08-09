@@ -25,6 +25,7 @@ requires 'XML::Simple';
 requires 'LWP::Simple';
 requires 'Plack';
 requires 'LWP';
+#requires 'Try::Tiny';
 
 requires 'parent';
 requires 'Config::General';

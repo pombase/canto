@@ -38,7 +38,7 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
-extends 'PomCur::CurModule';
+with 'PomCur::CurModule';
 
 has 'ontologies' => (
   is => 'ro',
@@ -64,7 +64,7 @@ sub _build_go_store
   my $config = $self->config();
   my $go_store = $config->{implementation_classes}->{go_store};
 
-  die "GOT HERE!"
+  die "GOT HERE!";
 
   return $go_store->new();
 }

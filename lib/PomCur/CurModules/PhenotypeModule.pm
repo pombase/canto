@@ -38,6 +38,20 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
-extends 'PomCur::CurModule';
+with 'PomCur::CurModule';
+
+=head2 annotation_count
+
+ Usage   : my ($old, $new) = $mod->annotation_count();
+ Function: returns the number of annotations made before this curs started and
+           the number of new annotations
+
+=cut
+sub annotation_count
+{
+  my $existing_count = 0;
+
+  return ($existing_count, 0);
+}
 
 1;

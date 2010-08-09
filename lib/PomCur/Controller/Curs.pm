@@ -37,6 +37,8 @@ under the same terms as Perl itself.
 
 =cut
 
+use strict;
+use warnings;
 use Carp;
 
 use PomCur::Curs::Util;
@@ -62,7 +64,11 @@ sub dispatch : LocalRegex('^([0-9a-f]{8})(?:/([^/]+)?)?')
   my $root_path = $c->uri_for("/$controller_name/$curs_key");
   $c->stash->{curs_root_path} = $root_path;
 
-  @{$c->stash->{module_names}} = keys %{$c->config()->{annotation_modules}};
+  my $config = $c->config();
+
+  my %annotation_modules = %{$config->{annotation_modules}};
+
+  @{$c->stash->{module_names}} = keys %annotation_modules;
 
   if ($module_name eq 'root') {
     $c->stash->{title} = 'Start';
@@ -72,6 +78,23 @@ sub dispatch : LocalRegex('^([0-9a-f]{8})(?:/([^/]+)?)?')
       PomCur::Curs::Util::module_display_name($module_name);
     $c->stash->{title} = 'Module: ' . $module_display_name;
     $c->stash->{template} = "curs/modules/$module_name.mhtml";
+
+    my $module_config = $annotation_modules{$module_name};
+    my $module_class_name = $module_config->{class};
+
+    my %args = (config => $config);
+
+    while (my($key, $value) = each %{$module_config->{constructor_args}}) {
+      $args{$key} = $value;
+    }
+
+    eval "use $module_class_name";
+    if ($@) {
+      die "can't find module ('$module_class_name') specified in configuration "
+        . "for module: $module_name\n";
+    }
+
+    my $store = $module_class_name->new(%args);
   }
 }
 
