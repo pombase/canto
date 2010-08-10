@@ -23,6 +23,7 @@ CREATE TABLE cvterm (
      );
 CREATE INDEX cvterm_idx1 ON cvterm (cv_id);
 CREATE INDEX cvterm_idx2 ON cvterm (name);
+
 CREATE TABLE organism (
        	organism_id integer NOT NULL PRIMARY KEY,
         abbreviation varchar(255) null,
@@ -77,7 +78,13 @@ CREATE TABLE sessions (
 CREATE TABLE gene (
        gene_id integer NOT NULL PRIMARY KEY,
        primary_identifier text NOT NULL,
-       secondary_identifier text,
        product text,
-       name text
+       name text,
+       primary_name text
+);
+
+CREATE TABLE gene_synonym (
+       gene_synonym_id integer NOT NULL PRIMARY key,
+       identifier text NOT NULL,
+       synonym_type integer NOT NULL references cvterm(cvterm_id)
 );

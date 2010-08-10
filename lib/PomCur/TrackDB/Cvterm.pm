@@ -48,10 +48,15 @@ __PACKAGE__->has_many(
   "PomCur::TrackDB::Person",
   { "foreign.role" => "self.cvterm_id" },
 );
+__PACKAGE__->has_many(
+  "gene_synonyms",
+  "PomCur::TrackDB::GeneSynonym",
+  { "foreign.synonym_type" => "self.cvterm_id" },
+);
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZGyDDVCvFKVKWhETgHN/eg
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/D+ozlb8xDbBXMGFdBywrA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
