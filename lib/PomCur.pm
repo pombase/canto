@@ -75,7 +75,11 @@ sub schema
 
   die "no model passed to schema()\n" unless defined $model_name;
 
-  return $self->model($_model_map{$model_name})->schema();
+  my $model = $_model_map{$model_name};
+
+  die "unknown model ($model_name) passed to schema()\n" unless defined $model;
+
+  return $self->model($model)->schema();
 }
 
 1;
