@@ -48,14 +48,11 @@ use PomCur::Curs::Util;
  Action to set up stash contents for curs
 
 =cut
-sub dispatch : LocalRegex('^([0-9a-f]{8})(?:/([^/]+)?)?')
+sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 {
-  my ($self, $c) = @_;
-  my ($curs_key, $module_name) = @{$c->req->captures()};
+  my ($self, $c, $curs_key) = @_;
 
   $c->stash()->{curs_key} = $curs_key;
-  $module_name ||= 'root';
-  $c->stash()->{current_module} = $module_name;
 
   my $path = $c->req->uri()->path();
   (my $controller_name = __PACKAGE__) =~ s/.*::(.*)/\L$1/;
@@ -69,34 +66,49 @@ sub dispatch : LocalRegex('^([0-9a-f]{8})(?:/([^/]+)?)?')
   my %annotation_modules = %{$config->{annotation_modules}};
 
   @{$c->stash->{module_names}} = keys %annotation_modules;
-
-  if ($module_name eq 'root') {
-    $c->stash->{title} = 'Start';
-    $c->stash->{template} = 'curs/main.mhtml';
-  } else {
-    my $module_display_name =
-      PomCur::Curs::Util::module_display_name($module_name);
-    $c->stash->{title} = 'Module: ' . $module_display_name;
-    $c->stash->{template} = "curs/modules/$module_name.mhtml";
-
-    my $module_config = $annotation_modules{$module_name};
-    my $module_class_name = $module_config->{class};
-
-    my %args = (config => $config);
-
-    while (my($key, $value) = each %{$module_config->{constructor_args}}) {
-      $args{$key} = $value;
-    }
-
-    eval "use $module_class_name";
-    if ($@) {
-      die "can't find module ('$module_class_name') specified in configuration "
-        . "for module: $module_name\n";
-    }
-
-    my $store = $module_class_name->new(%args);
-  }
 }
 
+sub start : Chained('top') PathPart('') Args(0)
+{
+  my ($self, $c) = @_;
+
+  $c->stash->{title} = 'Home';
+  $c->stash->{template} = 'curs/main.mhtml';
+
+  $c->stash->{component} = 'home';
+}
+
+sub module_dispatch : Chained('top') PathPart('') Args(1)
+{
+  my ($self, $c, $module_name) = @_;
+
+  my $config = $c->config();
+
+  my $module_display_name =
+    PomCur::Curs::Util::module_display_name($module_name);
+  $c->stash->{title} = 'Module: ' . $module_display_name;
+  $c->stash->{component} = $module_name;
+  $c->stash->{template} = "curs/modules/$module_name.mhtml";
+
+  my %annotation_modules = %{$config->{annotation_modules}};
+
+  my $module_config = $annotation_modules{$module_name};
+  my $module_class_name = $module_config->{class};
+
+  my %args = (config => $config);
+
+  while (my($key, $value) = each %{$module_config->{constructor_args}}) {
+    $args{$key} = $value;
+  }
+
+  eval "use $module_class_name";
+  if ($@) {
+    die "can't find module ('$module_class_name') specified in configuration "
+      . "for module: $module_name\n";
+  }
+
+  my $store = $module_class_name->new(%args);
+
+}
 
 1;
