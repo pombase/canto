@@ -2,6 +2,8 @@
 
 <& controls.mhtml &>
 
+<& gene_list.mhtml &>
+
 % $m->call_next;
 
 </div>

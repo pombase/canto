@@ -342,3 +342,19 @@ div.clearall {
   margin: 0px;
   padding: 0px;
 }
+
+
+.small-gene-list {
+  background-color: #efa;
+  float: right;
+  font-size: 80%;
+  position: relative;
+  right: -10px;
+  background-color: #cce;
+
+}
+
+.small-gene-list .no-genes-message {
+  font-size: 90%;
+  margin: 10px;
+}

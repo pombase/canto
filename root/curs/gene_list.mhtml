@@ -1,0 +1,61 @@
+<%args>
+$big_list => 0
+$title => 'Genes'
+</%args>
+
+<div class="<% $class %>">
+  <div class="title">
+    <% $title %>
+  </div>
+% if (@gene_hashes) {
+  <table>
+    <thead>
+%   for my $col_name (@col_names) {
+      <td>
+        <% $col_name %>
+      </td>
+%   }
+    </thead>
+%   for my $gene (@gene_hashes) {
+    <tr>
+%     for my $col_name (@col_names) {
+      <td>
+        <% $gene->$col_name() %>
+      </td>
+%     }
+    </tr>
+%   }
+  </table>
+% } else {
+  <div class="no-genes-message">
+    [No genes]
+  </div>
+% }
+</div>
+
+<%init>
+use PomCur::Curs;
+
+my $schema = PomCur::Curs::get_schema($c);
+my @all_genes = $schema->resultset('Gene')->all();
+my $class;
+my @col_names;
+
+my @gene_hashes = map {
+     {
+       systematic_identifier => $_->systematic_identifier(),
+       primary_name => $_->primary_name(),
+       product => $_->product(),
+       name_or_systematic => $_->primary_name() || $_->systematic_identifier(),
+     }
+   } @all_genes;
+
+if ($big_list) {
+  $class = 'big-gene-list';
+  @col_names = qw(systematic_identifier primary_name product);
+} else {
+  $class = 'small-gene-list';
+  @col_names = qw(name_or_systematic);
+}
+
+</%init>
