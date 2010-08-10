@@ -2,13 +2,16 @@ PRAGMA foreign_keys=ON;
 
 CREATE TABLE organism (
        organism_id integer PRIMARY KEY,
-       data text NOT NULL
+       name TEXT NOT NULL UNIQUE,
+       ncbi_taxonomy_identifier integer NOT NULL
 );
 
 CREATE TABLE gene (
        primary_id text PRIMARY KEY,
-       organism integer NOT NULL REFERENCES organism(organism_id),
-       data text NOT NULL
+       systematic_identifier test NOT NULL UNIQUE,
+       primary_name TEXT,
+       gene_product TEXT,
+       organism integer NOT NULL REFERENCES organism(organism_id)
 );
 
 CREATE TABLE annotation (
