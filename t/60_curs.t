@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use PomCur::TestUtil;
 use PomCur::Curs;
@@ -34,3 +34,27 @@ my ($connect_string2, $exists_flag) =
 is($connect_string1, $connect_string2);
 
 like($connect_string1, qr/$key1/);
+
+
+package Test::PomCur;
+
+sub stash
+{
+  return {
+    curs_key => $key1
+  };
+}
+
+sub config
+{
+  return $config;
+}
+
+
+package main;
+
+my $test_pomcur = bless {}, 'Test::PomCur';
+
+my $schema = PomCur::Curs::get_schema($test_pomcur);
+
+is(ref $schema, 'PomCur::CursDB');

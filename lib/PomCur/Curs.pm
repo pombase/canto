@@ -40,6 +40,8 @@ use warnings;
 use Carp;
 use Moose;
 
+use PomCur::CursDB;
+
 =head2 make_connect_string
 
  Usage   : my ($connect_string, $exists_flag) =
@@ -97,6 +99,28 @@ sub make_curs_key
 {
   my $key_int = int(rand 2**32);
   return sprintf("%.8x", $key_int);
+}
+
+=head2
+
+ Usage   : my $schema = PomCur::Curs::get_schema($c);
+ Function: Get a schema object for the current curs, based on the curs_key in
+           the path
+ Args    : $c - The Catalyst object
+ Return  : the schema
+
+=cut
+sub get_schema
+{
+  my $c = shift;
+  my $curs_key = $c->stash()->{curs_key};
+
+  if (defined $curs_key) {
+    my $config = $c->config();
+    PomCur::CursDB->connect(make_connect_string($config, $curs_key));
+  } else {
+    croak "internal error: no curs_key in the stash\n";
+  }
 }
 
 1;
