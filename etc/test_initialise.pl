@@ -175,7 +175,7 @@ sub process_gene_row
                             {
                               primary_identifier => $primary_name,
                               product => $product,
-                              name => $name,
+                              primary_name => $name,
                             });
 }
 

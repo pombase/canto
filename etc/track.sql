@@ -79,7 +79,6 @@ CREATE TABLE gene (
        gene_id integer NOT NULL PRIMARY KEY,
        primary_identifier text NOT NULL,
        product text,
-       name text,
        primary_name text
 );
 

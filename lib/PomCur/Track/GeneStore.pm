@@ -51,15 +51,39 @@ sub lookup
 
   my $gene_rs = $self->schema()->resultset('Gene');
   my $rs = $gene_rs->search({
-    primary_identifier => {
-      -in => [@search_terms],
-    }});
+    -or => [
+      primary_identifier => {
+        -in => [@search_terms],
+      },
+      primary_name => {
+        -in => [@search_terms],
+      },
+    ]
+   });
 
   $rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
 
-  my @return_array = $rs->all();
+  my @found_genes = $rs->all();
 
-  return @return_array;
+  my %gene_ids = ();
+
+  for my $found_gene (@found_genes) {
+    my $gene_identifier = $found_gene->{primary_identifier};
+    if (defined $gene_identifier) {
+      $gene_ids{$gene_identifier} = 1;
+    }
+    my $gene_name = $found_gene->{primary_name};
+    if (defined $gene_name) {
+      $gene_ids{$gene_name} = 1;
+    }
+  }
+
+  my @missing_genes = grep {
+    !exists $gene_ids{$_}
+  } @search_terms;
+
+  return { found => \@found_genes,
+           missing => \@missing_genes };
 }
 
 1;
