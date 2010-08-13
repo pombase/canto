@@ -42,6 +42,7 @@ use warnings;
 use Carp;
 
 use PomCur::Curs::Util;
+use PomCur::Track;
 
 =head2 begin
 
@@ -88,13 +89,33 @@ sub home : Chained('top') PathPart('') Args(0)
 
 my $gene_list_textarea_name = 'gene_identifiers';
 
+
 sub _find_genes
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $form) = @_;
 
-  my $gene_list = $self->form()->param_value($gene_list_textarea_name);
+  my $gene_list = $form->param_value($gene_list_textarea_name);
+  my $schema = PomCur::Curs::get_schema($c);
+  my $store = PomCur::Track::get_store($c->config(), 'gene');
+  my @search_terms = split /[\s,]+/, $gene_list;
 
-  die $gene_list;
+  my $result = $store->lookup([@search_terms]);
+
+  my $_create_curs_genes = sub
+    {
+      my @genes = @{$result->{found}};
+
+      for my $gene (@genes) {
+        $schema->create_with_type('Gene', {
+          primary_name => $gene->{primary_name},
+          primary_identifier => $gene->{primary_identifier},
+          product => $gene->{product},
+          organism => 1,
+        });
+      }
+    };
+
+  $schema->txn_do($_create_curs_genes);
 }
 
 sub gene_upload : Chained('top') Args(0) Form
@@ -135,7 +156,7 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 
   if ($form->submitted_and_valid()) {
-    $self->_find_genes($c);
+    $self->_find_genes($c, $form);
 
     $self->_redirect_home_and_detach($c);
   }

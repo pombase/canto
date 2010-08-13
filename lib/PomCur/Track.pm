@@ -111,13 +111,35 @@ sub create_curs_db
            $curs - the Curs object
 
 =cut
-
 sub create_curs_db_hook
 {
   my $c = shift;
   my $curs = shift;
 
   create_curs_db($c->config(), $curs);
+}
+
+=head2
+
+ Usage   : my $store = PomCur::Track::get_store($config, 'gene');
+ Function: return an initialised Store object of the given type
+ Args    : $config - the PomCur::Config object
+           $store_name - the store name used to look up in the config
+ Return  : a Store object
+
+=cut
+sub get_store
+{
+  my ($config, $store_name) = @_;
+
+  if (!defined $store_name) {
+    croak "no store_name passed to get_store()\n";
+  }
+
+  my $impl_class = $config->{implementation_classes}->{"${store_name}_store"};
+
+  eval "use $impl_class";
+  return $impl_class->new(config => $config);
 }
 
 1;
