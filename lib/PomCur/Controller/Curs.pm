@@ -1,6 +1,6 @@
 package PomCur::Controller::Curs;
 
-use parent 'Catalyst::Controller';
+use base 'Catalyst::Controller::HTML::FormFu';
 
 =head1 NAME
 
@@ -68,7 +68,15 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   @{$c->stash->{module_names}} = keys %annotation_modules;
 }
 
-sub start : Chained('top') PathPart('') Args(0)
+sub _redirect_home_and_detach
+{
+  my ($self, $c) = @_;
+
+  $c->res->redirect($c->stash->{curs_root_path});
+  $c->detach();
+}
+
+sub home : Chained('top') PathPart('') Args(0)
 {
   my ($self, $c) = @_;
 
@@ -76,6 +84,61 @@ sub start : Chained('top') PathPart('') Args(0)
   $c->stash->{template} = 'curs/main.mhtml';
 
   $c->stash->{component} = 'home';
+}
+
+my $gene_list_textarea_name = 'gene_identifiers';
+
+sub _find_genes
+{
+  my ($self, $c) = @_;
+
+  my $gene_list = $self->form()->param_value($gene_list_textarea_name);
+
+  die $gene_list;
+}
+
+sub gene_upload : Chained('top') Args(0) Form
+{
+  my ($self, $c) = @_;
+
+  $c->stash->{title} = 'Gene upload';
+  $c->stash->{template} = 'curs/gene_upload.mhtml';
+
+  $c->stash->{component} = 'gene_upload';
+
+  my $form = $self->form();
+
+  my @all_elements = (
+      { name => $gene_list_textarea_name, type => 'Textarea', cols => 80, rows => 10,
+        constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
+      },
+      map {
+          {
+            name => $_, type => 'Submit', value => $_,
+              attributes => { class => 'button', },
+            }
+        } qw(submit cancel),
+    );
+
+  $form->auto_fieldset(1);
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $c->stash->{form} = $form;
+
+  if ($form->submitted()) {
+    if (defined $c->req->param('cancel')) {
+      $self->_redirect_home_and_detach($c);
+    }
+  }
+
+  if ($form->submitted_and_valid()) {
+    $self->_find_genes($c);
+
+    $self->_redirect_home_and_detach($c);
+  }
 }
 
 sub module_dispatch : Chained('top') PathPart('') Args(1)

@@ -1,0 +1,6 @@
+<%args>
+</%args>
+
+<div class="gene-update">
+  <% $c->stash->{form}->render() %>
+</div>
