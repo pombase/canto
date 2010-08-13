@@ -43,19 +43,19 @@ my @col_names;
 
 my @gene_hashes = map {
      {
-       systematic_identifier => $_->systematic_identifier(),
+       primary_identifier => $_->primary_identifier(),
        primary_name => $_->primary_name(),
        product => $_->product(),
-       name_or_systematic => $_->primary_name() || $_->systematic_identifier(),
+       name_or_primary => $_->primary_name() || $_->primary_identifier(),
      }
    } @all_genes;
 
 if ($big_list) {
   $class = 'big-gene-list';
-  @col_names = qw(systematic_identifier primary_name product);
+  @col_names = qw(primary_identifier primary_name product);
 } else {
   $class = 'small-gene-list';
-  @col_names = qw(name_or_systematic);
+  @col_names = qw(name_or_primary);
 }
 
 </%init>

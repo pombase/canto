@@ -8,16 +8,16 @@ use base 'DBIx::Class';
 __PACKAGE__->load_components("Core");
 __PACKAGE__->table("gene");
 __PACKAGE__->add_columns(
-  "primary_id",
+  "gene_id",
   {
-    data_type => "text",
+    data_type => "integer",
     default_value => undef,
     is_nullable => 1,
     size => undef,
   },
-  "systematic_identifier",
+  "primary_identifier",
   {
-    data_type => "test",
+    data_type => "text",
     default_value => undef,
     is_nullable => 0,
     size => undef,
@@ -29,7 +29,7 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => undef,
   },
-  "gene_product",
+  "product",
   {
     data_type => "TEXT",
     default_value => undef,
@@ -44,8 +44,8 @@ __PACKAGE__->add_columns(
     size => undef,
   },
 );
-__PACKAGE__->set_primary_key("primary_id");
-__PACKAGE__->add_unique_constraint("systematic_identifier_unique", ["systematic_identifier"]);
+__PACKAGE__->set_primary_key("gene_id");
+__PACKAGE__->add_unique_constraint("primary_identifier_unique", ["primary_identifier"]);
 __PACKAGE__->belongs_to(
   "organism",
   "PomCur::CursDB::Organism",
@@ -54,7 +54,7 @@ __PACKAGE__->belongs_to(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AqLOgRv1v2JIxQd3nyP0YQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IUMoQ2h41Blm7ErUetag6w
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

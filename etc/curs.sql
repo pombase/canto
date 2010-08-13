@@ -7,10 +7,10 @@ CREATE TABLE organism (
 );
 
 CREATE TABLE gene (
-       primary_id text PRIMARY KEY,
-       systematic_identifier test NOT NULL UNIQUE,
+       gene_id integer PRIMARY KEY,
+       primary_identifier text NOT NULL UNIQUE,
        primary_name TEXT,
-       gene_product TEXT,
+       product TEXT,
        organism integer NOT NULL REFERENCES organism(organism_id)
 );
 
