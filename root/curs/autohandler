@@ -2,7 +2,9 @@
 
 <& controls.mhtml &>
 
-<& gene_list.mhtml &>
+% if ($c->stash()->{component} ne 'gene_upload') {
+  <& gene_list.mhtml &>
+% }
 
 % $m->call_next;
 
