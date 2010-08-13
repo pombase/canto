@@ -9,3 +9,4 @@ pipeline-example-config.yaml
 t/scratch/
 pomcur_deploy.yaml
 pomcur_test.yaml
+local

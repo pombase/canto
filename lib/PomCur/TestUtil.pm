@@ -57,6 +57,23 @@ sub new
 
 =head2
 
+ Usage   : my $file = PomCur::TestUtil::connect_string_file($connect_string);
+ Function: Return the db file name from an sqlite connect string
+ Args    : $connect_string
+ Return  : the file name
+
+=cut
+sub connect_string_file_name
+{
+  my $connect_string = shift;
+
+  (my $db_file_name = $connect_string) =~ s/dbi:SQLite:dbname=(.*)/$1/;
+
+  return $db_file_name;
+}
+
+=head2
+
  Usage   : $test_util->init_test();
  Function: set up the test environment by creating a test database and
            configuration
@@ -139,7 +156,7 @@ sub init_test
 
   my $connect_string = $config->model_connect_string('Track');
 
-  (my $db_file_name = $connect_string) =~ s/dbi:SQLite:dbname=(.*)/$1/;
+  my $db_file_name = connect_string_file_name($connect_string);
 
   return (track_db_file_name => $db_file_name);
 }
