@@ -19,6 +19,8 @@ use PomCur::Meta::Util;
 
 use File::Temp qw(tempdir);
 
+$ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
+
 =head2
 
  Usage   : my $utils = PomCur::TestUtil->new();
@@ -140,6 +142,19 @@ sub init_test
   (my $db_file_name = $connect_string) =~ s/dbi:SQLite:dbname=(.*)/$1/;
 
   return (track_db_file_name => $db_file_name);
+}
+
+=head2 plack_app
+
+ Function: make a mock Plack application for testing
+
+=cut
+sub plack_app
+{
+  my $self = shift;
+
+  my $psgi_script_name = $self->root_dir() . '/script/pomcur_psgi.pl';
+  return Plack::Util::load_psgi($psgi_script_name);
 }
 
 sub root_dir

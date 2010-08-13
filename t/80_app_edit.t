@@ -9,13 +9,10 @@ use Plack::Util;
 use HTTP::Request;
 use HTTP::Cookies;
 
-$ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
-
 my $test_util = PomCur::TestUtil->new();
 $test_util->init_test();
 
-my $psgi_script_name = $test_util->root_dir() . '/script/pomcur_psgi.pl';
-my $app = Plack::Util::load_psgi($psgi_script_name);
+my $app = $test_util->plack_app();
 
 my $cookie_jar = HTTP::Cookies->new(
   file => '/tmp/pomcur_web_test_$$.cookies',
