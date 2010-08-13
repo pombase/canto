@@ -20,7 +20,7 @@ $title => 'Genes'
     <tr>
 %     for my $col_name (@col_names) {
       <td>
-        <% $gene->$col_name() %>
+        <% $gene->{$col_name} %>
       </td>
 %     }
     </tr>
