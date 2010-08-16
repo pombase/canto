@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::More tests => 19;
 
 use PomCur::TestUtil;
 
@@ -18,6 +18,12 @@ my $cookie_jar = HTTP::Cookies->new(
   file => '/tmp/pomcur_web_test_$$.cookies',
   autosave => 1,
 );
+
+my $test_name = 'Test name';
+my $test_email = 'test@test';
+my $test_email2 = 'new@test_email';
+
+my $new_object_id = undef;
 
 test_psgi $app, sub {
   my $cb = shift;
@@ -58,12 +64,59 @@ test_psgi $app, sub {
 
   # test creating an object
   {
-    my $test_name = 'Test name';
-
     my $uri = new URI('http://localhost:5000/new/object/person');
     $uri->query_form(model => 'manage',
                      name => $test_name,
-                     'Email address' => 'test@test',
+                     'Email address' => $test_email,
+                     lab => 0,
+                     role => 1,
+                     submit => 'Submit',
+                    );
+
+    my $req = HTTP::Request->new(GET => $uri);
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    ok ($redirect_url =~ m:view/object/person/(\d+):);
+
+    $new_object_id = $1;
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    ok ($redirect_res->content() =~ /Details for person $new_object_id/);
+    ok ($redirect_res->content() =~ /Email address/);
+    ok ($redirect_res->content() =~ /\Q$test_name/);
+    ok ($redirect_res->content() =~ /\Q$test_email/);
+  }
+
+  # test visiting the edit object page
+  {
+    my $url = "http://localhost:5000/editnew/object/person/$new_object_id?model=manage";
+    my $req = HTTP::Request->new(GET => $url);
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    ok ($res->content() =~ /<form/);
+    ok ($res->content() =~ /<input name="Email address"/);
+  }
+
+  # test editing an object
+  {
+    my $test_name = 'Test name';
+
+    my $uri = new URI("http://localhost:5000/edit/object/person/$new_object_id");
+    $uri->query_form(model => 'manage',
+                     name => $test_name,
+                     'Email address' => $test_email2,
                      lab => 0,
                      role => 1,
                      submit => 'Submit',
@@ -81,9 +134,10 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    ok ($redirect_res->content() =~ /Details for person 19/);
+    ok ($redirect_res->content() =~ /Details for person $new_object_id/);
     ok ($redirect_res->content() =~ /Email address/);
-    ok ($redirect_res->content() =~ /\Q$test_name/);
+    ok ($redirect_res->content() !~ /\Q$test_email/);
+    ok ($redirect_res->content() =~ /\Q$test_email2/);
   }
 };
 
