@@ -13,29 +13,27 @@ BEGIN {
   push @INC, "lib";
 }
 
+use PomCur::Track;
 use PomCur::TrackDB;
 use PomCur::Config;
+use PomCur::TestUtil;
+
+my @test_curators = ();
+my @test_publications = ();
+my %test_schemas = ();
+
+my $test_util = PomCur::TestUtil->new();
 
 my $config = PomCur::Config->new("pomcur.yaml", "t/test_config.yaml");
+
+$config->{data_directory} = $test_util->root_dir() . '/t/data';
 
 my $spreadsheet_file = $config->{test_config}->{curation_spreadsheet};
 my $genes_file = $config->{test_config}->{test_genes_file};
 
-my $track_test_db =
-  $config->{test_config}->{track_test_db};
-
-my $track_db_template_file = $config->{track_db_template_file};
-
-unlink $track_test_db;
-
-copy $track_db_template_file, $track_test_db;
-
-%{$config->{"Model::TrackModel"}} = (
-  schema_class => 'PomCur::TrackDB',
-  connect_info => ["dbi:SQLite:dbname=$track_test_db"],
-);
-
-my $schema = PomCur::TrackDB->new($config);
+my $base_track_db_file_name;
+($test_schemas{base}, $base_track_db_file_name) =
+  PomCur::TestUtil::make_track_test_db($config, 'track_test_db');
 
 my $curation_csv = Text::CSV->new({binary => 1});
 open my $curation_io, '<', $spreadsheet_file or die;
@@ -44,6 +42,15 @@ $curation_csv->column_names ($curation_csv->getline($curation_io));
 my $genes_csv = Text::CSV->new({binary => 1});
 open my $genes_io, '<', $genes_file or die;
 $genes_csv->column_names ($genes_csv->getline($genes_io));
+
+
+my %test_cases = (
+  'base' => [],
+  '1_curs' => [ { community_curator => 0, pub => 0 } ],
+  '3_curs' => [ { community_curator => 1, pub => 1 },
+                { community_curator => 2, pub => 2 },
+              ]
+);
 
 my %people = ();
 my %labs = ();
@@ -67,6 +74,7 @@ my %pub_titles = (
 
 sub get_pub
 {
+  my $schema = shift;
   my $pubmed_id = shift;
 
   if (!exists $pubs{$pubmed_id}) {
@@ -84,6 +92,7 @@ sub get_pub
 
 sub get_lab
 {
+  my $schema = shift;
   my $lab_head = shift;
 
   my $lab_head_name = $lab_head->longname();
@@ -105,6 +114,7 @@ sub get_lab
 
 sub get_person
 {
+  my $schema = shift;
   my $longname = shift;
   my $networkaddress = shift;
   my $role_cvterm = shift;
@@ -143,19 +153,42 @@ sub fix_lab
 
 sub process_row
 {
+  my $schema = shift;
   my $columns_ref = shift;
   my $user_cvterm = shift;
 
   my ($pubmed_id, $lab_head_name, $submitter_name, $date_sent, $status,
       $lab_head_email, $submitter_email) = @{$columns_ref};
 
-  my $pub = get_pub($pubmed_id);
-  my $lab_head = get_person($lab_head_name, $lab_head_email, $user_cvterm);
-  my $lab = get_lab($lab_head);
+  my $pub = get_pub($schema, $pubmed_id);
+  my $lab_head = get_person($schema, $lab_head_name, $lab_head_email, $user_cvterm);
+  my $lab = get_lab($schema, $lab_head);
   my $submitter = undef;
 
   if ($submitter || $submitter_email) {
-    $submitter = get_person($submitter_name, $submitter_email, $user_cvterm);
+    $submitter = get_person($schema, $submitter_name, $submitter_email, $user_cvterm);
+  }
+
+  if ($lab_head_email eq 'fred.winston@genetics.med.harvard.edu') {
+    $test_curators[0] = $submitter;
+  }
+  if ($submitter_email eq 'Mary.Porter-Goff@umassmed.edu') {
+    $test_curators[1] = $submitter;
+  }
+  if ($submitter_email eq 'Nicholas.Willis@umassmed.edu') {
+    $test_curators[2] = $submitter;
+  }
+  if ($pubmed_id == 7958849) {
+    $test_publications[0] = $pub;
+  }
+  if ($pubmed_id == 19351719) {
+    $test_publications[1] = $pub;
+  }
+  if ($pubmed_id == 17304215) {
+    $test_publications[2] = $pub;
+  }
+  if ($pubmed_id == 19686603) {
+    $test_publications[3] = $pub;
   }
 
   if (!defined ($submitter)) {
@@ -168,6 +201,7 @@ sub process_row
 
 sub process_gene_row
 {
+  my $schema = shift;
   my $columns_ref = shift;
   my ($primary_name, $product, $name) = @{$columns_ref};
 
@@ -179,30 +213,97 @@ sub process_gene_row
                             });
 }
 
-sub process
-{
-  my $cv = $schema->create_with_type('Cv', { name => 'pomcur user types' });
-  my $user_cvterm = $schema->create_with_type('Cvterm', { cv => $cv,
-                                                          name => 'user',
-                                                        });
-  my $admin_cvterm = $schema->create_with_type('Cvterm', { cv => $cv,
-                                                           name => 'admin',
-                                                         });
-
-  my $admin = get_person('Val Wood', 'val@sanger.ac.uk', $admin_cvterm);
-
-  while (my $columns_ref = $curation_csv->getline($curation_io)) {
-    process_row($columns_ref, $user_cvterm);
-  }
-
-  while (my $columns_ref = $genes_csv->getline($genes_io)) {
-    process_gene_row($columns_ref, $user_cvterm);
-  }
-}
-
+# populate base track database, with no curation sessions (curs objects)
 eval {
-  $schema->txn_do(\&process);
+  my $schema = $test_schemas{base};
+
+  my $process =
+    sub {
+      my $cv =
+        $schema->create_with_type('Cv', { name => 'pomcur user types' });
+      my $user_cvterm =
+        $schema->create_with_type('Cvterm', { cv => $cv,
+                                              name => 'user',
+                                            });
+      my $admin_cvterm =
+        $schema->create_with_type('Cvterm', { cv => $cv,
+                                              name => 'admin',
+                                            });
+
+      my $admin = get_person($schema, 'Val Wood', 'val@sanger.ac.uk', $admin_cvterm);
+
+      while (my $columns_ref = $curation_csv->getline($curation_io)) {
+        process_row($schema, $columns_ref, $user_cvterm);
+      }
+
+      while (my $columns_ref = $genes_csv->getline($genes_io)) {
+        process_gene_row($schema, $columns_ref, $user_cvterm);
+      }
+    };
+
+  $schema->txn_do($process);
 };
 if ($@) {
   die "ROLLBACK called: $@\n";
 }
+
+sub make_curs_dbs
+{
+  my $test_case_key = shift;
+
+  my $test_case = $test_cases{$test_case_key};
+  my $schema = $test_schemas{$test_case_key};
+
+  my $process_test_case =
+    sub {
+      for my $curs_def (@$test_case) {
+        my %def_details = %$curs_def;
+        my $community_curator = $def_details{community_curator};
+        my $pub = $def_details{pub};
+
+        my $curs_key = 'a' . $community_curator . 'b' . $pub . 'c00000';
+
+        my $create_args = {
+          community_curator => $test_curators[0],
+          curs_key => $curs_key,
+          pub => $test_publications[0]
+        };
+
+        my $curs_1 = $schema->create_with_type('Curs', $create_args);
+
+        my $curs_file_name = PomCur::Curs::make_db_file_name($config, $curs_key);
+        unlink $curs_file_name;
+
+        PomCur::Track::create_curs_db($config, $curs_1);
+
+      }
+    };
+
+  eval {
+    warn "$test_case_key\n";
+    $test_schemas{$test_case_key}->txn_do($process_test_case);
+  };
+  if ($@) {
+    die "ROLLBACK called: $@\n";
+  }
+}
+
+# copy base track database to other test case track dbs, and create some curs
+# objects
+my $track_1_curs_db_file_name;
+
+($test_schemas{'1_curs'}, $track_1_curs_db_file_name) =
+  PomCur::TestUtil::make_track_test_db($config, 'track_test_1_curs_db',
+                                       $base_track_db_file_name);
+
+
+make_curs_dbs('1_curs');
+
+my $track_3_curs_db_file_name;
+
+($test_schemas{'3_curs'}, $track_3_curs_db_file_name) =
+  PomCur::TestUtil::make_track_test_db($config, 'track_test_3_curs_db',
+                                       $track_1_curs_db_file_name);
+
+
+make_curs_dbs('3_curs');

@@ -11,6 +11,7 @@ use warnings;
 use Carp;
 use Cwd qw(abs_path getcwd);
 use File::Path qw(make_path remove_tree);
+use File::Copy qw(copy);
 use File::Basename;
 use YAML qw(LoadFile);
 
@@ -197,6 +198,57 @@ sub _check_dir
 {
   my $dir = shift;
   return -d "$dir/etc" && -d "$dir/lib";
+}
+
+=head2
+
+ Usage   : my $schema = PomCur::TestUtil::schema_for_file($config, $file_name);
+ Function: Return a schema object for the given file
+ Args    : $config - a PomCur::Config object
+           $file_name - the file name of the database
+ Return  : the schema
+
+=cut
+sub schema_for_file
+{
+  my $config = shift;
+  my $file_name = shift;
+
+  my %config_copy = %$config;
+
+  %{$config_copy{"Model::TrackModel"}} = (
+    schema_class => 'PomCur::TrackDB',
+    connect_info => ["dbi:SQLite:dbname=$file_name"],
+  );
+
+  my $schema = PomCur::TrackDB->new(\%config_copy);
+}
+
+=head2
+
+ Usage   : my ($schema, $db_file_name) =
+             PomCur::TestUtil::make_track_test_db($config, $key);
+ Function: Make a copy of the empty template track database and return a schema
+           object for it, or use the supplied file as the template database
+ Args    : $config - a PomCur::Config object
+           $key - a hash key to use to look up the destination db file name in
+                  the test config file
+           $track_db_template_file - the file to use as the template (optional)
+ Return  : the new schema and the file name of the new database
+
+=cut
+sub make_track_test_db
+{
+  my $config = shift;
+  my $test_config_key = shift;
+  my $track_db_template_file = shift || $config->{track_db_template_file};
+
+  my $track_test_db_file = $config->{test_config}->{$test_config_key};
+
+  unlink $track_test_db_file;
+  copy $track_db_template_file, $track_test_db_file or die "$!\n";
+
+  return (schema_for_file($config, $track_test_db_file), $track_test_db_file);
 }
 
 1;
