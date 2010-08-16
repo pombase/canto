@@ -82,7 +82,7 @@ sub home : Chained('top') PathPart('') Args(0)
   my ($self, $c) = @_;
 
   $c->stash->{title} = 'Home';
-  $c->stash->{template} = 'curs/main.mhtml';
+  $c->stash->{template} = 'curs/home.mhtml';
 
   $c->stash->{component} = 'home';
 }
