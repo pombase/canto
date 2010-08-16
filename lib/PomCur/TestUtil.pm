@@ -100,6 +100,7 @@ sub init_test
   }
 
   my $root_dir = $self->{root_dir};
+  my $data_dir = $self->{data_dir};
   my $test_config_file_name = "$root_dir/t/test_config.yaml";
 
   my $test_config = LoadFile($test_config_file_name);
@@ -139,7 +140,7 @@ sub init_test
 
   if (!$use_empty_template_db) {
     $config->{track_db_template_file} =
-      "$root_dir/t/data/track_db_test_template.sqlite3";
+      "$root_dir/$data_dir/track_db_test_template.sqlite3";
   }
 
   my $cwd = getcwd();
