@@ -9,13 +9,16 @@ $title => 'Genes'
   </div>
 % if (@gene_hashes) {
   <table>
+%   if ($big_list) {
     <thead>
-%   for my $col_name (@col_names) {
+%     for my $col_name (@col_names) {
       <td>
         <% $col_name %>
       </td>
-%   }
+%     }
     </thead>
+%   }
+
 %   for my $gene (@gene_hashes) {
     <tr>
 %     for my $col_name (@col_names) {
@@ -46,7 +49,7 @@ my @gene_hashes = map {
        primary_identifier => $_->primary_identifier(),
        primary_name => $_->primary_name(),
        product => $_->product(),
-       name_or_primary => $_->primary_name() || $_->primary_identifier(),
+       identifier => $_->primary_name() || $_->primary_identifier(),
      }
    } @all_genes;
 
@@ -55,7 +58,7 @@ if ($big_list) {
   @col_names = qw(primary_identifier primary_name product);
 } else {
   $class = 'small-gene-list';
-  @col_names = qw(name_or_primary);
+  @col_names = qw(identifier);
 }
 
 </%init>
