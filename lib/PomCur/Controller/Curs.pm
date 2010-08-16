@@ -90,32 +90,38 @@ sub home : Chained('top') PathPart('') Args(0)
 my $gene_list_textarea_name = 'gene_identifiers';
 
 
-sub _find_genes
+sub _find_and_create_genes
 {
   my ($self, $c, $form) = @_;
 
   my $gene_list = $form->param_value($gene_list_textarea_name);
   my $schema = PomCur::Curs::get_schema($c);
   my $store = PomCur::Track::get_store($c->config(), 'gene');
-  my @search_terms = split /[\s,]+/, $gene_list;
+  my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $gene_list;
 
   my $result = $store->lookup([@search_terms]);
 
-  my $_create_curs_genes = sub
-    {
-      my @genes = @{$result->{found}};
+  if (@{$result->{missing}}) {
+    return $result;
+  } else {
+    my $_create_curs_genes = sub
+        {
+          my @genes = @{$result->{found}};
 
-      for my $gene (@genes) {
-        $schema->create_with_type('Gene', {
-          primary_name => $gene->{primary_name},
-          primary_identifier => $gene->{primary_identifier},
-          product => $gene->{product},
-          organism => 1,
-        });
-      }
-    };
+          for my $gene (@genes) {
+            $schema->create_with_type('Gene', {
+              primary_name => $gene->{primary_name},
+              primary_identifier => $gene->{primary_identifier},
+              product => $gene->{product},
+              organism => 1,  # FIXME - don't hard-code this
+            });
+          }
+        };
 
-  $schema->txn_do($_create_curs_genes);
+    $schema->txn_do($_create_curs_genes);
+
+    return undef;
+  }
 }
 
 sub gene_upload : Chained('top') Args(0) Form
@@ -156,9 +162,16 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 
   if ($form->submitted_and_valid()) {
-    $self->_find_genes($c, $form);
+    my $result = $self->_find_and_create_genes($c, $form);
 
-    $self->_redirect_home_and_detach($c);
+    if ($result) {
+      my @missing = @{$result->{missing}};
+      $c->stash->{error} =
+          { title => "No genes found for these identifiers: @missing" };
+      $c->stash->{gene_upload_unknown} = [@missing];
+    } else {
+      $self->_redirect_home_and_detach($c);
+    }
   }
 }
 
