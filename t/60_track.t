@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use PomCur::TestUtil;
 use PomCur::Track;
@@ -19,10 +19,12 @@ is(@results, 0);
 
 my $key = 'abcd0123';
 
+my $first_contact = 'val@sanger.ac.uk';
+
 my $pub = $schema->find_with_type('Pub', { pubmedid => '19056896' });
 my $person = $schema->find_with_type('Person',
                                      {
-                                       networkaddress => 'val@sanger.ac.uk'
+                                       networkaddress => $first_contact
                                      });
 
 my $curs = $schema->create_with_type('Curs',
@@ -61,7 +63,7 @@ my $curs_schema = PomCur::TestUtil::schema_for_file($config, $new_curs_db);
 my $curs_metadata_rs = $curs_schema->resultset('Metadata');
 
 while (defined (my $metadata = $curs_metadata_rs->next())) {
-  if ($metadata->key() eq 'curator') {
-    is($metadata->value(), 'fix_this_test');
+  if ($metadata->key() eq 'first_contact') {
+    is($metadata->value(), $first_contact);
   }
 }

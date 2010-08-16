@@ -44,6 +44,7 @@ use File::Copy qw(copy);
 
 use PomCur::Config;
 use PomCur::Curs;
+use PomCur::CursDB;
 
 =head2
 
@@ -101,6 +102,14 @@ sub create_curs_db
   my $curs_db_template_file = $config->{curs_db_template_file};
 
   copy($curs_db_template_file, $db_file_name) or die "$!\n";
+
+  my $connect_string = PomCur::Curs::make_connect_string($config, $curs_key);
+  my $curs_schema = PomCur::CursDB->connect($connect_string);
+
+  my $first_contact = $curs->community_curator()->networkaddress();
+
+  $curs_schema->create_with_type('Metadata', { key => 'first_contact',
+                                               value => $first_contact });
 }
 
 =head2 create_curs_db_hook
