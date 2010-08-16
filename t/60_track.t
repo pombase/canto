@@ -48,8 +48,20 @@ is(@results, 1);
 
 
 my @files_after = sort glob("$data_directory/*.sqlite3");
-
 is(@files_after, 2);
-is($files_after[0], "$data_directory/curs_$key.sqlite3");
+
+my $new_curs_db = "$data_directory/curs_$key.sqlite3";
+
+is($files_after[0], $new_curs_db);
 is($files_after[1], "$data_directory/track.sqlite3");
 
+my $curs_schema = PomCur::TestUtil::schema_for_file($config, $new_curs_db);
+
+# make sure it's a valid sqlite3 database
+my $curs_metadata_rs = $curs_schema->resultset('Metadata');
+
+while (defined (my $metadata = $curs_metadata_rs->next())) {
+  if ($metadata->key() eq 'curator') {
+    is($metadata->value(), 'fix_this_test');
+  }
+}

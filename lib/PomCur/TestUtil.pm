@@ -17,6 +17,8 @@ use YAML qw(LoadFile);
 
 use PomCur::Config;
 use PomCur::Meta::Util;
+use PomCur::TrackDB;
+use PomCur::CursDB;
 
 use File::Temp qw(tempdir);
 
@@ -218,12 +220,21 @@ sub schema_for_file
 
   my %config_copy = %$config;
 
-  %{$config_copy{"Model::TrackModel"}} = (
-    schema_class => 'PomCur::TrackDB',
+  my $model;
+
+  if ($file_name =~ m:/curs_:) {
+    $model = 'Curs';
+  } else {
+    $model = 'Track';
+  }
+
+  %{$config_copy{"Model::${model}Model"}} = (
+    schema_class => "PomCur::${model}DB",
     connect_info => ["dbi:SQLite:dbname=$file_name"],
   );
 
-  my $schema = PomCur::TrackDB->new(\%config_copy);
+  my $model_class_name = "PomCur::${model}DB";
+  my $schema = $model_class_name->new(\%config_copy);
 }
 
 =head2
