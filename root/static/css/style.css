@@ -349,9 +349,14 @@ div.clearall {
   float: right;
   font-size: 80%;
   position: relative;
+  width: 10%;
   right: -10px;
   background-color: #cce;
 
+}
+
+.small-gene-list table {
+  margin: 4px;
 }
 
 .small-gene-list .no-genes-message {
