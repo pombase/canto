@@ -27,7 +27,9 @@ my $db_file_name =
 
 (my $local_dir = $db_file_name) =~ s:(.*?)/.*:$1:;
 
-my $track_test_db = $config->{test_config}->{track_test_db};
+my $track_test_db = $config->{test_config}->{track_test_3_curs_db};
+
+(my $test_data_dir = $track_test_db) =~ s:(.*)/.*:$1:;
 
 remove_tree($local_dir, { error => \my $rm_err } );
 
@@ -52,3 +54,4 @@ if (@$mk_err) {
 copy $track_test_db, $db_file_name
   or die "'$!' while creating $db_file_name\n";;
 
+system ("cp $test_data_dir/curs* $local_dir/");
