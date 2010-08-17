@@ -4,9 +4,7 @@ $title => 'Genes'
 </%args>
 
 <div class="<% $class %>">
-  <div class="title">
-    <% $title %>
-  </div>
+<form name="gene-edit" method="get" action="<% $edit_genes_path %>">
 % if (@gene_hashes) {
   <table class="list">
 %   if ($big_list) {
@@ -17,6 +15,9 @@ $title => 'Genes'
           <% $col_name %>
         </th>
 %     }
+        <th>
+          &nbsp;
+        </th>
       </tr>
     </thead>
 %   }
@@ -26,6 +27,13 @@ $title => 'Genes'
 %     for my $col_name (@col_names) {
       <td>
         <% $gene->{$col_name} %>
+      </td>
+%     }
+%     if ($big_list) {
+      <td>
+        <input type="checkbox"
+               name="gene-select"
+               value="<% $gene->{primary_identifier} %>" />
       </td>
 %     }
     </tr>
@@ -45,6 +53,9 @@ $title => 'Genes'
 
 % }
 
+  <input type="submit" name="submit" value="edit"/>
+
+</form>
 </div>
 
 <%init>
@@ -71,5 +82,7 @@ if ($big_list) {
   $class = 'small-gene-list';
   @col_names = qw(identifier);
 }
+
+my $edit_genes_path = $c->stash->{curs_root_path} . '/edit_genes';
 
 </%init>
