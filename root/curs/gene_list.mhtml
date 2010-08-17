@@ -34,6 +34,15 @@ $title => 'Genes'
     [No genes]
   </div>
 % }
+
+%   if (!$big_list) {
+
+  <div class="edit">
+    <a href="./edit_genes">Edit ...</a>
+  </div>
+
+% }
+
 </div>
 
 <%init>

@@ -124,14 +124,30 @@ sub _find_and_create_genes
   }
 }
 
+sub edit_genes : Chained('top') Args(0) Form
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Edit gene list';
+  $st->{template} = 'curs/gene_list.mhtml';
+
+  $st->{component} = 'list_edit';
+
+  $st->{big_list} = 1;
+}
+
 sub gene_upload : Chained('top') Args(0) Form
 {
   my ($self, $c) = @_;
 
-  $c->stash->{title} = 'Gene upload';
-  $c->stash->{template} = 'curs/gene_upload.mhtml';
+  my $st = $c->stash();
 
-  $c->stash->{component} = 'gene_upload';
+  $st->{title} = 'Gene upload';
+  $st->{template} = 'curs/gene_upload.mhtml';
+
+  $st->{component} = 'gene_upload';
 
   my $form = $self->form();
 
@@ -153,7 +169,7 @@ sub gene_upload : Chained('top') Args(0) Form
 
   $form->process();
 
-  $c->stash->{form} = $form;
+  $st->{form} = $form;
 
   if ($form->submitted()) {
     if (defined $c->req->param('cancel')) {
@@ -166,9 +182,9 @@ sub gene_upload : Chained('top') Args(0) Form
 
     if ($result) {
       my @missing = @{$result->{missing}};
-      $c->stash->{error} =
+      $st->{error} =
           { title => "No genes found for these identifiers: @missing" };
-      $c->stash->{gene_upload_unknown} = [@missing];
+      $st->{gene_upload_unknown} = [@missing];
     } else {
       $self->_redirect_home_and_detach($c);
     }
@@ -181,11 +197,13 @@ sub module_dispatch : Chained('top') PathPart('') Args(1)
 
   my $config = $c->config();
 
+  my $st = $c->stash();
+
   my $module_display_name =
     PomCur::Curs::Util::module_display_name($module_name);
-  $c->stash->{title} = 'Module: ' . $module_display_name;
-  $c->stash->{component} = $module_name;
-  $c->stash->{template} = "curs/modules/$module_name.mhtml";
+  $st->{title} = 'Module: ' . $module_display_name;
+  $st->{component} = $module_name;
+  $st->{template} = "curs/modules/$module_name.mhtml";
 
   my %annotation_modules = %{$config->{annotation_modules}};
 
