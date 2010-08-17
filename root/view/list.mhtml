@@ -17,9 +17,9 @@ $disclosed => 1  # true will make the list default to visible
     <thead>
       <tr>
 %   for my $head_col (@column_headings) {
-        <td><span class="field_label"><% ucfirst $head_col %></span></td>
+        <th><span class="field_label"><% ucfirst $head_col %></span></th>
 %   }
-      <td>&nbsp;</td>
+      <th>&nbsp;</th>
       </tr>
     </thead>
 %   my $row_count = 0;

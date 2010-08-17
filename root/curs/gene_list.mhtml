@@ -8,14 +8,16 @@ $title => 'Genes'
     <% $title %>
   </div>
 % if (@gene_hashes) {
-  <table>
+  <table class="list">
 %   if ($big_list) {
     <thead>
+      <tr>
 %     for my $col_name (@col_names) {
-      <td>
-        <% $col_name %>
-      </td>
+        <th>
+          <% $col_name %>
+        </th>
 %     }
+      </tr>
     </thead>
 %   }
 

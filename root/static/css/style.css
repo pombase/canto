@@ -147,19 +147,22 @@ table.list {
   margin: 10px;
   border-width: 1px;
   border-spacing: 5px;
-  border-style: outset;
+  border-style: solid;
   border-color: gray;
   border-collapse: collapse;
   font-size: 75%;
 }
-table.list thead tr td {
+table.list th {
   padding: 3px;
-  background-color: #e0e0c6;
-  color: black;
+  background-color: #d0d0c0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #bbb;
   font-weight: bold;
+  text-align: left;
 }
 table.list tr.odd {
-  background-color: #f5f5e5;
+  background-color: #e8e8d8;
 }
 table.list tr td {
   border-width: 1px;
@@ -362,4 +365,11 @@ div.clearall {
 .small-gene-list .no-genes-message {
   font-size: 90%;
   margin: 10px;
+}
+
+.title {
+  font-size: 100%;
+  font-weight: bold;
+  display: inline;
+  border-bottom: 1px solid black;
 }
