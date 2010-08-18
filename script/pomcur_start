@@ -45,6 +45,7 @@ Run with --initialise <some_directory>
 require Plack::Runner;
 require Plack::Builder;
 require Plack::Middleware::ReverseProxy;
+require Plack::Middleware::Debug;
 
 require PomCur;
 
@@ -52,6 +53,10 @@ PomCur->setup_engine('PSGI');
 my $app = sub { PomCur->run(@_) };
 
 $app = Plack::Middleware::ReverseProxy->wrap($app);
+
+if ($ENV{POMCUR_DEBUG}) {
+  $app = Plack::Middleware::Debug->wrap($app);
+}
 
 my $runner = Plack::Runner->new;
 

@@ -176,7 +176,11 @@ sub plack_app
   my $self = shift;
 
   my $psgi_script_name = $self->root_dir() . '/script/pomcur_psgi.pl';
-  return Plack::Util::load_psgi($psgi_script_name);
+  my $app = Plack::Util::load_psgi($psgi_script_name);
+  if ($ENV{POMCUR_DEBUG}) {
+    $app = Plack::Middleware::Debug->wrap($app);
+  }
+  return $app;
 }
 
 sub root_dir
