@@ -24,6 +24,7 @@ requires 'XML::Simple';
 requires 'LWP::Simple';
 requires 'Plack';
 requires 'Plack::Middleware::ReverseProxy';
+requires 'Plack::Middleware::Debug';
 requires 'LWP';
 #requires 'Try::Tiny';
 
