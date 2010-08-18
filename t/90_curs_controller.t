@@ -24,23 +24,25 @@ my $app = $test_util->plack_app();
 my @known_genes = qw(SPCC1739.10 wtf22 SPNCRNA.119);
 my @unknown_genes = qw(dummy SPCC999999.99);
 
+my $curs_schema =
+  PomCur::Curs::get_schema_for_key($test_util->config(), $curs_key);
+
+my $curs_metadata_rs = $curs_schema->resultset('Metadata');
+
+my %metadata = ();
+
+while (defined (my $metadata = $curs_metadata_rs->next())) {
+  $metadata{$metadata->key()} = $metadata->value();
+}
+
+is($metadata{first_contact}, 'dom@genetics.med.harvard.edu');
+is($metadata{pub_pubmedid}, 7958849);
+like($metadata{pub_title}, qr/A heteromeric protein that binds to a meiotic/);
+
 test_psgi $app, sub {
   my $cb = shift;
 
-  my $curs_schema =
-    PomCur::Curs::get_schema_for_key($test_util->config(), $curs_key);
 
-  my $curs_metadata_rs = $curs_schema->resultset('Metadata');
-
-  my $first_contact = undef;
-
-  while (defined (my $metadata = $curs_metadata_rs->next())) {
-    if ($metadata->key() eq 'first_contact') {
-      $first_contact = $metadata->value();
-    }
-  }
-
-  is($first_contact, 'dom@genetics.med.harvard.edu');
 };
 
 done_testing;

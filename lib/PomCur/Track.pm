@@ -108,8 +108,16 @@ sub create_curs_db
 
   my $first_contact = $curs->community_curator()->networkaddress();
 
+  # the calling function will wrap this in a transaction if necessary
   $curs_schema->create_with_type('Metadata', { key => 'first_contact',
                                                value => $first_contact });
+  $curs_schema->create_with_type('Metadata', { key => 'pub_title',
+                                               value => $curs->pub()->title(),
+                                             });
+  $curs_schema->create_with_type('Metadata', { key => 'pub_pubmedid',
+                                               value => $pubmedid,
+                                             });
+
 }
 
 =head2 create_curs_db_hook
