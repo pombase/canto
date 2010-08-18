@@ -93,8 +93,12 @@ sub _get_field_values
     my $value = $row->$table_pk_column();
     my $label = $row->$db_field_column();
 
-    if (defined $label && length $label > $MAX_VALUE_LENGTH) {
-      $label =~ s/(.{$MAX_VALUE_LENGTH}).*/$1 .../;
+    if (defined $label) {
+      if (length $label > $MAX_VALUE_LENGTH) {
+        $label =~ s/(.{$MAX_VALUE_LENGTH}).*/$1 .../;
+      }
+    } else {
+      $label = '[...]';
     }
 
     my $option = { value => $value, label => $label };
