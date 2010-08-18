@@ -12,7 +12,6 @@ requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Session::PerUser';
 requires 'Catalyst::Action::RenderView';
 requires 'File::Copy::Recursive';
-requires 'Plack::Middleware::ReverseProxy';
 requires 'DBD::SQLite';
 requires 'DBIx::Class';
 requires 'DBIx::Class::Schema';
@@ -24,6 +23,7 @@ requires 'YAML';
 requires 'XML::Simple';
 requires 'LWP::Simple';
 requires 'Plack';
+requires 'Plack::Middleware::ReverseProxy';
 requires 'LWP';
 #requires 'Try::Tiny';
 
