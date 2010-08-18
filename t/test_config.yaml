@@ -3,8 +3,19 @@ test_config:
   scratch_dir: "t/scratch"
   data_dir: "t/data"
   tracking_scratch: "t/scratch/tracking"
-  track_test_db: "t/data/track_db_test_template.sqlite3"
+  track_test_0_curs_db: "t/data/track_db_0_curs_test_template.sqlite3"
   track_test_1_curs_db: "t/data/track_db_1_curs_test_template.sqlite3"
   track_test_3_curs_db: "t/data/track_db_3_curs_test_template.sqlite3"
   curation_spreadsheet: "t/data/community_curation_stats_small.txt"
   test_genes_file: "t/data/pombe_genes.txt"
+  test_cases:
+    empty_db:
+    '0_curs': []
+    '1_curs':
+       - community_curator: 0
+         pub: 0
+    '3_curs':
+       - community_curator: 1
+         pub: 1
+       - community_curator: 2
+         pub: 2

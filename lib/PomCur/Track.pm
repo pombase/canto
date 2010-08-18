@@ -93,7 +93,7 @@ sub create_curs_db
 
   my $exists_flag = 1;
 
-  my $db_file_name = PomCur::Curs::make_db_file_name($config, $curs_key);
+  my $db_file_name = PomCur::Curs::make_long_db_file_name($config, $curs_key);
 
   if (-e $db_file_name) {
     die "Internal error: database already exists\n";

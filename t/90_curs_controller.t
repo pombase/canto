@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use PomCur::TestUtil;
 
@@ -32,13 +32,15 @@ test_psgi $app, sub {
 
   my $curs_metadata_rs = $curs_schema->resultset('Metadata');
 
+  my $first_contact = undef;
+
   while (defined (my $metadata = $curs_metadata_rs->next())) {
     if ($metadata->key() eq 'first_contact') {
-      is($metadata->value(), 'zz');
+      $first_contact = $metadata->value();
     }
   }
 
-  ok(1);
+  is($first_contact, 'dom@genetics.med.harvard.edu');
 };
 
 done_testing;

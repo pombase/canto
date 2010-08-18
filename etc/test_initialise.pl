@@ -32,8 +32,8 @@ my $spreadsheet_file = $config->{test_config}->{curation_spreadsheet};
 my $genes_file = $config->{test_config}->{test_genes_file};
 
 my $base_track_db_file_name;
-($test_schemas{base}, $base_track_db_file_name) =
-  PomCur::TestUtil::make_track_test_db($config, 'track_test_db');
+($test_schemas{"0_curs"}, $base_track_db_file_name) =
+  PomCur::TestUtil::make_track_test_db($config, 'track_test_0_curs_db');
 
 my $curation_csv = Text::CSV->new({binary => 1});
 open my $curation_io, '<', $spreadsheet_file or die;
@@ -43,14 +43,7 @@ my $genes_csv = Text::CSV->new({binary => 1});
 open my $genes_io, '<', $genes_file or die;
 $genes_csv->column_names ($genes_csv->getline($genes_io));
 
-
-my %test_cases = (
-  'base' => [],
-  '1_curs' => [ { community_curator => 0, pub => 0 } ],
-  '3_curs' => [ { community_curator => 1, pub => 1 },
-                { community_curator => 2, pub => 2 },
-              ]
-);
+my %test_cases = %{$config->{test_config}->{test_cases}};
 
 my %people = ();
 my %labs = ();
@@ -213,9 +206,10 @@ sub process_gene_row
                             });
 }
 
-# populate base track database, with no curation sessions (curs objects)
+# populate base track database ("0_curs"), with no curation sessions (curs
+# objects)
 eval {
-  my $schema = $test_schemas{base};
+  my $schema = $test_schemas{"0_curs"};
 
   my $process =
     sub {
@@ -256,26 +250,23 @@ sub make_curs_dbs
 
   my $process_test_case =
     sub {
-      for my $curs_def (@$test_case) {
-        my %def_details = %$curs_def;
-        my $community_curator = $def_details{community_curator};
-        my $pub = $def_details{pub};
-
-        my $curs_key = 'a' . $community_curator . 'b' . $pub . 'c00000';
+      for my $test_case_ref (@$test_case) {
+        my $test_case_curs_key =
+          PomCur::TestUtil::curs_key_of_test_case($test_case_ref);
 
         my $create_args = {
           community_curator => $test_curators[0],
-          curs_key => $curs_key,
+          curs_key => $test_case_curs_key,
           pub => $test_publications[0]
         };
 
-        my $curs_1 = $schema->create_with_type('Curs', $create_args);
+        my $curs_object = $schema->create_with_type('Curs', $create_args);
 
-        my $curs_file_name = PomCur::Curs::make_db_file_name($config, $curs_key);
+        my $curs_file_name =
+          PomCur::Curs::make_long_db_file_name($config, $test_case_curs_key);
         unlink $curs_file_name;
 
-        PomCur::Track::create_curs_db($config, $curs_1);
-
+        PomCur::Track::create_curs_db($config, $curs_object);
       }
     };
 

@@ -19,6 +19,7 @@ use PomCur::Config;
 use PomCur::Meta::Util;
 use PomCur::TrackDB;
 use PomCur::CursDB;
+use PomCur::Curs;
 
 use File::Temp qw(tempdir);
 
@@ -80,26 +81,21 @@ sub connect_string_file_name
  Usage   : $test_util->init_test();
  Function: set up the test environment by creating a test database and
            configuration
- Args    : $flag - (optional) pass "empty_db" to set up the tests with an empty
-                   tracking database
+ Args    : $arg - pass "empty_db" to set up the tests with an empty
+                  tracking database
+                - pass "1_curs" to get a tracking database with one curation
+                  session (initialises the curs database too)
+                - pass "3_curs" to set up 3 curation sessions
+                - pass nothing or "default" to set up a tracking database
+                  populated with test data, but with no curation sessions
 
 =cut
 sub init_test
 {
   my $self = shift;
-  my $arg = shift;
+  my $test_env_type = shift || '0_curs';
 
   local $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
-
-  my $use_empty_template_db = 0;
-
-  if (defined $arg){
-    if ($arg eq 'empty_db') {
-      $use_empty_template_db = 1;
-    } else {
-      die "unknown argument ($arg) ". __PACKAGE__ . "::new()\n";
-    }
-  }
 
   my $root_dir = $self->{root_dir};
   my $test_config_file_name = "$root_dir/t/test_config.yaml";
@@ -141,9 +137,12 @@ sub init_test
 
   my $data_dir = $config->{test_config}->{data_dir};
 
-  if (!$use_empty_template_db) {
+  if ($test_env_type ne 'empty_db') {
+    my $track_db_file =
+      $config->{test_config}->{"track_test_${test_env_type}_db"};
+
     $config->{track_db_template_file} =
-      "$root_dir/$data_dir/track_db_test_template.sqlite3";
+      "$root_dir/$track_db_file";
   }
 
   my $cwd = getcwd();
@@ -164,6 +163,15 @@ sub init_test
   $self->{track_schema} = PomCur::TrackDB->new($config);
 
   my $db_file_name = connect_string_file_name($connect_string);
+  my $test_case_def = $config->{test_config}->{test_cases}->{$test_env_type};
+  my @test_case_curs_confs = @$test_case_def;
+
+  for my $test_case_curs_conf (@test_case_curs_confs) {
+    my $curs_key = curs_key_of_test_case($test_case_curs_conf);
+    my $db_file_name = PomCur::Curs::make_db_file_name($curs_key);
+
+    copy "$data_dir/$db_file_name", $tracking_scratch_dir or die "$!";
+  }
 
   return (track_db_file_name => $db_file_name);
 }
@@ -274,6 +282,26 @@ sub make_track_test_db
   copy $track_db_template_file, $track_test_db_file or die "$!\n";
 
   return (schema_for_file($config, $track_test_db_file), $track_test_db_file);
+}
+
+=head2 curs_key_of_test_case
+
+ Usage   : my $curs_key = PomCur::TestUtil::curs_key_of_test_case($test_case);
+ Function: Get the curs_key to use for the given curs test case definition
+ Args    : $test_case - the test case definition
+ Return  :
+
+=cut
+sub curs_key_of_test_case
+{
+  my $test_case_def = shift;
+
+  my %def_details = %$test_case_def;
+
+  my $community_curator = $def_details{community_curator};
+  my $pub = $def_details{pub};
+
+  return 'a' . $community_curator . 'b' . $pub . 'c00000';
 }
 
 1;
