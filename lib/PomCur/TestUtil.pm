@@ -161,6 +161,8 @@ sub init_test
 
   my $connect_string = $config->model_connect_string('Track');
 
+  $self->{track_schema} = PomCur::TrackDB->new($config);
+
   my $db_file_name = connect_string_file_name($connect_string);
 
   return (track_db_file_name => $db_file_name);
@@ -193,6 +195,12 @@ sub config
 {
   my $self = shift;
   return $self->{config};
+}
+
+sub track_schema
+{
+  my $self = shift;
+  return $self->{track_schema};
 }
 
 sub temp_dir
