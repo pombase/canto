@@ -18,8 +18,8 @@ use PomCur::TrackDB;
 use PomCur::Config;
 use PomCur::TestUtil;
 
-my @test_curators = ();
-my @test_publications = ();
+my %test_curators = ();
+my %test_publications = ();
 my %test_schemas = ();
 
 my $test_util = PomCur::TestUtil->new();
@@ -158,35 +158,16 @@ sub process_row
   my $lab = get_lab($schema, $lab_head);
   my $submitter = undef;
 
-  if ($submitter || $submitter_email) {
+  if ($submitter_email) {
     $submitter = get_person($schema, $submitter_name, $submitter_email, $user_cvterm);
-  }
-
-  if ($lab_head_email eq 'fred.winston@genetics.med.harvard.edu') {
-    $test_curators[0] = $submitter;
-  }
-  if ($submitter_email eq 'Mary.Porter-Goff@umassmed.edu') {
-    $test_curators[1] = $submitter;
-  }
-  if ($submitter_email eq 'Nicholas.Willis@umassmed.edu') {
-    $test_curators[2] = $submitter;
-  }
-  if ($pubmed_id == 7958849) {
-    $test_publications[0] = $pub;
-  }
-  if ($pubmed_id == 19351719) {
-    $test_publications[1] = $pub;
-  }
-  if ($pubmed_id == 17304215) {
-    $test_publications[2] = $pub;
-  }
-  if ($pubmed_id == 19686603) {
-    $test_publications[3] = $pub;
   }
 
   if (!defined ($submitter)) {
     $submitter = $lab_head;
   }
+
+  $test_curators{$lab_head_email} = $lab_head;
+  $test_publications{$pubmed_id} = $pub;
 
   fix_lab($lab_head, $lab);
   fix_lab($submitter, $lab);
@@ -255,9 +236,9 @@ sub make_curs_dbs
           PomCur::TestUtil::curs_key_of_test_case($test_case_ref);
 
         my $create_args = {
-          community_curator => $test_curators[0],
+          community_curator => $test_curators{$test_case_ref->{first_contact}},
           curs_key => $test_case_curs_key,
-          pub => $test_publications[0]
+          pub => $test_publications{$test_case_ref->{pubmedid}},
         };
 
         my $curs_object = $schema->create_with_type('Curs', $create_args);

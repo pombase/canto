@@ -296,12 +296,7 @@ sub curs_key_of_test_case
 {
   my $test_case_def = shift;
 
-  my %def_details = %$test_case_def;
-
-  my $community_curator = $def_details{community_curator};
-  my $pub = $def_details{pub};
-
-  return 'a' . $community_curator . 'b' . $pub . 'c00000';
+  return $test_case_def->{curs_key};
 }
 
 1;

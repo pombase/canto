@@ -12,10 +12,13 @@ test_config:
     empty_db:
     '0_curs': []
     '1_curs':
-       - community_curator: 0
-         pub: 0
+       - curs_key: aaaa0001
+         first_contact: "nick.rhind@umassmed.edu"
+         pubmedid: 19664060
     '3_curs':
-       - community_curator: 1
-         pub: 1
-       - community_curator: 2
-         pub: 2
+       - curs_key: aaaa0002
+         first_contact: "hoffmacs@bc.edu"
+         pubmedid: 19686603
+       - curs_key: aaaa0003
+         first_contact: "kevin.hardwick@ed.ac.uk"
+         pubmedid: 19436749
