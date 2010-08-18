@@ -9,7 +9,15 @@ use Plack::Util;
 use HTTP::Request;
 
 my $test_util = PomCur::TestUtil->new();
-$test_util->init_test();
+$test_util->init_test('1_curs');
+
+my $track_schema = $test_util->track_schema();
+
+my @curs_objects = $track_schema->resultset('Curs')->all();
+
+is(@curs_objects, 1);
+
+my $curs_key = $curs_objects[0]->curs_key();
 
 my $app = $test_util->plack_app();
 
@@ -19,9 +27,18 @@ my @unknown_genes = qw(dummy SPCC999999.99);
 test_psgi $app, sub {
   my $cb = shift;
 
+  my $curs_schema =
+    PomCur::Curs::get_schema_for_key($test_util->config(), $curs_key);
+
+  my $curs_metadata_rs = $curs_schema->resultset('Metadata');
+
+  while (defined (my $metadata = $curs_metadata_rs->next())) {
+    if ($metadata->key() eq 'first_contact') {
+      is($metadata->value(), 'zz');
+    }
+  }
 
   ok(1);
-
 };
 
 done_testing;

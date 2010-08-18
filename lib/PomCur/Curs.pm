@@ -117,10 +117,32 @@ sub get_schema
 
   if (defined $curs_key) {
     my $config = $c->config();
-    PomCur::CursDB->connect(make_connect_string($config, $curs_key));
+    return get_schema_for_key($config, $curs_key);
   } else {
     croak "internal error: no curs_key in the stash\n";
   }
 }
 
+=head2
+
+ Usage   : my $schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
+ Function: Get a schema object for the given curs_key
+ Args    : $config - the config object
+           $curs_key - the key (as a string) of the curation session
+ Return  : the schema
+
+=cut
+sub get_schema_for_key
+{
+  my $config = shift;
+  my $curs_key = shift;
+
+  return PomCur::CursDB->connect(make_connect_string($config, $curs_key));
+}
+
 1;
+
+
+
+
+
