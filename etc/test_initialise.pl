@@ -280,7 +280,6 @@ sub make_curs_dbs
     };
 
   eval {
-    warn "$test_case_key\n";
     $test_schemas{$test_case_key}->txn_do($process_test_case);
   };
   if ($@) {
