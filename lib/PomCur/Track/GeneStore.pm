@@ -61,18 +61,16 @@ sub lookup
     ]
    });
 
-  $rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
-
   my @found_genes = $rs->all();
 
   my %gene_ids = ();
 
   for my $found_gene (@found_genes) {
-    my $gene_identifier = $found_gene->{primary_identifier};
+    my $gene_identifier = $found_gene->primary_identifier();
     if (defined $gene_identifier) {
       $gene_ids{$gene_identifier} = 1;
     }
-    my $gene_name = $found_gene->{primary_name};
+    my $gene_name = $found_gene->primary_name();
     if (defined $gene_name) {
       $gene_ids{$gene_name} = 1;
     }

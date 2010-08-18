@@ -96,15 +96,35 @@ sub home : Chained('top') PathPart('home') Args(0)
 
 my $gene_list_textarea_name = 'gene_identifiers';
 
+# return a list of only those genes which aren't already in the database
+sub _filter_existing_genes
+{
+  my $schema = shift;
+  my @genes = @_;
+
+  my @gene_primary_identifiers = map { $_->primary_identifier() } @genes;
+
+  my $gene_rs = $schema->resultset('Gene');
+  my $rs = $gene_rs->search({
+    primary_identifier => {
+      -in => [@gene_primary_identifiers],
+    }
+  });
+
+  my %found_genes = ();
+  while (defined (my $gene = $rs->next())) {
+    $found_genes{$gene->primary_identifier()} = 1;
+  }
+
+  return grep { !exists $found_genes{ $_->primary_identifier()} } @genes;
+}
 
 sub _find_and_create_genes
 {
-  my ($self, $c, $form) = @_;
+  my ($schema, $config, $search_terms_ref) = @_;
 
-  my $gene_list = $form->param_value($gene_list_textarea_name);
-  my $schema = PomCur::Curs::get_schema($c);
-  my $store = PomCur::Track::get_store($c->config(), 'gene');
-  my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $gene_list;
+  my @search_terms = @$search_terms_ref;
+  my $store = PomCur::Track::get_store($config, 'gene');
 
   my $result = $store->lookup([@search_terms]);
 
@@ -115,12 +135,13 @@ sub _find_and_create_genes
         {
           my @genes = @{$result->{found}};
 
+          @genes = _filter_existing_genes($schema, @genes);
+
           for my $gene (@genes) {
             $schema->create_with_type('Gene', {
-              primary_name => $gene->{primary_name},
-              primary_identifier => $gene->{primary_identifier},
-              product => $gene->{product},
-              organism => 1,  # FIXME - don't hard-code this
+              primary_name => $gene->primary_name(),
+              primary_identifier => $gene->primary_identifier(),
+              product => $gene->product(),
             });
           }
         };
@@ -185,7 +206,12 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 
   if ($form->submitted_and_valid()) {
-    my $result = $self->_find_and_create_genes($c, $form);
+    my $search_terms_text = $form->param_value($gene_list_textarea_name);
+    my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $search_terms_text;
+
+    my $schema = PomCur::Curs::get_schema($c);
+
+    my $result = _find_and_create_genes($schema, $c->config(), \@search_terms);
 
     if ($result) {
       my @missing = @{$result->{missing}};
