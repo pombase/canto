@@ -27,7 +27,6 @@ requires 'Plack::Middleware::ReverseProxy';
 requires 'Plack::Middleware::Debug';
 requires 'LWP';
 requires 'Data::Compare';
-#requires 'Try::Tiny';
 
 requires 'parent';
 requires 'Config::General';
