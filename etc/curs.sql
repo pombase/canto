@@ -26,6 +26,7 @@ CREATE TABLE annotation (
 
 CREATE TABLE pub (
        pub_id integer primary key,
+       pubmedid integer NOT NULL UNIQUE,
        data text NOT NULL
 );
 
@@ -34,5 +35,3 @@ CREATE TABLE metadata (
        key text NOT NULL UNIQUE,
        value text
 );
-
-

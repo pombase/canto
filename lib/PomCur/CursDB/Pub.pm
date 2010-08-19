@@ -15,6 +15,13 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => undef,
   },
+  "pubmedid",
+  {
+    data_type => "integer",
+    default_value => undef,
+    is_nullable => 0,
+    size => undef,
+  },
   "data",
   {
     data_type => "text",
@@ -24,6 +31,7 @@ __PACKAGE__->add_columns(
   },
 );
 __PACKAGE__->set_primary_key("pub_id");
+__PACKAGE__->add_unique_constraint("pubmedid_unique", ["pubmedid"]);
 __PACKAGE__->has_many(
   "annotations",
   "PomCur::CursDB::Annotation",
@@ -32,8 +40,14 @@ __PACKAGE__->has_many(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+w8h/Y7rBwS+nUH5uFzDBw
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QSKatPqmU1Cc8730c9W2kQ
 
+use YAML;
+
+__PACKAGE__->inflate_column('data', {
+  inflate => sub { my @res = Load(shift); $res[0] },
+  deflate => sub { Dump(shift) },
+});
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;
