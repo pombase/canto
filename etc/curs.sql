@@ -31,7 +31,7 @@ CREATE TABLE pub (
 
 CREATE TABLE metadata (
        metadata_id integer PRIMARY KEY,
-       key text NOT NULL,
+       key text NOT NULL UNIQUE,
        value text
 );
 
