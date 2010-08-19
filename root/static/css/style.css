@@ -32,9 +32,9 @@ img {
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
-banner {
+#banner {
   float: left;
-  width: 10%;
+  width: 50%;
 }
 
 #logo {
@@ -75,7 +75,6 @@ div#footer .sponsor {
 }
 
 #menu {
-  position: absolute;
   float: right;
   right: 0px;
   top: 0px;
@@ -373,3 +372,11 @@ div.clearall {
   display: inline;
   border-bottom: 1px solid black;
 }
+
+.pub-title {
+  float: right;
+  width: 45%;
+  font-size: 70%;
+  margin: 10px 5px 5px 5px;
+}
+

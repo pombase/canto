@@ -9,6 +9,13 @@
     </a>
   </div>
   <& menu.mhtml &>
+
+  <div class="pub-title">
+    <% $c->stash()->{pub_title} %>
+  </div>
+
+  <div class="clearall"></div>
+
 </div>
 
 

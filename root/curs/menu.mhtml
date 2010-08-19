@@ -1,10 +1,16 @@
 <div id="menu">
   <ul>
+% if (defined $submitter_email) {
     <li>
-      <div class="useridentifier"> <% $c->stash()->{curs_key} %> </div>
+      <div class="useridentifier"> <% $submitter_email %> </div>
     </li>
+% }
     <li>
       <a href="<% $c->uri_for('/help') %>">Help</a>
     </li>
   </ul>
 </div>
+
+<%init>
+my $submitter_email = $c->stash()->{submitter_email};
+</%init>

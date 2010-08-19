@@ -75,12 +75,24 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $submitter_email =
     $schema->resultset('Metadata')->find({ key => 'submitter_email' });
 
-  if (!defined $submitter_email && $path !~ /submitter_update/) {
-    $c->res->redirect($st->{curs_root_path} . '/submitter_update');
-    $c->detach();
-  }
+  if (defined $submitter_email) {
+    $st->{submitter_email} = $submitter_email->value();
 
-  $st->{curs_initialised} = 1;
+    my $submitter_name =
+      $schema->resultset('Metadata')->find({ key => 'submitter_name' });
+    $st->{submitter_name} = $submitter_name->value();
+
+    my $pub_title =
+      $schema->find_with_type('Metadata', { key => 'pub_title' })->value();
+    $st->{pub_title} = $pub_title;
+
+    $st->{curs_initialised} = 1;
+  } else {
+    if ($path !~ /submitter_update/) {
+      $c->res->redirect($st->{curs_root_path} . '/submitter_update');
+      $c->detach();
+    }
+  }
 }
 
 sub _redirect_home_and_detach

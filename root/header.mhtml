@@ -8,6 +8,8 @@
     </a>
   </div>
   <& /menu.mhtml &>
+
+  <div class="clearall"></div>
 </div>
 
 
