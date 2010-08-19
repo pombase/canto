@@ -138,10 +138,15 @@ sub _find_and_create_genes
           @genes = _filter_existing_genes($schema, @genes);
 
           for my $gene (@genes) {
+            my $org_full_name = $gene->organism()->full_name();
+            my $curs_org =
+              PomCur::CursDB::Organism::get_organism($schema, $org_full_name);
+
             $schema->create_with_type('Gene', {
               primary_name => $gene->primary_name(),
               primary_identifier => $gene->primary_identifier(),
               product => $gene->product(),
+              organism => $curs_org
             });
           }
         };

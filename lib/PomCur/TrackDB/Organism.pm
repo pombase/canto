@@ -57,10 +57,15 @@ __PACKAGE__->has_many(
   "PomCur::TrackDB::PubOrganism",
   { "foreign.organism" => "self.organism_id" },
 );
+__PACKAGE__->has_many(
+  "genes",
+  "PomCur::TrackDB::Gene",
+  { "foreign.organism" => "self.organism_id" },
+);
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KVOVnAChcX7VCLJDj36pJg
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:alw3Rgi/i/SHvLABsMxHNA
 
 # the genus and species, used when displaying organisms
 sub full_name {

@@ -2,8 +2,7 @@ PRAGMA foreign_keys=ON;
 
 CREATE TABLE organism (
        organism_id integer PRIMARY KEY,
-       name TEXT NOT NULL UNIQUE,
-       ncbi_taxonomy_identifier integer NOT NULL
+       full_name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE gene (
