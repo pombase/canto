@@ -53,20 +53,34 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 {
   my ($self, $c, $curs_key) = @_;
 
-  $c->stash()->{curs_key} = $curs_key;
+  my $st = $c->stash();
+
+  $st->{curs_key} = $curs_key;
 
   my $path = $c->req->uri()->path();
   (my $controller_name = __PACKAGE__) =~ s/.*::(.*)/\L$1/;
-  $c->stash->{controller_name} = $controller_name;
+  $st->{controller_name} = $controller_name;
 
   my $root_path = $c->uri_for("/$controller_name/$curs_key");
-  $c->stash->{curs_root_path} = $root_path;
+  $st->{curs_root_path} = $root_path;
 
   my $config = $c->config();
 
   my %annotation_modules = %{$config->{annotation_modules}};
 
-  @{$c->stash->{module_names}} = keys %annotation_modules;
+  @{$st->{module_names}} = keys %annotation_modules;
+
+  my $schema = PomCur::Curs::get_schema($c);
+
+  my $submitter_email =
+    $schema->resultset('Metadata')->find({ key => 'submitter_email' });
+
+  if (!defined $submitter_email && $path !~ /submitter_update/) {
+    $c->res->redirect($st->{curs_root_path} . '/submitter_update');
+    $c->detach();
+  }
+
+  $st->{curs_initialised} = 1;
 }
 
 sub _redirect_home_and_detach
@@ -92,6 +106,64 @@ sub home : Chained('top') PathPart('home') Args(0)
   $c->stash->{template} = 'curs/home.mhtml';
 
   $c->stash->{component} = 'home';
+}
+
+sub submitter_update : Chained('top') PathPart('submitter_update') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Submitter update';
+  $st->{template} = 'curs/submitter_update.mhtml';
+
+  $st->{component} = 'submitter_update';
+
+  my $submitter_update_text_name = 'submitter_name';
+  my $submitter_update_text_email = 'submitter_email';
+
+  my $form = $self->form();
+
+  my @all_elements = (
+      {
+        name => 'submitter_name', label => 'Name', type => 'Text', size => 40,
+        constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
+      },
+      {
+        name => 'submitter_email', label => 'Email', type => 'Text', size => 40,
+        constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
+      },
+      {
+        name => 'submit', type => 'Submit', value => 'submit',
+        attributes => { class => 'button', },
+      }
+    );
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $submitter_name = $form->param_value('submitter_name');
+    my $submitter_email = $form->param_value('submitter_email');
+
+    my $schema = PomCur::Curs::get_schema($c);
+
+
+    my $add_submitter = sub {
+      $schema->create_with_type('Metadata', { key => 'submitter_email',
+                                              value => $submitter_email });
+
+      $schema->create_with_type('Metadata', { key => 'submitter_name',
+                                              value => $submitter_name });
+    };
+
+    $schema->txn_do($add_submitter);
+
+    $self->_redirect_home_and_detach($c);
+  }
 }
 
 my $gene_list_textarea_name = 'gene_identifiers';
@@ -195,8 +267,6 @@ sub gene_upload : Chained('top') Args(0) Form
             }
         } qw(submit cancel),
     );
-
-  $form->auto_fieldset(1);
 
   $form->elements([@all_elements]);
 

@@ -1,0 +1,10 @@
+<%args>
+
+</%args>
+
+<div class="submitter-update">
+  <% $c->stash->{form}->render() %>
+</div>
+
+<%init>
+</%init>
