@@ -48,6 +48,7 @@ my %test_cases = %{$config->{test_config}->{test_cases}};
 my %people = ();
 my %labs = ();
 my %pubs = ();
+my %organisms = ();
 
 my %pub_titles = (
   7958849  => "A heteromeric protein that binds to a meiotic homologous recombination hot spot: correlation of binding and hot spot activity.",
@@ -64,6 +65,27 @@ my %pub_titles = (
   19056896 => "The S. pombe SAGA complex controls the switch from proliferation to sexual differentiation through the opposing roles of its subunits Gcn5 and Spt8.",
   18426916 => "The anaphase-promoting complex/cyclosome controls repair and recombination by ubiquitylating Rhp54 in fission yeast.",
 );
+
+sub get_organism
+{
+  my $schema = shift;
+  my $genus = shift;
+  my $species = shift;
+
+  my $full_name = "$genus $species";
+
+  if (!exists $organisms{$full_name}) {
+    my $organism = $schema->create_with_type('Organism',
+                                             {
+                                               genus => $genus,
+                                               species => $species,
+                                             });
+
+    $organisms{$full_name} = $organism;
+  }
+
+  return $organisms{$full_name};
+}
 
 sub get_pub
 {
@@ -179,11 +201,14 @@ sub process_gene_row
   my $columns_ref = shift;
   my ($primary_name, $product, $name) = @{$columns_ref};
 
+  my $pombe = get_organism($schema, 'Schizosaccharomyces', 'pombe');
+
   $schema->create_with_type('Gene',
                             {
                               primary_identifier => $primary_name,
                               product => $product,
                               primary_name => $name,
+                              organism => $pombe
                             });
 }
 
@@ -228,6 +253,8 @@ sub make_curs_dbs
 
   my $test_case = $test_cases{$test_case_key};
   my $schema = $test_schemas{$test_case_key};
+
+  my $pombe = get_organism($schema, 'Schizosaccharomyces', 'pombe');
 
   my $process_test_case =
     sub {
@@ -278,3 +305,5 @@ my $track_3_curs_db_file_name;
 
 
 make_curs_dbs('3_curs');
+
+warn "Test initialisation complete\n";
