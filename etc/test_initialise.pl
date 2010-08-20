@@ -49,6 +49,8 @@ my %people = ();
 my %labs = ();
 my %pubs = ();
 my %organisms = ();
+my %cvs = ();
+my %cvterms = ();
 
 my %pub_titles = (
   7958849  => "A heteromeric protein that binds to a meiotic homologous recombination hot spot: correlation of binding and hot spot activity.",
@@ -87,16 +89,56 @@ sub get_organism
   return $organisms{$full_name};
 }
 
+sub get_cv
+{
+  my $schema = shift;
+  my $cv_name = shift;
+
+  if (!exists $cvs{$cv_name}) {
+    my $cv = $schema->create_with_type('Cv',
+                                       {
+                                         name => $cv_name
+                                       });
+
+    $cvs{$cv_name} = $cv;
+  }
+
+  return $cvs{$cv_name};
+}
+
+sub get_cvterm
+{
+  my $schema = shift;
+  my $cv = shift;
+  my $cvterm_name = shift;
+
+  if (!exists $cvterms{$cvterm_name}) {
+    my $cvterm = $schema->create_with_type('Cvterm',
+                                           {
+                                             name => $cvterm_name,
+                                             cv => $cv,
+                                           });
+
+    $cvterms{$cvterm_name} = $cvterm;
+  }
+
+  return $cvterms{$cvterm_name};
+}
+
 sub get_pub
 {
   my $schema = shift;
   my $pubmed_id = shift;
+
+  my $pub_type_cv = get_cv($schema, 'PomBase publication type');
+  my $pub_type = get_cvterm($schema, $pub_type_cv, 'unknown');
 
   if (!exists $pubs{$pubmed_id}) {
     my $pub = $schema->create_with_type('Pub',
                                         {
                                           pubmedid => $pubmed_id,
                                           title => $pub_titles{$pubmed_id},
+                                          type => $pub_type,
                                         });
 
     $pubs{$pubmed_id} = $pub;
@@ -219,18 +261,12 @@ eval {
 
   my $process =
     sub {
-      my $cv =
-        $schema->create_with_type('Cv', { name => 'pomcur user types' });
-      my $user_cvterm =
-        $schema->create_with_type('Cvterm', { cv => $cv,
-                                              name => 'user',
-                                            });
-      my $admin_cvterm =
-        $schema->create_with_type('Cvterm', { cv => $cv,
-                                              name => 'admin',
-                                            });
+      my $cv = get_cv($schema, 'PomBase user types');
+      my $user_cvterm = get_cvterm($schema, $cv, 'user');
+      my $admin_cvterm = get_cvterm($schema, $cv, 'admin');
 
-      my $admin = get_person($schema, 'Val Wood', 'val@sanger.ac.uk', $admin_cvterm);
+      my $admin = get_person($schema, 'Val Wood', 'val@sanger.ac.uk',
+                             $admin_cvterm);
 
       while (my $columns_ref = $curation_csv->getline($curation_io)) {
         process_row($schema, $columns_ref, $user_cvterm);

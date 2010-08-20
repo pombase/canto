@@ -37,6 +37,11 @@ __PACKAGE__->add_columns(
   { data_type => "int", default_value => 0, is_nullable => 0, size => undef },
 );
 __PACKAGE__->set_primary_key("cvterm_id");
+__PACKAGE__->has_many(
+  "pubs",
+  "PomCur::TrackDB::Pub",
+  { "foreign.type_id" => "self.cvterm_id" },
+);
 __PACKAGE__->belongs_to("cv", "PomCur::TrackDB::Cv", { cv_id => "cv_id" });
 __PACKAGE__->has_many(
   "pubstatuses",
@@ -56,7 +61,7 @@ __PACKAGE__->has_many(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/D+ozlb8xDbBXMGFdBywrA
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7k9KkLsIon6pIYsGeM+jgQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

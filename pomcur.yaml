@@ -89,6 +89,9 @@ class_info:
         editable: 1
       - name: authors
         editable: 1
+      - name: type
+        source: type_id
+        editable: 1
   curs:
     display_field: curs_key
     editable: 1

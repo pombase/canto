@@ -3,6 +3,7 @@ PRAGMA foreign_keys=ON;
 CREATE TABLE pub (
        pub_id integer NOT NULL PRIMARY KEY,
        pubmedid text UNIQUE,
+       type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
        title text,
        authors text
 );
