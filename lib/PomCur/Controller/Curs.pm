@@ -92,6 +92,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
     $st->{curs_initialised} = 1;
   } else {
+    $st->{curs_initialised} = 0;
     if ($path !~ /submitter_update/) {
       $c->res->redirect($st->{curs_root_path} . '/submitter_update');
       $c->detach();

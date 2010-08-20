@@ -1,6 +1,10 @@
+<%args>
+$curs_initialised
+</%args>
+
 <div class="curs-content">
 
-% if ($c->stash()->{curs_initialised}) {
+% if ($curs_initialised) {
 
 <& controls.mhtml &>
 
