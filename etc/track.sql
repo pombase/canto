@@ -40,9 +40,9 @@ CREATE TABLE pub_organism (
        organism integer NOT NULL REFERENCES organism (organism_id)
 );
 
-CREATE TABLE pubstatus (
-       pubstatus_id integer NOT NULL PRIMARY KEY,
-       pub_id integer NOT NULL REFERENCES pub (pub_id),
+CREATE TABLE pub_status (
+       pub_status_id integer NOT NULL PRIMARY KEY,
+       pub_id integer NOT NULL REFERENCES pub (pub_id) UNIQUE,
        status integer NOT NULL REFERENCES cvterm (cvterm_id)
 );
 

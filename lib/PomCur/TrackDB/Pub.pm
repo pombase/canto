@@ -53,8 +53,8 @@ __PACKAGE__->has_many(
   { "foreign.pub" => "self.pub_id" },
 );
 __PACKAGE__->has_many(
-  "pubstatuses",
-  "PomCur::TrackDB::Pubstatus",
+  "pub_statuses",
+  "PomCur::TrackDB::PubStatus",
   { "foreign.pub_id" => "self.pub_id" },
 );
 __PACKAGE__->has_many(
@@ -65,7 +65,7 @@ __PACKAGE__->has_many(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hugKSdC0UuK6gWcxBS/XIg
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nGrHL5HlY1dbRGr9w3N9OA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
