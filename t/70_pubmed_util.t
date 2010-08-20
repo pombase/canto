@@ -45,13 +45,13 @@ my @pub_results = $schema->resultset('Pub')->search();
 
 isnt(@pub_results, 0);
 
-my $defined_title_count = 0;
+my $defined_count = 0;
 
 for my $pub (@pub_results) {
-  $defined_title_count++ if defined $pub->title();
+  $defined_count++ if defined $pub->title();
 }
 
-my $count = PomCur::Track::PubmedUtil::add_missing_titles($config, $schema);
+my $count = PomCur::Track::PubmedUtil::add_missing_fields($config, $schema);
 
 is($count, 3);
 
@@ -59,11 +59,11 @@ my @new_pub_results = $schema->resultset('Pub')->search();
 
 is(@new_pub_results, @pub_results);
 
-my $new_defined_title_count = 0;
+my $new_defined_count = 0;
 
 for my $pub (@new_pub_results) {
-  $new_defined_title_count++ if defined $pub->title();
+  $new_defined_count++ if defined $pub->title();
   warn $pub->pubmedid() unless defined $pub->title();
 }
 
-is($new_defined_title_count, @pub_results);
+is($new_defined_count, @pub_results);

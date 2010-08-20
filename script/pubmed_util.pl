@@ -20,19 +20,21 @@ my $config = PomCur::Config::get_config();
 my $schema = PomCur::TrackDB->new($config);
 
 
-my $do_title = 0;
+my $do_fields = 0;
 my $do_help = 0;
 
-my $result = GetOptions ("title|t" => \$do_title,
+my $result = GetOptions ("add-missing-fields|f" => \$do_fields,
                          "help|h" => \$do_help);
 
 if (!$result || $do_help) {
   die "$0: needs one argument:
-  --add-missing-titles (or -t): access pubmed to add missing title to
-          publications in the pub table
+  --add-missing-fields (or -f): access pubmed to add missing title, abstract,
+          authors, etc. to publications in the publications table (pub)
 \n";
 }
 
-my $count = PomCur::Track::PubmedUtil::add_missing_titles($config, $schema);
+if ($do_fields) {
+  my $count = PomCur::Track::PubmedUtil::add_missing_fields($config, $schema);
 
-print "added $count titles\n";
+  print "added missing fields to $count publications\n";
+}

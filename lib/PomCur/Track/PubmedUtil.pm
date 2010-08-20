@@ -96,7 +96,7 @@ sub _process_batch
 
 =head2
 
- Usage   : PomCur::Track::PubmedUtil::add_missing_titles();
+ Usage   : my $count = PomCur::Track::PubmedUtil::add_missing_fields();
  Function: Find publications in the pub table that have no title, query pubmed
            for the missing information and then set the titles
  Args    : $config - the config object
@@ -105,7 +105,7 @@ sub _process_batch
 
 =cut
 
-sub add_missing_titles
+sub add_missing_fields
 {
   my $config = shift;
   my $schema = shift;
