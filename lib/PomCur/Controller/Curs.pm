@@ -75,6 +75,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $submitter_email =
     $schema->resultset('Metadata')->find({ key => 'submitter_email' });
 
+  my $first_contact =
+    $schema->find_with_type('Metadata', { key => 'first_contact' });
+  $st->{first_contact} = $first_contact->value();
+
   if (defined $submitter_email) {
     $st->{submitter_email} = $submitter_email->value();
 
