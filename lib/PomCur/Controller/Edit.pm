@@ -673,4 +673,12 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
   }
 }
 
+sub create : Global Args(1) {
+  my ($self, $c, $type) = @_;
+
+  my %params = %{$c->request()->params()};
+
+  die "not implemented";
+}
+
 1;

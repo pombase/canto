@@ -6,9 +6,9 @@ $object
 % if ($c->user_exists()) {
 
 <div class="long-action-link">
-  <a href="<% $c->uri_for('/new/object/curs',
-                          { 'pub.pub_id' => $object->pub_id(),
-                            'object.curs_key' => PomCur::Curs::make_curs_key(),
+  <a href="<% $c->uri_for('/create/curs',
+                          { pub => $object->pub_id(),
+                            curs_key => PomCur::Curs::make_curs_key(),
                             model => $c->req()->param('model') }) %>">
     Create a new curation session for this publication ...
   </a>
