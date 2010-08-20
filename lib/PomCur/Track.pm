@@ -117,7 +117,9 @@ sub create_curs_db
   $curs_schema->create_with_type('Metadata', { key => 'pub_pubmedid',
                                                value => $pubmedid,
                                              });
-
+  $curs_schema->create_with_type('Metadata', { key => 'curs_id',
+                                               value => $curs->curs_id(),
+                                             });
 }
 
 =head2 create_curs_db_hook

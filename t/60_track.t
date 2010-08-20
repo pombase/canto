@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 10;
 
 use PomCur::TestUtil;
 use PomCur::Track;
@@ -62,8 +62,12 @@ my $curs_schema = PomCur::TestUtil::schema_for_file($config, $new_curs_db);
 # make sure it's a valid sqlite3 database
 my $curs_metadata_rs = $curs_schema->resultset('Metadata');
 
+my %metadata_hash = ();
+
 while (defined (my $metadata = $curs_metadata_rs->next())) {
-  if ($metadata->key() eq 'first_contact') {
-    is($metadata->value(), $first_contact);
-  }
+  $metadata_hash{$metadata->key()} = $metadata->value();
 }
+
+is($metadata_hash{first_contact}, $first_contact);
+is($metadata_hash{curs_id}, $curs->curs_id());
+is($metadata_hash{pub_pubmedid}, $pub->pubmedid());
