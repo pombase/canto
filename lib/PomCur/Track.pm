@@ -114,6 +114,9 @@ sub create_curs_db
   $curs_schema->create_with_type('Metadata', { key => 'pub_title',
                                                value => $curs->pub()->title(),
                                              });
+  $curs_schema->create_with_type('Metadata', { key => 'pub_abstract',
+                                               value => $curs->pub()->abstract()
+                                             });
   $curs_schema->create_with_type('Metadata', { key => 'pub_pubmedid',
                                                value => $pubmedid,
                                              });

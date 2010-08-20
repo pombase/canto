@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 use PomCur::TestUtil;
 use PomCur::Track;
@@ -71,3 +71,4 @@ while (defined (my $metadata = $curs_metadata_rs->next())) {
 is($metadata_hash{first_contact}, $first_contact);
 is($metadata_hash{curs_id}, $curs->curs_id());
 is($metadata_hash{pub_pubmedid}, $pub->pubmedid());
+is($metadata_hash{pub_abstract}, $pub->abstract());
