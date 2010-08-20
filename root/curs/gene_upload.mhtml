@@ -1,8 +1,10 @@
 <%args>
+$gene_upload_unknown => undef
+$form
 </%args>
 
 <div class="gene-update">
-  <% $c->stash->{form}->render() %>
+  <% $form %>
 
 % if (0 && @unknown_identifiers) {
   <div class="unknown_identifiers">
@@ -17,9 +19,7 @@
 <%init>
 my @unknown_identifiers = ();
 
-my $stash_unknown = $c->stash()->{gene_upload_unknown};
-
-if ($stash_unknown) {
-  @unknown_identifiers = @{$stash_unknown};
+if ($gene_upload_unknown) {
+  @unknown_identifiers = @{$gene_upload_unknown};
 }
 </%init>

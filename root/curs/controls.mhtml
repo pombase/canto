@@ -1,10 +1,15 @@
+<%args>
+$current_component
+$curs_root_path
+</%args>
+
 <div class="curs-controls">
   <ul>
     <li class="<% $home_class %>">
-      <a href="<% $start_path . '/home' %>">Start</a>
+      <a href="<% $curs_root_path . '/home' %>">Start</a>
     </li>
 % for my $module_name (@module_names) {
-%   my $module_path = $start_path . '/' . $module_name;
+%   my $module_path = $curs_root_path . '/' . $module_name;
 %   my $class = $module_name eq $current_component ? 'current-module' : 'not-current-module';
     <li class="<% $class %>">
       <a href="<% $module_path %>">
@@ -18,15 +23,12 @@
 <%init>
 use PomCur::Curs::Util;
 
-my @module_names = @{$c->stash()->{module_names}};
-my $start_path = $c->stash()->{curs_root_path};
-my $current_component = $c->stash()->{component};
-
 my $home_class = '';
 
 if ($current_component eq 'home') {
   $home_class = 'current-module';
 }
 
+my @module_names = @{$c->stash()->{module_names}};
 </%init>
 

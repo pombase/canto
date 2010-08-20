@@ -4,11 +4,7 @@ $curs_key
 
 <p>KEY: <% $curs_key %></p>
 
+% my $start_path = $c->stash()->{curs_root_path};
+% my $upload_path = "$start_path/gene_upload";
 <a href="<% $upload_path %>">Upload ...</a>
 
-<%init>
-
-my $start_path = $c->stash()->{curs_root_path};
-my $upload_path = "$start_path/gene_upload";
-
-</%init>

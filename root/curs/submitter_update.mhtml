@@ -1,11 +1,12 @@
 <%args>
+$form
 $first_contact
 </%args>
 
 If aren't <span class="email-address"><% $first_contact %></span>, please fill in this form:
 
 <div class="submitter-update">
-  <% $c->stash->{form}->render() %>
+  <% $form %>
 </div>
 
 <%init>

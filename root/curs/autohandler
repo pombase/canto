@@ -1,15 +1,18 @@
 <%args>
 $curs_initialised
+$current_component
+$curs_root_path
 </%args>
 
 <div class="curs-content">
 
 % if ($curs_initialised) {
 
-<& controls.mhtml &>
+<& controls.mhtml, current_component => $current_component,
+   curs_root_path => $curs_root_path &>
 
-% if ($c->stash()->{component} ne 'gene_upload' &&
-%     $c->stash()->{component} ne 'list_edit') {
+% if ($current_component ne 'gene_upload' &&
+%     $current_component ne 'list_edit') {
   <& gene_list.mhtml &>
 % }
 

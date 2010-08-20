@@ -8,7 +8,7 @@
       <div id="text"> <% $c->config->{long_name} %> </div>
     </a>
   </div>
-  <& menu.mhtml &>
+  <& menu.mhtml, submitter_email => $c->stash()->{submitter_email} &>
 
   <div class="pub-title">
     <% $c->stash()->{pub_title} %>

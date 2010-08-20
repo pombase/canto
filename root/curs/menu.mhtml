@@ -1,3 +1,7 @@
+<%args>
+$submitter_email => undef
+</%args>
+
 <div id="menu">
   <ul>
 % if (defined $submitter_email) {
@@ -12,7 +16,3 @@
     </li>
   </ul>
 </div>
-
-<%init>
-my $submitter_email = $c->stash()->{submitter_email};
-</%init>

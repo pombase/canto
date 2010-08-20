@@ -122,7 +122,7 @@ sub home : Chained('top') PathPart('home') Args(0)
   $c->stash->{title} = 'Home';
   $c->stash->{template} = 'curs/home.mhtml';
 
-  $c->stash->{component} = 'home';
+  $c->stash->{current_component} = 'home';
 }
 
 sub submitter_update : Chained('top') PathPart('submitter_update') Args(0)
@@ -134,7 +134,7 @@ sub submitter_update : Chained('top') PathPart('submitter_update') Args(0)
   $st->{title} = 'Submitter update';
   $st->{template} = 'curs/submitter_update.mhtml';
 
-  $st->{component} = 'submitter_update';
+  $st->{current_component} = 'submitter_update';
 
   my $submitter_update_text_name = 'submitter_name';
   my $submitter_update_text_email = 'submitter_email';
@@ -255,7 +255,7 @@ sub edit_genes : Chained('top') Args(0) Form
   $st->{title} = 'Edit gene list';
   $st->{template} = 'curs/gene_list.mhtml';
 
-  $st->{component} = 'list_edit';
+  $st->{current_component} = 'list_edit';
 
   $st->{big_list} = 1;
 }
@@ -269,7 +269,7 @@ sub gene_upload : Chained('top') Args(0) Form
   $st->{title} = 'Gene upload';
   $st->{template} = 'curs/gene_upload.mhtml';
 
-  $st->{component} = 'gene_upload';
+  $st->{current_component} = 'gene_upload';
 
   my $form = $self->form();
 
@@ -327,7 +327,7 @@ sub module_dispatch : Chained('top') PathPart('') Args(1)
   my $module_display_name =
     PomCur::Curs::Util::module_display_name($module_name);
   $st->{title} = 'Module: ' . $module_display_name;
-  $st->{component} = $module_name;
+  $st->{current_component} = $module_name;
   $st->{template} = "curs/modules/$module_name.mhtml";
 
   my %annotation_modules = %{$config->{annotation_modules}};
