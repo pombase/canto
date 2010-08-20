@@ -3,15 +3,9 @@ $object
 </%args>
 
 <&| /view/object/object_top.mhtml, object => $object &>
-<div class="sect abstract">
-<span class="sect-title disclosed-title"><a href="#"> Abstract </a> </span>
-<div class="sect-content">
-  <% $abstract %>
-</div>
-</div>
 % if ($c->user_exists()) {
 
-<div>
+<div class="long-action-link">
   <a href="<% $c->uri_for('/new/object/curs',
                           { 'pub.pub_id' => $object->pub_id(),
                             'object.curs_key' => PomCur::Curs::make_curs_key(),
@@ -20,6 +14,14 @@ $object
   </a>
 </div>
 % }
+
+<div class="sect abstract">
+<span class="sect-title undisclosed-title"><a href="#"> Abstract </a> </span>
+<div class="sect-content">
+  <% $abstract %>
+</div>
+</div>
+
 </&>
 
 <%init>

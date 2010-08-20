@@ -206,7 +206,7 @@ table.list tr td {
 }
 
 .sect {
-  margin: 10px 0px 10px 0px;
+  margin: 20px 0px 10px 0px;
 }
 
 .infobox {
@@ -382,4 +382,8 @@ div.clearall {
 
 .email-address {
   font-style: italic;
+}
+
+.long-action-link {
+  margin: 5px;
 }
