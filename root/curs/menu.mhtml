@@ -2,7 +2,9 @@
   <ul>
 % if (defined $submitter_email) {
     <li>
-      <div class="useridentifier"> <% $submitter_email %> </div>
+      <div class="useridentifier"> 
+        <span class="email-address"> <% $submitter_email %> </span>
+      </div>
     </li>
 % }
     <li>

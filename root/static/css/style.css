@@ -380,3 +380,6 @@ div.clearall {
   margin: 10px 5px 5px 5px;
 }
 
+.email-address {
+  font-style: italic;
+}

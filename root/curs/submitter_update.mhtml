@@ -2,7 +2,7 @@
 $first_contact
 </%args>
 
-If aren't <% $first_contact %>, please fill in this form:
+If aren't <span class="email-address"><% $first_contact %></span>, please fill in this form:
 
 <div class="submitter-update">
   <% $c->stash->{form}->render() %>
