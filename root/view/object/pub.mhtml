@@ -3,7 +3,14 @@ $object
 </%args>
 
 <&| /view/object/object_top.mhtml, object => $object &>
+<div class="sect abstract">
+<span class="sect-title disclosed-title"><a href="#"> Abstract </a> </span>
+<div class="sect-content">
+  <% $abstract %>
+</div>
+</div>
 % if ($c->user_exists()) {
+
 <div>
   <a href="<% $c->uri_for('/new/object/curs',
                           { 'pub.pub_id' => $object->pub_id(),
@@ -17,4 +24,6 @@ $object
 
 <%init>
 use PomCur::Curs;
+
+my $abstract = $object->abstract() || '[Abstract not available]';
 </%init>

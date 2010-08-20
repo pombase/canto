@@ -5,6 +5,7 @@ CREATE TABLE pub (
        pubmedid text UNIQUE,
        type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
        title text,
+       abstract text,
        authors text
 );
 

@@ -77,10 +77,14 @@ sub _process_batch
         for my $article (@{$res_hash->{PubmedArticle}}) {
           my $medline_citation = $article->{MedlineCitation};
           my $pubmedid = $medline_citation->{PMID};
-          my $title = $medline_citation->{Article}->{ArticleTitle};
+          my $article = $medline_citation->{Article};
+          my $title = $article->{ArticleTitle};
+          my $abstract = $article->{Abstract}->{AbstractText};
+
           my $pub = $schema->find_with_type('Pub', { pubmedid => $pubmedid });
 
           $pub->title($title);
+          $pub->abstract($abstract);
           $pub->update();
 
           $count++;
@@ -110,8 +114,14 @@ sub add_missing_fields
   my $config = shift;
   my $schema = shift;
 
-  my @missing_title_ids = ();
-  my $rs = $schema->resultset('Pub')->search({title => undef});
+  my @missing_field_ids = ();
+  my $rs = $schema->resultset('Pub')->search({
+    -or => [
+      title => undef,
+      abstract => undef,
+      authors => undef,
+    ]
+   });
   my $max_batch_size = 10;
   my $count = 0;
 
@@ -119,17 +129,17 @@ sub add_missing_fields
     my $pubmedid = $pub->pubmedid();
 
     if (defined $pubmedid) {
-      push @missing_title_ids, $pubmedid;
+      push @missing_field_ids, $pubmedid;
 
-      if (@missing_title_ids == $max_batch_size) {
-        $count += _process_batch($config, $schema, @missing_title_ids);
-        @missing_title_ids = ();
+      if (@missing_field_ids == $max_batch_size) {
+        $count += _process_batch($config, $schema, @missing_field_ids);
+        @missing_field_ids = ();
       }
     }
   }
 
-  if (@missing_title_ids) {
-    $count += _process_batch($config, $schema, @missing_title_ids);
+  if (@missing_field_ids) {
+    $count += _process_batch($config, $schema, @missing_field_ids);
   }
 
   return $count;
