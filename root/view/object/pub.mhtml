@@ -24,8 +24,19 @@ $object
 
 </&>
 
+<div id="collections">
+% if ($object->curs()) {
+  <& /view/collection.mhtml, object => $object, collection_name => 'curs',
+     collection_title => "Curation sessions" &>
+% }
+</div>
+
 <%init>
 use PomCur::Curs;
 
 my $abstract = $object->abstract() || '[Abstract not available]';
+
+my $current_path = $c->req->uri()->path();
+my $return_path_uri = 
+  $c->uri_for($current_path, $c->req()->params());
 </%init>
