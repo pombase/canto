@@ -24,7 +24,6 @@ img {
 #heading a {
 }
 #heading {
-  padding: 5px;
   position: relative;
   -moz-box-shadow: 0px 3px 3px #666;
   -webkit-box-shadow: 0px 3px 3px #666;
@@ -33,6 +32,7 @@ img {
   border-bottom-width: 1px;
 }
 #banner {
+  padding: 5px;
   float: left;
   width: 50%;
 }
