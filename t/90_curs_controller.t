@@ -184,6 +184,8 @@ test_psgi $app, sub {
     ok ($redirect_res->content(), qr/$pub_title_fragment/);
     ok ($redirect_res->content(), qr/\Q$test_email/);
   }
+
+  # FIXME Test gene update
 };
 
 done_testing;
