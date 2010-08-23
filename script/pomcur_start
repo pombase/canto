@@ -6,18 +6,22 @@ use Carp;
 use File::Basename;
 use Getopt::Long;
 
+BEGIN {
+  my $script_name = basename $0;
+
+  if (-f $script_name && ! -d "etc") {
+    # we're in the scripts directory - go up
+    chdir "..";
+  }
+
+  push @INC, "lib";
+};
+
 use PomCur::Meta::Util;
 
 $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
 my $app_name = 'pomcur';
-
-my $script_name = basename $0;
-
-if (-f $script_name && ! -d "etc") {
-  # we're in the scripts directory - go up
-  chdir "..";
-}
 
 if ($ENV{POMCUR_CONFIG_LOCAL_SUFFIX} eq 'deploy') {
   my $init_dir = undef;
@@ -53,6 +57,9 @@ PomCur->setup_engine('PSGI');
 my $app = sub { PomCur->run(@_) };
 
 $app = Plack::Middleware::ReverseProxy->wrap($app);
+$app = Plack::Middleware::Expires->warp($app,
+                                        content_type => qr!^image/!,
+                                        expires => 'modification plus 1 year');
 
 if ($ENV{POMCUR_DEBUG}) {
   $app = Plack::Middleware::Debug->wrap($app);
