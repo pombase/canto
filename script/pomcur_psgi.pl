@@ -17,5 +17,8 @@ builder {
     "Plack::Middleware::ReverseProxy";
   enable_if { $ENV{POMCUR_DEBUG} }
     "Plack::Middleware::Debug";
+  enable 'Expires',
+    content_type => qr!^image/!i,
+    expires => 'access plus 12 months';
   $app;
 };

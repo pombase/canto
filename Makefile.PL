@@ -25,6 +25,7 @@ requires 'LWP::Simple';
 requires 'Plack';
 requires 'Plack::Middleware::ReverseProxy';
 requires 'Plack::Middleware::Debug';
+requires 'Plack::Middleware::Expires';
 requires 'LWP';
 requires 'Data::Compare';
 
