@@ -11,6 +11,8 @@ requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Session::PerUser';
 requires 'Catalyst::Action::RenderView';
+requires 'Catalyst::TraitFor::Request::ProxyBase';
+requires 'CatalystX::Roles';
 requires 'File::Copy::Recursive';
 requires 'DBD::SQLite';
 requires 'DBIx::Class';

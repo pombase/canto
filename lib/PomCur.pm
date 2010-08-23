@@ -16,6 +16,10 @@ use Catalyst qw/ConfigLoader
                 Session::Store::DBI
                 Session::PerUser
                 Static::Simple/;
+
+use Moose;
+use CatalystX::RoleApplicator;
+
 our $VERSION = '0.01';
 
 __PACKAGE__->config(name => 'PomCur',
@@ -39,6 +43,14 @@ __PACKAGE__->config(name => 'PomCur',
                        ],
                     },
                    );
+
+
+
+extends 'Catalyst';
+
+__PACKAGE__->apply_request_class_roles(qw/
+                                       Catalyst::TraitFor::Request::ProxyBase
+                                       /);
 
 sub debug
 {
