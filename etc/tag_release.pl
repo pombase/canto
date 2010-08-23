@@ -17,7 +17,7 @@ sub move_to_master
 
 sub get_current_version
 {
-  my $describe = `git describe --always`;
+  my $describe = `git describe --always --match "$version_prefix*"`;
 
   if ($describe =~ /^$version_prefix(\d+)/) {
     if ($describe =~ /^$version_prefix(\d+)$/) {
