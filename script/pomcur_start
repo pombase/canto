@@ -50,6 +50,7 @@ require Plack::Runner;
 require Plack::Builder;
 require Plack::Middleware::ReverseProxy;
 require Plack::Middleware::Debug;
+require Plack::Middleware::Expires;
 
 require PomCur;
 
@@ -57,7 +58,7 @@ PomCur->setup_engine('PSGI');
 my $app = sub { PomCur->run(@_) };
 
 $app = Plack::Middleware::ReverseProxy->wrap($app);
-$app = Plack::Middleware::Expires->warp($app,
+$app = Plack::Middleware::Expires->wrap($app,
                                         content_type => qr!^image/!,
                                         expires => 'modification plus 1 year');
 
