@@ -30,6 +30,7 @@ requires 'Plack::Middleware::Debug';
 requires 'Plack::Middleware::Expires';
 requires 'LWP';
 requires 'Data::Compare';
+requires 'IO::All';
 
 requires 'parent';
 requires 'Config::General';
