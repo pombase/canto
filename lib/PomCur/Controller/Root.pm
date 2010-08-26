@@ -18,7 +18,10 @@ sub default :Path
 {
   my ($self, $c) = @_;
 
-  $c->response->body( 'Page not found' );
+  my $st = $c->stash;
+
+  $st->{title} = "Page not found";
+  $st->{template} = 'not_found_404.mhtml';
   $c->response->status(404);
 }
 
@@ -32,6 +35,16 @@ sub end : Private
 {
   my $self = shift;
   my $c = shift;
+
+  if (scalar @{ $c->error }) {
+    $c->stash->{error} = $c->error;
+    $c->stash->{title} = 'Error';
+    $c->stash->{template} = 'error.mhtml';
+    $c->forward('MyApp::View::TT');
+    $c->error(0);
+    return 0;
+  }
+
 
   # copied from RenderView.pm
   if (! $c->response->content_type ) {
