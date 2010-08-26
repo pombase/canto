@@ -46,7 +46,24 @@ sub tag_version
 {
   my $new_version = $version_prefix . get_new_version();
 
-  system "git tag -s -a -m 'Version $new_version' $new_version"
+  local $/ = undef;
+
+  open my $config_fh, '<', 'pomcur.yaml' or die "$!";
+  my $contents = <$config_fh>;
+  close $config_fh or die "$!";
+
+  my $old_contents = $contents;
+
+  $contents =~ s/(app_version:\s*)(.*)/$1$new_version/m;
+
+  open $config_fh, '>', 'pomcur.yaml' or die "$!";
+  print $config_fh $contents;
+  close $config_fh or die "$!";
+
+  system "git commit -m 'Update to version $new_version' pomcur.yaml";
+
+#  system "git tag -s -a -m 'Version $new_version' $new_version"
+  system "git tag -a -m 'Version $new_version' $new_version"
 }
 
 sub make_release_branch
@@ -56,11 +73,50 @@ sub make_release_branch
   system "git branch -f release/latest release/$version_prefix$new_version";
 }
 
+sub stash
+{
+  open my $stash_fh, 'git stash|' or die "$!";
+
+  my $stashed = 0;
+  my $nothing_to_save = 0;
+
+  my $save = '';
+
+  while (defined (my $line = <$stash_fh>)) {
+    if ($line =~ /No local changes to save/) {
+      $nothing_to_save = 1;
+    }
+    if ($line =~ /Saved working directory/) {
+      $stashed = 1;
+    }
+
+    $save .= $line;
+  }
+
+  close $stash_fh or die "$!";
+
+  if (!$stashed && !$nothing_to_save) {
+    die "couldn't parse git stash output:\n$save";
+  }
+
+  return $stashed;
+}
+
 move_to_master();
 print 'current version: ', `git describe --always`, "\n";
+
+my $stashed = stash();
 
 my $new_version = get_new_version();
 print 'new version: ', $new_version, "\n";
 tag_version($new_version);
 
-make_release_branch($new_version);
+# make_release_branch($new_version);
+
+system "git push -v repo";
+
+END {
+  if ($stashed) {
+    system "git stash pop";
+  }
+}
