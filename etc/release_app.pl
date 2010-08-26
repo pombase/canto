@@ -17,6 +17,7 @@ my $pomcur_dir = '/var/pomcur';
 my $run_dir = "$pomcur_dir/run";
 my $apps_dir = "$pomcur_dir/apps";
 my $repo = "$pomcur_dir/repo.git";
+my $apache_conf_dir = '/etc/apache2/pomcur.d/';
 
 my $start_script = "script/pomcur_start";
 
@@ -130,3 +131,16 @@ if ($pid) {
 } else {
   exec "/home/kmr44/cur/$start_script", "--port", $port;
 }
+
+my $apache_conf = <<"CONF";
+<Location /$app_name>
+  RequestHeader set X-Request-Base /$app_name
+</Location>
+
+ProxyPass /$app_name http://localhost:$port/
+ProxyPassReverse /$app_name http://localhost:$port/
+CONF
+
+$apache_conf > io("$apache_conf_dir/$app_name");
+
+system "sudo -n /etc/init.d/apache2 restart";
