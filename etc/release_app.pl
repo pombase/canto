@@ -76,7 +76,7 @@ my $app_tag = shift;
 
 if (!defined $app_tag) {
   chdir $repo;
-  my $describe_cmd = 'git describe --match "$version_prefix*"';
+  my $describe_cmd = 'git describe --tags --match "$version_prefix*"';
   $app_tag = `$describe_cmd`;
 
   if (defined $app_tag) {
