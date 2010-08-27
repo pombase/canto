@@ -113,7 +113,7 @@ tag_version($new_version);
 
 # make_release_branch($new_version);
 
-system "git push --tags -v repo";
+system "git push --tags -v repo master";
 
 END {
   if ($stashed) {
