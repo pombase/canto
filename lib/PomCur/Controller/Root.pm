@@ -36,15 +36,16 @@ sub end : Private
   my $self = shift;
   my $c = shift;
 
+  my $st = $c->stash();
+
   if (scalar @{ $c->error }) {
-    $c->stash->{error} = $c->error;
-    $c->stash->{title} = 'Error';
-    $c->stash->{template} = 'error.mhtml';
+    $st->{error} = $c->error;
+    $st->{title} = 'Error';
+    $st->{template} = 'error.mhtml';
     $c->forward('MyApp::View::TT');
     $c->error(0);
     return 0;
   }
-
 
   # copied from RenderView.pm
   if (! $c->response->content_type ) {
@@ -52,7 +53,7 @@ sub end : Private
   }
   return 1 if $c->req->method eq 'HEAD';
   return 1 if length( $c->response->body );
-  return 1 if scalar @{ $c->error } && !$c->stash->{template};
+  return 1 if scalar @{ $c->error } && !$st->{template};
   return 1 if $c->response->status =~ /^(?:204|3\d\d)$/;
   $c->forward('PomCur::View::Mason');
 }
