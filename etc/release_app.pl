@@ -110,8 +110,10 @@ my $full_app_path = "$apps_dir/$app_name";
 if (-d $full_app_path) {
   print "updating $full_app_path\n";
   chdir $full_app_path;
-  system "git remote update origin";
-  system "git checkout $app_tag";
+  system "git reset --hard";
+  system "git pull origin master";
+  system "git reset --hard $app_tag";
+  print 'now at: ', `git describe --tags`;
 
   my $pid_file = "$run_dir/$app_name";
 
