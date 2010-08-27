@@ -94,4 +94,29 @@ sub schema
   return $self->model($model)->schema();
 }
 
+=head2
+
+ Usage   : my $local_path = $c->local_path();
+ Function: If Catalyst::TraitFor::Request::ProxyBase is enable use, the
+           'X-Request-Base' header to find the base path, remove it from
+           the request path, then return the result.  If ProxyBase isn't
+           enabled, just return the path from the URI of the current request
+ Args    : None
+ Return  : The local path
+
+=cut
+sub local_path
+{
+  my $self = shift;
+
+  my $path = $self->req->uri()->path();
+  my $base = $self->req()->header('X-Request-Base');
+
+  if ($base) {
+    $path =~ s/\Q$base//;
+  }
+
+  return $path;
+}
+
 1;
