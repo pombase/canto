@@ -1,5 +1,16 @@
 #!/usr/bin/perl -w
 
+# Script to install or update an existing installation, including the apache
+# configuration
+#
+# Usage:
+#   <script_path> <app_name> [<version_tag>]
+#
+# where:
+#   <app_name> is something like "test" or "prod"
+#
+# The application will appear as http://the.server/<app_name>
+
 use strict;
 use warnings;
 use Carp;
