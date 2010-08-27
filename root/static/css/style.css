@@ -88,10 +88,7 @@ div#footer .sponsor {
   display: inline;
   float: left;
   text-decoration: none;
-  padding: 4px 10px;
-  color: black;
   background-color: #fff;
-
 }
 #menu ul {
   background-color: #228;
@@ -108,7 +105,6 @@ div#footer .sponsor {
 }
 #menu ul li span {
   float: left; text-decoration: none;
-  color: grey;
   padding: 4px 10px;
 }
 #menu ul li a:visited {
@@ -382,6 +378,7 @@ div.clearall {
 
 .email-address {
   font-style: italic;
+  color: #666;
 }
 
 .long-action-link {
