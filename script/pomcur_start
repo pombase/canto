@@ -60,8 +60,10 @@ PomCur->setup_engine('PSGI');
 my $app = sub { PomCur->run(@_) };
 
 $app = Plack::Middleware::ReverseProxy->wrap($app);
+
+my $type_re = qr!^image/|^application/javascript$|^text/css$!;
 $app = Plack::Middleware::Expires->wrap($app,
-                                        content_type => qr!^image/!,
+                                        content_type => $type_re,
                                         expires => 'modification plus 1 year');
 
 if ($ENV{POMCUR_DEBUG}) {
