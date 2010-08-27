@@ -40,6 +40,15 @@ use warnings;
 use Carp;
 use Moose;
 
+=head2 module_display_name
+
+ Usage   : my $display_name =
+              PomCur::Curs::Util::module_display_name($module_name);
+ Function: Return a user friendly version of a module name, suitable for display
+ Args    : $module_name - a module name eg. "go_component"
+ Return  : The display name
+
+=cut
 sub module_display_name
 {
   my $module_name = shift;
