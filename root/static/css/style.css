@@ -187,12 +187,12 @@ table.list tr td {
 }
 
 .undisclosed-title {
-  background-image: url('../images/undisclosed.png');
+  background-image: url('../images/right_triangle.png');
   background-repeat: no-repeat;
   background-position: center left
 }
 .disclosed-title {
-  background-image: url('../images/disclosed.png');
+  background-image: url('../images/down_triangle.png');
   background-repeat: no-repeat;
   background-position: center left
 }
