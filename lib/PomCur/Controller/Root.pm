@@ -47,6 +47,8 @@ sub end : Private
     return 0;
   }
 
+  $st->{app_version} = $c->config()->{app_version};
+
   # copied from RenderView.pm
   if (! $c->response->content_type ) {
     $c->response->content_type( 'text/html; charset=utf-8' );

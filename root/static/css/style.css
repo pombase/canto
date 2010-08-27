@@ -384,3 +384,8 @@ div.clearall {
 .long-action-link {
   margin: 5px;
 }
+
+.app_version {
+  color: #aaa;
+  font-size: 50%;
+}
