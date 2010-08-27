@@ -2,7 +2,9 @@
   <ul>
     <li>
 % if ($c->user_exists()) {
-  <div class="useridentifier"> <% $c->user()->networkaddress() %> </div>
+     <div class="useridentifier">
+       <span class="email-address"> <% $c->user()->networkaddress() %> </span>
+     </div>
 % }
     </li>
     <li>
