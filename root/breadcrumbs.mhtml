@@ -1,0 +1,11 @@
+<div id="breadcrumbs">
+% if ($current_path ne '/') {
+  <a href="<% $c->uri_for('/') %>">
+    <img src="<% $c->uri_for('/static/images/left_triangle.png') %>"> start page</a>
+% }
+</div>
+
+
+<%init>
+my $current_path = $c->req->uri()->path();
+</%init>

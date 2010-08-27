@@ -42,6 +42,8 @@ $message => undef
 % }
 </div>
 
+<& breadcrumbs.mhtml &>
+
       <div id="content">
         <div id="page-description">
           <% $title %>
