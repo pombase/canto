@@ -3,7 +3,7 @@ $object
 @field_labels
 </%args>
 
-<div class="field_list">
+<div class="field-list">
   <table>
 % for my $field_label (@field_labels) {
 %   my $col_conf = $field_infos{$field_label};

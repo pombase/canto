@@ -131,7 +131,7 @@ div#footer .sponsor {
 }
 
 .field-list {
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   margin: 10px 0px 5px 0px;
 }
 
@@ -234,10 +234,7 @@ table.list tr td {
 
 /* front page: */
 .actionlist {
-    margin: 5px;
     font-weight: bold;
-    border: 0px solid #ff;
-    clear: right;
 }
 
 .actionlist .label {
