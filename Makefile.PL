@@ -31,6 +31,7 @@ requires 'Plack::Middleware::Expires';
 requires 'LWP';
 requires 'Data::Compare';
 requires 'IO::All';
+requires 'Test::Exception';
 
 requires 'parent';
 requires 'Config::General';

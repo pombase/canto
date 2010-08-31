@@ -100,13 +100,22 @@ sub init_test
   my $root_dir = $self->{root_dir};
   my $test_config_file_name = "$root_dir/t/test_config.yaml";
 
-  my $test_config = LoadFile($test_config_file_name);
+  my $test_config = LoadFile($test_config_file_name)->{test_config};
 
   my $scratch_dir =
-    "$root_dir/" . $test_config->{test_config}->{scratch_dir};
+    "$root_dir/" . $test_config->{scratch_dir};
   my $tracking_scratch_dir =
-    "$root_dir/" . $test_config->{test_config}->{tracking_scratch};
+    "$root_dir/" . $test_config->{tracking_scratch};
 
+  my $app_name = lc PomCur::Config::get_application_name();
+
+  my $config = PomCur::Config->new("$root_dir/$app_name.yaml",
+                                   $test_config_file_name);
+
+
+  if (!exists $test_config->{test_cases}->{$test_env_type}) {
+    die "no test case configured for '$test_env_type'\n";
+  }
 
   remove_tree($scratch_dir, { error => \my $rm_err } );
 
@@ -128,18 +137,13 @@ sub init_test
     exit (1);
   }
 
-  my $app_name = lc PomCur::Config::get_application_name();
-
-  my $config = PomCur::Config->new("$root_dir/$app_name.yaml",
-                                   $test_config_file_name);
-
   $self->{config} = $config;
 
-  my $data_dir = $config->{test_config}->{data_dir};
+  my $data_dir = $test_config->{data_dir};
 
   if ($test_env_type ne 'empty_db') {
     my $track_db_file =
-      $config->{test_config}->{"track_test_${test_env_type}_db"};
+      $test_config->{"track_test_${test_env_type}_db"};
 
     $config->{track_db_template_file} =
       "$root_dir/$track_db_file";
@@ -163,14 +167,17 @@ sub init_test
   $self->{track_schema} = PomCur::TrackDB->new($config);
 
   my $db_file_name = connect_string_file_name($connect_string);
-  my $test_case_def = $config->{test_config}->{test_cases}->{$test_env_type};
-  my @test_case_curs_confs = @$test_case_def;
+  my $test_case_def = $test_config->{test_cases}->{$test_env_type};
 
-  for my $test_case_curs_conf (@test_case_curs_confs) {
-    my $curs_key = curs_key_of_test_case($test_case_curs_conf);
-    my $db_file_name = PomCur::Curs::make_db_file_name($curs_key);
+  if ($test_env_type ne 'empty_db') {
+    my @test_case_curs_confs = @$test_case_def;
 
-    copy "$data_dir/$db_file_name", $tracking_scratch_dir or die "$!";
+    for my $test_case_curs_conf (@test_case_curs_confs) {
+      my $curs_key = curs_key_of_test_case($test_case_curs_conf);
+      my $db_file_name = PomCur::Curs::make_db_file_name($curs_key);
+
+      copy "$data_dir/$db_file_name", $tracking_scratch_dir or die "$!";
+    }
   }
 
   return (track_db_file_name => $db_file_name);
@@ -193,18 +200,45 @@ sub plack_app
   return $app;
 }
 
+=head2
+
+ Usage   : my $test_util = PomCur::TestUtil->new();
+           my $root_dir = $test_util->root_dir();
+ Function: Return the root directory of the application, ie. the directory
+           containing lib, etc, root, t, etc.
+ Args    : none
+
+=cut
 sub root_dir
 {
   my $self = shift;
   return $self->{root_dir};
 }
 
+=head2
+
+ Usage   : my $test_util = PomCur::TestUtil->new();
+           $test_util->init_test();
+           my $config = $test_util->config();
+ Function: Return the config object to use while testing
+ Args    : none
+
+=cut
 sub config
 {
   my $self = shift;
   return $self->{config};
 }
 
+=head2
+
+ Usage   : my $test_util = PomCur::TestUtil->new();
+           $test_util->init_test();
+           my $schema = $test_util->track_schema();
+ Function: Return the schema object of the test track database
+ Args    : none
+
+=cut
 sub track_schema
 {
   my $self = shift;
