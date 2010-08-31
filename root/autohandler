@@ -60,7 +60,6 @@ $message => undef
         </div>
 % $m->call_next;
       </div>
-    </div>
     <& footer.mhtml &>
   </body>
 </html>

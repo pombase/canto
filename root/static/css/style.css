@@ -40,6 +40,7 @@ img {
 #logo {
   font-size: 150%;
 }
+
 div#footer {
   padding-top: 40px;
 }
@@ -136,6 +137,15 @@ div#footer .sponsor {
 
 #front-page {
   padding: 10px;
+}
+
+#track-actions {
+  width: 80%;
+}
+
+#track-actions actionlist {
+  width: 30%;
+  vertical-align: top;
 }
 
 table.list {

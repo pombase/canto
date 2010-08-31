@@ -1,7 +1,7 @@
 <div id="front-page">
-  <table width="80%">
+  <table id="track-actions">
     <tr>
-      <td class="actionlist" width="30%" valign="top">
+      <td class="actionlist">
         <div>
           <div class="label">
             View ...
@@ -23,7 +23,7 @@
         </div>
       </td>
 %  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
-      <td class="actionlist" width="30%" valign="top">
+      <td class="actionlist">
         <div class="label">
           Add a ...
         </div>

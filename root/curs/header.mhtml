@@ -2,7 +2,7 @@
   <div id="banner">
     <a href="<% $root_path %>">
       <div id="logo">
-        <img src="<% $c->uri_for('/static/images/site_logo.png') %>" border="0"/>
+        <img src="<% $c->uri_for('/static/images/site_logo.png') %>"/>
         CURS <span class="app_version"><% $c->stash()->{app_version} %></span>
       </div>
       <div id="text"> <% $c->config->{long_name} %> </div>
