@@ -17,6 +17,9 @@ use PomCur::Track;
 use PomCur::TrackDB;
 use PomCur::Config;
 use PomCur::TestUtil;
+use PomCur::Track::CurationLoad;
+use PomCur::Track::GeneLoad;
+use PomCur::Track::LoadUtil;
 
 my %test_curators = ();
 my %test_publications = ();
@@ -28,29 +31,14 @@ my $config = PomCur::Config->new("pomcur.yaml", "t/test_config.yaml");
 
 $config->{data_directory} = $test_util->root_dir() . '/t/data';
 
-my $spreadsheet_file = $config->{test_config}->{curation_spreadsheet};
+my $curation_file = $config->{test_config}->{curation_spreadsheet};
 my $genes_file = $config->{test_config}->{test_genes_file};
 
 my $base_track_db_file_name;
 ($test_schemas{"0_curs"}, $base_track_db_file_name) =
   PomCur::TestUtil::make_track_test_db($config, 'track_test_0_curs_db');
 
-my $curation_csv = Text::CSV->new({binary => 1});
-open my $curation_io, '<', $spreadsheet_file or die;
-$curation_csv->column_names ($curation_csv->getline($curation_io));
-
-my $genes_csv = Text::CSV->new({binary => 1});
-open my $genes_io, '<', $genes_file or die;
-$genes_csv->column_names ($genes_csv->getline($genes_io));
-
 my %test_cases = %{$config->{test_config}->{test_cases}};
-
-my %people = ();
-my %labs = ();
-my %pubs = ();
-my %organisms = ();
-my %cvs = ();
-my %cvterms = ();
 
 my %pub_titles = (
   7958849  => "A heteromeric protein that binds to a meiotic homologous recombination hot spot: correlation of binding and hot spot activity.",
@@ -81,193 +69,21 @@ my %pub_abstracts = (
   19056896 => "The SAGA complex is a conserved multifunctional coactivator known to play broad roles in eukaryotic transcription. To gain new insights into its functions, we performed biochemical and genetic analyses of SAGA in the fission yeast, Schizosaccharomyces pombe. Purification of the S. pombe SAGA complex showed that its subunit composition is identical to that of Saccharomyces cerevisiae. Analysis of S. pombe SAGA mutants revealed that SAGA has two opposing roles regulating sexual differentiation. First, in nutrient-rich conditions, the SAGA histone acetyltransferase Gcn5 represses ste11(+), which encodes the master regulator of the mating pathway. In contrast, the SAGA subunit Spt8 is required for the induction of ste11(+) upon nutrient starvation. Chromatin immunoprecipitation experiments suggest that these regulatory effects are direct, as SAGA is physically associated with the ste11(+) promoter independent of nutrient levels. Genetic tests suggest that nutrient levels do cause a switch in SAGA function, as spt8Delta suppresses gcn5Delta with respect to ste11(+) derepression in rich medium, whereas the opposite relationship, gcn5Delta suppression of spt8Delta, occurs during starvation. Thus, SAGA plays distinct roles in the control of the switch from proliferation to differentiation in S. pombe through the dynamic and opposing activities of Gcn5 and Spt8.",
 );
 
-sub get_organism
+
+sub _add_pub_details
 {
   my $schema = shift;
-  my $genus = shift;
-  my $species = shift;
 
-  my $full_name = "$genus $species";
+  my @pubs = $schema->resultset('Pub')->all();
 
-  if (!exists $organisms{$full_name}) {
-    my $organism = $schema->create_with_type('Organism',
-                                             {
-                                               genus => $genus,
-                                               species => $species,
-                                             });
+  for my $pub (@pubs) {
+    my $title = $pub_titles{$pub->pubmedid()};
+    $pub->title($title) if defined $title;
+    my $abstract = $pub_abstracts{$pub->pubmedid()};
+    $pub->abstract($abstract) if defined $abstract;
 
-    $organisms{$full_name} = $organism;
+    $pub->update();
   }
-
-  return $organisms{$full_name};
-}
-
-sub get_cv
-{
-  my $schema = shift;
-  my $cv_name = shift;
-
-  if (!exists $cvs{$cv_name}) {
-    my $cv = $schema->create_with_type('Cv',
-                                       {
-                                         name => $cv_name
-                                       });
-
-    $cvs{$cv_name} = $cv;
-  }
-
-  return $cvs{$cv_name};
-}
-
-sub get_cvterm
-{
-  my $schema = shift;
-  my $cv = shift;
-  my $cvterm_name = shift;
-
-  if (!exists $cvterms{$cvterm_name}) {
-    my $cvterm = $schema->create_with_type('Cvterm',
-                                           {
-                                             name => $cvterm_name,
-                                             cv => $cv,
-                                           });
-
-    $cvterms{$cvterm_name} = $cvterm;
-  }
-
-  return $cvterms{$cvterm_name};
-}
-
-sub get_pub
-{
-  my $schema = shift;
-  my $pubmed_id = shift;
-
-  my $pub_type_cv = get_cv($schema, 'PomBase publication type');
-  my $pub_type = get_cvterm($schema, $pub_type_cv, 'unknown');
-
-  if (!exists $pubs{$pubmed_id}) {
-    my $title = $pub_titles{$pubmed_id};
-    my $abstract = $pub_abstracts{$pubmed_id};
-    my $pub = $schema->create_with_type('Pub',
-                                        {
-                                          pubmedid => $pubmed_id,
-                                          title => $title,
-                                          abstract => $abstract,
-                                          type => $pub_type,
-                                        });
-
-    $pubs{$pubmed_id} = $pub;
-  }
-
-  return $pubs{$pubmed_id};
-}
-
-sub get_lab
-{
-  my $schema = shift;
-  my $lab_head = shift;
-
-  my $lab_head_name = $lab_head->longname();
-
-  (my $lab_head_surname = $lab_head_name) =~ s/.* //;
-
-  if (!exists $labs{$lab_head_name}) {
-    my $lab = $schema->create_with_type('Lab',
-                                        {
-                                          lab_head => $lab_head,
-                                          name => "$lab_head_surname Lab"
-                                         });
-
-    $labs{$lab_head_name} = $lab;
-  }
-
-  return $labs{$lab_head_name};
-}
-
-sub get_person
-{
-  my $schema = shift;
-  my $longname = shift;
-  my $networkaddress = shift;
-  my $role_cvterm = shift;
-
-  if (!defined $networkaddress || length $networkaddress == 0) {
-    die "email not set for $longname\n";
-  }
-  if (!defined $longname || length $longname == 0) {
-    die "name not set for $networkaddress\n";
-  }
-
-  if (!exists $people{$longname}) {
-    my $person = $schema->create_with_type('Person',
-                                           {
-                                             longname => $longname,
-                                             networkaddress => $networkaddress,
-                                             password => $networkaddress,
-                                             role => $role_cvterm,
-                                           });
-
-    $people{$longname} = $person;
-  }
-
-  return $people{$longname};
-}
-
-sub fix_lab
-{
-  my ($person, $lab) = @_;
-
-  if (!defined $person->lab()) {
-    $person->lab($lab);
-    $person->update();
-  }
-}
-
-sub process_row
-{
-  my $schema = shift;
-  my $columns_ref = shift;
-  my $user_cvterm = shift;
-
-  my ($pubmed_id, $lab_head_name, $submitter_name, $date_sent, $status,
-      $lab_head_email, $submitter_email) = @{$columns_ref};
-
-  my $pub = get_pub($schema, $pubmed_id);
-  my $lab_head = get_person($schema, $lab_head_name, $lab_head_email, $user_cvterm);
-  my $lab = get_lab($schema, $lab_head);
-  my $submitter = undef;
-
-  if ($submitter_email) {
-    $submitter = get_person($schema, $submitter_name, $submitter_email, $user_cvterm);
-  }
-
-  if (!defined ($submitter)) {
-    $submitter = $lab_head;
-  }
-
-  $test_curators{$lab_head_email} = $lab_head;
-  $test_publications{$pubmed_id} = $pub;
-
-  fix_lab($lab_head, $lab);
-  fix_lab($submitter, $lab);
-}
-
-sub process_gene_row
-{
-  my $schema = shift;
-  my $columns_ref = shift;
-  my ($primary_name, $product, $name) = @{$columns_ref};
-
-  my $pombe = get_organism($schema, 'Schizosaccharomyces', 'pombe');
-
-  $schema->create_with_type('Gene',
-                            {
-                              primary_identifier => $primary_name,
-                              product => $product,
-                              primary_name => $name,
-                              organism => $pombe
-                            });
 }
 
 # populate base track database ("0_curs"), with no curation sessions (curs
@@ -275,28 +91,37 @@ sub process_gene_row
 eval {
   my $schema = $test_schemas{"0_curs"};
 
+  my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);
+  my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
+
   my $process =
     sub {
-      my $cv = get_cv($schema, 'PomBase user types');
-      my $user_cvterm = get_cvterm($schema, $cv, 'user');
-      my $admin_cvterm = get_cvterm($schema, $cv, 'admin');
-
-      my $admin = get_person($schema, 'Val Wood', 'val@sanger.ac.uk',
-                             $admin_cvterm);
-
-      while (my $columns_ref = $curation_csv->getline($curation_io)) {
-        process_row($schema, $columns_ref, $user_cvterm);
-      }
-
-      while (my $columns_ref = $genes_csv->getline($genes_io)) {
-        process_gene_row($schema, $columns_ref, $user_cvterm);
-      }
+      $curation_load->load($curation_file);
+      _add_pub_details($schema);
+      $gene_load->load($genes_file);
     };
 
   $schema->txn_do($process);
 };
 if ($@) {
   die "ROLLBACK called: $@\n";
+}
+
+sub _get_curator_object
+{
+  my $schema = shift;
+  my $email_address = shift;
+
+  return $schema->find_with_type('Person',
+                                 { networkaddress => $email_address });
+}
+
+sub _get_pub_object
+{
+  my $schema = shift;
+  my $pubmedid = shift;
+
+  return $schema->find_with_type('Pub', { pubmedid => $pubmedid });
 }
 
 sub make_curs_dbs
@@ -306,7 +131,9 @@ sub make_curs_dbs
   my $test_case = $test_cases{$test_case_key};
   my $schema = $test_schemas{$test_case_key};
 
-  my $pombe = get_organism($schema, 'Schizosaccharomyces', 'pombe');
+  my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
+
+  my $pombe = $load_util->get_organism('Schizosaccharomyces', 'pombe');
 
   my $process_test_case =
     sub {
@@ -315,9 +142,10 @@ sub make_curs_dbs
           PomCur::TestUtil::curs_key_of_test_case($test_case_ref);
 
         my $create_args = {
-          community_curator => $test_curators{$test_case_ref->{first_contact}},
+          community_curator =>
+            _get_curator_object($schema, $test_case_ref->{first_contact}),
           curs_key => $test_case_curs_key,
-          pub => $test_publications{$test_case_ref->{pubmedid}},
+          pub => _get_pub_object($schema, $test_case_ref->{pubmedid}),
         };
 
         my $curs_object = $schema->create_with_type('Curs', $create_args);
