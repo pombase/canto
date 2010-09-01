@@ -44,7 +44,8 @@ CREATE TABLE pub_organism (
 CREATE TABLE pub_status (
        pub_status_id integer NOT NULL PRIMARY KEY,
        pub_id integer NOT NULL REFERENCES pub (pub_id) UNIQUE,
-       status integer NOT NULL REFERENCES cvterm (cvterm_id)
+       status integer NOT NULL REFERENCES cvterm (cvterm_id),
+       assigned_curator integer REFERENCES person (person_id) 
 );
 
 CREATE TABLE person (

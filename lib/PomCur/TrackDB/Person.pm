@@ -67,6 +67,11 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("person_id");
 __PACKAGE__->add_unique_constraint("networkaddress_unique", ["networkaddress"]);
+__PACKAGE__->has_many(
+  "pub_statuses",
+  "PomCur::TrackDB::PubStatus",
+  { "foreign.assigned_curator" => "self.person_id" },
+);
 __PACKAGE__->belongs_to("role", "PomCur::TrackDB::Cvterm", { cvterm_id => "role" });
 __PACKAGE__->belongs_to("lab", "PomCur::TrackDB::Lab", { lab_id => "lab" });
 __PACKAGE__->has_many(
@@ -82,8 +87,25 @@ __PACKAGE__->has_many(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:15E++hlyOdiFOInCGtvaDQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zqiWGfHfuJp5SaDaW6dvkw
 
+=head2
+
+ Usage   : my $pub_status = $pub->pub_status();
+ Function: Return the PubStatus object for this publication.
+           DBIx::Class::Schema::Loader has created pub_statuses() for us,
+           but the constraints on the pub_status.pub column mean there can be
+           only one PubStatus per Pub
+ Args    : None
+ Return  : The PubStatus object
+
+=cut
+sub pub_status
+{
+  my $self = shift;
+
+  return ($self->pub_statuses())[0];
+}
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;
