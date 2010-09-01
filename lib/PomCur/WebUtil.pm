@@ -44,7 +44,7 @@ use PomCur::DB;
 =head2
 
  Usage   : my ($field_value, $field_type) =
-             PomCur::WebUtil::get_field_value($c, $object, $col_conf);
+             PomCur::WebUtil::get_field_value($c, $object, $field_name);
  Function: Get the real value of a field, for display.  The value may be
            straight from the database column, or may be created with Perl code
            in the source key of the configuration.
