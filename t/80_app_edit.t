@@ -89,7 +89,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    ok ($redirect_res->content() =~ /Details for person $new_object_id/);
+    ok ($redirect_res->content() =~ /Details for Test name/);
     ok ($redirect_res->content() =~ /Email address/);
     ok ($redirect_res->content() =~ /\Q$test_name/);
     ok ($redirect_res->content() =~ /\Q$test_email/);
@@ -134,7 +134,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    ok ($redirect_res->content() =~ /Details for person $new_object_id/);
+    ok ($redirect_res->content() =~ /Details for Test name/);
     ok ($redirect_res->content() =~ /Email address/);
     ok ($redirect_res->content() !~ /\Q$test_email/);
     ok ($redirect_res->content() =~ /\Q$test_email2/);

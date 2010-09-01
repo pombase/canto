@@ -23,7 +23,8 @@ test_psgi $app, sub {
     my $res = $cb->($req);
 
     is $res->code, 200;
-    ok ($res->content() =~ /Details for/);
+
+    ok ($res->content() =~ /Details for Val Wood/);
     ok ($res->content() =~ /Val Wood/);
   }
 

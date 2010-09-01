@@ -41,6 +41,8 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
+use PomCur::WebUtil;
+
 use Lingua::EN::Inflect::Number qw(to_PL);
 
 =head2 get_object_by_id_or_name
@@ -77,6 +79,64 @@ sub get_object_by_id_or_name
   return undef;
 }
 
+sub _eval_format
+{
+  my $object = shift;
+  my $eval_string = shift;
+  my $failures_ref = shift;
+
+  my $val = eval $eval_string;
+
+  if ($@) {
+    push @{$failures_ref}, $@;
+  }
+
+  return $val;
+}
+
+sub _make_title
+{
+  my $c = shift;
+  my $object = shift;
+  my $class_info = shift;
+
+  my $type = $object->table();
+
+  my $class_display_name = $class_info->{class_display_name} || $type;
+  my $object_display_key;
+
+  my $class_display_field = $class_info->{display_field};
+  if (defined $class_display_field) {
+    ($object_display_key) =
+      PomCur::WebUtil::get_field_value($c, $object, $class_display_field);
+  } else {
+    my $object_id_field = $type . '_id';
+    $object_display_key = $object->$object_id_field();
+  }
+
+  my $title_format = $class_info->{object_title_format};
+
+  if (defined $title_format) {
+    my $title = $title_format;
+
+    $title =~ s/\@\@DISPLAY_FIELD\@\@/$object_display_key/g;
+
+    my @failures = ();
+    $title =~ s/\@\@(\$[^@]+)\@\@/_eval_format($object, $1, \@failures)/eg;
+
+    if (@failures) {
+      for my $failure (@failures) {
+        warn "eval failure: $failure";
+      }
+      # fall through
+    } else {
+      return $title;
+    }
+  }
+
+  return "Details for $class_display_name $object_display_key";
+}
+
 =head2 object
 
  Function: Render details about an object (about a row in a table)
@@ -91,13 +151,14 @@ sub object : Local
   my $st = $c->stash;
 
   eval {
-    $st->{title} = "Details for $type $object_key";
+    my $object = get_object_by_id_or_name($c, $type, $object_key);
+
+    my $class_info = $c->config()->{class_info}->{$type};
+
+    $st->{title} = _make_title($c, $object, $class_info);
     $st->{template} = 'view/object/generic.mhtml';
 
     $st->{type} = $type;
-
-    my $object = get_object_by_id_or_name($c, $type, $object_key);
-
     $st->{object} = $object;
 
     my $object_id = PomCur::DB::id_of_object($object);

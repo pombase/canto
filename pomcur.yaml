@@ -18,6 +18,7 @@ authentication:
 
 class_info:
   cv:
+    class_display_name: controlled vocabulary
     editable: 1
     display_field: name
     field_info_list:
@@ -26,6 +27,7 @@ class_info:
       - name: definition
         editable: 1
   cvterm:
+    class_display_name: controlled vocabulary term
     editable: 1
     display_field: name
     field_info_list:
@@ -49,6 +51,7 @@ class_info:
       - name: ecotypes
         editable: 1
   person:
+    object_title_format: 'Details for @@DISPLAY_FIELD@@'
     editable: 1
     display_field: name
     order_by: name
@@ -81,6 +84,8 @@ class_info:
         is_collection: 1
         editable: 1
   pub:
+    object_title_format: 'Details for PubMed ID: @@$object->pubmedid()@@'
+    class_display_name: publication
     display_field: title
     editable: 1
     field_info_list:
@@ -95,6 +100,7 @@ class_info:
         source: type_id
         editable: 1
   curs:
+    class_display_name: curation session
     display_field: curs_key
     editable: 1
     field_info_list:

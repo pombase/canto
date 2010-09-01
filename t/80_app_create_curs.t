@@ -104,7 +104,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    ok ($redirect_res->content() =~ /Details for curs $new_object_id/);
+    ok ($redirect_res->content() =~ /Details for curation session $curs_key/);
     ok ($redirect_res->content() =~ /$curs_key/);
     ok ($redirect_res->content() =~ /$pub_title/);
 
