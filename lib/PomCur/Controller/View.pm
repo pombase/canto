@@ -110,7 +110,8 @@ sub object : Local
     }
   };
   if ($@ || !defined $st->{object}) {
-    $c->stash->{error} = qq(No object type "$type" and key = $object_key - $@);
+    $c->stash->{error} =
+      qq(Cannot display object with type "$type" and key = $object_key - $@);
     $c->forward('/front');
   }
 }
