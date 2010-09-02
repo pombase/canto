@@ -284,8 +284,7 @@ sub class_name_of_relationship
 
  Usage   : my $id = PomCur::DB::id_of_object($object);
  Function: Return the database id or primary key of the object, eg. for a
-           sample, return the value in the sample_id column and for Protocol,
-           return its name
+           sample, return the value in the sample_id column
  Args    : $object - an object
 
 =cut
