@@ -60,14 +60,12 @@ my $tidy = sub {
     return ();
   }
 
-  my @ret = ();
-
   if (ref $arg) {
     if (ref $arg eq 'ARRAY') {
       return @$arg;
     } else {
       if (ref $arg eq 'HASH' && exists $arg->{title}) {
-        return ($arg);
+        return $arg;
       } else {
         use Data::Dumper;
         $Data::Dumper::Maxdepth = 5;
@@ -78,7 +76,7 @@ my $tidy = sub {
       }
     }
   } else {
-    push @ret, { title => $arg }
+    return { title => $arg };
   }
 };
 
