@@ -44,7 +44,7 @@ while (defined (my $metadata = $curs_metadata_rs->next())) {
   $metadata{$metadata->key()} = $metadata->value();
 }
 
-is($metadata{first_contact}, 'nick.rhind@umassmed.edu');
+is($metadata{first_contact_email}, 'nick.rhind@umassmed.edu');
 is($metadata{pub_pubmedid}, 19664060);
 like($metadata{pub_title}, qr/Inactivating pentapeptide insertions in the/);
 

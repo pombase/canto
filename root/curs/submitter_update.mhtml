@@ -1,9 +1,10 @@
 <%args>
 $form
-$first_contact
+$first_contact_email
+$first_contact_name
 </%args>
 
-If aren't <span class="email-address"><% $first_contact %></span>, please fill in this form:
+<p>Please enter your name and email address to continue:</p>
 
 <div class="submitter-update">
   <% $form %>

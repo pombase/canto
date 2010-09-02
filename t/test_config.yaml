@@ -13,12 +13,12 @@ test_config:
     '0_curs': []
     '1_curs':
        - curs_key: aaaa0001
-         first_contact: "nick.rhind@umassmed.edu"
+         first_contact_email: "nick.rhind@umassmed.edu"
          pubmedid: 19664060
     '3_curs':
        - curs_key: aaaa0002
-         first_contact: "hoffmacs@bc.edu"
+         first_contact_email: "hoffmacs@bc.edu"
          pubmedid: 19686603
        - curs_key: aaaa0003
-         first_contact: "kevin.hardwick@ed.ac.uk"
+         first_contact_email: "kevin.hardwick@ed.ac.uk"
          pubmedid: 19436749

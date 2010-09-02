@@ -106,11 +106,14 @@ sub create_curs_db
   my $connect_string = PomCur::Curs::make_connect_string($config, $curs_key);
   my $curs_schema = PomCur::CursDB->connect($connect_string);
 
-  my $first_contact = $curs->community_curator()->networkaddress();
+  my $first_contact_email = $curs->community_curator()->networkaddress();
+  my $first_contact_name = $curs->community_curator()->longname();
 
   # the calling function will wrap this in a transaction if necessary
-  $curs_schema->create_with_type('Metadata', { key => 'first_contact',
-                                               value => $first_contact });
+  $curs_schema->create_with_type('Metadata', { key => 'first_contact_email',
+                                               value => $first_contact_email });
+  $curs_schema->create_with_type('Metadata', { key => 'first_contact_name',
+                                               value => $first_contact_name });
   $curs_schema->create_with_type('Metadata', { key => 'pub_title',
                                                value => $curs->pub()->title(),
                                              });

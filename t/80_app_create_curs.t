@@ -115,7 +115,7 @@ test_psgi $app, sub {
 
     my $metadata = $curs_schema->find_with_type('Metadata',
                                                 {
-                                                  key => 'first_contact',
+                                                  key => 'first_contact_email',
                                                 });
 
     is ($metadata->value(), $curator->networkaddress());

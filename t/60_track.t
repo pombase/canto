@@ -19,7 +19,7 @@ is(@results, 0);
 
 my $key = 'abcd0123';
 
-my $first_contact = 'val@sanger.ac.uk';
+my $first_contact_email = 'val@sanger.ac.uk';
 
 my $pub = $schema->find_with_type('Pub', { pubmedid => '19056896' });
 
@@ -27,7 +27,7 @@ is($pub->type()->name(), 'unknown');
 
 my $person = $schema->find_with_type('Person',
                                      {
-                                       networkaddress => $first_contact
+                                       networkaddress => $first_contact_email
                                      });
 
 my $curs = $schema->create_with_type('Curs',
@@ -71,7 +71,7 @@ while (defined (my $metadata = $curs_metadata_rs->next())) {
   $metadata_hash{$metadata->key()} = $metadata->value();
 }
 
-is($metadata_hash{first_contact}, $first_contact);
+is($metadata_hash{first_contact_email}, $first_contact_email);
 is($metadata_hash{curs_id}, $curs->curs_id());
 is($metadata_hash{pub_pubmedid}, $pub->pubmedid());
 is($metadata_hash{pub_abstract}, $pub->abstract());

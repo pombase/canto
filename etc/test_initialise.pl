@@ -143,7 +143,7 @@ sub make_curs_dbs
 
         my $create_args = {
           community_curator =>
-            _get_curator_object($schema, $test_case_ref->{first_contact}),
+            _get_curator_object($schema, $test_case_ref->{first_contact_email}),
           curs_key => $test_case_curs_key,
           pub => _get_pub_object($schema, $test_case_ref->{pubmedid}),
         };

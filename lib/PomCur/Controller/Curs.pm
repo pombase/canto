@@ -75,9 +75,13 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $submitter_email =
     $schema->resultset('Metadata')->find({ key => 'submitter_email' });
 
-  my $first_contact =
-    $schema->find_with_type('Metadata', { key => 'first_contact' });
-  $st->{first_contact} = $first_contact->value();
+  my $first_contact_email =
+    $schema->find_with_type('Metadata', { key => 'first_contact_email' });
+  $st->{first_contact_email} = $first_contact_email->value();
+
+  my $first_contact_name =
+    $schema->find_with_type('Metadata', { key => 'first_contact_name' });
+  $st->{first_contact_name} = $first_contact_name->value();
 
   if (defined $submitter_email) {
     $st->{submitter_email} = $submitter_email->value();
@@ -136,6 +140,9 @@ sub submitter_update : Chained('top') PathPart('submitter_update') Args(0)
 
   $st->{current_component} = 'submitter_update';
 
+  my $first_contact_name = $st->{first_contact_name};
+  my $first_contact_email = $st->{first_contact_email};
+
   my $submitter_update_text_name = 'submitter_name';
   my $submitter_update_text_email = 'submitter_email';
 
@@ -144,14 +151,20 @@ sub submitter_update : Chained('top') PathPart('submitter_update') Args(0)
   my @all_elements = (
       {
         name => 'submitter_name', label => 'Name', type => 'Text', size => 40,
+        value => $first_contact_name,
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
       },
       {
         name => 'submitter_email', label => 'Email', type => 'Text', size => 40,
+        value => $first_contact_email,
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
       },
       {
         name => 'submit', type => 'Submit', value => 'submit',
+        attributes => { class => 'button', },
+      },
+      {
+        name => 'continue', type => 'Submit', value => 'continue',
         attributes => { class => 'button', },
       }
     );
