@@ -300,6 +300,12 @@ sub gene_upload : Chained('top') Args(0) Form
 
   my $form = $self->form();
 
+  my @submit_buttons = ("submit");
+
+  if ($st->{gene_count} > 0) {
+    push @submit_buttons, "cancel";
+  }
+
   my @all_elements = (
       { name => $gene_list_textarea_name, type => 'Textarea', cols => 80, rows => 10,
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
@@ -309,7 +315,7 @@ sub gene_upload : Chained('top') Args(0) Form
             name => $_, type => 'Submit', value => $_,
               attributes => { class => 'button', },
             }
-        } qw(submit cancel),
+        } @submit_buttons,
     );
 
   $form->elements([@all_elements]);
