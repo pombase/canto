@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 use PomCur::TestUtil;
 use PomCur::Track;
@@ -22,6 +22,9 @@ my $key = 'abcd0123';
 my $first_contact = 'val@sanger.ac.uk';
 
 my $pub = $schema->find_with_type('Pub', { pubmedid => '19056896' });
+
+is($pub->type()->name(), 'unknown');
+
 my $person = $schema->find_with_type('Person',
                                      {
                                        networkaddress => $first_contact
