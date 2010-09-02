@@ -66,12 +66,16 @@ my $tidy = sub {
     if (ref $arg eq 'ARRAY') {
       return @$arg;
     } else {
-      use Data::Dumper;
-      $Data::Dumper::Maxdepth = 5;
-      warn "error is not an array or scalar: ", Dumper([$arg]);
+      if (ref $arg eq 'HASH' && exists $arg->{title}) {
+        return ($arg);
+      } else {
+        use Data::Dumper;
+        $Data::Dumper::Maxdepth = 5;
+        warn "error in stash is not an array, hash or scalar: ", Dumper([$arg]);
 
-      return [ { title => 'Internal error',
-                 text => 'The problem will be investigated' } ];
+        return ( { title => 'Internal error',
+                   text => 'The problem will be investigated' } );
+      }
     }
   } else {
     push @ret, { title => $arg }

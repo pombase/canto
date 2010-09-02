@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 23;
 
 use PomCur::TestUtil;
 
@@ -97,7 +97,7 @@ test_psgi $app, sub {
 
   # test visiting the edit object page
   {
-    my $url = "http://localhost:5000/editnew/object/person/$new_object_id?model=manage";
+    my $url = "http://localhost:5000/edit/object/person/$new_object_id?model=manage";
     my $req = HTTP::Request->new(GET => $url);
     $cookie_jar->add_cookie_header($req);
 
@@ -138,6 +138,28 @@ test_psgi $app, sub {
     ok ($redirect_res->content() =~ /Email address/);
     ok ($redirect_res->content() !~ /\Q$test_email/);
     ok ($redirect_res->content() =~ /\Q$test_email2/);
+  }
+
+  # special case: test editing publications separately as they have a reference
+  # that ends in _id ("type_id")
+  {
+    my $schema = $test_util->track_schema();
+    my $pub = $schema->find_with_type('Pub', { pubmedid => '19686603' });
+
+    ok (defined $pub);
+
+    my $pub_id = $pub->pub_id();
+
+    my $url = "http://localhost:5000/new/object/pub/$pub_id?model=manage";
+    my $req = HTTP::Request->new(GET => $url);
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    ok ($res->content() =~ /<form/);
+    ok ($res->content() =~ /<input name="title"/);
   }
 };
 
