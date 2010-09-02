@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 27;
 
 use PomCur::TestUtil;
 
@@ -23,7 +23,9 @@ my $test_name = 'Test name';
 my $test_email = 'test@test';
 my $test_email2 = 'new@test_email';
 
-my $new_object_id = undef;
+my $new_person_id = undef;
+
+my $schema = $test_util->track_schema();
 
 test_psgi $app, sub {
   my $cb = shift;
@@ -84,7 +86,7 @@ test_psgi $app, sub {
 
     ok ($redirect_url =~ m:view/object/person/(\d+):);
 
-    $new_object_id = $1;
+    $new_person_id = $1;
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
@@ -97,7 +99,7 @@ test_psgi $app, sub {
 
   # test visiting the edit object page
   {
-    my $url = "http://localhost:5000/edit/object/person/$new_object_id?model=manage";
+    my $url = "http://localhost:5000/edit/object/person/$new_person_id?model=manage";
     my $req = HTTP::Request->new(GET => $url);
     $cookie_jar->add_cookie_header($req);
 
@@ -113,7 +115,7 @@ test_psgi $app, sub {
   {
     my $test_name = 'Test name';
 
-    my $uri = new URI("http://localhost:5000/edit/object/person/$new_object_id");
+    my $uri = new URI("http://localhost:5000/edit/object/person/$new_person_id");
     $uri->query_form(model => 'manage',
                      name => $test_name,
                      'Email address' => $test_email2,
@@ -140,10 +142,40 @@ test_psgi $app, sub {
     ok ($redirect_res->content() =~ /\Q$test_email2/);
   }
 
+  # test create action
+  {
+    my $test_name = 'Test name';
+    my $pub = $schema->find_with_type('Pub', { pubmedid => '19056896' });
+    my $curs_key = 'abcd1234';
+
+    my $uri = new URI("http://localhost:5000/create/curs");
+    $uri->query_form(model => 'manage',
+                     curs_key => $curs_key,
+                     pub => $pub->pub_id(),
+                     community_curator => $new_person_id,
+                    );
+
+    my $req = HTTP::Request->new(GET => $uri);
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    ok ($redirect_res->content() =~ /Details for curation session $curs_key/);
+    ok ($redirect_res->content() =~ /$test_name/);
+    ok ($redirect_res->content() =~ /The S. pombe SAGA complex controls/);
+  }
+
+
   # special case: test editing publications separately as they have a reference
   # that ends in _id ("type_id")
   {
-    my $schema = $test_util->track_schema();
     my $pub = $schema->find_with_type('Pub', { pubmedid => '19686603' });
 
     ok (defined $pub);
@@ -161,6 +193,7 @@ test_psgi $app, sub {
     ok ($res->content() =~ /<form/);
     ok ($res->content() =~ /<input name="title"/);
   }
+
 };
 
 done_testing;

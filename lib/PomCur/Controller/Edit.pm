@@ -683,12 +683,32 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
   }
 }
 
+=head2
+
+ Usage   : called by Catalyst
+ Function: Create a new object from the parameters, without going to a form
+           first, redirecting to the object page
+ Args    : type - the table for the new object
+
+=cut
 sub create : Global Args(1) {
   my ($self, $c, $type) = @_;
 
   my %params = %{$c->request()->params()};
 
-  die "not implemented";
+  delete $params{model};
+
+  my $model_name = $c->req()->param('model');
+  my $schema = $c->schema();
+  my $class = $schema->class_name_of_table($type);
+  my $object = $schema->create_with_type($class, { %params });
+  my $object_id = PomCur::DB::id_of_object($object);
+
+  $c->res->redirect($c->uri_for("/view/object/$type/$object_id",
+                                {
+                                  model => $model_name
+                                }));
+  $c->detach();
 }
 
 1;
