@@ -3,12 +3,12 @@ some_key_for_overriding: some_value_2
 class_info:
   person:
     editable: 1
-    display_field: longname
-    order_by: longname
+    display_field: name
+    order_by: name
     field_info_list:
       - name: shortname
         editable: 1
-      - name: longname
+      - name: name
         editable: 1
       - name: Email address
         source: networkaddress

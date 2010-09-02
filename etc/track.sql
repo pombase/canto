@@ -50,8 +50,7 @@ CREATE TABLE pub_status (
 
 CREATE TABLE person (
        person_id integer NOT NULL PRIMARY KEY,
-       shortname text,
-       longname text NOT NULL,
+       name text NOT NULL,
        networkaddress text NOT NULL UNIQUE,
        role integer REFERENCES cvterm(cvterm_id) DEFERRABLE INITIALLY DEFERRED  NOT NULL,
        lab INTEGER REFERENCES lab (lab_id),

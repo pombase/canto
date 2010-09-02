@@ -57,7 +57,7 @@ class_info:
     order_by: name
     field_info_list:
       - name: name
-        source: longname
+        source: name
         editable: 1
       - name: Email address
         source: networkaddress

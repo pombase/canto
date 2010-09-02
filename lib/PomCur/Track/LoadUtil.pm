@@ -151,7 +151,7 @@ sub get_lab
 
   my $schema = $self->schema();
 
-  my $lab_head_name = $lab_head->longname();
+  my $lab_head_name = $lab_head->name();
 
   (my $lab_head_surname = $lab_head_name) =~ s/.* //;
 
@@ -171,32 +171,32 @@ sub get_lab
 sub get_person
 {
   my $self = shift;
-  my $longname = shift;
+  my $name = shift;
   my $networkaddress = shift;
   my $role_cvterm = shift;
 
   my $schema = $self->schema();
 
   if (!defined $networkaddress || length $networkaddress == 0) {
-    die "email not set for $longname\n";
+    die "email not set for $name\n";
   }
-  if (!defined $longname || length $longname == 0) {
+  if (!defined $name || length $name == 0) {
     die "name not set for $networkaddress\n";
   }
 
-  if (!exists $self->{people}->{$longname}) {
+  if (!exists $self->{people}->{$name}) {
     my $person = $schema->create_with_type('Person',
                                            {
-                                             longname => $longname,
+                                             name => $name,
                                              networkaddress => $networkaddress,
                                              password => $networkaddress,
                                              role => $role_cvterm,
                                            });
 
-    $self->{people}->{$longname} = $person;
+    $self->{people}->{$name} = $person;
   }
 
-  return $self->{people}->{$longname};
+  return $self->{people}->{$name};
 }
 
 1;

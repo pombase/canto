@@ -64,7 +64,7 @@ use PomCur::DB;
 
  Note    : This function uses the field_infos section of the configuration and
            uses the source field (if present) to get the field value
-              eg.  { name => 'longname' }  # read from the longname column
+              eg.  { name => 'name' }  # read from the name column
               eg.  { name => 'Sample name',
                      source => 'samplename',   # use the samplename column
                    }

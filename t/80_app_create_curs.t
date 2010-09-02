@@ -31,7 +31,7 @@ my $pub = $schema->find_with_type('Pub',
 ok($pub);
 my $curator = $schema->find_with_type('Person',
                                       {
-                                        longname => 'Henar Valdivieso',
+                                        name => 'Henar Valdivieso',
                                       });
 ok($curator);
 

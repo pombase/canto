@@ -48,7 +48,7 @@ my $person = $schema->find_with_type('Person',
                                      });
 
 my ($field_value, $field_type) =
-  PomCur::WebUtil::get_field_value($mock_c, $person, 'longname');
+  PomCur::WebUtil::get_field_value($mock_c, $person, 'name');
 
 is($field_value, 'Val Wood');
 is($field_type, 'key_field');
