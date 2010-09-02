@@ -97,8 +97,20 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $st->{pub_title} = $pub_title;
 
     $st->{curs_initialised} = 1;
+
+    my $gene_count = $schema->resultset('Gene')->count();
+    $st->{gene_count} = $gene_count;
+
+    if ($gene_count > 0) {
+      $st->{curs_initialised} = 1;
+    } else {
+      $st->{curs_initialised} = 0;
+      if ($path !~ /gene_upload/) {
+        $c->res->redirect($st->{curs_root_path} . '/gene_upload');
+        $c->detach();
+      }
+    }
   } else {
-    $st->{curs_initialised} = 0;
     if ($path !~ /submitter_update/) {
       $c->res->redirect($st->{curs_root_path} . '/submitter_update');
       $c->detach();

@@ -1,5 +1,5 @@
 <%args>
-$curs_initialised
+$curs_initialised => 0
 $current_component
 $curs_root_path
 </%args>
