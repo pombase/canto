@@ -39,10 +39,17 @@ sub end : Private
   my $st = $c->stash();
 
   if (scalar @{ $c->error }) {
-    $st->{error} = $c->error;
+    my @pomcur_errors =
+      map {
+            {
+              title => 'Internal error',
+              text => $_
+            }
+          } @{$c->error()};
+    $st->{error} = \@pomcur_errors;
     $st->{title} = 'Error';
     $st->{template} = 'error.mhtml';
-    $c->forward('MyApp::View::TT');
+    $c->forward('PomCur::View::Mason');
     $c->error(0);
     return 0;
   }

@@ -13,43 +13,31 @@ $message => undef
     <& header.mhtml &>
 
 <div id="error-list">
-% if (defined $error) {
+% for my $err (@errors) {
 <div class="error">
-% if (ref $error) {
   <strong>
-    <% $error->{title} %>
+    <% $err->{title} %>
   </strong>
-%   if (exists $error->{text}) {
+%   if (exists $err->{text}) {
   <div>
-    <% $error->{text} %>
+    <% $err->{text} %>
   </div>
 %   }
-% } else {
-  <strong>
-    <% $error %>
-  </strong>
-% }
 </div>
 % }
 </div>
 
 <div id="message-list">
-% if (defined $message) {
+% for my $mess (@messages) {
 <div class="message">
-% if (ref $message) {
   <strong>
-    <% $message->{title} %>
+    <% $mess->{title} %>
   </strong>
-%   if (exists $message->{text}) {
+%   if (exists $mess->{text}) {
   <div>
-    <% $message->{text} %>
+    <% $mess->{text} %>
   </div>
 %   }
-% } else {
-  <strong>
-    <% $message %>
-  </strong>
-% }
 </div>
 % }
 </div>
@@ -65,9 +53,37 @@ $message => undef
 </html>
 
 <%init>
+my $tidy = sub {
+  my $arg = shift;
+
+  if (!defined $arg) {
+    return ();
+  }
+
+  my @ret = ();
+
+  if (ref $arg) {
+    if (ref $arg eq 'ARRAY') {
+      return @$arg;
+    } else {
+      use Data::Dumper;
+      $Data::Dumper::Maxdepth = 5;
+      warn "error is not an array or scalar: ", Dumper([$arg]);
+
+      return [ { title => 'Internal error',
+                 text => 'The problem will be investigated' } ];
+    }
+  } else {
+    push @ret, { title => $arg }
+  }
+};
+
 # flash_to_stash doesn't seem to work, so:
 $error ||= $c->flash->{error};
 $message ||= $c->flash->{message};
+
+my @errors = $tidy->($error);
+my @messages = $tidy->($message);
 </%init>
 
 <%flags>
