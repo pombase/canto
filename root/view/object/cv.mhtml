@@ -1,0 +1,12 @@
+<%args>
+$object
+</%args>
+
+<div>
+<& /view/field_list.mhtml, object => $object, field_labels => [qw|name definition|] &>
+</div>
+
+<div id="collections">
+  <& /view/collection.mhtml, object => $object, collection_name => 'cvterms',
+    collection_title => 'Terms in this controlled vocabulary' &>
+</div>
