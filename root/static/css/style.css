@@ -178,6 +178,7 @@ table.list tr td {
 
 .field-label {
   color: #226;
+  white-space: nowrap;
 }
 .field-value {
   color: #332;

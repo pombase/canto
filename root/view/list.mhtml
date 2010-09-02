@@ -17,7 +17,7 @@ $disclosed => 1  # true will make the list default to visible
     <thead>
       <tr>
 %   for my $head_col (@column_headings) {
-        <th><span class="field_label"><% ucfirst $head_col %></span></th>
+        <th><span class="field-label"><% ucfirst $head_col %></span></th>
 %   }
       <th>&nbsp;</th>
       </tr>
