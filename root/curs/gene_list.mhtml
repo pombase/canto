@@ -50,7 +50,7 @@ $title => 'Genes'
 <%init>
 use PomCur::Curs;
 
-my $schema = PomCur::Curs::get_schema($c);
+my $schema = $c->stash()->{schema};
 my @all_genes = $schema->resultset('Gene')->all();
 my $class;
 my @col_names;

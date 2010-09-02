@@ -72,6 +72,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   my $schema = PomCur::Curs::get_schema($c);
 
+  $st->{schema} = $schema;
+
   my $submitter_email =
     $schema->resultset('Metadata')->find({ key => 'submitter_email' });
 
