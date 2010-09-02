@@ -584,6 +584,18 @@ sub _update_object {
   $object->update();
 }
 
+sub _check_auth
+{
+  my $c = shift;
+
+  if (!defined $c->user()) {
+    $c->stash()->{error} = "Log in to allow editing";
+    $c->forward('/front');
+    $c->detach();
+    return;
+  }
+}
+
 sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
   my ($self, $c) = @_;
   my ($req_type, $type, $object_id) = @{$c->req->captures()};
@@ -592,12 +604,7 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 
   my $st = $c->stash;
 
-  if (!defined $c->user()) {
-    $st->{error} = "Log in to allow editing";
-    $c->forward('/front');
-    $c->detach();
-    return;
-  }
+  _check_auth($c);
 
   if (defined $object_id) {
     my $class_name = $schema->class_name_of_table($type);
@@ -693,6 +700,8 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 =cut
 sub create : Global Args(1) {
   my ($self, $c, $type) = @_;
+
+  _check_auth($c);
 
   my %params = %{$c->request()->params()};
 
