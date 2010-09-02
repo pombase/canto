@@ -596,6 +596,34 @@ sub _check_auth
   }
 }
 
+sub _run_create_hook
+{
+  my $c = shift;
+  my $object = shift;
+  my $type = $object->table();
+
+  my $class_info_ref =
+    $c->config()->{class_info}->{$type};
+
+  if (defined $class_info_ref) {
+    my $pre_create_hook =
+      $class_info_ref->{pre_create_hook};
+
+    if (defined $pre_create_hook) {
+      no strict 'refs';
+      (my $hook_class_name = $pre_create_hook) =~
+        s/(.*)::.*/$1/;
+      eval "require $hook_class_name";
+      if ($@) {
+        croak "couldn't find class ($hook_class_name)"
+          . " for pre_create_hook: $pre_create_hook\n";
+      }
+      &{$pre_create_hook}($c, $object);
+    }
+  }
+
+}
+
 sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
   my ($self, $c) = @_;
   my ($req_type, $type, $object_id) = @{$c->req->captures()};
@@ -656,29 +684,11 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
                              # get the id so we can redirect below
                              $object_id = $object->$table_pk_field();
 
-                             my $class_info_ref =
-                               $c->config()->{class_info}->{$type};
-
-                             if (defined $class_info_ref) {
-                               my $pre_create_hook =
-                                 $class_info_ref->{pre_create_hook};
-
-                               if (defined $pre_create_hook) {
-                                 no strict 'refs';
-                                 (my $hook_class_name = $pre_create_hook) =~
-                                   s/(.*)::.*/$1/;
-                                 eval "require $hook_class_name";
-                                 if ($@) {
-                                   croak "couldn't find class ($hook_class_name)"
-                                     . " for pre_create_hook: $pre_create_hook\n";
-                                 }
-                                 &{$pre_create_hook}($c, $object);
-                               }
-                             }
+                             _run_create_hook($c, $object);
                            });
     } else {
       $c->schema()->txn_do(sub {
-                             _update_object($c, $object, $form);
+                 _update_object($c, $object, $form);
                            });
     }
 
@@ -710,8 +720,18 @@ sub create : Global Args(1) {
   my $model_name = $c->req()->param('model');
   my $schema = $c->schema();
   my $class = $schema->class_name_of_table($type);
-  my $object = $schema->create_with_type($class, { %params });
-  my $object_id = PomCur::DB::id_of_object($object);
+
+  my $new_object;
+
+  my $process = sub {
+    $new_object = $schema->create_with_type($class, { %params });
+
+    _run_create_hook($c, $new_object);
+  };
+
+  $schema->txn_do($process);
+
+  my $object_id = PomCur::DB::id_of_object($new_object);
 
   $c->res->redirect($c->uri_for("/view/object/$type/$object_id",
                                 {
