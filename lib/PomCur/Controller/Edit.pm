@@ -187,6 +187,16 @@ sub _get_default_ref_value
   }
 }
 
+sub _make_display_label
+{
+  my $display_field_label = shift;
+
+  $display_field_label =~ s/_id$//;
+  $display_field_label =~ s/_/ /g;
+
+  return $display_field_label;
+}
+
 sub _init_form_field
 {
   my $c = shift;
@@ -196,19 +206,18 @@ sub _init_form_field
 
   my $schema = $c->schema();
 
-  my $field_label = $field_info->{name};
+  my $field_name = $field_info->{name};
 
-  my $display_field_label = $field_label;
-  $display_field_label =~ s/_/ /g;
+  my $display_field_label = _make_display_label($field_name);
 
-  my $field_db_column = $field_label;
+  my $field_db_column = $field_name;
 
   if (defined $field_info->{source}) {
     $field_db_column = $field_info->{source};
   }
 
   my $elem = {
-    name => $field_label, label => $display_field_label
+    name => $field_name, label => $display_field_label
   };
 
   if (!$field_info->{editable}) {
@@ -233,7 +242,7 @@ sub _init_form_field
 
     my $referenced_table = PomCur::DB::table_name_of_class($referenced_class_name);
 
-    if (!defined $field_label) {
+    if (!defined $field_name) {
       die "no display_key_fields configuration for $referenced_table\n";
     }
 
