@@ -221,8 +221,9 @@ sub _init_form_field
   my $info_ref = $class_name->relationship_info($field_db_column);
 
   #to handle Chado style foreign keys like "type_id" (rather than "type")
+  (my $field_without_id = $field_db_column) =~ s/_id//;
+
   if (!defined $info_ref) {
-    (my $field_without_id = $field_db_column) =~ s/_id//;
     $info_ref = $class_name->relationship_info($field_without_id);
   }
 
@@ -240,7 +241,7 @@ sub _init_form_field
 
     my $current_value = undef;
     if (defined $object && defined $object->$field_db_column()) {
-      my $other_object = $object->$field_db_column();
+      my $other_object = $object->$field_without_id();
       my $table_pk_column = ($other_object->primary_columns())[0];
 
       $current_value = $other_object->$table_pk_column();
