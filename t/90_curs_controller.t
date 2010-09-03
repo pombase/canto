@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 31;
+use Test::More tests => 20;
 
 use Data::Compare;
 
@@ -16,9 +16,7 @@ my $test_util = PomCur::TestUtil->new();
 $test_util->init_test('1_curs');
 
 my $config = $test_util->config();
-
 my $track_schema = $test_util->track_schema();
-
 my @curs_objects = $track_schema->resultset('Curs')->all();
 is(@curs_objects, 1);
 
@@ -124,68 +122,5 @@ $result =
 ok(!defined $result);
 
 is($curs_schema->resultset('Gene')->count(), 4);
-
-my $test_name = 'Dr. Test Name';
-my $test_email = 'test.name@example.com';
-
-test_psgi $app, sub {
-  my $cb = shift;
-
-  my $root_url = "http://localhost:5000/curs/$curs_key";
-  my $pub_title_fragment = "Inactivating pentapeptide insertions";
-
-  # front page redirect
-  {
-    my $uri = new URI($root_url);
-    my $req = HTTP::Request->new(GET => $uri);
-    my $res = $cb->($req);
-
-    is ($res->code, 302);
-    is ($res->header('location'), "$root_url/submitter_update");
-  }
-
-  # test that submitter_update doesn't redirect
-  {
-    my $req = HTTP::Request->new(GET => "$root_url/submitter_update");
-    my $res = $cb->($req);
-
-    is $res->code, 200;
-
-    like ($res->content(), qr/<form/);
-    like ($res->content(), qr/<input name="submitter_email"/);
-    unlike ($res->content(), qr/$pub_title_fragment/);
-  }
-
-  # test submitting a name and email address
-  {
-    my $uri = new URI("$root_url/submitter_update");
-    $uri->query_form(submitter_email => $test_email,
-                     submitter_name => $test_name,
-                     submit => 'Submit',
-                    );
-
-    my $req = HTTP::Request->new(GET => $uri);
-    $cookie_jar->add_cookie_header($req);
-
-    my $res = $cb->($req);
-
-    is $res->code, 302;
-
-    my $redirect_url = $res->header('location');
-
-    is ($redirect_url, "$root_url/home");
-
-    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
-    my $redirect_res = $cb->($redirect_req);
-
-    ok ($redirect_res->content(), qr/Home/);
-
-    # publication title
-    ok ($redirect_res->content(), qr/$pub_title_fragment/);
-    ok ($redirect_res->content(), qr/\Q$test_email/);
-  }
-
-  # FIXME Test gene update
-};
 
 done_testing;
