@@ -115,7 +115,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $c->detach($dispatch_dest);
     } else {
       if ($current_annotation_id) {
-        warn "current_annotation_id: $current_annotation_id\n";
         # choose a module based by looking in the current annotation
         my $current_annotation =
           $schema->resultset('Annotation')->find($current_annotation_id);
