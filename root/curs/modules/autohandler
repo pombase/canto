@@ -1,0 +1,16 @@
+<%args>
+$current_annotation_id
+</%args>
+
+<p>Current gene: <% $gene_long_name %></p>
+
+% $m->call_next;
+
+<%init>
+my $schema = $c->stash()->{schema};
+my $current_annotation =
+   $schema->find_with_type('Annotation', $current_annotation_id);
+my $gene_id = $current_annotation->data()->{gene};
+my $gene = $schema->find_with_type('Gene', $gene_id);
+my $gene_long_name = $gene->long_display_name();
+</%init>

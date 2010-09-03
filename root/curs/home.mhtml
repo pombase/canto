@@ -1,10 +1,36 @@
 <%args>
 $curs_key
+$state
+$current_gene_id => undef
 </%args>
 
-<p>KEY: <% $curs_key %></p>
+<%args>
+$current_component
+$curs_root_path
+</%args>
 
-% my $start_path = $c->stash()->{curs_root_path};
-% my $upload_path = "$start_path/gene_upload";
-<a href="<% $upload_path %>">Upload ...</a>
+% if ($state eq 'done') {
+  <p>All genes annotated</p>
+% } else {
+  <p>Choose an action for: <% $current_gene->long_display_name() %></p>
+  <ul>
+% for my $module_name (@module_names) {
+%   my $module_path = $curs_root_path . '/' . $module_name;
+    <li>
+      <a href="<% $module_path %>">
+        <% PomCur::Curs::Util::module_display_name($module_name) %>
+      </a>
+    </li>
+% }
+  </ul>
+% }
+
+<%init>
+use PomCur::Curs::Util;
+
+my @module_names = @{$c->stash()->{module_names}};
+
+my $schema = $c->stash()->{schema};
+my $current_gene = $schema->resultset('Gene')->find($current_gene_id);
+</%init>
 

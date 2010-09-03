@@ -1,21 +1,12 @@
 <%args>
-$curs_initialised => 0
-$current_component
+$state
 $curs_root_path
 </%args>
 
 <div class="curs-content">
 
-% if ($curs_initialised) {
-
-<& controls.mhtml, current_component => $current_component,
-   curs_root_path => $curs_root_path &>
-
-% if ($current_component ne 'gene_upload' &&
-%     $current_component ne 'list_edit') {
+% if ($show_gene_list) {
   <& gene_list.mhtml &>
-% }
-
 % }
 
 % $m->call_next;
@@ -23,7 +14,19 @@ $curs_root_path
 </div>
 <div class="clearall"/>
 
-
 <%flags>
 inherit => '/curs/page_template.mhtml'
 </%flags>
+
+<%init>
+use PomCur::Controller::Curs;
+
+my $show_gene_list = 0;
+
+if ($state > PomCur::Controller::Curs::NEEDS_GENES) {
+  my $path = $c->req->uri()->path();
+  if ($path !~ /gene_upload|edit_genes/) {
+    $show_gene_list = 1;
+  }
+}
+</%init>

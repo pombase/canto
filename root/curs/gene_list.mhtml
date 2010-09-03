@@ -40,10 +40,13 @@ $title => 'Genes'
 %   if (!$big_list) {
 
   <div class="edit">
-    <a href="./edit_genes">Edit ...</a>
+    <a href="<% $edit_path %>">Edit ...</a>
   </div>
 
 % }
+
+<a href="<% $upload_path %>">Upload ...</a>
+
 
 </div>
 
@@ -72,4 +75,7 @@ if ($big_list) {
   @col_names = qw(identifier);
 }
 
+my $start_path = $c->stash()->{curs_root_path};
+my $upload_path = "$start_path/gene_upload";
+my $edit_path = "$start_path/edit_genes";
 </%init>

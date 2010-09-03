@@ -17,7 +17,7 @@ CREATE TABLE annotation (
        annotation_id integer PRIMARY KEY,
        status text NOT NULL,  -- "new", "deleted", "unchanged"
        pub integer REFERENCES pub(pub_id),
-       type text NOT NULL, -- "go function", "ortholog", "phenotype"
+       type text NOT NULL, -- "go_function", "ortholog", "phenotype"
        data text NOT NULL,
        -- include type as the there may be a go term and ortholog with the same
        -- chado id

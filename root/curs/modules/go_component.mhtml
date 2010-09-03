@@ -1,2 +1,5 @@
-GO component stuff
+<%args>
+$module_obj
+</%args>
+GO component stuff for <% $module_obj %>
  

@@ -37,12 +37,28 @@ under the same terms as Perl itself.
 
 =cut
 
-use strict;
-use warnings;
 use Carp;
+use Moose;
 
 use PomCur::Curs::Util;
 use PomCur::Track;
+
+use constant {
+  NEEDS_SUBMITTER => 0,
+  NEEDS_GENES => 1,
+  READY => 2,
+  GENE_ACTIVE => 3,
+  ANNOTATION_ACTIVE => 4,
+  DONE => 5
+};
+
+my %state_dispatch = (
+  NEEDS_SUBMITTER, 'submitter_update',
+  NEEDS_GENES, 'gene_upload',
+  GENE_ACTIVE, undef,
+  ANNOTATION_ACTIVE, undef,
+  DONE, 'home',
+);
 
 =head2 begin
 
@@ -65,57 +81,143 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{curs_root_path} = $root_path;
 
   my $config = $c->config();
-
   my %annotation_modules = %{$config->{annotation_modules}};
 
   @{$st->{module_names}} = keys %annotation_modules;
 
   my $schema = PomCur::Curs::get_schema($c);
-
   $st->{schema} = $schema;
 
-  my $submitter_email =
-    $schema->resultset('Metadata')->find({ key => 'submitter_email' });
+  my ($state, $submitter_email,
+      $gene_count, $current_gene_id, $current_annotation_id) = _get_state($c);
+  $st->{state} = $state;
 
-  my $first_contact_email =
-    $schema->find_with_type('Metadata', { key => 'first_contact_email' });
-  $st->{first_contact_email} = $first_contact_email->value();
+  $st->{first_contact_email} = _get_metadata($schema, 'first_contact_email');
+  $st->{first_contact_name} = _get_metadata($schema, 'first_contact_name');
 
-  my $first_contact_name =
-    $schema->find_with_type('Metadata', { key => 'first_contact_name' });
-  $st->{first_contact_name} = $first_contact_name->value();
+  if ($state >= NEEDS_GENES) {
+    $st->{submitter_email} = $submitter_email;
+    $st->{submitter_name} = _get_metadata($schema, 'submitter_name');
+    $st->{pub_title} = _get_metadata($schema, 'pub_title');
+  }
+  if ($state == GENE_ACTIVE) {
+    $st->{current_gene_id} = $current_gene_id;
+  }
+  if ($state == ANNOTATION_ACTIVE) {
+    $st->{current_annotation_id} = $current_annotation_id;
+  }
 
-  if (defined $submitter_email) {
-    $st->{submitter_email} = $submitter_email->value();
+  $st->{gene_count} = $schema->resultset('Gene')->count();
 
-    my $submitter_name =
-      $schema->resultset('Metadata')->find({ key => 'submitter_name' });
-    $st->{submitter_name} = $submitter_name->value();
-
-    my $pub_title =
-      $schema->find_with_type('Metadata', { key => 'pub_title' })->value();
-    $st->{pub_title} = $pub_title;
-
-    $st->{curs_initialised} = 1;
-
-    my $gene_count = $schema->resultset('Gene')->count();
-    $st->{gene_count} = $gene_count;
-
-    if ($gene_count > 0) {
-      $st->{curs_initialised} = 1;
+  if ($path !~ /gene_upload|edit_genes/) {
+    my $dispatch_dest = $state_dispatch{$state};
+    warn "state: $state\n";
+    if (defined $dispatch_dest) {
+      warn "dispatching to: $dispatch_dest\n";
+      $c->detach($dispatch_dest);
     } else {
-      $st->{curs_initialised} = 0;
-      if ($path !~ /gene_upload/) {
-        $c->res->redirect($st->{curs_root_path} . '/gene_upload');
-        $c->detach();
+      if ($current_annotation_id) {
+        warn "current_annotation_id: $current_annotation_id\n";
+        # choose a module based by looking in the current annotation
+        my $current_annotation =
+          $schema->resultset('Annotation')->find($current_annotation_id);
+        $c->detach('module_dispatch', [$current_annotation->type()]);
       }
     }
-  } else {
-    if ($path !~ /submitter_update/) {
-      $c->res->redirect($st->{curs_root_path} . '/submitter_update');
-      $c->detach();
-    }
   }
+}
+
+sub _get_state
+{
+  my $c = shift;
+
+  my $st = $c->stash();
+
+  my $schema = $st->{schema};
+  my $submitter_email = _get_metadata($schema, 'submitter_email');
+
+  my $state = undef;
+  my $current_annotation_id = undef;
+  my $current_gene_id = undef;
+  my $gene_count = undef;
+
+  if (defined $submitter_email) {
+    my $gene_rs = $schema->resultset('Gene');
+    $gene_count = $gene_rs->count();
+
+    if ($gene_count > 0) {
+      $current_annotation_id = _get_metadata($schema, 'current_annotation_id');
+      $current_gene_id = _get_metadata($schema, 'current_gene_id');
+
+      if (defined $current_gene_id) {
+        if (defined $current_annotation_id) {
+          die 'internal error - ' .
+            'current_gene_id and current_annotation_id are both set';
+        } else {
+          $state = GENE_ACTIVE;
+        }
+      } else {
+        if (defined $current_annotation_id) {
+          $state = ANNOTATION_ACTIVE;
+        } else {
+          $state = DONE;
+        }
+      }
+    } else {
+      $state = NEEDS_GENES;
+    }
+  } else {
+    $state = NEEDS_SUBMITTER;
+  }
+
+  return ($state, $submitter_email, $gene_count,
+          $current_gene_id, $current_annotation_id);
+}
+
+sub _get_metadata
+{
+  my $schema = shift;
+  my $key = shift;
+
+  my $metadata_obj = $schema->resultset('Metadata')->find({ key => $key });
+  if (defined $metadata_obj) {
+    return $metadata_obj->value();
+  } else {
+    return undef;
+  }
+}
+
+sub _set_metadata
+{
+  my $schema = shift;
+  my $key = shift;
+  my $value = shift;
+
+  if (defined $value) {
+    $schema->resultset('Metadata')->update_or_create({ key => $key,
+                                                       value => $value });
+  } else {
+    my $metadata = $schema->resultset('Metadata')->find({ key => $key });
+    $metadata->delete();
+  }
+}
+
+sub _set_new_gene
+{
+  my $c = shift;
+  my $schema = $c->stash->{schema};
+
+  my $gene_rs = $schema->resultset('Gene');
+  my $first_gene = $gene_rs->first();
+
+  if (defined _get_metadata($schema, 'current_gene_id') ||
+      defined _get_metadata($schema, 'current_annotation_id')) {
+    die 'internal error - ' .
+      'current_gene_id and current_annotation_id are both set';
+  }
+
+  _set_metadata($schema, 'current_gene_id', $first_gene->gene_id());
+  $c->stash()->{state} = GENE_ACTIVE;
 }
 
 sub _redirect_home_and_detach
@@ -143,7 +245,7 @@ sub home : Chained('top') PathPart('home') Args(0)
   $c->stash->{current_component} = 'home';
 }
 
-sub submitter_update : Chained('top') PathPart('submitter_update') Args(0)
+sub submitter_update : Private
 {
   my ($self, $c) = @_;
 
@@ -295,12 +397,12 @@ sub gene_upload : Chained('top') Args(0) Form
 
   $st->{title} = 'Gene upload';
   $st->{template} = 'curs/gene_upload.mhtml';
-
   $st->{current_component} = 'gene_upload';
 
   my $form = $self->form();
-
   my @submit_buttons = ("submit");
+
+  my $schema = $st->{schema};
 
   if ($st->{gene_count} > 0) {
     push @submit_buttons, "cancel";
@@ -334,8 +436,6 @@ sub gene_upload : Chained('top') Args(0) Form
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
     my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $search_terms_text;
 
-    my $schema = PomCur::Curs::get_schema($c);
-
     my $result = _find_and_create_genes($schema, $c->config(), \@search_terms);
 
     if ($result) {
@@ -344,24 +444,22 @@ sub gene_upload : Chained('top') Args(0) Form
           { title => "No genes found for these identifiers: @missing" };
       $st->{gene_upload_unknown} = [@missing];
     } else {
+      my $state = $st->{state};
+      if ($state ne GENE_ACTIVE && $state ne ANNOTATION_ACTIVE) {
+        _set_new_gene($c);
+      }
       $self->_redirect_home_and_detach($c);
     }
   }
 }
 
-sub module_dispatch : Chained('top') PathPart('') Args(1)
+sub _get_module_obj
 {
-  my ($self, $c, $module_name) = @_;
+  my $c = shift;
+  my $module_name = shift;
 
   my $config = $c->config();
-
   my $st = $c->stash();
-
-  my $module_display_name =
-    PomCur::Curs::Util::module_display_name($module_name);
-  $st->{title} = 'Module: ' . $module_display_name;
-  $st->{current_component} = $module_name;
-  $st->{template} = "curs/modules/$module_name.mhtml";
 
   my %annotation_modules = %{$config->{annotation_modules}};
 
@@ -382,6 +480,50 @@ sub module_dispatch : Chained('top') PathPart('') Args(1)
 
   my $store = $module_class_name->new(%args);
 
+}
+
+sub module_choose : Chained('top') PathPart('') Args(1)
+{
+  my ($self, $c, $module_name) = @_;
+
+  my $schema = $c->stash()->{schema};
+
+  my $process = sub {
+    my $current_gene_id = $c->stash()->{current_gene_id};
+    my $annotation =
+      $schema->create_with_type('Annotation', { type => $module_name,
+                                                status => 'new',
+                                                data => {
+                                                  gene => $current_gene_id
+                                                }
+                                              });
+
+    _set_metadata($schema, 'current_annotation_id',
+                  $annotation->annotation_id());
+    _set_metadata($schema, 'current_gene_id', undef);
+  };
+
+  $schema->txn_do($process);
+
+  $c->dispatch('module_dispatch', $module_name);
+}
+
+sub module_dispatch : Private
+{
+  my ($self, $c, $module_name) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+
+  my $module_display_name =
+    PomCur::Curs::Util::module_display_name($module_name);
+  $st->{title} = 'Module: ' . $module_display_name;
+  $st->{current_component} = $module_name;
+  $st->{template} = "curs/modules/$module_name.mhtml";
+
+  my $module_obj = _get_module_obj($c, $module_name);
+
+  $st->{module_obj} = $module_obj;
 }
 
 1;

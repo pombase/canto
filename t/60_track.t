@@ -75,3 +75,4 @@ is($metadata_hash{first_contact_email}, $first_contact_email);
 is($metadata_hash{curs_id}, $curs->curs_id());
 is($metadata_hash{pub_pubmedid}, $pub->pubmedid());
 is($metadata_hash{pub_abstract}, $pub->abstract());
+is($metadata_hash{state}, 'no_gene');
