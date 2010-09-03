@@ -28,6 +28,7 @@ requires 'Plack';
 requires 'Plack::Middleware::ReverseProxy';
 requires 'Plack::Middleware::Debug';
 requires 'Plack::Middleware::Expires';
+requires 'Catalyst::Engine::PSGI';
 requires 'LWP';
 requires 'Data::Compare';
 requires 'IO::All';
