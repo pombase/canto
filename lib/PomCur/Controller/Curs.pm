@@ -111,9 +111,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   if ($path !~ /gene_upload|edit_genes/) {
     my $dispatch_dest = $state_dispatch{$state};
-    warn "state: $state\n";
     if (defined $dispatch_dest) {
-      warn "dispatching to: $dispatch_dest\n";
       $c->detach($dispatch_dest);
     } else {
       if ($current_annotation_id) {
