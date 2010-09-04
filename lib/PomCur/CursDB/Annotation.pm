@@ -40,7 +40,7 @@ __PACKAGE__->add_columns(
   {
     data_type => "text",
     default_value => undef,
-    is_nullable => 1,
+    is_nullable => 0,
     size => undef,
   },
 );
@@ -53,7 +53,7 @@ __PACKAGE__->belongs_to("pub", "PomCur::CursDB::Pub", { pub_id => "pub" });
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9eiJ2pe4BZHjQxG/RS7IhA
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:w3NhVm4J4B4Vs8fIFmfI5g
 
 use YAML;
 
