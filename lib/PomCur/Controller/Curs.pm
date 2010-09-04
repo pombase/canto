@@ -221,18 +221,11 @@ sub _redirect_home_and_detach
 {
   my ($self, $c) = @_;
 
-  $c->res->redirect($c->stash->{curs_root_path} . '/home');
+  $c->res->redirect($c->stash->{curs_root_path});
   $c->detach();
 }
 
-sub home_redirect : Chained('top') PathPart('') Args(0)
-{
-  my ($self, $c) = @_;
-
-  $self->_redirect_home_and_detach($c);
-}
-
-sub home : Chained('top') PathPart('home') Args(0)
+sub home : Chained('top') PathPart('') Args(0)
 {
   my ($self, $c) = @_;
 
