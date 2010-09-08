@@ -318,7 +318,7 @@ sub _find_and_create_genes
   my ($schema, $config, $search_terms_ref) = @_;
 
   my @search_terms = @$search_terms_ref;
-  my $store = PomCur::Track::get_store($config, 'gene');
+  my $store = PomCur::Track::get_store($config, $schema, 'gene');
 
   my $result = $store->lookup([@search_terms]);
 
