@@ -109,7 +109,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $st->{current_annotation_id} = $current_annotation_id;
   }
 
-  $st->{gene_count} = $schema->resultset('Gene')->count();
+  $st->{gene_count} = _get_gene_resultset($schema)->count();
 
   if ($path !~ /gene_upload|edit_genes/) {
     my $dispatch_dest = $state_dispatch{$state};
@@ -141,7 +141,7 @@ sub _get_state
   my $gene_count = undef;
 
   if (defined $submitter_email) {
-    my $gene_rs = $schema->resultset('Gene');
+    my $gene_rs = _get_gene_resultset($schema);
     $gene_count = $gene_rs->count();
 
     if ($gene_count > 0) {
@@ -178,7 +178,7 @@ sub _set_new_gene
   my $c = shift;
   my $schema = $c->stash->{schema};
 
-  my $gene_rs = $schema->resultset('Gene');
+  my $gene_rs = _get_gene_resultset($schema);
   my $first_gene = $gene_rs->first();
 
   if (defined get_metadata($schema, 'current_gene_id') ||
@@ -286,7 +286,7 @@ sub _filter_existing_genes
 
   my @gene_primary_identifiers = map { $_->primary_identifier() } @genes;
 
-  my $gene_rs = $schema->resultset('Gene');
+  my $gene_rs = _get_gene_resultset($schema);
   my $rs = $gene_rs->search({
     primary_identifier => {
       -in => [@gene_primary_identifiers],
@@ -488,6 +488,17 @@ sub module_dispatch : Private
   my $module_obj = _get_module_obj($c, $module_name);
 
   $st->{module_obj} = $module_obj;
+}
+
+sub _get_gene_resultset
+{
+  my $schema = shift;
+  return $schema->resultset('Gene')->search({},
+                                            {
+                                              order_by => {
+                                                -asc => 'gene_id'
+                                              }
+                                            });
 }
 
 1;
