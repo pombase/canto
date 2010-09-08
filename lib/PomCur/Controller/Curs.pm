@@ -479,6 +479,7 @@ sub module_choose : Chained('top') PathPart('') Args(1)
 
     set_metadata($schema, 'current_annotation_id',
                   $annotation->annotation_id());
+    # the gene is stored in the annotation, so unset
     set_metadata($schema, 'current_gene_id', undef);
   };
 
