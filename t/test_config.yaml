@@ -29,3 +29,7 @@ test_config:
          pubmedid: 18426916
          submitter_email: "fred.smith@ed.ac.uk"
          submitter_name: "Fred Smith"
+         current_gene: "SPCC1739.10"
+         genes:
+           - "cdc11"
+           - "SPCC1739.10"

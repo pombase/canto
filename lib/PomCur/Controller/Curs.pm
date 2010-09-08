@@ -316,6 +316,38 @@ sub _filter_existing_genes
   return grep { !exists $found_genes{ $_->{primary_identifier} } } @genes;
 }
 
+sub _create_gene
+{
+  my $schema = shift;
+  my $result = shift;
+
+  my $ret_gene = undef;
+
+  my $_create_curs_genes = sub
+      {
+        my @genes = @{$result->{found}};
+
+        @genes = _filter_existing_genes($schema, @genes);
+
+        for my $gene (@genes) {
+          my $org_full_name = $gene->{organism_full_name};
+          my $curs_org =
+            PomCur::CursDB::Organism::get_organism($schema, $org_full_name);
+
+          $ret_gene = $schema->create_with_type('Gene', {
+            primary_name => $gene->{primary_name},
+            primary_identifier => $gene->{primary_identifier},
+            product => $gene->{product},
+            organism => $curs_org
+          });
+        }
+      };
+
+  $schema->txn_do($_create_curs_genes);
+
+  return $ret_gene;
+}
+
 sub _find_and_create_genes
 {
   my ($schema, $config, $search_terms_ref) = @_;
@@ -328,27 +360,7 @@ sub _find_and_create_genes
   if (@{$result->{missing}}) {
     return $result;
   } else {
-    my $_create_curs_genes = sub
-        {
-          my @genes = @{$result->{found}};
-
-          @genes = _filter_existing_genes($schema, @genes);
-
-          for my $gene (@genes) {
-            my $org_full_name = $gene->{organism_full_name};
-            my $curs_org =
-              PomCur::CursDB::Organism::get_organism($schema, $org_full_name);
-
-            $schema->create_with_type('Gene', {
-              primary_name => $gene->{primary_name},
-              primary_identifier => $gene->{primary_identifier},
-              product => $gene->{product},
-              organism => $curs_org
-            });
-          }
-        };
-
-    $schema->txn_do($_create_curs_genes);
+    _create_gene($schema, $result);
 
     return undef;
   }

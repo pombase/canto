@@ -46,7 +46,6 @@ requires 'config';
 has 'schema' => (
   is => 'ro',
   lazy_build => 1,
-  init_arg => undef
 );
 
 sub _build_schema {

@@ -20,6 +20,8 @@ use PomCur::TestUtil;
 use PomCur::Track::CurationLoad;
 use PomCur::Track::GeneLoad;
 use PomCur::Track::LoadUtil;
+use PomCur::Track::GeneStore;
+use PomCur::Controller::Curs;
 
 use Moose;
 
@@ -130,6 +132,37 @@ sub _get_pub_object
   return $schema->find_with_type('Pub', { pubmedid => $pubmedid });
 }
 
+sub _load_curs_db_data
+{
+  my $trackdb_schema = shift;
+  my $cursdb_schema = shift;
+  my $test_case_ref = shift;
+
+  my $gene_store = PomCur::Track::GeneStore->new(config => $config,
+                                                 schema => $trackdb_schema);
+
+  set_metadata($cursdb_schema, 'submitter_email',
+               $test_case_ref->{submitter_email});
+  set_metadata($cursdb_schema, 'submitter_name',
+               $test_case_ref->{submitter_name});
+
+  for my $gene_identifier (@{$test_case_ref->{genes}}) {
+    my $result = $gene_store->lookup([$gene_identifier]);
+    my @found = @{$result->{found}};
+    die "Expected 1 result" if @found != 1;
+    my $gene_info = $found[0];
+
+    my $new_gene =
+      PomCur::Controller::Curs::_create_gene($cursdb_schema, $result);
+
+    my $current_config_gene = $test_case_ref->{current_gene};
+    if ($gene_identifier eq $current_config_gene) {
+      set_metadata($cursdb_schema, 'current_gene_id',
+                   $new_gene->gene_id());
+    }
+  }
+}
+
 sub make_curs_dbs
 {
   my $test_case_key = shift;
@@ -138,7 +171,7 @@ sub make_curs_dbs
   my $schema = $test_schemas{$test_case_key};
 
   my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
-
+  my $trackdb_schema = $test_schemas{$test_case_key};
   my $pombe = $load_util->get_organism('Schizosaccharomyces', 'pombe');
 
   my $process_test_case =
@@ -166,17 +199,15 @@ sub make_curs_dbs
         if (exists $test_case_ref->{submitter_email}) {
           $cursdb_schema->txn_do(
             sub {
-              set_metadata($cursdb_schema, 'submitter_email',
-                           $test_case_ref->{submitter_email});
-              set_metadata($cursdb_schema, 'submitter_name',
-                           $test_case_ref->{submitter_name});
+              _load_curs_db_data($trackdb_schema, $cursdb_schema,
+                                 $test_case_ref);
             });
         }
       }
     };
 
   eval {
-    $test_schemas{$test_case_key}->txn_do($process_test_case);
+    $trackdb_schema->txn_do($process_test_case);
   };
   if ($@) {
     die "ROLLBACK called: $@\n";
