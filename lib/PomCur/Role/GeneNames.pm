@@ -38,6 +38,9 @@ under the same terms as Perl itself.
 use Carp;
 use Moose::Role;
 
+requires 'primary_name';
+requires 'primary_identifier';
+
 =head2
 
  Usage   : my $display_name = $gene->display_name()
