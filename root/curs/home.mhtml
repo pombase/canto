@@ -1,18 +1,12 @@
 <%args>
 $curs_key
 $state
-$current_gene_id => undef
-</%args>
-
-<%args>
-$current_component
 $curs_root_path
 </%args>
 
 % if ($state eq 'done') {
   <p>All genes annotated</p>
 % } else {
-  <p>Current gene: <% $gene_long_display_name %>
   <p>Choose an action: </p>
   <ul class="module-choose">
 % for my $module_name (@module_names) {
@@ -26,13 +20,10 @@ $curs_root_path
   </ul>
 % }
 
+
 <%init>
 use PomCur::Curs::Util;
 
 my @module_names = @{$c->stash()->{module_names}};
-
-my $schema = $c->stash()->{schema};
-my $current_gene = $schema->resultset('Gene')->find($current_gene_id);
-my $gene_long_display_name = $current_gene->long_display_name();
 </%init>
 

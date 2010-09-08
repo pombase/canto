@@ -114,9 +114,16 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   if ($state == GENE_ACTIVE) {
     $st->{current_gene_id} = $current_gene_id;
+    $st->{current_gene} = $schema->find_with_type('Gene', $current_gene_id);
   }
   if ($state == ANNOTATION_ACTIVE) {
     $st->{current_annotation_id} = $current_annotation_id;
+    my $current_annotation =
+      $schema->find_with_type('Annotation', $current_annotation_id);
+    $st->{current_annotation} = $current_annotation;
+    my $current_gene_id = $current_annotation->data()->{gene};
+    $st->{current_gene_id} = $current_gene_id;
+    $st->{current_gene} = $schema->find_with_type('Gene', $current_gene_id);
   }
 
   $st->{gene_count} = _get_gene_resultset($schema)->count();

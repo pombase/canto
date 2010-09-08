@@ -1,12 +1,16 @@
 <%args>
 $state
 $curs_root_path
+$current_gene => undef
 </%args>
 
 <div class="curs-content">
 
 % if ($show_gene_list) {
   <& gene_list.mhtml &>
+%   if (defined $gene_long_display_name) {
+  <p>Current gene: <% $gene_long_display_name %> </p>
+% }
 % }
 
 % $m->call_next;
@@ -14,9 +18,11 @@ $curs_root_path
 </div>
 <div class="clearall"/>
 
+
 <%flags>
 inherit => '/curs/page_template.mhtml'
 </%flags>
+
 
 <%init>
 use PomCur::Controller::Curs;
@@ -28,5 +34,10 @@ if ($state > PomCur::Controller::Curs::NEEDS_GENES) {
   if ($path !~ /gene_upload|edit_genes/) {
     $show_gene_list = 1;
   }
+}
+
+my $gene_long_display_name = undef;
+if (defined $current_gene) {
+  $gene_long_display_name = $current_gene->long_display_name();
 }
 </%init>
