@@ -69,20 +69,32 @@ sub _process_gene_row
   my $schema = $self->schema();
 
   my $columns_ref = shift;
-  my ($primary_name, $product, $name) = @{$columns_ref};
+  my ($primary_identifier, $product, $name) = @{$columns_ref};
 
   my $pombe = $self->load_util()->get_organism('Schizosaccharomyces', 'pombe');
 
   $schema->create_with_type('Gene',
                             {
-                              primary_identifier => $primary_name,
+                              primary_identifier => $primary_identifier,
                               product => $product,
                               primary_name => $name,
                               organism => $pombe
                             });
 }
 
+=head2 load
 
+ Usage   : my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
+           $gene_load->load($file_name);
+ Function: Load a file of gene identifiers, name and products into the Track
+           database
+ Args    : $file_name - a comma separated file of genes, one per line:
+                           <identifier>,<gene_product>,<name>
+                        first line should be a header line:
+                           "identifier,product,gene"
+ Returns : Nothing
+
+=cut
 sub load
 {
   my $self = shift;

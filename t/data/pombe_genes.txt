@@ -1,4 +1,4 @@
-primary_identifier,product,name
+identifier,product,name
 SPCC1739.10,conserved fungal protein
 SPCC1739.11c,"SIN component scaffold protein, centriolin ortholog Cdc11",cdc11
 SPCTRNASER.13,tRNA Serine
