@@ -61,7 +61,9 @@ sub set_metadata
                                                        value => $value });
   } else {
     my $metadata = $schema->resultset('Metadata')->find({ key => $key });
-    $metadata->delete();
+    if (defined $metadata) {
+      $metadata->delete();
+    }
   }
 }
 
