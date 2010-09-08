@@ -17,14 +17,17 @@ my $schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0001');
 
 ok($schema);
 
-my $test_data = { title => "a title", abstract => "abstract text" };
+my $test_data = { year => 1999 };
 
 
 # test inflating and deflating of data
-$schema->txn_do(sub {
-                  $schema->create_with_type('Pub', { pubmedid => 12345678,
-                                                     data => $test_data });
-                });
+$schema->txn_do(
+  sub {
+    $schema->create_with_type('Pub', { pubmedid => 12345678,
+                                       title => "a title",
+                                       abstract => "abstract text",
+                                       data => $test_data });
+  });
 
 my $res_pub = $schema->find_with_type('Pub', { pubmedid => 12345678 });
 

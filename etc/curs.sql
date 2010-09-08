@@ -27,6 +27,8 @@ CREATE TABLE annotation (
 CREATE TABLE pub (
        pub_id integer primary key,
        pubmedid integer NOT NULL UNIQUE,
+       title text NOT NULL,
+       abstract text,
        data text NOT NULL
 );
 

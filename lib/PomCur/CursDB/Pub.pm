@@ -22,6 +22,20 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => undef,
   },
+  "title",
+  {
+    data_type => "text",
+    default_value => undef,
+    is_nullable => 0,
+    size => undef,
+  },
+  "abstract",
+  {
+    data_type => "text",
+    default_value => undef,
+    is_nullable => 1,
+    size => undef,
+  },
   "data",
   {
     data_type => "text",
@@ -40,7 +54,7 @@ __PACKAGE__->has_many(
 
 
 # Created by DBIx::Class::Schema::Loader v0.04006
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QSKatPqmU1Cc8730c9W2kQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hR59fGa8O8+3D1gqqB1oIA
 
 use YAML;
 

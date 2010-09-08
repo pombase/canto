@@ -42,9 +42,11 @@ while (defined (my $metadata = $curs_metadata_rs->next())) {
   $metadata{$metadata->key()} = $metadata->value();
 }
 
+my $curs_db_pub = $curs_schema->resultset('Pub')->first();
+
 is($metadata{first_contact_email}, 'nick.rhind@umassmed.edu');
-is($metadata{pub_pubmedid}, 19664060);
-like($metadata{pub_title}, qr/Inactivating pentapeptide insertions in the/);
+is($metadata{curation_pub_id}, $curs_db_pub->pub_id());
+like($curs_db_pub->title(), qr/Inactivating pentapeptide insertions in the/);
 
 
 my @search_list = (@known_genes, @unknown_genes);

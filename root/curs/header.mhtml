@@ -10,9 +10,11 @@
   </div>
   <& menu.mhtml, submitter_email => $c->stash()->{submitter_email} &>
 
+% if (defined $pub_title) {
   <div class="pub-title">
-    <% $c->stash()->{pub_title} %>
+    <% $pub->title() %>
   </div>
+% }
 
   <div class="clearall"></div>
 
@@ -25,4 +27,9 @@ inherit => undef
 
 <%init>
 my $root_path = $c->stash()->{curs_root_path};
+my $pub = $c->stash()->{pub};
+my $pub_title = undef;
+if (defined $pub) {
+  $pub_title = $pub->title();
+}
 </%init>

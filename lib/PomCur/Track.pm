@@ -111,12 +111,20 @@ sub create_curs_db
   my $first_contact_email = $curs->community_curator()->networkaddress();
   my $first_contact_name = $curs->community_curator()->name();
 
+  my $track_db_pub = $curs->pub();
+  my $curs_db_pub =
+    $curs_schema->create_with_type('Pub',
+                                   {
+                                     pubmedid => $pubmedid,
+                                     title => $track_db_pub->title(),
+                                     abstract => $track_db_pub->abstract(),
+                                     data => {}
+                                   });
+
   # the calling function will wrap this in a transaction if necessary
   set_metadata($curs_schema, 'first_contact_email', $first_contact_email);
   set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
-  set_metadata($curs_schema, 'pub_title', $curs->pub()->title());
-  set_metadata($curs_schema, 'pub_abstract', $curs->pub()->abstract());
-  set_metadata($curs_schema, 'pub_pubmedid', $pubmedid);
+  set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
   set_metadata($curs_schema, 'curs_id', $curs->curs_id());
 }
 

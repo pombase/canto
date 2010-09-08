@@ -104,11 +104,14 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
   $st->{first_contact_name} = get_metadata($schema, 'first_contact_name');
 
+  my $pub_id = get_metadata($schema, 'curation_pub_id');
+  $st->{pub} = $schema->find_with_type('Pub', $pub_id);
+
   if ($state >= NEEDS_GENES) {
     $st->{submitter_email} = $submitter_email;
     $st->{submitter_name} = get_metadata($schema, 'submitter_name');
-    $st->{pub_title} = get_metadata($schema, 'pub_title');
   }
+
   if ($state == GENE_ACTIVE) {
     $st->{current_gene_id} = $current_gene_id;
   }
