@@ -40,6 +40,8 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
+with 'PomCur::Role::MetadataAccess';
+
 use PomCur::Curs::Util;
 use PomCur::Track;
 
@@ -92,13 +94,13 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $gene_count, $current_gene_id, $current_annotation_id) = _get_state($c);
   $st->{state} = $state;
 
-  $st->{first_contact_email} = _get_metadata($schema, 'first_contact_email');
-  $st->{first_contact_name} = _get_metadata($schema, 'first_contact_name');
+  $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
+  $st->{first_contact_name} = get_metadata($schema, 'first_contact_name');
 
   if ($state >= NEEDS_GENES) {
     $st->{submitter_email} = $submitter_email;
-    $st->{submitter_name} = _get_metadata($schema, 'submitter_name');
-    $st->{pub_title} = _get_metadata($schema, 'pub_title');
+    $st->{submitter_name} = get_metadata($schema, 'submitter_name');
+    $st->{pub_title} = get_metadata($schema, 'pub_title');
   }
   if ($state == GENE_ACTIVE) {
     $st->{current_gene_id} = $current_gene_id;
@@ -131,7 +133,7 @@ sub _get_state
   my $st = $c->stash();
 
   my $schema = $st->{schema};
-  my $submitter_email = _get_metadata($schema, 'submitter_email');
+  my $submitter_email = get_metadata($schema, 'submitter_email');
 
   my $state = undef;
   my $current_annotation_id = undef;
@@ -143,8 +145,8 @@ sub _get_state
     $gene_count = $gene_rs->count();
 
     if ($gene_count > 0) {
-      $current_annotation_id = _get_metadata($schema, 'current_annotation_id');
-      $current_gene_id = _get_metadata($schema, 'current_gene_id');
+      $current_annotation_id = get_metadata($schema, 'current_annotation_id');
+      $current_gene_id = get_metadata($schema, 'current_gene_id');
 
       if (defined $current_gene_id) {
         if (defined $current_annotation_id) {
@@ -171,34 +173,6 @@ sub _get_state
           $current_gene_id, $current_annotation_id);
 }
 
-sub _get_metadata
-{
-  my $schema = shift;
-  my $key = shift;
-
-  my $metadata_obj = $schema->resultset('Metadata')->find({ key => $key });
-  if (defined $metadata_obj) {
-    return $metadata_obj->value();
-  } else {
-    return undef;
-  }
-}
-
-sub _set_metadata
-{
-  my $schema = shift;
-  my $key = shift;
-  my $value = shift;
-
-  if (defined $value) {
-    $schema->resultset('Metadata')->update_or_create({ key => $key,
-                                                       value => $value });
-  } else {
-    my $metadata = $schema->resultset('Metadata')->find({ key => $key });
-    $metadata->delete();
-  }
-}
-
 sub _set_new_gene
 {
   my $c = shift;
@@ -207,13 +181,13 @@ sub _set_new_gene
   my $gene_rs = $schema->resultset('Gene');
   my $first_gene = $gene_rs->first();
 
-  if (defined _get_metadata($schema, 'current_gene_id') ||
-      defined _get_metadata($schema, 'current_annotation_id')) {
+  if (defined get_metadata($schema, 'current_gene_id') ||
+      defined get_metadata($schema, 'current_annotation_id')) {
     die 'internal error - ' .
       'current_gene_id and current_annotation_id are both set';
   }
 
-  _set_metadata($schema, 'current_gene_id', $first_gene->gene_id());
+  set_metadata($schema, 'current_gene_id', $first_gene->gene_id());
   $c->stash()->{state} = GENE_ACTIVE;
 }
 
@@ -488,9 +462,9 @@ sub module_choose : Chained('top') PathPart('') Args(1)
                                                 }
                                               });
 
-    _set_metadata($schema, 'current_annotation_id',
+    set_metadata($schema, 'current_annotation_id',
                   $annotation->annotation_id());
-    _set_metadata($schema, 'current_gene_id', undef);
+    set_metadata($schema, 'current_gene_id', undef);
   };
 
   $schema->txn_do($process);

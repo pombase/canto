@@ -40,6 +40,8 @@ use warnings;
 use Carp;
 use Moose;
 
+with 'PomCur::Role::MetadataAccess';
+
 use File::Copy qw(copy);
 
 use PomCur::Config;
@@ -110,22 +112,12 @@ sub create_curs_db
   my $first_contact_name = $curs->community_curator()->name();
 
   # the calling function will wrap this in a transaction if necessary
-  $curs_schema->create_with_type('Metadata', { key => 'first_contact_email',
-                                               value => $first_contact_email });
-  $curs_schema->create_with_type('Metadata', { key => 'first_contact_name',
-                                               value => $first_contact_name });
-  $curs_schema->create_with_type('Metadata', { key => 'pub_title',
-                                               value => $curs->pub()->title(),
-                                             });
-  $curs_schema->create_with_type('Metadata', { key => 'pub_abstract',
-                                               value => $curs->pub()->abstract()
-                                             });
-  $curs_schema->create_with_type('Metadata', { key => 'pub_pubmedid',
-                                               value => $pubmedid,
-                                             });
-  $curs_schema->create_with_type('Metadata', { key => 'curs_id',
-                                               value => $curs->curs_id(),
-                                             });
+  set_metadata($curs_schema, 'first_contact_email', $first_contact_email);
+  set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
+  set_metadata($curs_schema, 'pub_title', $curs->pub()->title());
+  set_metadata($curs_schema, 'pub_abstract', $curs->pub()->abstract());
+  set_metadata($curs_schema, 'pub_pubmedid', $pubmedid);
+  set_metadata($curs_schema, 'curs_id', $curs->curs_id());
 }
 
 =head2 create_curs_db_hook
