@@ -82,7 +82,7 @@ sub create_template_dbs
            to create the database (file)name.
  Args    : $config - the Config object
            $curs - the Curs object
- Return  : none, die()s on failure
+ Returns : A CursDB object for the new db, die()s on failure
 
 =cut
 sub create_curs_db
@@ -126,6 +126,8 @@ sub create_curs_db
   set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
   set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
   set_metadata($curs_schema, 'curs_id', $curs->curs_id());
+
+  return $curs_schema;
 }
 
 =head2 create_curs_db_hook

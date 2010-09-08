@@ -22,3 +22,10 @@ test_config:
        - curs_key: aaaa0003
          first_contact_email: "kevin.hardwick@ed.ac.uk"
          pubmedid: 19436749
+         submitter_email: "kevin.hardwick@ed.ac.uk"
+         submitter_name: "Kevin Hardwick"
+       - curs_key: aaaa0004
+         first_contact_email: "kevin.hardwick@ed.ac.uk"
+         pubmedid: 18426916
+         submitter_email: "fred.smith@ed.ac.uk"
+         submitter_name: "Fred Smith"

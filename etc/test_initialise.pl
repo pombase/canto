@@ -21,6 +21,12 @@ use PomCur::Track::CurationLoad;
 use PomCur::Track::GeneLoad;
 use PomCur::Track::LoadUtil;
 
+use Moose;
+
+with 'PomCur::Role::MetadataAccess';
+
+no Moose;
+
 my %test_curators = ();
 my %test_publications = ();
 my %test_schemas = ();
@@ -154,7 +160,18 @@ sub make_curs_dbs
           PomCur::Curs::make_long_db_file_name($config, $test_case_curs_key);
         unlink $curs_file_name;
 
-        PomCur::Track::create_curs_db($config, $curs_object);
+        my $cursdb_schema =
+          PomCur::Track::create_curs_db($config, $curs_object);
+
+        if (exists $test_case_ref->{submitter_email}) {
+          $cursdb_schema->txn_do(
+            sub {
+              set_metadata($cursdb_schema, 'submitter_email',
+                           $test_case_ref->{submitter_email});
+              set_metadata($cursdb_schema, 'submitter_name',
+                           $test_case_ref->{submitter_name});
+            });
+        }
       }
     };
 
