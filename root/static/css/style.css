@@ -377,3 +377,7 @@ div.clearall {
   color: #aaa;
   font-size: 50%;
 }
+
+.current-gene {
+  font-weight: bold;
+}

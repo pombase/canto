@@ -9,7 +9,7 @@ $current_gene => undef
 % if ($show_gene_list) {
   <& gene_list.mhtml &>
 %   if (defined $gene_long_display_name) {
-  <p>Current gene: <% $gene_long_display_name %> </p>
+  <p>Current gene: <span class="current-gene"> <% $gene_long_display_name %> </span> </p>
 % }
 % }
 
