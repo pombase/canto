@@ -313,42 +313,22 @@ div.clearall {
   margin-top: 30px;
 }
 
-.curs-controls {
-  position: relative;
-  left: -10px;
-  float: left;
-  background-color: #cce;
-/*
-  border-top: 1px solid grey;
-  border-right: 1px solid grey;
-  border-bottom: 1px solid grey;
- */
-  margin-right: 20px;
+.module-choose {
+  margin-left: 30px;
   padding: 5px;
 }
 
-.curs-controls ul {
+.module-choose ul {
   margin: 0px;
   padding: 0px;
-
 }
 
-.curs-controls li {
+.module-choose li {
   text-decoration: none; 
   list-style-type: none;
   margin: 0px;
   padding: 0px;
 }
-
-.curs-controls li.current-module {
-  background-color: #cc0;
-}
-
-.curs-controls a {
-  margin: 0px;
-  padding: 0px;
-}
-
 
 .small-gene-list {
   background-color: #efa;

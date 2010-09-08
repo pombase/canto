@@ -12,8 +12,9 @@ $curs_root_path
 % if ($state eq 'done') {
   <p>All genes annotated</p>
 % } else {
-  <p>Choose an action for: <% $current_gene->long_display_name() %></p>
-  <ul>
+  <p>Current gene: <% $gene_long_display_name %>
+  <p>Choose an action: </p>
+  <ul class="module-choose">
 % for my $module_name (@module_names) {
 %   my $module_path = $curs_root_path . '/' . $module_name;
     <li>
@@ -32,5 +33,6 @@ my @module_names = @{$c->stash()->{module_names}};
 
 my $schema = $c->stash()->{schema};
 my $current_gene = $schema->resultset('Gene')->find($current_gene_id);
+my $gene_long_display_name = $current_gene->long_display_name();
 </%init>
 
