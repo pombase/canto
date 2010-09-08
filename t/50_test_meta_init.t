@@ -10,7 +10,7 @@ use File::Path qw(remove_tree);
 
 my $config = PomCur::Config->new('pomcur.yaml');
 
-my $deploy_dir = 't/scratch/tracking';
+my $deploy_dir = 't/scratch';
 
 remove_tree ($deploy_dir, { error => \my $rm_err } );
 
