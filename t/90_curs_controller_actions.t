@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 12;
 
 use Data::Compare;
 
@@ -73,6 +73,33 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     like ($redirect_res->content(), qr/Gene upload/);
+    like ($redirect_res->content(), qr/email-address.*$test_email/);
+  }
+
+  # test submitting a list of genes
+  {
+    my @gene_names = qw(cdc11 wtf22);
+
+    my $uri = new URI("$root_url/");
+    $uri->query_form(gene_identifiers => "@gene_names",
+                     submit => 'Submit',
+                    );
+
+    my $req = HTTP::Request->new(GET => $uri);
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    is ($redirect_url, "$root_url");
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    like ($redirect_res->content(), qr/Choose an action for: cdc11/);
   }
 
   # FIXME Test gene update
