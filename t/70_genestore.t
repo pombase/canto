@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 15;
 
 use PomCur::Track::GeneStore;
 
@@ -14,10 +14,16 @@ my $store = PomCur::Track::GeneStore->new(config => $test_util->config());
 
 ok(defined $store->schema());
 
-my $result = $store->lookup([qw(SPCC1739.10)]);
+my $result = $store->lookup([qw(SPCC576.16c)]);
 
 is(@{$result->{found}}, 1, 'look up one gene - found count');
 is(@{$result->{missing}}, 0, 'look up one gene - missing count');
+
+my $found_gene = $result->{found}->[0];
+is($found_gene->{primary_identifier}, 'SPCC576.16c');
+is($found_gene->{primary_name}, 'wtf22');
+is($found_gene->{product}, 'wtf element Wtf22');
+is($found_gene->{organism_full_name}, 'Schizosaccharomyces pombe');
 
 $result = $store->lookup([qw(missing1 missing2 missing3)]);
 is(@{$result->{found}}, 0, 'look up with no results - found count');

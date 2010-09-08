@@ -296,7 +296,7 @@ sub _filter_existing_genes
   my $schema = shift;
   my @genes = @_;
 
-  my @gene_primary_identifiers = map { $_->primary_identifier() } @genes;
+  my @gene_primary_identifiers = map { $_->{primary_identifier} } @genes;
 
   my $gene_rs = _get_gene_resultset($schema);
   my $rs = $gene_rs->search({
@@ -310,7 +310,7 @@ sub _filter_existing_genes
     $found_genes{$gene->primary_identifier()} = 1;
   }
 
-  return grep { !exists $found_genes{ $_->primary_identifier()} } @genes;
+  return grep { !exists $found_genes{ $_->{primary_identifier} } } @genes;
 }
 
 sub _find_and_create_genes
@@ -332,14 +332,14 @@ sub _find_and_create_genes
           @genes = _filter_existing_genes($schema, @genes);
 
           for my $gene (@genes) {
-            my $org_full_name = $gene->organism()->full_name();
+            my $org_full_name = $gene->{organism_full_name};
             my $curs_org =
               PomCur::CursDB::Organism::get_organism($schema, $org_full_name);
 
             $schema->create_with_type('Gene', {
-              primary_name => $gene->primary_name(),
-              primary_identifier => $gene->primary_identifier(),
-              product => $gene->product(),
+              primary_name => $gene->{primary_name},
+              primary_identifier => $gene->{primary_identifier},
+              product => $gene->{product},
               organism => $curs_org
             });
           }

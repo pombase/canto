@@ -69,7 +69,7 @@ sub check_result
   ok(Compare(\@res_missing, \@unknown_genes));
   is(@res_found, $found_count);
 
-  ok(grep { $_->gene_id() == 7 } @res_found);
+  ok(grep { $_->{primary_identifier} eq 'SPCC576.16c' } @res_found);
 
   is($curs_schema->resultset('Gene')->count(), $gene_count);
 }
@@ -101,7 +101,10 @@ sub _lookup_gene
 
   die if @genes != 1;
 
-  return $genes[0];
+  return { primary_identifier => $genes[0]->primary_identifier(),
+           primary_name => $genes[0]->primary_identifier(),
+           product => $genes[0]->product(),
+         };
 }
 
 my @gene_identifiers_to_filter = ('SPCC1739.11c', $known_genes[0], $known_genes[2]);
@@ -115,7 +118,7 @@ my @filtered_genes =
 
 is(@filtered_genes, 1);
 
-is($filtered_genes[0]->primary_identifier(), 'SPCC1739.11c');
+is($filtered_genes[0]->{primary_identifier}, 'SPCC1739.11c');
 
 $result =
   PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,

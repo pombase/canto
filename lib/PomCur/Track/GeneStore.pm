@@ -41,6 +41,19 @@ use Moose;
 with 'PomCur::GeneStore';
 with 'PomCur::Track::TrackStore';
 
+=head2 lookup
+
+ Usage   : my $gene_store =
+             PomCur::Track::get_store($config, $curs_db, $store_name);
+           my $results = $gene_store->lookup([qw(cdc11 SPCTRNASER.13 test)]);
+ Function: Search for genes by name or identifier
+ Args    : $search_terms_ref - an array reference containing the terms to search
+                               for
+ Returns : All genes that match any of the search terms exactly.  The results
+           look like this hashref:
+             { found => [qw(cdc11 SPCTRNASER.13)], missing => [qw(test)] }
+
+=cut
 sub lookup
 {
   my $self = shift;
@@ -79,6 +92,15 @@ sub lookup
   my @missing_genes = grep {
     !exists $gene_ids{$_}
   } @search_terms;
+
+  @found_genes = map {
+      {
+        primary_identifier => $_->primary_identifier(),
+        primary_name => $_->primary_name(),
+        product => $_->product(),
+        organism_full_name => $_->organism()->full_name(),
+      }
+    } @found_genes;
 
   return { found => \@found_genes,
            missing => \@missing_genes };
