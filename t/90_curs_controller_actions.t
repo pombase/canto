@@ -99,7 +99,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/Choose an action for: cdc11/);
+    like ($redirect_res->content(), qr/Current gene: .*cdc11/);
   }
 
   # FIXME Test gene update
