@@ -255,10 +255,6 @@ sub submitter_update : Private
         name => 'submit', type => 'Submit', value => 'submit',
         attributes => { class => 'button', },
       },
-      {
-        name => 'continue', type => 'Submit', value => 'continue',
-        attributes => { class => 'button', },
-      }
     );
 
   $form->elements([@all_elements]);
