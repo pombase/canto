@@ -46,14 +46,21 @@ use PomCur::Curs::Util;
 use PomCur::Track;
 
 use constant {
+  # user needs to confirm name and email address
   NEEDS_SUBMITTER => 0,
+  # no genes in database, user needs to upload some
   NEEDS_GENES => 1,
-  READY => 2,
+#  READY => 2,
+  # a gene is selected, but no annotation is started
   GENE_ACTIVE => 3,
+  # user has picked an annotation type
   ANNOTATION_ACTIVE => 4,
+  # all genes have some annotatation, but user can select a gene and
+  # do some more annotation
   DONE => 5
 };
 
+# actions to execute for each state, undef for special cases
 my %state_dispatch = (
   NEEDS_SUBMITTER, 'submitter_update',
   NEEDS_GENES, 'gene_upload',
@@ -126,6 +133,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 }
 
+# Return a constant describing the state of the application, eg. NEEDS_GENES
+# or DONE.  See the %state hash above for details
 sub _get_state
 {
   my $c = shift;
