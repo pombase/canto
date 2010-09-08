@@ -121,7 +121,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     my $current_annotation =
       $schema->find_with_type('Annotation', $current_annotation_id);
     $st->{current_annotation} = $current_annotation;
-    my $current_gene_id = $current_annotation->data()->{gene};
+    my $current_gene_id = $current_annotation->data()->{gene_id};
     $st->{current_gene_id} = $current_gene_id;
     $st->{current_gene} = $schema->find_with_type('Gene', $current_gene_id);
   }
@@ -473,7 +473,7 @@ sub module_choose : Chained('top') PathPart('') Args(1)
       $schema->create_with_type('Annotation', { type => $module_name,
                                                 status => 'new',
                                                 data => {
-                                                  gene => $current_gene_id
+                                                  gene_id => $current_gene_id
                                                 }
                                               });
 
