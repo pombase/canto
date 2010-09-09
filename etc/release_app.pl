@@ -111,7 +111,7 @@ if (-d $full_app_path) {
   print "updating $full_app_path\n";
   chdir $full_app_path;
   system "git reset --hard";
-  system "git pull origin master";
+  system "git pull --tags origin master";
   system "git reset --hard $app_tag";
   print 'now at: ', `git describe --tags`;
 
