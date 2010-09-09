@@ -165,6 +165,10 @@ sub get_lookup
 
   my $impl_class = $config->{implementation_classes}->{"${lookup_name}_lookup"};
 
+  if (!defined $impl_class) {
+    croak "can't find implementation class for ${lookup_name}_lookup";
+  }
+
   eval "use $impl_class";
   return $impl_class->new(config => $config);
 }
