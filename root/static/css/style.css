@@ -313,17 +313,17 @@ div.clearall {
   margin-top: 30px;
 }
 
-.module-choose {
+.annotation-start {
   margin-left: 30px;
   padding: 5px;
 }
 
-.module-choose ul {
+.annotation-start ul {
   margin: 0px;
   padding: 0px;
 }
 
-.module-choose li {
+.annotation-start li {
   text-decoration: none; 
   list-style-type: none;
   margin: 0px;

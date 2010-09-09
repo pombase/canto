@@ -90,9 +90,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{curs_root_path} = $root_path;
 
   my $config = $c->config();
-  my %annotation_modules = %{$config->{annotation_modules}};
+  my %annotation_types = %{$config->{annotation_types}};
 
-  @{$st->{module_names}} = keys %annotation_modules;
+  @{$st->{annotation_type_names}} = keys %annotation_types;
 
   my $schema = PomCur::Curs::get_schema($c);
   $st->{schema} = $schema;
@@ -124,6 +124,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     my $current_gene_id = $current_annotation->data()->{gene_id};
     $st->{current_gene_id} = $current_gene_id;
     $st->{current_gene} = $schema->find_with_type('Gene', $current_gene_id);
+
+    $st->{current_annotation_type} = $current_annotation->type();
   }
 
   $st->{gene_count} = _get_gene_resultset($schema)->count();
@@ -137,7 +139,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
         # choose a module based by looking in the current annotation
         my $current_annotation =
           $schema->resultset('Annotation')->find($current_annotation_id);
-        $c->detach('module_dispatch', [$current_annotation->type()]);
+        $c->detach('annotation_dispatch', [$current_annotation->type()]);
       }
     }
   }
@@ -444,17 +446,17 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 }
 
-sub _get_module_obj
+sub _get_annotation_helper
 {
   my $c = shift;
-  my $module_name = shift;
+  my $annotation_type_name = shift;
 
   my $config = $c->config();
   my $st = $c->stash();
 
-  my %annotation_modules = %{$config->{annotation_modules}};
+  my %annotation_types = %{$config->{annotation_types}};
 
-  my $module_config = $annotation_modules{$module_name};
+  my $module_config = $annotation_types{$annotation_type_name};
   my $module_class_name = $module_config->{class};
 
   my %args = (config => $config);
@@ -466,23 +468,23 @@ sub _get_module_obj
   eval "use $module_class_name";
   if ($@) {
     die "can't find module ('$module_class_name') specified in configuration "
-      . "for module: $module_name\n";
+      . "for module: $annotation_type_name\n";
   }
 
   my $store = $module_class_name->new(%args);
 
 }
 
-sub module_choose : Chained('top') PathPart('') Args(1)
+sub annotation_choose : Chained('top') PathPart('') Args(1)
 {
-  my ($self, $c, $module_name) = @_;
+  my ($self, $c, $annotation_type_name) = @_;
 
   my $schema = $c->stash()->{schema};
 
   my $process = sub {
     my $current_gene_id = $c->stash()->{current_gene_id};
     my $annotation =
-      $schema->create_with_type('Annotation', { type => $module_name,
+      $schema->create_with_type('Annotation', { type => $annotation_type_name,
                                                 status => 'new',
                                                 data => {
                                                   gene_id => $current_gene_id
@@ -497,25 +499,25 @@ sub module_choose : Chained('top') PathPart('') Args(1)
 
   $schema->txn_do($process);
 
-  $c->dispatch('module_dispatch', $module_name);
+  $c->dispatch('annotation_dispatch', $annotation_type_name);
 }
 
-sub module_dispatch : Private
+sub annotation_dispatch : Private
 {
-  my ($self, $c, $module_name) = @_;
+  my ($self, $c, $annotation_type_name) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
 
   my $module_display_name =
-    PomCur::Curs::Util::module_display_name($module_name);
+    PomCur::Curs::Util::module_display_name($annotation_type_name);
   $st->{title} = 'Module: ' . $module_display_name;
-  $st->{current_component} = $module_name;
-  $st->{template} = "curs/modules/$module_name.mhtml";
+  $st->{current_component} = $annotation_type_name;
+  $st->{template} = "curs/modules/$annotation_type_name.mhtml";
 
-  my $module_obj = _get_module_obj($c, $module_name);
+  my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
 
-  $st->{module_obj} = $module_obj;
+  $st->{annotation_helper} = $annotation_helper;
 }
 
 sub _get_gene_resultset

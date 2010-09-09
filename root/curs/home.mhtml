@@ -8,12 +8,12 @@ $curs_root_path
   <p>All genes annotated</p>
 % } else {
   <p>Choose an action: </p>
-  <ul class="module-choose">
-% for my $module_name (@module_names) {
-%   my $module_path = $curs_root_path . '/' . $module_name;
+  <ul class="annotation-start">
+% for my $annotation_type_name (@annotation_type_names) {
+%   my $action_path = $curs_root_path . '/' . $annotation_type_name;
     <li>
-      <a href="<% $module_path %>">
-        <% PomCur::Curs::Util::module_display_name($module_name) %>
+      <a href="<% $action_path %>">
+        <% PomCur::Curs::Util::module_display_name($annotation_type_name) %>
       </a>
     </li>
 % }
@@ -24,6 +24,5 @@ $curs_root_path
 <%init>
 use PomCur::Curs::Util;
 
-my @module_names = @{$c->stash()->{module_names}};
+my @annotation_type_names = @{$c->stash()->{annotation_type_names}};
 </%init>
-

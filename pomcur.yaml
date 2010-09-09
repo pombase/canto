@@ -127,7 +127,7 @@ implementation_classes:
 
 # each class needs to set up the stash for forwarding to a template
 # page based on the module name, eg. go_function.html
-annotation_modules:
+annotation_types:
   go_function:
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
