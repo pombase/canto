@@ -123,7 +123,7 @@ external_sources:
 implementation_classes:
   gene_lookup: PomCur::Track::GeneLookup
   go_annotation_lookup: PomCur::Track::GOAnnotationLookup
-  go_lookup: PomCur::Track::GOLookup
+  go_lookup: PomCur::Track::OntologyLookup
 
 # each class needs to set up the stash for forwarding to a template
 # page based on the module name, eg. go_function.html

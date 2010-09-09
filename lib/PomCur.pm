@@ -37,6 +37,9 @@ __PACKAGE__->config(name => 'PomCur',
                       driver_args => { format => 'pdf' },
                       content_type => 'application/pdf',
                     },
+                    'View::JSON' => {
+                      expose_stash => 'json_data',
+                    },
                     static => {
                       dirs => [
                         'static'

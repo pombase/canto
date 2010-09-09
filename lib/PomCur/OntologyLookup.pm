@@ -1,8 +1,8 @@
-package PomCur::GOLookup;
+package PomCur::OntologyLookup;
 
 =head1 NAME
 
-PomCur::GOLookup - methods to query the Gene Ontology
+PomCur::OntologyLookup - Role defining packages that can query ontologies
 
 =head1 SYNOPSIS
 
@@ -18,7 +18,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::GOLookup
+    perldoc PomCur::OntologyLookup
 
 =over 4
 
@@ -47,6 +47,7 @@ with 'PomCur::Configurable';
 
 =cut
 
-requires 'lookup';
+
+#requires 'lookup';
 
 1;

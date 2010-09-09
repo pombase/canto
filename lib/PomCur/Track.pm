@@ -148,21 +148,17 @@ sub create_curs_db_hook
 
 =head2
 
- Usage   : my $lookup = PomCur::Track::get_lookup($config, $cursdb, 'gene');
+ Usage   : my $lookup = PomCur::Track::get_lookup($config, 'gene');
  Function: return an initialised Lookup object of the given type
  Args    : $config - the PomCur::Config object
-           $cursdb - a CursDB object
-           $lookup_name - the lookup name used to look up in the config
+           $lookup_name - the lookup type used to look up in the config
  Return  : a Lookup object
 
 =cut
 sub get_lookup
 {
-  my ($config, $curs_db, $lookup_name) = @_;
+  my ($config, $lookup_name) = @_;
 
-  if (!defined $curs_db) {
-    croak "no CursDB passed to get_lookup()\n";
-  }
   if (!defined $lookup_name) {
     croak "no lookup_name passed to get_lookup()\n";
   }
@@ -170,7 +166,7 @@ sub get_lookup
   my $impl_class = $config->{implementation_classes}->{"${lookup_name}_lookup"};
 
   eval "use $impl_class";
-  return $impl_class->new(config => $config, curs_db => $curs_db);
+  return $impl_class->new(config => $config);
 }
 
 1;

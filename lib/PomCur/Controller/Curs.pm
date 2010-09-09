@@ -355,7 +355,7 @@ sub _find_and_create_genes
   my ($schema, $config, $search_terms_ref) = @_;
 
   my @search_terms = @$search_terms_ref;
-  my $lookup = PomCur::Track::get_lookup($config, $schema, 'gene');
+  my $lookup = PomCur::Track::get_lookup($config, 'gene');
 
   my $result = $lookup->lookup([@search_terms]);
 
