@@ -148,25 +148,26 @@ sub create_curs_db_hook
 
 =head2
 
- Usage   : my $store = PomCur::Track::get_store($config, 'gene');
- Function: return an initialised Store object of the given type
+ Usage   : my $lookup = PomCur::Track::get_lookup($config, $cursdb, 'gene');
+ Function: return an initialised Lookup object of the given type
  Args    : $config - the PomCur::Config object
-           $store_name - the store name used to look up in the config
- Return  : a Store object
+           $cursdb - a CursDB object
+           $lookup_name - the lookup name used to look up in the config
+ Return  : a Lookup object
 
 =cut
-sub get_store
+sub get_lookup
 {
-  my ($config, $curs_db, $store_name) = @_;
+  my ($config, $curs_db, $lookup_name) = @_;
 
   if (!defined $curs_db) {
-    croak "no CursDB passed to get_store()\n";
+    croak "no CursDB passed to get_lookup()\n";
   }
-  if (!defined $store_name) {
-    croak "no store_name passed to get_store()\n";
+  if (!defined $lookup_name) {
+    croak "no lookup_name passed to get_lookup()\n";
   }
 
-  my $impl_class = $config->{implementation_classes}->{"${store_name}_store"};
+  my $impl_class = $config->{implementation_classes}->{"${lookup_name}_lookup"};
 
   eval "use $impl_class";
   return $impl_class->new(config => $config, curs_db => $curs_db);

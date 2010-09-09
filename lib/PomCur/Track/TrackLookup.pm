@@ -1,8 +1,9 @@
-package PomCur::GOStore;
+package PomCur::Track::TrackLookup;
 
 =head1 NAME
 
-PomCur::GOStore - methods to query the Gene Ontology
+PomCur::Track::TrackLookup - A role for Lookup classes that get data from the
+                            TrackDB
 
 =head1 SYNOPSIS
 
@@ -18,7 +19,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::GOStore
+    perldoc PomCur::Track::TrackLookup
 
 =over 4
 
@@ -39,14 +40,21 @@ use Carp;
 
 use Moose::Role;
 
-with 'PomCur::Configurable';
+use PomCur::TrackDB;
 
-=head2 lookup
+requires 'config';
 
- Usage  : my $go_term = lookup($identifier);
+has 'schema' => (
+  is => 'ro',
+  lazy_build => 1,
+);
 
-=cut
+sub _build_schema {
+  my $self = shift;
 
-requires 'lookup';
+  my $config = $self->config();
+
+  return PomCur::TrackDB->new($config);
+};
 
 1;

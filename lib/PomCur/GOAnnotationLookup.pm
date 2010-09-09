@@ -1,8 +1,9 @@
-package PomCur::Track::TrackStore;
+package PomCur::GOAnnotationLookup
 
 =head1 NAME
 
-PomCur::Track::TrackStore - A role for Stores that get data from the TrackDB
+PomCur::GOAnnotationSource - methods to retrieve information about the current
+                             GO annotations
 
 =head1 SYNOPSIS
 
@@ -18,7 +19,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::Track::TrackStore
+    perldoc PomCur::GOAnnotationLookup
 
 =over 4
 
@@ -36,24 +37,16 @@ under the same terms as Perl itself.
 =cut
 
 use Carp;
-
 use Moose::Role;
 
-use PomCur::TrackDB;
+with 'PomCur::Configurable';
 
-requires 'config';
+=head2 annotation_of_genes
 
-has 'schema' => (
-  is => 'ro',
-  lazy_build => 1,
-);
+  Returns   : an array: [{ identifier => 'spc123', annotation => {}},
+                         {
 
-sub _build_schema {
-  my $self = shift;
-
-  my $config = $self->config();
-
-  return PomCur::TrackDB->new($config);
-};
+=cut
+method annotation_of_genes(\@gene_identifiers, { options ... });
 
 1;

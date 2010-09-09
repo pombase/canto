@@ -20,7 +20,7 @@ use PomCur::TestUtil;
 use PomCur::Track::CurationLoad;
 use PomCur::Track::GeneLoad;
 use PomCur::Track::LoadUtil;
-use PomCur::Track::GeneStore;
+use PomCur::Track::GeneLookup;
 use PomCur::Controller::Curs;
 
 use Moose;
@@ -138,8 +138,8 @@ sub _load_curs_db_data
   my $cursdb_schema = shift;
   my $test_case_ref = shift;
 
-  my $gene_store = PomCur::Track::GeneStore->new(config => $config,
-                                                 schema => $trackdb_schema);
+  my $gene_lookup = PomCur::Track::GeneLookup->new(config => $config,
+                                                   schema => $trackdb_schema);
 
   set_metadata($cursdb_schema, 'submitter_email',
                $test_case_ref->{submitter_email});
@@ -147,7 +147,7 @@ sub _load_curs_db_data
                $test_case_ref->{submitter_name});
 
   for my $gene_identifier (@{$test_case_ref->{genes}}) {
-    my $result = $gene_store->lookup([$gene_identifier]);
+    my $result = $gene_lookup->lookup([$gene_identifier]);
     my @found = @{$result->{found}};
     die "Expected 1 result" if @found != 1;
     my $gene_info = $found[0];

@@ -1,9 +1,8 @@
-package PomCur::GOAnnotationStore
+package PomCur::GOLookup;
 
 =head1 NAME
 
-PomCur::GOAnnotationSource - methods to retrieve information about the current
-                             GO annotations
+PomCur::GOLookup - methods to query the Gene Ontology
 
 =head1 SYNOPSIS
 
@@ -19,7 +18,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::GOAnnotationStore
+    perldoc PomCur::GOLookup
 
 =over 4
 
@@ -37,16 +36,17 @@ under the same terms as Perl itself.
 =cut
 
 use Carp;
+
 use Moose::Role;
 
 with 'PomCur::Configurable';
 
-=head2 annotation_of_genes
+=head2 lookup
 
-  Returns   : an array: [{ identifier => 'spc123', annotation => {}},
-                         {
+ Usage  : my $go_term = lookup($identifier);
 
 =cut
-method annotation_of_genes(\@gene_identifiers, { options ... });
+
+requires 'lookup';
 
 1;

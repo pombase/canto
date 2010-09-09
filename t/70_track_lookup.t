@@ -2,10 +2,10 @@ use strict;
 use warnings;
 use Test::More tests => 1;
 
-use PomCur::Track::TrackStore;
+use PomCur::Track::TrackLookup;
 
 
-package StoreTest;
+package LookupTest;
 
 use Moose;
 
@@ -14,7 +14,7 @@ has 'config' => (
   isa => 'PomCur::Config'
 );
 
-with 'PomCur::Track::TrackStore';
+with 'PomCur::Track::TrackLookup';
 
 no Moose;
 
@@ -27,6 +27,6 @@ my $test_util = PomCur::TestUtil->new();
 
 $test_util->init_test();
 
-my $store = StoreTest->new(config => $test_util->config());
+my $lookup = LookupTest->new(config => $test_util->config());
 
-ok(defined $store->schema());
+ok(defined $lookup->schema());

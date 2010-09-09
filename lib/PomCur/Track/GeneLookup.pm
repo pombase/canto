@@ -1,8 +1,8 @@
-package PomCur::Track::GeneStore;
+package PomCur::Track::GeneLookup;
 
 =head1 NAME
 
-PomCur::Track::GeneStore - A GeneStore that gets it's data from the TrackDB
+PomCur::Track::GeneLookup - A GeneLookup that gets it's data from the TrackDB
 
 =head1 SYNOPSIS
 
@@ -18,7 +18,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::Track::GeneStore
+    perldoc PomCur::Track::GeneLookup
 
 =over 4
 
@@ -38,14 +38,14 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
-with 'PomCur::GeneStore';
-with 'PomCur::Track::TrackStore';
+with 'PomCur::GeneLookup';
+with 'PomCur::Track::TrackLookup';
 
 =head2 lookup
 
- Usage   : my $gene_store =
-             PomCur::Track::get_store($config, $curs_db, $store_name);
-           my $results = $gene_store->lookup([qw(cdc11 SPCTRNASER.13 test)]);
+ Usage   : my $gene_lookup =
+             PomCur::Track::get_lookup($config, $curs_db, $lookup_name);
+           my $results = $gene_lookup->lookup([qw(cdc11 SPCTRNASER.13 test)]);
  Function: Search for genes by name or identifier
  Args    : $search_terms_ref - an array reference containing the terms to search
                                for

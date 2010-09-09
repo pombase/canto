@@ -45,28 +45,28 @@ has 'ontologies' => (
   isa => 'ArrayRef[Str]',
 );
 
-has 'go_store' => (
+has 'go_lookup' => (
   is => 'ro',
   lazy_build => 1,
   init_arg => undef,
 );
 
-has 'annotation_store' => (
+has 'annotation_lookup' => (
   is => 'ro',
   lazy_build => 1,
   init_arg => undef,
 );
 
-sub _build_go_store
+sub _build_go_lookup
 {
   my $self = shift;
 
   my $config = $self->config();
-  my $go_store = $config->{implementation_classes}->{go_store};
+  my $go_lookup = $config->{implementation_classes}->{go_lookup};
 
   die "GOT HERE!";
 
-  return $go_store->new();
+  return $go_lookup->new();
 }
 
 =head2 annotation_count

@@ -1,8 +1,8 @@
-package PomCur::GeneStore;
+package PomCur::GeneLookup;
 
 =head1 NAME
 
-PomCur::GeneStore - A role describing gene lookup services
+PomCur::GeneLookup - A role describing gene lookup services
 
 =head1 SYNOPSIS
 
@@ -18,7 +18,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::GeneStore
+    perldoc PomCur::GeneLookup
 
 =over 4
 
