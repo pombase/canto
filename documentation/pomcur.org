@@ -47,9 +47,10 @@ PomCur installation and maintainence.
    "Track" run is the part that the adminstrator uses to add people,
    publications and curation sessions to the database.
 
-   "Curs" handles the curation sessions that are seen 
-*** Track
-    This 
+   "Curs" handles the user curation sessions.
+*** Track - user, publication and session tracking
+*** Curs - curation sessions
+    Each curation session has a cooresponding SQLite database.
 ** Databases
 ** Database structure
 ** Code
