@@ -34,6 +34,7 @@ requires 'LWP';
 requires 'Data::Compare';
 requires 'IO::All';
 requires 'Test::Exception';
+requires 'JSON::Any';
 
 requires 'parent';
 requires 'Config::General';
