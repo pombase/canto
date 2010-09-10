@@ -3,11 +3,14 @@ $annotation_helper
 </%args>
 
 <form action="" method="post">
+  <input type="hidden" id="ontology-term-id"/>
   <div class="text label">
-    <input id="ontology-term-entry" name="ontology-term-entry"
-           type="text" value="" size="50" />
+    <textarea id="ontology-term-entry" name="ontology-term-entry"
+              type="textarea" value="" cols="30" rows="4"></textarea>
   </div>
   <div class="submit">
     <input name="submit" type="submit" value="Submit" class="button" />
   </div>
 </form>
+
+<p id="ontology-term-definition"></p>
