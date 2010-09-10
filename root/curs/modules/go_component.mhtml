@@ -1,5 +1,18 @@
 <%args>
-$module_obj
+$annotation_helper
 </%args>
-GO component stuff for <% $module_obj %>
- 
+GO component stuff for <% $annotation_helper %>
+
+<script type="text/javascript">
+  ontology_complete_url = '<% $c->uri_for("/ws/lookup/go/component/term/10/") %>';
+</script>
+
+<form action="" method="post">
+  <div class="text label">
+    <input id="ontology-term-entry" name="ontology-term-entry"
+           type="text" value="" size="50" />
+  </div>
+  <div class="submit">
+    <input name="submit" type="submit" value="Submit" class="button" />
+  </div>
+</form>

@@ -14,3 +14,25 @@ $(document).ready(function() {
     }
   })
 });
+
+$(function() {
+    var cache = {};
+    $( "#ontology-term-entry" ).autocomplete({
+        minLength: 0,
+        source: ontology_complete_url,
+        focus: function(event, ui) {
+            $('#ontology-term-entry').val(ui.item.match);
+            return false;
+        },
+        select: function(event, ui) {
+            $('#ontology-term-entry').val(ui.item.match);
+            return false;
+        }
+    })
+    .data( "autocomplete" )._renderItem = function( ul, item ) {
+        return $( "<li></li>" )
+            .data( "item.autocomplete", item )
+            .append( "<a>" + item.match + "<br>" + item.desc + "</a>" )
+            .appendTo( ul );
+    };
+});

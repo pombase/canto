@@ -381,3 +381,7 @@ div.clearall {
 .current-gene {
   font-weight: bold;
 }
+
+.ui-autocomplete-loading { 
+  background: white url('static/images/ui-anim_basic_16x16.gif') right center no-repeat;
+}
