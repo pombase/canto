@@ -17,7 +17,7 @@ $(document).ready(function() {
 $(function() {
   var ontology_complete_url = application_root + '/ws/lookup/go/component/term/';
 
-  var set_definition = function() {
+  var term_selected = function() {
     var term_id = $('#ontology-term-id').val();
     if (term_id) {
       $.ajax({
@@ -43,7 +43,7 @@ $(function() {
       $('#ontology-term-entry').val(ui.item.name);
       return false;
     },
-    close: function(event, ui) { set_definition() }
+    close: term_selected
   })
   .data( "autocomplete" )._renderItem = function( ul, item ) {
     return $( "<li></li>" )
