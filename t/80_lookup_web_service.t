@@ -33,7 +33,6 @@ package main;
 
 my $c = bless {}, 'MockCatalyst';
 
-my $results = $lookup->web_service_lookup($c, 'component', 'term', 10);
+my $results = $lookup->web_service_lookup($c, 'component', 'term');
 
 ok(defined $results);
-

@@ -112,8 +112,9 @@ sub web_service_lookup
   my $c = shift;
   my $ontology_name = shift;
   my $search_type = shift;
-  my $max_results = shift || 10;
   my $search_string = shift || $c->req()->param('term');
+
+  my $max_results = $c->req()->param('max_results') || 10;
 
   my @ret = ();
 

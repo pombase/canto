@@ -15,7 +15,7 @@ $(document).ready(function() {
 });
 
 $(function() {
-  var ontology_complete_url = application_root + '/ws/lookup/go/component/term/10/';
+  var ontology_complete_url = application_root + '/ws/lookup/go/component/term/';
 
   $( "#ontology-term-entry" ).autocomplete({
     minLength: 2,
