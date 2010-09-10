@@ -403,10 +403,12 @@ div.clearall {
   clear: left;
   float: left;
   width: 49%;
+  font-size: 80%;
 }
 
 #ontology-term-children {
   float: right;
   width: 40%;
   min-height: 10em;
+  font-size: 80%;
 }

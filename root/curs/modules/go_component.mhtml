@@ -6,16 +6,14 @@ $annotation_helper
 <form action="" method="post">
   <div id="ontology-term-find">
   <input type="hidden" id="ontology-term-id"/>
-  <div class="text label">
-    <textarea id="ontology-term-entry" name="ontology-term-entry"
-              type="textarea" value="" cols="30" rows="4"
-              placeholder="start typing ..."></textarea>
+  <textarea id="ontology-term-entry" name="ontology-term-entry"
+            type="textarea" value="" cols="30" rows="4"
+            placeholder="start typing ..."></textarea>
   </div>
+  <div id="ontology-term-children">(children)</div>
+  <div id="ontology-term-definition">(definition)</div>
   <div class="submit">
     <input name="submit" type="submit" value="Submit" class="button" />
   </div>
-  </div>
-  <div id="ontology-term-children">children</div>
-  <div id="ontology-term-definition">definition</div>
 </form>
 </div>
