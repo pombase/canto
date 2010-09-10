@@ -390,10 +390,23 @@ div.clearall {
   font-size: 60%;
 }
 
+#ontology-term-container {
+  position: relative;
+}
+
+#ontology-term-find {
+  float: left;
+  width: 49%;
+}
+
 #ontology-term-definition {
+  clear: left;
+  float: left;
   width: 49%;
 }
 
 #ontology-term-children {
-  width: 49%;
+  float: right;
+  width: 40%;
+  min-height: 10em;
 }

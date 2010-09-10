@@ -2,6 +2,7 @@
 $annotation_helper
 </%args>
 
+<div id="ontology-term-container">
 <form action="" method="post">
   <div id="ontology-term-find">
   <input type="hidden" id="ontology-term-id"/>
@@ -14,8 +15,7 @@ $annotation_helper
     <input name="submit" type="submit" value="Submit" class="button" />
   </div>
   </div>
-  
-  <div id="ontology-term-definition">definition</div>
   <div id="ontology-term-children">children</div>
+  <div id="ontology-term-definition">definition</div>
 </form>
-
+</div>
