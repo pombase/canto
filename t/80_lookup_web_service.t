@@ -28,7 +28,11 @@ sub param
     if ($arg eq 'max_results') {
       return 5;
     } else {
-      die "got $arg";
+      if ($arg eq 'def') {
+        return 1;
+      } else {
+        die "got $arg";
+      }
     }
   }
 }
