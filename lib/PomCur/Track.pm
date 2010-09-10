@@ -170,6 +170,7 @@ sub get_lookup
   }
 
   eval "use $impl_class";
+  die "failed to import $impl_class: $@" if $@;
   return $impl_class->new(config => $config);
 }
 
