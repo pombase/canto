@@ -57,7 +57,7 @@ my %terms_by_id = (
                   },
   'GO:0004025' => { id => 'GO:0004025',
                     name => 'alcohol dehydrogenase activity, iron-dependent',
-                    definition => 'Catalysis of the reaction: an alcohol + NAD+ = an aldehyde or ketone + NADH + H+, requiring the presence of iron.<',
+                    definition => 'Catalysis of the reaction: an alcohol + NAD+ = an aldehyde or ketone + NADH + H+, requiring the presence of iron.',
                   },
   'GO:0010301' => { id => 'GO:0010301',
                     name => 'xanthoxin dehydrogenase activity',
