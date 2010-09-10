@@ -389,3 +389,11 @@ div.clearall {
 .ui-menu-item {
   font-size: 60%;
 }
+
+#ontology-term-definition {
+  width: 49%;
+}
+
+#ontology-term-children {
+  width: 49%;
+}
