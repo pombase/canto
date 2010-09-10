@@ -15,25 +15,29 @@ $(document).ready(function() {
 });
 
 $(function() {
-  var ontology_complete_url = application_root + '/ws/lookup/go/component/term/';
+  var ontology_complete_url = application_root + '/ws/lookup/go/component';
+
+  var use_term_data = function(data) {
+    $('#ontology-term-definition').text(data[0].definition);
+// do something with the children:
+//    $('#ontology-term-children').text(data[0].children[0].id);
+  }
 
   var term_selected = function() {
     var term_id = $('#ontology-term-id').val();
     if (term_id) {
       $.ajax({
-        url: ontology_complete_url,
-        data: { term: term_id, def: 1 },
+        url: ontology_complete_url + '/term',
+        data: { term: term_id, def: 1, children: 1 },
         dataType: 'json',
-        success: function (data) {
-          $('#ontology-term-definition').text(data[0].definition);
-        }
+        success: use_term_data
       });
     }
   }
 
   $( "#ontology-term-entry" ).autocomplete({
     minLength: 2,
-    source: ontology_complete_url,
+    source: ontology_complete_url + '/term',
     focus: function(event, ui) {
       $('#ontology-term-entry').val(ui.item.name);
       return false;

@@ -121,6 +121,7 @@ sub web_service_lookup
 
   my $max_results = $c->req()->param('max_results') || 10;
   my $include_definition = $c->req()->param('def');
+  my $include_children = $c->req()->param('children');
 
   my @ret = ();
 
@@ -128,11 +129,24 @@ sub web_service_lookup
     my $term = $terms_by_id{$key};
 
     if ($key =~ /$search_string/i || $term->{name} =~ /$search_string/i) {
-      if ($include_definition) {
-        push @ret, $term;
-      } else {
-        push @ret, { id => $term->{id}, name => $term->{name} };
+      my %ret_term = %$term;
+
+      delete $ret_term{children};
+
+      if (!$include_definition) {
+        delete $ret_term{definition};
       }
+      if ($include_children) {
+        if (defined $term->{children}) {
+          for my $child_id (@{$term->{children}}) {
+            my $child = $terms_by_id{$child_id};
+
+            push @{$ret_term{children}}, $child;
+          }
+        }
+      }
+
+      push @ret, \%ret_term;
 
       if (@ret >= $max_results) {
         last;
