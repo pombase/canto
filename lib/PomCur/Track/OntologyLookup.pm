@@ -44,10 +44,12 @@ with 'PomCur::Track::TrackLookup';
 my %terms_by_id = (
   'GO:0004022' => { id => 'GO:0004022',
                     name => 'alcohol dehydrogenase (NAD) activity',
+                    definition => 'Catalysis of the reaction: an alcohol + NAD+ = an aldehyde or ketone + NADH + H+.',
                     children => [qw(GO:0004023 GO:0004024 GO:0004025 GO:0010301)],
                   },
   'GO:0004023' => { id => 'GO:0004023',
                     name => 'alcohol dehydrogenase activity, metal ion-independent',
+                    definition => 'Catalysis of the reaction: an alcohol + NAD+ = an aldehyde or ketone + NADH + H+; can proceed in the absence of a metal ion.'
                   },
   'GO:0004024' => { id => 'GO:0004024',
                     name => 'alcohol dehydrogenase activity, zinc-dependent',
@@ -64,6 +66,7 @@ my %terms_by_id = (
                   },
   'GO:0016616' => { id => 'GO:0016616',
                     name => 'oxidoreductase activity, acting on the CH-OH group of donors, NAD or NADP as acceptor',
+                    definition => 'Catalysis of an oxidation-reduction (redox) reaction in which a CH-OH group acts as a hydrogen or electron donor and reduces NAD+ or NADP.',
                     children => [qw(GO:0004022 GO:0016509 GO:0004471 GO:0004473 GO:0050491 GO:0050492)],
                   },
   'GO:0016509' => { id => 'GO:0016509',
@@ -115,6 +118,7 @@ sub web_service_lookup
   my $search_string = shift || $c->req()->param('term');
 
   my $max_results = $c->req()->param('max_results') || 10;
+  my $include_definition = $c->req()->param('def');
 
   my @ret = ();
 
@@ -122,8 +126,11 @@ sub web_service_lookup
     my $term = $terms_by_id{$key};
 
     if ($key =~ /$search_string/i || $term->{name} =~ /$search_string/i) {
-      push @ret, { match => $term->{name} . ' (' . $term->{id} . ')',
-                   description => '(some description of ' . $term->{id} . ')'  };
+      if ($include_definition) {
+        push @ret, $term;
+      } else {
+        push @ret, { id => $term->{id}, name => $term->{name} };
+      }
 
       if (@ret >= $max_results) {
         last;

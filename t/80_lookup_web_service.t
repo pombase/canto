@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use PomCur::TestUtil;
 
@@ -13,11 +13,24 @@ my $config = $test_util->config();
 my $lookup = PomCur::Track::get_lookup($config, 'go');
 
 
+my $test_string = 'GO:00040';
+
 package MockRequest;
 
 sub param
 {
-  return 'GO:000';
+  my $self = shift;
+  my $arg = shift;
+
+  if ($arg eq 'term') {
+    return $test_string;
+  } else {
+    if ($arg eq 'max_results') {
+      return 5;
+    } else {
+      die "got $arg";
+    }
+  }
 }
 
 
@@ -36,3 +49,8 @@ my $c = bless {}, 'MockCatalyst';
 my $results = $lookup->web_service_lookup($c, 'component', 'term');
 
 ok(defined $results);
+
+ok(grep { $_->{id} eq 'GO:0004022' &&
+          $_->{name} eq 'alcohol dehydrogenase (NAD) activity' &&
+          defined $_->{definition} &&
+          $_->{definition} =~ /Catalysis of the reaction:/i } @$results);

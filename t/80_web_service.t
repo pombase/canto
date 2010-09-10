@@ -31,7 +31,8 @@ test_psgi $app, sub {
     my $json_any = JSON::Any->new();
     my $obj = $json_any->jsonToObj($res->content());
 
-    ok(grep { $_->{match} =~ /$search_term/ } @$obj);
+    ok(grep { $_->{id} =~ /$search_term/ } @$obj);
+    ok(grep { $_->{name} =~ /glycerol-1-phosphate dehydrogenase/ } @$obj);
   }
 };
 

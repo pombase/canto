@@ -21,18 +21,18 @@ $(function() {
     minLength: 2,
     source: ontology_complete_url,
     focus: function(event, ui) {
-      $('#ontology-term-entry').val(ui.item.match);
+      $('#ontology-term-entry').val(ui.item.name);
       return false;
     },
     select: function(event, ui) {
-      $('#ontology-term-entry').val(ui.item.match);
+      $('#ontology-term-entry').val(ui.item.name);
       return false;
     }
   })
   .data( "autocomplete" )._renderItem = function( ul, item ) {
     return $( "<li></li>" )
       .data( "item.autocomplete", item )
-      .append( "<a>" + item.match + "<br>" + item.description + "</a>" )
+      .append( "<a>" + item.id + "<br>" + item.name + "</a>" )
       .appendTo( ul );
   };
 });
