@@ -47,7 +47,8 @@ test_psgi $app, sub {
   my $cb = shift;
 
   {
-    my $url = 'http://localhost:5000/ws/lookup/go/component/term/10/?term=GO:0050';
+    my $search_term = 'GO:0050';
+    my $url = "http://localhost:5000/ws/lookup/go/component/term/10/?term=$search_term";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
@@ -57,6 +58,8 @@ test_psgi $app, sub {
 
     my $json_any = JSON::Any->new();
     my $obj = $json_any->jsonToObj($res->content());
+
+    ok(grep { $_->{match} =~ /$search_term/ } @$obj);
   }
 };
 

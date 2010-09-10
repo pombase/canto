@@ -112,15 +112,25 @@ sub web_service_lookup
   my $c = shift;
   my $ontology_name = shift;
   my $search_type = shift;
-  my $search_string = shift;
+  my $max_results = shift || 10;
+  my $search_string = shift || $c->req()->param('term');
 
-  my $term = $terms_by_id{$search_string};
+  my @ret = ();
 
-  if (defined $term) {
-    return [ { match => $term->{name} . ' (' . $term->{id} . ')' } ];
-  } else {
-    return [ ];
+  for my $key (keys %terms_by_id) {
+    my $term = $terms_by_id{$key};
+
+    if ($key =~ /$search_string/i || $term->{name} =~ /$search_string/i) {
+      push @ret, { match => $term->{name} . ' (' . $term->{id} . ')',
+                   description => '(some description of ' . $term->{id} . ')'  };
+
+      if (@ret >= $max_results) {
+        last;
+      }
+    }
   }
+
+  return \@ret;
 }
 
 1;
