@@ -4,6 +4,12 @@ $curs_root_path
 $current_gene => undef
 </%args>
 
+<script language="javascript" type="text/javascript">
+var curs_root_path = '<% $curs_root_path %>';
+var application_root = '<% $c->uri_for('/') %>';
+</script>
+
+
 <div class="curs-content">
 
 % if ($show_gene_list) {

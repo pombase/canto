@@ -1,11 +1,6 @@
 <%args>
 $annotation_helper
 </%args>
-GO component stuff for <% $annotation_helper %>
-
-<script type="text/javascript">
-  ontology_complete_url = '<% $c->uri_for("/ws/lookup/go/component/term/10/") %>';
-</script>
 
 <form action="" method="post">
   <div class="text label">
