@@ -511,7 +511,7 @@ sub annotation_dispatch : Private
 
   my $module_display_name =
     PomCur::Curs::Util::module_display_name($annotation_type_name);
-  $st->{title} = 'Module: ' . $module_display_name;
+  $st->{title} = $module_display_name;
   $st->{current_component} = $annotation_type_name;
   $st->{template} = "curs/modules/$annotation_type_name.mhtml";
 
