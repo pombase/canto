@@ -399,6 +399,10 @@ div.clearall {
   width: 49%;
 }
 
+#ontology-term-entry {
+  width: 100%;
+}
+
 #ontology-term-definition {
   clear: left;
   float: left;
