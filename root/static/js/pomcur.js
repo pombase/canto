@@ -23,10 +23,9 @@ $(function() {
     var children = data[0].children;
     var children_html = '';
 
-    for (var i = 0; i < children.length; i++) {
-      var child = children[i];
+    $.each(children, function(idx, child) {
       children_html += '<li>' + child.name + ' (' + child.id + ')</li>';
-    }
+    });
 
     $('#ontology-term-children').html($('<ul/>').append($(children_html)));
   }
