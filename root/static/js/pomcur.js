@@ -49,7 +49,7 @@ var pomcur = {
 };
 
 
-$(function() {
+$(document).ready(function() {
   $( "#ontology-term-entry" ).autocomplete({
     minLength: 2,
     source: pomcur.ontology_complete_url + '/term',
