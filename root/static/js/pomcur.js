@@ -19,8 +19,16 @@ $(function() {
 
   var use_term_data = function(data) {
     $('#ontology-term-definition').text(data[0].definition);
-// do something with the children:
-//    $('#ontology-term-children').text(data[0].children[0].id);
+
+    var children = data[0].children;
+    var children_html = '';
+
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i];
+      children_html += '<li>' + child.name + ' (' + child.id + ')</li>';
+    }
+
+    $('#ontology-term-children').html($('<ul/>').append($(children_html)));
   }
 
   var term_selected = function() {
@@ -33,7 +41,12 @@ $(function() {
         success: use_term_data
       });
     }
-  }
+  };
+
+  var set_term = function(term) {
+    $('#ontology-term-id').val(term.id);
+    $('#ontology-term-entry').val(term.name);
+  };
 
   $( "#ontology-term-entry" ).autocomplete({
     minLength: 2,
@@ -43,8 +56,7 @@ $(function() {
       return false;
     },
     select: function(event, ui) {
-      $('#ontology-term-id').val(ui.item.id);
-      $('#ontology-term-entry').val(ui.item.name);
+      set_term(ui.item);
       return false;
     },
     close: term_selected
