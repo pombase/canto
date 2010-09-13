@@ -35,6 +35,7 @@ requires 'Data::Compare';
 requires 'IO::All';
 requires 'Test::Exception';
 requires 'JSON::Any';
+requires 'HTML::Mason';
 
 requires 'parent';
 requires 'Config::General';
