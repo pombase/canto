@@ -104,19 +104,14 @@ for my $go_id (keys %terms_by_id) {
  Function: Return matching ontology terms
  Args    : $c - the Catalyst object
            $ontology_name - the ontology to search
-           $search_type - one of "term", meaning search for matching terms
-                          or "children", meaning return child term
            $search_string - the text to use when searching
  Returns : for search_type "term", returns [ { match => 'description ...' }, ...
-           for "children", returns [ { id => 'GO:0050492', name => '...'},
-                                     { id => 'GO:0004473', name => '...'}, ... ]
 =cut
 sub web_service_lookup
 {
   my $self = shift;
   my $c = shift;
   my $ontology_name = shift;
-  my $search_type = shift;
   my $search_string = shift || $c->req()->param('term');
 
   my $max_results = $c->req()->param('max_results') || 10;

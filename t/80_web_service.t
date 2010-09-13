@@ -20,7 +20,7 @@ test_psgi $app, sub {
 
   {
     my $search_term = 'GO:005049';
-    my $url = "http://localhost:5000/ws/lookup/go/component/term/?term=$search_term";
+    my $url = "http://localhost:5000/ws/lookup/go/component/?term=$search_term";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 

@@ -34,7 +34,7 @@ var pomcur = {
     var term_id = $('#ontology-term-id').val();
     if (term_id) {
       $.ajax({
-        url: pomcur.ontology_complete_url + '/term',
+        url: pomcur.ontology_complete_url,
         data: { term: term_id, def: 1, children: 1 },
         dataType: 'json',
         success: pomcur.use_term_data
@@ -53,7 +53,7 @@ var pomcur = {
 $(document).ready(function() {
   $( "#ontology-term-entry" ).autocomplete({
     minLength: 2,
-    source: pomcur.ontology_complete_url + '/term',
+    source: pomcur.ontology_complete_url,
     focus: function(event, ui) {
       $('#ontology-term-entry').val(ui.item.name);
       return false;
