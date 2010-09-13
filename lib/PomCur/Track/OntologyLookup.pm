@@ -136,14 +136,18 @@ sub web_service_lookup
       if (!$include_definition) {
         delete $ret_term{definition};
       }
+
       if ($include_children) {
+        my @children = ();
+
         if (defined $term->{children}) {
           for my $child_id (@{$term->{children}}) {
             my $child = $terms_by_id{$child_id};
-
-            push @{$ret_term{children}}, $child;
+            push @children, $child;
           }
         }
+
+        @{$ret_term{children}} = @children;
       }
 
       push @ret, \%ret_term;
