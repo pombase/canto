@@ -142,7 +142,7 @@ if ($pid) {
   "pid: $pid\nport: $port\n" > io("$run_dir/$app_name");
   print "started server with pid: $pid on port: $port\n";
 } else {
-  exec "/home/kmr44/cur/$start_script", "--port", $port;
+  exec "./$start_script", "--port", $port;
 }
 
 my $apache_conf = <<"CONF";
