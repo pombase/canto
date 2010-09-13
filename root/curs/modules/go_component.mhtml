@@ -6,6 +6,7 @@ $annotation_helper
 <form action="" method="post">
   <div id="ontology-term-find">
   <input type="hidden" id="ontology-term-id"/>
+  <span id="ontology-term-id-display"></span>
   <textarea id="ontology-term-entry" name="ontology-term-entry"
             type="textarea" value="" cols="30" rows="4"
             placeholder="start typing ..."></textarea>

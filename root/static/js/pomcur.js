@@ -44,6 +44,7 @@ var pomcur = {
 
   set_term : function(term) {
     $('#ontology-term-id').val(term.id);
+    $('#ontology-term-id-display').text(term.id);
     $('#ontology-term-entry').val(term.name);
   }
 };
