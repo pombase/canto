@@ -10,7 +10,7 @@ $curs_root_path
   <p>Choose an action: </p>
   <ul class="annotation-start">
 % for my $annotation_type_name (@annotation_type_names) {
-%   my $action_path = $curs_root_path . '/' . $annotation_type_name;
+%   my $action_path = $curs_root_path . '/annotation/create/' . $annotation_type_name;
     <li>
       <a href="<% $action_path %>">
         <% PomCur::Curs::Util::module_display_name($annotation_type_name) %>

@@ -54,9 +54,6 @@ use constant {
   # a gene is selected, but no annotation is started
   GENE_ACTIVE => 3,
   # user has picked an annotation type
-  ANNOTATION_ACTIVE => 4,
-  # all genes have some annotatation, but user can select a gene and
-  # do some more annotation
   DONE => 5
 };
 
@@ -65,7 +62,6 @@ my %state_dispatch = (
   NEEDS_SUBMITTER, 'submitter_update',
   NEEDS_GENES, 'gene_upload',
   GENE_ACTIVE, undef,
-  ANNOTATION_ACTIVE, undef,
   DONE, 'home',
 );
 
@@ -97,8 +93,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $schema = PomCur::Curs::get_schema($c);
   $st->{schema} = $schema;
 
-  my ($state, $submitter_email,
-      $gene_count, $current_gene_id, $current_annotation_id) = _get_state($c);
+  my ($state, $submitter_email, $gene_count, $current_gene_id) = _get_state($c);
   $st->{state} = $state;
 
   $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
@@ -116,17 +111,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $st->{current_gene_id} = $current_gene_id;
     $st->{current_gene} = $schema->find_with_type('Gene', $current_gene_id);
   }
-  if ($state == ANNOTATION_ACTIVE) {
-    $st->{current_annotation_id} = $current_annotation_id;
-    my $current_annotation =
-      $schema->find_with_type('Annotation', $current_annotation_id);
-    $st->{current_annotation} = $current_annotation;
-    my $current_gene_id = $current_annotation->data()->{gene_id};
-    $st->{current_gene_id} = $current_gene_id;
-    $st->{current_gene} = $schema->find_with_type('Gene', $current_gene_id);
-
-    $st->{current_annotation_type} = $current_annotation->type();
-  }
 
   $st->{gene_count} = _get_gene_resultset($schema)->count();
 
@@ -134,13 +118,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
       $c->detach($dispatch_dest);
-    } else {
-      if ($current_annotation_id) {
-        # choose a module based by looking in the current annotation
-        my $current_annotation =
-          $schema->resultset('Annotation')->find($current_annotation_id);
-        $c->detach('annotation_dispatch', [$current_annotation->type()]);
-      }
     }
   }
 }
@@ -157,7 +134,6 @@ sub _get_state
   my $submitter_email = get_metadata($schema, 'submitter_email');
 
   my $state = undef;
-  my $current_annotation_id = undef;
   my $current_gene_id = undef;
   my $gene_count = undef;
 
@@ -166,22 +142,12 @@ sub _get_state
     $gene_count = $gene_rs->count();
 
     if ($gene_count > 0) {
-      $current_annotation_id = get_metadata($schema, 'current_annotation_id');
       $current_gene_id = get_metadata($schema, 'current_gene_id');
 
       if (defined $current_gene_id) {
-        if (defined $current_annotation_id) {
-          die 'internal error - ' .
-            'current_gene_id and current_annotation_id are both set';
-        } else {
           $state = GENE_ACTIVE;
-        }
       } else {
-        if (defined $current_annotation_id) {
-          $state = ANNOTATION_ACTIVE;
-        } else {
-          $state = DONE;
-        }
+        $state = DONE;
       }
     } else {
       $state = NEEDS_GENES;
@@ -190,33 +156,26 @@ sub _get_state
     $state = NEEDS_SUBMITTER;
   }
 
-  return ($state, $submitter_email, $gene_count,
-          $current_gene_id, $current_annotation_id);
+  return ($state, $submitter_email, $gene_count, $current_gene_id);
 }
 
 sub _set_new_gene
 {
-  my $c = shift;
-  my $schema = $c->stash->{schema};
+  my $schema = shift;
 
   my $gene_rs = _get_gene_resultset($schema);
   my $first_gene = $gene_rs->first();
 
-  if (defined get_metadata($schema, 'current_gene_id') ||
-      defined get_metadata($schema, 'current_annotation_id')) {
-    die 'internal error - ' .
-      'current_gene_id and current_annotation_id are both set';
-  }
-
   set_metadata($schema, 'current_gene_id', $first_gene->gene_id());
-  $c->stash()->{state} = GENE_ACTIVE;
 }
 
-sub _redirect_home_and_detach
+sub _redirect_and_detach
 {
-  my ($self, $c) = @_;
+  my ($c, @path_components) = @_;
 
-  $c->res->redirect($c->stash->{curs_root_path});
+  my $target = $c->stash->{curs_root_path} . join ('/', @path_components);
+
+  $c->res->redirect($target);
   $c->detach();
 }
 
@@ -289,7 +248,7 @@ sub submitter_update : Private
 
     $schema->txn_do($add_submitter);
 
-    $self->_redirect_home_and_detach($c);
+    _redirect_and_detach($c);
   }
 }
 
@@ -421,7 +380,7 @@ sub gene_upload : Chained('top') Args(0) Form
 
   if ($form->submitted()) {
     if (defined $c->req->param('cancel')) {
-      $self->_redirect_home_and_detach($c);
+      _redirect_and_detach($c);
     }
   }
 
@@ -438,10 +397,12 @@ sub gene_upload : Chained('top') Args(0) Form
       $st->{gene_upload_unknown} = [@missing];
     } else {
       my $state = $st->{state};
-      if ($state ne GENE_ACTIVE && $state ne ANNOTATION_ACTIVE) {
+      if ($state ne GENE_ACTIVE) {
         _set_new_gene($c);
+        $c->stash()->{state} = GENE_ACTIVE;
       }
-      $self->_redirect_home_and_detach($c);
+
+      _redirect_and_detach($c);
     }
   }
 }
@@ -475,39 +436,43 @@ sub _get_annotation_helper
 
 }
 
-sub annotation_choose : Chained('top') PathPart('') Args(1)
+sub annotation_create : Chained('top') PathPart('annotation/create') Args(1)
 {
   my ($self, $c, $annotation_type_name) = @_;
 
-  my $schema = $c->stash()->{schema};
+  my $st = $c->stash();
+  my $schema = $st->{schema};
 
-  my $process = sub {
-    my $current_gene_id = $c->stash()->{current_gene_id};
-    my $annotation =
-      $schema->create_with_type('Annotation', { type => $annotation_type_name,
-                                                status => 'new',
-                                                data => {
-                                                  gene_id => $current_gene_id
-                                                }
-                                              });
+  my $guard = $schema->txn_scope_guard;
 
-    set_metadata($schema, 'current_annotation_id',
-                  $annotation->annotation_id());
-    # the gene is stored in the annotation, so unset
-    set_metadata($schema, 'current_gene_id', undef);
-  };
+  my $current_gene_id = $c->stash()->{current_gene_id};
+  my $annotation =
+    $schema->create_with_type('Annotation', { type => $annotation_type_name,
+                                              status => 'new',
+                                              data => {
+                                                gene_id => $current_gene_id
+                                              }
+                                            });
 
-  $schema->txn_do($process);
+  $guard->commit();
 
-  $c->dispatch('annotation_dispatch', $annotation_type_name);
+  my $annotation_id = $annotation->annotation_id();
+
+  _redirect_and_detach($c, '/annotation', 'edit', $annotation_id);
+  $c->detach();
 }
 
-sub annotation_dispatch : Private
+sub annotation_edit : Chained('top') PathPart('annotation/edit') Arg(1)
 {
-  my ($self, $c, $annotation_type_name) = @_;
+  my ($self, $c, $annotation_id) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+
+  my $annotation_type_name = $annotation->type();
 
   my $module_display_name =
     PomCur::Curs::Util::module_display_name($annotation_type_name);
