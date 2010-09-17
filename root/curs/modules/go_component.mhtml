@@ -11,8 +11,8 @@ $annotation_helper
             type="textarea" value="" cols="30" rows="4"
             placeholder="start typing ..."></textarea>
   </div>
-  <div id="ontology-term-children">(children)</div>
-  <div id="ontology-term-definition">(definition)</div>
+  <div id="ontology-term-children"></div>
+  <div id="ontology-term-definition"></div>
   <div class="submit">
     <input name="submit" type="submit" value="Submit" class="button" />
   </div>
