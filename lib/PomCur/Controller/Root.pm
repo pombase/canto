@@ -142,6 +142,39 @@ sub logout : Global {
 }
 
 
+=head2
+
+ Usage   : Called by Catalyst
+ Function: Create a new curation session for testing, then redirect to a page
+           that links to it
+
+=cut
+sub test_curs :Global :Args(0) {
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = "Link to new test curation session";
+  $st->{template} = 'view_curs_test.mhtml';
+
+  my $schema = $c->schema('manage');
+  my $config = $c->config();
+
+  my $pub = $schema->resultset('Pub')->first();
+  my $curs_key = PomCur::Curs::make_curs_key();
+  my $person = $schema->resultset('Person')->first();
+  my $curs = $schema->create_with_type('Curs',
+                                       {
+                                         pub => $pub,
+                                         community_curator => $person,
+                                         curs_key => $curs_key,
+                                       });
+
+  my $curs_schema = PomCur::Track::create_curs_db($config, $curs);
+
+  $st->{curs_key} = $curs_key;
+}
+
 
 =head1 LICENSE
 
