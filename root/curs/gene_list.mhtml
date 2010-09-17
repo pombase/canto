@@ -39,15 +39,14 @@ $title => 'Genes'
   </div>
 % }
 
-%   if (!$big_list) {
-
-  <div class="edit">
-    <a href="<% $edit_path %>">Edit ...</a>
+% if ($big_list) {
+<a href="<% $upload_path %>">Upload ...</a>
+% } else {
+  <div class="view-edit">
+    <a href="<% $edit_path %>">View or edit ...</a>
   </div>
-
 % }
 
-<a href="<% $upload_path %>">Upload ...</a>
 
 
 </div>
