@@ -149,8 +149,8 @@ sub logout : Global {
            that links to it
 
 =cut
-sub test_curs :Global :Args(0) {
-  my ($self, $c) = @_;
+sub test_curs :Global {
+  my ($self, $c, $arg) = @_;
 
   my $st = $c->stash();
 
@@ -173,6 +173,28 @@ sub test_curs :Global :Args(0) {
   my $curs_schema = PomCur::Track::create_curs_db($config, $curs);
 
   $st->{curs_key} = $curs_key;
+
+  if (defined $arg) {
+    if ($arg >= 1) {
+      $curs_schema->create_with_type('Metadata', { key => 'submitter_email',
+                                                   value => 'test@test.com' });
+
+      $curs_schema->create_with_type('Metadata', { key => 'submitter_name',
+                                                   value => 'Dr T. Tester' });
+    }
+    if ($arg >= 2) {
+      my $gene = $schema->resultset('Gene')->first();
+
+      my $gene_identifier = $gene->primary_identifier();
+      use PomCur::Controller::Curs;
+      PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
+                                                       [$gene_identifier]);
+      my $gene_rs = PomCur::Controller::Curs::_get_gene_resultset($curs_schema);
+      my $first_curs_gene = $gene_rs->first();
+
+      PomCur::Controller::Curs::_set_new_gene($curs_schema);
+    }
+  }
 }
 
 
