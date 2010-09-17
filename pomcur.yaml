@@ -141,3 +141,6 @@ annotation_types:
         - component
   phenotype:
     class: 'PomCur::CurModules::PhenotypeModule'
+#  post_translational_modifications:
+#  genetic_interactions:
+#  physical_interactions:
