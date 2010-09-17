@@ -25,7 +25,9 @@ $title => 'Genes'
     <tr>
 %     for my $col_name (@col_names) {
       <td>
-        <% $gene->{$col_name} %>
+        <a href="<% $start_path . '/set_current_gene/' .$gene->{gene_id} %>">
+          <% $gene->{$col_name} %>
+        </a>
       </td>
 %     }
     </tr>
@@ -64,6 +66,7 @@ my @gene_hashes = map {
        primary_name => $_->primary_name(),
        product => $_->product(),
        identifier => $_->primary_name() || $_->primary_identifier(),
+       gene_id => $_->gene_id(),
      }
    } @all_genes;
 

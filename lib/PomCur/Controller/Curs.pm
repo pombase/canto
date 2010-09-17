@@ -485,6 +485,17 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Arg(1)
   $st->{annotation_helper} = $annotation_helper;
 }
 
+sub set_current_gene : Chained('top') Args(1)
+{
+  my ($self, $c, $gene_id) = @_;
+
+  my $schema = $c->stash()->{schema};
+
+  set_metadata($schema, 'current_gene_id', $gene_id);
+
+  _redirect_and_detach($c);
+}
+
 sub _get_gene_resultset
 {
   my $schema = shift;
