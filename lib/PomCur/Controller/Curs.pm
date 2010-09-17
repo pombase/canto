@@ -398,7 +398,7 @@ sub gene_upload : Chained('top') Args(0) Form
     } else {
       my $state = $st->{state};
       if ($state ne GENE_ACTIVE) {
-        _set_new_gene($c);
+        _set_new_gene($schema);
         $c->stash()->{state} = GENE_ACTIVE;
       }
 
