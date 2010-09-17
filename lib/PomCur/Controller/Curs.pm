@@ -462,7 +462,7 @@ sub annotation_create : Chained('top') PathPart('annotation/create') Args(1)
   $c->detach();
 }
 
-sub annotation_edit : Chained('top') PathPart('annotation/edit') Arg(1)
+sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;
 
