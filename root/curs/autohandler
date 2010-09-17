@@ -16,7 +16,7 @@ var application_root = '<% $c->uri_for('/') %>';
   <& gene_list.mhtml &>
 %   if (defined $gene_long_display_name) {
   <p>Current gene: <span class="current-gene"> <% $gene_long_display_name %> </span> </p>
-% }
+%   }
 % }
 
 % $m->call_next;
