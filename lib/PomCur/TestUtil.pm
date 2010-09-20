@@ -102,37 +102,15 @@ sub init_test
 
   my $test_config = LoadFile($test_config_file_name)->{test_config};
 
-  my $scratch_dir =
-    "$root_dir/" . $test_config->{scratch_dir};
-
   my $app_name = lc PomCur::Config::get_application_name();
 
   my $config = PomCur::Config->new("$root_dir/$app_name.yaml",
                                    $test_config_file_name);
 
+  my $temp_dir = temp_dir();
 
   if (!exists $test_config->{test_cases}->{$test_env_type}) {
     die "no test case configured for '$test_env_type'\n";
-  }
-
-  remove_tree($scratch_dir, { error => \my $rm_err } );
-
-  if (@$rm_err) {
-    for my $diag (@$rm_err) {
-      my ($file, $message) = %$diag;
-      warn "error: $message\n";
-    }
-    exit (1);
-  }
-
-  make_path ($scratch_dir, { error => \my $mk_err });
-
-  if (@$mk_err) {
-    for my $diag (@$mk_err) {
-      my ($file, $message) = %$diag;
-      warn "error: $message\n";
-    }
-    exit (1);
   }
 
   $self->{config} = $config;
@@ -150,7 +128,7 @@ sub init_test
   my $cwd = getcwd();
   chdir ($root_dir);
   eval {
-    PomCur::Meta::Util::initialise_app($config, $scratch_dir, 'test');
+    PomCur::Meta::Util::initialise_app($config, $temp_dir, 'test');
   };
   chdir $cwd;
   if ($@) {
@@ -166,6 +144,7 @@ sub init_test
   my $db_file_name = connect_string_file_name($connect_string);
   my $test_case_def = $test_config->{test_cases}->{$test_env_type};
 
+  # copy the curs databases too
   if ($test_env_type ne 'empty_db') {
     my @test_case_curs_confs = @$test_case_def;
 
@@ -173,7 +152,7 @@ sub init_test
       my $curs_key = curs_key_of_test_case($test_case_curs_conf);
       my $db_file_name = PomCur::Curs::make_db_file_name($curs_key);
 
-      copy "$data_dir/$db_file_name", $scratch_dir or die "$!";
+      copy "$data_dir/$db_file_name", $temp_dir or die "$!";
     }
   }
 
@@ -242,11 +221,18 @@ sub track_schema
   return $self->{track_schema};
 }
 
+=head2 temp_dir
+
+ Usage   : my $temp_dir_name = PomCur::TestUtil::temp_dir()
+ Function: Create a temporary directory for this test
+ Args    : None
+
+=cut
 sub temp_dir
 {
-  (my $test_name = $0) =~ s:.*/(.*)\.t:$1:;
+  (my $test_name = $0) =~ s!.*/(.*)(?:\.t)?!$1!;
 
-  return tempdir("/tmp/pomcur_test_${test_name}_$$.XXXXX", CLEANUP => 0);;
+  return tempdir("/tmp/pomcur_test_${test_name}_$$.XXXXX", CLEANUP => 1);
 }
 
 sub _check_dir
