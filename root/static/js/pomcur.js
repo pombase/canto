@@ -67,7 +67,7 @@ $(document).ready(function() {
   .data( "autocomplete" )._renderItem = function( ul, item ) {
     return $( "<li></li>" )
       .data( "item.autocomplete", item )
-      .append( "<a>" + item.id + "<br>" + item.name + "</a>" )
+      .append( "<a>" + item.name + " <span style='color: #666'>(" + item.id + "</span>)</a>" )
       .appendTo( ul );
   };
 });
