@@ -5,21 +5,7 @@ $form
 
 <div class="gene-update">
   <% $form %>
-
-% if (0 && @unknown_identifiers) {
-  <div class="unknown_identifiers">
-    
-%   for my $identifier (@unknown_identifiers) {
-    <span> <% $identifier %> </span>
-%   }
-  </div>
-% }
 </div>
 
 <%init>
-my @unknown_identifiers = ();
-
-if ($gene_upload_unknown) {
-  @unknown_identifiers = @{$gene_upload_unknown};
-}
 </%init>
