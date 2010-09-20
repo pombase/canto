@@ -214,9 +214,17 @@ sub list : Local
           push @order_by_fields, $class_info->{display_field};
         }
       }
+
       if (@order_by_fields) {
         my $field_infos = $class_info->{field_infos};
-        $order_by = [map { $field_infos->{$_}->{source} } @order_by_fields];
+        $order_by = [map {
+          my $source = $field_infos->{$_}->{source};
+          if (defined $source) {
+            $source;
+          } else {
+            $_;
+          }
+        } @order_by_fields];
       }
     }
 

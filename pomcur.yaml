@@ -88,8 +88,9 @@ class_info:
     class_display_name: publication
     display_field: title
     editable: 1
+    order_by: "CAST(pubmedid AS integer)"
     field_info_list:
-      - name: Pubmed ID
+      - name: 'PubMed ID'
         source: pubmedid
         editable: 1
       - name: title
