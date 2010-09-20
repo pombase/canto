@@ -37,7 +37,7 @@ $title => 'Genes'
 % }
 
 % if ($big_list) {
-<a href="<% $upload_path %>">Upload addition genes ...</a>
+<a href="<% $upload_path %>">Upload additional genes ...</a>
 % } else {
   <div class="view-edit">
     <a href="<% $edit_path %>">View or edit ...</a>
