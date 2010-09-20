@@ -176,6 +176,10 @@ sub _redirect_and_detach
 {
   my ($c, @path_components) = @_;
 
+  if (@path_components) {
+    unshift @path_components, '';
+  }
+
   my $target = $c->stash->{curs_root_path} . join ('/', @path_components);
 
   $c->res->redirect($target);
@@ -383,7 +387,7 @@ sub gene_upload : Chained('top') Args(0) Form
 
   if ($form->submitted()) {
     if (defined $c->req->param('cancel')) {
-      _redirect_and_detach($c);
+      _redirect_and_detach($c, 'edit_genes');
     }
   }
 
@@ -405,7 +409,7 @@ sub gene_upload : Chained('top') Args(0) Form
         $c->stash()->{state} = GENE_ACTIVE;
       }
 
-      _redirect_and_detach($c);
+      _redirect_and_detach($c, 'edit_genes');
     }
   }
 }

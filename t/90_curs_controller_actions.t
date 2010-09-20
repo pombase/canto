@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use Data::Compare;
 
@@ -94,12 +94,13 @@ test_psgi $app, sub {
 
     my $redirect_url = $res->header('location');
 
-    is ($redirect_url, "$root_url");
+    is ($redirect_url, "$root_url/edit_genes");
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/Current gene: .*cdc11/);
+    like ($redirect_res->content(), qr/Gene list/);
+    like ($redirect_res->content(), qr/cdc11/);
   }
 
   # FIXME Test gene update
