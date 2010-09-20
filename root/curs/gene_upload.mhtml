@@ -3,9 +3,21 @@ $gene_upload_unknown => undef
 $form
 </%args>
 
-<div class="gene-update">
+<div>
+Please enter the systematic Identifier (eg. <% $example_identifier %>)
+or the primary identifier (eg. <% $example_name %>) of the genes
+referred to in PMID:<% $pubmedid %>
+</div>
+
+<div id="gene-update">
   <% $form %>
 </div>
 
 <%init>
+my $example_identifier =
+  $c->config()->{messages}->{gene_upload}->{examples}->{gene_identifier};
+my $example_name =
+  $c->config()->{messages}->{gene_upload}->{examples}->{gene_name};
+
+my $pubmedid = $c->stash()->{pub}->pubmedid();
 </%init>

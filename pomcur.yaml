@@ -144,3 +144,9 @@ annotation_types:
 #  post_translational_modifications:
 #  genetic_interactions:
 #  physical_interactions:
+
+messages:
+  gene_upload:
+    examples:
+      gene_identifier: 'SPBC11B10.09'
+      gene_name: 'cdc11'

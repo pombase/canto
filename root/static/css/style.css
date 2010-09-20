@@ -428,3 +428,7 @@ div.clearall {
   min-height: 10em;
   font-size: 80%;
 }
+
+#gene-update {
+  padding-top: 15px;
+}
