@@ -7,13 +7,13 @@ $curs_root_path
 % if ($state eq 'done') {
   <p>All genes annotated</p>
 % } else {
-  <p>Choose an action: </p>
+  <p>Choose annotation type: </p>
   <ul class="annotation-start">
-% for my $annotation_type_name (@annotation_type_names) {
+% while(my ($annotation_type_name, $annotation_type) = each %annotation_types) {
 %   my $action_path = $curs_root_path . '/annotation/create/' . $annotation_type_name;
     <li>
       <a href="<% $action_path %>">
-        <% PomCur::Curs::Util::module_display_name($annotation_type_name) %>
+        <% $annotation_type->{display_name} %>
       </a>
     </li>
 % }
@@ -22,7 +22,5 @@ $curs_root_path
 
 
 <%init>
-use PomCur::Curs::Util;
-
-my @annotation_type_names = @{$c->stash()->{annotation_type_names}};
+my %annotation_types = %{$c->stash()->{annotation_types}};
 </%init>

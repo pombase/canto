@@ -42,7 +42,6 @@ use Moose;
 
 with 'PomCur::Role::MetadataAccess';
 
-use PomCur::Curs::Util;
 use PomCur::Track;
 
 use constant {
@@ -88,7 +87,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $config = $c->config();
   my %annotation_types = %{$config->{annotation_types}};
 
-  @{$st->{annotation_type_names}} = keys %annotation_types;
+  $st->{annotation_types} = { %annotation_types };
 
   my $schema = PomCur::Curs::get_schema($c);
   $st->{schema} = $schema;
@@ -471,11 +470,11 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1)
   my $schema = $st->{schema};
 
   my $annotation = $schema->find_with_type('Annotation', $annotation_id);
-
   my $annotation_type_name = $annotation->type();
 
-  my $module_display_name =
-    PomCur::Curs::Util::module_display_name($annotation_type_name);
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $module_display_name = $annotation_config->{display_name};
   $st->{title} = $module_display_name;
   $st->{current_component} = $annotation_type_name;
   $st->{template} = "curs/modules/$annotation_type_name.mhtml";

@@ -129,17 +129,20 @@ implementation_classes:
 # page based on the module name, eg. go_function.html
 annotation_types:
   go_function:
+    display_name: 'GO molecular functions and biological processes'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - function
         - process
   go_component:
+    display_name: 'GO cellular components or complexes'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - component
   phenotype:
+    display_name: Phenotypes
     class: 'PomCur::CurModules::PhenotypeModule'
 #  post_translational_modifications:
 #  genetic_interactions:
