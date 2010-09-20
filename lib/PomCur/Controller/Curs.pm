@@ -465,7 +465,7 @@ sub annotation_create : Chained('top') PathPart('annotation/create') Args(1)
 
   my $annotation_id = $annotation->annotation_id();
 
-  _redirect_and_detach($c, '/annotation', 'edit', $annotation_id);
+  _redirect_and_detach($c, 'annotation', 'edit', $annotation_id);
   $c->detach();
 }
 
