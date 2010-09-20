@@ -104,8 +104,6 @@ sub init_test
 
   my $scratch_dir =
     "$root_dir/" . $test_config->{scratch_dir};
-  my $tracking_scratch_dir =
-    "$root_dir/" . $test_config->{tracking_scratch};
 
   my $app_name = lc PomCur::Config::get_application_name();
 
@@ -127,7 +125,7 @@ sub init_test
     exit (1);
   }
 
-  make_path ($tracking_scratch_dir, { error => \my $mk_err });
+  make_path ($scratch_dir, { error => \my $mk_err });
 
   if (@$mk_err) {
     for my $diag (@$mk_err) {
@@ -152,8 +150,7 @@ sub init_test
   my $cwd = getcwd();
   chdir ($root_dir);
   eval {
-    PomCur::Meta::Util::initialise_app($config, $tracking_scratch_dir,
-                                       'test');
+    PomCur::Meta::Util::initialise_app($config, $scratch_dir, 'test');
   };
   chdir $cwd;
   if ($@) {
@@ -176,7 +173,7 @@ sub init_test
       my $curs_key = curs_key_of_test_case($test_case_curs_conf);
       my $db_file_name = PomCur::Curs::make_db_file_name($curs_key);
 
-      copy "$data_dir/$db_file_name", $tracking_scratch_dir or die "$!";
+      copy "$data_dir/$db_file_name", $scratch_dir or die "$!";
     }
   }
 
