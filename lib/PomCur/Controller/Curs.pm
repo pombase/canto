@@ -108,7 +108,11 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   if ($state == GENE_ACTIVE) {
     $st->{current_gene_id} = $current_gene_id;
-    $st->{current_gene} = $schema->find_with_type('Gene', $current_gene_id);
+    my $current_gene = $schema->find_with_type('Gene', $current_gene_id);
+    $st->{current_gene} = $current_gene;
+
+    my $gene_long_display_name = $current_gene->long_display_name();
+    $st->{gene_long_display_name} = $gene_long_display_name;
   }
 
   $st->{gene_count} = _get_gene_resultset($schema)->count();

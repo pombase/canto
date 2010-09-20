@@ -2,6 +2,7 @@
 $state
 $curs_root_path
 $current_gene => undef
+$gene_long_display_name => undef
 </%args>
 
 <script language="javascript" type="text/javascript">
@@ -40,10 +41,5 @@ if ($state > PomCur::Controller::Curs::NEEDS_GENES) {
   if ($path !~ /gene_upload|edit_genes/) {
     $show_gene_list = 1;
   }
-}
-
-my $gene_long_display_name = undef;
-if (defined $current_gene) {
-  $gene_long_display_name = $current_gene->long_display_name();
 }
 </%init>
