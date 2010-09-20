@@ -8,14 +8,13 @@ use PomCur::TrackDB;
 
 my $test_util = PomCur::TestUtil->new();
 
-my @config_file_names =
-  ($test_util->root_dir() . '/pomcur_test.yaml',
-   $test_util->root_dir() . '/t/data/50_config_1.yaml');
+$test_util->init_test();
 
 my $lc_app_name = lc PomCur::Config::get_application_name();
 my $uc_app_name = uc $lc_app_name;
 
-my $config = PomCur::Config->new(@config_file_names);
+my $config = $test_util->config();
+$config->merge_config($test_util->root_dir() . '/t/data/50_config_1.yaml');
 
 my $mock_c = { };
 
