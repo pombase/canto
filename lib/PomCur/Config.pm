@@ -87,6 +87,8 @@ sub merge_config
   while (my($key, $value) = each %new_config) {
     $self->{$key} = $value;
   }
+
+  $self->setup();
 }
 
 =head2 setup
