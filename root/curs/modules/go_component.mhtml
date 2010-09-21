@@ -21,7 +21,7 @@ experiment you are curating?
     <div>The term you have selected:
       <span class="term-id" id="ferret-term-id-display"></span>
     </div>
-    <div>Is defined: <span id="ferret-term-definition" class="term-definition"></span>
+    <div>Definition: <div id="ferret-term-definition" class="term-definition"></div>
     </div>
     <div id="ferret-confirm">
       Does this definition have the correct meaning for the term you require?
