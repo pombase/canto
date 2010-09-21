@@ -10,8 +10,10 @@ $annotation_helper
             type="textarea" cols="30" rows="4"
             placeholder="start typing ..."></textarea>
   <div id="ferret-term-children" style="display: none">
-    Are any of these these more specific ("child") terms more correct for your
-    gene?:
+GO annotations should always be made to the most specific term possible.
+These are the child terms of the term you have chosen.
+In this instance would any of the children be more appropriate for the
+experiment you are curating?
     <div id="ferret-term-children-list">
     </div>
   </div>
@@ -28,4 +30,3 @@ $annotation_helper
   </div>
 </form>
 </div>
-
