@@ -8,7 +8,6 @@ $annotation_helper
   <textarea id="ferret-term-entry" name="ferret-term-entry"
             type="textarea" value="" cols="30" rows="4"
             placeholder="start typing ..."></textarea>
-  </div>
   <div id="ferret-term-children"></div>
   <div id="ferret-term-details" style="display: none">
     <div>The term you have selected: 
