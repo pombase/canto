@@ -64,6 +64,7 @@ my %terms_by_id = (
                   },
   'GO:0016614' => { id => 'GO:0016614',
                     name => 'oxidoreductase activity, acting on CH-OH group of donors',
+                    definition => 'Catalysis of an oxidation-reduction (redox) reaction in which a CH-OH group act as a hydrogen or electron donor and reduces a hydrogen or electron acceptor.',
                     children => [qw(GO:0016616)],
                   },
   'GO:0016616' => { id => 'GO:0016616',
