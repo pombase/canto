@@ -469,7 +469,7 @@ sub annotation_create : Chained('top') PathPart('annotation/create') Args(1)
   $c->detach();
 }
 
-sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1)
+sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
 {
   my ($self, $c, $annotation_id) = @_;
 
@@ -490,6 +490,35 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1)
   my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
 
   $st->{annotation_helper} = $annotation_helper;
+
+  my $form = $self->form();
+
+  my @all_elements = (
+      {
+        name => 'ferret-term-id', label => 'ferret-term-id',
+        type => 'Hidden',
+      },
+      {
+        name => 'confirm', type => 'Submit', value => 'confirm',
+      },
+    );
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $term_id = $form->param_value('ferret-term-id');
+
+    my $data = $annotation->data();
+    $data->{term_id} = $term_id;
+    $annotation->data($data);
+
+    $annotation->update();
+    $c->res->body('term-selected');
+  }
 }
 
 sub set_current_gene : Chained('top') Args(1)

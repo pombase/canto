@@ -17,3 +17,4 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui<% $min_flag %>.js"></script>
 
 <script type="text/javascript" src="<% $c->uri_for('/static/js/pomcur.js') %>"></script>
+<script type="text/javascript" src="<% $c->uri_for('/static/js/jquery.form.2.47.js') %>"></script>

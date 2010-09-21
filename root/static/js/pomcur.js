@@ -73,3 +73,13 @@ $(document).ready(function() {
   };
 });
 
+$(document).ready(function() {
+  var form_success = function(responseText, statusText, xhr, $form) {
+    if (responseText == 'term-selected') {
+      $('#ferret-confirm').hide();
+      $('#ferret-term-children').show();
+    }
+    return true;
+  };
+  $('#ferret-form').ajaxForm({ success: form_success });
+});
