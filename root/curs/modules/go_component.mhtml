@@ -22,7 +22,10 @@ $annotation_helper
     <div>Is defined: <span id="ferret-term-definition" class="term-definition"></span>
     </div>
     <div id="ferret-confirm">
-      Does this definition have the correct meaning for the term you require?
+GO annotations should always be made to the most specific term possible.
+These are the child terms of the term you have chosen.
+In this instance would any of the children be more appropriate for the
+experiment you are curating?
       <input name="confirm-def" type="submit" value="Confirm" class="button" />
     </div>
   </div>
