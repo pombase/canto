@@ -499,7 +499,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
         type => 'Hidden',
       },
       {
-        name => 'confirm', type => 'Submit', value => 'confirm',
+        name => 'confirm-def', type => 'Submit', value => 'confirm',
       },
     );
 

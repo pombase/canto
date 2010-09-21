@@ -9,7 +9,12 @@ $annotation_helper
   <textarea id="ferret-term-entry" name="ferret-term-entry"
             type="textarea" cols="30" rows="4"
             placeholder="start typing ..."></textarea>
-  <div id="ferret-term-children" style="display: none"></div>
+  <div id="ferret-term-children" style="display: none">
+    Are any of these these more specific ("child") terms more correct for your
+    gene?:
+    <div id="ferret-term-children-list">
+    </div>
+  </div>
   <div id="ferret-term-details" style="display: none">
     <div>The term you have selected:
       <span class="term-id" id="ferret-term-id-display"></span>
@@ -18,7 +23,7 @@ $annotation_helper
     </div>
     <div id="ferret-confirm">
       Does this definition have the correct meaning for the term you require?
-      <input name="confirm" type="submit" value="Confirm" class="button" />
+      <input name="confirm-def" type="submit" value="Confirm" class="button" />
     </div>
   </div>
 </form>
