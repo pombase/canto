@@ -35,6 +35,8 @@ var pomcur = {
   },
 
   set_details : function(term_id) {
+    $('#ferret-confirm').show();
+    $('#ferret-term-children').hide();
     var stored_term_id = $('#ferret-term-id').val();
     if (stored_term_id != term_id) {
       $('#ferret-term-id').val(term_id);
@@ -52,8 +54,6 @@ var pomcur = {
     if (term_id) {
       pomcur.set_details(term_id);
     }
-    $('#ferret-confirm').show();
-    $('#ferret-term-children').hide();
   },
 
   set_term : function(term) {
