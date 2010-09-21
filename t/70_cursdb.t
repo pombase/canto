@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 use Data::Compare;
 
@@ -34,3 +34,16 @@ my $res_pub = $schema->find_with_type('Pub', { pubmedid => 12345678 });
 my $res = $res_pub->data();
 
 ok(Compare($res, $test_data));
+
+$res->{year} = 2525;
+
+$res_pub->data($res);
+
+$res_pub->update();
+
+my $new_res_pub = $schema->find_with_type('Pub', { pubmedid => 12345678 });
+
+my $new_data = $new_res_pub->data();
+
+ok(!Compare($new_data, $test_data));
+
