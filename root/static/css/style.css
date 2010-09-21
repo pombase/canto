@@ -402,27 +402,34 @@ div.clearall {
   font-size: 60%;
 }
 
-#ontology-term-container {
+#ferret-term-container {
   position: relative;
 }
 
-#ontology-term-find {
+#ferret-term-entry {
   float: left;
-  width: 49%;
+  width: 45%;
 }
 
-#ontology-term-entry {
-  width: 90%;
-}
-
-#ontology-term-definition {
+#ferret-term-details {
   clear: left;
   float: left;
   width: 49%;
   font-size: 80%;
 }
 
-#ontology-term-children {
+.term-id {
+  color: #000;
+  font-weight: bold;
+}
+
+.term-definition {
+  display: block;
+  font-weight: bold;
+  margin: 0px 10px 10px 10px;
+}
+
+#ferret-term-children {
   float: right;
   width: 40%;
   min-height: 10em;
