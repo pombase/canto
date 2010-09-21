@@ -24,7 +24,7 @@ var pomcur = {
     var children_html = '';
 
     $.each(children, function(idx, child) {
-      children_html += '<li>' + child.name + ' (' + child.id + ')</li>';
+      children_html += '<li><a href="#">' + child.name + ' (' + child.id + ')</a></li>';
     });
 
     $('#ferret-term-children').html($('<ul/>').append($(children_html)));
