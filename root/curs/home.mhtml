@@ -2,12 +2,13 @@
 $curs_key
 $state
 $curs_root_path
+$gene_long_display_name
 </%args>
 
 % if ($state eq 'done') {
   <p>All genes annotated</p>
 % } else {
-  <p>Choose annotation type: </p>
+<p>Choose annotation type for <span class="current-gene"><% $gene_long_display_name %></span></p>
   <ul class="annotation-start">
 % while(my ($annotation_type_name, $annotation_type) = each %annotation_types) {
 %   my $action_path = $curs_root_path . '/annotation/create/' . $annotation_type_name;
