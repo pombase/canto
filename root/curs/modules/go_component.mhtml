@@ -7,9 +7,10 @@ $annotation_helper
 <form id="ferret-form" action="" method="post">
   <input type="hidden" id="ferret-term-id"/>
   <div id="ferret-term-entry">
-    Start typing and suggestions will be made:
+    Identify GO molecular functions or biological processes
     <input id="ferret-term-input" name="ferret-term-entry"
-           type="text" size="50" placeholder="start typing ..."
+           type="text" size="50" 
+           placeholder="start typing and suggestions will be made ..."
            disabled="true"/>
   </div>
   <div id="ferret-term-children" style="display: none">
