@@ -10,14 +10,7 @@
 my $current_path = $c->req->uri()->path();
 my $home_path = undef;
 
-if ($current_path =~ m!/curs/!) {
-  my $curs_root_path = $c->stash()->{curs_root_path};
-  if ($curs_root_path !~ /$current_path$/) {
-    $home_path = $curs_root_path;
-  }
-} else {
-  if ($current_path ne '/') {
-    $home_path = $c->uri_for('/');
-  }
+if ($current_path ne '/') {
+  $home_path = $c->uri_for('/');
 }
 </%init>

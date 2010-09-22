@@ -1,1 +1,17 @@
-../breadcrumbs.mhtml
+<div id="breadcrumbs">
+% if (defined $home_path) {
+  <a href="<% $home_path %>">
+    <img src="<% $c->uri_for('/static/images/left_triangle.png') %>">Home page</a>
+% }
+</div>
+
+
+<%init>
+my $current_path = $c->req->uri()->path();
+my $home_path = undef;
+
+my $curs_root_path = $c->stash()->{curs_root_path};
+if ($curs_root_path !~ /$current_path$/) {
+  $home_path = $curs_root_path;
+}
+</%init>
