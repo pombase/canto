@@ -157,25 +157,29 @@ var pomcur = {
 
 
 $(document).ready(function() {
-  $( "#ferret-term-input" ).autocomplete({
-    minLength: 2,
-    source: pomcur.ontology_complete_url,
-    focus: function(event, ui) {
-      $('#ferret-term-input').val(ui.item.name);
-      $('#ferret-confirm').hide();
-      return false;
-    },
-    select: function(event, ui) {
-      pomcur.term_selected(ui.item.id);
-      return false;
-    }
-  })
-  .data( "autocomplete" )._renderItem = function( ul, item ) {
-    return $( "<li></li>" )
-      .data( "item.autocomplete", item )
-      .append( "<a>" + item.name + " <span class='term-id'>(" + item.id + ")</span></a>" )
-      .appendTo( ul );
-  };
+  var ferret_input = $("#ferret-term-input");
+
+  if (ferret_input.size()) {
+    ferret_input.autocomplete({
+      minLength: 2,
+      source: pomcur.ontology_complete_url,
+      focus: function(event, ui) {
+        $('#ferret-term-input').val(ui.item.name);
+        $('#ferret-confirm').hide();
+        return false;
+      },
+      select: function(event, ui) {
+        pomcur.term_selected(ui.item.id);
+        return false;
+      }
+    })
+    .data("autocomplete")._renderItem = function( ul, item ) {
+      return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append( "<a>" + item.name + " <span class='term-id'>(" + item.id + ")</span></a>" )
+        .appendTo( ul );
+    };
+  }
 
   $("body").delegate("#ferret-term-children-list a", "click",
                      pomcur.child_click_handler);
