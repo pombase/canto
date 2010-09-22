@@ -134,6 +134,24 @@ div#footer .sponsor {
   padding: 10px;
   margin: 0px;
   clear: both;
+  float: left;
+  right: 0px;
+  top: 0px;
+  font-size: 80%;
+}
+#breadcrumbs ul {
+  margin: 0; padding: 0;
+  display: inline;
+}
+#breadcrumbs ul li {
+  display: inline;
+}
+#breadcrumbs ul li a {
+  text-decoration: none;
+  padding: 5px;
+}
+#breadcrumbs ul li a:hover, . ul li .current {
+  background-color:#0b75b2;
 }
 
 .field-list {

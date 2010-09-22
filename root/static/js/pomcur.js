@@ -22,6 +22,8 @@ var pomcur = {
   use_term_data : function(data) {
     var term = data[0];
 
+    $('#ferret').data('current-term', term);
+
     $('#ferret-term-entry').val(term.name);
     $('#ferret-term-definition').text(term.definition);
 
@@ -51,24 +53,53 @@ var pomcur = {
     });
   },
 
-  term_selected : function() {
-    var term_id = $('#ferret-term-id').val();
-    if (term_id) {
-      pomcur.set_details(term_id);
-    }
-  },
-
-  set_term : function(term) {
-    $('#ferret-term-id').val(term.id);
-    $('#ferret-term-id-display').text(term.id);
-    $('#ferret-term-entry').val(term.name);
+  term_selected : function(term_id) {
+    $('#ferret-term-id').val(term_id);
+    $('#ferret-term-id-display').text(term_id);
     $('#ferret-term-details').show();
+    pomcur.set_details(term_id);
   },
 
-  child_click_handler : function() {
-    var href = $(this).attr('href');
+  add_to_breadcrumbs : function(term) {
+    var breadcrumbs_ul = $('#breadcrumbs ul')
+    var li = $('<li class="hash-term">&gt;<a href="#' + term.id + '">' + 
+               term.id + "</a></li>");
+    li.data('term', term);
+    breadcrumbs_ul.append(li);
+  },
+
+  add_history : function(term) {
+    pomcur.term_history.push(term);
+    pomcur.add_to_breadcrumbs(term);
+  },
+
+  truncate_history : function(term_id) {
+    $('#breadcrumbs li.hash-term').remove();
+    for (var i = 0; i < pomcur.term_history.length; i++) {
+      var this_term = pomcur.term_history[i];
+      if (this_term.id == term_id) {
+        pomcur.term_history.length = i;
+        break;
+      } else {
+        pomcur.add_to_breadcrumbs(this_term);
+      }
+    };
+  },
+
+  move_to_hash_term : function(link) {
+    var href = link.attr('href');
     var term_id = href.substring(href.indexOf('#') + 1);
-    pomcur.set_details(term_id);
+    pomcur.term_selected(term_id);
+    pomcur.truncate_history(term_id);
+  },
+
+  term_click_handler : function(event) {
+    pomcur.move_to_hash_term($(event.target));
+  },
+
+  child_click_handler : function(event) {
+    pomcur.move_to_hash_term($(event.target));
+    pomcur.add_history($('#ferret').data('current-term'));
   },
 
   show_hide_children : function() {
@@ -104,10 +135,9 @@ $(document).ready(function() {
       return false;
     },
     select: function(event, ui) {
-      pomcur.set_term(ui.item);
+      pomcur.term_selected(ui.item.id);
       return false;
-    },
-    close: pomcur.term_selected
+    }
   })
   .data( "autocomplete" )._renderItem = function( ul, item ) {
     return $( "<li></li>" )
@@ -118,6 +148,8 @@ $(document).ready(function() {
 
   $("body").delegate("#ferret-term-children-list a", "click",
                      pomcur.child_click_handler);
+  $("body").delegate("#breadcrumbs li.hash-term a", "click",
+                     pomcur.term_click_handler);
 
   $("#ferret input[name='reset']").click(pomcur.ferret_reset);
 
