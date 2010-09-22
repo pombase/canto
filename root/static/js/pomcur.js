@@ -76,6 +76,18 @@ var pomcur = {
     } else {
       term_children.hide();
     }
+  },
+
+  ferret_reset : function() {
+    // from: http://stackoverflow.com/questions/680241/blank-out-a-form-with-jquery
+    $(':input','#ferret-form')
+      .not(':button, :submit, :reset, :hidden')
+      .val('')
+      .removeAttr('checked')
+      .removeAttr('selected');
+    $('#ferret-term-children').hide();
+    $('#ferret-term-details').hide();
+    return true;
   }
 };
 
@@ -104,9 +116,9 @@ $(document).ready(function() {
 
   $("body").delegate("#ferret-term-children-list a", "click",
                      pomcur.child_click_handler);
-});
 
-$(document).ready(function() {
+  $("#ferret input[name='reset']").click(pomcur.ferret_reset);
+
   var form_success = function(responseText, statusText, xhr, $form) {
     if (responseText == 'term-selected') {
       $('#ferret-confirm').hide();

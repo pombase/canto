@@ -19,14 +19,14 @@ experiment you are curating?
     </div>
   </div>
   <div id="ferret-term-details" style="display: none">
-    <div>The term you have selected:
+    <div>
       <span class="term-id" id="ferret-term-id-display"></span>
-    </div>
-    <div>Definition: <div id="ferret-term-definition" class="term-definition"></div>
+    has definition: <div id="ferret-term-definition" class="term-definition"></div>
     </div>
     <div id="ferret-confirm">
-      Does this definition have the correct meaning for the term you require?
-      <input name="confirm-def" type="submit" value="Confirm" class="button" />
+      <input name="reset" type="reset" value="Search again" class="button" />
+      or
+      <input name="confirm-def" type="submit" value="Confirm definition" class="button" />
     </div>
   </div>
 </form>
