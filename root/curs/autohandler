@@ -20,7 +20,7 @@ var application_root = '<% $c->uri_for('/') %>';
 % $m->call_next;
 
 </div>
-<div class="clearall"/>
+<div class="clearall"></div>
 
 
 <%flags>
