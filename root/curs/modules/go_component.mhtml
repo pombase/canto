@@ -24,7 +24,9 @@ experiment you are curating?
     has definition: <div id="ferret-term-definition" class="term-definition"></div>
     </div>
     <div id="ferret-confirm">
-      <input name="reset" type="reset" value="Search again" class="button" />
+      <input id="ferret-reset-button" name="reset" type="reset" value="Search again" class="button" />
+      <input id="ferret-previous-button" name="previous" type="submit" value="Previous term" class="button"
+             style="display: none"/>
       or
       <input name="confirm-def" type="submit" value="Confirm definition" class="button" />
     </div>

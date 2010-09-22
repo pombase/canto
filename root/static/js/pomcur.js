@@ -1,3 +1,5 @@
+Array.prototype.last = function() {return this[this.length-1];}
+
 $(document).ready(function() {
   $(".sect .sect-title").each(function(i) {
     $(this).click(function() {
@@ -57,12 +59,20 @@ var pomcur = {
     $('#ferret-term-id').val(term_id);
     $('#ferret-term-id-display').text(term_id);
     $('#ferret-term-details').show();
+
+    if (pomcur.term_history.length > 0) {
+      $('#ferret-previous-button').show();
+      $('#ferret-reset-button').hide();
+    } else {
+      $('#ferret-previous-button').hide();
+      $('#ferret-reset-button').show();
+    }
     pomcur.set_details(term_id);
   },
 
   add_to_breadcrumbs : function(term) {
     var breadcrumbs_ul = $('#breadcrumbs ul')
-    var li = $('<li class="hash-term">&gt;<a href="#' + term.id + '">' + 
+    var li = $('<li class="hash-term">&gt;<a href="#' + term.id + '">' +
                term.id + "</a></li>");
     li.data('term', term);
     breadcrumbs_ul.append(li);
@@ -86,20 +96,29 @@ var pomcur = {
     };
   },
 
+  pop_history : function() {
+    var last_id = pomcur.term_history.last().id;
+    pomcur.truncate_history(last_id);
+    pomcur.term_selected(last_id);
+    return false;
+  },
+
   move_to_hash_term : function(link) {
     var href = link.attr('href');
     var term_id = href.substring(href.indexOf('#') + 1);
-    pomcur.term_selected(term_id);
     pomcur.truncate_history(term_id);
+    pomcur.term_selected(term_id);
   },
 
   term_click_handler : function(event) {
     pomcur.move_to_hash_term($(event.target));
+    return false;
   },
 
   child_click_handler : function(event) {
-    pomcur.move_to_hash_term($(event.target));
     pomcur.add_history($('#ferret').data('current-term'));
+    pomcur.move_to_hash_term($(event.target));
+    return false;
   },
 
   show_hide_children : function() {
@@ -151,7 +170,8 @@ $(document).ready(function() {
   $("body").delegate("#breadcrumbs li.hash-term a", "click",
                      pomcur.term_click_handler);
 
-  $("#ferret input[name='reset']").click(pomcur.ferret_reset);
+  $("#ferret-reset-button").click(pomcur.ferret_reset);
+  $("#ferret-previous-button").click(pomcur.pop_history);
 
   var form_success = function(responseText, statusText, xhr, $form) {
     if (responseText == 'term-selected') {
