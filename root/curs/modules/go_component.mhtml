@@ -6,10 +6,12 @@ $annotation_helper
 
 <form id="ferret-form" action="" method="post">
   <input type="hidden" id="ferret-term-id"/>
-  <textarea id="ferret-term-entry" name="ferret-term-entry"
-            type="textarea" cols="30" rows="4"
-            placeholder="start typing ..."
-            disabled="true"></textarea>
+  <div id="ferret-term-entry">
+    Start typing and suggestions will be made:
+    <input id="ferret-term-input" name="ferret-term-entry"
+           type="text" size="50" placeholder="start typing ..."
+           disabled="true"/>
+  </div>
   <div id="ferret-term-children" style="display: none">
 GO annotations should always be made to the most specific term possible.
 These are the child terms of the term you have chosen.
@@ -19,10 +21,10 @@ experiment you are curating?
     </div>
   </div>
   <div id="ferret-term-details" style="display: none">
-    <div>
-      <span class="term-id" id="ferret-term-id-display"></span>
-    has definition: <div id="ferret-term-definition" class="term-definition"></div>
-    </div>
+    <span class="term-id" id="ferret-term-id-display"></span>
+    has term name:
+    <div id="ferret-term-name" class="term-name"></div>
+    Definition: <div id="ferret-term-definition" class="term-definition"></div>
     <div id="ferret-confirm">
       <input id="ferret-reset-button" name="reset" type="reset" value="Search again" class="button" />
       <input id="ferret-previous-button" name="previous" type="submit" value="Previous term" class="button"

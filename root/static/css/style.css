@@ -447,6 +447,12 @@ div.clearall {
   margin: 0px 10px 10px 10px;
 }
 
+.term-name {
+  display: block;
+  font-weight: bold;
+  margin: 0px 10px 10px 10px;
+}
+
 #ferret-term-children {
   float: right;
   width: 40%;

@@ -26,7 +26,7 @@ var pomcur = {
 
     $('#ferret').data('current-term', term);
 
-    $('#ferret-term-entry').val(term.name);
+    $('#ferret-term-name').text(term.name);
     $('#ferret-term-definition').text(term.definition);
 
     var children = term.children;
@@ -53,6 +53,7 @@ var pomcur = {
       dataType: 'json',
       success: pomcur.use_term_data
     });
+    $('#ferret-term-entry').hide();
   },
 
   term_selected : function(term_id) {
@@ -139,17 +140,18 @@ var pomcur = {
       .removeAttr('selected');
     $('#ferret-term-children').hide();
     $('#ferret-term-details').hide();
+    $('#ferret-term-entry').show();
     return true;
   }
 };
 
 
 $(document).ready(function() {
-  $( "#ferret-term-entry" ).autocomplete({
+  $( "#ferret-term-input" ).autocomplete({
     minLength: 2,
     source: pomcur.ontology_complete_url,
     focus: function(event, ui) {
-      $('#ferret-term-entry').val(ui.item.name);
+      $('#ferret-term-input').val(ui.item.name);
       $('#ferret-confirm').hide();
       return false;
     },
@@ -181,5 +183,5 @@ $(document).ready(function() {
     return true;
   };
   $('#ferret-form').ajaxForm({ success: form_success });
-  $('#ferret-term-entry').attr('disabled', false);
+  $('#ferret-term-input').attr('disabled', false);
 });
