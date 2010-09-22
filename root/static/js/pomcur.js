@@ -11,11 +11,13 @@ $(document).ready(function() {
     } else {
       $(this).next().show();
     }
-  })
+  });
 });
 
 var pomcur = {
   ontology_complete_url : application_root + '/ws/lookup/go/component',
+
+  term_history : [],
 
   use_term_data : function(data) {
     var term = data[0];
@@ -105,7 +107,7 @@ $(document).ready(function() {
       pomcur.set_term(ui.item);
       return false;
     },
-    close: pomcur.term_selected,
+    close: pomcur.term_selected
   })
   .data( "autocomplete" )._renderItem = function( ul, item ) {
     return $( "<li></li>" )
@@ -127,5 +129,5 @@ $(document).ready(function() {
     return true;
   };
   $('#ferret-form').ajaxForm({ success: form_success });
-  $('#ferret-term-entry').attr('disabled', false);;
+  $('#ferret-term-entry').attr('disabled', false);
 });
