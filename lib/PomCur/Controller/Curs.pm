@@ -480,10 +480,13 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
   my $annotation = $schema->find_with_type('Annotation', $annotation_id);
   my $annotation_type_name = $annotation->type();
 
+  my $gene = $schema->find_with_type('Gene', $annotation->data()->{gene_id});
+  my $gene_display_name = $gene->long_display_name();
+
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   my $module_display_name = $annotation_config->{display_name};
-  $st->{title} = $module_display_name . ' for ' . $st->{gene_long_display_name};
+  $st->{title} = $module_display_name . ' for ' . $gene_display_name;
   $st->{current_component} = $annotation_type_name;
   $st->{template} = "curs/modules/$annotation_type_name.mhtml";
 
