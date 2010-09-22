@@ -1,5 +1,6 @@
 <%args>
 $title
+$show_title => 1
 $error => undef
 $message => undef
 </%args>
@@ -45,9 +46,11 @@ $message => undef
 <& breadcrumbs.mhtml &>
 
       <div id="content">
+% if ($show_title) {
         <div id="page-description">
           <% $title %>
         </div>
+% }
 % $m->call_next;
       </div>
     <& footer.mhtml &>
