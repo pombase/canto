@@ -34,10 +34,10 @@ var pomcur = {
 
     $('#ferret-term-children').data('child-count', children.length);
     $('#ferret-term-children-list').html($('<ul/>').append($(children_html)));
+    $('#ferret-confirm').show();
   },
 
   set_details : function(term_id) {
-    $('#ferret-confirm').show();
     $('#ferret-term-children').hide();
     var stored_term_id = $('#ferret-term-id').val();
     if (stored_term_id != term_id) {
