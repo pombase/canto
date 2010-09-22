@@ -123,12 +123,20 @@ var pomcur = {
     return false;
   },
 
+  current_child_count : function() {
+    var term_children = $('#ferret-term-children');
+    return term_children.data('child-count');
+  },
+
   show_hide_children : function() {
     var term_children = $('#ferret-term-children');
-    if (term_children.data('child-count') > 0) {
+    var leaf = $('#ferret-leaf');
+    if (pomcur.current_child_count() > 0) {
       term_children.show();
+      leaf.hide();
     } else {
       term_children.hide();
+      leaf.show();
     }
   },
 
@@ -140,6 +148,7 @@ var pomcur = {
       .removeAttr('checked')
       .removeAttr('selected');
     $('#ferret-term-children').hide();
+    $('#ferret-leaf').hide();
     $('#ferret-term-details').hide();
     $('#ferret-term-entry').show();
     return true;
@@ -178,8 +187,10 @@ $(document).ready(function() {
 
   var form_success = function(responseText, statusText, xhr, $form) {
     if (responseText == 'term-selected') {
-      $('#ferret-confirm').hide();
       pomcur.show_hide_children();
+      if (pomcur.current_child_count() > 0) {
+        $('#ferret-confirm').hide();
+      }
     }
     return true;
   };

@@ -20,6 +20,9 @@ experiment you are curating?
     <div id="ferret-term-children-list">
     </div>
   </div>
+  <div id="ferret-leaf" style="display: none">
+This term is a leaf node ...
+  </div>
   <div id="ferret-term-details" style="display: none">
     <span class="term-id" id="ferret-term-id-display"></span>
     has term name:

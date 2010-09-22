@@ -453,7 +453,7 @@ div.clearall {
   margin: 0px 10px 10px 10px;
 }
 
-#ferret-term-children {
+#ferret-term-children, #ferret-leaf {
   float: right;
   width: 40%;
   min-height: 10em;
