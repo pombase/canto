@@ -115,4 +115,5 @@ $(document).ready(function() {
     return true;
   };
   $('#ferret-form').ajaxForm({ success: form_success });
+  $('#ferret-term-entry').attr('disabled', false);;
 });
