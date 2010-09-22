@@ -73,7 +73,8 @@ var pomcur = {
 
   add_to_breadcrumbs : function(term) {
     var breadcrumbs_ul = $('#breadcrumbs ul')
-    var li = $('<li class="hash-term">&gt;<a href="#' + term.id + '">' +
+    var li = $('<li class="hash-term">&gt;<a title="' +
+               term.name + '" href="#' + term.id + '">' +
                term.id + "</a></li>");
     li.data('term', term);
     breadcrumbs_ul.append(li);
