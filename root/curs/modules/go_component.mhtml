@@ -32,7 +32,7 @@ This term is a leaf node ...
       <input id="ferret-previous-button" name="previous" type="submit" value="Previous term" class="button"
              style="display: none"/>
       or
-      <input name="confirm-def" type="submit" value="Confirm definition" class="button" />
+      <input name="confirm-def" type="submit" value="Select this term" class="button" />
     </div>
   </div>
 </form>
