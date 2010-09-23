@@ -190,9 +190,10 @@ table.list th {
   font-weight: bold;
   text-align: left;
 }
-table.list tr.odd {
-  background-color: #e8e8d8;
+table.list tr.even, table.list tr:nth-child(even) {
+  background-color: #eed;
 }
+
 table.list tr td {
   border-width: 1px;
   padding: 3px;
@@ -359,14 +360,23 @@ div.clearall {
   float: right;
   font-size: 80%;
   position: relative;
-  width: 10%;
+  width: 15%;
   right: -10px;
   background-color: #cce;
+}
 
+.small-gene-list .title {
+  display: inline;
+  border-bottom: 1px solid black;
 }
 
 .small-gene-list table {
+  border-width: 0px;
   margin: 4px;
+}
+.small-gene-list td {
+  border-width: 0px;
+  font-size: 80%;
 }
 
 .small-gene-list .no-genes-message {
@@ -374,17 +384,9 @@ div.clearall {
   margin: 10px;
 }
 
-
 .small-gene-list .view-edit {
   font-size: 80%;
   margin: 0px 2px 0px 2px;
-}
-
-.title {
-  font-size: 100%;
-  font-weight: bold;
-  display: inline;
-  border-bottom: 1px solid black;
 }
 
 .pub-title {
