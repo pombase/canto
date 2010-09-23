@@ -23,12 +23,6 @@ use PomCur::Track::LoadUtil;
 use PomCur::Track::GeneLookup;
 use PomCur::Controller::Curs;
 
-use Moose;
-
-with 'PomCur::Role::MetadataAccess';
-
-no Moose;
-
 my %test_curators = ();
 my %test_publications = ();
 my %test_schemas = ();
@@ -115,94 +109,19 @@ if ($@) {
   die "ROLLBACK called: $@\n";
 }
 
-sub _get_curator_object
-{
-  my $schema = shift;
-  my $email_address = shift;
-
-  return $schema->find_with_type('Person',
-                                 { networkaddress => $email_address });
-}
-
-sub _get_pub_object
-{
-  my $schema = shift;
-  my $pubmedid = shift;
-
-  return $schema->find_with_type('Pub', { pubmedid => $pubmedid });
-}
-
-sub _load_curs_db_data
-{
-  my $trackdb_schema = shift;
-  my $cursdb_schema = shift;
-  my $test_case_ref = shift;
-
-  my $gene_lookup = PomCur::Track::GeneLookup->new(config => $config,
-                                                   schema => $trackdb_schema);
-
-  set_metadata($cursdb_schema, 'submitter_email',
-               $test_case_ref->{submitter_email});
-  set_metadata($cursdb_schema, 'submitter_name',
-               $test_case_ref->{submitter_name});
-
-  for my $gene_identifier (@{$test_case_ref->{genes}}) {
-    my $result = $gene_lookup->lookup([$gene_identifier]);
-    my @found = @{$result->{found}};
-    die "Expected 1 result" if @found != 1;
-    my $gene_info = $found[0];
-
-    my $new_gene =
-      PomCur::Controller::Curs::_create_gene($cursdb_schema, $result);
-
-    my $current_config_gene = $test_case_ref->{current_gene};
-    if ($gene_identifier eq $current_config_gene) {
-      set_metadata($cursdb_schema, 'current_gene_id',
-                   $new_gene->gene_id());
-    }
-  }
-}
-
 sub make_curs_dbs
 {
   my $test_case_key = shift;
 
   my $test_case = $test_cases{$test_case_key};
-  my $schema = $test_schemas{$test_case_key};
-
-  my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
   my $trackdb_schema = $test_schemas{$test_case_key};
-  my $pombe = $load_util->get_organism('Schizosaccharomyces', 'pombe');
+  my $load_util = PomCur::Track::LoadUtil->new(schema => $trackdb_schema);
 
   my $process_test_case =
     sub {
-      for my $test_case_ref (@$test_case) {
-        my $test_case_curs_key =
-          PomCur::TestUtil::curs_key_of_test_case($test_case_ref);
-
-        my $create_args = {
-          community_curator =>
-            _get_curator_object($schema, $test_case_ref->{first_contact_email}),
-          curs_key => $test_case_curs_key,
-          pub => _get_pub_object($schema, $test_case_ref->{pubmedid}),
-        };
-
-        my $curs_object = $schema->create_with_type('Curs', $create_args);
-
-        my $curs_file_name =
-          PomCur::Curs::make_long_db_file_name($config, $test_case_curs_key);
-        unlink $curs_file_name;
-
-        my $cursdb_schema =
-          PomCur::Track::create_curs_db($config, $curs_object);
-
-        if (exists $test_case_ref->{submitter_email}) {
-          $cursdb_schema->txn_do(
-            sub {
-              _load_curs_db_data($trackdb_schema, $cursdb_schema,
-                                 $test_case_ref);
-            });
-        }
+      for my $curs_config (@$test_case) {
+        PomCur::TestUtil::make_curs_db($config, $curs_config, $trackdb_schema,
+                                       $load_util);
       }
     };
 

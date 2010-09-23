@@ -23,6 +23,12 @@ use PomCur::Curs;
 
 use File::Temp qw(tempdir);
 
+use Moose;
+
+with 'PomCur::Role::MetadataAccess';
+
+no Moose;
+
 $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
 
 =head2
@@ -315,5 +321,105 @@ sub curs_key_of_test_case
 
   return $test_case_def->{curs_key};
 }
+
+sub _get_curator_object
+{
+  my $schema = shift;
+  my $email_address = shift;
+
+  return $schema->find_with_type('Person',
+                                 { networkaddress => $email_address });
+}
+
+sub _get_pub_object
+{
+  my $schema = shift;
+  my $pubmedid = shift;
+
+  return $schema->find_with_type('Pub', { pubmedid => $pubmedid });
+}
+
+sub _load_curs_db_data
+{
+  my $config = shift;
+  my $trackdb_schema = shift;
+  my $cursdb_schema = shift;
+  my $curs_config = shift;
+
+  my $gene_lookup = PomCur::Track::GeneLookup->new(config => $config,
+                                                   schema => $trackdb_schema);
+
+  set_metadata($cursdb_schema, 'submitter_email',
+               $curs_config->{submitter_email});
+  set_metadata($cursdb_schema, 'submitter_name',
+               $curs_config->{submitter_name});
+
+  for my $gene_identifier (@{$curs_config->{genes}}) {
+    my $result = $gene_lookup->lookup([$gene_identifier]);
+    my @found = @{$result->{found}};
+    die "Expected 1 result" if @found != 1;
+    my $gene_info = $found[0];
+
+    my $new_gene =
+      PomCur::Controller::Curs::_create_gene($cursdb_schema, $result);
+
+    my $current_config_gene = $curs_config->{current_gene};
+    if ($gene_identifier eq $current_config_gene) {
+      set_metadata($cursdb_schema, 'current_gene_id',
+                   $new_gene->gene_id());
+    }
+  }
+}
+
+=head2 make_curs_db
+
+ Usage   : PomCur::TestUtil::make_curs_db($config, $curs_config,
+                                          $trackdb_schema);
+ Function: Make a curs database for the given $curs_config and update the
+           TrackDB given by $trackdb_schema.  See the test_config.yaml file
+           for example curs test case configurations.
+ Args    : $config - a PomCur::Config object
+           $curs_config - the configuration for this curs
+           $trackdb_schema - the TrackDB
+ Returns : nothing, dies on error
+
+=cut
+sub make_curs_db
+{
+  my $config = shift;
+  my $curs_config = shift;
+  my $trackdb_schema = shift;
+  my $load_util = shift;
+
+  my $pombe = $load_util->get_organism('Schizosaccharomyces', 'pombe');
+
+  my $test_case_curs_key =
+    PomCur::TestUtil::curs_key_of_test_case($curs_config);
+
+  my $create_args = {
+    community_curator =>
+      _get_curator_object($trackdb_schema, $curs_config->{first_contact_email}),
+    curs_key => $test_case_curs_key,
+    pub => _get_pub_object($trackdb_schema, $curs_config->{pubmedid}),
+  };
+
+  my $curs_object = $trackdb_schema->create_with_type('Curs', $create_args);
+
+  my $curs_file_name =
+    PomCur::Curs::make_long_db_file_name($config, $test_case_curs_key);
+  unlink $curs_file_name;
+
+  my $cursdb_schema =
+    PomCur::Track::create_curs_db($config, $curs_object);
+
+  if (exists $curs_config->{submitter_email}) {
+    $cursdb_schema->txn_do(
+      sub {
+        _load_curs_db_data($config, $trackdb_schema, $cursdb_schema,
+                           $curs_config);
+      });
+  }
+}
+
 
 1;
