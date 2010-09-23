@@ -22,15 +22,13 @@ $disclosed => 1  # true will make the list default to visible
       <th>&nbsp;</th>
       </tr>
     </thead>
-%   my $row_count = 0;
 %   for my $object (@rows) {
-    <tr class="<% $row_count % 2 == 0 ? 'even' : 'odd' %>">
+    <tr>
 %     for my $col_conf (@column_confs) {
         <td><& field.mhtml, object => $object, field_name => $col_conf->{name} &></td>
 %     }
     <td><& field.mhtml, object => $object, field_name => "${type}_id" &></td>
     </tr>
-%     $row_count++;
 %   }
   </table>
 % }

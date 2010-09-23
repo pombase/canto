@@ -4,8 +4,14 @@ $title => 'Genes'
 </%args>
 
 <div class="<% $class %>">
+  <div class="title">Current gene list</div>
 % if (@gene_hashes) {
+%   if ($big_list) {
   <table class="list">
+% } else {
+  <table>
+% }
+
 %   if ($big_list) {
     <thead>
       <tr>
