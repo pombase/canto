@@ -355,6 +355,10 @@ div.clearall {
   padding: 0px;
 }
 
+.big-gene-list .upload-genes-link {
+  padding: 20px 0px 10px 0px;
+}
+
 .small-gene-list {
   background-color: #efa;
   float: right;

@@ -54,15 +54,15 @@ $title => 'Genes'
 % }
 
 % if ($big_list) {
-<a href="<% $upload_path %>">Upload additional genes ...</a>
+<input type="submit" name="submit" value="edit"/>
+<div class="upload-genes-link">
+  <a href="<% $upload_path %>">Upload additional genes ...</a>
+</div>
 % } else {
   <div class="view-edit">
     <a href="<% $edit_path %>">View or edit ...</a>
   </div>
 % }
-
-  <input type="submit" name="submit" value="edit"/>
-
 </form>
 </div>
 
