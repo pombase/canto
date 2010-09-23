@@ -440,7 +440,6 @@ sub _get_annotation_helper
   }
 
   my $lookup = $module_class_name->new(%args);
-
 }
 
 sub annotation_create : Chained('top') PathPart('annotation/create') Args(1)
