@@ -58,7 +58,7 @@ var pomcur = {
 
   term_selected : function(term_id) {
     $('#ferret-term-id').val(term_id);
-    $('#ferret-term-id-display').text(term_id);
+    $('.ferret-term-id-display').text(term_id);
     $('#ferret-term-details').show();
 
     if (pomcur.term_history.length > 0) {

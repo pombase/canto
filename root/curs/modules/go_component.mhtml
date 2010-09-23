@@ -14,10 +14,8 @@ $annotation_helper
            disabled="true"/>
   </div>
   <div id="ferret-term-children" style="display: none">
-GO annotations should always be made to the most specific term possible.
-These are the child terms of the term you have chosen.
-In this instance would any of the children be more appropriate for the
-experiment you are curating?
+Select a child term of <span class="term-id ferret-term-id-display"></span>
+if it describes the experiment you are curating more accurately:
     <div id="ferret-term-children-list">
     </div>
   </div>
@@ -25,7 +23,7 @@ experiment you are curating?
 This term is a leaf node ...
   </div>
   <div id="ferret-term-details" style="display: none">
-    <span class="term-id" id="ferret-term-id-display"></span>
+    <span class="term-id ferret-term-id-display"></span>
     has term name:
     <div id="ferret-term-name" class="term-name"></div>
     Definition: <div id="ferret-term-definition" class="term-definition"></div>
