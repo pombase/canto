@@ -54,3 +54,5 @@ for my $schema_name (keys %db_template_files) {
 
   make_schema($schema_class, $connect_string);
 }
+
+warn "finished initialising development environment\n";
