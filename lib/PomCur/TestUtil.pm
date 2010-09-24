@@ -356,7 +356,9 @@ sub _load_curs_db_data
   for my $gene_identifier (@{$curs_config->{genes}}) {
     my $result = $gene_lookup->lookup([$gene_identifier]);
     my @found = @{$result->{found}};
-    die "Expected 1 result" if @found != 1;
+    if (@found != 1) {
+      die "Expected 1 result for $gene_identifier not ", scalar(@found)
+    }
     my $gene_info = $found[0];
 
     my $new_gene =
