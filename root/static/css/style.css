@@ -432,13 +432,13 @@ div.clearall {
 
 #ferret-term-entry {
   float: left;
-  width: 45%;
+  width: 40%;
 }
 
 #ferret-term-details {
   clear: left;
   float: left;
-  width: 49%;
+  width: 40%;
   font-size: 80%;
 }
 
