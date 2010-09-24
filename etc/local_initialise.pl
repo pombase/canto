@@ -27,7 +27,8 @@ my $db_file_name =
 
 (my $local_dir = $db_file_name) =~ s:(.*?)/.*:$1:;
 
-my $track_test_db = $config->{test_config}->{track_test_3_curs_db};
+my $track_test_db =
+  PomCur::TestUtil::test_track_db_name($config, "3_curs");
 
 (my $test_data_dir = $track_test_db) =~ s:(.*)/.*:$1:;
 

@@ -1,9 +1,6 @@
 test_mode: 1
 test_config:
   data_dir: "t/data"
-  track_test_0_curs_db: "t/data/track_db_0_curs_test_template.sqlite3"
-  track_test_1_curs_db: "t/data/track_db_1_curs_test_template.sqlite3"
-  track_test_3_curs_db: "t/data/track_db_3_curs_test_template.sqlite3"
   curation_spreadsheet: "t/data/community_curation_stats_small.txt"
   test_genes_file: "t/data/pombe_genes.txt"
   test_cases:
