@@ -20,8 +20,11 @@ use Clone qw(clone);
 use PomCur::Config;
 use PomCur::Meta::Util;
 use PomCur::TrackDB;
+use PomCur::Track;
 use PomCur::CursDB;
 use PomCur::Curs;
+use PomCur::Controller::Curs;
+use PomCur::Track::GeneLookup;
 
 use File::Temp qw(tempdir);
 
@@ -370,6 +373,13 @@ sub _load_curs_db_data
                    $new_gene->gene_id());
     }
   }
+
+  for my $annotation (@{$curs_config->{annotations}}) {
+    my %create_args = %{_process_data($cursdb_schema, $annotation)};
+
+    my $new_annotation =
+      $cursdb_schema->create_with_type('Annotation', { %create_args });
+  }
 }
 
 sub _process_data
@@ -389,10 +399,12 @@ sub _process_data
         my $field_name = $2;
         delete $_->{$key};
         my $type_name = PomCur::DB::table_name_of_class($class_name);
+
         my $object = $cursdb_schema->find_with_type($class_name,
                                                     {
                                                       $field_name, $value
                                                     });
+
         $_->{$type_name} = PomCur::DB::id_of_object($object);
       }
     }
@@ -411,7 +423,8 @@ sub _process_data
  Args    : $config - a PomCur::Config object
            $curs_config - the configuration for this curs
            $trackdb_schema - the TrackDB
- Returns : nothing, dies on error
+ Returns : ($curs_schema, $cursdb_file_name) - A CursDB object for the new db,
+           and its file name - die()s on failure
 
 =cut
 sub make_curs_db
@@ -439,7 +452,7 @@ sub make_curs_db
     PomCur::Curs::make_long_db_file_name($config, $test_case_curs_key);
   unlink $curs_file_name;
 
-  my $cursdb_schema =
+  my ($cursdb_schema, $cursdb_file_name) =
     PomCur::Track::create_curs_db($config, $curs_object);
 
   if (exists $curs_config->{submitter_email}) {
@@ -450,6 +463,7 @@ sub make_curs_db
       });
   }
 
+  return ($cursdb_schema, $cursdb_file_name);
 }
 
 

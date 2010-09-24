@@ -1,11 +1,13 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 14;
 use Test::Exception;
 use File::Temp qw(tempfile);
 use Data::Compare;
+use File::Copy qw(copy);
 
 use PomCur::TestUtil;
+use PomCur::Track::LoadUtil;
 
 {
   my $config = {};
@@ -49,6 +51,8 @@ use PomCur::TestUtil;
 }
 
 {
+  # test _process_data()
+
   my $config = PomCur::Config::get_config();
   $config->merge_config($config->{test_config_file});
 
@@ -78,6 +82,11 @@ use PomCur::TestUtil;
     return $self->{id}
   }
 
+  sub pub_id {
+    my $self = shift;
+    return $self->{id}
+  }
+
   sub primary_columns {
     my $self = shift;
     return $self->{table} . '_id';
@@ -100,6 +109,11 @@ use PomCur::TestUtil;
         primary_identifier => {
           'SPCC1739.10' => 200
         }
+      },
+      'Pub' => {
+        pubmedid => {
+          18426916 => 300
+        }
       }
     );
 
@@ -117,4 +131,100 @@ use PomCur::TestUtil;
     PomCur::TestUtil::_process_data($test_curs_db, $annotations_conf);
 
   is ($results->{data}->{gene}, 200);
+  is ($results->{pub}, 300);
+}
+
+sub track_init
+{
+  my $track_schema = shift;
+
+  $track_schema->create_with_type('Person',
+                                  {
+                                    networkaddress => 'kevin.hardwick@ed.ac.uk',
+                                    name => 'Kevin Hardwick',
+                                    role => 'user'
+                                  });
+  $track_schema->create_with_type('Cv',
+                                  {
+                                    cv_id => 50,
+                                    name => 'Test CV'
+                                  });
+  $track_schema->create_with_type('Cvterm',
+                                  {
+                                    cvterm_id => 601,
+                                    cv_id => 50,
+                                    name => 'Test pub type',
+                                  });
+  $track_schema->create_with_type('Pub',
+                                  {
+                                    pubmedid => 18426916,
+                                    title => 'test title',
+                                    type_id => 601
+                                  });
+  $track_schema->create_with_type('Organism',
+                                  {
+                                    organism_id => 1000,
+                                    genus => 'Schizosaccharomyces',
+                                    species => 'pombe',
+                                  });
+  $track_schema->create_with_type('Gene',
+                                  {
+                                    primary_identifier => 'SPCC1739.11c',
+                                    product =>
+                                      'SIN component scaffold protein, centriolin ortholog Cdc11',
+                                    primary_name => 'cdc11',
+                                    organism => 1000
+                                  });
+  $track_schema->create_with_type('Gene',
+                                  {
+                                    primary_identifier => 'SPCC1739.10',
+                                    product => 'conserved fungal protein',
+                                    organism => 1000
+                                  });
+}
+
+{
+  # test make_curs_db
+
+  my $config = PomCur::Config::get_config();
+  $config->merge_config($config->{test_config_file});
+
+  my $curs_config =
+    $config->{test_config}->{test_cases}->{curs_annotations_1}->[0];
+
+  my $track_db_template_file = $config->{track_db_template_file};
+
+  my ($fh, $temp_track_db) = tempfile();
+
+  copy $track_db_template_file, $temp_track_db or die "$!\n";
+
+  my $track_schema =
+    PomCur::TestUtil::schema_for_file($config, $temp_track_db, 'Track');
+
+  track_init($track_schema);
+
+  my $load_util = PomCur::Track::LoadUtil->new(schema => $track_schema);
+
+  my ($cursdb_schema, $cursdb_file_name) =
+    PomCur::TestUtil::make_curs_db($config, $curs_config,
+                                   $track_schema, $load_util);
+
+  my @res_annotations = $cursdb_schema->resultset('Annotation')->all();
+
+  is (@res_annotations, 1);
+
+  my $res_annotation = $res_annotations[0];
+
+  my $annotation_conf = $curs_config->{annotations}->[0];
+
+  is ($res_annotation->pub()->pubmedid(), $annotation_conf->{'Pub:pubmedid'});
+
+  my $gene_identifier = $annotation_conf->{data}->{'Gene:primary_identifier'};
+  my $gene = $cursdb_schema->find_with_type('Gene',
+                                            {
+                                              primary_identifier => $gene_identifier,
+                                            });
+
+  is ($res_annotation->data()->{'gene'},
+      $gene->gene_id());
 }
