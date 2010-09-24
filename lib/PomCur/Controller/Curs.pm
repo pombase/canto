@@ -284,6 +284,7 @@ sub _filter_existing_genes
   return grep { !exists $found_genes{ $_->{primary_identifier} } } @genes;
 }
 
+# create a gene in the Curs database from a lookup() result
 sub _create_gene
 {
   my $schema = shift;
