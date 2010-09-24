@@ -8,6 +8,16 @@ use Data::Compare;
 use PomCur::TestUtil;
 
 {
+  my $config = {};
+  my $file_name = '/tmp/test_file.sqlite3';
+  my $schema = PomCur::TestUtil::schema_for_file($config, $file_name, 'Curs');
+
+  my $storage = $schema->storage();
+
+  is ($storage->connect_info()->[0], "dbi:SQLite:dbname=$file_name");
+}
+
+{
   my $test_util = PomCur::TestUtil->new();
 
   ok(ref $test_util);

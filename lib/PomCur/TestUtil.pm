@@ -251,10 +251,13 @@ sub _check_dir
 
 =head2
 
- Usage   : my $schema = PomCur::TestUtil::schema_for_file($config, $file_name);
+ Usage   : my $schema = PomCur::TestUtil::schema_for_file($config, $file_name,
+                                                          $model_name);
  Function: Return a schema object for the given file
  Args    : $config - a PomCur::Config object
            $file_name - the file name of the database
+           $model_name - the name of the model to make the schema for,
+                         eg. "Track" or "Curs"
  Return  : the schema
 
 =cut
@@ -262,24 +265,17 @@ sub schema_for_file
 {
   my $config = shift;
   my $file_name = shift;
+  my $model_name = shift;
 
   my %config_copy = %$config;
 
-  my $model;
-
-  if ($file_name =~ m:/curs_:) {
-    $model = 'Curs';
-  } else {
-    $model = 'Track';
-  }
-
-  %{$config_copy{"Model::${model}Model"}} = (
-    schema_class => "PomCur::${model}DB",
+  %{$config_copy{"Model::${model_name}Model"}} = (
+    schema_class => "PomCur::${model_name}DB",
     connect_info => ["dbi:SQLite:dbname=$file_name"],
   );
 
-  my $model_class_name = "PomCur::${model}DB";
-  my $schema = $model_class_name->new(\%config_copy);
+  my $model_class_name = "PomCur::${model_name}DB";
+  return $model_class_name->new(\%config_copy);
 }
 
 =head2
@@ -306,7 +302,8 @@ sub make_track_test_db
   unlink $track_test_db_file;
   copy $track_db_template_file, $track_test_db_file or die "$!\n";
 
-  return (schema_for_file($config, $track_test_db_file), $track_test_db_file);
+  return (schema_for_file($config, $track_test_db_file, 'Track'),
+          $track_test_db_file);
 }
 
 =head2 curs_key_of_test_case
