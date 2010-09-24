@@ -14,6 +14,8 @@ use File::Path qw(make_path remove_tree);
 use File::Copy qw(copy);
 use File::Basename;
 use YAML qw(LoadFile);
+use Data::Rmap ':all';
+use Clone qw(clone);
 
 use PomCur::Config;
 use PomCur::Meta::Util;
@@ -371,6 +373,35 @@ sub _load_curs_db_data
   }
 }
 
+sub _process_data
+{
+  my $cursdb_schema = shift;
+  my $config_data_ref = shift;
+
+  my $data = clone($config_data_ref);
+
+  rmap_to {
+    # change 'class_name:field_name' => 'value' to:
+    # 'class_name' => object_id
+    my %tmp_hash = %$_;
+    while (my ($key, $value) = each %tmp_hash) {
+      if ($key =~ /(.*):(.*)/) {
+        my $class_name = $1;
+        my $field_name = $2;
+        delete $_->{$key};
+        my $type_name = PomCur::DB::table_name_of_class($class_name);
+        my $object = $cursdb_schema->find_with_type($class_name,
+                                                    {
+                                                      $field_name, $value
+                                                    });
+        $_->{$type_name} = PomCur::DB::id_of_object($object);
+      }
+    }
+  } HASH, $data;
+
+  return $data;
+}
+
 =head2 make_curs_db
 
  Usage   : PomCur::TestUtil::make_curs_db($config, $curs_config,
@@ -419,6 +450,7 @@ sub make_curs_db
                            $curs_config);
       });
   }
+
 }
 
 

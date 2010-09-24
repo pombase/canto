@@ -31,3 +31,19 @@ test_config:
          genes:
            - "cdc11"
            - "SPCC1739.10"
+    'curs_annotations_1':
+       - curs_key: aaaa0005
+         first_contact_email: "kevin.hardwick@ed.ac.uk"
+         pubmedid: 18426916
+         submitter_email: "fred.smith@ed.ac.uk"
+         submitter_name: "Fred Smith"
+         current_gene: "SPCC1739.10"
+         genes:
+           - "cdc11"
+           - "SPCC1739.10"
+         annotations:
+           - type: go_component
+             status: new
+             pub_pubmedid: 18426916
+             data:
+               'Gene:primary_identifier': "SPCC1739.10"

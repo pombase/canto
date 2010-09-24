@@ -154,3 +154,5 @@ messages:
     examples:
       gene_identifier: 'SPBC11B10.09'
       gene_name: 'cdc11'
+
+test_config_file: 't/test_config.yaml'

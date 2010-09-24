@@ -36,6 +36,8 @@ requires 'IO::All';
 requires 'Test::Exception';
 requires 'JSON::Any';
 requires 'HTML::Mason';
+requires 'Data::Rmap';
+requires 'Clone';
 
 requires 'parent';
 requires 'Config::General';
