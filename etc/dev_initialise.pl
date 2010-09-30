@@ -43,8 +43,15 @@ sub make_schema
   die unless defined $schema_class and defined $connect_string;
 
   make_schema_at($schema_class,
-                   { debug => 0, dump_directory => './lib', inflect_singular =>
-                       \&remove_id },
+                   {
+                     debug => 0, dump_directory => './lib',
+                     inflect_singular => \&remove_id,
+                     naming => 'current',
+                     schema_base_class => 'PomCur::DB',
+                     use_moose => 1, use_namespaces => 0,
+                     moniker_map => { curs => 'Curs',
+                                      sessions => 'Sessions' },
+                   },
                  [ $connect_string ]);
 }
 

@@ -2,7 +2,9 @@
 # IMPORTANT: if you delete this file your app will not work as
 # expected.  You have been warned.
 use inc::Module::Install;
-
+use Module::Install::Catalyst; # Complain loudly if you don't have
+                               # Catalyst::Devel installed or haven't said
+                               # 'make dist' to create a standalone tarball.
 name 'PomCur';
 all_from 'lib/PomCur.pm';
 
@@ -48,8 +50,9 @@ requires 'Data::Rmap';
 requires 'Clone';
 requires 'Catalyst::Controller::HTML::FormFu';
 
-requires 'parent';
 requires 'Config::General';
+
+test_requires 'Test::More' => '0.88';
 
 catalyst;
 
