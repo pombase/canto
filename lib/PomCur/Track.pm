@@ -128,7 +128,11 @@ sub create_curs_db
   set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
   set_metadata($curs_schema, 'curs_id', $curs->curs_id());
 
-  return ($curs_schema, $db_file_name);
+  if (wantarray) {
+    return ($curs_schema, $db_file_name);
+  } else {
+    return $curs_schema;
+  }
 }
 
 =head2 create_curs_db_hook
