@@ -64,18 +64,10 @@ sub make_curs_dbs
 my ($fh, $temp_track_db) = tempfile();
 PomCur::TestUtil::make_base_track_db($config, $temp_track_db);
 
-my $base_track_db_file_name;
-($test_schemas{"0_curs"}, $base_track_db_file_name) =
-  PomCur::TestUtil::make_track_test_db($config, '0_curs', $temp_track_db);
-
-my $track_1_curs_db_file_name;
-($test_schemas{'1_curs'}, $track_1_curs_db_file_name) =
-  PomCur::TestUtil::make_track_test_db($config, '1_curs', $temp_track_db);
-make_curs_dbs('1_curs');
-
-my $track_3_curs_db_file_name;
-($test_schemas{'3_curs'}, $track_3_curs_db_file_name) =
-  PomCur::TestUtil::make_track_test_db($config, '3_curs', $temp_track_db);
-make_curs_dbs('3_curs');
+for my $test_case_key (sort keys %test_cases) {
+  warn "Creating database for $test_case_key\n";
+  PomCur::TestUtil::make_track_test_db($config, $test_case_key, $temp_track_db);
+  make_curs_dbs($test_case_key);
+}
 
 warn "Test initialisation complete\n";
