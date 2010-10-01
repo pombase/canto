@@ -350,7 +350,8 @@ sub column_type {
   }
 
   if ($field_info->{is_collection} ||
-        (defined $info_ref && $info_ref->{attrs}->{join_type})) {
+        (defined $info_ref && defined $info_ref->{attrs}->{accessor}
+           && $info_ref->{attrs}->{accessor} eq 'multi')) {
     return 'collection';
   } else {
     return 'attribute';
