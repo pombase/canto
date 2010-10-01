@@ -50,6 +50,7 @@ requires 'HTML::Mason';
 requires 'Data::Rmap';
 requires 'Clone';
 requires 'Catalyst::Controller::HTML::FormFu';
+requires 'Lingua::EN::Inflect::Number';
 
 requires 'Config::General';
 
