@@ -12,7 +12,7 @@ my $test_util = PomCur::TestUtil->new();
 $test_util->init_test('empty_db');
 
 my $config = $test_util->config();
-my $schema = PomCur::TrackDB->new($config);
+my $schema = PomCur::TrackDB->new(config => $config);
 
 my @loaded_genes = $schema->resultset('Gene')->all();
 

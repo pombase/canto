@@ -17,7 +17,7 @@ use PomCur::Config;
 
 
 my $config = PomCur::Config::get_config();
-my $schema = PomCur::TrackDB->new($config);
+my $schema = PomCur::TrackDB->new(config => $config);
 
 
 my $do_fields = 0;

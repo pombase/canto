@@ -48,7 +48,7 @@ use Carp;
 
 =head2 new
 
- Usage   : my $schema = PomCur::DB->new($c->config());
+ Usage   : my $schema = PomCur::DB->new(config => $c->config());
  Function: Return a new database connection (schema)
  Args    : $config - The configuration object
 
@@ -56,7 +56,9 @@ use Carp;
 sub new
 {
   my $self = shift;
-  my $config = shift;
+  my %args = @_;
+
+  my $config = $args{config};
 
   if (!defined $config) {
     croak "schema() needs a config hash as argument\n";

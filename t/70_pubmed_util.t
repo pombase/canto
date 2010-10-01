@@ -39,7 +39,7 @@ package main;
 $test_util->init_test();
 
 my $config = $test_util->config();
-my $schema = PomCur::TrackDB->new($config);
+my $schema = PomCur::TrackDB->new(config => $config);
 
 my @pub_results = $schema->resultset('Pub')->search();
 

@@ -147,7 +147,7 @@ sub init_test
 
   my $connect_string = $config->model_connect_string('Track');
 
-  $self->{track_schema} = PomCur::TrackDB->new($config);
+  $self->{track_schema} = PomCur::TrackDB->new(config => $config);
 
   my $db_file_name = connect_string_file_name($connect_string);
   my $test_case_def = $test_config->{test_cases}->{$test_env_type};
@@ -275,7 +275,7 @@ sub schema_for_file
   );
 
   my $model_class_name = "PomCur::${model_name}DB";
-  return $model_class_name->new(\%config_copy);
+  return $model_class_name->new(config => \%config_copy);
 }
 
 =head2 test_track_db_name

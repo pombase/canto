@@ -18,7 +18,7 @@ $config->merge_config($test_util->root_dir() . '/t/data/50_config_1.yaml');
 
 my $mock_c = { };
 
-my $schema = PomCur::TrackDB->new($config);
+my $schema = PomCur::TrackDB->new(config => $config);
 
 
 # mock package

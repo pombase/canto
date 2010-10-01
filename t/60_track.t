@@ -11,7 +11,7 @@ my $test_util = PomCur::TestUtil->new();
 $test_util->init_test();
 
 my $config = $test_util->config();
-my $schema = PomCur::TrackDB->new($config);
+my $schema = PomCur::TrackDB->new(config => $config);
 
 my @results = $schema->resultset('Curs')->search();
 

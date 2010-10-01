@@ -54,7 +54,7 @@ sub _build_schema {
 
   my $config = $self->config();
 
-  return PomCur::TrackDB->new($config);
+  return PomCur::TrackDB->new(config => $config);
 };
 
 1;
