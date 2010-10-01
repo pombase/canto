@@ -30,6 +30,7 @@ requires 'DBIx::Class::Schema';
 requires 'DBIx::Class::ResultSet::Data::Pageset';
 requires 'DBIx::Class::ResultClass::HashRefInflator';
 requires 'Moose';
+requires 'MooseX::NonMoose';
 requires 'MooseX::Role::Parameterized';
 requires 'Params::Validate';
 requires 'YAML';
