@@ -54,7 +54,8 @@ $title => 'Genes'
 % }
 
 % if ($big_list) {
-<input type="submit" name="submit" value="edit"/>
+<input type="submit" name="submit" value="Delete selected"/>
+<input type="submit" name="cancel" value="Cancel"/>
 <div class="upload-genes-link">
   <a href="<% $upload_path %>">Upload additional genes ...</a>
 </div>
