@@ -45,6 +45,8 @@ sub make_curs_dbs
   my $trackdb_schema = $test_schemas{$test_case_key};
   my $load_util = PomCur::Track::LoadUtil->new(schema => $trackdb_schema);
 
+  return unless defined $test_case;
+
   my $process_test_case =
     sub {
       for my $curs_config (@$test_case) {
@@ -61,13 +63,24 @@ sub make_curs_dbs
   }
 }
 
-my ($fh, $temp_track_db) = tempfile();
-PomCur::TestUtil::make_base_track_db($config, $temp_track_db);
+my ($fh_with_data, $temp_track_db_with_data) = tempfile();
+PomCur::TestUtil::make_base_track_db($config, $temp_track_db_with_data, 1);
+
+my ($fh_no_data, $temp_track_db_no_data) = tempfile();
+PomCur::TestUtil::make_base_track_db($config, $temp_track_db_no_data, 0);
 
 for my $test_case_key (sort keys %test_cases) {
   warn "Creating database for $test_case_key\n";
+  my $base_track_db;
+
+  if (defined $test_cases{$test_case_key}) {
+    $base_track_db = $temp_track_db_with_data;
+  } else {
+    $base_track_db = $temp_track_db_no_data;
+  }
+
   ($test_schemas{$test_case_key}) =
-    PomCur::TestUtil::make_track_test_db($config, $test_case_key, $temp_track_db);
+    PomCur::TestUtil::make_track_test_db($config, $test_case_key, $base_track_db);
   make_curs_dbs($test_case_key);
 }
 

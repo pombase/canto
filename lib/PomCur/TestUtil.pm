@@ -379,7 +379,8 @@ sub _add_pub_details
            genes and publication information
  Args    : $config - a PomCur::Config object
            $db_file_name - the file to create
-
+           $load_data - if non-zero or undef, load sample data into the new
+                        database, otherwise just load the schema
  Returns : The TrackDB schema
 
 =cut
@@ -387,6 +388,11 @@ sub make_base_track_db
 {
   my $config = shift;
   my $db_file_name = shift;
+  my $load_data = shift;
+
+  if (!defined $load_data) {
+    $load_data = 1;
+  }
 
   my $curation_file = $config->{test_config}->{curation_spreadsheet};
   my $genes_file = $config->{test_config}->{test_genes_file};
@@ -398,17 +404,21 @@ sub make_base_track_db
 
   my $schema = schema_for_file($config, $db_file_name, 'Track');
 
-  my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);
-  my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
+  if ($load_data) {
+    my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);
+    my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
 
-  my $process =
-    sub {
-      $curation_load->load($curation_file);
-      _add_pub_details($schema);
-      $gene_load->load($genes_file);
-    };
+    my $process =
+      sub {
+        $curation_load->load($curation_file);
+        _add_pub_details($schema);
+        $gene_load->load($genes_file);
+      };
 
-  $schema->txn_do($process);
+    $schema->txn_do($process);
+  }
+
+  return $schema;
 }
 
 =head2 curs_key_of_test_case
