@@ -66,7 +66,8 @@ PomCur::TestUtil::make_base_track_db($config, $temp_track_db);
 
 for my $test_case_key (sort keys %test_cases) {
   warn "Creating database for $test_case_key\n";
-  PomCur::TestUtil::make_track_test_db($config, $test_case_key, $temp_track_db);
+  ($test_schemas{$test_case_key}) =
+    PomCur::TestUtil::make_track_test_db($config, $test_case_key, $temp_track_db);
   make_curs_dbs($test_case_key);
 }
 
