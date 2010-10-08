@@ -378,11 +378,13 @@ sub _edit_genes_helper
       for my $gene_id (@gene_ids) {
         my $gene = $schema->find_with_type('Gene', $gene_id);
         $gene->delete();
+        if ($st->{current_gene_id} eq $gene_id) {
+          $st->{current_gene_id} = undef;
+        }
       }
     };
     $schema->txn_do($delete_sub);
   }
-
 }
 
 sub edit_genes : Chained('top') Args(0) Form
