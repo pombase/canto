@@ -107,6 +107,7 @@ div#footer .sponsor {
 #menu ul li span {
   float: left; text-decoration: none;
   padding: 4px 10px;
+  color: #999;
 }
 #menu ul li a:visited {
   color: white;
