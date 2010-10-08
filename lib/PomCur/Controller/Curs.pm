@@ -335,9 +335,10 @@ sub _find_and_create_genes
   }
 }
 
-sub edit_genes : Chained('top') Args(0) Form
+# $confirm_genes will be true if we have just uploaded some genes
+sub _edit_genes_helper
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $confirm_genes) = @_;
 
   my $st = $c->stash();
 
@@ -346,7 +347,7 @@ sub edit_genes : Chained('top') Args(0) Form
 
   $st->{current_component} = 'list_edit';
 
-  $st->{big_list} = 1;
+  $st->{confirm_genes} = $confirm_genes;
 
   my $config = $c->config();
   my $schema = $st->{schema};
@@ -381,6 +382,21 @@ sub edit_genes : Chained('top') Args(0) Form
     };
     $schema->txn_do($delete_sub);
   }
+
+}
+
+sub edit_genes : Chained('top') Args(0) Form
+{
+  my $self = shift;
+
+  $self->_edit_genes_helper(@_, 0);
+}
+
+sub confirm_genes : Chained('top') Args(0) Form
+{
+  my $self = shift;
+
+  $self->_edit_genes_helper(@_, 1);
 }
 
 sub gene_upload : Chained('top') Args(0) Form
@@ -444,7 +460,7 @@ sub gene_upload : Chained('top') Args(0) Form
         $c->stash()->{state} = GENE_ACTIVE;
       }
 
-      _redirect_and_detach($c, 'edit_genes');
+      _redirect_and_detach($c, 'confirm_genes');
     }
   }
 }
