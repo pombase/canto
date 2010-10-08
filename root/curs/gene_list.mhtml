@@ -41,7 +41,7 @@ $title => 'Genes'
       <td>
         <input type="checkbox"
                name="gene-select"
-               value="<% $gene->{primary_identifier} %>" />
+               value="<% $gene->{gene_id} %>" />
       </td>
 %     }
     </tr>

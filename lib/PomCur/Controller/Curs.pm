@@ -347,6 +347,40 @@ sub edit_genes : Chained('top') Args(0) Form
   $st->{current_component} = 'list_edit';
 
   $st->{big_list} = 1;
+
+  my $config = $c->config();
+  my $schema = $st->{schema};
+
+  my $form = $self->form();
+
+  my @all_elements = (
+      {
+        name => 'gene-select', label => 'gene-select',
+        type => 'Checkbox',
+      },
+      {
+        name => 'confirm-def', type => 'Submit', value => 'confirm',
+      },
+    );
+
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my @gene_ids = @{$form->param_array('gene-select')};
+
+    my $delete_sub = sub {
+      for my $gene_id (@gene_ids) {
+        my $gene = $schema->find_with_type('Gene', $gene_id);
+        $gene->delete();
+      }
+    };
+    $schema->txn_do($delete_sub);
+  }
 }
 
 sub gene_upload : Chained('top') Args(0) Form
