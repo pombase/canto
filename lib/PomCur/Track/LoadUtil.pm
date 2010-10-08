@@ -45,17 +45,6 @@ has 'schema' => (
   isa => 'PomCur::TrackDB'
 );
 
-sub _empty_hash
-{
-  return {};
-}
-has 'people' => ( is => 'ro', builder => '_empty_hash' );
-has 'labs' => ( is => 'ro', builder => '_empty_hash' );
-has 'pubs' => ( is => 'ro', builder => '_empty_hash' );
-has 'organisms' => ( is => 'ro', builder => '_empty_hash' );
-has 'cvs' => ( is => 'ro', builder => '_empty_hash' );
-has 'cvterms' => ( is => 'ro', builder => '_empty_hash' );
-
 sub get_organism
 {
   my $self = shift;
@@ -67,17 +56,11 @@ sub get_organism
 
   my $full_name = "$genus $species";
 
-  if (!exists $self->{organisms}->{$full_name}) {
-    my $organism = $schema->create_with_type('Organism',
-                                             {
-                                               genus => $genus,
-                                               species => $species,
-                                             });
-
-    $self->{organisms}->{$full_name} = $organism;
-  }
-
-  return $self->{organisms}->{$full_name};
+  return $schema->resultset('Organism')->find_or_create(
+      {
+        genus => $genus,
+        species => $species,
+      });
 }
 
 sub get_cv
@@ -87,16 +70,10 @@ sub get_cv
 
   my $schema = $self->schema();
 
-  if (!exists $self->{cvs}->{$cv_name}) {
-    my $cv = $schema->create_with_type('Cv',
-                                       {
-                                         name => $cv_name
-                                       });
-
-    $self->{cvs}->{$cv_name} = $cv;
-  }
-
-  return $self->{cvs}->{$cv_name};
+  return $schema->resultset('Cv')->find_or_create(
+      {
+        name => $cv_name
+      });
 }
 
 sub get_cvterm
@@ -108,17 +85,11 @@ sub get_cvterm
 
   my $schema = $self->schema();
 
-  if (!exists $self->{cvterms}->{$cvterm_name}) {
-    my $cvterm = $schema->create_with_type('Cvterm',
-                                           {
-                                             name => $cvterm_name,
-                                             cv => $cv,
-                                           });
-
-    $self->{cvterms}->{$cvterm_name} = $cvterm;
-  }
-
-  return $self->{cvterms}->{$cvterm_name};
+  return $schema->resultset('Cvterm')->find_or_create(
+      {
+        name => $cvterm_name,
+        cv => $cv,
+      });
 }
 
 sub get_pub
@@ -131,17 +102,11 @@ sub get_pub
   my $pub_type_cv = $self->get_cv('PomBase publication type');
   my $pub_type = $self->get_cvterm($pub_type_cv, 'unknown');
 
-  if (!exists $self->{pubs}->{$pubmed_id}) {
-    my $pub = $schema->create_with_type('Pub',
-                                        {
-                                          pubmedid => $pubmed_id,
-                                          type => $pub_type,
-                                        });
-
-    $self->{pubs}->{$pubmed_id} = $pub;
-  }
-
-  return $self->{pubs}->{$pubmed_id};
+  return $schema->resultset('Pub')->find_or_create(
+      {
+        pubmedid => $pubmed_id,
+        type => $pub_type,
+      });
 }
 
 sub get_lab
@@ -155,17 +120,11 @@ sub get_lab
 
   (my $lab_head_surname = $lab_head_name) =~ s/.* //;
 
-  if (!exists $self->{labs}->{$lab_head_name}) {
-    my $lab = $schema->create_with_type('Lab',
-                                        {
-                                          lab_head => $lab_head,
-                                          name => "$lab_head_surname Lab"
-                                         });
-
-    $self->{labs}->{$lab_head_name} = $lab;
-  }
-
-  return $self->{labs}->{$lab_head_name};
+  return $schema->resultset('Lab')->find_or_create(
+      {
+        lab_head => $lab_head,
+        name => "$lab_head_surname Lab"
+      });
 }
 
 sub get_person
@@ -184,19 +143,13 @@ sub get_person
     die "name not set for $networkaddress\n";
   }
 
-  if (!exists $self->{people}->{$name}) {
-    my $person = $schema->create_with_type('Person',
-                                           {
-                                             name => $name,
-                                             networkaddress => $networkaddress,
-                                             password => $networkaddress,
-                                             role => $role_cvterm,
-                                           });
-
-    $self->{people}->{$name} = $person;
-  }
-
-  return $self->{people}->{$name};
+  return $schema->resultset('Person')->find_or_create(
+      {
+        name => $name,
+        networkaddress => $networkaddress,
+        password => $networkaddress,
+        role => $role_cvterm,
+      });
 }
 
 1;
