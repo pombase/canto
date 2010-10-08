@@ -360,7 +360,8 @@ sub _edit_genes_helper
         type => 'Checkbox',
       },
       {
-        name => 'confirm-def', type => 'Submit', value => 'confirm',
+        name => 'submit', type => 'Submit', value => '',
+        name => 'continue', type => 'Submit', value => '',
       },
     );
 
@@ -372,6 +373,10 @@ sub _edit_genes_helper
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
+    if (defined $c->req->param('continue')) {
+      _redirect_and_detach($c);
+    }
+
     my @gene_ids = @{$form->param_array('gene-select')};
 
     my $delete_sub = sub {
