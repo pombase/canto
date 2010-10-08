@@ -342,7 +342,7 @@ sub edit_genes : Chained('top') Args(0) Form
   my $st = $c->stash();
 
   $st->{title} = 'Gene list';
-  $st->{template} = 'curs/gene_list.mhtml';
+  $st->{template} = 'curs/gene_list_edit.mhtml';
 
   $st->{current_component} = 'list_edit';
 

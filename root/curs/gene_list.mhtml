@@ -1,33 +1,11 @@
 <%args>
-$big_list => 0
 $title => 'Genes'
 </%args>
 
-<div class="<% $class %>">
+<div class="gene-list">
   <div class="title">Current gene list</div>
-  <form name="gene-edit" method="get" action="<% $edit_path %>">
 % if (@gene_hashes) {
-%   if ($big_list) {
-  <table class="list">
-% } else {
   <table>
-% }
-
-%   if ($big_list) {
-    <thead>
-      <tr>
-%     for my $col_name (@col_names) {
-        <th>
-          <% $col_name %>
-        </th>
-%     }
-        <th>
-          &nbsp;
-        </th>
-      </tr>
-    </thead>
-%   }
-
 %   for my $gene (@gene_hashes) {
     <tr>
 %     for my $col_name (@col_names) {
@@ -35,13 +13,6 @@ $title => 'Genes'
         <a href="<% $start_path . '/set_current_gene/' .$gene->{gene_id} %>">
           <% $gene->{$col_name} %>
         </a>
-      </td>
-%     }
-%     if ($big_list) {
-      <td>
-        <input type="checkbox"
-               name="gene-select"
-               value="<% $gene->{gene_id} %>" />
       </td>
 %     }
     </tr>
@@ -53,17 +24,9 @@ $title => 'Genes'
   </div>
 % }
 
-% if ($big_list) {
-<input type="submit" name="submit" value="Delete selected"/>
-<input type="submit" name="cancel" value="Cancel"/>
-<div class="upload-genes-link">
-  <a href="<% $upload_path %>">Upload additional genes ...</a>
-</div>
-% } else {
   <div class="view-edit">
     <a href="<% $edit_path %>">View or edit ...</a>
   </div>
-% }
 </form>
 </div>
 
@@ -72,26 +35,13 @@ use PomCur::Curs;
 
 my $schema = $c->stash()->{schema};
 my @all_genes = $schema->resultset('Gene')->all();
-my $class;
-my @col_names;
-
 my @gene_hashes = map {
      {
-       primary_identifier => $_->primary_identifier(),
-       primary_name => $_->primary_name(),
-       product => $_->product(),
        identifier => $_->primary_name() || $_->primary_identifier(),
-       gene_id => $_->gene_id(),
      }
    } @all_genes;
 
-if ($big_list) {
-  $class = 'big-gene-list';
-  @col_names = qw(primary_identifier primary_name product);
-} else {
-  $class = 'small-gene-list';
-  @col_names = qw(identifier);
-}
+my @col_names = qw(identifier);
 
 my $start_path = $c->stash()->{curs_root_path};
 my $upload_path = "$start_path/gene_upload";

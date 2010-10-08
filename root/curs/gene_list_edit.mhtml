@@ -1,0 +1,76 @@
+<%args>
+$title => 'Genes'
+</%args>
+
+<div class="gene-list-edit">
+  <div class="title">Current gene list</div>
+  <form name="gene-edit" method="get" action="<% $edit_path %>">
+% if (@gene_hashes) {
+  <table class="list">
+
+    <thead>
+      <tr>
+%     for my $col_name (@col_names) {
+        <th>
+          <% $col_name %>
+        </th>
+%     }
+        <th>
+          &nbsp;
+        </th>
+      </tr>
+    </thead>
+
+%   for my $gene (@gene_hashes) {
+    <tr>
+%     for my $col_name (@col_names) {
+      <td>
+        <a href="<% $start_path . '/set_current_gene/' .$gene->{gene_id} %>">
+          <% $gene->{$col_name} %>
+        </a>
+      </td>
+%     }
+      <td>
+        <input type="checkbox"
+               name="gene-select"
+               value='<% $gene->{gene_id} %>' />
+      </td>
+    </tr>
+%   }
+  </table>
+  <input type="submit" name="submit" value="Delete selected"/>
+  <input type="submit" name="cancel" value="Cancel"/>
+% } else {
+  <div class="no-genes-message">
+    [No genes]
+  </div>
+% }
+
+<div class="upload-genes-link">
+  <a href="<% $upload_path %>">Upload additional genes ...</a>
+</div>
+</form>
+</div>
+
+<%init>
+use PomCur::Curs;
+
+my $schema = $c->stash()->{schema};
+my @all_genes = $schema->resultset('Gene')->all();
+
+my @gene_hashes = map {
+     {
+       primary_identifier => $_->primary_identifier(),
+       primary_name => $_->primary_name(),
+       product => $_->product(),
+       identifier => $_->primary_name() || $_->primary_identifier(),
+       gene_id => $_->gene_id(),
+     }
+   } @all_genes;
+
+my @col_names = qw(primary_identifier primary_name product);
+
+my $start_path = $c->stash()->{curs_root_path};
+my $upload_path = "$start_path/gene_upload";
+my $edit_path = "$start_path/edit_genes";
+</%init>
