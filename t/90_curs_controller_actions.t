@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 19;
 
 use Data::Compare;
 
@@ -31,6 +31,8 @@ my $cookie_jar = HTTP::Cookies->new(
 
 my $test_name = 'Dr. Test Name';
 my $test_email = 'test.name@example.com';
+
+my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
 test_psgi $app, sub {
   my $cb = shift;
@@ -76,12 +78,12 @@ test_psgi $app, sub {
     like ($redirect_res->content(), qr/email-address.*$test_email/);
   }
 
+  my @gene_identifiers = qw(cdc11 wtf22 SPCC1739.10);
+
   # test submitting a list of genes
   {
-    my @gene_names = qw(cdc11 wtf22);
-
     my $uri = new URI("$root_url/");
-    $uri->query_form(gene_identifiers => "@gene_names",
+    $uri->query_form(gene_identifiers => "@gene_identifiers",
                      submit => 'Submit',
                     );
 
@@ -101,9 +103,40 @@ test_psgi $app, sub {
 
     like ($redirect_res->content(), qr/Gene list/);
     like ($redirect_res->content(), qr/cdc11/);
+
+    my @stored_genes = $curs_schema->resultset('Gene')->all();
+    is (@stored_genes, 3);
+
+    for my $gene_identifier (@gene_identifiers) {
+      ok (grep { $_->primary_identifier() eq $gene_identifier ||
+                 ( defined $_->primary_name() &&
+                   $_->primary_name() eq $gene_identifier ) } @stored_genes);
+    }
   }
 
-  # FIXME Test gene update
+  # test deleting genes
+  {
+    my @stored_genes = $curs_schema->resultset('Gene')->all();
+    my @stored_gene_ids = map { $_->gene_id() } @stored_genes;
+
+    my $uri = new URI("$root_url/edit_genes");
+    $uri->query_form(submit => 'Delete selected',
+                     'gene-select' => [@stored_gene_ids],
+                    );
+
+    my $req = HTTP::Request->new(GET => $uri);
+
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my @genes_after_delete = $curs_schema->resultset('Gene')->all();
+
+    is (@genes_after_delete, 0);
+  }
+
 };
 
 done_testing;
