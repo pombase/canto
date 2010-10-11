@@ -3,6 +3,7 @@ $curs_key
 $state
 $curs_root_path
 $gene_long_display_name
+@annotation_type_list
 </%args>
 
 % if ($state eq 'done') {
@@ -11,7 +12,8 @@ $gene_long_display_name
 <p>Annotating <span class="current-gene"><% $gene_long_display_name %></span>,
   choose annotation type:</p>
   <ul class="annotation-start">
-% while(my ($annotation_type_name, $annotation_type) = each %annotation_types) {
+% for my $annotation_type (@annotation_type_list) {
+%   my $annotation_type_name = $annotation_type->{name};
 %   my $action_path = $curs_root_path . '/annotation/create/' . $annotation_type_name;
     <li>
       <a href="<% $action_path %>">
@@ -21,8 +23,3 @@ $gene_long_display_name
 % }
   </ul>
 % }
-
-
-<%init>
-my %annotation_types = %{$c->stash()->{annotation_types}};
-</%init>

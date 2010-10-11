@@ -119,6 +119,12 @@ sub setup
     my $name = $report->{name};
     $self->{reports}->{$name} = $report;
   }
+
+  # create an annotation_types hash from the annotation_type_list
+  for my $annotation_type (@{$self->{annotation_type_list}}) {
+    my $annotation_type_name = $annotation_type->{name};
+    $self->{annotation_types}->{$annotation_type_name} = $annotation_type;
+  }
 }
 
 =head2

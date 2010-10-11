@@ -85,9 +85,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{curs_root_path} = $root_path;
 
   my $config = $c->config();
-  my %annotation_types = %{$config->{annotation_types}};
 
-  $st->{annotation_types} = { %annotation_types };
+  $st->{annotation_types} = $config->{annotation_types};
+  $st->{annotation_type_list} = $config->{annotation_type_list};
 
   my $schema = PomCur::Curs::get_schema($c);
   $st->{schema} = $schema;
