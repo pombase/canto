@@ -395,6 +395,10 @@ sub _edit_genes_helper
           }
         };
         $schema->txn_do($delete_sub);
+
+        if ($schema->resultset('Gene')->count() == 0) {
+          _redirect_and_detach($c, 'gene_upload');
+        }
       }
     }
   }

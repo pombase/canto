@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 21;
 
 use Data::Compare;
 
@@ -130,7 +130,16 @@ test_psgi $app, sub {
 
     my $res = $cb->($req);
 
-    is $res->code, 200;
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    is ($redirect_url, "$root_url/gene_upload");
+
+    my $redirect_req = HTTP::Request->new(GET =>$redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    like ($redirect_res->content(), qr/Gene upload/);
 
     my @genes_after_delete = $curs_schema->resultset('Gene')->all();
 
