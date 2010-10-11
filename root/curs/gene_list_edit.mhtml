@@ -32,9 +32,7 @@ $confirm_genes
     <tr>
 %     for my $col_name (@col_names) {
       <td>
-        <a href="<% $start_path . '/set_current_gene/' .$gene->{gene_id} %>">
-          <% $gene->{$col_name} %>
-        </a>
+        <% $gene->{$col_name} %>
       </td>
 %     }
       <td>
