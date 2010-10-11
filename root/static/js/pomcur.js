@@ -51,7 +51,8 @@ var pomcur = {
       url: pomcur.ontology_complete_url,
       data: { term: term_id, def: 1, children: 1 },
       dataType: 'json',
-      success: pomcur.use_term_data
+      success: pomcur.use_term_data,
+      async: false
     });
     $('#ferret-term-entry').hide();
   },
@@ -102,6 +103,7 @@ var pomcur = {
     var last_id = pomcur.term_history.last().id;
     pomcur.truncate_history(last_id);
     pomcur.term_selected(last_id);
+    pomcur.show_hide_children();
     return false;
   },
 
@@ -110,6 +112,7 @@ var pomcur = {
     var term_id = href.substring(href.indexOf('#') + 1);
     pomcur.truncate_history(term_id);
     pomcur.term_selected(term_id);
+    pomcur.show_hide_children();
   },
 
   term_click_handler : function(event) {
