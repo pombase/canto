@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 21;
+use Test::More tests => 33;
 
 use Data::Compare;
 
@@ -34,11 +34,50 @@ my $test_email = 'test.name@example.com';
 
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
-test_psgi $app, sub {
+my $root_url = "http://localhost:5000/curs/$curs_key";
+my $pub_title_fragment = "Inactivating pentapeptide insertions";
+
+my @gene_identifiers = qw(cdc11 wtf22 SPCC1739.10);
+
+# test submitting a list of genes
+sub upload_genes
+{
   my $cb = shift;
 
-  my $root_url = "http://localhost:5000/curs/$curs_key";
-  my $pub_title_fragment = "Inactivating pentapeptide insertions";
+  my $uri = new URI("$root_url/");
+  $uri->query_form(gene_identifiers => "@gene_identifiers",
+                   submit => 'Submit',
+                 );
+
+  my $req = HTTP::Request->new(GET => $uri);
+  $cookie_jar->add_cookie_header($req);
+
+  my $res = $cb->($req);
+
+  is $res->code, 302;
+
+  my $redirect_url = $res->header('location');
+
+  is ($redirect_url, "$root_url/confirm_genes");
+
+  my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+  my $redirect_res = $cb->($redirect_req);
+
+  like ($redirect_res->content(), qr/Gene list/);
+  like ($redirect_res->content(), qr/cdc11/);
+
+  my @stored_genes = $curs_schema->resultset('Gene')->all();
+  is (@stored_genes, 3);
+
+  for my $gene_identifier (@gene_identifiers) {
+    ok (grep { $_->primary_identifier() eq $gene_identifier ||
+                 ( defined $_->primary_name() &&
+                     $_->primary_name() eq $gene_identifier ) } @stored_genes);
+  }
+}
+
+test_psgi $app, sub {
+  my $cb = shift;
 
   # front page redirect
   {
@@ -78,41 +117,7 @@ test_psgi $app, sub {
     like ($redirect_res->content(), qr/email-address.*$test_email/);
   }
 
-  my @gene_identifiers = qw(cdc11 wtf22 SPCC1739.10);
-
-  # test submitting a list of genes
-  {
-    my $uri = new URI("$root_url/");
-    $uri->query_form(gene_identifiers => "@gene_identifiers",
-                     submit => 'Submit',
-                    );
-
-    my $req = HTTP::Request->new(GET => $uri);
-    $cookie_jar->add_cookie_header($req);
-
-    my $res = $cb->($req);
-
-    is $res->code, 302;
-
-    my $redirect_url = $res->header('location');
-
-    is ($redirect_url, "$root_url/confirm_genes");
-
-    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
-    my $redirect_res = $cb->($redirect_req);
-
-    like ($redirect_res->content(), qr/Gene list/);
-    like ($redirect_res->content(), qr/cdc11/);
-
-    my @stored_genes = $curs_schema->resultset('Gene')->all();
-    is (@stored_genes, 3);
-
-    for my $gene_identifier (@gene_identifiers) {
-      ok (grep { $_->primary_identifier() eq $gene_identifier ||
-                 ( defined $_->primary_name() &&
-                   $_->primary_name() eq $gene_identifier ) } @stored_genes);
-    }
-  }
+  upload_genes($cb);
 
   # test deleting genes
   {
@@ -146,6 +151,33 @@ test_psgi $app, sub {
     is (@genes_after_delete, 0);
   }
 
+  upload_genes($cb);
+
+  # test deleting 1 gene
+  {
+    my @stored_genes = $curs_schema->resultset('Gene')->all();
+    my @stored_gene_ids = map { $_->gene_id() } @stored_genes;
+
+    my $uri = new URI("$root_url/edit_genes");
+    $uri->query_form(submit => 'Delete selected',
+                     'gene-select' => [$stored_gene_ids[0]],
+                    );
+
+    my $req = HTTP::Request->new(GET => $uri);
+
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    like ($res->content(), qr/Removed 1 gene from list/);
+    like ($res->content(), qr/Current gene list/);
+
+    my @genes_after_delete = $curs_schema->resultset('Gene')->all();
+
+    is (@genes_after_delete, 2);
+  }
 };
 
 done_testing;
