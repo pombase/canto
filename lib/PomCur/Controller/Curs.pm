@@ -390,7 +390,7 @@ sub _edit_genes_helper
             $gene->delete();
             if (defined $st->{current_gene_id} &&
                 $st->{current_gene_id} eq $gene_id) {
-              $st->{current_gene_id} = undef;
+              _set_new_gene($schema);
             }
           }
         };
