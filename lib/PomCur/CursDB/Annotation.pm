@@ -91,9 +91,26 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 gene_annotations
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:67JQedBjsMOmdg8xLmtP9A
+Type: has_many
+
+Related object: L<PomCur::CursDB::GeneAnnotation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "gene_annotations",
+  "PomCur::CursDB::GeneAnnotation",
+  { "foreign.annotation" => "self.annotation_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-11 13:37:39
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7IU8A0/v6YcX18Ny27rVhA
+
+__PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');
 
 use YAML;
 
@@ -101,10 +118,6 @@ __PACKAGE__->inflate_column('data', {
   inflate => sub { my @res = Load(shift); $res[0] },
   deflate => sub { Dump(shift) },
 });
-
-
-# You can replace this text with custom content, and it will be preserved on regeneration
-1;
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

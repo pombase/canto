@@ -83,18 +83,30 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 gene_annotations
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2z89CNxMRrzIgFWE4jEBIA
+Type: has_many
+
+Related object: L<PomCur::CursDB::GeneAnnotation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "gene_annotations",
+  "PomCur::CursDB::GeneAnnotation",
+  { "foreign.gene" => "self.gene_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-11 13:37:39
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/jE57YL1mn6hgzPhRVG68g
+
+__PACKAGE__->many_to_many('annotations' => 'gene_annotations', 'annotation');
 
 use Moose;
 
 with 'PomCur::Role::GeneNames';
 
-# You can replace this text with custom content, and it will be preserved on regeneration
-1;
-
-
-# You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

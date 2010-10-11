@@ -489,8 +489,44 @@ sub _load_curs_db_data
   for my $annotation (@{$curs_config->{annotations}}) {
     my %create_args = %{_process_data($cursdb_schema, $annotation)};
 
+    # save the args that are arrays and set them after creation to cope with
+    # many-many relations
+    my %array_args = ();
+
+    for my $key (keys %create_args) {
+      if (ref $create_args{$key} eq 'ARRAY') {
+        $array_args{$key} = $create_args{$key};
+        delete $create_args{$key};
+      }
+    }
+
     my $new_annotation =
       $cursdb_schema->create_with_type('Annotation', { %create_args });
+
+    for my $key (keys %array_args) {
+      my $method = "set_$key";
+      $new_annotation->$method(@{$array_args{$key}});
+    }
+  }
+}
+
+sub _replace_object
+{
+  my $schema = shift;
+  my $class_name = shift;
+  my $lookup_field_name = shift;
+  my $value = shift;
+  my $return_object = shift;
+
+  my $object = $schema->find_with_type($class_name,
+                                       {
+                                         $lookup_field_name, $value
+                                       });
+
+  if ($return_object) {
+    return $object;
+  } else {
+    return PomCur::DB::id_of_object($object);
   }
 }
 
@@ -501,23 +537,32 @@ sub _process_data
 
   my $data = clone($config_data_ref);
 
+  my $field_name = $1;
+  my $class_name = $2;
+  my $lookup_field_name = $3;
+
   rmap_to {
-    # change 'class_name:field_name' => 'value' to:
-    # 'class_name' => object_id
+    # change 'field_name(class_name:field_name)' => [value, value] to:
+    # 'field_name' => [object_id, object_id] by looking up the object
     my %tmp_hash = %$_;
     while (my ($key, $value) = each %tmp_hash) {
-      if ($key =~ /(.*):(.*)/) {
-        my $class_name = $1;
-        my $field_name = $2;
+      if ($key =~ /([^:]+)\((.*):(.*)\)/) {
+        my $field_name = $1;
+        my $class_name = $2;
+        my $lookup_field_name = $3;
         delete $_->{$key};
         my $type_name = PomCur::DB::table_name_of_class($class_name);
 
-        my $object = $cursdb_schema->find_with_type($class_name,
-                                                    {
-                                                      $field_name, $value
-                                                    });
-
-        $_->{$type_name} = PomCur::DB::id_of_object($object);
+        if (ref $value eq 'ARRAY') {
+          $_->{$field_name} = [map {
+            _replace_object($cursdb_schema, $class_name,
+                            $lookup_field_name, $_, 1);
+          } @$value];
+        } else {
+          $_->{$field_name} =
+            _replace_object($cursdb_schema,
+                            $class_name, $lookup_field_name, $value);
+        }
       }
     }
   } HASH, $data;

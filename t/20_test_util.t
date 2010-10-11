@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Test::Exception;
 use File::Temp qw(tempfile);
 use Data::Compare;
@@ -130,7 +130,8 @@ use PomCur::Track::LoadUtil;
   my $results =
     PomCur::TestUtil::_process_data($test_curs_db, $annotations_conf);
 
-  is ($results->{data}->{gene}, 200);
+  is (@{$results->{genes}}, 1);
+  is ($results->{genes}->[0]->gene_id(), 200);
   is ($results->{pub}, 300);
 }
 
@@ -217,14 +218,13 @@ sub track_init
 
   my $annotation_conf = $curs_config->{annotations}->[0];
 
-  is ($res_annotation->pub()->pubmedid(), $annotation_conf->{'Pub:pubmedid'});
+  is ($res_annotation->pub()->pubmedid(), $annotation_conf->{'pub(Pub:pubmedid)'});
 
-  my $gene_identifier = $annotation_conf->{data}->{'Gene:primary_identifier'};
+  my $gene_identifier = $annotation_conf->{'genes(Gene:primary_identifier)'};
   my $gene = $cursdb_schema->find_with_type('Gene',
                                             {
                                               primary_identifier => $gene_identifier,
                                             });
 
-  is ($res_annotation->data()->{'gene'},
-      $gene->gene_id());
+  is ($res_annotation->genes()->first()->gene_id(), $gene->gene_id());
 }

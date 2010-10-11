@@ -41,6 +41,8 @@ test_config:
          annotations:
            - type: go_component
              status: new
-             'Pub:pubmedid': 18426916
+             'genes(Gene:primary_identifier)':
+               - 'SPCC1739.10'
+             'pub(Pub:pubmedid)': 18426916
              data:
-               'Gene:primary_identifier': "SPCC1739.10"
+               some_key: 'some_value'

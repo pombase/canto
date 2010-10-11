@@ -525,13 +525,14 @@ sub annotation_create : Chained('top') PathPart('annotation/create') Args(1)
   my $guard = $schema->txn_scope_guard;
 
   my $current_gene_id = $c->stash()->{current_gene_id};
+  my $current_gene = $schema->find_with_type('Gene', $current_gene_id);
   my $annotation =
     $schema->create_with_type('Annotation', { type => $annotation_type_name,
                                               status => 'new',
-                                              data => {
-                                                gene_id => $current_gene_id
-                                              }
+                                              data => {}
                                             });
+
+  $annotation->set_genes($current_gene);
 
   $guard->commit();
 
@@ -552,7 +553,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
   my $annotation = $schema->find_with_type('Annotation', $annotation_id);
   my $annotation_type_name = $annotation->type();
 
-  my $gene = $schema->find_with_type('Gene', $annotation->data()->{gene_id});
+  my $gene = $annotation->genes()->first();
   my $gene_display_name = $gene->long_display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};

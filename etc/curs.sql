@@ -24,6 +24,12 @@ CREATE TABLE annotation (
        UNIQUE (annotation_id, status, type)
 );
 
+CREATE TABLE gene_annotation (
+       gene_annotation_id integer PRIMARY KEY,
+       gene integer REFERENCES gene(gene_id),
+       annotation integer REFERENCES annotation(annotation_id)
+);
+
 CREATE TABLE pub (
        pub_id integer primary key,
        pubmedid integer NOT NULL UNIQUE,
