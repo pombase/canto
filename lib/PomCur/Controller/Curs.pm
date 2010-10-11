@@ -357,11 +357,11 @@ sub _edit_genes_helper
   my @all_elements = (
       {
         name => 'gene-select', label => 'gene-select',
-        type => 'Checkbox',
+        type => 'Checkbox', default_empty_value => 1
       },
       {
-        name => 'submit', type => 'Submit', value => '',
-        name => 'continue', type => 'Submit', value => '',
+        name => 'submit', type => 'Submit', value => 'Delete selected',
+        name => 'continue', type => 'Submit', value => 'Continue',
       },
     );
 
@@ -377,18 +377,25 @@ sub _edit_genes_helper
       _redirect_and_detach($c);
     }
 
-    my @gene_ids = @{$form->param_array('gene-select')};
+    if ($c->req()->param('submit')) {
+      my @gene_ids = @{$form->param_array('gene-select')};
 
-    my $delete_sub = sub {
-      for my $gene_id (@gene_ids) {
-        my $gene = $schema->find_with_type('Gene', $gene_id);
-        $gene->delete();
-        if ($st->{current_gene_id} eq $gene_id) {
-          $st->{current_gene_id} = undef;
-        }
+      if (@gene_ids == 0) {
+        $st->{error} =
+          { title => "No genes selected for deletion" };
+      } else {
+        my $delete_sub = sub {
+          for my $gene_id (@gene_ids) {
+            my $gene = $schema->find_with_type('Gene', $gene_id);
+            $gene->delete();
+            if ($st->{current_gene_id} eq $gene_id) {
+              $st->{current_gene_id} = undef;
+            }
+          }
+        };
+        $schema->txn_do($delete_sub);
       }
-    };
-    $schema->txn_do($delete_sub);
+    }
   }
 }
 
