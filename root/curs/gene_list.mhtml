@@ -38,6 +38,7 @@ my @all_genes = $schema->resultset('Gene')->all();
 my @gene_hashes = map {
      {
        identifier => $_->primary_name() || $_->primary_identifier(),
+       gene_id => $_->gene_id(),
      }
    } @all_genes;
 
