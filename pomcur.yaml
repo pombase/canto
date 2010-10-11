@@ -130,11 +130,16 @@ implementation_classes:
 # page based on the module name, eg. go_function.html
 annotation_types:
   go_function:
-    display_name: 'GO molecular functions and biological processes'
+    display_name: 'GO molecular functions'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - function
+  go_process:
+    display_name: 'GO biological processes'
+    class: 'PomCur::CurModules::GOModule'
+    constructor_args:
+      ontologies:
         - process
   go_component:
     display_name: 'GO cellular components or complexes'

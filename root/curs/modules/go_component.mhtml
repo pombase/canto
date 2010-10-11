@@ -1,5 +1,6 @@
 <%args>
 $annotation_helper
+$current_component_display_name
 </%args>
 
 <div id="ferret">
@@ -7,7 +8,7 @@ $annotation_helper
 <form id="ferret-form" action="" method="post">
   <input type="hidden" id="ferret-term-id"/>
   <div id="ferret-term-entry">
-    Identify GO molecular functions or biological processes
+    Identify <% $current_component_display_name %>
     <input id="ferret-term-input" name="ferret-term-entry"
            type="text" size="50" 
            placeholder="start typing and suggestions will be made ..."

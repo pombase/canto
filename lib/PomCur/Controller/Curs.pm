@@ -560,6 +560,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
   my $module_display_name = $annotation_config->{display_name};
   $st->{title} = $module_display_name . ' for ' . $gene_display_name;
   $st->{current_component} = $annotation_type_name;
+  $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/$annotation_type_name.mhtml";
 
   my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
