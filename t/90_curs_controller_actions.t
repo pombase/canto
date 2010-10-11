@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 33;
+use Test::More tests => 37;
 
 use Data::Compare;
 
@@ -177,6 +177,31 @@ test_psgi $app, sub {
     my @genes_after_delete = $curs_schema->resultset('Gene')->all();
 
     is (@genes_after_delete, 2);
+  }
+
+  # test continuing from gene edit form
+  {
+    my $uri = new URI("$root_url/edit_genes");
+    $uri->query_form(continue => 'Continue');
+
+    my $req = HTTP::Request->new(GET => $uri);
+
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    is ($redirect_url, "$root_url");
+
+    my $redirect_req = HTTP::Request->new(GET =>$redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    like ($redirect_res->content(),
+          qr/Annotating.*$gene_identifiers[0].*,/);
+    like ($redirect_res->content(), qr/Current gene list/);
   }
 };
 
