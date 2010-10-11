@@ -388,7 +388,8 @@ sub _edit_genes_helper
           for my $gene_id (@gene_ids) {
             my $gene = $schema->find_with_type('Gene', $gene_id);
             $gene->delete();
-            if ($st->{current_gene_id} eq $gene_id) {
+            if (defined $st->{current_gene_id} &&
+                $st->{current_gene_id} eq $gene_id) {
               $st->{current_gene_id} = undef;
             }
           }
