@@ -169,7 +169,11 @@ sub _set_new_gene
   my $gene_rs = _get_gene_resultset($schema);
   my $first_gene = $gene_rs->first();
 
-  set_metadata($schema, 'current_gene_id', $first_gene->gene_id());
+  if (defined $first_gene) {
+    set_metadata($schema, 'current_gene_id', $first_gene->gene_id());
+  } else {
+    unset_metadata($schema, 'current_gene_id');
+  }
 }
 
 sub _redirect_and_detach

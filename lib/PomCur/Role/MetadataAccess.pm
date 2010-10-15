@@ -90,4 +90,21 @@ sub get_metadata
   }
 }
 
+=head2 get_metadata
+
+ Usage   : unsetget_metadata($schema, $key);
+ Function: delete the row with the given key in the metadata table
+ Args    : $schema - the CursDB schema object
+           $key - the key
+ Returns : Nothing
+
+=cut
+sub unset_metadata
+{
+  my $schema = shift;
+  my $key = shift;
+
+  $schema->resultset('Metadata')->search({ key => $key })->delete();
+}
+
 1;
