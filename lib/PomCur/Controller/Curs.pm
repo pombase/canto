@@ -396,11 +396,12 @@ sub _edit_genes_helper
         };
         $schema->txn_do($delete_sub);
 
-        my $plu = scalar(@gene_ids) > 1 ? 's' : '';
-        $st->{message} = 'Removed ' . scalar(@gene_ids) . " gene$plu from list";
-
         if ($schema->resultset('Gene')->count() == 0) {
+          $c->flash()->{message} = 'All genes removed from the list';
           _redirect_and_detach($c, 'gene_upload');
+        } else {
+          my $plu = scalar(@gene_ids) > 1 ? 's' : '';
+          $st->{message} = 'Removed ' . scalar(@gene_ids) . " gene$plu from list";
         }
       }
     }
