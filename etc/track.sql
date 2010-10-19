@@ -38,6 +38,7 @@ CREATE TABLE cvterm (
        cvterm_id integer NOT NULL PRIMARY KEY,
        cv_id int NOT NULL references cv (cv_id),
        name text NOT NULL,
+       dbxref_id integer NOT NULL REFERENCES dbxref (dbxref_id),
        definition text
      );
 CREATE INDEX cvterm_idx1 ON cvterm (cv_id);

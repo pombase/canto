@@ -76,12 +76,58 @@ sub get_cv
       });
 }
 
+sub get_db
+{
+  my $self = shift;
+  my $db_name = shift;
+
+  my $schema = $self->schema();
+
+  return $schema->resultset('Db')->find_or_create(
+      {
+        name => $db_name
+      });
+}
+
+sub get_dbxref
+{
+  my $self = shift;
+  my $db = shift;
+  my $dbxref_acc = shift;
+
+  my $schema = $self->schema();
+
+  return $schema->resultset('Db')->find_or_create(
+      {
+        accession => $dbxref_acc,
+        db => $db
+      });
+}
+
 sub get_cvterm
 {
   my $self = shift;
 
-  my $cv = shift;
-  my $cvterm_name = shift;
+  my %args = @_;
+
+  my $db_name;
+  my $accession;
+
+  if ($ontologyid =~ /(.*):(.*)/) {
+    $db_name = $1;
+    $accession = $2
+  } else {
+    croak "ontologyid '$ontologyid' needs a colon, eg. GO:0012345";
+  }
+
+  my $cv_name = $args{cv_name};
+  my $cv = $self->get_cv($cv_name};
+  my $term_name = $args{term_name};
+  my $ontologyid = $args{ontologyid};
+  my $definition = $args{definition};
+
+  my $db = $self->get_db($db_name);
+  my $dbxref = $self->get_dbxref($db, $accession);
 
   my $schema = $self->schema();
 
@@ -89,6 +135,8 @@ sub get_cvterm
       {
         name => $cvterm_name,
         cv => $cv,
+        definition => $definition,
+        dbxref => $dbxref
       });
 }
 
