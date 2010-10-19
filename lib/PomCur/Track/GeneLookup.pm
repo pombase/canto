@@ -38,7 +38,7 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
-with 'PomCur::GeneLookup';
+with 'PomCur::Configurable';
 with 'PomCur::Track::TrackLookup';
 
 =head2 lookup

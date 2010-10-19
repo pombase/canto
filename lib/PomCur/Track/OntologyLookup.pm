@@ -38,7 +38,7 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
-with 'PomCur::OntologyLookup';
+with 'PomCur::Configurable';
 with 'PomCur::Track::TrackLookup';
 
 my %terms_by_id = (
