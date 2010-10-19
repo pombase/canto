@@ -102,8 +102,6 @@ sub load
 
   my $schema = $self->schema();
 
-  my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
-
   my $csv = Text::CSV->new({binary => 1});
   open my $fh, '<', $file_name or die;
   $csv->column_names ($csv->getline($fh));
