@@ -47,12 +47,23 @@ __PACKAGE__->config->{namespace} = 'ws';
 
 sub lookup : Local
 {
-  my ($self, $c, $type_name, @args) = @_;
+  my ($self, $c, $type_name, $ontology_name, $search_string) = @_;
 
   my $config = $c->config();
   my $lookup = PomCur::Track::get_lookup($config, $type_name);
 
-  $c->stash->{json_data} = $lookup->web_service_lookup($c, @args);
+  $search_string ||= $c->req()->param('term');
+
+  my $max_results = $c->req()->param('max_results') || 10;
+  my $include_definition = $c->req()->param('def');
+  my $include_children = $c->req()->param('children');
+
+  $c->stash->{json_data} =
+    $lookup->web_service_lookup(ontology_name => $ontology_name,
+                                search_string => $search_string,
+                                max_results => $max_results,
+                                include_definition => $include_definition,
+                                include_children => $include_children);
   $c->forward('View::JSON');
 }
 

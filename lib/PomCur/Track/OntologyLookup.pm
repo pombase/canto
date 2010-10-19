@@ -111,20 +111,20 @@ for my $go_id (keys %terms_by_id) {
 sub web_service_lookup
 {
   my $self = shift;
-  my $c = shift;
-  my $ontology_name = shift;
-  my $search_string = shift || $c->req()->param('term');
+  my %args = @_;
 
-  my $max_results = $c->req()->param('max_results') || 10;
-  my $include_definition = $c->req()->param('def');
-  my $include_children = $c->req()->param('children');
+  my $ontology_name = $args{ontology_name};
+  my $search_string = $args{search_string};
+  my $max_results = $args{max_results};
+  my $include_definition = $args{include_definition};
+  my $include_children = $args{include_children};
 
   my @ret = ();
 
   for my $key (keys %terms_by_id) {
     my $term = $terms_by_id{$key};
 
-    if ($key =~ /$search_string/i || $term->{name} =~ /$search_string/i) {
+    if ($key =~ /^$search_string/i || $term->{name} =~ /^$search_string/i) {
       my %ret_term = %$term;
 
       delete $ret_term{children};
