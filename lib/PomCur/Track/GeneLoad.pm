@@ -2,7 +2,7 @@ package PomCur::Track::GeneLoad;
 
 =head1 NAME
 
-PomCur::Track::GeneLoad - Code for loading gene information
+PomCur::Track::GeneLoad - Code for loading gene information into a TrackDB
 
 =head1 SYNOPSIS
 
