@@ -195,24 +195,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 gene_synonyms
+=head2 genesynonyms
 
 Type: has_many
 
-Related object: L<PomCur::TrackDB::GeneSynonym>
+Related object: L<PomCur::TrackDB::Genesynonym>
 
 =cut
 
 __PACKAGE__->has_many(
-  "gene_synonyms",
-  "PomCur::TrackDB::GeneSynonym",
+  "genesynonyms",
+  "PomCur::TrackDB::Genesynonym",
   { "foreign.synonym_type" => "self.cvterm_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 16:05:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:F7PQTq71Bkui670MZRltuQ
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 16:12:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1MIXEcvfdCpOTtAy6N0vXA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

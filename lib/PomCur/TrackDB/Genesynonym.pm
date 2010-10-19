@@ -1,4 +1,4 @@
-package PomCur::TrackDB::GeneSynonym;
+package PomCur::TrackDB::Genesynonym;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -14,15 +14,15 @@ extends 'DBIx::Class::Core';
 
 =head1 NAME
 
-PomCur::TrackDB::GeneSynonym
+PomCur::TrackDB::Genesynonym
 
 =cut
 
-__PACKAGE__->table("gene_synonym");
+__PACKAGE__->table("genesynonym");
 
 =head1 ACCESSORS
 
-=head2 gene_synonym_id
+=head2 genesynonym_id
 
   data_type: 'integer'
   is_auto_increment: 1
@@ -42,14 +42,14 @@ __PACKAGE__->table("gene_synonym");
 =cut
 
 __PACKAGE__->add_columns(
-  "gene_synonym_id",
+  "genesynonym_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "identifier",
   { data_type => "text", is_nullable => 0 },
   "synonym_type",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
-__PACKAGE__->set_primary_key("gene_synonym_id");
+__PACKAGE__->set_primary_key("genesynonym_id");
 
 =head1 RELATIONS
 
@@ -69,8 +69,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qaWFdoo23SENQwW6SrXlBA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 16:12:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2mCliXyy7ji+mOfBG0i3KA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

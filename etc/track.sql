@@ -120,9 +120,12 @@ CREATE TABLE gene (
        primary_name text,
        organism integer NOT NULL REFERENCES organism (organism_id)
 );
+CREATE INDEX gene_primary_identifier_idx ON gene (primary_identifier);
+CREATE INDEX gene_primary_name_idx ON gene (primary_name);
 
-CREATE TABLE gene_synonym (
-       gene_synonym_id integer NOT NULL PRIMARY key,
+CREATE TABLE genesynonym (
+       genesynonym_id integer NOT NULL PRIMARY key,
        identifier text NOT NULL,
        synonym_type integer NOT NULL references cvterm(cvterm_id)
 );
+CREATE INDEX genesynonym_identifier ON genesynonym (identifier);
