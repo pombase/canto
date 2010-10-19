@@ -114,8 +114,11 @@ sub load
   my $schema = $self->schema();
 
   my $cv = $self->load_util()->get_cv('PomBase user types');
-  my $user_cvterm = $self->load_util()->get_cvterm($cv, 'user');
-  my $admin_cvterm = $self->load_util()->get_cvterm($cv, 'admin');
+
+  my $user_cvterm = $self->load_util()->get_cvterm(cv => $cv,
+                                                   term_name => 'user');
+  my $admin_cvterm = $self->load_util()->get_cvterm(cv => $cv,
+                                                    term_name => 'admin');
 
   my $admin = $self->load_util()->get_person('Val Wood', 'val@sanger.ac.uk',
                                              $admin_cvterm);

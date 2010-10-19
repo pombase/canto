@@ -27,7 +27,7 @@ CREATE TABLE dbxref (
     dbxref_id integer NOT NULL PRIMARY KEY,
     db_id integer NOT NULL REFERENCES db (db_id),
     accession text NOT NULL,
-    version text NOT NULL,
+    version text NOT NULL DEFAULT '',
     description text
 );
 CREATE INDEX dbxref_idx1 ON dbxref (db_id);

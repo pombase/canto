@@ -39,6 +39,12 @@ __PACKAGE__->table("cvterm");
   data_type: 'text'
   is_nullable: 0
 
+=head2 dbxref_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
 =head2 definition
 
   data_type: 'text'
@@ -53,6 +59,8 @@ __PACKAGE__->add_columns(
   { data_type => "int", is_foreign_key => 1, is_nullable => 0 },
   "name",
   { data_type => "text", is_nullable => 0 },
+  "dbxref_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "definition",
   { data_type => "text", is_nullable => 1 },
 );
@@ -73,6 +81,21 @@ __PACKAGE__->has_many(
   "PomCur::TrackDB::Pub",
   { "foreign.type_id" => "self.cvterm_id" },
   { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 dbxref
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Dbxref>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "dbxref",
+  "PomCur::TrackDB::Dbxref",
+  { dbxref_id => "dbxref_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 cv
@@ -211,8 +234,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 16:12:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1MIXEcvfdCpOTtAy6N0vXA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 23:12:37
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m6ELJDFEOy548W3Bz2v4IA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

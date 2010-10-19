@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 3;
 
 use Data::Compare;
 
@@ -25,8 +25,8 @@ $ontology_load->load($test_ontology_file);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 7);
+is(@loaded_cvterms, 16);
 
 ok(grep {
-  defined $_->name() eq 'regulation of transmembrane transport'
+  $_->name() eq 'regulation of transmembrane transport'
 } @loaded_cvterms);

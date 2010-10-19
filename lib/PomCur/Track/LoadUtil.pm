@@ -70,6 +70,8 @@ sub get_cv
 
   my $schema = $self->schema();
 
+  croak unless defined $cv_name;
+
   return $schema->resultset('Cv')->find_or_create(
       {
         name => $cv_name
@@ -97,7 +99,7 @@ sub get_dbxref
 
   my $schema = $self->schema();
 
-  return $schema->resultset('Db')->find_or_create(
+  return $schema->resultset('Dbxref')->find_or_create(
       {
         accession => $dbxref_acc,
         db => $db
@@ -110,33 +112,41 @@ sub get_cvterm
 
   my %args = @_;
 
-  my $db_name;
-  my $accession;
-
-  if ($ontologyid =~ /(.*):(.*)/) {
-    $db_name = $1;
-    $accession = $2
-  } else {
-    croak "ontologyid '$ontologyid' needs a colon, eg. GO:0012345";
-  }
-
   my $cv_name = $args{cv_name};
-  my $cv = $self->get_cv($cv_name};
+  my $cv = $args{cv};
+  if (!defined $cv) {
+    $cv = $self->get_cv($cv_name);
+  }
   my $term_name = $args{term_name};
   my $ontologyid = $args{ontologyid};
   my $definition = $args{definition};
+
+  my $db_name;
+  my $accession;
+
+  if (defined $ontologyid && $ontologyid =~ /(.*):(.*)/) {
+    $db_name = $1;
+    $accession = $2
+  } else {
+    $db_name = 'PomCur Track';
+    $accession = $term_name;
+  }
 
   my $db = $self->get_db($db_name);
   my $dbxref = $self->get_dbxref($db, $accession);
 
   my $schema = $self->schema();
 
-  return $schema->resultset('Cvterm')->find_or_create(
+  my %create_args = (
+    name => $term_name,
+    cv => $cv,
+    definition => $definition,
+    dbxref => $dbxref,
+  );
+
+  return $self->schema()->resultset('Cvterm')->find_or_create(
       {
-        name => $cvterm_name,
-        cv => $cv,
-        definition => $definition,
-        dbxref => $dbxref
+        %create_args
       });
 }
 
@@ -148,7 +158,8 @@ sub get_pub
   my $schema = $self->schema();
 
   my $pub_type_cv = $self->get_cv('PomBase publication type');
-  my $pub_type = $self->get_cvterm($pub_type_cv, 'unknown');
+  my $pub_type = $self->get_cvterm(cv => $pub_type_cv,
+                                   term_name => 'unknown');
 
   return $schema->resultset('Pub')->find_or_create(
       {
