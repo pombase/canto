@@ -15,16 +15,52 @@ CREATE TABLE cv (
        definition text
        );
 
+CREATE TABLE db (
+    db_id integer NOT NULL PRIMARY KEY,
+    name character varying(255) NOT NULL,
+    description character varying(255),
+    urlprefix character varying(255),
+    url character varying(255)
+);
+
+CREATE TABLE dbxref (
+    dbxref_id integer NOT NULL PRIMARY KEY,
+    db_id integer NOT NULL REFERENCES db (db_id),
+    accession text NOT NULL,
+    version text NOT NULL,
+    description text
+);
+CREATE INDEX dbxref_idx1 ON dbxref (db_id);
+CREATE INDEX dbxref_idx2 ON dbxref (accession);
+CREATE INDEX dbxref_idx3 ON dbxref (version);
+
 CREATE TABLE cvterm (
        cvterm_id integer NOT NULL PRIMARY KEY,
        cv_id int NOT NULL references cv (cv_id),
-       name varchar(1024) NOT NULL,
-       definition text,
-       is_obsolete int NOT NULL default 0,
-       is_relationshiptype int NOT NULL default 0
+       name text NOT NULL,
+       definition text
      );
 CREATE INDEX cvterm_idx1 ON cvterm (cv_id);
 CREATE INDEX cvterm_idx2 ON cvterm (name);
+
+CREATE TABLE cvtermsynonym (
+    cvtermsynonym_id integer NOT NULL PRIMARY KEY,
+    cvterm_id integer NOT NULL references cvterm (cvterm_id),
+    synonym text NOT NULL,
+    type_id integer NOT NULL references cvterm (cvterm_id)
+);
+CREATE INDEX cvtermsynonym_idx1 ON cvtermsynonym (cvterm_id);
+
+CREATE TABLE cvterm_relationship (
+    cvterm_relationship_id integer NOT NULL PRIMARY KEY,
+    type_id integer NOT NULL references cvterm (cvterm_id),
+    subject_id integer NOT NULL references cvterm (cvterm_id),
+    object_id integer NOT NULL references cvterm (cvterm_id)
+);
+CREATE INDEX cvterm_relationship_idx1 ON cvterm_relationship (type_id);
+CREATE INDEX cvterm_relationship_idx2 ON cvterm_relationship (subject_id);
+CREATE INDEX cvterm_relationship_idx3 ON cvterm_relationship (object_id);
+
 
 CREATE TABLE organism (
        	organism_id integer NOT NULL PRIMARY KEY,

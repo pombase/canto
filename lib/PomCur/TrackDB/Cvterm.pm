@@ -36,26 +36,13 @@ __PACKAGE__->table("cvterm");
 
 =head2 name
 
-  data_type: 'varchar'
+  data_type: 'text'
   is_nullable: 0
-  size: 1024
 
 =head2 definition
 
   data_type: 'text'
   is_nullable: 1
-
-=head2 is_obsolete
-
-  data_type: 'int'
-  default_value: 0
-  is_nullable: 0
-
-=head2 is_relationshiptype
-
-  data_type: 'int'
-  default_value: 0
-  is_nullable: 0
 
 =cut
 
@@ -65,13 +52,9 @@ __PACKAGE__->add_columns(
   "cv_id",
   { data_type => "int", is_foreign_key => 1, is_nullable => 0 },
   "name",
-  { data_type => "varchar", is_nullable => 0, size => 1024 },
+  { data_type => "text", is_nullable => 0 },
   "definition",
   { data_type => "text", is_nullable => 1 },
-  "is_obsolete",
-  { data_type => "int", default_value => 0, is_nullable => 0 },
-  "is_relationshiptype",
-  { data_type => "int", default_value => 0, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("cvterm_id");
 
@@ -105,6 +88,81 @@ __PACKAGE__->belongs_to(
   "PomCur::TrackDB::Cv",
   { cv_id => "cv_id" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+=head2 cvtermsynonym_types
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Cvtermsynonym>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvtermsynonym_types",
+  "PomCur::TrackDB::Cvtermsynonym",
+  { "foreign.type_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 cvtermsynonym_cvterms
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Cvtermsynonym>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvtermsynonym_cvterms",
+  "PomCur::TrackDB::Cvtermsynonym",
+  { "foreign.cvterm_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 cvterm_relationship_objects
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::CvtermRelationship>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvterm_relationship_objects",
+  "PomCur::TrackDB::CvtermRelationship",
+  { "foreign.object_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 cvterm_relationship_subjects
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::CvtermRelationship>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvterm_relationship_subjects",
+  "PomCur::TrackDB::CvtermRelationship",
+  { "foreign.subject_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 cvterm_relationship_types
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::CvtermRelationship>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvterm_relationship_types",
+  "PomCur::TrackDB::CvtermRelationship",
+  { "foreign.type_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 pub_statuses
@@ -153,8 +211,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3nQSW+UJD3ARtiejdHlA5w
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 16:05:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:F7PQTq71Bkui670MZRltuQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
