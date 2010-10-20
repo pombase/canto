@@ -150,11 +150,21 @@ sub track_init
                                     cv_id => 50,
                                     name => 'Test CV'
                                   });
+  my $db = $track_schema->create_with_type('Db',
+                                           {
+                                             name => 'Test DB'
+                                           });
+  my $dbxref = $track_schema->create_with_type('Dbxref',
+                                               {
+                                                 accession => 'Test accession',
+                                                 db => $db
+                                               });
   $track_schema->create_with_type('Cvterm',
                                   {
                                     cvterm_id => 601,
                                     cv_id => 50,
                                     name => 'Test pub type',
+                                    dbxref => $dbxref
                                   });
   $track_schema->create_with_type('Pub',
                                   {

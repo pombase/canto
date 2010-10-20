@@ -27,7 +27,7 @@ CREATE TABLE dbxref (
     dbxref_id integer NOT NULL PRIMARY KEY,
     db_id integer NOT NULL REFERENCES db (db_id),
     accession text NOT NULL,
-    version text NOT NULL,
+    version text NOT NULL DEFAULT '',
     description text
 );
 CREATE INDEX dbxref_idx1 ON dbxref (db_id);
@@ -38,6 +38,7 @@ CREATE TABLE cvterm (
        cvterm_id integer NOT NULL PRIMARY KEY,
        cv_id int NOT NULL references cv (cv_id),
        name text NOT NULL,
+       dbxref_id integer NOT NULL REFERENCES dbxref (dbxref_id),
        definition text
      );
 CREATE INDEX cvterm_idx1 ON cvterm (cv_id);

@@ -51,6 +51,7 @@ requires 'Data::Rmap';
 requires 'Clone';
 requires 'Catalyst::Controller::HTML::FormFu';
 requires 'Lingua::EN::Inflect::Number';
+requires 'GO::Parser';
 
 requires 'Config::General';
 
