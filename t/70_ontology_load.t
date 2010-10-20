@@ -18,7 +18,7 @@ my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
 is (@loaded_cvterms, 0);
 
-my $test_ontology_file = $test_util->root_dir() . '/t/data/small.obo';
+my $test_ontology_file = $test_util->root_dir() . '/t/data/go_small.obo';
 
 my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
 $ontology_load->load($test_ontology_file);
