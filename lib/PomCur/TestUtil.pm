@@ -28,6 +28,7 @@ use PomCur::Controller::Curs;
 use PomCur::Track::GeneLookup;
 use PomCur::Track::CurationLoad;
 use PomCur::Track::GeneLoad;
+use PomCur::Track::OntologyLoad;
 
 use Moose;
 
@@ -398,6 +399,7 @@ sub make_base_track_db
 
   my $curation_file = $config->{test_config}->{curation_spreadsheet};
   my $genes_file = $config->{test_config}->{test_genes_file};
+  my $go_obo_file = $config->{test_config}->{test_go_obo_file};
 
   my $track_db_template_file = $config->{track_db_template_file};
 
@@ -409,12 +411,14 @@ sub make_base_track_db
   if ($load_data) {
     my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);
     my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
+    my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
 
     my $process =
       sub {
         $curation_load->load($curation_file);
         _add_pub_details($schema);
         $gene_load->load($genes_file);
+        $ontology_load->load($go_obo_file);
       };
 
     $schema->txn_do($process);
