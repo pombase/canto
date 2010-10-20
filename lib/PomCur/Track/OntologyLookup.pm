@@ -41,61 +41,6 @@ use Moose;
 with 'PomCur::Configurable';
 with 'PomCur::Track::TrackLookup';
 
-my %terms_by_id = (
-  'GO:0004022' => { id => 'GO:0004022',
-                    name => 'alcohol dehydrogenase (NAD) activity',
-                    definition => 'Catalysis of the reaction: an alcohol + NAD+ = an aldehyde or ketone + NADH + H+.',
-                    children => [qw(GO:0004023 GO:0004024 GO:0004025 GO:0010301)],
-                  },
-  'GO:0004023' => { id => 'GO:0004023',
-                    name => 'alcohol dehydrogenase activity, metal ion-independent',
-                    definition => 'Catalysis of the reaction: an alcohol + NAD+ = an aldehyde or ketone + NADH + H+; can proceed in the absence of a metal ion.',
-                  },
-  'GO:0004024' => { id => 'GO:0004024',
-                    name => 'alcohol dehydrogenase activity, zinc-dependent',
-                    definition => 'Catalysis of the reaction: an alcohol + NAD+ = an aldehyde or ketone + NADH + H+, requiring the presence of zinc.',
-                  },
-  'GO:0004025' => { id => 'GO:0004025',
-                    name => 'alcohol dehydrogenase activity, iron-dependent',
-                    definition => 'Catalysis of the reaction: an alcohol + NAD+ = an aldehyde or ketone + NADH + H+, requiring the presence of iron.',
-                  },
-  'GO:0010301' => { id => 'GO:0010301',
-                    name => 'xanthoxin dehydrogenase activity',
-                  },
-  'GO:0016614' => { id => 'GO:0016614',
-                    name => 'oxidoreductase activity, acting on CH-OH group of donors',
-                    definition => 'Catalysis of an oxidation-reduction (redox) reaction in which a CH-OH group act as a hydrogen or electron donor and reduces a hydrogen or electron acceptor.',
-                    children => [qw(GO:0016616)],
-                  },
-  'GO:0016616' => { id => 'GO:0016616',
-                    name => 'oxidoreductase activity, acting on the CH-OH group of donors, NAD or NADP as acceptor',
-                    definition => 'Catalysis of an oxidation-reduction (redox) reaction in which a CH-OH group acts as a hydrogen or electron donor and reduces NAD+ or NADP.',
-                    children => [qw(GO:0004022 GO:0016509 GO:0004471 GO:0004473 GO:0050491 GO:0050492)],
-                  },
-  'GO:0016509' => { id => 'GO:0016509',
-                    name => 'long-chain-3-hydroxyacyl-CoA dehydrogenase activity',
-                  },
-  'GO:0004471' => { id => 'GO:0004471',
-                    name => 'malate dehydrogenase (decarboxylating) activity',
-                  },
-  'GO:0004473' => { id => 'GO:0004473',
-                    name => 'malate dehydrogenase (oxaloacetate-decarboxylating) (NADP+) activity',
-                  },
-  'GO:0050491' => { id => 'GO:0050491',
-                    name => 'sulcatone reductase activity',
-                  },
-  'GO:0050492' => { id => 'GO:0050492',
-                    name => 'glycerol-1-phosphate dehydrogenase [NAD(P)+] activity',
-                  },
-);
-
-my %terms_by_name = ();
-
-for my $go_id (keys %terms_by_id) {
-  my $term_hash = $terms_by_id{$go_id};
-  $terms_by_name{$term_hash->{name}} = $term_hash;
-}
-
 =head2 web_service_lookup
 
  Usage   : my $lookup = PomCur::Track::OntologyLookup->new(...);
@@ -119,42 +64,36 @@ sub web_service_lookup
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
 
-  my @ret = ();
+  my @ret_list = ();
 
-  for my $key (keys %terms_by_id) {
-    my $term = $terms_by_id{$key};
+  my $schema = $self->schema();
+  my $rs = $schema->resultset('Cvterm')->
+    search({
+      name => { like => "$search_string%" }
+    });
 
-    if ($key =~ /^$search_string/i || $term->{name} =~ /^$search_string/i) {
-      my %ret_term = %$term;
+  while (defined (my $cvterm = $rs->next())) {
+    my %term_hash = ();
 
-      delete $ret_term{children};
+    my $dbxref = $cvterm->dbxref();
+    my $db = $dbxref->db();
 
-      if (!$include_definition) {
-        delete $ret_term{definition};
-      }
+    $term_hash{id} = $db->name() . ':' . $dbxref->accession();
+    $term_hash{name} = $cvterm->name();
 
-      if ($include_children) {
-        my @children = ();
-
-        if (defined $term->{children}) {
-          for my $child_id (@{$term->{children}}) {
-            my $child = $terms_by_id{$child_id};
-            push @children, $child;
-          }
-        }
-
-        @{$ret_term{children}} = @children;
-      }
-
-      push @ret, \%ret_term;
-
-      if (@ret >= $max_results) {
-        last;
-      }
+    if ($include_definition) {
+      $term_hash{definition} = $cvterm->definition();
     }
+
+    if ($include_children) {
+
+
+    }
+
+    push @ret_list, \%term_hash;
   }
 
-  return \@ret;
+  return \@ret_list;
 }
 
 1;

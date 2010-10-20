@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 use PomCur::TestUtil;
 
@@ -18,22 +18,26 @@ package main;
 
 my $c = bless {}, 'MockCatalyst';
 
+my $search_string = 'transport';
+
 my $results = $lookup->web_service_lookup(ontology_name => 'component',
-                                          search_string => 'alcohol',
+                                          search_string => $search_string,
                                           max_results => 10,
                                           include_definition => 1);
 
 ok(defined $results);
 
-ok(grep { $_->{id} eq 'GO:0004022' &&
-          $_->{name} eq 'alcohol dehydrogenase (NAD) activity' &&
-          defined $_->{definition} &&
-          $_->{definition} =~ /Catalysis of the reaction:/i } @$results);
+is(scalar(@$results), 2);
+
+ok(grep { $_->{id} eq 'GO:0005215' &&
+          $_->{name} eq 'transporter activity' &&
+          $_->{definition} =~ /^Enables the directed movement of substances/i
+        } @$results);
+
+is(scalar(map { $_->{name} =~ /^$search_string/ } @$results), 2);
 
 my $child_results =
   $lookup->web_service_lookup(ontology_name => 'component',
                               include_children => 1,
                               search_string => 'GO:0004022',
                               max_results => 10);
-
-

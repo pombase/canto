@@ -19,7 +19,7 @@ test_psgi $app, sub {
   my $cb = shift;
 
   {
-    my $search_term = 'GO:005049';
+    my $search_term = 'transport';
     my $url = "http://localhost:5000/ws/lookup/go/component/?term=$search_term";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
@@ -31,8 +31,10 @@ test_psgi $app, sub {
     my $json_any = JSON::Any->new();
     my $obj = $json_any->jsonToObj($res->content());
 
-    ok(grep { $_->{id} =~ /$search_term/ } @$obj);
-    ok(grep { $_->{name} =~ /glycerol-1-phosphate dehydrogenase/ } @$obj);
+    is (@$obj, 2);
+
+    ok(grep { $_->{id} =~ /GO:0005215/ } @$obj);
+    ok(grep { $_->{name} =~ /transporter activity/ } @$obj);
   }
 };
 
