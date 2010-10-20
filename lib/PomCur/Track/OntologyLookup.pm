@@ -57,6 +57,8 @@ sub _make_term_hash
   my $include_definition = shift;
   my $include_children = shift;
 
+  my $cv = $cvterm->cv();
+
   my %term_hash = ();
 
   $term_hash{id} = _cvterm_accession($cvterm);
@@ -73,7 +75,9 @@ sub _make_term_hash
       ->search_related('subject')->all();
 
     for my $child_cvterm (@child_cvterms) {
-      push @{$term_hash{children}}, {_make_term_hash($child_cvterm, 0, 0)};
+      if ($child_cvterm->cv()->name() eq $cv->name()) {
+        push @{$term_hash{children}}, {_make_term_hash($child_cvterm, 0, 0)};
+      }
     }
   }
 
