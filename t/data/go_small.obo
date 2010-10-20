@@ -88,6 +88,14 @@ is_a: GO:0005215 ! transporter activity
 relationship: part_of GO:0055085 ! transmembrane transport
 
 [Term]
+id: GO:0005487
+name: nucleocytoplasmic transporter activity
+namespace: molecular_function
+def: "Enables the directed movement of substances between the nucleus and the cytoplasm of a cell." [GOC:ai]
+xref: Reactome:15116 "nucleocytoplasmic transporter activity"
+is_a: GO:0005215 ! transporter activity
+
+[Term]
 id: GO:0005215
 name: transporter activity
 namespace: molecular_function

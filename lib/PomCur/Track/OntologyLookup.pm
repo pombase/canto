@@ -41,6 +41,45 @@ use Moose;
 with 'PomCur::Configurable';
 with 'PomCur::Track::TrackLookup';
 
+sub _cvterm_accession
+{
+  my $cvterm = shift;
+
+  my $dbxref = $cvterm->dbxref();
+  my $db = $dbxref->db();
+
+  return $db->name() . ':' . $dbxref->accession();
+}
+
+sub _make_term_hash
+{
+  my $cvterm = shift;
+  my $include_definition = shift;
+  my $include_children = shift;
+
+  my %term_hash = ();
+
+  $term_hash{id} = _cvterm_accession($cvterm);
+  $term_hash{name} = $cvterm->name();
+
+  if ($include_definition) {
+    $term_hash{definition} = $cvterm->definition();
+  }
+
+  if ($include_children) {
+    @{$term_hash{children}} = ();
+
+    my @child_cvterms = $cvterm->cvterm_relationship_objects()
+      ->search_related('subject')->all();
+
+    for my $child_cvterm (@child_cvterms) {
+      push @{$term_hash{children}}, {_make_term_hash($child_cvterm, 0, 0)};
+    }
+  }
+
+  return %term_hash;
+}
+
 =head2 web_service_lookup
 
  Usage   : my $lookup = PomCur::Track::OntologyLookup->new(...);
@@ -84,26 +123,13 @@ sub web_service_lookup
   } else {
     $rs = $schema->resultset('Cvterm')->
       search({ name => { like => "$search_string%" } },
-             { rows => $max_results });
+             { rows => $max_results,
+               order_by => { -asc => 'length(name)' } });
   }
 
   while (defined (my $cvterm = $rs->next())) {
-    my %term_hash = ();
-
-    my $dbxref = $cvterm->dbxref();
-    my $db = $dbxref->db();
-
-    $term_hash{id} = $db->name() . ':' . $dbxref->accession();
-    $term_hash{name} = $cvterm->name();
-
-    if ($include_definition) {
-      $term_hash{definition} = $cvterm->definition();
-    }
-
-    if ($include_children) {
-
-
-    }
+    my %term_hash =
+      _make_term_hash($cvterm, $include_definition, $include_children);
 
     push @ret_list, \%term_hash;
   }

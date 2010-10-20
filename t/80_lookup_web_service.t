@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 18;
 
 use PomCur::TestUtil;
 
@@ -69,5 +69,23 @@ like($id_result->[0]->{definition}, qr/^The directed movement of substances/);
 my $child_results =
   $lookup->web_service_lookup(ontology_name => 'component',
                               include_children => 1,
-                              search_string => 'GO:0004022',
+                              search_string => $transport_id,
                               max_results => 10);
+
+is(@$child_results, 1);
+
+my $child_res = $child_results->[0];
+
+is($child_res->{id}, $transport_id);
+is($child_res->{name}, $transport_name);
+ok(!defined $child_res->{definition});
+
+my @children = @{$child_res->{children}};
+
+is(@children, 2);
+        use Data::Dumper;
+
+ok(grep { $_->{id} eq 'GO:0005487' &&
+          $_->{name} eq 'nucleocytoplasmic transporter activity' ||
+          $_->{id} eq 'GO:0022857' &&
+          $_->{name} eq 'transmembrane transporter activity' } @children);

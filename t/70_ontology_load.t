@@ -25,7 +25,7 @@ $ontology_load->load($test_ontology_file);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 16);
+is(@loaded_cvterms, 17);
 
 ok(grep {
   $_->name() eq 'regulation of transmembrane transport'
