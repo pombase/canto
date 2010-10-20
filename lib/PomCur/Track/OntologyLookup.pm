@@ -67,10 +67,25 @@ sub web_service_lookup
   my @ret_list = ();
 
   my $schema = $self->schema();
-  my $rs = $schema->resultset('Cvterm')->
-    search({
-      name => { like => "$search_string%" }
-    });
+  my $rs;
+
+  if ($search_string =~ /^([^:]+):(.*)/) {
+    my $db_name = $1;
+    my $db_accession = $2;
+
+    my $where =
+      "dbxref_id = (SELECT dbxref_id FROM dbxref, db
+                     WHERE dbxref.db_id = db.db_id AND db.name = ?
+                       AND dbxref.accession = ?)";
+
+    $rs = $schema->resultset('Cvterm')->
+      search_literal($where, $db_name, $db_accession,
+                     { rows => $max_results });
+  } else {
+    $rs = $schema->resultset('Cvterm')->
+      search({ name => { like => "$search_string%" } },
+             { rows => $max_results });
+  }
 
   while (defined (my $cvterm = $rs->next())) {
     my %term_hash = ();
