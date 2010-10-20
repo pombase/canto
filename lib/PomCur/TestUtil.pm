@@ -26,6 +26,8 @@ use PomCur::CursDB;
 use PomCur::Curs;
 use PomCur::Controller::Curs;
 use PomCur::Track::GeneLookup;
+use PomCur::Track::CurationLoad;
+use PomCur::Track::GeneLoad;
 
 use Moose;
 

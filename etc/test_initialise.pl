@@ -18,10 +18,7 @@ use PomCur::Track;
 use PomCur::TrackDB;
 use PomCur::Config;
 use PomCur::TestUtil;
-use PomCur::Track::CurationLoad;
-use PomCur::Track::GeneLoad;
 use PomCur::Track::LoadUtil;
-use PomCur::Track::GeneLookup;
 use PomCur::Controller::Curs;
 
 my %test_curators = ();
