@@ -17,7 +17,7 @@ $(document).ready(function() {
 });
 
 var pomcur = {
-  ontology_complete_url : application_root + '/ws/lookup/go/component',
+  ontology_complete_url : application_root + '/ws/lookup/go/' + current_component,
 
   term_history : [],
 

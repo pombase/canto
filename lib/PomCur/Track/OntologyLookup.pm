@@ -108,6 +108,8 @@ sub web_service_lookup
   my $schema = $self->schema();
   my $rs;
 
+  my $cv = $schema->find_with_type('Cv', { name => $ontology_name });
+
   if ($search_string =~ /^([^:]+):(.*)/) {
     my $db_name = $1;
     my $db_accession = $2;
@@ -115,14 +117,16 @@ sub web_service_lookup
     my $where =
       "dbxref_id = (SELECT dbxref_id FROM dbxref, db
                      WHERE dbxref.db_id = db.db_id AND db.name = ?
-                       AND dbxref.accession = ?)";
+                       AND dbxref.accession = ?)
+                   AND cv_id = ?";
 
     $rs = $schema->resultset('Cvterm')->
-      search_literal($where, $db_name, $db_accession,
+      search_literal($where, $db_name, $db_accession, $cv->cv_id(),
                      { rows => $max_results });
   } else {
     $rs = $schema->resultset('Cvterm')->
-      search({ name => { like => "$search_string%" } },
+      search({ name => { like => "$search_string%" },
+               cv_id => $cv->cv_id() },
              { rows => $max_results,
                order_by => { -asc => 'length(name)' } });
   }

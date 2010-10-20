@@ -129,19 +129,19 @@ implementation_classes:
 # each class needs to set up the stash for forwarding to a template
 # page based on the module name, eg. go_function.html
 annotation_type_list:
-  - name: go_function
+  - name: molecular_function
     display_name: 'GO molecular functions'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - function
-  - name: go_process
+  - name: biological_process
     display_name: 'GO biological processes'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - process
-  - name: go_component
+  - name: cellular_component
     display_name: 'GO cellular components or complexes'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
