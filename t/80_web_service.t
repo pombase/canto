@@ -19,8 +19,8 @@ test_psgi $app, sub {
   my $cb = shift;
 
   {
-    my $search_term = 'transport';
-    my $url = "http://localhost:5000/ws/lookup/go/component/?term=$search_term";
+    my $search_term = 'trans';
+    my $url = "http://localhost:5000/ws/lookup/go/biological_process/?term=$search_term";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
@@ -33,8 +33,8 @@ test_psgi $app, sub {
 
     is (@$obj, 2);
 
-    ok(grep { $_->{id} =~ /GO:0005215/ } @$obj);
-    ok(grep { $_->{name} =~ /transporter activity/ } @$obj);
+    ok(grep { $_->{id} =~ /GO:0055085/ } @$obj);
+    ok(grep { $_->{name} =~ /transmembrane transport/ } @$obj);
   }
 };
 
