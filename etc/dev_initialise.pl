@@ -14,10 +14,10 @@ use Carp;
 use DBIx::Class::Schema::Loader qw(make_schema_at);
 
 use PomCur::Config;
-use PomCur::Track;
+use PomCur::Meta::Util;
 
 # Create empty databases
-PomCur::Track::create_template_dbs();
+PomCur::Meta::Util::create_template_dbs();
 
 my $config = PomCur::Config::get_config();
 

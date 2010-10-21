@@ -48,33 +48,6 @@ use PomCur::Config;
 use PomCur::Curs;
 use PomCur::CursDB;
 
-=head2
-
- Usage   : PomCur::Track::create_template_dbs();
- Function: create empty databases in the template directory and load them with
-           the appropriate schemas
-
-=cut
-sub create_template_dbs
-{
-  my $config = PomCur::Config::get_config();
-
-  my %model_files = (
-    track => $config->{track_db_template_file},
-    curs => $config->{curs_db_template_file}
-  );
-
-  for my $model_name (keys %model_files) {
-        unlink $model_files{$model_name};
-
-    my $sql = "etc/$model_name.sql";
-
-    print "Creating: $model_files{$model_name} from $sql\n";
-    system "sqlite3 $model_files{$model_name} < etc/$model_name.sql";
-  }
-
-}
-
 =head2 create_curs
 
  Usage   : PomCur::Track::create_curs_db($config, $curs_object);
