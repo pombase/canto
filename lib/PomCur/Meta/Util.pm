@@ -135,8 +135,10 @@ EOF
 =head2
 
  Usage   : PomCur::Meta::Util::create_template_dbs();
- Function: create empty databases in the template directory and load them with
-           the appropriate schemas
+ Function: Create empty template databases in the template directory and load
+           them with the appropriate schemas.  Also populate the tables with
+           basic data needed for loading genes and ontologies.  eg. load the
+           synonym_type cv.
 
 =cut
 sub create_template_dbs
@@ -149,14 +151,13 @@ sub create_template_dbs
   );
 
   for my $model_name (keys %model_files) {
-        unlink $model_files{$model_name};
+    unlink $model_files{$model_name};
 
     my $sql = "etc/$model_name.sql";
 
     print "Creating: $model_files{$model_name} from $sql\n";
     system "sqlite3 $model_files{$model_name} < etc/$model_name.sql";
   }
-
 }
 
 1;
