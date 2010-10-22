@@ -61,12 +61,26 @@ sub _build_load_util
   return PomCur::Track::LoadUtil->new(schema => $self->schema());
 }
 
+sub _add_to_index
+{
+  my $index = shift;
+  my $cvterm = shift;
+
+  my $doc = $index->new_doc;
+
+  $doc->set_value(ontid => $cvterm->db_accession());
+  $doc->set_value(name => $cvterm->name());
+
+  $index->add_doc($doc);
+}
+
 =head2 load
 
  Usage   : my $ont_load = PomCur::Track::OntLoad->new(schema => $schema);
            $ont_load->load($file_name);
  Function: Load the contents an OBO file into the schema
  Args    : $file_name - an obo format file
+           $index - the index to add the terms to
  Returns : Nothing
 
 =cut
@@ -74,6 +88,7 @@ sub load
 {
   my $self = shift;
   my $file_name = shift;
+  my $index = shift;
 
   my $schema = $self->schema();
   my $guard = $schema->txn_scope_guard;
@@ -102,6 +117,8 @@ sub load
                                             definition => $term->definition());
 
         $cvterms{$term->acc()} = $cvterm;
+
+        _add_to_index($index, $cvterm);
       }
     };
 

@@ -190,4 +190,27 @@ sub get_config
   return $config;
 }
 
+=head2 data_dir_path
+
+ Usage   : my $path = $config->{$key};
+ Function: return a value from the configuration hash relative to the
+           data_directory
+ Args    : $config_key - a key from the hash eg. "ontology_index_file"
+ Returns : eg. "the_data_dir/" . $config{ontology_index_file}
+
+=cut
+sub data_dir_path
+{
+  my $self = shift;
+  my $config_key = shift;
+
+  my $file_name = $self->{$config_key};
+
+  if (!defined $file_name) {
+    croak "no configuration item with key '$config_key'";
+  }
+
+  return $self->{data_directory} . '/' . $file_name;
+}
+
 1;

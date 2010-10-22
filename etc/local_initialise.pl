@@ -17,6 +17,8 @@ use PomCur::TestUtil;
 use File::Path qw(make_path remove_tree);
 use File::Copy qw(copy);
 
+use File::Copy::Recursive qw(dircopy);
+
 my $config = PomCur::Config->new("pomcur.yaml", "t/test_config.yaml",
                                  "pomcur_local.yaml");
 
@@ -55,4 +57,15 @@ if (@$mk_err) {
 copy $track_test_db, $db_file_name
   or die "'$!' while creating $db_file_name\n";;
 
-system ("cp $test_data_dir/curs* $local_dir/");
+my $ontology_index_file = $config->{ontology_index_file};
+my $ontology_index_path = $config->data_dir_path('ontology_index_file');
+
+my $test_ontology_index = "$test_data_dir/$ontology_index_file";
+
+dircopy($test_ontology_index, $ontology_index_path)
+  or die "'$!' while copying $test_ontology_index to $ontology_index_path\n";
+
+for my $curs_file (glob ("$test_data_dir/curs*")) {
+  copy $curs_file, $local_dir
+    or die "'$!' while copying $curs_file\n";;
+}

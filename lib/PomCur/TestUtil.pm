@@ -31,6 +31,9 @@ use PomCur::Track::GeneLoad;
 use PomCur::Track::OntologyLoad;
 use PomCur::DBUtil;
 
+use KinoSearch::InvIndexer;
+use KinoSearch::Analysis::PolyAnalyzer;
+
 use Moose;
 
 with 'PomCur::Role::MetadataAccess';
@@ -384,6 +387,8 @@ sub make_base_track_db
   if ($load_data) {
     my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);
     my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
+
+    my $ontology_index = _make_ontology_index($config);
     my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
 
     my $process =
@@ -391,13 +396,50 @@ sub make_base_track_db
         $curation_load->load($curation_file);
         _add_pub_details($schema);
         $gene_load->load($genes_file);
-        $ontology_load->load($go_obo_file);
+        $ontology_load->load($go_obo_file, $ontology_index);
       };
 
     $schema->txn_do($process);
+
+    $ontology_index->finish();
   }
 
   return $schema;
+}
+
+sub _make_ontology_index
+{
+  my $config = shift;
+
+  my $analyzer = KinoSearch::Analysis::PolyAnalyzer->new(language => 'en');
+
+  my $ontology_index_path = $config->data_dir_path('ontology_index_file');
+
+  remove_tree($ontology_index_path, { error => \my $rm_err } );
+
+  if (@$rm_err) {
+    for my $diag (@$rm_err) {
+      my ($file, $message) = %$diag;
+      warn "error: $message\n";
+    }
+    exit (1);
+  }
+
+  my $invindexer = KinoSearch::InvIndexer->new(
+    invindex => $ontology_index_path,
+    create   => 1,
+    analyzer => $analyzer,
+  );
+
+  $invindexer->spec_field(
+    name  => 'name',
+#    boost => 3,
+  );
+  $invindexer->spec_field(
+    name  => 'ontid',
+  );
+
+  return $invindexer;
 }
 
 =head2 curs_key_of_test_case
