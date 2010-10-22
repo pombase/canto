@@ -41,16 +41,6 @@ use Moose;
 with 'PomCur::Configurable';
 with 'PomCur::Track::TrackLookup';
 
-sub _cvterm_accession
-{
-  my $cvterm = shift;
-
-  my $dbxref = $cvterm->dbxref();
-  my $db = $dbxref->db();
-
-  return $db->name() . ':' . $dbxref->accession();
-}
-
 sub _make_term_hash
 {
   my $cvterm = shift;
@@ -61,7 +51,7 @@ sub _make_term_hash
 
   my %term_hash = ();
 
-  $term_hash{id} = _cvterm_accession($cvterm);
+  $term_hash{id} = $cvterm->db_accession();
   $term_hash{name} = $cvterm->name();
 
   if ($include_definition) {

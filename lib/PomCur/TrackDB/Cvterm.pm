@@ -237,6 +237,15 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 23:12:37
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m6ELJDFEOy548W3Bz2v4IA
 
+sub db_accession
+{
+  my $cvterm = shift;
+
+  my $dbxref = $cvterm->dbxref();
+  my $db = $dbxref->db();
+
+  return $db->name() . ':' . $dbxref->accession();
+}
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
