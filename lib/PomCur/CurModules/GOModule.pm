@@ -57,16 +57,17 @@ has 'annotation_lookup' => (
   init_arg => undef,
 );
 
-sub _build_go_lookup
+sub _build_go_annotation_lookup
 {
   my $self = shift;
 
   my $config = $self->config();
-  my $go_lookup = $config->{implementation_classes}->{go_lookup};
+  my $go_annotation_lookup =
+    $config->{implementation_classes}->{go_annotation_lookup};
 
   die "GOT HERE!";
 
-  return $go_lookup->new();
+  return $go_annotation_lookup->new();
 }
 
 =head2 annotation_count
