@@ -40,10 +40,12 @@ use Moose;
 
 use File::Path qw(remove_tree);
 
-use KinoSearch::InvIndexer;
-use KinoSearch::Searcher;
+use KinoSearch::Index::Indexer;
 use KinoSearch::Analysis::PolyAnalyzer;
 use KinoSearch::Highlight::Highlighter;
+use KinoSearch::Plan::Schema;
+use KinoSearch::Plan::FullTextType;
+use KinoSearch::Search::IndexSearcher;
 
 with 'PomCur::Configurable';
 
@@ -74,28 +76,42 @@ sub initialise_index
     exit (1);
   }
 
-  my $invindexer = KinoSearch::InvIndexer->new(
-    invindex => $ontology_index_path,
-    create   => 1,
-    analyzer => $analyzer,
+  my $schema = KinoSearch::Plan::Schema->new;
+
+  my $polyanalyzer = KinoSearch::Analysis::PolyAnalyzer->new(
+    language => 'en',
   );
 
-  $invindexer->spec_field(
+  my $indexer = KinoSearch::Index::Indexer->new(
+    index    => $ontology_index_path,
+    schema   => $schema,
+    create   => 1,
+    truncate => 1,
+  );
+
+  my $type = KinoSearch::Plan::FullTextType->new(
+    analyzer => $polyanalyzer,
+  );
+
+  $schema->spec_field(
     name  => 'name',
-    vectorized => 1,
+    type => $type,
 #    boost => 3,
   );
-  $invindexer->spec_field(
+  $schema->spec_field(
     name  => 'ontid',
+    type => $type,
   );
-  $invindexer->spec_field(
+  $schema->spec_field(
     name  => 'cvterm_id',
+    type => $type,
   );
-  $invindexer->spec_field(
-    name  => 'cvname',
+  $schema->spec_field(
+    name  => 'cv_name',
+    type => $type,
   );
 
-  $self->{_index} = $invindexer;
+  $self->{_index} = $indexer;
 }
 
 sub _get_analyzer
@@ -125,14 +141,13 @@ sub add_to_index
 
   my $index = $self->{_index};
 
-  my $doc = $index->new_doc();
-
-  $doc->set_value(ontid => $cvterm->db_accession());
-  $doc->set_value(name => $cvterm->name());
-  $doc->set_value(cvname => $cvterm->cv()->name());
-  $doc->set_value(cvterm_id => $cvterm->cvterm_id());
-
-  $index->add_doc($doc);
+  $index->add_doc(
+    {
+      ontid => $cvterm->db_accession(),
+      name => $cvterm->name(),
+      cv_name => $cvterm->cv()->name(),
+      cvterm_id => $cvterm->cvterm_id()
+    });
 }
 
 =head2 finish_index
@@ -147,7 +162,7 @@ sub finish_index
 {
   my $self = shift;
 
-  $self->{_index}->finish();
+  $self->{_index}->commit();
 }
 
 sub lookup
@@ -159,19 +174,18 @@ sub lookup
 
   my $analyzer = _get_analyzer();
 
-  my $searcher = KinoSearch::Searcher->new(
-    invindex => _index_path($self->config()),
-    analyzer => $analyzer,
+  my $searcher = KinoSearch::Search::IndexSearcher->new(
+    index => _index_path($self->config())
   );
 
-  my $hits = $searcher->search(query => $search_string);
+  my $hits = $searcher->hits(query => $search_string, num_wanted => 10);
 
-  my $highlighter =
-    KinoSearch::Highlight::Highlighter->new(excerpt_field => 'name');
+#  my $highlighter =
+#    KinoSearch::Highlight::Highlighter->new(excerpt_field => 'name');
 
-  $hits->create_excerpts(highlighter => $highlighter);
+#  $hits->create_excerpts(highlighter => $highlighter);
 
-  $hits->seek(0, $max_results);
+#  $hits->seek(0, $max_results);
 
   return $hits;
 }

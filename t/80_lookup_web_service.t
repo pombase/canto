@@ -14,7 +14,7 @@ my $lookup = PomCur::Track::get_lookup($config, 'go');
 
 my $test_string = 'GO:00040';
 
-my $search_string = 'trans';
+my $search_string = 'transporter';
 my $transport_id = 'GO:0005215';
 my $transport_name = 'transporter activity';
 my $transport_definition = 'Enables the directed movement of substances (such as macromolecules, small molecules, ions) into, out of or within a cell, or between cells.';

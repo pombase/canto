@@ -38,6 +38,8 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
+use PomCur::Track::OntologyIndex;
+
 with 'PomCur::Configurable';
 with 'PomCur::Track::TrackLookup';
 
@@ -98,20 +100,20 @@ sub web_service_lookup
   my $include_children = $args{include_children};
 
   my $config = $self->config();
-  my $ontology_index = PomCur::Track::OntologyIndex(config => $config);
+  my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
 
-  my $index_res = $ontology_index->lookup($ontology_name, $search_string,
-                                          $max_results);
+  my $hits = $ontology_index->lookup($ontology_name, $search_string,
+                                     $max_results);
 
   my @ret_list = ();
 
   my $schema = $self->schema();
 
-  while (my $hit = $hits->fetch_hit_hashref) {
-    my $score = sprintf( "%0.3f", $hit->{score} );
+  while (my $hit = $hits->next()) {
+    my $score = sprintf("%0.3f", $hit->get_score());
     my $name = $hit->{name};
     my $ontid = $hit->{ontid};
-    my $cvterm_id = $hit->{ontid};
+    my $cvterm_id = $hit->{cvterm_id};
 
     my $cvterm = $schema->find_with_type('Cvterm', $cvterm_id);
 

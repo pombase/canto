@@ -38,11 +38,11 @@ ok(grep {
 my $hits =
   $ontology_index->lookup('biological_process', 'transmembrane transport', 100);
 
-while (my $hit = $hits->fetch_hit_hashref) {
-  my $score = sprintf( "%0.3f", $hit->{score} );
+while (my $hit = $hits->next()) {
+  my $score = sprintf( "%0.3f", $hit->get_score() );
   my $name = $hit->{name};
-  my $ontid = $hit->{ontid};
-  my $cvterm_id = $hit->{ontid};
+  my $cv_name = $hit->{cv_name};
+  my $cvterm_id = $hit->{cvterm_id};
 
-  warn "$score $ontid $name\n";
+  warn "$score $cv_name $name\n";
 }

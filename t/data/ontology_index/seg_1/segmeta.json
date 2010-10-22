@@ -1,0 +1,38 @@
+{
+   "documents" : {
+      "format" : "2"
+   },
+   "highlight" : {
+      "format" : "1"
+   },
+   "lexicon" : {
+      "counts" : {
+         "cv_name" : "2",
+         "cvterm_id" : "12",
+         "name" : "14",
+         "ontid" : "13"
+      },
+      "format" : "3",
+      "index_counts" : {
+         "cv_name" : "1",
+         "cvterm_id" : "1",
+         "name" : "1",
+         "ontid" : "1"
+      }
+   },
+   "postings" : {
+      "format" : "1"
+   },
+   "segmeta" : {
+      "count" : "12",
+      "field_names" : [
+         "",
+         "cv_name",
+         "ontid",
+         "cvterm_id",
+         "name"
+      ],
+      "format" : "1",
+      "name" : "seg_1"
+   }
+}
