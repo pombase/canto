@@ -5,6 +5,7 @@ use Test::More tests => 12;
 use PomCur::TestUtil;
 use PomCur::Track;
 use PomCur::TrackDB;
+use PomCur::DBUtil;
 
 my $test_util = PomCur::TestUtil->new();
 
@@ -61,7 +62,7 @@ is($files_after[0], $new_curs_db);
 is($files_after[1], "$data_directory/track.sqlite3");
 
 my $curs_schema =
-  PomCur::TestUtil::schema_for_file($config, $new_curs_db, 'Curs');
+  PomCur::DBUtil::schema_for_file($config, $new_curs_db, 'Curs');
 
 # make sure it's a valid sqlite3 database
 my $curs_metadata_rs = $curs_schema->resultset('Metadata');

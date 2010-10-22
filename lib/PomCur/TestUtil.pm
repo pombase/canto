@@ -29,6 +29,7 @@ use PomCur::Track::GeneLookup;
 use PomCur::Track::CurationLoad;
 use PomCur::Track::GeneLoad;
 use PomCur::Track::OntologyLoad;
+use PomCur::DBUtil;
 
 use Moose;
 
@@ -252,35 +253,6 @@ sub _check_dir
   return -d "$dir/etc" && -d "$dir/lib";
 }
 
-=head2
-
- Usage   : my $schema = PomCur::TestUtil::schema_for_file($config, $file_name,
-                                                          $model_name);
- Function: Return a schema object for the given file
- Args    : $config - a PomCur::Config object
-           $file_name - the file name of the database
-           $model_name - the name of the model to make the schema for,
-                         eg. "Track" or "Curs"
- Return  : the schema
-
-=cut
-sub schema_for_file
-{
-  my $config = shift;
-  my $file_name = shift;
-  my $model_name = shift;
-
-  my %config_copy = %$config;
-
-  %{$config_copy{"Model::${model_name}Model"}} = (
-    schema_class => "PomCur::${model_name}DB",
-    connect_info => ["dbi:SQLite:dbname=$file_name"],
-  );
-
-  my $model_class_name = "PomCur::${model_name}DB";
-  return $model_class_name->new(config => \%config_copy);
-}
-
 =head2 test_track_db_name
 
  Usage   : my $db_file_name =
@@ -323,7 +295,8 @@ sub make_track_test_db
   unlink $track_test_db_file;
   copy $track_db_template_file, $track_test_db_file or die "$!\n";
 
-  return (schema_for_file($config, $track_test_db_file, 'Track'),
+  return (PomCur::DBUtil::schema_for_file($config, $track_test_db_file,
+                                          'Track'),
           $track_test_db_file);
 }
 
@@ -406,7 +379,7 @@ sub make_base_track_db
   unlink $db_file_name;
   copy $track_db_template_file, $db_file_name or die "$!\n";
 
-  my $schema = schema_for_file($config, $db_file_name, 'Track');
+  my $schema = PomCur::DBUtil::schema_for_file($config, $db_file_name, 'Track');
 
   if ($load_data) {
     my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);

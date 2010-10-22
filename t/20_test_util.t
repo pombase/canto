@@ -7,12 +7,13 @@ use Data::Compare;
 use File::Copy qw(copy);
 
 use PomCur::TestUtil;
+use PomCur::DBUtil;
 use PomCur::Track::LoadUtil;
 
 {
   my $config = {};
   my $file_name = '/tmp/test_file.sqlite3';
-  my $schema = PomCur::TestUtil::schema_for_file($config, $file_name, 'Curs');
+  my $schema = PomCur::DBUtil::schema_for_file($config, $file_name, 'Curs');
 
   my $storage = $schema->storage();
 
@@ -210,7 +211,7 @@ sub track_init
   copy $track_db_template_file, $temp_track_db or die "$!\n";
 
   my $track_schema =
-    PomCur::TestUtil::schema_for_file($config, $temp_track_db, 'Track');
+    PomCur::DBUtil::schema_for_file($config, $temp_track_db, 'Track');
 
   track_init($track_schema);
 
