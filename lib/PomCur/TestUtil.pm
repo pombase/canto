@@ -11,6 +11,7 @@ use warnings;
 use Carp;
 use Cwd qw(abs_path getcwd);
 use File::Copy qw(copy);
+use File::Copy::Recursive qw(dircopy);
 use File::Temp qw(tempdir);
 use File::Basename;
 use YAML qw(LoadFile);
@@ -30,9 +31,6 @@ use PomCur::Track::GeneLoad;
 use PomCur::Track::OntologyLoad;
 use PomCur::Track::OntologyIndex;
 use PomCur::DBUtil;
-
-use KinoSearch::InvIndexer;
-use KinoSearch::Analysis::PolyAnalyzer;
 
 use Moose;
 
@@ -111,6 +109,11 @@ sub init_test
 {
   my $self = shift;
   my $test_env_type = shift || '0_curs';
+  my $args = shift || {};
+
+  if (!defined $args->{copy_ontology_index}) {
+    $args->{copy_ontology_index} = 1;
+  }
 
   local $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
 
@@ -169,6 +172,15 @@ sub init_test
 
       copy "$data_dir/$db_file_name", $temp_dir or die "$!";
     }
+  }
+
+  if ($args->{copy_ontology_index}) {
+    my $ontology_index_file = $config->{ontology_index_file};
+    my $test_ontology_index = "$data_dir/$ontology_index_file";
+    my $dest_ontology_index = "$temp_dir/$ontology_index_file";
+
+    dircopy($test_ontology_index, $dest_ontology_index)
+      or die "'$!' while copying $test_ontology_index to $dest_ontology_index\n";
   }
 
   return (track_db_file_name => $db_file_name);

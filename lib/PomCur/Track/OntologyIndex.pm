@@ -40,6 +40,11 @@ use Moose;
 
 use File::Path qw(remove_tree);
 
+use KinoSearch::InvIndexer;
+use KinoSearch::Searcher;
+use KinoSearch::Analysis::PolyAnalyzer;
+use KinoSearch::Highlight::Highlighter;
+
 with 'PomCur::Configurable';
 
 =head2 initialise_index
@@ -55,9 +60,9 @@ sub initialise_index
   my $self = shift;
 
   my $config = $self->config();
-  my $analyzer = KinoSearch::Analysis::PolyAnalyzer->new(language => 'en');
+  my $analyzer = _get_analyzer();
 
-  my $ontology_index_path = $config->data_dir_path('ontology_index_file');
+  my $ontology_index_path = _index_path($config);
 
   remove_tree($ontology_index_path, { error => \my $rm_err } );
 
@@ -77,16 +82,32 @@ sub initialise_index
 
   $invindexer->spec_field(
     name  => 'name',
+    vectorized => 1,
 #    boost => 3,
   );
   $invindexer->spec_field(
     name  => 'ontid',
   );
   $invindexer->spec_field(
+    name  => 'cvterm_id',
+  );
+  $invindexer->spec_field(
     name  => 'cvname',
   );
 
   $self->{_index} = $invindexer;
+}
+
+sub _get_analyzer
+{
+  return KinoSearch::Analysis::PolyAnalyzer->new(language => 'en');
+}
+
+sub _index_path
+{
+  my $config = shift;
+
+  return $config->data_dir_path('ontology_index_file');
 }
 
 =head2 add_to_index
@@ -109,6 +130,7 @@ sub add_to_index
   $doc->set_value(ontid => $cvterm->db_accession());
   $doc->set_value(name => $cvterm->name());
   $doc->set_value(cvname => $cvterm->cv()->name());
+  $doc->set_value(cvterm_id => $cvterm->cvterm_id());
 
   $index->add_doc($doc);
 }
@@ -126,6 +148,32 @@ sub finish_index
   my $self = shift;
 
   $self->{_index}->finish();
+}
+
+sub lookup
+{
+  my $self = shift;
+  my $ontology_name = shift;
+  my $search_string = shift;
+  my $max_results = shift;
+
+  my $analyzer = _get_analyzer();
+
+  my $searcher = KinoSearch::Searcher->new(
+    invindex => _index_path($self->config()),
+    analyzer => $analyzer,
+  );
+
+  my $hits = $searcher->search(query => $search_string);
+
+  my $highlighter =
+    KinoSearch::Highlight::Highlighter->new(excerpt_field => 'name');
+
+  $hits->create_excerpts(highlighter => $highlighter);
+
+  $hits->seek(0, $max_results);
+
+  return $hits;
 }
 
 1;

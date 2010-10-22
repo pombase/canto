@@ -97,35 +97,24 @@ sub web_service_lookup
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
 
+  my $config = $self->config();
+  my $ontology_index = PomCur::Track::OntologyIndex(config => $config);
+
+  my $index_res = $ontology_index->lookup($ontology_name, $search_string,
+                                          $max_results);
+
   my @ret_list = ();
 
   my $schema = $self->schema();
-  my $rs;
 
-  my $cv = $schema->find_with_type('Cv', { name => $ontology_name });
+  while (my $hit = $hits->fetch_hit_hashref) {
+    my $score = sprintf( "%0.3f", $hit->{score} );
+    my $name = $hit->{name};
+    my $ontid = $hit->{ontid};
+    my $cvterm_id = $hit->{ontid};
 
-  if ($search_string =~ /^([^:]+):(.*)/) {
-    my $db_name = $1;
-    my $db_accession = $2;
+    my $cvterm = $schema->find_with_type('Cvterm', $cvterm_id);
 
-    my $where =
-      "dbxref_id = (SELECT dbxref_id FROM dbxref, db
-                     WHERE dbxref.db_id = db.db_id AND db.name = ?
-                       AND dbxref.accession = ?)
-                   AND cv_id = ?";
-
-    $rs = $schema->resultset('Cvterm')->
-      search_literal($where, $db_name, $db_accession, $cv->cv_id(),
-                     { rows => $max_results });
-  } else {
-    $rs = $schema->resultset('Cvterm')->
-      search({ name => { like => "$search_string%" },
-               cv_id => $cv->cv_id() },
-             { rows => $max_results,
-               order_by => { -asc => 'length(name)' } });
-  }
-
-  while (defined (my $cvterm = $rs->next())) {
     my %term_hash =
       _make_term_hash($cvterm, $include_definition, $include_children);
 
