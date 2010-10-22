@@ -29,14 +29,14 @@ my $ont_name = 'molecular_function';
 
   ok(defined $results);
 
-  is(scalar(@$results), 2);
+  is(scalar(@$results), 10);
 
   ok(grep { $_->{id} eq $transport_id &&
             $_->{name} eq $transport_name &&
             !defined $_->{definition}
           } @$results);
 
-  is(scalar(map { $_->{name} =~ /^$search_string/ } @$results), 2);
+  is(scalar(map { $_->{name} =~ /^$search_string/ } @$results), 1);
 }
 
 {
@@ -47,14 +47,14 @@ my $ont_name = 'molecular_function';
 
   ok(defined $results);
 
-  is(scalar(@$results), 2);
+  is(scalar(@$results), 10);
 
   ok(grep { $_->{id} eq $transport_id &&
             $_->{name} eq $transport_name &&
             $_->{definition} eq $transport_definition
           } @$results);
 
-  is(scalar(map { $_->{name} =~ /^$search_string/ } @$results), 2);
+  is(scalar(map { $_->{name} =~ /^$search_string/ } @$results), 1);
 }
 
 my $id_result = $lookup->web_service_lookup(ontology_name => 'biological_process',
