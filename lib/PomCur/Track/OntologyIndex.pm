@@ -89,26 +89,28 @@ sub initialise_index
     truncate => 1,
   );
 
-  my $type = KinoSearch::Plan::FullTextType->new(
+  my $full_text_type = KinoSearch::Plan::FullTextType->new(
     analyzer => $polyanalyzer,
   );
 
+  my $string_type = KinoSearch::Plan::StringType->new();
+
   $schema->spec_field(
     name  => 'name',
-    type => $type,
+    type => $full_text_type,
 #    boost => 3,
   );
   $schema->spec_field(
     name  => 'ontid',
-    type => $type,
+    type => $string_type,
   );
   $schema->spec_field(
     name  => 'cvterm_id',
-    type => $type,
+    type => $string_type,
   );
   $schema->spec_field(
     name  => 'cv_name',
-    type => $type,
+    type => $string_type,
   );
 
   $self->{_index} = $indexer;
@@ -178,7 +180,20 @@ sub lookup
     index => _index_path($self->config())
   );
 
-  my $hits = $searcher->hits(query => $search_string, num_wanted => 10);
+  my $qparser = KinoSearch::Search::QueryParser->new(
+    schema => $searcher->get_schema(),
+  );
+
+  my $user_query = $qparser->parse($search_string);
+  my $cv_name_query = KinoSearch::Search::TermQuery->new(
+    field => 'cv_name',
+    term  => $ontology_name,
+  );
+  my $query = KinoSearch::Search::ANDQuery->new(
+    children => [ $user_query, $cv_name_query ]
+  );
+
+  my $hits = $searcher->hits(query => $query, num_wanted => $max_results);
 
 #  my $highlighter =
 #    KinoSearch::Highlight::Highlighter->new(excerpt_field => 'name');
