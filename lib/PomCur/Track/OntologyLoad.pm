@@ -61,19 +61,6 @@ sub _build_load_util
   return PomCur::Track::LoadUtil->new(schema => $self->schema());
 }
 
-sub _add_to_index
-{
-  my $index = shift;
-  my $cvterm = shift;
-
-  my $doc = $index->new_doc;
-
-  $doc->set_value(ontid => $cvterm->db_accession());
-  $doc->set_value(name => $cvterm->name());
-
-  $index->add_doc($doc);
-}
-
 =head2 load
 
  Usage   : my $ont_load = PomCur::Track::OntLoad->new(schema => $schema);
@@ -118,7 +105,7 @@ sub load
 
         $cvterms{$term->acc()} = $cvterm;
 
-        _add_to_index($index, $cvterm);
+        $index->add_to_index($cvterm);
       }
     };
 

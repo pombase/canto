@@ -10,7 +10,6 @@ use strict;
 use warnings;
 use Carp;
 use Cwd qw(abs_path getcwd);
-use File::Path qw(make_path remove_tree);
 use File::Copy qw(copy);
 use File::Temp qw(tempdir);
 use File::Basename;
@@ -29,6 +28,7 @@ use PomCur::Track::GeneLookup;
 use PomCur::Track::CurationLoad;
 use PomCur::Track::GeneLoad;
 use PomCur::Track::OntologyLoad;
+use PomCur::Track::OntologyIndex;
 use PomCur::DBUtil;
 
 use KinoSearch::InvIndexer;
@@ -388,7 +388,8 @@ sub make_base_track_db
     my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);
     my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
 
-    my $ontology_index = _make_ontology_index($config);
+    my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
+    $ontology_index->initialise_index();
     my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
 
     my $process =
@@ -401,45 +402,10 @@ sub make_base_track_db
 
     $schema->txn_do($process);
 
-    $ontology_index->finish();
+    $ontology_index->finish_index();
   }
 
   return $schema;
-}
-
-sub _make_ontology_index
-{
-  my $config = shift;
-
-  my $analyzer = KinoSearch::Analysis::PolyAnalyzer->new(language => 'en');
-
-  my $ontology_index_path = $config->data_dir_path('ontology_index_file');
-
-  remove_tree($ontology_index_path, { error => \my $rm_err } );
-
-  if (@$rm_err) {
-    for my $diag (@$rm_err) {
-      my ($file, $message) = %$diag;
-      warn "error: $message\n";
-    }
-    exit (1);
-  }
-
-  my $invindexer = KinoSearch::InvIndexer->new(
-    invindex => $ontology_index_path,
-    create   => 1,
-    analyzer => $analyzer,
-  );
-
-  $invindexer->spec_field(
-    name  => 'name',
-#    boost => 3,
-  );
-  $invindexer->spec_field(
-    name  => 'ontid',
-  );
-
-  return $invindexer;
 }
 
 =head2 curs_key_of_test_case
