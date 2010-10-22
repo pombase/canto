@@ -40,10 +40,12 @@ under the same terms as Perl itself.
 use strict;
 use warnings;
 use Carp;
-use PomCur::Config;
 
 use File::Path;
 use File::Copy qw(copy);
+
+use PomCur::Config;
+use PomCur::DBUtil;
 
 =head2 needs_app_init
 
@@ -158,6 +160,20 @@ sub create_template_dbs
     print "Creating: $model_files{$model_name} from $sql\n";
     system "sqlite3 $model_files{$model_name} < etc/$model_name.sql";
   }
+
+  my $track_file = $model_files{track};
+  my $track_schema =
+    PomCur::DBUtil::schema_for_file($config, $track_file, 'Track');
+
+  initialise_tables($track_schema);
+}
+
+
+sub initialise_tables
+{
+  my $track_schema = shift;
+
+#  add 'synonym_type' to cv ...
 }
 
 1;
