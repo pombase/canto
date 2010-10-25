@@ -143,13 +143,19 @@ sub add_to_index
 
   my $index = $self->{_index};
 
+  my $length_boost = 100 - length $cvterm->name();
+  $length_boost = 0 if $length_boost < 0;
+
+  my $boost = (100 + $length_boost) / 10;
+
   $index->add_doc(
-    {
+    doc => {
       ontid => $cvterm->db_accession(),
       name => $cvterm->name(),
       cv_name => $cvterm->cv()->name(),
       cvterm_id => $cvterm->cvterm_id()
-    });
+    },
+  boost => $boost);
 }
 
 =head2 finish_index
