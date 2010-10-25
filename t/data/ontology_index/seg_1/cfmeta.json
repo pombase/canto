@@ -17,7 +17,7 @@
          "offset" : "1256"
       },
       "lexicon-1.dat" : {
-         "length" : "41",
+         "length" : "44",
          "offset" : "1368"
       },
       "lexicon-1.ix" : {
@@ -29,7 +29,7 @@
          "offset" : "1424"
       },
       "lexicon-2.dat" : {
-         "length" : "103",
+         "length" : "100",
          "offset" : "1432"
       },
       "lexicon-2.ix" : {
@@ -69,20 +69,20 @@
          "offset" : "1808"
       },
       "postings-2.dat" : {
-         "length" : "72",
+         "length" : "36",
          "offset" : "1848"
       },
       "postings-3.dat" : {
          "length" : "36",
-         "offset" : "1920"
+         "offset" : "1888"
       },
       "postings-4.dat" : {
          "length" : "105",
-         "offset" : "1960"
+         "offset" : "1928"
       },
       "postings.skip" : {
          "length" : "0",
-         "offset" : "2072"
+         "offset" : "2040"
       }
    },
    "format" : "2"

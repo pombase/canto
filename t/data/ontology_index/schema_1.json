@@ -21,20 +21,17 @@
    ],
    "fields" : {
       "cv_name" : {
-         "analyzer" : "1",
-         "type" : "fulltext"
+         "type" : "string"
       },
       "cvterm_id" : {
-         "analyzer" : "1",
-         "type" : "fulltext"
+         "type" : "string"
       },
       "name" : {
          "analyzer" : "1",
          "type" : "fulltext"
       },
       "ontid" : {
-         "analyzer" : "1",
-         "type" : "fulltext"
+         "type" : "string"
       }
    }
 }
