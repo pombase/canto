@@ -53,36 +53,36 @@
          "offset" : "1624"
       },
       "lexicon-4.dat" : {
-         "length" : "155",
+         "length" : "182",
          "offset" : "1632"
       },
       "lexicon-4.ix" : {
          "length" : "4",
-         "offset" : "1792"
+         "offset" : "1816"
       },
       "lexicon-4.ixix" : {
          "length" : "8",
-         "offset" : "1800"
+         "offset" : "1824"
       },
       "postings-1.dat" : {
          "length" : "36",
-         "offset" : "1808"
+         "offset" : "1832"
       },
       "postings-2.dat" : {
          "length" : "36",
-         "offset" : "1848"
+         "offset" : "1872"
       },
       "postings-3.dat" : {
          "length" : "36",
-         "offset" : "1888"
+         "offset" : "1912"
       },
       "postings-4.dat" : {
          "length" : "105",
-         "offset" : "1928"
+         "offset" : "1952"
       },
       "postings.skip" : {
          "length" : "0",
-         "offset" : "2040"
+         "offset" : "2064"
       }
    },
    "format" : "2"

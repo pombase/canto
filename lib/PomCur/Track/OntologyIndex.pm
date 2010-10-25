@@ -42,6 +42,8 @@ use File::Path qw(remove_tree);
 
 use KinoSearch::Index::Indexer;
 use KinoSearch::Analysis::PolyAnalyzer;
+use KinoSearch::Analysis::CaseFolder;
+use KinoSearch::Analysis::Tokenizer;
 use KinoSearch::Highlight::Highlighter;
 use KinoSearch::Plan::Schema;
 use KinoSearch::Plan::FullTextType;
@@ -78,9 +80,11 @@ sub initialise_index
 
   my $schema = KinoSearch::Plan::Schema->new;
 
+  my $case_folder  = KinoSearch::Analysis::CaseFolder->new;
+  my $tokenizer    = KinoSearch::Analysis::Tokenizer->new;
   my $polyanalyzer = KinoSearch::Analysis::PolyAnalyzer->new(
-    language => 'en',
-  );
+        analyzers => [ $case_folder, $tokenizer, ] );
+
 
   my $indexer = KinoSearch::Index::Indexer->new(
     index    => $ontology_index_path,
