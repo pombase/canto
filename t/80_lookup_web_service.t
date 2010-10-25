@@ -29,7 +29,7 @@ my $ont_name = 'molecular_function';
 
   ok(defined $results);
 
-  is(scalar(@$results), 10);
+  is(scalar(@$results), 3);
 
   ok(grep { $_->{id} eq $transport_id &&
             $_->{name} eq $transport_name &&
@@ -47,7 +47,7 @@ my $ont_name = 'molecular_function';
 
   ok(defined $results);
 
-  is(scalar(@$results), 10);
+  is(scalar(@$results), 3);
 
   ok(grep { $_->{id} eq $transport_id &&
             $_->{name} eq $transport_name &&

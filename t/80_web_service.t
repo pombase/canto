@@ -19,7 +19,7 @@ test_psgi $app, sub {
   my $cb = shift;
 
   {
-    my $search_term = 'trans';
+    my $search_term = 'transporter';
     my $url = "http://localhost:5000/ws/lookup/go/biological_process/?term=$search_term";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
@@ -31,7 +31,7 @@ test_psgi $app, sub {
     my $json_any = JSON::Any->new();
     my $obj = $json_any->jsonToObj($res->content());
 
-    is (@$obj, 2);
+    is (@$obj, 7);
 
     ok(grep { $_->{id} =~ /GO:0055085/ } @$obj);
     ok(grep { $_->{name} =~ /transmembrane transport/ } @$obj);
