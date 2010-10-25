@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 5;
 
 use Data::Compare;
 
@@ -39,11 +39,11 @@ ok(grep {
 my $hits =
   $ontology_index->lookup('biological_process', 'transmembrane transport', 100);
 
-while (my $hit = $hits->next()) {
-  my $score = sprintf( "%0.3f", $hit->get_score() );
-  my $name = $hit->{name};
-  my $cv_name = $hit->{cv_name};
-  my $cvterm_id = $hit->{cvterm_id};
+my @hits_list = ();
 
-  warn "$score $cv_name $name\n";
+while (my $hit = $hits->next()) {
+  push @hits_list, $hit;
 }
+
+is($hits_list[0]->{name}, 'transmembrane transport');
+is($hits_list[1]->{name}, 'protein transmembrane transport');
