@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 12;
 
 use Data::Compare;
 
@@ -36,14 +36,18 @@ ok(grep {
   $_->name() eq 'regulation of transmembrane transport'
 } @loaded_cvterms);
 
+my $ontology_name = 'biological_process';
 my $hits =
-  $ontology_index->lookup('biological_process', 'transmembrane transport', 100);
+  $ontology_index->lookup($ontology_name, 'transmembrane transport()\:-', 100);
 
-my @hits_list = ();
+my $num_hits = $hits->length();
 
-while (my $hit = $hits->next()) {
-  push @hits_list, $hit;
+for (my $i = 0; $i < $num_hits; $i++) {
+  my $doc = $hits->doc($i);
+  my $cv_name = $doc->get('cv_name');
+
+  is($cv_name, $ontology_name);
 }
 
-is($hits_list[0]->{name}, 'transmembrane transport');
-is($hits_list[1]->{name}, 'protein transmembrane transport');
+is($hits->doc(0)->get('name'), 'transmembrane transport');
+is($hits->doc(1)->get('name'), 'hydrogen peroxide transmembrane transport');

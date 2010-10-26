@@ -40,14 +40,7 @@ use Moose;
 
 use File::Path qw(remove_tree);
 
-use KinoSearch::Index::Indexer;
-use KinoSearch::Analysis::PolyAnalyzer;
-use KinoSearch::Analysis::CaseFolder;
-use KinoSearch::Analysis::Tokenizer;
-use KinoSearch::Highlight::Highlighter;
-use KinoSearch::Plan::Schema;
-use KinoSearch::Plan::FullTextType;
-use KinoSearch::Search::IndexSearcher;
+use Lucene;
 
 with 'PomCur::Configurable';
 
@@ -64,7 +57,6 @@ sub initialise_index
   my $self = shift;
 
   my $config = $self->config();
-  my $analyzer = _get_analyzer();
 
   my $ontology_index_path = _index_path($config);
 
@@ -78,51 +70,17 @@ sub initialise_index
     exit (1);
   }
 
-  my $schema = KinoSearch::Plan::Schema->new;
+  my $init_analyzer = new Lucene::Analysis::Standard::StandardAnalyzer();
+  my $store = Lucene::Store::FSDirectory->getDirectory($ontology_index_path, 1);
 
-  my $case_folder  = KinoSearch::Analysis::CaseFolder->new;
-  my $tokenizer    = KinoSearch::Analysis::Tokenizer->new;
-  my $polyanalyzer = KinoSearch::Analysis::PolyAnalyzer->new(
-        analyzers => [ $case_folder, $tokenizer, ] );
+  my $tmp_writer = new Lucene::Index::IndexWriter($store, $init_analyzer, 1);
+  $tmp_writer->close;
+  undef $tmp_writer;
 
+  my $analyzer = new Lucene::Analysis::Standard::StandardAnalyzer();
+  my $writer = new Lucene::Index::IndexWriter($store, $analyzer, 0);
 
-  my $indexer = KinoSearch::Index::Indexer->new(
-    index    => $ontology_index_path,
-    schema   => $schema,
-    create   => 1,
-    truncate => 1,
-  );
-
-  my $full_text_type = KinoSearch::Plan::FullTextType->new(
-    analyzer => $polyanalyzer,
-  );
-
-  my $string_type = KinoSearch::Plan::StringType->new();
-
-  $schema->spec_field(
-    name  => 'name',
-    type => $full_text_type,
-#    boost => 3,
-  );
-  $schema->spec_field(
-    name  => 'ontid',
-    type => $string_type,
-  );
-  $schema->spec_field(
-    name  => 'cvterm_id',
-    type => $string_type,
-  );
-  $schema->spec_field(
-    name  => 'cv_name',
-    type => $string_type,
-  );
-
-  $self->{_index} = $indexer;
-}
-
-sub _get_analyzer
-{
-  return KinoSearch::Analysis::PolyAnalyzer->new(language => 'en');
+  $self->{_index} = $writer;
 }
 
 sub _index_path
@@ -145,21 +103,20 @@ sub add_to_index
   my $self = shift;
   my $cvterm = shift;
 
-  my $index = $self->{_index};
+  my $writer = $self->{_index};
 
-  my $length_boost = 100 - length $cvterm->name();
-  $length_boost = 0 if $length_boost < 0;
+  my $doc = new Lucene::Document;
 
-  my $boost = (100 + $length_boost) / 10;
+  my @fields = (
+    Lucene::Document::Field->Text(name => $cvterm->name()),
+    Lucene::Document::Field->Keyword(ontid => $cvterm->db_accession()),
+    Lucene::Document::Field->Keyword(cv_name => $cvterm->cv()->name()),
+    Lucene::Document::Field->Keyword(cvterm_id => $cvterm->cvterm_id()),
+  );
 
-  $index->add_doc(
-    doc => {
-      ontid => $cvterm->db_accession(),
-      name => $cvterm->name(),
-      cv_name => $cvterm->cv()->name(),
-      cvterm_id => $cvterm->cvterm_id()
-    },
-  boost => $boost);
+  map { $doc->add($_) } @fields;
+
+  $writer->addDocument($doc);
 }
 
 =head2 finish_index
@@ -174,45 +131,75 @@ sub finish_index
 {
   my $self = shift;
 
-  $self->{_index}->commit();
+  $self->{_index}->optimize();
+  $self->{_index}->close();
+  $self->{_index} = undef;
 }
 
+sub _init_lookup
+{
+  my $self = shift;
+
+  my $config = $self->config();
+
+  my $analyzer = new Lucene::Analysis::Standard::StandardAnalyzer();
+  my $ontology_index_path = _index_path($config);
+  my $store = Lucene::Store::FSDirectory->getDirectory($ontology_index_path, 0);
+  my $searcher = new Lucene::Search::IndexSearcher($store);
+  my $parser = new Lucene::QueryParser("name", $analyzer);
+
+  $self->{analyzer} = $analyzer;
+  $self->{store} = $store;
+  $self->{searcher} = $searcher;
+  $self->{parser} = $parser;
+}
+
+=head2 lookup
+
+ Usage   : my $hits = $index->lookup("cellular_component", $search_string, 10);
+ Function: Return the search results for the $search_string
+ Args    : $ontology_name - the ontology to search
+           $search_string - the text to search for
+ Returns : the Lucene hits object
+
+=cut
 sub lookup
 {
   my $self = shift;
+
+  my $config = $self->config();
+
   my $ontology_name = shift;
   my $search_string = shift;
-  my $max_results = shift;
 
-  my $analyzer = _get_analyzer();
+  my $searcher;
+  my $parser;
 
-  my $searcher = KinoSearch::Search::IndexSearcher->new(
-    index => _index_path($self->config())
-  );
+  if (!defined $self->{searcher}) {
+    $self->_init_lookup();
+  }
 
-  my $qparser = KinoSearch::Search::QueryParser->new(
-    schema => $searcher->get_schema(),
-  );
+  $searcher = $self->{searcher};
+  $parser = $self->{parser};
 
-  my $user_query = $qparser->parse($search_string);
-  my $cv_name_query = KinoSearch::Search::TermQuery->new(
-    field => 'cv_name',
-    term  => $ontology_name,
-  );
-  my $query = KinoSearch::Search::ANDQuery->new(
-    children => [ $user_query, $cv_name_query ]
-  );
+  my $query;
 
-  my $hits = $searcher->hits(query => $query, num_wanted => $max_results);
+  if ($search_string =~ /^[a-zA-Z]+:\d+$/) {
+    my $ontid_term = Lucene::Index::Term->new('ontid', $search_string);
+    $query = Lucene::Search::TermQuery->new($ontid_term);
+  } else {
+    # sanitise
+    $search_string =~ s/[^\d\w]+/ /g;
+    $search_string =~ s/\s+$//;
 
-#  my $highlighter =
-#    KinoSearch::Highlight::Highlighter->new(excerpt_field => 'name');
+    my $query_string =
+      "cv_name:$ontology_name AND ($search_string OR $search_string*)";
 
-#  $hits->create_excerpts(highlighter => $highlighter);
+    $query = $parser->parse($query_string);
+  }
 
-#  $hits->seek(0, $max_results);
-
-  return $hits;
+  return $searcher->search($query);
 }
 
 1;
+

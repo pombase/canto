@@ -109,11 +109,13 @@ sub web_service_lookup
 
   my $schema = $self->schema();
 
-  while (my $hit = $hits->next()) {
-    my $score = sprintf("%0.3f", $hit->get_score());
-    my $name = $hit->{name};
-    my $ontid = $hit->{ontid};
-    my $cvterm_id = $hit->{cvterm_id};
+  my $num_hits = $hits->length();
+
+  for (my $i = 0; $i < $max_results && $i < $num_hits; $i++) {
+    my $doc = $hits->doc($i);
+    my $name = $doc->get('name');
+    my $ontid = $doc->get('ontid');
+    my $cvterm_id = $doc->get('cvterm_id');
 
     my $cvterm = $schema->find_with_type('Cvterm', $cvterm_id);
 
