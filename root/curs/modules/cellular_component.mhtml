@@ -3,6 +3,10 @@ $annotation_helper
 $current_component_display_name
 </%args>
 
+<form id="ferret-suggest-form" style="display: none">
+
+</form>
+
 <div id="ferret">
 
 <form id="ferret-form" action="" method="post">
@@ -15,18 +19,26 @@ $current_component_display_name
            disabled="true"/>
   </div>
 
+  <div id="ferret-children-details" style="display: none">
+
   <div id="ferret-term-children" style="display: none">
 Select a child term of <span class="term-id ferret-term-id-display"></span>
 if it describes the experiment you are curating more accurately:
     <div id="ferret-term-children-list">
     </div>
 
+    <a id="ferret-suggest-link" href="#">Suggest a new term name and definition ...</a>
+
     <input id="ferret-cancel-children" name="ferret-cancel-children"
-           type="submit" value="Cancel suggestions" class="button"
+           type="submit" value="Cancel suggestions" class="button"/>
   </div>
 
   <div id="ferret-leaf" style="display: none">
     There are no more specific terms at this point.
+
+    <a id="ferret-suggest-link" href="#">Suggest a new term name and definition ...</a>
+  </div>
+
   </div>
 
   <div id="ferret-term-details" style="display: none">

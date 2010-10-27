@@ -460,7 +460,7 @@ div.clearall {
   margin: 0px 10px 10px 10px;
 }
 
-#ferret-term-children, #ferret-leaf {
+#ferret-children-details {
   float: right;
   width: 40%;
   min-height: 10em;
@@ -473,6 +473,10 @@ div.clearall {
 
 #ferret-term-children ul li a:hover {
   background-color:#eee;
+}
+
+#ferret-suggest-link, #ferret-cancel-children {
+  margin: 20px 0px 20px 0px;
 }
 
 #gene-update {
