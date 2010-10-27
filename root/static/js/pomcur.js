@@ -114,7 +114,7 @@ var pomcur = {
     return false;
   },
 
-  cancel_children : function() {
+  ignore_children : function() {
     pomcur.hide_child_details();
     $('#ferret-confirm').show();
     return false;
@@ -239,7 +239,7 @@ $(document).ready(function() {
 
   $("#ferret-reset-button").click(pomcur.ferret_reset);
   $("#ferret-previous-button").click(pomcur.pop_history);
-  $("#ferret-cancel-children").click(pomcur.cancel_children);
+  $("#ferret-ignore-children").click(pomcur.ignore_children);
 
   var form_success = function(responseText, statusText, xhr, $form) {
     if (responseText == 'term-selected') {
