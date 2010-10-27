@@ -38,13 +38,15 @@ var pomcur = {
 
     $('#ferret-term-children').data('child-count', children.length);
     $('#ferret-term-children-list').html($('<ul/>').append($(children_html)));
-    $('#ferret-confirm').show();
 
     if (children.length == 0) {
       pomcur.show_leaf();
     } else {
       pomcur.hide_child_details();
+      pomcur.show_confirm();
     }
+
+    pomcur.hide_accept();
   },
 
   set_details : function(term_id) {
@@ -110,14 +112,31 @@ var pomcur = {
     pomcur.truncate_history(last_id);
     pomcur.term_selected(last_id);
     pomcur.show_hide_children();
-    $('#ferret-confirm').hide();
+    pomcur.hide_confirm();
+    pomcur.hide_accept();
     return false;
   },
 
   ignore_children : function() {
     pomcur.hide_child_details();
-    $('#ferret-confirm').show();
+    pomcur.show_accept();
     return false;
+  },
+
+  show_accept : function() {
+    $('#ferret-accept-term-details').show();
+  },
+
+  hide_accept : function() {
+    $('#ferret-accept-term-details').hide();
+  },
+
+  show_confirm : function() {
+    $('#ferret-confirm').show();
+  },
+
+  hide_confirm : function() {
+    $('#ferret-confirm').hide();
   },
 
   move_to_hash_term : function(link) {
@@ -202,6 +221,7 @@ var pomcur = {
     pomcur.hide_child_details();
     $('#ferret-term-details').hide();
     $('#ferret-term-entry').show();
+    pomcur.hide_accept();
     return true;
   }
 };
@@ -216,7 +236,7 @@ $(document).ready(function() {
       source: pomcur.ontology_complete_url,
       focus: function(event, ui) {
         $('#ferret-term-input').val(ui.item.name);
-        $('#ferret-confirm').hide();
+        pomcur.hide_confirm();
         return false;
       },
       select: function(event, ui) {
@@ -245,7 +265,7 @@ $(document).ready(function() {
     if (responseText == 'term-selected') {
       pomcur.show_hide_children();
       if (pomcur.current_child_count() > 0) {
-        $('#ferret-confirm').hide();
+        pomcur.hide_confirm();
       }
     }
     return true;
