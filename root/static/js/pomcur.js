@@ -186,6 +186,12 @@ var pomcur = {
     }
   },
 
+  suggest_dialog : function() {
+    $('#ferret-suggest-form').dialog({ modal: true,
+                                       title: 'Suggest a new term' });
+    return false;
+  },
+
   ferret_reset : function() {
     // from: http://stackoverflow.com/questions/680241/blank-out-a-form-with-jquery
     $(':input','#ferret-form')
@@ -247,10 +253,7 @@ $(document).ready(function() {
   $('#ferret-form').ajaxForm({ success: form_success, async: false });
   $('#ferret-term-input').attr('disabled', false);
 
-  $('#ferret-suggest-link').click(function() {
-    $('#ferret-suggest-form').dialog({ modal: true,
-                                       title: 'Suggest a new term' });
-    return false;
-  });
+  $('#ferret-suggest-link').click(pomcur.suggest_dialog);
+  $('#ferret-suggest-link-leaf').click(pomcur.suggest_dialog);
 
 });
