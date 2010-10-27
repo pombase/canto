@@ -104,6 +104,13 @@ var pomcur = {
     pomcur.truncate_history(last_id);
     pomcur.term_selected(last_id);
     pomcur.show_hide_children();
+    $('#ferret-confirm').hide();
+    return false;
+  },
+
+  cancel_children : function() {
+    pomcur.hide_children();
+    $('#ferret-confirm').show();
     return false;
   },
 
@@ -135,16 +142,23 @@ var pomcur = {
 
   show_children : function() {
     var term_children = $('#ferret-term-children');
-    var leaf = $('#ferret-leaf');
     term_children.show();
-    leaf.hide();
+    pomcur.hide_leaf();
   },
 
   hide_children : function() {
     var term_children = $('#ferret-term-children');
-    var leaf = $('#ferret-leaf');
     term_children.hide();
-    leaf.show();
+  },
+
+  show_leaf : function() {
+    var leaf = $('#ferret-leaf');
+    leaf.hide();
+  },
+
+  hide_leaf : function() {
+    var leaf = $('#ferret-leaf');
+    leaf.hide();
   },
 
   show_hide_children : function() {
@@ -203,6 +217,7 @@ $(document).ready(function() {
 
   $("#ferret-reset-button").click(pomcur.ferret_reset);
   $("#ferret-previous-button").click(pomcur.pop_history);
+  $("#ferret-cancel-children").click(pomcur.cancel_children);
 
   var form_success = function(responseText, statusText, xhr, $form) {
     if (responseText == 'term-selected') {

@@ -20,6 +20,9 @@ Select a child term of <span class="term-id ferret-term-id-display"></span>
 if it describes the experiment you are curating more accurately:
     <div id="ferret-term-children-list">
     </div>
+
+    <input id="ferret-cancel-children" name="ferret-cancel-children"
+           type="submit" value="Cancel suggestions" class="button"
   </div>
 
   <div id="ferret-leaf" style="display: none">
