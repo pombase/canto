@@ -39,6 +39,10 @@ var pomcur = {
     $('#ferret-term-children').data('child-count', children.length);
     $('#ferret-term-children-list').html($('<ul/>').append($(children_html)));
     $('#ferret-confirm').show();
+
+    if (children.length == 0) {
+      pomcur.show_leaf();
+    }
   },
 
   set_details : function(term_id) {
@@ -153,7 +157,7 @@ var pomcur = {
 
   show_leaf : function() {
     var leaf = $('#ferret-leaf');
-    leaf.hide();
+    leaf.show();
   },
 
   hide_leaf : function() {
