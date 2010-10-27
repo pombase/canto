@@ -48,14 +48,14 @@ if it describes the experiment you are curating more accurately:
 
     Definition: <div id="ferret-term-definition" class="term-definition"></div>
 
-    <div id="ferret-confirm">
-      <input id="ferret-reset-button" name="reset" type="reset" value="Search again" class="button" />
-      <input id="ferret-previous-button" name="previous" type="submit" value="Go back" class="button"
-             style="display: none"/>
+    <input id="ferret-reset-button" name="reset" type="reset" value="Search again" class="button" />
+    <input id="ferret-previous-button" name="previous" type="submit" value="Go back" class="button"
+           style="display: none"/>
+
+    <span id="ferret-confirm">
       or
       <input name="confirm-def" type="submit" value="Proceed" class="button" />
-      </span>
-    </div>
+    </span>
   </div>
 </form>
 </div>
