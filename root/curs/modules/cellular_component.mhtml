@@ -35,10 +35,11 @@ This term is a leaf node ...
 
     <div id="ferret-confirm">
       <input id="ferret-reset-button" name="reset" type="reset" value="Search again" class="button" />
-      <input id="ferret-previous-button" name="previous" type="submit" value="Previous term" class="button"
+      <input id="ferret-previous-button" name="previous" type="submit" value="Go back" class="button"
              style="display: none"/>
       or
-      <input name="confirm-def" type="submit" value="Select this term" class="button" />
+      <input name="confirm-def" type="submit" value="Proceed" class="button" />
+      </span>
     </div>
   </div>
 </form>
