@@ -42,8 +42,7 @@ var pomcur = {
     if (children.length == 0) {
       pomcur.show_leaf();
     } else {
-      pomcur.hide_child_details();
-      pomcur.show_confirm();
+      pomcur.show_children();
     }
 
     pomcur.hide_accept();
@@ -112,7 +111,6 @@ var pomcur = {
     pomcur.truncate_history(last_id);
     pomcur.term_selected(last_id);
     pomcur.show_hide_children();
-    pomcur.hide_confirm();
     pomcur.hide_accept();
     return false;
   },
@@ -129,14 +127,6 @@ var pomcur = {
 
   hide_accept : function() {
     $('#ferret-accept-term-details').hide();
-  },
-
-  show_confirm : function() {
-    $('#ferret-confirm').show();
-  },
-
-  hide_confirm : function() {
-    $('#ferret-confirm').hide();
   },
 
   move_to_hash_term : function(link) {
@@ -264,9 +254,6 @@ $(document).ready(function() {
   var form_success = function(responseText, statusText, xhr, $form) {
     if (responseText == 'term-selected') {
       pomcur.show_hide_children();
-      if (pomcur.current_child_count() > 0) {
-        pomcur.hide_confirm();
-      }
     }
     return true;
   };
