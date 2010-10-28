@@ -106,9 +106,14 @@ sub add_to_index
   my $writer = $self->{_index};
 
   my $doc = new Lucene::Document;
+  my $boost = 0.5 + 100.0 / (10 + length($cvterm->name()));
+
+  my $name_field = Lucene::Document::Field->Text(name => $cvterm->name());
+
+  $name_field->setBoost($boost);
 
   my @fields = (
-    Lucene::Document::Field->Text(name => $cvterm->name()),
+    $name_field,
     Lucene::Document::Field->Keyword(ontid => $cvterm->db_accession()),
     Lucene::Document::Field->Keyword(cv_name => $cvterm->cv()->name()),
     Lucene::Document::Field->Keyword(cvterm_id => $cvterm->cvterm_id()),
