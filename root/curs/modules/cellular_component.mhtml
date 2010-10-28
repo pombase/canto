@@ -42,6 +42,7 @@ if it describes the experiment you are curating more accurately:
       </li>
     </ul>
   </div>
+
   <input id="ferret-ignore-children" name="ferret-cancel-children"
          type="submit" value="Ignore suggestions" class="button"/>
 
