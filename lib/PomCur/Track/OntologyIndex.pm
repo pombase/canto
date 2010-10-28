@@ -189,8 +189,8 @@ sub lookup
 
   my $query;
 
-  if ($search_string =~ /^[a-zA-Z]+:\d+$/) {
-    my $ontid_term = Lucene::Index::Term->new('ontid', $search_string);
+  if ($search_string =~ /^\s*([a-zA-Z]+:\d+)\s*$/) {
+    my $ontid_term = Lucene::Index::Term->new('ontid', $1);
     $query = Lucene::Search::TermQuery->new($ontid_term);
   } else {
     # sanitise
