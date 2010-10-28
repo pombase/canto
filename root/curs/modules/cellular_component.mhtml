@@ -26,14 +26,21 @@ Select a child term of <span class="term-id ferret-term-id-display"></span>
 if it describes the experiment you are curating more accurately:
     <div id="ferret-term-children-list">
     </div>
+
+    Or:
   </div>
 
   <div id="ferret-leaf" style="display: none">
-    There are no more specific terms at this point.
+    There are no more specific terms.
   </div>
 
   <div id="ferret-suggest-link">
-    <a href="#">Suggest a new term name and definition ...</a>
+    <ul>
+      <li>
+        <a href="#">Suggest a new specific term name and definition for 
+          <span class="ferret-term-id-display"></span> </a>
+      </li>
+    </ul>
   </div>
   <input id="ferret-ignore-children" name="ferret-cancel-children"
          type="submit" value="Ignore suggestions" class="button"/>
@@ -49,13 +56,15 @@ if it describes the experiment you are curating more accurately:
   </div>
 
   <div id="ferret-term-details" style="display: none">
-    <span class="term-id ferret-term-id-display"></span>
-    has term name:
-    <div id="ferret-term-name" class="term-name"></div>
+    <div class="term-id ferret-term-id-display"></div>
+    <div>
+      Term name:
+      <span id="ferret-term-name" class="term-name"></span>
+    </div>
 
     Definition: <div id="ferret-term-definition" class="term-definition"></div>
 
-    <input id="ferret-reset-button" name="reset" type="reset" value="Search again" class="button" />
+    <input id="ferret-reset-button" name="reset" type="reset" value="Go back" class="button" />
     <input id="ferret-previous-button" name="previous" type="submit" value="Go back" class="button"
            style="display: none"/>
   </div>

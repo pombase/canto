@@ -10,14 +10,14 @@ $gene_long_display_name
   <p>All genes annotated</p>
 % } else {
 <p>Annotating <span class="current-gene"><% $gene_long_display_name %></span>,
-  choose annotation type:</p>
+  choose:</p>
   <ul class="annotation-start">
 % for my $annotation_type (@annotation_type_list) {
 %   my $annotation_type_name = $annotation_type->{name};
 %   my $action_path = $curs_root_path . '/annotation/create/' . $annotation_type_name;
     <li>
       <a href="<% $action_path %>">
-        <% $annotation_type->{display_name} %>
+        Annotate <% $annotation_type->{display_name} %>
       </a>
     </li>
 % }
