@@ -166,11 +166,11 @@ test_config_file: 't/test_config.yaml'
 help_text:
   inline:
     molecular_function_hint: |
-      A Molecular function is a molecular level activity usually, but not always
+      A molecular function is a molecular level activity usually, but not always
       performed by a single gene product (catalytic activity, binding,
       transporter)
     biological_process_hint: |
-      A Biological process is a series of events accomplished by one or more
+      A biological process is a series of events accomplished by one or more
       ordered assemblies of molecular functions (cell cycle, transcription)
     cellular_component_hint: |
       A cellular component is a part of a cell (proteasome, nucleus)
