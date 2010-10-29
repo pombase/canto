@@ -162,19 +162,11 @@ var ferrit_choose = {
     return term_children.data('child-count');
   },
 
-  _make_suggest_link_html : function(term_desc) {
-    return 'Suggest a new ' + term_desc + ' term name and definition ' +
-      'for <span class="ferret-term-id-display">' +
-      ferrit_choose.get_stored_term_id() + '</span>';
-  },
-
   show_children : function() {
     var term_children = $('#ferret-term-children');
     term_children.show();
     ferrit_choose.hide_leaf();
     ferrit_choose.show_child_details();
-    var link_html = ferrit_choose._make_suggest_link_html('sibling');
-    $('#ferret-suggest-link a').html(link_html);
   },
 
   hide_children : function() {
@@ -187,8 +179,6 @@ var ferrit_choose = {
     leaf.show();
     ferrit_choose.hide_children();
     ferrit_choose.show_child_details();
-    var link_html = ferrit_choose._make_suggest_link_html('specific');
-    $('#ferret-suggest-link a').html(link_html);
   },
 
   hide_leaf : function() {
