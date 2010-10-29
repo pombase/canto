@@ -581,7 +581,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
         type => 'Hidden',
       },
       {
-        name => 'confirm-def', type => 'Submit', value => 'confirm',
+        name => 'ferret-accept-term-proceed', type => 'Submit', value => 'confirm',
       },
     );
 
@@ -599,8 +599,37 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
     $annotation->data($data);
 
     $annotation->update();
-    $c->res->body('term-selected');
+
+    _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }
+}
+
+sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1) Form
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+  my $annotation_type_name = $annotation->type();
+
+  my $gene = $annotation->genes()->first();
+  my $gene_display_name = $gene->long_display_name();
+
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $module_display_name = $annotation_config->{display_name};
+  $st->{title} = "Choose evidence for $gene_display_name";
+  $st->{current_component} = $annotation_type_name;
+  $st->{current_component_display_name} = $annotation_config->{display_name};
+  $st->{template} = "curs/modules/${annotation_type_name}_evidence.mhtml";
+
+  my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
+
+  $st->{annotation_helper} = $annotation_helper;
+
 }
 
 sub set_current_gene : Chained('top') Args(1)

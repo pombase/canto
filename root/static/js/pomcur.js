@@ -264,7 +264,7 @@ $(document).ready(function() {
     }
     return true;
   };
-  $('#ferret-form').ajaxForm({ success: form_success, async: false });
+
   $('#ferret-term-input').attr('disabled', false);
 
   $('#ferret-suggest-link').click(ferrit_choose.suggest_dialog);

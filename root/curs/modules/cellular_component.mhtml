@@ -11,7 +11,7 @@ $current_component
 <div id="ferret">
 
 <form id="ferret-form" action="" method="post">
-  <input type="hidden" id="ferret-term-id"/>
+  <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
   <div id="ferret-term-entry">
     Identify <% $current_component_display_name %>
     <& ../../help_text.mhtml, key => "${current_component}_hint" &>
