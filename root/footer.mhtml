@@ -17,4 +17,9 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui<% $min_flag %>.js"></script>
 
 <script type="text/javascript" src="<% $c->uri_for('/static/js/pomcur.js') %>"></script>
+<script language="javascript" type="text/javascript">
+  if (typeof current_component != 'undefined') {
+    pomcur.initialise(current_component);
+  }
+</script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/jquery.form.2.47.js') %>"></script>

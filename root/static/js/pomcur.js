@@ -17,9 +17,12 @@ $(document).ready(function() {
 });
 
 var pomcur = {
-  ontology_complete_url : application_root + '/ws/lookup/go/' + current_component,
-
   term_history : [],
+
+  initialise : function(current_component) {
+    pomcur.ontology_complete_url =
+      application_root + '/ws/lookup/go/' + current_component;
+  },
 
   use_term_data : function(data) {
     var term = data[0];
@@ -48,9 +51,13 @@ var pomcur = {
     pomcur.hide_accept();
   },
 
+  get_stored_term_id : function() {
+    return $('#ferret-term-id').val();
+  },
+
   set_details : function(term_id) {
     pomcur.hide_children();
-    var stored_term_id = $('#ferret-term-id').val();
+    var stored_term_id = pomcur.get_stored_term_id();
     if (stored_term_id != term_id) {
       $('#ferret-term-id').val(term_id);
     }
@@ -155,11 +162,19 @@ var pomcur = {
     return term_children.data('child-count');
   },
 
+  _make_suggest_link_html : function(term_desc) {
+    return 'Suggest a new ' + term_desc + ' term name and definition ' +
+      'for <span class="ferret-term-id-display">' +
+      pomcur.get_stored_term_id() + '</span>';
+  },
+
   show_children : function() {
     var term_children = $('#ferret-term-children');
     term_children.show();
     pomcur.hide_leaf();
     pomcur.show_child_details();
+    var link_html = pomcur._make_suggest_link_html('sibling');
+    $('#ferret-suggest-link a').html(link_html);
   },
 
   hide_children : function() {
@@ -172,6 +187,8 @@ var pomcur = {
     leaf.show();
     pomcur.hide_children();
     pomcur.show_child_details();
+    var link_html = pomcur._make_suggest_link_html('specific');
+    $('#ferret-suggest-link a').html(link_html);
   },
 
   hide_leaf : function() {

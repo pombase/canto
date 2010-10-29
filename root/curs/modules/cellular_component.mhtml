@@ -37,8 +37,7 @@ if it describes the experiment you are curating more accurately:
   <div id="ferret-suggest-link">
     <ul>
       <li>
-        <a href="#">Suggest a new specific term name and definition for 
-          <span class="ferret-term-id-display"></span> </a>
+        <a href="#">Suggest a new term name and definition</a>
       </li>
     </ul>
   </div>
