@@ -151,11 +151,11 @@ annotation_type_list:
   - name: phenotype
     display_name: Phenotypes
     class: 'PomCur::CurModules::PhenotypeModule'
-  - post_translational_modifications:
+  - name: post_translational_modifications
     display_name: "Post translational modifications"
-  - genetic_interactions:
+  - name: genetic_interactions
     display_name: "Genetic Interactions"
-  - physical_interactions:
+  - name: physical_interactions
     display_name: "Physical Interactions"
 
 messages:
