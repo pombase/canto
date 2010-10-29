@@ -12,7 +12,7 @@
 
 % if (defined $pub_title) {
   <div class="pub-title">
-    <% $pub->title() %>
+    <% $pub->title() %> &nbsp; (PMID:<% $pub->pubmedid() %>)
   </div>
 % }
 

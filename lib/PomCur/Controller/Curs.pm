@@ -346,7 +346,7 @@ sub _edit_genes_helper
 
   my $st = $c->stash();
 
-  $st->{title} = 'Gene list';
+  $st->{title} = 'Gene list for PMID:' . $st->{pub}->pubmedid();
   $st->{template} = 'curs/gene_list_edit.mhtml';
 
   $st->{current_component} = 'list_edit';

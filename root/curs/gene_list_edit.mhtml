@@ -1,15 +1,14 @@
 <%args>
 $title => 'Genes'
 $confirm_genes
+$pub
 </%args>
 
 <div class="gene-list-edit">
   <div class="title">
-% if ($confirm_genes) {
-    Confirm genes
-% } else {
-    Current gene list
-% }
+%# if ($confirm_genes) {
+%#    Confirm genes
+%# }
   </div>
   <form name="gene-edit" method="get" action="<% $edit_path %>">
 % if (@gene_hashes) {
