@@ -564,7 +564,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   my $module_display_name = $annotation_config->{display_name};
-  $st->{title} = 'Annotating ' . $module_display_name . ' for ' . $gene_display_name;
+  $st->{title} = "Annotating $gene_display_name";
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/$annotation_type_name.mhtml";
