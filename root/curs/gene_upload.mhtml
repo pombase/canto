@@ -6,7 +6,7 @@ $form
 <div>
 Please enter the systematic identifier (eg. <% $example_identifier %>)
 or the primary identifier (eg. <% $example_name %>) of the genes
-referred to in PMID:<% $pubmedid %>
+referred to in <span class="pubmedid">PMID:<% $pubmedid %></span>
 </div>
 
 <div id="gene-update">

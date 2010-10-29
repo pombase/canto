@@ -3,6 +3,7 @@ $curs_key
 $state
 $curs_root_path
 $gene_long_display_name
+$pub
 @annotation_type_list
 </%args>
 
@@ -10,7 +11,7 @@ $gene_long_display_name
   <p>All genes annotated</p>
 % } else {
 <p>Annotating <span class="current-gene"><% $gene_long_display_name %></span>,
-  choose:</p>
+  from <span class="pubmedid"> PMID:<% $pub->pubmedid() %></span> choose:</p>
   <ul class="annotation-start">
 % for my $annotation_type (@annotation_type_list) {
 %   my $annotation_type_name = $annotation_type->{name};
