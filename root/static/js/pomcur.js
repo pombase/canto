@@ -16,11 +16,11 @@ $(document).ready(function() {
   });
 });
 
-var pomcur = {
+var ferrit_choose = {
   term_history : [],
 
   initialise : function(current_component) {
-    pomcur.ontology_complete_url =
+    ferrit_choose.ontology_complete_url =
       application_root + '/ws/lookup/go/' + current_component;
   },
 
@@ -43,12 +43,12 @@ var pomcur = {
     $('#ferret-term-children-list').html($('<ul/>').append($(children_html)));
 
     if (children.length == 0) {
-      pomcur.show_leaf();
+      ferrit_choose.show_leaf();
     } else {
-      pomcur.show_children();
+      ferrit_choose.show_children();
     }
 
-    pomcur.hide_accept();
+    ferrit_choose.hide_accept();
   },
 
   get_stored_term_id : function() {
@@ -56,16 +56,16 @@ var pomcur = {
   },
 
   set_details : function(term_id) {
-    pomcur.hide_children();
-    var stored_term_id = pomcur.get_stored_term_id();
+    ferrit_choose.hide_children();
+    var stored_term_id = ferrit_choose.get_stored_term_id();
     if (stored_term_id != term_id) {
       $('#ferret-term-id').val(term_id);
     }
     $.ajax({
-      url: pomcur.ontology_complete_url,
+      url: ferrit_choose.ontology_complete_url,
       data: { term: term_id, def: 1, children: 1 },
       dataType: 'json',
-      success: pomcur.use_term_data,
+      success: ferrit_choose.use_term_data,
       async: false
     });
     $('#ferret-term-entry').hide();
@@ -76,14 +76,14 @@ var pomcur = {
     $('.ferret-term-id-display').text(term_id);
     $('#ferret-term-details').show();
 
-    if (pomcur.term_history.length > 0) {
+    if (ferrit_choose.term_history.length > 0) {
       $('#ferret-previous-button').show();
       $('#ferret-reset-button').hide();
     } else {
       $('#ferret-previous-button').hide();
       $('#ferret-reset-button').show();
     }
-    pomcur.set_details(term_id);
+    ferrit_choose.set_details(term_id);
   },
 
   add_to_breadcrumbs : function(term) {
@@ -96,35 +96,35 @@ var pomcur = {
   },
 
   add_history : function(term) {
-    pomcur.term_history.push(term);
-    pomcur.add_to_breadcrumbs(term);
+    ferrit_choose.term_history.push(term);
+    ferrit_choose.add_to_breadcrumbs(term);
   },
 
   truncate_history : function(term_id) {
     $('#breadcrumbs li.hash-term').remove();
-    for (var i = 0; i < pomcur.term_history.length; i++) {
-      var this_term = pomcur.term_history[i];
+    for (var i = 0; i < ferrit_choose.term_history.length; i++) {
+      var this_term = ferrit_choose.term_history[i];
       if (this_term.id == term_id) {
-        pomcur.term_history.length = i;
+        ferrit_choose.term_history.length = i;
         break;
       } else {
-        pomcur.add_to_breadcrumbs(this_term);
+        ferrit_choose.add_to_breadcrumbs(this_term);
       }
     };
   },
 
   pop_history : function() {
-    var last_id = pomcur.term_history.last().id;
-    pomcur.truncate_history(last_id);
-    pomcur.term_selected(last_id);
-    pomcur.show_hide_children();
-    pomcur.hide_accept();
+    var last_id = ferrit_choose.term_history.last().id;
+    ferrit_choose.truncate_history(last_id);
+    ferrit_choose.term_selected(last_id);
+    ferrit_choose.show_hide_children();
+    ferrit_choose.hide_accept();
     return false;
   },
 
   ignore_children : function() {
-    pomcur.hide_child_details();
-    pomcur.show_accept();
+    ferrit_choose.hide_child_details();
+    ferrit_choose.show_accept();
     return false;
   },
 
@@ -139,21 +139,21 @@ var pomcur = {
   move_to_hash_term : function(link) {
     var href = link.attr('href');
     var term_id = href.substring(href.indexOf('#') + 1);
-    pomcur.truncate_history(term_id);
-    pomcur.term_selected(term_id);
+    ferrit_choose.truncate_history(term_id);
+    ferrit_choose.term_selected(term_id);
   },
 
   term_click_handler : function(event) {
-    pomcur.move_to_hash_term($(event.target));
-    pomcur.hide_children();
+    ferrit_choose.move_to_hash_term($(event.target));
+    ferrit_choose.hide_children();
     var leaf = $('#ferret-leaf');
     leaf.hide();
     return false;
   },
 
   child_click_handler : function(event) {
-    pomcur.add_history($('#ferret').data('current-term'));
-    pomcur.move_to_hash_term($(event.target));
+    ferrit_choose.add_history($('#ferret').data('current-term'));
+    ferrit_choose.move_to_hash_term($(event.target));
     return false;
   },
 
@@ -165,15 +165,15 @@ var pomcur = {
   _make_suggest_link_html : function(term_desc) {
     return 'Suggest a new ' + term_desc + ' term name and definition ' +
       'for <span class="ferret-term-id-display">' +
-      pomcur.get_stored_term_id() + '</span>';
+      ferrit_choose.get_stored_term_id() + '</span>';
   },
 
   show_children : function() {
     var term_children = $('#ferret-term-children');
     term_children.show();
-    pomcur.hide_leaf();
-    pomcur.show_child_details();
-    var link_html = pomcur._make_suggest_link_html('sibling');
+    ferrit_choose.hide_leaf();
+    ferrit_choose.show_child_details();
+    var link_html = ferrit_choose._make_suggest_link_html('sibling');
     $('#ferret-suggest-link a').html(link_html);
   },
 
@@ -185,9 +185,9 @@ var pomcur = {
   show_leaf : function() {
     var leaf = $('#ferret-leaf');
     leaf.show();
-    pomcur.hide_children();
-    pomcur.show_child_details();
-    var link_html = pomcur._make_suggest_link_html('specific');
+    ferrit_choose.hide_children();
+    ferrit_choose.show_child_details();
+    var link_html = ferrit_choose._make_suggest_link_html('specific');
     $('#ferret-suggest-link a').html(link_html);
   },
 
@@ -205,10 +205,10 @@ var pomcur = {
   },
 
   show_hide_children : function() {
-    if (pomcur.current_child_count() > 0) {
-      pomcur.show_children();
+    if (ferrit_choose.current_child_count() > 0) {
+      ferrit_choose.show_children();
     } else {
-      pomcur.hide_children();
+      ferrit_choose.hide_children();
     }
   },
 
@@ -225,10 +225,10 @@ var pomcur = {
       .val('')
       .removeAttr('checked')
       .removeAttr('selected');
-    pomcur.hide_child_details();
+    ferrit_choose.hide_child_details();
     $('#ferret-term-details').hide();
     $('#ferret-term-entry').show();
-    pomcur.hide_accept();
+    ferrit_choose.hide_accept();
     return true;
   }
 };
@@ -240,14 +240,14 @@ $(document).ready(function() {
   if (ferret_input.size()) {
     ferret_input.autocomplete({
       minLength: 2,
-      source: pomcur.ontology_complete_url,
+      source: ferrit_choose.ontology_complete_url,
       focus: function(event, ui) {
         $('#ferret-term-input').val(ui.item.name);
-        pomcur.hide_confirm();
+        ferrit_choose.hide_confirm();
         return false;
       },
       select: function(event, ui) {
-        pomcur.term_selected(ui.item.id);
+        ferrit_choose.term_selected(ui.item.id);
         return false;
       }
     })
@@ -260,24 +260,24 @@ $(document).ready(function() {
   }
 
   $("body").delegate("#ferret-term-children-list a", "click",
-                     pomcur.child_click_handler);
+                     ferrit_choose.child_click_handler);
   $("body").delegate("#breadcrumbs li.hash-term a", "click",
-                     pomcur.term_click_handler);
+                     ferrit_choose.term_click_handler);
 
-  $("#ferret-reset-button").click(pomcur.ferret_reset);
-  $("#ferret-previous-button").click(pomcur.pop_history);
-  $("#ferret-ignore-children").click(pomcur.ignore_children);
+  $("#ferret-reset-button").click(ferrit_choose.ferret_reset);
+  $("#ferret-previous-button").click(ferrit_choose.pop_history);
+  $("#ferret-ignore-children").click(ferrit_choose.ignore_children);
 
   var form_success = function(responseText, statusText, xhr, $form) {
     if (responseText == 'term-selected') {
-      pomcur.show_hide_children();
+      ferrit_choose.show_hide_children();
     }
     return true;
   };
   $('#ferret-form').ajaxForm({ success: form_success, async: false });
   $('#ferret-term-input').attr('disabled', false);
 
-  $('#ferret-suggest-link').click(pomcur.suggest_dialog);
-  $('#ferret-suggest-link-leaf').click(pomcur.suggest_dialog);
+  $('#ferret-suggest-link').click(ferrit_choose.suggest_dialog);
+  $('#ferret-suggest-link-leaf').click(ferrit_choose.suggest_dialog);
 
 });
