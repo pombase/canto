@@ -1,0 +1,7 @@
+<%args>
+$key
+</%args>
+
+<div class="inline-help">
+  <% $c->config()->{help_text}->{inline}->{$key} %>
+</div>

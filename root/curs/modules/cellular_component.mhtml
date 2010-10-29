@@ -1,6 +1,7 @@
 <%args>
 $annotation_helper
 $current_component_display_name
+$current_component
 </%args>
 
 <form id="ferret-suggest-form" style="display: none">
@@ -13,6 +14,7 @@ $current_component_display_name
   <input type="hidden" id="ferret-term-id"/>
   <div id="ferret-term-entry">
     Identify <% $current_component_display_name %>
+    <& ../../help_text.mhtml, key => "${current_component}_hint" &>
     <input id="ferret-term-input" name="ferret-term-entry"
            type="text" size="50" 
            placeholder="start typing and suggestions will be made ..."
