@@ -2,6 +2,10 @@
 @annotation_type_list
 </%args>
 
+% if (@annotations) {
+<div>
+  Current annotations:
+</div>
 <table class="list">
   <thead>
     <tr>
@@ -42,7 +46,7 @@
   </tr>
 % }
 </table>
-
+% }
 
 
 <%init>
