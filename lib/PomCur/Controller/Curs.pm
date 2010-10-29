@@ -592,10 +592,10 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
-    my $term_id = $form->param_value('ferret-term-id');
+    my $term_ontid = $form->param_value('ferret-term-id');
 
     my $data = $annotation->data();
-    $data->{term_id} = $term_id;
+    $data->{term_ontid} = $term_ontid;
     $annotation->data($data);
 
     $annotation->update();

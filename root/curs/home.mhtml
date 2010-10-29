@@ -24,3 +24,5 @@ $pub
 % }
   </ul>
 % }
+
+<& current_annotation_view.mhtml, annotation_type_list => @annotation_type_list &>
