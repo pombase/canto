@@ -13,8 +13,8 @@ $current_component
 <form id="ferret-form" action="" method="post">
   <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
   <div id="ferret-term-entry">
-    Identify <% $current_component_display_name %>
     <& ../../help_text.mhtml, key => "${current_component}_hint" &>
+    Search for <% $current_component_display_name %>
     <input id="ferret-term-input" name="ferret-term-entry"
            type="text" size="50" 
            placeholder="start typing and suggestions will be made ..."
