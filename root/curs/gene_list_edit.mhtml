@@ -64,15 +64,15 @@ my @all_genes = $schema->resultset('Gene')->all();
 
 my @gene_hashes = map {
      {
-       primary_identifier => $_->primary_identifier(),
-       primary_name => $_->primary_name(),
-       product => $_->product(),
+       'Systematic identifier' => $_->primary_identifier(),
+       Name => $_->primary_name(),
+       Product => $_->product(),
        identifier => $_->primary_name() || $_->primary_identifier(),
        gene_id => $_->gene_id(),
      }
    } @all_genes;
 
-my @col_names = qw(primary_identifier primary_name product);
+my @col_names = ("Systematic identifier", "Name", "Product");
 
 my $start_path = $c->stash()->{curs_root_path};
 my $upload_path = "$start_path/gene_upload";
