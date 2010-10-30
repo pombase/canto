@@ -172,7 +172,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr/Removed 1 gene from list/);
-    like ($res->content(), qr/Current gene list/);
+    like ($res->content(), qr/Gene list for PMID:19664060/);
 
     my @genes_after_delete = $curs_schema->resultset('Gene')->all();
 
