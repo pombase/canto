@@ -50,4 +50,4 @@ for (my $i = 0; $i < $num_hits; $i++) {
 }
 
 is($hits->doc(0)->get('name'), 'transmembrane transport');
-is($hits->doc(1)->get('name'), 'hydrogen peroxide transmembrane transport');
+is($hits->doc(1)->get('name'), 'protein transmembrane transport');

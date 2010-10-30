@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 32;
+use Test::More tests => 36;
 
 use PomCur::TestUtil;
 use PomCur::Track::PubmedUtil;
