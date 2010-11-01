@@ -365,31 +365,31 @@ div.clearall {
   float: right;
   font-size: 80%;
   position: relative;
-  width: 15%;
+  width: 30ex;
   right: -10px;
   background-color: #cce;
 }
 
-.small-gene-list .title {
+.gene-list .title {
   display: inline;
-  border-bottom: 1px solid black;
+  white-space:nowrap;
 }
 
-.small-gene-list table {
+.gene-list table {
   border-width: 0px;
   margin: 4px;
 }
-.small-gene-list td {
+.gene-list td {
   border-width: 0px;
   font-size: 80%;
 }
 
-.small-gene-list .no-genes-message {
+.gene-list .no-genes-message {
   font-size: 90%;
   margin: 10px;
 }
 
-.small-gene-list .view-edit {
+.gene-list .view-edit {
   font-size: 80%;
   margin: 0px 2px 0px 2px;
 }
