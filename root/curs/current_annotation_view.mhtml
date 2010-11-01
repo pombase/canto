@@ -81,13 +81,13 @@ while (defined (my $gene = $gene_rs->next())) {
 
     my $term_name = $result->[0]->{name};
 
-      push @annotations, { gene_identifier => $gene->primary_identifier(),
-                           gene_name => $gene->primary_name(),
-                           annotation_type => $annotation_type,
-                           term_ontid => $term_ontid,
-                           term_name => $term_name,
-                           evidence_type => $data->{evidence_type},
-                         };
+    push @annotations, { gene_identifier => $gene->primary_identifier(),
+                         gene_name => $gene->primary_name(),
+                         annotation_type => $annotation_type,
+                         term_ontid => $term_ontid,
+                         term_name => $term_name,
+                         evidence_type => $data->{evidence_type},
+                       };
   }
 }
 </%init>
