@@ -99,7 +99,7 @@ sub web_service_lookup
 
   my $ontology_name = $args{ontology_name};
   my $search_string = $args{search_string};
-  my $max_results = $args{max_results};
+  my $max_results = $args{max_results} || 10;
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
 
