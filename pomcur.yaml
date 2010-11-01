@@ -138,11 +138,10 @@ annotation_type_list:
       ontologies:
         - function
     evidence_codes:
-      - inferred from mutant phenotype
-      - inferred from direct assay
-      - inferred from genetic interaction
-      - inferred from physical interaction
-      - Inferred from something
+      - Inferred from mutant phenotype
+      - Inferred from direct assay
+      - Inferred from genetic interaction
+      - Inferred from physical interaction
   - name: biological_process
     display_name: 'GO biological process'
     class: 'PomCur::CurModules::GOModule'
@@ -150,11 +149,10 @@ annotation_type_list:
       ontologies:
         - process
     evidence_codes:
-      - inferred from mutant phenotype
-      - inferred from direct assay
-      - inferred from genetic interaction
-      - inferred from physical interaction
-      - Inferred from something
+      - Inferred from mutant phenotype
+      - Inferred from direct assay
+      - Inferred from genetic interaction
+      - Inferred from physical interaction
   - name: cellular_component
     display_name: 'GO cellular component or complex'
     class: 'PomCur::CurModules::GOModule'
@@ -162,11 +160,10 @@ annotation_type_list:
       ontologies:
         - component
     evidence_codes:
-      - inferred from mutant phenotype
-      - inferred from direct assay
-      - inferred from genetic interaction
-      - inferred from physical interaction
-      - Inferred from something
+      - Inferred from mutant phenotype
+      - Inferred from direct assay
+      - Inferred from genetic interaction
+      - Inferred from physical interaction
   - name: phenotype
     display_name: Phenotypes
     class: 'PomCur::CurModules::PhenotypeModule'
