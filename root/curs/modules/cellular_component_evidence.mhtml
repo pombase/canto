@@ -2,4 +2,6 @@
 $form
 </%args>
 
-<% $form %>
+<div class="evidence-select">
+  <% $form %>
+</div>
