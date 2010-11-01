@@ -190,6 +190,7 @@ table.list th {
   border-color: #bbb;
   font-weight: bold;
   text-align: left;
+  white-space: nowrap;
 }
 table.list tr.even, table.list tr:nth-child(even) {
   background-color: #eed;
