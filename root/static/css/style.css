@@ -360,16 +360,15 @@ div.clearall {
 .gene-list {
   background-color: #efa;
   float: right;
-  font-size: 80%;
+  font-size: 70%;
   position: relative;
-  width: 30ex;
+  width: 18%;
   right: -10px;
   background-color: #cce;
 }
 
 .gene-list .title {
   display: inline;
-  white-space:nowrap;
 }
 
 .gene-list table {
@@ -378,7 +377,7 @@ div.clearall {
 }
 .gene-list td {
   border-width: 0px;
-  font-size: 80%;
+  font-size: 90%;
 }
 
 .gene-list .no-genes-message {
