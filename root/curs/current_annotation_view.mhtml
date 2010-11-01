@@ -75,6 +75,8 @@ while (defined (my $gene = $gene_rs->next())) {
     my $data = $annotation->data();
     my $term_ontid = $data->{term_ontid};
     my $annotation_type = $annotation->type();
+    my $annotation_type_display_name =
+      $config->{annotation_types}->{$annotation_type}->{display_name};
     my $result =
       $lookup->web_service_lookup(ontology_name => $annotation_type,
                                   search_string => $term_ontid);
@@ -83,7 +85,7 @@ while (defined (my $gene = $gene_rs->next())) {
 
     push @annotations, { gene_identifier => $gene->primary_identifier(),
                          gene_name => $gene->primary_name(),
-                         annotation_type => $annotation_type,
+                         annotation_type => $annotation_type_display_name,
                          term_ontid => $term_ontid,
                          term_name => $term_name,
                          evidence_type => $data->{evidence_type},
