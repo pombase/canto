@@ -80,13 +80,17 @@ sub _make_term_hash
 
  Usage   : my $lookup = PomCur::Track::OntologyLookup->new(...);
            my $result =
-             $lookup->web_service_lookup($c, $search_type,
-                                         $ontology_name, $search_string);
+             $lookup->web_service_lookup(search_string => $search_string,
+                                         ontology_name => $ontology_name);
  Function: Return matching ontology terms
- Args    : $c - the Catalyst object
-           $ontology_name - the ontology to search
-           $search_string - the text to use when searching
- Returns : for search_type "term", returns [ { match => 'description ...' }, ...
+ Args    : ontology_name - the ontology to search
+           search_string - the text to use when searching, if this is a ontology
+                           ID (eg. "GO:0012345") return just that match
+           max_results - maximum hits to return
+           include_children - include data about the child terms
+           include_definition - include the definition for each term
+ Returns : [ { id => '...', name => '...', definition => '...',
+               children => [ { id => '...' }, { id => '...' }, ... ] } ]
 =cut
 sub web_service_lookup
 {
