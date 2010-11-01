@@ -45,6 +45,7 @@
       <% $row->{term_ontid} %>
     </td>
     <td>
+      <% $row->{term_name} %>
     </td>
     <td>
       <% $row->{evidence_type} %>
@@ -63,16 +64,29 @@ my $schema = $st->{schema};
 
 my $gene_rs = $schema->resultset('Gene');
 
+my $config = $c->config();
+
+my $lookup = PomCur::Track::get_lookup($config, 'go');
+
 while (defined (my $gene = $gene_rs->next())) {
   my $an_rs = $gene->annotations();
 
   while (defined (my $annotation = $an_rs->next())) {
+    my $data = $annotation->data();
+    my $term_ontid = $data->{term_ontid};
     my $annotation_type = $annotation->type();
+    my $result =
+      $lookup->web_service_lookup(ontology_name => $annotation_type,
+                                  search_string => $term_ontid);
+
+    my $term_name = $result->[0]->{name};
+
       push @annotations, { gene_identifier => $gene->primary_identifier(),
                            gene_name => $gene->primary_name(),
                            annotation_type => $annotation_type,
-                           term_ontid => $annotation->data()->{term_ontid},
-                           evidence_type => $annotation->data()->{evidence_type}
+                           term_ontid => $term_ontid,
+                           term_name => $term_name,
+                           evidence_type => $data->{evidence_type},
                          };
   }
 }
