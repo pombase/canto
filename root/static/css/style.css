@@ -280,9 +280,6 @@ table.list tr td {
 }
 
 /* editing: */
-div.submit {
-    float: right;
-}
 
 div.edit_link {
     float: right;
