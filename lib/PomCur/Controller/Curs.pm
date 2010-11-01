@@ -520,45 +520,15 @@ sub _get_annotation_helper
   my $lookup = $module_class_name->new(%args);
 }
 
-sub annotation_create : Chained('top') PathPart('annotation/create') Args(1)
+sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
 {
-  my ($self, $c, $annotation_type_name) = @_;
-
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $guard = $schema->txn_scope_guard;
-
-  my $current_gene_id = $c->stash()->{current_gene_id};
-  my $current_gene = $schema->find_with_type('Gene', $current_gene_id);
-  my $annotation =
-    $schema->create_with_type('Annotation', { type => $annotation_type_name,
-                                              status => 'new',
-                                              data => {}
-                                            });
-
-  $annotation->set_genes($current_gene);
-
-  $guard->commit();
-
-  my $annotation_id = $annotation->annotation_id();
-
-  _redirect_and_detach($c, 'annotation', 'edit', $annotation_id);
-  $c->detach();
-}
-
-sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
-{
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c, $gene_id, $annotation_type_name) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
-  my $annotation_type_name = $annotation->type();
-
-  my $gene = $annotation->genes()->first();
+  my $gene = $schema->find_with_type('Gene', $gene_id);
   my $gene_display_name = $gene->long_display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
@@ -594,11 +564,22 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(1) Form
   if ($form->submitted_and_valid()) {
     my $term_ontid = $form->param_value('ferret-term-id');
 
-    my $data = $annotation->data();
-    $data->{term_ontid} = $term_ontid;
-    $annotation->data($data);
+    my $guard = $schema->txn_scope_guard;
 
-    $annotation->update();
+    my $gene = $schema->find_with_type('Gene', $gene_id);
+    my $annotation =
+      $schema->create_with_type('Annotation',
+                                {
+                                  type => $annotation_type_name,
+                                  status => 'new',
+                                  data => { term_ontid => $term_ontid }
+                                });
+
+    $annotation->set_genes($gene);
+
+    $guard->commit();
+
+    my $annotation_id = $annotation->annotation_id();
 
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }

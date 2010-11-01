@@ -15,7 +15,8 @@ $pub
   <ul class="annotation-start">
 % for my $annotation_type (@annotation_type_list) {
 %   my $annotation_type_name = $annotation_type->{name};
-%   my $action_path = $curs_root_path . '/annotation/create/' . $annotation_type_name;
+%   my $action_path = $curs_root_path . '/annotation/edit/' .
+%                     $current_gene_id . '/' . $annotation_type_name;
     <li>
       <a href="<% $action_path %>">
         Annotate <% $annotation_type->{display_name} %>
@@ -26,3 +27,7 @@ $pub
 % }
 
 <& current_annotation_view.mhtml, annotation_type_list => @annotation_type_list &>
+
+<%init>
+my $current_gene_id = $c->stash()->{current_gene_id};
+</%init>
