@@ -136,18 +136,30 @@ annotation_type_list:
     constructor_args:
       ontologies:
         - function
+    evidence_codes:
+      - Inferred from something
+      - Made up data
+      - Outright lie
   - name: biological_process
     display_name: 'GO biological process'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - process
+    evidence_codes:
+      - Inferred from something
+      - Made up data
+      - Outright lie
   - name: cellular_component
     display_name: 'GO cellular component or complex'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - component
+    evidence_codes:
+      - Inferred from something
+      - Made up data
+      - Outright lie
   - name: phenotype
     display_name: Phenotypes
     class: 'PomCur::CurModules::PhenotypeModule'

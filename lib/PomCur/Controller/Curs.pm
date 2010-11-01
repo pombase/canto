@@ -615,6 +615,36 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
   $st->{annotation_helper} = $annotation_helper;
 
+  my $ont_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my @codes = map { [ $_, $_ ] } @{$ont_config->{evidence_codes}};
+
+  my $form = $self->form();
+
+  my @all_elements = (
+      {
+        name => 'evidence-select',
+        type => 'Select', options => [ @codes ],
+      },
+      {
+        name => 'evidence-proceed', type => 'Submit', value => 'Proceed',
+      },
+    );
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $data = $annotation->data();
+    $data->{evidence_type} = $form->param_value('evidence-select');
+    $annotation->data($data);
+    $annotation->update();
+
+    _redirect_and_detach($c);
+  }
 }
 
 sub set_current_gene : Chained('top') Args(1)

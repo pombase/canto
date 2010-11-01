@@ -1,2 +1,5 @@
+<%args>
+$form
+</%args>
 
-(To be implemented)
+<% $form %>
