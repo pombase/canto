@@ -9,24 +9,24 @@
 <table class="list">
   <thead>
     <tr>
-      <td>
+      <th>
         Systematic identifier
-      </td>
-      <td>
+      </th>
+      <th>
         Gene name
-      </td>
-      <td>
+      </th>
+      <th>
         Annotation type
-      </td>
-      <td>
+      </th>
+      <th>
         Term ID
-      </td>
-      <td>
+      </th>
+      <th>
         Term name
-      </td>
-      <td>
+      </th>
+      <th>
         Evidence type
-      </td>
+      </th>
     </tr>
   </thead>
 
