@@ -492,3 +492,13 @@ div.clearall {
   color: #010;
   margin: 0px 0px 10px 0px;
 }
+
+.evidence-select div {
+  display: inline;
+}
+
+.evidence-select div.submit {
+  float: none;
+  display: inline;
+  margin: 10px 0px 0px 30px;
+}
