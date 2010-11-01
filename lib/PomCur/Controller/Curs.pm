@@ -520,6 +520,25 @@ sub _get_annotation_helper
   my $lookup = $module_class_name->new(%args);
 }
 
+sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $delete_sub = sub {
+    $schema->resultset('Annotation')->find($annotation_id)->delete();
+    $schema->resultset('GeneAnnotation')
+      ->search({ annotation => $annotation_id })->delete();
+  };
+
+  $schema->txn_do($delete_sub);
+
+  _redirect_and_detach($c);
+}
+
 sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
 {
   my ($self, $c, $gene_id, $annotation_type_name) = @_;

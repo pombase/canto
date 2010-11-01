@@ -1,5 +1,6 @@
 <%args>
 @annotation_type_list
+$curs_root_path
 </%args>
 
 % if (@annotations) {
@@ -27,6 +28,8 @@
       <th>
         Evidence type
       </th>
+      <th>
+      </th>
     </tr>
   </thead>
 
@@ -50,11 +53,15 @@
     <td>
       <% $row->{evidence_type} %>
     </td>
+    <td>
+      <a href="<% $delete_action . $row->{annotation_id} %>">
+        <img src="<% $delete_icon_uri %>"/>
+      </a>
+    </td>
   </tr>
 % }
 </table>
 % }
-
 
 <%init>
 my @annotations = ();
@@ -86,10 +93,15 @@ while (defined (my $gene = $gene_rs->next())) {
     push @annotations, { gene_identifier => $gene->primary_identifier(),
                          gene_name => $gene->primary_name(),
                          annotation_type => $annotation_type_display_name,
+                         annotation_id => $annotation->annotation_id(),
                          term_ontid => $term_ontid,
                          term_name => $term_name,
                          evidence_type => $data->{evidence_type},
                        };
   }
 }
+
+my $delete_action = $curs_root_path . '/annotation/delete/';
+my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+
 </%init>

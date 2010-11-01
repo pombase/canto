@@ -26,7 +26,9 @@ $pub
   </ul>
 % }
 
-<& current_annotation_view.mhtml, annotation_type_list => @annotation_type_list &>
+<& current_annotation_view.mhtml,
+   annotation_type_list => @annotation_type_list,
+   curs_root_path => $curs_root_path &>
 
 <%init>
 my $current_gene_id = $c->stash()->{current_gene_id};
