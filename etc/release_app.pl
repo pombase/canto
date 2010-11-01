@@ -27,7 +27,7 @@ my $apache_dir = '/etc/apache2/pomcur.d';
 my $pomcur_dir = '/var/pomcur';
 my $run_dir = "$pomcur_dir/run";
 my $apps_dir = "$pomcur_dir/apps";
-my $repo = "$pomcur_dir/repo.git";
+my $repo = "$pomcur_dir/pomcur.git";
 my $apache_conf_dir = '/etc/apache2/pomcur.d/';
 
 my $start_script = "script/pomcur_start";
