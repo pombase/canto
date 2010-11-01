@@ -24,6 +24,9 @@
       <td>
         Term name
       </td>
+      <td>
+        Evidence type
+      </td>
     </tr>
   </thead>
 
@@ -42,6 +45,9 @@
       <% $row->{term_ontid} %>
     </td>
     <td>
+    </td>
+    <td>
+      <% $row->{evidence_type} %>
     </td>
   </tr>
 % }
@@ -65,7 +71,8 @@ while (defined (my $gene = $gene_rs->next())) {
       push @annotations, { gene_identifier => $gene->primary_identifier(),
                            gene_name => $gene->primary_name(),
                            annotation_type => $annotation_type,
-                           term_ontid => $annotation->data()->{term_ontid}
+                           term_ontid => $annotation->data()->{term_ontid},
+                           evidence_type => $annotation->data()->{evidence_type}
                          };
   }
 }
