@@ -64,6 +64,7 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("gene_id");
+__PACKAGE__->add_unique_constraint("primary_identifier_unique", ["primary_identifier"]);
 
 =head1 RELATIONS
 
@@ -83,8 +84,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iqZZTmRN2XHzH8ODEyBGKg
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-02 18:17:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:v5ozZQkVkoiaNBesCZpCWw
 
 use Moose;
 

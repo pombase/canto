@@ -116,7 +116,7 @@ CREATE TABLE sessions (
 
 CREATE TABLE gene (
        gene_id integer NOT NULL PRIMARY KEY,
-       primary_identifier text NOT NULL,
+       primary_identifier text NOT NULL UNIQUE,
        product text,
        primary_name text,
        organism integer NOT NULL REFERENCES organism (organism_id)
