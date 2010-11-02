@@ -17,7 +17,7 @@ use Getopt::Long qw(:config pass_through);
 BEGIN {
   my $script_name = basename $0;
 
-  if (-f $script_name && ! -d "etc") {
+  if (-f $script_name && -d "../etc") {
     # we're in the scripts directory - go up
     chdir "..";
   }
