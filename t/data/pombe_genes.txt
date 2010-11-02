@@ -1,8 +1,9 @@
-identifier,product,name
-SPCC1739.10,conserved fungal protein
-SPCC1739.11c,"SIN component scaffold protein, centriolin ortholog Cdc11",cdc11
-SPCTRNASER.13,tRNA Serine
-SPCC576.19c,dubious
-SPCC576.03c
-SPNCRNA.119,non-coding RNA (predicted)
-SPCC576.16c,wtf element Wtf22,wtf22
+SPCC1739.10			"conserved fungal protein"
+SPCC1739.11c	cdc11		"SIN component scaffold protein, centriolin ortholog Cdc11"
+SPCTRNASER.13			"tRNA Serine"
+SPCC576.19c			dubious
+SPCC576.03c			
+SPNCRNA.119			"non-coding RNA (predicted)"
+SPCC576.16c	wtf22		"wtf element Wtf22"
+SPAC3A11.14c	pkl1	klp1,SPAC3H5.03c	"kinesin-like protein Pkl1"
+SPBC12C2.11		SPBC21D10.02	"glutamine-fructose-6-phosphate transaminase (predicted)"

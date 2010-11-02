@@ -69,7 +69,7 @@ sub _process_gene_row
   my $schema = $self->schema();
 
   my $columns_ref = shift;
-  my ($primary_identifier, $product, $name) = @{$columns_ref};
+  my ($primary_identifier, $name, $synonyms, $product) = @{$columns_ref};
 
   my $pombe = $self->load_util()->get_organism('Schizosaccharomyces', 'pombe');
 
@@ -102,9 +102,9 @@ sub load
 
   my $schema = $self->schema();
 
-  my $csv = Text::CSV->new({binary => 1});
+  my $csv = Text::CSV->new({ binary => 1, sep_char => "\t",
+                             blank_is_undef => 1 });
   open my $fh, '<', $file_name or die;
-  $csv->column_names ($csv->getline($fh));
 
   while (my $columns_ref = $csv->getline($fh)) {
     $self->_process_gene_row($columns_ref);
