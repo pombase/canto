@@ -1,5 +1,13 @@
 #!/usr/bin/perl
 
+# This script initialises and runs the pomcur server
+#
+# The first time the script is run, the user will be asked to initialise
+# the application with the --initialise flag.
+#
+# Once initialised, the script needs no arguments as it will read it's
+# configuration from the pomcur_deploy.yaml file.
+
 use strict;
 use warnings;
 use Carp;
