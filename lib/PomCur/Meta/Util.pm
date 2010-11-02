@@ -74,6 +74,7 @@ sub app_initialised
            $suffix - used to change the config file name for testing, defaults
                      to "deploy"
            $config_dir - for testing, set the directory to write the config file
+
 =cut
 sub initialise_app
 {
