@@ -73,13 +73,13 @@ sub _process_gene_row
 
   my $pombe = $self->load_util()->get_organism('Schizosaccharomyces', 'pombe');
 
-  $schema->create_with_type('Gene',
-                            {
-                              primary_identifier => $primary_identifier,
-                              product => $product,
-                              primary_name => $name,
-                              organism => $pombe
-                            });
+  $schema->resultset('Gene')->find_or_create(
+    {
+      primary_identifier => $primary_identifier,
+      product => $product,
+      primary_name => $name,
+      organism => $pombe
+    });
 }
 
 =head2 load
