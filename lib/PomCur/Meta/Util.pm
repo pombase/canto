@@ -56,7 +56,7 @@ use PomCur::DBUtil;
 =cut
 sub app_initialised
 {
-  my $app_name = shift;
+  my $app_name = lc shift;
 
   my $deploy_config_file_name = $app_name . '_deploy.yaml';
 
