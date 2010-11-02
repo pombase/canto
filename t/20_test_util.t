@@ -48,7 +48,7 @@ use PomCur::Track::LoadUtil;
   $test_util->init_test('1_curs');
 
   is($test_util->track_schema()->resultset('Pub')->count(), 18);
-  is($test_util->track_schema()->resultset('Gene')->count(), 7);
+  is($test_util->track_schema()->resultset('Gene')->count(), 9);
 }
 
 {
