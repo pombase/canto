@@ -201,7 +201,7 @@ test_psgi $app, sub {
 
     like ($redirect_res->content(),
           qr/Annotating.*$gene_identifiers[0].*,/);
-    like ($redirect_res->content(), qr/Current gene list/);
+    like ($redirect_res->content(), qr/Genes for PMID:19664060/);
   }
 };
 
