@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use Data::Compare;
 
@@ -17,7 +17,7 @@ my $schema = PomCur::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is (@loaded_cvterms, 1);
+is (@loaded_cvterms, 5);
 
 my $test_ontology_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
@@ -30,10 +30,16 @@ $ontology_index->finish_index();
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 18);
+is(@loaded_cvterms, 22);
 
 ok(grep {
   $_->name() eq 'regulation of transmembrane transport'
+} @loaded_cvterms);
+
+ok(grep {
+  $_->name() eq 'negative regulation of transmembrane transport' &&
+    $_->cvtermsynonym_cvterms()->first()->synonym() eq
+      'down regulation of transmembrane transport'
 } @loaded_cvterms);
 
 my $ontology_name = 'biological_process';
