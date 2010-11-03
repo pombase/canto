@@ -364,7 +364,7 @@ div.clearall {
 .gene-list {
   background-color: #efa;
   float: right;
-  font-size: 70%;
+  font-size: 80%;
   position: relative;
   width: 18%;
   right: -10px;
@@ -381,16 +381,16 @@ div.clearall {
 }
 .gene-list td {
   border-width: 0px;
-  font-size: 90%;
+  font-size: 95%;
 }
 
 .gene-list .no-genes-message {
-  font-size: 90%;
+  font-size: 95%;
   margin: 10px;
 }
 
 .gene-list .view-edit {
-  font-size: 80%;
+  font-size: 95%;
   margin: 0px 2px 0px 2px;
 }
 
