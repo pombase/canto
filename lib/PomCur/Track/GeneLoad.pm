@@ -71,6 +71,17 @@ sub _process_gene_row
   my $columns_ref = shift;
   my ($primary_identifier, $name, $synonyms, $product) = @{$columns_ref};
 
+  my @synonym_hashes = ();
+
+  if (defined $synonyms) {
+    @synonym_hashes = map {
+      s/^\s+//; s/\s+$//;
+      {
+        identifier => $_,
+      }
+    } split /,/, $synonyms;
+  }
+
   my $pombe = $self->load_util()->get_organism('Schizosaccharomyces', 'pombe');
 
   $schema->resultset('Gene')->find_or_create(
@@ -78,7 +89,8 @@ sub _process_gene_row
       primary_identifier => $primary_identifier,
       product => $product,
       primary_name => $name,
-      organism => $pombe
+      organism => $pombe,
+      genesynonyms => [ @synonym_hashes ],
     });
 }
 

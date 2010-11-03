@@ -83,9 +83,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 genesynonyms
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-02 18:17:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:v5ozZQkVkoiaNBesCZpCWw
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Genesynonym>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genesynonyms",
+  "PomCur::TrackDB::Genesynonym",
+  { "foreign.gene" => "self.gene_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-03 12:15:29
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8swiiplXYIyfFHQk0poacg
 
 use Moose;
 

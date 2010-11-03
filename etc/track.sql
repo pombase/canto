@@ -135,7 +135,8 @@ CREATE INDEX gene_primary_name_idx ON gene (primary_name);
 
 CREATE TABLE genesynonym (
        genesynonym_id integer NOT NULL PRIMARY key,
-       identifier text NOT NULL,
-       synonym_type integer NOT NULL references cvterm(cvterm_id)
+       gene integer NOT NULL references gene (gene_id),
+       identifier text NOT NULL
+--       synonym_type integer NOT NULL references cvterm(cvterm_id)
 );
 CREATE INDEX genesynonym_identifier ON genesynonym (identifier);

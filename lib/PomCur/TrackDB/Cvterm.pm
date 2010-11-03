@@ -248,24 +248,9 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 genesynonyms
 
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Genesynonym>
-
-=cut
-
-__PACKAGE__->has_many(
-  "genesynonyms",
-  "PomCur::TrackDB::Genesynonym",
-  { "foreign.synonym_type" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-02 22:31:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9I2UZSXNU83b/gIucB/sOQ
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-03 12:12:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MsEQ3bbHbDixDbox/axHEA
 
 sub db_accession
 {
