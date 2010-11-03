@@ -182,6 +182,12 @@ implementation_classes:
   go_annotation_lookup: PomCur::Track::GOAnnotationLookup
   go_lookup: PomCur::Track::OntologyLookup
 
+evidence_types:
+  IMP: Inferred from mutant phenotype
+  IDA: Inferred from direct assay
+  IGI: Inferred from genetic interaction
+  IPI: Inferred from physical interaction
+
 # each class needs to set up the stash for forwarding to a template
 # page based on the module name, eg. go_function.html
 annotation_type_list:
@@ -192,10 +198,10 @@ annotation_type_list:
       ontologies:
         - function
     evidence_codes:
-      - Inferred from mutant phenotype
-      - Inferred from direct assay
-      - Inferred from genetic interaction
-      - Inferred from physical interaction
+      - IMP
+      - IDA
+      - IGI
+      - IPI
   - name: biological_process
     display_name: 'GO biological process'
     class: 'PomCur::CurModules::GOModule'
@@ -203,10 +209,10 @@ annotation_type_list:
       ontologies:
         - process
     evidence_codes:
-      - Inferred from mutant phenotype
-      - Inferred from direct assay
-      - Inferred from genetic interaction
-      - Inferred from physical interaction
+      - IMP
+      - IDA
+      - IGI
+      - IPI
   - name: cellular_component
     display_name: 'GO cellular component or complex'
     class: 'PomCur::CurModules::GOModule'
@@ -214,10 +220,10 @@ annotation_type_list:
       ontologies:
         - component
     evidence_codes:
-      - Inferred from mutant phenotype
-      - Inferred from direct assay
-      - Inferred from genetic interaction
-      - Inferred from physical interaction
+      - IMP
+      - IDA
+      - IGI
+      - IPI
   - name: phenotype
     display_name: Phenotypes
     class: 'PomCur::CurModules::PhenotypeModule'

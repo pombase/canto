@@ -636,7 +636,11 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
   my $ont_config = $config->{annotation_types}->{$annotation_type_name};
 
-  my @codes = map { [ $_, $_ ] } @{$ont_config->{evidence_codes}};
+  my %evidence_types = %{$config->{evidence_types}};
+
+  my @codes = map {
+    [ $_, $evidence_types{$_} ]
+  } @{$ont_config->{evidence_codes}};
 
   my $form = $self->form();
 
@@ -658,7 +662,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
   if ($form->submitted_and_valid()) {
     my $data = $annotation->data();
-    $data->{evidence_type} = $form->param_value('evidence-select');
+    $data->{evidence_code} = $form->param_value('evidence-select');
     $annotation->data($data);
     $annotation->update();
 
