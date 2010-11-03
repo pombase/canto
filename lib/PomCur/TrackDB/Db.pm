@@ -30,27 +30,23 @@ __PACKAGE__->table("db");
 
 =head2 name
 
-  data_type: 'character varying'
+  data_type: 'text'
   is_nullable: 0
-  size: 255
 
 =head2 description
 
-  data_type: 'character varying'
+  data_type: 'text'
   is_nullable: 1
-  size: 255
 
 =head2 urlprefix
 
-  data_type: 'character varying'
+  data_type: 'text'
   is_nullable: 1
-  size: 255
 
 =head2 url
 
-  data_type: 'character varying'
+  data_type: 'text'
   is_nullable: 1
-  size: 255
 
 =cut
 
@@ -58,13 +54,13 @@ __PACKAGE__->add_columns(
   "db_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
-  { data_type => "character varying", is_nullable => 0, size => 255 },
+  { data_type => "text", is_nullable => 0 },
   "description",
-  { data_type => "character varying", is_nullable => 1, size => 255 },
+  { data_type => "text", is_nullable => 1 },
   "urlprefix",
-  { data_type => "character varying", is_nullable => 1, size => 255 },
+  { data_type => "text", is_nullable => 1 },
   "url",
-  { data_type => "character varying", is_nullable => 1, size => 255 },
+  { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("db_id");
 
@@ -86,8 +82,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 16:02:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cLW/yowA9M9Mqn92xzTRxQ
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-03 17:12:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Om1dlXsf1yr2/hg8eaRd6Q
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

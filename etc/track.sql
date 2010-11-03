@@ -17,10 +17,10 @@ CREATE TABLE cv (
 
 CREATE TABLE db (
     db_id integer NOT NULL PRIMARY KEY,
-    name character varying(255) NOT NULL,
-    description character varying(255),
-    urlprefix character varying(255),
-    url character varying(255)
+    name text NOT NULL,
+    description text,
+    urlprefix text,
+    url text
 );
 
 CREATE TABLE dbxref (
