@@ -81,15 +81,12 @@ sub load
   my $guard = $schema->txn_scope_guard;
 
   my $load_util = $self->load_util();
-
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
-
   my $parser = new GO::Parser({handler=>'obj'});
 
   $parser->parse($file_name);
 
   my $graph = $parser->handler->graph;
-
   my %cvterms = ();
 
   my $store_term_handler =
