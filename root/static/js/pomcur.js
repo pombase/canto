@@ -21,7 +21,7 @@ var ferrit_choose = {
 
   initialise : function(current_component) {
     ferrit_choose.ontology_complete_url =
-      application_root + '/ws/lookup/go/' + current_component;
+      application_root + 'ws/lookup/go/' + current_component;
   },
 
   use_term_data : function(data) {
