@@ -188,6 +188,36 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 cvtermprop_types
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Cvtermprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvtermprop_types",
+  "PomCur::TrackDB::Cvtermprop",
+  { "foreign.type_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 cvtermprop_cvterms
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Cvtermprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvtermprop_cvterms",
+  "PomCur::TrackDB::Cvtermprop",
+  { "foreign.cvterm_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 pub_statuses
 
 Type: has_many
@@ -234,8 +264,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 23:12:37
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m6ELJDFEOy548W3Bz2v4IA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-02 22:31:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9I2UZSXNU83b/gIucB/sOQ
 
 sub db_accession
 {

@@ -62,6 +62,15 @@ CREATE INDEX cvterm_relationship_idx1 ON cvterm_relationship (type_id);
 CREATE INDEX cvterm_relationship_idx2 ON cvterm_relationship (subject_id);
 CREATE INDEX cvterm_relationship_idx3 ON cvterm_relationship (object_id);
 
+CREATE TABLE cvtermprop (
+    cvtermprop_id integer NOT NULL PRIMARY KEY,
+    cvterm_id integer NOT NULL references cvterm (cvterm_id),
+    type_id integer NOT NULL references cvterm (cvterm_id),
+    value text DEFAULT '' NOT NULL,
+    rank integer DEFAULT 0 NOT NULL
+);
+CREATE INDEX cvtermprop_idx1 ON cvtermprop (cvterm_id);
+CREATE INDEX cvtermprop_idx2 ON cvtermprop (type_id);
 
 CREATE TABLE organism (
        	organism_id integer NOT NULL PRIMARY KEY,
