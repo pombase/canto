@@ -226,7 +226,7 @@ sub find_or_create_with_type
 
 =head2 class_name_of_table
 
- Usage   : my $class_name = PomCur::DB::class_name_of_table($table_name);
+ Usage   : my $class_name = PomCur::DB->class_name_of_table($table_name);
  Function: Return the class name of a given table name
  Args    : $table_name - the table name
  Returns : the qualified class name, eg. PomCur::DB::Person
