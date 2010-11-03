@@ -82,6 +82,8 @@ sub load
 
   my $load_util = $self->load_util();
 
+  my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
+
   my $parser = new GO::Parser({handler=>'obj'});
 
   $parser->parse($file_name);
@@ -96,12 +98,26 @@ sub load
       my $term = $ni->term;
 
       my $cv_name = $term->namespace();
+      my $comment = $term->comment();
 
-      if (!$term->is_relationship_type()) {
+      if (!$term->is_relationship_type() && !$term->is_obsolete()) {
         my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
                                             term_name => $term->name(),
                                             ontologyid => $term->acc(),
                                             definition => $term->definition());
+        my $cvterm_id = $cvterm->cvterm_id();
+
+        if (defined $comment) {
+          my $cvtermprop =
+            $schema->create_with_type('Cvtermprop',
+                                      {
+                                        cvterm_id => $cvterm_id,
+                                        type_id =>
+                                          $comment_cvterm->cvterm_id(),
+                                        value => $comment,
+                                        rank =>0,
+                                      });
+        }
 
         $cvterms{$term->acc()} = $cvterm;
 
