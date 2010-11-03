@@ -248,9 +248,17 @@ $(document).ready(function() {
       }
     })
     .data("autocomplete")._renderItem = function( ul, item ) {
+      var search_string = $('#ferret-term-input').val();
+      var search_bits = search_string.split(/\s+/);
+      var match_name = item.name;
+      for (var i = 0; i < search_bits.length; i++) {
+        match_name = match_name.replace(search_bits[i], 
+                                        '<b>' + search_bits[i] + '</b>');
+      }
       return $( "<li></li>" )
         .data( "item.autocomplete", item )
-        .append( "<a>" + item.name + " <span class='term-id'>(" + item.id + ")</span></a>" )
+        .append( "<a>" + match_name + " <span class='term-id'>(" + 
+                 item.id + ")</span></a>" )
         .appendTo( ul );
     };
   }
