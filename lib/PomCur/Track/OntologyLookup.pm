@@ -91,6 +91,7 @@ sub _make_term_hash
            include_definition - include the definition for each term
  Returns : [ { id => '...', name => '...', definition => '...',
                children => [ { id => '...' }, { id => '...' }, ... ] } ]
+
 =cut
 sub web_service_lookup
 {
