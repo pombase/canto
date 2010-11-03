@@ -93,7 +93,9 @@ sub get_annotation_table
 
       push @annotations, { gene_identifier => $gene->primary_identifier(),
                            gene_name => $gene->primary_name(),
-                           annotation_type => $annotation_type_display_name,
+                           annotation_type => $annotation_type,
+                           annotation_type_display_name =>
+                             $annotation_type_display_name,
                            annotation_id => $annotation->annotation_id(),
                            term_ontid => $term_ontid,
                            term_name => $term_name,

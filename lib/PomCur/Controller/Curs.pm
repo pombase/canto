@@ -43,6 +43,7 @@ use Moose;
 with 'PomCur::Role::MetadataAccess';
 
 use PomCur::Track;
+use PomCur::Curs::Utils;
 
 use constant {
   # user needs to confirm name and email address
@@ -690,6 +691,29 @@ sub _get_gene_resultset
                                                 -asc => 'gene_id'
                                               }
                                             });
+}
+
+sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $schema = $c->stash()->{schema};
+  my $config = $c->config();
+
+  my @annotations =
+    PomCur::Curs::Utils::get_annotation_table($config, $schema);
+
+  my @column_names = qw(gene_identifier annotation_type term_ontid evidence_code);
+
+  my $results = '';
+
+  for my $annotation (@annotations) {
+    $results .= join "\t", map { $annotation->{$_} } @column_names;
+    $results .= "\n";
+  }
+
+  $c->res->content_type('text/plain');
+  $c->res->body($results);
 }
 
 1;

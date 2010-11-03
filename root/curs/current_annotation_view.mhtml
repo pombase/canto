@@ -45,7 +45,7 @@ $curs_root_path
       <% $row->{gene_name} %>
     </td>
     <td>
-      <% $row->{annotation_type} %>
+      <% $row->{annotation_type_display_name} %>
     </td>
     <td>
       <% $row->{term_ontid} %>
@@ -67,6 +67,10 @@ $curs_root_path
   </tr>
 % }
 </table>
+
+<div>
+  <a href="<% $download_action %>">Download table ...</a>
+</div>
 % }
 
 <%init>
@@ -78,6 +82,7 @@ my $config = $c->config();
 
 my @annotations = PomCur::Curs::Utils::get_annotation_table($config, $schema);
 
+my $download_action = $curs_root_path . '/export/annotation';
 my $delete_action = $curs_root_path . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 
