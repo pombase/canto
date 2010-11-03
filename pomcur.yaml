@@ -16,6 +16,17 @@ authentication:
         class: DBIx::Class
         user_class: TrackModel::Person
 
+db_initial_data:
+  track:
+    cv:
+      - name: cvterm_property_type
+        cvterms:
+          - name: comment
+            dbxref:
+              accession: comment
+              db:
+                name: PomCur Track
+
 class_info:
   cv:
     class_display_name: controlled vocabulary

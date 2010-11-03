@@ -57,9 +57,15 @@ sub make_schema
 
 for my $schema_name (keys %db_template_files) {
   my $schema_class = "PomCur::${schema_name}DB";
-  my $connect_string = "dbi:SQLite:dbname=$db_template_files{$schema_name}";
+  my $file_name = $db_template_files{$schema_name};
+  my $connect_string = "dbi:SQLite:dbname=$file_name";
 
   make_schema($schema_class, $connect_string);
+
+  my $schema =
+    PomCur::DBUtil::schema_for_file($config, $file_name, $schema_name);
+
+  PomCur::Meta::Util::initialise_core_data($config, $schema, lc $schema_name);
 }
 
 warn "finished initialising development environment\n";

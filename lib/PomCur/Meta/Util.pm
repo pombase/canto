@@ -46,6 +46,7 @@ use File::Copy qw(copy);
 
 use PomCur::Config;
 use PomCur::DBUtil;
+use PomCur::DB;
 
 =head2 needs_app_init
 
@@ -161,20 +162,38 @@ sub create_template_dbs
     print "Creating: $model_files{$model_name} from $sql\n";
     system "sqlite3 $model_files{$model_name} < etc/$model_name.sql";
   }
-
-  my $track_file = $model_files{track};
-  my $track_schema =
-    PomCur::DBUtil::schema_for_file($config, $track_file, 'Track');
-
-  initialise_tables($track_schema);
 }
 
+=head2 initialise_data
 
-sub initialise_tables
+ Usage   : PomCur::Meta::Util::initialise_core_data($config, $schema, $key);
+ Function: Load core data into the given schema.  eg. cvterms used by other
+           loaders
+ Args    : $config - the PomCur::Config object
+           $schema - the schema to write to
+           $key - the key to use when accessing the config hash
+ Returns : Nothing
+
+=cut
+sub initialise_core_data
 {
-  my $track_schema = shift;
+  my $config = shift;
+  my $schema = shift;
+  my $config_key = shift;
 
-#  add 'synonym_type' to cv ...
+  my $initial_data_ref = $config->{db_initial_data}->{$config_key};
+
+  return unless defined $initial_data_ref;
+
+  my %initial_data = %{$initial_data_ref};
+
+  for my $table_name (keys %initial_data) {
+    for my $row_contents (@{$initial_data{$table_name}}) {
+      my $class_name = $schema->class_name_of_table($table_name);
+
+      $schema->resultset($class_name)->create($row_contents);
+    }
+  }
 }
 
 1;
