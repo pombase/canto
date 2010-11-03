@@ -45,6 +45,14 @@ has 'schema' => (
   isa => 'PomCur::TrackDB'
 );
 
+=head2 get_organism
+
+ Usage   : my $organism = $load_util->get_organism($genus, $species);
+ Function: Find or create, and then return the organism matching the arguments
+ Args    : the genus and species of the new organism
+ Returns : The new organism
+
+=cut
 sub get_organism
 {
   my $self = shift;
@@ -63,6 +71,14 @@ sub get_organism
       });
 }
 
+=head2 get_cv
+
+ Usage   : my $cv = $load_util->get_cv($cv_name);
+ Function: Find or create, and then return the cv object matching the arguments
+ Args    : $cv_name - the cv name
+ Returns : The new organism
+
+=cut
 sub get_cv
 {
   my $self = shift;
@@ -78,6 +94,13 @@ sub get_cv
       });
 }
 
+=head2 get_db
+
+ Usage   : my $db = $load_util->get_db($db_name);
+ Function: Find or create, and then return the db object matching the arguments
+ Returns : The new db object
+
+=cut
 sub get_db
 {
   my $self = shift;
@@ -91,6 +114,15 @@ sub get_db
       });
 }
 
+=head2 get_dbxref
+
+ Usage   : my $dbxref = $load_util->get_dbxref($db, $dbxref_acc);
+ Function: Find or create, and then return the object matching the arguments
+ Args    : $db - the Db object
+           $dbxref_acc - the accession
+ Returns : The new dbxref object
+
+=cut
 sub get_dbxref
 {
   my $self = shift;
@@ -106,6 +138,20 @@ sub get_dbxref
       });
 }
 
+=head2 get_cvterm
+
+ Usage   : my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
+                                               term_name => $term_name,
+                                               ontologyid => $ontologyid,
+                                               definition => $definition);
+ Function: Find or create, and then return the object matching the arguments
+ Args    : cv_name - the Cv name
+           term_name - the cvterm name
+           ontologyid - the id in the ontology, eg. "GO:0001234"
+           definition - the term definition
+ Returns : The new cvterm object
+
+=cut
 sub get_cvterm
 {
   my $self = shift;
@@ -150,10 +196,18 @@ sub get_cvterm
       });
 }
 
+=head2 get_pub
+
+ Usage   : my $pub = $load_util->get_pub($pubmedid);
+ Function: Find or create, and then return the object matching the arguments
+ Args    : $pubmedid - the PubMed ID
+ Returns : The new pub object
+
+=cut
 sub get_pub
 {
   my $self = shift;
-  my $pubmed_id = shift;
+  my $pubmedid = shift;
 
   my $schema = $self->schema();
 
@@ -163,11 +217,19 @@ sub get_pub
 
   return $schema->resultset('Pub')->find_or_create(
       {
-        pubmedid => $pubmed_id,
+        pubmedid => $pubmedid,
         type => $pub_type,
       });
 }
 
+=head2 get_lab
+
+ Usage   : my $lab = $load_util->get_lab($lab_head_obj);
+ Function: Find or create, and then return the object matching the arguments
+ Args    : $lab_head_obj - the Person object for the lab head
+ Returns : The new lab object
+
+=cut
 sub get_lab
 {
   my $self = shift;
@@ -186,6 +248,17 @@ sub get_lab
       });
 }
 
+=head2 get_person
+
+ Usage   : my $person = $load_util->get_person($name, $networkaddress,
+                                               $role_cvterm);
+ Function: Find or create, and then return the object matching the arguments
+ Args    : $name - the Person full name
+           $networkaddress - the email address
+           $role_cvterm - a cvterm from the "PomBase user types" cv
+ Returns : The new person object
+
+=cut
 sub get_person
 {
   my $self = shift;
