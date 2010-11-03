@@ -89,6 +89,14 @@ sub load
   my $graph = $parser->handler->graph;
   my %cvterms = ();
 
+  my @synonym_types_to_load = qw(exact);
+  my %synonym_type_ids = ();
+
+  for my $synonym_type (@synonym_types_to_load) {
+    $synonym_type_ids{$synonym_type} =
+      $schema->find_with_type('Cvterm', { name => $synonym_type })->cvterm_id();
+  }
+
   my $store_term_handler =
     sub {
       my $ni = shift;
@@ -96,6 +104,7 @@ sub load
 
       my $cv_name = $term->namespace();
       my $comment = $term->comment();
+      my $synonyms = $term->synonyms_by_type('exact');
 
       if (!$term->is_relationship_type() && !$term->is_obsolete()) {
         my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
@@ -114,6 +123,17 @@ sub load
                                         value => $comment,
                                         rank =>0,
                                       });
+        }
+
+        if (@$synonyms) {
+          for my $synonym (@$synonyms) {
+            $schema->create_with_type('Cvtermsynonym',
+                                      {
+                                        cvterm_id => $cvterm->cvterm_id(),
+                                        synonym => $synonym,
+                                        type_id => $synonym_type_ids{exact},
+                                      });
+          }
         }
 
         $cvterms{$term->acc()} = $cvterm;

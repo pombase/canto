@@ -26,6 +26,28 @@ db_initial_data:
               accession: comment
               db:
                 name: PomCur Track
+      - name: synonym_type
+        cvterms:
+          - name: broad
+            dbxref:
+              accession: broad
+              db:
+                name: PomCur Track
+          - name: narrow
+            dbxref:
+              accession: narrow
+              db:
+                name: PomCur Track
+          - name: exact
+            dbxref:
+              accession: exact
+              db:
+                name: PomCur Track
+          - name: related
+            dbxref:
+              accession: related
+              db:
+                name: PomCur Track
 
 class_info:
   cv:
