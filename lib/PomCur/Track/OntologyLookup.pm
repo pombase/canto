@@ -58,6 +58,14 @@ sub _make_term_hash
 
   if ($include_definition) {
     $term_hash{definition} = $cvterm->definition();
+    my $comment_prop =
+      $cvterm->cvtermprop_cvterms()->search({ 'type.name' => 'comment' },
+                                            {
+                                              join => 'type',
+                                            })->first();
+    if ($comment_prop) {
+      $term_hash{comment} = $comment_prop->value();
+    }
   }
 
   if ($include_children) {

@@ -458,6 +458,12 @@ div.clearall {
   margin: 0px 10px 10px 10px;
 }
 
+.term-comment {
+  display: block;
+  font-weight: bold;
+  margin: 0px 10px 10px 10px;
+}
+
 .term-name {
   display: block;
   font-weight: bold;

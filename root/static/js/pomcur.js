@@ -32,6 +32,11 @@ var ferrit_choose = {
     $('#ferret-term-name').text(term.name);
     $('#ferret-term-definition').text(term.definition);
 
+    if (term.comment) {
+      $('#ferret-term-comment').html('Comment: <div class="term-comment">' +
+                                     term.comment + '</div>');
+    }
+
     var children = term.children;
     var children_html = '';
 

@@ -38,4 +38,32 @@ test_psgi $app, sub {
   }
 };
 
+test_psgi $app, sub {
+  my $cb = shift;
+
+  {
+    my $search_term = 'molecular_function';
+    my $url = "http://localhost:5000/ws/lookup/go/molecular_function/?term=$search_term&def=1";
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    use JSON::Any;
+
+    my $json_any = JSON::Any->new();
+    my $obj;
+    eval { $obj = $json_any->jsonToObj($res->content()); };
+    if ($@) {
+      die "$@\n", $res->content();
+    }
+
+    is (@$obj, 1);
+
+    ok(grep { $_->{id} =~ /GO:0003674/ } @$obj);
+    ok(grep { $_->{name} =~ /molecular_function/ } @$obj);
+    ok(grep { $_->{comment} =~ /Note that, in addition to forming the root/ } @$obj);
+  }
+};
+
 done_testing;
