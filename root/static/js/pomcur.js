@@ -233,7 +233,6 @@ $(document).ready(function() {
       source: ferrit_choose.ontology_complete_url,
       focus: function(event, ui) {
         $('#ferret-term-input').val(ui.item.name);
-        ferrit_choose.hide_confirm();
         return false;
       },
       select: function(event, ui) {
