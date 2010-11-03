@@ -1,0 +1,12 @@
+<%args>
+$object
+</%args>
+
+<&| /view/object/object_top.mhtml, object => $object &>
+
+</&>
+
+<div id="collections">
+  <& /view/collection.mhtml, object => $object, collection_name => 'genesynonyms',
+     collection_title => "Synonyms" &>
+</div>

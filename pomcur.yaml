@@ -115,6 +115,27 @@ class_info:
         editable: 0
 # if the hook dies the creation fails
     pre_create_hook: 'PomCur::Track::create_curs_db_hook'
+  gene:
+    editable: 1
+    display_field: primary_identifier
+    field_info_list:
+      - name: primary_identifier
+        editable: 1
+      - name: primary_name
+        editable: 1
+      - name: product
+        editable: 1
+      - name: genesynonyms
+        editable: 1
+        is_collection: 1
+  genesynonym:
+    editable: 1
+    display_field: identifier
+    field_info_list:
+      - name: identifier
+        editable: 1
+      - name: gene
+        editable: 1
 
 track_db_template_file: db_templates/track_db_template.sqlite3
 curs_db_template_file: db_templates/curs_db_template.sqlite3
