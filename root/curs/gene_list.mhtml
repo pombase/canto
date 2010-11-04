@@ -11,11 +11,16 @@ $pub
     <tr>
 %     for my $col_name (@col_names) {
       <td>
-        <a href="<% $start_path . '/set_current_gene/' .$gene->{gene_id} %>">
+%       if ($gene->{gene_id} != $current_gene_id) {
+        <a href="<% $start_path . '/set_current_gene/' .$gene->{gene_id} %>"
+           title="Click to make this gene current">
+%       }
           <span class="<% _span_class($gene->{gene_id}, $current_gene_id) %>">
             <% $gene->{$col_name} %>
           </span>
+%       if ($gene->{gene_id} != $current_gene_id) {
         </a>
+%       }
       </td>
 %     }
     </tr>

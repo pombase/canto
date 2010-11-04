@@ -2,7 +2,7 @@
 % if (defined $home_path) {
   Trail: <ul>
     <li>
-       <a href="<% $home_path %>">
+       <a href="<% $home_path %>" title="Go to the home page">
          Home page
        </a>
     </li>
