@@ -12,7 +12,9 @@ $pub
 %     for my $col_name (@col_names) {
       <td>
         <a href="<% $start_path . '/set_current_gene/' .$gene->{gene_id} %>">
-          <% $gene->{$col_name} %>
+          <span class="<% _span_class($gene->{gene_id}, $current_gene_id) %>">
+            <% $gene->{$col_name} %>
+          </span>
         </a>
       </td>
 %     }
@@ -33,6 +35,19 @@ $pub
 
 <%init>
 use PomCur::Curs;
+
+my $current_gene_id = $c->stash()->{current_gene_id};
+
+sub _span_class
+{
+  my $gene_id = shift;
+  my $current_gene_id = shift;
+  if ($current_gene_id == $gene_id) {
+    return "current-gene";
+  } else {
+    return "";
+  }
+}
 
 my $schema = $c->stash()->{schema};
 my @all_genes = $schema->resultset('Gene')->all();
