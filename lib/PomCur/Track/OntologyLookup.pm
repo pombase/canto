@@ -72,7 +72,7 @@ sub _make_term_hash
     @{$term_hash{children}} = ();
 
     my @child_cvterms = $cvterm->cvterm_relationship_objects()
-      ->search_related('subject')->all();
+      ->search_related('subject', {}, { order_by => 'name' })->all();
 
     for my $child_cvterm (@child_cvterms) {
       if ($child_cvterm->cv()->name() eq $cv->name()) {
