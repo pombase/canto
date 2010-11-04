@@ -481,12 +481,18 @@ div.clearall {
   font-size: 80%;
 }
 
-#ferret-term-children ul li {
-  padding: 3px;
+#ferret-term-children ul {
+  padding: 0px 0px 0px 2em;
 }
 
-#ferret-term-children ul li a:hover {
-  background-color:#eee;
+#ferret-term-children ul li img {
+  padding: 0px 4px 0px 0em;
+}
+
+#ferret-term-children ul li {
+  padding: 2px;
+  text-decoration: none;
+  list-style-type: none;
 }
 
 #ferret-suggest-link, #ferret-cancel-children {
