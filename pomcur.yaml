@@ -130,6 +130,8 @@ class_info:
         editable: 1
       - name: authors
         editable: 1
+      - name: community_curator
+        editable: 1
       - name: type
         source: type_id
         values_constraint: 'cv->name = "PomBase publication type"'

@@ -9,6 +9,8 @@ $object
   <a href="<% $c->uri_for('/create/curs',
                           { pub => $object->pub_id(),
                             curs_key => PomCur::Curs::make_curs_key(),
+                            community_curator =>
+                              $object->community_curator()->person_id(),
                             model => $c->req()->param('model') }) %>">
     Create a new curation session for this publication ...
   </a>

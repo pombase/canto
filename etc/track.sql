@@ -4,6 +4,7 @@ CREATE TABLE pub (
        pub_id integer NOT NULL PRIMARY KEY,
        pubmedid text UNIQUE,
        type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
+       community_curator integer REFERENCES person (person_id),
        title text,
        abstract text,
        authors text
