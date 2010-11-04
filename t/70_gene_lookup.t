@@ -14,7 +14,7 @@ my $lookup = PomCur::Track::GeneLookup->new(config => $test_util->config());
 
 ok(defined $lookup->schema());
 
-my $result = $lookup->lookup([qw(SPCC576.16c)]);
+my $result = $lookup->lookup([qw(SPCc576.16c)]);
 
 is(@{$result->{found}}, 1, 'look up one gene - found count');
 is(@{$result->{missing}}, 0, 'look up one gene - missing count');

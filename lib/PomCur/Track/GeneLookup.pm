@@ -41,6 +41,18 @@ use Moose;
 with 'PomCur::Configurable';
 with 'PomCur::Track::TrackLookup';
 
+sub _build_constraint
+{
+  return map {
+    {
+      'lower(primary_identifier)' => $_
+    },
+    {
+      'lower(primary_name)' => $_
+    }
+  } @_;
+}
+
 =head2 lookup
 
  Usage   : my $gene_lookup = PomCur::Track::get_lookup($config, $lookup_name);
@@ -59,19 +71,11 @@ sub lookup
   my $search_terms_ref = shift;
   my $options = shift;
 
-  my @search_terms = @{$search_terms_ref};
+  my @search_terms = map { lc } @{$search_terms_ref};
 
   my $gene_rs = $self->schema()->resultset('Gene');
-  my $rs = $gene_rs->search({
-    -or => [
-      primary_identifier => {
-        -in => [@search_terms],
-      },
-      primary_name => {
-        -in => [@search_terms],
-      },
-    ]
-   });
+  my $rs = $gene_rs->search(
+    [_build_constraint(@search_terms)]);
 
   my @found_genes = $rs->all();
 
@@ -80,11 +84,11 @@ sub lookup
   for my $found_gene (@found_genes) {
     my $gene_identifier = $found_gene->primary_identifier();
     if (defined $gene_identifier) {
-      $gene_ids{$gene_identifier} = 1;
+      $gene_ids{lc $gene_identifier} = 1;
     }
     my $gene_name = $found_gene->primary_name();
     if (defined $gene_name) {
-      $gene_ids{$gene_name} = 1;
+      $gene_ids{lc $gene_name} = 1;
     }
   }
 
