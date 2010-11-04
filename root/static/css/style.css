@@ -357,6 +357,10 @@ div.clearall {
   padding: 0px;
 }
 
+.annotation-start li > .annotation-type {
+  color: #555;
+}
+
 .gene-list-edit .upload-genes-link {
   padding: 20px 0px 10px 0px;
 }

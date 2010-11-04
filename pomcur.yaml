@@ -230,12 +230,16 @@ annotation_type_list:
   - name: phenotype
     display_name: Phenotypes
     class: 'PomCur::CurModules::PhenotypeModule'
+    disabled: 1
   - name: post_translational_modifications
     display_name: "Post translational modifications"
+    disabled: 1
   - name: genetic_interactions
     display_name: "Genetic Interactions"
+    disabled: 1
   - name: physical_interactions
     display_name: "Physical Interactions"
+    disabled: 1
 
 messages:
   gene_upload:
