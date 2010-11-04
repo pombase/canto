@@ -121,7 +121,6 @@ class_info:
     class_display_name: publication
     display_field: title
     editable: 1
-    order_by: "CAST(pubmedid AS integer) DESC"
     field_info_list:
       - name: 'PubMed ID'
         source: pubmedid
