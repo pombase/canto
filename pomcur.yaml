@@ -133,6 +133,7 @@ class_info:
       - name: type
         source: type_id
         values_constraint: 'cv->name = "PomBase publication type"'
+        referenced_class: Cvterm
         editable: 1
   curs:
     class_display_name: curation session
