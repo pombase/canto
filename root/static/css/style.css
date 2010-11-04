@@ -513,3 +513,7 @@ div.clearall {
   display: inline;
   margin: 10px 0px 0px 30px;
 }
+
+.placeholder {
+  color: #999;
+}

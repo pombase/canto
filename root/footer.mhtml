@@ -15,7 +15,7 @@
 % $min_flag = '.min' unless $c->debug();
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery<% $min_flag %>.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui<% $min_flag %>.js"></script>
-
+<script src="<% $c->uri_for('/static/js/jquery.placeholder.min.js') %>"></script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/pomcur.js') %>"></script>
 <script language="javascript" type="text/javascript">
   if (typeof current_component != 'undefined') {
@@ -23,3 +23,9 @@
   }
 </script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/jquery.form.2.47.js') %>"></script>
+
+<script language="javascript" type="text/javascript">
+$(function() {
+  $('input, textarea').placeholder();
+});
+</script>
