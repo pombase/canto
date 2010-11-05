@@ -43,9 +43,10 @@ var ferrit_choose = {
     var children_html = '';
 
     $.each(children, function(idx, child) {
+      var img_html =
+        '<img src="' + application_root + '/static/images/right_arrow.png"/>';
       children_html += '<li><a href="#' + child.id + '">' +
-        '<img src="' + application_root + '/static/images/plus_box.png"/>' +
-        child.name + '</a></li>';
+        child.name + img_html + '</li></a>';
     });
 
     $('#ferret-term-children').data('child-count', children.length);
