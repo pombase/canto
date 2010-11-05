@@ -4,7 +4,7 @@ use parent 'Catalyst::Controller';
 
 =head1 NAME
 
-PomCur::Controller::Manage - Actions for managing PomCur
+PomCur::Controller::Track - Actions for managing PomCur
 
 =head1 SYNOPSIS
 
@@ -20,7 +20,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::Controller::Manage
+    perldoc PomCur::Controller::Track
 
 =over 4
 

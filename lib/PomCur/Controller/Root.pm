@@ -157,7 +157,7 @@ sub test_curs :Global {
   $st->{title} = "Link to new test curation session";
   $st->{template} = 'view_curs_test.mhtml';
 
-  my $schema = $c->schema('manage');
+  my $schema = $c->schema('track');
   my $config = $c->config();
 
   my $pub = $schema->resultset('Pub')->first();
