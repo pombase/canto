@@ -643,6 +643,8 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     [ $_, $evidence_types{$_} ]
   } @{$ont_config->{evidence_codes}};
 
+  unshift @codes, [ '', 'Choose an evidence type ...' ];
+
   my $form = $self->form();
 
   my @all_elements = (
@@ -663,7 +665,15 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
   if ($form->submitted_and_valid()) {
     my $data = $annotation->data();
-    $data->{evidence_code} = $form->param_value('evidence-select');
+    my $evidence_select = $form->param_value('evidence-select');
+
+    if ($evidence_select eq '') {
+      $c->flash()->{error} = 'Please choose an evidence type to continue';
+      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    }
+
+    $data->{evidence_code} = $evidence_select;
+
     $annotation->data($data);
     $annotation->update();
 
