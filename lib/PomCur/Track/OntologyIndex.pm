@@ -42,7 +42,7 @@ use File::Path qw(remove_tree);
 
 use Lucene;
 
-with 'PomCur::Configurable';
+with 'PomCur::Role::Configurable';
 
 =head2 initialise_index
 

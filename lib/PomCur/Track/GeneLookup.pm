@@ -38,7 +38,7 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
-with 'PomCur::Configurable';
+with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackLookup';
 
 sub _build_constraint

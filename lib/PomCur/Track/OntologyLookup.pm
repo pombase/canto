@@ -40,7 +40,7 @@ use Moose;
 
 use PomCur::Track::OntologyIndex;
 
-with 'PomCur::Configurable';
+with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackLookup';
 
 sub _make_term_hash

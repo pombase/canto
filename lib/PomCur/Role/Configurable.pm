@@ -1,4 +1,4 @@
-package PomCur::Configurable;
+package PomCur::Role::Configurable;
 
 =head1 NAME
 
@@ -18,7 +18,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::Configurable
+    perldoc PomCur::Role::Configurable
 
 =over 4
 
