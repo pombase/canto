@@ -172,6 +172,12 @@ class_info:
       - name: gene
         editable: 1
 
+export:
+  gene_association_fields:
+    db: "GeneDB_Spombe"
+    db_reference: "GO_REF:0000015"
+    assigned_by: "GeneDB_Spombe"
+
 track_db_template_file: db_templates/track_db_template.sqlite3
 curs_db_template_file: db_templates/curs_db_template.sqlite3
 ontology_index_file: ontology_index
@@ -194,6 +200,7 @@ evidence_types:
 # page based on the module name, eg. go_function.html
 annotation_type_list:
   - name: molecular_function
+    abbreviation: F
     display_name: 'GO molecular function'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
@@ -205,6 +212,7 @@ annotation_type_list:
       - IGI
       - IPI
   - name: biological_process
+    abbreviation: P
     display_name: 'GO biological process'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
@@ -216,6 +224,7 @@ annotation_type_list:
       - IGI
       - IPI
   - name: cellular_component
+    abbreviation: C
     display_name: 'GO cellular component or complex'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
