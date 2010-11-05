@@ -72,20 +72,22 @@ sub new
   return $self;
 }
 
-=head2 append_config
+=head2 merge_config
 
- Usage   : $config->append_config($config_file_name);
- Function: merge the another config file into a Config object
+ Usage   : $config->merge_config($config_file_name, [...]);
+ Function: merge the given config files into a Config object
 
 =cut
 sub merge_config
 {
   my $self = shift;
-  my $file_name = shift;
+  my @file_names = @_;
 
-  my %new_config = %{LoadFile($file_name)};
-  while (my($key, $value) = each %new_config) {
-    $self->{$key} = $value;
+  for my $file_name (@file_names) {
+    my %new_config = %{LoadFile($file_name)};
+    while (my($key, $value) = each %new_config) {
+      $self->{$key} = $value;
+    }
   }
 
   $self->setup();

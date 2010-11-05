@@ -118,14 +118,15 @@ sub init_test
   local $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
 
   my $root_dir = $self->{root_dir};
-  my $test_config_file_name = "$root_dir/t/test_config.yaml";
-
-  my $test_config = LoadFile($test_config_file_name)->{test_config};
 
   my $app_name = lc PomCur::Config::get_application_name();
 
-  my $config = PomCur::Config->new("$root_dir/$app_name.yaml",
-                                   $test_config_file_name);
+  my $config = PomCur::Config->new("$root_dir/$app_name.yaml");
+
+  my $test_config_file_name = "$root_dir/" . $config->{test_config_file};
+  $config->merge_config($test_config_file_name);
+
+  my $test_config = LoadFile($test_config_file_name)->{test_config};
 
   my $temp_dir = temp_dir();
 
@@ -425,7 +426,9 @@ sub make_base_track_db
         _load_extra_pubs($schema);
         _add_pub_details($schema);
         $gene_load->load($genes_file);
+#        $gene_load->load('/home/kmr44/Work/pombe/sysID2product.txt');
         $ontology_load->load($go_obo_file, $ontology_index);
+#        $ontology_load->load('/home/kmr44/Work/perl/go-perl/gene_ontology_ext.obo', $ontology_index);
       };
 
     $schema->txn_do($process);
