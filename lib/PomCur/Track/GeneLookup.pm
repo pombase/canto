@@ -71,6 +71,7 @@ sub lookup
   my $search_terms_ref = shift;
   my $options = shift;
 
+  my @orig_search_terms = @{$search_terms_ref};
   my @search_terms = map { lc } @{$search_terms_ref};
 
   my $gene_rs = $self->schema()->resultset('Gene');
@@ -93,8 +94,8 @@ sub lookup
   }
 
   my @missing_genes = grep {
-    !exists $gene_ids{$_}
-  } @search_terms;
+    !exists $gene_ids{lc $_}
+  } @orig_search_terms;
 
   @found_genes = map {
       {
