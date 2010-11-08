@@ -163,7 +163,7 @@ var ferrit_choose = {
 
   child_click_handler : function(event) {
     ferrit_choose.add_history($('#ferret').data('current-term'));
-    ferrit_choose.move_to_hash_term($(event.target));
+    ferrit_choose.move_to_hash_term($(event.target).closest('a'));
     return false;
   },
 
