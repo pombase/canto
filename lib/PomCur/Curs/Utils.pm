@@ -78,6 +78,8 @@ sub get_annotation_table
     while (defined (my $annotation = $an_rs->next())) {
       my $data = $annotation->data();
       my $term_ontid = $data->{term_ontid};
+      next unless defined $term_ontid and length $term_ontid > 0;
+
       my $annotation_type = $annotation->type();
       my $annotation_type_config =
         $config->{annotation_types}->{$annotation_type};
