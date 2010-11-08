@@ -255,8 +255,11 @@ $(document).ready(function() {
       var search_bits = search_string.split(/\s+/);
       var match_name = item.name;
       for (var i = 0; i < search_bits.length; i++) {
-        var re = new RegExp('(' + search_bits[i] + ')', "gi");
-        match_name = match_name.replace(re,'<b>$1</b>');
+        var bit = search_bits[i];
+        if (bit.length > 0) {
+          var re = new RegExp('(' + bit + ')', "gi");
+          match_name = match_name.replace(re,'<b>$1</b>');
+        }
       }
       return $( "<li></li>" )
         .data( "item.autocomplete", item )
