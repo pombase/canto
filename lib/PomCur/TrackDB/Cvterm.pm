@@ -218,6 +218,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 organismprops
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Organismprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "organismprops",
+  "PomCur::TrackDB::Organismprop",
+  { "foreign.type_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 pub_statuses
 
 Type: has_many
@@ -249,8 +264,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-03 12:12:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MsEQ3bbHbDixDbox/axHEA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-05 19:49:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fkfo9cnkbKSLgFOHLrGp/g
 
 sub db_accession
 {

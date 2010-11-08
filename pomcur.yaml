@@ -19,6 +19,13 @@ authentication:
 db_initial_data:
   track:
     cv:
+      - name: organismprop_types
+        cvterms:
+          - name: taxonId
+            dbxref:
+              accession: taxonId
+              db:
+                name: PomCur Track
       - name: cvterm_property_type
         cvterms:
           - name: comment

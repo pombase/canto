@@ -77,6 +77,21 @@ __PACKAGE__->set_primary_key("organism_id");
 
 =head1 RELATIONS
 
+=head2 organismprops
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Organismprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "organismprops",
+  "PomCur::TrackDB::Organismprop",
+  { "foreign.organism_id" => "self.organism_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 pub_organisms
 
 Type: has_many
@@ -108,8 +123,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gle24yFkF64rFO/tpLcbsA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-05 19:49:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iMjS12EO7y/ChMNtsKugBQ
 
 # the genus and species, used when displaying organisms
 sub full_name {

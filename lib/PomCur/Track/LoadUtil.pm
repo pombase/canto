@@ -59,6 +59,9 @@ sub get_organism
 
   my $genus = shift;
   my $species = shift;
+  my $taxonid = shift;
+
+  croak unless $taxonid;
 
   my $schema = $self->schema();
 
@@ -68,6 +71,9 @@ sub get_organism
       {
         genus => $genus,
         species => $species,
+        organismprops => [ { value => $taxonid,
+                             type => { name => 'taxonId' },
+                             rank => 0 } ]
       });
 }
 

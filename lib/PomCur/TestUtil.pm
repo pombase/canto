@@ -384,7 +384,7 @@ sub _add_pub_details
              PomCur::TestUtil::make_base_track_db($config, $db_file_name);
  Function: Create a TrackDB for testing with basic data: curation data, sample
            genes and publication information
- Args    : $config - a PomCur::Config object
+ Args    : $config - a PomCur::Config object (including the test properties)
            $db_file_name - the file to create
            $load_data - if non-zero or undef, load sample data into the new
                         database, otherwise just load the schema
@@ -609,7 +609,7 @@ sub make_curs_db
   my $trackdb_schema = shift;
   my $load_util = shift;
 
-  my $pombe = $load_util->get_organism('Schizosaccharomyces', 'pombe');
+  my $pombe = $load_util->get_organism('Schizosaccharomyces', 'pombe', 4896);
 
   my $test_case_curs_key =
     PomCur::TestUtil::curs_key_of_test_case($curs_config);

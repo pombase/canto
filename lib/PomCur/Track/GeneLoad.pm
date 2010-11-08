@@ -44,6 +44,11 @@ use PomCur::Track::LoadUtil;
 
 use Text::CSV;
 
+has 'organism' => (
+  is => 'ro',
+  isa => 'PomCur::TrackDB::Organism'
+);
+
 has 'schema' => (
   is => 'ro',
   isa => 'PomCur::TrackDB'
@@ -82,7 +87,8 @@ sub _process_gene_row
     } split /,/, $synonyms;
   }
 
-  my $pombe = $self->load_util()->get_organism('Schizosaccharomyces', 'pombe');
+  my $pombe =
+    $self->load_util()->get_organism('Schizosaccharomyces', 'pombe', 4896);
 
   $schema->resultset('Gene')->find_or_create(
     {
