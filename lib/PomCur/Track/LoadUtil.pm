@@ -61,7 +61,7 @@ sub get_organism
   my $species = shift;
   my $taxonid = shift;
 
-  croak unless $taxonid;
+  croak "no taxon id supplied" unless $taxonid;
 
   my $schema = $self->schema();
 

@@ -20,7 +20,9 @@ is (@loaded_genes, 0);
 
 my $test_genes_file = $test_util->root_dir() . '/t/data/pombe_genes.txt';
 
-my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
+my $organism = PomCur::TestUtil::add_test_organism($config, $schema);
+my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema,
+                                             organism => $organism);
 $gene_load->load($test_genes_file);
 
 @loaded_genes = $schema->resultset('Gene')->all();

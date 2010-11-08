@@ -133,8 +133,20 @@ sub full_name {
   return $self->genus() . ' ' . $self->species();
 }
 
-# You can replace this text with custom content, and it will be preserved on regeneration
-1;
+# return the taxon ID of this organism, from the organismprop table
+sub taxonid {
+  my $self = shift;
+
+  my $schema = $self->result_source()->schema();
+  my $taxonid_cvterm_id =
+    $schema->find_with_type('Cvterm',
+                            { name => 'taxonId' })->cvterm_id();
+
+  my $prop =
+    $self->organismprops->search({ type_id => $taxonid_cvterm_id })->first();
+
+  return $prop->value();
+}
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
