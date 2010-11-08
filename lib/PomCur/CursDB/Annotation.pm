@@ -44,12 +44,6 @@ __PACKAGE__->table("annotation");
   data_type: 'text'
   is_nullable: 0
 
-=head2 creation_date
-
-  data_type: 'text'
-  default_value: datetime('now')
-  is_nullable: 0
-
 =head2 data
 
   data_type: 'text'
@@ -66,12 +60,6 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "type",
   { data_type => "text", is_nullable => 0 },
-  "creation_date",
-  {
-    data_type     => "text",
-    default_value => \"datetime('now')",
-    is_nullable   => 0,
-  },
   "data",
   { data_type => "text", is_nullable => 0 },
 );
@@ -119,8 +107,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-05 14:36:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TI3cD1beriyuac9tudAzTA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-11 13:37:39
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7IU8A0/v6YcX18Ny27rVhA
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');
 
