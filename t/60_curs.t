@@ -26,7 +26,7 @@ my $pubmedid = 123456;
 my $connect_string1 =
   PomCur::Curs::make_connect_string($config, $key1, $pubmedid);
 
-my ($connect_string2, $exists_flag) =
+my ($connect_string2, $exists_flag, $key1_db_file_name) =
   PomCur::Curs::make_connect_string($config, $key1, $pubmedid);
 
 is($connect_string1, $connect_string2);
@@ -50,6 +50,10 @@ sub config
 
 
 package main;
+
+# create empty db so get_schema() succeeds
+open my $key1_db, '>', $key1_db_file_name or die;
+close $key1_db;
 
 my $test_pomcur = bless {}, 'Test::PomCur';
 

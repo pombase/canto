@@ -44,8 +44,10 @@ use PomCur::CursDB;
 
 =head2 make_connect_string
 
- Usage   : my ($connect_string, $exists_flag) =
-             PomCur::Curs::make_connect_string($config, $curs_key, $pubmedid);
+ Usage   : my $connect_string =
+             PomCur::Curs::make_connect_string($config, $curs_key);
+           my ($connect_string, $exists_flag, $db_file_name) =
+             PomCur::Curs::make_connect_string($config, $curs_key);
  Function: Make a connect string to use for a curation session db and report
            if the database exists
  Args    : $config - the Config object
@@ -62,7 +64,7 @@ sub make_connect_string
   my $connect_string = "dbi:SQLite:dbname=$file_name";
 
   if (wantarray()) {
-    return ($connect_string, -e $file_name);
+    return ($connect_string, -e $file_name, $file_name);
   } else {
     return $connect_string;
   }
@@ -144,7 +146,7 @@ sub get_schema
  Function: Get a schema object for the given curs_key
  Args    : $config - the config object
            $curs_key - the key (as a string) of the curation session
- Return  : the schema
+ Return  : the schema or undef if the corresponding database doesn't exist
 
 =cut
 sub get_schema_for_key
@@ -152,7 +154,14 @@ sub get_schema_for_key
   my $config = shift;
   my $curs_key = shift;
 
-  return PomCur::CursDB->connect(make_connect_string($config, $curs_key));
+  my ($connect_string, $exists_flag) =
+    PomCur::Curs::make_connect_string($config, $curs_key);
+
+  if ($exists_flag) {
+    return PomCur::CursDB->connect($connect_string);
+  } else {
+    return undef;
+  }
 }
 
 1;

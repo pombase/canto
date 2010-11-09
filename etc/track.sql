@@ -82,6 +82,19 @@ CREATE TABLE organism (
         comment text null
 );
 
+CREATE INDEX organism_idx1 ON organism (organism_id);
+
+CREATE TABLE organismprop (
+organismprop_id integer NOT NULL PRIMARY KEY,
+organism_id integer NOT NULL REFERENCES organism (organism_id),
+type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
+value text,
+rank integer DEFAULT 0 NOT NULL
+);
+
+CREATE INDEX organismprop_idx1 ON organismprop (organism_id);
+CREATE INDEX organismprop_idx2 ON organismprop (type_id);
+
 CREATE TABLE pub_organism (
        pub_organism_id integer NOT NULL PRIMARY KEY,
        pub integer NOT NULL REFERENCES pub (pub_id),

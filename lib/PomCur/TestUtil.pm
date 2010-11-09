@@ -30,6 +30,7 @@ use PomCur::Track::CurationLoad;
 use PomCur::Track::GeneLoad;
 use PomCur::Track::OntologyLoad;
 use PomCur::Track::OntologyIndex;
+use PomCur::Track::LoadUtil;
 use PomCur::DBUtil;
 
 use Moose;
@@ -384,7 +385,7 @@ sub _add_pub_details
              PomCur::TestUtil::make_base_track_db($config, $db_file_name);
  Function: Create a TrackDB for testing with basic data: curation data, sample
            genes and publication information
- Args    : $config - a PomCur::Config object
+ Args    : $config - a PomCur::Config object (including the test properties)
            $db_file_name - the file to create
            $load_data - if non-zero or undef, load sample data into the new
                         database, otherwise just load the schema
@@ -412,9 +413,14 @@ sub make_base_track_db
 
   my $schema = PomCur::DBUtil::schema_for_file($config, $db_file_name, 'Track');
 
+  my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
+
   if ($load_data) {
+    my $organism = add_test_organism($config, $schema);
+
     my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);
-    my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
+    my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema,
+                                                 organism => $organism);
 
     my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
     $ontology_index->initialise_index();
@@ -437,6 +443,29 @@ sub make_base_track_db
   }
 
   return $schema;
+}
+
+=head2 add_test_organism
+
+ Usage   : my $organism = PomCur::TestUtil::add_test_organism($config, $schema);
+ Function: Create a test Organism
+ Args    : $config - a PomCur::Config object
+           $schema - the TrackDB schema object
+ Returns :
+
+=cut
+sub add_test_organism
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my $test_config = $config->{test_config};
+  my $organism_config = $test_config->{organism};
+  my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
+
+  return $load_util->get_organism($organism_config->{genus},
+                                  $organism_config->{species},
+                                  $organism_config->{taxonid});
 }
 
 =head2 curs_key_of_test_case
@@ -595,7 +624,7 @@ sub _process_data
  Function: Make a curs database for the given $curs_config and update the
            TrackDB given by $trackdb_schema.  See the test_config.yaml file
            for example curs test case configurations.
- Args    : $config - a PomCur::Config object
+ Args    : $config - a PomCur::Config object that includes the test properties
            $curs_config - the configuration for this curs
            $trackdb_schema - the TrackDB
  Returns : ($curs_schema, $cursdb_file_name) - A CursDB object for the new db,
@@ -609,7 +638,11 @@ sub make_curs_db
   my $trackdb_schema = shift;
   my $load_util = shift;
 
-  my $pombe = $load_util->get_organism('Schizosaccharomyces', 'pombe');
+  my $organism_conf = $config->{test_config}->{organism};
+
+  my $pombe = $load_util->get_organism($organism_conf->{genus},
+                                       $organism_conf->{species},
+                                       $organism_conf->{taxonid});
 
   my $test_case_curs_key =
     PomCur::TestUtil::curs_key_of_test_case($curs_config);
