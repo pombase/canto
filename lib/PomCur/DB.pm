@@ -331,7 +331,7 @@ sub display_name
 
 =head2 column_type
 
- Usage   : my $column_type = SmallRNA::DB::column_type($field_info, $table_name);
+ Usage   : my $column_type = PomCur::DB::column_type($field_info, $table_name);
  Function: Return 'attribute' if a field is a plain attribute or 'collection'
            if it is a collection.
 
