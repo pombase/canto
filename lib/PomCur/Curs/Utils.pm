@@ -97,7 +97,7 @@ sub get_annotation_table
 
       my $term_name = $result->[0]->{name};
       my $evidence_code = $data->{evidence_code};
-      my $evidence_type_name = $evidence_types{$evidence_code};
+      my $evidence_type_name = $evidence_types{$evidence_code}->{name};
 
       (my $short_date = $annotation->creation_date()) =~ s/-//g;
 

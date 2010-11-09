@@ -198,10 +198,16 @@ implementation_classes:
   go_lookup: PomCur::Track::OntologyLookup
 
 evidence_types:
-  IMP: Inferred from mutant phenotype
-  IDA: Inferred from direct assay
-  IGI: Inferred from genetic interaction
-  IPI: Inferred from physical interaction
+  IMP:
+    name: Inferred from mutant phenotype
+  IDA:
+    name: Inferred from direct assay
+  IGI:
+    name: Inferred from genetic interaction
+    with_gene: 1
+  IPI:
+    name: Inferred from physical interaction
+    with_gene: 1
 
 # each class needs to set up the stash for forwarding to a template
 # page based on the module name, eg. go_function.html
