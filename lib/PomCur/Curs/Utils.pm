@@ -69,11 +69,14 @@ sub get_annotation_table
   my $gene_rs = $schema->resultset('Gene');
 
   my %evidence_types = %{$config->{evidence_types}};
+  my %annotation_types_config = %{$config->{annotation_types}};
 
   my $lookup = PomCur::Track::get_lookup($config, 'go');
 
   while (defined (my $gene = $gene_rs->next())) {
     my $an_rs = $gene->annotations();
+
+    my %gene_annotations = ();
 
     while (defined (my $annotation = $an_rs->next())) {
       my $data = $annotation->data();
@@ -81,8 +84,7 @@ sub get_annotation_table
       next unless defined $term_ontid and length $term_ontid > 0;
 
       my $annotation_type = $annotation->type();
-      my $annotation_type_config =
-        $config->{annotation_types}->{$annotation_type};
+      my $annotation_type_config = $annotation_types_config{$annotation_type};
       my $annotation_type_display_name =
         $annotation_type_config->{display_name};
       my $annotation_type_abbreviation =
@@ -99,24 +101,31 @@ sub get_annotation_table
 
       (my $short_date = $annotation->creation_date()) =~ s/-//g;
 
-      push @annotations, { gene_identifier => $gene->primary_identifier(),
-                           gene_name => $gene->primary_name() || '',
-                           gene_product => $gene->product(),
-                           annotation_type => $annotation_type,
-                           annotation_type_display_name =>
-                             $annotation_type_display_name,
-                           annotation_type_abbreviation =>
-                             $annotation_type_abbreviation,
-                           annotation_id => $annotation->annotation_id(),
-                           pubmedid => $pubmedid,
-                           term_ontid => $term_ontid,
-                           term_name => $term_name,
-                           evidence_code => $evidence_code,
-                           evidence_type_name => $evidence_type_name,
-                           creation_date => $annotation->creation_date(),
-                           creation_date_short => $short_date,
-                           taxonid => $gene->organism()->taxonid(),
-                         };
+      push @{$gene_annotations{$annotation_type}}, {
+        gene_identifier => $gene->primary_identifier(),
+        gene_name => $gene->primary_name() || '',
+        gene_product => $gene->product(),
+        annotation_type => $annotation_type,
+        annotation_type_display_name => $annotation_type_display_name,
+        annotation_type_abbreviation => $annotation_type_abbreviation,
+        annotation_id => $annotation->annotation_id(),
+        pubmedid => $pubmedid,
+        term_ontid => $term_ontid,
+        term_name => $term_name,
+        evidence_code => $evidence_code,
+        evidence_type_name => $evidence_type_name,
+        creation_date => $annotation->creation_date(),
+        creation_date_short => $short_date,
+        taxonid => $gene->organism()->taxonid(),
+      };
+    }
+
+    for my $annotation_type_config (@{$config->{annotation_type_list}}) {
+      my $annotation_type_name = $annotation_type_config->{name};
+
+      for my $annotation_data (@{$gene_annotations{$annotation_type_name}}) {
+        push @annotations, $annotation_data;
+      }
     }
   }
 
