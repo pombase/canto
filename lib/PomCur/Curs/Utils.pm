@@ -104,6 +104,7 @@ sub get_annotation_table
                            evidence_code => $evidence_code,
                            evidence_type_name => $evidence_type_name,
                            creation_date => $annotation->creation_date(),
+                           taxonid => $gene->organism()->taxonid(),
                          };
     }
   }

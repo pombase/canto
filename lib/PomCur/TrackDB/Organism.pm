@@ -126,6 +126,8 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-05 19:49:43
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iMjS12EO7y/ChMNtsKugBQ
 
+use Carp;
+
 # the genus and species, used when displaying organisms
 sub full_name {
   my $self = shift;
@@ -144,6 +146,8 @@ sub taxonid {
 
   my $prop =
     $self->organismprops->search({ type_id => $taxonid_cvterm_id })->first();
+
+  croak "expected organismprop not found" unless defined $prop;
 
   return $prop->value();
 }

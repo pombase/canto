@@ -33,6 +33,11 @@ __PACKAGE__->table("organism");
   data_type: 'text'
   is_nullable: 0
 
+=head2 taxonid
+
+  data_type: 'integer'
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -40,6 +45,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "full_name",
   { data_type => "text", is_nullable => 0 },
+  "taxonid",
+  { data_type => "integer", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("organism_id");
 __PACKAGE__->add_unique_constraint("full_name_unique", ["full_name"]);
@@ -62,22 +69,22 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mwQlhwNKs1ExDvT5qHsPoA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-09 15:54:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QTH48OIanNPNBm9E+orHgA
+
+use Carp;
 
 sub get_organism
 {
   my $schema = shift;
   my $name = shift;
+  my $taxonid = shift;
 
-  my $organism =
-    $schema->resultset('Organism')->search({ full_name => $name })->first();
+  croak "taxonid argument undefined" unless defined $taxonid;
 
-  if (!defined $organism) {
-    $organism = $schema->create_with_type('Organism', { full_name => $name });
-  }
-
-  return $organism;
+  return $schema->find_or_create_with_type('Organism',
+                                           { full_name => $name,
+                                             taxonid => $taxonid });
 }
 
 1;

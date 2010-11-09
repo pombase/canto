@@ -139,6 +139,7 @@ use PomCur::Track::LoadUtil;
 sub track_init
 {
   my $track_schema = shift;
+  my $load_util = shift;
 
   $track_schema->create_with_type('Person',
                                   {
@@ -173,25 +174,21 @@ sub track_init
                                     title => 'test title',
                                     type_id => 601
                                   });
-  $track_schema->create_with_type('Organism',
-                                  {
-                                    organism_id => 1000,
-                                    genus => 'Schizosaccharomyces',
-                                    species => 'pombe',
-                                  });
+  my $organism = $load_util->get_organism('Schizosaccharomyces', 'pombe', 4896);
+
   $track_schema->create_with_type('Gene',
                                   {
                                     primary_identifier => 'SPCC1739.11c',
                                     product =>
                                       'SIN component scaffold protein, centriolin ortholog Cdc11',
                                     primary_name => 'cdc11',
-                                    organism => 1000
+                                    organism => $organism->organism_id()
                                   });
   $track_schema->create_with_type('Gene',
                                   {
                                     primary_identifier => 'SPCC1739.10',
                                     product => 'conserved fungal protein',
-                                    organism => 1000
+                                    organism => $organism->organism_id()
                                   });
 }
 
@@ -213,9 +210,9 @@ sub track_init
   my $track_schema =
     PomCur::DBUtil::schema_for_file($config, $temp_track_db, 'Track');
 
-  track_init($track_schema);
-
   my $load_util = PomCur::Track::LoadUtil->new(schema => $track_schema);
+
+  track_init($track_schema, $load_util);
 
   my ($cursdb_schema, $cursdb_file_name) =
     PomCur::TestUtil::make_curs_db($config, $curs_config,

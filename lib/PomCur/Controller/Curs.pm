@@ -305,8 +305,10 @@ sub _create_gene
 
         for my $gene (@genes) {
           my $org_full_name = $gene->{organism_full_name};
+          my $org_taxonid = $gene->{organism_taxonid};
           my $curs_org =
-            PomCur::CursDB::Organism::get_organism($schema, $org_full_name);
+            PomCur::CursDB::Organism::get_organism($schema, $org_full_name,
+                                                   $org_taxonid);
 
           $ret_gene = $schema->create_with_type('Gene', {
             primary_name => $gene->{primary_name},

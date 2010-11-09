@@ -103,6 +103,7 @@ sub lookup
         primary_name => $_->primary_name(),
         product => $_->product(),
         organism_full_name => $_->organism()->full_name(),
+        organism_taxonid => $_->organism()->taxonid(),
       }
     } @found_genes;
 

@@ -99,8 +99,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-03 12:15:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8swiiplXYIyfFHQk0poacg
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-09 15:58:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UELLF9bfOV2wXyfQ56PsHA
 
 use Moose;
 
