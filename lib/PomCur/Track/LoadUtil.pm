@@ -65,8 +65,6 @@ sub get_organism
 
   my $schema = $self->schema();
 
-  my $full_name = "$genus $species";
-
   return $schema->resultset('Organism')->find_or_create(
       {
         genus => $genus,
