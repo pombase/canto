@@ -540,6 +540,12 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
   _redirect_and_detach($c);
 }
 
+sub _get_iso_date
+{
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time);
+  return sprintf "%4d-%02d-%02d", 1900+$year, $mon+1, $mday
+}
+
 sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
 {
   my ($self, $c, $gene_id, $annotation_type_name) = @_;
@@ -592,6 +598,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
                                 {
                                   type => $annotation_type_name,
                                   status => 'new',
+                                  creation_date => _get_iso_date(),
                                   data => { term_ontid => $term_ontid }
                                 });
 

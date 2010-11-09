@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 20;
+use Test::More tests => 21;
 
 use Data::Compare;
 
@@ -127,5 +127,10 @@ $result =
 ok(!defined $result);
 
 is($curs_schema->resultset('Gene')->count(), 4);
+
+
+# utility methods
+my $iso_datetime = PomCur::Controller::Curs::_get_iso_date();
+like ($iso_datetime, qr(^\d+-\d+-\d+$));
 
 done_testing;

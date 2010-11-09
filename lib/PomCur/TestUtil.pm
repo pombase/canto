@@ -536,6 +536,8 @@ sub _load_curs_db_data
   for my $annotation (@{$curs_config->{annotations}}) {
     my %create_args = %{_process_data($cursdb_schema, $annotation)};
 
+    $create_args{creation_date} = '2010-01-02';
+
     # save the args that are arrays and set them after creation to cope with
     # many-many relations
     my %array_args = ();
