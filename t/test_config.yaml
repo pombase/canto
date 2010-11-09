@@ -44,7 +44,7 @@ test_config:
            - "cdc11"
            - "SPCC1739.10"
          annotations:
-           - type: go_component
+           - type: cellular_component
              status: new
              'genes(Gene:primary_identifier)':
                - 'SPCC1739.10'

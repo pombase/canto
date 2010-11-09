@@ -85,6 +85,10 @@ sub get_annotation_table
         $config->{annotation_types}->{$annotation_type};
       my $annotation_type_display_name =
         $annotation_type_config->{display_name};
+      my $annotation_type_abbreviation =
+        $annotation_type_config->{abbreviation};
+
+      my $pubmedid = $annotation->pub()->pubmedid();
       my $result =
         $lookup->web_service_lookup(ontology_name => $annotation_type,
                                     search_string => $term_ontid);
@@ -93,17 +97,24 @@ sub get_annotation_table
       my $evidence_code = $data->{evidence_code};
       my $evidence_type_name = $evidence_types{$evidence_code};
 
+      (my $short_date = $annotation->creation_date()) =~ s/-//g;
+
       push @annotations, { gene_identifier => $gene->primary_identifier(),
-                           gene_name => $gene->primary_name(),
+                           gene_name => $gene->primary_name() || '',
+                           gene_product => $gene->product(),
                            annotation_type => $annotation_type,
                            annotation_type_display_name =>
                              $annotation_type_display_name,
+                           annotation_type_abbreviation =>
+                             $annotation_type_abbreviation,
                            annotation_id => $annotation->annotation_id(),
+                           pubmedid => $pubmedid,
                            term_ontid => $term_ontid,
                            term_name => $term_name,
                            evidence_code => $evidence_code,
                            evidence_type_name => $evidence_type_name,
                            creation_date => $annotation->creation_date(),
+                           creation_date_short => $short_date,
                            taxonid => $gene->organism()->taxonid(),
                          };
     }

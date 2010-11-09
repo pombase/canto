@@ -182,8 +182,8 @@ class_info:
 export:
   gene_association_fields:
     db: "GeneDB_Spombe"
-    db_reference: "GO_REF:0000015"
     assigned_by: "GeneDB_Spombe"
+    db_object_type: gene
 
 track_db_template_file: db_templates/track_db_template.sqlite3
 curs_db_template_file: db_templates/curs_db_template.sqlite3

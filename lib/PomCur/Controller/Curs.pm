@@ -600,6 +600,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
                                 {
                                   type => $annotation_type_name,
                                   status => 'new',
+                                  pub => $st->{pub},
                                   creation_date => _get_iso_date(),
                                   data => { term_ontid => $term_ontid }
                                 });
@@ -722,12 +723,35 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
   my @annotations =
     PomCur::Curs::Utils::get_annotation_table($config, $schema);
 
-  my @column_names = qw(gene_identifier annotation_type term_ontid evidence_code);
+  my %common_values = %{$config->{export}->{gene_association_fields}};
+
+  $common_values{with_or_from} = '';
+
+  my @column_names = qw(db gene_identifier gene_name term_ontid pubmedid
+                        evidence_code with_or_from annotation_type_abbreviation
+                        gene_product gene_identifier db_object_type taxonid
+                        creation_date_short db);
 
   my $results = '';
 
   for my $annotation (@annotations) {
-    $results .= join "\t", map { $annotation->{$_} } @column_names;
+    $results .= join "\t", map {
+      my $val = $common_values{$_};
+      if (!defined $val) {
+        $val = $annotation->{$_};
+      }
+      if (!defined $val) {
+        die "no value for key: $_\n";
+      }
+      if ($_ eq 'taxonid') {
+        $val = "taxon:$val";
+      }
+      if ($_ eq 'pubmedid') {
+        $val = "PMID:$val";
+      }
+
+      $val;
+    } @column_names;
     $results .= "\n";
   }
 
