@@ -50,4 +50,5 @@ test_config:
                - 'SPCC1739.10'
              'pub(Pub:pubmedid)': 18426916
              data:
-               some_key: 'some_value'
+               evidence_code: IMP
+               term_ontid: GO:0055085

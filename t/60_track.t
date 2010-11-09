@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 14;
 
 use PomCur::TestUtil;
 use PomCur::Track;
@@ -81,3 +81,15 @@ my $curs_db_pub = $curs_schema->find_with_type('Pub', $curs_db_pub_id);
 
 is($curs_db_pub->pubmedid(), $pub->pubmedid());
 is($curs_db_pub->abstract(), $pub->abstract());
+
+my $track_schema = $test_util->track_schema();
+my $cursdb_iter = PomCur::Track::cursdb_iterator($config, $track_schema);
+
+my $cursdb_count = 0;
+
+while (my $cursdb = $cursdb_iter->()) {
+  $cursdb_count++;
+  is(ref $cursdb, 'PomCur::CursDB');
+}
+
+is ($cursdb_count, 1);
