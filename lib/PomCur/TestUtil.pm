@@ -432,9 +432,7 @@ sub make_base_track_db
         _load_extra_pubs($schema);
         _add_pub_details($schema);
         $gene_load->load($genes_file);
-#        $gene_load->load('/home/kmr44/Work/pombe/sysID2product.txt');
         $ontology_load->load($go_obo_file, $ontology_index);
-#        $ontology_load->load('/home/kmr44/Work/perl/go-perl/gene_ontology_ext.obo', $ontology_index);
       };
 
     $schema->txn_do($process);
