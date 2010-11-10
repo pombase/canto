@@ -513,11 +513,11 @@ div.clearall {
   margin: 0px 0px 10px 0px;
 }
 
-.evidence-select div {
+.evidence-select div, .with-gene-select div {
   display: inline;
 }
 
-.evidence-select div.submit {
+.evidence-select div.submit, .with-gene-select div.submit {
   float: none;
   display: inline;
   margin: 10px 0px 0px 30px;
