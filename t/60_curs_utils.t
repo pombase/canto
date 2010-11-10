@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 use PomCur::TestUtil;
 use PomCur::Curs::Utils;
@@ -22,3 +22,4 @@ is ($annotations[0]->{gene_identifier}, 'SPCC1739.10');
 is ($annotations[0]->{term_ontid}, 'GO:0055085');
 is ($annotations[0]->{taxonid}, '4896');
 like ($annotations[0]->{creation_date}, qr/\d+-\d+-\d+/);
+is ($annotations[0]->{gene_synonyms_string}, '');

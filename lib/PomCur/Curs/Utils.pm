@@ -71,10 +71,20 @@ sub get_annotation_table
   my %evidence_types = %{$config->{evidence_types}};
   my %annotation_types_config = %{$config->{annotation_types}};
 
-  my $lookup = PomCur::Track::get_lookup($config, 'go');
+  my $go_lookup = PomCur::Track::get_lookup($config, 'go');
+  my $gene_lookup = PomCur::Track::get_lookup($config, 'gene');
 
   while (defined (my $gene = $gene_rs->next())) {
     my $an_rs = $gene->annotations();
+
+    my $gene_lookup_results =
+      $gene_lookup->lookup([$gene->primary_identifier()]);
+    my @found_results = @{$gene_lookup_results->{found}};
+    if (@found_results != 1) {
+      die "expected 1 result looking up: ", $gene->primary_identifier(),
+        " but got ", scalar(@found_results);
+    }
+    my $gene_synonyms_string = join '|', @{$found_results[0]->{synonyms}};
 
     my %gene_annotations = ();
 
@@ -92,8 +102,8 @@ sub get_annotation_table
 
       my $pubmedid = $annotation->pub()->pubmedid();
       my $result =
-        $lookup->web_service_lookup(ontology_name => $annotation_type,
-                                    search_string => $term_ontid);
+        $go_lookup->web_service_lookup(ontology_name => $annotation_type,
+                                       search_string => $term_ontid);
 
       my $term_name = $result->[0]->{name};
       my $evidence_code = $data->{evidence_code};
@@ -108,6 +118,7 @@ sub get_annotation_table
         gene_name_or_identifier =>
           $gene->primary_name() || $gene->primary_identifier(),
         gene_product => $gene->product(),
+        gene_synonyms_string => $gene_synonyms_string,
         qualifier => '',
         annotation_type => $annotation_type,
         annotation_type_display_name => $annotation_type_display_name,

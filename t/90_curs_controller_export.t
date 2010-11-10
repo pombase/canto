@@ -34,7 +34,21 @@ test_psgi $app, sub {
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);
 
-    my $exported = "GeneDB_Spombe	SPCC1739.10		GO:0055085	PMID:18426916	IMP		C	conserved fungal protein	SPCC1739.10	gene	taxon:4896	20100102	GeneDB_Spombe\n";
+    my $exported = join ("	", ("GeneDB_Spombe",
+                                    "SPCC1739.10",
+                                    "SPCC1739.10",
+                                    "GO:0055085",
+                                    "",
+                                    "PMID:18426916",
+                                    "IMP",
+                                    "",
+                                    "C",
+                                    "conserved fungal protein",
+                                    "",
+                                    "gene",
+                                    "taxon:4896",
+                                    "20100102",
+                                    "GeneDB_Spombe")) . "\n";
 
     is $res->code, 200;
     is ($res->content(), $exported);
