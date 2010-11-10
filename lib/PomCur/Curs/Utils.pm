@@ -97,6 +97,7 @@ sub get_annotation_table
 
       my $term_name = $result->[0]->{name};
       my $evidence_code = $data->{evidence_code};
+      my $with_gene = $data->{with_gene};
       my $evidence_type_name = $evidence_types{$evidence_code}->{name};
 
       (my $short_date = $annotation->creation_date()) =~ s/-//g;
@@ -119,6 +120,7 @@ sub get_annotation_table
         evidence_type_name => $evidence_type_name,
         creation_date => $annotation->creation_date(),
         creation_date_short => $short_date,
+        with_or_from => $with_gene || '',
         taxonid => $gene->organism()->taxonid(),
       };
     }
