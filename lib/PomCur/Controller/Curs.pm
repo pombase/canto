@@ -687,6 +687,89 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     $annotation->data($data);
     $annotation->update();
 
+    my $with_gene = $evidence_types{$evidence_select}->{with_gene};
+
+    if ($with_gene) {
+      _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
+    } else {
+      _redirect_and_detach($c);
+    }
+  }
+}
+
+sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(1) Form
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+  my $annotation_type_name = $annotation->type();
+
+  my $gene = $annotation->genes()->first();
+  my $gene_display_name = $gene->long_display_name();
+
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $annotation_data = $annotation->data();
+  my $evidence_code = $annotation_data->{evidence_code};
+  my $term_ontid = $annotation_data->{term_ontid};
+
+  my $module_display_name = $annotation_config->{display_name};
+  $st->{title} = "Choose interacting gene for annotating $gene_display_name "
+    . "with $term_ontid using $evidence_code";
+  $st->{current_component} = $annotation_type_name;
+  $st->{current_component_display_name} = $annotation_config->{display_name};
+  $st->{template} = "curs/modules/${annotation_type_name}_with_gene.mhtml";
+
+  my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
+
+  $st->{annotation_helper} = $annotation_helper;
+
+  my @genes = ();
+
+  my $gene_rs = $schema->resultset('Gene');
+
+  while (defined (my $gene = $gene_rs->next())) {
+    push @genes, [$gene->primary_identifier(), $gene->long_display_name()];
+  }
+
+  unshift @genes, [ '', 'Choose a gene ...' ];
+
+  my $form = $self->form();
+
+  my @all_elements = (
+      {
+        name => 'with-gene-select',
+        type => 'Select', options => [ @genes ],
+      },
+      {
+        name => 'with-gene-proceed', type => 'Submit', value => 'Proceed',
+      },
+    );
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $data = $annotation->data();
+    my $with_gene_select = $form->param_value('with-gene-select');
+
+    if ($with_gene_select eq '') {
+      $c->flash()->{error} = 'Please choose a gene to continue';
+      _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
+    }
+
+    $data->{with_gene} = $with_gene_select;
+
+    $annotation->data($data);
+    $annotation->update();
+
     _redirect_and_detach($c);
   }
 }

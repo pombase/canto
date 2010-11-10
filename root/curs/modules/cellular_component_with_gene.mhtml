@@ -1,0 +1,7 @@
+<%args>
+$form
+</%args>
+
+<div class="with-gene-select">
+  <% $form %>
+</div>
