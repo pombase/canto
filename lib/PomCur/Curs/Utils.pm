@@ -107,6 +107,7 @@ sub get_annotation_table
         gene_name_or_identifier =>
           $gene->primary_name() || $gene->primary_identifier(),
         gene_product => $gene->product(),
+        qualifier => '',
         annotation_type => $annotation_type,
         annotation_type_display_name => $annotation_type_display_name,
         annotation_type_abbreviation => $annotation_type_abbreviation,

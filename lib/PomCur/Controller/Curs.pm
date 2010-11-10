@@ -809,7 +809,7 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
   my %common_values = %{$config->{export}->{gene_association_fields}};
 
   my @column_names = qw(db gene_identifier gene_name_or_identifier
-                        term_ontid pubmedid
+                        term_ontid qualifier pubmedid
                         evidence_code with_or_from annotation_type_abbreviation
                         gene_product gene_identifier db_object_type taxonid
                         creation_date_short db);
