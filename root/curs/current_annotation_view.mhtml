@@ -26,10 +26,10 @@ $curs_root_path
         Term name
       </th>
       <th>
-        Evidence type
+        Evidence code
       </th>
       <th>
-        Evidence code
+        With
       </th>
       <th>
       </th>
@@ -54,10 +54,10 @@ $curs_root_path
       <% $row->{term_name} %>
     </td>
     <td>
-      <% $row->{evidence_type_name} %>
+      <% $row->{evidence_code} %>
     </td>
     <td>
-      <% $row->{evidence_code} %>
+      <% $row->{with_or_from} %>
     </td>
     <td>
       <a href="<% $delete_action . $row->{annotation_id} %>"
