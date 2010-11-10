@@ -104,6 +104,8 @@ sub get_annotation_table
       push @{$gene_annotations{$annotation_type}}, {
         gene_identifier => $gene->primary_identifier(),
         gene_name => $gene->primary_name() || '',
+        gene_name_or_identifier =>
+          $gene->primary_name() || $gene->primary_identifier(),
         gene_product => $gene->product(),
         annotation_type => $annotation_type,
         annotation_type_display_name => $annotation_type_display_name,
