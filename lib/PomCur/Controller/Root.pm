@@ -183,12 +183,16 @@ sub test_curs :Global {
                                                    value => 'Dr T. Tester' });
     }
     if ($arg >= 2) {
-      my $gene = $schema->resultset('Gene')->first();
+      my $gene_track_rs = $schema->resultset('Gene');
+      my $gene1 = $gene_track_rs->next();
+      my $gene2 = $gene_track_rs->next();
 
-      my $gene_identifier = $gene->primary_identifier();
+      my $gene1_identifier = $gene1->primary_identifier();
+      my $gene2_identifier = $gene2->primary_identifier();
       use PomCur::Controller::Curs;
       PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
-                                                       [$gene_identifier]);
+                                                       [$gene1_identifier,
+                                                        $gene2_identifier]);
       my $gene_rs = PomCur::Controller::Curs::_get_gene_resultset($curs_schema);
       my $first_curs_gene = $gene_rs->first();
 
