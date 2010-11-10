@@ -69,7 +69,6 @@ sub lookup
 {
   my $self = shift;
   my $search_terms_ref = shift;
-  my $options = shift;
 
   my @orig_search_terms = @{$search_terms_ref};
   my @search_terms = map { lc } @{$search_terms_ref};
@@ -97,11 +96,17 @@ sub lookup
     !exists $gene_ids{lc $_}
   } @orig_search_terms;
 
+  my $_get_synonyms = sub {
+    my $gene = shift;
+    return map { $_->identifier() } $_->genesynonyms();
+  };
+
   @found_genes = map {
       {
         primary_identifier => $_->primary_identifier(),
         primary_name => $_->primary_name(),
         product => $_->product(),
+        synonyms => [$_get_synonyms->($_)],
         organism_full_name => $_->organism()->full_name(),
         organism_taxonid => $_->organism()->taxonid(),
       }

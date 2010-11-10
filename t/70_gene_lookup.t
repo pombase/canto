@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 17;
 
 use PomCur::Track::GeneLookup;
 
@@ -40,4 +40,8 @@ is(@{$result->{missing}}, 3, 'look up two genes by name - missing count');
 $result = $lookup->lookup([qw(SPCC1739.10 wtf22 cdc11 missing1 missing2 missing3)]);
 is(@{$result->{found}}, 3, 'look up two genes by name and identifier - found count');
 is(@{$result->{missing}}, 3, 'look up two genes by name and identifier - missing count');
+
+$result = $lookup->lookup([qw(SPAC3A11.14c)]);
+is(@{$result->{found}}, 1);
+is(@{$result->{found}->[0]->{synonyms}}, 2);
 
