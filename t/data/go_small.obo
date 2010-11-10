@@ -139,6 +139,50 @@ is_a: GO:0055085 ! transmembrane transport
 created_by: donghui
 creation_date: 2010-09-23T05:12:14Z
 
+[Term]
+id: GO:0005575
+name: cellular_component
+namespace: cellular_component
+alt_id: GO:0008372
+def: "The part of a cell or its extracellular environment in which a gene product is located. A gene product may be located in one or more parts of a cell and its location may be as specific as a particular macromolecular complex, that is, a stable, persistent association of macromolecules that function together." [GOC:go_curators]
+comment: Note that, in addition to forming the root of the cellular component ontology, this term is recommended for use for the annotation of gene products whose cellular component is unknown. Note that when this term is used for annotation, it indicates that no information was available about the cellular component of the gene product annotated as of the date the annotation was made; the evidence code ND, no data, is used to indicate this.
+subset: goslim_candida
+subset: goslim_generic
+subset: goslim_goa
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+subset: gosubset_prok
+synonym: "cellular component" EXACT []
+synonym: "cellular component unknown" NARROW []
+xref: NIF_Subcellular:sao1337158144
+disjoint_from: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016023
+name: cytoplasmic membrane-bounded vesicle
+namespace: cellular_component
+def: "A membrane-bounded vesicle found in the cytoplasm of the cell." [GOC:ai, GOC:mah]
+subset: goslim_candida
+subset: goslim_generic
+subset: goslim_yeast
+subset: gosubset_prok
+synonym: "cytoplasmic membrane bounded vesicle" EXACT []
+synonym: "cytoplasmic membrane-enclosed vesicle" EXACT []
+is_a: GO:0005575 | cellular_component
+
+[Term]
+id: GO:0030133
+name: transport vesicle
+namespace: cellular_component
+def: "Any of the vesicles of the constitutive secretory pathway, which carry cargo from the endoplasmic reticulum to the Golgi, between Golgi cisternae, or to destinations within or outside the cell." [GOC:mah]
+comment: Note that the term 'secretory vesicle' is sometimes used in this sense, but can also mean 'secretory granule ; GO:0030141'.
+synonym: "Golgi to vacuole transport vesicle" NARROW []
+synonym: "Golgi-vacuole transport vesicle" NARROW []
+synonym: "secretory vesicle" BROAD []
+xref: NIF_Subcellular:sao885490876
+is_a: GO:0016023 ! cytoplasmic membrane-bounded vesicle
+
 [Typedef]
 id: has_part
 name: has_part
