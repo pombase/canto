@@ -35,7 +35,6 @@ $pub
   <div class="view-edit">
     <a href="<% $edit_path %>">View or edit ...</a>
   </div>
-</form>
 </div>
 
 <%init>
