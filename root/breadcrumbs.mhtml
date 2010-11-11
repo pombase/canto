@@ -10,7 +10,7 @@
 my $current_path = $c->req->uri()->path();
 my $home_path = undef;
 
-if ($current_path ne '/') {
+if ($current_path ne $c->uri_for('/')->path()) {
   $home_path = $c->uri_for('/');
 }
 </%init>
