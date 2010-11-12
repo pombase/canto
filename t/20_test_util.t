@@ -190,6 +190,21 @@ sub track_init
                                     product => 'conserved fungal protein',
                                     organism => $organism->organism_id()
                                   });
+  $track_schema->create_with_type('Gene',
+                                  {
+                                    primary_identifier => 'SPAC3A11.14c',
+                                    primary_name => 'pkl1',
+                                    product => 'kinesin-like protein Pkl1',
+                                    genesynonyms => [
+                                      {
+                                        identifier => 'klp1'
+                                      },
+                                      {
+                                        identifier => 'SPAC3H5.03c'
+                                      }
+                                    ],
+                                    organism => $organism->organism_id()
+                                  });
 }
 
 {
@@ -220,7 +235,7 @@ sub track_init
 
   my @res_annotations = $cursdb_schema->resultset('Annotation')->all();
 
-  is (@res_annotations, 1);
+  is (@res_annotations, 2);
 
   my $res_annotation = $res_annotations[0];
 

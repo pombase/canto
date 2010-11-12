@@ -50,6 +50,22 @@ test_psgi $app, sub {
                                     "20100102",
                                     "GeneDB_Spombe")) . "\n";
 
+    $exported .= join ("	", ("GeneDB_Spombe",
+                                    "SPAC3A11.14c",
+                                    "pkl1",
+                                    "GO:0030133",
+                                    "",
+                                    "PMID:18426916",
+                                    "IPI",
+                                    "SPCC1739.11c",
+                                    "C",
+                                    "kinesin-like protein Pkl1",
+                                    "klp1|SPAC3H5.03c",
+                                    "gene",
+                                    "taxon:4896",
+                                    "20100102",
+                                    "GeneDB_Spombe")) . "\n";
+
     is $res->code, 200;
     is ($res->content(), $exported);
   }

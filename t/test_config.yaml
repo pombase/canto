@@ -43,6 +43,7 @@ test_config:
          genes:
            - "cdc11"
            - "SPCC1739.10"
+           - "SPAC3A11.14c"
          annotations:
            - type: cellular_component
              status: new
@@ -52,3 +53,12 @@ test_config:
              data:
                evidence_code: IMP
                term_ontid: GO:0055085
+           - type: cellular_component
+             status: new
+             'genes(Gene:primary_identifier)':
+               - 'SPAC3A11.14c'
+             'pub(Pub:pubmedid)': 18426916
+             data:
+               evidence_code: IPI
+               term_ontid: GO:0030133
+               with_gene: SPCC1739.11c
