@@ -579,20 +579,51 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
         type => 'Hidden',
       },
       {
-        name => 'ferret-accept-term-proceed', type => 'Submit', value => 'confirm',
+        name => 'ferret-suggest-name', label => 'ferret-suggest-name',
+        type => 'Text',
       },
+      {
+        name =>'ferret-suggest-definition', label => 'ferret-suggest-definition',
+        type => 'Text',
+      },
+      {
+        name => 'ferret-submit', type => 'Submit',
+      }
     );
 
   $form->elements([@all_elements]);
-
   $form->process();
-
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
     my $term_ontid = $form->param_value('ferret-term-id');
 
+    my $submit_value = $form->param_value('ferret-submit');
+
     my $guard = $schema->txn_scope_guard;
+
+    my %annotation_data = (term_ontid => $term_ontid);
+
+
+    if ($submit_value eq 'Submit suggestion') {
+      my $suggested_name = $form->param_value('ferret-suggest-name');
+      my $suggested_definition =
+        $form->param_value('ferret-suggest-definition');
+
+      $suggested_name =~ s/^\s+//;
+      $suggested_name =~ s/\s+$//;
+      $suggested_definition =~ s/^\s+//;
+      $suggested_definition =~ s/\s+$//;
+
+      $annotation_data{term_suggestion} = {
+        name => $suggested_name,
+        definition => $suggested_definition
+      };
+
+      $c->flash()->{message} = 'Note that your term suggestion has been '
+        . 'stored, but the gene will be temporarily '
+        . 'annotated with the parent of your suggested new term';
+    }
 
     my $gene = $schema->find_with_type('Gene', $gene_id);
     my $annotation =
@@ -602,7 +633,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
                                   status => 'new',
                                   pub => $st->{pub},
                                   creation_date => _get_iso_date(),
-                                  data => { term_ontid => $term_ontid }
+                                  data => { %annotation_data }
                                 });
 
     $annotation->set_genes($gene);

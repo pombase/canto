@@ -526,3 +526,7 @@ div.clearall {
 .placeholder {
   color: #999;
 }
+
+#ferret-suggest-form label.error {
+  color: red;
+}

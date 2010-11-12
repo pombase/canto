@@ -4,13 +4,22 @@ $current_component_display_name
 $current_component
 </%args>
 
-<form id="ferret-suggest-form" style="display: none">
-
+<div id="ferret-suggest" style="display: none">
+<form id="ferret-suggest-form" action="" method="post">
+  <div>
+    Name: <input id="ferret-suggest-name" name="ferret-suggest-name"/>
+  </div>
+  <div>
+    Definition: <textarea name="ferret-suggest-definition" cols="80" rows="10"> </textarea>
+  </div>
+  <input id="ferret-suggest-submit" name="ferret-submit" type="submit"
+         value="Submit suggestion" class="button"/>
 </form>
+</div>
 
 <div id="ferret">
+  <form id="ferret-form" action="" method="post">
 
-<form id="ferret-form" action="" method="post">
   <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
   <div id="ferret-term-entry">
     <& ../../help_text.mhtml, key => "${current_component}_hint" &>
@@ -54,7 +63,7 @@ if it describes the experiment you are curating more specifically:
     <div>
       Annotatate with this term
     </div>
-    <input id="ferret-accept-term-proceed" name="ferret-accept-term-proceed"
+    <input id="ferret-accept-term-proceed" name="ferret-submit"
            type="submit" value="Proceed" class="button"/>
   </div>
 

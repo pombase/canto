@@ -213,8 +213,9 @@ var ferrit_choose = {
   },
 
   suggest_dialog : function() {
-    $('#ferret-suggest-form').dialog({ modal: true,
-                                       title: 'Suggest a new term' });
+    $('#ferret-suggest').dialog({ modal: true, 
+                                  title: 'Suggest a new term',
+                                  width: 800 });
     return false;
   },
 
@@ -290,4 +291,14 @@ $(document).ready(function() {
   $('#ferret-suggest-link').click(ferrit_choose.suggest_dialog);
   $('#ferret-suggest-link-leaf').click(ferrit_choose.suggest_dialog);
 
+  $("#ferret-suggest-form").validate({
+    rules: {
+      'ferret-suggest-name': "required",
+      'ferret-suggest-definition': "required"
+    },
+    messages: {
+      'ferret-suggest-name': "Please enter a name for the term",
+      'ferret-suggest-definition': "Please enter a definition for the term"
+    }
+  });
 });
