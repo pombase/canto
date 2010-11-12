@@ -10,7 +10,7 @@ $current_component
     Name: <input id="ferret-suggest-name" name="ferret-suggest-name"/>
   </div>
   <div>
-    Definition: <textarea name="ferret-suggest-definition" cols="80" rows="10"> </textarea>
+    Definition: <textarea name="ferret-suggest-definition" cols="60" rows="10"> </textarea>
   </div>
   <input id="ferret-suggest-submit" name="ferret-submit" type="submit"
          value="Submit suggestion" class="button"/>
