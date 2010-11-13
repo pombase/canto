@@ -597,7 +597,6 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
 
   if ($form->submitted_and_valid()) {
     my $term_ontid = $form->param_value('ferret-term-id');
-
     my $submit_value = $form->param_value('ferret-submit');
 
     my $guard = $schema->txn_scope_guard;
