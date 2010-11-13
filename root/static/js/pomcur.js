@@ -213,6 +213,7 @@ var ferrit_choose = {
   },
 
   suggest_dialog : function() {
+    $('#ferret-suggest-term-id').val($('#ferret-term-id').val());
     $('#ferret-suggest').dialog({ modal: true, 
                                   title: 'Suggest a new term',
                                   width: 800 });
@@ -234,6 +235,19 @@ var ferrit_choose = {
   }
 };
 
+
+var curs_home = {
+  show_term_suggestion : function(term_ontid, name, definition) {
+    var html = '<div> Term name:' +
+      '<span class="term-name">' + name + '</span></div>' +
+      'Definition: <div class="term-definition">' + definition +
+      '</div></div>';
+    $('#term-suggestion').html(html);
+    $('#term-suggestion').dialog({ modal: true, 
+                                   title: 'Child term suggestion for ' +
+                                     term_ontid});
+  }
+};
 
 $(document).ready(function() {
   var ferret_input = $("#ferret-term-input");

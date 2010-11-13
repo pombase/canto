@@ -4,6 +4,10 @@ $curs_root_path
 </%args>
 
 % if (@annotations) {
+<div id="term-suggestion" style="display: none">
+
+</div>
+
 <div>
   Current annotations:
 </div>
@@ -32,6 +36,10 @@ $curs_root_path
         With
       </th>
       <th>
+        Note
+      </th>
+      <th>
+        &nbsp
       </th>
     </tr>
   </thead>
@@ -58,6 +66,13 @@ $curs_root_path
     </td>
     <td>
       <% $row->{with_or_from} %>
+    </td>
+    <td>
+% if ($row->{term_suggestion}) {
+      <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% $row->{term_suggestion}->{name} %>','<% $row->{term_suggestion}->{definition} %>');">View note ...</a>
+% } else {
+      &nbsp;
+% }
     </td>
     <td>
       <a href="<% $delete_action . $row->{annotation_id} %>"

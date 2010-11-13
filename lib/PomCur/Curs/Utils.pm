@@ -131,6 +131,7 @@ sub get_annotation_table
         evidence_type_name => $evidence_type_name,
         creation_date => $annotation->creation_date(),
         creation_date_short => $short_date,
+        term_suggestion => $annotation->data()->{term_suggestion},
         with_or_from => $with_gene || '',
         taxonid => $gene->organism()->taxonid(),
       };
