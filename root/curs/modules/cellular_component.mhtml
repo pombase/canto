@@ -4,9 +4,7 @@ $current_component_display_name
 $current_component
 </%args>
 
-<div id="ferret-suggest" 
-%#style="display: none"
->
+<div id="ferret-suggest" style="display: none">
 <form id="ferret-suggest-form" action="" method="post">
   <input type="hidden" id="ferret-suggest-term-id" name="ferret-term-id"/>
   <div>
