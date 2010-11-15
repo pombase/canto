@@ -35,7 +35,7 @@ $current_component
 
   <div id="ferret-term-children" style="display: none">
 Select a child term of <span class="term-id ferret-term-id-display"></span>
-if it describes the experiment you are curating more specifically:
+if it describes the experiment you are curating more precisely:
     <div id="ferret-term-children-list">
     </div>
   </div>
