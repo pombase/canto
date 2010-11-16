@@ -24,7 +24,7 @@ $current_component
   <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
   <div id="ferret-term-entry">
     <& ../../help_text.mhtml, key => "${current_component}_hint" &>
-    Search for <% $current_component_display_name %>
+    <div>Search for <% $current_component_display_name %></div>
     <input id="ferret-term-input" name="ferret-term-entry"
            type="text" size="50" 
            placeholder="start typing and suggestions will be made ..."
