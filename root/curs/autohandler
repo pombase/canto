@@ -36,7 +36,7 @@ my $show_gene_list = 0;
 
 if ($state > PomCur::Controller::Curs::NEEDS_GENES) {
   my $path = $c->req->uri()->path();
-  if ($path !~ /gene_upload|edit_genes|confirm_genes/) {
+  if ($path !~ /gene_upload|edit_genes|confirm_genes|annotation/) {
     $show_gene_list = 1;
   }
 }
