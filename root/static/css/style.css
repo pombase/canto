@@ -438,20 +438,20 @@ div.clearall {
   font-size: 60%;
 }
 
-#ferret-term-container {
-  position: relative;
+#ferret-form > div {
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 #ferret-term-entry {
-  float: left;
-  width: 40%;
+  width: 90%;
+  margin-top: 10px;
 }
 
 #ferret-term-details {
-  clear: left;
-  float: left;
-  width: 40%;
+  width: 90%;
   font-size: 80%;
+  margin-top: 10px;
 }
 
 .term-id {
@@ -478,8 +478,7 @@ div.clearall {
 }
 
 #ferret-children-details, #ferret-accept-term-details {
-  float: right;
-  width: 40%;
+  width: 90%;
   min-height: 10em;
   font-size: 80%;
 }
@@ -508,7 +507,6 @@ div.clearall {
 
 .inline-help {
   font-size: 95%;
-  width: 130%;
   color: #010;
   margin: 0px 0px 10px 0px;
 }
