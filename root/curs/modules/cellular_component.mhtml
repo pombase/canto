@@ -23,12 +23,12 @@ $current_component
 
   <input id="ferret-previous-button" name="previous" type="submit" value="<- Go back" class="button"
          style="display: none"/>
+  <input id="ferret-reset-button" name="reset" type="reset" value="<- Go back" class="button"
+         style="display: none"/>
 
   <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
 
   <div id="ferret-term-details" style="display: none">
-    <input id="ferret-reset-button" name="reset" type="reset" value="<- Go back" class="button" />
-
     <table>
       <tr>
         <td class="title">ID</td>
@@ -47,10 +47,6 @@ $current_component
         <td id="ferret-term-comment"></td>
       </tr>
     </table>
-
-    <input id="ferret-reset-button" name="reset" type="reset" value="Go back" class="button" />
-    <input id="ferret-previous-button" name="previous" type="submit" value="Go back" class="button"
-           style="display: none"/>
   </div>
 
   <div id="ferret-term-entry">
