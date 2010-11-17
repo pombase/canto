@@ -229,6 +229,7 @@ var ferrit_choose = {
       .removeAttr('selected');
     ferrit_choose.hide_child_details();
     $('#ferret-term-details').hide();
+    $('#ferret-reset-button').hide();
     $('#ferret-term-entry').show();
     ferrit_choose.hide_accept();
     return true;
