@@ -452,8 +452,8 @@ div.clearall {
   width: 90%;
   font-size: 80%;
   margin-top: 10px;
+  margin-bottom: 20px;
 }
-
 
 #ferret-term-details table {
   table-layout: fixed;
