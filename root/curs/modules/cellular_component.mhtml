@@ -26,16 +26,30 @@ $current_component
          style="display: none"/>
 
   <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
+
   <div id="ferret-term-details" style="display: none">
-    <div class="term-id ferret-term-id-display"></div>
-    <div>
-      Term name:
-      <span id="ferret-term-name" class="term-name"></span>
-    </div>
+    <table>
+      <tr>
+        <td class="title">ID</td>
+        <td class="term-id ferret-term-id-display"></td>
+      </tr>
+      <tr>
+        <td class="title">Term name</td>
+        <td id="ferret-term-name" class="term-name"></td>
+      </tr>
+      <tr>
+        <td class="title">Definition</td>
+        <td id="ferret-term-definition" class="term-definition"></td>
+      </tr>
+      <tr id="ferret-term-comment-row">
+        <td class="title">Comment</td>
+        <td id="ferret-term-comment"></td>
+      </tr>
+    </table>
 
-    Definition: <div id="ferret-term-definition" class="term-definition"></div>
-
-    <div id="ferret-term-comment"></div>
+    <input id="ferret-reset-button" name="reset" type="reset" value="Go back" class="button" />
+    <input id="ferret-previous-button" name="previous" type="submit" value="Go back" class="button"
+           style="display: none"/>
   </div>
 
   <div id="ferret-term-entry">

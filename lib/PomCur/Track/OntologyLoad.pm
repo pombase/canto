@@ -153,6 +153,8 @@ sub load
     # don't try to load the relationship relations
     next unless $subject_term_acc =~ /:/;
 
+    next if $rel->type() eq 'has_part';
+
     my $rel_type = $rel->type();
     my $rel_type_ontid = "OBO_REL:$rel_type";
 
