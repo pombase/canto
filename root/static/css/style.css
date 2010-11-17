@@ -454,6 +454,21 @@ div.clearall {
   font-size: 80%;
 }
 
+
+#ferret-term-details table {
+  table-layout: fixed;
+  border-collapse: separate;
+}
+
+#ferret-term-details td {
+  vertical-align: top;
+}
+
+#ferret-term-details td.title {
+  white-space: nowrap;
+  border-right: 2px solid black;
+}
+
 .term-id {
   color: #000;
   font-weight: bold;
@@ -462,19 +477,16 @@ div.clearall {
 .term-definition {
   display: block;
   font-weight: bold;
-  margin: 0px 10px 10px 10px;
 }
 
 .term-comment {
   display: block;
   font-weight: bold;
-  margin: 0px 10px 10px 10px;
 }
 
 .term-name {
   display: block;
   font-weight: bold;
-  margin: 0px 10px 10px 10px;
 }
 
 #ferret-children-details, #ferret-accept-term-details {

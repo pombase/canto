@@ -66,15 +66,24 @@ if it describes the experiment you are curating more precisely:
   </div>
 
   <div id="ferret-term-details" style="display: none">
-    <div class="term-id ferret-term-id-display"></div>
-    <div>
-      Term name:
-      <span id="ferret-term-name" class="term-name"></span>
-    </div>
-
-    Definition: <div id="ferret-term-definition" class="term-definition"></div>
-
-    <div id="ferret-term-comment"></div>
+    <table>
+      <tr>
+        <td class="title">ID</td>
+        <td class="term-id ferret-term-id-display"></td>
+      </tr>
+      <tr>
+        <td class="title">Term name</td>
+        <td id="ferret-term-name" class="term-name"></td>
+      </tr>
+      <tr>
+        <td class="title">Definition</td>
+        <td id="ferret-term-definition" class="term-definition"></td>
+      </tr>
+      <tr id="ferret-term-comment-row">
+        <td class="title">Comment</td>
+        <td id="ferret-term-comment"></td>
+      </tr>
+    </table>
 
     <input id="ferret-reset-button" name="reset" type="reset" value="Go back" class="button" />
     <input id="ferret-previous-button" name="previous" type="submit" value="Go back" class="button"
