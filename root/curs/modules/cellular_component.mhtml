@@ -31,6 +31,7 @@ $pub
   <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
 
   <div id="ferret-term-details" style="display: none">
+    Term currently selected for annotation:
     <table>
       <tr>
         <td class="title">ID</td>
@@ -49,6 +50,19 @@ $pub
         <td id="ferret-term-comment"></td>
       </tr>
     </table>
+
+    <div class="inline-help">
+Step 1: GO annotations are made to the term definition. Similar GO terms 
+often have different meanings. Please read the definition and ensure it 
+is the term  (or broader than) the term you require.
+    </div>
+    <div class="inline-help">
+Step 2: GO annotations are made to the most specific  term possible. 
+Select any of the children of
+<span class="term-id ferret-term-id-display"></span> below if it (one one of its 
+possible descendants) describes the experiment you are curating more 
+precisely, or remove suggestions.
+    </div>
   </div>
 
   <div id="ferret-term-entry">

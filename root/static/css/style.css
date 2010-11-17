@@ -450,14 +450,16 @@ div.clearall {
 
 #ferret-term-details {
   width: 90%;
-  font-size: 80%;
+  font-size: 90%;
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 #ferret-term-details table {
+  font-size: 90%;
   table-layout: fixed;
   border-collapse: separate;
+  margin: 15px;
 }
 
 #ferret-term-details td {
