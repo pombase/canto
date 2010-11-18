@@ -160,7 +160,6 @@ var ferrit_choose = {
 
   term_click_handler : function(event) {
     ferrit_choose.move_to_hash_term($(event.target));
-    ferrit_choose.show_term_children();
     ferrit_choose.hide_leaf();
     return false;
   },
