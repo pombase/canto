@@ -20,7 +20,7 @@
 <script type="text/javascript" src="<% $c->uri_for('/static/js/pomcur.js') %>"></script>
 <script language="javascript" type="text/javascript">
   if (typeof current_component != 'undefined') {
-    ferrit_choose.initialise(current_component);
+    ferret_choose.initialise(current_component);
   }
 </script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/jquery.form.2.47.js') %>"></script>
