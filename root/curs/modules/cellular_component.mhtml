@@ -27,8 +27,8 @@ $pub
 
   <div id="ferret-term-details" style="display: none">
     <div class="inline-help ferret-help-text ferret-help-step-1">
-Step 1: GO annotations are made to the term definition. Similar GO terms 
-often have different meanings. Please read the definition and ensure it 
+Step 1: GO annotations are made to the term definition. Similar GO terms
+often have different meanings. Please read the definition and ensure it
 is the term  (or broader than) the term you require.
     </div>
     Term currently selected for annotation:
@@ -52,10 +52,10 @@ is the term  (or broader than) the term you require.
     </table>
 
     <div class="inline-help ferret-help-text ferret-help-step-2">
-Step 2: GO annotations are always made to the most specific term possible. 
+Step 2: GO annotations are always made to the most specific term possible.
 Select any of the children of
-<span class="term-id ferret-term-id-display"></span> below if it (or one of its 
-possible descendants) describes the experiment you are curating more 
+<span class="term-id ferret-term-id-display"></span> below if it (or one of its
+possible descendants) describes the experiment you are curating more
 precisely, or remove suggestions.
     </div>
   </div>
@@ -67,14 +67,14 @@ Search for the process terms to annotate to <% $gene_long_display_name %>,
 from PMID:<% $pub->pubmedid() %>.
       </div>
       <div>
-If you do not identify the term you are looking for with your initial 
-search, begin with a broader term (cell cycle, transport). More specific 
+If you do not identify the term you are looking for with your initial
+search, begin with a broader term (cell cycle, transport). More specific
 terms will be suggested before you approve your selection.
       </div>
     </div>
     <div>Search for <% $current_component_display_name %></div>
     <input id="ferret-term-input" name="ferret-term-entry"
-           type="text" size="50" 
+           type="text" size="50"
            placeholder="start typing and suggestions will be made ..."
            disabled="true"/>
   </div>
