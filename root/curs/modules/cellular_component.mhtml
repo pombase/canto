@@ -82,8 +82,6 @@ terms will be suggested before you approve your selection.
   <div id="ferret-children-details" style="display: none">
 
   <div id="ferret-term-children" style="display: none">
-Select a child term of <span class="term-id ferret-term-id-display"></span>
-if it describes the experiment you are curating more precisely:
     <div id="ferret-term-children-list">
     </div>
   </div>
