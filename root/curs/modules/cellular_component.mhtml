@@ -46,12 +46,12 @@ $pub
       </tr>
     </table>
 
-    <div class="inline-help">
+    <div class="inline-help ferret-help-text ferret-help-step-1">
 Step 1: GO annotations are made to the term definition. Similar GO terms 
 often have different meanings. Please read the definition and ensure it 
 is the term  (or broader than) the term you require.
     </div>
-    <div class="inline-help">
+    <div class="inline-help ferret-help-text ferret-help-step-2">
 Step 2: GO annotations are made to the most specific  term possible. 
 Select any of the children of
 <span class="term-id ferret-term-id-display"></span> below if it (or one of its 

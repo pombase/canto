@@ -140,6 +140,7 @@ var ferrit_choose = {
   ignore_children : function() {
     ferrit_choose.hide_child_details();
     ferrit_choose.show_accept();
+    ferrit_choose.hide_help();
     return false;
   },
 
@@ -179,6 +180,7 @@ var ferrit_choose = {
     var term_children = $('#ferret-term-children');
     term_children.show();
     ferrit_choose.hide_leaf();
+    ferrit_choose.show_help();
     ferrit_choose.show_child_details();
   },
 
@@ -191,6 +193,7 @@ var ferrit_choose = {
     var leaf = $('#ferret-leaf');
     leaf.show();
     ferrit_choose.hide_children();
+    ferrit_choose.show_help();
     ferrit_choose.show_child_details();
   },
 
@@ -215,6 +218,14 @@ var ferrit_choose = {
     }
   },
 
+  hide_help : function() {
+    $('.ferret-help-text').hide();
+  },
+
+  show_help : function() {
+    $('.ferret-help-text').show();
+  },
+
   suggest_dialog : function() {
     $('#ferret-suggest-term-id').val($('#ferret-term-id').val());
     $('#ferret-suggest').dialog({ modal: true, 
@@ -235,6 +246,7 @@ var ferrit_choose = {
     $('#ferret-term-entry').show();
     ferrit_choose.hide_accept();
     $('#ferret-term-id').val('');
+    ferret_reset.show_help();
     return true;
   }
 };
