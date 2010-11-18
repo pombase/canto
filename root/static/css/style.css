@@ -533,6 +533,12 @@ div.clearall {
   margin: 0px 0px 10px 0px;
 }
 
+.ferret-help-text {
+  margin-left: 0%;
+  background-color: #efe;
+  font-size: 85%;
+}
+
 .evidence-select div, .with-gene-select div {
   display: inline;
 }
