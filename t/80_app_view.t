@@ -18,7 +18,7 @@ test_psgi $app, sub {
 
   # test viewing an object
   {
-    my $url = 'http://localhost:5000/view/object/person/1?model=manage';
+    my $url = 'http://localhost:5000/view/object/person/1?model=track';
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
@@ -30,7 +30,7 @@ test_psgi $app, sub {
 
   # test viewing a list
   {
-    my $url = 'http://localhost:5000/view/list/lab?model=manage';
+    my $url = 'http://localhost:5000/view/list/lab?model=track';
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 

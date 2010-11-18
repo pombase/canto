@@ -52,7 +52,7 @@ test_psgi $app, sub {
 
   # test visiting the create object page
   {
-    my $url = 'http://localhost:5000/new/object/person?model=manage';
+    my $url = 'http://localhost:5000/new/object/person?model=track';
     my $req = HTTP::Request->new(GET => $url);
     $cookie_jar->add_cookie_header($req);
 
@@ -67,7 +67,7 @@ test_psgi $app, sub {
   # test creating an object
   {
     my $uri = new URI('http://localhost:5000/new/object/person');
-    $uri->query_form(model => 'manage',
+    $uri->query_form(model => 'track',
                      name => $test_name,
                      'Email address' => $test_email,
                      lab => 0,
@@ -99,7 +99,7 @@ test_psgi $app, sub {
 
   # test visiting the edit object page
   {
-    my $url = "http://localhost:5000/edit/object/person/$new_person_id?model=manage";
+    my $url = "http://localhost:5000/edit/object/person/$new_person_id?model=track";
     my $req = HTTP::Request->new(GET => $url);
     $cookie_jar->add_cookie_header($req);
 
@@ -116,7 +116,7 @@ test_psgi $app, sub {
     my $test_name = 'Test name';
 
     my $uri = new URI("http://localhost:5000/edit/object/person/$new_person_id");
-    $uri->query_form(model => 'manage',
+    $uri->query_form(model => 'track',
                      name => $test_name,
                      'Email address' => $test_email2,
                      lab => 0,
@@ -149,7 +149,7 @@ test_psgi $app, sub {
     my $curs_key = 'abcd1234';
 
     my $uri = new URI("http://localhost:5000/create/curs");
-    $uri->query_form(model => 'manage',
+    $uri->query_form(model => 'track',
                      curs_key => $curs_key,
                      pub => $pub->pub_id(),
                      community_curator => $new_person_id,
@@ -182,7 +182,7 @@ test_psgi $app, sub {
 
     my $pub_id = $pub->pub_id();
 
-    my $url = "http://localhost:5000/new/object/pub/$pub_id?model=manage";
+    my $url = "http://localhost:5000/new/object/pub/$pub_id?model=track";
     my $req = HTTP::Request->new(GET => $url);
     $cookie_jar->add_cookie_header($req);
 

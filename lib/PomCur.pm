@@ -72,7 +72,7 @@ use PomCur::Config;
 
 $config->setup();
 
-my %_model_map = ( manage => "TrackModel",
+my %_model_map = ( track => "TrackModel",
                    meta => "MetaModel" );
 
 =head2 schema

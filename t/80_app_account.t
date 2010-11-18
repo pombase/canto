@@ -16,7 +16,7 @@ my $app = $test_util->plack_app();
 test_psgi $app, sub {
   my $cb = shift;
 
-  my $return_path = 'http://localhost:5000/view/list/lab?model=manage';
+  my $return_path = 'http://localhost:5000/view/list/lab?model=track';
   my $encoded_return_path = $return_path;
   $encoded_return_path =~ s/\?/%3F/g;
   $encoded_return_path =~ s/=/%3D/g;
