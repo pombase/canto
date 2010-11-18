@@ -479,6 +479,7 @@ div.clearall {
 #ferret-term-details td.title {
   white-space: nowrap;
   border-right: 2px solid black;
+  font-weight: bold;
 }
 
 .term-id {
@@ -488,17 +489,14 @@ div.clearall {
 
 .term-definition {
   display: block;
-  font-weight: bold;
 }
 
 .term-comment {
   display: block;
-  font-weight: bold;
 }
 
 .term-name {
   display: block;
-  font-weight: bold;
 }
 
 #ferret-children-details, #ferret-accept-term-details {
