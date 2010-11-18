@@ -52,7 +52,7 @@ is the term  (or broader than) the term you require.
     </table>
 
     <div class="inline-help ferret-help-text ferret-help-step-2">
-Step 2: GO annotations are made to the most specific  term possible. 
+Step 2: GO annotations are always made to the most specific term possible. 
 Select any of the children of
 <span class="term-id ferret-term-id-display"></span> below if it (or one of its 
 possible descendants) describes the experiment you are curating more 
