@@ -144,8 +144,14 @@ div#footer .sponsor {
   margin: 0; padding: 0;
   display: inline;
 }
-#breadcrumbs ul li {
+#breadcrumbs ul li:first-child {
   display: inline;
+}
+#breadcrumbs ul li {
+  list-style-type: none;
+}
+#breadcrumbs .hash-term {
+  margin-left: 10px;
 }
 #breadcrumbs ul li a {
   text-decoration: none;

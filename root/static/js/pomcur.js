@@ -90,21 +90,33 @@ var ferrit_choose = {
   },
 
   add_to_breadcrumbs : function(term) {
-    var breadcrumbs_ul = $('#breadcrumbs ul')
-    var li = $('<li class="hash-term">&gt;<a title="' +
+    var dest = $('#breadcrumbs > div.hash-term');
+    if (dest.length == 0) {
+      dest = $('#breadcrumbs');
+    } else {
+      // find the most nested div
+      while (true) {
+        var children = dest.children('div');
+        if (children.length > 0) {
+          dest = children.first();
+        } else {
+          break;
+        }
+      }
+    }
+    var div = $('<div class="hash-term"><a title="' +
                term.name + '" href="#' + term.id + '">' +
-               term.id + "</a></li>");
-    li.data('term', term);
-    breadcrumbs_ul.append(li);
+               term.id + "</a></div>");
+    div.data('term', term);
+    dest.append(div);
   },
 
   add_history : function(term) {
     ferrit_choose.term_history.push(term);
-    ferrit_choose.add_to_breadcrumbs(term);
   },
 
   truncate_history : function(term_id) {
-    $('#breadcrumbs li.hash-term').remove();
+    $('#breadcrumbs div.hash-term').remove();
     for (var i = 0; i < ferrit_choose.term_history.length; i++) {
       var this_term = ferrit_choose.term_history[i];
       if (this_term.id == term_id) {
@@ -148,9 +160,8 @@ var ferrit_choose = {
 
   term_click_handler : function(event) {
     ferrit_choose.move_to_hash_term($(event.target));
-    ferrit_choose.hide_children();
-    var leaf = $('#ferret-leaf');
-    leaf.hide();
+    ferrit_choose.show_term_children();
+    ferrit_choose.hide_leaf();
     return false;
   },
 
@@ -279,7 +290,7 @@ $(document).ready(function() {
 
   $("body").delegate("#ferret-term-children-list a", "click",
                      ferrit_choose.child_click_handler);
-  $("body").delegate("#breadcrumbs li.hash-term a", "click",
+  $("body").delegate("#breadcrumbs .hash-term a", "click",
                      ferrit_choose.term_click_handler);
 
     $("#breadcrumb-previous-button").click(function () {
