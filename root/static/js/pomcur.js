@@ -299,6 +299,12 @@ $(document).ready(function() {
         .appendTo( ul );
     };
 
+    ferret_input.keypress(function(event) {
+      if (event.keyCode == '13') {
+        event.preventDefault();
+      }
+    });
+
   $("body").delegate("#ferret-term-children-list a", "click",
                      ferret_choose.child_click_handler);
   $("body").delegate("#breadcrumbs .hash-term a", "click",
