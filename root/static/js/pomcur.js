@@ -246,7 +246,7 @@ var ferret_choose = {
     $('#ferret-term-entry').show();
     ferret_choose.hide_accept();
     $('#ferret-term-id').val('');
-    ferret_reset.show_help();
+    ferret_choose.show_help();
     return true;
   }
 };
