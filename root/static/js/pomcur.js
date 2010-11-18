@@ -228,7 +228,7 @@ var ferret_choose = {
 
   suggest_dialog : function() {
     $('#ferret-suggest-term-id').val($('#ferret-term-id').val());
-    $('#ferret-suggest').dialog({ modal: true, 
+    $('#ferret-suggest').dialog({ modal: true,
                                   title: 'Suggest a new term',
                                   width: 800 });
     return false;
@@ -259,7 +259,7 @@ var curs_home = {
       'Definition: <div class="term-definition">' + definition +
       '</div></div>';
     $('#term-suggestion').html(html);
-    $('#term-suggestion').dialog({ modal: true, 
+    $('#term-suggestion').dialog({ modal: true,
                                    title: 'Child term suggestion for ' +
                                      term_ontid});
   }
@@ -294,7 +294,7 @@ $(document).ready(function() {
       }
       return $( "<li></li>" )
         .data( "item.autocomplete", item )
-        .append( "<a>" + match_name + " <span class='term-id'>(" + 
+        .append( "<a>" + match_name + " <span class='term-id'>(" +
                  item.id + ")</span></a>" )
         .appendTo( ul );
     };
@@ -305,10 +305,10 @@ $(document).ready(function() {
       }
     });
 
-  $("body").delegate("#ferret-term-children-list a", "click",
-                     ferret_choose.child_click_handler);
-  $("body").delegate("#breadcrumbs .hash-term a", "click",
-                     ferret_choose.term_click_handler);
+    $("body").delegate("#ferret-term-children-list a", "click",
+                       ferret_choose.child_click_handler);
+    $("body").delegate("#breadcrumbs .hash-term a", "click",
+                       ferret_choose.term_click_handler);
 
     $("#breadcrumb-previous-button").click(function () {
       if (ferret_choose.term_history.length > 0) {
@@ -321,35 +321,37 @@ $(document).ready(function() {
         }
       }
     });
-  $("#ferret-ignore-children").click(ferret_choose.ignore_children);
+    $("#ferret-ignore-children").click(ferret_choose.ignore_children);
 
-  var form_success = function(responseText, statusText, xhr, $form) {
-    if (responseText == 'term-selected') {
-      ferret_choose.show_hide_children();
-    }
-    return true;
-  };
+    var form_success = function(responseText, statusText, xhr, $form) {
+      if (responseText == 'term-selected') {
+        ferret_choose.show_hide_children();
+      }
+      return true;
+    };
 
-  $('#ferret-term-input').attr('disabled', false);
+    $('#ferret-term-input').attr('disabled', false);
 
-  $('#ferret-suggest-link').click(ferret_choose.suggest_dialog);
-  $('#ferret-suggest-link-leaf').click(ferret_choose.suggest_dialog);
+    $('#ferret-suggest-link').click(ferret_choose.suggest_dialog);
+    $('#ferret-suggest-link-leaf').click(ferret_choose.suggest_dialog);
 
-  $("#ferret-suggest-form").validate({
-    rules: {
-      'ferret-suggest-name': "required",
-      'ferret-suggest-definition': "required"
-    },
-    messages: {
-      'ferret-suggest-name': "Please enter a name for the term",
-      'ferret-suggest-definition': "Please enter a definition for the term"
-    }
-  });
+    $("#ferret-suggest-form").validate({
+      rules: {
+        'ferret-suggest-name': "required",
+        'ferret-suggest-definition': "required"
+      },
+      messages: {
+        'ferret-suggest-name': "Please enter a name for the term",
+        'ferret-suggest-definition': "Please enter a definition for the term"
+      }
+    });
 
   } else {
+
     $('#breadcrumb-previous-button').click(function () {
       window.location.href = curs_root_path;
     });
+
   }
 
 });
