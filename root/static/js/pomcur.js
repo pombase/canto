@@ -86,13 +86,6 @@ var ferrit_choose = {
     $('.ferret-term-id-display').text(term_id);
     $('#ferret-term-details').show();
 
-    if (ferrit_choose.term_history.length > 0) {
-      $('#ferret-previous-button').show();
-      $('#ferret-reset-button').hide();
-    } else {
-      $('#ferret-previous-button').hide();
-      $('#ferret-reset-button').show();
-    }
     ferrit_choose.set_details(term_id);
   },
 
@@ -229,9 +222,9 @@ var ferrit_choose = {
       .removeAttr('selected');
     ferrit_choose.hide_child_details();
     $('#ferret-term-details').hide();
-    $('#ferret-reset-button').hide();
     $('#ferret-term-entry').show();
     ferrit_choose.hide_accept();
+    $('#ferret-term-id').val('');
     return true;
   }
 };
@@ -283,15 +276,23 @@ $(document).ready(function() {
                  item.id + ")</span></a>" )
         .appendTo( ul );
     };
-  }
 
   $("body").delegate("#ferret-term-children-list a", "click",
                      ferrit_choose.child_click_handler);
   $("body").delegate("#breadcrumbs li.hash-term a", "click",
                      ferrit_choose.term_click_handler);
 
-  $("#ferret-reset-button").click(ferrit_choose.ferret_reset);
-  $("#ferret-previous-button").click(ferrit_choose.pop_history);
+    $("#breadcrumb-previous-button").click(function () {
+      if (ferrit_choose.term_history.length > 0) {
+        ferrit_choose.pop_history();
+      } else {
+        if ($('#ferret-term-id').val().length > 0) {
+          ferrit_choose.ferret_reset();
+        } else {
+          window.location.href = curs_root_path;
+        }
+      }
+    });
   $("#ferret-ignore-children").click(ferrit_choose.ignore_children);
 
   var form_success = function(responseText, statusText, xhr, $form) {
@@ -316,4 +317,11 @@ $(document).ready(function() {
       'ferret-suggest-definition': "Please enter a definition for the term"
     }
   });
+
+  } else {
+    $('#breadcrumb-previous-button').click(function () {
+      window.location.href = curs_root_path;
+    });
+  }
+
 });

@@ -1,5 +1,7 @@
 <div id="breadcrumbs">
 % if (defined $home_path) {
+  <button id="breadcrumb-previous-button" name="breadcrumb-previous-button"
+          class="button">&lt;- Back</button>
   Trail: <ul>
     <li>
        <a href="<% $home_path %>" title="Go to the home page">

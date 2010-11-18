@@ -23,11 +23,6 @@ $pub
 <div id="ferret">
   <form id="ferret-form" action="" method="post">
 
-  <input id="ferret-previous-button" name="previous" type="submit" value="<- Go back" class="button"
-         style="display: none"/>
-  <input id="ferret-reset-button" name="reset" type="reset" value="<- Go back" class="button"
-         style="display: none"/>
-
   <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
 
   <div id="ferret-term-details" style="display: none">
