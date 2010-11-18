@@ -47,7 +47,11 @@ use Moose;
  Function: Return a table of the current annotations
  Args    : $config - the PomCur::Config object
            $schema - a PomCur::CursDB object
- Returns : An array of hashes containing the annotation in the form:
+ Returns : ($completed_count, $table)
+           where:
+             $completed_count - a count of the annotations that are incomplete
+                because they need an evidence code or a with field, etc.
+             $table - an array of hashes containing the annotation in the form:
            [ { gene_identifier => 'SPCC1739.11c', gene_name => 'cdc11',
                annotation_type => 'molecular_function',
                annotation_id => 1234, term_ontid => 'GO:0055085',
@@ -73,6 +77,8 @@ sub get_annotation_table
 
   my $go_lookup = PomCur::Track::get_lookup($config, 'go');
   my $gene_lookup = PomCur::Track::get_lookup($config, 'gene');
+
+  my $completed_count = 0;
 
   while (defined (my $gene = $gene_rs->next())) {
     my $an_rs = $gene->annotations();
@@ -109,8 +115,14 @@ sub get_annotation_table
       my $evidence_code = $data->{evidence_code};
       my $with_gene = $data->{with_gene};
       my $evidence_type_name = $evidence_types{$evidence_code}->{name};
+      my $needs_with = $evidence_types{$evidence_code}->{with_gene};
 
       (my $short_date = $annotation->creation_date()) =~ s/-//g;
+
+      my $completed = defined $evidence_code &&
+          (!$needs_with || defined $with_gene);
+
+      $completed_count++ if $completed;
 
       push @{$gene_annotations{$annotation_type}}, {
         gene_identifier => $gene->primary_identifier(),
@@ -132,8 +144,10 @@ sub get_annotation_table
         creation_date => $annotation->creation_date(),
         creation_date_short => $short_date,
         term_suggestion => $annotation->data()->{term_suggestion},
-        with_or_from => $with_gene || '',
+        needs_with => $needs_with,
+        with_or_from => $with_gene,
         taxonid => $gene->organism()->taxonid(),
+        completed => $completed,
       };
     }
 
@@ -146,7 +160,7 @@ sub get_annotation_table
     }
   }
 
-  return @annotations;
+  return ($completed_count, [@annotations]);;
 }
 
 1;

@@ -833,8 +833,9 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
-  my @annotations =
+  my ($completed_count, $annotations_ref) =
     PomCur::Curs::Utils::get_annotation_table($config, $schema);
+  my @annotations = @$annotations_ref;
 
   my %common_values = %{$config->{export}->{gene_association_fields}};
 
@@ -847,13 +848,12 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
   my $results = '';
 
   for my $annotation (@annotations) {
+    next unless $annotation->{completed};
+
     $results .= join "\t", map {
       my $val = $common_values{$_};
       if (!defined $val) {
         $val = $annotation->{$_};
-      }
-      if (!defined $val) {
-        die "no value for key: $_\n";
       }
       if ($_ eq 'taxonid') {
         $val = "taxon:$val";

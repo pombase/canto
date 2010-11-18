@@ -62,10 +62,22 @@ $curs_root_path
       <% $row->{term_name} %>
     </td>
     <td>
-      <% $row->{evidence_code} %>
+% if (defined $row->{evidence_code}) {
+     <% $row->{evidence_code} %>
+% } else {
+     <a href="<% $curs_root_path . '/annotation/evidence/' . $row->{annotation_id} %>">Set evidence ...</a>
+% }
     </td>
     <td>
+% if ($row->{needs_with}) {
+%   if (defined $row->{with_or_from}) {
       <% $row->{with_or_from} %>
+%   } else {
+      <a href="<% $curs_root_path . '/annotation/with_gene/' . $row->{annotation_id} %>">Set with ...</a>
+%   }
+% } else {
+     &nbsp; 
+% }
     </td>
     <td>
 % if ($row->{term_suggestion}) {
@@ -85,6 +97,12 @@ $curs_root_path
 </table>
 
 <div>
+% if ($some_incomplete) {
+<div style="font-size: 85%; margin: 5px 0px 5px 0px;">
+  Note that some of the annotations are incomplete, and only complete
+  annotations are included in the downloaded table. 
+</div>
+% }
   <a href="<% $download_action %>">Download table ...</a>
 </div>
 % }
@@ -96,10 +114,14 @@ my $st = $c->stash();
 my $schema = $st->{schema};
 my $config = $c->config();
 
-my @annotations = PomCur::Curs::Utils::get_annotation_table($config, $schema);
+my ($completed_count, $annotations_ref) =
+  PomCur::Curs::Utils::get_annotation_table($config, $schema);
+my @annotations = @$annotations_ref;
 
 my $download_action = $curs_root_path . '/export/annotation';
 my $delete_action = $curs_root_path . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+
+my $some_incomplete = $completed_count != @annotations;
 
 </%init>
