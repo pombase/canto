@@ -473,11 +473,6 @@ div.clearall {
   border: 1px solid #ddd;
 }
 
-#ferret-term-details table caption {
-  text-align: left;
-  padding-bottom: 5px;
-}
-
 #ferret-term-details table {
   table-layout: fixed;
   border-collapse: separate;

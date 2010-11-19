@@ -27,14 +27,12 @@ $pub
 
   <div id="ferret-term-details" style="display: none">
     <div class="inline-help ferret-help-text ferret-help-step-1">
-Step 1: GO annotations are made to the term definition. Similar GO terms
-often have different meanings. Please read the definition and ensure it
-is the term  (or broader than) the term you require.
+Step 1: GO annotations are made to the term definition because similar 
+term names can have different biological meanings.  Please read the 
+definition of the currently selected term and ensure it is equivalent 
+to, or broader than, the term you require.
     </div>
     <table>
-      <caption>
-Term currently selected for annotation:
-      </caption>
       <tr>
         <td class="title">ID</td>
         <td class="term-id ferret-term-id-display"></td>
