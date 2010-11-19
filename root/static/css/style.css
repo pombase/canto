@@ -556,6 +556,7 @@ div.clearall {
   margin-left: 0%;
   background-color: #f2f2ff;
   border-bottom: 1px solid #ddd;
+  padding: 5px;
 }
 
 .evidence-select div, .with-gene-select div {
