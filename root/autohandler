@@ -3,6 +3,7 @@ $title
 $show_title => 1
 $error => undef
 $message => undef
+$page_description_id => 'page-description'
 </%args>
 
 <!DOCTYPE HTML>
@@ -45,12 +46,14 @@ $message => undef
 
 <& breadcrumbs.mhtml &>
 
-      <div id="content">
 % if ($show_title) {
-        <div id="page-description">
-          <% $title %>
-        </div>
+      <div id="<% $page_description_id %>">
+        <% $title %>
+      </div>
 % }
+
+      <div id="content">
+        <div class="clearall"/>
 % $m->call_next;
       </div>
     <& footer.mhtml &>

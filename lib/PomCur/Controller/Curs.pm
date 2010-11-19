@@ -85,6 +85,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $root_path = $c->uri_for("/$controller_name/$curs_key");
   $st->{curs_root_path} = $root_path;
 
+  $st->{page_description_id} = 'curs-page-description';
+
   my $config = $c->config();
 
   $st->{annotation_types} = $config->{annotation_types};
@@ -197,6 +199,8 @@ sub home : Chained('top') PathPart('') Args(0)
 
   $c->stash->{title} = 'Home';
   $c->stash->{template} = 'curs/home.mhtml';
+
+  $c->stash->{show_title} = 0;
 
   $c->stash->{current_component} = 'home';
 }
