@@ -753,7 +753,8 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $term_ontid = $annotation_data->{term_ontid};
 
   my $module_display_name = $annotation_config->{display_name};
-  $st->{title} =
+
+  $st->{title} = "Annotating $gene_display_name";
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/${annotation_type_name}_with_gene.mhtml";
