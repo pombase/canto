@@ -753,8 +753,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $term_ontid = $annotation_data->{term_ontid};
 
   my $module_display_name = $annotation_config->{display_name};
-  $st->{title} = "Choose interacting gene for annotating $gene_display_name "
-    . "with $term_ontid using $evidence_code";
+  $st->{title} =
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/${annotation_type_name}_with_gene.mhtml";
@@ -762,6 +761,8 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
 
   $st->{annotation_helper} = $annotation_helper;
+  $st->{term_ontid} = $term_ontid;
+  $st->{evidence_code} = $evidence_code;
 
   my @genes = ();
 
