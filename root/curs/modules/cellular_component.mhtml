@@ -63,7 +63,8 @@ to, or broader than, the term you require.
   <div id="ferret-term-entry">
     <div class="inline-help">
       <div>
-Search for the process terms to annotate to <% $gene_display_name %>,
+Search for the <% $current_component_display_name %>
+terms to annotate to <% $gene_display_name %>,
 from PMID:<% $pub->pubmedid() %>.
       </div>
       <div>
