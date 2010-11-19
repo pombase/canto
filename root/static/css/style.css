@@ -543,7 +543,8 @@ div.clearall {
 
 .ferret-help-text {
   margin-left: 0%;
-  background-color: #efe;
+  background-color: #f2f2ff;
+  border: 1px solid #ddd;
   font-size: 85%;
 }
 
