@@ -51,6 +51,13 @@ is the term  (or broader than) the term you require.
       </tr>
     </table>
 
+  <div id="ferret-accept-term-details" style="display: none">
+    <div>
+      Annotate with this term
+    </div>
+    <input id="ferret-accept-term-proceed" name="ferret-submit"
+           type="submit" value="Proceed" class="button"/>
+  </div>
   </div>
 
   <div id="ferret-term-entry">
@@ -102,14 +109,6 @@ precisely, or remove suggestions.
   <input id="ferret-ignore-children" name="ferret-cancel-children"
          type="submit" value="Ignore suggestions" class="button"/>
 
-  </div>
-
-  <div id="ferret-accept-term-details" style="display: none">
-    <div>
-      Annotate with this term
-    </div>
-    <input id="ferret-accept-term-proceed" name="ferret-submit"
-           type="submit" value="Proceed" class="button"/>
   </div>
 </form>
 </div>

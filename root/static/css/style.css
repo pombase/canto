@@ -511,9 +511,14 @@ div.clearall {
   border: 1px solid #ddd;
 }
 
-#ferret-children-details, #ferret-accept-term-details {
+#ferret-children-details {
   width: 90%;
   min-height: 10em;
+}
+
+#ferret-accept-term-details {
+  width: 90%;
+  margin: 5px;
 }
 
 #ferret-term-children ul {
