@@ -31,8 +31,10 @@ Step 1: GO annotations are made to the term definition. Similar GO terms
 often have different meanings. Please read the definition and ensure it
 is the term  (or broader than) the term you require.
     </div>
-    Term currently selected for annotation:
     <table>
+      <caption>
+Term currently selected for annotation:
+      </caption>
       <tr>
         <td class="title">ID</td>
         <td class="term-id ferret-term-id-display"></td>
