@@ -669,11 +669,12 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my $term_ontid = $annotation_data->{term_ontid};
 
   my $module_display_name = $annotation_config->{display_name};
-  $st->{title} =
-    "Choose evidence for annotating $gene_display_name with $term_ontid";
+  $st->{title} = "Annotating $gene_display_name";
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/${annotation_type_name}_evidence.mhtml";
+
+  $st->{term_ontid} = $term_ontid;
 
   my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
 
