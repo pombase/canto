@@ -4,7 +4,17 @@ use strict;
 use warnings;
 use base 'Catalyst::View::Mason';
 
+use File::Spec;
+use PomCur::Config;
+
+my $app = PomCur::Config::get_application_name();
+
 __PACKAGE__->config(use_match => 0);
+__PACKAGE__->config->{data_dir} =
+  File::Spec->catdir(
+    File::Spec->tmpdir,
+    sprintf('%s_%d_mason_data_dir', $app, $<)
+  );
 
 =head1 NAME
 
