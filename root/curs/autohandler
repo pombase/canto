@@ -2,7 +2,7 @@
 $state
 $curs_root_path
 $current_gene => undef
-$gene_long_display_name => undef
+$gene_display_name => undef
 $pub
 </%args>
 

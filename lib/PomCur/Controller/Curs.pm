@@ -114,8 +114,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     my $current_gene = $schema->find_with_type('Gene', $current_gene_id);
     $st->{current_gene} = $current_gene;
 
-    my $gene_long_display_name = $current_gene->long_display_name();
-    $st->{gene_long_display_name} = $gene_long_display_name;
+    my $gene_display_name = $current_gene->display_name();
+    $st->{gene_display_name} = $gene_display_name;
   }
 
   $st->{gene_count} = _get_gene_resultset($schema)->count();
@@ -561,7 +561,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   my $schema = $st->{schema};
 
   my $gene = $schema->find_with_type('Gene', $gene_id);
-  my $gene_display_name = $gene->long_display_name();
+  my $gene_display_name = $gene->display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
@@ -661,7 +661,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
-  my $gene_display_name = $gene->long_display_name();
+  my $gene_display_name = $gene->display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
@@ -743,7 +743,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
-  my $gene_display_name = $gene->long_display_name();
+  my $gene_display_name = $gene->display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
@@ -767,7 +767,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $gene_rs = $schema->resultset('Gene');
 
   while (defined (my $gene = $gene_rs->next())) {
-    push @genes, [$gene->primary_identifier(), $gene->long_display_name()];
+    push @genes, [$gene->primary_identifier(), $gene->display_name()];
   }
 
   unshift @genes, [ '', 'Choose a gene ...' ];
