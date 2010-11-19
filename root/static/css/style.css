@@ -468,9 +468,9 @@ div.clearall {
 
 #ferret-term-details {
   width: 90%;
-  font-size: 90%;
   margin-top: 10px;
   margin-bottom: 25px;
+  border: 1px solid #ddd;
 }
 
 #ferret-term-details table {
@@ -507,10 +507,13 @@ div.clearall {
   display: block;
 }
 
+#ferret-children-details {
+  border: 1px solid #ddd;
+}
+
 #ferret-children-details, #ferret-accept-term-details {
   width: 90%;
   min-height: 10em;
-  font-size: 80%;
 }
 
 #ferret-term-children ul {
@@ -536,7 +539,6 @@ div.clearall {
 }
 
 .inline-help {
-  font-size: 95%;
   color: #010;
   margin: 0px 0px 10px 0px;
 }
@@ -544,8 +546,7 @@ div.clearall {
 .ferret-help-text {
   margin-left: 0%;
   background-color: #f2f2ff;
-  border: 1px solid #ddd;
-  font-size: 85%;
+  border-bottom: 1px solid #ddd;
 }
 
 .evidence-select div, .with-gene-select div {

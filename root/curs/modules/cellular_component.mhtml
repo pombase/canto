@@ -51,13 +51,6 @@ is the term  (or broader than) the term you require.
       </tr>
     </table>
 
-    <div class="inline-help ferret-help-text ferret-help-step-2">
-Step 2: GO annotations are always made to the most specific term possible.
-Select any of the children of
-<span class="term-id ferret-term-id-display"></span> below if it (or one of its
-possible descendants) describes the experiment you are curating more
-precisely, or remove suggestions.
-    </div>
   </div>
 
   <div id="ferret-term-entry">
@@ -80,6 +73,14 @@ terms will be suggested before you approve your selection.
   </div>
 
   <div id="ferret-children-details" style="display: none">
+    <div class="inline-help ferret-help-text ferret-help-step-2">
+Step 2: GO annotations are always made to the most specific term possible.
+Select any of the children of
+<span class="term-id ferret-term-id-display"></span> below if it (or one of its
+possible descendants) describes the experiment you are curating more
+precisely, or remove suggestions.
+    </div>
+
 
   <div id="ferret-term-children" style="display: none">
     <div id="ferret-term-children-list">
@@ -110,6 +111,5 @@ terms will be suggested before you approve your selection.
     <input id="ferret-accept-term-proceed" name="ferret-submit"
            type="submit" value="Proceed" class="button"/>
   </div>
-
 </form>
 </div>
