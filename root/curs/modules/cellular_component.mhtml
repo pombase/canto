@@ -106,7 +106,7 @@ precisely, or remove suggestions.
 
   <div id="ferret-accept-term-details" style="display: none">
     <div>
-      Annotatate with this term
+      Annotate with this term
     </div>
     <input id="ferret-accept-term-proceed" name="ferret-submit"
            type="submit" value="Proceed" class="button"/>
