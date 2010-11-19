@@ -521,6 +521,10 @@ div.clearall {
   margin: 5px;
 }
 
+#ferret-ignore-children {
+  margin: 5px;
+}
+
 #ferret-term-children ul {
   padding: 0px 0px 0px 2em;
 }
