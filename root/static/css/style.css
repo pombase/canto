@@ -572,6 +572,10 @@ div.clearall {
   margin: 10px 0px 0px 30px;
 }
 
+.with-gene-select form, .evidence-select form {
+  margin-top: 10px;
+}
+
 .placeholder {
   color: #999;
 }
