@@ -26,11 +26,9 @@ $pub
   <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
 
   <div id="ferret-term-details" style="display: none">
-    <div class="inline-help ferret-help-text ferret-help-step-1">
-Step 1: GO annotations are made to the term definition because similar 
-term names can have different biological meanings.  Please read the 
-definition of the currently selected term and ensure it is equivalent 
-to, or broader than, the term you require.
+    <div id="ferret-help-step-1" class="inline-help ferret-help-text">
+Step 1: Please read the definition of the currently selected term and ensure
+it is equivalent to, or broader than, the term you require.
     </div>
     <table>
       <tr>
@@ -81,26 +79,28 @@ terms will be suggested before you approve your selection.
   </div>
 
   <div id="ferret-children-details" style="display: none">
-    <div class="inline-help ferret-help-text ferret-help-step-2">
-Step 2: GO annotations are always made to the most specific term possible.
-Select any of the children of
-<span class="term-id ferret-term-id-display"></span> below if it (or one of its
-possible descendants) describes the experiment you are curating more
-precisely, or remove suggestions.
-    </div>
-
-
   <div id="ferret-term-children" style="display: none">
+    <div id="ferret-help-step-2" class="inline-help ferret-help-text">
+Step 2: Select a child of <span class="term-id ferret-term-id-display"></span>
+below if it (or one of its possible descendants) describes the experiment you
+are curating more precisely.
+    </div>
     <div id="ferret-term-children-list">
     </div>
   </div>
 
   <div id="ferret-leaf" style="display: none">
-    There are no more specific terms.
+    <div id="ferret-help-step-2-suggest" class="inline-help ferret-help-text">
+Step 2: The term you have currently selected has no more specific children. If
+this term is not specific enough to describe the experiment you are
+annotating suggest a new child term for 
+<span class="term-id ferret-term-id-display"></span>.
+    </div>
   <div id="ferret-suggest-link">
     <ul>
       <li>
-        <a href="#">Suggest a new child term for <span class="ferret-term-id-display"></span>
+        <a href="#">Suggest a new child term
+        for <span class="ferret-term-id-display"></span> ...
 </a>
       </li>
     </ul>
