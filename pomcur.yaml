@@ -140,7 +140,7 @@ class_info:
         editable: 1
       - name: type
         source: type_id
-        values_constraint: 'cv->name = "PomBase publication type"'
+        values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication type")'
         referenced_class: Cvterm
         editable: 1
   curs:

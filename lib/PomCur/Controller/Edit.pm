@@ -64,25 +64,32 @@ sub _get_field_values
 
   my $constraint_path = undef;
   my $constraint_value = undef;
+  my $where_constraint = undef;
 
   # constrain the possible values shown in the list by using the
   # values_constraint from the config file
   if (defined $values_constraint) {
-    my $pattern = qr|^\s*(.*?)\s*=\s*"(.*)"\s*$|;
-    if ($values_constraint =~ /$pattern/) {
-      $constraint_path = PomCur::DBLayer::Path->new(path_string => $1);
-      $constraint_value = $2;
+    if ($values_constraint =~ /where (.*)/) {
+      $where_constraint = $1;
     } else {
-      die "values_constraint '$values_constraint' doesn't match pattern: $pattern\n";
+      my $pattern = qr|^\s*(.*?)\s*=\s*"(.*)"\s*$|;
+      if ($values_constraint =~ /$pattern/) {
+        $constraint_path = PomCur::DBLayer::Path->new(path_string => $1);
+        $constraint_value = $2;
+      } else {
+        die "values_constraint '$values_constraint' doesn't match " +
+          "pattern: $pattern\n";
+      }
     }
   }
 
-  my $rs = $c->schema()->resultset($referenced_class_name);
+  my $rs = $c->schema()->resultset($referenced_class_name)
+    ->search(\[$where_constraint]);
 
   my @res = ();
 
   while (defined (my $row = $rs->next())) {
-    if (defined $values_constraint) {
+    if (defined $constraint_path) {
       my $this_constrain_value = $constraint_path->resolve($row);
       next unless $constraint_value eq $this_constrain_value;
     }
