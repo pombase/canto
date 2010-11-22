@@ -3,7 +3,7 @@ $object
 </%args>
 
 <&| /view/object/object_top.mhtml, object => $object &>
-% if ($c->user_exists()) {
+% if ($c->user_exists() && defined $object->community_curator()) {
 
 <div class="long-action-link">
   <a href="<% $c->uri_for('/create/curs',
