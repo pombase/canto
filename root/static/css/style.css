@@ -520,11 +520,13 @@ div.clearall {
 
 #ferret-children-details {
   border: 1px solid #ddd;
-}
-
-#ferret-children-details {
   width: 90%;
   min-height: 10em;
+}
+
+#ferret-children-details, #ferret-term-details {
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 
 #ferret-accept-term-details {
@@ -568,6 +570,10 @@ div.clearall {
   background-color: #dbf0f7;
   border-bottom: 1px solid #ddd;
   padding: 5px;
+  -moz-border-top-right-radius: 4px;
+  border-top-right-radius: 4px;
+  -moz-border-top-left-radius: 4px;
+  border-top-left-radius: 4px;
 }
 
 .evidence-select div, .with-gene-select div {
