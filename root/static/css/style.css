@@ -475,7 +475,7 @@ div.clearall {
 
 #ferret-term-details table {
   table-layout: fixed;
-  border-collapse: separate;
+  border-collapse: collapse;
   margin: 15px;
 }
 
@@ -485,6 +485,7 @@ div.clearall {
 
 #ferret-term-details td {
   vertical-align: top;
+  padding: 2px 5px 2px 5px;
 }
 
 #ferret-term-details td.title {
