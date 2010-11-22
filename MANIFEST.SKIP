@@ -1,0 +1,10 @@
+^Makefile$
+^local/*
+^.git
+~$
+^blib/
+.bak$
+.old$
+\.tar\.gz$
+\.tar$
+\#$

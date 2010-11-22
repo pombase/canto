@@ -12,3 +12,6 @@ pomcur_test.yaml
 local
 nytprof*
 inc
+PomCur-*.tar*
+*.bak
+MANIFEST
