@@ -2,6 +2,7 @@
 $annotation_helper
 $current_component_display_name
 $current_component
+$broad_term_suggestions
 $gene_display_name
 $pub
 </%args>
@@ -67,7 +68,7 @@ from PMID:<% $pub->pubmedid() %>.
     <div class="ferret-term-entry-inside">
     <div>
 If you do not find the term you are looking for with your initial search,
-begin with a broad term (cell cycle, transport). More specific terms will be
+begin with a broad term (<% $broad_term_suggestions %>). More specific terms will be
 suggested before make your final selection allowing you to refine your search
 iteratively.
     </div>

@@ -224,6 +224,8 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
+    broad_term_suggestions: |
+      transporter, transferase activity
   - name: biological_process
     abbreviation: P
     display_name: 'GO biological process'
@@ -236,6 +238,8 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
+    broad_term_suggestions: |
+       cell cycle, transport
   - name: cellular_component
     abbreviation: C
     display_name: 'GO cellular component or complex'
@@ -248,6 +252,8 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
+    broad_term_suggestions: |
+      rough endoplasmic reticulum, nucleus, ribosome
   - name: phenotype
     display_name: Phenotypes
     class: 'PomCur::CurModules::PhenotypeModule'
