@@ -151,6 +151,10 @@ div#footer .sponsor {
   color: #CC0033;
 }
 
+#breadcrumb-previous-button {
+  margin-right: 6px;
+}
+
 #breadcrumbs {
   padding: 10px;
   margin: 0px;
@@ -166,11 +170,20 @@ div#footer .sponsor {
   float: left;
 }
 
-#breadcrumbs ul li {
-  list-style-type: none;
+#breadcrumbs ul li, #breadcrumbs button {
   display: inline;
   float: left;
-  padding-left: 2px;
+}
+
+#breadcrumbs ul li, #breadcrumbs .hash-term {
+  padding-left: 11px;
+  background-image: url(../images/right_empty_triangle.png);
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+
+#breadcrumbs ul li {
+  list-style-type: none;
 }
 #breadcrumbs .hash-term {
   margin-left: 10px;
