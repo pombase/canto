@@ -255,7 +255,7 @@ annotation_type_list:
     help_text: |
       A biological process is series of events accomplished by one or more
       ordered assemblies of molecular functions. Examples of broad biological
-      process terms are cellular cycle or signal transduction. Examples of
+      process terms are cell cycle or signal transduction. Examples of
       more specific terms are pyrimidine metabolic process or alpha-glucoside
       transport. It can be difficult to distinguish between a biological
       process and a molecular function, but the general rule is that a process
