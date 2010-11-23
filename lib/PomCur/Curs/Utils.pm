@@ -113,14 +113,20 @@ sub get_annotation_table
 
       my $term_name = $result->[0]->{name};
       my $evidence_code = $data->{evidence_code};
-      my $with_gene = $data->{with_gene};
+      my $with_gene_identifier = $data->{with_gene};
+
+      my $with_gene = $schema->find_with_type('Gene',
+                                              { primary_identifier =>
+                                                  $with_gene_identifier });
+
+      my $with_gene_display_name = $with_gene->display_name();
       my $evidence_type_name = $evidence_types{$evidence_code}->{name};
       my $needs_with = $evidence_types{$evidence_code}->{with_gene};
 
       (my $short_date = $annotation->creation_date()) =~ s/-//g;
 
       my $completed = defined $evidence_code &&
-          (!$needs_with || defined $with_gene);
+          (!$needs_with || defined $with_gene_identifier);
 
       $completed_count++ if $completed;
 
@@ -145,7 +151,8 @@ sub get_annotation_table
         creation_date_short => $short_date,
         term_suggestion => $annotation->data()->{term_suggestion},
         needs_with => $needs_with,
-        with_or_from => $with_gene,
+        with_or_from_identifier => $with_gene_identifier,
+        with_or_from_display_name => $with_gene_display_name,
         taxonid => $gene->organism()->taxonid(),
         completed => $completed,
       };

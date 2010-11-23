@@ -70,8 +70,8 @@ $curs_root_path
     </td>
     <td>
 % if ($row->{needs_with}) {
-%   if (defined $row->{with_or_from}) {
-      <% $row->{with_or_from} %>
+%   if (defined $row->{with_or_from_display_name}) {
+      <% $row->{with_or_from_display_name} %>
 %   } else {
       <a href="<% $curs_root_path . '/annotation/with_gene/' . $row->{annotation_id} %>">Set with ...</a>
 %   }
