@@ -262,7 +262,7 @@ annotation_type_list:
       must have more than one distinct steps.
   - name: cellular_component
     abbreviation: C
-    display_name: 'GO cellular component or complex'
+    display_name: 'GO cellular component'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
