@@ -12,7 +12,7 @@ body
   background-color:#ffffff; 
   color: #302226;
   font-size: 12pt;
-  font-family: Verdant, helvetica, "trebuchet MS", arial, sans-serif;
+  font-family: helvetica, "trebuchet MS", arial, sans-serif;
 }
 
 a:link { color:#36b; text-decoration:none; cursor:pointer; }
