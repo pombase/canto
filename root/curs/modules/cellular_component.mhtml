@@ -62,16 +62,16 @@ it is equivalent to, or broader than, the term you require.
 
   <div id="ferret-term-entry">
     <div class="inline-help ferret-help-text">
-Search for the <% $current_component_display_name %>
-terms to annotate to <% $gene_display_name %>,
+Search for <% $current_component_display_name %>
+terms to annotate to <% $gene_display_name %>
 from PMID:<% $pub->pubmedid() %>.
     </div>
     <div class="ferret-term-entry-inside">
     <div>
 If you do not find the term you are looking for with your initial search,
-begin with a broad term (<% $broad_term_suggestions %>). More specific terms will be
-suggested before make your final selection allowing you to refine your search
-iteratively.
+begin with a broad term (<% $broad_term_suggestions %>).  More specific terms
+will be suggested allowing you to refine your search iteratively before making
+your final selection.
 <a id="ferret-term-entry-extra-help" class="pomcur-toggle-button" href='#'>more ...</a>
     </div>
     <div id="ferret-term-entry-extra-help-target" class="ferret-more-help"
