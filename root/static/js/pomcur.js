@@ -351,7 +351,6 @@ $(document).ready(function() {
     $('.pomcur-toggle-button').each(function (index, element) {
       var this_id = $(element).attr('id');
       var target = $('#' + this_id + '-target');
-      target.hide();
       $(element).click(
         function () {
           target.toggle()

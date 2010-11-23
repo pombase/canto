@@ -74,7 +74,8 @@ suggested before make your final selection allowing you to refine your search
 iteratively.
 <a id="ferret-term-entry-extra-help" class="pomcur-toggle-button" href='#'>more ...</a>
     </div>
-    <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
+    <div id="ferret-term-entry-extra-help-target" class="ferret-more-help"
+         style="display: none">
       <% $annotation_help_text %>
     </div>
     <input id="ferret-term-input" name="ferret-term-entry"
