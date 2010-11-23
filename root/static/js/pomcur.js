@@ -33,9 +33,11 @@ var ferret_choose = {
     $('#ferret-term-definition').text(term.definition);
 
     if (term.comment) {
-      $('#ferret-term-comment').html('Comment: <div class="term-comment">' +
+      $('#ferret-term-comment-row').show();
+      $('#ferret-term-comment').html('<div class="term-comment">' +
                                      term.comment + '</div>');
     } else {
+      $('#ferret-term-comment-row').hide();
       $('#ferret-term-comment').html('');
     }
 
