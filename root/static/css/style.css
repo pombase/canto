@@ -522,6 +522,7 @@ div.clearall {
   border: 1px solid #ddd;
   width: 90%;
   min-height: 10em;
+  font-size: 90%;
 }
 
 #ferret-children-details, #ferret-term-details {
