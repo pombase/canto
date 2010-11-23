@@ -115,13 +115,18 @@ sub get_annotation_table
       my $evidence_code = $data->{evidence_code};
       my $with_gene_identifier = $data->{with_gene};
 
-      my $with_gene = $schema->find_with_type('Gene',
-                                              { primary_identifier =>
-                                                  $with_gene_identifier });
-
-      my $with_gene_display_name = $with_gene->display_name();
       my $evidence_type_name = $evidence_types{$evidence_code}->{name};
       my $needs_with = $evidence_types{$evidence_code}->{with_gene};
+
+      my $with_gene;
+      my $with_gene_display_name;
+
+      if ($with_gene_identifier) {
+        $with_gene = $schema->find_with_type('Gene',
+                                             { primary_identifier =>
+                                                 $with_gene_identifier });
+        $with_gene_display_name = $with_gene->display_name()
+      }
 
       (my $short_date = $annotation->creation_date()) =~ s/-//g;
 
