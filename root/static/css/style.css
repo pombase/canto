@@ -163,19 +163,20 @@ div#footer .sponsor {
 #breadcrumbs ul {
   margin: 0; padding: 0;
   display: inline;
+  float: left;
 }
-#breadcrumbs ul li:first-child {
-  display: inline;
-}
+
 #breadcrumbs ul li {
   list-style-type: none;
+  display: inline;
+  float: left;
+  padding-left: 2px;
 }
 #breadcrumbs .hash-term {
   margin-left: 10px;
 }
 #breadcrumbs ul li a {
   text-decoration: none;
-  padding: 5px;
 }
 #breadcrumbs ul li a:hover, . ul li .current {
   background-color:#0b75b2;

@@ -92,18 +92,14 @@ var ferret_choose = {
   },
 
   add_to_breadcrumbs : function(term) {
-    var dest = $('#breadcrumbs > div.hash-term');
-    if (dest.length == 0) {
-      dest = $('#breadcrumbs');
-    } else {
-      // find the most nested div
-      while (true) {
-        var children = dest.children('div');
-        if (children.length > 0) {
-          dest = children.first();
-        } else {
-          break;
-        }
+    var dest = $('#breadcrumbs-search');
+    // find the most nested div
+    while (true) {
+      var children = dest.children('div');
+      if (children.length > 0) {
+        dest = children.first();
+      } else {
+        break;
       }
     }
     var div = $('<div class="hash-term"><a title="' +
@@ -118,7 +114,11 @@ var ferret_choose = {
   },
 
   truncate_history : function(term_id) {
-    $('#breadcrumbs div.hash-term').remove();
+    $('#breadcrumbs-search').remove();
+    if (ferret_choose.term_history.length > 0) {
+      var html = '<li id="breadcrumbs-search">Search</li>';
+      $('#breadcrumbs ul').append(html);
+    }
     for (var i = 0; i < ferret_choose.term_history.length; i++) {
       var this_term = ferret_choose.term_history[i];
       if (this_term.id == term_id) {
