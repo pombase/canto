@@ -148,6 +148,7 @@ div#footer .sponsor {
   display: inline;
   float: right;
   padding: 7px;
+  color: #c00;
 }
 
 #breadcrumbs {
@@ -426,9 +427,12 @@ div.clearall {
   margin: 0px 2px 0px 2px;
 }
 
-.pub-title {
+.pub-title, #curs-page-description {
   float: right;
   width: 45%;
+}
+
+.pub-title {
   font-size: 70%;
   margin: 10px 5px 5px 5px;
 }
