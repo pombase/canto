@@ -473,11 +473,18 @@ div.clearall {
   margin-top: 10px;
 }
 
+#ferret-term-entry .ferret-term-entry-inside {
+  margin: 10px;
+}
+
+#ferret-term-entry .ferret-term-entry-inside div {
+  margin-bottom: 5px;
+}
+
 #ferret-term-details {
   width: 90%;
   margin-top: 10px;
   margin-bottom: 25px;
-  border: 1px solid #ddd;
 }
 
 #ferret-term-details table {
@@ -518,14 +525,17 @@ div.clearall {
   display: block;
 }
 
-#ferret-children-details {
+#ferret-term-details, #ferret-term-entry, #ferret-children-details {
   border: 1px solid #ddd;
+}
+
+#ferret-children-details {
   width: 90%;
   min-height: 10em;
   font-size: 90%;
 }
 
-#ferret-children-details, #ferret-term-details {
+#ferret-children-details, #ferret-term-details, #ferret-term-entry {
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
