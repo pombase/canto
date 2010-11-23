@@ -348,11 +348,16 @@ $(document).ready(function() {
       }
     });
 
-    $('#ferret-term-entry-extra-help a').click(
-      function () {
-        $('#ferret-term-entry-extra-help div').toggle()
-      });
-
+    $('.pomcur-toggle-button').each(function (index, element) {
+      var this_id = $(element).attr('id');
+      var target = $('#' + this_id + '-target');
+      target.hide();
+      $(element).click(
+        function () {
+          target.toggle()
+        }
+      );
+    });
   } else {
 
     $('#breadcrumb-previous-button').click(function () {

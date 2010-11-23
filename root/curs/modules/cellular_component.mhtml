@@ -72,12 +72,10 @@ If you do not find the term you are looking for with your initial search,
 begin with a broad term (<% $broad_term_suggestions %>). More specific terms will be
 suggested before make your final selection allowing you to refine your search
 iteratively.
+<a id="ferret-term-entry-extra-help" class="pomcur-toggle-button" href='#'>more ...</a>
     </div>
-    <div id="ferret-term-entry-extra-help">
-      <a href='#'>more ...</a>
-      <div style="display: none">
-        <% $annotation_help_text %>
-      </div>
+    <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
+      <% $annotation_help_text %>
     </div>
     <div>Search for <% $current_component_display_name %></div>
     <input id="ferret-term-input" name="ferret-term-entry"

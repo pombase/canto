@@ -181,6 +181,10 @@ div#footer .sponsor {
   background-color:#0b75b2;
 }
 
+a.pomcur-toggle-button {
+  margin-left: 5px;
+}
+
 .field-list {
   padding-bottom: 10px;
   margin: 10px 0px 5px 0px;
@@ -594,6 +598,11 @@ div.clearall {
   border-top-right-radius: 4px;
   -moz-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
+}
+
+.ferret-more-help {
+  margin: 5px;
+  font-size: 95%;
 }
 
 .evidence-select div, .with-gene-select div {
