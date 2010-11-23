@@ -572,6 +572,8 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   my $broad_term_suggestions = $annotation_config->{broad_term_suggestions};
   $broad_term_suggestions =~ s/\s+$//g;
   $st->{broad_term_suggestions} = $broad_term_suggestions;
+  my $annotation_help_text = $annotation_config->{help_text};
+  $st->{annotation_help_text} = $annotation_help_text;
   $st->{template} = "curs/modules/$annotation_type_name.mhtml";
 
   my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);

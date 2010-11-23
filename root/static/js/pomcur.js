@@ -348,6 +348,11 @@ $(document).ready(function() {
       }
     });
 
+    $('#ferret-term-entry-extra-help a').click(
+      function () {
+        $('#ferret-term-entry-extra-help div').toggle()
+      });
+
   } else {
 
     $('#breadcrumb-previous-button').click(function () {

@@ -226,6 +226,18 @@ annotation_type_list:
       - IPI
     broad_term_suggestions: |
       transporter, transferase activity
+    help_text: |
+      Molecular function describes activities, such as catalytic or binding
+      activities, that occur at the molecular level. GO molecular function
+      terms represent activities rather than the entities (molecules or
+      complexes) that perform the actions, and do not specify where or when,
+      or in what context, the action takes place. Molecular functions
+      generally correspond to activities that can be performed by individual
+      gene products, but some activities are performed by assembled complexes
+      of gene products. Examples of broad functional terms are catalytic
+      activity, transporter activity, or binding; examples of narrower
+      functional terms are adenylate cyclase activity or biotin transporter
+      activity
   - name: biological_process
     abbreviation: P
     display_name: 'GO biological process'
@@ -240,6 +252,14 @@ annotation_type_list:
       - IPI
     broad_term_suggestions: |
        cell cycle, transport
+    help_text: |
+      A biological process is series of events accomplished by one or more
+      ordered assemblies of molecular functions. Examples of broad biological
+      process terms are cellular cycle or signal transduction. Examples of
+      more specific terms are pyrimidine metabolic process or alpha-glucoside
+      transport. It can be difficult to distinguish between a biological
+      process and a molecular function, but the general rule is that a process
+      must have more than one distinct steps.
   - name: cellular_component
     abbreviation: C
     display_name: 'GO cellular component or complex'
@@ -254,19 +274,40 @@ annotation_type_list:
       - IPI
     broad_term_suggestions: |
       rough endoplasmic reticulum, nucleus, ribosome
+    help_text: |
+      A cellular component is a component of a cell, but with the proviso that
+      it is part of some larger object; this may be an anatomical structure
+      (e.g. rough endoplasmic reticulum or nucleus) or a complex (e.g.
+      ribosome, proteasome).
   - name: phenotype
     display_name: Phenotypes
     class: 'PomCur::CurModules::PhenotypeModule'
     disabled: 1
+    broad_term_suggestions: |
+      PLACEHOLDER
+    help_text: |
+      PLACEHOLDER
   - name: post_translational_modifications
     display_name: "Post translational modifications"
     disabled: 1
+    broad_term_suggestions: |
+      PLACEHOLDER
+    help_text: |
+      PLACEHOLDER
   - name: genetic_interactions
     display_name: "Genetic Interactions"
     disabled: 1
+    broad_term_suggestions: |
+      PLACEHOLDER
+    help_text: |
+      PLACEHOLDER
   - name: physical_interactions
     display_name: "Physical Interactions"
     disabled: 1
+    broad_term_suggestions: |
+      PLACEHOLDER
+    help_text: |
+      PLACEHOLDER
 
 messages:
   gene_upload:

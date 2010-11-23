@@ -477,8 +477,13 @@ div.clearall {
   margin: 10px;
 }
 
-#ferret-term-entry .ferret-term-entry-inside div {
-  margin-bottom: 5px;
+#ferret-term-entry .ferret-term-entry-inside > div {
+  margin-bottom: 8px;
+}
+
+#ferret-term-entry-extra-help div {
+  margin: 5px;
+  font-size: 95%;
 }
 
 #ferret-term-details {
