@@ -77,7 +77,6 @@ iteratively.
     <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
       <% $annotation_help_text %>
     </div>
-    <div>Search for <% $current_component_display_name %></div>
     <input id="ferret-term-input" name="ferret-term-entry"
            type="text" size="50"
            placeholder="start typing and suggestions will be made ..."
