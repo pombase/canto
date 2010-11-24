@@ -433,6 +433,10 @@ div.clearall {
   font-size: 95%;
 }
 
+.gene-list td:before {
+  content: "- ";
+}
+
 .gene-list .no-genes-message {
   font-size: 95%;
   margin: 10px;
