@@ -17,10 +17,9 @@ body
 
 a:link { text-decoration:none; cursor:pointer; }
 a:visited { color:#300; text-decoration:none }
-a:link:hover { color:#723; text-decoration:underline }
-a:visited:hover { color:#723; text-decoration:underline }
+a:link:hover { text-decoration:underline }
+a:visited:hover { color:#300; text-decoration:underline }
 a:link:active { color:#944; text-decoration:none }
-
 
 button, input[type=submit] {
   background-color: #c00;
