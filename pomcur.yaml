@@ -227,17 +227,17 @@ annotation_type_list:
     broad_term_suggestions: |
       transporter, transferase activity
     help_text: |
-      Molecular function describes activities, such as catalytic or binding
-      activities, that occur at the molecular level. GO molecular function
-      terms represent activities rather than the entities (molecules or
-      complexes) that perform the actions, and do not specify where or when,
-      or in what context, the action takes place. Molecular functions
-      generally correspond to activities that can be performed by individual
-      gene products, but some activities are performed by assembled complexes
-      of gene products. Examples of broad functional terms are catalytic
+      Molecular function describes activities, such as catalytic or
+      binding activities, that occur at the molecular level. GO
+      molecular function terms represent activities rather than the
+      entities (molecules or complexes) that perform the actions, and
+      do not specify where or when, or in what context, the action
+      takes place. Molecular functions generally correspond to
+      activities that can be performed by individual gene
+      products. Examples of broad functional terms are catalytic
       activity, transporter activity, or binding; examples of narrower
-      functional terms are adenylate cyclase activity or biotin transporter
-      activity
+      function terms are adenylate cyclase activity or biotin
+      transporter activity.
   - name: biological_process
     abbreviation: P
     display_name: 'GO biological process'
