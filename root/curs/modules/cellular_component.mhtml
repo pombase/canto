@@ -62,7 +62,7 @@ it is equivalent to, or broader than, the term you require.
 
   <div id="ferret-term-entry">
     <div class="inline-help ferret-help-text">
-Search for <% $current_component_display_name %>
+Search for <% $current_component_display_name %> term
     </div>
     <div class="ferret-term-entry-inside">
     <div>
