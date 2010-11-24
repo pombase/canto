@@ -63,7 +63,7 @@ it is equivalent to, or broader than, the term you require.
   <div id="ferret-term-entry">
     <div class="inline-help ferret-help-text">
 Search for <% $current_component_display_name %>
-terms to annotate to <% $gene_display_name %>
+term to annotate to <% $gene_display_name %>
 from PMID:<% $pub->pubmedid() %>.
     </div>
     <div class="ferret-term-entry-inside">
