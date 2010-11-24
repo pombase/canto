@@ -104,8 +104,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $pub_id = get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
 
-  $st->{title} = 'Curating genes from PMID:' . $st->{pub}->pubmedid();
-
   if ($state >= NEEDS_GENES) {
     $st->{submitter_email} = $submitter_email;
     $st->{submitter_name} = get_metadata($schema, 'submitter_name');
@@ -118,6 +116,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
     my $gene_display_name = $current_gene->display_name();
     $st->{gene_display_name} = $gene_display_name;
+
+    $st->{title} =
+      "Curating $gene_display_name from PMID:" . $st->{pub}->pubmedid();
   }
 
   $st->{gene_count} = _get_gene_resultset($schema)->count();
