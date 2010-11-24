@@ -221,11 +221,11 @@ var ferret_choose = {
   },
 
   hide_help : function() {
-    $('.ferret-help-text').hide();
+    $('.inline-help').hide();
   },
 
   show_help : function() {
-    $('.ferret-help-text').show();
+    $('.inline-help').show();
   },
 
   suggest_dialog : function() {

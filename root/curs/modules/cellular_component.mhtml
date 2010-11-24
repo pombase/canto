@@ -27,11 +27,12 @@ $pub
 
   <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
 
-  <div id="ferret-term-details" style="display: none">
-    <div id="ferret-help-step-1" class="inline-help ferret-help-text">
+  <div id="ferret-term-details" style="display: none" class="curs-box">
+    <div id="ferret-help-step-1" class="inline-help curs-box-title">
 Step 1: Please read the definition of the currently selected term and ensure
 it is equivalent to, or broader than, the term you require.
     </div>
+    <div class="curs-box-body">
     <table>
       <tr>
         <td class="title">ID</td>
@@ -59,12 +60,13 @@ it is equivalent to, or broader than, the term you require.
            type="submit" value="Proceed" class="button"/>
   </div>
   </div>
+  </div>
 
-  <div id="ferret-term-entry">
-    <div class="inline-help ferret-help-text">
+  <div id="ferret-term-entry" class="curs-box">
+    <div class="inline-help curs-box-title">
 Search for <% $current_component_display_name %> term
     </div>
-    <div class="ferret-term-entry-inside">
+    <div class="ferret-term-entry-inside curs-box-body">
     <div>
 If you do not find the term you are looking for with your initial search,
 begin with a broad term (<% $broad_term_suggestions %>).  More specific terms
@@ -83,25 +85,25 @@ your final selection.
   </div>
   </div>
 
-  <div id="ferret-children-details" style="display: none">
+  <div id="ferret-children-details" style="display: none" class="curs-box">
   <div id="ferret-term-children" style="display: none">
-    <div id="ferret-help-step-2" class="inline-help ferret-help-text">
+    <div id="ferret-help-step-2" class="inline-help curs-box-title">
 Step 2: Select a child of <span class="term-id ferret-term-id-display"></span>
 below if it (or one of its possible descendants) describes the experiment you
 are curating more precisely.
     </div>
-    <div id="ferret-term-children-list">
+    <div id="ferret-term-children-list" class="curs-box-body">
     </div>
   </div>
 
   <div id="ferret-leaf" style="display: none">
-    <div id="ferret-help-step-2-suggest" class="inline-help ferret-help-text">
+    <div id="ferret-help-step-2-suggest" class="inline-help curs-box-title">
 Step 2: The term you have currently selected has no more specific children. If
 this term is not specific enough to describe the experiment you are
 annotating suggest a new child term for 
 <span class="term-id ferret-term-id-display"></span>.
     </div>
-  <div id="ferret-suggest-link">
+  <div id="ferret-suggest-link" class="curs-box-body">
     <ul>
       <li>
         <a href="#">Suggest a new child term

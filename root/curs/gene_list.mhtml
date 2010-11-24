@@ -3,8 +3,9 @@ $title => 'Genes'
 $pub
 </%args>
 
-<div class="gene-list">
-  <div class="title">Genes for curation</div>
+<div class="gene-list curs-box">
+  <div class="curs-box-title">Genes for curation</div>
+  <div class="curs-box-body">
 % if (@gene_hashes) {
   <table>
 %   for my $gene (@gene_hashes) {
@@ -34,6 +35,7 @@ $pub
 
   <div class="view-edit">
     <a href="<% $edit_path %>">View or edit ...</a>
+  </div>
   </div>
 </div>
 
