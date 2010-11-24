@@ -106,7 +106,7 @@ annotating suggest a new child term for
       <li>
         <a href="#">Suggest a new child term
         for <span class="ferret-term-id-display"></span> ...
-</a>
+        </a>
       </li>
     </ul>
   </div>
