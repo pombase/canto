@@ -104,6 +104,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $pub_id = get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
 
+  $st->{title} = 'Curating genes from PMID:' . $st->{pub}->pubmedid();
+
   if ($state >= NEEDS_GENES) {
     $st->{submitter_email} = $submitter_email;
     $st->{submitter_name} = get_metadata($schema, 'submitter_name');
@@ -197,10 +199,8 @@ sub home : Chained('top') PathPart('') Args(0)
 {
   my ($self, $c) = @_;
 
-  $c->stash->{title} = 'Home';
+  # don't set stash title - use default
   $c->stash->{template} = 'curs/home.mhtml';
-
-  $c->stash->{show_title} = 0;
 
   $c->stash->{current_component} = 'home';
 }
@@ -566,7 +566,8 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   my $module_display_name = $annotation_config->{display_name};
-  $st->{title} = "Annotating $gene_display_name";
+
+  # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
   my $broad_term_suggestions = $annotation_config->{broad_term_suggestions};
