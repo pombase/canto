@@ -4,7 +4,7 @@ $pub
 </%args>
 
 <div class="gene-list">
-  <div class="title">Genes for PMID:<% $pub->pubmedid() %></div>
+  <div class="title">Genes for curation</div>
 % if (@gene_hashes) {
   <table>
 %   for my $gene (@gene_hashes) {

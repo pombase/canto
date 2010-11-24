@@ -142,13 +142,16 @@ div#footer .sponsor {
   clear: both;
 }
 
+#curs-page-description, .gene-list .current-gene {
+  color: #CC0033;
+}
+
 #curs-page-description {
   font-size: 110%;
   font-weight: bold;
   display: inline;
   float: right;
   padding: 7px;
-  color: #CC0033;
 }
 
 #breadcrumb-previous-button {
@@ -427,6 +430,7 @@ div.clearall {
 }
 
 .gene-list table {
+  font-size: 
   border-width: 0px;
   margin: 4px;
 }
