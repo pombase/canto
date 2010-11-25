@@ -99,12 +99,12 @@ terms are: <% $specific_term_examples %>). Gene
 products may be annotated with multiple 
 <% $current_component_short_display_name %> terms.
         </div>
-      <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
-        <% $annotation_help_text %>
-      </div>
-      <input id="ferret-term-input" name="ferret-term-entry"
-             type="text" size="50" disabled="true"
-             placeholder="start typing and suggestions will be made ..." />
+        <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
+          <% $annotation_help_text %>
+        </div>
+        <input id="ferret-term-input" name="ferret-term-entry"
+               type="text" size="50" disabled="true"
+               placeholder="start typing and suggestions will be made ..." />
       </div>
     </div>
 
