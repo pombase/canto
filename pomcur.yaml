@@ -280,7 +280,7 @@ annotation_type_list:
     specific_term_examples: |
       ADD ME
     help_text: |
-      A cellular component is a component of a cell, but with the proviso that
+      A cellular component is a component of a cell, with the proviso that
       it is part of some larger object; this may be an anatomical structure
       (e.g. rough endoplasmic reticulum or nucleus) or a complex (e.g.
       ribosome, proteasome).
