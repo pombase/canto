@@ -2,6 +2,7 @@
 $annotation_helper
 $current_component_display_name
 $current_component_short_display_name
+$current_component_very_short_display_name
 $current_component
 $broad_term_suggestions
 $specific_term_examples
@@ -27,9 +28,9 @@ Definition: <textarea name="ferret-suggest-definition" cols="60" rows="10"> </te
   <hr/>
   <div class="ferret-help-text">
 Please provide a suggested definition for your new term.
-The pattern for the formal (Aristotelian) definition is "An A is a B 
-that C." Here A stands for the new term, B stands for the parent term, 
-and C, stands for the characteristics that differentiate the species (A) 
+The pattern for the formal (Aristotelian) definition is "An A is a B
+that C." Here A stands for the new term, B stands for the parent term,
+and C, stands for the characteristics that differentiate the species (A)
 from other members of the group (B).
   </div>
 </div>
@@ -52,7 +53,7 @@ it is equivalent to, or broader than, the term you require.
           </tr>
           <tr>
             <td class="title">Term name</td>
-            <td id="ferret-term-name" class="term-name"></td>
+            <td class="term-name ferret-term-name"></td>
           </tr>
           <tr>
             <td class="title">Definition</td>
@@ -88,7 +89,7 @@ Search for <% $current_component_display_name %> term
         </div>
         <div>
 Start typing a <% $current_component_short_display_name %> in the search box.
-If you do not find the term you are looking for with your initial 
+If you do not find the term you are looking for with your initial
 search, begin with a broad term (<% $broad_term_suggestions %>).
           <a id="ferret-term-entry-extra-help" class="pomcur-toggle-button" href='#'>more ...</a>
         </div>
@@ -96,7 +97,7 @@ search, begin with a broad term (<% $broad_term_suggestions %>).
 More specific terms will be suggested allowing you to refine your search
 iteratively before making your final selection (examples of more specific
 terms are: <% $specific_term_examples %>). Gene
-products may be annotated with multiple 
+products may be annotated with multiple
 <% $current_component_short_display_name %> terms.
         </div>
         <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
@@ -121,17 +122,17 @@ are curating more precisely.
 
       <div id="ferret-leaf" style="display: none">
         <div id="ferret-help-step-2-suggest" class="inline-help curs-box-title">
-Step 2: The term you have currently selected has no more specific children. If
-this term is not specific enough to describe the experiment you are
-annotating suggest a new child term for
-          <span class="term-id ferret-term-id-display"></span>.
+Step 2: The term "<span class='ferret-term-name'></span>" you
+have currently selected has no children. If this term is not specific enough
+to describe the experiment you are annotating suggest a new child term.
           <a id="ferret-help-step-2-suggest-help" class="pomcur-toggle-button" href='#'>more ...</a>
 
           <div id="ferret-help-step-2-suggest-help-target" class="ferret-more-help">
-You may need a new term if the process you are describing is not defined by
-existing terms in a way that will distinguish it from related processes. A
-child term by the parent term.  Often this will be a novel biological process
-which has not been previously described.
+You may need a new term if the biology you are describing is not defined
+by existing terms in a way that will distinguish it from related
+<% $current_component_very_short_display_name %> terms. Sometimes this will be
+a novel <% $current_component_short_display_name %> which has not been
+previously described, and so is not yet included in the ontology.
           </div>
         </div>
         <div id="ferret-suggest-link" class="curs-box-body">

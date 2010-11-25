@@ -29,7 +29,7 @@ var ferret_choose = {
 
     $('#ferret').data('current-term', term);
 
-    $('#ferret-term-name').text(term.name);
+    $('.ferret-term-name').text(term.name);
     $('#ferret-term-definition').text(term.definition);
 
     if (term.comment) {
