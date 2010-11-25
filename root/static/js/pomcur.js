@@ -304,6 +304,10 @@ $(document).ready(function() {
         .appendTo( ul );
     };
 
+    $('#ferret-test-do-search').click(function () {
+      ferret_choose.term_selected($('#ferret-term-input').val());
+    });
+
     ferret_input.keypress(function(event) {
       if (event.keyCode == '13') {
         event.preventDefault();

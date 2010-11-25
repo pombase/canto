@@ -38,6 +38,10 @@ sub end : Private
 
   my $st = $c->stash();
 
+  if (exists $c->request()->parameters()->{testmode}) {
+    $c->session()->{testmode} = $c->request()->parameters()->{testmode};
+  }
+
   if (scalar @{ $c->error }) {
     my @pomcur_errors =
       map {
