@@ -232,10 +232,8 @@ annotation_type_list:
       terms represent activities that perform the actions, rather than the 
       entities (molecules or complexes).
     more_help_text: |
-      Molecular function do not specify where or when, or in what
-      context, the action takes place.  Molecular functions generally
-      correspond to activities that can be performed by individual
-      gene products.
+      Molecular functions generally correspond to activities that can
+      be performed by individual gene products.
   - name: biological_process
     abbreviation: P
     display_name: 'GO biological process'
