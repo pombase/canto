@@ -230,9 +230,9 @@ annotation_type_list:
     specific_term_examples: |
       adenylate cyclase activity or biotin transporter activity
     help_text: |
-      Molecular function describes activities, such as catalytic or binding 
-      activities, that occur at the molecular level. GO molecular function 
-      terms represent activities that perform the actions, rather than the 
+      Molecular function describes activities, such as catalytic or binding
+      activities, that occur at the molecular level. GO molecular function
+      terms represent activities that perform the actions, rather than the
       entities (molecules or complexes).
     more_help_text: |
       Molecular functions generally correspond to activities that can
@@ -255,12 +255,12 @@ annotation_type_list:
     specific_term_examples: |
       pyrimidine metabolic process or alpha-glucoside transport
     help_text: |
-      A biological process is series of events accomplished by one or more 
+      A biological process is series of events accomplished by one or more
       ordered assemblies of molecular functions.
     more_help_text: |
-      It can be difficult to distinguish between a biological process 
-      and a molecular function, but the general rule is that a process must 
-      have more than one distinct steps (eg. cell cycle, transport, signal 
+      It can be difficult to distinguish between a biological process
+      and a molecular function, but the general rule is that a process must
+      have more than one distinct steps (eg. cell cycle, transport, signal
       transduction).
   - name: cellular_component
     abbreviation: C
