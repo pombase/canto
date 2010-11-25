@@ -278,14 +278,18 @@ annotation_type_list:
     broad_term_suggestions: |
       rough endoplasmic reticulum, nucleus, ribosome
     specific_term_examples: |
-      ADD ME
+      condensed nuclear chromosome, inner kinetochore
     help_text: |
-      A cellular component is a component of a cell, with the proviso that
-      it is part of some larger object; this may be an anatomical structure
-      (e.g. rough endoplasmic reticulum or nucleus) or a complex (e.g.
-      ribosome, proteasome).
+      The cellular component ontology describes locations, at the levels of
+      subcellular structures and macromolecular complexes. Examples of
+      cellular components include nucleus, nuclear inner membrane, nuclear
+      pore, and proteasome complex.
     more_help_text: |
-      ADD ME!
+      Generally, a gene product is located in or is a subcomponent of a
+      particular cellular component. The cellular component ontology includes
+      multi-subunit enzymes and other protein complexes, but not individual
+      proteins or nucleic acids. Cellular component also does not include
+      multicellular anatomical terms.
   - name: phenotype
     display_name: Phenotypes
     class: 'PomCur::CurModules::PhenotypeModule'
