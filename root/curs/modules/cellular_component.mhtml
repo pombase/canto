@@ -74,8 +74,7 @@ will be suggested allowing you to refine your search iteratively before making
 your final selection.
 <a id="ferret-term-entry-extra-help" class="pomcur-toggle-button" href='#'>more ...</a>
     </div>
-    <div id="ferret-term-entry-extra-help-target" class="ferret-more-help"
-         style="display: none">
+    <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
       <% $annotation_help_text %>
     </div>
     <input id="ferret-term-input" name="ferret-term-entry"
@@ -100,8 +99,16 @@ are curating more precisely.
     <div id="ferret-help-step-2-suggest" class="inline-help curs-box-title">
 Step 2: The term you have currently selected has no more specific children. If
 this term is not specific enough to describe the experiment you are
-annotating suggest a new child term for 
+annotating suggest a new child term for
 <span class="term-id ferret-term-id-display"></span>.
+<a id="ferret-help-step-2-suggest-help" class="pomcur-toggle-button" href='#'>more ...</a>
+
+<div id="ferret-help-step-2-suggest-help-target" class="ferret-more-help">
+You may need a new term if the process you are describing is not defined by
+existing terms in a way that will distinguish it from related processes. A
+child term by the parent term.  Often this will be a novel biological process
+which has not been previously described.
+</div>
     </div>
   <div id="ferret-suggest-link" class="curs-box-body">
     <ul>

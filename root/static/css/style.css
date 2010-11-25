@@ -624,6 +624,7 @@ div.clearall {
 .ferret-more-help {
   margin: 5px;
   font-size: 95%;
+  display: none;
 }
 
 .evidence-select div, .with-gene-select div {
