@@ -3,6 +3,7 @@ $annotation_helper
 $current_component_display_name
 $current_component_short_display_name
 $current_component_very_short_display_name
+$current_component_suggest_term_help
 $current_component
 $broad_term_suggestions
 $specific_term_examples
@@ -128,11 +129,18 @@ to describe the experiment you are annotating suggest a new child term.
           <a id="ferret-help-step-2-suggest-help" class="pomcur-toggle-button" href='#'>more ...</a>
 
           <div id="ferret-help-step-2-suggest-help-target" class="ferret-more-help">
+            <div>
 You may need a new term if the biology you are describing is not defined
 by existing terms in a way that will distinguish it from related
 <% $current_component_very_short_display_name %> terms. Sometimes this will be
 a novel <% $current_component_short_display_name %> which has not been
 previously described, and so is not yet included in the ontology.
+            </div>
+% if (defined $current_component_suggest_term_help) {
+            <div>
+<% $current_component_suggest_term_help %>
+            </div>
+% }
           </div>
         </div>
         <div id="ferret-suggest-link" class="curs-box-body">

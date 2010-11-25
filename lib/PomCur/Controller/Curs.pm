@@ -575,6 +575,8 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
     $annotation_config->{short_display_name};
   $st->{current_component_very_short_display_name} =
     $annotation_config->{very_short_display_name};
+  $st->{current_component_suggest_term_help} =
+    $annotation_config->{suggest_term_help_text};
   my $broad_term_suggestions = $annotation_config->{broad_term_suggestions};
   $broad_term_suggestions =~ s/\s+$//g;
   $st->{broad_term_suggestions} = $broad_term_suggestions;

@@ -264,6 +264,16 @@ annotation_type_list:
       and a molecular function, but the general rule is that a process must
       have more than one distinct steps (eg. cell cycle, transport, signal
       transduction).
+    suggest_term_help_text: |
+      A new term should be differentiated from the parent as a "sub term"  by
+      the mechanism of action, or the genes which are required to perform the
+      action. It should not be differentiated only be its target gene
+      products. For example,
+      <a href="https://sourceforge.net/tracker/?func=detail&aid=3110076&group_id=36855&atid=440764">histone H2A-S121 phosphorylation</a>
+      is a valid term request because it is performed by a set of genes
+      specific for this process, translation of histone H2a is not a valid
+      term request because there is no translation machinery specifically for
+      histone H2a.
   - name: cellular_component
     abbreviation: C
     very_short_display_name: 'component'
