@@ -199,6 +199,7 @@ div#footer .sponsor {
 
 a.pomcur-toggle-button {
   margin-left: 5px;
+  display: none;
 }
 
 .field-list {

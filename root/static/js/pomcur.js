@@ -356,6 +356,7 @@ $(document).ready(function() {
           target.toggle()
         }
       );
+      $(element).show();
     });
   } else {
 
