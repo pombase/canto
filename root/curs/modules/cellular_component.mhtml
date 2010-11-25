@@ -20,6 +20,15 @@ $pub
   <input id="ferret-suggest-submit" name="ferret-submit" type="submit"
          value="Submit suggestion" class="button"/>
 </form>
+
+<hr/>
+<div class="ferret-help-text">
+Please provide a suggested definition for your new term.
+The pattern for the formal (Aristotelian) definition is "An A is a B 
+that C." Here A stands for the new term, B stands for the parent term, 
+and C, stands for the characteristics that differentiate the species (A) 
+from other members of the group (B).
+</div>
 </div>
 
 <div id="ferret">
