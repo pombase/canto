@@ -278,7 +278,7 @@ annotation_type_list:
     broad_term_suggestions: |
       rough endoplasmic reticulum, nucleus, ribosome
     specific_term_examples: |
-      condensed nuclear chromosome, inner kinetochore
+      condensed nuclear chromosome, inner kinetochore and GET complex
     help_text: |
       The cellular component ontology describes locations, at the levels of
       subcellular structures and macromolecular complexes. Examples of
