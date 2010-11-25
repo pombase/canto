@@ -154,7 +154,6 @@ sub test_curs :Global {
 
   my $st = $c->stash();
 
-  $st->{title} = "Link to new test curation session";
   $st->{template} = 'view_curs_test.mhtml';
 
   my $schema = $c->schema('track');
@@ -162,6 +161,9 @@ sub test_curs :Global {
 
   my $pub = $schema->resultset('Pub')->first();
   my $curs_key = PomCur::Curs::make_curs_key();
+
+  $st->{title} = "Link to new test curation session " . $curs_key;
+
   my $person = $schema->resultset('Person')->first();
   my $curs = $schema->create_with_type('Curs',
                                        {

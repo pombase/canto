@@ -2,5 +2,4 @@
 $curs_key
 </%args>
 
-<p>
-<a href='<% $c->uri_for("/curs/$curs_key") %>'>Curation session <% $curs_key %> </a>
+<a href='<% $c->uri_for("/curs/$curs_key") %>'>Enter curation session </a>
