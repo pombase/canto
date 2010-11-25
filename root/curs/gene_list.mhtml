@@ -4,7 +4,10 @@ $pub
 </%args>
 
 <div class="gene-list curs-box">
-  <div class="curs-box-title">Genes for curation</div>
+  <div class="curs-box-title">
+    <div>Genes for curation</div>
+    <div class="curs-box-sub-title">(Click to change current gene)</div>
+  </div>
   <div class="curs-box-body">
 % if (@gene_hashes) {
   <table>

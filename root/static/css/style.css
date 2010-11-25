@@ -577,6 +577,10 @@ div.clearall {
   border-top-left-radius: 4px;
 }
 
+.curs-box-sub-title {
+  font-size: 80%;
+}
+
 .curs-box-body {
   margin: 10px;
 }
