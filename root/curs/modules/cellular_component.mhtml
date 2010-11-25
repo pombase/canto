@@ -28,11 +28,10 @@ Definition: <textarea name="ferret-suggest-definition" cols="60" rows="10"> </te
 
   <hr/>
   <div class="ferret-help-text">
-Please provide a suggested definition for your new term.
-The pattern for the formal (Aristotelian) definition is "An A is a B
-that C." Here A stands for the new term, B stands for the parent term,
-and C, stands for the characteristics that differentiate the species (A)
-from other members of the group (B).
+Please suggest a definition for your new term request. The pattern for
+the formal  definition is &ldquo;An A (the term you are describing) is a B
+(the parent of the term you are describing) that C (the characteristics
+that differentiate your new term "A" from other members of the group "B")&rdquo;.
   </div>
 </div>
 
