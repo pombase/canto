@@ -230,8 +230,11 @@ var ferret_choose = {
 
   suggest_dialog : function() {
     $('#ferret-suggest-term-id').val($('#ferret-term-id').val());
+    var term_name = $('.ferret-term-name').first().text();
     $('#ferret-suggest').dialog({ modal: true,
-                                  title: 'Suggest a new term',
+                                  title:
+                                  'Suggest a new child term of "' +
+                                   term_name + '"',
                                   width: 800 });
     return false;
   },
