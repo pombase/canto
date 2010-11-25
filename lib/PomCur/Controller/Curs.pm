@@ -571,9 +571,14 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
+  $st->{current_component_short_display_name} =
+    $annotation_config->{short_display_name};
   my $broad_term_suggestions = $annotation_config->{broad_term_suggestions};
   $broad_term_suggestions =~ s/\s+$//g;
   $st->{broad_term_suggestions} = $broad_term_suggestions;
+  my $specific_term_examples = $annotation_config->{specific_term_examples};
+  $specific_term_examples =~ s/\s+$//g;
+  $st->{specific_term_examples} = $specific_term_examples;
   my $annotation_help_text = $annotation_config->{help_text};
   $st->{annotation_help_text} = $annotation_help_text;
   my $annotation_more_help_text = $annotation_config->{more_help_text};

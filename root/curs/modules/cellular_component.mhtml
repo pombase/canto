@@ -1,8 +1,10 @@
 <%args>
 $annotation_helper
 $current_component_display_name
+$current_component_short_display_name
 $current_component
 $broad_term_suggestions
+$specific_term_examples
 $annotation_help_text
 $annotation_more_help_text
 $gene_display_name
@@ -85,16 +87,17 @@ Search for <% $current_component_display_name %> term
           <% $annotation_more_help_text %>
         </div>
         <div>
-Start typing a molecular function in the search box.
+Start typing a <% $current_component_short_display_name %> in the search box.
 If you do not find the term you are looking for with your initial 
 search, begin with a broad term (<% $broad_term_suggestions %>).
           <a id="ferret-term-entry-extra-help" class="pomcur-toggle-button" href='#'>more ...</a>
         </div>
         <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
 More specific terms will be suggested allowing you to refine your search
-iteratively before making your final selection (examples of narrower function
-terms are adenylate cyclase activity or biotin transporter activity). Gene
-products may be annotated with multiple molecular functions.
+iteratively before making your final selection (examples of more specific
+terms are: <% $specific_term_examples %>). Gene
+products may be annotated with multiple 
+<% $current_component_short_display_name %> terms.
         </div>
       </div>
       <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">

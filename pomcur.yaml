@@ -214,6 +214,7 @@ evidence_types:
 annotation_type_list:
   - name: molecular_function
     abbreviation: F
+    short_display_name: 'molecular function'
     display_name: 'GO molecular function'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
@@ -226,6 +227,8 @@ annotation_type_list:
       - IPI
     broad_term_suggestions: |
       transporter, transferase activity
+    specific_term_examples: |
+      adenylate cyclase activity or biotin transporter activity
     help_text: |
       Molecular function describes activities, such as catalytic or binding 
       activities, that occur at the molecular level. GO molecular function 
@@ -236,6 +239,7 @@ annotation_type_list:
       be performed by individual gene products.
   - name: biological_process
     abbreviation: P
+    short_display_name: 'biological process'
     display_name: 'GO biological process'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
@@ -247,7 +251,9 @@ annotation_type_list:
       - IGI
       - IPI
     broad_term_suggestions: |
-       cell cycle, transport
+      cell cycle, transport
+    specific_term_examples: |
+      pyrimidine metabolic process or alpha-glucoside transport
     help_text: |
       A biological process is series of events accomplished by one or more 
       ordered assemblies of molecular functions.
@@ -258,6 +264,7 @@ annotation_type_list:
       transduction).
   - name: cellular_component
     abbreviation: C
+    short_display_name: 'cellular component'
     display_name: 'GO cellular component'
     class: 'PomCur::CurModules::GOModule'
     constructor_args:
@@ -270,6 +277,8 @@ annotation_type_list:
       - IPI
     broad_term_suggestions: |
       rough endoplasmic reticulum, nucleus, ribosome
+    specific_term_examples: |
+      ADD ME
     help_text: |
       A cellular component is a component of a cell, but with the proviso that
       it is part of some larger object; this may be an anatomical structure
