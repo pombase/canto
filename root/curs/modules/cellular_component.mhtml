@@ -16,12 +16,19 @@ $pub
 <div id="ferret-suggest" style="display: none">
   <form id="ferret-suggest-form" action="" method="post">
     <input type="hidden" id="ferret-suggest-term-id" name="ferret-term-id"/>
-    <div>
-Name: <input id="ferret-suggest-name" name="ferret-suggest-name"/>
-    </div>
-    <div>
-Definition: <textarea name="ferret-suggest-definition" cols="60" rows="10"> </textarea>
-    </div>
+    <table>
+      <tr>
+        <td> Name: </td>
+        <td> <input id="ferret-suggest-name" name="ferret-suggest-name"/> </td>
+      </tr>
+      <tr>
+        <td> Definition: </td>
+        <td>
+          <textarea name="ferret-suggest-definition" cols="60" rows="10">
+          </textarea>
+        </td>
+      </tr>
+    </table>
     <input id="ferret-suggest-submit" name="ferret-submit" type="submit"
            value="Submit suggestion" class="button"/>
   </form>

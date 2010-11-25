@@ -649,3 +649,6 @@ div.clearall {
 #ferret-suggest-form label.error {
   color: red;
 }
+#ferret-suggest-form td {
+  text-align: top;
+}
