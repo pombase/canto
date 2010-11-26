@@ -29,11 +29,21 @@ my $run_dir = "$pomcur_dir/run";
 my $apps_dir = "$pomcur_dir/apps";
 my $repo = "$pomcur_dir/pomcur.git";
 my $apache_conf_dir = '/etc/apache2/pomcur.d/';
+my $config_file_name = 'pomcur_deploy.yaml';
 
 my $start_script = "script/pomcur_start";
 
 my $start_port = 5100;
 my $end_port = 6000;
+
+my $google_analytics_id;
+
+if (@ARGV >= 2) {
+  if ($ARGV[0] eq '--google-analytics-id') {
+    shift;
+    $google_analytics_id = shift;
+  }
+}
 
 sub get_from_run_file
 {
@@ -134,6 +144,15 @@ if (-d $full_app_path) {
   system "git checkout $app_tag";
 
   system "./script/pomcur_start --initialise $data_dir";
+
+  if (defined $google_analytics_id) {
+    open my $config_file, '>>', $config_file_name
+      or die "can't open $config_file_name: $!\n";
+
+    print "google_analytics_id: $google_analytics_id\n";
+
+    close $config_file;
+  }
 }
 
 my $pid = fork;
