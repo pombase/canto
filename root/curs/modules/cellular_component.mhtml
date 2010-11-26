@@ -59,6 +59,10 @@ it is equivalent to, or broader than, the term you require.
             <td class="term-id ferret-term-id-display"></td>
           </tr>
           <tr>
+            <td class="title">Ontology</td>
+            <td><% $current_component_display_name %></td>
+          </tr>
+          <tr>
             <td class="title">Term name</td>
             <td class="term-name ferret-term-name"></td>
           </tr>
