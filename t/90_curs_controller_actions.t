@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 37;
+use Test::More tests => 36;
 
 use Data::Compare;
 
@@ -36,6 +36,8 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 my $pub_title_fragment = "Inactivating pentapeptide insertions";
+
+my $pubmedid = "PMID:19664060";
 
 my @gene_identifiers = qw(cdc11 wtf22 SPCC1739.10);
 
@@ -172,7 +174,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr/Removed 1 gene from list/);
-    like ($res->content(), qr/Gene list for PMID:19664060/);
+    like ($res->content(), qr/Gene list for $pubmedid/);
 
     my @genes_after_delete = $curs_schema->resultset('Gene')->all();
 
@@ -200,8 +202,7 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     like ($redirect_res->content(),
-          qr/Annotating.*$gene_identifiers[0].*,/);
-    like ($redirect_res->content(), qr/Genes for PMID:19664060/);
+          qr/Curating\s+$gene_identifiers[0]\s+from\s+$pubmedid/);
   }
 };
 

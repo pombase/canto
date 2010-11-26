@@ -13,8 +13,10 @@ my $schema = $test_util->track_schema();
 
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0005');
 
-my @annotations =
+my ($completed_count, $annotations_ref) =
   PomCur::Curs::Utils::get_annotation_table($config, $curs_schema);
+
+my @annotations = @$annotations_ref;
 
 is (@annotations, 2);
 
