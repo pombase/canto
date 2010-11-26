@@ -365,6 +365,18 @@ $(document).ready(function() {
       );
       $(element).show();
     });
+
+    $('.pomcur-more-button').each(function (index, element) {
+      var this_id = $(element).attr('id');
+      var target = $('#' + this_id + '-target');
+      $(element).click(
+        function () {
+          target.show()
+          $(element).hide();
+        }
+      );
+      $(element).show();
+    });
   } else {
 
     $('#breadcrumb-previous-button').click(function () {

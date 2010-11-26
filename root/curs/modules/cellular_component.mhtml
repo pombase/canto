@@ -89,7 +89,7 @@ Search for <% $current_component_display_name %> term
       <div class="ferret-term-entry-inside curs-box-body">
         <div>
           <% $annotation_help_text %>
-          <a id="ferret-term-entry-type-help" class="pomcur-toggle-button" href='#'>more ...</a>
+          <a id="ferret-term-entry-type-help" class="pomcur-more-button" href='#'>more ...</a>
         </div>
         <div id="ferret-term-entry-type-help-target" class="ferret-more-help">
           <% $annotation_more_help_text %>
@@ -98,7 +98,7 @@ Search for <% $current_component_display_name %> term
 Start typing a <% $current_component_short_display_name %> in the search box.
 If you do not find the term you are looking for with your initial
 search, begin with a broad term (<% $broad_term_suggestions %>).
-          <a id="ferret-term-entry-extra-help" class="pomcur-toggle-button" href='#'>more ...</a>
+          <a id="ferret-term-entry-extra-help" class="pomcur-more-button" href='#'>more ...</a>
         </div>
         <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
 More specific terms will be suggested allowing you to refine your search
@@ -138,7 +138,7 @@ are curating more precisely.
 Step 2: The term "<span class='ferret-term-name'></span>" you
 have currently selected has no children. If this term is not specific enough
 to describe the experiment you are annotating suggest a new child term.
-          <a id="ferret-help-step-2-suggest-help" class="pomcur-toggle-button" href='#'>more ...</a>
+          <a id="ferret-help-step-2-suggest-help" class="pomcur-more-button" href='#'>more ...</a>
 
           <div id="ferret-help-step-2-suggest-help-target" class="ferret-more-help">
             <div>
