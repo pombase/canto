@@ -231,13 +231,14 @@ annotation_type_list:
     specific_term_examples: |
       adenylate cyclase activity or biotin transporter activity
     help_text: |
-      Molecular function describes activities, such as catalytic or binding
-      activities, that occur at the molecular level. GO molecular function
-      terms represent activities that perform the actions, rather than the
-      entities (molecules or complexes).
+      A molecular function is an activity, such as a catalytic or binding
+      activitiy, that occurs at the molecular level. GO molecular function
+      terms represent activities that perform the actions (protein
+      serine/threonine kinase activity, pyruvate carboxylase activity),
+      rather than the entities (gene products or complexes).
     more_help_text: |
-      Molecular functions generally correspond to activities that can
-      be performed by individual gene products.
+      As a general rule, molecular functions  correspond to single step
+      activities performed by individual gene products.
   - name: biological_process
     abbreviation: P
     very_short_display_name: 'process'
@@ -292,7 +293,7 @@ annotation_type_list:
     specific_term_examples: |
       condensed nuclear chromosome, inner kinetochore and GET complex
     help_text: |
-      The cellular component ontology describes locations, at the levels of
+      Cellular component describes locations, at the levels of
       subcellular structures and macromolecular complexes. Examples of
       cellular components include nucleus, nuclear inner membrane, nuclear
       pore, and proteasome complex.
