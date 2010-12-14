@@ -871,6 +871,8 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
                         gene_product gene_synonyms_string db_object_type taxonid
                         creation_date_short db);
 
+  my $db = $config->{export}->{gene_association_fields}->{db};
+
   my $results = '';
 
   for my $annotation (@annotations) {
@@ -886,6 +888,11 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
       }
       if ($_ eq 'pubmedid') {
         $val = "PMID:$val";
+      }
+      if ($_ eq 'with_or_from_identifier') {
+        if (defined $val && length $val > 0) {
+          $val = "$db:$val";
+        }
       }
 
       $val;
