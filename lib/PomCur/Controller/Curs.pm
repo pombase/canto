@@ -866,7 +866,8 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
 
   my @column_names = qw(db gene_identifier gene_name_or_identifier
                         qualifier term_ontid pubmedid
-                        evidence_code with_or_from_identifier annotation_type_abbreviation
+                        evidence_code with_or_from_identifier
+                        annotation_type_abbreviation
                         gene_product gene_synonyms_string db_object_type taxonid
                         creation_date_short db);
 
