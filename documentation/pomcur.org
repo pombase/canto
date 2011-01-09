@@ -1,7 +1,7 @@
 PomCur installation and maintainence.
 
 * Introduction
-  PomCur is a generic gene annotation with a focus on community curation.
+  PomCur is a generic gene annotation tool with a focus on community curation.
   This document describes PomCur from the adminstrators perspective.
 * Requirements
   - Linux, BSB or UNIX
@@ -36,7 +36,7 @@ PomCur installation and maintainence.
    =./script/pomcur_start --init <some_directory>=
 ** Running the server
    =./script/pomcur_start=
-** Visit the application start page 
+** Visit the application start page
    http://localhost:5000
 * Configuration
 ** =pomcur.yaml=
