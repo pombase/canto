@@ -393,8 +393,8 @@ sub _edit_genes_helper
       my @gene_ids = @{$form->param_array('gene-select')};
 
       if (@gene_ids == 0) {
-        $st->{error} =
-          { title => "No genes selected for deletion" };
+        $st->{message} = 'No genes selected for deletion';
+        $c->flash()->{message} = 'no genes selected for deletion';
       } else {
         my $delete_sub = sub {
           for my $gene_id (@gene_ids) {
