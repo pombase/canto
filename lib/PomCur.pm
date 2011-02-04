@@ -73,7 +73,8 @@ use PomCur::Config;
 $config->setup();
 
 my %_model_map = ( track => "TrackModel",
-                   meta => "MetaModel" );
+                   meta => "MetaModel",
+                   chado => "ChadoModel" );
 
 =head2 schema
 
