@@ -16,6 +16,9 @@ authentication:
         class: DBIx::Class
         user_class: TrackModel::Person
 
+view_options:
+  max_inline_results_length: 100
+
 db_initial_data:
   track:
     cv:
