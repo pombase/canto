@@ -90,7 +90,7 @@ sub get_field_value
     return ($object->$field_name(), 'table_id', undef);
   }
 
-  my $class_infos = $c->config()->{class_info};
+  my $class_infos = $c->config()->class_info($c);
   my $col_conf = $class_infos->{$type}->{field_infos}->{$field_name};
 
   if (!defined $col_conf) {
@@ -179,7 +179,8 @@ sub get_field_value
 =cut
 sub get_column_confs_from_object
 {
-  my $config = shift;
+  my $c = shift;
+  my $config = $c->config();
   my $user_role = shift;
   my $object = shift;
 
@@ -187,7 +188,7 @@ sub get_column_confs_from_object
 
   my @column_confs = ();
 
-  for my $conf (@{$config->{class_info}->{$table}->{field_info_list}}) {
+  for my $conf (@{$config->class_info($c)->{$table}->{field_info_list}}) {
     my $field_db_column = $conf->{source} || $conf->{name};
 
     next unless $object->has_column($field_db_column);

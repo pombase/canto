@@ -75,7 +75,7 @@ sub format_field_value
   return $field_value;
 }
 
-my $class_info = $c->config()->{class_info}->{$object->table()};
+my $class_info = $c->config()->class_info($c)->{$object->table()};
 my $col_conf = $class_info->{field_infos}->{$field_name};
 
 my ($field_value, $field_type, $ref_display_key) =

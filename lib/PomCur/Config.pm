@@ -104,15 +104,18 @@ sub setup
   my $self = shift;
 
   # make the field_infos available as a hash in the config
-  for my $class_name (keys %{$self->{class_info}}) {
-    my $class_info = $self->{class_info}->{$class_name};
-    for my $field_info (@{$class_info->{field_info_list}}) {
-      $field_info->{source} ||= $field_info->{name};
-      my $name = $field_info->{name};
-      if (!defined $name) {
-        die "config loading failed: field_info with no name in $class_name\n";
+  for my $model (keys %{$self->{class_info}}) {
+    for my $class_name (keys %{$self->{class_info}->{$model}}) {
+      my $class_info = $self->{class_info}->{$model}->{$class_name};
+      for my $field_info (@{$class_info->{field_info_list}}) {
+        $field_info->{source} ||= $field_info->{name};
+        my $name = $field_info->{name};
+        if (!defined $name) {
+          die "config loading failed: field_info with no name in $class_name\n";
+        }
+        $self->{class_info}->{$model}->{$class_name}->{field_infos}->{$name} =
+          $field_info;
       }
-      $self->{class_info}->{$class_name}->{field_infos}->{$name} = $field_info;
     }
   }
 
@@ -217,6 +220,24 @@ sub data_dir_path
   }
 
   return $self->{data_directory} . '/' . $file_name;
+}
+
+=head2 class_info
+
+ Usage   : my $class_info = $config->class_info($c);
+ Function: Return the class information from the Config
+ Args    : $c - the Catalyst object
+ Returns : the class information hash
+
+=cut
+sub class_info
+{
+  my $self = shift;
+  my $c = shift;
+
+  my $model_name = $c->request()->param('model');
+
+  return $self->{class_info}->{$model_name};
 }
 
 1;

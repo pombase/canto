@@ -57,127 +57,126 @@ db_initial_data:
                 name: PomCur Track
 
 class_info:
-  cv:
-    class_display_name: controlled vocabulary
-    editable: 1
-    display_field: name
-    field_info_list:
-      - name: name
-        editable: 1
-      - name: definition
-        editable: 1
-  cvterm:
-    class_display_name: controlled vocabulary term
-    editable: 1
-    display_field: name
-    field_info_list:
-      - name: name
-        editable: 1
-      - name: definition
-        editable: 1
-      - name: cv_id
-        editable: 1
-  organism:
-    editable: 1
-    display_field: full_name
-    order_by:
-      - genus
-      - species
-    field_info_list:
-      - name: genus
-        editable: 1
-      - name: species
-        editable: 1
-      - name: ecotypes
-        editable: 1
-  person:
-    object_title_format: 'Details for @@DISPLAY_FIELD@@'
-    editable: 1
-    display_field: name
-    order_by: name
-    field_info_list:
-      - name: name
-        source: name
-        editable: 1
-      - name: Email address
-        source: networkaddress
-        editable: 1
-      - name: role
-        default_value: "'user'"
-        editable: 1
-        admin_only: 1
-      - name: password
-        editable: 1
-        admin_only: 1
-      - name: lab
-        editable: 1
-  lab:
-    editable: 1
-    display_field: name
-    order_by: name
-    field_info_list:
-      - name: name
-        editable: 1
-      - name: lab_head
-        editable: 1
-      - name: people
-        is_collection: 1
-        editable: 1
-  pub:
-    object_title_format: 'Details for PubMed ID: @@$object->pubmedid()@@'
-    class_display_name: publication
-    display_field: title
-    editable: 1
-    field_info_list:
-      - name: 'PubMed ID'
-        source: pubmedid
-        editable: 1
-      - name: title
-        editable: 1
-      - name: authors
-        editable: 1
-      - name: community_curator
-        editable: 1
-      - name: type
-        source: type_id
-        values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication type")'
-        referenced_class: Cvterm
-        editable: 1
-  curs:
-    class_display_name: curation session
-    display_field: curs_key
-    editable: 1
-    field_info_list:
-      - name: community_curator
-        editable: 1
-      - name: publication
-        editable: 0
-        source: pub
-      - name: curs_key
-        editable: 0
+  track:
+    cv:
+      class_display_name: controlled vocabulary
+      editable: 1
+      display_field: name
+      field_info_list:
+        - name: name
+          editable: 1
+        - name: definition
+          editable: 1
+    cvterm:
+      class_display_name: controlled vocabulary term
+      editable: 1
+      display_field: name
+      field_info_list:
+        - name: name
+          editable: 1
+        - name: definition
+          editable: 1
+        - name: cv_id
+          editable: 1
+    organism:
+      editable: 1
+      display_field: full_name
+      order_by:
+        - genus
+        - species
+      field_info_list:
+        - name: genus
+          editable: 1
+        - name: species
+          editable: 1
+    person:
+      object_title_format: 'Details for @@DISPLAY_FIELD@@'
+      editable: 1
+      display_field: name
+      order_by: name
+      field_info_list:
+        - name: name
+          source: name
+          editable: 1
+        - name: Email address
+          source: networkaddress
+          editable: 1
+        - name: role
+          default_value: "'user'"
+          editable: 1
+          admin_only: 1
+        - name: password
+          editable: 1
+          admin_only: 1
+        - name: lab
+          editable: 1
+    lab:
+      editable: 1
+      display_field: name
+      order_by: name
+      field_info_list:
+        - name: name
+          editable: 1
+        - name: lab_head
+          editable: 1
+        - name: people
+          is_collection: 1
+          editable: 1
+    pub:
+      object_title_format: 'Details for PubMed ID: @@$object->pubmedid()@@'
+      class_display_name: publication
+      display_field: title
+      editable: 1
+      field_info_list:
+        - name: 'PubMed ID'
+          source: pubmedid
+          editable: 1
+        - name: title
+          editable: 1
+        - name: authors
+          editable: 1
+        - name: community_curator
+          editable: 1
+        - name: type
+          source: type_id
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication type")'
+          referenced_class: Cvterm
+          editable: 1
+    curs:
+      class_display_name: curation session
+      display_field: curs_key
+      editable: 1
+      field_info_list:
+        - name: community_curator
+          editable: 1
+        - name: publication
+          editable: 0
+          source: pub
+        - name: curs_key
+          editable: 0
 # if the hook dies the creation fails
-    pre_create_hook: 'PomCur::Track::create_curs_db_hook'
-  gene:
-    editable: 1
-    display_field: primary_identifier
-    field_info_list:
-      - name: primary_identifier
-        editable: 1
-      - name: primary_name
-        editable: 1
-      - name: product
-        editable: 1
-      - name: genesynonyms
-        editable: 1
-        is_collection: 1
-  genesynonym:
-    editable: 1
-    display_field: identifier
-    field_info_list:
-      - name: identifier
-        editable: 1
-      - name: gene
-        editable: 1
+      pre_create_hook: 'PomCur::Track::create_curs_db_hook'
+    gene:
+      editable: 1
+      display_field: primary_identifier
+      field_info_list:
+        - name: primary_identifier
+          editable: 1
+        - name: primary_name
+          editable: 1
+        - name: product
+          editable: 1
+        - name: genesynonyms
+          editable: 1
+          is_collection: 1
+    genesynonym:
+      editable: 1
+      display_field: identifier
+      field_info_list:
+        - name: identifier
+          editable: 1
+        - name: gene
+          editable: 1
 
 export:
   gene_association_fields:

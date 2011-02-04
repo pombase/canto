@@ -65,7 +65,7 @@ $object
 my $table_pk_field = ($object->primary_columns())[0];
 my $object_id = $object->$table_pk_field();
 
-my $editable = $c->config()->{class_info}->{$type}->{editable};
+my $editable = $c->config()->class_info($c)->{$type}->{editable};
 
 my $model_name = $c->request()->param('model');
 </%init>

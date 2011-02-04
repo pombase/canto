@@ -22,8 +22,9 @@ my $type = $object->table();
 
 my %field_infos = ();
 
-if (defined $c->config()->{class_info}->{$type}->{field_infos}) {
-  %field_infos = %{$c->config()->{class_info}->{$type}->{field_infos}};
+my $class_infos = $c->config()->class_info($c);
+if (defined $class_infos->{$type}->{field_infos}) {
+  %field_infos = %{$class_infos->{$type}->{field_infos}};
 }
 
 my $_get_display_name_code = sub {

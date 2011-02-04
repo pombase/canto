@@ -66,7 +66,7 @@ sub get_object_by_id_or_name
     return $schema->find_with_type($class_name, $object_key);
   } else {
     # try looking up by display name
-    my $class_info = $c->config()->{class_info}->{$type};
+    my $class_info = $c->config()->class_info($c)->{$type};
     if (defined $class_info) {
       if (defined $class_info->{display_field}) {
         return $schema->find_with_type($class_name,
@@ -153,7 +153,7 @@ sub object : Local
   eval {
     my $object = get_object_by_id_or_name($c, $type, $object_key);
 
-    my $class_info = $c->config()->{class_info}->{$type};
+    my $class_info = $c->config()->class_info($c)->{$type};
 
     $st->{title} = _make_title($c, $object, $class_info);
     $st->{template} = 'view/object/generic.mhtml';
@@ -196,7 +196,7 @@ sub list : Local
     $st->{type} = $type;
 
     my $class_name = $schema->class_name_of_table($type);
-    my $class_info = $c->config()->{class_info}->{$type};
+    my $class_info = $c->config()->class_info($c)->{$type};
 
     # default: order by id
     my $order_by = $type . '_id';
@@ -248,7 +248,7 @@ sub _get_order_by_field
   my $c = shift;
   my $type = shift;
 
-  my $class_info = $c->config()->{class_info}->{$type};
+  my $class_info = $c->config()->class_info($c)->{$type};
 
   # default: order by id
   my $order_by = $type . '_id';

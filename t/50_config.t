@@ -16,7 +16,7 @@ is($config_single->{some_key}, 'some_value_1');
 
 is(keys %{$config_single}, 3);
 
-my $lab_classinfo = $config_single->{class_info}->{lab};
+my $lab_classinfo = $config_single->{class_info}->{track}->{lab};
 
 # check that source defaults to name
 is($lab_classinfo->{field_info_list}->[1]->{source},
