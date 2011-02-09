@@ -4,7 +4,7 @@ PomCur installation and maintainence.
   PomCur is a generic gene annotation tool with a focus on community curation.
   This document describes PomCur from the adminstrators perspective.
 * Requirements
-  - Linux, BSB or UNIX
+  - Linux, BSD or UNIX
   - Perl
 * Getting the code
   Currently the easiest way to get the code is via GitHub.  Run this command
@@ -40,6 +40,7 @@ PomCur installation and maintainence.
    http://localhost:5000
 * Configuration
 ** =pomcur.yaml=
+** Loading data
 * Implementation details
 ** Structure
    There are two parts to the system.
@@ -49,6 +50,8 @@ PomCur installation and maintainence.
 
    "Curs" handles the user curation sessions.
 *** Track - user, publication and session tracking
+**** Database storage
+***** SQLite for main database
 *** Curs - curation sessions
     Each curation session has a cooresponding SQLite database.
 ** Databases
@@ -57,7 +60,7 @@ PomCur installation and maintainence.
    PomCur is written in Perl, implemented using the Catalyst framework and
    running on a Plack server.
 
-
+* Config
 ###+INFOJS_OPT: view:content toc:t ltoc:t mouse:#dddddd
 #+OPTIONS:     H:5
 #+STYLE: <style type="text/css">  html { font-family: Times, serif; font-size: 16pt; }</style>
