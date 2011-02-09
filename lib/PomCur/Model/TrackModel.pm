@@ -20,10 +20,6 @@ L<Catalyst::Model::DBIC::Schema> Model using schema L<PomCur::TrackDB>
 
 Catalyst::Helper::Model::DBIC::Schema - 0.30
 
-=head1 AUTHOR
-
-A clever guy
-
 =head1 LICENSE
 
 This library is free software, you can redistribute it and/or modify
