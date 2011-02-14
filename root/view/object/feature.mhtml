@@ -1,0 +1,25 @@
+<%args>
+$object
+</%args>
+
+<&| /view/object/object_top.mhtml, object => $object &>
+
+</&>
+
+% if (defined $type_template_path->stat()) {
+
+<& "/view/object/feature/$feature_type.mhtml", object => $object &>
+  
+% }
+
+<div id="collections">
+  <& /view/collection.mhtml, object => $object, collection_name => 'featureprops',
+     collection_title => "Feature properties" &>
+</div>
+
+<%init>
+my $feature_type = $object->type()->name();
+my $type_template_path =
+  $c->path_to("root", "view", "object", "feature", "$feature_type.mhtml");
+ 
+</%init>

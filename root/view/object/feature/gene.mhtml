@@ -1,0 +1,14 @@
+<%args>
+$object
+</%args>
+
+<div id="collections">
+  <& /view/list.mhtml, type => 'cvterm', rs => $cvterms_rs,
+    list_title => 'Controlled vocabulary terms for this gene' &>
+</div>
+
+<%init>
+my $cvterms_rs =
+  $object->feature_cvterms()->search_related('cvterm');
+</%init>
+

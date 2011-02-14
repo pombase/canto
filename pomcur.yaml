@@ -180,6 +180,84 @@ class_info:
           editable: 1
         - name: gene
           editable: 1
+  chado:
+    cv:
+      class_display_name: controlled vocabulary
+      editable: 1
+      display_field: name
+      field_info_list:
+        - name: name
+          editable: 1
+        - name: definition
+          editable: 1
+    cvterm:
+      class_display_name: controlled vocabulary term
+      editable: 1
+      display_field: name
+      field_info_list:
+        - name: name
+          editable: 1
+        - name: definition
+          editable: 1
+        - name: cv
+          source: cv_id
+          editable: 1
+    organism:
+      editable: 1
+      display_field: full_name
+      order_by:
+        - genus
+        - species
+      field_info_list:
+        - name: genus
+          editable: 1
+        - name: species
+          editable: 1
+    pub:
+      object_title_format: 'Details for PubMed ID: @@$object->pubmedid()@@'
+      class_display_name: publication
+      display_field: title
+      editable: 1
+      field_info_list:
+        - name: 'PubMed ID'
+          source: pubmedid
+          editable: 1
+        - name: title
+          editable: 1
+        - name: authors
+          editable: 1
+        - name: community_curator
+          editable: 1
+        - name: type
+          source: type_id
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "genedb_literature")'
+          referenced_class: Cvterm
+          editable: 1
+    feature:
+      editable: 1
+      display_field: uniquename
+      field_info_list:
+        - name: uniquename
+          editable: 1
+        - name: name
+          editable: 1
+        - name: type
+          source: type_id
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "sequence")'
+          referenced_class: Cvterm
+          editable: 1
+        - name: featureprops
+          is_collection: 1
+          editable: 1
+    featureprop:
+      editable: 1
+      display_field: value
+      field_info_list:
+        - name: type
+          source: type_id
+          referenced_class: Cvterm
+        - name: value
+          editable: 1
 
 export:
   gene_association_fields:
