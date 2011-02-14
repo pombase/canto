@@ -1,0 +1,17 @@
+<%args>
+$object
+</%args>
+
+<div>
+<& /view/field_list.mhtml, object => $object, field_labels => [qw|name definition cv|] &>
+</div>
+
+<div id="collections">
+  <& /view/list.mhtml, type => 'feature', rs => $features_rs,
+    list_title => 'Features annotated with this cvterm' &>
+</div>
+
+<%init>
+my $features_rs =
+  $object->feature_cvterms()->search_related('feature');
+</%init>
