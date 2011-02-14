@@ -1,6 +1,6 @@
 <%args>
 $object
-@field_labels
+@field_labels => ()
 </%args>
 
 <div class="field-list">
@@ -38,4 +38,18 @@ my $_get_display_name_code = sub {
 
   return ucfirst $display_field_label;
 };
+
+if (!@field_labels) {
+  my $class_info_ref =
+    $c->config()->class_info($c)->{$object->table()};
+  my %class_info = %{$class_info_ref};
+  my @field_info_list = @{$class_info{field_info_list}};
+
+  for my $field_info (@field_info_list) {
+    my $field_name = $field_info->{name};
+    if (!$field_info->{is_collection}) {
+      push @field_labels, $field_name;
+    }
+  }
+}
 </%init>
