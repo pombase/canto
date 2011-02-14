@@ -1,0 +1,53 @@
+<div id="front-page">
+  <table id="chado-actions">
+    <tr>
+      <td class="actionlist">
+        <div>
+          <div class="label">
+            View ...
+          </div>
+          <ul>
+            <li>
+              <a href="<% $c->uri_for('/view/list/feature', { model => 'chado'} ) %>">Features</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/view/list/pub', { model => 'chado'} ) %>">Publications</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/view/list/cv', { model => 'chado'} ) %>">Controlled vocabularies</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/view/list/cvterm', { model => 'chado'} ) %>">Controlled vocabulary terms</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/view/list/db', { model => 'chado'} ) %>">Known databases</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/view/list/dbxref', { model => 'chado'}) %>">Database cross references</a>
+            </li>
+          </ul>
+        </div>
+      </td>
+%  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+      <td class="actionlist">
+        <div class="label">
+          Add a ...
+        </div>
+        <div>
+          <ul>
+            <li>
+              <a href="<% $c->uri_for('/new/object/feature', { model => 'chado'} ) %>">Feature</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/new/object/cv', { model => 'chado' } ) %>">Controlled vocabulary</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/new/object/cvterm', { model => 'chado'} ) %>">Controlled vocabulary term</a>
+            </li>
+          </ul>
+        </div>
+      </td>
+% }
+    </tr>
+  </table>
+</div>

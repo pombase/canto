@@ -211,11 +211,11 @@ a.pomcur-toggle-button {
   padding: 10px;
 }
 
-#track-actions {
+#main-actions {
   width: 80%;
 }
 
-#track-actions actionlist {
+#main-actions actionlist {
   width: 30%;
   vertical-align: top;
 }

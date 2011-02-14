@@ -1,10 +1,10 @@
-package PomCur::Controller::Track;
+package PomCur::Controller::Chado;
 
 use parent 'Catalyst::Controller';
 
 =head1 NAME
 
-PomCur::Controller::Track - Actions for managing PomCur
+PomCur::Controller::Chado - Home for Chado actions
 
 =head1 SYNOPSIS
 
@@ -20,7 +20,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::Controller::Track
+    perldoc PomCur::Controller::Chado
 
 =over 4
 
@@ -41,11 +41,11 @@ use strict;
 use warnings;
 use Carp;
 
-sub track :Path :Args(0) {
+sub chado :Path :Args(0) {
   my ($self, $c) = @_;
 
-  $c->stash->{title} = 'Start page';
-  $c->stash->{template} = 'track/index.mhtml';
+  $c->stash->{title} = 'Chado home';
+  $c->stash->{template} = 'chado/index.mhtml';
 }
 
 1;
