@@ -11,6 +11,20 @@ $page => 1
   function resize(uri) { eval( location = uri ); }
 </script>
 
+% if (defined $search_term) {
+<div id="search-results-title">
+  You searched for: <% $search_term %>
+</div>
+% } else {
+<div id="search-list">
+  <form id="search-list-form" method="get" action="<% $search_url %>">
+    <input type="hidden" name="model" value="<% $model_name %>"/>
+    Search this list: <input id="search-list-text" name="search-term" size="20"/>
+    <input id="submit" name="submit" type="submit" value="search"/>
+  </form>
+</div>
+% }
+
 % if ($pager->total_entries() > 0) {
 <div class="page_nav_summary"><b><% $pager->total_entries() %></b> rows found <b>|</b>
 Showing page <b><% $pager->current_page() %></b> of <% $pager->last_page() %>
@@ -130,4 +144,8 @@ if (! grep { $_ == $numrows } @possible_page_sizes) {
 }
 @possible_page_sizes =  sort { $a <=> $b } @possible_page_sizes;
 
+my $model_name = $c->req()->param('model');
+my $search_url = $c->uri_for("/search/type/$type");
+
+my $search_term = $c->stash()->{list_search_term};
 </%init>
