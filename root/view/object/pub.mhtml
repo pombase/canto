@@ -36,7 +36,13 @@ $object
 <%init>
 use PomCur::Curs;
 
-my $abstract = $object->abstract() || '[Abstract not available]';
+my $abstract = undef;
+
+if ($object->can('abstract')) {
+  $abstract = $object->abstract();
+}
+
+$abstract //= '[Abstract not available]';
 
 my $current_path = $c->req->uri()->path();
 my $return_path_uri = 

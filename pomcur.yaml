@@ -219,14 +219,7 @@ class_info:
       display_field: title
       editable: 1
       field_info_list:
-        - name: 'PubMed ID'
-          source: pubmedid
-          editable: 1
         - name: title
-          editable: 1
-        - name: authors
-          editable: 1
-        - name: community_curator
           editable: 1
         - name: type
           source: type_id
