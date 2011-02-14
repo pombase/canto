@@ -107,8 +107,11 @@ sub setup
   for my $model (keys %{$self->{class_info}}) {
     for my $class_name (keys %{$self->{class_info}->{$model}}) {
       my $class_info = $self->{class_info}->{$model}->{$class_name};
+
+      $class_info->{search_fields} //= [ $class_info->{display_field} ];
+
       for my $field_info (@{$class_info->{field_info_list}}) {
-        $field_info->{source} ||= $field_info->{name};
+        $field_info->{source} //= $field_info->{name};
         my $name = $field_info->{name};
         if (!defined $name) {
           die "config loading failed: field_info with no name in $class_name\n";

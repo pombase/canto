@@ -230,7 +230,9 @@ sub list : Local
 
     my $params = { order_by => $order_by };
 
-    $st->{rs} = $schema->resultset($class_name)->search(undef, $params);
+    my $search = $st->{list_search_constraint};
+
+    $st->{rs} = $schema->resultset($class_name)->search($search, $params);
 
     $st->{page} = $c->req->param('page') || 1;
     $st->{numrows} = $c->req->param('numrows') || 20;
