@@ -5,7 +5,7 @@
 "Model::ChadoModel":
   schema_class: 'PomCur::ChadoDB'
   connect_info:
-     - "dbi:Pg:dbname=pombe-with-genes-1;host=localhost;port=5432"
+     - "dbi:Pg:dbname=pombe-chado-v9;host=localhost;port=5432"
      - kmr44
      - kmr44
 data_directory: "local"
