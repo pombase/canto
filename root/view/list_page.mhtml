@@ -102,6 +102,10 @@ Number of rows to display
 
 </div> 
 % }
+% } else {
+
+No results
+
 % }
 
 </div>
