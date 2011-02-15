@@ -50,6 +50,18 @@ __PACKAGE__->table("cvterm");
   data_type: 'text'
   is_nullable: 1
 
+=head2 is_obsolete
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 0
+
+=head2 is_relationshiptype
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -63,6 +75,10 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "definition",
   { data_type => "text", is_nullable => 1 },
+  "is_obsolete",
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
+  "is_relationshiptype",
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("cvterm_id");
 
@@ -264,8 +280,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-05 19:49:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fkfo9cnkbKSLgFOHLrGp/g
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-15 16:42:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gAoQyVcOZzDThwwwgCjIVA
 
 sub db_accession
 {

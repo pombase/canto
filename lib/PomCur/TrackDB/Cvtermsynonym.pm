@@ -43,7 +43,7 @@ __PACKAGE__->table("cvtermsynonym");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 0
+  is_nullable: 1
 
 =cut
 
@@ -55,7 +55,7 @@ __PACKAGE__->add_columns(
   "synonym",
   { data_type => "text", is_nullable => 0 },
   "type_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("cvtermsynonym_id");
 
@@ -73,7 +73,12 @@ __PACKAGE__->belongs_to(
   "type",
   "PomCur::TrackDB::Cvterm",
   { cvterm_id => "type_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
 );
 
 =head2 cvterm
@@ -92,8 +97,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 12:13:07
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Elu3rxSgN/Od3Zulm7hSRw
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-15 17:02:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jPohPoVsmbAuWnqx+iYVlQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

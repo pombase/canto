@@ -40,7 +40,9 @@ CREATE TABLE cvterm (
        cv_id int NOT NULL references cv (cv_id),
        name text NOT NULL,
        dbxref_id integer NOT NULL REFERENCES dbxref (dbxref_id),
-       definition text
+       definition text,
+       is_obsolete integer DEFAULT 0 NOT NULL,
+       is_relationshiptype integer DEFAULT 0 NOT NULL
 );
 CREATE INDEX cvterm_idx1 ON cvterm (cv_id);
 CREATE INDEX cvterm_idx2 ON cvterm (name);
@@ -49,7 +51,7 @@ CREATE TABLE cvtermsynonym (
     cvtermsynonym_id integer NOT NULL PRIMARY KEY,
     cvterm_id integer NOT NULL references cvterm (cvterm_id),
     synonym text NOT NULL,
-    type_id integer NOT NULL references cvterm (cvterm_id)
+    type_id integer references cvterm (cvterm_id)
 );
 CREATE INDEX cvtermsynonym_idx1 ON cvtermsynonym (cvterm_id);
 
@@ -72,6 +74,16 @@ CREATE TABLE cvtermprop (
 );
 CREATE INDEX cvtermprop_idx1 ON cvtermprop (cvterm_id);
 CREATE INDEX cvtermprop_idx2 ON cvtermprop (type_id);
+
+CREATE TABLE cvterm_dbxref (
+    cvterm_dbxref_id integer NOT NULL PRIMARY KEY,
+    cvterm_id integer NOT NULL,
+    dbxref_id integer NOT NULL,
+    is_for_definition integer DEFAULT 0 NOT NULL
+);
+CREATE UNIQUE INDEX cvterm_dbxref_c1 on cvterm_dbxref (cvterm_id, dbxref_id);
+CREATE INDEX cvterm_dbxref_idx1 ON cvterm_dbxref (cvterm_id);
+CREATE INDEX cvterm_dbxref_idx2 ON cvterm_dbxref (dbxref_id);
 
 CREATE TABLE organism (
        	organism_id integer NOT NULL PRIMARY KEY,

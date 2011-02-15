@@ -170,6 +170,7 @@ sub get_cvterm
   my $term_name = $args{term_name};
   my $ontologyid = $args{ontologyid};
   my $definition = $args{definition};
+  my $is_relationshiptype = $args{is_relationshiptype} // 0;
 
   my $db_name;
   my $accession;
@@ -192,6 +193,7 @@ sub get_cvterm
     cv => $cv,
     definition => $definition,
     dbxref => $dbxref,
+    is_relationshiptype => $is_relationshiptype,
   );
 
   return $self->schema()->resultset('Cvterm')->find_or_create(
