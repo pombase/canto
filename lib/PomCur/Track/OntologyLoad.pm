@@ -36,8 +36,8 @@ under the same terms as Perl itself.
 
 =cut
 
-use Carp;
 use Moose;
+use perl5i::2;
 
 use GO::Parser;
 
@@ -71,6 +71,7 @@ sub _build_load_util
  Returns : Nothing
 
 =cut
+
 sub load
 {
   my $self = shift;
@@ -82,7 +83,7 @@ sub load
 
   my $load_util = $self->load_util();
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
-  my $parser = new GO::Parser({handler=>'obj'});
+  my $parser = GO::Parser->new({ handler=>'obj' });
 
   $parser->parse($file_name);
 
