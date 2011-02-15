@@ -22,13 +22,17 @@ use PomCur::Meta::Util;
 use PomCur::TrackDB;
 use PomCur::Config;
 use PomCur::Track::GeneLoad;
+use PomCur::Track::OntologyLoad;
+use PomCur::Track::OntologyIndex;
 
 my $do_genes = 0;
 my $do_ontology = 0;
+my $dry_run = 0;
 my $do_help = 0;
 
 my $result = GetOptions ("genes|g=s" => \$do_genes,
                          "ontology|o=s" => \$do_ontology,
+                         "dry-run|T" => $dry_run,
                          "help|h" => \$do_help);
 
 sub usage
@@ -56,7 +60,7 @@ The ontology file should be in OBO format
 ";
 }
 
-if (!$result || $do_help || $do_genes xor $do_ontology) {
+if (!$result || $do_help || !($do_genes xor $do_ontology)) {
   usage();
 }
 
@@ -66,19 +70,30 @@ if (@ARGV != 0) {
 
 my $app_name = PomCur::Config::get_application_name();
 
-if (!PomCur::Meta::Util::app_initialised($app_name)) {
+$ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+
+my $pomcur_dir = $ENV{POMCUR_CONFIG_LOCAL_SUFFIX};
+
+if (!PomCur::Meta::Util::app_initialised($app_name, $pomcur_dir, $pomcur_dir)) {
   die "The application is not yet initialised, try running the pomcur_start " .
     "script\n";
 }
 
+my $config = PomCur::Config::get_config();
+my $schema = PomCur::TrackDB->new(config => $config);
+
+my $guard = $schema->txn_scope_guard;
+
 if ($do_genes) {
-  my $config = PomCur::Config::get_config();
-  my $schema = PomCur::TrackDB->new(config => $config);
   my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
-
-  my $code = sub {
-    $gene_load->load($do_genes);
-  };
-
-  $schema->txn_do($code);
+  $gene_load->load($do_genes);
 }
+
+if ($do_ontology) {
+  my $index = PomCur::Track::OntologyIndex->new(config => $config);
+  $index->initialise_index();
+  my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
+  $ontology_load->load($do_ontology, $index);
+}
+
+$guard->commit unless $dry_run;
