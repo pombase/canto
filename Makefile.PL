@@ -49,6 +49,7 @@ requires 'JSON::Any';
 requires 'HTML::Mason';
 requires 'Data::Rmap';
 requires 'Clone';
+requires 'MIME::Types';
 requires 'Catalyst::Controller::HTML::FormFu';
 requires 'Lingua::EN::Inflect::Number';
 requires 'GO::Parser';
