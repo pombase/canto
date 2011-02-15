@@ -56,8 +56,7 @@ The ontology file should be in OBO format
 ";
 }
 
-if (!$result || $do_help || ($do_genes && $do_ontology) ||
-      !($do_genes || $do_ontology)) {
+if (!$result || $do_help || $do_genes xor $do_ontology) {
   usage();
 }
 
