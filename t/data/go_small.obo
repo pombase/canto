@@ -24,8 +24,6 @@ id: GO:0034762
 name: regulation of transmembrane transport
 namespace: biological_process
 def: "Any process that modulates the frequency, rate or extent of the directed movement of a solute from one side of a membrane to the other." [GOC:mah]
-is_a: GO:0050794 ! regulation of cellular process
-is_a: GO:0051049 ! regulation of transport
 intersection_of: GO:0065007 ! biological regulation
 intersection_of: regulates GO:0055085 ! transmembrane transport
 relationship: regulates GO:0055085 ! transmembrane transport
@@ -38,8 +36,6 @@ def: "Any process that stops, prevents, or reduces the frequency, rate or extent
 synonym: "down regulation of transmembrane transport" EXACT []
 synonym: "inhibition of transmembrane transport" NARROW []
 is_a: GO:0034762 ! regulation of transmembrane transport
-is_a: GO:0048523 ! negative regulation of cellular process
-is_a: GO:0051051 ! negative regulation of transport
 intersection_of: GO:0065007 ! biological regulation
 intersection_of: negatively_regulates GO:0055085 ! transmembrane transport
 relationship: negatively_regulates GO:0055085 ! transmembrane transport
@@ -50,8 +46,6 @@ name: positive regulation of transmembrane transport
 namespace: biological_process
 def: "Any process that activates or increases the frequency, rate or extent of the directed movement of a solute from one side of a membrane to the other." [GOC:mah]
 is_a: GO:0034762 ! regulation of transmembrane transport
-is_a: GO:0048522 ! positive regulation of cellular process
-is_a: GO:0051050 ! positive regulation of transport
 intersection_of: GO:0065007 ! biological regulation
 intersection_of: positively_regulates GO:0055085 ! transmembrane transport
 relationship: positively_regulates GO:0055085 ! transmembrane transport
@@ -64,14 +58,12 @@ alt_id: GO:0008151
 alt_id: GO:0050875
 def: "Any process that is carried out at the cellular level, but not necessarily restricted to a single cell. For example, cell communication occurs among more than one cell, but occurs at the cellular level." [GOC:go_curators, GOC:isa_complete]
 synonym: "cell growth and/or maintenance" NARROW []
-is_a: GO:0008150 ! biological_process
 
 [Term]
 id: GO:0071806
 name: protein transmembrane transport
 namespace: biological_process
 def: "The directed movement of a protein across a membrane by means of some agent such as a transporter or pore." [GOC:mah, GOC:vw]
-is_a: GO:0015031 ! protein transport
 is_a: GO:0055085 ! transmembrane transport
 created_by: midori
 creation_date: 2010-09-03T02:54:26Z

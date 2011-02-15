@@ -106,11 +106,14 @@ sub load
       my $comment = $term->comment();
       my $synonyms = $term->synonyms_by_type('exact');
 
-      if (!$term->is_relationship_type() && !$term->is_obsolete()) {
+      if (!$term->is_obsolete()) {
         my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
                                             term_name => $term->name(),
                                             ontologyid => $term->acc(),
-                                            definition => $term->definition());
+                                            definition => $term->definition(),
+                                            is_relationshiptype =>
+                                              $term->is_relationship_type());
+
         my $cvterm_id = $cvterm->cvterm_id();
 
         if (defined $comment) {
@@ -149,9 +152,6 @@ sub load
   for my $rel (@$rels) {
     my $subject_term_acc = $rel->subject_acc();
     my $object_term_acc = $rel->object_acc();
-
-    # don't try to load the relationship relations
-    next unless $subject_term_acc =~ /:/;
 
     next if $rel->type() eq 'has_part';
 
