@@ -121,7 +121,7 @@ sub load
                                         type_id =>
                                           $comment_cvterm->cvterm_id(),
                                         value => $comment,
-                                        rank =>0,
+                                        rank => 0,
                                       });
         }
 

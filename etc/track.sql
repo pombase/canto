@@ -14,7 +14,7 @@ CREATE TABLE cv (
        cv_id integer NOT NULL PRIMARY KEY,
        name text NOT NULL,
        definition text
-       );
+);
 
 CREATE TABLE db (
     db_id integer NOT NULL PRIMARY KEY,
@@ -41,7 +41,7 @@ CREATE TABLE cvterm (
        name text NOT NULL,
        dbxref_id integer NOT NULL REFERENCES dbxref (dbxref_id),
        definition text
-     );
+);
 CREATE INDEX cvterm_idx1 ON cvterm (cv_id);
 CREATE INDEX cvterm_idx2 ON cvterm (name);
 
