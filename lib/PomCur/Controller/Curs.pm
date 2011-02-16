@@ -892,6 +892,8 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
       if ($_ eq 'with_or_from_identifier') {
         if (defined $val && length $val > 0) {
           $val = "$db:$val";
+        } else {
+          $val = '';
         }
       }
 
