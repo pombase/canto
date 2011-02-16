@@ -65,7 +65,7 @@ sub end : Private
     $c->response->content_type( 'text/html; charset=utf-8' );
   }
   return 1 if $c->req->method eq 'HEAD';
-  return 1 if length( $c->response->body );
+  return 1 if $c->response->body && length($c->response->body);
   return 1 if scalar @{ $c->error } && !$st->{template};
   return 1 if $c->response->status =~ /^(?:204|3\d\d)$/;
   $c->forward('PomCur::View::Mason');
