@@ -1,46 +1,47 @@
 some_key: some_value_1
 some_key_for_overriding: some_value_2
 class_info:
-  person:
-    editable: 1
-    display_field: name
-    order_by: name
-    field_info_list:
-      - name: shortname
-        editable: 1
-      - name: name
-        editable: 1
-      - name: Email address
-        source: networkaddress
-        editable: 1
-      - name: role
-        default_value: "'user'"
-        editable: 1
-        admin_edit_only: 1
-      - name: password
-        editable: 1
-        admin_only: 1
-      - name: lab
-        editable: 1
-  lab:
-    editable: 1
-    display_field: name
-    order_by: name
-    field_info_list:
-      - name: name
-        editable: 1
-      - name: lab_head
-        editable: 1
-      - name: people
-        is_collection: 1
-        editable: 1
-  cvterm:
-    editable: 1
-    display_field: name
-    field_info_list:
-      - name: name
-        editable: 1
-      - name: definition
-        editable: 1
-      - name: cv_id
-        editable: 1
+  track:
+    person:
+      editable: 1
+      display_field: name
+      order_by: name
+      field_info_list:
+        - name: shortname
+          editable: 1
+        - name: name
+          editable: 1
+        - name: Email address
+          source: networkaddress
+          editable: 1
+        - name: role
+          default_value: "'user'"
+          editable: 1
+          admin_edit_only: 1
+        - name: password
+          editable: 1
+          admin_only: 1
+        - name: lab
+          editable: 1
+    lab:
+      editable: 1
+      display_field: name
+      order_by: name
+      field_info_list:
+        - name: name
+          editable: 1
+        - name: lab_head
+          editable: 1
+        - name: people
+          is_collection: 1
+          editable: 1
+    cvterm:
+      editable: 1
+      display_field: name
+      field_info_list:
+        - name: name
+          editable: 1
+        - name: definition
+          editable: 1
+        - name: cv_id
+          editable: 1
