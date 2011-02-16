@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More tests => 6;
+use Test::MockObject;
 
 use PomCur::TestUtil;
 use PomCur::WebUtil;
@@ -16,26 +17,17 @@ my $uc_app_name = uc $lc_app_name;
 my $config = $test_util->config();
 $config->merge_config($test_util->root_dir() . '/t/data/50_config_1.yaml');
 
-my $mock_c = { };
-
 my $schema = PomCur::TrackDB->new(config => $config);
 
 
-# mock package
-package PomCur;
+my $mock_request = Test::MockObject->new();
+$mock_request->mock('param', sub { return 'track' });
 
-sub schema
-{
-  return $schema;
-}
+my $mock_c = Test::MockObject->new();
 
-sub config
-{
-  return $config;
-}
-
-bless $mock_c, "PomCur";
-
+$mock_c->mock('schema', sub { return $schema; });
+$mock_c->mock('config', sub { return $config; });
+$mock_c->mock('request', sub { return $mock_request; });
 
 package main;
 
