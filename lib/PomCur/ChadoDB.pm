@@ -16,6 +16,6 @@ __PACKAGE__->load_classes;
 
 __PACKAGE__->initialise();
 
-__PACKAGE__->meta->make_immutable;
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 1;
