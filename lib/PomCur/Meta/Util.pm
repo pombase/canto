@@ -48,6 +48,8 @@ use PomCur::Config;
 use PomCur::DBUtil;
 use PomCur::DB;
 
+use YAML;
+
 =head2 needs_app_init
 
  Usage   : if (PomCur::Meta::Util::needs_app_init($app_name)) { ... }
@@ -126,13 +128,27 @@ sub initialise_app
         "$config_dir/$deploy_config_file_name") or
     die "can't open $deploy_config_file_name for writing: $!\n";
 
-  print $deploy_config_fh <<"EOF";
-"Model::TrackModel":
-  schema_class: 'PomCur::TrackDB'
-  connect_info:
-     - "dbi:SQLite:dbname=$dest_file"
-data_directory: "$init_dir"
-EOF
+  my $chado_connect_info = [
+    'dbi:Pg:dbname=some_db_name;host=some_host_name',
+      'some_username', 'some_password'
+    ];
+
+  my $new_config = {
+    "Model::TrackModel" => {
+      schema_class => 'PomCur::TrackDB',
+      connect_info => [
+        "dbi:SQLite:dbname=$dest_file"
+      ]
+    },
+    # make a dummy config so that Catalyst doesn't complain
+    "Model::ChadoModel" => {
+      schema_class => 'PomCur::ChadoDB',
+      connect_info => $chado_connect_info
+    },
+    data_directory => $init_dir
+  };
+
+  print $deploy_config_fh Dump($new_config);
 
   close $deploy_config_fh or die "can't close $deploy_config_file_name: $!\n";
 
