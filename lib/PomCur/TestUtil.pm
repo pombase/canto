@@ -405,6 +405,8 @@ sub make_base_track_db
   my $curation_file = $config->{test_config}->{curation_spreadsheet};
   my $genes_file = $config->{test_config}->{test_genes_file};
   my $go_obo_file = $config->{test_config}->{test_go_obo_file};
+  my $relationship_obo_file =
+    $config->{test_config}->{test_relationship_obo_file};
 
   my $track_db_template_file = $config->{track_db_template_file};
 
@@ -432,6 +434,7 @@ sub make_base_track_db
         _load_extra_pubs($schema);
         _add_pub_details($schema);
         $gene_load->load($genes_file);
+        $ontology_load->load($relationship_obo_file);
         $ontology_load->load($go_obo_file, $ontology_index);
       };
 

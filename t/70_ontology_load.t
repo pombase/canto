@@ -21,16 +21,19 @@ is (@loaded_cvterms, 6);
 
 my $test_ontology_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
+my $test_relationship_ontology_file =
+  $test_util->root_dir() . '/' . $config->{test_config}->{test_relationship_obo_file};
 
 my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
 $ontology_index->initialise_index();
 my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
+$ontology_load->load($test_relationship_ontology_file);
 $ontology_load->load($test_ontology_file, $ontology_index);
 $ontology_index->finish_index();
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 26);
+is(@loaded_cvterms, 46);
 
 ok(grep {
   $_->name() eq 'regulation of transmembrane transport'

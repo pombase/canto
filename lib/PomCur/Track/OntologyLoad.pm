@@ -67,7 +67,7 @@ sub _build_load_util
            $ont_load->load($file_name);
  Function: Load the contents an OBO file into the schema
  Args    : $file_name - an obo format file
-           $index - the index to add the terms to
+           $index - the index to add the terms to (optional)
  Returns : Nothing
 
 =cut
@@ -98,6 +98,20 @@ sub load
       $schema->find_with_type('Cvterm', { name => $synonym_type })->cvterm_id();
   }
 
+  my %relationship_cvterms = ();
+
+  my $relationship_cv =
+    $schema->resultset('Cv')->find({ name => 'relationship' });
+  my $isa_cvterm = undef;
+
+  if (defined $relationship_cv) {
+    $isa_cvterm =
+      $schema->resultset('Cvterm')->find({ name => 'is_a',
+                                           cv_id => $relationship_cv->cv_id() });
+
+    $relationship_cvterms{is_a} = $isa_cvterm;
+  }
+
   my $store_term_handler =
     sub {
       my $ni = shift;
@@ -107,6 +121,34 @@ sub load
       my $comment = $term->comment();
       my $synonyms = $term->synonyms_by_type('exact');
 
+      my $xrefs = $term->dbxref_list();
+
+      for my $xref (@$xrefs) {
+        my $x_db_name = $xref->xref_dbname();
+        my $x_acc = $xref->xref_key();
+
+        my $x_db = $schema->resultset('Db')->find({ name => $x_db_name });
+
+        if (defined $x_db) {
+          my $x_dbxref =
+            $schema->resultset('Dbxref')->find({ accession => $x_acc,
+                                                 db_id => $x_db->db_id() });
+
+          if (defined $x_dbxref) {
+            # no need to add it as it's already there, from another ontology
+
+            if ($term->is_relationship_type()) {
+              my $x_dbxref_id = $x_dbxref->dbxref_id();
+              my $cvterm_rs = $schema->resultset('Cvterm');
+              my ($cvterm) = $cvterm_rs->search({dbxref_id => $x_dbxref_id});
+              $relationship_cvterms{$term->name()} = $cvterm;
+            }
+
+            return;
+          }
+        }
+      }
+
       if (!$term->is_obsolete()) {
         my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
                                             term_name => $term->name(),
@@ -114,6 +156,10 @@ sub load
                                             definition => $term->definition(),
                                             is_relationshiptype =>
                                               $term->is_relationship_type());
+
+        if ($term->is_relationship_type()) {
+          $relationship_cvterms{$term->name()} = $cvterm;
+        }
 
         my $cvterm_id = $cvterm->cvterm_id();
 
@@ -142,7 +188,7 @@ sub load
 
         $cvterms{$term->acc()} = $cvterm;
 
-        $index->add_to_index($cvterm);
+        $index->add_to_index($cvterm) if $index;
       }
     };
 
@@ -157,13 +203,10 @@ sub load
     next if $rel->type() eq 'has_part';
 
     my $rel_type = $rel->type();
-    my $rel_type_ontid = "OBO_REL:$rel_type";
+    my $rel_type_cvterm = $relationship_cvterms{$rel_type};
 
     my $subject_cvterm = $cvterms{$subject_term_acc};
     my $object_cvterm = $cvterms{$object_term_acc};
-    my $rel_type_cvterm = $load_util->get_cvterm(cv_name => 'relationship_type',
-                                                 term_name => $rel_type,
-                                                 ontologyid => $rel_type_ontid);
 
     $schema->create_with_type('CvtermRelationship',
                               {
