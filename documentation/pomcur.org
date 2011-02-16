@@ -60,6 +60,45 @@ PomCur installation and maintainence.
    PomCur is written in Perl, implemented using the Catalyst framework and
    running on a Plack server.
 
+* Developing PomCur
+** Running tests
+   :PROPERTIES:
+   :ID:       7e75cddc-b9b9-410b-ac68-8900457483ad
+   :END:
+   In general the tests can be run with: =make test= in the main pomcur
+   directory.  If the schema or test genes or ontologies are is changed the
+   test data will need to be [[id:7e75cddc-b9b9-410b-ac68-8900457483ad][re-initialised]].
+** Helper scripts
+   Scripts to help developers:
+   - =etc/db_initialise.pl= :: create empty template database from the schemas
+        and recreate the database classes in lib/PomCur/TrackDB and
+        lib/PomCur/CursDB
+   - =etc/test_initialise.pl= :: initialise the test databases in t/data with
+        a small number of genes and a mini version of the Gene Ontology
+        database
+   - =etc/local_initialise.pl= :: create a test instance of PomCur in ./local
+** Initialising test data
+   :PROPERTIES:
+   :ID:       5867435c-b002-4c97-b912-1cf0d5167100
+   :END:
+   Run the following commands in the pomcur directory to create the test
+   database and to populate it with test data:
+#+BEGIN_SRC sh
+./etc/db_initialise.pl
+./etc/test_initialise.pl
+#+END_SRC
+
+   That will need to be done each time the schemas or test data change.
+
+   To create a local test instance of PomCur, run =local_initialise.pl=
+** Running the test instance
+   The server can be run from the top level directory with this command:
+#+BEGIN_SRC sh
+POMCUR_CONFIG_LOCAL_SUFFIX=local PERL5LIB=lib ./script/pomcur_server.pl -p 5000 -r -d
+#+END_SRC
+   "5000" is the local port to connect on.  The server should then be
+   available at http://localhost:5000/
+
 * Config
 ###+INFOJS_OPT: view:content toc:t ltoc:t mouse:#dddddd
 #+OPTIONS:     H:5
