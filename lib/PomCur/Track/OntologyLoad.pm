@@ -37,7 +37,6 @@ under the same terms as Perl itself.
 =cut
 
 use Moose;
-use perl5i::2;
 
 use GO::Parser;
 
@@ -71,7 +70,6 @@ sub _build_load_util
  Returns : Nothing
 
 =cut
-
 sub load
 {
   my $self = shift;
