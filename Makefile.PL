@@ -53,6 +53,8 @@ requires 'MIME::Types';
 requires 'Catalyst::Controller::HTML::FormFu';
 requires 'Lingua::EN::Inflect::Number';
 requires 'GO::Parser';
+requires 'Lucene';
+requires 'Text::CSV';
 
 requires 'Config::General';
 
