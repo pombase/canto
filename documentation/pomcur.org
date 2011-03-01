@@ -5,31 +5,58 @@ PomCur installation and maintainence.
   This document describes PomCur from the adminstrators perspective.
 * Requirements
   - Linux, BSD or UNIX
-  - Perl
+  - Perl, clucene
 * Getting the code
   Currently the easiest way to get the code is via GitHub.  Run this command
   to get a copy of the code:
 #+BEGIN_SRC sh
   git clone git://github.com/kimrutherford/pomcur.git pomcur
 #+END_SRC
-  This creates a directory called "pomcur".  The directory can be updated
+  This creates a directory called "=pomcur=".  The directory can be updated
   later with the command:
 #+BEGIN_SRC sh
   git pull
 #+END_SRC
 * Installation
-** Debian
-   - libfile-copy-recursive-perl
-   - libcatalyst-perl
-   - libcatalyst-modules-perl
-   - libdbd-sqlite3-perl
-   - libdbix-class-perl
-   - libdbix-class-schema-loader-perl
-   - libparams-validate-perl
-   - libxml-simple-perl
-   - liburi-perl
-   - libmodule-install-perl
-   - libmoose-perl
+** Installing basic prerequisites
+*** Debian
+    At a minimum, these packages need to installed before [[id:fafab442-0030-4cef-b466-1dafef4827cf][running make]] in the
+    =pomcur= directory:
+#+BEGIN_SRC sh
+sudo apt-get install perl gcc tar gzip bzip2 make libmodule-install-perl
+sudo apt-get install libclucene-dev libclucene0ldbl
+sudo cpan Dist::CheckConflicts
+sudo cpan Module::Install::Catalyst
+#+END_SRC
+
+    If installing from the =git= repository, the git executable will be needed:
+#+BEGIN_SRC sh
+sudo apt-get install git-core
+#+END_SRC
+
+*** CPAN tip
+    Use these commands at the =cpan= prompt avoid lots of questions while
+    installing:
+#+BEGIN_SRC sh
+  o conf prerequisites_policy follow
+  o conf build_requires_install_policy no
+  o conf commit
+#+END_SRC
+
+    This command at the CPAN prompt will update CPAN and install Readline
+    support:
+#+BEGIN_SRC sh
+  install Bundle::CPAN
+#+END_SRC
+
+** Installing other Perl modules
+   :PROPERTIES:
+   :ID:       fafab442-0030-4cef-b466-1dafef4827cf
+   :END:
+#+BEGIN_SRC sh
+perl Makefile.PL
+make
+#+END_SRC
 * Quick start guide
 ** Initialising the data directory
    (in the pomcur directory)
