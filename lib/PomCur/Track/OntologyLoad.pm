@@ -133,8 +133,8 @@ sub load
                                                  db_id => $x_db->db_id() });
 
           if (defined $x_dbxref) {
-            # no need to add it as it's already there, from another ontology
-
+            # no need to add it as it's already there, loaded from another
+            # ontology
             if ($term->is_relationship_type()) {
               my $x_dbxref_id = $x_dbxref->dbxref_id();
               my $cvterm_rs = $schema->resultset('Cvterm');
