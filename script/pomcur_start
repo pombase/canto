@@ -32,7 +32,9 @@ $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
 my $lc_app_name = lc PomCur::Config::get_application_name();
 
-if ($ENV{POMCUR_CONFIG_LOCAL_SUFFIX} eq 'deploy') {
+my $local_suffix = $ENV{POMCUR_CONFIG_LOCAL_SUFFIX};
+
+if ($local_suffix eq 'deploy') {
   my $init_dir = undef;
 
   GetOptions ("initialise=s" => \$init_dir);

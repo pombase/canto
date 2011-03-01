@@ -55,16 +55,16 @@ use YAML;
  Usage   : if (PomCur::Meta::Util::needs_app_init($app_name)) { ... }
  Function: Return true if the given application needs initialisation
  Args    : $app_name - the application name used for finding configuration files
-           $init_dir - the directory containing the track and curs databases,
-                       should not contain slashes
+           $suffix - the file name suffix to use, defaults to "deploy", ie.
+                     <app_name>_deploy.yaml
 
 =cut
 sub app_initialised
 {
   my $app_name = lc shift;
-  my $init_dir = shift;
+  my $suffix = shift // 'deploy';
 
-  my $deploy_config_file_name = $app_name . "_$init_dir.yaml";
+  my $deploy_config_file_name = $app_name . "_$suffix.yaml";
 
   return -f $deploy_config_file_name;
 }
