@@ -180,7 +180,8 @@ sub model_connect_string
  Usage   : $config = PomCur::Config::get_config();
  Function: Get a config object as Catalyst would, by looking for appname.yaml
            and merging the contents with appname_<suffix>.yaml, where <suffix>
-           comes from the environment variable POMCUR_CONFIG_LOCAL_SUFFIX
+           comes from the environment variable POMCUR_CONFIG_LOCAL_SUFFIX, but
+           defaults to "deploy"
 
 =cut
 sub get_config
