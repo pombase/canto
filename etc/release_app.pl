@@ -16,9 +16,8 @@ use warnings;
 use Carp;
 
 use IO::All;
-
 use File::Path qw(make_path);
-
+use Getopt::Long;
 use POSIX ":sys_wait_h";
 
 my $version_prefix = 'v';
@@ -32,18 +31,19 @@ my $apache_conf_dir = '/etc/apache2/pomcur.d/';
 my $config_file_name = 'pomcur_deploy.yaml';
 
 my $start_script = "script/pomcur_start";
+my $plack_handler = undef;
+my $preload = undef;
+my $workers = undef;
+my $google_analytics_id;
 
 my $start_port = 5100;
 my $end_port = 6000;
 
-my $google_analytics_id;
-
-if (@ARGV >= 2) {
-  if ($ARGV[0] eq '--google-analytics-id') {
-    shift;
-    $google_analytics_id = shift;
-  }
-}
+GetOptions ("server|s=s" => \$plack_handler,
+            "preload" => \$preload,
+            "workers=i" => \$workers,
+            "google-analytics-id=s" => \$google_analytics_id,
+          );
 
 sub get_from_run_file
 {
@@ -161,7 +161,18 @@ if ($pid) {
   "pid: $pid\nport: $port\n" > io("$run_dir/$app_name");
   print "started server with pid: $pid on port: $port\n";
 } else {
-  exec "./$start_script", "--port", $port;
+  my @exec_args = ("./$start_script", "--port", $port);
+  if (defined $plack_handler) {
+    push @exec_args, '-s', $plack_handler;
+  }
+  if (defined $preload) {
+    push @exec_args, '--preload';
+  }
+  if (defined $workers) {
+    push @exec_args, '--workers', $workers;
+  }
+
+  exec @exec_args;
 }
 
 my $apache_conf = <<"CONF";
