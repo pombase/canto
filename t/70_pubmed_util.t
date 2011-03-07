@@ -21,7 +21,7 @@ sub _get_batch
 {
   local ($/) = undef;
 
-  my $xml_file_name = $test_util->root_dir() . '/t/data/entrez_pubmed.xml';
+  my $xml_file_name = $test_util->publications_xml_file();
   open my $pubmed_xml, '<', $xml_file_name
     or die "can't open '$xml_file_name': $!";
 
@@ -53,7 +53,7 @@ for my $pub (@pub_results) {
 
 my $count = PomCur::Track::PubmedUtil::add_missing_fields($config, $schema);
 
-is($count, 6);
+is($count, 18);
 
 my @new_pub_results = $schema->resultset('Pub')->search();
 

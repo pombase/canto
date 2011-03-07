@@ -44,8 +44,17 @@ use Text::CSV;
 use XML::Simple;
 use LWP::Simple;
 
-# return an XML string with the pubmed query results for the given ids
-sub _get_batch
+=head2 get_pubmed_xml
+
+ Usage   : my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml($config, @ids);
+ Function: Return an XML chunk from pubmed with information about the
+           publications with IDs given by @ids
+ Args    : $config - the config object
+           @ids - the pubmed ids to search for
+ Returns : The XML from pubmed
+
+=cut
+sub get_pubmed_xml
 {
   my $config = shift;
   my @ids = @_;
@@ -56,6 +65,57 @@ sub _get_batch
   my $url = $pubmed_query_url . join(',', @ids);
 
   return get($url);
+}
+
+=head2 load_pubmed_xml
+
+ Usage   : my $count = PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml);
+ Function: Load the given pubmed XML in the database
+ Args    : $schema - the schema to load into
+           $xml - a string holding an XML fragment about containing some
+                  publications from pubmed
+ Returns : the count of number of publications loaded
+
+=cut
+sub load_pubmed_xml
+{
+  my $schema = shift;
+  my $content = shift;
+
+  my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
+
+  my $res_hash = XMLin($content);
+
+  my $count = 0;
+
+  for my $article (@{$res_hash->{PubmedArticle}}) {
+    my $medline_citation = $article->{MedlineCitation};
+    my $pubmedid = $medline_citation->{PMID}->{content};
+
+    if (!defined $pubmedid) {
+      die "PubMed ID not found in XML\n";
+    }
+
+    my $article = $medline_citation->{Article};
+    my $title = $article->{ArticleTitle};
+    my $abstract = $article->{Abstract}->{AbstractText};
+
+    my $pub_type_cv = $load_util->get_cv('PomBase publication type');
+    my $pub_type = $load_util->get_cvterm(cv => $pub_type_cv,
+                                          term_name => 'unknown');
+
+    my $pub =
+      $schema->resultset('Pub')->find_or_create({ pubmedid => $pubmedid,
+                                                  type => $pub_type });
+
+    $pub->title($title);
+    $pub->abstract($abstract);
+    $pub->update();
+
+    $count++;
+  }
+
+  return $count;
 }
 
 sub _process_batch
@@ -69,26 +129,10 @@ sub _process_batch
   eval {
     $schema->txn_do(
       sub {
-        my $content = _get_batch($config, @ids);
+        my $content = get_pubmed_xml($config, @ids);
         die "Failed to get results" unless defined $content;
 
-        my $res_hash = XMLin($content);
-
-        for my $article (@{$res_hash->{PubmedArticle}}) {
-          my $medline_citation = $article->{MedlineCitation};
-          my $pubmedid = $medline_citation->{PMID};
-          my $article = $medline_citation->{Article};
-          my $title = $article->{ArticleTitle};
-          my $abstract = $article->{Abstract}->{AbstractText};
-
-          my $pub = $schema->find_with_type('Pub', { pubmedid => $pubmedid });
-
-          $pub->title($title);
-          $pub->abstract($abstract);
-          $pub->update();
-
-          $count++;
-        }
+        $count += load_pubmed_xml($schema, $content);
       });
   };
   if ($@) {
@@ -108,7 +152,6 @@ sub _process_batch
  Return  : the number of titles added, dies on error
 
 =cut
-
 sub add_missing_fields
 {
   my $config = shift;
