@@ -87,8 +87,15 @@ sub load_pubmed_xml
   my $res_hash = XMLin($content);
 
   my $count = 0;
+  my @articles;
 
-  for my $article (@{$res_hash->{PubmedArticle}}) {
+  if (ref $res_hash->{PubmedArticle} eq 'ARRAY') {
+    @articles = @{$res_hash->{PubmedArticle}};
+  } else {
+    push @articles, $res_hash->{PubmedArticle};
+  }
+
+  for my $article (@articles) {
     my $medline_citation = $article->{MedlineCitation};
     my $pubmedid = $medline_citation->{PMID}->{content};
 
