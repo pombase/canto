@@ -106,6 +106,7 @@ class_info:
           editable: 1
         - name: role
           default_value: "'user'"
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase user types")'
           editable: 1
           admin_only: 1
         - name: password
