@@ -17,6 +17,7 @@ use File::Basename;
 use YAML qw(LoadFile);
 use Data::Rmap ':all';
 use Clone qw(clone);
+use XML::Simple;
 
 use PomCur::Config;
 use PomCur::Meta::Util;
@@ -373,37 +374,7 @@ sub _add_pub_details
   my $schema = shift;
 
   my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml($config, @test_pub_ids);
-  my $pub_hash = XMLin($xml);
-
-  my %pub_titles = ();
-  my %pub_abstracts = ();
-
-  for my $article (@{$pub_hash->{PubmedArticle}}) {
-    my $medline_citation = $article->{MedlineCitation};
-    my $pubmedid = $medline_citation->{PMID};
-    my $article = $medline_citation->{Article};
-    my $title = $article->{ArticleTitle};
-    my $abstract = $article->{Abstract}->{AbstractText};
-
-    $pub_titles{$pubmedid} = $title;
-    $pub_abstracts{$pubmedid} = $abstract;
-  }
-
-  my @pubs = $schema->resultset('Pub')->all();
-
-  for my $pub (@pubs) {
-    my $title = $pub_titles{$pub->pubmedid()};
-    $pub->title($title) if defined $title;
-    my $abstract = $pub_abstracts{$pub->pubmedid()};
-    $pub->abstract($abstract) if defined $abstract;
-
-    $pub->update();
-  }
-}
-
-sub retreive_test_pubs
-{
-
+  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml);
 }
 
 =head2 make_base_track_db
