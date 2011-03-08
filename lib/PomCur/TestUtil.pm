@@ -43,7 +43,7 @@ no Moose;
 
 $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
 
-=head2
+=head2 new
 
  Usage   : my $utils = PomCur::TestUtil->new();
  Function: Create a new TestUtil object
@@ -77,7 +77,7 @@ sub new
   return bless $self, $class;
 }
 
-=head2
+=head2 connect_string_file_name
 
  Usage   : my $file = PomCur::TestUtil::connect_string_file($connect_string);
  Function: Return the db file name from an sqlite connect string
@@ -94,7 +94,7 @@ sub connect_string_file_name
   return $db_file_name;
 }
 
-=head2
+=head2 init_test
 
  Usage   : $test_util->init_test();
  Function: set up the test environment by creating a test database and
@@ -207,7 +207,7 @@ sub plack_app
   return $app;
 }
 
-=head2
+=head2 root_dir
 
  Usage   : my $test_util = PomCur::TestUtil->new();
            my $root_dir = $test_util->root_dir();
@@ -222,7 +222,7 @@ sub root_dir
   return $self->{root_dir};
 }
 
-=head2
+=head2 config
 
  Usage   : my $test_util = PomCur::TestUtil->new();
            $test_util->init_test();
@@ -237,7 +237,7 @@ sub config
   return $self->{config};
 }
 
-=head2
+=head2 track_schema
 
  Usage   : my $test_util = PomCur::TestUtil->new();
            $test_util->init_test();
