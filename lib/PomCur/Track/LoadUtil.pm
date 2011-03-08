@@ -223,7 +223,7 @@ sub get_pub
 
   return $schema->resultset('Pub')->find_or_create(
       {
-        pubmedid => $pubmedid,
+        uniquename => $pubmedid,
         type => $pub_type,
       });
 }

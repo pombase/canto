@@ -170,7 +170,7 @@ sub track_init
                                   });
   $track_schema->create_with_type('Pub',
                                   {
-                                    pubmedid => 18426916,
+                                    uniquename => 18426916,
                                     title => 'test title',
                                     type_id => 601
                                   });

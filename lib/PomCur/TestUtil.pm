@@ -519,7 +519,7 @@ sub _get_pub_object
   my $schema = shift;
   my $pubmedid = shift;
 
-  return $schema->find_with_type('Pub', { pubmedid => $pubmedid });
+  return $schema->find_with_type('Pub', { uniquename => $pubmedid });
 }
 
 sub _load_curs_db_data

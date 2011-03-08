@@ -145,7 +145,7 @@ test_psgi $app, sub {
   # test create action
   {
     my $test_name = 'Test name';
-    my $pub = $schema->find_with_type('Pub', { pubmedid => '19056896' });
+    my $pub = $schema->find_with_type('Pub', { uniquename => '19056896' });
     my $curs_key = 'abcd1234';
 
     my $uri = new URI("http://localhost:5000/create/curs");
@@ -176,7 +176,7 @@ test_psgi $app, sub {
   # special case: test editing publications separately as they have a reference
   # that ends in _id ("type_id")
   {
-    my $pub = $schema->find_with_type('Pub', { pubmedid => '19686603' });
+    my $pub = $schema->find_with_type('Pub', { uniquename => '19686603' });
 
     ok (defined $pub);
 

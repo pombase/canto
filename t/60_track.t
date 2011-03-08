@@ -22,7 +22,7 @@ my $key = 'abcd0123';
 
 my $first_contact_email = 'val@sanger.ac.uk';
 
-my $pub = $schema->find_with_type('Pub', { pubmedid => '19056896' });
+my $pub = $schema->find_with_type('Pub', { uniquename => '19056896' });
 
 is($pub->type()->name(), 'unknown');
 
@@ -79,7 +79,7 @@ is($metadata_hash{curs_id}, $curs->curs_id());
 my $curs_db_pub_id = $metadata_hash{curation_pub_id};
 my $curs_db_pub = $curs_schema->find_with_type('Pub', $curs_db_pub_id);
 
-is($curs_db_pub->pubmedid(), $pub->pubmedid());
+is($curs_db_pub->pubmedid(), $pub->uniquename());
 is($curs_db_pub->abstract(), $pub->abstract());
 
 my $track_schema = $test_util->track_schema();

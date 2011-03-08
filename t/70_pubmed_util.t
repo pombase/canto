@@ -63,5 +63,5 @@ is(@new_pub_results, @pub_results);
 for my $pub (@new_pub_results) {
   # all should have titles
   ok(defined $pub->title());
-  ok(defined $pub->abstract(), "has abstract: " . $pub->pubmedid());
+  ok(defined $pub->abstract(), "has abstract: " . $pub->uniquename());
 }

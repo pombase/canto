@@ -139,7 +139,7 @@ sub load_pubmed_xml
                                           term_name => 'unknown');
 
     my $pub =
-      $schema->resultset('Pub')->find_or_create({ pubmedid => $pubmedid,
+      $schema->resultset('Pub')->find_or_create({ uniquename => $pubmedid,
                                                   type => $pub_type });
 
     $pub->title($title);
@@ -203,7 +203,7 @@ sub add_missing_fields
   my $count = 0;
 
   while (defined (my $pub = $rs->next())) {
-    my $pubmedid = $pub->pubmedid();
+    my $pubmedid = $pub->uniquename();
 
     if (defined $pubmedid) {
       push @missing_field_ids, $pubmedid;

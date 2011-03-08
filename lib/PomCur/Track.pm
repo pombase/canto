@@ -64,7 +64,7 @@ sub create_curs_db
   my $config = shift;
   my $curs = shift;
 
-  my $pubmedid = $curs->pub()->pubmedid();
+  my $pubmedid = $curs->pub()->uniquename();
   my $curs_key = $curs->curs_key();
 
   my $exists_flag = 1;
