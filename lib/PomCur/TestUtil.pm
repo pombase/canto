@@ -345,8 +345,7 @@ sub create_pubmed_test_xml
   my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml($config,
                                                       @test_pub_ids);
 
-  my $test_util = PomCur::TestUtil->new();
-  my $pubmed_xml_file = $test_util->publications_xml_file();
+  my $pubmed_xml_file = $self->publications_xml_file();
 
   open my $pubmed_xml_fh, '>', $pubmed_xml_file
     or die "can't open $pubmed_xml_file for writing: $!\n";
