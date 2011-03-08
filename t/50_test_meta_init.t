@@ -8,7 +8,7 @@ use PomCur::Config;
 
 use File::Path qw(remove_tree);
 
-my $config = PomCur::Config->new('pomcur.yaml');
+my $config = PomCur::Config->new();
 
 my $deploy_dir = 't/scratch';
 

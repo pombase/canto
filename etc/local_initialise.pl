@@ -19,8 +19,8 @@ use File::Copy qw(copy);
 
 use File::Copy::Recursive qw(dircopy);
 
-my $config = PomCur::Config->new("pomcur.yaml");
-$config->merge_config($config->{test_config_file}, "pomcur_local.yaml");
+my $config = PomCur::Config->new_test_config();
+$config->merge_config("pomcur_local.yaml");
 
 my $connect_string = $config->model_connect_string('Track');
 

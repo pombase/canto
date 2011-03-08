@@ -47,16 +47,24 @@ use vars qw($VERSION);
 
 $VERSION = '0.01';
 
+my $app_config_file = "pomcur.yaml";
+my $test_config_file = "t/test_config.yaml";
+
 =head2 new
 
- Usage   : my $config = PomCur::Config->new($file_name);
- Function: Create a new Config object from the file.
+ Usage   : my $config = PomCur::Config->new($file_name, [$file_name_2, ...]);
+ Function: Create a new Config object from the given files.  If no files are
+           given read from the default application configuration file.
 
 =cut
 sub new
 {
   my $class = shift;
   my @config_file_names = @_;
+
+  if (@config_file_names == 0) {
+    push @config_file_names, $app_config_file;
+  }
 
   my $self = LoadFile(shift @config_file_names);
 
@@ -70,6 +78,20 @@ sub new
   $self->setup();
 
   return $self;
+}
+
+=head2 new_test_config
+
+ Usage   : my $config = PomCur::Config->new_test_config();
+ Function: Create a Config object including the test settings
+ Args    : none
+
+=cut
+sub new_test_config
+{
+  my $self = shift;
+
+  return $self->new($app_config_file, $test_config_file);
 }
 
 =head2 merge_config

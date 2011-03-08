@@ -27,8 +27,7 @@ my %test_schemas = ();
 
 my $test_util = PomCur::TestUtil->new();
 
-my $config = PomCur::Config->new("pomcur.yaml");
-$config->merge_config($config->{test_config_file});
+my $config = PomCur::Config->new_test_config();
 
 $config->{data_directory} = $test_util->root_dir() . '/t/data';
 
