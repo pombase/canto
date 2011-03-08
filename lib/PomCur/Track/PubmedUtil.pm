@@ -64,7 +64,6 @@ sub get_pubmed_xml
 
   my $url = $pubmed_query_url . join(',', @ids);
 
-
   my $ua = LWP::UserAgent->new;
   $ua->agent($config->get_application_name());
 
