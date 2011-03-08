@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 36;
+use Test::More tests => 45;
 
 use PomCur::TestUtil;
 use PomCur::Track::PubmedUtil;
@@ -51,9 +51,10 @@ for my $pub (@pub_results) {
   $defined_count++ if defined $pub->title();
 }
 
-my $count = PomCur::Track::PubmedUtil::add_missing_fields($config, $schema);
+my $xml = $test_util->get_pubmed_test_xml();
+my $count = PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml);
 
-is($count, 18);
+is($count, 21);
 
 my @new_pub_results = $schema->resultset('Pub')->search();
 
@@ -62,8 +63,5 @@ is(@new_pub_results, @pub_results);
 for my $pub (@new_pub_results) {
   # all should have titles
   ok(defined $pub->title());
-  # all but 3 have abstracts
-  ok(defined $pub->abstract())
-    unless grep { $pub->pubmedid() eq $_ } qw(18426916 7518718 7958849);
-#  ok(defined $pub->authors());
+  ok(defined $pub->abstract(), "has abstract: " . $pub->pubmedid());
 }

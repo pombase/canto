@@ -324,7 +324,7 @@ sub make_track_test_db
 my @test_pub_ids = (
   7958849, 19351719, 17304215, 19686603, 19160458, 19664060, 19041767,
   19037101, 19436749, 7518718, 18430926, 19056896, 18426916, 20976105,
-  20622008, 19756689, 16641370, 20870879,
+  20622008, 19756689, 16641370, 20870879, 18556659, 19211838, 19627505
 );
 
 =head2 create_pubmed_test_xml
@@ -354,6 +354,30 @@ sub create_pubmed_test_xml
   print $pubmed_xml_fh $xml;
 
   close $pubmed_xml_fh or die "$!";
+}
+
+=head2 get_pubmed_test_xml
+
+ Usage   : my $xml = get_pubmed_test_xml();
+ Function: Return the contents of the test XML file.  The file is updated with
+           the: etc/data_initialise.pl script
+ Args    : none
+ Returns : the XML
+
+=cut
+sub get_pubmed_test_xml
+{
+  my $self = shift;
+
+  my $xml_file_name = $self->publications_xml_file();
+
+  local $/ = undef;
+  open my $xml_file, '<', $xml_file_name
+    or die "can't open $xml_file_name";
+  my $xml = <$xml_file>;
+  close $xml_file or die "$!";
+
+  return $xml;
 }
 
 # pubmed IDs which won't have title, authors, etc.

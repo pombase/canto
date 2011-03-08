@@ -42,7 +42,7 @@ use Moose;
 
 use Text::CSV;
 use XML::Simple;
-use LWP::Simple;
+use LWP::UserAgent;
 
 =head2 get_pubmed_xml
 
@@ -64,7 +64,18 @@ sub get_pubmed_xml
 
   my $url = $pubmed_query_url . join(',', @ids);
 
-  return get($url);
+
+  my $ua = LWP::UserAgent->new;
+  $ua->agent($config->get_application_name());
+
+  my $req = HTTP::Request->new(GET => $url);
+  my $res = $ua->request($req);
+
+  if ($res->is_success) {
+    return $res->content;
+  } else {
+    die "Couldn't read from $url: ", $res->status_line, "\n";
+  }
 }
 
 =head2 load_pubmed_xml
@@ -84,7 +95,8 @@ sub load_pubmed_xml
 
   my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
-  my $res_hash = XMLin($content);
+  my $res_hash = XMLin($content,
+                       ForceArray => ['AbstractText']);
 
   my $count = 0;
   my @articles;
@@ -105,7 +117,22 @@ sub load_pubmed_xml
 
     my $article = $medline_citation->{Article};
     my $title = $article->{ArticleTitle};
-    my $abstract = $article->{Abstract}->{AbstractText};
+    my $abstract_text = $article->{Abstract}->{AbstractText};
+
+    my $abstract;
+
+    if (ref $abstract_text eq 'ARRAY') {
+      $abstract = join ("\n",
+                        map {
+                          if (ref $_ eq 'HASH') {
+                            $_->{content};
+                          } else {
+                            $_;
+                          }
+                        } @$abstract_text);
+    } else {
+      $abstract = $abstract_text;
+    }
 
     my $pub_type_cv = $load_util->get_cv('PomBase publication type');
     my $pub_type = $load_util->get_cvterm(cv => $pub_type_cv,
