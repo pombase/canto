@@ -342,8 +342,8 @@ sub create_pubmed_test_xml
 
   my $config = PomCur::Config->get_config();
 
-  my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml($config,
-                                                      @test_pub_ids);
+  my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_ids($config,
+                                                             @test_pub_ids);
 
   my $pubmed_xml_file = $self->publications_xml_file();
 
@@ -396,7 +396,8 @@ sub _add_pub_details
   my $config = shift;
   my $schema = shift;
 
-  my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml($config, @test_pub_ids);
+  my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_ids($config,
+                                                             @test_pub_ids);
   PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml);
 }
 

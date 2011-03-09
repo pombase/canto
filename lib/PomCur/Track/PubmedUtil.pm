@@ -44,25 +44,10 @@ use Text::CSV;
 use XML::Simple;
 use LWP::UserAgent;
 
-=head2 get_pubmed_xml
-
- Usage   : my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml($config, @ids);
- Function: Return an XML chunk from pubmed with information about the
-           publications with IDs given by @ids
- Args    : $config - the config object
-           @ids - the pubmed ids to search for
- Returns : The XML from pubmed
-
-=cut
-sub get_pubmed_xml
+sub _get_url
 {
   my $config = shift;
-  my @ids = @_;
-
-  my $pubmed_query_url =
-    $config->{external_sources}->{pubmed_query_url};
-
-  my $url = $pubmed_query_url . join(',', @ids);
+  my $url = shift;
 
   my $ua = LWP::UserAgent->new;
   $ua->agent($config->get_application_name());
@@ -75,6 +60,54 @@ sub get_pubmed_xml
   } else {
     die "Couldn't read from $url: ", $res->status_line, "\n";
   }
+}
+
+=head2 get_pubmed_xml_by_ids
+
+ Usage   : my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_ids($config,
+                                                                      @ids);
+ Function: Return an XML chunk from pubmed with information about the
+           publications with IDs given by @ids
+ Args    : $config - the config object
+           @ids - the pubmed ids to search for
+ Returns : The XML from pubmed
+
+=cut
+sub get_pubmed_xml_by_ids
+{
+  my $config = shift;
+  my @ids = @_;
+
+  my $pubmed_query_url =
+    $config->{external_sources}->{pubmed_efetch_url};
+
+  my $url = $pubmed_query_url . join(',', @ids);
+
+  return _get_url($config, $url);
+}
+
+=head2 get_pubmed_ids_by_text
+
+ Usage   : my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_text($config,
+                                                                       $text);
+ Function: Return a list of PubMed IDs of the articles that match the given
+           text (in the title or abstract)
+ Args    : $config - the config object
+           $text - the text
+ Returns : XML containing the matching IDs
+
+=cut
+sub get_pubmed_xml_by_text
+{
+  my $config = shift;
+  my $text = shift;
+
+  my $pubmed_query_url =
+    $config->{external_sources}->{pubmed_esearch_url};
+
+  my $url = $pubmed_query_url . $text;
+
+  return _get_url($config, $url);
 }
 
 =head2 load_pubmed_xml
@@ -162,7 +195,7 @@ sub _process_batch
   eval {
     $schema->txn_do(
       sub {
-        my $content = get_pubmed_xml($config, @ids);
+        my $content = get_pubmed_xml_by_ids($config, @ids);
         die "Failed to get results" unless defined $content;
 
         $count += load_pubmed_xml($schema, $content);
