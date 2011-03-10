@@ -72,6 +72,7 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-09 15:54:16
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QTH48OIanNPNBm9E+orHgA
 
+
 use Carp;
 
 sub get_organism
@@ -87,9 +88,7 @@ sub get_organism
                                              taxonid => $taxonid });
 }
 
-1;
 
-
-# You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
+
 1;

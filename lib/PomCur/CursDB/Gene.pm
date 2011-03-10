@@ -104,9 +104,12 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->many_to_many('annotations' => 'gene_annotations', 'annotation');
 
+
 use Moose;
 
 with 'PomCur::Role::GeneNames';
 
+
 __PACKAGE__->meta->make_immutable;
+
 1;

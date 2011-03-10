@@ -56,6 +56,6 @@ __PACKAGE__->add_unique_constraint("key_unique", ["key"]);
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7sJTR/8hfCSh81OLzGe0fQ
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
+
 1;

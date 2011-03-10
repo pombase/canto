@@ -117,6 +117,7 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-09 12:57:29
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BszWB0et69SXmY8/9jfsWg
 
+
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');
 
 use YAML;
@@ -127,6 +128,6 @@ __PACKAGE__->inflate_column('data', {
 });
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
+
 1;
