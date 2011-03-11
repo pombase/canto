@@ -55,6 +55,7 @@ requires 'Lingua::EN::Inflect::Number';
 requires 'GO::Parser';
 requires 'Lucene';
 requires 'Text::CSV';
+requires 'JSON';
 
 requires 'Config::General';
 
