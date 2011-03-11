@@ -33,7 +33,7 @@ requires 'Moose';
 requires 'MooseX::NonMoose';
 requires 'MooseX::Role::Parameterized';
 requires 'Params::Validate';
-requires 'YAML';
+requires 'YAML::Tiny';
 requires 'XML::Simple';
 requires 'LWP::Simple';
 requires 'Plack';

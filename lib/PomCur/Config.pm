@@ -38,7 +38,7 @@ under the same terms as Perl itself.
 use strict;
 
 use Params::Validate qw(:all);
-use YAML qw(LoadFile);
+use YAML::Tiny qw(LoadFile);
 use Carp;
 
 use v5.005;

@@ -87,7 +87,7 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:G6BJAT6GBN87IgD74Vujfg
 
 
-use YAML;
+use YAML::Tiny qw(Load Dump);
 
 __PACKAGE__->inflate_column('data', {
   inflate => sub { my @res = Load(shift); $res[0] },

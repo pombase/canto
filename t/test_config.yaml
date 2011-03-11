@@ -11,12 +11,12 @@ test_config:
   test_relationship_obo_file: "t/data/ro.obo"
   test_cases:
     empty_db:
-    '0_curs': []
-    '1_curs':
+    0_curs: []
+    1_curs:
        - curs_key: aaaa0001
          first_contact_email: "nick.rhind@umassmed.edu"
          pubmedid: 19664060
-    '3_curs':
+    3_curs:
        - curs_key: aaaa0002
          first_contact_email: "hoffmacs@bc.edu"
          pubmedid: 19686603
@@ -34,7 +34,7 @@ test_config:
          genes:
            - "cdc11"
            - "SPCC1739.10"
-    'curs_annotations_1':
+    curs_annotations_1:
        - curs_key: aaaa0005
          first_contact_email: "kevin.hardwick@ed.ac.uk"
          pubmedid: 18426916
@@ -48,17 +48,17 @@ test_config:
          annotations:
            - type: cellular_component
              status: new
-             'genes(Gene:primary_identifier)':
-               - 'SPCC1739.10'
-             'pub(Pub:pubmedid)': 18426916
+             genes(Gene:primary_identifier):
+               - SPCC1739.10
+             pub(Pub:pubmedid): 18426916
              data:
                evidence_code: IMP
                term_ontid: GO:0055085
            - type: cellular_component
              status: new
-             'genes(Gene:primary_identifier)':
-               - 'SPAC3A11.14c'
-             'pub(Pub:pubmedid)': 18426916
+             genes(Gene:primary_identifier):
+               - SPAC3A11.14c
+             pub(Pub:pubmedid): 18426916
              data:
                evidence_code: IPI
                term_ontid: GO:0030133
