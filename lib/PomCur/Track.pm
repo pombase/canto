@@ -92,7 +92,6 @@ sub create_curs_db
                                      uniquename => $uniquename,
                                      title => $track_db_pub->title(),
                                      abstract => $track_db_pub->abstract(),
-                                     data => {}
                                    });
 
   # the calling function will wrap this in a transaction if necessary

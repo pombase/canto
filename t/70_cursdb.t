@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 3;
 
 use Data::Compare;
 
@@ -17,35 +17,20 @@ my $schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0005');
 
 ok($schema);
 
-my $test_data = { year => 1999 };
-
-
 # test inflating and deflating of data
 $schema->txn_do(
   sub {
     $schema->create_with_type('Pub', { uniquename => 12345678,
                                        title => "a title",
                                        abstract => "abstract text",
-                                       data => $test_data });
+                                     });
   });
 
 my $res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
 
-my $res = $res_pub->data();
-
-ok(Compare($res, $test_data));
-
-$res->{year} = 2525;
-
-$res_pub->data($res);
-
 $res_pub->update();
 
 my $new_res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
-
-my $new_data = $new_res_pub->data();
-
-ok(!Compare($new_data, $test_data));
 
 my $cdc11 = $schema->find_with_type('Gene', { primary_name => 'cdc11' });
 my @cdc11_annotations = $cdc11->annotations();

@@ -43,11 +43,6 @@ __PACKAGE__->table("pub");
   data_type: 'text'
   is_nullable: 1
 
-=head2 data
-
-  data_type: 'text'
-  is_nullable: 0
-
 =cut
 
 __PACKAGE__->add_columns(
@@ -59,8 +54,6 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "abstract",
   { data_type => "text", is_nullable => 1 },
-  "data",
-  { data_type => "text", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("pub_id");
 __PACKAGE__->add_unique_constraint("uniquename_unique", ["uniquename"]);
@@ -83,17 +76,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-14 15:37:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+zNXQj9U9jA8LPobZ9NT7g
-
-
-use YAML::Tiny qw(Load Dump);
-
-__PACKAGE__->inflate_column('data', {
-  inflate => sub { my @res = Load(shift); $res[0] },
-  deflate => sub { Dump(shift) },
-});
-
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-14 17:46:35
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iGqNQ04QcGrYAAiC8VLXmQ
 
 __PACKAGE__->meta->make_immutable;
 
