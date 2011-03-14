@@ -29,8 +29,6 @@ $pub
         </td>
       </tr>
     </table>
-    <input id="ferret-suggest-submit" name="ferret-submit" type="submit"
-           value="Submit suggestion" class="button"/>
   </form>
 
   <hr/>
@@ -49,8 +47,8 @@ that differentiate your new term "A" from other members of the group "B")&rdquo;
 
     <div id="ferret-term-details" style="display: none" class="curs-box">
       <div id="ferret-help-step-1" class="inline-help curs-box-title">
-Step 1: Please read the definition of the currently selected term and ensure
-it is equivalent to, or broader than, the term you require.
+Please read the definition of the currently selected term to ensure that
+it accurately describes your gene:
       </div>
       <div class="curs-box-body">
         <table>
@@ -80,8 +78,6 @@ it is equivalent to, or broader than, the term you require.
           <div>
 Annotate with this term
           </div>
-          <input id="ferret-accept-term-proceed" name="ferret-submit"
-                 type="submit" value="Proceed" class="button"/>
         </div>
       </div>
     </div>
@@ -133,9 +129,9 @@ Gene products may be annotated with multiple
     <div id="ferret-children-details" style="display: none" class="curs-box">
       <div id="ferret-term-children" style="display: none">
         <div id="ferret-help-step-2" class="inline-help curs-box-title">
-Step 2: Select a child of <span class="term-id ferret-term-id-display"></span>
-below if it (or one of its possible descendants) describes the experiment you
-are curating more precisely.
+If possible, please refine your term selection. Clicking on a child term
+from the list below selects it and shows its definition (and children,
+if any):
         </div>
         <div id="ferret-term-children-list" class="curs-box-body">
         </div>
@@ -143,9 +139,9 @@ are curating more precisely.
 
       <div id="ferret-leaf" style="display: none">
         <div id="ferret-help-step-2-suggest" class="inline-help curs-box-title">
-Step 2: The term "<span class='ferret-term-name'></span>" you
-have currently selected has no children. If this term is not specific enough
-to describe the experiment you are annotating suggest a new child term.
+The currently selected term has no children. If you need a more specific
+term to describe the experiment you are annotating, please follow the
+link below to suggest it:
           <a id="ferret-help-step-2-suggest-help" class="pomcur-more-button" href='#'>more ...</a>
 
           <div id="ferret-help-step-2-suggest-help-target" class="ferret-more-help">
@@ -174,9 +170,12 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
         </div>
       </div>
 
-      <input id="ferret-ignore-children" name="ferret-cancel-children"
-             type="submit" value="Ignore suggestions" class="button"/>
+      <div id="ferret-accept-term-proceed-message">
+        Otherwise, use the currently selected term:
 
+        <input id="ferret-accept-term-proceed" name="ferret-submit"
+               type="submit" value="Proceed -&gt;" class="button"/>
+      </div>
     </div>
   </form>
 </div>

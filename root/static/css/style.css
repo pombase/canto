@@ -535,6 +535,11 @@ div.clearall {
   font-weight: bold;
 }
 
+#ferret-accept-term-proceed-message {
+  clear: both;
+  float: right;
+}
+
 .term-id {
   color: #000;
   font-weight: bold;
