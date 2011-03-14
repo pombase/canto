@@ -50,19 +50,82 @@ sub _get_metadata
   return [map { { $_->key(), $_->value() } } @results];
 }
 
+sub _get_annotations
+{
+  my $schema = shift;
+  my $gene = shift;
+
+  my $rs = $gene->annotations();
+  my @ret = ();
+
+  while (defined (my $annotation = $rs->next())) {
+    my %extra_data = %{$annotation->data()};
+
+    push @ret, {
+      status => $annotation->status(),
+      publication => $annotation->pub->pubmedid(),
+      type => $annotation->type(),
+      creation_date => $annotation->creation_date(),
+      %extra_data,
+    };
+  }
+
+  return \@ret;
+}
+
 sub _get_genes
 {
-  {}
+  my $schema = shift;
+
+  my $rs = $schema->resultset('Gene');
+  my @ret = ();
+
+  while (defined (my $gene = $rs->next())) {
+    push @ret, {
+      primary_identifier => $gene->primary_identifier(),
+      primary_name => $gene->primary_name(),
+      product => $gene->product(),
+      organism => $gene->organism()->full_name(),
+      annotations => _get_annotations($schema, $gene),
+    };
+  }
+
+  return \@ret;
 }
 
 sub _get_organisms
 {
-  {}
+  my $schema = shift;
+
+  my $rs = $schema->resultset('Organism');
+  my @ret = ();
+
+  while (defined (my $organism = $rs->next())) {
+    push @ret, {
+      full_name => $organism->full_name(),
+      taxonid => $organism->taxonid(),
+    };
+  }
+
+  return \@ret;
 }
 
 sub _get_pubs
 {
-  {}
+  my $schema = shift;
+
+  my $rs = $schema->resultset('Pub');
+  my @ret = ();
+
+  while (defined (my $pub = $rs->next())) {
+    push @ret, {
+      pubmedid => $pub->pubmedid(),
+      title => $pub->title(),
+      abstract => $pub->abstract(),
+    };
+  }
+
+  return \@ret;
 }
 
 =head2 json
@@ -90,7 +153,7 @@ sub perl
     metadata => _get_metadata($schema),
     genes => _get_genes($schema),
     organisms => _get_organisms($schema),
-    pubs => _get_pubs($schema)
+    publications => _get_pubs($schema)
   };
 }
 
