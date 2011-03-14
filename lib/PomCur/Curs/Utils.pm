@@ -106,7 +106,7 @@ sub get_annotation_table
       my $annotation_type_abbreviation =
         $annotation_type_config->{abbreviation};
 
-      my $pubmedid = $annotation->pub()->pubmedid();
+      my $uniquename = $annotation->pub()->uniquename();
       my $result =
         $go_lookup->web_service_lookup(ontology_name => $annotation_type,
                                        search_string => $term_ontid);
@@ -147,7 +147,7 @@ sub get_annotation_table
         annotation_type_display_name => $annotation_type_display_name,
         annotation_type_abbreviation => $annotation_type_abbreviation,
         annotation_id => $annotation->annotation_id(),
-        pubmedid => $pubmedid,
+        uniquename => $uniquename,
         term_ontid => $term_ontid,
         term_name => $term_name,
         evidence_code => $evidence_code,

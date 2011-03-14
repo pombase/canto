@@ -64,7 +64,7 @@ sub create_curs_db
   my $config = shift;
   my $curs = shift;
 
-  my $pubmedid = $curs->pub()->uniquename();
+  my $uniquename = $curs->pub()->uniquename();
   my $curs_key = $curs->curs_key();
 
   my $exists_flag = 1;
@@ -89,7 +89,7 @@ sub create_curs_db
   my $curs_db_pub =
     $curs_schema->create_with_type('Pub',
                                    {
-                                     pubmedid => $pubmedid,
+                                     uniquename => $uniquename,
                                      title => $track_db_pub->title(),
                                      abstract => $track_db_pub->abstract(),
                                      data => {}

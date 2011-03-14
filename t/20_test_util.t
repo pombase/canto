@@ -112,7 +112,7 @@ use PomCur::Track::LoadUtil;
         }
       },
       'Pub' => {
-        pubmedid => {
+        uniquename => {
           18426916 => 300
         }
       }
@@ -241,7 +241,7 @@ sub track_init
 
   my $annotation_conf = $curs_config->{annotations}->[0];
 
-  is ($res_annotation->pub()->pubmedid(), $annotation_conf->{'pub(Pub:pubmedid)'});
+  is ($res_annotation->pub()->uniquename(), $annotation_conf->{'pub(Pub:uniquename)'});
 
   my $gene_identifier = $annotation_conf->{'genes(Gene:primary_identifier)'};
   my $gene = $cursdb_schema->find_with_type('Gene',

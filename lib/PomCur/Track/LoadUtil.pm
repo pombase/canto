@@ -204,16 +204,16 @@ sub get_cvterm
 
 =head2 get_pub
 
- Usage   : my $pub = $load_util->get_pub($pubmedid);
+ Usage   : my $pub = $load_util->get_pub($uniquename);
  Function: Find or create, and then return the object matching the arguments
- Args    : $pubmedid - the PubMed ID
+ Args    : $uniquename - the PubMed ID
  Returns : The new pub object
 
 =cut
 sub get_pub
 {
   my $self = shift;
-  my $pubmedid = shift;
+  my $uniquename = shift;
 
   my $schema = $self->schema();
 
@@ -223,7 +223,7 @@ sub get_pub
 
   return $schema->resultset('Pub')->find_or_create(
       {
-        uniquename => $pubmedid,
+        uniquename => $uniquename,
         type => $pub_type,
       });
 }

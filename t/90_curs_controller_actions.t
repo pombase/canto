@@ -37,7 +37,7 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
 my $pub_title_fragment = "Inactivating pentapeptide insertions";
 
-my $pubmedid = "PMID:19664060";
+my $uniquename = "PMID:19664060";
 
 my @gene_identifiers = qw(cdc11 wtf22 SPCC1739.10);
 
@@ -174,7 +174,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr/Removed 1 gene from list/);
-    like ($res->content(), qr/Gene list for $pubmedid/);
+    like ($res->content(), qr/Gene list for $uniquename/);
 
     my @genes_after_delete = $curs_schema->resultset('Gene')->all();
 
@@ -202,7 +202,7 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     like ($redirect_res->content(),
-          qr/Curating\s+$gene_identifiers[0]\s+from\s+$pubmedid/);
+          qr/Curating\s+$gene_identifiers[0]\s+from\s+$uniquename/);
   }
 };
 

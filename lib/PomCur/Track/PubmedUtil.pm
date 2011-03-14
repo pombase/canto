@@ -141,9 +141,9 @@ sub load_pubmed_xml
 
   for my $article (@articles) {
     my $medline_citation = $article->{MedlineCitation};
-    my $pubmedid = $medline_citation->{PMID}->{content};
+    my $uniquename = $medline_citation->{PMID}->{content};
 
-    if (!defined $pubmedid) {
+    if (!defined $uniquename) {
       die "PubMed ID not found in XML\n";
     }
 
@@ -171,7 +171,7 @@ sub load_pubmed_xml
                                           term_name => 'unknown');
 
     my $pub =
-      $schema->resultset('Pub')->find_or_create({ uniquename => $pubmedid,
+      $schema->resultset('Pub')->find_or_create({ uniquename => $uniquename,
                                                   type => $pub_type });
 
     $pub->title($title);
@@ -235,10 +235,10 @@ sub add_missing_fields
   my $count = 0;
 
   while (defined (my $pub = $rs->next())) {
-    my $pubmedid = $pub->uniquename();
+    my $uniquename = $pub->uniquename();
 
-    if (defined $pubmedid) {
-      push @missing_field_ids, $pubmedid;
+    if (defined $uniquename) {
+      push @missing_field_ids, $uniquename;
 
       if (@missing_field_ids == $max_batch_size) {
         $count += _process_batch($config, $schema, @missing_field_ids);

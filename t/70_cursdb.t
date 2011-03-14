@@ -23,13 +23,13 @@ my $test_data = { year => 1999 };
 # test inflating and deflating of data
 $schema->txn_do(
   sub {
-    $schema->create_with_type('Pub', { pubmedid => 12345678,
+    $schema->create_with_type('Pub', { uniquename => 12345678,
                                        title => "a title",
                                        abstract => "abstract text",
                                        data => $test_data });
   });
 
-my $res_pub = $schema->find_with_type('Pub', { pubmedid => 12345678 });
+my $res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
 
 my $res = $res_pub->data();
 
@@ -41,7 +41,7 @@ $res_pub->data($res);
 
 $res_pub->update();
 
-my $new_res_pub = $schema->find_with_type('Pub', { pubmedid => 12345678 });
+my $new_res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
 
 my $new_data = $new_res_pub->data();
 

@@ -63,7 +63,7 @@ sub _get_annotations
 
     push @ret, {
       status => $annotation->status(),
-      publication => $annotation->pub->pubmedid(),
+      publication => $annotation->pub->uniquename(),
       type => $annotation->type(),
       creation_date => $annotation->creation_date(),
       %extra_data,
@@ -119,7 +119,7 @@ sub _get_pubs
 
   while (defined (my $pub = $rs->next())) {
     push @ret, {
-      pubmedid => $pub->pubmedid(),
+      uniquename => $pub->uniquename(),
       title => $pub->title(),
       abstract => $pub->abstract(),
     };

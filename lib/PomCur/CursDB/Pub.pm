@@ -28,7 +28,7 @@ __PACKAGE__->table("pub");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 pubmedid
+=head2 uniquename
 
   data_type: 'integer'
   is_nullable: 0
@@ -53,7 +53,7 @@ __PACKAGE__->table("pub");
 __PACKAGE__->add_columns(
   "pub_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "pubmedid",
+  "uniquename",
   { data_type => "integer", is_nullable => 0 },
   "title",
   { data_type => "text", is_nullable => 0 },
@@ -63,7 +63,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("pub_id");
-__PACKAGE__->add_unique_constraint("pubmedid_unique", ["pubmedid"]);
+__PACKAGE__->add_unique_constraint("uniquename_unique", ["uniquename"]);
 
 =head1 RELATIONS
 
@@ -83,8 +83,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:G6BJAT6GBN87IgD74Vujfg
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-14 15:37:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+zNXQj9U9jA8LPobZ9NT7g
 
 
 use YAML::Tiny qw(Load Dump);

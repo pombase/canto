@@ -6,7 +6,7 @@ $form
 <div>
 Please enter the systematic identifier (eg. <% $example_identifier %>)
 or the primary identifier (eg. <% $example_name %>) of the genes
-referred to in <span class="pubmedid">PMID:<% $pubmedid %></span>
+referred to in <span class="uniquename">PMID:<% $uniquename %></span>
 </div>
 
 <div id="gene-update">
@@ -19,5 +19,5 @@ my $example_identifier =
 my $example_name =
   $c->config()->{messages}->{gene_upload}->{examples}->{gene_name};
 
-my $pubmedid = $c->stash()->{pub}->pubmedid();
+my $uniquename = $c->stash()->{pub}->uniquename();
 </%init>

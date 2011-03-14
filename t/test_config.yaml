@@ -15,19 +15,19 @@ test_config:
     1_curs:
        - curs_key: aaaa0001
          first_contact_email: "nick.rhind@umassmed.edu"
-         pubmedid: 19664060
+         uniquename: 19664060
     3_curs:
        - curs_key: aaaa0002
          first_contact_email: "hoffmacs@bc.edu"
-         pubmedid: 19686603
+         uniquename: 19686603
        - curs_key: aaaa0003
          first_contact_email: "kevin.hardwick@ed.ac.uk"
-         pubmedid: 19436749
+         uniquename: 19436749
          submitter_email: "kevin.hardwick@ed.ac.uk"
          submitter_name: "Kevin Hardwick"
        - curs_key: aaaa0004
          first_contact_email: "kevin.hardwick@ed.ac.uk"
-         pubmedid: 18426916
+         uniquename: 18426916
          submitter_email: "fred.smith@ed.ac.uk"
          submitter_name: "Fred Smith"
          current_gene: "SPCC1739.10"
@@ -37,7 +37,7 @@ test_config:
     curs_annotations_1:
        - curs_key: aaaa0005
          first_contact_email: "kevin.hardwick@ed.ac.uk"
-         pubmedid: 18426916
+         uniquename: 18426916
          submitter_email: "fred.smith@ed.ac.uk"
          submitter_name: "Fred Smith"
          current_gene: "SPCC1739.10"
@@ -50,7 +50,7 @@ test_config:
              status: new
              genes(Gene:primary_identifier):
                - SPCC1739.10
-             pub(Pub:pubmedid): 18426916
+             pub(Pub:uniquename): 18426916
              data:
                evidence_code: IMP
                term_ontid: GO:0055085
@@ -58,7 +58,7 @@ test_config:
              status: new
              genes(Gene:primary_identifier):
                - SPAC3A11.14c
-             pub(Pub:pubmedid): 18426916
+             pub(Pub:uniquename): 18426916
              data:
                evidence_code: IPI
                term_ontid: GO:0030133

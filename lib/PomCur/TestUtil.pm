@@ -518,9 +518,9 @@ sub _get_curator_object
 sub _get_pub_object
 {
   my $schema = shift;
-  my $pubmedid = shift;
+  my $uniquename = shift;
 
-  return $schema->find_with_type('Pub', { uniquename => $pubmedid });
+  return $schema->find_with_type('Pub', { uniquename => $uniquename });
 }
 
 sub _load_curs_db_data
@@ -676,7 +676,7 @@ sub make_curs_db
     community_curator =>
       _get_curator_object($trackdb_schema, $curs_config->{first_contact_email}),
     curs_key => $test_case_curs_key,
-    pub => _get_pub_object($trackdb_schema, $curs_config->{pubmedid}),
+    pub => _get_pub_object($trackdb_schema, $curs_config->{uniquename}),
   };
 
   my $curs_object = $trackdb_schema->create_with_type('Curs', $create_args);

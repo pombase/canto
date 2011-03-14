@@ -120,7 +120,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $st->{gene_display_name} = $gene_display_name;
 
     $st->{title} =
-      "Curating $gene_display_name from PMID:" . $st->{pub}->pubmedid();
+      "Curating $gene_display_name from PMID:" . $st->{pub}->uniquename();
   }
 
   $st->{gene_count} = _get_gene_resultset($schema)->count();
@@ -356,7 +356,7 @@ sub _edit_genes_helper
 
   my $st = $c->stash();
 
-  $st->{title} = 'Gene list for PMID:' . $st->{pub}->pubmedid();
+  $st->{title} = 'Gene list for PMID:' . $st->{pub}->uniquename();
   $st->{template} = 'curs/gene_list_edit.mhtml';
 
   $st->{current_component} = 'list_edit';
@@ -867,7 +867,7 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
   my %common_values = %{$config->{export}->{gene_association_fields}};
 
   my @column_names = qw(db gene_identifier gene_name_or_identifier
-                        qualifier term_ontid pubmedid
+                        qualifier term_ontid uniquename
                         evidence_code with_or_from_identifier
                         annotation_type_abbreviation
                         gene_product gene_synonyms_string db_object_type taxonid
@@ -888,7 +888,7 @@ sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
       if ($_ eq 'taxonid') {
         $val = "taxon:$val";
       }
-      if ($_ eq 'pubmedid') {
+      if ($_ eq 'uniquename') {
         $val = "PMID:$val";
       }
       if ($_ eq 'with_or_from_identifier') {

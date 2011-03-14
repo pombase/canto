@@ -22,12 +22,12 @@ my $data_directory = $test_util->temp_dir();
 
 $config->{data_directory} = $data_directory;
 
-my $pubmedid = 123456;
+my $uniquename = 123456;
 my $connect_string1 =
-  PomCur::Curs::make_connect_string($config, $key1, $pubmedid);
+  PomCur::Curs::make_connect_string($config, $key1, $uniquename);
 
 my ($connect_string2, $exists_flag, $key1_db_file_name) =
-  PomCur::Curs::make_connect_string($config, $key1, $pubmedid);
+  PomCur::Curs::make_connect_string($config, $key1, $uniquename);
 
 is($connect_string1, $connect_string2);
 
