@@ -110,6 +110,8 @@ sub get_pubmed_xml_by_text
   return _get_url($config, $url);
 }
 
+our $PUBMED_PREFIX = "PMID";
+
 =head2 load_pubmed_xml
 
  Usage   : my $count = PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml);
@@ -141,7 +143,7 @@ sub load_pubmed_xml
 
   for my $article (@articles) {
     my $medline_citation = $article->{MedlineCitation};
-    my $uniquename = $medline_citation->{PMID}->{content};
+    my $uniquename = "$PUBMED_PREFIX:" . $medline_citation->{PMID}->{content};
 
     if (!defined $uniquename) {
       die "PubMed ID not found in XML\n";

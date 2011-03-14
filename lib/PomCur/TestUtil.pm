@@ -388,7 +388,10 @@ sub _load_extra_pubs
 
   my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
-  map { $load_util->get_pub($_); } @extra_test_pubs;
+  map {
+    my $uniquename = $PomCur::Track::PubmedUtil::PUBMED_PREFIX . ":$_";
+    $load_util->get_pub($uniquename);
+  } @extra_test_pubs;
 }
 
 sub _add_pub_details

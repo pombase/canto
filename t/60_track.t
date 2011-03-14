@@ -22,7 +22,7 @@ my $key = 'abcd0123';
 
 my $first_contact_email = 'val@sanger.ac.uk';
 
-my $pub = $schema->find_with_type('Pub', { uniquename => '19056896' });
+my $pub = $schema->find_with_type('Pub', { uniquename => 'PMID:19056896' });
 
 is($pub->type()->name(), 'unknown');
 

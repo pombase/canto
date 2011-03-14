@@ -47,14 +47,14 @@ is_deeply ($annotation,
              term_ontid => "GO:0055085",
              status => "new",
              type => "cellular_component",
-             publication => 19756689
+             publication => 'PMID:19756689'
            }
          );
 
 
 my @publications = @{$curation_session->{publications}};
 is (@publications, 1);
-is ($publications[0]->{uniquename}, '19756689');
+is ($publications[0]->{uniquename}, 'PMID:19756689');
 like ($publications[0]->{abstract}, qr/SUMOylation/);
 
 my @organisms = @{$curation_session->{organisms}};

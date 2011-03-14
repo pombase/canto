@@ -30,7 +30,7 @@ __PACKAGE__->table("pub");
 
 =head2 uniquename
 
-  data_type: 'integer'
+  data_type: 'text'
   is_nullable: 0
 
 =head2 title
@@ -49,7 +49,7 @@ __PACKAGE__->add_columns(
   "pub_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "uniquename",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "text", is_nullable => 0 },
   "title",
   { data_type => "text", is_nullable => 0 },
   "abstract",
@@ -76,8 +76,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-14 17:46:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iGqNQ04QcGrYAAiC8VLXmQ
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-14 18:26:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tf7s9tTTnhPOPK7raW03Kg
 
 __PACKAGE__->meta->make_immutable;
 

@@ -43,6 +43,7 @@ use Moose;
 use Text::CSV;
 
 use PomCur::Track::LoadUtil;
+use PomCur::Track::PubmedUtil;
 
 has 'schema' => (
   is => 'ro',
@@ -87,7 +88,8 @@ sub _process_row
   my ($pubmed_id, $lab_head_name, $submitter_name, $date_sent, $status,
       $lab_head_email, $submitter_email) = @{$columns_ref};
 
-  my $pub = $self->load_util()->get_pub($pubmed_id);
+  my $uniquename = $PomCur::Track::PubmedUtil::PUBMED_PREFIX . ":$pubmed_id";
+  my $pub = $self->load_util()->get_pub($uniquename);
   my $lab_head = $self->load_util()->get_person($lab_head_name,
                                                 $lab_head_email, $user_cvterm);
   my $lab = $self->load_util()->get_lab($lab_head);

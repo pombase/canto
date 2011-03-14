@@ -15,19 +15,19 @@ test_config:
     1_curs:
        - curs_key: aaaa0001
          first_contact_email: "nick.rhind@umassmed.edu"
-         uniquename: 19664060
+         uniquename: PMID:19664060
     3_curs:
        - curs_key: aaaa0002
          first_contact_email: "hoffmacs@bc.edu"
-         uniquename: 19686603
+         uniquename: PMID:19686603
        - curs_key: aaaa0003
          first_contact_email: "kevin.hardwick@ed.ac.uk"
-         uniquename: 19436749
+         uniquename: PMID:19436749
          submitter_email: "kevin.hardwick@ed.ac.uk"
          submitter_name: "Kevin Hardwick"
        - curs_key: aaaa0004
          first_contact_email: "kevin.hardwick@ed.ac.uk"
-         uniquename: 18426916
+         uniquename: PMID:18426916
          submitter_email: "fred.smith@ed.ac.uk"
          submitter_name: "Fred Smith"
          current_gene: "SPCC1739.10"
@@ -37,7 +37,7 @@ test_config:
     curs_annotations_1:
        - curs_key: aaaa0005
          first_contact_email: "kevin.hardwick@ed.ac.uk"
-         uniquename: 18426916
+         uniquename: PMID:18426916
          submitter_email: "fred.smith@ed.ac.uk"
          submitter_name: "Fred Smith"
          current_gene: "SPCC1739.10"
@@ -50,7 +50,7 @@ test_config:
              status: new
              genes(Gene:primary_identifier):
                - SPCC1739.10
-             pub(Pub:uniquename): 18426916
+             pub(Pub:uniquename): PMID:18426916
              data:
                evidence_code: IMP
                term_ontid: GO:0055085
@@ -58,7 +58,7 @@ test_config:
              status: new
              genes(Gene:primary_identifier):
                - SPAC3A11.14c
-             pub(Pub:uniquename): 18426916
+             pub(Pub:uniquename): PMID:18426916
              data:
                evidence_code: IPI
                term_ontid: GO:0030133
@@ -66,7 +66,7 @@ test_config:
     curs_annotations_2:
        - curs_key: aaaa0006
          first_contact_email: "henar@usal.es"
-         uniquename: 19756689
+         uniquename: PMID:19756689
          submitter_email: "henar@usal.es"
          submitter_name: "Henar Valdivieso"
          current_gene: "SPCC576.16c"
@@ -77,13 +77,13 @@ test_config:
              status: new
              genes(Gene:primary_identifier):
                - SPCC576.16c
-             pub(Pub:uniquename): 19756689
+             pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: IMP
                term_ontid: GO:0055085
        - curs_key: aaaa0007
          first_contact_email: "Ken.Sawin@ed.ac.uk"
-         uniquename: 19756689
+         uniquename: PMID:19756689
          submitter_email: "Ken.Sawin@ed.ac.uk"
          submitter_name: "Ken Sawin"
          current_gene: "SPCC576.16c"
@@ -94,7 +94,7 @@ test_config:
              status: new
              genes(Gene:primary_identifier):
                - SPCC576.16c
-             pub(Pub:uniquename): 19756689
+             pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: IMP
                term_ontid: GO:0055085

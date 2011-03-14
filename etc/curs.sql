@@ -34,7 +34,7 @@ CREATE TABLE gene_annotation (
 
 CREATE TABLE pub (
        pub_id integer primary key,
-       uniquename integer NOT NULL UNIQUE,
+       uniquename text NOT NULL UNIQUE,
        title text NOT NULL,
        abstract text
 );

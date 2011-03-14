@@ -113,7 +113,7 @@ use PomCur::Track::LoadUtil;
       },
       'Pub' => {
         uniquename => {
-          18426916 => 300
+          'PMID:18426916' => 300
         }
       }
     );
@@ -170,7 +170,7 @@ sub track_init
                                   });
   $track_schema->create_with_type('Pub',
                                   {
-                                    uniquename => 18426916,
+                                    uniquename => 'PMID:18426916',
                                     title => 'test title',
                                     type_id => 601
                                   });
