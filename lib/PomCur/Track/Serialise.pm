@@ -72,11 +72,13 @@ sub json
   my $config = shift;
   my $schema = shift;
 
-  my $curs = {
+  my $track_hash = {
     curation_sessions => _get_curation_sessions($config, $schema),
   };
 
-  return encode_json($curs);
+  my $encoder = JSON->new()->utf8()->pretty(1);
+
+  return $encoder->encode($track_hash);
 }
 
 1;

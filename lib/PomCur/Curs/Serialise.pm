@@ -77,7 +77,9 @@ sub json
 {
   my $schema = shift;
 
-  return encode_json(perl($schema));
+  my $encoder = JSON->new()->utf8()->pretty(1);
+
+  return $encoder->encode(perl($schema));
 }
 
 sub perl
