@@ -101,6 +101,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
   $st->{first_contact_name} = get_metadata($schema, 'first_contact_name');
 
+  # curation_pub_id will be set if we are annotating a particular publication,
+  # rather than annotating genes without a publication
   my $pub_id = get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
 
