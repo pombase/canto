@@ -24,8 +24,7 @@ $pub
       <tr>
         <td> Definition: </td>
         <td>
-          <textarea name="ferret-suggest-definition" cols="60" rows="10">
-          </textarea>
+          <textarea name="ferret-suggest-definition" cols="60" rows="10"></textarea>
         </td>
       </tr>
     </table>
