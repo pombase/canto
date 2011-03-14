@@ -68,4 +68,4 @@ is ($metadata{submitter_email}, 'henar@usal.es');
 is ($metadata{submitter_name}, 'Henar Valdivieso');
 is ($metadata{first_contact_email}, 'henar@usal.es');
 is ($metadata{first_contact_name}, 'Henar Valdivieso');
-
+is ($metadata{curs_key}, 'aaaa0006');

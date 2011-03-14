@@ -74,7 +74,7 @@ while (defined (my $metadata = $curs_metadata_rs->next())) {
 }
 
 is($metadata_hash{first_contact_email}, $first_contact_email);
-is($metadata_hash{curs_id}, $curs->curs_id());
+is($metadata_hash{curs_key}, $curs->curs_key());
 
 my $curs_db_pub_id = $metadata_hash{curation_pub_id};
 my $curs_db_pub = $curs_schema->find_with_type('Pub', $curs_db_pub_id);

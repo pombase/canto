@@ -99,7 +99,7 @@ sub create_curs_db
   set_metadata($curs_schema, 'first_contact_email', $first_contact_email);
   set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
   set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
-  set_metadata($curs_schema, 'curs_id', $curs->curs_id());
+  set_metadata($curs_schema, 'curs_key', $curs->curs_key());
 
   if (wantarray) {
     return ($curs_schema, $db_file_name);
