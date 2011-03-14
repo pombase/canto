@@ -63,3 +63,38 @@ test_config:
                evidence_code: IPI
                term_ontid: GO:0030133
                with_gene: SPCC1739.11c
+    curs_annotations_2:
+       - curs_key: aaaa0006
+         first_contact_email: "henar@usal.es"
+         uniquename: 19756689
+         submitter_email: "henar@usal.es"
+         submitter_name: "Henar Valdivieso"
+         current_gene: "SPCC576.16c"
+         genes:
+           - "SPCC576.16c"
+         annotations:
+           - type: cellular_component
+             status: new
+             genes(Gene:primary_identifier):
+               - SPCC576.16c
+             pub(Pub:uniquename): 19756689
+             data:
+               evidence_code: IMP
+               term_ontid: GO:0055085
+       - curs_key: aaaa0007
+         first_contact_email: "Ken.Sawin@ed.ac.uk"
+         uniquename: 19756689
+         submitter_email: "Ken.Sawin@ed.ac.uk"
+         submitter_name: "Ken Sawin"
+         current_gene: "SPCC576.16c"
+         genes:
+           - "SPCC576.16c"
+         annotations:
+           - type: cellular_component
+             status: new
+             genes(Gene:primary_identifier):
+               - SPCC576.16c
+             pub(Pub:uniquename): 19756689
+             data:
+               evidence_code: IMP
+               term_ontid: GO:0055085
