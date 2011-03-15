@@ -104,7 +104,7 @@ var ferret_choose = {
     }
     var div = $('<div class="hash-term"><a title="' +
                term.name + '" href="#' + term.id + '">' +
-               term.id + "</a></div>");
+               term.name + "</a></div>");
     div.data('term', term);
     dest.append(div);
   },
