@@ -59,8 +59,6 @@ var ferret_choose = {
     } else {
       ferret_choose.show_children();
     }
-
-    ferret_choose.hide_accept();
   },
 
   get_stored_term_id : function() {
@@ -135,23 +133,7 @@ var ferret_choose = {
     ferret_choose.truncate_history(last_id);
     ferret_choose.term_selected(last_id);
     ferret_choose.show_hide_children();
-    ferret_choose.hide_accept();
     return false;
-  },
-
-  ignore_children : function() {
-    ferret_choose.hide_child_details();
-    ferret_choose.show_accept();
-    ferret_choose.hide_help();
-    return false;
-  },
-
-  show_accept : function() {
-    $('#ferret-accept-term-details').show();
-  },
-
-  hide_accept : function() {
-    $('#ferret-accept-term-details').hide();
   },
 
   move_to_hash_term : function(link) {
@@ -182,8 +164,6 @@ var ferret_choose = {
     var term_children = $('#ferret-term-children');
     term_children.show();
     ferret_choose.hide_leaf();
-    ferret_choose.show_help();
-    ferret_choose.show_child_details();
   },
 
   hide_children : function() {
@@ -195,21 +175,11 @@ var ferret_choose = {
     var leaf = $('#ferret-leaf');
     leaf.show();
     ferret_choose.hide_children();
-    ferret_choose.show_help();
-    ferret_choose.show_child_details();
   },
 
   hide_leaf : function() {
     var leaf = $('#ferret-leaf');
     leaf.hide();
-  },
-
-  hide_child_details: function() {
-    $('#ferret-children-details').hide();
-  },
-
-  show_child_details: function() {
-    $('#ferret-children-details').show();
   },
 
   show_hide_children : function() {
@@ -218,14 +188,6 @@ var ferret_choose = {
     } else {
       ferret_choose.hide_children();
     }
-  },
-
-  hide_help : function() {
-    $('.inline-help').hide();
-  },
-
-  show_help : function() {
-    $('.inline-help').show();
   },
 
   suggest_dialog : function() {
@@ -246,12 +208,9 @@ var ferret_choose = {
       .val('')
       .removeAttr('checked')
       .removeAttr('selected');
-    ferret_choose.hide_child_details();
     $('#ferret-term-details').hide();
     $('#ferret-term-entry').show();
-    ferret_choose.hide_accept();
     $('#ferret-term-id').val('');
-    ferret_choose.show_help();
     return true;
   }
 };
@@ -330,7 +289,6 @@ $(document).ready(function() {
         }
       }
     });
-    $("#ferret-ignore-children").click(ferret_choose.ignore_children);
 
     var form_success = function(responseText, statusText, xhr, $form) {
       if (responseText == 'term-selected') {

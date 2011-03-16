@@ -72,60 +72,8 @@ it accurately describes your gene:
             <td id="ferret-term-comment"></td>
           </tr>
         </table>
-
-        <div id="ferret-accept-term-details" style="display: none">
-          <div>
-Annotate with this term
-          </div>
-        </div>
       </div>
-    </div>
 
-    <div id="ferret-term-entry" class="curs-box">
-      <div class="inline-help curs-box-title">
-Search for <% $current_component_display_name %> term
-      </div>
-      <div class="ferret-term-entry-inside curs-box-body">
-        <div>
-          <% $annotation_help_text %>
-          <a id="ferret-term-entry-type-help" class="pomcur-more-button" href='#'>more ...</a>
-        </div>
-        <div id="ferret-term-entry-type-help-target" class="ferret-more-help">
-          <% $annotation_more_help_text %>
-        </div>
-        <div>
-Start typing a <% $current_component_short_display_name %> in the search box.
-If you do not find the term you are looking for with your initial
-search, begin with a broad term (<% $broad_term_suggestions %>).
-          <a id="ferret-term-entry-extra-help" class="pomcur-more-button" href='#'>more ...</a>
-        </div>
-        <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
-          <div>
-More specific terms will be suggested allowing you to refine your search
-iteratively before making your final selection (examples of more specific
-terms are: <% $specific_term_examples %>).
-          </div>
-          <div>
-Gene products may be annotated with multiple
-<% $current_component_short_display_name %> terms.
-          </div>
-        </div>
-        <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
-          <% $annotation_help_text %>
-        </div>
-        <input id="ferret-term-input" name="ferret-term-entry"
-               type="text" size="50" disabled="true"
-% if (!$c->session()->{testmode}) {
-               placeholder="start typing and suggestions will be made ..."
-% }
-               />
-% if ($c->session()->{testmode}) {
-        <a href="#" id="ferret-test-do-search">Go to term</a>
-% }
-      </div>
-    </div>
-
-    <div id="ferret-children-details" style="display: none" class="curs-box">
       <div id="ferret-term-children" style="display: none">
         <div id="ferret-help-step-2" class="inline-help curs-box-title">
 If possible, please refine your term selection. Clicking on a child term
@@ -174,6 +122,50 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
 
         <input id="ferret-accept-term-proceed" name="ferret-submit"
                type="submit" value="Proceed -&gt;" class="button"/>
+      </div>
+    </div>
+
+    <div id="ferret-term-entry" class="curs-box">
+      <div class="inline-help curs-box-title">
+Search for <% $current_component_display_name %> term
+      </div>
+      <div class="ferret-term-entry-inside curs-box-body">
+        <div>
+          <% $annotation_help_text %>
+          <a id="ferret-term-entry-type-help" class="pomcur-more-button" href='#'>more ...</a>
+        </div>
+        <div id="ferret-term-entry-type-help-target" class="ferret-more-help">
+          <% $annotation_more_help_text %>
+        </div>
+        <div>
+Start typing a <% $current_component_short_display_name %> in the search box.
+If you do not find the term you are looking for with your initial
+search, begin with a broad term (<% $broad_term_suggestions %>).
+          <a id="ferret-term-entry-extra-help" class="pomcur-more-button" href='#'>more ...</a>
+        </div>
+        <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
+          <div>
+More specific terms will be suggested allowing you to refine your search
+iteratively before making your final selection (examples of more specific
+terms are: <% $specific_term_examples %>).
+          </div>
+          <div>
+Gene products may be annotated with multiple
+<% $current_component_short_display_name %> terms.
+          </div>
+        </div>
+        <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
+          <% $annotation_help_text %>
+        </div>
+        <input id="ferret-term-input" name="ferret-term-entry"
+               type="text" size="50" disabled="true"
+% if (!$c->session()->{testmode}) {
+               placeholder="start typing and suggestions will be made ..."
+% }
+               />
+% if ($c->session()->{testmode}) {
+        <a href="#" id="ferret-test-do-search">Go to term</a>
+% }
       </div>
     </div>
   </form>
