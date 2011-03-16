@@ -17,76 +17,72 @@ $(document).ready(function() {
 });
 
 var ferret_choose = {
-  term_history : [],
+  term_history : [undefined],
+  term_detail_cache : {},
 
   initialise : function(current_component) {
     ferret_choose.ontology_complete_url =
       application_root + 'ws/lookup/go/' + current_component;
   },
 
-  use_term_data : function(data) {
+  debug : function(message) {
+//    $("#ferret").append("<div>" + message + "</div>");
+  },
+
+  store_term_data : function(data) {
     var term = data[0];
-
-    $('#ferret').data('current-term', term);
-
-    $('.ferret-term-name').text(term.name);
-    $('#ferret-term-definition').text(term.definition);
-
-    if (term.comment) {
-      $('#ferret-term-comment-row').show();
-      $('#ferret-term-comment').html('<div class="term-comment">' +
-                                     term.comment + '</div>');
-    } else {
-      $('#ferret-term-comment-row').hide();
-      $('#ferret-term-comment').html('');
-    }
-
-    var children = term.children;
-    var children_html = '';
-
-    $.each(children, function(idx, child) {
-      var img_html =
-        '<img src="' + application_root + '/static/images/right_arrow.png"/>';
-      children_html += '<li><a href="#' + child.id + '">' +
-        child.name + img_html + '</li></a>';
-    });
-
-    $('#ferret-term-children').data('child-count', children.length);
-    $('#ferret-term-children-list').html($('<ul/>').append($(children_html)));
-
-    if (children.length == 0) {
-      ferret_choose.show_leaf();
-    } else {
-      ferret_choose.show_children();
-    }
+    ferret_choose.debug("adding to cache: " + term.id + " " + term.name);
+    ferret_choose.term_detail_cache[term.id] = term;
   },
 
-  get_stored_term_id : function() {
-    return $('#ferret-term-id').val();
-  },
-
-  set_current : function(term_id) {
-    ferret_choose.hide_children();
-    var stored_term_id = ferret_choose.get_stored_term_id();
-    if (stored_term_id != term_id) {
-      $('#ferret-term-id').val(term_id);
-    }
+  fetch_term_detail : function(term_id) {
+    ferret_choose.debug("fetching: " + term_id);
     $.ajax({
       url: ferret_choose.ontology_complete_url,
       data: { term: term_id, def: 1, children: 1 },
       dataType: 'json',
-      success: ferret_choose.use_term_data,
+      success: ferret_choose.store_term_data,
       async: false
     });
     $('#ferret-term-entry').hide();
   },
 
-  term_selected : function(term_id) {
-    $('#ferret-term-id').val(term_id);
-    $('.ferret-term-id-display').text(term_id);
-    $('#ferret-term-details').show();
+  get_term_by_id : function(term_id) {
+    if (!ferret_choose.term_detail_cache[term_id]) {
+      ferret_choose.fetch_term_detail(term_id);
+    }
 
-    ferret_choose.set_current(term_id);
+    ferret_choose.debug("looking for in cache: " + term_id);
+    ferret_choose.debug("returning from cache: " + ferret_choose.term_detail_cache[term_id]);
+    var term = ferret_choose.term_detail_cache[term_id];
+
+    return term;
+  },
+
+  get_current_term : function() {
+    return ferret_choose.term_history.last();
+  },
+
+  set_current_term : function(term_id) {
+    $('#ferret-term-id').val(term_id);
+
+    ferret_choose.debug("set_current_term: " + term_id);
+
+    var i = 0;
+    for (; i < ferret_choose.term_history.length; i++) {
+      var value = ferret_choose.term_history[i];
+      if (term_id == value) {
+        // truncate the array, making term_id the last element
+        ferret_choose.term_history.length = i + 1;
+        break;
+      }
+    }
+
+    if (i == ferret_choose.term_history.length) {
+      ferret_choose.term_history.push(term_id);
+    }
+
+    ferret_choose.render();
   },
 
   add_to_breadcrumbs : function(term) {
@@ -107,57 +103,34 @@ var ferret_choose = {
     dest.append(div);
   },
 
-  add_history : function(term) {
-    ferret_choose.term_history.push(term);
-  },
-
-  truncate_history : function(term_id) {
+  render_breadcrumbs : function(term_id) {
     $('#breadcrumbs-search').remove();
     if (ferret_choose.term_history.length > 0) {
-      var html = '<li id="breadcrumbs-search">Search</li>';
+      var html = '<li id="breadcrumbs-search">Search (' + 
+        ferret_choose.term_history[0] + ')</li>';
       $('#breadcrumbs ul').append(html);
-    }
-    for (var i = 0; i < ferret_choose.term_history.length; i++) {
-      var this_term = ferret_choose.term_history[i];
-      if (this_term.id == term_id) {
-        ferret_choose.term_history.length = i;
-        break;
-      } else {
-        ferret_choose.add_to_breadcrumbs(this_term);
+      for (var i = 1; i < ferret_choose.term_history.length; i++) {
+        var term_id = ferret_choose.term_history[i];
+        var term = ferret_choose.get_term_by_id(term_id);
+        ferret_choose.add_to_breadcrumbs(term);
       }
     };
-  },
-
-  pop_history : function() {
-    var last_id = ferret_choose.term_history.last().id;
-    ferret_choose.truncate_history(last_id);
-    ferret_choose.term_selected(last_id);
-    ferret_choose.show_hide_children();
-    return false;
   },
 
   move_to_hash_term : function(link) {
     var href = link.attr('href');
     var term_id = href.substring(href.indexOf('#') + 1);
-    ferret_choose.truncate_history(term_id);
-    ferret_choose.term_selected(term_id);
+    ferret_choose.set_current_term(term_id);
   },
 
   term_click_handler : function(event) {
     ferret_choose.move_to_hash_term($(event.target));
-    ferret_choose.hide_leaf();
     return false;
   },
 
   child_click_handler : function(event) {
-    ferret_choose.add_history($('#ferret').data('current-term'));
     ferret_choose.move_to_hash_term($(event.target).closest('a'));
     return false;
-  },
-
-  current_child_count : function() {
-    var term_children = $('#ferret-term-children');
-    return term_children.data('child-count');
   },
 
   show_children : function() {
@@ -182,14 +155,6 @@ var ferret_choose = {
     leaf.hide();
   },
 
-  show_hide_children : function() {
-    if (ferret_choose.current_child_count() > 0) {
-      ferret_choose.show_children();
-    } else {
-      ferret_choose.hide_children();
-    }
-  },
-
   suggest_dialog : function() {
     $('#ferret-suggest-term-id').val($('#ferret-term-id').val());
     var term_name = $('.ferret-term-name').first().text();
@@ -201,6 +166,55 @@ var ferret_choose = {
     return false;
   },
 
+  render : function() {
+    if (ferret_choose.term_history.length <= 1) {
+      $('#ferret-term-details').hide();
+      $('#ferret-term-entry').show();
+    } else {
+      $('#ferret-term-details').show();
+      $('#ferret-term-entry').hide();
+
+      var term_id = ferret_choose.term_history.last();
+      var term = ferret_choose.get_term_by_id(term_id);
+
+      $('.ferret-term-name').text(term.name);
+      $('#ferret-term-definition').text(term.definition);
+      $('.ferret-term-id-display').text(term_id);
+
+      if (term.comment) {
+        $('#ferret-term-comment-row').show();
+        $('#ferret-term-comment').html('<div class="term-comment">' +
+                                       term.comment + '</div>');
+      } else {
+        $('#ferret-term-comment-row').hide();
+        $('#ferret-term-comment').html('');
+      }
+
+      ferret_choose.debug("render(): " + term_id + " " + term.name);
+
+      var children = term.children;
+      var children_html = '';
+
+      $.each(children, function(idx, child) {
+        var img_html =
+          '<img src="' + application_root + '/static/images/right_arrow.png"/>';
+        children_html += '<li><a href="#' + child.id + '">' +
+          child.name + img_html + '</li></a>';
+      });
+
+      $('#ferret-term-children').data('child-count', children.length);
+      $('#ferret-term-children-list').html($('<ul/>').append($(children_html)));
+
+      if (children.length == 0) {
+        ferret_choose.show_leaf();
+      } else {
+        ferret_choose.show_children();
+      }
+    }
+
+    ferret_choose.render_breadcrumbs();
+  },
+
   ferret_reset : function() {
     // from: http://stackoverflow.com/questions/680241/blank-out-a-form-with-jquery
     $(':input','#ferret-form')
@@ -208,9 +222,7 @@ var ferret_choose = {
       .val('')
       .removeAttr('checked')
       .removeAttr('selected');
-    $('#ferret-term-details').hide();
-    $('#ferret-term-entry').show();
-    $('#ferret-term-id').val('');
+    ferret_choose.term_history = [ferret_choose.term_history.first()];
     return true;
   }
 };
@@ -233,6 +245,9 @@ $(document).ready(function() {
   var ferret_input = $("#ferret-term-input");
 
   if (ferret_input.size()) {
+    ferret_input.keyup(function() {
+      ferret_choose.term_history = [$('#ferret-term-input').val()];
+    });
     ferret_input.autocomplete({
       minLength: 2,
       source: ferret_choose.ontology_complete_url,
@@ -241,7 +256,7 @@ $(document).ready(function() {
         return false;
       },
       select: function(event, ui) {
-        ferret_choose.term_selected(ui.item.id);
+        ferret_choose.set_current_term(ui.item.id);
         return false;
       }
     })
@@ -280,22 +295,12 @@ $(document).ready(function() {
 
     $("#breadcrumb-previous-button").click(function () {
       if (ferret_choose.term_history.length > 0) {
-        ferret_choose.pop_history();
+        ferret_choose.term_history.length -= 1;
+        ferret_choose.render();
       } else {
-        if ($('#ferret-term-id').val().length > 0) {
-          ferret_choose.ferret_reset();
-        } else {
-          window.location.href = curs_root_path;
-        }
+        window.location.href = curs_root_path;
       }
     });
-
-    var form_success = function(responseText, statusText, xhr, $form) {
-      if (responseText == 'term-selected') {
-        ferret_choose.show_hide_children();
-      }
-      return true;
-    };
 
     $('#ferret-term-input').attr('disabled', false);
 
@@ -342,5 +347,4 @@ $(document).ready(function() {
     });
 
   }
-
 });
