@@ -16,6 +16,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery<% $min_flag %>.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui<% $min_flag %>.js"></script>
 <script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/jquery.validate<% $min_flag %>.js"></script>
+<script src="<% $c->uri_for('/static/js/jquery.ba-bbq.min.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.placeholder.min.js') %>"></script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/pomcur.js') %>"></script>
 <script language="javascript" type="text/javascript">

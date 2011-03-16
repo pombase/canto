@@ -89,6 +89,14 @@ var ferret_choose = {
     $('#ferret-term-details').show();
 
     ferret_choose.set_details(term_id);
+
+    var crumbs = [];
+
+    $.each(ferret_choose.term_history, function(idx, term) {
+      crumbs.push(term.id);
+    });
+
+    $.bbq.pushState({ 'crumbs' : crumbs, 'current-term' : term_id });
   },
 
   add_to_breadcrumbs : function(term) {
@@ -385,4 +393,13 @@ $(document).ready(function() {
 
   }
 
+  $(window).bind('hashchange', function(e) {
+    var state = $.bbq.getState( this.id, true );
+    if (state['current-term']) {
+      ferret_choose.term_selected();
+      alert("foo");
+    }
+  })
+
+  $(window).trigger( 'hashchange' );
 });
