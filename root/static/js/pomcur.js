@@ -65,7 +65,7 @@ var ferret_choose = {
     return $('#ferret-term-id').val();
   },
 
-  set_details : function(term_id) {
+  set_current : function(term_id) {
     ferret_choose.hide_children();
     var stored_term_id = ferret_choose.get_stored_term_id();
     if (stored_term_id != term_id) {
@@ -86,7 +86,7 @@ var ferret_choose = {
     $('.ferret-term-id-display').text(term_id);
     $('#ferret-term-details').show();
 
-    ferret_choose.set_details(term_id);
+    ferret_choose.set_current(term_id);
   },
 
   add_to_breadcrumbs : function(term) {
