@@ -96,7 +96,14 @@ var ferret_choose = {
       crumbs.push(term.id);
     });
 
-    $.bbq.pushState({ 'crumbs' : crumbs, 'current-term' : term_id });
+    var bbq_state = {
+      "s" : ferret_choose.term_history[0],
+      "crumbs" : ferret_choose.term_history.slice(1).join(",")
+    };
+
+    $.bbq.pushState(bbq_state);
+
+    ferret_choose.render();
   },
 
   add_to_breadcrumbs : function(term) {
