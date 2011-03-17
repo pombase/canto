@@ -117,8 +117,8 @@ var ferret_choose = {
   render_breadcrumbs : function(term_id) {
     $('#breadcrumbs-search').remove();
     if (ferret_choose.term_history.length > 1) {
-      var html = '<li id="breadcrumbs-search">Search (' + 
-        ferret_choose.term_history[0] + ')</li>';
+      var html = '<li id="breadcrumbs-search">Search: "' + 
+        ferret_choose.term_history[0] + '"</li>';
       $('#breadcrumbs ul').append(html);
       for (var i = 1; i < ferret_choose.term_history.length - 1; i++) {
         var term_id = ferret_choose.term_history[i];
