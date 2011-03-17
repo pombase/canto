@@ -92,7 +92,7 @@ var ferret_choose = {
 
     var bbq_state = {
       "s" : ferret_choose.term_history[0],
-      "crumbs" : ferret_choose.term_history.slice(1).join(",")
+      "c" : ferret_choose.term_history.slice(1).join(",")
     };
 
     $.bbq.pushState(bbq_state);
@@ -360,8 +360,8 @@ $(document).ready(function() {
       var search_string = state.s;
 
       if (search_string) {
-        if (state.crumbs) {
-          var crumbs = trim(state.crumbs);
+        if (state.c) {
+          var crumbs = trim(state.c);
           var new_history = [search_string].concat(crumbs.split(","));
           ferret_choose.term_history = new_history
           $('#ferret-term-id').val(last(new_history));
