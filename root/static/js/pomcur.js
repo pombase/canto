@@ -247,7 +247,7 @@ $(document).ready(function() {
 
   if (ferret_input.size()) {
     ferret_input.keyup(function() {
-      ferret_choose.term_history = [$('#ferret-term-input').val()];
+      ferret_choose.term_history = [$('#ferret-term-input').val().trim()];
     });
     ferret_input.autocomplete({
       minLength: 2,
