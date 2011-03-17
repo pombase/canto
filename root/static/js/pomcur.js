@@ -83,6 +83,13 @@ var ferret_choose = {
       ferret_choose.term_history.push(term_id);
     }
 
+    var bbq_state = {
+      "s" : ferret_choose.term_history[0],
+      "crumbs" : ferret_choose.term_history.slice(1).join(",")
+    };
+
+    $.bbq.pushState(bbq_state);
+
     ferret_choose.render();
   },
 
@@ -344,4 +351,14 @@ $(document).ready(function() {
     });
 
   }
+
+  $(window).bind('hashchange', function(e) {
+    var state = $.bbq.getState( this.id, true );
+    if (state['current-term']) {
+      ferret_choose.term_selected();
+      alert("foo");
+    }
+  })
+
+  $(window).trigger( 'hashchange' );
 });
