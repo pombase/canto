@@ -1,4 +1,5 @@
 Array.prototype.last = function() {return this[this.length-1];}
+String.prototype.trim=function(){a=this.replace(/^\s+/,'');return a.replace(/\s+$/,'');};
 
 $(document).ready(function() {
   $(".sect .sect-title").each(function(i) {
@@ -251,10 +252,6 @@ $(document).ready(function() {
     ferret_input.autocomplete({
       minLength: 2,
       source: ferret_choose.ontology_complete_url,
-      focus: function(event, ui) {
-        $('#ferret-term-input').val(ui.item.name);
-        return false;
-      },
       select: function(event, ui) {
         ferret_choose.set_current_term(ui.item.id);
         return false;
