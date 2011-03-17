@@ -354,6 +354,30 @@ $(document).ready(function() {
       );
       $(element).show();
     });
+
+    $(window).bind('hashchange', function(e) {
+      var state = $.bbq.getState( this.id, true );
+      var search_string = state.s;
+
+      if (search_string) {
+        if (state.crumbs) {
+          var crumbs = trim(state.crumbs);
+          var new_history = [search_string].concat(crumbs.split(","));
+          ferret_choose.term_history = new_history
+          $('#ferret-term-id').val(last(new_history));
+        } else {
+          ferret_choose.term_history = [search_string];
+        }
+      } else {
+        ferret_choose.term_history = [];
+      }
+
+      $('#ferret-term-input').val(search_string);
+
+      ferret_choose.render();
+    })
+
+    $(window).trigger( 'hashchange' );
   } else {
 
     $('#breadcrumb-previous-button').click(function () {
@@ -361,26 +385,4 @@ $(document).ready(function() {
     });
 
   }
-
-  $(window).bind('hashchange', function(e) {
-    var state = $.bbq.getState( this.id, true );
-    var search_string = state.s;
-
-    if (search_string) {
-      if (state.crumbs) {
-        var crumbs = trim(state.crumbs);
-        ferret_choose.term_history = [search_string].concat(crumbs.split(","));
-      } else {
-        ferret_choose.term_history = [search_string];
-      }
-    } else {
-      ferret_choose.term_history = [];
-    }
-
-    $('#ferret-term-input').val(search_string);
-
-    ferret_choose.render();
-  })
-
-  $(window).trigger( 'hashchange' );
 });
