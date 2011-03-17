@@ -2,7 +2,9 @@ function last(a) {
   return a[a.length-1]; 
 }
 
-String.prototype.trim=function(){a=this.replace(/^\s+/,'');return a.replace(/\s+$/,'');};
+function trim(a) {
+  a=a.replace(/^\s+/,''); return a.replace(/\s+$/,'');
+};
 
 $(document).ready(function() {
   $(".sect .sect-title").each(function(i) {
@@ -257,7 +259,7 @@ $(document).ready(function() {
 
   if (ferret_input.size()) {
     ferret_input.keyup(function() {
-      ferret_choose.term_history = [$('#ferret-term-input').val().trim()];
+      ferret_choose.term_history = [trim($('#ferret-term-input').val())];
     });
     ferret_input.autocomplete({
       minLength: 2,
@@ -363,12 +365,16 @@ $(document).ready(function() {
   $(window).bind('hashchange', function(e) {
     var state = $.bbq.getState( this.id, true );
     var search_string = state.s;
-    var crumbs = state.crumbs.trim();
 
-    if (crumbs.length == 0) {
-      ferret_choose.term_history = [search_string];
+    if (search_string) {
+      if (state.crumbs) {
+        var crumbs = trim(state.crumbs);
+        ferret_choose.term_history = [search_string].concat(crumbs.split(","));
+      } else {
+        ferret_choose.term_history = [search_string];
+      }
     } else {
-      ferret_choose.term_history = [search_string].concat(crumbs.split(","));
+      ferret_choose.term_history = [];
     }
 
     $('#ferret-term-input').val(search_string);
