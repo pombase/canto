@@ -1,4 +1,7 @@
-Array.prototype.last = function() {return this[this.length-1];}
+function last(a) { 
+  return a[a.length-1]; 
+}
+
 String.prototype.trim=function(){a=this.replace(/^\s+/,'');return a.replace(/\s+$/,'');};
 
 $(document).ready(function() {
@@ -61,7 +64,7 @@ var ferret_choose = {
   },
 
   get_current_term : function() {
-    return ferret_choose.term_history.last();
+    return last(ferret_choose.term_history);
   },
 
   set_current_term : function(term_id) {
@@ -69,18 +72,20 @@ var ferret_choose = {
 
     ferret_choose.debug("set_current_term: " + term_id);
 
-    var i = 0;
-    for (; i < ferret_choose.term_history.length; i++) {
-      var value = ferret_choose.term_history[i];
-      if (term_id == value) {
-        // truncate the array, making term_id the last element
-        ferret_choose.term_history.length = i + 1;
-        break;
+    if (term_id) {
+      var i = 0;
+      for (; i < ferret_choose.term_history.length; i++) {
+        var value = ferret_choose.term_history[i];
+        if (term_id == value) {
+          // truncate the array, making term_id the last element
+          ferret_choose.term_history.length = i + 1;
+          break;
+        }
       }
-    }
 
-    if (i == ferret_choose.term_history.length) {
-      ferret_choose.term_history.push(term_id);
+      if (i == ferret_choose.term_history.length) {
+        ferret_choose.term_history.push(term_id);
+      }
     }
 
     var bbq_state = {
@@ -89,8 +94,6 @@ var ferret_choose = {
     };
 
     $.bbq.pushState(bbq_state);
-
-    ferret_choose.render();
   },
 
   add_to_breadcrumbs : function(term) {
@@ -182,7 +185,7 @@ var ferret_choose = {
       $('#ferret-term-details').show();
       $('#ferret-term-entry').hide();
 
-      var term_id = ferret_choose.term_history.last();
+      var term_id = last(ferret_choose.term_history);
       var term = ferret_choose.get_term_by_id(term_id);
 
       $('.ferret-term-name').text(term.name);
@@ -298,9 +301,13 @@ $(document).ready(function() {
                        ferret_choose.term_click_handler);
 
     $("#breadcrumb-previous-button").click(function () {
+      ferret_choose.term_history.length -= 1;
       if (ferret_choose.term_history.length > 0) {
-        ferret_choose.term_history.length -= 1;
-        ferret_choose.render();
+        if (ferret_choose.term_history.length == 1) {
+          ferret_choose.set_current_term();
+        } else {
+          ferret_choose.set_current_term(last(ferret_choose.term_history));
+        }
       } else {
         window.location.href = curs_root_path;
       }
@@ -354,10 +361,18 @@ $(document).ready(function() {
 
   $(window).bind('hashchange', function(e) {
     var state = $.bbq.getState( this.id, true );
-    if (state['current-term']) {
-      ferret_choose.term_selected();
-      alert("foo");
+    var search_string = state.s;
+    var crumbs = state.crumbs.trim();
+
+    if (crumbs.length == 0) {
+      ferret_choose.term_history = [search_string];
+    } else {
+      ferret_choose.term_history = [search_string].concat(crumbs.split(","));
     }
+
+    $('#ferret-term-input').val(search_string);
+
+    ferret_choose.render();
   })
 
   $(window).trigger( 'hashchange' );
