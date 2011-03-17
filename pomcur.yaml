@@ -2,7 +2,7 @@
 name: PomCur
 long_name: Pombe community curation application
 
-app_version: v127
+app_version: v128
 
 authentication:
   default_realm: 'members'
