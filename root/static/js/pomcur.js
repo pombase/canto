@@ -291,6 +291,7 @@ $(document).ready(function() {
 
     ferret_input.keypress(function(event) {
       if (event.which == 13) {
+        // disable return
         event.preventDefault();
       }
     });
