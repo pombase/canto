@@ -71,9 +71,9 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    ok ($res->content() =~ /<form/);
-    ok ($res->content() =~ m:<label>community curator</label>:i);
-    ok ($res->content() =~ /input name="curs_key" type="text" value="$curs_key"/);
+    like ($res->content(), qr/<form/);
+    like ($res->content(), qr:<label>community curator</label>:i);
+    like ($res->content(), qr /input name="curs_key" type="text" value="$curs_key"/);
   }
 
   my $new_object_id = undef;
@@ -104,9 +104,9 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    ok ($redirect_res->content() =~ /Details for curation session $curs_key/);
-    ok ($redirect_res->content() =~ /$curs_key/);
-    ok ($redirect_res->content() =~ /$pub_title/);
+    like ($redirect_res->content(), qr/Details for curation session $curs_key/);
+    like ($redirect_res->content(), qr/$curs_key/);
+    like ($redirect_res->content(), qr/$pub_title/);
 
     my $curs_connect_string =
       PomCur::Curs::make_connect_string($test_util->config(), $curs_key);

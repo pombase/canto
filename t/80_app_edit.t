@@ -60,8 +60,8 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    ok ($res->content() =~ /<form/);
-    ok ($res->content() =~ /<input name="Email address"/);
+    like ($res->content(), qr/<form/);
+    like ($res->content(), qr/<input name="Email address"/);
   }
 
   # test creating an object
@@ -91,10 +91,10 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    ok ($redirect_res->content() =~ /Details for Test name/);
-    ok ($redirect_res->content() =~ /Email address/);
-    ok ($redirect_res->content() =~ /\Q$test_name/);
-    ok ($redirect_res->content() =~ /\Q$test_email/);
+    like ($redirect_res->content(), qr/Details for Test name/);
+    like ($redirect_res->content(), qr/Email address/);
+    like ($redirect_res->content(), qr/\Q$test_name/);
+    like ($redirect_res->content(), qr/\Q$test_email/);
   }
 
   # test visiting the edit object page
@@ -107,8 +107,8 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    ok ($res->content() =~ /<form/);
-    ok ($res->content() =~ /<input name="Email address"/);
+    like ($res->content(), qr/<form/);
+    like ($res->content(), qr/<input name="Email address"/);
   }
 
   # test editing an object
@@ -136,10 +136,10 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    ok ($redirect_res->content() =~ /Details for Test name/);
-    ok ($redirect_res->content() =~ /Email address/);
-    ok ($redirect_res->content() !~ /\Q$test_email/);
-    ok ($redirect_res->content() =~ /\Q$test_email2/);
+    like ($redirect_res->content(), qr/Details for Test name/);
+    like ($redirect_res->content(), qr/Email address/);
+    unlike ($redirect_res->content(), qr/\Q$test_email/);
+    like ($redirect_res->content(), qr/\Q$test_email2/);
   }
 
   # test create action
@@ -167,9 +167,9 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    ok ($redirect_res->content() =~ /Details for curation session $curs_key/);
-    ok ($redirect_res->content() =~ /$test_name/);
-    ok ($redirect_res->content() =~ /The S. pombe SAGA complex controls/);
+    like ($redirect_res->content(), qr/Details for curation session $curs_key/);
+    like ($redirect_res->content(), qr/$test_name/);
+    like ($redirect_res->content(), qr/The S. pombe SAGA complex controls/);
   }
 
 
@@ -190,8 +190,8 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    ok ($res->content() =~ /<form/);
-    ok ($res->content() =~ /<input name="title"/);
+    like ($res->content(), qr/<form/);
+    like ($res->content(), qr/<input name="title"/);
   }
 
 };
