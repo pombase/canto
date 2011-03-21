@@ -1,14 +1,10 @@
 <div id="breadcrumbs">
 % if (defined $home_path) {
-  <button id="breadcrumb-previous-button" name="breadcrumb-previous-button"
-              class="button">&lt;- Back</button>
- <ul>
-    <li>
-       <a href="<% $home_path %>" title="Go to the home page">
-         Home page
-       </a>
-    </li>
-  </ul>
+  <div id="breadcrumbs-home-link" class="breadcrumbs-ferret-link">
+    <a href="<% $home_path %>" title="Go to the home page">
+      Home page
+    </a>
+  </div>
 % }
 </div>
 

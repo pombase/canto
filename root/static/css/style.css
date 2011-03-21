@@ -173,11 +173,9 @@ div#footer .sponsor {
 }
 
 #breadcrumbs ul li, #breadcrumbs button {
-  display: inline;
-  float: left;
 }
 
-#breadcrumbs ul li, #breadcrumbs .hash-term {
+#breadcrumbs ul li, #breadcrumbs .breadcrumbs-ferret-link {
   padding-left: 11px;
   background-image: url(../images/right_empty_triangle.png);
   background-repeat: no-repeat;
@@ -187,7 +185,7 @@ div#footer .sponsor {
 #breadcrumbs ul li {
   list-style-type: none;
 }
-#breadcrumbs .hash-term {
+#breadcrumbs .breadcrumbs-ferret-link {
   margin-left: 10px;
 }
 #breadcrumbs ul li a {

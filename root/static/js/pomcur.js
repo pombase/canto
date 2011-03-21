@@ -109,7 +109,7 @@ var ferret_choose = {
         break;
       }
     }
-    var div = $('<div class="hash-term"><a title="' +
+    var div = $('<div class="breadcrumbs-ferret-link"><a title="' +
                term.name + '" href="#' + term.id + '">' +
                term.name + "</a></div>");
     div.data('term', term);
@@ -119,9 +119,10 @@ var ferret_choose = {
   render_breadcrumbs : function(term_id) {
     $('#breadcrumbs-search').remove();
     if (ferret_choose.term_history.length > 1) {
-      var html = '<li id="breadcrumbs-search">Search: "' + 
-        ferret_choose.term_history[0] + '"</li>';
-      $('#breadcrumbs ul').append(html);
+      var html =
+        '<div class="breadcrumbs-ferret-link" id="breadcrumbs-search">Search: "' +
+        ferret_choose.term_history[0] + '"</div>';
+      $('#breadcrumbs-home-link').append(html);
       for (var i = 1; i < ferret_choose.term_history.length - 1; i++) {
         var term_id = ferret_choose.term_history[i];
         var term = ferret_choose.get_term_by_id(term_id);
@@ -300,7 +301,7 @@ $(document).ready(function() {
 
     $("body").delegate("#ferret-term-children-list a", "click",
                        ferret_choose.child_click_handler);
-    $("body").delegate("#breadcrumbs .hash-term a", "click",
+    $("body").delegate("#breadcrumbs .breadcrumbs-ferret-link a", "click",
                        ferret_choose.term_click_handler);
 
     $("#breadcrumb-previous-button").click(function () {
