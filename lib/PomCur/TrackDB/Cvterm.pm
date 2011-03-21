@@ -114,6 +114,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 pub_curation_statuses
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::PubCurationStatus>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pub_curation_statuses",
+  "PomCur::TrackDB::PubCurationStatus",
+  { "foreign.status_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 dbxref
 
 Type: belongs_to
@@ -280,8 +295,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 16:35:05
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9sAt9DNDvgaipYiIK3QyPQ
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 17:45:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8doTVn2+Epk/ettJlHF2YQ
 
 sub db_accession
 {

@@ -85,6 +85,18 @@ db_initial_data:
               accession: admin
               db:
                 name: PomCur Track
+      - name: PomBase publication curation status
+        cvterms:
+          - name: not started
+            dbxref:
+              accession: admin
+              db:
+                name: PomCur Track
+          - name: complete
+            dbxref:
+              accession: admin
+              db:
+                name: PomCur Track
 
 class_info:
   track:
@@ -178,6 +190,23 @@ class_info:
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication status")'
           referenced_class: Cvterm
           editable: 1
+    pub_curation_status:
+      object_title_format: 'Details for PubMed ID: @@$object->uniquename()@@'
+      class_display_name: publication curation status
+      display_field: status_summary
+      editable: 1
+      field_info_list:
+        - name: publication
+          source: pub_id
+          editable: 1
+        - name: annotation_type
+          editable: 1
+        - name: status
+          source: status_id
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication curation status")'
+          referenced_class: Cvterm
+          editable: 1
+
     curs:
       class_display_name: curation session
       display_field: curs_key

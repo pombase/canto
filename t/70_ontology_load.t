@@ -17,7 +17,7 @@ my $schema = PomCur::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is (@loaded_cvterms, 10);
+is (@loaded_cvterms, 12);
 
 my $test_ontology_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
@@ -33,7 +33,7 @@ $ontology_index->finish_index();
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 50);
+is(@loaded_cvterms, 52);
 
 ok(grep {
   $_->name() eq 'regulation of transmembrane transport'

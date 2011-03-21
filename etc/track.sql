@@ -11,6 +11,13 @@ CREATE TABLE pub (
        status_id integer NOT NULL REFERENCES cvterm (cvterm_id)
 );
 
+CREATE TABLE pub_curation_status (
+       pub_curation_status_id integer NOT NULL PRIMARY KEY,
+       pub_id integer NOT NULL REFERENCES pub (pub_id),
+       annotation_type text,
+       status_id integer NOT NULL REFERENCES cvterm (cvterm_id)
+);
+
 CREATE TABLE cv (
        cv_id integer NOT NULL PRIMARY KEY,
        name text NOT NULL,

@@ -30,6 +30,9 @@ $object
 % if ($object->curs()) {
   <& /view/collection.mhtml, object => $object, collection_name => 'curs',
      collection_title => "Curation sessions" &>
+  <& /view/collection.mhtml, object => $object, 
+    collection_name => 'pub_curation_statuses',
+    collection_title => 'Status for all curation types' &>
 % }
 </div>
 
