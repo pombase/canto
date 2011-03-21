@@ -100,7 +100,7 @@ make
    - =etc/db_initialise.pl= :: create empty template database from the schemas
         and recreate the database classes in lib/PomCur/TrackDB and
         lib/PomCur/CursDB
-   - =etc/data_initialise.pl= :: re-create test data files that don't change
+   - =etc/test_data_initialise.pl= :: re-create test data files that don't change
         very often.  eg. the test PubMed XML file.  Currently this script only
         needs to be run if the list of publications for the test database
         changes
