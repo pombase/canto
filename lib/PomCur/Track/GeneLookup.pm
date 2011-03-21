@@ -55,7 +55,7 @@ sub _build_constraint
 
 =head2 lookup
 
- Usage   : my $gene_lookup = PomCur::Track::get_lookup($config, 'gene');
+ Usage   : my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
            my $results = $gene_lookup->lookup([qw(cdc11 SPCTRNASER.13 test)]);
  Function: Search for genes by name or identifier
  Args    : $search_terms_ref - an array reference containing the terms to search

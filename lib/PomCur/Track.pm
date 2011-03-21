@@ -125,25 +125,27 @@ sub create_curs_db_hook
 
 =head2
 
- Usage   : my $lookup = PomCur::Track::get_lookup($config, 'gene');
- Function: return an initialised Lookup object of the given type
+ Usage   : my $adaptor = PomCur::Track::get_adaptor($config, 'gene');
+ Function: return an initialised Adaptor object of the given type
  Args    : $config - the PomCur::Config object
-           $lookup_name - the lookup type used to look up in the config
- Return  : a Lookup object
+           $adaptor_name - the adaptor type used to look up in the config
+ Return  : a Adaptor object
 
 =cut
-sub get_lookup
+sub get_adaptor
 {
-  my ($config, $lookup_name) = @_;
+  my ($config, $adaptor_name) = @_;
 
-  if (!defined $lookup_name) {
-    croak "no lookup_name passed to get_lookup()\n";
+  if (!defined $adaptor_name) {
+    croak "no adaptor_name passed to get_adaptor()\n";
   }
 
-  my $impl_class = $config->{implementation_classes}->{"${lookup_name}_lookup"};
+  my $conf_name = "${adaptor_name}_adaptor";
+
+  my $impl_class = $config->{implementation_classes}->{$conf_name};
 
   if (!defined $impl_class) {
-    croak "can't find implementation class for ${lookup_name}_lookup";
+    croak "can't find implementation class for $conf_name";
   }
 
   eval "use $impl_class";

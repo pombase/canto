@@ -336,9 +336,9 @@ sub _find_and_create_genes
   my ($schema, $config, $search_terms_ref) = @_;
 
   my @search_terms = @$search_terms_ref;
-  my $lookup = PomCur::Track::get_lookup($config, 'gene');
+  my $adaptor = PomCur::Track::get_adaptor($config, 'gene');
 
-  my $result = $lookup->lookup([@search_terms]);
+  my $result = $adaptor->lookup([@search_terms]);
 
   if (@{$result->{missing}}) {
     return $result;

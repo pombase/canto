@@ -334,9 +334,9 @@ external_sources:
   pubmed_esearch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&remode=xml&term='
 
 implementation_classes:
-  gene_lookup: PomCur::Track::GeneLookup
-  go_annotation_lookup: PomCur::Track::GOAnnotationLookup
-  go_lookup: PomCur::Track::OntologyLookup
+  gene_adaptor: PomCur::Track::GeneLookup
+  go_annotation_adaptor: PomCur::Track::GOAnnotationLookup
+  go_adaptor: PomCur::Track::OntologyLookup
 
 evidence_types:
   IMP:

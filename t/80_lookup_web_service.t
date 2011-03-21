@@ -10,7 +10,7 @@ my $test_util = PomCur::TestUtil->new();
 $test_util->init_test();
 
 my $config = $test_util->config();
-my $lookup = PomCur::Track::get_lookup($config, 'go');
+my $lookup = PomCur::Track::get_adaptor($config, 'go');
 
 my $test_string = 'GO:00040';
 

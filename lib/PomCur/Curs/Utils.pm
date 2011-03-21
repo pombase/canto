@@ -75,8 +75,8 @@ sub get_annotation_table
   my %evidence_types = %{$config->{evidence_types}};
   my %annotation_types_config = %{$config->{annotation_types}};
 
-  my $go_lookup = PomCur::Track::get_lookup($config, 'go');
-  my $gene_lookup = PomCur::Track::get_lookup($config, 'gene');
+  my $go_adaptor = PomCur::Track::get_adaptor($config, 'go');
+  my $gene_adaptor = PomCur::Track::get_adaptor($config, 'gene');
 
   my $completed_count = 0;
 
@@ -84,7 +84,7 @@ sub get_annotation_table
     my $an_rs = $gene->annotations();
 
     my $gene_lookup_results =
-      $gene_lookup->lookup([$gene->primary_identifier()]);
+      $gene_adaptor->lookup([$gene->primary_identifier()]);
     my @found_results = @{$gene_lookup_results->{found}};
     if (@found_results != 1) {
       die "expected 1 result looking up: ", $gene->primary_identifier(),
@@ -108,8 +108,8 @@ sub get_annotation_table
 
       my $uniquename = $annotation->pub()->uniquename();
       my $result =
-        $go_lookup->web_service_lookup(ontology_name => $annotation_type,
-                                       search_string => $term_ontid);
+        $go_adaptor->web_service_lookup(ontology_name => $annotation_type,
+                                        search_string => $term_ontid);
 
       my $term_name = $result->[0]->{name};
       my $evidence_code = $data->{evidence_code};

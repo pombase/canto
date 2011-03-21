@@ -50,7 +50,7 @@ sub lookup : Local
   my ($self, $c, $type_name, $ontology_name, $search_string) = @_;
 
   my $config = $c->config();
-  my $lookup = PomCur::Track::get_lookup($config, $type_name);
+  my $lookup = PomCur::Track::get_adaptor($config, $type_name);
 
   $search_string ||= $c->req()->param('term');
 
