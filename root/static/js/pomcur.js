@@ -23,6 +23,8 @@ $(document).ready(function() {
 });
 
 var ferret_choose = {
+  // element 0 is the orginal text we searched for, last element is the current
+  // selected term, the other elements are the history/trail
   term_history : [undefined],
   term_detail_cache : {},
 
