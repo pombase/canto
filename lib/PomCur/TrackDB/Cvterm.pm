@@ -84,7 +84,7 @@ __PACKAGE__->set_primary_key("cvterm_id");
 
 =head1 RELATIONS
 
-=head2 pubs
+=head2 pub_statuses
 
 Type: has_many
 
@@ -93,7 +93,22 @@ Related object: L<PomCur::TrackDB::Pub>
 =cut
 
 __PACKAGE__->has_many(
-  "pubs",
+  "pub_statuses",
+  "PomCur::TrackDB::Pub",
+  { "foreign.status_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 pub_types
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Pub>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pub_types",
   "PomCur::TrackDB::Pub",
   { "foreign.type_id" => "self.cvterm_id" },
   { cascade_copy => 0, cascade_delete => 0 },
@@ -249,21 +264,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 pub_statuses
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::PubStatus>
-
-=cut
-
-__PACKAGE__->has_many(
-  "pub_statuses",
-  "PomCur::TrackDB::PubStatus",
-  { "foreign.status" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 people
 
 Type: has_many
@@ -280,8 +280,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-15 16:42:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gAoQyVcOZzDThwwwgCjIVA
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 16:35:05
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9sAt9DNDvgaipYiIK3QyPQ
 
 sub db_accession
 {

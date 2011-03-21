@@ -94,21 +94,6 @@ Related object: L<PomCur::TrackDB::Pub>
 __PACKAGE__->has_many(
   "pubs",
   "PomCur::TrackDB::Pub",
-  { "foreign.community_curator" => "self.person_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 pub_statuses
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::PubStatus>
-
-=cut
-
-__PACKAGE__->has_many(
-  "pub_statuses",
-  "PomCur::TrackDB::PubStatus",
   { "foreign.assigned_curator" => "self.person_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -159,7 +144,7 @@ Related object: L<PomCur::TrackDB::Curs>
 __PACKAGE__->has_many(
   "curs",
   "PomCur::TrackDB::Curs",
-  { "foreign.community_curator" => "self.person_id" },
+  { "foreign.curator" => "self.person_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -179,8 +164,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-04 11:18:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ff4MTBSG/hmdZSwOh1fW2A
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 16:45:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Kbzrylly87St7Fx+C0lr5g
 
 =head2
 

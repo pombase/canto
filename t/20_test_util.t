@@ -168,11 +168,19 @@ sub track_init
                                     name => 'Test pub type',
                                     dbxref => $dbxref
                                   });
+  $track_schema->create_with_type('Cvterm',
+                                  {
+                                    cvterm_id => 602,
+                                    cv_id => 50,
+                                    name => 'Test pub status',
+                                    dbxref => $dbxref
+                                  });
   $track_schema->create_with_type('Pub',
                                   {
                                     uniquename => 'PMID:18426916',
                                     title => 'test title',
-                                    type_id => 601
+                                    type_id => 601,
+                                    status_id => 602,
                                   });
   my $organism = $load_util->get_organism('Schizosaccharomyces', 'pombe', 4896);
 

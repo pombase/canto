@@ -34,7 +34,7 @@ my $person = $schema->find_with_type('Person',
 my $curs = $schema->create_with_type('Curs',
                                      {
                                        pub => $pub,
-                                       community_curator => $person,
+                                       curator => $person,
                                        curs_key => $key,
                                      });
 

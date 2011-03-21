@@ -45,12 +45,19 @@ has 'schema' => (
   isa => 'PomCur::TrackDB'
 );
 
+sub BUILD
+{
+  my $self = shift;
+
+  $self->{cache} = {};
+}
+
 =head2 get_organism
 
  Usage   : my $organism = $load_util->get_organism($genus, $species);
  Function: Find or create, and then return the organism matching the arguments
  Args    : the genus and species of the new organism
- Returns : The new organism
+ Returns : The found or new organism
 
 =cut
 sub get_organism
@@ -75,15 +82,15 @@ sub get_organism
       });
 }
 
-=head2 get_cv
+=head2 find_cv
 
- Usage   : my $cv = $load_util->get_cv($cv_name);
- Function: Find or create, and then return the cv object matching the arguments
+ Usage   : my $cv = $load_util->find_cv($cv_name);
+ Function: Find and return the cv object matching the arguments
  Args    : $cv_name - the cv name
- Returns : The new organism
+ Returns : The CV or calls die()
 
 =cut
-sub get_cv
+sub find_cv
 {
   my $self = shift;
   my $cv_name = shift;
@@ -92,10 +99,44 @@ sub get_cv
 
   croak unless defined $cv_name;
 
-  return $schema->resultset('Cv')->find_or_create(
+  my $cv = $schema->resultset('Cv')->find(
       {
         name => $cv_name
       });
+
+  if (defined $cv) {
+    return $cv;
+  } else {
+    croak "no CV found for: $cv_name";
+  }
+}
+
+=head2 find_or_create_cv
+
+ Usage   : my $cv = $load_util->find_or_create_cv($cv_name);
+ Function: Find or create, and then return the cv object matching the arguments.
+           The Cv object is cached
+ Args    : $cv_name - the cv name
+ Returns : The new CV
+
+=cut
+sub find_or_create_cv
+{
+  my $self = shift;
+  my $cv_name = shift;
+
+  croak unless defined $cv_name;
+
+  if (exists $self->{cache}->{cv}->{$cv_name}) {
+    return $self->{cache}->{cv}->{$cv_name};
+  } else {
+    my $cv = $self->schema()->resultset('Cv')->find_or_create(
+      {
+        name => $cv_name
+      });
+    $self->{cache}->{cv}->{$cv_name} = $cv;
+    return $cv;
+  }
 }
 
 =head2 get_db
@@ -165,7 +206,7 @@ sub get_cvterm
   my $cv_name = $args{cv_name};
   my $cv = $args{cv};
   if (!defined $cv) {
-    $cv = $self->get_cv($cv_name);
+    $cv = $self->find_or_create_cv($cv_name);
   }
   my $term_name = $args{term_name};
   my $ontologyid = $args{ontologyid};
@@ -217,14 +258,20 @@ sub get_pub
 
   my $schema = $self->schema();
 
-  my $pub_type_cv = $self->get_cv('PomBase publication type');
+  my $pub_type_cv = $self->find_cv('PomBase publication type');
   my $pub_type = $self->get_cvterm(cv => $pub_type_cv,
                                    term_name => 'unknown');
+
+  my $pub_status_cv = $self->find_cv('PomBase publication status');
+  my $pub_new_status =
+    $self->get_cvterm(cv => $pub_status_cv,
+                      term_name => 'unknown');
 
   return $schema->resultset('Pub')->find_or_create(
       {
         uniquename => $uniquename,
         type => $pub_type,
+        status => $pub_new_status,
       });
 }
 

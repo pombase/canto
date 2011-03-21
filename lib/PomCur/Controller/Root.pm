@@ -172,7 +172,7 @@ sub test_curs :Global {
   my $curs = $schema->create_with_type('Curs',
                                        {
                                          pub => $pub,
-                                         community_curator => $person,
+                                         curator => $person,
                                          curs_key => $curs_key,
                                        });
 

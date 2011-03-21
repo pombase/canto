@@ -72,7 +72,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr/<form/);
-    like ($res->content(), qr:<label>community curator</label>:i);
+    like ($res->content(), qr:<label>curator</label>:i);
     like ($res->content(), qr /input name="curs_key" type="text" value="$curs_key"/);
   }
 
@@ -83,7 +83,7 @@ test_psgi $app, sub {
     my $uri = new URI('http://localhost:5000/new/object/curs');
     $uri->query_form(model => 'track',
                      publication => $pub->pub_id(),
-                     community_curator => $curator->person_id(),
+                     curator => $curator->person_id(),
                      curs_key => $curs_key,
                      submit => 'Submit',
                     );

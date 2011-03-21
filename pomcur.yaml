@@ -19,6 +19,7 @@ authentication:
 view_options:
   max_inline_results_length: 100
 
+# see PomCur::Meta::Util::initialise_core_data()
 db_initial_data:
   track:
     cv:
@@ -56,6 +57,32 @@ db_initial_data:
           - name: related
             dbxref:
               accession: related
+              db:
+                name: PomCur Track
+      - name: PomBase publication type
+        cvterms:
+          - name: unknown
+            dbxref:
+              accession: unknown
+              db:
+                name: PomCur Track
+      - name: PomBase publication status
+        cvterms:
+          - name: unknown
+            dbxref:
+              accession: unknown
+              db:
+                name: PomCur Track
+      - name: PomBase user types
+        cvterms:
+          - name: user
+            dbxref:
+              accession: user
+              db:
+                name: PomCur Track
+          - name: admin
+            dbxref:
+              accession: admin
               db:
                 name: PomCur Track
 
@@ -139,11 +166,16 @@ class_info:
           editable: 1
         - name: authors
           editable: 1
-        - name: community_curator
+        - name: assigned_curator
           editable: 1
         - name: type
           source: type_id
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication type")'
+          referenced_class: Cvterm
+          editable: 1
+        - name: status
+          source: status_id
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication status")'
           referenced_class: Cvterm
           editable: 1
     curs:
@@ -151,7 +183,7 @@ class_info:
       display_field: curs_key
       editable: 1
       field_info_list:
-        - name: community_curator
+        - name: curator
           editable: 1
         - name: publication
           editable: 0

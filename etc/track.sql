@@ -4,10 +4,11 @@ CREATE TABLE pub (
        pub_id integer NOT NULL PRIMARY KEY,
        uniquename text UNIQUE,
        type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
-       community_curator integer REFERENCES person (person_id),
+       assigned_curator integer REFERENCES person (person_id),
        title text,
        abstract text,
-       authors text
+       authors text,
+       status_id integer NOT NULL REFERENCES cvterm (cvterm_id)
 );
 
 CREATE TABLE cv (
@@ -113,13 +114,6 @@ CREATE TABLE pub_organism (
        organism integer NOT NULL REFERENCES organism (organism_id)
 );
 
-CREATE TABLE pub_status (
-       pub_status_id integer NOT NULL PRIMARY KEY,
-       pub_id integer NOT NULL REFERENCES pub (pub_id) UNIQUE,
-       status integer NOT NULL REFERENCES cvterm (cvterm_id),
-       assigned_curator integer REFERENCES person (person_id) 
-);
-
 CREATE TABLE person (
        person_id integer NOT NULL PRIMARY KEY,
        name text NOT NULL,
@@ -132,7 +126,7 @@ CREATE TABLE person (
 
 CREATE TABLE curs (
        curs_id integer NOT NULL PRIMARY KEY,
-       community_curator integer NOT NULL REFERENCES person (person_id),
+       curator integer NOT NULL REFERENCES person (person_id),
        pub integer NOT NULL REFERENCES pub (pub_id),
        curs_key text NOT NULL
 );

@@ -28,7 +28,7 @@ __PACKAGE__->table("curs");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 community_curator
+=head2 curator
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -50,7 +50,7 @@ __PACKAGE__->table("curs");
 __PACKAGE__->add_columns(
   "curs_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "community_curator",
+  "curator",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "pub",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
@@ -76,7 +76,7 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
-=head2 community_curator
+=head2 curator
 
 Type: belongs_to
 
@@ -85,15 +85,15 @@ Related object: L<PomCur::TrackDB::Person>
 =cut
 
 __PACKAGE__->belongs_to(
-  "community_curator",
+  "curator",
   "PomCur::TrackDB::Person",
-  { person_id => "community_curator" },
+  { person_id => "curator" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yomXeElP5/ZIKQldaus7xA
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 16:45:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mRfimmYcqOGFDXdoPZsy8A
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

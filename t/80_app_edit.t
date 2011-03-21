@@ -152,7 +152,7 @@ test_psgi $app, sub {
     $uri->query_form(model => 'track',
                      curs_key => $curs_key,
                      pub => $pub->pub_id(),
-                     community_curator => $new_person_id,
+                     curator => $new_person_id,
                     );
 
     my $req = HTTP::Request->new(GET => $uri);

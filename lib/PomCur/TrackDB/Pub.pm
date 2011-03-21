@@ -39,7 +39,7 @@ __PACKAGE__->table("pub");
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 community_curator
+=head2 assigned_curator
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -60,6 +60,12 @@ __PACKAGE__->table("pub");
   data_type: 'text'
   is_nullable: 1
 
+=head2 status_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -69,7 +75,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "type_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "community_curator",
+  "assigned_curator",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "title",
   { data_type => "text", is_nullable => 1 },
@@ -77,13 +83,30 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "authors",
   { data_type => "text", is_nullable => 1 },
+  "status_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("pub_id");
 __PACKAGE__->add_unique_constraint("uniquename_unique", ["uniquename"]);
 
 =head1 RELATIONS
 
-=head2 community_curator
+=head2 status
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "status",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "status_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+=head2 assigned_curator
 
 Type: belongs_to
 
@@ -92,9 +115,9 @@ Related object: L<PomCur::TrackDB::Person>
 =cut
 
 __PACKAGE__->belongs_to(
-  "community_curator",
+  "assigned_curator",
   "PomCur::TrackDB::Person",
-  { person_id => "community_curator" },
+  { person_id => "assigned_curator" },
   {
     is_deferrable => 1,
     join_type     => "LEFT",
@@ -133,21 +156,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 pub_status
-
-Type: might_have
-
-Related object: L<PomCur::TrackDB::PubStatus>
-
-=cut
-
-__PACKAGE__->might_have(
-  "pub_status",
-  "PomCur::TrackDB::PubStatus",
-  { "foreign.pub_id" => "self.pub_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 curs
 
 Type: has_many
@@ -164,8 +172,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-08 14:40:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1IAGYK4wHcp38xAqNsx27g
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 16:35:05
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jUVaGhM/3JyQ5oCdSlbfmA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -676,7 +676,7 @@ sub make_curs_db
     PomCur::TestUtil::curs_key_of_test_case($curs_config);
 
   my $create_args = {
-    community_curator =>
+    curator =>
       _get_curator_object($trackdb_schema, $curs_config->{first_contact_email}),
     curs_key => $test_case_curs_key,
     pub => _get_pub_object($trackdb_schema, $curs_config->{uniquename}),

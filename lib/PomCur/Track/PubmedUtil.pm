@@ -168,13 +168,7 @@ sub load_pubmed_xml
       $abstract = $abstract_text;
     }
 
-    my $pub_type_cv = $load_util->get_cv('PomBase publication type');
-    my $pub_type = $load_util->get_cvterm(cv => $pub_type_cv,
-                                          term_name => 'unknown');
-
-    my $pub =
-      $schema->resultset('Pub')->find_or_create({ uniquename => $uniquename,
-                                                  type => $pub_type });
+    my $pub = $load_util->get_pub($uniquename);
 
     $pub->title($title);
     $pub->abstract($abstract);
