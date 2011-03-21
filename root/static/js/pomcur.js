@@ -109,9 +109,10 @@ var ferret_choose = {
         break;
       }
     }
-    var div = $('<div class="breadcrumbs-ferret-link"><a title="' +
-               term.name + '" href="#' + term.id + '">' +
-               term.name + "</a></div>");
+    var div = $('<div class="breadcrumbs-ferret-link breadcrumbs-ferret-term">' +
+                '<a title="' +
+                term.name + '" href="#' + term.id + '">' +
+                term.name + "</a></div>");
     div.data('term', term);
     dest.append(div);
   },
@@ -120,8 +121,9 @@ var ferret_choose = {
     $('#breadcrumbs-search').remove();
     if (ferret_choose.term_history.length > 1) {
       var html =
-        '<div class="breadcrumbs-ferret-link" id="breadcrumbs-search">Search: "' +
-        ferret_choose.term_history[0] + '"</div>';
+        '<div class="breadcrumbs-ferret-link" id="breadcrumbs-search">' +
+        '<a href="#' + $('#ferret-term-input').val() + '">Search: "' +
+        ferret_choose.term_history[0] + '"</a></div>';
       $('#breadcrumbs-home-link').append(html);
       for (var i = 1; i < ferret_choose.term_history.length - 1; i++) {
         var term_id = ferret_choose.term_history[i];
@@ -131,10 +133,16 @@ var ferret_choose = {
     };
   },
 
+  // if link has no fragment, go to search page
   move_to_hash_term : function(link) {
     var href = link.attr('href');
-    var term_id = href.substring(href.indexOf('#') + 1);
-    ferret_choose.set_current_term(term_id);
+    var index = href.indexOf('#');
+    if (index < 0) {
+      ferret_choose.set_current_term();
+    } else {
+      var term_id = href.substring(index + 1);
+      ferret_choose.set_current_term(term_id);
+    }
   },
 
   term_click_handler : function(event) {
@@ -301,7 +309,9 @@ $(document).ready(function() {
 
     $("body").delegate("#ferret-term-children-list a", "click",
                        ferret_choose.child_click_handler);
-    $("body").delegate("#breadcrumbs .breadcrumbs-ferret-link a", "click",
+    $("body").delegate("#breadcrumbs .breadcrumbs-ferret-term a", "click",
+                       ferret_choose.term_click_handler);
+    $("body").delegate("#breadcrumbs-search a", "click",
                        ferret_choose.term_click_handler);
 
     $("#breadcrumb-previous-button").click(function () {
