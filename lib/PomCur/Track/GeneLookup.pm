@@ -55,14 +55,23 @@ sub _build_constraint
 
 =head2 lookup
 
- Usage   : my $gene_lookup = PomCur::Track::get_lookup($config, $lookup_name);
+ Usage   : my $gene_lookup = PomCur::Track::get_lookup($config, 'gene');
            my $results = $gene_lookup->lookup([qw(cdc11 SPCTRNASER.13 test)]);
  Function: Search for genes by name or identifier
  Args    : $search_terms_ref - an array reference containing the terms to search
                                for
- Returns : All genes that match any of the search terms exactly.  The results
-           look like this hashref:
-             { found => [qw(cdc11 SPCTRNASER.13)], missing => [qw(test)] }
+ Returns : All genes that match any of the search terms exactly.  The result
+           should look like this hashref:
+             { found => [ {
+                             primary_name => 'cdc11',
+                             primary_identifier => 'SPCTRNASER.13'
+                             product => 'SIN component scaffold protein, centriolin ortholog Cdc11',
+                             synonyms => ['foo', 'bar'],
+                             organism_full_name => 'Schizosaccharomyces pombe',
+                             organism_taxonid => 4896
+                          }
+                       ],
+                       missing => [qw(test)] }
 
 =cut
 sub lookup
