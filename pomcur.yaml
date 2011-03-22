@@ -73,6 +73,52 @@ db_initial_data:
               accession: new
               db:
                 name: PomCur Track
+          - name: curatable
+            definition: Triage status for papers that can be curated.
+            dbxref:
+              accession: curatable
+              db:
+                name: PomCur Track
+          - name: not_english
+            definition: |
+                Triage status for a paper that will not be curated because
+                the text is not in English.
+            dbxref:
+              accession: not_english
+              db:
+                name: PomCur Track
+          - name: methods_paper
+            definition: |
+                Triage status for a paper that will not be curated because it
+                is a methods paper.
+            dbxref:
+              accession: methods_paper
+              db:
+                name: PomCur Track
+          - name: wrong_organism
+            definition: |
+                Triage status for a paper that will not be curated because the
+                organism is not appropriate for this database.
+            dbxref:
+              accession: wrong_organism
+              db:
+                name: PomCur Track
+          - name: news_and_views
+            definition: |
+                Triage status for a publication that will not be curated because
+                it is an editorial, a comment or a news and views article.
+            dbxref:
+              accession: news_and_views
+              db:
+                name: PomCur Track
+          - name: other
+            definition: |
+                Triage status for a publication that will not be curated for
+                a reason the is not covered by the other statuses.
+            dbxref:
+              accession: other
+              db:
+                name: PomCur Track
       - name: PomCur user types
         cvterms:
           - name: user
