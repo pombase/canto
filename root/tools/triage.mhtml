@@ -1,0 +1,22 @@
+<%args>
+$pub
+@pub_statuses
+</%args>
+
+<div class="triage">
+  <div class="pub-details">
+    <div class="title"><% $pub->title() %></div>
+    <div class="authors"><% $pub->authors() %></div>
+    <div class="abstract"><% $pub->abstract() %></div>
+  </div>
+  <div class="status-choice">
+    <ul>
+% for my $status (@pub_statuses) {
+      <li>
+        <% $status->name() %>
+      </li>
+% }
+    </ul>
+  </div>
+</div>
+
