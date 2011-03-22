@@ -54,8 +54,9 @@ my @status_links = ();
 
 for my $status (@pub_statuses) {
   my $name = $status->name();
-  if ($pub->triage_status_id() == $status->cvterm_id()) {
-    $name .= ' (current)';
+
+  if ($status->name() eq 'new') {
+    next;
   }
 
   my $path = '/tools/triage/' . $pub->pub_id() .
