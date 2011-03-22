@@ -97,7 +97,7 @@ sub find_cv
 
   my $schema = $self->schema();
 
-  croak unless defined $cv_name;
+  croak "no cv name supplied" unless defined $cv_name;
 
   my $cv = $schema->resultset('Cv')->find(
       {
@@ -125,7 +125,7 @@ sub find_or_create_cv
   my $self = shift;
   my $cv_name = shift;
 
-  croak unless defined $cv_name;
+  croak "no cv found for: $cv_name" unless defined $cv_name;
 
   if (exists $self->{cache}->{cv}->{$cv_name}) {
     return $self->{cache}->{cv}->{$cv_name};
