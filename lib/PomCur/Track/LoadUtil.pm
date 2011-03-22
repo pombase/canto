@@ -301,7 +301,7 @@ sub get_pub
       {
         uniquename => $uniquename,
         type => $pub_type,
-        status => $pub_new_status,
+        triage_status => $pub_new_status,
       });
 }
 

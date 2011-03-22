@@ -60,7 +60,7 @@ __PACKAGE__->table("pub");
   data_type: 'text'
   is_nullable: 1
 
-=head2 status_id
+=head2 triage_status_id
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -83,7 +83,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "authors",
   { data_type => "text", is_nullable => 1 },
-  "status_id",
+  "triage_status_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("pub_id");
@@ -91,7 +91,7 @@ __PACKAGE__->add_unique_constraint("uniquename_unique", ["uniquename"]);
 
 =head1 RELATIONS
 
-=head2 status
+=head2 triage_status
 
 Type: belongs_to
 
@@ -100,9 +100,9 @@ Related object: L<PomCur::TrackDB::Cvterm>
 =cut
 
 __PACKAGE__->belongs_to(
-  "status",
+  "triage_status",
   "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "status_id" },
+  { cvterm_id => "triage_status_id" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
@@ -187,8 +187,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 17:41:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nRV+30btvx2jOHaXFN6ggQ
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-22 15:38:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L80gq6sesg24lq2/t2Bvfg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

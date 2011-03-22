@@ -28,7 +28,7 @@ sub triage :Path {
                                              name => 'new' });
 
   my $constraint = {
-    status_id => $new_cvterm->cvterm_id()
+    triage_status_id => $new_cvterm->cvterm_id()
   };
 
   my $pub = $schema->resultset('Pub')->search($constraint)->first();

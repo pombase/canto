@@ -185,8 +185,8 @@ class_info:
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication type")'
           referenced_class: Cvterm
           editable: 1
-        - name: status
-          source: status_id
+        - name: triage_status
+          source: triage_status_id
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication triage status")'
           referenced_class: Cvterm
           editable: 1

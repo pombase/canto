@@ -180,7 +180,7 @@ sub track_init
                                     uniquename => 'PMID:18426916',
                                     title => 'test title',
                                     type_id => 601,
-                                    status_id => 602,
+                                    triage_status_id => 602,
                                   });
   my $organism = $load_util->get_organism('Schizosaccharomyces', 'pombe', 4896);
 

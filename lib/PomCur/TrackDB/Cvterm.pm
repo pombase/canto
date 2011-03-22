@@ -84,7 +84,7 @@ __PACKAGE__->set_primary_key("cvterm_id");
 
 =head1 RELATIONS
 
-=head2 pub_statuses
+=head2 pub_triage_statuses
 
 Type: has_many
 
@@ -93,9 +93,9 @@ Related object: L<PomCur::TrackDB::Pub>
 =cut
 
 __PACKAGE__->has_many(
-  "pub_statuses",
+  "pub_triage_statuses",
   "PomCur::TrackDB::Pub",
-  { "foreign.status_id" => "self.cvterm_id" },
+  { "foreign.triage_status_id" => "self.cvterm_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -295,8 +295,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 17:45:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8doTVn2+Epk/ettJlHF2YQ
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-22 15:38:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:usNpeCmnIyDeHUg9v0ceWg
 
 sub db_accession
 {
