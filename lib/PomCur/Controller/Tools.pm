@@ -22,7 +22,7 @@ sub triage :Path {
   my $config = $c->config();
 
   my $cv = $schema->find_with_type('Cv',
-                                   { name => 'PomBase publication status' });
+                                   { name => 'PomCur publication triage status' });
   my $new_cvterm = $schema->find_with_type('Cvterm',
                                            { cv_id => $cv->cv_id(),
                                              name => 'new' });

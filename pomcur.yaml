@@ -59,21 +59,21 @@ db_initial_data:
               accession: related
               db:
                 name: PomCur Track
-      - name: PomBase publication type
+      - name: PomCur publication type
         cvterms:
           - name: unknown
             dbxref:
               accession: unknown
               db:
                 name: PomCur Track
-      - name: PomBase publication status
+      - name: PomCur publication triage status
         cvterms:
           - name: new
             dbxref:
               accession: new
               db:
                 name: PomCur Track
-      - name: PomBase user types
+      - name: PomCur user types
         cvterms:
           - name: user
             dbxref:
@@ -85,7 +85,7 @@ db_initial_data:
               accession: admin
               db:
                 name: PomCur Track
-      - name: PomBase publication curation status
+      - name: PomCur publication curation status
         cvterms:
           - name: not started
             dbxref:
@@ -145,7 +145,7 @@ class_info:
           editable: 1
         - name: role
           default_value: "'user'"
-          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase user types")'
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur user types")'
           editable: 1
           admin_only: 1
         - name: password
@@ -182,12 +182,12 @@ class_info:
           editable: 1
         - name: type
           source: type_id
-          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication type")'
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication type")'
           referenced_class: Cvterm
           editable: 1
         - name: status
           source: status_id
-          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication status")'
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication triage status")'
           referenced_class: Cvterm
           editable: 1
     pub_curation_status:
@@ -203,7 +203,7 @@ class_info:
           editable: 1
         - name: status
           source: status_id
-          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomBase publication curation status")'
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication curation status")'
           referenced_class: Cvterm
           editable: 1
 

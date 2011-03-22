@@ -289,11 +289,11 @@ sub get_pub
 
   my $schema = $self->schema();
 
-  my $pub_type_cv = $self->find_cv('PomBase publication type');
+  my $pub_type_cv = $self->find_cv('PomCur publication type');
   my $pub_type = $self->find_cvterm(cv => $pub_type_cv,
                                     name => 'unknown');
 
-  my $pub_status_cv = $self->find_cv('PomBase publication status');
+  my $pub_status_cv = $self->find_cv('PomCur publication triage status');
   my $pub_new_status = $self->find_cvterm(cv => $pub_status_cv,
                                           name => 'new');
 
@@ -338,7 +338,7 @@ sub get_lab
  Function: Find or create, and then return the object matching the arguments
  Args    : $name - the Person full name
            $networkaddress - the email address
-           $role_cvterm - a cvterm from the "PomBase user types" cv
+           $role_cvterm - a cvterm from the user types cv
  Returns : The new person object
 
 =cut
