@@ -139,6 +139,37 @@ sub find_or_create_cv
   }
 }
 
+=head2 find_cvterm
+
+ Usage   : my $cvterm = $load_util->find_cvterm(cv => $cv,
+                                                name => $cvterm_name);
+ Function: Find and return the cvterm object matching the arguments
+ Args    : $cvterm_name - the cvterm name
+ Returns : The Cvterm or calls die()
+
+=cut
+sub find_cvterm
+{
+  my $self = shift;
+  my %args = @_;
+
+  my $schema = $self->schema();
+
+  croak "no cvterm name passed" unless defined $args{name};
+
+  my $cvterm = $schema->resultset('Cvterm')->find(
+      {
+        cv_id => $args{cv}->cv_id(),
+        name => $args{name}
+      });
+
+  if (defined $cvterm) {
+    return $cvterm;
+  } else {
+    croak "no CV found for: $args{name}";
+  }
+}
+
 =head2 get_db
 
  Usage   : my $db = $load_util->get_db($db_name);
@@ -259,13 +290,12 @@ sub get_pub
   my $schema = $self->schema();
 
   my $pub_type_cv = $self->find_cv('PomBase publication type');
-  my $pub_type = $self->get_cvterm(cv => $pub_type_cv,
-                                   term_name => 'unknown');
+  my $pub_type = $self->find_cvterm(cv => $pub_type_cv,
+                                    name => 'unknown');
 
   my $pub_status_cv = $self->find_cv('PomBase publication status');
-  my $pub_new_status =
-    $self->get_cvterm(cv => $pub_status_cv,
-                      term_name => 'unknown');
+  my $pub_new_status = $self->find_cvterm(cv => $pub_status_cv,
+                                          name => 'unknown');
 
   return $schema->resultset('Pub')->find_or_create(
       {
