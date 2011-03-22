@@ -33,7 +33,8 @@ sub triage :Local :Args() {
     $pub->triage_status_id($status_id);
     $pub->update();
 
-    # fall through and show another paper
+    $c->res->redirect('/tools/triage');
+    $c->detach();
   }
 
   $st->{template} = 'tools/triage.mhtml';
