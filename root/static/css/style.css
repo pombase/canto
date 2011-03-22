@@ -213,7 +213,7 @@ a.pomcur-toggle-button {
   width: 80%;
 }
 
-#main-actions actionlist {
+#main-actions .actionlist {
   width: 30%;
   vertical-align: top;
 }
