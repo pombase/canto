@@ -664,13 +664,14 @@ div.clearall {
   font-size: 90%;
 }
 
-.triage .status-choice {
+.triage .status-settings {
   width: 48%;
   float: right;
 }
 
 .triage li {
   list-style-type: none;
+  padding: 2px;
 }
 .triage li a {
   text-decoration: none;

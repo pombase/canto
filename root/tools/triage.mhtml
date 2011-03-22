@@ -4,48 +4,70 @@ $pub
 </%args>
 
 <div class="triage">
-  <div class="pub-details">
-    <div class="sect title">
-      <span class="sect-title">
-        Title
-      </span>
-      <div class="sect-content">
-        <% $pub->title() %>
+  <form id="triage-form" action="" method="get">
+    <input type="hidden" id="triage-pub-id" name="triage-pub-id"
+           value="<% $pub->pub_id() %>"/>
+    <div class="pub-details">
+      <div class="sect title">
+        <span class="sect-title">
+          Title
+        </span>
+        <div class="sect-content">
+          <% $pub->title() %>
+        </div>
+      </div>
+      <div class="sect authors">
+        <span class="sect-title">
+          Authors
+        </span>
+        <div class="sect-content">
+          <% $pub->authors() %>
+        </div>
+      </div>
+      <div class="sect abstract">
+        <span class="sect-title undisclosed-title">
+          <a href="#">Abstract</a>
+        </span>
+        <div class="sect-content" style="display: none">
+          <% $pub->abstract() %>
+        </div>
+      </div>
+      <div>
+        <input type="checkbox" name="genome-wide" value="genome-wide" >
+        Genome wide<br>
+      </div>
+      <div>
+        <input type="checkbox" name="high-throughput-sequencing"
+               value="high-throughput-sequencing">
+        High throughput sequencing <br>
+      </div>
+      <div>
+        <input type="checkbox" name="computational-analysis"
+               value="computational-analysis">
+        Computational analysis<br>
       </div>
     </div>
-    <div class="sect authors">
-      <span class="sect-title">
-        Authors
-      </span>
-      <div class="sect-content">
-        <% $pub->authors() %>
-      </div>
-    </div>
-    <div class="sect abstract">
-      <span class="sect-title undisclosed-title">
-        <a href="#">Abstract</a>
-      </span>
-      <div class="sect-content">
-        <% $pub->abstract() %>
-      </div>
-    </div>
-  </div>
-  <div class="sect status-choice">
-    <span class="sect-title">
-      <a href="#">Actions ...</a>
-    </span>
-    <div class="sect-content">
-      <ul>
+    <div class="status-settings">
+      <div class="sect status-choice">
+        <span class="sect-title">
+          <a href="#">Actions ...</a>
+        </span>
+        <div class="sect-content">
+          <ul>
 % for my $status_info (@status_links) {
-        <li>
-          <a href="<% $status_info->{link} %>"><% $status_info->{name} %></a>
-        </li>
+            <li>
+              <input type="submit" name="submit"
+              value="<% $status_info->{name} %>">
+            </li>
 % }
-      </ul>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
 
+  </form>
   <div class="clearall"/>
+
 </div>
 
 
@@ -55,15 +77,17 @@ my @status_links = ();
 for my $status (@pub_statuses) {
   my $name = $status->name();
 
-  if ($status->name() eq 'New') {
+  if ($name eq 'New') {
     next;
   }
 
+  my $status_id = $status->cvterm_id();
   my $path = '/tools/triage/' . $pub->pub_id() .
-    '/status/' . $status->cvterm_id();
+    '/status/' . $status_id;
   my $link = $c->uri_for($path);
 
-  push @status_links, { name => $name, link => $link };
+  push @status_links, { name => $name,
+                        link => $link };
 }
 
 

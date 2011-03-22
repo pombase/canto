@@ -11,10 +11,10 @@ PomCur::Controller::Tools - Controller for PomCur user tools
 =head1 METHODS
 
 =cut
-sub triage :Local :Args() {
-  my ($self, $c, $pub_id, %args) = @_;
+sub triage :Local {
+  my ($self, $c) = @_;
 
-  if (!defined $c->user() && $c->user()->role()->name() eq 'admin') {
+  if (!defined $c->user() || $c->user()->role()->name() ne 'admin') {
     $c->stash()->{error} = "Log in as administrator to allow triaging";
     $c->forward('/front');
     $c->detach();
@@ -25,12 +25,15 @@ sub triage :Local :Args() {
 
   my $schema = $c->schema('track');
 
-  if (defined $pub_id && defined $args{status}) {
+  if ($c->req()->param('submit')) {
+    my $pub_id = $c->req()->param('triage-pub-id');
+    my $status_name = $c->req()->param('submit');
+
     my $pub = $schema->find_with_type('Pub', $pub_id);
 
-    my $status_id = $args{status};
+    my $status = $schema->find_with_type('Cvterm', { name => $status_name });
 
-    $pub->triage_status_id($status_id);
+    $pub->triage_status_id($status->cvterm_id());
     $pub->update();
 
     $c->res->redirect('/tools/triage');
