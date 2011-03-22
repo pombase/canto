@@ -68,9 +68,9 @@ db_initial_data:
                 name: PomCur Track
       - name: PomBase publication status
         cvterms:
-          - name: unknown
+          - name: new
             dbxref:
-              accession: unknown
+              accession: new
               db:
                 name: PomCur Track
       - name: PomBase user types

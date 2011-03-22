@@ -295,7 +295,7 @@ sub get_pub
 
   my $pub_status_cv = $self->find_cv('PomBase publication status');
   my $pub_new_status = $self->find_cvterm(cv => $pub_status_cv,
-                                          name => 'unknown');
+                                          name => 'new');
 
   return $schema->resultset('Pub')->find_or_create(
       {
