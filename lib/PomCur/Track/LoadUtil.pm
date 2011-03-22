@@ -295,7 +295,7 @@ sub get_pub
 
   my $pub_status_cv = $self->find_cv('PomCur publication triage status');
   my $pub_new_status = $self->find_cvterm(cv => $pub_status_cv,
-                                          name => 'new');
+                                          name => 'New');
 
   return $schema->resultset('Pub')->find_or_create(
       {

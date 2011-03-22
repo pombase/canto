@@ -55,7 +55,7 @@ my @status_links = ();
 for my $status (@pub_statuses) {
   my $name = $status->name();
 
-  if ($status->name() eq 'new') {
+  if ($status->name() eq 'New') {
     next;
   }
 

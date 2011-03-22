@@ -41,7 +41,7 @@ sub triage :Local :Args() {
                                    { name => 'PomCur publication triage status' });
   my $new_cvterm = $schema->find_with_type('Cvterm',
                                            { cv_id => $cv->cv_id(),
-                                             name => 'new' });
+                                             name => 'New' });
 
   my $constraint = {
     triage_status_id => $new_cvterm->cvterm_id()

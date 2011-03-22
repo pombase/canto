@@ -68,18 +68,18 @@ db_initial_data:
                 name: PomCur Track
       - name: PomCur publication triage status
         cvterms:
-          - name: new
+          - name: New
             dbxref:
               accession: new
               db:
                 name: PomCur Track
-          - name: curatable
+          - name: Curatable
             definition: Triage status for papers that can be curated.
             dbxref:
               accession: curatable
               db:
                 name: PomCur Track
-          - name: not_english
+          - name: Not english
             definition: |
                 Triage status for a paper that will not be curated because
                 the text is not in English.
@@ -87,7 +87,7 @@ db_initial_data:
               accession: not_english
               db:
                 name: PomCur Track
-          - name: methods_paper
+          - name: Methods paper
             definition: |
                 Triage status for a paper that will not be curated because it
                 is a methods paper.
@@ -95,7 +95,7 @@ db_initial_data:
               accession: methods_paper
               db:
                 name: PomCur Track
-          - name: wrong_organism
+          - name: Wrong organism
             definition: |
                 Triage status for a paper that will not be curated because the
                 organism is not appropriate for this database.
@@ -103,7 +103,7 @@ db_initial_data:
               accession: wrong_organism
               db:
                 name: PomCur Track
-          - name: news_and_views
+          - name: News and views
             definition: |
                 Triage status for a publication that will not be curated because
                 it is an editorial, a comment or a news and views article.
@@ -111,7 +111,7 @@ db_initial_data:
               accession: news_and_views
               db:
                 name: PomCur Track
-          - name: other
+          - name: Other
             definition: |
                 Triage status for a publication that will not be curated for
                 a reason the is not covered by the other statuses.
