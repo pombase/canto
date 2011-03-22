@@ -167,23 +167,5 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 16:45:22
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Kbzrylly87St7Fx+C0lr5g
 
-=head2
-
- Usage   : my $pub_status = $pub->pub_status();
- Function: Return the PubStatus object for this publication.
-           DBIx::Class::Schema::Loader has created pub_statuses() for us,
-           but the constraints on the pub_status.pub column mean there can be
-           only one PubStatus per Pub
- Args    : None
- Return  : The PubStatus object
-
-=cut
-sub pub_status
-{
-  my $self = shift;
-
-  return ($self->pub_statuses())[0];
-}
-
 __PACKAGE__->meta->make_immutable;
 1;
