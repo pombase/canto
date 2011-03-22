@@ -655,3 +655,26 @@ div.clearall {
 #ferret-suggest-form td {
   text-align: top;
 }
+
+.triage .pub-details {
+  width: 48%;
+  float: left;
+}
+.triage .pub-details .abstract .sect-content {
+  font-size: 90%;
+}
+
+.triage .status-choice {
+  width: 48%;
+  float: right;
+}
+
+.triage li {
+  list-style-type: none;
+}
+.triage li a {
+  text-decoration: none;
+}
+.triage li a:hover {
+  background-color:#0b75b2;
+}

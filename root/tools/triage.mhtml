@@ -5,18 +5,65 @@ $pub
 
 <div class="triage">
   <div class="pub-details">
-    <div class="title"><% $pub->title() %></div>
-    <div class="authors"><% $pub->authors() %></div>
-    <div class="abstract"><% $pub->abstract() %></div>
+    <div class="sect title">
+      <span class="sect-title">
+        Title
+      </span>
+      <div class="sect-content">
+        <% $pub->title() %>
+      </div>
+    </div>
+    <div class="sect authors">
+      <span class="sect-title">
+        Authors
+      </span>
+      <div class="sect-content">
+        <% $pub->authors() %>
+      </div>
+    </div>
+    <div class="sect abstract">
+      <span class="sect-title undisclosed-title">
+        <a href="#">Abstract</a>
+      </span>
+      <div class="sect-content">
+        <% $pub->abstract() %>
+      </div>
+    </div>
   </div>
-  <div class="status-choice">
-    <ul>
-% for my $status (@pub_statuses) {
-      <li>
-        <% $status->name() %>
-      </li>
+  <div class="sect status-choice">
+    <span class="sect-title disclosed-title">
+      <a href="#">Actions ...</a>
+    </span>
+    <div class="sect-content">
+      <ul>
+% for my $status_info (@status_links) {
+        <li>
+          <a href="<% $status_info->{link} %>"><% $status_info->{name} %></a>
+        </li>
 % }
-    </ul>
+      </ul>
+    </div>
   </div>
+
+  <div class="clearall"/>
 </div>
 
+
+<%init>
+my @status_links = ();
+
+for my $status (@pub_statuses) {
+  my $name = $status->name();
+  if ($pub->triage_status_id() == $status->cvterm_id()) {
+    $name .= ' (current)';
+  }
+
+  my $path = '/tools/triage/' . $pub->pub_id() .
+    '/status/' . $status->cvterm_id();
+  my $link = $c->uri_for($path);
+
+  push @status_links, { name => $name, link => $link };
+}
+
+
+</%init>

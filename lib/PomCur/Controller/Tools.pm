@@ -11,15 +11,25 @@ PomCur::Controller::Tools - Controller for PomCur user tools
 =head1 METHODS
 
 =cut
-sub triage :Path {
-  my ($self, $c, $arg) = @_;
+sub triage :Local :Args() {
+  my ($self, $c, $pub_id, %args) = @_;
 
   my $st = $c->stash();
 
-  $st->{template} = 'tools/triage.mhtml';
-
   my $schema = $c->schema('track');
-  my $config = $c->config();
+
+  if (defined $pub_id && defined $args{status}) {
+    my $pub = $schema->find_with_type('Pub', $pub_id);
+
+    my $status_id = $args{status};
+
+    $pub->triage_status_id($status_id);
+    $pub->update();
+
+    # fall through and show another paper
+  }
+
+  $st->{template} = 'tools/triage.mhtml';
 
   my $cv = $schema->find_with_type('Cv',
                                    { name => 'PomCur publication triage status' });
