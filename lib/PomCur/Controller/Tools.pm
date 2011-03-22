@@ -37,8 +37,6 @@ sub triage :Local :Args() {
     $c->detach();
   }
 
-  $st->{template} = 'tools/triage.mhtml';
-
   my $cv = $schema->find_with_type('Cv',
                                    { name => 'PomCur publication triage status' });
   my $new_cvterm = $schema->find_with_type('Cvterm',
@@ -51,13 +49,22 @@ sub triage :Local :Args() {
 
   my $pub = $schema->resultset('Pub')->search($constraint)->first();
 
-  $st->{title} = 'Triaging ' . $pub->uniquename();
+  if (defined $pub) {
+    $st->{title} = 'Triaging ' . $pub->uniquename();
+    $st->{pub} = $pub;
 
-  $st->{pub} = $pub;
+    my @statuses =
+      $schema->resultset('Cvterm')->search({ cv_id => $cv->cv_id() });
 
-  my @statuses = $schema->resultset('Cvterm')->search({ cv_id => $cv->cv_id() });
+    $st->{pub_statuses} = [@statuses];
 
-  $st->{pub_statuses} = [@statuses];
+    $st->{template} = 'tools/triage.mhtml';
+  } else {
+    $c->flash()->{message} =
+      'Triaging finished - no more un-triaged publications';
+    $c->res->redirect('/');
+    $c->detach();
+  }
 }
 
 
