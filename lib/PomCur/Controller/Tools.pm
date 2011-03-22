@@ -14,6 +14,13 @@ PomCur::Controller::Tools - Controller for PomCur user tools
 sub triage :Local :Args() {
   my ($self, $c, $pub_id, %args) = @_;
 
+  if (!defined $c->user() && $c->user()->role()->name() eq 'admin') {
+    $c->stash()->{error} = "Log in as administrator to allow triaging";
+    $c->forward('/front');
+    $c->detach();
+    return;
+  }
+
   my $st = $c->stash();
 
   my $schema = $c->schema('track');
