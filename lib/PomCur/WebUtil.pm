@@ -59,6 +59,8 @@ use PomCur::DB;
                             'attribute': this is a plain attribute field
                             'key_field': this is the attribute field that is the
                                natural primary key for this class
+                            'method': $field_name is a method name on the object,
+                               which will be called and it's value returned
            $ref_display_key - the display key of the referenced object
                               (or undef)
 
@@ -94,7 +96,11 @@ sub get_field_value
   my $col_conf = $class_infos->{$type}->{field_infos}->{$field_name};
 
   if (!defined $col_conf) {
-    croak "no field_info configured for field '$field_name' of $type\n";
+    if ($object->can($field_name)) {
+      return ($object->$field_name(), 'method', undef);
+    } else {
+      croak "no field_info configured for field '$field_name' of $type\n";
+    }
   }
 
   if (defined $col_conf->{source} && $col_conf->{source} =~ /[\$\-<>\';]/) {
