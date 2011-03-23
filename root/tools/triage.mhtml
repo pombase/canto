@@ -1,6 +1,5 @@
 <%args>
 $pub
-@pub_statuses
 </%args>
 
 <div class="triage">
@@ -32,20 +31,12 @@ $pub
           <% $pub->abstract() %>
         </div>
       </div>
+% for my $experiment_type (@experiment_types) {
       <div>
-        <input type="checkbox" name="genome-wide" value="genome-wide" >
-        Genome wide<br>
+        <input type="checkbox" name="experiment-type"
+               value="<% $experiment_type %>" ><% $experiment_type %><br>
       </div>
-      <div>
-        <input type="checkbox" name="high-throughput-sequencing"
-               value="high-throughput-sequencing">
-        High throughput sequencing <br>
-      </div>
-      <div>
-        <input type="checkbox" name="computational-analysis"
-               value="computational-analysis">
-        Computational analysis<br>
-      </div>
+% }
     </div>
     <div class="status-settings">
       <div class="sect status-choice">
@@ -72,7 +63,14 @@ $pub
 
 
 <%init>
+my $schema = $c->schema('track');
+my $status_cv_name = 'PomCur publication triage status';
+my $status_cv = $schema->find_with_type('Cv', { name => $status_cv_name });
+
 my @status_links = ();
+
+my @pub_statuses =
+  $schema->resultset('Cvterm')->search({ cv_id => $status_cv->cv_id() });
 
 for my $status (@pub_statuses) {
   my $name = $status->name();
@@ -90,5 +88,13 @@ for my $status (@pub_statuses) {
                         link => $link };
 }
 
+my $experiment_type_cv_name = 'PomCur publication experiment types';
+my $experiment_type_cv =
+  $schema->find_with_type('Cv', { name => $experiment_type_cv_name });
+
+my @experiment_type_cvterms =
+  $schema->resultset('Cvterm')->search({ cv_id => $experiment_type_cv->cv_id() });
+
+my @experiment_types = map { $_->name() } @experiment_type_cvterms;
 
 </%init>

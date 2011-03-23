@@ -143,6 +143,23 @@ db_initial_data:
               accession: admin
               db:
                 name: PomCur Track
+      - name: PomCur publication experiment types
+        cvterms:
+          - name: Genome wide
+            dbxref:
+              accession: genome_wide
+              db:
+                name: PomCur Track
+          - name: High throughput
+            dbxref:
+              accession: high_throughput
+              db:
+                name: PomCur Track
+          - name: Computational analysis
+            dbxref:
+              accession: computational_analysis
+              db:
+                name: PomCur Track
 
 class_info:
   track:

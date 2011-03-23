@@ -87,11 +87,6 @@ sub triage :Local {
     $st->{title} = 'Triaging ' . $next_pub->uniquename();
     $st->{pub} = $next_pub;
 
-    my @statuses =
-      $schema->resultset('Cvterm')->search({ cv_id => $cv->cv_id() });
-
-    $st->{pub_statuses} = [@statuses];
-
     $st->{template} = 'tools/triage.mhtml';
   } else {
     $c->flash()->{message} =
