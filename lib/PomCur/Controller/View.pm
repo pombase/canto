@@ -161,11 +161,14 @@ sub object : Local
     $st->{type} = $type;
     $st->{object} = $object;
 
+    my $model_name = $c->req()->param('model');
+
     my $object_id = PomCur::DB::id_of_object($object);
-    my $template_path = $c->path_to("root", "view", "object", "$type.mhtml");
+    my $template_path = $c->path_to("root", "view", "object", $model_name,
+                                    "$type.mhtml");
 
     if (defined $template_path->stat()) {
-      $c->stash()->{template} = "view/object/$type.mhtml";
+      $c->stash()->{template} = "view/object/$model_name/$type.mhtml";
     } else {
       $c->stash()->{template} = "view/object/generic.mhtml";
     }

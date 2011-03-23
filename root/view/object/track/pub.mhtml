@@ -27,27 +27,19 @@ $object
 </&>
 
 <div id="collections">
-% if ($object->curs()) {
   <& /view/collection.mhtml, object => $object, collection_name => 'curs',
      collection_title => "Curation sessions" &>
-  <& /view/collection.mhtml, object => $object, 
+  <& /view/collection.mhtml, object => $object,
     collection_name => 'pub_curation_statuses',
     collection_title => 'Status for all curation types' &>
-% }
 </div>
 
 <%init>
 use PomCur::Curs;
 
-my $abstract = undef;
-
-if ($object->can('abstract')) {
-  $abstract = $object->abstract();
-}
-
-$abstract //= '[Abstract not available]';
+my $abstract = $object->abstract() // '[Abstract not available]';
 
 my $current_path = $c->req->uri()->path();
-my $return_path_uri = 
+my $return_path_uri =
   $c->uri_for($current_path, $c->req()->params());
 </%init>

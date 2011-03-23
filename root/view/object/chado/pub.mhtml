@@ -1,0 +1,13 @@
+<%args>
+$object
+</%args>
+
+<&| /view/object/object_top.mhtml, object => $object &>
+
+</&>
+
+<%init>
+my $current_path = $c->req->uri()->path();
+my $return_path_uri =
+  $c->uri_for($current_path, $c->req()->params());
+</%init>

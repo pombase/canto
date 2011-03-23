@@ -1,0 +1,7 @@
+<%args>
+$object
+</%args>
+
+<div>
+<& /view/field_list.mhtml, object => $object &>
+</div>

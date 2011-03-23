@@ -6,17 +6,11 @@ $object
 <& /view/field_list.mhtml, object => $object &>
 </div>
 
-% if (defined $features_rs) {
 <div id="collections">
   <& /view/list.mhtml, type => 'feature', rs => $features_rs,
     list_title => 'Features annotated with this cvterm' &>
 </div>
-% }
 
 <%init>
-my $features_rs = undef;
-
-if ($object->can("feature_cvterms")) {
-  $features_rs = $object->feature_cvterms()->search_related('feature');
-}
+my $features_rs = $object->feature_cvterms()->search_related('feature');
 </%init>
