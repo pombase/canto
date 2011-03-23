@@ -212,14 +212,14 @@ class_info:
           is_collection: 1
           editable: 1
     pub:
-      object_title_format: 'Details for PubMed ID: @@$object->uniquename()@@'
+      object_title_format: 'Details for publication: @@$object->uniquename()@@'
       class_display_name: publication
       display_field: title
       editable: 1
       # hack to order by pubmed id, or by doi number
       order_by: "cast((case me.uniquename like 'PMID:%' WHEN 1 THEN substr(me.uniquename, 6) ELSE me.uniquename END) as integer)"
       field_info_list:
-        - name: 'PubMed ID'
+        - name: 'Publication ID'
           source: uniquename
           editable: 1
         - name: title
@@ -239,7 +239,6 @@ class_info:
           referenced_class: Cvterm
           editable: 1
     pub_curation_status:
-      object_title_format: 'Details for PubMed ID: @@$object->uniquename()@@'
       class_display_name: publication curation status
       display_field: status_summary
       editable: 1
@@ -324,7 +323,7 @@ class_info:
         - name: species
           editable: 1
     pub:
-      object_title_format: 'Details for PubMed ID: @@$object->uniquename()@@'
+      object_title_format: 'Details for publication ID: @@$object->uniquename()@@'
       class_display_name: publication
       display_field: title
       editable: 1
