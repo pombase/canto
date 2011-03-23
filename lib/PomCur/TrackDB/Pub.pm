@@ -141,6 +141,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 pubprops
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Pubprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pubprops",
+  "PomCur::TrackDB::Pubprop",
+  { "foreign.pub_id" => "self.pub_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 pub_curation_statuses
 
 Type: has_many
@@ -187,8 +202,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-22 15:38:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L80gq6sesg24lq2/t2Bvfg
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-23 19:13:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yZ9Qd89YuGVwsYOOtTxlMA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

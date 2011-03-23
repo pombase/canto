@@ -10,6 +10,13 @@ CREATE TABLE pub (
        authors text,
        triage_status_id integer NOT NULL REFERENCES cvterm (cvterm_id)
 );
+CREATE TABLE pubprop (
+       pubprop_id integer NOT NULL PRIMARY KEY,
+       pub_id integer NOT NULL REFERENCES pub (pub_id),
+       type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
+       value text NOT NULL,
+       rank integer DEFAULT 0 NOT NULL
+);
 
 CREATE TABLE pub_curation_status (
        pub_curation_status_id integer NOT NULL PRIMARY KEY,

@@ -60,6 +60,8 @@ sub triage :Local {
   my $next_pub = undef;
 
   if ($c->req()->param('submit')) {
+    my $guard = $schema->txn_scope_guard;
+
     my $pub_id = $c->req()->param('triage-pub-id');
     my $status_name = $c->req()->param('submit');
 
@@ -69,7 +71,30 @@ sub triage :Local {
                                                      cv_id => $cv->cv_id() });
 
     $pub->triage_status_id($status->cvterm_id());
+
+    my $pubprop_types_cv_name = 'PomCur publication property types';
+
+    my $pubprop_types_cv =
+      $schema->find_with_type('Cv',
+                              { name => $pubprop_types_cv_name });
+    my $experiment_type =
+      $schema->find_with_type('Cvterm',
+                              { name => 'experiment_type',
+                                cv_id => $pubprop_types_cv->cv_id() });
+    $pub->pubprops()->search({ type_id => $experiment_type->cvterm_id() })
+      ->delete();
+
+    for my $exp_type_param ($c->req()->param('experiment-type')) {
+      my $pubprop =
+        $schema->create_with_type('Pubprop',
+                                  { type_id => $experiment_type->cvterm_id(),
+                                    value => $exp_type_param,
+                                    pub_id => $pub->pub_id() });
+    }
+
     $pub->update();
+
+    $guard->commit();
 
     $next_pub = _get_next_triage_pub($schema);
 

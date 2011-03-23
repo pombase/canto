@@ -160,6 +160,14 @@ db_initial_data:
               accession: computational_analysis
               db:
                 name: PomCur Track
+      # possibilities for the type_id of pubprops
+      - name: PomCur publication property types
+        cvterms:
+          - name: experiment_type
+            dbxref:
+              accession: experiment_type
+              db:
+                name: PomCur Track
 
 class_info:
   track:
