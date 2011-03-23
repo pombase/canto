@@ -44,7 +44,7 @@ test_psgi $app, sub {
     my $val_email = 'val@sanger.ac.uk';
     my $return_path = 'http://localhost:5000/';
 
-    $uri->query_form(networkaddress => $val_email,
+    $uri->query_form(email_address => $val_email,
                      password => $val_email,
                      return_path => $return_path);
 
@@ -118,7 +118,7 @@ test_psgi $app, sub {
                                                   key => 'first_contact_email',
                                                 });
 
-    is ($metadata->value(), $curator->networkaddress());
+    is ($metadata->value(), $curator->email_address());
   }
 };
 

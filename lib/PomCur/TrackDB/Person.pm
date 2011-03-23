@@ -33,7 +33,7 @@ __PACKAGE__->table("person");
   data_type: 'text'
   is_nullable: 0
 
-=head2 networkaddress
+=head2 email_address
 
   data_type: 'text'
   is_nullable: 0
@@ -67,7 +67,7 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
   { data_type => "text", is_nullable => 0 },
-  "networkaddress",
+  "email_address",
   { data_type => "text", is_nullable => 0 },
   "role",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
@@ -79,7 +79,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("person_id");
-__PACKAGE__->add_unique_constraint("networkaddress_unique", ["networkaddress"]);
+__PACKAGE__->add_unique_constraint("email_address_unique", ["email_address"]);
 
 =head1 RELATIONS
 
@@ -164,8 +164,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 16:45:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Kbzrylly87St7Fx+C0lr5g
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-23 13:36:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:70J2cJgsRTqxqflFlB6qaQ
 
 __PACKAGE__->meta->make_immutable;
 1;

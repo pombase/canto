@@ -333,11 +333,11 @@ sub get_lab
 
 =head2 get_person
 
- Usage   : my $person = $load_util->get_person($name, $networkaddress,
+ Usage   : my $person = $load_util->get_person($name, $email_address,
                                                $role_cvterm);
  Function: Find or create, and then return the object matching the arguments
  Args    : $name - the Person full name
-           $networkaddress - the email address
+           $email_address - the email address
            $role_cvterm - a cvterm from the user types cv
  Returns : The new person object
 
@@ -346,23 +346,23 @@ sub get_person
 {
   my $self = shift;
   my $name = shift;
-  my $networkaddress = shift;
+  my $email_address = shift;
   my $role_cvterm = shift;
 
   my $schema = $self->schema();
 
-  if (!defined $networkaddress || length $networkaddress == 0) {
+  if (!defined $email_address || length $email_address == 0) {
     die "email not set for $name\n";
   }
   if (!defined $name || length $name == 0) {
-    die "name not set for $networkaddress\n";
+    die "name not set for $email_address\n";
   }
 
   return $schema->resultset('Person')->find_or_create(
       {
         name => $name,
-        networkaddress => $networkaddress,
-        password => $networkaddress,
+        email_address => $email_address,
+        password => $email_address,
         role => $role_cvterm,
       });
 }

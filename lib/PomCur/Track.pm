@@ -82,7 +82,7 @@ sub create_curs_db
   my $connect_string = PomCur::Curs::make_connect_string($config, $curs_key);
   my $curs_schema = PomCur::CursDB->connect($connect_string);
 
-  my $first_contact_email = $curs->curator()->networkaddress();
+  my $first_contact_email = $curs->curator()->email_address();
   my $first_contact_name = $curs->curator()->name();
 
   my $track_db_pub = $curs->pub();

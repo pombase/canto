@@ -99,17 +99,18 @@ sub account :Global
 
 =head2 login
 
- Try to authenticate a user based on networkaddress and password parameters
+ Try to authenticate a user based on email_address and password parameters
 
 =cut
 sub login : Global {
   my ( $self, $c ) = @_;
-  my $networkaddress = $c->req->param('networkaddress');
+  my $email_address = $c->req->param('email_address');
   my $password = $c->req->param('password');
 
   my $return_path = $c->req->param('return_path');
 
-  if ($c->authenticate({networkaddress => $networkaddress, password => $password})) {
+  if ($c->authenticate({email_address => $email_address,
+                        password => $password})) {
     $c->flash->{message} =
       { title => "Login successful" };
 

@@ -28,7 +28,7 @@ is($pub->type()->name(), 'unknown');
 
 my $person = $schema->find_with_type('Person',
                                      {
-                                       networkaddress => $first_contact_email
+                                       email_address => $first_contact_email
                                      });
 
 my $curs = $schema->create_with_type('Curs',

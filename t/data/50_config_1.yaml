@@ -12,7 +12,7 @@ class_info:
         - name: name
           editable: 1
         - name: Email address
-          source: networkaddress
+          source: email_address
           editable: 1
         - name: role
           default_value: "'user'"

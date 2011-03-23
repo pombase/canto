@@ -143,7 +143,7 @@ sub track_init
 
   $track_schema->create_with_type('Person',
                                   {
-                                    networkaddress => 'kevin.hardwick@ed.ac.uk',
+                                    email_address => 'kevin.hardwick@ed.ac.uk',
                                     name => 'Kevin Hardwick',
                                     role => 'user'
                                   });

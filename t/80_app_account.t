@@ -37,7 +37,7 @@ test_psgi $app, sub {
   # test login
   {
     my $uri = new URI('http://localhost:5000/login');
-    $uri->query_form(networkaddress => 'nick.rhind@umassmed.edu',
+    $uri->query_form(email_address => 'nick.rhind@umassmed.edu',
                      password => 'nick.rhind@umassmed.edu',
                      return_path => $return_path);
 

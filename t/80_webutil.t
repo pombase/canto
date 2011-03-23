@@ -35,7 +35,7 @@ my $val_email = 'val@sanger.ac.uk';
 
 my $person = $schema->find_with_type('Person',
                                      {
-                                       networkaddress => $val_email
+                                       email_address => $val_email
                                      });
 
 my ($field_value, $field_type) =

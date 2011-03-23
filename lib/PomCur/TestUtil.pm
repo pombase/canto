@@ -515,7 +515,7 @@ sub _get_curator_object
   my $email_address = shift;
 
   return $schema->find_with_type('Person',
-                                 { networkaddress => $email_address });
+                                 { email_address => $email_address });
 }
 
 sub _get_pub_object

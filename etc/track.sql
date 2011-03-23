@@ -124,7 +124,7 @@ CREATE TABLE pub_organism (
 CREATE TABLE person (
        person_id integer NOT NULL PRIMARY KEY,
        name text NOT NULL,
-       networkaddress text NOT NULL UNIQUE,
+       email_address text NOT NULL UNIQUE,
        role integer REFERENCES cvterm(cvterm_id) DEFERRABLE INITIALLY DEFERRED  NOT NULL,
        lab INTEGER REFERENCES lab (lab_id),
        session_data text,

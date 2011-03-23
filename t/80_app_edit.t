@@ -36,7 +36,7 @@ test_psgi $app, sub {
     my $val_email = 'val@sanger.ac.uk';
     my $return_path = 'http://localhost:5000/';
 
-    $uri->query_form(networkaddress => $val_email,
+    $uri->query_form(email_address => $val_email,
                      password => $val_email,
                      return_path => $return_path);
 
