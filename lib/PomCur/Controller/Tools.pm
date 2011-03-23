@@ -4,6 +4,38 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
+sub _get_status_cv
+{
+  my $schema = shift;
+
+  my $cv_name = 'PomCur publication triage status';
+  return $schema->find_with_type('Cv', { name => $cv_name });
+}
+
+sub _get_next_triage_pub
+{
+  my $schema = shift;
+
+  my $cv = _get_status_cv($schema);
+  my $new_cvterm = $schema->find_with_type('Cvterm',
+                                           { cv_id => $cv->cv_id(),
+                                             name => 'New' });
+
+  my $constraint = {
+    triage_status_id => $new_cvterm->cvterm_id()
+  };
+
+  my $options = {
+    # nasty hack to order by pubmed ID
+    order_by => {
+      -asc => "cast((case me.uniquename like 'PMID:%' WHEN 1 THEN " .
+        "substr(me.uniquename, 6) ELSE me.uniquename END) as integer)"
+    }
+  };
+
+  return $schema->resultset('Pub')->search($constraint, $options)->first();
+}
+
 =head1 NAME
 
 PomCur::Controller::Tools - Controller for PomCur user tools
@@ -25,13 +57,16 @@ sub triage :Local {
 
   my $schema = $c->schema('track');
 
+  my $cv = _get_status_cv($schema);
+
   if ($c->req()->param('submit')) {
     my $pub_id = $c->req()->param('triage-pub-id');
     my $status_name = $c->req()->param('submit');
 
     my $pub = $schema->find_with_type('Pub', $pub_id);
 
-    my $status = $schema->find_with_type('Cvterm', { name => $status_name });
+    my $status = $schema->find_with_type('Cvterm', { name => $status_name,
+                                                     cv_id => $cv->cv_id() });
 
     $pub->triage_status_id($status->cvterm_id());
     $pub->update();
@@ -40,25 +75,7 @@ sub triage :Local {
     $c->detach();
   }
 
-  my $cv = $schema->find_with_type('Cv',
-                                   { name => 'PomCur publication triage status' });
-  my $new_cvterm = $schema->find_with_type('Cvterm',
-                                           { cv_id => $cv->cv_id(),
-                                             name => 'New' });
-
-  my $constraint = {
-    triage_status_id => $new_cvterm->cvterm_id()
-  };
-
-  my $options = {
-    # nasty hack to order by pubmed ID
-    order_by => {
-      -asc => "cast((case me.uniquename like 'PMID:%' WHEN 1 THEN " .
-        "substr(me.uniquename, 6) ELSE me.uniquename END) as integer)"
-    }
-  };
-
-  my $pub = $schema->resultset('Pub')->search($constraint, $options)->first();
+  my $pub = _get_next_triage_pub($schema);
 
   if (defined $pub) {
     $st->{title} = 'Triaging ' . $pub->uniquename();
