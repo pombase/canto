@@ -54,10 +54,10 @@ sub triage :Local {
   }
 
   my $st = $c->stash();
-
   my $schema = $c->schema('track');
-
   my $cv = _get_status_cv($schema);
+
+  my $next_pub = undef;
 
   if ($c->req()->param('submit')) {
     my $pub_id = $c->req()->param('triage-pub-id');
@@ -71,15 +71,21 @@ sub triage :Local {
     $pub->triage_status_id($status->cvterm_id());
     $pub->update();
 
-    $c->res->redirect($c->uri_for('/tools/triage'));
-    $c->detach();
+    $next_pub = _get_next_triage_pub($schema);
+
+    if (defined $next_pub) {
+      $c->res->redirect($c->uri_for('/tools/triage'));
+      $c->detach();
+    } else {
+      # fall through
+    }
+  } else {
+    $next_pub = _get_next_triage_pub($schema);
   }
 
-  my $pub = _get_next_triage_pub($schema);
-
-  if (defined $pub) {
-    $st->{title} = 'Triaging ' . $pub->uniquename();
-    $st->{pub} = $pub;
+  if (defined $next_pub) {
+    $st->{title} = 'Triaging ' . $next_pub->uniquename();
+    $st->{pub} = $next_pub;
 
     my @statuses =
       $schema->resultset('Cvterm')->search({ cv_id => $cv->cv_id() });
@@ -90,7 +96,7 @@ sub triage :Local {
   } else {
     $c->flash()->{message} =
       'Triaging finished - no more un-triaged publications';
-    $c->res->redirect('/');
+    $c->res->redirect($c->uri_for('/'));
     $c->detach();
   }
 }
