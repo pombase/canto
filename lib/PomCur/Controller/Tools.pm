@@ -36,7 +36,7 @@ sub triage :Local {
     $pub->triage_status_id($status->cvterm_id());
     $pub->update();
 
-    $c->res->redirect('/tools/triage');
+    $c->res->redirect($c->uri_for('/tools/triage'));
     $c->detach();
   }
 
