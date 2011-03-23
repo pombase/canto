@@ -72,9 +72,9 @@ my $app_name = PomCur::Config::get_application_name();
 
 $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
-my $pomcur_dir = $ENV{POMCUR_CONFIG_LOCAL_SUFFIX};
+my $suffix = $ENV{POMCUR_CONFIG_LOCAL_SUFFIX};
 
-if (!PomCur::Meta::Util::app_initialised($app_name, $pomcur_dir, $pomcur_dir)) {
+if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
   die "The application is not yet initialised, try running the pomcur_start " .
     "script\n";
 }
