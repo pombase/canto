@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 12;
 
 use PomCur::TestUtil;
 
@@ -12,12 +12,10 @@ use HTTP::Cookies;
 my $test_util = PomCur::TestUtil->new();
 $test_util->init_test();
 
-my $app = $test_util->plack_app();
-
-my $cookie_jar = HTTP::Cookies->new(
-  file => '/tmp/pomcur_web_test_$$.cookies',
-  autosave => 1,
-);
+my $return_path = 'http://localhost:5000/';
+my %test_app_conf = %{$test_util->plack_app(login => $return_path)};
+my $app = $test_app_conf{app};
+my $cookie_jar = $test_app_conf{cookie_jar};
 
 my $schema = $test_util->track_schema();
 
@@ -37,26 +35,6 @@ ok($curator);
 
 test_psgi $app, sub {
   my $cb = shift;
-
-  # login
-  {
-    my $uri = new URI('http://localhost:5000/login');
-    my $val_email = 'val@sanger.ac.uk';
-    my $return_path = 'http://localhost:5000/';
-
-    $uri->query_form(email_address => $val_email,
-                     password => $val_email,
-                     return_path => $return_path);
-
-    my $req = HTTP::Request->new(GET => $uri);
-    my $res = $cb->($req);
-
-    my $login_cookie = $res->header('set-cookie');
-    $cookie_jar->extract_cookies($res);
-
-    is ($res->code, 302);
-    is ($res->header('location'), $return_path);
-  }
 
   my $curs_key = '0000ffff';
 

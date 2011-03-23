@@ -11,7 +11,7 @@ use HTTP::Request;
 my $test_util = PomCur::TestUtil->new();
 $test_util->init_test();
 
-my $app = $test_util->plack_app();
+my $app = $test_util->plack_app()->{app};
 
 test_psgi $app, sub {
   my $cb = shift;

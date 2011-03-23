@@ -22,7 +22,7 @@ is(@curs_objects, 1);
 
 my $curs_key = $curs_objects[0]->curs_key();
 
-my $app = $test_util->plack_app();
+my $app = $test_util->plack_app()->{app};
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 

@@ -19,6 +19,10 @@ use Data::Rmap ':all';
 use Clone qw(clone);
 use XML::Simple;
 
+use Plack::Test;
+use Plack::Util;
+use HTTP::Cookies;
+
 use PomCur::Config;
 use PomCur::Meta::Util;
 use PomCur::TrackDB;
@@ -192,19 +196,68 @@ sub init_test
 
 =head2 plack_app
 
+ Usage   : my $plack_conf = $test_util->plack_app();
+           my $app = $plack_conf->{app};
+       or: my $plack_conf = $test_util->plack_app(login => $return_path);
+           my $app = $plack_conf->{app};
+           my $cookie_jar = $plack_conf->{cookie_jar};
  Function: make a mock Plack application for testing
+ Args    : login - if passed, preform a login and set the appropriate cookie,
+                   then return the cookie_jar (HTTP::Cookies object)
 
 =cut
 sub plack_app
 {
   my $self = shift;
+  my %args = @_;
 
   my $psgi_script_name = $self->root_dir() . '/script/pomcur_psgi.pl';
   my $app = Plack::Util::load_psgi($psgi_script_name);
   if ($ENV{POMCUR_DEBUG}) {
     $app = Plack::Middleware::Debug->wrap($app);
   }
-  return $app;
+
+  my $cookie_jar = HTTP::Cookies->new(
+    file => '/tmp/pomcur_web_test_$$.cookies',
+    autosave => 1,
+  );
+
+  if (defined $args{login}) {
+    test_psgi $app, sub {
+      my $cb = shift;
+
+      my $uri = new URI('http://localhost:5000/login');
+      my $val_email = 'val@sanger.ac.uk';
+      my $return_path = $args{login};
+
+      $uri->query_form(email_address => $val_email,
+                       password => $val_email,
+                       return_path => $return_path);
+
+      my $req = HTTP::Request->new(GET => $uri);
+      my $res = $cb->($req);
+
+      my $login_cookie = $res->header('set-cookie');
+      $cookie_jar->extract_cookies($res);
+
+      my $expected_return_code = 302;
+      if ($res->code != $expected_return_code) {
+        die "unexpected return code: got ", $res->code(),
+          " instead of $expected_return_code";
+      }
+      if ($res->header('location') ne $return_path) {
+        die "unexpected location returned from login: got ",
+          $res->header('location'), " instead of $return_path";
+
+      }
+    };
+  }
+
+  return {
+    app => $app,
+    cookie_jar => $cookie_jar,
+    test_user_email => 'val@sanger.ac.uk',
+  };
 }
 
 =head2 root_dir

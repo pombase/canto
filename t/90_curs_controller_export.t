@@ -20,7 +20,7 @@ my $config = $test_util->config();
 my $track_schema = $test_util->track_schema();
 my @curs_objects = $track_schema->resultset('Curs')->all();
 my $curs_key = $curs_objects[0]->curs_key();
-my $app = $test_util->plack_app();
+my $app = $test_util->plack_app()->{app};
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
