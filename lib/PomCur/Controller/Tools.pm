@@ -50,7 +50,15 @@ sub triage :Local {
     triage_status_id => $new_cvterm->cvterm_id()
   };
 
-  my $pub = $schema->resultset('Pub')->search($constraint)->first();
+  my $options = {
+    # nasty hack to order by pubmed ID
+    order_by => {
+      -asc => "cast((case me.uniquename like 'PMID:%' WHEN 1 THEN " .
+        "substr(me.uniquename, 6) ELSE me.uniquename END) as integer)"
+    }
+  };
+
+  my $pub = $schema->resultset('Pub')->search($constraint, $options)->first();
 
   if (defined $pub) {
     $st->{title} = 'Triaging ' . $pub->uniquename();

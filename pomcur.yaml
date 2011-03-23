@@ -216,6 +216,8 @@ class_info:
       class_display_name: publication
       display_field: title
       editable: 1
+      # hack to order by pubmed id, or by doi number
+      order_by: "cast((case me.uniquename like 'PMID:%' WHEN 1 THEN substr(me.uniquename, 6) ELSE me.uniquename END) as integer)"
       field_info_list:
         - name: 'PubMed ID'
           source: uniquename
