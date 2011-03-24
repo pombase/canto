@@ -25,7 +25,14 @@ $disclosed => 1  # true will make the list default to visible
 %   for my $object (@rows) {
     <tr>
 %     for my $col_conf (@column_confs) {
-        <td><& field.mhtml, object => $object, field_name => $col_conf->{name} &></td>
+%       my $align_attr = '';
+%       if (defined $col_conf->{format} && $col_conf->{format} eq 'integer' ||
+%           defined $col_conf->{align} && $col_conf->{align} eq 'right') {
+%         $align_attr = 'right';
+%       }
+        <td align="<% $align_attr %>">
+          <& field.mhtml, object => $object, field_name => $col_conf->{name} &>
+        </td>
 %     }
     <td><& field.mhtml, object => $object, field_name => "${type}_id" &></td>
     </tr>
