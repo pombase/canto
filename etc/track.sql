@@ -10,6 +10,7 @@ CREATE TABLE pub (
        authors text,
        triage_status_id integer NOT NULL REFERENCES cvterm (cvterm_id)
 );
+CREATE INDEX pub_triage_status_idx ON pub(triage_status_id);
 CREATE TABLE pubprop (
        pubprop_id integer NOT NULL PRIMARY KEY,
        pub_id integer NOT NULL REFERENCES pub (pub_id),
