@@ -7,7 +7,7 @@ function trim(a) {
 };
 
 $(document).ready(function() {
-  $(".sect .sect-title").each(function(i) {
+  $(".sect .undisclosed-title, .sect .disclosed-title").each(function(i) {
     $(this).click(function() {
       $(this).next().toggle();
       $(this).toggleClass('undisclosed-title');
