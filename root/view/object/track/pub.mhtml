@@ -32,6 +32,9 @@ $object
   <& /view/collection.mhtml, object => $object,
     collection_name => 'pub_curation_statuses',
     collection_title => 'Status for all curation types' &>
+  <& /view/collection.mhtml, object => $object,
+    collection_name => 'pubprops',
+    collection_title => 'Publication properties' &>
 </div>
 
 <%init>

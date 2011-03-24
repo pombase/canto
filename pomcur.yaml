@@ -278,7 +278,20 @@ class_info:
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication curation status")'
           referenced_class: Cvterm
           editable: 1
-
+    pubprop:
+      class_display_name: publication properties
+      display_field: value
+      editable: 1
+      field_info_list:
+        - name: publication
+          source: pub_id
+          editable: 1
+        - name: type_id
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication experiment types")'
+          referenced_class: Cvterm
+          editable: 1
+        - name: value
+          editable: 1
     curs:
       class_display_name: curation session
       display_field: curs_key

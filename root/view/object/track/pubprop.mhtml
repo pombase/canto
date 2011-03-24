@@ -1,0 +1,18 @@
+<%args>
+$object
+</%args>
+
+<&| /view/object/object_top.mhtml, object => $object &>
+
+</&>
+
+<div id="collections">
+  <& /view/list.mhtml, type => 'pub', rs => $pubs_rs,
+    list_title => "Publications with this property" &>
+</div>
+
+<%init>
+my $pubs_rs = $c->schema()->resultset('Pub')
+  ->search({ 'pubprops.value' => $object->value() },
+           { join => 'pubprops' });
+</%init>
