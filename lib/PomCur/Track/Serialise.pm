@@ -59,6 +59,57 @@ sub _get_curation_sessions
   ];
 }
 
+sub _get_name
+{
+  my $obj = shift;
+
+  if (defined $obj) {
+    return $obj->name();
+  } else {
+    return undef;
+  }
+}
+
+sub _get_pubprops
+{
+  my $pub = shift;
+
+  my $rs = $pub->pubprops();
+  my @ret = ();
+
+  while (defined (my $prop = $rs->next())) {
+    push @ret, {
+      type => $prop->type()->name(),
+      value => $prop->value(),
+    };
+  }
+
+  return \@ret;
+}
+
+sub _get_pubs
+{
+  my $schema = shift;
+
+  my $rs = $schema->resultset('Pub');
+  my @ret = ();
+
+  while (defined (my $pub = $rs->next())) {
+    push @ret, {
+      uniquename => $pub->uniquename(),
+      type => $pub->type()->name(),
+      assigned_curator => _get_name($pub->assigned_curator()),
+      title => $pub->title(),
+      abstract => $pub->abstract(),
+      authors => $pub->authors(),
+      triage_status => _get_name($pub->triage_status()),
+      properties => _get_pubprops($pub),
+    };
+  }
+
+  return \@ret;
+}
+
 =head2 json
 
  Usage   : my $ser = PomCur::Track::Serialise::json
@@ -74,6 +125,7 @@ sub json
 
   my $track_hash = {
     curation_sessions => _get_curation_sessions($config, $schema),
+    publications => _get_pubs($schema),
   };
 
   my $encoder = JSON->new()->utf8()->pretty(1);
