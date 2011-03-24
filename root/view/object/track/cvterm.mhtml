@@ -5,3 +5,15 @@ $object
 <div>
 <& /view/field_list.mhtml, object => $object &>
 </div>
+
+<div id="collections">
+% if ($pubs_triage_status_rs->count() > 0) {
+  <& /view/list.mhtml, type => 'pub', rs => $pubs_triage_status_rs,
+    list_title => "Publications with this triage status" &>
+% }
+</div>
+
+<%init>
+my $pubs_triage_status_rs = $c->schema()->resultset('Pub')
+  ->search({ triage_status_id => $object->cvterm_id() });
+</%init>
