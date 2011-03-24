@@ -35,10 +35,7 @@ my $test_email = 'test.name@example.com';
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
-my $pub_title_fragment = "Inactivating pentapeptide insertions";
-
 my $uniquename = "PMID:19664060";
-
 my @gene_identifiers = qw(cdc11 wtf22 SPCC1739.10);
 
 # test submitting a list of genes
