@@ -309,6 +309,10 @@ class_info:
     gene:
       editable: 1
       display_field: primary_identifier
+      search_fields:
+        - primary_identifier
+        - primary_name
+        - product
       field_info_list:
         - name: primary_identifier
           editable: 1
