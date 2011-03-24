@@ -3,6 +3,7 @@ $type
 $rs
 $numrows => 20
 $page => 1
+@column_confs => ();
 </%args>
 
 <div class="list_page">
@@ -39,7 +40,7 @@ Number of rows to display
 </div>
 
 <& /view/list.mhtml, type => $type, rs => $page_rs, list_title => '',
-  numrows => $numrows, page => $page &>
+  numrows => $numrows, page => $page, column_confs => \@column_confs &>
 
 % if ($pager->last_page() > 1) {
 <div class="page_nav_actions">

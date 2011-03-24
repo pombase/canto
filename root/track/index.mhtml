@@ -59,5 +59,23 @@
       </td>
 % }
     </tr>
+    <tr>
+      <td class="actionlist" width="30%" valign="top">
+        <div>
+          <div class="label">
+            Reports ...
+          </div>
+          <ul>
+% for my $report (@{$c->config()->{report_list}}) {
+            <li>
+              <a href="<% $c->uri_for('/view/report/' . $report->{name}, { model => 'track'} ) %>">
+                <% $report->{description} %>
+              </a>
+            </li>
+% }
+          </ul>
+        </div>
+      </td>
+    </tr>
   </table>
 </div>

@@ -296,23 +296,35 @@ sub report : Local
     my $report_conf = $c->config()->{reports}->{$report_name};
 
     $st->{title} = $report_conf->{description};
-    $st->{template} = 'view/rstable.mhtml';
+    $st->{template} = 'view/list_page.mhtml';
 
     my $type = $report_conf->{object_type};
 
     $st->{type} = $type;
 
     my $class_name = $schema->class_name_of_table($type);
+    my $class_info = $c->config()->class_info($c)->{$type};
     my $params = { order_by => $self->_get_order_by_field($c, $type) };
 
-    my $prefetch_conf = $report_conf->{prefetch};
-
-    if (defined $prefetch_conf) {
-      $params->{prefetch} = eval "$prefetch_conf";
+    if (defined $report_conf->{constraint}) {
+      $params->{where} = $report_conf->{constraint};
     }
 
     $st->{rs} = $schema->resultset($class_name)->search({ }, $params);
-    $st->{column_confs} = $report_conf->{columns};
+
+    $st->{column_confs} = [map {
+      my $conf_name = $_->{name};
+      if (exists $_->{source}) {
+        $_;
+      } else {
+        if (exists $class_info->{field_infos}->{$conf_name}) {
+          $class_info->{field_infos}->{$conf_name};
+        } else {
+          die "no configuration for $type.$conf_name used by report: " .
+            $report_name;
+        }
+      }
+    } @{$report_conf->{columns}}];
 
     $st->{page} = $c->req->param('page') || 1;
     $st->{numrows} = $c->req->param('numrows') || 20;

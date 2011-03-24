@@ -404,6 +404,15 @@ class_info:
         - name: value
           editable: 1
 
+report_list:
+  - name: new_publications
+    description: List of un-triaged publications
+    object_type: pub
+    constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'New')"
+    columns:
+      - name: 'Publication ID'
+      - name: title
+
 export:
   gene_association_fields:
     db: "GeneDB_Spombe"
