@@ -79,3 +79,29 @@
     </tr>
   </table>
 </div>
+
+<div class="plugins">
+% for my $plugin_conf (@plugins) {
+  <div class="plugin sect">
+    <span class="sect-title disclosed-title">
+      <a href="#"> <% $plugin_conf->{name} %> </a>
+    </span>
+    <div class="sect-content <% $plugin_conf->{css_class} %>">
+      <& $plugin_conf->{path} &>
+    </div>
+  </div>
+% }
+</div>
+
+
+<%init>
+
+my @plugins = ();
+
+if (defined $c->config()->{plugins}) {
+  if (defined $c->config()->{plugins}->{front_page}) {
+    @plugins = @{$c->config()->{plugins}->{front_page}};
+  }
+}
+
+</%init>
