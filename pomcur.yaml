@@ -69,6 +69,7 @@ db_initial_data:
       - name: PomCur publication triage status
         cvterms:
           - name: New
+            definition: Triage status for new papers.
             dbxref:
               accession: new
               db:
@@ -79,8 +80,8 @@ db_initial_data:
               accession: curatable
               db:
                 name: PomCur Track
-          - name: Not english
-            definition: |
+          - name: Not English
+            definition: >
                 Triage status for a paper that will not be curated because
                 the text is not in English.
             dbxref:
@@ -88,7 +89,7 @@ db_initial_data:
               db:
                 name: PomCur Track
           - name: Methods paper
-            definition: |
+            definition: >
                 Triage status for a paper that will not be curated because it
                 is a methods paper.
             dbxref:
@@ -96,7 +97,7 @@ db_initial_data:
               db:
                 name: PomCur Track
           - name: Wrong organism
-            definition: |
+            definition: >
                 Triage status for a paper that will not be curated because the
                 organism is not appropriate for this database.
             dbxref:
@@ -104,7 +105,7 @@ db_initial_data:
               db:
                 name: PomCur Track
           - name: News and views
-            definition: |
+            definition: >
                 Triage status for a publication that will not be curated because
                 it is an editorial, a comment or a news and views article.
             dbxref:
@@ -112,7 +113,7 @@ db_initial_data:
               db:
                 name: PomCur Track
           - name: Other
-            definition: |
+            definition: >
                 Triage status for a publication that will not be curated for
                 a reason the is not covered by the other statuses.
             dbxref:
