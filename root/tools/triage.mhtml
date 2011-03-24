@@ -31,12 +31,19 @@ $pub
           <% $pub->abstract() %>
         </div>
       </div>
+      <div class="sect experiment-types">
+        <span class="sect-title">
+          Experiment types
+        </span>
+        <div class="sect-content">
 % for my $experiment_type (@experiment_types) {
-      <div>
-        <input type="checkbox" name="experiment-type"
-               value="<% $experiment_type %>" ><% $experiment_type %><br>
-      </div>
+          <div>
+            <input type="checkbox" name="experiment-type"
+                   value="<% $experiment_type %>" ><% $experiment_type %><br>
+          </div>
 % }
+        </div>
+      </div>
     </div>
     <div class="status-settings">
       <div class="sect status-choice">
