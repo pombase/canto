@@ -30,10 +30,11 @@ sub _get_next_triage_pub
     order_by => {
       -asc => "cast((case me.uniquename like 'PMID:%' WHEN 1 THEN " .
         "substr(me.uniquename, 6) ELSE me.uniquename END) as integer)"
-    }
+    },
+    rows => 1,
   };
 
-  return $schema->resultset('Pub')->search($constraint, $options)->first();
+  return $schema->resultset('Pub')->search($constraint, $options)->single();
 }
 
 =head1 NAME
