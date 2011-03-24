@@ -406,7 +406,7 @@ class_info:
 
 report_list:
   - name: new_publications
-    description: List of un-triaged publications
+    description: Un-triaged publications
     object_type: pub
     constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'New')"
     columns:
