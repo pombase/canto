@@ -143,7 +143,7 @@ sub logout : Global {
   $c->logout;
 
   $c->stash->{message} = "Logged out";
-  $c->forward('track/index');
+  $c->forward('front');
 }
 
 
