@@ -59,7 +59,14 @@ sub type : Local
   my $config = $c->config();
   my $class_info = $config->class_info($c)->{$type};
 
-  my @search_fields = @{$class_info->{search_fields}};
+  my @search_fields = map {
+    if (exists $class_info->{field_infos}->{$_}->{source}) {
+      $class_info->{field_infos}->{$_}->{source};
+    } else {
+      $_;
+    }
+  } @{$class_info->{search_fields}};
+
   my @search = map { { $_ => $search_term } } @search_fields;
   $c->stash()->{list_search_term} = $search_term;
   $c->stash()->{list_search_constraint} = [@search];
