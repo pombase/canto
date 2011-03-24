@@ -42,7 +42,7 @@ use base 'Catalyst::Controller';
 =head2 list
 
  Function: Search for objects of the given type that match the search text.
-           The text much match one the configured index_fields (which defaults
+           The text much match one the configured search_fields (which defaults
            to the display_name).  Then forward to the list display code to view
            the results.
  Args    : $type - the object class from the URL
