@@ -148,7 +148,8 @@ test_psgi $app, sub {
 
     like ($redirect_res->content(), qr/Details for curation session $curs_key/);
     like ($redirect_res->content(), qr/$test_name/);
-    like ($redirect_res->content(), qr/The S. pombe SAGA complex controls/);
+    my $pub_uniquename = $pub->uniquename();
+    like ($redirect_res->content(), qr/$pub_uniquename/);
   }
 
 

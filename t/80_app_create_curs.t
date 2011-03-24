@@ -19,12 +19,11 @@ my $cookie_jar = $test_app_conf{cookie_jar};
 
 my $schema = $test_util->track_schema();
 
-my $pub_title = "A nucleolar protein allows viability in the absence of the "
-  . "essential ER-residing molecular chaperone calnexin.";
+my $pub_uniquename = "PMID:19351719";
 
 my $pub = $schema->find_with_type('Pub',
                                   {
-                                    title => $pub_title,
+                                    uniquename => $pub_uniquename,
                                   });
 ok($pub);
 my $curator = $schema->find_with_type('Person',
@@ -84,7 +83,7 @@ test_psgi $app, sub {
 
     like ($redirect_res->content(), qr/Details for curation session $curs_key/);
     like ($redirect_res->content(), qr/$curs_key/);
-    like ($redirect_res->content(), qr/$pub_title/);
+    like ($redirect_res->content(), qr/$pub_uniquename/);
 
     my $curs_connect_string =
       PomCur::Curs::make_connect_string($test_util->config(), $curs_key);
