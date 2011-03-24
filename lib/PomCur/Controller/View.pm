@@ -201,37 +201,7 @@ sub list : Local
     my $class_name = $schema->class_name_of_table($type);
     my $class_info = $c->config()->class_info($c)->{$type};
 
-    # default: order by id
-    my $order_by = $type . '_id';
-
-    if (defined $class_info) {
-      my @order_by_fields;
-      if (defined $class_info->{order_by}) {
-        if (ref $class_info->{order_by}) {
-          @order_by_fields = @{$class_info->{order_by}};
-        } else {
-          push @order_by_fields, $class_info->{order_by};
-        }
-      } else {
-        if (defined $class_info->{display_field}) {
-          push @order_by_fields, $class_info->{display_field};
-        }
-      }
-
-      if (@order_by_fields) {
-        my $field_infos = $class_info->{field_infos};
-        $order_by = [map {
-          my $source = $field_infos->{$_}->{source};
-          if (defined $source) {
-            $source;
-          } else {
-            $_;
-          }
-        } @order_by_fields];
-      }
-    }
-
-    my $params = { order_by => $order_by };
+    my $params = { order_by => $self->_get_order_by_field($c, $type) };
 
     my $search = $st->{list_search_constraint};
 
@@ -271,7 +241,17 @@ sub _get_order_by_field
         push @order_by_fields, $class_info->{display_field};
       }
     }
+
     if (@order_by_fields) {
+      my $field_infos = $class_info->{field_infos};
+      $order_by = [map {
+        my $source = $field_infos->{$_}->{source};
+        if (defined $source) {
+          $source;
+        } else {
+          $_;
+        }
+      } @order_by_fields];
       $order_by = \@order_by_fields;
     }
   }
