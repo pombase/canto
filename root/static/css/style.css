@@ -311,7 +311,7 @@ table.list tr td {
 }
 
 .actionlist .label {
-    font-size: 110%;
+    font-size: 105%;
     display: inline;
     padding: 2px 0px 2px 0px;
     border-bottom: 1px solid black;
@@ -320,9 +320,11 @@ table.list tr td {
 .actionlist ul {
     padding: 8px;
     margin: 1em;
+    font-size: 95%;
 }
 .actionlist ul li {
     list-style: none;
+    white-space: nowrap;
 }
 
 /* editing: */
