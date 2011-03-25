@@ -466,17 +466,17 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
-    broad_term_suggestions: |
+    broad_term_suggestions: >
       transporter, transferase activity
-    specific_term_examples: |
+    specific_term_examples: >
       adenylate cyclase activity or biotin transporter activity
-    help_text: |
+    help_text: >
       A molecular function is an activity, such as a catalytic or binding
       activitiy, that occurs at the molecular level. GO molecular function
       terms represent activities that perform the actions (protein
       serine/threonine kinase activity, pyruvate carboxylase activity),
       rather than the entities (gene products or complexes).
-    more_help_text: |
+    more_help_text: >
       As a general rule, molecular functions  correspond to single step
       activities performed by individual gene products.
   - name: biological_process
@@ -489,19 +489,19 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
-    broad_term_suggestions: |
+    broad_term_suggestions: >
       cell cycle, transport
-    specific_term_examples: |
+    specific_term_examples: >
       pyrimidine metabolic process or alpha-glucoside transport
-    help_text: |
+    help_text: >
       A biological process is series of events accomplished by one or more
       ordered assemblies of molecular functions.
-    more_help_text: |
+    more_help_text: >
       It can be difficult to distinguish between a biological process
       and a molecular function, but the general rule is that a process must
       have more than one distinct steps (eg. cell cycle, transport, signal
       transduction).
-    suggest_term_help_text: |
+    suggest_term_help_text: >
       A new term should be differentiated from the parent as a "sub term"  by
       the mechanism of action, or the genes which are required to perform the
       action. It should not be differentiated only by its target gene
@@ -520,16 +520,16 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
-    broad_term_suggestions: |
+    broad_term_suggestions: >
       rough endoplasmic reticulum, nucleus, ribosome
-    specific_term_examples: |
+    specific_term_examples: >
       condensed nuclear chromosome, inner kinetochore and GET complex
-    help_text: |
+    help_text: >
       Cellular component describes locations, at the levels of
       subcellular structures and macromolecular complexes. Examples of
       cellular components include nucleus, nuclear inner membrane, nuclear
       pore, and proteasome complex.
-    more_help_text: |
+    more_help_text: >
       Generally, a gene product is located in or is a subcomponent of a
       particular cellular component. The cellular component ontology includes
       multi-subunit enzymes and other protein complexes, but not individual
@@ -542,44 +542,44 @@ annotation_type_list:
     evidence_codes:
       - MIU
       - LDM
-    broad_term_suggestions: |
+    broad_term_suggestions: >
       round, squishy
-    specific_term_examples: |
+    specific_term_examples: >
       slightly odd
-    help_text: |
+    help_text: >
       A phenotype is any observable characteristic or trait of an organism;
       such as its morphology, development, biochemical or physiological
       properties, behavior, and products of behaviour.
-    more_help_text: |
+    more_help_text: >
       Phenotypes result from the expression of the genes of an organism as well
       as the influence of environmental factors and the interactions between
       the two.
   - name: post_translational_modifications
     display_name: "Post translational modifications"
     disabled: 1
-    broad_term_suggestions: |
+    broad_term_suggestions: >
       PLACEHOLDER
-    help_text: |
+    help_text: >
       PLACEHOLDER
-    more_help_text: |
+    more_help_text: >
       ADD ME!
   - name: genetic_interactions
     display_name: "Genetic Interactions"
     disabled: 1
-    broad_term_suggestions: |
+    broad_term_suggestions: >
       PLACEHOLDER
-    help_text: |
+    help_text: >
       PLACEHOLDER
-    more_help_text: |
+    more_help_text: >
       ADD ME!
   - name: physical_interactions
     display_name: "Physical Interactions"
     disabled: 1
-    broad_term_suggestions: |
+    broad_term_suggestions: >
       PLACEHOLDER
-    help_text: |
+    help_text: >
       PLACEHOLDER
-    more_help_text: |
+    more_help_text: >
       ADD ME!
 
 messages:
@@ -592,12 +592,12 @@ test_config_file: 't/test_config.yaml'
 
 help_text:
   inline:
-    molecular_function_hint: |
+    molecular_function_hint: >
       A molecular function is a molecular level activity usually, but not always
       performed by a single gene product (catalytic activity, binding,
       transporter)
-    biological_process_hint: |
+    biological_process_hint: >
       A biological process is a series of events accomplished by one or more
       ordered assemblies of molecular functions (cell cycle, transcription)
-    cellular_component_hint: |
+    cellular_component_hint: >
       A cellular component is a part of a cell (proteasome, nucleus)
