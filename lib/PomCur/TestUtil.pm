@@ -483,6 +483,7 @@ sub make_base_track_db
   my $curation_file = $config->{test_config}->{curation_spreadsheet};
   my $genes_file = $config->{test_config}->{test_genes_file};
   my $go_obo_file = $config->{test_config}->{test_go_obo_file};
+  my $phenotype_obo_file = $config->{test_config}->{test_phenotype_obo_file};
   my $relationship_obo_file =
     $config->{test_config}->{test_relationship_obo_file};
 
@@ -514,6 +515,7 @@ sub make_base_track_db
         $gene_load->load($genes_file);
         $ontology_load->load($relationship_obo_file);
         $ontology_load->load($go_obo_file, $ontology_index);
+        $ontology_load->load($phenotype_obo_file, $ontology_index);
       };
 
     $schema->txn_do($process);

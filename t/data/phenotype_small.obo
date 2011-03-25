@@ -1,0 +1,48 @@
+format-version: 1.2
+date: 15:10:2010 08:38
+saved-by: kmr
+auto-generated-by: hand
+synonymtypedef: systematic_synonym "Systematic synonym" EXACT
+default-namespace: phenotype
+remark: cvs version: $Revision: 1.1536 $
+
+[Term]
+id: PP:00001
+name: phenotype
+namespace: phenotype
+def: "Phenotype."
+
+[Term]
+id: PP:00002
+name: round
+namespace: phenotype
+def: "Round, no corners."
+is_a: PP:00001
+
+[Term]
+id: PP:00003
+name: squishy
+namespace: phenotype
+def: "A bit squishy."
+is_a: PP:00001
+
+[Term]
+id: PP:00004
+name: very squishy
+namespace: phenotype
+def: "Really very squishy."
+is_a: PP:00003
+
+[Term]
+id: PP:00005
+name: extremely squishy
+namespace: phenotype
+def: "Extremely squishy."
+is_a: PP:00004
+
+[Term]
+id: PP:00006
+name: flat
+namespace: phenotype
+def: "Flat - no height."
+is_a: PP:00003

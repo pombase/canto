@@ -448,6 +448,10 @@ evidence_types:
   IPI:
     name: Inferred from physical interaction
     with_gene: 1
+  MIU:
+    name: Experimenter made it up
+  LDM:
+    name: Scientist looked down a microscope
 
 # each class needs to set up the stash for forwarding to a template
 # page based on the module name, eg. go_function.html
@@ -532,14 +536,24 @@ annotation_type_list:
       proteins or nucleic acids. Cellular component also does not include
       multicellular anatomical terms.
   - name: phenotype
-    display_name: Phenotypes
-    disabled: 1
+    very_short_display_name: 'phenotype'
+    short_display_name: 'phenotype'
+    display_name: 'phenotype'
+    evidence_codes:
+      - MIU
+      - LDM
     broad_term_suggestions: |
-      PLACEHOLDER
+      round, squishy
+    specific_term_examples: |
+      slightly odd
     help_text: |
-      PLACEHOLDER
+      A phenotype is any observable characteristic or trait of an organism;
+      such as its morphology, development, biochemical or physiological
+      properties, behavior, and products of behaviour.
     more_help_text: |
-      ADD ME!
+      Phenotypes result from the expression of the genes of an organism as well
+      as the influence of environmental factors and the interactions between
+      the two.
   - name: post_translational_modifications
     display_name: "Post translational modifications"
     disabled: 1
