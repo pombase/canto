@@ -1,14 +1,1 @@
-<%args>
-$form
-$gene_display_name
-$term_ontid
-$evidence_code
-</%args>
-
-<div class="with-gene-select">
-  <div class="description">
-Choose interacting gene for annotating <% $gene_display_name %>
-with <% $term_ontid %> using <% $evidence_code %>
-  </div>
-  <% $form %>
-</div>
+ontology_term_select_with_gene.mhtml
