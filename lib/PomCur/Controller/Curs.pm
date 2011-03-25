@@ -356,12 +356,15 @@ sub _edit_genes_helper
 
   my $st = $c->stash();
 
-  $st->{title} = 'Gene list for ' . $st->{pub}->uniquename();
+  if ($confirm_genes) {
+    $st->{title} = 'Confirm gene list for ' . $st->{pub}->uniquename();
+  } else {
+    $st->{title} = 'Gene list for ' . $st->{pub}->uniquename();
+  }
+
   $st->{template} = 'curs/gene_list_edit.mhtml';
 
   $st->{current_component} = 'list_edit';
-
-  $st->{confirm_genes} = $confirm_genes;
 
   my $config = $c->config();
   my $schema = $st->{schema};
