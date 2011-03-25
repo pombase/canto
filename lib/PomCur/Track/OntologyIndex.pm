@@ -108,7 +108,10 @@ sub add_to_index
   my $doc = new Lucene::Document;
   my $boost = 0.5 + 100.0 / (10 + length($cvterm->name()));
 
-  my $name_field = Lucene::Document::Field->Text(name => $cvterm->name());
+  my $processed_name = $cvterm->name();
+  $processed_name =~ s/_/ /g;
+
+  my $name_field = Lucene::Document::Field->Text(name => $processed_name);
 
   $name_field->setBoost($boost);
 
