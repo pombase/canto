@@ -1,5 +1,4 @@
 <%args>
-$annotation_helper
 $current_component_display_name
 $current_component_short_display_name
 $current_component_very_short_display_name

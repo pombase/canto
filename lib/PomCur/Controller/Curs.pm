@@ -504,34 +504,6 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 }
 
-sub _get_annotation_helper
-{
-  my $c = shift;
-  my $annotation_type_name = shift;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-
-  my %annotation_types = %{$config->{annotation_types}};
-
-  my $module_config = $annotation_types{$annotation_type_name};
-  my $module_class_name = $module_config->{class};
-
-  my %args = (config => $config);
-
-  while (my($key, $value) = each %{$module_config->{constructor_args}}) {
-    $args{$key} = $value;
-  }
-
-  eval "use $module_class_name";
-  if ($@) {
-    die "can't find module ('$module_class_name') specified in configuration "
-      . "for module: $annotation_type_name\n";
-  }
-
-  my $lookup = $module_class_name->new(%args);
-}
-
 sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;
@@ -592,10 +564,6 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   my $annotation_more_help_text = $annotation_config->{more_help_text};
   $st->{annotation_more_help_text} = $annotation_more_help_text;
   $st->{template} = "curs/modules/$annotation_type_name.mhtml";
-
-  my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
-
-  $st->{annotation_helper} = $annotation_helper;
 
   my $form = $self->form();
 
@@ -698,10 +666,6 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
   $st->{term_ontid} = $term_ontid;
 
-  my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
-
-  $st->{annotation_helper} = $annotation_helper;
-
   my $ont_config = $config->{annotation_types}->{$annotation_type_name};
 
   my %evidence_types = %{$config->{evidence_types}};
@@ -781,9 +745,6 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/${annotation_type_name}_with_gene.mhtml";
 
-  my $annotation_helper = _get_annotation_helper($c, $annotation_type_name);
-
-  $st->{annotation_helper} = $annotation_helper;
   $st->{term_ontid} = $term_ontid;
   $st->{evidence_code} = $evidence_code;
 

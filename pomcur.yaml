@@ -457,7 +457,6 @@ annotation_type_list:
     very_short_display_name: 'function'
     short_display_name: 'molecular function'
     display_name: 'GO molecular function'
-    class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - function
@@ -484,7 +483,6 @@ annotation_type_list:
     very_short_display_name: 'process'
     short_display_name: 'biological process'
     display_name: 'GO biological process'
-    class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - process
@@ -519,7 +517,6 @@ annotation_type_list:
     very_short_display_name: 'component'
     short_display_name: 'cellular component'
     display_name: 'GO cellular component'
-    class: 'PomCur::CurModules::GOModule'
     constructor_args:
       ontologies:
         - component
@@ -545,7 +542,6 @@ annotation_type_list:
       multicellular anatomical terms.
   - name: phenotype
     display_name: Phenotypes
-    class: 'PomCur::CurModules::PhenotypeModule'
     disabled: 1
     broad_term_suggestions: |
       PLACEHOLDER
