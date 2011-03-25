@@ -180,7 +180,7 @@ my $apache_conf = <<"CONF";
   RequestHeader set X-Request-Base /$app_name
 </Location>
 
-ProxyPass /$app_name http://localhost:$port/
+ProxyPass /$app_name http://localhost:$port/ retry=1
 ProxyPassReverse /$app_name http://localhost:$port/
 CONF
 
