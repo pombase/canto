@@ -194,6 +194,10 @@ var ferret_choose = {
     if (ferret_choose.term_history.length <= 1) {
       $('#ferret-term-details').hide();
       $('#ferret-term-entry').show();
+
+      var term_input = $('#ferret-term-input');
+      term_input.focus();
+      term_input.autocomplete('search');
     } else {
       $('#ferret-term-details').show();
       $('#ferret-term-entry').hide();
