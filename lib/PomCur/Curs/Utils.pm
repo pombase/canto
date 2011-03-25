@@ -115,8 +115,15 @@ sub get_annotation_table
       my $evidence_code = $data->{evidence_code};
       my $with_gene_identifier = $data->{with_gene};
 
-      my $evidence_type_name = $evidence_types{$evidence_code}->{name};
-      my $needs_with = $evidence_types{$evidence_code}->{with_gene};
+      my $evidence_type_name;
+      my $needs_with;
+      if (defined $evidence_code) {
+        $evidence_type_name = $evidence_types{$evidence_code}->{name};
+        $needs_with = $evidence_types{$evidence_code}->{with_gene};
+      } else {
+        $evidence_type_name = undef;
+        $needs_with = 0;
+      }
 
       my $with_gene;
       my $with_gene_display_name;
