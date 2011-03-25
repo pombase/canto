@@ -555,7 +555,7 @@ annotation_type_list:
       as the influence of environmental factors and the interactions between
       the two.
   - name: post_translational_modifications
-    display_name: "Post translational modifications"
+    display_name: "post translational modifications"
     disabled: 1
     broad_term_suggestions: >
       PLACEHOLDER
@@ -564,7 +564,7 @@ annotation_type_list:
     more_help_text: >
       ADD ME!
   - name: genetic_interactions
-    display_name: "Genetic Interactions"
+    display_name: "genetic interactions"
     disabled: 1
     broad_term_suggestions: >
       PLACEHOLDER
@@ -573,7 +573,7 @@ annotation_type_list:
     more_help_text: >
       ADD ME!
   - name: physical_interactions
-    display_name: "Physical Interactions"
+    display_name: "physical interactions"
     disabled: 1
     broad_term_suggestions: >
       PLACEHOLDER
