@@ -457,9 +457,6 @@ annotation_type_list:
     very_short_display_name: 'function'
     short_display_name: 'molecular function'
     display_name: 'GO molecular function'
-    constructor_args:
-      ontologies:
-        - function
     evidence_codes:
       - IMP
       - IDA
@@ -483,9 +480,6 @@ annotation_type_list:
     very_short_display_name: 'process'
     short_display_name: 'biological process'
     display_name: 'GO biological process'
-    constructor_args:
-      ontologies:
-        - process
     evidence_codes:
       - IMP
       - IDA
@@ -517,9 +511,6 @@ annotation_type_list:
     very_short_display_name: 'component'
     short_display_name: 'cellular component'
     display_name: 'GO cellular component'
-    constructor_args:
-      ontologies:
-        - component
     evidence_codes:
       - IMP
       - IDA
