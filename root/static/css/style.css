@@ -633,6 +633,10 @@ div.clearall {
   display: none;
 }
 
+.pomcur-more-button {
+  white-space: nowrap;
+}
+
 .evidence-select div, .with-gene-select div {
   display: inline;
 }
