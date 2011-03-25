@@ -389,17 +389,16 @@ sub _edit_genes_helper
 
   $st->{form} = $form;
 
-  if ($form->submitted_and_valid()) {
-    if (defined $c->req->param('continue')) {
-      _redirect_and_detach($c);
-    }
+  if (defined $c->req->param('continue')) {
+    _redirect_and_detach($c);
+  }
 
+  if (defined $c->req->param('submit')) {
     if ($c->req()->param('submit')) {
       my @gene_ids = @{$form->param_array('gene-select')};
 
       if (@gene_ids == 0) {
         $st->{message} = 'No genes selected for deletion';
-        $c->flash()->{message} = 'no genes selected for deletion';
       } else {
         my $delete_sub = sub {
           for my $gene_id (@gene_ids) {

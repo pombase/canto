@@ -62,7 +62,7 @@ sub upload_genes
   my $redirect_req = HTTP::Request->new(GET => $redirect_url);
   my $redirect_res = $cb->($redirect_req);
 
-  like ($redirect_res->content(), qr/Gene list/);
+  like ($redirect_res->content(), qr/Confirm gene list/);
   like ($redirect_res->content(), qr/cdc11/);
 
   my @stored_genes = $curs_schema->resultset('Gene')->all();
