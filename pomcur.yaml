@@ -555,7 +555,7 @@ annotation_type_list:
       as the influence of environmental factors and the interactions between
       the two.
   - name: post_translational_modifications
-    display_name: "post translational modifications"
+    display_name: 'post translational modifications'
     disabled: 1
     broad_term_suggestions: >
       PLACEHOLDER
