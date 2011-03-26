@@ -564,23 +564,13 @@ annotation_type_list:
     more_help_text: >
       ADD ME!
   - name: genetic_interactions
-    display_name: "genetic interactions"
-    disabled: 1
-    broad_term_suggestions: >
-      PLACEHOLDER
-    help_text: >
-      PLACEHOLDER
-    more_help_text: >
-      ADD ME!
+    display_name: 'genetic interactions'
+    evidence_codes:
+      - IDA
   - name: physical_interactions
-    display_name: "physical interactions"
-    disabled: 1
-    broad_term_suggestions: >
-      PLACEHOLDER
-    help_text: >
-      PLACEHOLDER
-    more_help_text: >
-      ADD ME!
+    display_name: 'physical interactions'
+    evidence_codes:
+      - IDA
 
 messages:
   gene_upload:
