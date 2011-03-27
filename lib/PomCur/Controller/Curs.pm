@@ -639,6 +639,86 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   }
 }
 
+sub edit_interaction : Chained('top') PathPart('edit/interaction') Args(2) Form
+{
+  my ($self, $c, $gene_id, $annotation_type_name) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $gene = $schema->find_with_type('Gene', $gene_id);
+
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $module_display_name = $annotation_config->{display_name};
+
+  # don't set stash title - use default
+  $st->{current_component} = $annotation_type_name;
+  $st->{current_component_display_name} = $annotation_config->{display_name};
+  $st->{template} = "curs/modules/$annotation_type_name.mhtml";
+
+  my $form = $self->form();
+
+  my $schema = $c->stash()->{schema};
+  my $genes_rs = $schema->resultset('Gene');
+  my @options = ();
+
+  while (defined (my $gene = $genes_rs->next())) {
+    push @options, { value => $gene->gene_id(),
+                     label => $gene->long_display_name() };
+  }
+
+  my @all_elements = (
+      {
+        name => 'prey', label => 'prey',
+        type => 'Checkboxgroup',
+        options => [@options],
+      },
+      {
+        name => 'interaction-submit', type => 'Submit',
+      }
+    );
+
+  $form->elements([@all_elements]);
+  $form->process();
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $submit_value = $form->param_value('interaction-submit');
+
+    my $guard = $schema->txn_scope_guard;
+
+    my @prey = ();
+
+    my @prey_param = $form->param_array('prey');
+
+die "@prey_param";
+
+    my %annotation_data = (name => $annotation_type_name,
+                           prey => [@prey]);
+
+    my $gene = $schema->find_with_type('Gene', $gene_id);
+    my $annotation =
+      $schema->create_with_type('Annotation',
+                                {
+                                  type => $annotation_type_name,
+                                  status => 'new',
+                                  pub => $st->{pub},
+                                  creation_date => _get_iso_date(),
+                                  data => { %annotation_data }
+                                });
+
+    $annotation->set_genes($gene);
+
+    $guard->commit();
+
+    my $annotation_id = $annotation->annotation_id();
+
+    _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+  }
+}
+
 sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1) Form
 {
   my ($self, $c, $annotation_id) = @_;
