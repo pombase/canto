@@ -412,7 +412,7 @@ sub _edit_genes_helper
         };
         $schema->txn_do($delete_sub);
 
-        if ($schema->resultset('Gene')->count() == 0) {
+        if (_get_gene_resultset($schema)->count() == 0) {
           $c->flash()->{message} = 'All genes removed from the list';
           _redirect_and_detach($c, 'gene_upload');
         } else {
@@ -750,7 +750,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
 
   my @genes = ();
 
-  my $gene_rs = $schema->resultset('Gene');
+  my $gene_rs = _get_gene_resultset($schema);
 
   while (defined (my $gene = $gene_rs->next())) {
     push @genes, [$gene->primary_identifier(), $gene->display_name()];
