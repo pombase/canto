@@ -689,14 +689,14 @@ sub edit_interaction : Chained('top') PathPart('edit/interaction') Args(2) Form
 
     my $guard = $schema->txn_scope_guard;
 
-    my @prey = ();
-
-    my @prey_param = $form->param_array('prey');
-
-die "@prey_param";
+    my @prey_params = @{$form->param_array('prey')};
+    my @prey_identifiers =
+      map {
+        $schema->find_with_type('Gene', $_)->primary_identifier()
+      } @prey_params;
 
     my %annotation_data = (name => $annotation_type_name,
-                           prey => [@prey]);
+                           prey => [@prey_identifiers]);
 
     my $gene = $schema->find_with_type('Gene', $gene_id);
     my $annotation =
