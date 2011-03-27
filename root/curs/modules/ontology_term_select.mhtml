@@ -8,7 +8,6 @@ $broad_term_suggestions
 $specific_term_examples
 $annotation_help_text
 $annotation_more_help_text
-$gene_display_name
 $pub
 </%args>
 

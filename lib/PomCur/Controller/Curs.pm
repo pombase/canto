@@ -538,7 +538,6 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   my $schema = $st->{schema};
 
   my $gene = $schema->find_with_type('Gene', $gene_id);
-  my $gene_display_name = $gene->display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
