@@ -692,7 +692,12 @@ sub edit_interaction : Chained('top') PathPart('edit/interaction') Args(2) Form
     my @prey_params = @{$form->param_array('prey')};
     my @prey_identifiers =
       map {
-        $schema->find_with_type('Gene', $_)->primary_identifier()
+        my $prey_gene = $schema->find_with_type('Gene', $_);
+        {
+          primary_identifier => $prey_gene->primary_identifier(),
+          organism_taxon => $prey_gene->organism()->taxonid(),
+          organism_full_name => $prey_gene->organism()->full_name(),
+        }
       } @prey_params;
 
     my %annotation_data = (name => $annotation_type_name,
