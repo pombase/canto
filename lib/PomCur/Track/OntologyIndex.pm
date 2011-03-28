@@ -177,7 +177,9 @@ sub lookup
 
   my $config = $self->config();
 
-  my $ontology_name = shift;
+  # keyword search must be lower case
+  my $ontology_name = lc shift;
+
   my $search_string = shift;
 
   my $searcher;
