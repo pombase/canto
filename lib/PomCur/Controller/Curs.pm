@@ -529,19 +529,15 @@ sub _get_iso_date
   return sprintf "%4d-%02d-%02d", 1900+$year, $mon+1, $mday
 }
 
-sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
+sub annotation_ontology_edit
 {
-  my ($self, $c, $gene_id, $annotation_type_name) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $gene = $schema->find_with_type('Gene', $gene_id);
-
-  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+  my ($self, $c, $gene, $annotation_config) = @_;
 
   my $module_display_name = $annotation_config->{display_name};
+
+  my $annotation_type_name = $annotation_config->{name};
+  my $st = $c->stash();
+  my $schema = $st->{schema};
 
   # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
@@ -617,7 +613,6 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
         . 'annotated with the parent of your suggested new term';
     }
 
-    my $gene = $schema->find_with_type('Gene', $gene_id);
     my $annotation =
       $schema->create_with_type('Annotation',
                                 {
@@ -638,19 +633,16 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   }
 }
 
-sub edit_interaction : Chained('top') PathPart('edit/interaction') Args(2) Form
+sub annotation_interaction_edit
 {
-  my ($self, $c, $gene_id, $annotation_type_name) = @_;
+  my ($self, $c, $gene, $annotation_config) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $gene = $schema->find_with_type('Gene', $gene_id);
-
-  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
-
   my $module_display_name = $annotation_config->{display_name};
+  my $annotation_type_name = $annotation_config->{name};
 
   # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
@@ -701,7 +693,6 @@ sub edit_interaction : Chained('top') PathPart('edit/interaction') Args(2) Form
     my %annotation_data = (name => $annotation_type_name,
                            prey => [@prey_identifiers]);
 
-    my $gene = $schema->find_with_type('Gene', $gene_id);
     my $annotation =
       $schema->create_with_type('Annotation',
                                 {
@@ -720,6 +711,29 @@ sub edit_interaction : Chained('top') PathPart('edit/interaction') Args(2) Form
 
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }
+}
+
+sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
+{
+  my ($self, $c, $gene_id, $annotation_type_name) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $gene = $schema->find_with_type('Gene', $gene_id);
+
+  $st->{annotation_gene} = $gene;
+
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my %type_dispatch = (
+    ontology => \&annotation_ontology_edit,
+    interaction => \&annotation_interaction_edit,
+  );
+
+  &{$type_dispatch{$annotation_config->{type}}}($self, $c, $gene,
+                                                $annotation_config);
 }
 
 sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1) Form
