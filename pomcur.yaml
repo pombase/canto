@@ -561,7 +561,6 @@ annotation_type_list:
   - name: post_translational_modification
     type: ontology
     display_name: 'post translational modification'
-    disabled: 1
     broad_term_suggestions: >
       PLACEHOLDER
     help_text: >
