@@ -651,6 +651,8 @@ sub annotation_interaction_edit
 
   my $form = $self->form();
 
+  $form->auto_fieldset(0);
+
   my $genes_rs = $schema->resultset('Gene');
   my @options = ();
 
@@ -663,6 +665,8 @@ sub annotation_interaction_edit
       {
         name => 'prey', label => 'prey',
         type => 'Checkboxgroup',
+        container_tag => 'div',
+        label => '',
         options => [@options],
       },
       {
