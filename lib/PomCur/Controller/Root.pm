@@ -194,14 +194,21 @@ sub test_curs :Global {
       my $gene1 = $gene_track_rs->next();
       my $gene2 = $gene_track_rs->next();
 
-      my $gene1_identifier = $gene1->primary_identifier();
-      my $gene2_identifier = $gene2->primary_identifier();
+      my @test_gene_ids;
+
+      if (exists $config->{test_gene_identifiers}) {
+        @test_gene_ids = @{$config->{test_gene_identifiers}};
+      } else {
+        my $gene1_identifier = $gene1->primary_identifier();
+        my $gene2_identifier = $gene2->primary_identifier();
+
+        @test_gene_ids = ($gene1_identifier, $gene2_identifier);
+      }
+
       use PomCur::Controller::Curs;
-      PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
-                                                       [$gene1_identifier,
-                                                        $gene2_identifier]);
-      my $gene_rs = PomCur::Controller::Curs::_get_gene_resultset($curs_schema);
-      my $first_curs_gene = $gene_rs->first();
+      my $res =
+        PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
+                                                         [@test_gene_ids], 1);
 
       PomCur::Controller::Curs::_set_new_gene($curs_schema);
     }

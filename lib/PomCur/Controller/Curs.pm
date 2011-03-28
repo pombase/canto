@@ -333,7 +333,7 @@ sub _create_gene
 
 sub _find_and_create_genes
 {
-  my ($schema, $config, $search_terms_ref) = @_;
+  my ($schema, $config, $search_terms_ref, $create_when_missing) = @_;
 
   my @search_terms = @$search_terms_ref;
   my $adaptor = PomCur::Track::get_adaptor($config, 'gene');
@@ -341,6 +341,10 @@ sub _find_and_create_genes
   my $result = $adaptor->lookup([@search_terms]);
 
   if (@{$result->{missing}}) {
+    if ($create_when_missing) {
+      _create_gene($schema, $result);
+    }
+
     return $result;
   } else {
     _create_gene($schema, $result);
