@@ -160,6 +160,8 @@ sub setup
       }
       my $annotation_type_name = $annotation_type->{name};
       $self->{annotation_types}->{$annotation_type_name} = $annotation_type;
+
+      $annotation_type->{namespace} //= $annotation_type->{name};
     }
   }
 }

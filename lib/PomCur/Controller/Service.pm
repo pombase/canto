@@ -47,10 +47,13 @@ __PACKAGE__->config->{namespace} = 'ws';
 
 sub lookup : Local
 {
-  my ($self, $c, $type_name, $ontology_name, $search_string) = @_;
+  my ($self, $c, $type_name, $component_name, $search_string) = @_;
 
   my $config = $c->config();
   my $lookup = PomCur::Track::get_adaptor($config, $type_name);
+
+  my $component_config = $config->{annotation_types}->{$component_name};
+  my $ontology_name = $component_config->{namespace};
 
   $search_string ||= $c->req()->param('term');
 

@@ -560,6 +560,7 @@ annotation_type_list:
       the two.
   - name: post_translational_modification
     type: ontology
+    namespace: PSI-MOD
     display_name: 'post translational modification'
     broad_term_suggestions: >
       PLACEHOLDER
