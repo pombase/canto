@@ -5,5 +5,12 @@ $form
 </%args>
 
 <div id="phenotype-ferret">
+  <div class="curs-box">
+    <div class="curs-box-title">
+      Select the interacting genes ...
+    </div>
+    <div class="curs-box-body">
 <% $form %>
+    </div>
+  </div>
 </div>
