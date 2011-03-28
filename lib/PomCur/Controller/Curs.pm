@@ -659,7 +659,6 @@ sub edit_interaction : Chained('top') PathPart('edit/interaction') Args(2) Form
 
   my $form = $self->form();
 
-  my $schema = $c->stash()->{schema};
   my $genes_rs = $schema->resultset('Gene');
   my @options = ();
 
