@@ -568,6 +568,8 @@ annotation_type_list:
       PLACEHOLDER
     more_help_text: >
       ADD ME!
+    evidence_codes:
+      - IDA
   - name: genetic_interaction
     type: interaction
     display_name: 'genetic interaction'
