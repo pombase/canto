@@ -199,6 +199,7 @@ sub lookup
     # sanitise
     $search_string =~ s/[^\d\w]+/ /g;
     $search_string =~ s/\s+$//;
+    $search_string =~ s/_/ /g;
 
     my $query_string =
       "cv_name:$ontology_name AND ($search_string OR $search_string*)";
