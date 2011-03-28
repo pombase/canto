@@ -198,7 +198,9 @@ sub load
     my $subject_term_acc = $rel->subject_acc();
     my $object_term_acc = $rel->object_acc();
 
-    next if $rel->type() eq 'has_part';
+    next if $rel->type() eq 'has_part' ||
+      $rel->type() eq 'has_functional_parent' ||
+      $rel->type() eq 'derives_from';
 
     my $rel_type = $rel->type();
     my $rel_type_cvterm = $relationship_cvterms{$rel_type};
