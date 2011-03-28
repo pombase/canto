@@ -9,6 +9,7 @@ test_config:
   test_genes_file: "t/data/pombe_genes.txt"
   test_go_obo_file: "t/data/go_small.obo"
   test_phenotype_obo_file: "t/data/phenotype_small.obo"
+  test_psi_mod_obo_file: "t/data/psi_mod_small.obo"
   test_relationship_obo_file: "t/data/ro.obo"
   test_cases:
     empty_db:

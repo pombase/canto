@@ -37,6 +37,7 @@ under the same terms as Perl itself.
 =cut
 
 use Moose;
+use Carp;
 
 use GO::Parser;
 
@@ -75,6 +76,10 @@ sub load
   my $self = shift;
   my $file_name = shift;
   my $index = shift;
+
+  if (!defined $file_name) {
+    croak "no file name passed to OntologyLoad::load()";
+  }
 
   my $schema = $self->schema();
   my $guard = $schema->txn_scope_guard;
@@ -199,11 +204,15 @@ sub load
     my $object_term_acc = $rel->object_acc();
 
     next if $rel->type() eq 'has_part' ||
-      $rel->type() eq 'has_functional_parent' ||
-      $rel->type() eq 'derives_from';
+      $rel->type() eq 'has_functional_part' ||
+      $rel->type() eq 'derives_from' ||
+      $rel->type() eq 'contains';
 
     my $rel_type = $rel->type();
     my $rel_type_cvterm = $relationship_cvterms{$rel_type};
+
+    die "can't find relationship cvterm for: $rel_type"
+      unless defined $rel_type_cvterm;
 
     my $subject_cvterm = $cvterms{$subject_term_acc};
     my $object_cvterm = $cvterms{$object_term_acc};
