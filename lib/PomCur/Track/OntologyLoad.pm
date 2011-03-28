@@ -205,6 +205,7 @@ sub load
 
     next if $rel->type() eq 'has_part' ||
       $rel->type() eq 'has_functional_part' ||
+      $rel->type() eq 'has_functional_parent' ||
       $rel->type() eq 'derives_from' ||
       $rel->type() eq 'contains';
 
