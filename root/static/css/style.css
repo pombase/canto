@@ -175,7 +175,7 @@ div#footer .sponsor {
 #breadcrumbs ul li, #breadcrumbs button {
 }
 
-#breadcrumbs ul li, #breadcrumbs .breadcrumbs-ferret-link {
+#breadcrumbs ul li, #breadcrumbs .breadcrumbs-link {
   padding-left: 11px;
   background-image: url(../images/right_empty_triangle.png);
   background-repeat: no-repeat;
@@ -185,7 +185,7 @@ div#footer .sponsor {
 #breadcrumbs ul li {
   list-style-type: none;
 }
-#breadcrumbs .breadcrumbs-ferret-link {
+#breadcrumbs .breadcrumbs-link {
   margin-left: 10px;
 }
 #breadcrumbs ul li a {

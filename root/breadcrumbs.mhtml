@@ -1,16 +1,11 @@
 <div id="breadcrumbs">
-% if (defined $home_path) {
-  <a id="breadcrumbs-home-link" href="<% $home_path %>" title="Go to the home page">
-    <img src="<% $c->uri_for('/static/images/left_triangle.png') %>">Home page</a>
-% }
+  <a id="breadcrumbs-home-link" class="breadcrumbs-link" 
+     href="<% $home_path %>" title="Go to the home page">
+    Home page
+  </a>
 </div>
 
 
 <%init>
-my $current_path = $c->req->uri()->path();
-my $home_path = undef;
-
-if ($current_path ne $c->uri_for('/')->path()) {
-  $home_path = $c->uri_for('/');
-}
+my $home_path = $c->req->uri()->path();
 </%init>
