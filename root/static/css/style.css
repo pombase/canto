@@ -685,3 +685,11 @@ div.clearall {
 .triage li a:hover {
   background-color:#0b75b2;
 }
+
+form .checkboxgroup {
+  margin-top: 10px;
+
+}
+form .checkboxgroup span {
+  display: block;
+}
