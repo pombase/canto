@@ -900,7 +900,7 @@ sub _get_gene_resultset
                                             });
 }
 
-sub export_annotation : Chained('top') PathPart('export/annotation') Args(0)
+sub annotation_export : Chained('top') PathPart('annotation/export') Args(0)
 {
   my ($self, $c) = @_;
 

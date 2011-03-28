@@ -29,7 +29,7 @@ test_psgi $app, sub {
 
   # test submitting a name and email address
   {
-    my $uri = new URI("$root_url/export/annotation");
+    my $uri = new URI("$root_url/annotation/export");
 
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);

@@ -119,7 +119,7 @@ my ($completed_count, $annotations_ref) =
   PomCur::Curs::Utils::get_annotation_table($config, $schema);
 my @annotations = @$annotations_ref;
 
-my $download_action = $curs_root_path . '/export/annotation';
+my $download_action = $curs_root_path . '/annotation/export';
 my $delete_action = $curs_root_path . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 
