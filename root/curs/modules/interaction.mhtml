@@ -1,0 +1,9 @@
+<%args>
+$current_component_display_name
+$current_component
+$form
+</%args>
+
+<div id="phenotype-ferret">
+<% $form %>
+</div>

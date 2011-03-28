@@ -1,0 +1,11 @@
+<%args>
+$form
+$term_ontid
+</%args>
+
+<div class="evidence-select">
+  <div class="description">
+Choose evidence for <% $term_ontid %>
+  </div>
+  <% $form %>
+</div>
