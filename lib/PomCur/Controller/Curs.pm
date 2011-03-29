@@ -458,7 +458,7 @@ sub gene_upload : Chained('top') Args(0) Form
   my $schema = $st->{schema};
 
   if ($st->{gene_count} > 0) {
-    push @submit_buttons, "cancel";
+    push @submit_buttons, "back";
   }
 
   my @all_elements = (
@@ -480,7 +480,7 @@ sub gene_upload : Chained('top') Args(0) Form
   $st->{form} = $form;
 
   if ($form->submitted()) {
-    if (defined $c->req->param('cancel')) {
+    if (defined $c->req->param('back')) {
       _redirect_and_detach($c, 'edit_genes');
     }
   }
