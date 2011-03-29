@@ -38,6 +38,8 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
+use Text::Similarity::Overlaps;
+
 use PomCur::Track::OntologyIndex;
 
 with 'PomCur::Role::Configurable';
@@ -45,6 +47,7 @@ with 'PomCur::Track::TrackLookup';
 
 sub _make_term_hash
 {
+  my $search_string = shift;
   my $cvterm = shift;
   my $include_definition = shift;
   my $include_children = shift;
@@ -55,6 +58,30 @@ sub _make_term_hash
 
   $term_hash{id} = $cvterm->db_accession();
   $term_hash{name} = $cvterm->name();
+
+  my $tso = Text::Similarity::Overlaps->new();
+
+  my $fudge_factor = 1.2;
+
+  # the $fudge_factor is to try to make sure that the cvterm name is nudged
+  # ahead if there is need for a tie-break
+  my $name_match_score =
+    $tso->getSimilarityStrings($search_string, $cvterm->name()) *
+      $fudge_factor;
+
+  my $max_score = $name_match_score;
+
+  for my $synonym ($cvterm->synonyms()) {
+    my $synonym_name = $synonym->synonym();
+
+    my $synonym_score =
+      $tso->getSimilarityStrings($search_string, $synonym_name);
+
+    if ($synonym_score > $max_score) {
+      $max_score = $synonym_score;
+      $term_hash{matching_synonym} = $synonym_name;
+    }
+  }
 
   if ($include_definition) {
     $term_hash{definition} = $cvterm->definition();
@@ -76,7 +103,9 @@ sub _make_term_hash
 
     for my $child_cvterm (@child_cvterms) {
       if ($child_cvterm->cv()->name() eq $cv->name()) {
-        push @{$term_hash{children}}, {_make_term_hash($child_cvterm, 0, 0)};
+        push @{$term_hash{children}}, {
+          _make_term_hash($search_string, $child_cvterm, 0, 0)
+        };
       }
     }
   }
@@ -98,7 +127,13 @@ sub _make_term_hash
            include_children - include data about the child terms
            include_definition - include the definition for each term
  Returns : [ { id => '...', name => '...', definition => '...',
+               matching_synonym => '...',
                children => [ { id => '...' }, { id => '...' }, ... ] } ]
+
+           Note: if the search_string matches a synonym more exactly
+           than it matches the cvterm name, the matching_synonym field
+           is name that synonym, otherwise matching_synonym won't be
+           returned in the hash
 
 =cut
 sub web_service_lookup
@@ -133,7 +168,8 @@ sub web_service_lookup
     my $cvterm = $schema->find_with_type('Cvterm', $cvterm_id);
 
     my %term_hash =
-      _make_term_hash($cvterm, $include_definition, $include_children);
+      _make_term_hash($search_string, $cvterm,
+                      $include_definition, $include_children);
 
     push @ret_list, \%term_hash;
   }

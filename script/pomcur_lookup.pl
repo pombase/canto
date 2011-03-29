@@ -102,7 +102,12 @@ if ($lookup_type eq 'gene') {
                                           search_string => $search_string);
 
     for my $hit (@$res) {
-      print $hit->{id}, " - ", $hit->{name}, "\n";
+      my $synonym_text = '';
+      if (defined $hit->{matching_synonym}) {
+        $synonym_text =
+          q{ (matching synonym: "} . $hit->{matching_synonym} . q{"};
+      }
+      print $hit->{id}, " - ", $hit->{name}, "$synonym_text\n";
     }
   }
 }
