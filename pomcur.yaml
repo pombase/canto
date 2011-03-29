@@ -436,6 +436,7 @@ implementation_classes:
   gene_adaptor: PomCur::Track::GeneLookup
   go_annotation_adaptor: PomCur::Track::GOAnnotationLookup
   go_adaptor: PomCur::Track::OntologyLookup
+  ontology_adaptor: PomCur::Track::OntologyLookup
 
 evidence_types:
   IMP:

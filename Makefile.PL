@@ -56,6 +56,7 @@ requires 'GO::Parser';
 requires 'Lucene';
 requires 'Text::CSV';
 requires 'JSON';
+requires 'Try::Tiny';
 
 requires 'Config::General';
 
