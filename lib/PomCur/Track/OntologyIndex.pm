@@ -93,9 +93,7 @@ sub _index_path
 sub _process_name
 {
   my $name = shift;
-  my $boost_factor = shift // 1;
-
-  my $boost = 0.5 + 100.0 / (10 + length($name)) * $boost_factor;
+  my $boost = shift;
 
   my $processed_name = $name;
   $processed_name =~ s/_/ /g;
@@ -105,6 +103,29 @@ sub _process_name
   $name_field->setBoost($boost);
 
   return $name_field;
+}
+
+# returns a Field containing each word from the name and synonyms exactly once
+sub _get_all_words_field
+{
+  my $cvterm = shift;
+  my $boost = shift;
+
+  my %words = ();
+
+  for my $name ($cvterm->name(), map { $_->synonym() } $cvterm->synonyms()) {
+    my @bits = split /\W/, $name;
+
+    for my $bit (@bits) {
+      $words{$bit}++;
+    }
+  }
+
+  my $word_string = join ' ', keys %words;
+
+  warn "all: $word_string\n";
+
+  return _process_name($word_string, $boost * 0.9);
 }
 
 =head2 add_to_index
@@ -126,7 +147,14 @@ sub add_to_index
   my $writer = $self->{_index};
   my $doc = new Lucene::Document;
 
-  my $name_field = _process_name($cvterm->name());
+  my $cvterm_name = $cvterm->name();
+
+  my $name_boost = 0.5 + 100.0 / (10 + length($cvterm_name));
+
+  warn "name: $cvterm_name\n";
+
+  my $name_field = _process_name($cvterm_name, $name_boost);
+  my $all_words_field = _get_all_words_field($cvterm, $name_boost);
 
   my @fields = (
     $name_field,
