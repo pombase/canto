@@ -86,7 +86,13 @@ make
 ** Code
    PomCur is written in Perl, implemented using the Catalyst framework and
    running on a Plack server.
-
+** Autocomplete searching
+   - implemented using CLucene
+   - short names are weighted more highly so they appear at the top of the
+     search list
+   - the term names are passed to CLucene for indexing
+   - all words appearing in the name or synonyms are joined into one string
+     for separate indexing by CLucene
 * Developing PomCur
 ** Running tests
    :PROPERTIES:
