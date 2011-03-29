@@ -318,7 +318,13 @@ $(document).ready(function() {
     .data("autocomplete")._renderItem = function( ul, item ) {
       var search_string = $('#ferret-term-input').val();
       var search_bits = search_string.split(/\s+/);
-      var match_name = item.name;
+      var match_name = item.matching_synonym;
+      var synonym_extra = '';
+      if (match_name) {
+        synonym_extra = ' (synonym)';
+      } else {
+        match_name = item.name;
+      }
       for (var i = 0; i < search_bits.length; i++) {
         var bit = search_bits[i];
         if (bit.length > 0) {
@@ -329,7 +335,7 @@ $(document).ready(function() {
       return $( "<li></li>" )
         .data( "item.autocomplete", item )
         .append( "<a>" + match_name + " <span class='term-id'>(" +
-                 item.id + ")</span></a>" )
+                 item.id + ")</span>" + synonym_extra + "</a>" )
         .appendTo( ul );
     };
 
