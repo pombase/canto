@@ -147,7 +147,8 @@ sub add_to_index
 
   my $cvterm_name = $cvterm->name();
 
-  my $name_boost = 0.5 + 100.0 / (10 + length($cvterm_name));
+  my $length_factor = 15 - length($cvterm_name) / 3.0;
+  my $name_boost = 10 ** $length_factor;
 
   my $name_field = _process_name($cvterm_name, $name_boost);
   my $all_words_field = _get_all_words_field($cvterm, $name_boost);
