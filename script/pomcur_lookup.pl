@@ -81,7 +81,15 @@ try {
 if ($lookup_type eq 'gene') {
   my $res = $lookup->lookup([@ARGV]);
 
-  # TODO
+  for my $gene (@{$res->{found}}) {
+    print
+      ($gene->{primary_identifier}, "\t",
+       $gene->{primary_name}, "\t",
+       $gene->{product}, "\t",
+       (join ",", @{$gene->{synonyms}}), "\t",
+       $gene->{organism_full_name}, "\t",
+       $gene->{organism_taxonid}, "\n");
+  }
 } else {
   if ($lookup_type eq 'ontology') {
     if (!defined $ontology_name) {
