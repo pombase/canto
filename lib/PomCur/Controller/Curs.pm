@@ -906,6 +906,8 @@ sub set_current_gene : Chained('top') Args(1)
   my $schema = $c->stash()->{schema};
 
   set_metadata($schema, 'current_gene_id', $gene_id);
+  my $gene = $schema->find_with_type('Gene', $gene_id);
+  $c->flash()->{message} = 'New current gene: ' . $gene->display_name();
 
   _redirect_and_detach($c);
 }
