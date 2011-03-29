@@ -45,7 +45,7 @@ $pub
 % }
 
 <div class="upload-genes-link">
-  <a href="<% $upload_path %>">Upload additional genes ...</a>
+  <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
 </div>
 </form>
 </div>
