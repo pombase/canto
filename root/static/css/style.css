@@ -693,3 +693,8 @@ form .checkboxgroup {
 form .checkboxgroup span {
   display: block;
 }
+
+#curs-upload-help {
+  padding-top: 5px;
+  font-size: 90%;
+}
