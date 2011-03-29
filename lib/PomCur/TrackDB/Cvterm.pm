@@ -323,6 +323,19 @@ sub db_accession
   return $db->name() . ':' . $dbxref->accession();
 }
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+=head2 synonyms
+
+ Usage   : my @cvterm_synonyms = $cvterm->synonyms();
+ Function: An alias for cvtermsynonym_cvterms(), returns the Cvtermsynonyms of
+           this cvterm
+ Args    : none
+ Returns : return synonyms
+
+=cut
+sub synonyms
+{
+  return cvtermsynonym_cvterms(@_);
+}
+
 __PACKAGE__->meta->make_immutable;
 1;

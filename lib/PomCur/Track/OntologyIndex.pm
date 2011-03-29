@@ -90,6 +90,23 @@ sub _index_path
   return $config->data_dir_path('ontology_index_file');
 }
 
+sub _process_name
+{
+  my $name = shift;
+  my $boost_factor = shift // 1;
+
+  my $boost = 0.5 + 100.0 / (10 + length($name)) * $boost_factor;
+
+  my $processed_name = $name;
+  $processed_name =~ s/_/ /g;
+
+  my $name_field = Lucene::Document::Field->Text(name => $processed_name);
+
+  $name_field->setBoost($boost);
+
+  return $name_field;
+}
+
 =head2 add_to_index
 
  Usage   : $ont_index->add_to_index($cvterm);
@@ -103,20 +120,13 @@ sub add_to_index
   my $self = shift;
   my $cvterm = shift;
 
-  my $writer = $self->{_index};
-
-  my $doc = new Lucene::Document;
-  my $boost = 0.5 + 100.0 / (10 + length($cvterm->name()));
-
   my $cv_name = lc $cvterm->cv()->name();
   $cv_name =~ s/-/_/g;
 
-  my $processed_name = $cvterm->name();
-  $processed_name =~ s/_/ /g;
+  my $writer = $self->{_index};
+  my $doc = new Lucene::Document;
 
-  my $name_field = Lucene::Document::Field->Text(name => $processed_name);
-
-  $name_field->setBoost($boost);
+  my $name_field = _process_name($cvterm->name());
 
   my @fields = (
     $name_field,
@@ -124,6 +134,12 @@ sub add_to_index
     Lucene::Document::Field->Keyword(cv_name => $cv_name),
     Lucene::Document::Field->Keyword(cvterm_id => $cvterm->cvterm_id()),
   );
+
+  for my $synonym ($cvterm->synonyms()) {
+    # weight the synonyms slightly lower
+    my $name_field = _process_name($synonym->synonym(), 0.8);
+    push @fields, $name_field;
+  }
 
   map { $doc->add($_) } @fields;
 
@@ -208,7 +224,7 @@ sub lookup
     $search_string =~ s/_/ /g;
 
     my $query_string =
-      "cv_name:$ontology_name AND ($search_string OR $search_string*)";
+      "cv_name:$ontology_name AND (($search_string) OR ($search_string*))";
 
     $query = $parser->parse($query_string);
   }
