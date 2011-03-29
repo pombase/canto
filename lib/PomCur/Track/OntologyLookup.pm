@@ -45,6 +45,17 @@ use PomCur::Track::OntologyIndex;
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackLookup';
 
+sub _get_score
+{
+  my $tso = shift;
+  my $search_string = shift;
+  my $name = shift;
+
+  $name =~ s/\W+/ /g;
+
+  return $tso->getSimilarityStrings($search_string, $name);
+}
+
 sub _make_term_hash
 {
   my $search_string = shift;
@@ -66,16 +77,13 @@ sub _make_term_hash
   # the $fudge_factor is to try to make sure that the cvterm name is nudged
   # ahead if there is need for a tie-break
   my $name_match_score =
-    $tso->getSimilarityStrings($search_string, $cvterm->name()) *
-      $fudge_factor;
+    _get_score($tso, $search_string, $cvterm->name()) * $fudge_factor;
 
   my $max_score = $name_match_score;
 
   for my $synonym ($cvterm->synonyms()) {
     my $synonym_name = $synonym->synonym();
-
-    my $synonym_score =
-      $tso->getSimilarityStrings($search_string, $synonym_name);
+    my $synonym_score = _get_score($tso, $search_string, $synonym_name);
 
     if ($synonym_score > $max_score) {
       $max_score = $synonym_score;
