@@ -108,6 +108,9 @@ sub add_to_index
   my $doc = new Lucene::Document;
   my $boost = 0.5 + 100.0 / (10 + length($cvterm->name()));
 
+  my $cv_name = lc $cvterm->cv()->name();
+  $cv_name =~ s/-/_/g;
+
   my $processed_name = $cvterm->name();
   $processed_name =~ s/_/ /g;
 
@@ -118,7 +121,7 @@ sub add_to_index
   my @fields = (
     $name_field,
     Lucene::Document::Field->Keyword(ontid => $cvterm->db_accession()),
-    Lucene::Document::Field->Keyword(cv_name => $cvterm->cv()->name()),
+    Lucene::Document::Field->Keyword(cv_name => $cv_name),
     Lucene::Document::Field->Keyword(cvterm_id => $cvterm->cvterm_id()),
   );
 
@@ -179,6 +182,7 @@ sub lookup
 
   # keyword search must be lower case
   my $ontology_name = lc shift;
+  $ontology_name =~ s/-/_/g;
 
   my $search_string = shift;
 
