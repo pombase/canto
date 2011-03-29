@@ -96,7 +96,7 @@ if ($lookup_type eq 'gene') {
       usage("no ontology name argument");
     }
 
-    my $search_string = $ARGV[0];
+    my $search_string = "@ARGV";
 
     my $res = $lookup->web_service_lookup(ontology_name => $ontology_name,
                                           search_string => $search_string);
