@@ -146,7 +146,7 @@ sub web_service_lookup
 
   my $schema = $self->schema();
   my $tso = Text::Similarity::Overlaps->new();
-  my $fudge_factor = 1.2;
+  my $fudge_factor = 1.05;
 
   my $num_hits = $hits->length();
 
