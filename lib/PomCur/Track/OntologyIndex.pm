@@ -93,14 +93,11 @@ sub _index_path
 sub _process_name
 {
   my $name = shift;
-  my $boost = shift;
 
   my $processed_name = $name;
   $processed_name =~ s/_/ /g;
 
   my $name_field = Lucene::Document::Field->Text(name => $processed_name);
-
-  $name_field->setBoost($boost);
 
   return $name_field;
 }
@@ -109,12 +106,11 @@ sub _process_name
 sub _get_all_words_field
 {
   my $cvterm = shift;
-  my $boost = shift;
 
   my %words = ();
 
   for my $name ($cvterm->name(), map { $_->synonym() } $cvterm->synonyms()) {
-    my @bits = split /\W/, $name;
+    my @bits = split /\W+/, $name;
 
     for my $bit (@bits) {
       $words{$bit}++;
@@ -123,7 +119,12 @@ sub _get_all_words_field
 
   my $word_string = join ' ', keys %words;
 
-  return _process_name($word_string, $boost * 0.9);
+  my $field = _process_name($word_string);
+
+  # weight the synonyms slightly lower
+  $field->setBoost(0.8);
+
+  return $field;
 }
 
 =head2 add_to_index
@@ -147,23 +148,21 @@ sub add_to_index
 
   my $cvterm_name = $cvterm->name();
 
-  my $length_factor = 15 - length($cvterm_name) / 3.0;
-  my $name_boost = 10 ** $length_factor;
-
-  my $name_field = _process_name($cvterm_name, $name_boost);
-  my $all_words_field = _get_all_words_field($cvterm, $name_boost);
+  my $name_field = _process_name($cvterm_name);
+  my $all_words_field = _get_all_words_field($cvterm);
 
   my @fields = (
     $name_field,
     Lucene::Document::Field->Keyword(ontid => $cvterm->db_accession()),
     Lucene::Document::Field->Keyword(cv_name => $cv_name),
     Lucene::Document::Field->Keyword(cvterm_id => $cvterm->cvterm_id()),
+    $all_words_field,
   );
 
   for my $synonym ($cvterm->synonyms()) {
     # weight the synonyms slightly lower
     my $name_field = _process_name($synonym->synonym(), 0.8);
-    push @fields, $name_field;
+#    push @fields, $name_field;
   }
 
   map { $doc->add($_) } @fields;
