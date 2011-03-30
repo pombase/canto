@@ -478,13 +478,13 @@ evidence_types:
   'Dosage Rescue':
     name: Dosage Rescue
   'FRET':
-    NAME: FRET
+    name: FRET
   'Far Western':
     name: Far Western
   'Negative Genetic':
     name: Negative Genetic
   'PCA':
-    NAME: PCA
+    name: PCA
   'Phenotypic Enhancement':
     name: Phenotypic Enhancement
   'Phenotypic Suppression':
