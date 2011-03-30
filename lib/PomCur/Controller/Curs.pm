@@ -776,7 +776,13 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my %evidence_types = %{$config->{evidence_types}};
 
   my @codes = map {
-    [ $_, $evidence_types{$_}->{name} . " ($_)" ]
+    my $description;
+    if ($evidence_types{$_}->{name} eq $_) {
+      $description = $_;
+    } else {
+      $description = $evidence_types{$_}->{name} . " ($_)";
+    }
+    [ $_, $description]
   } @{$ont_config->{evidence_codes}};
 
   unshift @codes, [ '', 'Choose an evidence type ...' ];
