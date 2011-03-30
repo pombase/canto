@@ -453,6 +453,60 @@ evidence_types:
     name: Experimenter made it up
   LDM:
     name: Scientist looked down a microscope
+  'Affinity Capture-Luminescence':
+    name: Affinity Capture-Luminescence
+  'Affinity Capture-MS':
+    name: Affinity Capture-MS
+  'Affinity Capture-RNA':
+    name: Affinity Capture-RNA
+  'Affinity Capture-Western':
+    name: Affinity Capture-Western
+  'Biochemical Activity':
+    name: Biochemical Activity
+  'Co-crystal Structure':
+    name: Co-crystal Structure
+  'Co-fractionation':
+    name: Co-fractionation
+  'Co-localization':
+    name: Co-localization
+  'Co-purification':
+    name: Co-purification
+  'Dosage Growth Defect':
+    name: Dosage Growth Defect
+  'Dosage Lethality':
+    name: Dosage Lethality
+  'Dosage Rescue':
+    name: Dosage Rescue
+  'FRET':
+    NAME: FRET
+  'Far Western':
+    name: Far Western
+  'Negative Genetic':
+    name: Negative Genetic
+  'PCA':
+    NAME: PCA
+  'Phenotypic Enhancement':
+    name: Phenotypic Enhancement
+  'Phenotypic Suppression':
+    name: Phenotypic Suppression
+  'Positive Genetic':
+    name: Positive Genetic
+  'Protein-RNA':
+    name: Protein-RNA
+  'Protein-peptide':
+    name: Protein-peptide
+  'Reconstituted Complex':
+    name: Reconstituted Complex
+  'Synthetic Growth Defect':
+    name: Synthetic Growth Defect
+  'Synthetic Haploinsufficiency':
+    name: Synthetic Haploinsufficiency
+  'Synthetic Lethality':
+    name: Synthetic Lethality
+  'Synthetic Rescue':
+    name: Synthetic Rescue
+  'Two-hybrid':
+    name: Two-hybrid
 
 annotation_type_list:
   - name: molecular_function
@@ -573,12 +627,37 @@ annotation_type_list:
     category: interaction
     display_name: 'genetic interaction'
     evidence_codes:
-      - IDA
+      - Dosage Growth Defect
+      - Dosage Lethality
+      - Dosage Rescue
+      - Negative Genetic
+      - Phenotypic Enhancement
+      - Phenotypic Suppression
+      - Positive Genetic
+      - Synthetic Growth Defect
+      - Synthetic Haploinsufficiency
+      - Synthetic Lethality
+      - Synthetic Rescue
   - name: physical_interaction
     category: interaction
     display_name: 'physical interaction'
     evidence_codes:
-      - IDA
+      - Affinity Capture-Luminescence
+      - Affinity Capture-MS
+      - Affinity Capture-RNA
+      - Affinity Capture-Western
+      - Biochemical Activity
+      - Co-crystal Structure
+      - Co-fractionation
+      - Co-localization
+      - Co-purification
+      - Far Western
+      - FRET
+      - PCA
+      - Protein-peptide
+      - Protein-RNA
+      - Reconstituted Complex
+      - Two-hybrid
 
 messages:
   gene_upload:

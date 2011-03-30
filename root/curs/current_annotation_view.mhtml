@@ -3,109 +3,9 @@ $curs_root_path
 $annotation_type
 </%args>
 
-% if (@annotations) {
-<div class="sect">
-  <div class="title sect-title">
-Current <% $annotation_type->{display_name} %> annotations
-  </div>
-  <div class="annotation-table sect-content">
-<table class="list">
-  <thead>
-    <tr>
-      <th>
-        Systematic identifier
-      </th>
-      <th>
-        Gene name
-      </th>
-      <th>
-        Annotation type
-      </th>
-      <th>
-        Term ID
-      </th>
-      <th>
-        Term name
-      </th>
-      <th>
-        Evidence code
-      </th>
-      <th>
-        With
-      </th>
-      <th>
-        Note
-      </th>
-      <th>
-        &nbsp
-      </th>
-    </tr>
-  </thead>
-
-% for my $row (@annotations) {
-  <tr>
-    <td>
-      <% $row->{gene_identifier} %>
-    </td>
-    <td>
-      <% $row->{gene_name} %>
-    </td>
-    <td>
-      <% $row->{annotation_type_display_name} %>
-    </td>
-    <td>
-      <% $row->{term_ontid} %>
-    </td>
-    <td>
-      <% $row->{term_name} %>
-    </td>
-    <td>
-% if (defined $row->{evidence_code}) {
-     <% $row->{evidence_code} %>
-% } else {
-     <a href="<% $curs_root_path . '/annotation/evidence/' . $row->{annotation_id} %>">Set evidence ...</a>
-% }
-    </td>
-    <td>
-% if ($row->{needs_with}) {
-%   if (defined $row->{with_or_from_display_name}) {
-      <% $row->{with_or_from_display_name} %>
-%   } else {
-      <a href="<% $curs_root_path . '/annotation/with_gene/' . $row->{annotation_id} %>">Set with ...</a>
-%   }
-% } else {
-     &nbsp; 
-% }
-    </td>
-    <td>
-% if ($row->{term_suggestion}) {
-      <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% $row->{term_suggestion}->{name} %>','<% $row->{term_suggestion}->{definition} %>');">View note ...</a>
-% } else {
-      &nbsp;
-% }
-    </td>
-    <td>
-      <a href="<% $delete_action . $row->{annotation_id} %>"
-         id="curs-annotation-delete-<% $row->{annotation_id} %>"
-         title="Remove this annotation">
-        <img src="<% $delete_icon_uri %>"/>
-      </a>
-    </td>
-  </tr>
-% }
-</table>
-
-<div>
-% if ($some_incomplete) {
-<div style="font-size: 85%; margin: 5px 0px 5px 0px;">
-  Note that some of the annotations are incomplete, and only complete
-  annotations are included in the downloaded table. 
-</div>
-% }
-  <a href="<% $download_action %>">Download table ...</a>
-</div>
-</div>
-% }
+<& $annotation_view_template, curs_root_path => $curs_root_path,
+  annotation_type => $annotation_type, annotations => [@annotations],
+  completed_count => $completed_count &>
 
 <%init>
 use PomCur::Curs::Utils;
@@ -119,11 +19,7 @@ my ($completed_count, $annotations_ref) =
                                             $annotation_type->{name});
 my @annotations = @$annotations_ref;
 
-my $download_action =
-  $curs_root_path . '/annotation/export/' . $annotation_type->{name};
-my $delete_action = $curs_root_path . '/annotation/delete/';
-my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
-
-my $some_incomplete = $completed_count != @annotations;
+my $annotation_view_template =
+  "current_annotation_" . $annotation_type->{category} . ".mhtml";
 
 </%init>

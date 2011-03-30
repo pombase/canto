@@ -51,7 +51,8 @@ sub _make_ontology_annotation
 
   my $data = $annotation->data();
   my $term_ontid = $data->{term_ontid};
-#  next unless defined $term_ontid and length $term_ontid > 0;
+  die "no term_ontid for annotation"
+    unless defined $term_ontid and length $term_ontid > 0;
 
   my $annotation_type = $annotation->type();
 
@@ -124,6 +125,44 @@ sub _make_ontology_annotation
   };
 }
 
+sub _make_interaction_annotation
+{
+  my $config = shift;
+  my $schema = shift;
+  my $annotation = shift;
+  my $gene = shift;
+
+  my $data = $annotation->data();
+  my $evidence_code = $data->{evidence_code};
+  my $annotation_type = $annotation->type();
+
+  my %annotation_types_config = %{$config->{annotation_types}};
+  my $annotation_type_config = $annotation_types_config{$annotation_type};
+  my $annotation_type_display_name = $annotation_type_config->{display_name};
+
+  my $pub_uniquename = $annotation->pub()->uniquename();
+
+  my @prey_data = @{$data->{prey}};
+
+  return map {
+    my $prey_data = $_;
+    my $entry =
+          {
+            gene_identifier => $gene->primary_identifier(),
+            gene_taxonid => $gene->organism()->taxonid(),
+            publication_uniquename => $pub_uniquename,
+            evidence_code => $evidence_code,
+            interacting_gene_identifier => $prey_data->{primary_identifier},
+            interacting_gene_taxonid => $prey_data->{organism_taxon},
+            score => '',
+            phenotypes => '',
+            comment => '',
+            completed => 1,
+          };
+    $entry;
+  } @prey_data;
+};
+
 =head2 get_annotation_table
 
  Usage   : my @annotations =
@@ -182,13 +221,19 @@ sub get_annotation_table
     my $gene_synonyms_string = join '|', @{$found_results[0]->{synonyms}};
 
     while (defined (my $annotation = $an_rs->next())) {
+      my @entries;
       if ($annotation_type_category eq 'ontology') {
-        my $entry = _make_ontology_annotation($config, $schema, $annotation,
-                                              $ontology_adaptor,
-                                              $gene, $gene_synonyms_string);
-        push @annotations, $entry;
-        $completed_count++ if $entry->{completed};
+        @entries = (_make_ontology_annotation($config, $schema, $annotation,
+                                             $ontology_adaptor,
+                                             $gene, $gene_synonyms_string));
+      } else {
+        if ($annotation_type_category eq 'interaction') {
+          @entries = _make_interaction_annotation($config, $schema, $annotation,
+                                                  $gene);
+        }
       }
+      push @annotations, @entries;
+      map { $completed_count++ if $_->{completed} } @entries;
     }
   }
 

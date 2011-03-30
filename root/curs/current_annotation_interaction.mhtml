@@ -1,0 +1,78 @@
+<%args>
+$curs_root_path
+$annotation_type
+@annotations
+</%args>
+
+% if (@annotations) {
+<div class="sect">
+  <div class="title sect-title">
+Current <% $annotation_type->{display_name} %> annotations
+  </div>
+  <div class="annotation-table sect-content">
+<table class="list">
+  <thead>
+    <tr>
+      <th>
+        Interactor A
+      </th>
+      <th>
+        Interactor B
+      </th>
+      <th>
+        Interactor A taxon
+      </th>
+      <th>
+        Interactor B taxon
+      </th>
+      <th>
+        Evidence code
+      </th>
+      <th>
+        &nbsp
+      </th>
+    </tr>
+  </thead>
+
+% for my $row (@annotations) {
+  <tr>
+    <td>
+      <% $row->{gene_identifier} %>
+    </td>
+    <td>
+      <% $row->{interacting_gene_identifier} %>
+    </td>
+    <td>
+      <% $row->{gene_taxonid} %>
+    </td>
+    <td>
+      <% $row->{interacting_gene_taxonid} %>
+    </td>
+    <td>
+      <% $row->{evidence_code} %>
+    </td>
+    <td>
+      <a href="<% $delete_action . $row->{annotation_id} %>"
+         id="curs-annotation-delete-<% $row->{annotation_id} %>"
+         title="Remove this annotation">
+        <img src="<% $delete_icon_uri %>"/>
+      </a>
+    </td>
+  </tr>
+% }
+</table>
+
+<div>
+  <a href="<% $download_action %>">Download table ...</a>
+</div>
+</div>
+</div>
+% }
+
+<%init>
+my $download_action =
+  $curs_root_path . '/annotation/export/' . $annotation_type->{name};
+my $delete_action = $curs_root_path . '/annotation/delete/';
+my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+
+</%init>
