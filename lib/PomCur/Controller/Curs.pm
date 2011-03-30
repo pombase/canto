@@ -967,6 +967,10 @@ sub annotation_export : Chained('top') PathPart('annotation/export') Args(1)
         }
       }
 
+      if (!defined $val) {
+        die "no value for field $_";
+      }
+
       $val;
     } @column_names;
     $results .= "\n";
