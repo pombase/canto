@@ -454,8 +454,6 @@ evidence_types:
   LDM:
     name: Scientist looked down a microscope
 
-# each class needs to set up the stash for forwarding to a template
-# page based on the module name, eg. go_function.html
 annotation_type_list:
   - name: molecular_function
     type: ontology
