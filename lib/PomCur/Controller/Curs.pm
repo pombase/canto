@@ -930,19 +930,12 @@ sub annotation_export : Chained('top') PathPart('annotation/export') Args(1)
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
-  my ($completed_count, $annotations_ref) =
+  my ($completed_count, $annotations_ref, $columns_ref) =
     PomCur::Curs::Utils::get_annotation_table($config, $schema,
                                               $annotation_type_name);
   my @annotations = @$annotations_ref;
-
   my %common_values = %{$config->{export}->{gene_association_fields}};
-
-  my @column_names = qw(db gene_identifier gene_name_or_identifier
-                        qualifier term_ontid uniquename
-                        evidence_code with_or_from_identifier
-                        annotation_type_abbreviation
-                        gene_product gene_synonyms_string db_object_type taxonid
-                        creation_date_short db);
+  my @column_names = @$columns_ref;
 
   my $db = $config->{export}->{gene_association_fields}->{db};
 
