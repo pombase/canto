@@ -338,10 +338,22 @@ $(document).ready(function() {
       } else {
         match_name = item.name;
       }
+      function length_compare(a,b) {
+        if (a.length < b.length) { 
+          return 1;
+        } else {
+          if (a.length > b.length) { 
+            return -1;
+          } else {
+            return 0;
+          }
+        }
+      };
+      search_bits.sort(length_compare);
       for (var i = 0; i < search_bits.length; i++) {
         var bit = search_bits[i];
         if (bit.length > 0) {
-          var re = new RegExp('(' + bit + ')', "gi");
+          var re = new RegExp('(\\b' + bit + ')', "gi");
           match_name = match_name.replace(re,'<b>$1</b>');
         }
       }
