@@ -76,7 +76,7 @@ for (my $i = 0; $i < $num_hits; $i++) {
   my $doc = $hits->doc($i);
   my $cv_name = $doc->get('cv_name');
 
-  is($cv_name, 'PSI-MOD');
+  is($cv_name, 'psi_mod');
 }
 
 is($hits->doc(0)->get('name'), 'modified residue with a secondary neutral loss');

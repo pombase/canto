@@ -27,7 +27,7 @@ $gene_load->load($test_genes_file);
 
 @loaded_genes = $schema->resultset('Gene')->all();
 
-is(@loaded_genes, 9);
+is(@loaded_genes, 11);
 
 ok(grep {
   defined $_->primary_name() && $_->primary_name() eq 'cdc11' &&
