@@ -65,6 +65,10 @@ it accurately describes your gene:
             <td class="title">Definition</td>
             <td id="ferret-term-definition" class="term-definition"></td>
           </tr>
+          <tr id="ferret-term-synonym-row">
+            <td class="title">Synonym</td>
+            <td id="ferret-term-synonym"></td>
+          </tr>
           <tr id="ferret-term-comment-row">
             <td class="title">Comment</td>
             <td id="ferret-term-comment"></td>

@@ -28,6 +28,9 @@ var ferret_choose = {
   term_history : [undefined],
   term_detail_cache : {},
 
+  // the synonym we match when searching, if any
+  matching_synonym : undefined,
+
   initialise : function(current_component) {
     ferret_choose.ontology_complete_url =
       application_root + 'ws/lookup/go/' + current_component;
@@ -249,6 +252,15 @@ var ferret_choose = {
         $('#ferret-term-comment').html('');
       }
 
+      if (ferret_choose.matching_synonym && ferret_choose.term_history.length == 2) {
+        $('#ferret-term-synonym-row').show();
+        $('#ferret-term-synonym').html('<div class="term-synonym">' +
+                                       ferret_choose.matching_synonym + '</div>');
+      } else {
+        $('#ferret-term-synonym-row').hide();
+        $('#ferret-term-synonym').html('');
+      }
+
       ferret_choose.debug("render(): " + term_id + " " + term.name);
 
       var children = term.children;
@@ -319,6 +331,7 @@ $(document).ready(function() {
       var search_string = $('#ferret-term-input').val();
       var search_bits = search_string.split(/\s+/);
       var match_name = item.matching_synonym;
+      ferret_choose.matching_synonym = match_name;
       var synonym_extra = '';
       if (match_name) {
         synonym_extra = ' (synonym)';
