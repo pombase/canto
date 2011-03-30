@@ -740,8 +740,8 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
     interaction => \&annotation_interaction_edit,
   );
 
-  &{$type_dispatch{$annotation_config->{type}}}($self, $c, $gene,
-                                                $annotation_config);
+  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene,
+                                                    $annotation_config);
 }
 
 sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1) Form
@@ -923,15 +923,16 @@ sub _get_gene_resultset
                                             });
 }
 
-sub annotation_export : Chained('top') PathPart('annotation/export') Args(0)
+sub annotation_export : Chained('top') PathPart('annotation/export') Args(1)
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $annotation_type_name) = @_;
 
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
   my ($completed_count, $annotations_ref) =
-    PomCur::Curs::Utils::get_annotation_table($config, $schema);
+    PomCur::Curs::Utils::get_annotation_table($config, $schema,
+                                              $annotation_type_name);
   my @annotations = @$annotations_ref;
 
   my %common_values = %{$config->{export}->{gene_association_fields}};

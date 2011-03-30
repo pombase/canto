@@ -31,9 +31,13 @@ Annotate <% $annotation_type->{display_name} %>
   </ul>
 % }
 
+<div class="curs-annotation-tables sect">
+% for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,
-   annotation_type_list => @annotation_type_list,
+   annotation_type => $annotation_type,
    curs_root_path => $curs_root_path &>
+% }
+</div>
 
 <%init>
 my $current_gene_id = $c->stash()->{current_gene_id};

@@ -698,3 +698,7 @@ form .checkboxgroup span {
   padding-top: 5px;
   font-size: 90%;
 }
+
+.curs-annotation-tables .sect {
+  width: 80%
+}

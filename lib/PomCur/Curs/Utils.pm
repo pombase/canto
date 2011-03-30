@@ -40,10 +40,95 @@ use warnings;
 use Carp;
 use Moose;
 
+sub _make_ontology_annotation
+{
+  my $config = shift;
+  my $schema = shift;
+  my $annotation = shift;
+  my $ontology_adaptor = shift;
+  my $gene = shift;
+  my $gene_synonyms_string = shift;
+
+  my $data = $annotation->data();
+  my $term_ontid = $data->{term_ontid};
+#  next unless defined $term_ontid and length $term_ontid > 0;
+
+  my $annotation_type = $annotation->type();
+
+  my %annotation_types_config = %{$config->{annotation_types}};
+  my $annotation_type_config = $annotation_types_config{$annotation_type};
+  my $annotation_type_display_name = $annotation_type_config->{display_name};
+  my $annotation_type_abbreviation = $annotation_type_config->{abbreviation};
+
+  my %evidence_types = %{$config->{evidence_types}};
+
+  my $uniquename = $annotation->pub()->uniquename();
+  my $result =
+    $ontology_adaptor->web_service_lookup(ontology_name => $annotation_type,
+                                          search_string => $term_ontid);
+
+  my $term_name = $result->[0]->{name};
+  my $evidence_code = $data->{evidence_code};
+  my $with_gene_identifier = $data->{with_gene};
+
+  my $evidence_type_name;
+  my $needs_with;
+  if (defined $evidence_code) {
+    $evidence_type_name = $evidence_types{$evidence_code}->{name};
+    $needs_with = $evidence_types{$evidence_code}->{with_gene};
+  } else {
+    $evidence_type_name = undef;
+    $needs_with = 0;
+  }
+
+  my $with_gene;
+  my $with_gene_display_name;
+
+  if ($with_gene_identifier) {
+    $with_gene = $schema->find_with_type('Gene',
+                                         { primary_identifier =>
+                                             $with_gene_identifier });
+    $with_gene_display_name = $with_gene->display_name()
+  }
+
+  (my $short_date = $annotation->creation_date()) =~ s/-//g;
+
+  my $completed = defined $evidence_code &&
+    (!$needs_with || defined $with_gene_identifier);
+
+  return {
+    gene_identifier => $gene->primary_identifier(),
+    gene_name => $gene->primary_name() || '',
+    gene_name_or_identifier =>
+      $gene->primary_name() || $gene->primary_identifier(),
+    gene_product => $gene->product() // '',
+    gene_synonyms_string => $gene_synonyms_string,
+    qualifier => '',
+    annotation_type => $annotation_type,
+    annotation_type_display_name => $annotation_type_display_name,
+    annotation_type_abbreviation => $annotation_type_abbreviation // '',
+    annotation_id => $annotation->annotation_id(),
+    uniquename => $uniquename,
+    term_ontid => $term_ontid,
+    term_name => $term_name,
+    evidence_code => $evidence_code,
+    evidence_type_name => $evidence_type_name,
+    creation_date => $annotation->creation_date(),
+    creation_date_short => $short_date,
+    term_suggestion => $annotation->data()->{term_suggestion},
+    needs_with => $needs_with,
+    with_or_from_identifier => $with_gene_identifier,
+    with_or_from_display_name => $with_gene_display_name,
+    taxonid => $gene->organism()->taxonid(),
+    completed => $completed,
+  };
+}
+
 =head2 get_annotation_table
 
  Usage   : my @annotations =
-             PomCur::Curs::Utils::get_annotation_table($config, $schema);
+             PomCur::Curs::Utils::get_annotation_table($config, $schema,
+                                                       $annotation_type_name);
  Function: Return a table of the current annotations
  Args    : $config - the PomCur::Config object
            $schema - a PomCur::CursDB object
@@ -63,25 +148,29 @@ use Moose;
            annotation
 
 =cut
+
 sub get_annotation_table
 {
   my $config = shift;
   my $schema = shift;
+  my $annotation_type_name = shift;
 
   my @annotations = ();
 
-  my $gene_rs = $schema->resultset('Gene');
-
-  my %evidence_types = %{$config->{evidence_types}};
   my %annotation_types_config = %{$config->{annotation_types}};
+  my $annotation_type_config = $annotation_types_config{$annotation_type_name};
+  my $annotation_type_category = $annotation_type_config->{category};
 
-  my $go_adaptor = PomCur::Track::get_adaptor($config, 'go');
+  my $ontology_adaptor =
+    PomCur::Track::get_adaptor($config, 'ontology');
+
+  my $gene_rs = $schema->resultset('Gene');
   my $gene_adaptor = PomCur::Track::get_adaptor($config, 'gene');
 
   my $completed_count = 0;
 
   while (defined (my $gene = $gene_rs->next())) {
-    my $an_rs = $gene->annotations();
+    my $an_rs = $gene->annotations()->search({ type => $annotation_type_name });
 
     my $gene_lookup_results =
       $gene_adaptor->lookup([$gene->primary_identifier()]);
@@ -92,89 +181,13 @@ sub get_annotation_table
     }
     my $gene_synonyms_string = join '|', @{$found_results[0]->{synonyms}};
 
-    my %gene_annotations = ();
-
     while (defined (my $annotation = $an_rs->next())) {
-      my $data = $annotation->data();
-      my $term_ontid = $data->{term_ontid};
-      next unless defined $term_ontid and length $term_ontid > 0;
-
-      my $annotation_type = $annotation->type();
-      my $annotation_type_config = $annotation_types_config{$annotation_type};
-      my $annotation_type_display_name =
-        $annotation_type_config->{display_name};
-      my $annotation_type_abbreviation =
-        $annotation_type_config->{abbreviation};
-
-      my $uniquename = $annotation->pub()->uniquename();
-      my $result =
-        $go_adaptor->web_service_lookup(ontology_name => $annotation_type,
-                                        search_string => $term_ontid);
-
-      my $term_name = $result->[0]->{name};
-      my $evidence_code = $data->{evidence_code};
-      my $with_gene_identifier = $data->{with_gene};
-
-      my $evidence_type_name;
-      my $needs_with;
-      if (defined $evidence_code) {
-        $evidence_type_name = $evidence_types{$evidence_code}->{name};
-        $needs_with = $evidence_types{$evidence_code}->{with_gene};
-      } else {
-        $evidence_type_name = undef;
-        $needs_with = 0;
-      }
-
-      my $with_gene;
-      my $with_gene_display_name;
-
-      if ($with_gene_identifier) {
-        $with_gene = $schema->find_with_type('Gene',
-                                             { primary_identifier =>
-                                                 $with_gene_identifier });
-        $with_gene_display_name = $with_gene->display_name()
-      }
-
-      (my $short_date = $annotation->creation_date()) =~ s/-//g;
-
-      my $completed = defined $evidence_code &&
-          (!$needs_with || defined $with_gene_identifier);
-
-      $completed_count++ if $completed;
-
-      push @{$gene_annotations{$annotation_type}}, {
-        gene_identifier => $gene->primary_identifier(),
-        gene_name => $gene->primary_name() || '',
-        gene_name_or_identifier =>
-          $gene->primary_name() || $gene->primary_identifier(),
-        gene_product => $gene->product(),
-        gene_synonyms_string => $gene_synonyms_string,
-        qualifier => '',
-        annotation_type => $annotation_type,
-        annotation_type_display_name => $annotation_type_display_name,
-        annotation_type_abbreviation => $annotation_type_abbreviation,
-        annotation_id => $annotation->annotation_id(),
-        uniquename => $uniquename,
-        term_ontid => $term_ontid,
-        term_name => $term_name,
-        evidence_code => $evidence_code,
-        evidence_type_name => $evidence_type_name,
-        creation_date => $annotation->creation_date(),
-        creation_date_short => $short_date,
-        term_suggestion => $annotation->data()->{term_suggestion},
-        needs_with => $needs_with,
-        with_or_from_identifier => $with_gene_identifier,
-        with_or_from_display_name => $with_gene_display_name,
-        taxonid => $gene->organism()->taxonid(),
-        completed => $completed,
-      };
-    }
-
-    for my $annotation_type_config (@{$config->{annotation_type_list}}) {
-      my $annotation_type_name = $annotation_type_config->{name};
-
-      for my $annotation_data (@{$gene_annotations{$annotation_type_name}}) {
-        push @annotations, $annotation_data;
+      if ($annotation_type_category eq 'ontology') {
+        my $entry = _make_ontology_annotation($config, $schema, $annotation,
+                                              $ontology_adaptor,
+                                              $gene, $gene_synonyms_string);
+        push @annotations, $entry;
+        $completed_count++ if $entry->{completed};
       }
     }
   }

@@ -1,16 +1,14 @@
 <%args>
-@annotation_type_list
 $curs_root_path
+$annotation_type
 </%args>
 
 % if (@annotations) {
-<div id="term-suggestion" style="display: none">
-
-</div>
-
-<div>
-  Current annotations:
-</div>
+<div class="sect">
+  <div class="title sect-title">
+Current <% $annotation_type->{display_name} %> annotations
+  </div>
+  <div class="annotation-table sect-content">
 <table class="list">
   <thead>
     <tr>
@@ -106,6 +104,7 @@ $curs_root_path
 % }
   <a href="<% $download_action %>">Download table ...</a>
 </div>
+</div>
 % }
 
 <%init>
@@ -116,10 +115,12 @@ my $schema = $st->{schema};
 my $config = $c->config();
 
 my ($completed_count, $annotations_ref) =
-  PomCur::Curs::Utils::get_annotation_table($config, $schema);
+  PomCur::Curs::Utils::get_annotation_table($config, $schema,
+                                            $annotation_type->{name});
 my @annotations = @$annotations_ref;
 
-my $download_action = $curs_root_path . '/annotation/export';
+my $download_action =
+  $curs_root_path . '/annotation/export/' . $annotation_type->{name};
 my $delete_action = $curs_root_path . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 

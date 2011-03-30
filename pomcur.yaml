@@ -456,7 +456,7 @@ evidence_types:
 
 annotation_type_list:
   - name: molecular_function
-    type: ontology
+    category: ontology
     abbreviation: F
     very_short_display_name: 'function'
     short_display_name: 'molecular function'
@@ -480,7 +480,7 @@ annotation_type_list:
       As a general rule, molecular functions  correspond to single step
       activities performed by individual gene products.
   - name: biological_process
-    type: ontology
+    category: ontology
     abbreviation: P
     very_short_display_name: 'process'
     short_display_name: 'biological process'
@@ -512,7 +512,7 @@ annotation_type_list:
       term request because there is no translation machinery specifically for
       histone H2a.
   - name: cellular_component
-    type: ontology
+    category: ontology
     abbreviation: C
     very_short_display_name: 'component'
     short_display_name: 'cellular component'
@@ -538,7 +538,7 @@ annotation_type_list:
       proteins or nucleic acids. Cellular component also does not include
       multicellular anatomical terms.
   - name: phenotype
-    type: ontology
+    category: ontology
     very_short_display_name: 'phenotype'
     short_display_name: 'phenotype'
     display_name: 'phenotype'
@@ -558,7 +558,7 @@ annotation_type_list:
       as the influence of environmental factors and the interactions between
       the two.
   - name: post_translational_modification
-    type: ontology
+    category: ontology
     namespace: PSI-MOD
     display_name: 'post translational modification'
     broad_term_suggestions: >
@@ -570,12 +570,12 @@ annotation_type_list:
     evidence_codes:
       - IDA
   - name: genetic_interaction
-    type: interaction
+    category: interaction
     display_name: 'genetic interaction'
     evidence_codes:
       - IDA
   - name: physical_interaction
-    type: interaction
+    category: interaction
     display_name: 'physical interaction'
     evidence_codes:
       - IDA
