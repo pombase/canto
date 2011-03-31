@@ -48,7 +48,7 @@ use PomCur::Config;
 use PomCur::DBUtil;
 use PomCur::DB;
 
-use YAML::Tiny qw(Load Dump);
+use YAML qw(Load Dump);
 
 =head2 needs_app_init
 

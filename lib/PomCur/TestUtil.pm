@@ -14,7 +14,7 @@ use File::Copy qw(copy);
 use File::Copy::Recursive qw(dircopy);
 use File::Temp qw(tempdir);
 use File::Basename;
-use YAML::Tiny qw(LoadFile);
+use YAML qw(LoadFile);
 use Data::Rmap ':all';
 use Clone qw(clone);
 use XML::Simple;

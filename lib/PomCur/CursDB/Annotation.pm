@@ -120,7 +120,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');
 
-use YAML::Tiny qw(Load Dump);
+use YAML qw(Load Dump);
 
 __PACKAGE__->inflate_column('data', {
   inflate => sub { my @res = Load(shift); $res[0] },
