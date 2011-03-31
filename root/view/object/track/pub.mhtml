@@ -18,7 +18,7 @@ $object
 % }
 
 <div class="sect abstract">
-<span class="sect-title undisclosed-title"><a href="#"> Abstract </a> </span>
+<span class="sect-title disclosed-title"><a href="#"> Abstract </a> </span>
 <div class="sect-content">
   <% $abstract %>
 </div>
