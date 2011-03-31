@@ -158,6 +158,7 @@ sub _make_interaction_annotation
             phenotypes => '',
             comment => '',
             completed => 1,
+            annotation_id => $annotation->annotation_id(),
           };
     $entry;
   } @prey_data;
