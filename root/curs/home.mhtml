@@ -7,6 +7,7 @@ $pub
 @annotation_type_list
 </%args>
 
+<div id="curs-annotation-actions">
 % if ($state eq 'done') {
   <p>All genes annotated</p>
 % } else {
@@ -30,6 +31,7 @@ Annotate <% $annotation_type->{display_name} %>
 % }
   </ul>
 % }
+</div>
 
 <div class="curs-annotation-tables sect">
 % for my $annotation_type (@annotation_type_list) {
