@@ -191,7 +191,9 @@ sub load
 
         $cvterms{$term->acc()} = $cvterm;
 
-        $index->add_to_index($cvterm) if $index;
+        if (defined $index && !$term->is_relationship_type()) {
+          $index->add_to_index($cvterm);
+        }
       }
     };
 

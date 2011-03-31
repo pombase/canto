@@ -146,3 +146,29 @@ name: protein modification categorized by amino acid modified
 def: "A protein modification considered either as modified amino acid residues derived from natural amino acids, as a replacement by another natural amino acid, or as a replacement by an unnatural amino acid." [PubMed:18688235]
 subset: PSI-MOD slim
 is_a: MOD:00000 ! protein modification
+
+[Typedef]
+id: contains
+name: contains
+def: "'Entity A' contains 'Entity B' implies that 'Entity B' is a part of the structure of 'Entity A'." [PubMed:18688235]
+comment: The inverse relationship to "part of".
+is_transitive: true
+
+[Typedef]
+id: derives_from
+name: derives from
+def: "'Entity A' derives_from 'Entity B' implies that 'Entity A' is chemically derived from 'Entity B'." [PubMed:18688235]
+is_transitive: true
+
+[Typedef]
+id: has_functional_parent
+name: has functional parent
+def: "'Entity A' has_functional_parent 'Entity B' implies that 'Entity B' has at least one chacteristic group from which 'Entity A' can be derived by functional modification." [PubMed:18688235]
+comment: This relationship indicates that the formula and mass of the child are not inherited from the mass of the parent.
+is_transitive: true
+
+[Typedef]
+id: part_of
+name: part of
+def: "'Entity A' part_of 'Entity B' implies that 'Entity A' is a part of the structure of 'Entity B'." [PubMed:18688235]
+is_transitive: true
