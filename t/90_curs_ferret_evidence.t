@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::More tests => 14;
 
 use Data::Compare;
 
@@ -21,6 +21,7 @@ my @curs_objects = $track_schema->resultset('Curs')->all();
 is(@curs_objects, 1);
 
 my $curs_key = $curs_objects[0]->curs_key();
+my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
 my $app = $test_util->plack_app()->{app};
 
@@ -85,10 +86,43 @@ test_psgi $app, sub {
 
     my $redirect_url = $res->header('location');
 
+    is ($redirect_url, "$root_url/annotation/transfer/3");
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    like ($redirect_res->content(),
+          qr/Select the genes to transfer the annotation to/);
+  }
+
+  # test transferring annotation
+  {
+    my $cdc11 = $curs_schema->find_with_type('Gene',
+                                              { primary_name => 'cdc11' });
+    my $gene_2 =
+      $curs_schema->find_with_type('Gene',
+                                   { primary_identifier => 'SPAC3A11.14c' });
+
+    my $an_rs = $curs_schema->resultset('Annotation');
+    is ($an_rs->count(), 3);
+
+    my $uri = new URI("$root_url/annotation/transfer/3");
+    $uri->query_form('transfer' => 'transfer-submit',
+                     dest => [$cdc11->gene_id(), $gene_2->gene_id()]);
+
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
     is ($redirect_url, "$root_url");
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
+
+    is ($an_rs->count(), 5);
 
     like ($redirect_res->content(), $new_annotation_re);
   }

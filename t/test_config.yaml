@@ -48,7 +48,7 @@ test_config:
            - "SPCC1739.10"
            - "SPAC3A11.14c"
          annotations:
-           - type: cellular_component
+           - type: biological_process
              status: new
              genes(Gene:primary_identifier):
                - SPCC1739.10
@@ -75,7 +75,7 @@ test_config:
          genes:
            - "SPCC576.16c"
          annotations:
-           - type: cellular_component
+           - type: biological_process
              status: new
              genes(Gene:primary_identifier):
                - SPCC576.16c
@@ -92,7 +92,7 @@ test_config:
          genes:
            - "SPCC576.16c"
          annotations:
-           - type: cellular_component
+           - type: biological_process
              status: new
              genes(Gene:primary_identifier):
                - SPCC576.16c

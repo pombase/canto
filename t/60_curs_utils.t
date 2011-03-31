@@ -14,11 +14,12 @@ my $schema = $test_util->track_schema();
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0005');
 
 my ($completed_count, $annotations_ref) =
-  PomCur::Curs::Utils::get_annotation_table($config, $curs_schema);
+  PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
+                                            'biological_process');
 
 my @annotations = @$annotations_ref;
 
-is (@annotations, 2);
+is (@annotations, 1);
 
 is ($annotations[0]->{gene_identifier}, 'SPCC1739.10');
 is ($annotations[0]->{term_ontid}, 'GO:0055085');

@@ -29,26 +29,12 @@ test_psgi $app, sub {
 
   # test submitting a name and email address
   {
-    my $uri = new URI("$root_url/annotation/export");
+    my $uri = new URI("$root_url/annotation/export/cellular_component");
 
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);
 
-    my $exported = join ("	", ("GeneDB_Spombe",
-                                    "SPCC1739.10",
-                                    "SPCC1739.10",
-                                    "",
-                                    "GO:0055085",
-                                    "PMID:18426916",
-                                    "IMP",
-                                    "",
-                                    "C",
-                                    "conserved fungal protein",
-                                    "",
-                                    "gene",
-                                    "taxon:4896",
-                                    "20100102",
-                                    "GeneDB_Spombe")) . "\n";
+    my $exported = '';
 
     $exported .= join ("	", ("GeneDB_Spombe",
                                     "SPAC3A11.14c",

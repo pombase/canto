@@ -46,7 +46,7 @@ is_deeply ($annotation,
              creation_date => "2010-01-02",
              term_ontid => "GO:0055085",
              status => "new",
-             type => "cellular_component",
+             type => "biological_process",
              publication => 'PMID:19756689'
            }
          );
