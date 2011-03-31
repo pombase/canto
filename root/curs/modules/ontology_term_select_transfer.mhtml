@@ -1,0 +1,14 @@
+<%args>
+$form
+</%args>
+
+<div id="phenotype-ferret">
+  <div class="curs-box">
+    <div class="curs-box-title">
+      Select the genes to transfer the annotation to ...
+    </div>
+    <div class="curs-box-body">
+<% $form %>
+    </div>
+  </div>
+</div>

@@ -744,6 +744,27 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
                                                     $annotation_config);
 }
 
+# redirect to the annotation transfer page only if we've just created an
+# ontology annotation and we have more than one gene
+sub _maybe_transfer_annotation
+{
+  my $c = shift;
+  my $annotation = shift;
+  my $annotation_config = shift;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $gene_count = $schema->resultset('Gene')->count();
+
+  if ($annotation_config->{category} eq 'ontology' && $gene_count > 1) {
+    _redirect_and_detach($c, 'annotation', 'transfer',
+                         $annotation->annotation_id());
+  } else {
+    _redirect_and_detach($c);
+  }
+}
+
 sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1) Form
 {
   my ($self, $c, $annotation_id) = @_;
@@ -824,8 +845,89 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     if ($with_gene) {
       _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
     } else {
-      _redirect_and_detach($c);
+      _maybe_transfer_annotation($c, $annotation, $annotation_config);
     }
+  }
+}
+
+sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1) Form
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+  my $annotation_type_name = $annotation->type();
+
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $gene = $annotation->genes()->first();
+  my $gene_display_name = $gene->display_name();
+
+  my $annotation_data = $annotation->data();
+
+  my $module_display_name = $annotation_config->{display_name};
+  $st->{title} = "Transfer annotation from $gene_display_name";
+  $st->{template} = "curs/modules/${annotation_type_name}_transfer.mhtml";
+
+  my $form = $self->form();
+
+  $form->auto_fieldset(0);
+
+  my $genes_rs = $schema->resultset('Gene');
+  my @options = ();
+
+  while (defined (my $other_gene = $genes_rs->next())) {
+    next if $gene->gene_id() == $other_gene->gene_id();
+
+    push @options, { value => $other_gene->gene_id(),
+                     label => $other_gene->long_display_name() };
+  }
+
+  my @all_elements = (
+      {
+        name => 'dest', label => 'dest',
+        type => 'Checkboxgroup',
+        container_tag => 'div',
+        label => '',
+        options => [@options],
+      },
+      {
+        name => 'transfer-submit', type => 'Submit',
+      }
+    );
+
+  $form->elements([@all_elements]);
+  $form->process();
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $submit_value = $form->param_value('transfer-submit');
+
+    my $guard = $schema->txn_scope_guard;
+
+    my @dest_params = @{$form->param_array('dest')};
+
+    for my $dest_param (@dest_params) {
+      my $dest_gene = $schema->find_with_type('Gene', $dest_param);
+
+      my $new_annotation =
+        $schema->create_with_type('Annotation',
+                                  {
+                                    type => $annotation_type_name,
+                                    status => 'new',
+                                    pub => $annotation->pub(),
+                                    creation_date => _get_iso_date(),
+                                    data => $annotation_data,
+                                  });
+      $new_annotation->set_genes($dest_gene);
+    };
+
+    $guard->commit();
+
+    _redirect_and_detach($c);
   }
 }
 
@@ -901,7 +1003,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
     $annotation->data($data);
     $annotation->update();
 
-    _redirect_and_detach($c);
+    _maybe_transfer_annotation($c, $annotation, $annotation_config);
   }
 }
 
