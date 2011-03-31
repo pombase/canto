@@ -21,9 +21,6 @@ Current <% $annotation_type->{display_name} %> annotations
         Gene name
       </th>
       <th>
-        Annotation type
-      </th>
-      <th>
         Term ID
       </th>
       <th>
@@ -51,9 +48,6 @@ Current <% $annotation_type->{display_name} %> annotations
     </td>
     <td>
       <% $row->{gene_name} %>
-    </td>
-    <td>
-      <% $row->{annotation_type_display_name} %>
     </td>
     <td>
       <% $row->{term_ontid} %>
