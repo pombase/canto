@@ -96,8 +96,6 @@ Current <% $annotation_type->{display_name} %> annotations
   </tr>
 % }
 </table>
-
-<div>
 % if ($some_incomplete) {
 <div style="font-size: 85%; margin: 5px 0px 5px 0px;">
   Note that some of the annotations are incomplete, and only complete
