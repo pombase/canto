@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 29;
+use Test::More tests => 132;
 
 use Data::Compare;
 
@@ -13,9 +13,10 @@ use PomCur::TestUtil;
 use PomCur::Controller::Curs;
 
 my $test_util = PomCur::TestUtil->new();
+my $config = $test_util->config();
+
 $test_util->init_test('curs_annotations_1');
 
-my $config = $test_util->config();
 my $track_schema = $test_util->track_schema();
 my @curs_objects = $track_schema->resultset('Curs')->all();
 is(@curs_objects, 1);
@@ -27,11 +28,27 @@ my $app = $test_util->plack_app()->{app};
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
+my @annotation_type_list = @{$config->{annotation_type_list}};
+
+for my $annotation_type (@annotation_type_list) {
+
+  my $annotation_type_name = $annotation_type->{name};
+
+  next unless $annotation_type->{category} eq 'ontology';
+
+  my $cv_name = $annotation_type->{namespace} // $annotation_type->{name};
+  my $cv = $track_schema->find_with_type('Cv', { name => $cv_name });
+
+  my $new_term = $track_schema->resultset('Cvterm')
+    ->search({ is_relationshiptype => 0, cv_id => $cv->cv_id() },
+             { order_by => 'name' })->first();
+
+
 test_psgi $app, sub {
   my $cb = shift;
 
-  my $term_id = 'GO:0080170';
-  my $new_annotation_re = qr/<td>\s*SPCC1739.10\s*<\/td>.*$term_id.*IMP/s;
+  my $term_db_accession = $new_term->db_accession();
+  my $new_annotation_re = qr/<td>\s*SPCC1739.10\s*<\/td>.*$term_db_accession.*IMP/s;
 
   {
     my $uri = new URI("$root_url");
@@ -48,13 +65,17 @@ test_psgi $app, sub {
 
   }
 
+
+  my $new_annotation = undef;
+  my $new_annotation_id = undef;
+
   # test proceeding after choosing a term
   {
-    my $term_id = 'GO:0080170';
-    my $uri = new URI("$root_url/annotation/edit/2/biological_process");
-    $uri->query_form('ferret-term-id' => $term_id,
+    my $uri = new URI("$root_url/annotation/edit/2/$annotation_type_name");
+
+    $uri->query_form('ferret-term-id' => $term_db_accession,
                      'ferret-submit' => 'Proceed',
-                     'ferret-term-entry' => 'transport');
+                     'ferret-term-entry' => $new_term->name());
 
     my $req = HTTP::Request->new(GET => $uri);
 
@@ -64,24 +85,25 @@ test_psgi $app, sub {
 
     my $redirect_url = $res->header('location');
 
-    is ($redirect_url, "$root_url/annotation/evidence/3");
+    $new_annotation_id = $PomCur::Controller::Curs::_debug_annotation_id;
+    is ($redirect_url, "$root_url/annotation/evidence/$new_annotation_id");
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/Choose evidence for $term_id/);
+    like ($redirect_res->content(), qr/Choose evidence for $term_db_accession/);
 
-    my $annotation =
-      $curs_schema->find_with_type('Annotation', 3);
+    $new_annotation =
+      $curs_schema->find_with_type('Annotation', $new_annotation_id);
 
-    is ($annotation->genes(), 1);
-    is (($annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
-    is ($annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($new_annotation->genes(), 1);
+    is (($new_annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
+    is ($new_annotation->data()->{term_ontid}, $new_term->db_accession());
   }
 
   # test adding evidence to an annotation
   {
-    my $uri = new URI("$root_url/annotation/evidence/3");
+    my $uri = new URI("$root_url/annotation/evidence/$new_annotation_id");
     $uri->query_form('evidence-select' => 'IMP',
                      'evidence-proceed' => 'Proceed');
 
@@ -93,7 +115,7 @@ test_psgi $app, sub {
 
     my $redirect_url = $res->header('location');
 
-    is ($redirect_url, "$root_url/annotation/transfer/3");
+    is ($redirect_url, "$root_url/annotation/transfer/$new_annotation_id");
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
@@ -102,11 +124,11 @@ test_psgi $app, sub {
           qr/Select the genes to transfer the annotation to/);
 
     my $annotation =
-      $curs_schema->find_with_type('Annotation', 3);
+      $curs_schema->find_with_type('Annotation', $new_annotation_id);
 
     is ($annotation->genes(), 1);
     is (($annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
-    is ($annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($annotation->data()->{term_ontid}, $new_term->db_accession());
     is ($annotation->data()->{evidence_code}, 'IMP');
   }
 
@@ -115,15 +137,9 @@ test_psgi $app, sub {
     my $cdc11 = $curs_schema->find_with_type('Gene',
                                               { primary_name => 'cdc11' });
     my $gene_2 =
-      $curs_schema->find_with_type('Gene',
-                                   { primary_identifier => 'SPAC3A11.14c' });
-
-    my $an_rs = $curs_schema->resultset('Annotation');
-    is ($an_rs->count(), 3);
-
-    my $uri = new URI("$root_url/annotation/transfer/3");
+    my $uri = new URI("$root_url/annotation/transfer/$new_annotation_id");
     $uri->query_form('transfer' => 'transfer-submit',
-                     dest => [$cdc11->gene_id(), $gene_2->gene_id()]);
+                     dest => [$cdc11->gene_id()]);
 
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);
@@ -137,26 +153,31 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    is ($an_rs->count(), 5);
-
     like ($redirect_res->content(), $new_annotation_re);
 
     my $annotation =
-      $curs_schema->find_with_type('Annotation', 3);
+      $curs_schema->find_with_type('Annotation', $new_annotation_id);
 
     is ($annotation->genes(), 1);
     is (($annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
-    is ($annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($annotation->data()->{term_ontid}, $new_term->db_accession());
     is ($annotation->data()->{evidence_code}, 'IMP');
 
     my $new_annotation =
-      $curs_schema->find_with_type('Annotation', 4);
+      $curs_schema->find_with_type('Annotation', $new_annotation_id + 1);
 
     is ($new_annotation->genes(), 1);
     is (($new_annotation->genes())[0]->primary_identifier(), "SPCC1739.11c");
-    is ($new_annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($new_annotation->data()->{term_ontid}, $new_term->db_accession());
     is ($new_annotation->data()->{evidence_code}, 'IMP');
   }
+  };
+
 };
+
+my $an_rs = $curs_schema->resultset('Annotation');
+is ($an_rs->count(), 12);
+
+sleep 100;
 
 done_testing;

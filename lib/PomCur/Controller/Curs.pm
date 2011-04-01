@@ -68,6 +68,9 @@ my %state_dispatch = (
   DONE, 'home',
 );
 
+# used by the tests to find the most reecently created annotation
+our $_debug_annotation_id = undef;
+
 =head2 begin
 
  Action to set up stash contents for curs
@@ -635,6 +638,7 @@ sub annotation_ontology_edit
     $guard->commit();
 
     my $annotation_id = $annotation->annotation_id();
+    $_debug_annotation_id = $annotation_id;
 
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }
@@ -719,6 +723,7 @@ sub annotation_interaction_edit
     $guard->commit();
 
     my $annotation_id = $annotation->annotation_id();
+    $_debug_annotation_id = $annotation_id;
 
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }

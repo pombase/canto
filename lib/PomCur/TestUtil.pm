@@ -78,6 +78,14 @@ sub new
     root_dir => $root_dir,
   };
 
+  my $app_name = lc PomCur::Config::get_application_name();
+  my $config = PomCur::Config->new("$root_dir/$app_name.yaml");
+
+  my $test_config_file_name = "$root_dir/" . $config->{test_config_file};
+  $config->merge_config($test_config_file_name);
+
+  $self->{config} = $config;
+
   return bless $self, $class;
 }
 
@@ -125,23 +133,15 @@ sub init_test
   local $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
 
   my $root_dir = $self->{root_dir};
-
   my $app_name = lc PomCur::Config::get_application_name();
-
-  my $config = PomCur::Config->new("$root_dir/$app_name.yaml");
+  my $config = $self->{config};
 
   my $test_config_file_name = "$root_dir/" . $config->{test_config_file};
-  $config->merge_config($test_config_file_name);
-
   my $test_config = LoadFile($test_config_file_name)->{test_config};
-
-  my $temp_dir = temp_dir();
 
   if (!exists $test_config->{test_cases}->{$test_env_type}) {
     die "no test case configured for '$test_env_type'\n";
   }
-
-  $self->{config} = $config;
 
   my $data_dir = $test_config->{data_dir};
 
@@ -150,6 +150,8 @@ sub init_test
 
     $config->{track_db_template_file} = "$root_dir/$track_db_file";
   }
+
+  my $temp_dir = temp_dir();
 
   my $cwd = getcwd();
   chdir ($root_dir);
