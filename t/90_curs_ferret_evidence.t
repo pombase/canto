@@ -178,6 +178,4 @@ test_psgi $app, sub {
 my $an_rs = $curs_schema->resultset('Annotation');
 is ($an_rs->count(), 12);
 
-sleep 100;
-
 done_testing;
