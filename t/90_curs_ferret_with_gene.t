@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 22;
 
 use Data::Compare;
 
@@ -120,18 +120,22 @@ test_psgi $app, sub {
 
   # test transferring annotation
   {
-    my $cdc11 = $curs_schema->find_with_type('Gene',
-                                              { primary_name => 'cdc11' });
-    my $gene_2 =
+    my $gene_1 =
       $curs_schema->find_with_type('Gene',
-                                   { primary_identifier => 'SPAC3A11.14c' });
+                                   { primary_name => 'cdc11' });
 
     my $an_rs = $curs_schema->resultset('Annotation');
     is ($an_rs->count(), 3);
 
+    while (defined (my $annotation = $an_rs->next())) {
+      ok(!grep {
+        $_->primary_identifier() eq $gene_1->primary_identifier()
+      } $annotation->genes());
+    }
+
     my $uri = new URI("$root_url/annotation/transfer/3");
     $uri->query_form('transfer' => 'transfer-submit',
-                     dest => [$cdc11->gene_id(), $gene_2->gene_id()]);
+                     dest => [$gene_1->gene_id()]);
 
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);
@@ -145,11 +149,20 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), $new_annotation_re);
-
-    is ($an_rs->count(), 5);
+    is ($an_rs->count(), 4);
 
     like ($redirect_res->content(), $new_annotation_re);
+
+    my $original_annotation =
+      $curs_schema->find_with_type('Annotation', 3);
+
+    my $new_annotation =
+      $curs_schema->find_with_type('Annotation', 4);
+
+    is($original_annotation->genes(), 1);
+    is($new_annotation->genes(), 1);
+
+    is(($new_annotation->genes())[0]->primary_name(), "cdc11");
   }
 };
 
