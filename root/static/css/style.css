@@ -706,3 +706,11 @@ form .checkboxgroup span {
   font-size: 95%;
 }
 
+.curs-annotation-incomplete-message {
+  padding-left: 10px;
+  font-size: 85%;
+}
+.curs-annotation-download {
+  padding: 10px;
+  font-size: 90%;
+}

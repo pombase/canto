@@ -91,19 +91,16 @@ Current <% $annotation_type->{display_name} %> annotations
 % }
 </table>
 % if ($some_incomplete) {
-<div style="font-size: 85%; margin: 5px 0px 5px 0px;">
+<div class="curs-annotation-incomplete-message">
   Note that some of the annotations are incomplete, and only complete
-  annotations are included in the downloaded table. 
+  annotations are included in the downloaded table.
 </div>
 % }
-  <a href="<% $download_action %>">Download table ...</a>
 </div>
 </div>
 % }
 
 <%init>
-my $download_action =
-  $curs_root_path . '/annotation/export/' . $annotation_type->{name};
 my $delete_action = $curs_root_path . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 

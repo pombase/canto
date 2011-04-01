@@ -38,9 +38,36 @@ Annotate <% $annotation_type->{display_name} %>
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
    curs_root_path => $curs_root_path &>
+
+% _increment_annotation_count($annotation_type->{name});
 % }
+
+<div class="curs-annotation-download">
+  <a href="<% $download_action %>">Download all annotation (Zip format) ...</a>
 </div>
+</div>
+
+
 
 <%init>
 my $current_gene_id = $c->stash()->{current_gene_id};
+
+my $annotation_count = 0;
+
+sub _increment_annotation_count
+{
+  my $annotation_type_name = shift;
+  my $annotation_count_ref = shift;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $rs = $schema->resultset('Annotation')
+               ->search({ type => $annotation_type_name });
+
+  $$annotation_count_ref += $rs->count();
+}
+
+my $download_action = $curs_root_path . '/annotation/zipexport';
+
 </%init>
