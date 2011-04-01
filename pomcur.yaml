@@ -617,6 +617,8 @@ annotation_type_list:
     display_name: 'post translational modification'
     broad_term_suggestions: >
       PLACEHOLDER
+    specific_term_examples: >
+      PLACEHOLDER
     help_text: >
       PLACEHOLDER
     more_help_text: >
