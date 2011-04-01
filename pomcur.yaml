@@ -29,43 +29,43 @@ db_initial_data:
             dbxref:
               accession: taxonId
               db:
-                name: PomCur Track
+                name: PomCur
       - name: cvterm_property_type
         cvterms:
           - name: comment
             dbxref:
               accession: comment
               db:
-                name: PomCur Track
+                name: PomCur
       - name: synonym_type
         cvterms:
           - name: broad
             dbxref:
               accession: broad
               db:
-                name: PomCur Track
+                name: PomCur
           - name: narrow
             dbxref:
               accession: narrow
               db:
-                name: PomCur Track
+                name: PomCur
           - name: exact
             dbxref:
               accession: exact
               db:
-                name: PomCur Track
+                name: PomCur
           - name: related
             dbxref:
               accession: related
               db:
-                name: PomCur Track
+                name: PomCur
       - name: PomCur publication type
         cvterms:
           - name: unknown
             dbxref:
               accession: unknown
               db:
-                name: PomCur Track
+                name: PomCur
       - name: PomCur publication triage status
         cvterms:
           - name: New
@@ -73,13 +73,13 @@ db_initial_data:
             dbxref:
               accession: new
               db:
-                name: PomCur Track
+                name: PomCur
           - name: Curatable
             definition: Triage status for papers that can be curated.
             dbxref:
               accession: curatable
               db:
-                name: PomCur Track
+                name: PomCur
           - name: Not English
             definition: >
                 Triage status for a paper that will not be curated because
@@ -87,7 +87,7 @@ db_initial_data:
             dbxref:
               accession: not_english
               db:
-                name: PomCur Track
+                name: PomCur
           - name: Methods paper
             definition: >
                 Triage status for a paper that will not be curated because it
@@ -95,7 +95,7 @@ db_initial_data:
             dbxref:
               accession: methods_paper
               db:
-                name: PomCur Track
+                name: PomCur
           - name: Wrong organism
             definition: >
                 Triage status for a paper that will not be curated because the
@@ -103,7 +103,7 @@ db_initial_data:
             dbxref:
               accession: wrong_organism
               db:
-                name: PomCur Track
+                name: PomCur
           - name: News and views
             definition: >
                 Triage status for a publication that will not be curated because
@@ -111,7 +111,7 @@ db_initial_data:
             dbxref:
               accession: news_and_views
               db:
-                name: PomCur Track
+                name: PomCur
           - name: Other
             definition: >
                 Triage status for a publication that will not be curated for
@@ -119,48 +119,48 @@ db_initial_data:
             dbxref:
               accession: other
               db:
-                name: PomCur Track
+                name: PomCur
       - name: PomCur user types
         cvterms:
           - name: user
             dbxref:
               accession: user
               db:
-                name: PomCur Track
+                name: PomCur
           - name: admin
             dbxref:
               accession: admin
               db:
-                name: PomCur Track
+                name: PomCur
       - name: PomCur publication curation status
         cvterms:
           - name: not started
             dbxref:
               accession: admin
               db:
-                name: PomCur Track
+                name: PomCur
           - name: complete
             dbxref:
               accession: admin
               db:
-                name: PomCur Track
+                name: PomCur
       - name: PomCur publication experiment types
         cvterms:
           - name: Genome wide
             dbxref:
               accession: genome_wide
               db:
-                name: PomCur Track
+                name: PomCur
           - name: High throughput
             dbxref:
               accession: high_throughput
               db:
-                name: PomCur Track
+                name: PomCur
           - name: Computational analysis
             dbxref:
               accession: computational_analysis
               db:
-                name: PomCur Track
+                name: PomCur
       # possibilities for the type_id of pubprops
       - name: PomCur publication property types
         cvterms:
@@ -168,7 +168,7 @@ db_initial_data:
             dbxref:
               accession: experiment_type
               db:
-                name: PomCur Track
+                name: PomCur
 
 class_info:
   track:

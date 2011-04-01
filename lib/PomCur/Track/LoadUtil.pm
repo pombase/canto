@@ -251,7 +251,7 @@ sub get_cvterm
     $db_name = $1;
     $accession = $2
   } else {
-    $db_name = 'PomCur Track';
+    $db_name = 'PomCur';
     $accession = $term_name;
   }
 
