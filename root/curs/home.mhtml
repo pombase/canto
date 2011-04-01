@@ -39,12 +39,14 @@ Annotate <% $annotation_type->{display_name} %>
    annotation_type => $annotation_type,
    curs_root_path => $curs_root_path &>
 
-% _increment_annotation_count($annotation_type->{name});
+% _increment_annotation_count($annotation_type->{name}, \$annotation_count);
 % }
 
+% if ($annotation_count > 0) {
 <div class="curs-annotation-download">
   <a href="<% $download_action %>">Download all annotation (Zip format) ...</a>
 </div>
+% }
 </div>
 
 
