@@ -42,6 +42,9 @@ use Moose;
 
 with 'PomCur::Role::MetadataAccess';
 
+use Archive::Zip qw(:CONSTANTS :ERROR_CODES);
+use IO::String;
+
 use PomCur::Track;
 use PomCur::Curs::Utils;
 
@@ -1031,12 +1034,11 @@ sub _get_gene_resultset
                                             });
 }
 
-sub annotation_export : Chained('top') PathPart('annotation/export') Args(1)
+sub _get_annotation_table_tsv
 {
-  my ($self, $c, $annotation_type_name) = @_;
-
-  my $schema = $c->stash()->{schema};
-  my $config = $c->config();
+  my $config = shift;
+  my $schema = shift;
+  my $annotation_type_name = shift;
 
   my ($completed_count, $annotations_ref, $columns_ref) =
     PomCur::Curs::Utils::get_annotation_table($config, $schema,
@@ -1077,8 +1079,114 @@ sub annotation_export : Chained('top') PathPart('annotation/export') Args(1)
     $results .= "\n";
   }
 
+  return $results;
+}
+
+sub annotation_export : Chained('top') PathPart('annotation/export') Args(1)
+{
+  my ($self, $c, $annotation_type_name) = @_;
+
+  my $schema = $c->stash()->{schema};
+  my $config = $c->config();
+
+  my $results = _get_annotation_table_tsv($config, $schema, $annotation_type_name);
+
   $c->res->content_type('text/plain');
   $c->res->body($results);
+}
+
+=head2 get_all_annotation_tsv
+
+ Usage   : my $results_hash = get_all_annotation_tsv($config, $schema);
+ Function: Return a hashref containing all the current annotations in tab
+           separated values format.  The hash has the form:
+             { 'cellular_component' => "...",
+               'phenotype' => "..." }
+           where the values are the TSV strings.
+ Args    : $config - the Config object
+           $schema - the CursDB object
+ Returns : a hashref of results
+
+=cut
+sub get_all_annotation_tsv
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my %results = ();
+
+  for my $annotation_type (@{$config->{annotation_type_list}}) {
+    my $annotation_type_name = $annotation_type->{name};
+    my $results =
+      _get_annotation_table_tsv($config, $schema, $annotation_type_name);
+    if (length $results > 0) {
+      $results{$annotation_type_name} = $results;
+    }
+  }
+
+  return \%results;
+}
+
+=head2 get_all_annotation_zip
+
+ Usage   : my $zip_data = get_all_annotation_zip($config, $schema);
+ Function: return a data string containing all the annotations, stored in
+           Zip format
+ Args    : $config - the Config object
+           $schema - the CursDB object
+ Returns : the Zip data, or undef if there are no annotations
+
+=cut
+sub get_all_annotation_zip
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my $results = get_all_annotation_tsv($config, $schema);
+
+  if (keys %$results > 0) {
+    my $zip = Archive::Zip->new();
+    for my $annotation_type_name (keys %$results) {
+      my $annotation_tsv =
+        _get_annotation_table_tsv($config, $schema, $annotation_type_name);
+      my $file_name = "$annotation_type_name.tsv";
+      my $member = $zip->addString($annotation_tsv, $file_name);
+      $member->desiredCompressionMethod(COMPRESSION_DEFLATED);
+    }
+
+    my $io = IO::String->new();
+
+    $zip->writeToFileHandle($io);
+
+    return ${$io->string_ref()}
+  } else {
+    return undef;
+  }
+}
+
+sub annotation_zipexport : Chained('top') PathPart('annotation/zipexport') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $schema = $c->stash()->{schema};
+  my $config = $c->config();
+
+  my $zip_data = get_all_annotation_zip($config, $schema);
+
+  if (defined $zip_data) {
+    my $st = $c->stash();
+    my $pub_uniquename = $st->{pub}->uniquename();
+
+    my $zip_file_name =
+      'curation_' . $st->{curs_key} . '_' . $pub_uniquename . '.zip';
+
+    $c->res->headers->header("Content-Disposition" =>
+                               "attachment; filename=$zip_file_name");
+    $c->res->content_type('application/zip');
+    $c->res->body($zip_data);
+  } else {
+    die "annotation_zipexport() called with no results to export";
+  }
 }
 
 1;

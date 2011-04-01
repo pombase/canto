@@ -57,6 +57,7 @@ requires 'Text::CSV';
 requires 'JSON';
 requires 'Try::Tiny';
 requires 'Text::Similarity';
+requires 'Archive::Zip';
 
 requires 'Config::General';
 
