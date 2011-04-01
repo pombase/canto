@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 35;
 
 use Data::Compare;
 
@@ -73,6 +73,13 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     like ($redirect_res->content(), qr/Choose evidence for $term_id/);
+
+    my $annotation =
+      $curs_schema->find_with_type('Annotation', 3);
+
+    is ($annotation->genes(), 1);
+    is (($annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
+    is ($annotation->data()->{term_ontid}, 'GO:0080170');
   }
 
   # test adding evidence to an annotation
@@ -93,6 +100,12 @@ test_psgi $app, sub {
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
+
+    my $annotation =
+      $curs_schema->find_with_type('Annotation', 3);
+
+    is ($annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($annotation->data()->{evidence_code}, 'IPI');
   }
 
   # test setting "with gene"
@@ -116,6 +129,13 @@ test_psgi $app, sub {
 
     like ($redirect_res->content(),
           qr/Select the genes to transfer the annotation to/);
+
+    my $annotation =
+      $curs_schema->find_with_type('Annotation', 3);
+
+    is ($annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($annotation->data()->{evidence_code}, 'IPI');
+    is ($annotation->data()->{with_gene}, 'SPCC1739.11c');
   }
 
   # test transferring annotation
@@ -156,13 +176,18 @@ test_psgi $app, sub {
     my $original_annotation =
       $curs_schema->find_with_type('Annotation', 3);
 
+    is ($original_annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($original_annotation->data()->{evidence_code}, 'IPI');
+    is ($original_annotation->data()->{with_gene}, 'SPCC1739.11c');
+
     my $new_annotation =
       $curs_schema->find_with_type('Annotation', 4);
 
-    is($original_annotation->genes(), 1);
-    is($new_annotation->genes(), 1);
-
-    is(($new_annotation->genes())[0]->primary_name(), "cdc11");
+    is ($new_annotation->genes(), 1);
+    is (($new_annotation->genes())[0]->primary_name(), "cdc11");
+    is ($new_annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($new_annotation->data()->{evidence_code}, 'IPI');
+    is ($new_annotation->data()->{with_gene}, 'SPCC1739.11c');
   }
 };
 

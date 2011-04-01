@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 29;
 
 use Data::Compare;
 
@@ -70,6 +70,13 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     like ($redirect_res->content(), qr/Choose evidence for $term_id/);
+
+    my $annotation =
+      $curs_schema->find_with_type('Annotation', 3);
+
+    is ($annotation->genes(), 1);
+    is (($annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
+    is ($annotation->data()->{term_ontid}, 'GO:0080170');
   }
 
   # test adding evidence to an annotation
@@ -93,6 +100,14 @@ test_psgi $app, sub {
 
     like ($redirect_res->content(),
           qr/Select the genes to transfer the annotation to/);
+
+    my $annotation =
+      $curs_schema->find_with_type('Annotation', 3);
+
+    is ($annotation->genes(), 1);
+    is (($annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
+    is ($annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($annotation->data()->{evidence_code}, 'IMP');
   }
 
   # test transferring annotation
@@ -125,6 +140,22 @@ test_psgi $app, sub {
     is ($an_rs->count(), 5);
 
     like ($redirect_res->content(), $new_annotation_re);
+
+    my $annotation =
+      $curs_schema->find_with_type('Annotation', 3);
+
+    is ($annotation->genes(), 1);
+    is (($annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
+    is ($annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($annotation->data()->{evidence_code}, 'IMP');
+
+    my $new_annotation =
+      $curs_schema->find_with_type('Annotation', 4);
+
+    is ($new_annotation->genes(), 1);
+    is (($new_annotation->genes())[0]->primary_identifier(), "SPCC1739.11c");
+    is ($new_annotation->data()->{term_ontid}, 'GO:0080170');
+    is ($new_annotation->data()->{evidence_code}, 'IMP');
   }
 };
 
