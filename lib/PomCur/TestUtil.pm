@@ -220,7 +220,7 @@ sub plack_app
   }
 
   my $cookie_jar = HTTP::Cookies->new(
-    file => '/tmp/pomcur_web_test_$$.cookies',
+    file => "/tmp/pomcur_web_test_$$.cookies",
     autosave => 1,
   );
 
