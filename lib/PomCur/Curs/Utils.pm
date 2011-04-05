@@ -198,6 +198,7 @@ sub get_annotation_table
   my $config = shift;
   my $schema = shift;
   my $annotation_type_name = shift;
+  my $annotation = shift;
 
   my @annotations = ();
 
@@ -213,8 +214,16 @@ sub get_annotation_table
 
   my $completed_count = 0;
 
+  my %constraints = (
+    type => $annotation_type_name,
+  );
+
+  if ($annotation) {
+    $constraints{annotation_id} = $annotation->annotation_id();
+  }
+
   while (defined (my $gene = $gene_rs->next())) {
-    my $an_rs = $gene->annotations()->search({ type => $annotation_type_name });
+    my $an_rs = $gene->annotations()->search({ %constraints });
 
     my $gene_lookup_results =
       $gene_adaptor->lookup([$gene->primary_identifier()]);

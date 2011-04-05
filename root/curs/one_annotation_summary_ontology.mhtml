@@ -1,0 +1,50 @@
+<%args>
+$curs_root_path
+$annotation_data
+</%args>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th>
+        Systematic identifier
+      </th>
+      <th>
+        Gene name
+      </th>
+      <th>
+        Term ID
+      </th>
+      <th>
+        Term name
+      </th>
+      <th>
+        Evidence code
+      </th>
+      <th>
+        With
+      </th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>
+      <% $annotation_data->{gene_identifier} %>
+    </td>
+    <td>
+      <% $annotation_data->{gene_name} %>
+    </td>
+    <td>
+      <% $annotation_data->{term_ontid} %>
+    </td>
+    <td>
+      <% $annotation_data->{term_name} %>
+    </td>
+    <td>
+      <% $annotation_data->{evidence_code} %>
+    </td>
+    <td>
+      <% $annotation_data->{with_or_from_display_name} %>
+    </td>
+  </tr>
+</table>

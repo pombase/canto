@@ -119,8 +119,7 @@ for my $annotation_type (@annotation_type_list) {
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
 
-      like ($redirect_res->content(),
-            qr/Select the genes to transfer the annotation to/);
+      like ($redirect_res->content(), qr/You can annotate other genes/);
 
       my $annotation =
         $curs_schema->find_with_type('Annotation', $new_annotation_id);

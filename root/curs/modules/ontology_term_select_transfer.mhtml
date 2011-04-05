@@ -1,13 +1,23 @@
 <%args>
+$curs_root_path
+$annotation
 $form
 </%args>
 
 <div id="phenotype-ferret">
   <div class="curs-box">
     <div class="curs-box-title">
-      Select the genes to transfer the annotation to ...
+      You have just made the following annotation:
     </div>
     <div class="curs-box-body">
+
+<& ../one_annotation_summary.mhtml,
+   curs_root_path => $curs_root_path,
+   annotation => $annotation &>
+
+<div>You can annotate other genes from your list with the same term and
+evidence by selecting genes below</div>
+
 <% $form %>
     </div>
   </div>

@@ -1,0 +1,31 @@
+<%args>
+$curs_root_path
+$annotation
+</%args>
+
+<& $annotation_view_template, curs_root_path => $curs_root_path,
+   annotation_data => $annotations[0] &>
+
+<%init>
+use PomCur::Curs::Utils;
+
+my $st = $c->stash();
+my $schema = $st->{schema};
+my $config = $c->config();
+
+my $annotation_type_name = $annotation->type();
+
+my %annotation_types_config = %{$config->{annotation_types}};
+my $annotation_type_config = $annotation_types_config{$annotation_type_name};
+my $annotation_type_category = $annotation_type_config->{category};
+
+my ($completed_count, $annotations_ref) =
+  PomCur::Curs::Utils::get_annotation_table($config, $schema,
+                                            $annotation_type_name,
+                                            $annotation);
+my @annotations = @$annotations_ref;
+
+my $annotation_view_template =
+  "one_annotation_summary_" . $annotation_type_category . ".mhtml";
+
+</%init>

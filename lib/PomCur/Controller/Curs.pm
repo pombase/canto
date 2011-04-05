@@ -871,6 +871,9 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
+  $st->{annotation_type} = $annotation_config;
+  $st->{annotation} = $annotation;
+
   my $gene = $annotation->genes()->first();
   my $gene_display_name = $gene->display_name();
 
