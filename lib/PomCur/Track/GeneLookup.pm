@@ -69,7 +69,8 @@ sub _build_constraint
                               product => 'SIN component scaffold protein, centriolin ortholog Cdc11',
                               synonyms => ['foo', 'bar'],
                               organism_full_name => 'Schizosaccharomyces pombe',
-                              organism_taxonid => 4896
+                              organism_taxonid => 4896,
+                              match_type => 'primary_name',
                             },
                             {
                               primary_name => 'fred1',
@@ -78,6 +79,7 @@ sub _build_constraint
                               synonyms => ['foo', 'bar', 'cdc11'],
                               organism_full_name => 'Schizosaccharomyces pombe',
                               organism_taxonid => 4896
+                              match_type => 'synonym',
                             },
                           ],
                          "SPCTRNASER.13" => [ ...],
@@ -97,11 +99,11 @@ sub lookup
   my $rs = $gene_rs->search(
     [_build_constraint(@search_terms)]);
 
-  my @found_genes = $rs->all();
+  my @found_genes = ();
 
   my %gene_ids = ();
 
-  for my $found_gene (@found_genes) {
+  while (defined (my $found_gene = $rs->next())) {
     my $gene_identifier = $found_gene->primary_identifier();
     if (defined $gene_identifier) {
       $gene_ids{lc $gene_identifier} = 1;
@@ -110,27 +112,23 @@ sub lookup
     if (defined $gene_name) {
       $gene_ids{lc $gene_name} = 1;
     }
+
+    my @synonym_identifiers =
+      map { $_->identifier() } $found_gene->genesynonyms();
+
+    push @found_genes, {
+      primary_identifier => $found_gene->primary_identifier(),
+      primary_name => $found_gene->primary_name(),
+      product => $found_gene->product(),
+      synonyms => [@synonym_identifiers],
+      organism_full_name => $found_gene->organism()->full_name(),
+      organism_taxonid => $found_gene->organism()->taxonid(),
+    }
   }
 
   my @missing_genes = grep {
     !exists $gene_ids{lc $_}
   } @orig_search_terms;
-
-  my $_get_synonyms = sub {
-    my $gene = shift;
-    return map { $_->identifier() } $_->genesynonyms();
-  };
-
-  @found_genes = map {
-      {
-        primary_identifier => $_->primary_identifier(),
-        primary_name => $_->primary_name(),
-        product => $_->product(),
-        synonyms => [$_get_synonyms->($_)],
-        organism_full_name => $_->organism()->full_name(),
-        organism_taxonid => $_->organism()->taxonid(),
-      }
-    } @found_genes;
 
   return { found => \@found_genes,
            missing => \@missing_genes };
