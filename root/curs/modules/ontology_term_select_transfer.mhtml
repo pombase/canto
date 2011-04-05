@@ -19,6 +19,13 @@ $form
 evidence by selecting genes below</div>
 
 <% $form %>
+
+<span class="pomcur-select-buttons">
+Select:
+ <a href="#" class="pomcur-select-all">all</a>
+ <a href="#" class="pomcur-select-none">none</a>
+</span>
+
     </div>
   </div>
 </div>

@@ -714,3 +714,8 @@ form .checkboxgroup span {
   padding: 10px;
   font-size: 90%;
 }
+
+span.pomcur-select-buttons {
+  display: block;
+  margin: 10px;
+}

@@ -464,4 +464,14 @@ $(document).ready(function() {
     });
 
   }
+
+  $('input[type=checkbox]').shiftcheckbox();
+
+  $('a.pomcur-select-all').click(function () {
+    $(this).closest('div').find('input:checkbox').attr('checked', true);
+  });
+
+  $('a.pomcur-select-none').click(function () {
+    $(this).closest('div').find('input:checkbox').removeAttr('checked');
+  });
 });
