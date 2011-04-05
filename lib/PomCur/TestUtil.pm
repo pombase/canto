@@ -496,7 +496,6 @@ sub make_base_track_db
   copy $track_db_template_file, $db_file_name or die "$!\n";
 
   my $schema = PomCur::DBUtil::schema_for_file($config, $db_file_name, 'Track');
-
   my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
   if ($load_data) {
@@ -510,16 +509,20 @@ sub make_base_track_db
     $ontology_index->initialise_index();
     my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
 
+    my $synonym_types = $config->{load}->{ontology}->{synonym_types};
+
     my $process =
       sub {
         $curation_load->load($curation_file);
         _load_extra_pubs($schema);
         _add_pub_details($config, $schema);
         $gene_load->load($genes_file);
-        $ontology_load->load($relationship_obo_file);
-        $ontology_load->load($go_obo_file, $ontology_index);
-        $ontology_load->load($phenotype_obo_file, $ontology_index);
-        $ontology_load->load($psi_mod_obo_file, $ontology_index);
+        $ontology_load->load($relationship_obo_file, undef, $synonym_types);
+        $ontology_load->load($go_obo_file, $ontology_index, $synonym_types);
+        $ontology_load->load($phenotype_obo_file, $ontology_index,
+                             $synonym_types);
+        $ontology_load->load($psi_mod_obo_file, $ontology_index,
+                             $synonym_types);
       };
 
     $schema->txn_do($process);

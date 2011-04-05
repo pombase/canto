@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More tests => 22;
 
 use PomCur::TestUtil;
 
@@ -55,6 +55,26 @@ my $ont_name = 'molecular_function';
           } @$results);
 
   is(scalar(map { $_->{name} =~ /^$search_string/ } @$results), 1);
+}
+
+# lookup a broad synonym
+{
+  my $results = $lookup->web_service_lookup(ontology_name => 'molecular_function',
+                                            search_string => 'tagging',
+                                            max_results => 10,
+                                            include_definition => 1);
+
+  ok(defined $results);
+
+  is(scalar(@$results), 2);
+
+  ok(grep {
+    $_->{id} eq 'GO:0031386' && $_->{name} eq 'protein tag'
+  } @$results);
+
+  ok(grep {
+    $_->{id} eq 'GO:0005515' && $_->{name} eq 'protein binding'
+  } @$results);
 }
 
 my $id_result = $lookup->web_service_lookup(ontology_name => 'biological_process',

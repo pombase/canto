@@ -27,11 +27,13 @@ my $test_relationship_ontology_file =
 my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
 $ontology_index->initialise_index();
 my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
-$ontology_load->load($test_relationship_ontology_file);
-$ontology_load->load($test_go_file, $ontology_index);
+my $synonym_types = $config->{load}->{ontology}->{synonym_types};
+
+$ontology_load->load($test_relationship_ontology_file, undef, $synonym_types);
+$ontology_load->load($test_go_file, $ontology_index, $synonym_types);
 
 my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
-$ontology_load->load($psi_mod_obo_file, $ontology_index);
+$ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
 
 $ontology_index->finish_index();
 
@@ -45,8 +47,10 @@ ok(grep {
 
 ok(grep {
   $_->name() eq 'negative regulation of transmembrane transport' &&
-    $_->cvtermsynonym_cvterms()->first()->synonym() eq
-      'down regulation of transmembrane transport'
+    ($_->cvtermsynonym_cvterms()->first()->synonym() eq
+       'down regulation of transmembrane transport' ||
+         $_->cvtermsynonym_cvterms()->first()->synonym() eq
+           'inhibition of transmembrane transport')
 } @loaded_cvterms);
 
 my $hits =

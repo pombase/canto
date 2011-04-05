@@ -68,6 +68,8 @@ sub _build_load_util
  Function: Load the contents an OBO file into the schema
  Args    : $file_name - an obo format file
            $index - the index to add the terms to (optional)
+           $synonym_types - a hashref of synonym types; key is the synonym type,
+                            value is the boost factor for lucene
  Returns : Nothing
 
 =cut
@@ -76,9 +78,14 @@ sub load
   my $self = shift;
   my $file_name = shift;
   my $index = shift;
+  my $synonym_types = shift;
 
   if (!defined $file_name) {
     croak "no file name passed to OntologyLoad::load()";
+  }
+
+  if (!defined $synonym_types) {
+    croak "no synonym_types passed to OntologyLoad::load()";
   }
 
   my $schema = $self->schema();
@@ -93,7 +100,7 @@ sub load
   my $graph = $parser->handler->graph;
   my %cvterms = ();
 
-  my @synonym_types_to_load = qw(exact);
+  my @synonym_types_to_load = keys %$synonym_types;
   my %synonym_type_ids = ();
 
   for my $synonym_type (@synonym_types_to_load) {
@@ -122,7 +129,6 @@ sub load
 
       my $cv_name = $term->namespace();
       my $comment = $term->comment();
-      my $synonyms = $term->synonyms_by_type('exact');
 
       my $xrefs = $term->dbxref_list();
 
@@ -178,13 +184,17 @@ sub load
                                       });
         }
 
-        if (@$synonyms) {
+        for my $synonym_type (@synonym_types_to_load) {
+          my $synonyms = $term->synonyms_by_type($synonym_type);
+
+          my $type_id = $synonym_type_ids{$synonym_type};
+
           for my $synonym (@$synonyms) {
             $schema->create_with_type('Cvtermsynonym',
                                       {
                                         cvterm_id => $cvterm->cvterm_id(),
                                         synonym => $synonym,
-                                        type_id => $synonym_type_ids{exact},
+                                        type_id => $type_id,
                                       });
           }
         }
