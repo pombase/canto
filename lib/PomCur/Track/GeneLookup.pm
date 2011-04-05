@@ -62,16 +62,27 @@ sub _build_constraint
                                for
  Returns : All genes that match any of the search terms exactly.  The result
            should look like this hashref:
-             { found => [ {
-                             primary_name => 'cdc11',
-                             primary_identifier => 'SPCTRNASER.13'
-                             product => 'SIN component scaffold protein, centriolin ortholog Cdc11',
-                             synonyms => ['foo', 'bar'],
-                             organism_full_name => 'Schizosaccharomyces pombe',
-                             organism_taxonid => 4896
-                          }
-                       ],
-                       missing => [qw(test)] }
+             { found => { "cdc11" => [
+                            {
+                              primary_name => 'cdc11',
+                              primary_identifier => 'SPCTRNASER.13'
+                              product => 'SIN component scaffold protein, centriolin ortholog Cdc11',
+                              synonyms => ['foo', 'bar'],
+                              organism_full_name => 'Schizosaccharomyces pombe',
+                              organism_taxonid => 4896
+                            },
+                            {
+                              primary_name => 'fred1',
+                              primary_identifier => 'SPCT...'
+                              product => 'SIN component scaffold protein, centriolin ortholog Cdc11',
+                              synonyms => ['foo', 'bar', 'cdc11'],
+                              organism_full_name => 'Schizosaccharomyces pombe',
+                              organism_taxonid => 4896
+                            },
+                          ],
+                         "SPCTRNASER.13" => [ ...],
+                        },
+                        missing => ["test"] }
 
 =cut
 sub lookup
