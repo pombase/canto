@@ -175,6 +175,53 @@ synonym: "secretory vesicle" BROAD []
 xref: NIF_Subcellular:sao885490876
 is_a: GO:0016023 ! cytoplasmic membrane-bounded vesicle
 
+[Term]
+id: GO:0030141
+name: stored secretory granule
+namespace: cellular_component
+def: "A small subcellular vesicle, surrounded by a membrane, that is formed from the Golgi apparatus and contains a highly concentrated protein destined for secretion. Secretory granules move towards the periphery of the cell and upon stimulation, their membranes fuse with the cell membrane, and their protein load is exteriorized. Processing of the contained protein may take place in secretory granules." [GOC:mah, ISBN:0198596732]
+comment: Note that the term 'secretory vesicle' is sometimes used in this sense, but can also mean 'transport vesicle ; GO:0030133'.
+synonym: "secretory vesicle" BROAD []
+is_a: GO:0016023 ! cytoplasmic membrane-bounded vesicle
+
+[Term]
+id: GO:0031386
+name: protein tag
+namespace: molecular_function
+def: "Acting as an indicator or marker to facilitate recognition by other molecules in the cell. Recognition of the tag, which can be covalently attached to the target molecule, may result in modification, sequestration, transport or degradation of the molecule in question." [GOC:go_curators]
+subset: goslim_pir
+synonym: "covalent modifier" RELATED [GOC:vw]
+synonym: "protein tagging activity" RELATED []
+synonym: "ubiquitin" RELATED []
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0005515
+name: protein binding
+namespace: molecular_function
+alt_id: GO:0045308
+def: "Interacting selectively and non-covalently with any protein or protein complex (a complex of two or more proteins that may include other nonprotein molecules)." [GOC:go_curators]
+synonym: "alpha-2 macroglobulin receptor-associated protein activity" RELATED []
+synonym: "protein amino acid binding" EXACT []
+synonym: "protein degradation tagging activity" RELATED []
+synonym: "protein folding chaperone" NARROW [GOC:dph, GOC:mah, GOC:tb]
+synonym: "protein tagging activity" RELATED []
+xref: Reactome:6125 "protein binding"
+is_a: GO:0005488 ! binding
+
+[Term]
+id: GO:0005488
+name: binding
+namespace: molecular_function
+def: "The selective, non-covalent, often stoichiometric, interaction of a molecule with one or more specific sites on another molecule." [GOC:ceb, GOC:mah, ISBN:0198506732 "Oxford Dictionary of Biochemistry and Molecular Biology"]
+comment: For ligands that bind to signal transducing receptors, consider the molecular function term 'receptor binding ; GO:0005102' and its children.
+subset: goslim_pir
+subset: goslim_plant
+subset: gosubset_prok
+synonym: "ligand" NARROW []
+xref: Wikipedia:Binding_(molecular)
+is_a: GO:0003674 ! molecular_function
+
 [Typedef]
 id: has_part
 name: has_part
