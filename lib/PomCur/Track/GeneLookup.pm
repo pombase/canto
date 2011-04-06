@@ -69,7 +69,7 @@ sub _read_genes
   my $existing_genes = shift;
 
   my @found_genes = ();
-  my %gene_ids = ();
+  my %gene_ids = %$existing_genes;
   my %terms_found = ();
 
   while (defined (my $found_gene = $rs->next())) {
@@ -80,13 +80,14 @@ sub _read_genes
     my %match_types;
 
     my $primary_identifier = $found_gene->primary_identifier();
+
     if (exists $search_terms_ref->{lc $primary_identifier}) {
       $match_types{primary_identifier} = $primary_identifier;
       $terms_found{lc $primary_identifier} = 1;
     }
 
     my $primary_name = $found_gene->primary_name();
-    if (exists $search_terms_ref->{lc $primary_name}) {
+    if (defined $primary_name && exists $search_terms_ref->{lc $primary_name}) {
       $match_types{primary_name} = $primary_name;
       $terms_found{lc $primary_name} = 1;
     }
@@ -136,10 +137,10 @@ sub _read_genes
                          organism_taxonid => 4896,
                          match_types => { primary_name => 'cdc11',
                                           primary_identifier => 'SPCTRNASER.13',
-                                          synonyms => [ 'foo' ],
+                                          synonym => [ 'foo' ],
                                         },
                         },
-                        missing => ["test"] }
+              missing => ['test'] }
 
 =cut
 sub lookup
@@ -148,10 +149,11 @@ sub lookup
   my $search_terms_ref = shift;
 
   my @orig_search_terms = @{$search_terms_ref};
-  my %orig_search_terms = ();
-  @orig_search_terms{@orig_search_terms} = @orig_search_terms;
 
   my @lc_search_terms = map { lc } @{$search_terms_ref};
+
+  my %lc_search_terms = ();
+  @lc_search_terms{@lc_search_terms} = @lc_search_terms;
 
   my $gene_rs = $self->schema()->resultset('Gene');
   my $rs = $gene_rs->search(
@@ -159,7 +161,7 @@ sub lookup
 
 
   my ($found_genes_ref, $gene_ids_ref, $terms_found_ref) =
-    _read_genes($rs, \%orig_search_terms, {});
+    _read_genes($rs, \%lc_search_terms, {});
 
   my @found_genes = @$found_genes_ref;
   my %gene_ids = %$gene_ids_ref;
@@ -170,14 +172,14 @@ sub lookup
     ->search_related('gene');
 
   my ($new_found_genes_ref, $dummy, $new_terms_found_ref) =
-    _read_genes($rs, \%orig_search_terms, \%gene_ids);
+    _read_genes($rs, \%lc_search_terms, \%gene_ids);
 
   @terms_found{keys %$new_terms_found_ref} = values %$new_terms_found_ref;
 
   push @found_genes, @$new_found_genes_ref;
 
   my @missing_genes = grep {
-    !exists $gene_ids{lc $_}
+    !exists $terms_found{lc $_}
   } @orig_search_terms;
 
   return { found => \@found_genes,
