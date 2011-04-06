@@ -58,6 +58,8 @@ requires 'JSON';
 requires 'Try::Tiny';
 requires 'Text::Similarity';
 requires 'Archive::Zip';
+requires 'File::Basename';
+requires 'Getopt::Long';
 
 requires 'Config::General';
 
