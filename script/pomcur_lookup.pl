@@ -90,6 +90,13 @@ if ($lookup_type eq 'gene') {
        $gene->{organism_full_name}, "\t",
        $gene->{organism_taxonid}, "\n");
   }
+
+  if (@{$res->{missing}}) {
+    print "Not found:\n";
+    for my $identifier (@{$res->{missing}}) {
+      print "$identifier\n";
+    }
+  }
 } else {
   if ($lookup_type eq 'ontology') {
     if (!defined $ontology_name) {
