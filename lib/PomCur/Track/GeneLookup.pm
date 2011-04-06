@@ -66,7 +66,7 @@ sub _build_constraint
                             {
                               primary_name => 'cdc11',
                               primary_identifier => 'SPCTRNASER.13'
-                              product => 'SIN component scaffold protein, centriolin ortholog Cdc11',
+                              product => 'SIN component scaffold protein, ...',
                               synonyms => ['foo', 'bar'],
                               organism_full_name => 'Schizosaccharomyces pombe',
                               organism_taxonid => 4896,
@@ -75,7 +75,7 @@ sub _build_constraint
                             {
                               primary_name => 'fred1',
                               primary_identifier => 'SPCT...'
-                              product => 'SIN component scaffold protein, centriolin ortholog Cdc11',
+                              product => 'SIN component scaffold protein, ...',
                               synonyms => ['foo', 'bar', 'cdc11'],
                               organism_full_name => 'Schizosaccharomyces pombe',
                               organism_taxonid => 4896
