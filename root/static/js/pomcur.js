@@ -324,6 +324,7 @@ $(document).ready(function() {
       source: ferret_choose.ontology_complete_url,
       select: function(event, ui) {
         ferret_choose.set_current_term(ui.item.id);
+        ferret_choose.matching_synonym = ui.item.matching_synonym;
         return false;
       }
     })
@@ -331,7 +332,6 @@ $(document).ready(function() {
       var search_string = $('#ferret-term-input').val();
       var search_bits = search_string.split(/\s+/);
       var match_name = item.matching_synonym;
-      ferret_choose.matching_synonym = match_name;
       var synonym_extra = '';
       if (match_name) {
         synonym_extra = ' (synonym)';
