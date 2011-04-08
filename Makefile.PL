@@ -64,6 +64,7 @@ requires 'Getopt::Long';
 requires 'Config::General';
 
 test_requires 'Test::More' => '0.88';
+test_requires 'Test::Deep';
 test_requires 'Test::MockObject';
 
 catalyst;

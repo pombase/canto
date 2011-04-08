@@ -105,11 +105,10 @@ sub _get_genes
   my $schema = shift;
 
   my $rs = $schema->resultset('Gene');
-  my @ret = ();
+  my %ret = ();
 
   while (defined (my $gene = $rs->next())) {
-    push @ret, {
-      primary_identifier => $gene->primary_identifier(),
+    $ret{$gene->primary_identifier()} = {
       primary_name => $gene->primary_name(),
       product => $gene->product(),
       organism => $gene->organism()->full_name(),
@@ -118,7 +117,7 @@ sub _get_genes
     };
   }
 
-  return \@ret;
+  return \%ret;
 }
 
 sub _get_organisms
@@ -126,16 +125,13 @@ sub _get_organisms
   my $schema = shift;
 
   my $rs = $schema->resultset('Organism');
-  my @ret = ();
+  my %ret = ();
 
   while (defined (my $organism = $rs->next())) {
-    push @ret, {
-      full_name => $organism->full_name(),
-      taxonid => $organism->taxonid(),
-    };
+    $ret{$organism->taxonid()} = { full_name => $organism->full_name() };
   }
 
-  return \@ret;
+  return \%ret;
 }
 
 sub _get_pubs
@@ -143,17 +139,16 @@ sub _get_pubs
   my $schema = shift;
 
   my $rs = $schema->resultset('Pub');
-  my @ret = ();
+  my %ret = ();
 
   while (defined (my $pub = $rs->next())) {
-    push @ret, {
-      uniquename => $pub->uniquename(),
+    $ret{$pub->uniquename()} = {
       title => $pub->title(),
       abstract => $pub->abstract(),
     };
   }
 
-  return \@ret;
+  return \%ret;
 }
 
 =head2 json

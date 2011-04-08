@@ -1,6 +1,8 @@
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::Deep;
+
+use Test::More tests => 2;
 
 use Data::Compare;
 
@@ -20,15 +22,33 @@ my $schema = PomCur::TrackDB->new(config => $config);
 my $json = PomCur::Track::Serialise::json($config, $schema);
 my $ref = decode_json($json);
 
+my @expected_pubs =
+  qw{PMID:16641370 PMID:17304215 PMID:18426916 PMID:18430926 PMID:18556659
+     PMID:19037101 PMID:19041767 PMID:19056896 PMID:19160458 PMID:19211838
+     PMID:19351719 PMID:19436749 PMID:19627505 PMID:19664060 PMID:19686603
+     PMID:19756689 PMID:20622008 PMID:20870879 PMID:20976105 PMID:7518718
+     PMID:7958849};
+my %expected_pubs = ();
+@expected_pubs{@expected_pubs} = (ignore()) x @expected_pubs;
+
+cmp_deeply($ref,
+           {
+             publications => \%expected_pubs,
+             curation_sessions => ignore(),
+           }
+           );
+
 my @curation_sessions = @{$ref->{curation_sessions}};
 is (@curation_sessions, 2);
 
-my $abstract = q{In the fission yeast, Schizosaccharomyces pombe, synaptonemal complexes (SCs) are not formed during meiotic prophase. However, structures resembling the axial elements of SCs, the so-called linear elements (LinEs) appear. By in situ immunostaining, we found Pmt3 (S. pombe's SUMO protein) transiently along LinEs, suggesting that SUMOylation of some component(s) of LinEs occurs during meiosis. Mutation of the SUMO ligase Pli1 caused aberrant LinE formation and reduced genetic recombination indicating a role for SUMOylation of LinEs for the regulation of meiotic recombination. Western blot analysis of TAP-tagged Rec10 demonstrated that there is a Pli1-dependent posttranslational modification of this protein, which is a major LinE component and a distant homolog of the SC protein Red1. Mass spectrometry (MS) analysis revealed that Rec10 is both phosphorylated and ubiquitylated, but no evidence for SUMOylation of Rec10 was found. These findings indicate that the regulation of LinE and Rec10 function is modulated by Pli1-dependent SUMOylation of LinE protein(s) which directly or indirectly regulates Rec10 modification. On the side, MS analysis confirmed the interaction of Rec10 with the known LinE components Rec25, Rec27, and Hop1 and identified the meiotically upregulated protein Mug20 as a novel putative LinE-associated protein.};
+my $abstract =
+ qr/In the fission yeast, Schizosaccharomyces pombe, synaptonemal complexes/;
 
 my $curation_session = $curation_sessions[1];
-is_deeply($curation_session,
-          { genes => [
-              { primary_identifier => 'SPCC576.16c',
+cmp_deeply($curation_session,
+          {
+            genes => {
+              'SPCC576.16c' => {
                 primary_name => 'wtf22',
                 product => 'wtf element Wtf22',
                 organism => 'Schizosaccharomyces pombe',
@@ -43,29 +63,28 @@ is_deeply($curation_session,
                     } ],
                 synonyms => [],
               },
-            { primary_identifier => 'SPAC27D7.13c',
-              primary_name => 'ssm4',
-              product => 'p150-Glued',
-              organism => 'Schizosaccharomyces pombe',
-              annotations => [
-                {
-                  evidence_code => "IMP",
-                  creation_date => "2010-01-02",
-                  term_ontid => "GO:0055085",
-                  status => "new",
-                  type => "biological_process",
-                  publication => 'PMID:19756689'
-                  } ],
-              synonyms => ['SPAC637.01c'],
+              'SPAC27D7.13c' => {
+                primary_name => 'ssm4',
+                product => 'p150-Glued',
+                organism => 'Schizosaccharomyces pombe',
+                annotations => [
+                  {
+                    evidence_code => "IMP",
+                    creation_date => "2010-01-02",
+                    term_ontid => "GO:0055085",
+                    status => "new",
+                    type => "biological_process",
+                    publication => 'PMID:19756689'
+                    } ],
+                synonyms => ['SPAC637.01c'],
+              },
             },
-            ],
-            publications => [
-              {
-                uniquename => 'PMID:19756689',
+            publications => {
+              'PMID:19756689' => {
                 title => 'SUMOylation is required for normal development of linear elements and wild-type meiotic recombination in Schizosaccharomyces pombe.',
-                abstract => $abstract,
+                abstract => re($abstract),
               }
-            ],
+            },
             metadata => {
               submitter_email => 'Ken.Sawin@ed.ac.uk',
               submitter_name =>'Ken Sawin',
@@ -75,22 +94,10 @@ is_deeply($curation_session,
               current_gene_id => 'SPCC576.16c',
               curation_pub_id => 'PMID:19756689',
             },
-            organisms => [
-              {
-                taxonid => 4896,
+            organisms => {
+              4896 => {
                 full_name => 'Schizosaccharomyces pombe',
               }
-            ],
+            },
           },
           );
-
-
-my @publications = @{$curation_session->{publications}};
-is (@publications, 1);
-is ($publications[0]->{uniquename}, 'PMID:19756689');
-like ($publications[0]->{abstract}, qr/SUMOylation/);
-
-my @organisms = @{$curation_session->{organisms}};
-is (@organisms, 1);
-is ($organisms[0]->{full_name}, "Schizosaccharomyces pombe");
-

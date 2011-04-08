@@ -92,11 +92,10 @@ sub _get_pubs
   my $schema = shift;
 
   my $rs = $schema->resultset('Pub');
-  my @ret = ();
+  my %ret = ();
 
   while (defined (my $pub = $rs->next())) {
-    push @ret, {
-      uniquename => $pub->uniquename(),
+    $ret{$pub->uniquename()} = {
       type => $pub->type()->name(),
       assigned_curator => _get_name($pub->assigned_curator()),
       title => $pub->title(),
@@ -107,7 +106,7 @@ sub _get_pubs
     };
   }
 
-  return \@ret;
+  return \%ret;
 }
 
 =head2 json
