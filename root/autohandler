@@ -89,9 +89,6 @@ my $tidy = sub {
 };
 
 # flash_to_stash doesn't seem to work, so:
-$error ||= $c->flash->{error};
-$message ||= $c->flash->{message};
-
 my @errors = $tidy->($error);
 my @messages = $tidy->($message);
 </%init>

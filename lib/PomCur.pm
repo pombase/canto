@@ -23,7 +23,6 @@ use CatalystX::RoleApplicator;
 our $VERSION = '0.01';
 
 __PACKAGE__->config(name => 'PomCur',
-                    session => { flash_to_stash => 1 },
                     'Plugin::Session' => {
                       expires   => 3600,
                       dbi_dbh   => 'TrackModel',
@@ -31,6 +30,7 @@ __PACKAGE__->config(name => 'PomCur',
                       dbi_id_field => 'id',
                       dbi_data_field => 'session_data',
                       dbi_expires_field => 'expires',
+                      flash_to_stash => 1,
                     },
                     'View::Graphics::Primitive' => {
                       driver => 'Cairo',
