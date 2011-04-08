@@ -90,14 +90,24 @@ sub _index_path
   return $config->data_dir_path('ontology_index_file');
 }
 
-sub _process_name
+sub _clean_name
 {
   my $name = shift;
 
   my $processed_name = $name;
+  $processed_name =~ s/[^\d\w]+/ /g;
   $processed_name =~ s/_/ /g;
+  $processed_name =~ s/\s+$//;
+  $processed_name =~ s/^\s+//;
 
-  my $name_field = Lucene::Document::Field->Text(name => $processed_name);
+  return $processed_name;
+}
+
+sub _process_name
+{
+  my $name = _clean_name(shift);
+
+  my $name_field = Lucene::Document::Field->Text(name => $name);
 
   return $name_field;
 }
@@ -243,9 +253,7 @@ sub lookup
     $query = Lucene::Search::TermQuery->new($ontid_term);
   } else {
     # sanitise
-    $search_string =~ s/[^\d\w]+/ /g;
-    $search_string =~ s/\s+$//;
-    $search_string =~ s/_/ /g;
+    $search_string = _clean_name($search_string);
 
     my $query_string =
       "cv_name:$ontology_name AND (($search_string) OR ($search_string*))";

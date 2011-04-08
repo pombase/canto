@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More tests => 28;
 
 use Data::Compare;
 
@@ -53,6 +53,8 @@ ok(grep {
            'inhibition of transmembrane transport')
 } @loaded_cvterms);
 
+
+# biological_process
 my $hits =
   $ontology_index->lookup('biological_process', 'transmembrane transport()\:-', 100);
 
@@ -68,9 +70,9 @@ for (my $i = 0; $i < $num_hits; $i++) {
 is($hits->doc(0)->get('name'), 'transmembrane transport');
 is($hits->doc(1)->get('name'), 'protein transmembrane transport');
 
-eval {
-  $hits = $ontology_index->lookup('psi-mod', 'secondary neutral', 100);
-};
+
+# psi-mod
+$hits = $ontology_index->lookup('psi-mod', 'secondary neutral', 100);
 
 $num_hits = $hits->length();
 
@@ -85,4 +87,35 @@ for (my $i = 0; $i < $num_hits; $i++) {
 
 is($hits->doc(0)->get('name'), 'modified residue with a secondary neutral loss');
 
+
+# molecular_function with synonym
+my $long_ugly_synonym =
+  '(2-amino-4-hydroxy-7,8-dihydropteridin-6-yl)methyl-diphosphate:4-aminobenzoate ' .
+  '2-amino-4-hydroxydihydropteridine-6-methenyltransferase activity';
+$hits = $ontology_index->lookup('molecular_function',
+                                $long_ugly_synonym, 100);
+
+$num_hits = $hits->length();
+
+is($num_hits, 6);
+
+for (my $i = 0; $i < $num_hits; $i++) {
+  my $doc = $hits->doc($i);
+  my $cv_name = $doc->get('cv_name');
+
+  is($cv_name, 'molecular_function');
+}
+
+is($hits->doc(0)->get('name'), 'dihydropteroate synthase activity');
+
+my $ugly_synonym_substring =
+  ',8-dihydropteridin-6-yl)methyl-diphosphate:4-aminobenzoate methenyltransferase';
+$hits = $ontology_index->lookup('molecular_function',
+                                $ugly_synonym_substring, 100);
+
+$num_hits = $hits->length();
+
+is($hits->doc(0)->get('cv_name'), 'molecular_function');
+
+is($hits->doc(0)->get('name'), 'dihydropteroate synthase activity');
 

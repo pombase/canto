@@ -51,7 +51,8 @@ sub _get_score
   my $search_string = shift;
   my $name = shift;
 
-  $name =~ s/\W+/ /g;
+  $name =~ s/[\d\W]+/ /g;
+  $search_string =~ s/[\d\W]+/ /g;
 
   return $tso->getSimilarityStrings($search_string, $name);
 }
