@@ -210,7 +210,6 @@ sub get_annotation_table
     PomCur::Track::get_adaptor($config, 'ontology');
 
   my $gene_rs = $schema->resultset('Gene');
-  my $gene_adaptor = PomCur::Track::get_adaptor($config, 'gene');
 
   my $completed_count = 0;
 
@@ -225,14 +224,8 @@ sub get_annotation_table
   while (defined (my $gene = $gene_rs->next())) {
     my $an_rs = $gene->annotations()->search({ %constraints });
 
-    my $gene_lookup_results =
-      $gene_adaptor->lookup([$gene->primary_identifier()]);
-    my @found_results = @{$gene_lookup_results->{found}};
-    if (@found_results != 1) {
-      die "expected 1 result looking up: ", $gene->primary_identifier(),
-        " but got ", scalar(@found_results);
-    }
-    my $gene_synonyms_string = join '|', @{$found_results[0]->{synonyms}};
+    my $gene_synonyms_string =
+      join '|', map { $_->identifier() } $gene->genesynonyms();
 
     while (defined (my $annotation = $an_rs->next())) {
       my @entries;

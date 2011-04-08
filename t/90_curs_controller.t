@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 21;
+use Test::More tests => 24;
 
 use Data::Compare;
 
@@ -29,7 +29,7 @@ my $cookie_jar = HTTP::Cookies->new(
   autosave => 1,
 );
 
-my @known_genes = qw(SPCC1739.10 wtf22 SPNCRNA.119);
+my @known_genes = qw(SPCC1739.10 wtf22 SPNCRNA.119 ssm4);
 my @unknown_genes = qw(dummy SPCC999999.99);
 
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
@@ -74,13 +74,13 @@ sub check_result
   is($curs_schema->resultset('Gene')->count(), $gene_count);
 }
 
-check_result($result, 2, 3, 0);
+check_result($result, 2, 5, 0);
 
 $result =
   PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
                                                    \@search_list);
 
-check_result($result, 2, 3, 0);
+check_result($result, 2, 5, 0);
 
 $result =
   PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
@@ -88,7 +88,7 @@ $result =
 
 ok(!defined $result);
 
-is($curs_schema->resultset('Gene')->count(), 3);
+is($curs_schema->resultset('Gene')->count(), 5);
 
 
 sub _lookup_gene
@@ -126,8 +126,13 @@ $result =
 
 ok(!defined $result);
 
-is($curs_schema->resultset('Gene')->count(), 4);
+is($curs_schema->resultset('Gene')->count(), 6);
 
+my $ssm4 = $curs_schema->find_with_type('Gene', { primary_name => 'ssm4' });
+
+ok($ssm4);
+is($ssm4->genesynonyms(), 1);
+is($ssm4->genesynonyms()->first()->identifier(), "SPAC637.01c");
 
 # utility methods
 my $iso_datetime = PomCur::Controller::Curs::_get_iso_date();

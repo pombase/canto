@@ -329,6 +329,14 @@ sub _create_genes
             product => $gene->{product},
             organism => $curs_org
           });
+
+          for my $synonym_identifier (@{$gene->{synonyms}}) {
+            $schema->create_with_type('Genesynonym',
+                                      {
+                                        gene => $ret_gene,
+                                        identifier => $synonym_identifier,
+                                      });
+          }
         }
       };
 

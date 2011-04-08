@@ -14,6 +14,12 @@ CREATE TABLE gene (
        organism integer NOT NULL REFERENCES organism(organism_id)
 );
 
+CREATE TABLE genesynonym (
+      genesynonym_id integer NOT NULL PRIMARY key,
+      gene_id integer NOT NULL references gene (gene_id),
+      identifier text NOT NULL
+);
+
 CREATE TABLE annotation (
        annotation_id integer PRIMARY KEY,
        status text NOT NULL,  -- "new", "deleted", "unchanged"
