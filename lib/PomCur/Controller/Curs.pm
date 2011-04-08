@@ -302,8 +302,8 @@ sub _filter_existing_genes
   return grep { !exists $found_genes{ $_->{primary_identifier} } } @genes;
 }
 
-# create a gene in the Curs database from a lookup() result
-sub _create_gene
+# create genes in the Curs database from a lookup() result
+sub _create_genes
 {
   my $schema = shift;
   my $result = shift;
@@ -348,12 +348,12 @@ sub _find_and_create_genes
 
   if (@{$result->{missing}}) {
     if ($create_when_missing) {
-      _create_gene($schema, $result);
+      _create_genes($schema, $result);
     }
 
     return $result;
   } else {
-    _create_gene($schema, $result);
+    _create_genes($schema, $result);
 
     return undef;
   }

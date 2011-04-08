@@ -612,7 +612,7 @@ sub _load_curs_db_data
     my $gene_info = $found[0];
 
     my $new_gene =
-      PomCur::Controller::Curs::_create_gene($cursdb_schema, $result);
+      PomCur::Controller::Curs::_create_genes($cursdb_schema, $result);
 
     my $current_config_gene = $curs_config->{current_gene};
     if ($gene_identifier eq $current_config_gene) {
