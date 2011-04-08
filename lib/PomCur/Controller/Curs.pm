@@ -83,6 +83,14 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $st = $c->stash();
 
   $st->{curs_key} = $curs_key;
+  my $schema = PomCur::Curs::get_schema($c);
+
+  if (!defined $schema) {
+    $c->res->redirect('/404');
+    $c->detach();
+  }
+
+  $st->{schema} = $schema;
 
   my $path = $c->req->uri()->path();
   (my $controller_name = __PACKAGE__) =~ s/.*::(.*)/\L$1/;
@@ -97,9 +105,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{annotation_types} = $config->{annotation_types};
   $st->{annotation_type_list} = $config->{annotation_type_list};
-
-  my $schema = PomCur::Curs::get_schema($c);
-  $st->{schema} = $schema;
 
   my ($state, $submitter_email, $gene_count, $current_gene_id) = _get_state($c);
   $st->{state} = $state;
