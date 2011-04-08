@@ -130,7 +130,7 @@ sub _get_pubs
 
 =head2 json
 
- Usage   : my $ser = PomCur::Curs::Serialise::json
+ Usage   : my $ser = PomCur::Curs::Serialise::json($curs_schema);
  Function: Return a JSON representation of the given CursDB
  Args    : $schema - the CursDB
  Returns : A JSON string
@@ -145,6 +145,14 @@ sub json
   return $encoder->encode(perl($schema));
 }
 
+=head2 perl
+
+ Usage   : my $ser = PomCur::Curs::Serialise::perl($curs_schema);
+ Function: Return a Perl hash representating all the data in the given CursDB
+ Args    : $schema - the CursDB
+ Returns : A Perl hashref
+
+=cut
 sub perl
 {
   my $schema = shift;
