@@ -57,16 +57,19 @@ my $schema = $c->stash()->{schema};
 my @all_genes = $schema->resultset('Gene')->all();
 
 my @gene_hashes = map {
+     my $gene = $_;
+     my $synonyms_string =
+       join (',', map { $_->identifier() } $gene->genesynonyms());
      {
-       'Systematic identifier' => $_->primary_identifier(),
-       Name => $_->primary_name(),
-       Product => $_->product(),
-       identifier => $_->primary_name() || $_->primary_identifier(),
-       gene_id => $_->gene_id(),
+       'Systematic identifier' => $gene->primary_identifier(),
+       Name => $gene->primary_name(),
+       Product => $gene->product(),
+       Synonyms => $synonyms_string,
+       gene_id => $gene->gene_id(),
      }
    } @all_genes;
 
-my @col_names = ("Systematic identifier", "Name", "Product");
+my @col_names = ("Systematic identifier", "Name", "Synonyms", "Product");
 
 my $start_path = $c->stash()->{curs_root_path};
 my $upload_path = "$start_path/gene_upload";

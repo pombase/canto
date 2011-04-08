@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 36;
+use Test::More tests => 38;
 
 use Data::Compare;
 
@@ -36,7 +36,7 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 my $uniquename = "PMID:19664060";
-my @gene_identifiers = qw(cdc11 wtf22 SPCC1739.10);
+my @gene_identifiers = qw(cdc11 wtf22 SPCC1739.10 klp1);
 
 # test submitting a list of genes
 sub upload_genes
@@ -66,12 +66,24 @@ sub upload_genes
   like ($redirect_res->content(), qr/cdc11/);
 
   my @stored_genes = $curs_schema->resultset('Gene')->all();
-  is (@stored_genes, 3);
+  is (@stored_genes, 4);
 
   for my $gene_identifier (@gene_identifiers) {
-    ok (grep { $_->primary_identifier() eq $gene_identifier ||
-                 ( defined $_->primary_name() &&
-                     $_->primary_name() eq $gene_identifier ) } @stored_genes);
+    my $found_match = 0;
+    for my $stored_gene (@stored_genes) {
+      if ($stored_gene->primary_identifier() eq $gene_identifier ||
+          ( defined $stored_gene->primary_name() &&
+            $stored_gene->primary_name() eq $gene_identifier ) ||
+            grep {
+              $_->identifier() eq $gene_identifier;
+            } $stored_gene->genesynonyms()
+          ) {
+        $found_match = 1;
+        last;
+      }
+    };
+
+    ok($found_match);
   }
 }
 
@@ -175,7 +187,7 @@ test_psgi $app, sub {
 
     my @genes_after_delete = $curs_schema->resultset('Gene')->all();
 
-    is (@genes_after_delete, 2);
+    is (@genes_after_delete, 3);
   }
 
   # test continuing from gene edit form
