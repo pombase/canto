@@ -517,6 +517,8 @@ sub gene_upload : Chained('top') Args(0) Form
         $c->stash()->{state} = GENE_ACTIVE;
       }
 
+      $c->flash()->{search_terms} = [@search_terms];
+
       _redirect_and_detach($c, 'confirm_genes');
     }
   }

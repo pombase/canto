@@ -715,6 +715,10 @@ form .checkboxgroup span {
   font-size: 90%;
 }
 
+.curs-matched-search-term {
+  font-weight: bold;
+}
+
 span.pomcur-select-buttons {
   display: block;
   margin: 10px;
