@@ -222,6 +222,26 @@ synonym: "ligand" NARROW []
 xref: Wikipedia:Binding_(molecular)
 is_a: GO:0003674 ! molecular_function
 
+[Term]
+id: GO:0004156
+name: dihydropteroate synthase activity
+namespace: molecular_function
+def: "Catalysis of the reaction: 2-amino-4-hydroxy-6-hydroxymethyl-7,8-dihydropteridine diphosphate + 4-aminobenzoate = diphosphate + dihydropteroate." [EC:2.5.1.15]
+subset: gosubset_prok
+synonym: "(2-amino-4-hydroxy-7,8-dihydropteridin-6-yl)methyl-diphosphate:4-aminobenzoate 2-amino-4-hydroxydihydropteridine-6-methenyltransferase activity" EXACT [EC:2.5.1.15]
+synonym: "2-amino-4-hydroxy-6-hydroxymethyl-7,8-dihydropteridine-diphosphate:4-aminobenzoate 2-amino-4-hydroxydihydropteridine-6-methenyltransferase activity" EXACT [EC:2.5.1.15]
+synonym: "7,8-dihydropteroate synthase activity" EXACT [EC:2.5.1.15]
+synonym: "7,8-dihydropteroate synthetase activity" EXACT [EC:2.5.1.15]
+synonym: "7,8-dihydropteroic acid synthetase activity" EXACT [EC:2.5.1.15]
+synonym: "DHPS activity" EXACT [EC:2.5.1.15]
+synonym: "dihydropteroate diphosphorylase activity" EXACT [EC:2.5.1.15]
+synonym: "dihydropteroate pyrophosphorylase activity" EXACT [EC:2.5.1.15]
+synonym: "dihydropteroate synthetase activity" EXACT [EC:2.5.1.15]
+synonym: "dihydropteroic synthetase activity" EXACT [EC:2.5.1.15]
+xref: EC:2.5.1.15
+xref: MetaCyc:H2PTEROATESYNTH-RXN
+is_a: GO:0003674 ! molecular_function
+
 [Typedef]
 id: has_part
 name: has_part

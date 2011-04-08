@@ -39,7 +39,7 @@ $ontology_index->finish_index();
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 85);
+is(@loaded_cvterms, 86);
 
 ok(grep {
   $_->name() eq 'regulation of transmembrane transport'
