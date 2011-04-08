@@ -41,13 +41,32 @@ use Carp;
 
 use JSON;
 
+sub _get_metadata_value
+{
+  my $schema = shift;
+  my $key = shift;
+  my $value = shift;
+
+  if ($key eq 'current_gene_id') {
+    return $schema->find_with_type('Gene', $value)->primary_identifier();
+  } else {
+    if ($key eq 'curation_pub_id') {
+      return $schema->find_with_type('Pub', $value)->uniquename();
+    } else {
+      return $value;
+    }
+  }
+}
+
 sub _get_metadata
 {
   my $schema = shift;
 
   my @results = $schema->resultset('Metadata')->all();
 
-  return [map { { $_->key(), $_->value() } } @results];
+  return { map {
+      ($_->key(), _get_metadata_value($schema, $_->key(), $_->value() ))
+    } @results };
 }
 
 sub _get_annotations
@@ -73,6 +92,14 @@ sub _get_annotations
   return \@ret;
 }
 
+sub _get_gene_synonyms
+{
+  my $schema = shift;
+  my $gene = shift;
+
+  return [map { $_->identifier(); } $gene->genesynonyms()->all()];
+}
+
 sub _get_genes
 {
   my $schema = shift;
@@ -87,6 +114,7 @@ sub _get_genes
       product => $gene->product(),
       organism => $gene->organism()->full_name(),
       annotations => _get_annotations($schema, $gene),
+      synonyms => _get_gene_synonyms($schema, $gene),
     };
   }
 
