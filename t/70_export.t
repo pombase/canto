@@ -21,25 +21,19 @@ my $json = PomCur::Track::Serialise::json($config, $schema);
 my $ref = decode_json($json);
 
 my @curation_sessions = @{$ref->{curation_sessions}};
-
 is (@curation_sessions, 2);
 
 my $curation_session = $curation_sessions[0];
-
 my @genes = @{$curation_session->{genes}};
-
 is (@genes, 1);
 
 my $gene = $genes[0];
-
 is ($gene->{primary_name}, "wtf22");
 
 my @annotations = @{$gene->{annotations}};
-
 is (@annotations, 1);
 
 my $annotation = $annotations[0];
-
 is_deeply ($annotation,
            {
              evidence_code => "IMP",
