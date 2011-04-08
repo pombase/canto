@@ -52,6 +52,9 @@ use PomCur::CursDB;
            if the database exists
  Args    : $config - the Config object
            $curs_key - the key (as a string) of the curation session
+ Returns : $connect_string - the DBI connection string
+           $exists_flag - true if and only if the database already exists
+           $db_file_name - the full path to the database file
 
 =cut
 sub make_connect_string
