@@ -52,7 +52,7 @@ sub end : Private
           } @{$c->error()};
     $st->{error} = \@pomcur_errors;
     $st->{title} = 'Error';
-    $st->{template} = 'error.mhtml';
+    $st->{template} = $st->{error_template} // 'error.mhtml';
     $c->forward('PomCur::View::Mason');
     $c->error(0);
     return 0;

@@ -1232,4 +1232,14 @@ sub annotation_zipexport : Chained('top') PathPart('annotation/zipexport') Args(
   }
 }
 
+sub end : Private
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+  $c->stash()->{error_template} = 'curs/error.mhtml';
+
+  PomCur::Controller::Root::end(@_);
+}
+
 1;
