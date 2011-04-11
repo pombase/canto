@@ -313,6 +313,15 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-23 19:13:47
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I+2ulK9Zg5pmyk7jntCshQ
 
+=head2 db_accession
+
+ Usage   : my $db_accession = $cvterm->db_accession();
+ Function: Return the identifier for this term in "<db>:<identifier>" form,
+           eg. "GO:0004022"
+ Args    : none
+ Returns : the database accession
+
+=cut
 sub db_accession
 {
   my $cvterm = shift;
