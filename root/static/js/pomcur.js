@@ -330,7 +330,7 @@ $(document).ready(function() {
     })
     .data("autocomplete")._renderItem = function( ul, item ) {
       var search_string = $('#ferret-term-input').val();
-      var search_bits = search_string.split(/\s+/);
+      var search_bits = search_string.split(/\W+/);
       var match_name = item.matching_synonym;
       var synonym_extra = '';
       if (match_name) {
