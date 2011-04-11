@@ -409,7 +409,7 @@ div.clearall {
   color: #777;
 }
 
-.gene-list-edit .upload-genes-link {
+.upload-genes-link {
   padding: 20px 0px 10px 0px;
 }
 
@@ -638,7 +638,7 @@ div.clearall {
   white-space: nowrap;
 }
 
-.evidence-select div, .with-gene-select div {
+.evidence-select .select, .with-gene-select .select {
   display: inline;
 }
 
