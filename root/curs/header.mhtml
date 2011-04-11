@@ -26,7 +26,7 @@ inherit => undef
 </%flags>
 
 <%init>
-my $root_path = $c->stash()->{curs_root_path};
+my $root_path = $c->stash()->{curs_root_uri};
 my $pub = $c->stash()->{pub};
 my $pub_title = undef;
 if (defined $pub) {

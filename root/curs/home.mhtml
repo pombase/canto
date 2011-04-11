@@ -1,7 +1,7 @@
 <%args>
 $curs_key
 $state
-$curs_root_path
+$curs_root_uri
 $gene_display_name
 $pub
 @annotation_type_list
@@ -15,7 +15,7 @@ $pub
   <ul class="annotation-start">
 % for my $annotation_type (@annotation_type_list) {
 %   my $annotation_type_name = $annotation_type->{name};
-%   my $action_path = $curs_root_path . '/annotation/edit/' .
+%   my $action_path = $curs_root_uri . '/annotation/edit/' .
 %                     $current_gene_id . '/' . $annotation_type_name;
     <li>
 %   if (!$annotation_type->{disabled}) {
@@ -37,7 +37,7 @@ Annotate <% $annotation_type->{display_name} %>
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
-   curs_root_path => $curs_root_path &>
+   curs_root_uri => $curs_root_uri &>
 
 % _increment_annotation_count($annotation_type->{name}, \$annotation_count);
 % }
@@ -70,6 +70,6 @@ sub _increment_annotation_count
   $$annotation_count_ref += $rs->count();
 }
 
-my $download_action = $curs_root_path . '/annotation/zipexport';
+my $download_action = $curs_root_uri . '/annotation/zipexport';
 
 </%init>

@@ -1,5 +1,5 @@
 <%args>
-$curs_root_path
+$curs_root_uri
 $annotation
 $form
 </%args>
@@ -12,7 +12,7 @@ $form
     <div class="curs-box-body">
 
 <& ../one_annotation_summary.mhtml,
-   curs_root_path => $curs_root_path,
+   curs_root_uri => $curs_root_uri,
    annotation => $annotation &>
 
 <div>You can annotate other genes from your list with the same term and

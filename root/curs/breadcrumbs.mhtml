@@ -8,5 +8,5 @@
 
 
 <%init>
-my $home_path = $c->stash()->{curs_root_path};
+my $home_path = $c->stash()->{curs_root_uri};
 </%init>

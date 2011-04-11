@@ -391,7 +391,7 @@ $(document).ready(function() {
           ferret_choose.set_current_term(last(ferret_choose.term_history));
         }
       } else {
-        window.location.href = curs_root_path;
+        window.location.href = curs_root_uri;
       }
     });
 
@@ -460,7 +460,7 @@ $(document).ready(function() {
   } else {
 
     $('#breadcrumb-previous-button').click(function () {
-      window.location.href = curs_root_path;
+      window.location.href = curs_root_uri;
     });
 
   }

@@ -1,5 +1,5 @@
 <%args>
-$curs_root_path
+$curs_root_uri
 $annotation_type
 @annotations
 $completed_count
@@ -59,7 +59,7 @@ Current <% $annotation_type->{display_name} %> annotations
 % if (defined $row->{evidence_code}) {
      <% $row->{evidence_code} %>
 % } else {
-     <a href="<% $curs_root_path . '/annotation/evidence/' . $row->{annotation_id} %>">Set evidence ...</a>
+     <a href="<% $curs_root_uri . '/annotation/evidence/' . $row->{annotation_id} %>">Set evidence ...</a>
 % }
     </td>
     <td>
@@ -67,7 +67,7 @@ Current <% $annotation_type->{display_name} %> annotations
 %   if (defined $row->{with_or_from_display_name}) {
       <% $row->{with_or_from_display_name} %>
 %   } else {
-      <a href="<% $curs_root_path . '/annotation/with_gene/' . $row->{annotation_id} %>">Set with ...</a>
+      <a href="<% $curs_root_uri . '/annotation/with_gene/' . $row->{annotation_id} %>">Set with ...</a>
 %   }
 % } else {
      &nbsp; 
@@ -101,7 +101,7 @@ Current <% $annotation_type->{display_name} %> annotations
 % }
 
 <%init>
-my $delete_action = $curs_root_path . '/annotation/delete/';
+my $delete_action = $curs_root_uri . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 
 my $some_incomplete = $completed_count != @annotations;

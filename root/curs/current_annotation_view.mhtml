@@ -1,9 +1,9 @@
 <%args>
-$curs_root_path
+$curs_root_uri
 $annotation_type
 </%args>
 
-<& $annotation_view_template, curs_root_path => $curs_root_path,
+<& $annotation_view_template, curs_root_uri => $curs_root_uri,
   annotation_type => $annotation_type, annotations => [@annotations],
   completed_count => $completed_count &>
 

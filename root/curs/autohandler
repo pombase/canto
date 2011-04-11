@@ -1,13 +1,13 @@
 <%args>
 $state
-$curs_root_path
+$curs_root_uri
 $current_gene => undef
 $gene_display_name => undef
 $pub
 </%args>
 
 <script language="javascript" type="text/javascript">
-var curs_root_path = '<% $curs_root_path %>';
+var curs_root_uri = '<% $curs_root_uri %>';
 var application_root = '<% $c->uri_for('/') %>';
 </script>
 

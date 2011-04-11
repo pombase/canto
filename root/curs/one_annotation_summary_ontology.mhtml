@@ -1,5 +1,4 @@
 <%args>
-$curs_root_path
 $annotation_data
 </%args>
 

@@ -69,7 +69,7 @@ my @gene_hashes = map {
 
 my @col_names = qw(identifier);
 
-my $start_path = $c->stash()->{curs_root_path};
+my $start_path = $c->stash()->{curs_root_uri};
 my $upload_path = "$start_path/gene_upload";
 my $edit_path = "$start_path/edit_genes";
 </%init>

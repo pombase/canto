@@ -1,9 +1,9 @@
 <%args>
-$curs_root_path
+$curs_root_uri
 $annotation
 </%args>
 
-<& $annotation_view_template, curs_root_path => $curs_root_path,
+<& $annotation_view_template, curs_root_uri => $curs_root_uri,
    annotation_data => $annotations[0] &>
 
 <%init>

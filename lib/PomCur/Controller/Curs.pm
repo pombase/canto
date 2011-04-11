@@ -97,7 +97,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{controller_name} = $controller_name;
 
   my $root_path = $c->uri_for("/$controller_name/$curs_key");
-  $st->{curs_root_path} = $root_path;
+  $st->{curs_root_uri} = $root_path;
 
   $st->{page_description_id} = 'curs-page-description';
 
@@ -203,7 +203,7 @@ sub _redirect_and_detach
     unshift @path_components, '';
   }
 
-  my $target = $c->stash->{curs_root_path} . join ('/', @path_components);
+  my $target = $c->stash->{curs_root_uri} . join ('/', @path_components);
 
   $c->res->redirect($target);
   $c->detach();
