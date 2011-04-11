@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 35;
+use Test::More tests => 43;
 
 use Data::Compare;
 
@@ -36,6 +36,7 @@ test_psgi $app, sub {
 
   my $annotation_evidence_url = "$root_url/annotation/evidence/3";
   my $annotation_with_gene_url = "$root_url/annotation/with_gene/3";
+  my $transfer_url = "$root_url/annotation/transfer/3";
 
   {
     my $uri = new URI("$root_url");
@@ -108,6 +109,56 @@ test_psgi $app, sub {
     is ($annotation->data()->{evidence_code}, 'IPI');
   }
 
+  # test uploading another gene
+  {
+    is ($curs_schema->resultset('Gene')->count(), 3);
+
+    my $uri = new URI("$root_url/gene_upload");
+    $uri->query_form(return_path_input => $annotation_with_gene_url,
+                     gene_identifiers => ['orb5'],
+                     Submit => 'Submit');
+
+    my $req = HTTP::Request->new(GET => $uri);
+
+    my $res = $cb->($req);
+
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    is ($redirect_url, $annotation_with_gene_url);
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    is ($curs_schema->resultset('Gene')->count(), 4);
+  }
+
+  # test going to upload gene page, then pressing back
+  {
+    is ($curs_schema->resultset('Gene')->count(), 4);
+
+    my $uri = new URI("$root_url/gene_upload");
+    $uri->query_form(return_path_input => $annotation_with_gene_url,
+                     gene_identifiers => ['klp1'],
+                     Submit => 'Back');
+
+    my $req = HTTP::Request->new(GET => $uri);
+
+    my $res = $cb->($req);
+
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    is ($redirect_url, $annotation_with_gene_url);
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    is ($curs_schema->resultset('Gene')->count(), 4);
+  }
+
   # test setting "with gene"
   {
     my $uri = new URI($annotation_with_gene_url);
@@ -122,7 +173,7 @@ test_psgi $app, sub {
 
     my $redirect_url = $res->header('location');
 
-    is ($redirect_url, "$root_url/annotation/transfer/3");
+    is ($redirect_url, $transfer_url);
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
@@ -152,7 +203,7 @@ test_psgi $app, sub {
       } $annotation->genes());
     }
 
-    my $uri = new URI("$root_url/annotation/transfer/3");
+    my $uri = new URI($transfer_url);
     $uri->query_form('transfer' => 'transfer-submit',
                      dest => [$gene_1->gene_id()]);
 

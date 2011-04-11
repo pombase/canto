@@ -96,8 +96,11 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   (my $controller_name = __PACKAGE__) =~ s/.*::(.*)/\L$1/;
   $st->{controller_name} = $controller_name;
 
-  my $root_path = $c->uri_for("/$controller_name/$curs_key");
-  $st->{curs_root_uri} = $root_path;
+  my $root_path = "/$controller_name/$curs_key";
+  $st->{curs_root_path} = $root_path;
+
+  my $root_uri = $c->uri_for($root_path);
+  $st->{curs_root_uri} = $root_uri;
 
   $st->{page_description_id} = 'curs-page-description';
 
@@ -484,6 +487,8 @@ sub gene_upload : Chained('top') Args(0) Form
       { name => $gene_list_textarea_name, type => 'Textarea', cols => 80, rows => 10,
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
       },
+      { name => 'return_path_input', type => 'Hidden',
+        value => $c->req()->param("return_path") // '' },
       map {
           {
             name => $_, type => 'Submit', value => $_,
@@ -500,7 +505,15 @@ sub gene_upload : Chained('top') Args(0) Form
 
   if ($form->submitted()) {
     if (defined $c->req->param('Back')) {
-      _redirect_and_detach($c, 'edit_genes');
+      my $return_path = $form->param_value('return_path_input');
+
+      if (defined $return_path && length $return_path > 0) {
+        $c->res->redirect($return_path, 302);
+        $c->detach();
+        return 0;
+      } else {
+        _redirect_and_detach($c, 'edit_genes');
+      }
     }
   }
 
@@ -522,9 +535,16 @@ sub gene_upload : Chained('top') Args(0) Form
         $c->stash()->{state} = GENE_ACTIVE;
       }
 
-      $c->flash()->{search_terms} = [@search_terms];
+      my $return_path = $form->param_value('return_path_input');
 
-      _redirect_and_detach($c, 'confirm_genes');
+      if (defined $return_path && length $return_path > 0) {
+        $c->res->redirect($return_path, 302);
+        $c->detach();
+        return 0;
+      } else {
+        $c->flash()->{search_terms} = [@search_terms];
+        _redirect_and_detach($c, 'confirm_genes');
+      }
     }
   }
 }
