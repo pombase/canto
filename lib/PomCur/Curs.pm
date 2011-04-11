@@ -161,7 +161,12 @@ sub get_schema_for_key
     PomCur::Curs::make_connect_string($config, $curs_key);
 
   if ($exists_flag) {
-    return PomCur::CursDB->connect($connect_string);
+    my $schema = PomCur::CursDB->connect($connect_string);
+
+    my $dbh = $schema->storage()->dbh();
+    $dbh->do("PRAGMA foreign_keys = ON");
+
+    return $schema;
   } else {
     return undef;
   }

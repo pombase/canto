@@ -76,11 +76,16 @@ sub new
     }
   }
 
-  return $self->connect($con_info->[0], $con_info->[1], $con_info->[2],
-                        {
-                         RaiseError => 1,
-                         AutoCommit => 1
-                        })
+  my $schema = $self->connect($con_info->[0], $con_info->[1], $con_info->[2],
+                              {
+                                RaiseError => 1,
+                                AutoCommit => 1
+                              });
+
+  my $dbh = $schema->storage()->dbh();
+  $dbh->do("PRAGMA foreign_keys = ON");
+
+  return $schema;
 }
 
 =head2 initialise
