@@ -472,12 +472,12 @@ sub gene_upload : Chained('top') Args(0) Form
   $st->{current_component} = 'gene_upload';
 
   my $form = $self->form();
-  my @submit_buttons = ("submit");
+  my @submit_buttons = ("Submit");
 
   my $schema = $st->{schema};
 
   if ($st->{gene_count} > 0) {
-    push @submit_buttons, "back";
+    push @submit_buttons, "Back";
   }
 
   my @all_elements = (
@@ -499,7 +499,7 @@ sub gene_upload : Chained('top') Args(0) Form
   $st->{form} = $form;
 
   if ($form->submitted()) {
-    if (defined $c->req->param('back')) {
+    if (defined $c->req->param('Back')) {
       _redirect_and_detach($c, 'edit_genes');
     }
   }
