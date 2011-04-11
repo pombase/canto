@@ -429,11 +429,20 @@ sub _edit_genes_helper
         my $delete_sub = sub {
           for my $gene_id (@gene_ids) {
             my $gene = $schema->find_with_type('Gene', $gene_id);
+
+            my @annotations = $gene->annotations()->all();
+
+            $schema->resultset('GeneAnnotation')
+              ->search({ gene => $gene_id })->delete();
+
+            map { $_->delete() } @annotations;
+
             $gene->delete();
             if (defined $st->{current_gene_id} &&
                 $st->{current_gene_id} eq $gene_id) {
               _set_new_gene($schema);
             }
+
           }
         };
         $schema->txn_do($delete_sub);
