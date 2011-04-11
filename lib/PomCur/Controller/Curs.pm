@@ -696,7 +696,7 @@ sub annotation_interaction_edit
         options => [@options],
       },
       {
-        name => 'interaction-submit', type => 'Submit',
+        name => 'interaction-submit', type => 'Submit', value => 'Proceed ->',
       }
     );
 
@@ -839,7 +839,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
         type => 'Select', options => [ @codes ],
       },
       {
-        name => 'evidence-proceed', type => 'Submit', value => 'Proceed',
+        name => 'evidence-proceed', type => 'Submit', value => 'Proceed ->',
       },
     );
 
@@ -921,7 +921,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
         options => [@options],
       },
       {
-        name => 'transfer-submit', type => 'Submit',
+        name => 'transfer-submit', type => 'Submit', value => 'Finish',
       }
     );
 
@@ -1005,7 +1005,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
         type => 'Select', options => [ @genes ],
       },
       {
-        name => 'with-gene-proceed', type => 'Submit', value => 'Proceed',
+        name => 'with-gene-proceed', type => 'Submit', value => 'Proceed ->',
       },
     );
 
