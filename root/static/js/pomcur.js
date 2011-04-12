@@ -80,18 +80,22 @@ var ferret_choose = {
     ferret_choose.debug("set_current_term: " + term_id);
 
     if (term_id) {
-      var i = 0;
-      for (; i < ferret_choose.term_history.length; i++) {
-        var value = ferret_choose.term_history[i];
-        if (term_id == value) {
-          // truncate the array, making term_id the last element
-          ferret_choose.term_history.length = i + 1;
-          break;
+      if (term_id == 'search') {
+        ferret_choose.term_history.length = 1;
+      } else {
+        var i;
+        for (i = 1; i < ferret_choose.term_history.length; i++) {
+          var value = ferret_choose.term_history[i];
+          if (term_id == value) {
+            // truncate the array, making term_id the last element
+            ferret_choose.term_history.length = i + 1;
+            break;
+          }
         }
-      }
-
-      if (i == ferret_choose.term_history.length) {
-        ferret_choose.term_history.push(term_id);
+        
+        if (i == ferret_choose.term_history.length) {
+          ferret_choose.term_history.push(term_id);
+        }
       }
     }
 
@@ -142,7 +146,7 @@ var ferret_choose = {
     var link_start;
     var link_end;
     if (history_length > 1) {
-      link_start = '<a href="#' + search_string + '">';
+      link_start = '<a href="#search">';
       link_end = '</a>';
     } else {
       link_start = '';
@@ -316,13 +320,14 @@ $(document).ready(function() {
   var ferret_input = $("#ferret-term-input");
 
   if (ferret_input.size()) {
-    ferret_input.keyup(function() {
-      ferret_choose.term_history = [trim($('#ferret-term-input').val())];
-    });
     ferret_input.autocomplete({
       minLength: 2,
       source: ferret_choose.ontology_complete_url,
+      cacheLength: 100,
+      mustMatch: false,
+      selectFirst: true,
       select: function(event, ui) {
+        ferret_choose.term_history =[trim(ferret_input.val())];
         ferret_choose.set_current_term(ui.item.id);
         ferret_choose.matching_synonym = ui.item.matching_synonym;
         return false;
@@ -364,14 +369,24 @@ $(document).ready(function() {
         .appendTo( ul );
     };
 
+    function do_autocomplete () {
+      ferret_input.focus();
+      ferret_input.autocomplete('search');
+    }
+
+    ferret_input.bind('paste', function() {
+      setTimeout(do_autocomplete, 10);
+    });
+
     $('#ferret-test-do-search').click(function () {
       ferret_choose.term_selected($('#ferret-term-input').val());
     });
 
     ferret_input.keypress(function(event) {
       if (event.which == 13) {
-        // disable return
+        // return should autocomplete not submit the form
         event.preventDefault();
+        ferret_input.autocomplete('search');
       }
     });
 
