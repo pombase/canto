@@ -137,7 +137,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       "Curating $gene_display_name from " . $st->{pub}->uniquename();
   }
 
-  $st->{gene_count} = _get_gene_resultset($schema)->count();
+  $st->{gene_count} = get_ordered_gene_rs($schema)->count();
 
   if ($path !~ /gene_upload|edit_genes/) {
     my $dispatch_dest = $state_dispatch{$state};
@@ -163,7 +163,7 @@ sub _get_state
   my $gene_count = undef;
 
   if (defined $submitter_email) {
-    my $gene_rs = _get_gene_resultset($schema);
+    my $gene_rs = get_ordered_gene_rs($schema);
     $gene_count = $gene_rs->count();
 
     if ($gene_count > 0) {
@@ -188,7 +188,7 @@ sub _set_new_gene
 {
   my $schema = shift;
 
-  my $gene_rs = _get_gene_resultset($schema);
+  my $gene_rs = get_ordered_gene_rs($schema);
   my $first_gene = $gene_rs->first();
 
   if (defined $first_gene) {
@@ -295,7 +295,7 @@ sub _filter_existing_genes
 
   my @gene_primary_identifiers = map { $_->{primary_identifier} } @genes;
 
-  my $gene_rs = _get_gene_resultset($schema);
+  my $gene_rs = get_ordered_gene_rs($schema);
   my $rs = $gene_rs->search({
     primary_identifier => {
       -in => [@gene_primary_identifiers],
@@ -447,7 +447,7 @@ sub _edit_genes_helper
         };
         $schema->txn_do($delete_sub);
 
-        if (_get_gene_resultset($schema)->count() == 0) {
+        if (get_ordered_gene_rs($schema)->count() == 0) {
           $c->flash()->{message} = 'All genes removed from the list';
           _redirect_and_detach($c, 'gene_upload');
         } else {
@@ -709,7 +709,8 @@ sub annotation_interaction_edit
 
   $form->auto_fieldset(0);
 
-  my $genes_rs = $schema->resultset('Gene');
+  my $genes_rs = get_ordered_gene_rs($schema, 'primary_name');
+
   my @options = ();
 
   while (defined (my $gene = $genes_rs->next())) {
@@ -932,7 +933,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   $form->auto_fieldset(0);
 
-  my $genes_rs = $schema->resultset('Gene');
+  my $genes_rs = get_ordered_gene_rs($schema, 'primary_name');
+
   my @options = ();
 
   while (defined (my $other_gene = $genes_rs->next())) {
@@ -1019,7 +1021,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
 
   my @genes = ();
 
-  my $gene_rs = _get_gene_resultset($schema);
+  my $gene_rs = get_ordered_gene_rs($schema, 'primary_name');
 
   while (defined (my $gene = $gene_rs->next())) {
     push @genes, [$gene->primary_identifier(), $gene->display_name()];
@@ -1076,14 +1078,37 @@ sub set_current_gene : Chained('top') Args(1)
   _redirect_and_detach($c);
 }
 
-sub _get_gene_resultset
+=head2 get_ordered_gene_rs
+
+ Usage   : my $gene_rs = get_ordered_gene_rs($schema, $order_by_field);
+ Function: Return an ordered resultset of genes
+ Args    : $schema - the CursDB schema
+           $order_by_field - the field to order by, defaults to gene_id
+ Returns : a ResultSet
+
+=cut
+sub get_ordered_gene_rs
 {
   my $schema = shift;
+
+  my $order_by_field = shift // 'gene_id';
+  my $order_by;
+
+  if ($order_by_field eq 'primary_name') {
+    # special case, order by primary_name unless it's null, then use
+    # primary_identifier
+    $order_by =
+      "case when primary_name is null then 'zzz' || primary_identifier " .
+      "else primary_name end";
+  } else {
+    $order_by = {
+      -asc => $order_by_field
+    }
+  }
+
   return $schema->resultset('Gene')->search({},
                                             {
-                                              order_by => {
-                                                -asc => 'gene_id'
-                                              }
+                                              order_by => $order_by
                                             });
 }
 
