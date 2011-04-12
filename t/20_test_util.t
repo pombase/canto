@@ -141,11 +141,15 @@ sub track_init
   my $track_schema = shift;
   my $load_util = shift;
 
+  my $role = $track_schema->find_with_type('Cvterm',
+                                           {
+                                             name => 'user',
+                                           });
   $track_schema->create_with_type('Person',
                                   {
                                     email_address => 'kevin.hardwick@ed.ac.uk',
                                     name => 'Kevin Hardwick',
-                                    role => 'user'
+                                    role => $role,
                                   });
   $track_schema->create_with_type('Cv',
                                   {
