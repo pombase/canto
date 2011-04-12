@@ -723,3 +723,7 @@ span.pomcur-select-buttons {
   display: block;
   margin: 10px;
 }
+
+#curs-annotation-actions {
+  width: 80%;
+}
