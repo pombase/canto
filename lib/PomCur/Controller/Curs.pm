@@ -752,8 +752,7 @@ sub annotation_interaction_edit
         }
       } @prey_params;
 
-    my %annotation_data = (name => $annotation_type_name,
-                           prey => [@prey_identifiers]);
+    my %annotation_data = (prey => [@prey_identifiers]);
 
     my $annotation =
       $schema->create_with_type('Annotation',
