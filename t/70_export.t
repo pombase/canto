@@ -78,6 +78,29 @@ cmp_deeply($curation_session,
                     } ],
                 synonyms => ['SPAC637.01c'],
               },
+              'SPBC14F5.07' => {
+                primary_name => 'doa10',
+                product => 'ER-localized ubiquitin ligase Doa10 (predicted)',
+                organism => 'Schizosaccharomyces pombe',
+                annotations => [
+                  {
+                    evidence_code => "IPI",
+                    creation_date => "2010-01-02",
+                    term_ontid => "GO:0034763",
+                    status => "new",
+                    type => "biological_process",
+                    publication => 'PMID:19756689',
+                    with_gene => "SPCC63.05"
+                    } ],
+                synonyms => ['ssm4'],
+              },
+              'SPCC63.05' => {
+                primary_name => undef,
+                product => 'TAP42 family protein involved in TOR signalling (predicted)',
+                organism => 'Schizosaccharomyces pombe',
+                annotations => [],
+                synonyms => [],
+              },
             },
             publications => {
               'PMID:19756689' => {

@@ -13,43 +13,56 @@ use PomCur::TestUtil;
 use PomCur::Controller::Curs;
 
 my $test_util = PomCur::TestUtil->new();
-$test_util->init_test('curs_annotations_1');
+$test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
-
-my $track_schema = $test_util->track_schema();
-my @curs_objects = $track_schema->resultset('Curs')->all();
-my $curs_key = $curs_objects[0]->curs_key();
 my $app = $test_util->plack_app()->{app};
 
-my $root_url = "http://localhost:5000/curs/$curs_key";
+my $root_url = "http://localhost:5000/curs/aaaa0007";
 
 test_psgi $app, sub {
   my $cb = shift;
 
   {
-    my $uri = new URI("$root_url/annotation/export/cellular_component");
+    my $uri = new URI("$root_url/annotation/export/biological_process");
 
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);
 
     my $exported = '';
 
-    $exported .= join ("	", ("GeneDB_Spombe",
-                                    "SPAC3A11.14c",
-                                    "pkl1",
-                                    "",
-                                    "GO:0030133",
-                                    "PMID:18426916",
-                                    "IPI",
-                                    "GeneDB_Spombe:SPCC1739.11c",
-                                    "C",
-                                    "kinesin-like protein Pkl1",
-                                    "klp1|SPAC3H5.03c",
-                                    "gene",
-                                    "taxon:4896",
-                                    "20100102",
-                                    "GeneDB_Spombe")) . "\n";
+    $exported .= join ("	",
+                       ('GeneDB_Spombe',
+                        'SPAC27D7.13c',
+                        'ssm4',
+                        '',
+                        'GO:0055085',
+                        'PMID:19756689',
+                        'IMP',
+                        '',
+                        'P',
+                        'p150-Glued',
+                        'SPAC637.01c',
+                        'gene',
+                        'taxon:4896',
+                        '20100102',
+                        'GeneDB_Spombe')) . "\n";
+    $exported .= join ("	",
+                       ('GeneDB_Spombe',
+                        'SPBC14F5.07',
+                        'doa10',
+                        '',
+                        'GO:0034763',
+                        'PMID:19756689',
+                        'IPI',
+                        'GeneDB_Spombe:SPCC63.05',
+                        'P',
+                        'ER-localized ubiquitin ligase Doa10 (predicted)',
+                        'ssm4',
+                        'gene',
+                        'taxon:4896',
+                        '20100102',
+                        'GeneDB_Spombe')) . "\n";
 
     is $res->code, 200;
     is ($res->content(), $exported);

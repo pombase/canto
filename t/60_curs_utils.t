@@ -19,7 +19,7 @@ my ($completed_count, $annotations_ref) =
 
 my @annotations = @$annotations_ref;
 
-is (@annotations, 1);
+is (@annotations, 2);
 
 is ($annotations[0]->{gene_identifier}, 'SPAC27D7.13c');
 is ($annotations[0]->{term_ontid}, 'GO:0055085');
