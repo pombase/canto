@@ -27,7 +27,6 @@ my $root_url = "http://localhost:5000/curs/$curs_key";
 test_psgi $app, sub {
   my $cb = shift;
 
-  # test submitting a name and email address
   {
     my $uri = new URI("$root_url/annotation/export/cellular_component");
 
