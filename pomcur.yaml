@@ -601,6 +601,7 @@ annotation_type_list:
       multicellular anatomical terms.
   - name: phenotype
     category: ontology
+    namespace: fission_yeast_phenotype
     very_short_display_name: 'phenotype'
     short_display_name: 'phenotype'
     display_name: 'phenotype'
