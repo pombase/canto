@@ -98,7 +98,23 @@ cmp_deeply($curation_session,
                 primary_name => undef,
                 product => 'TAP42 family protein involved in TOR signalling (predicted)',
                 organism => 'Schizosaccharomyces pombe',
-                annotations => [],
+                annotations => [
+                  {
+                    type => 'genetic_interaction',
+                    publication => 'PMID:19756689',
+                    status => 'new',
+                    creation_date => "2010-01-02",
+                    evidence_code => 'Synthetic Haploinsufficiency',
+                    interacting_genes => [
+                      {
+                        primary_identifier => 'SPBC14F5.07',
+                      },
+                      {
+                        primary_identifier => 'SPAC27D7.13c',
+                      }
+                    ]
+                  }
+                ],
                 synonyms => [],
               },
             },

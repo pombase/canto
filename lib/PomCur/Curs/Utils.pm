@@ -142,18 +142,20 @@ sub _make_interaction_annotation
 
   my $pub_uniquename = $annotation->pub()->uniquename();
 
-  my @prey_data = @{$data->{prey}};
+  my @interacting_genes = @{$data->{interacting_genes}};
 
   return map {
-    my $prey_data = $_;
+    my $interacting_gene = $_;
     my $entry =
           {
             gene_identifier => $gene->primary_identifier(),
             gene_taxonid => $gene->organism()->taxonid(),
             publication_uniquename => $pub_uniquename,
             evidence_code => $evidence_code,
-            interacting_gene_identifier => $prey_data->{primary_identifier},
-            interacting_gene_taxonid => $prey_data->{organism_taxon},
+            interacting_gene_identifier =>
+              $interacting_gene->{primary_identifier},
+            interacting_gene_taxonid =>
+              $interacting_gene->{organism_taxon} // $gene->organism()->taxonid(),
             score => '',
             phenotypes => '',
             comment => '',
@@ -161,7 +163,7 @@ sub _make_interaction_annotation
             annotation_id => $annotation->annotation_id(),
           };
     $entry;
-  } @prey_data;
+  } @interacting_genes;
 };
 
 =head2 get_annotation_table

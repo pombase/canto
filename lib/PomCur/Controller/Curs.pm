@@ -747,12 +747,10 @@ sub annotation_interaction_edit
         my $prey_gene = $schema->find_with_type('Gene', $_);
         {
           primary_identifier => $prey_gene->primary_identifier(),
-          organism_taxon => $prey_gene->organism()->taxonid(),
-          organism_full_name => $prey_gene->organism()->full_name(),
         }
       } @prey_params;
 
-    my %annotation_data = (prey => [@prey_identifiers]);
+    my %annotation_data = (interacting_genes => [@prey_identifiers]);
 
     my $annotation =
       $schema->create_with_type('Annotation',

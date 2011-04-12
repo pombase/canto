@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 34;
+use Test::More tests => 26;
 
 use Data::Compare;
 
@@ -99,13 +99,12 @@ for my $annotation_type (@annotation_type_list) {
           $bait->primary_identifier());
 
       my $new_annotation_data = $new_annotation->data();
-      my @data_prey = @{$new_annotation_data->{prey}};
+      my @interacting_genes = @{$new_annotation_data->{interacting_genes}};
 
-      is ($data_prey[0]->{primary_identifier}, $prey1->primary_identifier());
-      is ($data_prey[1]->{primary_identifier}, $prey2->primary_identifier());
-
-      map { is ($_->{organism_full_name}, "Schizosaccharomyces pombe");
-            is ($_->{organism_taxon}, 4896) } @data_prey;
+      is ($interacting_genes[0]->{primary_identifier},
+          $prey1->primary_identifier());
+      is ($interacting_genes[1]->{primary_identifier},
+          $prey2->primary_identifier());
     }
 
     # test adding evidence to an annotation
