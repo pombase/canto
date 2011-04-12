@@ -6,12 +6,14 @@ $evidence_code
 $pub
 </%args>
 
-<div class="with-gene-select">
-  <div class="description">
+<div class="curs-box with-gene-select">
+  <div class="curs-box-title">
 Choose interacting gene for annotating <% $gene_display_name %>
 with <% $term_ontid %> using <% $evidence_code %>
   </div>
-  <% $form %>
+  <div class="curs-box-body">
+    <% $form %>
+  </div>
 
   <div class="upload-genes-link">
     <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>

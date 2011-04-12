@@ -3,9 +3,11 @@ $form
 $term_ontid
 </%args>
 
-<div class="evidence-select">
-  <div class="description">
+<div class="curs-box evidence-select">
+  <div class="curs-box-title">
 Choose evidence for <% $term_ontid %>
   </div>
-  <% $form %>
+  <div class="curs-box-body">
+    <% $form %>
+  </div>
 </div>
