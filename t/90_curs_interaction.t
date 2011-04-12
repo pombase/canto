@@ -89,7 +89,7 @@ for my $annotation_type (@annotation_type_list) {
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
 
-      like ($redirect_res->content(), qr/Choose evidence for /);
+      like ($redirect_res->content(), qr/Choose evidence for interaction/);
 
       $new_annotation =
         $curs_schema->find_with_type('Annotation', $new_annotation_id);

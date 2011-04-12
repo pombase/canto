@@ -835,16 +835,12 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
-  my $annotation_data = $annotation->data();
-  my $term_ontid = $annotation_data->{term_ontid};
-
   my $module_display_name = $annotation_config->{display_name};
   $st->{title} = "Annotating $gene_display_name";
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/${annotation_type_name}_evidence.mhtml";
-
-  $st->{term_ontid} = $term_ontid;
+  $st->{annotation} = $annotation;
 
   my $ont_config = $config->{annotation_types}->{$annotation_type_name};
 

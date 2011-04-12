@@ -1,6 +1,6 @@
 <%args>
 $form
-$term_ontid
+$annotation
 </%args>
 
 <div class="curs-box evidence-select">
@@ -11,3 +11,8 @@ Choose evidence for <% $term_ontid %>
     <% $form %>
   </div>
 </div>
+
+<%init>
+my $annotation_data = $annotation->data();
+my $term_ontid = $annotation_data->{term_ontid};
+</%init>
