@@ -2,9 +2,11 @@
 $form
 </%args>
 
-<div class="evidence-select">
-  <div class="description">
+<div class="curs-box evidence-select">
+  <div class="curs-box-title">
 Choose evidence for interaction
   </div>
-  <% $form %>
+  <div class="curs-box-body">
+    <% $form %>
+  </div>
 </div>
