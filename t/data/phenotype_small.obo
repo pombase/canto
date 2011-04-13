@@ -1,48 +1,172 @@
 format-version: 1.2
-date: 15:10:2010 08:38
-saved-by: kmr
-auto-generated-by: hand
-synonymtypedef: systematic_synonym "Systematic synonym" EXACT
-default-namespace: phenotype
-remark: cvs version: $Revision: 1.1536 $
+date: 12:04:2011 18:01
+saved-by: mah79
+auto-generated-by: OBO-Edit 2.1-beta12
+default-namespace: file:/Users/mah79/pombase/phenotype_ontology/fypo.obo
+remark: svn version: $Revision: 136 $
+ontology: fypo
 
 [Term]
-id: PP:00001
+id: FYPO:0000001
 name: phenotype
-namespace: phenotype
-def: "Phenotype."
+namespace: fission_yeast_phenotype
+def: "Any of the set of observable characteristics of an organism resulting from the interaction of its genotype with the environment." [PomBase:mah]
+creation_date: 2011-03-16T03:59:25Z
 
 [Term]
-id: PP:00002
-name: round
-namespace: phenotype
-def: "Round, no corners."
-is_a: PP:00001
+id: FYPO:0000002
+name: cell phenotype
+namespace: fission_yeast_phenotype
+def: "A phenotype that is observed at the level of an individual cell." [PomBase:mah]
+is_a: FYPO:0000001 ! phenotype
+intersection_of: FYPO:0000001 ! phenotype
+intersection_of: inheres_in CL:0000000 ! cell
+created_by: midori
+creation_date: 2011-03-16T04:25:28Z
 
 [Term]
-id: PP:00003
-name: squishy
-namespace: phenotype
-def: "A bit squishy."
-is_a: PP:00001
+id: FYPO:0000005
+name: abnormal cell morphology
+namespace: fission_yeast_phenotype
+alt_id: FYPO:0000019
+def: "A cell phenotype characterized by altered cell morphology." [PomBase:mah]
+synonym: "cell morphology, misshapen cells" EXACT []
+is_a: FYPO:0000136 ! cellular structure phenotype
+intersection_of: PATO:0000051
+intersection_of: inheres_in CL:0000000 ! cell
+created_by: mah79
+creation_date: 2011-03-29T05:53:56Z
 
 [Term]
-id: PP:00004
-name: very squishy
-namespace: phenotype
-def: "Really very squishy."
-is_a: PP:00003
+id: FYPO:0000013
+name: T-shaped cells
+namespace: fission_yeast_phenotype
+synonym: "cell morphology, T shaped" EXACT []
+is_a: FYPO:0000005 ! abnormal cell morphology
+intersection_of: PATO:0001200
+intersection_of: inheres_in CL:0000000 ! cell
+created_by: mah79
+creation_date: 2011-03-29T05:53:56Z
 
 [Term]
-id: PP:00005
-name: extremely squishy
-namespace: phenotype
-def: "Extremely squishy."
-is_a: PP:00004
+id: FYPO:0000017
+name: elongated cells
+namespace: fission_yeast_phenotype
+synonym: "cell morphology, elongated cells" EXACT []
+is_a: FYPO:0000005 ! abnormal cell morphology
+intersection_of: PATO:0000573
+intersection_of: inheres_in CL:0000000 ! cell
+created_by: mah79
+creation_date: 2011-03-29T05:53:56Z
 
 [Term]
-id: PP:00006
-name: flat
-namespace: phenotype
-def: "Flat - no height."
-is_a: PP:00003
+id: FYPO:0000035
+name: growth auxotrophic for arginine
+namespace: fission_yeast_phenotype
+def: "Auxotrophy in which arginine is required for cell growth." [PomBase:mah]
+is_a: FYPO:0000128 ! auxotrophy
+intersection_of: PATO:0000422
+intersection_of: towards CHEBI:16467
+created_by: mah79
+creation_date: 2011-03-29T05:53:56Z
+
+[Term]
+id: FYPO:0000061
+name: multinucleate
+namespace: fission_yeast_phenotype
+is_a: FYPO:0000136 ! cellular structure phenotype
+intersection_of: PATO:0001908
+intersection_of: inheres_in CL:0000000 ! cell
+created_by: mah79
+creation_date: 2011-03-29T05:53:56Z
+
+[Term]
+id: FYPO:0000114
+name: cellular process phenotype
+namespace: fission_yeast_phenotype
+alt_id: FYPO:0000028
+def: "A phenotype that affects a cellular process." [PomBase:mah]
+synonym: "chromosome condensation defects" EXACT []
+is_a: FYPO:0000002 ! cell phenotype
+intersection_of: PATO:0000001
+intersection_of: inheres_in GO:0030261
+intersection_of: qualifier PATO:0000460
+created_by: mah79
+creation_date: 2011-04-12T12:00:38Z
+
+[Term]
+id: FYPO:0000128
+name: auxotrophy
+namespace: fission_yeast_phenotype
+def: "A phenotype characterized by a cell's inability to synthesize a particular organic compound required for its growth." [PATO:0000422, PomBase:mah]
+is_a: FYPO:0000139 ! cell growth phenotype
+is_a: FYPO:0000140 ! cellular metabolism phenotype
+intersection_of: qualifier PATO:0000422
+created_by: mah79
+creation_date: 2011-03-29T05:54:40Z
+
+[Term]
+id: FYPO:0000133
+name: elongated multinucleate cells
+namespace: fission_yeast_phenotype
+def: "A cell phenotype in which cells contain more than one nucleus apiece and are elongated." [PomBase:mah]
+is_a: FYPO:0000017 ! elongated cells
+is_a: FYPO:0000061 ! multinucleate
+intersection_of: PATO:0000573
+intersection_of: PATO:0001908
+intersection_of: inheres_in CL:0000000 ! cell
+created_by: mah79
+creation_date: 2011-03-29T05:54:40Z
+
+[Term]
+id: FYPO:0000136
+name: cellular structure phenotype
+namespace: fission_yeast_phenotype
+def: "A phenotype that affects the structure of a cell or a cellular component." [PomBase:mah]
+is_a: FYPO:0000002 ! cell phenotype
+intersection_of: FYPO:0000002 ! cell phenotype
+intersection_of: inheres_in GO:0005575
+created_by: mah79
+creation_date: 2011-04-12T12:01:21Z
+
+[Term]
+id: FYPO:0000139
+name: cell growth phenotype
+namespace: fission_yeast_phenotype
+def: "A cell phenotype that affects the rate or extent of cell growth." []
+is_a: FYPO:0000114 ! cellular process phenotype
+intersection_of: FYPO:0000002 ! cell phenotype
+intersection_of: inheres_in GO:0016049
+created_by: mah79
+creation_date: 2011-04-12T02:22:51Z
+
+[Term]
+id: FYPO:0000140
+name: cellular metabolism phenotype
+namespace: fission_yeast_phenotype
+def: "A phenotype that affects metabolism in the cell." [PomBase:mah]
+is_a: FYPO:0000114 ! cellular process phenotype
+intersection_of: FYPO:0000002 ! cell phenotype
+intersection_of: inheres_in GO:0044237
+created_by: mah79
+creation_date: 2011-04-12T02:23:26Z
+
+[Typedef]
+id: inheres_in
+name: inheres_in
+namespace: fission_yeast_phenotype
+xref: OBO_REL:inheres_in
+
+[Typedef]
+id: qualifier
+name: qualifier
+namespace: fission_yeast_phenotype
+comment: placeholder relation to indicate normality/abnormality.
+
+[Typedef]
+id: towards
+name: towards
+namespace: fission_yeast_phenotype
+comment: relation binding a relational quality or disposition to the relevant type of entity
+xref: OBO_REL:towards
+

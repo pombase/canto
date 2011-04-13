@@ -58,7 +58,7 @@ cmp_deeply($curation_session,
                     creation_date => "2010-01-02",
                     term_ontid => "PP:00004",
                     status => "new",
-                    type => "phenotype",
+                    type => "fission_yeast_phenotype",
                     publication => 'PMID:19756689'
                     } ],
                 synonyms => [],
