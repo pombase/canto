@@ -16,3 +16,4 @@ PomCur-*.tar*
 *.bak
 MANIFEST
 *.tmp
+cover_db
