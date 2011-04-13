@@ -60,7 +60,7 @@ sub _span_class
 
 my $schema = $c->stash()->{schema};
 my @all_genes = 
-  PomCur::Controller::Curs::get_ordered_gene_rs($schema, 'primary_name');
+  PomCur::Controller::Curs::get_ordered_gene_rs($schema, 'primary_name')->all();
 my @gene_hashes = map {
      {
        identifier => $_->primary_name() || $_->primary_identifier(),

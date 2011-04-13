@@ -54,7 +54,8 @@ $pub
 use PomCur::Curs;
 
 my $schema = $c->stash()->{schema};
-my @all_genes = $schema->resultset('Gene')->all();
+my @all_genes =
+  PomCur::Controller::Curs::get_ordered_gene_rs($schema, 'primary_name')->all();
 
 my @search_terms = ();
 
