@@ -22,9 +22,9 @@ CREATE TABLE genesynonym (
 
 CREATE TABLE annotation (
        annotation_id integer PRIMARY KEY,
-       status text NOT NULL,  -- "new", "deleted", "unchanged"
+       status text NOT NULL,  -- "new", "deleted"
        pub integer REFERENCES pub(pub_id),
-       type text NOT NULL, -- "go_function", "ortholog", "phenotype"
+       type text NOT NULL, -- "biological_process", "phenotype"
        creation_date text NOT NULL,
        data text NOT NULL,
        -- include type as the there may be a go term and ortholog with the same
