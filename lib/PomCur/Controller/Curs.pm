@@ -188,7 +188,7 @@ sub _set_new_gene
 {
   my $schema = shift;
 
-  my $gene_rs = get_ordered_gene_rs($schema);
+  my $gene_rs = get_ordered_gene_rs($schema, "primary_name");
   my $first_gene = $gene_rs->first();
 
   if (defined $first_gene) {
