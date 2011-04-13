@@ -226,7 +226,8 @@ sub get_annotation_table
   my %options = ( order_by => 'annotation_id' );
 
   while (defined (my $gene = $gene_rs->next())) {
-    my $an_rs = $gene->annotations()->search({ %constraints }, { %options });
+    my $an_rs =
+      $gene->direct_annotations()->search({ %constraints }, { %options });
 
     my $gene_synonyms_string =
       join '|', map { $_->identifier() } $gene->genesynonyms();

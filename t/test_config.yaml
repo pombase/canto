@@ -64,7 +64,7 @@ test_config:
              data:
                evidence_code: IPI
                term_ontid: GO:0030133
-               with_gene: SPCC1739.11c
+               with_gene: SPCC1739.10
     curs_annotations_2:
        - curs_key: aaaa0006
          first_contact_email: "henar@usal.es"
@@ -111,7 +111,7 @@ test_config:
              data:
                evidence_code: IPI
                term_ontid: GO:0034763
-               with_gene: SPCC63.05
+               with_gene: SPCC576.16c
            - type: genetic_interaction
              status: new
              genes(Gene:primary_identifier):
@@ -125,7 +125,7 @@ test_config:
            - type: fission_yeast_phenotype
              status: new
              genes(Gene:primary_identifier):
-               - SPCC576.16c
+               - SPCC63.05
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: MIU

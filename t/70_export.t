@@ -52,15 +52,7 @@ cmp_deeply($curation_session,
                 primary_name => 'wtf22',
                 product => 'wtf element Wtf22',
                 organism => 'Schizosaccharomyces pombe',
-                annotations => [
-                  {
-                    evidence_code => "MIU",
-                    creation_date => "2010-01-02",
-                    term_ontid => "PP:00004",
-                    status => "new",
-                    type => "fission_yeast_phenotype",
-                    publication => 'PMID:19756689'
-                    } ],
+                annotations => [],
                 synonyms => [],
               },
               'SPAC27D7.13c' => {
@@ -90,7 +82,7 @@ cmp_deeply($curation_session,
                     status => "new",
                     type => "biological_process",
                     publication => 'PMID:19756689',
-                    with_gene => "SPCC63.05"
+                    with_gene => "SPCC576.16c"
                     } ],
                 synonyms => ['ssm4'],
               },
@@ -113,7 +105,15 @@ cmp_deeply($curation_session,
                         primary_identifier => 'SPAC27D7.13c',
                       }
                     ]
-                  }
+                  },
+                  {
+                    type => 'fission_yeast_phenotype',
+                    status => 'new',
+                    creation_date => "2010-01-02",
+                    evidence_code => 'MIU',
+                    publication => 'PMID:19756689',
+                    term_ontid => 'PP:00004',
+                  },
                 ],
                 synonyms => [],
               },

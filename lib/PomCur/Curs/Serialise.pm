@@ -74,7 +74,7 @@ sub _get_annotations
   my $schema = shift;
   my $gene = shift;
 
-  my $rs = $gene->annotations();
+  my $rs = $gene->direct_annotations();
   my @ret = ();
 
   while (defined (my $annotation = $rs->next())) {

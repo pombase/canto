@@ -55,7 +55,7 @@ test_psgi $app, sub {
                         'GO:0034763',
                         'PMID:19756689',
                         'IPI',
-                        'GeneDB_Spombe:SPCC63.05',
+                        'GeneDB_Spombe:SPCC576.16c',
                         'P',
                         'ER-localized ubiquitin ligase Doa10 (predicted)',
                         'ssm4',

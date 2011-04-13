@@ -117,7 +117,101 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-04-08 13:29:30
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:a/kSfOpENIAOvaVK/76BjA
 
-__PACKAGE__->many_to_many('annotations' => 'gene_annotations', 'annotation');
+=head2 direct_annotations
+
+ Usage   : my $annotations_rs = $gene->direct_annotations();
+ Function: Return the Annotation object related to this gene via the
+           gene_annotations table
+ Args    : None
+ Returns : An Annotation ResultSet
+
+=cut
+__PACKAGE__->many_to_many('direct_annotations' => 'gene_annotations',
+                          'annotation');
+
+sub _get_indirect_annotations
+{
+  my $self = shift;
+  my $all_annotations = shift;
+
+  my @ret;
+  my %ids = ();
+
+  if ($all_annotations) {
+    @ret = $self->direct_annotations();
+
+    for my $annotation (@ret) {
+      $ids{$annotation->annotation_id()} = 1;
+    }
+  } else {
+    @ret = ();
+  }
+
+  my $schema = $self->result_source()->schema();
+
+  my $rs = $schema->resultset("Annotation");
+
+  while (defined (my $annotation = $rs->next())) {
+    if (!exists $ids{$annotation->annotation_id()}) {
+      my $data = $annotation->data();
+      my $with_gene = $data->{with_gene};
+
+      if (defined $with_gene && $with_gene eq $self->primary_identifier()) {
+        push @ret, $annotation;
+        $ids{$annotation->annotation_id()} = 1;
+      } else {
+        my $interacting_genes = $annotation->data()->{interacting_genes};
+
+        if (defined $interacting_genes) {
+          my @interacting_genes = @$interacting_genes;
+
+          for my $interacting_gene (@interacting_genes) {
+            my $interacting_gene_identifier =
+              $interacting_gene->{primary_identifier};
+            if ($interacting_gene_identifier eq $self->primary_identifier()) {
+              push @ret, $annotation;
+              $ids{$annotation->annotation_id()} = 1;
+              last;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return @ret;
+}
+
+=head2 indirect_annotations
+
+ Usage   : my @annotations = $gene->indirect_annotations();
+ Function: Return those annotations that reference this Gene in data field of
+           the Annotations (eg. the "with_gene" field)
+ Args    : None
+
+=cut
+sub indirect_annotations
+{
+  my $self = shift;
+
+  return $self->_get_indirect_annotations(0);
+}
+
+=head2 all_annotations
+
+ Usage   : my @annotations = $gene->all_annotations();
+ Function: Return those annotations are related to this Gene via the
+           gene_annotations tables or that reference this Gene in data
+           field of the Annotation (eg. the "with_gene" field)
+ Args    : None
+
+=cut
+sub all_annotations
+{
+  my $self = shift;
+
+  return $self->_get_indirect_annotations(1);
+}
 
 
 use Moose;

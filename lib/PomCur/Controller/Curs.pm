@@ -430,7 +430,7 @@ sub _edit_genes_helper
           for my $gene_id (@gene_ids) {
             my $gene = $schema->find_with_type('Gene', $gene_id);
 
-            my @annotations = $gene->annotations()->all();
+            my @annotations = $gene->all_annotations();
 
             $schema->resultset('GeneAnnotation')
               ->search({ gene => $gene_id })->delete();

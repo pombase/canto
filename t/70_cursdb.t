@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 10;
 
 use Data::Compare;
 
@@ -9,11 +9,11 @@ use PomCur::CursDB;
 
 my $test_util = PomCur::TestUtil->new();
 
-$test_util->init_test('curs_annotations_1');
+$test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
 
-my $schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0005');
+my $schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
 
 ok($schema);
 
@@ -32,11 +32,21 @@ $res_pub->update();
 
 my $new_res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
 
-my $cdc11 = $schema->find_with_type('Gene', { primary_name => 'cdc11' });
-my @cdc11_annotations = $cdc11->annotations();
-is (@cdc11_annotations, 0);
+my $spcc576_16c = $schema->find_with_type('Gene',
+                                          { primary_identifier => 'SPCC576.16c' });
+is ($spcc576_16c->direct_annotations()->count(), 0);
+is ($spcc576_16c->indirect_annotations(), 1);
+is ($spcc576_16c->all_annotations(), 1);
 
-my $g1739_10 = $schema->find_with_type('Gene',
-                                       { primary_identifier => 'SPCC1739.10' });
-my @g1739_10_annotations = $g1739_10->annotations();
-is (@g1739_10_annotations, 1);
+my $spcc63_05 = $schema->find_with_type('Gene',
+                                          { primary_identifier => 'SPCC63.05' });
+is ($spcc63_05->direct_annotations()->count(), 2);
+is ($spcc63_05->indirect_annotations(), 0);
+is ($spcc63_05->all_annotations(), 2);
+
+my $spbc14f5_07 = $schema->find_with_type('Gene',
+                                          { primary_identifier => 'SPAC27D7.13c' });
+is ($spbc14f5_07->direct_annotations()->count(), 1);
+is ($spbc14f5_07->indirect_annotations(), 1);
+is ($spbc14f5_07->all_annotations(), 2);
+

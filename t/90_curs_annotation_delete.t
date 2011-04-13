@@ -33,7 +33,7 @@ test_psgi $app, sub {
 
   my $term_id = 'GO:0080170';
   my $delete_annotation_re =
-    qr/SPAC3A11.14c.*GO:0030133.*IPI.*cdc11/s;
+    qr/SPAC3A11.14c.*GO:0030133.*IPI.*SPCC1739.10/s;
   my $other_annotation_re =
     qr/SPCC1739.10.*GO:0055085.*IMP/s;
 
