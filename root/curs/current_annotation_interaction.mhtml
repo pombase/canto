@@ -37,10 +37,10 @@ Current <% $annotation_type->{display_name} %> annotations
 % for my $row (@annotations) {
   <tr>
     <td>
-      <% $row->{gene_identifier} %>
+      <% $row->{gene_display_name} %>
     </td>
     <td>
-      <% $row->{interacting_gene_identifier} %>
+      <% $row->{interacting_gene_display_name} %>
     </td>
     <td>
       <% $row->{gene_taxonid} %>

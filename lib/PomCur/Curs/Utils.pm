@@ -145,17 +145,28 @@ sub _make_interaction_annotation
   my @interacting_genes = @{$data->{interacting_genes}};
 
   return map {
-    my $interacting_gene = $_;
+    my $interacting_gene_info = $_;
+    my $interacting_gene_primary_identifier =
+      $interacting_gene_info->{primary_identifier};
+    my $interacting_gene_display_name =
+      $schema->find_with_type('Gene',
+                              { primary_identifier =>
+                                  $interacting_gene_primary_identifier})
+        ->display_name();
     my $entry =
           {
             gene_identifier => $gene->primary_identifier(),
+            gene_display_name => $gene->display_name(),
             gene_taxonid => $gene->organism()->taxonid(),
             publication_uniquename => $pub_uniquename,
             evidence_code => $evidence_code,
             interacting_gene_identifier =>
-              $interacting_gene->{primary_identifier},
+              $interacting_gene_primary_identifier,
+            interacting_gene_display_name =>
+              $interacting_gene_display_name,
             interacting_gene_taxonid =>
-              $interacting_gene->{organism_taxon} // $gene->organism()->taxonid(),
+              $interacting_gene_info->{organism_taxon}
+                // $gene->organism()->taxonid(),
             score => '',
             phenotypes => '',
             comment => '',
