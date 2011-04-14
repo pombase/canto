@@ -83,20 +83,35 @@ sub _search_highlight
   }
 }
 
+my $total_annotation_count = 0;
+
 my @gene_hashes = map {
      my $gene = $_;
      my $synonyms_string =
        join (',', map { _search_highlight($_->identifier()) } $gene->genesynonyms());
+     my $direct_annotation_count = $gene->direct_annotations()->count();
+     $total_annotation_count += $direct_annotation_count;
+     my $annotations_text;
+     if ($direct_annotation_count > 0) {
+       $annotations_text = "$direct_annotation_count";
+     } else {
+       $annotations_text = "none";
+     }
      {
        'Systematic identifier' => _search_highlight($gene->primary_identifier()),
        Name => _search_highlight($gene->primary_name()),
        Product => $gene->product(),
        Synonyms => $synonyms_string,
+       Annotations => $annotations_text,
        gene_id => $gene->gene_id(),
      }
    } @all_genes;
 
 my @col_names = ("Systematic identifier", "Name", "Synonyms", "Product");
+
+if ($total_annotation_count > 0) {
+  push @col_names, "Annotations";
+}
 
 my $start_path = $c->stash()->{curs_root_uri};
 my $upload_path = "$start_path/gene_upload";
