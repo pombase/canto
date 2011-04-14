@@ -128,6 +128,22 @@ __PACKAGE__->inflate_column('data', {
 });
 
 
+=head2 delete
+
+ Usage   : $annotation->delete();
+ Function: Delete this Annotation and any genes that depend on it
+ Args    : none
+ Returns : nothing
+
+=cut
+sub delete
+{
+  my $self = shift;
+
+  $self->gene_annotations()->delete();
+  $self->SUPER::delete();
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

@@ -560,8 +560,6 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
 
   my $delete_sub = sub {
     my $annotation = $schema->resultset('Annotation')->find($annotation_id);
-    $schema->resultset('GeneAnnotation')
-      ->search({ annotation => $annotation_id })->delete();
     $annotation->delete();
   };
 
