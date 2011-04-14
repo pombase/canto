@@ -134,21 +134,16 @@ sub _get_indirect_annotations
   my $self = shift;
   my $all_annotations = shift;
 
-  my @ret;
   my %ids = ();
 
   if ($all_annotations) {
-    @ret = $self->direct_annotations();
-
-    for my $annotation (@ret) {
-      $ids{$annotation->annotation_id()} = 1;
+    my $rs = $self->direct_annotations()->get_column('annotation_id');
+    while (defined (my $annotation_id = $rs->next())) {
+      $ids{$annotation_id} = 1;
     }
-  } else {
-    @ret = ();
   }
 
   my $schema = $self->result_source()->schema();
-
   my $rs = $schema->resultset("Annotation");
 
   while (defined (my $annotation = $rs->next())) {
@@ -157,7 +152,6 @@ sub _get_indirect_annotations
       my $with_gene = $data->{with_gene};
 
       if (defined $with_gene && $with_gene eq $self->primary_identifier()) {
-        push @ret, $annotation;
         $ids{$annotation->annotation_id()} = 1;
       } else {
         my $interacting_genes = $annotation->data()->{interacting_genes};
@@ -169,7 +163,6 @@ sub _get_indirect_annotations
             my $interacting_gene_identifier =
               $interacting_gene->{primary_identifier};
             if ($interacting_gene_identifier eq $self->primary_identifier()) {
-              push @ret, $annotation;
               $ids{$annotation->annotation_id()} = 1;
               last;
             }
@@ -179,7 +172,9 @@ sub _get_indirect_annotations
     }
   }
 
-  return @ret;
+  return $schema->resultset("Annotation")
+    ->search({ annotation_id => { -in => [keys %ids] }});
+
 }
 
 =head2 indirect_annotations
@@ -217,7 +212,7 @@ sub delete
 {
   my $self = shift;
 
-  my @annotations = $self->all_annotations();
+  my @annotations = $self->all_annotations()->all();
   map { $_->gene_annotations()->delete() } @annotations;
   map { $_->delete() } @annotations;
 
