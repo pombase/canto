@@ -213,6 +213,18 @@ sub all_annotations
   return $self->_get_indirect_annotations(1);
 }
 
+sub delete
+{
+  my $self = shift;
+
+  my @annotations = $self->all_annotations();
+  map { $_->gene_annotations()->delete() } @annotations;
+  map { $_->delete() } @annotations;
+
+  $self->genesynonyms()->delete();
+
+  $self->SUPER::delete();
+}
 
 use Moose;
 
