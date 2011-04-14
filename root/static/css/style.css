@@ -129,7 +129,7 @@ div#footer .sponsor {
 
 #content {
   padding: 10px;
-  margin: 0px;
+  margin: 15px;
   clear: both;
 }
 
@@ -487,11 +487,6 @@ div.clearall {
 
 .ui-menu-item {
   font-size: 60%;
-}
-
-#ferret-form > div {
-  margin-left: 20px;
-  margin-right: 20px;
 }
 
 #ferret-term-entry {
