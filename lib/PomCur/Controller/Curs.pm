@@ -584,6 +584,8 @@ sub annotation_ontology_edit
   my $st = $c->stash();
   my $schema = $st->{schema};
 
+  my $module_category = $annotation_config->{category};
+
   # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
@@ -603,7 +605,7 @@ sub annotation_ontology_edit
   $st->{annotation_help_text} = $annotation_help_text;
   my $annotation_more_help_text = $annotation_config->{more_help_text};
   $st->{annotation_more_help_text} = $annotation_more_help_text;
-  $st->{template} = "curs/modules/$annotation_type_name.mhtml";
+  $st->{template} = "curs/modules/$module_category.mhtml";
 
   my $form = $self->form();
 
@@ -690,10 +692,12 @@ sub annotation_interaction_edit
   my $module_display_name = $annotation_config->{display_name};
   my $annotation_type_name = $annotation_config->{name};
 
+  my $module_category = $annotation_config->{category};
+
   # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
-  $st->{template} = "curs/modules/$annotation_type_name.mhtml";
+  $st->{template} = "curs/modules/$module_category.mhtml";
 
   my $form = $self->form();
 
@@ -822,11 +826,13 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
+  my $module_category = $annotation_config->{category};
+
   my $module_display_name = $annotation_config->{display_name};
   $st->{title} = "Annotating $gene_display_name";
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
-  $st->{template} = "curs/modules/${annotation_type_name}_evidence.mhtml";
+  $st->{template} = "curs/modules/${module_category}_evidence.mhtml";
   $st->{annotation} = $annotation;
 
   my $ont_config = $config->{annotation_types}->{$annotation_type_name};
@@ -903,6 +909,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   $st->{annotation_type} = $annotation_config;
   $st->{annotation} = $annotation;
 
+  my $module_category = $annotation_config->{category};
+
   my $gene = $annotation->genes()->first();
   my $gene_display_name = $gene->display_name();
 
@@ -910,7 +918,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my $module_display_name = $annotation_config->{display_name};
   $st->{title} = "Transfer annotation from $gene_display_name";
-  $st->{template} = "curs/modules/${annotation_type_name}_transfer.mhtml";
+  $st->{template} = "curs/modules/${module_category}_transfer.mhtml";
 
   my $form = $self->form();
 
@@ -993,11 +1001,12 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $term_ontid = $annotation_data->{term_ontid};
 
   my $module_display_name = $annotation_config->{display_name};
+  my $module_category = $annotation_config->{category};
 
   $st->{title} = "Annotating $gene_display_name";
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
-  $st->{template} = "curs/modules/${annotation_type_name}_with_gene.mhtml";
+  $st->{template} = "curs/modules/${module_category}_with_gene.mhtml";
 
   $st->{term_ontid} = $term_ontid;
   $st->{evidence_code} = $evidence_code;
