@@ -146,8 +146,6 @@ test_psgi $app, sub {
 
     my $res = $cb->($req);
 
-    warn $res->content(), "\n";
-
     is $res->code, 302;
 
     my $redirect_url = $res->header('location');
