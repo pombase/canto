@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 43;
+use Test::More tests => 47;
 
 use Data::Compare;
 
@@ -159,10 +159,15 @@ test_psgi $app, sub {
     is ($curs_schema->resultset('Gene')->count(), 4);
   }
 
+  my $with_gene_identifier = "SPCC1739.11c";
+  my $with_gene =
+    $curs_schema->find_with_type('Gene',
+                                 { primary_identifier => $with_gene_identifier });
+
   # test setting "with gene"
   {
     my $uri = new URI($annotation_with_gene_url);
-    $uri->query_form('with-gene-select' => 'SPCC1739.11c',
+    $uri->query_form('with-gene-select' => $with_gene_identifier,
                      'with-gene-proceed' => 'Proceed');
 
     my $req = HTTP::Request->new(GET => $uri);
@@ -185,8 +190,10 @@ test_psgi $app, sub {
 
     is ($annotation->data()->{term_ontid}, 'GO:0080170');
     is ($annotation->data()->{evidence_code}, 'IPI');
-    is ($annotation->data()->{with_gene}, 'SPCC1739.11c');
+    is ($annotation->data()->{with_gene}, $with_gene_identifier);
   }
+
+  my @annotations_with_gene = ();
 
   # test transferring annotation
   {
@@ -226,18 +233,48 @@ test_psgi $app, sub {
     my $original_annotation =
       $curs_schema->find_with_type('Annotation', 3);
 
+    push @annotations_with_gene, $original_annotation->annotation_id();
+
     is ($original_annotation->data()->{term_ontid}, 'GO:0080170');
     is ($original_annotation->data()->{evidence_code}, 'IPI');
-    is ($original_annotation->data()->{with_gene}, 'SPCC1739.11c');
+    is ($original_annotation->data()->{with_gene}, $with_gene_identifier);
 
     my $new_annotation =
       $curs_schema->find_with_type('Annotation', 4);
+
+    push @annotations_with_gene, $new_annotation->annotation_id();
 
     is ($new_annotation->genes(), 1);
     is (($new_annotation->genes())[0]->primary_name(), "cdc11");
     is ($new_annotation->data()->{term_ontid}, 'GO:0080170');
     is ($new_annotation->data()->{evidence_code}, 'IPI');
-    is ($new_annotation->data()->{with_gene}, 'SPCC1739.11c');
+    is ($new_annotation->data()->{with_gene}, $with_gene_identifier);
+  }
+
+  # test deleting a gene referred to by a with_gene field
+  {
+    my $uri = new URI("$root_url/edit_genes");
+    $uri->query_form(submit => 'Delete selected',
+                     'gene-select' => [$with_gene->gene_id()],
+                    );
+
+    my $req = HTTP::Request->new(GET => $uri);
+
+    my @genes_before_delete = $curs_schema->resultset('Gene')->all();
+
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my @genes_after_delete = $curs_schema->resultset('Gene')->all();
+
+    is (@genes_after_delete, @genes_before_delete - 1);
+
+    # check that the annotations are deleted too
+    ok (!defined($curs_schema->resultset('Annotation')
+                 ->find($annotations_with_gene[0])));
+    ok (!defined($curs_schema->resultset('Annotation')
+                 ->find($annotations_with_gene[1])));
   }
 };
 
