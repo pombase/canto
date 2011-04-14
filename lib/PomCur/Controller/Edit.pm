@@ -595,7 +595,7 @@ sub _check_auth
 {
   my $c = shift;
 
-  if (!defined $c->user()) {
+  if (!$c->user_exists() || $c->user()->role()->name() ne 'admin') {
     $c->stash()->{error} = "Log in to allow editing";
     $c->forward('/front');
     $c->detach();

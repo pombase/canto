@@ -3,8 +3,8 @@ $type
 $object
 </%args>
 
-% if ($c->user_exists()) {
-%   if (0 && $c->user()->role()->name() eq 'admin') {
+% if ($is_admin) {
+%   if (0 && $is_admin) {
 <div id="deleteDialog" title="Confirmation Required">
   Delete this <% PomCur::DB::display_name($type) %>?
 </div>
@@ -23,7 +23,7 @@ $object
       </li>
 %  }
 
-%  if (0 && $c->user_exists() && $c->user()->role()->name() eq 'admin') {
+%  if (0 && $is_admin) {
       <li>
 <a id="confirmDelete" href="<% $c->uri_for('/delete/object/' . $type . '/' . $object_id) %>">Delete</a>
 
@@ -66,6 +66,7 @@ my $table_pk_field = ($object->primary_columns())[0];
 my $object_id = $object->$table_pk_field();
 
 my $editable = $c->config()->class_info($c)->{$type}->{editable};
+my $is_admin = $c->user_exists() && $c->user()->role()->name() eq 'admin';
 
 my $model_name = $c->request()->param('model');
 </%init>
