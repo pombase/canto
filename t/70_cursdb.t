@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 16;
 
 use Data::Compare;
 
@@ -39,10 +39,12 @@ is ($spcc576_16c->indirect_annotations()->count(), 1);
 is ($spcc576_16c->all_annotations()->count(), 1);
 
 my $spcc63_05 = $schema->find_with_type('Gene',
-                                          { primary_identifier => 'SPCC63.05' });
+                               { primary_identifier => 'SPCC63.05' });
 is ($spcc63_05->direct_annotations()->count(), 2);
 is ($spcc63_05->indirect_annotations()->count(), 0);
 is ($spcc63_05->all_annotations()->count(), 2);
+
+my $annotation_1_id = $spcc63_05->all_annotations()->first()->annotation_id();
 
 my $spbc14f5_07 = $schema->find_with_type('Gene',
                                           { primary_identifier => 'SPAC27D7.13c' });
@@ -50,3 +52,34 @@ is ($spbc14f5_07->direct_annotations()->count(), 1);
 is ($spbc14f5_07->indirect_annotations()->count(), 1);
 is ($spbc14f5_07->all_annotations()->count(), 2);
 
+my $annotation_2 = $spbc14f5_07->all_annotations()->first();
+my $annotation_2_id = $annotation_2->annotation_id();
+
+
+# delete gene and make sure the annotation goes too
+ok (defined ($schema->find_with_type('Annotation', $annotation_1_id)));
+ok (defined ($schema->find_with_type('GeneAnnotation',
+                          { gene => $spcc63_05->gene_id(),
+                            annotation => $annotation_1_id })));
+
+$spcc63_05->delete();
+ok (!defined ($schema->resultset('Annotation')->find($annotation_1_id)));
+ok (!defined ($schema->resultset('GeneAnnotation')
+              ->find({ gene => $spcc63_05->gene_id(),
+                       annotation => $annotation_1_id })));
+
+
+# delete annotation and make sure the GeneAnnotation row goes too
+my $gene_annotation =
+  $schema->find_with_type('GeneAnnotation',
+                          { gene => $spbc14f5_07->gene_id(),
+                            annotation => $annotation_2_id });
+ok (defined $gene_annotation);
+
+$annotation_2->delete();
+
+my $gene_annotation_again =
+  $schema->resultset('GeneAnnotation')
+    ->find({ gene => $spbc14f5_07->gene_id(),
+             annotation => $annotation_2_id });
+ok (!defined $gene_annotation_again);
