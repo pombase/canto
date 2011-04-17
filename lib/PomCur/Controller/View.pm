@@ -290,21 +290,25 @@ sub report : Local
       $params->{where} = $report_conf->{constraint};
     }
 
-    $st->{rs} = $schema->resultset($class_name)->search({ }, $params);
+    my @column_confs = ();
 
-    $st->{column_confs} = [map {
-      my $conf_name = $_->{name};
-      if (exists $_->{source}) {
-        $_;
+    for my $column_conf (@{$report_conf->{columns}}) {
+      my $conf_name = $column_conf->{name};
+      if (exists $column_conf->{source}) {
+        push @column_confs, $column_conf;
       } else {
         if (exists $class_info->{field_infos}->{$conf_name}) {
-          $class_info->{field_infos}->{$conf_name};
+          push @column_confs, $class_info->{field_infos}->{$conf_name};
         } else {
           die "no configuration for $type.$conf_name used by report: " .
             $report_name;
         }
       }
-    } @{$report_conf->{columns}}];
+    }
+
+    $st->{column_confs} = [@column_confs];
+
+    $st->{rs} = $schema->resultset($class_name)->search({ }, $params);
 
     $st->{page} = $c->req->param('page') || 1;
     $st->{numrows} = $c->req->param('numrows') || 20;

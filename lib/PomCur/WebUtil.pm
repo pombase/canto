@@ -103,15 +103,23 @@ sub get_field_value
     }
   }
 
-  if (defined $col_conf->{source} && $col_conf->{source} =~ /[\$\-<>\';]/) {
-    # it looks like Perl code, so eval it
-    my $field_value = eval $col_conf->{source};
-    if ($@) {
-      $field_value = $@;
-      warn "$@\n";
-    }
+  if (defined $col_conf->{source} && ref $col_conf->{source} eq 'HASH') {
+    if (defined $col_conf->{source}->{perl}) {
+      my $field_value = eval $col_conf->{source}->{perl};
+      if ($@) {
+        $field_value = $@;
+        warn "$@\n";
+      }
 
-    return ($field_value, 'attribute', undef);
+      return ($field_value, 'attribute', undef);
+    } else {
+      if (defined $col_conf->{source}->{sql}) {
+        return ($object->get_column($field_name), 'attribute', undef);
+      } else {
+        use Data::Dumper;
+        die "source not understood: ", Dumper([$col_conf->{source}]), "\n";
+      }
+    }
   }
 
   my $schema = $c->schema();
@@ -169,6 +177,25 @@ sub get_field_value
   }
 }
 
+sub process_rs_options
+{
+  my $rs = shift;
+  my $column_confs = shift;
+
+  my @column_options = ();
+
+  for my $conf (@$column_confs) {
+    my $source = $conf->{source};
+
+    next unless defined $source;
+    next unless ref $source eq 'HASH' && defined $source->{sql};
+
+    push @column_options, { $conf->{name}, \"($source->{sql})" };
+  }
+
+  return $rs->search(undef, { '+columns' => [@column_options] });
+}
+
 =head2
 
  Usage   : my @column_confs =
@@ -183,15 +210,15 @@ sub get_field_value
            get_field_value() above
 
 =cut
-sub get_column_confs_from_object
+sub get_column_confs_from_rs
 {
   my $c = shift;
   my $schema = $c->schema();
   my $config = $c->config();
   my $user_role = shift;
-  my $object = shift;
+  my $rs = shift;
 
-  my $table = $object->table();
+  my $table = PomCur::DB::table_name_of_class($rs->result_class());
 
   my @column_confs = ();
 
@@ -210,7 +237,7 @@ sub get_column_confs_from_object
   }
 
   if (!@column_confs) {
-    for my $column_name ($object->columns()) {
+    for my $column_name ($rs->result_source->columns()) {
       next if $column_name eq 'created_stamp';
       if ($column_name =~ /(.*)_id$/) {
         next if $1 eq $table;

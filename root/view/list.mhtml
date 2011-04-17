@@ -51,49 +51,43 @@ use PomCur::WebUtil;
 
 my @column_headings = ();
 my @rows = ();
-my $first = 1;
 
-my $type = undef;
+my $type = PomCur::DB::table_name_of_class($rs->result_class());
 
 my $count = 0;
-
 my $max_results_flag = 0;
 
 my $max_inline_results_length =
   $c->config()->{view_options}{max_inline_results_length} || 100;
 
-while (my $obj = $rs->next()) {
-  if ($first) {
-    $type = $obj->table();
+if (@column_confs == 0) {
+  my $user_role = undef;
 
-    if (@column_confs == 0) {
-      my $user_role = undef;
-
-      if ($c->user_exists()) {
-        $user_role = $c->user()->role()->name();
-      }
-
-      @column_confs =
-        PomCur::WebUtil::get_column_confs_from_object($c,
-                                                      $user_role,
-                                                      $obj);
-    }
-
-    for my $col_conf (@column_confs) {
-      my $column_name = $col_conf->{name};
-      next if $column_name eq 'created_stamp' or $column_name eq "${type}_id";
-
-      my $column_type = $c->schema()->column_type($col_conf, $type);
-
-      next if $column_type eq 'collection';
-
-      my $column_heading = $column_name;
-      $column_heading =~ s/_/ /g;
-
-      push @column_headings, ucfirst $column_heading;
-    }
-    $first = 0;
+  if ($c->user_exists()) {
+    $user_role = $c->user()->role()->name();
   }
+
+  @column_confs =
+    PomCur::WebUtil::get_column_confs_from_rs($c, $user_role, $rs);
+}
+
+for my $col_conf (@column_confs) {
+  my $column_name = $col_conf->{name};
+  next if $column_name eq 'created_stamp' or $column_name eq "${type}_id";
+
+  my $column_type = $c->schema()->column_type($col_conf, $type);
+
+  next if $column_type eq 'collection';
+
+  my $column_heading = $column_name;
+  $column_heading =~ s/_/ /g;
+
+  push @column_headings, ucfirst $column_heading;
+}
+
+$rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
+
+while (my $obj = $rs->next()) {
   push @rows, $obj;
 
   if ($count++ > $max_inline_results_length) {
@@ -101,7 +95,6 @@ while (my $obj = $rs->next()) {
     last;
   }
 }
-
 
 my $disclosed_style = 'undisclosed-title';
 

@@ -181,6 +181,9 @@ class_info:
           editable: 1
         - name: definition
           editable: 1
+        - name: "term count"
+          source:
+            sql: 'select count(*) from cvterm where cvterm.cv_id = me.cv_id'
     cvterm:
       class_display_name: controlled vocabulary term
       editable: 1

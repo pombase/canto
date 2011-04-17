@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 10;
 
 use PomCur::TestUtil;
 
@@ -38,6 +38,17 @@ test_psgi $app, sub {
     ok ($res->content() =~ /List of all labs/);
     ok ($res->content() =~ /Nick Rhind/);
     ok ($res->content() =~ /12\b.* rows found/);
+  }
+
+  # test sql columns
+  {
+    my $url = 'http://localhost:5000/view/list/cv?model=track';
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+    ok ($res->content() =~ /List of all cvs/);
+    ok ($res->content() =~ /PSI-MOD.*19.*PomCur publication curation status/s);
   }
 };
 
