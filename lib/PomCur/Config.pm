@@ -127,8 +127,9 @@ sub setup
 
   # make the field_infos available as a hash in the config
   for my $model (keys %{$self->{class_info}}) {
-    for my $class_name (keys %{$self->{class_info}->{$model}}) {
-      my $class_info = $self->{class_info}->{$model}->{$class_name};
+    my $model_conf = $self->{class_info}->{$model};
+    for my $class_name (keys %{$model_conf}) {
+      my $class_info = $model_conf->{$class_name};
 
       $class_info->{search_fields} //= [ $class_info->{display_field} ];
 
@@ -138,8 +139,7 @@ sub setup
         if (!defined $name) {
           die "config loading failed: field_info with no name in $class_name\n";
         }
-        $self->{class_info}->{$model}->{$class_name}->{field_infos}->{$name} =
-          $field_info;
+        $model_conf->{$class_name}->{field_infos}->{$name} = $field_info;
       }
     }
   }
