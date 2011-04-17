@@ -186,6 +186,7 @@ sub get_field_value
 sub get_column_confs_from_object
 {
   my $c = shift;
+  my $schema = $c->schema();
   my $config = $c->config();
   my $user_role = shift;
   my $object = shift;
@@ -197,7 +198,9 @@ sub get_column_confs_from_object
   for my $conf (@{$config->class_info($c)->{$table}->{field_info_list}}) {
     my $field_db_column = $conf->{source} || $conf->{name};
 
-    next unless $object->has_column($field_db_column);
+    if ($schema->column_type($conf, $table) eq 'collection') {
+      next;
+    }
 
     if ($conf->{admin_only}) {
       next unless defined $user_role && $user_role eq 'admin';
