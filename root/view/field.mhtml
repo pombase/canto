@@ -91,11 +91,12 @@ my $ref_class_info = undef;
 
 if ($field_type eq 'foreign_key') {
   $referenced_object = $field_value;
-  $ref_table = $referenced_object->table();
 
-  my $class_infos = $c->config()->class_info($c);
-
-  $ref_class_info = $class_infos->{$ref_table};
+  if (defined $referenced_object) {
+    $ref_table = $referenced_object->table();
+    my $class_infos = $c->config()->class_info($c);
+    $ref_class_info = $class_infos->{$ref_table};
+  }
 }
 
 if (!defined $field_value) {
