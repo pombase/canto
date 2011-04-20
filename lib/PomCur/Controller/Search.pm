@@ -67,7 +67,18 @@ sub type : Local
     }
   } @{$class_info->{search_fields}};
 
-  my @search = map { { $_ => $search_term } } @search_fields;
+  my $dbh = $schema->storage()->dbh();
+
+  my $quoted_search_term;
+
+  if ($search_term =~ /(.*)\*/) {
+    $quoted_search_term = $dbh->quote($1) . " || '%'";
+  } else {
+    $quoted_search_term = $dbh->quote($search_term);
+  }
+
+  my @search = map { { $_ => { like => \$quoted_search_term } } } @search_fields;
+
   $c->stash()->{list_search_term} = $search_term;
   $c->stash()->{list_search_constraint} = [@search];
 
