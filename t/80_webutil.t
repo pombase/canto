@@ -38,15 +38,19 @@ my $person = $schema->find_with_type('Person',
                                        email_address => $val_email
                                      });
 
+my $person_class_info = $config->{class_info}->{track}->{person};
+
 my ($field_value, $field_type) =
-  PomCur::WebUtil::get_field_value($mock_c, $person, 'name');
+  PomCur::WebUtil::get_field_value($mock_c, $person, $person_class_info,
+                                   'name');
 
 is($field_value, 'Val Wood');
 is($field_type, 'key_field');
 
 
 ($field_value, $field_type) =
-  PomCur::WebUtil::get_field_value($mock_c, $person, 'Email address');
+  PomCur::WebUtil::get_field_value($mock_c, $person, $person_class_info,
+                                   'Email address');
 
 is($field_value, $val_email);
 is($field_type, 'attribute');
@@ -57,8 +61,10 @@ my $lab = $schema->find_with_type('Lab',
                                     name => 'Rhind Lab',
                                   });
 
+my $lab_class_info = $config->{class_info}->{track}->{lab};
+
 ($field_value, $field_type) =
-  PomCur::WebUtil::get_field_value($mock_c, $lab, 'people');
+  PomCur::WebUtil::get_field_value($mock_c, $lab, $lab_class_info, 'people');
 
 ok(!defined $field_value);
 is($field_type, 'collection');
