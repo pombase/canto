@@ -44,7 +44,8 @@ use PomCur::DB;
 =head2
 
  Usage   : my ($field_value, $field_type) =
-             PomCur::WebUtil::get_field_value($c, $object, $field_name);
+             PomCur::WebUtil::get_field_value($c, $object, $class_info,
+                                              $field_name);
  Function: Get the real value of a field, for display.  The value may be
            straight from the database column, or may be created with Perl code
            in the source key of the configuration.
@@ -61,6 +62,7 @@ use PomCur::DB;
                                natural primary key for this class
                             'method': $field_name is a method name on the object,
                                which will be called and it's value returned
+           $class_info - the configuration for the object
            $ref_display_key - the display key of the referenced object
                               (or undef)
 
@@ -84,22 +86,23 @@ sub get_field_value
 {
   my $c = shift;
   my $object = shift;
+  my $class_info = shift;
   my $field_name = shift;
 
-  my $type = $object->table();
+  my $type = $class_info->{source};
 
   if ($field_name eq "${type}_id") {
     return ($object->$field_name(), 'table_id', undef);
   }
 
   my $class_infos = $c->config()->class_info($c);
-  my $col_conf = $class_infos->{$type}->{field_infos}->{$field_name};
+  my $col_conf = $class_info->{field_infos}->{$field_name};
 
   if (!defined $col_conf) {
     if ($object->can($field_name)) {
       return ($object->$field_name(), 'method', undef);
     } else {
-      croak "no field_info configured for field '$field_name' of $type\n";
+      warn "no field_info configured for field '$field_name' in $class_info->{name}\n";
     }
   }
 
@@ -199,30 +202,36 @@ sub process_rs_options
 =head2
 
  Usage   : my @column_confs =
-             PomCur::WebUtil::get_column_confs_from_object($config, $user_role, $object)
+             PomCur::WebUtil::get_column_confs($c, $rs, $config_info)
  Function: Return the column configuration for displaying the given object, from
            the configuration file (if columns are configured for this type) or
            by creating a default configuration
  Args    : $c - the Catalyst context
-           $user_role - the role of the current user
            $object - the object
+           $config_info - the configuration discribing the columns
  Return  : column configurations in the same format as described in
            get_field_value() above
 
 =cut
-sub get_column_confs_from_rs
+sub get_column_confs
 {
   my $c = shift;
   my $schema = $c->schema();
   my $config = $c->config();
-  my $user_role = shift;
   my $rs = shift;
+  my $config_info = shift;
 
-  my $table = PomCur::DB::table_name_of_class($rs->result_class());
+  my $role;
+
+  if ($c->user_exists()) {
+    $role = $c->user()->role()->name();
+  }
+
+  my $table = $config_info->{source};
 
   my @column_confs = ();
 
-  for my $conf (@{$config->class_info($c)->{$table}->{field_info_list}}) {
+  for my $conf (@{$config_info->{field_info_list}}) {
     my $field_db_column = $conf->{source} || $conf->{name};
 
     if ($schema->column_type($conf, $table) eq 'collection') {
@@ -230,7 +239,7 @@ sub get_column_confs_from_rs
     }
 
     if ($conf->{admin_only}) {
-      next unless defined $user_role && $user_role eq 'admin';
+      next unless defined $role && $role eq 'admin';
     }
 
     push @column_confs, $conf;

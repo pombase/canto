@@ -3,7 +3,8 @@ $object
 </%args>
 
 <div>
-<& /view/field_list.mhtml, object => $object, field_labels => [qw|name definition|] &>
+<& /view/field_list.mhtml, object => $object, field_labels => [qw|name definition|],
+                           class_info => $class_info &>
 </div>
 
 <div id="collections">

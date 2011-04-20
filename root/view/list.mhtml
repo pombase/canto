@@ -1,8 +1,8 @@
 <%args>
 $rs
+$config_name
 $list_title
 $disclosed => 1  # true will make the list default to visible
-@column_confs => ()
 </%args>
 
 <div class="sect">
@@ -31,10 +31,12 @@ $disclosed => 1  # true will make the list default to visible
 %         $align_attr = 'right';
 %       }
         <td align="<% $align_attr %>">
-          <& field.mhtml, object => $object, field_name => $col_conf->{name} &>
+          <& field.mhtml, object => $object, field_name => $col_conf->{name},
+             class_info => $class_info &>
         </td>
 %     }
-    <td><& field.mhtml, object => $object, field_name => "${type}_id" &></td>
+    <td><& field.mhtml, object => $object, field_name => "${table}_id",
+           class_info => $class_info &></td>
     </tr>
 %   }
   </table>
@@ -49,10 +51,10 @@ $disclosed => 1  # true will make the list default to visible
 <%init>
 use PomCur::WebUtil;
 
+my $st = $c->stash();
+
 my @column_headings = ();
 my @rows = ();
-
-my $type = PomCur::DB::table_name_of_class($rs->result_class());
 
 my $count = 0;
 my $max_results_flag = 0;
@@ -60,22 +62,19 @@ my $max_results_flag = 0;
 my $max_inline_results_length =
   $c->config()->{view_options}{max_inline_results_length} || 100;
 
-if (@column_confs == 0) {
-  my $user_role = undef;
+my $class_info = $c->config()->class_info($c)->{$config_name};
+my $table = $class_info->{source};
 
-  if ($c->user_exists()) {
-    $user_role = $c->user()->role()->name();
-  }
+my @column_confs =
+  PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
 
-  @column_confs =
-    PomCur::WebUtil::get_column_confs_from_rs($c, $user_role, $rs);
-}
+$st->{column_confs} = [@column_confs];
 
 for my $col_conf (@column_confs) {
   my $column_name = $col_conf->{name};
-  next if $column_name eq 'created_stamp' or $column_name eq "${type}_id";
+  next if $column_name eq 'created_stamp' or $column_name eq "${table}_id";
 
-  my $column_type = $c->schema()->column_type($col_conf, $type);
+  my $column_type = $c->schema()->column_type($col_conf, $table);
 
   next if $column_type eq 'collection';
 
@@ -84,8 +83,6 @@ for my $col_conf (@column_confs) {
 
   push @column_headings, ucfirst $column_heading;
 }
-
-$rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
 
 while (my $obj = $rs->next()) {
   push @rows, $obj;

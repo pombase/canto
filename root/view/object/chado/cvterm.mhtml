@@ -3,11 +3,11 @@ $object
 </%args>
 
 <div>
-<& /view/field_list.mhtml, object => $object &>
+<& /view/field_list.mhtml, object => $object, class_info => $class_info &>
 </div>
 
 <div id="collections">
-  <& /view/list.mhtml, type => 'feature', rs => $features_rs,
+  <& /view/list.mhtml, config_name => 'feature', rs => $features_rs,
     list_title => 'Features annotated with this cvterm' &>
 </div>
 

@@ -39,6 +39,7 @@ use strict;
 
 use Params::Validate qw(:all);
 use YAML qw(LoadFile);
+use Clone qw(clone);
 use Carp;
 
 use v5.005;
@@ -125,13 +126,70 @@ sub setup
 {
   my $self = shift;
 
-  # make the field_infos available as a hash in the config
+  # make the field_infos available as a hash in the config and make
+  # the config inheritable using "extends"
   for my $model (keys %{$self->{class_info}}) {
     my $model_conf = $self->{class_info}->{$model};
     for my $class_name (keys %{$model_conf}) {
       my $class_info = $model_conf->{$class_name};
 
+      $class_info->{name} = $class_name;
+
+      my $parent_name = $class_info->{extends};
+
+      if (!defined $parent_name) {
+        $class_info->{source} //= $class_name;
+      }
+
       $class_info->{search_fields} //= [ $class_info->{display_field} ];
+    }
+
+    for my $class_name (keys %{$model_conf}) {
+      my $class_info = $model_conf->{$class_name};
+
+      my $parent_name = $class_info->{extends};
+
+      if (defined $parent_name) {
+        my $parent_info = $model_conf->{$parent_name};
+
+        if (!defined $parent_info) {
+          die "parent configuration '$parent_name' not found in " .
+            "configuration for: $class_name";
+        }
+
+        while (my ($key, $value) = each %$parent_info) {
+          if (!exists $class_info->{$key}) {
+            $class_info->{$key} = clone $parent_info->{$key};
+          }
+        }
+
+        delete $class_info->{extends};
+
+        # keys starting with "+" should be merged into the parent config
+        while (my ($key, $value) = each %$class_info) {
+          if ($key =~ /^\+(.*)/) {
+            my $real_key = $1;
+
+            if (ref $class_info->{$real_key} eq 'HASH') {
+              while (my ($sub_key, $sub_value) = each %{$class_info->{$key}}) {
+                if (exists $class_info->{$real_key}->{$sub_key}) {
+                  die "key '$sub_key' in child configuration '$class_name' " .
+                  "would overwrite configuration from parent";
+                } else {
+                  $class_info->{$real_key}->{$sub_key} =
+                    $class_info->{$key}->{$sub_key};
+                }
+              }
+            } else {
+              if (ref $class_info->{$real_key} eq 'ARRAY') {
+                push @{$class_info->{$real_key}}, @{$class_info->{$key}};
+              }
+            }
+
+            delete $class_info->{$key};
+          }
+        }
+      }
 
       for my $field_info (@{$class_info->{field_info_list}}) {
         $field_info->{source} //= $field_info->{name};

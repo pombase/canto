@@ -1,10 +1,10 @@
 <%args>
 $object
-@field_labels => ()
+$class_info
 </%args>
 
 <div>
-<& /view/field_list.mhtml, object => $object, field_labels => [@field_labels] &>
+<& /view/field_list.mhtml, object => $object, class_info => $class_info &>
 </div>
 
 <% $m->content() %>

@@ -1,5 +1,6 @@
 <%args>
 $type
+$class_info
 $object
 </%args>
 

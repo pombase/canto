@@ -1,6 +1,6 @@
 <%args>
-$type
 $rs
+$config_name
 $numrows => 20
 $page => 1
 @column_confs => ();
@@ -39,7 +39,8 @@ Number of rows to display
 </select>
 </div>
 
-<& /view/list.mhtml, type => $type, rs => $page_rs, list_title => '',
+<& /view/list.mhtml, config_name => $config_name, rs => $page_rs,
+  list_title => '',
   numrows => $numrows, page => $page, column_confs => \@column_confs &>
 
 % if ($pager->last_page() > 1) {
@@ -146,7 +147,7 @@ if (! grep { $_ == $numrows } @possible_page_sizes) {
 @possible_page_sizes =  sort { $a <=> $b } @possible_page_sizes;
 
 my $model_name = $c->req()->param('model');
-my $search_url = $c->uri_for("/search/type/$type");
+my $search_url = $c->uri_for("/search/type/$config_name");
 
 my $search_term = $c->stash()->{list_search_term};
 </%init>

@@ -206,6 +206,12 @@ class_info:
           editable: 1
         - name: species
           editable: 1
+    organism_report:
+      extends: organism
+      '+field_info_list':
+        - name: Number of genes
+          source:
+            sql: 'select count(*) from gene where gene.organism = me.organism_id'
     person:
       object_title_format: 'Details for @@DISPLAY_FIELD@@'
       editable: 1
@@ -327,6 +333,11 @@ class_info:
         - name: genesynonyms
           editable: 1
           is_collection: 1
+        - name: organism
+          editable: 1
+    named_gene:
+      extends: gene
+      constraint: "primary_name is not null"
     genesynonym:
       editable: 1
       display_field: identifier

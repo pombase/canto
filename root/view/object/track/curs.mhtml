@@ -1,8 +1,9 @@
 <%args>
 $object
+$class_info
 </%args>
 
-<&| /view/object/object_top.mhtml, object => $object &>
+<&| /view/object/object_top.mhtml, object => $object, class_info => $class_info &>
 
 <div class="object_sub_action">
   <a href="<% $c->uri_for('/curs/' . $object->curs_key()) %>">

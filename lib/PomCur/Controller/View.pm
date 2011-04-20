@@ -54,29 +54,30 @@ use Lingua::EN::Inflect::Number qw(to_PL);
 sub get_object_by_id_or_name
 {
   my $c = shift;
-  my $type = shift;
+  my $class_info = shift;
   my $object_key = shift;
 
   my $st = $c->stash;
   my $schema = $c->schema();
 
-  my $class_name = $schema->class_name_of_table($type);
+  my $table = $class_info->{source};
+
+  my $class_name = $schema->class_name_of_table($table);
+
+  my $search;
 
   if ($object_key =~ /^\d+$/) {
-    return $schema->find_with_type($class_name, $object_key);
+    $search = { $table . "_id", $object_key };
   } else {
     # try looking up by display name
-    my $class_info = $c->config()->class_info($c)->{$type};
-    if (defined $class_info) {
-      if (defined $class_info->{display_field}) {
-        return $schema->find_with_type($class_name,
-                                       $class_info->{display_field} =>
-                                         $object_key);
-      }
+    if (defined $class_info->{display_field}) {
+      $search = { $class_info->{display_field}, $object_key };
     }
   }
 
-  return undef;
+  my ($rs) = get_list_rs($c, $search, $class_info);
+
+  return $rs->first();
 }
 
 sub _eval_format
@@ -108,7 +109,8 @@ sub _make_title
   my $class_display_field = $class_info->{display_field};
   if (defined $class_display_field) {
     ($object_display_key) =
-      PomCur::WebUtil::get_field_value($c, $object, $class_display_field);
+      PomCur::WebUtil::get_field_value($c, $object, $class_info,
+                                       $class_display_field);
   } else {
     my $object_id_field = $type . '_id';
     $object_display_key = $object->$object_id_field();
@@ -146,38 +148,70 @@ sub _make_title
 =cut
 sub object : Local
 {
-  my ($self, $c, $type, $object_key) = @_;
+  my ($self, $c, $config_name, $object_key) = @_;
 
   my $st = $c->stash;
 
-  eval {
-    my $object = get_object_by_id_or_name($c, $type, $object_key);
+  my $class_info = $c->config()->class_info($c)->{$config_name};
+  $st->{class_info} = $class_info;
 
-    my $class_info = $c->config()->class_info($c)->{$type};
+  my $table = $class_info->{source};
+
+  eval {
+    my $object = get_object_by_id_or_name($c, $class_info, $object_key);
 
     $st->{title} = _make_title($c, $object, $class_info);
     $st->{template} = 'view/object/generic.mhtml';
 
-    $st->{type} = $type;
+    $st->{type} = $table;
     $st->{object} = $object;
 
     my $model_name = $c->req()->param('model');
 
     my $object_id = PomCur::DB::id_of_object($object);
     my $template_path = $c->path_to("root", "view", "object", $model_name,
-                                    "$type.mhtml");
+                                    "$table.mhtml");
 
     if (defined $template_path->stat()) {
-      $c->stash()->{template} = "view/object/$model_name/$type.mhtml";
+      $c->stash()->{template} = "view/object/$model_name/$table.mhtml";
     } else {
       $c->stash()->{template} = "view/object/generic.mhtml";
     }
   };
   if ($@ || !defined $st->{object}) {
     $c->stash->{error} =
-      qq(Cannot display object with type "$type" and key = $object_key - $@);
+      qq(Cannot display object with type "$table" and key = $object_key - $@);
     $c->forward('/front');
   }
+}
+
+sub get_list_rs
+{
+  my $c = shift;
+  my $search = shift;
+  my $class_info = shift;
+
+  my $schema = $c->schema();
+
+  my $table = $class_info->{source};
+  my $class_name = $schema->class_name_of_table($table);
+
+  my $params = { order_by => _get_order_by_field($c, $table) };
+
+  if (defined $class_info->{constraint}) {
+    $params->{where} = $class_info->{constraint};
+  }
+
+  my $rs = $schema->resultset($class_name)->search($search, $params);
+
+  my $user_role = undef;
+
+  my @column_confs =
+    PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
+
+  $rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
+
+  return $rs;
 }
 
 =head2 list
@@ -188,30 +222,29 @@ sub object : Local
 =cut
 sub list : Local
 {
-  my ($self, $c, $type) = @_;
+  my ($self, $c, $config_name) = @_;
 
   my $st = $c->stash;
-  my $schema = $c->schema();
 
   eval {
-    $st->{title} = 'List of all ' . to_PL($type);
+    $st->{title} = 'List of all ' . to_PL($config_name);
     $st->{template} = 'view/list_page.mhtml';
-    $st->{type} = $type;
 
-    my $class_name = $schema->class_name_of_table($type);
-    my $class_info = $c->config()->class_info($c)->{$type};
+    my $config = $c->config();
 
-    my $params = { order_by => $self->_get_order_by_field($c, $type) };
+    $st->{config_name} = $config_name;
 
     my $search = $st->{list_search_constraint};
 
-    $st->{rs} = $schema->resultset($class_name)->search($search, $params);
+    my $class_info = $c->config()->class_info($c)->{$config_name};
+    my $rs = get_list_rs($c, $search, $class_info);
+    $st->{rs} = $rs;
 
     $st->{page} = $c->req->param('page') || 1;
     $st->{numrows} = $c->req->param('numrows') || 20;
   };
   if ($@) {
-    $c->stash->{error} = qq(No objects with type: $type - $@);
+    $c->stash->{error} = qq(No objects with type: $config_name - $@);
     $c->forward('/front');
   }
 
@@ -219,7 +252,6 @@ sub list : Local
 
 sub _get_order_by_field
 {
-  my $self = shift;
   my $c = shift;
   my $type = shift;
 
@@ -284,7 +316,7 @@ sub report : Local
 
     my $class_name = $schema->class_name_of_table($type);
     my $class_info = $c->config()->class_info($c)->{$type};
-    my $params = { order_by => $self->_get_order_by_field($c, $type) };
+    my $params = { order_by => _get_order_by_field($c, $type) };
 
     if (defined $report_conf->{constraint}) {
       $params->{where} = $report_conf->{constraint};

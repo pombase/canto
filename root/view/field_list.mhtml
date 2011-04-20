@@ -1,6 +1,6 @@
 <%args>
 $object
-@field_labels => ()
+$class_info
 </%args>
 
 <div class="field-list">
@@ -10,7 +10,8 @@ $object
 %   $col_conf = { name => $field_label } if !defined $col_conf;
     <tr>
       <td><span class="field-label"><% $_get_display_name_code->($field_label) %></span>:</td>
-      <td><& /view/field.mhtml, object => $object, field_name => $col_conf->{name} &></td>
+      <td><& /view/field.mhtml, object => $object, class_info => $class_info,
+             field_name => $col_conf->{name} &></td>
     </tr>
 % }
   </table>
@@ -22,9 +23,8 @@ my $type = $object->table();
 
 my %field_infos = ();
 
-my $class_infos = $c->config()->class_info($c);
-if (defined $class_infos->{$type}->{field_infos}) {
-  %field_infos = %{$class_infos->{$type}->{field_infos}};
+if (defined $class_info->{field_infos}) {
+  %field_infos = %{$class_info->{field_infos}};
 }
 
 my $_get_display_name_code = sub {
@@ -39,19 +39,15 @@ my $_get_display_name_code = sub {
   return ucfirst $display_field_label;
 };
 
-if (!@field_labels) {
-  my $class_info_ref =
-    $c->config()->class_info($c)->{$object->table()};
-  my %class_info = %{$class_info_ref};
-  my @field_info_list = @{$class_info{field_info_list}};
+my @field_labels = ();
+my @field_info_list = @{$class_info->{field_info_list}};
 
-  for my $field_info (@field_info_list) {
-    my $field_name = $field_info->{name};
-    if (!$field_info->{is_collection} &&
-        (!$field_info->{admin_only} ||
-          $c->user_exists() && $c->user()->role()->name() eq 'admin')) {
-      push @field_labels, $field_name;
-    }
+for my $field_info (@field_info_list) {
+  my $field_name = $field_info->{name};
+  if (!$field_info->{is_collection} &&
+      (!$field_info->{admin_only} ||
+        $c->user_exists() && $c->user()->role()->name() eq 'admin')) {
+    push @field_labels, $field_name;
   }
 }
 </%init>

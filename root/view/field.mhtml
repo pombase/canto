@@ -7,6 +7,7 @@ it will be rendered as a 'details' link.
 
 <%args>
 $object
+$class_info
 $field_name
 </%args>
 
@@ -20,10 +21,11 @@ $field_name
 % } else {
 %   if ($field_type eq 'foreign_key' && $field_value && defined $ref_display_key) {
   <span class="ref-field">
-  <a href='<% $c->uri_for("/view/object", $referenced_object->table(), 
+  <a href='<% $c->uri_for("/view/object", $ref_table, 
                PomCur::DB::id_of_object($field_value),
                { model => $model_name } ) %>'>
-    <& field.mhtml, object => $referenced_object, field_name => $ref_display_key &>
+    <& field.mhtml, object => $referenced_object, class_info => $ref_class_info,
+       field_name => $ref_display_key &>
   </a>
   </span>
 %   } else {
@@ -76,18 +78,24 @@ sub format_field_value
   return $field_value;
 }
 
-my $class_info = $c->config()->class_info($c)->{$object->table()};
 my $col_conf = $class_info->{field_infos}->{$field_name};
 
 my ($field_value, $field_type, $ref_display_key) =
-  PomCur::WebUtil::get_field_value($c, $object, $field_name);
+  PomCur::WebUtil::get_field_value($c, $object, $class_info, $field_name);
 
 my $type = $object->table();
 
 my $referenced_object = undef;
+my $ref_table = undef;
+my $ref_class_info = undef;
 
 if ($field_type eq 'foreign_key') {
   $referenced_object = $field_value;
+  $ref_table = $referenced_object->table();
+
+  my $class_infos = $c->config()->class_info($c);
+
+  $ref_class_info = $class_infos->{$ref_table};
 }
 
 if (!defined $field_value) {
