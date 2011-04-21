@@ -237,6 +237,11 @@ sub list : Local
     my $search = $st->{list_search_constraint};
 
     my $class_info = $c->config()->class_info($c)->{$config_name};
+
+    if (!defined $class_info) {
+      die "no such configuration: $config_name\n";
+    }
+
     my $rs = get_list_rs($c, $search, $class_info);
     $st->{rs} = $rs;
 
