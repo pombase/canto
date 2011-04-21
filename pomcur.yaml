@@ -335,9 +335,6 @@ class_info:
           is_collection: 1
         - name: organism
           editable: 1
-    named_gene:
-      extends: gene
-      constraint: "primary_name is not null"
     genesynonym:
       editable: 1
       display_field: identifier
@@ -346,6 +343,18 @@ class_info:
           editable: 1
         - name: gene
           editable: 1
+    new_publications:
+      description: un-triaged publications
+      extends: pub
+      constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'New')"
+      field_info_list:
+        - name: 'Publication ID'
+          source: uniquename
+        - name: title
+    named_genes:
+      extends: gene
+      description: named genes
+      constraint: "primary_name is not null"
   chado:
     cv:
       class_display_name: controlled vocabulary
@@ -423,14 +432,10 @@ class_info:
         - name: value
           editable: 1
 
-report_list:
-  - name: new_publications
-    description: Un-triaged publications
-    object_type: pub
-    constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'New')"
-    columns:
-      - name: 'Publication ID'
-      - name: title
+reports:
+  track:
+    - new_publications
+    - named_genes
 
 export:
   gene_association_fields:

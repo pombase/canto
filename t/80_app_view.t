@@ -42,12 +42,12 @@ test_psgi $app, sub {
 
   # test viewing a report
   {
-    my $url = 'http://localhost:5000/view/list/named_gene?model=track';
+    my $url = 'http://localhost:5000/view/list/named_genes?model=track';
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
     is $res->code, 200;
-    ok ($res->content() =~ /List of all named_genes/);
+    ok ($res->content() =~ /List of named genes/);
     ok ($res->content() =~ m:<b>8</b> rows found:);
     ok ($res->content() =~ /rpn501/);
     ok ($res->content() !~ /SPBC12C2.11/);

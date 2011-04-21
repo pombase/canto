@@ -46,6 +46,8 @@ sub track :Path :Args(0) {
 
   $c->stash->{title} = 'Start page';
   $c->stash->{template} = 'track/index.mhtml';
+
+  $c->stash->{model} = 'track';
 }
 
 1;

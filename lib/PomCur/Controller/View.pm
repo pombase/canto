@@ -228,19 +228,25 @@ sub list : Local
   my $st = $c->stash;
 
   eval {
-    $st->{title} = 'List of all ' . to_PL($config_name);
     $st->{template} = 'view/list_page.mhtml';
 
     my $config = $c->config();
-
     $st->{config_name} = $config_name;
 
     my $search = $st->{list_search_constraint};
+    $st->{title} = 'List of ';
 
     my $class_info = $c->config()->class_info($c)->{$config_name};
 
     if (!defined $class_info) {
       die "no such configuration: $config_name\n";
+    }
+
+    if (defined $class_info->{description}) {
+      $st->{title} .= $class_info->{description};
+    } else {
+      my $plural_name = to_PL($config_name);
+      $st->{title} .= "all $plural_name";
     }
 
     my $rs = get_list_rs($c, $search, $class_info);
@@ -295,66 +301,6 @@ sub _get_order_by_field
   }
 
   return $order_by;
-}
-
-=head2 report
-
- Function: Display a report, configuration from the config file
- Args    : $report_name - the report name, used to find the configuration
-
-=cut
-sub report : Local
-{
-  my ($self, $c, $report_name) = @_;
-
-  my $st = $c->stash;
-  my $schema = $c->schema();
-
-  eval {
-    my $report_conf = $c->config()->{reports}->{$report_name};
-
-    $st->{title} = $report_conf->{description};
-    $st->{template} = 'view/list_page.mhtml';
-
-    my $type = $report_conf->{object_type};
-
-    $st->{type} = $type;
-
-    my $class_name = $schema->class_name_of_table($type);
-    my $class_info = $c->config()->class_info($c)->{$type};
-    my $params = { order_by => _get_order_by_field($c, $type) };
-
-    if (defined $report_conf->{constraint}) {
-      $params->{where} = $report_conf->{constraint};
-    }
-
-    my @column_confs = ();
-
-    for my $column_conf (@{$report_conf->{columns}}) {
-      my $conf_name = $column_conf->{name};
-      if (exists $column_conf->{source}) {
-        push @column_confs, $column_conf;
-      } else {
-        if (exists $class_info->{field_infos}->{$conf_name}) {
-          push @column_confs, $class_info->{field_infos}->{$conf_name};
-        } else {
-          die "no configuration for $type.$conf_name used by report: " .
-            $report_name;
-        }
-      }
-    }
-
-    $st->{column_confs} = [@column_confs];
-
-    $st->{rs} = $schema->resultset($class_name)->search({ }, $params);
-
-    $st->{page} = $c->req->param('page') || 1;
-    $st->{numrows} = $c->req->param('numrows') || 20;
-  };
-  if ($@) {
-    $c->stash->{error} = qq(Can't display report for: $report_name - $@);
-    $c->forward('/front');
-  }
 }
 
 =head2 list_collection

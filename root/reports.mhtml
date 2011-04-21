@@ -1,0 +1,28 @@
+<%args>
+$model
+</%args>
+
+<div>
+  <div class="label">
+    Reports ...
+  </div>
+  <ul>
+% for my $report_conf (@report_confs) {
+%   my $report_name = $report_conf->{name};
+    <li>
+      <a href="<% $c->uri_for('/view/list/' . $report_name, { model => $model } ) %>">
+        <% $report_conf->{description} %>
+      </a>
+    </li>
+% }
+  </ul>
+</div>
+
+<%init>
+my @report_confs = ();
+
+for my $report_name (@{$c->config()->{reports}->{$model}}) {
+  my $report_conf = $c->config()->{class_info}->{$model}->{$report_name};
+  push @report_confs, $report_conf
+}
+</%init>
