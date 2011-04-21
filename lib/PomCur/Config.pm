@@ -201,14 +201,6 @@ sub setup
     }
   }
 
-  # make the reports available as a hash (by report name)
-  if (defined $self->{report_list}) {
-    for my $report (@{$self->{report_list}}) {
-      my $name = $report->{name};
-      $self->{reports}->{$name} = $report;
-    }
-  }
-
   # create an annotation_types hash from the annotation_type_list
   if (defined $self->{annotation_type_list}) {
     for my $annotation_type (@{$self->{annotation_type_list}}) {
