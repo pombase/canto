@@ -199,7 +199,8 @@ sub get_list_rs
   my $params = { order_by => _get_order_by_field($c, $table) };
 
   if (defined $class_info->{constraint}) {
-    $params->{where} = $class_info->{constraint};
+    my $constraint = '(' . $class_info->{constraint} . ')';
+    $params->{where} = \$constraint;
   }
 
   my $rs = $schema->resultset($class_name)->search($search, $params);

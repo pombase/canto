@@ -139,9 +139,8 @@ sub setup
 
       if (!defined $parent_name) {
         $class_info->{source} //= $class_name;
+        $class_info->{search_fields} //= [ $class_info->{display_field} ];
       }
-
-      $class_info->{search_fields} //= [ $class_info->{display_field} ];
     }
 
     for my $class_name (keys %{$model_conf}) {

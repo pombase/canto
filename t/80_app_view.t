@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 15;
 
 use PomCur::TestUtil;
 
@@ -38,6 +38,19 @@ test_psgi $app, sub {
     ok ($res->content() =~ /List of all labs/);
     ok ($res->content() =~ /Nick Rhind/);
     ok ($res->content() =~ /12\b.* rows found/);
+  }
+
+  # test viewing a report
+  {
+    my $url = 'http://localhost:5000/view/list/named_gene?model=track';
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+    ok ($res->content() =~ /List of all named_genes/);
+    ok ($res->content() =~ m:<b>8</b> rows found:);
+    ok ($res->content() =~ /rpn501/);
+    ok ($res->content() !~ /SPBC12C2.11/);
   }
 
   # test sql columns
