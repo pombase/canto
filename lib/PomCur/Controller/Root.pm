@@ -71,7 +71,7 @@ sub end : Private
   $c->forward('PomCur::View::Mason');
 }
 
-# In development use, redirect to the tracking application
+# redirect to the tracking application
 sub front :Path :Args(0)
 {
   my ($self, $c) = @_;
