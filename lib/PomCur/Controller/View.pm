@@ -289,11 +289,17 @@ sub _get_order_by_field
     if (@order_by_fields) {
       my $field_infos = $class_info->{field_infos};
       $order_by = [map {
-        my $source = $field_infos->{$_}->{source};
-        if (defined $source) {
-          $source;
-        } else {
-          $_;
+        if (defined $field_infos->{$_}) {
+          my $source = $field_infos->{$_}->{source};
+          if (defined $source) {
+            if (ref $source) {
+              die "can't use reference as order_by field for $type.$_";
+            } else {
+              $source;
+            }
+          } else {
+            $_;
+          }
         }
       } @order_by_fields];
       $order_by = \@order_by_fields;
