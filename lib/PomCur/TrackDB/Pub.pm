@@ -31,7 +31,7 @@ __PACKAGE__->table("pub");
 =head2 uniquename
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 type_id
 
@@ -72,7 +72,7 @@ __PACKAGE__->add_columns(
   "pub_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "uniquename",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "type_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "assigned_curator",
@@ -202,8 +202,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-23 19:13:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yZ9Qd89YuGVwsYOOtTxlMA
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-04-23 23:49:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2gFza6SvQz2pjTXvTY471w
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
