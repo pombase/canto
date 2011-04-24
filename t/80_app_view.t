@@ -24,8 +24,8 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    ok ($res->content() =~ /Details for Val Wood/);
-    ok ($res->content() =~ /Val Wood/);
+    like ($res->content(), qr/Details for Val Wood/);
+    like ($res->content(), qr/Val Wood/);
   }
 
   # test viewing a list
@@ -35,9 +35,9 @@ test_psgi $app, sub {
     my $res = $cb->($req);
 
     is $res->code, 200;
-    ok ($res->content() =~ /List of all labs/);
-    ok ($res->content() =~ /Nick Rhind/);
-    ok ($res->content() =~ /12\b.* rows found/);
+    like ($res->content(), qr/List of all labs/);
+    like ($res->content(), qr/Nick Rhind/);
+    like ($res->content(), qr/12\b.* rows found/);
   }
 
   # test viewing a report
@@ -47,10 +47,10 @@ test_psgi $app, sub {
     my $res = $cb->($req);
 
     is $res->code, 200;
-    ok ($res->content() =~ /List of named genes/);
-    ok ($res->content() =~ m:<b>8</b> rows found:);
-    ok ($res->content() =~ /rpn501/);
-    ok ($res->content() !~ /SPBC12C2.11/);
+    like ($res->content(), qr/List of named genes/);
+    like ($res->content(), qr:<b>8</b> rows found:);
+    like ($res->content(), qr/rpn501/);
+    unlike ($res->content(), qr/SPBC12C2.11/);
   }
 
   # test sql columns
@@ -60,8 +60,8 @@ test_psgi $app, sub {
     my $res = $cb->($req);
 
     is $res->code, 200;
-    ok ($res->content() =~ /List of all cvs/);
-    ok ($res->content() =~ /PSI-MOD.*19.*PomCur publication curation status/s);
+    like ($res->content(), qr/List of all cvs/);
+    like ($res->content(), qr/PSI-MOD.*19.*PomCur publication curation status/s);
   }
 };
 
