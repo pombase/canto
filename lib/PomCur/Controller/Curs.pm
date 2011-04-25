@@ -53,9 +53,7 @@ use constant {
   NEEDS_SUBMITTER => 0,
   # no genes in database, user needs to upload some
   NEEDS_GENES => 1,
-#  READY => 2,
-  # a gene is selected, but no annotation is started
-  GENE_ACTIVE => 3,
+  READY => 2,
   # user has picked an annotation type
   DONE => 5
 };
@@ -64,8 +62,7 @@ use constant {
 my %state_dispatch = (
   NEEDS_SUBMITTER, 'submitter_update',
   NEEDS_GENES, 'gene_upload',
-  GENE_ACTIVE, undef,
-  DONE, 'home',
+  READY, 'front',
 );
 
 # used by the tests to find the most reecently created annotation
@@ -109,7 +106,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{annotation_types} = $config->{annotation_types};
   $st->{annotation_type_list} = $config->{annotation_type_list};
 
-  my ($state, $submitter_email, $gene_count, $current_gene_id) = _get_state($c);
+  my ($state, $submitter_email, $gene_count) = _get_state($c);
   $st->{state} = $state;
 
   $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
@@ -123,18 +120,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if ($state >= NEEDS_GENES) {
     $st->{submitter_email} = $submitter_email;
     $st->{submitter_name} = get_metadata($schema, 'submitter_name');
-  }
-
-  if ($state == GENE_ACTIVE) {
-    $st->{current_gene_id} = $current_gene_id;
-    my $current_gene = $schema->find_with_type('Gene', $current_gene_id);
-    $st->{current_gene} = $current_gene;
-
-    my $gene_display_name = $current_gene->display_name();
-    $st->{gene_display_name} = $gene_display_name;
-
-    $st->{title} =
-      "Curating $gene_display_name from " . $st->{pub}->uniquename();
   }
 
   $st->{gene_count} = get_ordered_gene_rs($schema)->count();
@@ -159,7 +144,6 @@ sub _get_state
   my $submitter_email = get_metadata($schema, 'submitter_email');
 
   my $state = undef;
-  my $current_gene_id = undef;
   my $gene_count = undef;
 
   if (defined $submitter_email) {
@@ -167,13 +151,7 @@ sub _get_state
     $gene_count = $gene_rs->count();
 
     if ($gene_count > 0) {
-      $current_gene_id = get_metadata($schema, 'current_gene_id');
-
-      if (defined $current_gene_id) {
-          $state = GENE_ACTIVE;
-      } else {
-        $state = DONE;
-      }
+      $state = READY;
     } else {
       $state = NEEDS_GENES;
     }
@@ -181,21 +159,7 @@ sub _get_state
     $state = NEEDS_SUBMITTER;
   }
 
-  return ($state, $submitter_email, $gene_count, $current_gene_id);
-}
-
-sub _set_new_gene
-{
-  my $schema = shift;
-
-  my $gene_rs = get_ordered_gene_rs($schema, "primary_name");
-  my $first_gene = $gene_rs->first();
-
-  if (defined $first_gene) {
-    set_metadata($schema, 'current_gene_id', $first_gene->gene_id());
-  } else {
-    unset_metadata($schema, 'current_gene_id');
-  }
+  return ($state, $submitter_email, $gene_count);
 }
 
 sub _redirect_and_detach
@@ -212,14 +176,14 @@ sub _redirect_and_detach
   $c->detach();
 }
 
-sub home : Chained('top') PathPart('') Args(0)
+sub front : Chained('top') PathPart('') Args(0)
 {
   my ($self, $c) = @_;
 
   # don't set stash title - use default
-  $c->stash->{template} = 'curs/home.mhtml';
+  $c->stash->{template} = 'curs/front.mhtml';
 
-  $c->stash->{current_component} = 'home';
+  $c->stash->{current_component} = 'front';
 }
 
 sub submitter_update : Private
@@ -430,11 +394,6 @@ sub _edit_genes_helper
           for my $gene_id (@gene_ids) {
             my $gene = $schema->find_with_type('Gene', $gene_id);
             $gene->delete();
-
-            if (defined $st->{current_gene_id} &&
-                $st->{current_gene_id} eq $gene_id) {
-              _set_new_gene($schema);
-            }
           }
         };
         $schema->txn_do($delete_sub);
@@ -530,12 +489,6 @@ sub gene_upload : Chained('top') Args(0) Form
           { title => "No genes found for these identifiers: @missing" };
       $st->{gene_upload_unknown} = [@missing];
     } else {
-      my $state = $st->{state};
-      if ($state ne GENE_ACTIVE) {
-        _set_new_gene($schema);
-        $c->stash()->{state} = GENE_ACTIVE;
-      }
-
       my $return_path = $form->param_value('return_path_input');
 
       if (defined $return_path && length $return_path > 0) {
@@ -1057,17 +1010,18 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   }
 }
 
-sub set_current_gene : Chained('top') Args(1)
+sub gene : Chained('top') Args(1)
 {
   my ($self, $c, $gene_id) = @_;
 
   my $schema = $c->stash()->{schema};
 
-  set_metadata($schema, 'current_gene_id', $gene_id);
-  my $gene = $schema->find_with_type('Gene', $gene_id);
-  $c->flash()->{message} = 'New current gene: ' . $gene->display_name();
+  my $st = $c->stash();
 
-  _redirect_and_detach($c);
+  my $gene = $schema->find_with_type('Gene', $gene_id);
+  $st->{gene} = $gene;
+
+  $st->{template} //= 'curs/gene.mhtml';
 }
 
 =head2 get_ordered_gene_rs
