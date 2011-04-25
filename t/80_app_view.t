@@ -60,7 +60,7 @@ test_psgi $app, sub {
     my $res = $cb->($req);
 
     is $res->code, 200;
-    like ($res->content(), qr/List of all cvs/);
+    like ($res->content(), qr/List of all controlled vocabularies/);
     like ($res->content(), qr/PSI-MOD.*19.*PomCur publication curation status/s);
   }
 };

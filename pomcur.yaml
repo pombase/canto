@@ -344,7 +344,7 @@ class_info:
         - name: gene
           editable: 1
     new_publications:
-      description: un-triaged publications
+      class_display_name: un-triaged publications
       extends: pub
       constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'New')"
       field_info_list:
@@ -353,7 +353,6 @@ class_info:
         - name: title
     named_genes:
       extends: gene
-      description: named genes
       constraint: "primary_name is not null"
   chado:
     cv:

@@ -9,9 +9,10 @@ $model
   <ul>
 % for my $report_conf (@report_confs) {
 %   my $report_name = $report_conf->{name};
+%   my $display_name = $report_conf->{display_name};
     <li>
       <a href="<% $c->uri_for('/view/list/' . $report_name, { model => $model } ) %>">
-        <% $report_conf->{description} %>
+        <% ucfirst $display_name %>
       </a>
     </li>
 % }
@@ -23,6 +24,6 @@ my @report_confs = ();
 
 for my $report_name (@{$c->config()->{reports}->{$model}}) {
   my $report_conf = $c->config()->{class_info}->{$model}->{$report_name};
-  push @report_confs, $report_conf
+  push @report_confs, $report_conf;
 }
 </%init>
