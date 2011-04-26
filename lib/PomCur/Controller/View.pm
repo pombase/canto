@@ -242,10 +242,10 @@ sub list : Local
       die "no such configuration: $config_name\n";
     }
 
-    if (defined $class_info->{description}) {
-      $st->{title} .= $class_info->{description};
+    if (defined $class_info->{extends}) {
+      $st->{title} .= $class_info->{display_name};
     } else {
-      my $plural_name = to_PL($config_name);
+      my $plural_name = to_PL($class_info->{display_name});
       $st->{title} .= "all $plural_name";
     }
 
