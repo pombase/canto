@@ -54,15 +54,14 @@ use constant {
   # no genes in database, user needs to upload some
   NEEDS_GENES => 1,
   READY => 2,
-  # user has picked an annotation type
-  DONE => 5
+  DONE => 3
 };
 
 # actions to execute for each state, undef for special cases
 my %state_dispatch = (
   NEEDS_SUBMITTER, 'submitter_update',
   NEEDS_GENES, 'gene_upload',
-  READY, 'front',
+  READY, undef,
 );
 
 # used by the tests to find the most reecently created annotation
@@ -124,7 +123,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{gene_count} = get_ordered_gene_rs($schema)->count();
 
-  if ($path !~ /gene_upload|edit_genes/) {
+  if ($path !~ /gene_upload|edit_genes|confirm_genes/) {
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
       $c->detach($dispatch_dest);
@@ -181,9 +180,9 @@ sub front : Chained('top') PathPart('') Args(0)
   my ($self, $c) = @_;
 
   $c->stash->{title} = 'Front page';
+  # use only in header, not in body:
+  $c->stash->{show_title} = 0;
   $c->stash->{template} = 'curs/front.mhtml';
-
-  $c->stash->{current_component} = 'front';
 }
 
 sub submitter_update : Private
@@ -541,7 +540,7 @@ sub annotation_ontology_edit
 
   # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
-  $st->{current_component_display_name} = $annotation_config->{display_name};
+  $st->{current_component_display_name} = $module_display_name;
   $st->{current_component_short_display_name} =
     $annotation_config->{short_display_name};
   $st->{current_component_very_short_display_name} =
@@ -572,7 +571,8 @@ sub annotation_ontology_edit
         type => 'Text',
       },
       {
-        name =>'ferret-suggest-definition', label => 'ferret-suggest-definition',
+        name =>'ferret-suggest-definition',
+        label => 'ferret-suggest-definition',
         type => 'Text',
       },
       {
@@ -732,6 +732,12 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   $st->{annotation_gene} = $gene;
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $annotation_display_name = $annotation_config->{display_name};
+  my $gene_display_name = $gene->display_name();
+
+  $st->{title} = "Curating $annotation_display_name for $gene_display_name\n";
+  $st->{show_title} = 0;
 
   my %type_dispatch = (
     ontology => \&annotation_ontology_edit,
@@ -1014,14 +1020,16 @@ sub gene : Chained('top') Args(1)
 {
   my ($self, $c, $gene_id) = @_;
 
-  my $schema = $c->stash()->{schema};
-
   my $st = $c->stash();
+  my $schema = $st->{schema};
 
   my $gene = $schema->find_with_type('Gene', $gene_id);
   $st->{gene} = $gene;
 
-  $st->{template} //= 'curs/gene.mhtml';
+  $st->{title} = 'Gene: ' . $gene->display_name();
+  # use only in header, not in body:
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/gene_front.mhtml';
 }
 
 =head2 get_ordered_gene_rs

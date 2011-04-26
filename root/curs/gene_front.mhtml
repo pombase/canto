@@ -1,13 +1,32 @@
 <%args>
-$curs_key
-$state
 $curs_root_uri
 $pub
 @annotation_type_list
 </%args>
 
 <div id="curs-annotation-actions">
-<& /curs/gene_list.mhtml, pub => $pub &>
+<div class="curs-box">
+  <div class="curs-box-title">Choose curation type:</div>
+  <div class="curs-box-body">
+  <ul class="annotation-start">
+% for my $annotation_type (@annotation_type_list) {
+%   my $annotation_type_name = $annotation_type->{name};
+%   my $action_path = $curs_root_uri . '/annotation/edit/' .
+%                     $gene_id . '/' . $annotation_type_name;
+    <li>
+%   if (!$annotation_type->{disabled}) {
+      <a href="<% $action_path %>">
+%   }
+      <span class="annotation-type">
+Annotate <% $annotation_type->{display_name} %>
+      </span>
+%   if (!$annotation_type->{disabled}) {
+      </a>
+%   }
+    </li>
+% }
+  </ul>
+  </div>
 </div>
 
 <div class="curs-annotation-tables sect">
@@ -29,7 +48,8 @@ $pub
 
 
 <%init>
-my $current_gene_id = $c->stash()->{current_gene_id};
+my $gene = $c->stash()->{gene};
+my $gene_id = $gene->gene_id();
 
 my $annotation_count = 0;
 

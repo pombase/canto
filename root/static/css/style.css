@@ -416,13 +416,9 @@ div.clearall {
 .gene-list {
   border: 1px solid #c7c7c7;
   border-right: 0px;
-  float: right;
-  font-size: 78%;
+  font-size: 90%;
   position: relative;
-  width: 18%;
-  right: -10px;
-  -moz-border-top-right-radius: 0px;
-  border-top-right-radius: 0px;
+  width: 50%;
 }
 
 .gene-list table {
@@ -577,10 +573,6 @@ div.clearall {
   border-top-right-radius: 4px;
   -moz-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
-}
-
-.curs-box-sub-title {
-  font-size: 80%;
 }
 
 .curs-box-body {

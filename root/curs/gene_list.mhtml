@@ -5,8 +5,7 @@ $pub
 
 <div class="gene-list curs-box">
   <div class="curs-box-title">
-    <div>Genes for curation</div>
-    <div class="curs-box-sub-title">(Click to change current gene)</div>
+    <div>Choose a gene to annotate:</div>
   </div>
   <div class="curs-box-body">
 % if (@gene_hashes) {
@@ -16,7 +15,7 @@ $pub
 %     for my $col_name (@col_names) {
       <td>
 %       if ($gene->{gene_id} != $current_gene_id) {
-        <a href="<% $start_path . '/set_current_gene/' .$gene->{gene_id} %>"
+        <a href="<% $start_path . '/gene/' .$gene->{gene_id} %>"
            title="Click to make this gene current">
 %       }
           <span class="<% _span_class($gene->{gene_id}, $current_gene_id) %>">
