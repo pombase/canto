@@ -1,0 +1,72 @@
+<%args>
+$curs_root_uri
+$pub
+$gene
+@annotation_type_list
+</%args>
+
+<div id="curs-annotation-actions">
+<div class="curs-box">
+  <div class="curs-box-title">
+Choose curation type for <% $gene->display_name() %>:
+  </div>
+  <div class="curs-box-body">
+  <ul class="annotation-start">
+% for my $annotation_type (@annotation_type_list) {
+%   my $annotation_type_name = $annotation_type->{name};
+%   my $action_path = $curs_root_uri . '/annotation/edit/' .
+%                     $gene_id . '/' . $annotation_type_name;
+    <li>
+%   if (!$annotation_type->{disabled}) {
+      <a href="<% $action_path %>">
+%   }
+      <span class="annotation-type">
+<% ucfirst $annotation_type->{display_name} %>
+      </span>
+%   if (!$annotation_type->{disabled}) {
+      </a>
+%   }
+    </li>
+% }
+  </ul>
+  </div>
+</div>
+
+<div class="curs-annotation-tables sect">
+% for my $annotation_type (@annotation_type_list) {
+<& current_annotation_view.mhtml,
+   annotation_type => $annotation_type,
+   curs_root_uri => $curs_root_uri &>
+
+% _increment_annotation_count($annotation_type->{name}, \$annotation_count);
+% }
+
+% if ($annotation_count > 0) {
+<div class="curs-annotation-download">
+  <a href="<% $download_action %>">Download all annotation (Zip format) ...</a>
+</div>
+% }
+</div>
+
+<%init>
+my $gene_id = $gene->gene_id();
+
+my $annotation_count = 0;
+
+sub _increment_annotation_count
+{
+  my $annotation_type_name = shift;
+  my $annotation_count_ref = shift;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $rs = $schema->resultset('Annotation')
+               ->search({ type => $annotation_type_name });
+
+  $$annotation_count_ref += $rs->count();
+}
+
+my $download_action = $curs_root_uri . '/annotation/zipexport';
+
+</%init>

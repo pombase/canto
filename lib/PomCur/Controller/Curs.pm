@@ -53,19 +53,15 @@ use constant {
   NEEDS_SUBMITTER => 0,
   # no genes in database, user needs to upload some
   NEEDS_GENES => 1,
-#  READY => 2,
-  # a gene is selected, but no annotation is started
-  GENE_ACTIVE => 3,
-  # user has picked an annotation type
-  DONE => 5
+  READY => 2,
+  DONE => 3
 };
 
 # actions to execute for each state, undef for special cases
 my %state_dispatch = (
   NEEDS_SUBMITTER, 'submitter_update',
   NEEDS_GENES, 'gene_upload',
-  GENE_ACTIVE, undef,
-  DONE, 'home',
+  READY, undef,
 );
 
 # used by the tests to find the most reecently created annotation
@@ -93,6 +89,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{schema} = $schema;
 
   my $path = $c->req->uri()->path();
+  $st->{current_path_uri} = $path;
+
   (my $controller_name = __PACKAGE__) =~ s/.*::(.*)/\L$1/;
   $st->{controller_name} = $controller_name;
 
@@ -109,7 +107,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{annotation_types} = $config->{annotation_types};
   $st->{annotation_type_list} = $config->{annotation_type_list};
 
-  my ($state, $submitter_email, $gene_count, $current_gene_id) = _get_state($c);
+  my ($state, $submitter_email, $gene_count) = _get_state($c);
   $st->{state} = $state;
 
   $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
@@ -125,21 +123,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $st->{submitter_name} = get_metadata($schema, 'submitter_name');
   }
 
-  if ($state == GENE_ACTIVE) {
-    $st->{current_gene_id} = $current_gene_id;
-    my $current_gene = $schema->find_with_type('Gene', $current_gene_id);
-    $st->{current_gene} = $current_gene;
-
-    my $gene_display_name = $current_gene->display_name();
-    $st->{gene_display_name} = $gene_display_name;
-
-    $st->{title} =
-      "Curating $gene_display_name from " . $st->{pub}->uniquename();
-  }
-
   $st->{gene_count} = get_ordered_gene_rs($schema)->count();
 
-  if ($path !~ /gene_upload|edit_genes/) {
+  if ($path !~ /gene_upload|edit_genes|confirm_genes/) {
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
       $c->detach($dispatch_dest);
@@ -159,7 +145,6 @@ sub _get_state
   my $submitter_email = get_metadata($schema, 'submitter_email');
 
   my $state = undef;
-  my $current_gene_id = undef;
   my $gene_count = undef;
 
   if (defined $submitter_email) {
@@ -167,13 +152,7 @@ sub _get_state
     $gene_count = $gene_rs->count();
 
     if ($gene_count > 0) {
-      $current_gene_id = get_metadata($schema, 'current_gene_id');
-
-      if (defined $current_gene_id) {
-          $state = GENE_ACTIVE;
-      } else {
-        $state = DONE;
-      }
+      $state = READY;
     } else {
       $state = NEEDS_GENES;
     }
@@ -181,21 +160,7 @@ sub _get_state
     $state = NEEDS_SUBMITTER;
   }
 
-  return ($state, $submitter_email, $gene_count, $current_gene_id);
-}
-
-sub _set_new_gene
-{
-  my $schema = shift;
-
-  my $gene_rs = get_ordered_gene_rs($schema, "primary_name");
-  my $first_gene = $gene_rs->first();
-
-  if (defined $first_gene) {
-    set_metadata($schema, 'current_gene_id', $first_gene->gene_id());
-  } else {
-    unset_metadata($schema, 'current_gene_id');
-  }
+  return ($state, $submitter_email, $gene_count);
 }
 
 sub _redirect_and_detach
@@ -212,14 +177,14 @@ sub _redirect_and_detach
   $c->detach();
 }
 
-sub home : Chained('top') PathPart('') Args(0)
+sub front : Chained('top') PathPart('') Args(0)
 {
   my ($self, $c) = @_;
 
-  # don't set stash title - use default
-  $c->stash->{template} = 'curs/home.mhtml';
-
-  $c->stash->{current_component} = 'home';
+  $c->stash->{title} = 'Front page';
+  # use only in header, not in body:
+  $c->stash->{show_title} = 0;
+  $c->stash->{template} = 'curs/front.mhtml';
 }
 
 sub submitter_update : Private
@@ -430,11 +395,6 @@ sub _edit_genes_helper
           for my $gene_id (@gene_ids) {
             my $gene = $schema->find_with_type('Gene', $gene_id);
             $gene->delete();
-
-            if (defined $st->{current_gene_id} &&
-                $st->{current_gene_id} eq $gene_id) {
-              _set_new_gene($schema);
-            }
           }
         };
         $schema->txn_do($delete_sub);
@@ -530,12 +490,6 @@ sub gene_upload : Chained('top') Args(0) Form
           { title => "No genes found for these identifiers: @missing" };
       $st->{gene_upload_unknown} = [@missing];
     } else {
-      my $state = $st->{state};
-      if ($state ne GENE_ACTIVE) {
-        _set_new_gene($schema);
-        $c->stash()->{state} = GENE_ACTIVE;
-      }
-
       my $return_path = $form->param_value('return_path_input');
 
       if (defined $return_path && length $return_path > 0) {
@@ -588,7 +542,7 @@ sub annotation_ontology_edit
 
   # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
-  $st->{current_component_display_name} = $annotation_config->{display_name};
+  $st->{current_component_display_name} = $module_display_name;
   $st->{current_component_short_display_name} =
     $annotation_config->{short_display_name};
   $st->{current_component_very_short_display_name} =
@@ -619,7 +573,8 @@ sub annotation_ontology_edit
         type => 'Text',
       },
       {
-        name =>'ferret-suggest-definition', label => 'ferret-suggest-definition',
+        name =>'ferret-suggest-definition',
+        label => 'ferret-suggest-definition',
         type => 'Text',
       },
       {
@@ -776,9 +731,15 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
 
   my $gene = $schema->find_with_type('Gene', $gene_id);
 
-  $st->{annotation_gene} = $gene;
+  $st->{gene} = $gene;
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $annotation_display_name = $annotation_config->{display_name};
+  my $gene_display_name = $gene->display_name();
+
+  $st->{title} = "Curating $annotation_display_name for $gene_display_name\n";
+  $st->{show_title} = 0;
 
   my %type_dispatch = (
     ontology => \&annotation_ontology_edit,
@@ -1057,17 +1018,20 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   }
 }
 
-sub set_current_gene : Chained('top') Args(1)
+sub gene : Chained('top') Args(1)
 {
   my ($self, $c, $gene_id) = @_;
 
-  my $schema = $c->stash()->{schema};
+  my $st = $c->stash();
+  my $schema = $st->{schema};
 
-  set_metadata($schema, 'current_gene_id', $gene_id);
   my $gene = $schema->find_with_type('Gene', $gene_id);
-  $c->flash()->{message} = 'New current gene: ' . $gene->display_name();
+  $st->{gene} = $gene;
 
-  _redirect_and_detach($c);
+  $st->{title} = 'Gene: ' . $gene->display_name();
+  # use only in header, not in body:
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/gene_front.mhtml';
 }
 
 =head2 get_ordered_gene_rs
