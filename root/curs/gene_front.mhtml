@@ -1,12 +1,15 @@
 <%args>
 $curs_root_uri
 $pub
+$gene
 @annotation_type_list
 </%args>
 
 <div id="curs-annotation-actions">
 <div class="curs-box">
-  <div class="curs-box-title">Choose curation type:</div>
+  <div class="curs-box-title">
+Choose curation type for <% $gene->display_name() %>:
+  </div>
   <div class="curs-box-body">
   <ul class="annotation-start">
 % for my $annotation_type (@annotation_type_list) {
@@ -45,10 +48,7 @@ Annotate <% $annotation_type->{display_name} %>
 % }
 </div>
 
-
-
 <%init>
-my $gene = $c->stash()->{gene};
 my $gene_id = $gene->gene_id();
 
 my $annotation_count = 0;
