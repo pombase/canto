@@ -21,7 +21,7 @@ Choose curation type for <% $gene->display_name() %>:
       <a href="<% $action_path %>">
 %   }
       <span class="annotation-type">
-Annotate <% $annotation_type->{display_name} %>
+<% ucfirst $annotation_type->{display_name} %>
       </span>
 %   if (!$annotation_type->{disabled}) {
       </a>
