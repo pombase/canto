@@ -1,12 +1,30 @@
 <div id="breadcrumbs">
   <div id="breadcrumbs-home-link" class="breadcrumbs-link">
-    <a href="<% $home_path %>" title="Go to the home page">
+    <a href="<% $curs_root_uri %>" title="Go to the home page">
       Home page
     </a>
+% if (defined $gene) {
+%   my $gene_display_name = $gene->display_name();
+    <div id="breadcrumbs-gene-link" class="breadcrumbs-link">
+%   if ($current_path_uri !~ m:/gene/:) {
+      <a href="<% $gene_url %>" title="Go to the home page">
+%   }
+      Gene: <% $gene_display_name %>
+%   if ($current_path_uri !~ m:/gene/:) {
+      </a>
+%   }
+    </div>
+% }
   </div>
 </div>
 
-
 <%init>
-my $home_path = $c->stash()->{curs_root_uri};
+my $current_path_uri = $c->stash()->{current_path_uri};
+my $gene = $c->stash()->{gene};
+my $curs_root_uri = $c->stash()->{curs_root_uri};
+my $gene_url;
+
+if (defined $gene) {
+  $gene_url = $curs_root_uri . '/gene/' . $gene->gene_id();
+}
 </%init>

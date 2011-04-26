@@ -89,6 +89,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{schema} = $schema;
 
   my $path = $c->req->uri()->path();
+  $st->{current_path_uri} = $path;
+
   (my $controller_name = __PACKAGE__) =~ s/.*::(.*)/\L$1/;
   $st->{controller_name} = $controller_name;
 
@@ -729,7 +731,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
 
   my $gene = $schema->find_with_type('Gene', $gene_id);
 
-  $st->{annotation_gene} = $gene;
+  $st->{gene} = $gene;
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 

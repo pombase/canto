@@ -161,7 +161,7 @@ var ferret_choose = {
     var html = '<div class="breadcrumbs-link" id="breadcrumbs-search">' +
       link_start + search_text + link_end +
       '</div>';
-    $('#breadcrumbs-home-link').append(html);
+    $('#breadcrumbs-gene-link').append(html);
 
     if (ferret_choose.term_history.length > 1) {
       for (var i = 1; i < history_length; i++) {
