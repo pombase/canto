@@ -170,8 +170,6 @@ sub setup
           }
         }
 
-#        delete $class_info->{extends};
-
         # keys starting with "+" should be merged into the parent config
         while (my ($key, $value) = each %$class_info) {
           if ($key =~ /^\+(.*)/) {
