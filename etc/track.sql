@@ -152,7 +152,7 @@ CREATE TABLE lab (
        name text NOT NULL
 );
 
-CREATE TABLE sessions (
+CREATE TABLE sessions ( -- web sessions
        id text PRIMARY KEY,
        session_data text,
        expires INTEGER
