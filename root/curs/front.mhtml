@@ -2,7 +2,6 @@
 $curs_key
 $state
 $curs_root_uri
-$gene_display_name
 $pub
 @annotation_type_list
 </%args>

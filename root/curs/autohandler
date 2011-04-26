@@ -2,7 +2,6 @@
 $state
 $curs_root_uri
 $current_gene => undef
-$gene_display_name => undef
 $pub
 </%args>
 
