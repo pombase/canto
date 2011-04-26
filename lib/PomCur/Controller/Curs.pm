@@ -180,7 +180,7 @@ sub front : Chained('top') PathPart('') Args(0)
 {
   my ($self, $c) = @_;
 
-  # don't set stash title - use default
+  $c->stash->{title} = 'Front page';
   $c->stash->{template} = 'curs/front.mhtml';
 
   $c->stash->{current_component} = 'front';
