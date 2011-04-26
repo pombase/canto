@@ -54,7 +54,7 @@ test_psgi $app, sub {
 
   # test searching for a wildcard on report page
   {
-    my $url = 'http://localhost:15000/search/type/named_gene?model=track&search-term=rpn*&submit=search';
+    my $url = 'http://localhost:15000/search/type/named_genes?model=track&search-term=rpn*&submit=search';
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
@@ -68,7 +68,7 @@ test_psgi $app, sub {
 
   # test searching for a search term on report page that shouldn't be found
   {
-    my $url = 'http://localhost:15000/search/type/named_gene?model=track&search-term=SPBC12C2.11&submit=search';
+    my $url = 'http://localhost:15000/search/type/named_genes?model=track&search-term=SPBC12C2.11&submit=search';
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
