@@ -39,7 +39,7 @@ use Carp;
 use Moose;
 
 with 'PomCur::Role::Configurable';
-with 'PomCur::Track::TrackLookup';
+with 'PomCur::Track::TrackAdaptor';
 
 sub _build_constraint
 {

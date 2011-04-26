@@ -43,7 +43,7 @@ use Text::Similarity::Overlaps;
 use PomCur::Track::OntologyIndex;
 
 with 'PomCur::Role::Configurable';
-with 'PomCur::Track::TrackLookup';
+with 'PomCur::Track::TrackAdaptor';
 
 sub _get_score
 {

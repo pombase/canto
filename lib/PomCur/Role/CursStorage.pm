@@ -1,9 +1,9 @@
-package PomCur::Track::TrackLookup;
+package PomCur::Role::CursStorage;
 
 =head1 NAME
 
-PomCur::Track::TrackLookup - A role for Lookup classes that get data from the
-                            TrackDB
+PomCur::Role::CursStorage - A role used by the code that implements the storage
+                            of curation session in a databse
 
 =head1 SYNOPSIS
 
@@ -19,7 +19,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::Track::TrackLookup
+    perldoc PomCur::Role::CursStorage
 
 =over 4
 
@@ -37,24 +37,11 @@ under the same terms as Perl itself.
 =cut
 
 use Carp;
-
 use Moose::Role;
 
-use PomCur::TrackDB;
-
-requires 'config';
-
-has 'schema' => (
+has curs_key => (
   is => 'ro',
-  lazy_build => 1,
+  required => 1,
 );
-
-sub _build_schema {
-  my $self = shift;
-
-  my $config = $self->config();
-
-  return PomCur::TrackDB->new(config => $config);
-};
 
 1;

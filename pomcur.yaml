@@ -463,6 +463,7 @@ implementation_classes:
   go_annotation_adaptor: PomCur::Track::GOAnnotationLookup
   go_adaptor: PomCur::Track::OntologyLookup
   ontology_adaptor: PomCur::Track::OntologyLookup
+  status_adaptor: PomCur::Track::StatusStorage
 
 evidence_types:
   IMP:

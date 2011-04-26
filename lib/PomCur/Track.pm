@@ -126,7 +126,7 @@ sub create_curs_db_hook
 =head2
 
  Usage   : my $adaptor = PomCur::Track::get_adaptor($config, 'gene');
- Function: return an initialised Adaptor object of the given type
+ Function: return an initialised Lookup or Storage object of the given type
  Args    : $config - the PomCur::Config object
            $adaptor_name - the adaptor type used to look up in the config
  Return  : a Adaptor object
@@ -134,7 +134,7 @@ sub create_curs_db_hook
 =cut
 sub get_adaptor
 {
-  my ($config, $adaptor_name) = @_;
+  my ($config, $adaptor_name, $args) = @_;
 
   if (!defined $adaptor_name) {
     croak "no adaptor_name passed to get_adaptor()\n";
@@ -148,9 +148,15 @@ sub get_adaptor
     croak "can't find implementation class for $conf_name";
   }
 
+  my %args = ();
+
+  if (defined $args) {
+    %args = %$args;
+  }
+
   eval "use $impl_class";
   die "failed to import $impl_class: $@" if $@;
-  return $impl_class->new(config => $config);
+  return $impl_class->new(config => $config, %args);
 }
 
 =head2 cursdb_file_name
