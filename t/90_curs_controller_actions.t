@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 38;
+use Test::More tests => 39;
 
 use Data::Compare;
 
@@ -210,8 +210,8 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET =>$redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(),
-          qr/Curating\s+$gene_identifiers[0]\s+from\s+$uniquename/);
+    like ($redirect_res->content(), qr/Choose a gene to annotate/);
+    like ($redirect_res->content(), qr/Inactivating pentapeptide insertions/);
   }
 };
 
