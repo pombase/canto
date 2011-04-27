@@ -142,14 +142,10 @@ div#footer .sponsor {
 }
 
 #curs-page-description {
-  color: #CC0033;
-}
-
-#curs-page-description {
+  clear: both;
   font-size: 110%;
   font-weight: bold;
-  display: inline;
-  float: right;
+  float: left;
   padding: 7px;
 }
 
@@ -442,7 +438,7 @@ div.clearall {
   font-size: 90%;
 }
 
-#heading .pubid, #curs-page-description {
+#heading .pubid {
   float: right;
   width: 45%;
 }
