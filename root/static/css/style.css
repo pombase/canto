@@ -141,7 +141,7 @@ div#footer .sponsor {
   clear: both;
 }
 
-#curs-page-description, .gene-list .current-gene {
+#curs-page-description {
   color: #CC0033;
 }
 
@@ -413,14 +413,6 @@ div.clearall {
   padding: 20px 10px 10px 10px;
 }
 
-.gene-list {
-  border: 1px solid #c7c7c7;
-  border-right: 0px;
-  font-size: 90%;
-  position: relative;
-  width: 50%;
-}
-
 .gene-list table {
   font-size: 
   border-width: 0px;
@@ -445,12 +437,19 @@ div.clearall {
   margin: 5px 2px 0px 2px;
 }
 
-.pub-title, #curs-page-description {
+#curs-front-page .pub-title {
+  font-size: 90%;
+  width: 46%;
+  float: right;
+}
+
+#heading .pubid, #curs-page-description {
   float: right;
   width: 45%;
 }
 
-.pub-title {
+#heading .pubid {
+  clear: right;
   font-size: 70%;
   margin: 10px 5px 5px 5px;
 }
@@ -711,6 +710,8 @@ span.pomcur-select-buttons {
   margin: 10px;
 }
 
-#curs-annotation-actions {
-  width: 80%;
+#curs-gene-list {
+  font-size: 90%;
+  float: left;
+  width: 46%;
 }

@@ -6,8 +6,18 @@ $pub
 @annotation_type_list
 </%args>
 
-<div id="curs-annotation-actions">
+<div id="curs-front-page">
+<div id="curs-gene-list">
 <& /curs/gene_list.mhtml, pub => $pub &>
+</div>
+
+<div class="pub-title curs-box">
+  <div class="curs-box-title">
+Publication title
+  </div>
+  <div class="curs-box-body">
+<% $pub->title() %>
+  </div>
 </div>
 
 <div class="curs-annotation-tables sect">
@@ -25,7 +35,7 @@ $pub
 </div>
 % }
 </div>
-
+</div>
 
 
 <%init>
