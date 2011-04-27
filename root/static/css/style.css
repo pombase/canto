@@ -500,22 +500,22 @@ div.clearall {
   margin-bottom: 25px;
 }
 
-#ferret-term-details table {
+.curs-definition-table {
   table-layout: fixed;
   border-collapse: collapse;
   margin: 15px;
 }
 
-#ferret-term-details table tbody {
+.curs-definition-table tbody {
   font-size: 90%;
 }
 
-#ferret-term-details td {
+.curs-definition-table td {
   vertical-align: top;
   padding: 2px 5px 2px 5px;
 }
 
-#ferret-term-details td.title {
+.curs-definition-table td.title {
   white-space: nowrap;
   border-right: 2px solid black;
   font-weight: bold;
@@ -712,7 +712,7 @@ span.pomcur-select-buttons {
   width: 46%;
 }
 
-#curs-front-page .pub-title {
+#curs-front-page .pub-title, #curs-gene-details {
   font-size: 90%;
   width: 46%;
   float: right;
