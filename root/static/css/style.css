@@ -437,6 +437,11 @@ div.clearall {
   margin: 5px 2px 0px 2px;
 }
 
+.gene-list .annotation-count {
+  color: green;
+  font-size: 90%;
+}
+
 #heading .pubid, #curs-page-description {
   float: right;
   width: 45%;
