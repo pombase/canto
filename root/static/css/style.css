@@ -437,12 +437,6 @@ div.clearall {
   margin: 5px 2px 0px 2px;
 }
 
-#curs-front-page .pub-title {
-  font-size: 90%;
-  width: 46%;
-  float: right;
-}
-
 #heading .pubid, #curs-page-description {
   float: right;
   width: 45%;
@@ -710,8 +704,14 @@ span.pomcur-select-buttons {
   margin: 10px;
 }
 
-#curs-gene-list {
+#curs-gene-list, #curs-annotation-actions {
   font-size: 90%;
   float: left;
   width: 46%;
+}
+
+#curs-front-page .pub-title {
+  font-size: 90%;
+  width: 46%;
+  float: right;
 }
