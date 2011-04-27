@@ -431,7 +431,7 @@ sub gene_upload : Chained('top') Args(0) Form
 
   my $st = $c->stash();
 
-  $st->{title} = 'Gene upload';
+  $st->{title} = 'Create gene list for ' . $st->{pub}->uniquename();
   $st->{template} = 'curs/gene_upload.mhtml';
   $st->{current_component} = 'gene_upload';
 

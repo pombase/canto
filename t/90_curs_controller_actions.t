@@ -125,7 +125,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/Gene upload/);
+    like ($redirect_res->content(), qr/Create gene list for $uniquename/);
     like ($redirect_res->content(), qr/email-address.*$test_email/);
   }
 
@@ -156,7 +156,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET =>$redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/Gene upload/);
+    like ($redirect_res->content(), qr/Create gene list for $uniquename/);
 
     my @genes_after_delete = $curs_schema->resultset('Gene')->all();
 
