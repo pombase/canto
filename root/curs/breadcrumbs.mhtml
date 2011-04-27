@@ -1,7 +1,7 @@
 <div id="breadcrumbs">
   <div id="breadcrumbs-home-link" class="breadcrumbs-link">
     <a href="<% $curs_root_uri %>" title="Go to the home page">
-      Home page
+      Home page - <% $pub->uniquename() %>
     </a>
 % if (defined $gene) {
 %   my $gene_display_name = $gene->display_name();
@@ -21,6 +21,7 @@
 <%init>
 my $current_path_uri = $c->stash()->{current_path_uri};
 my $gene = $c->stash()->{gene};
+my $pub = $c->stash()->{pub};
 my $curs_root_uri = $c->stash()->{curs_root_uri};
 my $gene_url;
 
