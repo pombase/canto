@@ -33,6 +33,30 @@ Choose curation type for <% $gene->display_name() %>:
 </div>
 </div>
 
+<div id="curs-gene-details">
+<div class="curs-box">
+  <div class="curs-box-title">
+Details for <% $gene->display_name() %>
+  </div>
+  <div class="curs-box-body">
+    <table class="curs-definition-table">
+      <tr>
+        <td class="title">Identifier</td>
+        <td><% $gene->primary_identifier() %></td>
+      </tr>
+      <tr>
+        <td class="title">Name</td>
+        <td><% $gene_name %></td>
+      </tr>
+      <tr>
+        <td class="title">Product</td>
+        <td><% $gene->product() %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+
 <div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,
@@ -45,4 +69,8 @@ Choose curation type for <% $gene->display_name() %>:
 
 <%init>
 my $gene_id = $gene->gene_id();
+my $gene_name = '';
+if (defined $gene->primary_name()) {
+  $gene_name = $gene->primary_name();
+}
 </%init>
