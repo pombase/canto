@@ -680,7 +680,8 @@ form .checkboxgroup span {
   font-size: 90%;
 }
 
-.curs-annotation-tables .sect {
+#curs-annotation-tables {
+  clear: both;
   padding-top: 15px;
   width: 75%;
   font-size: 95%;
@@ -690,7 +691,7 @@ form .checkboxgroup span {
   padding-left: 10px;
   font-size: 85%;
 }
-.curs-annotation-download {
+#curs-annotation-download {
   padding: 10px;
   font-size: 90%;
 }

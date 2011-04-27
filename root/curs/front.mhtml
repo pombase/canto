@@ -20,7 +20,7 @@ Publication title
   </div>
 </div>
 
-<div class="curs-annotation-tables sect">
+<div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
@@ -30,7 +30,7 @@ Publication title
 % }
 
 % if ($annotation_count > 0) {
-<div class="curs-annotation-download">
+<div id="curs-annotation-download">
   <a href="<% $download_action %>">Download all annotation (Zip format) ...</a>
 </div>
 % }
