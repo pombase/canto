@@ -709,11 +709,11 @@ span.pomcur-select-buttons {
 #curs-gene-list, #curs-annotation-actions {
   font-size: 90%;
   float: left;
-  width: 46%;
+  width: 48%;
 }
 
 #curs-front-page .pub-title, #curs-gene-details {
   font-size: 90%;
-  width: 46%;
+  width: 48%;
   float: right;
 }
