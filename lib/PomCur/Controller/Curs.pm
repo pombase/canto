@@ -968,6 +968,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/${module_category}_with_gene.mhtml";
+  $st->{gene_display_name} = $gene_display_name;
 
   $st->{term_ontid} = $term_ontid;
   $st->{evidence_code} = $evidence_code;
