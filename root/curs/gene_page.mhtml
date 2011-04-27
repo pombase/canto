@@ -36,7 +36,8 @@ Choose curation type for <% $gene->display_name() %>:
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
-   curs_root_uri => $curs_root_uri &>
+   curs_root_uri => $curs_root_uri,
+   gene => $gene &>
 % }
 
 </div>
