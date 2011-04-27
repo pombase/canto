@@ -8,6 +8,7 @@ use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
 use HTTP::Cookies;
+use Web::Scraper;
 
 use PomCur::TestUtil;
 use PomCur::Controller::Curs;
@@ -210,8 +211,16 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET =>$redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/Choose a gene to annotate/);
-    like ($redirect_res->content(), qr/Inactivating pentapeptide insertions/);
+    my $page_scrape = scraper {
+      process ".gene-list", "gene_list" => 'TEXT';
+      process ".pub-title", "pub_title" => 'TEXT';
+      result 'gene_list', 'pub_title';
+    };
+
+    my $scrape_res = $page_scrape->scrape($redirect_res->content());
+
+    like ($scrape_res->{gene_list}, qr/Choose a gene to annotate/);
+    like ($scrape_res->{pub_title}, qr/Inactivating pentapeptide insertions/);
   }
 };
 
