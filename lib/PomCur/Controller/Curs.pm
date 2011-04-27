@@ -1031,7 +1031,7 @@ sub gene : Chained('top') Args(1)
   $st->{title} = 'Gene: ' . $gene->display_name();
   # use only in header, not in body:
   $st->{show_title} = 0;
-  $st->{template} = 'curs/gene_front.mhtml';
+  $st->{template} = 'curs/gene_page.mhtml';
 }
 
 =head2 get_ordered_gene_rs
