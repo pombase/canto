@@ -69,13 +69,9 @@ sub type : Local
 
   my $dbh = $schema->storage()->dbh();
 
-  my $quoted_search_term;
+  my $quoted_search_term = lc $dbh->quote($search_term);
 
-  if ($search_term =~ /(.*)\*/) {
-    $quoted_search_term = $dbh->quote($1) . " || '%'";
-  } else {
-    $quoted_search_term = $dbh->quote($search_term);
-  }
+  $quoted_search_term =~ s/\*/\%/g;
 
   my @search = map { { $_ => { like => \$quoted_search_term } } } @search_fields;
 
