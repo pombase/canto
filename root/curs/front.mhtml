@@ -2,41 +2,37 @@
 $curs_key
 $state
 $curs_root_uri
-$gene_display_name
 $pub
 @annotation_type_list
 </%args>
 
-<div id="curs-annotation-actions">
-% if ($state eq 'done') {
-  <p>All genes annotated</p>
-% } else {
-<div class="curs-box">
-  <div class="curs-box-title">Choose curation type:</div>
-  <div class="curs-box-body">
-  <ul class="annotation-start">
-% for my $annotation_type (@annotation_type_list) {
-%   my $annotation_type_name = $annotation_type->{name};
-%   my $action_path = $curs_root_uri . '/annotation/edit/' .
-%                     $current_gene_id . '/' . $annotation_type_name;
-    <li>
-%   if (!$annotation_type->{disabled}) {
-      <a href="<% $action_path %>">
-%   }
-      <span class="annotation-type">
-Annotate <% $annotation_type->{display_name} %>
-      </span>
-%   if (!$annotation_type->{disabled}) {
-      </a>
-%   }
-    </li>
-% }
-  </ul>
-  </div>
-% }
+<div id="curs-front-page">
+<div id="curs-gene-list">
+<& /curs/gene_list.mhtml, pub => $pub &>
 </div>
 
-<div class="curs-annotation-tables sect">
+<div class="pub-title curs-box">
+  <div class="curs-box-title">
+Publication details
+  </div>
+  <div class="curs-box-body">
+    <table class="curs-definition-table">
+      <tr>
+        <td class="title"><% $uniquename_desc %></td>
+        <td><% $pub->uniquename() %></td>
+      </tr>
+      <tr>
+        <td class="title">Title</td>
+        <td><% $pub->title() %></td>
+      </tr>
+      <tr>
+        <td class="title">Authors</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
@@ -46,12 +42,12 @@ Annotate <% $annotation_type->{display_name} %>
 % }
 
 % if ($annotation_count > 0) {
-<div class="curs-annotation-download">
+<div id="curs-annotation-download">
   <a href="<% $download_action %>">Download all annotation (Zip format) ...</a>
 </div>
 % }
 </div>
-
+</div>
 
 
 <%init>
@@ -74,5 +70,13 @@ sub _increment_annotation_count
 }
 
 my $download_action = $curs_root_uri . '/annotation/zipexport';
+
+my $uniquename_desc;
+
+if ($pub->uniquename() =~ /PMID/) {
+  $uniquename_desc = 'ID';
+} else {
+  $uniquename_desc = 'Database ID';
+}
 
 </%init>

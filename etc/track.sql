@@ -2,7 +2,7 @@ PRAGMA foreign_keys=ON;
 
 CREATE TABLE pub (
        pub_id integer NOT NULL PRIMARY KEY,
-       uniquename text UNIQUE,
+       uniquename text UNIQUE NOT NULL,
        type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
        assigned_curator integer REFERENCES person (person_id),
        title text,
@@ -152,6 +152,7 @@ CREATE TABLE lab (
        name text NOT NULL
 );
 
+-- web sessions
 CREATE TABLE sessions (
        id text PRIMARY KEY,
        session_data text,

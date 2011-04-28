@@ -5,8 +5,7 @@ $pub
 
 <div class="gene-list curs-box">
   <div class="curs-box-title">
-    <div>Genes for curation</div>
-    <div class="curs-box-sub-title">(Click to change current gene)</div>
+    <div>Choose a gene to annotate:</div>
   </div>
   <div class="curs-box-body">
 % if (@gene_hashes) {
@@ -15,16 +14,12 @@ $pub
     <tr>
 %     for my $col_name (@col_names) {
       <td>
-%       if ($gene->{gene_id} != $current_gene_id) {
-        <a href="<% $start_path . '/set_current_gene/' .$gene->{gene_id} %>"
-           title="Click to make this gene current">
-%       }
-          <span class="<% _span_class($gene->{gene_id}, $current_gene_id) %>">
+        <a href="<% $start_path . '/gene/' .$gene->{gene_id} %>"
+          <span>
             <% $gene->{$col_name} %>
           </span>
-%       if ($gene->{gene_id} != $current_gene_id) {
         </a>
-%       }
+        <% $gene->{extra_text} %>
       </td>
 %     }
     </tr>
@@ -37,7 +32,7 @@ $pub
 % }
 
   <div class="view-edit">
-    <a href="<% $edit_path %>">View or edit ...</a>
+    <a href="<% $edit_path %>">View or edit list ...</a>
   </div>
   </div>
 </div>
@@ -45,26 +40,26 @@ $pub
 <%init>
 use PomCur::Curs;
 
-my $current_gene_id = $c->stash()->{current_gene_id};
-
-sub _span_class
-{
-  my $gene_id = shift;
-  my $current_gene_id = shift;
-  if ($current_gene_id == $gene_id) {
-    return "current-gene";
-  } else {
-    return "";
-  }
-}
-
 my $schema = $c->stash()->{schema};
 my @all_genes = 
   PomCur::Controller::Curs::get_ordered_gene_rs($schema, 'primary_name')->all();
 my @gene_hashes = map {
+     my $extra_text = '';
+     my @annotations = $_->direct_annotations();
+     if (@annotations) {
+       my $annotation_count = scalar(@annotations);
+       my $text;
+       if ($annotation_count == 1) {
+         $text = '1 annotation';
+       } else {
+         $text = "$annotation_count annotations";
+       }
+       $extra_text = "&nbsp;&nbsp;<span class='annotation-count'>($text)</span>";
+     }
      {
        identifier => $_->primary_name() || $_->primary_identifier(),
        gene_id => $_->gene_id(),
+       extra_text => $extra_text,
      }
    } @all_genes;
 

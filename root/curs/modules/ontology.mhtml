@@ -91,7 +91,7 @@ Please read the definition of the currently selected term to ensure that
 it accurately describes your gene:
       </div>
       <div class="curs-box-body">
-        <table>
+        <table class="curs-definition-table">
           <tr>
             <td class="title">ID</td>
             <td class="term-id ferret-term-id-display"></td>

@@ -1,11 +1,12 @@
 <%args>
 $curs_root_uri
 $annotation_type
+$gene => undef
 </%args>
 
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
   annotation_type => $annotation_type, annotations => [@annotations],
-  completed_count => $completed_count &>
+  completed_count => $completed_count, gene => $gene &>
 
 <%init>
 use PomCur::Curs::Utils;
@@ -14,9 +15,16 @@ my $st = $c->stash();
 my $schema = $st->{schema};
 my $config = $c->config();
 
+my $constrain_annotations = undef;
+
+if (defined $gene) {
+  $constrain_annotations = [$gene->direct_annotations()];
+}
+
 my ($completed_count, $annotations_ref) =
   PomCur::Curs::Utils::get_annotation_table($config, $schema,
-                                            $annotation_type->{name});
+                                            $annotation_type->{name},
+                                            $constrain_annotations);
 my @annotations = @$annotations_ref;
 
 my $annotation_view_template =

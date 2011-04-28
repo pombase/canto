@@ -1,0 +1,76 @@
+<%args>
+$curs_root_uri
+$pub
+$gene
+@annotation_type_list
+</%args>
+
+<div id="curs-annotation-actions">
+<div class="curs-box">
+  <div class="curs-box-title">
+Choose curation type for <% $gene->display_name() %>:
+  </div>
+  <div class="curs-box-body">
+  <ul class="annotation-start">
+% for my $annotation_type (@annotation_type_list) {
+%   my $annotation_type_name = $annotation_type->{name};
+%   my $action_path = $curs_root_uri . '/annotation/edit/' .
+%                     $gene_id . '/' . $annotation_type_name;
+    <li>
+%   if (!$annotation_type->{disabled}) {
+      <a href="<% $action_path %>">
+%   }
+      <span class="annotation-type">
+<% ucfirst $annotation_type->{display_name} %>
+      </span>
+%   if (!$annotation_type->{disabled}) {
+      </a>
+%   }
+    </li>
+% }
+  </ul>
+  </div>
+</div>
+</div>
+
+<div id="curs-gene-details">
+<div class="curs-box">
+  <div class="curs-box-title">
+Details for <% $gene->display_name() %>
+  </div>
+  <div class="curs-box-body">
+    <table class="curs-definition-table">
+      <tr>
+        <td class="title">Identifier</td>
+        <td><% $gene->primary_identifier() %></td>
+      </tr>
+      <tr>
+        <td class="title">Name</td>
+        <td><% $gene_name %></td>
+      </tr>
+      <tr>
+        <td class="title">Product</td>
+        <td><% $gene->product() %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<div id="curs-annotation-tables" class="sect">
+% for my $annotation_type (@annotation_type_list) {
+<& current_annotation_view.mhtml,
+   annotation_type => $annotation_type,
+   curs_root_uri => $curs_root_uri,
+   gene => $gene &>
+% }
+
+</div>
+
+<%init>
+my $gene_id = $gene->gene_id();
+my $gene_name = '';
+if (defined $gene->primary_name()) {
+  $gene_name = $gene->primary_name();
+}
+</%init>

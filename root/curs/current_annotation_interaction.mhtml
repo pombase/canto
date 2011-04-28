@@ -2,12 +2,17 @@
 $curs_root_uri
 $annotation_type
 @annotations
+$gene
 </%args>
 
 % if (@annotations) {
 <div class="sect">
   <div class="title sect-title">
-Current <% $annotation_type->{display_name} %> annotations
+% my $gene_text = "";
+% if (defined $gene) {
+%   $gene_text = ' for ' . $gene->display_name();
+% }
+Current <% $annotation_type->{display_name} %> annotations<% $gene_text %>
   </div>
   <div class="annotation-table sect-content">
 <table class="list">

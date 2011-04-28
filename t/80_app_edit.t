@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 25;
+use Test::More tests => 30;
 
 use PomCur::TestUtil;
 
@@ -153,25 +153,75 @@ test_psgi $app, sub {
   }
 
 
+  my $other_pub = $schema->find_with_type('Pub', { uniquename => 'PMID:19686603' });
+  ok (defined $other_pub);
+
   # special case: test editing publications separately as they have a reference
-  # that ends in _id ("type_id")
+  # that ends in _id ("type_id") and an odd order_by field
   {
     my $pub = $schema->find_with_type('Pub', { uniquename => 'PMID:19686603' });
-
     ok (defined $pub);
-
     my $pub_id = $pub->pub_id();
 
-    my $url = "http://localhost:5000/new/object/pub/$pub_id?model=track";
-    my $req = HTTP::Request->new(GET => $url);
+    my $url = "http://localhost:5000/edit/object/pub/$pub_id?model=track";
+    my $uri = new URI($url);
+
+    $uri->query_form(model => 'track',
+                     'Publication ID' => 'TEST:1',
+                     title => 'title',
+                     authors => '',
+                     assigned_curator => 0,
+                     type => $pub->type_id(),
+                     triage_status => $pub->triage_status()->cvterm_id(),
+                     submit => 'Submit',
+                    );
+
+    my $req = HTTP::Request->new(GET => $uri);
     $cookie_jar->add_cookie_header($req);
 
     my $res = $cb->($req);
+    is $res->code, 302;
 
-    is $res->code, 200;
+    my $redirect_url = $res->header('location');
 
-    like ($res->content(), qr/<form/);
-    like ($res->content(), qr/<input name="title"/);
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    like ($redirect_res->content(), qr/Details for publication/);
+    like ($redirect_res->content(), qr/TEST:1/);
+  }
+
+  # edit same publication again
+  {
+    my $pub = $schema->find_with_type('Pub', { uniquename => 'TEST:1' });
+    ok (defined $pub);
+    my $pub_id = $pub->pub_id();
+
+    my $url = "http://localhost:5000/edit/object/pub/$pub_id?model=track";
+    my $uri = new URI($url);
+    $uri->query_form(model => 'track',
+                     'Publication ID' => 'TEST:2',
+                     title => 'title',
+                     authors => '',
+                     assigned_curator => 0,
+                     type => $pub->type_id(),
+                     triage_status => $pub->triage_status()->cvterm_id(),
+                     submit => 'Submit',
+                    );
+
+    my $req = HTTP::Request->new(GET => $uri);
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    like ($redirect_res->content(), qr/Details for publication/);
+    like ($redirect_res->content(), qr/TEST:2/);
   }
 
 };

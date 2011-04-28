@@ -219,7 +219,9 @@ sub load
       $rel->type() eq 'has_functional_part' ||
       $rel->type() eq 'has_functional_parent' ||
       $rel->type() eq 'derives_from' ||
-      $rel->type() eq 'contains';
+      $rel->type() eq 'contains' ||
+      $rel->type() eq 'includes_cells_with_phenotype' ||
+      $rel->type() eq 'comprises_cells_with_phenotype';
 
     my $rel_type = $rel->type();
     my $rel_type_cvterm = $relationship_cvterms{$rel_type};

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 26;
+use Test::More tests => 28;
 
 use Data::Compare;
 
@@ -124,7 +124,8 @@ for my $annotation_type (@annotation_type_list) {
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
 
-      like ($redirect_res->content(), qr/Choose curation type/);
+      like ($redirect_res->content(), qr/Choose a gene to annotate/);
+      like ($redirect_res->content(), qr/The anaphase-promoting complex/);
 
       $new_annotation =
         $curs_schema->find_with_type('Annotation', $new_annotation_id);

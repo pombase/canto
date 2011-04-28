@@ -211,7 +211,7 @@ sub get_annotation_table
   my $config = shift;
   my $schema = shift;
   my $annotation_type_name = shift;
-  my $annotation = shift;
+  my $constrain_annotations = shift;
 
   my @annotations = ();
 
@@ -230,8 +230,15 @@ sub get_annotation_table
     type => $annotation_type_name,
   );
 
-  if ($annotation) {
-    $constraints{annotation_id} = $annotation->annotation_id();
+  if ($constrain_annotations) {
+    if (ref $constrain_annotations eq 'ARRAY') {
+      my @constrain_annotations = @$constrain_annotations;
+      $constraints{annotation_id} = {
+        -in => [map { $_->annotation_id() } @constrain_annotations]
+      };
+    } else {
+      $constraints{annotation_id} = $constrain_annotations->annotation_id();
+    }
   }
 
   my %options = ( order_by => 'annotation_id' );
@@ -253,6 +260,8 @@ sub get_annotation_table
         if ($annotation_type_category eq 'interaction') {
           @entries = _make_interaction_annotation($config, $schema, $annotation,
                                                   $gene);
+        } else {
+          die "unknown annotation type category: $annotation_type_category\n";
         }
       }
       push @annotations, @entries;

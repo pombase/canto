@@ -40,15 +40,18 @@ img {
   box-shadow: 0px 3px 3px #666;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  text-align: center;
 }
-#banner {
+#heading .text {
+  display: inline;
+  margin:0 auto;
+}
+#heading .logo {
   padding: 5px;
   float: left;
-  width: 50%;
-}
-
-#logo {
   font-size: 150%;
+  float: left;
+  display: inline;
 }
 
 div#footer {
@@ -59,9 +62,6 @@ div#footer .sponsor {
   margin-top:30px;
   padding-right: 25px;
   padding-left: 25px;
-}
-#heading-text {
-  padding: 5px;
 }
 
 #error-list .error, #message-list .message {
@@ -141,15 +141,11 @@ div#footer .sponsor {
   clear: both;
 }
 
-#curs-page-description, .gene-list .current-gene {
-  color: #CC0033;
-}
-
 #curs-page-description {
+  clear: both;
   font-size: 110%;
   font-weight: bold;
-  display: inline;
-  float: right;
+  float: left;
   padding: 7px;
 }
 
@@ -413,18 +409,6 @@ div.clearall {
   padding: 20px 10px 10px 10px;
 }
 
-.gene-list {
-  border: 1px solid #c7c7c7;
-  border-right: 0px;
-  float: right;
-  font-size: 78%;
-  position: relative;
-  width: 18%;
-  right: -10px;
-  -moz-border-top-right-radius: 0px;
-  border-top-right-radius: 0px;
-}
-
 .gene-list table {
   font-size: 
   border-width: 0px;
@@ -449,12 +433,18 @@ div.clearall {
   margin: 5px 2px 0px 2px;
 }
 
-.pub-title, #curs-page-description {
+.gene-list .annotation-count {
+  color: green;
+  font-size: 90%;
+}
+
+#heading .pubid {
   float: right;
   width: 45%;
 }
 
-.pub-title {
+#heading .pubid {
+  clear: right;
   font-size: 70%;
   margin: 10px 5px 5px 5px;
 }
@@ -510,22 +500,22 @@ div.clearall {
   margin-bottom: 25px;
 }
 
-#ferret-term-details table {
+.curs-definition-table {
   table-layout: fixed;
   border-collapse: collapse;
   margin: 15px;
 }
 
-#ferret-term-details table tbody {
+.curs-definition-table tbody {
   font-size: 90%;
 }
 
-#ferret-term-details td {
+.curs-definition-table td {
   vertical-align: top;
   padding: 2px 5px 2px 5px;
 }
 
-#ferret-term-details td.title {
+.curs-definition-table td.title {
   white-space: nowrap;
   border-right: 2px solid black;
   font-weight: bold;
@@ -577,10 +567,6 @@ div.clearall {
   border-top-right-radius: 4px;
   -moz-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
-}
-
-.curs-box-sub-title {
-  font-size: 80%;
 }
 
 .curs-box-body {
@@ -695,7 +681,8 @@ form .checkboxgroup span {
   font-size: 90%;
 }
 
-.curs-annotation-tables .sect {
+#curs-annotation-tables {
+  clear: both;
   padding-top: 15px;
   width: 75%;
   font-size: 95%;
@@ -705,7 +692,7 @@ form .checkboxgroup span {
   padding-left: 10px;
   font-size: 85%;
 }
-.curs-annotation-download {
+#curs-annotation-download {
   padding: 10px;
   font-size: 90%;
 }
@@ -719,6 +706,14 @@ span.pomcur-select-buttons {
   margin: 10px;
 }
 
-#curs-annotation-actions {
-  width: 80%;
+#curs-gene-list, #curs-annotation-actions {
+  font-size: 90%;
+  float: left;
+  width: 48%;
+}
+
+#curs-front-page .pub-title, #curs-gene-details {
+  font-size: 90%;
+  width: 48%;
+  float: right;
 }

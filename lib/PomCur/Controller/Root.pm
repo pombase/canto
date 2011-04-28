@@ -58,8 +58,6 @@ sub end : Private
     return 0;
   }
 
-  $st->{app_version} = $c->config()->{app_version};
-
   # copied from RenderView.pm
   if (! $c->response->content_type ) {
     $c->response->content_type( 'text/html; charset=utf-8' );
@@ -71,7 +69,7 @@ sub end : Private
   $c->forward('PomCur::View::Mason');
 }
 
-# In development use, redirect to the tracking application
+# redirect to the tracking application
 sub front :Path :Args(0)
 {
   my ($self, $c) = @_;
@@ -209,8 +207,6 @@ sub test_curs :Global {
       my $res =
         PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
                                                          [@test_gene_ids], 1);
-
-      PomCur::Controller::Curs::_set_new_gene($curs_schema);
     }
   }
 }

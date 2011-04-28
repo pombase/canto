@@ -134,14 +134,21 @@ sub setup
       my $class_info = $model_conf->{$class_name};
 
       $class_info->{name} = $class_name;
+      my $display_name =
+        $class_info->{class_display_name};
+      if (!defined $display_name) {
+        $display_name = $class_info->{name};
+        $display_name =~ s/_/ /g;
+      }
+
+      $class_info->{display_name} = $display_name;
 
       my $parent_name = $class_info->{extends};
 
       if (!defined $parent_name) {
         $class_info->{source} //= $class_name;
+        $class_info->{search_fields} //= [ $class_info->{display_field} ];
       }
-
-      $class_info->{search_fields} //= [ $class_info->{display_field} ];
     }
 
     for my $class_name (keys %{$model_conf}) {
@@ -162,8 +169,6 @@ sub setup
             $class_info->{$key} = clone $parent_info->{$key};
           }
         }
-
-        delete $class_info->{extends};
 
         # keys starting with "+" should be merged into the parent config
         while (my ($key, $value) = each %$class_info) {
@@ -199,14 +204,6 @@ sub setup
         }
         $model_conf->{$class_name}->{field_infos}->{$name} = $field_info;
       }
-    }
-  }
-
-  # make the reports available as a hash (by report name)
-  if (defined $self->{report_list}) {
-    for my $report (@{$self->{report_list}}) {
-      my $name = $report->{name};
-      $self->{reports}->{$name} = $report;
     }
   }
 

@@ -46,6 +46,8 @@ sub chado :Path :Args(0) {
 
   $c->stash->{title} = 'Chado home';
   $c->stash->{template} = 'chado/index.mhtml';
+
+  $c->stash->{model} = 'chado';
 }
 
 1;
