@@ -260,6 +260,8 @@ sub get_annotation_table
         if ($annotation_type_category eq 'interaction') {
           @entries = _make_interaction_annotation($config, $schema, $annotation,
                                                   $gene);
+        } else {
+          die "unknown annotation type category: $annotation_type_category\n";
         }
       }
       push @annotations, @entries;
