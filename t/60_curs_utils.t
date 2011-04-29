@@ -48,3 +48,13 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
   is ($annotations[0]->{interacting_gene_identifier}, 'SPBC14F5.07');
   is ($annotations[1]->{interacting_gene_identifier}, 'SPAC27D7.13c');
 }
+
+{
+  my $pub = $schema->resultset('Pub')->first();
+  my $options = { pub_uniquename => $pub->uniquename(),
+                  ontology_name => 'biological_process' };
+  my @annotations =
+    PomCur::Curs::Utils::get_existing_annotations($config, $options);
+
+  is (@annotations, 2);
+}

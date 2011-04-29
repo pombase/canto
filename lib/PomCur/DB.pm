@@ -83,7 +83,10 @@ sub new
                               });
 
   my $dbh = $schema->storage()->dbh();
-  $dbh->do("PRAGMA foreign_keys = ON");
+
+  if (ref $schema->storage() =~ /SQLite/) {
+    $dbh->do("PRAGMA foreign_keys = ON");
+  }
 
   return $schema;
 }

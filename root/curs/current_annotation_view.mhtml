@@ -26,10 +26,11 @@ my $config = $c->config();
 
 my $constrain_annotations = undef;
 
-my $options = { pub_uniquename => $pub->uniquename() };
+my $options = { pub_uniquename => $pub->uniquename(),
+                ontology_name => $annotation_type->{name} };
 if (defined $gene) {
   $constrain_annotations = [$gene->direct_annotations()];
-  $options->{gene} = $gene;
+  $options->{gene_identifier} = $gene->primary_identifier();
 }
 
 my ($completed_count, $annotations_ref) =
@@ -38,9 +39,8 @@ my ($completed_count, $annotations_ref) =
                                             $constrain_annotations);
 my @user_annotations = @$annotations_ref;
 
-my $existing_annotations_ref = [];
-#  PomCur::Curs::Utils::get_existing_annotations($config, $options);
-my @existing_annotations = @$existing_annotations_ref;
+my @existing_annotations =
+    PomCur::Curs::Utils::get_existing_annotations($config, $options);
 
 my $annotation_view_template =
   "current_annotation_" . $annotation_type->{category} . ".mhtml";

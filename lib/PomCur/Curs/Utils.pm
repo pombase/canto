@@ -272,4 +272,49 @@ sub get_annotation_table
   return ($completed_count, [@annotations]);
 }
 
+sub _process_one
+{
+  my $row = shift;
+
+  my $gene = $row->{gene};
+  my $ontology_term = $row->{ontology_term};
+  my $publication = $row->{publication};
+  my $evidence_code = $row->{evidence_code};
+
+  return {
+    gene_identifier => $gene->{identifier},
+    gene_name => $gene->{name} || '',
+    gene_name_or_identifier =>
+      $gene->{name} || $gene->{identifier},
+    gene_product => $gene->{product} || '',
+    gene_synonyms_string => (join ',', @{$gene->{synonyms}}),
+    qualifier => '',
+    annotation_type => $ontology_term->{ontology_name},
+    annotation_type_display_name => $ontology_term->{ontology_name},
+    annotation_type_abbreviation => $ontology_term->{ontology_name},
+    term_ontid => $ontology_term->{ontid},
+    term_name => $ontology_term->{term_name},
+    evidence_code => $evidence_code,
+    evidence_type_name => $evidence_code,
+    with_or_from_identifier => 'DUNNO',
+    with_or_from_display_name => 'DUNNO display_name',
+    taxonid => $gene->{organism_taxonid},
+  };
+}
+
+sub get_existing_annotations
+{
+  my $config = shift;
+  my $options = shift;
+
+  my $pub_uniquename = $options->{pub_uniquename};
+  my $gene_identifier = $options->{gene_identifier};
+  my $ontology_name = $options->{ontology_name};
+
+  my $lookup =
+    PomCur::Track::get_adaptor($config, 'ontology_annotation');
+
+  return map { _process_one($_) } @{$lookup->lookup($options)};
+}
+
 1;
