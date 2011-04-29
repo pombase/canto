@@ -1080,7 +1080,31 @@ sub _get_annotation_table_tsv
                                               $annotation_type_name);
   my @annotations = @$annotations_ref;
   my %common_values = %{$config->{export}->{gene_association_fields}};
-  my @column_names = @$columns_ref;
+
+  my $ontology_column_names =
+    [qw(db gene_identifier gene_name_or_identifier
+        qualifier term_ontid uniquename
+        evidence_code with_or_from_identifier
+        annotation_type_abbreviation
+        gene_product gene_synonyms_string db_object_type taxonid
+        creation_date_short db)];
+
+  my $interaction_column_names =
+    [qw(gene_identifier interacting_gene_identifier
+        gene_taxonid interacting_gene_taxonid evidence_code
+        publication_uniquename score phenotypes comment)];
+
+  my %type_column_names = (
+    biological_process => $ontology_column_names,
+    cellular_component => $ontology_column_names,
+    molecular_function => $ontology_column_names,
+    phenotype => $ontology_column_names,
+    post_translational_modification => $ontology_column_names,
+    genetic_interaction => $interaction_column_names,
+    physical_interaction => $interaction_column_names,
+  );
+
+  my @column_names = @{$type_column_names{$annotation_type_name}};
 
   my $db = $config->{export}->{gene_association_fields}->{db};
 
