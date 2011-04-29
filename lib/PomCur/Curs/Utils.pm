@@ -194,15 +194,15 @@ sub _make_interaction_annotation
              $completed_count - a count of the annotations that are incomplete
                 because they need an evidence code or a with field, etc.
              $table - an array of hashes containing the annotation in the form:
-           [ { gene_identifier => 'SPCC1739.11c', gene_name => 'cdc11',
-               annotation_type => 'molecular_function',
-               annotation_id => 1234, term_ontid => 'GO:0055085',
-               term_name => 'transmembrane transport',
-               evidence_code => 'IDA',
-               evidence_type_name => 'Inferred from direct assay' },
-             { gene_identifier => '...', ... }, ]
-           where annotation_id is the id of the Annotation object for this
-           annotation
+                  [ { gene_identifier => 'SPCC1739.11c', gene_name => 'cdc11',
+                      annotation_type => 'molecular_function',
+                      annotation_id => 1234, term_ontid => 'GO:0055085',
+                      term_name => 'transmembrane transport',
+                      evidence_code => 'IDA',
+                      evidence_type_name => 'Inferred from direct assay' },
+                    { gene_identifier => '...', ... }, ]
+                  where annotation_id is the id of the Annotation object for
+                  this annotation
 
 =cut
 
