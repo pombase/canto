@@ -143,13 +143,12 @@ sub lookup
       warn "$evidence_type_name $evidence_code";
 
       push @res, {
-        gene => { identifier => $feature->uniquename(),
-                  name => $feature->name(),
-                  product => 'DUNNO product',
-                  synonyms => ['DUNNO synonyms'],
-                  organism_taxonid =>
-                    _get_taxonid($schema, $taxonid_cache, $genus, $species),
-                },
+        gene => {
+          identifier => $feature->uniquename(),
+          name => $feature->name(),
+          organism_taxonid =>
+            _get_taxonid($schema, $taxonid_cache, $genus, $species),
+        },
         ontology_term => {
           ontology_name => $cvterm->cv()->name(),
           term_name => $cvterm->name(),
