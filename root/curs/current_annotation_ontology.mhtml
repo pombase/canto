@@ -84,9 +84,9 @@ $user_created
     </td>
 % if ($user_created) {
     <td>
-% if ($row->{term_suggestion}) {
+%   if ($row->{term_suggestion}) {
       <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% $row->{term_suggestion}->{name} %>','<% $row->{term_suggestion}->{definition} %>');">View note ...</a>
-% } else {
+%   } else {
       &nbsp;
 % }
     </td>
