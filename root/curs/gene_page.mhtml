@@ -62,6 +62,7 @@ Details for <% $gene->display_name() %>
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
    curs_root_uri => $curs_root_uri,
+   pub => $pub,
    gene => $gene &>
 % }
 

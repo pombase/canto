@@ -2,11 +2,20 @@
 $curs_root_uri
 $annotation_type
 $gene => undef
+$pub
 </%args>
 
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
-  annotation_type => $annotation_type, annotations => [@annotations],
-  completed_count => $completed_count, gene => $gene &>
+   annotation_type => $annotation_type, 
+   annotations => [@user_annotations], user_created => 1,
+   pub => $pub,
+   completed_count => $completed_count, gene => $gene &>
+
+<& $annotation_view_template, curs_root_uri => $curs_root_uri,
+   annotation_type => $annotation_type, 
+   annotations => [@existing_annotations], user_created => 0,
+   pub => $pub,
+   completed_count => $completed_count, gene => $gene &>
 
 <%init>
 use PomCur::Curs::Utils;
@@ -17,15 +26,21 @@ my $config = $c->config();
 
 my $constrain_annotations = undef;
 
+my $options = { pub_uniquename => $pub->uniquename() };
 if (defined $gene) {
   $constrain_annotations = [$gene->direct_annotations()];
+  $options->{gene} = $gene;
 }
 
 my ($completed_count, $annotations_ref) =
   PomCur::Curs::Utils::get_annotation_table($config, $schema,
                                             $annotation_type->{name},
                                             $constrain_annotations);
-my @annotations = @$annotations_ref;
+my @user_annotations = @$annotations_ref;
+
+my $existing_annotations_ref = [];
+#  PomCur::Curs::Utils::get_existing_annotations($config, $options);
+my @existing_annotations = @$existing_annotations_ref;
 
 my $annotation_view_template =
   "current_annotation_" . $annotation_type->{category} . ".mhtml";
