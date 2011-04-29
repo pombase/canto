@@ -45,7 +45,7 @@ sub _make_ontology_annotation
   my $config = shift;
   my $schema = shift;
   my $annotation = shift;
-  my $ontology_adaptor = shift;
+  my $ontology_lookup = shift;
   my $gene = shift;
   my $gene_synonyms_string = shift;
 
@@ -65,7 +65,7 @@ sub _make_ontology_annotation
 
   my $uniquename = $annotation->pub()->uniquename();
   my $result =
-    $ontology_adaptor->lookup(ontology_name => $annotation_type,
+    $ontology_lookup->lookup(ontology_name => $annotation_type,
                               search_string => $term_ontid);
 
   my $term_name = $result->[0]->{name};
@@ -219,7 +219,7 @@ sub get_annotation_table
   my $annotation_type_config = $annotation_types_config{$annotation_type_name};
   my $annotation_type_category = $annotation_type_config->{category};
 
-  my $ontology_adaptor =
+  my $ontology_lookup =
     PomCur::Track::get_adaptor($config, 'ontology');
 
   my $gene_rs = $schema->resultset('Gene');
@@ -254,8 +254,8 @@ sub get_annotation_table
       my @entries;
       if ($annotation_type_category eq 'ontology') {
         @entries = (_make_ontology_annotation($config, $schema, $annotation,
-                                             $ontology_adaptor,
-                                             $gene, $gene_synonyms_string));
+                                              $ontology_lookup,
+                                              $gene, $gene_synonyms_string));
       } else {
         if ($annotation_type_category eq 'interaction') {
           @entries = _make_interaction_annotation($config, $schema, $annotation,
