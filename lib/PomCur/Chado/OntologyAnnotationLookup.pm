@@ -106,6 +106,13 @@ sub lookup
   my $pub = $schema->find_with_type('Pub', { uniquename => $pub_uniquename });
 
   if (defined $pub) {
+    my $feature_cvtermprop_type_cv =
+      $schema->find_with_type('Cv', name => 'feature_cvtermprop_type');
+    my $evidence_type_cvterm_id =
+      $schema->resultset('Cvterm')
+         ->search({ cv_id => $feature_cvtermprop_type_cv->cv_id(),
+                    name => 'evidence' })
+         ->single()->cvterm_id();
     my $cv = $schema->find_with_type('Cv', name => $db_ontology_name);
     my $constraint = { pub_id => $pub->pub_id(),
                        'cvterm.cv_id' => $cv->cv_id() };
@@ -123,6 +130,18 @@ sub lookup
       my $organism = $feature->organism();
       my $genus = $organism->genus();
       my $species = $organism->species();
+      my $evidence_type_prop = $row->feature_cvtermprops
+          ->search({ type_id =>$evidence_type_cvterm_id  })->single();
+      my $evidence_type_name = 'Unknown';
+      if (defined $evidence_type_prop) {
+        $evidence_type_name = $evidence_type_prop->value();
+      }
+      $evidence_type_name =~ s/\s+with\s+.*//;
+      my $evidence_code =
+        $self->config()->{evidence_types_by_name}->{lc $evidence_type_name} //
+        $evidence_type_name;
+      warn "$evidence_type_name $evidence_code";
+
       push @res, {
         gene => { identifier => $feature->uniquename(),
                   name => $feature->name(),
@@ -139,7 +158,7 @@ sub lookup
         publication => {
           uniquename => $pub_uniquename,
         },
-        evidence_code => 'DUNNO',
+        evidence_code => $evidence_code,
       }
     }
 

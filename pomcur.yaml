@@ -475,6 +475,10 @@ evidence_types:
   IPI:
     name: Inferred from physical interaction
     with_gene: 1
+  TAS:
+    name: Traceable Author Statement
+  UNK:
+    name: Unknown
   MIU:
     name: Experimenter made it up
   LDM:
