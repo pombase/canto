@@ -103,17 +103,17 @@ sub _make_term_hash
   return %term_hash;
 }
 
-=head2 web_service_lookup
+=head2 lookup
 
  Usage   : my $lookup = PomCur::Track::OntologyLookup->new(...);
-           my $result =
-             $lookup->web_service_lookup(search_string => $search_string,
-                                         ontology_name => $ontology_name);
- Function: Return matching ontology terms
+           my $result = $lookup->lookup(search_string => $search_string,
+                                        ontology_name => $ontology_name);
+ Function: Return matching ontology terms from a given ontology
  Args    : ontology_name - the ontology to search
            search_string - the text to use when searching, if this is a ontology
                            ID (eg. "GO:0012345") return just that match
-           max_results - maximum hits to return
+           max_results - maximum hits to return (ignored when search_string is
+                         an ontology ID)
            include_children - include data about the child terms
            include_definition - include the definition for each term
  Returns : [ { id => '...', name => '...', definition => '...',
@@ -126,7 +126,7 @@ sub _make_term_hash
            returned in the hash
 
 =cut
-sub web_service_lookup
+sub lookup
 {
   my $self = shift;
   my %args = @_;

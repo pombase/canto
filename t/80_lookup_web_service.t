@@ -22,10 +22,10 @@ my $transport_definition = 'Enables the directed movement of substances (such as
 my $ont_name = 'molecular_function';
 
 {
-  my $results = $lookup->web_service_lookup(ontology_name => $ont_name,
-                                            search_string => $search_string,
-                                            max_results => 10,
-                                            include_definition => 0);
+  my $results = $lookup->lookup(ontology_name => $ont_name,
+                                search_string => $search_string,
+                                max_results => 10,
+                                include_definition => 0);
 
   ok(defined $results);
 
@@ -40,10 +40,10 @@ my $ont_name = 'molecular_function';
 }
 
 {
-  my $results = $lookup->web_service_lookup(ontology_name => $ont_name,
-                                            search_string => $search_string,
-                                            max_results => 10,
-                                            include_definition => 1);
+  my $results = $lookup->lookup(ontology_name => $ont_name,
+                                search_string => $search_string,
+                                max_results => 10,
+                                include_definition => 1);
 
   ok(defined $results);
 
@@ -59,10 +59,10 @@ my $ont_name = 'molecular_function';
 
 # lookup a broad synonym
 {
-  my $results = $lookup->web_service_lookup(ontology_name => 'molecular_function',
-                                            search_string => 'tagging',
-                                            max_results => 10,
-                                            include_definition => 1);
+  my $results = $lookup->lookup(ontology_name => 'molecular_function',
+                                search_string => 'tagging',
+                                max_results => 10,
+                                include_definition => 1);
 
   ok(defined $results);
 
@@ -77,10 +77,10 @@ my $ont_name = 'molecular_function';
   } @$results);
 }
 
-my $id_result = $lookup->web_service_lookup(ontology_name => 'biological_process',
-                                            search_string => 'GO:0006810',
-                                            max_results => 10,
-                                            include_definition => 1);
+my $id_result = $lookup->lookup(ontology_name => 'biological_process',
+                                search_string => 'GO:0006810',
+                                max_results => 10,
+                                include_definition => 1);
 
 is(scalar(@$id_result), 1);
 
@@ -89,10 +89,10 @@ is($id_result->[0]->{name}, 'transport');
 like($id_result->[0]->{definition}, qr/^The directed movement of substances/);
 
 my $child_results =
-  $lookup->web_service_lookup(ontology_name => $ont_name,
-                              include_children => 1,
-                              search_string => $transport_id,
-                              max_results => 10);
+  $lookup->lookup(ontology_name => $ont_name,
+                  include_children => 1,
+                  search_string => $transport_id,
+                  max_results => 10);
 
 is(@$child_results, 1);
 

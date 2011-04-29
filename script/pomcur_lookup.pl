@@ -105,9 +105,9 @@ if ($lookup_type eq 'gene') {
 
     my $search_string = "@ARGV";
 
-    my $res = $lookup->web_service_lookup(ontology_name => $ontology_name,
-                                          search_string => $search_string,
-                                          max_results => 20);
+    my $res = $lookup->lookup(ontology_name => $ontology_name,
+                              search_string => $search_string,
+                              max_results => 20);
 
     for my $hit (@$res) {
       my $synonym_text = '';

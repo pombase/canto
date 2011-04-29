@@ -65,8 +65,8 @@ sub _make_ontology_annotation
 
   my $uniquename = $annotation->pub()->uniquename();
   my $result =
-    $ontology_adaptor->web_service_lookup(ontology_name => $annotation_type,
-                                          search_string => $term_ontid);
+    $ontology_adaptor->lookup(ontology_name => $annotation_type,
+                              search_string => $term_ontid);
 
   my $term_name = $result->[0]->{name};
   my $evidence_code = $data->{evidence_code};

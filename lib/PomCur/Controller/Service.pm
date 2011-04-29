@@ -62,11 +62,11 @@ sub lookup : Local
   my $include_children = $c->req()->param('children');
 
   $c->stash->{json_data} =
-    $lookup->web_service_lookup(ontology_name => $ontology_name,
-                                search_string => $search_string,
-                                max_results => $max_results,
-                                include_definition => $include_definition,
-                                include_children => $include_children);
+    $lookup->lookup(ontology_name => $ontology_name,
+                    search_string => $search_string,
+                    max_results => $max_results,
+                    include_definition => $include_definition,
+                    include_children => $include_children);
   $c->forward('View::JSON');
 }
 
