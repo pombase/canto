@@ -37,9 +37,11 @@ $user_created
       <th>
         With
       </th>
+% if ($user_created) {
       <th>
         Note
       </th>
+% }
       <th>
         &nbsp
       </th>
@@ -80,6 +82,7 @@ $user_created
      &nbsp; 
 % }
     </td>
+% if ($user_created) {
     <td>
 % if ($row->{term_suggestion}) {
       <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% $row->{term_suggestion}->{name} %>','<% $row->{term_suggestion}->{definition} %>');">View note ...</a>
@@ -87,6 +90,7 @@ $user_created
       &nbsp;
 % }
     </td>
+% }
     <td>
       <a href="<% $delete_action . $row->{annotation_id} %>"
          id="curs-annotation-delete-<% $row->{annotation_id} %>"
