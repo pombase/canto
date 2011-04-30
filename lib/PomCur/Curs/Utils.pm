@@ -292,7 +292,6 @@ sub _process_one
     term_ontid => $ontology_term->{ontid},
     term_name => $ontology_term->{term_name},
     evidence_code => $evidence_code,
-    evidence_type_name => $evidence_code,
     with_or_from_identifier => 'DUNNO',
     with_or_from_display_name => 'DUNNO display_name',
     taxonid => $gene->{organism_taxonid},
