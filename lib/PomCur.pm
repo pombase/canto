@@ -72,16 +72,16 @@ use PomCur::Config;
 
 $config->setup();
 
-my %_model_map = ( track => "TrackModel",
-                   meta => "MetaModel",
-                   chado => "ChadoModel" );
+my %_schema_map = ( track => "TrackDB",
+                    meta => "MetaDB",
+                    chado => "ChadoDB" );
 
 =head2 schema
 
  Usage   : my $schema = $c->schema();
  Function: Return the appropriate schema object, based on the model parameter
            of the request, or explicitly if a model_name is pass as an argument.
- Args    : $model_name - the name of model to return (optional)
+ Args    : $model_name - the name of schema to return (optional)
 
 =cut
 sub schema
@@ -91,11 +91,14 @@ sub schema
 
   die "no model passed to schema()\n" unless defined $model_name;
 
-  my $model = $_model_map{$model_name};
+  my $schema_class_name = "PomCur::$_schema_map{$model_name}";
 
-  die "unknown model ($model_name) passed to schema()\n" unless defined $model;
+  die "unknown model ($model_name) passed to schema()\n"
+    unless defined $schema_class_name;
 
-  return $self->model($model)->schema();
+  eval "require $schema_class_name";
+
+  return $schema_class_name->new(config => $self->config());
 }
 
 =head2
