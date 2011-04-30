@@ -287,11 +287,8 @@ sub _process_one
     gene_name_or_identifier =>
       $gene->{name} || $gene->{identifier},
     gene_product => $gene->{product} || '',
-    gene_synonyms_string => (join ',', @{$gene->{synonyms}}),
     qualifier => '',
     annotation_type => $ontology_term->{ontology_name},
-    annotation_type_display_name => $ontology_term->{ontology_name},
-    annotation_type_abbreviation => $ontology_term->{ontology_name},
     term_ontid => $ontology_term->{ontid},
     term_name => $ontology_term->{term_name},
     evidence_code => $evidence_code,
