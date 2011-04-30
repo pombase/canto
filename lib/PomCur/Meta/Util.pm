@@ -140,11 +140,6 @@ sub initialise_app
         "dbi:SQLite:dbname=$dest_file"
       ]
     },
-    # make a dummy config so that Catalyst doesn't complain
-    "Model::ChadoModel" => {
-      schema_class => 'PomCur::ChadoDB',
-      connect_info => $chado_connect_info
-    },
     data_directory => $init_dir
   };
 
