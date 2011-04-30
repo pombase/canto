@@ -140,7 +140,6 @@ sub lookup
       my $evidence_code =
         $self->config()->{evidence_types_by_name}->{lc $evidence_type_name} //
         $evidence_type_name;
-      warn "$evidence_type_name $evidence_code";
 
       push @res, {
         gene => {
