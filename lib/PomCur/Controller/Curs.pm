@@ -883,6 +883,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   my $annotation_data = $annotation->data();
 
   $st->{title} = "Transfer annotation from $gene_display_name";
+  $st->{show_title} = 0;
   $st->{template} = "curs/modules/${module_category}_transfer.mhtml";
 
   my $form = $self->form();
