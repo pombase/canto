@@ -49,7 +49,6 @@ use vars qw($VERSION);
 $VERSION = '0.01';
 
 my $app_config_file = "pomcur.yaml";
-my $test_config_file = "t/test_config.yaml";
 
 =head2 new
 
@@ -92,7 +91,9 @@ sub new_test_config
 {
   my $self = shift;
 
-  return $self->new($app_config_file, $test_config_file);
+  my $config = get_config();
+
+  return $self->new($app_config_file, $config->{test_config_file});
 }
 
 =head2 merge_config
