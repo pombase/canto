@@ -419,8 +419,10 @@ div.clearall {
   font-size: 95%;
 }
 
-.gene-list td:before {
-  content: "- ";
+.gene-list td {
+  padding-right: 30px;
+  width: 150px;
+  white-space: nowrap;
 }
 
 .gene-list .no-genes-message {

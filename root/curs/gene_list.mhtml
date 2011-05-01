@@ -10,17 +10,21 @@ $pub
   <div class="curs-box-body">
 % if (@gene_hashes) {
   <table>
-%   for my $gene (@gene_hashes) {
+%   for (my $y = 0; $y < $row_max; $y++) {
     <tr>
-%     for my $col_name (@col_names) {
+%     for (my $x = 0; $x < $col_count; $x++) {
+%       my $index = $y + $x * $row_max;
+%       my $gene = $gene_hashes[$index];
+%       if (defined $gene) {
       <td>
         <a href="<% $start_path . '/gene/' .$gene->{gene_id} %>"
           <span>
-            <% $gene->{$col_name} %>
+            <% $gene->{identifier} %>
           </span>
         </a>
         <% $gene->{extra_text} %>
       </td>
+%       }
 %     }
     </tr>
 %   }
@@ -63,9 +67,15 @@ my @gene_hashes = map {
      }
    } @all_genes;
 
-my @col_names = qw(identifier);
+# pad so we don't get two columns if there are only a few genes
+if (@gene_hashes <= 5) {
+  push @gene_hashes, (undef) x @gene_hashes;
+}
 
 my $start_path = $c->stash()->{curs_root_uri};
 my $upload_path = "$start_path/gene_upload";
 my $edit_path = "$start_path/edit_genes";
+
+my $row_max = int((@gene_hashes + 1) / 2);
+my $col_count = 2;
 </%init>
