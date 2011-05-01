@@ -55,7 +55,8 @@ test_psgi $app, sub {
   # test proceeding after choosing a term
   {
     my $term_id = 'GO:0080170';
-    my $uri = new URI("$root_url/annotation/edit/2/biological_process");
+    my $gene_id = 2;
+    my $uri = new URI("$root_url/annotation/edit/$gene_id/biological_process");
     $uri->query_form('ferret-term-id' => $term_id,
                      'ferret-submit' => 'Proceed',
                      'ferret-term-entry' => 'transport');
@@ -73,7 +74,11 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/Choose evidence for $term_id/);
+    my $gene = $curs_schema->find_with_type('Gene', $gene_id);
+    my $gene_display_name = $gene->display_name();
+
+    like ($redirect_res->content(),
+          qr/Choose evidence for annotating $gene_display_name with $term_id/);
 
     my $annotation =
       $curs_schema->find_with_type('Annotation', 3);

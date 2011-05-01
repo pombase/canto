@@ -70,7 +70,8 @@ for my $annotation_type (@annotation_type_list) {
 
     # test proceeding after choosing a term
     {
-      my $uri = new URI("$root_url/annotation/edit/2/$annotation_type_name");
+      my $gene_id = 2;
+      my $uri = new URI("$root_url/annotation/edit/$gene_id/$annotation_type_name");
 
       $uri->query_form('ferret-term-id' => $term_db_accession,
                        'ferret-submit' => 'Proceed',
@@ -90,7 +91,11 @@ for my $annotation_type (@annotation_type_list) {
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
 
-      like ($redirect_res->content(), qr/Choose evidence for $term_db_accession/);
+      my $gene = $curs_schema->find_with_type('Gene', $gene_id);
+      my $gene_display_name = $gene->display_name();
+
+      like ($redirect_res->content(),
+            qr/Choose evidence for annotating $gene_display_name with $term_db_accession/);
 
       $new_annotation =
         $curs_schema->find_with_type('Annotation', $new_annotation_id);
