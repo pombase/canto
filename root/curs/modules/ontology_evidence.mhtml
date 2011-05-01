@@ -1,11 +1,12 @@
 <%args>
 $form
 $annotation
+$gene_display_name
 </%args>
 
 <div class="curs-box evidence-select">
   <div class="curs-box-title">
-Choose evidence for <% $term_ontid %>
+Choose evidence for annotating <% $gene_display_name %> with <% $term_ontid %>
   </div>
   <div class="curs-box-body">
     <% $form %>
