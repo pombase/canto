@@ -791,7 +791,13 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
   my $annotation_data = $annotation->data();
   my $term_ontid = $annotation_data->{term_ontid};
-  $st->{title} = "Annotating $gene_display_name with $term_ontid";
+
+  if (defined $term_ontid) {
+    $st->{title} = "Evidence for annotating $gene_display_name with $term_ontid";
+  } else {
+    $st->{title} = "Evidence for annotating $gene_display_name";
+  }
+
   $st->{show_title} = 0;
 
   $st->{gene_display_name} = $gene_display_name;
