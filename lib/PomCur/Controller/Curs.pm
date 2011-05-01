@@ -789,8 +789,6 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
   my $module_category = $annotation_config->{category};
 
-  my $module_display_name = $annotation_config->{display_name};
-
   my $annotation_data = $annotation->data();
   my $term_ontid = $annotation_data->{term_ontid};
   $st->{title} = "Annotating $gene_display_name with $term_ontid";
@@ -884,7 +882,6 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my $annotation_data = $annotation->data();
 
-  my $module_display_name = $annotation_config->{display_name};
   $st->{title} = "Transfer annotation from $gene_display_name";
   $st->{template} = "curs/modules/${module_category}_transfer.mhtml";
 
@@ -968,7 +965,6 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $evidence_code = $annotation_data->{evidence_code};
   my $term_ontid = $annotation_data->{term_ontid};
 
-  my $module_display_name = $annotation_config->{display_name};
   my $module_category = $annotation_config->{category};
 
   $st->{title} = "Annotating $gene_display_name";
