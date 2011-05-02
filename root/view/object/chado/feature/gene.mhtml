@@ -1,10 +1,11 @@
 <%args>
 $object
-class_info
+$class_info
 </%args>
 
 <div id="collections">
-  <& /view/list.mhtml, type => 'cvterm', rs => $cvterms_rs, class_info => $class_info,
+  <& /view/list.mhtml, config_name => 'cvterm', rs => $cvterms_rs,
+                       class_info => $class_info,
                        list_title => 'Controlled vocabulary terms for this gene' &>
 </div>
 

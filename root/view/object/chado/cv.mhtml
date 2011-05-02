@@ -1,5 +1,6 @@
 <%args>
 $object
+$class_info
 </%args>
 
 <div>
