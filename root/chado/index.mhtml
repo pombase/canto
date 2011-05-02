@@ -11,7 +11,10 @@
               <a href="<% $c->uri_for('/view/list/feature', { model => 'chado'} ) %>">Features</a>
             </li>
             <li>
-              <a href="<% $c->uri_for('/view/list/pub', { model => 'chado'} ) %>">Publications</a>
+              <a href="<% $c->uri_for('/view/list/genes', { model => 'chado'} ) %>">Genes</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/view/list/pombe_genes', { model => 'chado'} ) %>">S. pombe genes</a>
             </li>
             <li>
               <a href="<% $c->uri_for('/view/list/cv', { model => 'chado'} ) %>">Controlled vocabularies</a>

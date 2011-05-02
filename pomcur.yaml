@@ -430,6 +430,13 @@ class_info:
           referenced_class: Cvterm
         - name: value
           editable: 1
+    genes:
+      extends: feature
+      constraint: "type_id = (select cvterm_id from cvterm, cv where cvterm.name = 'gene' and cvterm.cv_id = cv.cv_id and cv.name = 'sequence')"
+    pombe_genes:
+      class_display_name: S. pombe genes
+      extends: feature
+      constraint: "type_id = (select cvterm_id from cvterm, cv where cvterm.name = 'gene' and cvterm.cv_id = cv.cv_id and cv.name = 'sequence') and organism_id = (select organism_id from organism where genus = 'Schizosaccharomyces' and species = 'pombe')"
 
 reports:
   track:
