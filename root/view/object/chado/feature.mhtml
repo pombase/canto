@@ -9,8 +9,7 @@ $class_info
 
 % if (defined $type_template_path->stat()) {
 
-<& "/view/object/feature/$feature_type.mhtml", object => $object, 
-                                               class_info => $class_info, &>
+<& $type_path, object => $object, class_info => $class_info, &>
   
 % }
 
@@ -21,7 +20,7 @@ $class_info
 
 <%init>
 my $feature_type = $object->type()->name();
-my $type_template_path =
-  $c->path_to("root", "view", "object", "feature", "$feature_type.mhtml");
- 
+my @path_parts = ("view", "object", "chado", "feature", "$feature_type.mhtml");
+my $type_template_path = $c->path_to("root", @path_parts);
+my $type_path = '/' . join '/', @path_parts;
 </%init>
