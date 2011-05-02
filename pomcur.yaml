@@ -364,6 +364,12 @@ class_info:
           editable: 1
         - name: definition
           editable: 1
+        - name: "terms in this CV"
+          source:
+            sql: 'select count(*) from cvterm where cvterm.cv_id = me.cv_id'
+        - name: "annotation count"
+          source:
+            sql: 'select count(*) from feature_cvterm fc, cvterm c where fc.cvterm_id = c.cvterm_id and c.cv_id = me.cv_id'
     cvterm:
       class_display_name: controlled vocabulary term
       editable: 1
@@ -376,6 +382,9 @@ class_info:
         - name: cv
           source: cv_id
           editable: 1
+        - name: "features annotated with this term"
+          source:
+            sql: 'select count(*) from feature_cvterm fc where fc.cvterm_id = me.cvterm_id'
     organism:
       editable: 1
       display_field: full_name
