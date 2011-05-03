@@ -734,13 +734,3 @@ test_gene_identifiers:
   - SPCC777.08c
 
 help_text:
-  inline:
-    molecular_function_hint: >
-      A molecular function is a molecular level activity usually, but not always
-      performed by a single gene product (catalytic activity, binding,
-      transporter)
-    biological_process_hint: >
-      A biological process is a series of events accomplished by one or more
-      ordered assemblies of molecular functions (cell cycle, transcription)
-    cellular_component_hint: >
-      A cellular component is a part of a cell (proteasome, nucleus)
