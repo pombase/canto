@@ -44,6 +44,7 @@ with 'PomCur::Role::MetadataAccess';
 
 use Archive::Zip qw(:CONSTANTS :ERROR_CODES);
 use IO::String;
+use Clone qw(clone);
 
 use PomCur::Track;
 use PomCur::Curs::Utils;
@@ -886,7 +887,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   my $gene = $annotation->genes()->first();
   my $gene_display_name = $gene->display_name();
 
-  my $annotation_data = $annotation->data();
+  my $annotation_data = clone $annotation->data();
+  delete $annotation_data->{with_gene};
 
   $st->{title} = "Transfer annotation from $gene_display_name";
   $st->{show_title} = 0;
