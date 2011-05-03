@@ -734,3 +734,7 @@ test_gene_identifiers:
   - SPCC777.08c
 
 help_text:
+  choose_gene:
+    inline: >
+      Once you have selected a gene to annotate you will be presented with a
+      set of annotation options

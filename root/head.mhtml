@@ -4,9 +4,9 @@ $title
 
 <title><% $c->config()->{long_name} %> - <% $title %></title>
 <meta charset="UTF-8"/>
-<link href="<% $c->uri_for('/static/css/style.css') %>" type="text/css" rel="stylesheet" />
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" 
       type="text/css" rel="stylesheet"/>
+<link href="<% $c->uri_for('/static/css/style.css') %>" type="text/css" rel="stylesheet" />
 
 <%flags>
 inherit => undef

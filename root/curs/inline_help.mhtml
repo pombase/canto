@@ -1,0 +1,19 @@
+<%args>
+$key
+</%args>
+
+<div id="<% $popup_id %>" title="Help" style="display:none">
+  <% $help_text %>
+</div>
+
+<span class="curs-inline-help-icon">
+  <img src="<% $c->uri_for('/static/images/help.png') %>"
+       alt="help" title="<% $help_text %>"
+       onclick="$('#<% $popup_id %>').dialog()"/>
+</span>
+
+<%init>
+my $help_text = $c->config()->{help_text}->{choose_gene}->{inline};
+my $curs_root_uri = $c->stash()->{curs_root_uri};
+my $popup_id = "curs-inline-help-popup-$key";
+</%init>

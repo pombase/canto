@@ -571,6 +571,10 @@ div.clearall {
   border-top-left-radius: 4px;
 }
 
+.curs-inline-help-icon {
+  float: right;
+}
+
 .curs-box-body {
   margin: 10px;
 }
@@ -724,4 +728,11 @@ span.pomcur-select-buttons {
   clear: right;
   float: right;
   margin-top: 10px;
+}
+
+.ui-dialog {
+   font-size: 80%;
+}
+.ui-dialog .ui-dialog-titlebar {
+   padding: .2em 1em .1em;
 }

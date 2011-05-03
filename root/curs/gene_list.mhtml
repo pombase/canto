@@ -5,7 +5,9 @@ $pub
 
 <div class="gene-list curs-box">
   <div class="curs-box-title">
-    <div>Choose a gene to annotate:</div>
+    <div>Choose a gene to annotate:
+    <& /curs/inline_help.mhtml, key => 'choose_gene' &>
+    </div>
   </div>
   <div class="curs-box-body">
 % if (@gene_hashes) {
