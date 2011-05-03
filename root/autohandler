@@ -45,6 +45,7 @@ $page_description_id => 'page-description'
 </div>
 
 <& breadcrumbs.mhtml &>
+<& contact.mhtml &>
 
 % if ($show_title) {
       <div id="<% $page_description_id %>">

@@ -193,6 +193,14 @@ div#footer .sponsor {
   background-color:#0b75b2;
 }
 
+#curs-contact-curators {
+  padding: 10px;
+  margin-right: 20px;
+  clear: right;
+  float: right;
+  font-size: 80%;
+}
+
 a.pomcur-toggle-button {
   margin-left: 5px;
   display: none;

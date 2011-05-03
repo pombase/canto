@@ -497,4 +497,9 @@ $(document).ready(function() {
   $('#curs-finish-gene').click(function () {
     window.location.href = curs_root_uri;
   });
+
+  $('#curs-contact-curators').click(function () {
+    $('#curs-contact-curators-dialog').dialog({ modal: true,
+                                                width: '50em' });
+  });
 });
