@@ -649,6 +649,10 @@ div.clearall {
 #ferret-suggest-form td {
   text-align: top;
 }
+#ferret-suggest-submit {
+  clear: right;
+  float: right;
+}
 
 .triage .pub-details {
   width: 48%;

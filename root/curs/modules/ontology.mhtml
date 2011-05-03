@@ -26,14 +26,15 @@ $pub
         </td>
       </tr>
     </table>
-  </form>
-
-  <div class="ferret-help-text">
+    <div id="ferret-suggest-help" class="ferret-help-text">
 Please suggest a definition for your new term request. The pattern for
 the formal  definition is &ldquo;An A (the term you are describing) is a B
 (the parent of the term you are describing) that C (the characteristics
 that differentiate your new term "A" from other members of the group "B")&rdquo;.
-  </div>
+    </div>
+    <input id="ferret-suggest-submit" name="ferret-submit" type="submit"
+           value="Submit suggestion" class="button"/>
+  </form>
 </div>
 
 <div id="ferret">
