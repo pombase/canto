@@ -948,7 +948,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     $guard->commit();
 
-    _redirect_and_detach($c);
+    _redirect_and_detach($c, 'gene', $gene->gene_id());
   }
 }
 
