@@ -43,8 +43,10 @@ img {
   text-align: center;
 }
 #heading .text {
-  display: inline;
   margin:0 auto;
+  width: 60%;
+  padding: 6px;
+  font-size: 120%;
 }
 #heading .logo {
   padding: 5px;
