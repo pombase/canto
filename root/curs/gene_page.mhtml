@@ -33,8 +33,7 @@ Choose curation type for <% $gene->display_name() %>:
 </div>
 </div>
 
-<div id="curs-gene-details">
-<div class="curs-box">
+<div id="curs-gene-details" class="curs-box">
   <div class="curs-box-title">
 Details for <% $gene->display_name() %>
   </div>
@@ -54,7 +53,6 @@ Details for <% $gene->display_name() %>
       </tr>
     </table>
   </div>
-</div>
 </div>
 
 <button id="curs-finish-gene" class="curs-finish-button">Change gene</button>
