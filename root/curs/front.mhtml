@@ -32,6 +32,8 @@ Publication details
   </div>
 </div>
 
+<button id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>
+
 <div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,

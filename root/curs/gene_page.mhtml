@@ -57,6 +57,8 @@ Details for <% $gene->display_name() %>
 </div>
 </div>
 
+<button id="curs-finish-gene" class="curs-finish-button">Change gene</button>
+
 <div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,

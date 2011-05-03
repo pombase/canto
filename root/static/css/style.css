@@ -719,3 +719,9 @@ span.pomcur-select-buttons {
   width: 48%;
   float: right;
 }
+
+.curs-finish-button {
+  clear: right;
+  float: right;
+  margin-top: 10px;
+}

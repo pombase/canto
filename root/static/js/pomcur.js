@@ -489,4 +489,12 @@ $(document).ready(function() {
   $('a.pomcur-select-none').click(function () {
     $(this).closest('div').find('input:checkbox').removeAttr('checked');
   });
+
+  $('#curs-finish-publication').click(function () {
+    window.location.href = curs_root_uri + '/finish_publication';
+  });
+
+  $('#curs-finish-gene').click(function () {
+    window.location.href = curs_root_uri;
+  });
 });
