@@ -325,7 +325,11 @@ sub get_existing_annotations
   my $lookup =
     PomCur::Track::get_adaptor($config, 'ontology_annotation');
 
-  return map { _process_one($_) } @{$lookup->lookup($options)};
+  if (defined $lookup) {
+    return map { _process_one($_) } @{$lookup->lookup($options)};
+  } else {
+    return ();
+  }
 }
 
 1;
