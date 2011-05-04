@@ -162,7 +162,8 @@ sub test_curs :Global {
   my $schema = $c->schema('track');
   my $config = $c->config();
 
-  my $pub = $schema->resultset('Pub')->first();
+  my $pub_uniquename = $config->{test_publication_uniquename};
+  my $pub = $schema->find_with_type('Pub', { uniquename => $pub_uniquename });
   my $curs_key = PomCur::Curs::make_curs_key();
 
   $st->{title} = "Link to new test curation session " . $curs_key;

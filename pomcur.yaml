@@ -739,6 +739,7 @@ test_gene_identifiers:
   - SPCC4B3.16
   - SPCC63.05
   - SPCC777.08c
+test_publication_uniquename: 'PMID:18556659'
 
 help_text:
   choose_gene:
