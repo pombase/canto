@@ -1095,7 +1095,7 @@ sub _get_annotation_table_tsv
 
   my $ontology_column_names =
     [qw(db gene_identifier gene_name_or_identifier
-        qualifier term_ontid uniquename
+        qualifier term_ontid publication_uniquename
         evidence_code with_or_from_identifier
         annotation_type_abbreviation
         gene_product gene_synonyms_string db_object_type taxonid

@@ -106,7 +106,7 @@ sub _make_ontology_annotation
     annotation_type_display_name => $annotation_type_display_name,
     annotation_type_abbreviation => $annotation_type_abbreviation // '',
     annotation_id => $annotation->annotation_id(),
-    uniquename => $uniquename,
+    publication_uniquename => $uniquename,
     term_ontid => $term_ontid,
     term_name => $term_name,
     evidence_code => $evidence_code,
