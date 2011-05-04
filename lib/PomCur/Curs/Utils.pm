@@ -300,6 +300,18 @@ sub _process_one
   };
 }
 
+=head2 get_existing_annotations
+
+ Usage   : my @annotations =
+             PomCur::Curs::Utils::get_existing_annotations($config, $options)
+ Function: Return a table of the existing annotations from the database
+ Args    : $config - the PomCur::Config object
+           $options->{pub_uniquename} - the publication ID (eg. PubMed ID)
+ Returns : An array of hashes containing the annotation in the same form as
+           get_annotation_table() above, except that annotation_id will be a
+           database identifier for the annotation.
+
+=cut
 sub get_existing_annotations
 {
   my $config = shift;
