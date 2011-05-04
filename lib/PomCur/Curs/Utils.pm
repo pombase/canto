@@ -284,6 +284,7 @@ sub _process_one
   my $evidence_code = $row->{evidence_code};
 
   return {
+    annotation_id => $row->{annotation_id},
     gene_identifier => $gene->{identifier},
     gene_name => $gene->{name} || '',
     gene_name_or_identifier =>

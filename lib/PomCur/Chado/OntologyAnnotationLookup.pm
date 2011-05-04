@@ -157,6 +157,7 @@ sub lookup
           uniquename => $pub_uniquename,
         },
         evidence_code => $evidence_code,
+        annotation_id => $row->feature_cvterm_id(),
       }
     }
 
