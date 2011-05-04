@@ -130,4 +130,25 @@ test_config:
              data:
                evidence_code: MIU
                term_ontid: PP:00004
+  test_gene_identifiers:
+    - SPAC22F3.13
+    - SPAC23C11.11
+    - SPAC23H3.03c
+    - SPAC458.03
+    - SPAC57A7.11
+    - SPAC630.13c
+    - SPAPYUG7.02c
+    - SPBC12C2.02c
+    - SPBC16A3.08c
+    - SPBC216.07c
+    - SPBC21B10.05c
+    - SPBC30D10.10c
+    - SPBC543.04
+    - SPBP18G5.03
+    - SPCC162.12
+    - SPCC24B10.07
+    - SPCC4B3.16
+    - SPCC63.05
+    - SPCC777.08c
+
 

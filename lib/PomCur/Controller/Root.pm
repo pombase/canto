@@ -194,8 +194,9 @@ sub test_curs :Global {
 
       my @test_gene_ids;
 
-      if (exists $config->{test_gene_identifiers}) {
-        @test_gene_ids = @{$config->{test_gene_identifiers}};
+      if (defined (my $test_gene_identifiers =
+                     $config->{test_config}->{test_gene_identifiers})) {
+        @test_gene_ids = @{$test_gene_identifiers};
       } else {
         my $gene1_identifier = $gene1->primary_identifier();
         my $gene2_identifier = $gene2->primary_identifier();
