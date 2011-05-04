@@ -140,8 +140,7 @@ for my $annotation_type (@annotation_type_list) {
       my $cdc11 = $curs_schema->find_with_type('Gene',
                                                {
                                                  primary_name => 'cdc11' });
-      my $gene_2 =
-        my $uri = new URI("$root_url/annotation/transfer/$new_annotation_id");
+      my $uri = new URI("$root_url/annotation/transfer/$new_annotation_id");
       $uri->query_form('transfer' => 'transfer-submit',
                        dest => [$cdc11->gene_id()]);
 
