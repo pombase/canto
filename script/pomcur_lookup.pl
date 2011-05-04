@@ -40,9 +40,10 @@ sub usage
     $message = '';
   }
 
-  die "${message}usage:
-   $0 --lookup-type
-";
+  warn "${message}usage:
+   $0 -t <type> [-n ontology-name ] search terms ...\n";
+
+  exit(1);
 }
 
 if ($do_help) {
