@@ -38,6 +38,7 @@ Publication details
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
+   pub => $pub,
    curs_root_uri => $curs_root_uri &>
 
 % _increment_annotation_count($annotation_type->{name}, \$annotation_count);

@@ -3,16 +3,14 @@ $curs_root_uri
 $annotation_type
 @annotations
 $gene
+$pub
+$user_created
 </%args>
 
 % if (@annotations) {
 <div class="sect">
   <div class="title sect-title">
-% my $gene_text = "";
-% if (defined $gene) {
-%   $gene_text = ' for ' . $gene->display_name();
-% }
-Current <% $annotation_type->{display_name} %> annotations<% $gene_text %>
+<% $title %>
   </div>
   <div class="annotation-table sect-content">
 <table class="list">
@@ -74,4 +72,20 @@ Current <% $annotation_type->{display_name} %> annotations<% $gene_text %>
 <%init>
 my $delete_action = $curs_root_uri . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+
+my $gene_text = "";
+if (defined $gene) {
+  $gene_text = ' for ' . $gene->display_name();
+}
+
+my $new_or_db;
+if ($user_created) {
+  $new_or_db = 'New ';
+} else {
+  $new_or_db = 'Existing ';
+}
+
+my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
+  $gene_text;
+
 </%init>

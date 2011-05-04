@@ -220,6 +220,17 @@ sub setup
       $annotation_type->{namespace} //= $annotation_type->{name};
     }
   }
+
+  # create an inverted map of evidence types so that evidence codes
+  # can be looked up by name
+  if (my $evidence_types = $self->{evidence_types}) {
+    for my $evidence_code (keys %$evidence_types) {
+      my $evidence_type_name =
+        $self->{evidence_types}->{$evidence_code}->{name};
+      $self->{evidence_types_by_name}->{lc $evidence_type_name} =
+        $evidence_code;
+    }
+  }
 }
 
 =head2

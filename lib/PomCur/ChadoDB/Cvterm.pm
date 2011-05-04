@@ -1644,6 +1644,38 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:u/RKQVQ6aNHYtPmTlLOh3g
 
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
+=head2 db_accession
+
+ Usage   : my $db_accession = $cvterm->db_accession();
+ Function: Return the identifier for this term in "<db>:<identifier>" form,
+           eg. "GO:0004022"
+ Args    : none
+ Returns : the database accession
+
+=cut
+sub db_accession
+{
+  my $cvterm = shift;
+
+  my $dbxref = $cvterm->dbxref();
+  my $db = $dbxref->db();
+
+  return $db->name() . ':' . $dbxref->accession();
+}
+
+=head2 synonyms
+
+ Usage   : my @cvterm_synonyms = $cvterm->synonyms();
+ Function: An alias for cvtermsynonym_cvterms(), returns the Cvtermsynonyms of
+           this cvterm
+ Args    : none
+ Returns : return synonyms
+
+=cut
+sub synonyms
+{
+  return cvtermsynonym_cvterms(@_);
+}
+
 __PACKAGE__->meta->make_immutable;
 1;

@@ -129,7 +129,8 @@ sub create_curs_db_hook
  Function: return an initialised Adaptor object of the given type
  Args    : $config - the PomCur::Config object
            $adaptor_name - the adaptor type used to look up in the config
- Return  : a Adaptor object
+ Return  : a Adaptor object or undef if there isn't an adaptor of the
+           given type configured
 
 =cut
 sub get_adaptor
@@ -145,7 +146,7 @@ sub get_adaptor
   my $impl_class = $config->{implementation_classes}->{$conf_name};
 
   if (!defined $impl_class) {
-    croak "can't find implementation class for $conf_name";
+    return undef;
   }
 
   eval "use $impl_class";

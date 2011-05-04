@@ -128,11 +128,6 @@ sub initialise_app
         "$config_dir/$deploy_config_file_name") or
     die "can't open $deploy_config_file_name for writing: $!\n";
 
-  my $chado_connect_info = [
-    'dbi:Pg:dbname=some_db_name;host=some_host_name',
-      'some_username', 'some_password'
-    ];
-
   my $new_config = {
     "Model::TrackModel" => {
       schema_class => 'PomCur::TrackDB',

@@ -2,10 +2,4 @@ Model::TrackModel:
   schema_class: 'PomCur::TrackDB'
   connect_info:
      - "dbi:SQLite:dbname=local/track.sqlite3"
-Model::ChadoModel:
-  schema_class: 'PomCur::ChadoDB'
-  connect_info:
-     - "dbi:Pg:dbname=pombe-chado-v9;host=localhost;port=5432"
-     - kmr44
-     - kmr44
 data_directory: "local"

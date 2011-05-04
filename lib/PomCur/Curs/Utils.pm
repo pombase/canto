@@ -190,12 +190,14 @@ sub _make_interaction_annotation
              $completed_count - a count of the annotations that are incomplete
                 because they need an evidence code or a with field, etc.
              $table - an array of hashes containing the annotation in the form:
-                  [ { gene_identifier => 'SPCC1739.11c', gene_name => 'cdc11',
+                  [ { gene_identifier => 'SPCC1739.11c',
+                      gene_name => 'cdc11',
                       annotation_type => 'molecular_function',
-                      annotation_id => 1234, term_ontid => 'GO:0055085',
+                      annotation_id => 1234,
+                      term_ontid => 'GO:0055085',
                       term_name => 'transmembrane transport',
                       evidence_code => 'IDA',
-                      evidence_type_name => 'Inferred from direct assay' },
+                      ... },
                     { gene_identifier => '...', ... }, ]
                   where annotation_id is the id of the Annotation object for
                   this annotation
@@ -266,6 +268,64 @@ sub get_annotation_table
   }
 
   return ($completed_count, [@annotations]);
+}
+
+sub _process_one
+{
+  my $row = shift;
+
+  my $gene = $row->{gene};
+  my $ontology_term = $row->{ontology_term};
+  my $publication = $row->{publication};
+  my $evidence_code = $row->{evidence_code};
+
+  return {
+    annotation_id => $row->{annotation_id},
+    gene_identifier => $gene->{identifier},
+    gene_name => $gene->{name} || '',
+    gene_name_or_identifier =>
+      $gene->{name} || $gene->{identifier},
+    gene_product => $gene->{product} || '',
+    qualifier => '',
+    annotation_type => $ontology_term->{ontology_name},
+    term_ontid => $ontology_term->{ontid},
+    term_name => $ontology_term->{term_name},
+    evidence_code => $evidence_code,
+    with_or_from_identifier => 'DUNNO',
+    with_or_from_display_name => 'DUNNO display_name',
+    taxonid => $gene->{organism_taxonid},
+  };
+}
+
+=head2 get_existing_annotations
+
+ Usage   : my @annotations =
+             PomCur::Curs::Utils::get_existing_annotations($config, $options)
+ Function: Return a table of the existing annotations from the database
+ Args    : $config - the PomCur::Config object
+           $options->{pub_uniquename} - the publication ID (eg. PubMed ID)
+ Returns : An array of hashes containing the annotation in the same form as
+           get_annotation_table() above, except that annotation_id will be a
+           database identifier for the annotation.
+
+=cut
+sub get_existing_annotations
+{
+  my $config = shift;
+  my $options = shift;
+
+  my $pub_uniquename = $options->{pub_uniquename};
+  my $gene_identifier = $options->{gene_identifier};
+  my $ontology_name = $options->{ontology_name};
+
+  my $lookup =
+    PomCur::Track::get_adaptor($config, 'ontology_annotation');
+
+  if (defined $lookup) {
+    return map { _process_one($_) } @{$lookup->lookup($options)};
+  } else {
+    return ();
+  }
 }
 
 1;

@@ -4,16 +4,14 @@ $annotation_type
 @annotations
 $completed_count
 $gene
+$pub
+$user_created
 </%args>
 
 % if (@annotations) {
 <div class="sect">
   <div class="title sect-title">
-% my $gene_text = "";
-% if (defined $gene) {
-%   $gene_text = ' for ' . $gene->display_name();
-% }
-Current <% $annotation_type->{display_name} %> annotations<% $gene_text %>
+<% $title %>
   </div>
   <div class="annotation-table sect-content">
 <table class="list">
@@ -39,12 +37,14 @@ Current <% $annotation_type->{display_name} %> annotations<% $gene_text %>
       <th>
         With
       </th>
+% if ($user_created) {
       <th>
         Note
       </th>
       <th>
         &nbsp
       </th>
+% }
     </tr>
   </thead>
 
@@ -82,10 +82,11 @@ Current <% $annotation_type->{display_name} %> annotations<% $gene_text %>
      &nbsp; 
 % }
     </td>
+% if ($user_created) {
     <td>
-% if ($row->{term_suggestion}) {
+%   if ($row->{term_suggestion}) {
       <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% $row->{term_suggestion}->{name} %>','<% $row->{term_suggestion}->{definition} %>');">View note ...</a>
-% } else {
+%   } else {
       &nbsp;
 % }
     </td>
@@ -96,6 +97,7 @@ Current <% $annotation_type->{display_name} %> annotations<% $gene_text %>
         <img src="<% $delete_icon_uri %>"/>
       </a>
     </td>
+% }
   </tr>
 % }
 </table>
@@ -113,5 +115,20 @@ Current <% $annotation_type->{display_name} %> annotations<% $gene_text %>
 my $delete_action = $curs_root_uri . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 
-my $some_incomplete = $completed_count != @annotations;
+my $some_incomplete = $completed_count != @annotations && $user_created;
+
+my $gene_text = "";
+if (defined $gene) {
+  $gene_text = ' for ' . $gene->display_name();
+}
+
+my $new_or_db;
+if ($user_created) {
+  $new_or_db = 'New ';
+} else {
+  $new_or_db = 'Existing ';
+}
+
+my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
+  $gene_text;
 </%init>
