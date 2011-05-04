@@ -72,13 +72,10 @@ sub _make_ontology_annotation
   my $evidence_code = $data->{evidence_code};
   my $with_gene_identifier = $data->{with_gene};
 
-  my $evidence_type_name;
   my $needs_with;
   if (defined $evidence_code) {
-    $evidence_type_name = $evidence_types{$evidence_code}->{name};
     $needs_with = $evidence_types{$evidence_code}->{with_gene};
   } else {
-    $evidence_type_name = undef;
     $needs_with = 0;
   }
 
@@ -113,7 +110,6 @@ sub _make_ontology_annotation
     term_ontid => $term_ontid,
     term_name => $term_name,
     evidence_code => $evidence_code,
-    evidence_type_name => $evidence_type_name,
     creation_date => $annotation->creation_date(),
     creation_date_short => $short_date,
     term_suggestion => $annotation->data()->{term_suggestion},
