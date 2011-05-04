@@ -253,7 +253,7 @@ test_psgi $app, sub {
     is (($new_annotation->genes())[0]->primary_name(), "cdc11");
     is ($new_annotation->data()->{term_ontid}, 'GO:0080170');
     is ($new_annotation->data()->{evidence_code}, 'IPI');
-    is ($new_annotation->data()->{with_gene}, $with_gene_identifier);
+    is ($new_annotation->data()->{with_gene}, undef);
   }
 
   # test deleting a gene referred to by a with_gene field
