@@ -491,10 +491,12 @@ evidence_types:
   IPI:
     name: Inferred from physical interaction
     with_gene: 1
-  MIU:
-    name: Experimenter made it up
-  LDM:
-    name: Scientist looked down a microscope
+  Microscopy:
+    name: Microscopy
+  'Cell growth assay':
+    name: Cell growth assay
+  'Other direct assay':
+    name: Other direct assay
   'Affinity Capture-Luminescence':
     name: Affinity Capture-Luminescence
   'Affinity Capture-MS':
@@ -640,8 +642,9 @@ annotation_type_list:
     short_display_name: 'phenotype'
     display_name: 'phenotype'
     evidence_codes:
-      - MIU
-      - LDM
+      - Microscopy
+      - Cell growth assay
+      - Other direct assay
     broad_term_suggestions: >
       round, squishy
     specific_term_examples: >
