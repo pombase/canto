@@ -56,7 +56,7 @@ requires 'Lucene';
 requires 'Text::CSV';
 requires 'JSON';
 requires 'Try::Tiny';
-requires 'Text::Similarity';
+requires 'String::Similarity';
 requires 'Archive::Zip';
 requires 'File::Basename';
 requires 'Getopt::Long';

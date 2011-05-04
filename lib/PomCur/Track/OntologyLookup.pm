@@ -38,23 +38,33 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
-use Text::Similarity::Overlaps;
+use String::Similarity;
 
 use PomCur::Track::OntologyIndex;
 
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackLookup';
 
+sub _clean_string
+{
+  my $text = shift;
+
+  $text =~ s/[\d\W]+/ /g;
+  $text =~ s/^\s+//;
+  $text =~ s/\s+$//;
+
+  return $text;
+}
+
 sub _get_score
 {
-  my $tso = shift;
   my $search_string = shift;
   my $name = shift;
 
-  $name =~ s/[\d\W]+/ /g;
-  $search_string =~ s/[\d\W]+/ /g;
+  $name = _clean_string($name);
+  $search_string = _clean_string($search_string);
 
-  return $tso->getSimilarityStrings($search_string, $name);
+  return similarity $search_string, $name;
 }
 
 sub _make_term_hash
@@ -146,7 +156,6 @@ sub lookup
   my @ret_list = ();
 
   my $schema = $self->schema();
-  my $tso = Text::Similarity::Overlaps->new();
   my $fudge_factor = 1.05;
 
   my $num_hits = $hits->length();
@@ -161,14 +170,14 @@ sub lookup
     # the $fudge_factor is to try to make sure that the cvterm name is nudged
     # ahead if there is need for a tie-break
     my $name_match_score =
-      _get_score($tso, $search_string, $cvterm->name()) * $fudge_factor;
+      _get_score($search_string, $cvterm->name()) * $fudge_factor;
 
     my $max_score = $name_match_score;
     my $matching_synonym = undef;
 
     for my $synonym ($cvterm->synonyms()) {
       my $synonym_name = $synonym->synonym();
-      my $synonym_score = _get_score($tso, $search_string, $synonym_name);
+      my $synonym_score = _get_score($search_string, $synonym_name);
 
       if ($synonym_score > $max_score) {
         $max_score = $synonym_score;
