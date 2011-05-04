@@ -40,6 +40,7 @@ use warnings;
 use Carp;
 
 use PomCur::DB;
+use PomCur::DBLayer::Path;
 
 =head2
 
@@ -256,6 +257,40 @@ sub get_column_confs
   }
 
   return @column_confs;
+}
+
+sub _resolve_path
+{
+  my $path_string = shift;
+  my $object = shift;
+
+  my $path = PomCur::DBLayer::Path->new(path_string => $1);
+
+  return $path->resolve($object);
+}
+
+=head2 substitute_paths
+
+ Usage   : my $new_str = PomCur::WebUtil::substitute_paths($template, $object);
+ Function: Use $object to replace the paths in the $template.  Paths look
+           like @@something->something_else@@.  eg for a Person $object with
+           a name of "John Smith" and a role of "user", that has a lab field
+           that refers to a Lab with the name "Big Lab" this template:
+             "person name: @@name@@, role: @@role@@, lab name: @@lab->name@@"
+ Args    : $template - a template containing paths that can be resolved with
+                       PomCur::DBLayer::Path::resolve()
+           $object - the object that will be passed to Path::resolve()
+ Returns : the substituted string
+
+=cut
+sub substitute_paths
+{
+  my $string = shift;
+  my $object = shift;
+
+  $string =~ s/\@\@([^@]+)\@\@/_resolve_path($1, $object)/eg;
+
+  return $string;
 }
 
 1;

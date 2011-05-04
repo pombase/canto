@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Test::MockObject;
 
 use PomCur::TestUtil;
@@ -31,11 +31,11 @@ $mock_c->mock('request', sub { return $mock_request; });
 
 package main;
 
-my $val_email = 'val@sanger.ac.uk';
+my $person_email = 'Nicholas.Willis@umassmed.edu';
 
 my $person = $schema->find_with_type('Person',
                                      {
-                                       email_address => $val_email
+                                       email_address => $person_email
                                      });
 
 my $person_class_info = $config->{class_info}->{track}->{person};
@@ -44,7 +44,7 @@ my ($field_value, $field_type) =
   PomCur::WebUtil::get_field_value($mock_c, $person, $person_class_info,
                                    'name');
 
-is($field_value, 'Val Wood');
+is($field_value, 'Nicholas Willis');
 is($field_type, 'key_field');
 
 
@@ -52,7 +52,7 @@ is($field_type, 'key_field');
   PomCur::WebUtil::get_field_value($mock_c, $person, $person_class_info,
                                    'Email address');
 
-is($field_value, $val_email);
+is($field_value, $person_email);
 is($field_type, 'attribute');
 
 
@@ -68,3 +68,10 @@ my $lab_class_info = $config->{class_info}->{track}->{lab};
 
 ok(!defined $field_value);
 is($field_type, 'collection');
+
+
+my $paths_string =
+  'test string @@name@@ -- @@lab->name@@ more text @@lab->lab_head->name@@';
+my $substituted_1 = PomCur::WebUtil::substitute_paths($paths_string, $person);
+
+is ($substituted_1, 'test string Nicholas Willis -- Rhind Lab more text Nick Rhind');
