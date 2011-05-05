@@ -476,7 +476,6 @@ external_sources:
 
 implementation_classes:
   gene_adaptor: PomCur::Track::GeneLookup
-  ontology_annotation_adaptor: PomCur::Chado::OntologyAnnotationLookup
   go_adaptor: PomCur::Track::OntologyLookup
   ontology_adaptor: PomCur::Track::OntologyLookup
 
