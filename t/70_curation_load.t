@@ -26,4 +26,4 @@ $curation_load->load($test_curation_file);
 
 @loaded_pubs = $schema->resultset('Pub')->all();
 
-is(@loaded_pubs, 16);
+is(@loaded_pubs, 17);

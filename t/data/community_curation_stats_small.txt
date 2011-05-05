@@ -15,3 +15,4 @@ PMID,Laboratory,"Submitter, if different","date sent out",Status,"PI e-mail","co
 19627505,"Henar Valdivieso",,2009/11/23,DONE,henar@usal.es,
 19664060,"Stuart Macneill",,2009/11/23,pending,stuart.macneill@st-andrews.ac.uk,
 19686603,"Stuart Macneill",,2009/11/23,pending,stuart.macneill@st-andrews.ac.uk,
+10467002,"Test User",,2011/4/39,pending,test.user@pombase.org,

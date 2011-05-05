@@ -120,7 +120,7 @@ test_psgi $app, sub {
 
     my $uri = new URI("$root_url/gene_upload");
     $uri->query_form(return_path_input => $annotation_with_gene_url,
-                     gene_identifiers => ['orb5'],
+                     gene_identifiers => ['ste16'],
                      Submit => 'Submit');
 
     my $req = HTTP::Request->new(GET => $uri);

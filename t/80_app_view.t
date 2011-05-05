@@ -7,6 +7,7 @@ use PomCur::TestUtil;
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
+use Web::Scraper;
 
 my $test_util = PomCur::TestUtil->new();
 $test_util->init_test();
@@ -35,9 +36,18 @@ test_psgi $app, sub {
     my $res = $cb->($req);
 
     is $res->code, 200;
-    like ($res->content(), qr/List of all labs/);
-    like ($res->content(), qr/Nick Rhind/);
-    like ($res->content(), qr/12\b.* rows found/);
+
+    my $page_scrape = scraper {
+      process "title", title => 'TEXT';
+      process ".field-value .display-key", 'field_values[]' => 'TEXT';
+      process ".page_nav_summary", row_count => 'TEXT';
+    };
+
+    my $scrape_res = $page_scrape->scrape($res->content());
+
+    like ($scrape_res->{title}, qr/List of all labs/);
+    ok (grep { /Nick Rhind/ } @{$scrape_res->{field_values}});
+    like ($scrape_res->{row_count}, qr/13\b.* rows found/);
   }
 
   # test viewing a report

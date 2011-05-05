@@ -5670,6 +5670,11 @@
             <Month>02</Month>
             <Day>23</Day>
         </DateCompleted>
+        <DateRevised>
+            <Year>2011</Year>
+            <Month>05</Month>
+            <Day>03</Day>
+        </DateRevised>
         <Article PubModel="Print-Electronic">
             <Journal>
                 <ISSN IssnType="Electronic">1535-9786</ISSN>
@@ -5793,7 +5798,7 @@
                 <DescriptorName MajorTopicYN="N">Time-Lapse Imaging</DescriptorName>
             </MeshHeading>
         </MeshHeadingList>
-        <OtherID Source="NLM">PMC2976291 [Available on 05/01/11]</OtherID>
+        <OtherID Source="NLM">PMC2976291</OtherID>
     </MedlineCitation>
     <PubmedData>
         <History>
@@ -5822,11 +5827,6 @@
                 <Day>24</Day>
                 <Hour>6</Hour>
                 <Minute>0</Minute>
-            </PubMedPubDate>
-            <PubMedPubDate PubStatus="pmc-release">
-                <Year>2011</Year>
-                <Month>5</Month>
-                <Day>1</Day>
             </PubMedPubDate>
         </History>
         <PublicationStatus>ppublish</PublicationStatus>
@@ -7046,6 +7046,271 @@
             <ArticleId IdType="pii">MMI6800</ArticleId>
             <ArticleId IdType="doi">10.1111/j.1365-2958.2009.06800.x</ArticleId>
             <ArticleId IdType="pubmed">19627505</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">10467002</PMID>
+        <DateCreated>
+            <Year>1999</Year>
+            <Month>12</Month>
+            <Day>15</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>1999</Year>
+            <Month>12</Month>
+            <Day>15</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2009</Year>
+            <Month>11</Month>
+            <Day>19</Day>
+        </DateRevised>
+        <Article PubModel="Print">
+            <Journal>
+                <ISSN IssnType="Print">0172-8083</ISSN>
+                <JournalIssue CitedMedium="Print">
+                    <Volume>35</Volume>
+                    <Issue>6</Issue>
+                    <PubDate>
+                        <Year>1999</Year>
+                        <Month>Jul</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Current genetics</Title>
+                <ISOAbbreviation>Curr. Genet.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Gene ste20 controls amiloride sensitivity and fertility in Schizosaccharomyces pombe.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>585-92</MedlinePgn>
+            </Pagination>
+            <Abstract>
+                <AbstractText>It has been shown previously that amiloride, a widely used diuretic drug, inhibits growth in Schizosaccharomyces pombe. Here we show that the drug also alleviates repression by various nutrients of mating and sporulation in fission yeast. We selected spontaneous mutants that are amiloride-resistant and unable to mate and sporulate. One of them defines the gene ste20. This gene has been cloned and sequenced. It codes for a putative protein of 1309 amino acids. Its sequence does not provide any clues to its function. In contrast to the wild-type, mutants defective in this gene can grow in a medium containing 40 microm amiloride, do not arrest in G(1), and do not induce ste11 expression upon nitrogen starvation and thus are sterile. In addition the ste20 mutants are methylamine-sensitive, exhibit enhanced medium acidification and are defective in the utilization of gycerol as a carbon source.</AbstractText>
+            </Abstract>
+            <Affiliation>Institute of General Microbiology, University of Bern, Baltzerstrasse 4, CH-3012 Bern, Switzerland.</Affiliation>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Hilti</LastName>
+                    <ForeName>N</ForeName>
+                    <Initials>N</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Baumann</LastName>
+                    <ForeName>D</ForeName>
+                    <Initials>D</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Schweingruber</LastName>
+                    <ForeName>A M</ForeName>
+                    <Initials>AM</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Bigler</LastName>
+                    <ForeName>P</ForeName>
+                    <Initials>P</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Schweingruber</LastName>
+                    <ForeName>M E</ForeName>
+                    <Initials>ME</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType>Journal Article</PublicationType>
+                <PublicationType>Research Support, Non-U.S. Gov't</PublicationType>
+            </PublicationTypeList>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>UNITED STATES</Country>
+            <MedlineTA>Curr Genet</MedlineTA>
+            <NlmUniqueID>8004904</NlmUniqueID>
+            <ISSNLinking>0172-8083</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>Culture Media</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>Diuretics</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>Fungal Proteins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>Intracellular Signaling Peptides and Proteins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>Methylamines</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>Peptides</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>RNA-Binding Proteins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>Saccharomyces cerevisiae Proteins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>Schizosaccharomyces pombe Proteins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance>mei2 protein, S pombe</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>2609-46-3</RegistryNumber>
+                <NameOfSubstance>Amiloride</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>56-81-5</RegistryNumber>
+                <NameOfSubstance>Glycerol</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>61194-02-3</RegistryNumber>
+                <NameOfSubstance>mating factor</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>74-89-5</RegistryNumber>
+                <NameOfSubstance>methylamine</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>EC 2.7.1.37</RegistryNumber>
+                <NameOfSubstance>STE20 protein, S cerevisiae</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>EC 2.7.11.1</RegistryNumber>
+                <NameOfSubstance>Protein-Serine-Threonine Kinases</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>IM</CitationSubset>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Amiloride</DescriptorName>
+                <QualifierName MajorTopicYN="Y">pharmacology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Culture Media</DescriptorName>
+                <QualifierName MajorTopicYN="N">pharmacology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Diuretics</DescriptorName>
+                <QualifierName MajorTopicYN="Y">pharmacology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Drug Resistance, Microbial</DescriptorName>
+                <QualifierName MajorTopicYN="N">genetics</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Fertility</DescriptorName>
+                <QualifierName MajorTopicYN="N">drug effects</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Fungal Proteins</DescriptorName>
+                <QualifierName MajorTopicYN="N">genetics</QualifierName>
+                <QualifierName MajorTopicYN="N">physiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">G1 Phase</DescriptorName>
+                <QualifierName MajorTopicYN="N">genetics</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Gene Expression Regulation</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Genes, Fungal</DescriptorName>
+                <QualifierName MajorTopicYN="N">genetics</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Glycerol</DescriptorName>
+                <QualifierName MajorTopicYN="N">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Hydrogen-Ion Concentration</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Intracellular Signaling Peptides and Proteins</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Methylamines</DescriptorName>
+                <QualifierName MajorTopicYN="N">pharmacology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Microbial Sensitivity Tests</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Mutation</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Peptides</DescriptorName>
+                <QualifierName MajorTopicYN="N">drug effects</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Protein-Serine-Threonine Kinases</DescriptorName>
+                <QualifierName MajorTopicYN="Y">genetics</QualifierName>
+                <QualifierName MajorTopicYN="N">physiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">RNA-Binding Proteins</DescriptorName>
+                <QualifierName MajorTopicYN="N">genetics</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="Y">Saccharomyces cerevisiae Proteins</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Schizosaccharomyces</DescriptorName>
+                <QualifierName MajorTopicYN="N">drug effects</QualifierName>
+                <QualifierName MajorTopicYN="Y">genetics</QualifierName>
+                <QualifierName MajorTopicYN="N">physiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="Y">Schizosaccharomyces pombe Proteins</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N">Spores</DescriptorName>
+                <QualifierName MajorTopicYN="N">drug effects</QualifierName>
+            </MeshHeading>
+        </MeshHeadingList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>1999</Year>
+                <Month>8</Month>
+                <Day>31</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>1999</Year>
+                <Month>8</Month>
+                <Day>31</Day>
+                <Hour>0</Hour>
+                <Minute>1</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>1999</Year>
+                <Month>8</Month>
+                <Day>31</Day>
+                <Hour>0</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">10467002</ArticleId>
+            <ArticleId IdType="pii">90350585.294</ArticleId>
         </ArticleIdList>
     </PubmedData>
 </PubmedArticle>
