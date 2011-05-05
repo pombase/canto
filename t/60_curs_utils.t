@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 16;
 
 use PomCur::TestUtil;
 use PomCur::Curs::Utils;
@@ -56,5 +56,5 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
   my @annotations =
     PomCur::Curs::Utils::get_existing_annotations($config, $options);
 
-  is (@annotations, 2);
+  is (@annotations, 0);
 }
