@@ -90,7 +90,7 @@ sub _process_gene_row
 
   my $organism = $self->organism();
 
-  $schema->resultset('Gene')->find_or_create(
+  $schema->resultset('Gene')->create(
     {
       primary_identifier => $primary_identifier,
       product => $product,
