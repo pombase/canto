@@ -1,0 +1,52 @@
+<%args>
+$object
+$context
+</%args>
+
+<div class="curs-external-links">
+% if (@url_details) {
+%   for my $url_detail (@url_details) {
+  <div class="curs-external-link">
+    <a href="<% $url_detail->{url} %>">
+%     if (defined $url_detail->{icon}) {
+      <img src="<% $url_detail->{icon} %>"/>
+%     }
+      <% $url_detail->{name} %>
+    </a>
+  </div>
+%   }
+% }
+</div>
+
+<%init>
+my $context_config = $c->config()->{external_links}->{$context};
+
+my @url_configs = ();
+
+if (defined $context_config) {
+  if (ref $context_config eq 'HASH') {
+    if ($object->can('organism') &&
+        defined (my $org_full_name = $object->organism()->full_name())) {
+      if (exists $context_config->{$org_full_name}) {
+        @url_configs = @{$context_config->{$org_full_name}};
+      }
+    }
+  } else {
+    @url_configs = @{$context_config};
+  }
+}
+
+my @url_details = map {
+  my $url = PomCur::WebUtil::substitute_paths($_->{url}, $object);
+  my $icon = $_->{icon};
+
+  if ($icon !~ m{^http://}) {
+    $icon = $c->uri_for("/static/images/logos/$icon");
+  }
+  {
+    url => $url,
+    name => $_->{name},
+    icon => $icon,
+  }
+} @url_configs;
+</%init>

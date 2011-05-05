@@ -30,6 +30,9 @@ Publication details
       </tr>
     </table>
   </div>
+
+<& /linkouts.mhtml, object => $pub, context => 'pub' &>
+
 </div>
 
 <button id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>

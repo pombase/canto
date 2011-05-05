@@ -53,6 +53,9 @@ Details for <% $gene->display_name() %>
       </tr>
     </table>
   </div>
+
+<& /linkouts.mhtml, object => $gene, context => 'gene' &>
+
 </div>
 
 <button id="curs-finish-gene" class="curs-finish-button">Change gene</button>

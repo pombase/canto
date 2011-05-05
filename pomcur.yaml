@@ -745,3 +745,14 @@ help_text:
     inline: >
       Once you have selected a gene to annotate you will be presented with a
       set of annotation options
+
+external_links:
+  gene:
+    Schizosaccharomyces pombe:
+      - name: GeneDB
+        icon: genedb.gif
+        url: 'http://old.genedb.org/genedb/Search?organism=pombe&name=@@primary_identifier@@'
+  pub:
+    - name: PubMed
+      icon: PubMed_logo_small.png
+      url: 'http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&dopt=Abstract&list_uids=@@uniquename@@'

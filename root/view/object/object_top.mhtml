@@ -9,6 +9,8 @@ $class_info
 
 <% $m->content() %>
 
+<& /linkouts.mhtml, object => $object, context => $class_info->{source} &>
+
 <div class="plugins">
 % for my $plugin_conf (@object_plugins) {
   <div class="plugin">

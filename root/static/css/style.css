@@ -750,3 +750,11 @@ span.pomcur-select-buttons {
 .ui-dialog .ui-dialog-titlebar {
    padding: .2em 1em .1em;
 }
+
+.curs-external-link {
+  float: right;
+  display: inline;
+}
+.curs-external-link a img {
+  height: 20px;
+}
