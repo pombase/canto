@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use PomCur::TestUtil;
 use PomCur::Curs::Utils;
