@@ -80,6 +80,7 @@ sub lookup
   my %args = %{$args_ref};
 
   my $pub_uniquename = $args{pub_uniquename};
+  my $gene_identifier = $args{gene_identifier};
   my $ontology_name = $args{ontology_name};
 
   die "no ontology_name" unless defined $ontology_name;
@@ -116,9 +117,13 @@ sub lookup
     my $cv = $schema->find_with_type('Cv', name => $db_ontology_name);
     my $constraint = { pub_id => $pub->pub_id(),
                        'cvterm.cv_id' => $cv->cv_id() };
+    if (defined $gene_identifier) {
+      $constraint->{'feature.uniquename'} = $gene_identifier;
+    }
+
     my $options = { prefetch => [ { feature => 'organism' },
                                   { cvterm => [ 'cv', { dbxref => 'db' } ] } ],
-                    join => 'cvterm' };
+                    join => ['cvterm', 'feature'] };
     my $rs = $schema->resultset('FeatureCvterm')->search($constraint, $options);
     my $taxonid_cache = {};
 
