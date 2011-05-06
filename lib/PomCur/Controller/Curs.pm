@@ -83,7 +83,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $schema = PomCur::Curs::get_schema($c);
 
   if (!defined $schema) {
-    $c->res->redirect('/404');
+    $c->res->redirect($c->uri_for('/404'));
     $c->detach();
   }
 
