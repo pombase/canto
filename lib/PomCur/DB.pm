@@ -126,7 +126,7 @@ sub find_with_type
   my $self = shift;
   my ($type, $arg, $value) = validate_pos(@_, 1, 1, 0);
 
-  $type = ucfirst $type;
+  $type = _make_short_classname($type);
 
   my $rs = $self->resultset($type);
 
@@ -171,9 +171,11 @@ sub create_with_type
   my $self = shift;
   my ($type, $field_data) = validate_pos(@_, 1, 1);
 
+  $type = _make_short_classname($type);
+
   my $rs = $self->resultset($type);
 
-  my $obj = undef;
+ my $obj = undef;
 
   eval {
     $obj = $rs->create($field_data);
@@ -211,6 +213,8 @@ sub find_or_create_with_type
   my $self = shift;
   my ($type, $field_data) = validate_pos(@_, 1, 1);
 
+  $type = _make_short_classname($type);
+
   my $rs = $self->resultset($type);
 
   my $obj = undef;
@@ -232,6 +236,15 @@ sub find_or_create_with_type
   }
 }
 
+sub _make_short_classname
+{
+  my $table = shift;
+
+  (my $class_name = $table) =~ s/_(\w)/uc $1/eg;
+
+  return ucfirst $class_name;
+}
+
 =head2 class_name_of_table
 
  Usage   : my $class_name = PomCur::DB->class_name_of_table($table_name);
@@ -244,11 +257,10 @@ sub class_name_of_table
 {
   die if @_ != 2;
   my $self = shift;
-  my $class_name = shift;
+  my $class_name = _make_short_classname(shift);
   my $db_name = ref($self) || $self;
 
-  $class_name =~ s/_(\w)/uc $1/eg;
-  return $db_name . '::' . ucfirst $class_name;
+  return $db_name . '::' . $class_name;
 }
 
 =head2 table_name_of_class
