@@ -205,8 +205,6 @@ sub get_list_rs
 
   my $rs = $schema->resultset($class_name)->search($search, $params);
 
-  my $user_role = undef;
-
   my @column_confs =
     PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
 
