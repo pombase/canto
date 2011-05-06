@@ -210,6 +210,8 @@ sub get_list_rs
   my @column_confs =
     PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
 
+  $rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
+
   return $rs;
 }
 
