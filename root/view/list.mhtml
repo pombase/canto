@@ -68,6 +68,8 @@ my $table = $class_info->{source};
 my @column_confs =
   PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
 
+$rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
+
 $st->{column_confs} = [@column_confs];
 
 for my $col_conf (@column_confs) {
