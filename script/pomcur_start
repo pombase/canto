@@ -76,7 +76,7 @@ $app = Plack::Middleware::ReverseProxy->wrap($app);
 my $type_re = qr!^image/|^application/javascript$|^text/css$!;
 $app = Plack::Middleware::Expires->wrap($app,
                                         content_type => $type_re,
-                                        expires => 'modification plus 1 year');
+                                        expires => 'modification plus 1 day');
 
 if ($ENV{PLACK_DEBUG}) {
   $app = Plack::Middleware::Debug->wrap($app);
