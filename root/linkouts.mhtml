@@ -11,7 +11,7 @@ $context
 %     if (defined $url_detail->{icon}) {
       <img src="<% $url_detail->{icon} %>"/>
 %     }
-      <% $url_detail->{name} %>
+      <img src="<% $link_img_src %>"/>
     </a>
   </div>
 %   }
@@ -49,4 +49,6 @@ my @url_details = map {
     icon => $icon,
   }
 } @url_configs;
+
+my $link_img_src = $c->uri_for("/static/images/ext_link.png");
 </%init>

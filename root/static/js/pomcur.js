@@ -27,13 +27,15 @@ var ferret_choose = {
   // selected term, the other elements are the history/trail
   term_history : [undefined],
   term_detail_cache : {},
+  annotation_type: undefined,
 
   // the synonym we match when searching, if any
   matching_synonym : undefined,
 
-  initialise : function(current_component) {
+  initialise : function(annotation_type) {
     ferret_choose.ontology_complete_url =
-      application_root + 'ws/lookup/go/' + current_component;
+      application_root + 'ws/lookup/go/' + annotation_type;
+    ferret_choose.annotation_type = annotation_type;
   },
 
   debug : function(message) {
@@ -284,6 +286,30 @@ var ferret_choose = {
         ferret_choose.show_leaf();
       } else {
         ferret_choose.show_children();
+      }
+
+      var link_confs = ontology_external_links[ferret_choose.annotation_type];
+      if (link_confs) {
+        var html = '';
+        $.each(link_confs, function(idx, link_conf) {
+          var url = link_conf['url'];
+          var re = /(@@term_ont_id@@)/;
+          url = url.replace(re, term_id);
+          var img_src =
+            application_root + 'static/images/logos/' +
+            link_conf['icon'];
+          var title = link_conf['title'];
+          html += '<div class="curs-external-link"><a href="' +
+            url + '">';
+          if (img_src) {
+            html += '<img alt="' + title + '" src="' + img_src + '"/></a>'
+          } else {
+            html += title;
+          }
+          var link_img_src = application_root + 'static/images/ext_link.png';
+          html += '<img src="' + link_img_src + '"/></div>';
+        });
+        $('#ferret-linkouts').html(html);
       }
     }
 

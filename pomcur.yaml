@@ -756,3 +756,26 @@ external_links:
     - name: PubMed
       icon: PubMed_logo_small.png
       url: 'http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&dopt=Abstract&list_uids=@@uniquename@@'
+
+ontology_external_links:
+  cellular_component:
+    - name: AmiGO
+      icon: amigo.png
+      url: 'http://amigo.geneontology.org/cgi-bin/amigo/term_details?term=@@term_ont_id@@'
+    - name: QuickGO
+      icon: quickgo.png
+      url: 'http://www.ebi.ac.uk/QuickGO/GTerm?id=@@term_ont_id@@#term=ancchart'
+  molecular_function:
+    - name: AmiGO
+      icon: amigo.png
+      url: 'http://amigo.geneontology.org/cgi-bin/amigo/term_details?term=@@term_ont_id@@'
+    - name: QuickGO
+      icon: quickgo.png
+      url: 'http://www.ebi.ac.uk/QuickGO/GTerm?id=@@term_ont_id@@#term=ancchart'
+  biological_process:
+    - name: AmiGO
+      icon: amigo.png
+      url: 'http://amigo.geneontology.org/cgi-bin/amigo/term_details?term=@@term_ont_id@@'
+    - name: QuickGO
+      icon: quickgo.png
+      url: 'http://www.ebi.ac.uk/QuickGO/GTerm?id=@@term_ont_id@@#term=ancchart'

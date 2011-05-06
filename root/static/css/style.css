@@ -754,7 +754,8 @@ span.pomcur-select-buttons {
 .curs-external-link {
   float: right;
   display: inline;
+  clear: right;
 }
 .curs-external-link a img {
-  height: 20px;
+  height: 16px;
 }

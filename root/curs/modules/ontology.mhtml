@@ -92,6 +92,10 @@ Please read the definition of the currently selected term to ensure that
 it accurately describes your gene:
       </div>
       <div class="curs-box-body">
+<div id="ferret-linkouts" class="curs-external-links">
+
+</div>
+
         <table class="curs-definition-table">
           <tr>
             <td class="title">ID</td>
@@ -172,3 +176,14 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
     </div>
   </form>
 </div>
+
+<script language="javascript" type="text/javascript">
+var ontology_external_links = <% $ontology_external_links_json %>;
+</script>
+
+<%init>
+use JSON;
+
+my $ontology_external_links_json =
+  encode_json $c->config()->{ontology_external_links};
+</%init>
