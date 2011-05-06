@@ -1,0 +1,10 @@
+<%args>
+$rs
+$config_name
+$list_title
+$disclosed => 1  # true will make the list default to visible
+</%args>
+
+<& list.mhtml, rs => $rs, config_name => $config_name,
+               list_title => $list_title, is_inline => 1,
+               disclosed => $disclosed &>
