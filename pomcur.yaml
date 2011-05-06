@@ -447,9 +447,17 @@ class_info:
           editable: 1
         - name: description
           editable: 1
-        - name: urlprefix
-          editable: 1
         - name: url
+          editable: 1
+    dbxref:
+      editable: 1
+      display_field: accession
+      field_info_list:
+        - name: accession
+          editable: 1
+        - name: description
+          editable: 1
+        - name: db
           editable: 1
     genes:
       extends: feature
