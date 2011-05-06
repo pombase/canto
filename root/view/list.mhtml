@@ -3,6 +3,7 @@ $rs
 $config_name
 $list_title
 $disclosed => 1  # true will make the list default to visible
+$is_inline
 </%args>
 
 <div class="sect">
@@ -68,6 +69,8 @@ my $table = $class_info->{source};
 my @column_confs =
   PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
 
+$rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
+
 $st->{column_confs} = [@column_confs];
 
 for my $col_conf (@column_confs) {
@@ -87,9 +90,11 @@ for my $col_conf (@column_confs) {
 while (my $obj = $rs->next()) {
   push @rows, $obj;
 
-  if ($count++ > $max_inline_results_length) {
-    $max_results_flag = 1;
-    last;
+  if ($is_inline) {
+    if ($count++ > $max_inline_results_length) {
+      $max_results_flag = 1;
+      last;
+    }
   }
 }
 

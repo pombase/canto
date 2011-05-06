@@ -8,7 +8,7 @@ $class_info
 </&>
 
 <div id="collections">
-  <& /view/list.mhtml, type => 'pub', rs => $pubs_rs,
+  <& /view/inline_list.mhtml, type => 'pub', rs => $pubs_rs,
     list_title => "Publications with this property" &>
 </div>
 

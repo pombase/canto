@@ -8,7 +8,7 @@ $class_info
 </div>
 
 <div id="collections">
-  <& /view/list.mhtml, config_name => 'feature', rs => $features_rs,
+  <& /view/inline_list.mhtml, config_name => 'feature', rs => $features_rs,
     list_title => 'Features annotated with this cvterm' &>
 </div>
 

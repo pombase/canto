@@ -40,7 +40,7 @@ Number of rows to display
 </div>
 
 <& /view/list.mhtml, config_name => $config_name, rs => $page_rs,
-  list_title => '',
+  list_title => '', is_inline => 0,
   numrows => $numrows, page => $page, column_confs => \@column_confs &>
 
 % if ($pager->last_page() > 1) {

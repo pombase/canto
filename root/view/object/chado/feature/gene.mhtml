@@ -4,7 +4,7 @@ $class_info
 </%args>
 
 <div id="collections">
-  <& /view/list.mhtml, config_name => 'cvterm', rs => $cvterms_rs,
+  <& /view/inline_list.mhtml, config_name => 'cvterm', rs => $cvterms_rs,
                        class_info => $class_info,
                        list_title => 'Controlled vocabulary terms for this gene' &>
 </div>

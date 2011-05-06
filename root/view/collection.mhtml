@@ -8,7 +8,7 @@ $disclosed => 1
 % if ($error) {
   <% $error %>
 % } else {
-  <& list.mhtml, rs => $rs, config_name => $collection_table_name,
+  <& inline_list.mhtml, rs => $rs, config_name => $collection_table_name,
      list_title => $collection_title, disclosed => $disclosed &>
 % }
 
@@ -26,6 +26,10 @@ eval {
     PomCur::DB::class_name_of_relationship($object, $collection_name);
   $collection_table_name = PomCur::DB::table_name_of_class($collection_type);
   $rs = $object->$collection_name();
+
+  my $class_info = $c->config()->class_info($c)->{$collection_table_name};
+
+  $rs = PomCur::Controller::View::order_list_rs($c, $rs, $class_info);
 
   if (! defined $collection_title) {
     $collection_title = ucfirst $collection_name;

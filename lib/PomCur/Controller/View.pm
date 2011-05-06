@@ -75,7 +75,12 @@ sub get_object_by_id_or_name
     }
   }
 
-  my ($rs) = get_list_rs($c, $search, $class_info);
+  my $rs = get_list_rs($c, $search, $class_info);
+
+  my @column_confs =
+    PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
+
+  $rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
 
   return $rs->first();
 }
@@ -185,6 +190,23 @@ sub object : Local
   }
 }
 
+sub order_list_rs
+{
+  my $c = shift;
+  my $rs = shift;
+  my $class_info = shift;
+
+  my $table = $class_info->{source};
+  my $params = { order_by => _get_order_by_field($c, $table) };
+
+  if (defined $class_info->{constraint}) {
+    my $constraint = '(' . $class_info->{constraint} . ')';
+    $params->{where} = \$constraint;
+  }
+
+  return $rs->search({}, $params);
+}
+
 sub get_list_rs
 {
   my $c = shift;
@@ -196,21 +218,9 @@ sub get_list_rs
   my $table = $class_info->{source};
   my $class_name = $schema->class_name_of_table($table);
 
-  my $params = { order_by => _get_order_by_field($c, $table) };
+  my $rs = $schema->resultset($class_name)->search($search);
 
-  if (defined $class_info->{constraint}) {
-    my $constraint = '(' . $class_info->{constraint} . ')';
-    $params->{where} = \$constraint;
-  }
-
-  my $rs = $schema->resultset($class_name)->search($search, $params);
-
-  my @column_confs =
-    PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
-
-  $rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
-
-  return $rs;
+  return order_list_rs($c, $rs, $class_info);
 }
 
 =head2 list
