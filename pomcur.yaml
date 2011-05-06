@@ -17,7 +17,7 @@ authentication:
         user_class: TrackModel::Person
 
 view_options:
-  max_inline_results_length: 100
+  max_inline_results_length: 50
 
 # see PomCur::Meta::Util::initialise_core_data()
 db_initial_data:
