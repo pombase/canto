@@ -16,6 +16,7 @@ $pub
 Publication details
   </div>
   <div class="curs-box-body">
+<& /linkouts.mhtml, object => $pub, context => 'pub' &>
     <table class="curs-definition-table">
       <tr>
         <td class="title"><% $uniquename_desc %></td>
@@ -30,9 +31,6 @@ Publication details
       </tr>
     </table>
   </div>
-
-<& /linkouts.mhtml, object => $pub, context => 'pub' &>
-
 </div>
 
 <button id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>

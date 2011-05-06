@@ -38,6 +38,7 @@ Choose curation type for <% $gene->display_name() %>:
 Details for <% $gene->display_name() %>
   </div>
   <div class="curs-box-body">
+<& /linkouts.mhtml, object => $gene, context => 'gene' &>
     <table class="curs-definition-table">
       <tr>
         <td class="title">Identifier</td>
@@ -53,9 +54,6 @@ Details for <% $gene->display_name() %>
       </tr>
     </table>
   </div>
-
-<& /linkouts.mhtml, object => $gene, context => 'gene' &>
-
 </div>
 
 <button id="curs-finish-gene" class="curs-finish-button">Change gene</button>
