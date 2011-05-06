@@ -274,7 +274,7 @@ var ferret_choose = {
 
       $.each(children, function(idx, child) {
         var img_html =
-          '<img src="' + application_root + '/static/images/right_arrow.png"/>';
+          '<img src="' + application_root + 'static/images/right_arrow.png"/>';
         children_html += '<li><a href="#' + child.id + '">' +
           child.name + img_html + '</li></a>';
       });
