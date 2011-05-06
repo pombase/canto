@@ -307,7 +307,7 @@ sub _get_order_by_field
   return $order_by;
 }
 
-=head2 list_collection
+=head2 collection
 
  Function: Render a collection from an object of a given type
  Args    : $type - the object class from the URL
