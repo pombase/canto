@@ -41,9 +41,10 @@ __PACKAGE__->config(name => 'PomCur',
                       expose_stash => 'json_data',
                     },
                     static => {
+                      ignore_extensions => [ qw/html xhtml mhtml tt tt2 tmpl/ ],
                       dirs => [
                         'static'
-                       ],
+                      ],
                     },
                    );
 
