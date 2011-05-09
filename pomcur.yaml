@@ -669,9 +669,9 @@ annotation_type_list:
       - Cell growth assay
       - Other direct assay
     broad_term_suggestions: >
-      round, squishy
+      multinucleate, abnormal spindle, inviable
     specific_term_examples: >
-      slightly odd
+      growth auxotrophic for arginine, abnormal cytokinetic cell separation
     help_text: >
       A phenotype is any observable characteristic or trait of an organism;
       such as its morphology, development, biochemical or physiological
