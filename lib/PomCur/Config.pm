@@ -42,6 +42,8 @@ use YAML qw(LoadFile);
 use Clone qw(clone);
 use Carp;
 
+use Hash::Merge;
+
 use v5.005;
 
 use vars qw($VERSION);
@@ -108,12 +110,10 @@ sub merge_config
   my @file_names = @_;
 
   for my $file_name (@file_names) {
-    my %new_config = %{LoadFile($file_name)};
-    while (my($key, $value) = each %new_config) {
-      $self->{$key} = $value;
-    }
+    my $new_config = LoadFile($file_name);
+    my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+    $self = merge($self, $new_config);
   }
-
   $self->setup();
 }
 
