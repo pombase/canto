@@ -1,14 +1,9 @@
 <%args>
 $form
-$first_contact_email
-$first_contact_name
 </%args>
 
-<p>Please enter your name and email address to continue:</p>
-
 <div class="submitter-update">
+  <p>Please enter your name and email address to continue:</p>
+
   <% $form %>
 </div>
-
-<%init>
-</%init>
