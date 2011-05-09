@@ -13,6 +13,10 @@ var application_root = '<% $c->uri_for('/') %>';
 
 <div class="curs-content">
 
+<div id="curs-dialog" style="display: none">
+
+</div>
+
 % $m->call_next;
 
 </div>

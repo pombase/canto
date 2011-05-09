@@ -331,14 +331,15 @@ var ferret_choose = {
 
 var curs_home = {
   show_term_suggestion : function(term_ontid, name, definition) {
+    var dialog_div = $('#curs-dialog');
     var html = '<div> Term name:' +
       '<span class="term-name">' + name + '</span></div>' +
       'Definition: <div class="term-definition">' + definition +
       '</div></div>';
-    $('#term-suggestion').html(html);
-    $('#term-suggestion').dialog({ modal: true,
-                                   title: 'Child term suggestion for ' +
-                                     term_ontid});
+    $('#curs-dialog').html(html);
+    $('#curs-dialog').dialog({ modal: true,
+                               title: 'Child term suggestion for ' +
+                               term_ontid});
   }
 };
 
