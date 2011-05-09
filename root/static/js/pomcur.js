@@ -518,7 +518,7 @@ $(document).ready(function() {
   });
 
   $('#curs-finish-publication').click(function () {
-    window.location.href = curs_root_uri + '/finish_publication';
+    window.location.href = curs_root_uri + '/finish_form';
   });
 
   $('#curs-finish-gene').click(function () {

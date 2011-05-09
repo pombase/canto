@@ -1,6 +1,7 @@
 # PomCur config file  -*- conf -*-
 name: PomCur
 long_name: Pombe community curation application
+database_name: PomBase
 
 app_version: v186
 
@@ -735,6 +736,11 @@ messages:
     examples:
       gene_identifier: 'SPCC1739.10'
       gene_name: 'cdc11'
+  finish_form: >
+      Thank you for your annotations, which will now be sent to the
+      curators for inclusion in the database.  If you have further
+      information about the publication that would like send to the
+      curators, please include it below.
 
 test_config_file: 't/test_config.yaml'
 

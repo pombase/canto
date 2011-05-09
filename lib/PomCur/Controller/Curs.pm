@@ -1260,6 +1260,72 @@ sub annotation_zipexport : Chained('top') PathPart('annotation/zipexport') Args(
   }
 }
 
+sub finish_form : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $schema = $c->stash()->{schema};
+  my $config = $c->config();
+
+  my $finished_text_key = 'finished_text';
+
+  if (get_metadata($schema, $finished_text_key)) {
+    _redirect_and_detach($c, 'finished_publication');
+  }
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Finish publication';
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/finish_form.mhtml';
+
+  $st->{finish_help} = $c->config()->{messages}->{finish_form};
+
+  my $form = $self->form();
+  my @submit_buttons = ("Submit");
+
+  my $finish_textarea = 'finish_textarea';
+
+  my @all_elements = (
+      { name => $finish_textarea, type => 'Textarea', cols => 80, rows => 20
+      },
+      map {
+          {
+            name => $_, type => 'Submit', value => $_,
+              attributes => { class => 'button', },
+            }
+        } @submit_buttons,
+    );
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $text = $form->param_value($finish_textarea);
+    $text =~ s/^\s+//;
+    $text =~ s/\s+$//;
+
+    $schema->create_with_type('Metadata', { key => 'finished_text',
+                                            value => $text });
+
+    _redirect_and_detach($c, 'finished_publication');
+  }
+}
+
+sub finished_publication : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Finished publication';
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/finished_publication.mhtml';
+}
+
 sub end : Private
 {
   my ($self, $c) = @_;
