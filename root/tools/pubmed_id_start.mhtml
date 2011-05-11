@@ -1,0 +1,20 @@
+<%args>
+
+</%args>
+
+<form id="pubmed-id-lookup"
+      action="<% $c->uri_for('/tools/pubmed_id_lookup') %>" method="get">
+  <input name="pubmed-id-lookup-input" id="pubmed-id-lookup-input"/>
+  <input type="submit" id="pubmed-id-lookup-submit"
+         name="pubmed-id-lookup-submit" value="Lookup ..."/>
+</form>
+
+<div id="pubmed-id-lookup-waiting">
+  <img class="ajax-spinner"
+       src="<% $c->uri_for('/static/images/spinner.gif') %>"/>
+</div>
+
+<div id="pubmed-id-lookup-results">
+
+</div>
+

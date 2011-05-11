@@ -3,6 +3,7 @@ package PomCur::Controller::Tools;
 use strict;
 use warnings;
 use parent 'Catalyst::Controller';
+use Package::Alias PubmedUtil => 'PomCur::Track::PubmedUtil';
 
 sub _get_status_cv
 {
@@ -120,6 +121,72 @@ sub triage :Local {
     $c->res->redirect($c->uri_for('/'));
     $c->detach();
   }
+}
+
+sub _load_one_pub
+{
+  my $config = shift;
+  my $schema = shift;
+  my $pubmedid = shift;
+
+  my $raw_pubmedid;
+
+  if ($pubmedid =~ /^\s*(?:pmid:|pubmed:)?(\d+)\s*$/i) {
+    $raw_pubmedid = $1;
+    $pubmedid = "PMID:$1";
+  } else {
+    my $message = 'You need to give the raw numeric ID, or the ID ' .
+      'prefixed by "PMID:" or "PubMed:"' . "  $pubmedid";
+    return (undef, $message);
+  }
+
+  my $pub = $schema->resultset('Pub')->find({ uniquename => $pubmedid });
+
+  if (defined $pub) {
+    return ($pub, undef);
+  } else {
+    my $xml = PubmedUtil::get_pubmed_xml_by_ids($config, $raw_pubmedid);
+
+    my $count = PubmedUtil::load_pubmed_xml($schema, $xml);
+
+    if ($count) {
+      $pub = $schema->resultset('Pub')->find({ uniquename => $pubmedid });
+      return ($pub, undef);
+    } else {
+      my $message = "No publication found in PubMed with ID: $pubmedid";
+      return (undef, $message);
+    }
+  }
+}
+
+sub pubmed_id_lookup : Local Form {
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{template} = 'tools/pubmed_id_lookup.mhtml';
+
+  my $pubmedid = $c->req()->param('pubmed-id-lookup-input');
+
+  if (!defined $pubmedid) {
+    $st->{message} = 'No PubMed ID given';
+    return;
+  }
+
+  my ($pub, $message) =
+    _load_one_pub($c->config, $c->schema('track'), $pubmedid);
+
+  $st->{pub} = $pub;
+  $st->{message} = $message;
+}
+
+sub pubmed_id_start : Local {
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Lookup a publication using a PubMed ID';
+  $st->{template} = 'tools/pubmed_id_start.mhtml';
 }
 
 

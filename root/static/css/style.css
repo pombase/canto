@@ -756,3 +756,24 @@ span.pomcur-select-buttons {
   display: inline;
   clear: right;
 }
+
+#pubmed-id-lookup-results {
+  clear: left;
+  padding-top: 20px;
+}
+
+#pubmed-id-lookup {
+  display: inline;
+  float: left;
+}
+
+#pubmed-id-lookup-waiting {
+  display: inline;
+  float: left;
+}
+
+.ajax-spinner {
+  margin-bottom: -10px;
+  margin-left: 15px;
+  display: none;
+}

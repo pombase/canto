@@ -529,4 +529,14 @@ $(document).ready(function() {
     $('#curs-contact-curators-dialog').dialog({ modal: true,
                                                 width: '50em' });
   });
+
+  $('#pubmed-id-lookup').ajaxForm({
+    target: '#pubmed-id-lookup-results',
+    beforeSubmit: function() {
+      $('#pubmed-id-lookup-waiting .ajax-spinner').show();
+    },
+    success: function() {
+      $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
+    }
+  });
 });

@@ -131,3 +131,6 @@ test_config:
                evidence_code: MIU
                term_ontid: PP:00004
 
+external_sources:
+  pubmed_efetch_url: 'pubmed_18910671.xml'
+  

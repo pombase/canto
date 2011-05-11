@@ -1,0 +1,18 @@
+<%args>
+$pub => undef
+$message => undef
+</%args>
+
+% if (defined $message) {
+<div>
+  <span class="error_constraint_required">
+    <% $message %>
+  </span>
+</div>
+% } else {
+  <% $pub->title() %>
+% }
+
+<%flags>
+inherit => undef
+</%flags>
