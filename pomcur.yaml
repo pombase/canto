@@ -3,7 +3,7 @@ name: PomCur
 long_name: Pombe community curation application
 database_name: PomBase
 
-app_version: v186
+app_version: v188
 
 authentication:
   default_realm: 'members'
@@ -276,7 +276,7 @@ class_info:
           editable: 1
     pub_curation_status:
       class_display_name: publication curation status
-      display_field: status_summary
+      display_field: status_id
       editable: 1
       field_info_list:
         - name: publication

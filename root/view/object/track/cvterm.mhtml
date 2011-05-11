@@ -9,7 +9,8 @@ $class_info
 
 <div id="collections">
 % if ($pubs_triage_status_rs->count() > 0) {
-  <& /view/inline_list.mhtml, type => 'pub', rs => $pubs_triage_status_rs,
+  <& /view/inline_list.mhtml, rs => $pubs_triage_status_rs,
+    config_name => 'pub',
     list_title => "Publications with this triage status" &>
 % }
 </div>
