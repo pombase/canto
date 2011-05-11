@@ -61,6 +61,7 @@ requires 'Archive::Zip';
 requires 'File::Basename';
 requires 'Getopt::Long';
 requires 'Data::Dumper';
+requires 'Hash::Merge';
 
 requires 'Config::General';
 
