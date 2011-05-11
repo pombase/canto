@@ -112,7 +112,9 @@ sub merge_config
   for my $file_name (@file_names) {
     my $new_config = LoadFile($file_name);
     my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
-    $self = merge($self, $new_config);
+    my $new = $merge->merge({%$self}, $new_config);
+    %$self = %$new;
+
   }
   $self->setup();
 }
