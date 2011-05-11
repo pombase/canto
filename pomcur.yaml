@@ -308,7 +308,7 @@ class_info:
       display_field: curs_key
       editable: 1
       field_info_list:
-        - name: curator
+        - name: assigned_curator
           editable: 1
         - name: publication
           editable: 0

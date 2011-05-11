@@ -144,7 +144,7 @@ Related object: L<PomCur::TrackDB::Curs>
 __PACKAGE__->has_many(
   "curs",
   "PomCur::TrackDB::Curs",
-  { "foreign.curator" => "self.person_id" },
+  { "foreign.assigned_curator" => "self.person_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -164,8 +164,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-23 13:36:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:70J2cJgsRTqxqflFlB6qaQ
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-11 15:27:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oJyZpr4Tt6jHHBDT+xUA6w
 
 __PACKAGE__->meta->make_immutable;
 1;
