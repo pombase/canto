@@ -131,6 +131,8 @@ sub _load_one_pub
 
   my $raw_pubmedid;
 
+  $pubmedid =~ s/\s+//g;
+
   if ($pubmedid =~ /^\s*(?:pmid:|pubmed:)?(\d+)\s*$/i) {
     $raw_pubmedid = $1;
     $pubmedid = "PMID:$1";
