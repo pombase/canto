@@ -557,6 +557,7 @@ $(document).ready(function() {
   $('#pubmed-id-lookup-reset').click(function () {
     $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
     $('#pubmed-id-lookup-pub-results').hide();
+    $('#pubmed-id-lookup-input').val('');
     $('#pubmed-id-lookup-form').show();
   });
 
