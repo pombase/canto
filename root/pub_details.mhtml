@@ -1,0 +1,36 @@
+<%args>
+$pub
+</%args>
+
+<div class="pub-title curs-box">
+  <div class="curs-box-title">
+Publication details
+  </div>
+  <div class="curs-box-body">
+<& /linkouts.mhtml, object => $pub, context => 'pub' &>
+    <table class="curs-definition-table">
+      <tr>
+        <td class="title"><% $uniquename_desc %></td>
+        <td><% $pub->uniquename() %></td>
+      </tr>
+      <tr>
+        <td class="title">Title</td>
+        <td><% $pub->title() %></td>
+      </tr>
+      <tr>
+        <td class="title">Authors</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<%init>
+my $uniquename_desc;
+
+if ($pub->uniquename() =~ /PMID/) {
+  $uniquename_desc = 'ID';
+} else {
+  $uniquename_desc = 'Database ID';
+}
+
+</%init>

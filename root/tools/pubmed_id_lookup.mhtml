@@ -10,7 +10,7 @@ $message => undef
   </span>
 </div>
 % } else {
-  <% $pub->title() %>
+<& /pub_details.mhtml, pub => $pub &>
 % }
 
 <%flags>
