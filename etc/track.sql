@@ -8,7 +8,8 @@ CREATE TABLE pub (
        title text,
        abstract text,
        authors text,
-       triage_status_id integer NOT NULL REFERENCES cvterm (cvterm_id)
+       triage_status_id integer NOT NULL REFERENCES cvterm (cvterm_id),
+       load_type_id integer NOT NULL REFERENCES cvterm (cvterm_id)
 );
 CREATE INDEX pub_triage_status_idx ON pub(triage_status_id);
 CREATE TABLE pubprop (
@@ -141,7 +142,7 @@ CREATE TABLE person (
 
 CREATE TABLE curs (
        curs_id integer NOT NULL PRIMARY KEY,
-       curator integer NOT NULL REFERENCES person (person_id),
+       assigned_curator integer REFERENCES person (person_id),
        pub integer NOT NULL REFERENCES pub (pub_id),
        curs_key text NOT NULL
 );

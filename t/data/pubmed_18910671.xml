@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2011//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_110101.dtd">
+<PubmedArticleSet>
+
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="OLDMEDLINE">
+        <PMID Version="1">18910671</PMID>
+        <DateCreated>
+            <Year>1948</Year>
+            <Month>12</Month>
+            <Day>01</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2008</Year>
+            <Month>10</Month>
+            <Day>16</Day>
+        </DateCompleted>
+        <Article PubModel="Print">
+            <Journal>
+                <JournalIssue CitedMedium="Print">
+                    <Volume>17</Volume>
+                    <Issue>1</Issue>
+                    <PubDate>
+                        <Year>1948</Year>
+                        <Month>Apr</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Archives of biochemistry</Title>
+                <ISOAbbreviation>Arch Biochem</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Studies on the nutritional requirements of Schizosaccharomyces pombe (2478).</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>3-9</MedlinePgn>
+            </Pagination>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>CLARK</LastName>
+                    <ForeName>F M</ForeName>
+                    <Initials>FM</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>BANISTER</LastName>
+                    <ForeName>N C</ForeName>
+                    <Initials>NC</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>MITCHELL</LastName>
+                    <ForeName>W R</ForeName>
+                    <Initials>WR</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType>Journal Article</PublicationType>
+            </PublicationTypeList>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>Not Available</Country>
+            <MedlineTA>Arch Biochem</MedlineTA>
+            <NlmUniqueID>15210080R</NlmUniqueID>
+        </MedlineJournalInfo>
+        <CitationSubset>OM</CitationSubset>
+        <OtherID Source="CLML">4814:863a</OtherID>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>1948</Year>
+                <Month>4</Month>
+                <Day>1</Day>
+                <Hour>0</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>1948</Year>
+                <Month>4</Month>
+                <Day>1</Day>
+                <Hour>0</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>1948</Year>
+                <Month>4</Month>
+                <Day>1</Day>
+                <Hour>0</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">18910671</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+</PubmedArticleSet>

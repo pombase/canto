@@ -185,6 +185,11 @@ sub track_init
                                     title => 'test title',
                                     type_id => 601,
                                     triage_status_id => 602,
+                                    load_type => { name => 'admin_load',
+                                                   cv => {
+                                                     name => 'Publication load types'
+                                                   }
+                                                 },
                                   });
   my $organism = $load_util->get_organism('Schizosaccharomyces', 'pombe', 4896);
 

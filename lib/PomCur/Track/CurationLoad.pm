@@ -89,7 +89,7 @@ sub _process_row
       $lab_head_email, $submitter_email) = @{$columns_ref};
 
   my $uniquename = $PomCur::Track::PubmedUtil::PUBMED_PREFIX . ":$pubmed_id";
-  my $pub = $self->load_util()->get_pub($uniquename);
+  my $pub = $self->load_util()->get_pub($uniquename, 'admin_load');
   my $lab_head = $self->load_util()->get_person($lab_head_name,
                                                 $lab_head_email, $user_cvterm);
   my $lab = $self->load_util()->get_lab($lab_head);

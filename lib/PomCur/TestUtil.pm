@@ -277,6 +277,31 @@ sub root_dir
   return $self->{root_dir};
 }
 
+=head2 test_data_dir_full_path
+
+ Usage   : my $test_util = PomCur::TestUtil->new();
+           my $root_dir = $test_util->test_data_dir_full_path();
+       or:
+           my $root_dir =
+             $test_util->test_data_dir_full_path('path_bit', $file_name);
+ Function: Return the full path to the test data directory, or in the second
+           form the full path to a file within the test data directory
+ Args    : none
+
+=cut
+sub test_data_dir_full_path
+{
+  my $self = shift;
+
+  my $data_dir = $self->config()->{test_config}->{data_dir};
+
+  if (@_) {
+    return $self->root_dir() . "/$data_dir/" . join ('/', @_);
+  } else {
+    return $self->root_dir() . "/$data_dir";
+  }
+}
+
 =head2 config
 
  Usage   : my $test_util = PomCur::TestUtil->new();
@@ -446,7 +471,7 @@ sub _load_extra_pubs
 
   map {
     my $uniquename = $PomCur::Track::PubmedUtil::PUBMED_PREFIX . ":$_";
-    $load_util->get_pub($uniquename);
+    $load_util->get_pub($uniquename, 'admin_load');
   } @extra_test_pubs;
 }
 
@@ -457,7 +482,7 @@ sub _add_pub_details
 
   my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_ids($config,
                                                              @test_pub_ids);
-  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml);
+  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'user_load');
 }
 
 =head2 make_base_track_db
@@ -739,7 +764,7 @@ sub make_curs_db
     PomCur::TestUtil::curs_key_of_test_case($curs_config);
 
   my $create_args = {
-    curator =>
+    assigned_curator =>
       _get_curator_object($trackdb_schema, $curs_config->{first_contact_email}),
     curs_key => $test_case_curs_key,
     pub => _get_pub_object($trackdb_schema, $curs_config->{uniquename}),

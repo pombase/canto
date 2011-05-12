@@ -82,8 +82,8 @@ sub create_curs_db
   my $connect_string = PomCur::Curs::make_connect_string($config, $curs_key);
   my $curs_schema = PomCur::CursDB->connect($connect_string);
 
-  my $first_contact_email = $curs->curator()->email_address();
-  my $first_contact_name = $curs->curator()->name();
+  my $first_contact_email;
+  my $first_contact_name;
 
   my $track_db_pub = $curs->pub();
   my $curs_db_pub =
@@ -94,9 +94,14 @@ sub create_curs_db
                                      abstract => $track_db_pub->abstract(),
                                    });
 
+  if (defined $curs->assigned_curator()) {
+    my $first_contact_name = $curs->assigned_curator()->name();
+    my $first_contact_email = $curs->assigned_curator()->email_address();
+    set_metadata($curs_schema, 'first_contact_email', $first_contact_email);
+    set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
+  }
+
   # the calling function will wrap this in a transaction if necessary
-  set_metadata($curs_schema, 'first_contact_email', $first_contact_email);
-  set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
   set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
   set_metadata($curs_schema, 'curs_key', $curs->curs_key());
 

@@ -3,6 +3,7 @@ package PomCur::Controller::Tools;
 use strict;
 use warnings;
 use parent 'Catalyst::Controller';
+use Package::Alias PubmedUtil => 'PomCur::Track::PubmedUtil';
 
 sub _get_status_cv
 {
@@ -122,6 +123,95 @@ sub triage :Local {
   }
 }
 
+sub _load_one_pub
+{
+  my $config = shift;
+  my $schema = shift;
+  my $pubmedid = shift;
+
+  my $raw_pubmedid;
+
+  $pubmedid =~ s/\s+//g;
+
+  if ($pubmedid =~ /^\s*(?:pmid:|pubmed:)?(\d+)\s*$/i) {
+    $raw_pubmedid = $1;
+    $pubmedid = "PMID:$1";
+  } else {
+    my $message = 'You need to give the raw numeric ID, or the ID ' .
+      'prefixed by "PMID:" or "PubMed:"' . "  $pubmedid";
+    return (undef, $message);
+  }
+
+  my $pub = $schema->resultset('Pub')->find({ uniquename => $pubmedid });
+
+  if (defined $pub) {
+    return ($pub, undef);
+  } else {
+    my $xml = PubmedUtil::get_pubmed_xml_by_ids($config, $raw_pubmedid);
+
+    my $count = PubmedUtil::load_pubmed_xml($schema, $xml, 'user_load');
+
+    if ($count) {
+      $pub = $schema->resultset('Pub')->find({ uniquename => $pubmedid });
+      return ($pub, undef);
+    } else {
+      my $message = "No publication found in PubMed with ID: $pubmedid";
+      return (undef, $message);
+    }
+  }
+}
+
+sub pubmed_id_lookup : Local Form {
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{template} = 'tools/pubmed_id_lookup.mhtml';
+
+  my $pubmedid = $c->req()->param('pubmed-id-lookup-input');
+
+  if (!defined $pubmedid) {
+    $st->{message} = 'No PubMed ID given';
+    return;
+  }
+
+  my ($pub, $message) =
+    _load_one_pub($c->config, $c->schema('track'), $pubmedid);
+
+  $st->{pub} = $pub;
+  $st->{message} = $message;
+}
+
+sub pubmed_id_start : Local {
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Find a publication to curate using a PubMed ID';
+  $st->{template} = 'tools/pubmed_id_start.mhtml';
+}
+
+sub start : Local Args(1) {
+  my ($self, $c, $pub_uniquename) = @_;
+
+  my $st = $c->stash();
+
+  my $schema = $c->schema('track');
+  my $config = $c->config();
+
+  my $pub = $schema->find_with_type('Pub', { uniquename => $pub_uniquename });
+  my $curs_key = PomCur::Curs::make_curs_key();
+
+  my $curs = $schema->create_with_type('Curs',
+                                       {
+                                         pub => $pub,
+                                         curs_key => $curs_key,
+                                       });
+
+  my $curs_schema = PomCur::Track::create_curs_db($config, $curs);
+
+  $c->res->redirect($c->uri_for("/curs/$curs_key"));
+}
 
 =head1 LICENSE
 

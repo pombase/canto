@@ -29,7 +29,7 @@ my $test_util = PomCur::TestUtil->new();
 
 my $config = PomCur::Config->new_test_config();
 
-$config->{data_directory} = $test_util->root_dir() . '/t/data';
+$config->{data_directory} = $test_util->test_data_dir_full_path();
 
 
 my %test_cases = %{$config->{test_config}->{test_cases}};

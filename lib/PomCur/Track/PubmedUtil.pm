@@ -44,6 +44,8 @@ use Text::CSV;
 use XML::Simple;
 use LWP::UserAgent;
 
+use PomCur::Track::LoadUtil;
+
 sub _get_url
 {
   my $config = shift;
@@ -119,6 +121,8 @@ our $PUBMED_PREFIX = "PMID";
  Args    : $schema - the schema to load into
            $xml - a string holding an XML fragment about containing some
                   publications from pubmed
+           $load_type - a cvterm from the "Publication load types" CV that
+                        records who is loading this publication
  Returns : the count of number of publications loaded
 
 =cut
@@ -126,6 +130,11 @@ sub load_pubmed_xml
 {
   my $schema = shift;
   my $content = shift;
+  my $load_type = shift;
+
+  if (!defined $load_type) {
+    croak("no load_type passed to load_pubmed_xml()");
+  }
 
   my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
@@ -168,7 +177,7 @@ sub load_pubmed_xml
       $abstract = $abstract_text;
     }
 
-    my $pub = $load_util->get_pub($uniquename);
+    my $pub = $load_util->get_pub($uniquename, $load_type);
 
     $pub->title($title);
     $pub->abstract($abstract);

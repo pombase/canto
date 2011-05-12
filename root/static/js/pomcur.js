@@ -529,4 +529,31 @@ $(document).ready(function() {
     $('#curs-contact-curators-dialog').dialog({ modal: true,
                                                 width: '50em' });
   });
+
+  $('#pubmed-id-lookup').ajaxForm({
+    target: '#pubmed-id-lookup-results',
+    beforeSubmit: function() {
+      $('#pubmed-id-lookup-waiting .ajax-spinner').show();
+    },
+    success: function() {
+      $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
+      $('#pubmed-id-lookup').hide();
+      $('#pubmed-id-lookup-results').show();
+      $('#pubmed-id-lookup-buttons').show();
+      $('#pubmed-id-lookup').data('pubmedid',
+                                  $('#pub-details-uniquename').html());
+    }
+  });
+
+  $('#pubmed-id-lookup-reset').click(function () {
+    $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
+    $('#pubmed-id-lookup-results').hide();
+    $('#pubmed-id-lookup').show();
+    $('#pubmed-id-lookup-buttons').hide();
+  });
+
+  $('#pubmed-id-lookup-curate').click(function () {
+    var pubmedid = $('#pubmed-id-lookup').data('pubmedid');
+    window.location.href = 'start/' + pubmedid;
+  });
 });
