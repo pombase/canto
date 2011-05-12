@@ -147,7 +147,7 @@ sub _load_one_pub
   } else {
     my $xml = PubmedUtil::get_pubmed_xml_by_ids($config, $raw_pubmedid);
 
-    my $count = PubmedUtil::load_pubmed_xml($schema, $xml);
+    my $count = PubmedUtil::load_pubmed_xml($schema, $xml, 'user_load');
 
     if ($count) {
       $pub = $schema->resultset('Pub')->find({ uniquename => $pubmedid });

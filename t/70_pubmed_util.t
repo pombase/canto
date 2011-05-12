@@ -52,7 +52,7 @@ for my $pub (@pub_results) {
 }
 
 my $xml = $test_util->get_pubmed_test_xml();
-my $count = PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml);
+my $count = PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
 
 is($count, 22);
 

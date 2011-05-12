@@ -471,7 +471,7 @@ sub _load_extra_pubs
 
   map {
     my $uniquename = $PomCur::Track::PubmedUtil::PUBMED_PREFIX . ":$_";
-    $load_util->get_pub($uniquename);
+    $load_util->get_pub($uniquename, 'admin_load');
   } @extra_test_pubs;
 }
 
@@ -482,7 +482,7 @@ sub _add_pub_details
 
   my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_ids($config,
                                                              @test_pub_ids);
-  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml);
+  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'user_load');
 }
 
 =head2 make_base_track_db

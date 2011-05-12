@@ -279,6 +279,8 @@ sub get_cvterm
  Usage   : my $pub = $load_util->get_pub($uniquename);
  Function: Find or create, and then return the object matching the arguments
  Args    : $uniquename - the PubMed ID
+           $load_type - a cvterm from the "Publication load types" CV that
+                        records who is loading this publication
  Returns : The new pub object
 
 =cut
@@ -286,8 +288,17 @@ sub get_pub
 {
   my $self = shift;
   my $uniquename = shift;
+  my $load_type = shift;
+
+  if (!defined $load_type) {
+    croak("no load_type passed to get_pub()");
+  }
 
   my $schema = $self->schema();
+
+  my $load_type_cv = $self->find_cv('PomCur publication load types');
+  my $load_type_term = $self->find_cvterm(cv => $load_type_cv,
+                                          name => $load_type);
 
   my $pub_type_cv = $self->find_cv('PomCur publication type');
   my $pub_type = $self->find_cvterm(cv => $pub_type_cv,
@@ -302,6 +313,7 @@ sub get_pub
         uniquename => $uniquename,
         type => $pub_type,
         triage_status => $pub_new_status,
+        load_type => $load_type_term,
       });
 }
 

@@ -170,6 +170,25 @@ db_initial_data:
               accession: experiment_type
               db:
                 name: PomCur
+      - name: PomCur publication load types
+        definition: >
+          Publications can be added to database by the administrator or by user
+          actions such as going to /tools/pubmed_id_start.  Types in this CV
+          record that information.  A publication loaded by user actions can be
+          removed if no curation session refers to it.
+        cvterms:
+          - name: user_load
+            definition: Type used for a publication loaded by a user action.
+            dbxref:
+              accession: user_load
+              db:
+                name: PomCur
+          - name: admin_load
+            definition: Type used for a publication loaded by the administrator.
+            dbxref:
+              accession: user_load
+              db:
+                name: PomCur
 
 class_info:
   track:
