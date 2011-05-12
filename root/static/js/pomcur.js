@@ -530,26 +530,34 @@ $(document).ready(function() {
                                                 width: '50em' });
   });
 
-  $('#pubmed-id-lookup').ajaxForm({
-    target: '#pubmed-id-lookup-results',
+  $('#pubmed-id-lookup-form').ajaxForm({
+    dataType: 'json',
     beforeSubmit: function() {
       $('#pubmed-id-lookup-waiting .ajax-spinner').show();
     },
-    success: function() {
+    success: function(data) {
       $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
-      $('#pubmed-id-lookup').hide();
-      $('#pubmed-id-lookup-results').show();
-      $('#pubmed-id-lookup-buttons').show();
-      $('#pubmed-id-lookup').data('pubmedid',
-                                  $('#pub-details-uniquename').html());
+      if (data.pub) {
+        $('#pub-details-uniquename').html(data.pub.uniquename);
+        $('#pub-details-title').html(data.pub.title);
+        $('#pub-details-authors').html(data.pub.authors);
+        $('#pub-details-abstract').html(data.pub.abstract);
+        $('#pubmed-id-lookup-form').hide();
+        $('#pubmed-id-lookup-message').hide();
+        $('#pubmed-id-lookup-pub-results').show();
+        $('#pubmed-id-lookup').data('pubmedid',
+                                    $('#pub-details-uniquename').html());
+      } else {
+        $('#pubmed-id-lookup-message').show();
+        $('#pubmed-id-lookup-message span').html(data.message);
+      }
     }
   });
 
   $('#pubmed-id-lookup-reset').click(function () {
     $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
-    $('#pubmed-id-lookup-results').hide();
-    $('#pubmed-id-lookup').show();
-    $('#pubmed-id-lookup-buttons').hide();
+    $('#pubmed-id-lookup-pub-results').hide();
+    $('#pubmed-id-lookup-form').show();
   });
 
   $('#pubmed-id-lookup-curate').click(function () {

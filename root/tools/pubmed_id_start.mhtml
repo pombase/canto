@@ -2,7 +2,7 @@
 
 </%args>
 
-<form id="pubmed-id-lookup"
+<form id="pubmed-id-lookup-form"
       action="<% $c->uri_for('/tools/pubmed_id_lookup') %>" method="get">
   <input name="pubmed-id-lookup-input" id="pubmed-id-lookup-input"/>
   <input type="submit" id="pubmed-id-lookup-submit"
@@ -14,10 +14,43 @@
        src="<% $c->uri_for('/static/images/spinner.gif') %>"/>
 </div>
 
-<div id="pubmed-id-lookup-results" style="display: none">
+<div id="pubmed-id-lookup-message" style="display: none">
+  <span class="error_constraint_required">
+    
+  </span>
 </div>
 
-<div id="pubmed-id-lookup-buttons" style="display: none">
-  <button id="pubmed-id-lookup-reset">Find another</button>
-  <button id="pubmed-id-lookup-curate">Start curating</button>
+<div id="pubmed-id-lookup-pub-results" style="display: none">
+  <div id="pubmed-id-lookup-pub-details">
+    <div class="pub-title curs-box">
+      <div class="curs-box-title">
+Publication details
+      </div>
+      <div class="curs-box-body">
+        <table class="curs-definition-table">
+          <tr>
+            <td class="title">ID</td>
+            <td id="pub-details-uniquename"></td>
+          </tr>
+          <tr>
+            <td class="title">Title</td>
+            <td id="pub-details-title"></td>
+          </tr>
+          <tr>
+            <td class="title">Authors</td>
+            <td id="pub-details-authors"></td>
+          </tr>
+          <tr>
+            <td class="title">Abstract</td>
+            <td id="pub-details-abstract"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="pubmed-id-lookup-buttons">
+    <button id="pubmed-id-lookup-reset">Find another</button>
+    <button id="pubmed-id-lookup-curate">Start curating</button>
+  </div>
 </div>

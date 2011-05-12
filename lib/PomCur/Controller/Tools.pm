@@ -138,7 +138,7 @@ sub _load_one_pub
     $pubmedid = "PMID:$1";
   } else {
     my $message = 'You need to give the raw numeric ID, or the ID ' .
-      'prefixed by "PMID:" or "PubMed:"' . "  $pubmedid";
+      'prefixed by "PMID:" or "PubMed:"';
     return (undef, $message);
   }
 
@@ -166,20 +166,37 @@ sub pubmed_id_lookup : Local Form {
 
   my $st = $c->stash();
 
-  $st->{template} = 'tools/pubmed_id_lookup.mhtml';
-
   my $pubmedid = $c->req()->param('pubmed-id-lookup-input');
 
+  my $result;
+
   if (!defined $pubmedid) {
-    $st->{message} = 'No PubMed ID given';
-    return;
+    $result = {
+      message => 'No PubMed ID given'
+    }
+  } else {
+    my ($pub, $message) =
+      _load_one_pub($c->config, $c->schema('track'), $pubmedid);
+
+    if (defined $pub) {
+      $result = {
+        pub => {
+          uniquename => $pub->uniquename(),
+          title => $pub->title(),
+          authors => $pub->authors(),
+          abstract => $pub->abstract(),
+        }
+      }
+    } else {
+      $result = {
+        message => $message
+      }
+    }
   }
 
-  my ($pub, $message) =
-    _load_one_pub($c->config, $c->schema('track'), $pubmedid);
+  $c->stash->{json_data} = $result;
+  $c->forward('View::JSON');
 
-  $st->{pub} = $pub;
-  $st->{message} = $message;
 }
 
 sub pubmed_id_start : Local {

@@ -762,9 +762,14 @@ span.pomcur-select-buttons {
   padding-top: 20px;
 }
 
-#pubmed-id-lookup {
+#pubmed-id-lookup-form {
   display: inline;
   float: left;
+}
+
+#pubmed-id-lookup-message {
+  clear: both;
+  padding-top: 15px;
 }
 
 #pubmed-id-lookup-waiting {
