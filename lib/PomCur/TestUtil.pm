@@ -280,6 +280,31 @@ sub root_dir
   return $self->{root_dir};
 }
 
+=head2 test_data_dir_full_path
+
+ Usage   : my $test_util = PomCur::TestUtil->new();
+           my $root_dir = $test_util->test_data_dir_full_path();
+       or:
+           my $root_dir =
+             $test_util->test_data_dir_full_path('path_bit', $file_name);
+ Function: Return the full path to the test data directory, or in the second
+           form the full path to a file within the test data directory
+ Args    : none
+
+=cut
+sub test_data_dir_full_path
+{
+  my $self = shift;
+
+  my $data_dir = $self->config()->{test_config}->{data_dir};
+
+  if (@_) {
+    return $self->root_dir() . "/$data_dir/" . join ('/', @_);
+  } else {
+    return $self->root_dir() . "/$data_dir";
+  }
+}
+
 =head2 config
 
  Usage   : my $test_util = PomCur::TestUtil->new();
