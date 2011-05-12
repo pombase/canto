@@ -14,7 +14,9 @@
        src="<% $c->uri_for('/static/images/spinner.gif') %>"/>
 </div>
 
-<div id="pubmed-id-lookup-results">
-
+<div id="pubmed-id-lookup-results" style="display: none">
 </div>
 
+<div id="pubmed-id-lookup-buttons" style="display: none">
+  <button id="pubmed-id-lookup-reset">Find another</button>
+</div>

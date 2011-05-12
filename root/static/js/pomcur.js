@@ -537,6 +537,17 @@ $(document).ready(function() {
     },
     success: function() {
       $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
+      $('#pubmed-id-lookup').hide();
+      $('#pubmed-id-lookup-results').show();
+      $('#pubmed-id-lookup-buttons').show();
     }
+  });
+
+  $('#pubmed-id-lookup-reset').click(function () {
+    $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
+    $('#pubmed-id-lookup-results').hide();
+    $('#pubmed-id-lookup').show();
+    $('#pubmed-id-lookup-buttons').hide();
+    return 0;
   });
 });
