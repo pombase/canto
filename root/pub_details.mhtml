@@ -11,14 +11,15 @@ Publication details
     <table class="curs-definition-table">
       <tr>
         <td class="title"><% $uniquename_desc %></td>
-        <td id="pub-details-uniquename"><% $pub->uniquename() %></td>
+        <td id="pub-details-uniquename"><% $uniquename %></td>
       </tr>
       <tr>
         <td class="title">Title</td>
-        <td id="pub-details-title"><% $pub->title() %></td>
+        <td id="pub-details-title"><% $title %></td>
       </tr>
       <tr>
         <td class="title">Authors</td>
+        <td><% $authors %></td>
       </tr>
     </table>
   </div>
@@ -32,5 +33,10 @@ if ($pub->uniquename() =~ /PMID/) {
 } else {
   $uniquename_desc = 'Database ID';
 }
+
+my $uniquename = $pub->uniquename();
+my $title = $pub->title();
+my $authors = $pub->authors();
+my $abstract = $pub->abstract();
 
 </%init>
