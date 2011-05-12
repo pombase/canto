@@ -11,6 +11,7 @@ test_config:
   test_phenotype_obo_file: "t/data/phenotype_small.obo"
   test_psi_mod_obo_file: "t/data/psi_mod_small.obo"
   test_relationship_obo_file: "t/data/ro.obo"
+  test_extra_publication: 'pubmed_18910671.xml'
   test_cases:
     empty_db:
     0_curs: []
@@ -130,7 +131,4 @@ test_config:
              data:
                evidence_code: MIU
                term_ontid: PP:00004
-
-external_sources:
-  pubmed_efetch_url: 'pubmed_18910671.xml'
   

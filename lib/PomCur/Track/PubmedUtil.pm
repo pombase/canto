@@ -83,13 +83,6 @@ sub get_pubmed_xml_by_ids
   my $pubmed_query_url =
     $config->{external_sources}->{pubmed_efetch_url};
 
-  if ($pubmed_query_url !~ m{http://}) {
-    # a hack for testing
-    local $/ = undef;
-    open my $file, '<', $pubmed_query_url or die "can't open $pubmed_query_url";
-    return <$file>
-  }
-
   my $url = $pubmed_query_url . join(',', @ids);
 
   return _get_url($config, $url);

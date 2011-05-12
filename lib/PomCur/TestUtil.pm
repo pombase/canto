@@ -145,9 +145,6 @@ sub init_test
 
   my $data_dir = $test_config->{data_dir};
 
-  $config->{external_sources}->{pubmed_efetch_url} =
-    "$root_dir/$data_dir/" . $config->{external_sources}->{pubmed_efetch_url};
-
   if ($test_env_type ne 'empty_db') {
     my $track_db_file = test_track_db_name($config, $test_env_type);
 
