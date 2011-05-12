@@ -189,6 +189,27 @@ sub pubmed_id_start : Local {
   $st->{template} = 'tools/pubmed_id_start.mhtml';
 }
 
+sub start : Local Args(1) {
+  my ($self, $c, $pub_uniquename) = @_;
+
+  my $st = $c->stash();
+
+  my $schema = $c->schema('track');
+  my $config = $c->config();
+
+  my $pub = $schema->find_with_type('Pub', { uniquename => $pub_uniquename });
+  my $curs_key = PomCur::Curs::make_curs_key();
+
+  my $curs = $schema->create_with_type('Curs',
+                                       {
+                                         pub => $pub,
+                                         curs_key => $curs_key,
+                                       });
+
+  my $curs_schema = PomCur::Track::create_curs_db($config, $curs);
+
+  $c->res->redirect($c->uri_for("/curs/$curs_key"));
+}
 
 =head1 LICENSE
 

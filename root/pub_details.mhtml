@@ -11,11 +11,11 @@ Publication details
     <table class="curs-definition-table">
       <tr>
         <td class="title"><% $uniquename_desc %></td>
-        <td><% $pub->uniquename() %></td>
+        <td id="pub-details-uniquename"><% $pub->uniquename() %></td>
       </tr>
       <tr>
         <td class="title">Title</td>
-        <td><% $pub->title() %></td>
+        <td id="pub-details-title"><% $pub->title() %></td>
       </tr>
       <tr>
         <td class="title">Authors</td>

@@ -540,6 +540,8 @@ $(document).ready(function() {
       $('#pubmed-id-lookup').hide();
       $('#pubmed-id-lookup-results').show();
       $('#pubmed-id-lookup-buttons').show();
+      $('#pubmed-id-lookup').data('pubmedid',
+                                  $('#pub-details-uniquename').html());
     }
   });
 
@@ -548,6 +550,10 @@ $(document).ready(function() {
     $('#pubmed-id-lookup-results').hide();
     $('#pubmed-id-lookup').show();
     $('#pubmed-id-lookup-buttons').hide();
-    return 0;
+  });
+
+  $('#pubmed-id-lookup-curate').click(function () {
+    var pubmedid = $('#pubmed-id-lookup').data('pubmedid');
+    window.location.href = 'start/' + pubmedid;
   });
 });

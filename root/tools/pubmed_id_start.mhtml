@@ -19,4 +19,5 @@
 
 <div id="pubmed-id-lookup-buttons" style="display: none">
   <button id="pubmed-id-lookup-reset">Find another</button>
+  <button id="pubmed-id-lookup-curate">Start curating</button>
 </div>
