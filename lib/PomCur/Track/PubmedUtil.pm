@@ -151,41 +151,41 @@ sub load_pubmed_xml
       push @articles, $res_hash->{PubmedArticle};
     }
 
-  for my $article (@articles) {
-    my $medline_citation = $article->{MedlineCitation};
-    my $uniquename = "$PUBMED_PREFIX:" . $medline_citation->{PMID}->{content};
+    for my $article (@articles) {
+      my $medline_citation = $article->{MedlineCitation};
+      my $uniquename = "$PUBMED_PREFIX:" . $medline_citation->{PMID}->{content};
 
-    if (!defined $uniquename) {
-      die "PubMed ID not found in XML\n";
+      if (!defined $uniquename) {
+        die "PubMed ID not found in XML\n";
+      }
+
+      my $article = $medline_citation->{Article};
+      my $title = $article->{ArticleTitle};
+      my $abstract_text = $article->{Abstract}->{AbstractText};
+
+      my $abstract;
+
+      if (ref $abstract_text eq 'ARRAY') {
+        $abstract = join ("\n",
+                          map {
+                            if (ref $_ eq 'HASH') {
+                              $_->{content};
+                            } else {
+                              $_;
+                            }
+                          } @$abstract_text);
+      } else {
+        $abstract = $abstract_text;
+      }
+
+      my $pub = $load_util->get_pub($uniquename, $load_type);
+
+      $pub->title($title);
+      $pub->abstract($abstract);
+      $pub->update();
+
+      $count++;
     }
-
-    my $article = $medline_citation->{Article};
-    my $title = $article->{ArticleTitle};
-    my $abstract_text = $article->{Abstract}->{AbstractText};
-
-    my $abstract;
-
-    if (ref $abstract_text eq 'ARRAY') {
-      $abstract = join ("\n",
-                        map {
-                          if (ref $_ eq 'HASH') {
-                            $_->{content};
-                          } else {
-                            $_;
-                          }
-                        } @$abstract_text);
-    } else {
-      $abstract = $abstract_text;
-    }
-
-    my $pub = $load_util->get_pub($uniquename, $load_type);
-
-    $pub->title($title);
-    $pub->abstract($abstract);
-    $pub->update();
-
-    $count++;
-  }
   }
 
   return $count;
