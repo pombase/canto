@@ -539,14 +539,13 @@ $(document).ready(function() {
       $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
       if (data.pub) {
         $('#pub-details-uniquename').html(data.pub.uniquename);
+        $('#pub-details-uniquename').data('pubmedid', data.pub.uniquename);
         $('#pub-details-title').html(data.pub.title);
         $('#pub-details-authors').html(data.pub.authors);
         $('#pub-details-abstract').html(data.pub.abstract);
         $('#pubmed-id-lookup-form').hide();
         $('#pubmed-id-lookup-message').hide();
         $('#pubmed-id-lookup-pub-results').show();
-        $('#pubmed-id-lookup').data('pubmedid',
-                                    $('#pub-details-uniquename').html());
       } else {
         $('#pubmed-id-lookup-message').show();
         $('#pubmed-id-lookup-message span').html(data.message);
@@ -562,7 +561,7 @@ $(document).ready(function() {
   });
 
   $('#pubmed-id-lookup-curate').click(function () {
-    var pubmedid = $('#pubmed-id-lookup').data('pubmedid');
+    var pubmedid = $('#pub-details-uniquename').data('pubmedid');
     window.location.href = 'start/' + pubmedid;
   });
 });
