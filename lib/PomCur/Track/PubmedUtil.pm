@@ -144,11 +144,12 @@ sub load_pubmed_xml
   my $count = 0;
   my @articles;
 
-  if (ref $res_hash->{PubmedArticle} eq 'ARRAY') {
-    @articles = @{$res_hash->{PubmedArticle}};
-  } else {
-    push @articles, $res_hash->{PubmedArticle};
-  }
+  if (defined $res_hash->{PubmedArticle}) {
+    if (ref $res_hash->{PubmedArticle} eq 'ARRAY') {
+      @articles = @{$res_hash->{PubmedArticle}};
+    } else {
+      push @articles, $res_hash->{PubmedArticle};
+    }
 
   for my $article (@articles) {
     my $medline_citation = $article->{MedlineCitation};
@@ -184,6 +185,7 @@ sub load_pubmed_xml
     $pub->update();
 
     $count++;
+  }
   }
 
   return $count;
