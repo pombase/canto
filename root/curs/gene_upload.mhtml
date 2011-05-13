@@ -1,8 +1,14 @@
 <%args>
 $gene_upload_unknown => undef
 $form
+$title
 </%args>
 
+<div class="curs-box">
+    <div class="curs-box-title">
+<% $title %>
+  </div>
+  <div class="curs-box-body">
 <div>
 Please enter the systematic identifier (eg. <% $example_identifier %>)
 or the primary identifier (eg. <% $example_name %>) of the genes
@@ -17,7 +23,8 @@ can be one per line.
 <div id="gene-update">
   <% $form %>
 </div>
-
+  </div>
+</div>
 <%init>
 my $example_identifier =
   $c->config()->{messages}->{gene_upload}->{examples}->{gene_identifier};

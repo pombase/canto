@@ -434,11 +434,13 @@ sub gene_upload : Chained('top') Args(0) Form
   my $st = $c->stash();
 
   $st->{title} = 'Create gene list for ' . $st->{pub}->uniquename();
+  $st->{show_title} = 0;
+
   $st->{template} = 'curs/gene_upload.mhtml';
   $st->{current_component} = 'gene_upload';
 
   my $form = $self->form();
-  my @submit_buttons = ("Submit");
+  my @submit_buttons = ("Continue");
 
   my $schema = $st->{schema};
 
