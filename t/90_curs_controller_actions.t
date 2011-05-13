@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 39;
+use Test::More tests => 55;
 
 use Data::Compare;
 
@@ -43,9 +43,11 @@ my @gene_identifiers = qw(cdc11 wtf22 SPCC1739.10 klp1);
 sub upload_genes
 {
   my $cb = shift;
+  my $genes = shift;
+  my $multiple_organisms = shift // 0;
 
   my $uri = new URI("$root_url/");
-  $uri->query_form(gene_identifiers => "@gene_identifiers",
+  $uri->query_form(gene_identifiers => "@$genes",
                    submit => 'Submit',
                  );
 
@@ -54,7 +56,7 @@ sub upload_genes
 
   my $res = $cb->($req);
 
-  is $res->code, 302;
+  is $res->code, 302, $res->content();
 
   my $redirect_url = $res->header('location');
 
@@ -63,13 +65,28 @@ sub upload_genes
   my $redirect_req = HTTP::Request->new(GET => $redirect_url);
   my $redirect_res = $cb->($redirect_req);
 
-  like ($redirect_res->content(), qr/Confirm gene list/);
-  like ($redirect_res->content(), qr/cdc11/);
+  my $content = $redirect_res->content();
+
+  like ($content, qr/Confirm gene list/);
+  like ($content, qr/cdc11/);
+
+  if ($multiple_organisms) {
+    like ($content, qr/Saccharomyces/);
+    like ($content, qr/cerevisiae/);
+  } else {
+    unlike ($content, qr/Saccharomyces/);
+    unlike ($content, qr/cerevisiae/);
+  }
 
   my @stored_genes = $curs_schema->resultset('Gene')->all();
-  is (@stored_genes, 4);
 
-  for my $gene_identifier (@gene_identifiers) {
+  if ($multiple_organisms) {
+    is (@stored_genes, 5);
+  } else {
+    is (@stored_genes, 4);
+  }
+
+  for my $gene_identifier (@$genes) {
     my $found_match = 0;
     for my $stored_gene (@stored_genes) {
       if ($stored_gene->primary_identifier() eq $gene_identifier ||
@@ -129,7 +146,14 @@ test_psgi $app, sub {
     like ($redirect_res->content(), qr/email-address.*$test_email/);
   }
 
-  upload_genes($cb);
+  # try with and without the organism column
+  upload_genes($cb, \@gene_identifiers, 0);
+
+  $curs_schema->resultset('Genesynonym')->delete();
+  $curs_schema->resultset('Gene')->delete();
+
+  my @genes_with_cerevisiae = (@gene_identifiers, 'YHR066W');
+  upload_genes($cb, \@genes_with_cerevisiae, 1);
 
   # test deleting genes
   {
@@ -163,7 +187,7 @@ test_psgi $app, sub {
     is (@genes_after_delete, 0);
   }
 
-  upload_genes($cb);
+  upload_genes($cb, \@gene_identifiers, 0);
 
   # test deleting 1 gene
   {

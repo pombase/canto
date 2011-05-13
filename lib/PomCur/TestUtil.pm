@@ -510,6 +510,8 @@ sub make_base_track_db
 
   my $curation_file = $config->{test_config}->{curation_spreadsheet};
   my $genes_file = $config->{test_config}->{test_genes_file};
+  my $genes_file_organism_2 =
+    $config->{test_config}->{test_genes_file_organism_2};
   my $go_obo_file = $config->{test_config}->{test_go_obo_file};
   my $phenotype_obo_file = $config->{test_config}->{test_phenotype_obo_file};
   my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
@@ -525,11 +527,14 @@ sub make_base_track_db
   my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
   if ($load_data) {
-    my $organism = add_test_organism($config, $schema);
+    my ($organism, $organism_2) = add_test_organisms($config, $schema);
 
     my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);
     my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema,
                                                  organism => $organism);
+    my $gene_load_organism_2 =
+      PomCur::Track::GeneLoad->new(schema => $schema,
+                                   organism => $organism_2);
 
     my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
     $ontology_index->initialise_index();
@@ -543,6 +548,7 @@ sub make_base_track_db
         _load_extra_pubs($schema);
         _add_pub_details($config, $schema);
         $gene_load->load($genes_file);
+        $gene_load_organism_2->load($genes_file_organism_2);
         $ontology_load->load($relationship_obo_file, undef, $synonym_types);
         $ontology_load->load($go_obo_file, $ontology_index, $synonym_types);
         $ontology_load->load($phenotype_obo_file, $ontology_index,
@@ -559,27 +565,33 @@ sub make_base_track_db
   return $schema;
 }
 
-=head2 add_test_organism
+=head2 add_test_organisms
 
- Usage   : my $organism = PomCur::TestUtil::add_test_organism($config, $schema);
- Function: Create a test Organism
+ Usage   : my @orgs = PomCur::TestUtil::add_test_organisms($config, $schema);
+ Function: Create the test organisms
  Args    : $config - a PomCur::Config object
            $schema - the TrackDB schema object
- Returns :
+ Returns : a list of the new Organism objects
 
 =cut
-sub add_test_organism
+sub add_test_organisms
 {
   my $config = shift;
   my $schema = shift;
 
+  my @ret = ();
+
   my $test_config = $config->{test_config};
-  my $organism_config = $test_config->{organism};
   my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
-  return $load_util->get_organism($organism_config->{genus},
-                                  $organism_config->{species},
-                                  $organism_config->{taxonid});
+  for my $org_conf (@{$test_config->{organisms}}) {
+    push @ret, $load_util->get_organism($org_conf->{genus},
+                                        $org_conf->{species},
+                                        $org_conf->{taxonid});
+
+  }
+
+  return @ret;
 }
 
 =head2 curs_key_of_test_case
@@ -753,12 +765,6 @@ sub make_curs_db
   my $curs_config = shift;
   my $trackdb_schema = shift;
   my $load_util = shift;
-
-  my $organism_conf = $config->{test_config}->{organism};
-
-  my $pombe = $load_util->get_organism($organism_conf->{genus},
-                                       $organism_conf->{species},
-                                       $organism_conf->{taxonid});
 
   my $test_case_curs_key =
     PomCur::TestUtil::curs_key_of_test_case($curs_config);

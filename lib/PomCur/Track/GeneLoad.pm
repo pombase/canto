@@ -122,11 +122,15 @@ sub load
 
   my $csv = Text::CSV->new({ binary => 1, sep_char => "\t",
                              blank_is_undef => 1 });
-  open my $fh, '<', $file_name or die;
+  open my $fh, '<', $file_name
+    or die "can't open $file_name: $!";
 
   while (my $columns_ref = $csv->getline($fh)) {
     $self->_process_gene_row($columns_ref);
   }
+
+  close $fh
+    or die "can't close $file_name: $!";
 }
 
 1;

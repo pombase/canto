@@ -2,11 +2,15 @@ test_mode: 1
 test_config:
   data_dir: "t/data"
   curation_spreadsheet: "t/data/community_curation_stats_small.txt"
-  organism:
-    genus: Schizosaccharomyces
-    species: pombe
-    taxonid: 4896
+  organisms:
+    - genus: Schizosaccharomyces
+      species: pombe
+      taxonid: 4896
+    - genus: Saccharomyces
+      species: cerevisiae
+      taxonid: 4932
   test_genes_file: "t/data/pombe_genes.txt"
+  test_genes_file_organism_2: "t/data/cerevisiae_genes.txt"
   test_go_obo_file: "t/data/go_small.obo"
   test_phenotype_obo_file: "t/data/phenotype_small.obo"
   test_psi_mod_obo_file: "t/data/psi_mod_small.obo"

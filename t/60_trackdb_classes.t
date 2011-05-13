@@ -14,7 +14,7 @@ my $schema = PomCur::TrackDB->new(config => $config);
 
 my @results = $schema->resultset('Organism')->search();
 
-is(@results, 1);
+is(@results, 2);
 
 my $organism = $results[0];
 
