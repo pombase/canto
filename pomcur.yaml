@@ -3,7 +3,7 @@ name: PomCur
 long_name: Pombe community curation application
 database_name: PomBase
 
-app_version: v190
+app_version: v191
 
 authentication:
   default_realm: 'members'
