@@ -101,7 +101,7 @@ $user_created
   </tr>
 % }
 </table>
-% if ($some_incomplete) {
+% if ($some_incomplete && !$gene) {
 <div class="curs-annotation-incomplete-message">
   Note that some of the annotations are incomplete, and only complete
   annotations are included in the downloaded table.
