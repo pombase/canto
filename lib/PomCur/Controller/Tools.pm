@@ -155,7 +155,8 @@ sub _load_one_pub
       $pub = $schema->resultset('Pub')->find({ uniquename => $pubmedid });
       return ($pub, undef);
     } else {
-      my $message = "No publication found in PubMed with ID: $pubmedid";
+      (my $numericid = $pubmedid) =~ s/.*://;
+      my $message = "No publication found in PubMed with ID: $numericid";
       return (undef, $message);
     }
   }
