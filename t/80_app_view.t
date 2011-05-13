@@ -58,7 +58,7 @@ test_psgi $app, sub {
 
     is $res->code, 200;
     like ($res->content(), qr/List of named genes/);
-    like ($res->content(), qr:<b>8</b> rows found:);
+    like ($res->content(), qr:<b>10</b> rows found:);
     like ($res->content(), qr/rpn501/);
     unlike ($res->content(), qr/SPBC12C2.11/);
   }

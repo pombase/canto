@@ -1,0 +1,2 @@
+YHR066W	SSF1	S000001108	"Suppressor of ste4 (Four)"
+YHR120W	MSH1	S000001162	"MutS Homolog"

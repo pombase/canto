@@ -93,20 +93,34 @@ sub _search_highlight
   }
 }
 
+my $organism_rs = $schema->resultset('Organism')->search({}, { rows => 2});
+my $has_multiple_organisms = $organism_rs->count() > 1;
+
+my $show_organism_column =
+  $c->config()->{multiple_organisms} || $has_multiple_organisms;
+
 my @gene_hashes = map {
      my $gene = $_;
      my $synonyms_string =
        join (',', map { _search_highlight($_->identifier()) } $gene->genesynonyms());
-     {
+     my $hash = {
        'Systematic identifier' => _search_highlight($gene->primary_identifier()),
        Name => _search_highlight($gene->primary_name()),
        Product => $gene->product(),
        Synonyms => $synonyms_string,
        gene_id => $gene->gene_id(),
+     };
+     if ($show_organism_column) {
+       $hash->{Organism} = $gene->organism()->full_name();
      }
+     $hash
    } @all_genes;
 
 my @col_names = ("Systematic identifier", "Name", "Synonyms", "Product");
+
+if ($show_organism_column) {
+  push @col_names, "Organism";
+}
 
 my $start_path = $c->stash()->{curs_root_uri};
 my $upload_path = "$start_path/gene_upload";
