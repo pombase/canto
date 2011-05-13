@@ -354,6 +354,7 @@ sub _edit_genes_helper
   } else {
     $st->{title} = 'Gene list for ' . $st->{pub}->uniquename();
   }
+  $st->{show_title} = 0;
 
   $st->{template} = 'curs/gene_list_edit.mhtml';
 

@@ -3,7 +3,12 @@ $title => 'Genes'
 $pub
 </%args>
 
-<div class="gene-list-edit">
+<div class="gene-list-edit curs-box">
+  <div class="curs-box-title">
+<% $title %>
+  </div>
+  <div class="curs-box-body">
+  
   <form name="gene-edit" method="get" action="<% $edit_path %>">
 % if (@gene_hashes) {
   <table class="list">
@@ -36,8 +41,12 @@ $pub
     </tr>
 %   }
   </table>
-  <input type="submit" name="submit" value="Delete selected"/>
-  <input type="submit" name="continue" value="Continue"/>
+  <div class="submit">
+    <input type="submit" name="continue" value="Continue"/>
+  </div>
+  <div class="submit">
+    <input type="submit" name="submit" value="Delete selected"/>
+  </div>
 % } else {
   <div class="no-genes-message">
     [No genes]
@@ -48,6 +57,7 @@ $pub
   <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
 </div>
 </form>
+</div>
 </div>
 
 <%init>
