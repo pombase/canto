@@ -14,6 +14,9 @@ $page_description_id => 'page-description'
   <body>
     <& header.mhtml &>
 
+<& breadcrumbs.mhtml &>
+<& contact.mhtml &>
+
 <div id="error-list">
 % for my $err (@errors) {
 <div class="error">
@@ -43,9 +46,6 @@ $page_description_id => 'page-description'
 </div>
 % }
 </div>
-
-<& breadcrumbs.mhtml &>
-<& contact.mhtml &>
 
 % if ($show_title) {
       <div id="<% $page_description_id %>">
