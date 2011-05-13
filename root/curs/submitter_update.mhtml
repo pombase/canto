@@ -1,9 +1,15 @@
 <%args>
 $form
+$title
 </%args>
 
-<div class="submitter-update">
-  <p>Please enter your name and email address to continue:</p>
+<div class="submitter-update curs-box">
+  <div class="curs-box-title">
+<% $title %>
+  </div>
+  <div class="curs-box-body">
+    <p>Please enter your name and email address:</p>
 
-  <% $form %>
+    <% $form %>
+  </div>
 </div>

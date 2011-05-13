@@ -194,7 +194,8 @@ sub submitter_update : Private
 
   my $st = $c->stash();
 
-  $st->{title} = 'Submitter update';
+  $st->{title} = 'Curator details';
+  $st->{show_title} = 0;
   $st->{template} = 'curs/submitter_update.mhtml';
 
   $st->{current_component} = 'submitter_update';
@@ -219,7 +220,7 @@ sub submitter_update : Private
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
       },
       {
-        name => 'submit', type => 'Submit', value => 'submit',
+        name => 'submit', type => 'Submit', value => 'Continue',
         attributes => { class => 'button', },
       },
     );
