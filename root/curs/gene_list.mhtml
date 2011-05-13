@@ -38,7 +38,7 @@ $pub
 % }
 
   <div class="view-edit">
-    <a href="<% $edit_path %>">View or edit list ...</a>
+    <a href="<% $edit_path %>">Edit gene list ...</a>
   </div>
   </div>
 </div>
