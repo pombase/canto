@@ -205,6 +205,7 @@ sub pubmed_id_start : Local {
   my $st = $c->stash();
 
   $st->{title} = 'Find a publication to curate using a PubMed ID';
+  $st->{show_title} = 0;
   $st->{template} = 'tools/pubmed_id_start.mhtml';
 }
 

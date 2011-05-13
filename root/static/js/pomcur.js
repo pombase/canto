@@ -543,7 +543,7 @@ $(document).ready(function() {
         $('#pub-details-title').html(data.pub.title);
         $('#pub-details-authors').html(data.pub.authors);
         $('#pub-details-abstract').html(data.pub.abstract);
-        $('#pubmed-id-lookup-form').hide();
+        $('#pubmed-id-lookup').hide();
         $('#pubmed-id-lookup-message').hide();
         $('#pubmed-id-lookup-pub-results').show();
       } else {
@@ -557,7 +557,7 @@ $(document).ready(function() {
     $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
     $('#pubmed-id-lookup-pub-results').hide();
     $('#pubmed-id-lookup-input').val('');
-    $('#pubmed-id-lookup-form').show();
+    $('#pubmed-id-lookup').show();
   });
 
   $('#pubmed-id-lookup-curate').click(function () {

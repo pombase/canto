@@ -762,7 +762,11 @@ span.pomcur-select-buttons {
   padding-top: 20px;
 }
 
-#pubmed-id-lookup-form {
+#pubmed-id-lookup .curs-box-body {
+  height: 3em;
+}
+
+#pubmed-id-lookup-input, #pubmed-id-lookup-submit {
   display: inline;
   float: left;
 }
@@ -783,6 +787,7 @@ span.pomcur-select-buttons {
 
 .ajax-spinner {
   margin-bottom: -10px;
+  padding-bottom: -10px;
   margin-left: 15px;
   display: none;
 }

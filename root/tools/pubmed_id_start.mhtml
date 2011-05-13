@@ -1,19 +1,24 @@
 <%args>
-
+$title
 </%args>
 
+<div id="pubmed-id-lookup" class="curs-box">
+<div class="curs-box-title">
+  <% $title %>
+</div>
+<div class="curs-box-body">
 <form id="pubmed-id-lookup-form"
       action="<% $c->uri_for('/tools/pubmed_id_lookup') %>" method="get">
   <input name="pubmed-id-lookup-input" id="pubmed-id-lookup-input"/>
   <input type="submit" id="pubmed-id-lookup-submit"
          name="pubmed-id-lookup-submit" value="Find ..."/>
+  <div id="pubmed-id-lookup-waiting">
+    <img class="ajax-spinner"
+         src="<% $c->uri_for('/static/images/spinner.gif') %>"/>
+  </div>
 </form>
-
-<div id="pubmed-id-lookup-waiting">
-  <img class="ajax-spinner"
-       src="<% $c->uri_for('/static/images/spinner.gif') %>"/>
 </div>
-
+</div>
 <div id="pubmed-id-lookup-message" style="display: none">
   <span class="error_constraint_required">
     
