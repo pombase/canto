@@ -98,7 +98,7 @@ test_psgi $app, sub {
     my $res = $cb->($req);
 
     is ($res->code, 200);
-    like ($res->content(), qr/<div class="submitter-update">/);
+    like ($res->content(), qr/<div class="submitter-update/);
     like ($res->content(), qr/<form action="" method="post">/);
     like ($res->content(), qr/<input name="submitter_name"/);
   }
