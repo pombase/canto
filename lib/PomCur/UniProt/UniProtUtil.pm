@@ -46,6 +46,10 @@ sub _parse_results
 {
   my $xml = shift;
 
+  if ($xml =~ /^\s*$/) {
+    return ();
+  }
+
   my $res_hash = XMLin($xml, ForceArray => ['entry', 'accession', 'dbReference']);
 
   my @ret = ();
@@ -118,7 +122,6 @@ sub retrieve_entries
 
   if ($response->is_success) {
     my $xml = $response->content();
-
     return _parse_results($xml);
   } else {
     die 'Failed, got ' . $response->status_line .

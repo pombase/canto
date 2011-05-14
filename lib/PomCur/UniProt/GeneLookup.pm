@@ -75,13 +75,18 @@ sub lookup
   my @results = UniProtUtil::retrieve_entries($self->config(),
                                               $search_terms_ref);
 
+  my %missing_search_terms = ();
+  @missing_search_terms{@$search_terms_ref} = @$search_terms_ref;
+
   my @found_genes = map {
     my $h = clone $_;
     $h->{match_type} = { primary_identifier => $h->{primary_identifier} };
+    delete $missing_search_terms{$h->{primary_name}};
+    delete $missing_search_terms{$h->{primary_identifier}};
     $h
   } @results;
 
-  my @missing_genes = ();
+  my @missing_genes = (keys %missing_search_terms);
 
   return { found => \@found_genes,
            missing => \@missing_genes };
