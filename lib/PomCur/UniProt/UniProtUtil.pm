@@ -78,7 +78,8 @@ sub _parse_results
       primary_identifier => $accession,
       product => $full_name,
       synonyms => [@synonyms],
-      organism_full_name => $organism_full_name
+      organism_full_name => $organism_full_name,
+      organism_taxonid => $taxonid,
     };
   }
 
@@ -92,7 +93,7 @@ sub retrieve_entries
 
   my @identifiers = @$identifiers_ref;
 
-  my $batch_service_url = $config->{uniprot_batch_lookup_url};
+  my $batch_service_url = $config->{webservices}->{uniprot_batch_lookup_url};
 
   # copied from http://www.uniprot.org/faq/28#batch_retrieval_of_entries
   my $agent = LWP::UserAgent->new;
@@ -105,7 +106,7 @@ sub retrieve_entries
                                   Content_Type => 'text/plain',
                                   Content => "@identifiers"
                                ],
-                               'format' => 'XML',
+                               'format' => 'xml',
                                ],
                                'Content_Type' => 'form-data');
 

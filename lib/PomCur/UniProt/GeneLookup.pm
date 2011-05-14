@@ -42,6 +42,7 @@ use Moose;
 with 'PomCur::Role::Configurable';
 
 use Package::Alias UniProtUtil => 'PomCur::UniProt::UniProtUtil';
+use Clone qw(clone);
 
 =head2 lookup
 
@@ -74,8 +75,13 @@ sub lookup
   my @results = UniProtUtil::retrieve_entries($self->config(),
                                               $search_terms_ref);
 
-  my @found_genes = map
+  my @found_genes = map {
+    my $h = clone $_;
+    $h->{match_type} = { primary_identifier => $h->{primary_identifier} };
+    $h
+  } @results;
 
+  my @missing_genes = ();
 
   return { found => \@found_genes,
            missing => \@missing_genes };
