@@ -16,6 +16,7 @@ test_config:
   test_psi_mod_obo_file: "t/data/psi_mod_small.obo"
   test_relationship_obo_file: "t/data/ro.obo"
   test_extra_publication: 'pubmed_18910671.xml'
+  test_uniprot_entries: 'uniprot_lookup.xml'
   test_cases:
     empty_db:
     0_curs: []

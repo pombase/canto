@@ -128,7 +128,7 @@ sub _read_genes
                                for
  Returns : All genes that match any of the search terms exactly.  The result
            should look like this hashref:
-            { found => {
+            { found => [{
                          primary_name => 'cdc11',
                          primary_identifier => 'SPCTRNASER.13'
                          product => 'SIN component scaffold protein, ...',
@@ -139,7 +139,7 @@ sub _read_genes
                                           primary_identifier => 'SPCTRNASER.13',
                                           synonym => [ 'foo' ],
                                         },
-                        },
+                        }, ... ],
               missing => ['test'] }
 
 =cut
