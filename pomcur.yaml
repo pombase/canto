@@ -802,6 +802,9 @@ external_links:
       icon: PubMed_logo_small.png
       url: 'http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&dopt=Abstract&list_uids=@@uniquename@@'
 
+webservices:
+  uniprot_batch_lookup_url: 'http://www.uniprot.org/batch/'
+
 ontology_external_links:
   cellular_component:
     - name: AmiGO

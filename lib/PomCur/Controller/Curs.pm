@@ -114,6 +114,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
   $st->{first_contact_name} = get_metadata($schema, 'first_contact_name');
 
+  my $organism_rs = $schema->resultset('Organism')->search({}, { rows => 2});
+  my $has_multiple_organisms = $organism_rs->count() > 1;
+
+  $st->{multi_organism_mode} =
+    $config->{multi_organism_mode} || $has_multiple_organisms;
+
   # curation_pub_id will be set if we are annotating a particular publication,
   # rather than annotating genes without a publication
   my $pub_id = get_metadata($schema, 'curation_pub_id');

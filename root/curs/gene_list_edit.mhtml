@@ -93,11 +93,7 @@ sub _search_highlight
   }
 }
 
-my $organism_rs = $schema->resultset('Organism')->search({}, { rows => 2});
-my $has_multiple_organisms = $organism_rs->count() > 1;
-
-my $show_organism_column =
-  $c->config()->{multiple_organisms} || $has_multiple_organisms;
+my $show_organism_column = $c->stash()->{multi_organism_mode};
 
 my @gene_hashes = map {
      my $gene = $_;

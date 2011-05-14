@@ -52,6 +52,12 @@ Details for <% $gene->display_name() %>
         <td class="title">Product</td>
         <td><% $gene->product() %></td>
       </tr>
+% if ($c->stash()->{multi_organism_mode}) {
+      <tr>
+        <td class="title">Organism</td>
+        <td><% $gene->organism()->full_name() %></td>
+      </tr>
+% } 
     </table>
   </div>
 </div>
