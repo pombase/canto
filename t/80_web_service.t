@@ -20,7 +20,7 @@ test_psgi $app, sub {
 
   {
     my $search_term = 'transport';
-    my $url = "http://localhost:5000/ws/lookup/go/biological_process/?term=$search_term";
+    my $url = "http://localhost:5000/ws/lookup/ontology/biological_process/?term=$search_term";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
@@ -43,7 +43,7 @@ test_psgi $app, sub {
 
   {
     my $search_term = 'molecular_function';
-    my $url = "http://localhost:5000/ws/lookup/go/molecular_function/?term=$search_term&def=1";
+    my $url = "http://localhost:5000/ws/lookup/ontology/molecular_function/?term=$search_term&def=1";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 

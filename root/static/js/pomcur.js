@@ -34,7 +34,7 @@ var ferret_choose = {
 
   initialise : function(annotation_type) {
     ferret_choose.ontology_complete_url =
-      application_root + 'ws/lookup/go/' + annotation_type;
+      application_root + 'ws/lookup/ontology/' + annotation_type;
     ferret_choose.annotation_type = annotation_type;
   },
 

@@ -516,7 +516,6 @@ external_sources:
 
 implementation_classes:
   gene_adaptor: PomCur::Track::GeneLookup
-  go_adaptor: PomCur::Track::OntologyLookup
   ontology_adaptor: PomCur::Track::OntologyLookup
 
 evidence_types:
