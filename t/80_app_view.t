@@ -43,7 +43,7 @@ test_psgi $app, sub {
       process ".page_nav_summary", row_count => 'TEXT';
     };
 
-    my $scrape_res = $page_scrape->scrape($res->content());
+    my $scrape_res = $page_scrape->scrape($res->decoded_content());
 
     like ($scrape_res->{title}, qr/List of all labs/);
     ok (grep { /Nick Rhind/ } @{$scrape_res->{field_values}});

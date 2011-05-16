@@ -3,7 +3,7 @@ PMID,Laboratory,"Submitter, if different","date sent out",Status,"PI e-mail","co
 19041767,"Peter Espenshade","John Burg",2009/01/04,DONE,peter.espenshade@jhmi.edu,John.Burg@jhmi.edu
 18556659,"Kevin Hardwick",,2009/01/06,DONE,kevin.hardwick@ed.ac.uk,
 18430926,"Charles Hoffman",,2009/01/06,DONE,hoffmacs@bc.edu,
-17304215,"Hiroshi Iwasaki",,2009/01/06,DONE,iwasaki@tsurumi.yokohama-cu.ac.jp,
+17304215,"岩崎ひろし",,2009/01/06,DONE,iwasaki@tsurumi.yokohama-cu.ac.jp,
 18426916,"Hiro Yamano",,2009/01/06,DONE,h.yamano@mcri.ac.uk,
 19037101,"Nick Rhind","Nicholas Willis",2009/01/06,DONE,nick.rhind@umassmed.edu,Nicholas.Willis@umassmed.edu
 19351719,"Luis Rokeach","Pascale Beauregard",2009/04/20,DONE,Luis.Rokeach@umontreal.ca,Pascale.Beauregard@umontreal.ca
