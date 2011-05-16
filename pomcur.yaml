@@ -4,7 +4,7 @@ long_name: Pombe community curation application
 database_name: PomBase
 header_image: logos/pombase_logo.png
 
-app_version: v199
+app_version: v200
 
 home_path: '/track/track'
 
