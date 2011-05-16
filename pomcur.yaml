@@ -2,6 +2,7 @@
 name: PomCur
 long_name: Pombe community curation application
 database_name: PomBase
+header_image: site_logo.png
 
 app_version: v194
 
