@@ -797,10 +797,15 @@ help_text:
 
 external_links:
   gene:
-    Schizosaccharomyces pombe:
-      - name: GeneDB
-        icon: genedb.gif
-        url: 'http://old.genedb.org/genedb/Search?organism=pombe&name=@@primary_identifier@@'
+    generic:
+      - name: AmiGO
+        icon: amigo.png
+        url: 'http://amigo.geneontology.org/cgi-bin/amigo/gp-assoc.cgi?gp=SPB@@primary_identifier@@'
+    organism:
+      Schizosaccharomyces pombe:
+        - name: GeneDB
+          icon: genedb.gif
+          url: 'http://old.genedb.org/genedb/Search?organism=pombe&name=@@primary_identifier@@'
   pub:
     - name: PubMed
       icon: PubMed_logo_small.png

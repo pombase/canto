@@ -27,8 +27,11 @@ if (defined $context_config) {
   if (ref $context_config eq 'HASH') {
     if ($object->can('organism') &&
         defined (my $org_full_name = $object->organism()->full_name())) {
-      if (exists $context_config->{$org_full_name}) {
-        @url_configs = @{$context_config->{$org_full_name}};
+      if (exists $context_config->{organism}->{$org_full_name}) {
+        push @url_configs, @{$context_config->{organism}->{$org_full_name}};
+      }
+      if (exists $context_config->{generic}) {
+        push @url_configs, @{$context_config->{generic}};
       }
     }
   } else {
