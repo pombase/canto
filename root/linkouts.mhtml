@@ -7,7 +7,7 @@ $context
 % if (@url_details) {
 %   for my $url_detail (@url_details) {
   <div class="curs-external-link">
-    <a href="<% $url_detail->{url} %>">
+    <a href="<% $url_detail->{url} %>" target="_blank">
 %     if (defined $url_detail->{icon}) {
       <img src="<% $url_detail->{icon} %>"/>
 %     }
