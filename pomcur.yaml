@@ -4,7 +4,7 @@ long_name: Pombe community curation application
 database_name: PomBase
 header_image: pombase_logo.png
 
-app_version: v195
+app_version: v196
 
 authentication:
   default_realm: 'members'
