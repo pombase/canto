@@ -752,6 +752,8 @@ annotation_type_list:
 
 messages:
   gene_upload:
+    systematic_identifier_desc: systematic identifier
+    primary_name_desc: primary identifier
     examples:
       gene_identifier: 'SPCC1739.10'
       gene_name: 'cdc11'

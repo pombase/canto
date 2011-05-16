@@ -10,8 +10,8 @@ $title
   </div>
   <div class="curs-box-body">
 <div>
-Please enter the systematic identifier (eg. <% $example_identifier %>)
-or the primary identifier (eg. <% $example_name %>) of the genes
+Please enter the <% $systematic_identifier_desc %> (eg. <% $example_identifier %>)
+or the <% $primary_name_desc %> (eg. <% $example_name %>) of the genes
 referred to in <span class="publication-name"><% $uniquename %></span>
 </div>
 
@@ -26,10 +26,15 @@ can be one per line.
   </div>
 </div>
 <%init>
+my $gene_upload_conf = $c->config()->{messages}->{gene_upload};
 my $example_identifier =
-  $c->config()->{messages}->{gene_upload}->{examples}->{gene_identifier};
+  $gene_upload_conf->{examples}->{gene_identifier};
 my $example_name =
-  $c->config()->{messages}->{gene_upload}->{examples}->{gene_name};
+  $gene_upload_conf->{examples}->{gene_name};
+my $systematic_identifier_desc =
+  $gene_upload_conf->{systematic_identifier_desc};
+my $primary_name_desc =
+  $gene_upload_conf->{primary_name_desc};
 
 my $uniquename = $c->stash()->{pub}->uniquename();
 </%init>
