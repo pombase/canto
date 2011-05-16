@@ -6,6 +6,8 @@ header_image: pombase_logo.png
 
 app_version: v196
 
+home_path: '/track/track'
+
 authentication:
   default_realm: 'members'
   realms:

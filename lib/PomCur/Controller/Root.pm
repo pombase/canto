@@ -74,7 +74,7 @@ sub front :Path :Args(0)
 {
   my ($self, $c) = @_;
 
-  $c->forward('/track/track');
+  $c->forward($c->config()->{home_path});
   $c->detach();
 }
 
