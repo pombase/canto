@@ -813,6 +813,7 @@ external_links:
 
 webservices:
   uniprot_batch_lookup_url: 'http://www.uniprot.org/batch/'
+  quickgo_annotation_lookup_url: 'http://www.ebi.ac.uk/QuickGO/GAnnotation?format=gaf&ref='
 
 ontology_external_links:
   cellular_component:
