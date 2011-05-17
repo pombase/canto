@@ -57,7 +57,7 @@ sub _cached_lookup
   my $config = shift;
   my $pub_uniquename = shift;
   my $gene_identifier = shift;
-  my $ontology_name = shift;
+  my $wanted_ontology_name = shift;
 
   my $url =
     $config->{webservices}->{quickgo_annotation_lookup_url} . $pub_uniquename;
@@ -103,9 +103,11 @@ sub _cached_lookup
     $assocdate = '' unless defined $assocdate;
     $source_db = '' unless defined $source_db;
 
-    my $ontology_name = $ontology_name_lookup{$aspect};
+    my $returned_ontology_name = $ontology_name_lookup{$aspect};
 
-    next unless defined $ontology_name;
+    next unless defined $returned_ontology_name;
+
+    next unless $returned_ontology_name eq $wanted_ontology_name;
 
     my @ids = split (/\|/, $prodsyn);
 
@@ -120,7 +122,7 @@ sub _cached_lookup
         organism_taxonid => $taxonid,
       },
       ontology_term => {
-        ontology_name => $ontology_name,
+        ontology_name => $returned_ontology_name,
         ontid => $termacc,
       },
       publication => $pub_uniquename,
