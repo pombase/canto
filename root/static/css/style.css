@@ -21,6 +21,9 @@ a:link:hover { text-decoration:underline }
 a:visited:hover { text-decoration:underline }
 a:link:active { text-decoration:none }
 
+#heading a { color: black; }
+#heading { background-color: #eef; }
+
 button, input[type=submit] {
   background-color: #c00;
   color: white;
@@ -31,8 +34,6 @@ img {
   border-width: 0px;
 }
 
-#heading a {
-}
 #heading {
   position: relative;
   -moz-box-shadow: 0px 3px 3px #666;
