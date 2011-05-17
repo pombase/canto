@@ -67,10 +67,33 @@ sub _get_taxonid
 
 =head2
 
- Usage   :
- Function:
- Args    :
- Returns :
+ Usage   : my $res = PomCur::Chado::OntologyAnnotationLookup($options);
+ Function: lookup ontology annotation in a Chado database
+ Args    : $options->{pub_uniquename} - the identifier of the publication,
+               usually the PubMed ID to get annotations for
+           $options->{gene_identifier} - the gene identifier to constraint the
+               search with; only annotations for the gene are returned
+           $options->{ontology_name} - the ontology name to use to restrict the
+               search; only annotations from this ontology are returned
+ Returns : An array reference of annotation results:
+            [ {
+              gene => {
+                identifier => "SPAC22F3.13",
+                name => 'tsc1',
+                organism_taxonid => 4896
+              },
+              ontology_term => {
+                ontology_name => 'molecular_function',
+                term_name => 'regulation of conjugation ...',
+                ontid => 'GO:0031137',
+              },
+              publication => {
+                uniquename => 'PMID:10467002',
+              },
+              evidence_code => 'IMP',
+              annotation_id => ....
+            }, ... ]
+          - where annotation_id is a unique ID for this annotation
 
 =cut
 sub lookup
