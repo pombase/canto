@@ -56,7 +56,11 @@ sub _parse_results
 
   while (my ($name, $details) = each %{$res_hash->{entry}}) {
     my $full_name = $details->{protein}->{recommendedName}->{fullName};
-    my @synonyms = map { $_->{content} } @{$details->{gene}->{name}};
+    my @synonyms = ();
+
+    if (defined $details->{gene}->{name}) {
+      push @synonyms, map { $_->{content} } @{$details->{gene}->{name}};
+    }
 
     my $accession = $details->{accession}->[0];
 
