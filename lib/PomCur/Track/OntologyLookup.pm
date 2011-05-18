@@ -124,8 +124,8 @@ sub _make_term_hash
                            ID (eg. "GO:0012345") return just that match
            max_results - maximum hits to return (ignored when search_string is
                          an ontology ID)
-           include_children - include data about the child terms
-           include_definition - include the definition for each term
+           include_children - include data about the child terms (default: 0)
+           include_definition - include the definition for terms (default: 0)
  Returns : [ { id => '...', name => '...', definition => '...',
                matching_synonym => '...',
                children => [ { id => '...' }, { id => '...' }, ... ] } ]
