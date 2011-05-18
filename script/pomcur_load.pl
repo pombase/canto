@@ -28,15 +28,17 @@ use PomCur::Track::LoadUtil;
 
 my $do_genes = 0;
 my $for_taxon = 0;
-my $do_ontology = 0;
+my @ontology_args = ();
 my $do_organism = 0;
 my $dry_run = 0;
+my $verbose = 0;
 my $do_help = 0;
 
 my $result = GetOptions ("genes=s" => \$do_genes,
-                         "ontology=s" => \$do_ontology,
+                         "ontology=s" => \@ontology_args,
                          "organism=s" => \$do_organism,
                          "for-taxon=i" => \$for_taxon,
+                         "verbose|v" => \$verbose,
                          "dry-run|T" => \$dry_run,
                          "help|h" => \$do_help);
 
@@ -54,8 +56,10 @@ sub usage
    $0 --genes genes_file --for-taxon=4896
 or:
    $0 --ontology ontology_file.obo
+   $0 --ontology http://some_host.org/file.obo
 or:
    $0 --organism "<genus> <species> <taxon_id>"
+
 Options:
   --genes  - load a tab delimited gene data file, must be also specify the
                 organism with --for-taxon
@@ -75,7 +79,8 @@ The ontology file should be in OBO format
 |;
 }
 
-if (!$result || $do_help || !($do_genes xor $do_ontology xor $do_organism)) {
+if (!$result || $do_help ||
+    ($do_genes xor (@ontology_args > 0) xor $do_organism) > 1) {
   usage();
 }
 
@@ -116,17 +121,23 @@ if ($do_genes) {
   my $guard = $schema->txn_scope_guard;
   my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema,
                                                organism => $organism);
+  print "loading $do_genes\n" if $verbose;
   $gene_load->load($do_genes);
   $guard->commit unless $dry_run;
 }
 
-if ($do_ontology) {
+if (@ontology_args) {
   my $guard = $schema->txn_scope_guard;
   my $index = PomCur::Track::OntologyIndex->new(config => $config);
   $index->initialise_index();
   my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
   my $synonym_types = $config->{load}->{ontology}->{synonym_types};
-  $ontology_load->load($do_ontology, $index, $synonym_types);
+
+  for my $ontology_source (@ontology_args) {
+    print "loading $ontology_source\n" if $verbose;
+    $ontology_load->load($ontology_source, $index, $synonym_types);
+  }
+
   $guard->commit unless $dry_run;
 }
 
@@ -138,6 +149,7 @@ if ($do_organism) {
 
     my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
     my $guard = $schema->txn_scope_guard;
+    print "loading $genus $species - $taxon_id\n" if $verbose;
     $load_util->get_organism($genus, $species, $taxon_id);
     $guard->commit unless $dry_run;
   } else {
