@@ -6,6 +6,5 @@ psi_mod_file="../../sources/PSI-MOD.obo"
 ro_file="etc/ro.obo"
 
 ./script/pomcur_load.pl -v --ontology $ro_file --ontology $go_ext_url \
-                           --ontology $psi_mod_file --ontology $phenotype_file
-
-./script/pomcur_load.pl -v --genes ../../sources/genes_and_products.txt --for-taxon=4896
+                           --ontology $psi_mod_file --ontology $phenotype_file \
+                           --genes ../../sources/genes_and_products.txt --for-taxon=4896
