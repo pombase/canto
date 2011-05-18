@@ -272,12 +272,25 @@ sub get_annotation_table
 
 sub _process_one
 {
+  my $ontology_lookup = shift;
   my $row = shift;
 
   my $gene = $row->{gene};
   my $ontology_term = $row->{ontology_term};
   my $publication = $row->{publication};
   my $evidence_code = $row->{evidence_code};
+  my $ontology_name = $ontology_term->{ontology_name};
+
+  my $term_ontid = $ontology_term->{ontid};
+  my $term_details =
+    $ontology_lookup->lookup(ontology_name => $ontology_name,
+                             search_string => $term_ontid);
+
+  if (!@$term_details) {
+    return undef;
+  }
+
+  my $term_name = $term_details->[0]->{name};
 
   return {
     annotation_id => $row->{annotation_id},
@@ -287,9 +300,9 @@ sub _process_one
       $gene->{name} || $gene->{identifier},
     gene_product => $gene->{product} || '',
     qualifier => '',
-    annotation_type => $ontology_term->{ontology_name},
-    term_ontid => $ontology_term->{ontid},
-    term_name => $ontology_term->{term_name},
+    annotation_type => $ontology_name,
+    term_ontid => $term_ontid,
+    term_name => $term_name,
     evidence_code => $evidence_code,
     with_or_from_identifier => 'DUNNO',
     with_or_from_display_name => 'DUNNO display_name',
@@ -318,11 +331,20 @@ sub get_existing_annotations
   my $gene_identifier = $options->{gene_identifier};
   my $ontology_name = $options->{ontology_name};
 
-  my $lookup =
+  my $ontology_lookup =
+    PomCur::Track::get_adaptor($config, 'ontology');
+  my $annotation_lookup =
     PomCur::Track::get_adaptor($config, 'ontology_annotation');
 
-  if (defined $lookup) {
-    return map { _process_one($_) } @{$lookup->lookup($options)};
+  if (defined $annotation_lookup) {
+    return map {
+      my $res = _process_one($ontology_lookup, $_);
+      if (defined $res) {
+        ($res);
+      } else {
+        ();
+      }
+    } @{$annotation_lookup->lookup($options)};
   } else {
     return ();
   }
