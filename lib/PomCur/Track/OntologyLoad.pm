@@ -68,8 +68,8 @@ sub _build_load_util
  Function: Load the contents an OBO file into the schema
  Args    : $file_name - an obo format file
            $index - the index to add the terms to (optional)
-           $synonym_types - a hashref of synonym types; key is the synonym type,
-                            value is the boost factor for lucene
+           $synonym_types - a array ref of synonym types that should be added
+                            to the index
  Returns : Nothing
 
 =cut
@@ -78,13 +78,13 @@ sub load
   my $self = shift;
   my $file_name = shift;
   my $index = shift;
-  my $synonym_types = shift;
+  my $synonym_types_ref = shift;
 
   if (!defined $file_name) {
     croak "no file name passed to OntologyLoad::load()";
   }
 
-  if (!defined $synonym_types) {
+  if (!defined $synonym_types_ref) {
     croak "no synonym_types passed to OntologyLoad::load()";
   }
 
@@ -100,7 +100,7 @@ sub load
   my $graph = $parser->handler->graph;
   my %cvterms = ();
 
-  my @synonym_types_to_load = keys %$synonym_types;
+  my @synonym_types_to_load = @$synonym_types_ref;
   my %synonym_type_ids = ();
 
   for my $synonym_type (@synonym_types_to_load) {

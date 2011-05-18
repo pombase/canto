@@ -125,7 +125,8 @@ if ($do_ontology) {
   my $index = PomCur::Track::OntologyIndex->new(config => $config);
   $index->initialise_index();
   my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
-  $ontology_load->load($do_ontology, $index);
+  my $synonym_types = $config->{load}->{ontology}->{synonym_types};
+  $ontology_load->load($do_ontology, $index, $synonym_types);
   $guard->commit unless $dry_run;
 }
 
