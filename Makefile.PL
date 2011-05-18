@@ -62,6 +62,8 @@ requires 'File::Basename';
 requires 'Getopt::Long';
 requires 'Data::Dumper';
 requires 'Hash::Merge';
+requires 'Memoize';
+requires 'IO::String';
 
 requires 'Config::General';
 
