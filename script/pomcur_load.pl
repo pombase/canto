@@ -53,18 +53,25 @@ sub usage
   }
 
   die qq|${message}usage:
-   $0 --genes genes_file --for-taxon=4896
+  $0 --genes genes_file --for-taxon=<taxon_id>
 or:
-   $0 --ontology ontology_file.obo
-   $0 --ontology http://some_host.org/file.obo
+  $0 --ontology ontology_file.obo
+  $0 --ontology http://some_host.org/file.obo
 or:
-   $0 --organism "<genus> <species> <taxon_id>"
+  $0 --organism "<genus> <species> <taxon_id>"
+or in combination:
+  $0 --organism "<genus> <species> <taxon_id>" \
+     --ontology ontology_2.obo --ontology ontology_2.obo \
+     --genes genes_file --for-taxon=<taxon_id>
 
 Options:
   --genes  - load a tab delimited gene data file, must be also specify the
                 organism with --for-taxon
   --ontology  - load an ontology data file in OBO format
   --organism  - add an organism to the database
+
+Any combination of options is valid - eg. genes and ontologies can be loaded
+at once.
 
 File formats
 ~~~~~~~~~~~~
@@ -79,8 +86,7 @@ The ontology file should be in OBO format
 |;
 }
 
-if (!$result || $do_help ||
-    ($do_genes xor (@ontology_args > 0) xor $do_organism) > 1) {
+if (!$result || $do_help) {
   usage();
 }
 
