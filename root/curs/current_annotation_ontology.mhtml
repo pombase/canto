@@ -130,5 +130,5 @@ if ($user_created) {
 }
 
 my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
-  $gene_text;
+  $gene_text . ($user_created ? '' : ' from ' . $pub->uniquename());
 </%init>
