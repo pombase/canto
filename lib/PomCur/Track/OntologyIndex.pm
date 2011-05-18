@@ -90,24 +90,25 @@ sub _index_path
   return $config->data_dir_path('ontology_index_file');
 }
 
-sub _clean_name
+sub _clean_field_value
 {
-  my $name = shift;
+  my $field_value = shift;
 
-  my $processed_name = $name;
-  $processed_name =~ s/[^\d\w]+/ /g;
-  $processed_name =~ s/_/ /g;
-  $processed_name =~ s/\s+$//;
-  $processed_name =~ s/^\s+//;
+  my $processed_field_value = $field_value;
+  $processed_field_value =~ s/[^\d\w]+/ /g;
+  $processed_field_value =~ s/_/ /g;
+  $processed_field_value =~ s/\s+$//;
+  $processed_field_value =~ s/^\s+//;
 
-  return $processed_name;
+  return $processed_field_value;
 }
 
-sub _process_name
+sub _process_field
 {
-  my $name = _clean_name(shift);
+  my $key = shift;
+  my $field_value = _clean_field_value(shift);
 
-  my $name_field = Lucene::Document::Field->Text(name => $name);
+  my $name_field = Lucene::Document::Field->Text($key, $field_value);
 
   return $name_field;
 }
@@ -129,11 +130,7 @@ sub _get_all_words_field
 
   my $word_string = join ' ', keys %words;
 
-  my $field = _process_name($word_string);
-
-  # weight the synonyms slightly lower
-  $field->setBoost(0.8);
-
+  my $field = _process_field('all_words', $word_string);
   return $field;
 }
 
@@ -158,7 +155,7 @@ sub add_to_index
 
   my $cvterm_name = $cvterm->name();
 
-  my $name_field = _process_name($cvterm_name);
+  my $name_field = _process_field('name', $cvterm_name);
   my $all_words_field = _get_all_words_field($cvterm);
 
   my @fields = (
@@ -171,7 +168,7 @@ sub add_to_index
 
   for my $synonym ($cvterm->synonyms()) {
     # weight the synonyms slightly lower
-    my $name_field = _process_name($synonym->synonym(), 0.8);
+    my $name_field = _process_field($synonym->synonym(), 0.8);
 #    push @fields, $name_field;
   }
 
@@ -253,10 +250,12 @@ sub lookup
     $query = Lucene::Search::TermQuery->new($ontid_term);
   } else {
     # sanitise
-    $search_string = _clean_name($search_string);
+    $search_string = _clean_field_value($search_string);
 
     my $query_string =
-      "cv_name:$ontology_name AND (($search_string) OR ($search_string*))";
+      qq{cv_name:$ontology_name AND (} .
+        qq{name:($search_string) OR name:($search_string*) OR } .
+        qq{all_words:($search_string) OR all_words:($search_string*))};
 
     $query = $parser->parse($query_string);
   }
