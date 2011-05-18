@@ -120,6 +120,10 @@ sub load
 
   my $schema = $self->schema();
 
+  my $gene_rs = $schema->resultset('Gene')
+    ->search({ organism => $self->organism()->organism_id() });
+  $gene_rs->delete();
+
   my $csv = Text::CSV->new({ binary => 1, sep_char => "\t",
                              blank_is_undef => 1 });
   open my $fh, '<', $file_name
