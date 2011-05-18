@@ -40,6 +40,8 @@ use Moose;
 use Carp;
 
 use GO::Parser;
+use LWP::Simple;
+use File::Temp qw(tempfile);
 
 use PomCur::Track::LoadUtil;
 
@@ -61,12 +63,34 @@ sub _build_load_util
   return PomCur::Track::LoadUtil->new(schema => $self->schema());
 }
 
+sub _delete_term_by_cv
+{
+  my $schema = shift;
+  my $cv_name = shift;
+
+  my $guard = $schema->txn_scope_guard;
+
+  # delete relationships first
+  $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
+    ->search_related('cvterms')
+    ->search_related('cvterm_relationship_objects')->delete();
+
+  $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
+    ->search_related('cvterms')
+    ->search_related('cvterm_relationship_subjects')->delete();
+
+  $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
+    ->search_related('cvterms')->delete();
+
+  $guard->commit();
+}
+
 =head2 load
 
  Usage   : my $ont_load = PomCur::Track::OntLoad->new(schema => $schema);
            $ont_load->load($file_name);
  Function: Load the contents an OBO file into the schema
- Args    : $file_name - an obo format file
+ Args    : $source - the file name or URL of an obo format file
            $index - the index to add the terms to (optional)
            $synonym_types - a array ref of synonym types that should be added
                             to the index
@@ -76,12 +100,12 @@ sub _build_load_util
 sub load
 {
   my $self = shift;
-  my $file_name = shift;
+  my $source = shift;
   my $index = shift;
   my $synonym_types_ref = shift;
 
-  if (!defined $file_name) {
-    croak "no file name passed to OntologyLoad::load()";
+  if (!defined $source) {
+    croak "no source passed to OntologyLoad::load()";
   }
 
   if (!defined $synonym_types_ref) {
@@ -95,10 +119,29 @@ sub load
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
   my $parser = GO::Parser->new({ handler=>'obj' });
 
+  my $file_name;
+  my $fh;
+
+  if ($source =~ m|http://|) {
+    ($fh, $file_name) = tempfile('/tmp/downloaded_ontology_file_XXXXX',
+                                 SUFFIX => '.obo');
+    my $rc = getstore($source, $file_name);
+    if (is_error($rc)) {
+      die "failed to download source OBO file: $rc\n";
+    }
+  } else {
+    $file_name = $source;
+  }
+
   $parser->parse($file_name);
 
   my $graph = $parser->handler->graph;
   my %cvterms = ();
+
+  # The first time we see a ontology mentioned in the input, delete all cvterms
+  # from that ontology from the database and add the name to this array.  This
+  # allows us to re-load ontologies.
+  my @seen_cvs = ();
 
   my @synonym_types_to_load = @$synonym_types_ref;
   my %synonym_type_ids = ();
@@ -128,6 +171,12 @@ sub load
       my $term = $ni->term;
 
       my $cv_name = $term->namespace();
+
+      if (!grep { $_ eq $cv_name } @seen_cvs) {
+        push @seen_cvs, $cv_name;
+        _delete_term_by_cv($schema, $cv_name);
+      }
+
       my $comment = $term->comment();
 
       my $xrefs = $term->dbxref_list();
