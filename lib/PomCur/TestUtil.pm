@@ -18,6 +18,7 @@ use YAML qw(LoadFile);
 use Data::Rmap ':all';
 use Clone qw(clone);
 use XML::Simple;
+use IO::All;
 
 use Plack::Test;
 use Plack::Util;
@@ -480,9 +481,9 @@ sub _add_pub_details
   my $config = shift;
   my $schema = shift;
 
-  my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_ids($config,
-                                                             @test_pub_ids);
-  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'user_load');
+  my $xml_file = $self->test_data_dir_full_path('entrez_pubmed.xml');
+  my $xml = IO::All($xml_file)->slurp();
+  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
 }
 
 =head2 make_base_track_db

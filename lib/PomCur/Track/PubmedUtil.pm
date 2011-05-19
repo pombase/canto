@@ -139,7 +139,8 @@ sub load_pubmed_xml
   my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
   my $res_hash = XMLin($content,
-                       ForceArray => ['AbstractText']);
+                       ForceArray => ['AbstractText',
+                                      'Author']);
 
   my $count = 0;
   my @articles;
@@ -161,8 +162,15 @@ sub load_pubmed_xml
 
       my $article = $medline_citation->{Article};
       my $title = $article->{ArticleTitle};
-      my $abstract_text = $article->{Abstract}->{AbstractText};
 
+
+      my $authors = '';
+      my @author_elements = @{$article->{AuthorList}->{Author}};
+      $authors = join ', ', map {
+        $_->{Initials} . ' ' . $_->{LastName};
+      } @author_elements;
+
+      my $abstract_text = $article->{Abstract}->{AbstractText};
       my $abstract;
 
       if (ref $abstract_text eq 'ARRAY') {
@@ -181,6 +189,7 @@ sub load_pubmed_xml
       my $pub = $load_util->get_pub($uniquename, $load_type);
 
       $pub->title($title);
+      $pub->authors($authors);
       $pub->abstract($abstract);
       $pub->update();
 
