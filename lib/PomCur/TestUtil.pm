@@ -440,7 +440,7 @@ sub create_pubmed_test_xml
 
  Usage   : my $xml = get_pubmed_test_xml();
  Function: Return the contents of the test XML file.  The file is updated with
-           the: etc/data_initialise.pl script
+           the etc/data_initialise.pl script
  Args    : none
  Returns : the XML
 
