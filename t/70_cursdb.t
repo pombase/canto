@@ -23,6 +23,7 @@ $schema->txn_do(
     $schema->create_with_type('Pub', { uniquename => 12345678,
                                        title => "a title",
                                        abstract => "abstract text",
+                                       authors => "author list",
                                      });
   });
 

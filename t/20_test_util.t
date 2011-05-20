@@ -183,6 +183,8 @@ sub track_init
                                   {
                                     uniquename => 'PMID:18426916',
                                     title => 'test title',
+                                    abstract => 'test abstract',
+                                    authors => 'test author list',
                                     type_id => 601,
                                     triage_status_id => 602,
                                     load_type => { name => 'admin_load',
