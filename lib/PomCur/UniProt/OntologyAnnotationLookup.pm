@@ -50,7 +50,7 @@ use Memoize::Expire;
 
 tie my %cache => 'Memoize::Expire', LIFETIME => 60*60*2;
 
-memoize '_cached_lookup', SCALAR_CACHE => [HASH => \%cache];
+#memoize '_cached_lookup', SCALAR_CACHE => [HASH => \%cache];
 
 sub _cached_lookup
 {
