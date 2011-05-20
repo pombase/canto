@@ -38,10 +38,15 @@ __PACKAGE__->table("pub");
   data_type: 'text'
   is_nullable: 0
 
+=head2 authors
+
+  data_type: 'text'
+  is_nullable: 0
+
 =head2 abstract
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =cut
 
@@ -52,8 +57,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "title",
   { data_type => "text", is_nullable => 0 },
+  "authors",
+  { data_type => "text", is_nullable => 0 },
   "abstract",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("pub_id");
 __PACKAGE__->add_unique_constraint("uniquename_unique", ["uniquename"]);
@@ -76,8 +83,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-14 18:26:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tf7s9tTTnhPOPK7raW03Kg
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-20 14:20:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YfJ3VMrX/3FxU0h9GIQZ9g
 
 __PACKAGE__->meta->make_immutable;
 

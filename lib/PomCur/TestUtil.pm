@@ -18,6 +18,7 @@ use YAML qw(LoadFile);
 use Data::Rmap ':all';
 use Clone qw(clone);
 use XML::Simple;
+use IO::All;
 
 use Plack::Test;
 use Plack::Util;
@@ -440,7 +441,7 @@ sub create_pubmed_test_xml
 
  Usage   : my $xml = get_pubmed_test_xml();
  Function: Return the contents of the test XML file.  The file is updated with
-           the: etc/data_initialise.pl script
+           the etc/data_initialise.pl script
  Args    : none
  Returns : the XML
 
@@ -451,13 +452,7 @@ sub get_pubmed_test_xml
 
   my $xml_file_name = $self->publications_xml_file();
 
-  local $/ = undef;
-  open my $xml_file, '<', $xml_file_name
-    or die "can't open $xml_file_name";
-  my $xml = <$xml_file>;
-  close $xml_file or die "$!";
-
-  return $xml;
+  return IO::All->new($xml_file_name)->slurp();
 }
 
 # pubmed IDs which won't have title, authors, etc.
@@ -480,9 +475,13 @@ sub _add_pub_details
   my $config = shift;
   my $schema = shift;
 
-  my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_ids($config,
-                                                             @test_pub_ids);
-  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'user_load');
+  my $test_config = $config->{test_config};
+  my $data_dir = $test_config->{data_dir};
+  my $xml_file_name = $test_config->{test_pubmed_xml};
+
+  my $full_file_name = $data_dir . '/'. $xml_file_name;
+  my $xml = IO::All->new($full_file_name)->slurp();
+  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
 }
 
 =head2 make_base_track_db

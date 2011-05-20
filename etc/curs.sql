@@ -42,7 +42,8 @@ CREATE TABLE pub (
        pub_id integer primary key,
        uniquename text NOT NULL UNIQUE,
        title text NOT NULL,
-       abstract text
+       authors text NOT NULL,
+       abstract text NOT NULL
 );
 
 CREATE TABLE metadata (

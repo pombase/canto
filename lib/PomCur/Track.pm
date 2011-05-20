@@ -91,6 +91,7 @@ sub create_curs_db
                                    {
                                      uniquename => $uniquename,
                                      title => $track_db_pub->title(),
+                                     authors => $track_db_pub->authors(),
                                      abstract => $track_db_pub->abstract(),
                                    });
 
