@@ -97,6 +97,10 @@ sub _cached_lookup
         $properties,            # GAF2.0
         $isoform) = @vals;      # GAF2.0
 
+    if (defined $gene_identifier && $gene_identifier ne $prodacc) {
+      next;
+    }
+
     # backward compatibility GAF2.0 -> GAF1.0
     $properties = '' unless defined $properties;
     $isoform = '' unless defined $isoform;
