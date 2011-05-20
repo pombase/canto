@@ -131,7 +131,9 @@ sub _load_one_pub
 
   my $raw_pubmedid;
 
-  $pubmedid =~ s/\s+//g;
+  $pubmedid =~ s/[^_\d\w:]+//g;
+
+  warn "PUBMED: $pubmedid\n";
 
   if ($pubmedid =~ /^\s*(?:pmid:|pubmed:)?(\d+)\s*$/i) {
     $raw_pubmedid = $1;
