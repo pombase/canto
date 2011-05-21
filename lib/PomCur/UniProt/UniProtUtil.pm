@@ -50,7 +50,8 @@ sub _parse_results
     return ();
   }
 
-  my $res_hash = XMLin($xml, ForceArray => ['entry', 'accession', 'dbReference']);
+  my $res_hash =
+    XMLin($xml, ForceArray => ['entry', 'accession', 'dbReference', 'name']);
 
   my @ret = ();
 
