@@ -95,6 +95,14 @@ sub _parse_results
   return @ret;
 }
 
+=head2 retrieve_entries
+
+ Usage   : my $xml =
+             PomCur::UniProt::UniProtUtil::retrieve_entries($config, [@ids]);
+ Function: Return the XML entries from UniProt for the given ids
+ Args    : $config - the PomCur::Config object
+
+=cut
 sub retrieve_entries
 {
   my $config = shift;
