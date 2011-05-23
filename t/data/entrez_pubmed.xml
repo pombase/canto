@@ -3070,9 +3070,6 @@
             <Pagination>
                 <MedlinePgn>272-7</MedlinePgn>
             </Pagination>
-            <Abstract>
-                <AbstractText>The ade6-M26 mutation in the fission yeast Schizosaccharomyces pombe creates a meiotic homologous recombination hot spot. We have achieved 40,000-fold purification of a heterodimeric DNA-binding protein, Mts1/Mts2, that activates the recombination hot spot. Physical studies suggested the presence of a third subunit. It is demonstrated here that RNA molecules of approximately 210 nucleotides copurified with the heterodimer. To characterize the RNA component, it was necessary to develop a new strategy for cloning of the unknown, low-abundance, partially degraded RNAs that were present in purified Mts1/Mts2 protein preparations. The strategy uses RNA ligase to add DNA oligonucleotide priming sites to the RNA for subsequent reverse transcription and PCR (RNA ligase, reverse transcription-PCR, or RL/RT/PCR). This cloning procedure could be applied to the cloning of any unknown RNA or DNA molecules. Because the cDNA clones obtained from Mts1/Mts2 were largely heterogeneous, it seems likely that the RNAs copurified as a result of tight but nonspecific interactions with the heterodimeric protein.</AbstractText>
-            </Abstract>
             <Affiliation>Fred Hutchinson Cancer Research Center, Seattle, Washington 98104.</Affiliation>
             <AuthorList CompleteYN="Y">
                 <Author ValidYN="Y">
@@ -3265,7 +3262,6 @@
                 <MedlinePgn>1927-36</MedlinePgn>
             </Pagination>
             <Abstract>
-                <AbstractText>The fission yeast Schizosaccharomyces pombe senses environmental glucose through a cAMP-signaling pathway. Elevated cAMP levels activate protein kinase A (PKA) to inhibit transcription of genes involved in sexual development and gluconeogenesis, including the fbp1(+) gene, which encodes fructose-1,6-bisphosphatase. Glucose-mediated activation of PKA requires the function of nine glucose-insensitive transcription (git) genes, encoding adenylate cyclase, the PKA catalytic subunit, and seven "upstream" proteins required for glucose-triggered adenylate cyclase activation. We describe the cloning and characterization of the git10(+) gene, which is identical to swo1(+) and encodes the S. pombe Hsp90 chaperone protein. Glucose repression of fbp1(+) transcription is impaired by both git10(-) and swo1(-) mutant alleles of the hsp90(+) gene, as well as by chemical inhibition of Hsp90 activity and temperature stress to wild-type cells. Unlike the swo1(-) mutant alleles, the git10-201 allele supports cell growth at 37 degrees , while severely reducing glucose repression of an fbp1-lacZ reporter, suggesting a separation-of-function defect. Sequence analyses of three swo1(-) alleles and the one git10(-) allele indicate that swo1(-) mutations alter core functional domains of Hsp90, while the git10(-) mutation affects the Hsp90 central domain involved in client protein binding. These results suggest that Hsp90 plays a specific role in the S. pombe glucose/cAMP pathway.</AbstractText>
             </Abstract>
             <Affiliation>Biology Department, Boston College, Chestnut Hill, Massachusetts 02467, USA.</Affiliation>
             <AuthorList CompleteYN="Y">
@@ -5291,56 +5287,6 @@
             </Abstract>
             <Affiliation>Genome Damage and Stability Centre, University of Sussex, Falmer, Brighton BN1 9RQ, United Kingdom.</Affiliation>
             <AuthorList CompleteYN="Y">
-                <Author ValidYN="Y">
-                    <LastName>Frampton</LastName>
-                    <ForeName>Jonathan</ForeName>
-                    <Initials>J</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Irmisch</LastName>
-                    <ForeName>Anja</ForeName>
-                    <Initials>A</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Green</LastName>
-                    <ForeName>Catherine M</ForeName>
-                    <Initials>CM</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Neiss</LastName>
-                    <ForeName>Andrea</ForeName>
-                    <Initials>A</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Trickey</LastName>
-                    <ForeName>Michelle</ForeName>
-                    <Initials>M</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Ulrich</LastName>
-                    <ForeName>Helle D</ForeName>
-                    <Initials>HD</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Furuya</LastName>
-                    <ForeName>Kanji</ForeName>
-                    <Initials>K</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Watts</LastName>
-                    <ForeName>Felicity Z</ForeName>
-                    <Initials>FZ</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Carr</LastName>
-                    <ForeName>Antony M</ForeName>
-                    <Initials>AM</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Lehmann</LastName>
-                    <ForeName>Alan R</ForeName>
-                    <Initials>AR</Initials>
-                </Author>
             </AuthorList>
             <Language>eng</Language>
             <PublicationTypeList>
@@ -5697,28 +5643,6 @@
                 <AbstractText>The organization and control of polarized growth through the cell cycle of Schizosaccharomyces pombe, a single-celled eukaryote, have been studied extensively. We have investigated the changes in these processes when S. pombe differentiates to form multicellular invasive mycelia and have found striking alterations to the behavior of some of the key regulatory proteins. Cells at the tips of invading filaments are considerably more elongated than cells growing singly and grow at one pole only. The filament tip follows a strict direction of growth through multiple cell cycles. A group of proteins involved in the growth process and actin regulation, comprising Spo20, Bgs4, activated Cdc42, and Crn1, are all concentrated at the growing tip, unlike their distribution at both ends of single cells. In contrast, several proteins implicated in microtubule-dependent organization of growth, including Tea1, Tea4, Mod5, and Pom1, all show the opposite effect and are relatively depleted at the growing end and enriched at the nongrowing end, although Tea1 appears to continue to be delivered to both ends. A third group acting at different stages of the cell cycle, including Bud6, Rga4, and Mid1, localize similarly in filaments and single cells, while Nif1 shows a reciprocal localization to Pom1.</AbstractText>
             </Abstract>
             <Affiliation>University of Sussex, Falmer, Brighton, England.</Affiliation>
-            <AuthorList CompleteYN="Y">
-                <Author ValidYN="Y">
-                    <LastName>Dodgson</LastName>
-                    <ForeName>James</ForeName>
-                    <Initials>J</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Brown</LastName>
-                    <ForeName>William</ForeName>
-                    <Initials>W</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Rosa</LastName>
-                    <ForeName>Carlos A</ForeName>
-                    <Initials>CA</Initials>
-                </Author>
-                <Author ValidYN="Y">
-                    <LastName>Armstrong</LastName>
-                    <ForeName>John</ForeName>
-                    <Initials>J</Initials>
-                </Author>
-            </AuthorList>
             <Language>eng</Language>
             <GrantList CompleteYN="Y">
                 <Grant>

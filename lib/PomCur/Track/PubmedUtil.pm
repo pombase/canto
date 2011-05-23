@@ -165,10 +165,13 @@ sub load_pubmed_xml
 
 
       my $authors = '';
-      my @author_elements = @{$article->{AuthorList}->{Author}};
-      $authors = join ', ', map {
-        $_->{Initials} . ' ' . $_->{LastName};
-      } @author_elements;
+      my $author_detail = $article->{AuthorList}->{Author};
+      if (defined $author_detail) {
+        my @author_elements = @{$author_detail};
+        $authors = join ', ', map {
+          $_->{Initials} . ' ' . $_->{LastName};
+        } @author_elements;
+      }
 
       my $abstract_text = $article->{Abstract}->{AbstractText};
       my $abstract;
@@ -183,7 +186,7 @@ sub load_pubmed_xml
                             }
                           } @$abstract_text);
       } else {
-        $abstract = $abstract_text;
+        $abstract = $abstract_text // '';
       }
 
       my $pub = $load_util->get_pub($uniquename, $load_type);
