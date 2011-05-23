@@ -42,6 +42,17 @@ use Carp;
 use XML::Simple;
 use LWP::UserAgent;
 
+sub _content
+{
+  my $data = shift;
+
+  if (ref $data) {
+    return $data->{content};
+  } else {
+    return $data;
+  }
+}
+
 sub _parse_results
 {
   my $xml = shift;
@@ -50,33 +61,34 @@ sub _parse_results
     return ();
   }
 
-  my $res_hash =
-    XMLin($xml, ForceArray => ['entry', 'accession', 'dbReference', 'name']);
-
+  my $res_hash = XMLin($xml, ForceArray => 1, KeyAttr => []);
   my @ret = ();
 
-  while (my ($name, $details) = each %{$res_hash->{entry}}) {
-    my $full_name = $details->{protein}->{recommendedName}->{fullName};
+  for my $entry (@{$res_hash->{entry}}) {
+    my $name = _content($entry->{name}->[0]);
+    my $full_name =
+      _content($entry->{protein}->[0]->{recommendedName}->[0]->{fullName}->[0]);
+
     my @synonyms = ();
 
-    if (defined $details->{gene}->{name}) {
-      push @synonyms, map { $_->{content} } @{$details->{gene}->{name}};
+    if (defined $entry->{gene}->[0]->{name}) {
+      push @synonyms, map { _content($_) } @{$entry->{gene}->[0]->{name}};
     }
 
-    my $accession = $details->{accession}->[0];
+    my $accession = _content($entry->{accession}->[0]);
 
     my $organism_full_name = 'Unknown unknown';
 
-    for my $org_details (@{$details->{organism}->{name}}) {
+    for my $org_details (@{$entry->{organism}->[0]->{name}}) {
       if ($org_details->{type} eq 'scientific') {
-        $organism_full_name = $org_details->{content};
+        $organism_full_name = _content($org_details);
         last;
       }
     }
 
     my $taxonid = 0;
 
-    for my $org_details (values %{$details->{organism}->{dbReference}}) {
+    for my $org_details (@{$entry->{organism}->[0]->{dbReference}}) {
       if ($org_details->{type} eq 'NCBI Taxonomy') {
         $taxonid = $org_details->{id};
       }

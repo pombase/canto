@@ -1712,6 +1712,180 @@
       CPHLEWLDGSDVSQSSRAAFTKSSN
     </sequence>
   </entry>
+  <entry dataset="TrEMBL" created="2006-10-31" modified="2011-05-03" version="32">
+    <accession>Q06Y82</accession>
+    <name>Q06Y82_SCHPM</name>
+    <protein>
+      <recommendedName>
+        <fullName evidence="EA9">Cytochrome c oxidase subunit 2</fullName>
+      </recommendedName>
+    </protein>
+    <gene>
+      <name type="primary" evidence="EI1">COXII</name>
+    </gene>
+    <organism evidence="EI1">
+      <name type="scientific">Schizosaccharomyces pombe</name>
+      <name type="common">Fission yeast</name>
+      <dbReference type="NCBI Taxonomy" id="4896" key="1"/>
+      <lineage>
+        <taxon>Eukaryota</taxon>
+        <taxon>Fungi</taxon>
+        <taxon>Dikarya</taxon>
+        <taxon>Ascomycota</taxon>
+        <taxon>Taphrinomycotina</taxon>
+        <taxon>Schizosaccharomycetes</taxon>
+        <taxon>Schizosaccharomycetales</taxon>
+        <taxon>Schizosaccharomycetaceae</taxon>
+        <taxon>Schizosaccharomyces</taxon>
+      </lineage>
+    </organism>
+    <geneLocation type="mitochondrion" evidence="EI1"/>
+    <reference key="2" evidence="EI1">
+      <citation type="journal article" date="2007" name="FEMS Yeast Res." volume="7" first="141" last="151">
+        <title>Multigene phylogenetic analysis of the Trichomonascus, Wickerhamiella and Zygoascus yeast clades, and the proposal of Sugiyamaella gen. nov. and 14 new species combinations.</title>
+        <authorList>
+          <person name="Kurtzman C.P."/>
+          <person name="Robnett C.J."/>
+        </authorList>
+        <dbReference type="PubMed" id="17311592" key="3"/>
+        <dbReference type="DOI" id="10.1111/j.1567-1364.2006.00157.x" key="4"/>
+      </citation>
+      <scope>NUCLEOTIDE SEQUENCE</scope>
+      <source>
+        <strain evidence="EI1">NRRL Y-12796</strain>
+      </source>
+    </reference>
+    <comment type="function">
+      <text evidence="EA9">Cytochrome c oxidase is the component of the respiratory chain that catalyzes the reduction of oxygen to water. Subunits 1-3 form the functional core of the enzyme complex. Subunit 2 transfers the electrons from cytochrome c via its binuclear copper A center to the bimetallic center of the catalytic subunit 1 (By similarity).</text>
+    </comment>
+    <comment type="cofactor">
+      <text evidence="EA9">Copper A (By similarity).</text>
+    </comment>
+    <comment type="subcellular location">
+      <subcellularLocation>
+        <location>Mitochondrion inner membrane</location>
+        <topology status="by similarity" evidence="EA9">Multi-pass membrane protein</topology>
+      </subcellularLocation>
+    </comment>
+    <comment type="similarity">
+      <text evidence="EA9">Belongs to the cytochrome c oxidase subunit 2 family.</text>
+    </comment>
+    <dbReference type="EMBL" id="DQ443118" key="5">
+      <property type="protein sequence ID" value="ABD97050.1"/>
+      <property type="molecule type" value="Genomic_DNA"/>
+    </dbReference>
+    <dbReference type="STRING" id="Q06Y82" key="6"/>
+    <dbReference type="GO" id="GO:0016021" key="7">
+      <property type="term" value="C:integral to membrane"/>
+      <property type="evidence" value="IEA:UniProtKB-KW"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0005743" key="8">
+      <property type="term" value="C:mitochondrial inner membrane"/>
+      <property type="evidence" value="IEA:UniProtKB-SubCell"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0070469" key="9">
+      <property type="term" value="C:respiratory chain"/>
+      <property type="evidence" value="IEA:UniProtKB-KW"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0005507" key="10">
+      <property type="term" value="F:copper ion binding"/>
+      <property type="evidence" value="IEA:InterPro"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0004129" key="11">
+      <property type="term" value="F:cytochrome-c oxidase activity"/>
+      <property type="evidence" value="IEA:InterPro"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0009055" key="12">
+      <property type="term" value="F:electron carrier activity"/>
+      <property type="evidence" value="IEA:InterPro"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0020037" key="13">
+      <property type="term" value="F:heme binding"/>
+      <property type="evidence" value="IEA:InterPro"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0022904" key="14">
+      <property type="term" value="P:respiratory electron transport chain"/>
+      <property type="evidence" value="IEA:InterPro"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR008972" key="15">
+      <property type="entry name" value="Cupredoxin"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR015964" key="16">
+      <property type="entry name" value="Cyt_c_oxidase_su2-like_TM_dom"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR002429" key="17">
+      <property type="entry name" value="Cyt_c_oxidase_su2_C"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR011759" key="18">
+      <property type="entry name" value="Cyt_c_oxidase_su2_TM_dom"/>
+    </dbReference>
+    <dbReference type="Gene3D" id="G3DSA:1.10.287.90" key="19">
+      <property type="entry name" value="COX2_TM"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="Gene3D" id="G3DSA:2.60.40.420" key="20">
+      <property type="entry name" value="Cupredoxin"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="Pfam" id="PF00116" key="21">
+      <property type="entry name" value="COX2"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="Pfam" id="PF02790" key="22">
+      <property type="entry name" value="COX2_TM"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="PRINTS" id="PR01166" key="23">
+      <property type="entry name" value="CYCOXIDASEII"/>
+    </dbReference>
+    <dbReference type="SUPFAM" id="SSF49503" key="24">
+      <property type="entry name" value="Cupredoxin"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="SUPFAM" id="SSF81464" key="25">
+      <property type="entry name" value="Cyt_c_oxidase_II-like_TM"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="PROSITE" id="PS50857" key="26">
+      <property type="entry name" value="COX2_CUA"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="PROSITE" id="PS50999" key="27">
+      <property type="entry name" value="COX2_TM"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <proteinExistence type="inferred from homology"/>
+    <keyword id="KW-0186" evidence="EA2 EA9">Copper</keyword>
+    <keyword id="KW-0249" evidence="EA5 EA9">Electron transport</keyword>
+    <keyword id="KW-0472" evidence="EA9 EA7">Membrane</keyword>
+    <keyword id="KW-0479" evidence="EA9">Metal-binding</keyword>
+    <keyword id="KW-0496" evidence="EA9">Mitochondrion</keyword>
+    <keyword id="KW-0999" evidence="EA9">Mitochondrion inner membrane</keyword>
+    <keyword id="KW-0679" evidence="EA5 EA9">Respiratory chain</keyword>
+    <keyword id="KW-0812" evidence="EA7">Transmembrane</keyword>
+    <keyword id="KW-1133" evidence="EA7">Transmembrane helix</keyword>
+    <keyword id="KW-0813" evidence="EA5 EA9">Transport</keyword>
+    <feature type="non-terminal residue" evidence="EI1">
+      <location>
+        <position position="1"/>
+      </location>
+    </feature>
+    <feature type="non-terminal residue" evidence="EI1">
+      <location>
+        <position position="142"/>
+      </location>
+    </feature>
+    <evidence key="EA2" category="program" type="SAAS" attribute="SAAS011759_004_000142" date="2011-03-31"/>
+    <evidence key="EA5" category="program" type="SAAS" attribute="SAAS011759_004_000478" date="2011-03-31"/>
+    <evidence key="EA7" category="program" type="SAAS" attribute="SAAS011759_004_000533" date="2011-03-31"/>
+    <evidence key="EA9" category="program" type="Rulebase" attribute="RU000457V2.822S0063728" date="2011-02-01"/>
+    <evidence key="EI1" category="import" type="EMBL" attribute="ABD97050.1" date="2007-01-27"/>
+    <sequence length="142" mass="16095" checksum="D3DF9BA34D1E4CEE" modified="2006-10-31" version="1" fragment="single">
+      HPIAAKYTTHGSIVEFIWTLIPALILILVALPSFKLLYLLDEVQKPSMTVKAIGRQWFWS
+      YELNDFVTNENEPVSFDSYMVPEEDLEEGSLRQLEVDNRLVLPIDTRIRLILTSGDVIHS
+      WAVPSLGIKCDCIPGRLNQVSA
+    </sequence>
+  </entry>
   <copyright>
     Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
     Distributed under the Creative Commons Attribution-NoDerivs License
