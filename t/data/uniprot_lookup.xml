@@ -1,1719 +1,1719 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <uniprot xmlns="http://uniprot.org/uniprot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://uniprot.org/uniprot http://www.uniprot.org/support/docs/uniprot.xsd">
-<entry dataset="Swiss-Prot" created="1990-04-01" modified="2011-05-03" version="121">
-<accession>P15436</accession>
-<accession>D6VRP8</accession>
-<name>DPOD_YEAST</name>
-<protein>
-<recommendedName ref="1">
-<fullName>DNA polymerase delta catalytic subunit</fullName>
-</recommendedName>
-<alternativeName>
-<fullName>DNA polymerase III</fullName>
-</alternativeName>
-</protein>
-<gene>
-<name type="primary">POL3</name>
-<name type="synonym">CDC2</name>
-<name type="synonym">TEX1</name>
-<name type="ordered locus">YDL102W</name>
-<name type="ORF">D2366</name>
-</gene>
-<organism>
-<name type="scientific">Saccharomyces cerevisiae (strain ATCC 204508 / S288c)</name>
-<name type="common">Baker's yeast</name>
-<dbReference type="NCBI Taxonomy" id="559292" key="2"/>
-<lineage>
-<taxon>Eukaryota</taxon>
-<taxon>Fungi</taxon>
-<taxon>Dikarya</taxon>
-<taxon>Ascomycota</taxon>
-<taxon>Saccharomycotina</taxon>
-<taxon>Saccharomycetes</taxon>
-<taxon>Saccharomycetales</taxon>
-<taxon>Saccharomycetaceae</taxon>
-<taxon>Saccharomyces</taxon>
-</lineage>
-</organism>
-<reference key="3">
-<citation type="journal article" date="1989" name="EMBO J." volume="8" first="1849" last="1854">
-<title>Structure and function of the Saccharomyces cerevisiae CDC2 gene encoding the large subunit of DNA polymerase III.</title>
-<authorList>
-<person name="Boulet A."/>
-<person name="Simon M."/>
-<person name="Faye G."/>
-<person name="Bauer G.A."/>
-<person name="Burgers M.J."/>
-</authorList>
-<dbReference type="MEDLINE" id="89356661" key="4"/>
-<dbReference type="PubMed" id="2670563" key="5"/>
-</citation>
-<scope>NUCLEOTIDE SEQUENCE [GENOMIC DNA]</scope>
-<source>
-<strain>YAB2</strain>
-</source>
-</reference>
-<reference key="6">
-<citation type="journal article" date="1992" name="Nucleic Acids Res." volume="20" first="375" last="375">
-<title>Nucleotide sequence of the POL3 gene encoding DNA polymerase III (delta) of Saccharomyces cerevisiae.</title>
-<authorList>
-<person name="Morrison A."/>
-<person name="Sugino A."/>
-</authorList>
-<dbReference type="MEDLINE" id="92158636" key="7"/>
-<dbReference type="PubMed" id="1741270" key="8"/>
-<dbReference type="DOI" id="10.1093/nar/20.2.375" key="9"/>
-</citation>
-<scope>NUCLEOTIDE SEQUENCE [GENOMIC DNA]</scope>
-<scope>SEQUENCE REVISION</scope>
-</reference>
-<reference key="10">
-<citation type="journal article" date="1996" name="Yeast" volume="12" first="1077" last="1084">
-<title>The sequence of a 20.3 kb DNA fragment from the left arm of Saccharomyces cerevisiae chromosome IV contains the KIN28, MSS2, PHO2, POL3 and DUN1 genes, and six new open reading frames.</title>
-<authorList>
-<person name="Saiz J.E."/>
-<person name="Buitrago M.J."/>
-<person name="Garcia R."/>
-<person name="Revuelta J.L."/>
-<person name="del Rey F."/>
-</authorList>
-<dbReference type="MEDLINE" id="97051597" key="11"/>
-<dbReference type="PubMed" id="8896274" key="12"/>
-<dbReference type="DOI" id="10.1002/(SICI)1097-0061(199609)12:10B&lt;1077::AID-YEA8>3.3.CO;2-Q" key="13"/>
-</citation>
-<scope>NUCLEOTIDE SEQUENCE [GENOMIC DNA]</scope>
-<source>
-<strain>ATCC 96604 / S288c / FY1679</strain>
-</source>
-</reference>
-<reference key="14">
-<citation type="journal article" date="1997" name="Nature" volume="387" first="75" last="78">
-<title>The nucleotide sequence of Saccharomyces cerevisiae chromosome IV.</title>
-<authorList>
-<person name="Jacq C."/>
-<person name="Alt-Moerbe J."/>
-<person name="Andre B."/>
-<person name="Arnold W."/>
-<person name="Bahr A."/>
-<person name="Ballesta J.P.G."/>
-<person name="Bargues M."/>
-<person name="Baron L."/>
-<person name="Becker A."/>
-<person name="Biteau N."/>
-<person name="Bloecker H."/>
-<person name="Blugeon C."/>
-<person name="Boskovic J."/>
-<person name="Brandt P."/>
-<person name="Brueckner M."/>
-<person name="Buitrago M.J."/>
-<person name="Coster F."/>
-<person name="Delaveau T."/>
-<person name="del Rey F."/>
-<person name="Dujon B."/>
-<person name="Eide L.G."/>
-<person name="Garcia-Cantalejo J.M."/>
-<person name="Goffeau A."/>
-<person name="Gomez-Peris A."/>
-<person name="Granotier C."/>
-<person name="Hanemann V."/>
-<person name="Hankeln T."/>
-<person name="Hoheisel J.D."/>
-<person name="Jaeger W."/>
-<person name="Jimenez A."/>
-<person name="Jonniaux J.-L."/>
-<person name="Kraemer C."/>
-<person name="Kuester H."/>
-<person name="Laamanen P."/>
-<person name="Legros Y."/>
-<person name="Louis E.J."/>
-<person name="Moeller-Rieker S."/>
-<person name="Monnet A."/>
-<person name="Moro M."/>
-<person name="Mueller-Auer S."/>
-<person name="Nussbaumer B."/>
-<person name="Paricio N."/>
-<person name="Paulin L."/>
-<person name="Perea J."/>
-<person name="Perez-Alonso M."/>
-<person name="Perez-Ortin J.E."/>
-<person name="Pohl T.M."/>
-<person name="Prydz H."/>
-<person name="Purnelle B."/>
-<person name="Rasmussen S.W."/>
-<person name="Remacha M.A."/>
-<person name="Revuelta J.L."/>
-<person name="Rieger M."/>
-<person name="Salom D."/>
-<person name="Saluz H.P."/>
-<person name="Saiz J.E."/>
-<person name="Saren A.-M."/>
-<person name="Schaefer M."/>
-<person name="Scharfe M."/>
-<person name="Schmidt E.R."/>
-<person name="Schneider C."/>
-<person name="Scholler P."/>
-<person name="Schwarz S."/>
-<person name="Soler-Mira A."/>
-<person name="Urrestarazu L.A."/>
-<person name="Verhasselt P."/>
-<person name="Vissers S."/>
-<person name="Voet M."/>
-<person name="Volckaert G."/>
-<person name="Wagner G."/>
-<person name="Wambutt R."/>
-<person name="Wedler E."/>
-<person name="Wedler H."/>
-<person name="Woelfl S."/>
-<person name="Harris D.E."/>
-<person name="Bowman S."/>
-<person name="Brown D."/>
-<person name="Churcher C.M."/>
-<person name="Connor R."/>
-<person name="Dedman K."/>
-<person name="Gentles S."/>
-<person name="Hamlin N."/>
-<person name="Hunt S."/>
-<person name="Jones L."/>
-<person name="McDonald S."/>
-<person name="Murphy L.D."/>
-<person name="Niblett D."/>
-<person name="Odell C."/>
-<person name="Oliver K."/>
-<person name="Rajandream M.A."/>
-<person name="Richards C."/>
-<person name="Shore L."/>
-<person name="Walsh S.V."/>
-<person name="Barrell B.G."/>
-<person name="Dietrich F.S."/>
-<person name="Mulligan J.T."/>
-<person name="Allen E."/>
-<person name="Araujo R."/>
-<person name="Aviles E."/>
-<person name="Berno A."/>
-<person name="Carpenter J."/>
-<person name="Chen E."/>
-<person name="Cherry J.M."/>
-<person name="Chung E."/>
-<person name="Duncan M."/>
-<person name="Hunicke-Smith S."/>
-<person name="Hyman R.W."/>
-<person name="Komp C."/>
-<person name="Lashkari D."/>
-<person name="Lew H."/>
-<person name="Lin D."/>
-<person name="Mosedale D."/>
-<person name="Nakahara K."/>
-<person name="Namath A."/>
-<person name="Oefner P."/>
-<person name="Oh C."/>
-<person name="Petel F.X."/>
-<person name="Roberts D."/>
-<person name="Schramm S."/>
-<person name="Schroeder M."/>
-<person name="Shogren T."/>
-<person name="Shroff N."/>
-<person name="Winant A."/>
-<person name="Yelton M.A."/>
-<person name="Botstein D."/>
-<person name="Davis R.W."/>
-<person name="Johnston M."/>
-<person name="Andrews S."/>
-<person name="Brinkman R."/>
-<person name="Cooper J."/>
-<person name="Ding H."/>
-<person name="Du Z."/>
-<person name="Favello A."/>
-<person name="Fulton L."/>
-<person name="Gattung S."/>
-<person name="Greco T."/>
-<person name="Hallsworth K."/>
-<person name="Hawkins J."/>
-<person name="Hillier L.W."/>
-<person name="Jier M."/>
-<person name="Johnson D."/>
-<person name="Johnston L."/>
-<person name="Kirsten J."/>
-<person name="Kucaba T."/>
-<person name="Langston Y."/>
-<person name="Latreille P."/>
-<person name="Le T."/>
-<person name="Mardis E."/>
-<person name="Menezes S."/>
-<person name="Miller N."/>
-<person name="Nhan M."/>
-<person name="Pauley A."/>
-<person name="Peluso D."/>
-<person name="Rifkin L."/>
-<person name="Riles L."/>
-<person name="Taich A."/>
-<person name="Trevaskis E."/>
-<person name="Vignati D."/>
-<person name="Wilcox L."/>
-<person name="Wohldman P."/>
-<person name="Vaudin M."/>
-<person name="Wilson R."/>
-<person name="Waterston R."/>
-<person name="Albermann K."/>
-<person name="Hani J."/>
-<person name="Heumann K."/>
-<person name="Kleine K."/>
-<person name="Mewes H.-W."/>
-<person name="Zollner A."/>
-<person name="Zaccaria P."/>
-</authorList>
-<dbReference type="MEDLINE" id="97313263" key="15"/>
-<dbReference type="PubMed" id="9169867" key="16"/>
-</citation>
-<scope>NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]</scope>
-<source>
-<strain>ATCC 204508 / S288c</strain>
-</source>
-</reference>
-<reference key="17">
-<citation type="submission" date="2009-12" db="EMBL/GenBank/DDBJ databases">
-<authorList>
-<consortium name="Saccharomyces Genome Database"/>
-</authorList>
-</citation>
-<scope>GENOME REANNOTATION</scope>
-<source>
-<strain>ATCC 204508 / S288c</strain>
-</source>
-</reference>
-<reference key="18">
-<citation type="journal article" date="1991" name="EMBO J." volume="10" first="2165" last="2170">
-<title>The 3' to 5' exonuclease activity located in the DNA polymerase delta subunit of Saccharomyces cerevisiae is required for accurate replication.</title>
-<authorList>
-<person name="Simon M."/>
-<person name="Giot L."/>
-<person name="Faye G."/>
-</authorList>
-<dbReference type="MEDLINE" id="91293091" key="19"/>
-<dbReference type="PubMed" id="1648480" key="20"/>
-</citation>
-<scope>FUNCTION AS AN EXONUCLEASE</scope>
-</reference>
-<reference key="21">
-<citation type="journal article" date="2001" name="J. Biol. Chem." volume="276" first="43824" last="43828">
-<title>Structure of DNA polymerase delta from Saccharomyces cerevisiae.</title>
-<authorList>
-<person name="Johansson E."/>
-<person name="Majka J."/>
-<person name="Burgers P.M."/>
-</authorList>
-<dbReference type="PubMed" id="11568188" key="22"/>
-<dbReference type="DOI" id="10.1074/jbc.M108842200" key="23"/>
-</citation>
-<scope>COMPOSITION OF THE DNA POLYMERASE DELTA COMPLEX</scope>
-</reference>
-<reference key="24">
-<citation type="journal article" date="2007" name="J. Proteome Res." volume="6" first="1190" last="1197">
-<title>Large-scale phosphorylation analysis of alpha-factor-arrested Saccharomyces cerevisiae.</title>
-<authorList>
-<person name="Li X."/>
-<person name="Gerber S.A."/>
-<person name="Rudner A.D."/>
-<person name="Beausoleil S.A."/>
-<person name="Haas W."/>
-<person name="Villen J."/>
-<person name="Elias J.E."/>
-<person name="Gygi S.P."/>
-</authorList>
-<dbReference type="PubMed" id="17330950" key="25"/>
-<dbReference type="DOI" id="10.1021/pr060559j" key="26"/>
-</citation>
-<scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-30</scope>
-<scope>MASS SPECTROMETRY</scope>
-<source>
-<strain>ADR376</strain>
-</source>
-</reference>
-<reference key="27">
-<citation type="journal article" date="2007" name="Proc. Natl. Acad. Sci. U.S.A." volume="104" first="2193" last="2198">
-<title>Analysis of phosphorylation sites on proteins from Saccharomyces cerevisiae by electron transfer dissociation (ETD) mass spectrometry.</title>
-<authorList>
-<person name="Chi A."/>
-<person name="Huttenhower C."/>
-<person name="Geer L.Y."/>
-<person name="Coon J.J."/>
-<person name="Syka J.E.P."/>
-<person name="Bai D.L."/>
-<person name="Shabanowitz J."/>
-<person name="Burke D.J."/>
-<person name="Troyanskaya O.G."/>
-<person name="Hunt D.F."/>
-</authorList>
-<dbReference type="PubMed" id="17287358" key="28"/>
-<dbReference type="DOI" id="10.1073/pnas.0607084104" key="29"/>
-</citation>
-<scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-30</scope>
-<scope>MASS SPECTROMETRY</scope>
-</reference>
-<reference key="30">
-<citation type="journal article" date="2007" name="Proc. Natl. Acad. Sci. U.S.A." volume="104" first="10364" last="10369">
-<title>Proteome-wide identification of in vivo targets of DNA damage checkpoint kinases.</title>
-<authorList>
-<person name="Smolka M.B."/>
-<person name="Albuquerque C.P."/>
-<person name="Chen S.H."/>
-<person name="Zhou H."/>
-</authorList>
-<dbReference type="PubMed" id="17563356" key="31"/>
-<dbReference type="DOI" id="10.1073/pnas.0701622104" key="32"/>
-</citation>
-<scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-30 AND SER-56</scope>
-<scope>MASS SPECTROMETRY</scope>
-</reference>
-<reference key="33">
-<citation type="journal article" date="2008" name="Mol. Cell. Proteomics" volume="7" first="1389" last="1396">
-<title>A multidimensional chromatography technology for in-depth phosphoproteome analysis.</title>
-<authorList>
-<person name="Albuquerque C.P."/>
-<person name="Smolka M.B."/>
-<person name="Payne S.H."/>
-<person name="Bafna V."/>
-<person name="Eng J."/>
-<person name="Zhou H."/>
-</authorList>
-<dbReference type="PubMed" id="18407956" key="34"/>
-<dbReference type="DOI" id="10.1074/mcp.M700468-MCP200" key="35"/>
-</citation>
-<scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-30; SER-37 AND SER-50</scope>
-<scope>MASS SPECTROMETRY</scope>
-</reference>
-<comment type="function">
-<text evidence="EC1">DNA polymerase delta (DNA polymerase III) participates in chromosomal DNA replication. It is required during synthesis of the leading and lagging DNA strands at the replication fork and binds at/or near replication origins and moves along DNA with the replication fork. It has 3'-5' proofreading exonuclease activity that correct errors arising during DNA replication. It is also involved in DNA synthesis during DNA repair. POL3 contains the polymerase active site and most likely the active site for the 3'-5' exonuclease activity.</text>
-</comment>
-<comment type="catalytic activity">
-<text>Deoxynucleoside triphosphate + DNA(n) = diphosphate + DNA(n+1).</text>
-</comment>
-<comment type="subunit">
-<text>DNA polymerase delta is a heterotrimer of POL3, POL32 and HYS2.</text>
-</comment>
-<comment type="interaction">
-<interactant intactId="EBI-6134"/>
-<interactant intactId="EBI-6080">
-<id>P46957</id>
-<label>POL31</label>
-</interactant>
-<organismsDiffer>false</organismsDiffer>
-<experiments>2</experiments>
-</comment>
-<comment type="subcellular location">
-<subcellularLocation>
-<location>Nucleus</location>
-</subcellularLocation>
-</comment>
-<comment type="miscellaneous">
-<text>In eukaryotes there are five DNA polymerases: alpha, beta, gamma, delta, and epsilon which are responsible for different reactions of DNA synthesis.</text>
-</comment>
-<comment type="similarity">
-<text>Belongs to the DNA polymerase type-B family.</text>
-</comment>
-<comment type="sequence caution">
-<conflict type="miscellaneous discrepancy">
-<sequence resource="EMBL-CDS" id="CAA33504" version="1"/>
-</conflict>
-</comment>
-<dbReference type="EC" id="2.7.7.7" key="1"/>
-<dbReference type="EMBL" id="X15477" key="36">
-<property type="protein sequence ID" value="CAA33504.1"/>
-<property type="status" value="ALT_SEQ"/>
-<property type="molecule type" value="Genomic_DNA"/>
-</dbReference>
-<dbReference type="EMBL" id="X61920" key="37">
-<property type="protein sequence ID" value="CAA43922.1"/>
-<property type="molecule type" value="Genomic_DNA"/>
-</dbReference>
-<dbReference type="EMBL" id="X95644" key="38">
-<property type="protein sequence ID" value="CAA64911.1"/>
-<property type="molecule type" value="Genomic_DNA"/>
-</dbReference>
-<dbReference type="EMBL" id="Z74150" key="39">
-<property type="protein sequence ID" value="CAA98669.1"/>
-<property type="molecule type" value="Genomic_DNA"/>
-</dbReference>
-<dbReference type="EMBL" id="BK006938" key="40">
-<property type="protein sequence ID" value="DAA11758.1"/>
-<property type="molecule type" value="Genomic_DNA"/>
-</dbReference>
-<dbReference type="PIR" id="S67644" key="41">
-<property type="entry name" value="RNBYL3"/>
-</dbReference>
-<dbReference type="RefSeq" id="NP_010181.1" key="42">
-<property type="nucleotide sequence ID" value="NM_001180161.1"/>
-</dbReference>
-<dbReference type="PDB" id="3IAY" key="43">
-<property type="method" value="X-ray"/>
-<property type="resolution" value="2.00"/>
-<property type="chains" value="A=67-985"/>
-</dbReference>
-<dbReference type="PDBsum" id="3IAY" key="44"/>
-<dbReference type="ProteinModelPortal" id="P15436" key="45"/>
-<dbReference type="SMR" id="P15436" key="46">
-<property type="residue range" value="95-985"/>
-</dbReference>
-<dbReference type="DIP" id="DIP-2524N" key="47"/>
-<dbReference type="IntAct" id="P15436" key="48">
-<property type="interactions" value="8"/>
-</dbReference>
-<dbReference type="MINT" id="MINT-2781941" key="49"/>
-<dbReference type="STRING" id="P15436" key="50"/>
-<dbReference type="PeptideAtlas" id="P15436" key="51"/>
-<dbReference type="EnsemblFungi" id="YDL102W" key="52">
-<property type="protein sequence ID" value="YDL102W"/>
-<property type="gene ID" value="YDL102W"/>
-</dbReference>
-<dbReference type="GeneID" id="851456" key="53"/>
-<dbReference type="KEGG" id="sce:YDL102W" key="54"/>
-<dbReference type="NMPDR" id="fig|4932.3.peg.919" key="55"/>
-<dbReference type="CYGD" id="YDL102w" key="56"/>
-<dbReference type="SGD" id="S000002260" key="57">
-<property type="gene designation" value="CDC2"/>
-</dbReference>
-<dbReference type="eggNOG" id="fuNOG05375" key="58"/>
-<dbReference type="GeneTree" id="EFGT00050000004684" key="59"/>
-<dbReference type="HOGENOM" id="HBG357584" key="60"/>
-<dbReference type="OMA" id="VIQIANV" key="61"/>
-<dbReference type="OrthoDB" id="EOG4B01XB" key="62"/>
-<dbReference type="PhylomeDB" id="P15436" key="63"/>
-<dbReference type="BRENDA" id="2.7.7.7" key="64">
-<property type="organism ID" value="250"/>
-</dbReference>
-<dbReference type="NextBio" id="968726" key="65"/>
-<dbReference type="ArrayExpress" id="P15436" key="66"/>
-<dbReference type="Genevestigator" id="P15436" key="67"/>
-<dbReference type="GermOnline" id="YDL102W" key="68">
-<property type="organism name" value="Saccharomyces cerevisiae"/>
-</dbReference>
-<dbReference type="GO" id="GO:0043625" key="69">
-<property type="term" value="C:delta DNA polymerase complex"/>
-<property type="evidence" value="TAS:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0003677" key="70">
-<property type="term" value="F:DNA binding"/>
-<property type="evidence" value="IEA:UniProtKB-KW"/>
-</dbReference>
-<dbReference type="GO" id="GO:0003887" key="71">
-<property type="term" value="F:DNA-directed DNA polymerase activity"/>
-<property type="evidence" value="IDA:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0046872" key="72">
-<property type="term" value="F:metal ion binding"/>
-<property type="evidence" value="IEA:UniProtKB-KW"/>
-</dbReference>
-<dbReference type="GO" id="GO:0000166" key="73">
-<property type="term" value="F:nucleotide binding"/>
-<property type="evidence" value="IEA:InterPro"/>
-</dbReference>
-<dbReference type="GO" id="GO:0005515" key="74">
-<property type="term" value="F:protein binding"/>
-<property type="evidence" value="IPI:IntAct"/>
-</dbReference>
-<dbReference type="GO" id="GO:0008310" key="75">
-<property type="term" value="F:single-stranded DNA specific 3'-5' exodeoxyribonuclease activity"/>
-<property type="evidence" value="TAS:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0006284" key="76">
-<property type="term" value="P:base-excision repair"/>
-<property type="evidence" value="TAS:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0043137" key="77">
-<property type="term" value="P:DNA replication, removal of RNA primer"/>
-<property type="evidence" value="IDA:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0006272" key="78">
-<property type="term" value="P:leading strand elongation"/>
-<property type="evidence" value="TAS:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0045005" key="79">
-<property type="term" value="P:maintenance of fidelity involved in DNA-dependent DNA replication"/>
-<property type="evidence" value="IGI:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0006298" key="80">
-<property type="term" value="P:mismatch repair"/>
-<property type="evidence" value="NAS:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0006289" key="81">
-<property type="term" value="P:nucleotide-excision repair"/>
-<property type="evidence" value="TAS:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0006301" key="82">
-<property type="term" value="P:postreplication repair"/>
-<property type="evidence" value="TAS:SGD"/>
-</dbReference>
-<dbReference type="GO" id="GO:0006278" key="83">
-<property type="term" value="P:RNA-dependent DNA replication"/>
-<property type="evidence" value="IDA:SGD"/>
-</dbReference>
-<dbReference type="InterPro" id="IPR006172" key="84">
-<property type="entry name" value="DNA-dir_DNA_pol_B"/>
-</dbReference>
-<dbReference type="InterPro" id="IPR017964" key="85">
-<property type="entry name" value="DNA-dir_DNA_pol_B_CS"/>
-</dbReference>
-<dbReference type="InterPro" id="IPR006133" key="86">
-<property type="entry name" value="DNA-dir_DNA_pol_B_exonuc"/>
-</dbReference>
-<dbReference type="InterPro" id="IPR006134" key="87">
-<property type="entry name" value="DNA-dir_DNA_pol_B_multi_dom"/>
-</dbReference>
-<dbReference type="InterPro" id="IPR004578" key="88">
-<property type="entry name" value="DNA-dir_DNA_pol_B_pol2"/>
-</dbReference>
-<dbReference type="InterPro" id="IPR023211" key="89">
-<property type="entry name" value="DNA_pol_palm_dom"/>
-</dbReference>
-<dbReference type="InterPro" id="IPR012337" key="90">
-<property type="entry name" value="RNaseH-like"/>
-</dbReference>
-<dbReference type="Gene3D" id="G3DSA:3.90.1600.10" key="91">
-<property type="entry name" value="DNA_pol_palm_dom"/>
-<property type="match status" value="2"/>
-</dbReference>
-<dbReference type="Pfam" id="PF00136" key="92">
-<property type="entry name" value="DNA_pol_B"/>
-<property type="match status" value="1"/>
-</dbReference>
-<dbReference type="Pfam" id="PF03104" key="93">
-<property type="entry name" value="DNA_pol_B_exo"/>
-<property type="match status" value="1"/>
-</dbReference>
-<dbReference type="PRINTS" id="PR00106" key="94">
-<property type="entry name" value="DNAPOLB"/>
-</dbReference>
-<dbReference type="SMART" id="SM00486" key="95">
-<property type="entry name" value="POLBc"/>
-<property type="match status" value="1"/>
-</dbReference>
-<dbReference type="SUPFAM" id="SSF53098" key="96">
-<property type="entry name" value="RNaseH_fold"/>
-<property type="match status" value="1"/>
-</dbReference>
-<dbReference type="TIGRFAMs" id="TIGR00592" key="97">
-<property type="entry name" value="pol2"/>
-<property type="match status" value="1"/>
-</dbReference>
-<dbReference type="PROSITE" id="PS00116" key="98">
-<property type="entry name" value="DNA_POLYMERASE_B"/>
-<property type="match status" value="1"/>
-</dbReference>
-<proteinExistence type="evidence at protein level"/>
-<keyword id="KW-0002">3D-structure</keyword>
-<keyword id="KW-0181">Complete proteome</keyword>
-<keyword id="KW-0235">DNA replication</keyword>
-<keyword id="KW-0238">DNA-binding</keyword>
-<keyword id="KW-0239">DNA-directed DNA polymerase</keyword>
-<keyword id="KW-0269">Exonuclease</keyword>
-<keyword id="KW-0378">Hydrolase</keyword>
-<keyword id="KW-0479">Metal-binding</keyword>
-<keyword id="KW-0540">Nuclease</keyword>
-<keyword id="KW-0548">Nucleotidyltransferase</keyword>
-<keyword id="KW-0539">Nucleus</keyword>
-<keyword id="KW-0597">Phosphoprotein</keyword>
-<keyword id="KW-0808">Transferase</keyword>
-<keyword id="KW-0862">Zinc</keyword>
-<keyword id="KW-0863">Zinc-finger</keyword>
-<feature type="chain" description="DNA polymerase delta catalytic subunit" id="PRO_0000046454">
-<location>
-<begin position="1"/>
-<end position="1097"/>
-</location>
-</feature>
-<feature type="zinc finger region" description="C4-type" status="potential">
-<location>
-<begin position="1009"/>
-<end position="1027"/>
-</location>
-</feature>
-<feature type="zinc finger region" description="C4-type" status="potential">
-<location>
-<begin position="1056"/>
-<end position="1074"/>
-</location>
-</feature>
-<feature type="modified residue" description="Phosphoserine" evidence="EC2 EC3 EC4 EC5">
-<location>
-<position position="30"/>
-</location>
-</feature>
-<feature type="modified residue" description="Phosphoserine" evidence="EC5">
-<location>
-<position position="37"/>
-</location>
-</feature>
-<feature type="modified residue" description="Phosphoserine" evidence="EC5">
-<location>
-<position position="50"/>
-</location>
-</feature>
-<feature type="modified residue" description="Phosphoserine; by ATM or ATR" evidence="EC4">
-<location>
-<position position="56"/>
-</location>
-</feature>
-<feature type="sequence conflict" description="In Ref. 2; CAA43922." ref="6">
-<original>DV</original>
-<variation>EL</variation>
-<location>
-<begin position="78"/>
-<end position="79"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="108"/>
-<end position="110"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="113"/>
-<end position="126"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="128"/>
-<end position="130"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="133"/>
-<end position="140"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="149"/>
-<end position="154"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="159"/>
-<end position="163"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="168"/>
-<end position="171"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="173"/>
-<end position="184"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="185"/>
-<end position="189"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="191"/>
-<end position="201"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="211"/>
-<end position="220"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="223"/>
-<end position="232"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="238"/>
-<end position="240"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="254"/>
-<end position="261"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="269"/>
-<end position="272"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="282"/>
-<end position="284"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="290"/>
-<end position="296"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="297"/>
-<end position="299"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="301"/>
-<end position="303"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="316"/>
-<end position="324"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="334"/>
-<end position="336"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="339"/>
-<end position="348"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="355"/>
-<end position="363"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="372"/>
-<end position="378"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="379"/>
-<end position="393"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="396"/>
-<end position="399"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="403"/>
-<end position="406"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="407"/>
-<end position="417"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="439"/>
-<end position="442"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="449"/>
-<end position="451"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="464"/>
-<end position="471"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="479"/>
-<end position="486"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="499"/>
-<end position="503"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="507"/>
-<end position="530"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="533"/>
-<end position="543"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="550"/>
-<end position="553"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="557"/>
-<end position="570"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="604"/>
-<end position="609"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="612"/>
-<end position="619"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="624"/>
-<end position="626"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="630"/>
-<end position="635"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="641"/>
-<end position="643"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="644"/>
-<end position="646"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="652"/>
-<end position="654"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="656"/>
-<end position="658"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="663"/>
-<end position="682"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="687"/>
-<end position="693"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="697"/>
-<end position="707"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="721"/>
-<end position="729"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="733"/>
-<end position="745"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="757"/>
-<end position="760"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="764"/>
-<end position="769"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="775"/>
-<end position="780"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="784"/>
-<end position="790"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="799"/>
-<end position="812"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="815"/>
-<end position="817"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="819"/>
-<end position="826"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="836"/>
-<end position="838"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="840"/>
-<end position="842"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="844"/>
-<end position="858"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="867"/>
-<end position="878"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="884"/>
-<end position="887"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="889"/>
-<end position="892"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="902"/>
-<end position="913"/>
-</location>
-</feature>
-<feature type="strand">
-<location>
-<begin position="923"/>
-<end position="928"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="935"/>
-<end position="937"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="942"/>
-<end position="947"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="954"/>
-<end position="960"/>
-</location>
-</feature>
-<feature type="helix">
-<location>
-<begin position="963"/>
-<end position="970"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="971"/>
-<end position="973"/>
-</location>
-</feature>
-<feature type="turn">
-<location>
-<begin position="977"/>
-<end position="979"/>
-</location>
-</feature>
-<evidence key="EC1" category="curator" type="Literature" attribute="PubMed=1648480" date="2010-07-01"/>
-<evidence key="EC2" category="curator" type="Literature" attribute="PubMed=17330950" date="2010-07-01"/>
-<evidence key="EC3" category="curator" type="Literature" attribute="PubMed=17287358" date="2010-07-01"/>
-<evidence key="EC4" category="curator" type="Literature" attribute="PubMed=17563356" date="2010-07-01"/>
-<evidence key="EC5" category="curator" type="Literature" attribute="PubMed=18407956" date="2010-07-01"/>
-<sequence length="1097" mass="124591" checksum="16E42588BB4168DA" modified="1996-10-01" version="3">
-MSEKRSLPMVDVKIDDEDTPQLEKKIKRQSIDHGVGSEPVSTIEIIPSDSFRKYNSQGFK
-AKDTDLMGTQLESTFEQDVSQMEHDMADQEEHDLSSFERKKLPTDFDPSLYDISFQQIDA
-EQSVLNGIKDENTSTVVRFFGVTSEGHSVLCNVTGFKNYLYVPAPNSSDANDQEQINKFV
-HYLNETFDHAIDSIEVVSKQSIWGYSGDTKLPFWKIYVTYPHMVNKLRTAFERGHLSFNS
-WFSNGTTTYDNIAYTLRLMVDCGIVGMSWITLPKGKYSMIEPNNRVSSCQLEVSINYRNL
-IAHPAEGDWSHTAPLRIMSFDIECAGRIGVFPEPEYDPVIQIANVVSIAGAKKPFIRNVF
-TLNTCSPITGSMIFSHATEEEMLSNWRNFIIKVDPDVIIGYNTTNFDIPYLLNRAKALKV
-NDFPYFGRLKTVKQEIKESVFSSKAYGTRETKNVNIDGRLQLDLLQFIQREYKLRSYTLN
-AVSAHFLGEQKEDVHYSIISDLQNGDSETRRRLAVYCLKDAYLPLRLMEKLMALVNYTEM
-ARVTGVPFSYLLARGQQIKVVSQLFRKCLEIDTVIPNMQSQASDDQYEGATVIEPIRGYY
-DVPIATLDFNSLYPSIMMAHNLCYTTLCNKATVERLNLKIDEDYVITPNGDYFVTTKRRR
-GILPIILDELISARKRAKKDLRDEKDPFKRDVLNGRQLALKISANSVYGFTGATVGKLPC
-LAISSSVTAYGRTMILKTKTAVQEKYCIKNGYKHDAVVVYGDTDSVMVKFGTTDLKEAMD
-LGTEAAKYVSTLFKHPINLEFEKAYFPYLLINKKRYAGLFWTNPDKFDKLDQKGLASVRR
-DSCSLVSIVMNKVLKKILIERNVDGALAFVRETINDILHNRVDISKLIISKTLAPNYTNP
-QPHAVLAERMKRREGVGPNVGDRVDYVIIGGNDKLYNRAEDPLFVLENNIQVDSRYYLTN
-QLQNPIISIVAPIIGDKQANGMFVVKSIKINTGSQKGGLMSFIKKVEACKSCKGPLRKGE
-GPLCSNCLARSGELYIKALYDVRDLEEKYSRLWTQCQRCAGNLHSEVLCSNKNCDIFYMR
-VKVKKELQEKVEQLSKW
-</sequence>
-</entry>
-<entry dataset="Swiss-Prot" created="2008-06-10" modified="2011-05-03" version="74">
-<accession>O74473</accession>
-<name>CDC11_SCHPO</name>
-<protein>
-<recommendedName>
-<fullName>Septation initiation network scaffold protein cdc11</fullName>
-<shortName>SIN scaffold protein cdc11</shortName>
-</recommendedName>
-<alternativeName>
-<fullName>Cell division control protein 11</fullName>
-</alternativeName>
-</protein>
-<gene>
-<name type="primary">cdc11</name>
-<name type="ORF">SPCC1739.11c</name>
-</gene>
-<organism>
-<name type="scientific">Schizosaccharomyces pombe (strain ATCC 38366 / 972)</name>
-<name type="common">Fission yeast</name>
-<dbReference type="NCBI Taxonomy" id="284812" key="1"/>
-<lineage>
-<taxon>Eukaryota</taxon>
-<taxon>Fungi</taxon>
-<taxon>Dikarya</taxon>
-<taxon>Ascomycota</taxon>
-<taxon>Taphrinomycotina</taxon>
-<taxon>Schizosaccharomycetes</taxon>
-<taxon>Schizosaccharomycetales</taxon>
-<taxon>Schizosaccharomycetaceae</taxon>
-<taxon>Schizosaccharomyces</taxon>
-</lineage>
-</organism>
-<reference key="2">
-<citation type="journal article" date="2002" name="Nature" volume="415" first="871" last="880">
-<title>The genome sequence of Schizosaccharomyces pombe.</title>
-<authorList>
-<person name="Wood V."/>
-<person name="Gwilliam R."/>
-<person name="Rajandream M.A."/>
-<person name="Lyne M.H."/>
-<person name="Lyne R."/>
-<person name="Stewart A."/>
-<person name="Sgouros J.G."/>
-<person name="Peat N."/>
-<person name="Hayles J."/>
-<person name="Baker S.G."/>
-<person name="Basham D."/>
-<person name="Bowman S."/>
-<person name="Brooks K."/>
-<person name="Brown D."/>
-<person name="Brown S."/>
-<person name="Chillingworth T."/>
-<person name="Churcher C.M."/>
-<person name="Collins M."/>
-<person name="Connor R."/>
-<person name="Cronin A."/>
-<person name="Davis P."/>
-<person name="Feltwell T."/>
-<person name="Fraser A."/>
-<person name="Gentles S."/>
-<person name="Goble A."/>
-<person name="Hamlin N."/>
-<person name="Harris D.E."/>
-<person name="Hidalgo J."/>
-<person name="Hodgson G."/>
-<person name="Holroyd S."/>
-<person name="Hornsby T."/>
-<person name="Howarth S."/>
-<person name="Huckle E.J."/>
-<person name="Hunt S."/>
-<person name="Jagels K."/>
-<person name="James K.D."/>
-<person name="Jones L."/>
-<person name="Jones M."/>
-<person name="Leather S."/>
-<person name="McDonald S."/>
-<person name="McLean J."/>
-<person name="Mooney P."/>
-<person name="Moule S."/>
-<person name="Mungall K.L."/>
-<person name="Murphy L.D."/>
-<person name="Niblett D."/>
-<person name="Odell C."/>
-<person name="Oliver K."/>
-<person name="O'Neil S."/>
-<person name="Pearson D."/>
-<person name="Quail M.A."/>
-<person name="Rabbinowitsch E."/>
-<person name="Rutherford K.M."/>
-<person name="Rutter S."/>
-<person name="Saunders D."/>
-<person name="Seeger K."/>
-<person name="Sharp S."/>
-<person name="Skelton J."/>
-<person name="Simmonds M.N."/>
-<person name="Squares R."/>
-<person name="Squares S."/>
-<person name="Stevens K."/>
-<person name="Taylor K."/>
-<person name="Taylor R.G."/>
-<person name="Tivey A."/>
-<person name="Walsh S.V."/>
-<person name="Warren T."/>
-<person name="Whitehead S."/>
-<person name="Woodward J.R."/>
-<person name="Volckaert G."/>
-<person name="Aert R."/>
-<person name="Robben J."/>
-<person name="Grymonprez B."/>
-<person name="Weltjens I."/>
-<person name="Vanstreels E."/>
-<person name="Rieger M."/>
-<person name="Schaefer M."/>
-<person name="Mueller-Auer S."/>
-<person name="Gabel C."/>
-<person name="Fuchs M."/>
-<person name="Duesterhoeft A."/>
-<person name="Fritzc C."/>
-<person name="Holzer E."/>
-<person name="Moestl D."/>
-<person name="Hilbert H."/>
-<person name="Borzym K."/>
-<person name="Langer I."/>
-<person name="Beck A."/>
-<person name="Lehrach H."/>
-<person name="Reinhardt R."/>
-<person name="Pohl T.M."/>
-<person name="Eger P."/>
-<person name="Zimmermann W."/>
-<person name="Wedler H."/>
-<person name="Wambutt R."/>
-<person name="Purnelle B."/>
-<person name="Goffeau A."/>
-<person name="Cadieu E."/>
-<person name="Dreano S."/>
-<person name="Gloux S."/>
-<person name="Lelaure V."/>
-<person name="Mottier S."/>
-<person name="Galibert F."/>
-<person name="Aves S.J."/>
-<person name="Xiang Z."/>
-<person name="Hunt C."/>
-<person name="Moore K."/>
-<person name="Hurst S.M."/>
-<person name="Lucas M."/>
-<person name="Rochet M."/>
-<person name="Gaillardin C."/>
-<person name="Tallada V.A."/>
-<person name="Garzon A."/>
-<person name="Thode G."/>
-<person name="Daga R.R."/>
-<person name="Cruzado L."/>
-<person name="Jimenez J."/>
-<person name="Sanchez M."/>
-<person name="del Rey F."/>
-<person name="Benito J."/>
-<person name="Dominguez A."/>
-<person name="Revuelta J.L."/>
-<person name="Moreno S."/>
-<person name="Armstrong J."/>
-<person name="Forsburg S.L."/>
-<person name="Cerutti L."/>
-<person name="Lowe T."/>
-<person name="McCombie W.R."/>
-<person name="Paulsen I."/>
-<person name="Potashkin J."/>
-<person name="Shpakovski G.V."/>
-<person name="Ussery D."/>
-<person name="Barrell B.G."/>
-<person name="Nurse P."/>
-</authorList>
-<dbReference type="MEDLINE" id="21848401" key="3"/>
-<dbReference type="PubMed" id="11859360" key="4"/>
-<dbReference type="DOI" id="10.1038/nature724" key="5"/>
-</citation>
-<scope>NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]</scope>
-<source>
-<strain>ATCC 38366 / 972</strain>
-</source>
-</reference>
-<reference key="6">
-<citation type="journal article" date="2001" name="Curr. Biol." volume="11" first="1559" last="1568">
-<title>S. pombe cdc11p, together with sid4p, provides an anchor for septation initiation network proteins on the spindle pole body.</title>
-<authorList>
-<person name="Krapp A."/>
-<person name="Schmidt S."/>
-<person name="Cano E."/>
-<person name="Simanis V."/>
-</authorList>
-<dbReference type="PubMed" id="11676915" key="7"/>
-<dbReference type="DOI" id="10.1016/S0960-9822(01)00478-X" key="8"/>
-</citation>
-<scope>FUNCTION</scope>
-<scope>INTERACTION WITH SID4</scope>
-<scope>SUBCELLULAR LOCATION</scope>
-<scope>PHOSPHORYLATION</scope>
-<scope>MUTAGENESIS OF ASN-767; ARG-947 AND THR-1041</scope>
-</reference>
-<reference key="9">
-<citation type="journal article" date="2003" name="Curr. Biol." volume="13" first="168" last="172">
-<title>Mitotic hyperphosphorylation of the fission yeast SIN scaffold protein cdc11p is regulated by the protein kinase cdc7p.</title>
-<authorList>
-<person name="Krapp A."/>
-<person name="Cano E."/>
-<person name="Simanis V."/>
-</authorList>
-<dbReference type="PubMed" id="12546793" key="10"/>
-<dbReference type="DOI" id="10.1016/S0960-9822(02)01417-3" key="11"/>
-</citation>
-<scope>INTERACTION WITH BYR4</scope>
-<scope>PHOSPHORYLATION BY CDC7</scope>
-<scope>DEPHOSPHORYLATION BY PAR1</scope>
-</reference>
-<reference key="12">
-<citation type="journal article" date="2004" name="Curr. Biol." volume="14" first="579" last="584">
-<title>Sid4p-Cdc11p assembles the septation initiation network and its regulators at the S. pombe SPB.</title>
-<authorList>
-<person name="Morrell J.L."/>
-<person name="Tomlin G.C."/>
-<person name="Rajagopalan S."/>
-<person name="Venkatram S."/>
-<person name="Feoktistova A.S."/>
-<person name="Tasto J.J."/>
-<person name="Mehta S."/>
-<person name="Jennings J.L."/>
-<person name="Link A."/>
-<person name="Balasubramanian M.K."/>
-<person name="Gould K.L."/>
-</authorList>
-<dbReference type="PubMed" id="15062098" key="13"/>
-<dbReference type="DOI" id="10.1016/j.cub.2004.03.036" key="14"/>
-</citation>
-<scope>FUNCTION</scope>
-<scope>INTERACTION WITH SPG1; SID2</scope>
-<scope>CDC13 AND CDC16</scope>
-<scope>SUBCELLULAR LOCATION</scope>
-<scope>PHOSPHORYLATION BY CDCK1</scope>
-<scope>MUTAGENESIS OF SER-98; SER-103; SER-136; SER-199; SER-208; SER-360; SER-393 AND SER-558</scope>
-</reference>
-<reference key="15">
-<citation type="journal article" date="2006" name="Nat. Biotechnol." volume="24" first="841" last="847">
-<title>ORFeome cloning and global analysis of protein localization in the fission yeast Schizosaccharomyces pombe.</title>
-<authorList>
-<person name="Matsuyama A."/>
-<person name="Arai R."/>
-<person name="Yashiroda Y."/>
-<person name="Shirai A."/>
-<person name="Kamata A."/>
-<person name="Sekido S."/>
-<person name="Kobayashi Y."/>
-<person name="Hashimoto A."/>
-<person name="Hamamoto M."/>
-<person name="Hiraoka Y."/>
-<person name="Horinouchi S."/>
-<person name="Yoshida M."/>
-</authorList>
-<dbReference type="PubMed" id="16823372" key="16"/>
-<dbReference type="DOI" id="10.1038/nbt1222" key="17"/>
-</citation>
-<scope>SUBCELLULAR LOCATION [LARGE SCALE ANALYSIS]</scope>
-</reference>
-<reference key="18">
-<citation type="journal article" date="2008" name="J. Proteome Res." volume="7" first="1088" last="1097">
-<title>Phosphoproteome analysis of fission yeast.</title>
-<authorList>
-<person name="Wilson-Grady J.T."/>
-<person name="Villen J."/>
-<person name="Gygi S.P."/>
-</authorList>
-<dbReference type="PubMed" id="18257517" key="19"/>
-<dbReference type="DOI" id="10.1021/pr7006335" key="20"/>
-</citation>
-<scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-360 AND SER-558</scope>
-<scope>MASS SPECTROMETRY</scope>
-</reference>
-<comment type="function">
-<text evidence="EC1 EC2">Essential for the onset of septum formation. Involved in the organization of astral microtubules during mitosis. Acts as a bridge between sid4 and the other SIN proteins mediating their association with the spindle pole body (SPB). The sid4-cdc11 complex organizes a signaling hub on the SPB which coordinates cell and nuclear division.</text>
-</comment>
-<comment type="subunit">
-<text evidence="EC1 EC2 EC3">Interacts with sid4. When hyperphosphorylated, interacts with byr4. Also interacts with spg1, sid2, cdc13 and cdc16.</text>
-</comment>
-<comment type="subcellular location">
-<subcellularLocation>
-<location>Cytoplasm</location>
-</subcellularLocation>
-<subcellularLocation>
-<location>Cytoplasm</location>
-<location>Cytoskeleton</location>
-<location>Spindle pole body</location>
-</subcellularLocation>
-<text evidence="EC1 EC2 EC4">Localizes at the spindle pole body and the barrier septum.</text>
-</comment>
-<comment type="PTM">
-<text evidence="EC1 EC2 EC3 EC5">Phosphorylated by cdc7 and cdk1. Hyperphosphorylated during anaphase. Dephosphorylated by par1.</text>
-</comment>
-<comment type="similarity">
-<text>Contains 15 LRR (leucine-rich) repeats.</text>
-</comment>
-<comment type="similarity">
-<text>Contains 1 LRRCT domain.</text>
-</comment>
-<dbReference type="EMBL" id="CU329672" key="21">
-<property type="protein sequence ID" value="CAA20785.1"/>
-<property type="molecule type" value="Genomic_DNA"/>
-</dbReference>
-<dbReference type="PIR" id="T41119" key="22">
-<property type="entry name" value="T41119"/>
-</dbReference>
-<dbReference type="ProteinModelPortal" id="O74473" key="23"/>
-<dbReference type="SMR" id="O74473" key="24">
-<property type="residue range" value="651-925"/>
-</dbReference>
-<dbReference type="IntAct" id="O74473" key="25">
-<property type="interactions" value="1"/>
-</dbReference>
-<dbReference type="STRING" id="O74473" key="26"/>
-<dbReference type="EnsemblFungi" id="SPCC1739.11c-1" key="27">
-<property type="protein sequence ID" value="SPCC1739.11c-1"/>
-<property type="gene ID" value="SPCC1739.11c"/>
-</dbReference>
-<dbReference type="GenomeReviews" id="CU329672_GR" key="28">
-<property type="gene designation" value="cdc11"/>
-</dbReference>
-<dbReference type="KEGG" id="spo:SPCC1739.11c" key="29"/>
-<dbReference type="NMPDR" id="fig|4896.1.peg.757" key="30"/>
-<dbReference type="GeneDB_Spombe" id="SPCC1739.11c" key="31"/>
-<dbReference type="eggNOG" id="fuNOG06206" key="32"/>
-<dbReference type="GeneTree" id="EFGT00050000002537" key="33"/>
-<dbReference type="OrthoDB" id="EOG42C1JW" key="34"/>
-<dbReference type="PhylomeDB" id="O74473" key="35"/>
-<dbReference type="ArrayExpress" id="O74473" key="36"/>
-<dbReference type="GO" id="GO:0032153" key="37">
-<property type="term" value="C:cell division site"/>
-<property type="evidence" value="IDA:GeneDB_Spombe"/>
-</dbReference>
-<dbReference type="GO" id="GO:0005634" key="38">
-<property type="term" value="C:nucleus"/>
-<property type="evidence" value="IDA:GeneDB_Spombe"/>
-</dbReference>
-<dbReference type="GO" id="GO:0005816" key="39">
-<property type="term" value="C:spindle pole body"/>
-<property type="evidence" value="IDA:GeneDB_Spombe"/>
-</dbReference>
-<dbReference type="GO" id="GO:0005515" key="40">
-<property type="term" value="F:protein binding"/>
-<property type="evidence" value="IPI:GeneDB_Spombe"/>
-</dbReference>
-<dbReference type="GO" id="GO:0005198" key="41">
-<property type="term" value="F:structural molecule activity"/>
-<property type="evidence" value="TAS:GeneDB_Spombe"/>
-</dbReference>
-<dbReference type="GO" id="GO:0071937" key="42">
-<property type="term" value="P:barrier septum formation involved in cell cycle cytokinesis"/>
-<property type="evidence" value="IMP:GeneDB_Spombe"/>
-</dbReference>
-<dbReference type="GO" id="GO:0034613" key="43">
-<property type="term" value="P:cellular protein localization"/>
-<property type="evidence" value="IGI:GeneDB_Spombe"/>
-</dbReference>
-<dbReference type="GO" id="GO:0031028" key="44">
-<property type="term" value="P:septation initiation signaling cascade"/>
-<property type="evidence" value="IMP:GeneDB_Spombe"/>
-</dbReference>
-<dbReference type="InterPro" id="IPR001611" key="45">
-<property type="entry name" value="Leu-rich_rpt"/>
-</dbReference>
-<dbReference type="PROSITE" id="PS51450" key="46">
-<property type="entry name" value="LRR"/>
-<property type="match status" value="12"/>
-</dbReference>
-<proteinExistence type="evidence at protein level"/>
-<keyword id="KW-0181">Complete proteome</keyword>
-<keyword id="KW-0963">Cytoplasm</keyword>
-<keyword id="KW-0206">Cytoskeleton</keyword>
-<keyword id="KW-0433">Leucine-rich repeat</keyword>
-<keyword id="KW-0539">Nucleus</keyword>
-<keyword id="KW-0597">Phosphoprotein</keyword>
-<keyword id="KW-0677">Repeat</keyword>
-<feature type="chain" description="Septation initiation network scaffold protein cdc11" id="PRO_0000339131">
-<location>
-<begin position="1"/>
-<end position="1045"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 1">
-<location>
-<begin position="604"/>
-<end position="625"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 2">
-<location>
-<begin position="627"/>
-<end position="646"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 3">
-<location>
-<begin position="647"/>
-<end position="668"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 4">
-<location>
-<begin position="669"/>
-<end position="690"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 5">
-<location>
-<begin position="691"/>
-<end position="712"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 6">
-<location>
-<begin position="713"/>
-<end position="734"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 7">
-<location>
-<begin position="736"/>
-<end position="757"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 8">
-<location>
-<begin position="758"/>
-<end position="779"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 9">
-<location>
-<begin position="780"/>
-<end position="801"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 10">
-<location>
-<begin position="802"/>
-<end position="822"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 11">
-<location>
-<begin position="846"/>
-<end position="867"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 12">
-<location>
-<begin position="868"/>
-<end position="889"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 13">
-<location>
-<begin position="892"/>
-<end position="913"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 14">
-<location>
-<begin position="914"/>
-<end position="935"/>
-</location>
-</feature>
-<feature type="repeat" description="LRR 15">
-<location>
-<begin position="940"/>
-<end position="962"/>
-</location>
-</feature>
-<feature type="domain" description="LRRCT">
-<location>
-<begin position="1005"/>
-<end position="1043"/>
-</location>
-</feature>
-<feature type="compositionally biased region" description="Ser-rich">
-<location>
-<begin position="94"/>
-<end position="201"/>
-</location>
-</feature>
-<feature type="modified residue" description="Phosphoserine" evidence="EC5">
-<location>
-<position position="360"/>
-</location>
-</feature>
-<feature type="modified residue" description="Phosphoserine" evidence="EC5">
-<location>
-<position position="558"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
-<original>S</original>
-<variation>A</variation>
-<location>
-<position position="98"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
-<original>S</original>
-<variation>A</variation>
-<location>
-<position position="103"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
-<original>S</original>
-<variation>A</variation>
-<location>
-<position position="136"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
-<original>S</original>
-<variation>A</variation>
-<location>
-<position position="199"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
-<original>S</original>
-<variation>A</variation>
-<location>
-<position position="208"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
-<original>S</original>
-<variation>A</variation>
-<location>
-<position position="360"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
-<original>S</original>
-<variation>A</variation>
-<location>
-<position position="393"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
-<original>S</original>
-<variation>A</variation>
-<location>
-<position position="558"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="In cdc11-136; normal interaction with sid4; normal localization at the SPB." evidence="EC1">
-<original>N</original>
-<variation>M</variation>
-<location>
-<position position="767"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="In cdc11-123; no interaction with sid4; does not localize at the SPB." evidence="EC1">
-<original>R</original>
-<variation>A</variation>
-<location>
-<position position="947"/>
-</location>
-</feature>
-<feature type="mutagenesis site" description="In cdc11-123; no interaction with sid4; does not localize at the SPB." evidence="EC1">
-<original>T</original>
-<variation>I</variation>
-<location>
-<position position="1041"/>
-</location>
-</feature>
-<evidence key="EC1" category="curator" type="Literature" attribute="PubMed=11676915" date="2010-07-01"/>
-<evidence key="EC2" category="curator" type="Literature" attribute="PubMed=15062098" date="2010-07-01"/>
-<evidence key="EC3" category="curator" type="Literature" attribute="PubMed=12546793" date="2010-07-01"/>
-<evidence key="EC4" category="curator" type="Literature" attribute="PubMed=16823372" date="2010-07-01"/>
-<evidence key="EC5" category="curator" type="Literature" attribute="PubMed=18257517" date="2010-07-01"/>
-<sequence length="1045" mass="118628" checksum="E66CBF374B00B046" modified="1998-11-01" version="1">
-MEQLWLEHDLSEEWIPQPQEQGSDNSSEPPTTSNVNNTQSTGRGSSGTSTEHGTFKKGRN
-DAPDVPQWKQVNAKNPVARDIFARLDLENMFEESSKQSPPSKSPTKNPSKKSSNNSSRRS
-SSSVGKLSNVSNMQSSPSKDPFVSQDYEKESISSSQFSKKYSEGSLKSQQSNTRSNSVHE
-KQNTDHASNASSSSSVVSSPSLKPNNTSPLKLFQGASDPFTREHLNQLTQDVKSNSFENG
-EKQFSLPEPRRPQKPMRTTERKASLNTKDLYQEVEEVMARLRGRMPNSGRESTIFLPRKL
-SGLREEEEQDEISVEVSQEDSSNAFPSLSDQLHLKSLQSMKRVTSIFNDNDDSFPSASSS
-PQRQAYMTDKMPLREIDVGSSQSSSKTARLNSSPKSTLKTSSVKTRRSHSAQSSRKVSDY
-PNMVVITPADLPEGIDTTQGSMEFDRIHNRWRRKGHDSDLGFDFETDEDASLSHPERTIL
-FKAASTRHQANNDPNNLEKQQPHSFPLRKQNVAQSEFPKHSLRDNSENAPQILSSFHDLS
-LQNESFDEMFNGRYENGSPIPFISSGSGLKSKADKDAEYSFSVSRQSIIQILSDVEPYEP
-FWKRIIQLDISRRHLDSLIGLSELCPSIEELTLEGNEIAYLTGCPVTIRDLNAVENRLSS
-LTSFSNLLNLQYLDISYNQLEDLTGLSSLIHLRELKVDSNHLWSLDGIQHLDGLLKLSAC
-NNRIKELSFTNSNLHRLEELLLGNNEIEEIEEISSLQNLMVLQLDNNKLTNLKASQPMIH
-LRILRISNNAIHQLEVDQFPHLRTLYMDLNRFNRPPDIRRLKRLVNFSFRTQDPEASNFV
-IQPSLDIRNLYLSNNTFVTLDCKHMFLGVRYLELANVQLKEVPKYIATSMPNLRVLDLSH
-NYISDIESLKPLQMIHRLYLVGNRIKKMRNLCDILANLKQLNVLDLRMNPLNFNIYPVID
-DSIYELSAASKYQQSINQKGHHRKEDPQKQWQEKELAFSSTLSEAWRTRRKMYAEAILLA
-CPHLEWLDGSDVSQSSRAAFTKSSN
-</sequence>
-</entry>
-<copyright>
-Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
-Distributed under the Creative Commons Attribution-NoDerivs License
-</copyright>
+  <entry dataset="Swiss-Prot" created="1990-04-01" modified="2011-05-03" version="121">
+    <accession>P15436</accession>
+    <accession>D6VRP8</accession>
+    <name>DPOD_YEAST</name>
+    <protein>
+      <recommendedName ref="1">
+        <fullName>DNA polymerase delta catalytic subunit</fullName>
+      </recommendedName>
+      <alternativeName>
+        <fullName>DNA polymerase III</fullName>
+      </alternativeName>
+    </protein>
+    <gene>
+      <name type="primary">POL3</name>
+      <name type="synonym">CDC2</name>
+      <name type="synonym">TEX1</name>
+      <name type="ordered locus">YDL102W</name>
+      <name type="ORF">D2366</name>
+    </gene>
+    <organism>
+      <name type="scientific">Saccharomyces cerevisiae (strain ATCC 204508 / S288c)</name>
+      <name type="common">Baker's yeast</name>
+      <dbReference type="NCBI Taxonomy" id="559292" key="2"/>
+      <lineage>
+        <taxon>Eukaryota</taxon>
+        <taxon>Fungi</taxon>
+        <taxon>Dikarya</taxon>
+        <taxon>Ascomycota</taxon>
+        <taxon>Saccharomycotina</taxon>
+        <taxon>Saccharomycetes</taxon>
+        <taxon>Saccharomycetales</taxon>
+        <taxon>Saccharomycetaceae</taxon>
+        <taxon>Saccharomyces</taxon>
+      </lineage>
+    </organism>
+    <reference key="3">
+      <citation type="journal article" date="1989" name="EMBO J." volume="8" first="1849" last="1854">
+        <title>Structure and function of the Saccharomyces cerevisiae CDC2 gene encoding the large subunit of DNA polymerase III.</title>
+        <authorList>
+          <person name="Boulet A."/>
+          <person name="Simon M."/>
+          <person name="Faye G."/>
+          <person name="Bauer G.A."/>
+          <person name="Burgers M.J."/>
+        </authorList>
+        <dbReference type="MEDLINE" id="89356661" key="4"/>
+        <dbReference type="PubMed" id="2670563" key="5"/>
+      </citation>
+      <scope>NUCLEOTIDE SEQUENCE [GENOMIC DNA]</scope>
+      <source>
+        <strain>YAB2</strain>
+      </source>
+    </reference>
+    <reference key="6">
+      <citation type="journal article" date="1992" name="Nucleic Acids Res." volume="20" first="375" last="375">
+        <title>Nucleotide sequence of the POL3 gene encoding DNA polymerase III (delta) of Saccharomyces cerevisiae.</title>
+        <authorList>
+          <person name="Morrison A."/>
+          <person name="Sugino A."/>
+        </authorList>
+        <dbReference type="MEDLINE" id="92158636" key="7"/>
+        <dbReference type="PubMed" id="1741270" key="8"/>
+        <dbReference type="DOI" id="10.1093/nar/20.2.375" key="9"/>
+      </citation>
+      <scope>NUCLEOTIDE SEQUENCE [GENOMIC DNA]</scope>
+      <scope>SEQUENCE REVISION</scope>
+    </reference>
+    <reference key="10">
+      <citation type="journal article" date="1996" name="Yeast" volume="12" first="1077" last="1084">
+        <title>The sequence of a 20.3 kb DNA fragment from the left arm of Saccharomyces cerevisiae chromosome IV contains the KIN28, MSS2, PHO2, POL3 and DUN1 genes, and six new open reading frames.</title>
+        <authorList>
+          <person name="Saiz J.E."/>
+          <person name="Buitrago M.J."/>
+          <person name="Garcia R."/>
+          <person name="Revuelta J.L."/>
+          <person name="del Rey F."/>
+        </authorList>
+        <dbReference type="MEDLINE" id="97051597" key="11"/>
+        <dbReference type="PubMed" id="8896274" key="12"/>
+        <dbReference type="DOI" id="10.1002/(SICI)1097-0061(199609)12:10B&lt;1077::AID-YEA8>3.3.CO;2-Q" key="13"/>
+      </citation>
+      <scope>NUCLEOTIDE SEQUENCE [GENOMIC DNA]</scope>
+      <source>
+        <strain>ATCC 96604 / S288c / FY1679</strain>
+      </source>
+    </reference>
+    <reference key="14">
+      <citation type="journal article" date="1997" name="Nature" volume="387" first="75" last="78">
+        <title>The nucleotide sequence of Saccharomyces cerevisiae chromosome IV.</title>
+        <authorList>
+          <person name="Jacq C."/>
+          <person name="Alt-Moerbe J."/>
+          <person name="Andre B."/>
+          <person name="Arnold W."/>
+          <person name="Bahr A."/>
+          <person name="Ballesta J.P.G."/>
+          <person name="Bargues M."/>
+          <person name="Baron L."/>
+          <person name="Becker A."/>
+          <person name="Biteau N."/>
+          <person name="Bloecker H."/>
+          <person name="Blugeon C."/>
+          <person name="Boskovic J."/>
+          <person name="Brandt P."/>
+          <person name="Brueckner M."/>
+          <person name="Buitrago M.J."/>
+          <person name="Coster F."/>
+          <person name="Delaveau T."/>
+          <person name="del Rey F."/>
+          <person name="Dujon B."/>
+          <person name="Eide L.G."/>
+          <person name="Garcia-Cantalejo J.M."/>
+          <person name="Goffeau A."/>
+          <person name="Gomez-Peris A."/>
+          <person name="Granotier C."/>
+          <person name="Hanemann V."/>
+          <person name="Hankeln T."/>
+          <person name="Hoheisel J.D."/>
+          <person name="Jaeger W."/>
+          <person name="Jimenez A."/>
+          <person name="Jonniaux J.-L."/>
+          <person name="Kraemer C."/>
+          <person name="Kuester H."/>
+          <person name="Laamanen P."/>
+          <person name="Legros Y."/>
+          <person name="Louis E.J."/>
+          <person name="Moeller-Rieker S."/>
+          <person name="Monnet A."/>
+          <person name="Moro M."/>
+          <person name="Mueller-Auer S."/>
+          <person name="Nussbaumer B."/>
+          <person name="Paricio N."/>
+          <person name="Paulin L."/>
+          <person name="Perea J."/>
+          <person name="Perez-Alonso M."/>
+          <person name="Perez-Ortin J.E."/>
+          <person name="Pohl T.M."/>
+          <person name="Prydz H."/>
+          <person name="Purnelle B."/>
+          <person name="Rasmussen S.W."/>
+          <person name="Remacha M.A."/>
+          <person name="Revuelta J.L."/>
+          <person name="Rieger M."/>
+          <person name="Salom D."/>
+          <person name="Saluz H.P."/>
+          <person name="Saiz J.E."/>
+          <person name="Saren A.-M."/>
+          <person name="Schaefer M."/>
+          <person name="Scharfe M."/>
+          <person name="Schmidt E.R."/>
+          <person name="Schneider C."/>
+          <person name="Scholler P."/>
+          <person name="Schwarz S."/>
+          <person name="Soler-Mira A."/>
+          <person name="Urrestarazu L.A."/>
+          <person name="Verhasselt P."/>
+          <person name="Vissers S."/>
+          <person name="Voet M."/>
+          <person name="Volckaert G."/>
+          <person name="Wagner G."/>
+          <person name="Wambutt R."/>
+          <person name="Wedler E."/>
+          <person name="Wedler H."/>
+          <person name="Woelfl S."/>
+          <person name="Harris D.E."/>
+          <person name="Bowman S."/>
+          <person name="Brown D."/>
+          <person name="Churcher C.M."/>
+          <person name="Connor R."/>
+          <person name="Dedman K."/>
+          <person name="Gentles S."/>
+          <person name="Hamlin N."/>
+          <person name="Hunt S."/>
+          <person name="Jones L."/>
+          <person name="McDonald S."/>
+          <person name="Murphy L.D."/>
+          <person name="Niblett D."/>
+          <person name="Odell C."/>
+          <person name="Oliver K."/>
+          <person name="Rajandream M.A."/>
+          <person name="Richards C."/>
+          <person name="Shore L."/>
+          <person name="Walsh S.V."/>
+          <person name="Barrell B.G."/>
+          <person name="Dietrich F.S."/>
+          <person name="Mulligan J.T."/>
+          <person name="Allen E."/>
+          <person name="Araujo R."/>
+          <person name="Aviles E."/>
+          <person name="Berno A."/>
+          <person name="Carpenter J."/>
+          <person name="Chen E."/>
+          <person name="Cherry J.M."/>
+          <person name="Chung E."/>
+          <person name="Duncan M."/>
+          <person name="Hunicke-Smith S."/>
+          <person name="Hyman R.W."/>
+          <person name="Komp C."/>
+          <person name="Lashkari D."/>
+          <person name="Lew H."/>
+          <person name="Lin D."/>
+          <person name="Mosedale D."/>
+          <person name="Nakahara K."/>
+          <person name="Namath A."/>
+          <person name="Oefner P."/>
+          <person name="Oh C."/>
+          <person name="Petel F.X."/>
+          <person name="Roberts D."/>
+          <person name="Schramm S."/>
+          <person name="Schroeder M."/>
+          <person name="Shogren T."/>
+          <person name="Shroff N."/>
+          <person name="Winant A."/>
+          <person name="Yelton M.A."/>
+          <person name="Botstein D."/>
+          <person name="Davis R.W."/>
+          <person name="Johnston M."/>
+          <person name="Andrews S."/>
+          <person name="Brinkman R."/>
+          <person name="Cooper J."/>
+          <person name="Ding H."/>
+          <person name="Du Z."/>
+          <person name="Favello A."/>
+          <person name="Fulton L."/>
+          <person name="Gattung S."/>
+          <person name="Greco T."/>
+          <person name="Hallsworth K."/>
+          <person name="Hawkins J."/>
+          <person name="Hillier L.W."/>
+          <person name="Jier M."/>
+          <person name="Johnson D."/>
+          <person name="Johnston L."/>
+          <person name="Kirsten J."/>
+          <person name="Kucaba T."/>
+          <person name="Langston Y."/>
+          <person name="Latreille P."/>
+          <person name="Le T."/>
+          <person name="Mardis E."/>
+          <person name="Menezes S."/>
+          <person name="Miller N."/>
+          <person name="Nhan M."/>
+          <person name="Pauley A."/>
+          <person name="Peluso D."/>
+          <person name="Rifkin L."/>
+          <person name="Riles L."/>
+          <person name="Taich A."/>
+          <person name="Trevaskis E."/>
+          <person name="Vignati D."/>
+          <person name="Wilcox L."/>
+          <person name="Wohldman P."/>
+          <person name="Vaudin M."/>
+          <person name="Wilson R."/>
+          <person name="Waterston R."/>
+          <person name="Albermann K."/>
+          <person name="Hani J."/>
+          <person name="Heumann K."/>
+          <person name="Kleine K."/>
+          <person name="Mewes H.-W."/>
+          <person name="Zollner A."/>
+          <person name="Zaccaria P."/>
+        </authorList>
+        <dbReference type="MEDLINE" id="97313263" key="15"/>
+        <dbReference type="PubMed" id="9169867" key="16"/>
+      </citation>
+      <scope>NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]</scope>
+      <source>
+        <strain>ATCC 204508 / S288c</strain>
+      </source>
+    </reference>
+    <reference key="17">
+      <citation type="submission" date="2009-12" db="EMBL/GenBank/DDBJ databases">
+        <authorList>
+          <consortium name="Saccharomyces Genome Database"/>
+        </authorList>
+      </citation>
+      <scope>GENOME REANNOTATION</scope>
+      <source>
+        <strain>ATCC 204508 / S288c</strain>
+      </source>
+    </reference>
+    <reference key="18">
+      <citation type="journal article" date="1991" name="EMBO J." volume="10" first="2165" last="2170">
+        <title>The 3' to 5' exonuclease activity located in the DNA polymerase delta subunit of Saccharomyces cerevisiae is required for accurate replication.</title>
+        <authorList>
+          <person name="Simon M."/>
+          <person name="Giot L."/>
+          <person name="Faye G."/>
+        </authorList>
+        <dbReference type="MEDLINE" id="91293091" key="19"/>
+        <dbReference type="PubMed" id="1648480" key="20"/>
+      </citation>
+      <scope>FUNCTION AS AN EXONUCLEASE</scope>
+    </reference>
+    <reference key="21">
+      <citation type="journal article" date="2001" name="J. Biol. Chem." volume="276" first="43824" last="43828">
+        <title>Structure of DNA polymerase delta from Saccharomyces cerevisiae.</title>
+        <authorList>
+          <person name="Johansson E."/>
+          <person name="Majka J."/>
+          <person name="Burgers P.M."/>
+        </authorList>
+        <dbReference type="PubMed" id="11568188" key="22"/>
+        <dbReference type="DOI" id="10.1074/jbc.M108842200" key="23"/>
+      </citation>
+      <scope>COMPOSITION OF THE DNA POLYMERASE DELTA COMPLEX</scope>
+    </reference>
+    <reference key="24">
+      <citation type="journal article" date="2007" name="J. Proteome Res." volume="6" first="1190" last="1197">
+        <title>Large-scale phosphorylation analysis of alpha-factor-arrested Saccharomyces cerevisiae.</title>
+        <authorList>
+          <person name="Li X."/>
+          <person name="Gerber S.A."/>
+          <person name="Rudner A.D."/>
+          <person name="Beausoleil S.A."/>
+          <person name="Haas W."/>
+          <person name="Villen J."/>
+          <person name="Elias J.E."/>
+          <person name="Gygi S.P."/>
+        </authorList>
+        <dbReference type="PubMed" id="17330950" key="25"/>
+        <dbReference type="DOI" id="10.1021/pr060559j" key="26"/>
+      </citation>
+      <scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-30</scope>
+      <scope>MASS SPECTROMETRY</scope>
+      <source>
+        <strain>ADR376</strain>
+      </source>
+    </reference>
+    <reference key="27">
+      <citation type="journal article" date="2007" name="Proc. Natl. Acad. Sci. U.S.A." volume="104" first="2193" last="2198">
+        <title>Analysis of phosphorylation sites on proteins from Saccharomyces cerevisiae by electron transfer dissociation (ETD) mass spectrometry.</title>
+        <authorList>
+          <person name="Chi A."/>
+          <person name="Huttenhower C."/>
+          <person name="Geer L.Y."/>
+          <person name="Coon J.J."/>
+          <person name="Syka J.E.P."/>
+          <person name="Bai D.L."/>
+          <person name="Shabanowitz J."/>
+          <person name="Burke D.J."/>
+          <person name="Troyanskaya O.G."/>
+          <person name="Hunt D.F."/>
+        </authorList>
+        <dbReference type="PubMed" id="17287358" key="28"/>
+        <dbReference type="DOI" id="10.1073/pnas.0607084104" key="29"/>
+      </citation>
+      <scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-30</scope>
+      <scope>MASS SPECTROMETRY</scope>
+    </reference>
+    <reference key="30">
+      <citation type="journal article" date="2007" name="Proc. Natl. Acad. Sci. U.S.A." volume="104" first="10364" last="10369">
+        <title>Proteome-wide identification of in vivo targets of DNA damage checkpoint kinases.</title>
+        <authorList>
+          <person name="Smolka M.B."/>
+          <person name="Albuquerque C.P."/>
+          <person name="Chen S.H."/>
+          <person name="Zhou H."/>
+        </authorList>
+        <dbReference type="PubMed" id="17563356" key="31"/>
+        <dbReference type="DOI" id="10.1073/pnas.0701622104" key="32"/>
+      </citation>
+      <scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-30 AND SER-56</scope>
+      <scope>MASS SPECTROMETRY</scope>
+    </reference>
+    <reference key="33">
+      <citation type="journal article" date="2008" name="Mol. Cell. Proteomics" volume="7" first="1389" last="1396">
+        <title>A multidimensional chromatography technology for in-depth phosphoproteome analysis.</title>
+        <authorList>
+          <person name="Albuquerque C.P."/>
+          <person name="Smolka M.B."/>
+          <person name="Payne S.H."/>
+          <person name="Bafna V."/>
+          <person name="Eng J."/>
+          <person name="Zhou H."/>
+        </authorList>
+        <dbReference type="PubMed" id="18407956" key="34"/>
+        <dbReference type="DOI" id="10.1074/mcp.M700468-MCP200" key="35"/>
+      </citation>
+      <scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-30; SER-37 AND SER-50</scope>
+      <scope>MASS SPECTROMETRY</scope>
+    </reference>
+    <comment type="function">
+      <text evidence="EC1">DNA polymerase delta (DNA polymerase III) participates in chromosomal DNA replication. It is required during synthesis of the leading and lagging DNA strands at the replication fork and binds at/or near replication origins and moves along DNA with the replication fork. It has 3'-5' proofreading exonuclease activity that correct errors arising during DNA replication. It is also involved in DNA synthesis during DNA repair. POL3 contains the polymerase active site and most likely the active site for the 3'-5' exonuclease activity.</text>
+    </comment>
+    <comment type="catalytic activity">
+      <text>Deoxynucleoside triphosphate + DNA(n) = diphosphate + DNA(n+1).</text>
+    </comment>
+    <comment type="subunit">
+      <text>DNA polymerase delta is a heterotrimer of POL3, POL32 and HYS2.</text>
+    </comment>
+    <comment type="interaction">
+      <interactant intactId="EBI-6134"/>
+      <interactant intactId="EBI-6080">
+        <id>P46957</id>
+        <label>POL31</label>
+      </interactant>
+      <organismsDiffer>false</organismsDiffer>
+      <experiments>2</experiments>
+    </comment>
+    <comment type="subcellular location">
+      <subcellularLocation>
+        <location>Nucleus</location>
+      </subcellularLocation>
+    </comment>
+    <comment type="miscellaneous">
+      <text>In eukaryotes there are five DNA polymerases: alpha, beta, gamma, delta, and epsilon which are responsible for different reactions of DNA synthesis.</text>
+    </comment>
+    <comment type="similarity">
+      <text>Belongs to the DNA polymerase type-B family.</text>
+    </comment>
+    <comment type="sequence caution">
+      <conflict type="miscellaneous discrepancy">
+        <sequence resource="EMBL-CDS" id="CAA33504" version="1"/>
+      </conflict>
+    </comment>
+    <dbReference type="EC" id="2.7.7.7" key="1"/>
+    <dbReference type="EMBL" id="X15477" key="36">
+      <property type="protein sequence ID" value="CAA33504.1"/>
+      <property type="status" value="ALT_SEQ"/>
+      <property type="molecule type" value="Genomic_DNA"/>
+    </dbReference>
+    <dbReference type="EMBL" id="X61920" key="37">
+      <property type="protein sequence ID" value="CAA43922.1"/>
+      <property type="molecule type" value="Genomic_DNA"/>
+    </dbReference>
+    <dbReference type="EMBL" id="X95644" key="38">
+      <property type="protein sequence ID" value="CAA64911.1"/>
+      <property type="molecule type" value="Genomic_DNA"/>
+    </dbReference>
+    <dbReference type="EMBL" id="Z74150" key="39">
+      <property type="protein sequence ID" value="CAA98669.1"/>
+      <property type="molecule type" value="Genomic_DNA"/>
+    </dbReference>
+    <dbReference type="EMBL" id="BK006938" key="40">
+      <property type="protein sequence ID" value="DAA11758.1"/>
+      <property type="molecule type" value="Genomic_DNA"/>
+    </dbReference>
+    <dbReference type="PIR" id="S67644" key="41">
+      <property type="entry name" value="RNBYL3"/>
+    </dbReference>
+    <dbReference type="RefSeq" id="NP_010181.1" key="42">
+      <property type="nucleotide sequence ID" value="NM_001180161.1"/>
+    </dbReference>
+    <dbReference type="PDB" id="3IAY" key="43">
+      <property type="method" value="X-ray"/>
+      <property type="resolution" value="2.00"/>
+      <property type="chains" value="A=67-985"/>
+    </dbReference>
+    <dbReference type="PDBsum" id="3IAY" key="44"/>
+    <dbReference type="ProteinModelPortal" id="P15436" key="45"/>
+    <dbReference type="SMR" id="P15436" key="46">
+      <property type="residue range" value="95-985"/>
+    </dbReference>
+    <dbReference type="DIP" id="DIP-2524N" key="47"/>
+    <dbReference type="IntAct" id="P15436" key="48">
+      <property type="interactions" value="8"/>
+    </dbReference>
+    <dbReference type="MINT" id="MINT-2781941" key="49"/>
+    <dbReference type="STRING" id="P15436" key="50"/>
+    <dbReference type="PeptideAtlas" id="P15436" key="51"/>
+    <dbReference type="EnsemblFungi" id="YDL102W" key="52">
+      <property type="protein sequence ID" value="YDL102W"/>
+      <property type="gene ID" value="YDL102W"/>
+    </dbReference>
+    <dbReference type="GeneID" id="851456" key="53"/>
+    <dbReference type="KEGG" id="sce:YDL102W" key="54"/>
+    <dbReference type="NMPDR" id="fig|4932.3.peg.919" key="55"/>
+    <dbReference type="CYGD" id="YDL102w" key="56"/>
+    <dbReference type="SGD" id="S000002260" key="57">
+      <property type="gene designation" value="CDC2"/>
+    </dbReference>
+    <dbReference type="eggNOG" id="fuNOG05375" key="58"/>
+    <dbReference type="GeneTree" id="EFGT00050000004684" key="59"/>
+    <dbReference type="HOGENOM" id="HBG357584" key="60"/>
+    <dbReference type="OMA" id="VIQIANV" key="61"/>
+    <dbReference type="OrthoDB" id="EOG4B01XB" key="62"/>
+    <dbReference type="PhylomeDB" id="P15436" key="63"/>
+    <dbReference type="BRENDA" id="2.7.7.7" key="64">
+      <property type="organism ID" value="250"/>
+    </dbReference>
+    <dbReference type="NextBio" id="968726" key="65"/>
+    <dbReference type="ArrayExpress" id="P15436" key="66"/>
+    <dbReference type="Genevestigator" id="P15436" key="67"/>
+    <dbReference type="GermOnline" id="YDL102W" key="68">
+      <property type="organism name" value="Saccharomyces cerevisiae"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0043625" key="69">
+      <property type="term" value="C:delta DNA polymerase complex"/>
+      <property type="evidence" value="TAS:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0003677" key="70">
+      <property type="term" value="F:DNA binding"/>
+      <property type="evidence" value="IEA:UniProtKB-KW"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0003887" key="71">
+      <property type="term" value="F:DNA-directed DNA polymerase activity"/>
+      <property type="evidence" value="IDA:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0046872" key="72">
+      <property type="term" value="F:metal ion binding"/>
+      <property type="evidence" value="IEA:UniProtKB-KW"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0000166" key="73">
+      <property type="term" value="F:nucleotide binding"/>
+      <property type="evidence" value="IEA:InterPro"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0005515" key="74">
+      <property type="term" value="F:protein binding"/>
+      <property type="evidence" value="IPI:IntAct"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0008310" key="75">
+      <property type="term" value="F:single-stranded DNA specific 3'-5' exodeoxyribonuclease activity"/>
+      <property type="evidence" value="TAS:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0006284" key="76">
+      <property type="term" value="P:base-excision repair"/>
+      <property type="evidence" value="TAS:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0043137" key="77">
+      <property type="term" value="P:DNA replication, removal of RNA primer"/>
+      <property type="evidence" value="IDA:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0006272" key="78">
+      <property type="term" value="P:leading strand elongation"/>
+      <property type="evidence" value="TAS:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0045005" key="79">
+      <property type="term" value="P:maintenance of fidelity involved in DNA-dependent DNA replication"/>
+      <property type="evidence" value="IGI:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0006298" key="80">
+      <property type="term" value="P:mismatch repair"/>
+      <property type="evidence" value="NAS:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0006289" key="81">
+      <property type="term" value="P:nucleotide-excision repair"/>
+      <property type="evidence" value="TAS:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0006301" key="82">
+      <property type="term" value="P:postreplication repair"/>
+      <property type="evidence" value="TAS:SGD"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0006278" key="83">
+      <property type="term" value="P:RNA-dependent DNA replication"/>
+      <property type="evidence" value="IDA:SGD"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR006172" key="84">
+      <property type="entry name" value="DNA-dir_DNA_pol_B"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR017964" key="85">
+      <property type="entry name" value="DNA-dir_DNA_pol_B_CS"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR006133" key="86">
+      <property type="entry name" value="DNA-dir_DNA_pol_B_exonuc"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR006134" key="87">
+      <property type="entry name" value="DNA-dir_DNA_pol_B_multi_dom"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR004578" key="88">
+      <property type="entry name" value="DNA-dir_DNA_pol_B_pol2"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR023211" key="89">
+      <property type="entry name" value="DNA_pol_palm_dom"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR012337" key="90">
+      <property type="entry name" value="RNaseH-like"/>
+    </dbReference>
+    <dbReference type="Gene3D" id="G3DSA:3.90.1600.10" key="91">
+      <property type="entry name" value="DNA_pol_palm_dom"/>
+      <property type="match status" value="2"/>
+    </dbReference>
+    <dbReference type="Pfam" id="PF00136" key="92">
+      <property type="entry name" value="DNA_pol_B"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="Pfam" id="PF03104" key="93">
+      <property type="entry name" value="DNA_pol_B_exo"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="PRINTS" id="PR00106" key="94">
+      <property type="entry name" value="DNAPOLB"/>
+    </dbReference>
+    <dbReference type="SMART" id="SM00486" key="95">
+      <property type="entry name" value="POLBc"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="SUPFAM" id="SSF53098" key="96">
+      <property type="entry name" value="RNaseH_fold"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="TIGRFAMs" id="TIGR00592" key="97">
+      <property type="entry name" value="pol2"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="PROSITE" id="PS00116" key="98">
+      <property type="entry name" value="DNA_POLYMERASE_B"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <proteinExistence type="evidence at protein level"/>
+    <keyword id="KW-0002">3D-structure</keyword>
+    <keyword id="KW-0181">Complete proteome</keyword>
+    <keyword id="KW-0235">DNA replication</keyword>
+    <keyword id="KW-0238">DNA-binding</keyword>
+    <keyword id="KW-0239">DNA-directed DNA polymerase</keyword>
+    <keyword id="KW-0269">Exonuclease</keyword>
+    <keyword id="KW-0378">Hydrolase</keyword>
+    <keyword id="KW-0479">Metal-binding</keyword>
+    <keyword id="KW-0540">Nuclease</keyword>
+    <keyword id="KW-0548">Nucleotidyltransferase</keyword>
+    <keyword id="KW-0539">Nucleus</keyword>
+    <keyword id="KW-0597">Phosphoprotein</keyword>
+    <keyword id="KW-0808">Transferase</keyword>
+    <keyword id="KW-0862">Zinc</keyword>
+    <keyword id="KW-0863">Zinc-finger</keyword>
+    <feature type="chain" description="DNA polymerase delta catalytic subunit" id="PRO_0000046454">
+      <location>
+        <begin position="1"/>
+        <end position="1097"/>
+      </location>
+    </feature>
+    <feature type="zinc finger region" description="C4-type" status="potential">
+      <location>
+        <begin position="1009"/>
+        <end position="1027"/>
+      </location>
+    </feature>
+    <feature type="zinc finger region" description="C4-type" status="potential">
+      <location>
+        <begin position="1056"/>
+        <end position="1074"/>
+      </location>
+    </feature>
+    <feature type="modified residue" description="Phosphoserine" evidence="EC2 EC3 EC4 EC5">
+      <location>
+        <position position="30"/>
+      </location>
+    </feature>
+    <feature type="modified residue" description="Phosphoserine" evidence="EC5">
+      <location>
+        <position position="37"/>
+      </location>
+    </feature>
+    <feature type="modified residue" description="Phosphoserine" evidence="EC5">
+      <location>
+        <position position="50"/>
+      </location>
+    </feature>
+    <feature type="modified residue" description="Phosphoserine; by ATM or ATR" evidence="EC4">
+      <location>
+        <position position="56"/>
+      </location>
+    </feature>
+    <feature type="sequence conflict" description="In Ref. 2; CAA43922." ref="6">
+      <original>DV</original>
+      <variation>EL</variation>
+      <location>
+        <begin position="78"/>
+        <end position="79"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="108"/>
+        <end position="110"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="113"/>
+        <end position="126"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="128"/>
+        <end position="130"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="133"/>
+        <end position="140"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="149"/>
+        <end position="154"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="159"/>
+        <end position="163"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="168"/>
+        <end position="171"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="173"/>
+        <end position="184"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="185"/>
+        <end position="189"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="191"/>
+        <end position="201"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="211"/>
+        <end position="220"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="223"/>
+        <end position="232"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="238"/>
+        <end position="240"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="254"/>
+        <end position="261"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="269"/>
+        <end position="272"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="282"/>
+        <end position="284"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="290"/>
+        <end position="296"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="297"/>
+        <end position="299"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="301"/>
+        <end position="303"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="316"/>
+        <end position="324"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="334"/>
+        <end position="336"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="339"/>
+        <end position="348"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="355"/>
+        <end position="363"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="372"/>
+        <end position="378"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="379"/>
+        <end position="393"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="396"/>
+        <end position="399"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="403"/>
+        <end position="406"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="407"/>
+        <end position="417"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="439"/>
+        <end position="442"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="449"/>
+        <end position="451"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="464"/>
+        <end position="471"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="479"/>
+        <end position="486"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="499"/>
+        <end position="503"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="507"/>
+        <end position="530"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="533"/>
+        <end position="543"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="550"/>
+        <end position="553"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="557"/>
+        <end position="570"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="604"/>
+        <end position="609"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="612"/>
+        <end position="619"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="624"/>
+        <end position="626"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="630"/>
+        <end position="635"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="641"/>
+        <end position="643"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="644"/>
+        <end position="646"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="652"/>
+        <end position="654"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="656"/>
+        <end position="658"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="663"/>
+        <end position="682"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="687"/>
+        <end position="693"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="697"/>
+        <end position="707"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="721"/>
+        <end position="729"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="733"/>
+        <end position="745"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="757"/>
+        <end position="760"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="764"/>
+        <end position="769"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="775"/>
+        <end position="780"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="784"/>
+        <end position="790"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="799"/>
+        <end position="812"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="815"/>
+        <end position="817"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="819"/>
+        <end position="826"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="836"/>
+        <end position="838"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="840"/>
+        <end position="842"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="844"/>
+        <end position="858"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="867"/>
+        <end position="878"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="884"/>
+        <end position="887"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="889"/>
+        <end position="892"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="902"/>
+        <end position="913"/>
+      </location>
+    </feature>
+    <feature type="strand">
+      <location>
+        <begin position="923"/>
+        <end position="928"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="935"/>
+        <end position="937"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="942"/>
+        <end position="947"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="954"/>
+        <end position="960"/>
+      </location>
+    </feature>
+    <feature type="helix">
+      <location>
+        <begin position="963"/>
+        <end position="970"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="971"/>
+        <end position="973"/>
+      </location>
+    </feature>
+    <feature type="turn">
+      <location>
+        <begin position="977"/>
+        <end position="979"/>
+      </location>
+    </feature>
+    <evidence key="EC1" category="curator" type="Literature" attribute="PubMed=1648480" date="2010-07-01"/>
+    <evidence key="EC2" category="curator" type="Literature" attribute="PubMed=17330950" date="2010-07-01"/>
+    <evidence key="EC3" category="curator" type="Literature" attribute="PubMed=17287358" date="2010-07-01"/>
+    <evidence key="EC4" category="curator" type="Literature" attribute="PubMed=17563356" date="2010-07-01"/>
+    <evidence key="EC5" category="curator" type="Literature" attribute="PubMed=18407956" date="2010-07-01"/>
+    <sequence length="1097" mass="124591" checksum="16E42588BB4168DA" modified="1996-10-01" version="3">
+      MSEKRSLPMVDVKIDDEDTPQLEKKIKRQSIDHGVGSEPVSTIEIIPSDSFRKYNSQGFK
+      AKDTDLMGTQLESTFEQDVSQMEHDMADQEEHDLSSFERKKLPTDFDPSLYDISFQQIDA
+      EQSVLNGIKDENTSTVVRFFGVTSEGHSVLCNVTGFKNYLYVPAPNSSDANDQEQINKFV
+      HYLNETFDHAIDSIEVVSKQSIWGYSGDTKLPFWKIYVTYPHMVNKLRTAFERGHLSFNS
+      WFSNGTTTYDNIAYTLRLMVDCGIVGMSWITLPKGKYSMIEPNNRVSSCQLEVSINYRNL
+      IAHPAEGDWSHTAPLRIMSFDIECAGRIGVFPEPEYDPVIQIANVVSIAGAKKPFIRNVF
+      TLNTCSPITGSMIFSHATEEEMLSNWRNFIIKVDPDVIIGYNTTNFDIPYLLNRAKALKV
+      NDFPYFGRLKTVKQEIKESVFSSKAYGTRETKNVNIDGRLQLDLLQFIQREYKLRSYTLN
+      AVSAHFLGEQKEDVHYSIISDLQNGDSETRRRLAVYCLKDAYLPLRLMEKLMALVNYTEM
+      ARVTGVPFSYLLARGQQIKVVSQLFRKCLEIDTVIPNMQSQASDDQYEGATVIEPIRGYY
+      DVPIATLDFNSLYPSIMMAHNLCYTTLCNKATVERLNLKIDEDYVITPNGDYFVTTKRRR
+      GILPIILDELISARKRAKKDLRDEKDPFKRDVLNGRQLALKISANSVYGFTGATVGKLPC
+      LAISSSVTAYGRTMILKTKTAVQEKYCIKNGYKHDAVVVYGDTDSVMVKFGTTDLKEAMD
+      LGTEAAKYVSTLFKHPINLEFEKAYFPYLLINKKRYAGLFWTNPDKFDKLDQKGLASVRR
+      DSCSLVSIVMNKVLKKILIERNVDGALAFVRETINDILHNRVDISKLIISKTLAPNYTNP
+      QPHAVLAERMKRREGVGPNVGDRVDYVIIGGNDKLYNRAEDPLFVLENNIQVDSRYYLTN
+      QLQNPIISIVAPIIGDKQANGMFVVKSIKINTGSQKGGLMSFIKKVEACKSCKGPLRKGE
+      GPLCSNCLARSGELYIKALYDVRDLEEKYSRLWTQCQRCAGNLHSEVLCSNKNCDIFYMR
+      VKVKKELQEKVEQLSKW
+    </sequence>
+  </entry>
+  <entry dataset="Swiss-Prot" created="2008-06-10" modified="2011-05-03" version="74">
+    <accession>O74473</accession>
+    <name>CDC11_SCHPO</name>
+    <protein>
+      <recommendedName>
+        <fullName>Septation initiation network scaffold protein cdc11</fullName>
+        <shortName>SIN scaffold protein cdc11</shortName>
+      </recommendedName>
+      <alternativeName>
+        <fullName>Cell division control protein 11</fullName>
+      </alternativeName>
+    </protein>
+    <gene>
+      <name type="primary">cdc11</name>
+      <name type="ORF">SPCC1739.11c</name>
+    </gene>
+    <organism>
+      <name type="scientific">Schizosaccharomyces pombe (strain ATCC 38366 / 972)</name>
+      <name type="common">Fission yeast</name>
+      <dbReference type="NCBI Taxonomy" id="284812" key="1"/>
+      <lineage>
+        <taxon>Eukaryota</taxon>
+        <taxon>Fungi</taxon>
+        <taxon>Dikarya</taxon>
+        <taxon>Ascomycota</taxon>
+        <taxon>Taphrinomycotina</taxon>
+        <taxon>Schizosaccharomycetes</taxon>
+        <taxon>Schizosaccharomycetales</taxon>
+        <taxon>Schizosaccharomycetaceae</taxon>
+        <taxon>Schizosaccharomyces</taxon>
+      </lineage>
+    </organism>
+    <reference key="2">
+      <citation type="journal article" date="2002" name="Nature" volume="415" first="871" last="880">
+        <title>The genome sequence of Schizosaccharomyces pombe.</title>
+        <authorList>
+          <person name="Wood V."/>
+          <person name="Gwilliam R."/>
+          <person name="Rajandream M.A."/>
+          <person name="Lyne M.H."/>
+          <person name="Lyne R."/>
+          <person name="Stewart A."/>
+          <person name="Sgouros J.G."/>
+          <person name="Peat N."/>
+          <person name="Hayles J."/>
+          <person name="Baker S.G."/>
+          <person name="Basham D."/>
+          <person name="Bowman S."/>
+          <person name="Brooks K."/>
+          <person name="Brown D."/>
+          <person name="Brown S."/>
+          <person name="Chillingworth T."/>
+          <person name="Churcher C.M."/>
+          <person name="Collins M."/>
+          <person name="Connor R."/>
+          <person name="Cronin A."/>
+          <person name="Davis P."/>
+          <person name="Feltwell T."/>
+          <person name="Fraser A."/>
+          <person name="Gentles S."/>
+          <person name="Goble A."/>
+          <person name="Hamlin N."/>
+          <person name="Harris D.E."/>
+          <person name="Hidalgo J."/>
+          <person name="Hodgson G."/>
+          <person name="Holroyd S."/>
+          <person name="Hornsby T."/>
+          <person name="Howarth S."/>
+          <person name="Huckle E.J."/>
+          <person name="Hunt S."/>
+          <person name="Jagels K."/>
+          <person name="James K.D."/>
+          <person name="Jones L."/>
+          <person name="Jones M."/>
+          <person name="Leather S."/>
+          <person name="McDonald S."/>
+          <person name="McLean J."/>
+          <person name="Mooney P."/>
+          <person name="Moule S."/>
+          <person name="Mungall K.L."/>
+          <person name="Murphy L.D."/>
+          <person name="Niblett D."/>
+          <person name="Odell C."/>
+          <person name="Oliver K."/>
+          <person name="O'Neil S."/>
+          <person name="Pearson D."/>
+          <person name="Quail M.A."/>
+          <person name="Rabbinowitsch E."/>
+          <person name="Rutherford K.M."/>
+          <person name="Rutter S."/>
+          <person name="Saunders D."/>
+          <person name="Seeger K."/>
+          <person name="Sharp S."/>
+          <person name="Skelton J."/>
+          <person name="Simmonds M.N."/>
+          <person name="Squares R."/>
+          <person name="Squares S."/>
+          <person name="Stevens K."/>
+          <person name="Taylor K."/>
+          <person name="Taylor R.G."/>
+          <person name="Tivey A."/>
+          <person name="Walsh S.V."/>
+          <person name="Warren T."/>
+          <person name="Whitehead S."/>
+          <person name="Woodward J.R."/>
+          <person name="Volckaert G."/>
+          <person name="Aert R."/>
+          <person name="Robben J."/>
+          <person name="Grymonprez B."/>
+          <person name="Weltjens I."/>
+          <person name="Vanstreels E."/>
+          <person name="Rieger M."/>
+          <person name="Schaefer M."/>
+          <person name="Mueller-Auer S."/>
+          <person name="Gabel C."/>
+          <person name="Fuchs M."/>
+          <person name="Duesterhoeft A."/>
+          <person name="Fritzc C."/>
+          <person name="Holzer E."/>
+          <person name="Moestl D."/>
+          <person name="Hilbert H."/>
+          <person name="Borzym K."/>
+          <person name="Langer I."/>
+          <person name="Beck A."/>
+          <person name="Lehrach H."/>
+          <person name="Reinhardt R."/>
+          <person name="Pohl T.M."/>
+          <person name="Eger P."/>
+          <person name="Zimmermann W."/>
+          <person name="Wedler H."/>
+          <person name="Wambutt R."/>
+          <person name="Purnelle B."/>
+          <person name="Goffeau A."/>
+          <person name="Cadieu E."/>
+          <person name="Dreano S."/>
+          <person name="Gloux S."/>
+          <person name="Lelaure V."/>
+          <person name="Mottier S."/>
+          <person name="Galibert F."/>
+          <person name="Aves S.J."/>
+          <person name="Xiang Z."/>
+          <person name="Hunt C."/>
+          <person name="Moore K."/>
+          <person name="Hurst S.M."/>
+          <person name="Lucas M."/>
+          <person name="Rochet M."/>
+          <person name="Gaillardin C."/>
+          <person name="Tallada V.A."/>
+          <person name="Garzon A."/>
+          <person name="Thode G."/>
+          <person name="Daga R.R."/>
+          <person name="Cruzado L."/>
+          <person name="Jimenez J."/>
+          <person name="Sanchez M."/>
+          <person name="del Rey F."/>
+          <person name="Benito J."/>
+          <person name="Dominguez A."/>
+          <person name="Revuelta J.L."/>
+          <person name="Moreno S."/>
+          <person name="Armstrong J."/>
+          <person name="Forsburg S.L."/>
+          <person name="Cerutti L."/>
+          <person name="Lowe T."/>
+          <person name="McCombie W.R."/>
+          <person name="Paulsen I."/>
+          <person name="Potashkin J."/>
+          <person name="Shpakovski G.V."/>
+          <person name="Ussery D."/>
+          <person name="Barrell B.G."/>
+          <person name="Nurse P."/>
+        </authorList>
+        <dbReference type="MEDLINE" id="21848401" key="3"/>
+        <dbReference type="PubMed" id="11859360" key="4"/>
+        <dbReference type="DOI" id="10.1038/nature724" key="5"/>
+      </citation>
+      <scope>NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]</scope>
+      <source>
+        <strain>ATCC 38366 / 972</strain>
+      </source>
+    </reference>
+    <reference key="6">
+      <citation type="journal article" date="2001" name="Curr. Biol." volume="11" first="1559" last="1568">
+        <title>S. pombe cdc11p, together with sid4p, provides an anchor for septation initiation network proteins on the spindle pole body.</title>
+        <authorList>
+          <person name="Krapp A."/>
+          <person name="Schmidt S."/>
+          <person name="Cano E."/>
+          <person name="Simanis V."/>
+        </authorList>
+        <dbReference type="PubMed" id="11676915" key="7"/>
+        <dbReference type="DOI" id="10.1016/S0960-9822(01)00478-X" key="8"/>
+      </citation>
+      <scope>FUNCTION</scope>
+      <scope>INTERACTION WITH SID4</scope>
+      <scope>SUBCELLULAR LOCATION</scope>
+      <scope>PHOSPHORYLATION</scope>
+      <scope>MUTAGENESIS OF ASN-767; ARG-947 AND THR-1041</scope>
+    </reference>
+    <reference key="9">
+      <citation type="journal article" date="2003" name="Curr. Biol." volume="13" first="168" last="172">
+        <title>Mitotic hyperphosphorylation of the fission yeast SIN scaffold protein cdc11p is regulated by the protein kinase cdc7p.</title>
+        <authorList>
+          <person name="Krapp A."/>
+          <person name="Cano E."/>
+          <person name="Simanis V."/>
+        </authorList>
+        <dbReference type="PubMed" id="12546793" key="10"/>
+        <dbReference type="DOI" id="10.1016/S0960-9822(02)01417-3" key="11"/>
+      </citation>
+      <scope>INTERACTION WITH BYR4</scope>
+      <scope>PHOSPHORYLATION BY CDC7</scope>
+      <scope>DEPHOSPHORYLATION BY PAR1</scope>
+    </reference>
+    <reference key="12">
+      <citation type="journal article" date="2004" name="Curr. Biol." volume="14" first="579" last="584">
+        <title>Sid4p-Cdc11p assembles the septation initiation network and its regulators at the S. pombe SPB.</title>
+        <authorList>
+          <person name="Morrell J.L."/>
+          <person name="Tomlin G.C."/>
+          <person name="Rajagopalan S."/>
+          <person name="Venkatram S."/>
+          <person name="Feoktistova A.S."/>
+          <person name="Tasto J.J."/>
+          <person name="Mehta S."/>
+          <person name="Jennings J.L."/>
+          <person name="Link A."/>
+          <person name="Balasubramanian M.K."/>
+          <person name="Gould K.L."/>
+        </authorList>
+        <dbReference type="PubMed" id="15062098" key="13"/>
+        <dbReference type="DOI" id="10.1016/j.cub.2004.03.036" key="14"/>
+      </citation>
+      <scope>FUNCTION</scope>
+      <scope>INTERACTION WITH SPG1; SID2</scope>
+      <scope>CDC13 AND CDC16</scope>
+      <scope>SUBCELLULAR LOCATION</scope>
+      <scope>PHOSPHORYLATION BY CDCK1</scope>
+      <scope>MUTAGENESIS OF SER-98; SER-103; SER-136; SER-199; SER-208; SER-360; SER-393 AND SER-558</scope>
+    </reference>
+    <reference key="15">
+      <citation type="journal article" date="2006" name="Nat. Biotechnol." volume="24" first="841" last="847">
+        <title>ORFeome cloning and global analysis of protein localization in the fission yeast Schizosaccharomyces pombe.</title>
+        <authorList>
+          <person name="Matsuyama A."/>
+          <person name="Arai R."/>
+          <person name="Yashiroda Y."/>
+          <person name="Shirai A."/>
+          <person name="Kamata A."/>
+          <person name="Sekido S."/>
+          <person name="Kobayashi Y."/>
+          <person name="Hashimoto A."/>
+          <person name="Hamamoto M."/>
+          <person name="Hiraoka Y."/>
+          <person name="Horinouchi S."/>
+          <person name="Yoshida M."/>
+        </authorList>
+        <dbReference type="PubMed" id="16823372" key="16"/>
+        <dbReference type="DOI" id="10.1038/nbt1222" key="17"/>
+      </citation>
+      <scope>SUBCELLULAR LOCATION [LARGE SCALE ANALYSIS]</scope>
+    </reference>
+    <reference key="18">
+      <citation type="journal article" date="2008" name="J. Proteome Res." volume="7" first="1088" last="1097">
+        <title>Phosphoproteome analysis of fission yeast.</title>
+        <authorList>
+          <person name="Wilson-Grady J.T."/>
+          <person name="Villen J."/>
+          <person name="Gygi S.P."/>
+        </authorList>
+        <dbReference type="PubMed" id="18257517" key="19"/>
+        <dbReference type="DOI" id="10.1021/pr7006335" key="20"/>
+      </citation>
+      <scope>PHOSPHORYLATION [LARGE SCALE ANALYSIS] AT SER-360 AND SER-558</scope>
+      <scope>MASS SPECTROMETRY</scope>
+    </reference>
+    <comment type="function">
+      <text evidence="EC1 EC2">Essential for the onset of septum formation. Involved in the organization of astral microtubules during mitosis. Acts as a bridge between sid4 and the other SIN proteins mediating their association with the spindle pole body (SPB). The sid4-cdc11 complex organizes a signaling hub on the SPB which coordinates cell and nuclear division.</text>
+    </comment>
+    <comment type="subunit">
+      <text evidence="EC1 EC2 EC3">Interacts with sid4. When hyperphosphorylated, interacts with byr4. Also interacts with spg1, sid2, cdc13 and cdc16.</text>
+    </comment>
+    <comment type="subcellular location">
+      <subcellularLocation>
+        <location>Cytoplasm</location>
+      </subcellularLocation>
+      <subcellularLocation>
+        <location>Cytoplasm</location>
+        <location>Cytoskeleton</location>
+        <location>Spindle pole body</location>
+      </subcellularLocation>
+      <text evidence="EC1 EC2 EC4">Localizes at the spindle pole body and the barrier septum.</text>
+    </comment>
+    <comment type="PTM">
+      <text evidence="EC1 EC2 EC3 EC5">Phosphorylated by cdc7 and cdk1. Hyperphosphorylated during anaphase. Dephosphorylated by par1.</text>
+    </comment>
+    <comment type="similarity">
+      <text>Contains 15 LRR (leucine-rich) repeats.</text>
+    </comment>
+    <comment type="similarity">
+      <text>Contains 1 LRRCT domain.</text>
+    </comment>
+    <dbReference type="EMBL" id="CU329672" key="21">
+      <property type="protein sequence ID" value="CAA20785.1"/>
+      <property type="molecule type" value="Genomic_DNA"/>
+    </dbReference>
+    <dbReference type="PIR" id="T41119" key="22">
+      <property type="entry name" value="T41119"/>
+    </dbReference>
+    <dbReference type="ProteinModelPortal" id="O74473" key="23"/>
+    <dbReference type="SMR" id="O74473" key="24">
+      <property type="residue range" value="651-925"/>
+    </dbReference>
+    <dbReference type="IntAct" id="O74473" key="25">
+      <property type="interactions" value="1"/>
+    </dbReference>
+    <dbReference type="STRING" id="O74473" key="26"/>
+    <dbReference type="EnsemblFungi" id="SPCC1739.11c-1" key="27">
+      <property type="protein sequence ID" value="SPCC1739.11c-1"/>
+      <property type="gene ID" value="SPCC1739.11c"/>
+    </dbReference>
+    <dbReference type="GenomeReviews" id="CU329672_GR" key="28">
+      <property type="gene designation" value="cdc11"/>
+    </dbReference>
+    <dbReference type="KEGG" id="spo:SPCC1739.11c" key="29"/>
+    <dbReference type="NMPDR" id="fig|4896.1.peg.757" key="30"/>
+    <dbReference type="GeneDB_Spombe" id="SPCC1739.11c" key="31"/>
+    <dbReference type="eggNOG" id="fuNOG06206" key="32"/>
+    <dbReference type="GeneTree" id="EFGT00050000002537" key="33"/>
+    <dbReference type="OrthoDB" id="EOG42C1JW" key="34"/>
+    <dbReference type="PhylomeDB" id="O74473" key="35"/>
+    <dbReference type="ArrayExpress" id="O74473" key="36"/>
+    <dbReference type="GO" id="GO:0032153" key="37">
+      <property type="term" value="C:cell division site"/>
+      <property type="evidence" value="IDA:GeneDB_Spombe"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0005634" key="38">
+      <property type="term" value="C:nucleus"/>
+      <property type="evidence" value="IDA:GeneDB_Spombe"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0005816" key="39">
+      <property type="term" value="C:spindle pole body"/>
+      <property type="evidence" value="IDA:GeneDB_Spombe"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0005515" key="40">
+      <property type="term" value="F:protein binding"/>
+      <property type="evidence" value="IPI:GeneDB_Spombe"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0005198" key="41">
+      <property type="term" value="F:structural molecule activity"/>
+      <property type="evidence" value="TAS:GeneDB_Spombe"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0071937" key="42">
+      <property type="term" value="P:barrier septum formation involved in cell cycle cytokinesis"/>
+      <property type="evidence" value="IMP:GeneDB_Spombe"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0034613" key="43">
+      <property type="term" value="P:cellular protein localization"/>
+      <property type="evidence" value="IGI:GeneDB_Spombe"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0031028" key="44">
+      <property type="term" value="P:septation initiation signaling cascade"/>
+      <property type="evidence" value="IMP:GeneDB_Spombe"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR001611" key="45">
+      <property type="entry name" value="Leu-rich_rpt"/>
+    </dbReference>
+    <dbReference type="PROSITE" id="PS51450" key="46">
+      <property type="entry name" value="LRR"/>
+      <property type="match status" value="12"/>
+    </dbReference>
+    <proteinExistence type="evidence at protein level"/>
+    <keyword id="KW-0181">Complete proteome</keyword>
+    <keyword id="KW-0963">Cytoplasm</keyword>
+    <keyword id="KW-0206">Cytoskeleton</keyword>
+    <keyword id="KW-0433">Leucine-rich repeat</keyword>
+    <keyword id="KW-0539">Nucleus</keyword>
+    <keyword id="KW-0597">Phosphoprotein</keyword>
+    <keyword id="KW-0677">Repeat</keyword>
+    <feature type="chain" description="Septation initiation network scaffold protein cdc11" id="PRO_0000339131">
+      <location>
+        <begin position="1"/>
+        <end position="1045"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 1">
+      <location>
+        <begin position="604"/>
+        <end position="625"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 2">
+      <location>
+        <begin position="627"/>
+        <end position="646"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 3">
+      <location>
+        <begin position="647"/>
+        <end position="668"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 4">
+      <location>
+        <begin position="669"/>
+        <end position="690"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 5">
+      <location>
+        <begin position="691"/>
+        <end position="712"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 6">
+      <location>
+        <begin position="713"/>
+        <end position="734"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 7">
+      <location>
+        <begin position="736"/>
+        <end position="757"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 8">
+      <location>
+        <begin position="758"/>
+        <end position="779"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 9">
+      <location>
+        <begin position="780"/>
+        <end position="801"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 10">
+      <location>
+        <begin position="802"/>
+        <end position="822"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 11">
+      <location>
+        <begin position="846"/>
+        <end position="867"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 12">
+      <location>
+        <begin position="868"/>
+        <end position="889"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 13">
+      <location>
+        <begin position="892"/>
+        <end position="913"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 14">
+      <location>
+        <begin position="914"/>
+        <end position="935"/>
+      </location>
+    </feature>
+    <feature type="repeat" description="LRR 15">
+      <location>
+        <begin position="940"/>
+        <end position="962"/>
+      </location>
+    </feature>
+    <feature type="domain" description="LRRCT">
+      <location>
+        <begin position="1005"/>
+        <end position="1043"/>
+      </location>
+    </feature>
+    <feature type="compositionally biased region" description="Ser-rich">
+      <location>
+        <begin position="94"/>
+        <end position="201"/>
+      </location>
+    </feature>
+    <feature type="modified residue" description="Phosphoserine" evidence="EC5">
+      <location>
+        <position position="360"/>
+      </location>
+    </feature>
+    <feature type="modified residue" description="Phosphoserine" evidence="EC5">
+      <location>
+        <position position="558"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
+      <original>S</original>
+      <variation>A</variation>
+      <location>
+        <position position="98"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
+      <original>S</original>
+      <variation>A</variation>
+      <location>
+        <position position="103"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
+      <original>S</original>
+      <variation>A</variation>
+      <location>
+        <position position="136"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
+      <original>S</original>
+      <variation>A</variation>
+      <location>
+        <position position="199"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
+      <original>S</original>
+      <variation>A</variation>
+      <location>
+        <position position="208"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
+      <original>S</original>
+      <variation>A</variation>
+      <location>
+        <position position="360"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
+      <original>S</original>
+      <variation>A</variation>
+      <location>
+        <position position="393"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="No phosphorylation by cdk1." evidence="EC2">
+      <original>S</original>
+      <variation>A</variation>
+      <location>
+        <position position="558"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="In cdc11-136; normal interaction with sid4; normal localization at the SPB." evidence="EC1">
+      <original>N</original>
+      <variation>M</variation>
+      <location>
+        <position position="767"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="In cdc11-123; no interaction with sid4; does not localize at the SPB." evidence="EC1">
+      <original>R</original>
+      <variation>A</variation>
+      <location>
+        <position position="947"/>
+      </location>
+    </feature>
+    <feature type="mutagenesis site" description="In cdc11-123; no interaction with sid4; does not localize at the SPB." evidence="EC1">
+      <original>T</original>
+      <variation>I</variation>
+      <location>
+        <position position="1041"/>
+      </location>
+    </feature>
+    <evidence key="EC1" category="curator" type="Literature" attribute="PubMed=11676915" date="2010-07-01"/>
+    <evidence key="EC2" category="curator" type="Literature" attribute="PubMed=15062098" date="2010-07-01"/>
+    <evidence key="EC3" category="curator" type="Literature" attribute="PubMed=12546793" date="2010-07-01"/>
+    <evidence key="EC4" category="curator" type="Literature" attribute="PubMed=16823372" date="2010-07-01"/>
+    <evidence key="EC5" category="curator" type="Literature" attribute="PubMed=18257517" date="2010-07-01"/>
+    <sequence length="1045" mass="118628" checksum="E66CBF374B00B046" modified="1998-11-01" version="1">
+      MEQLWLEHDLSEEWIPQPQEQGSDNSSEPPTTSNVNNTQSTGRGSSGTSTEHGTFKKGRN
+      DAPDVPQWKQVNAKNPVARDIFARLDLENMFEESSKQSPPSKSPTKNPSKKSSNNSSRRS
+      SSSVGKLSNVSNMQSSPSKDPFVSQDYEKESISSSQFSKKYSEGSLKSQQSNTRSNSVHE
+      KQNTDHASNASSSSSVVSSPSLKPNNTSPLKLFQGASDPFTREHLNQLTQDVKSNSFENG
+      EKQFSLPEPRRPQKPMRTTERKASLNTKDLYQEVEEVMARLRGRMPNSGRESTIFLPRKL
+      SGLREEEEQDEISVEVSQEDSSNAFPSLSDQLHLKSLQSMKRVTSIFNDNDDSFPSASSS
+      PQRQAYMTDKMPLREIDVGSSQSSSKTARLNSSPKSTLKTSSVKTRRSHSAQSSRKVSDY
+      PNMVVITPADLPEGIDTTQGSMEFDRIHNRWRRKGHDSDLGFDFETDEDASLSHPERTIL
+      FKAASTRHQANNDPNNLEKQQPHSFPLRKQNVAQSEFPKHSLRDNSENAPQILSSFHDLS
+      LQNESFDEMFNGRYENGSPIPFISSGSGLKSKADKDAEYSFSVSRQSIIQILSDVEPYEP
+      FWKRIIQLDISRRHLDSLIGLSELCPSIEELTLEGNEIAYLTGCPVTIRDLNAVENRLSS
+      LTSFSNLLNLQYLDISYNQLEDLTGLSSLIHLRELKVDSNHLWSLDGIQHLDGLLKLSAC
+      NNRIKELSFTNSNLHRLEELLLGNNEIEEIEEISSLQNLMVLQLDNNKLTNLKASQPMIH
+      LRILRISNNAIHQLEVDQFPHLRTLYMDLNRFNRPPDIRRLKRLVNFSFRTQDPEASNFV
+      IQPSLDIRNLYLSNNTFVTLDCKHMFLGVRYLELANVQLKEVPKYIATSMPNLRVLDLSH
+      NYISDIESLKPLQMIHRLYLVGNRIKKMRNLCDILANLKQLNVLDLRMNPLNFNIYPVID
+      DSIYELSAASKYQQSINQKGHHRKEDPQKQWQEKELAFSSTLSEAWRTRRKMYAEAILLA
+      CPHLEWLDGSDVSQSSRAAFTKSSN
+    </sequence>
+  </entry>
+  <copyright>
+    Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
+    Distributed under the Creative Commons Attribution-NoDerivs License
+  </copyright>
 </uniprot>
