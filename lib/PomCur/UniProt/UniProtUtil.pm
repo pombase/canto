@@ -149,8 +149,13 @@ sub retrieve_entries
     my $xml = $response->content();
     return _parse_results($xml);
   } else {
-    die 'Failed, got ' . $response->status_line .
-      ' for ' . $response->request->uri . "\n";
+    if ($response->status_line() =~ /^400 /) {
+      # illegal identifier like "cdc11"
+      return ();
+    } else {
+      die 'Failed, got ' . $response->status_line .
+        ' for ' . $response->request->uri . "\n";
+    }
   }
 }
 
