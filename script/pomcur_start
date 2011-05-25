@@ -44,7 +44,8 @@ if ($local_suffix eq 'deploy') {
   if ($init_dir) {
     my $config = PomCur::Config->new("${lc_app_name}.yaml");
     PomCur::Meta::Util::initialise_app($config, $init_dir);
-    print "Initialisation succesful, now starting server\n";
+    print "Initialisation succesful, now run $0 without the initialise flag\n";
+    exit(0);
   } else {
     if (!PomCur::Meta::Util::app_initialised($lc_app_name)) {
       die "$0: Error - application not initialised
