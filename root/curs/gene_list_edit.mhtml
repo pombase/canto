@@ -3,7 +3,7 @@ $title => 'Genes'
 $pub
 </%args>
 
-<div class="gene-list-edit curs-box">
+<div id="curs-gene-list-edit" class="curs-box">
   <div class="curs-box-title">
 <% $title %>
   </div>

@@ -3,7 +3,7 @@ $form
 $title
 </%args>
 
-<div class="submitter-update curs-box">
+<div id="curs-submitter-update" class="curs-box">
   <div class="curs-box-title">
 <% $title %>
   </div>

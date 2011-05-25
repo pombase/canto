@@ -418,7 +418,7 @@ div.clearall {
 }
 
 .upload-genes-link {
-  padding: 20px 10px 10px 10px;
+  float: left;
 }
 
 .gene-list table {
@@ -581,6 +581,7 @@ div.clearall {
   border-top-right-radius: 4px;
   -moz-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
+  font-weight: 700;
 }
 
 .curs-inline-help-icon {
@@ -616,10 +617,6 @@ div.clearall {
 
 #ferret-suggest-link, #ferret-cancel-children {
   margin: 10px 0px 10px 0px;
-}
-
-#gene-update {
-  padding-top: 15px;
 }
 
 .inline-help {
@@ -783,8 +780,22 @@ span.pomcur-select-buttons {
   float: left;
 }
 
-#pubmed-id-lookup-results {
+#pubmed-id-lookup-results, #curs-submitter-update, #curs-gene-update,
+#curs-gene-list-edit {
   width: 70%;
+}
+
+#curs-gene-update .textarea {
+  padding-top: 15px;
+}
+
+#curs-gene-list-edit .upload-genes-link {
+  margin: 10px;
+  font-size: 90%;
+}
+
+input[type="submit"] {
+  margin: 5px;
 }
 
 .ajax-spinner {
@@ -792,4 +803,12 @@ span.pomcur-select-buttons {
   padding-bottom: -10px;
   margin-left: 15px;
   display: none;
+}
+
+.curs-box:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }

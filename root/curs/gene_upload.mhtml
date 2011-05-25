@@ -4,7 +4,7 @@ $form
 $title
 </%args>
 
-<div class="curs-box">
+<div id="curs-gene-update" class="curs-box">
     <div class="curs-box-title">
 <% $title %>
   </div>
@@ -20,9 +20,7 @@ The list of gene identifiers can be separated by commas, spaces, tabs or there
 can be one per line.
 </div>
 
-<div id="gene-update">
   <% $form %>
-</div>
   </div>
 </div>
 <%init>
