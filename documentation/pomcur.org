@@ -19,15 +19,25 @@ PomCur installation and maintainence.
 #+END_SRC
 * Installation
 ** Installing basic prerequisites
-*** Debian
-    At a minimum, these packages need to installed before [[id:fafab442-0030-4cef-b466-1dafef4827cf][running make]] in the
-    =pomcur= directory:
+*** Debian and Ubuntu
+    To improve the installation speed, these packages can be installed before
+    [[id:fafab442-0030-4cef-b466-1dafef4827cf][running make]] in the =pomcur= directory:
 #+BEGIN_SRC sh
-sudo apt-get install perl gcc tar gzip bzip2 make libmodule-install-perl
-sudo apt-get install libclucene-dev libclucene0ldbl
+sudo apt-get install perl gcc g++ tar gzip bzip2 make libmodule-install-perl
+sudo apt-get install libhash-merge-perl \
+  libhtml-mason-perl libplack-perl libdbix-class-perl \
+  libdbix-class-schema-loader-perl libcatalyst-modules-perl libio-all-lwp-perl \
+  libwww-perl perl gcc g++ tar gzip bzip2 make libmodule-install-perl \
+  libclucene-dev libclucene0ldbl libjson-xs-perl libio-all-perl \
+  libio-string-perl libmemoize-expirelru-perl libtry-tiny-perl \
+  libarchive-zip-perl libtext-csv-xs-perl liblingua-en-inflect-number-perl \
+  libcatalyst-modules-perl libmoose-perl libdata-compare-perl \
+  libmoosex-role-parameterized-perl libfile-copy-recursive-perl \
+  libxml-simple-perl libtext-csv-perl libtest-deep-perl
 sudo cpan Dist::CheckConflicts
 sudo cpan Module::Install::Catalyst
 #+END_SRC
+
 
     If installing from the =git= repository, the git executable will be needed:
 #+BEGIN_SRC sh
