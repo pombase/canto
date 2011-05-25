@@ -152,6 +152,8 @@ test_psgi $app, sub {
     like ($redirect_res->content(), qr/$pub_uniquename/);
   }
 
+  my $load_type_cvterm =
+    $schema->find_with_type('Cvterm', { name => "admin_load" });
 
   my $other_pub = $schema->find_with_type('Pub', { uniquename => 'PMID:19686603' });
   ok (defined $other_pub);
@@ -172,6 +174,7 @@ test_psgi $app, sub {
                      authors => '',
                      assigned_curator => 0,
                      type => $pub->type_id(),
+                     load_type => $load_type_cvterm->cvterm_id(),
                      triage_status => $pub->triage_status()->cvterm_id(),
                      submit => 'Submit',
                     );
@@ -205,6 +208,7 @@ test_psgi $app, sub {
                      authors => '',
                      assigned_curator => 0,
                      type => $pub->type_id(),
+                     load_type => $load_type_cvterm->cvterm_id(),
                      triage_status => $pub->triage_status()->cvterm_id(),
                      submit => 'Submit',
                     );
