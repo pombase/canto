@@ -127,7 +127,7 @@ sub lookup
 
   my $schema = $self->schema();
 
-  my $pub = $schema->find_with_type('Pub', { uniquename => $pub_uniquename });
+  my $pub = $schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
 
   if (defined $pub) {
     my $feature_cvtermprop_type_cv =
