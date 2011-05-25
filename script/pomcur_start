@@ -62,10 +62,10 @@ to initialise
 }
 
 require Plack::Runner;
-require Plack::Builder;
 require Plack::Middleware::ReverseProxy;
 require Plack::Middleware::Debug;
 require Plack::Middleware::Expires;
+require Plack::Middleware::Static;
 
 require PomCur;
 
@@ -73,6 +73,11 @@ PomCur->setup_engine('PSGI');
 my $app = sub { PomCur->run(@_) };
 
 $app = Plack::Middleware::ReverseProxy->wrap($app);
+
+$app = Plack::Middleware::Static->wrap($app,
+                                       path => sub {
+                                         s!^/static/v\d+/!! },
+                                       root => 'root/static');
 
 my $type_re = qr!^image/|^application/javascript$|^text/css$!;
 $app = Plack::Middleware::Expires->wrap($app,

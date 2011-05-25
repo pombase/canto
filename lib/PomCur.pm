@@ -127,4 +127,20 @@ sub local_path
   return $path;
 }
 
+around 'uri_for' => sub {
+  my $orig = shift;
+  my $self = shift;
+
+  my $path = shift;
+
+  my $config = $self->config();
+  my $version = $config->{app_version};
+
+  if (defined $ENV{PLACK_ENV}) {
+    $path =~ s:/static/(.*):/static/$version/$1:;
+  }
+
+  $self->$orig($path, @_);
+};
+
 1;
