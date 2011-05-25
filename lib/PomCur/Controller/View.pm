@@ -190,6 +190,18 @@ sub object : Local
   }
 }
 
+=head2 order_list_rs
+
+ Usage   : order_list_rs($c, $rs, $class_info);
+ Function: add an appropriate order_by option to a ResultSet, based on the
+           configuration
+ Args    : $c - the Catalyst object
+           $rs - the ResultSet
+           $class_info - the class information from the config file for this
+           ResultSet
+ Returns : none, modifies $rs
+
+=cut
 sub order_list_rs
 {
   my $c = shift;
