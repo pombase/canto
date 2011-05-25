@@ -9,10 +9,9 @@ my %results = $test_util->init_test();
 
 my $db_file_name = $results{track_db_file_name};
 
-# make sure the database has something in it
-open my $pipe, "sqlite3 $db_file_name 'select count(*) from person'|" or die;
-my $select_result = <$pipe>;
-chomp $select_result;
-close $pipe;
+my $schema = $test_util->track_schema();
 
-ok($select_result > 10);
+# make sure the database has something in it
+my $person_count = $schema->resultset('Person')->count();
+
+ok($person_count > 10);
