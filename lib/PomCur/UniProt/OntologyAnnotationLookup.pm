@@ -43,6 +43,7 @@ use LWP::UserAgent;
 
 with 'PomCur::Role::Configurable';
 
+use YAML qw(Load Dump);
 use IO::String;
 
 use Memoize;
@@ -50,7 +51,9 @@ use Memoize::Expire;
 
 tie my %cache => 'Memoize::Expire', LIFETIME => 60*60*2;
 
-#memoize '_cached_lookup', SCALAR_CACHE => [HASH => \%cache];
+# this might help a little bit, but as there is more than one server,
+# the cache is mostly not going to be hit - need to use memcached
+memoize '_cached_lookup', SCALAR_CACHE => [HASH => \%cache];
 
 sub _cached_lookup
 {
@@ -134,7 +137,7 @@ sub _cached_lookup
     };
   }
 
-  return [@ret];
+  return Dump([@ret]);
 }
 
 =head2
@@ -178,7 +181,7 @@ sub lookup
 
   die "no ontology_name" unless defined $ontology_name;
 
-  return _cached_lookup($self->config(), $pub_uniquename,
-                        $gene_identifier, $ontology_name);
+  return Load(_cached_lookup($self->config(), $pub_uniquename,
+                             $gene_identifier, $ontology_name));
 }
 1;

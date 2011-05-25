@@ -18,6 +18,7 @@ test_config:
   test_pubmed_xml: 'entrez_pubmed.xml'
   test_extra_publication: 'pubmed_18910671.xml'
   test_uniprot_entries: 'uniprot_lookup.xml'
+  test_quickgo_gaf: 'pubmed_11676915_annotation.gaf'
   test_cases:
     empty_db:
     0_curs: []
