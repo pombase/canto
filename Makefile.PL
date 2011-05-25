@@ -64,6 +64,7 @@ requires 'Data::Dumper';
 requires 'Hash::Merge';
 requires 'Memoize';
 requires 'IO::String';
+requires 'Package::Alias';
 
 requires 'Config::General';
 
