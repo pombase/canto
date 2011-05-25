@@ -14,9 +14,9 @@ BEGIN {
     # we're in the scripts directory - go up
     chdir "..";
   }
-
-  push @INC, "lib";
 };
+
+use lib qw(lib);
 
 use PomCur::Meta::Util;
 use PomCur::TrackDB;

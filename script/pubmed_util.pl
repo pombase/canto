@@ -5,11 +5,19 @@ use warnings;
 use Carp;
 
 use Getopt::Long;
+use File::Basename;
 
 BEGIN {
   $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
-  push @INC, qw(lib ../lib);
-}
+
+  my $script_name = basename $0;
+
+  if (-f $script_name && -d "../etc") {
+    # we're in the scripts directory - go up
+    chdir "..";
+  }
+};
+push @INC, "lib";
 
 use PomCur::TrackDB;
 use PomCur::Track::PubmedUtil;
