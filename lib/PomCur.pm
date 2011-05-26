@@ -127,6 +127,8 @@ sub local_path
   return $path;
 }
 
+# this code adds the application version to the paths of all static content so
+# we can use a far future expires header in safety
 around 'uri_for' => sub {
   my $orig = shift;
   my $self = shift;
