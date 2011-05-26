@@ -79,10 +79,10 @@ $app = Plack::Middleware::Static->wrap($app,
                                          s!^/+static/v\d+/!! },
                                        root => 'root/static');
 
-my $type_re = qr!^image/|^application/javascript$|^text/css$!;
+my $type_re = qr!^image/|^application/javascript$|^text/css!;
 $app = Plack::Middleware::Expires->wrap($app,
                                         content_type => $type_re,
-                                        expires => 'access plus 8 hours');
+                                        expires => 'access plus 999 days');
 
 if ($ENV{PLACK_DEBUG}) {
   $app = Plack::Middleware::Debug->wrap($app);
