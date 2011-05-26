@@ -76,7 +76,7 @@ $app = Plack::Middleware::ReverseProxy->wrap($app);
 
 $app = Plack::Middleware::Static->wrap($app,
                                        path => sub {
-                                         s!^/static/v\d+/!! },
+                                         s!^/+static/v\d+/!! },
                                        root => 'root/static');
 
 my $type_re = qr!^image/|^application/javascript$|^text/css$!;
