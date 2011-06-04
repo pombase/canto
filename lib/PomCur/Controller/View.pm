@@ -75,7 +75,7 @@ sub get_object_by_id_or_name
     }
   }
 
-  my $rs = get_list_rs($c, $search, $class_info);
+  my $rs = _get_list_rs($c, $search, $class_info);
 
   my @column_confs =
     PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
@@ -198,7 +198,7 @@ sub object : Local
  Args    : $c - the Catalyst object
            $rs - the ResultSet
            $class_info - the class information from the config file for this
-           ResultSet
+                         ResultSet
  Returns : none, modifies $rs
 
 =cut
@@ -219,7 +219,19 @@ sub order_list_rs
   return $rs->search({}, $params);
 }
 
-sub get_list_rs
+=head2 _get_list_rs
+
+ Usage   : my $rs = _get_list_rs($c, $search, $class_info)
+ Function: Return a ResultSet for the table given by $class_info
+ Args    : $c - the Catalyst object
+           $search - an options hashref to pass to the DBIx::Class search()
+                     method
+           $class_info - the class information from the config file used
+                         to choose the table to query
+ Returns :
+
+=cut
+sub _get_list_rs
 {
   my $c = shift;
   my $search = shift;
@@ -269,7 +281,7 @@ sub list : Local
       $st->{title} .= "all $plural_name";
     }
 
-    my $rs = get_list_rs($c, $search, $class_info);
+    my $rs = _get_list_rs($c, $search, $class_info);
     $st->{rs} = $rs;
 
     $st->{page} = $c->req->param('page') || 1;
