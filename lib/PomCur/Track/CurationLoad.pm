@@ -108,6 +108,19 @@ sub _process_row
   _fix_lab($submitter, $lab);
 }
 
+=head2 load
+
+ Usage:
+    my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
+    my $loader = PomCur::Track::CurationLoad->new(schema => $schema,
+                                                  load_util => $load_util);
+    $loader->load($file_name);
+ Function: Load curation data into the database.  The input is a tab delimited
+           file
+ Args    : $file_name - the file name
+ Returns : nothing
+
+=cut
 sub load
 {
   my $self = shift;
