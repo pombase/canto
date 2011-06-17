@@ -40,7 +40,7 @@ my $start_port = 5100;
 my $end_port = 6000;
 
 GetOptions ("server|s=s" => \$plack_handler,
-            "preload" => \$preload,
+            "preload-app" => \$preload,
             "workers=i" => \$workers,
             "google-analytics-id=s" => \$google_analytics_id,
           );
@@ -166,7 +166,7 @@ if ($pid) {
     push @exec_args, '-s', $plack_handler;
   }
   if (defined $preload) {
-    push @exec_args, '--preload';
+    push @exec_args, '--preload-app';
   }
   if (defined $workers) {
     push @exec_args, '--workers', $workers;
