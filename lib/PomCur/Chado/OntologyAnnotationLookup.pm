@@ -57,7 +57,7 @@ sub _get_taxonid
     my $constraint = { genus => $genus, species => $species };
     my $organism_rs = $schema->resultset('Organism')->search($constraint);
     my $prop = $organism_rs->search_related('organismprops')
-      ->search({ 'type.name' => 'taxonId' }, { join => 'type' })->first();
+      ->search({ 'type.name' => 'taxon_id' }, { join => 'type' })->first();
 
     my $taxonid = $prop->value();
     $cache->{$full_name} = $taxonid;
