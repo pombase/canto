@@ -494,11 +494,17 @@ class_info:
       class_display_name: S. pombe genes
       extends: feature
       constraint: "type_id = (select cvterm_id from cvterm, cv where cvterm.name = 'gene' and cvterm.cv_id = cv.cv_id and cv.name = 'sequence') and organism_id = (select organism_id from organism where genus = 'Schizosaccharomyces' and species = 'pombe')"
+    protein_and_domain_terms:
+      class_display_name: PomBase family or domain terms
+      extends: cvterm
+      constraint: "cv_id = (select cv_id from cv where cv.name = 'PomBase family or domain')"
 
 reports:
   track:
     - new_publications
     - named_genes
+  chado:
+    - protein_and_domain_terms
 
 export:
   gene_association_fields:

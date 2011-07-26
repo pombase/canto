@@ -52,5 +52,10 @@
       </td>
 % }
     </tr>
+    <tr>
+      <td class="actionlist" width="30%" valign="top">
+<& /reports.mhtml, model => 'chado' &>
+      </td>
+    </tr>
   </table>
 </div>
