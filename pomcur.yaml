@@ -498,6 +498,21 @@ class_info:
       class_display_name: PomBase family or domain terms
       extends: cvterm
       constraint: "cv_id = (select cv_id from cv where cv.name = 'PomBase family or domain')"
+    types_and_counts:
+      class_display_name: feature types and counts
+      constraint: "(select count(*) from feature where type_id = me.cvterm_id) > 0"
+      display_field: name
+      extends: cvterm
+      field_info_list:
+        - name: name
+          editable: 1
+        - name: cv
+          source: cv_id
+          editable: 1
+        - name: "features annotated with this term"
+          as: count
+          source:
+            sql: 'select count(*) from feature where type_id = me.cvterm_id'
 
 reports:
   track:
@@ -505,6 +520,7 @@ reports:
     - named_genes
   chado:
     - protein_and_domain_terms
+    - types_and_counts
 
 export:
   gene_association_fields:
