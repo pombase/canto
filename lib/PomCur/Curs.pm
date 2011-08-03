@@ -117,8 +117,13 @@ sub make_db_file_name
 =cut
 sub make_curs_key
 {
-  my $key_int = int(rand 2**32);
-  return sprintf("%.8x", $key_int);
+  my $ret_key = '';
+  use integer;
+  for (my $i = 0; $i < 4; $i++) {
+    my $key_int = int(rand 2**16);
+    $ret_key .= sprintf("%.2x", $key_int);
+  }
+  return $ret_key;
 }
 
 =head2
