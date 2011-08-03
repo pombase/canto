@@ -284,6 +284,8 @@ class_info:
           editable: 1
         - name: authors
           editable: 1
+        - name: abstract
+          editable: 1
         - name: assigned_curator
           editable: 1
         - name: type
