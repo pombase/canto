@@ -56,6 +56,7 @@ $model
           </ul>
         </div>
       </td>
+% }
 
       <td class="actionlist">
         <div class="label">
@@ -63,13 +64,17 @@ $model
         </div>
         <div>
           <ul>
+% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
             <li>
               <a href="<% $c->uri_for('/tools/triage') %>">Triage publications</a>
+            </li>
+% }
+            <li>
+              <a href="<% $c->uri_for('/tools/pubmed_id_start') %>">Add by PubMed ID</a>
             </li>
           </ul>
         </div>
       </td>
-% }
     </tr>
     <tr>
       <td class="actionlist" width="30%" valign="top">
