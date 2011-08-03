@@ -135,11 +135,13 @@ sub load
   my $admin_cvterm = $self->load_util()->get_cvterm(cv => $cv,
                                                     term_name => 'admin');
 
-  my $admin = $self->load_util()->get_person('Val Wood', 'val@sanger.ac.uk',
+  $self->load_util()->get_person('Val Wood', 'val@sanger.ac.uk',
                                              $admin_cvterm);
-  my $admin2 =
-    $self->load_util()->get_person('Midori Harris', 'mah79@cam.ac.uk',
-                                   $admin_cvterm);
+  $self->load_util()->get_person('Midori Harris', 'mah79@cam.ac.uk',
+                                 $admin_cvterm);
+
+  $self->load_util()->get_person('Antonia Nilsson', 'a.nilsson@warwick.ac.uk',
+                                 $admin_cvterm);
 
   my $csv = Text::CSV->new({binary => 1});
   open my $curation_io, '<', $curation_file or die;
