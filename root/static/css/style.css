@@ -417,6 +417,10 @@ div.clearall {
   color: #777;
 }
 
+.annotation-extension {
+  margin: 10px 0 10px 0;
+}
+
 .upload-genes-link {
   float: left;
 }

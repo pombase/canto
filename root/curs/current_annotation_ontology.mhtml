@@ -41,6 +41,11 @@ $user_created
       <th>
         Note
       </th>
+% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+      <th>
+        Annotation extension
+      </th>
+% }
       <th>
         &nbsp
       </th>
@@ -90,6 +95,15 @@ $user_created
       &nbsp;
 % }
     </td>
+% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+    <td>
+%   if ($row->{annotation_extension}) {
+      <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $row->{annotation_extension} %></a>
+%   } else {
+      <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
+%   }
+    </td>
+% }
     <td>
       <a href="<% $delete_action . $row->{annotation_id} %>"
          id="curs-annotation-delete-<% $row->{annotation_id} %>"

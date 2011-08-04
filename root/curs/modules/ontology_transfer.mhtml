@@ -16,8 +16,6 @@ $pub
    curs_root_uri => $curs_root_uri,
    annotation => $annotation &>
 
-<div>You can annotate other genes from your list with the same term and
-evidence by selecting genes below</div>
 
 <% $form %>
 

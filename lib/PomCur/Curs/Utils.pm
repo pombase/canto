@@ -112,12 +112,13 @@ sub _make_ontology_annotation
     evidence_code => $evidence_code,
     creation_date => $annotation->creation_date(),
     creation_date_short => $short_date,
-    term_suggestion => $annotation->data()->{term_suggestion},
+    term_suggestion => $data->{term_suggestion},
     needs_with => $needs_with,
     with_or_from_identifier => $with_gene_identifier,
     with_or_from_display_name => $with_gene_display_name,
     taxonid => $gene->organism()->taxonid(),
     completed => $completed,
+    annotation_extension => $data->{annotation_extension},
   };
 }
 
