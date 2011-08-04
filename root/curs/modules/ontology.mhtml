@@ -132,6 +132,21 @@ if any):
         </div>
         <div id="ferret-term-children-list" class="curs-box-body">
         </div>
+
+        <div class="inline-help curs-box-title">
+          If you need a more specific term to describe the experiment you are
+          annotating, and if none of terms above is appropriate, you can
+          suggest a new term:
+        </div>
+        <div id="ferret-suggest-link" class="curs-box-body">
+          <ul>
+            <li>
+              <a href="#">
+Suggest a new child term for <span class="ferret-term-id-display"></span> ...
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div id="ferret-leaf" style="display: none">
@@ -156,7 +171,7 @@ previously described, and so is not yet included in the ontology.
 % }
           </div>
         </div>
-        <div id="ferret-suggest-link" class="curs-box-body">
+        <div id="ferret-suggest-link-leaf" class="curs-box-body">
           <ul>
             <li>
               <a href="#">
