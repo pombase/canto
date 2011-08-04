@@ -897,9 +897,6 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   my $gene = $annotation->genes()->first();
   my $gene_display_name = $gene->display_name();
 
-  my $annotation_data = clone $annotation->data();
-  delete $annotation_data->{with_gene};
-
   $st->{title} = "Transfer annotation from $gene_display_name";
   $st->{show_title} = 0;
   $st->{template} = "curs/modules/${module_category}_transfer.mhtml";
@@ -921,6 +918,12 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my @all_elements = (
       {
+        type => 'Block',
+        tag => 'div',
+        content => 'You can annotate other genes from your list with the '
+          . 'same term and evidence by selecting genes below',
+      },
+      {
         name => 'dest', label => 'dest',
         type => 'Checkboxgroup',
         container_tag => 'div',
@@ -932,6 +935,17 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       }
     );
 
+  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+    unshift @all_elements, {
+      name => 'annotation-extension',
+      label => 'Add optional annotation extension',
+      type => 'Text',
+      container_tag => 'div',
+      attributes => { class => 'annotation-extension' },
+      size => 60,
+    };
+  }
+
   $form->elements([@all_elements]);
   $form->process();
   $st->{form} = $form;
@@ -942,6 +956,16 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     my $guard = $schema->txn_scope_guard;
 
     my @dest_params = @{$form->param_array('dest')};
+    my $extension = $form->param_value('annotation-extension');
+
+    my $data = $annotation->data();
+    $data->{annotation_extension} = $extension;
+    $annotation->data($data);
+    $annotation->update();
+
+    my $cloned_data = clone $data;
+    delete $cloned_data->{with_gene};
+    delete $cloned_data->{annotation_extension};
 
     for my $dest_param (@dest_params) {
       my $dest_gene = $schema->find_with_type('Gene', $dest_param);
@@ -953,7 +977,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
                                     status => 'new',
                                     pub => $annotation->pub(),
                                     creation_date => _get_iso_date(),
-                                    data => $annotation_data,
+                                    data => $cloned_data,
                                   });
       $new_annotation->set_genes($dest_gene);
     };

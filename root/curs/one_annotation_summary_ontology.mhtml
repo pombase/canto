@@ -23,6 +23,11 @@ $annotation_data
       <th>
         With
       </th>
+% if (exists $annotation_data->{annotation_extension}) {
+      <th>
+        Annotation extension
+      </th>
+% }
     </tr>
   </thead>
 
@@ -45,5 +50,10 @@ $annotation_data
     <td>
       <% $annotation_data->{with_or_from_display_name} %>
     </td>
+% if (exists $annotation_data->{annotation_extension}) {
+    <td>
+      <% $annotation_data->{with_or_from_display_name} %>
+    </td>
+% }
   </tr>
 </table>
