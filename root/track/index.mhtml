@@ -37,44 +37,44 @@ $model
           </ul>
         </div>
       </td>
-%  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
       <td class="actionlist">
         <div class="label">
-          Add a ...
+          Add ...
         </div>
         <div>
           <ul>
             <li>
-              <a href="<% $c->uri_for('/new/object/person', { model => 'track'} ) %>">Person</a>
+              <a href="<% $c->uri_for('/tools/pubmed_id_start') %>">By PubMed ID</a>
             </li>
+%  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
             <li>
-              <a href="<% $c->uri_for('/new/object/pub', { model => 'track'} ) %>">Publication</a>
+              <a href="<% $c->uri_for('/new/object/person', { model => 'track'} ) %>">Person</a>
             </li>
             <li>
               <a href="<% $c->uri_for('/new/object/curs', { model => 'track'} ) %>">Curation session</a>
             </li>
+            <li>
+              <a href="<% $c->uri_for('/new/object/pub', { model => 'track'} ) %>">Publication details</a>
+            </li>
+% }
           </ul>
         </div>
       </td>
-% }
 
+% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
       <td class="actionlist">
         <div class="label">
           Tools ...
         </div>
         <div>
           <ul>
-% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
             <li>
               <a href="<% $c->uri_for('/tools/triage') %>">Triage publications</a>
-            </li>
-% }
-            <li>
-              <a href="<% $c->uri_for('/tools/pubmed_id_start') %>">Add by PubMed ID</a>
             </li>
           </ul>
         </div>
       </td>
+% }
     </tr>
     <tr>
       <td class="actionlist" width="30%" valign="top">
