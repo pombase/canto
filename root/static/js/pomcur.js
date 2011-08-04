@@ -471,6 +471,7 @@ $(document).ready(function() {
         function () {
           target.show()
           $(element).hide();
+          return false;
         }
       );
       $(element).show();
