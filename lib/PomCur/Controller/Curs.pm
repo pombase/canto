@@ -936,13 +936,23 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     );
 
   if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
-    unshift @all_elements, {
+    my %extension_def = (
       name => 'annotation-extension',
       label => 'Add optional annotation extension',
       type => 'Text',
       container_tag => 'div',
       attributes => { class => 'annotation-extension' },
       size => 60,
+    );
+
+    my $existing_extension = $annotation->data()->{annotation_extension};
+
+    if (defined $existing_extension) {
+      $extension_def{'value'} = $existing_extension;
+    }
+
+    unshift @all_elements, {
+      %extension_def,
     };
   }
 
