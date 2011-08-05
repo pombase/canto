@@ -85,6 +85,16 @@ sub new
   my $test_config_file_name = "$root_dir/" . $config->{test_config_file};
   $config->merge_config($test_config_file_name);
 
+  $config->{implementation_classes}->{ontology_annotation_adaptor} =
+    'PomCur::Chado::OntologyAnnotationLookup';
+
+  $config->{'Model::ChadoModel'} = {
+    schema_class => 'PomCur::ChadoDB',
+    connect_info => [
+      "dbi:SQLite:dbname=$root_dir/t/data/chado_test_db"
+      ]
+    };
+
   $self->{config} = $config;
 
   return bless $self, $class;
