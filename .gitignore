@@ -17,3 +17,4 @@ PomCur-*.tar*
 MANIFEST
 *.tmp
 cover_db
+pomcur_local.yaml
