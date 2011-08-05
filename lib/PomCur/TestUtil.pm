@@ -91,7 +91,7 @@ sub new
   $config->{'Model::ChadoModel'} = {
     schema_class => 'PomCur::ChadoDB',
     connect_info => [
-      "dbi:SQLite:dbname=$root_dir/t/data/chado_test_db"
+      "dbi:SQLite:dbname=$root_dir/t/data/chado_test_db.sqlite3"
       ]
     };
 
