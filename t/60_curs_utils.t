@@ -54,7 +54,7 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
   my $options = { pub_uniquename => $pub->uniquename(),
                   ontology_name => 'biological_process' };
   my @annotations =
-    PomCur::Curs::Utils::get_existing_annotations($config, $options);
+    PomCur::Curs::Utils::get_existing_ontology_annotations ($config, $options);
 
   is (@annotations, 0);
 }

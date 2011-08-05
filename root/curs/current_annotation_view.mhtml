@@ -40,7 +40,7 @@ my ($completed_count, $annotations_ref) =
 my @user_annotations = @$annotations_ref;
 
 my @existing_annotations =
-    PomCur::Curs::Utils::get_existing_annotations($config, $options);
+    PomCur::Curs::Utils::get_existing_ontology_annotations($config, $options);
 
 my $annotation_view_template =
   "current_annotation_" . $annotation_type->{category} . ".mhtml";
