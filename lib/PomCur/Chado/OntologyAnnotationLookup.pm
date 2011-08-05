@@ -109,7 +109,7 @@ sub lookup
   die "no ontology_name" unless defined $ontology_name;
 
   my %db_ontology_names = (
-    post_translational_modification => 'pt_mod',
+    post_translational_modification => 'PSI-MOD',
     physical_interaction => undef,
     genetic_interaction => undef,
   );
