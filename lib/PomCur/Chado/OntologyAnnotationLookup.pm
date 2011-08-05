@@ -71,10 +71,11 @@ sub _get_taxonid
  Function: lookup ontology annotation in a Chado database
  Args    : $options->{pub_uniquename} - the identifier of the publication,
                usually the PubMed ID to get annotations for
-           $options->{gene_identifier} - the gene identifier to constraint the
-               search with; only annotations for the gene are returned
+           $options->{gene_identifier} - the gene identifier to use to constrain
+               the search; only annotations for the gene are returned (optional)
            $options->{ontology_name} - the ontology name to use to restrict the
-               search; only annotations from this ontology are returned
+               search; only annotations using terms from this ontology are
+               returned (optional)
  Returns : An array reference of annotation results:
             [ {
               gene => {

@@ -164,7 +164,7 @@ sub _make_interaction_annotation
             interacting_gene_taxonid =>
               $interacting_gene_info->{organism_taxon}
                 // $gene->organism()->taxonid(),
-            score => '',
+            score => '',  # for biogrid format output
             phenotypes => '',
             comment => '',
             completed => 1,
@@ -190,21 +190,36 @@ sub _make_interaction_annotation
            where:
              $completed_count - a count of the annotations that are incomplete
                 because they need an evidence code or a with field, etc.
-             $table - an array of hashes containing the annotation in the form:
-                  [ { gene_identifier => 'SPCC1739.11c',
-                      gene_name => 'cdc11',
-                      annotation_type => 'molecular_function',
-                      annotation_id => 1234,
-                      term_ontid => 'GO:0055085',
-                      term_name => 'transmembrane transport',
-                      evidence_code => 'IDA',
-                      ... },
-                    { gene_identifier => '...', ... }, ]
-                  where annotation_id is the id of the Annotation object for
-                  this annotation
+             $table - an array of hashes containing the annotation
+
+ The returned table has this format if the annotation_type_name is an ontology
+ type:
+    [ { gene_identifier => 'SPCC1739.11c',
+        gene_name => 'cdc11',
+        annotation_type => 'molecular_function',
+        annotation_id => 1234,
+        term_ontid => 'GO:0055085',
+        term_name => 'transmembrane transport',
+        evidence_code => 'IDA',
+        ... },
+      { gene_identifier => '...', ... }, ]
+    where annotation_id is the id of the Annotation object for this annotation
+
+ If the annotation_type_name is an interaction type the format is:
+    [ { gene_identifier => 'SPCC1739.11c',
+        gene_display_name => 'cdc11',
+        gene_taxonid => 4896,
+        publication_uniquename => 'PMID:20870879',
+        evidence_code => 'Phenotypic Enhancement',
+        interacting_gene_identifier => 'SPBC12C2.02c',
+        interacting_gene_display_name => 'ste20',
+        interacting_gene_taxonid => 4896
+        annotation_id => 1234,
+        ... },
+      { gene_identifier => '...', ... }, ]
+    where annotation_id is the id of the Annotation object for this annotation
 
 =cut
-
 sub get_annotation_table
 {
   my $config = shift;
@@ -316,9 +331,15 @@ sub _process_one
  Usage   :
    my @annotations =
      PomCur::Curs::Utils::get_existing_ontology_annotations($config, $options);
- Function: Return a table of the existing annotations from the database
+ Function: Return a table of the existing ontology annotations from the database
  Args    : $config - the PomCur::Config object
-           $options->{pub_uniquename} - the publication ID (eg. PubMed ID)
+ Args    : $options->{pub_uniquename} - the identifier of the publication,
+               usually the PubMed ID to get annotations for
+           $options->{gene_identifier} - the gene identifier to use to constrain
+               the search; only annotations for the gene are returned (optional)
+           $options->{ontology_name} - the ontology name to use to restrict the
+               search; only annotations using terms from this ontology are
+               returned (optional)
  Returns : An array of hashes containing the annotation in the same form as
            get_annotation_table() above, except that annotation_id will be a
            database identifier for the annotation.
