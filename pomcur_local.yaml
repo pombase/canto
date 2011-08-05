@@ -1,5 +1,0 @@
-Model::TrackModel:
-  schema_class: 'PomCur::TrackDB'
-  connect_info:
-     - "dbi:SQLite:dbname=local/track.sqlite3"
-data_directory: "local"
