@@ -50,11 +50,10 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
 }
 
 {
-  my $pub = $schema->resultset('Pub')->first();
-  my $options = { pub_uniquename => $pub->uniquename(),
+  my $options = { pub_uniquename => 'PMID:20519959',
                   ontology_name => 'biological_process' };
   my @annotations =
     PomCur::Curs::Utils::get_existing_ontology_annotations ($config, $options);
 
-  is (@annotations, 0);
+  is (@annotations, 1);
 }
