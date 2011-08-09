@@ -97,8 +97,13 @@ sub lookup
                                 cv_id => $interaction_types_cv->cv_id() });
   }
 
-  my $relations =
-    $schema->resultset('Pub')->find({ uniquename => $pub_uniquename })
+  my $pub = $schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
+
+  if (!defined $pub) {
+    return [];
+  }
+
+  my $relations = $pub
       ->search_related('feature_relationship_pubs')
       ->search_related('feature_relationship')
       ->search({ 'feature_relationship.type_id' => $interaction_type_cvterm->cvterm_id() },
