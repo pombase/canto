@@ -87,6 +87,8 @@ sub new
 
   $config->{implementation_classes}->{ontology_annotation_adaptor} =
     'PomCur::Chado::OntologyAnnotationLookup';
+  $config->{implementation_classes}->{interaction_annotation_adaptor} =
+    'PomCur::Chado::InteractionAnnotationLookup';
 
   $config->{'Model::ChadoModel'} = {
     schema_class => 'PomCur::ChadoDB',

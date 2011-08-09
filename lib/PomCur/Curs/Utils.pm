@@ -352,7 +352,13 @@ sub get_existing_ontology_annotations
 
   my $pub_uniquename = $options->{pub_uniquename};
   my $gene_identifier = $options->{gene_identifier};
-  my $ontology_name = $options->{ontology_name};
+  my $ontology_name = $options->{annotation_type_name};
+
+  my $args = {
+    pub_uniquename => $pub_uniquename,
+    gene_identifier => $gene_identifier,
+    ontology_name => $ontology_name,
+  };
 
   my $ontology_lookup =
     PomCur::Track::get_adaptor($config, 'ontology');
@@ -367,9 +373,112 @@ sub get_existing_ontology_annotations
       } else {
         ();
       }
-    } @{$annotation_lookup->lookup($options)};
+    } @{$annotation_lookup->lookup($args)};
   } else {
     return ();
+  }
+}
+
+sub _process_interaction
+{
+  my $ontology_lookup = shift;
+  my $row = shift;
+
+  my $gene = $row->{gene};
+  my $interacting_gene = $row->{interacting_gene};
+  my $publication = $row->{publication};
+
+  return {
+    gene_identifier => $gene->{identifier},
+    gene_display_name => $gene->{name},
+    gene_taxonid => $gene->{taxonid},
+    publication_uniquename => $publication->{uniquename},
+    evidence_code => $row->{evidence_code},
+    interacting_gene_identifier => $interacting_gene->{identifier},
+    interacting_gene_display_name => $interacting_gene->{name},
+    interacting_gene_taxonid => $interacting_gene->{taxonid},
+  };
+}
+
+=head2 get_existing_interaction_annotations
+
+ Usage   :
+   my @annotations =
+  PomCur::Curs::Utils::get_existing_interaction_annotations($config, $options);
+ Function: Return a table of the existing interaction annotations from the
+           database
+ Args    : $config - the PomCur::Config object
+           $options->{pub_uniquename} - the publication ID (eg. PubMed ID)
+               to retrieve annotations from
+           $options->{gene_identifier} - the gene identifier to use to constrain
+               the search; only annotations for the gene are returned (optional)
+ Returns : An array of hashes containing the annotation in the same form as
+           get_annotation_table() above, except that annotation_id will be a
+           database identifier for the annotation.
+
+=cut
+sub get_existing_interaction_annotations
+{
+  my $config = shift;
+  my $options = shift;
+
+  my $pub_uniquename = $options->{pub_uniquename};
+  my $gene_identifier = $options->{gene_identifier};
+  my $interaction_type_name = $options->{annotation_type_name};
+
+  my $args = {
+    pub_uniquename => $pub_uniquename,
+    gene_identifier => $gene_identifier,
+    interaction_type_name => $interaction_type_name,
+  };
+
+  my $annotation_lookup =
+    PomCur::Track::get_adaptor($config, 'interaction_annotation');
+
+  if (defined $annotation_lookup) {
+    return map {
+      my $res = _process_interaction($annotation_lookup, $_);
+      if (defined $res) {
+        ($res);
+      } else {
+        ();
+      }
+    } @{$annotation_lookup->lookup($args)};
+  } else {
+    return ();
+  }
+}
+
+=head2 get_existing_interaction_annotations
+
+ Usage   :
+   my @annotations =
+     PomCur::Curs::Utils::get_existing_annotations($config, $options);
+ Function: Return a table of the existing interaction annotations from the
+           database
+ Args    : $config - the PomCur::Config object
+           $options->{pub_uniquename} - the publication ID (eg. PubMed ID)
+               to retrieve annotations from
+           $options->{gene_identifier} - the gene identifier to use to constrain
+               the search; only annotations for the gene are returned (optional)
+           $options->{annotation_type_name} - the annotation type eg.
+               'biological_process', 'physical_interaction'
+           $options->{annotation_type_category} - the annotation category, eg.
+               'ontology' or 'interaction'
+ Returns : An array of hashes containing the annotation in the same form as
+           get_annotation_table() above, except that annotation_id will be a
+           database identifier for the annotation.
+
+=cut
+sub get_existing_annotations
+{
+  my $config = shift;
+  my $options = shift;
+
+  if ($options->{annotation_type_category} eq 'ontology') {
+    return get_existing_ontology_annotations($config, $options);
+  } else {
+    return get_existing_interaction_annotations($config, $options);
   }
 }
 

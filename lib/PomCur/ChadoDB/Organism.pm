@@ -246,5 +246,24 @@ sub full_name {
   return $self->genus() . ' ' . $self->species();
 }
 
+=head2 taxonid
+
+ Usage   : my $taxonid = $organism->taxonid();
+ Function: Return the taxon ID from the organismprop of type 'taxon_id'
+ Args    : None
+
+=cut
+sub taxonid {
+  my $self = shift;
+
+  for my $prop ($self->organismprops()) {
+    if ($prop->type()->name() eq 'taxon_id') {
+      return $prop->value();
+    }
+  }
+
+  return undef;
+}
+
 __PACKAGE__->meta->make_immutable;
 1;
