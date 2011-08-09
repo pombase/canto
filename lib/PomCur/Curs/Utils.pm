@@ -286,7 +286,7 @@ sub get_annotation_table
   return ($completed_count, [@annotations]);
 }
 
-sub _process_one
+sub _process_ontology
 {
   my $ontology_lookup = shift;
   my $row = shift;
@@ -361,7 +361,7 @@ sub get_existing_ontology_annotations
 
   if (defined $annotation_lookup) {
     return map {
-      my $res = _process_one($ontology_lookup, $_);
+      my $res = _process_ontology($ontology_lookup, $_);
       if (defined $res) {
         ($res);
       } else {
