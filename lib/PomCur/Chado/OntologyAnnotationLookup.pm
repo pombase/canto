@@ -65,6 +65,27 @@ sub _get_taxonid
   }
 }
 
+# if the $feature is an mRNA, return it's gene feature, otherwise return
+# the $feature
+sub _gene_of_feature
+{
+  my $self = shift;
+  my $feature = shift;
+
+  my $mrna_cvterm = $self->schema()->get_cvterm('sequence', 'mRNA');
+
+  if ($feature->type_id() == $mrna_cvterm->cvterm_id()) {
+    my $gene_cvterm = $self->schema()->get_cvterm('sequence', 'gene');
+
+    return $feature->feature_relationship_objects()
+                   ->search_related('subject', {
+                     'subject.type_id' => $gene_cvterm->cvterm_id()
+                   })->single();
+  } else {
+    return $feature;
+  }
+}
+
 =head2
 
  Usage   : my $res = PomCur::Chado::OntologyAnnotationLookup($options);
@@ -154,7 +175,7 @@ sub lookup
     my @res = ();
 
     while (defined (my $row = $rs->next())) {
-      my $feature = $row->feature();
+      my $feature = $self->_gene_of_feature($row->feature());
       my $cvterm = $row->cvterm();
       my $organism = $feature->organism();
       my $genus = $organism->genus();

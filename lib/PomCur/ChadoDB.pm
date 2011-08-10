@@ -18,4 +18,24 @@ __PACKAGE__->initialise();
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
+our %cache = ();
+
+sub get_cvterm
+{
+  my $self = shift;
+  my $cv_name = shift;
+  my $cvterm_name = shift;
+
+  my $key = "cvterm:$cv_name:$cvterm_name";
+
+  if (exists $cache{$key}) {
+    return $cache{$key};
+  } else {
+    my $cv = $self->find_with_type('Cv', { name => $cv_name });
+    my $cvterm = $self->find_with_type('Cvterm', { name => $cvterm_name,
+                                                   cv_id => $cv->cv_id() });
+    $cache{$key} = $cvterm;
+  }
+}
+
 1;
