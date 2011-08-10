@@ -248,10 +248,12 @@ sub load
           }
         }
 
-        $cvterms{$term->acc()} = $cvterm;
+        if (!$term->is_relationship_type()) {
+          $cvterms{$term->acc()} = $cvterm;
 
-        if (defined $index && !$term->is_relationship_type()) {
-          $index->add_to_index($cvterm);
+          if (defined $index) {
+            $index->add_to_index($cvterm);
+          }
         }
       }
     };
@@ -278,8 +280,12 @@ sub load
     die "can't find relationship cvterm for: $rel_type"
       unless defined $rel_type_cvterm;
 
+    # don't store relations between relation terms
     my $subject_cvterm = $cvterms{$subject_term_acc};
+    next unless defined $subject_cvterm;
+
     my $object_cvterm = $cvterms{$object_term_acc};
+    next unless defined $object_cvterm;
 
     $schema->create_with_type('CvtermRelationship',
                               {
