@@ -149,6 +149,8 @@ sub lookup
 
   my $schema = $self->schema();
 
+  $pub_uniquename =~ s/PMID://;
+
   my $pub = $schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
 
   if (defined $pub) {
