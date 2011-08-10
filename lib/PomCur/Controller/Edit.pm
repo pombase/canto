@@ -58,8 +58,8 @@ sub _get_field_values
   my $class_info = $c->config()->class_info($c)->{$referenced_table_name};
   my $field_name = $class_info->{display_field};
 
-  my $db_field_column = $class_info->{field_infos}->{$field_name}->{source};
-
+  my $db_field_column =
+    $class_info->{field_infos}->{$field_name}->{source} // $field_name;
   my $values_constraint = $field_info->{values_constraint};
 
   my $constraint_path = undef;
