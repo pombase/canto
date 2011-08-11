@@ -77,9 +77,10 @@ sub _gene_of_feature
   if ($feature->type_id() == $mrna_cvterm->cvterm_id()) {
     my $gene_cvterm = $self->schema()->get_cvterm('sequence', 'gene');
 
-    return $feature->feature_relationship_objects()
-                   ->search_related('subject', {
-                     'subject.type_id' => $gene_cvterm->cvterm_id()
+    return $feature->feature_relationship_subjects()
+                   ->search_related('object')
+                   ->search({
+                     'object.type_id' => $gene_cvterm->cvterm_id()
                    })->single();
   } else {
     return $feature;
