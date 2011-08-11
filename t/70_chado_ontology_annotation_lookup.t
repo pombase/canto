@@ -37,6 +37,6 @@ cmp_deeply($res->[0],
              evidence_code => 'UNK',
              annotation_id => 1,
              publication => {
-               uniquename => '20519959'
+               uniquename => 'PMID:20519959'
              }
             });

@@ -97,8 +97,6 @@ sub lookup
                                 cv_id => $interaction_types_cv->cv_id() });
   }
 
-  $pub_uniquename =~ s/PMID://;
-
   my $pub = $schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
 
   if (!defined $pub) {

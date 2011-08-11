@@ -51,7 +51,7 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
 }
 
 {
-  my $options = { pub_uniquename => '20519959',
+  my $options = { pub_uniquename => 'PMID:20519959',
                   annotation_type_name => 'biological_process',
                 };
   my @annotations =
@@ -74,12 +74,12 @@ sub _test_interactions
                'interacting_gene_display_name' => 'cdc11',
                'interacting_gene_taxonid' => '4896',
                'evidence_code' => 'Phenotypic Enhancement',
-               'publication_uniquename' => '20519959',
+               'publication_uniquename' => 'PMID:20519959',
              });
 }
 
 {
-  my $options = { pub_uniquename => '20519959',
+  my $options = { pub_uniquename => 'PMID:20519959',
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
   my @annotations =
@@ -89,7 +89,7 @@ sub _test_interactions
 }
 
 {
-  my $options = { pub_uniquename => '20519959',
+  my $options = { pub_uniquename => 'PMID:20519959',
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
   my @annotations =
