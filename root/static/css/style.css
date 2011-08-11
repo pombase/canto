@@ -28,6 +28,7 @@ button, input[type=submit] {
   color: white;
   border-color: #c00;
   white-space: nowrap;
+  font-weight: bold;
 }
 
 img {
