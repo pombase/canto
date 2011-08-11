@@ -259,7 +259,7 @@ test_psgi $app, sub {
   # test deleting a gene referred to by a with_gene field
   {
     my $uri = new URI("$root_url/edit_genes");
-    $uri->query_form(submit => 'Delete selected',
+    $uri->query_form(submit => 'Remove selected',
                      'gene-select' => [$with_gene->gene_id()],
                     );
 

@@ -377,7 +377,7 @@ sub _edit_genes_helper
         type => 'Checkbox', default_empty_value => 1
       },
       {
-        name => 'submit', type => 'Submit', value => 'Delete selected',
+        name => 'submit', type => 'Submit', value => 'Remove selected',
         name => 'continue', type => 'Submit', value => 'Continue',
       },
     );

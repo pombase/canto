@@ -161,7 +161,7 @@ test_psgi $app, sub {
     my @stored_gene_ids = map { $_->gene_id() } @stored_genes;
 
     my $uri = new URI("$root_url/edit_genes");
-    $uri->query_form(submit => 'Delete selected',
+    $uri->query_form(submit => 'Remove selected',
                      'gene-select' => [@stored_gene_ids],
                     );
 
@@ -195,7 +195,7 @@ test_psgi $app, sub {
     my @stored_gene_ids = map { $_->gene_id() } @stored_genes;
 
     my $uri = new URI("$root_url/edit_genes");
-    $uri->query_form(submit => 'Delete selected',
+    $uri->query_form(submit => 'Remove selected',
                      'gene-select' => [$stored_gene_ids[0]],
                     );
 
