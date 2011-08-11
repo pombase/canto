@@ -898,3 +898,8 @@ ontology_external_links:
     - name: QuickGO
       icon: quickgo.png
       url: 'http://www.ebi.ac.uk/QuickGO/GTerm?id=@@term_ont_id@@#term=ancchart'
+
+chado:
+  ontology_cv_names:
+    post_translational_modification: PSI-MOD
+    phenotype: fission_yeast_phenotype

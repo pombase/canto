@@ -131,19 +131,11 @@ sub lookup
 
   die "no ontology_name" unless defined $ontology_name;
 
-  my %db_ontology_names = (
-    post_translational_modification => 'PSI-MOD',
-    physical_interaction => undef,
-    genetic_interaction => undef,
-  );
+  my %db_ontology_names = %{$self->config()->{chado}->{ontology_cv_names}};
 
   my $db_ontology_name;
   if (exists $db_ontology_names{$ontology_name}) {
-    if (defined $db_ontology_names{$ontology_name}) {
-      $db_ontology_name = $db_ontology_names{$ontology_name};
-    } else {
-      return [];
-    }
+    $db_ontology_name = $db_ontology_names{$ontology_name};
   } else {
     $db_ontology_name = $ontology_name;
   }
