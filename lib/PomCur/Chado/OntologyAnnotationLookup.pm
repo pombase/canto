@@ -87,6 +87,26 @@ sub _gene_of_feature
   }
 }
 
+sub _get_prop_type_cvterm_id
+{
+  my $self = shift;
+  my $schema = $self->schema();
+  my $type_cv = shift;
+  my $type_name = shift;
+
+  my $cvterm =
+    $schema->resultset('Cvterm')
+           ->search({ cv_id => $type_cv->cv_id(),
+                      name => $type_name })
+           ->single();
+
+  if (defined $cvterm) {
+    return $cvterm->cvterm_id();
+  } else {
+    return undef;
+  }
+}
+
 =head2
 
  Usage   : my $res = PomCur::Chado::OntologyAnnotationLookup($options);
@@ -145,13 +165,14 @@ sub lookup
   my $pub = $schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
 
   if (defined $pub) {
-    my $feature_cvtermprop_type_cv =
+    my $prop_type_cv =
       $schema->find_with_type('Cv', name => 'feature_cvtermprop_type');
-    my $evidence_type_cvterm_id =
-      $schema->resultset('Cvterm')
-         ->search({ cv_id => $feature_cvtermprop_type_cv->cv_id(),
-                    name => 'evidence' })
-         ->single()->cvterm_id();
+    my @prop_type_names = qw[evidence with from];
+    my %prop_cvterm_ids = ();
+    for my $prop_type_name (@prop_type_names) {
+      $prop_cvterm_ids{$prop_type_name} =
+        $self->_get_prop_type_cvterm_id($prop_type_cv, $prop_type_name);
+    }
     my $cv = $schema->find_with_type('Cv', name => $db_ontology_name);
     my $constraint = { pub_id => $pub->pub_id(),
                        'cvterm.cv_id' => $cv->cv_id() };
@@ -173,16 +194,26 @@ sub lookup
       my $organism = $feature->organism();
       my $genus = $organism->genus();
       my $species = $organism->species();
-      my $evidence_type_prop = $row->feature_cvtermprops
-          ->search({ type_id =>$evidence_type_cvterm_id  })->single();
-      my $evidence_type_name = 'Unknown';
-      if (defined $evidence_type_prop) {
-        $evidence_type_name = $evidence_type_prop->value();
+      my @props = $row->feature_cvtermprops()->all();
+      my %prop_type_values = (evidence_type => 'Unknown',
+                              with => undef,
+                              from => undef,
+                              );
+      for my $prop (@props) {
+        for my $prop_type_name (@prop_type_names) {
+          if (defined $prop_cvterm_ids{$prop_type_name} &&
+              $prop_cvterm_ids{$prop_type_name} == $prop->type_id()) {
+            $prop_type_values{$prop_type_name} = $prop->value();
+          }
+        }
       }
-      $evidence_type_name =~ s/\s+with\s+.*//;
+
+      $prop_type_values{evidence_type} //= 'Unknown';
+
+      $prop_type_values{evidence_type} =~ s/\s+with\s+.*//;
       my $evidence_code =
-        $self->config()->{evidence_types_by_name}->{lc $evidence_type_name} //
-        $evidence_type_name;
+        $self->config()->{evidence_types_by_name}->{lc $prop_type_values{evidence_type}} //
+        $prop_type_values{evidence_type};
 
       push @res, {
         gene => {
@@ -196,6 +227,8 @@ sub lookup
           term_name => $cvterm->name(),
           ontid => $cvterm->db_accession(),
         },
+        with => $prop_type_values{with},
+        from => $prop_type_values{from},
         publication => {
           uniquename => $pub_uniquename,
         },

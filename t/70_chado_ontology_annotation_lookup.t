@@ -35,6 +35,8 @@ cmp_deeply($res->[0],
                ontology_name => 'biological_process'
              },
              evidence_code => 'UNK',
+             with => 'GeneDB_Spombe:SPBC2G2.01c',
+             from => undef,
              annotation_id => 1,
              publication => {
                uniquename => 'PMID:20519959'

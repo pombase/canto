@@ -77,7 +77,7 @@ $user_created
 % }
     </td>
     <td>
-% if ($row->{needs_with}) {
+% if ($row->{needs_with} || defined $row->{with_or_from_display_name}) {
 %   if (defined $row->{with_or_from_display_name}) {
       <% $row->{with_or_from_display_name} %>
 %   } else {

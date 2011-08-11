@@ -320,8 +320,8 @@ sub _process_ontology
     term_ontid => $term_ontid,
     term_name => $term_name,
     evidence_code => $evidence_code,
-    with_or_from_identifier => 'DUNNO',
-    with_or_from_display_name => 'DUNNO display_name',
+    with_or_from_identifier => $row->{with} // $row->{from},
+    with_or_from_display_name => $row->{with} // $row->{from},
     taxonid => $gene->{organism_taxonid},
   };
 }
