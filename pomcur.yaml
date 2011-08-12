@@ -511,7 +511,7 @@ class_info:
         - name: cv
           source: cv_id
           editable: 1
-        - name: "features annotated with this term"
+        - name: "features of this type"
           as: count
           source:
             sql: 'select count(*) from feature where type_id = me.cvterm_id'
