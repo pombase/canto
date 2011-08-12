@@ -77,7 +77,100 @@ make
    http://localhost:5000
 * Configuration
 ** =pomcur.yaml=
+   :PROPERTIES:
+   :ID:       3069044b-4da1-420c-8246-c01d7fd1e35e
+   :END:
+*** name
+    A one word name for the site.
+*** long_name
+    A longer description of the site.
+*** database_name
+    Database name for prefixing identifiers when exporting.
+*** header_image
+    A the path relative to =root/static= of the logo to put in the header.
+*** app_version
+    The software version.
+*** home_path
+    The path to use for the home link.
+*** authentication
+    Configuration for the Catalyst authentication code.
+*** view_options
+    Configuration for the view.
+**** max_inline_results_length
+     The maximum number of lines of results to show in a table on an object
+     page.
+*** db_initial_data
+    Data needed to initialise a PomCur instance.
+*** class_info
+    Descriptions of table in the database used by the interface.  This
+    information is used for rendering the view and object pages.
+*** reports
+    A list of report names to show on the front page.
+*** export
+    Configuration for exporting.
+*** load
+    Configuration for loading data.
+*** track_db_template_file
+    The template database to use when creating a new PomCur instance.
+*** curs_db_template_file
+    The template database to use when creating a new curation session.
+*** ontology_index_file
+    The name of the directory used for the ontology Lucene index.  This index
+    is used to do autocompeletion in the interface.
+*** external_sources
+    URLs of external services.
+*** implementation_classes
+    Names of classes used to implement database query and storage.  This
+    allows the implementations to be swapped from the defaults.
+**** gene_adaptor
+     Used to lookup gene identifier, name, synonyms and products.  The default
+     is to use the internal PomCur database ("track").
+*** evidence_types
+     Short name (codes) and long names of evidence types.  Any evidence type
+     configured with the option "with_gene" set to true will cause the
+     interface to ask for a gene for later storage in the "with/from" column
+     of a GAF file.
+*** annotation_type_list
+    :PROPERTIES:
+    :ID:       7e618d95-78e6-4445-b7b4-52665fa723ea
+    :END:
+    Configuration of the type of annotations possible in this PomCur instance.
+**** name
+     The identifier for this annotation type, used internally and in URLs.
+**** category
+     One of: "ontology" or "interaction", used to select which Perl package
+     should be used for rendering and storing these annotation type.
+*** messages
+*** test_config_file
+*** test_gene_identifiers
+*** test_publication_uniquename
+*** help_text
+*** external_links
+*** webservices
+*** ontology_external_links
+*** chado
+
 ** Loading data
+*** Organisms
+#+BEGIN_SRC sh
+./script/pomcur_load.pl --organism "<genus> <species> <taxon_id>"
+#+END_SRC
+*** Gene data
+#+BEGIN_SRC sh
+./script/pomcur_load.pl --genes genes_file.tsv --for-taxon 4896
+#+END_SRC
+**** gene data format
+     Four columns:
+     - systematic identifier
+     - gene primary name
+     - synonyms (comma separated)
+     - product
+*** Ontology terms
+#+BEGIN_SRC sh
+./script/pomcur_load.pl --ontology ontology_file.obo
+#+END_SRC
+The ontology must be [[id:3069044b-4da1-420c-8246-c01d7fd1e35e][configured]] in the [[id:7e618d95-78e6-4445-b7b4-52665fa723ea][annotation_type_list]] section of the
+=pomcur.yaml= file.
 * Implementation details
 ** Structure
    There are two parts to the system.
