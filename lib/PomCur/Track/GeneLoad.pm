@@ -105,7 +105,7 @@ sub _process_gene_row
  Usage   : my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
            $gene_load->load($file_name);
  Function: Load a file of gene identifiers, name and products into the Track
-           database
+           database.  Note that this method doesn't start a transaction.
  Args    : $file_name - a comma separated file of genes, one per line:
                            <identifier>,<gene_product>,<name>
                         first line should be a header line:
