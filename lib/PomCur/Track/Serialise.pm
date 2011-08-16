@@ -127,7 +127,7 @@ sub json
     publications => _get_pubs($schema),
   };
 
-  my $encoder = JSON->new()->utf8()->pretty(1);
+  my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);
 
   return $encoder->encode($track_hash);
 }

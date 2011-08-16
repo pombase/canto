@@ -163,7 +163,7 @@ sub json
 {
   my $schema = shift;
 
-  my $encoder = JSON->new()->utf8()->pretty(1);
+  my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);
 
   return $encoder->encode(perl($schema));
 }
