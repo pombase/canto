@@ -34,7 +34,7 @@ cmp_deeply($res->[0],
                term_name => 'transport',
                ontology_name => 'biological_process'
              },
-             evidence_code => 'UNK',
+             evidence_code => 'IMP',
              with => 'GeneDB_Spombe:SPBC2G2.01c',
              from => undef,
              annotation_id => 1,
