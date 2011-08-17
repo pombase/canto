@@ -57,10 +57,10 @@ if (@$mk_err) {
 copy $track_test_db, $db_file_name
   or die "'$!' while creating $db_file_name\n";;
 
-my $ontology_index_file = $config->{ontology_index_file};
-my $ontology_index_path = $config->data_dir_path('ontology_index_file');
+my $ontology_index_dir = $config->{ontology_index_dir};
+my $ontology_index_path = $config->data_dir_path('ontology_index_dir');
 
-my $test_ontology_index = "$test_data_dir/$ontology_index_file";
+my $test_ontology_index = "$test_data_dir/$ontology_index_dir";
 
 dircopy($test_ontology_index, $ontology_index_path)
   or die "'$!' while copying $test_ontology_index to $ontology_index_path\n";

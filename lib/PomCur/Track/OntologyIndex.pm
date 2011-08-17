@@ -87,7 +87,7 @@ sub _index_path
 {
   my $config = shift;
 
-  return $config->data_dir_path('ontology_index_file');
+  return $config->data_dir_path('ontology_index_dir');
 }
 
 sub _clean_field_value

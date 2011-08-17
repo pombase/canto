@@ -114,7 +114,7 @@ make
     The template database to use when creating a new PomCur instance.
 *** curs_db_template_file
     The template database to use when creating a new curation session.
-*** ontology_index_file
+*** ontology_index_dir
     The name of the directory used for the ontology Lucene index.  This index
     is used to do autocompeletion in the interface.
 *** external_sources

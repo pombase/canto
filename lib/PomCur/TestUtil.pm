@@ -198,9 +198,9 @@ sub init_test
   }
 
   if ($args->{copy_ontology_index}) {
-    my $ontology_index_file = $config->{ontology_index_file};
-    my $test_ontology_index = "$data_dir/$ontology_index_file";
-    my $dest_ontology_index = "$temp_dir/$ontology_index_file";
+    my $ontology_index_dir = $config->{ontology_index_dir};
+    my $test_ontology_index = "$data_dir/$ontology_index_dir";
+    my $dest_ontology_index = "$temp_dir/$ontology_index_dir";
 
     dircopy($test_ontology_index, $dest_ontology_index)
       or die "'$!' while copying $test_ontology_index to $dest_ontology_index\n";

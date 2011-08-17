@@ -301,8 +301,8 @@ sub get_config
  Usage   : my $path = $config->{$key};
  Function: return a value from the configuration hash relative to the
            data_directory
- Args    : $config_key - a key from the hash eg. "ontology_index_file"
- Returns : eg. "the_data_dir/" . $config{ontology_index_file}
+ Args    : $config_key - a key from the hash eg. "ontology_index_dir"
+ Returns : eg. "the_data_dir/" . $config{ontology_index_dir}
 
 =cut
 sub data_dir_path
