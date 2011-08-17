@@ -195,7 +195,7 @@ sub lookup
       my $genus = $organism->genus();
       my $species = $organism->species();
       my @props = $row->feature_cvtermprops()->all();
-      my %prop_type_values = (evidence_type => 'Unknown',
+      my %prop_type_values = (evidence => 'Unknown',
                               with => undef,
                               from => undef,
                               );
@@ -208,12 +208,12 @@ sub lookup
         }
       }
 
-      $prop_type_values{evidence_type} //= 'Unknown';
+      $prop_type_values{evidence} //= 'Unknown';
 
-      $prop_type_values{evidence_type} =~ s/\s+with\s+.*//;
+      $prop_type_values{evidence} =~ s/\s+with\s+.*//;
+      my $evidence = $prop_type_values{evidence};
       my $evidence_code =
-        $self->config()->{evidence_types_by_name}->{lc $prop_type_values{evidence_type}} //
-        $prop_type_values{evidence_type};
+        $self->config()->{evidence_types_by_name}->{lc $evidence};
 
       push @res, {
         gene => {
