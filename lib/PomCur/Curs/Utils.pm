@@ -303,6 +303,7 @@ sub _process_ontology
                              search_string => $term_ontid);
 
   if (!@$term_details) {
+    warn "failed to find term for $term_ontid\n";
     return undef;
   }
 
