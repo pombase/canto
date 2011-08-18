@@ -106,35 +106,39 @@ sub _process_gene_row
            $gene_load->load($file_name);
  Function: Load a file of gene identifiers, name and products into the Track
            database.  Note that this method doesn't start a transaction.
- Args    : $file_name - a comma separated file of genes, one per line:
-                           <identifier>,<gene_product>,<name>
-                        first line should be a header line:
-                           "identifier,product,gene"
+           Any existing genes and gene synonyms are removed before
+           loading.
+ Args    : $handle -  the file handle of a tab separated file of gene
+                      information, one gene per line:
+                         <identifier>\t<name>\t<synonyms>\t<gene_products>
+                      the synonyms field should be a comma separated
+                      list of the synonyms
  Returns : Nothing
 
 =cut
 sub load
 {
   my $self = shift;
-  my $file_name = shift;
+  my $handle = shift;
 
   my $schema = $self->schema();
 
   my $gene_rs = $schema->resultset('Gene')
     ->search({ organism => $self->organism()->organism_id() });
+
+  my $genesynonyms_rs = $schema->resultset('Genesynonym')
+    ->search({ gene => {
+      -in => $gene_rs->get_column('gene_id')->as_query()
+    } });
+  $genesynonyms_rs->delete();
+
   $gene_rs->delete();
 
   my $csv = Text::CSV->new({ binary => 1, sep_char => "\t",
                              blank_is_undef => 1 });
-  open my $fh, '<', $file_name
-    or die "can't open $file_name: $!";
-
-  while (my $columns_ref = $csv->getline($fh)) {
+  while (my $columns_ref = $csv->getline($handle)) {
     $self->_process_gene_row($columns_ref);
   }
-
-  close $fh
-    or die "can't close $file_name: $!";
 }
 
 1;

@@ -1,8 +1,9 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 use Data::Compare;
+use IO::String;
 
 use PomCur::TestUtil;
 use PomCur::Track::GeneLoad;
@@ -23,7 +24,13 @@ my $test_genes_file = $test_util->root_dir() . '/t/data/pombe_genes.txt';
 my ($organism) = PomCur::TestUtil::add_test_organisms($config, $schema);
 my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema,
                                              organism => $organism);
-$gene_load->load($test_genes_file);
+
+open my $fh, '<', $test_genes_file
+  or die "can't open $test_genes_file: $!";
+
+$gene_load->load($fh);
+
+close $fh or die "can't close $test_genes_file: $!";
 
 @loaded_genes = $schema->resultset('Gene')->all();
 
@@ -39,3 +46,9 @@ my @pkl1_synonyms = sort map { $_->identifier() } $pkl1->genesynonyms()->all();
 is (@pkl1_synonyms, 2);
 is ($pkl1_synonyms[0], 'SPAC3H5.03c');
 is ($pkl1_synonyms[1], 'klp1');
+
+# test that all genes and synonyms are removed
+$gene_load->load(IO::String->new(''));
+
+is($schema->resultset('Gene')->count(), 0);
+is($schema->resultset('Genesynonym')->count(), 0);
