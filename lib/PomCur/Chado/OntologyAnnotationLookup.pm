@@ -180,11 +180,27 @@ sub lookup
       return [];
     }
 
-    my $constraint = { pub_id => $pub->pub_id(),
-                       'cvterm.cv_id' => $cv->cv_id() };
+    my $constraint_and_bits = { pub_id => $pub->pub_id(),
+                                'cvterm.cv_id' => $cv->cv_id() };
     if (defined $gene_identifier) {
-      $constraint->{'feature.uniquename'} = $gene_identifier;
+      my $transcript_params =
+        { where => "me.feature_id in (select subject_id from feature_relationship r, cvterm t, feature objf " .
+          "where r.type_id = t.cvterm_id and r.object_id = objf.feature_id " .
+          "and objf.uniquename = '$gene_identifier')" };
+      my $transcript_rs =
+        $schema->resultset('Feature')->search({}, $transcript_params);
+
+      # jump through hoops to query genes or transcripts
+      $constraint_and_bits->{'-or'} =
+        {
+          'feature.uniquename' => $gene_identifier,
+          'feature.feature_id' => {
+            -in => $transcript_rs->get_column('feature_id')->as_query()
+          }
+        };
     }
+
+    my $constraint = { -and => [%$constraint_and_bits] };
 
     my $options = { prefetch => [ { feature => 'organism' },
                                   { cvterm => [ 'cv', { dbxref => 'db' } ] } ],
