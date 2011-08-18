@@ -54,7 +54,7 @@ $user_created
   </thead>
 
 % for my $row (@annotations) {
-  <tr>
+  <tr class="<% $row->{status} eq 'deleted' ? 'deleted-annotation' : '' %>">
 % if (!defined $gene) {
     <td>
       <% $row->{gene_identifier} %>
@@ -105,11 +105,19 @@ $user_created
     </td>
 % }
     <td>
+% if ($row->{status} eq 'deleted') {
+      <a href="<% $undelete_action . $row->{annotation_id} %>"
+         id="curs-annotation-undelete-<% $row->{annotation_id} %>"
+         title="Restore/undelete this annotation">
+        <img src="<% $undelete_icon_uri %>"/>
+      </a>
+% } else {
       <a href="<% $delete_action . $row->{annotation_id} %>"
          id="curs-annotation-delete-<% $row->{annotation_id} %>"
          title="Remove this annotation">
         <img src="<% $delete_icon_uri %>"/>
       </a>
+% }
     </td>
 % }
   </tr>
@@ -128,6 +136,8 @@ $user_created
 <%init>
 my $delete_action = $curs_root_uri . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+my $undelete_action = $curs_root_uri . '/annotation/undelete/';
+my $undelete_icon_uri = $c->uri_for('/static/images/undo_icon.png');
 
 my $some_incomplete = $completed_count != @annotations && $user_created;
 

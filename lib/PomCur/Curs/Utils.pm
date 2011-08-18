@@ -119,6 +119,7 @@ sub _make_ontology_annotation
     taxonid => $gene->organism()->taxonid(),
     completed => $completed,
     annotation_extension => $data->{annotation_extension},
+    status => $annotation->status(),
   };
 }
 
@@ -169,6 +170,7 @@ sub _make_interaction_annotation
             comment => '',
             completed => 1,
             annotation_id => $annotation->annotation_id(),
+            status => $annotation->status(),
           };
     $entry;
   } @interacting_genes;
@@ -324,6 +326,7 @@ sub _process_ontology
     with_or_from_identifier => $row->{with} // $row->{from},
     with_or_from_display_name => $row->{with} // $row->{from},
     taxonid => $gene->{organism_taxonid},
+    status => 'existing',
   };
 }
 
@@ -398,6 +401,7 @@ sub _process_interaction
     interacting_gene_identifier => $interacting_gene->{identifier},
     interacting_gene_display_name => $interacting_gene->{name},
     interacting_gene_taxonid => $interacting_gene->{taxonid},
+    status => 'existing',
   };
 }
 

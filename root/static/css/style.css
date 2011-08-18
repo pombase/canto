@@ -817,3 +817,9 @@ input[type="submit"] {
   clear: both;
   visibility: hidden;
 }
+
+.deleted-annotation {
+  text-decoration: line-through;
+  color: #e22;
+  background-color: #eee;
+}

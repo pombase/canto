@@ -72,6 +72,7 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
                'annotation_id' => 1,
                'gene_name' => 'ste20',
                'gene_product' => '',
+               'status' => 'existing',
                'with_or_from_display_name' => 'GeneDB_Spombe:SPBC2G2.01c',
                'with_or_from_identifier' => 'GeneDB_Spombe:SPBC2G2.01c',
              });
@@ -92,11 +93,12 @@ sub _test_interactions
                'interacting_gene_taxonid' => '4896',
                'evidence_code' => 'Phenotypic Enhancement',
                'publication_uniquename' => 'PMID:20519959',
-             });
+               'status' => 'existing',
+           });
 }
 
 {
-  my $options = { pub_uniquename => 'PMID:20519959',
+  my $options = { pub_uniquename => 'PMID:10467002',
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
   my @annotations =

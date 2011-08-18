@@ -525,7 +525,27 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
 
   my $delete_sub = sub {
     my $annotation = $schema->resultset('Annotation')->find($annotation_id);
-    $annotation->delete();
+    $annotation->status('deleted');
+    $annotation->update();
+  };
+
+  $schema->txn_do($delete_sub);
+
+  _redirect_and_detach($c);
+}
+
+sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $delete_sub = sub {
+    my $annotation = $schema->resultset('Annotation')->find($annotation_id);
+    $annotation->status('new');
+    $annotation->update();
   };
 
   $schema->txn_do($delete_sub);

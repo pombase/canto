@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 9;
 
 use Data::Compare;
 
@@ -28,27 +28,31 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
+my $delete_annotation_re =
+  qr/SPAC3A11.14c.*GO:0030133.*IPI.*SPCC1739.10/s;
+my $other_annotation_re =
+  qr/SPCC1739.10.*GO:0055085.*IMP/s;
+
 test_psgi $app, sub {
   my $cb = shift;
 
   my $term_id = 'GO:0080170';
-  my $delete_annotation_re =
-    qr/SPAC3A11.14c.*GO:0030133.*IPI.*SPCC1739.10/s;
-  my $other_annotation_re =
-    qr/SPCC1739.10.*GO:0055085.*IMP/s;
 
-  {
+  sub check_not_deleted {
+    my $cb = shift;
     my $uri = new URI("$root_url");
     my $req = HTTP::Request->new(GET => $uri);
 
     my $res = $cb->($req);
 
     # make sure we actually change the list of annotations later
-    like ($res->content(), $delete_annotation_re);
+    like ($res->content(), qr/$delete_annotation_re.*curs-annotation-delete-2/s);
 
     # and make sure we have the right test data set
     like ($res->content(), $other_annotation_re);
   }
+
+  check_not_deleted($cb);
 
   {
     my $term_id = 'GO:0080170';
@@ -65,8 +69,23 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    unlike ($redirect_res->content(), $delete_annotation_re);
+    like ($redirect_res->content(), qr/$delete_annotation_re.*curs-annotation-undelete-2/s);
     like ($redirect_res->content(), $other_annotation_re);
+  }
+
+  {
+    my $term_id = 'GO:0080170';
+    my $uri = new URI("$root_url/annotation/undelete/2");
+
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+    is $res->code, 302;
+    my $redirect_url = $res->header('location');
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    check_not_deleted($cb);
   }
 };
 
