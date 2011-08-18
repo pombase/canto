@@ -160,7 +160,7 @@ make
 ./script/pomcur_load.pl --genes genes_file.tsv --for-taxon 4896
 #+END_SRC
 **** gene data format
-     Four tab separated columns:
+     Four tab separated columns with no header line:
      - systematic identifier
      - gene primary name
      - synonyms (comma separated)
