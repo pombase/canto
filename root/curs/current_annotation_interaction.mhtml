@@ -31,9 +31,11 @@ $user_created
       <th>
         Evidence code
       </th>
+% if ($user_created) {
       <th>
         &nbsp
       </th>
+% }
     </tr>
   </thead>
 
@@ -54,6 +56,7 @@ $user_created
     <td>
       <% $row->{evidence_code} %>
     </td>
+% if ($user_created) {
     <td>
 % if ($row->{status} eq 'deleted') {
       <a href="<% $undelete_action . $row->{annotation_id} %>"
@@ -70,6 +73,7 @@ $user_created
 % }
 
     </td>
+% }
   </tr>
 % }
 </table>
