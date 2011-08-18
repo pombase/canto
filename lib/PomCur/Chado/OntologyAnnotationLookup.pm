@@ -173,7 +173,13 @@ sub lookup
       $prop_cvterm_ids{$prop_type_name} =
         $self->_get_prop_type_cvterm_id($prop_type_cv, $prop_type_name);
     }
-    my $cv = $schema->find_with_type('Cv', name => $db_ontology_name);
+    my $cv = $schema->resultset('Cv')->find({ name => $db_ontology_name });
+
+    if (!defined $cv) {
+      warn "no Cv found with name: $db_ontology_name\n";
+      return [];
+    }
+
     my $constraint = { pub_id => $pub->pub_id(),
                        'cvterm.cv_id' => $cv->cv_id() };
     if (defined $gene_identifier) {
