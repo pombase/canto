@@ -15,7 +15,7 @@ my $lookup =
 
 ok(defined $lookup->schema());
 
-my $res = $lookup->lookup({pub_uniquename => 'PMID:20519959',
+my $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
                            ontology_name => 'biological_process',
                            }
                          );
@@ -39,6 +39,6 @@ cmp_deeply($res->[0],
              from => undef,
              annotation_id => 1,
              publication => {
-               uniquename => 'PMID:20519959'
+               uniquename => 'PMID:10467002'
              }
             });
