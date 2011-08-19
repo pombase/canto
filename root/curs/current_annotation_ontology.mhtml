@@ -57,26 +57,37 @@ $user_created
   <tr class="<% $row->{status} eq 'deleted' ? 'deleted-annotation' : '' %>">
 % if (!defined $gene) {
     <td>
+      <span>
       <% $row->{gene_identifier} %>
+      </span>
     </td>
     <td>
+      <span>
       <% $row->{gene_name} %>
+      </span>
     </td>
 % }
     <td>
+      <span>
       <% $row->{term_ontid} %>
+      </span>
     </td>
     <td>
+      <span>
       <% $row->{term_name} %>
+      </span>
     </td>
     <td>
+      <span>
 % if (defined $row->{evidence_code}) {
      <% $row->{evidence_code} %>
 % } else {
      <a href="<% $curs_root_uri . '/annotation/evidence/' . $row->{annotation_id} %>">Set evidence ...</a>
 % }
+      </span>
     </td>
     <td>
+      <span>
 % if ($row->{needs_with} || defined $row->{with_or_from_display_name}) {
 %   if (defined $row->{with_or_from_display_name}) {
       <% $row->{with_or_from_display_name} %>
@@ -86,22 +97,27 @@ $user_created
 % } else {
      &nbsp; 
 % }
+      </span>
     </td>
 % if ($user_created) {
     <td>
+      <span>
 %   if ($row->{term_suggestion}) {
       <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% $row->{term_suggestion}->{name} %>','<% $row->{term_suggestion}->{definition} %>');">View note ...</a>
 %   } else {
       &nbsp;
 % }
+      </span>
     </td>
 % if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
     <td>
+      <span>
 %   if ($row->{annotation_extension}) {
       <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $row->{annotation_extension} %></a>
 %   } else {
       <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
 %   }
+      </span>
     </td>
 % }
     <td>

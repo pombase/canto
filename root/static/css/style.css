@@ -818,7 +818,7 @@ input[type="submit"] {
   visibility: hidden;
 }
 
-.deleted-annotation {
+.deleted-annotation span {
   text-decoration: line-through;
   color: #e22;
   background-color: #eee;

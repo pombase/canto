@@ -42,19 +42,29 @@ $user_created
 % for my $row (@annotations) {
   <tr class="<% $row->{status} eq 'deleted' ? 'deleted-annotation' : '' %>">
     <td>
+      <span>
       <% $row->{gene_display_name} %>
+      </span>
     </td>
     <td>
+      <span>
       <% $row->{interacting_gene_display_name} %>
+      </span>
     </td>
     <td>
+      <span>
       <% $row->{gene_taxonid} %>
+      </span>
     </td>
     <td>
+      <span>
       <% $row->{interacting_gene_taxonid} %>
+      </span>
     </td>
     <td>
+      <span>
       <% $row->{evidence_code} %>
+      </span>
     </td>
 % if ($user_created) {
     <td>
