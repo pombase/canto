@@ -128,7 +128,11 @@ if ($do_genes) {
   my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema,
                                                organism => $organism);
   print "loading $do_genes\n" if $verbose;
-  $gene_load->load($do_genes);
+
+  open my $fh, '<', $do_genes or die "can't open $do_genes: $!";
+  $gene_load->load($fh);
+  close $fh or die "can't close $do_genes: $!";
+
   $guard->commit unless $dry_run;
 }
 
