@@ -384,7 +384,7 @@ $(document).ready(function() {
       search_bits.sort(length_compare);
       for (var i = 0; i < search_bits.length; i++) {
         var bit = search_bits[i];
-        if (bit.length > 0) {
+        if (bit.length > 1) {
           var re = new RegExp('(\\b' + bit + ')', "gi");
           match_name = match_name.replace(re,'<b>$1</b>');
         }
