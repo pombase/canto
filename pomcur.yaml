@@ -672,6 +672,7 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
+      - EXP
     broad_term_suggestions: >
       transporter, transferase activity
     specific_term_examples: >
@@ -696,6 +697,7 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
+      - EXP
     broad_term_suggestions: >
       cell cycle, transport
     specific_term_examples: >
@@ -728,6 +730,7 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
+      - EXP
     broad_term_suggestions: >
       rough endoplasmic reticulum, nucleus, ribosome
     specific_term_examples: >
