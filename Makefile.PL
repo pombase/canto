@@ -65,6 +65,7 @@ requires 'Hash::Merge';
 requires 'Memoize';
 requires 'IO::String';
 requires 'Package::Alias';
+requires 'Catalyst::ScriptRunner';
 
 requires 'Config::General';
 

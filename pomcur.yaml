@@ -4,7 +4,7 @@ long_name: Pombe community curation application
 database_name: PomBase
 header_image: logos/curation_tool.png
 
-app_version: v233
+app_version: v235
 
 home_path: '/track/track'
 
@@ -672,6 +672,7 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
+      - EXP
     broad_term_suggestions: >
       transporter, transferase activity
     specific_term_examples: >
@@ -696,6 +697,7 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
+      - EXP
     broad_term_suggestions: >
       cell cycle, transport
     specific_term_examples: >
@@ -728,6 +730,7 @@ annotation_type_list:
       - IDA
       - IGI
       - IPI
+      - EXP
     broad_term_suggestions: >
       rough endoplasmic reticulum, nucleus, ribosome
     specific_term_examples: >
