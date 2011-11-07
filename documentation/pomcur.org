@@ -151,6 +151,9 @@ make
 *** chado
 
 ** Loading data
+   :PROPERTIES:
+   :ID:       3e140e8f-f53c-48a2-aac4-1a412b1f159e
+   :END:
 *** Organisms
 #+BEGIN_SRC sh
 ./script/pomcur_load.pl --organism "<genus> <species> <taxon_id>"
