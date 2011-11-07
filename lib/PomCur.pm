@@ -24,7 +24,7 @@ our $VERSION = '0.01';
 
 __PACKAGE__->config(name => 'PomCur',
                     'Plugin::Session' => {
-                      expires   => 3600,
+                      expires   => 86400,
                       dbi_dbh   => 'TrackModel',
                       dbi_table => 'sessions',
                       dbi_id_field => 'id',
