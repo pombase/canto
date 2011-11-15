@@ -599,66 +599,38 @@ evidence_types:
     name: Traceable Author Statement
   UNK:
     name: Unknown
-  Microscopy:
-    name: Microscopy
-  'Cell growth assay':
-    name: Cell growth assay
-  'Other direct assay':
-    name: Other direct assay
-  'Affinity Capture-Luminescence':
-    name: Affinity Capture-Luminescence
-  'Affinity Capture-MS':
-    name: Affinity Capture-MS
-  'Affinity Capture-RNA':
-    name: Affinity Capture-RNA
-  'Affinity Capture-Western':
-    name: Affinity Capture-Western
-  'Biochemical Activity':
-    name: Biochemical Activity
-  'Co-crystal Structure':
-    name: Co-crystal Structure
-  'Co-fractionation':
-    name: Co-fractionation
-  'Co-localization':
-    name: Co-localization
-  'Co-purification':
-    name: Co-purification
-  'Dosage Growth Defect':
-    name: Dosage Growth Defect
-  'Dosage Lethality':
-    name: Dosage Lethality
-  'Dosage Rescue':
-    name: Dosage Rescue
+  Microscopy: ~
+  'Cell growth assay': ~
+  'Other direct assay': ~
+  'Affinity Capture-Luminescence': ~
+  'Affinity Capture-MS': ~
+  'Affinity Capture-RNA': ~
+  'Affinity Capture-Western': ~
+  'Biochemical Activity': ~
+  'Co-crystal Structure': ~
+  'Co-fractionation': ~
+  'Co-localization': ~
+  'Co-purification': ~
+  'Dosage Growth Defect': ~
+  'Dosage Lethality': ~
+  'Dosage Rescue': ~
   'FRET':
     name: FRET
-  'Far Western':
-    name: Far Western
-  'Negative Genetic':
-    name: Negative Genetic
+  'Far Western': ~
+  'Negative Genetic': ~
   'PCA':
     name: PCA
-  'Phenotypic Enhancement':
-    name: Phenotypic Enhancement
-  'Phenotypic Suppression':
-    name: Phenotypic Suppression
-  'Positive Genetic':
-    name: Positive Genetic
-  'Protein-RNA':
-    name: Protein-RNA
-  'Protein-peptide':
-    name: Protein-peptide
-  'Reconstituted Complex':
-    name: Reconstituted Complex
-  'Synthetic Growth Defect':
-    name: Synthetic Growth Defect
-  'Synthetic Haploinsufficiency':
-    name: Synthetic Haploinsufficiency
-  'Synthetic Lethality':
-    name: Synthetic Lethality
-  'Synthetic Rescue':
-    name: Synthetic Rescue
-  'Two-hybrid':
-    name: Two-hybrid
+  'Phenotypic Enhancement': ~
+  'Phenotypic Suppression': ~
+  'Positive Genetic': ~
+  'Protein-RNA': ~
+  'Protein-peptide': ~
+  'Reconstituted Complex': ~
+  'Synthetic Growth Defect': ~
+  'Synthetic Haploinsufficiency': ~
+  'Synthetic Lethality': ~
+  'Synthetic Rescue': ~
+  'Two-hybrid': ~
 
 annotation_type_list:
   - name: molecular_function

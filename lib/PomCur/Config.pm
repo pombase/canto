@@ -227,8 +227,11 @@ sub setup
   # can be looked up by name
   if (my $evidence_types = $self->{evidence_types}) {
     for my $evidence_code (keys %$evidence_types) {
-      my $evidence_type_name =
-        $self->{evidence_types}->{$evidence_code}->{name};
+      my $evidence_type_name = $self->{evidence_types}->{$evidence_code}->{name};
+      if (!defined $evidence_type_name) {
+        $self->{evidence_types}->{$evidence_code}->{name} = $evidence_code;
+        $evidence_type_name = $evidence_code;
+      }
       $self->{evidence_types_by_name}->{lc $evidence_type_name} =
         $evidence_code;
     }
