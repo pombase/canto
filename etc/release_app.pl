@@ -162,14 +162,14 @@ if ($pid) {
   print "started server with pid: $pid on port: $port\n";
 } else {
   my @exec_args = ("./$start_script", "--port", $port);
+  if (defined $workers) {
+    push @exec_args, '--workers', $workers;
+  }
   if (defined $plack_handler) {
     push @exec_args, '-s', $plack_handler;
   }
   if (defined $preload) {
     push @exec_args, '--preload-app';
-  }
-  if (defined $workers) {
-    push @exec_args, '--workers', $workers;
   }
 
   exec @exec_args;
