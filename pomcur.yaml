@@ -631,6 +631,7 @@ evidence_types:
   'Synthetic Lethality': ~
   'Synthetic Rescue': ~
   'Two-hybrid': ~
+  'Reporter gene assay': ~
 
 annotation_type_list:
   - name: molecular_function
@@ -728,6 +729,7 @@ annotation_type_list:
       - Microscopy
       - Cell growth assay
       - Other direct assay
+      - Reporter gene assay
     broad_term_suggestions: >
       multinucleate, abnormal spindle, inviable
     specific_term_examples: >
