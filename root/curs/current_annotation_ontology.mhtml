@@ -41,11 +41,11 @@ $user_created
       <th>
         Note
       </th>
-% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+% #if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
       <th>
         Annotation extension
       </th>
-% }
+% #}
       <th>
         &nbsp
       </th>
@@ -109,7 +109,7 @@ $user_created
 % }
       </span>
     </td>
-% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+% # if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
     <td>
       <span>
 %   if ($row->{annotation_extension}) {
@@ -119,7 +119,7 @@ $user_created
 %   }
       </span>
     </td>
-% }
+% # }
     <td>
 % if ($row->{status} eq 'deleted') {
       <a href="<% $undelete_action . $row->{annotation_id} %>"
