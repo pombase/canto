@@ -10,8 +10,21 @@ $class_info
 <div id="collections">
   <& /view/inline_list.mhtml, config_name => 'feature', rs => $features_rs,
     list_title => 'Features annotated with this cvterm' &>
+  <& /view/inline_list.mhtml, config_name => 'cvterm', rs => $parents_rs,
+    list_title => 'Parent(s) of this cvterm' &>
 </div>
 
 <%init>
 my $features_rs = $object->feature_cvterms()->search_related('feature');
+
+my $schema = $c->schema();
+
+my $parent_constraint =
+  'cvterm_id in (
+    SELECT object_id
+      FROM cvterm_relationship
+     WHERE subject_id = ?)';
+my $parents_rs =
+  $schema->resultset('Cvterm')->search({}, { where => $parent_constraint,
+                                             bind => [ $object->cvterm_id() ] });
 </%init>
