@@ -989,7 +989,10 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     my $extension = $form->param_value('annotation-extension');
 
     my $data = $annotation->data();
-    $data->{annotation_extension} = $extension;
+    if ($extension && $extension !~ /^\s*$/) {
+      $data->{annotation_extension} = $extension;
+    }
+
     $annotation->data($data);
     $annotation->update();
 
