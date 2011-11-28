@@ -839,6 +839,9 @@ external_links:
       - name: AmiGO
         icon: amigo.png
         url: 'http://amigo.geneontology.org/cgi-bin/amigo/gp-assoc.cgi?gp=SPB@@primary_identifier@@'
+      - name: PomBase
+        icon: pombase_logo_small.png
+        url: 'http://www.pombase.org/spombe/result/@@primary_identifier@@'
     organism:
       Schizosaccharomyces pombe:
         - name: GeneDB
