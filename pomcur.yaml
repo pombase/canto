@@ -412,6 +412,8 @@ class_info:
         - name: cv
           source: cv_id
           editable: 1
+        - name: dbxref
+          editable: 1
         - name: "features annotated with this term"
           source:
             sql: 'select count(*) from feature_cvterm fc where fc.cvterm_id = me.cvterm_id'
