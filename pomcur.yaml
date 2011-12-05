@@ -840,7 +840,7 @@ external_links:
     generic:
       - name: AmiGO
         icon: amigo.png
-        url: 'http://amigo.geneontology.org/cgi-bin/amigo/gp-assoc.cgi?gp=SPB@@primary_identifier@@'
+        url: 'http://amigo.geneontology.org/cgi-bin/amigo/gp-assoc.cgi?gp=GeneDB_Spombe:@@primary_identifier@@'
       - name: PomBase
         icon: pombase_logo_small.png
         url: 'http://www.pombase.org/spombe/result/@@primary_identifier@@'
