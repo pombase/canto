@@ -6,6 +6,7 @@ header_image: logos/curation_tool.png
 
 app_version: v241
 
+# the path that the home link goes to
 home_path: '/track/track'
 
 authentication:
