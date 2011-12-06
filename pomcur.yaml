@@ -9,6 +9,10 @@ app_version: v241
 # the path that the home link goes to
 home_path: '/track/track'
 
+# if zero, the user will need to log in before the links on the front page are
+# visible
+public_mode: 0
+
 authentication:
   default_realm: 'members'
   realms:
