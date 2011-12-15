@@ -121,7 +121,7 @@ sub make_curs_key
   use integer;
   for (my $i = 0; $i < 4; $i++) {
     my $key_int = int(rand 2**16);
-    $ret_key .= sprintf("%.2x", $key_int);
+    $ret_key .= sprintf("%.4x", $key_int);
   }
   return $ret_key;
 }
