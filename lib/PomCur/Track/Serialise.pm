@@ -113,7 +113,8 @@ sub _get_pubs
 
  Usage   : my $ser = PomCur::Track::Serialise::json
  Function: Return a JSON representation of the TrackDB and all its CursDBs
- Args    : $schema - the TrackDB
+ Args    : $config - a Config object
+           $schema - the TrackDB
  Returns : A JSON string
 
 =cut
