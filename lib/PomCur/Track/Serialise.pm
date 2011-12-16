@@ -48,15 +48,23 @@ sub _get_curation_sessions
 {
   my $config = shift;
   my $schema = shift;
+  my $options = shift;
 
   my @curs_list = $schema->resultset('Curs')->all();
 
-  return [
+  return {
     map {
-      my $cursdb = PomCur::Curs::get_schema_for_key($config, $_->curs_key);
-      PomCur::Curs::Serialise::perl($cursdb);
+      my $curs_key = $_->curs_key();
+      my $data;
+      if ($options->{stream_mode}) {
+        $data = undef;
+      } else {
+        my $cursdb = PomCur::Curs::get_schema_for_key($config, $curs_key);
+        $data = PomCur::Curs::Serialise::perl($cursdb);
+      }
+      ($curs_key, $data);
     } @curs_list
-  ];
+  };
 }
 
 sub _get_name
@@ -115,16 +123,26 @@ sub _get_pubs
  Function: Return a JSON representation of the TrackDB and all its CursDBs
  Args    : $config - a Config object
            $schema - the TrackDB
- Returns : A JSON string
+           $options - a hash of settings
+             - stream_mode => (0|1) - change the behaviour to return
+                 two things: the JSON for the TrackDB and an iterator
+                 returning the JSON representation of each CursDB in turn
+ Returns : A JSON string containing all of the TrackDB and CursDB data
+           or with stream_mode set, return a (JSON string, CursDB JSON
+           iterator) pair.
 
 =cut
 sub json
 {
   my $config = shift;
   my $schema = shift;
+  my $options = shift;
+
+  my ($curation_sessions_hash, $sessions_iter) =
+    _get_curation_sessions($config, $schema, $options);
 
   my $track_hash = {
-    curation_sessions => _get_curation_sessions($config, $schema),
+    curation_sessions => $curation_sessions_hash,
     publications => _get_pubs($schema),
   };
 
