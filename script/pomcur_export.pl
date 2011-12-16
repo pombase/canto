@@ -31,7 +31,7 @@ my $result = GetOptions ("help|h" => \$do_help);
 sub usage
 {
   die "usage:
-   $0
+   $0 export_type [options]
 ";
 }
 
@@ -39,9 +39,13 @@ if ($do_help) {
   usage();
 }
 
-if (@ARGV != 0) {
+if (@ARGV < 1) {
   usage();
 }
+
+my $export_type = shift;
+
+my @options = @ARGV;
 
 my $app_name = PomCur::Config::get_application_name();
 
@@ -55,6 +59,22 @@ if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
 }
 
 my $config = PomCur::Config::get_config();
-my $track_schema = PomCur::TrackDB->new(config => $config);
 
-print PomCur::Track::Serialise::json($config, $track_schema), "\n";
+my %export_modules = (
+  dump => 'PomCur::Export::Dump',
+);
+
+my $export_module = $export_modules{$export_type};
+
+if (defined $export_module) {
+  my $exporter =
+    eval qq{
+require $export_module;
+$export_module->new(config => \$config, options => [@options]);
+};
+  die "$@" if $@;
+
+  $exporter->export();
+} else {
+  die "unknown type to export: $export_type\n";
+}
