@@ -260,7 +260,13 @@ cmp_deeply($track_ref,
                  'lab' => 'Espenshade Lab',
                  'name' => 'John Burg',
                  'role' => 'user'
-               }
+               },
+               'a.nilsson@warwick.ac.uk' => {
+                 'password' => 'a.nilsson@warwick.ac.uk',
+                 'lab' => undef,
+                 'name' => 'Antonia Nilsson',
+                 'role' => 'admin',
+               },
              },
              labs => {
                'Wahls Lab' => {

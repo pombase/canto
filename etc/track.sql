@@ -150,7 +150,7 @@ CREATE TABLE curs (
 CREATE TABLE lab (
        lab_id integer NOT NULL PRIMARY KEY,
        lab_head integer NOT NULL REFERENCES person (person_id),
-       name text NOT NULL
+       name text NOT NULL UNIQUE
 );
 
 -- web sessions

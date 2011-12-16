@@ -598,56 +598,28 @@
         <CitationSubset>IM</CitationSubset>
         <CommentsCorrectionsList>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Microbiol Mol Biol Rev. 1999 Jun;63(2):349-404</RefSource>
-                <PMID Version="1">10357855</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
                 <RefSource>Cell. 2004 Nov 12;119(4):469-80</RefSource>
                 <PMID Version="1">15537537</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 2000 Mar 15;19(6):1389-96</RefSource>
-                <PMID Version="1">10716938</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 2000 Apr;154(4):1451-61</RefSource>
-                <PMID Version="1">10747044</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Cell. 2001 Jul 13;106(1):47-57</RefSource>
-                <PMID Version="1">11461701</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Cell. 2001 Jul 13;106(1):59-70</RefSource>
-                <PMID Version="1">11461702</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 2001 Aug 15;15(16):2060-8</RefSource>
-                <PMID Version="1">11511538</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 2002 May 15;16(10):1195-208</RefSource>
-                <PMID Version="1">12023299</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 2002 Aug;10(2):387-95</RefSource>
-                <PMID Version="1">12191483</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Microbiol Mol Biol Rev. 2002 Dec;66(4):630-70, table of contents</RefSource>
-                <PMID Version="1">12456786</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 2003 Mar 17;22(6):1419-30</RefSource>
-                <PMID Version="1">12628934</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 2003 Jul;12(1):209-19</RefSource>
-                <PMID Version="1">12887906</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
                 <RefSource>Cell. 2003 Nov 14;115(4):401-11</RefSource>
                 <PMID Version="1">14622595</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 2004 Nov;168(3):1219-30</RefSource>
+                <PMID Version="1">15579681</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 2004 Dec 29;119(7):927-40</RefSource>
+                <PMID Version="1">15620352</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 1992 May 1;69(3):439-56</RefSource>
+                <PMID Version="1">1581960</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Struct Mol Biol. 2006 Sep;13(9):823-30</RefSource>
+                <PMID Version="1">16921379</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Proc Natl Acad Sci U S A. 2003 Dec 23;100(26):15770-5</RefSource>
@@ -680,26 +652,6 @@
             <CommentsCorrections RefType="Cites">
                 <RefSource>Nucleic Acids Res. 2004;32(18):5570-81</RefSource>
                 <PMID Version="1">15486206</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Annu Rev Genet. 2004;38:233-71</RefSource>
-                <PMID Version="1">15568977</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 2004 Nov;168(3):1219-30</RefSource>
-                <PMID Version="1">15579681</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Cell. 2004 Dec 29;119(7):927-40</RefSource>
-                <PMID Version="1">15620352</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Cell. 1992 May 1;69(3):439-56</RefSource>
-                <PMID Version="1">1581960</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nat Struct Mol Biol. 2006 Sep;13(9):823-30</RefSource>
-                <PMID Version="1">16921379</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Methods Enzymol. 1991;194:795-823</RefSource>
@@ -746,8 +698,56 @@
                 <PMID Version="1">9215889</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
+                <RefSource>Microbiol Mol Biol Rev. 1999 Jun;63(2):349-404</RefSource>
+                <PMID Version="1">10357855</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
                 <RefSource>Genetics. 1999 Aug;152(4):1557-72</RefSource>
                 <PMID Version="1">10430583</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 2000 Mar 15;19(6):1389-96</RefSource>
+                <PMID Version="1">10716938</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 2000 Apr;154(4):1451-61</RefSource>
+                <PMID Version="1">10747044</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 2001 Jul 13;106(1):47-57</RefSource>
+                <PMID Version="1">11461701</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 2001 Jul 13;106(1):59-70</RefSource>
+                <PMID Version="1">11461702</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 2001 Aug 15;15(16):2060-8</RefSource>
+                <PMID Version="1">11511538</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 2002 May 15;16(10):1195-208</RefSource>
+                <PMID Version="1">12023299</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2002 Aug;10(2):387-95</RefSource>
+                <PMID Version="1">12191483</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Microbiol Mol Biol Rev. 2002 Dec;66(4):630-70, table of contents</RefSource>
+                <PMID Version="1">12456786</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 2003 Mar 17;22(6):1419-30</RefSource>
+                <PMID Version="1">12628934</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2003 Jul;12(1):209-19</RefSource>
+                <PMID Version="1">12887906</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Genet. 2004;38:233-71</RefSource>
+                <PMID Version="1">15568977</PMID>
             </CommentsCorrections>
         </CommentsCorrectionsList>
         <MeshHeadingList>
@@ -988,12 +988,76 @@
         <CitationSubset>IM</CitationSubset>
         <CommentsCorrectionsList>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 1999 May;3(5):679-85</RefSource>
-                <PMID Version="1">10360184</PMID>
+                <RefSource>EMBO J. 2009 Jul 8;28(13):1978-87</RefSource>
+                <PMID Version="1">19494830</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>FEBS J. 2009 Sep;276(17):4803-13</RefSource>
+                <PMID Version="1">19664060</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell Cycle. 2008 Oct;7(19):3026-36</RefSource>
+                <PMID Version="1">18818516</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Acta Crystallogr Sect F Struct Biol Cryst Commun. 2008 Sep 1;64(Pt 9):822-4</RefSource>
+                <PMID Version="1">18765914</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nucleic Acids Res. 2008 Sep;36(15):5102-10</RefSource>
+                <PMID Version="1">18676977</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2008 May 9;30(3):259-60</RefSource>
+                <PMID Version="1">18471969</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2008 Apr 25;30(2):137-44</RefSource>
+                <PMID Version="1">18439893</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Microbiol. 2008 Mar;6(3):245-52</RefSource>
+                <PMID Version="1">18274537</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 2007 Jul 6;317(5834):127-30</RefSource>
+                <PMID Version="1">17615360</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 2006 May 26;281(21):14748-55</RefSource>
+                <PMID Version="1">16510448</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Struct Mol Biol. 2006 Jan;13(1):35-43</RefSource>
+                <PMID Version="1">16369485</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nucleic Acids Res. 2005;33(13):4078-89</RefSource>
+                <PMID Version="1">16040599</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Crit Rev Biochem Mol Biol. 2005 Mar-Apr;40(2):115-28</RefSource>
+                <PMID Version="1">15814431</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>BMC Mol Biol. 2004 Dec 3;5(1):21</RefSource>
+                <PMID Version="1">15579205</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nucleic Acids Res. 2004;32(21):6367-77</RefSource>
+                <PMID Version="1">15576681</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Trends Biochem Sci. 1999 Jan;24(1):14-6</RefSource>
                 <PMID Version="1">10087916</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 1999 May;3(5):679-85</RefSource>
+                <PMID Version="1">10360184</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Gene. 1999 Apr 1;230(1):15-22</RefSource>
+                <PMID Version="1">10196469</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Curr Genet. 1998 Oct;34(4):250-8</RefSource>
@@ -1112,72 +1176,8 @@
                 <PMID Version="1">10562546</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>FEBS J. 2009 Sep;276(17):4803-13</RefSource>
-                <PMID Version="1">19664060</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 2009 Jul 8;28(13):1978-87</RefSource>
-                <PMID Version="1">19494830</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
                 <RefSource>Trends Cell Biol. 2008 Nov;18(11):521-7</RefSource>
                 <PMID Version="1">18824354</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Cell Cycle. 2008 Oct;7(19):3026-36</RefSource>
-                <PMID Version="1">18818516</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Acta Crystallogr Sect F Struct Biol Cryst Commun. 2008 Sep 1;64(Pt 9):822-4</RefSource>
-                <PMID Version="1">18765914</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nucleic Acids Res. 2008 Sep;36(15):5102-10</RefSource>
-                <PMID Version="1">18676977</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 2008 May 9;30(3):259-60</RefSource>
-                <PMID Version="1">18471969</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 2008 Apr 25;30(2):137-44</RefSource>
-                <PMID Version="1">18439893</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nat Rev Microbiol. 2008 Mar;6(3):245-52</RefSource>
-                <PMID Version="1">18274537</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Science. 2007 Jul 6;317(5834):127-30</RefSource>
-                <PMID Version="1">17615360</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 2006 May 26;281(21):14748-55</RefSource>
-                <PMID Version="1">16510448</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nat Struct Mol Biol. 2006 Jan;13(1):35-43</RefSource>
-                <PMID Version="1">16369485</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nucleic Acids Res. 2005;33(13):4078-89</RefSource>
-                <PMID Version="1">16040599</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Crit Rev Biochem Mol Biol. 2005 Mar-Apr;40(2):115-28</RefSource>
-                <PMID Version="1">15814431</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>BMC Mol Biol. 2004 Dec 3;5(1):21</RefSource>
-                <PMID Version="1">15579205</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nucleic Acids Res. 2004;32(21):6367-77</RefSource>
-                <PMID Version="1">15576681</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Gene. 1999 Apr 1;230(1):15-22</RefSource>
-                <PMID Version="1">10196469</PMID>
             </CommentsCorrections>
         </CommentsCorrectionsList>
         <MeshHeadingList>
@@ -1879,60 +1879,12 @@
         <CitationSubset>IM</CitationSubset>
         <CommentsCorrectionsList>
             <CommentsCorrections RefType="Cites">
-                <RefSource>J Proteome Res. 2008 Mar;7(3):1088-97</RefSource>
-                <PMID Version="1">18257517</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 2000 Mar 1;19(5):819-30</RefSource>
-                <PMID Version="1">10698924</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nat Cell Biol. 2007 Nov;9(11):1263-72</RefSource>
-                <PMID Version="1">17952063</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Science. 2007 Mar 23;315(5819):1726-9</RefSource>
-                <PMID Version="1">17289942</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Cell Metab. 2007 Feb;5(2):143-9</RefSource>
-                <PMID Version="1">17276356</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Physiol. 2006 Jul 1;574(Pt 1):7-15</RefSource>
-                <PMID Version="1">16644800</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell Biol. 2006 Apr;26(7):2817-31</RefSource>
-                <PMID Version="1">16537923</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Cell. 2006 Jan 13;124(1):35-46</RefSource>
-                <PMID Version="1">16413480</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 2005 Nov 16;24(22):3917-26</RefSource>
-                <PMID Version="1">16270032</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Clin Invest. 2005 Sep;115(9):2489-98</RefSource>
-                <PMID Version="1">16100574</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Eukaryot Cell. 2005 Apr;4(4):799-813</RefSource>
-                <PMID Version="1">15821139</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Cell. 2005 Mar 25;120(6):831-42</RefSource>
-                <PMID Version="1">15797383</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
                 <RefSource>Yeast. 1998 Jul;14(10):943-51</RefSource>
                 <PMID Version="1">9717240</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Biol Cell. 1998 Jun;9(6):1339-49</RefSource>
-                <PMID Version="1">9614178</PMID>
+                <RefSource>Cell. 2005 Mar 25;120(6):831-42</RefSource>
+                <PMID Version="1">15797383</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Genes Dev. 1998 May 15;12(10):1464-73</RefSource>
@@ -1999,8 +1951,56 @@
                 <PMID Version="1">12445404</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 2000 Mar 1;19(5):819-30</RefSource>
+                <PMID Version="1">10698924</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Proteome Res. 2008 Mar;7(3):1088-97</RefSource>
+                <PMID Version="1">18257517</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
                 <RefSource>Annu Rev Genet. 2007;41:401-27</RefSource>
                 <PMID Version="1">17666007</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Cell Biol. 2007 Nov;9(11):1263-72</RefSource>
+                <PMID Version="1">17952063</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 2007 Mar 23;315(5819):1726-9</RefSource>
+                <PMID Version="1">17289942</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell Metab. 2007 Feb;5(2):143-9</RefSource>
+                <PMID Version="1">17276356</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Physiol. 2006 Jul 1;574(Pt 1):7-15</RefSource>
+                <PMID Version="1">16644800</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell Biol. 2006 Apr;26(7):2817-31</RefSource>
+                <PMID Version="1">16537923</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 2006 Jan 13;124(1):35-46</RefSource>
+                <PMID Version="1">16413480</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 2005 Nov 16;24(22):3917-26</RefSource>
+                <PMID Version="1">16270032</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Invest. 2005 Sep;115(9):2489-98</RefSource>
+                <PMID Version="1">16100574</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eukaryot Cell. 2005 Apr;4(4):799-813</RefSource>
+                <PMID Version="1">15821139</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Biol Cell. 1998 Jun;9(6):1339-49</RefSource>
+                <PMID Version="1">9614178</PMID>
             </CommentsCorrections>
         </CommentsCorrectionsList>
         <MeshHeadingList>
@@ -2226,24 +2226,24 @@
         <CitationSubset>IM</CitationSubset>
         <CommentsCorrectionsList>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell Biol. 2007 Aug;27(16):5806-18</RefSource>
-                <PMID Version="1">17515603</PMID>
+                <RefSource>Proc Natl Acad Sci U S A. 2008 Aug 12;105(32):11230-5</RefSource>
+                <PMID Version="1">18682565</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Proc Natl Acad Sci U S A. 2004 Aug 31;101(35):12783-8</RefSource>
                 <PMID Version="1">15328417</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 2007 Mar 7;26(5):1352-62</RefSource>
-                <PMID Version="1">17304215</PMID>
+                <RefSource>J Mol Biol. 2008 Jan 25;375(4):1152-64</RefSource>
+                <PMID Version="1">18054789</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 2006 Nov 1;25(21):5171-9</RefSource>
-                <PMID Version="1">17053780</PMID>
+                <RefSource>Nucleic Acids Res. 2007;35(19):6560-70</RefSource>
+                <PMID Version="1">17905819</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Yeast. 2006 Oct 15;23(13):963-76</RefSource>
-                <PMID Version="1">17072889</PMID>
+                <RefSource>J Biol Chem. 2007 Aug 31;282(35):25903-16</RefSource>
+                <PMID Version="1">17609212</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Nat Genet. 2004 Aug;36(8):809-17</RefSource>
@@ -2350,6 +2350,26 @@
                 <PMID Version="1">10640278</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell Biol. 2007 Aug;27(16):5806-18</RefSource>
+                <PMID Version="1">17515603</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell Cycle. 2006 Nov 1;5(21):2495-500</RefSource>
+                <PMID Version="1">17102632</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 2007 Mar 7;26(5):1352-62</RefSource>
+                <PMID Version="1">17304215</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 2006 Nov 1;25(21):5171-9</RefSource>
+                <PMID Version="1">17053780</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Yeast. 2006 Oct 15;23(13):963-76</RefSource>
+                <PMID Version="1">17072889</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
                 <RefSource>Nat Struct Mol Biol. 2006 Sep;13(9):823-30</RefSource>
                 <PMID Version="1">16921379</PMID>
             </CommentsCorrections>
@@ -2392,26 +2412,6 @@
             <CommentsCorrections RefType="Cites">
                 <RefSource>Yeast. 1997 Nov;13(14):1329-35</RefSource>
                 <PMID Version="1">9392077</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Proc Natl Acad Sci U S A. 2008 Aug 12;105(32):11230-5</RefSource>
-                <PMID Version="1">18682565</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 2008 May 7;27(9):1378-87</RefSource>
-                <PMID Version="1">18388861</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Mol Biol. 2008 Jan 25;375(4):1152-64</RefSource>
-                <PMID Version="1">18054789</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nucleic Acids Res. 2007;35(19):6560-70</RefSource>
-                <PMID Version="1">17905819</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 2007 Aug 31;282(35):25903-16</RefSource>
-                <PMID Version="1">17609212</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Mol Cell Biol. 1999 Jun;19(6):4262-9</RefSource>
@@ -2474,8 +2474,8 @@
                 <PMID Version="1">15367656</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Cell Cycle. 2006 Nov 1;5(21):2495-500</RefSource>
-                <PMID Version="1">17102632</PMID>
+                <RefSource>EMBO J. 2008 May 7;27(9):1378-87</RefSource>
+                <PMID Version="1">18388861</PMID>
             </CommentsCorrections>
         </CommentsCorrectionsList>
         <MeshHeadingList>
@@ -2712,14 +2712,6 @@
         <CitationSubset>IM</CitationSubset>
         <CommentsCorrectionsList>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Hum Mol Genet. 2007 Oct 15;16 Spec No. 2:R203-8</RefSource>
-                <PMID Version="1">17911163</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 2007 Feb 23;282(8):5160-70</RefSource>
-                <PMID Version="1">17182615</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
                 <RefSource>Genetics. 1989 Sep;123(1):45-54</RefSource>
                 <PMID Version="1">2806887</PMID>
             </CommentsCorrections>
@@ -2904,7 +2896,7 @@
                 <PMID Version="1">12743037</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>J Mol Med. 2003 Sep;81(9):549-57</RefSource>
+                <RefSource>J Mol Med (Berl). 2003 Sep;81(9):549-57</RefSource>
                 <PMID Version="1">12920522</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
@@ -2918,6 +2910,14 @@
             <CommentsCorrections RefType="Cites">
                 <RefSource>J Biol Chem. 2004 Dec 3;279(49):50857-63</RefSource>
                 <PMID Version="1">15448137</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 2007 Feb 23;282(8):5160-70</RefSource>
+                <PMID Version="1">17182615</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Hum Mol Genet. 2007 Oct 15;16 Spec No. 2:R203-8</RefSource>
+                <PMID Version="1">17911163</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Nucleic Acids Res. 2008 May;36(9):2838-51</RefSource>
@@ -3070,6 +3070,9 @@
             <Pagination>
                 <MedlinePgn>272-7</MedlinePgn>
             </Pagination>
+            <Abstract>
+                <AbstractText>The ade6-M26 mutation in the fission yeast Schizosaccharomyces pombe creates a meiotic homologous recombination hot spot. We have achieved 40,000-fold purification of a heterodimeric DNA-binding protein, Mts1/Mts2, that activates the recombination hot spot. Physical studies suggested the presence of a third subunit. It is demonstrated here that RNA molecules of approximately 210 nucleotides copurified with the heterodimer. To characterize the RNA component, it was necessary to develop a new strategy for cloning of the unknown, low-abundance, partially degraded RNAs that were present in purified Mts1/Mts2 protein preparations. The strategy uses RNA ligase to add DNA oligonucleotide priming sites to the RNA for subsequent reverse transcription and PCR (RNA ligase, reverse transcription-PCR, or RL/RT/PCR). This cloning procedure could be applied to the cloning of any unknown RNA or DNA molecules. Because the cDNA clones obtained from Mts1/Mts2 were largely heterogeneous, it seems likely that the RNAs copurified as a result of tight but nonspecific interactions with the heterodimeric protein.</AbstractText>
+            </Abstract>
             <Affiliation>Fred Hutchinson Cancer Research Center, Seattle, Washington 98104.</Affiliation>
             <AuthorList CompleteYN="Y">
                 <Author ValidYN="Y">
@@ -3239,9 +3242,9 @@
             <Day>27</Day>
         </DateCompleted>
         <DateRevised>
-            <Year>2009</Year>
-            <Month>11</Month>
-            <Day>18</Day>
+            <Year>2011</Year>
+            <Month>10</Month>
+            <Day>07</Day>
         </DateRevised>
         <Article PubModel="Print">
             <Journal>
@@ -3262,6 +3265,7 @@
                 <MedlinePgn>1927-36</MedlinePgn>
             </Pagination>
             <Abstract>
+                <AbstractText>The fission yeast Schizosaccharomyces pombe senses environmental glucose through a cAMP-signaling pathway. Elevated cAMP levels activate protein kinase A (PKA) to inhibit transcription of genes involved in sexual development and gluconeogenesis, including the fbp1(+) gene, which encodes fructose-1,6-bisphosphatase. Glucose-mediated activation of PKA requires the function of nine glucose-insensitive transcription (git) genes, encoding adenylate cyclase, the PKA catalytic subunit, and seven "upstream" proteins required for glucose-triggered adenylate cyclase activation. We describe the cloning and characterization of the git10(+) gene, which is identical to swo1(+) and encodes the S. pombe Hsp90 chaperone protein. Glucose repression of fbp1(+) transcription is impaired by both git10(-) and swo1(-) mutant alleles of the hsp90(+) gene, as well as by chemical inhibition of Hsp90 activity and temperature stress to wild-type cells. Unlike the swo1(-) mutant alleles, the git10-201 allele supports cell growth at 37 degrees , while severely reducing glucose repression of an fbp1-lacZ reporter, suggesting a separation-of-function defect. Sequence analyses of three swo1(-) alleles and the one git10(-) allele indicate that swo1(-) mutations alter core functional domains of Hsp90, while the git10(-) mutation affects the Hsp90 central domain involved in client protein binding. These results suggest that Hsp90 plays a specific role in the S. pombe glucose/cAMP pathway.</AbstractText>
             </Abstract>
             <Affiliation>Biology Department, Boston College, Chestnut Hill, Massachusetts 02467, USA.</Affiliation>
             <AuthorList CompleteYN="Y">
@@ -3280,6 +3284,42 @@
             <GrantList CompleteYN="Y">
                 <Grant>
                     <GrantID>GM46226</GrantID>
+                    <Acronym>GM</Acronym>
+                    <Agency>NIGMS NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 GM046226-09</GrantID>
+                    <Acronym>GM</Acronym>
+                    <Agency>NIGMS NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 GM046226-10A1</GrantID>
+                    <Acronym>GM</Acronym>
+                    <Agency>NIGMS NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 GM046226-11</GrantID>
+                    <Acronym>GM</Acronym>
+                    <Agency>NIGMS NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 GM046226-12</GrantID>
+                    <Acronym>GM</Acronym>
+                    <Agency>NIGMS NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 GM046226-13</GrantID>
+                    <Acronym>GM</Acronym>
+                    <Agency>NIGMS NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 GM046226-13S1</GrantID>
                     <Acronym>GM</Acronym>
                     <Agency>NIGMS NIH HHS</Agency>
                     <Country>United States</Country>
@@ -3325,12 +3365,128 @@
         <CitationSubset>IM</CitationSubset>
         <CommentsCorrectionsList>
             <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 1999 Jul;4(1):21-33</RefSource>
+                <PMID Version="1">10445024</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Struct Biol. 2000 Feb;10(1):46-51</RefSource>
+                <PMID Version="1">10679459</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 2000 Apr;154(4):1463-71</RefSource>
+                <PMID Version="1">10747045</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
                 <RefSource>Genetics. 2000 May;155(1):85-104</RefSource>
                 <PMID Version="1">10790386</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 2000 Sep 26;97(20):10832-7</RefSource>
+                <PMID Version="1">10995457</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 2000 Oct;156(2):513-21</RefSource>
+                <PMID Version="1">11014802</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 2001 Mar;157(3):1159-68</RefSource>
+                <PMID Version="1">11238401</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 2001 Mar;157(3):1205-15</RefSource>
+                <PMID Version="1">11238405</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nature. 2002 Feb 21;415(6874):871-80</RefSource>
+                <PMID Version="1">11859360</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Circ Res. 2002 May 3;90(8):866-73</RefSource>
+                <PMID Version="1">11988487</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 2002 Sep 6;277(36):32409-12</RefSource>
+                <PMID Version="1">12117999</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eukaryot Cell. 2002 Aug;1(4):558-67</RefSource>
+                <PMID Version="1">12456004</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eukaryot Cell. 2002 Aug;1(4):568-82</RefSource>
+                <PMID Version="1">12456005</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2003 Mar;11(3):647-58</RefSource>
+                <PMID Version="1">12667448</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Genet Genomics. 2003 Apr;269(1):116-25</RefSource>
+                <PMID Version="1">12715160</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 1992 Dec;6(12B):2455-62</RefSource>
+                <PMID Version="1">1340462</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Med (Berl). 2004 Aug;82(8):488-99</RefSource>
+                <PMID Version="1">15168026</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eukaryot Cell. 2004 Jun;3(3):610-9</RefSource>
+                <PMID Version="1">15189983</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell Biol. 2004 Sep;24(18):8069-79</RefSource>
+                <PMID Version="1">15340069</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell Biol. 2004 Oct;24(20):8938-50</RefSource>
+                <PMID Version="1">15456868</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biochem Soc Trans. 2005 Feb;33(Pt 1):257-60</RefSource>
+                <PMID Version="1">15667320</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eukaryot Cell. 2005 Mar;4(3):495-503</RefSource>
+                <PMID Version="1">15755912</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eukaryot Cell. 2005 Mar;4(3):567-76</RefSource>
+                <PMID Version="1">15755919</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 2005 Apr 26;102(17):6108-13</RefSource>
+                <PMID Version="1">15831585</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 2005 Dec;171(4):1523-33</RefSource>
+                <PMID Version="1">16143612</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 2006 May;173(1):49-61</RefSource>
+                <PMID Version="1">16489217</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 1991 Dec;10(12):3759-68</RefSource>
+                <PMID Version="1">1657594</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Biochem. 2006;75:271-94</RefSource>
+                <PMID Version="1">16756493</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 2006 Nov 3;281(44):33739-48</RefSource>
+                <PMID Version="1">16945921</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
                 <RefSource>Mol Cell Biol. 2006 Nov;26(22):8385-95</RefSource>
                 <PMID Version="1">16982694</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Gen Virol. 1991 Jul;72 ( Pt 7):1551-7</RefSource>
+                <PMID Version="1">1713260</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Endocr Relat Cancer. 2006 Dec;13 Suppl 1:S125-35</RefSource>
@@ -3407,122 +3563,6 @@
             <CommentsCorrections RefType="Cites">
                 <RefSource>Yeast. 1998 Jul;14(10):943-51</RefSource>
                 <PMID Version="1">9717240</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 1999 Jul;4(1):21-33</RefSource>
-                <PMID Version="1">10445024</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Curr Opin Struct Biol. 2000 Feb;10(1):46-51</RefSource>
-                <PMID Version="1">10679459</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 2000 Apr;154(4):1463-71</RefSource>
-                <PMID Version="1">10747045</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Proc Natl Acad Sci U S A. 2000 Sep 26;97(20):10832-7</RefSource>
-                <PMID Version="1">10995457</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 2000 Oct;156(2):513-21</RefSource>
-                <PMID Version="1">11014802</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 2001 Mar;157(3):1159-68</RefSource>
-                <PMID Version="1">11238401</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 2001 Mar;157(3):1205-15</RefSource>
-                <PMID Version="1">11238405</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nature. 2002 Feb 21;415(6874):871-80</RefSource>
-                <PMID Version="1">11859360</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Circ Res. 2002 May 3;90(8):866-73</RefSource>
-                <PMID Version="1">11988487</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 2002 Sep 6;277(36):32409-12</RefSource>
-                <PMID Version="1">12117999</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Eukaryot Cell. 2002 Aug;1(4):558-67</RefSource>
-                <PMID Version="1">12456004</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Eukaryot Cell. 2002 Aug;1(4):568-82</RefSource>
-                <PMID Version="1">12456005</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 2003 Mar;11(3):647-58</RefSource>
-                <PMID Version="1">12667448</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Genet Genomics. 2003 Apr;269(1):116-25</RefSource>
-                <PMID Version="1">12715160</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 1992 Dec;6(12B):2455-62</RefSource>
-                <PMID Version="1">1340462</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Mol Med. 2004 Aug;82(8):488-99</RefSource>
-                <PMID Version="1">15168026</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Eukaryot Cell. 2004 Jun;3(3):610-9</RefSource>
-                <PMID Version="1">15189983</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell Biol. 2004 Sep;24(18):8069-79</RefSource>
-                <PMID Version="1">15340069</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell Biol. 2004 Oct;24(20):8938-50</RefSource>
-                <PMID Version="1">15456868</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Biochem Soc Trans. 2005 Feb;33(Pt 1):257-60</RefSource>
-                <PMID Version="1">15667320</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Eukaryot Cell. 2005 Mar;4(3):495-503</RefSource>
-                <PMID Version="1">15755912</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Eukaryot Cell. 2005 Mar;4(3):567-76</RefSource>
-                <PMID Version="1">15755919</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Proc Natl Acad Sci U S A. 2005 Apr 26;102(17):6108-13</RefSource>
-                <PMID Version="1">15831585</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 2005 Dec;171(4):1523-33</RefSource>
-                <PMID Version="1">16143612</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 2006 May;173(1):49-61</RefSource>
-                <PMID Version="1">16489217</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 1991 Dec;10(12):3759-68</RefSource>
-                <PMID Version="1">1657594</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Annu Rev Biochem. 2006;75:271-94</RefSource>
-                <PMID Version="1">16756493</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 2006 Nov 3;281(44):33739-48</RefSource>
-                <PMID Version="1">16945921</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Gen Virol. 1991 Jul;72 ( Pt 7):1551-7</RefSource>
-                <PMID Version="1">1713260</PMID>
             </CommentsCorrections>
         </CommentsCorrectionsList>
         <MeshHeadingList>
@@ -3776,6 +3816,90 @@
         <CitationSubset>IM</CitationSubset>
         <CommentsCorrectionsList>
             <CommentsCorrections RefType="Cites">
+                <RefSource>Yeast. 1998 Dec;14(16):1529-66</RefSource>
+                <PMID Version="1">9885154</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Acta Microbiol Immunol Hung. 1999;46(2-3):297-302</RefSource>
+                <PMID Version="1">10379403</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 1999 Feb 26;274(9):5895-900</RefSource>
+                <PMID Version="1">10026213</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell Biol. 1999 Jan;19(1):86-98</RefSource>
+                <PMID Version="1">9858534</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Yeast. 1998 Mar 30;14(5):409-17</RefSource>
+                <PMID Version="1">9559549</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Cells. 1997 Apr;2(4):245-54</RefSource>
+                <PMID Version="1">9224658</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 1997 Oct;147(2):451-65</RefSource>
+                <PMID Version="1">9335585</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 1997 Jul 1;11(13):1640-50</RefSource>
+                <PMID Version="1">9224714</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genetics. 1994 Jul;137(3):647-57</RefSource>
+                <PMID Version="1">8088510</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 1994 Apr 15;13(8):1863-72</RefSource>
+                <PMID Version="1">7909513</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 1994 Apr 1;269(13):9632-7</RefSource>
+                <PMID Version="1">8144551</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 1992 Dec;6(12B):2455-62</RefSource>
+                <PMID Version="1">1340462</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 1990 Oct;87(20):7814-8</RefSource>
+                <PMID Version="1">2172964</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 1991 Nov;5(11):1990-9</RefSource>
+                <PMID Version="1">1657709</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Bacteriol. 1987 Jan;169(1):93-6</RefSource>
+                <PMID Version="1">3025190</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2004 Jul 23;15(2):199-208</RefSource>
+                <PMID Version="1">15260971</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 2004 May 1;18(9):1022-34</RefSource>
+                <PMID Version="1">15132995</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>BMC Genomics. 2003 Jul 10;4(1):27</RefSource>
+                <PMID Version="1">12854975</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 2004 Apr 21;23(8):1792-803</RefSource>
+                <PMID Version="1">14988732</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2004 Feb 27;13(4):573-85</RefSource>
+                <PMID Version="1">14992726</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 2003 Nov 1;17(21):2648-63</RefSource>
+                <PMID Version="1">14563679</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
                 <RefSource>Mol Cell Biol. 2003 Mar;23(6):1910-21</RefSource>
                 <PMID Version="1">12612066</PMID>
             </CommentsCorrections>
@@ -3814,6 +3938,54 @@
             <CommentsCorrections RefType="Cites">
                 <RefSource>Nucleic Acids Res. 2002 May 1;30(9):1952-8</RefSource>
                 <PMID Version="1">11972332</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 2002 Mar 8;277(10):7989-95</RefSource>
+                <PMID Version="1">11773077</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Biochem. 2001;70:475-501</RefSource>
+                <PMID Version="1">11395415</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell Biol. 2002 Jan;22(1):1-11</RefSource>
+                <PMID Version="1">11739717</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 2001 Aug 1;15(15):1946-56</RefSource>
+                <PMID Version="1">11485989</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 2001 Aug 1;15(15):1935-45</RefSource>
+                <PMID Version="1">11485988</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 2001 May 18;276(20):17117-24</RefSource>
+                <PMID Version="1">11279037</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Biol Cell. 2000 Sep;11(9):3205-17</RefSource>
+                <PMID Version="1">10982411</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Microbiol Mol Biol Rev. 2000 Jun;64(2):435-59</RefSource>
+                <PMID Version="1">10839822</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nature. 2000 Jun 8;405(6787):701-4</RefSource>
+                <PMID Version="1">10864329</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell Biol. 2000 Jan;20(2):634-47</RefSource>
+                <PMID Version="1">10611242</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 1999 Nov 15;13(22):2940-5</RefSource>
+                <PMID Version="1">10580001</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 1999 Dec 10;286(5447):2151-3</RefSource>
+                <PMID Version="1">10591645</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Nat Cell Biol. 2008 Jun;10(6):707-15</RefSource>
@@ -3904,54 +4076,6 @@
                 <PMID Version="1">16611979</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 2002 Mar 8;277(10):7989-95</RefSource>
-                <PMID Version="1">11773077</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Annu Rev Biochem. 2001;70:475-501</RefSource>
-                <PMID Version="1">11395415</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell Biol. 2002 Jan;22(1):1-11</RefSource>
-                <PMID Version="1">11739717</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 2001 Aug 1;15(15):1946-56</RefSource>
-                <PMID Version="1">11485989</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 2001 Aug 1;15(15):1935-45</RefSource>
-                <PMID Version="1">11485988</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 2001 May 18;276(20):17117-24</RefSource>
-                <PMID Version="1">11279037</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Biol Cell. 2000 Sep;11(9):3205-17</RefSource>
-                <PMID Version="1">10982411</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Microbiol Mol Biol Rev. 2000 Jun;64(2):435-59</RefSource>
-                <PMID Version="1">10839822</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nature. 2000 Jun 8;405(6787):701-4</RefSource>
-                <PMID Version="1">10864329</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell Biol. 2000 Jan;20(2):634-47</RefSource>
-                <PMID Version="1">10611242</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 1999 Nov 15;13(22):2940-5</RefSource>
-                <PMID Version="1">10580001</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Science. 1999 Dec 10;286(5447):2151-3</RefSource>
-                <PMID Version="1">10591645</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
                 <RefSource>Yeast. 2006 Feb;23(3):173-83</RefSource>
                 <PMID Version="1">16498704</PMID>
             </CommentsCorrections>
@@ -3986,90 +4110,6 @@
             <CommentsCorrections RefType="Cites">
                 <RefSource>Yeast. 1999 Jun 15;15(8):669-86</RefSource>
                 <PMID Version="1">10392445</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Yeast. 1998 Dec;14(16):1529-66</RefSource>
-                <PMID Version="1">9885154</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Acta Microbiol Immunol Hung. 1999;46(2-3):297-302</RefSource>
-                <PMID Version="1">10379403</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 1999 Feb 26;274(9):5895-900</RefSource>
-                <PMID Version="1">10026213</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell Biol. 1999 Jan;19(1):86-98</RefSource>
-                <PMID Version="1">9858534</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Yeast. 1998 Mar 30;14(5):409-17</RefSource>
-                <PMID Version="1">9559549</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Cells. 1997 Apr;2(4):245-54</RefSource>
-                <PMID Version="1">9224658</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 1997 Oct;147(2):451-65</RefSource>
-                <PMID Version="1">9335585</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 1997 Jul 1;11(13):1640-50</RefSource>
-                <PMID Version="1">9224714</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genetics. 1994 Jul;137(3):647-57</RefSource>
-                <PMID Version="1">8088510</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 1994 Apr 15;13(8):1863-72</RefSource>
-                <PMID Version="1">7909513</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 1994 Apr 1;269(13):9632-7</RefSource>
-                <PMID Version="1">8144551</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 1992 Dec;6(12B):2455-62</RefSource>
-                <PMID Version="1">1340462</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Proc Natl Acad Sci U S A. 1990 Oct;87(20):7814-8</RefSource>
-                <PMID Version="1">2172964</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 1991 Nov;5(11):1990-9</RefSource>
-                <PMID Version="1">1657709</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Bacteriol. 1987 Jan;169(1):93-6</RefSource>
-                <PMID Version="1">3025190</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 2004 Jul 23;15(2):199-208</RefSource>
-                <PMID Version="1">15260971</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 2004 May 1;18(9):1022-34</RefSource>
-                <PMID Version="1">15132995</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>BMC Genomics. 2003 Jul 10;4(1):27</RefSource>
-                <PMID Version="1">12854975</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 2004 Apr 21;23(8):1792-803</RefSource>
-                <PMID Version="1">14988732</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 2004 Feb 27;13(4):573-85</RefSource>
-                <PMID Version="1">14992726</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 2003 Nov 1;17(21):2648-63</RefSource>
-                <PMID Version="1">14563679</PMID>
             </CommentsCorrections>
         </CommentsCorrectionsList>
         <MeshHeadingList>
@@ -4819,6 +4859,11 @@
             <Month>10</Month>
             <Day>21</Day>
         </DateCompleted>
+        <DateRevised>
+            <Year>2011</Year>
+            <Month>09</Month>
+            <Day>30</Day>
+        </DateRevised>
         <Article PubModel="Print-Electronic">
             <Journal>
                 <ISSN IssnType="Electronic">1083-351X</ISSN>
@@ -4996,7 +5041,7 @@
                 <QualifierName MajorTopicYN="Y">metabolism</QualifierName>
             </MeshHeading>
         </MeshHeadingList>
-        <OtherID Source="NLM">PMC2943280 [Available on 09/24/11]</OtherID>
+        <OtherID Source="NLM">PMC2943280</OtherID>
     </MedlineCitation>
     <PubmedData>
         <History>
@@ -5025,11 +5070,6 @@
                 <Day>22</Day>
                 <Hour>6</Hour>
                 <Minute>0</Minute>
-            </PubMedPubDate>
-            <PubMedPubDate PubStatus="pmc-release">
-                <Year>2011</Year>
-                <Month>9</Month>
-                <Day>24</Day>
             </PubMedPubDate>
         </History>
         <PublicationStatus>ppublish</PublicationStatus>
@@ -5287,6 +5327,56 @@
             </Abstract>
             <Affiliation>Genome Damage and Stability Centre, University of Sussex, Falmer, Brighton BN1 9RQ, United Kingdom.</Affiliation>
             <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Frampton</LastName>
+                    <ForeName>Jonathan</ForeName>
+                    <Initials>J</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Irmisch</LastName>
+                    <ForeName>Anja</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Green</LastName>
+                    <ForeName>Catherine M</ForeName>
+                    <Initials>CM</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Neiss</LastName>
+                    <ForeName>Andrea</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Trickey</LastName>
+                    <ForeName>Michelle</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Ulrich</LastName>
+                    <ForeName>Helle D</ForeName>
+                    <Initials>HD</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Furuya</LastName>
+                    <ForeName>Kanji</ForeName>
+                    <Initials>K</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Watts</LastName>
+                    <ForeName>Felicity Z</ForeName>
+                    <Initials>FZ</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Carr</LastName>
+                    <ForeName>Antony M</ForeName>
+                    <Initials>AM</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Lehmann</LastName>
+                    <ForeName>Alan R</ForeName>
+                    <Initials>AR</Initials>
+                </Author>
             </AuthorList>
             <Language>eng</Language>
             <PublicationTypeList>
@@ -5346,12 +5436,56 @@
         <CitationSubset>IM</CitationSubset>
         <CommentsCorrectionsList>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Cell. 1999 Mar 5;96(5):645-53</RefSource>
-                <PMID Version="1">10089880</PMID>
+                <RefSource>Mol Biol Cell. 1994 Feb;5(2):147-60</RefSource>
+                <PMID Version="1">8019001</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nature. 1995 Apr 27;374(6525):817-9</RefSource>
+                <PMID Version="1">7723827</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nucleic Acids Res. 1993 Mar 25;21(6):1345-9</RefSource>
+                <PMID Version="1">8464724</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 1996 Jan 19;271(5247):353-6</RefSource>
+                <PMID Version="1">8553071</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Cell Sci. 1996 Jan;109 ( Pt 1):73-81</RefSource>
+                <PMID Version="1">8834792</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 1996 Dec 2;15(23):6641-51</RefSource>
+                <PMID Version="1">8978690</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nucleic Acids Res. 1997 Feb 15;25(4):743-9</RefSource>
+                <PMID Version="1">9016623</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nucleic Acids Res. 1997 Apr 15;25(8):1553-8</RefSource>
+                <PMID Version="1">9092661</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 1997 Sep 12;272(37):23360-5</RefSource>
+                <PMID Version="1">9287349</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Gen Genet. 1976 Jul 23;146(2):167-78</RefSource>
+                <PMID Version="1">958201</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Yeast. 1998 Jul;14(10):943-51</RefSource>
                 <PMID Version="1">9717240</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 1999 Mar 5;96(5):645-53</RefSource>
+                <PMID Version="1">10089880</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mutat Res. 1999 Sep 13;435(1):1-11</RefSource>
+                <PMID Version="1">10526212</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>EMBO J. 2000 Jul 3;19(13):3388-97</RefSource>
@@ -5446,52 +5580,8 @@
                 <PMID Version="1">3306404</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Nature. 1995 Apr 27;374(6525):817-9</RefSource>
-                <PMID Version="1">7723827</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Biol Cell. 1994 Feb;5(2):147-60</RefSource>
-                <PMID Version="1">8019001</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
                 <RefSource>Nucleic Acids Res. 1993 Dec 25;21(25):5964-71</RefSource>
                 <PMID Version="1">8290359</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nucleic Acids Res. 1993 Mar 25;21(6):1345-9</RefSource>
-                <PMID Version="1">8464724</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Science. 1996 Jan 19;271(5247):353-6</RefSource>
-                <PMID Version="1">8553071</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Cell Sci. 1996 Jan;109 ( Pt 1):73-81</RefSource>
-                <PMID Version="1">8834792</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 1996 Dec 2;15(23):6641-51</RefSource>
-                <PMID Version="1">8978690</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nucleic Acids Res. 1997 Feb 15;25(4):743-9</RefSource>
-                <PMID Version="1">9016623</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nucleic Acids Res. 1997 Apr 15;25(8):1553-8</RefSource>
-                <PMID Version="1">9092661</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Biol Chem. 1997 Sep 12;272(37):23360-5</RefSource>
-                <PMID Version="1">9287349</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Gen Genet. 1976 Jul 23;146(2):167-78</RefSource>
-                <PMID Version="1">958201</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mutat Res. 1999 Sep 13;435(1):1-11</RefSource>
-                <PMID Version="1">10526212</PMID>
             </CommentsCorrections>
         </CommentsCorrectionsList>
         <MeshHeadingList>
@@ -5618,8 +5708,8 @@
         </DateCompleted>
         <DateRevised>
             <Year>2011</Year>
-            <Month>05</Month>
-            <Day>03</Day>
+            <Month>07</Month>
+            <Day>28</Day>
         </DateRevised>
         <Article PubModel="Print-Electronic">
             <Journal>
@@ -5643,6 +5733,28 @@
                 <AbstractText>The organization and control of polarized growth through the cell cycle of Schizosaccharomyces pombe, a single-celled eukaryote, have been studied extensively. We have investigated the changes in these processes when S. pombe differentiates to form multicellular invasive mycelia and have found striking alterations to the behavior of some of the key regulatory proteins. Cells at the tips of invading filaments are considerably more elongated than cells growing singly and grow at one pole only. The filament tip follows a strict direction of growth through multiple cell cycles. A group of proteins involved in the growth process and actin regulation, comprising Spo20, Bgs4, activated Cdc42, and Crn1, are all concentrated at the growing tip, unlike their distribution at both ends of single cells. In contrast, several proteins implicated in microtubule-dependent organization of growth, including Tea1, Tea4, Mod5, and Pom1, all show the opposite effect and are relatively depleted at the growing end and enriched at the nongrowing end, although Tea1 appears to continue to be delivered to both ends. A third group acting at different stages of the cell cycle, including Bud6, Rga4, and Mid1, localize similarly in filaments and single cells, while Nif1 shows a reciprocal localization to Pom1.</AbstractText>
             </Abstract>
             <Affiliation>University of Sussex, Falmer, Brighton, England.</Affiliation>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Dodgson</LastName>
+                    <ForeName>James</ForeName>
+                    <Initials>J</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Brown</LastName>
+                    <ForeName>William</ForeName>
+                    <Initials>W</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Rosa</LastName>
+                    <ForeName>Carlos A</ForeName>
+                    <Initials>CA</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Armstrong</LastName>
+                    <ForeName>John</ForeName>
+                    <Initials>J</Initials>
+                </Author>
+            </AuthorList>
             <Language>eng</Language>
             <GrantList CompleteYN="Y">
                 <Grant>
@@ -5686,6 +5798,148 @@
             </Chemical>
         </ChemicalList>
         <CitationSubset>IM</CitationSubset>
+        <CommentsCorrectionsList>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Biol Cell. 2000 Aug;11(8):2757-73</RefSource>
+                <PMID Version="1">10930468</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Microbiology. 1998 Dec;144 ( Pt 12):3475-85</RefSource>
+                <PMID Version="1">9884240</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Biol Cell. 2001 Apr;12(4):901-17</RefSource>
+                <PMID Version="1">11294895</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Biol. 2001 Jun 5;11(11):836-45</RefSource>
+                <PMID Version="1">11516644</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Cell Sci. 2002 Apr 15;115(Pt 8):1651-62</RefSource>
+                <PMID Version="1">11950884</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Biol Cell. 2002 Apr;13(4):1203-14</RefSource>
+                <PMID Version="1">11950932</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Can J Microbiol. 2002 May;48(5):399-406</RefSource>
+                <PMID Version="1">12109879</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nature. 2003 Jun 5;423(6940):647-51</RefSource>
+                <PMID Version="1">12789340</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Cell Biol. 2004 Jun 7;165(5):697-707</RefSource>
+                <PMID Version="1">15184402</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Biol Cell. 2004 Dec;15(12):5219-30</RefSource>
+                <PMID Version="1">15385623</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Dev Cell. 2005 Apr;8(4):479-91</RefSource>
+                <PMID Version="1">15809031</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Biol. 2005 Jun 7;15(11):1006-15</RefSource>
+                <PMID Version="1">15936270</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eukaryot Cell. 2005 Jul;4(7):1287-97</RefSource>
+                <PMID Version="1">16002654</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Dev Cell. 2005 Oct;9(4):565-71</RefSource>
+                <PMID Version="1">16198298</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell Microbiol. 2005 Nov;7(11):1546-54</RefSource>
+                <PMID Version="1">16207242</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Biotechnol. 2006 Jul;24(7):841-7</RefSource>
+                <PMID Version="1">16823372</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Biol. 2006 Dec 19;16(24):2480-7</RefSource>
+                <PMID Version="1">17140794</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Microbiol. 2007 Jul;65(1):201-17</RefSource>
+                <PMID Version="1">17581129</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Biol Cell. 2007 Oct;18(10):4155-67</RefSource>
+                <PMID Version="1">17699595</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Biol Cell. 2008 Jan;19(1):339-51</RefSource>
+                <PMID Version="1">18003978</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Biol. 2008 Mar 11;18(5):322-30</RefSource>
+                <PMID Version="1">18328707</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>FEMS Microbiol Lett. 2008 Jul;284(2):127-34</RefSource>
+                <PMID Version="1">18479435</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Biol. 2008 Nov 25;18(22):1748-53</RefSource>
+                <PMID Version="1">19026544</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Biol. 2009 Jan 27;19(2):83-94</RefSource>
+                <PMID Version="1">19147354</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nature. 2009 Jun 11;459(7248):857-60</RefSource>
+                <PMID Version="1">19474789</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nature. 2009 Jun 11;459(7248):852-6</RefSource>
+                <PMID Version="1">19474792</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eukaryot Cell. 2009 Aug;8(8):1298-306</RefSource>
+                <PMID Version="1">19542312</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Trends Cell Biol. 2009 Sep;19(9):447-54</RefSource>
+                <PMID Version="1">19713114</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Methods Enzymol. 1991;194:795-823</RefSource>
+                <PMID Version="1">2005825</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biotechniques. 1994 May;16(5):798-800</RefSource>
+                <PMID Version="1">8068327</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 1997 Mar 17;16(6):1342-50</RefSource>
+                <PMID Version="1">9135149</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 1997 Jun 13;89(6):939-49</RefSource>
+                <PMID Version="1">9200612</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Biol Cell. 1997 Aug;8(8):1461-79</RefSource>
+                <PMID Version="1">9285819</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 1998 May 1;12(9):1356-70</RefSource>
+                <PMID Version="1">9573052</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Cell Biol. 2001 Mar;3(3):235-44</RefSource>
+                <PMID Version="1">11231572</PMID>
+            </CommentsCorrections>
+        </CommentsCorrectionsList>
         <MeshHeadingList>
             <MeshHeading>
                 <DescriptorName MajorTopicYN="N">Gene Deletion</DescriptorName>
@@ -5914,64 +6168,12 @@
         <CitationSubset>IM</CitationSubset>
         <CommentsCorrectionsList>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Curr Biol. 2005 Feb 8;15(3):214-25</RefSource>
-                <PMID Version="1">15694304</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>EMBO J. 1998 Oct 1;17(19):5670-8</RefSource>
-                <PMID Version="1">9755167</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Eukaryot Cell. 2005 May;4(5):867-78</RefSource>
-                <PMID Version="1">15879521</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 2005 May 27;18(5):533-42</RefSource>
-                <PMID Version="1">15916960</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Mol Cell. 2005 May 27;18(5):543-53</RefSource>
-                <PMID Version="1">15916961</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Cell Sci. 2005 Aug 15;118(Pt 16):3639-52</RefSource>
-                <PMID Version="1">16046481</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Cell. 2006 Jan 13;124(1):89-103</RefSource>
-                <PMID Version="1">16413484</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Exp Cell Res. 2006 Jun 10;312(10):1831-42</RefSource>
-                <PMID Version="1">16600213</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>J Cell Biol. 2006 Apr 24;173(2):153-7</RefSource>
-                <PMID Version="1">16636141</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Yeast. 2006 Jun;23(8):623-32</RefSource>
-                <PMID Version="1">16823883</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Nat Rev Mol Cell Biol. 2006 Sep;7(9):644-56</RefSource>
-                <PMID Version="1">16896351</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Genes Dev. 2006 Sep 1;20(17):2410-20</RefSource>
-                <PMID Version="1">16921029</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
-                <RefSource>Proc Natl Acad Sci U S A. 2007 Jan 23;104(4):1201-6</RefSource>
-                <PMID Version="1">17227844</PMID>
-            </CommentsCorrections>
-            <CommentsCorrections RefType="Cites">
                 <RefSource>Nature. 1999 Nov 11;402(6758):203-7</RefSource>
                 <PMID Version="1">10647015</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>J Cell Biol. 2000 Mar 6;148(5):871-82</RefSource>
-                <PMID Version="1">10704439</PMID>
+                <RefSource>EMBO J. 1998 Oct 1;17(19):5670-8</RefSource>
+                <PMID Version="1">9755167</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
                 <RefSource>Genes Dev. 2000 Mar 15;14(6):655-65</RefSource>
@@ -6066,6 +6268,58 @@
                 <PMID Version="1">15525673</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Biol. 2005 Feb 8;15(3):214-25</RefSource>
+                <PMID Version="1">15694304</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 2005 Mar 25;120(6):739-46</RefSource>
+                <PMID Version="1">15797376</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eukaryot Cell. 2005 May;4(5):867-78</RefSource>
+                <PMID Version="1">15879521</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2005 May 27;18(5):533-42</RefSource>
+                <PMID Version="1">15916960</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2005 May 27;18(5):543-53</RefSource>
+                <PMID Version="1">15916961</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Cell Sci. 2005 Aug 15;118(Pt 16):3639-52</RefSource>
+                <PMID Version="1">16046481</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 2006 Jan 13;124(1):89-103</RefSource>
+                <PMID Version="1">16413484</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Exp Cell Res. 2006 Jun 10;312(10):1831-42</RefSource>
+                <PMID Version="1">16600213</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Cell Biol. 2006 Apr 24;173(2):153-7</RefSource>
+                <PMID Version="1">16636141</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Yeast. 2006 Jun;23(8):623-32</RefSource>
+                <PMID Version="1">16823883</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Mol Cell Biol. 2006 Sep;7(9):644-56</RefSource>
+                <PMID Version="1">16896351</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Genes Dev. 2006 Sep 1;20(17):2410-20</RefSource>
+                <PMID Version="1">16921029</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 2007 Jan 23;104(4):1201-6</RefSource>
+                <PMID Version="1">17227844</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
                 <RefSource>Genetics. 2007 Apr;175(4):1571-84</RefSource>
                 <PMID Version="1">17277378</PMID>
             </CommentsCorrections>
@@ -6150,8 +6404,8 @@
                 <PMID Version="1">9736616</PMID>
             </CommentsCorrections>
             <CommentsCorrections RefType="Cites">
-                <RefSource>Cell. 2005 Mar 25;120(6):739-46</RefSource>
-                <PMID Version="1">15797376</PMID>
+                <RefSource>J Cell Biol. 2000 Mar 6;148(5):871-82</RefSource>
+                <PMID Version="1">10704439</PMID>
             </CommentsCorrections>
         </CommentsCorrectionsList>
         <MeshHeadingList>

@@ -50,6 +50,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("lab_id");
+__PACKAGE__->add_unique_constraint("name_unique", ["name"]);
 
 =head1 RELATIONS
 
@@ -84,8 +85,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AIvzZ2GZ3FZUL97QP9c7Tg
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-12-16 10:43:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qnRnFlAovbpd82uxg1232w
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
