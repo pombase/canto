@@ -95,6 +95,23 @@ sub _get_pubprops
   return \@ret;
 }
 
+sub _get_pub_curation_statuses
+{
+  my $pub = shift;
+
+  my $rs = $pub->pub_curation_statuses();
+  my @ret = ();
+
+  while (defined (my $status = $rs->next())) {
+    push @ret, {
+      status => $status->status()->name(),
+      value => $status->value(),
+    };
+  }
+
+  return \@ret;
+}
+
 sub _get_pubs
 {
   my $schema = shift;
@@ -109,6 +126,7 @@ sub _get_pubs
       assigned_curator => _get_name($pub->assigned_curator()),
       triage_status => _get_name($pub->triage_status()),
       properties => _get_pubprops($pub),
+      curation_statuses => _get_pub_curation_statuses($pub),
     );
     if ($options->{dump_all}) {
       $pub_hash{title} = $pub->title();
