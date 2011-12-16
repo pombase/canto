@@ -140,6 +140,41 @@ sub _get_pubs
   return \%ret;
 }
 
+sub _get_people
+{
+  my $schema = shift;
+
+  my $rs = $schema->resultset('Person');
+  my %ret = ();
+
+  while (defined (my $person = $rs->next())) {
+    $ret{$person->email_address()} = {
+      name => $person->name(),
+      role => $person->role()->name(),
+      lab => defined $person->lab() ? $person->lab()->name() : undef,
+      password => $person->password(),
+    };
+  }
+
+  return \%ret;
+}
+
+sub _get_labs
+{
+  my $schema = shift;
+
+  my $rs = $schema->resultset('Lab');
+  my %ret = ();
+
+  while (defined (my $lab = $rs->next())) {
+    $ret{$lab->name()} = {
+      head => $lab->lab_head()->name(),
+    };
+  }
+
+  return \%ret;
+}
+
 =head2 json
 
  Usage   : my $ser = PomCur::Track::Serialise::json
@@ -172,6 +207,8 @@ sub json
   my $track_hash = {
     curation_sessions => $curation_sessions_hash,
     publications => _get_pubs($schema, $options),
+    people => _get_people($schema),
+    labs => _get_labs($schema),
   };
 
   my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);

@@ -140,8 +140,171 @@ cmp_deeply($track_ref,
            {
              publications => \%expected_pubs,
              curation_sessions => ignore(),
+             'people' => {
+               'dom@genetics.med.harvard.edu' => {
+                 'password' => 'dom@genetics.med.harvard.edu',
+                 'lab' => 'Winston Lab',
+                 'name' => 'Dom Helmlinger',
+                 'role' => 'user'
+               },
+               'Pascale.Beauregard@umontreal.ca' => {
+                 'password' => 'Pascale.Beauregard@umontreal.ca',
+                 'lab' => 'Rokeach Lab',
+                 'name' => 'Pascale Beauregard',
+                 'role' => 'user'
+               },
+               'peter.espenshade@jhmi.edu' => {
+                 'password' => 'peter.espenshade@jhmi.edu',
+                 'lab' => 'Espenshade Lab',
+                 'name' => 'Peter Espenshade',
+                 'role' => 'user'
+               },
+               'kevin.hardwick@ed.ac.uk' => {
+                 'password' => 'kevin.hardwick@ed.ac.uk',
+                 'lab' => 'Hardwick Lab',
+                 'name' => 'Kevin Hardwick',
+                 'role' => 'user'
+               },
+               'hoffmacs@bc.edu' => {
+                 'password' => 'hoffmacs@bc.edu',
+                 'lab' => 'Hoffman Lab',
+                 'name' => 'Charles Hoffman',
+                 'role' => 'user'
+               },
+               'fred.winston@genetics.med.harvard.edu' => {
+                 'password' => 'fred.winston@genetics.med.harvard.edu',
+                 'lab' => 'Winston Lab',
+                 'name' => 'Fred Winston',
+                 'role' => 'user'
+               },
+               'h.yamano@mcri.ac.uk' => {
+                 'password' => 'h.yamano@mcri.ac.uk',
+                 'lab' => 'Yamano Lab',
+                 'name' => 'Hiro Yamano',
+                 'role' => 'user'
+               },
+               'test.user@pombase.org' => {
+                 'password' => 'test.user@pombase.org',
+                 'lab' => 'User Lab',
+                 'name' => 'Test User',
+                 'role' => 'user'
+               },
+               'Mary.Porter-Goff@umassmed.edu' => {
+                 'password' => 'Mary.Porter-Goff@umassmed.edu',
+                 'lab' => 'Rhind Lab',
+                 'name' => 'Mary Porter-Goff',
+                 'role' => 'user'
+               },
+               'Ken.Sawin@ed.ac.uk' => {
+                 'password' => 'Ken.Sawin@ed.ac.uk',
+                 'lab' => 'Sawin Lab',
+                 'name' => 'Ken Sawin',
+                 'role' => 'user'
+               },
+               'val@sanger.ac.uk' => {
+                 'password' => 'val@sanger.ac.uk',
+                 'lab' => undef,
+                 'name' => 'Val Wood',
+                 'role' => 'admin'
+               },
+               'mah79@cam.ac.uk' => {
+                 'password' => 'mah79@cam.ac.uk',
+                 'lab' => undef,
+                 'name' => 'Midori Harris',
+                 'role' => 'admin'
+               },
+               'henar@usal.es' => {
+                 'password' => 'henar@usal.es',
+                 'lab' => 'Valdivieso Lab',
+                 'name' => 'Henar Valdivieso',
+                 'role' => 'user'
+               },
+               'iwasaki@tsurumi.yokohama-cu.ac.jp' => {
+                 'password' => 'iwasaki@tsurumi.yokohama-cu.ac.jp',
+                 'lab' => "\x{e5}\x{b2}\x{a9}\x{e5}\x{b4}\x{8e}\x{e3}\x{81}\x{b2}\x{e3}\x{82}\x{8d}\x{e3}\x{81}\x{97} Lab",
+                 'name' => "\x{e5}\x{b2}\x{a9}\x{e5}\x{b4}\x{8e}\x{e3}\x{81}\x{b2}\x{e3}\x{82}\x{8d}\x{e3}\x{81}\x{97}",
+                 'role' => 'user'
+               },
+               'Nicholas.Willis@umassmed.edu' => {
+                 'password' => 'Nicholas.Willis@umassmed.edu',
+                 'lab' => 'Rhind Lab',
+                 'name' => 'Nicholas Willis',
+                 'role' => 'user'
+               },
+               'stuart.macneill@st-andrews.ac.uk' => {
+                 'password' => 'stuart.macneill@st-andrews.ac.uk',
+                 'lab' => 'Macneill Lab',
+                 'name' => 'Stuart Macneill',
+                 'role' => 'user'
+               },
+               'nick.rhind@umassmed.edu' => {
+                 'password' => 'nick.rhind@umassmed.edu',
+                 'lab' => 'Rhind Lab',
+                 'name' => 'Nick Rhind',
+                 'role' => 'user'
+               },
+               'Luis.Rokeach@umontreal.ca' => {
+                 'password' => 'Luis.Rokeach@umontreal.ca',
+                 'lab' => 'Rokeach Lab',
+                 'name' => 'Luis Rokeach',
+                 'role' => 'user'
+               },
+               'wahlswaynep@uams.edu' => {
+                 'password' => 'wahlswaynep@uams.edu',
+                 'lab' => 'Wahls Lab',
+                 'name' => 'Wayne Wahls',
+                 'role' => 'user'
+               },
+               'John.Burg@jhmi.edu' => {
+                 'password' => 'John.Burg@jhmi.edu',
+                 'lab' => 'Espenshade Lab',
+                 'name' => 'John Burg',
+                 'role' => 'user'
+               }
+             },
+             labs => {
+               'Wahls Lab' => {
+                 'head' => 'Wayne Wahls'
+               },
+               'Sawin Lab' => {
+                 'head' => 'Ken Sawin'
+               },
+               'Macneill Lab' => {
+                 'head' => 'Stuart Macneill'
+               },
+               'Rokeach Lab' => {
+                 'head' => 'Luis Rokeach'
+               },
+               'Rhind Lab' => {
+                 'head' => 'Nick Rhind'
+               },
+               'Hoffman Lab' => {
+                 'head' => 'Charles Hoffman'
+               },
+               'Espenshade Lab' => {
+                 'head' => 'Peter Espenshade'
+               },
+               'User Lab' => {
+                 'head' => 'Test User'
+               },
+               'Valdivieso Lab' => {
+                 'head' => 'Henar Valdivieso'
+               },
+               'Yamano Lab' => {
+                 'head' => 'Hiro Yamano'
+               },
+               'Hardwick Lab' => {
+                 'head' => 'Kevin Hardwick'
+               },
+               "\x{e5}\x{b2}\x{a9}\x{e5}\x{b4}\x{8e}\x{e3}\x{81}\x{b2}\x{e3}\x{82}\x{8d}\x{e3}\x{81}\x{97} Lab" => {
+                 'head' => "\x{e5}\x{b2}\x{a9}\x{e5}\x{b4}\x{8e}\x{e3}\x{81}\x{b2}\x{e3}\x{82}\x{8d}\x{e3}\x{81}\x{97}"
+               },
+               'Winston Lab' => {
+                 'head' => 'Fred Winston'
+               }
+             }
            }
-           );
+         );
 
 my %curation_sessions = %{$track_ref->{curation_sessions}};
 is (keys %curation_sessions, 2);
