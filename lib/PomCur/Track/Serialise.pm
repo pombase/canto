@@ -60,7 +60,7 @@ sub _get_curation_sessions
         $data = undef;
       } else {
         my $cursdb = PomCur::Curs::get_schema_for_key($config, $curs_key);
-        $data = PomCur::Curs::Serialise::perl($cursdb);
+        $data = PomCur::Curs::Serialise::perl($cursdb, $options);
       }
       ($curs_key, $data);
     } @curs_list
@@ -98,20 +98,25 @@ sub _get_pubprops
 sub _get_pubs
 {
   my $schema = shift;
+  my $options = shift;
 
   my $rs = $schema->resultset('Pub');
   my %ret = ();
 
   while (defined (my $pub = $rs->next())) {
-    $ret{$pub->uniquename()} = {
+    my %pub_hash = (
       type => $pub->type()->name(),
       assigned_curator => _get_name($pub->assigned_curator()),
-      title => $pub->title(),
-      abstract => $pub->abstract(),
-      authors => $pub->authors(),
       triage_status => _get_name($pub->triage_status()),
       properties => _get_pubprops($pub),
-    };
+    );
+    if ($options->{dump_all}) {
+      $pub_hash{title} = $pub->title();
+      $pub_hash{abstract} = $pub->abstract();
+      $pub_hash{authors} = $pub->authors();
+
+    }
+    $ret{$pub->uniquename()} = { %pub_hash };
   }
 
   return \%ret;
@@ -124,9 +129,14 @@ sub _get_pubs
  Args    : $config - a Config object
            $schema - the TrackDB
            $options - a hash of settings
-             - stream_mode => (0|1) - change the behaviour to return
-                 two things: the JSON for the TrackDB and an iterator
-                 returning the JSON representation of each CursDB in turn
+             - stream_mode => (0|1) - if 1, change the behaviour to
+                 return two things: the JSON for the TrackDB and an
+                 iterator returning the JSON representation of each
+                 CursDB in turn - default 1
+             - dump_all => (0|1) - if 1, dump all data from the
+                 track and curs databases, including data that can be
+                 recreated (eg. publication title can be found from
+                 PubMed ID) - default 0
  Returns : A JSON string containing all of the TrackDB and CursDB data
            or with stream_mode set, return a (JSON string, CursDB JSON
            iterator) pair.
@@ -143,7 +153,7 @@ sub json
 
   my $track_hash = {
     curation_sessions => $curation_sessions_hash,
-    publications => _get_pubs($schema),
+    publications => _get_pubs($schema, $options),
   };
 
   my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);

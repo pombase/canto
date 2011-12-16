@@ -119,20 +119,20 @@ my $expected_curation_session =
 
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
 
-my $curs_json = PomCur::Curs::Serialise::json($curs_schema);
+my $curs_json = PomCur::Curs::Serialise::json($curs_schema, { dump_all => 1 });
 my $curs_ref = decode_json($curs_json);
 
 cmp_deeply($curs_ref, $expected_curation_session);
 
-my $track_json = PomCur::Track::Serialise::json($config, $track_schema);
+my $track_json = PomCur::Track::Serialise::json($config, $track_schema, { dump_all => 1});
 my $track_ref = decode_json($track_json);
 
 my @expected_pubs =
-  qw{PMID:16641370 PMID:17304215 PMID:18426916 PMID:18430926 PMID:18556659
+  qw"PMID:16641370 PMID:17304215 PMID:18426916 PMID:18430926 PMID:18556659
      PMID:19037101 PMID:19041767 PMID:19056896 PMID:19160458 PMID:19211838
      PMID:19351719 PMID:19436749 PMID:19627505 PMID:19664060 PMID:19686603
      PMID:19756689 PMID:20622008 PMID:20870879 PMID:20976105 PMID:7518718
-     PMID:7958849 PMID:10467002};
+     PMID:7958849 PMID:10467002";
 my %expected_pubs = ();
 @expected_pubs{@expected_pubs} = (ignore()) x @expected_pubs;
 

@@ -103,18 +103,23 @@ sub _get_gene_synonyms
 sub _get_genes
 {
   my $schema = shift;
+  my $options = shift;
 
   my $rs = $schema->resultset('Gene');
   my %ret = ();
 
   while (defined (my $gene = $rs->next())) {
-    $ret{$gene->primary_identifier()} = {
-      primary_name => $gene->primary_name(),
-      product => $gene->product(),
+    my %gene_data = (
       organism => $gene->organism()->full_name(),
       annotations => _get_annotations($schema, $gene),
-      synonyms => _get_gene_synonyms($schema, $gene),
-    };
+    );
+    if ($options->{dump_all}) {
+      $gene_data{primary_name} = $gene->primary_name();
+      $gene_data{product} = $gene->product();
+      $gene_data{synonyms} = _get_gene_synonyms($schema, $gene);
+
+    }
+    $ret{$gene->primary_identifier()} = { %gene_data };
   }
 
   return \%ret;
@@ -137,15 +142,20 @@ sub _get_organisms
 sub _get_pubs
 {
   my $schema = shift;
+  my $options = shift;
 
   my $rs = $schema->resultset('Pub');
   my %ret = ();
 
   while (defined (my $pub = $rs->next())) {
-    $ret{$pub->uniquename()} = {
-      title => $pub->title(),
-      abstract => $pub->abstract(),
-    };
+    if ($options->{dump_all}) {
+      $ret{$pub->uniquename()} = {
+        title => $pub->title(),
+        abstract => $pub->abstract(),
+      };
+    } else {
+      $ret{$pub->uniquename()} = { };
+    }
   }
 
   return \%ret;
@@ -162,10 +172,11 @@ sub _get_pubs
 sub json
 {
   my $schema = shift;
+  my $options = shift;
 
   my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);
 
-  return $encoder->encode(perl($schema));
+  return $encoder->encode(perl($schema, $options));
 }
 
 =head2 perl
@@ -173,18 +184,21 @@ sub json
  Usage   : my $ser = PomCur::Curs::Serialise::perl($curs_schema);
  Function: Return a Perl hash representating all the data in the given CursDB
  Args    : $schema - the CursDB
+           $options - export options - see documentation for
+             PomCur::Track::Serialise::json()
  Returns : A Perl hashref
 
 =cut
 sub perl
 {
   my $schema = shift;
+  my $options = shift;
 
   return {
     metadata => _get_metadata($schema),
-    genes => _get_genes($schema),
-    organisms => _get_organisms($schema),
-    publications => _get_pubs($schema)
+    genes => _get_genes($schema, $options),
+    organisms => _get_organisms($schema, $options),
+    publications => _get_pubs($schema, $options)
   };
 }
 
