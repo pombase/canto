@@ -114,8 +114,10 @@ sub _get_genes
   my %ret = ();
 
   while (defined (my $gene = $rs->next())) {
+    my $organism_full_name = $gene->organism()->full_name();
     my %gene_data = (
-      organism => $gene->organism()->full_name(),
+      organism => $organism_full_name,
+      uniquename => $gene->primary_identifier(),
       annotations => _get_annotations($schema, $gene),
     );
     if ($options->{dump_all}) {
@@ -124,7 +126,9 @@ sub _get_genes
       $gene_data{synonyms} = _get_gene_synonyms($schema, $gene);
 
     }
-    $ret{$gene->primary_identifier()} = { %gene_data };
+    my $gene_key =
+      $organism_full_name . ' ' . $gene->primary_identifier();
+    $ret{$gene_key} = { %gene_data };
   }
 
   return \%ret;

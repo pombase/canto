@@ -24,14 +24,16 @@ my $abstract =
 my $full_expected_curation_session =
   {
     genes => {
-      'SPCC576.16c' => {
+      'Schizosaccharomyces pombe SPCC576.16c' => {
+        uniquename => 'SPCC576.16c',
         primary_name => 'wtf22',
         product => 'wtf element Wtf22',
         organism => 'Schizosaccharomyces pombe',
         annotations => [],
         synonyms => [],
       },
-      'SPAC27D7.13c' => {
+      'Schizosaccharomyces pombe SPAC27D7.13c' => {
+        uniquename => 'SPAC27D7.13c',
         primary_name => 'ssm4',
         product => 'p150-Glued',
         organism => 'Schizosaccharomyces pombe',
@@ -46,7 +48,8 @@ my $full_expected_curation_session =
           } ],
         synonyms => ['SPAC637.01c'],
       },
-      'SPBC14F5.07' => {
+      'Schizosaccharomyces pombe SPBC14F5.07' => {
+        uniquename => 'SPBC14F5.07',
         primary_name => 'doa10',
         product => 'ER-localized ubiquitin ligase Doa10 (predicted)',
         organism => 'Schizosaccharomyces pombe',
@@ -62,7 +65,8 @@ my $full_expected_curation_session =
           } ],
         synonyms => ['ssm4'],
       },
-      'SPCC63.05' => {
+      'Schizosaccharomyces pombe SPCC63.05' => {
+        uniquename => 'SPCC63.05',
         primary_name => undef,
         product => 'TAP42 family protein involved in TOR signalling (predicted)',
         organism => 'Schizosaccharomyces pombe',
