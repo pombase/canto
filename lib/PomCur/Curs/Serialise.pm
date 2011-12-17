@@ -80,6 +80,11 @@ sub _get_annotations
   while (defined (my $annotation = $rs->next())) {
     my %extra_data = %{$annotation->data()};
 
+    my $term_ontid = delete $extra_data{term_ontid};
+    if ($term_ontid) {
+      $extra_data{term} = $term_ontid;
+    }
+
     push @ret, {
       status => $annotation->status(),
       publication => $annotation->pub->uniquename(),

@@ -39,7 +39,7 @@ my $full_expected_curation_session =
           {
             evidence_code => "IMP",
             creation_date => "2010-01-02",
-            term_ontid => "GO:0055085",
+            term => "GO:0055085",
             status => "new",
             type => "biological_process",
             publication => 'PMID:19756689'
@@ -54,7 +54,7 @@ my $full_expected_curation_session =
           {
             evidence_code => "IPI",
             creation_date => "2010-01-02",
-            term_ontid => "GO:0034763",
+            term => "GO:0034763",
             status => "new",
             type => "biological_process",
             publication => 'PMID:19756689',
@@ -88,7 +88,7 @@ my $full_expected_curation_session =
             creation_date => "2010-01-02",
             evidence_code => 'MIU',
             publication => 'PMID:19756689',
-            term_ontid => 'PP:00004',
+            term => 'PP:00004',
           },
         ],
         synonyms => [],
