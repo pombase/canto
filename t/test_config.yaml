@@ -136,6 +136,6 @@ test_config:
                - SPCC63.05
              pub(Pub:uniquename): PMID:19756689
              data:
-               evidence_code: MIU
+               evidence_code: IDA
                term_ontid: FYPO:00004
   

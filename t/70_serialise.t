@@ -90,7 +90,7 @@ my $full_expected_curation_session =
             type => 'fission_yeast_phenotype',
             status => 'new',
             creation_date => "2010-01-02",
-            evidence_code => 'MIU',
+            evidence_code => 'IDA',
             publication => 'PMID:19756689',
             term => 'FYPO:00004',
           },
