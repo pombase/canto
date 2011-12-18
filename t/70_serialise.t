@@ -92,7 +92,7 @@ my $full_expected_curation_session =
             creation_date => "2010-01-02",
             evidence_code => 'MIU',
             publication => 'PMID:19756689',
-            term => 'PP:00004',
+            term => 'FYPO:00004',
           },
         ],
         synonyms => [],

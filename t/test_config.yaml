@@ -137,5 +137,5 @@ test_config:
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: MIU
-               term_ontid: PP:00004
+               term_ontid: FYPO:00004
   
