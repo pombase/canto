@@ -61,8 +61,18 @@ my $full_expected_curation_session =
             status => "new",
             type => "biological_process",
             publication => 'PMID:19756689',
-            with_gene => "SPCC576.16c"
-          } ],
+            with_gene => "SPCC576.16c",
+            annotation_extension => 'exists_during(GO:0051329)|has_substrate(GeneDB_Spombe:SPBC1105.11c),requires_feature(Pfam:PF00564)',
+          },
+          {
+            evidence_code => 'IPI',
+            creation_date => '2010-01-02',
+            status => 'new',
+            type => 'molecular_function',
+            publication => 'PMID:19756689',
+            term => 'GO:0022857'
+          }
+        ],
         synonyms => ['ssm4'],
       },
       'Schizosaccharomyces pombe SPCC63.05' => {

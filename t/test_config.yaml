@@ -120,6 +120,15 @@ test_config:
                evidence_code: IPI
                term_ontid: GO:0034763
                with_gene: SPCC576.16c
+               annotation_extension: "exists_during(GO:0051329)|has_substrate(GeneDB_Spombe:SPBC1105.11c),requires_feature(Pfam:PF00564)"
+           - type: molecular_function
+             status: new
+             genes(Gene:primary_identifier):
+               - SPBC14F5.07
+             pub(Pub:uniquename): PMID:19756689
+             data:
+               evidence_code: IPI
+               term_ontid: GO:0022857
            - type: genetic_interaction
              status: new
              genes(Gene:primary_identifier):
