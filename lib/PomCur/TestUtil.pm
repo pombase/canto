@@ -665,16 +665,8 @@ sub _load_curs_db_data
     if (@found != 1) {
       die "Expected 1 result for $gene_identifier not ", scalar(@found)
     }
-    my $gene_info = $found[0];
 
-    my $new_gene =
-      PomCur::Controller::Curs::_create_genes($cursdb_schema, $result);
-
-    my $current_config_gene = $curs_config->{current_gene};
-    if ($gene_identifier eq $current_config_gene) {
-      set_metadata($cursdb_schema, 'current_gene_id',
-                   $new_gene->gene_id());
-    }
+    PomCur::Controller::Curs::_create_genes($cursdb_schema, $result);
   }
 
   for my $annotation (@{$curs_config->{annotations}}) {

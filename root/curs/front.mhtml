@@ -35,8 +35,6 @@ $pub
 
 
 <%init>
-my $current_gene_id = $c->stash()->{current_gene_id};
-
 my $annotation_count = 0;
 
 sub _increment_annotation_count

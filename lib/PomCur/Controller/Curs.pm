@@ -289,8 +289,6 @@ sub _create_genes
   my $schema = shift;
   my $result = shift;
 
-  my $ret_gene = undef;
-
   my $_create_curs_genes = sub
       {
         my @genes = @{$result->{found}};
@@ -304,7 +302,7 @@ sub _create_genes
             PomCur::CursDB::Organism::get_organism($schema, $org_full_name,
                                                    $org_taxonid);
 
-          $ret_gene = $schema->create_with_type('Gene', {
+          my $new_gene = $schema->create_with_type('Gene', {
             primary_name => $gene->{primary_name},
             primary_identifier => $gene->{primary_identifier},
             product => $gene->{product},
@@ -314,7 +312,7 @@ sub _create_genes
           for my $synonym_identifier (@{$gene->{synonyms}}) {
             $schema->create_with_type('Genesynonym',
                                       {
-                                        gene => $ret_gene,
+                                        gene => $new_gene,
                                         identifier => $synonym_identifier,
                                       });
           }
@@ -322,8 +320,6 @@ sub _create_genes
       };
 
   $schema->txn_do($_create_curs_genes);
-
-  return $ret_gene;
 }
 
 sub _find_and_create_genes

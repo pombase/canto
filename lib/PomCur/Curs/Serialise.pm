@@ -47,14 +47,10 @@ sub _get_metadata_value
   my $key = shift;
   my $value = shift;
 
-  if ($key eq 'current_gene_id') {
-    return $schema->find_with_type('Gene', $value)->primary_identifier();
+  if ($key eq 'curation_pub_id') {
+    return $schema->find_with_type('Pub', $value)->uniquename();
   } else {
-    if ($key eq 'curation_pub_id') {
-      return $schema->find_with_type('Pub', $value)->uniquename();
-    } else {
-      return $value;
-    }
+    return $value;
   }
 }
 
