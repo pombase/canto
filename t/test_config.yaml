@@ -127,7 +127,7 @@ test_config:
                - SPBC14F5.07
              pub(Pub:uniquename): PMID:19756689
              data:
-               evidence_code: IPI
+               evidence_code: IDA
                term_ontid: GO:0022857
            - type: genetic_interaction
              status: new

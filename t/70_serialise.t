@@ -65,7 +65,7 @@ my $full_expected_curation_session =
             annotation_extension => 'exists_during(GO:0051329)|has_substrate(GeneDB_Spombe:SPBC1105.11c),requires_feature(Pfam:PF00564)',
           },
           {
-            evidence_code => 'IPI',
+            evidence_code => 'IDA',
             creation_date => '2010-01-02',
             status => 'new',
             type => 'molecular_function',
