@@ -6,3 +6,14 @@ $class_info
 <div>
 <& /view/field_list.mhtml, object => $object, class_info => $class_info &>
 </div>
+
+<div id="collections">
+  <& /view/inline_list.mhtml, config_name => 'cvterm', rs => $cvterms_rs,
+                       class_info => $class_info,
+                       list_title => 'Terms referenced via cvterm_dbxref' &>
+</div>
+
+<%init>
+my $cvterms_rs =
+  $object->cvterm_dbxrefs()->search_related('cvterm');
+</%init>
