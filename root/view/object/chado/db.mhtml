@@ -1,0 +1,14 @@
+<%args>
+$object
+$class_info
+</%args>
+
+<div>
+<& /view/field_list.mhtml, object => $object, field_labels => [qw|name definition|],
+                           class_info => $class_info &>
+</div>
+
+<div id="collections">
+  <& /view/collection.mhtml, object => $object, collection_name => 'dbxrefs',
+    collection_title => 'Accessions/cross references in this database' &>
+</div>
