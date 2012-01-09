@@ -486,6 +486,9 @@ class_info:
           editable: 1
         - name: url
           editable: 1
+        - name: "accessions stored"
+          source:
+            sql: 'select count(*) from dbxref where dbxref.db_id = me.db_id'
     dbxref:
       editable: 1
       display_field: accession
