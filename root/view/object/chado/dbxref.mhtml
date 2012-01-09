@@ -11,9 +11,19 @@ $class_info
   <& /view/inline_list.mhtml, config_name => 'cvterm', rs => $cvterms_rs,
                        class_info => $class_info,
                        list_title => 'Terms referenced via cvterm_dbxref' &>
+  <& /view/inline_list.mhtml, config_name => 'feature', rs => $features_rs,
+                       class_info => $class_info,
+                       list_title => 'Features with this dbxref' &>
+  <& /view/inline_list.mhtml, config_name => 'feature', rs => $indirect_features_rs,
+                       class_info => $class_info,
+                       list_title => 'Features referenced via feature_dbxref' &>
 </div>
 
 <%init>
 my $cvterms_rs =
   $object->cvterm_dbxrefs()->search_related('cvterm');
+my $features_rs =
+  $object->features();
+my $indirect_features_rs =
+  $object->feature_dbxrefs()->search_related('feature');
 </%init>
