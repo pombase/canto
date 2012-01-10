@@ -73,7 +73,7 @@ sub type : Local
 
   $quoted_search_term =~ s/\*/\%/g;
 
-  my @search = map { { $_ => { like => \$quoted_search_term } } } @search_fields;
+  my @search = map { { "lower($_)" => { like => \$quoted_search_term } } } @search_fields;
 
   $c->stash()->{list_search_term} = $search_term;
   $c->stash()->{list_search_constraint} = [@search];
