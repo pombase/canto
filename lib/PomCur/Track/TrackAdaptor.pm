@@ -2,9 +2,10 @@ package PomCur::Track::TrackAdaptor;
 
 =head1 NAME
 
-PomCur::Track::TrackAdaptor - A role for Adaptor classes that get data from the
-                              TrackDB.  Note, an adaptor can be either a Lookup
-                              or a Storage object
+PomCur::Track::TrackAdaptor -
+   A role for Adaptor classes that get data from the TrackDB.  Note,
+   an adaptor can be either a Lookup (read-only) or a Storage object
+   (read-write)
 
 =head1 SYNOPSIS
 
