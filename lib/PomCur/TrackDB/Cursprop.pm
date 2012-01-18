@@ -1,4 +1,4 @@
-package PomCur::TrackDB::Curs;
+package PomCur::TrackDB::Cursprop;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -14,33 +14,33 @@ extends 'DBIx::Class::Core';
 
 =head1 NAME
 
-PomCur::TrackDB::Curs
+PomCur::TrackDB::Cursprop
 
 =cut
 
-__PACKAGE__->table("curs");
+__PACKAGE__->table("cursprop");
 
 =head1 ACCESSORS
 
-=head2 curs_id
+=head2 cursprop_id
 
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 curator
+=head2 curs
 
   data_type: 'integer'
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 pub
+=head2 type
 
   data_type: 'integer'
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 curs_key
+=head2 value
 
   data_type: 'text'
   is_nullable: 0
@@ -48,67 +48,52 @@ __PACKAGE__->table("curs");
 =cut
 
 __PACKAGE__->add_columns(
-  "curs_id",
+  "cursprop_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "curator",
+  "curs",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "pub",
+  "type",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "curs_key",
+  "value",
   { data_type => "text", is_nullable => 0 },
 );
-__PACKAGE__->set_primary_key("curs_id");
+__PACKAGE__->set_primary_key("cursprop_id");
 
 =head1 RELATIONS
 
-=head2 pub
+=head2 type
 
 Type: belongs_to
 
-Related object: L<PomCur::TrackDB::Pub>
+Related object: L<PomCur::TrackDB::Cvterm>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "pub",
-  "PomCur::TrackDB::Pub",
-  { pub_id => "pub" },
+  "type",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "type" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
-=head2 curator
+=head2 cur
 
 Type: belongs_to
 
-Related object: L<PomCur::TrackDB::Person>
+Related object: L<PomCur::TrackDB::Curs>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "curator",
-  "PomCur::TrackDB::Person",
-  { person_id => "curator" },
+  "cur",
+  "PomCur::TrackDB::Curs",
+  { curs_id => "curs" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
-=head2 cursprops
 
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Cursprop>
-
-=cut
-
-__PACKAGE__->has_many(
-  "cursprops",
-  "PomCur::TrackDB::Cursprop",
-  { "foreign.curs" => "self.curs_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-18 02:49:31
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5+jUgXYjaOs04PhofNWcZw
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-18 06:44:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:argmwbDRClSHIAg9kY/yzw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -309,9 +309,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 cursprops
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-23 19:13:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I+2ulK9Zg5pmyk7jntCshQ
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Cursprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cursprops",
+  "PomCur::TrackDB::Cursprop",
+  { "foreign.type" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-18 06:44:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qeDEqcAO4KUDeWttqW2elw
 
 =head2 db_accession
 
