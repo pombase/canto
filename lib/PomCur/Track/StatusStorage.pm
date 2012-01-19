@@ -125,8 +125,9 @@ sub retrieve
   my $type_name = shift;
 
   my $schema = $self->schema();
+  my $curs = $self->get_curs_object($curs_key);
 
-  my ($cursprop_rs) = $self->_rs_and_type($type_name);
+  my ($cursprop_rs) = $self->_rs_and_type($curs, $type_name);
 
   return $cursprop_rs->first()->value();
 }

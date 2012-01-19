@@ -129,7 +129,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $pub_id = get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
 
-  if ($state ne NEEDS_GENES and $state ne NEEDS_SUBMITTER) {
+  if ($state ne NEEDS_SUBMITTER) {
     $st->{submitter_email} = $submitter_email;
     $st->{submitter_name} = get_metadata($schema, 'submitter_name');
   }
