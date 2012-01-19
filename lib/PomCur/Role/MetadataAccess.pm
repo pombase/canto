@@ -66,6 +66,8 @@ sub set_metadata
     if (defined $metadata) {
       $metadata->delete();
     }
+
+    $guard->commit();
   }
 }
 
