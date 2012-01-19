@@ -104,8 +104,6 @@ sub store
   $cursprop_rs->create({ curs => $curs->curs_id(),
                          type => $type_cvterm->cvterm_id(),
                          value => $value });
-
-  warn "storing $type_name => $value\n";
 }
 
 =head2
