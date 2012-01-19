@@ -43,6 +43,22 @@ use JSON;
 
 use PomCur::Curs::Serialise;
 
+sub _get_cursprops
+{
+  my $curs = shift;
+
+  my $rs = $curs->cursprops();
+  my @ret = ();
+
+  while (defined (my $prop = $rs->next())) {
+    push @ret, {
+      type => $prop->type()->name(),
+      value => $prop->value(),
+    };
+  }
+
+  return \@ret;
+}
 
 sub _get_curation_sessions
 {
