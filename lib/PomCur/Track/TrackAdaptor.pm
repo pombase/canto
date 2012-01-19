@@ -1,9 +1,11 @@
-package PomCur::Track::TrackLookup;
+package PomCur::Track::TrackAdaptor;
 
 =head1 NAME
 
-PomCur::Track::TrackLookup - A role for Lookup classes that get data from the
-                            TrackDB
+PomCur::Track::TrackAdaptor -
+   A role for Adaptor classes that get data from the TrackDB.  Note,
+   an adaptor can be either a Lookup (read-only) or a Storage object
+   (read-write)
 
 =head1 SYNOPSIS
 
@@ -19,7 +21,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::Track::TrackLookup
+    perldoc PomCur::Track::TrackAdaptor
 
 =over 4
 
@@ -37,7 +39,6 @@ under the same terms as Perl itself.
 =cut
 
 use Carp;
-
 use Moose::Role;
 
 use PomCur::TrackDB;

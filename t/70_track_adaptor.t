@@ -2,8 +2,6 @@ use strict;
 use warnings;
 use Test::More tests => 1;
 
-use PomCur::Track::TrackLookup;
-
 
 package LookupTest;
 
@@ -14,7 +12,7 @@ has 'config' => (
   isa => 'PomCur::Config'
 );
 
-with 'PomCur::Track::TrackLookup';
+with 'PomCur::Track::TrackAdaptor';
 
 no Moose;
 

@@ -96,9 +96,24 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 cursprops
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-11 15:27:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6mEv/rHvG3e7LwpSy1wV2w
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Cursprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cursprops",
+  "PomCur::TrackDB::Cursprop",
+  { "foreign.curs" => "self.curs_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-19 03:19:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:v7WhEOpgq127UKF+2OmG6A
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

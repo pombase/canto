@@ -147,6 +147,13 @@ CREATE TABLE curs (
        curs_key text NOT NULL
 );
 
+CREATE TABLE cursprop (
+       cursprop_id integer NOT NULL PRIMARY KEY,
+       curs integer REFERENCES curs(curs_id) NOT NULL,
+       type integer REFERENCES cvterm(cvterm_id) NOT NULL,
+       value text NOT NULL
+);
+
 CREATE TABLE lab (
        lab_id integer NOT NULL PRIMARY KEY,
        lab_head integer NOT NULL REFERENCES person (person_id),

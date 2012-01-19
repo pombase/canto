@@ -75,6 +75,18 @@ db_initial_data:
               accession: unknown
               db:
                 name: PomCur
+      - name: PomCur cursprop types
+        cvterms:
+          - name: annotation_status
+            dbxref:
+              accession: annotation_status
+              db:
+                name: PomCur
+          - name: genes_annotated_count
+            dbxref:
+              accession: genes_annotated_count
+              db:
+                name: PomCur
       - name: PomCur publication triage status
         cvterms:
           - name: New
@@ -561,6 +573,7 @@ external_sources:
 implementation_classes:
   gene_adaptor: PomCur::Track::GeneLookup
   ontology_adaptor: PomCur::Track::OntologyLookup
+  status_adaptor: PomCur::Track::StatusStorage
 
 evidence_types:
   IMP:

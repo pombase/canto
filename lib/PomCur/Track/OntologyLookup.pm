@@ -43,7 +43,7 @@ use String::Similarity;
 use PomCur::Track::OntologyIndex;
 
 with 'PomCur::Role::Configurable';
-with 'PomCur::Track::TrackLookup';
+with 'PomCur::Track::TrackAdaptor';
 
 sub _clean_string
 {
