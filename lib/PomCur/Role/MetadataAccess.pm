@@ -94,7 +94,7 @@ sub get_metadata
 
 =head2 get_metadata
 
- Usage   : unsetget_metadata($schema, $key);
+ Usage   : unset_metadata($schema, $key);
  Function: delete the row with the given key in the metadata table
  Args    : $schema - the CursDB schema object
            $key - the key
