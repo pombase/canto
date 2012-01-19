@@ -60,6 +60,8 @@ sub set_metadata
     $schema->resultset('Metadata')->update_or_create({ key => $key,
                                                        value => $value });
   } else {
+    my $guard = $schema->txn_scope_guard();
+
     my $metadata = $schema->resultset('Metadata')->find({ key => $key });
     if (defined $metadata) {
       $metadata->delete();
