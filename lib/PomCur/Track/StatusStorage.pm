@@ -93,6 +93,10 @@ sub store
   my $type_name = shift;
   my $value = shift;
 
+  if (!defined $value) {
+    die "undefined value when trying to store $type_name\n";
+  }
+
   my $curs = $self->get_curs_object($curs_key);
 
   die 'no curs' unless $curs;
