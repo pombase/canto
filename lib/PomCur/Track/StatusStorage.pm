@@ -40,10 +40,7 @@ use Carp;
 use Moose;
 
 with 'PomCur::Role::Configurable';
-with 'PomCur::Role::CursStorage';
 with 'PomCur::Track::TrackCursStorage';
-
-has curs_key => (is => 'ro', required => 1);
 
 sub _cv_rs
 {
@@ -56,10 +53,10 @@ sub _cv_rs
 sub _rs_and_type
 {
   my $self = shift;
+  my $curs = shift;
   my $type_name = shift;
 
   my $schema = $self->schema();
-  my $curs = $self->curs_object();
 
   my $terms_rs = _cv_rs($schema)->search_related('cvterms');
   my $type_cvterm = $terms_rs->find({ name => $type_name });
@@ -74,13 +71,14 @@ sub _rs_and_type
 
 =head2 store
 
- Usage   : $status_storage->store($type, 'value');
-       OR: $status_storage->store('genes_annotated_count', $count);
-       OR: $status_storage->store('annotation_status', 'finished');
+ Usage   : $status_storage->store($curs_key, $type, 'value');
+       OR: $status_storage->store($curs_key, 'genes_annotated_count', $count);
+       OR: $status_storage->store($curs_key, 'annotation_status', 'finished');
  Function: Store status information about a curation session in the Track
            database, without knowledge of the database schema.  The data
            will be stored in the cursprop table
- Args    : $type_name - the data type to store; there can only be one
+ Args    : $curs_key  - the session key
+           $type_name - the data type to store; there can only be one
                         value of each type; possible type names can be
                         queried with types();
            $value - the value
@@ -91,27 +89,31 @@ sub _rs_and_type
 sub store
 {
   my $self = shift;
+  my $curs_key = shift;
   my $type_name = shift;
   my $value = shift;
 
-  my $curs = $self->curs_object();
+  my $curs = $self->get_curs_object($curs_key);
 
   die 'no curs' unless $curs;
 
-  my ($cursprop_rs, $type_cvterm) = $self->_rs_and_type($type_name);
+  my ($cursprop_rs, $type_cvterm) = $self->_rs_and_type($curs, $type_name);
 
   $cursprop_rs->delete();
 
   $cursprop_rs->create({ curs => $curs->curs_id(),
                          type => $type_cvterm->cvterm_id(),
                          value => $value });
+
+  warn "storing $type_name => $value\n";
 }
 
 =head2
 
  Usage   : my $value = $status_storage->retrieve($type);
  Function: return a stored value
- Args    : $type - the type name
+ Args    : $curs_key - the session key
+           $type - the type name
  Returns : the stored value
 
 =cut
@@ -119,10 +121,10 @@ sub store
 sub retrieve
 {
   my $self = shift;
+  my $curs_key = shift;
   my $type_name = shift;
 
   my $schema = $self->schema();
-  my $curs = $self->curs_object();
 
   my ($cursprop_rs) = $self->_rs_and_type($type_name);
 
@@ -143,7 +145,6 @@ sub types
   my $self = shift;
 
   my $schema = $self->schema();
-
   my $rs = _cv_rs($schema)->search_related('cvterms');
 
   return map { $_->name() } $rs->all();

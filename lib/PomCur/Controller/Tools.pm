@@ -232,6 +232,23 @@ sub start : Local Args(1) {
   $c->res->redirect($c->uri_for("/curs/$curs_key"));
 }
 
+sub store_all_statuses : Local Args(0) {
+  my ($self, $c) = @_;
+
+  my $track_schema = $c->schema('track');
+  my $config = $c->config();
+
+  my $iter = PomCur::Track::cursdb_iterator($config, $track_schema);
+  while (my $cursdb = $iter->()) {
+    PomCur::Controller::Curs::store_statuses($config, $cursdb);
+  }
+
+  $c->flash()->{message} =
+    'Stored statuses for all sessions';
+  $c->res->redirect($c->uri_for('/'));
+  $c->detach();
+}
+
 =head1 LICENSE
 
 This library is free software. You can redistribute it and/or modify

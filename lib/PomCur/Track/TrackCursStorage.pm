@@ -41,20 +41,20 @@ use Moose::Role;
 
 with 'PomCur::Track::TrackAdaptor';
 
-requires 'curs_key';
+=head2
 
-has curs_object => (
-  is => 'ro',
-  isa => 'PomCur::TrackDB::Curs',
-  builder => '_make_curs_object',
-);
+ Usage   : my $curs = $self->get_curs_object($curs_key);
+ Function: Find the Curs DBIx::Class object for the given key
+ Args    : $curs_key - the session key
+ Returns : the Curs object
 
-sub _make_curs_object
+=cut
+sub get_curs_object
 {
   my $self = shift;
+  my $curs_key = shift;
 
   my $schema = $self->schema();
-  my $curs_key = $self->curs_key();
 
   return $schema->find_with_type('Curs', { curs_key => $curs_key });
 }

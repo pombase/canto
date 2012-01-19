@@ -51,18 +51,22 @@ use PomCur::Curs::Utils;
 
 use constant {
   # user needs to confirm name and email address
-  NEEDS_SUBMITTER => 0,
+  NEEDS_SUBMITTER => "NEEDS_SUBMITTER",
   # no genes in database, user needs to upload some
-  NEEDS_GENES => 1,
-  READY => 2,
-  DONE => 3
+  NEEDS_GENES => "NEEDS_GENES",
+  READY => "READY",
+  FINISHED => "FINISHED"
 };
+
+use constant FINISHED_TEXT_KEY => 'finished_text';
+
 
 # actions to execute for each state, undef for special cases
 my %state_dispatch = (
   NEEDS_SUBMITTER, 'submitter_update',
   NEEDS_GENES, 'gene_upload',
   READY, undef,
+  FINISHED, 'finished_publication',
 );
 
 # used by the tests to find the most reecently created annotation
@@ -108,7 +112,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{annotation_types} = $config->{annotation_types};
   $st->{annotation_type_list} = $config->{annotation_type_list};
 
-  my ($state, $submitter_email, $gene_count) = _get_state($c);
+  my ($state, $submitter_email, $gene_count) = _get_state($schema);
   $st->{state} = $state;
 
   $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
@@ -125,7 +129,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $pub_id = get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
 
-  if ($state >= NEEDS_GENES) {
+  if ($state ne NEEDS_GENES and $state ne NEEDS_SUBMITTER) {
     $st->{submitter_email} = $submitter_email;
     $st->{submitter_name} = get_metadata($schema, 'submitter_name');
   }
@@ -144,11 +148,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 # or DONE.  See the %state hash above for details
 sub _get_state
 {
-  my $c = shift;
+  my $schema = shift;
 
-  my $st = $c->stash();
-
-  my $schema = $st->{schema};
   my $submitter_email = get_metadata($schema, 'submitter_email');
 
   my $state = undef;
@@ -159,7 +160,11 @@ sub _get_state
     $gene_count = $gene_rs->count();
 
     if ($gene_count > 0) {
-      $state = READY;
+      if (defined get_metadata($schema, FINISHED_TEXT_KEY)) {
+        $state = FINISHED;
+      } else {
+        $state = READY;
+      }
     } else {
       $state = NEEDS_GENES;
     }
@@ -168,6 +173,31 @@ sub _get_state
   }
 
   return ($state, $submitter_email, $gene_count);
+}
+
+=head2
+
+ Usage   : PomCur::Controller::Curs::store_state($config, $schema)
+ Function: Store all the current state via the status adaptor
+ Args    : $config - the Config object
+           $schema - the CursDB object
+ Returns : nothing
+
+=cut
+sub store_statuses
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my $adaptor = PomCur::Track::get_adaptor($config, 'status');
+
+  my ($status, $submitter_email, $gene_count) = _get_state($schema);
+
+  my $curs_key =
+    $schema->resultset('Metadata')->find({ key => 'curs_key' })->value();
+
+  $adaptor->store($curs_key, 'annotation_status', $status);
+  $adaptor->store($curs_key, 'genes_annotated_count', $gene_count);
 }
 
 sub _redirect_and_detach
@@ -1330,9 +1360,7 @@ sub finish_form : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
-  my $finished_text_key = 'finished_text';
-
-  if (get_metadata($schema, $finished_text_key)) {
+  if (get_metadata($schema, FINISHED_TEXT_KEY)) {
     _redirect_and_detach($c, 'finished_publication');
   }
 
@@ -1371,8 +1399,7 @@ sub finish_form : Chained('top') Args(0)
     $text =~ s/^\s+//;
     $text =~ s/\s+$//;
 
-    $schema->create_with_type('Metadata', { key => 'finished_text',
-                                            value => $text });
+    set_metadata($schema, FINISHED_TEXT_KEY, $text);
 
     _redirect_and_detach($c, 'finished_publication');
   }
