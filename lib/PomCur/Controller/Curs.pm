@@ -197,7 +197,7 @@ sub store_statuses
     $schema->resultset('Metadata')->find({ key => 'curs_key' })->value();
 
   $adaptor->store($curs_key, 'annotation_status', $status);
-  $adaptor->store($curs_key, 'genes_annotated_count', $gene_count);
+  $adaptor->store($curs_key, 'genes_annotated_count', $gene_count // 0);
 }
 
 sub _redirect_and_detach
