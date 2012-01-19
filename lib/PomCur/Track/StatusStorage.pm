@@ -101,6 +101,8 @@ sub store
 
   die 'no curs' unless $curs;
 
+  my $guard = $self->schema()->txn_scope_guard();
+
   my ($cursprop_rs, $type_cvterm) = $self->_rs_and_type($curs, $type_name);
 
   $cursprop_rs->delete();
