@@ -4,7 +4,7 @@ long_name: Pombe community curation application
 database_name: PomBase
 header_image: logos/curation_tool.png
 
-app_version: v246
+app_version: v247
 
 # the path that the home link goes to
 home_path: '/track/track'
