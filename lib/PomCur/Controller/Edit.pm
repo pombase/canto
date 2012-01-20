@@ -362,8 +362,9 @@ sub _initialise_form
   }
 
   for my $field_info (@field_infos) {
-    if (!$field_info->{admin_only} ||
-          $c->user_exists() && $c->user()->role()->name() eq 'admin') {
+    if ((!$field_info->{admin_only} ||
+         $c->user_exists() && $c->user()->role()->name() eq 'admin') &&
+        $c->schema()->column_type($field_info, $type) ne 'computed') {
       push @elements, _init_form_field($c, $field_info, $object, $type);
     }
   }
@@ -526,7 +527,9 @@ sub _update_object {
       $value = undef;
     }
 
-    if ($schema->column_type(\%field_info, $type) eq 'collection') {
+    my $column_type = $schema->column_type(\%field_info, $type);
+
+    if ($column_type eq 'collection') {
       # special case for collections, we need to look up the objects
       my $referenced_class_name;
 
@@ -584,7 +587,11 @@ sub _update_object {
         $object->$set_meth(\@values);
       }
     } else {
-      $object->$field_db_column($value);
+      if ($column_type eq 'attribute') {
+        $object->$field_db_column($value);
+      } else {
+        # can't set computed columns
+      }
     }
   }
 

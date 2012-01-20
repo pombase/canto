@@ -374,7 +374,11 @@ sub column_type {
            && $info_ref->{attrs}->{accessor} eq 'multi')) {
     return 'collection';
   } else {
-    return 'attribute';
+    if (!defined $field_info->{source} || !ref $field_info->{source}) {
+      return 'attribute';
+    } else {
+      return 'computed';
+    }
   }
 }
 
