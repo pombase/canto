@@ -363,6 +363,9 @@ class_info:
           source: pub
         - name: curs_key
           editable: 0
+        - name: status
+          source:
+            sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status'"
 # if the hook dies the creation fails
       pre_create_hook: 'PomCur::Track::create_curs_db_hook'
     gene:
@@ -403,6 +406,9 @@ class_info:
     named_genes:
       extends: gene
       constraint: "primary_name is not null"
+    finished_sessions:
+      extends: curs
+      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'FINISHED')"
   chado:
     cv:
       class_display_name: controlled vocabulary
@@ -546,6 +552,7 @@ reports:
   track:
     - new_publications
     - named_genes
+    - finished_sessions
   chado:
     - protein_and_domain_terms
     - types_and_counts
