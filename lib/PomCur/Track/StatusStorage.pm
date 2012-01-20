@@ -72,7 +72,7 @@ sub _rs_and_type
 =head2 store
 
  Usage   : $status_storage->store($curs_key, $type, 'value');
-       OR: $status_storage->store($curs_key, 'genes_annotated_count', $count);
+       OR: $status_storage->store($curs_key, 'session_genes_count', $count);
        OR: $status_storage->store($curs_key, 'annotation_status', 'finished');
  Function: Store status information about a curation session in the Track
            database, without knowledge of the database schema.  The data

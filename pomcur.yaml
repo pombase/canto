@@ -83,10 +83,10 @@ db_initial_data:
               accession: annotation_status
               db:
                 name: PomCur
-          - name: genes_annotated_count
+          - name: session_genes_count
             # The number of genes the user has added to the session
             dbxref:
-              accession: genes_annotated_count
+              accession: session_genes_count
               db:
                 name: PomCur
       - name: PomCur publication triage status

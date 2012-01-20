@@ -204,7 +204,7 @@ sub store_statuses
   my $curs_key = $metadata_row->value();
 
   $adaptor->store($curs_key, 'annotation_status', $status);
-  $adaptor->store($curs_key, 'genes_annotated_count', $gene_count // 0);
+  $adaptor->store($curs_key, 'session_genes_count', $gene_count // 0);
 }
 
 sub _redirect_and_detach

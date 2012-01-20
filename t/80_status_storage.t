@@ -22,4 +22,4 @@ is($storage->retrieve($curs_key, 'annotation_status'), 'value1');
 
 my @type_names = $storage->types();
 
-ok(grep { $_ eq 'genes_annotated_count' } @type_names);
+ok(grep { $_ eq 'session_genes_count' } @type_names);
