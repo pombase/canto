@@ -193,8 +193,15 @@ sub store_statuses
 
   my ($status, $submitter_email, $gene_count) = _get_state($schema);
 
-  my $curs_key =
-    $schema->resultset('Metadata')->find({ key => 'curs_key' })->value();
+  my $metadata_rs = $schema->resultset('Metadata');
+  my $metadata_row = $metadata_rs->find({ key => 'curs_key' });
+
+  if (!defined $metadata_row) {
+    warn 'failed to read curs_key from: ', $schema->storage()->connect_info();
+    return;
+  }
+
+  my $curs_key = $metadata_row->value();
 
   $adaptor->store($curs_key, 'annotation_status', $status);
   $adaptor->store($curs_key, 'genes_annotated_count', $gene_count // 0);
