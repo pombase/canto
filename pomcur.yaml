@@ -78,15 +78,15 @@ db_initial_data:
       - name: PomCur cursprop types
         cvterms:
           - name: annotation_status
-            description: "The session status (eg. 'NEEDS_GENES', 'READY', 'FINSISHED')"
+            # The session status (eg. 'NEEDS_GENES', 'READY', 'FINSISHED')
             dbxref:
               accession: annotation_status
               db:
                 name: PomCur
-          - name: genes_count
-            description: The number of genes the user has added to the session
+          - name: genes_annotated_count
+            # The number of genes the user has added to the session
             dbxref:
-              accession: genes_count
+              accession: genes_annotated_count
               db:
                 name: PomCur
       - name: PomCur publication triage status
