@@ -588,10 +588,20 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
   _redirect_and_detach($c);
 }
 
+my $iso_date_template = "%4d-%02d-%02d";
+
+
 sub _get_iso_date
 {
   my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time);
-  return sprintf "%4d-%02d-%02d", 1900+$year, $mon+1, $mday
+  return sprintf "$iso_date_template", 1900+$year, $mon+1, $mday
+}
+
+sub _get_datetime
+{
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time);
+  return sprintf "$iso_date_template %02d:%02d:%02d",
+    1900+$year, $mon+1, $mday, $hour, $min, $sec;
 }
 
 sub annotation_ontology_edit
