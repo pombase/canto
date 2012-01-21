@@ -1,1 +1,9 @@
-Thank you for your contribution to <% $c->config()->{database_name} %>
+<p>
+Thank you for your contribution to <% $c->config()->{database_name} %>.  Your
+annotations will now be sent to the curation team for inclusion in the
+database.
+</p>
+<p>
+If you wish to modify an annotation you have made, please contact
+the curators.
+</p>
