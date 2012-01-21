@@ -78,7 +78,7 @@ db_initial_data:
       - name: PomCur cursprop types
         cvterms:
           - name: annotation_status
-            # The session status (eg. 'NEEDS_GENES', 'READY', 'FINSISHED')
+            # The session status (eg. 'NEEDS_GENES', 'ACTIVE', 'FINSISHED')
             dbxref:
               accession: annotation_status
               db:

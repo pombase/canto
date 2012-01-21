@@ -54,8 +54,10 @@ use constant {
   NEEDS_SUBMITTER => "NEEDS_SUBMITTER",
   # no genes in database, user needs to upload some
   NEEDS_GENES => "NEEDS_GENES",
-  READY => "READY",
-  FINISHED => "FINISHED"
+  # session can be used for curation
+  ACTIVE => "ACTIVE",
+  # user has indicated that they are finished
+  FINISHED => "FINISHED",
 };
 
 use constant FINISHED_TEXT_KEY => 'finished_text';
@@ -65,7 +67,7 @@ use constant FINISHED_TEXT_KEY => 'finished_text';
 my %state_dispatch = (
   NEEDS_SUBMITTER, 'submitter_update',
   NEEDS_GENES, 'gene_upload',
-  READY, undef,
+  ACTIVE, undef,
   FINISHED, 'finished_publication',
 );
 
@@ -163,7 +165,7 @@ sub _get_state
       if (defined get_metadata($schema, FINISHED_TEXT_KEY)) {
         $state = FINISHED;
       } else {
-        $state = READY;
+        $state = ACTIVE;
       }
     } else {
       $state = NEEDS_GENES;
