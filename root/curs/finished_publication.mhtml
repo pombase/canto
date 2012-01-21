@@ -1,9 +1,21 @@
+<%args>
+$curs_root_uri
+</%args>
+
 <p>
 Thank you for your contribution to <% $c->config()->{database_name} %>.  Your
-annotations will now be sent to the curation team for inclusion in the
+annotations have now been sent to the curation team for inclusion in the
 database.
 </p>
 <p>
 If you wish to modify an annotation you have made, please contact
 the curators.
 </p>
+
+% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+Admin only: <a href="<% $reactivate_session_uri %>">Reactivate session</a>
+% }
+
+<%init>
+my $reactivate_session_uri = $curs_root_uri . '/reactivate_session/';
+</%init>

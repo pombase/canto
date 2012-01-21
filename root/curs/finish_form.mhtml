@@ -3,7 +3,16 @@ $form
 $finish_help
 </%args>
 
-<% $finish_help %>
+<p>
+Thank you for your contribution to <% $c->config()->{database_name} %>.  Your
+annotations will now be sent to the curation team for inclusion in the
+database.
+</p>
+
+<p>
+If you have further information about the publication that would like send to
+the curators, please include it below.
+</p>
 
 <% $form %>
 

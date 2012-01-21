@@ -58,10 +58,18 @@ use constant {
   ACTIVE => "ACTIVE",
   # user has indicated that they are finished
   FINISHED => "FINISHED",
+  # session has been checked by a curator
+  CHECKED => "CHECKED",
+  # session has been exported to JSON
+  EXPORTED => "EXPORTED",
 };
 
-use constant FINISHED_TEXT_KEY => 'finished_text';
-
+use constant {
+  FINISHED_TIMESTAMP_KEY => 'finished_timestamp',
+  CHECKED_TIMESTAMP_KEY => 'checked_timestamp',
+  EXPORT_TIMESTAMP_KEY => 'export_timestamp',
+  MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
+};
 
 # actions to execute for each state, undef for special cases
 my %state_dispatch = (
@@ -69,6 +77,8 @@ my %state_dispatch = (
   NEEDS_GENES, 'gene_upload',
   ACTIVE, undef,
   FINISHED, 'finished_publication',
+  CHECKED, 'finished_publication',
+  EXPORTED, 'finished_publication',
 );
 
 # used by the tests to find the most reecently created annotation
@@ -138,7 +148,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{gene_count} = get_ordered_gene_rs($schema)->count();
 
-  if ($path !~ /gene_upload|edit_genes|confirm_genes/) {
+  if ($path !~ /gene_upload|edit_genes|confirm_genes|finish_form|reactivate_session/) {
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
       $c->detach($dispatch_dest);
@@ -162,7 +172,7 @@ sub _get_state
     $gene_count = $gene_rs->count();
 
     if ($gene_count > 0) {
-      if (defined get_metadata($schema, FINISHED_TEXT_KEY)) {
+      if (defined get_metadata($schema, FINISHED_TIMESTAMP_KEY)) {
         $state = FINISHED;
       } else {
         $state = ACTIVE;
@@ -1379,13 +1389,11 @@ sub finish_form : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
-  if (get_metadata($schema, FINISHED_TEXT_KEY)) {
-    _redirect_and_detach($c, 'finished_publication');
-  }
+  set_metadata($schema, FINISHED_TIMESTAMP_KEY, _get_datetime());
 
   my $st = $c->stash();
 
-  $st->{title} = 'Finish publication';
+  $st->{title} = 'Finish curation session';
   $st->{show_title} = 0;
   $st->{template} = 'curs/finish_form.mhtml';
 
@@ -1418,7 +1426,7 @@ sub finish_form : Chained('top') Args(0)
     $text =~ s/^\s+//;
     $text =~ s/\s+$//;
 
-    set_metadata($schema, FINISHED_TEXT_KEY, $text);
+    set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
 
     _redirect_and_detach($c, 'finished_publication');
   }
@@ -1433,6 +1441,20 @@ sub finished_publication : Chained('top') Args(0)
   $st->{title} = 'Finished publication';
   $st->{show_title} = 0;
   $st->{template} = 'curs/finished_publication.mhtml';
+}
+
+sub reactivate_session : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $schema = $c->stash()->{schema};
+
+  unset_metadata($schema, FINISHED_TIMESTAMP_KEY);
+  unset_metadata($schema, CHECKED_TIMESTAMP_KEY);
+
+  $c->flash()->{message} = 'Session has been reactivated';
+
+  _redirect_and_detach($c);
 }
 
 sub end : Private
