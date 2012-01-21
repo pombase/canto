@@ -8,6 +8,7 @@ $submitter_email => undef
     <li>
       <div class="useridentifier"> 
         <span class="email-address"> <% $submitter_email %> </span>
+        <span class="email-address logged-in-address"> <% $logged_in_username %> </span>
       </div>
     </li>
 % }
@@ -16,3 +17,11 @@ $submitter_email => undef
     </li>
   </ul>
 </div>
+
+<%init>
+my $logged_in_username = '';
+if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+  $logged_in_username = '(logged in as: ' . $c->user()->email_address() . ')';
+}
+
+</%init>
