@@ -69,11 +69,16 @@ div#footer .sponsor {
   padding-left: 25px;
 }
 
-#error-list .error, #message-list .message {
+#error-list .error, #message-list .message, #notice-list .notice {
   padding: 10px;
   margin: 20px 0px 10px 5px;
   width: 62%;
   clear: both;
+}
+
+#notice-list .notice {
+  border: 2px solid blue;
+  background-color: #fff;
 }
 
 #error-list .error {

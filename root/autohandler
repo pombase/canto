@@ -3,6 +3,7 @@ $title
 $show_title => 1
 $error => undef
 $message => undef
+$notice => undef
 $page_description_id => 'page-description'
 </%args>
 
@@ -16,6 +17,21 @@ $page_description_id => 'page-description'
 
 <& breadcrumbs.mhtml &>
 <& contact.mhtml &>
+
+<div id="notice-list">
+% for my $notice (@notices) {
+<div class="notice">
+  <strong>
+    <% $notice->{title} %>
+  </strong>
+%   if (exists $notice->{text}) {
+  <div>
+    <% $notice->{text} %>
+  </div>
+%   }
+</div>
+% }
+</div>
 
 <div id="error-list">
 % for my $err (@errors) {
@@ -92,6 +108,7 @@ my $tidy = sub {
 # flash_to_stash doesn't seem to work, so:
 my @errors = $tidy->($error);
 my @messages = $tidy->($message);
+my @notices = $tidy->($notice);
 </%init>
 
 <%flags>

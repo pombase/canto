@@ -58,6 +58,8 @@ use constant {
   ACTIVE => "ACTIVE",
   # user has indicated that they are finished
   FINISHED => "FINISHED",
+  # sessions is being checked by a curator
+  CHECKING => "CHECKING",
   # session has been checked by a curator
   CHECKED => "CHECKED",
   # session has been exported to JSON
@@ -67,7 +69,8 @@ use constant {
 use constant {
   FINISHED_TIMESTAMP_KEY => 'finished_timestamp',
   CHECKED_TIMESTAMP_KEY => 'checked_timestamp',
-  EXPORT_TIMESTAMP_KEY => 'export_timestamp',
+  CHECKING_TIMESTAMP_KEY => 'checking_timestamp',
+  EXPORTED_TIMESTAMP_KEY => 'exported_timestamp',
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
 };
 
@@ -76,6 +79,7 @@ my %state_dispatch = (
   NEEDS_SUBMITTER, 'submitter_update',
   NEEDS_GENES, 'gene_upload',
   ACTIVE, undef,
+  CHECKING, undef,
   FINISHED, 'finished_publication',
   CHECKED, 'finished_publication',
   EXPORTED, 'finished_publication',
@@ -127,6 +131,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my ($state, $submitter_email, $gene_count) = _get_state($schema);
   $st->{state} = $state;
 
+  if ($state eq CHECKING && $c->user_exists() && $c->user()->role()->name() eq 'admin') {
+    $st->{notice} = 'Session is being checked';
+  }
+
   $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
   $st->{first_contact_name} = get_metadata($schema, 'first_contact_name');
 
@@ -148,7 +156,18 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{gene_count} = get_ordered_gene_rs($schema)->count();
 
-  if ($path !~ /gene_upload|edit_genes|confirm_genes|finish_form|reactivate_session/) {
+  my $use_dispatch = 1;
+
+  if ($state eq NEEDS_GENES &&
+      $path =~ /gene_upload|edit_genes|confirm_genes/) {
+    $use_dispatch = 0;
+  }
+  if (($state eq FINISHED || $state eq CHECKED) &&
+      $path =~ /finish_form|reactivate_session|check_session/) {
+    $use_dispatch = 0;
+  }
+
+  if ($use_dispatch) {
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
       $c->detach($dispatch_dest);
@@ -172,10 +191,22 @@ sub _get_state
     $gene_count = $gene_rs->count();
 
     if ($gene_count > 0) {
-      if (defined get_metadata($schema, FINISHED_TIMESTAMP_KEY)) {
-        $state = FINISHED;
+      if (defined get_metadata($schema, EXPORTED_TIMESTAMP_KEY)) {
+        $state = EXPORTED;
       } else {
-        $state = ACTIVE;
+        if (defined get_metadata($schema, CHECKED_TIMESTAMP_KEY)) {
+          $state = CHECKED;
+        } else {
+          if (defined get_metadata($schema, CHECKING_TIMESTAMP_KEY)) {
+            $state = CHECKING;
+          } else {
+            if (defined get_metadata($schema, FINISHED_TIMESTAMP_KEY)) {
+              $state = FINISHED;
+            } else {
+              $state = ACTIVE;
+            }
+          }
+        }
       }
     } else {
       $state = NEEDS_GENES;
@@ -1474,10 +1505,42 @@ sub reactivate_session : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
 
   unset_metadata($schema, FINISHED_TIMESTAMP_KEY);
+  unset_metadata($schema, CHECKING_TIMESTAMP_KEY);
   unset_metadata($schema, CHECKED_TIMESTAMP_KEY);
   store_statuses($c->config(), $schema);
 
   $c->flash()->{message} = 'Session has been reactivated';
+
+  _redirect_and_detach($c);
+}
+
+sub check_session : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $schema = $c->stash()->{schema};
+
+  if (!defined get_metadata($schema, FINISHED_TIMESTAMP_KEY)) {
+    set_metadata($schema, FINISHED_TIMESTAMP_KEY, _get_datetime());
+  }
+  set_metadata($schema, CHECKING_TIMESTAMP_KEY, _get_datetime());
+  store_statuses($c->config(), $schema);
+
+  $c->flash()->{message} = 'Session ready to be checked';
+
+  _redirect_and_detach($c);
+}
+
+sub check_completed : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $schema = $c->stash()->{schema};
+
+  set_metadata($schema, CHECKED_TIMESTAMP_KEY, _get_datetime());
+  store_statuses($c->config(), $schema);
+
+  $c->flash()->{message} = 'Session checked';
 
   _redirect_and_detach($c);
 }

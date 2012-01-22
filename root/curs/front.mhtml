@@ -13,7 +13,11 @@ $pub
 
 <& /pub_details.mhtml, pub => $pub &>
 
+% if ($state eq 'ACTIVE') {
 <button id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>
+% } else {
+<button id="curs-check-completed" class="curs-finish-button">Finish checking</button>
+% }
 
 <div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {

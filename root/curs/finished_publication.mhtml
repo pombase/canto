@@ -1,11 +1,20 @@
 <%args>
+$state
 $curs_root_uri
 </%args>
 
 <p>
-Thank you for your contribution to <% $c->config()->{database_name} %>.  Your
-annotations have now been sent to the curation team for inclusion in the
+Thank you for your contribution to <% $c->config()->{database_name} %>.
+</p>
+
+<p>
+% if ($state eq 'FINISHED') {
+Your annotations have now been sent to the curation team for inclusion in the
 database.
+% } else {
+Your annotations have now been checked by the curation team and will be
+included in the next database update.
+% }
 </p>
 <p>
 If you wish to modify an annotation you have made, please contact
@@ -13,9 +22,19 @@ the curators.
 </p>
 
 % if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
-Admin only: <a href="<% $reactivate_session_uri %>">Reactivate session</a>
+Admin only: <a href="<% $check_session_uri %>"><% $check_text %> session</a>
+or <a href="<% $reactivate_session_uri %>">Reactivate session</a>
 % }
 
 <%init>
 my $reactivate_session_uri = $curs_root_uri . '/reactivate_session/';
+my $check_session_uri = $curs_root_uri . '/check_session/';
+
+my $check_text;
+if ($state eq 'CHECKED') {
+  $check_text = 'Re-check';
+} else {
+  $check_text = 'Check';
+}
+
 </%init>
