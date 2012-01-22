@@ -301,9 +301,11 @@ sub submitter_update : Private
                                               value => $submitter_name });
     };
 
+    store_statuses($c->config(), $schema);
+
     $schema->txn_do($add_submitter);
 
-    _redirect_and_detach($c);
+ _redirect_and_detach($c);
   }
 }
 
@@ -468,15 +470,19 @@ sub _edit_genes_helper
 sub edit_genes : Chained('top') Args(0) Form
 {
   my $self = shift;
+  my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 0);
+  store_statuses($c->config(), $c->stash()->{schema});
 }
 
 sub confirm_genes : Chained('top') Args(0) Form
 {
   my $self = shift;
+  my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 1);
+  store_statuses($c->config(), $c->stash()->{schema});
 }
 
 sub gene_upload : Chained('top') Args(0) Form
@@ -540,6 +546,8 @@ sub gene_upload : Chained('top') Args(0) Form
 
     my $result = _find_and_create_genes($schema, $c->config(), \@search_terms);
 
+    store_statuses($c->config(), $schema);
+
     if ($result) {
       my @missing = @{$result->{missing}};
       $st->{error} =
@@ -576,6 +584,8 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
 
   $schema->txn_do($delete_sub);
 
+  store_statuses($c->config(), $schema);
+
   _redirect_and_detach($c);
 }
 
@@ -594,6 +604,8 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
   };
 
   $schema->txn_do($delete_sub);
+
+  store_statuses($c->config(), $schema);
 
   _redirect_and_detach($c);
 }
@@ -680,7 +692,6 @@ sub annotation_ontology_edit
 
     my %annotation_data = (term_ontid => $term_ontid);
 
-
     if ($submit_value eq 'Submit suggestion') {
       my $suggested_name = $form->param_value('ferret-suggest-name');
       my $suggested_definition =
@@ -717,6 +728,8 @@ sub annotation_ontology_edit
 
     my $annotation_id = $annotation->annotation_id();
     $_debug_annotation_id = $annotation_id;
+
+    store_statuses($c->config(), $schema);
 
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }
@@ -803,6 +816,8 @@ sub annotation_interaction_edit
     my $annotation_id = $annotation->annotation_id();
     $_debug_annotation_id = $annotation_id;
 
+    store_statuses($c->config(), $schema);
+
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }
 }
@@ -831,6 +846,8 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
     ontology => \&annotation_ontology_edit,
     interaction => \&annotation_interaction_edit,
   );
+
+  store_statuses($c->config(), $schema);
 
   &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene,
                                                     $annotation_config);
@@ -942,6 +959,8 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     $annotation->update();
 
     my $with_gene = $evidence_types{$evidence_select}->{with_gene};
+
+    store_statuses($c->config(), $schema);
 
     if ($with_gene) {
       _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
@@ -1072,6 +1091,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     $guard->commit();
 
+    store_statuses($c->config(), $schema);
+
     _redirect_and_detach($c, 'gene', $gene->gene_id());
   }
 }
@@ -1151,6 +1172,8 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
 
     _maybe_transfer_annotation($c, $annotation, $annotation_config);
   }
+
+  store_statuses($c->config(), $schema);
 }
 
 sub gene : Chained('top') Args(1)
@@ -1390,6 +1413,7 @@ sub finish_form : Chained('top') Args(0)
   my $config = $c->config();
 
   set_metadata($schema, FINISHED_TIMESTAMP_KEY, _get_datetime());
+  store_statuses($c->config(), $schema);
 
   my $st = $c->stash();
 
@@ -1451,6 +1475,7 @@ sub reactivate_session : Chained('top') Args(0)
 
   unset_metadata($schema, FINISHED_TIMESTAMP_KEY);
   unset_metadata($schema, CHECKED_TIMESTAMP_KEY);
+  store_statuses($c->config(), $schema);
 
   $c->flash()->{message} = 'Session has been reactivated';
 
