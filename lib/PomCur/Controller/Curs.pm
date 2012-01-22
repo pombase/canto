@@ -131,7 +131,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my ($state, $submitter_email, $gene_count) = _get_state($schema);
   $st->{state} = $state;
 
-  if ($state eq CHECKING && $c->user_exists() && $c->user()->role()->name() eq 'admin') {
+  if ($state eq CHECKING) {
     $st->{notice} = 'Session is being checked';
   }
 
@@ -156,21 +156,25 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{gene_count} = get_ordered_gene_rs($schema)->count();
 
-  my $use_dispatch = 1;
+  if ($state eq CHECKING &&
+      !($c->user_exists() && $c->user()->role()->name() eq 'admin')) {
+    $c->detach('finished_publication');
+  } else {
+    my $use_dispatch = 1;
+    if ($state eq NEEDS_GENES &&
+        $path =~ /gene_upload|edit_genes|confirm_genes/) {
+      $use_dispatch = 0;
+    }
+    if (($state eq FINISHED || $state eq CHECKED) &&
+        $path =~ /finish_form|reactivate_session|check_session/) {
+      $use_dispatch = 0;
+    }
 
-  if ($state eq NEEDS_GENES &&
-      $path =~ /gene_upload|edit_genes|confirm_genes/) {
-    $use_dispatch = 0;
-  }
-  if (($state eq FINISHED || $state eq CHECKED) &&
-      $path =~ /finish_form|reactivate_session|check_session/) {
-    $use_dispatch = 0;
-  }
-
-  if ($use_dispatch) {
-    my $dispatch_dest = $state_dispatch{$state};
-    if (defined $dispatch_dest) {
-      $c->detach($dispatch_dest);
+    if ($use_dispatch) {
+      my $dispatch_dest = $state_dispatch{$state};
+      if (defined $dispatch_dest) {
+        $c->detach($dispatch_dest);
+      }
     }
   }
 }
@@ -1524,9 +1528,9 @@ sub check_session : Chained('top') Args(0)
     set_metadata($schema, FINISHED_TIMESTAMP_KEY, _get_datetime());
   }
   set_metadata($schema, CHECKING_TIMESTAMP_KEY, _get_datetime());
-  store_statuses($c->config(), $schema);
+  unset_metadata($schema, CHECKED_TIMESTAMP_KEY);
 
-  $c->flash()->{message} = 'Session ready to be checked';
+  store_statuses($c->config(), $schema);
 
   _redirect_and_detach($c);
 }
