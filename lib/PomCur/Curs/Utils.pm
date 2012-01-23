@@ -487,4 +487,24 @@ sub get_existing_annotations
   }
 }
 
+=head2 store_all_statuses
+
+ Usage   : PomCur::Curs::Utils::store_all_statuses($config, $schema);
+ Function: Store the current status of all Curs DBs in the Track DB
+ Args    : $config - the PomCur::Config object
+           $schema - a PomCur::TrackDB object
+ Returns :
+
+=cut
+sub store_all_statuses
+{
+  my $config = shift;
+  my $track_schema = shift;
+
+  my $iter = PomCur::Track::cursdb_iterator($config, $track_schema);
+  while (my $cursdb = $iter->()) {
+    PomCur::Controller::Curs::store_statuses($config, $cursdb);
+  }
+}
+
 1;

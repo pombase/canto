@@ -9,6 +9,7 @@ use Carp;
 use Text::CSV;
 use File::Copy qw(copy);
 use File::Temp qw(tempfile);
+use Clone;
 
 BEGIN {
   push @INC, "lib";
@@ -36,6 +37,7 @@ my %test_cases = %{$config->{test_config}->{test_cases}};
 
 sub make_curs_dbs
 {
+  my $config = shift;
   my $test_case_key = shift;
 
   my $test_case = $test_cases{$test_case_key};
@@ -76,9 +78,23 @@ for my $test_case_key (sort keys %test_cases) {
     $base_track_db = $temp_track_db_no_data;
   }
 
-  ($test_schemas{$test_case_key}) =
+  my $dbname;
+
+  ($test_schemas{$test_case_key}, $dbname) =
     PomCur::TestUtil::make_track_test_db($config, $test_case_key, $base_track_db);
-  make_curs_dbs($test_case_key);
+
+  make_curs_dbs($config, $test_case_key);
+
+  my $config_copy = clone $config;
+
+  $config_copy->{'Model::TrackModel'} = {
+    schema_class => 'PomCur::TrackDB',
+    connect_info => [
+      "dbi:SQLite:dbname=$dbname"
+      ]
+    };
+
+  PomCur::Curs::Utils::store_all_statuses($config_copy, $test_schemas{$test_case_key});
 }
 
 warn "Test initialisation complete\n";

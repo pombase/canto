@@ -238,10 +238,7 @@ sub store_all_statuses : Local Args(0) {
   my $track_schema = $c->schema('track');
   my $config = $c->config();
 
-  my $iter = PomCur::Track::cursdb_iterator($config, $track_schema);
-  while (my $cursdb = $iter->()) {
-    PomCur::Controller::Curs::store_statuses($config, $cursdb);
-  }
+  PomCur::Curs::store_all_statuses($config, $track_schema);
 
   $c->flash()->{message} =
     'Stored statuses for all sessions';
