@@ -135,7 +135,13 @@ sub retrieve
 
   my ($cursprop_rs) = $self->_rs_and_type($curs, $type_name);
 
-  return $cursprop_rs->first()->value();
+  my $first = $cursprop_rs->first();
+
+  if (defined $first) {
+    return $first->value();
+  } else {
+    return undef;
+  }
 }
 
 =head2
