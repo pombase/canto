@@ -10,8 +10,9 @@ database.
 </p>
 
 <p>
-If you have further information about the publication that would like send to
-the curators, please include it below.
+Is there any information in your paper which you could not curate in the
+curation tool.  Please describe the type of data briefly.  The curators may be
+able to capture this information.
 </p>
 
 <% $form %>
