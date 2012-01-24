@@ -51,37 +51,37 @@ use PomCur::Curs::Utils;
 
 use constant {
   # user needs to confirm name and email address
-  NEEDS_SUBMITTER => "NEEDS_SUBMITTER",
+  SESSION_CREATED => "SESSION_CREATED",
   # no genes in database, user needs to upload some
-  NEEDS_GENES => "NEEDS_GENES",
+  SESSION_ASSIGNED => "SESSION_ASSIGNED",
   # session can be used for curation
-  ACTIVE => "ACTIVE",
+  CURATION_IN_PROGRESS => "CURATION_IN_PROGRESS",
   # user has indicated that they are finished
-  FINISHED => "FINISHED",
+  NEEDS_APPROVAL => "NEEDS_APPROVAL",
   # sessions is being checked by a curator
-  CHECKING => "CHECKING",
+  APPROVAL_IN_PROGRESS => "APPROVAL_IN_PROGRESS",
   # session has been checked by a curator
-  CHECKED => "CHECKED",
+  APPROVED => "APPROVED",
   # session has been exported to JSON
   EXPORTED => "EXPORTED",
 };
 
 use constant {
-  FINISHED_TIMESTAMP_KEY => 'finished_timestamp',
-  CHECKED_TIMESTAMP_KEY => 'checked_timestamp',
-  CHECKING_TIMESTAMP_KEY => 'checking_timestamp',
+  NEEDS_APPROVAL_TIMESTAMP_KEY => 'needs_approval_timestamp',
+  APPROVED_TIMESTAMP_KEY => 'approved_timestamp',
+  APPROVAL_IN_PROGRESS_TIMESTAMP_KEY => 'approval_in_progress_timestamp',
   EXPORTED_TIMESTAMP_KEY => 'exported_timestamp',
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
 };
 
 # actions to execute for each state, undef for special cases
 my %state_dispatch = (
-  NEEDS_SUBMITTER, 'submitter_update',
-  NEEDS_GENES, 'gene_upload',
-  ACTIVE, undef,
-  CHECKING, undef,
-  FINISHED, 'finished_publication',
-  CHECKED, 'finished_publication',
+  SESSION_CREATED, 'submitter_update',
+  SESSION_ASSIGNED, 'gene_upload',
+  CURATION_IN_PROGRESS, undef,
+  APPROVAL_IN_PROGRESS, undef,
+  NEEDS_APPROVAL, 'finished_publication',
+  APPROVED, 'finished_publication',
   EXPORTED, 'finished_publication',
 );
 
@@ -131,7 +131,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my ($state, $submitter_email, $gene_count) = _get_state($schema);
   $st->{state} = $state;
 
-  if ($state eq CHECKING) {
+  if ($state eq APPROVAL_IN_PROGRESS) {
     $st->{notice} = 'Session is being checked';
   }
 
@@ -149,23 +149,23 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $pub_id = get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
 
-  if ($state ne NEEDS_SUBMITTER) {
+  if ($state ne SESSION_CREATED) {
     $st->{submitter_email} = $submitter_email;
     $st->{submitter_name} = get_metadata($schema, 'submitter_name');
   }
 
   $st->{gene_count} = get_ordered_gene_rs($schema)->count();
 
-  if ($state eq CHECKING &&
+  if ($state eq APPROVAL_IN_PROGRESS &&
       !($c->user_exists() && $c->user()->role()->name() eq 'admin')) {
     $c->detach('finished_publication');
   } else {
     my $use_dispatch = 1;
-    if ($state eq NEEDS_GENES &&
+    if ($state eq SESSION_ASSIGNED &&
         $path =~ /gene_upload|edit_genes|confirm_genes/) {
       $use_dispatch = 0;
     }
-    if (($state eq FINISHED || $state eq CHECKED) &&
+    if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
         $path =~ /finish_form|reactivate_session|check_session/) {
       $use_dispatch = 0;
     }
@@ -179,7 +179,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 }
 
-# Return a constant describing the state of the application, eg. NEEDS_GENES
+# Return a constant describing the state of the application, eg. SESSION_ASSIGNED
 # or DONE.  See the %state hash above for details
 sub _get_state
 {
@@ -198,25 +198,25 @@ sub _get_state
       if (defined get_metadata($schema, EXPORTED_TIMESTAMP_KEY)) {
         $state = EXPORTED;
       } else {
-        if (defined get_metadata($schema, CHECKED_TIMESTAMP_KEY)) {
-          $state = CHECKED;
+        if (defined get_metadata($schema, APPROVED_TIMESTAMP_KEY)) {
+          $state = APPROVED;
         } else {
-          if (defined get_metadata($schema, CHECKING_TIMESTAMP_KEY)) {
-            $state = CHECKING;
+          if (defined get_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY)) {
+            $state = APPROVAL_IN_PROGRESS;
           } else {
-            if (defined get_metadata($schema, FINISHED_TIMESTAMP_KEY)) {
-              $state = FINISHED;
+            if (defined get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
+              $state = NEEDS_APPROVAL;
             } else {
-              $state = ACTIVE;
+              $state = CURATION_IN_PROGRESS;
             }
           }
         }
       }
     } else {
-      $state = NEEDS_GENES;
+      $state = SESSION_ASSIGNED;
     }
   } else {
-    $state = NEEDS_SUBMITTER;
+    $state = SESSION_CREATED;
   }
 
   return ($state, $submitter_email, $gene_count);
@@ -1447,7 +1447,7 @@ sub finish_form : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
-  set_metadata($schema, FINISHED_TIMESTAMP_KEY, _get_datetime());
+  set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY, _get_datetime());
   store_statuses($c->config(), $schema);
 
   my $st = $c->stash();
@@ -1508,9 +1508,9 @@ sub reactivate_session : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  unset_metadata($schema, FINISHED_TIMESTAMP_KEY);
-  unset_metadata($schema, CHECKING_TIMESTAMP_KEY);
-  unset_metadata($schema, CHECKED_TIMESTAMP_KEY);
+  unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
+  unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
+  unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
   store_statuses($c->config(), $schema);
 
   $c->flash()->{message} = 'Session has been reactivated';
@@ -1524,11 +1524,11 @@ sub check_session : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  if (!defined get_metadata($schema, FINISHED_TIMESTAMP_KEY)) {
-    set_metadata($schema, FINISHED_TIMESTAMP_KEY, _get_datetime());
+  if (!defined get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
+    set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY, _get_datetime());
   }
-  set_metadata($schema, CHECKING_TIMESTAMP_KEY, _get_datetime());
-  unset_metadata($schema, CHECKED_TIMESTAMP_KEY);
+  set_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY, _get_datetime());
+  unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
 
   store_statuses($c->config(), $schema);
 
@@ -1541,10 +1541,10 @@ sub check_completed : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  set_metadata($schema, CHECKED_TIMESTAMP_KEY, _get_datetime());
+  set_metadata($schema, APPROVED_TIMESTAMP_KEY, _get_datetime());
   store_statuses($c->config(), $schema);
 
-  $c->flash()->{message} = 'Session checked';
+  $c->flash()->{message} = 'Session approved';
 
   _redirect_and_detach($c);
 }

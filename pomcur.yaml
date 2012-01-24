@@ -78,7 +78,7 @@ db_initial_data:
       - name: PomCur cursprop types
         cvterms:
           - name: annotation_status
-            # The session status (eg. 'NEEDS_GENES', 'ACTIVE', 'FINSISHED')
+            # The session status (eg. 'SESSION_CREATED', 'CURATION_IN_PROGRESS')
             dbxref:
               accession: annotation_status
               db:
@@ -411,7 +411,7 @@ class_info:
       constraint: "primary_name is not null"
     finished_sessions:
       extends: curs
-      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'FINISHED')"
+      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'NEEDS_APPROVAL')"
   chado:
     cv:
       class_display_name: controlled vocabulary

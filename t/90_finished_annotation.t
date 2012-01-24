@@ -46,11 +46,12 @@ test_psgi $app, sub {
     like ($res->content(), qr/Choose a gene to annotate/s);
     like ($res->content(), qr/Publication details/s);
 
-    is($status_storage->retrieve($curs_key, 'annotation_status'), "ACTIVE");
+    is($status_storage->retrieve($curs_key, 'annotation_status'),
+       PomCur::Controller::Curs::CURATION_IN_PROGRESS);
   }
 
   my $further_information =
-    "If you have further information about the publication";
+    "If there any information in your paper";
   my $thank_you ="Thank you for your contribution to PomBase";
   my $your_annotations = "Your annotations have been sent to the curation team for inclusion in the database";
 
@@ -68,10 +69,10 @@ test_psgi $app, sub {
     like ($content, qr/Your annotations will now be sent to the curation team/s);
     like ($content, qr/$further_information/s);
 
-    is($status_storage->retrieve($curs_key, 'annotation_status'), "FINISHED");
+    is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
 
-  # test submitting a message on the finsh form
+  # test submitting a message on the finish form
   {
     my $test_text = "A text string";
 
@@ -102,7 +103,7 @@ test_psgi $app, sub {
 
     PomCur::Role::MetadataAccess::get_metadata($curs_schema, PomCur::Controller::Curs::MESSAGE_FOR_CURATORS_KEY);
 
-    is($status_storage->retrieve($curs_key, 'annotation_status'), "FINISHED");
+    is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
 
   # check that we now redirect to the "finished" page
@@ -121,7 +122,7 @@ test_psgi $app, sub {
     unlike ($content, qr/$further_information/s);
     unlike ($content, qr/Admin only:/);
 
-    is($status_storage->retrieve($curs_key, 'annotation_status'), "FINISHED");
+    is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
 
   # log in
@@ -171,7 +172,7 @@ test_psgi $app, sub {
 
     like ($content, qr/Admin only:/);
 
-    is($status_storage->retrieve($curs_key, 'annotation_status'), "FINISHED");
+    is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
 };
 

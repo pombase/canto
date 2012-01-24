@@ -13,7 +13,7 @@ $pub
 
 <& /pub_details.mhtml, pub => $pub &>
 
-% if ($state eq 'ACTIVE') {
+% if ($state eq PomCur::Controller::Curs::CURATION_IN_PROGRESS) {
 <button id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>
 % } else {
 <button id="curs-check-completed" class="curs-finish-button">Finish checking</button>

@@ -8,11 +8,11 @@ Thank you for your contribution to <% $c->config()->{database_name} %>.
 </p>
 
 <p>
-% if ($state eq 'FINISHED') {
+% if ($state eq PomCur::Controller::Curs::NEEDS_APPROVAL) {
 Your annotations have been sent to the curation team for inclusion in the
 database.
 % } else {
-%   if ($state eq 'CHECKING') {
+%   if ($state eq PomCur::Controller::Curs::APPROVAL_IN_PROGRESS) {
 Your annotations are now being checked by the curation team.
 %   } else {
 Your annotations have been checked by the curation team and will be
