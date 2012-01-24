@@ -340,7 +340,7 @@ sub submitter_update : Private
 
     $schema->txn_do($add_submitter);
 
- _redirect_and_detach($c);
+    _redirect_and_detach($c);
   }
 }
 
