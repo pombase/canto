@@ -1508,10 +1508,15 @@ sub reactivate_session : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
-  unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
-  unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
-  store_statuses($c->config(), $schema);
+  my $proc = sub {
+    unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
+    unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
+    unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
+    store_statuses($c->config(), $schema);
+    store_statuses($c->config(), $schema);
+  };
+
+  $schema->txn_do($proc);
 
   $c->flash()->{message} = 'Session has been reactivated';
 
@@ -1524,11 +1529,15 @@ sub check_session : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  if (!defined get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
-    set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY, _get_datetime());
-  }
-  set_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY, _get_datetime());
-  unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
+  my $proc = sub {
+    if (!defined get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
+      set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY, _get_datetime());
+    }
+    set_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY, _get_datetime());
+    unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
+  };
+
+  $schema->txn_do($proc);
 
   store_statuses($c->config(), $schema);
 
