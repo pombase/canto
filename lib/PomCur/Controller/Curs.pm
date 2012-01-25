@@ -1513,7 +1513,6 @@ sub reactivate_session : Chained('top') Args(0)
     unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
     unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
     store_statuses($c->config(), $schema);
-    store_statuses($c->config(), $schema);
   };
 
   $schema->txn_do($proc);
