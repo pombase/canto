@@ -798,8 +798,8 @@ sub make_curs_db
   if (exists $curs_config->{submitter_email}) {
     $cursdb_schema->txn_do(
       sub {
-        _load_curs_db_data($config, $trackdb_schema, $cursdb_schema,
-                           $curs_config);
+        _load_curs_db_data($config, $trackdb_schema, $cursdb_schema, $curs_config);
+        PomCur::Controller::Curs::_store_suggestion_count($cursdb_schema);
       });
   }
 

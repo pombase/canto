@@ -44,7 +44,12 @@ my $full_expected_curation_session =
             term => "GO:0055085",
             status => "new",
             type => "biological_process",
-            publication => 'PMID:19756689'
+            publication => 'PMID:19756689',
+            term_suggestion => {
+                 name => 'miscellaneous transmembrane transport',
+                 definition =>
+                   'The process in which miscellaneous stuff is transported from one side of a membrane to the other.',
+            },
           } ],
         synonyms => ['SPAC637.01c'],
       },
@@ -129,6 +134,7 @@ my $full_expected_curation_session =
       first_contact_name => 'Ken Sawin',
       curs_key => 'aaaa0007',
       curation_pub_id => 'PMID:19756689',
+      term_suggestion_count => 1,
     },
     organisms => {
       4896 => {

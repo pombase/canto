@@ -72,6 +72,7 @@ use constant {
   APPROVAL_IN_PROGRESS_TIMESTAMP_KEY => 'approval_in_progress_timestamp',
   EXPORTED_TIMESTAMP_KEY => 'exported_timestamp',
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
+  TERM_SUGGESTION_COUNT_KEY => 'term_suggestion_count'
 };
 
 # actions to execute for each state, undef for special cases
@@ -250,8 +251,40 @@ sub store_statuses
 
   my $curs_key = $metadata_row->value();
 
+  my $term_suggest_count_row =
+    $metadata_rs->search({ key => TERM_SUGGESTION_COUNT_KEY })->first();
+
+  my $term_suggestion_count;
+
+  if (defined $term_suggest_count_row) {
+    $term_suggestion_count = $term_suggest_count_row->value();
+  } else {
+    $term_suggestion_count = 0;
+  }
+
   $adaptor->store($curs_key, 'annotation_status', $status);
   $adaptor->store($curs_key, 'session_genes_count', $gene_count // 0);
+  $adaptor->store($curs_key, 'session_term_suggestions_count',
+                  $term_suggestion_count);
+}
+
+sub _store_suggestion_count
+{
+  my $schema = shift;
+
+  my $ann_rs = $schema->resultset('Annotation')->search();
+
+  my $count = 0;
+
+  while (defined (my $ann = $ann_rs->next())) {
+    my $data = $ann->data();
+
+    if (exists $data->{term_suggestion}) {
+      $count++;
+    }
+  }
+
+  set_metadata($schema, TERM_SUGGESTION_COUNT_KEY, $count);
 }
 
 sub _redirect_and_detach
@@ -615,6 +648,8 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
     my $annotation = $schema->resultset('Annotation')->find($annotation_id);
     $annotation->status('deleted');
     $annotation->update();
+
+    _store_suggestion_count($schema);
   };
 
   $schema->txn_do($delete_sub);
@@ -741,6 +776,8 @@ sub annotation_ontology_edit
         name => $suggested_name,
         definition => $suggested_definition
       };
+
+      _store_suggestion_count($schema);
 
       $c->flash()->{message} = 'Note that your term suggestion has been '
         . 'stored, but the gene will be temporarily '

@@ -111,6 +111,9 @@ test_config:
              data:
                evidence_code: IMP
                term_ontid: GO:0055085
+               term_suggestion:
+                 name: miscellaneous transmembrane transport
+                 definition: The process in which miscellaneous stuff is transported from one side of a membrane to the other.
            - type: biological_process
              status: new
              genes(Gene:primary_identifier):
