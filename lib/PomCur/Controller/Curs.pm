@@ -53,7 +53,7 @@ use constant {
   # user needs to confirm name and email address
   SESSION_CREATED => "SESSION_CREATED",
   # no genes in database, user needs to upload some
-  SESSION_ASSIGNED => "SESSION_ASSIGNED",
+  SESSION_ACCEPTED => "SESSION_ACCEPTED",
   # session can be used for curation
   CURATION_IN_PROGRESS => "CURATION_IN_PROGRESS",
   # user has indicated that they are finished
@@ -78,7 +78,7 @@ use constant {
 # actions to execute for each state, undef for special cases
 my %state_dispatch = (
   SESSION_CREATED, 'submitter_update',
-  SESSION_ASSIGNED, 'gene_upload',
+  SESSION_ACCEPTED, 'gene_upload',
   CURATION_IN_PROGRESS, undef,
   APPROVAL_IN_PROGRESS, undef,
   NEEDS_APPROVAL, 'finished_publication',
@@ -162,7 +162,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $c->detach('finished_publication');
   } else {
     my $use_dispatch = 1;
-    if ($state eq SESSION_ASSIGNED &&
+    if ($state eq SESSION_ACCEPTED &&
         $path =~ /gene_upload|edit_genes|confirm_genes/) {
       $use_dispatch = 0;
     }
@@ -180,7 +180,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 }
 
-# Return a constant describing the state of the application, eg. SESSION_ASSIGNED
+# Return a constant describing the state of the application, eg. SESSION_ACCEPTED
 # or DONE.  See the %state hash above for details
 sub _get_state
 {
@@ -214,7 +214,7 @@ sub _get_state
         }
       }
     } else {
-      $state = SESSION_ASSIGNED;
+      $state = SESSION_ACCEPTED;
     }
   } else {
     $state = SESSION_CREATED;
