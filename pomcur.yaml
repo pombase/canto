@@ -375,6 +375,9 @@ class_info:
         - name: genes added
           source:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_genes_count'"
+        - name: term suggestions
+          source:
+            sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_term_suggestions_count'"
 # if the hook dies the creation fails
       pre_create_hook: 'PomCur::Track::create_curs_db_hook'
     gene:
