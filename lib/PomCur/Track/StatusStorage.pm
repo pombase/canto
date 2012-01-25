@@ -61,6 +61,10 @@ sub _rs_and_type
   my $terms_rs = _cv_rs($schema)->search_related('cvterms');
   my $type_cvterm = $terms_rs->find({ name => $type_name });
 
+  if (!defined $type_cvterm) {
+    die "Can't find Cvterm for $type_name\n";
+  }
+
   my $cursprop_rs =
     $curs->search_related('cursprops',
                           { curs => $curs->curs_id(),
