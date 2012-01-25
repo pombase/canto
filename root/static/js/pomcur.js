@@ -574,4 +574,11 @@ $(document).ready(function() {
     }
     window.location.href = bits.join('/') + '/start/' + pubmedid;
   });
+
+  $('.non-key-attribute').jTruncate({  
+        length: 300,  
+        minTrail: 50,  
+        moreText: "[show all]",  
+        lessText: "[hide]"
+    });
 });

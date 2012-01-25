@@ -38,7 +38,9 @@ $field_name
       </a>
     </span>
 %     } else {
-    <% format_field_value($col_conf, $field_value) %>
+    <span class="non-key-attribute">
+      <% format_field_value($col_conf, $field_value) %>
+    </span>
 %     }
   </span>
 %   }
