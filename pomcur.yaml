@@ -310,6 +310,7 @@ class_info:
         - name: authors
           editable: 1
         - name: abstract
+          hidden_field: 1
           editable: 1
         - name: assigned_curator
           editable: 1
