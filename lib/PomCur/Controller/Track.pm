@@ -53,11 +53,15 @@ sub index_page :Path :Args(0) {
 sub assign_pub :Local {
   my ($self, $c) = @_;
 
+  my $config = $c->config();
+
   my $return_path = $c->req()->param('pub-view-path');
   my $pub_id = $c->req()->param('pub-id');
   my $person_id = $c->req()->param('pub-assign-person');
 
   my $schema = $c->schema('track');
+
+  my $curs_schema;
 
   my $proc = sub {
     my $pub = $schema->resultset('Pub')->find({ pub_id => $pub_id });
@@ -74,11 +78,13 @@ sub assign_pub :Local {
       curs_key => PomCur::Curs::make_curs_key(),
     );
     my $curs = $schema->create_with_type('Curs', { %create_args });
-    PomCur::Track::create_curs_db($c->config(), $curs, $admin_session);
+    ($curs_schema) = PomCur::Track::create_curs_db($c->config(), $curs, $admin_session);
     $pub->update();
   };
 
   $schema->txn_do($proc);
+
+  PomCur::Controller::Curs::store_statuses($config, $curs_schema);
 
   $c->res->redirect($return_path);
   $c->detach();
