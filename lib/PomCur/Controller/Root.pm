@@ -113,7 +113,7 @@ sub login : Global {
       { title => "Login successful" };
 
     if ($return_path =~ m/logout|login/) {
-      $c->forward('/track/index');
+      $c->forward($c->config()->{home_path});
       return 0;
     }
   } else {
