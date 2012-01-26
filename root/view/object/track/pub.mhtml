@@ -34,6 +34,16 @@ $schema
 </div>
 % }
 
+% if (defined $curs_key) {
+<div class="curs-pub-go-to-curs-actions">
+  <div class="object_sub_action">
+    <a href="<% $c->uri_for('/curs/' . $curs_key) %>">
+      Go to the curation session ...
+    </a>
+  </div>
+</div>
+% }
+
 <div class="sect abstract">
 <span class="sect-title disclosed-title"><a href="#"> Abstract </a> </span>
 <div class="sect-content">
@@ -75,4 +85,13 @@ my $assign_to_text;
 #} else {
   $assign_to_text = 'Assign to curator ...';
 #}
+
+my $curs_key = undef;
+my $curs_rs = $schema->resultset('Curs')->search({ pub => $object->pub_id()});
+my $curs = $curs_rs->next();
+
+if (defined $curs) {
+  $curs_key = $curs->curs_key();
+}
+
 </%init>
