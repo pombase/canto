@@ -55,6 +55,8 @@ use PomCur::CursDB;
            to create the database (file)name.
  Args    : $config - the Config object
            $curs - the Curs object
+           $admin_session - if true the assigned_curator is assumed to be an
+                            admin user so the "Curator details" page is skipped
  Returns : ($curs_schema, $cursdb_file_name) - A CursDB object for the new db,
            and its file name - die()s on failure
 
@@ -63,6 +65,7 @@ sub create_curs_db
 {
   my $config = shift;
   my $curs = shift;
+  my $admin_session = shift // 0;
 
   my $uniquename = $curs->pub()->uniquename();
   my $curs_key = $curs->curs_key();
@@ -100,6 +103,12 @@ sub create_curs_db
     my $first_contact_email = $curs->assigned_curator()->email_address();
     set_metadata($curs_schema, 'first_contact_email', $first_contact_email);
     set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
+
+    if ($admin_session) {
+      set_metadata($curs_schema, 'submitter_email', $first_contact_email);
+      set_metadata($curs_schema, 'submitter_name', $first_contact_name);
+      set_metadata($curs_schema, 'admin_session', 1);
+    }
   }
 
   # the calling function will wrap this in a transaction if necessary
