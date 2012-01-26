@@ -7,7 +7,7 @@ header_image: logos/curation_tool.png
 app_version: v254
 
 # the path that the home link goes to
-home_path: '/track/track'
+home_path: '/track/index_page'
 
 # if zero, the user will need to log in before the links on the front page are
 # visible
