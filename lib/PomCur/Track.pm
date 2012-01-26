@@ -115,7 +115,7 @@ sub create_curs_db
 
 =head2 create_curs_db_hook
 
- Usage   : PomCur::Track::create_curs_db_hook($config, $curs_object);
+ Usage   : PomCur::Track::create_curs_db_hook($c, $curs_object);
  Function: Wrapper for create_curs_db() to be called from Edit::object()
  Args    : $c - the Catalyst object
            $curs - the Curs object
