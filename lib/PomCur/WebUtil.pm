@@ -244,6 +244,10 @@ sub get_column_confs
       next unless defined $role && $role eq 'admin';
     }
 
+    if ($conf->{hidden_field}) {
+      next;
+    }
+
     push @column_confs, $conf;
   }
 
