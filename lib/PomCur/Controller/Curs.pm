@@ -370,9 +370,9 @@ sub submitter_update : Private
                                               value => $submitter_name });
     };
 
-    store_statuses($c->config(), $schema);
-
     $schema->txn_do($add_submitter);
+
+    store_statuses($c->config(), $schema);
 
     _redirect_and_detach($c);
   }
