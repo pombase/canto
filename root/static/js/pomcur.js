@@ -453,6 +453,17 @@ $(document).ready(function() {
       }
     });
 
+    $("#curs-contact-form").validate({
+      rules: {
+        'curs-contact-name': "required",
+        'curs-contact-definition': "required"
+      },
+      messages: {
+        'curs-contact-name': "Please enter a name for the term",
+        'curs-contact-definition': "Please enter a definition for the term"
+      }
+    });
+
     $('.pomcur-toggle-button').each(function (index, element) {
       var this_id = $(element).attr('id');
       var target = $('#' + this_id + '-target');
@@ -530,9 +541,9 @@ $(document).ready(function() {
     window.location.href = curs_root_uri;
   });
 
-  $('#curs-contact-curators').click(function () {
-    $('#curs-contact-curators-dialog').dialog({ modal: true,
-                                                width: '50em' });
+  $('#curs-contact-link').click(function () {
+    $('#curs-contact-dialog').dialog({ modal: true,
+                                       width: '50em' });
   });
 
   $('#pubmed-id-lookup-form').ajaxForm({

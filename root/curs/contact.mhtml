@@ -1,23 +1,23 @@
-<div id="curs-contact-curators-dialog" title="Message for curator"
+<div id="curs-contact-dialog" title="Message for curator"
      style="display:none">
-  <form id="curs-contact-curators-form" action="" method="post">
-    <input type="hidden" id="curs-contact-curators-page"
+  <form id="curs-contact-form" action="" method="post">
+    <input type="hidden" id="curs-contact-page"
            value="<% $c->stash()->{current_path_uri} %>"/>
     <table>
       <tr>
         <td> Subject: </td>
-        <td> <input id="ferret-suggest-name" name="ferret-suggest-name"/> </td>
+        <td> <input id="curs-contact-subject" name="curs-contact-suggest-name"/> </td>
       </tr>
       <tr>
         <td> Message: </td>
         <td>
-          <textarea name="ferret-suggest-definition" cols="60" rows="10"></textarea>
+          <textarea name="curs-contact-subject" cols="60" rows="10"></textarea>
         </td>
       </tr>
     </table>
-    <input id="ferret-suggest-submit" name="ferret-submit" type="submit"
-           value="Submit suggestion" class="button"/>
+    <input id="curs-contact-submit" name="curs-contact-submit" type="submit"
+           value="Send" class="button dialog-submit"/>
   </form>
 </div>
 
-<a id="curs-contact-curators" href="#">Questions? Contact curators ...</a>
+<a id="curs-contact-link" href="#">Questions? Contact curators ...</a>

@@ -33,7 +33,7 @@ the formal  definition is &ldquo;An A (the term you are describing) is a B
 that differentiate your new term "A" from other members of the group "B")&rdquo;.
     </div>
     <input id="ferret-suggest-submit" name="ferret-submit" type="submit"
-           value="Submit suggestion" class="button"/>
+           value="Submit suggestion" class="button dialog-submit"/>
   </form>
 </div>
 

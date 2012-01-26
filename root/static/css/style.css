@@ -201,12 +201,16 @@ div#footer .sponsor {
   background-color:#0b75b2;
 }
 
-#curs-contact-curators {
+#curs-contact-link {
   padding: 10px;
   margin-right: 20px;
   clear: right;
   float: right;
   font-size: 80%;
+}
+.dialog-submit {
+  clear: right;
+  float: right;
 }
 
 a.pomcur-toggle-button {
@@ -667,10 +671,6 @@ div.clearall {
 }
 #ferret-suggest-form td {
   text-align: top;
-}
-#ferret-suggest-submit {
-  clear: right;
-  float: right;
 }
 
 .triage .pub-details {
