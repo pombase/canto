@@ -50,4 +50,32 @@ sub index_page :Path :Args(0) {
   $c->stash->{model} = 'track';
 }
 
+sub assign_pub :Local {
+  my ($self, $c) = @_;
+
+  my $return_path = $c->req()->param('pub-view-path');
+  my $pub_id = $c->req()->param('pub-id');
+  my $person_id = $c->req()->param('pub-assign-person');
+
+  my $schema = $c->schema('track');
+
+  my $proc = sub {
+    my $pub = $schema->resultset('Pub')->find({ pub_id => $pub_id });
+    $pub->assigned_curator($person_id);
+    my %create_args = (
+      assigned_curator => $person_id,
+      pub => $pub_id,
+      curs_key => PomCur::Curs::make_curs_key(),
+    );
+    my $curs = $schema->create_with_type('Curs', { %create_args });
+    PomCur::Track::create_curs_db($c->config(), $curs);
+    $pub->update();
+  };
+
+  $schema->txn_do($proc);
+
+  $c->res->redirect('/view/object/pub/12?model=track');
+  $c->detach();
+}
+
 1;

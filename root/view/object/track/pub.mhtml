@@ -1,20 +1,36 @@
 <%args>
 $object
 $class_info
+$schema
 </%args>
 
 <&| /view/object/object_top.mhtml, object => $object, class_info => $class_info &>
-% if ($c->user_exists() && defined $object->assigned_curator()) {
 
-<div class="long-action-link">
-  <a href="<% $c->uri_for('/create/curs',
-                          { pub => $object->pub_id(),
-                            curs_key => PomCur::Curs::make_curs_key(),
-                            assigned_curator =>
-                              $object->assigned_curator()->person_id(),
-                            model => $c->req()->param('model') }) %>">
-    Create a new curation session for this publication ...
-  </a>
+% if (!defined $object->assigned_curator()) {
+<div id="curs-pub-assign-dialog" style="display: none">
+  <form id="ferret-suggest-form" method="put" action="/track/assign_pub">
+    <input type="hidden" name="pub-id" value="<% $object->pub_id() %>"/>
+    <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
+
+    <select name="pub-assign-person">
+% for my $person_data (@people_data) {
+      <option value="<% $person_data->{id} %>"><% $person_data->{text} %></option>
+% }
+    </select>
+
+    <div id="curs-pub-assign-help" class="ferret-help-text">
+      Choose a curator to assign this publication to.  A session will
+      then be automatically created for the publication.
+    </div>
+    <input id="curs-pub-assign-cancel" name="curs-pub-assign-cancel" type="submit"
+           value="Cancel" class="button"/>
+    <input name="curs-pub-assign-submit" type="submit"
+           value="Assign" class="button"/>
+  </form>
+</div>
+
+<div class="curs-pub-assign-actions">
+  <button id="curs-pub-assign-popup-dialog"><% $assign_to_text %></button>
 </div>
 % }
 
@@ -42,8 +58,21 @@ $class_info
 use PomCur::Curs;
 
 my $abstract = $object->abstract() // '[Abstract not available]';
+my $current_pathquery = $c->req->uri()->path_query();
+my $person_rs = $schema->resultset('Person');
 
-my $current_path = $c->req->uri()->path();
-my $return_path_uri =
-  $c->uri_for($current_path, $c->req()->params());
+my @people_data = ();
+
+while (defined (my $person = $person_rs->next())) {
+  push @people_data, { id => $person->person_id(),
+                       text => $person->name() . ' <' . $person->email_address() . '>' };
+}
+
+my $assign_to_text;
+
+#if (defined $object->assigned_curator()) {
+#  $assign_to_text = 'Change curator ...';
+#} else {
+  $assign_to_text = 'Assign to curator ...';
+#}
 </%init>

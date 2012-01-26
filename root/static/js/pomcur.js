@@ -546,6 +546,16 @@ $(document).ready(function() {
                                        width: '50em' });
   });
 
+  $('#curs-pub-assign-popup-dialog').click(function () {
+    $('#curs-pub-assign-dialog').dialog({ modal: true,
+                                          width: '50em' });
+  });
+
+  $('#curs-pub-assign-cancel').click(function () {
+    $('#curs-pub-assign-dialog').hide();
+  });
+
+
   $('#pubmed-id-lookup-form').ajaxForm({
     dataType: 'json',
     beforeSubmit: function() {

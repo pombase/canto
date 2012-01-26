@@ -171,6 +171,8 @@ sub object : Local
     $st->{type} = $table;
     $st->{object} = $object;
 
+    $st->{schema} = $c->schema();
+
     my $model_name = $c->req()->param('model');
 
     my $object_id = PomCur::DB::id_of_object($object);
