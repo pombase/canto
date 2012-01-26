@@ -173,7 +173,8 @@ sub get_field_value
   } else {
     my $display_key_field = $class_infos->{$type}->{display_field};
 
-    if (defined $display_key_field && $field_db_column eq $display_key_field) {
+    if (defined $display_key_field &&
+        $field_name eq $display_key_field) {
       return ($field_value, 'key_field', undef);
     } else {
       return ($field_value, 'attribute', undef);
