@@ -13,11 +13,7 @@ $field_name
 
 <span class="field-value">
 % if ($field_type eq 'table_id') {
-  <span class="this-id-field">
-    <a href='<% $c->uri_for("/view/object", $type,
-                   PomCur::DB::id_of_object($object),
-                   { model => $model_name } ) %>'>[details&nbsp;...]</a>
-  </span>
+% # don't show for now, was "details ..."
 % } else {
 %   if ($field_type eq 'foreign_key' && $field_value && defined $ref_display_key) {
   <span class="ref-field">

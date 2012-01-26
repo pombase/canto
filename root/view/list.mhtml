@@ -20,7 +20,6 @@ $is_inline
 %   for my $head_col (@column_headings) {
         <th><span class="field-label"><% ucfirst $head_col %></span></th>
 %   }
-      <th>&nbsp;</th>
       </tr>
     </thead>
 %   for my $object (@rows) {
@@ -36,8 +35,6 @@ $is_inline
              class_info => $class_info &>
         </td>
 %     }
-    <td><& field.mhtml, object => $object, field_name => "${table}_id",
-           class_info => $class_info &></td>
     </tr>
 %   }
   </table>
