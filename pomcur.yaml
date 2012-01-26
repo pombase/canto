@@ -426,6 +426,15 @@ class_info:
     curatable_publications:
       extends: pub
       constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'Curatable')"
+    publications_with_sessions:
+      extends: pub
+      constraint: "pub_id in (select pub from curs)"
+    publications_without_session:
+      extends: pub
+      constraint: "pub_id not in (select pub from curs)"
+    unassigned_publications:
+      extends: pub
+      constraint: "assigned_curator is null"
     finished_sessions:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'NEEDS_APPROVAL')"
@@ -572,6 +581,9 @@ reports:
   track:
     - new_publications
     - curatable_publications
+    - publications_with_sessions
+    - publications_without_session
+    - unassigned_publications
     - named_genes
     - finished_sessions
   chado:
