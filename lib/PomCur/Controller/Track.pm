@@ -41,7 +41,7 @@ use strict;
 use warnings;
 use Carp;
 
-sub track :Path :Args(0) {
+sub index_page :Path :Args(0) {
   my ($self, $c) = @_;
 
   $c->stash->{title} = 'Start page';
