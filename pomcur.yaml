@@ -429,7 +429,7 @@ class_info:
     publications_with_sessions:
       extends: pub
       constraint: "pub_id in (select pub from curs)"
-    publications_without_session:
+    publications_without_a_session:
       extends: pub
       constraint: "pub_id not in (select pub from curs)"
     unassigned_publications:
@@ -582,7 +582,7 @@ reports:
     - new_publications
     - curatable_publications
     - publications_with_sessions
-    - publications_without_session
+    - publications_without_a_session
     - unassigned_publications
     - named_genes
     - finished_sessions
