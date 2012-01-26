@@ -138,6 +138,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
   $st->{first_contact_name} = get_metadata($schema, 'first_contact_name');
+  $st->{is_admin_session} = get_metadata($schema, 'admin_session');
 
   my $organism_rs = $schema->resultset('Organism')->search({}, { rows => 2});
   my $has_multiple_organisms = $organism_rs->count() > 1;

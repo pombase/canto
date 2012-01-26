@@ -4,6 +4,7 @@ $state
 $curs_root_uri
 $pub
 @annotation_type_list
+$is_admin_session
 </%args>
 
 <div id="curs-front-page">
@@ -13,10 +14,11 @@ $pub
 
 <& /pub_details.mhtml, pub => $pub &>
 
-% if ($state eq PomCur::Controller::Curs::CURATION_IN_PROGRESS) {
+% if ($state eq PomCur::Controller::Curs::CURATION_IN_PROGRESS &&
+%     !$is_admin_session) {
 <button id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>
 % } else {
-<button id="curs-check-completed" class="curs-finish-button">Finish checking</button>
+<button id="curs-check-completed" class="curs-finish-button">Approve session</button>
 % }
 
 <div id="curs-annotation-tables" class="sect">
