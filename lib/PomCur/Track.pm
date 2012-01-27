@@ -175,7 +175,7 @@ sub get_adaptor
   return $impl_class->new(config => $config, %args);
 }
 
-=head2 cursdb_file_name
+=head2 cursdb_iterator
 
  Usage   : my $iter = PomCur::Track::cursdb_iterator($config, $track_schema);
            while (my $cursdb = $iter->()) {
