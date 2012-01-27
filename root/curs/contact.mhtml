@@ -1,4 +1,4 @@
-<div id="curs-contact-dialog" title="Message for curator"
+<div id="curs-contact-dialog" title="Request curator help"
      style="display:none">
   <form id="curs-contact-form" action="" method="post">
     <input type="hidden" id="curs-contact-page"

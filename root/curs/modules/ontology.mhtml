@@ -16,11 +16,11 @@ $pub
     <input type="hidden" id="ferret-suggest-term-id" name="ferret-term-id"/>
     <table>
       <tr>
-        <td> Name: </td>
+        <td> Suggested term name: </td>
         <td> <input id="ferret-suggest-name" name="ferret-suggest-name"/> </td>
       </tr>
       <tr>
-        <td> Definition: </td>
+        <td> Suggested definition: </td>
         <td>
           <textarea name="ferret-suggest-definition" cols="60" rows="10"></textarea>
         </td>
