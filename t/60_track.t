@@ -1,6 +1,7 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 15;
+use Test::Deep;
 
 use PomCur::TestUtil;
 use PomCur::Track;
@@ -9,14 +10,14 @@ use PomCur::DBUtil;
 
 my $test_util = PomCur::TestUtil->new();
 
-$test_util->init_test();
+$test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
 my $schema = PomCur::TrackDB->new(config => $config);
 
 my @results = $schema->resultset('Curs')->search();
 
-is(@results, 0);
+is(@results, 2);
 
 my $key = 'abcd0123';
 
@@ -43,23 +44,28 @@ my $data_directory = $config->{data_directory};
 
 my @existing_files = glob("$data_directory/*.sqlite3");
 
-is(@existing_files, 1);
-is($existing_files[0], "$data_directory/track.sqlite3");
+is(@existing_files, 3);
+ok(grep { $_ eq "$data_directory/track.sqlite3" } @existing_files);
 
 PomCur::Track::create_curs_db($config, $curs);
 
 @results = $schema->resultset('Curs')->search();
 
-is(@results, 1);
+is(@results, 3);
 
 
 my @files_after = sort glob("$data_directory/*.sqlite3");
-is(@files_after, 2);
+is(@files_after, 4);
 
 my $new_curs_db = "$data_directory/curs_$key.sqlite3";
 
-is($files_after[0], $new_curs_db);
-is($files_after[1], "$data_directory/track.sqlite3");
+cmp_deeply([@files_after],
+           [
+             "$data_directory/curs_aaaa0006.sqlite3",
+             "$data_directory/curs_aaaa0007.sqlite3",
+             $new_curs_db,
+             "$data_directory/track.sqlite3"
+           ]);
 
 my $curs_schema =
   PomCur::DBUtil::schema_for_file($config, $new_curs_db, 'Curs');
@@ -87,9 +93,11 @@ my $cursdb_iter = PomCur::Track::cursdb_iterator($config, $track_schema);
 
 my $cursdb_count = 0;
 
-while (my $cursdb = $cursdb_iter->()) {
+while (my ($cursdb, $curs_key) = $cursdb_iter->()) {
   $cursdb_count++;
   is(ref $cursdb, 'PomCur::CursDB');
+
+  fail("too many cursdbs"), last if $cursdb_count > 100;
 }
 
-is ($cursdb_count, 1);
+is ($cursdb_count, 3);
