@@ -26,19 +26,19 @@ the curators.
 </p>
 
 % if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
-Admin only: <a href="<% $check_session_uri %>"><% $check_text %> session</a>
+Admin only: <a href="<% $approve_session_uri %>"><% $approve_text %> session</a>
 or <a href="<% $reactivate_session_uri %>">Reactivate session</a>
 % }
 
 <%init>
 my $reactivate_session_uri = $curs_root_uri . '/reactivate_session/';
-my $check_session_uri = $curs_root_uri . '/check_session/';
+my $approve_session_uri = $curs_root_uri . '/approve_session/';
 
-my $check_text;
-if ($state eq 'CHECKED') {
-  $check_text = 'Re-check';
+my $approve_text;
+if ($state eq 'APPROVED') {
+  $approve_text = 'Re-approve';
 } else {
-  $check_text = 'Check';
+  $approve_text = 'Approve';
 }
 
 </%init>

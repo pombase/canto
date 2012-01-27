@@ -168,7 +168,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $use_dispatch = 0;
     }
     if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-        $path =~ /finish_form|reactivate_session|check_session/) {
+        $path =~ /finish_form|reactivate_session|approve_session/) {
       $use_dispatch = 0;
     }
 
@@ -1560,7 +1560,7 @@ sub reactivate_session : Chained('top') Args(0)
   _redirect_and_detach($c);
 }
 
-sub check_session : Chained('top') Args(0)
+sub approve_session : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
 
