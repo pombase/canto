@@ -435,7 +435,7 @@ class_info:
     unassigned_publications:
       extends: pub
       constraint: "assigned_curator is null"
-    finished_sessions:
+    sessions_needing_approval:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'NEEDS_APPROVAL')"
   chado:
@@ -585,7 +585,7 @@ reports:
     - publications_without_a_session
     - unassigned_publications
     - named_genes
-    - finished_sessions
+    - sessions_needing_approval
   chado:
     - protein_and_domain_terms
     - types_and_counts
