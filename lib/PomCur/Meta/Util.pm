@@ -173,7 +173,7 @@ sub create_template_dbs
   }
 }
 
-=head2 initialise_data
+=head2 initialise_core_data
 
  Usage   : PomCur::Meta::Util::initialise_core_data($config, $schema, $key);
  Function: Load core data into the given schema.  eg. cvterms used by other
