@@ -26,7 +26,7 @@ the curators.
 </p>
 
 % if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
-Admin only: <a href="<% $approve_session_uri %>"><% $approve_text %> session</a>
+Admin only: <a href="<% $approve_session_uri %>"><% $approve_text %></a>
 or <a href="<% $reactivate_session_uri %>">Reactivate session</a>
 % }
 
@@ -36,9 +36,9 @@ my $approve_session_uri = $curs_root_uri . '/approve_session/';
 
 my $approve_text;
 if ($state eq 'APPROVED') {
-  $approve_text = 'Re-approve';
+  $approve_text = 'Restart stessions approval';
 } else {
-  $approve_text = 'Approve';
+  $approve_text = 'Start session approval';
 }
 
 </%init>
