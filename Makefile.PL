@@ -66,6 +66,7 @@ requires 'Memoize';
 requires 'IO::String';
 requires 'Package::Alias';
 requires 'Catalyst::ScriptRunner';
+requires 'HTTP::Message';
 
 requires 'Config::General';
 
