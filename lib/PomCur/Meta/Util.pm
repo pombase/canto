@@ -203,6 +203,16 @@ sub initialise_core_data
       $schema->resultset($class_name)->create($row_contents);
     }
   }
+
+  if ($config_key eq 'track') {
+    my $schema_version_cvterm =
+      $schema->resultset('Cvterm')->find({ name => 'schema_version' });
+
+    my $schema_version = $config->{schema_version};
+    $schema->resultset('Metadata')->
+      create({ type => $schema_version_cvterm->cvterm_id(),
+               value => $schema_version });
+  }
 }
 
 1;

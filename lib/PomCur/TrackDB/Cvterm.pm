@@ -339,9 +339,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 metadatas
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-19 03:19:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RyOe0yAO20Iwp1haTrPtcA
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Metadata>
+
+=cut
+
+__PACKAGE__->has_many(
+  "metadatas",
+  "PomCur::TrackDB::Metadata",
+  { "foreign.type" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-28 00:36:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2Z/w3xhte3MqQAWgN8WaAg
 
 =head2 db_accession
 

@@ -160,6 +160,12 @@ CREATE TABLE lab (
        name text NOT NULL UNIQUE
 );
 
+CREATE TABLE metadata (
+       metadata_id integer NOT NULL PRIMARY KEY,
+       type integer NOT NULL REFERENCES cvterm(cvterm_id),
+       value text NOT NULL
+);
+
 -- web sessions
 CREATE TABLE sessions (
        id text PRIMARY KEY,

@@ -6,6 +6,8 @@ header_image: logos/curation_tool.png
 
 app_version: v258
 
+schema_version: 0
+
 # the path that the home link goes to
 home_path: '/track/index_page'
 
@@ -215,6 +217,17 @@ db_initial_data:
             definition: Type used for a publication loaded by the administrator.
             dbxref:
               accession: user_load
+              db:
+                name: PomCur
+      - name: PomCur metadata types
+        definition: Types for the metadata table.
+        cvterms:
+          - name: schema_version
+            definition: >
+              Version number of the track schema, incremented when the schema
+              changes.
+            dbxref:
+              accession: schema_version
               db:
                 name: PomCur
 
