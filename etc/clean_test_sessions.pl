@@ -21,7 +21,7 @@ use lib qw(lib);
 use PomCur::Config;
 use PomCur::Meta::Util;
 use PomCur::TrackDB;
-
+use PomCur::Track;
 
 sub usage
 {
@@ -59,7 +59,19 @@ if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
 my $config = PomCur::Config::get_config();
 my $track_schema = PomCur::TrackDB->new(config => $config);
 
-my $iter = PomCur::Track::cursdb_iterator($config, $track_schema);
+my $iter = PomCur::Track::curs_iterator($config, $track_schema);
 
-while (my ($cursdb, $curs_key) = $iter->()) {
+my $test_publication_uniquename =
+  $config->{test_publication_uniquename};
+
+while (my ($curs, $cursdb) = $iter->()) {
+  my $pub = $curs->pub();
+
+  my $curs_key = $curs->curs_key();
+
+  if ($pub->uniquename() eq $test_publication_uniquename ||
+      $curs_key =~ /^aaaa000\d$/) {
+    warn "deleting ", $curs->curs_key(), "\n";
+    PomCur::Track::delete_curs($config, $track_schema, $curs_key);
+  }
 }

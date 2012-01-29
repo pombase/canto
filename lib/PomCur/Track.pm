@@ -210,4 +210,32 @@ sub curs_iterator
   };
 }
 
+=head2
+
+ Usage   : PomCur::Track::delete_curs($config, $schema, $curs_key);
+ Function: Delete the curs specified by the $curs_key from the track
+           database and delete the cursdb itself
+ Args    : $config - the PomCur::Config object
+           $schema - a TrackDB object
+           $curs_key - the curs_key from the Curs object
+ Returns : none
+
+=cut
+sub delete_curs
+{
+  my $config = shift;
+  my $track_schema = shift;
+  my $curs_key = shift;
+
+  my $guard = $track_schema->txn_scope_guard;
+
+  $track_schema->resultset('Curs')
+    ->find({ curs_key => $curs_key })->delete();
+
+  my $db_file_name = PomCur::Curs::make_long_db_file_name($config, $curs_key);
+  unlink $db_file_name;
+
+  $guard->commit();
+}
+
 1;
