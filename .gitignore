@@ -18,3 +18,5 @@ MANIFEST
 *.tmp
 cover_db
 pomcur.par
+MYMETA.json
+MYMETA.yml
