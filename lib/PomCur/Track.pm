@@ -175,9 +175,9 @@ sub get_adaptor
   return $impl_class->new(config => $config, %args);
 }
 
-=head2 cursdb_iterator
+=head2 curs_iterator
 
- Usage   : my $iter = PomCur::Track::cursdb_iterator($config, $track_schema);
+ Usage   : my $iter = PomCur::Track::curs_iterator($config, $track_schema);
            while (my ($cursdb, $curs_key) = $iter->()) {
              ...
            }
@@ -188,24 +188,20 @@ sub get_adaptor
            $track_schema - the TrackDB schema
 
 =cut
-sub cursdb_iterator
+sub curs_iterator
 {
   my $config = shift;
   my $track_schema = shift;
 
-  my $curs_rs = $track_schema->resultset('Curs');
-
-  my @curs_keys = ();
-
-  while (defined (my $curs = $curs_rs->next())) {
-    push @curs_keys, $curs->curs_key();
-  }
+  my @curs_objects = $track_schema->resultset('Curs')->all();
 
   return sub {
-    while (defined (my $curs_key = shift @curs_keys)) {
-      my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
+    while (defined (my $curs = shift @curs_objects)) {
+      my $curs_key = $curs->curs_key();
+      my $curs_schema =
+        PomCur::Curs::get_schema_for_key($config, $curs_key);
       if (defined $curs_schema) {
-        return ($curs_schema, $curs_key);
+        return ($curs, $curs_schema);
       } else {
         next;
       }

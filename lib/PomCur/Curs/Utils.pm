@@ -501,8 +501,8 @@ sub store_all_statuses
   my $config = shift;
   my $track_schema = shift;
 
-  my $iter = PomCur::Track::cursdb_iterator($config, $track_schema);
-  while (my ($cursdb, $curs_key) = $iter->()) {
+  my $iter = PomCur::Track::curs_iterator($config, $track_schema);
+  while (my ($curs, $cursdb) = $iter->()) {
     PomCur::Controller::Curs::store_statuses($config, $cursdb);
   }
 }

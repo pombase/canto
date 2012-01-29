@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 18;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -89,13 +89,17 @@ is($curs_db_pub->uniquename(), $pub->uniquename());
 is($curs_db_pub->abstract(), $pub->abstract());
 
 my $track_schema = $test_util->track_schema();
-my $cursdb_iter = PomCur::Track::cursdb_iterator($config, $track_schema);
+my $cursdb_iter = PomCur::Track::curs_iterator($config, $track_schema);
 
 my $cursdb_count = 0;
 
-while (my ($cursdb, $curs_key) = $cursdb_iter->()) {
+while (my ($curs, $cursdb) = $cursdb_iter->()) {
   $cursdb_count++;
   is(ref $cursdb, 'PomCur::CursDB');
+
+  my $metadata_curs_key =
+    $cursdb->resultset('Metadata')->find({ key => 'curs_key' });
+  ok($curs->curs_key() eq $metadata_curs_key->value());
 
   fail("too many cursdbs"), last if $cursdb_count > 100;
 }
