@@ -69,7 +69,7 @@ my ($fh_no_data, $temp_track_db_no_data) = tempfile();
 PomCur::TestUtil::make_base_track_db($config, $temp_track_db_no_data, 0);
 
 for my $test_case_key (sort keys %test_cases) {
-  warn "Creating database for $test_case_key\n";
+  print "Creating database for $test_case_key\n";
   my $base_track_db;
 
   if (defined $test_cases{$test_case_key}) {
