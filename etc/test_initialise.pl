@@ -97,4 +97,4 @@ for my $test_case_key (sort keys %test_cases) {
   PomCur::Curs::Utils::store_all_statuses($config_copy, $test_schemas{$test_case_key});
 }
 
-warn "Test initialisation complete\n";
+print "Test initialisation complete\n";
