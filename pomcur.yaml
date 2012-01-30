@@ -159,6 +159,19 @@ db_initial_data:
               accession: loaded_in_error
               db:
                 name: PomCur
+      - name: PomCur curation priorities
+        definition: Priorities assigned to papers 
+        cvterms:
+          - name: low - 100
+            dbxref:
+              accession: low_100
+              db:
+                name: PomCur
+          - name: high - 1000
+            dbxref:
+              accession: high_1000
+              db:
+                name: PomCur
       - name: PomCur user types
         cvterms:
           - name: user
@@ -352,6 +365,11 @@ class_info:
         - name: triage_status
           source: triage_status_id
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication triage status")'
+          referenced_class: Cvterm
+          editable: 1
+        - name: curation_priority
+          source: curation_priority_id
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur curation priorities")'
           referenced_class: Cvterm
           editable: 1
     pub_curation_status:
@@ -881,6 +899,8 @@ annotation_type_list:
       - Protein-RNA
       - Reconstituted Complex
       - Two-hybrid
+
+default_curation_priority_name: low
 
 messages:
   gene_upload:

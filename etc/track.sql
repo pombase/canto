@@ -9,7 +9,8 @@ CREATE TABLE pub (
        abstract text,
        authors text,
        triage_status_id integer NOT NULL REFERENCES cvterm (cvterm_id),
-       load_type_id integer NOT NULL REFERENCES cvterm (cvterm_id)
+       load_type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
+       curation_priority_id integer REFERENCES cvterm (cvterm_id)
 );
 CREATE INDEX pub_triage_status_idx ON pub(triage_status_id);
 CREATE TABLE pubprop (

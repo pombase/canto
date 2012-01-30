@@ -94,6 +94,12 @@ sub triage :Local {
                                     pub_id => $pub->pub_id() });
     }
 
+    my $priority_cvterm_id = $c->req()->param('triage-curation-priority');
+    my $priority_cvterm =
+      $schema->resultset('Cvterm')->find({ cvterm_id => $priority_cvterm_id });
+
+    $pub->curation_priority($priority_cvterm);
+
     $pub->update();
 
     $guard->commit();

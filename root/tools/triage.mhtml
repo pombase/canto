@@ -44,6 +44,25 @@ $pub
 % }
         </div>
       </div>
+      <div class="sect triage-curation-priorities">
+        <span class="sect-title">
+          Curation priority
+        </span>
+        <div class="sect-content">
+% for my $curation_priority (@curation_priorities) {
+          <div>
+            <input type="radio" group="triage-curation-priorities"
+                   name="triage-curation-priority"
+                   value="<% $curation_priority->{cvterm_id} %>"
+%   if ($curation_priority->{display_name} eq $default_priority_name) {
+                   checked="true"
+%   }
+                   >
+            <% $curation_priority->{display_name} %><br>
+          </div>
+% }
+        </div>
+      </div>
     </div>
     <div class="status-settings">
       <div class="sect status-choice">
@@ -92,7 +111,7 @@ for my $status (@pub_statuses) {
   my $link = $c->uri_for($path);
 
   push @status_links, { name => $name,
-                        link => $link };
+                        link => $link };  
 }
 
 my $experiment_type_cv_name = 'PomCur publication experiment types';
@@ -103,5 +122,26 @@ my @experiment_type_cvterms =
   $schema->resultset('Cvterm')->search({ cv_id => $experiment_type_cv->cv_id() });
 
 my @experiment_types = map { $_->name() } @experiment_type_cvterms;
+
+my $curation_priority_cv_name = 'PomCur curation priorities';
+my $curation_priority_cv =
+  $schema->find_with_type('Cv', { name => $curation_priority_cv_name });
+
+my @curation_priority_cvterms =
+  $schema->resultset('Cvterm')->search({ cv_id => $curation_priority_cv->cv_id() });
+
+my @curation_priorities = 
+  map {
+    {
+      display_name => $_->[0],
+      cvterm_id => $_->[2],
+    }
+  } sort {
+    $a->[1] <=> $b->[1];
+  } map {
+    [ $_->name() =~ /(.*?)\s*-\s*(.*)/, $_->cvterm_id() ];
+  } @curation_priority_cvterms;
+
+my $default_priority_name = $c->config()->{default_curation_priority_name};
 
 </%init>

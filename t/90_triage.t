@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use Plack::Test;
 use Plack::Util;
@@ -87,6 +87,12 @@ test_psgi $app, sub {
                                                  { cv_id => $cv->cv_id(),
                                                    name => 'Curatable' });
 
+  my $priority_cv = $schema->find_with_type('Cv',
+                                            { name => 'PomCur curation priorities' });
+  my $low_cvterm = $schema->find_with_type('Cvterm',
+                                           { cv_id => $priority_cv->cv_id(),
+                                             name => 'low - 100' });
+
   my $second_pub;
 
   # check triage form submission
@@ -94,7 +100,8 @@ test_psgi $app, sub {
     my $uri = new URI($triage_url);
     $uri->query_form('triage-pub-id' => $first_pub->pub_id(),
                      submit => $curatable_cvterm->name(),
-                     'experiment-type' => [$curatable_cvterm->name()]
+                     'experiment-type' => [$curatable_cvterm->name()],
+                     'triage-curation-priority' => [$low_cvterm->cvterm_id()],
                     );
 
     my $req = HTTP::Request->new(GET => $uri);
@@ -111,6 +118,8 @@ test_psgi $app, sub {
 
     # refetch to get database changes
     $first_pub = $schema->find_with_type('Pub', $first_pub->pub_id());
+
+    is ($first_pub->curation_priority()->name(), 'low - 100');
 
     is ($first_pub->triage_status_id(), $curatable_cvterm->cvterm_id());
 

@@ -828,3 +828,13 @@ input[type="submit"] {
   color: #e22;
   background-color: #eee;
 }
+
+.sect.experiment-types {
+  clear: both;
+  float: left;
+}
+
+.sect.triage-curation-priorities {
+  float: left;
+  padding-left: 50px;
+}

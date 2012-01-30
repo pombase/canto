@@ -84,6 +84,21 @@ __PACKAGE__->set_primary_key("cvterm_id");
 
 =head1 RELATIONS
 
+=head2 pub_curation_priorities
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Pub>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pub_curation_priorities",
+  "PomCur::TrackDB::Pub",
+  { "foreign.curation_priority_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 pub_load_types
 
 Type: has_many
@@ -355,8 +370,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-28 00:36:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2Z/w3xhte3MqQAWgN8WaAg
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-30 11:06:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kkrYKuX3seC3SH2URH6dVA
 
 =head2 db_accession
 
