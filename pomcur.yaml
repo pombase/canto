@@ -151,6 +151,14 @@ db_initial_data:
               accession: other
               db:
                 name: PomCur
+          - name: Loaded in error
+            definition: >
+                Triage status for a publication that will not be curated for
+                a reason the is not covered by the other statuses.
+            dbxref:
+              accession: loaded_in_error
+              db:
+                name: PomCur
       - name: PomCur user types
         cvterms:
           - name: user
@@ -439,6 +447,9 @@ class_info:
     curatable_publications:
       extends: pub
       constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'Curatable')"
+    publications_loaded_in_error:
+      extends: pub
+      constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'Loaded in error')"
     publications_with_sessions:
       extends: pub
       constraint: "pub_id in (select pub from curs)"
@@ -594,6 +605,7 @@ reports:
   track:
     - new_publications
     - curatable_publications
+    - publications_loaded_in_error
     - publications_with_sessions
     - publications_without_a_session
     - unassigned_publications
