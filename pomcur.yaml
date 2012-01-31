@@ -477,10 +477,13 @@ class_info:
       constraint: "primary_name is not null"
     curatable_publications:
       extends: pub
-      constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'Curatable')"
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
+    high_priority_publications:
+      extends: pub
+      constraint: "curation_priority_id in (select cvterm_id from cvterm where name = 'high')"
     publications_loaded_in_error:
       extends: pub
-      constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'Loaded in error')"
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Loaded in error')"
     publications_with_sessions:
       extends: pub
       constraint: "pub_id in (select pub from curs)"
@@ -636,6 +639,7 @@ reports:
   track:
     - new_publications
     - curatable_publications
+    - high_priority_publications
     - publications_loaded_in_error
     - publications_with_sessions
     - publications_without_a_session
