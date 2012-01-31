@@ -4,3 +4,10 @@ $class_info
 </%args>
 
 <& /view/object/object_top.mhtml, object => $object, class_info => $class_info &>
+
+<div id="collections">
+  <& /view/collection.mhtml, object => $object, collection_name => 'pubs',
+    collection_title => 'Publications assigned to this person' &>
+  <& /view/collection.mhtml, object => $object, collection_name => 'curs',
+    collection_title => 'Sessions assigned to this person' &>
+</div>
