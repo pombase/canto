@@ -35,7 +35,7 @@ $field_name
     </span>
 %     } else {
     <span class="non-key-attribute">
-      <% format_field_value($col_conf, $field_value) %>
+      <% $field_value %>
     </span>
 %     }
   </span>
@@ -48,33 +48,7 @@ use PomCur::DB;
 use PomCur::WebUtil;
 
 use Number::Format;
-
-sub format_field_value
-{
-  my $col_conf = shift;
-  my $field_value = shift;
-
-  my $fmt = Number::Format->new();
-
-  if (defined $field_value && defined $col_conf->{format}) {
-    if ($col_conf->{format} eq 'integer') {
-      if ($field_value =~ /^\d+$/) {
-        return $fmt->format_number($field_value);
-      } else {
-        return 0;
-      }
-    } else {
-      if ($col_conf->{format} =~ /\%/) {
-        return 0 unless $field_value;
-        return sprintf $col_conf->{format}, $field_value;
-      } else {
-        die "unknown column format: ", $col_conf->{format}, "\n";
-      }
-    }
-  }
-
-  return $field_value;
-}
+use Data::Dumper;
 
 my $col_conf = $class_info->{field_infos}->{$field_name};
 

@@ -41,6 +41,48 @@ use Carp;
 
 use PomCur::DB;
 use PomCur::DBLayer::Path;
+use Number::Format;
+
+sub _format_field_value
+{
+  my $col_conf = shift;
+  my $field_value = shift;
+
+  my $fmt = Number::Format->new();
+
+  my $format_def = $col_conf->{format};
+
+  if (defined $field_value && defined $format_def) {
+    if (ref $format_def) {
+      if ($format_def->{type} eq 'perl') {
+        eval $format_def->{code};
+        if ($@) {
+          warn "error eval()ing ", $format_def->{code}, ": $@\n";
+          $field_value = '[configuration error]';
+        }
+      } else {
+        die "unknown column format, ", Dumper([$format_def]), "\n";
+      }
+    } else {
+      if ($format_def eq 'integer') {
+        if ($field_value =~ /^\d+$/) {
+          return $fmt->format_number($field_value);
+        } else {
+          return 0;
+        }
+      } else {
+        if ($format_def =~ /\%/) {
+          return 0 unless $field_value;
+          return sprintf $format_def, $field_value;
+        } else {
+          die "unknown column format: $format_def\n";
+        }
+      }
+    }
+  }
+
+  return $field_value;
+}
 
 =head2
 
@@ -173,12 +215,17 @@ sub get_field_value
   } else {
     my $display_key_field = $class_infos->{$type}->{display_field};
 
+    my $return_type;
+
     if (defined $display_key_field &&
         $field_name eq $display_key_field) {
-      return ($field_value, 'key_field', undef);
+      $return_type = 'key_field';
     } else {
-      return ($field_value, 'attribute', undef);
+      $return_type = 'attribute';
     }
+
+    return (_format_field_value($col_conf, $field_value),
+            $return_type, undef);
   }
 }
 
