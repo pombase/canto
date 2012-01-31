@@ -496,6 +496,9 @@ class_info:
     sessions_needing_approval:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'NEEDS_APPROVAL')"
+    unassigned_sessions:
+      extends: curs
+      constraint: "me.assigned_curator IS NULL"
   chado:
     cv:
       class_display_name: controlled vocabulary
@@ -646,6 +649,7 @@ reports:
     - unassigned_publications
     - named_genes
     - sessions_needing_approval
+    - unassigned_sessions
   chado:
     - protein_and_domain_terms
     - types_and_counts
