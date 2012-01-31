@@ -91,7 +91,7 @@ test_psgi $app, sub {
                                             { name => 'PomCur curation priorities' });
   my $low_cvterm = $schema->find_with_type('Cvterm',
                                            { cv_id => $priority_cv->cv_id(),
-                                             name => 'low - 100' });
+                                             name => 'low' });
 
   my $second_pub;
 
@@ -119,7 +119,7 @@ test_psgi $app, sub {
     # refetch to get database changes
     $first_pub = $schema->find_with_type('Pub', $first_pub->pub_id());
 
-    is ($first_pub->curation_priority()->name(), 'low - 100');
+    is ($first_pub->curation_priority()->name(), 'low');
 
     is ($first_pub->triage_status_id(), $curatable_cvterm->cvterm_id());
 

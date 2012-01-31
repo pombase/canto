@@ -54,11 +54,11 @@ $pub
             <input type="radio" group="triage-curation-priorities"
                    name="triage-curation-priority"
                    value="<% $curation_priority->{cvterm_id} %>"
-%   if ($curation_priority->{display_name} eq $default_priority_name) {
+%   if ($curation_priority->{name} eq $default_priority_name) {
                    checked="true"
 %   }
                    >
-            <% $curation_priority->{display_name} %><br>
+            <% ucfirst $curation_priority->{name} %><br>
           </div>
 % }
         </div>
@@ -133,13 +133,16 @@ my @curation_priority_cvterms =
 my @curation_priorities = 
   map {
     {
-      display_name => $_->[0],
+      name => $_->[0],
       cvterm_id => $_->[2],
     }
   } sort {
-    $a->[1] <=> $b->[1];
+    $b->[1] <=> $a->[1];
   } map {
-    [ $_->name() =~ /(.*?)\s*-\s*(.*)/, $_->cvterm_id() ];
+    my $numeric_priority = $_->cvtermprop_cvterms()->
+      search({ 'type.name' => 'PomCur numeric prioritity' },
+             { join => 'type' })->first()->value();
+    [ $_->name(), $numeric_priority, $_->cvterm_id() ];
   } @curation_priority_cvterms;
 
 my $default_priority_name = $c->config()->{default_curation_priority_name};

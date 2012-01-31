@@ -48,6 +48,11 @@ db_initial_data:
               accession: comment
               db:
                 name: PomCur
+          - name: PomCur numeric prioritity
+            dbxref:
+              accession: number_priorities
+              db:
+                name: PomCur
       - name: synonym_type
         cvterms:
           - name: broad
@@ -162,16 +167,24 @@ db_initial_data:
       - name: PomCur curation priorities
         definition: Priorities assigned to papers 
         cvterms:
-          - name: low - 100
+          - name: low
             dbxref:
-              accession: low_100
+              accession: low_priority
               db:
                 name: PomCur
-          - name: high - 1000
+            cvtermprop_cvterms:
+              - type:
+                  name: PomCur numeric prioritity
+                value: 100
+          - name: high
             dbxref:
-              accession: high_1000
+              accession: high_priority
               db:
                 name: PomCur
+            cvtermprop_cvterms:
+              - type:
+                  name: PomCur numeric prioritity
+                value: 1000
       - name: PomCur user types
         cvterms:
           - name: user
