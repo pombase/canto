@@ -674,7 +674,7 @@ div.clearall {
 }
 
 .triage .pub-details {
-  width: 48%;
+  width: 68%;
   float: left;
 }
 .triage .pub-details .abstract .sect-content {
@@ -682,7 +682,7 @@ div.clearall {
 }
 
 .triage .status-settings {
-  width: 48%;
+  width: 28%;
   float: right;
 }
 
