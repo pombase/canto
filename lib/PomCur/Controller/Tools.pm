@@ -94,6 +94,13 @@ sub triage :Local {
                                     pub_id => $pub->pub_id() });
     }
 
+    my $assigned_curator_id =
+      $c->req()->param('triage-assigned-curator-person-id');
+
+    if (defined $assigned_curator_id) {
+      $pub->assigned_curator($assigned_curator_id);
+    }
+
     my $priority_cvterm_id = $c->req()->param('triage-curation-priority');
     my $priority_cvterm =
       $schema->resultset('Cvterm')->find({ cvterm_id => $priority_cvterm_id });

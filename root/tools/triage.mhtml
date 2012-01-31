@@ -63,6 +63,15 @@ $pub
 % }
         </div>
       </div>
+      <div class="sect triage-assigned-curator">
+        <span class="sect-title">
+          Assign to curator:
+        </span>
+        <div class="sect-content">
+          <input id="triage-assigned-curator-input" name="triage-assigned-curator-input"/>
+          <input id="triage-assigned-curator-person-id" name="triage-assigned-curator-person-id" type="hidden"/>
+        </div>
+      </div>
     </div>
     <div class="status-settings">
       <div class="sect status-choice">
@@ -87,6 +96,17 @@ $pub
 
 </div>
 
+
+<script>
+  var triage_assign_people = [
+% for my $person_data (@people_data) {
+    {
+      label: "<% $person_data->name() %>",
+      value: "<% $person_data->person_id() %>",
+    },
+% }
+  ];
+</script>
 
 <%init>
 my $schema = $c->schema('track');
@@ -146,5 +166,7 @@ my @curation_priorities =
   } @curation_priority_cvterms;
 
 my $default_priority_name = $c->config()->{default_curation_priority_name};
+
+my @people_data = $schema->resultset('Person')->all();
 
 </%init>

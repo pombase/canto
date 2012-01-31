@@ -603,3 +603,28 @@ $(document).ready(function() {
         lessText: "[hide]"
     });
 });
+
+// autocomplete for the traige tool
+$(document).ready(function() {
+  if (typeof triage_assign_people != 'undefined') {
+    $("#triage-assigned-curator-input").autocomplete({
+      minLength: 0,
+      source: triage_assign_people,
+      focus: function( event, ui ) {
+        $( "#triage-assigned-curator-input" ).val( ui.item.label );
+        return false;
+      },
+      select: function( event, ui ) {
+        $( "#triage-assigned-curator-input" ).val( ui.item.label );
+        $( "#triage-assigned-curator-person-id" ).val( ui.item.value );
+        return false;
+      }
+    })
+    .data( "autocomplete" )._renderItem = function( ul, item ) {
+      return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append( "<a>" + item.label + "<br></a>" )
+        .appendTo( ul );
+    };
+  }
+});

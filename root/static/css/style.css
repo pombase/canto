@@ -834,7 +834,7 @@ input[type="submit"] {
   float: left;
 }
 
-.sect.triage-curation-priorities {
+.sect.triage-curation-priorities, .sect.triage-assigned-curator {
   float: left;
   padding-left: 50px;
 }
