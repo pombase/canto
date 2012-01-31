@@ -27,7 +27,7 @@ $pub
         <span class="sect-title disclosed-title">
           <a href="#">Abstract</a>
         </span>
-        <div class="sect-content" style="display: none">
+        <div class="sect-content">
           <% $pub->abstract() %>
         </div>
       </div>
