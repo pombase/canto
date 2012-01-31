@@ -419,13 +419,13 @@ class_info:
       display_field: curs_key
       editable: 1
       field_info_list:
-        - name: assigned_curator
-          editable: 1
+        - name: curs_key
+          editable: 0
         - name: publication
           editable: 0
           source: pub
-        - name: curs_key
-          editable: 0
+        - name: assigned_curator
+          editable: 1
         - name: status
           source:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status'"
