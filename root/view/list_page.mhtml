@@ -17,6 +17,7 @@ $page => 1
   You searched for: <% $search_term %>
 </div>
 % } else {
+%   if ($total_rows > 0) {
 <div id="search-list">
   <form id="search-list-form" method="get" action="<% $search_url %>">
     <input type="hidden" name="model" value="<% $model_name %>"/>
@@ -24,9 +25,10 @@ $page => 1
     <input id="submit" name="submit" type="submit" value="search"/>
   </form>
 </div>
+%   }
 % }
 
-% if ($pager->total_entries() > 0) {
+% if ($total_rows > 0) {
 <div class="page_nav_summary"><b><% $pager->total_entries() %></b> rows found <b>|</b>
 Showing page <b><% $pager->current_page() %></b> of <% $pager->last_page() %>
 (rows <% $pager->first() %>-<% $pager->last() %>) <b>|</b>
@@ -150,4 +152,6 @@ my $model_name = $c->req()->param('model');
 my $search_url = $c->uri_for("/search/type/$config_name");
 
 my $search_term = $c->stash()->{list_search_term};
+
+my $total_rows = $pager->total_entries();
 </%init>
