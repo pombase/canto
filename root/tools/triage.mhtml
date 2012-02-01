@@ -160,7 +160,7 @@ my @curation_priorities =
     $b->[1] <=> $a->[1];
   } map {
     my $numeric_priority = $_->cvtermprop_cvterms()->
-      search({ 'type.name' => 'PomCur numeric prioritity' },
+      search({ 'type.name' => 'PomCur numeric priority' },
              { join => 'type' })->first()->value();
     [ $_->name(), $numeric_priority, $_->cvterm_id() ];
   } @curation_priority_cvterms;

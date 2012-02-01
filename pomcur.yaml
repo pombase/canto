@@ -48,9 +48,9 @@ db_initial_data:
               accession: comment
               db:
                 name: PomCur
-          - name: PomCur numeric prioritity
+          - name: PomCur numeric priority
             dbxref:
-              accession: number_priorities
+              accession: numeric_priority
               db:
                 name: PomCur
       - name: synonym_type
@@ -174,7 +174,7 @@ db_initial_data:
                 name: PomCur
             cvtermprop_cvterms:
               - type:
-                  name: PomCur numeric prioritity
+                  name: PomCur numeric priority
                 value: 100
           - name: high
             dbxref:
@@ -183,7 +183,7 @@ db_initial_data:
                 name: PomCur
             cvtermprop_cvterms:
               - type:
-                  name: PomCur numeric prioritity
+                  name: PomCur numeric priority
                 value: 1000
       - name: PomCur user types
         cvterms:
