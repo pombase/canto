@@ -34,15 +34,13 @@ sub usage
   }
 
   die qq|${message}usage:
-  $0
+  $0 [pubmed_ids ...]
 
 Script to remove dead test sessions.
 |;
 }
 
-if (@ARGV != 0) {
-  usage();
-}
+my @command_line_pubs = @ARGV;
 
 my $app_name = PomCur::Config::get_application_name();
 
@@ -66,11 +64,13 @@ my $test_publication_uniquename =
 
 while (my ($curs, $cursdb) = $iter->()) {
   my $pub = $curs->pub();
+  my $pub_uniquename = $pub->uniquename();
 
   my $curs_key = $curs->curs_key();
 
-  if ($pub->uniquename() eq $test_publication_uniquename ||
-      $curs_key =~ /^aaaa000\d$/) {
+  if ($pub_uniquename eq $test_publication_uniquename ||
+      $curs_key =~ /^aaaa000\d$/ ||
+      grep { $_ eq $pub_uniquename } @command_line_pubs) {
     warn "deleting ", $curs->curs_key(), "\n";
     PomCur::Track::delete_curs($config, $track_schema, $curs_key);
   }
