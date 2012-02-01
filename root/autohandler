@@ -5,6 +5,7 @@ $error => undef
 $message => undef
 $notice => undef
 $page_description_id => 'page-description'
+$is_admin_user
 </%args>
 
 <!DOCTYPE HTML>

@@ -42,6 +42,9 @@ sub end : Private
     $c->session()->{testmode} = $c->request()->parameters()->{testmode};
   }
 
+  my $is_admin = $c->user_exists() && $c->user()->role()->name() eq 'admin';
+  $c->stash()->{is_admin_user} = $is_admin;
+
   if (scalar @{ $c->error }) {
     my @pomcur_errors =
       map {
