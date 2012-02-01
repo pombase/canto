@@ -229,8 +229,13 @@ sub delete_curs
 
   my $guard = $track_schema->txn_scope_guard;
 
-  $track_schema->resultset('Curs')
-    ->find({ curs_key => $curs_key })->delete();
+  my $curs =
+    $track_schema->resultset('Curs') ->find({ curs_key => $curs_key });
+
+  $track_schema->resultset('Cursprop')
+    ->search({ curs => $curs->curs_id() })->delete();
+
+  $curs->delete();
 
   my $db_file_name = PomCur::Curs::make_long_db_file_name($config, $curs_key);
   unlink $db_file_name;
