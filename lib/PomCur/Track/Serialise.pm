@@ -206,6 +206,7 @@ sub _get_labs
                  track and curs databases, including data that can be
                  recreated (eg. publication title can be found from
                  PubMed ID) - default 0
+             - mark_exported -
  Returns : A JSON string containing all of the TrackDB and CursDB data
            or with stream_mode set, return a (JSON string, CursDB JSON
            iterator) pair.

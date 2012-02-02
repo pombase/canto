@@ -54,7 +54,8 @@ sub export
 
   my $track_schema = PomCur::TrackDB->new(config => $config);
 
-  print PomCur::Track::Serialise::json($config, $track_schema), "\n";
+  print PomCur::Track::Serialise::json($config, $track_schema,
+                                       $options), "\n";
 }
 
 1;
