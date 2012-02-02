@@ -26,7 +26,7 @@ is(@curs_objects, 1);
 my $curs_key = $curs_objects[0]->curs_key();
 my $app = $test_util->plack_app()->{app};
 my $cookie_jar = HTTP::Cookies->new(
-  file => '/tmp/pomcur_web_test_$$.cookies',
+  file => "/tmp/pomcur_web_test_$$.cookies",
   autosave => 1,
 );
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
