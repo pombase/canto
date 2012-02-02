@@ -198,15 +198,17 @@ sub _get_labs
  Args    : $config - a Config object
            $schema - the TrackDB
            $options - a hash of settings
-             - stream_mode => (0|1) - if 1, change the behaviour to
+             - stream-mode => (0|1) - if 1, change the behaviour to
                  return two things: the JSON for the TrackDB and an
                  iterator returning the JSON representation of each
                  CursDB in turn - default 1
-             - dump_all => (0|1) - if 1, dump all data from the
+             - dump-all => (0|1) - if 1, dump all data from the
                  track and curs databases, including data that can be
                  recreated (eg. publication title can be found from
                  PubMed ID) - default 0
-             - mark_exported -
+             - mark-exported => (0|1) - if 1, only dump those curation
+                 sessions from the curs table that have the status of
+                 "APPROVED" and then mark them as "EXPORTED"
  Returns : A JSON string containing all of the TrackDB and CursDB data
            or with stream_mode set, return a (JSON string, CursDB JSON
            iterator) pair.
