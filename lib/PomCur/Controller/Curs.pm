@@ -1583,7 +1583,7 @@ sub approve_session : Chained('top') Args(0)
   _redirect_and_detach($c);
 }
 
-sub check_completed : Chained('top') Args(0)
+sub approval_complete : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
 
