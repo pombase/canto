@@ -495,7 +495,7 @@ class_info:
       constraint: "assigned_curator is null"
     sessions_needing_approval:
       extends: curs
-      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'NEEDS_APPROVAL')"
+      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS'))"
     unassigned_sessions:
       extends: curs
       constraint: "me.assigned_curator IS NULL"
