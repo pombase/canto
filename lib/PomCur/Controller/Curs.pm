@@ -40,7 +40,7 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
-with 'PomCur::Role::MetadataAccess';
+with 'PomCur::Role::MetadataAccess', 'PomCur::Curs::State';
 
 use Archive::Zip qw(:CONSTANTS :ERROR_CODES);
 use IO::String;
@@ -48,29 +48,9 @@ use Clone qw(clone);
 
 use PomCur::Track;
 use PomCur::Curs::Utils;
+use PomCur::Curs::State qw/:all/;
 
 use constant {
-  # user needs to confirm name and email address
-  SESSION_CREATED => "SESSION_CREATED",
-  # no genes in database, user needs to upload some
-  SESSION_ACCEPTED => "SESSION_ACCEPTED",
-  # session can be used for curation
-  CURATION_IN_PROGRESS => "CURATION_IN_PROGRESS",
-  # user has indicated that they are finished
-  NEEDS_APPROVAL => "NEEDS_APPROVAL",
-  # sessions is being checked by a curator
-  APPROVAL_IN_PROGRESS => "APPROVAL_IN_PROGRESS",
-  # session has been checked by a curator
-  APPROVED => "APPROVED",
-  # session has been exported to JSON
-  EXPORTED => "EXPORTED",
-};
-
-use constant {
-  NEEDS_APPROVAL_TIMESTAMP_KEY => 'needs_approval_timestamp',
-  APPROVED_TIMESTAMP_KEY => 'approved_timestamp',
-  APPROVAL_IN_PROGRESS_TIMESTAMP_KEY => 'approval_in_progress_timestamp',
-  EXPORTED_TIMESTAMP_KEY => 'exported_timestamp',
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
   TERM_SUGGESTION_COUNT_KEY => 'term_suggestion_count'
 };
@@ -129,7 +109,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{annotation_types} = $config->{annotation_types};
   $st->{annotation_type_list} = $config->{annotation_type_list};
 
-  my ($state, $submitter_email, $gene_count) = _get_state($schema);
+  my ($state, $submitter_email, $gene_count) = get_state($schema);
   $st->{state} = $state;
 
   if ($state eq APPROVAL_IN_PROGRESS) {
@@ -168,7 +148,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $use_dispatch = 0;
     }
     if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-        $path =~ /finish_form|reactivate_session|approve_session/) {
+        $path =~ /finish_form|reactivate_session|begin_approval/) {
       $use_dispatch = 0;
     }
 
@@ -179,113 +159,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       }
     }
   }
-}
-
-# Return a constant describing the state of the application, eg. SESSION_ACCEPTED
-# or DONE.  See the %state hash above for details
-sub _get_state
-{
-  my $schema = shift;
-
-  my $submitter_email = get_metadata($schema, 'submitter_email');
-
-  my $state = undef;
-  my $gene_count = undef;
-
-  if (defined $submitter_email) {
-    my $gene_rs = get_ordered_gene_rs($schema);
-    $gene_count = $gene_rs->count();
-
-    if ($gene_count > 0) {
-      if (defined get_metadata($schema, EXPORTED_TIMESTAMP_KEY)) {
-        $state = EXPORTED;
-      } else {
-        if (defined get_metadata($schema, APPROVED_TIMESTAMP_KEY)) {
-          $state = APPROVED;
-        } else {
-          if (defined get_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY)) {
-            $state = APPROVAL_IN_PROGRESS;
-          } else {
-            if (defined get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
-              $state = NEEDS_APPROVAL;
-            } else {
-              $state = CURATION_IN_PROGRESS;
-            }
-          }
-        }
-      }
-    } else {
-      $state = SESSION_ACCEPTED;
-    }
-  } else {
-    $state = SESSION_CREATED;
-  }
-
-  return ($state, $submitter_email, $gene_count);
-}
-
-=head2
-
- Usage   : PomCur::Controller::Curs::store_state($config, $schema)
- Function: Store all the current state via the status adaptor
- Args    : $config - the Config object
-           $schema - the CursDB object
- Returns : nothing
-
-=cut
-sub store_statuses
-{
-  my $config = shift;
-  my $schema = shift;
-
-  my $adaptor = PomCur::Track::get_adaptor($config, 'status');
-
-  my ($status, $submitter_email, $gene_count) = _get_state($schema);
-
-  my $metadata_rs = $schema->resultset('Metadata');
-  my $metadata_row = $metadata_rs->find({ key => 'curs_key' });
-
-  if (!defined $metadata_row) {
-    warn 'failed to read curs_key from: ', $schema->storage()->connect_info();
-    return;
-  }
-
-  my $curs_key = $metadata_row->value();
-
-  my $term_suggest_count_row =
-    $metadata_rs->search({ key => TERM_SUGGESTION_COUNT_KEY })->first();
-
-  my $term_suggestion_count;
-
-  if (defined $term_suggest_count_row) {
-    $term_suggestion_count = $term_suggest_count_row->value();
-  } else {
-    $term_suggestion_count = 0;
-  }
-
-  $adaptor->store($curs_key, 'annotation_status', $status);
-  $adaptor->store($curs_key, 'session_genes_count', $gene_count // 0);
-  $adaptor->store($curs_key, 'session_term_suggestions_count',
-                  $term_suggestion_count);
-}
-
-sub _store_suggestion_count
-{
-  my $schema = shift;
-
-  my $ann_rs = $schema->resultset('Annotation')->search();
-
-  my $count = 0;
-
-  while (defined (my $ann = $ann_rs->next())) {
-    my $data = $ann->data();
-
-    if (exists $data->{term_suggestion}) {
-      $count++;
-    }
-  }
-
-  set_metadata($schema, TERM_SUGGESTION_COUNT_KEY, $count);
 }
 
 sub _redirect_and_detach
@@ -682,7 +555,6 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
 }
 
 my $iso_date_template = "%4d-%02d-%02d";
-
 
 sub _get_iso_date
 {
@@ -1487,8 +1359,7 @@ sub finish_form : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
-  set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY, _get_datetime());
-  store_statuses($c->config(), $schema);
+  set_state($schema, NEEDS_APPROVAL);
 
   my $st = $c->stash();
 
@@ -1548,49 +1419,31 @@ sub reactivate_session : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  my $proc = sub {
-    unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
-    unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
-    unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
-    store_statuses($c->config(), $schema);
-  };
-
-  $schema->txn_do($proc);
+  set_state($c->config(), $schema, CURATION_IN_PROGRESS);
 
   $c->flash()->{message} = 'Session has been reactivated';
 
   _redirect_and_detach($c);
 }
 
-sub approve_session : Chained('top') Args(0)
+sub begin_approval : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
 
   my $schema = $c->stash()->{schema};
 
-  my $proc = sub {
-    if (!defined get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
-      set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY, _get_datetime());
-    }
-    set_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY, _get_datetime());
-    unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
-  };
-
-  $schema->txn_do($proc);
-
-  store_statuses($c->config(), $schema);
+  set_state($c->config(), $schema, APPROVAL_IN_PROGRESS);
 
   _redirect_and_detach($c);
 }
 
-sub approval_complete : Chained('top') Args(0)
+sub complete_approval : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
 
   my $schema = $c->stash()->{schema};
 
-  set_metadata($schema, APPROVED_TIMESTAMP_KEY, _get_datetime());
-  store_statuses($c->config(), $schema);
+  set_state($c->config(), $schema, APPROVED);
 
   $c->flash()->{message} = 'Session approved';
 
