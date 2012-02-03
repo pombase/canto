@@ -55,9 +55,9 @@ sub BUILD
 
   my %parsed_options = ();
 
-  my @opt_config = ('stream-mode!' => \$parsed_options{'stream-mode'},
-                    'dump-all!' => \$parsed_options{'dump-all'},
-                    'mark-exported!' => \$parsed_options{'mark-exported'});
+  my @opt_config = ('stream-mode!' => \$parsed_options{stream_mode},
+                    'dump-all!' => \$parsed_options{dump_all},
+                    'export-approved!' => \$parsed_options{export_approved});
   if (!GetOptionsFromArray($self->options(), @opt_config)) {
     croak "option parsing failed";
   }
