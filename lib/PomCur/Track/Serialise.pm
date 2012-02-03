@@ -77,6 +77,16 @@ sub _get_curation_sessions
       } else {
         my $cursdb = PomCur::Curs::get_schema_for_key($config, $curs_key);
         $data = PomCur::Curs::Serialise::perl($cursdb, $options);
+        my $curs = $schema->resultset('Curs')->find({ curs_key => $curs_key });
+        my $props = _get_cursprops($curs);
+
+        for my $prop_data (@$props) {
+          if (exists $data->{$prop_data->{type}}) {
+            die "attempted to overwritten data from curs with: ", $prop_data->{type};
+          } else {
+            $data->{$prop_data->{type}} = $prop_data->{value};
+          }
+        }
       }
       ($curs_key, $data);
     } @curs_list

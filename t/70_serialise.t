@@ -333,11 +333,20 @@ my @expected_pubs =
 my %expected_pubs = ();
 @expected_pubs{@expected_pubs} = (ignore()) x @expected_pubs;
 
+my %extra_curs_statuses = (
+        annotation_status => PomCur::Controller::Curs::CURATION_IN_PROGRESS,
+        session_genes_count => 4,
+        session_term_suggestions_count => 1,
+);
+
 my $full_expected_track_data =
   {
     publications => \%expected_pubs,
     curation_sessions => {
-      aaaa0007 => $full_expected_curation_session,
+      aaaa0007 => {
+        %extra_curs_statuses,
+        %$full_expected_curation_session,
+      },
       aaaa0006 => ignore(),
     },
     people => \%expected_people,
@@ -348,7 +357,10 @@ my $small_expected_track_data =
   {
     publications => \%expected_pubs,
     curation_sessions => {
-      aaaa0007 => $small_expected_curation_session,
+      aaaa0007 => {
+        %extra_curs_statuses,
+        %$small_expected_curation_session,
+      },
       aaaa0006 => ignore(),
     },
     people => \%expected_people,
