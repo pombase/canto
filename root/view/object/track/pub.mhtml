@@ -5,11 +5,12 @@ $schema
 $is_admin_user
 </%args>
 
+
 <&| /view/object/object_top.mhtml, object => $object, class_info => $class_info &>
 
 % if ($is_admin_user) {
 %   if (defined $object->assigned_curator()) {
-
+%     if (scalar($object->curs()->all()) == 0) {
 <div class="long-action-link">
   <a href="<% $c->uri_for('/create/curs',
                           { pub => $object->pub_id(),
@@ -20,7 +21,7 @@ $is_admin_user
     Create a new curation session for this publication
   </a>
 </div>
-
+%     }
 %   } else {
 
 <div id="curs-pub-assign-dialog" style="display: none">
