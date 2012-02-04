@@ -1105,11 +1105,13 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
     my %extension_def = (
       name => 'annotation-extension',
-      label => 'Add optional annotation extension',
-      type => 'Text',
+      label => 'Add optional annotation extension:',
+      type => 'Textarea',
       container_tag => 'div',
-      attributes => { class => 'annotation-extension' },
-      size => 60,
+      attributes => { class => 'annotation-extension',
+                      style => 'display: block' },
+      cols => 60,
+      rows => 4,
     );
 
     my $existing_extension = $annotation->data()->{annotation_extension};
