@@ -223,6 +223,13 @@ sub pubmed_id_start : Local {
   $st->{template} = 'tools/pubmed_id_start.mhtml';
 }
 
+=head2 start
+
+ Usage   : /start/<pubmedid>
+ Function: Create a new session for a publication and redirect to it
+ Args    : pubmedid
+
+=cut
 sub start : Local Args(1) {
   my ($self, $c, $pub_uniquename) = @_;
 
@@ -245,6 +252,12 @@ sub start : Local Args(1) {
   $c->res->redirect($c->uri_for("/curs/$curs_key"));
 }
 
+=head2 store_all_statuses
+
+ Function: Call PomCur::Curs::Utils::store_all_statuses()
+ Args    : none
+
+=cut
 sub store_all_statuses : Local Args(0) {
   my ($self, $c) = @_;
 
