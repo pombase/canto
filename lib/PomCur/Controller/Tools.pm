@@ -272,7 +272,7 @@ sub store_all_statuses : Local Args(0) {
   $c->detach();
 }
 
-sub show_anex_locations : Local Args(0) {
+sub ann_ex_locations : Local Args(0) {
   my ($self, $c) = @_;
 
   my $st = $c->stash();
@@ -301,7 +301,7 @@ sub show_anex_locations : Local Args(0) {
 
   $st->{title} = 'Locations of annotation extension strings';
   $st->{show_title} = 0;
-  $st->{template} = 'tools/show_anex_locations.mhtml';
+  $st->{template} = 'tools/ann_ex_locations.mhtml';
 }
 
 =head1 LICENSE
