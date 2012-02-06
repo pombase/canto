@@ -21,7 +21,7 @@ my $app = $test_util->plack_app()->{app};
 test_psgi $app, sub {
   my $cb = shift;
 
-  my $url = 'http://localhost:5000/tools/show_anex_locations';
+  my $url = 'http://localhost:5000/tools/ann_ex_locations';
   my $req = HTTP::Request->new(GET => $url);
   my $res = $cb->($req);
 
