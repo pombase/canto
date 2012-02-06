@@ -12,12 +12,12 @@ $extension_data
     </th>
   </tr>
 % for my $anex_text (keys %$extension_data) {
+%   my $curs_data = $extension_data->{$anex_text};
 %   $anex_text =~ s/([;|,])/$1&#8203;/g;
   <tr>
     <td>
       <% $anex_text %>
     </td>
-%   my $curs_data = $extension_data->{$anex_text};
     <td>
       <table>
 %   for my $curs_key (keys %$curs_data) {
