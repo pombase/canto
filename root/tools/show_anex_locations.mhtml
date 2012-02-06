@@ -23,7 +23,7 @@ $extension_data
 %   for my $curs_key (keys %$curs_data) {
        <tr>
          <td>
-           <a href="<% $c->uri_for('/curs/' . $curs_key) %>">Session <% $curs_key %></a>
+           <a href="<% $c->uri_for('/curs/' . $curs_key) %>"><% $curs_key %></a>
          </td>
          <td>
            <ul style="list-style: none; white-space: nowrap;">
