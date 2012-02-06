@@ -11,7 +11,7 @@ $extension_data
       Curation session(s) / gene(s)
     </th>
   </tr>
-% for my $anex_text (keys %$extension_data) {
+% for my $anex_text (sort keys %$extension_data) {
 %   my $curs_data = $extension_data->{$anex_text};
 %   $anex_text =~ s/([;|,])/$1&#8203;/g;
   <tr>
