@@ -89,7 +89,7 @@ my %state_dispatch = (
 # used by the tests to find the most reecently created annotation
 our $_debug_annotation_id = undef;
 
-=head2 begin
+=head2 top
 
  Action to set up stash contents for curs
 
