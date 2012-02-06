@@ -243,4 +243,45 @@ sub delete_curs
   $guard->commit();
 }
 
+=head2
+
+ Usage   : PomCur::Track::tidy_curs($config, $curs_schema);
+ Function: Tidy the curs databases by fixing problems caused by code
+           changes.
+ Args    : $config - the PomCur::Config object
+           $curs_db - the CursDB to clean
+ Returns : none
+
+=cut
+sub tidy_curs
+{
+  my $config = shift;
+  my $curs_db = shift;
+
+  my $guard = $curs_db->txn_scope_guard;
+
+  my $ann_rs = $curs_db->resultset('Annotation');
+
+  while (defined (my $ann = $ann_rs->next())) {
+    if ($ann->status() eq 'deleted') {
+      $ann->delete();
+      next;
+    }
+
+    my $data = $ann->data();
+
+    if (defined $data->{annotation_extension}) {
+      if ($data->{annotation_extension} eq '') {
+        delete $data->{annotation_extension};
+        warn "deleting\n";
+        $ann->data($data);
+        $ann->update();
+      }
+    }
+  }
+
+  $guard->commit();
+
+}
+
 1;
