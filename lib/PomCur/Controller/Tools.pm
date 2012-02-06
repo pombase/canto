@@ -288,7 +288,10 @@ sub show_anex_locations : Local Args(0) {
     for my $gene ($cursdb->resultset('Gene')->all()) {
       for my $annotation ($gene->direct_annotations()) {
         if (defined $annotation->data()->{annotation_extension}) {
-          push @{$anexs{$annotation->data()->{annotation_extension}}->{$curs_key}}, $gene->primary_identifier();
+          push @{$anexs{$annotation->data()->{annotation_extension}}->{$curs_key}}, {
+            primary_identifier => $gene->primary_identifier(),
+            gene_id => $gene->gene_id(),
+          };
 last if keys %anexs > 10;
         }
       }
