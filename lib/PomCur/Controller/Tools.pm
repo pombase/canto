@@ -292,7 +292,6 @@ sub show_anex_locations : Local Args(0) {
             primary_identifier => $gene->primary_identifier(),
             gene_id => $gene->gene_id(),
           };
-last if keys %anexs > 10;
         }
       }
     }
