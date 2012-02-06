@@ -113,7 +113,8 @@ $user_created
     <td>
       <span>
 %   if ($row->{annotation_extension} && $row->{annotation_extension} !~ /^\s*$/) {
-      <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $row->{annotation_extension} %></a>
+%     (my $extension = $row->{annotation_extension}) =~ s/([;|,])/$1&#8203;/g;
+      <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $extension %></a>
 %   } else {
       <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
 %   }
