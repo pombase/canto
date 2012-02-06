@@ -1110,8 +1110,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       container_tag => 'div',
       attributes => { class => 'annotation-extension',
                       style => 'display: block' },
-      cols => 60,
-      rows => 4,
+      cols => 90,
+      rows => 6,
     );
 
     my $existing_extension = $annotation->data()->{annotation_extension};
