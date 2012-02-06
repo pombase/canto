@@ -1,0 +1,45 @@
+<%args>
+$extension_data
+</%args>
+
+<table class="list">
+  <tr>
+    <th>
+      Annotation extension text 
+    </th>
+    <th>
+      Curation session
+    </th>
+    <th>
+      Gene
+    </th>
+  </tr>
+% for my $anex_text (keys %$extension_data) {
+  <tr>
+    <td>
+      <% $anex_text %>
+    </td>
+%    my $curs_data = $extension_data->{$anex_text};
+    <td>
+      <table>
+%    for my $curs_key (keys %$curs_data) {
+       <tr>
+         <td>
+           <a href="<% $c->uri_for('/curs/' . $curs_key) %>">Session <% $curs_key %></a>
+         </td>
+         <td>
+           <ul>
+%     for my $gene_id (@{$curs_data->{$curs_key}}) {
+             <li>
+               <% $gene_id %>
+             </li>
+%     }
+           </ul>
+         </td>
+       </tr>
+%    }
+      </table>
+    </td>
+  </tr>
+% }
+</table>

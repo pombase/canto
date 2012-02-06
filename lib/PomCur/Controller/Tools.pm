@@ -272,6 +272,36 @@ sub store_all_statuses : Local Args(0) {
   $c->detach();
 }
 
+sub show_anex_locations : Local Args(0) {
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $track_schema = $c->schema('track');
+  my $config = $c->config();
+
+  my %anexs = ();
+
+  my $iter = PomCur::Track::curs_iterator($config, $track_schema);
+  while (my ($curs, $cursdb) = $iter->()) {
+    my $curs_key = $curs->curs_key();
+    for my $gene ($cursdb->resultset('Gene')->all()) {
+      for my $annotation ($gene->direct_annotations()) {
+        if (defined $annotation->data()->{annotation_extension}) {
+          push @{$anexs{$annotation->data()->{annotation_extension}}->{$curs_key}}, $gene->primary_identifier();
+last if keys %anexs > 10;
+        }
+      }
+    }
+  }
+
+  $st->{extension_data} = \%anexs;
+
+  $st->{title} = 'Locations of annotation extension strings';
+  $st->{show_title} = 0;
+  $st->{template} = 'tools/show_anex_locations.mhtml';
+}
+
 =head1 LICENSE
 
 This library is free software. You can redistribute it and/or modify
