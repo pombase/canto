@@ -236,7 +236,7 @@ sub set_state
 
   $guard->commit();
 
-  store_statuses($config, $schema);
+  $self->store_statuses($config, $schema);
 }
 
 1;
