@@ -10,6 +10,15 @@ use PomCur::Config;
 my $app = PomCur::Config::get_application_name();
 
 __PACKAGE__->config(use_match => 0);
+__PACKAGE__->config(escape_flags => {
+  html => sub {
+    # don't use the Mason HTML escaping because it breaks Unicode text
+    ${$_[0]} =~ s/&/&amp;/gs;
+    ${$_[0]} =~ s/</&lt;/gs;
+    ${$_[0]} =~ s/>/&gt;/gs;
+  },
+});
+__PACKAGE__->config(default_escape_flags => 'html');
 __PACKAGE__->config->{data_dir} =
   File::Spec->catdir(
     File::Spec->tmpdir,

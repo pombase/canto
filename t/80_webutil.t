@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::More tests => 8;
 use Test::MockObject;
 
 use PomCur::TestUtil;
@@ -75,3 +75,14 @@ my $paths_string =
 my $substituted_1 = PomCur::WebUtil::substitute_paths($paths_string, $person);
 
 is ($substituted_1, 'test string Nicholas Willis -- Rhind Lab more text Nick Rhind');
+
+
+my $js_test_string = qq~!@#$%^&*()_{}:"|<>?\
+foo~;
+
+$js_test_string .= "\tbar'zzz";
+
+my $js_result = PomCur::WebUtil::escape_inline_js($js_test_string);
+
+is ($js_result, '!@#0^&*()_{}:&quot;|<>?\\nfoo\\tbar\\\'zzz');
+

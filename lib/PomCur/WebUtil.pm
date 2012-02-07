@@ -345,4 +345,28 @@ sub substitute_paths
   return $string;
 }
 
+=head2 escape_inline_js
+
+ Usage   : $res = PomCur::WebUtil::escape_inline_js($string);
+ Function: Escape a string so that it can be used in an
+           inline "javascript:" string.
+ Args    : $string - the string
+ Returns : The input string with problematic characters escaped
+
+=cut
+sub escape_inline_js
+{
+  my $string = shift;
+
+  $string =~ s/\\/\\\\/gs;
+  $string =~ s/\n/\\n/gs;
+  $string =~ s/\r/\\r/gs;
+  $string =~ s/\t/\\t/gs;
+  $string =~ s/'/\\'/gs;
+  $string =~ s/"/&quot;/gs;
+
+  return $string;
+}
+
 1;
+
