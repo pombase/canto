@@ -666,7 +666,7 @@ sub _load_curs_db_data
       die "Expected 1 result for $gene_identifier not ", scalar(@found)
     }
 
-    PomCur::Controller::Curs::_create_genes($cursdb_schema, $result);
+    PomCur::Controller::Curs->_create_genes($cursdb_schema, $result);
   }
 
   for my $annotation (@{$curs_config->{annotations}}) {
