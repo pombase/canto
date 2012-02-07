@@ -179,7 +179,7 @@ sub set_state
   my $new_state = shift;
   my $force = shift;
 
-  my $current_state = get_state($schema);
+  my ($current_state) = $self->get_state($schema);
 
   if ($current_state eq EXPORTED) {
     croak "can't change state from ", EXPORTED;
