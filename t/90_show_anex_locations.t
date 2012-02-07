@@ -27,8 +27,6 @@ test_psgi $app, sub {
 
   is $res->code, 200;
 
-die $res->content();
-
   like ($res->content(), qr/Details for Val Wood/);
 };
 
