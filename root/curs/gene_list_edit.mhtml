@@ -30,7 +30,7 @@ $pub
     <tr>
 %     for my $col_name (@col_names) {
       <td>
-        <% $gene->{$col_name} %>
+        <% $gene->{$col_name} |n %>
       </td>
 %     }
       <td>
@@ -83,6 +83,8 @@ sub _search_highlight
   my $identifier = shift;
 
   return '' if !defined $identifier;
+
+  HTML::Mason::Escapes::basic_html_escape(\$identifier);
 
   my %search_terms = %{$c->stash()->{search_terms_hash}};
 
