@@ -52,7 +52,7 @@ $annotation_data
     </td>
 % if (exists $annotation_data->{annotation_extension}) {
     <td>
-      <% $annotation_data->{with_or_from_display_name} %>
+      <% $annotation_data->{annotation_extension} %>
     </td>
 % }
   </tr>
