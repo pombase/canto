@@ -117,7 +117,7 @@ sub get_state
 
 =head2
 
- Usage   : PomCur::Controller::Curs::store_statuses($config, $schema)
+ Usage   : $self->store_statuses($config, $schema)
  Function: Store all the current state via the status adaptor
  Args    : $config - the Config object
            $schema - the CursDB object
