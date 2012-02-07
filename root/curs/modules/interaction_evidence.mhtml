@@ -7,6 +7,6 @@ $form
 Choose evidence for interaction
   </div>
   <div class="curs-box-body">
-    <% $form %>
+    <% $form |n %>
   </div>
 </div>

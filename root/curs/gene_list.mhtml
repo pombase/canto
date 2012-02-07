@@ -24,7 +24,7 @@ $pub
             <% $gene->{identifier} %>
           </span>
         </a>
-        <% $gene->{extra_text} %>
+        <% $gene->{extra_text} |n %>
       </td>
 %       }
 %     }

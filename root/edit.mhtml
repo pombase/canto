@@ -2,4 +2,4 @@
 $form
 </%args>
 
-<% $form %>
+<% $form |n %>

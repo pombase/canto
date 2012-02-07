@@ -115,10 +115,10 @@ sub _make_ontology_annotation
     term_suggestion => $data->{term_suggestion},
     needs_with => $needs_with,
     with_or_from_identifier => $with_gene_identifier,
-    with_or_from_display_name => $with_gene_display_name,
+    with_or_from_display_name => $with_gene_display_name // '',
     taxonid => $gene->organism()->taxonid(),
     completed => $completed,
-    annotation_extension => $data->{annotation_extension},
+    annotation_extension => $data->{annotation_extension} // '',
     status => $annotation->status(),
   };
 }

@@ -9,7 +9,7 @@ $gene_display_name
 Choose evidence for annotating <% $gene_display_name %> with <% $term_ontid %>
   </div>
   <div class="curs-box-body">
-    <% $form %>
+    <% $form |n %>
   </div>
 </div>
 

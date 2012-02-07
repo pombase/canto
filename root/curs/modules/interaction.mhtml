@@ -11,7 +11,7 @@ $pub
       Select the interacting gene or genes ...
     </div>
     <div class="curs-box-body">
-<% $form %>
+<% $form |n %>
     </div>
   </div>
 

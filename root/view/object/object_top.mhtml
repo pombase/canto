@@ -7,7 +7,7 @@ $class_info
 <& /view/field_list.mhtml, object => $object, class_info => $class_info &>
 </div>
 
-<% $m->content() %>
+<% $m->content() |n %>
 
 <& /linkouts.mhtml, object => $object, context => $class_info->{source} &>
 

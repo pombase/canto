@@ -114,7 +114,7 @@ $user_created
       <span>
 %   if ($row->{annotation_extension} && $row->{annotation_extension} !~ /^\s*$/) {
 %     (my $extension = $row->{annotation_extension}) =~ s/([;|,])/$1&#8203;/g;
-      <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $extension %></a>
+      <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $extension |n %></a>
 %   } else {
       <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
 %   }

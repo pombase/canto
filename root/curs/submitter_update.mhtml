@@ -10,6 +10,6 @@ $title
   <div class="curs-box-body">
     <p>Please enter your name and email address:</p>
 
-    <% $form %>
+    <% $form |n %>
   </div>
 </div>

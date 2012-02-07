@@ -12,7 +12,7 @@ Choose interacting gene for annotating <% $gene_display_name %>
 with <% $term_ontid %> using <% $evidence_code %>
   </div>
   <div class="curs-box-body">
-    <% $form %>
+    <% $form |n %>
   </div>
 
   <div class="upload-genes-link">

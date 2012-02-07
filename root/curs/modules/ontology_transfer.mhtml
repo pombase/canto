@@ -17,7 +17,7 @@ $pub
    annotation => $annotation &>
 
 
-<% $form %>
+<% $form |n %>
 
 % if ($gene_count > 2) {
 <span class="pomcur-select-buttons">

@@ -15,5 +15,5 @@ curation tool.  Please describe the type of data briefly.  The curators may be
 able to capture this information.
 </p>
 
-<% $form %>
+<% $form |n %>
 

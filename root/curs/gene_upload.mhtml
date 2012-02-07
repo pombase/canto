@@ -20,7 +20,7 @@ The list of gene identifiers can be separated by commas, spaces, tabs or there
 can be one per line.
 </div>
 
-  <% $form %>
+  <% $form |n %>
   </div>
 </div>
 <%init>

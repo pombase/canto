@@ -19,7 +19,7 @@ $extension_data
 %   $anex_text =~ s/([;|,])/$1&#8203;/g;
   <tr>
     <td>
-      <% $anex_text %>
+      <% $anex_text |n %>
     </td>
     <td>
       <table>
