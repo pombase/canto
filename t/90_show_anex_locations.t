@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 2;
 
 use Plack::Test;
 use Plack::Util;
@@ -27,7 +27,7 @@ test_psgi $app, sub {
 
   is $res->code, 200;
 
-  like ($res->content(), qr/Details for Val Wood/);
+  like ($res->content(), qr/has_substrate\(GeneDB_Spombe:SPBC1105.11c\)/);
 };
 
 done_testing;
