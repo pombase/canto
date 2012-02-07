@@ -654,10 +654,10 @@ sub _load_curs_db_data
   my $gene_lookup = PomCur::Track::GeneLookup->new(config => $config,
                                                    schema => $trackdb_schema);
 
-  set_metadata($cursdb_schema, 'submitter_email',
-               $curs_config->{submitter_email});
-  set_metadata($cursdb_schema, 'submitter_name',
-               $curs_config->{submitter_name});
+  __PACKAGE__->set_metadata($cursdb_schema, 'submitter_email',
+                            $curs_config->{submitter_email});
+  __PACKAGE__->set_metadata($cursdb_schema, 'submitter_name',
+                            $curs_config->{submitter_name});
 
   for my $gene_identifier (@{$curs_config->{genes}}) {
     my $result = $gene_lookup->lookup([$gene_identifier]);
@@ -799,7 +799,7 @@ sub make_curs_db
     $cursdb_schema->txn_do(
       sub {
         _load_curs_db_data($config, $trackdb_schema, $cursdb_schema, $curs_config);
-        PomCur::Controller::Curs::_store_suggestion_count($cursdb_schema);
+        PomCur::Controller::Curs->_store_suggestion_count($cursdb_schema);
       });
   }
 

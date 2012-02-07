@@ -503,7 +503,7 @@ sub store_all_statuses
 
   my $iter = PomCur::Track::curs_iterator($config, $track_schema);
   while (my ($curs, $cursdb) = $iter->()) {
-    PomCur::Controller::Curs::store_statuses($config, $cursdb);
+    PomCur::Controller::Curs->store_statuses($config, $cursdb);
   }
 }
 

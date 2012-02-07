@@ -40,7 +40,11 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
-with 'PomCur::Role::MetadataAccess', 'PomCur::Curs::State';
+use PomCur::Curs::State qw/:all/;
+
+with 'PomCur::Role::MetadataAccess';
+with 'PomCur::Curs::Role::GeneResultSet';
+with 'PomCur::Curs::State';
 
 use Archive::Zip qw(:CONSTANTS :ERROR_CODES);
 use IO::String;
@@ -48,7 +52,6 @@ use Clone qw(clone);
 
 use PomCur::Track;
 use PomCur::Curs::Utils;
-use PomCur::Curs::State qw/:all/;
 
 use constant {
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
@@ -109,16 +112,19 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{annotation_types} = $config->{annotation_types};
   $st->{annotation_type_list} = $config->{annotation_type_list};
 
-  my ($state, $submitter_email, $gene_count) = get_state($schema);
+  my ($state, $submitter_email, $gene_count) = $self->get_state($schema);
   $st->{state} = $state;
 
   if ($state eq APPROVAL_IN_PROGRESS) {
     $st->{notice} = 'Session is being checked';
   }
 
-  $st->{first_contact_email} = get_metadata($schema, 'first_contact_email');
-  $st->{first_contact_name} = get_metadata($schema, 'first_contact_name');
-  $st->{is_admin_session} = get_metadata($schema, 'admin_session');
+  $st->{first_contact_email} =
+    $self->get_metadata($schema, 'first_contact_email');
+  $st->{first_contact_name} =
+    $self->get_metadata($schema, 'first_contact_name');
+  $st->{is_admin_session} =
+    $self->get_metadata($schema, 'admin_session');
 
   my $organism_rs = $schema->resultset('Organism')->search({}, { rows => 2});
   my $has_multiple_organisms = $organism_rs->count() > 1;
@@ -128,15 +134,15 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   # curation_pub_id will be set if we are annotating a particular publication,
   # rather than annotating genes without a publication
-  my $pub_id = get_metadata($schema, 'curation_pub_id');
+  my $pub_id = $self->get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
 
   if ($state ne SESSION_CREATED) {
     $st->{submitter_email} = $submitter_email;
-    $st->{submitter_name} = get_metadata($schema, 'submitter_name');
+    $st->{submitter_name} = $self->get_metadata($schema, 'submitter_name');
   }
 
-  $st->{gene_count} = get_ordered_gene_rs($schema)->count();
+  $st->{gene_count} = $self->get_ordered_gene_rs($schema)->count();
 
   if ($state eq APPROVAL_IN_PROGRESS &&
       !($c->user_exists() && $c->user()->role()->name() eq 'admin')) {
@@ -245,7 +251,7 @@ sub submitter_update : Private
 
     $schema->txn_do($add_submitter);
 
-    store_statuses($c->config(), $schema);
+    $self->store_statuses($c->config(), $schema);
 
     _redirect_and_detach($c);
   }
@@ -256,12 +262,13 @@ my $gene_list_textarea_name = 'gene_identifiers';
 # return a list of only those genes which aren't already in the database
 sub _filter_existing_genes
 {
+  my $self = shift;
   my $schema = shift;
   my @genes = @_;
 
   my @gene_primary_identifiers = map { $_->{primary_identifier} } @genes;
 
-  my $gene_rs = get_ordered_gene_rs($schema);
+  my $gene_rs = $self->get_ordered_gene_rs($schema);
   my $rs = $gene_rs->search({
     primary_identifier => {
       -in => [@gene_primary_identifiers],
@@ -279,6 +286,7 @@ sub _filter_existing_genes
 # create genes in the Curs database from a lookup() result
 sub _create_genes
 {
+  my $self = shift;
   my $schema = shift;
   my $result = shift;
 
@@ -286,7 +294,7 @@ sub _create_genes
       {
         my @genes = @{$result->{found}};
 
-        @genes = _filter_existing_genes($schema, @genes);
+        @genes = $self->_filter_existing_genes($schema, @genes);
 
         for my $gene (@genes) {
           my $org_full_name = $gene->{organism_full_name};
@@ -317,7 +325,7 @@ sub _create_genes
 
 sub _find_and_create_genes
 {
-  my ($schema, $config, $search_terms_ref, $create_when_missing) = @_;
+  my ($self, $schema, $config, $search_terms_ref, $create_when_missing) = @_;
 
   my @search_terms = @$search_terms_ref;
   my $adaptor = PomCur::Track::get_adaptor($config, 'gene');
@@ -326,12 +334,12 @@ sub _find_and_create_genes
 
   if (@{$result->{missing}}) {
     if ($create_when_missing) {
-      _create_genes($schema, $result);
+      $self->_create_genes($schema, $result);
     }
 
     return $result;
   } else {
-    _create_genes($schema, $result);
+    $self->_create_genes($schema, $result);
 
     return undef;
   }
@@ -397,7 +405,7 @@ sub _edit_genes_helper
         };
         $schema->txn_do($delete_sub);
 
-        if (get_ordered_gene_rs($schema)->count() == 0) {
+        if ($self->get_ordered_gene_rs($schema)->count() == 0) {
           $c->flash()->{message} = 'All genes removed from the list';
           _redirect_and_detach($c, 'gene_upload');
         } else {
@@ -415,7 +423,7 @@ sub edit_genes : Chained('top') Args(0) Form
   my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 0);
-  store_statuses($c->config(), $c->stash()->{schema});
+  $self->store_statuses($c->config(), $c->stash()->{schema});
 }
 
 sub confirm_genes : Chained('top') Args(0) Form
@@ -424,7 +432,7 @@ sub confirm_genes : Chained('top') Args(0) Form
   my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 1);
-  store_statuses($c->config(), $c->stash()->{schema});
+  $self->store_statuses($c->config(), $c->stash()->{schema});
 }
 
 sub gene_upload : Chained('top') Args(0) Form
@@ -486,9 +494,9 @@ sub gene_upload : Chained('top') Args(0) Form
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
     my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $search_terms_text;
 
-    my $result = _find_and_create_genes($schema, $c->config(), \@search_terms);
+    my $result = $self->_find_and_create_genes($schema, $c->config(), \@search_terms);
 
-    store_statuses($c->config(), $schema);
+    $self->store_statuses($c->config(), $schema);
 
     if ($result) {
       my @missing = @{$result->{missing}};
@@ -510,6 +518,26 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 }
 
+sub _store_suggestion_count
+{
+  my $self = shift;
+  my $schema = shift;
+
+  my $ann_rs = $schema->resultset('Annotation')->search();
+
+  my $count = 0;
+
+  while (defined (my $ann = $ann_rs->next())) {
+    my $data = $ann->data();
+
+    if (exists $data->{term_suggestion}) {
+      $count++;
+    }
+  }
+
+  $self->set_metadata($schema, TERM_SUGGESTION_COUNT_KEY, $count);
+}
+
 sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;
@@ -523,12 +551,12 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
     $annotation->status('deleted');
     $annotation->update();
 
-    _store_suggestion_count($schema);
+    $self->_store_suggestion_count($schema);
   };
 
   $schema->txn_do($delete_sub);
 
-  store_statuses($c->config(), $schema);
+  $self->store_statuses($config, $schema);
 
   _redirect_and_detach($c);
 }
@@ -549,7 +577,7 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
 
   $schema->txn_do($delete_sub);
 
-  store_statuses($c->config(), $schema);
+  $self->store_statuses($config, $schema);
 
   _redirect_and_detach($c);
 }
@@ -674,7 +702,7 @@ sub annotation_ontology_edit
     my $annotation_id = $annotation->annotation_id();
     $_debug_annotation_id = $annotation_id;
 
-    store_statuses($c->config(), $schema);
+    $self->store_statuses($c->config(), $schema);
 
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }
@@ -702,7 +730,7 @@ sub annotation_interaction_edit
 
   $form->auto_fieldset(0);
 
-  my $genes_rs = get_ordered_gene_rs($schema, 'primary_name');
+  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_name');
 
   my @options = ();
 
@@ -761,7 +789,7 @@ sub annotation_interaction_edit
     my $annotation_id = $annotation->annotation_id();
     $_debug_annotation_id = $annotation_id;
 
-    store_statuses($c->config(), $schema);
+    $self->store_statuses($config, $schema);
 
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }
@@ -792,7 +820,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
     interaction => \&annotation_interaction_edit,
   );
 
-  store_statuses($c->config(), $schema);
+  $self->store_statuses($config, $schema);
 
   &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene,
                                                     $annotation_config);
@@ -905,7 +933,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
     my $with_gene = $evidence_types{$evidence_select}->{with_gene};
 
-    store_statuses($c->config(), $schema);
+    $self->store_statuses($config, $schema);
 
     if ($with_gene) {
       _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
@@ -944,7 +972,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   $form->auto_fieldset(0);
 
-  my $genes_rs = get_ordered_gene_rs($schema, 'primary_name');
+  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_name');
 
   my @options = ();
 
@@ -1038,7 +1066,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     $guard->commit();
 
-    store_statuses($c->config(), $schema);
+    $self->store_statuses($config, $schema);
 
     _redirect_and_detach($c, 'gene', $gene->gene_id());
   }
@@ -1077,7 +1105,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
 
   my @genes = ();
 
-  my $gene_rs = get_ordered_gene_rs($schema, 'primary_name');
+  my $gene_rs = $self->get_ordered_gene_rs($schema, 'primary_name');
 
   while (defined (my $gene = $gene_rs->next())) {
     push @genes, [$gene->primary_identifier(), $gene->display_name()];
@@ -1120,7 +1148,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
     _maybe_transfer_annotation($c, $annotation, $annotation_config);
   }
 
-  store_statuses($c->config(), $schema);
+  $self->store_statuses($config, $schema);
 }
 
 sub gene : Chained('top') Args(1)
@@ -1137,40 +1165,6 @@ sub gene : Chained('top') Args(1)
   # use only in header, not in body:
   $st->{show_title} = 0;
   $st->{template} = 'curs/gene_page.mhtml';
-}
-
-=head2 get_ordered_gene_rs
-
- Usage   : my $gene_rs = get_ordered_gene_rs($schema, $order_by_field);
- Function: Return an ordered resultset of genes
- Args    : $schema - the CursDB schema
-           $order_by_field - the field to order by, defaults to gene_id
- Returns : a ResultSet
-
-=cut
-sub get_ordered_gene_rs
-{
-  my $schema = shift;
-
-  my $order_by_field = shift // 'gene_id';
-  my $order_by;
-
-  if ($order_by_field eq 'primary_name') {
-    # special case, order by primary_name unless it's null, then use
-    # primary_identifier
-    $order_by =
-      "case when primary_name is null then 'zzz' || primary_identifier " .
-      "else primary_name end";
-  } else {
-    $order_by = {
-      -asc => $order_by_field
-    }
-  }
-
-  return $schema->resultset('Gene')->search({},
-                                            {
-                                              order_by => $order_by
-                                            });
 }
 
 sub _get_annotation_table_tsv
@@ -1359,7 +1353,7 @@ sub finish_form : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
-  set_state($schema, NEEDS_APPROVAL);
+  $self->set_state($config, $schema, NEEDS_APPROVAL);
 
   my $st = $c->stash();
 
@@ -1396,7 +1390,7 @@ sub finish_form : Chained('top') Args(0)
     $text =~ s/^\s+//;
     $text =~ s/\s+$//;
 
-    set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
+    $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
 
     _redirect_and_detach($c, 'finished_publication');
   }
@@ -1419,7 +1413,7 @@ sub reactivate_session : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  set_state($c->config(), $schema, CURATION_IN_PROGRESS);
+  $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS);
 
   $c->flash()->{message} = 'Session has been reactivated';
 
@@ -1432,7 +1426,7 @@ sub begin_approval : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  set_state($c->config(), $schema, APPROVAL_IN_PROGRESS);
+  $self->set_state($c->config(), $schema, APPROVAL_IN_PROGRESS);
 
   _redirect_and_detach($c);
 }
@@ -1443,7 +1437,7 @@ sub complete_approval : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  set_state($c->config(), $schema, APPROVED);
+  $self->set_state($c->config(), $schema, APPROVED);
 
   $c->flash()->{message} = 'Session approved';
 
