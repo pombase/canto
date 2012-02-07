@@ -201,7 +201,7 @@ sub set_state
     when (NEEDS_APPROVAL) {
       if (!$force and $current_state ne CURATION_IN_PROGRESS) {
         croak "trying to approve a session that isn't in the state ",
-          CURATION_IN_PROGRESS;
+          CURATION_IN_PROGRESS, " it's currently: ", $current_state;
       }
       $self->set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY, _get_datetime());
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
