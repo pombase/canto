@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 33;
+use Test::More tests => 29;
 
 use Plack::Test;
 use Plack::Util;
@@ -133,47 +133,7 @@ test_psgi $app, sub {
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
 
-  # log in
-  {
-    my $first_admin_email_address = undef;
-    my $first_admin_password = undef;
-
-    {
-      my $admin_role =
-        $track_schema->resultset('Cvterm')->find({ name => 'admin' });
-
-      my $admin_people =
-        $track_schema->resultset('Person')->
-        search({ role => $admin_role->cvterm_id() });
-
-      my $first_admin = $admin_people->first();
-      ok(defined $first_admin);
-
-      $first_admin_email_address = $first_admin->email_address();
-      $first_admin_password = $first_admin->password();
-    }
-
-    my $uri = new URI("http://localhost:5000/login");
-    $uri->query_form(email_address => $first_admin_email_address,
-                     password => $first_admin_password,
-                     return_path => 'http://localhost:5000/',
-                     submit => 'login',
-                   );
-
-    my $res = $cb->(GET $uri);
-    $cookie_jar->extract_cookies($res);
-
-    is $res->code, 302;
-
-    my $redirect_url = $res->header('location');
-    is ($redirect_url, 'http://localhost:5000/');
-
-    my $redirect_req = GET $redirect_url;
-    $cookie_jar->add_cookie_header($redirect_req);
-    my $redirect_res = $cb->($redirect_req);
-
-    like ($redirect_res->content(), qr/Login successful/);
-  }
+  $test_util->app_login($cookie_jar, $cb);
 
   # check that admin options are shown when logged in as admin
   {
