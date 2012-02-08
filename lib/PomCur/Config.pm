@@ -337,6 +337,10 @@ sub class_info
 
   my $model_name = $c->request()->param('model');
 
+  if (!defined $model_name) {
+    croak "no model_name passed to class_info()";
+  }
+
   return $self->{class_info}->{$model_name};
 }
 
