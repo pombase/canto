@@ -67,7 +67,6 @@ $is_admin_user
 my $table_pk_field = ($object->primary_columns())[0];
 my $object_id = $object->$table_pk_field();
 
-my $editable = $c->config()->class_info($c)->{$type}->{editable};
-
-my $model_name = $c->request()->param('model');
+my $model_name = $c->req()->param('model');
+my $editable = $c->config()->class_info($model_name)->{$type}->{editable};
 </%init>

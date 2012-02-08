@@ -23,6 +23,7 @@ use IO::All;
 use Plack::Test;
 use Plack::Util;
 use HTTP::Cookies;
+use HTTP::Request::Common;
 
 use PomCur::Config;
 use PomCur::Meta::Util;
@@ -831,6 +832,73 @@ sub cookie_jar
     file => "/tmp/pomcur_web_test_$$.cookies",
     autosave => 1,
   );
+}
+
+=head2 app_login
+
+ Usage   : $test_util->app_login($cookie_jar, $app_call_back);
+ Function: Log in as an admin user
+ Args    : $cookie_jar - a HTTP::Cookies object
+           $app_call_back - the callback object from test_psgi
+ Returns : nothing
+
+=cut
+sub app_login
+{
+  my $self = shift;
+  my $cookie_jar = shift;
+  my $cb = shift;
+
+  my $track_schema = $self->track_schema();
+
+  my $admin_role =
+    $track_schema->resultset('Cvterm')->find({ name => 'admin' });
+
+  my $admin_people =
+    $track_schema->resultset('Person')->
+    search({ role => $admin_role->cvterm_id() });
+
+  my $first_admin = $admin_people->first();
+  if (!defined $first_admin) {
+    croak "can't find an admin user";
+  }
+
+  # reset so that the database isn't open for reading, otherwise login
+  # will time out waiting for a write lock
+  $admin_people->reset();
+
+  my $first_admin_email_address = $first_admin->email_address();
+  my $first_admin_password = $first_admin->password();
+
+  my $uri = new URI("http://localhost:5000/login");
+  $uri->query_form(email_address => $first_admin_email_address,
+                   password => $first_admin_password,
+                   return_path => 'http://localhost:5000/',
+                   submit => 'login',
+                 );
+  my $req = GET $uri;
+  $cookie_jar->add_cookie_header($req);
+
+  my $res = $cb->($req);
+  if ($res->code != 302) {
+    croak "couldn't login";
+  }
+  $cookie_jar->extract_cookies($res);
+
+  my $redirect_url = $res->header('location');
+  if ($redirect_url ne 'http://localhost:5000/') {
+    croak "login didn't redirect to the front page";
+  }
+
+
+  my $redirect_req = GET $redirect_url;
+  $cookie_jar->add_cookie_header($redirect_req);
+
+  my $redirect_res = $cb->($redirect_req);
+  my $login_text = "Login successful";
+  if ($redirect_res->content() !~ m/$login_text/) {
+    croak q(after login page doesn't contain "$login_text");
+  }
 }
 
 1;

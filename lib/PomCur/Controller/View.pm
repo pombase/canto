@@ -40,6 +40,7 @@ under the same terms as Perl itself.
 use strict;
 use warnings;
 use base 'Catalyst::Controller';
+use Carp;
 
 use PomCur::WebUtil;
 
@@ -75,7 +76,8 @@ sub get_object_by_id_or_name
     }
   }
 
-  my $rs = _get_list_rs($c, $search, $class_info);
+  my $model_name = $c->request()->param('model');
+  my $rs = get_list_rs($c, $search, $class_info, $model_name);
 
   my @column_confs =
     PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
@@ -157,7 +159,9 @@ sub object : Local
 
   my $st = $c->stash;
 
-  my $class_info = $c->config()->class_info($c)->{$config_name};
+  my $model_name = $c->req()->param('model');
+  my $class_info =
+    $c->config()->class_info($model_name)->{$config_name};
   $st->{class_info} = $class_info;
 
   my $table = $class_info->{source};
@@ -194,13 +198,15 @@ sub object : Local
 
 =head2 order_list_rs
 
- Usage   : order_list_rs($c, $rs, $class_info);
+ Usage   : order_list_rs($c, $rs, $class_info, $model_name);
  Function: add an appropriate order_by option to a ResultSet, based on the
            configuration
  Args    : $c - the Catalyst object
            $rs - the ResultSet
            $class_info - the class information from the config file for this
                          ResultSet
+           $model_name - the model to use when retrieving the schema
+                         object
  Returns : none, modifies $rs
 
 =cut
@@ -209,9 +215,17 @@ sub order_list_rs
   my $c = shift;
   my $rs = shift;
   my $class_info = shift;
+  my $model_name = shift;
+
+  if (!defined $model_name) {
+    croak "no model_name passed to order_list_rs()";
+  }
 
   my $table = $class_info->{source};
-  my $params = { order_by => _get_order_by_field($c, $table) };
+  my $params = {
+    order_by => _get_order_by_field($c->config(),
+                                    $model_name, $table)
+  };
 
   if (defined $class_info->{constraint}) {
     my $constraint = '(' . $class_info->{constraint} . ')';
@@ -221,32 +235,35 @@ sub order_list_rs
   return $rs->search({}, $params);
 }
 
-=head2 _get_list_rs
+=head2 get_list_rs
 
- Usage   : my $rs = _get_list_rs($c, $search, $class_info)
+ Usage   : my $rs = get_list_rs($c, $search, $class_info)
  Function: Return a ResultSet for the table given by $class_info
  Args    : $c - the Catalyst object
            $search - an options hashref to pass to the DBIx::Class search()
                      method
            $class_info - the class information from the config file used
                          to choose the table to query
+           $model - the model to use when retrieving the schema object,
+                    or undef to use the one from the params
  Returns :
 
 =cut
-sub _get_list_rs
+sub get_list_rs
 {
   my $c = shift;
   my $search = shift;
   my $class_info = shift;
+  my $model = shift;
 
-  my $schema = $c->schema();
+  my $schema = $c->schema($model);
 
   my $table = $class_info->{source};
   my $class_name = $schema->class_name_of_table($table);
 
   my $rs = $schema->resultset($class_name)->search($search);
 
-  return order_list_rs($c, $rs, $class_info);
+  return order_list_rs($c, $rs, $class_info, $model);
 }
 
 =head2 list
@@ -270,7 +287,9 @@ sub list : Local
     my $search = $st->{list_search_constraint};
     $st->{title} = 'List of ';
 
-    my $class_info = $c->config()->class_info($c)->{$config_name};
+    my $model_name = $c->req()->param('model');
+    my $class_info =
+      $c->config()->class_info($model_name)->{$config_name};
 
     if (!defined $class_info) {
       die "no such configuration: $config_name\n";
@@ -283,7 +302,7 @@ sub list : Local
       $st->{title} .= "all $plural_name";
     }
 
-    my $rs = _get_list_rs($c, $search, $class_info);
+    my $rs = get_list_rs($c, $search, $class_info, $model_name);
     $st->{rs} = $rs;
 
     $st->{page} = $c->req->param('page') || 1;
@@ -298,10 +317,11 @@ sub list : Local
 
 sub _get_order_by_field
 {
-  my $c = shift;
+  my $config = shift;
+  my $model_name = shift;
   my $type = shift;
 
-  my $class_info = $c->config()->class_info($c)->{$type};
+  my $class_info = $config->class_info($model_name)->{$type};
 
   # default: order by id
   my $order_by = $type . '_id';

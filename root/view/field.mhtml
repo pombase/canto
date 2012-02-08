@@ -66,7 +66,8 @@ if ($field_type eq 'foreign_key') {
 
   if (defined $referenced_object) {
     $ref_table = $referenced_object->table();
-    my $class_infos = $c->config()->class_info($c);
+    my $model_name = $c->req()->param('model');
+    my $class_infos = $c->config()->class_info($model_name);
     $ref_class_info = $class_infos->{$ref_table};
   }
 }

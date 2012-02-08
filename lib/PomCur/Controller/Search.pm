@@ -57,7 +57,8 @@ sub type : Local
 
   my $schema = $c->schema();
   my $config = $c->config();
-  my $class_info = $config->class_info($c)->{$type};
+  my $model_name = $c->request()->param('model');
+  my $class_info = $config->class_info($model_name)->{$type};
 
   my @search_fields = map {
     if (exists $class_info->{field_infos}->{$_}->{source}) {
@@ -78,7 +79,6 @@ sub type : Local
   $c->stash()->{list_search_term} = $search_term;
   $c->stash()->{list_search_constraint} = [@search];
 
-  my $model_name = $c->req()->param('model');
   $c->forward("/view/list/$type",
               {
                 model => $model_name
