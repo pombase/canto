@@ -1,8 +1,10 @@
 <%args>
 $state
 $curs_root_uri
+$message_to_curators => undef
 </%args>
 
+<div id="curs-pub-finished">
 <p>
 Thank you for your contribution to <% $c->config()->{database_name} %>.
 </p>
@@ -25,10 +27,30 @@ If you wish to modify an annotation you have made, please contact
 the curators.
 </p>
 
-% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
-Admin only: <a href="<% $begin_approval_uri %>"><% $approve_text %></a>
-or <a href="<% $reactivate_session_uri %>">Reactivate session</a>
+% if (defined $message_to_curators) {
+<div class="curs-box curs-pub-finished-message-to-curator">
+  <div class="curs-box-title">
+    Message sent to the curators
+  </div>
+  <div class="curs-box-body">
+    <% $message_to_curators %>
+  </div>
+</div>
 % }
+
+% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+<div class="curs-box" id="curs-pub-finished-admin">
+  <div class="curs-box-title">
+    Admin only links
+  </div>
+  <div class="curs-box-body">
+<a href="<% $begin_approval_uri %>"><% $approve_text %></a>
+or <a href="<% $reactivate_session_uri %>">Reactivate session</a>
+  </div>
+</div>
+% }
+
+</div>
 
 <%init>
 my $reactivate_session_uri = $curs_root_uri . '/reactivate_session/';

@@ -838,3 +838,8 @@ input[type="submit"] {
   float: left;
   padding-left: 50px;
 }
+
+#curs-pub-finished .curs-box {
+  width: 60%;
+  margin-bottom: 10px;
+}

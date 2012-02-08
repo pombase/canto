@@ -1405,6 +1405,10 @@ sub finished_publication : Chained('top') Args(0)
   $st->{title} = 'Finished publication';
   $st->{show_title} = 0;
   $st->{template} = 'curs/finished_publication.mhtml';
+
+  my $schema = $c->stash()->{schema};
+  $st->{message_to_curators} =
+    $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
 }
 
 sub reactivate_session : Chained('top') Args(0)
