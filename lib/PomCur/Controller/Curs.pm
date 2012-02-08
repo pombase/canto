@@ -523,6 +523,10 @@ sub _store_suggestion_count
   my $self = shift;
   my $schema = shift;
 
+  if (!defined $schema) {
+    die "no schema passed to _store_suggestion_count()";
+  }
+
   my $ann_rs = $schema->resultset('Annotation')->search();
 
   my $count = 0;
