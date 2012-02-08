@@ -48,7 +48,7 @@ use PomCur::Curs;
 
 my $schema = $c->stash()->{schema};
 my @all_genes = 
-  PomCur::Controller::Curs::get_ordered_gene_rs($schema, 'primary_name')->all();
+  PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_name')->all();
 my @gene_hashes = map {
      my $extra_text = '';
      my @annotations = $_->direct_annotations();

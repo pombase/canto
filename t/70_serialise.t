@@ -333,11 +333,20 @@ my @expected_pubs =
 my %expected_pubs = ();
 @expected_pubs{@expected_pubs} = (ignore()) x @expected_pubs;
 
+my %extra_curs_statuses = (
+        annotation_status => PomCur::Controller::Curs::CURATION_IN_PROGRESS,
+        session_genes_count => 4,
+        session_term_suggestions_count => 1,
+);
+
 my $full_expected_track_data =
   {
     publications => \%expected_pubs,
     curation_sessions => {
-      aaaa0007 => $full_expected_curation_session,
+      aaaa0007 => {
+        %extra_curs_statuses,
+        %$full_expected_curation_session,
+      },
       aaaa0006 => ignore(),
     },
     people => \%expected_people,
@@ -348,7 +357,10 @@ my $small_expected_track_data =
   {
     publications => \%expected_pubs,
     curation_sessions => {
-      aaaa0007 => $small_expected_curation_session,
+      aaaa0007 => {
+        %extra_curs_statuses,
+        %$small_expected_curation_session,
+      },
       aaaa0006 => ignore(),
     },
     people => \%expected_people,
@@ -379,14 +391,20 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
   cmp_deeply($curs_ref, $small_expected_curation_session);
 }
 
-my $track_json = PomCur::Track::Serialise::json($config, $track_schema, { dump_all => 1});
-my $track_ref = decode_json($track_json);
+sub check_track {
+  my $options = shift;
+  my $track_json = PomCur::Track::Serialise::json($config, $track_schema, $options);
+  my $track_ref = decode_json($track_json);
 
-cmp_deeply($track_ref, $full_expected_track_data);
+  cmp_deeply($track_ref, $full_expected_track_data);
 
-my %curation_sessions = %{$track_ref->{curation_sessions}};
-is (keys %curation_sessions, 2);
+  my %curation_sessions = %{$track_ref->{curation_sessions}};
+  is (keys %curation_sessions, 2);
 
-my $curation_session = $curation_sessions{aaaa0007};
+  my $curation_session = $curation_sessions{aaaa0007};
 
-cmp_deeply($curation_session, $full_expected_curation_session);
+  cmp_deeply($curation_session, { %extra_curs_statuses,
+                                  %$full_expected_curation_session });
+}
+
+check_track({ dump_all => 1 });

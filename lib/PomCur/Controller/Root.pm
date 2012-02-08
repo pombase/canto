@@ -209,7 +209,7 @@ sub test_curs :Global {
 
       use PomCur::Controller::Curs;
       my $res =
-        PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
+        PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                          [@test_gene_ids], 1);
     }
   }

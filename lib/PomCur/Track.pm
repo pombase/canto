@@ -101,19 +101,19 @@ sub create_curs_db
   if (defined $curs->assigned_curator()) {
     my $first_contact_name = $curs->assigned_curator()->name();
     my $first_contact_email = $curs->assigned_curator()->email_address();
-    set_metadata($curs_schema, 'first_contact_email', $first_contact_email);
-    set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
+    __PACKAGE__->set_metadata($curs_schema, 'first_contact_email', $first_contact_email);
+    __PACKAGE__->set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
 
     if ($admin_session) {
-      set_metadata($curs_schema, 'submitter_email', $first_contact_email);
-      set_metadata($curs_schema, 'submitter_name', $first_contact_name);
-      set_metadata($curs_schema, 'admin_session', 1);
+      __PACKAGE__->set_metadata($curs_schema, 'submitter_email', $first_contact_email);
+      __PACKAGE__->set_metadata($curs_schema, 'submitter_name', $first_contact_name);
+      __PACKAGE__->set_metadata($curs_schema, 'admin_session', 1);
     }
   }
 
   # the calling function will wrap this in a transaction if necessary
-  set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
-  set_metadata($curs_schema, 'curs_key', $curs->curs_key());
+  __PACKAGE__->set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
+  __PACKAGE__->set_metadata($curs_schema, 'curs_key', $curs->curs_key());
 
   if (wantarray) {
     return ($curs_schema, $db_file_name);

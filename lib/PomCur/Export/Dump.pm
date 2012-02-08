@@ -46,6 +46,25 @@ use PomCur::Track::Serialise;
 
 with 'PomCur::Role::Configurable';
 
+has options => (is => 'ro', isa => 'ArrayRef', required => 1);
+has parsed_options => (is => 'rw', isa => 'HashRef', init_arg => undef);
+
+sub BUILD
+{
+  my $self = shift;
+
+  my %parsed_options = ();
+
+  my @opt_config = ('stream-mode!' => \$parsed_options{stream_mode},
+                    'dump-all!' => \$parsed_options{dump_all},
+                    'export-approved!' => \$parsed_options{export_approved});
+  if (!GetOptionsFromArray($self->options(), @opt_config)) {
+    croak "option parsing failed";
+  }
+
+  $self->parsed_options(\%parsed_options);
+}
+
 sub export
 {
   my $self = shift;
@@ -54,7 +73,8 @@ sub export
 
   my $track_schema = PomCur::TrackDB->new(config => $config);
 
-  print PomCur::Track::Serialise::json($config, $track_schema), "\n";
+  print PomCur::Track::Serialise::json($config, $track_schema,
+                                       $self->parsed_options()), "\n";
 }
 
 1;

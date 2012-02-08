@@ -67,7 +67,7 @@ requires 'IO::String';
 requires 'Package::Alias';
 requires 'Catalyst::ScriptRunner';
 requires 'HTTP::Message';
-
+requires 'Sub::Exporter';
 requires 'Config::General';
 
 test_requires 'Test::More' => '0.88';

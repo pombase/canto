@@ -52,6 +52,7 @@ use Moose::Role;
 =cut
 sub set_metadata
 {
+  my $self = shift;
   my $schema = shift;
   my $key = shift;
   my $value = shift;
@@ -83,6 +84,7 @@ sub set_metadata
 =cut
 sub get_metadata
 {
+  my $self = shift;
   my $schema = shift;
   my $key = shift;
 
@@ -105,6 +107,7 @@ sub get_metadata
 =cut
 sub unset_metadata
 {
+  my $self = shift;
   my $schema = shift;
   my $key = shift;
 

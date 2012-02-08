@@ -52,7 +52,7 @@ like($curs_db_pub->title(), qr/Inactivating pentapeptide insertions in the/);
 my @search_list = (@known_genes, @unknown_genes);
 
 my $result =
-  PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
+  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@search_list);
 sub check_result
 {
@@ -77,13 +77,13 @@ sub check_result
 check_result($result, 2, 5, 0);
 
 $result =
-  PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
+  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@search_list);
 
 check_result($result, 2, 5, 0);
 
 $result =
-  PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
+  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@known_genes);
 
 ok(!defined $result);
@@ -113,7 +113,7 @@ my @genes_to_filter =
   map { _lookup_gene($_)} @gene_identifiers_to_filter;
 
 my @filtered_genes =
-  PomCur::Controller::Curs::_filter_existing_genes($curs_schema,
+  PomCur::Controller::Curs->_filter_existing_genes($curs_schema,
                                                    @genes_to_filter);
 
 is(@filtered_genes, 1);
@@ -121,7 +121,7 @@ is(@filtered_genes, 1);
 is($filtered_genes[0]->{primary_identifier}, 'SPCC1739.11c');
 
 $result =
-  PomCur::Controller::Curs::_find_and_create_genes($curs_schema, $config,
+  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    [@known_genes, 'SPCC576.19c']);
 
 ok(!defined $result);

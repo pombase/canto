@@ -77,6 +77,16 @@ sub _get_curation_sessions
       } else {
         my $cursdb = PomCur::Curs::get_schema_for_key($config, $curs_key);
         $data = PomCur::Curs::Serialise::perl($cursdb, $options);
+        my $curs = $schema->resultset('Curs')->find({ curs_key => $curs_key });
+        my $props = _get_cursprops($curs);
+
+        for my $prop_data (@$props) {
+          if (exists $data->{$prop_data->{type}}) {
+            die "attempted to overwritten data from curs with: ", $prop_data->{type};
+          } else {
+            $data->{$prop_data->{type}} = $prop_data->{value};
+          }
+        }
       }
       ($curs_key, $data);
     } @curs_list
@@ -198,14 +208,17 @@ sub _get_labs
  Args    : $config - a Config object
            $schema - the TrackDB
            $options - a hash of settings
-             - stream_mode => (0|1) - if 1, change the behaviour to
+             - stream-mode => (0|1) - if 1, change the behaviour to
                  return two things: the JSON for the TrackDB and an
                  iterator returning the JSON representation of each
                  CursDB in turn - default 1
-             - dump_all => (0|1) - if 1, dump all data from the
+             - dump-all => (0|1) - if 1, dump all data from the
                  track and curs databases, including data that can be
                  recreated (eg. publication title can be found from
                  PubMed ID) - default 0
+             - mark-exported => (0|1) - if 1, only dump those curation
+                 sessions from the curs table that have the status of
+                 "APPROVED" and then mark them as "EXPORTED"
  Returns : A JSON string containing all of the TrackDB and CursDB data
            or with stream_mode set, return a (JSON string, CursDB JSON
            iterator) pair.
