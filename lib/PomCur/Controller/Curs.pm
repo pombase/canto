@@ -682,7 +682,7 @@ sub annotation_ontology_edit
         definition => $suggested_definition
       };
 
-      _store_suggestion_count($schema);
+      $self->_store_suggestion_count($schema);
 
       $c->flash()->{message} = 'Note that your term suggestion has been '
         . 'stored, but the gene will be temporarily '
