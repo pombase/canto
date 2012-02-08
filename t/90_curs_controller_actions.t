@@ -7,7 +7,6 @@ use Data::Compare;
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
-use HTTP::Cookies;
 use Web::Scraper;
 
 use PomCur::TestUtil;
@@ -25,10 +24,7 @@ my $curs_key = $curs_objects[0]->curs_key();
 
 my $app = $test_util->plack_app()->{app};
 
-my $cookie_jar = HTTP::Cookies->new(
-  file => "/tmp/pomcur_web_test_$$.cookies",
-  autosave => 1,
-);
+my $cookie_jar = $test_util->cookie_jar();
 
 my $test_name = 'Dr. Test Name';
 my $test_email = 'test.name@example.com';

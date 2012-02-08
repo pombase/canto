@@ -6,7 +6,6 @@ use PomCur::TestUtil;
 
 use Plack::Test;
 use Plack::Util;
-use HTTP::Cookies;
 use HTTP::Request::Common;
 
 my $test_util = PomCur::TestUtil->new();
@@ -14,10 +13,7 @@ $test_util->init_test();
 
 my $app = $test_util->plack_app()->{app};
 
-my $cookie_jar = HTTP::Cookies->new(
-  file => "/tmp/pomcur_web_test_$$.cookies",
-  autosave => 1,
-);
+my $cookie_jar = $test_util->cookie_jar();
 
 test_psgi $app, sub {
   my $cb = shift;

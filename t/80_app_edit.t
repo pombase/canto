@@ -7,7 +7,6 @@ use PomCur::TestUtil;
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
-use HTTP::Cookies;
 
 my $test_util = PomCur::TestUtil->new();
 $test_util->init_test();

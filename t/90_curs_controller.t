@@ -7,7 +7,6 @@ use Data::Compare;
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
-use HTTP::Cookies;
 
 use PomCur::TestUtil;
 use PomCur::Controller::Curs;
@@ -24,10 +23,7 @@ my $curs_key = $curs_objects[0]->curs_key();
 
 my $app = $test_util->plack_app()->{app};
 
-my $cookie_jar = HTTP::Cookies->new(
-  file => "/tmp/pomcur_web_test_$$.cookies",
-  autosave => 1,
-);
+my $cookie_jar = $test_util->cookie_jar();
 
 my @known_genes = qw(SPCC1739.10 wtf22 SPNCRNA.119 ssm4);
 my @unknown_genes = qw(dummy SPCC999999.99);

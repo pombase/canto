@@ -5,7 +5,6 @@ use Test::More tests => 33;
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request::Common;
-use HTTP::Cookies;
 use Test::MockObject;
 
 use PomCur::TestUtil;
@@ -26,10 +25,7 @@ is(@curs_objects, 1);
 
 my $curs_key = $curs_objects[0]->curs_key();
 my $app = $test_util->plack_app()->{app};
-my $cookie_jar = HTTP::Cookies->new(
-  file => "/tmp/pomcur_web_test_$$.cookies",
-  autosave => 1,
-);
+my $cookie_jar = $test_util->cookie_jar();
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
 

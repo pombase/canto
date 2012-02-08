@@ -7,7 +7,6 @@ use Data::Compare;
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
-use HTTP::Cookies;
 
 use PomCur::TestUtil;
 use PomCur::Controller::Curs;

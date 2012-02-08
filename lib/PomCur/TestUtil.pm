@@ -232,10 +232,7 @@ sub plack_app
     $app = Plack::Middleware::Debug->wrap($app);
   }
 
-  my $cookie_jar = HTTP::Cookies->new(
-    file => "/tmp/pomcur_web_test_$$.cookies",
-    autosave => 1,
-  );
+  my $cookie_jar = $self->cookie_jar();
 
   if (defined $args{login}) {
     test_psgi $app, sub {
@@ -820,5 +817,20 @@ sub publications_xml_file
   return $self->root_dir() . '/t/data/entrez_pubmed.xml';
 }
 
+=head2 cookie_jar
+
+ Usage   : my $jar = $self->cookie_jar();
+ Function: Create and return a HTTP::Cookies object
+
+=cut
+sub cookie_jar
+{
+  my $self = shift;
+
+  return HTTP::Cookies->new(
+    file => "/tmp/pomcur_web_test_$$.cookies",
+    autosave => 1,
+  );
+}
 
 1;
