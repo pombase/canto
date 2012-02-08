@@ -849,6 +849,14 @@ sub app_login
   my $cookie_jar = shift;
   my $cb = shift;
 
+  if (!defined $cookie_jar) {
+    croak "no cookie jar passed to app_login()";
+  }
+
+  if (!defined $cb) {
+    croak "no callback passed to app_login()";
+  }
+
   my $track_schema = $self->track_schema();
 
   my $admin_role =
