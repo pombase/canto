@@ -14,16 +14,13 @@ $model
       <a href="<% $c->uri_for('/view/list/' . $report_name, { model => $model } ) %>">
         <% ucfirst $display_name %>
       </a>
+      (<% $report_conf->{row_count} %>)
+
     </li>
 % }
   </ul>
 </div>
 
 <%init>
-my @report_confs = ();
-
-for my $report_name (@{$c->config()->{reports}->{$model}}) {
-  my $report_conf = $c->config()->{class_info}->{$model}->{$report_name};
-  push @report_confs, $report_conf;
-}
+my @report_confs = PomCur::WebUtil::reports_and_counts($c, $model);
 </%init>

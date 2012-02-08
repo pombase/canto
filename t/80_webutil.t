@@ -1,11 +1,12 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 11;
 use Test::MockObject;
 
 use PomCur::TestUtil;
 use PomCur::WebUtil;
 use PomCur::TrackDB;
+use PomCur::Controller::View;
 
 my $test_util = PomCur::TestUtil->new();
 
@@ -86,3 +87,12 @@ my $js_result = PomCur::WebUtil::escape_inline_js($js_test_string);
 
 is ($js_result, '!@#0^&*()_{}:&quot;|<>?\\nfoo\\tbar\\\'zzz');
 
+
+my @reports_and_counts =
+  PomCur::WebUtil::reports_and_counts($mock_c, 'track');
+is(@reports_and_counts, 10);
+
+my ($untriaged_pubs) =
+  grep { $_->{name} eq 'new_publications' } @reports_and_counts;
+is($untriaged_pubs->{display_name}, 'un-triaged publications');
+is($untriaged_pubs->{row_count}, 22);

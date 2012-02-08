@@ -27,9 +27,10 @@ eval {
   $collection_table_name = PomCur::DB::table_name_of_class($collection_type);
   $rs = $object->$collection_name();
 
-  my $class_info = $c->config()->class_info($c)->{$collection_table_name};
+  my $model_name = $c->req()->param('model');
+  my $class_info = $c->config()->class_info($model_name)->{$collection_table_name};
 
-  $rs = PomCur::Controller::View::order_list_rs($c, $rs, $class_info);
+  $rs = PomCur::Controller::View::order_list_rs($c, $rs, $class_info, $model_name);
 
   if (! defined $collection_title) {
     $collection_title = ucfirst $collection_name;

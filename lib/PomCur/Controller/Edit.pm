@@ -55,7 +55,9 @@ sub _get_field_values
   my $field_info = shift;
   my $type = shift;
 
-  my $class_info = $c->config()->class_info($c)->{$referenced_table_name};
+  my $model_name = $c->request()->param('model');
+  my $class_info =
+    $c->config()->class_info($model_name)->{$referenced_table_name};
   my $field_name = $class_info->{display_field};
 
   my $db_field_column =
@@ -164,7 +166,9 @@ sub _get_default_ref_value
 
   if (defined $default_value) {
     # look up the display name and find the object_id
-    my $ref_table_info = $c->config()->class_info($c)->{$referenced_table};
+    my $model_name = $c->request()->param('model');
+    my $ref_table_info =
+      $c->config()->class_info($model_name)->{$referenced_table};
     my $ref_display_field = $ref_table_info->{display_field};
     my $ref_default_obj;
 
@@ -352,7 +356,9 @@ sub _initialise_form
 
   my @elements = ();
 
-  my $field_infos_ref = $c->config()->class_info($c)->{$type}->{field_info_list};
+  my $model_name = $c->request()->param('model');
+  my $field_infos_ref =
+    $c->config()->class_info($model_name)->{$type}->{field_info_list};
   my @field_infos;
 
   if (defined $field_infos_ref) {
@@ -416,7 +422,9 @@ sub _create_object {
 
   my $class_name = $schema->class_name_of_table($table_name);
 
-  my $class_info_ref = $c->config()->class_info($c)->{$table_name};
+  my $model_name = $c->request()->param('model');
+  my $class_info_ref =
+    $c->config()->class_info($model_name)->{$table_name};
   if (!defined $class_info_ref) {
     croak "can't find configuration for editing $table_name objects\n";
   }
@@ -487,7 +495,8 @@ sub _update_object {
   my $type = $object->table();
   my $class_name = $schema->class_name_of_table($type);
 
-  my $class_info_ref = $c->config()->class_info($c)->{$type};
+  my $model_name = $c->request()->param('model');
+  my $class_info_ref = $c->config()->class_info($model_name)->{$type};
 
   my %field_infos = %{$class_info_ref->{field_infos}};
 
@@ -616,8 +625,9 @@ sub _run_create_hook
   my $object = shift;
   my $type = $object->table();
 
+  my $model_name = $c->request()->param('model');
   my $class_info_ref =
-    $c->config()->class_info($c)->{$type};
+    $c->config()->class_info($model_name)->{$type};
 
   if (defined $class_info_ref) {
     my $pre_create_hook =

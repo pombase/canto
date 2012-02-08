@@ -324,18 +324,16 @@ sub data_dir_path
 
 =head2 class_info
 
- Usage   : my $class_info = $config->class_info($c);
+ Usage   : my $class_info = $config->class_info($model_name);
  Function: Return the class information from the Config
- Args    : $c - the Catalyst object
+ Args    : $model_name - the model to use to select the class_indo
  Returns : the class information hash
 
 =cut
 sub class_info
 {
   my $self = shift;
-  my $c = shift;
-
-  my $model_name = $c->request()->param('model');
+  my $model_name = shift;
 
   if (!defined $model_name) {
     croak "no model_name passed to class_info()";

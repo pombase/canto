@@ -60,7 +60,8 @@ my $max_results_flag = 0;
 my $max_inline_results_length =
   $c->config()->{view_options}{max_inline_results_length} || 100;
 
-my $class_info = $c->config()->class_info($c)->{$config_name};
+my $model_name = $c->req()->param('model');
+my $class_info = $c->config()->class_info($model_name)->{$config_name};
 my $table = $class_info->{source};
 
 my @column_confs =
