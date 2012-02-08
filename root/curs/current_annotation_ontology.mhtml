@@ -113,7 +113,9 @@ $user_created
     <td>
       <span>
 %   if ($row->{annotation_extension} && $row->{annotation_extension} !~ /^\s*$/) {
-%     (my $extension = $row->{annotation_extension}) =~ s/([;|,])/$1&#8203;/g;
+%     my $extension = $row->{annotation_extension};
+%     HTML::Mason::Escapes::basic_html_escape(\$extension);
+%     $extension =~ s/([;|,])/$1&#8203;/g;
       <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $extension |n %></a>
 %   } else {
       <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
@@ -151,6 +153,8 @@ $user_created
 % }
 
 <%init>
+use HTML::Mason::Escapes;
+
 my $delete_action = $curs_root_uri . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 my $undelete_action = $curs_root_uri . '/annotation/undelete/';
