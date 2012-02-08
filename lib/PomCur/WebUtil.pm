@@ -359,12 +359,15 @@ sub escape_inline_js
 {
   my $string = shift;
 
+  $string =~ s/&/&amp;/gs;
   $string =~ s/\\/\\\\/gs;
   $string =~ s/\n/\\n/gs;
   $string =~ s/\r/\\r/gs;
   $string =~ s/\t/\\t/gs;
   $string =~ s/'/\\'/gs;
   $string =~ s/"/&quot;/gs;
+  $string =~ s/</&lt;/gs;
+  $string =~ s/>/&gt;/gs;
 
   return $string;
 }
