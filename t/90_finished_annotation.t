@@ -191,7 +191,7 @@ test_psgi $app, sub {
     like ($content, qr/$your_annotations/s);
     unlike ($content, qr/$further_information/s);
 
-    like ($content, qr/Admin only:/);
+    like ($content, qr/Admin only/);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
