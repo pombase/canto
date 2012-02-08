@@ -534,7 +534,7 @@ $(document).ready(function() {
   });
 
   $('#curs-check-completed').click(function () {
-    window.location.href = curs_root_uri + '/approval_complete';
+    window.location.href = curs_root_uri + '/complete_approval';
   });
 
   $('#curs-finish-gene').click(function () {
