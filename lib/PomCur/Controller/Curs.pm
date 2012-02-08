@@ -1353,8 +1353,6 @@ sub finish_form : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
-  $self->set_state($config, $schema, NEEDS_APPROVAL);
-
   my $st = $c->stash();
 
   $st->{title} = 'Finish curation session';
@@ -1393,6 +1391,8 @@ sub finish_form : Chained('top') Args(0)
     $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
 
     _redirect_and_detach($c, 'finished_publication');
+  } else {
+    $self->set_state($config, $schema, NEEDS_APPROVAL);
   }
 }
 
@@ -1413,7 +1413,7 @@ sub reactivate_session : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS);
+  $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS, 1);
 
   $c->flash()->{message} = 'Session has been reactivated';
 

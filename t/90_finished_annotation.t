@@ -1,11 +1,12 @@
 use strict;
 use warnings;
-use Test::More tests => 32;
+use Test::More tests => 33;
 
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request::Common;
 use HTTP::Cookies;
+use Test::MockObject;
 
 use PomCur::TestUtil;
 use PomCur::Track::StatusStorage;
@@ -31,6 +32,19 @@ my $cookie_jar = HTTP::Cookies->new(
 );
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
+
+package TestState;
+
+use Moose;
+
+with 'PomCur::Role::MetadataAccess';
+with 'PomCur::Curs::Role::GeneResultSet';
+with 'PomCur::Curs::State';
+
+package main;
+
+
+my $state = TestState->new();
 
 test_psgi $app, sub {
   my $cb = shift;
@@ -85,7 +99,6 @@ test_psgi $app, sub {
     $cookie_jar->add_cookie_header($req);
 
     my $res = $cb->($req);
-
     is $res->code, 302;
 
     my $redirect_url = $res->header('location');
@@ -101,7 +114,8 @@ test_psgi $app, sub {
     like ($content, qr/$your_annotations/s);
     unlike ($content, qr/$further_information/s);
 
-    PomCur::Role::MetadataAccess::get_metadata($curs_schema, PomCur::Controller::Curs::MESSAGE_FOR_CURATORS_KEY);
+    is ($state->get_metadata($curs_schema, PomCur::Controller::Curs::MESSAGE_FOR_CURATORS_KEY),
+        $test_text);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
