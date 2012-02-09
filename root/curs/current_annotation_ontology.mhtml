@@ -109,16 +109,21 @@ $user_created
 % }
       </span>
     </td>
-% # if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
     <td>
       <span>
 %   if ($row->{annotation_extension} && $row->{annotation_extension} !~ /^\s*$/) {
 %     my $extension = $row->{annotation_extension};
 %     HTML::Mason::Escapes::basic_html_escape(\$extension);
 %     $extension =~ s/([;|,])/$1&#8203;/g;
-      <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $extension |n %></a>
+%     if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+        <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $extension |n %></a>
+%     } else {
+        <% $extension |n %>
+%     }
 %   } else {
-      <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
+%     if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+        <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
+%     }
 %   }
       </span>
     </td>
