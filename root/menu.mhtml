@@ -8,27 +8,10 @@
 % }
     </li>
     <li>
-% if ($c->user_exists()) {
-      <a href="<% $c->uri_for('/logout') %>">Logout</a>
-% } else {
-%   if ($local_path !~ m:/account|/login:) {
-      <a href="<% $c->uri_for('/account', { return_path => $return_path_uri }
-      ) %>">
-        Log in
-      </a>
-%   } else {
-      <span>Log in</span>
-%   }
-% }
+      <& login_button.mhtml &>
     </li>
     <li>
       <a href="<% $c->uri_for('/help') %>">Help</a>
     </li>
   </ul>
 </div>
-
-<%init>
-my $local_path = $c->local_path();
-my $return_path_uri =
-  $c->uri_for($local_path, $c->req()->params());
-</%init>

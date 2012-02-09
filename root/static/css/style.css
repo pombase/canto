@@ -100,16 +100,19 @@ div#footer .sponsor {
   right: 0px;
   top: 0px;
 }
-#menu {
+#menu li a {
   background-color: #333;
   font-size: 90%;
 }
 #menu .useridentifier {
-  margin: 0; padding: 0;
+  margin: 0; padding: 0 8px 0 8px;
   display: inline;
   float: left;
   text-decoration: none;
   background-color: #eef;
+}
+#menu .useridentifier .logged-in-address {
+  font-size: 80%;
 }
 #menu ul {
   background-color: #228;
