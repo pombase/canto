@@ -234,6 +234,11 @@ db_initial_data:
               accession: experiment_type
               db:
                 name: PomCur
+          - name: community_curatable
+            dbxref:
+              accession: community_curatable
+              db:
+                name: PomCur
       - name: PomCur publication load types
         definition: >
           Publications can be added to database by the administrator or by user

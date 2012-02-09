@@ -70,6 +70,9 @@ $pub
         <div class="sect-content">
           <input id="triage-assigned-curator-input" name="triage-assigned-curator-input"/>
           <input id="triage-assigned-curator-person-id" name="triage-assigned-curator-person-id" type="hidden"/>
+          <div>
+            <input type="checkbox" name="community-curatable" value="yes">Community curatable<br>
+          </div>
         </div>
       </div>
     </div>

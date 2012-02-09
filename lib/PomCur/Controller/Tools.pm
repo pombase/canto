@@ -107,6 +107,20 @@ sub triage :Local {
 
     $pub->curation_priority($priority_cvterm);
 
+    my $community_curatable = $c->req()->param('community-curatable');
+    my $community_curatable_cvterm =
+      $schema->resultset('Cvterm')->find({ name => "community_curatable" });
+
+    $pub->pubprops()->search({ type_id => $community_curatable_cvterm->cvterm_id() })
+      ->delete();
+
+    if (defined $community_curatable) {
+      $schema->create_with_type('Pubprop',
+                                { type_id => $community_curatable_cvterm->cvterm_id(),
+                                  value => $community_curatable,
+                                  pub_id => $pub->pub_id() });
+    }
+
     $pub->update();
 
     $guard->commit();
