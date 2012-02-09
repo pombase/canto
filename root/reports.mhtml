@@ -6,21 +6,9 @@ $model
   <div class="label">
     Reports ...
   </div>
-  <ul>
-% for my $report_conf (@report_confs) {
-%   my $report_name = $report_conf->{name};
-%   my $display_name = $report_conf->{display_name};
-    <li>
-      <a href="<% $c->uri_for('/view/list/' . $report_name, { model => $model } ) %>">
-        <% ucfirst $display_name %>
-      </a>
-      (<% $report_conf->{row_count} %>)
-
-    </li>
-% }
-  </ul>
+  <& /report_gen.mhtml, report_conf => $all_reports_conf, model => $model &>
 </div>
 
 <%init>
-my @report_confs = PomCur::WebUtil::reports_and_counts($c, $model);
+my $all_reports_conf = $c->config()->{reports}->{$model};
 </%init>

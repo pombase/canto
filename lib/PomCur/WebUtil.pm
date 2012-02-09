@@ -372,43 +372,4 @@ sub escape_inline_js
   return $string;
 }
 
-=head2 reports_and_counts
-
- Usage   : @res = PomCur::WebUtil::reports_and_counts(c, $model)
- Function: Return the name, display_name and row count of each of
-           the reports for $model
- Args    : $c - the Catalyst context
-           $model - the model name to use to choose a schema
- Returns : an array of hashes like:
-           ( { display_name => '...', name => '...', row_count => x },
-             { display_name => '...', ... }, ... )
-
-=cut
-sub reports_and_counts
-{
-  my $c = shift;
-  my $model = shift;
-
-  my $config = $c->config();
-  my $schema = $c->schema($model);
-
-  my @ret = ();
-
-  for my $report_name (@{$config->{reports}->{$model}}) {
-    my $report_conf = $config->{class_info}->{$model}->{$report_name};
-    my $rs = PomCur::Controller::View::get_list_rs($c, {}, $report_conf,
-                                                   $model);
-
-    my $return_conf = {
-      display_name => $report_conf->{display_name},
-      name => $report_conf->{name},
-      row_count => $rs->count(),
-    };
-
-    push @ret, $return_conf;
-  }
-
-  return @ret;
-}
-
 1;

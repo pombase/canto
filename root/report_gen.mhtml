@@ -1,0 +1,24 @@
+<%args>
+$report_conf
+$model
+</%args>
+
+<ul>
+% for my $conf (@$report_conf) {
+%   my $yaml_conf = $c->config()->{class_info}->{$model}->{$conf->{report}};
+%   die "config not found for ", $conf->{report} unless defined $yaml_conf;
+%   my $report_name = $yaml_conf->{name};
+%   my $display_name = $yaml_conf->{display_name};
+%   my $rs = PomCur::Controller::View::get_list_rs($c, {}, $yaml_conf, $model);
+%   my $count = $rs->count();
+  <li>
+    <a href="<% $c->uri_for('/view/list/' . $report_name, { model => $model } ) %>">
+      <% ucfirst $display_name %>
+    </a>
+    (<% $count %>)
+%   if (exists $conf->{children}) {
+    <& /report_gen.mhtml, report_conf => $conf->{children}, model => $model &>
+%   }
+  </li>
+% }
+</ul>
