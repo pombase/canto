@@ -118,13 +118,26 @@ sub local_path
   my $self = shift;
 
   my $path = $self->req->uri()->path();
-  my $base = $self->req()->header('X-Request-Base');
+  my $base = $self->request_base_path();
 
   if ($base) {
     $path =~ s/\Q$base//;
   }
 
   return $path;
+}
+
+=head2 request_base_path
+
+ Usage   : $base_path = $c->request_base_path();
+ Function: Return the value of the X-Request-Base header.
+
+=cut
+sub request_base_path
+{
+  my $self = shift;
+
+  return $self->req()->header('X-Request-Base');
 }
 
 # this code adds the application version to the paths of all static content so
