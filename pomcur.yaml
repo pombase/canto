@@ -487,10 +487,34 @@ class_info:
     curatable_publications:
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
+    uncuratable_publications:
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name <> 'Curatable' and name <> 'New')"
     high_priority_publications:
       extends: pub
       constraint: "curation_priority_id in (select cvterm_id from cvterm where name = 'high')"
-    publications_loaded_in_error:
+    triage_news_and_views_publications:
+      class_display_name: News and views
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'News and views')"
+    triage_not_english_publications:
+      class_display_name: Not English
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Not English')"
+    triage_wrong_organism_publications:
+      class_display_name: Wrong organism
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Wrong organism')"
+    triage_methods_publications:
+      class_display_name: Methods
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Methods paper')"
+    triage_other_publications:
+      class_display_name: Other
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Other')"
+    triage_loaded_in_error_publications:
+      class_display_name: Loaded in error
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Loaded in error')"
     publications_with_sessions:
@@ -508,6 +532,8 @@ class_info:
     unassigned_sessions:
       extends: curs
       constraint: "me.assigned_curator IS NULL"
+    all_sessions:
+      extends: curs
   chado:
     cv:
       class_display_name: controlled vocabulary
@@ -656,13 +682,22 @@ reports:
           children:
             - report: high_priority_publications
             - report: curatable_publications
-    - report: publications_without_a_session
-    - report: publications_loaded_in_error
-    - report: publications_with_sessions
-    - report: unassigned_publications
+            - report: uncuratable_publications
+              children:
+                - report: triage_methods_publications
+                - report: triage_news_and_views_publications
+                - report: triage_not_english_publications
+                - report: triage_wrong_organism_publications
+                - report: triage_other_publications
+                - report: triage_loaded_in_error_publications
+        - report: publications_without_a_session
+        - report: publications_with_sessions
+        - report: unassigned_publications
     - report: named_genes
-    - report: sessions_needing_approval
-    - report: unassigned_sessions
+    - report: all_sessions
+      children:
+        - report: sessions_needing_approval
+        - report: unassigned_sessions
   chado:
     - report: protein_and_domain_terms
     - report: types_and_counts
