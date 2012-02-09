@@ -105,7 +105,7 @@ sub schema
 =head2
 
  Usage   : my $local_path = $c->local_path();
- Function: If Catalyst::TraitFor::Request::ProxyBase is enable use, the
+ Function: If Catalyst::TraitFor::Request::ProxyBase is enabled use the
            'X-Request-Base' header to find the base path, remove it from
            the request path, then return the result.  If ProxyBase isn't
            enabled, just return the path from the URI of the current request

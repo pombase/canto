@@ -14,6 +14,11 @@ PomCur::Controller::Root - Root Controller for PomCur tracking application
 
 =cut
 
+=head2 default
+
+ Return the page not found message
+
+=cut
 sub default :Path
 {
   my ($self, $c) = @_;
