@@ -68,7 +68,7 @@ $pub
           Assign to curator:
         </span>
         <div class="sect-content">
-          <input id="triage-assigned-curator-input" name="triage-assigned-curator-input"/>
+          <input id="triage-assigned-curator-input" name="triage-assigned-curator-input" size="30" />
           <input id="triage-assigned-curator-person-id" name="triage-assigned-curator-person-id" type="hidden"/>
           <div>
             <input type="checkbox" name="community-curatable" value="yes">Community curatable<br>
@@ -104,7 +104,8 @@ $pub
   var triage_assign_people = [
 % for my $person_data (@people_data) {
     {
-      label: "<% $person_data->name() %>",
+      label: "<% $person_data->name() . ' <' . $person_data->email_address . '>' %>",
+      name: "<% $person_data->name() %>",
       value: "<% $person_data->person_id() %>",
     },
 % }

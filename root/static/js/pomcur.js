@@ -611,11 +611,11 @@ $(document).ready(function() {
       minLength: 0,
       source: triage_assign_people,
       focus: function( event, ui ) {
-        $( "#triage-assigned-curator-input" ).val( ui.item.label );
+        $( "#triage-assigned-curator-input" ).val( ui.item.name );
         return false;
       },
       select: function( event, ui ) {
-        $( "#triage-assigned-curator-input" ).val( ui.item.label );
+        $( "#triage-assigned-curator-input" ).val( ui.item.name );
         $( "#triage-assigned-curator-person-id" ).val( ui.item.value );
         return false;
       }
