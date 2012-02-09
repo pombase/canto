@@ -375,6 +375,10 @@ class_info:
           source:
             sql: "select value from curs, cursprop p, cvterm t where me.pub_id = curs.pub and curs.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status'"
           editable: 0
+        - name: community_curatable
+          source:
+            sql: "select value from pubprop p, cvterm t where me.pub_id = p.pub_id and t.cvterm_id = p.type_id and t.name = 'community_curatable'"
+          editable: 0
         - name: load_type
           source: load_type_id
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication load types")'
