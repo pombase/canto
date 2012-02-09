@@ -85,7 +85,7 @@ $js_test_string .= "\tbar'zzz";
 
 my $js_result = PomCur::WebUtil::escape_inline_js($js_test_string);
 
-is ($js_result, '!@#0^&*()_{}:&quot;|<>?\\nfoo\\tbar\\\'zzz');
+is ($js_result, '!@#0^&amp;*()_{}:&quot;|&lt;&gt;?\\nfoo\\tbar\\\'zzz');
 
 
 my @reports_and_counts =
