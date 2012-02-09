@@ -77,6 +77,18 @@ my %_schema_map = ( track => "TrackDB",
                     meta => "MetaDB",
                     chado => "ChadoDB" );
 
+before 'prepare_action' => sub {
+  my $self = shift;
+
+  my $base_path = $self->request_base_path() // '/root';
+  (my $cookie_path = $base_path) =~ s:/:_:g;
+
+  # make sure the cookie name is unique if there are multiple
+  # instances on one server
+  $self->config()->{'Plugin::Session'}->{cookie_name} =
+    $self->config()->{name} . "${cookie_path}_session";
+};
+
 =head2 schema
 
  Usage   : my $schema = $c->schema();

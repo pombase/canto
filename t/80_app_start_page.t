@@ -32,6 +32,7 @@ test_psgi $app, sub {
 
     $res = $cb->($req);
     ok ($res->content() =~ /Reports/);
+    like ($cookie_jar->as_string(), qr[PomCur_root_session=[0-9a-f]+]);
 };
 
 done_testing;

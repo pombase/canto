@@ -40,14 +40,6 @@ sub end : Private
   my $self = shift;
   my $c = shift;
 
-  my $base_path = $c->request_base_path() // '/root';
-  (my $cookie_path = $base_path) =~ s:/:_:g;
-
-  # make sure the cookie name is unique if there are multiple
-  # instances on one server
-  $c->config()->{'Plugin::Session'}->{cookie_name} =
-    $c->config()->{name} . "${cookie_path}_session";
-
   my $st = $c->stash();
 
   if (exists $c->request()->parameters()->{testmode}) {

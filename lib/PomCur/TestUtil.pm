@@ -848,6 +848,8 @@ sub app_login
   my $self = shift;
   my $cookie_jar = shift;
   my $cb = shift;
+  my $req_base = shift;
+  my $dest_redirect_url = shift // 'http://localhost:5000/';
 
   if (!defined $cookie_jar) {
     croak "no cookie jar passed to app_login()";
@@ -881,10 +883,13 @@ sub app_login
   my $uri = new URI("http://localhost:5000/login");
   $uri->query_form(email_address => $first_admin_email_address,
                    password => $first_admin_password,
-                   return_path => 'http://localhost:5000/',
+                   return_path => $dest_redirect_url,
                    submit => 'login',
                  );
   my $req = GET $uri;
+  if (defined $req_base) {
+    $req->header('X-Request-Base', "$req_base");
+  }
   $cookie_jar->add_cookie_header($req);
 
   my $res = $cb->($req);
@@ -894,12 +899,14 @@ sub app_login
   $cookie_jar->extract_cookies($res);
 
   my $redirect_url = $res->header('location');
-  if ($redirect_url ne 'http://localhost:5000/') {
+  if ($redirect_url ne $dest_redirect_url) {
     croak "login didn't redirect to the front page";
   }
 
-
   my $redirect_req = GET $redirect_url;
+  if (defined $req_base) {
+    $redirect_req->header('X-Request-Base', "$req_base");
+  }
   $cookie_jar->add_cookie_header($redirect_req);
 
   my $redirect_res = $cb->($redirect_req);
@@ -907,6 +914,8 @@ sub app_login
   if ($redirect_res->content() !~ m/$login_text/) {
     croak q(after login page doesn't contain "$login_text");
   }
+
+  return $res;
 }
 
 1;
