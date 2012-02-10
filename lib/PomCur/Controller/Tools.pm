@@ -303,6 +303,7 @@ sub ann_ex_locations : Local Args(0) {
     my $curs_key = $curs->curs_key();
     for my $gene ($cursdb->resultset('Gene')->all()) {
       for my $annotation ($gene->direct_annotations()) {
+        next if $annotation->status() eq 'deleted';
         if (defined $annotation->data()->{annotation_extension}) {
           push @{$anexs{$annotation->data()->{annotation_extension}}->{$curs_key}}, {
             primary_identifier => $gene->primary_identifier(),
