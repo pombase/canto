@@ -142,6 +142,8 @@ sub load_pubmed_xml
                        ForceArray => ['AbstractText',
                                       'Author']);
 
+  my $guard = $schema->txn_scope_guard();
+
   my $count = 0;
   my @articles;
 
@@ -199,6 +201,8 @@ sub load_pubmed_xml
       $count++;
     }
   }
+
+  $guard->commit();
 
   return $count;
 }

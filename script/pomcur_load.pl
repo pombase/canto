@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Carp;
 use File::Basename;
-
+use IO::All;
 use Getopt::Long;
 
 BEGIN {
@@ -25,8 +25,10 @@ use PomCur::Track::GeneLoad;
 use PomCur::Track::OntologyLoad;
 use PomCur::Track::OntologyIndex;
 use PomCur::Track::LoadUtil;
+use PomCur::Track::PubmedUtil;
 
 my $do_genes = 0;
+my $do_pubmed_xml = 0;
 my $for_taxon = 0;
 my @ontology_args = ();
 my $do_organism = 0;
@@ -37,6 +39,7 @@ my $do_help = 0;
 my $result = GetOptions ("genes=s" => \$do_genes,
                          "ontology=s" => \@ontology_args,
                          "organism=s" => \$do_organism,
+                         "pubmed-xml=s" => \$do_pubmed_xml,
                          "for-taxon=i" => \$for_taxon,
                          "verbose|v" => \$verbose,
                          "dry-run|T" => \$dry_run,
@@ -58,6 +61,8 @@ or:
   $0 --ontology ontology_file.obo
   $0 --ontology http://some_host.org/file.obo
 or:
+  $0 --pubmed-xml pubmed_entries.xml
+or:
   $0 --organism "<genus> <species> <taxon_id>"
 or in combination:
   $0 --organism "<genus> <species> <taxon_id>" \
@@ -65,13 +70,16 @@ or in combination:
      --genes genes_file --for-taxon=<taxon_id>
 
 Options:
-  --genes  - load a tab delimited gene data file, must be also specify the
-                organism with --for-taxon
+  --genes     - load a tab delimited gene data file, must also specify
+                the organism with --for-taxon
   --ontology  - load an ontology data file in OBO format
   --organism  - add an organism to the database
+  --pubmed-xml - load publications from a PubMed XML file; only loads
+                 publications that aren't already in the database
 
-Any combination of options is valid - eg. genes and ontologies can be loaded
-at once.
+Any combination of options is valid (eg. genes and ontologies can be
+loaded at once) but at most one "--genes" and at most one "--organism"
+option is allowed.
 
 File formats
 ~~~~~~~~~~~~
@@ -165,4 +173,11 @@ if ($do_organism) {
   } else {
     usage "organism option not in the correct format";
   }
+}
+
+if ($do_pubmed_xml) {
+  print "loading PubMed XML from $do_pubmed_xml\n" if $verbose;
+  my $xml = IO::All->new($do_pubmed_xml)->slurp();
+  PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml,
+                                             'admin_load');
 }
