@@ -193,7 +193,7 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
 </div>
 
 <script language="javascript" type="text/javascript">
-var ontology_external_links = <% $ontology_external_links_json %>;
+var ontology_external_links = <% $ontology_external_links_json |n %>;
 </script>
 
 <%init>
