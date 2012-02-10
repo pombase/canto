@@ -1,6 +1,7 @@
 <%args>
 $title
 $show_title => 1
+$right_title => undef
 $error => undef
 $message => undef
 $notice => undef
@@ -68,6 +69,11 @@ $is_admin_user
       <div id="<% $page_description_id %>">
         <% $title %>
       </div>
+%   if (defined $right_title) {
+      <div id="right-title">
+        <% $right_title %>
+      </div>
+%   }
 % }
 
       <div id="content">

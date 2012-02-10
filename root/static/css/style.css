@@ -154,6 +154,13 @@ div#footer .sponsor {
   clear: both;
 }
 
+#right-title {
+  font-weight: bold;
+  display: block;
+  padding: 5px;
+  float: right;
+}
+
 #curs-page-description {
   clear: both;
   font-size: 110%;
