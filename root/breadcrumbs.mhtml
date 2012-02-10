@@ -1,7 +1,7 @@
 <div id="breadcrumbs">
   <a id="breadcrumbs-home-link" class="breadcrumbs-link" 
      href="<% $home_path %>" title="Go to the home page">
-    Home page
+    Home
   </a>
 </div>
 
