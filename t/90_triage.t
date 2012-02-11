@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 17;
 
 use Plack::Test;
 use Plack::Util;
@@ -66,7 +66,7 @@ test_psgi $app, sub {
                                            { cv_id => $cv->cv_id(),
                                              name => 'New' });
 
-  my $first_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema);
+  my $first_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
 
   is ($first_pub->triage_status()->cvterm_id(), $new_cvterm->cvterm_id());
 
@@ -129,7 +129,7 @@ test_psgi $app, sub {
     is ($pubprops[0]->value(), $curatable_cvterm->name());
     is ($pubprops[0]->type()->name(), "experiment_type");
 
-    $second_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema);
+    $second_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
 
     _check_for_pub($redirect_res, $second_pub);
   }
@@ -158,6 +158,8 @@ test_psgi $app, sub {
 
     $cookie_jar->add_cookie_header($redirect_req);
     my $redirect_res = $cb->($redirect_req);
+
+    is $redirect_res->code, 200;
 
     like ($redirect_res->content(), qr/Triaging finished/);
   }

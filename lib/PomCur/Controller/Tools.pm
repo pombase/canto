@@ -58,7 +58,8 @@ sub triage :Local {
   my $new_status_cvterm = $schema->find_with_type('Cvterm',
                                                   { cv_id => $cv->cv_id(),
                                                     name => 'New' });
-  my $next_pub = _get_next_triage_pub($schema, $new_status_cvterm);
+
+  my $next_pub = undef;
 
   my $untriaged_pubs_count = $schema->resultset('Pub')->search({
     triage_status_id => $new_status_cvterm->cvterm_id(),
@@ -128,12 +129,16 @@ sub triage :Local {
 
     $guard->commit();
 
+    $next_pub = _get_next_triage_pub($schema, $new_status_cvterm);
+
     if (defined $next_pub) {
       $c->res->redirect($c->uri_for('/tools/triage'));
       $c->detach();
     } else {
       # fall through
     }
+  } else {
+    $next_pub = _get_next_triage_pub($schema, $new_status_cvterm);
   }
 
   if (defined $next_pub) {
