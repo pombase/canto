@@ -533,6 +533,10 @@ $(document).ready(function() {
     window.location.href = curs_root_uri + '/finish_form';
   });
 
+  $('#curs-pause-publication').click(function () {
+    window.location.href = curs_root_uri + '/pause_curation';
+  });
+
   $('#curs-check-completed').click(function () {
     window.location.href = curs_root_uri + '/complete_approval';
   });

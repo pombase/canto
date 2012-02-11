@@ -63,6 +63,7 @@ my %state_dispatch = (
   SESSION_CREATED, 'submitter_update',
   SESSION_ACCEPTED, 'gene_upload',
   CURATION_IN_PROGRESS, undef,
+  CURATION_PAUSED, 'curation_paused',
   APPROVAL_IN_PROGRESS, undef,
   NEEDS_APPROVAL, 'finished_publication',
   APPROVED, 'finished_publication',
@@ -1413,6 +1414,39 @@ sub finished_publication : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
   $st->{message_to_curators} =
     $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
+}
+
+sub pause_curation : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  $self->set_state($c->config(), $schema, CURATION_PAUSED);
+
+  _redirect_and_detach($c);
+}
+
+sub curation_paused : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Curation paused';
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/curation_paused.mhtml';
+}
+
+sub restart_curation : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS);
 }
 
 sub reactivate_session : Chained('top') Args(0)

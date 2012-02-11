@@ -1,0 +1,14 @@
+<%args>
+$curs_root_uri
+</%args>
+
+<div id="curs-curation-paused">
+<p>
+Your curation session has been paused
+</p>
+
+<a href="<% $restart_curation_uri %>">Continue curation</a>
+
+<%init>
+my $restart_curation_uri = $curs_root_uri . '/restart_curation/';
+</%init>

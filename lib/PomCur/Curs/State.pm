@@ -48,6 +48,8 @@ use constant {
   SESSION_ACCEPTED => "SESSION_ACCEPTED",
   # session can be used for curation
   CURATION_IN_PROGRESS => "CURATION_IN_PROGRESS",
+  # session has been paused by the user
+  CURATION_PAUSED => "CURATION_PAUSED",
   # user has indicated that they are finished
   NEEDS_APPROVAL => "NEEDS_APPROVAL",
   # sessions is being checked by a curator
@@ -59,6 +61,7 @@ use constant {
 };
 
 use constant {
+  CURATION_PAUSED_TIMESTAMP_KEY => 'curation_paused_timestamp',
   NEEDS_APPROVAL_TIMESTAMP_KEY => 'needs_approval_timestamp',
   APPROVED_TIMESTAMP_KEY => 'approved_timestamp',
   APPROVAL_IN_PROGRESS_TIMESTAMP_KEY => 'approval_in_progress_timestamp',
@@ -68,6 +71,7 @@ use constant {
 
 use Sub::Exporter -setup => {
   exports => [ qw/SESSION_CREATED SESSION_ACCEPTED CURATION_IN_PROGRESS
+                  CURATION_PAUSED
                   NEEDS_APPROVAL APPROVAL_IN_PROGRESS APPROVED EXPORTED/ ],
 };
 
@@ -100,7 +104,11 @@ sub get_state
             if (defined $self->get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
               $state = NEEDS_APPROVAL;
             } else {
-              $state = CURATION_IN_PROGRESS;
+              if (defined $self->get_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY)) {
+                $state = CURATION_PAUSED;
+              } else {
+                $state = CURATION_IN_PROGRESS;
+              }
             }
           }
         }
@@ -189,10 +197,22 @@ sub set_state
 
   given ($new_state) {
     when (CURATION_IN_PROGRESS) {
-      if (!$force) {
+      if (!$force && $current_state ne CURATION_PAUSED) {
         croak "use force flag to change state to ",
-          CURATION_IN_PROGRESS;
+          CURATION_IN_PROGRESS, " from ", $current_state;
       }
+      $self->unset_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
+    }
+    when (CURATION_PAUSED) {
+      if ($current_state ne CURATION_IN_PROGRESS) {
+        croak "trying to pause a session that isn't in the state ",
+          CURATION_IN_PROGRESS, " it's currently: ", $current_state;
+      }
+      $self->set_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY, _get_datetime());
       $self->unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
