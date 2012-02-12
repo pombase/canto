@@ -263,10 +263,13 @@ sub get_cvterm
   my %create_args = (
     name => $term_name,
     cv => $cv,
-    definition => $definition,
     dbxref => $dbxref,
     is_relationshiptype => $is_relationshiptype,
   );
+
+  if (defined $definition) {
+    $create_args{definition} = $definition;
+  }
 
   return $self->schema()->resultset('Cvterm')->find_or_create(
       {
