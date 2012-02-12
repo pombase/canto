@@ -139,6 +139,66 @@ sub find_or_create_cv
   }
 }
 
+
+=head2 find_db
+
+ Usage   : my $db = $load_util->find_db()
+ Function: Find then return the db object for the db_name
+ Args    : db_nam
+ Returns : the Db object
+
+=cut
+sub find_db
+{
+  my $self = shift;
+  my $db_name = shift;
+
+  my $schema = $self->schema();
+
+  my $db = $schema->resultset('Db')->find(
+      {
+        name => $db_name,
+      });
+
+  if (defined $db) {
+    return $db;
+  } else {
+    croak "no Db found for $db_name";
+  }
+}
+
+=head2 find_dbxref
+
+ Usage   : my $dbxref = $load_util->find_dbxref()
+ Function: Find then return the dbxref object matching the arguments
+ Args    : termid - "db_name:accession" eg. GO:0055085
+ Returns : the Dbxref object
+
+=cut
+sub find_dbxref
+{
+  my $self = shift;
+  my $termid = shift;
+
+  my ($db_name, $dbxref_acc) = $termid =~ /^(.*?):(.*)/;
+
+  my $db = $self->find_db($db_name);
+
+  my $schema = $self->schema();
+
+  my $dbxref = $schema->resultset('Dbxref')->find(
+      {
+        accession => $dbxref_acc,
+        db => $db
+      });
+
+  if (defined $dbxref) {
+    return $dbxref;
+  } else {
+    croak "no Dbxref found for $termid";
+  }
+}
+
 =head2 find_cvterm
 
  Usage   : my $cvterm = $load_util->find_cvterm(cv => $cv,

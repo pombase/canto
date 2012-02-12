@@ -19,6 +19,8 @@ BEGIN {
 use lib qw(lib);
 
 use PomCur::Config;
+use PomCur::TrackDB;
+use PomCur::Track::LoadUtil;
 use PomCur::Meta::Util;
 
 my $add_cvterm = 0;
@@ -64,6 +66,10 @@ if ($add_cvterm && (@ARGV < 2 || @ARGV > 4)) {
   usage();
 }
 
+if (!$add_cvterm) {
+  usage();
+}
+
 my $app_name = PomCur::Config::get_application_name();
 
 $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
@@ -81,18 +87,35 @@ my $schema = PomCur::TrackDB->new(config => $config);
 my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
 if (defined $add_cvterm) {
-  my $term_name = shift;
   my $cv_name = shift;
+  my $term_name = shift;
   my $termid = shift;
   my $definition = shift;
 
-  my $guard = $schema->txn_scope_guard;
+  my $proc = sub {
+    my $cv = undef;
+    eval {
+      $cv = $load_util->find_cv($cv_name);
+    };
+    die "could not find CV for: $cv_name\n" if $@;
 
-  $load_util->get_cvterm(cv_name => $cv_name,
-                         term_name => $term_name,
-                         ontologyid => $termid,
-                         definition => $definition);
+    eval {
+      $load_util->find_cvterm(cv => $cv, name => $term_name);
+    };
+    die qq/term "$term_name" already exists in CV: $cv_name\n/ unless $@;
 
+    if (defined $termid) {
+      eval {
+        $load_util->find_dbxref($termid);
+      };
+      die qq/$termid already exists in Dbxref/ unless $@;
+    }
 
-  $guard->commit unless $dry_run;
+    $load_util->get_cvterm(cv => $cv,
+                           term_name => $term_name,
+                           ontologyid => $termid,
+                           definition => $definition);
+  };
+
+  $schema->txn_do($proc);
 }
