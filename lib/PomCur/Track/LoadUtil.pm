@@ -144,7 +144,8 @@ sub find_or_create_cv
  Usage   : my $cvterm = $load_util->find_cvterm(cv => $cv,
                                                 name => $cvterm_name);
  Function: Find and return the cvterm object matching the arguments
- Args    : $cvterm_name - the cvterm name
+ Args    : name - the cvterm name
+           cv - the Cv object
  Returns : The Cvterm or calls die()
 
 =cut
