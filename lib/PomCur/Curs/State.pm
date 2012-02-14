@@ -148,14 +148,13 @@ sub store_statuses
   my ($status, $submitter_email, $gene_count) = $self->get_state($schema);
 
   my $metadata_rs = $schema->resultset('Metadata');
-  my $metadata_row = $metadata_rs->find({ key => 'curs_key' });
+  my $curs_key_row = $metadata_rs->find({ key => 'curs_key' });
 
-  if (!defined $metadata_row) {
+  if (!defined $curs_key_row) {
     warn 'failed to read curs_key from: ', $schema->storage()->connect_info();
     return;
   }
-
-  my $curs_key = $metadata_row->value();
+  my $curs_key = $curs_key_row->value();
 
   my $term_suggest_count_row =
     $metadata_rs->search({ key => TERM_SUGGESTION_COUNT_KEY })->first();
@@ -172,6 +171,12 @@ sub store_statuses
   $adaptor->store($curs_key, 'session_genes_count', $gene_count // 0);
   $adaptor->store($curs_key, 'session_term_suggestions_count',
                   $term_suggestion_count);
+
+  my $approver_name_row = $metadata_rs->find({ key => 'approver_name' });
+  if (defined $approver_name_row) {
+    my $approver_name = $approver_name_row->value();
+    $adaptor->store($curs_key, 'approver_name', $approver_name);
+  }
 }
 
 sub set_state

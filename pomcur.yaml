@@ -102,6 +102,13 @@ db_initial_data:
               accession: session_term_suggestions_count
               db:
                 name: PomCur
+          - name: approver_name
+            # The name of the person approving the session (if it is in the
+            # APPROVAL_IN_PROGRESS state)
+            dbxref:
+              accession: approver_name
+              db:
+                name: PomCur
       - name: PomCur publication triage status
         cvterms:
           - name: New
@@ -375,6 +382,10 @@ class_info:
           source:
             sql: "select value from curs, cursprop p, cvterm t where me.pub_id = curs.pub and curs.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status'"
           editable: 0
+        - name: approver_name
+          source:
+            sql: "select value from curs, cursprop p, cvterm t where me.pub_id = curs.pub and curs.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'approver_name'"
+          editable: 0
         - name: community_curatable
           source:
             sql: "select value from pubprop p, cvterm t where me.pub_id = p.pub_id and t.cvterm_id = p.type_id and t.name = 'community_curatable'"
@@ -438,6 +449,9 @@ class_info:
         - name: status
           source:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status'"
+        - name: approver_name
+          source:
+            sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'approver_name'"
         - name: genes added
           source:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_genes_count'"
