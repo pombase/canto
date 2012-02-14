@@ -141,6 +141,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $pub_id = $self->get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
 
+  die "internal error, can't find Pub for pub_id $pub_id"
+    if not defined $st->{pub};
+
   if ($state ne SESSION_CREATED) {
     $st->{submitter_email} = $submitter_email;
     $st->{submitter_name} = $self->get_metadata($schema, 'submitter_name');
