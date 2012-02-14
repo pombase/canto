@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 15;
 
 use Plack::Test;
 use Plack::Util;
@@ -53,8 +53,7 @@ test_psgi $app, sub {
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
 
-  # log in
-  $test_util->app_login($cookie_jar, $cb);
+  my $admin_only = "Admin only links";
 
   # check that we now redirect to the "finished" page
   {
@@ -67,6 +66,26 @@ test_psgi $app, sub {
     (my $content = $res->content()) =~ s/\s+/ /g;
 
     like ($content, qr/$thank_you/s);
+    unlike ($content, qr/$admin_only/s);
+    is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
+  }
+
+  # log in
+  $test_util->app_login($cookie_jar, $cb);
+
+  # check that after log in we still redirect to the "finished" page
+  # and the admin options are visiable
+  {
+    my $req = GET "$root_url/";
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+    is $res->code, 200;
+
+    (my $content = $res->content()) =~ s/\s+/ /g;
+
+    like ($content, qr/$thank_you/s);
+    like ($content, qr/$admin_only/s);
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
 };

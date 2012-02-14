@@ -61,7 +61,7 @@ test_psgi $app, sub {
   }
 
   my $further_information =
-    "If there any information in your paper";
+    "If there is any information in your paper";
   my $thank_you ="Thank you for your contribution to PomBase";
   my $your_annotations = "Your annotations have been sent to the curation team for inclusion in the database";
 
