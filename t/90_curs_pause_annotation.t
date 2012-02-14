@@ -1,9 +1,10 @@
 use strict;
 use warnings;
-use Test::More tests => 29;
+use Test::More tests => 24;
 
 use Plack::Test;
 use Plack::Util;
+use HTTP::Cookies;
 use HTTP::Request::Common;
 use Test::MockObject;
 
@@ -25,6 +26,7 @@ is(@curs_objects, 1);
 
 my $curs_key = $curs_objects[0]->curs_key();
 my $app = $test_util->plack_app()->{app};
+my $cookie_jar = $test_util->cookie_jar();
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
@@ -67,9 +69,16 @@ test_psgi $app, sub {
     my $req = GET $uri;
     my $res = $cb->($req);
 
-    is $res->code, 200;
+    is $res->code, 302;
 
-    (my $content = $res->content()) =~ s/\s+/ /g;
+    my $redirect_url = $res->header('location');
+
+    is ($redirect_url, "$root_url");
+
+    my $redirect_req = GET $redirect_url;
+    my $redirect_res = $cb->($redirect_req);
+
+    my $content = $redirect_res->content();
 
     like ($content, qr/$curation_paused_message/s);
 
@@ -85,7 +94,7 @@ test_psgi $app, sub {
 
     my $content = $res->content();
 
-    like ($content, qr/$curation_paused_message/)
+    like ($content, qr/$curation_paused_message/);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "CURATION_PAUSED");
   }
@@ -99,7 +108,7 @@ test_psgi $app, sub {
 
     my $content = $res->content();
 
-    like ($content, qr/$curation_paused_message/)
+    like ($content, qr/$curation_paused_message/);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "CURATION_PAUSED");
   }
@@ -113,7 +122,7 @@ test_psgi $app, sub {
 
     my $content = $res->content();
 
-    like ($content, qr/$curation_paused_message/)
+    like ($content, qr/$curation_paused_message/);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "CURATION_PAUSED");
   }
@@ -123,25 +132,26 @@ test_psgi $app, sub {
     my $uri = new URI("$root_url/restart_curation/");
 
     my $res = $cb->(GET $uri);
+    $cookie_jar->extract_cookies($res);
     is $res->code, 302;
 
     my $redirect_url = $res->header('location');
 
-    is ($redirect_url, "$root_url/finished_publication");
+    is ($redirect_url, "$root_url");
 
     my $redirect_req = GET $redirect_url;
+    $cookie_jar->add_cookie_header($redirect_req);
     my $redirect_res = $cb->($redirect_req);
 
     my $content = $redirect_res->content();
 
     unlike ($content, qr/$curation_paused_message/);
 
-    like ($content, qr/Curation restarted/);
-    like ($content, qr/Curation restarted/);
+    like ($content, qr/Session has been restarted/);
+    like ($content, qr/Choose a gene to annotate/);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "CURATION_IN_PROGRESS");
   }
-
 };
 
 done_testing;

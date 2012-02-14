@@ -159,6 +159,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $use_dispatch = 0;
     }
 
+    if ($state eq CURATION_PAUSED && $path =~ /restart_curation/) {
+      $use_dispatch = 0;
+    }
+
     if ($use_dispatch) {
       my $dispatch_dest = $state_dispatch{$state};
       if (defined $dispatch_dest) {
@@ -1442,6 +1446,10 @@ sub restart_curation : Chained('top') Args(0)
   my $schema = $st->{schema};
 
   $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS);
+
+  $c->flash()->{message} = 'Session has been restarted';
+
+  _redirect_and_detach($c);
 }
 
 sub reactivate_session : Chained('top') Args(0)
