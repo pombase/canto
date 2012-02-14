@@ -1045,6 +1045,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     my $data = $annotation->data();
     if ($extension && $extension !~ /^\s*$/) {
       $data->{annotation_extension} = $extension;
+    } else {
+      delete $data->{annotation_extension};
     }
 
     $annotation->data($data);
