@@ -595,13 +595,6 @@ sub _get_iso_date
   return sprintf "$iso_date_template", 1900+$year, $mon+1, $mday
 }
 
-sub _get_datetime
-{
-  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time);
-  return sprintf "$iso_date_template %02d:%02d:%02d",
-    1900+$year, $mon+1, $mday, $hour, $min, $sec;
-}
-
 sub annotation_ontology_edit
 {
   my ($self, $c, $gene, $annotation_config) = @_;
