@@ -40,6 +40,8 @@ use Moose::Role;
 use Carp;
 use Scalar::Util qw(reftype);
 
+use PomCur::Util;
+
 requires 'get_metadata', 'set_metadata', 'get_ordered_gene_rs';
 
 use constant {
@@ -172,16 +174,6 @@ sub store_statuses
                   $term_suggestion_count);
 }
 
-
-my $iso_date_template = "%4d-%02d-%02d";
-
-sub _get_datetime
-{
-  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time);
-  return sprintf "$iso_date_template %02d:%02d:%02d",
-    1900+$year, $mon+1, $mday, $hour, $min, $sec;
-}
-
 sub set_state
 {
   my $self = shift;
@@ -223,7 +215,8 @@ sub set_state
         croak "trying to pause a session that isn't in the state ",
           CURATION_IN_PROGRESS, " it's currently: ", $current_state;
       }
-      $self->set_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY, _get_datetime());
+      $self->set_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY,
+                          PomCur::Util::get_current_datetime());
       $self->unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
@@ -235,7 +228,8 @@ sub set_state
         croak "trying to start approving a session that isn't in the state ",
           CURATION_IN_PROGRESS, " it's currently: ", $current_state;
       }
-      $self->set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY, _get_datetime());
+      $self->set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY,
+                          PomCur::Util::get_current_datetime());
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
@@ -255,7 +249,8 @@ sub set_state
           "state ", APPROVAL_IN_PROGRESS, " actually in state ",
           $current_state;
       }
-      $self->set_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY, _get_datetime());
+      $self->set_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY,
+                          PomCur::Util::get_current_datetime());
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
     }
@@ -264,7 +259,8 @@ sub set_state
         croak "must be in state ", APPROVAL_IN_PROGRESS,
           " to change to state ", APPROVED;
       }
-      $self->set_metadata($schema, APPROVED_TIMESTAMP_KEY, _get_datetime());
+      $self->set_metadata($schema, APPROVED_TIMESTAMP_KEY,
+                          PomCur::Util::get_current_datetime());
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
     }
     when (EXPORTED) {
@@ -272,7 +268,8 @@ sub set_state
         croak "must be in state ", APPROVED, " to change to state ",
           EXPORTED;
       }
-      $self->set_metadata($schema, EXPORTED_TIMESTAMP_KEY, _get_datetime());
+      $self->set_metadata($schema, EXPORTED_TIMESTAMP_KEY,
+                          PomCur::Util::get_current_datetime());
     }
   };
 

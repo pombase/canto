@@ -45,6 +45,11 @@ __PACKAGE__->table("curs");
   data_type: 'text'
   is_nullable: 0
 
+=head2 creation_date
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -56,6 +61,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "curs_key",
   { data_type => "text", is_nullable => 0 },
+  "creation_date",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("curs_id");
 
@@ -112,10 +119,26 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-19 03:19:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:v7WhEOpgq127UKF+2OmG6A
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-14 00:21:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jJHJ9P6RbkwW1Eq+BKNE5Q
 
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
-# You can replace this text with custom content, and it will be preserved on regeneration
-__PACKAGE__->meta->make_immutable;
+use Carp;
+use PomCur::Util;
+
+sub new {
+  my ( $class, $attrs ) = @_;
+
+  if (defined $attrs->{creation_date}) {
+    croak "don't set creation_date in the constructor - it defaults to now";
+  }
+
+  $attrs->{creation_date} = PomCur::Util::get_current_datetime();
+
+  my $new = $class->next::method($attrs);
+
+  return $new;
+}
+
 1;

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 25;
+use Test::More tests => 24;
 
 use Data::Compare;
 
@@ -133,8 +133,5 @@ is($ssm4->genesynonyms()->first()->identifier(), "SPAC637.01c");
 # utility methods
 my $iso_date = PomCur::Controller::Curs::_get_iso_date();
 like ($iso_date, qr(^\d+-\d+-\d+$));
-
-my $datetime = PomCur::Controller::Curs::_get_datetime();
-like ($datetime, qr(^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$));
 
 done_testing;

@@ -10,7 +10,8 @@ CREATE TABLE pub (
        authors text,
        triage_status_id integer NOT NULL REFERENCES cvterm (cvterm_id),
        load_type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
-       curation_priority_id integer REFERENCES cvterm (cvterm_id)
+       curation_priority_id integer REFERENCES cvterm (cvterm_id),
+       added_date timestamp
 );
 CREATE INDEX pub_triage_status_idx ON pub(triage_status_id);
 CREATE TABLE pubprop (
@@ -138,14 +139,16 @@ CREATE TABLE person (
        role integer REFERENCES cvterm(cvterm_id) DEFERRABLE INITIALLY DEFERRED  NOT NULL,
        lab INTEGER REFERENCES lab (lab_id),
        session_data text,
-       password text
+       password text,
+       added_date timestamp
 );
 
 CREATE TABLE curs (
        curs_id integer NOT NULL PRIMARY KEY,
        assigned_curator integer REFERENCES person (person_id),
        pub integer NOT NULL REFERENCES pub (pub_id),
-       curs_key text NOT NULL
+       curs_key text NOT NULL,
+       creation_date timestamp
 );
 
 CREATE TABLE cursprop (

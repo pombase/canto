@@ -60,6 +60,11 @@ __PACKAGE__->table("person");
   data_type: 'text'
   is_nullable: 1
 
+=head2 added_date
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -77,6 +82,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "password",
   { data_type => "text", is_nullable => 1 },
+  "added_date",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("person_id");
 __PACKAGE__->add_unique_constraint("email_address_unique", ["email_address"]);
@@ -164,8 +171,27 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-11 15:27:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oJyZpr4Tt6jHHBDT+xUA6w
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-14 00:21:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kDKbejkWsU6glBHsLX2dfg
+
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
+
+use Carp;
+use PomCur::Util;
+
+sub new {
+  my ( $class, $attrs ) = @_;
+
+  if (defined $attrs->{added_date}) {
+    croak "don't set added_date in the constructor - it defaults to now";
+  }
+
+  $attrs->{added_date} = PomCur::Util::get_current_datetime();
+
+  my $new = $class->next::method($attrs);
+
+  return $new;
+}
 
 sub is_admin
 {
@@ -177,7 +203,5 @@ sub is_admin
     return 0;
   }
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;

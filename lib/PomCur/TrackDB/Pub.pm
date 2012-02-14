@@ -78,6 +78,11 @@ __PACKAGE__->table("pub");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 added_date
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -101,6 +106,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "curation_priority_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "added_date",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("pub_id");
 __PACKAGE__->add_unique_constraint("uniquename_unique", ["uniquename"]);
@@ -253,8 +260,29 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-30 11:06:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eM7ZV9GL8+5ZCHjmHkmSAw
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-14 22:37:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yWQbWD97jSPq774zwa7SVQ
+
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
+
+use Carp;
+use PomCur::Util;
+
+sub new {
+  my ( $class, $attrs ) = @_;
+
+  if (defined $attrs->{added_date}) {
+    croak "don't set added_date in the constructor - it defaults to now";
+  }
+
+  $attrs->{added_date} = PomCur::Util::get_current_datetime();
+
+  my $new = $class->next::method($attrs);
+
+  return $new;
+}
+
+1;
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
