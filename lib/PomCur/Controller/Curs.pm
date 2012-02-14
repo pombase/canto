@@ -117,7 +117,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{state} = $state;
 
   if ($state eq APPROVAL_IN_PROGRESS) {
-    $st->{notice} = 'Session is being checked';
+    my $approver_name = $self->get_metadata($schema, 'approver_name');
+    my $approver_email = $self->get_metadata($schema, 'approver_email');
+    $st->{notice} =
+      "Session is being checked by $approver_name <$approver_email>";
   }
 
   $st->{first_contact_email} =
@@ -155,7 +158,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $use_dispatch = 0;
     }
     if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-        $path =~ /finish_form|reactivate_session|begin_approval/) {
+        $path =~ /finish_form|reactivate_session|begin_approval|restart_approval/) {
       $use_dispatch = 0;
     }
 
@@ -1458,22 +1461,44 @@ sub reactivate_session : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS, 1);
+  $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS,
+                   { force => NEEDS_APPROVAL });
 
   $c->flash()->{message} = 'Session has been reactivated';
 
   _redirect_and_detach($c);
 }
 
-sub begin_approval : Chained('top') Args(0)
+sub _start_approval
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $force) = @_;
 
   my $schema = $c->stash()->{schema};
 
-  $self->set_state($c->config(), $schema, APPROVAL_IN_PROGRESS);
+  my $current_user = $c->user();
+
+  if (defined $current_user && $current_user->is_admin()) {
+    $self->set_state($c->config(), $schema, APPROVAL_IN_PROGRESS,
+                     {
+                       current_user => $current_user,
+                       force => $force,
+                     });
+  } else {
+    $c->flash()->{error} = 'Only admin users can approve sessions';
+  }
 
   _redirect_and_detach($c);
+
+}
+
+sub begin_approval : Chained('top') Args(0)
+{
+  _start_approval(@_);
+}
+
+sub restart_approval : Chained('top') Args(0)
+{
+  _start_approval(@_, APPROVED);
 }
 
 sub complete_approval : Chained('top') Args(0)

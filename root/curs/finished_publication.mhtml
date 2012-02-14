@@ -54,13 +54,15 @@ or <a href="<% $reactivate_session_uri %>">Reactivate session</a>
 
 <%init>
 my $reactivate_session_uri = $curs_root_uri . '/reactivate_session/';
-my $begin_approval_uri = $curs_root_uri . '/begin_approval/';
+my $begin_approval_uri;
 
 my $approve_text;
 if ($state eq 'APPROVED') {
   $approve_text = 'Restart session approval';
+  $begin_approval_uri = $curs_root_uri . '/restart_approval/';
 } else {
   $approve_text = 'Start session approval';
+  $begin_approval_uri = $curs_root_uri . '/begin_approval/';
 }
 
 </%init>

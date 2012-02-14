@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 27;
 
 use Plack::Test;
 use Plack::Util;
@@ -58,7 +58,6 @@ test_psgi $app, sub {
   # check that we now redirect to the "finished" page
   {
     my $req = GET "$root_url/";
-    $cookie_jar->add_cookie_header($req);
 
     my $res = $cb->($req);
     is $res->code, 200;
@@ -70,11 +69,36 @@ test_psgi $app, sub {
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
 
+  # make sure we can't start approving a session unless logged in as admin
+  {
+    my $req = GET "$root_url/begin_approval/";
+
+    my $res = $cb->($req);
+    $cookie_jar->extract_cookies($res);
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    is ($redirect_url, "$root_url");
+
+    my $redirect_req = GET $redirect_url;
+    $cookie_jar->add_cookie_header($redirect_req);
+    my $redirect_res = $cb->($redirect_req);
+
+    (my $content = $redirect_res->content()) =~ s/\s+/ /g;
+
+    like ($content, qr/Only admin users can approve sessions/s);
+    like ($content, qr/Thank you for your contribution to PomBase/s);
+    unlike ($content, qr/$admin_only/s);
+
+    is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
+  }
+
   # log in
   $test_util->app_login($cookie_jar, $cb);
 
-  # check that after log in we still redirect to the "finished" page
-  # and the admin options are visiable
+  # check that after log in we still show the "finished" page
+  # and the admin options are visible
   {
     my $req = GET "$root_url/";
     $cookie_jar->add_cookie_header($req);
@@ -88,6 +112,30 @@ test_psgi $app, sub {
     like ($content, qr/$admin_only/s);
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
+
+  # check we can start approving a session when logged in as admin
+  {
+    my $req = GET "$root_url/begin_approval/";
+
+    my $res = $cb->($req);
+    is $res->code, 302;
+
+    my $redirect_url = $res->header('location');
+
+    is ($redirect_url, "$root_url");
+
+    my $redirect_req = GET $redirect_url;
+    my $redirect_res = $cb->($redirect_req);
+
+    (my $content = $redirect_res->content()) =~ s/\s+/ /g;
+
+    like ($content, qr//s);
+    like ($content, qr/Thank you for your contribution to PomBase/s);
+    unlike ($content, qr/$admin_only/s);
+
+    is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
+  }
+
 };
 
 done_testing;

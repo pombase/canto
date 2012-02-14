@@ -38,6 +38,7 @@ under the same terms as Perl itself.
 use feature "switch";
 use Moose::Role;
 use Carp;
+use Scalar::Util qw(reftype);
 
 requires 'get_metadata', 'set_metadata', 'get_ordered_gene_rs';
 
@@ -66,7 +67,9 @@ use constant {
   APPROVED_TIMESTAMP_KEY => 'approved_timestamp',
   APPROVAL_IN_PROGRESS_TIMESTAMP_KEY => 'approval_in_progress_timestamp',
   EXPORTED_TIMESTAMP_KEY => 'exported_timestamp',
-  TERM_SUGGESTION_COUNT_KEY => 'term_suggestion_count'
+  TERM_SUGGESTION_COUNT_KEY => 'term_suggestion_count',
+  APPROVER_NAME_KEY => 'approver_name',
+  APPROVER_EMAIL_KEY => 'approver_email',
 };
 
 use Sub::Exporter -setup => {
@@ -76,7 +79,7 @@ use Sub::Exporter -setup => {
 };
 
 # Return a constant describing the state of the application, eg. SESSION_ACCEPTED
-# or DONE.  See the %state hash above for details
+# or APPROVED
 sub get_state
 {
   my $self = shift;
@@ -185,7 +188,14 @@ sub set_state
   my $config = shift;
   my $schema = shift;
   my $new_state = shift;
-  my $force = shift;
+  my $options = shift;
+
+  if (defined $options && reftype($options) ne 'HASH') {
+    croak "last argument must be a hash ref of options";
+  }
+
+  my $force = $options->{force};
+  my $current_user = $options->{current_user};
 
   my ($current_state) = $self->get_state($schema);
 
@@ -197,7 +207,8 @@ sub set_state
 
   given ($new_state) {
     when (CURATION_IN_PROGRESS) {
-      if (!$force && $current_state ne CURATION_PAUSED) {
+      if ($current_state ne CURATION_PAUSED &&
+          $force ne $current_state) {
         croak "use force flag to change state to ",
           CURATION_IN_PROGRESS, " from ", $current_state;
       }
@@ -219,7 +230,8 @@ sub set_state
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
     }
     when (NEEDS_APPROVAL) {
-      if (!$force and $current_state ne CURATION_IN_PROGRESS) {
+      if (!$force ne $current_state &&
+          $current_state ne CURATION_IN_PROGRESS) {
         croak "trying to start approving a session that isn't in the state ",
           CURATION_IN_PROGRESS, " it's currently: ", $current_state;
       }
@@ -229,9 +241,19 @@ sub set_state
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
     }
     when (APPROVAL_IN_PROGRESS) {
-      if ($current_state ne NEEDS_APPROVAL) {
+      if (defined $current_user && $current_user->is_admin()) {
+        $self->set_metadata($schema, APPROVER_NAME_KEY,
+                            $current_user->name());
+        $self->set_metadata($schema, APPROVER_EMAIL_KEY,
+                            $current_user->email_address());
+      } else {
+        croak "must be admin user to start approval";
+      }
+
+      if ($current_state ne NEEDS_APPROVAL && $force ne $current_state) {
         croak "must be in state ", NEEDS_APPROVAL, " to change to ",
-          "state ", APPROVAL_IN_PROGRESS;
+          "state ", APPROVAL_IN_PROGRESS, " actually in state ",
+          $current_state;
       }
       $self->set_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY, _get_datetime());
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);

@@ -167,5 +167,17 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-11 15:27:46
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oJyZpr4Tt6jHHBDT+xUA6w
 
+sub is_admin
+{
+  my $self = shift;
+
+  if (defined $self->role() && $self->role()->name() eq 'admin') {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 __PACKAGE__->meta->make_immutable;
+
 1;
