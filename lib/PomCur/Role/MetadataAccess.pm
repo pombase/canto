@@ -53,6 +53,11 @@ use Moose::Role;
 sub set_metadata
 {
   my $self = shift;
+
+  if (@_ < 3) {
+    croak "not enough arguments to get_metadata()";
+  }
+
   my $schema = shift;
   my $key = shift;
   my $value = shift;
@@ -88,6 +93,10 @@ sub get_metadata
   my $schema = shift;
   my $key = shift;
 
+  if (!defined $key) {
+    croak "not enough arguments to get_metadata()";
+  }
+
   my $metadata_obj = $schema->resultset('Metadata')->find({ key => $key });
   if (defined $metadata_obj) {
     return $metadata_obj->value();
@@ -110,6 +119,10 @@ sub unset_metadata
   my $self = shift;
   my $schema = shift;
   my $key = shift;
+
+  if (!defined $key) {
+    croak "not enough arguments to unset_metadata()";
+  }
 
   $schema->resultset('Metadata')->search({ key => $key })->delete();
 }
