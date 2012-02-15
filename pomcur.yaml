@@ -499,7 +499,7 @@ class_info:
         - name: title
     triaged_publications:
       extends: pub
-      constraint: "triage_status_id = (select cvterm_id from cvterm where name <> 'New')"
+      constraint: "triage_status_id <> (select cvterm_id from cvterm where name <> 'New')"
       field_info_list:
         - name: 'Publication ID'
           source: uniquename
@@ -543,9 +543,18 @@ class_info:
     publications_with_sessions:
       extends: pub
       constraint: "pub_id in (select pub from curs)"
+    publications_with_active_sessions:
+      extends: pub
+      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'SESSION_ACCEPTED' or p.value = 'CURATION_IN_PROGRESS')))"
+    publications_with_session_needing_approval:
+      extends: pub
+      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')))"
     publications_without_a_session:
       extends: pub
       constraint: "pub_id not in (select pub from curs)"
+    publications_with_unassigned_session:
+      extends: pub
+      constraint: "pub_id in (select pub from curs where assigned_curator is null)"
     unassigned_publications:
       extends: pub
       constraint: "assigned_curator is null"
@@ -703,8 +712,12 @@ reports:
         - report: untriged_publications
         - report: triaged_publications
           children:
-            - report: high_priority_publications
             - report: curatable_publications
+              children:
+                - report: high_priority_publications
+                - report: publications_with_active_sessions
+                - report: publications_with_session_needing_approval
+                - report: publications_with_unassigned_session
             - report: uncuratable_publications
               children:
                 - report: triage_methods_publications
@@ -716,11 +729,11 @@ reports:
         - report: publications_without_a_session
         - report: publications_with_sessions
         - report: unassigned_publications
-    - report: named_genes
     - report: all_sessions
       children:
         - report: sessions_needing_approval
         - report: unassigned_sessions
+#    - report: named_genes
   chado:
     - report: protein_and_domain_terms
     - report: types_and_counts
