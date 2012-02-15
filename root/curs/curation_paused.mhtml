@@ -4,7 +4,8 @@ $curs_root_uri
 
 <div id="curs-curation-paused">
 <p>
-Your curation session has been paused.
+Your work is permanently saved.  You can return and continue curating at any
+time.
 </p>
 
 <a href="<% $restart_curation_uri %>">Continue curation</a>

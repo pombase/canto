@@ -61,7 +61,7 @@ test_psgi $app, sub {
        PomCur::Controller::Curs::CURATION_IN_PROGRESS);
   }
 
-  my $curation_paused_message = 'Your curation session has been paused';
+  my $curation_paused_message = 'Your work is permanently saved';
 
   {
     my $uri = new URI("$root_url/pause_curation");
