@@ -14,9 +14,11 @@ $is_admin_session
 
 <& /pub_details.mhtml, pub => $pub &>
 
+<div class="clearall"/>
+
 % if ($state eq PomCur::Controller::Curs::CURATION_IN_PROGRESS) {
-<button id="curs-pause-publication" class="curs-finish-button">Pause curation</button>
 <button id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>
+<button id="curs-pause-publication" class="curs-finish-button">Pause curation</button>
 % } else {
 <button id="curs-check-completed" class="curs-finish-button">Approve session</button>
 % }

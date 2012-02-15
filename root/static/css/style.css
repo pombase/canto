@@ -763,9 +763,9 @@ span.pomcur-select-buttons {
 }
 
 .curs-finish-button {
-  clear: right;
   float: right;
   margin-top: 10px;
+  margin-left: 8px;
 }
 
 .ui-dialog {

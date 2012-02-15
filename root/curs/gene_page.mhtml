@@ -62,6 +62,8 @@ Details for <% $gene->display_name() %>
   </div>
 </div>
 
+<div class="clearall"/>
+
 <button id="curs-finish-gene" class="curs-finish-button">Change gene</button>
 
 <div id="curs-annotation-tables" class="sect">
