@@ -710,6 +710,7 @@ reports:
                 - report: publications_with_active_sessions
                 - report: publications_with_session_needing_approval
                 - report: publications_with_unassigned_session
+                - report: publications_with_sessions
             - report: uncuratable_publications
               children:
                 - report: triage_methods_publications
@@ -719,7 +720,6 @@ reports:
                 - report: triage_other_publications
                 - report: triage_loaded_in_error_publications
         - report: publications_without_a_session
-        - report: publications_with_sessions
         - report: unassigned_publications
     - report: all_sessions
       children:
