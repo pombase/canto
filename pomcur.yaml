@@ -499,7 +499,7 @@ class_info:
         - name: title
     triaged_publications:
       extends: pub
-      constraint: "triage_status_id <> (select cvterm_id from cvterm where name <> 'New')"
+      constraint: "triage_status_id not in (select cvterm_id from cvterm where name = 'New')"
       field_info_list:
         - name: 'Publication ID'
           source: uniquename
