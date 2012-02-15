@@ -19,12 +19,6 @@ $model
               <a href="<% $c->uri_for('/view/list/lab', { model => 'track'} ) %>">Labs</a>
             </li>
             <li>
-              <a href="<% $c->uri_for('/view/list/pub', { model => 'track'} ) %>">Publications</a>
-            </li>
-            <li>
-              <a href="<% $c->uri_for('/view/list/curs', { model => 'track'} ) %>">Curation sessions</a>
-            </li>
-            <li>
               <a href="<% $c->uri_for('/view/list/gene', { model => 'track'} ) %>">Genes</a>
             </li>
 %  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
