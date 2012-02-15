@@ -1398,7 +1398,11 @@ sub finish_form : Chained('top') Args(0)
     $text =~ s/^\s+//;
     $text =~ s/\s+$//;
 
-    $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
+    if (length $text > 0) {
+      $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
+    } else {
+      $self->unset_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
+    }
 
     _redirect_and_detach($c, 'finished_publication');
   } else {
