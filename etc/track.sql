@@ -8,6 +8,7 @@ CREATE TABLE pub (
        title text,
        abstract text,
        authors text,
+       affiliation text,
        triage_status_id integer NOT NULL REFERENCES cvterm (cvterm_id),
        load_type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
        curation_priority_id integer REFERENCES cvterm (cvterm_id),

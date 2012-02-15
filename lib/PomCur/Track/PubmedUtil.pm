@@ -164,7 +164,7 @@ sub load_pubmed_xml
 
       my $article = $medline_citation->{Article};
       my $title = $article->{ArticleTitle};
-
+      my $affiliation = $article->{Affiliation};
 
       my $authors = '';
       my $author_detail = $article->{AuthorList}->{Author};
@@ -196,6 +196,7 @@ sub load_pubmed_xml
       $pub->title($title);
       $pub->authors($authors);
       $pub->abstract($abstract);
+      $pub->affiliation($affiliation);
       $pub->update();
 
       $count++;

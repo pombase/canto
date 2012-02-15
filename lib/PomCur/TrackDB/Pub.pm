@@ -60,6 +60,11 @@ __PACKAGE__->table("pub");
   data_type: 'text'
   is_nullable: 1
 
+=head2 affiliation
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 triage_status_id
 
   data_type: 'integer'
@@ -99,6 +104,8 @@ __PACKAGE__->add_columns(
   "abstract",
   { data_type => "text", is_nullable => 1 },
   "authors",
+  { data_type => "text", is_nullable => 1 },
+  "affiliation",
   { data_type => "text", is_nullable => 1 },
   "triage_status_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
@@ -260,8 +267,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-14 22:37:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yWQbWD97jSPq774zwa7SVQ
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-15 02:42:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sCNbCzEhAlqEGTpqP09laQ
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
