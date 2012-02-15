@@ -22,6 +22,23 @@ use PomCur::TestUtil;
 use PomCur::Track::LoadUtil;
 use PomCur::Controller::Curs;
 
+
+package PomCur::Util;
+
+#no warnings;
+
+# make sure we have consistent timestamps in the creation_date and
+# added_date columns
+sub get_current_datetime
+{
+  return "2012-02-15 13:45:00";
+}
+
+1;
+
+
+package main;
+
 my %test_curators = ();
 my %test_publications = ();
 my %test_schemas = ();
