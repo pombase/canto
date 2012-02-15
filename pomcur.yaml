@@ -512,7 +512,7 @@ class_info:
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
     uncuratable_publications:
       extends: pub
-      constraint: "triage_status_id in (select cvterm_id from cvterm where name <> 'Curatable' and name <> 'New')"
+      constraint: "triage_status_id not in (select cvterm_id from cvterm where name ='Curatable' or name = 'New')"
     high_priority_publications:
       extends: pub
       constraint: "curation_priority_id in (select cvterm_id from cvterm where name = 'high')"
