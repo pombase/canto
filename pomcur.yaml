@@ -493,17 +493,9 @@ class_info:
       class_display_name: un-triaged publications
       extends: pub
       constraint: "triage_status_id = (select cvterm_id from cvterm where name = 'New')"
-      field_info_list:
-        - name: 'Publication ID'
-          source: uniquename
-        - name: title
     triaged_publications:
       extends: pub
       constraint: "triage_status_id not in (select cvterm_id from cvterm where name = 'New')"
-      field_info_list:
-        - name: 'Publication ID'
-          source: uniquename
-        - name: title
     named_genes:
       extends: gene
       constraint: "primary_name is not null"
