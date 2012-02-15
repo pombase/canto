@@ -35,7 +35,8 @@ under the same terms as Perl itself.
 
 =cut
 
-use perl5i::2;
+use strict;
+use warnings;
 use Moose;
 
 my $iso_date_template = "%4d-%02d-%02d";
