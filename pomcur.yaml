@@ -123,6 +123,14 @@ db_initial_data:
               accession: curatable
               db:
                 name: PomCur
+          - name: Sequence feature or region
+            definition: >
+                Triage status for a paper that reports a sequence feature
+                with no other curatable information.
+            dbxref:
+              accession: sequence_feature_or_region
+              db:
+                name: PomCur
           - name: Not English
             definition: >
                 Triage status for a paper that will not be curated because
