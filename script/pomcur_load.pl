@@ -36,6 +36,10 @@ my $dry_run = 0;
 my $verbose = 0;
 my $do_help = 0;
 
+if (@ARGV == 0) {
+  usage();
+}
+
 my $result = GetOptions ("genes=s" => \$do_genes,
                          "ontology=s" => \@ontology_args,
                          "organism=s" => \$do_organism,
