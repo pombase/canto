@@ -149,6 +149,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $st->{submitter_name} = $self->get_metadata($schema, 'submitter_name');
   }
 
+  $st->{message_to_curators} =
+    $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
+
   $st->{gene_count} = $self->get_ordered_gene_rs($schema)->count();
 
   if ($state eq APPROVAL_IN_PROGRESS &&
@@ -1421,8 +1424,6 @@ sub finished_publication : Chained('top') Args(0)
   $st->{template} = 'curs/finished_publication.mhtml';
 
   my $schema = $c->stash()->{schema};
-  $st->{message_to_curators} =
-    $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
 }
 
 sub pause_curation : Chained('top') Args(0)

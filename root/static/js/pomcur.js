@@ -343,6 +343,16 @@ var curs_home = {
   }
 };
 
+var pomcur_util = {
+  show_message : function(title, message) {
+    var dialog_div = $('#curs-dialog');
+    var html = '<div>' + message + '</div>';
+    $('#curs-dialog').html(html);
+    $('#curs-dialog').dialog({ modal: true,
+                               title: title});
+  }
+};
+
 $(document).ready(function() {
   var ferret_input = $("#ferret-term-input");
 
@@ -558,7 +568,6 @@ $(document).ready(function() {
   $('#curs-pub-assign-cancel').click(function () {
     $('#curs-pub-assign-dialog').hide();
   });
-
 
   $('#pubmed-id-lookup-form').ajaxForm({
     dataType: 'json',

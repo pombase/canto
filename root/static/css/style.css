@@ -858,3 +858,8 @@ input[type="submit"] {
   width: 60%;
   margin-bottom: 10px;
 }
+
+.curs-inline-message-to-curators {
+  clear: right;
+  float: right;
+}
