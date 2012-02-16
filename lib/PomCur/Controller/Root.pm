@@ -114,6 +114,15 @@ sub login : Global {
 
   my $return_path = $c->req->param('return_path');
 
+  if (!defined $password || length $password == 0) {
+    $c->stash->{error} =
+      { title => "Login error",
+        text => "No password given, please try again" };
+    $c->forward('account');
+    $c->detach();
+    return 0;
+  }
+
   if ($c->authenticate({email_address => $email_address,
                         password => $password})) {
     $c->flash->{message} =
