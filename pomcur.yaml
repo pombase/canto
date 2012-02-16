@@ -155,6 +155,13 @@ db_initial_data:
               accession: wrong_organism
               db:
                 name: PomCur
+          - name: Review
+            definition: >
+                Triage status for a review.
+            dbxref:
+              accession: review
+              db:
+                name: PomCur
           - name: News and views
             definition: >
                 Triage status for a publication that will not be curated because
