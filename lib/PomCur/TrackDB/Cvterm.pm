@@ -129,6 +129,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 pub_pubmed_types
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Pub>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pub_pubmed_types",
+  "PomCur::TrackDB::Pub",
+  { "foreign.pubmed_type" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 pub_types
 
 Type: has_many
@@ -370,8 +385,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-30 11:06:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kkrYKuX3seC3SH2URH6dVA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-16 05:21:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6h30gne1aTPTgvZwuaprFw
 
 =head2 db_accession
 

@@ -67,7 +67,8 @@ __PACKAGE__->table("pub");
 
 =head2 pubmed_type
 
-  data_type: 'text'
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =head2 triage_status_id
@@ -113,7 +114,7 @@ __PACKAGE__->add_columns(
   "affiliation",
   { data_type => "text", is_nullable => 1 },
   "pubmed_type",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "triage_status_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "load_type_id",
@@ -176,6 +177,26 @@ __PACKAGE__->belongs_to(
   "PomCur::TrackDB::Cvterm",
   { cvterm_id => "triage_status_id" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+=head2 pubmed_type
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "pubmed_type",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "pubmed_type" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
 );
 
 =head2 assigned_curator
@@ -274,8 +295,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-16 04:11:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7dz03+8pFpzIeJ9JGL7Zbg
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-16 09:45:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Gx+zkWm1egEQ5efA2x2mMQ
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 47;
+use Test::More tests => 49;
 
 use PomCur::TestUtil;
 use PomCur::Track::PubmedUtil;
@@ -54,7 +54,7 @@ for my $pub (@pub_results) {
 my $xml = $test_util->get_pubmed_test_xml();
 my $count = PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
 
-is($count, 22);
+is($count, 23);
 
 my @new_pub_results = $schema->resultset('Pub')->search();
 
