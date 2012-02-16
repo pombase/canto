@@ -318,6 +318,10 @@ table.list tr td {
   margin: 20px 0px 10px 0px;
 }
 
+.sect-content {
+  margin: 2px 5px 2px 5px;
+}
+
 .infobox {
   padding: 8px 0px 8px 0px;
 }
