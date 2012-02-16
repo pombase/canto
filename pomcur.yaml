@@ -779,8 +779,8 @@ curs_db_template_file: db_templates/curs_db_template.sqlite3
 ontology_index_dir: ontology_index
 
 external_sources:
-  pubmed_efetch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id='
-  pubmed_esearch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&remode=xml&term='
+  pubmed_efetch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&retmax=99999&id='
+  pubmed_esearch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&remode=xml&retmax=99999&term='
 
 implementation_classes:
   gene_adaptor: PomCur::Track::GeneLookup
