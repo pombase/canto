@@ -124,10 +124,10 @@ my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
 my $proc = sub {
   if ($add_cvterm) {
-    my $cv_name = shift;
-    my $term_name = shift;
-    my $termid = shift;
-    my $definition = shift;
+    my $cv_name = shift @ARGV;
+    my $term_name = shift @ARGV;
+    my $termid = shift @ARGV;
+    my $definition = shift @ARGV;
 
     my $cv = undef;
     eval {
