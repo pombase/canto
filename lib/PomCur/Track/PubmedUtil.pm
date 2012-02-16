@@ -256,7 +256,7 @@ sub add_missing_fields
       affiliation => undef,
     ]
    });
-  my $max_batch_size = 10;
+  my $max_batch_size = 300;
   my $count = 0;
 
   while (defined (my $pub = $rs->next())) {
