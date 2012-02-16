@@ -25,7 +25,7 @@ use PomCur::Controller::Curs;
 
 package PomCur::Util;
 
-#no warnings;
+no warnings;
 
 # make sure we have consistent timestamps in the creation_date and
 # added_date columns
