@@ -848,7 +848,7 @@ input[type="submit"] {
   background-color: #eee;
 }
 
-.sect.experiment-types {
+.sect.experiment-types, .sect.triage-pubmed-type {
   clear: both;
   float: left;
 }

@@ -75,6 +75,14 @@ $pub
           </div>
         </div>
       </div>
+      <div class="sect triage-pubmed-type">
+        <span class="sect-title">
+          Publication type from PubMed
+        </span>
+        <div class="sect-content">
+          <% $pubmed_type_name %>
+        </div>
+      </div>
     </div>
     <div class="status-settings">
       <div class="sect status-choice">
@@ -173,4 +181,12 @@ my $default_priority_name = $c->config()->{default_curation_priority_name};
 
 my @people_data = $schema->resultset('Person')->all();
 
+my $pubmed_type = $pub->pubmed_type();
+my $pubmed_type_name;
+
+if (defined $pubmed_type) {
+  $pubmed_type_name = ucfirst $pubmed_type->name();
+} else {
+  $pubmed_type_name = 'Unknown';
+}
 </%init>
