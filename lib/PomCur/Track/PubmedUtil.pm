@@ -253,6 +253,7 @@ sub add_missing_fields
       title => undef,
       abstract => undef,
       authors => undef,
+      affiliation => undef,
     ]
    });
   my $max_batch_size = 10;
