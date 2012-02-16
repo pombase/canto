@@ -276,6 +276,21 @@ db_initial_data:
               accession: schema_version
               db:
                 name: PomCur
+      - name: PubMed publication types
+        definition: >
+          Publication types loaded from the PublicationType elements
+          of the PubMed XML.
+        cvterms:
+          - name: paper
+            dbxref:
+              accession: pubmed_paper
+              db:
+                name: PomCur
+          - name: review
+            dbxref:
+              accession: pubmed_review
+              db:
+                name: PomCur
 
 class_info:
   track:

@@ -39,6 +39,7 @@ use strict;
 use warnings;
 use Carp;
 use Moose;
+use feature ':5.10';
 
 use Text::CSV;
 use XML::Simple;
@@ -140,7 +141,7 @@ sub load_pubmed_xml
 
   my $res_hash = XMLin($content,
                        ForceArray => ['AbstractText',
-                                      'Author']);
+                                      'Author', 'PublicationType']);
 
   my $guard = $schema->txn_scope_guard();
 
@@ -154,6 +155,10 @@ sub load_pubmed_xml
       push @articles, $res_hash->{PubmedArticle};
     }
 
+    my $pubmed_type_cv = $load_util->find_cv('PubMed publication types');
+    my $pubmed_review_term = undef;
+    my $pubmed_paper_term = undef;
+
     for my $article (@articles) {
       my $medline_citation = $article->{MedlineCitation};
       my $uniquename = "$PUBMED_PREFIX:" . $medline_citation->{PMID}->{content};
@@ -164,7 +169,13 @@ sub load_pubmed_xml
 
       my $article = $medline_citation->{Article};
       my $title = $article->{ArticleTitle};
-      my $affiliation = $article->{Affiliation};
+
+      if (!defined $title || length $title == 0) {
+        warn "No title for $uniquename - can't load";
+        next;
+      }
+
+      my $affiliation = $article->{Affiliation} // '';
 
       my $authors = '';
       my $author_detail = $article->{AuthorList}->{Author};
@@ -191,12 +202,34 @@ sub load_pubmed_xml
         $abstract = $abstract_text // '';
       }
 
+      my $pubmed_type;
+
+      my @publication_types =
+        @{$article->{PublicationTypeList}->{PublicationType}};
+
+      for my $pub_type (@publication_types) {
+        if ($pub_type eq 'Review') {
+          $pubmed_type =
+            ($pubmed_review_term //=
+               $load_util->find_cvterm(cv => $pubmed_type_cv,
+                                       name => 'review'));
+        }
+      }
+
+      if (!defined $pubmed_type) {
+        $pubmed_type =
+          ($pubmed_paper_term //=
+             $load_util->find_cvterm(cv => $pubmed_type_cv,
+                                     name => 'paper'));
+      }
+
       my $pub = $load_util->get_pub($uniquename, $load_type);
 
       $pub->title($title);
       $pub->authors($authors);
       $pub->abstract($abstract);
       $pub->affiliation($affiliation);
+      $pub->pubmed_type($pubmed_type->cvterm_id());
       $pub->update();
 
       $count++;
@@ -254,6 +287,7 @@ sub add_missing_fields
       abstract => undef,
       authors => undef,
       affiliation => undef,
+      pubmed_type => undef,
     ]
    });
   my $max_batch_size = 300;

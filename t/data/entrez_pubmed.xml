@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2011//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/pubmed_110101.dtd">
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2012//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_120101.dtd">
 <PubmedArticleSet>
 <PubmedArticle>
     <MedlineCitation Owner="NLM" Status="MEDLINE">
@@ -3265,7 +3265,7 @@
                 <MedlinePgn>1927-36</MedlinePgn>
             </Pagination>
             <Abstract>
-                <AbstractText>The fission yeast Schizosaccharomyces pombe senses environmental glucose through a cAMP-signaling pathway. Elevated cAMP levels activate protein kinase A (PKA) to inhibit transcription of genes involved in sexual development and gluconeogenesis, including the fbp1(+) gene, which encodes fructose-1,6-bisphosphatase. Glucose-mediated activation of PKA requires the function of nine glucose-insensitive transcription (git) genes, encoding adenylate cyclase, the PKA catalytic subunit, and seven "upstream" proteins required for glucose-triggered adenylate cyclase activation. We describe the cloning and characterization of the git10(+) gene, which is identical to swo1(+) and encodes the S. pombe Hsp90 chaperone protein. Glucose repression of fbp1(+) transcription is impaired by both git10(-) and swo1(-) mutant alleles of the hsp90(+) gene, as well as by chemical inhibition of Hsp90 activity and temperature stress to wild-type cells. Unlike the swo1(-) mutant alleles, the git10-201 allele supports cell growth at 37 degrees , while severely reducing glucose repression of an fbp1-lacZ reporter, suggesting a separation-of-function defect. Sequence analyses of three swo1(-) alleles and the one git10(-) allele indicate that swo1(-) mutations alter core functional domains of Hsp90, while the git10(-) mutation affects the Hsp90 central domain involved in client protein binding. These results suggest that Hsp90 plays a specific role in the S. pombe glucose/cAMP pathway.</AbstractText>
+                <AbstractText>The fission yeast Schizosaccharomyces pombe senses environmental glucose through a cAMP-signaling pathway. Elevated cAMP levels activate protein kinase A (PKA) to inhibit transcription of genes involved in sexual development and gluconeogenesis, including the fbp1(+) gene, which encodes fructose-1,6-bisphosphatase. Glucose-mediated activation of PKA requires the function of nine glucose-insensitive transcription (git) genes, encoding adenylate cyclase, the PKA catalytic subunit, and seven &quot;upstream&quot; proteins required for glucose-triggered adenylate cyclase activation. We describe the cloning and characterization of the git10(+) gene, which is identical to swo1(+) and encodes the S. pombe Hsp90 chaperone protein. Glucose repression of fbp1(+) transcription is impaired by both git10(-) and swo1(-) mutant alleles of the hsp90(+) gene, as well as by chemical inhibition of Hsp90 activity and temperature stress to wild-type cells. Unlike the swo1(-) mutant alleles, the git10-201 allele supports cell growth at 37 degrees , while severely reducing glucose repression of an fbp1-lacZ reporter, suggesting a separation-of-function defect. Sequence analyses of three swo1(-) alleles and the one git10(-) allele indicate that swo1(-) mutations alter core functional domains of Hsp90, while the git10(-) mutation affects the Hsp90 central domain involved in client protein binding. These results suggest that Hsp90 plays a specific role in the S. pombe glucose/cAMP pathway.</AbstractText>
             </Abstract>
             <Affiliation>Biology Department, Boston College, Chestnut Hill, Massachusetts 02467, USA.</Affiliation>
             <AuthorList CompleteYN="Y">
@@ -7492,6 +7492,5 @@
         </ArticleIdList>
     </PubmedData>
 </PubmedArticle>
-
 
 </PubmedArticleSet>
