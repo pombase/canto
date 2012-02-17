@@ -57,7 +57,7 @@ given ($opt) {
     $dry_run = 1;
   }
   default {
-    usages ();
+    usage ();
   }
 }
 
