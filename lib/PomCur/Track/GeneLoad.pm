@@ -75,7 +75,7 @@ sub _process_gene_row
   my $schema = $self->schema();
 
   my $columns_ref = shift;
-  my ($primary_identifier, $name, $synonyms, $product) = @{$columns_ref};
+  my ($primary_identifier, $name, $synonyms, $dummy, $product) = @{$columns_ref};
 
   my @synonym_hashes = ();
 
