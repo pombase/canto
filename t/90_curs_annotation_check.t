@@ -136,6 +136,11 @@ test_psgi $app, sub {
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }
 
+
+
+  # XXX FIXME add a test for reactivating sessions
+
+
 };
 
 done_testing;
