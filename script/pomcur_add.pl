@@ -153,15 +153,16 @@ my $proc = sub {
                            definition => $definition);
   }
 
-  if ($add_by_pubmed_id || $add_by_pubmed_query) {
-    my $xml;
-    if ($add_by_pubmed_id) {
-      $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_ids($config, @ARGV);
-    } else {
-      $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_text($config, @ARGV);
-    }
+  if ($add_by_pubmed_id) {
+    PomCur::Track::PubmedUtil::load_by_ids($config, $schema, [@ARGV], 'admin_load');
+  }
 
-    PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
+  if ($add_by_pubmed_query) {
+    if (@ARGV > 1) {
+      usage (qq{need one argument to "$opt"});
+    } else {
+      PomCur::Track::PubmedUtil::load_by_query($config, $schema, $ARGV[0], 'admin_load');
+    }
   }
 };
 
