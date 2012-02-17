@@ -41,6 +41,7 @@ use Params::Validate qw(:all);
 use YAML qw(LoadFile);
 use Clone qw(clone);
 use Carp;
+use Cwd;
 
 use Hash::Merge;
 
@@ -250,6 +251,28 @@ sub get_application_name
   (my $app_name = __PACKAGE__) =~ s/(.*?)::.*/$1/;
 
   return $app_name;
+}
+
+=head2 get_instance_name
+
+ Usage   : my $inst_name = PomCur::Config::get_instance_name();
+ Function: Return the name of this instance of PomCur.  eg. "test" or
+           "prod" .  Currently this just return the name of the
+           directory that contains the "pomcur.yaml" file so to have
+           multiple instances, have multiple checkouts and name the
+           directories uniquely.
+ Args    : none
+
+=cut
+sub get_instance_name
+{
+  my $cwd = getcwd();
+
+  if ($cwd =~ m:.*/(.*):) {
+    return $1;
+  } else {
+    return 'root';
+  }
 }
 
 =head2 model_connect_string
