@@ -47,6 +47,8 @@ use LWP::UserAgent;
 
 use PomCur::Track::LoadUtil;
 
+my $max_batch_size = 300;
+
 sub _get_url
 {
   my $config = shift;
@@ -89,18 +91,17 @@ sub get_pubmed_xml_by_ids
   return _get_url($config, $url);
 }
 
-=head2 get_pubmed_ids_by_text
+=head2 get_pubmed_ids_by_query
 
- Usage   : my $xml = PomCur::Track::PubmedUtil::get_pubmed_xml_by_text($config,
-                                                                       $text);
+ Usage   : my $xml = PomCur::Track::PubmedUtil::get_pubmed_ids_by_query($config, $text);
  Function: Return a list of PubMed IDs of the articles that match the given
            text (in the title or abstract)
  Args    : $config - the config object
-           $text - the text
+           $text - the query
  Returns : XML containing the matching IDs
 
 =cut
-sub get_pubmed_xml_by_text
+sub get_pubmed_ids_by_query
 {
   my $config = shift;
   my $text = shift;
@@ -112,6 +113,7 @@ sub get_pubmed_xml_by_text
 
   return _get_url($config, $url);
 }
+
 
 our $PUBMED_PREFIX = "PMID";
 
@@ -245,7 +247,9 @@ sub _process_batch
 {
   my $config = shift;
   my $schema = shift;
-  my @ids = @_;
+  my $ids = shift;
+  my @ids = @$ids;
+  my $load_type = shift;
 
   my $count = 0;
 
@@ -254,8 +258,7 @@ sub _process_batch
       sub {
         my $content = get_pubmed_xml_by_ids($config, @ids);
         die "Failed to get results" unless defined $content;
-
-        $count += load_pubmed_xml($schema, $content);
+        $count += load_pubmed_xml($schema, $content, $load_type);
       });
   };
   if ($@) {
@@ -264,6 +267,75 @@ sub _process_batch
 
   return $count;
 }
+
+=head2 load_by_ids
+
+ Usage   : my $count = PomCur::Track::PubmedUtil::load_by_ids(...)
+ Function: Load the publications with the given ids into the track
+           database.
+ Args    : $config - the config object
+           $schema - the TrackDB object
+           $ids - an array ref of ids of publications to load, with
+                  optional "PMID:" prefix
+           $load_type - a cvterm from the "Publication load types" CV
+                    that records who is loading this publication
+ Returns : a count of the number of publications found and loaded
+
+=cut
+sub load_by_ids
+{
+  my $config = shift;
+  my $schema = shift;
+  my $ids = shift;
+  my $load_type = shift;
+
+  my $count = 0;
+
+  while (@$ids) {
+    my @process_ids = map { s/^PMID://; $_; } splice(@$ids, 0, $max_batch_size);
+
+    $count += _process_batch($config, $schema, [@process_ids], $load_type);
+  }
+
+  return $count;
+}
+
+=head2 load_by_query
+
+ Usage   : my $count = PomCur::Track::PubmedUtil::load_by_query(...)
+ Function: Send a query to PubMed and load the publications it returns
+           into the track database.
+ Args    : $config - the config object
+           $schema - the TrackDB object
+           $query - a PubMed query string
+           $load_type - a cvterm from the "Publication load types" CV
+                    that records who is loading this publication
+ Returns : a count of the number of publications found and loaded
+
+=cut
+sub load_by_query
+{
+  my $config = shift;
+  my $schema = shift;
+  my $query = shift;
+  my $load_type = shift;
+
+  my $count = 0;
+
+  my $xml = get_pubmed_ids_by_query($config, $query);
+  my $res_hash = XMLin($xml);
+
+  my @ids = @{$res_hash->{IdList}->{Id}};
+
+  while (@ids) {
+    my @process_ids = splice(@ids, 0, $max_batch_size);
+
+    $count += _process_batch($config, $schema, [@process_ids], $load_type);
+  }
+
+  return $count;
+}
+
 
 =head2
 
@@ -293,24 +365,9 @@ sub add_missing_fields
   my $max_batch_size = 300;
   my $count = 0;
 
-  while (defined (my $pub = $rs->next())) {
-    my $uniquename = $pub->uniquename();
-
-    if (defined $uniquename) {
-      push @missing_field_ids, $uniquename;
-
-      if (@missing_field_ids == $max_batch_size) {
-        $count += _process_batch($config, $schema, @missing_field_ids);
-        @missing_field_ids = ();
-      }
-    }
-  }
-
-  if (@missing_field_ids) {
-    $count += _process_batch($config, $schema, @missing_field_ids);
-  }
-
-  return $count;
+  return load_by_ids($config, $schema,
+                     [map { $_->uniquename() } $rs->all()],
+                     'admin_load');
 }
 
 1;
