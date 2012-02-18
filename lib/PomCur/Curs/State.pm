@@ -228,8 +228,8 @@ sub set_state
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
     }
     when (NEEDS_APPROVAL) {
-      if (!$force ne $current_state &&
-          $current_state ne CURATION_IN_PROGRESS) {
+      if ($current_state ne CURATION_IN_PROGRESS &&
+          $force ne $current_state) {
         croak "trying to start approving a session that isn't in the state ",
           CURATION_IN_PROGRESS, " it's currently: ", $current_state;
       }
@@ -238,6 +238,10 @@ sub set_state
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, APPROVER_NAME_KEY);
+      $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
+      $self->unset_metadata($schema, APPROVER_NAME_KEY);
+      $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
     }
     when (APPROVAL_IN_PROGRESS) {
       if (defined $current_user && $current_user->is_admin()) {

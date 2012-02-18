@@ -551,6 +551,10 @@ $(document).ready(function() {
     window.location.href = curs_root_uri + '/complete_approval';
   });
 
+  $('#curs-cancel-approval').click(function () {
+    window.location.href = curs_root_uri + '/cancel_approval';
+  });
+
   $('#curs-finish-gene').click(function () {
     window.location.href = curs_root_uri;
   });

@@ -22,6 +22,7 @@ $message_to_curators
 <button id="curs-pause-publication" class="curs-finish-button">Pause curation</button>
 % } else {
 <button id="curs-check-completed" class="curs-finish-button">Approve session</button>
+<button id="curs-cancel-approval" class="curs-finish-button">Cancel approval</button>
 %   if (defined $message_to_curators) {
 <div class="curs-inline-message-to-curators">
   <a href="#" onclick="javascript:pomcur_util.show_message('Message to curators', '<% PomCur::WebUtil::escape_inline_js($message_to_curators) %>')">Display message to curators ...</a>

@@ -1527,6 +1527,18 @@ sub complete_approval : Chained('top') Args(0)
   _redirect_and_detach($c);
 }
 
+sub cancel_approval : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $schema = $c->stash()->{schema};
+  $self->set_state($c->config(), $schema, NEEDS_APPROVAL,
+                   { force => APPROVAL_IN_PROGRESS });
+  $c->flash()->{message} = 'Session approval cancelled';
+
+  _redirect_and_detach($c);
+}
+
 sub end : Private
 {
   my ($self, $c) = @_;
