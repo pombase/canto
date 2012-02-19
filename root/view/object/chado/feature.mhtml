@@ -14,6 +14,9 @@ $class_info
 % }
 
 <div id="collections">
+  <& /view/inline_list.mhtml, config_name => 'cvterm', rs => $cvterms_rs,
+                       class_info => $class_info,
+                       list_title => 'Controlled vocabulary terms for this feature' &>
   <& /view/collection.mhtml, object => $object, collection_name => 'featureprops',
      collection_title => "Feature properties" &>
 </div>
@@ -23,4 +26,7 @@ my $feature_type = $object->type()->name();
 my @path_parts = ("view", "object", "chado", "feature", "$feature_type.mhtml");
 my $type_template_path = $c->path_to("root", @path_parts);
 my $type_path = '/' . join '/', @path_parts;
+
+my $cvterms_rs =
+  $object->feature_cvterms()->search_related('cvterm');
 </%init>
