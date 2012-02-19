@@ -102,7 +102,13 @@ sub triage :Local {
       $c->req()->param('triage-assigned-curator-person-id');
 
     if (defined $assigned_curator_id) {
-      $pub->assigned_curator($assigned_curator_id);
+      if ($assigned_curator_id =~ /^\d+$/) {
+        if (defined $schema->resultset('Person')->find({
+          assigned_curator_id => $assigned_curator_id
+        })) {
+          $pub->assigned_curator($assigned_curator_id);
+        }
+      }
     }
 
     my $priority_cvterm_id = $c->req()->param('triage-curation-priority');
