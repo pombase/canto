@@ -601,6 +601,9 @@ class_info:
         - name: "terms in this CV"
           source:
             sql: 'select count(*) from cvterm where cvterm.cv_id = me.cv_id'
+        - name: "terms used"
+          source:
+            sql: 'select count(*) from cvterm c where c.cv_id = me.cv_id and c.cvterm_id in (select cvterm_id from feature_cvterm)'
         - name: "annotation count"
           source:
             sql: 'select count(*) from feature_cvterm fc, cvterm c where fc.cvterm_id = c.cvterm_id and c.cv_id = me.cv_id'
