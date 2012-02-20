@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 22;
 
 use Plack::Test;
 use Plack::Util;
@@ -25,11 +25,20 @@ sub _check_for_pub
 {
   my $res = shift;
   my $pub = shift;
+  my $remaining_count = shift;
 
   my $re = qr/Triaging (PMID:\d+)/;
 
   if ($res->content() =~ $re) {
     is ($1, $pub->uniquename());
+  } else {
+    fail("page contents didn't match $re: " . $res->content());
+  }
+
+  $re = qr/(\d+) remaining/;
+
+  if ($res->content() =~ $re) {
+    is ($1, $remaining_count);
   } else {
     fail("page contents didn't match $re: " . $res->content());
   }
@@ -80,7 +89,7 @@ test_psgi $app, sub {
 
     is ($res->code, 200);
 
-    _check_for_pub($res, $first_pub);
+    _check_for_pub($res, $first_pub, 23);
   }
 
   my $curatable_cvterm = $schema->find_with_type('Cvterm',
@@ -131,18 +140,29 @@ test_psgi $app, sub {
 
     $second_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
 
-    _check_for_pub($redirect_res, $second_pub);
+    _check_for_pub($redirect_res, $second_pub, 22);
   }
 
-  # check when there are no more publications to triage, by setting all
+  # check when there are no more publications totriage, by setting all
   # but one publication as "Curatable"
+  $schema->resultset('Pub')
+    ->search({ pub_id => { '<>' => $second_pub->pub_id() } })
+    ->update({ triage_status_id =>
+               $curatable_cvterm->cvterm_id() });
+
+
   {
-    $schema->resultset('Pub')
-      ->search({ pub_id => { '<>' => $second_pub->pub_id() } })
-        ->update({ triage_status_id =>
-                     $curatable_cvterm->cvterm_id() });
+    my $uri = new URI($triage_url);
+    my $req = HTTP::Request->new(GET => $uri);
+    $cookie_jar->add_cookie_header($req);
 
+    my $res = $cb->($req);
+    is $res->code, 200;
 
+    _check_for_pub($res, $second_pub, 1);
+  }
+
+  {
     my $uri = new URI($triage_url);
     $uri->query_form('triage-pub-id' => $second_pub->pub_id(),
                      submit => $curatable_cvterm->name(),
