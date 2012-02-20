@@ -176,6 +176,9 @@ sub store_statuses
   if (defined $approver_name_row) {
     my $approver_name = $approver_name_row->value();
     $adaptor->store($curs_key, 'approver_name', $approver_name);
+  } else {
+    # remove name
+    $adaptor->store($curs_key, 'approver_name');
   }
 }
 

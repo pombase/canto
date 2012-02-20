@@ -78,6 +78,7 @@ sub _rs_and_type
  Usage   : $status_storage->store($curs_key, $type, 'value');
        OR: $status_storage->store($curs_key, 'session_genes_count', $count);
        OR: $status_storage->store($curs_key, 'annotation_status', 'finished');
+       OR: $status_storage->store($curs_key, 'approver_name')  # to delete
  Function: Store status information about a curation session in the Track
            database, without knowledge of the database schema.  The data
            will be stored in the cursprop table
@@ -85,7 +86,7 @@ sub _rs_and_type
            $type_name - the data type to store; there can only be one
                         value of each type; possible type names can be
                         queried with types();
-           $value - the value
+           $value - the value, or undef to delete the stored status
  Returns : nothing
 
 =cut
@@ -97,10 +98,6 @@ sub store
   my $type_name = shift;
   my $value = shift;
 
-  if (!defined $value) {
-    die "undefined value when trying to store $type_name\n";
-  }
-
   my $curs = $self->get_curs_object($curs_key);
 
   die 'no curs' unless $curs;
@@ -111,9 +108,11 @@ sub store
 
   $cursprop_rs->delete();
 
-  $cursprop_rs->create({ curs => $curs->curs_id(),
-                         type => $type_cvterm->cvterm_id(),
-                         value => $value });
+  if (defined $value) {
+    $cursprop_rs->create({ curs => $curs->curs_id(),
+                           type => $type_cvterm->cvterm_id(),
+                           value => $value });
+  }
 
   $guard->commit();
 }
