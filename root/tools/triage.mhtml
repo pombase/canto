@@ -23,12 +23,28 @@ $pub
           <% $pub->authors() %>
         </div>
       </div>
+      <div class="sect citation">
+        <span class="sect-title">
+          Citation
+        </span>
+        <div class="sect-content">
+          <% $pub->citation() || '[no citation]' %>
+        </div>
+      </div>
       <div class="sect abstract">
         <span class="sect-title disclosed-title">
           <a href="#">Abstract</a>
         </span>
         <div class="sect-content">
           <% $pub->abstract() %>
+        </div>
+      </div>
+      <div class="sect affiliation">
+        <span class="sect-title">
+          Affiliation
+        </span>
+        <div class="sect-content">
+          <% $pub->affiliation() || '[no affiliation]' %>
         </div>
       </div>
       <div class="sect experiment-types">
