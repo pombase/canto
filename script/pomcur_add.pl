@@ -154,14 +154,18 @@ my $proc = sub {
   }
 
   if ($add_by_pubmed_id) {
-    PomCur::Track::PubmedUtil::load_by_ids($config, $schema, [@ARGV], 'admin_load');
+    my $count = PomCur::Track::PubmedUtil::load_by_ids($config, $schema,
+                                                       [@ARGV], 'admin_load');
+    print "loaded $count publcations\n";
   }
 
   if ($add_by_pubmed_query) {
     if (@ARGV > 1) {
       usage (qq{need one argument to "$opt"});
     } else {
-      PomCur::Track::PubmedUtil::load_by_query($config, $schema, $ARGV[0], 'admin_load');
+      my $count = PomCur::Track::PubmedUtil::load_by_query($config, $schema,
+                                                           $ARGV[0], 'admin_load');
+      print "loaded $count publcations\n";
     }
   }
 };
