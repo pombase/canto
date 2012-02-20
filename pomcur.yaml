@@ -903,6 +903,16 @@ evidence_types:
   'Synthetic Rescue': ~
   'Two-hybrid': ~
   'Reporter gene assay': ~
+  'Enzyme assay data': ~
+  'Flow cytometry data': ~
+  'Chromatin immunoprecipitation experiment': ~
+  'Quantitative PCR': ~
+  'Fusion protein localization experiment': ~
+  'Immunolocalization experiment data': ~
+  'Green fluorescent protein fusion protein localization experiment': ~
+  'YFP fusion protein localization experiment': ~
+  'Epitope-tagged protein immunolocalization experiment data': ~
+  'Protein localization experiment': ~
 
 annotation_type_list:
   - name: molecular_function
@@ -1001,6 +1011,16 @@ annotation_type_list:
       - Cell growth assay
       - Other direct assay
       - Reporter gene assay
+      - Enzyme assay data
+      - Flow cytometry data
+      - Chromatin immunoprecipitation experiment
+      - Quantitative PCR
+      - Fusion protein localization experiment
+      - Immunolocalization experiment data
+      - Green fluorescent protein fusion protein localization experiment
+      - YFP fusion protein localization experiment
+      - Epitope-tagged protein immunolocalization experiment data
+      - Protein localization experiment
     broad_term_suggestions: >
       multinucleate, abnormal spindle, inviable
     specific_term_examples: >
