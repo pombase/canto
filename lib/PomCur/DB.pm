@@ -84,9 +84,8 @@ sub new
 
   my $dbh = $schema->storage()->dbh();
 
-  if (ref $schema->storage() =~ /SQLite/) {
+  if ((ref $schema->storage()) =~ /SQLite/) {
     $dbh->do("PRAGMA foreign_keys = ON");
-    $dbh->do("PRAGMA journal_mode = WAL;");
   }
 
   return $schema;
