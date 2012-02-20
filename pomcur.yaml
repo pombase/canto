@@ -427,6 +427,11 @@ class_info:
             - list
             - inline_list
           editable: 1
+        - name: affiliation
+          hide_context:
+            - list
+            - inline_list
+          editable: 1
         - name: assigned_curator
           editable: 1
         - name: type
