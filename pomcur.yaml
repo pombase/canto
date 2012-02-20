@@ -170,20 +170,20 @@ db_initial_data:
               accession: news_and_views
               db:
                 name: PomCur
-          - name: Other
-            definition: >
-                Triage status for a publication that will not be curated for
-                a reason the is not covered by the other statuses.
-            dbxref:
-              accession: other
-              db:
-                name: PomCur
           - name: Loaded in error
             definition: >
                 Triage status for a publication that will not be curated for
                 a reason the is not covered by the other statuses.
             dbxref:
               accession: loaded_in_error
+              db:
+                name: PomCur
+          - name: Other
+            definition: >
+                Triage status for a publication that will not be curated for
+                a reason the is not covered by the other statuses.
+            dbxref:
+              accession: other
               db:
                 name: PomCur
       - name: PomCur curation priorities
