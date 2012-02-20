@@ -178,6 +178,20 @@ db_initial_data:
               accession: loaded_in_error
               db:
                 name: PomCur
+          - name: Reagent
+            definition: >
+                Triage status for a publication that describes a reagent.
+            dbxref:
+              accession: reagent
+              db:
+                name: PomCur
+          - name: Erratum
+            definition: >
+                Triage status for an erratum.
+            dbxref:
+              accession: erratum
+              db:
+                name: PomCur
           - name: Other
             definition: >
                 Triage status for a publication that will not be curated for
