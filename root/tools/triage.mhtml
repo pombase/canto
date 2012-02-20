@@ -84,8 +84,7 @@ $pub
           Assign to curator:
         </span>
         <div class="sect-content">
-          <input id="triage-assigned-curator-input" name="triage-assigned-curator-input" size="30" />
-          <input id="triage-assigned-curator-person-id" name="triage-assigned-curator-person-id" type="hidden"/>
+          <& /person_picker.mhtml, id_prefix => 'triage-assigned-curator' &>
           <div>
             <input type="checkbox" name="community-curatable" value="yes">Community curatable<br>
           </div>
@@ -122,19 +121,6 @@ $pub
   <div class="clearall"/>
 
 </div>
-
-
-<script>
-  var triage_assign_people = [
-% for my $person_data (@people_data) {
-    {
-      label: "<% $person_data->name() . ' <' . $person_data->email_address . '>' %>",
-      name: "<% $person_data->name() %>",
-      value: "<% $person_data->person_id() %>",
-    },
-% }
-  ];
-</script>
 
 <%init>
 my $schema = $c->schema('track');
@@ -194,8 +180,6 @@ my @curation_priorities =
   } @curation_priority_cvterms;
 
 my $default_priority_name = $c->config()->{default_curation_priority_name};
-
-my @people_data = $schema->resultset('Person')->all();
 
 my $pubmed_type = $pub->pubmed_type();
 my $pubmed_type_name;

@@ -1,0 +1,25 @@
+<%args>
+$id_prefix
+</%args>
+
+<input id="<% $id_prefix %>-input" name="<% $id_prefix %>-input" size="30" />
+<input id="<% $id_prefix %>-person-id" name="<% $id_prefix %>-person-id" type="hidden"/>
+
+
+<script>
+  var triage_assign_people = [
+% for my $person_data (@people_data) {
+    {
+      label: "<% $person_data->name() . ' <' . $person_data->email_address . '>' %>",
+      name: "<% $person_data->name() %>",
+      value: "<% $person_data->person_id() %>",
+    },
+% }
+  ];
+</script>
+
+
+<%init>
+my $schema = $c->schema('track');
+my @people_data = $schema->resultset('Person')->all();
+</%init>
