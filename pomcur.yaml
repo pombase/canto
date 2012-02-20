@@ -872,7 +872,7 @@ evidence_types:
     name: Unknown
   Microscopy: ~
   'Cell growth assay': ~
-  'Other direct assay': ~
+  'Other': ~
   'Affinity Capture-Luminescence': ~
   'Affinity Capture-MS': ~
   'Affinity Capture-RNA': ~
@@ -1009,7 +1009,7 @@ annotation_type_list:
     evidence_codes:
       - Microscopy
       - Cell growth assay
-      - Other direct assay
+      - Other
       - Reporter gene assay
       - Enzyme assay data
       - Flow cytometry data
