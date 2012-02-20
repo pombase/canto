@@ -922,9 +922,9 @@ annotation_type_list:
     short_display_name: 'molecular function'
     display_name: 'GO molecular function'
     evidence_codes:
-      - IMP
       - IDA
       - IGI
+      - IMP
       - IPI
       - EXP
     broad_term_suggestions: >
@@ -980,9 +980,9 @@ annotation_type_list:
     short_display_name: 'cellular component'
     display_name: 'GO cellular component'
     evidence_codes:
-      - IMP
       - IDA
       - IGI
+      - IMP
       - IPI
       - EXP
     broad_term_suggestions: >
@@ -1007,20 +1007,20 @@ annotation_type_list:
     short_display_name: 'phenotype'
     display_name: 'phenotype'
     evidence_codes:
-      - Microscopy
       - Cell growth assay
-      - Other
-      - Reporter gene assay
-      - Enzyme assay data
-      - Flow cytometry data
       - Chromatin immunoprecipitation experiment
-      - Quantitative PCR
-      - Fusion protein localization experiment
-      - Immunolocalization experiment data
-      - Green fluorescent protein fusion protein localization experiment
-      - YFP fusion protein localization experiment
+      - Enzyme assay data
       - Epitope-tagged protein immunolocalization experiment data
+      - Flow cytometry data
+      - Fusion protein localization experiment
+      - Green fluorescent protein fusion protein localization experiment
+      - Immunolocalization experiment data
+      - Microscopy
       - Protein localization experiment
+      - Quantitative PCR
+      - Reporter gene assay
+      - YFP fusion protein localization experiment
+      - Other
     broad_term_suggestions: >
       multinucleate, abnormal spindle, inviable
     specific_term_examples: >
