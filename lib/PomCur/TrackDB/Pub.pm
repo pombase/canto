@@ -65,6 +65,16 @@ __PACKAGE__->table("pub");
   data_type: 'text'
   is_nullable: 1
 
+=head2 citation
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 publication_date
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 pubmed_type
 
   data_type: 'integer'
@@ -112,6 +122,10 @@ __PACKAGE__->add_columns(
   "authors",
   { data_type => "text", is_nullable => 1 },
   "affiliation",
+  { data_type => "text", is_nullable => 1 },
+  "citation",
+  { data_type => "text", is_nullable => 1 },
+  "publication_date",
   { data_type => "text", is_nullable => 1 },
   "pubmed_type",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
@@ -295,8 +309,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-16 09:45:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Gx+zkWm1egEQ5efA2x2mMQ
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-20 02:01:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:snEUmLIaK3Xsv9Fozgdl4A
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 

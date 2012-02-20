@@ -184,7 +184,7 @@ sub load_pubmed_xml
       if (defined $author_detail) {
         my @author_elements = @{$author_detail};
         $authors = join ', ', map {
-          $_->{Initials} . ' ' . $_->{LastName};
+          $_->{LastName} . ' ' . $_->{Initials};
         } @author_elements;
       }
 
@@ -225,12 +225,52 @@ sub load_pubmed_xml
                                      name => 'paper'));
       }
 
+      my $citation = '';
+      my $publication_date = '';
+
+      if (defined $article->{Journal}) {
+        my $journal = $article->{Journal};
+        $citation =
+          $journal->{ISOAbbreviation} // $journal->{Title} //
+          'Unknown journal';
+
+        if (defined $journal->{JournalIssue}) {
+          my $journal_issue = $journal->{JournalIssue};
+          if (defined $journal_issue->{PubDate}) {
+            my $pub_date = $journal_issue->{PubDate};
+            my @date_bits = ($pub_date->{Year} // (),
+                             $pub_date->{Month} // (),
+                             $pub_date->{Day} // ());
+            my $cite_date = join (' ', @date_bits);
+            $citation .= ' ' . $cite_date;
+
+            $publication_date = join (' ', reverse @date_bits);
+          }
+          $citation .= ';';
+          if (defined $journal_issue->{Volume}) {
+            $citation .= $journal_issue->{Volume};
+          }
+          if (defined $journal_issue->{Issue}) {
+            $citation .= '(' . $journal_issue->{Issue} . ')';
+          }
+        }
+      }
+
+      if (defined $article->{Pagination}) {
+        my $pagination = $article->{Pagination};
+        if (defined $pagination->{MedlinePgn}) {
+          $citation .= ':' . $pagination->{MedlinePgn};
+        }
+      }
+
       my $pub = $load_util->get_pub($uniquename, $load_type);
 
       $pub->title($title);
       $pub->authors($authors);
       $pub->abstract($abstract);
       $pub->affiliation($affiliation);
+      $pub->citation($citation);
+      $pub->publication_date($publication_date);
       $pub->pubmed_type($pubmed_type->cvterm_id());
       $pub->update();
 
@@ -360,6 +400,8 @@ sub add_missing_fields
       authors => undef,
       affiliation => undef,
       pubmed_type => undef,
+      citation => undef,
+      publication_date => undef,
     ]
    });
   my $max_batch_size = 300;

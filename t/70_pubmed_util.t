@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 53;
+use Test::More tests => 66;
 
 use PomCur::TestUtil;
 use PomCur::Track::PubmedUtil;
@@ -44,6 +44,18 @@ my $schema = PomCur::TrackDB->new(config => $config);
 my $pub_rs = $schema->resultset('Pub');
 my @pub_results = $pub_rs->search();
 
+sub _check_embo_pub
+{
+  my $embo_pub = $pub_rs->find({ uniquename => 'PMID:17304215' });
+
+  is ($embo_pub->title(), "Fission yeast Swi5/Sfr1 and Rhp55/Rhp57 differentially regulate Rhp51-dependent recombination outcomes.");
+  like ($embo_pub->abstract(), qr/Several accessory proteins referred to as mediators are required/);
+  is ($embo_pub->citation(), "EMBO J. 2007 Mar 7;26(5):1352-62");
+  is ($embo_pub->publication_date(), "7 Mar 2007");
+  is ($embo_pub->affiliation(), "International Graduate School of Arts and Sciences, Yokohama City University, Yokohama, Kanagawa, Japan.");
+  is ($embo_pub->authors(), "Akamatsu Y, Tsutsui Y, Morishita T, Siddique MS, Kurokawa Y, Ikeguchi M, Yamao F, Arcangioli B, Iwasaki H");
+}
+
 isnt(@pub_results, 0);
 
 my $defined_count = 0;
@@ -67,14 +79,27 @@ for my $pub (@new_pub_results) {
   ok(defined $pub->abstract(), "has abstract: " . $pub->uniquename());
 }
 
+_check_embo_pub();
+
 is ($pub_rs->search({ abstract =>  undef })->count(), 0);
+
 $pub_rs->search({ -or => [ uniquename => 'PMID:19436749',
-                           uniquename => 'PMID:19056896'
-                         ]})->update({ abstract => undef });
+                           uniquename => 'PMID:17304215'
+                         ]})->update({ title => undef,
+                                       abstract => undef,
+                                       authors => undef,
+                                       affiliation => undef,
+                                       pubmed_type => undef,
+                                       citation => undef,
+                                       publication_date => undef,
+                                     });
 
 is ($pub_rs->search({ abstract => undef })->count(), 2);
 
 PomCur::Track::PubmedUtil::add_missing_fields($config, $schema);
 
 is ($pub_rs->search({ abstract => undef })->count(), 0);
+is ($pub_rs->search({ citation => undef })->count(), 0);
 is ($pub_rs->count(), 23);
+
+_check_embo_pub();
