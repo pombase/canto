@@ -908,8 +908,6 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     [ $_, $description]
   } @{$ont_config->{evidence_codes}};
 
-  @codes = sort { lc $a->[1] cmp lc $b->[1]; } @codes;
-
   unshift @codes, [ '', 'Choose an evidence type ...' ];
 
   my $form = $self->form();
