@@ -413,7 +413,19 @@ class_info:
         - name: authors
           editable: 1
         - name: abstract
-          hidden_field: 1
+          hide_context:
+            - list
+            - inline_list
+          editable: 1
+        - name: citation
+          hide_context:
+            - list
+            - inline_list
+          editable: 1
+        - name: publication_date
+          hide_context:
+            - list
+            - inline_list
           editable: 1
         - name: assigned_curator
           editable: 1

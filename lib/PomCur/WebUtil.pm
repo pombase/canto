@@ -259,6 +259,11 @@ sub process_rs_options
  Args    : $c - the Catalyst context
            $object - the object
            $config_info - the configuration discribing the columns
+           $context - where in the application these fields will be shown,
+                      can be: "list", "summary", "inline_list" or undef.
+                      If this context matches the hide_context
+                      configuration for a field it won't be included in
+                      the returned list
  Return  : column configurations in the same format as described in
            get_field_value() above
 
@@ -270,6 +275,7 @@ sub get_column_confs
   my $config = $c->config();
   my $rs = shift;
   my $config_info = shift;
+  my $context = shift;
 
   my $role;
 
@@ -292,8 +298,18 @@ sub get_column_confs
       next unless defined $role && $role eq 'admin';
     }
 
-    if ($conf->{hidden_field}) {
-      next;
+    my $hide_context = $conf->{hide_context};
+
+    if (defined $hide_context && defined $context) {
+      if (ref $hide_context) {
+        if (grep { $_ eq $context } @$hide_context) {
+          next;
+        }
+      } else {
+        if ($hide_context eq $context) {
+          next;
+        }
+      }
     }
 
     push @column_confs, $conf;

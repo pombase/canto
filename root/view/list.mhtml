@@ -64,8 +64,16 @@ my $model_name = $c->req()->param('model');
 my $class_info = $c->config()->class_info($model_name)->{$config_name};
 my $table = $class_info->{source};
 
+my $context;
+
+if ($is_inline) {
+  $context = 'inline_list';
+} else {
+  $context = 'list';
+}
+
 my @column_confs =
-  PomCur::WebUtil::get_column_confs($c, $rs, $class_info);
+  PomCur::WebUtil::get_column_confs($c, $rs, $class_info, $context);
 
 $rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
 
