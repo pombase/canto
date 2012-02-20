@@ -870,6 +870,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
+  $st->{gene} = $gene;
   my $gene_display_name = $gene->display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
