@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 20;
 
 use PomCur::TestUtil;
 
@@ -30,6 +30,18 @@ test_psgi $app, sub {
   # test searching for an exact match
   {
     my $url = 'http://localhost:15000/search/type/gene?model=track&search-term=cdc11&submit=search';
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    ok ($res->content() =~ m:<b>1</b> rows found:);
+    ok ($res->content() =~ /SPCC1739.11c/);
+  }
+
+  # test searching for an match surrounded by whitespace
+  {
+    my $url = 'http://localhost:15000/search/type/gene?model=track&search-term=++cdc11+++&submit=search';
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 

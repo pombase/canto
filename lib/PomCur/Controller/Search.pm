@@ -70,6 +70,9 @@ sub type : Local
 
   my $dbh = $schema->storage()->dbh();
 
+  $search_term =~ s/\s+$//;
+  $search_term =~ s/^\s+//;
+
   my $quoted_search_term = lc $dbh->quote($search_term);
 
   $quoted_search_term =~ s/\*/\%/g;
