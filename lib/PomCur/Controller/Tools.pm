@@ -104,7 +104,7 @@ sub triage :Local {
     if (defined $assigned_curator_id) {
       if ($assigned_curator_id =~ /^\d+$/) {
         if (defined $schema->resultset('Person')->find({
-          assigned_curator_id => $assigned_curator_id
+          person_id => $assigned_curator_id
         })) {
           $pub->assigned_curator($assigned_curator_id);
         }
