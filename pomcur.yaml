@@ -770,13 +770,13 @@ reports:
           children:
             - report: curatable_publications
               children:
-                - report: high_priority_publications
                 - report: publications_with_sessions
                   children:
                    - report: publications_with_active_sessions
                    - report: publications_with_session_needing_approval
                    - report: publications_with_unassigned_session
                 - report: publications_without_sessions
+            - report: high_priority_publications
             - report: uncuratable_publications
               children:
                 - report: triage_methods_publications
