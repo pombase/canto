@@ -530,6 +530,11 @@ sub _update_object {
     my $value = $form_params{$name};
     my $info_ref = $object->relationship_info($field_db_column);
 
+    if (!defined $info_ref) {
+      (my $short_db_column_name = $field_db_column) =~ s/_id$//;
+      $info_ref = $object->relationship_info($short_db_column_name);
+    }
+
     if (defined $info_ref && $value == 0) {
       # special case for undefined references which are represented in the form
       # as a 0
