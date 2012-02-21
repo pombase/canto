@@ -434,11 +434,11 @@ class_info:
           editable: 1
         - name: assigned_curator
           editable: 1
-        - name: type
-          source: type_id
-          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication type")'
-          referenced_class: Cvterm
-          editable: 1
+        # - name: type
+        #   source: type_id
+        #   values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication type")'
+        #   referenced_class: Cvterm
+        #   editable: 1
         - name: session_status
           source:
             sql: "select value from curs, cursprop p, cvterm t where me.pub_id = curs.pub and curs.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status'"
