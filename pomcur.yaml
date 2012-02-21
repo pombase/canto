@@ -456,6 +456,8 @@ class_info:
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication triage status")'
           referenced_class: Cvterm
           editable: 1
+          hide_context:
+            - inline_list
         - name: curation_priority
           source: curation_priority_id
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur curation priorities")'
