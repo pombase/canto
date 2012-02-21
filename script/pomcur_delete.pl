@@ -25,6 +25,7 @@ use PomCur::Track::LoadUtil;
 use PomCur::Meta::Util;
 
 my $remove_person = undef;
+my $remove_lab = undef;
 my $dry_run = 0;
 my $do_help = 0;
 
@@ -33,6 +34,7 @@ if (!@ARGV) {
 }
 
 my $result = GetOptions ("person=s" => \$remove_person,
+                         "lab=s" => \$remove_lab,
                          "dry-run|T" => \$dry_run,
                          "help|h" => \$do_help);
 
@@ -78,10 +80,10 @@ my $schema = PomCur::TrackDB->new(config => $config);
 
 my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
 
-my $success = 0;
+my $exit_flag = 1;
 
 my $proc = sub {
-  if ($remove_person) {
+  if (defined $remove_person) {
     my $person = $schema->resultset('Person')->find({ email_address => $remove_person });
 
     if (defined $person) {
@@ -106,13 +108,25 @@ Delete the lab first with:
         } @assigned_publications;
 
         $person->delete();
+        $exit_flag = 0;
       }
     } else {
       warn "No person found for email address: $remove_person\n";
+    }
+  }
+  if (defined $remove_lab) {
+    my $lab = $schema->resultset('Lab')->find({ name => $remove_lab });
+
+    if (defined $lab) {
+      map { $_->lab(undef); $_->update(); } $lab->people();
+      $lab->delete();
+      $exit_flag = 0;
+    } else {
+      warn "No lab found named: $remove_lab\n";
     }
   }
 };
 
 $schema->txn_do($proc);
 
-exit($success);
+exit($exit_flag);
