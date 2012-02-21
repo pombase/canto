@@ -785,10 +785,10 @@ reports:
                 - report: triage_loaded_in_error_publications
         - report: publications_without_a_session
         - report: unassigned_publications
-    - report: all_sessions
-      children:
-        - report: sessions_needing_approval
-        - report: unassigned_sessions
+#    - report: all_sessions
+#      children:
+#        - report: sessions_needing_approval
+#        - report: unassigned_sessions
 #    - report: named_genes
   chado:
     - report: protein_and_domain_terms
