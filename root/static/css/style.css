@@ -827,6 +827,10 @@ input[type="submit"] {
   margin: 5px;
 }
 
+input[readonly="1"] {
+  color: #555;
+}
+
 .ajax-spinner {
   margin-bottom: -10px;
   padding-bottom: -10px;
