@@ -143,7 +143,7 @@ test_psgi $app, sub {
     _check_for_pub($redirect_res, $second_pub, 22);
   }
 
-  # check when there are no more publications totriage, by setting all
+  # test when there are no more publications to triage, by setting all
   # but one publication as "Curatable"
   $schema->resultset('Pub')
     ->search({ pub_id => { '<>' => $second_pub->pub_id() } })
