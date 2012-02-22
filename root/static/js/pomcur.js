@@ -569,6 +569,10 @@ $(document).ready(function() {
                                           width: '50em' });
   });
 
+  $('#curs-pub-triage-this-pub').click(function () {
+    window.location.href = application_root + 'tools/triage?triage-return-pub-id=' + $(this).val();
+  });
+
   $('#curs-pub-assign-cancel').click(function () {
     $('#curs-pub-assign-dialog').hide();
   });

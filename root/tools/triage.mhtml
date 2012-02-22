@@ -1,11 +1,16 @@
 <%args>
 $pub
+$return_pub_id
 </%args>
 
 <div class="triage">
   <form id="triage-form" action="" method="get">
     <input type="hidden" id="triage-pub-id" name="triage-pub-id"
            value="<% $pub->pub_id() %>"/>
+% if (defined $return_pub_id) {
+    <input type="hidden" id="triage-return-pub-id" name="triage-return-pub-id"
+           value="<% $return_pub_id %>"/>
+% }
     <div class="pub-details">
       <div class="sect title">
         <span class="sect-title">

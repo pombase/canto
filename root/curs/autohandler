@@ -7,7 +7,6 @@ $pub
 
 <script language="javascript" type="text/javascript">
 var curs_root_uri = '<% $curs_root_uri %>';
-var application_root = '<% $c->uri_for('/') %>';
 </script>
 
 

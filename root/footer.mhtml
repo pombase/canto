@@ -11,6 +11,10 @@
       </div>
     </div>
 
+<script language="javascript" type="text/javascript">
+var application_root = '<% $c->uri_for('/') %>';
+</script>
+
 % my $min_flag = '';
 % $min_flag = '.min' unless $c->debug();
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery<% $min_flag %>.js"></script>

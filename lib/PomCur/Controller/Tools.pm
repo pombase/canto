@@ -55,6 +55,11 @@ sub triage :Local {
   my $schema = $c->schema('track');
   my $cv = _get_status_cv($schema);
 
+  my $pub_just_triaged = undef;
+
+  my $return_pub_id = $c->req()->param('triage-return-pub-id');
+  $st->{return_pub_id} = $return_pub_id;
+
   my $new_status_cvterm = $schema->find_with_type('Cvterm',
                                                   { cv_id => $cv->cv_id(),
                                                     name => 'New' });
@@ -71,12 +76,12 @@ sub triage :Local {
     my $pub_id = $c->req()->param('triage-pub-id');
     my $status_name = $c->req()->param('submit');
 
-    my $pub = $schema->find_with_type('Pub', $pub_id);
+    $pub_just_triaged = $schema->find_with_type('Pub', $pub_id);
 
     my $status = $schema->find_with_type('Cvterm', { name => $status_name,
                                                      cv_id => $cv->cv_id() });
 
-    $pub->triage_status_id($status->cvterm_id());
+    $pub_just_triaged->triage_status_id($status->cvterm_id());
 
     my $pubprop_types_cv_name = 'PomCur publication property types';
 
@@ -87,7 +92,7 @@ sub triage :Local {
       $schema->find_with_type('Cvterm',
                               { name => 'experiment_type',
                                 cv_id => $pubprop_types_cv->cv_id() });
-    $pub->pubprops()->search({ type_id => $experiment_type->cvterm_id() })
+    $pub_just_triaged->pubprops()->search({ type_id => $experiment_type->cvterm_id() })
       ->delete();
 
     for my $exp_type_param ($c->req()->param('experiment-type')) {
@@ -95,7 +100,7 @@ sub triage :Local {
         $schema->create_with_type('Pubprop',
                                   { type_id => $experiment_type->cvterm_id(),
                                     value => $exp_type_param,
-                                    pub_id => $pub->pub_id() });
+                                    pub_id => $pub_just_triaged->pub_id() });
     }
 
     my $assigned_curator_id =
@@ -106,7 +111,7 @@ sub triage :Local {
         if (defined $schema->resultset('Person')->find({
           person_id => $assigned_curator_id
         })) {
-          $pub->assigned_curator($assigned_curator_id);
+          $pub_just_triaged->assigned_curator($assigned_curator_id);
         }
       }
     }
@@ -115,27 +120,37 @@ sub triage :Local {
     my $priority_cvterm =
       $schema->resultset('Cvterm')->find({ cvterm_id => $priority_cvterm_id });
 
-    $pub->curation_priority($priority_cvterm);
+    $pub_just_triaged->curation_priority($priority_cvterm);
 
     my $community_curatable = $c->req()->param('community-curatable');
     my $community_curatable_cvterm =
       $schema->resultset('Cvterm')->find({ name => "community_curatable" });
 
-    $pub->pubprops()->search({ type_id => $community_curatable_cvterm->cvterm_id() })
+    if (!defined $community_curatable_cvterm) {
+      die "Can't find term for: community_curatable";
+    }
+
+    $pub_just_triaged->pubprops()->search({ type_id => $community_curatable_cvterm->cvterm_id() })
       ->delete();
 
     if (defined $community_curatable) {
       $schema->create_with_type('Pubprop',
                                 { type_id => $community_curatable_cvterm->cvterm_id(),
                                   value => $community_curatable,
-                                  pub_id => $pub->pub_id() });
+                                  pub_id => $pub_just_triaged->pub_id() });
     }
 
-    $pub->update();
+    $pub_just_triaged->update();
 
     $guard->commit();
 
-    $next_pub = _get_next_triage_pub($schema, $new_status_cvterm);
+    if (defined $return_pub_id && length $return_pub_id > 0) {
+      # we were triaging a single publication and should now go back to the
+      # publication detail page
+      $next_pub = undef;
+    } else {
+      $next_pub = _get_next_triage_pub($schema, $new_status_cvterm);
+    }
 
     if (defined $next_pub) {
       $c->res->redirect($c->uri_for('/tools/triage'));
@@ -144,21 +159,29 @@ sub triage :Local {
       # fall through
     }
   } else {
-    $next_pub = _get_next_triage_pub($schema, $new_status_cvterm);
+    my $return_pub = $schema->resultset('Pub')->find({ pub_id => $return_pub_id });
+    $next_pub = $return_pub // _get_next_triage_pub($schema, $new_status_cvterm);
   }
 
   if (defined $next_pub) {
     $st->{title} = 'Triaging ' . $next_pub->uniquename();
-    $st->{right_title} =
-      "$untriaged_pubs_count remaining";
+    if (!defined $return_pub_id) {
+      $st->{right_title} =
+        "$untriaged_pubs_count remaining";
+    }
 
     $st->{pub} = $next_pub;
 
     $st->{template} = 'tools/triage.mhtml';
   } else {
-    $c->flash()->{message} =
-      'Triaging finished - no more un-triaged publications';
-    $c->res->redirect($c->uri_for('/'));
+    if (defined $return_pub_id && length $return_pub_id > 0) {
+      $c->flash()->{message} = $pub_just_triaged->uniquename . ' triaged';
+      $c->res->redirect($c->uri_for("/view/object/pub/$return_pub_id", { model => 'track'} ));
+    } else {
+      $c->flash()->{message} =
+        'Triaging finished - no more un-triaged publications';
+      $c->res->redirect($c->uri_for('/'));
+    }
     $c->detach();
   }
 }

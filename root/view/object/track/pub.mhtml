@@ -13,7 +13,7 @@ $is_admin_user
 %     if (scalar($object->curs()->all()) == 0) {
 <div class="long-action-link">
   <a href="<% $c->uri_for('/create/curs',
-                          { pub => $object->pub_id(),
+                          { pub => $pub_id,
                             curs_key => PomCur::Curs::make_curs_key(),
                             assigned_curator =>
                               $object->assigned_curator()->person_id(),
@@ -27,7 +27,7 @@ $is_admin_user
 <div id="curs-pub-assign-dialog" style="display: none">
   <form id="ferret-suggest-form" method="put"
         action="<% $c->uri_for('/track/assign_pub') %>">
-    <input type="hidden" name="pub-id" value="<% $object->pub_id() %>"/>
+    <input type="hidden" name="pub-id" value="<% $pub_id %>"/>
     <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
 
     <select name="pub-assign-person">
@@ -51,6 +51,9 @@ $is_admin_user
   <button type="button" id="curs-pub-assign-popup-dialog"><% $assign_to_text %></button>
 </div>
 %   }
+<div class="curs-pub-assign-actions">
+  <button type="button" value="<% $pub_id %>" id="curs-pub-triage-this-pub">Triage</button>
+</div>
 % }
 
 % if (defined $curs_key) {
@@ -86,6 +89,8 @@ $is_admin_user
 <%init>
 use PomCur::Curs;
 
+my $pub_id = $object->pub_id();
+
 my $abstract = $object->abstract() // '[Abstract not available]';
 my $current_pathquery = $c->req->uri()->path_query();
 my $person_rs = $schema->resultset('Person');
@@ -106,7 +111,7 @@ my $assign_to_text;
 #}
 
 my $curs_key = undef;
-my $curs_rs = $schema->resultset('Curs')->search({ pub => $object->pub_id()});
+my $curs_rs = $schema->resultset('Curs')->search({ pub => $pub_id});
 my $curs = $curs_rs->next();
 
 if (defined $curs) {
