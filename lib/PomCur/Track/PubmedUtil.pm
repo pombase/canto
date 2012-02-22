@@ -184,7 +184,20 @@ sub load_pubmed_xml
       if (defined $author_detail) {
         my @author_elements = @{$author_detail};
         $authors = join ', ', map {
-          $_->{LastName} . ' ' . $_->{Initials};
+          if (defined $_->{CollectiveName}) {
+            $_->{CollectiveName};
+          } else {
+            if (defined $_->{LastName}) {
+              if (defined $_->{Initials}) {
+                $_->{LastName} . ' ' . $_->{Initials};
+              } else {
+                $_->{LastName};
+              }
+            } else {
+              warn "missing author details in: $uniquename\n";
+              ();
+            }
+          }
         } @author_elements;
       }
 
