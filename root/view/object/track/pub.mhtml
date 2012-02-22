@@ -55,6 +55,7 @@ $is_admin_user
   <button type="button" value="<% $pub_id %>" id="curs-pub-triage-this-pub">Triage</button>
 </div>
 % }
+<div class="clearall"/>
 
 % if (defined $curs_key) {
 <div class="curs-pub-go-to-curs-actions">

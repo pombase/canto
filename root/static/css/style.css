@@ -867,6 +867,11 @@ input[readonly="1"] {
   margin-bottom: 10px;
 }
 
+.curs-pub-assign-actions {
+  float: left;
+  padding: 5px 1px 15px 1px;
+}
+
 .curs-inline-message-to-curators {
   clear: right;
   float: right;
