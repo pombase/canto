@@ -175,6 +175,7 @@ test_psgi $app, sub {
                      type => $pub->type_id(),
                      load_type => $load_type_cvterm->cvterm_id(),
                      triage_status => $pub->triage_status()->cvterm_id(),
+                     curation_priority => 0,
                      submit => 'Submit',
                     );
 
@@ -209,6 +210,7 @@ test_psgi $app, sub {
                      type => $pub->type_id(),
                      load_type => $load_type_cvterm->cvterm_id(),
                      triage_status => $pub->triage_status()->cvterm_id(),
+                     curation_priority => 0,
                      submit => 'Submit',
                     );
 
