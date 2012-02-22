@@ -18,11 +18,11 @@ $message_to_curators
 <div class="clearall"/>
 
 % if ($state eq PomCur::Controller::Curs::CURATION_IN_PROGRESS) {
-<button id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>
-<button id="curs-pause-publication" class="curs-finish-button">Pause curation</button>
+<button type="button" id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>
+<button type="button" id="curs-pause-publication" class="curs-finish-button">Pause curation</button>
 % } else {
-<button id="curs-check-completed" class="curs-finish-button">Approve session</button>
-<button id="curs-cancel-approval" class="curs-finish-button">Cancel approval</button>
+<button type="button" id="curs-check-completed" class="curs-finish-button">Approve session</button>
+<button type="button" id="curs-cancel-approval" class="curs-finish-button">Cancel approval</button>
 %   if (defined $message_to_curators) {
 <div class="curs-inline-message-to-curators">
   <a href="#" onclick="javascript:pomcur_util.show_message('Message to curators', '<% PomCur::WebUtil::escape_inline_js($message_to_curators) %>')">Display message to curators ...</a>

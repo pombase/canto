@@ -48,7 +48,7 @@ $is_admin_user
 </div>
 
 <div class="curs-pub-assign-actions">
-  <button id="curs-pub-assign-popup-dialog"><% $assign_to_text %></button>
+  <button type="button" id="curs-pub-assign-popup-dialog"><% $assign_to_text %></button>
 </div>
 %   }
 % }
@@ -112,5 +112,4 @@ my $curs = $curs_rs->next();
 if (defined $curs) {
   $curs_key = $curs->curs_key();
 }
-
 </%init>

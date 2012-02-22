@@ -55,7 +55,7 @@ Publication details
   </div>
 
   <div id="pubmed-id-lookup-buttons">
-    <button id="pubmed-id-lookup-reset">Find another</button>
-    <button id="pubmed-id-lookup-curate">Start curating</button>
+    <button type="button" id="pubmed-id-lookup-reset">Find another</button>
+    <button type="button" id="pubmed-id-lookup-curate">Start curating</button>
   </div>
 </div>
