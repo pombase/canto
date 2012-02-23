@@ -566,10 +566,10 @@ class_info:
     high_priority_publications:
       extends: pub
       constraint: "curation_priority_id in (select cvterm_id from cvterm where name = 'high')"
-    triage_news_and_views_publications:
-      class_display_name: News and views
+    triage_sequence_feature_or_region_publications:
+      class_display_name: Sequence feature or region
       extends: pub
-      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'News and views')"
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Sequence feature or region')"
     triage_not_english_publications:
       class_display_name: Not English
       extends: pub
@@ -586,6 +586,22 @@ class_info:
       class_display_name: Other
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Other')"
+    triage_review_publications:
+      class_display_name: Review
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Review')"
+    triage_news_and_views_publications:
+      class_display_name: News and views
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'News and views')"
+    triage_reagent_publications:
+      class_display_name: Reagent
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Reagent')"
+    triage_erratum_publications:
+      class_display_name: Erratum
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Erratum')"
     triage_loaded_in_error_publications:
       class_display_name: Loaded in error
       extends: pub
@@ -779,12 +795,16 @@ reports:
             - report: high_priority_publications
             - report: uncuratable_publications
               children:
-                - report: triage_methods_publications
-                - report: triage_news_and_views_publications
+                - report: triage_sequence_feature_or_region_publications
                 - report: triage_not_english_publications
+                - report: triage_methods_publications
                 - report: triage_wrong_organism_publications
-                - report: triage_other_publications
+                - report: triage_review_publications
+                - report: triage_news_and_views_publications
+                - report: triage_reagent_publications
+                - report: triage_erratum_publications
                 - report: triage_loaded_in_error_publications
+                - report: triage_other_publications
         - report: publications_without_a_session
         - report: unassigned_publications
 #    - report: all_sessions
