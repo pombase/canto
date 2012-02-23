@@ -609,9 +609,9 @@ class_info:
       class_display_name: Loaded in error
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Loaded in error')"
-    publications_with_sessions:
+    curatable_publications_with_sessions:
       extends: pub
-      constraint: "pub_id in (select pub from curs)"
+      constraint: "pub_id in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
     curatable_publications_without_sessions:
       extends: pub
       constraint: "pub_id not in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -786,7 +786,7 @@ reports:
           children:
             - report: curatable_publications
               children:
-                - report: publications_with_sessions
+                - report: curatable_publications_with_sessions
                   children:
                    - report: publications_with_active_sessions
                    - report: publications_with_session_needing_approval
