@@ -647,5 +647,9 @@ $(document).ready(function() {
         .append( "<a>" + item.label + "<br></a>" )
         .appendTo( ul );
     };
+    $(".curs-person-picker button.curs-person-picker-add").click(function () {
+      $(this).hide().siblings('div.curs-person-picker-add').show();
+      $(this).siblings('.curs-person-picker-input').hide();
+    });
   }
 });

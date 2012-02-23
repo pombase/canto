@@ -3,7 +3,11 @@ package PomCur::Controller::Tools;
 use strict;
 use warnings;
 use parent 'Catalyst::Controller';
-use Package::Alias PubmedUtil => 'PomCur::Track::PubmedUtil';
+use Package::Alias PubmedUtil => 'PomCur::Track::PubmedUtil',
+                   LoadUtil => 'PomCur::Track::LoadUtil';
+
+use Clone qw(clone);
+
 
 sub _get_status_cv
 {
@@ -105,14 +109,52 @@ sub triage :Local {
 
     my $assigned_curator_id =
       $c->req()->param('triage-assigned-curator-person-id');
-
-    if (defined $assigned_curator_id) {
+    if (defined $assigned_curator_id && length $assigned_curator_id > 0) {
       if ($assigned_curator_id =~ /^\d+$/) {
         if (defined $schema->resultset('Person')->find({
           person_id => $assigned_curator_id
         })) {
           $pub_just_triaged->assigned_curator($assigned_curator_id);
         }
+      }
+    } else {
+      # user may have used the "New ..." button
+      my $new_name =
+        $c->req()->param('triage-assigned-curator-add-name') // '';
+      $new_name =~ s/^\s+//;
+      $new_name =~ s/\s+$//;
+      my $new_email =
+        $c->req()->param('triage-assigned-curator-add-email') // '';
+      $new_email =~ s/^\s+//;
+      $new_email =~ s/\s+$//;
+
+      if (length $new_name > 0 || length $new_email > 0) {
+        my $new_params = clone $c->req()->params();
+        delete $new_params->{submit};
+        my $redirect_uri = $c->uri_for('/tools/triage', $new_params);
+        if (length $new_email == 0) {
+          $c->flash()->{error} =
+            "No email address given for new user: $new_name";
+          $c->res->redirect($redirect_uri);
+        }
+        if (length $new_name == 0) {
+          $c->flash()->{error} =
+            "No name given for new email: $new_email";
+          $c->res->redirect($redirect_uri);
+        }
+        my $load_util = LoadUtil->new(schema => $schema);
+        my $user_types_cv = $load_util->find_cv('PomCur user types');
+        my $user_cvterm = $load_util->get_cvterm(cv => $user_types_cv,
+                                                 term_name => 'user');
+
+        my $new_person = $schema->resultset('Person')->create({
+          name => $new_name,
+          email_address => $new_email,
+          role => $user_cvterm,
+        });
+        $pub_just_triaged->assigned_curator($new_person->person_id());
+      } else {
+        # they didn't enter a new person
       }
     }
 

@@ -6,6 +6,15 @@ $id_prefix
 
 <input class="curs-person-picker-input" id="<% $id_prefix %>-input" name="<% $id_prefix %>-input" size="30" />
 <input class="curs-person-picker-person-id" id="<% $id_prefix %>-person-id" name="<% $id_prefix %>-person-id" type="hidden"/>
+<button class="curs-person-picker-add" type="button">New ...</button>
+<div class="curs-person-picker-add" style="display: none">
+  <div>
+    Name: <input class="curs-person-picker-add-name" name="<% $id_prefix %>-add-name" size="30"/>
+  </div>
+  <div>
+    Email: <input class="curs-person-picker-add-email" name="<% $id_prefix %>-add-email" size="30"/>
+  </div>
+</div>
 
 <script>
   var curs_people_autocomplete_list = [
