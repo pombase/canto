@@ -566,6 +566,9 @@ class_info:
     high_priority_publications:
       extends: pub
       constraint: "curation_priority_id in (select cvterm_id from cvterm where name = 'high')"
+    community_curatable_publications:
+      extends: pub
+      constraint: "pub_id in (select pub_id from pubprop where type_id = (select cvterm_id from cvterm where name = 'community_curatable') and value = 'yes')"
     triage_sequence_feature_or_region_publications:
       class_display_name: Sequence feature or region
       extends: pub
@@ -790,6 +793,7 @@ reports:
                    - report: publications_with_unassigned_session
                 - report: publications_without_sessions
             - report: high_priority_publications
+            - report: community_curatable_publications
             - report: uncuratable_publications
               children:
                 - report: triage_sequence_feature_or_region_publications
