@@ -25,7 +25,7 @@ $is_admin_user
 %   } else {
 
 <div id="curs-pub-assign-dialog" style="display: none">
-  <form id="ferret-suggest-form" method="put"
+  <form id="curs-pub-assign-form" method="put"
         action="<% $c->uri_for('/track/assign_pub') %>">
     <input type="hidden" name="pub-id" value="<% $pub_id %>"/>
     <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
