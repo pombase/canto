@@ -93,7 +93,7 @@ sub assign_pub :Local {
   $schema->txn_do($proc);
 
   if (defined $curs_schema) {
-    # call output txn_do() because otherwise it will time out because
+    # call after txn_do() because otherwise it will time out because
     # the database is locked
     PomCur::Controller::Curs->store_statuses($config, $curs_schema);
   }
