@@ -852,14 +852,16 @@ input[readonly="1"] {
   background-color: #eee;
 }
 
-.sect.experiment-types, .sect.triage-pubmed-type {
-  clear: both;
+.sect.triage-pubmed-type {
   float: left;
 }
 
-.sect.triage-curation-priorities, .sect.triage-assigned-curator {
+.sect.triage-experiment-types, .sect.triage-curation-priorities, .sect.triage-assigned-curator, .sect.triage-flags {
   float: left;
-  padding-left: 50px;
+  padding-right: 40px;
+}
+.sect.triage-flags {
+  clear: left;
 }
 
 #curs-pub-finished .curs-box {

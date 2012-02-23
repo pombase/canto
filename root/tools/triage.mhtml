@@ -52,17 +52,28 @@ $return_pub_id
           <% $pub->affiliation() || '[no affiliation]' %>
         </div>
       </div>
-      <div class="sect experiment-types">
+      <div class="sect triage-pubmed-type">
         <span class="sect-title">
-          Experiment types
+          Publication type from PubMed
         </span>
         <div class="sect-content">
-% for my $experiment_type (@experiment_types) {
-          <div>
-            <input type="checkbox" name="experiment-type"
-                   value="<% $experiment_type %>" ><% $experiment_type %><br>
-          </div>
-% }
+          <% $pubmed_type_name %>
+        </div>
+      </div>
+      <div class="sect triage-flags">
+        <span class="sect-title">
+          Triage flags
+        </span>
+        <div class="sect-content">
+          <input type="checkbox" name="community-curatable" value="yes">Community curatable<br>
+        </div>
+      </div>
+      <div class="sect triage-assigned-curator">
+        <span class="sect-title">
+          Assign to curator:
+        </span>
+        <div class="sect-content">
+          <& /person_picker.mhtml, id_prefix => 'triage-assigned-curator' &>
         </div>
       </div>
       <div class="sect triage-curation-priorities">
@@ -84,23 +95,17 @@ $return_pub_id
 % }
         </div>
       </div>
-      <div class="sect triage-assigned-curator">
+      <div class="sect triage-experiment-types">
         <span class="sect-title">
-          Assign to curator:
+          Experiment types
         </span>
         <div class="sect-content">
-          <& /person_picker.mhtml, id_prefix => 'triage-assigned-curator' &>
+% for my $experiment_type (@experiment_types) {
           <div>
-            <input type="checkbox" name="community-curatable" value="yes">Community curatable<br>
+            <input type="checkbox" name="experiment-type"
+                   value="<% $experiment_type %>" ><% $experiment_type %><br>
           </div>
-        </div>
-      </div>
-      <div class="sect triage-pubmed-type">
-        <span class="sect-title">
-          Publication type from PubMed
-        </span>
-        <div class="sect-content">
-          <% $pubmed_type_name %>
+% }
         </div>
       </div>
     </div>
