@@ -618,9 +618,6 @@ class_info:
     publications_with_session_needing_approval:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')))"
-    publications_without_a_session:
-      extends: pub
-      constraint: "pub_id not in (select pub from curs)"
     publications_with_unassigned_session:
       extends: pub
       constraint: "pub_id in (select pub from curs where assigned_curator is null)"
@@ -805,7 +802,6 @@ reports:
                 - report: triage_erratum_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
-        - report: publications_without_a_session
         - report: unassigned_publications
 #    - report: all_sessions
 #      children:
