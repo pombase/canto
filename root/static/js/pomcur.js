@@ -627,17 +627,17 @@ $(document).ready(function() {
 
 // autocomplete for the traige tool
 $(document).ready(function() {
-  if (typeof triage_assign_people != 'undefined') {
-    $("#triage-assigned-curator-input").autocomplete({
+  if (typeof curs_people_autocomplete_list != 'undefined') {
+    $(".curs-person-picker .curs-person-picker-input").autocomplete({
       minLength: 0,
-      source: triage_assign_people,
+      source: curs_people_autocomplete_list,
       focus: function( event, ui ) {
-        $( "#triage-assigned-curator-input" ).val( ui.item.name );
+        $(this).val( ui.item.name );
         return false;
       },
       select: function( event, ui ) {
-        $( "#triage-assigned-curator-input" ).val( ui.item.name );
-        $( "#triage-assigned-curator-person-id" ).val( ui.item.value );
+        $(this).val( ui.item.name );
+        $(this).siblings('.curs-person-picker-person-id').val( ui.item.value );
         return false;
       }
     })
