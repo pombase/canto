@@ -243,7 +243,9 @@ sub process_rs_options
     next unless defined $source;
     next unless ref $source eq 'HASH' && defined $source->{sql};
 
-    push @column_options, { $conf->{name}, \"($source->{sql})" };
+    my $field_name = $conf->{name};
+
+    push @column_options, { $conf->{name}, \("($source->{sql}) as '$field_name'") };
   }
 
   return $rs->search(undef, { '+columns' => [@column_options] });

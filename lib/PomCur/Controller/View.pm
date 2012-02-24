@@ -224,11 +224,11 @@ sub order_list_rs
 
   if (defined $order_by_arg) {
     if ($order_by_arg =~ /^([><])([\w\s]+)/) {
-      my $column_name = $2;
-      my $field_info = $class_info->{field_infos}->{$column_name};
+      my $field_name = $2;
+      my $field_info = $class_info->{field_infos}->{$field_name};
 
       if (!defined $field_info) {
-        croak qq{Can't find a column called "$column_name"};
+        croak qq{Can't find a column called "$field_name"};
       }
 
       my $direction;
@@ -240,11 +240,14 @@ sub order_list_rs
 
       my $collation = '';
 
-      if ($rs->result_source()->column_info($field_info->{source})->{data_type} eq 'text') {
+      my $db_column_name = $field_info->{db_column_name};
+
+      if (defined $db_column_name && !ref $field_info->{source} &&
+          $rs->result_source()->column_info($db_column_name)->{data_type} eq 'text') {
         $collation = 'COLLATE NOCASE ';
       }
 
-      $order_by = "$column_name $collation$direction";
+      $order_by = "$db_column_name $collation$direction";
     } else {
       croak '$order_by argument to order_list_rs() must by of the ' .
         'form: "<column_name" or ">column_name"';

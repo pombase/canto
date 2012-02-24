@@ -202,6 +202,11 @@ sub setup
 
       for my $field_info (@{$class_info->{field_info_list}}) {
         $field_info->{source} //= $field_info->{name};
+        if (ref $field_info->{source}) {
+          $field_info->{db_column_name} = $field_info->{name};
+        } else {
+          $field_info->{db_column_name} = $field_info->{source};
+        }
         my $name = $field_info->{name};
         if (!defined $name) {
           die "config loading failed: field_info with no name in $class_name\n";
