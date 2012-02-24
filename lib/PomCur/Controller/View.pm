@@ -200,13 +200,15 @@ sub object : Local
 
  Usage   : order_list_rs($c, $rs, $class_info, $model_name);
  Function: add an appropriate order_by option to a ResultSet, based on the
-           configuration
+           configuration, or using the $order_by arg
  Args    : $c - the Catalyst object
            $rs - the ResultSet
            $class_info - the class information from the config file for this
                          ResultSet
            $model_name - the model to use when retrieving the schema
                          object
+           $order_by - the column to order by, prefixed by "<" to order
+                       ascending and ">" to order descending (optional)
  Returns : none, modifies $rs
 
 =cut
@@ -216,15 +218,49 @@ sub order_list_rs
   my $rs = shift;
   my $class_info = shift;
   my $model_name = shift;
+  my $order_by_arg = shift;
+
+  my $order_by = undef;
+
+  if (defined $order_by_arg) {
+    if ($order_by_arg =~ /^([><])([\w\s]+)/) {
+      my $column_name = $2;
+      my $field_info = $class_info->{field_infos}->{$column_name};
+
+      if (!defined $field_info) {
+        croak qq{Can't find a column called "$column_name"};
+      }
+
+      my $direction;
+      if ($1 eq '<') {
+        $direction = 'ASC';
+      } else {
+        $direction = 'DESC';
+      }
+
+      my $collation = '';
+
+      if ($rs->result_source()->column_info($field_info->{source})->{data_type} eq 'text') {
+        $collation = 'COLLATE NOCASE ';
+      }
+
+      $order_by = "$column_name $collation$direction";
+    } else {
+      croak '$order_by argument to order_list_rs() must by of the ' .
+        'form: "<column_name" or ">column_name"';
+    }
+  }
 
   if (!defined $model_name) {
     croak "no model_name passed to order_list_rs()";
   }
 
+
+
   my $table = $class_info->{source};
   my $params = {
-    order_by => _get_order_by_field($c->config(),
-                                    $model_name, $table)
+    order_by => $order_by // _get_order_by_field($c->config(),
+                                                 $model_name, $table)
   };
 
   if (defined $class_info->{constraint}) {
@@ -246,6 +282,8 @@ sub order_list_rs
                          to choose the table to query
            $model - the model to use when retrieving the schema object,
                     or undef to use the one from the params
+           $order_by - the column to order by, prefixed by "<" to order
+                       ascending and ">" to order descending (optional)
  Returns :
 
 =cut
@@ -255,6 +293,7 @@ sub get_list_rs
   my $search = shift;
   my $class_info = shift;
   my $model = shift;
+  my $order_by = shift;
 
   my $schema = $c->schema($model);
 
@@ -263,7 +302,7 @@ sub get_list_rs
 
   my $rs = $schema->resultset($class_name)->search($search);
 
-  return order_list_rs($c, $rs, $class_info, $model);
+  return order_list_rs($c, $rs, $class_info, $model, $order_by);
 }
 
 =head2 list
@@ -302,7 +341,9 @@ sub list : Local
       $st->{title} .= "all $plural_name";
     }
 
-    my $rs = get_list_rs($c, $search, $class_info, $model_name);
+    my $order_by = $c->req()->param('order_by');
+    my $rs = get_list_rs($c, $search, $class_info, $model_name,
+                         $order_by);
     $st->{rs} = $rs;
 
     $st->{page} = $c->req->param('page') || 1;
