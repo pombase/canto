@@ -510,10 +510,10 @@ class_info:
         - name: approver_name
           source:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'approver_name'"
-        - name: genes added
+        - name: genes_added
           source:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_genes_count'"
-        - name: term suggestions
+        - name: term_suggestions
           source:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_term_suggestions_count'"
 # if the hook dies the creation fails
