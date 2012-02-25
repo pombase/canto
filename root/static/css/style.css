@@ -878,3 +878,7 @@ input[readonly="1"] {
   clear: right;
   float: right;
 }
+
+.sect.triage-comment {
+  clear: left;
+}

@@ -108,6 +108,14 @@ $return_pub_id
 % }
         </div>
       </div>
+      <div class="sect triage-comment">
+        <span class="sect-title">
+          Trage comment:
+        </span>
+        <div class="sect-content">
+          <textarea cols="60" rows="5" name="triage-comment"></textarea>
+        </div>
+      </div>
     </div>
     <div class="status-settings">
       <div class="sect status-choice">

@@ -182,6 +182,28 @@ sub triage :Local {
                                   pub_id => $pub_just_triaged->pub_id() });
     }
 
+    my $triage_comment = $c->req()->param('triage-comment');
+    my $triage_comment_cvterm =
+      $schema->resultset('Cvterm')->find({ name => "triage_comment" });
+
+    if (!defined $triage_comment_cvterm) {
+      die "Can't find term for: triage_comment";
+    }
+
+    $pub_just_triaged->pubprops()->search({ type_id => $triage_comment_cvterm->cvterm_id() })
+      ->delete();
+
+    if (defined $triage_comment) {
+      $triage_comment =~ s/^\s+//;
+      $triage_comment =~ s/\s+$//;
+      if (length $triage_comment > 0) {
+        $schema->create_with_type('Pubprop',
+                                  { type_id => $triage_comment_cvterm->cvterm_id(),
+                                    value => $triage_comment,
+                                    pub_id => $pub_just_triaged->pub_id() });
+      }
+    }
+
     $pub_just_triaged->update();
 
     $guard->commit();
