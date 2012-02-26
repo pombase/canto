@@ -247,6 +247,11 @@ sub set_state
       $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
     }
     when (APPROVAL_IN_PROGRESS) {
+      if ($current_state ne NEEDS_APPROVAL && $force ne $current_state) {
+        croak "must be in state ", NEEDS_APPROVAL, " to change to ",
+          "state ", APPROVAL_IN_PROGRESS, " actually in state ",
+          $current_state;
+      }
       if (defined $current_user && $current_user->is_admin()) {
         $self->set_metadata($schema, APPROVER_NAME_KEY,
                             $current_user->name());
@@ -256,11 +261,6 @@ sub set_state
         croak "must be admin user to start approval";
       }
 
-      if ($current_state ne NEEDS_APPROVAL && $force ne $current_state) {
-        croak "must be in state ", NEEDS_APPROVAL, " to change to ",
-          "state ", APPROVAL_IN_PROGRESS, " actually in state ",
-          $current_state;
-      }
       $self->set_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY,
                           PomCur::Util::get_current_datetime());
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
