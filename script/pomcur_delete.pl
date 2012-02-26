@@ -21,11 +21,13 @@ use lib qw(lib);
 
 use PomCur::Config;
 use PomCur::TrackDB;
+use PomCur::Track;
 use PomCur::Track::LoadUtil;
 use PomCur::Meta::Util;
 
 my $remove_person = undef;
 my $remove_lab = undef;
+my $remove_curs = undef;
 my $dry_run = 0;
 my $do_help = 0;
 
@@ -35,6 +37,7 @@ if (!@ARGV) {
 
 my $result = GetOptions ("person=s" => \$remove_person,
                          "lab=s" => \$remove_lab,
+                         "curs=s" => \$remove_curs,
                          "dry-run|T" => \$dry_run,
                          "help|h" => \$do_help);
 
@@ -52,11 +55,14 @@ sub usage
   $0 --person <email_address>
 OR
   $0 --lab <lab_name>
+OR
+  $0 --curs <session_key>
 
 Options:
   --person - remove the person with the given email address, and unassign any
        publications and sessions assigned to this user
   --lab - remove the lab with the given name.
+  --curs - remove a curation session (curs) and the curs database
 |;
 }
 
@@ -124,6 +130,9 @@ Delete the lab first with:
     } else {
       warn "No lab found named: $remove_lab\n";
     }
+  }
+  if (defined $remove_curs) {
+    PomCur::Track::delete_curs($config, $schema, $remove_curs);
   }
 };
 
