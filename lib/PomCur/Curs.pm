@@ -89,7 +89,7 @@ sub make_long_db_file_name
   my $config = shift;
   my $curs_key = shift;
 
-  my $data_directory = $config->{data_directory};
+  my $data_directory = $config->data_dir();
 
   return "$data_directory/" . make_db_file_name($curs_key);
 }

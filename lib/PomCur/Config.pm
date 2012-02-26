@@ -350,6 +350,20 @@ sub data_dir_path
   return $self->{data_directory} . '/' . $file_name;
 }
 
+=head2
+
+ Usage   : my $data_dir = $config->data_dir();
+ Function: Return the configured data directory
+ Args    : none
+
+=cut
+sub data_dir
+{
+  my $self = shift;
+
+  return $self->{data_directory};
+}
+
 =head2 class_info
 
  Usage   : my $class_info = $config->class_info($model_name);
