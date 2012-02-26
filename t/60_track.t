@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More tests => 22;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -105,3 +105,16 @@ while (my ($curs, $cursdb) = $cursdb_iter->()) {
 }
 
 is ($cursdb_count, 3);
+
+
+my $curs_rs = $schema->resultset('Curs');
+
+my $curs_key = 'aaaa0006';
+is($curs_rs->search({ curs_key => $curs_key })->count(), 1);
+my $db_file_name = PomCur::Curs::make_long_db_file_name($config, $curs_key);
+ok(-f $db_file_name);
+
+PomCur::Track::delete_curs($config, $schema, $curs_key);
+
+is($curs_rs->search({ curs_key => $curs_key })->count(), 0);
+ok(!-f $db_file_name);
