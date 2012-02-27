@@ -23,9 +23,6 @@ $model
             </li>
 %  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
             <li>
-              <a href="<% $c->uri_for('/view/list/cvterm', { model => 'track'} ) %>">CV terms</a>
-            </li>
-            <li>
               <a href="<% $c->uri_for('/view/list/cv', { model => 'track'} ) %>">CVs</a>
             </li>
             <li>
