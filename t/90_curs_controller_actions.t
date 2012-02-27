@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 55;
+use Test::More tests => 64;
 
 use Data::Compare;
 
@@ -241,6 +241,42 @@ test_psgi $app, sub {
 
     like ($scrape_res->{gene_list}, qr/Choose a gene to annotate/);
     like ($scrape_res->{pub_title}, qr/Inactivating pentapeptide insertions/);
+  }
+
+  # test the "this paper has no genes" button on the gene upload form
+  {
+    $curs_schema->resultset('Genesynonym')->delete();
+    $curs_schema->resultset('Gene')->delete();
+
+    my $uri = new URI("$root_url/");
+    $uri->query_form();
+
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    like ($res->content(), qr/Create gene list for $uniquename/);
+    like ($res->content(), qr/email-address.*$test_email/);
+
+    my @genes_after_delete = $curs_schema->resultset('Gene')->all();
+
+    is (@genes_after_delete, 0);
+
+    $uri = new URI("$root_url/");
+    $uri->query_form(gene_identifiers => "",
+                     'no-genes' => 1,
+                     submit => 'Submit',
+                   );
+
+    $req = HTTP::Request->new(GET => $uri);
+    $res = $cb->($req);
+
+    unlike ($res->content(), qr/Create gene list for $uniquename/);
+    like ($res->content(), qr/Annotation complete/);
+    like ($res->content(), qr/Thank you for your contribution to PomBase/);
+    like ($res->content(), qr/If there is any information in your paper/);
+    like ($res->content(), qr/email-address.*$test_email/);
   }
 };
 

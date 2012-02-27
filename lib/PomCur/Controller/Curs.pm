@@ -466,16 +466,29 @@ sub gene_upload : Chained('top') Args(0) Form
 
   my $schema = $st->{schema};
 
+  my @no_genes_element = ();
+  my @required_when = ();
+
   if ($st->{gene_count} > 0) {
     push @submit_buttons, "Back";
+  } else {
+    @no_genes_element = {
+      name => 'no-genes', type => 'Checkbox',
+      label => 'Or: no for annotation in this paper',
+      default_empty_value => 1
+    };
+    @required_when = (when => { field => 'no-genes', not => 1, value => 1 });
   }
 
   my @all_elements = (
       { name => $gene_list_textarea_name, type => 'Textarea', cols => 80, rows => 10,
-        constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
+        constraints => [ { type => 'Length',  min => 1 },
+                         { type => 'Required', @required_when },
+                       ],
       },
       { name => 'return_path_input', type => 'Hidden',
         value => $c->req()->param("return_path") // '' },
+      @no_genes_element,
       map {
           {
             name => $_, type => 'Submit', value => $_,
@@ -505,6 +518,11 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 
   if ($form->submitted_and_valid()) {
+    if ($form->param_value('no-genes')) {
+      $st->{message} = "Annotation complete";
+      $c->detach('finish_form', ['no_genes']);
+    }
+
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
     my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $search_terms_text;
 
@@ -1362,7 +1380,7 @@ sub annotation_zipexport : Chained('top') PathPart('annotation/zipexport') Args(
 
 sub finish_form : Chained('top') Args(0)
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $arg) = @_;
 
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
@@ -1410,7 +1428,13 @@ sub finish_form : Chained('top') Args(0)
 
     _redirect_and_detach($c, 'finished_publication');
   } else {
-    $self->set_state($config, $schema, NEEDS_APPROVAL);
+    my $force = {};
+    if (defined $arg && $arg eq 'no_genes') {
+      # user ticked the "no genes" checkbox on the gene upload page
+      $force = { force => SESSION_ACCEPTED };
+    }
+
+    $self->set_state($config, $schema, NEEDS_APPROVAL, $force);
   }
 }
 

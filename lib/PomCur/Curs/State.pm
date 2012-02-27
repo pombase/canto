@@ -90,13 +90,10 @@ sub get_state
   my $submitter_email = $self->get_metadata($schema, 'submitter_email');
 
   my $state = undef;
-  my $gene_count = undef;
 
-  if (defined $submitter_email) {
-    my $gene_rs = $self->get_ordered_gene_rs($schema);
-    $gene_count = $gene_rs->count();
+  my $gene_rs = $self->get_ordered_gene_rs($schema);
+  my $gene_count = $gene_rs->count();
 
-    if ($gene_count > 0) {
       if (defined $self->get_metadata($schema, EXPORTED_TIMESTAMP_KEY)) {
         $state = EXPORTED;
       } else {
@@ -112,18 +109,21 @@ sub get_state
               if (defined $self->get_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY)) {
                 $state = CURATION_PAUSED;
               } else {
-                $state = CURATION_IN_PROGRESS;
+                if (defined $submitter_email) {
+                  if ($gene_count > 0) {
+                    $state = CURATION_IN_PROGRESS;
+                  } else {
+                    $state = SESSION_ACCEPTED;
+                  }
+                } else {
+                  $state = SESSION_CREATED;
+
+                }
               }
             }
           }
         }
       }
-    } else {
-      $state = SESSION_ACCEPTED;
-    }
-  } else {
-    $state = SESSION_CREATED;
-  }
 
   return ($state, $submitter_email, $gene_count);
 }
