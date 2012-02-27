@@ -623,10 +623,10 @@ class_info:
       constraint: "pub_id not in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
     publications_with_active_sessions:
       extends: pub
-      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'SESSION_ACCEPTED' or p.value = 'CURATION_IN_PROGRESS')))"
+      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'SESSION_ACCEPTED' or p.value = 'CURATION_IN_PROGRESS')))"
     publications_with_session_needing_approval:
       extends: pub
-      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')))"
+      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')))"
     publications_with_unassigned_session:
       extends: pub
       constraint: "pub_id in (select pub from curs where assigned_curator is null)"
