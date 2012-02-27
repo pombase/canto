@@ -455,6 +455,7 @@ class_info:
           referenced_class: Cvterm
           editable: 1
           hide_context:
+            - list
             - inline_list
         - name: triage_status
           source: triage_status_id
