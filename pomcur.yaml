@@ -627,6 +627,9 @@ class_info:
     publications_with_session_needing_approval:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')))"
+    publications_with_no_annotatable_genes:
+      extends: pub
+      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_genes_count' and p.value = 0))"
     publications_with_unassigned_session:
       extends: pub
       constraint: "pub_id in (select pub from curs where assigned_curator is null)"
@@ -797,6 +800,7 @@ reports:
                    - report: publications_with_active_sessions
                    - report: publications_with_session_needing_approval
                    - report: publications_with_unassigned_session
+                   - report: publications_with_no_annotatable_genes
                 - report: curatable_publications_without_sessions
             - report: high_priority_publications
             - report: community_curatable_publications
