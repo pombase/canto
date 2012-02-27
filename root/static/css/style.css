@@ -140,8 +140,7 @@ div#footer .sponsor {
 }
 
 #content {
-  padding: 10px;
-  margin: 15px;
+  padding: 15px;
   clear: both;
 }
 
@@ -149,9 +148,10 @@ div#footer .sponsor {
   font-size: 120%;
   font-weight: bold;
   display: block;
-  padding: 5px;
+  margin: 5px 0px 15px 0px;
   clear: both;
   float: left;
+  border-bottom: 2px solid black;
 }
 
 #right-title {
@@ -174,13 +174,14 @@ div#footer .sponsor {
 }
 
 #breadcrumbs {
-  padding: 10px;
+  padding-bottom: 20px;
   margin: 0px;
   clear: both;
   float: left;
   right: 0px;
   top: 0px;
   font-size: 80%;
+  margin-left: -10px;
 }
 #breadcrumbs ul {
   margin: 0; padding: 0;

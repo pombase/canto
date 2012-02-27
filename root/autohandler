@@ -17,6 +17,7 @@ $is_admin_user
   <body>
     <& header.mhtml &>
 
+    <div id="content">
 <& breadcrumbs.mhtml &>
 <& contact.mhtml &>
 
@@ -76,10 +77,9 @@ $is_admin_user
 %   }
 % }
 
-      <div id="content">
-        <div class="clearall"/>
+      <div class="clearall"/>
 % $m->call_next;
-      </div>
+    </div>
     <& footer.mhtml &>
   </body>
 </html>
