@@ -37,7 +37,7 @@ under the same terms as Perl itself.
 
 use feature "switch";
 use Moose::Role;
-use Carp;
+use Carp qw(croak longmess);
 use Scalar::Util qw(reftype);
 
 use PomCur::Util;
@@ -198,6 +198,11 @@ sub set_state
   my $current_user = $options->{current_user};
 
   my ($current_state) = $self->get_state($schema);
+
+  if ($current_state eq $new_state) {
+    # nothing to do, but potentially a bug
+    warn longmess();
+  }
 
   if ($current_state eq EXPORTED) {
     croak "can't change state from ", EXPORTED;
