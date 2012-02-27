@@ -10,3 +10,4 @@ Model::ChadoModel:
   connect_info:
     - "dbi:SQLite:dbname=t/data/chado_test_db.sqlite3"
 
+extra_css: /static/css/test_style.css
