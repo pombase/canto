@@ -67,13 +67,6 @@ $is_admin_user
 </div>
 % }
 
-<div class="sect abstract">
-<span class="sect-title disclosed-title"><a href="#"> Abstract </a> </span>
-<div class="sect-content">
-  <% $abstract %>
-</div>
-</div>
-
 </&>
 
 <div id="collections">
@@ -92,7 +85,6 @@ use PomCur::Curs;
 
 my $pub_id = $object->pub_id();
 
-my $abstract = $object->abstract() // '[Abstract not available]';
 my $current_pathquery = $c->req->uri()->path_query();
 my $person_rs = $schema->resultset('Person');
 
