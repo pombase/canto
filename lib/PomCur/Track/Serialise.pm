@@ -158,7 +158,10 @@ sub _get_pubs
       $pub_hash{title} = $pub->title();
       $pub_hash{abstract} = $pub->abstract();
       $pub_hash{authors} = $pub->authors();
-
+      $pub_hash{affiliation} = $pub->affiliation();
+      $pub_hash{authors} = $pub->authors();
+      $pub_hash{publication_date} = $pub->publication_date();
+      $pub_hash{citation} = $pub->citation();
     }
     $ret{$pub->uniquename()} = { %pub_hash };
   }
