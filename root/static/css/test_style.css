@@ -1,7 +1,10 @@
-#heading {
-  background-color: #8d8;
+#content {
+  background: url(../images/test.png);
+  background-color: #ffe;
 }
 
-#content {
-  background-color: #eed;
+#heading {
+  background: url(../images/preview.png) 20% 0% no-repeat;
+  background-color: #eef;
+  height: 73px;
 }
