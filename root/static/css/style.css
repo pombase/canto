@@ -288,6 +288,9 @@ table.list tr td {
 .attribute-field {
   font-weight: bold;
 }
+.non-important-attribute-field {
+  font-weight: normal;
+}
 
 .sect .sect-title {
   background-color: #ddd;

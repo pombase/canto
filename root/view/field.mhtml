@@ -25,7 +25,7 @@ $field_name
   </a>
   </span>
 %   } else {
-  <span class="attribute-field">
+  <span class="attribute-field<% $extra_field_class %>">
 %     if ($field_type eq 'key_field') {
     <span class="display-key">
       <a href='<% $c->uri_for("/view/object", $type, PomCur::DB::id_of_object($object),
@@ -77,4 +77,10 @@ if (!defined $field_value) {
 }
 
 my $model_name = $c->request()->param('model');
+
+my $extra_field_class = '';
+
+if (defined $col_conf->{extra_field_class}) {
+  $extra_field_class = ' ' . $col_conf->{extra_field_class};
+}
 </%init>

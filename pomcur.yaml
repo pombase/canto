@@ -417,6 +417,7 @@ class_info:
         - name: title
         - name: authors
         - name: abstract
+          extra_field_class: non-important-attribute-field
           hide_context:
             - list
             - inline_list
