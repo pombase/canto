@@ -702,7 +702,7 @@ div.clearall {
   width: 68%;
   float: left;
 }
-.triage .pub-details .abstract .sect-content {
+.triage .pub-details .triage-abstract .sect-content {
   font-size: 90%;
 }
 
@@ -862,11 +862,11 @@ input[readonly="1"] {
   float: left;
 }
 
-.sect.triage-experiment-types, .sect.triage-curation-priorities, .sect.triage-assigned-curator, .sect.triage-flags {
+.sect.triage-citation, .sect.triage-pubmed-type, .sect.triage-experiment-types, .sect.triage-curation-priorities, .sect.triage-assigned-curator, .sect.triage-flags {
   float: left;
   padding-right: 40px;
 }
-.sect.triage-flags {
+.sect.triage-flags, .sect.triage-abstract {
   clear: left;
 }
 

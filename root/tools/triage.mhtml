@@ -28,7 +28,7 @@ $return_pub_id
           <% $pub->authors() %>
         </div>
       </div>
-      <div class="sect citation">
+      <div class="sect triage-citation">
         <span class="sect-title">
           Citation
         </span>
@@ -36,11 +36,20 @@ $return_pub_id
           <% $pub->citation() || '[no citation]' %>
         </div>
       </div>
-      <div class="sect abstract">
+      <div class="sect triage-pubmed-type">
+        <span class="sect-title">
+          Publication type from PubMed
+        </span>
+        <div class="sect-content">
+          <% $pubmed_type_name %>
+        </div>
+      </div>
+      <div class="sect triage-abstract">
         <span class="sect-title disclosed-title">
           <a href="#">Abstract</a>
         </span>
         <div class="sect-content">
+
           <% $pub->abstract() %>
         </div>
       </div>
@@ -50,14 +59,6 @@ $return_pub_id
         </span>
         <div class="sect-content">
           <% $pub->affiliation() || '[no affiliation]' %>
-        </div>
-      </div>
-      <div class="sect triage-pubmed-type">
-        <span class="sect-title">
-          Publication type from PubMed
-        </span>
-        <div class="sect-content">
-          <% $pubmed_type_name %>
         </div>
       </div>
       <div class="sect triage-flags">
