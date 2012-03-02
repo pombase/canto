@@ -193,6 +193,12 @@ sub new {
   return $new;
 }
 
+=head2 is_admin
+
+ Usage   : if ($person->is_admin()) { ...}
+ Function: Return true if this person has the admin role
+
+=cut
 sub is_admin
 {
   my $self = shift;
