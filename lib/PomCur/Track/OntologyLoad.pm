@@ -70,17 +70,14 @@ sub _delete_term_by_cv
 
   my $guard = $schema->txn_scope_guard;
 
-  # delete relationships first
-  $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
-    ->search_related('cvterms')
-    ->search_related('cvterm_relationship_objects')->delete();
+  my $cv_cvterms = $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
+     ->search_related('cvterms');
 
-  $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
-    ->search_related('cvterms')
-    ->search_related('cvterm_relationship_subjects')->delete();
-
-  $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
-    ->search_related('cvterms')->delete();
+  $cv_cvterms->search_related('cvtermprop_cvterms')->delete();
+  $cv_cvterms->search_related('cvtermsynonym_cvterms')->delete();
+  $cv_cvterms->search_related('cvterm_relationship_objects')->delete();
+  $cv_cvterms->search_related('cvterm_relationship_subjects')->delete();
+  $cv_cvterms->delete();
 
   $guard->commit();
 }
