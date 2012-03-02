@@ -584,9 +584,7 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
 
   my $delete_sub = sub {
     my $annotation = $schema->resultset('Annotation')->find($annotation_id);
-    $annotation->status('deleted');
-    $annotation->update();
-
+    $annotation->delete();
     $self->_store_suggestion_count($schema);
   };
 

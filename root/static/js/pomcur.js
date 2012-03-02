@@ -653,3 +653,31 @@ $(document).ready(function() {
     });
   }
 });
+
+$(document).ready(function() {
+  $(".confirm-delete").click(function(e) {
+    e.preventDefault();
+    var targetUrl = $(this).attr("href");
+
+    var deleteDialog = $('#delete-dialog');
+    if (deleteDialog.length == 0) {
+      deleteDialog =
+        $('<div id="delete-dialog" title="Confirmation needed">Really delete?</div>');
+      $('body').append(deleteDialog);
+    }
+    deleteDialog.dialog({
+      autoOpen: false,
+      modal: true,
+      buttons : {
+        "Confirm" : function() {
+          window.location.href = targetUrl;
+        },
+        "Cancel" : function() {
+          $(this).dialog("close");
+        }
+      }
+    });
+
+    deleteDialog.dialog("open");
+  });
+});

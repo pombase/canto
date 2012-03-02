@@ -6,11 +6,6 @@ $is_admin_user
 </%args>
 
 % if ($is_admin_user) {
-%   if (0) {
-<div id="deleteDialog" title="Confirmation Required">
-  Delete this <% PomCur::DB::display_name($type) %>?
-</div>
-%   }
 
 <div class="actionlist" style="float: right">
   <div class="label">
@@ -27,32 +22,7 @@ $is_admin_user
 
 %  if (0) {
       <li>
-<a id="confirmDelete" href="<% $c->uri_for('/delete/object/' . $type . '/' . $object_id) %>">Delete</a>
-
-<script type="text/javascript">
-  $("#confirmDelete").click(function(e) {
-    e.preventDefault();
-    var targetUrl = $(this).attr("href");
-
-    $("#deleteDialog").dialog({
-      autoOpen: false,
-      modal: true,
-      buttons : {
-        "Confirm" : function() {
-          window.location.href = targetUrl;
-        },
-        "Cancel" : function() {
-          $(this).dialog("close");
-        }
-      }
-    });
-
-    $("#deleteDialog").dialog("open");
-  });
-
-  $("#deleteDialog").hide();
-</script>
-
+<a id="object-delete-action" class="confirm-delete" href="<% $c->uri_for('/delete/object/' . $type . '/' . $object_id) %>">Delete</a>
       </li>
 %  }
     </ul>
