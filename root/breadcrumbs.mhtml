@@ -1,11 +1,13 @@
 <div id="breadcrumbs">
+% if ($current_pathquery ne '/') {
   <a id="breadcrumbs-home-link" class="breadcrumbs-link" 
      href="<% $home_path %>" title="Go to the home page">
     Home
   </a>
+% }
 </div>
-
 
 <%init>
 my $home_path = $c->uri_for('/');
+my $current_pathquery = $c->req->uri()->path_query();
 </%init>
