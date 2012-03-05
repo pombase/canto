@@ -264,6 +264,7 @@ sub tidy_curs
 
   while (defined (my $ann = $ann_rs->next())) {
     if ($ann->status() eq 'deleted') {
+      warn "deleting annotation flagged as deleted\n";
       $ann->delete();
       next;
     }
@@ -273,7 +274,7 @@ sub tidy_curs
     if (defined $data->{annotation_extension}) {
       if ($data->{annotation_extension} eq '') {
         delete $data->{annotation_extension};
-        warn "deleting\n";
+        warn "deleting empty annotation\n";
         $ann->data($data);
         $ann->update();
       }
