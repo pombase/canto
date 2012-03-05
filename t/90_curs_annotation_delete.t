@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::More tests => 5;
 
 use Data::Compare;
 
@@ -68,23 +68,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/$delete_annotation_re.*curs-annotation-undelete-2/s);
     like ($redirect_res->content(), $other_annotation_re);
-  }
-
-  {
-    my $term_id = 'GO:0080170';
-    my $uri = new URI("$root_url/annotation/undelete/2");
-
-    my $req = HTTP::Request->new(GET => $uri);
-    my $res = $cb->($req);
-    is $res->code, 302;
-    my $redirect_url = $res->header('location');
-
-    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
-    my $redirect_res = $cb->($redirect_req);
-
-    check_not_deleted($cb);
   }
 };
 
