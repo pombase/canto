@@ -454,7 +454,7 @@ sub get_existing_interaction_annotations
   }
 }
 
-=head2 get_existing_interaction_annotations
+=head2 get_existing_annotations
 
  Usage   :
    my @annotations =
