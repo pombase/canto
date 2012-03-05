@@ -394,12 +394,13 @@ sub _process_interaction
 
   return {
     gene_identifier => $gene->{identifier},
-    gene_display_name => $gene->{name},
+    gene_display_name => $gene->{name} // $gene->{identifier},
     gene_taxonid => $gene->{taxonid},
     publication_uniquename => $publication->{uniquename},
     evidence_code => $row->{evidence_code},
     interacting_gene_identifier => $interacting_gene->{identifier},
-    interacting_gene_display_name => $interacting_gene->{name},
+    interacting_gene_display_name =>
+      $interacting_gene->{name} // $interacting_gene->{identifier},
     interacting_gene_taxonid => $interacting_gene->{taxonid},
     status => 'existing',
   };
