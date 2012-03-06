@@ -29,8 +29,9 @@ $page => 1
 % }
 
 % if ($total_rows > 0) {
-% if ($pager->last_page() > 1) {
 <div class="page_nav_actions">
+% if ($pager->last_page() > 1) {
+
 <b>Go to page:</b>  
 
 % if ($page != $pager->first_page()) {
@@ -101,12 +102,15 @@ $page => 1
 % } else {
 <span class="page_nav_no_link">last</span>
 % }
+% } else {
+  Showing all results
+% }
 </div>
 
-<div class="page_nav_summary"><b><% $pager->total_entries() %></b> rows found &nbsp;<b>|</b>&nbsp;
+<div class="page_nav_summary"><b><% $pager->total_entries() %></b> total &nbsp;<b>|</b>&nbsp;
 Page <b><% $pager->current_page() %></b> of <% $pager->last_page() %>
 (rows <% $pager->first() %>-<% $pager->last() %>) &nbsp;<b>|</b>&nbsp;
-Number of rows to display:
+Rows to display:
 <select name="pagesize" onChange="resize(this.value)" style="width: 60px">
 % for my $val (@possible_page_sizes) {
   <option <% ($val == $numrows) ? 'selected' : '' %>
@@ -114,12 +118,12 @@ Number of rows to display:
 % }
 </select>
 </div>
+<div class="clearall"/>
 
 <& /view/list.mhtml, config_name => $config_name, rs => $page_rs,
   list_title => '', is_inline => 0,
   numrows => $numrows, page => $page, column_confs => \@column_confs &>
 
-% }
 % } else {
 
 No results
