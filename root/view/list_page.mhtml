@@ -134,7 +134,8 @@ use List::MoreUtils qw(minmax);
 my $page_rs = $rs->search({}, { 
                                 page => $page,
                                 rows => $numrows,
-                                pageset_mode => 'slide'
+                                pageset_mode => 'slide',
+                                pages_per_set => 6,
                               });
 
 my $pager = $page_rs->pageset();
