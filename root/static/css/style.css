@@ -386,12 +386,15 @@ span.error_constraint_required {
 }
 
 /* page navigation */
-.page_nav_summary {
+.page_nav_summary, .page_nav_actions {
     font-size: 90%;
-    margin: 10px 0px 5px 0px;
+    margin: 15px 0px 10px 0px;
+}
+.page_nav_summary {
+    float: left;
 }
 .page_nav_actions {
-    font-size: 90%;
+    float: right;
 }
 .page_nav_actions a:visited {
   color:#026; text-decoration:none;
