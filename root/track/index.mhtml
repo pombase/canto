@@ -25,9 +25,6 @@ $model
             <li>
               <a href="<% $c->uri_for('/view/list/cv', { model => 'track'} ) %>">CVs</a>
             </li>
-            <li>
-              <a href="<% $c->uri_for('/view/list/curs', { model => 'track'} ) %>">Curation sessions</a>
-            </li>
 %  }
           </ul>
         </div>
