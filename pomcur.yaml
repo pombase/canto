@@ -141,7 +141,7 @@ db_initial_data:
               accession: not_english
               db:
                 name: PomCur
-          - name: Methods paper
+          - name: Method or reagent
             definition: >
                 Triage status for a paper that will not be curated because it
                 is a methods paper.
@@ -157,19 +157,11 @@ db_initial_data:
               accession: wrong_organism
               db:
                 name: PomCur
-          - name: Review
+          - name: Review or comment
             definition: >
-                Triage status for a review.
+                Triage status for a review or comment.
             dbxref:
               accession: review
-              db:
-                name: PomCur
-          - name: News and views
-            definition: >
-                Triage status for a publication that will not be curated because
-                it is an editorial, a comment or a news and views article.
-            dbxref:
-              accession: news_and_views
               db:
                 name: PomCur
           - name: Loaded in error
@@ -180,18 +172,31 @@ db_initial_data:
               accession: loaded_in_error
               db:
                 name: PomCur
-          - name: Reagent
-            definition: >
-                Triage status for a publication that describes a reagent.
-            dbxref:
-              accession: reagent
-              db:
-                name: PomCur
           - name: Erratum
             definition: >
                 Triage status for an erratum.
             dbxref:
               accession: erratum
+              db:
+                name: PomCur
+          - name: Mutagenicity or toxicity study
+            dbxref:
+              accession: mutagenicity_or_toxicity_study
+              db:
+                name: PomCur
+          - name: Genetically mapped only
+            dbxref:
+              accession: genetically_mapped_only
+              db:
+                name: PomCur
+          - name: Cell composition or WT feature
+            dbxref:
+              accession: cell_composition_or_wt_feature
+              db:
+                name: PomCur
+          - name: Phylogeny
+            dbxref:
+              accession: phylogeny_paper 
               db:
                 name: PomCur
           - name: Other
@@ -590,30 +595,38 @@ class_info:
       class_display_name: Wrong organism
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Wrong organism')"
-    triage_methods_publications:
-      class_display_name: Methods
+    triage_method_or_reagent_publications:
+      class_display_name: Method or reagent
       extends: pub
-      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Methods paper')"
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Method or reagent')"
     triage_other_publications:
       class_display_name: Other
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Other')"
-    triage_review_publications:
-      class_display_name: Review
+    triage_review_or_comment_publications:
+      class_display_name: Review or comment
       extends: pub
-      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Review')"
-    triage_news_and_views_publications:
-      class_display_name: News and views
-      extends: pub
-      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'News and views')"
-    triage_reagent_publications:
-      class_display_name: Reagent
-      extends: pub
-      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Reagent')"
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Review or comment')"
     triage_erratum_publications:
       class_display_name: Erratum
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Erratum')"
+    triage_mutagenicity_or_toxicity_study_publications:
+      class_display_name: Mutagenicity or toxicity study
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Mutagenicity or toxicity study')"
+    triage_genetically_mapped_only_publications:
+      class_display_name: Genetically mapped only
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Genetically mapped only')"
+    triage_cell_composition_or_wt_feature_publications:
+      class_display_name: Cell composition or WT feature
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Cell composition or WT feature')"
+    triage_phylogeny_paper_publications:
+      class_display_name: Phylogeny
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Phylogeny')"
     triage_loaded_in_error_publications:
       class_display_name: Loaded in error
       extends: pub
@@ -811,12 +824,14 @@ reports:
               children:
                 - report: triage_sequence_feature_or_region_publications
                 - report: triage_not_english_publications
-                - report: triage_methods_publications
+                - report: triage_method_or_reagent_publications
                 - report: triage_wrong_organism_publications
-                - report: triage_review_publications
-                - report: triage_news_and_views_publications
-                - report: triage_reagent_publications
+                - report: triage_review_or_comment_publications
                 - report: triage_erratum_publications
+                - report: triage_mutagenicity_or_toxicity_study_publications
+                - report: triage_genetically_mapped_only_publications
+                - report: triage_cell_composition_or_wt_feature_publications
+                - report: triage_phylogeny_paper_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
         - report: unassigned_publications
