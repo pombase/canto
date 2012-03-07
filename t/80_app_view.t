@@ -47,7 +47,7 @@ test_psgi $app, sub {
 
     like ($scrape_res->{title}, qr/List of all labs/);
     ok (grep { /Nick Rhind/ } @{$scrape_res->{field_values}});
-    like ($scrape_res->{row_count}, qr/13\b.* rows found/);
+    like ($scrape_res->{row_count}, qr/13\b.* total/);
   }
 
   # test viewing a report
@@ -58,7 +58,7 @@ test_psgi $app, sub {
 
     is $res->code, 200;
     like ($res->content(), qr/List of named genes/);
-    like ($res->content(), qr:<b>10</b> rows found:);
+    like ($res->content(), qr:<b>10</b> total:);
     like ($res->content(), qr/rpn501/);
     unlike ($res->content(), qr/SPBC12C2.11/);
   }

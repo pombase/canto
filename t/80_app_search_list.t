@@ -35,8 +35,8 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    ok ($res->content() =~ m:<b>1</b> rows found:);
-    ok ($res->content() =~ /SPCC1739.11c/);
+    like ($res->content(), qr:<b>1</b> total:);
+    like ($res->content(), qr/SPCC1739.11c/);
   }
 
   # test searching for an match surrounded by whitespace
@@ -47,7 +47,7 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    ok ($res->content() =~ m:<b>1</b> rows found:);
+    ok ($res->content() =~ m:<b>1</b> total:);
     ok ($res->content() =~ /SPCC1739.11c/);
   }
 
@@ -59,7 +59,7 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    ok ($res->content() =~ m:<b>2</b> rows found:);
+    ok ($res->content() =~ m:<b>2</b> total:);
     ok ($res->content() =~ /SPAC1420.03/);
     ok ($res->content() =~ /SPAPB8E5.02c/);
   }
@@ -72,7 +72,7 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    ok ($res->content() =~ m:<b>2</b> rows found:);
+    ok ($res->content() =~ m:<b>2</b> total:);
     ok ($res->content() =~ /rpn501/);
     ok ($res->content() =~ /rpn502/);
     ok ($res->content() !~ /ssm4/);
