@@ -245,7 +245,7 @@ sub process_rs_options
 
     my $field_name = $conf->{name};
 
-    push @column_options, { $conf->{name}, \("($source->{sql}) as '$field_name'") };
+    push @column_options, { $conf->{name}, \(qq|($source->{sql}) as "$field_name"|) };
   }
 
   return $rs->search(undef, { '+columns' => [@column_options] });
