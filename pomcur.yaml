@@ -1065,17 +1065,19 @@ annotation_type_list:
     evidence_codes:
       - Cell growth assay
       - Chromatin immunoprecipitation experiment
+      - Co-immunoprecipitation experiment
+      - Electrophoretic mobility shift assay data
       - Enzyme assay data
       - Epitope-tagged protein immunolocalization experiment data
       - Flow cytometry data
       - Fusion protein localization experiment
-      - Green fluorescent protein fusion protein localization experiment
       - Immunolocalization experiment data
       - Microscopy
+      - Northern assay evidence
+      - Western blot assay
       - Protein localization experiment
       - Quantitative PCR
       - Reporter gene assay
-      - YFP fusion protein localization experiment
       - Other
     broad_term_suggestions: >
       multinucleate, abnormal spindle, inviable
