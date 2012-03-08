@@ -963,10 +963,12 @@ evidence_types:
   'Quantitative PCR': ~
   'Fusion protein localization experiment': ~
   'Immunolocalization experiment data': ~
-  'Green fluorescent protein fusion protein localization experiment': ~
-  'YFP fusion protein localization experiment': ~
   'Epitope-tagged protein immunolocalization experiment data': ~
   'Protein localization experiment': ~
+  'Co-immunoprecipitation experiment': ~
+  'Electrophoretic mobility shift assay data': ~
+  'Northern assay evidence': ~
+  'Western blot assay': ~
 
 annotation_type_list:
   - name: molecular_function
