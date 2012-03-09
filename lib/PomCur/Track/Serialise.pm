@@ -66,31 +66,43 @@ sub _get_curation_sessions
   my $schema = shift;
   my $options = shift;
 
-  my @curs_list = $schema->resultset('Curs')->all();
+  my %ret_map = ();
 
-  return {
-    map {
-      my $curs_key = $_->curs_key();
-      my $data;
-      if ($options->{stream_mode}) {
-        $data = undef;
-      } else {
-        my $cursdb = PomCur::Curs::get_schema_for_key($config, $curs_key);
-        $data = PomCur::Curs::Serialise::perl($cursdb, $options);
-        my $curs = $schema->resultset('Curs')->find({ curs_key => $curs_key });
-        my $props = _get_cursprops($curs);
+  my $curs_rs = $schema->resultset('Curs');
 
-        for my $prop_data (@$props) {
-          if (exists $data->{$prop_data->{type}}) {
-            die "attempted to overwritten data from curs with: ", $prop_data->{type};
-          } else {
-            $data->{$prop_data->{type}} = $prop_data->{value};
-          }
+
+  while (defined (my $curs = $curs_rs->next())) {
+    my $curs_key = $curs->curs_key();
+    my $data;
+    if ($options->{stream_mode}) {
+      $data = undef;
+    } else {
+      my $cursdb = PomCur::Curs::get_schema_for_key($config, $curs_key);
+      $data = PomCur::Curs::Serialise::perl($cursdb, $options);
+      my $props = _get_cursprops($curs);
+
+      if ($options->{dump_approved} || $options->{export_approved}) {
+        my $annotation_status_prop =
+          (grep { $_->{type} eq 'annotation_status' } @$props)[0];
+
+        if ($annotation_status_prop->{value} ne 'APPROVED') {
+          next;
         }
       }
-      ($curs_key, $data);
-    } @curs_list
-  };
+
+      for my $prop_data (@$props) {
+        if (exists $data->{$prop_data->{type}}) {
+          die "attempted to overwritten data from curs with: ", $prop_data->{type};
+        } else {
+          $data->{$prop_data->{type}} = $prop_data->{value};
+        }
+      }
+    }
+
+    $ret_map{$curs_key} = $data;
+  }
+
+  return \%ret_map;
 }
 
 sub _get_name
@@ -219,9 +231,12 @@ sub _get_labs
                  track and curs databases, including data that can be
                  recreated (eg. publication title can be found from
                  PubMed ID) - default 0
-             - mark-exported => (0|1) - if 1, only dump those curation
+             - dump-approved => (0|1) - if 1, only dump those curation
                  sessions from the curs table that have the status of
-                 "APPROVED" and then mark them as "EXPORTED"
+                 "APPROVED"
+             - export-approved => (0|1) - like dump-approved, but set
+                 the state of the exported sessions as "EXPORTED"
+
  Returns : A JSON string containing all of the TrackDB and CursDB data
            or with stream_mode set, return a (JSON string, CursDB JSON
            iterator) pair.
@@ -236,16 +251,22 @@ sub json
   my ($curation_sessions_hash, $sessions_iter) =
     _get_curation_sessions($config, $schema, $options);
 
-  my $track_hash = {
-    curation_sessions => $curation_sessions_hash,
-    publications => _get_pubs($schema, $options),
-    people => _get_people($schema),
-    labs => _get_labs($schema),
-  };
+  my $hash;
+
+  if ($options->{dump_approved} || $options->{export_approved}) {
+    $hash = $curation_sessions_hash;
+  } else {
+    $hash = {
+      curation_sessions => $curation_sessions_hash,
+      publications => _get_pubs($schema, $options),
+      people => _get_people($schema),
+      labs => _get_labs($schema),
+    };
+  }
 
   my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);
 
-  return $encoder->encode($track_hash);
+  return $encoder->encode($hash);
 }
 
 1;
