@@ -5,7 +5,7 @@ use warnings;
 use Carp;
 use File::Basename;
 
-use Getopt::Long;
+use Getopt::Long qw(:config require_order);
 
 BEGIN {
   my $script_name = basename $0;
@@ -74,7 +74,7 @@ if (defined $export_module) {
   my $exporter =
     eval qq{
 require $export_module;
-$export_module->new(config => \$config, options => [@options]);
+$export_module->new(config => \$config, options => [\@options]);
 };
   die "$@" if $@;
 
