@@ -254,7 +254,9 @@ sub json
   my $hash;
 
   if ($options->{dump_approved} || $options->{export_approved}) {
-    $hash = $curation_sessions_hash;
+    $hash = {
+      curation_sessions => $curation_sessions_hash
+    };
   } else {
     $hash = {
       curation_sessions => $curation_sessions_hash,
