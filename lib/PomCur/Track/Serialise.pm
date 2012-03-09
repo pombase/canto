@@ -85,7 +85,8 @@ sub _get_curation_sessions
         my $annotation_status_prop =
           (grep { $_->{type} eq 'annotation_status' } @$props)[0];
 
-        if ($annotation_status_prop->{value} ne 'APPROVED') {
+        if (!defined $annotation_status_prop ||
+            $annotation_status_prop->{value} ne 'APPROVED') {
           next;
         }
       }
