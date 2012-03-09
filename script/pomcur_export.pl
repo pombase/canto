@@ -28,10 +28,18 @@ my $do_help = 0;
 
 my $result = GetOptions ("help|h" => \$do_help);
 
+my %export_modules = (
+  dump => 'PomCur::Export::Dump',
+);
+
 sub usage
 {
+  my $types = join "", (map { "   $_\n"; } keys %export_modules);
   die "usage:
    $0 export_type [options]
+
+Possible export types:
+$types
 ";
 }
 
@@ -59,10 +67,6 @@ if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
 }
 
 my $config = PomCur::Config::get_config();
-
-my %export_modules = (
-  dump => 'PomCur::Export::Dump',
-);
 
 my $export_module = $export_modules{$export_type};
 
