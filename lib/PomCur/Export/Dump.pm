@@ -36,11 +36,9 @@ under the same terms as Perl itself.
 
 =cut
 
-use strict;
-use warnings;
-use Carp;
-
 use Moose;
+use Carp;
+use Getopt::Long qw(GetOptionsFromArray);
 
 use PomCur::Track::Serialise;
 
