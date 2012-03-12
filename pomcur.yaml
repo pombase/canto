@@ -1188,6 +1188,9 @@ external_links:
       - name: PomBase
         icon: pombase_logo_small.png
         url: 'http://www.pombase.org/spombe/result/@@primary_identifier@@'
+      - name: BioGRID
+        icon: biogrid_logo_small.png
+        url: 'http://thebiogrid.org/275721/summary/schizosaccharomyces-pombe/@@primary_identifier@@.html'
     organism:
       Schizosaccharomyces pombe:
         - name: GeneDB
