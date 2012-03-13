@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use PomCur::Config;
 use PomCur::TestUtil;
@@ -14,7 +14,10 @@ my $config_single = PomCur::Config->new($config_yaml_1);
 
 is($config_single->{some_key}, 'some_value_1');
 
-is(keys %{$config_single}, 3);
+is(keys %{$config_single}, 7);
+
+ok(!$config_single->{annotation_types}->{phenotype}->{needs_with_or_from});
+ok($config_single->{annotation_types}->{cellular_component}->{needs_with_or_from});
 
 my $lab_classinfo = $config_single->{class_info}->{track}->{lab};
 
@@ -31,7 +34,7 @@ my $config_two = PomCur::Config->new($config_yaml_1, $config_yaml_2);
 
 is($config_two->{some_key}, 'some_value_1');
 is($config_two->{some_key_for_overriding}, 'overidden_value');
-is(keys %{$config_two}, 3);
+is(keys %{$config_two}, 7);
 
 
 # test loading then merging
@@ -40,7 +43,7 @@ $config_merge->merge_config($config_yaml_2);
 
 is($config_merge->{some_key}, 'some_value_1');
 is($config_merge->{some_key_for_overriding}, 'overidden_value');
-is(keys %{$config_merge}, 3);
+is(keys %{$config_merge}, 7);
 
 my $lc_app_name = lc PomCur::Config::get_application_name();
 my $uc_app_name = uc $lc_app_name;
@@ -65,4 +68,5 @@ is($config_with_suffix->{name}, "PomCur");
 ok(defined $config_with_suffix->{"Model::TrackModel"});
 
 ok(defined $config_with_suffix->model_connect_string('Track'));
+
 

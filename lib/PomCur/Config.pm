@@ -216,19 +216,6 @@ sub setup
     }
   }
 
-  # create an annotation_types hash from the annotation_type_list
-  if (defined $self->{annotation_type_list}) {
-    for my $annotation_type (@{$self->{annotation_type_list}}) {
-      if (!defined $annotation_type->{short_display_name}) {
-        $annotation_type->{short_display_name} = $annotation_type->{display_name};
-      }
-      my $annotation_type_name = $annotation_type->{name};
-      $self->{annotation_types}->{$annotation_type_name} = $annotation_type;
-
-      $annotation_type->{namespace} //= $annotation_type->{name};
-    }
-  }
-
   # create an inverted map of evidence types so that evidence codes
   # can be looked up by name
   if (my $evidence_types = $self->{evidence_types}) {
@@ -240,6 +227,28 @@ sub setup
       }
       $self->{evidence_types_by_name}->{lc $evidence_type_name} =
         $evidence_code;
+    }
+  }
+
+  # create an annotation_types hash from the annotation_type_list
+  if (defined $self->{annotation_type_list}) {
+    for my $annotation_type (@{$self->{annotation_type_list}}) {
+      if (!defined $annotation_type->{short_display_name}) {
+        $annotation_type->{short_display_name} = $annotation_type->{display_name};
+      }
+      my $annotation_type_name = $annotation_type->{name};
+      $self->{annotation_types}->{$annotation_type_name} = $annotation_type;
+
+      $annotation_type->{namespace} //= $annotation_type->{name};
+
+      # if any evidence code for this type needs a with or from field, set
+      # needs_with_or_from in the type
+      for my $ev_code (@{$annotation_type->{evidence_codes}}) {
+        if ($self->{evidence_types}->{$ev_code}->{with_gene}) {
+          $annotation_type->{needs_with_or_from} = 1;
+          last;
+        }
+      }
     }
   }
 }

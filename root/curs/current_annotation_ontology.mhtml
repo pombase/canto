@@ -34,9 +34,11 @@ $user_created
       <th>
         Evidence code
       </th>
+% if ($needs_with_or_from) {
       <th>
         With
       </th>
+% }
 % if ($user_created) {
       <th>
         Term suggestion
@@ -88,6 +90,7 @@ $user_created
     </td>
     <td>
       <span>
+% if ($needs_with_or_from) {
 % if ($row->{needs_with} || defined $row->{with_or_from_display_name}) {
 %   if (defined $row->{with_or_from_display_name}) {
       <% $row->{with_or_from_display_name} %>
@@ -96,6 +99,7 @@ $user_created
 %   }
 % } else {
      &nbsp; 
+% }
 % }
       </span>
     </td>
@@ -184,4 +188,6 @@ if ($user_created) {
 
 my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
   $gene_text . ($user_created ? '' : ' from ' . $pub->uniquename());
+
+my $needs_with_or_from = $annotation_type->{needs_with_or_from};
 </%init>

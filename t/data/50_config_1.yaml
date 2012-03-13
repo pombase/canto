@@ -45,3 +45,20 @@ class_info:
           editable: 1
         - name: cv_id
           editable: 1
+
+evidence_types:
+  IDA:
+    name: Inferred from direct assay
+  IGI:
+    name: Inferred from genetic interaction
+    with_gene: 1
+  'Cell growth assay': ~
+
+annotation_type_list:
+  - name: cellular_component
+    evidence_codes:
+      - IDA
+      - IGI
+  - name: phenotype
+    evidence_codes:
+      - Cell growth assay
