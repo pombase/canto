@@ -7,6 +7,8 @@ $message_to_curators => undef
 <div id="curs-pub-finished">
 <p>
 Thank you for your contribution to <% $c->config()->{database_name} %>.
+You curated <% $gene_count %> <% $gene_count == 1 ? 'gene' : 'genes' %> for
+<% $pub->uniquename() %>.
 </p>
 
 <p>
@@ -65,4 +67,6 @@ if ($state eq 'APPROVED') {
   $begin_approval_uri = $curs_root_uri . '/begin_approval/';
 }
 
+my $gene_count = $c->stash()->{gene_count};
+my $pub = $c->stash()->{pub};
 </%init>
