@@ -1002,6 +1002,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_name');
 
+  my $gene_count = $genes_rs->count();
+
   my @options = ();
 
   while (defined (my $other_gene = $genes_rs->next())) {
@@ -1011,12 +1013,23 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
                      label => $other_gene->long_display_name() };
   }
 
+  my $transfer_select_genes_text;
+
+  if ($gene_count > 1) {
+    $transfer_select_genes_text =
+      'You can annotate other genes from your list with the '
+        . 'same term and evidence by selecting genes below.';
+  } else {
+    $transfer_select_genes_text =
+      'You can annotate other genes with the same term and '
+        . 'evidence by adding more genes from the publication.';
+  }
+
   my @all_elements = (
       {
         type => 'Block',
         tag => 'div',
-        content => 'You can annotate other genes from your list with the '
-          . 'same term and evidence by selecting genes below',
+        content => $transfer_select_genes_text,
       },
       {
         name => 'dest', label => 'dest',
