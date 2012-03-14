@@ -364,20 +364,8 @@ sub _edit_genes_helper
 {
   my ($self, $c, $confirm_genes) = @_;
 
-  my $st = $c->stash();
-
-  if ($confirm_genes) {
-    $st->{title} = 'Confirm gene list for ' . $st->{pub}->uniquename();
-  } else {
-    $st->{title} = 'Gene list for ' . $st->{pub}->uniquename();
-  }
-  $st->{show_title} = 0;
-
-  $st->{template} = 'curs/gene_list_edit.mhtml';
-
-  $st->{current_component} = 'list_edit';
-
   my $config = $c->config();
+  my $st = $c->stash();
   my $schema = $st->{schema};
 
   my $form = $self->form();
@@ -397,8 +385,6 @@ sub _edit_genes_helper
   $form->elements([@all_elements]);
 
   $form->process();
-
-  $st->{form} = $form;
 
   if (defined $c->req->param('continue')) {
     _redirect_and_detach($c);
@@ -429,6 +415,20 @@ sub _edit_genes_helper
       }
     }
   }
+
+  if ($confirm_genes) {
+    $st->{title} = 'Confirm gene list for ' . $st->{pub}->uniquename();
+  } else {
+    $st->{title} = 'Gene list for ' . $st->{pub}->uniquename();
+  }
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/gene_list_edit.mhtml';
+  $st->{current_component} = 'list_edit';
+
+  $st->{form} = $form;
+
+  $st->{gene_list} =
+    [PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_name')->all()];
 }
 
 sub edit_genes : Chained('top') Args(0) Form

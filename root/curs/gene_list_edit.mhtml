@@ -2,6 +2,7 @@
 $schema
 $title => 'Genes'
 $pub
+@gene_list
 @search_terms => ()
 $curs_root_uri
 $multi_organism_mode
@@ -67,9 +68,6 @@ $multi_organism_mode
 <%init>
 use PomCur::Curs;
 
-my @all_genes =
-  PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_name')->all();
-
 my %search_terms = ();
 @search_terms{@search_terms} = @search_terms;
 
@@ -104,7 +102,7 @@ my @gene_hashes = map {
        $hash->{Organism} = $gene->organism()->full_name();
      }
      $hash
-   } @all_genes;
+   } @gene_list;
 
 my @col_names = ("Systematic identifier", "Name", "Synonyms", "Product");
 
