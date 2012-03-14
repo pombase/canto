@@ -1,6 +1,10 @@
 <%args>
+$schema
 $title => 'Genes'
 $pub
+@search_terms => ()
+$curs_root_uri
+$multi_organism_mode
 </%args>
 
 <div id="curs-gene-list-edit" class="curs-box">
@@ -63,52 +67,40 @@ $pub
 <%init>
 use PomCur::Curs;
 
-my $schema = $c->stash()->{schema};
 my @all_genes =
   PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_name')->all();
-
-my @search_terms = ();
-
-if (defined $c->stash()->{search_terms}) {
-  @search_terms = @{$c->stash()->{search_terms}};
-}
 
 my %search_terms = ();
 @search_terms{@search_terms} = @search_terms;
 
-$c->stash()->{search_terms_hash} = \%search_terms;
-
 sub _search_highlight
 {
+  my $search_terms = shift;
   my $identifier = shift;
 
   return '' if !defined $identifier;
 
   HTML::Mason::Escapes::basic_html_escape(\$identifier);
 
-  my %search_terms = %{$c->stash()->{search_terms_hash}};
-
-  if (exists $search_terms{$identifier}) {
+  if (exists $search_terms->{$identifier}) {
     return '<span class="curs-matched-search-term">' . $identifier . '</span>';
   } else {
     return $identifier;
   }
 }
 
-my $show_organism_column = $c->stash()->{multi_organism_mode};
-
 my @gene_hashes = map {
      my $gene = $_;
      my $synonyms_string =
-       join (',', map { _search_highlight($_->identifier()) } $gene->genesynonyms());
+       join (',', map { _search_highlight(\%search_terms, $_->identifier()) } $gene->genesynonyms());
      my $hash = {
-       'Systematic identifier' => _search_highlight($gene->primary_identifier()),
-       Name => _search_highlight($gene->primary_name()),
+       'Systematic identifier' => _search_highlight(\%search_terms, $gene->primary_identifier()),
+       Name => _search_highlight(\%search_terms, $gene->primary_name()),
        Product => $gene->product(),
        Synonyms => $synonyms_string,
        gene_id => $gene->gene_id(),
      };
-     if ($show_organism_column) {
+     if ($multi_organism_mode) {
        $hash->{Organism} = $gene->organism()->full_name();
      }
      $hash
@@ -116,11 +108,10 @@ my @gene_hashes = map {
 
 my @col_names = ("Systematic identifier", "Name", "Synonyms", "Product");
 
-if ($show_organism_column) {
+if ($multi_organism_mode) {
   push @col_names, "Organism";
 }
 
-my $start_path = $c->stash()->{curs_root_uri};
-my $upload_path = "$start_path/gene_upload";
-my $edit_path = "$start_path/edit_genes";
+my $upload_path = "$curs_root_uri/gene_upload";
+my $edit_path = "$curs_root_uri/edit_genes";
 </%init>
