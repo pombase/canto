@@ -213,7 +213,7 @@ sub load
                                               $term->is_relationship_type());
 
         if ($term->is_relationship_type()) {
-          $relationship_cvterms{$term->name()} = $cvterm;
+          $relationship_cvterms{$term->acc()} = $cvterm;
         }
 
         my $cvterm_id = $cvterm->cvterm_id();
