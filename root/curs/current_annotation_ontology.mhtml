@@ -81,11 +81,14 @@ $user_created
     </td>
     <td>
       <span>
+<a href="<% $curs_root_uri . '/annotation/evidence/' . $row->{annotation_id} %>"
 % if (defined $row->{evidence_code}) {
-     <% $row->{evidence_code} %>
+   title="Change evidence ...">
+   <% $row->{evidence_code} %>
 % } else {
-     <a href="<% $curs_root_uri . '/annotation/evidence/' . $row->{annotation_id} %>">Set evidence ...</a>
+   title="Set evidence ...">Set evidence ...
 % }
+</a>
       </span>
     </td>
     <td>
