@@ -543,7 +543,7 @@ sub gene_upload : Chained('top') Args(0) Form
         $c->detach();
         return 0;
       } else {
-        $c->flash()->{search_terms} = [@search_terms];
+        $c->flash()->{hightlight_terms} = [@search_terms];
         _redirect_and_detach($c, 'confirm_genes');
       }
     }
