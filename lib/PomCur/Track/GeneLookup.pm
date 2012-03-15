@@ -143,6 +143,7 @@ sub _read_genes
               missing => ['test'] }
 
 =cut
+
 sub lookup
 {
   my $self = shift;
