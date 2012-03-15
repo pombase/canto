@@ -125,7 +125,9 @@ sub find_or_create_cv
   my $self = shift;
   my $cv_name = shift;
 
-  croak "no cv found for: $cv_name" unless defined $cv_name;
+  if (!defined $cv_name) {
+    croak "no cv name passed to find_or_create_cv()";
+  }
 
   if (exists $self->{cache}->{cv}->{$cv_name}) {
     return $self->{cache}->{cv}->{$cv_name};
