@@ -169,6 +169,10 @@ sub load
 
       my $cv_name = $term->namespace();
 
+      if (!defined $cv_name) {
+        die "no namespace in $source";
+      }
+
       if (!grep { $_ eq $cv_name } @seen_cvs) {
         push @seen_cvs, $cv_name;
         _delete_term_by_cv($schema, $cv_name);
