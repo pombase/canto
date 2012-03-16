@@ -217,7 +217,8 @@ sub load
                                               $term->is_relationship_type());
 
         if ($term->is_relationship_type()) {
-          $relationship_cvterms{$term->acc()} = $cvterm;
+          (my $term_acc = $term->acc()) =~ s/OBO_REL://;
+          $relationship_cvterms{$term_acc} = $cvterm;
         }
 
         my $cvterm_id = $cvterm->cvterm_id();
