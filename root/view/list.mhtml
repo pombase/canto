@@ -32,7 +32,7 @@ $is_inline
 %       }
         <td align="<% $align_attr %>">
           <& field.mhtml, object => $object, field_name => $col_conf->{name},
-             class_info => $class_info &>
+             class_info => $class_info, cache => $cache &>
         </td>
 %     }
     </tr>
@@ -110,4 +110,6 @@ if ($disclosed) {
   $disclosed_style = 'disclosed-title';
 }
 
+# speed up field.mhtml by caching the database lookups
+my $cache = {};
 </%init>

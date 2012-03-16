@@ -84,6 +84,33 @@ sub _format_field_value
   return $field_value;
 }
 
+sub _get_cached_object
+{
+  my $schema = shift;
+  my $object = shift;
+  my $db_column_name = shift;
+  my $table_name = shift;
+  my $cache = shift;
+
+  my $col_object_id = $object->get_column($db_column_name);
+
+  if (!defined $col_object_id) {
+    return undef;
+  }
+  my $cache_key = "$table_name.$col_object_id";
+
+  if (!defined $cache || !exists $cache->{$cache_key}) {
+    (my $column_name = $db_column_name) =~ s/_id$//;
+    my $value = $object->$column_name();
+    if (defined $cache) {
+      $cache->{$cache_key} = $value;
+    } else {
+      return $value;
+    }
+  }
+  return $cache->{$cache_key};
+}
+
 =head2
 
  Usage   : my ($field_value, $field_type) =
@@ -131,6 +158,7 @@ sub get_field_value
   my $object = shift;
   my $class_info = shift;
   my $field_name = shift;
+  my $cache = shift;
 
   my $type = $class_info->{source};
 
@@ -180,8 +208,6 @@ sub get_field_value
 
   $field_db_column =~ s/_id$//;
 
-  my $field_value = $object->$field_db_column();
-
   my $info_ref = $parent_class_name->relationship_info($field_db_column);
 
   if (!defined $info_ref) {
@@ -190,14 +216,17 @@ sub get_field_value
     $info_ref = $parent_class_name->relationship_info($short_field);
   }
 
+
   if (defined $info_ref) {
     my %info = %{$info_ref};
-    my $referenced_object = $object->$field_db_column();
 
-    if (defined $referenced_object) {
-      my $referenced_class_name = $info{class};
-      my $referenced_table = PomCur::DB::table_name_of_class($referenced_class_name);
+    my $referenced_class_name = $info{class};
+    my $referenced_table = PomCur::DB::table_name_of_class($referenced_class_name);
 
+    my $field_value =
+      _get_cached_object($schema, $object, $col_conf->{source}, $referenced_table, $cache);
+
+    if (defined $field_value) {
       my $ref_table_conf = $class_infos->{$referenced_table};
       if (!defined $ref_table_conf) {
         die "no class_info configuration for $referenced_table\n";
@@ -214,6 +243,7 @@ sub get_field_value
       return (undef, 'foreign_key', undef);
     }
   } else {
+    my $field_value = $object->$field_db_column();
     my $display_key_field = $class_infos->{$type}->{display_field};
 
     my $return_type;

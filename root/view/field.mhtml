@@ -1,4 +1,4 @@
-<%doc>
+ <%doc>
 This component renders the value one field of an object.  If the field contains
 the id of another object it will be rendered as a link to the
 referenced object.  If the field is the primary id key of the current object,
@@ -9,6 +9,7 @@ it will be rendered as a 'details' link.
 $object
 $class_info
 $field_name
+$cache => undef
 </%args>
 
 <span class="field-value">
@@ -52,8 +53,10 @@ use Data::Dumper;
 
 my $col_conf = $class_info->{field_infos}->{$field_name};
 
+#warn "getting field value for $field_name\n";
 my ($field_value, $field_type, $ref_display_key) =
-  PomCur::WebUtil::get_field_value($c, $object, $class_info, $field_name);
+  PomCur::WebUtil::get_field_value($c, $object, $class_info, $field_name, $cache);
+#warn "  got field value for $field_name\n";
 
 my $type = $object->table();
 

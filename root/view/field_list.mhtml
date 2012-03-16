@@ -1,6 +1,7 @@
 <%args>
 $object
 $class_info
+$cache => undef
 </%args>
 
 <div class="field-list">
@@ -11,7 +12,7 @@ $class_info
     <tr>
       <td><span class="field-label"><% $_get_display_name_code->($field_label) %></span>:</td>
       <td><& /view/field.mhtml, object => $object, class_info => $class_info,
-             field_name => $col_conf->{name} &></td>
+             field_name => $col_conf->{name}, cache => $cache &></td>
     </tr>
 % }
   </table>
