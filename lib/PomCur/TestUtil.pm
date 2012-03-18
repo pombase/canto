@@ -494,10 +494,21 @@ sub _add_pub_details
   PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
 
   my $curatable_term = $schema->resultset('Cvterm')->find({ name => 'Curatable' });
-  my $pub = $schema->resultset('Pub')->find({ uniquename => 'PMID:19756689' });
+  my @pubs = $schema->resultset('Pub')->search({ -or => [ uniquename => 'PMID:19756689',
+                                                          uniquename => 'PMID:18426916' ] });
 
-  $pub->triage_status($curatable_term);
-  $pub->update();
+  map {
+    $_->triage_status($curatable_term);
+    $_->update();
+  } @pubs;
+
+  my $feature_or_region_term =
+    $schema->resultset('Cvterm')->find({ name => 'Sequence feature or region' });
+
+  my $pub_19351719 = $schema->resultset('Pub')->find({ uniquename => 'PMID:19351719' });
+
+  $pub_19351719->triage_status($feature_or_region_term);
+  $pub_19351719->update();
 }
 
 =head2 make_base_track_db

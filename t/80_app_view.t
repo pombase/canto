@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 18;
 
 use PomCur::TestUtil;
 
@@ -11,6 +11,8 @@ use Web::Scraper;
 
 my $test_util = PomCur::TestUtil->new();
 $test_util->init_test();
+
+my $track_schema = $test_util->track_schema();
 
 my $app = $test_util->plack_app()->{app};
 
@@ -27,6 +29,21 @@ test_psgi $app, sub {
 
     like ($res->content(), qr/Details for Val Wood/);
     like ($res->content(), qr/Val Wood/);
+  }
+
+  # test viewing a more complicated object
+  {
+    my $test_pub = $track_schema->resultset('Pub')->find({ uniquename => 'PMID:19351719' });
+    my $test_pub_id = $test_pub->pub_id();
+
+    my $url = "http://localhost:5000/view/object/pub/$test_pub_id?model=track";
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    like ($res->content(), qr/Details for publication: PMID:19351719/);
+    like ($res->content(), qr/Sequence feature or region/);
   }
 
   # test viewing a list
