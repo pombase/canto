@@ -492,6 +492,12 @@ sub _add_pub_details
   my $full_file_name = $data_dir . '/'. $xml_file_name;
   my $xml = IO::All->new($full_file_name)->slurp();
   PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
+
+  my $curatable_term = $schema->resultset('Cvterm')->find({ name => 'Curatable' });
+  my $pub = $schema->resultset('Pub')->find({ uniquename => 'PMID:19756689' });
+
+  $pub->triage_status($curatable_term);
+  $pub->update();
 }
 
 =head2 make_base_track_db
