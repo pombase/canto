@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 28;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -118,3 +118,33 @@ PomCur::Track::delete_curs($config, $schema, $curs_key);
 
 is($curs_rs->search({ curs_key => $curs_key })->count(), 0);
 ok(!-f $db_file_name);
+
+
+# test validate_curs() by changing the cursdb
+my $validate_key = 'aaaa0007';
+my $validate_curs = $curs_rs->find({ curs_key => $validate_key });
+my @validate_res = PomCur::Track::validate_curs($config, $track_schema, $validate_curs);
+is (@validate_res, 0);
+
+my $validate_curs_schema =
+  PomCur::Curs::get_schema_for_key($config, $validate_key);
+my $validate_curs_pub_id =
+  $validate_curs_schema->find_with_type('Metadata', 'key', 'curation_pub_id')->value();
+my $validate_curs_pub =
+  $validate_curs_schema->find_with_type('Pub', $validate_curs_pub_id);
+$validate_curs_pub->uniquename('PMID:12345');
+$validate_curs_pub->update();
+@validate_res = PomCur::Track::validate_curs($config, $track_schema, $validate_curs);
+is (@validate_res, 1);
+my $validate_pub_mess = q/Pub uniquename in the trackdb ("PMID:19756689") doesn't match Pub uniquename in the cursdb ("PMID:12345")/;
+is ($validate_res[0], $validate_pub_mess);
+
+my $validate_cursdb_curs_key =
+  $validate_curs_schema->find_with_type('Metadata', 'key', 'curs_key');
+$validate_cursdb_curs_key->value('aaaa_no_match');
+$validate_cursdb_curs_key->update();
+@validate_res = PomCur::Track::validate_curs($config, $track_schema, $validate_curs);
+is (@validate_res, 2);
+is ($validate_res[0], $validate_pub_mess);
+my $validate_curs_key_mess = q/The curs_key stored in the trackdb ("aaaa0007") doesn't match curs_key in the metadata table of the cursdb ("aaaa_no_match")/;
+is ($validate_res[1], $validate_curs_key_mess);

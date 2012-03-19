@@ -285,4 +285,54 @@ sub tidy_curs
 
 }
 
+=head2 validate_curs
+
+ Usage   : PomCur::Track::validate_curs($config, $track_schema, $curs);
+ Function: Report inconsistencies in the given curation session.
+           Checks that:
+             - the PMID stored in the cursdb is the same as stored in
+               trackdb
+             - the curs_key stored in the metadata table matches the curs_key
+               in the Track DB
+ Args    : $config - the PomCur::Config object
+           $track_schema - the schema object for the trackdb
+           $curs - the Curs object of interest
+ Returns : a list of warning strings
+
+=cut
+sub validate_curs
+{
+  my $config = shift;
+  my $track_schema = shift;
+  my $curs = shift;
+
+  my @res = ();
+
+  my $trackdb_curs_key = $curs->curs_key();
+  my $curs_schema =
+    PomCur::Curs::get_schema_for_key($config, $trackdb_curs_key);
+
+  my $track_pub = $curs->pub();
+  my $track_pub_uniquename = $track_pub->uniquename();
+
+  my $curs_pub_id =
+    $curs_schema->find_with_type('Metadata', 'key', 'curation_pub_id');
+  my $curs_pub = $curs_schema->find_with_type('Pub', $curs_pub_id->value());
+  my $curs_pub_uniquename = $curs_pub->uniquename();
+  my $cursdb_curs_key =
+    $curs_schema->find_with_type('Metadata', 'key', 'curs_key')->value();
+
+  if ($track_pub_uniquename ne $curs_pub_uniquename) {
+    push @res, qq{Pub uniquename in the trackdb ("$track_pub_uniquename") doesn't } .
+               qq{match Pub uniquename in the cursdb ("$curs_pub_uniquename")};
+  }
+
+  if ($trackdb_curs_key ne $cursdb_curs_key) {
+    push @res, qq{The curs_key stored in the trackdb ("$trackdb_curs_key") doesn't } .
+               qq{match curs_key in the metadata table of the cursdb } .
+               qq{("$cursdb_curs_key")};
+  }
+
+  return @res;
+}
 1;
