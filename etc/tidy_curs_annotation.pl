@@ -33,14 +33,12 @@ sub usage
     $message = '';
   }
 
-  die qq|${message}usage:
+  die qq"${message}usage:
   $0
 
 Script to tidy cursdbs
-|;
+";
 }
-
-my @command_line_pubs = @ARGV;
 
 my $app_name = PomCur::Config::get_application_name();
 
