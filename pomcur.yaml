@@ -184,9 +184,9 @@ db_initial_data:
               accession: mutagenicity_or_toxicity_study
               db:
                 name: PomCur
-          - name: Genetically mapped only
+          - name: Not physically mapped
             dbxref:
-              accession: genetically_mapped_only
+              accession: not_physically_mapped
               db:
                 name: PomCur
           - name: Cell composition or WT feature
