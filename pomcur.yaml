@@ -840,7 +840,7 @@ reports:
                 - report: triage_review_or_comment_publications
                 - report: triage_erratum_publications
                 - report: triage_mutagenicity_or_toxicity_study_publications
-                - report: triage_genetically_mapped_only_publications
+                - report: triage_not_physically_mapped_publications
                 - report: triage_cell_composition_or_wt_feature_publications
                 - report: triage_phylogeny_paper_publications
                 - report: triage_loaded_in_error_publications
