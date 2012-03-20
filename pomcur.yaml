@@ -615,10 +615,10 @@ class_info:
       class_display_name: Mutagenicity or toxicity study
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Mutagenicity or toxicity study')"
-    triage_genetically_mapped_only_publications:
-      class_display_name: Genetically mapped only
+    triage_not_physically_mapped_publications:
+      class_display_name: Not physically mapped
       extends: pub
-      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Genetically mapped only')"
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Not physically mapped')"
     triage_cell_composition_or_wt_feature_publications:
       class_display_name: Cell composition or WT feature
       extends: pub
