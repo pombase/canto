@@ -114,7 +114,7 @@ sub initialise {
        or: my $obj = $schema->find_with_type('Organism', { genus => 'Arabidopsis',
                                                            species => 'thaliana' } );
  Function: Return the object of the given type that has the given key field with
-           given value
+           given value or croak if no object is found
  Args    : $type - an unqualified class name like 'Person'
            $field_name - the field name to use when searching
            $value - the value to search for
