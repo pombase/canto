@@ -39,7 +39,7 @@ $user_created
         With
       </th>
 % }
-% if ($user_created && $some_row_has_term_suggestion) {
+% if ($user_created) {
       <th>
         Term suggestion
       </th>
@@ -106,7 +106,7 @@ $user_created
       </span>
     </td>
 % }
-% if ($user_created && $some_row_has_term_suggestion) {
+% if ($user_created) {
     <td>
       <span>
 %   if ($row->{term_suggestion}) {
@@ -193,6 +193,4 @@ my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
   $gene_text . ($user_created ? '' : ' from ' . $pub->uniquename());
 
 my $needs_with_or_from = $annotation_type->{needs_with_or_from};
-
-my $some_row_has_term_suggestion = grep { $_-> {term_suggestion} } @annotations;
 </%init>
