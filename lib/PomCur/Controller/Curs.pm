@@ -582,6 +582,8 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
   my $st = $c->stash();
   my $schema = $st->{schema};
 
+  $self->_check_annotation_exists($c, $annotation_id);
+
   my $delete_sub = sub {
     my $annotation = $schema->resultset('Annotation')->find($annotation_id);
     $annotation->delete();
@@ -602,6 +604,8 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
+
+  $self->_check_annotation_exists($c, $annotation_id);
 
   my $delete_sub = sub {
     my $annotation = $schema->resultset('Annotation')->find($annotation_id);
@@ -874,6 +878,25 @@ sub _maybe_transfer_annotation
   }
 }
 
+sub _check_annotation_exists
+{
+  my $self = shift;
+  my $c = shift;
+  my $annotation_id = shift;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation =
+    $schema->resultset('Annotation')->find($annotation_id);
+
+  if (!defined $annotation) {
+    $c->flash()->{error} = qq|No annotation found with id "$annotation_id" |;
+    _redirect_and_detach($c);
+  }
+}
+
+
 sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1) Form
 {
   my ($self, $c, $annotation_id) = @_;
@@ -881,6 +904,8 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
+
+  $self->_check_annotation_exists($c, $annotation_id);
 
   my $annotation = $schema->find_with_type('Annotation', $annotation_id);
   my $annotation_type_name = $annotation->type();
@@ -978,6 +1003,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
+
+  $self->_check_annotation_exists($c, $annotation_id);
 
   my $annotation = $schema->find_with_type('Annotation', $annotation_id);
   my $annotation_type_name = $annotation->type();
@@ -1122,6 +1149,8 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
+
+  $self->_check_annotation_exists($c, $annotation_id);
 
   my $annotation = $schema->find_with_type('Annotation', $annotation_id);
   my $annotation_type_name = $annotation->type();
