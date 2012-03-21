@@ -89,7 +89,7 @@ test_psgi $app, sub {
 
     is ($res->code, 200);
 
-    _check_for_pub($res, $first_pub, 21);
+    _check_for_pub($res, $first_pub, 20);
   }
 
   my $curatable_cvterm = $schema->find_with_type('Cvterm',
@@ -143,7 +143,7 @@ test_psgi $app, sub {
 
     $second_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
 
-    _check_for_pub($redirect_res, $second_pub, 20);
+    _check_for_pub($redirect_res, $second_pub, 19);
   }
 
   # check triage return-pub-id works
