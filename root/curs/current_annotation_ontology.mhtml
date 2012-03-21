@@ -91,9 +91,9 @@ $user_created
 </a>
       </span>
     </td>
+% if ($needs_with_or_from) {
     <td>
       <span>
-% if ($needs_with_or_from) {
 % if ($row->{needs_with} || defined $row->{with_or_from_display_name}) {
 %   if (defined $row->{with_or_from_display_name}) {
       <% $row->{with_or_from_display_name} %>
@@ -103,9 +103,9 @@ $user_created
 % } else {
      &nbsp; 
 % }
-% }
       </span>
     </td>
+% }
 % if ($user_created) {
     <td>
       <span>
