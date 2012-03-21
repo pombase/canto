@@ -40,9 +40,11 @@ $user_created
       </th>
 % }
 % if ($user_created) {
+%   if ($some_row_has_term_suggestion) {
       <th>
         Term suggestion
       </th>
+%   }
 % #if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
       <th>
         Annotation extension
@@ -107,15 +109,17 @@ $user_created
     </td>
 % }
 % if ($user_created) {
+%   if ($some_row_has_term_suggestion) {
     <td>
       <span>
 %   if ($row->{term_suggestion}) {
       <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{name}) %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{definition}) %>');">View ...</a>
 %   } else {
       &nbsp;
-% }
+%   }
       </span>
     </td>
+% }
     <td>
       <span>
 %   if ($row->{annotation_extension} && $row->{annotation_extension} !~ /^\s*$/) {
@@ -193,4 +197,6 @@ my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
   $gene_text . ($user_created ? '' : ' from ' . $pub->uniquename());
 
 my $needs_with_or_from = $annotation_type->{needs_with_or_from};
+
+my $some_row_has_term_suggestion = grep { $_-> {term_suggestion} } @annotations;;
 </%init>
