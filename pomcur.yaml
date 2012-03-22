@@ -700,7 +700,7 @@ class_info:
         - name: cv
           source: cv_id
           editable: 1
-        - name: dbxref
+        - name: dbxref_id
           editable: 1
         - name: "features annotated with this term"
           source:
