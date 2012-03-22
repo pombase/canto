@@ -11,7 +11,4 @@ use PomCur;
 
 use Plack::Builder;
 
-PomCur->setup_engine('PSGI');
-my $app = sub { PomCur->run(@_) };
-
-$app;
+PomCur->psgi_app;
