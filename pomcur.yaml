@@ -358,6 +358,31 @@ class_info:
           editable: 1
         - name: cv_id
           editable: 1
+    db:
+      editable: 1
+      display_field: name
+      field_info_list:
+        - name: name
+          editable: 1
+        - name: description
+          editable: 1
+        - name: url
+          editable: 1
+        - name: "accessions stored"
+          source:
+            sql: 'select count(*) from dbxref where dbxref.db_id = me.db_id'
+    dbxref:
+      editable: 1
+      display_field: accession
+      field_info_list:
+        - name: db_id
+          editable: 1
+        - name: accession
+          editable: 1
+        - name: description
+          editable: 1
+        - name: cvterm_id
+          editable: 1
     organism:
       editable: 1
       display_field: full_name
