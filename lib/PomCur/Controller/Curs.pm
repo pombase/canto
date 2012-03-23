@@ -346,16 +346,45 @@ sub _find_and_create_genes
 
   my $result = $adaptor->lookup([@search_terms]);
 
+  my %identifiers_matching_more_than_once = ();
+  my %genes_matched_more_than_once = ();
+
+  map {
+    my $match = $_;
+    my $primary_identifier = $match->{primary_identifier};
+    map {
+      my $identifier = $_;
+      $identifiers_matching_more_than_once{$identifier}->{$primary_identifier} = 1;
+      $genes_matched_more_than_once{$primary_identifier}->{$identifier} = 1;
+    } (@{$match->{match_types}->{synonym} // []},
+       $match->{match_types}->{primary_identifier} // (),
+       $match->{match_types}->{primary_name} // ());
+  } @{$result->{found}};
+
+  sub _remove_single_matches {
+    my $hash = shift;
+    map {
+      my $identifier = $_;
+
+      if (keys %{$hash->{$identifier}} == 1) {
+        delete $hash->{$identifier};
+      }
+    } keys %$hash;
+  }
+
+  _remove_single_matches(\%identifiers_matching_more_than_once);
+  _remove_single_matches(\%genes_matched_more_than_once);
+
   if (@{$result->{missing}}) {
     if ($create_when_missing) {
       $self->_create_genes($schema, $result);
     }
 
-    return $result;
+    return ($result, \%genes_matched_more_than_once, \%identifiers_matching_more_than_once);
   } else {
     $self->_create_genes($schema, $result);
 
-    return undef;
+    return ();
   }
 }
 
@@ -526,16 +555,22 @@ sub gene_upload : Chained('top') Args(0) Form
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
     my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $search_terms_text;
 
-    my $result = $self->_find_and_create_genes($schema, $c->config(), \@search_terms);
-
-    $self->store_statuses($c->config(), $schema);
+    my ($result, $genes_matched_multiply, $identifers_matching_mutiply) =
+      $self->_find_and_create_genes($schema, $c->config(), \@search_terms);
 
     if ($result) {
+      # returns the search result only if there was a problem
       my @missing = @{$result->{missing}};
-      $st->{error} =
-          { title => "No genes found for these identifiers: @missing" };
-      $st->{gene_upload_unknown} = [@missing];
+      if (@missing) {
+        $st->{error} =
+            { title => "No genes found for these identifiers: @missing" };
+        $st->{gene_upload_unknown} = [@missing];
+      } else {
+
+      }
     } else {
+      $self->store_statuses($c->config(), $schema);
+
       my $return_path = $form->param_value('return_path_input');
 
       if (defined $return_path && length $return_path > 0) {
