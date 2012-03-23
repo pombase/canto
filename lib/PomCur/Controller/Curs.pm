@@ -564,48 +564,56 @@ sub gene_upload : Chained('top') Args(0) Form
     if ($result) {
       # the search result is returned only if there was a problem
       my @missing = @{$result->{missing}};
-      my $message;
+      my $error_title;
+      my $error_text;
       if (@missing) {
-        $message = "No genes found for these identifiers: @missing";
+        $error_title = "No genes found for these identifiers: @missing";
       } else {
         if (keys %$identifiers_matching_more_than_once > 0) {
           if (keys %$identifiers_matching_more_than_once > 1) {
-            $message = 'Some of your identifiers match more than one gene: ';
+            $error_title = 'Some of your identifiers match more than one gene: ';
           } else {
-            $message = 'One of your identifiers matches more than one gene: ';
+            $error_title = 'One of your identifiers matches more than one gene: ';
           }
 
           my @bits = ();
-          while (my ($identifier, $gene_hash) = each %$identifiers_matching_more_than_once) {
-            my @gene_identifiers = keys %$gene_hash;
+          while (my ($identifier, $gene_list) = each %$identifiers_matching_more_than_once) {
+            my @gene_identifiers = map { qq("$_") } @$gene_list;
             my $last_identifier = pop @gene_identifiers;
             my $this_message = "$identifier matches ";
-            $this_message .= join ', ', @gene_identifiers[0..@gene_identifiers];
-            $this_message .= "and $last_identifier";
+            $this_message .= join ', ', @gene_identifiers;
+            $this_message .= " and $last_identifier";
+            push @bits, $this_message;
           }
 
-          $message .= join '; ', @bits;
+          $error_title .= join '; ', @bits;
         } else {
           if (keys %$genes_matched_more_than_once > 0) {
-            $message = 'Some of your identifiers match the same gene: ';
+            $error_title = 'Some of your identifiers match the same gene: ';
 
             my @bits = ();
-            while (my ($identifier, $gene_hash) = each %$genes_matched_more_than_once) {
-              my @gene_identifiers = keys %$gene_hash;
+            while (my ($identifier, $gene_list) = each %$genes_matched_more_than_once) {
+              my @gene_identifiers = map { qq("$_") } @$gene_list;
               my $last_identifier = pop @gene_identifiers;
-              my $this_message = "$identifier matches ";
-              $this_message .= join ', ', @gene_identifiers[0..@gene_identifiers];
-              $this_message .= "and $last_identifier";
+              my $this_message = "found gene $identifier with ";
+              $this_message .= join ', ', @gene_identifiers;
+              $this_message .= " and $last_identifier";
+              push @bits, $this_message;
             }
 
-            $message .= join '; ', @bits;
+            $error_title .= join '; ', @bits;
           } else {
             die "internal error";
           }
         }
+
+        $error_text = 'Enter only systematic identifiers to avoid this problem.';
       }
 
-      $st->{error} = { title => $message };
+      $st->{error} = { title => $error_title };
+      if (defined $error_text) {
+        $st->{error}->{text} = $error_text;
+      }
       $st->{gene_upload_unknown} = [@missing];
     } else {
       $self->store_statuses($c->config(), $schema);
