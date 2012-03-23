@@ -1,6 +1,7 @@
 use strict;
 use warnings;
-use Test::More tests => 24;
+use Test::More tests => 27;
+use Test::Deep;
 
 use Data::Compare;
 
@@ -21,7 +22,9 @@ is(@curs_objects, 1);
 
 my $curs_key = $curs_objects[0]->curs_key();
 
-my @known_genes = qw(SPCC1739.10 wtf22 SPNCRNA.119 ssm4 ste20 ste16);
+my @known_genes = qw(SPCC1739.10 wtf22 SPNCRNA.119);
+my @id_matching_two_genes = qw(ssm4);
+my @two_ids_matching_one_gene = qw(ste20 ste16);
 my @unknown_genes = qw(dummy SPCC999999.99);
 
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
@@ -66,13 +69,13 @@ sub check_result
   is($curs_schema->resultset('Gene')->count(), $gene_count);
 }
 
-check_result($result, 2, 6, 0);
+check_result($result, 2, 3, 0);
 
 ($result) =
   PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@search_list);
 
-check_result($result, 2, 6, 0);
+check_result($result, 2, 3, 0);
 
 ($result) =
   PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
@@ -80,7 +83,7 @@ check_result($result, 2, 6, 0);
 
 ok(!defined $result);
 
-is($curs_schema->resultset('Gene')->count(), 6);
+is($curs_schema->resultset('Gene')->count(), 3);
 
 
 sub _lookup_gene
@@ -109,22 +112,47 @@ my @filtered_genes =
                                                    @genes_to_filter);
 
 is(@filtered_genes, 1);
-
 is($filtered_genes[0]->{primary_identifier}, 'SPCC1739.11c');
 
-($result) =
+
+# try some lists that fail
+$curs_schema->resultset('Gene')->delete();
+
+my ($identifiers_matching_more_than_once, $genes_matched_more_than_once);
+
+($result, $identifiers_matching_more_than_once, $genes_matched_more_than_once) =
   PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
-                                                   [@known_genes, 'SPCC576.19c']);
+                                                   [@known_genes,
+                                                    @id_matching_two_genes,
+                                                    'SPCC576.19c']);
+ok(defined $result);
+cmp_deeply($identifiers_matching_more_than_once,
+           {
+             ssm4 => [qw(SPAC27D7.13c SPBC14F5.07)],
+           });
+cmp_deeply($genes_matched_more_than_once, {});
 
-ok(!defined $result);
 
-is($curs_schema->resultset('Gene')->count(), 7);
 
-my $ssm4 = $curs_schema->find_with_type('Gene', { primary_name => 'ssm4' });
+is($curs_schema->resultset('Gene')->count(), 0);
 
-ok($ssm4);
-is($ssm4->genesynonyms(), 1);
-is($ssm4->genesynonyms()->first()->identifier(), "SPAC637.01c");
+($result, $identifiers_matching_more_than_once, $genes_matched_more_than_once) =
+  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
+                                                   [@known_genes,
+                                                    @two_ids_matching_one_gene,
+                                                    'SPCC576.19c']);
+ok(defined $result);
+cmp_deeply($identifiers_matching_more_than_once, {});
+cmp_deeply($genes_matched_more_than_once,
+           {
+             'SPBC12C2.02c' => [qw(ste16 ste20)],
+           });
+
+
+
+is($curs_schema->resultset('Gene')->count(), 0);
+
+
 
 # utility methods
 my $iso_date = PomCur::Controller::Curs::_get_iso_date();

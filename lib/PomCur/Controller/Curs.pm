@@ -368,6 +368,8 @@ sub _find_and_create_genes
 
       if (keys %{$hash->{$identifier}} == 1) {
         delete $hash->{$identifier};
+      } else {
+        $hash->{$identifier} = [sort keys %{$hash->{$identifier}}];
       }
     } keys %$hash;
   }
@@ -375,12 +377,13 @@ sub _find_and_create_genes
   _remove_single_matches(\%identifiers_matching_more_than_once);
   _remove_single_matches(\%genes_matched_more_than_once);
 
-  if (@{$result->{missing}}) {
+  if (@{$result->{missing}} || keys %identifiers_matching_more_than_once > 0 ||
+      keys %genes_matched_more_than_once > 0) {
     if ($create_when_missing) {
       $self->_create_genes($schema, $result);
     }
 
-    return ($result, \%genes_matched_more_than_once, \%identifiers_matching_more_than_once);
+    return ($result, \%identifiers_matching_more_than_once, \%genes_matched_more_than_once);
   } else {
     $self->_create_genes($schema, $result);
 
@@ -555,19 +558,55 @@ sub gene_upload : Chained('top') Args(0) Form
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
     my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $search_terms_text;
 
-    my ($result, $genes_matched_multiply, $identifers_matching_mutiply) =
+    my ($result, $identifiers_matching_more_than_once, $genes_matched_more_than_once) =
       $self->_find_and_create_genes($schema, $c->config(), \@search_terms);
 
     if ($result) {
-      # returns the search result only if there was a problem
+      # the search result is returned only if there was a problem
       my @missing = @{$result->{missing}};
+      my $message;
       if (@missing) {
-        $st->{error} =
-            { title => "No genes found for these identifiers: @missing" };
-        $st->{gene_upload_unknown} = [@missing];
+        $message = "No genes found for these identifiers: @missing";
       } else {
+        if (keys %$identifiers_matching_more_than_once > 0) {
+          if (keys %$identifiers_matching_more_than_once > 1) {
+            $message = 'Some of your identifiers match more than one gene: ';
+          } else {
+            $message = 'One of your identifiers matches more than one gene: ';
+          }
 
+          my @bits = ();
+          while (my ($identifier, $gene_hash) = each %$identifiers_matching_more_than_once) {
+            my @gene_identifiers = keys %$gene_hash;
+            my $last_identifier = pop @gene_identifiers;
+            my $this_message = "$identifier matches ";
+            $this_message .= join ', ', @gene_identifiers[0..@gene_identifiers];
+            $this_message .= "and $last_identifier";
+          }
+
+          $message .= join '; ', @bits;
+        } else {
+          if (keys %$genes_matched_more_than_once > 0) {
+            $message = 'Some of your identifiers match the same gene: ';
+
+            my @bits = ();
+            while (my ($identifier, $gene_hash) = each %$genes_matched_more_than_once) {
+              my @gene_identifiers = keys %$gene_hash;
+              my $last_identifier = pop @gene_identifiers;
+              my $this_message = "$identifier matches ";
+              $this_message .= join ', ', @gene_identifiers[0..@gene_identifiers];
+              $this_message .= "and $last_identifier";
+            }
+
+            $message .= join '; ', @bits;
+          } else {
+            die "internal error";
+          }
+        }
       }
+
+      $st->{error} = { title => $message };
+      $st->{gene_upload_unknown} = [@missing];
     } else {
       $self->store_statuses($c->config(), $schema);
 
