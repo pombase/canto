@@ -21,7 +21,7 @@ is(@curs_objects, 1);
 
 my $curs_key = $curs_objects[0]->curs_key();
 
-my @known_genes = qw(SPCC1739.10 wtf22 SPNCRNA.119 ssm4);
+my @known_genes = qw(SPCC1739.10 wtf22 SPNCRNA.119 ssm4 ste20 ste16);
 my @unknown_genes = qw(dummy SPCC999999.99);
 
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
@@ -43,7 +43,7 @@ like($curs_db_pub->title(), qr/Inactivating pentapeptide insertions in the/);
 
 my @search_list = (@known_genes, @unknown_genes);
 
-my $result =
+my ($result) =
   PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@search_list);
 sub check_result
@@ -66,21 +66,21 @@ sub check_result
   is($curs_schema->resultset('Gene')->count(), $gene_count);
 }
 
-check_result($result, 2, 5, 0);
+check_result($result, 2, 6, 0);
 
-$result =
+($result) =
   PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@search_list);
 
-check_result($result, 2, 5, 0);
+check_result($result, 2, 6, 0);
 
-$result =
+($result) =
   PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@known_genes);
 
 ok(!defined $result);
 
-is($curs_schema->resultset('Gene')->count(), 5);
+is($curs_schema->resultset('Gene')->count(), 6);
 
 
 sub _lookup_gene
@@ -112,13 +112,13 @@ is(@filtered_genes, 1);
 
 is($filtered_genes[0]->{primary_identifier}, 'SPCC1739.11c');
 
-$result =
+($result) =
   PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    [@known_genes, 'SPCC576.19c']);
 
 ok(!defined $result);
 
-is($curs_schema->resultset('Gene')->count(), 6);
+is($curs_schema->resultset('Gene')->count(), 7);
 
 my $ssm4 = $curs_schema->find_with_type('Gene', { primary_name => 'ssm4' });
 
