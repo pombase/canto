@@ -113,7 +113,7 @@ $user_created
     <td>
       <span>
 %   if ($row->{term_suggestion}) {
-      <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{name}) %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{definition}) %>');">View ...</a>
+      <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{name}) %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{definition}) %>'); return false;">View ...</a>
 %   } else {
       &nbsp;
 %   }
