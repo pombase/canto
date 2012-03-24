@@ -51,6 +51,9 @@ requires 'Clone';
 requires 'MIME::Types';
 requires 'Catalyst::Controller::HTML::FormFu';
 requires 'Lingua::EN::Inflect::Number';
+requires 'Number::Format';
+requires 'MooseX::SetOnce';
+requires 'MooseX::Aliases';
 requires 'GO::Parser';
 requires 'Lucene';
 requires 'Text::CSV';
@@ -69,12 +72,15 @@ requires 'Catalyst::ScriptRunner';
 requires 'HTTP::Message';
 requires 'Sub::Exporter';
 requires 'Config::General';
+requires 'MooseX::Traits::Pluggable';
+requires 'DBD::Pg';
 
 test_requires 'Test::More' => '0.88';
 test_requires 'Test::Deep';
 test_requires 'Test::MockObject';
 test_requires 'Web::Scraper';
 test_requires 'LWP::Protocol::PSGI';
+test_requires 'LWP::Protocol::https';
 
 catalyst;
 
