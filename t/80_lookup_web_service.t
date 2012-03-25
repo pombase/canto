@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 28;
 
 use PomCur::TestUtil;
 
@@ -84,7 +84,21 @@ is(scalar(@$id_result), 1);
 
 is($id_result->[0]->{id}, 'GO:0006810');
 is($id_result->[0]->{name}, 'transport');
+is($id_result->[0]->{annotation_type}, 'biological_process');
 like($id_result->[0]->{definition}, qr/^The directed movement of substances/);
+
+# try looking up an ID from the wrong ontology
+$id_result = $lookup->lookup(ontology_name => 'biological_process',
+                             search_string => 'GO:0030133',
+                             max_results => 10,
+                             include_definition => 1);
+
+is(scalar(@$id_result), 1);
+
+is($id_result->[0]->{id}, 'GO:0030133');
+is($id_result->[0]->{name}, 'transport vesicle');
+is($id_result->[0]->{annotation_type}, 'cellular_component');
+like($id_result->[0]->{definition}, qr/^Any of the vesicles of the constitutive/);
 
 my $child_results =
   $lookup->lookup(ontology_name => $ont_name,

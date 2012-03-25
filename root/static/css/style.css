@@ -530,6 +530,11 @@ div.clearall {
   font-weight: bold;
 }
 
+.autocomplete-warning {
+  color: red;
+  font-weight: bold;
+}
+
 .ui-autocomplete-loading { 
   background: white url('../images/ui-anim_basic_16x16.gif') right top no-repeat;
 }

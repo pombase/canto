@@ -379,6 +379,15 @@ $(document).ready(function() {
       } else {
         match_name = item.name;
       }
+      var warning = '';
+      if (ferret_choose.annotation_type !== item.annotation_type) {
+        warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
+          item.annotation_type + ' term but<br/>you are browsing ' +
+          ferret_choose.annotation_type + ' terms</span>';
+        var re = new RegExp('_', 'g');
+        // unpleasant hack to make the annotation_types look nicer
+        warning = warning.replace(re,' ');
+      }
       function length_compare(a,b) {
         if (a.length < b.length) {
           return 1;
@@ -401,7 +410,7 @@ $(document).ready(function() {
       return $( "<li></li>" )
         .data( "item.autocomplete", item )
         .append( "<a>" + match_name + " <span class='term-id'>(" +
-                 item.id + ")</span>" + synonym_extra + "</a>" )
+                 item.id + ")</span>" + synonym_extra + warning + "</a>" )
         .appendTo( ul );
     };
 

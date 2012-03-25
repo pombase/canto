@@ -82,6 +82,7 @@ sub _make_term_hash
   $term_hash{id} = $cvterm->db_accession();
   $term_hash{name} = $cvterm->name();
   $term_hash{matching_synonym} = $matching_synonym;
+  $term_hash{annotation_type} = $cvterm->cv()->name();
 
   if ($include_definition) {
     $term_hash{definition} = $cvterm->definition();
