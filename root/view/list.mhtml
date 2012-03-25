@@ -17,8 +17,17 @@ $is_inline
   <table class="list">
     <thead>
       <tr>
-%   for my $head_col (@column_headings) {
-        <th><span class="field-label"><% ucfirst $head_col %></span></th>
+%   for my $col_conf (@column_confs) {
+%     my $column_name = $col_conf->{name};
+%     my $column_heading = ucfirst $column_name;
+%     $column_heading =~ s/_/ /g;
+        <th><span class="field-label">
+%     if ($is_inline) {
+          <% $column_heading %>
+%     } else {
+          <a href="<% $c->request->uri_with({order_by => '<' . $column_name}) %>"><% $column_heading %></a>
+%     }
+        </span></th>
 %   }
       </tr>
     </thead>
@@ -78,20 +87,6 @@ my @column_confs =
 $rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
 
 $st->{column_confs} = [@column_confs];
-
-for my $col_conf (@column_confs) {
-  my $column_name = $col_conf->{name};
-  next if $column_name eq 'created_stamp' or $column_name eq "${table}_id";
-
-  my $column_type = $c->schema()->column_type($col_conf, $table);
-
-  next if $column_type eq 'collection';
-
-  my $column_heading = $column_name;
-  $column_heading =~ s/_/ /g;
-
-  push @column_headings, ucfirst $column_heading;
-}
 
 while (my $obj = $rs->next()) {
   push @rows, $obj;
