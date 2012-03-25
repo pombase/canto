@@ -1,5 +1,5 @@
-function last(a) { 
-  return a[a.length-1]; 
+function last(a) {
+  return a[a.length-1];
 }
 
 function trim(a) {
@@ -94,7 +94,7 @@ var ferret_choose = {
             break;
           }
         }
-        
+
         if (i == ferret_choose.term_history.length) {
           ferret_choose.term_history.push(term_id);
         }
@@ -338,8 +338,7 @@ var curs_home = {
       '</div></div>';
     $('#curs-dialog').html(html);
     $('#curs-dialog').dialog({ modal: true,
-                               title: 'Child term suggestion for ' +
-                               term_ontid});
+                               title: 'Child term suggestion for ' + term_ontid});
   }
 };
 
@@ -381,10 +380,10 @@ $(document).ready(function() {
         match_name = item.name;
       }
       function length_compare(a,b) {
-        if (a.length < b.length) { 
+        if (a.length < b.length) {
           return 1;
         } else {
-          if (a.length > b.length) { 
+          if (a.length > b.length) {
             return -1;
           } else {
             return 0;
@@ -617,10 +616,10 @@ $(document).ready(function() {
     window.location.href = bits.join('/') + '/start/' + pubmedid;
   });
 
-  $('.non-key-attribute').jTruncate({  
-        length: 300,  
-        minTrail: 50,  
-        moreText: "[show all]",  
+  $('.non-key-attribute').jTruncate({
+        length: 300,
+        minTrail: 50,
+        moreText: "[show all]",
         lessText: "[hide]"
     });
 });
