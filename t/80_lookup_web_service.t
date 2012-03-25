@@ -12,8 +12,6 @@ $test_util->init_test();
 my $config = $test_util->config();
 my $lookup = PomCur::Track::get_adaptor($config, 'ontology');
 
-my $test_string = 'GO:00040';
-
 my $search_string = 'transporter';
 my $transport_id = 'GO:0005215';
 my $transport_name = 'transporter activity';
