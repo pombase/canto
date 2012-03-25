@@ -272,6 +272,9 @@ table.list th {
 table.list tr.even, table.list tr:nth-child(even) {
   background-color: #eed;
 }
+.list th a:link {
+  color: #226
+}
 
 table.list tr td {
   border-width: 1px;
