@@ -17,8 +17,8 @@ var application_root = '<% $c->uri_for('/') %>';
 
 % my $min_flag = '';
 % $min_flag = '.min' unless $c->debug();
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery<% $min_flag %>.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui<% $min_flag %>.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery<% $min_flag %>.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui<% $min_flag %>.js"></script>
 <script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/jquery.validate<% $min_flag %>.js"></script>
 <script src="<% $c->uri_for('/static/js/jquery.ba-bbq.min.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.shiftcheckbox.js') %>"></script>
