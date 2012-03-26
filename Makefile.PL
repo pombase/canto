@@ -74,6 +74,7 @@ requires 'HTTP::Message';
 requires 'Sub::Exporter';
 requires 'Config::General';
 requires 'MooseX::Traits::Pluggable';
+requires 'MooseX::MarkAsMethods';
 requires 'DBD::Pg';
 
 test_requires 'Test::More' => '0.88';
