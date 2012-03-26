@@ -27,6 +27,7 @@ requires 'File::Copy::Recursive';
 requires 'DBD::SQLite';
 requires 'DBIx::Class';
 requires 'DBIx::Class::Schema';
+requires 'DBIx::Class::Schema::Loader';
 requires 'DBIx::Class::ResultSet::Data::Pageset';
 requires 'DBIx::Class::ResultClass::HashRefInflator';
 requires 'Moose';
