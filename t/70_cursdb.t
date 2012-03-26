@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use Data::Compare;
 
@@ -26,6 +26,12 @@ $schema->txn_do(
                                        authors => "author list",
                                      });
   });
+
+# test that a phenotype annotation exists and has the right type
+my $phenotype_annotation_rs =
+  $schema->resultset('Annotation')->search({ type => 'fission_yeast_phenotype' });
+is ($phenotype_annotation_rs->count(), 1);
+is ($phenotype_annotation_rs->first()->data()->{term_ontid}, 'FYPO:0000004');
 
 my $res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
 
