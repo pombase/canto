@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 32;
 
 use PomCur::TestUtil;
 
@@ -123,3 +123,16 @@ ok(grep { $_->{id} eq 'GO:0005487' &&
           $_->{name} eq 'nucleocytoplasmic transporter activity' ||
           $_->{id} eq 'GO:0022857' &&
           $_->{name} eq 'transmembrane transporter activity' } @children);
+
+# try a phenotype name
+$id_result = $lookup->lookup(ontology_name => 'phenotype',
+                             search_string => 'FYPO:0000114',
+                             max_results => 10,
+                             include_definition => 1);
+
+is(scalar(@$id_result), 1);
+
+is($id_result->[0]->{id}, 'FYPO:0000114');
+is($id_result->[0]->{name}, 'cellular process phenotype');
+is($id_result->[0]->{annotation_type}, 'phenotype');
+

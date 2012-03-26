@@ -142,7 +142,7 @@ test_config:
                interacting_genes:
                  - primary_identifier: SPBC14F5.07
                  - primary_identifier: SPAC27D7.13c
-           - type: fission_yeast_phenotype
+           - type: phenotype
              status: new
              genes(Gene:primary_identifier):
                - SPCC63.05
@@ -150,7 +150,7 @@ test_config:
              data:
                evidence_code: IDA
                term_ontid: FYPO:0000004
-           - type: PSI-MOD
+           - type: post_translational_modification
              status: new
              genes(Gene:primary_identifier):
                - SPCC63.05

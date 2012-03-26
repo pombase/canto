@@ -102,7 +102,7 @@ my $full_expected_curation_session =
             ]
           },
           {
-            type => 'fission_yeast_phenotype',
+            type => 'phenotype',
             status => 'new',
             creation_date => "2010-01-02",
             evidence_code => 'IDA',
@@ -110,7 +110,7 @@ my $full_expected_curation_session =
             term => 'FYPO:0000004',
           },
           {
-            type => 'PSI-MOD',
+            type => 'post_translational_modification',
             status => 'new',
             creation_date => "2010-01-02",
             evidence_code => 'ISS',

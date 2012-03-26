@@ -69,6 +69,7 @@ sub _get_score
 
 sub _make_term_hash
 {
+  my $config = shift;
   my $search_string = shift;
   my $cvterm = shift;
   my $include_definition = shift;
@@ -82,7 +83,9 @@ sub _make_term_hash
   $term_hash{id} = $cvterm->db_accession();
   $term_hash{name} = $cvterm->name();
   $term_hash{matching_synonym} = $matching_synonym;
-  $term_hash{annotation_type} = $cvterm->cv()->name();
+  my $annotation_namespace = $cvterm->cv()->name();
+  $term_hash{annotation_type} =
+    $config->{annotation_types_by_namespace}->{$annotation_namespace}->{name};
 
   if ($include_definition) {
     $term_hash{definition} = $cvterm->definition();
@@ -105,7 +108,7 @@ sub _make_term_hash
     for my $child_cvterm (@child_cvterms) {
       if ($child_cvterm->cv()->name() eq $cv->name()) {
         push @{$term_hash{children}}, {
-          _make_term_hash($search_string, $child_cvterm, 0, 0)
+          _make_term_hash($config, $search_string, $child_cvterm, 0, 0)
         };
       }
     }
@@ -223,7 +226,7 @@ sub lookup
     my $cvterm = $hit_hash->{cvterm};
 
     my %term_hash =
-      _make_term_hash($search_string, $cvterm,
+      _make_term_hash($config, $search_string, $cvterm,
                       $include_definition, $include_children,
                       $matching_synonym);
 
