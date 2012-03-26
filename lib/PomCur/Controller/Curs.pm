@@ -656,9 +656,9 @@ sub _store_suggestion_count
   $self->set_metadata($schema, TERM_SUGGESTION_COUNT_KEY, $count);
 }
 
-sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
+sub annotation_delete : Chained('top') PathPart('annotation/delete')
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c, $annotation_id, $other_gene_identifier) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -668,7 +668,24 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete') Args(1)
 
   my $delete_sub = sub {
     my $annotation = $schema->resultset('Annotation')->find($annotation_id);
-    $annotation->delete();
+    my $annotation_type_name = $annotation->type();
+    my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+    if ($annotation_config->{category} eq 'interaction') {
+      my $data = $annotation->data();
+      if (@{$data->{interacting_genes}} == 1) {
+        $annotation->delete();
+      } else {
+        warn "NUMBER OF GENES: ", scalar(@{$data->{interacting_genes}}), "\n";
+        $data->{interacting_genes} =
+          [grep {
+            $_->{primary_identifier} ne $other_gene_identifier;
+          } @{$data->{interacting_genes}}];
+        $annotation->data($data);
+        $annotation->update();
+      }
+    } else {
+      $annotation->delete();
+    }
     $self->_store_suggestion_count($schema);
   };
 

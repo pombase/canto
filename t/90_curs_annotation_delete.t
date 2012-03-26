@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 14;
 
 use Data::Compare;
 
@@ -12,14 +12,14 @@ use PomCur::TestUtil;
 use PomCur::Controller::Curs;
 
 my $test_util = PomCur::TestUtil->new();
-$test_util->init_test('curs_annotations_1');
+$test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
 my $track_schema = $test_util->track_schema();
 my @curs_objects = $track_schema->resultset('Curs')->all();
-is(@curs_objects, 1);
+is(@curs_objects, 2);
 
-my $curs_key = $curs_objects[0]->curs_key();
+my $curs_key = 'aaaa0007';
 
 my $app = $test_util->plack_app()->{app};
 my $cookie_jar = $test_util->cookie_jar();
@@ -29,14 +29,12 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
 my $delete_annotation_re =
-  qr/SPAC3A11.14c.*GO:0030133.*IPI.*SPCC1739.10/s;
+  qr/SPBC14F5.07.*GO:0034763.*IPI.*wtf22/s;
 my $other_annotation_re =
-  qr/SPCC1739.10.*GO:0055085.*IMP/s;
+  qr/SPAC27D7.13c.*GO:0055085.*IMP/s;
 
 test_psgi $app, sub {
   my $cb = shift;
-
-  my $term_id = 'GO:0080170';
 
   sub check_not_deleted {
     my $cb = shift;
@@ -56,11 +54,14 @@ test_psgi $app, sub {
 
   sub delete_and_get_content {
     my $cb = shift;
-    my $check_re = shift;
+    my $annotation_id = shift;
+    my $interactor_identifier = shift;
 
-    my $term_id = 'GO:0080170';
-    my $uri = new URI("$root_url/annotation/delete/2");
-
+    my $uri_string = "$root_url/annotation/delete/$annotation_id";
+    if (defined $interactor_identifier) {
+      $uri_string .= "/$interactor_identifier";
+    }
+    my $uri = new URI($uri_string);
     my $req = HTTP::Request->new(GET => $uri);
 
     my $res = $cb->($req);
@@ -77,14 +78,44 @@ test_psgi $app, sub {
     return $redirect_res->content();
   }
 
-  my $content = delete_and_get_content($cb);
+  my $content = delete_and_get_content($cb, 2);
 
   like ($content, $other_annotation_re);
   unlike ($content, $delete_annotation_re);
 
   # delete the same annotation again to make sure we get an error
-  $content = delete_and_get_content($cb);
+  $content = delete_and_get_content($cb, 2);
   like ($content, qr/No annotation found with id &quot;2&quot;/);
+
+  # delete one interaction from an annotation that has two interactions
+  my $annotation_rs =
+    $curs_schema->resultset('Annotation')->search({ type => 'genetic_interaction' });
+  my $interaction_annotation;
+  my $ev_code = 'Synthetic Haploinsufficiency';
+  my $interactor_to_delete = 'SPAC27D7.13c';
+
+  while (defined (my $ann = $annotation_rs->next())) {
+    my $data = $ann->data();
+    if ($data->{evidence_code} eq $ev_code) {
+      if (defined $interaction_annotation) {
+        die "fix test: there are now multiple interaction annotations " .
+          "with type: $ev_code";
+      } else {
+        $interaction_annotation = $ann;
+        is (@{$data->{interacting_genes}}, 2);
+        ok (grep { $_->{primary_identifier} eq $interactor_to_delete } @{$data->{interacting_genes}});
+      }
+    }
+  }
+  ok (defined $interaction_annotation);
+  $content = delete_and_get_content($cb, $interaction_annotation->annotation_id(),
+                                    $interactor_to_delete);
+  # re-fetch from database:
+  $interaction_annotation->discard_changes();
+  my $data = $interaction_annotation->data();
+
+  is (@{$data->{interacting_genes}}, 1);
+  ok (!grep { $_->{primary_identifier} eq $interactor_to_delete } @{$data->{interacting_genes}});
 };
 
 done_testing;
