@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Organism;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Organism
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Organism
+=head1 TABLE: C<organism>
 
 =cut
 
@@ -73,9 +77,35 @@ __PACKAGE__->add_columns(
   "comment",
   { data_type => "text", is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</organism_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("organism_id");
 
 =head1 RELATIONS
+
+=head2 genes
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Gene>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genes",
+  "PomCur::TrackDB::Gene",
+  { "foreign.organism" => "self.organism_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 =head2 organismprops
 
@@ -107,24 +137,9 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 genes
 
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Gene>
-
-=cut
-
-__PACKAGE__->has_many(
-  "genes",
-  "PomCur::TrackDB::Gene",
-  { "foreign.organism" => "self.organism_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-05 19:49:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iMjS12EO7y/ChMNtsKugBQ
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+WkHNeROMZ+VvBIlE1ffWA
 
 use Carp;
 

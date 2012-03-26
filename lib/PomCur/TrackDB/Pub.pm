@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Pub;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Pub
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Pub
+=head1 TABLE: C<pub>
 
 =cut
 
@@ -138,80 +142,34 @@ __PACKAGE__->add_columns(
   "added_date",
   { data_type => "timestamp", is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</pub_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("pub_id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<uniquename_unique>
+
+=over 4
+
+=item * L</uniquename>
+
+=back
+
+=cut
+
 __PACKAGE__->add_unique_constraint("uniquename_unique", ["uniquename"]);
 
 =head1 RELATIONS
-
-=head2 curation_priority
-
-Type: belongs_to
-
-Related object: L<PomCur::TrackDB::Cvterm>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "curation_priority",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "curation_priority_id" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
-);
-
-=head2 load_type
-
-Type: belongs_to
-
-Related object: L<PomCur::TrackDB::Cvterm>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "load_type",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "load_type_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-=head2 triage_status
-
-Type: belongs_to
-
-Related object: L<PomCur::TrackDB::Cvterm>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "triage_status",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "triage_status_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-=head2 pubmed_type
-
-Type: belongs_to
-
-Related object: L<PomCur::TrackDB::Cvterm>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "pubmed_type",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "pubmed_type" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
-);
 
 =head2 assigned_curator
 
@@ -233,7 +191,7 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 type
+=head2 curation_priority
 
 Type: belongs_to
 
@@ -242,25 +200,45 @@ Related object: L<PomCur::TrackDB::Cvterm>
 =cut
 
 __PACKAGE__->belongs_to(
-  "type",
+  "curation_priority",
   "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "type_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { cvterm_id => "curation_priority_id" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
 );
 
-=head2 pubprops
+=head2 curs
 
 Type: has_many
 
-Related object: L<PomCur::TrackDB::Pubprop>
+Related object: L<PomCur::TrackDB::Curs>
 
 =cut
 
 __PACKAGE__->has_many(
-  "pubprops",
-  "PomCur::TrackDB::Pubprop",
-  { "foreign.pub_id" => "self.pub_id" },
+  "curs",
+  "PomCur::TrackDB::Curs",
+  { "foreign.pub" => "self.pub_id" },
   { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 load_type
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "load_type",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "load_type_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 pub_curation_statuses
@@ -293,24 +271,74 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 curs
+=head2 pubmed_type
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "pubmed_type",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "pubmed_type" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
+=head2 pubprops
 
 Type: has_many
 
-Related object: L<PomCur::TrackDB::Curs>
+Related object: L<PomCur::TrackDB::Pubprop>
 
 =cut
 
 __PACKAGE__->has_many(
-  "curs",
-  "PomCur::TrackDB::Curs",
-  { "foreign.pub" => "self.pub_id" },
+  "pubprops",
+  "PomCur::TrackDB::Pubprop",
+  { "foreign.pub_id" => "self.pub_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 triage_status
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-20 02:01:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:snEUmLIaK3Xsv9Fozgdl4A
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "triage_status",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "triage_status_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+=head2 type
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "type",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "type_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YJ/6PsaQHv3DNCr6mh0xDw
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 

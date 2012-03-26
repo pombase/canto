@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Cvtermsynonym;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Cvtermsynonym
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Cvtermsynonym
+=head1 TABLE: C<cvtermsynonym>
 
 =cut
 
@@ -57,9 +61,35 @@ __PACKAGE__->add_columns(
   "type_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</cvtermsynonym_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("cvtermsynonym_id");
 
 =head1 RELATIONS
+
+=head2 cvterm
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "cvterm",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "cvterm_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
 
 =head2 type
 
@@ -81,24 +111,9 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 cvterm
 
-Type: belongs_to
-
-Related object: L<PomCur::TrackDB::Cvterm>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "cvterm",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "cvterm_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-15 17:02:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jPohPoVsmbAuWnqx+iYVlQ
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9TX2qNH8TCzs9VKHy30HJw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

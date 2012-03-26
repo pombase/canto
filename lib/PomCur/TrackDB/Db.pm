@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Db;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Db
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Db
+=head1 TABLE: C<db>
 
 =cut
 
@@ -62,6 +66,17 @@ __PACKAGE__->add_columns(
   "url",
   { data_type => "text", is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</db_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("db_id");
 
 =head1 RELATIONS
@@ -82,8 +97,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-03 17:12:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Om1dlXsf1yr2/hg8eaRd6Q
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lZ2Acl2ke8mwP8TUOiJ2zw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

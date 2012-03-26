@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::CursDB::Annotation;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::CursDB::Annotation
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::CursDB::Annotation
+=head1 TABLE: C<annotation>
 
 =cut
 
@@ -70,13 +74,56 @@ __PACKAGE__->add_columns(
   "data",
   { data_type => "text", is_nullable => 0 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</annotation_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("annotation_id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<annotation_id_status_type_unique>
+
+=over 4
+
+=item * L</annotation_id>
+
+=item * L</status>
+
+=item * L</type>
+
+=back
+
+=cut
+
 __PACKAGE__->add_unique_constraint(
   "annotation_id_status_type_unique",
   ["annotation_id", "status", "type"],
 );
 
 =head1 RELATIONS
+
+=head2 gene_annotations
+
+Type: has_many
+
+Related object: L<PomCur::CursDB::GeneAnnotation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "gene_annotations",
+  "PomCur::CursDB::GeneAnnotation",
+  { "foreign.annotation" => "self.annotation_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 =head2 pub
 
@@ -98,24 +145,9 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 gene_annotations
 
-Type: has_many
-
-Related object: L<PomCur::CursDB::GeneAnnotation>
-
-=cut
-
-__PACKAGE__->has_many(
-  "gene_annotations",
-  "PomCur::CursDB::GeneAnnotation",
-  { "foreign.annotation" => "self.annotation_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-09 12:57:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BszWB0et69SXmY8/9jfsWg
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tiOYH3EUd7ruuNA7ULhbSA
 
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');

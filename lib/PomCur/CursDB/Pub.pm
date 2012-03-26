@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::CursDB::Pub;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::CursDB::Pub
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::CursDB::Pub
+=head1 TABLE: C<pub>
 
 =cut
 
@@ -62,7 +66,31 @@ __PACKAGE__->add_columns(
   "abstract",
   { data_type => "text", is_nullable => 0 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</pub_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("pub_id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<uniquename_unique>
+
+=over 4
+
+=item * L</uniquename>
+
+=back
+
+=cut
+
 __PACKAGE__->add_unique_constraint("uniquename_unique", ["uniquename"]);
 
 =head1 RELATIONS
@@ -83,8 +111,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-20 14:20:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YfJ3VMrX/3FxU0h9GIQZ9g
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n+hxNqX5vtRJfWp8GBkiEw
 
 __PACKAGE__->meta->make_immutable;
 

@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Cv;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Cv
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Cv
+=head1 TABLE: C<cv>
 
 =cut
 
@@ -48,6 +52,17 @@ __PACKAGE__->add_columns(
   "definition",
   { data_type => "text", is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</cv_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("cv_id");
 
 =head1 RELATIONS
@@ -68,8 +83,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JvkQXvYd68NvtvzcMifhaQ
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1M93FWi9/8emSaYzdomXdQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

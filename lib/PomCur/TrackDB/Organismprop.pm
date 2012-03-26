@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Organismprop;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Organismprop
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Organismprop
+=head1 TABLE: C<organismprop>
 
 =cut
 
@@ -65,24 +69,20 @@ __PACKAGE__->add_columns(
   "rank",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
-__PACKAGE__->set_primary_key("organismprop_id");
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 type
+=over 4
 
-Type: belongs_to
+=item * L</organismprop_id>
 
-Related object: L<PomCur::TrackDB::Cvterm>
+=back
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "type",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "type_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+__PACKAGE__->set_primary_key("organismprop_id");
+
+=head1 RELATIONS
 
 =head2 organism
 
@@ -99,9 +99,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 type
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-11-05 19:49:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:B+2VCAwXGzMCZA4LNXceEA
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "type",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "type_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qQRaHeV1Uj73CvNPF0dHPg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

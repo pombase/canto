@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::PubCurationStatus;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::PubCurationStatus
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::PubCurationStatus
+=head1 TABLE: C<pub_curation_status>
 
 =cut
 
@@ -57,24 +61,20 @@ __PACKAGE__->add_columns(
   "status_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
-__PACKAGE__->set_primary_key("pub_curation_status_id");
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 status
+=over 4
 
-Type: belongs_to
+=item * L</pub_curation_status_id>
 
-Related object: L<PomCur::TrackDB::Cvterm>
+=back
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "status",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "status_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+__PACKAGE__->set_primary_key("pub_curation_status_id");
+
+=head1 RELATIONS
 
 =head2 pub
 
@@ -91,9 +91,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 status
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-03-21 17:45:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fA8AfLrEBACxYWO86Adl/g
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "status",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "status_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X1ZF783ceJLZvujMyUmGLw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

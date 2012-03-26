@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Cursprop;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Cursprop
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Cursprop
+=head1 TABLE: C<cursprop>
 
 =cut
 
@@ -57,24 +61,20 @@ __PACKAGE__->add_columns(
   "value",
   { data_type => "text", is_nullable => 0 },
 );
-__PACKAGE__->set_primary_key("cursprop_id");
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 type
+=over 4
 
-Type: belongs_to
+=item * L</cursprop_id>
 
-Related object: L<PomCur::TrackDB::Cvterm>
+=back
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "type",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "type" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+__PACKAGE__->set_primary_key("cursprop_id");
+
+=head1 RELATIONS
 
 =head2 cur
 
@@ -91,9 +91,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 type
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-01-18 06:44:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:argmwbDRClSHIAg9kY/yzw
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "type",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "type" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:C8q5aK9cPITPcQNrvuB+bQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

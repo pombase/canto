@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::CursDB::Genesynonym;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::CursDB::Genesynonym
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::CursDB::Genesynonym
+=head1 TABLE: C<genesynonym>
 
 =cut
 
@@ -49,6 +53,17 @@ __PACKAGE__->add_columns(
   "identifier",
   { data_type => "text", is_nullable => 0 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</genesynonym_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("genesynonym_id");
 
 =head1 RELATIONS
@@ -69,8 +84,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-04-08 12:57:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wf2iVL3Gp9fAITJvsjlztg
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:P5Ao2w0MIBiuVGLHsr5uSg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

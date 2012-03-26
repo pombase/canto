@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Lab;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Lab
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Lab
+=head1 TABLE: C<lab>
 
 =cut
 
@@ -49,25 +53,34 @@ __PACKAGE__->add_columns(
   "name",
   { data_type => "text", is_nullable => 0 },
 );
-__PACKAGE__->set_primary_key("lab_id");
-__PACKAGE__->add_unique_constraint("name_unique", ["name"]);
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 people
+=over 4
 
-Type: has_many
+=item * L</lab_id>
 
-Related object: L<PomCur::TrackDB::Person>
+=back
 
 =cut
 
-__PACKAGE__->has_many(
-  "people",
-  "PomCur::TrackDB::Person",
-  { "foreign.lab" => "self.lab_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
+__PACKAGE__->set_primary_key("lab_id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<name_unique>
+
+=over 4
+
+=item * L</name>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("name_unique", ["name"]);
+
+=head1 RELATIONS
 
 =head2 lab_head
 
@@ -84,9 +97,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 people
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-12-16 10:43:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qnRnFlAovbpd82uxg1232w
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Person>
+
+=cut
+
+__PACKAGE__->has_many(
+  "people",
+  "PomCur::TrackDB::Person",
+  { "foreign.lab" => "self.lab_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LLLQZHsshGepzrIaR6FSAQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

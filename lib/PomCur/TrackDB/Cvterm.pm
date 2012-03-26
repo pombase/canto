@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Cvterm;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Cvterm
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Cvterm
+=head1 TABLE: C<cvterm>
 
 =cut
 
@@ -80,128 +84,34 @@ __PACKAGE__->add_columns(
   "is_relationshiptype",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</cvterm_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("cvterm_id");
 
 =head1 RELATIONS
 
-=head2 pub_curation_priorities
+=head2 cursprops
 
 Type: has_many
 
-Related object: L<PomCur::TrackDB::Pub>
+Related object: L<PomCur::TrackDB::Cursprop>
 
 =cut
 
 __PACKAGE__->has_many(
-  "pub_curation_priorities",
-  "PomCur::TrackDB::Pub",
-  { "foreign.curation_priority_id" => "self.cvterm_id" },
+  "cursprops",
+  "PomCur::TrackDB::Cursprop",
+  { "foreign.type" => "self.cvterm_id" },
   { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 pub_load_types
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Pub>
-
-=cut
-
-__PACKAGE__->has_many(
-  "pub_load_types",
-  "PomCur::TrackDB::Pub",
-  { "foreign.load_type_id" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 pub_triage_statuses
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Pub>
-
-=cut
-
-__PACKAGE__->has_many(
-  "pub_triage_statuses",
-  "PomCur::TrackDB::Pub",
-  { "foreign.triage_status_id" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 pub_pubmed_types
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Pub>
-
-=cut
-
-__PACKAGE__->has_many(
-  "pub_pubmed_types",
-  "PomCur::TrackDB::Pub",
-  { "foreign.pubmed_type" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 pub_types
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Pub>
-
-=cut
-
-__PACKAGE__->has_many(
-  "pub_types",
-  "PomCur::TrackDB::Pub",
-  { "foreign.type_id" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 pubprops
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Pubprop>
-
-=cut
-
-__PACKAGE__->has_many(
-  "pubprops",
-  "PomCur::TrackDB::Pubprop",
-  { "foreign.type_id" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 pub_curation_statuses
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::PubCurationStatus>
-
-=cut
-
-__PACKAGE__->has_many(
-  "pub_curation_statuses",
-  "PomCur::TrackDB::PubCurationStatus",
-  { "foreign.status_id" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 dbxref
-
-Type: belongs_to
-
-Related object: L<PomCur::TrackDB::Dbxref>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "dbxref",
-  "PomCur::TrackDB::Dbxref",
-  { dbxref_id => "dbxref_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 cv
@@ -217,36 +127,6 @@ __PACKAGE__->belongs_to(
   "PomCur::TrackDB::Cv",
   { cv_id => "cv_id" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-=head2 cvtermsynonym_types
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Cvtermsynonym>
-
-=cut
-
-__PACKAGE__->has_many(
-  "cvtermsynonym_types",
-  "PomCur::TrackDB::Cvtermsynonym",
-  { "foreign.type_id" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 cvtermsynonym_cvterms
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Cvtermsynonym>
-
-=cut
-
-__PACKAGE__->has_many(
-  "cvtermsynonym_cvterms",
-  "PomCur::TrackDB::Cvtermsynonym",
-  { "foreign.cvterm_id" => "self.cvterm_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 cvterm_relationship_objects
@@ -294,6 +174,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 cvtermprop_cvterms
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Cvtermprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvtermprop_cvterms",
+  "PomCur::TrackDB::Cvtermprop",
+  { "foreign.cvterm_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 cvtermprop_types
 
 Type: has_many
@@ -309,18 +204,63 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 cvtermprop_cvterms
+=head2 cvtermsynonym_cvterms
 
 Type: has_many
 
-Related object: L<PomCur::TrackDB::Cvtermprop>
+Related object: L<PomCur::TrackDB::Cvtermsynonym>
 
 =cut
 
 __PACKAGE__->has_many(
-  "cvtermprop_cvterms",
-  "PomCur::TrackDB::Cvtermprop",
+  "cvtermsynonym_cvterms",
+  "PomCur::TrackDB::Cvtermsynonym",
   { "foreign.cvterm_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 cvtermsynonym_types
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Cvtermsynonym>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvtermsynonym_types",
+  "PomCur::TrackDB::Cvtermsynonym",
+  { "foreign.type_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 dbxref
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Dbxref>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "dbxref",
+  "PomCur::TrackDB::Dbxref",
+  { dbxref_id => "dbxref_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+=head2 metadatas
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Metadata>
+
+=cut
+
+__PACKAGE__->has_many(
+  "metadatas",
+  "PomCur::TrackDB::Metadata",
+  { "foreign.type" => "self.cvterm_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -354,39 +294,114 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 cursprops
+=head2 pub_curation_priorities
 
 Type: has_many
 
-Related object: L<PomCur::TrackDB::Cursprop>
+Related object: L<PomCur::TrackDB::Pub>
 
 =cut
 
 __PACKAGE__->has_many(
-  "cursprops",
-  "PomCur::TrackDB::Cursprop",
-  { "foreign.type" => "self.cvterm_id" },
+  "pub_curation_priorities",
+  "PomCur::TrackDB::Pub",
+  { "foreign.curation_priority_id" => "self.cvterm_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 metadatas
+=head2 pub_curation_statuses
 
 Type: has_many
 
-Related object: L<PomCur::TrackDB::Metadata>
+Related object: L<PomCur::TrackDB::PubCurationStatus>
 
 =cut
 
 __PACKAGE__->has_many(
-  "metadatas",
-  "PomCur::TrackDB::Metadata",
-  { "foreign.type" => "self.cvterm_id" },
+  "pub_curation_statuses",
+  "PomCur::TrackDB::PubCurationStatus",
+  { "foreign.status_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 pub_load_types
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Pub>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pub_load_types",
+  "PomCur::TrackDB::Pub",
+  { "foreign.load_type_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 pub_pubmed_types
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Pub>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pub_pubmed_types",
+  "PomCur::TrackDB::Pub",
+  { "foreign.pubmed_type" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 pub_triage_statuses
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Pub>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pub_triage_statuses",
+  "PomCur::TrackDB::Pub",
+  { "foreign.triage_status_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 pub_types
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Pub>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pub_types",
+  "PomCur::TrackDB::Pub",
+  { "foreign.type_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 pubprops
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::Pubprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pubprops",
+  "PomCur::TrackDB::Pubprop",
+  { "foreign.type_id" => "self.cvterm_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-16 05:21:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6h30gne1aTPTgvZwuaprFw
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Y3LxqSVU3NT3OSnErvBcNA
 
 =head2 db_accession
 

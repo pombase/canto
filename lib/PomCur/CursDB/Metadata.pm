@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::CursDB::Metadata;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::CursDB::Metadata
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::CursDB::Metadata
+=head1 TABLE: C<metadata>
 
 =cut
 
@@ -48,12 +52,36 @@ __PACKAGE__->add_columns(
   "value",
   { data_type => "text", is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</metadata_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("metadata_id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<key_unique>
+
+=over 4
+
+=item * L</key>
+
+=back
+
+=cut
+
 __PACKAGE__->add_unique_constraint("key_unique", ["key"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-09-30 16:18:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7sJTR/8hfCSh81OLzGe0fQ
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1T1W1NXnMXhxfsDm4nVh2w
 
 
 __PACKAGE__->meta->make_immutable;

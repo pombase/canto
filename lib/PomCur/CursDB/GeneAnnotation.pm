@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::CursDB::GeneAnnotation;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::CursDB::GeneAnnotation
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::CursDB::GeneAnnotation
+=head1 TABLE: C<gene_annotation>
 
 =cut
 
@@ -50,6 +54,17 @@ __PACKAGE__->add_columns(
   "annotation",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</gene_annotation_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("gene_annotation_id");
 
 =head1 RELATIONS
@@ -95,8 +110,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-11 13:37:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:txxGvY3eugpHSZBTfl2Qew
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6oC98pJFLVEfP4CxrqCwmQ
 
 
 __PACKAGE__->meta->make_immutable;

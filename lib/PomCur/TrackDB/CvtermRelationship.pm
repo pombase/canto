@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::CvtermRelationship;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::CvtermRelationship
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::CvtermRelationship
+=head1 TABLE: C<cvterm_relationship>
 
 =cut
 
@@ -58,6 +62,17 @@ __PACKAGE__->add_columns(
   "object_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</cvterm_relationship_id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("cvterm_relationship_id");
 
 =head1 RELATIONS
@@ -108,8 +123,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-19 12:15:07
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ci97sHHdZNf78R1I9qlM7w
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pDPod3veRPQOsn1+7efN7A
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

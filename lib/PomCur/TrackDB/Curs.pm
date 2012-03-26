@@ -1,20 +1,24 @@
+use utf8;
 package PomCur::TrackDB::Curs;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+PomCur::TrackDB::Curs
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-
-=head1 NAME
-
-PomCur::TrackDB::Curs
+=head1 TABLE: C<curs>
 
 =cut
 
@@ -64,24 +68,20 @@ __PACKAGE__->add_columns(
   "creation_date",
   { data_type => "timestamp", is_nullable => 1 },
 );
-__PACKAGE__->set_primary_key("curs_id");
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 pub
+=over 4
 
-Type: belongs_to
+=item * L</curs_id>
 
-Related object: L<PomCur::TrackDB::Pub>
+=back
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "pub",
-  "PomCur::TrackDB::Pub",
-  { pub_id => "pub" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+__PACKAGE__->set_primary_key("curs_id");
+
+=head1 RELATIONS
 
 =head2 assigned_curator
 
@@ -118,9 +118,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 pub
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2012-02-14 00:21:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jJHJ9P6RbkwW1Eq+BKNE5Q
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Pub>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "pub",
+  "PomCur::TrackDB::Pub",
+  { pub_id => "pub" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iebOwdaSmGXEFwH2+nJXng
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
@@ -141,4 +156,9 @@ sub new {
   return $new;
 }
 
+1;
+
+
+# You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
 1;
