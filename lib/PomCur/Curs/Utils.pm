@@ -60,15 +60,22 @@ sub _make_ontology_annotation
   my $annotation_type_config = $annotation_types_config{$annotation_type};
   my $annotation_type_display_name = $annotation_type_config->{display_name};
   my $annotation_type_abbreviation = $annotation_type_config->{abbreviation};
+  my $annotation_type_namespace = $annotation_type_config->{namespace};
 
   my %evidence_types = %{$config->{evidence_types}};
 
   my $uniquename = $annotation->pub()->uniquename();
+
   my $result =
-    $ontology_lookup->lookup(ontology_name => $annotation_type,
+    $ontology_lookup->lookup(ontology_name => $annotation_type_namespace,
                              search_string => $term_ontid);
 
+  if (!@$result) {
+    die qq(internal error: can't find details for "$term_ontid" in "$annotation_type");
+  }
+
   my $term_name = $result->[0]->{name};
+
   my $evidence_code = $data->{evidence_code};
   my $with_gene_identifier = $data->{with_gene};
 
