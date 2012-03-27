@@ -71,13 +71,11 @@ if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
 
 my $config = PomCur::Config::get_config();
 
-my $lookup;
+my $lookup = PomCur::Track::get_adaptor($config, $lookup_type);
 
-try {
-  $lookup = PomCur::Track::get_adaptor($config, $lookup_type);
-} catch {
+if (!defined $lookup) {
   usage("no lookup of type: $lookup_type");
-};
+}
 
 if ($lookup_type eq 'gene') {
   my $res = $lookup->lookup([@ARGV]);
