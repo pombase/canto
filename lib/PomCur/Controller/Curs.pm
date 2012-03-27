@@ -675,7 +675,6 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete')
       if (@{$data->{interacting_genes}} == 1) {
         $annotation->delete();
       } else {
-        warn "NUMBER OF GENES: ", scalar(@{$data->{interacting_genes}}), "\n";
         $data->{interacting_genes} =
           [grep {
             $_->{primary_identifier} ne $other_gene_identifier;
