@@ -149,7 +149,7 @@ test_config:
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: IDA
-               term_ontid: FYPO:0000004
+               term_ontid: FYPO:0000013
            - type: post_translational_modification
              status: new
              genes(Gene:primary_identifier):
@@ -157,5 +157,5 @@ test_config:
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: ISS
-               term_ontid: PSI-MOD:00017
+               term_ontid: MOD:01157
   
