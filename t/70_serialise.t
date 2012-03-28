@@ -115,7 +115,7 @@ my $full_expected_curation_session =
             creation_date => "2010-01-02",
             evidence_code => 'ISS',
             publication => 'PMID:19756689',
-            term => 'PSI-MOD:00017',
+            term => 'MOD:00017',
           },
         ],
         synonyms => [],
