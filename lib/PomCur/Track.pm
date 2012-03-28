@@ -70,12 +70,10 @@ sub create_curs_db
   my $uniquename = $curs->pub()->uniquename();
   my $curs_key = $curs->curs_key();
 
-  my $exists_flag = 1;
-
   my $db_file_name = PomCur::Curs::make_long_db_file_name($config, $curs_key);
 
   if (-e $db_file_name) {
-    die "Internal error: database already exists\n";
+    die "Internal error: database for $curs_key already exists\n";
   }
 
   my $curs_db_template_file = $config->{curs_db_template_file};
