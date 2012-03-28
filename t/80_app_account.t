@@ -29,7 +29,7 @@ test_psgi $app, sub {
     my $res = $cb->(GET $url);
 
     is $res->code, 200;
-    ok ($res->content() =~ /Account details/);
+    ok ($res->content() =~ /Log in to continue/);
     ok ($res->content() =~ /User ID/);
 
     ok ($res->content() =~ /\Q$return_path/);

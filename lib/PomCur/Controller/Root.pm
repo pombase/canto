@@ -96,7 +96,7 @@ sub account :Global
 
   my $st = $c->stash;
 
-  $st->{title} = "Account details";
+  $st->{title} = "Log in to continue";
   $st->{template} = 'account.mhtml';
 
   $st->{return_path} = $c->req()->param("return_path");
@@ -161,7 +161,7 @@ sub logout : Global {
 }
 
 
-=head2
+=head2 test_curs
 
  Usage   : Called by Catalyst
  Function: Create a new curation session for testing, then redirect to a page
