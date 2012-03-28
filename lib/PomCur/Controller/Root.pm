@@ -228,6 +228,23 @@ sub test_curs :Global {
   }
 }
 
+=head2 access_denied
+
+ Usage   : Called by Catalyst
+ Function: Redirect to account page if the user isn't logged in
+ Args    : none
+ Returns : redirects and then detaches
+
+=cut
+sub access_denied : Private {
+  my ($self, $c, $action) = @_;
+  my $local_path = $c->local_path();
+  my $return_path_uri =
+    $c->uri_for($local_path, $c->req()->params());
+  $c->res->redirect($c->uri_for('/account',
+                                { return_path => $return_path_uri }));
+  $c->detach();
+}
 
 =head1 LICENSE
 

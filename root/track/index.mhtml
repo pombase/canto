@@ -3,7 +3,6 @@ $model
 </%args>
 
 <div id="front-page">
-% if ($c->user_exists() || $c->config()->{public_mode}) {
   <table id="main-actions">
     <tr>
       <td class="actionlist">
@@ -74,14 +73,6 @@ $model
       </td>
     </tr>
   </table>
-% } else {
-  <div>
-    <a href="<% $c->uri_for('/account', { return_path => $return_path_uri }) %>">
-      Log in
-    </a>
-    to continue
-  </div>
-% }
 </div>
 
 <div class="plugins">

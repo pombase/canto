@@ -146,6 +146,8 @@ sub init_test
 
   local $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
 
+  $PomCur::access_control_enabled = 0;
+
   my $root_dir = $self->{root_dir};
   my $app_name = lc PomCur::Config::get_application_name();
   my $config = $self->{config};
@@ -933,6 +935,19 @@ sub app_login
   }
 
   return $res;
+}
+
+=head2 enable_access_control
+
+ Usage   : $test_util->enable_access_control();
+ Function: Turn on login / password access control that is normally
+           disabled for testing
+ Args    : none
+
+=cut
+sub enable_access_control
+{
+  $PomCur::access_control_enabled = 1;
 }
 
 1;

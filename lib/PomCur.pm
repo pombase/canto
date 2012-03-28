@@ -11,6 +11,8 @@ use parent qw/Catalyst/;
 use Catalyst qw/ConfigLoader
                 StackTrace
                 Authentication
+                Authorization::Roles
+                Authorization::ACL
                 Session
                 Session::State::Cookie
                 Session::Store::DBI
@@ -56,6 +58,9 @@ __PACKAGE__->apply_request_class_roles(qw/
                                        Catalyst::TraitFor::Request::ProxyBase
                                        /);
 
+# this variable exists only so the tests can disable access control
+our $access_control_enabled //= 1;
+
 sub debug
 {
   return $ENV{POMCUR_DEBUG};
@@ -63,6 +68,19 @@ sub debug
 
 # Start the application
 __PACKAGE__->setup();
+
+__PACKAGE__->deny_access_unless(
+  '/',
+  sub {
+    my $c = shift;
+    return $c->user_exists() || $c->config()->{public_mode} ||
+      !$access_control_enabled;
+  },
+);
+__PACKAGE__->allow_access('/end');
+__PACKAGE__->allow_access('/account');
+__PACKAGE__->allow_access('/login');
+__PACKAGE__->allow_access('/curs');
 
 my $config = __PACKAGE__->config();
 

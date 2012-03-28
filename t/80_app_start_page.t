@@ -15,6 +15,8 @@ my $app = $test_util->plack_app()->{app};
 
 my $cookie_jar = $test_util->cookie_jar();
 
+$test_util->enable_access_control();
+
 test_psgi $app, sub {
     my $cb = shift;
 
@@ -22,10 +24,13 @@ test_psgi $app, sub {
 
     my $res = $cb->($req);
 
-    is $res->code, 200;
-    ok ($res->content() =~ /Start page/);
+    is $res->code, 302;
+    my $redirect_url = $res->header('location');
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
 
-    ok ($res->content() !~ /Reports/);
+    ok ($redirect_res->content() =~ /Log in to continue/);
+    ok ($redirect_res->content() !~ /Reports/);
 
     $test_util->app_login($cookie_jar, $cb);
     $cookie_jar->add_cookie_header($req);

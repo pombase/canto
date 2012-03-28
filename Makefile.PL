@@ -21,6 +21,8 @@ requires 'CatalystX::RoleApplicator';
 requires 'Catalyst::Helper';
 requires 'Catalyst::Model::DBIC::Schema';
 requires 'Catalyst::Plugin::Session::Store::DBI';
+requires 'Catalyst::Plugin::Authorization::Roles';
+requires 'Catalyst::Plugin::Authorization::ACL';
 requires 'Catalyst::Authentication::Store::DBIx::Class';
 requires 'Catalyst::View::Mason';
 requires 'File::Copy::Recursive';
