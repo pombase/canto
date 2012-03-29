@@ -247,7 +247,7 @@ sub order_list_rs
         $collation = 'COLLATE NOCASE ';
       }
 
-      $order_by = "$db_column_name $collation$direction";
+      $order_by = qq("$db_column_name" $collation$direction);
     } else {
       croak '$order_by argument to order_list_rs() must by of the ' .
         'form: "<column_name" or ">column_name"';
