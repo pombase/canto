@@ -551,10 +551,10 @@ class_info:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'approver_name'"
         - name: genes_added
           source:
-            sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_genes_count'"
+            sql: "cast((select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_genes_count') as int)"
         - name: term_suggestions
           source:
-            sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_term_suggestions_count'"
+            sql: "cast((select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_term_suggestions_count') as int)"
 # if the hook dies the creation fails
       pre_create_hook: 'PomCur::Track::create_curs_db_hook'
     gene:
