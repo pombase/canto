@@ -910,14 +910,14 @@ implementation_classes:
 
 evidence_types:
   IMP:
-    name: Inferred from mutant phenotype
+    name: Inferred from Mutant Phenotype
   IDA:
-    name: Inferred from direct assay
+    name: Inferred from Direct Assay
   IGI:
-    name: Inferred from genetic interaction
+    name: Inferred from Genetic Interaction
     with_gene: 1
   IPI:
-    name: Inferred from physical interaction
+    name: Inferred from Physical Interaction
     with_gene: 1
   EXP:
     name: Inferred from Experiment
