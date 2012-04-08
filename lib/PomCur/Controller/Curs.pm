@@ -164,7 +164,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $use_dispatch = 0;
     }
     if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-        $path =~ /finish_form|reactivate_session|begin_approval|restart_approval/) {
+        $path =~ /ro|finish_form|reactivate_session|begin_approval|restart_approval/) {
       $use_dispatch = 0;
     }
 
@@ -202,6 +202,17 @@ sub front : Chained('top') PathPart('') Args(0)
   $c->stash->{title} = 'Front page';
   # use only in header, not in body:
   $c->stash->{show_title} = 0;
+  $c->stash->{template} = 'curs/front.mhtml';
+}
+
+sub read_only_summary : Chained('top') PathPart('ro') Args(0)
+{
+  my ($self, $c) = @_;
+
+  $c->stash->{title} = 'Read only session summary';
+  # use only in header, not in body:
+  $c->stash->{show_title} = 0;
+  $c->stash->{read_only} = 1;
   $c->stash->{template} = 'curs/front.mhtml';
 }
 
