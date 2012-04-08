@@ -64,8 +64,8 @@ my %state_dispatch = (
   SESSION_ACCEPTED, 'gene_upload',
   CURATION_IN_PROGRESS, undef,
   CURATION_PAUSED, 'curation_paused',
-  APPROVAL_IN_PROGRESS, undef,
   NEEDS_APPROVAL, 'finished_publication',
+  APPROVAL_IN_PROGRESS, undef,
   APPROVED, 'finished_publication',
   EXPORTED, 'finished_publication',
 );
