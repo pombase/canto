@@ -292,6 +292,13 @@ sub set_state
 
   $guard->commit();
 
+  my $approved_timestamp = $self->get_metadata($schema, APPROVED_TIMESTAMP_KEY);
+  my $approver_email = $self->get_metadata($schema, APPROVER_EMAIL_KEY);
+  if (defined $approved_timestamp && !defined $approver_email) {
+    warn "inconsistent state after set_state():";
+    warn longmess(), "\n";
+  }
+
   $self->store_statuses($config, $schema);
 }
 
