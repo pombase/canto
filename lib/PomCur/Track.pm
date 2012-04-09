@@ -176,12 +176,12 @@ sub get_adaptor
 =head2 curs_iterator
 
  Usage   : my $iter = PomCur::Track::curs_iterator($config, $track_schema);
-           while (my ($cursdb, $curs_key) = $iter->()) {
+           while (my ($curs, $cursdb) = $iter->()) {
              ...
            }
  Function: Return an iterator over the CursDB schema objects.  Each
-           call to the iterator returns a (CursDB, curs_key) pair, or
-           undef when there are no more.
+           call to the iterator returns a (TrackDB::Curs, CursDB) pair, or
+           () when there are no more.
  Args    : $config - the PomCur::Config object
            $track_schema - the TrackDB schema
 
