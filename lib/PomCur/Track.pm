@@ -208,6 +208,33 @@ sub curs_iterator
   };
 }
 
+=head2 curs_map
+
+ Usage   : my $proc = sub { ... };
+           my @res = PomCur::Track::curs_map($config, $track_schema, $proc);
+ Function: use curs_iterator() to call the $proc for each Curs, CursDB pair
+ Args    : $config - the PomCur::Config object
+           $track_schema - the TrackDB schema
+           $proc - a function the gets passed a Curs, CursDB pair
+ Returns : a list of the results of the calls to $proc
+
+=cut
+sub curs_map
+{
+  my $config = shift;
+  my $track_schema = shift;
+  my $func = shift;
+
+  my @ret = ();
+
+  my $iter = curs_iterator($config, $track_schema);
+  while (my ($cursdb, $curs_key) = $iter->()) {
+    push @ret, $func->($cursdb, $curs_key);
+  }
+
+  return @ret;
+}
+
 =head2
 
  Usage   : PomCur::Track::delete_curs($config, $schema, $curs_key);

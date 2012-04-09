@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 29;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -88,6 +88,8 @@ my $curs_db_pub = $curs_schema->find_with_type('Pub', $curs_db_pub_id);
 is($curs_db_pub->uniquename(), $pub->uniquename());
 is($curs_db_pub->abstract(), $pub->abstract());
 
+
+# test curs_iterator()
 my $track_schema = $test_util->track_schema();
 my $cursdb_iter = PomCur::Track::curs_iterator($config, $track_schema);
 
@@ -105,6 +107,21 @@ while (my ($curs, $cursdb) = $cursdb_iter->()) {
 }
 
 is ($cursdb_count, 3);
+
+
+# test curs_map()
+my $count_proc = sub {
+  my $curs = shift;
+  my $curs_schema = shift;
+
+  my $gene_count = $curs_schema->resultset('Gene')->count();
+  return ($curs->curs_key(), $gene_count);
+};
+
+my @map_res = PomCur::Track::curs_map($config, $track_schema, $count_proc);
+my %map_res_hash = @map_res;
+cmp_deeply(\%map_res_hash,
+          { aaaa0006 => 1, aaaa0007 => 4, abcd0123 => 0 });
 
 
 my $curs_rs = $schema->resultset('Curs');
