@@ -212,7 +212,7 @@ sub read_only_summary : Chained('top') PathPart('ro') Args(0)
   $c->stash->{title} = 'Read only session summary';
   # use only in header, not in body:
   $c->stash->{show_title} = 0;
-  $c->stash->{read_only} = 1;
+  $c->stash->{read_only_curs} = 1;
   $c->stash->{template} = 'curs/front.mhtml';
 }
 

@@ -29,6 +29,15 @@ If you wish to modify an annotation you have made, please contact
 the curators.
 </p>
 
+<div class="curs-box" id="curs-pub-finished-admin">
+  <div class="curs-box-title">
+    Actions
+  </div>
+  <div class="curs-box-body">
+    <a href="<% $review_session_uri %>">Review session ...</a>
+  </div>
+</div>
+
 % if (defined $message_to_curators) {
 <div class="curs-box curs-pub-finished-message-to-curator">
   <div class="curs-box-title">
@@ -56,6 +65,7 @@ or <a href="<% $reactivate_session_uri %>">Reactivate session</a>
 
 <%init>
 my $reactivate_session_uri = $curs_root_uri . '/reactivate_session/';
+my $review_session_uri = $curs_root_uri . '/ro/';
 my $begin_approval_uri;
 
 my $approve_text;

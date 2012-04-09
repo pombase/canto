@@ -19,11 +19,15 @@ $pub
 %       my $gene = $gene_hashes[$index];
 %       if (defined $gene) {
       <td>
+% if (!$read_only_curs) {
         <a href="<% $start_path . '/gene/' .$gene->{gene_id} %>"
+% }
           <span>
             <% $gene->{identifier} %>
           </span>
+% if (!$read_only_curs) {
         </a>
+% }
         <% $gene->{extra_text} |n %>
       </td>
 %       }
@@ -37,9 +41,11 @@ $pub
   </div>
 % }
 
+% if (!$read_only_curs) {
   <div class="view-edit">
     <a href="<% $edit_path %>">Edit gene list ...</a>
   </div>
+% }
   </div>
 </div>
 
@@ -80,4 +86,6 @@ my $edit_path = "$start_path/edit_genes";
 
 my $row_max = int((@gene_hashes + 1) / 2);
 my $col_count = 2;
+
+my $read_only_curs = $c->stash()->{read_only_curs};
 </%init>
