@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 29;
+use Test::More tests => 33;
 
 use Plack::Test;
 use Plack::Util;
@@ -129,6 +129,21 @@ test_psgi $app, sub {
     like ($content, qr/$your_annotations/s);
     unlike ($content, qr/$further_information/s);
     unlike ($content, qr/Admin only:/);
+
+    is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
+  }
+
+  # check the review/read-only view of the session
+  {
+    my $uri = new URI("$root_url/ro");
+
+    my $res = $cb->(GET $uri);
+    is $res->code, 200;
+
+    (my $content = $res->content()) =~ s/\s+/ /g;
+
+    like ($content, qr/Genes from this publication/s);
+    like ($content, qr/Reviewing annotation session for PMID:18426916/s);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
   }

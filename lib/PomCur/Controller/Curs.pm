@@ -214,6 +214,10 @@ sub read_only_summary : Chained('top') PathPart('ro') Args(0)
   $c->stash->{show_title} = 0;
   $c->stash->{read_only_curs} = 1;
   $c->stash->{template} = 'curs/front.mhtml';
+
+  my $pub_uniquename = $c->stash()->{pub}->uniquename();
+
+  $c->stash()->{message} = "Reviewing annotation session for $pub_uniquename";
 }
 
 sub submitter_update : Private
