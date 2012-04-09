@@ -228,8 +228,8 @@ sub curs_map
   my @ret = ();
 
   my $iter = curs_iterator($config, $track_schema);
-  while (my ($cursdb, $curs_key) = $iter->()) {
-    push @ret, $func->($cursdb, $curs_key);
+  while (my ($curs, $curs_schema) = $iter->()) {
+    push @ret, $func->($curs, $curs_schema);
   }
 
   return @ret;
