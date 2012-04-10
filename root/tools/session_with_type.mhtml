@@ -1,0 +1,30 @@
+<%args>
+$annotation_type
+@type_data
+</%args>
+
+% if (@type_data) {
+<table class="list">
+  <tr>
+    <th>
+      Session ID
+    </th>
+    <th>
+      Number of annotations
+    </th>
+  </tr>
+% for my $row_data (@type_data) {
+  <tr>
+    <td>
+% my $curs_key = $row_data->[0];
+      <a href="<% $c->uri_for('/curs/' . $curs_key) %>"><% $curs_key %></a>
+    </td>
+    <td>
+      <% $row_data->[1] %>
+    </td>
+  </tr>
+% }
+</table>
+% } else {
+There are no sessions with this type of annotation.
+% }

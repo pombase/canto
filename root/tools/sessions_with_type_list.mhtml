@@ -1,0 +1,26 @@
+<%args>
+@annotation_types
+</%args>
+
+<table class="list">
+  <tr>
+    <th>
+      Annotation type
+    </th>
+    <th>
+      Sessions with this type
+    </th>
+  </tr>
+% for my $row_data (@annotation_types) {
+%   my $annotation_type = $row_data->[0];
+%   my $count = $row_data->[1];
+  <tr>
+    <td>
+      <a href="<% $c->uri_for('/tools/sessions_with_type/' . $annotation_type) %>"><% $annotation_type %></a>
+    </td>
+    <td>
+      <% $count %>
+    </td>
+  </tr>
+% }
+</table>

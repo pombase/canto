@@ -62,6 +62,9 @@ $model
             <li>
               <a href="<% $c->uri_for('/tools/triage') %>">Triage publications</a>
             </li>
+            <li>
+              <a href="<% $c->uri_for('/tools/sessions_with_type_list') %>">List sessions by annotation type</a>
+            </li>
           </ul>
         </div>
       </td>

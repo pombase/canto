@@ -419,6 +419,71 @@ sub ann_ex_locations : Local Args(0) {
   $st->{template} = 'tools/ann_ex_locations.mhtml';
 }
 
+sub sessions_with_type : Local Args(1) {
+  my ($self, $c, $annotation_type) = @_;
+
+  my $st = $c->stash();
+
+  my $track_schema = $c->schema('track');
+  my $config = $c->config();
+
+  my $proc = sub {
+    my $curs = shift;
+    my $curs_schema = shift;
+
+    my $rs = $curs_schema->resultset("Annotation")->search({ type => $annotation_type });
+    return [$curs->curs_key(), $rs->count()];
+  };
+
+  my @res = PomCur::Track::curs_map($config, $track_schema, $proc);
+
+  $st->{annotation_type} = $annotation_type;
+  $st->{type_data} = [sort { $a->[0] cmp $b->[1] } grep { $_->[1] > 0 } @res];
+
+  $st->{title} = "Sessions with annotations of type: $annotation_type";
+  $st->{template} = 'tools/session_with_type.mhtml';
+}
+
+sub sessions_with_type_list : Local Args(0) {
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $track_schema = $c->schema('track');
+  my $config = $c->config();
+
+  my $proc = sub {
+    my $curs = shift;
+    my $curs_schema = shift;
+
+    my %res_map = ();
+
+    my $rs = $curs_schema->resultset("Annotation");
+    while (defined (my $an = $rs->next())) {
+      $res_map{$an->type()}++;
+    }
+    return \%res_map;
+  };
+
+  my @res = PomCur::Track::curs_map($config, $track_schema, $proc);
+
+  my %totals = ();
+
+  map {
+    while (my ($key, $count) = each %$_) {
+      $totals{$key} += $count;
+    }
+  } @res;
+
+  $st->{annotation_types} = [map {
+    [$_->{name}, $totals{$_->{name}} // 0]
+  } @{$config->{annotation_type_list}}];
+
+
+  $st->{title} = "Sessions listed by type";
+  $st->{template} = 'tools/sessions_with_type_list.mhtml';
+}
+
 =head1 LICENSE
 
 This library is free software. You can redistribute it and/or modify
