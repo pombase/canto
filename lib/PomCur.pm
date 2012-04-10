@@ -81,6 +81,7 @@ __PACKAGE__->allow_access('/end');
 __PACKAGE__->allow_access('/account');
 __PACKAGE__->allow_access('/login');
 __PACKAGE__->allow_access('/curs');
+__PACKAGE__->allow_access('/ws');
 
 my $config = __PACKAGE__->config();
 
