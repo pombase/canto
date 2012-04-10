@@ -22,7 +22,7 @@
 % # 
 % # <a id="curs-contact-link" href="#">Questions? Contact curators ...</a>
 
-<a id="curs-contact-email" href="mailto:<% $escaped_contact_email %>">Questions? Contact curators ...</a>
+<a id="curs-contact-link" href="mailto:<% $escaped_contact_email %>">Questions? Contact curators ...</a>
 
 <%init>
 use URI::Escape;
