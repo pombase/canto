@@ -1213,6 +1213,8 @@ help_text:
     inline: >
       Once you have selected a gene to annotate you will be presented with a
       set of annotation options
+contact_email:
+  address: "set_me@localhost"
 
 external_links:
   gene:

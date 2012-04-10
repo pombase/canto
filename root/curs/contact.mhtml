@@ -1,23 +1,44 @@
-<div id="curs-contact-dialog" title="Request curator help"
-     style="display:none">
-  <form id="curs-contact-form" action="" method="post">
-    <input type="hidden" id="curs-contact-page"
-           value="<% $c->stash()->{current_path_uri} %>"/>
-    <table>
-      <tr>
-        <td> Subject: </td>
-        <td> <input id="curs-contact-subject" name="curs-contact-suggest-name"/> </td>
-      </tr>
-      <tr>
-        <td> Message: </td>
-        <td>
-          <textarea name="curs-contact-subject" cols="60" rows="10"></textarea>
-        </td>
-      </tr>
-    </table>
-    <input id="curs-contact-submit" name="curs-contact-submit" type="submit"
-           value="Send" class="button dialog-submit"/>
-  </form>
-</div>
+% # <div id="curs-contact-dialog" title="Request curator help"
+% #      style="display:none">
+% #   <form id="curs-contact-form" action="" method="post">
+% #     <input type="hidden" id="curs-contact-page"
+% #            value="<% $c->stash()->{current_path_uri} %>"/>
+% #     <table>
+% #       <tr>
+% #         <td> Subject: </td>
+% #         <td> <input id="curs-contact-subject" name="curs-contact-suggest-name"/> </td>
+% #       </tr>
+% #       <tr>
+% #         <td> Message: </td>
+% #         <td>
+% #           <textarea name="curs-contact-subject" cols="60" rows="10"></textarea>
+% #         </td>
+% #       </tr>
+% #     </table>
+% #     <input id="curs-contact-submit" name="curs-contact-submit" type="submit"
+% #            value="Send" class="button dialog-submit"/>
+% #   </form>
+% # </div>
+% # 
+% # <a id="curs-contact-link" href="#">Questions? Contact curators ...</a>
 
-<a id="curs-contact-link" href="#">Questions? Contact curators ...</a>
+<a id="curs-contact-email" href="mailto:<% $escaped_contact_email %>">Questions? Contact curators ...</a>
+
+<%init>
+use URI::Escape;
+
+my $curs_key = $c->stash()->{curs_key};
+my $curs_root_uri = $c->stash()->{curs_root_uri};
+my $user_email = $c->stash()->{submitter_email};
+my $subject = uri_escape("User enquiry from $user_email  (for session $curs_key)");
+my $body = uri_escape("
+
+
+Please include the text below this line, as is, in your reply:
+----------------------------------
+$curs_root_uri
+");
+my $contact_address = $c->config()->{contact_email}->{address};
+
+my $escaped_contact_email = "$contact_address?subject=$subject&body=$body";
+</%init>

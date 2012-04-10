@@ -78,6 +78,7 @@ requires 'Config::General';
 requires 'MooseX::Traits::Pluggable';
 requires 'MooseX::MarkAsMethods';
 requires 'DBD::Pg';
+requires 'URI::Escape';
 
 test_requires 'Test::More' => '0.88';
 test_requires 'Test::Deep';
