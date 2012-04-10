@@ -196,6 +196,36 @@ sub object : Local
   }
 }
 
+sub _parse_order_by
+{
+  my $class_info = shift;
+  my $order_by_param = shift;
+
+  if ($order_by_param =~ /^([><])([\w\s]+)/) {
+    my $field_name = $2;
+    my $field_info = $class_info->{field_infos}->{$field_name};
+
+    if (!defined $field_info) {
+      croak qq{Can't find a column called "$field_name"};
+    }
+
+    my $direction;
+    if ($1 eq '<') {
+      $direction = 'ASC';
+    } else {
+      $direction = 'DESC';
+    }
+
+    return {
+      field_name => $field_name,
+      direction => $direction,
+    };
+  } else {
+    croak 'order_by parameter must by of the ' .
+      'form: "<column_name" or ">column_name"';
+  }
+}
+
 =head2 order_list_rs
 
  Usage   : order_list_rs($c, $rs, $class_info, $model_name);
@@ -207,8 +237,8 @@ sub object : Local
                          ResultSet
            $model_name - the model to use when retrieving the schema
                          object
-           $order_by - the column to order by, prefixed by "<" to order
-                       ascending and ">" to order descending (optional)
+           $order_by - undef or the column order information in the form
+                       { direction => "ASC", field_name => "title" }
  Returns : none, modifies $rs
 
 =cut
@@ -218,52 +248,36 @@ sub order_list_rs
   my $rs = shift;
   my $class_info = shift;
   my $model_name = shift;
-  my $order_by_arg = shift;
-
-  my $order_by = undef;
-
-  if (defined $order_by_arg) {
-    if ($order_by_arg =~ /^([><])([\w\s]+)/) {
-      my $field_name = $2;
-      my $field_info = $class_info->{field_infos}->{$field_name};
-
-      if (!defined $field_info) {
-        croak qq{Can't find a column called "$field_name"};
-      }
-
-      my $direction;
-      if ($1 eq '<') {
-        $direction = 'ASC';
-      } else {
-        $direction = 'DESC';
-      }
-
-      my $collation = '';
-
-      my $db_column_name = $field_info->{db_column_name};
-
-      if (defined $db_column_name && !ref $field_info->{source} &&
-          $rs->result_source()->column_info($db_column_name)->{data_type} eq 'text') {
-        $collation = 'COLLATE NOCASE ';
-      }
-
-      $order_by = qq("$db_column_name" $collation$direction);
-    } else {
-      croak '$order_by argument to order_list_rs() must by of the ' .
-        'form: "<column_name" or ">column_name"';
-    }
-  }
+  my $order_by = shift;
 
   if (!defined $model_name) {
     croak "no model_name passed to order_list_rs()";
   }
 
+  my $formatted_order_by = undef;
 
+  if (defined $order_by) {
+    my $collation = '';
+
+    my $field_name = $order_by->{field_name};
+    my $direction = $order_by->{direction};
+    my $field_info = $class_info->{field_infos}->{$field_name};
+
+    my $db_column_name = $field_info->{db_column_name};
+
+    if (defined $db_column_name && !ref $field_info->{source} &&
+        $rs->result_source()->column_info($db_column_name)->{data_type} eq 'text') {
+      $collation = 'COLLATE NOCASE ';
+    }
+
+    $formatted_order_by = qq("$db_column_name" $collation$direction);
+  }
 
   my $table = $class_info->{source};
   my $params = {
-    order_by => $order_by // _get_order_by_field($c->config(),
-                                                 $model_name, $table)
+    order_by =>
+      $formatted_order_by // _get_order_by_field($c->config(),
+                                                 $model_name, $table),
   };
 
   if (defined $class_info->{constraint}) {
@@ -285,9 +299,9 @@ sub order_list_rs
                          to choose the table to query
            $model - the model to use when retrieving the schema object,
                     or undef to use the one from the params
-           $order_by - the column to order by, prefixed by "<" to order
-                       ascending and ">" to order descending (optional)
- Returns :
+           $order_by - undef or the column order information in the form
+                       { direction => "ASC", field_name => "title" }
+ Returns : the ResultSet
 
 =cut
 sub get_list_rs
@@ -297,6 +311,11 @@ sub get_list_rs
   my $class_info = shift;
   my $model = shift;
   my $order_by = shift;
+
+  if (defined $order_by && !ref $order_by) {
+    croak "order_by argument to get_list_rs() must be undef or a " .
+      "hashref";
+  }
 
   my $schema = $c->schema($model);
 
@@ -344,10 +363,18 @@ sub list : Local
       $st->{title} .= "all $plural_name";
     }
 
-    my $order_by = $c->req()->param('order_by');
+    my $order_by_param = $c->req()->param('order_by');
+    my $parsed_order_by = undef;
+
+    if (defined $order_by_param) {
+      $parsed_order_by = _parse_order_by($class_info, $order_by_param);
+    }
+
     my $rs = get_list_rs($c, $search, $class_info, $model_name,
-                         $order_by);
+                         $parsed_order_by);
     $st->{rs} = $rs;
+
+    $st->{order_by} = $parsed_order_by;
 
     $st->{page} = $c->req->param('page') || 1;
     $st->{numrows} = $c->req->param('numrows') || 20;
