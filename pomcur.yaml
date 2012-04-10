@@ -1128,7 +1128,7 @@ annotation_type_list:
   - name: post_translational_modification
     category: ontology
     namespace: PSI-MOD
-    display_name: 'post translational modification'
+    display_name: 'protein modification'
     broad_term_suggestions: >
       PLACEHOLDER
     specific_term_examples: >
