@@ -222,6 +222,8 @@ sub set_state
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, APPROVER_NAME_KEY);
+      $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
     }
     when (CURATION_PAUSED) {
       if ($current_state ne CURATION_IN_PROGRESS) {
@@ -234,6 +236,8 @@ sub set_state
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, APPROVER_NAME_KEY);
+      $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
     }
     when (NEEDS_APPROVAL) {
       if ($current_state ne CURATION_IN_PROGRESS &&
