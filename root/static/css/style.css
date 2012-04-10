@@ -283,6 +283,11 @@ table.list tr td {
   border-color: #bbb;
 }
 
+table.list thead img.sort-direction-icon {
+  float: left;
+  padding-right: 5px;
+}
+
 .field-label {
   color: #226;
   white-space: nowrap;

@@ -4,6 +4,7 @@ $config_name
 $list_title
 $disclosed => 1  # true will make the list default to visible
 $is_inline
+$order_by => undef
 </%args>
 
 <div class="sect">
@@ -25,7 +26,25 @@ $is_inline
 %     if ($is_inline) {
           <% $column_heading %>
 %     } else {
-          <a href="<% $c->request->uri_with({order_by => '<' . $column_name}) %>"><% $column_heading %></a>
+%       my $new_direction;
+%       my $img_src;
+%       if (defined $order_by && $column_name eq $order_by->{field_name}) {
+%         if ($order_by->{direction} eq 'ASC') {
+%           $new_direction = '>';
+%           $img_src = 'ascending.png';
+%         } else {
+%           $new_direction = '<';
+%           $img_src = 'descending.png';
+%         }
+%       } else {
+%         $new_direction = '<';
+%       }
+          <a title="Click to sort by this column" href="<% $c->request->uri_with({order_by => $new_direction . $column_name}) %>">
+%       if (defined $img_src) {
+          <img class="sort-direction-icon" src="<% "$image_path/$img_src" %>" style="float: left"/>
+%       }
+          <% $column_heading %>
+          </a>
 %     }
         </span></th>
 %   }
@@ -107,4 +126,6 @@ if ($disclosed) {
 
 # speed up field.mhtml by caching the database lookups
 my $cache = {};
+
+my $image_path = $c->uri_for("/static/images");
 </%init>
