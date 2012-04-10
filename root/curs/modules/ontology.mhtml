@@ -49,11 +49,15 @@ Search for <% $current_component_display_name %> term
       <div class="ferret-term-entry-inside curs-box-body">
         <div>
           <% $annotation_help_text %>
+% if (defined $annotation_more_help_text) {
           <a id="ferret-term-entry-type-help" class="pomcur-more-button" href='#'>more ...</a>
+% }
         </div>
+% if (defined $annotation_more_help_text) {
         <div id="ferret-term-entry-type-help-target" class="ferret-more-help">
           <% $annotation_more_help_text %>
         </div>
+% }
         <div>
 Start typing a <% $current_component_short_display_name %> in the search box.
 If you do not find the term you are looking for with your initial
