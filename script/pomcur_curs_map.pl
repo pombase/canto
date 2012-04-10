@@ -56,6 +56,10 @@ The Perl code will be eval()ed for each curs.  The variables \$curs
 and \$curs_schema will be available to the code.  \$curs is a
 PomCur::TrackDB::Curs object and \$curs_schema is a PomCur::CursDB
 object.  The PomCur::Config object is also available as \$config.
+
+Example; print the curs_key and gene count for each curs DB:
+
+$0 'print \$curs->curs_key(), " ", \$curs_schema->resultset("Gene")->count(), "\\n"'
 |;
 }
 
