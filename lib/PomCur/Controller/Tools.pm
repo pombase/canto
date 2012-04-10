@@ -460,7 +460,7 @@ sub sessions_with_type_list : Local Args(0) {
 
     my $rs = $curs_schema->resultset("Annotation");
     while (defined (my $an = $rs->next())) {
-      $res_map{$an->type()}++;
+      $res_map{$an->type()} = 1;
     }
     return \%res_map;
   };
