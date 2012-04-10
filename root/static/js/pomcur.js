@@ -571,11 +571,6 @@ $(document).ready(function() {
     window.location.href = curs_root_uri;
   });
 
-//  $('#curs-contact-link').click(function () {
-//    $('#curs-contact-dialog').dialog({ modal: true,
-//                                       width: '50em' });
-//  });
-
   $('#curs-pub-assign-popup-dialog').click(function () {
     $('#curs-pub-assign-dialog').dialog({ modal: true,
                                           width: '50em' });
