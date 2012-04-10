@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More tests => 26;
 
 use PomCur::TestUtil;
 
@@ -65,6 +65,41 @@ test_psgi $app, sub {
     like ($scrape_res->{title}, qr/List of all labs/);
     ok (grep { /Nick Rhind/ } @{$scrape_res->{field_values}});
     like ($scrape_res->{row_count}, qr/13\b.* total/);
+  }
+
+  my $pub_order_by_scraper = scraper {
+    process "title", title => 'TEXT';
+    process "tr .display-key", 'fields[]' => 'TEXT';
+  };
+
+  # test viewing a list with ascending order_by
+  {
+    my $url = 'http://localhost:5000/view/list/pub?model=track&order_by=<title';
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my $scrape_res = $pub_order_by_scraper->scrape($res->decoded_content());
+
+    like ($scrape_res->{title}, qr/List of all publications/);
+    like ($scrape_res->{fields}->[0], qr/^\s*PMID:20622008\s*$/);
+    like ($scrape_res->{fields}->[1], qr/^\s*New\s*$/);
+  }
+
+  # test viewing a list with descending order_by on reference column
+  {
+    my $url = 'http://localhost:5000/view/list/pub?model=track&order_by=>triage_status&numrows=200';
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my $scrape_res = $pub_order_by_scraper->scrape($res->decoded_content());
+
+    like ($scrape_res->{title}, qr/List of all publications/);
+    like ($scrape_res->{fields}->[0], qr/^\s*PMID:19351719\s*$/);
+    like ($scrape_res->{fields}->[1], qr/^\s*Sequence feature or region\s*$/);
   }
 
   # test viewing a report
