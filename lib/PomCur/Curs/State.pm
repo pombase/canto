@@ -248,8 +248,6 @@ sub set_state
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVER_NAME_KEY);
       $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
-      $self->unset_metadata($schema, APPROVER_NAME_KEY);
-      $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
     }
     when (APPROVAL_IN_PROGRESS) {
       if ($current_state ne NEEDS_APPROVAL && $force ne $current_state) {
