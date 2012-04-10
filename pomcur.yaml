@@ -1130,13 +1130,14 @@ annotation_type_list:
     namespace: PSI-MOD
     display_name: 'protein modification'
     broad_term_suggestions: >
-      PLACEHOLDER
+      phosphorylated, methylated, lysine
     specific_term_examples: >
-      PLACEHOLDER
+      O-phospho-L-serine, monomethylated L-lysine
     help_text: >
-      PLACEHOLDER
-    more_help_text: >
-      ADD ME!
+      A protein modification is a covalent modification or other change that
+      alters the measured molecular mass of a peptide or protein amino acid
+      residue
+    more_help_text: ~
     evidence_codes:
       - IDA
   - name: genetic_interaction
