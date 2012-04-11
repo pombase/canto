@@ -34,6 +34,9 @@ $user_created
       <th>
         Evidence code
       </th>
+      <th>
+        Qualifier
+      </th>
 % if ($needs_with_or_from) {
       <th>
         With
@@ -100,6 +103,9 @@ $user_created
 </a>
 % }
       </span>
+    </td>
+    <td>
+      <% $row->{is_not} ? 'NOT' : '' %>
     </td>
 % if ($needs_with_or_from) {
     <td>
