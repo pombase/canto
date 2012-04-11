@@ -41,7 +41,7 @@ $order_by => undef
 %       }
           <a title="Click to sort by this column" href="<% $c->request->uri_with({order_by => $new_direction . $column_name}) %>">
 %       if (defined $img_src) {
-          <img class="sort-direction-icon" src="<% "$image_path/$img_src" %>" style="float: left"/>
+          <img class="sort-direction-icon" src="<% "$image_path/$img_src" %>"/>
 %       }
           <% $column_heading %>
           </a>
