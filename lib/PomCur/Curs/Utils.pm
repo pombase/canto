@@ -40,13 +40,15 @@ use warnings;
 use Carp;
 use Moose;
 
+use PomCur::Curs::GeneProxy;
+
 sub _make_ontology_annotation
 {
   my $config = shift;
   my $schema = shift;
   my $annotation = shift;
   my $ontology_lookup = shift;
-  my $gene = shift;
+  my $gene_proxy = shift;
   my $gene_synonyms_string = shift;
 
   my $data = $annotation->data();
@@ -90,10 +92,14 @@ sub _make_ontology_annotation
   my $with_gene_display_name;
 
   if ($with_gene_identifier) {
+    my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
     $with_gene = $schema->find_with_type('Gene',
                                          { primary_identifier =>
                                              $with_gene_identifier });
-    $with_gene_display_name = $with_gene->display_name()
+    my $gene_proxy = PomCur::Curs::GeneProxy->new(config => $config,
+                                                  cursdb_gene => $with_gene,
+                                                  gene_lookup => $gene_lookup);
+    $with_gene_display_name = $gene_proxy->display_name()
   }
 
   (my $short_date = $annotation->creation_date()) =~ s/-//g;
@@ -102,11 +108,11 @@ sub _make_ontology_annotation
     (!$needs_with || defined $with_gene_identifier);
 
   return {
-    gene_identifier => $gene->primary_identifier(),
-    gene_name => $gene->primary_name() || '',
+    gene_identifier => $gene_proxy->primary_identifier(),
+    gene_name => $gene_proxy->primary_name() || '',
     gene_name_or_identifier =>
-      $gene->primary_name() || $gene->primary_identifier(),
-    gene_product => $gene->product() // '',
+      $gene_proxy->primary_name() || $gene_proxy->primary_identifier(),
+    gene_product => $gene_proxy->product() // '',
     gene_synonyms_string => $gene_synonyms_string,
     qualifier => '',
     annotation_type => $annotation_type,
@@ -123,7 +129,7 @@ sub _make_ontology_annotation
     needs_with => $needs_with,
     with_or_from_identifier => $with_gene_identifier,
     with_or_from_display_name => $with_gene_display_name // '',
-    taxonid => $gene->organism()->taxonid(),
+    taxonid => $gene_proxy->organism()->taxonid(),
     completed => $completed,
     annotation_extension => $data->{annotation_extension} // '',
     status => $annotation->status(),
@@ -136,7 +142,7 @@ sub _make_interaction_annotation
   my $config = shift;
   my $schema = shift;
   my $annotation = shift;
-  my $gene = shift;
+  my $gene_proxy = shift;
 
   my $data = $annotation->data();
   my $evidence_code = $data->{evidence_code};
@@ -150,20 +156,29 @@ sub _make_interaction_annotation
 
   my @interacting_genes = @{$data->{interacting_genes}};
 
+  my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
+
   return map {
     my $interacting_gene_info = $_;
     my $interacting_gene_primary_identifier =
       $interacting_gene_info->{primary_identifier};
-    my $interacting_gene_display_name =
+    my $interacting_gene =
       $schema->find_with_type('Gene',
                               { primary_identifier =>
-                                  $interacting_gene_primary_identifier})
-        ->display_name();
+                                $interacting_gene_primary_identifier});
+    my $interacting_gene_proxy =
+      PomCur::Curs::GeneProxy->new(config => $config,
+                                   cursdb_gene => $interacting_gene,
+                                   gene_lookup => $gene_lookup);
+
+    my $interacting_gene_display_name =
+      $interacting_gene_proxy->display_name();
+
     my $entry =
           {
-            gene_identifier => $gene->primary_identifier(),
-            gene_display_name => $gene->display_name(),
-            gene_taxonid => $gene->organism()->taxonid(),
+            gene_identifier => $gene_proxy->primary_identifier(),
+            gene_display_name => $gene_proxy->display_name(),
+            gene_taxonid => $gene_proxy->organism()->taxonid(),
             publication_uniquename => $pub_uniquename,
             evidence_code => $evidence_code,
             interacting_gene_identifier =>
@@ -172,7 +187,7 @@ sub _make_interaction_annotation
               $interacting_gene_display_name,
             interacting_gene_taxonid =>
               $interacting_gene_info->{organism_taxon}
-                // $gene->organism()->taxonid(),
+                // $gene_proxy->organism()->taxonid(),
             score => '',  # for biogrid format output
             phenotypes => '',
             comment => '',
@@ -267,23 +282,29 @@ sub get_annotation_table
 
   my %options = ( order_by => 'annotation_id' );
 
-  while (defined (my $gene = $gene_rs->next())) {
-    my $an_rs =
-      $gene->direct_annotations()->search({ %constraints }, { %options });
+  my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
 
-    my $gene_synonyms_string =
-      join '|', map { $_->identifier() } $gene->genesynonyms();
+  while (defined (my $gene = $gene_rs->next())) {
+    my $gene_proxy =
+      PomCur::Curs::GeneProxy->new(config => $config,
+                                   cursdb_gene => $gene,
+                                   gene_lookup => $gene_lookup);
+
+    my $an_rs =
+      $gene_proxy->direct_annotations()->search({ %constraints }, { %options });
+
+    my $gene_synonyms_string = join '|', $gene_proxy->synonyms();
 
     while (defined (my $annotation = $an_rs->next())) {
       my @entries;
       if ($annotation_type_category eq 'ontology') {
         @entries = (_make_ontology_annotation($config, $schema, $annotation,
                                               $ontology_lookup,
-                                              $gene, $gene_synonyms_string));
+                                              $gene_proxy, $gene_synonyms_string));
       } else {
         if ($annotation_type_category eq 'interaction') {
           @entries = _make_interaction_annotation($config, $schema, $annotation,
-                                                  $gene);
+                                                  $gene_proxy);
         } else {
           die "unknown annotation type category: $annotation_type_category\n";
         }

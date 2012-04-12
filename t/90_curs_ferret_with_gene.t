@@ -74,7 +74,8 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     my $gene = $curs_schema->find_with_type('Gene', $gene_id);
-    my $gene_display_name = $gene->display_name();
+    my $gene_proxy = PomCur::Controller::Curs::_get_gene_proxy($config, $gene);
+    my $gene_display_name = $gene_proxy->display_name();
 
     like ($redirect_res->content(),
           qr/Choose evidence for annotating $gene_display_name with $term_id/);
@@ -175,13 +176,11 @@ test_psgi $app, sub {
                      'with-gene-proceed' => 'Proceed');
 
     my $req = HTTP::Request->new(GET => $uri);
-
     my $res = $cb->($req);
 
     is $res->code, 302;
 
     my $redirect_url = $res->header('location');
-
     is ($redirect_url, $transfer_url);
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
@@ -203,7 +202,9 @@ test_psgi $app, sub {
   {
     my $gene_1 =
       $curs_schema->find_with_type('Gene',
-                                   { primary_name => 'cdc11' });
+                                   {
+                                     primary_identifier => 'SPCC1739.11c',
+                                   });
 
     my $an_rs = $curs_schema->resultset('Annotation');
     is ($an_rs->count(), 3);
@@ -249,7 +250,7 @@ test_psgi $app, sub {
     push @annotations_with_gene, $new_annotation->annotation_id();
 
     is ($new_annotation->genes(), 1);
-    is (($new_annotation->genes())[0]->primary_name(), "cdc11");
+    is (($new_annotation->genes())[0]->primary_identifier(), "SPCC1739.11c");
     is ($new_annotation->data()->{term_ontid}, 'GO:0080170');
     is ($new_annotation->data()->{evidence_code}, 'IPI');
     is ($new_annotation->data()->{with_gene}, undef);

@@ -26,16 +26,11 @@ my $full_expected_curation_session =
     genes => {
       'Schizosaccharomyces pombe SPCC576.16c' => {
         uniquename => 'SPCC576.16c',
-        primary_name => 'wtf22',
-        product => 'wtf element Wtf22',
         organism => 'Schizosaccharomyces pombe',
         annotations => [],
-        synonyms => [],
       },
       'Schizosaccharomyces pombe SPAC27D7.13c' => {
         uniquename => 'SPAC27D7.13c',
-        primary_name => 'ssm4',
-        product => 'p150-Glued',
         organism => 'Schizosaccharomyces pombe',
         annotations => [
           {
@@ -51,12 +46,9 @@ my $full_expected_curation_session =
                    'The process in which miscellaneous stuff is transported from one side of a membrane to the other.',
             },
           } ],
-        synonyms => ['SPAC637.01c'],
       },
       'Schizosaccharomyces pombe SPBC14F5.07' => {
         uniquename => 'SPBC14F5.07',
-        primary_name => 'doa10',
-        product => 'ER-localized ubiquitin ligase Doa10 (predicted)',
         organism => 'Schizosaccharomyces pombe',
         annotations => [
           {
@@ -78,12 +70,9 @@ my $full_expected_curation_session =
             term => 'GO:0022857'
           }
         ],
-        synonyms => ['ssm4'],
       },
       'Schizosaccharomyces pombe SPCC63.05' => {
         uniquename => 'SPCC63.05',
-        primary_name => undef,
-        product => 'TAP42 family protein involved in TOR signalling (predicted)',
         organism => 'Schizosaccharomyces pombe',
         annotations => [
           {
@@ -118,7 +107,6 @@ my $full_expected_curation_session =
             term => 'MOD:01157',
           },
         ],
-        synonyms => [],
       },
     },
     publications => {

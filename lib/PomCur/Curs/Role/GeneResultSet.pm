@@ -37,6 +37,7 @@ under the same terms as Perl itself.
 =cut
 
 use Moose::Role;
+use Carp;
 
 =head2 get_ordered_gene_rs
 
@@ -56,11 +57,7 @@ sub get_ordered_gene_rs
   my $order_by;
 
   if ($order_by_field eq 'primary_name') {
-    # special case, order by primary_name unless it's null, then use
-    # primary_identifier
-    $order_by =
-      "case when primary_name is null then 'zzz' || primary_identifier " .
-      "else primary_name end";
+    croak "can't order by primary_name - column doesn't exist";
   } else {
     $order_by = {
       -asc => $order_by_field

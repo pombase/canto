@@ -67,6 +67,8 @@ $multi_organism_mode
 
 <%init>
 use PomCur::Curs;
+use PomCur::Track;
+use PomCur::Curs::GeneProxy;
 
 my %highlight_terms = ();
 @highlight_terms{@highlight_terms} = @highlight_terms;
@@ -87,19 +89,26 @@ sub _search_highlight
   }
 }
 
+my $gene_lookup = PomCur::Track::get_adaptor($c->config(), 'gene');
+
 my @gene_hashes = map {
      my $gene = $_;
+     my $gene_proxy =
+       PomCur::Curs::GeneProxy->new(config => $c->config(),
+                                    cursdb_gene => $_,
+                                    gene_lookup => $gene_lookup);
+
      my $synonyms_string =
-       join (',', map { _search_highlight(\%highlight_terms, $_->identifier()) } $gene->genesynonyms());
+join (',', map { _search_highlight(\%highlight_terms, $_) } $gene_proxy->synonyms());
      my $hash = {
-       'Systematic identifier' => _search_highlight(\%highlight_terms, $gene->primary_identifier()),
-       Name => _search_highlight(\%highlight_terms, $gene->primary_name()),
-       Product => $gene->product(),
+       'Systematic identifier' => _search_highlight(\%highlight_terms, $gene_proxy->primary_identifier()),
+       Name => _search_highlight(\%highlight_terms, $gene_proxy->primary_name()),
+       Product => $gene_proxy->product(),
        Synonyms => $synonyms_string,
-       gene_id => $gene->gene_id(),
+       gene_id => $gene_proxy->gene_id(),
      };
      if ($multi_organism_mode) {
-       $hash->{Organism} = $gene->organism()->full_name();
+       $hash->{Organism} = $gene_proxy->organism()->full_name();
      }
      $hash
    } @gene_list;
