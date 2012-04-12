@@ -72,6 +72,7 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
                'annotation_id' => 1,
                'gene_name' => 'ste20',
                'gene_product' => '',
+               'is_not' => 0,
                'status' => 'existing',
                'with_or_from_display_name' => 'GeneDB_Spombe:SPBC2G2.01c',
                'with_or_from_identifier' => 'GeneDB_Spombe:SPBC2G2.01c',
