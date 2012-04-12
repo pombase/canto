@@ -127,6 +127,7 @@ sub _make_ontology_annotation
     completed => $completed,
     annotation_extension => $data->{annotation_extension} // '',
     status => $annotation->status(),
+    is_not => 0,
   };
 }
 
@@ -334,6 +335,7 @@ sub _process_ontology
     with_or_from_display_name => $row->{with} // $row->{from},
     taxonid => $gene->{organism_taxonid},
     status => 'existing',
+    is_not => $row->{is_not} // 0,
   };
 }
 

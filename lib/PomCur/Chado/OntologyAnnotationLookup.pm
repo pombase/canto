@@ -249,6 +249,7 @@ sub lookup
           term_name => $cvterm->name(),
           ontid => $cvterm->db_accession(),
         },
+        is_not => $row->is_not(),
         with => $prop_type_values{with},
         from => $prop_type_values{from},
         publication => {
