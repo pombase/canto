@@ -6,7 +6,16 @@ use URI::Escape;
 my $curs_key = $c->stash()->{curs_key};
 my $curs_root_uri = $c->stash()->{curs_root_uri};
 my $user_email = $c->stash()->{submitter_email};
-my $subject = uri_escape("User enquiry from $user_email  (for session $curs_key)");
+
+my $from_email;
+
+if (defined $user_email) {
+  $from_email = "from $user_email";
+} else {
+  $from_email = '';
+}
+
+my $subject = uri_escape("User enquiry$from_email  (for session $curs_key)");
 my $body = uri_escape("
 
 
