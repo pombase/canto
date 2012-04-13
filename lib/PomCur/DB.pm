@@ -135,7 +135,13 @@ sub find_with_type
   my $obj;
 
   if (!defined $value) {
-    $obj = $rs->find($arg);
+    eval {
+      $obj = $rs->find($arg);
+    };
+    if ($@) {
+      use Carp "longmess";
+      die "$@: ", longmess();
+    }
     if (!defined $obj) {
       if (ref $arg) {
         my %args = %$arg;

@@ -41,6 +41,7 @@ use Moose::Role;
 has config => (
   is => 'ro',
   isa => 'PomCur::Config',
+  required => 1,
 );
 
 1;

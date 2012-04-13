@@ -333,19 +333,9 @@ sub _create_genes
                                                    $org_taxonid);
 
           my $new_gene = $schema->create_with_type('Gene', {
-            primary_name => $gene->{primary_name},
             primary_identifier => $gene->{primary_identifier},
-            product => $gene->{product},
             organism => $curs_org
           });
-
-          for my $synonym_identifier (@{$gene->{synonyms}}) {
-            $schema->create_with_type('Genesynonym',
-                                      {
-                                        gene => $new_gene,
-                                        identifier => $synonym_identifier,
-                                      });
-          }
         }
       };
 
@@ -475,7 +465,7 @@ sub _edit_genes_helper
   $st->{form} = $form;
 
   $st->{gene_list} =
-    [PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_name')->all()];
+    [PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all()];
 }
 
 sub edit_genes : Chained('top') Args(0) Form
@@ -743,7 +733,7 @@ sub _get_iso_date
 
 sub annotation_ontology_edit
 {
-  my ($self, $c, $gene, $annotation_config) = @_;
+  my ($self, $c, $gene_proxy, $annotation_config) = @_;
 
   my $module_display_name = $annotation_config->{display_name};
 
@@ -839,7 +829,7 @@ sub annotation_ontology_edit
                                   data => { %annotation_data }
                                 });
 
-    $annotation->set_genes($gene);
+    $annotation->set_genes($gene_proxy->cursdb_gene());
 
     $guard->commit();
 
@@ -854,7 +844,7 @@ sub annotation_ontology_edit
 
 sub annotation_interaction_edit
 {
-  my ($self, $c, $gene, $annotation_config) = @_;
+  my ($self, $c, $gene_proxy, $annotation_config) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -874,13 +864,14 @@ sub annotation_interaction_edit
 
   $form->auto_fieldset(0);
 
-  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_name');
+  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
 
   my @options = ();
 
-  while (defined (my $gene = $genes_rs->next())) {
-    push @options, { value => $gene->gene_id(),
-                     label => $gene->long_display_name() };
+  while (defined (my $g = $genes_rs->next())) {
+    my $g_proxy = _get_gene_proxy($config, $g);
+    push @options, { value => $g_proxy->gene_id(),
+                     label => $g_proxy->long_display_name() };
   }
 
   my @all_elements = (
@@ -926,7 +917,7 @@ sub annotation_interaction_edit
                                   data => { %annotation_data }
                                 });
 
-    $annotation->set_genes($gene);
+    $annotation->set_genes($gene_proxy->cursdb_gene());
 
     $guard->commit();
 
@@ -939,6 +930,18 @@ sub annotation_interaction_edit
   }
 }
 
+sub _get_gene_proxy
+{
+  my $config = shift;
+  my $gene = shift;
+
+  my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
+
+  return PomCur::Curs::GeneProxy->new(config => $config,
+                                      cursdb_gene => $gene,
+                                      gene_lookup => $gene_lookup);
+}
+
 sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
 {
   my ($self, $c, $gene_id, $annotation_type_name) = @_;
@@ -949,12 +952,13 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
 
   my $gene = $schema->find_with_type('Gene', $gene_id);
 
-  $st->{gene} = $gene;
+  my $gene_proxy = _get_gene_proxy($config, $gene);
+  $st->{gene} = $gene_proxy;
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   my $annotation_display_name = $annotation_config->{display_name};
-  my $gene_display_name = $gene->display_name();
+  my $gene_display_name = $gene_proxy->display_name();
 
   $st->{title} = "Curating $annotation_display_name for $gene_display_name\n";
   $st->{show_title} = 0;
@@ -966,7 +970,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
 
   $self->store_statuses($config, $schema);
 
-  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene,
+  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene_proxy,
                                                     $annotation_config);
 }
 
@@ -1024,8 +1028,9 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
-  $st->{gene} = $gene;
-  my $gene_display_name = $gene->display_name();
+  my $gene_proxy = _get_gene_proxy($config, $gene);
+  $st->{gene} = $gene_proxy;
+  my $gene_display_name = $gene_proxy->display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
@@ -1130,7 +1135,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   my $module_category = $annotation_config->{category};
 
   my $gene = $annotation->genes()->first();
-  my $gene_display_name = $gene->display_name();
+  my $gene_proxy = _get_gene_proxy($config, $gene);
+  my $gene_display_name = $gene_proxy->display_name();
 
   $st->{title} = "Transfer annotation from $gene_display_name";
   $st->{show_title} = 0;
@@ -1140,7 +1146,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   $form->auto_fieldset(0);
 
-  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_name');
+  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
 
   my $gene_count = $genes_rs->count();
 
@@ -1149,8 +1155,10 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   while (defined (my $other_gene = $genes_rs->next())) {
     next if $gene->gene_id() == $other_gene->gene_id();
 
-    push @options, { value => $other_gene->gene_id(),
-                     label => $other_gene->long_display_name() };
+    my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
+
+    push @options, { value => $other_gene_proxy->gene_id(),
+                     label => $other_gene_proxy->long_display_name() };
   }
 
   my $transfer_select_genes_text;
@@ -1269,7 +1277,8 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
-  my $gene_display_name = $gene->display_name();
+  my $gene_proxy = _get_gene_proxy($config, $gene);
+  my $gene_display_name = $gene_proxy->display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
@@ -1290,10 +1299,11 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
 
   my @genes = ();
 
-  my $gene_rs = $self->get_ordered_gene_rs($schema, 'primary_name');
+  my $gene_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
 
   while (defined (my $gene = $gene_rs->next())) {
-    push @genes, [$gene->primary_identifier(), $gene->display_name()];
+    my $gene_proxy = _get_gene_proxy($config, $gene);
+    push @genes, [$gene->primary_identifier(), $gene_proxy->display_name()];
   }
 
   unshift @genes, [ '', 'Choose a gene ...' ];
@@ -1342,11 +1352,14 @@ sub gene : Chained('top') Args(1)
 
   my $st = $c->stash();
   my $schema = $st->{schema};
+  my $config = $c->config();
 
   my $gene = $schema->find_with_type('Gene', $gene_id);
-  $st->{gene} = $gene;
+  my $gene_proxy = _get_gene_proxy($config, $gene);
 
-  $st->{title} = 'Gene: ' . $gene->display_name();
+  $st->{gene_proxy} = $gene_proxy;
+
+  $st->{title} = 'Gene: ' . $gene_proxy->display_name();
   # use only in header, not in body:
   $st->{show_title} = 0;
   $st->{template} = 'curs/gene_page.mhtml';

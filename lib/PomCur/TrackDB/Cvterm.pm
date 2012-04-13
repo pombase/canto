@@ -400,8 +400,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Y3LxqSVU3NT3OSnErvBcNA
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-12 03:16:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gbQ5AbhOZYcnIAsNdoC/rw
 
 =head2 db_accession
 

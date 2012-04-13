@@ -93,14 +93,6 @@ sub _get_annotations
   return \@ret;
 }
 
-sub _get_gene_synonyms
-{
-  my $schema = shift;
-  my $gene = shift;
-
-  return [map { $_->identifier(); } $gene->genesynonyms()->all()];
-}
-
 sub _get_genes
 {
   my $schema = shift;
@@ -116,12 +108,6 @@ sub _get_genes
       uniquename => $gene->primary_identifier(),
       annotations => _get_annotations($schema, $gene),
     );
-    if ($options->{dump_all}) {
-      $gene_data{primary_name} = $gene->primary_name();
-      $gene_data{product} = $gene->product();
-      $gene_data{synonyms} = _get_gene_synonyms($schema, $gene);
-
-    }
     my $gene_key =
       $organism_full_name . ' ' . $gene->primary_identifier();
     $ret{$gene_key} = { %gene_data };

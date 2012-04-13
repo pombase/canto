@@ -91,7 +91,8 @@ for my $annotation_type (@annotation_type_list) {
       my $redirect_res = $cb->($redirect_req);
 
       my $gene = $curs_schema->find_with_type('Gene', $gene_id);
-      my $gene_display_name = $gene->display_name();
+      my $gene_proxy = PomCur::Controller::Curs::_get_gene_proxy($config, $gene);
+      my $gene_display_name = $gene_proxy->display_name();
 
       like ($redirect_res->content(),
             qr/Choose evidence for annotating $gene_display_name with $term_db_accession/);
@@ -138,7 +139,8 @@ for my $annotation_type (@annotation_type_list) {
     {
       my $cdc11 = $curs_schema->find_with_type('Gene',
                                                {
-                                                 primary_name => 'cdc11' });
+                                                 primary_identifier => 'SPCC1739.11c',
+                                               });
       my $uri = new URI("$root_url/annotation/transfer/$new_annotation_id");
       $uri->query_form('transfer' => 'transfer-submit',
                        dest => [$cdc11->gene_id()]);

@@ -53,7 +53,7 @@ for my $annotation_type (@annotation_type_list) {
 
     my $bait = $curs_schema->find_with_type('Gene',
                                             {
-                                              primary_name => 'cdc11'
+                                              primary_identifier => 'SPCC1739.11c'
                                             });
     my $bait_id = $bait->gene_id();
 

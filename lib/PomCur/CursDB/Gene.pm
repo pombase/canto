@@ -37,16 +37,6 @@ __PACKAGE__->table("gene");
   data_type: 'text'
   is_nullable: 0
 
-=head2 primary_name
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 product
-
-  data_type: 'text'
-  is_nullable: 1
-
 =head2 organism
 
   data_type: 'integer'
@@ -60,10 +50,6 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "primary_identifier",
   { data_type => "text", is_nullable => 0 },
-  "primary_name",
-  { data_type => "text", is_nullable => 1 },
-  "product",
-  { data_type => "text", is_nullable => 1 },
   "organism",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
@@ -111,21 +97,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 genesynonyms
-
-Type: has_many
-
-Related object: L<PomCur::CursDB::Genesynonym>
-
-=cut
-
-__PACKAGE__->has_many(
-  "genesynonyms",
-  "PomCur::CursDB::Genesynonym",
-  { "foreign.gene_id" => "self.gene_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 organism
 
 Type: belongs_to
@@ -142,8 +113,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:50
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5SmKqdP4uJ0kvEVkceAVJg
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-12 03:26:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Xve+VEbtMM1onLCG2J8saA
 
 =head2 direct_annotations
 
@@ -244,14 +215,18 @@ sub delete
   map { $_->gene_annotations()->delete() } @annotations;
   map { $_->delete() } @annotations;
 
-  $self->genesynonyms()->delete();
-
   $self->SUPER::delete();
 }
 
-use Moose;
+sub primary_name
+{
+  use Carp "longmess";
 
-with 'PomCur::Role::GeneNames';
+  warn longmess();
+  die;
+}
+
+use Moose;
 
 
 __PACKAGE__->meta->make_immutable;

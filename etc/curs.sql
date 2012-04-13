@@ -9,15 +9,7 @@ CREATE TABLE organism (
 CREATE TABLE gene (
        gene_id integer PRIMARY KEY,
        primary_identifier text NOT NULL UNIQUE,
-       primary_name TEXT,
-       product TEXT,
        organism integer NOT NULL REFERENCES organism(organism_id)
-);
-
-CREATE TABLE genesynonym (
-      genesynonym_id integer NOT NULL PRIMARY key,
-      gene_id integer NOT NULL references gene (gene_id),
-      identifier text NOT NULL
 );
 
 CREATE TABLE annotation (

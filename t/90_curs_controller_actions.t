@@ -85,12 +85,14 @@ sub upload_genes
   for my $gene_identifier (@$genes) {
     my $found_match = 0;
     for my $stored_gene (@stored_genes) {
-      if ($stored_gene->primary_identifier() eq $gene_identifier ||
-          ( defined $stored_gene->primary_name() &&
-            $stored_gene->primary_name() eq $gene_identifier ) ||
+      my $stored_gene_proxy =
+        PomCur::Controller::Curs::_get_gene_proxy($config, $stored_gene);
+      if ($stored_gene_proxy->primary_identifier() eq $gene_identifier ||
+          ( defined $stored_gene_proxy->primary_name() &&
+            $stored_gene_proxy->primary_name() eq $gene_identifier ) ||
             grep {
-              $_->identifier() eq $gene_identifier;
-            } $stored_gene->genesynonyms()
+              $_ eq $gene_identifier;
+            } $stored_gene_proxy->synonyms()
           ) {
         $found_match = 1;
         last;
@@ -145,7 +147,6 @@ test_psgi $app, sub {
   # try with and without the organism column
   upload_genes($cb, \@gene_identifiers, 0);
 
-  $curs_schema->resultset('Genesynonym')->delete();
   $curs_schema->resultset('Gene')->delete();
 
   my @genes_with_cerevisiae = (@gene_identifiers, 'YHR066W');
@@ -245,7 +246,6 @@ test_psgi $app, sub {
 
   # test the "this paper has no genes" button on the gene upload form
   {
-    $curs_schema->resultset('Genesynonym')->delete();
     $curs_schema->resultset('Gene')->delete();
 
     my $uri = new URI("$root_url/");

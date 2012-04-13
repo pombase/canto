@@ -56,10 +56,16 @@ Choose a gene to annotate:
 
 <%init>
 use PomCur::Curs;
+use PomCur::Curs::GeneProxy;
 
 my $schema = $c->stash()->{schema};
-my @all_genes = 
-  PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_name')->all();
+my $config = $c->config();
+my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
+
+my @all_genes = map {
+  PomCur::Curs::GeneProxy->new(config => $config, cursdb_gene => $_, gene_lookup => $gene_lookup);
+} PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all();
+
 my @gene_hashes = map {
      my $extra_text = '';
      my @annotations = $_->direct_annotations();
@@ -75,7 +81,8 @@ my @gene_hashes = map {
      }
      {
        identifier => $_->primary_name() || $_->primary_identifier(),
-       gene_id => $_->gene_id(),
+  
+     gene_id => $_->gene_id(),
        extra_text => $extra_text,
      }
    } @all_genes;
