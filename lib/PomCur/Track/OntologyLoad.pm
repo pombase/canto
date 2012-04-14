@@ -84,13 +84,13 @@ sub _delete_term_by_cv
 
 =head2 load
 
- Usage   : my $ont_load = PomCur::Track::OntLoad->new(schema => $schema);
-           $ont_load->load($file_name);
+ Usage   : my $ont_load = PomCur::Track::OntologyLoad->new(schema => $schema);
+           $ont_load->load($file_name, $index, [qw(exact related)]);
  Function: Load the contents an OBO file into the schema
  Args    : $source - the file name or URL of an obo format file
            $index - the index to add the terms to (optional)
-           $synonym_types - a array ref of synonym types that should be added
-                            to the index
+           $synonym_types_ref - a array ref of synonym types that should be added
+                                to the index
  Returns : Nothing
 
 =cut
