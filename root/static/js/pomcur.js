@@ -27,15 +27,15 @@ var ferret_choose = {
   // selected term, the other elements are the history/trail
   term_history : [undefined],
   term_detail_cache : {},
-  annotation_type: undefined,
+  annotation_namespace: undefined,
 
   // the synonym we match when searching, if any
   matching_synonym : undefined,
 
-  initialise : function(annotation_type) {
+  initialise : function(annotation_namespace) {
     ferret_choose.ontology_complete_url =
-      application_root + 'ws/lookup/ontology/' + annotation_type;
-    ferret_choose.annotation_type = annotation_type;
+      application_root + 'ws/lookup/ontology/' + annotation_namespace;
+    ferret_choose.annotation_namespace = annotation_namespace;
   },
 
   debug : function(message) {
@@ -288,7 +288,7 @@ var ferret_choose = {
         ferret_choose.show_children();
       }
 
-      var link_confs = ontology_external_links[ferret_choose.annotation_type];
+      var link_confs = ontology_external_links[ferret_choose.annotation_namespace];
       if (link_confs) {
         var html = '';
         $.each(link_confs, function(idx, link_conf) {
@@ -380,12 +380,12 @@ $(document).ready(function() {
         match_name = item.name;
       }
       var warning = '';
-      if (ferret_choose.annotation_type !== item.annotation_type) {
+      if (ferret_choose.annotation_namespace !== item.annotation_namespace) {
         warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
-          item.annotation_type + ' term but<br/>you are browsing ' +
-          ferret_choose.annotation_type + ' terms</span>';
+          item.annotation_namespace + ' term but<br/>you are browsing ' +
+          ferret_choose.annotation_namespace + ' terms</span>';
         var re = new RegExp('_', 'g');
-        // unpleasant hack to make the annotation_types look nicer
+        // unpleasant hack to make the annotation_namespaces look nicer
         warning = warning.replace(re,' ');
       }
       function length_compare(a,b) {
