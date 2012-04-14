@@ -1125,6 +1125,41 @@ annotation_type_list:
       Phenotypes result from the expression of the genes of an organism as well
       as the influence of environmental factors and the interactions between
       the two.
+  - name: single_gene_phenotype
+    category: ontology
+    namespace: fission_yeast_phenotype
+    very_short_display_name: 'phenotype'
+    short_display_name: 'phenotype'
+    display_name: 'single gene phenotype'
+    evidence_codes:
+      - Cell growth assay
+      - Chromatin immunoprecipitation experiment
+      - Co-immunoprecipitation experiment
+      - Electrophoretic mobility shift assay data
+      - Enzyme assay data
+      - Epitope-tagged protein immunolocalization experiment data
+      - Flow cytometry data
+      - Fusion protein localization experiment
+      - Immunolocalization experiment data
+      - Microscopy
+      - Northern assay evidence
+      - Western blot assay
+      - Protein localization experiment
+      - Quantitative PCR
+      - Reporter gene assay
+      - Other
+    broad_term_suggestions: >
+      multinucleate, abnormal spindle, inviable
+    specific_term_examples: >
+      growth auxotrophic for arginine, abnormal cytokinetic cell separation
+    help_text: >
+      A phenotype is any observable characteristic or trait of an organism;
+      such as its morphology, development, biochemical or physiological
+      properties, behavior, and products of behaviour.
+    more_help_text: >
+      Phenotypes result from the expression of the genes of an organism as well
+      as the influence of environmental factors and the interactions between
+      the two.
   - name: post_translational_modification
     category: ontology
     namespace: PSI-MOD

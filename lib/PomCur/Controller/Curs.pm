@@ -1371,36 +1371,34 @@ sub _get_annotation_table_tsv
   my $schema = shift;
   my $annotation_type_name = shift;
 
+  my $annotation_type = $config->{annotation_types}->{$annotation_type_name};
+
   my ($completed_count, $annotations_ref, $columns_ref) =
     PomCur::Curs::Utils::get_annotation_table($config, $schema,
                                               $annotation_type_name);
   my @annotations = @$annotations_ref;
   my %common_values = %{$config->{export}->{gene_association_fields}};
 
-  my $ontology_column_names =
-    [qw(db gene_identifier gene_name_or_identifier
-        qualifier term_ontid publication_uniquename
-        evidence_code with_or_from_identifier
-        annotation_type_abbreviation
-        gene_product gene_synonyms_string db_object_type taxonid
-        creation_date_short db)];
+  my @ontology_column_names =
+    qw(db gene_identifier gene_name_or_identifier
+       qualifier term_ontid publication_uniquename
+       evidence_code with_or_from_identifier
+       annotation_type_abbreviation
+       gene_product gene_synonyms_string db_object_type taxonid
+       creation_date_short db);
 
-  my $interaction_column_names =
-    [qw(gene_identifier interacting_gene_identifier
-        gene_taxonid interacting_gene_taxonid evidence_code
-        publication_uniquename score phenotypes comment)];
+  my @interaction_column_names =
+    qw(gene_identifier interacting_gene_identifier
+       gene_taxonid interacting_gene_taxonid evidence_code
+       publication_uniquename score phenotypes comment);
 
-  my %type_column_names = (
-    biological_process => $ontology_column_names,
-    cellular_component => $ontology_column_names,
-    molecular_function => $ontology_column_names,
-    phenotype => $ontology_column_names,
-    post_translational_modification => $ontology_column_names,
-    genetic_interaction => $interaction_column_names,
-    physical_interaction => $interaction_column_names,
-  );
+  my @column_names;
 
-  my @column_names = @{$type_column_names{$annotation_type_name}};
+  if ($annotation_type->{category} eq 'ontology') {
+    @column_names = @ontology_column_names;
+  } else {
+    @column_names = @interaction_column_names;
+  }
 
   my $db = $config->{export}->{gene_association_fields}->{db};
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 132;
+use Test::More tests => 158;
 
 use Data::Compare;
 
@@ -179,6 +179,6 @@ for my $annotation_type (@annotation_type_list) {
 }
 
 my $an_rs = $curs_schema->resultset('Annotation');
-is ($an_rs->count(), 12);
+is ($an_rs->count(), 14);
 
 done_testing;
