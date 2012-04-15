@@ -84,7 +84,7 @@ is(scalar(@$id_result), 1);
 
 is($id_result->[0]->{id}, 'GO:0006810');
 is($id_result->[0]->{name}, 'transport');
-is($id_result->[0]->{annotation_type}, 'biological_process');
+is($id_result->[0]->{annotation_namespace}, 'biological_process');
 like($id_result->[0]->{definition}, qr/^The directed movement of substances/);
 
 # try looking up an ID from the wrong ontology
@@ -97,7 +97,7 @@ is(scalar(@$id_result), 1);
 
 is($id_result->[0]->{id}, 'GO:0030133');
 is($id_result->[0]->{name}, 'transport vesicle');
-is($id_result->[0]->{annotation_type}, 'cellular_component');
+is($id_result->[0]->{annotation_namespace}, 'cellular_component');
 like($id_result->[0]->{definition}, qr/^Any of the vesicles of the constitutive/);
 
 my $child_results =
@@ -134,5 +134,5 @@ is(scalar(@$id_result), 1);
 
 is($id_result->[0]->{id}, 'FYPO:0000114');
 is($id_result->[0]->{name}, 'cellular process phenotype');
-is($id_result->[0]->{annotation_type}, 'phenotype');
+is($id_result->[0]->{annotation_namespace}, 'phenotype');
 

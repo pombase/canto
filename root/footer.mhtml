@@ -26,8 +26,8 @@ var application_root = '<% $c->uri_for('/') %>';
 <script src="<% $c->uri_for('/static/js/jquery.jtruncate.js') %>"></script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/pomcur.js') %>"></script>
 <script language="javascript" type="text/javascript">
-  if (typeof current_component != 'undefined') {
-    ferret_choose.initialise(current_component);
+  if (typeof annotation_type != 'undefined') {
+    ferret_choose.initialise(annotation_type, annotation_namespace);
   }
 </script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/jquery.form.2.47.js') %>"></script>

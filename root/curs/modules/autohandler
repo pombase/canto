@@ -1,5 +1,6 @@
 <script language="javascript" type="text/javascript">
-var current_component = '<% $c->stash()->{current_component} |n %>';
+var annotation_type = '<% $c->stash()->{annotation_type_config}->{name} |n %>';
+var annotation_namespace = '<% $c->stash()->{annotation_type_config}->{namespace} |n %>';
 </script>
 
 % $m->call_next;
