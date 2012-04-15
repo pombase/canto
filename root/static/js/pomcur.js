@@ -27,7 +27,7 @@ var ferret_choose = {
   // selected term, the other elements are the history/trail
   term_history : [undefined],
   term_detail_cache : {},
-  annotation_type: undefined,
+  annotation_namespace: undefined,
 
   // the synonym we match when searching, if any
   matching_synonym : undefined,
@@ -289,7 +289,7 @@ var ferret_choose = {
         ferret_choose.show_children();
       }
 
-      var link_confs = ontology_external_links[ferret_choose.annotation_type];
+      var link_confs = ontology_external_links[ferret_choose.annotation_namespace];
       if (link_confs) {
         var html = '';
         $.each(link_confs, function(idx, link_conf) {
