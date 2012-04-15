@@ -742,6 +742,7 @@ sub annotation_ontology_edit
   # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
   $st->{annotation_type_config} = $annotation_config;
+  $st->{annotation_namespace} = $annotation_config->{namespace};
   $st->{current_component_display_name} = $module_display_name;
   $st->{current_component_short_display_name} =
     $annotation_config->{short_display_name};
