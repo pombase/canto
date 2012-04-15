@@ -230,8 +230,6 @@ sub submitter_update : Private
   $st->{show_title} = 0;
   $st->{template} = 'curs/submitter_update.mhtml';
 
-  $st->{current_component} = 'submitter_update';
-
   my $first_contact_name = $st->{first_contact_name};
   my $first_contact_email = $st->{first_contact_email};
 
@@ -460,7 +458,6 @@ sub _edit_genes_helper
   }
   $st->{show_title} = 0;
   $st->{template} = 'curs/gene_list_edit.mhtml';
-  $st->{current_component} = 'list_edit';
 
   $st->{form} = $form;
 
@@ -496,7 +493,6 @@ sub gene_upload : Chained('top') Args(0) Form
   $st->{show_title} = 0;
 
   $st->{template} = 'curs/gene_upload.mhtml';
-  $st->{current_component} = 'gene_upload';
 
   my $form = $self->form();
   my @submit_buttons = ("Continue");
