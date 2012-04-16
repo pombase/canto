@@ -836,7 +836,11 @@ sub annotation_ontology_edit
 
     $self->store_statuses($c->config(), $schema);
 
-    _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    if ($annotation_config->{needs_allele_selection}) {
+      _redirect_and_detach($c, 'annotation', 'allele_select', $annotation_id);
+    } else {
+      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    }
   }
 }
 
@@ -1109,6 +1113,115 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     } else {
       _maybe_transfer_annotation($c, $annotation, $annotation_config);
     }
+  }
+}
+
+sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1) Form
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  $self->_check_annotation_exists($c, $annotation_id);
+
+  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+  my $annotation_type_name = $annotation->type();
+
+  my $gene = $annotation->genes()->first();
+  my $gene_proxy = _get_gene_proxy($config, $gene);
+  $st->{gene} = $gene_proxy;
+  my $gene_display_name = $gene_proxy->display_name();
+
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $module_category = $annotation_config->{category};
+
+  my $annotation_data = $annotation->data();
+  my $term_ontid = $annotation_data->{term_ontid};
+
+  $st->{title} = "Specify the allele(s) of $gene_display_name to annotate with $term_ontid";
+
+  $st->{show_title} = 1;
+
+  $st->{gene_display_name} = $gene_display_name;
+
+  $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
+  $st->{annotation} = $annotation;
+
+  my $ont_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my %evidence_types = %{$config->{evidence_types}};
+
+  my @codes = map {
+    my $description;
+    if ($evidence_types{$_}->{name} eq $_) {
+      $description = $_;
+    } else {
+      $description = $evidence_types{$_}->{name} . " ($_)";
+    }
+    [ $_, $description]
+  } @{$ont_config->{evidence_codes}};
+
+  unshift @codes, [ '', 'Choose an evidence type ...' ];
+
+  my $form = $self->form();
+
+  my @all_elements = (
+      {
+        type => 'Block',
+        tag => "table",
+        elements => [
+          {
+            type => 'Repeatable',
+            repeat => 10,
+            name => 'row_rep',
+            tag => "tr",
+            elements => [
+              {
+                name => 'row',
+                elements => [
+                  {
+                    name => 'evidence-select-0',
+                    type => 'Select', options => [ @codes ],
+                  }
+                ]
+              }
+            ]
+          },
+        ]
+      },
+      {
+        name => 'allele-proceed', type => 'Submit', value => 'Proceed ->',
+      },
+    );
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $data = $annotation->data();
+    my $evidence_select = $form->param_value('evidence-select');
+
+    if ($evidence_select eq '') {
+      $c->flash()->{error} = 'Please choose an evidence type to continue';
+      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    }
+
+    $data->{evidence_code} = $evidence_select;
+
+    $annotation->data($data);
+    $annotation->update();
+
+    my $with_gene = $evidence_types{$evidence_select}->{with_gene};
+
+    $self->store_statuses($config, $schema);
+
+    _maybe_transfer_annotation($c, $annotation, $annotation_config);
   }
 }
 

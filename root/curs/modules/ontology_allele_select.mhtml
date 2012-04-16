@@ -1,0 +1,19 @@
+<%args>
+$form
+$annotation
+$gene_display_name
+</%args>
+
+<div class="curs-box evidence-select">
+  <div class="curs-box-title">
+Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
+  </div>
+  <div class="curs-box-body">
+    <% $form |n %>
+  </div>
+</div>
+
+<%init>
+my $annotation_data = $annotation->data();
+my $term_ontid = $annotation_data->{term_ontid};
+</%init>
