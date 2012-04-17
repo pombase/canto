@@ -625,6 +625,27 @@ $(document).ready(function() {
     window.location.href = bits.join('/') + '/start/' + pubmedid;
   });
 
+  $('#curs-add-allele').click(function () {
+    var current_rows = $('.curs-allele-row');
+    var max_row_index = -1;
+
+    var row_indexes = 
+      current_rows.map(function(index) { 
+        var row_index = this.id.match(/-(\d+)$/)[1];
+        if (row_index > max_row_index) {
+          max_row_index = row_index;
+        }
+      });
+
+    var new_index = max_row_index + 1;
+    var first_row = current_rows.first();
+    var new_row = first_row.clone();
+
+    new_row
+
+    return false;
+  });
+
   $('.non-key-attribute').jTruncate({
         length: 300,
         minTrail: 50,

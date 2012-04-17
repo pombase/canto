@@ -1258,6 +1258,12 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
         ]
       },
       {
+        type => 'Block',
+        tag => 'button',
+        id => 'curs-add-allele',
+        content => 'Add allele +',
+      },
+      {
         name => 'allele-proceed', type => 'Submit',
         value => 'Proceed ->',
         attributes => {
