@@ -1258,7 +1258,11 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
         ]
       },
       {
-        name => 'allele-proceed', type => 'Submit', value => 'Proceed ->',
+        name => 'allele-proceed', type => 'Submit',
+        value => 'Proceed ->',
+        attributes => {
+          class => 'curs-finish-button',
+        },
       },
     );
 
