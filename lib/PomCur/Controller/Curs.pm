@@ -1116,6 +1116,56 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   }
 }
 
+sub _generate_rows : Private
+{
+  my $codes = shift;
+  my $ids = shift;
+
+  return map {
+    my $id = $_;
+    {
+      type => 'Block',
+      tag => "tr",
+      elements => [
+        {
+          type => 'Block',
+          tag => 'td',
+          elements => [
+            {
+              name => "allele-name-$id",
+              type => 'Text',
+            },
+          ],
+        },
+        {
+          type => 'Block',
+          tag => 'td',
+          elements => [
+            {
+              name => "allele-def-$id",
+              type => 'Text',
+              constraints => [
+                {
+                  type => 'Required', },
+              ],
+            },
+          ],
+        },
+        {
+          type => 'Block',
+          tag => 'td',
+          elements => [
+            {
+              name => "evidence-select-$id",
+              type => 'Select', options => [ @$codes ],
+            }
+          ]
+        }
+      ]
+    }
+  } @$ids;
+}
+
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1) Form
 {
   my ($self, $c, $annotation_id) = @_;
@@ -1135,14 +1185,12 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   my $gene_display_name = $gene_proxy->display_name();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
-
   my $module_category = $annotation_config->{category};
 
   my $annotation_data = $annotation->data();
   my $term_ontid = $annotation_data->{term_ontid};
 
   $st->{title} = "Specify the allele(s) of $gene_display_name to annotate with $term_ontid";
-
   $st->{show_title} = 1;
 
   $st->{gene_display_name} = $gene_display_name;
@@ -1168,28 +1216,45 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   my $form = $self->form();
 
+  my @tbody_rows = _generate_rows(\@codes, ['0']);
+
   my @all_elements = (
       {
         type => 'Block',
         tag => "table",
         elements => [
           {
-            type => 'Repeatable',
-            repeat => 10,
-            name => 'row_rep',
-            tag => "tr",
+            type => 'Block',
+            tag => "thead",
             elements => [
               {
-                name => 'row',
+                type => 'Block',
+                tag => "tr",
                 elements => [
                   {
-                    name => 'evidence-select-0',
-                    type => 'Select', options => [ @codes ],
+                    type => 'Block',
+                    tag => 'th',
+                    content => 'Allele name',
+                  },
+                  {
+                    type => 'Block',
+                    tag => 'th',
+                    content => 'Allele definition (required)',
+                  },
+                  {
+                    type => 'Block',
+                    tag => 'th',
+                    content => 'Evidence',
                   }
-                ]
-              }
-            ]
+                ],
+              },
+            ],
           },
+          {
+            type => 'Block',
+            tag => "tbody",
+            elements => [@tbody_rows],
+          }
         ]
       },
       {
