@@ -1118,8 +1118,11 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
 sub _generate_rows : Private
 {
+  my $c = shift;
   my $codes = shift;
   my $ids = shift;
+
+  my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 
   return map {
     my $id = $_;
@@ -1161,11 +1164,25 @@ sub _generate_rows : Private
           tag => 'td',
           elements => [
             {
-              name => "evidence-select-$id",
+              name => "curs-allele-evidence-select-$id",
               type => 'Select', options => [ @$codes ],
             }
           ]
-        }
+        },
+        {
+          type => 'Block',
+          tag => 'td',
+          elements => [
+            {
+              type => 'Block',
+              tag => 'img',
+              attributes => {
+                id => "curs-allele-delete-$id",
+                src => $delete_icon_uri,
+              },
+            }
+          ],
+        },
       ]
     }
   } @$ids;
@@ -1221,12 +1238,15 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   my $form = $self->form();
 
-  my @tbody_rows = _generate_rows(\@codes, ['0']);
+  my @tbody_rows = _generate_rows($c, \@codes, ['0']);
 
   my @all_elements = (
       {
         type => 'Block',
         tag => "table",
+        attributes => {
+          class => 'list',
+        },
         elements => [
           {
             type => 'Block',
@@ -1254,6 +1274,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
                   {
                     type => 'Block',
                     tag => 'th',
+                    content_xml => '&nbsp;',
                   }
                 ],
               },
