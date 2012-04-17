@@ -1126,13 +1126,17 @@ sub _generate_rows : Private
     {
       type => 'Block',
       tag => "tr",
+      id => "curs-allele-row-$id",
+      attributes => {
+        class => 'curs-allele-row',
+      },
       elements => [
         {
           type => 'Block',
           tag => 'td',
           elements => [
             {
-              name => "allele-name-$id",
+              name => "curs-allele-name-$id",
               type => 'Text',
             },
           ],
@@ -1142,11 +1146,12 @@ sub _generate_rows : Private
           tag => 'td',
           elements => [
             {
-              name => "allele-def-$id",
+              name => "curs-allele-def-$id",
               type => 'Text',
               constraints => [
                 {
-                  type => 'Required', },
+                  type => 'Required',
+                },
               ],
             },
           ],
@@ -1245,6 +1250,10 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
                     type => 'Block',
                     tag => 'th',
                     content => 'Evidence',
+                  },
+                  {
+                    type => 'Block',
+                    tag => 'th',
                   }
                 ],
               },
