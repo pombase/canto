@@ -1284,7 +1284,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
     if ($evidence_select eq '') {
       $c->flash()->{error} = 'Please choose an evidence type to continue';
-      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+      return;
     }
 
     $data->{evidence_code} = $evidence_select;
