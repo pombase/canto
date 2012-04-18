@@ -1125,6 +1125,12 @@ sub _generate_rows : Private
   my $config = $c->config();
   my $ont_config = $config->{annotation_types}->{$annotation_type_name};
 
+  my @allele_type_names = map {
+    [ $_->{name}, $_->{name} ];
+  } @{$config->{allele_type_list}};
+
+  unshift @allele_type_names, [ '', 'Choose an allele type ...' ];
+
   my %evidence_types = %{$config->{evidence_types}};
 
   my @codes = map {
@@ -1140,6 +1146,7 @@ sub _generate_rows : Private
   unshift @codes, [ '', 'Choose an evidence type ...' ];
 
   my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+  my $delete_icon_small_uri = $c->uri_for('/static/images/delete_icon_small.png');
 
   return map {
     my $id = $_;
@@ -1158,6 +1165,9 @@ sub _generate_rows : Private
             {
               name => "curs-allele-name-$id",
               type => 'Text',
+              attributes => {
+                style => 'disabled: true',
+              },
             },
           ],
         },
@@ -1166,12 +1176,35 @@ sub _generate_rows : Private
           tag => 'td',
           elements => [
             {
-              name => "curs-allele-def-$id",
-              type => 'Text',
-              constraints => [
+              name => "curs-allele-type-$id",
+              type => 'Select',
+              attributes => {
+                class => 'curs-allele-type-select',
+              },
+              options => [ @allele_type_names ],
+            },
+            {
+              name => "curs-allele-description-$id",
+              type => 'Block',
+              tag => 'div',
+              attributes => {
+                class => 'curs-allele-type-description',
+                style => 'display: none',
+              },
+              elements => [
                 {
-                  type => 'Required',
+                  name => "curs-allele-description-input-$id",
+                  type => 'Text',
                 },
+                {
+                  name => "curs-allele-description-delete-$id",
+                  type => 'Block',
+                  tag => 'img',
+                  attributes => {
+                    src => $delete_icon_small_uri,
+                    class => 'curs-allele-description-delete',
+                  },
+                }
               ],
             },
           ],
@@ -1236,6 +1269,8 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
   $st->{annotation} = $annotation;
+
+  $st->{allele_types} = $config->{allele_types};
 
   my %evidence_types = %{$config->{evidence_types}};
   my $form = $self->form();

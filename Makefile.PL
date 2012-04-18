@@ -79,6 +79,7 @@ requires 'MooseX::Traits::Pluggable';
 requires 'MooseX::MarkAsMethods';
 requires 'DBD::Pg';
 requires 'URI::Escape';
+requires 'Data::JavaScript::Anon';
 
 test_requires 'Test::More' => '0.88';
 test_requires 'Test::Deep';

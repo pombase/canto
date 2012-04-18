@@ -4,6 +4,10 @@ $annotation
 $gene_display_name
 </%args>
 
+<script language="javascript" type="text/javascript">
+var allele_types = <% $allele_types_js |n %>;
+</script>
+<
 <div class="curs-box evidence-select">
   <div class="curs-box-title">
 Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
@@ -14,6 +18,10 @@ Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
 </div>
 
 <%init>
+use Data::JavaScript::Anon;
+
 my $annotation_data = $annotation->data();
 my $term_ontid = $annotation_data->{term_ontid};
+
+my $allele_types_js = Data::JavaScript::Anon->anon_dump($c->stash()->{allele_types});
 </%init>
