@@ -662,11 +662,11 @@ $(document).ready(function() {
     var row = $this.closest('tr');
     $this.hide();
     var selected_option = $this.children('option:selected');
-    var selected_text = selected_option.text();
     if (selected_option.val() === '') {
       hide_allele_description(row);
       return;
     }
+    var selected_text = selected_option.text();
     var allele_type_config = allele_types[selected_text];
     var description = row.find('div.curs-allele-type-description');
     description.show();
