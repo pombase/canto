@@ -23,6 +23,10 @@ a:link:active { text-decoration:none }
 
 #heading a { color: black; }
 
+.curs-allele-description-input, .curs-allele-type-description div.text {
+  display: inline;
+}
+
 button, input[type=submit] {
   background-color: #c00;
   color: white;

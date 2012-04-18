@@ -1174,6 +1174,9 @@ sub _generate_rows : Private
         {
           type => 'Block',
           tag => 'td',
+          attributes => {
+            class => 'curs-allele-type-td',
+          },
           elements => [
             {
               name => "curs-allele-type-$id",
@@ -1195,6 +1198,10 @@ sub _generate_rows : Private
                 {
                   name => "curs-allele-description-input-$id",
                   type => 'Text',
+                  attributes => {
+                    class => 'curs-allele-description-input',
+                    size => 40,
+                  },
                 },
                 {
                   name => "curs-allele-description-delete-$id",
@@ -1204,7 +1211,7 @@ sub _generate_rows : Private
                     src => $delete_icon_small_uri,
                     class => 'curs-allele-description-delete',
                   },
-                }
+                },
               ],
             },
           ],

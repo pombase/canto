@@ -655,6 +655,7 @@ $(document).ready(function() {
     var $button = $(this);
     var row = $button.closest('tr');
     hide_allele_description(row);
+    row.find('.curs-allele-type-select').val('');
   });
 
   $('.curs-allele-type-select').change(function (ev) {
