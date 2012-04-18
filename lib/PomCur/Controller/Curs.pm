@@ -1119,8 +1119,25 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 sub _generate_rows : Private
 {
   my $c = shift;
-  my $codes = shift;
+  my $annotation_type_name = shift;
   my $ids = shift;
+
+  my $config = $c->config();
+  my $ont_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my %evidence_types = %{$config->{evidence_types}};
+
+  my @codes = map {
+    my $description;
+    if ($evidence_types{$_}->{name} eq $_) {
+      $description = $_;
+    } else {
+      $description = $evidence_types{$_}->{name} . " ($_)";
+    }
+    [ $_, $description]
+  } @{$ont_config->{evidence_codes}};
+
+  unshift @codes, [ '', 'Choose an evidence type ...' ];
 
   my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 
@@ -1165,7 +1182,7 @@ sub _generate_rows : Private
           elements => [
             {
               name => "curs-allele-evidence-select-$id",
-              type => 'Select', options => [ @$codes ],
+              type => 'Select', options => [ @codes ],
             }
           ]
         },
@@ -1220,25 +1237,9 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
   $st->{annotation} = $annotation;
 
-  my $ont_config = $config->{annotation_types}->{$annotation_type_name};
-
   my %evidence_types = %{$config->{evidence_types}};
-
-  my @codes = map {
-    my $description;
-    if ($evidence_types{$_}->{name} eq $_) {
-      $description = $_;
-    } else {
-      $description = $evidence_types{$_}->{name} . " ($_)";
-    }
-    [ $_, $description]
-  } @{$ont_config->{evidence_codes}};
-
-  unshift @codes, [ '', 'Choose an evidence type ...' ];
-
   my $form = $self->form();
-
-  my @tbody_rows = _generate_rows($c, \@codes, ['0']);
+  my @tbody_rows = _generate_rows($c, $annotation_type_name, ['0']);
 
   my @all_elements = (
       {
@@ -1259,7 +1260,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
                   {
                     type => 'Block',
                     tag => 'th',
-                    content => 'Allele name',
+                    content => 'Allele name (optional)',
                   },
                   {
                     type => 'Block',
