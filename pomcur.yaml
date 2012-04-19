@@ -915,7 +915,7 @@ allele_type_list:
     autopoulate_name: '@@primary_identifier@@-delta'
   - name: unknown
     description_required: 0
-    allele_name_required: 0
+    allele_name_required: 1
   - name: overexpression
     description_required: 0
     allele_name_required: 0
@@ -929,7 +929,7 @@ allele_type_list:
   - name: mutation of multiple non-consecutive amino acid residues
     description_required: 1
     allele_name_required: 0
-    placeholder: eg. K144A
+    placeholder: eg. K132A,K144A
   - name: mutation of multiple consecutive amino acid residues
     description_required: 1
     allele_name_required: 0
