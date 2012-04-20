@@ -1201,7 +1201,6 @@ sub _generate_rows : Private
                   type => 'Text',
                   attributes => {
                     class => 'curs-allele-description-input',
-                    size => 40,
                   },
                 },
                 {
@@ -1223,7 +1222,11 @@ sub _generate_rows : Private
           elements => [
             {
               name => "curs-allele-evidence-select-$id",
-              type => 'Select', options => [ @codes ],
+              type => 'Select',
+              options => [ @codes ],
+              attributes => {
+                class => 'curs-allele-evidence-select',
+              },
             }
           ]
         },

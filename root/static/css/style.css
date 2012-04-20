@@ -26,6 +26,18 @@ a:link:active { text-decoration:none }
 .curs-allele-description-input, .curs-allele-type-description div.text {
   display: inline;
 }
+.curs-allele-type-description span, .curs-allele-type-description span span {
+  display: block;
+}
+.curs-allele-evidence-select {
+  width: 25em;
+}
+.curs-allele-type-select, .curs-allele-description-input {
+  width: 18em;
+}
+.curs-allele-row {
+  vertical-align: top;
+}
 
 button, input[type=submit] {
   background-color: #c00;
