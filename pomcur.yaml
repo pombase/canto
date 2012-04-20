@@ -912,7 +912,7 @@ allele_type_list:
   - name: deletion
     description_required: 0
     allele_name_required: 1
-    autopoulate_name: '@@primary_identifier@@-delta'
+    autopoulate_name: '@@primary_identifier@@delta'
   - name: unknown
     description_required: 0
     allele_name_required: 1
