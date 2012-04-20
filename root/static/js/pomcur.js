@@ -682,7 +682,7 @@ $(document).ready(function() {
       }
       description_input.removeAttr('disabled');
     } else {
-      description_input.attr('placeholder', 'No description needed');
+      description_input.attr('placeholder', selected_text);
       description_input.attr('disabled', true);
     }
     description_input.placeholder();
