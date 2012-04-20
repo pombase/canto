@@ -1167,6 +1167,7 @@ sub _generate_rows : Private
               type => 'Text',
               attributes => {
                 style => 'disabled: true',
+                class => 'curs-allele-name',
               },
             },
           ],

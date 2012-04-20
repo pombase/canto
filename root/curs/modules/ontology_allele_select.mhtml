@@ -6,8 +6,9 @@ $gene_display_name
 
 <script language="javascript" type="text/javascript">
 var allele_types = <% $allele_types_js |n %>;
+var gene_display_name = "<% $gene_display_name %>";
 </script>
-<
+
 <div class="curs-box evidence-select">
   <div class="curs-box-title">
 Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
