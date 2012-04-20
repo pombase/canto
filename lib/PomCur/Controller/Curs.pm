@@ -1220,6 +1220,14 @@ sub _generate_rows : Private
                     class => 'curs-allele-description-delete',
                   },
                 },
+                {
+                  type => 'Radiogroup',
+                  name => 'Expression level',
+                  options => [ [ 'Overexpression', 'Overexpression' ],
+                               [ 'Endogenous', 'Endogenous' ],
+                               [ 'Knockdown', 'Knockdown' ],
+                             ],
+                }
               ],
             },
           ],
