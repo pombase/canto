@@ -1180,6 +1180,14 @@ sub _generate_rows : Private
           },
           elements => [
             {
+              name => "curs-allele-type-label-$id",
+              type => 'Block',
+              tag => 'span',
+              attributes => {
+                class => 'curs-allele-type-label',
+              },
+            },
+            {
               name => "curs-allele-type-$id",
               type => 'Select',
               attributes => {

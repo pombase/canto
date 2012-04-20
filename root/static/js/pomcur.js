@@ -649,6 +649,11 @@ $(document).ready(function() {
   function hide_allele_description(row) {
     row.find('.curs-allele-type-description').hide();
     row.find('.curs-allele-type-select').show();
+    var name_input = row.find('.curs-allele-name');
+    name_input.removeAttr('disabled');
+    name_input.val('');
+    var label = row.find('.curs-allele-type-label');
+    label.hide();
   };
 
   $('.curs-allele-description-delete').click(function () {
@@ -675,7 +680,10 @@ $(document).ready(function() {
     description.show();
     var description_input = description.find('input');
     var description_placeholder_text;
+    var label = row.find('.curs-allele-type-label');
     if (allele_type_config.description_required == 1) {
+      label.show();
+      label.text(selected_text + ":");
       description_placeholder_text = allele_type_config.placeholder;
       if (typeof allele_type_config.placeholder != 'undefined') {
         description_input.attr('placeholder', description_placeholder_text);
@@ -684,6 +692,8 @@ $(document).ready(function() {
       }
       description_input.removeAttr('disabled');
     } else {
+      $this.hide();
+      label.hide();
       description_input.attr('placeholder', selected_text);
       description_input.attr('disabled', true);
     }
