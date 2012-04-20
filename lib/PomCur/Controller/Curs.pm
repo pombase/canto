@@ -1271,7 +1271,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   my $term_ontid = $annotation_data->{term_ontid};
 
   $st->{title} = "Specify the allele(s) of $gene_display_name to annotate with $term_ontid";
-  $st->{show_title} = 1;
+  $st->{show_title} = 0;
 
   $st->{gene_display_name} = $gene_display_name;
 
