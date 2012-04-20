@@ -1303,7 +1303,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
                   {
                     type => 'Block',
                     tag => 'th',
-                    content => 'Allele name (optional)',
+                    content => 'Allele name',
                   },
                   {
                     type => 'Block',
