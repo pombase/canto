@@ -1223,9 +1223,19 @@ sub _generate_rows : Private
                 {
                   type => 'Radiogroup',
                   name => 'Expression level',
-                  options => [ [ 'Overexpression', 'Overexpression' ],
-                               [ 'Endogenous', 'Endogenous' ],
-                               [ 'Knockdown', 'Knockdown' ],
+                  container_tag => 'div',
+                  options => [ { value => 'Overexpression',
+                                 label => 'Overexpression',
+                               },
+                               { value => 'Endogenous',
+                                 label => 'Endogenous',
+                                 attributes => {
+                                   checked => "checked",
+                                 },
+                               },
+                               { value => 'Knockdown',
+                                 label => 'Knockdown',
+                               },
                              ],
                 }
               ],
