@@ -1237,6 +1237,9 @@ sub _generate_rows : Private
                                  label => 'Knockdown',
                                },
                              ],
+                  attributes => {
+                    class => 'curs-allele-expression',
+                  },
                 }
               ],
             },
