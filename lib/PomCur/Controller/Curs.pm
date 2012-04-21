@@ -1322,7 +1322,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
         type => 'Block',
         tag => "table",
         attributes => {
-          class => 'list',
+          class => 'list curs-alleles',
         },
         elements => [
           {

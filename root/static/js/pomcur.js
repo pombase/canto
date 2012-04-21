@@ -641,7 +641,8 @@ $(document).ready(function() {
     var first_row = current_rows.first();
     var new_row = first_row.clone();
 
-    // ...
+    var tbody = first_row.closest('tbody');
+    tbody.append(new_row);
 
     return false;
   });
@@ -656,7 +657,7 @@ $(document).ready(function() {
     label.hide();
   };
 
-  $('.curs-allele-description-delete').click(function () {
+  $('table.curs-alleles').on('click', '.curs-allele-description-delete', function () {
     var $button = $(this);
     var row = $button.closest('tr');
     hide_allele_description(row);
@@ -715,7 +716,7 @@ $(document).ready(function() {
     }
   }
 
-  $('.curs-allele-type-select').change(function (ev) {
+  $('table.curs-alleles').on('change', '.curs-allele-type-select', function (ev) {
     var $this = $(this);
     var row = $this.closest('tr');
     $this.hide();
