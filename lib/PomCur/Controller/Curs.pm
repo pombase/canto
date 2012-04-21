@@ -1222,7 +1222,7 @@ sub _generate_rows : Private
                 },
                 {
                   type => 'Radiogroup',
-                  name => 'Expression level',
+                  name => "curs-allele-radio-group-$id",
                   container_tag => 'div',
                   options => [ { value => 'Overexpression',
                                  label => 'Overexpression',
