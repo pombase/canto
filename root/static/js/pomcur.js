@@ -694,6 +694,14 @@ $(document).ready(function() {
       description_input.attr('disabled', true);
     }
     description_input.placeholder();
+
+    var expression_span = row.find('.curs-allele-expression');
+    if (allele_type_config.allow_expression_change == 1) {
+      expression_span.show();
+    } else {
+      expression_span.hide();
+    }
+
     var name_input = row.find('.curs-allele-name');
     maybe_autopopulate(allele_type_config, name_input);
   }

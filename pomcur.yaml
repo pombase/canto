@@ -912,43 +912,45 @@ allele_type_list:
   - name: deletion
     description_required: 0
     allele_name_required: 1
+    allow_expression_change: 0
     autopopulate_name: '@@gene_name@@delta'
   - name: unknown
     description_required: 0
     allele_name_required: 1
-  - name: overexpression
-    description_required: 0
-    allele_name_required: 0
-  - name: knockdown
-    description_required: 0
-    allele_name_required: 0
   - name: mutation of single amino acid residue
     description_required: 1
     allele_name_required: 0
+    allow_expression_change: 1
     placeholder: eg. K132A
   - name: mutation of multiple non-consecutive amino acid residues
     description_required: 1
     allele_name_required: 0
+    allow_expression_change: 1
     placeholder: eg. K132A,K144A
   - name: mutation of multiple consecutive amino acid residues
     description_required: 1
     allele_name_required: 0
+    allow_expression_change: 1
     placeholder: eg. KEN26AAA
   - name: partial deletion, amino acid
     description_required: 1
     allele_name_required: 0
+    allow_expression_change: 1
     placeholder: eg. 100-200
   - name: partial deletion, nucleotide
     description_required: 1
     allele_name_required: 0
+    allow_expression_change: 1
     placeholder: eg. 100-200
   - name: mutation of a single nucleotide
     description_required: 1
     allele_name_required: 0
+    allow_expression_change: 1
     placeholder: eg. A25G
   - name: other
     description_required: 1
     allele_name_required: 0
+    allow_expression_change: 1
     placeholder: Please provide a description
 
 evidence_types:
