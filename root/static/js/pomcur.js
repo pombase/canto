@@ -629,8 +629,8 @@ $(document).ready(function() {
     var current_rows = $('.curs-allele-row');
     var max_row_index = -1;
 
-    var row_indexes = 
-      current_rows.map(function(index) { 
+    var row_indexes =
+      current_rows.map(function(index) {
         var row_index = parseInt(this.id.match(/-(\d+)$/)[1]);
         if (row_index > max_row_index) {
           max_row_index = row_index;
