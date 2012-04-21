@@ -663,28 +663,25 @@ $(document).ready(function() {
     row.find('.curs-allele-type-select').val('');
   });
 
-  $('.curs-allele-type-select').change(function (ev) {
-    var $this = $(this);
-    var row = $this.closest('tr');
-    $this.hide();
-    var selected_option = $this.children('option:selected');
-    var name_input = row.find('.curs-allele-name');
-    name_input.val('');
-    if (selected_option.val() === '') {
-      hide_allele_description(row);
-      return;
+  function maybe_autopopulate(allele_type_config, name_input) {
+    if (typeof allele_type_config.autopopulate_name != 'undefined') {
+      var new_name =
+        allele_type_config.autopopulate_name.replace(/@@gene_name@@/, gene_display_name);
+      name_input.val(new_name);
     }
-    var selected_text = selected_option.text();
-    var allele_type_config = allele_types[selected_text];
+  }
+
+  function setup_description(row, selected_option) {
     var description = row.find('div.curs-allele-type-description');
     description.show();
     var description_input = description.find('input');
-    var description_placeholder_text;
+    var selected_text = selected_option.text();
+    var allele_type_config = allele_types[selected_text];
     var label = row.find('.curs-allele-type-label');
     if (allele_type_config.description_required == 1) {
       label.show();
       label.text(selected_text + ":");
-      description_placeholder_text = allele_type_config.placeholder;
+      var description_placeholder_text = allele_type_config.placeholder;
       if (typeof allele_type_config.placeholder != 'undefined') {
         description_input.attr('placeholder', description_placeholder_text);
       } else {
@@ -692,17 +689,28 @@ $(document).ready(function() {
       }
       description_input.removeAttr('disabled');
     } else {
-      $this.hide();
       label.hide();
       description_input.attr('placeholder', selected_text);
       description_input.attr('disabled', true);
     }
-    if (typeof allele_type_config.autopopulate_name != 'undefined') {
-      var new_name =
-        allele_type_config.autopopulate_name.replace(/@@gene_name@@/, gene_display_name);
-      name_input.val(new_name);
-    }
     description_input.placeholder();
+    var name_input = row.find('.curs-allele-name');
+    maybe_autopopulate(allele_type_config, name_input);
+  }
+
+  $('.curs-allele-type-select').change(function (ev) {
+    var $this = $(this);
+    var row = $this.closest('tr');
+    $this.hide();
+    var selected_option = $this.children('option:selected');
+    var name_input = row.find('.curs-allele-name');
+    name_input.val('');
+    var selected_option = $this.children('option:selected');
+    if (selected_option.val() === '') {
+      hide_allele_description(row);
+      return;
+    }
+    setup_description(row, selected_option);
   });
 
   $('.non-key-attribute').jTruncate({
