@@ -1269,6 +1269,7 @@ sub _generate_rows : Private
               attributes => {
                 id => "curs-allele-delete-$id",
                 src => $delete_icon_uri,
+                class => 'curs-allele-row-delete',
               },
             }
           ],

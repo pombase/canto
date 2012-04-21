@@ -644,6 +644,8 @@ $(document).ready(function() {
     var tbody = first_row.closest('tbody');
     tbody.append(new_row);
 
+    reset_row(new_row);
+
     return false;
   });
 
@@ -662,6 +664,21 @@ $(document).ready(function() {
     var row = $button.closest('tr');
     hide_allele_description(row);
     row.find('.curs-allele-type-select').val('');
+  });
+
+  function reset_row(row) {
+    row.find('.curs-allele-type-select').val('').trigger('change');
+  }
+
+  $('table.curs-alleles').on('click', '.curs-allele-row-delete', function () {
+    var $button = $(this);
+    var row = $button.closest('tr');
+    var current_rows = $('.curs-allele-row');
+    if (current_rows.size() > 1)  {
+      row.remove();
+    } else {
+      reset_row(row);
+    }
   });
 
   function maybe_autopopulate(allele_type_config, name_input) {
