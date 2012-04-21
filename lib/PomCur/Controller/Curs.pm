@@ -1311,6 +1311,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   my %evidence_types = %{$config->{evidence_types}};
   my $form = $self->form();
+  $form->auto_fieldset(0);
   my @tbody_rows = _generate_rows($c, $annotation_type_name, ['0']);
 
   my @all_elements = (
