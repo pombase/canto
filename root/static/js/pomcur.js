@@ -664,10 +664,13 @@ $(document).ready(function() {
   });
 
   function maybe_autopopulate(allele_type_config, name_input) {
-    if (typeof allele_type_config.autopopulate_name != 'undefined') {
+    if (typeof allele_type_config.autopopulate_name == 'undefined') {
+      return false;
+    } else {
       var new_name =
         allele_type_config.autopopulate_name.replace(/@@gene_name@@/, gene_display_name);
       name_input.val(new_name);
+      return true;
     }
   }
 
@@ -703,7 +706,13 @@ $(document).ready(function() {
     }
 
     var name_input = row.find('.curs-allele-name');
-    maybe_autopopulate(allele_type_config, name_input);
+    var autopopulated = maybe_autopopulate(allele_type_config, name_input);
+
+    if (allele_type_config.allele_name_required == 1 && !autopopulated) {
+      name_input.attr('placeholder', 'Allele name required');
+    } else {
+      name_input.attr('placeholder', '');
+    }
   }
 
   $('.curs-allele-type-select').change(function (ev) {
