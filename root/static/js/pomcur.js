@@ -631,10 +631,11 @@ $(document).ready(function() {
 
     var row_indexes = 
       current_rows.map(function(index) { 
-        var row_index = this.id.match(/-(\d+)$/)[1];
+        var row_index = parseInt(this.id.match(/-(\d+)$/)[1]);
         if (row_index > max_row_index) {
           max_row_index = row_index;
         }
+        return row_index;
       });
 
     var new_index = max_row_index + 1;
@@ -642,9 +643,19 @@ $(document).ready(function() {
     var new_row = first_row.clone();
 
     var tbody = first_row.closest('tbody');
-    tbody.append(new_row);
+
+    new_row.find('*').each(function(index, el) {
+      if (typeof(el.id) != 'undefined') {
+        el.id = el.id.replace(/-\d+$/, '-' + new_index);
+      }
+      if (typeof(el.name) != 'undefined') {
+        el.name = el.name.replace(/-\d+$/, '-' + new_index);
+      }
+    });
+    new_row.attr('id', new_row.attr('id').replace(/-\d+$/, '-' + new_index));
 
     reset_row(new_row);
+    tbody.append(new_row);
 
     return false;
   });

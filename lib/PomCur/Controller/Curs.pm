@@ -1155,7 +1155,7 @@ sub _generate_rows : Private
       tag => "tr",
       id => "curs-allele-row-$id",
       attributes => {
-        class => 'curs-allele-row',
+        class => 'curs-allele-row curs-allele-element-with-id',
       },
       elements => [
         {
@@ -1167,7 +1167,7 @@ sub _generate_rows : Private
               type => 'Text',
               attributes => {
                 style => 'disabled: true',
-                class => 'curs-allele-name',
+                class => 'curs-allele-name curs-allele-element-with-id',
               },
             },
           ],
@@ -1180,27 +1180,27 @@ sub _generate_rows : Private
           },
           elements => [
             {
-              name => "curs-allele-type-label-$id",
+              id => "curs-allele-type-label-$id",
               type => 'Block',
               tag => 'span',
               attributes => {
-                class => 'curs-allele-type-label',
+                class => 'curs-allele-type-label curs-allele-element-with-id',
               },
             },
             {
               name => "curs-allele-type-$id",
               type => 'Select',
               attributes => {
-                class => 'curs-allele-type-select',
+                class => 'curs-allele-type-select curs-allele-element-with-id',
               },
               options => [ @allele_type_names ],
             },
             {
-              name => "curs-allele-description-$id",
+              id => "curs-allele-description-$id",
               type => 'Block',
               tag => 'div',
               attributes => {
-                class => 'curs-allele-type-description',
+                class => 'curs-allele-type-description curs-allele-element-with-id',
                 style => 'display: none',
               },
               elements => [
@@ -1208,16 +1208,16 @@ sub _generate_rows : Private
                   name => "curs-allele-description-input-$id",
                   type => 'Text',
                   attributes => {
-                    class => 'curs-allele-description-input',
+                    class => 'curs-allele-description-input curs-allele-element-with-id',
                   },
                 },
                 {
-                  name => "curs-allele-description-delete-$id",
+                  id => "curs-allele-description-delete-$id",
                   type => 'Block',
                   tag => 'img',
                   attributes => {
                     src => $delete_icon_small_uri,
-                    class => 'curs-allele-description-delete',
+                    class => 'curs-allele-description-delete curs-allele-element-with-id',
                   },
                 },
                 {
@@ -1238,7 +1238,7 @@ sub _generate_rows : Private
                                },
                              ],
                   attributes => {
-                    class => 'curs-allele-expression',
+                    class => 'curs-allele-expression curs-allele-element-with-id',
                   },
                 }
               ],
@@ -1254,7 +1254,7 @@ sub _generate_rows : Private
               type => 'Select',
               options => [ @codes ],
               attributes => {
-                class => 'curs-allele-evidence-select',
+                class => 'curs-allele-evidence-select curs-allele-element-with-id',
               },
             }
           ]
@@ -1269,7 +1269,7 @@ sub _generate_rows : Private
               attributes => {
                 id => "curs-allele-delete-$id",
                 src => $delete_icon_uri,
-                class => 'curs-allele-row-delete',
+                class => 'curs-allele-row-delete curs-allele-element-with-id',
               },
             }
           ],
