@@ -14,7 +14,7 @@ my $config_single = PomCur::Config->new($config_yaml_1);
 
 is($config_single->{some_key}, 'some_value_1');
 
-is(keys %{$config_single}, 8);
+is(keys %{$config_single}, 7);
 
 ok(!$config_single->{annotation_types}->{phenotype}->{needs_with_or_from});
 ok($config_single->{annotation_types}->{cellular_component}->{needs_with_or_from});
