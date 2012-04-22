@@ -134,5 +134,5 @@ is(scalar(@$id_result), 1);
 
 is($id_result->[0]->{id}, 'FYPO:0000114');
 is($id_result->[0]->{name}, 'cellular process phenotype');
-is($id_result->[0]->{annotation_namespace}, 'phenotype');
+is($id_result->[0]->{annotation_namespace}, 'fission_yeast_phenotype');
 
