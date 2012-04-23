@@ -760,11 +760,11 @@ $(document).ready(function() {
   });
 
   $('.non-key-attribute').jTruncate({
-        length: 300,
-        minTrail: 50,
-        moreText: "[show all]",
-        lessText: "[hide]"
-    });
+    length: 300,
+    minTrail: 50,
+    moreText: "[show all]",
+    lessText: "[hide]"
+  });
 });
 
 // autocomplete for the traige tool
