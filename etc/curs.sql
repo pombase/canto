@@ -12,6 +12,13 @@ CREATE TABLE gene (
        organism integer NOT NULL REFERENCES organism(organism_id)
 );
 
+CREATE TABLE allele (
+       allele_id integer PRIMARY KEY,
+       description text,
+       name text,
+       gene integer NOT NULL REFERENCES gene(gene_id)
+);
+
 CREATE TABLE annotation (
        annotation_id integer PRIMARY KEY,
        status text NOT NULL,  -- "new", "deleted"
@@ -27,6 +34,12 @@ CREATE TABLE annotation (
 CREATE TABLE gene_annotation (
        gene_annotation_id integer PRIMARY KEY,
        gene integer REFERENCES gene(gene_id),
+       annotation integer REFERENCES annotation(annotation_id)
+);
+
+CREATE TABLE allele_annotation (
+       allele_annotation_id integer PRIMARY KEY,
+       allele integer REFERENCES allele(allele_id),
        annotation integer REFERENCES annotation(annotation_id)
 );
 
