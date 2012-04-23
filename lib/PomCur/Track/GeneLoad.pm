@@ -35,12 +35,8 @@ under the same terms as Perl itself.
 
 =cut
 
-use strict;
-use warnings;
 use Carp;
 use Moose;
-
-use PomCur::Track::LoadUtil;
 
 use Text::CSV;
 
@@ -52,21 +48,9 @@ has 'organism' => (
 
 has 'schema' => (
   is => 'ro',
-  isa => 'PomCur::TrackDB'
+  isa => 'PomCur::TrackDB',
+  required => 1,
 );
-
-has 'load_util' => (
-  is => 'ro',
-  lazy => 1,
-  builder => '_build_load_util'
-);
-
-sub _build_load_util
-{
-  my $self = shift;
-
-  return PomCur::Track::LoadUtil->new(schema => $self->schema());
-}
 
 sub _process_gene_row
 {
@@ -103,7 +87,7 @@ sub _process_gene_row
 =head2 load
 
  Usage   : my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema);
-           $gene_load->load($file_name);
+           $gene_load->load($handle);
  Function: Load a file of gene identifiers, name and products into the Track
            database.  Note that this method doesn't start a transaction.
            Any existing genes and gene synonyms are removed before
