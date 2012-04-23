@@ -82,6 +82,21 @@ __PACKAGE__->add_unique_constraint("primary_identifier_unique", ["primary_identi
 
 =head1 RELATIONS
 
+=head2 alleles
+
+Type: has_many
+
+Related object: L<PomCur::CursDB::Allele>
+
+=cut
+
+__PACKAGE__->has_many(
+  "alleles",
+  "PomCur::CursDB::Allele",
+  { "foreign.gene" => "self.gene_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 gene_annotations
 
 Type: has_many
@@ -113,8 +128,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-12 03:26:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Xve+VEbtMM1onLCG2J8saA
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-22 13:14:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6ikaCdjlKIdLVU0fD8S1KA
 
 =head2 direct_annotations
 

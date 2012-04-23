@@ -35,6 +35,7 @@ use PomCur::Controller::Curs;
 use PomCur::Track::GeneLookup;
 use PomCur::Track::CurationLoad;
 use PomCur::Track::GeneLoad;
+use PomCur::Track::AlleleLoad;
 use PomCur::Track::OntologyLoad;
 use PomCur::Track::OntologyIndex;
 use PomCur::Track::LoadUtil;
@@ -559,6 +560,8 @@ sub make_base_track_db
 
     my $curation_load = PomCur::Track::CurationLoad->new(schema => $schema);
     my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema,
+                                                 organism => $organism);
+    my $allele_load = PomCur::Track::AlleleLoad->new(schema => $schema,
                                                  organism => $organism);
     my $gene_load_organism_2 =
       PomCur::Track::GeneLoad->new(schema => $schema,
