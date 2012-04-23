@@ -191,6 +191,17 @@ CREATE TABLE gene (
 CREATE INDEX gene_primary_identifier_idx ON gene (primary_identifier);
 CREATE INDEX gene_primary_name_idx ON gene (primary_name);
 
+CREATE TABLE allele (
+       allele_id integer NOT NULL PRIMARY KEY,
+       primary_identifier text NOT NULL UNIQUE,
+       primary_name text,
+       description text,
+       gene integer NOT NULL REFERENCES gene(gene_id)
+);
+CREATE INDEX allele_primary_identifier_idx ON allele (primary_identifier);
+CREATE INDEX allele_primary_name_idx ON allele (primary_name);
+
+
 CREATE TABLE genesynonym (
        genesynonym_id integer NOT NULL PRIMARY key,
        gene integer NOT NULL references gene (gene_id),

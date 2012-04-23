@@ -1,12 +1,12 @@
 use utf8;
-package PomCur::TrackDB::Gene;
+package PomCur::TrackDB::Allele;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-PomCur::TrackDB::Gene
+PomCur::TrackDB::Allele
 
 =cut
 
@@ -18,15 +18,15 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 TABLE: C<gene>
+=head1 TABLE: C<allele>
 
 =cut
 
-__PACKAGE__->table("gene");
+__PACKAGE__->table("allele");
 
 =head1 ACCESSORS
 
-=head2 gene_id
+=head2 allele_id
 
   data_type: 'integer'
   is_auto_increment: 1
@@ -37,17 +37,17 @@ __PACKAGE__->table("gene");
   data_type: 'text'
   is_nullable: 0
 
-=head2 product
-
-  data_type: 'text'
-  is_nullable: 1
-
 =head2 primary_name
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 organism
+=head2 description
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 gene
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -56,15 +56,15 @@ __PACKAGE__->table("gene");
 =cut
 
 __PACKAGE__->add_columns(
-  "gene_id",
+  "allele_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "primary_identifier",
   { data_type => "text", is_nullable => 0 },
-  "product",
-  { data_type => "text", is_nullable => 1 },
   "primary_name",
   { data_type => "text", is_nullable => 1 },
-  "organism",
+  "description",
+  { data_type => "text", is_nullable => 1 },
+  "gene",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
@@ -72,13 +72,13 @@ __PACKAGE__->add_columns(
 
 =over 4
 
-=item * L</gene_id>
+=item * L</allele_id>
 
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("gene_id");
+__PACKAGE__->set_primary_key("allele_id");
 
 =head1 UNIQUE CONSTRAINTS
 
@@ -96,59 +96,26 @@ __PACKAGE__->add_unique_constraint("primary_identifier_unique", ["primary_identi
 
 =head1 RELATIONS
 
-=head2 alleles
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Allele>
-
-=cut
-
-__PACKAGE__->has_many(
-  "alleles",
-  "PomCur::TrackDB::Allele",
-  { "foreign.gene" => "self.gene_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 genesynonyms
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Genesynonym>
-
-=cut
-
-__PACKAGE__->has_many(
-  "genesynonyms",
-  "PomCur::TrackDB::Genesynonym",
-  { "foreign.gene" => "self.gene_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 organism
+=head2 gene
 
 Type: belongs_to
 
-Related object: L<PomCur::TrackDB::Organism>
+Related object: L<PomCur::TrackDB::Gene>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "organism",
-  "PomCur::TrackDB::Organism",
-  { organism_id => "organism" },
+  "gene",
+  "PomCur::TrackDB::Gene",
+  { gene_id => "gene" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-23 03:55:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0eAbSRfuzmFxzz2DWnmerQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WBYeFJGM2uNPtJvwXEdtkw
 
-use Moose;
 
-with 'PomCur::Role::GeneNames';
-
-# You can replace this text with custom content, and it will be preserved on regeneration
+# You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;
