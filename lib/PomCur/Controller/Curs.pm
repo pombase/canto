@@ -1116,7 +1116,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   }
 }
 
-sub _generate_rows : Private
+sub _generate_allele_form : Private
 {
   my $c = shift;
   my $annotation_type_name = shift;
@@ -1148,135 +1148,108 @@ sub _generate_rows : Private
   my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
   my $delete_icon_small_uri = $c->uri_for('/static/images/delete_icon_small.png');
 
-  return map {
-    my $id = $_;
-    {
+  return {
       type => 'Block',
-      tag => "tr",
-      id => "curs-allele-row-$id",
+      tag => 'div',
+      id => 'curs-allele-add',
       attributes => {
-        class => 'curs-allele-row curs-allele-element-with-id',
+        style => 'display: none',
       },
       elements => [
         {
-          type => 'Block',
-          tag => 'td',
-          elements => [
-            {
-              name => "curs-allele-name-$id",
-              type => 'Text',
-              attributes => {
-                style => 'disabled: true',
-                class => 'curs-allele-name curs-allele-element-with-id',
-              },
-            },
-          ],
+          name => "curs-allele-name",
+          type => 'Text',
+          attributes => {
+            style => 'disabled: true',
+            class => 'curs-allele-name',
+          }
         },
         {
           type => 'Block',
-          tag => 'td',
+          tag => 'span',
           attributes => {
-            class => 'curs-allele-type-td',
+            class => 'curs-allele-type-label',
+          },
+        },
+        {
+          name => "curs-allele-type",
+          type => 'Select',
+          attributes => {
+            class => 'curs-allele-type-select',
+          },
+          options => [ @allele_type_names ],
+        },
+        {
+          type => 'Block',
+          tag => 'div',
+          attributes => {
+            class => 'curs-allele-type-description',
+            style => 'display: none',
           },
           elements => [
             {
-              id => "curs-allele-type-label-$id",
-              type => 'Block',
-              tag => 'span',
+              name => "curs-allele-description-input",
+              type => 'Text',
               attributes => {
-                class => 'curs-allele-type-label curs-allele-element-with-id',
+                class => 'curs-allele-description-input',
               },
             },
-            {
-              name => "curs-allele-type-$id",
-              type => 'Select',
-              attributes => {
-                class => 'curs-allele-type-select curs-allele-element-with-id',
-              },
-              options => [ @allele_type_names ],
-            },
-            {
-              id => "curs-allele-description-$id",
-              type => 'Block',
-              tag => 'div',
-              attributes => {
-                class => 'curs-allele-type-description curs-allele-element-with-id',
-                style => 'display: none',
-              },
-              elements => [
-                {
-                  name => "curs-allele-description-input-$id",
-                  type => 'Text',
-                  attributes => {
-                    class => 'curs-allele-description-input curs-allele-element-with-id',
-                  },
-                },
-                {
-                  id => "curs-allele-description-delete-$id",
-                  type => 'Block',
-                  tag => 'img',
-                  attributes => {
-                    src => $delete_icon_small_uri,
-                    class => 'curs-allele-description-delete curs-allele-element-with-id',
-                  },
-                },
-                {
-                  type => 'Radiogroup',
-                  name => "curs-allele-radio-group-$id",
-                  container_tag => 'div',
-                  options => [ { value => 'Overexpression',
-                                 label => 'Overexpression',
-                               },
-                               { value => 'Endogenous',
-                                 label => 'Endogenous',
-                                 attributes => {
-                                   checked => "checked",
-                                 },
-                               },
-                               { value => 'Knockdown',
-                                 label => 'Knockdown',
-                               },
-                             ],
-                  attributes => {
-                    class => 'curs-allele-expression curs-allele-element-with-id',
-                  },
-                }
-              ],
-            },
-          ],
-        },
-        {
-          type => 'Block',
-          tag => 'td',
-          elements => [
-            {
-              name => "curs-allele-evidence-select-$id",
-              type => 'Select',
-              options => [ @codes ],
-              attributes => {
-                class => 'curs-allele-evidence-select curs-allele-element-with-id',
-              },
-            }
-          ]
-        },
-        {
-          type => 'Block',
-          tag => 'td',
-          elements => [
             {
               type => 'Block',
               tag => 'img',
               attributes => {
-                id => "curs-allele-delete-$id",
-                src => $delete_icon_uri,
-                class => 'curs-allele-row-delete curs-allele-element-with-id',
+                src => $delete_icon_small_uri,
+                class => 'curs-allele-description-delete',
+              },
+            },
+            {
+              type => 'Radiogroup',
+              name => "curs-allele-radio-group",
+              container_tag => 'div',
+              options => [ { value => 'Overexpression',
+                             label => 'Overexpression',
+                           },
+                           { value => 'Endogenous',
+                             label => 'Endogenous',
+                             attributes => {
+                               checked => "checked",
+                             },
+                           },
+                           { value => 'Knockdown',
+                             label => 'Knockdown',
+                           },
+                         ],
+              attributes => {
+                class => 'curs-allele-expression',
               },
             }
           ],
         },
+        {
+          type => 'Block',
+          tag => 'td',
+          elements => [
+            {
+              name => "curs-allele-evidence-select",
+              type => 'Select',
+              options => [ @codes ],
+              attributes => {
+                class => 'curs-allele-evidence-select',
+              },
+            }
+          ],
+        },
+        {
+          type => 'Block',
+          tag => 'button',
+          name => 'curs-allele-clear',
+          content => 'Clear',
+          attributes => {
+            class => 'curs-allele-clear',
+          },
+        },
       ]
-    }
-  } @$ids;
+    };
 }
 
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1) Form
@@ -1316,71 +1289,23 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   my %evidence_types = %{$config->{evidence_types}};
   my $form = $self->form();
   $form->auto_fieldset(0);
-  my @tbody_rows = _generate_rows($c, $annotation_type_name, ['0']);
+  my $allele_form = _generate_allele_form($c, $annotation_type_name);
 
-  my @all_elements = (
-      {
-        type => 'Block',
-        tag => "table",
-        attributes => {
-          class => 'list curs-alleles',
-        },
-        elements => [
-          {
-            type => 'Block',
-            tag => "thead",
-            elements => [
-              {
-                type => 'Block',
-                tag => "tr",
-                elements => [
-                  {
-                    type => 'Block',
-                    tag => 'th',
-                    content => 'Allele name',
-                  },
-                  {
-                    type => 'Block',
-                    tag => 'th',
-                    content => 'Allele description (required)',
-                  },
-                  {
-                    type => 'Block',
-                    tag => 'th',
-                    content => 'Evidence',
-                  },
-                  {
-                    type => 'Block',
-                    tag => 'th',
-                    content_xml => '&nbsp;',
-                  }
-                ],
-              },
-            ],
-          },
-          {
-            type => 'Block',
-            tag => "tbody",
-            elements => [@tbody_rows],
-          }
-        ]
-      },
-      {
-        type => 'Block',
-        tag => 'button',
-        id => 'curs-add-allele',
-        content => 'Add allele +',
-      },
-      {
-        name => 'allele-proceed', type => 'Submit',
-        value => 'Proceed ->',
-        attributes => {
-          class => 'curs-finish-button',
-        },
-      },
-    );
-
-  $form->elements([@all_elements]);
+  $form->elements([$allele_form,
+                   {
+                     type => 'Block',
+                     tag => 'button',
+                     id => 'curs-add-allele-details',
+                     content => 'Add allele details +',
+                   },
+                   {
+                     name => 'allele-proceed', type => 'Submit',
+                     value => 'Proceed ->',
+                     attributes => {
+                       class => 'curs-finish-button',
+                     },
+                   },
+                 ]);
 
   $form->process();
 

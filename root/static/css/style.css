@@ -23,12 +23,6 @@ a:link:active { text-decoration:none }
 
 #heading a { color: black; }
 
-.curs-allele-description-input, .curs-allele-type-description div.text {
-  display: inline;
-}
-.curs-allele-type-description span, .curs-allele-type-description span span {
-  display: block;
-}
 .curs-allele-evidence-select {
   width: 25em;
 }

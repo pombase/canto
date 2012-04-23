@@ -625,71 +625,55 @@ $(document).ready(function() {
     window.location.href = bits.join('/') + '/start/' + pubmedid;
   });
 
-  $('#curs-add-allele').click(function () {
-    var current_rows = $('.curs-allele-row');
-    var max_row_index = -1;
-
-    var row_indexes =
-      current_rows.map(function(index) {
-        var row_index = parseInt(this.id.match(/-(\d+)$/)[1]);
-        if (row_index > max_row_index) {
-          max_row_index = row_index;
+  $('#curs-add-allele-details').click(function () {
+    $('#curs-allele-add').dialog({
+      modal: true,
+      height: 'auto',
+      width: 400,
+      buttons : {
+        "Confirm" : function() {
+//          window.location.href = targetUrl;
+        },
+        "Cancel" : function() {
+          $(this).dialog("close");
         }
-        return row_index;
-      });
-
-    var new_index = max_row_index + 1;
-    var first_row = current_rows.first();
-    var new_row = first_row.clone();
-
-    var tbody = first_row.closest('tbody');
-
-    new_row.find('*').each(function(index, el) {
-      if (typeof(el.id) != 'undefined') {
-        el.id = el.id.replace(/-\d+$/, '-' + new_index);
-      }
-      if (typeof(el.name) != 'undefined') {
-        el.name = el.name.replace(/-\d+$/, '-' + new_index);
       }
     });
-    new_row.attr('id', new_row.attr('id').replace(/-\d+$/, '-' + new_index));
-
-    reset_row(new_row);
-    tbody.append(new_row);
 
     return false;
   });
 
-  function hide_allele_description(row) {
-    row.find('.curs-allele-type-description').hide();
-    row.find('.curs-allele-type-select').show();
-    var name_input = row.find('.curs-allele-name');
+  function hide_allele_description(allele_dialog) {
+    allele_dialog.find('.curs-allele-type-description').hide();
+    allele_dialog.find('.curs-allele-type-select').show();
+    var name_input = allele_dialog.find('.curs-allele-name');
     name_input.removeAttr('disabled');
     name_input.val('');
-    var label = row.find('.curs-allele-type-label');
+    var label = allele_dialog.find('.curs-allele-type-label');
     label.hide();
   };
 
-  $('table.curs-alleles').on('click', '.curs-allele-description-delete', function () {
+  $('#curs-allele-add').on('click', '.curs-allele-description-delete', function () {
     var $button = $(this);
-    var row = $button.closest('tr');
-    hide_allele_description(row);
-    row.find('.curs-allele-type-select').val('');
+    var allele_dialog = $('#curs-allele-add');
+    hide_allele_description(allele_dialog);
+    allele_dialog.find('.curs-allele-type-select').val('');
   });
 
-  function reset_row(row) {
-    row.find('.curs-allele-type-select').val('').trigger('change');
+  function reset_allele_dialog(allele_dialog) {
+    allele_dialog.find('.curs-allele-type-select').val('').trigger('change');
   }
 
-  $('table.curs-alleles').on('click', '.curs-allele-row-delete', function () {
+  $('#curs-allele-add').on('click', '.curs-allele-clear', function () {
     var $button = $(this);
-    var row = $button.closest('tr');
-    var current_rows = $('.curs-allele-row');
-    if (current_rows.size() > 1)  {
-      row.remove();
+    var allele_dialog = $('#curs-allele-add');
+    var current_allele_dialogs = $('.curs-allele-allele_dialog');
+    if (current_allele_dialogs.size() > 1)  {
+      allele_dialog.remove();
     } else {
-      reset_row(row);
+      reset_allele_dialog(allele_dialog);
     }
+    return false;
   });
 
   function maybe_autopopulate(allele_type_config, name_input) {
@@ -703,13 +687,13 @@ $(document).ready(function() {
     }
   }
 
-  function setup_description(row, selected_option) {
-    var description = row.find('div.curs-allele-type-description');
+  function setup_description(allele_dialog, selected_option) {
+    var description = allele_dialog.find('div.curs-allele-type-description');
     description.show();
     var description_input = description.find('input');
     var selected_text = selected_option.text();
     var allele_type_config = allele_types[selected_text];
-    var label = row.find('.curs-allele-type-label');
+    var label = allele_dialog.find('.curs-allele-type-label');
     if (allele_type_config.description_required == 1) {
       label.show();
       label.text(selected_text + ":");
@@ -727,14 +711,14 @@ $(document).ready(function() {
     }
     description_input.placeholder();
 
-    var expression_span = row.find('.curs-allele-expression');
+    var expression_span = allele_dialog.find('.curs-allele-expression');
     if (allele_type_config.allow_expression_change == 1) {
       expression_span.show();
     } else {
       expression_span.hide();
     }
 
-    var name_input = row.find('.curs-allele-name');
+    var name_input = allele_dialog.find('.curs-allele-name');
     var autopopulated = maybe_autopopulate(allele_type_config, name_input);
 
     if (allele_type_config.allele_name_required == 1 && !autopopulated) {
@@ -744,19 +728,19 @@ $(document).ready(function() {
     }
   }
 
-  $('table.curs-alleles').on('change', '.curs-allele-type-select', function (ev) {
+  $('#curs-allele-add').on('change', '.curs-allele-type-select', function (ev) {
     var $this = $(this);
-    var row = $this.closest('tr');
+    var allele_dialog = $('#curs-allele-add');
     $this.hide();
     var selected_option = $this.children('option:selected');
-    var name_input = row.find('.curs-allele-name');
+    var name_input = allele_dialog.find('.curs-allele-name');
     name_input.val('');
     var selected_option = $this.children('option:selected');
     if (selected_option.val() === '') {
-      hide_allele_description(row);
+      hide_allele_description(allele_dialog);
       return;
     }
-    setup_description(row, selected_option);
+    setup_description(allele_dialog, selected_option);
   });
 
   $('.non-key-attribute').jTruncate({
