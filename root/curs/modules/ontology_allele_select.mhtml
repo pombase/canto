@@ -31,7 +31,6 @@ Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
           <td>
             <span class="curs-allele-type-label-span">
             </span>
-            <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete"/>
           </td>
         </tr>
         <tr class="curs-allele-type-select">
