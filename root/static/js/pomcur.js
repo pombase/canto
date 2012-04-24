@@ -658,23 +658,7 @@ $(document).ready(function() {
     var $button = $(this);
     var allele_dialog = $('#curs-allele-add');
     hide_allele_description(allele_dialog);
-    allele_dialog.find('.curs-allele-type-select').val('');
-  });
-
-  function reset_allele_dialog(allele_dialog) {
-    allele_dialog.find('.curs-allele-type-select').val('').trigger('change');
-  }
-
-  $('#curs-allele-add').on('click', '.curs-allele-clear', function () {
-    var $button = $(this);
-    var allele_dialog = $('#curs-allele-add');
-    var current_allele_dialogs = $('.curs-allele-allele_dialog');
-    if (current_allele_dialogs.size() > 1)  {
-      allele_dialog.remove();
-    } else {
-      reset_allele_dialog(allele_dialog);
-    }
-    return false;
+    allele_dialog.find('.curs-allele-type-select select').val('').trigger('change');
   });
 
   function maybe_autopopulate(allele_type_config, name_input) {
