@@ -723,6 +723,7 @@ $(document).ready(function() {
     var selected_option = $this.children('option:selected');
     if (selected_option.val() === '') {
       hide_allele_description(allele_dialog);
+      $('#curs-allele-add').find('.curs-allele-expression').hide();
       return;
     }
     setup_description(allele_dialog, selected_option);
