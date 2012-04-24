@@ -1030,8 +1030,6 @@ sub _generate_evidence_options
     [ $_, $description]
   } @{$annotation_type_config->{evidence_codes}};
 
-  unshift @codes, [ '', 'Choose an evidence type ...' ];
-
   return @codes;
 }
 
@@ -1123,8 +1121,6 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   }
 }
 
-
-
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1) Form
 {
   my ($self, $c, $annotation_id) = @_;
@@ -1160,7 +1156,6 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   my @allele_type_options = map {
     [ $_->{name}, $_->{name} ];
   } @{$config->{allele_type_list}};
-  unshift @allele_type_options, [ '', 'Choose an allele type ...' ];
 
   $st->{allele_type_options} = \@allele_type_options;
 
