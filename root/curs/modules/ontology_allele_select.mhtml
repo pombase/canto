@@ -14,7 +14,101 @@ var gene_display_name = "<% $gene_display_name %>";
 Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
   </div>
   <div class="curs-box-body">
-    <% $form |n %>
+    <div id="curs-allele-add" style="display: none">
+      <table>
+        <tr>
+          <td>
+            Allele name:
+          </td>
+          <td>
+            <input name="curs-allele-name" type="text" value="" class="curs-allele-name" style="disabled: true" />
+          </td>
+        </tr>
+        <tr class="curs-allele-type-label" style="display: none">
+          <td>
+            Allele type
+          </td>
+          <td>
+            <span class="curs-allele-type-label-span">
+            </span>
+          </td>
+        </tr>
+        <tr class="curs-allele-type-select">
+          <td>
+            Allele type
+          </td>
+          <td>
+            <select name="curs-allele-type">
+              <option value="" selected="selected">Choose an allele type ...</option>
+% for my $opt (@allele_type_options) {
+              <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
+% }
+            </select>
+          </td>
+        </tr>
+        <tr class="curs-allele-type-description" style="display: none">
+          <td>
+            Allele description
+          </td>
+          <td>
+            <input name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
+          </td>
+        </tr>
+        <tr class="curs-allele-expression">
+          <td>
+            Expression
+          </td>
+          <td>
+            <span>
+              <input name="curs-allele-radio-group" type="radio" value="Overexpression" />
+              <label>Overexpression</label>
+            </span>
+            <span>
+              <input name="curs-allele-radio-group" type="radio" value="Endogenous" checked="checked" />
+              <label>Endogenous</label>
+            </span>
+            <span>
+              <input name="curs-allele-radio-group" type="radio" value="Knockdown" />
+              <label>Knockdown</label>
+            </span>
+          </td>        
+        </tr>
+        <tr>
+          <td>
+            Evidence
+          </td>
+          <td>
+            <select name="curs-allele-evidence-select" class="curs-allele-evidence-select">
+              <option value="" selected="selected">Choose an evidence type ...</option>
+% for my $opt (@evidence_select_options) {
+              <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
+% }
+            </select>
+          </td>
+        </tr>
+      </table>
+<!--
+      <button class="curs-allele-clear">
+Clear
+      </button>
+-->
+    </div>
+  </div>
+</div>
+<button id="curs-add-allele-details">
+Add allele details +
+</button>
+<div class="submit">
+<input name="allele-proceed" type="submit" value="Proceed -&gt;" class="curs-finish-button" />
+</div>
+
+  </div>
+</div>
+
+
+
+
+
   </div>
 </div>
 
@@ -24,5 +118,15 @@ use Data::JavaScript::Anon;
 my $annotation_data = $annotation->data();
 my $term_ontid = $annotation_data->{term_ontid};
 
-my $allele_types_js = Data::JavaScript::Anon->anon_dump($c->stash()->{allele_types});
+my $st = $c->stash();
+
+my $allele_type_config = $st->{allele_type_config};
+
+my $allele_types_js = Data::JavaScript::Anon->anon_dump($allele_type_config);
+my @evidence_select_options = @{$st->{evidence_select_options}};
+my @allele_type_options = @{$st->{allele_type_options}};
+
+#  my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+#  my $delete_icon_small_uri = $c->uri_for('/static/images/delete_icon_small.png');
+
 </%init>

@@ -629,7 +629,8 @@ $(document).ready(function() {
     $('#curs-allele-add').dialog({
       modal: true,
       height: 'auto',
-      width: 400,
+      width: 600,
+      title: 'Add an allele for this phenotype',
       buttons : {
         "Confirm" : function() {
 //          window.location.href = targetUrl;
@@ -688,7 +689,7 @@ $(document).ready(function() {
   }
 
   function setup_description(allele_dialog, selected_option) {
-    var description = allele_dialog.find('div.curs-allele-type-description');
+    var description = allele_dialog.find('.curs-allele-type-description');
     description.show();
     var description_input = description.find('input');
     var selected_text = selected_option.text();
@@ -696,7 +697,7 @@ $(document).ready(function() {
     var label = allele_dialog.find('.curs-allele-type-label');
     if (allele_type_config.description_required == 1) {
       label.show();
-      label.text(selected_text + ":");
+      label.find('span').text(selected_text + ":");
       var description_placeholder_text = allele_type_config.placeholder;
       if (typeof allele_type_config.placeholder != 'undefined') {
         description_input.attr('placeholder', description_placeholder_text);
@@ -728,10 +729,10 @@ $(document).ready(function() {
     }
   }
 
-  $('#curs-allele-add').on('change', '.curs-allele-type-select', function (ev) {
+  $('#curs-allele-add').on('change', '.curs-allele-type-select select', function (ev) {
     var $this = $(this);
+    $this.closest('tr').hide();
     var allele_dialog = $('#curs-allele-add');
-    $this.hide();
     var selected_option = $this.children('option:selected');
     var name_input = allele_dialog.find('.curs-allele-name');
     name_input.val('');

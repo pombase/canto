@@ -80,6 +80,7 @@ requires 'MooseX::MarkAsMethods';
 requires 'DBD::Pg';
 requires 'URI::Escape';
 requires 'Data::JavaScript::Anon';
+requires 'HTML::HTML5::Builder';
 
 test_requires 'Test::More' => '0.88';
 test_requires 'Test::Deep';
