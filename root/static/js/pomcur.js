@@ -697,7 +697,7 @@ $(document).ready(function() {
     var label = allele_dialog.find('.curs-allele-type-label');
     if (allele_type_config.description_required == 1) {
       label.show();
-      label.find('span').text(selected_text + ":");
+      label.find('span').text(selected_text);
       var description_placeholder_text = allele_type_config.placeholder;
       if (typeof allele_type_config.placeholder != 'undefined') {
         description_input.attr('placeholder', description_placeholder_text);

@@ -31,6 +31,7 @@ Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
           <td>
             <span class="curs-allele-type-label-span">
             </span>
+            <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete"/>
           </td>
         </tr>
         <tr class="curs-allele-type-select">
@@ -52,9 +53,10 @@ Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
           </td>
           <td>
             <input name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
+            <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete"/>
           </td>
         </tr>
-        <tr class="curs-allele-expression">
+        <tr class="curs-allele-expression" style="display:none">
           <td>
             Expression
           </td>
@@ -126,7 +128,7 @@ my $allele_types_js = Data::JavaScript::Anon->anon_dump($allele_type_config);
 my @evidence_select_options = @{$st->{evidence_select_options}};
 my @allele_type_options = @{$st->{allele_type_options}};
 
-#  my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 #  my $delete_icon_small_uri = $c->uri_for('/static/images/delete_icon_small.png');
 
 </%init>
