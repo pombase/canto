@@ -83,11 +83,6 @@ var gene_display_name = "<% $gene_display_name %>";
           </td>
         </tr>
       </table>
-<!--
-      <button class="curs-allele-clear">
-Clear
-      </button>
--->
     </div>
 
 <div class="curs-box curs-allele-select">
