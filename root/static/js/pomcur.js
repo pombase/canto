@@ -625,6 +625,11 @@ $(document).ready(function() {
     window.location.href = bits.join('/') + '/start/' + pubmedid;
   });
 
+  $('#curs-allele-list').on('click', '.curs-allele-delete-row', function (ev) {
+    var $this = $(this);
+    $this.closest('tr').remove();
+  });
+
   $('#curs-add-allele-details').click(function () {
     $('#curs-allele-add').dialog({
       modal: true,
@@ -642,7 +647,8 @@ $(document).ready(function() {
                 '<td>' + data['curs-allele-name'] + '</td>' +
                 '<td>' + data['curs-allele-description-input'] + '</td>' +
                 '<td>' + data['curs-allele-radio-group'] + '</td>' +
-                '<td>' + data['curs-allele-evidence-select'] + '</td>';
+                '<td>' + data['curs-allele-evidence-select'] + '</td>' +
+                '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td';
               current_table.find('tbody').append('<tr>' + row + '</tr>');
             }
           });

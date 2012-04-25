@@ -8,6 +8,7 @@ $curs_root_uri
 <script language="javascript" type="text/javascript">
 var allele_types = <% $allele_types_js |n %>;
 var gene_display_name = "<% $gene_display_name %>";
+var delete_icon_uri = "<% $delete_icon_uri %>";
 </script>
 
     <div id="curs-allele-add" style="display: none">
@@ -142,7 +143,6 @@ my @evidence_select_options = @{$st->{evidence_select_options}};
 my @allele_type_options = @{$st->{allele_type_options}};
 
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
-#  my $delete_icon_small_uri = $c->uri_for('/static/images/delete_icon_small.png');
 
 my $annotation_id = $annotation->annotation_id();
 
