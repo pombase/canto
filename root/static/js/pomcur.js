@@ -633,7 +633,14 @@ $(document).ready(function() {
       title: 'Add an allele for this phenotype',
       buttons : {
         "Confirm" : function() {
-//          window.location.href = targetUrl;
+          $('#curs-allele-add form').ajaxSubmit({
+            dataType: 'json',
+            success: function(data) {
+              var current_table = $('#curs-allele-list');
+              current_table.show();
+              current_table.find('tbody').html('<tr><td>foo</td></tr>');
+            }
+          });
         },
         "Cancel" : function() {
           $(this).dialog("close");

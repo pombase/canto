@@ -1121,6 +1121,24 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   }
 }
 
+sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  $self->_check_annotation_exists($c, $annotation_id);
+
+  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+
+  my $res = {};
+
+  $c->stash->{json_data} = $res;
+  $c->forward('View::JSON');
+}
+
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1) Form
 {
   my ($self, $c, $annotation_id) = @_;

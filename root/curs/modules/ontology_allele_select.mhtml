@@ -2,6 +2,7 @@
 $form
 $annotation
 $gene_display_name
+$curs_root_uri
 </%args>
 
 <script language="javascript" type="text/javascript">
@@ -10,6 +11,7 @@ var gene_display_name = "<% $gene_display_name %>";
 </script>
 
     <div id="curs-allele-add" style="display: none">
+      <form action="<% $allele_add_action %>" method="post"> <!-- submitted by AJAX -->
       <table>
         <tr>
           <td>
@@ -83,6 +85,7 @@ var gene_display_name = "<% $gene_display_name %>";
           </td>
         </tr>
       </table>
+      </form>
     </div>
 
 <div class="curs-box curs-allele-select">
@@ -90,6 +93,26 @@ var gene_display_name = "<% $gene_display_name %>";
 Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
   </div>
   <div class="curs-box-body">
+    <table id="curs-allele-list" class="list" style="display: none">
+      <thead>
+        <tr>
+          <th>
+            Allele name
+          </th>
+          <th>
+            Allele description
+          </th>
+          <th>
+            Evidence
+          </th>
+          <th>
+            &nbsp;
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
   </div>
 <button id="curs-add-allele-details">
 Add allele details +
@@ -117,5 +140,9 @@ my @allele_type_options = @{$st->{allele_type_options}};
 
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 #  my $delete_icon_small_uri = $c->uri_for('/static/images/delete_icon_small.png');
+
+my $annotation_id = $annotation->annotation_id();
+
+my $allele_add_action = "$curs_root_uri/annotation/add_allele_action/$annotation_id" ;
 
 </%init>
