@@ -638,9 +638,15 @@ $(document).ready(function() {
             success: function(data) {
               var current_table = $('#curs-allele-list');
               current_table.show();
-              current_table.find('tbody').html('<tr><td>foo</td></tr>');
+              var row =
+                '<td>' + data['curs-allele-name'] + '</td>' +
+                '<td>' + data['curs-allele-description-input'] + '</td>' +
+                '<td>' + data['curs-allele-radio-group'] + '</td>' +
+                '<td>' + data['curs-allele-evidence-select'] + '</td>';
+              current_table.find('tbody').append('<tr>' + row + '</tr>');
             }
           });
+          $(this).dialog("close");
         },
         "Cancel" : function() {
           $(this).dialog("close");

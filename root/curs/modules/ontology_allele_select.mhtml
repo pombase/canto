@@ -103,6 +103,9 @@ Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
             Allele description
           </th>
           <th>
+            Expression
+          </th>
+          <th>
             Evidence
           </th>
           <th>

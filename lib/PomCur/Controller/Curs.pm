@@ -1133,7 +1133,7 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   my $annotation = $schema->find_with_type('Annotation', $annotation_id);
 
-  my $res = {};
+  my $res = $c->req()->params();
 
   $c->stash->{json_data} = $res;
   $c->forward('View::JSON');
