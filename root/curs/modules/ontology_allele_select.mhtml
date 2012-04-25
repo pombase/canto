@@ -9,11 +9,6 @@ var allele_types = <% $allele_types_js |n %>;
 var gene_display_name = "<% $gene_display_name %>";
 </script>
 
-<div class="curs-box curs-allele-select">
-  <div class="curs-box-title">
-Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
-  </div>
-  <div class="curs-box-body">
     <div id="curs-allele-add" style="display: none">
       <table>
         <tr>
@@ -94,6 +89,12 @@ Clear
       </button>
 -->
     </div>
+
+<div class="curs-box curs-allele-select">
+  <div class="curs-box-title">
+Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
+  </div>
+  <div class="curs-box-body">
   </div>
 <button id="curs-add-allele-details">
 Add allele details +
