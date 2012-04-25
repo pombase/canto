@@ -95,22 +95,14 @@ Clear
 -->
     </div>
   </div>
-</div>
 <button id="curs-add-allele-details">
 Add allele details +
 </button>
 <div class="submit">
+</div>
+
 <input name="allele-proceed" type="submit" value="Proceed -&gt;" class="curs-finish-button" />
-</div>
 
-  </div>
-</div>
-
-
-
-
-
-  </div>
 </div>
 
 <%init>
