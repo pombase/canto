@@ -627,6 +627,9 @@ $(document).ready(function() {
 
   $('#curs-allele-list').on('click', '.curs-allele-delete-row', function (ev) {
     var $this = $(this);
+    if ($this.closest('tbody').children('tr').size() == 1) {
+      $this.closest('table').hide();
+    }
     $this.closest('tr').remove();
   });
 
