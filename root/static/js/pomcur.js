@@ -671,7 +671,6 @@ $(document).ready(function() {
     allele_dialog.find('.curs-allele-type-select').show();
     var name_input = allele_dialog.find('.curs-allele-name');
     name_input.removeAttr('disabled');
-    name_input.val('');
     var label = allele_dialog.find('.curs-allele-type-label');
     label.hide();
   };
@@ -741,7 +740,6 @@ $(document).ready(function() {
     var allele_dialog = $('#curs-allele-add');
     var selected_option = $this.children('option:selected');
     var name_input = allele_dialog.find('.curs-allele-name');
-    name_input.val('');
     var selected_option = $this.children('option:selected');
     if (selected_option.val() === '') {
       hide_allele_description(allele_dialog);
