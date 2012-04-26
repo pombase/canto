@@ -11,87 +11,87 @@ var gene_display_name = "<% $gene_display_name %>";
 var delete_icon_uri = "<% $delete_icon_uri %>";
 </script>
 
-    <div id="curs-allele-add" style="display: none">
-      <form action="<% $allele_add_action %>" method="post"> <!-- submitted by AJAX -->
-      <table>
-        <tr>
-          <td>
-            Allele name:
-          </td>
-          <td>
-            <input name="curs-allele-name" type="text" value="" class="curs-allele-name" style="disabled: true" />
-          </td>
-        </tr>
-        <tr class="curs-allele-type-label" style="display: none">
-          <td>
-            Allele type
-          </td>
-          <td>
-            <span class="curs-allele-type-label-span">
-            </span>
-          </td>
-        </tr>
-        <tr class="curs-allele-type-select">
-          <td>
-            Allele type
-          </td>
-          <td>
-            <select name="curs-allele-type">
-              <option value="" selected="selected">Choose an allele type ...</option>
+<div id="curs-allele-add" style="display: none">
+  <form action="<% $allele_add_action %>" method="post"> <!-- submitted by AJAX -->
+    <table>
+      <tr>
+        <td>
+          Allele name:
+        </td>
+        <td>
+          <input name="curs-allele-name" type="text" value="" class="curs-allele-name" style="disabled: true" />
+        </td>
+      </tr>
+      <tr class="curs-allele-type-label" style="display: none">
+        <td>
+          Allele type
+        </td>
+        <td>
+          <span class="curs-allele-type-label-span">
+          </span>
+        </td>
+      </tr>
+      <tr class="curs-allele-type-select">
+        <td>
+          Allele type
+        </td>
+        <td>
+          <select name="curs-allele-type">
+            <option value="" selected="selected">Choose an allele type ...</option>
 % for my $opt (@allele_type_options) {
-              <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
+            <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
 % }
-            </select>
-          </td>
-        </tr>
-        <tr class="curs-allele-type-description" style="display: none">
-          <td>
-            Allele description
-          </td>
-          <td>
-            <input name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
-            <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete"/>
-          </td>
-        </tr>
-        <tr class="curs-allele-expression" style="display:none">
-          <td>
-            Expression
-          </td>
-          <td>
-            <span>
-              <input name="curs-allele-radio-group" type="radio" value="Overexpression" />
-              <label>Overexpression</label>
-            </span>
-            <span>
-              <input name="curs-allele-radio-group" type="radio" value="Endogenous" checked="checked" />
-              <label>Endogenous</label>
-            </span>
-            <span>
-              <input name="curs-allele-radio-group" type="radio" value="Knockdown" />
-              <label>Knockdown</label>
-            </span>
-          </td>        
-        </tr>
-        <tr>
-          <td>
-            Evidence
-          </td>
-          <td>
-            <select name="curs-allele-evidence-select" class="curs-allele-evidence-select">
-              <option value="" selected="selected">Choose an evidence type ...</option>
+          </select>
+        </td>
+      </tr>
+      <tr class="curs-allele-type-description" style="display: none">
+        <td>
+          Allele description
+        </td>
+        <td>
+          <input name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
+          <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete"/>
+        </td>
+      </tr>
+      <tr class="curs-allele-expression" style="display:none">
+        <td>
+          Expression
+        </td>
+        <td>
+          <span>
+            <input name="curs-allele-radio-group" type="radio" value="Overexpression" />
+            <label>Overexpression</label>
+          </span>
+          <span>
+            <input name="curs-allele-radio-group" type="radio" value="Endogenous" checked="checked" />
+            <label>Endogenous</label>
+          </span>
+          <span>
+            <input name="curs-allele-radio-group" type="radio" value="Knockdown" />
+            <label>Knockdown</label>
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Evidence
+        </td>
+        <td>
+          <select name="curs-allele-evidence-select" class="curs-allele-evidence-select">
+            <option value="" selected="selected">Choose an evidence type ...</option>
 % for my $opt (@evidence_select_options) {
-              <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
+            <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
 % }
-            </select>
-          </td>
-        </tr>
-      </table>
-      </form>
-    </div>
+          </select>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
 
 <div class="curs-box curs-allele-select">
   <div class="curs-box-title">
-Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
+    Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
   </div>
   <div class="curs-box-body">
     <table id="curs-allele-list" class="list" style="display: none">
@@ -118,14 +118,13 @@ Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
       </tbody>
     </table>
   </div>
-<button id="curs-add-allele-details">
-Add allele details +
-</button>
-<div class="submit">
-</div>
+  <button id="curs-add-allele-details">
+    Add allele details +
+  </button>
+  <div class="submit">
+  </div>
 
-<input name="allele-proceed" type="submit" value="Proceed -&gt;" class="curs-finish-button" />
-
+  <input name="allele-proceed" type="submit" value="Proceed -&gt;" class="curs-finish-button" />
 </div>
 
 <%init>
