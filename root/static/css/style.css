@@ -23,20 +23,6 @@ a:link:active { text-decoration:none }
 
 #heading a { color: black; }
 
-.curs-allele-evidence-select {
-  width: 25em;
-}
-.curs-allele-type-select, .curs-allele-description-input {
-  width: 18em;
-}
-.curs-allele-row {
-  vertical-align: top;
-}
-
-.curs-allele-description-delete {
-  padding-left: 20px;
-}
-
 button, input[type=submit] {
   background-color: #c00;
   color: white;
@@ -810,8 +796,14 @@ span.pomcur-select-buttons {
 .ui-dialog {
    font-size: 80%;
 }
-.ui-dialog .ui-dialog-titlebar {
+.ui-dialog .ui-dialog-titlebar, .curs-ui-dialog-subheading .ui-dialog-title {
    padding: .2em 1em .1em;
+}
+
+.curs-ui-dialog-subheading {
+  margin-left: -1em;
+  margin-right: -1em;
+  margin-top: 1.5em;
 }
 
 .curs-external-link {
@@ -916,4 +908,23 @@ input[readonly="1"] {
 
 .sect.triage-comment {
   clear: left;
+}
+
+.curs-allele-evidence-select {
+  width: 22em;
+}
+.curs-allele-type-select select, .curs-allele-description-input {
+  width: 18em;
+}
+.curs-allele-row {
+  vertical-align: top;
+}
+
+.curs-allele-description-delete {
+  padding-left: 20px;
+}
+
+form label.error {
+  padding-left: 1em;
+  color: red;
 }

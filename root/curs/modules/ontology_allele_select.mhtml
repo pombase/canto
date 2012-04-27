@@ -36,8 +36,8 @@ var delete_icon_uri = "<% $delete_icon_uri %>";
           Allele type
         </td>
         <td>
-          <select name="curs-allele-type">
-            <option value="" selected="selected">Choose an allele type ...</option>
+          <select name="curs-allele-type" class="required">
+            <option selected="selected" value="">Choose an allele type ...</option>
 % for my $opt (@allele_type_options) {
             <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
 % }
@@ -72,13 +72,18 @@ var delete_icon_uri = "<% $delete_icon_uri %>";
           </span>
         </td>
       </tr>
+    </table>
+    <div class="curs-ui-dialog-subheading ui-widget-header ui-helper-clearfix ui-corner-all">
+      <span class="ui-dialog-title">Evidence</span>
+    </div>
+    <table>
       <tr>
         <td>
           Evidence
         </td>
         <td>
-          <select name="curs-allele-evidence-select" class="curs-allele-evidence-select">
-            <option value="" selected="selected">Choose an evidence type ...</option>
+          <select name="curs-allele-evidence-select" class="required curs-allele-evidence-select">
+            <option selected="selected" value="">Choose an evidence type ...</option>
 % for my $opt (@evidence_select_options) {
             <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
 % }
