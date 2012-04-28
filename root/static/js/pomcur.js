@@ -637,11 +637,19 @@ $(document).ready(function() {
 
   function add_allele_row(data) {
     $allele_table.show();
+    var conditions;
+    if (typeof(data['conditions']) == 'undefined') {
+      conditions = '';
+    } else {
+      conditions = data['conditions'].join(', ')
+    }
+
     var row_html =
       '<td>' + data['name'] + '</td>' +
       '<td>' + data['description'] + '</td>' +
       '<td>' + data['expression'] + '</td>' +
       '<td>' + data['evidence'] + '</td>' +
+      '<td>' + conditions + '</td>' +
       '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td';
     var row = $allele_table.find('tbody').append('<tr>' + row_html + '</tr>');
     row.data('annotation_id', data['id']);

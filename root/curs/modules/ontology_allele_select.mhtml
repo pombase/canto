@@ -131,6 +131,9 @@ var delete_icon_uri = "<% $delete_icon_uri %>";
             Evidence
           </th>
           <th>
+            Conditions
+          </th>
+          <th>
             &nbsp;
           </th>
         </tr>
