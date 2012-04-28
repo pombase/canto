@@ -7,7 +7,7 @@ $curs_root_uri
 
 <script language="javascript" type="text/javascript">
 var allele_types = <% $allele_types_js |n %>;
-var alleles_in_progress = <% $alleles_in_progress |n %>;
+var alleles_in_progress = <% $alleles_in_progress_js |n %>;
 var gene_display_name = "<% $gene_display_name %>";
 var delete_icon_uri = "<% $delete_icon_uri %>";
 </script>

@@ -636,14 +636,14 @@ $(document).ready(function() {
   });
 
   function add_allele_row(data) {
-    current_table.show();
+    $allele_table.show();
     var row_html =
       '<td>' + data['name'] + '</td>' +
       '<td>' + data['description'] + '</td>' +
       '<td>' + data['expression'] + '</td>' +
       '<td>' + data['evidence'] + '</td>' +
       '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td';
-    var row = current_table.find('tbody').append('<tr>' + row_html + '</tr>');
+    var row = $allele_table.find('tbody').append('<tr>' + row_html + '</tr>');
     row.data('annotation_id', data['id']);
   }
 
@@ -659,7 +659,7 @@ $(document).ready(function() {
     if ($form.validate().form()) {
     $form.ajaxSubmit({
       dataType: 'json',
-      success: render_alleles(data)
+      success: add_allele_row
     });
     $(this).dialog("close");
     }

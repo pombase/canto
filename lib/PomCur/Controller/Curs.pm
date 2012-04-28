@@ -1152,11 +1152,13 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
     name => $params->{'curs-allele-name'},
     description => $params->{'curs-allele-description-input'},
     expression => $params->{'curs-allele-expression'},
-    evidence => >$param->{'curs-allele-evidence-select'},
+    evidence => $params->{'curs-allele-evidence-select'},
   };
 
   $alleles_in_progress->{$new_allele_id} = $new_allele_data;
+  $data->{alleles_in_progress} = $alleles_in_progress;
   $annotation->data($data);
+  $annotation->update();
 
   $c->stash->{json_data} = $new_allele_data;
   $c->forward('View::JSON');
@@ -1206,7 +1208,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   $st->{evidence_select_options} = \@evidence_codes;
 
-  $st->{alleles_in_progress} = $annotation->{data}->{alleles_in_progress};
+  $st->{alleles_in_progress} = $annotation->data()->{alleles_in_progress} // {};
 
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
 }
