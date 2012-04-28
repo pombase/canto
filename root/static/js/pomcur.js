@@ -683,6 +683,12 @@ $(document).ready(function() {
     buttons : add_allele_buttons,
   });
 
+  $('#curs-allele-add .curs-allele-conditions').tagit({
+    availableTags: allele_condition_names,
+    itemName: 'curs-allele-condition-names',
+    allowSpaces: true,
+    placeholderText: 'Type a condition ...',
+  });
 
   $('#curs-add-allele-details').click(function () {
     add_allele_dialog.dialog("open") 

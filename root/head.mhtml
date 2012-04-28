@@ -7,6 +7,7 @@ $title
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" 
       type="text/css" rel="stylesheet"/>
 <link href="<% $c->uri_for('/static/css/style.css') %>" type="text/css" rel="stylesheet" />
+<link href="<% $c->uri_for('/static/css/jquery.tagit.css') %>" type="text/css" rel="stylesheet" />
 % if (defined $c->config()->{extra_css}) {
 <link href="<% $c->uri_for($c->config()->{extra_css}) %>" type="text/css" rel="stylesheet" />
 %}

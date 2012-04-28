@@ -1147,12 +1147,19 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   my $new_allele_id = $max_id + 1;
 
+  my $condition_list = $params->{'curs-allele-condition-names[tags][]'};
+
+  if (!ref $condition_list) {
+    $condition_list = [$condition_list];
+  }
+
   my $new_allele_data = {
     id => $new_allele_id,
     name => $params->{'curs-allele-name'},
     description => $params->{'curs-allele-description-input'},
     expression => $params->{'curs-allele-expression'},
     evidence => $params->{'curs-allele-evidence-select'},
+    conditions => $condition_list
   };
 
   $alleles_in_progress->{$new_allele_id} = $new_allele_data;
@@ -1162,6 +1169,14 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   $c->stash->{json_data} = $new_allele_data;
   $c->forward('View::JSON');
+}
+
+sub _get_allele_condition_names
+{
+  my $self = shift;
+  my $config = shift;
+
+  return ['Hot', 'Cold', 'Quite hot', 'Really cold'];
 }
 
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1) Form
@@ -1209,6 +1224,8 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   $st->{evidence_select_options} = \@evidence_codes;
 
   $st->{alleles_in_progress} = $annotation->data()->{alleles_in_progress} // {};
+
+  $st->{allele_condition_names} = $self->_get_allele_condition_names($config);
 
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
 }

@@ -24,6 +24,7 @@ var application_root = '<% $c->uri_for('/') %>';
 <script src="<% $c->uri_for('/static/js/jquery.shiftcheckbox.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.placeholder.min.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.jtruncate.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/tag-it.min.js') %>"></script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/pomcur.js') %>"></script>
 <script language="javascript" type="text/javascript">
   if (typeof annotation_type != 'undefined') {
