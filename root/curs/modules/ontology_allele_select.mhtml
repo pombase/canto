@@ -7,6 +7,7 @@ $curs_root_uri
 
 <script language="javascript" type="text/javascript">
 var allele_types = <% $allele_types_js |n %>;
+var alleles_in_progress = <% $alleles_in_progress |n %>;
 var gene_display_name = "<% $gene_display_name %>";
 var delete_icon_uri = "<% $delete_icon_uri %>";
 </script>
@@ -59,15 +60,15 @@ var delete_icon_uri = "<% $delete_icon_uri %>";
         </td>
         <td>
           <span>
-            <input name="curs-allele-radio-group" type="radio" value="Overexpression" />
+            <input name="curs-allele-expression" type="radio" value="Overexpression" />
             <label>Overexpression</label>
           </span>
           <span>
-            <input name="curs-allele-radio-group" type="radio" value="Endogenous" checked="checked" />
+            <input name="curs-allele-expression" type="radio" value="Endogenous" checked="checked" />
             <label>Endogenous</label>
           </span>
           <span>
-            <input name="curs-allele-radio-group" type="radio" value="Knockdown" />
+            <input name="curs-allele-expression" type="radio" value="Knockdown" />
             <label>Knockdown</label>
           </span>
         </td>
@@ -141,8 +142,11 @@ my $term_ontid = $annotation_data->{term_ontid};
 my $st = $c->stash();
 
 my $allele_type_config = $st->{allele_type_config};
-
 my $allele_types_js = Data::JavaScript::Anon->anon_dump($allele_type_config);
+
+my $alleles_in_progress = $st->{alleles_in_progress};
+my $alleles_in_progress_js = Data::JavaScript::Anon->anon_dump($alleles_in_progress);
+
 my @evidence_select_options = @{$st->{evidence_select_options}};
 my @allele_type_options = @{$st->{allele_type_options}};
 

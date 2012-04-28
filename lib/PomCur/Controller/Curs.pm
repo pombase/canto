@@ -1133,9 +1133,32 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   my $annotation = $schema->find_with_type('Annotation', $annotation_id);
 
-  my $res = $c->req()->params();
+  my $data = $annotation->data();
+  my $alleles_in_progress = $data->{alleles_in_progress} // { };
+  my $max_id = -1;
 
-  $c->stash->{json_data} = $res;
+  map {
+    if ($_ > $max_id) {
+      $max_id = $_;
+    }
+  } keys %$alleles_in_progress;
+
+  my $params = $c->req()->params();
+
+  my $new_allele_id = $max_id + 1;
+
+  my $new_allele_data = {
+    id => $new_allele_id,
+    name => $params->{'curs-allele-name'},
+    description => $params->{'curs-allele-description-input'},
+    expression => $params->{'curs-allele-expression'},
+    evidence => >$param->{'curs-allele-evidence-select'},
+  };
+
+  $alleles_in_progress->{$new_allele_id} = $new_allele_data;
+  $annotation->data($data);
+
+  $c->stash->{json_data} = $new_allele_data;
   $c->forward('View::JSON');
 }
 
@@ -1182,6 +1205,8 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   my @evidence_codes = _generate_evidence_options($evidence_types, $annotation_type_config);
 
   $st->{evidence_select_options} = \@evidence_codes;
+
+  $st->{alleles_in_progress} = $annotation->{data}->{alleles_in_progress};
 
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
 }

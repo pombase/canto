@@ -625,7 +625,9 @@ $(document).ready(function() {
     window.location.href = bits.join('/') + '/start/' + pubmedid;
   });
 
-  $('#curs-allele-list').on('click', '.curs-allele-delete-row', function (ev) {
+  var $allele_table = $('#curs-allele-list');
+
+  $($allele_table).on('click', '.curs-allele-delete-row', function (ev) {
     var $this = $(this);
     if ($this.closest('tbody').children('tr').size() == 1) {
       $this.closest('table').hide();
@@ -633,22 +635,31 @@ $(document).ready(function() {
     $this.closest('tr').remove();
   });
 
+  function add_allele_row(data) {
+    current_table.show();
+    var row_html =
+      '<td>' + data['name'] + '</td>' +
+      '<td>' + data['description'] + '</td>' +
+      '<td>' + data['expression'] + '</td>' +
+      '<td>' + data['evidence'] + '</td>' +
+      '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td';
+    var row = current_table.find('tbody').append('<tr>' + row_html + '</tr>');
+    row.data('annotation_id', data['id']);
+  }
+
+  if (typeof(alleles_in_progress) != 'undefined') {
+    $.each(alleles_in_progress,
+           function(key, value) {
+             add_allele_row(value);
+           });
+  }
+
   function add_allele_confirm() {
     var $form = $('#curs-allele-add form');
     if ($form.validate().form()) {
     $form.ajaxSubmit({
       dataType: 'json',
-      success: function(data) {
-        var current_table = $('#curs-allele-list');
-        current_table.show();
-        var row =
-          '<td>' + data['curs-allele-name'] + '</td>' +
-          '<td>' + data['curs-allele-description-input'] + '</td>' +
-          '<td>' + data['curs-allele-radio-group'] + '</td>' +
-          '<td>' + data['curs-allele-evidence-select'] + '</td>' +
-          '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td';
-        current_table.find('tbody').append('<tr>' + row + '</tr>');
-      }
+      success: render_alleles(data)
     });
     $(this).dialog("close");
     }
