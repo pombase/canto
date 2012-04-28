@@ -13,7 +13,7 @@ var delete_icon_uri = "<% $delete_icon_uri %>";
 </script>
 
 <div id="curs-allele-add" style="display: none">
-  <form action="<% $allele_add_action %>" method="post"> <!-- submitted by AJAX -->
+  <form action="<% $allele_add_action %>" method="post"> <!-- submitted with Ajax -->
     <table>
       <tr>
         <td>
