@@ -730,7 +730,7 @@ $(document).ready(function() {
             if (typeof(allele_type_config) == 'undefined') {
               return false;
             } else {
-              return allele_type_config.description_required == 1;
+              return allele_type_config.allele_name_required == 1;
             }
           }
         },
