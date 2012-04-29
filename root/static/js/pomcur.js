@@ -689,10 +689,16 @@ $(document).ready(function() {
     $(this).dialog("close");
   }
 
-  var add_allele_buttons = {
-    "Confirm" : add_allele_confirm,
-    "Cancel" : add_allele_cancel
-  };
+  var add_allele_buttons = [
+    {
+      text: "Cancel",
+      click: add_allele_cancel,
+    },
+    {
+      text: "Confirm",
+      click: add_allele_confirm
+    },
+  ];
 
   var add_allele_dialog = $('#curs-allele-add').dialog({
     modal: true,
