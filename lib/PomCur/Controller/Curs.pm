@@ -1125,7 +1125,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   }
 }
 
-sub remove_add_action : Chained('top') PathPart('annotation/remove_allele_action') Args(2)
+sub allele_remove_action : Chained('top') PathPart('annotation/remove_allele_action') Args(2)
 {
   my ($self, $c, $annotation_id, $allele_id) = @_;
 
