@@ -638,6 +638,7 @@ $(document).ready(function() {
     }).done(function() {
       if ($tr.closest('tbody').children('tr').size() == 1) {
         $tr.closest('table').hide();
+        $('#curs-add-allele-proceed').hide();
       }
       $tr.remove();
     });
@@ -651,6 +652,8 @@ $(document).ready(function() {
     } else {
       conditions = data['conditions'].join(', ')
     }
+
+    $('#curs-add-allele-proceed').show();
 
     var row_html =
       '<td>' + data['name'] + '</td>' +

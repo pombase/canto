@@ -148,7 +148,7 @@ var delete_icon_uri = "<% $delete_icon_uri %>";
   <div class="submit">
   </div>
 
-  <input name="allele-proceed" type="submit" value="Proceed -&gt;" class="curs-finish-button" />
+  <input id="curs-add-allele-proceed" name="allele-proceed" type="submit" value="Proceed -&gt;"/>
 </div>
 
 <%init>
