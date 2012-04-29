@@ -629,7 +629,7 @@ $(document).ready(function() {
 
   $($allele_table).on('click', '.curs-allele-delete-row', function (ev) {
     var $tr = $(this).closest('tr');
-    var allele_id = $tr.data('annotation_id');
+    var allele_id = $tr.data('allele_id');
     
     $.ajax({
       url: curs_root_uri + '/annotation/remove_allele_action/' + annotation_id +
@@ -662,8 +662,9 @@ $(document).ready(function() {
       '<td>' + data['evidence'] + '</td>' +
       '<td>' + conditions + '</td>' +
       '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td';
-    var row = $allele_table.find('tbody').append('<tr>' + row_html + '</tr>');
-    row.data('allele_id', data['id']);
+    var $new_row = $('<tr>' + row_html + '</tr>');
+    $allele_table.find('tbody').append($new_row);
+    $new_row.data('allele_id', data['id']);
   }
 
   if (typeof(alleles_in_progress) != 'undefined') {
