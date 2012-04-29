@@ -1179,9 +1179,14 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
     $condition_list = [$condition_list];
   }
 
+  my $allele_name = $params->{'curs-allele-name'};
+  if (defined $allele_name && length $allele_name == 0) {
+    $allele_name = undef;
+  }
+
   my $new_allele_data = {
     id => $new_allele_id,
-    name => $params->{'curs-allele-name'},
+    name => $allele_name,
     description => $params->{'curs-allele-description-input'},
     expression => $params->{'curs-allele-expression'},
     evidence => $params->{'curs-allele-evidence-select'},
