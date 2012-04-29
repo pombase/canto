@@ -1,12 +1,13 @@
 use strict;
 use warnings;
-use Test::More tests => 158;
+use Test::More tests => 25;
 
 use Data::Compare;
 
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
+use JSON;
 
 use PomCur::TestUtil;
 use PomCur::Controller::Curs;
@@ -85,7 +86,7 @@ test_psgi $app, sub {
     my $gene_display_name = $gene_proxy->display_name();
 
     my $redirect_content = $redirect_res->content();
-    warn $redirect_content;
+#    warn $redirect_content;
 
     like ($redirect_res->content(),
           qr/Choose allele\(s\) for $gene_display_name with $term_db_accession/);
@@ -98,36 +99,74 @@ test_psgi $app, sub {
     is ($new_annotation->data()->{term_ontid}, $new_term->db_accession());
   }
 
-  # test adding evidence to an annotation
+  # test adding an allele
   {
-    my $uri = new URI("$root_url/annotation/allele_select/$new_annotation_id");
-    $uri->query_form('evidence-select' => 'Western blot assay',
-                     'evidence-proceed' => 'Proceed');
+    my $evidence_param = 'Western blot assay';
+    my $allele_name_param = 'an_allele_name';
+    my $allele_desc_param = 'allele_desc';
+    my $expression_param = 'Knockdown';
+    my @conditions_param = qw(Hot Col);
+
+    my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
+    $uri->query_form('curs-allele-evidence-select' => $evidence_param,
+                     'curs-allele-name' => $allele_name_param,
+                     'curs-allele-description-input' => $allele_desc_param,
+                     'curs-allele-expression' => $expression_param,
+                     'curs-allele-condition-names[tags][]' => \@conditions_param);
 
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);
-    is $res->code, 302;
+    is $res->code, 200;
 
-    my $redirect_url = $res->header('location');
-    is ($redirect_url, "$root_url/annotation/transfer/$new_annotation_id");
+    my $annotation = $curs_schema->find_with_type('Annotation', $new_annotation_id);
 
-    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
-    my $redirect_res = $cb->($redirect_req);
+    my $data = $annotation->data();
+    my $alleles_in_progress = $data->{alleles_in_progress};
 
-    unlike ($redirect_res->content(), qr/You can annotate other genes/);
+    is (keys %$alleles_in_progress, 1);
+    my $allele_in_progress = $alleles_in_progress->{0};
+    is ($allele_in_progress->{id}, 0);
+    is ($allele_in_progress->{name}, $allele_name_param);
+    is ($allele_in_progress->{description}, $allele_desc_param);
+    is ($allele_in_progress->{expression}, $expression_param);
+    is ($allele_in_progress->{evidence}, $evidence_param);
+    my @conditions_from_db = @{$allele_in_progress->{conditions}};
 
-    my $annotation =
-    $curs_schema->find_with_type('Annotation', $new_annotation_id);
+    is (@conditions_from_db, 2);
 
-    is ($annotation->genes(), 1);
-    is (($annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
-    is ($annotation->data()->{term_ontid}, $new_term->db_accession());
-    ok (!defined $annotation->data()->{evidence_code});
+    my $parsed_res = decode_json($res->content());
+
+    is ($parsed_res->{id}, 0);
+    is ($parsed_res->{name}, $allele_name_param);
+    is ($parsed_res->{description}, $allele_desc_param);
+    is ($parsed_res->{expression}, $expression_param);
+    is ($parsed_res->{evidence}, $evidence_param);
+    @conditions_from_db = @{$parsed_res->{conditions}};
+    is (@conditions_from_db, 2);
   }
 
-};
+  # test removing
+  {
+    my $uri = new URI("$root_url/annotation/remove_allele_action/$new_annotation_id/0");
 
-my $an_rs = $curs_schema->resultset('Annotation');
-is ($an_rs->count(), 3);
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+    is $res->code, 200;
+
+    my $annotation = $curs_schema->find_with_type('Annotation', $new_annotation_id);
+
+    my $data = $annotation->data();
+    my $alleles_in_progress = $data->{alleles_in_progress};
+
+    is (keys %$alleles_in_progress, 0);
+
+    my $parsed_res = decode_json($res->content());
+
+    is ($parsed_res->{annotation_id}, $new_annotation_id);
+    is ($parsed_res->{allele_id}, 0);
+  }
+
+
+};
 
 done_testing;

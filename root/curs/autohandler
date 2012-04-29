@@ -7,6 +7,7 @@ $pub
 
 <script language="javascript" type="text/javascript">
 var curs_root_uri = '<% $curs_root_uri %>';
+var annotation_id = <% $annotation_id %>;
 </script>
 
 
@@ -29,4 +30,10 @@ inherit => '/curs/page_template.mhtml'
 
 <%init>
 use PomCur::Controller::Curs;
+
+my $annotation_id = 'undefined';
+
+if (defined $c->stash()->{annotation}) {
+  $annotation_id = $c->stash()->{annotation}->annotation_id();
+}
 </%init>

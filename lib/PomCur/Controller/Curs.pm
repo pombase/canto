@@ -1009,7 +1009,11 @@ sub _check_annotation_exists
   my $annotation =
     $schema->resultset('Annotation')->find($annotation_id);
 
-  if (!defined $annotation) {
+  if (defined $annotation) {
+    $c->stash()->{annotation} = $annotation;
+
+    return $annotation;
+  } else {
     $c->flash()->{error} = qq|No annotation found with id "$annotation_id" |;
     _redirect_and_detach($c);
   }
@@ -1119,6 +1123,28 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
       _maybe_transfer_annotation($c, $annotation, $annotation_config);
     }
   }
+}
+
+sub remove_add_action : Chained('top') PathPart('annotation/remove_allele_action') Args(2)
+{
+  my ($self, $c, $annotation_id, $allele_id) = @_;
+
+  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+
+  my $data = $annotation->data();
+  my $alleles_in_progress = $data->{alleles_in_progress} // { };
+
+  delete $alleles_in_progress->{$allele_id};
+
+  $data->{alleles_in_progress} = $alleles_in_progress;
+  $annotation->data($data);
+  $annotation->update();
+
+  $c->stash->{json_data} = {
+    allele_id => $allele_id,
+    annotation_id => $annotation_id,
+  };
+  $c->forward('View::JSON');
 }
 
 sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') Args(1)

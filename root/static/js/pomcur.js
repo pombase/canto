@@ -628,11 +628,19 @@ $(document).ready(function() {
   var $allele_table = $('#curs-allele-list');
 
   $($allele_table).on('click', '.curs-allele-delete-row', function (ev) {
-    var $this = $(this);
-    if ($this.closest('tbody').children('tr').size() == 1) {
-      $this.closest('table').hide();
-    }
-    $this.closest('tr').remove();
+    var $tr = $(this).closest('tr');
+    var allele_id = $tr.data('annotation_id');
+    
+    $.ajax({
+      url: curs_root_uri + '/annotation/remove_allele_action/' + annotation_id +
+        '/' + allele_id,
+      cache: false,
+    }).done(function() {
+      if ($tr.closest('tbody').children('tr').size() == 1) {
+        $tr.closest('table').hide();
+      }
+      $tr.remove();
+    });
   });
 
   function add_allele_row(data) {
@@ -652,7 +660,7 @@ $(document).ready(function() {
       '<td>' + conditions + '</td>' +
       '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td';
     var row = $allele_table.find('tbody').append('<tr>' + row_html + '</tr>');
-    row.data('annotation_id', data['id']);
+    row.data('allele_id', data['id']);
   }
 
   if (typeof(alleles_in_progress) != 'undefined') {
