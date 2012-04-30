@@ -1,0 +1,51 @@
+format-version: 1.2
+date: 16:03:2012 09:11
+saved-by: antonialock
+auto-generated-by: OBO-Edit 2.1-rc3
+default-namespace: phenotype_condition
+
+[Term]
+id: PCO:0000001
+name: phenotype condition
+created_by: antonialock
+creation_date: 2012-02-07T11:36:20Z
+
+[Term]
+id: PCO:0000002
+name: temperature
+def: "The experiment was performed at a specific temperature." []
+is_a: PCO:0000001 ! phenotype condition
+created_by: antonialock
+creation_date: 2012-02-07T12:00:23Z
+
+[Term]
+id: PCO:0000004
+name: high temperature
+def: "The experiment was performed at a temperature exceeding 32 degrees Celsius." []
+is_a: PCO:0000002 ! temperature
+created_by: antonialock
+creation_date: 2012-02-07T12:17:29Z
+
+[Term]
+id: PCO:0000005
+name: normal temperature
+def: "The experiment was performed at a temperature within the range 25-32 degrees Celsius." []
+is_a: PCO:0000002 ! temperature
+created_by: antonialock
+creation_date: 2012-02-07T12:17:29Z
+
+[Term]
+id: PCO:0000006
+name: low temperature
+def: "The experiment was performed at a temperature lower than 25 degrees Celsius." []
+is_a: PCO:0000002 ! temperature
+created_by: antonialock
+creation_date: 2012-02-07T12:17:29Z
+
+[Typedef]
+id: part_of
+name: part_of
+xref: OBO_REL:part_of
+created_by: antonialock
+creation_date: 2012-02-07T11:57:34Z
+

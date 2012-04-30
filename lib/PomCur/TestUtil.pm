@@ -544,6 +544,7 @@ sub make_base_track_db
   my $go_obo_file = $config->{test_config}->{test_go_obo_file};
   my $phenotype_obo_file = $config->{test_config}->{test_phenotype_obo_file};
   my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
+  my $pco_obo_file = $config->{test_config}->{test_pco_obo_file};
   my $relationship_obo_file =
     $config->{test_config}->{test_relationship_obo_file};
 
@@ -592,6 +593,8 @@ sub make_base_track_db
         $ontology_load->load($phenotype_obo_file, $ontology_index,
                              $synonym_types);
         $ontology_load->load($psi_mod_obo_file, $ontology_index,
+                             $synonym_types);
+        $ontology_load->load($pco_obo_file, $ontology_index,
                              $synonym_types);
       };
 
