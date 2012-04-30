@@ -630,7 +630,7 @@ $(document).ready(function() {
   $($allele_table).on('click', '.curs-allele-delete-row', function (ev) {
     var $tr = $(this).closest('tr');
     var allele_id = $tr.data('allele_id');
-    
+
     $.ajax({
       url: curs_root_uri + '/annotation/remove_allele_action/' + annotation_id +
         '/' + allele_id,
@@ -717,7 +717,7 @@ $(document).ready(function() {
   });
 
   $('#curs-add-allele-details').click(function () {
-    add_allele_dialog.dialog("open") 
+    add_allele_dialog.dialog("open");
     add_allele_dialog.find('form').validate({
       rules: {
         'curs-allele-type': {
