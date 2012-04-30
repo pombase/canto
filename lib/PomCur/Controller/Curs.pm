@@ -1204,10 +1204,13 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
 sub _get_allele_condition_names
 {
-  my $self = shift;
   my $config = shift;
 
-  return ['Hot', 'Cold', 'Quite hot', 'Really cold'];
+  my $ontology_lookup = PomCur::Track::get_adaptor($config, 'ontology');
+
+  return map {
+    $_->{name};
+  } $ontology_lookup->get_all(ontology_name => 'phenotype_condition');
 }
 
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1) Form
@@ -1253,10 +1256,8 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   my @evidence_codes = _generate_evidence_options($evidence_types, $annotation_type_config);
 
   $st->{evidence_select_options} = \@evidence_codes;
-
   $st->{alleles_in_progress} = $annotation->data()->{alleles_in_progress} // {};
-
-  $st->{allele_condition_names} = $self->_get_allele_condition_names($config);
+  $st->{allele_condition_names} = [_get_allele_condition_names($config)];
 
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
 }
