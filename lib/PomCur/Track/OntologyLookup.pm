@@ -80,7 +80,9 @@ sub _make_term_hash
 
   $term_hash{id} = $cvterm->db_accession();
   $term_hash{name} = $cvterm->name();
-  $term_hash{matching_synonym} = $matching_synonym;
+  if (defined $matching_synonym) {
+    $term_hash{matching_synonym} = $matching_synonym;
+  }
   my $annotation_namespace = $cvterm->cv()->name();
   $term_hash{annotation_namespace} = $annotation_namespace;
 
@@ -230,6 +232,48 @@ sub lookup
   }
 
   return \@ret_list;
+}
+
+=head2 get_all
+
+ Usage   : my $lookup = PomCur::Track::OntologyLookup->new(...);
+           my @all_terms = $lookup->get_all(ontology_name => $ontology_name,
+                                            include_children => 1,
+                                            include_definition => 1);
+ Function: Return all the terms from an ontology
+ Args    : ontology_name - the ontology to search
+           include_children - include data about the child terms (default: 0)
+           include_definition - include the definition for terms (default: 0)
+ Returns : returns an array of hashes in the same format as lookup()
+           but with no matching_synonym keys
+
+=cut
+sub get_all
+{
+  my $self = shift;
+  my %args = @_;
+
+  my $ontology_name = $args{ontology_name};
+  my $include_definition = $args{include_definition};
+  my $include_children = $args{include_children};
+
+  my $config = $self->config();
+  my $schema = $self->schema();
+  my @ret_list = ();
+
+  my $cv = $schema->resultset('Cv')->find({ name => $ontology_name });
+  my $cvterm_rs = $schema->resultset('Cvterm')->search({ cv_id => $cv->cv_id() });
+
+  while (defined (my $cvterm = $cvterm_rs->next())) {
+    my $name = $cvterm->name();
+
+    my %term_hash =
+      _make_term_hash($cvterm, $include_definition, $include_children);
+
+    push @ret_list, \%term_hash;
+  }
+
+  return @ret_list;
 }
 
 1;

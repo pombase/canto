@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 32;
+use Test::More tests => 33;
 
 use PomCur::TestUtil;
 
@@ -136,3 +136,7 @@ is($id_result->[0]->{id}, 'FYPO:0000114');
 is($id_result->[0]->{name}, 'cellular process phenotype');
 is($id_result->[0]->{annotation_namespace}, 'fission_yeast_phenotype');
 
+
+my @all_pco_terms = $lookup->get_all(ontology_name => 'phenotype_condition');
+
+is (@all_pco_terms, 5);
