@@ -680,6 +680,10 @@ $(document).ready(function() {
            function(key, value) {
              add_allele_row(value);
            });
+
+    $('#curs-add-allele-proceed').click(function() {
+      window.location.href = curs_root_uri + '/gene/' + gene_id;
+    });
   }
 
   function add_allele_confirm() {

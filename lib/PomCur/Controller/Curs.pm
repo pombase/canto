@@ -1213,7 +1213,7 @@ sub _get_allele_condition_names
   } $ontology_lookup->get_all(ontology_name => 'phenotype_condition');
 }
 
-sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1) Form
+sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;
 
@@ -1241,6 +1241,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   $st->{show_title} = 0;
 
   $st->{gene_display_name} = $gene_display_name;
+  $st->{gene_id} = $gene->gene_id();
   $st->{annotation} = $annotation;
 
   $st->{allele_type_config} = $config->{allele_types};

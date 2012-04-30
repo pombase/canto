@@ -1,6 +1,6 @@
 <%args>
-$form
 $annotation
+$gene_id
 $gene_display_name
 $curs_root_uri
 </%args>
@@ -10,6 +10,7 @@ var allele_types = <% $allele_types_js |n %>;
 var alleles_in_progress = <% $alleles_in_progress_js |n %>;
 var allele_condition_names = <% $allele_condition_names_js |n %>
 var gene_display_name = "<% $gene_display_name %>";
+var gene_id = <% $gene_id %>;
 var delete_icon_uri = "<% $delete_icon_uri %>";
 </script>
 
@@ -148,8 +149,10 @@ var delete_icon_uri = "<% $delete_icon_uri %>";
   <div class="submit">
   </div>
 
-  <input id="curs-add-allele-proceed" name="allele-proceed" type="submit"
-         value="Proceed -&gt;" style="display: none" class="curs-finish-button"/>
+  <button id="curs-add-allele-proceed" name="allele-proceed" type="submit"
+          style="display: none" class="curs-finish-button">
+    Proceed -&gt;
+  </button>
 </div>
 
 <%init>
