@@ -69,7 +69,6 @@ sub _get_score
 
 sub _make_term_hash
 {
-  my $config = shift;
   my $cvterm = shift;
   my $include_definition = shift;
   my $include_children = shift;
@@ -106,7 +105,7 @@ sub _make_term_hash
     for my $child_cvterm (@child_cvterms) {
       if ($child_cvterm->cv()->name() eq $cv->name()) {
         push @{$term_hash{children}}, {
-          _make_term_hash($config, $child_cvterm, 0, 0)
+          _make_term_hash($child_cvterm, 0, 0)
         };
       }
     }
@@ -219,12 +218,11 @@ sub lookup
   for my $hit_hash (@limited_hits) {
     my $doc = $hit_hash->{doc};
     my $name = $doc->get('name');
-    my $ontid = $doc->get('ontid');
     my $matching_synonym = $hit_hash->{matching_synonym};
     my $cvterm = $hit_hash->{cvterm};
 
     my %term_hash =
-      _make_term_hash($config, $cvterm,
+      _make_term_hash($cvterm,
                       $include_definition, $include_children,
                       $matching_synonym);
 
