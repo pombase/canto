@@ -254,6 +254,10 @@ sub get_all
   my %args = @_;
 
   my $ontology_name = $args{ontology_name};
+  if (!defined $ontology_name) {
+    croak "no ontology_name passed to OntologyLookup::get_all()";
+  }
+
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
 
