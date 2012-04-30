@@ -646,6 +646,14 @@ $(document).ready(function() {
 
   function add_allele_row(data) {
     $allele_table.show();
+    var name = data['name'];
+    if (name == null) {
+      name = '';
+    }
+    var description = data['description'];
+    if (description == null) {
+      description = '';
+    }
     var conditions;
     if (typeof(data['conditions']) == 'undefined') {
       conditions = '';
@@ -656,8 +664,8 @@ $(document).ready(function() {
     $('#curs-add-allele-proceed').show();
 
     var row_html =
-      '<td>' + data['name'] + '</td>' +
-      '<td>' + data['description'] + '</td>' +
+      '<td>' + name + '</td>' +
+      '<td>' + description + '</td>' +
       '<td>' + data['expression'] + '</td>' +
       '<td>' + data['evidence'] + '</td>' +
       '<td>' + conditions + '</td>' +
