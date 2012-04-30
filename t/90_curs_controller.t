@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 27;
+use Test::More tests => 33;
 use Test::Deep;
 
 use Data::Compare;
@@ -157,5 +157,21 @@ is($curs_schema->resultset('Gene')->count(), 0);
 # utility methods
 my $iso_date = PomCur::Controller::Curs::_get_iso_date();
 like ($iso_date, qr(^\d+-\d+-\d+$));
+
+
+my @allele_condition_names = PomCur::Controller::Curs::_get_allele_condition_names($config);
+is (@allele_condition_names, 5);
+
+my @expected_allele_condition_names = (
+  'phenotype condition',
+  'temperature',
+  'high temperature',
+  'low temperature',
+  'normal temperature',
+);
+
+for my $expected_name (@expected_allele_condition_names) {
+  ok (grep { $_ eq $expected_name } @allele_condition_names);
+}
 
 done_testing;
