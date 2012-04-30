@@ -1080,7 +1080,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
   my $evidence_types = $config->{evidence_types};
 
-  my @codes = _generate_evidence_options(\$evidence_types, $annotation_type_config);
+  my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
   my $form = $self->form();
 
   my @all_elements = (
