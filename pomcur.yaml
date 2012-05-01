@@ -1136,7 +1136,7 @@ annotation_type_list:
       proteins or nucleic acids. Cellular component also does not include
       multicellular anatomical terms.
   - name: single_gene_phenotype
-    needs_allele_selection: 1
+    needs_allele: 1
     category: ontology
     namespace: fission_yeast_phenotype
     very_short_display_name: 'phenotype'

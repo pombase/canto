@@ -83,7 +83,7 @@ for my $annotation_type (@annotation_type_list) {
       my $redirect_url = $res->header('location');
 
       $new_annotation_id = $PomCur::Controller::Curs::_debug_annotation_id;
-      if ($annotation_type->{needs_allele_selection}) {
+      if ($annotation_type->{needs_allele}) {
         is ($redirect_url, "$root_url/annotation/allele_select/$new_annotation_id");
       } else {
         is ($redirect_url, "$root_url/annotation/evidence/$new_annotation_id");
@@ -96,7 +96,7 @@ for my $annotation_type (@annotation_type_list) {
       my $gene_proxy = PomCur::Controller::Curs::_get_gene_proxy($config, $gene);
       my $gene_display_name = $gene_proxy->display_name();
 
-      if ($annotation_type->{needs_allele_selection}) {
+      if ($annotation_type->{needs_allele}) {
         like ($redirect_res->content(),
               qr/Specify the allele\(s\) of $gene_display_name to annotate with $term_db_accession/);
       } else {

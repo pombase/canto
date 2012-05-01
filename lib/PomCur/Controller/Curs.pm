@@ -836,7 +836,7 @@ sub annotation_ontology_edit
 
     $self->store_statuses($c->config(), $schema);
 
-    if ($annotation_config->{needs_allele_selection}) {
+    if ($annotation_config->{needs_allele}) {
       _redirect_and_detach($c, 'annotation', 'allele_select', $annotation_id);
     } else {
       _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
