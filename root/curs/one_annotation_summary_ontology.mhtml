@@ -1,4 +1,5 @@
 <%args>
+$annotation_type_config
 $annotation_data
 </%args>
 
@@ -63,5 +64,5 @@ $annotation_data
 </table>
 
 <%init>
-my $needs_with_or_from = $annotation_data->{needs_with_or_from};
+my $needs_with_or_from = $annotation_type_config->{needs_with_or_from};
 </%init>
