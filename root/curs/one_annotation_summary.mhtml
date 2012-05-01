@@ -4,6 +4,7 @@ $annotation
 </%args>
 
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
+   annotation_type_config => $annotation_type_config,
    annotation_data => $annotations[0] &>
 
 <%init>
