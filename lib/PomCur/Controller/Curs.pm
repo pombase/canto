@@ -1263,6 +1263,21 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
 }
 
+sub annotation_process_alleles : Chained('top') PathPart('annotation/process_alleles') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+
+  my $annotation_type_name = $annotation->type();
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+}
+
 sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1) Form
 {
   my ($self, $c, $annotation_id) = @_;
