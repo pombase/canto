@@ -1276,6 +1276,24 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
   my $annotation_type_name = $annotation->type();
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
+  my $data = $annotation->data();
+  my $alleles_in_progress = $data->{alleles_in_progress};
+
+  if (!defined $alleles_in_progress) {
+    die "internal error: no alleles defined";
+  }
+
+  while (my ($id, $allele) = each %$alleles_in_progress) {
+    my $name = $allele->{name};
+    my $description = $allele->{description};
+    my $expression = $allele->{expression};
+    my $evidence = $allele->{evidence};
+    my $conditions = $allele->{conditions};
+  }
+
+  my $gene = $annotation->genes()->first();
+
+  _redirect_and_detach($c, 'gene', $gene->gene_id());
 }
 
 sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1) Form

@@ -682,7 +682,7 @@ $(document).ready(function() {
            });
 
     $('#curs-add-allele-proceed').click(function() {
-      window.location.href = curs_root_uri + '/gene/' + gene_id;
+      window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id;
     });
   }
 
