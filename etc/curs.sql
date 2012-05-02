@@ -14,6 +14,8 @@ CREATE TABLE gene (
 
 CREATE TABLE allele (
        allele_id integer PRIMARY KEY,
+       primary_identifier text NOT NULL,
+       type text NOT NULL,  -- 'new' or 'existing'
        description text,
        name text,
        gene integer NOT NULL REFERENCES gene(gene_id)

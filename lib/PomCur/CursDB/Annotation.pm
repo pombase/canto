@@ -166,6 +166,7 @@ __PACKAGE__->belongs_to(
 
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');
+__PACKAGE__->many_to_many('alleles' => 'allele_annotations', 'allele');
 
 use YAML qw(Load Dump);
 

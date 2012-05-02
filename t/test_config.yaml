@@ -100,9 +100,25 @@ test_config:
          current_gene: "SPCC576.16c"
          genes:
            - "SPCC576.16c"
-           - "SPAC27D7.13c"
+           - primary_identifier: "SPAC27D7.13c"
+             alleles:
+               - primary_identifier: 'SPAC27D7.13c:allele-1'
+                 name: ssm4delta
+                 description: deletion
+               - primary_identifier: 'SPAC27D7.13c:allele-2'
+                 name: R344A
+                 description: R344A
+               - primary_identifier: 'SPAC27D7.13c:allele-3'
+                 name: ssm4-D4
+                 description: 'del_100-200'
+               - primary_identifier: 'SPAC27D7.13c:allele-4'
+                 description: 'del_200-300'
            - "SPBC14F5.07"
-           - "SPCC63.05"
+           - primary_identifier: "SPCC63.05"
+             alleles:
+               - primary_identifier: "SPCC63.05:allele-1"
+                 name: SPCC63.05-unk
+                 description: unknown
          annotations:
            - type: biological_process
              status: new
