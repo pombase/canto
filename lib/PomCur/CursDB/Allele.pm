@@ -35,7 +35,7 @@ __PACKAGE__->table("allele");
 =head2 primary_identifier
 
   data_type: 'text'
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 type
 
@@ -64,7 +64,7 @@ __PACKAGE__->add_columns(
   "allele_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "primary_identifier",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "text", is_nullable => 1 },
   "type",
   { data_type => "text", is_nullable => 0 },
   "description",
@@ -120,8 +120,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-05-02 12:08:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:S6y+mTO1Fea0jCi5q3cWlQ
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-05-02 13:13:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2MdzsNBOPJI8vcJ3B967nQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
