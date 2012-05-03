@@ -1291,15 +1291,58 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
     die "internal error: no alleles defined";
   }
 
-  while (my ($id, $allele) = each %$alleles_in_progress) {
-    my $name = $allele->{name};
-    my $description = $allele->{description};
-    my $expression = $allele->{expression};
-    my $evidence = $allele->{evidence};
-    my $conditions = $allele->{conditions};
-  }
-
   my $gene = $annotation->genes()->first();
+
+  my $process = sub {
+    # create an annotation for each allele
+    while (my ($id, $allele) = each %$alleles_in_progress) {
+      my $name = $allele->{name};
+      my $description = $allele->{description};
+      my $expression = $allele->{expression};
+      my $evidence = $allele->{evidence};
+      my $conditions = $allele->{conditions};
+
+      my $new_data = {
+        expression => $expression,
+        evidence_code => $evidence,
+        conditions => $conditions,
+        term_ontid => $data->{term_ontid},
+      };
+
+      my $annotation_create_args = {
+        status => $annotation->status(),
+        pub => $annotation->pub(),
+        type => $annotation->type(),
+        creation_date => $annotation->creation_date(),
+        data => $new_data,
+      };
+
+      my $new_annotation =
+        $schema->create_with_type('Annotation',
+                                  $annotation_create_args);
+
+      my %create_args = (
+        type => 'new',
+        description => $description,
+        name => $name,
+        gene => $gene->gene_id(),
+      );
+
+      my $new_allele =
+        $schema->create_with_type('Allele', \%create_args);
+
+      $schema->create_with_type('AlleleAnnotation',
+                                {
+                                  allele => $new_allele->allele_id(),
+                                  annotation => $new_annotation->annotation_id(),
+                                });
+    }
+
+    # delete the original annotation now it's been split
+    $annotation->delete();
+  };
+
+  $schema->txn_do($process);
 
   _redirect_and_detach($c, 'gene', $gene->gene_id());
 }

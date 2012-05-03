@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 25;
+use Test::More tests => 35;
 
 use Data::Compare;
 
@@ -61,8 +61,12 @@ test_psgi $app, sub {
   my $new_annotation = undef;
   my $new_annotation_id = undef;
 
+  my $gene_id = 2;
+  my $gene = $curs_schema->find_with_type('Gene', $gene_id);
+  my $gene_proxy = PomCur::Controller::Curs::_get_gene_proxy($config, $gene);
+  my $gene_display_name = $gene_proxy->display_name();
+
   {
-    my $gene_id = 2;
     my $uri = new URI("$root_url/annotation/edit/$gene_id/$annotation_type_name");
 
     $uri->query_form('ferret-term-id' => $term_db_accession,
@@ -81,12 +85,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    my $gene = $curs_schema->find_with_type('Gene', $gene_id);
-    my $gene_proxy = PomCur::Controller::Curs::_get_gene_proxy($config, $gene);
-    my $gene_display_name = $gene_proxy->display_name();
-
     my $redirect_content = $redirect_res->content();
-#    warn $redirect_content;
 
     like ($redirect_res->content(),
           qr/Choose allele\(s\) for $gene_display_name with $term_db_accession/);
@@ -99,14 +98,13 @@ test_psgi $app, sub {
     is ($new_annotation->data()->{term_ontid}, $new_term->db_accession());
   }
 
-  # test adding an allele
-  {
-    my $evidence_param = 'Western blot assay';
-    my $allele_name_param = 'an_allele_name';
-    my $allele_desc_param = 'allele_desc';
-    my $expression_param = 'Knockdown';
-    my @conditions_param = qw(Hot Col);
+  my $evidence_param = 'Western blot assay';
+  my $allele_name_param = 'an_allele_name';
+  my $allele_desc_param = 'allele_desc';
+  my $expression_param = 'Knockdown';
+  my @conditions_param = qw(Hot Cold);
 
+  my $do_add_allele = sub {
     my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
     $uri->query_form('curs-allele-evidence-select' => $evidence_param,
                      'curs-allele-name' => $allele_name_param,
@@ -115,7 +113,12 @@ test_psgi $app, sub {
                      'curs-allele-condition-names[tags][]' => \@conditions_param);
 
     my $req = HTTP::Request->new(GET => $uri);
-    my $res = $cb->($req);
+    return $cb->($req);
+  };
+
+  # test adding an allele
+  {
+    my $res = $do_add_allele->();
     is $res->code, 200;
 
     my $annotation = $curs_schema->find_with_type('Annotation', $new_annotation_id);
@@ -166,7 +169,71 @@ test_psgi $app, sub {
     is ($parsed_res->{allele_id}, 0);
   }
 
+  # add two alleles, then finalise the phenotype annotation
+  {
+    $do_add_allele->();
 
+    my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
+    $uri->query_form('curs-allele-evidence-select' => $evidence_param,
+                     'curs-allele-name' => $allele_name_param . '_2',
+                     'curs-allele-description-input' => $allele_desc_param . '_2',
+                     'curs-allele-expression' => $expression_param,
+                     'curs-allele-condition-names[tags][]' => ['Cold']);
+
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    is ($res->code, 200);
+
+    my $annotation = $curs_schema->find_with_type('Annotation', $new_annotation_id);
+
+    my $data = $annotation->data();
+    my $alleles_in_progress = $data->{alleles_in_progress};
+
+    is (keys %$alleles_in_progress, 2);
+
+    my @current_ids = map {
+      $_->annotation_id();
+    } $curs_schema->resultset('Annotation')->all();
+
+    $uri = new URI("$root_url/annotation/process_alleles/$new_annotation_id");
+    $req = HTTP::Request->new(GET => $uri);
+    $res = $cb->($req);
+
+#    warn $res->content();
+
+    is ($res->code, 302);
+    my $redirect_url = $res->header('location');
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    like ($redirect_res->content(), qr/Choose curation type for $gene_display_name/);
+
+    my $rs = $curs_schema->resultset('Annotation');
+    ok ($rs->count() == scalar(@current_ids) + 1);
+
+    my $new_annotations_rs = $rs->search({ annotation_id => { -not_in => [@current_ids] }});
+    is ($new_annotations_rs->count(), 2);
+    my @new_annotations = $new_annotations_rs->all();
+
+    my ($allele_1_annotation, $allele_2_annotation) = @new_annotations;
+
+    my ($allele_1, $allele_2) =
+      map {
+        $_->alleles()->first();
+      } @new_annotations;
+
+    ok (defined $allele_1);
+    ok (defined $allele_2);
+
+    if ($allele_2->name() eq $allele_name_param) {
+      ($allele_1, $allele_2) = ($allele_2, $allele_1);
+    }
+
+    is ($allele_1->name(), $allele_name_param);
+    is ($allele_2->name(), $allele_name_param . '_2');
+  }
 };
 
 done_testing;
