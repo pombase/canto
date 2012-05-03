@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More tests => 20;
 
 use Data::Compare;
 
@@ -90,3 +90,12 @@ my $gene_annotation_again =
     ->find({ gene => $spbc14f5_07->gene_id(),
              annotation => $annotation_2_id });
 ok (!defined $gene_annotation_again);
+
+
+# make sure we can delete all genes
+
+my $genes_rs = $schema->resultset('Gene');
+is ($genes_rs->count, 3);
+
+map { $_->delete(); } $genes_rs->all();
+is ($genes_rs->count(), 0);
