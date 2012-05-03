@@ -44,20 +44,6 @@ test_psgi $app, sub {
 
   my $new_annotation_re = qr/<td>\s*SPCC1739.10\s*<\/td>.*$term_db_accession.*IMP/s;
 
-  {
-    my $uri = new URI("$root_url");
-    my $req = HTTP::Request->new(GET => $uri);
-
-    my $res = $cb->($req);
-
-    # make sure we actually change the list of annotations later
-#    unlike ($res->content(), $new_annotation_re);
-
-    # and make sure we have the right test data set
-#    like ($res->content(),
-#          qr/SPAC3A11.14c.*pkl1.*GO:0030133/s);
-  }
-
   my $new_annotation = undef;
   my $new_annotation_id = undef;
 
