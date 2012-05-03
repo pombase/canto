@@ -1281,10 +1281,6 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
 
   my $annotation = $self->_check_annotation_exists($c, $annotation_id);
 
-  if ($annotation->type() ne 'new') {
-    die "internal error: annotation has the wrong type: ", $annotation->type();
-  }
-
   my $annotation_type_name = $annotation->type();
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
