@@ -209,8 +209,8 @@ sub _make_interaction_annotation
            $schema - a PomCur::CursDB object
            $annotation_type_name - the type of annotation to show (eg.
                                    biological_process, phenotype)
-           $annotation - the annotation to show; if set only the row containing
-                         this annotation will be returned; optional
+           $constrain_annotations - extra DBIx::Class constraints to
+                                    use when querying annotations
  Returns : ($completed_count, $table)
            where:
              $completed_count - a count of the annotations that are incomplete
