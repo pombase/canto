@@ -89,14 +89,10 @@ sub _search_highlight
   }
 }
 
-my $gene_lookup = PomCur::Track::get_adaptor($c->config(), 'gene');
-
 my @gene_hashes = map {
      my $gene = $_;
      my $gene_proxy =
-       PomCur::Curs::GeneProxy->new(config => $c->config(),
-                                    cursdb_gene => $_,
-                                    gene_lookup => $gene_lookup);
+       PomCur::Curs::GeneProxy->new(config => $c->config(), cursdb_gene => $_);
 
      my $synonyms_string =
 join (',', map { _search_highlight(\%highlight_terms, $_) } $gene_proxy->synonyms());

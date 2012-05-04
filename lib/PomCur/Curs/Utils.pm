@@ -92,13 +92,11 @@ sub _make_ontology_annotation
   my $with_gene_display_name;
 
   if ($with_gene_identifier) {
-    my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
     $with_gene = $schema->find_with_type('Gene',
                                          { primary_identifier =>
                                              $with_gene_identifier });
     my $gene_proxy = PomCur::Curs::GeneProxy->new(config => $config,
-                                                  cursdb_gene => $with_gene,
-                                                  gene_lookup => $gene_lookup);
+                                                  cursdb_gene => $with_gene);
     $with_gene_display_name = $gene_proxy->display_name()
   }
 
@@ -156,8 +154,6 @@ sub _make_interaction_annotation
 
   my @interacting_genes = @{$data->{interacting_genes}};
 
-  my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
-
   return map {
     my $interacting_gene_info = $_;
     my $interacting_gene_primary_identifier =
@@ -168,8 +164,7 @@ sub _make_interaction_annotation
                                 $interacting_gene_primary_identifier});
     my $interacting_gene_proxy =
       PomCur::Curs::GeneProxy->new(config => $config,
-                                   cursdb_gene => $interacting_gene,
-                                   gene_lookup => $gene_lookup);
+                                   cursdb_gene => $interacting_gene);
 
     my $interacting_gene_display_name =
       $interacting_gene_proxy->display_name();
@@ -282,13 +277,10 @@ sub get_annotation_table
 
   my %options = ( order_by => 'annotation_id' );
 
-  my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
-
   while (defined (my $gene = $gene_rs->next())) {
     my $gene_proxy =
       PomCur::Curs::GeneProxy->new(config => $config,
-                                   cursdb_gene => $gene,
-                                   gene_lookup => $gene_lookup);
+                                   cursdb_gene => $gene);
 
     my $an_rs =
       $gene_proxy->direct_annotations()->search({ %constraints }, { %options });

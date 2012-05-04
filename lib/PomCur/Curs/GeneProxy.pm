@@ -46,7 +46,7 @@ has cursdb_gene => (is => 'ro', required => 1,
                                    all_annotations
                                    primary_identifier
                                    delete)]);
-has gene_lookup => (is => 'ro', required => 1);
+has gene_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has primary_name => (is => 'ro', init_arg => undef, lazy_build => 1);
 has product => (is => 'ro', init_arg => undef, lazy_build => 1);
 has synonyms_ref => (is => 'ro', init_arg => undef, lazy_build => 1,
@@ -58,6 +58,13 @@ has gene_data => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 with 'PomCur::Role::Configurable';
 with 'PomCur::Role::GeneNames';
+
+sub _build_gene_lookup
+{
+  my $self = shift;
+
+  return PomCur::Track::get_adaptor($self->config(), 'gene');
+}
 
 sub _build_gene_data
 {

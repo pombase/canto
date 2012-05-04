@@ -60,10 +60,9 @@ use PomCur::Curs::GeneProxy;
 
 my $schema = $c->stash()->{schema};
 my $config = $c->config();
-my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
 
 my @all_genes = map {
-  PomCur::Curs::GeneProxy->new(config => $config, cursdb_gene => $_, gene_lookup => $gene_lookup);
+  PomCur::Curs::GeneProxy->new(config => $config, cursdb_gene => $_);
 } PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all();
 
 my @gene_hashes = map {
