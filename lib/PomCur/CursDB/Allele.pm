@@ -123,6 +123,24 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-05-02 13:13:18
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2MdzsNBOPJI8vcJ3B967nQ
 
+=head2 display_name
+
+ Usage   : my $display_name = $allele->display_name();
+ Function: Return the name and description as one string of the form
+           "name(description)";
+ Args    : none
+
+=cut
+sub display_name
+{
+  my $self = shift;
+
+  my $name = $self->name() // 'noname';
+  my $description = $self->description() // 'unknown';
+
+  return "$name($description)";
+}
+
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

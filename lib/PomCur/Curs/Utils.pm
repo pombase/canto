@@ -102,6 +102,22 @@ sub _make_ontology_annotation
     $with_gene_display_name = $gene_proxy->display_name()
   }
 
+  my $allele_display_name = undef;
+
+  if ($annotation_type_config->{needs_allele}) {
+    my @alleles = $annotation->alleles();
+
+    if (@alleles == 0) {
+      die "no alleles for annotation ", $annotation->annotation_id();
+    }
+
+    if (@alleles > 1) {
+      die "more than one allele for annotation ", $annotation->annotation_id();
+    }
+
+    $allele_display_name = $alleles[0]->display_name();
+ }
+
   (my $short_date = $annotation->creation_date()) =~ s/-//g;
 
   my $completed = defined $evidence_code &&
@@ -114,6 +130,7 @@ sub _make_ontology_annotation
       $gene_proxy->primary_name() || $gene_proxy->primary_identifier(),
     gene_product => $gene_proxy->product() // '',
     gene_synonyms_string => $gene_synonyms_string,
+    allele_display_name => $allele_display_name,
     qualifier => '',
     annotation_type => $annotation_type,
     annotation_type_display_name => $annotation_type_display_name,
@@ -193,6 +210,7 @@ sub _make_interaction_annotation
             comment => '',
             completed => 1,
             annotation_id => $annotation->annotation_id(),
+            annotation_type => $annotation_type,
             status => $annotation->status(),
           };
     $entry;

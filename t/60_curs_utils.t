@@ -50,6 +50,37 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
   is ($annotations[1]->{interacting_gene_identifier}, 'SPAC27D7.13c');
 }
 
+my @annotation_type_list = @{$config->{annotation_type_list}};
+
+my $allele_count = 0;
+
+for my $annotation_type_config (@annotation_type_list) {
+  my ($completed_count, $annotations_ref) =
+    PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
+                                              $annotation_type_config->{name});
+
+  my @annotations = @$annotations_ref;
+
+  for my $annotation (@annotations) {
+    ok (length $annotation->{annotation_type} > 0);
+    ok (length $annotation->{evidence_code} > 0);
+
+    if ($annotation_type_config->{category} eq 'ontology') {
+      ok (defined $annotation->{gene_name_or_identifier} &&
+          length $annotation->{gene_name_or_identifier} > 0 ||
+          defined $annotation->{allele_display_name} &&
+          length $annotation->{allele_display_name} > 0);
+      ok (length $annotation->{term_ontid} > 0);
+      ok (length $annotation->{term_name} > 0);
+      if (defined $annotation->{allele_display_name}) {
+        $allele_count++;
+      }
+    }
+  }
+}
+
+ok ($allele_count > 0);
+
 {
   my $options = { pub_uniquename => 'PMID:10467002',
                   annotation_type_name => 'biological_process',
