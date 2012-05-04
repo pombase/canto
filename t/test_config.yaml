@@ -161,8 +161,8 @@ test_config:
                  - primary_identifier: SPAC27D7.13c
            - type: phenotype
              status: new
-             genes(Gene:primary_identifier):
-               - SPCC63.05
+             alleles(Allele:primary_identifier):
+               - SPAC27D7.13c:allele-1
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: IDA
