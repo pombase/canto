@@ -48,8 +48,6 @@ sub _make_ontology_annotation
   my $schema = shift;
   my $annotation = shift;
   my $ontology_lookup = shift;
-  my $gene_proxy = shift;
-  my $gene_synonyms_string = shift;
 
   my $data = $annotation->data();
   my $term_ontid = $data->{term_ontid};
@@ -67,7 +65,48 @@ sub _make_ontology_annotation
 
   my %evidence_types = %{$config->{evidence_types}};
 
-  my $uniquename = $annotation->pub()->uniquename();
+  my $allele_display_name = '';
+
+  my $gene;
+
+  if ($annotation_type_config->{needs_allele}) {
+    my @alleles = $annotation->alleles();
+
+    if (@alleles == 0) {
+      die "no alleles for annotation ", $annotation->annotation_id();
+    }
+
+    if (@alleles > 1) {
+      die "more than one allele for annotation ", $annotation->annotation_id();
+    }
+
+    my $allele = $alleles[0];
+
+    $allele_display_name = $allele->display_name();
+
+    $gene = $allele->gene();
+  } else {
+    my @annotation_genes = $annotation->genes();
+
+    if (@annotation_genes > 1) {
+      die "internal error, more than one gene for annotation: ",
+      $annotation->annotation_id();
+    }
+
+    $gene = $annotation_genes[0];
+  }
+
+  my $gene_proxy = PomCur::Curs::GeneProxy->new(config => $config,
+                                                cursdb_gene => $gene);
+  my $gene_identifier = $gene_proxy->primary_identifier();
+  my $gene_primary_name = $gene_proxy->primary_name() || '';
+  my $gene_name_or_identifier = $gene_proxy->primary_name() || $gene_proxy->primary_identifier();
+  my $gene_product = $gene_proxy->product() || '',
+  my $gene_synonyms_string = join '|', $gene_proxy->synonyms();
+
+  my $taxonid = $gene_proxy->organism()->taxonid();
+
+  my $pub_uniquename = $annotation->pub()->uniquename();
 
   my $result =
     $ontology_lookup->lookup(ontology_name => $annotation_type_namespace,
@@ -101,33 +140,16 @@ sub _make_ontology_annotation
     $with_gene_display_name = $gene_proxy->display_name()
   }
 
-  my $allele_display_name = undef;
-
-  if ($annotation_type_config->{needs_allele}) {
-    my @alleles = $annotation->alleles();
-
-    if (@alleles == 0) {
-      die "no alleles for annotation ", $annotation->annotation_id();
-    }
-
-    if (@alleles > 1) {
-      die "more than one allele for annotation ", $annotation->annotation_id();
-    }
-
-    $allele_display_name = $alleles[0]->display_name();
- }
-
   (my $short_date = $annotation->creation_date()) =~ s/-//g;
 
   my $completed = defined $evidence_code &&
     (!$needs_with || defined $with_gene_identifier);
 
   return {
-    gene_identifier => $gene_proxy->primary_identifier(),
-    gene_name => $gene_proxy->primary_name() || '',
-    gene_name_or_identifier =>
-      $gene_proxy->primary_name() || $gene_proxy->primary_identifier(),
-    gene_product => $gene_proxy->product() // '',
+    gene_identifier => $gene_identifier,
+    gene_name => $gene_primary_name,
+    gene_name_or_identifier => $gene_name_or_identifier,
+    gene_product => $gene_product,
     gene_synonyms_string => $gene_synonyms_string,
     allele_display_name => $allele_display_name,
     qualifier => '',
@@ -135,7 +157,7 @@ sub _make_ontology_annotation
     annotation_type_display_name => $annotation_type_display_name,
     annotation_type_abbreviation => $annotation_type_abbreviation // '',
     annotation_id => $annotation->annotation_id(),
-    publication_uniquename => $uniquename,
+    publication_uniquename => $pub_uniquename,
     term_ontid => $term_ontid,
     term_name => $term_name,
     evidence_code => $evidence_code,
@@ -145,7 +167,7 @@ sub _make_ontology_annotation
     needs_with => $needs_with,
     with_or_from_identifier => $with_gene_identifier,
     with_or_from_display_name => $with_gene_display_name // '',
-    taxonid => $gene_proxy->organism()->taxonid(),
+    taxonid => $taxonid,
     completed => $completed,
     annotation_extension => $data->{annotation_extension} // '',
     status => $annotation->status(),
@@ -158,7 +180,19 @@ sub _make_interaction_annotation
   my $config = shift;
   my $schema = shift;
   my $annotation = shift;
-  my $gene_proxy = shift;
+
+  my @annotation_genes = $annotation->genes();
+
+  if (@annotation_genes > 1) {
+    die "internal error, more than one gene for annotation: ",
+    $annotation->annotation_id();
+  }
+
+  my $gene = $annotation_genes[0];
+
+  my $gene_proxy =
+    PomCur::Curs::GeneProxy->new(config => $config,
+                                 cursdb_gene => $gene);
 
   my $data = $annotation->data();
   my $evidence_code = $data->{evidence_code};
@@ -301,29 +335,12 @@ sub get_annotation_table
 
   while (defined (my $annotation = $annotation_rs->next())) {
     my @entries;
-    my @annotation_genes = $annotation->genes();
-
-    if (@annotation_genes > 1) {
-      die "internal error, more than one gene for annotation: ",
-      $annotation->annotation_id();
-    }
-
-    my $gene = $annotation_genes[0];
-
-    my $gene_proxy =
-      PomCur::Curs::GeneProxy->new(config => $config,
-                                   cursdb_gene => $gene);
-
-    my $gene_synonyms_string = join '|', $gene_proxy->synonyms();
-
     if ($annotation_type_category eq 'ontology') {
-      @entries = (_make_ontology_annotation($config, $schema, $annotation,
-                                            $ontology_lookup,
-                                            $gene_proxy, $gene_synonyms_string));
+      @entries = _make_ontology_annotation($config, $schema, $annotation,
+                                            $ontology_lookup);
     } else {
       if ($annotation_type_category eq 'interaction') {
-        @entries = _make_interaction_annotation($config, $schema, $annotation,
-                                                $gene_proxy);
+        @entries = _make_interaction_annotation($config, $schema, $annotation);
       } else {
         die "unknown annotation type category: $annotation_type_category\n";
       }

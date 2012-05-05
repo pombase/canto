@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 20;
+use Test::More tests => 22;
 
 use Data::Compare;
 
@@ -29,7 +29,7 @@ $schema->txn_do(
 
 # test that a phenotype annotation exists and has the right type
 my $phenotype_annotation_rs =
-  $schema->resultset('Annotation')->search({ type => 'phenotype' });
+  $schema->resultset('Annotation')->search({ type => 'single_gene_phenotype' });
 is ($phenotype_annotation_rs->count(), 1);
 is ($phenotype_annotation_rs->first()->data()->{term_ontid}, 'FYPO:0000013');
 
@@ -47,9 +47,9 @@ is ($spcc576_16c->all_annotations()->count(), 1);
 
 my $spcc63_05 = $schema->find_with_type('Gene',
                                { primary_identifier => 'SPCC63.05' });
-is ($spcc63_05->direct_annotations()->count(), 3);
+is ($spcc63_05->direct_annotations()->count(), 2);
 is ($spcc63_05->indirect_annotations()->count(), 0);
-is ($spcc63_05->all_annotations()->count(), 3);
+is ($spcc63_05->all_annotations()->count(), 2);
 
 my $annotation_1_id = $spcc63_05->all_annotations()->first()->annotation_id();
 
@@ -61,6 +61,11 @@ is ($spbc14f5_07->all_annotations()->count(), 2);
 
 my $annotation_2 = $spbc14f5_07->all_annotations()->first();
 my $annotation_2_id = $annotation_2->annotation_id();
+
+my $spac27d7_13c_allele_1 = $schema->find_with_type('Allele', { primary_identifier => 'SPAC27D7.13c:allele-1' });
+ok (defined $spac27d7_13c_allele_1);
+
+is ($spac27d7_13c_allele_1->annotations()->count(), 1);
 
 
 # delete gene and make sure the annotation goes too

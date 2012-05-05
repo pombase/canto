@@ -159,7 +159,7 @@ test_config:
                interacting_genes:
                  - primary_identifier: SPBC14F5.07
                  - primary_identifier: SPAC27D7.13c
-           - type: phenotype
+           - type: single_gene_phenotype
              status: new
              alleles(Allele:primary_identifier):
                - SPAC27D7.13c:allele-1

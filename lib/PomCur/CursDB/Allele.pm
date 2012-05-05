@@ -123,6 +123,9 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-05-02 13:13:18
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2MdzsNBOPJI8vcJ3B967nQ
 
+__PACKAGE__->many_to_many('annotations' => 'allele_annotations',
+                          'annotation');
+
 =head2 display_name
 
  Usage   : my $display_name = $allele->display_name();

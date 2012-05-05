@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 54;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -61,18 +61,17 @@ for my $annotation_type_config (@annotation_type_list) {
 
   my @annotations = @$annotations_ref;
 
-  for my $annotation (@annotations) {
-    ok (length $annotation->{annotation_type} > 0);
-    ok (length $annotation->{evidence_code} > 0);
+  for my $annotation_row (@annotations) {
+    ok (length $annotation_row->{annotation_type} > 0);
+    ok (length $annotation_row->{evidence_code} > 0);
 
     if ($annotation_type_config->{category} eq 'ontology') {
-      ok (defined $annotation->{gene_name_or_identifier} &&
-          length $annotation->{gene_name_or_identifier} > 0 ||
-          defined $annotation->{allele_display_name} &&
-          length $annotation->{allele_display_name} > 0);
-      ok (length $annotation->{term_ontid} > 0);
-      ok (length $annotation->{term_name} > 0);
-      if (defined $annotation->{allele_display_name}) {
+      ok (length $annotation_row->{gene_name_or_identifier} > 0);
+      ok (length $annotation_row->{term_ontid} > 0);
+      ok (length $annotation_row->{term_name} > 0);
+
+      if ($annotation_type_config->{needs_allele}) {
+        ok (length $annotation_row->{allele_display_name} > 0);
         $allele_count++;
       }
     }
