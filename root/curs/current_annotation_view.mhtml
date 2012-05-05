@@ -31,8 +31,13 @@ my $options = { pub_uniquename => $pub->uniquename(),
                 annotation_type_category => $annotation_type->{category},
                 };
 if (defined $gene_proxy) {
-  $constrain_annotations = [$gene_proxy->direct_annotations()];
+  my @constrain_annotations = $gene_proxy->direct_annotations();
+  map {
+    push @constrain_annotations, $_->annotations();
+  } $gene_proxy->alleles();
+  $constrain_annotations = [@constrain_annotations];
   $options->{gene_identifier} = $gene_proxy->primary_identifier();
+
 }
 
 my ($completed_count, $annotations_ref) =

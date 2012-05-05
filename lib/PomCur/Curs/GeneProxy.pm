@@ -41,6 +41,7 @@ use Carp;
 
 has cursdb_gene => (is => 'ro', required => 1,
                     handles => [qw(gene_id
+                                   alleles
                                    direct_annotations
                                    indirect_annotations
                                    all_annotations

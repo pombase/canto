@@ -25,6 +25,11 @@ $user_created
         Gene name
       </th>
 % }
+% if ($needs_allele) {
+      <th>
+        Allele
+      </th>
+% }
       <th>
         Term ID
       </th>
@@ -73,6 +78,13 @@ $user_created
     <td>
       <span>
       <% $row->{gene_name} %>
+      </span>
+    </td>
+% }
+% if ($needs_allele) {
+    <td>
+      <span>
+      <% $row->{allele_display_name} %>
       </span>
     </td>
 % }
@@ -215,6 +227,7 @@ my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
   $gene_text . ($user_created ? '' : ' from ' . $pub->uniquename());
 
 my $needs_with_or_from = $annotation_type->{needs_with_or_from};
+my $needs_allele = $annotation_type->{needs_allele};
 
 my $some_row_has_term_suggestion = grep { $_-> {term_suggestion} } @annotations;;
 

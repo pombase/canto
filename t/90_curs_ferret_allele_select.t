@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 35;
+use Test::More tests => 37;
 
 use Data::Compare;
 
@@ -155,7 +155,7 @@ test_psgi $app, sub {
     is ($parsed_res->{allele_id}, 0);
   }
 
-  # add two alleles, then finalise the phenotype annotation
+  # add two alleles
   {
     $do_add_allele->();
 
@@ -185,8 +185,6 @@ test_psgi $app, sub {
     $uri = new URI("$root_url/annotation/process_alleles/$new_annotation_id");
     $req = HTTP::Request->new(GET => $uri);
     $res = $cb->($req);
-
-#    warn $res->content();
 
     is ($res->code, 302);
     my $redirect_url = $res->header('location');
@@ -219,6 +217,12 @@ test_psgi $app, sub {
 
     is ($allele_1->name(), $allele_name_param);
     is ($allele_2->name(), $allele_name_param . '_2');
+
+    my $allele_1_display_name = $allele_1->display_name();
+    like ($redirect_res->content(), qr/\Q$allele_1_display_name/);
+
+    my $allele_2_display_name = $allele_2->display_name();
+    like ($redirect_res->content(), qr/\Q$allele_2_display_name/);
   }
 };
 
