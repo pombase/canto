@@ -945,11 +945,8 @@ sub _get_gene_proxy
   my $config = shift;
   my $gene = shift;
 
-  my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
-
   return PomCur::Curs::GeneProxy->new(config => $config,
-                                      cursdb_gene => $gene,
-                                      gene_lookup => $gene_lookup);
+                                      cursdb_gene => $gene);
 }
 
 sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form

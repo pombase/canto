@@ -53,6 +53,7 @@ sub _make_ontology_annotation
 
   my $data = $annotation->data();
   my $term_ontid = $data->{term_ontid};
+
   die "no term_ontid for annotation"
     unless defined $term_ontid and length $term_ontid > 0;
 
@@ -92,13 +93,11 @@ sub _make_ontology_annotation
   my $with_gene_display_name;
 
   if ($with_gene_identifier) {
-    my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
     $with_gene = $schema->find_with_type('Gene',
                                          { primary_identifier =>
                                              $with_gene_identifier });
     my $gene_proxy = PomCur::Curs::GeneProxy->new(config => $config,
-                                                  cursdb_gene => $with_gene,
-                                                  gene_lookup => $gene_lookup);
+                                                  cursdb_gene => $with_gene);
     $with_gene_display_name = $gene_proxy->display_name()
   }
 
@@ -173,8 +172,6 @@ sub _make_interaction_annotation
 
   my @interacting_genes = @{$data->{interacting_genes}};
 
-  my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
-
   return map {
     my $interacting_gene_info = $_;
     my $interacting_gene_primary_identifier =
@@ -185,8 +182,7 @@ sub _make_interaction_annotation
                                 $interacting_gene_primary_identifier});
     my $interacting_gene_proxy =
       PomCur::Curs::GeneProxy->new(config => $config,
-                                   cursdb_gene => $interacting_gene,
-                                   gene_lookup => $gene_lookup);
+                                   cursdb_gene => $interacting_gene);
 
     my $interacting_gene_display_name =
       $interacting_gene_proxy->display_name();
@@ -227,8 +223,8 @@ sub _make_interaction_annotation
            $schema - a PomCur::CursDB object
            $annotation_type_name - the type of annotation to show (eg.
                                    biological_process, phenotype)
-           $annotation - the annotation to show; if set only the row containing
-                         this annotation will be returned; optional
+           $constrain_annotations - extra DBIx::Class constraints to
+                                    use when querying annotations
  Returns : ($completed_count, $table)
            where:
              $completed_count - a count of the annotations that are incomplete
@@ -300,36 +296,40 @@ sub get_annotation_table
 
   my %options = ( order_by => 'annotation_id' );
 
-  my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
+  my $annotation_rs =
+    $schema->resultset('Annotation')->search({ %constraints }, { %options });;
 
-  while (defined (my $gene = $gene_rs->next())) {
+  while (defined (my $annotation = $annotation_rs->next())) {
+    my @entries;
+    my @annotation_genes = $annotation->genes();
+
+    if (@annotation_genes > 1) {
+      die "internal error, more than one gene for annotation: ",
+      $annotation->annotation_id();
+    }
+
+    my $gene = $annotation_genes[0];
+
     my $gene_proxy =
       PomCur::Curs::GeneProxy->new(config => $config,
-                                   cursdb_gene => $gene,
-                                   gene_lookup => $gene_lookup);
-
-    my $an_rs =
-      $gene_proxy->direct_annotations()->search({ %constraints }, { %options });
+                                   cursdb_gene => $gene);
 
     my $gene_synonyms_string = join '|', $gene_proxy->synonyms();
 
-    while (defined (my $annotation = $an_rs->next())) {
-      my @entries;
-      if ($annotation_type_category eq 'ontology') {
-        @entries = (_make_ontology_annotation($config, $schema, $annotation,
-                                              $ontology_lookup,
-                                              $gene_proxy, $gene_synonyms_string));
+    if ($annotation_type_category eq 'ontology') {
+      @entries = (_make_ontology_annotation($config, $schema, $annotation,
+                                            $ontology_lookup,
+                                            $gene_proxy, $gene_synonyms_string));
+    } else {
+      if ($annotation_type_category eq 'interaction') {
+        @entries = _make_interaction_annotation($config, $schema, $annotation,
+                                                $gene_proxy);
       } else {
-        if ($annotation_type_category eq 'interaction') {
-          @entries = _make_interaction_annotation($config, $schema, $annotation,
-                                                  $gene_proxy);
-        } else {
-          die "unknown annotation type category: $annotation_type_category\n";
-        }
+        die "unknown annotation type category: $annotation_type_category\n";
       }
-      push @annotations, @entries;
-      map { $completed_count++ if $_->{completed} } @entries;
     }
+    push @annotations, @entries;
+    map { $completed_count++ if $_->{completed} } @entries;
   }
 
   return ($completed_count, [@annotations]);
