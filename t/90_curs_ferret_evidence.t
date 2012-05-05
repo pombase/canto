@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 132;
+use Test::More tests => 106;
 
 use Data::Compare;
 
@@ -33,6 +33,7 @@ for my $annotation_type (@annotation_type_list) {
   my $annotation_type_name = $annotation_type->{name};
 
   next unless $annotation_type->{category} eq 'ontology';
+  next if $annotation_type->{needs_allele};
 
   my $cv_name = $annotation_type->{namespace} // $annotation_type->{name};
   my $cv = $track_schema->find_with_type('Cv', { name => $cv_name });
@@ -186,6 +187,6 @@ for my $annotation_type (@annotation_type_list) {
 }
 
 my $an_rs = $curs_schema->resultset('Annotation');
-is ($an_rs->count(), 12);
+is ($an_rs->count(), 10);
 
 done_testing;
