@@ -66,6 +66,8 @@ sub _make_ontology_annotation
   my %evidence_types = %{$config->{evidence_types}};
 
   my $allele_display_name = '';
+  my $expression_level = '';
+  my $conditions_string = '';
 
   my $gene;
 
@@ -85,6 +87,14 @@ sub _make_ontology_annotation
     $allele_display_name = $allele->display_name();
 
     $gene = $allele->gene();
+
+    $expression_level = $data->{expression} // '';
+    my @conditions = ();
+    if ($data->{conditions}) {
+      $conditions_string = join ', ', @{$data->{conditions}};
+    } else {
+      $conditions_string = '';
+    }
   } else {
     my @annotation_genes = $annotation->genes();
 
@@ -161,6 +171,8 @@ sub _make_ontology_annotation
     term_ontid => $term_ontid,
     term_name => $term_name,
     evidence_code => $evidence_code,
+    expression_level => $expression_level,
+    conditions => $conditions_string,
     creation_date => $annotation->creation_date(),
     creation_date_short => $short_date,
     term_suggestion => $data->{term_suggestion},

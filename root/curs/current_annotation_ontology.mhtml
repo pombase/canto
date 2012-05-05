@@ -39,6 +39,14 @@ $user_created
       <th>
         Evidence code
       </th>
+% if ($needs_allele) {
+      <th>
+        Expresion
+      </th>
+      <th>
+        Conditions
+      </th>
+% }
       <th>
         Qualifier
       </th>
@@ -116,6 +124,18 @@ $user_created
 % }
       </span>
     </td>
+% if ($needs_allele) {
+    <td>
+      <span>
+      <% $row->{expression_level} %>
+      </span>
+    </td>
+    <td>
+      <span>
+      <% $row->{conditions} %>
+      </span>
+    </td>
+% }
     <td>
       <% $row->{is_not} ? 'NOT' : '' %>
     </td>
