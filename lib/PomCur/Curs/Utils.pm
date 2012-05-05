@@ -53,6 +53,7 @@ sub _make_ontology_annotation
 
   my $data = $annotation->data();
   my $term_ontid = $data->{term_ontid};
+
   die "no term_ontid for annotation"
     unless defined $term_ontid and length $term_ontid > 0;
 
@@ -277,33 +278,40 @@ sub get_annotation_table
 
   my %options = ( order_by => 'annotation_id' );
 
-  while (defined (my $gene = $gene_rs->next())) {
+  my $annotation_rs =
+    $schema->resultset('Annotation')->search({ %constraints }, { %options });;
+
+  while (defined (my $annotation = $annotation_rs->next())) {
+    my @entries;
+    my @annotation_genes = $annotation->genes();
+
+    if (@annotation_genes > 1) {
+      die "internal error, more than one gene for annotation: ",
+      $annotation->annotation_id();
+    }
+
+    my $gene = $annotation_genes[0];
+
     my $gene_proxy =
       PomCur::Curs::GeneProxy->new(config => $config,
                                    cursdb_gene => $gene);
 
-    my $an_rs =
-      $gene_proxy->direct_annotations()->search({ %constraints }, { %options });
-
     my $gene_synonyms_string = join '|', $gene_proxy->synonyms();
 
-    while (defined (my $annotation = $an_rs->next())) {
-      my @entries;
-      if ($annotation_type_category eq 'ontology') {
-        @entries = (_make_ontology_annotation($config, $schema, $annotation,
-                                              $ontology_lookup,
-                                              $gene_proxy, $gene_synonyms_string));
+    if ($annotation_type_category eq 'ontology') {
+      @entries = (_make_ontology_annotation($config, $schema, $annotation,
+                                            $ontology_lookup,
+                                            $gene_proxy, $gene_synonyms_string));
+    } else {
+      if ($annotation_type_category eq 'interaction') {
+        @entries = _make_interaction_annotation($config, $schema, $annotation,
+                                                $gene_proxy);
       } else {
-        if ($annotation_type_category eq 'interaction') {
-          @entries = _make_interaction_annotation($config, $schema, $annotation,
-                                                  $gene_proxy);
-        } else {
-          die "unknown annotation type category: $annotation_type_category\n";
-        }
+        die "unknown annotation type category: $annotation_type_category\n";
       }
-      push @annotations, @entries;
-      map { $completed_count++ if $_->{completed} } @entries;
     }
+    push @annotations, @entries;
+    map { $completed_count++ if $_->{completed} } @entries;
   }
 
   return ($completed_count, [@annotations]);
