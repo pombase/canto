@@ -165,8 +165,11 @@ test_config:
                - SPAC27D7.13c:allele-1
              pub(Pub:uniquename): PMID:19756689
              data:
-               evidence_code: IDA
+               evidence_code: Epitope-tagged protein immunolocalization experiment data
                term_ontid: FYPO:0000013
+               expression: Overexpression
+               conditions:
+                 - high temperature
            - type: post_translational_modification
              status: new
              genes(Gene:primary_identifier):
