@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 37;
+use Test::More tests => 39;
 
 use Data::Compare;
 
@@ -220,6 +220,10 @@ test_psgi $app, sub {
 
     my $allele_1_display_name = $allele_1->display_name();
     like ($redirect_res->content(), qr/\Q$allele_1_display_name/);
+    like ($redirect_res->content(), qr/$expression_param/);
+
+    my $conditions_param_re = join q(,\s+), @conditions_param;
+    like ($redirect_res->content(), qr/$conditions_param_re/);
 
     my $allele_2_display_name = $allele_2->display_name();
     like ($redirect_res->content(), qr/\Q$allele_2_display_name/);
