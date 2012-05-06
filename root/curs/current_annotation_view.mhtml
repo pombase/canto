@@ -37,7 +37,6 @@ if (defined $gene_proxy) {
   } $gene_proxy->alleles();
   $constrain_annotations = [@constrain_annotations];
   $options->{gene_identifier} = $gene_proxy->primary_identifier();
-
 }
 
 my ($completed_count, $annotations_ref) =
