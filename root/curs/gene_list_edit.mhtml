@@ -95,7 +95,7 @@ my @gene_hashes = map {
        PomCur::Curs::GeneProxy->new(config => $c->config(), cursdb_gene => $_);
 
      my $synonyms_string =
-join (',', map { _search_highlight(\%highlight_terms, $_) } $gene_proxy->synonyms());
+       join (',', map { _search_highlight(\%highlight_terms, $_) } $gene_proxy->synonyms());
      my $hash = {
        'Systematic identifier' => _search_highlight(\%highlight_terms, $gene_proxy->primary_identifier()),
        Name => _search_highlight(\%highlight_terms, $gene_proxy->primary_name()),
