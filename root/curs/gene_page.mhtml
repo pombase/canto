@@ -1,14 +1,14 @@
 <%args>
 $curs_root_uri
 $pub
-$gene_proxy
+$gene
 @annotation_type_list
 </%args>
 
 <div id="curs-annotation-actions">
 <div class="curs-box">
   <div class="curs-box-title">
-Choose curation type for <% $gene_proxy->display_name() %>:
+Choose curation type for <% $gene->display_name() %>:
   </div>
   <div class="curs-box-body">
   <ul class="annotation-start">
@@ -35,14 +35,14 @@ Choose curation type for <% $gene_proxy->display_name() %>:
 
 <div id="curs-gene-details" class="curs-box">
   <div class="curs-box-title">
-Details for <% $gene_proxy->display_name() %>
+Details for <% $gene->display_name() %>
   </div>
   <div class="curs-box-body">
-<& /linkouts.mhtml, object => $gene_proxy, context => 'gene' &>
+<& /linkouts.mhtml, object => $gene, context => 'gene' &>
     <table class="curs-definition-table">
       <tr>
         <td class="title">Identifier</td>
-        <td><% $gene_proxy->primary_identifier() %></td>
+        <td><% $gene->primary_identifier() %></td>
       </tr>
       <tr>
         <td class="title">Name</td>
@@ -50,12 +50,12 @@ Details for <% $gene_proxy->display_name() %>
       </tr>
       <tr>
         <td class="title">Product</td>
-        <td><% $gene_proxy->product() %></td>
+        <td><% $gene->product() %></td>
       </tr>
 % if ($c->stash()->{multi_organism_mode}) {
       <tr>
         <td class="title">Organism</td>
-        <td><% $gene_proxy->organism()->full_name() %></td>
+        <td><% $gene->organism()->full_name() %></td>
       </tr>
 % } 
     </table>
@@ -72,12 +72,12 @@ Details for <% $gene_proxy->display_name() %>
    annotation_type => $annotation_type,
    curs_root_uri => $curs_root_uri,
    pub => $pub,
-   gene_proxy => $gene_proxy &>
+   gene => $gene &>
 % }
 
 </div>
 
 <%init>
-my $gene_id = $gene_proxy->gene_id();
-my $gene_name = $gene_proxy->{primary_name} // '';
+my $gene_id = $gene->gene_id();
+my $gene_name = $gene->{primary_name} // '';
 </%init>

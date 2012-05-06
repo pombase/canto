@@ -1056,6 +1056,12 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
+  if (!defined $gene) {
+    $gene = $annotation->alleles()->first()->gene();
+  }
+
+  if (!defined $gene) { die };
+
   my $gene_proxy = _get_gene_proxy($config, $gene);
   $st->{gene} = $gene_proxy;
   my $gene_display_name = $gene_proxy->display_name();
@@ -1587,7 +1593,7 @@ sub gene : Chained('top') Args(1)
   my $gene = $schema->find_with_type('Gene', $gene_id);
   my $gene_proxy = _get_gene_proxy($config, $gene);
 
-  $st->{gene_proxy} = $gene_proxy;
+  $st->{gene} = $gene_proxy;
 
   $st->{title} = 'Gene: ' . $gene_proxy->display_name();
   # use only in header, not in body:
