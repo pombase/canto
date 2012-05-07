@@ -1137,7 +1137,11 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     if ($with_gene) {
       _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
     } else {
-      _maybe_transfer_annotation($c, $annotation, $annotation_config);
+      if ($annotation_config->{needs_allele}) {
+        _redirect_and_detach($c, 'gene', $gene->gene_id());
+      } else {
+        _maybe_transfer_annotation($c, $annotation, $annotation_config);
+      }
     }
   }
 }
