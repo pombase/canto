@@ -1064,7 +1064,9 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     $gene = $annotation->alleles()->first()->gene();
   }
 
-  if (!defined $gene) { die };
+  if (!defined $gene) {
+    die "could not find a gene for annotation: " . $annotation_id;
+  };
 
   my $gene_proxy = _get_gene_proxy($config, $gene);
   $st->{gene} = $gene_proxy;
