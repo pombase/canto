@@ -100,7 +100,7 @@ sub _make_ontology_annotation
 
     if (@annotation_genes > 1) {
       die "internal error, more than one gene for annotation: ",
-      $annotation->annotation_id();
+        $annotation->annotation_id();
     }
 
     $gene = $annotation_genes[0];
