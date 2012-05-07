@@ -1205,10 +1205,16 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
     $allele_name = undef;
   }
 
+  my $description = $params->{'curs-allele-description-input'};
+
+  if (length $description == 0) {
+    $description = $params->{'curs-allele-type'};
+  }
+
   my $new_allele_data = {
     id => $new_allele_id,
     name => $allele_name,
-    description => $params->{'curs-allele-description-input'},
+    description => $description,
     expression => $params->{'curs-allele-expression'},
     evidence => $params->{'curs-allele-evidence-select'},
     conditions => $condition_list
