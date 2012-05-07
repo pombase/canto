@@ -945,6 +945,10 @@ sub _get_gene_proxy
   my $config = shift;
   my $gene = shift;
 
+  if (!defined $gene) {
+    croak "no gene passed to _get_gene_proxy()";
+  }
+
   return PomCur::Curs::GeneProxy->new(config => $config,
                                       cursdb_gene => $gene);
 }
