@@ -71,13 +71,9 @@ sub _make_ontology_annotation
 
   my $gene;
 
-  if ($annotation_type_config->{needs_allele}) {
-    my @alleles = $annotation->alleles();
+  my @alleles = $annotation->alleles();
 
-    if (@alleles == 0) {
-      die "no alleles for annotation ", $annotation->annotation_id();
-    }
-
+  if ($annotation_type_config->{needs_allele} && @alleles) {
     if (@alleles > 1) {
       die "more than one allele for annotation ", $annotation->annotation_id();
     }
