@@ -730,6 +730,9 @@ $(document).ready(function() {
 
   $('#curs-add-allele-details').click(function () {
     add_allele_dialog.dialog("open");
+    hide_allele_description(add_allele_dialog);
+    add_allele_dialog.find('.curs-allele-type-select select').val(undefined).trigger('change');
+    add_allele_dialog.find('.curs-allele-name').val('');
     add_allele_dialog.find('form').validate({
       rules: {
         'curs-allele-type': {
@@ -767,7 +770,11 @@ $(document).ready(function() {
 
   function hide_allele_description(allele_dialog) {
     allele_dialog.find('.curs-allele-type-description').hide();
+    allele_dialog.find('.curs-allele-description-input').val('');
     allele_dialog.find('.curs-allele-type-select').show();
+    $expression_row = allele_dialog.find('.curs-allele-expression');
+    $expression_row.find('input[value="Endogenous"]').attr('checked', true);
+    allele_dialog.find('.curs-allele-evidence-select').val('');
     var name_input = allele_dialog.find('.curs-allele-name');
     name_input.removeAttr('disabled');
     var label = allele_dialog.find('.curs-allele-type-label');
