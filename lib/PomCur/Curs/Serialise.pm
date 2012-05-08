@@ -68,9 +68,9 @@ sub _get_metadata
 sub _get_annotations
 {
   my $schema = shift;
-  my $gene = shift;
 
-  my $rs = $gene->direct_annotations();
+  my $rs = $schema->resultset('Annotation');
+
   my @ret = ();
 
   while (defined (my $annotation = $rs->next())) {
@@ -86,6 +86,7 @@ sub _get_annotations
       publication => $annotation->pub->uniquename(),
       type => $annotation->type(),
       creation_date => $annotation->creation_date(),
+      genes => _get_genes($schema, $annotation),
       %extra_data,
     };
   }
@@ -96,9 +97,9 @@ sub _get_annotations
 sub _get_genes
 {
   my $schema = shift;
-  my $options = shift;
+  my $annotation = shift;
 
-  my $rs = $schema->resultset('Gene');
+  my $rs = $annotation->genes();
   my %ret = ();
 
   while (defined (my $gene = $rs->next())) {
@@ -106,7 +107,6 @@ sub _get_genes
     my %gene_data = (
       organism => $organism_full_name,
       uniquename => $gene->primary_identifier(),
-      annotations => _get_annotations($schema, $gene),
     );
     my $gene_key =
       $organism_full_name . ' ' . $gene->primary_identifier();
@@ -187,7 +187,7 @@ sub perl
 
   return {
     metadata => _get_metadata($schema),
-    genes => _get_genes($schema, $options),
+    annotations => _get_annotations($schema),
     organisms => _get_organisms($schema, $options),
     publications => _get_pubs($schema, $options)
   };
