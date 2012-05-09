@@ -105,7 +105,18 @@ my $full_expected_curation_session =
           type => 'single_gene_phenotype',
           conditions => [
             'high temperature'
-          ]
+          ],
+          alleles => [
+            {
+              primary_identifier => 'SPAC27D7.13c:allele-1',
+              gene => {
+                uniquename => 'SPAC27D7.13c',
+                organism => 'Schizosaccharomyces pombe'
+              },
+              type => 'existing',
+              description => 'deletion',
+            }
+          ],
         },
         {
           type => 'post_translational_modification',
