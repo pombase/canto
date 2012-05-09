@@ -153,6 +153,10 @@ sub lookup
   my $config = $self->config();
   my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
 
+  if (!defined $ontology_name || length $ontology_name == 0) {
+    croak "no ontology_name passed to lookup()";
+  }
+
   my $hits = $ontology_index->lookup($ontology_name, $search_string,
                                      $max_results);
 

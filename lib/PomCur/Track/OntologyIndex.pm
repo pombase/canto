@@ -224,11 +224,16 @@ sub _init_lookup
 sub lookup
 {
   my $self = shift;
+  my $ontology_name = shift;
+
+  if (!defined $ontology_name || length $ontology_name == 0) {
+    croak "no ontology_name passed to lookup()";
+  }
 
   my $config = $self->config();
 
   # keyword search must be lower case
-  my $ontology_name = lc shift;
+  $ontology_name = lc $ontology_name;
   $ontology_name =~ s/-/_/g;
 
   my $search_string = shift;
