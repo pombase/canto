@@ -81,14 +81,21 @@ sub _get_annotations
       $extra_data{term} = $term_ontid;
     }
 
-    push @ret, {
+    my %data = (
       status => $annotation->status(),
       publication => $annotation->pub->uniquename(),
       type => $annotation->type(),
       creation_date => $annotation->creation_date(),
-      genes => _get_genes($schema, $annotation),
       %extra_data,
-    };
+    );
+
+    my $genes = _get_genes($schema, $annotation);
+
+    if (keys %$genes) {
+      $data{genes} = $genes;
+    }
+
+    push @ret, \%data;
   }
 
   return \@ret;

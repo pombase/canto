@@ -80,6 +80,12 @@ my $full_expected_curation_session =
           status => 'new',
           creation_date => "2010-01-02",
           evidence_code => 'Synthetic Haploinsufficiency',
+          genes => {
+            'Schizosaccharomyces pombe SPCC63.05' => {
+              uniquename => 'SPCC63.05',
+              organism => 'Schizosaccharomyces pombe',
+            },
+          },
           interacting_genes => [
             {
               primary_identifier => 'SPBC14F5.07',
@@ -90,12 +96,16 @@ my $full_expected_curation_session =
           ]
         },
         {
-          type => 'post_translational_modification',
           status => 'new',
-          creation_date => "2010-01-02",
-          evidence_code => 'ISS',
+          term => 'FYPO:0000013',
+          evidence_code => 'Epitope-tagged protein immunolocalization experiment data',
+          creation_date => '2010-01-02',
+          expression => 'Overexpression',
           publication => 'PMID:19756689',
-          term => 'MOD:01157',
+          type => 'single_gene_phenotype',
+          conditions => [
+            'high temperature'
+          ]
         },
         {
           type => 'post_translational_modification',
