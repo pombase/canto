@@ -53,7 +53,16 @@ sub lookup : Local
   my $lookup = PomCur::Track::get_adaptor($config, $type_name);
 
   my $component_config = $config->{annotation_types}->{$component_name};
-  my $ontology_name = $component_config->{namespace};
+
+  my $ontology_name;
+
+  if (defined $component_config) {
+    $ontology_name = $component_config->{namespace};
+  } else {
+    # allow looking up using the ontology name for those ontologies
+    # that aren't configured as annotation types
+    $ontology_name = $component_name;
+  }
 
   $search_string ||= $c->req()->param('term');
 
