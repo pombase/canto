@@ -909,6 +909,11 @@ implementation_classes:
   status_adaptor: PomCur::Track::StatusStorage
 
 allele_type_list:
+  - name: wild type
+    description_required: 0
+    allele_name_required: 1
+    allow_expression_change: 1
+    autopopulate_name: '@@gene_name@@+'
   - name: deletion
     description_required: 0
     allele_name_required: 1
