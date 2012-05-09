@@ -732,8 +732,8 @@ $(document).ready(function() {
       success: function(data) {
         var choices = $.map( data, function( item ) {
           return {
-            label: item.label+" ("+ item.id +")",
-            value: item.value
+            label: item.name,
+            value: item.name
           }
         });
         showChoices(choices);
@@ -742,7 +742,7 @@ $(document).ready(function() {
   };
 
   $('#curs-allele-add .curs-allele-conditions').tagit({
-    availableTags: allele_condition_names,
+    minLength: 2,
     itemName: 'curs-allele-condition-names',
     allowSpaces: true,
     placeholderText: 'Type a condition ...',
