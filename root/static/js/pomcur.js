@@ -22,6 +22,10 @@ $(document).ready(function() {
   });
 });
 
+function make_ontology_complete_url(annotation_type) {
+  return application_root + 'ws/lookup/ontology/' + annotation_type;
+}
+
 var ferret_choose = {
   // element 0 is the orginal text we searched for, last element is the current
   // selected term, the other elements are the history/trail
@@ -33,8 +37,7 @@ var ferret_choose = {
   matching_synonym : undefined,
 
   initialise : function(annotation_type, annotation_namespace) {
-    ferret_choose.ontology_complete_url =
-      application_root + 'ws/lookup/ontology/' + annotation_type;
+    ferret_choose.ontology_complete_url = make_ontology_complete_url(annotation_type);
     ferret_choose.annotation_type = annotation_type;
     ferret_choose.annotation_namespace = annotation_namespace;
   },
@@ -721,11 +724,29 @@ $(document).ready(function() {
     buttons : add_allele_buttons,
   });
 
+  function fetch_conditions(search, showChoices) {
+    $.ajax({
+      url: make_ontology_complete_url('phenotype_condition'),
+      data: { term: search.term },
+      dataType: "json",
+      success: function(data) {
+        var choices = $.map( data, function( item ) {
+          return {
+            label: item.label+" ("+ item.id +")",
+            value: item.value
+          }
+        });
+        showChoices(choices);
+      },
+    });
+  };
+
   $('#curs-allele-add .curs-allele-conditions').tagit({
     availableTags: allele_condition_names,
     itemName: 'curs-allele-condition-names',
     allowSpaces: true,
     placeholderText: 'Type a condition ...',
+    tagSource: fetch_conditions,
   });
 
   $('#curs-add-allele-details').click(function () {

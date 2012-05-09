@@ -1229,17 +1229,6 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
   $c->forward('View::JSON');
 }
 
-sub _get_allele_condition_names
-{
-  my $config = shift;
-
-  my $ontology_lookup = PomCur::Track::get_adaptor($config, 'ontology');
-
-  return map {
-    $_->{name};
-  } $ontology_lookup->get_all(ontology_name => 'phenotype_condition');
-}
-
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;
@@ -1285,7 +1274,6 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   $st->{evidence_select_options} = \@evidence_codes;
   $st->{alleles_in_progress} = $annotation->data()->{alleles_in_progress} // {};
-  $st->{allele_condition_names} = [_get_allele_condition_names($config)];
 
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
 }
