@@ -981,7 +981,10 @@ sub _maybe_transfer_annotation
 
   my $gene_count = $schema->resultset('Gene')->count();
 
-  if ($annotation_config->{category} eq 'ontology' && $gene_count > 1) {
+  my $current_user = $c->user();
+
+  if ($annotation_config->{category} eq 'ontology' && $gene_count > 1 ||
+      defined $current_user && $current_user->is_admin()) {
     _redirect_and_detach($c, 'annotation', 'transfer',
                          $annotation->annotation_id());
   } else {
