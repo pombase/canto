@@ -748,7 +748,6 @@ $(document).ready(function() {
       add_allele_dialog.find('.curs-allele-description-input').val(ui.item.description);
       var label = add_allele_dialog.find('.curs-allele-type-label');
       label.hide();
-      return false;
     }
 
   });

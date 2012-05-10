@@ -1248,12 +1248,15 @@ sub _get_all_alleles
 {
   my $config = shift;
   my $schema = shift;
+  my $gene = shift;
 
   my %results = ();
 
-  my $ann_rs = $schema->resultset('Annotation');
+  my $allele_rs =
+    $schema->resultset('Allele')->search({
+      gene => $gene->gene_id(),
+    });
 
-  my $allele_rs = $schema->resultset('Allele');
   while (defined (my $allele = $allele_rs->next())) {
     my $allele_display_name = $allele->display_name();
     $results{$allele_display_name} = {
@@ -1262,6 +1265,8 @@ sub _get_all_alleles
       primary_identifier => $allele->primary_identifier(),
     };
   }
+
+  my $ann_rs = $gene->direct_annotations();
 
   while (defined (my $annotation = $ann_rs->next())) {
     my $data = $annotation->data();
@@ -1329,7 +1334,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   $st->{evidence_select_options} = \@evidence_codes;
 
-  my %existing_alleles_by_name = _get_all_alleles($config, $schema);
+  my %existing_alleles_by_name = _get_all_alleles($config, $schema, $gene);
   $st->{existing_alleles_by_name} =
     [
       map {
