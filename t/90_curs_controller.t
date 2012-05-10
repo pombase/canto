@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 27;
+use Test::More tests => 31;
 use Test::Deep;
 
 use Data::Compare;
@@ -157,6 +157,91 @@ is($curs_schema->resultset('Gene')->count(), 0);
 # utility methods
 my $iso_date = PomCur::Controller::Curs::_get_iso_date();
 like ($iso_date, qr(^\d+-\d+-\d+$));
+
+
+# test _get_all_alleles() - make some allele and gene data first
+
+my $pub_for_allele = $curs_schema->resultset('Pub')->first();
+my $annotation_for_allele =
+  $curs_schema->create_with_type('Annotation',
+                                 {
+                                   type => 'single_gene_phenotype',
+                                   status => 'new',
+                                   pub => $pub_for_allele,
+                                   creation_date => $iso_date,
+                                   data => {
+                                     term_ontid => 'FYPO:0000013',
+                                   },
+                                 });
+
+
+PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
+                                                 \@known_genes);
+
+my $gene_rs = $curs_schema->resultset('Gene');
+is ($gene_rs->count(), 3);
+
+my $gene_for_allele = $gene_rs->find({ primary_identifier => "SPCC1739.10" });
+
+my $allele =
+  $curs_schema->create_with_type('Allele',
+                                 {
+                                   name => 'existing_allele_name',
+                                   description => 'desc',
+                                   primary_identifier => 'SPCC1739.10:allele-1',
+                                   type => 'existing',
+                                   gene => $gene_for_allele->gene_id(),
+                                 });
+
+$curs_schema->create_with_type('AlleleAnnotation',
+                               {
+                                 allele => $allele->allele_id(),
+                                 annotation => $annotation_for_allele->annotation_id(),
+                               });
+
+
+my %allele_creation_data_1 = (
+  name => 'test_name_1',
+  description => 'test_desc_1',
+  conditions => ['low temperature'],
+  evidence => 'Western blot assay',
+  expression => 'Endogenous',
+);
+
+PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
+                                                      $annotation_for_allele,
+                                                      \%allele_creation_data_1);
+
+my %allele_creation_data_2 = (
+  name => 'an_allele',
+  description => undef,
+  conditions => ['low temperature'],
+  evidence => 'Enzyme assay data',
+  expression => 'Overexpression',
+);
+
+PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
+                                                      $annotation_for_allele,
+                                                      \%allele_creation_data_2);
+
+my %all_alleles = PomCur::Controller::Curs::_get_all_alleles($config, $curs_schema);
+
+is ($all_alleles{'test_name_1(test_desc_1)'}->{name}, $allele_creation_data_1{name});
+is ($all_alleles{'an_allele(unknown)'}->{description}, undef);
+is ($all_alleles{'existing_allele_name(desc)'}->{primary_identifier}, 'SPCC1739.10:allele-1');
+
+my %allele_creation_data_3 = (
+  name => '',
+  description => 'unknown',
+  conditions => ['low temperature'],
+  evidence => 'Enzyme assay data',
+  expression => 'Overexpression',
+);
+
+PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
+                                                      $annotation_for_allele,
+                                                      \%allele_creation_data_2);
+
 
 
 done_testing;

@@ -1168,17 +1168,13 @@ sub allele_remove_action : Chained('top') PathPart('annotation/remove_allele_act
   $c->forward('View::JSON');
 }
 
-sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') Args(1)
+# add a new blob of allele data to alleles_in_progress in the annotation
+sub _allele_add_action_internal
 {
-  my ($self, $c, $annotation_id) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  $self->_check_annotation_exists($c, $annotation_id);
-
-  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+  my $config = shift;
+  my $schema = shift;
+  my $annotation = shift;
+  my $allele_data_ref = shift;
 
   my $data = $annotation->data();
   my $alleles_in_progress = $data->{alleles_in_progress} // { };
@@ -1190,9 +1186,32 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
     }
   } keys %$alleles_in_progress;
 
-  my $params = $c->req()->params();
-
   my $new_allele_id = $max_id + 1;
+
+  my $new_allele_data = {
+    id => $new_allele_id,
+    %$allele_data_ref,
+  };
+
+  $alleles_in_progress->{$new_allele_id} = $new_allele_data;
+  $data->{alleles_in_progress} = $alleles_in_progress;
+  $annotation->data($data);
+  $annotation->update();
+
+  return $new_allele_data;
+}
+
+sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+
+  my $params = $c->req()->params();
 
   my $condition_list = $params->{'curs-allele-condition-names[tags][]'};
 
@@ -1211,22 +1230,58 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
     $description = $params->{'curs-allele-type'};
   }
 
-  my $new_allele_data = {
-    id => $new_allele_id,
-    name => $allele_name,
-    description => $description,
-    expression => $params->{'curs-allele-expression'},
-    evidence => $params->{'curs-allele-evidence-select'},
-    conditions => $condition_list
-  };
+  my %allele_data = (name => $allele_name,
+                     description => $description,
+                     expression => $params->{'curs-allele-expression'},
+                     evidence => $params->{'curs-allele-evidence-select'},
+                     conditions => $condition_list);
 
-  $alleles_in_progress->{$new_allele_id} = $new_allele_data;
-  $data->{alleles_in_progress} = $alleles_in_progress;
-  $annotation->data($data);
-  $annotation->update();
+  my $new_allele_data =
+    _allele_add_action_internal($config, $schema, $annotation,
+                                \%allele_data);
 
   $c->stash->{json_data} = $new_allele_data;
   $c->forward('View::JSON');
+}
+
+sub _get_all_alleles
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my %results = ();
+
+  my $ann_rs = $schema->resultset('Annotation');
+
+  my $allele_rs = $schema->resultset('Allele');
+  while (defined (my $allele = $allele_rs->next())) {
+    my $allele_display_name = $allele->display_name();
+    $results{$allele_display_name} = {
+      name => $allele->name(),
+      description => $allele->description(),
+      primary_identifier => $allele->primary_identifier(),
+    };
+  }
+
+  while (defined (my $annotation = $ann_rs->next())) {
+    my $data = $annotation->data();
+
+    if (exists $data->{alleles_in_progress}) {
+      for my $allele_data (values %{$data->{alleles_in_progress}}) {
+        my $allele_display_name =
+          PomCur::Curs::Utils::make_allele_display_name($allele_data->{name},
+                                                        $allele_data->{description});
+        if (!exists $results{$allele_display_name}) {
+          $results{$allele_display_name} = {
+            name => $allele_data->{name},
+            description => $allele_data->{description},
+          };
+        }
+      }
+    }
+  }
+
+  return %results;
 }
 
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1)
@@ -1273,6 +1328,10 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   my @evidence_codes = _generate_evidence_options($evidence_types, $annotation_type_config);
 
   $st->{evidence_select_options} = \@evidence_codes;
+
+  my @existing_alleles = _get_all_alleles($config, $schema);
+  $st->{existing_alleles} = \@existing_alleles;
+
   $st->{alleles_in_progress} = $annotation->data()->{alleles_in_progress} // {};
 
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
