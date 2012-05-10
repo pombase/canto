@@ -1329,8 +1329,16 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   $st->{evidence_select_options} = \@evidence_codes;
 
-  my @existing_alleles = _get_all_alleles($config, $schema);
-  $st->{existing_alleles} = \@existing_alleles;
+  my %existing_alleles_by_name = _get_all_alleles($config, $schema);
+  $st->{existing_alleles_by_name} =
+    [
+      map {
+        {
+          value => $existing_alleles_by_name{$_}->{name},
+          description => $existing_alleles_by_name{$_}->{description},
+        }
+      } keys %existing_alleles_by_name
+    ];
 
   $st->{alleles_in_progress} = $annotation->data()->{alleles_in_progress} // {};
 
