@@ -126,6 +126,8 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->many_to_many('annotations' => 'allele_annotations',
                           'annotation');
 
+use PomCur::Curs::Utils;
+
 =head2 display_name
 
  Usage   : my $display_name = $allele->display_name();
@@ -138,10 +140,8 @@ sub display_name
 {
   my $self = shift;
 
-  my $name = $self->name() // 'noname';
-  my $description = $self->description() // 'unknown';
-
-  return "$name($description)";
+  return PomCur::Curs::Utils::make_allele_display_name($self->name(),
+                                                       $self->description());
 }
 
 

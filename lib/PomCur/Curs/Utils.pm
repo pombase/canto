@@ -580,4 +580,20 @@ sub store_all_statuses
   }
 }
 
+=head2 make_allele_display_name
+
+ Usage   : $dis_name = make_allele_display_name($name, $description);
+ Function: make an allele display name from a name and description
+ Args    : $name - the allele name (can be undef)
+           $description - the allele description (can be undef)
+ Returns : a display name of the form "name(description)"
+
+=cut
+sub make_allele_display_name
+{
+  my $name = shift // 'noname';
+  my $description = shift // 'unknown';
+
+  return "$name($description)";
+}
 1;
