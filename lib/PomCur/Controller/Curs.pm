@@ -1341,6 +1341,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
         {
           value => $existing_alleles_by_name{$_}->{name},
           description => $existing_alleles_by_name{$_}->{description},
+          display_name => $_,
         }
       } keys %existing_alleles_by_name
     ];

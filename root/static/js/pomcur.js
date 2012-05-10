@@ -749,8 +749,12 @@ $(document).ready(function() {
       var label = add_allele_dialog.find('.curs-allele-type-label');
       label.hide();
     }
-
-  });
+  }).data("autocomplete" )._renderItem = function(ul, item) {
+    return $( "<li></li>" )
+      .data( "item.autocomplete", item )
+      .append( "<a>" + item.display_name + "</a>" )
+      .appendTo( ul );
+  };
 
   $('#curs-allele-add .curs-allele-conditions').tagit({
     minLength: 2,
