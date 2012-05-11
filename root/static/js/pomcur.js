@@ -727,13 +727,14 @@ $(document).ready(function() {
   function fetch_conditions(search, showChoices) {
     $.ajax({
       url: make_ontology_complete_url('phenotype_condition'),
-      data: { term: search.term },
+      data: { term: search.term, def: 1, },
       dataType: "json",
       success: function(data) {
         var choices = $.map( data, function( item ) {
           return {
             label: item.name,
-            value: item.name
+            value: item.name,
+            definition: item.definition,
           }
         });
         showChoices(choices);
@@ -762,6 +763,24 @@ $(document).ready(function() {
     allowSpaces: true,
     placeholderText: 'Type a condition ...',
     tagSource: fetch_conditions,
+    autocompleteOptions: {
+      focus: function(event, ui) {
+        $('.curs-autocomplete-definition').remove();
+        var def = 
+          $('<div class="curs-autocomplete-definition"><h3>Definition</h3><div>' + ui.item.definition + '</div></div>');
+	def.addClass('ui-widget-content ui-autocomplete ui-corner-all')
+	  .appendTo('body');
+        var widget = $(this).autocomplete("widget");
+        def.position({
+          my: 'left top',
+          at: 'right top',
+          of: widget
+        });
+      },
+      close: function() {
+        $('.curs-autocomplete-definition').remove();
+      },
+    },
   });
 
   $('#curs-add-allele-details').click(function () {

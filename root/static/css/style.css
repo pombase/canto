@@ -547,6 +547,19 @@ div.clearall {
   font-size: 60%;
 }
 
+.curs-autocomplete-definition h3 {
+  padding: 0;
+  margin: 0;
+}
+.curs-autocomplete-definition {
+  font-size: 60%;
+  width: 18em;
+  height: 12em;
+  z-index: 999999;
+  position: absolute;
+  overflow: auto;
+}
+
 #ferret-term-entry {
   width: 75%;
   margin-top: 10px;
