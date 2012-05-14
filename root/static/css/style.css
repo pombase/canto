@@ -937,6 +937,12 @@ input[readonly="1"] {
   padding-left: 20px;
 }
 
+#curs-allele-add .curs-allele-reuse {
+  border-top: 1px solid grey;
+  padding: 5px;
+  float: right;
+}
+
 form label.error {
   padding-left: 1em;
   color: red;
