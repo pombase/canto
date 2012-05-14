@@ -552,9 +552,9 @@ div.clearall {
   margin: 0;
 }
 .curs-autocomplete-definition {
-  font-size: 60%;
-  width: 18em;
-  height: 12em;
+  font-size: 70%;
+  width: 20em;
+  min-height: 5em;
   z-index: 999999;
   position: absolute;
   overflow: auto;
