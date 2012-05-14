@@ -692,11 +692,11 @@ $(document).ready(function() {
   function add_allele_confirm() {
     var $form = $('#curs-allele-add form');
     if ($form.validate().form()) {
-    $form.ajaxSubmit({
-      dataType: 'json',
-      success: add_allele_row
-    });
-    $(this).dialog("close");
+      $form.ajaxSubmit({
+        dataType: 'json',
+        success: add_allele_row
+      });
+      $(this).dialog("close");
     }
   }
 
