@@ -774,16 +774,18 @@ $(document).ready(function() {
     autocompleteOptions: {
       focus: function(event, ui) {
         $('.curs-autocomplete-definition').remove();
-        var def = 
-          $('<div class="curs-autocomplete-definition"><h3>Definition</h3><div>' + ui.item.definition + '</div></div>');
-	def.addClass('ui-widget-content ui-autocomplete ui-corner-all')
-	  .appendTo('body');
-        var widget = $(this).autocomplete("widget");
-        def.position({
-          my: 'left top',
-          at: 'right top',
-          of: widget
-        });
+        if (ui.item.definition != null) {
+          var def = 
+            $('<div class="curs-autocomplete-definition"><h3>Definition</h3><div>' + ui.item.definition + '</div></div>');
+	  def.addClass('ui-widget-content ui-autocomplete ui-corner-all')
+	    .appendTo('body');
+          var widget = $(this).autocomplete("widget");
+          def.position({
+            my: 'left top',
+            at: 'right top',
+            of: widget
+          });
+        }
       },
       close: function() {
         $('.curs-autocomplete-definition').remove();
