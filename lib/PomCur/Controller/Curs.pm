@@ -1201,6 +1201,12 @@ sub _allele_add_action_internal
   $annotation->data($data);
   $annotation->update();
 
+  my $allele_display_name =
+    PomCur::Curs::Utils::make_allele_display_name($allele_data_ref->{name},
+                                                  $allele_data_ref->{description});
+
+  $new_allele_data->{display_name} = $allele_display_name;
+
   return $new_allele_data;
 }
 
