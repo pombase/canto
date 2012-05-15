@@ -696,12 +696,14 @@ $(document).ready(function() {
         dataType: 'json',
         success: add_allele_row
       });
-      if ($form.find('input[name="curs-allele-reuse-dialog"]').is(':checked')) {
+      var $reuse_checkbox = $form.find('input[name="curs-allele-reuse-dialog"]');
+      if ($reuse_checkbox.is(':checked')) {
         $.pnotify({
           pnotify_title: 'Notice',
           pnotify_text: 'Allele successfully added',
         });
         $('#curs-allele-add .curs-allele-conditions').tagit("removeAll");
+        $reuse_checkbox.attr('checked', false);
       } else {
         $(this).dialog("close");
       }
