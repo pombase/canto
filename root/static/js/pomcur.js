@@ -718,7 +718,7 @@ $(document).ready(function() {
       click: add_allele_cancel,
     },
     {
-      text: "Confirm",
+      text: "Add",
       click: add_allele_confirm
     },
   ];
