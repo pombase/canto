@@ -31,7 +31,7 @@
 
 <%init>
 my $current_path_uri = $c->stash()->{current_path_uri};
-my $gene = $c->stash()->{gene};
+my $gene = $c->stash()->{gene_proxy};
 my $pub = $c->stash()->{pub};
 my $curs_root_uri = $c->stash()->{curs_root_uri};
 my $gene_url;
