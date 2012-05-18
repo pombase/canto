@@ -965,6 +965,7 @@ evidence_types:
   'Affinity Capture-RNA': ~
   'Affinity Capture-Western': ~
   'Biochemical Activity': ~
+  'Chromatography evidence': ~
   'Co-crystal Structure': ~
   'Co-fractionation': ~
   'Co-localization': ~
