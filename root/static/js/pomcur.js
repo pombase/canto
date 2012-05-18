@@ -684,6 +684,8 @@ $(document).ready(function() {
       existing_alleles_by_name.push({ value: name, description: description,
                                       display_name: data.display_name });
     }
+
+    $new_row.data('allele_data', data);
   }
 
   if (typeof(alleles_in_progress) != 'undefined') {
@@ -697,12 +699,55 @@ $(document).ready(function() {
     });
   }
 
+  function _make_condition_buttons(add_allele_dialog) {
+    var used_conditions = {};
+    $allele_table.find('tr').map(function(idx, el) {
+      var el_allele_data = $(el).data('allele_data');
+      if (typeof(el_allele_data) != 'undefined') {
+        $.map(el_allele_data.conditions,
+              function(cond, idx) {
+                used_conditions[cond] = true;
+              });
+      }
+    });
+    var button_html = '';
+
+    var used_buttons = $('#curs-allele-add').find('.curs-allele-condition-buttons');
+
+    used_buttons.find('button').remove();
+
+    $.each(used_conditions,
+           function(cond) {
+             button_html += '<button class="ui-widget ui-state-default curs-allele-condition-button">' +
+               cond + '</button>';
+           });
+
+    if (button_html === '') {
+      used_buttons.hide();
+    } else {
+      used_buttons.show();
+      used_buttons.append(button_html);
+
+      $('.curs-allele-condition-buttons button').click(function() {
+        $('#curs-allele-add .curs-allele-conditions').tagit("createTag", $(this).find('span').text());
+        return false;
+      }).button({
+        icons: {
+          secondary: "ui-icon-plus"
+        }
+      });
+    }
+  }
+
   function add_allele_confirm() {
     var $form = $('#curs-allele-add form');
     if ($form.validate().form()) {
       $form.ajaxSubmit({
         dataType: 'json',
-        success: add_allele_row
+        success: function(data) {
+          add_allele_row(data);
+          _make_condition_buttons(add_allele_dialog);
+        },
       });
       var $reuse_checkbox = $form.find('input[name="curs-allele-reuse-dialog"]');
       if ($reuse_checkbox.is(':checked')) {
@@ -755,6 +800,8 @@ $(document).ready(function() {
           .append( "<a>" + item.display_name + "</a>" )
           .appendTo( ul );
       };
+
+      _make_condition_buttons(add_allele_dialog);
     },
   });
 

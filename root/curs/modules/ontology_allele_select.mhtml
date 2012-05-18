@@ -107,6 +107,9 @@ var annotation_id = <% $annotation->annotation_id() %>;
         </td>
       </tr>
     </table>
+    <div class="curs-allele-condition-buttons">
+      <div>Previously used conditions:</div>
+    </div>
     <div class="curs-allele-reuse">
       <input type="checkbox" name="curs-allele-reuse-dialog" value="Reuse"/>Reuse with new condition(s)<br/>
     </div>

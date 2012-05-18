@@ -947,3 +947,7 @@ form label.error {
   padding-left: 1em;
   color: red;
 }
+
+.curs-allele-condition-button span.ui-button-text {
+  font-size: 80%;
+}
