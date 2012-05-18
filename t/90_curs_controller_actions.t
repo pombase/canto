@@ -51,6 +51,7 @@ sub upload_genes
   $cookie_jar->add_cookie_header($req);
 
   my $res = $cb->($req);
+  $cookie_jar->extract_cookies($res);
 
   is $res->code, 302, $res->content();
 
@@ -59,12 +60,13 @@ sub upload_genes
   is ($redirect_url, "$root_url/confirm_genes");
 
   my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+  $cookie_jar->add_cookie_header($redirect_req);
   my $redirect_res = $cb->($redirect_req);
 
   my $content = $redirect_res->content();
 
   like ($content, qr/Confirm gene list/);
-  like ($content, qr/cdc11/);
+  like ($content, qr:<span class="curs-matched-search-term">cdc11</span>:);
 
   if ($multiple_organisms) {
     like ($content, qr/Saccharomyces/);
