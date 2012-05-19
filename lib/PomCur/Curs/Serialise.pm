@@ -152,6 +152,9 @@ sub _get_alleles
     if (defined $allele->description()) {
       $allele_data{description} = $allele->description();
     }
+    if (defined $allele->name()) {
+      $allele_data{name} = $allele->name();
+    }
     push @ret, \%allele_data;
   }
 

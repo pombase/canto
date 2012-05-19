@@ -115,6 +115,7 @@ my $full_expected_curation_session =
               },
               type => 'existing',
               description => 'deletion',
+              name => 'ssm4delta',
             }
           ],
         },
