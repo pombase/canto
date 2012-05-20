@@ -92,13 +92,6 @@ sub new
   $config->{implementation_classes}->{interaction_annotation_adaptor} =
     'PomCur::Chado::InteractionAnnotationLookup';
 
-  $config->{'Model::ChadoModel'} = {
-    schema_class => 'PomCur::ChadoDB',
-    connect_info => [
-      "dbi:SQLite:dbname=$root_dir/t/data/chado_test_db.sqlite3"
-      ]
-    };
-
   $self->{config} = $config;
 
   return bless $self, $class;
@@ -200,6 +193,19 @@ sub init_test
       copy "$data_dir/$db_file_name", $temp_dir or die "$!";
     }
   }
+
+  my $chado_test_db_file = $test_config->{test_chado_db};
+  copy "$data_dir/$chado_test_db_file", $temp_dir or die "$!";
+  my $test_chado_db_copy ="$temp_dir/$chado_test_db_file";
+  $self->{chado_schema} =
+    PomCur::DBUtil::schema_for_file($config, $test_chado_db_copy,
+                                    'Chado');
+  $config->{'Model::ChadoModel'} = {
+    schema_class => 'PomCur::ChadoDB',
+    connect_info => [
+      "dbi:SQLite:dbname=$test_chado_db_copy",
+    ],
+  };
 
   if ($args->{copy_ontology_index}) {
     my $ontology_index_dir = $config->{ontology_index_dir};
@@ -344,6 +350,21 @@ sub track_schema
 {
   my $self = shift;
   return $self->{track_schema};
+}
+
+=head2 chado_schema
+
+ Usage   : my $test_util = PomCur::TestUtil->new();
+           $test_util->init_test();
+           my $chado_schema = $test_util->chado_schema();
+ Function: Return a schema object for the test chado database
+ Args    : name
+
+=cut
+sub chado_schema
+{
+  my $self = shift;
+  return $self->{chado_schema};
 }
 
 =head2 temp_dir
