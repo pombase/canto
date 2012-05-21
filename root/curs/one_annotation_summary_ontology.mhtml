@@ -12,6 +12,11 @@ $annotation_data
       <th>
         Gene name
       </th>
+% if (defined $annotation_data->{allele_display_name}) {
+      <th>
+        Allele
+      </th>
+% }
       <th>
         Term ID
       </th>
@@ -41,6 +46,11 @@ $annotation_data
     <td>
       <% $annotation_data->{gene_name} %>
     </td>
+% if (defined $annotation_data->{allele_display_name}) {
+    <td>
+      <% $annotation_data->{allele_display_name} %>
+    </td>
+% }
     <td>
       <% $annotation_data->{term_ontid} %>
     </td>

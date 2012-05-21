@@ -1479,6 +1479,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   } else {
     my $allele = $annotation->alleles()->first();
     $display_name = $allele->display_name();
+    $gene = $allele->gene();
   }
 
   $st->{title} = "Transfer annotation from $display_name";
