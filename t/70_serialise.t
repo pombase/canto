@@ -378,9 +378,6 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
   my $curs_json = PomCur::Curs::Serialise::json($curs_schema, { dump_all => 0 });
   my $curs_ref = decode_json($curs_json);
 
-  use Data::Dumper;
-  warn Dumper([$curs_ref, $small_expected_curation_session]);
-
   cmp_deeply($curs_ref, $small_expected_curation_session);
 }
 
