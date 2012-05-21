@@ -1456,11 +1456,32 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my $module_category = $annotation_config->{category};
 
-  my $gene = $annotation->genes()->first();
-  my $gene_proxy = _get_gene_proxy($config, $gene);
-  my $gene_display_name = $gene_proxy->display_name();
+  my $display_name = undef;
 
-  $st->{title} = "Transfer annotation from $gene_display_name";
+  my $gene = $annotation->genes()->first();
+
+  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
+
+  my @options = ();
+
+  if (defined $gene) {
+    my $gene_proxy = _get_gene_proxy($config, $gene);
+    $display_name = $gene_proxy->display_name();
+
+    while (defined (my $other_gene = $genes_rs->next())) {
+      next if $gene->gene_id() == $other_gene->gene_id();
+
+      my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
+
+      push @options, { value => $other_gene_proxy->gene_id(),
+                       label => $other_gene_proxy->long_display_name() };
+    }
+  } else {
+    my $allele = $annotation->alleles()->first();
+    $display_name = $allele->display_name();
+  }
+
+  $st->{title} = "Transfer annotation from $display_name";
   $st->{show_title} = 0;
   $st->{template} = "curs/modules/${module_category}_transfer.mhtml";
 
@@ -1468,20 +1489,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   $form->auto_fieldset(0);
 
-  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
-
   my $gene_count = $genes_rs->count();
-
-  my @options = ();
-
-  while (defined (my $other_gene = $genes_rs->next())) {
-    next if $gene->gene_id() == $other_gene->gene_id();
-
-    my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
-
-    push @options, { value => $other_gene_proxy->gene_id(),
-                     label => $other_gene_proxy->long_display_name() };
-  }
 
   my $transfer_select_genes_text;
 
@@ -1497,21 +1505,26 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my @all_elements = (
       {
-        type => 'Block',
-        tag => 'div',
-        content => $transfer_select_genes_text,
-      },
-      {
-        name => 'dest', label => 'dest',
-        type => 'Checkboxgroup',
-        container_tag => 'div',
-        label => '',
-        options => [@options],
-      },
-      {
         name => 'transfer-submit', type => 'Submit', value => 'Finish',
       }
     );
+
+  if (@options) {
+    unshift @all_elements, (
+        {
+          type => 'Block',
+          tag => 'div',
+          content => $transfer_select_genes_text,
+        },
+        {
+          name => 'dest', label => 'dest',
+          type => 'Checkboxgroup',
+          container_tag => 'div',
+          label => '',
+          options => [@options],
+        },
+      );
+  }
 
   if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
     my %extension_def = (
