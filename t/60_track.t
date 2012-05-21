@@ -44,7 +44,7 @@ my $data_directory = $config->{data_directory};
 
 my @existing_files = glob("$data_directory/*.sqlite3");
 
-is(@existing_files, 3);
+is(@existing_files, 4);
 ok(grep { $_ eq "$data_directory/track.sqlite3" } @existing_files);
 
 PomCur::Track::create_curs_db($config, $curs);
@@ -55,12 +55,13 @@ is(@results, 3);
 
 
 my @files_after = sort glob("$data_directory/*.sqlite3");
-is(@files_after, 4);
+is(@files_after, 5);
 
 my $new_curs_db = "$data_directory/curs_$key.sqlite3";
 
 cmp_deeply([@files_after],
            [
+             "$data_directory/chado_test_db.sqlite3",
              "$data_directory/curs_aaaa0006.sqlite3",
              "$data_directory/curs_aaaa0007.sqlite3",
              $new_curs_db,
