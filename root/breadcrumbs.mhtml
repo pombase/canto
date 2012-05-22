@@ -1,5 +1,5 @@
 <div id="breadcrumbs">
-% if ($current_pathquery ne '/') {
+% if ($current_path ne '/' && $current_path ne '/tools/canto_front_page') {
   <a id="breadcrumbs-home-link" class="breadcrumbs-link" 
      href="<% $home_path %>" title="Go to the home page">
     Home
@@ -9,5 +9,5 @@
 
 <%init>
 my $home_path = $c->uri_for('/');
-my $current_pathquery = $c->req->uri()->path_query();
+my $current_path = $c->req->uri()->path_query();
 </%init>
