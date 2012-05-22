@@ -9,5 +9,5 @@
 
 <%init>
 my $home_path = $c->uri_for('/');
-my $current_path = $c->req->uri()->path_query();
+my $current_path = $c->local_path();
 </%init>
