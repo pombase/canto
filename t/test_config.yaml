@@ -9,6 +9,7 @@ test_config:
     - genus: Saccharomyces
       species: cerevisiae
       taxonid: 4932
+  test_chado_db: "chado_test_db.sqlite3"
   test_genes_file: "t/data/pombe_genes.txt"
   test_genes_file_organism_2: "t/data/cerevisiae_genes.txt"
   test_go_obo_file: "t/data/go_small.obo"

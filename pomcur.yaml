@@ -4,7 +4,7 @@ long_name: Pombe community curation application
 database_name: PomBase
 header_image: logos/curation_tool.png
 
-app_version: v355
+app_version: v365
 
 schema_version: 0
 
@@ -1015,6 +1015,7 @@ evidence_types:
   'Affinity Capture-RNA': ~
   'Affinity Capture-Western': ~
   'Biochemical Activity': ~
+  'Chromatography evidence': ~
   'Co-crystal Structure': ~
   'Co-fractionation': ~
   'Co-localization': ~

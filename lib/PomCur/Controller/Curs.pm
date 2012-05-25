@@ -634,7 +634,7 @@ sub gene_upload : Chained('top') Args(0) Form
         $c->detach();
         return 0;
       } else {
-        $c->flash()->{hightlight_terms} = [@search_terms];
+        $c->flash()->{highlight_terms} = [@search_terms];
         _redirect_and_detach($c, 'confirm_genes');
       }
     }
@@ -964,7 +964,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   my $gene = $schema->find_with_type('Gene', $gene_id);
 
   my $gene_proxy = _get_gene_proxy($config, $gene);
-  $st->{gene} = $gene_proxy;
+  $st->{gene_proxy} = $gene_proxy;
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 

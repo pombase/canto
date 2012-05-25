@@ -126,6 +126,7 @@ div#footer .sponsor {
   float: left; text-decoration: none;
   color: white;
   padding: 4px 10px;
+  white-space: nowrap;
 }
 #menu ul li span {
   float: left; text-decoration: none;
@@ -183,6 +184,7 @@ div#footer .sponsor {
   top: 0px;
   font-size: 80%;
   margin-left: -10px;
+  white-space: nowrap;
 }
 #breadcrumbs ul {
   margin: 0; padding: 0;
@@ -219,6 +221,7 @@ div#footer .sponsor {
   clear: right;
   float: right;
   font-size: 80%;
+  white-space: nowrap;
 }
 .dialog-submit {
   clear: right;
@@ -377,6 +380,11 @@ table.list thead img.sort-direction-icon {
 .actionlist ul li {
     list-style: none;
     white-space: nowrap;
+}
+
+/* FormFu errors */
+.error_message {
+  color: red;
 }
 
 /* editing: */
