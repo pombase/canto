@@ -381,6 +381,11 @@ table.list thead img.sort-direction-icon {
     white-space: nowrap;
 }
 
+/* FormFu errors */
+.error_message {
+  color: red;
+}
+
 /* editing: */
 div.submit {
     float: right;
