@@ -125,6 +125,7 @@ div#footer .sponsor {
   float: left; text-decoration: none;
   color: white;
   padding: 4px 10px;
+  white-space: nowrap;
 }
 #menu ul li span {
   float: left; text-decoration: none;
@@ -182,6 +183,7 @@ div#footer .sponsor {
   top: 0px;
   font-size: 80%;
   margin-left: -10px;
+  white-space: nowrap;
 }
 #breadcrumbs ul {
   margin: 0; padding: 0;
