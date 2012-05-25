@@ -220,6 +220,7 @@ div#footer .sponsor {
   clear: right;
   float: right;
   font-size: 80%;
+  white-space: nowrap;
 }
 .dialog-submit {
   clear: right;
