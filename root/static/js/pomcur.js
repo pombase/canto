@@ -361,10 +361,11 @@ $(document).ready(function() {
       minLength: 2,
       source: ferret_choose.ontology_complete_url,
       cacheLength: 100,
-      mustMatch: false,
-      selectFirst: true,
+      focus: function(event, ui) {
+        return false;
+      },
       select: function(event, ui) {
-        ferret_choose.term_history =[trim(ferret_input.val())];
+        ferret_choose.term_history = [trim(ferret_input.val())];
         ferret_choose.set_current_term(ui.item.id);
         ferret_choose.matching_synonym = ui.item.matching_synonym;
         return false;
