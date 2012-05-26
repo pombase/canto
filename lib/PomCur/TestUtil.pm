@@ -565,6 +565,7 @@ sub make_base_track_db
   my $go_obo_file = $config->{test_config}->{test_go_obo_file};
   my $phenotype_obo_file = $config->{test_config}->{test_phenotype_obo_file};
   my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
+  my $pco_obo_file = $config->{test_config}->{test_pco_obo_file};
   my $relationship_obo_file =
     $config->{test_config}->{test_relationship_obo_file};
 
@@ -613,6 +614,8 @@ sub make_base_track_db
         $ontology_load->load($phenotype_obo_file, $ontology_index,
                              $synonym_types);
         $ontology_load->load($psi_mod_obo_file, $ontology_index,
+                             $synonym_types);
+        $ontology_load->load($pco_obo_file, $ontology_index,
                              $synonym_types);
       };
 
@@ -700,14 +703,46 @@ sub _load_curs_db_data
   __PACKAGE__->set_metadata($cursdb_schema, 'submitter_name',
                             $curs_config->{submitter_name});
 
-  for my $gene_identifier (@{$curs_config->{genes}}) {
+  for my $gene_details (@{$curs_config->{genes}}) {
+    my @allele_detail_list = ();
+    my $gene_identifier;
+    if (ref($gene_details)) {
+      $gene_identifier = $gene_details->{primary_identifier};
+      if (defined $gene_details->{alleles}) {
+        @allele_detail_list = @{$gene_details->{alleles}};
+      }
+    } else {
+      $gene_identifier = $gene_details;
+    }
     my $result = $gene_lookup->lookup([$gene_identifier]);
     my @found = @{$result->{found}};
     if (@found != 1) {
       die "Expected 1 result for $gene_identifier not ", scalar(@found)
     }
 
-    PomCur::Controller::Curs->_create_genes($cursdb_schema, $result);
+    my %new_genes = PomCur::Controller::Curs->_create_genes($cursdb_schema, $result);
+
+    if (keys %new_genes != 1) {
+      die "Expected only 1 gene to be created";
+    }
+
+    my $new_gene = (values %new_genes)[0];
+
+    for my $allele_details (@allele_detail_list) {
+      my $allele_primary_identifier = $allele_details->{primary_identifier};
+      my $allele_description = $allele_details->{description};
+      my $allele_name = $allele_details->{name};
+
+      my %create_args = (
+        primary_identifier => $allele_primary_identifier,
+        type => 'existing',
+        description => $allele_description,
+        name => $allele_name,
+        gene => $new_gene->gene_id(),
+      );
+
+      my $allele = $cursdb_schema->create_with_type('Allele', \%create_args);
+    }
   }
 
   for my $annotation (@{$curs_config->{annotations}}) {

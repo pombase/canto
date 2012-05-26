@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 132;
+use Test::More tests => 106;
 
 use Data::Compare;
 
@@ -33,6 +33,7 @@ for my $annotation_type (@annotation_type_list) {
   my $annotation_type_name = $annotation_type->{name};
 
   next unless $annotation_type->{category} eq 'ontology';
+  next if $annotation_type->{needs_allele};
 
   my $cv_name = $annotation_type->{namespace} // $annotation_type->{name};
   my $cv = $track_schema->find_with_type('Cv', { name => $cv_name });
@@ -77,15 +78,17 @@ for my $annotation_type (@annotation_type_list) {
                        'ferret-term-entry' => $new_term->name());
 
       my $req = HTTP::Request->new(GET => $uri);
-
       my $res = $cb->($req);
-
       is $res->code, 302;
 
       my $redirect_url = $res->header('location');
 
       $new_annotation_id = $PomCur::Controller::Curs::_debug_annotation_id;
-      is ($redirect_url, "$root_url/annotation/evidence/$new_annotation_id");
+      if ($annotation_type->{needs_allele}) {
+        is ($redirect_url, "$root_url/annotation/allele_select/$new_annotation_id");
+      } else {
+        is ($redirect_url, "$root_url/annotation/evidence/$new_annotation_id");
+      }
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
@@ -94,8 +97,13 @@ for my $annotation_type (@annotation_type_list) {
       my $gene_proxy = PomCur::Controller::Curs::_get_gene_proxy($config, $gene);
       my $gene_display_name = $gene_proxy->display_name();
 
-      like ($redirect_res->content(),
-            qr/Choose evidence for annotating $gene_display_name with $term_db_accession/);
+      if ($annotation_type->{needs_allele}) {
+        like ($redirect_res->content(),
+              qr/Specify the allele\(s\) of $gene_display_name to annotate with $term_db_accession/);
+      } else {
+        like ($redirect_res->content(),
+              qr/Choose evidence for annotating $gene_display_name with $term_db_accession/);
+      }
 
       $new_annotation =
         $curs_schema->find_with_type('Annotation', $new_annotation_id);
@@ -179,6 +187,6 @@ for my $annotation_type (@annotation_type_list) {
 }
 
 my $an_rs = $curs_schema->resultset('Annotation');
-is ($an_rs->count(), 12);
+is ($an_rs->count(), 10);
 
 done_testing;

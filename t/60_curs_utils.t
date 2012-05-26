@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 54;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -49,6 +49,36 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
   is ($annotations[0]->{interacting_gene_identifier}, 'SPBC14F5.07');
   is ($annotations[1]->{interacting_gene_identifier}, 'SPAC27D7.13c');
 }
+
+my @annotation_type_list = @{$config->{annotation_type_list}};
+
+my $allele_count = 0;
+
+for my $annotation_type_config (@annotation_type_list) {
+  my ($completed_count, $annotations_ref) =
+    PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
+                                              $annotation_type_config->{name});
+
+  my @annotations = @$annotations_ref;
+
+  for my $annotation_row (@annotations) {
+    ok (length $annotation_row->{annotation_type} > 0);
+    ok (length $annotation_row->{evidence_code} > 0);
+
+    if ($annotation_type_config->{category} eq 'ontology') {
+      ok (length $annotation_row->{gene_name_or_identifier} > 0);
+      ok (length $annotation_row->{term_ontid} > 0);
+      ok (length $annotation_row->{term_name} > 0);
+
+      if ($annotation_type_config->{needs_allele}) {
+        ok (length $annotation_row->{allele_display_name} > 0);
+        $allele_count++;
+      }
+    }
+  }
+}
+
+ok ($allele_count > 0);
 
 {
   my $options = { pub_uniquename => 'PMID:10467002',

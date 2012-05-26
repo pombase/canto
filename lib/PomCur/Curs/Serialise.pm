@@ -81,14 +81,25 @@ sub _get_annotations
       $extra_data{term} = $term_ontid;
     }
 
-    push @ret, {
+    my %data = (
       status => $annotation->status(),
       publication => $annotation->pub->uniquename(),
       type => $annotation->type(),
       creation_date => $annotation->creation_date(),
-      genes => _get_genes($schema, $annotation),
       %extra_data,
-    };
+    );
+
+    my $genes = _get_genes($schema, $annotation);
+    my @alleles = _get_alleles($schema, $annotation);
+
+    if (keys %$genes) {
+      $data{genes} = $genes;
+    }
+    if (@alleles) {
+      $data{alleles} = \@alleles;
+    }
+
+    push @ret, \%data;
   }
 
   return \@ret;
@@ -114,6 +125,40 @@ sub _get_genes
   }
 
   return \%ret;
+}
+
+sub _get_alleles
+{
+  my $schema = shift;
+  my $annotation = shift;
+
+  my $rs = $annotation->alleles();
+  my @ret = ();
+
+  while (defined (my $allele = $rs->next())) {
+    my $gene = $allele->gene();
+    my $organism_full_name = $gene->organism()->full_name();
+    my %gene_data = (
+      organism => $organism_full_name,
+      uniquename => $gene->primary_identifier(),
+    );
+    my %allele_data = (
+      type => $allele->type(),
+      gene => \%gene_data,
+    );
+    if (defined $allele->primary_identifier()) {
+      $allele_data{primary_identifier} = $allele->primary_identifier();
+    }
+    if (defined $allele->description()) {
+      $allele_data{description} = $allele->description();
+    }
+    if (defined $allele->name()) {
+      $allele_data{name} = $allele->name();
+    }
+    push @ret, \%allele_data;
+  }
+
+  return @ret;
 }
 
 sub _get_organisms

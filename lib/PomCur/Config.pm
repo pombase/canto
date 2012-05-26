@@ -230,6 +230,13 @@ sub setup
     }
   }
 
+  # create an allele_type_list
+  if (defined $self->{allele_type_list}) {
+    for my $allele_type (@{$self->{allele_type_list}}) {
+      $self->{allele_types}->{$allele_type->{name}} = $allele_type;
+    }
+  }
+
   # create an annotation_types hash from the annotation_type_list
   if (defined $self->{annotation_type_list}) {
     for my $annotation_type (@{$self->{annotation_type_list}}) {

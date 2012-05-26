@@ -15,6 +15,7 @@ test_config:
   test_go_obo_file: "t/data/go_small.obo"
   test_phenotype_obo_file: "t/data/phenotype_small.obo"
   test_psi_mod_obo_file: "t/data/psi_mod_small.obo"
+  test_pco_obo_file: "t/data/pco_small.obo"
   test_relationship_obo_file: "etc/ro.obo"
   test_pubmed_xml: 'entrez_pubmed.xml'
   test_extra_publication: 'pubmed_18910671.xml'
@@ -100,9 +101,25 @@ test_config:
          current_gene: "SPCC576.16c"
          genes:
            - "SPCC576.16c"
-           - "SPAC27D7.13c"
+           - primary_identifier: "SPAC27D7.13c"
+             alleles:
+               - primary_identifier: 'SPAC27D7.13c:allele-1'
+                 name: ssm4delta
+                 description: deletion
+               - primary_identifier: 'SPAC27D7.13c:allele-2'
+                 name: R344A
+                 description: R344A
+               - primary_identifier: 'SPAC27D7.13c:allele-3'
+                 name: ssm4-D4
+                 description: 'del_100-200'
+               - primary_identifier: 'SPAC27D7.13c:allele-4'
+                 description: 'del_200-300'
            - "SPBC14F5.07"
-           - "SPCC63.05"
+           - primary_identifier: "SPCC63.05"
+             alleles:
+               - primary_identifier: "SPCC63.05:allele-1"
+                 name: SPCC63.05-unk
+                 description: unknown
          annotations:
            - type: biological_process
              status: new
@@ -143,14 +160,17 @@ test_config:
                interacting_genes:
                  - primary_identifier: SPBC14F5.07
                  - primary_identifier: SPAC27D7.13c
-           - type: phenotype
+           - type: single_gene_phenotype
              status: new
-             genes(Gene:primary_identifier):
-               - SPCC63.05
+             alleles(Allele:primary_identifier):
+               - SPAC27D7.13c:allele-1
              pub(Pub:uniquename): PMID:19756689
              data:
-               evidence_code: IDA
+               evidence_code: Epitope-tagged protein immunolocalization experiment data
                term_ontid: FYPO:0000013
+               expression: Overexpression
+               conditions:
+                 - high temperature
            - type: post_translational_modification
              status: new
              genes(Gene:primary_identifier):

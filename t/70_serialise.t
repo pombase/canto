@@ -80,34 +80,44 @@ my $full_expected_curation_session =
           status => 'new',
           creation_date => "2010-01-02",
           evidence_code => 'Synthetic Haploinsufficiency',
-          interacting_genes => [
-              {
-                primary_identifier => 'SPBC14F5.07',
-              },
-                {
-                  primary_identifier => 'SPAC27D7.13c',
-                },
-             ],
           genes => {
             'Schizosaccharomyces pombe SPCC63.05' => {
               uniquename => 'SPCC63.05',
               organism => 'Schizosaccharomyces pombe',
             },
           },
+          interacting_genes => [
+            {
+              primary_identifier => 'SPBC14F5.07',
+            },
+            {
+              primary_identifier => 'SPAC27D7.13c',
+            }
+          ]
         },
         {
-          type => 'phenotype',
           status => 'new',
-          creation_date => "2010-01-02",
-          evidence_code => 'IDA',
-          publication => 'PMID:19756689',
           term => 'FYPO:0000013',
-          genes => {
-            'Schizosaccharomyces pombe SPCC63.05' => {
-              uniquename => 'SPCC63.05',
-              organism => 'Schizosaccharomyces pombe',
-            },
-          },
+          evidence_code => 'Epitope-tagged protein immunolocalization experiment data',
+          creation_date => '2010-01-02',
+          expression => 'Overexpression',
+          publication => 'PMID:19756689',
+          type => 'single_gene_phenotype',
+          conditions => [
+            'high temperature'
+          ],
+          alleles => [
+            {
+              primary_identifier => 'SPAC27D7.13c:allele-1',
+              gene => {
+                uniquename => 'SPAC27D7.13c',
+                organism => 'Schizosaccharomyces pombe'
+              },
+              type => 'existing',
+              description => 'deletion',
+              name => 'ssm4delta',
+            }
+          ],
         },
         {
           type => 'post_translational_modification',

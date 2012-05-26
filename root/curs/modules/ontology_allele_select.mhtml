@@ -1,0 +1,188 @@
+<%args>
+$annotation
+$gene_display_name
+$curs_root_uri
+</%args>
+
+<script language="javascript" type="text/javascript">
+var allele_types = <% $allele_types_js |n %>;
+var alleles_in_progress = <% $alleles_in_progress_js |n %>;
+var existing_alleles_by_name = <% $existing_alleles_by_name_js |n %>;
+var gene_display_name = "<% $gene_display_name %>";
+var delete_icon_uri = "<% $delete_icon_uri %>";
+var annotation_id = <% $annotation->annotation_id() %>;
+</script>
+
+<div id="curs-allele-add" style="display: none">
+  <form action="<% $allele_add_action %>" method="post"> <!-- submitted with Ajax -->
+    <table>
+      <tr>
+        <td>
+          Allele name:
+        </td>
+        <td>
+          <input name="curs-allele-name" type="text" value="" class="curs-allele-name" style="disabled: true" />
+        </td>
+      </tr>
+      <tr class="curs-allele-type-label" style="display: none">
+        <td>
+          Allele type
+        </td>
+        <td>
+          <span class="curs-allele-type-label-span">
+          </span>
+        </td>
+      </tr>
+      <tr class="curs-allele-type-select">
+        <td>
+          Allele type
+        </td>
+        <td>
+          <select name="curs-allele-type" class="required">
+            <option selected="selected" value="">Choose an allele type ...</option>
+% for my $opt (@allele_type_options) {
+            <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
+% }
+          </select>
+        </td>
+      </tr>
+      <tr class="curs-allele-type-description" style="display: none">
+        <td>
+          Allele description
+        </td>
+        <td>
+          <input name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
+          <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete"/>
+        </td>
+      </tr>
+      <tr class="curs-allele-expression" style="display:none">
+        <td>
+          Expression
+        </td>
+        <td>
+          <span>
+            <input name="curs-allele-expression" type="radio" value="Overexpression" />
+            <label>Overexpression</label>
+          </span>
+          <span>
+            <input name="curs-allele-expression" type="radio" value="Endogenous" checked="checked" />
+            <label>Endogenous</label>
+          </span>
+          <span>
+            <input name="curs-allele-expression" type="radio" value="Knockdown" />
+            <label>Knockdown</label>
+          </span>
+        </td>
+      </tr>
+    </table>
+    <div class="curs-ui-dialog-subheading ui-widget-header ui-helper-clearfix ui-corner-all">
+      <span class="ui-dialog-title">Evidence</span>
+    </div>
+    <table>
+      <tr>
+        <td>
+          Evidence
+        </td>
+        <td>
+          <select name="curs-allele-evidence-select" class="required curs-allele-evidence-select">
+            <option selected="selected" value="">Choose an evidence type ...</option>
+% for my $opt (@evidence_select_options) {
+            <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
+% }
+          </select>
+        </td>
+      </tr>
+    </table>
+    <div class="curs-ui-dialog-subheading ui-widget-header ui-helper-clearfix ui-corner-all">
+      <span class="ui-dialog-title">Conditions</span>
+    </div>
+    <table>
+      <tr>
+        <td>
+          Select conditions
+        </td>
+        <td>
+          <ul class="curs-allele-conditions">
+          </ul>
+        </td>
+      </tr>
+    </table>
+    <div class="curs-allele-condition-buttons">
+      <div>Previously used conditions:</div>
+    </div>
+    <div class="curs-allele-reuse">
+      <input type="checkbox" name="curs-allele-reuse-dialog" value="Reuse"/>Reuse with new condition(s)<br/>
+    </div>
+  </form>
+</div>
+
+<div class="curs-box curs-allele-select">
+  <div class="curs-box-title">
+    Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
+  </div>
+  <div class="curs-box-body">
+    <table id="curs-allele-list" class="list" style="display: none">
+      <thead>
+        <tr>
+          <th>
+            Allele name
+          </th>
+          <th>
+            Allele description
+          </th>
+          <th>
+            Expression
+          </th>
+          <th>
+            Evidence
+          </th>
+          <th>
+            Conditions
+          </th>
+          <th>
+            &nbsp;
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+  <button id="curs-add-allele-details">
+    Add allele details +
+  </button>
+  <div class="submit">
+  </div>
+
+  <button id="curs-add-allele-proceed" name="allele-proceed" type="submit"
+          style="display: none" class="curs-finish-button">
+    Proceed -&gt;
+  </button>
+</div>
+
+<%init>
+use Data::JavaScript::Anon;
+
+my $annotation_data = $annotation->data();
+my $term_ontid = $annotation_data->{term_ontid};
+
+my $st = $c->stash();
+
+my $allele_type_config = $st->{allele_type_config};
+my $allele_types_js = Data::JavaScript::Anon->anon_dump($allele_type_config);
+
+my $alleles_in_progress = $st->{alleles_in_progress};
+my $alleles_in_progress_js = Data::JavaScript::Anon->anon_dump($alleles_in_progress);
+
+my @evidence_select_options = @{$st->{evidence_select_options}};
+my @allele_type_options = @{$st->{allele_type_options}};
+
+my $existing_alleles_by_name = $st->{existing_alleles_by_name};
+my $existing_alleles_by_name_js = Data::JavaScript::Anon->anon_dump($existing_alleles_by_name);
+
+my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+
+my $annotation_id = $annotation->annotation_id();
+
+my $allele_add_action = "$curs_root_uri/annotation/add_allele_action/$annotation_id" ;
+</%init>

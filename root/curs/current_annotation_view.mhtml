@@ -1,7 +1,7 @@
 <%args>
 $curs_root_uri
 $annotation_type
-$gene_proxy => undef
+$gene => undef
 $pub
 </%args>
 
@@ -9,13 +9,13 @@ $pub
    annotation_type => $annotation_type, 
    annotations => [@user_annotations], user_created => 1,
    pub => $pub,
-   completed_count => $completed_count, gene => $gene_proxy &>
+   completed_count => $completed_count, gene => $gene &>
 
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
    annotation_type => $annotation_type, 
    annotations => [@existing_annotations], user_created => 0,
    pub => $pub,
-   completed_count => $completed_count, gene => $gene_proxy &>
+   completed_count => $completed_count, gene => $gene &>
 
 <%init>
 use PomCur::Curs::Utils;
@@ -30,9 +30,13 @@ my $options = { pub_uniquename => $pub->uniquename(),
                 annotation_type_name => $annotation_type->{name},
                 annotation_type_category => $annotation_type->{category},
                 };
-if (defined $gene_proxy) {
-  $constrain_annotations = [$gene_proxy->direct_annotations()];
-  $options->{gene_identifier} = $gene_proxy->primary_identifier();
+if (defined $gene) {
+  my @constrain_annotations = $gene->direct_annotations();
+  map {
+    push @constrain_annotations, $_->annotations();
+  } $gene->alleles();
+  $constrain_annotations = [@constrain_annotations];
+  $options->{gene_identifier} = $gene->primary_identifier();
 }
 
 my ($completed_count, $annotations_ref) =

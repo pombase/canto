@@ -317,6 +317,8 @@ sub _create_genes
   my $schema = shift;
   my $result = shift;
 
+  my %ret = ();
+
   my $_create_curs_genes = sub
       {
         my @genes = @{$result->{found}};
@@ -330,14 +332,20 @@ sub _create_genes
             PomCur::CursDB::Organism::get_organism($schema, $org_full_name,
                                                    $org_taxonid);
 
+          my $primary_identifier = $gene->{primary_identifier};
+
           my $new_gene = $schema->create_with_type('Gene', {
-            primary_identifier => $gene->{primary_identifier},
+            primary_identifier => $primary_identifier,
             organism => $curs_org
           });
+
+          $ret{$primary_identifier} = $new_gene
         }
       };
 
   $schema->txn_do($_create_curs_genes);
+
+  return %ret;
 }
 
 sub _find_and_create_genes
@@ -742,6 +750,7 @@ sub annotation_ontology_edit
   # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
   $st->{annotation_type_config} = $annotation_config;
+  $st->{annotation_namespace} = $annotation_config->{namespace};
   $st->{current_component_display_name} = $module_display_name;
   $st->{current_component_short_display_name} =
     $annotation_config->{short_display_name};
@@ -835,7 +844,11 @@ sub annotation_ontology_edit
 
     $self->store_statuses($c->config(), $schema);
 
-    _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    if ($annotation_config->{needs_allele}) {
+      _redirect_and_detach($c, 'annotation', 'allele_select', $annotation_id);
+    } else {
+      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    }
   }
 }
 
@@ -932,6 +945,10 @@ sub _get_gene_proxy
   my $config = shift;
   my $gene = shift;
 
+  if (!defined $gene) {
+    croak "no gene passed to _get_gene_proxy()";
+  }
+
   return PomCur::Curs::GeneProxy->new(config => $config,
                                       cursdb_gene => $gene);
 }
@@ -1004,12 +1021,33 @@ sub _check_annotation_exists
   my $annotation =
     $schema->resultset('Annotation')->find($annotation_id);
 
-  if (!defined $annotation) {
+  if (defined $annotation) {
+    $c->stash()->{annotation} = $annotation;
+
+    return $annotation;
+  } else {
     $c->flash()->{error} = qq|No annotation found with id "$annotation_id" |;
     _redirect_and_detach($c);
   }
 }
 
+sub _generate_evidence_options
+{
+  my $evidence_types = shift;
+  my $annotation_type_config = shift;
+
+  my @codes = map {
+    my $description;
+    if ($evidence_types->{$_}->{name} eq $_) {
+      $description = $_;
+    } else {
+      $description = $evidence_types->{$_}->{name} . " ($_)";
+    }
+    [ $_, $description]
+  } @{$annotation_type_config->{evidence_codes}};
+
+  return @codes;
+}
 
 sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1) Form
 {
@@ -1025,6 +1063,14 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
+  if (!defined $gene) {
+    $gene = $annotation->alleles()->first()->gene();
+  }
+
+  if (!defined $gene) {
+    die "could not find a gene for annotation: " . $annotation_id;
+  };
+
   my $gene_proxy = _get_gene_proxy($config, $gene);
   $st->{gene} = $gene_proxy;
   my $gene_display_name = $gene_proxy->display_name();
@@ -1051,22 +1097,10 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   $st->{template} = "curs/modules/${module_category}_evidence.mhtml";
   $st->{annotation} = $annotation;
 
-  my $ont_config = $config->{annotation_types}->{$annotation_type_name};
+  my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
+  my $evidence_types = $config->{evidence_types};
 
-  my %evidence_types = %{$config->{evidence_types}};
-
-  my @codes = map {
-    my $description;
-    if ($evidence_types{$_}->{name} eq $_) {
-      $description = $_;
-    } else {
-      $description = $evidence_types{$_}->{name} . " ($_)";
-    }
-    [ $_, $description]
-  } @{$ont_config->{evidence_codes}};
-
-  unshift @codes, [ '', 'Choose an evidence type ...' ];
-
+  my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
   my $form = $self->form();
 
   my @all_elements = (
@@ -1099,16 +1133,307 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     $annotation->data($data);
     $annotation->update();
 
-    my $with_gene = $evidence_types{$evidence_select}->{with_gene};
+    my $with_gene = $evidence_types->{$evidence_select}->{with_gene};
 
     $self->store_statuses($config, $schema);
 
     if ($with_gene) {
       _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
     } else {
-      _maybe_transfer_annotation($c, $annotation, $annotation_config);
+      if ($annotation_config->{needs_allele}) {
+        _redirect_and_detach($c, 'gene', $gene->gene_id());
+      } else {
+        _maybe_transfer_annotation($c, $annotation, $annotation_config);
+      }
     }
   }
+}
+
+sub allele_remove_action : Chained('top') PathPart('annotation/remove_allele_action') Args(2)
+{
+  my ($self, $c, $annotation_id, $allele_id) = @_;
+
+  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+
+  my $data = $annotation->data();
+  my $alleles_in_progress = $data->{alleles_in_progress} // { };
+
+  delete $alleles_in_progress->{$allele_id};
+
+  $data->{alleles_in_progress} = $alleles_in_progress;
+  $annotation->data($data);
+  $annotation->update();
+
+  $c->stash->{json_data} = {
+    allele_id => $allele_id,
+    annotation_id => $annotation_id,
+  };
+  $c->forward('View::JSON');
+}
+
+# add a new blob of allele data to alleles_in_progress in the annotation
+sub _allele_add_action_internal
+{
+  my $config = shift;
+  my $schema = shift;
+  my $annotation = shift;
+  my $allele_data_ref = shift;
+
+  my $data = $annotation->data();
+  my $alleles_in_progress = $data->{alleles_in_progress} // { };
+  my $max_id = -1;
+
+  map {
+    if ($_ > $max_id) {
+      $max_id = $_;
+    }
+  } keys %$alleles_in_progress;
+
+  my $new_allele_id = $max_id + 1;
+
+  my $new_allele_data = {
+    id => $new_allele_id,
+    %$allele_data_ref,
+  };
+
+  $alleles_in_progress->{$new_allele_id} = $new_allele_data;
+  $data->{alleles_in_progress} = $alleles_in_progress;
+  $annotation->data($data);
+  $annotation->update();
+
+  my $allele_display_name =
+    PomCur::Curs::Utils::make_allele_display_name($allele_data_ref->{name},
+                                                  $allele_data_ref->{description});
+
+  $new_allele_data->{display_name} = $allele_display_name;
+
+  return $new_allele_data;
+}
+
+sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+
+  my $params = $c->req()->params();
+
+  my $condition_list = $params->{'curs-allele-condition-names[tags][]'};
+
+  if (!ref $condition_list) {
+    $condition_list = [$condition_list];
+  }
+
+  my $allele_name = $params->{'curs-allele-name'};
+  if (defined $allele_name && length $allele_name == 0) {
+    $allele_name = undef;
+  }
+
+  my $description = $params->{'curs-allele-description-input'};
+
+  if (length $description == 0) {
+    $description = $params->{'curs-allele-type'};
+  }
+
+  my %allele_data = (name => $allele_name,
+                     description => $description,
+                     expression => $params->{'curs-allele-expression'},
+                     evidence => $params->{'curs-allele-evidence-select'},
+                     conditions => $condition_list);
+
+  my $new_allele_data =
+    _allele_add_action_internal($config, $schema, $annotation,
+                                \%allele_data);
+
+  $c->stash->{json_data} = $new_allele_data;
+  $c->forward('View::JSON');
+}
+
+sub _get_all_alleles
+{
+  my $config = shift;
+  my $schema = shift;
+  my $gene = shift;
+
+  my %results = ();
+
+  my $allele_rs =
+    $schema->resultset('Allele')->search({
+      gene => $gene->gene_id(),
+    });
+
+  while (defined (my $allele = $allele_rs->next())) {
+    my $allele_display_name = $allele->display_name();
+    $results{$allele_display_name} = {
+      name => $allele->name(),
+      description => $allele->description(),
+      primary_identifier => $allele->primary_identifier(),
+    };
+  }
+
+  my $ann_rs = $gene->direct_annotations();
+
+  while (defined (my $annotation = $ann_rs->next())) {
+    my $data = $annotation->data();
+
+    if (exists $data->{alleles_in_progress}) {
+      for my $allele_data (values %{$data->{alleles_in_progress}}) {
+        my $allele_display_name =
+          PomCur::Curs::Utils::make_allele_display_name($allele_data->{name},
+                                                        $allele_data->{description});
+        if (!exists $results{$allele_display_name}) {
+          $results{$allele_display_name} = {
+            name => $allele_data->{name},
+            description => $allele_data->{description},
+          };
+        }
+      }
+    }
+  }
+
+  return %results;
+}
+
+sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  $self->_check_annotation_exists($c, $annotation_id);
+
+  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+  my $annotation_type_name = $annotation->type();
+
+  my $gene = $annotation->genes()->first();
+  my $gene_proxy = _get_gene_proxy($config, $gene);
+  $st->{gene} = $gene_proxy;
+  my $gene_display_name = $gene_proxy->display_name();
+
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+  my $module_category = $annotation_config->{category};
+
+  my $annotation_data = $annotation->data();
+  my $term_ontid = $annotation_data->{term_ontid};
+
+  $st->{title} = "Specify the allele(s) of $gene_display_name to annotate with $term_ontid";
+  $st->{show_title} = 0;
+
+  $st->{gene_display_name} = $gene_display_name;
+  $st->{gene_id} = $gene->gene_id();
+  $st->{annotation} = $annotation;
+
+  $st->{allele_type_config} = $config->{allele_types};
+
+  my @allele_type_options = map {
+    [ $_->{name}, $_->{name} ];
+  } @{$config->{allele_type_list}};
+
+  $st->{allele_type_options} = \@allele_type_options;
+
+  my $evidence_types = $config->{evidence_types};
+  my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
+  my @evidence_codes = _generate_evidence_options($evidence_types, $annotation_type_config);
+
+  $st->{evidence_select_options} = \@evidence_codes;
+
+  my %existing_alleles_by_name = _get_all_alleles($config, $schema, $gene);
+  $st->{existing_alleles_by_name} =
+    [
+      map {
+        {
+          value => $existing_alleles_by_name{$_}->{name},
+          description => $existing_alleles_by_name{$_}->{description},
+          display_name => $_,
+        }
+      } keys %existing_alleles_by_name
+    ];
+
+  $st->{alleles_in_progress} = $annotation->data()->{alleles_in_progress} // {};
+
+  $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
+}
+
+sub annotation_process_alleles : Chained('top') PathPart('annotation/process_alleles') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+
+  my $annotation_type_name = $annotation->type();
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $data = $annotation->data();
+  my $alleles_in_progress = $data->{alleles_in_progress};
+
+  if (!defined $alleles_in_progress) {
+    die "internal error: no alleles defined";
+  }
+
+  my $gene = $annotation->genes()->first();
+
+  my $process = sub {
+    # create an annotation for each allele
+    while (my ($id, $allele) = each %$alleles_in_progress) {
+      my $name = $allele->{name};
+      my $description = $allele->{description};
+      my $expression = $allele->{expression};
+      my $evidence = $allele->{evidence};
+      my $conditions = $allele->{conditions};
+
+      my $new_data = {
+        expression => $expression,
+        evidence_code => $evidence,
+        conditions => $conditions,
+        term_ontid => $data->{term_ontid},
+      };
+
+      my $annotation_create_args = {
+        status => $annotation->status(),
+        pub => $annotation->pub(),
+        type => $annotation->type(),
+        creation_date => $annotation->creation_date(),
+        data => $new_data,
+      };
+
+      my $new_annotation =
+        $schema->create_with_type('Annotation',
+                                  $annotation_create_args);
+
+      my %create_args = (
+        type => 'new',
+        description => $description,
+        name => $name,
+        gene => $gene->gene_id(),
+      );
+
+      my $new_allele =
+        $schema->create_with_type('Allele', \%create_args);
+
+      $schema->create_with_type('AlleleAnnotation',
+                                {
+                                  allele => $new_allele->allele_id(),
+                                  annotation => $new_annotation->annotation_id(),
+                                });
+    }
+
+    # delete the original annotation now it's been split
+    $annotation->delete();
+  };
+
+  $schema->txn_do($process);
+
+  _redirect_and_detach($c, 'gene', $gene->gene_id());
 }
 
 sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1) Form
@@ -1131,11 +1456,33 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my $module_category = $annotation_config->{category};
 
-  my $gene = $annotation->genes()->first();
-  my $gene_proxy = _get_gene_proxy($config, $gene);
-  my $gene_display_name = $gene_proxy->display_name();
+  my $display_name = undef;
 
-  $st->{title} = "Transfer annotation from $gene_display_name";
+  my $gene = $annotation->genes()->first();
+
+  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
+
+  my @options = ();
+
+  if (defined $gene) {
+    my $gene_proxy = _get_gene_proxy($config, $gene);
+    $display_name = $gene_proxy->display_name();
+
+    while (defined (my $other_gene = $genes_rs->next())) {
+      next if $gene->gene_id() == $other_gene->gene_id();
+
+      my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
+
+      push @options, { value => $other_gene_proxy->gene_id(),
+                       label => $other_gene_proxy->long_display_name() };
+    }
+  } else {
+    my $allele = $annotation->alleles()->first();
+    $display_name = $allele->display_name();
+    $gene = $allele->gene();
+  }
+
+  $st->{title} = "Transfer annotation from $display_name";
   $st->{show_title} = 0;
   $st->{template} = "curs/modules/${module_category}_transfer.mhtml";
 
@@ -1143,20 +1490,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   $form->auto_fieldset(0);
 
-  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
-
   my $gene_count = $genes_rs->count();
-
-  my @options = ();
-
-  while (defined (my $other_gene = $genes_rs->next())) {
-    next if $gene->gene_id() == $other_gene->gene_id();
-
-    my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
-
-    push @options, { value => $other_gene_proxy->gene_id(),
-                     label => $other_gene_proxy->long_display_name() };
-  }
 
   my $transfer_select_genes_text;
 
@@ -1172,21 +1506,26 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my @all_elements = (
       {
-        type => 'Block',
-        tag => 'div',
-        content => $transfer_select_genes_text,
-      },
-      {
-        name => 'dest', label => 'dest',
-        type => 'Checkboxgroup',
-        container_tag => 'div',
-        label => '',
-        options => [@options],
-      },
-      {
         name => 'transfer-submit', type => 'Submit', value => 'Finish',
       }
     );
+
+  if (@options) {
+    unshift @all_elements, (
+        {
+          type => 'Block',
+          tag => 'div',
+          content => $transfer_select_genes_text,
+        },
+        {
+          name => 'dest', label => 'dest',
+          type => 'Checkboxgroup',
+          container_tag => 'div',
+          label => '',
+          options => [@options],
+        },
+      );
+  }
 
   if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
     my %extension_def = (
@@ -1354,7 +1693,7 @@ sub gene : Chained('top') Args(1)
   my $gene = $schema->find_with_type('Gene', $gene_id);
   my $gene_proxy = _get_gene_proxy($config, $gene);
 
-  $st->{gene_proxy} = $gene_proxy;
+  $st->{gene} = $gene_proxy;
 
   $st->{title} = 'Gene: ' . $gene_proxy->display_name();
   # use only in header, not in body:
@@ -1368,36 +1707,34 @@ sub _get_annotation_table_tsv
   my $schema = shift;
   my $annotation_type_name = shift;
 
+  my $annotation_type = $config->{annotation_types}->{$annotation_type_name};
+
   my ($completed_count, $annotations_ref, $columns_ref) =
     PomCur::Curs::Utils::get_annotation_table($config, $schema,
                                               $annotation_type_name);
   my @annotations = @$annotations_ref;
   my %common_values = %{$config->{export}->{gene_association_fields}};
 
-  my $ontology_column_names =
-    [qw(db gene_identifier gene_name_or_identifier
-        qualifier term_ontid publication_uniquename
-        evidence_code with_or_from_identifier
-        annotation_type_abbreviation
-        gene_product gene_synonyms_string db_object_type taxonid
-        creation_date_short db)];
+  my @ontology_column_names =
+    qw(db gene_identifier gene_name_or_identifier
+       qualifier term_ontid publication_uniquename
+       evidence_code with_or_from_identifier
+       annotation_type_abbreviation
+       gene_product gene_synonyms_string db_object_type taxonid
+       creation_date_short db);
 
-  my $interaction_column_names =
-    [qw(gene_identifier interacting_gene_identifier
-        gene_taxonid interacting_gene_taxonid evidence_code
-        publication_uniquename score phenotypes comment)];
+  my @interaction_column_names =
+    qw(gene_identifier interacting_gene_identifier
+       gene_taxonid interacting_gene_taxonid evidence_code
+       publication_uniquename score phenotypes comment);
 
-  my %type_column_names = (
-    biological_process => $ontology_column_names,
-    cellular_component => $ontology_column_names,
-    molecular_function => $ontology_column_names,
-    phenotype => $ontology_column_names,
-    post_translational_modification => $ontology_column_names,
-    genetic_interaction => $interaction_column_names,
-    physical_interaction => $interaction_column_names,
-  );
+  my @column_names;
 
-  my @column_names = @{$type_column_names{$annotation_type_name}};
+  if ($annotation_type->{category} eq 'ontology') {
+    @column_names = @ontology_column_names;
+  } else {
+    @column_names = @interaction_column_names;
+  }
 
   my $db = $config->{export}->{gene_association_fields}->{db};
 

@@ -226,6 +226,18 @@ sub delete
 {
   my $self = shift;
 
+  map {
+    my $allele = $_;
+    my @allele_annotations = $allele->allele_annotations();
+    map {
+      my $allele_annotation = $_;
+      my $annotation = $allele_annotation->annotation();
+      $allele_annotation->delete();
+      $annotation->delete();
+    } @allele_annotations;
+    $allele->delete();
+  } $self->alleles();
+
   my @annotations = $self->all_annotations()->all();
   map { $_->gene_annotations()->delete() } @annotations;
   map { $_->delete() } @annotations;

@@ -29,6 +29,7 @@ button, input[type=submit] {
   border-color: #c00;
   white-space: nowrap;
   font-weight: bold;
+  cursor: pointer;
 }
 
 img {
@@ -555,6 +556,19 @@ div.clearall {
   font-size: 60%;
 }
 
+.curs-autocomplete-definition h3 {
+  padding: 0;
+  margin: 0;
+}
+.curs-autocomplete-definition {
+  font-size: 70%;
+  width: 20em;
+  min-height: 5em;
+  z-index: 999999;
+  position: absolute;
+  overflow: auto;
+}
+
 #ferret-term-entry {
   width: 75%;
   margin-top: 10px;
@@ -804,8 +818,14 @@ span.pomcur-select-buttons {
 .ui-dialog {
    font-size: 80%;
 }
-.ui-dialog .ui-dialog-titlebar {
+.ui-dialog .ui-dialog-titlebar, .curs-ui-dialog-subheading .ui-dialog-title {
    padding: .2em 1em .1em;
+}
+
+.curs-ui-dialog-subheading {
+  margin-left: -1em;
+  margin-right: -1em;
+  margin-top: 1.5em;
 }
 
 .curs-external-link {
@@ -910,4 +930,33 @@ input[readonly="1"] {
 
 .sect.triage-comment {
   clear: left;
+}
+
+.curs-allele-evidence-select {
+  width: 22em;
+}
+.curs-allele-type-select select, .curs-allele-description-input {
+  width: 18em;
+}
+.curs-allele-row {
+  vertical-align: top;
+}
+
+.curs-allele-description-delete {
+  padding-left: 20px;
+}
+
+#curs-allele-add .curs-allele-reuse {
+  border-top: 1px solid grey;
+  padding: 5px;
+  float: right;
+}
+
+form label.error {
+  padding-left: 1em;
+  color: red;
+}
+
+.curs-allele-condition-button span.ui-button-text {
+  font-size: 80%;
 }

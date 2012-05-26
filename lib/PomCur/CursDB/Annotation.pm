@@ -166,6 +166,7 @@ __PACKAGE__->belongs_to(
 
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');
+__PACKAGE__->many_to_many('alleles' => 'allele_annotations', 'allele');
 
 use YAML qw(Load Dump);
 
@@ -178,7 +179,8 @@ __PACKAGE__->inflate_column('data', {
 =head2 delete
 
  Usage   : $annotation->delete();
- Function: Delete this Annotation and any genes that depend on it
+ Function: Delete this Annotation and any genes and alleles that
+           depend on it
  Args    : none
  Returns : nothing
 
@@ -188,6 +190,7 @@ sub delete
   my $self = shift;
 
   $self->gene_annotations()->delete();
+  $self->allele_annotations()->delete();
   $self->SUPER::delete();
 }
 
