@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 9;
 use Test::Deep;
 
 use PomCur::Chado::OntologyAnnotationLookup;
