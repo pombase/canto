@@ -245,16 +245,6 @@ sub delete
   $self->SUPER::delete();
 }
 
-sub primary_name
-{
-  use Carp "longmess";
-
-  warn longmess();
-  die;
-}
-
-use Moose;
-
 
 __PACKAGE__->meta->make_immutable;
 

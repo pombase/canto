@@ -90,7 +90,7 @@ my $chado_schema = PomCur::ChadoDB->new(config => $config);
 
 my $spbc12c2_02c = $chado_schema->resultset('Feature')->find({ uniquename => 'SPBC12C2.02c.1' });
 my $fcs = $spbc12c2_02c->feature_cvterms();
-is ($fcs->count(), 1);
+is ($fcs->count(), 2);
 
 my $fc = $fcs->first();
 $fc->is_not(1);
