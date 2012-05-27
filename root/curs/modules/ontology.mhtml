@@ -1,5 +1,6 @@
 <%args>
 $annotation_namespace
+$current_component_display_name
 $current_component_short_display_name
 $current_component_very_short_display_name
 $current_component_suggest_term_help
@@ -44,7 +45,7 @@ that differentiate your new term "A" from other members of the group "B")&rdquo;
 
     <div id="ferret-term-entry" class="curs-box">
       <div class="inline-help curs-box-title">
-Search for <% $annotation_namespace %> term
+Search for <% $current_component_display_name %> term
       </div>
       <div class="ferret-term-entry-inside curs-box-body">
         <div>
