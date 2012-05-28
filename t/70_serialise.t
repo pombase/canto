@@ -102,7 +102,7 @@ my $full_expected_curation_session =
           creation_date => '2010-01-02',
           expression => 'Overexpression',
           publication => 'PMID:19756689',
-          type => 'single_gene_phenotype',
+          type => 'phenotype',
           conditions => [
             'high temperature'
           ],
