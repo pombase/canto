@@ -964,7 +964,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   my $gene = $schema->find_with_type('Gene', $gene_id);
 
   my $gene_proxy = _get_gene_proxy($config, $gene);
-  $st->{gene_proxy} = $gene_proxy;
+  $st->{gene} = $gene_proxy;
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
