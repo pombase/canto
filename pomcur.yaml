@@ -922,6 +922,7 @@ allele_type_list:
   - name: unknown
     description_required: 0
     allele_name_required: 1
+    allow_expression_change: 1
   - name: mutation of single amino acid residue
     description_required: 1
     allele_name_required: 0
