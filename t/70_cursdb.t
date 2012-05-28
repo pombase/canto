@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 23;
 
 use Data::Compare;
 
@@ -26,6 +26,14 @@ $schema->txn_do(
                                        authors => "author list",
                                      });
   });
+
+
+# get allele annotations
+my $allele = $schema->resultset('Allele')->find({ primary_identifier => 'SPAC27D7.13c:allele-1' });
+my @allele_annotations = $allele->allele_annotations();
+
+is (@allele_annotations, 1);
+
 
 # test that a phenotype annotation exists and has the right type
 my $phenotype_annotation_rs =
