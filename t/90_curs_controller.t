@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 36;
+use Test::More tests => 41;
 use Test::Deep;
 
 use Data::Compare;
@@ -173,7 +173,7 @@ is ($gene_rs->count(), 3);
 my $annotation_for_allele =
   $curs_schema->create_with_type('Annotation',
                                  {
-                                   type => 'single_gene_phenotype',
+                                   type => 'phenotype',
                                    status => 'new',
                                    pub => $pub_for_allele,
                                    creation_date => $iso_date,
@@ -205,7 +205,7 @@ $curs_schema->create_with_type('AlleleAnnotation',
 my $annotation_for_rna_allele =
   $curs_schema->create_with_type('Annotation',
                                  {
-                                   type => 'single_gene_phenotype',
+                                   type => 'phenotype',
                                    status => 'new',
                                    pub => $pub_for_allele,
                                    creation_date => $iso_date,
@@ -237,7 +237,7 @@ $curs_schema->create_with_type('AlleleAnnotation',
 my $annotation_for_allele_in_progress =
   $curs_schema->create_with_type('Annotation',
                                  {
-                                   type => 'single_gene_phenotype',
+                                   type => 'phenotype',
                                    status => 'new',
                                    pub => $pub_for_allele,
                                    creation_date => $iso_date,
@@ -299,15 +299,22 @@ is ($allele_data_2{'existing_rna_allele_name(rna_desc)'}->{primary_identifier}, 
 my %allele_creation_data_3 = (
   name => '',
   description => 'unknown',
-  conditions => ['low temperature'],
   evidence => 'Enzyme assay data',
   expression => 'Overexpression',
 );
 
-PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
-                                                      $annotation_for_allele,
-                                                      \%allele_creation_data_2);
+my $new_allele_data_3 =
+  PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
+                                                        $annotation_for_allele,
+                                                        \%allele_creation_data_3);
 
+
+is (scalar(keys %$new_allele_data_3), 6);
+
+is ($new_allele_data_3->{'expression'}, 'Overexpression');
+is ($new_allele_data_3->{'name'}, '');
+is ($new_allele_data_3->{'display_name'}, '(unknown)');
+is ($new_allele_data_3->{'id'}, 0);
 
 
 done_testing;
