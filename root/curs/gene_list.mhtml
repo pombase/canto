@@ -80,8 +80,7 @@ my @gene_hashes = map {
      }
      {
        identifier => $_->primary_name() || $_->primary_identifier(),
-  
-     gene_id => $_->gene_id(),
+       gene_id => $_->gene_id(),
        extra_text => $extra_text,
      }
    } @all_genes;
