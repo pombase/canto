@@ -1224,8 +1224,14 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   my $condition_list = $params->{'curs-allele-condition-names[tags][]'};
 
-  if (!ref $condition_list) {
-    $condition_list = [$condition_list];
+  if (defined $condition_list) {
+    if (ref $condition_list) {
+      # it's already a list
+    } else {
+      $condition_list = [$condition_list];
+    }
+  } else {
+    $condition_list = [];
   }
 
   my $allele_name = $params->{'curs-allele-name'};
