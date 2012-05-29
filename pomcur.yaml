@@ -1158,6 +1158,7 @@ annotation_type_list:
       multicellular anatomical terms.
   - name: phenotype
     needs_allele: 1
+    gene_cardinality: one_or_more  # default is "one"
     category: ontology
     namespace: fission_yeast_phenotype
     very_short_display_name: 'phenotype'
