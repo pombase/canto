@@ -1011,37 +1011,51 @@ evidence_types:
   Microscopy: ~
   'Cell growth assay': ~
   'Other': ~
-  'Affinity Capture-Luminescence': ~
-  'Affinity Capture-MS': ~
-  'Affinity Capture-RNA': ~
-  'Affinity Capture-Western': ~
+  'Affinity Capture-Luminescence':
+    name: 'Affinity Capture-Luminescence (affinity captures)'
+  'Affinity Capture-MS':
+    name: 'Affinity Capture-MS (affinity captures)'
+  'Affinity Capture-RNA':
+    name: 'Affinity Capture-RNA (affinity captures)'
+  'Affinity Capture-Western':
+    name: 'Affinity Capture-Western (affinity captures)'
   'Biochemical Activity': ~
   'Chromatography evidence': ~
   'Co-crystal Structure': ~
   'Co-fractionation': ~
   'Co-localization': ~
   'Co-purification': ~
-  'Dosage Growth Defect': ~
-  'Dosage Lethality': ~
-  'Dosage Rescue': ~
+  'Dosage Growth Defect':
+    name: 'Dosage Growth Defect (growth defect in presence of overexpressed)'
+  'Dosage Lethality':
+    name: 'Dosage Lethality (inviable in presence of overexpressed)'
+  'Dosage Rescue':
+    name: 'Dosage Rescue (rescued by overexpression of)'
   'FRET':
-    name: FRET
-  'Far Western': ~
+    name: 'FRET (fluorescence resonance energy donor)'
+  'Far Western':
+    name: 'Far Western (captures)'
   'Microarray RNA expression level data': ~
   'Negative Genetic': ~
   'PCA':
-    name: PCA
-  'Phenotypic Enhancement': ~
-  'Phenotypic Suppression': ~
+    name: 'PCA (interacts with)'
+  'Phenotypic Enhancement':
+    name: 'Phenotypic Enhancement (phenotype enhanced by)'
+  'Phenotypic Suppression':
+    name: 'Phenotypic Suppression (rescued by)'
   'Positive Genetic': ~
-  'Protein-RNA': ~
-  'Protein-peptide': ~
+  'Protein-RNA':
+    name: 'Protein-RNA (binds to RNA)'
+  'Protein-peptide':
+    name: 'Protein-peptide (binds to peptide)'
   'Reconstituted Complex': ~
   'Synthetic Growth Defect': ~
   'Synthetic Haploinsufficiency': ~
   'Synthetic Lethality': ~
-  'Synthetic Rescue': ~
-  'Two-hybrid': ~
+  'Synthetic Rescue':
+    name: 'Synthetic Rescue (synthetically rescued by)'
+  'Two-hybrid':
+    name: 'Two-hybrid (binds activation domain construct with)'
   'Reporter gene assay': ~
   'Enzyme assay data': ~
   'Flow cytometry data': ~
