@@ -1282,6 +1282,10 @@ help_text:
     inline: >
       Once you have selected a gene to annotate you will be presented with a
       set of annotation options
+  genetic_interaction_evidence:
+    url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions"
+  physical_interaction_evidence:
+    url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#physical_interactions"
 contact_email:
   address: "set_me@localhost"
 

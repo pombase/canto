@@ -1,11 +1,13 @@
 <%args>
 $form
 $current_component_display_name
+$current_component
 </%args>
 
 <div class="curs-box evidence-select">
   <div class="curs-box-title">
 Choose evidence for this <% $current_component_display_name %>
+    <& /curs/inline_help.mhtml, key => "${current_component}_evidence" &>
   </div>
   <div class="curs-box-body">
     <% $form |n %>
