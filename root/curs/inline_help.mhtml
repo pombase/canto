@@ -2,18 +2,43 @@
 $key
 </%args>
 
+% if (defined $help_url) {
+<span class="curs-inline-help-icon">
+  <a href="<% $help_url %>">
+    <img src="<% $help_icon_url %>"
+         alt="help" title="help link">
+  </a>
+</span>
+
+% } else {
+
 <div id="<% $popup_id %>" title="Help" style="display:none">
   <% $help_text %>
 </div>
 
 <span class="curs-inline-help-icon">
-  <img src="<% $c->uri_for('/static/images/help.png') %>"
+  <img src="<% $help_icon_url %>"
        alt="help" title="<% $help_text %>"
        onclick="$('#<% $popup_id %>').dialog()"/>
 </span>
 
+% }
+
 <%init>
-my $help_text = $c->config()->{help_text}->{choose_gene}->{inline};
-my $curs_root_uri = $c->stash()->{curs_root_uri};
+my $help_config = $c->config()->{help_text}->{$key};
+my $help_text;
+my $help_url;
+
+if (exists $help_config->{inline}) {
+  $help_text = $help_config->{inline};
+} else {
+  if (exists $help_config->{url}) {
+    $help_url = $help_config->{url};
+  } else {
+    die qq(configuration not "inline" or "url" for key: $key);
+  }
+}
+
 my $popup_id = "curs-inline-help-popup-$key";
+my $help_icon_url = $c->uri_for('/static/images/help.png');
 </%init>
