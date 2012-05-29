@@ -768,6 +768,8 @@ sub annotation_ontology_edit
   $st->{annotation_help_text} = $annotation_help_text;
   my $annotation_more_help_text = $annotation_config->{more_help_text};
   $st->{annotation_more_help_text} = $annotation_more_help_text;
+  my $annotation_extra_help_text = $annotation_config->{extra_help_text};
+  $st->{annotation_extra_help_text} = $annotation_extra_help_text;
   $st->{template} = "curs/modules/$module_category.mhtml";
 
   my $form = $self->form();

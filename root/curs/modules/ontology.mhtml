@@ -9,6 +9,7 @@ $broad_term_suggestions
 $specific_term_examples
 $annotation_help_text
 $annotation_more_help_text
+$annotation_extra_help_text
 $pub
 </%args>
 
@@ -75,6 +76,11 @@ terms are: <% $specific_term_examples %>).
 Gene products may be annotated with multiple
 <% $current_component_short_display_name %> terms.
           </div>
+% if (defined $annotation_extra_help_text) {
+          <div>
+<% $annotation_extra_help_text %>
+          </div>
+% }
         </div>
         <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
           <% $annotation_help_text %>

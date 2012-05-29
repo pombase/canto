@@ -1178,6 +1178,8 @@ annotation_type_list:
       Phenotypes result from the expression of the genes of an organism as well
       as the influence of environmental factors and the interactions between
       the two.
+    extra_help_text: >
+      You can also annotate normal and abnormal phenotypes.
   - name: post_translational_modification
     category: ontology
     namespace: PSI-MOD
