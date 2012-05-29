@@ -10,6 +10,13 @@ Choose evidence for this <% $current_component_display_name %>
     <& /curs/inline_help.mhtml, key => "${current_component}_evidence" &>
   </div>
   <div class="curs-box-body">
+Some experiments have an inherent directionality. For these experiments, the
+curation tool allows you to curate in only one direction once you have
+selected the first gene involved in the interaction, as indicated in the
+evidence selector. If you have done the experiment in both directions you will
+need to switch genes to curate the interaction completely. For "symmetric"
+experiment types, you can start with either gene but you only need to curate
+the interaction once.
     <% $form |n %>
   </div>
 </div>
