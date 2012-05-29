@@ -1,10 +1,11 @@
 <%args>
 $form
+$current_component_display_name
 </%args>
 
 <div class="curs-box evidence-select">
   <div class="curs-box-title">
-Choose evidence for interaction
+Choose evidence for this <% $current_component_display_name %>
   </div>
   <div class="curs-box-body">
     <% $form |n %>
