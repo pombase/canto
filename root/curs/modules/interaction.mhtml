@@ -3,12 +3,13 @@ $current_component_display_name
 $current_component
 $form
 $pub
+$gene
 </%args>
 
 <div id="phenotype-ferret">
   <div class="curs-box">
     <div class="curs-box-title">
-      Select the interacting gene or genes ...
+      Select the gene or genes that interact with <% $gene_display_name %> ...
     </div>
     <div class="curs-box-body">
 <% $form |n %>
@@ -38,4 +39,6 @@ my $upload_path = $c->uri_for("$root_path/gene_upload",
                               { return_path => $return_path_uri });
 
 my $gene_count = $c->stash()->{schema}->resultset('Gene')->count();
+
+my $gene_display_name = $gene->display_name();
 </%init>
