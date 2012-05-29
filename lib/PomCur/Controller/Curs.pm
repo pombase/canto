@@ -1039,11 +1039,10 @@ sub _generate_evidence_options
   my $annotation_type_config = shift;
 
   my @codes = map {
-    my $description;
-    if ($evidence_types->{$_}->{name} eq $_) {
-      $description = $_;
-    } else {
-      $description = $evidence_types->{$_}->{name} . " ($_)";
+    my $code = $_;
+    my $description = $evidence_types->{$_}->{name};
+    if ($evidence_types->{$_}->{name} !~ /^$code/) {
+      $description .= " ($_)";
     }
     [ $_, $description]
   } @{$annotation_type_config->{evidence_codes}};

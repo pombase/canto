@@ -1032,7 +1032,7 @@ evidence_types:
   'Dosage Rescue':
     name: 'Dosage Rescue (rescued by overexpression of)'
   'FRET':
-    name: 'FRET (fluorescence resonance energy donor)'
+    name: 'FRET (fluorescence resonance energy donor to)'
   'Far Western':
     name: 'Far Western (captures)'
   'Microarray RNA expression level data': ~
