@@ -886,6 +886,9 @@ $(document).ready(function() {
         },
         'curs-allele-evidence-select': {
           required: true
+        },
+        'curs-allele-expression': {
+          required: true
         }
       }
     });
@@ -958,6 +961,15 @@ $(document).ready(function() {
       expression_span.show();
     } else {
       expression_span.hide();
+    }
+
+    var $endogenous_input = expression_span.find("input[value='Endogenous']");
+    var $endogenous_div = $endogenous_input.parent('div');
+    if (allele_type_config.name === 'wild type') {
+      $endogenous_div.hide();
+      $endogenous_input.attr('checked', false);
+    } else {
+      $endogenous_div.show();
     }
 
     var name_input = allele_dialog.find('.curs-allele-name');

@@ -56,22 +56,22 @@ var annotation_id = <% $annotation->annotation_id() %>;
         </td>
       </tr>
       <tr class="curs-allele-expression" style="display:none">
-        <td>
+        <td valign="top">
           Expression
         </td>
         <td>
-          <span>
-            <input name="curs-allele-expression" type="radio" value="Overexpression" />
+          <div>
             <label>Overexpression</label>
-          </span>
-          <span>
-            <input name="curs-allele-expression" type="radio" value="Endogenous" checked="checked" />
+            <input name="curs-allele-expression" type="radio" value="Overexpression" />
+          </div>
+          <div>
             <label>Endogenous</label>
-          </span>
-          <span>
-            <input name="curs-allele-expression" type="radio" value="Knockdown" />
+            <input name="curs-allele-expression" type="radio" value="Endogenous" />
+          </div>
+          <div>
             <label>Knockdown</label>
-          </span>
+            <input name="curs-allele-expression" type="radio" value="Knockdown" />
+          </div>
         </td>
       </tr>
     </table>
