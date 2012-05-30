@@ -19,14 +19,13 @@ Choose curation type for <% $gene->display_name() %>:
     <li>
 %   if (!$annotation_type->{disabled}) {
       <a href="<% $action_path %>">
-
-%# handle gene_cardinality by giving the option of one gene or multi-gene
-%# when the link is clicked
-
-
 %   }
       <span class="annotation-type">
+%   if ($annotation_type->{gene_cardinality} eq 'one_or_more') {
+Single gene <% $annotation_type->{display_name} %>
+%   } else {
 <% ucfirst $annotation_type->{display_name} %>
+%   }
       </span>
 %   if (!$annotation_type->{disabled}) {
       </a>

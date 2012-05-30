@@ -246,6 +246,7 @@ sub setup
       my $annotation_type_name = $annotation_type->{name};
       $self->{annotation_types}->{$annotation_type_name} = $annotation_type;
       $annotation_type->{namespace} //= $annotation_type->{name};
+      $annotation_type->{gene_cardinality} //= 'one';
 
       # if any evidence code for this type needs a with or from field, set
       # needs_with_or_from in the type
