@@ -1167,6 +1167,7 @@ annotation_type_list:
     evidence_codes:
       - Cell growth assay
       - Chromatin immunoprecipitation experiment
+      - Chromatography evidence
       - Co-immunoprecipitation experiment
       - Electrophoretic mobility shift assay data
       - Enzyme assay data
