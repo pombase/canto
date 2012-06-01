@@ -11,8 +11,10 @@ database.
 
 <p>
 If there is any information in your paper which you could not curate in the
-curation tool.  Please describe the type of data briefly.  The curators may be
-able to capture this information.
+curation tool, (for example orthologs, protein domain data, other protein
+sequence features, missing gene names, transcriptional regulation or
+complementation data) please describe the type of data briefly. The curators
+may be able to capture this information.
 </p>
 
 <% $form |n %>
