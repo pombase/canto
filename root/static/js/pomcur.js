@@ -993,16 +993,21 @@ $(document).ready(function() {
   function setup_allele_name(allele_type_config) {
     var allele_dialog = $('#curs-allele-add');
     var name_input = allele_dialog.find('.curs-allele-name');
-    var autopopulated = maybe_autopopulate(allele_type_config, name_input);
 
-    if (allele_type_config.allele_name_required == 1 && !autopopulated) {
-      name_input.attr('placeholder', 'Allele name required');
-    } else {
+    if (typeof(allele_type_config) === 'undefined') {
       name_input.attr('placeholder', '');
-    }
+    } else {
+      var autopopulated = maybe_autopopulate(allele_type_config, name_input);
 
-    if (autopopulated) {
-      name_input.data('autopopulated_name', name_input.val());
+      if (allele_type_config.allele_name_required == 1 && !autopopulated) {
+        name_input.attr('placeholder', 'Allele name required');
+      } else {
+        name_input.attr('placeholder', '');
+      }
+
+      if (autopopulated) {
+        name_input.data('autopopulated_name', name_input.val());
+      }
     }
   }
 
@@ -1015,6 +1020,9 @@ $(document).ready(function() {
     if (selected_option.val() === '') {
       hide_allele_description(allele_dialog);
       $('#curs-allele-add').find('.curs-allele-expression').hide();
+      var selected_text = selected_option.text();
+      var allele_type_config = allele_types[selected_text];
+      setup_allele_name(allele_type_config);
       return;
     }
     setup_description(selected_option);
