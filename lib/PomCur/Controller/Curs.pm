@@ -2006,7 +2006,7 @@ sub reactivate_session : Chained('top') Args(0)
 
   my $state = $c->stash()->{state};
 
-  croak "invalid state"
+  croak "invalid state: $state, when reactivating session"
     unless $state eq NEEDS_APPROVAL or $state eq APPROVED;
 
   $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS,
