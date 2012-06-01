@@ -84,7 +84,7 @@ sub _make_ontology_annotation
 
     $gene = $allele->gene();
 
-    $expression_level = $data->{expression} // '';
+    $expression_level = $data->{expression} // 'null';
     my @conditions = ();
     if ($data->{conditions}) {
       $conditions_string = join ', ', @{$data->{conditions}};
