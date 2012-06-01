@@ -658,6 +658,10 @@ $(document).ready(function() {
     if (description == null) {
       description = 'unknown';
     }
+    var expression = data['expression']
+    if (expression == null) {
+      expression = 'null';
+    }
     var conditions;
     if (typeof(data['conditions']) == 'undefined') {
       conditions = '';
@@ -670,7 +674,7 @@ $(document).ready(function() {
     var row_html =
       '<td>' + name + '</td>' +
       '<td>' + description + '</td>' +
-      '<td>' + data['expression'] + '</td>' +
+      '<td>' + expression + '</td>' +
       '<td>' + data['evidence'] + '</td>' +
       '<td>' + conditions + '</td>' +
       '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td';
@@ -863,7 +867,7 @@ $(document).ready(function() {
           required: true,
         },
         'curs-allele-name': {
-          required: function(element) {
+          required: function() { 
             var selected_text = add_allele_dialog.find('.curs-allele-type-select select').val();
             var allele_type_config = allele_types[selected_text];
             if (typeof(allele_type_config) == 'undefined') {
@@ -874,7 +878,7 @@ $(document).ready(function() {
           }
         },
         'curs-allele-description-input': {
-          required: function(element) {
+          required: function() {
             var selected_text = add_allele_dialog.find('.curs-allele-type-select select').val();
             var allele_type_config = allele_types[selected_text];
             if (typeof(allele_type_config) == 'undefined') {
@@ -888,7 +892,15 @@ $(document).ready(function() {
           required: true
         },
         'curs-allele-expression': {
-          required: true
+          required: function() {
+            var selected_text = add_allele_dialog.find('.curs-allele-type-select select').val();
+            var allele_type_config = allele_types[selected_text];
+            if (typeof(allele_type_config) == 'undefined') {
+              return false;
+            } else {
+              return allele_type_config.allow_expression_change == 1;
+            }
+          }
         }
       }
     });
@@ -957,13 +969,15 @@ $(document).ready(function() {
     description_input.placeholder();
 
     var expression_span = allele_dialog.find('.curs-allele-expression');
+    var $endogenous_input = expression_span.find("input[value='Endogenous']");
+
     if (allele_type_config.allow_expression_change == 1) {
       expression_span.show();
     } else {
       expression_span.hide();
+      $endogenous_input.attr('checked', false);
     }
 
-    var $endogenous_input = expression_span.find("input[value='Endogenous']");
     var $endogenous_div = $endogenous_input.parent('div');
     if (allele_type_config.name === 'wild type') {
       $endogenous_div.hide();

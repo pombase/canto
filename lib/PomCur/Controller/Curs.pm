@@ -1248,9 +1248,12 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   my %allele_data = (name => $allele_name,
                      description => $description,
-                     expression => $params->{'curs-allele-expression'},
                      evidence => $params->{'curs-allele-evidence-select'},
                      conditions => $condition_list);
+
+  if (defined $params->{'curs-allele-expression'}) {
+    $allele_data{expression} = $params->{'curs-allele-expression'};
+  }
 
   my $new_allele_data =
     _allele_add_action_internal($config, $schema, $annotation,
