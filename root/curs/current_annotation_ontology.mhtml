@@ -41,7 +41,7 @@ $user_created
       </th>
 % if ($needs_allele) {
       <th>
-        Expresion
+        Expression
       </th>
       <th>
         Conditions
