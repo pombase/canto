@@ -861,6 +861,8 @@ $(document).ready(function() {
     hide_allele_description(add_allele_dialog);
     add_allele_dialog.find('.curs-allele-type-select select').val(undefined).trigger('change');
     add_allele_dialog.find('.curs-allele-name').val('');
+    var name_input = allele_dialog.find('.curs-allele-name');
+    name_input.attr('placeholder', 'Allele name (optional)');
     add_allele_dialog.find('form').validate({
       rules: {
         'curs-allele-type': {
@@ -995,14 +997,14 @@ $(document).ready(function() {
     var name_input = allele_dialog.find('.curs-allele-name');
 
     if (typeof(allele_type_config) === 'undefined') {
-      name_input.attr('placeholder', '');
+      name_input.attr('placeholder', 'Allele name (optional)');
     } else {
       var autopopulated = maybe_autopopulate(allele_type_config, name_input);
 
       if (allele_type_config.allele_name_required == 1 && !autopopulated) {
         name_input.attr('placeholder', 'Allele name required');
       } else {
-        name_input.attr('placeholder', '');
+        name_input.attr('placeholder', 'Allele name (optional)');
       }
 
       if (autopopulated) {
