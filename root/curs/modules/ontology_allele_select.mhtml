@@ -2,6 +2,7 @@
 $annotation
 $gene_display_name
 $curs_root_uri
+$title
 </%args>
 
 <script language="javascript" type="text/javascript">
@@ -118,7 +119,7 @@ var annotation_id = <% $annotation->annotation_id() %>;
 
 <div class="curs-box curs-allele-select">
   <div class="curs-box-title">
-    Choose allele(s) for <% $gene_display_name %> with <% $term_ontid %>
+    <% $title %>
   </div>
   <div class="curs-box-body">
     <table id="curs-allele-list" class="list" style="display: none">

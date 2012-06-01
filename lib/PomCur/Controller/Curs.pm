@@ -1308,6 +1308,21 @@ sub _get_all_alleles
   return %results;
 }
 
+sub _term_name_from_id
+{
+  my $config = shift;
+  my $type_name = shift;
+  my $term_id = shift;
+
+  my $lookup = PomCur::Track::get_adaptor($config, 'ontology');
+
+  my $res = $lookup->lookup(ontology_name => $type_name,
+                            search_string => $term_id,
+                            max_results => 1);
+
+  return $res->[0]->{name};
+}
+
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;
@@ -1332,7 +1347,9 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   my $annotation_data = $annotation->data();
   my $term_ontid = $annotation_data->{term_ontid};
 
-  $st->{title} = "Specify the allele(s) of $gene_display_name to annotate with $term_ontid";
+  my $term_name = _term_name_from_id($config, $annotation_type_name, $term_ontid);
+
+  $st->{title} = "Choose allele(s) for $gene_display_name with $term_ontid ($term_name)";
   $st->{show_title} = 0;
 
   $st->{gene_display_name} = $gene_display_name;
