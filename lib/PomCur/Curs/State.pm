@@ -94,36 +94,35 @@ sub get_state
   my $gene_rs = $self->get_ordered_gene_rs($schema);
   my $gene_count = $gene_rs->count();
 
-      if (defined $self->get_metadata($schema, EXPORTED_TIMESTAMP_KEY)) {
-        $state = EXPORTED;
+  if (defined $self->get_metadata($schema, EXPORTED_TIMESTAMP_KEY)) {
+    $state = EXPORTED;
+  } else {
+    if (defined $self->get_metadata($schema, APPROVED_TIMESTAMP_KEY)) {
+      $state = APPROVED;
+    } else {
+      if (defined $self->get_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY)) {
+        $state = APPROVAL_IN_PROGRESS;
       } else {
-        if (defined $self->get_metadata($schema, APPROVED_TIMESTAMP_KEY)) {
-          $state = APPROVED;
+        if (defined $self->get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
+          $state = NEEDS_APPROVAL;
         } else {
-          if (defined $self->get_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY)) {
-            $state = APPROVAL_IN_PROGRESS;
+          if (defined $self->get_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY)) {
+            $state = CURATION_PAUSED;
           } else {
-            if (defined $self->get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
-              $state = NEEDS_APPROVAL;
-            } else {
-              if (defined $self->get_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY)) {
-                $state = CURATION_PAUSED;
+            if (defined $submitter_email) {
+              if ($gene_count > 0) {
+                $state = CURATION_IN_PROGRESS;
               } else {
-                if (defined $submitter_email) {
-                  if ($gene_count > 0) {
-                    $state = CURATION_IN_PROGRESS;
-                  } else {
-                    $state = SESSION_ACCEPTED;
-                  }
-                } else {
-                  $state = SESSION_CREATED;
-
-                }
+                $state = SESSION_ACCEPTED;
               }
+            } else {
+              $state = SESSION_CREATED;
             }
           }
         }
       }
+    }
+  }
 
   return ($state, $submitter_email, $gene_count);
 }
