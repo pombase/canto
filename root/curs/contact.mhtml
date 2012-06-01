@@ -10,7 +10,7 @@ my $user_email = $c->stash()->{submitter_email};
 my $from_email;
 
 if (defined $user_email) {
-  $from_email = "from $user_email";
+  $from_email = " from $user_email";
 } else {
   $from_email = '';
 }
