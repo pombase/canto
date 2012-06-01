@@ -944,7 +944,8 @@ $(document).ready(function() {
     }
   }
 
-  function setup_description(allele_dialog, selected_option) {
+  function setup_description(selected_option) {
+    var allele_dialog = $('#curs-allele-add');
     var description = allele_dialog.find('.curs-allele-type-description');
     description.show();
     var description_input = description.find('input');
@@ -986,6 +987,11 @@ $(document).ready(function() {
       $endogenous_div.show();
     }
 
+    setup_allele_name(allele_type_config);
+  }
+
+  function setup_allele_name(allele_type_config) {
+    var allele_dialog = $('#curs-allele-add');
     var name_input = allele_dialog.find('.curs-allele-name');
     var autopopulated = maybe_autopopulate(allele_type_config, name_input);
 
@@ -1011,7 +1017,7 @@ $(document).ready(function() {
       $('#curs-allele-add').find('.curs-allele-expression').hide();
       return;
     }
-    setup_description(allele_dialog, selected_option);
+    setup_description(selected_option);
   });
 
   $('.non-key-attribute').jTruncate({
