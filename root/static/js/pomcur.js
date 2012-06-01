@@ -838,7 +838,7 @@ $(document).ready(function() {
       focus: function(event, ui) {
         $('.curs-autocomplete-definition').remove();
         if (ui.item.definition != null) {
-          var def = 
+          var def =
             $('<div class="curs-autocomplete-definition"><h3>Definition</h3><div>' + ui.item.definition + '</div></div>');
 	  def.addClass('ui-widget-content ui-autocomplete ui-corner-all')
 	    .appendTo('body');
@@ -867,7 +867,7 @@ $(document).ready(function() {
           required: true,
         },
         'curs-allele-name': {
-          required: function() { 
+          required: function() {
             var selected_text = add_allele_dialog.find('.curs-allele-type-select select').val();
             var allele_type_config = allele_types[selected_text];
             if (typeof(allele_type_config) == 'undefined') {
