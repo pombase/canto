@@ -4,7 +4,7 @@ $key
 
 % if (defined $help_url) {
 <span class="curs-inline-help-icon">
-  <a href="<% $help_url %>">
+  <a href="<% $help_url %>" target="_blank">
     <img src="<% $help_icon_url %>"
          alt="help" title="help link">
   </a>
