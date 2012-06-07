@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 54;
+use Test::More tests => 56;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -106,6 +106,35 @@ ok ($allele_count > 0);
                'status' => 'existing',
                'with_or_from_display_name' => 'GeneDB_Spombe:SPBC2G2.01c',
                'with_or_from_identifier' => 'GeneDB_Spombe:SPBC2G2.01c',
+             });
+}
+
+{
+  my $options = { pub_uniquename => 'PMID:10467002',
+                  annotation_type_name => 'biological_process',
+                };
+  my @annotations =
+    PomCur::Curs::Utils::get_existing_ontology_annotations ($config, $options);
+
+  is (@annotations, 1);
+  cmp_deeply($annotations[0],
+             {
+               'taxonid' => '4896',
+               'annotation_type' => 'biological_process',
+               'term_ontid' => 'GO:0006810',
+               'term_name' => 'transport',
+               'with_or_from_identifier' => undef,
+               'gene_identifier' => 'SPBC12C2.02c',
+               'gene_name_or_identifier' => 'ste20',
+               'qualifier' => '',
+               'evidence_code' => 'UNK',
+               'annotation_id' => 2,
+               'gene_name' => 'ste20',
+               'gene_product' => '',
+               'is_not' => 0,
+               'status' => 'existing',
+               'with_or_from_display_name' => undef,
+               'with_or_from_identifier' => undef,
              });
 }
 
