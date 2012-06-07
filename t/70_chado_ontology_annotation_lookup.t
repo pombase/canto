@@ -17,34 +17,41 @@ my $lookup =
 
 ok(defined $lookup->schema());
 
+sub check_res {
+  my $res = shift;
+
+  is(@$res, 1);
+
+  cmp_deeply($res->[0],
+             {
+               gene => {
+                 identifier => 'SPBC12C2.02c',
+                 name => 'ste20',
+                 organism_taxonid => '4896',
+               },
+               ontology_term => {
+                 ontid => 'GO:0006810',
+                 term_name => 'transport',
+                 ontology_name => 'biological_process'
+               },
+               evidence_code => 'IMP',
+               with => 'GeneDB_Spombe:SPBC2G2.01c',
+               from => undef,
+               is_not => 0,
+               annotation_id => 1,
+               publication => {
+                 uniquename => 'PMID:10467002'
+               }
+             });
+
+}
+
 my $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
                            ontology_name => 'biological_process',
                            }
                          );
 
-is(@$res, 1);
-
-cmp_deeply($res->[0],
-           {
-             gene => {
-               identifier => 'SPBC12C2.02c',
-               name => 'ste20',
-               organism_taxonid => '4896',
-             },
-             ontology_term => {
-               ontid => 'GO:0006810',
-               term_name => 'transport',
-               ontology_name => 'biological_process'
-             },
-             evidence_code => 'IMP',
-             with => 'GeneDB_Spombe:SPBC2G2.01c',
-             from => undef,
-             is_not => 0,
-             annotation_id => 1,
-             publication => {
-               uniquename => 'PMID:10467002'
-             }
-            });
+check_res($res);
 
 $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
                         ontology_name => 'biological_process',
@@ -52,29 +59,7 @@ $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
                       }
                      );
 
-is(@$res, 1);
-
-cmp_deeply($res->[0],
-           {
-             gene => {
-               identifier => 'SPBC12C2.02c',
-               name => 'ste20',
-               organism_taxonid => '4896',
-             },
-             ontology_term => {
-               ontid => 'GO:0006810',
-               term_name => 'transport',
-               ontology_name => 'biological_process'
-             },
-             evidence_code => 'IMP',
-             with => 'GeneDB_Spombe:SPBC2G2.01c',
-             from => undef,
-             is_not => 0,
-             annotation_id => 1,
-             publication => {
-               uniquename => 'PMID:10467002'
-             }
-            });
+check_res($res);
 
 $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
                         ontology_name => 'biological_process',
