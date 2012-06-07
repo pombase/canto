@@ -370,7 +370,8 @@ sub _process_ontology
   my $evidence_code = $row->{evidence_code};
   my $ontology_name = $ontology_term->{ontology_name};
 
-  my $term_name = $row->{ontology_term}->{term_name};
+  my $term_name =
+    $row->{ontology_term}->{extension_term_name} // $row->{ontology_term}->{term_name};;
 
   my $term_ontid = $ontology_term->{ontid};
 

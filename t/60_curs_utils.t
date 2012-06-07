@@ -122,7 +122,7 @@ ok ($allele_count > 0);
                'taxonid' => '4896',
                'annotation_type' => 'biological_process',
                'term_ontid' => 'GO:0006810',
-               'term_name' => 'transport',
+               'term_name' => 'transport [requires_direct_regulator] SPCC1739.11c',
                'with_or_from_identifier' => undef,
                'gene_identifier' => 'SPBC12C2.02c',
                'gene_name_or_identifier' => 'ste20',
