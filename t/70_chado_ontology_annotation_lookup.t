@@ -103,7 +103,8 @@ cmp_deeply($res->[0],
              'ontology_term' => {
                'ontid' => 'GO:0006810',
                'term_name' => 'transport',
-               'ontology_name' => 'biological_process'
+               'ontology_name' => 'biological_process',
+               'extension_term_name' => 'transport [requires_direct_regulator] SPCC1739.11c',
              },
              'evidence_code' => 'UNK',
              'annotation_id' => 2,

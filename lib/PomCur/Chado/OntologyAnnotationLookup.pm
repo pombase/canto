@@ -277,27 +277,34 @@ sub lookup
         $real_cvterm = $cvterm;
       }
 
-      push @res, {
-        gene => {
-          identifier => $feature->uniquename(),
-          name => $feature->name(),
-          organism_taxonid =>
-            _get_taxonid($schema, $taxonid_cache, $genus, $species),
-        },
-        ontology_term => {
-          ontology_name => $real_cvterm->cv()->name(),
-          term_name => $real_cvterm->name(),
-          ontid => $real_cvterm->db_accession(),
-        },
-        is_not => $row->is_not(),
-        with => $prop_type_values{with},
-        from => $prop_type_values{from},
-        publication => {
-          uniquename => $pub_uniquename,
-        },
-        evidence_code => $evidence_code,
-        annotation_id => $row->feature_cvterm_id(),
+      my $new_res =
+        {
+          gene => {
+            identifier => $feature->uniquename(),
+            name => $feature->name(),
+            organism_taxonid =>
+              _get_taxonid($schema, $taxonid_cache, $genus, $species),
+          },
+          ontology_term => {
+            ontology_name => $real_cvterm->cv()->name(),
+            term_name => $real_cvterm->name(),
+            ontid => $real_cvterm->db_accession(),
+          },
+          is_not => $row->is_not(),
+          with => $prop_type_values{with},
+          from => $prop_type_values{from},
+          publication => {
+            uniquename => $pub_uniquename,
+          },
+          evidence_code => $evidence_code,
+          annotation_id => $row->feature_cvterm_id(),
+        };
+
+      if ($real_cvterm != $cvterm) {
+        $new_res->{ontology_term}->{extension_term_name} = $cvterm->name();
       }
+
+      push @res, $new_res;
     }
 
     return [@res];
