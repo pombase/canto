@@ -180,8 +180,36 @@ sub lookup
       return [];
     }
 
-    my $constraint_and_bits = { pub_id => $pub->pub_id(),
-                                'cvterm.cv_id' => $cv->cv_id() };
+    my $annotation_extension_cv_name = $self->config()->{chado}->{ontology_cv_names}->{annotation_extension};
+    my $ext_cv = $schema->resultset('Cv')->find({ name => $annotation_extension_cv_name });
+
+    my $is_a_term = $schema->resultset('Cvterm')->find({ name => 'is_a' });
+
+    my $is_a_rs =
+      $schema->resultset('CvtermRelationship')->search(
+        {
+          type_id => $is_a_term->cvterm_id(),
+          'object.cv_id' => $cv->cv_id(),
+        },
+        {
+          join => 'object',
+        }
+      );
+
+    my $constraint_and_bits = {
+      -and => {
+        pub_id => $pub->pub_id(),
+        -or => {
+          'me.cvterm.cv_id' => $cv->cv_id(),
+           -and => {
+             'cvterm.cv_id' => $ext_cv->cv_id(),
+             'me.cvterm_id' => {
+               -in => $is_a_rs->get_column('subject_id')->as_query(),
+             },
+           }
+        }
+      }
+    };
     if (defined $gene_identifier) {
       my $transcript_params =
         { where => "me.feature_id in (select subject_id from feature_relationship r, cvterm t, feature objf " .
@@ -237,6 +265,18 @@ sub lookup
       my $evidence_code =
         $self->config()->{evidence_types_by_name}->{lc $evidence};
 
+      my $real_cvterm;
+
+      if ($cvterm->cv_id() == $ext_cv->cv_id()) {
+        $real_cvterm =
+          $cvterm->cvterm_relationship_subjects()
+                 ->search({ type_id => $is_a_term->cvterm_id() })
+                 ->first()
+                 ->object();
+      } else {
+        $real_cvterm = $cvterm;
+      }
+
       push @res, {
         gene => {
           identifier => $feature->uniquename(),
@@ -245,9 +285,9 @@ sub lookup
             _get_taxonid($schema, $taxonid_cache, $genus, $species),
         },
         ontology_term => {
-          ontology_name => $cvterm->cv()->name(),
-          term_name => $cvterm->name(),
-          ontid => $cvterm->db_accession(),
+          ontology_name => $real_cvterm->cv()->name(),
+          term_name => $real_cvterm->name(),
+          ontid => $real_cvterm->db_accession(),
         },
         is_not => $row->is_not(),
         with => $prop_type_values{with},

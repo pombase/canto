@@ -1345,3 +1345,4 @@ chado:
   ontology_cv_names:
     post_translational_modification: PSI-MOD
     phenotype: fission_yeast_phenotype
+    annotation_extension: PomBase annotation extension terms

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::More tests => 11;
 use Test::Deep;
 
 use PomCur::Chado::OntologyAnnotationLookup;
@@ -88,3 +88,34 @@ $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
 is(@$res, 1);
 
 is ($res->[0]->{is_not}, 1);
+
+
+# check a annotation to a term from the "PomBase annotation extension
+# terms" cv - make sure we get the right name and ID back
+$res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
+                        ontology_name => 'biological_process',
+                      }
+                     );
+
+is(@$res, 1);
+cmp_deeply($res->[0],
+           {
+             'ontology_term' => {
+               'ontid' => 'GO:0006810',
+               'term_name' => 'transport',
+               'ontology_name' => 'biological_process'
+             },
+             'evidence_code' => 'UNK',
+             'annotation_id' => 2,
+             'from' => undef,
+             'gene' => {
+               'identifier' => 'SPBC12C2.02c',
+               'name' => 'ste20',
+               'organism_taxonid' => '4896'
+             },
+             'publication' => {
+               'uniquename' => 'PMID:10467002'
+             },
+             'is_not' => 1,
+             'with' => undef
+           });
