@@ -370,17 +370,14 @@ sub _process_ontology
   my $evidence_code = $row->{evidence_code};
   my $ontology_name = $ontology_term->{ontology_name};
 
+  my $term_name = $row->{ontology_term}->{term_name};
+
   my $term_ontid = $ontology_term->{ontid};
-  my $term_details =
-    $ontology_lookup->lookup(ontology_name => $ontology_name,
-                             search_string => $term_ontid);
 
-  if (!@$term_details) {
-    warn "failed to find term for $term_ontid\n";
-    return undef;
+  my $is_not = $row->{is_not} // 0;
+  if ($is_not eq 'false') {
+    $is_not = 0;
   }
-
-  my $term_name = $term_details->[0]->{name};
 
   return {
     annotation_id => $row->{annotation_id},
@@ -398,7 +395,7 @@ sub _process_ontology
     with_or_from_display_name => $row->{with} // $row->{from},
     taxonid => $gene->{organism_taxonid},
     status => 'existing',
-    is_not => $row->{is_not} // 0,
+    is_not => $is_not,
   };
 }
 
