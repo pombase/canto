@@ -30,9 +30,9 @@ sub check_res {
                  organism_taxonid => '4896',
                },
                ontology_term => {
-                 ontid => 'GO:0006810',
-                 term_name => 'transport',
-                 ontology_name => 'biological_process'
+                 ontid => 'GO:0030133',
+                 term_name => 'transport vesicle',
+                 ontology_name => 'cellular_component'
                },
                evidence_code => 'IMP',
                with => 'GeneDB_Spombe:SPBC2G2.01c',
@@ -47,14 +47,14 @@ sub check_res {
 }
 
 my $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
-                           ontology_name => 'biological_process',
+                           ontology_name => 'cellular_component',
                            }
                          );
 
 check_res($res);
 
 $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
-                        ontology_name => 'biological_process',
+                        ontology_name => 'cellular_component',
                         gene_identifier => 'SPBC12C2.02c',
                       }
                      );
@@ -62,7 +62,7 @@ $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
 check_res($res);
 
 $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
-                        ontology_name => 'biological_process',
+                        ontology_name => 'cellular_component',
                         gene_identifier => 'unknown_id',
                       }
                      );
@@ -77,12 +77,10 @@ my $spbc12c2_02c = $chado_schema->resultset('Feature')->find({ uniquename => 'SP
 my $fcs = $spbc12c2_02c->feature_cvterms();
 is ($fcs->count(), 2);
 
-my $fc = $fcs->first();
-$fc->is_not(1);
-$fc->update();
+map { $_->is_not(1); $_->update(); } $fcs->all();
 
 $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
-                        ontology_name => 'biological_process',
+                        ontology_name => 'cellular_component',
                         gene_identifier => 'SPBC12C2.02c',
                       }
                      );

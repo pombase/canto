@@ -82,7 +82,7 @@ ok ($allele_count > 0);
 
 {
   my $options = { pub_uniquename => 'PMID:10467002',
-                  annotation_type_name => 'biological_process',
+                  annotation_type_name => 'cellular_component',
                 };
   my @annotations =
     PomCur::Curs::Utils::get_existing_ontology_annotations ($config, $options);
@@ -91,9 +91,9 @@ ok ($allele_count > 0);
   cmp_deeply($annotations[0],
              {
                'taxonid' => '4896',
-               'annotation_type' => 'biological_process',
-               'term_ontid' => 'GO:0006810',
-               'term_name' => 'transport',
+               'annotation_type' => 'cellular_component',
+               'term_ontid' => 'GO:0030133',
+               'term_name' => 'transport vesicle',
                'with_or_from_identifier' => undef,
                'gene_identifier' => 'SPBC12C2.02c',
                'gene_name_or_identifier' => 'ste20',
