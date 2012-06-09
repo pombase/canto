@@ -686,6 +686,9 @@ class_info:
     sessions_needing_approval:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS'))"
+    sessions_with_term_requests:
+      extends: curs
+      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'CURATION_IN_PROGRESS' or p.value = 'CURATION_PAUSED' or p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS') and cast((select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_term_suggestions_count') as int) > 0)"
     approved_sessions:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')"
@@ -874,6 +877,7 @@ reports:
     - report: all_sessions
       children:
         - report: approved_sessions
+        - report: sessions_with_term_requests
 #        - report: sessions_needing_approval
 #        - report: unassigned_sessions
 #    - report: named_genes
