@@ -200,7 +200,7 @@ sub lookup
       -and => {
         pub_id => $pub->pub_id(),
         -or => {
-          'me.cvterm.cv_id' => $cv->cv_id(),
+          'cvterm.cv_id' => $cv->cv_id(),
            -and => {
              'cvterm.cv_id' => $ext_cv->cv_id(),
              'me.cvterm_id' => {
