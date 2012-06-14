@@ -1242,7 +1242,7 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   my $description = $params->{'curs-allele-description-input'};
 
-  if (length $description == 0) {
+  if (!defined $description || length $description == 0) {
     $description = $params->{'curs-allele-type'};
   }
 
