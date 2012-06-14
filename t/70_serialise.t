@@ -120,6 +120,25 @@ my $full_expected_curation_session =
           ],
         },
         {
+          evidence_code => 'Co-immunoprecipitation experiment',
+          creation_date => '2010-01-02',
+          alleles => [
+            {
+              name => 'ssm4-D4',
+              gene => {
+                uniquename => 'SPAC27D7.13c',
+                organism => 'Schizosaccharomyces pombe'
+              },
+              type => 'new',
+              description => 'del_100-200',
+            }
+          ],
+          status => 'new',
+          type => 'phenotype',
+          publication => 'PMID:19756689',
+          term => 'FYPO:0000017'
+        },
+        {
           type => 'post_translational_modification',
           status => 'new',
           creation_date => "2010-01-02",

@@ -106,20 +106,22 @@ test_config:
                - primary_identifier: 'SPAC27D7.13c:allele-1'
                  name: ssm4delta
                  description: deletion
+                 type: existing
                - primary_identifier: 'SPAC27D7.13c:allele-2'
                  name: R344A
                  description: R344A
-               - primary_identifier: 'SPAC27D7.13c:allele-3'
-                 name: ssm4-D4
+                 type: existing
+               - name: ssm4-D4
                  description: 'del_100-200'
-               - primary_identifier: 'SPAC27D7.13c:allele-4'
-                 description: 'del_200-300'
+                 type: new
+               - description: 'del_200-300'
+                 type: new
            - "SPBC14F5.07"
            - primary_identifier: "SPCC63.05"
              alleles:
-               - primary_identifier: "SPCC63.05:allele-1"
-                 name: SPCC63.05-unk
+               - name: SPCC63.05-unk
                  description: unknown
+                 type: new
          annotations:
            - type: biological_process
              status: new
@@ -162,8 +164,8 @@ test_config:
                  - primary_identifier: SPAC27D7.13c
            - type: phenotype
              status: new
-             alleles(Allele:primary_identifier):
-               - SPAC27D7.13c:allele-1
+             alleles(Allele:description):
+               - deletion
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: Epitope-tagged protein immunolocalization experiment data
@@ -171,6 +173,14 @@ test_config:
                expression: Overexpression
                conditions:
                  - high temperature
+           - type: phenotype
+             status: new
+             alleles(Allele:description):
+               - del_100-200
+             pub(Pub:uniquename): PMID:19756689
+             data:
+               evidence_code: Co-immunoprecipitation experiment
+               term_ontid: FYPO:0000017
            - type: post_translational_modification
              status: new
              genes(Gene:primary_identifier):

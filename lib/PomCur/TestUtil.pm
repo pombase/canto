@@ -732,10 +732,11 @@ sub _load_curs_db_data
       my $allele_primary_identifier = $allele_details->{primary_identifier};
       my $allele_description = $allele_details->{description};
       my $allele_name = $allele_details->{name};
+      my $allele_type = $allele_details->{type};
 
       my %create_args = (
         primary_identifier => $allele_primary_identifier,
-        type => 'existing',
+        type => $allele_type,
         description => $allele_description,
         name => $allele_name,
         gene => $new_gene->gene_id(),

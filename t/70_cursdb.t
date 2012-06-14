@@ -38,7 +38,7 @@ is (@allele_annotations, 1);
 # test that a phenotype annotation exists and has the right type
 my $phenotype_annotation_rs =
   $schema->resultset('Annotation')->search({ type => 'phenotype' });
-is ($phenotype_annotation_rs->count(), 1);
+is ($phenotype_annotation_rs->count(), 2);
 is ($phenotype_annotation_rs->first()->data()->{term_ontid}, 'FYPO:0000013');
 
 my $res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
