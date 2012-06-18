@@ -4,7 +4,6 @@ use Test::Deep;
 
 use Test::More tests => 6;
 
-use Data::Compare;
 use Clone qw(clone);
 use JSON;
 
