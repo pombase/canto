@@ -1322,7 +1322,7 @@ sub _get_all_alleles
   return %results;
 }
 
-sub _term_name_from_id
+sub _term_name_from_id : Private
 {
   my $config = shift;
   my $type_name = shift;
