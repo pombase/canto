@@ -238,6 +238,71 @@ sub lookup
   return \@ret_list;
 }
 
+
+sub _find_cv
+{
+  my $self = shift;
+  my $ontology_name = shift;
+
+  my $cv = $self->schema()->resultset('Cv')->find({ name => $ontology_name });
+
+  die "no cv with name: $ontology_name" unless defined $cv;
+
+  return $cv;
+}
+
+
+=head2 lookup_by_name
+
+ Usage   : my $result = $lookup->lookup_by_name(ontology_name => $ontology_name,
+                                                term_name => $term_name);
+ Function: Return the detail of the term that matches $term_name in the given
+           ontology.
+ Args    : ontology_name - the ontology to search
+           term_name - the name of the term to find
+           include_children - include data about the child terms (default: 0)
+           include_definition - include the definition for terms (default: 0)
+ Returns : A hash ref of details about the term, or undef if there is no term
+           with that name.  The hash will have the same field as returned by
+           lookup().
+           eg.
+           {
+             name => '...',
+             definition => '...',
+             id => '...',
+           }
+
+=cut
+
+sub lookup_by_name
+{
+  my $self = shift;
+  my %args = @_;
+
+  my $ontology_name = $args{ontology_name};
+  if (!defined $ontology_name) {
+    croak "no ontology_name passed to OntologyLookup::lookup_by_name()";
+  }
+
+  my $term_name = $args{term_name};
+
+  my $include_definition = $args{include_definition};
+  my $include_children = $args{include_children};
+
+  my $schema = $self->schema();
+
+  my $cv = $self->_find_cv($ontology_name);
+  my $cvterm = $schema->resultset('Cvterm')->find({ cv_id => $cv->cv_id(),
+                                                    name => $term_name });
+
+  if (defined $cvterm) {
+    return { _make_term_hash($cvterm, $include_definition, $include_children) };
+  } else {
+    return undef;
+  }
+}
+
+
 =head2 get_all
 
  Usage   : my $lookup = PomCur::Track::OntologyLookup->new(...);
@@ -265,16 +330,13 @@ sub get_all
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
 
-  my $config = $self->config();
   my $schema = $self->schema();
   my @ret_list = ();
 
-  my $cv = $schema->resultset('Cv')->find({ name => $ontology_name });
+  my $cv = $self->_find_cv($ontology_name);
   my $cvterm_rs = $schema->resultset('Cvterm')->search({ cv_id => $cv->cv_id() });
 
   while (defined (my $cvterm = $cvterm_rs->next())) {
-    my $name = $cvterm->name();
-
     my %term_hash =
       _make_term_hash($cvterm, $include_definition, $include_children);
 
