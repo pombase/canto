@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 41;
+use Test::More tests => 42;
 use Test::Deep;
 
 use Data::Compare;
@@ -266,14 +266,29 @@ PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
 my %allele_creation_data_2 = (
   name => 'an_allele',
   description => undef,
-  conditions => ['low temperature'],
+  conditions => ['low temperature', 'late in the afternoon'],
   evidence => 'Enzyme assay data',
   expression => 'Overexpression',
 );
 
-PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
-                                                      $annotation_for_allele_in_progress,
-                                                      \%allele_creation_data_2);
+my $add_res =
+  PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
+                                                        $annotation_for_allele_in_progress,
+                                                        \%allele_creation_data_2);
+my $add_expected = {
+  'expression' => 'Overexpression',
+  'name' => 'an_allele',
+  'evidence' => 'Enzyme assay data',
+  'id' => 1,
+  'display_name' => 'an_allele(unknown)',
+  'description' => undef,
+  'conditions' => [
+    'PCO:0000006',
+    'late in the afternoon'
+  ]
+};
+cmp_deeply($add_res, $add_expected);
+
 
 my %allele_data_1 = PomCur::Controller::Curs::_get_all_alleles($config, $curs_schema,
                                                                $gene_for_allele);

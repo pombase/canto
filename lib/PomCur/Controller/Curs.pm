@@ -1197,6 +1197,20 @@ sub _allele_add_action_internal
     %$allele_data_ref,
   };
 
+  my $lookup = PomCur::Track::get_adaptor($config, 'ontology');
+
+  if (exists $new_allele_data->{conditions}) {
+    # replace term names with the ID if we know it otherwise assume that the
+    # user has made up a condition
+    map { my $name = $_;
+          my $res = $lookup->lookup_by_name(ontology_name => 'phenotype_condition',
+                                             term_name => $name);
+          if (defined $res) {
+            $_ = $res->{id};
+          }
+        } @{$new_allele_data->{conditions}};
+  }
+
   $alleles_in_progress->{$new_allele_id} = $new_allele_data;
   $data->{alleles_in_progress} = $alleles_in_progress;
   $annotation->data($data);
