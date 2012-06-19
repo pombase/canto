@@ -88,7 +88,7 @@ test_psgi $app, sub {
   my $allele_name_param = 'an_allele_name';
   my $allele_desc_param = 'allele_desc';
   my $expression_param = 'Knockdown';
-  my @conditions_param = qw(Hot Cold);
+  my @conditions_param = ("high temperature", "low temperature");
 
   my $do_add_allele = sub {
     my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
@@ -164,7 +164,7 @@ test_psgi $app, sub {
                      'curs-allele-name' => $allele_name_param . '_2',
                      'curs-allele-description-input' => $allele_desc_param . '_2',
                      'curs-allele-expression' => $expression_param,
-                     'curs-allele-condition-names[tags][]' => ['Cold']);
+                     'curs-allele-condition-names[tags][]' => ['low temperature']);
 
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);

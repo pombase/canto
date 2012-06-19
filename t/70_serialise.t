@@ -103,7 +103,7 @@ my $full_expected_curation_session =
           publication => 'PMID:19756689',
           type => 'phenotype',
           conditions => [
-            'high temperature'
+            'PCO:0000004'
           ],
           alleles => [
             {

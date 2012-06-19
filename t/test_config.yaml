@@ -172,7 +172,7 @@ test_config:
                term_ontid: FYPO:0000013
                expression: Overexpression
                conditions:
-                 - high temperature
+                 - 'PCO:0000004'
            - type: phenotype
              status: new
              alleles(Allele:description):

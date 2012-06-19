@@ -87,7 +87,12 @@ sub _make_ontology_annotation
     $expression_level = $data->{expression} // 'null';
     my @conditions = ();
     if ($data->{conditions}) {
-      $conditions_string = join ', ', @{$data->{conditions}};
+      my @condition_names = map {
+        my $term_id = $_;
+        my $result = $ontology_lookup->lookup_by_id(id => $term_id);
+        $result->{name};
+      } @{$data->{conditions}};
+      $conditions_string = join ', ', @condition_names;
     } else {
       $conditions_string = '';
     }
