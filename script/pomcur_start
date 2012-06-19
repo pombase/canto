@@ -85,6 +85,7 @@ $app = Plack::Middleware::Expires->wrap($app,
 
 if ($ENV{PLACK_DEBUG}) {
   $app = Plack::Middleware::Debug->wrap($app);
+  $app = Plack::Middleware::InteractiveDebugger->wrap($app);
 }
 
 my $runner = Plack::Runner->new;
