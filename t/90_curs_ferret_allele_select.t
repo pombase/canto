@@ -157,6 +157,7 @@ test_psgi $app, sub {
 
   # add two alleles
   {
+    # add 1
     $do_add_allele->();
 
     my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
@@ -166,6 +167,7 @@ test_psgi $app, sub {
                      'curs-allele-expression' => $expression_param,
                      'curs-allele-condition-names[tags][]' => ['low temperature']);
 
+    # add another
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);
 
