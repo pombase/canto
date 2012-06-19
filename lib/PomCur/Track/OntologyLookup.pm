@@ -41,9 +41,20 @@ use Moose;
 use String::Similarity;
 
 use PomCur::Track::OntologyIndex;
+use PomCur::Track::LoadUtil;
 
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackAdaptor';
+
+has load_util => (is => 'ro', isa => 'PomCur::Track::LoadUtil',
+                  lazy_build => 1, init_arg => undef);
+
+sub _build_load_util
+{
+  my $self = shift;
+
+  return PomCur::Track::LoadUtil->new(schema => $self->schema());
+}
 
 sub _clean_string
 {
@@ -300,6 +311,58 @@ sub lookup_by_name
   } else {
     return undef;
   }
+}
+
+=head2 lookup_by_id
+
+ Usage   : my $result = $lookup->lookup_by_id(id => $term_name);
+ Function: Return the detail of the with the given id
+ Args    : id - the id to search for
+           include_children - include data about the child terms (default: 0)
+           include_definition - include the definition for terms (default: 0)
+ Returns : A hash ref of details about the term, or undef if there is no term
+           with that id.  The hash will have the same field as returned by
+           lookup().
+           eg.
+           {
+             name => '...',
+             definition => '...',
+             id => '...',
+           }
+
+=cut
+
+sub lookup_by_id
+{
+  my $self = shift;
+  my %args = @_;
+
+  my $include_definition = $args{include_definition};
+  my $include_children = $args{include_children};
+
+  my $term_id = $args{id};
+  if (!defined $term_id) {
+    croak "no id passed to OntologyLookup::lookup_by_id()";
+  }
+
+  my $dbxref = $self->load_util()->find_dbxref($term_id);
+
+  if (!defined $dbxref) {
+    return undef;
+  }
+
+  my @terms = $dbxref->cvterms();
+
+  if (@terms == 0) {
+    return undef;
+  }
+  if (@terms > 1) {
+    die "internal error: looked up $term_id and got more than one result";
+  }
+
+  my $cvterm = $terms[0];
+
+  return { _make_term_hash($cvterm, $include_definition, $include_children) };
 }
 
 

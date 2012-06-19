@@ -1,6 +1,7 @@
 use strict;
 use warnings;
-use Test::More tests => 36;
+use Test::More tests => 39;
+use Test::Deep;
 
 use PomCur::TestUtil;
 
@@ -117,7 +118,7 @@ ok(!defined $child_res->{definition});
 my @children = @{$child_res->{children}};
 
 is(@children, 2);
-        use Data::Dumper;
+
 
 ok(grep { $_->{id} eq 'GO:0005487' &&
           $_->{name} eq 'nucleocytoplasmic transporter activity' ||
@@ -132,18 +133,38 @@ $id_result = $lookup->lookup(ontology_name => 'phenotype',
 
 is(scalar(@$id_result), 1);
 
+my $expected_fypo_term = {
+  id => 'FYPO:0000114',
+  name => 'cellular process phenotype',
+  annotation_namespace => 'fission_yeast_phenotype',
+  definition => 'A phenotype that affects a cellular process.',
+};
+
 is($id_result->[0]->{id}, 'FYPO:0000114');
 is($id_result->[0]->{name}, 'cellular process phenotype');
 is($id_result->[0]->{annotation_namespace}, 'fission_yeast_phenotype');
 
+cmp_deeply($id_result->[0], $expected_fypo_term);
+
 
 my $fypo_cpp = $lookup->lookup_by_name(ontology_name => 'fission_yeast_phenotype',
-                                       term_name => 'cellular process phenotype');
+                                       term_name => 'cellular process phenotype',
+                                       include_definition => 1);
 is ($fypo_cpp->{id}, 'FYPO:0000114');
 is ($fypo_cpp->{name}, 'cellular process phenotype');
+
+cmp_deeply($fypo_cpp, $expected_fypo_term);
+
+
 my $fypo_fail = $lookup->lookup_by_name(ontology_name => 'fission_yeast_phenotype',
-                                       term_name => 'unknown name');
+                                        term_name => 'unknown name');
 ok (!defined $fypo_fail);
+
+
+my $fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000114',
+                                      include_definition => 1);
+cmp_deeply($fypo_term, $expected_fypo_term);
+
 
 my @all_pco_terms = $lookup->get_all(ontology_name => 'phenotype_condition');
 is (@all_pco_terms, 5);
