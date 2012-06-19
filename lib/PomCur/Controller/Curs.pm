@@ -1337,6 +1337,33 @@ sub _term_name_from_id : Private
   return $res->[0]->{name};
 }
 
+sub _allele_data_for_js : Private
+{
+  my $config = shift;
+  my $annotation = shift;
+
+  my $alleles_in_progress = $annotation->data()->{alleles_in_progress};
+
+  if (defined $alleles_in_progress) {
+    my $ontology_lookup =
+      PomCur::Track::get_adaptor($config, 'ontology');
+
+    my $ret = clone $alleles_in_progress;
+    while (my ($id, $data) = each %$ret) {
+      if (defined $data->{conditions}) {
+        map {
+          my $term_id = $_;
+          my $result = $ontology_lookup->lookup_by_id(id => $term_id);
+          $_ = $result->{name};
+        } @{$data->{conditions}};
+      }
+    }
+    return $ret;
+  } else {
+    return {};
+  }
+}
+
 sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;
@@ -1396,7 +1423,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
       } keys %existing_alleles_by_name
     ];
 
-  $st->{alleles_in_progress} = $annotation->data()->{alleles_in_progress} // {};
+  $st->{alleles_in_progress} = _allele_data_for_js($config, $annotation);
 
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
 }

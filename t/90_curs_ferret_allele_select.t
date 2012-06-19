@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 39;
+use Test::More tests => 42;
 
 use Data::Compare;
 
@@ -172,6 +172,19 @@ test_psgi $app, sub {
     my $res = $cb->($req);
 
     is ($res->code, 200);
+
+    {
+      my $uri = new URI("$root_url/annotation/allele_select/$new_annotation_id");
+      my $req = HTTP::Request->new(GET => $uri);
+      my $res = $cb->($req);
+
+      is $res->code, 200;
+
+      my $content = $res->content();
+
+      like ($content, qr/Choose allele\(s\) for SPCC1739.10 with FYPO:0000013 \(T-shaped cells\)/);
+      like ($content, qr/high temperature/);
+    }
 
     my $annotation = $curs_schema->find_with_type('Annotation', $new_annotation_id);
 
