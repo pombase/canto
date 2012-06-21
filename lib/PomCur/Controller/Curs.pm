@@ -88,7 +88,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $schema = PomCur::Curs::get_schema($c);
 
   if (!defined $schema) {
-    $c->res->redirect($c->uri_for('/404'));
+    $c->forward('not_found');
     $c->detach();
   }
 
@@ -179,6 +179,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       }
     }
   }
+}
+
+sub not_found: Private
+{
+  my ($self, $c) = @_;
+  $c->forward('PomCur::Controller::Root', 'default');
 }
 
 sub _redirect_and_detach
