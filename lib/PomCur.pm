@@ -85,6 +85,7 @@ __PACKAGE__->allow_access('/ws');
 __PACKAGE__->allow_access('/tools/canto_front_page');
 __PACKAGE__->allow_access('/tools/pubmed_id_start');
 __PACKAGE__->allow_access('/tools/pubmed_id_lookup');
+__PACKAGE__->allow_access('/tools/start');
 
 my $config = __PACKAGE__->config();
 
