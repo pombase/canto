@@ -89,8 +89,14 @@ sub _make_ontology_annotation
     if ($data->{conditions}) {
       my @condition_names = map {
         my $term_id = $_;
-        my $result = $ontology_lookup->lookup_by_id(id => $term_id);
-        $result->{name};
+        if ($term_id =~ /^[A-Z]+:/) {
+          my $result = $ontology_lookup->lookup_by_id(id => $term_id);
+          $result->{name};
+        } else {
+          # some conditions are just free text if the user couldn't find the
+          # appropriate PCO term
+          $term_id;
+        }
       } @{$data->{conditions}};
       $conditions_string = join ', ', @condition_names;
     } else {
