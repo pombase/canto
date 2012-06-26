@@ -184,6 +184,10 @@ sub find_dbxref
 
   my ($db_name, $dbxref_acc) = $termid =~ /^(.*?):(.*)/;
 
+  if (!defined $db_name) {
+    croak qq(dbxref "$termid" not in the form: <DB_NAME>:<ACCESSION>);
+  }
+
   my $db = $self->find_db($db_name);
 
   my $schema = $self->schema();
