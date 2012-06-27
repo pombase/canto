@@ -1053,6 +1053,7 @@ evidence_types:
   'Protein-peptide':
     name: 'Protein-peptide (binds to peptide)'
   'Reconstituted Complex': ~
+  'RNA protection assay evidence': ~
   'Synthetic Growth Defect': ~
   'Synthetic Haploinsufficiency': ~
   'Synthetic Lethality': ~
