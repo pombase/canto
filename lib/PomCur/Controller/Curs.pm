@@ -1114,6 +1114,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
       {
         name => 'evidence-select',
         type => 'Select', options => [ @codes ],
+        default => $annotation_data->{evidence_code},
       },
       {
         name => 'evidence-proceed', type => 'Submit', value => 'Proceed ->',
