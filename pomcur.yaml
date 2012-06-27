@@ -194,7 +194,7 @@ db_initial_data:
               accession: cell_composition_or_wt_feature
               db:
                 name: PomCur
-          - name: Phylogeny
+          - name: Phylogeny and evolutionary studies
             dbxref:
               accession: phylogeny_paper 
               db:
@@ -649,9 +649,9 @@ class_info:
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Cell composition or WT feature')"
     triage_phylogeny_paper_publications:
-      class_display_name: Phylogeny
+      class_display_name: Phylogeny and evolutionary studies
       extends: pub
-      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Phylogeny')"
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Phylogeny and evolutionary studies')"
     triage_loaded_in_error_publications:
       class_display_name: Loaded in error
       extends: pub
