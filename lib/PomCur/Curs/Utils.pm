@@ -391,6 +391,11 @@ sub _process_ontology
     $is_not = 0;
   }
 
+  my $allele_display_name =
+    PomCur::Curs::Utils::make_allele_display_name($row->{allele}->{name},
+                                                  $row->{allele}->{description});
+
+
   return {
     annotation_id => $row->{annotation_id},
     gene_identifier => $gene->{identifier},
@@ -398,6 +403,7 @@ sub _process_ontology
     gene_name_or_identifier =>
       $gene->{name} || $gene->{identifier},
     gene_product => $gene->{product} || '',
+    allele_display_name => $allele_display_name,
     qualifier => '',
     annotation_type => $ontology_name,
     term_ontid => $term_ontid,
