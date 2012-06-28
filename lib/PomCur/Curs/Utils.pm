@@ -85,7 +85,7 @@ sub _make_ontology_annotation
     $gene = $allele->gene();
 
     $expression_level = $data->{expression} // 'null';
-    my @conditions = ();
+
     if ($data->{conditions}) {
       my @condition_names = map {
         my $term_id = $_;
