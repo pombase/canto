@@ -166,7 +166,7 @@ sub lookup
   if (defined $pub) {
     my $prop_type_cv =
       $schema->find_with_type('Cv', name => 'feature_cvtermprop_type');
-    my @prop_type_names = qw[evidence with from];
+    my @prop_type_names = qw[evidence with from condition expression qualifier];
     my %prop_cvterm_ids = ();
     for my $prop_type_name (@prop_type_names) {
       $prop_cvterm_ids{$prop_type_name} =
@@ -245,12 +245,19 @@ sub lookup
       my %prop_type_values = (evidence => 'Unknown',
                               with => undef,
                               from => undef,
+                              expression => undef,
+                              qualifier => undef,
+                              condition => [],
                               );
       for my $prop (@props) {
         for my $prop_type_name (@prop_type_names) {
           if (defined $prop_cvterm_ids{$prop_type_name} &&
               $prop_cvterm_ids{$prop_type_name} == $prop->type_id()) {
-            $prop_type_values{$prop_type_name} = $prop->value();
+            if (ref $prop_type_values{$prop_type_name}) {
+              push @{$prop_type_values{$prop_type_name}}, $prop->value();
+            } else {
+              $prop_type_values{$prop_type_name} = $prop->value();
+            }
           }
         }
       }
@@ -287,7 +294,10 @@ sub lookup
           publication => {
             uniquename => $pub_uniquename,
           },
+          conditions => $prop_type_values{condition},
           evidence_code => $evidence_code,
+          expression => $prop_type_values{expression},
+          qualifier => $prop_type_values{expression},
           annotation_id => $row->feature_cvterm_id(),
         };
 

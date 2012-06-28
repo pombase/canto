@@ -87,18 +87,8 @@ sub _make_ontology_annotation
     $expression_level = $data->{expression} // 'null';
 
     if ($data->{conditions}) {
-      my @condition_names = map {
-        my $term_id = $_;
-        if ($term_id =~ /^[A-Z]+:/) {
-          my $result = $ontology_lookup->lookup_by_id(id => $term_id);
-          $result->{name};
-        } else {
-          # some conditions are just free text if the user couldn't find the
-          # appropriate PCO term
-          $term_id;
-        }
-      } @{$data->{conditions}};
-      $conditions_string = join ', ', @condition_names;
+      $conditions_string = _get_conditions_string($ontology_lookup,
+                                                  $data->{conditions});
     } else {
       $conditions_string = '';
     }
@@ -367,7 +357,29 @@ sub get_annotation_table
     map { $completed_count++ if $_->{completed} } @entries;
   }
 
-  return ($completed_count, [@annotations]);
+  return ($completed_count, [@annotations])
+}
+
+sub _get_conditions_string
+{
+  my $ontology_lookup = shift;
+  my $conditions = shift;
+
+  return '' unless defined $conditions;
+
+  my @condition_names = map {
+    my $term_id = $_;
+    if ($term_id =~ /^[A-Z]+:/) {
+      my $result = $ontology_lookup->lookup_by_id(id => $term_id);
+      $result->{name};
+    } else {
+      # some conditions are just free text if the user couldn't find the
+      # appropriate PCO term
+      $term_id;
+    }
+  } @$conditions;
+
+  return join ', ', @condition_names;
 }
 
 sub _process_ontology
@@ -396,6 +408,8 @@ sub _process_ontology
                                                   $row->{allele}->{description});
 
 
+  my $conditions_string = _get_conditions_string($ontology_lookup, $row->{conditions});
+
   return {
     annotation_id => $row->{annotation_id},
     gene_identifier => $gene->{identifier},
@@ -404,7 +418,9 @@ sub _process_ontology
       $gene->{name} || $gene->{identifier},
     gene_product => $gene->{product} || '',
     allele_display_name => $allele_display_name,
-    qualifier => '',
+    expression_level => $row->{expression} // '',
+    conditions => $conditions_string,
+    qualifier => $row->{qualifier} // '',
     annotation_type => $ontology_name,
     term_ontid => $term_ontid,
     term_name => $term_name,
