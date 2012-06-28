@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Test::Deep;
 
 use PomCur::Chado::OntologyAnnotationLookup;
@@ -120,3 +120,12 @@ cmp_deeply($res->[0],
              'is_not' => 1,
              'with' => undef
            });
+
+
+# check a phenotpe annotation for an allele
+$res = $lookup->lookup({
+  pub_uniquename => 'PMID:10467002',
+  ontology_name => 'phenotype',
+});
+
+is(@$res, 1);
