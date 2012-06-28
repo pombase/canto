@@ -44,23 +44,20 @@ with 'PomCur::Chado::ChadoLookup';
 
 sub _get_taxonid
 {
-  my $schema = shift;
   my $cache = shift;
-  my $genus = shift;
-  my $species = shift;
+  my $organism = shift;
 
-  my $full_name = "$genus $species";
-
-  if (exists $cache->{$full_name}) {
-    return $cache->{$full_name};
+  if (exists $cache->{$organism->organism_id()}) {
+    return $cache->{$organism->organism_id()};
   } else {
-    my $constraint = { genus => $genus, species => $species };
-    my $organism_rs = $schema->resultset('Organism')->search($constraint);
-    my $prop = $organism_rs->search_related('organismprops')
+    my $prop = $organism->organismprops()
       ->search({ 'type.name' => 'taxon_id' }, { join => 'type' })->first();
 
     my $taxonid = $prop->value();
-    $cache->{$full_name} = $taxonid;
+
+    die "no taxon_id for ", $organism->full_name() unless defined $taxonid;
+
+    $cache->{$organism->organism_id()} = $taxonid;
     return $taxonid;
   }
 }
@@ -244,8 +241,6 @@ sub lookup
       my $feature = $self->_gene_of_feature($row->feature());
       my $cvterm = $row->cvterm();
       my $organism = $feature->organism();
-      my $genus = $organism->genus();
-      my $species = $organism->species();
       my @props = $row->feature_cvtermprops()->all();
       my %prop_type_values = (evidence => 'Unknown',
                               with => undef,
@@ -281,12 +276,6 @@ sub lookup
 
       my $new_res =
         {
-          gene => {
-            identifier => $feature->uniquename(),
-            name => $feature->name(),
-            organism_taxonid =>
-              _get_taxonid($schema, $taxonid_cache, $genus, $species),
-          },
           ontology_term => {
             ontology_name => $real_cvterm->cv()->name(),
             term_name => $real_cvterm->name(),
@@ -301,6 +290,50 @@ sub lookup
           evidence_code => $evidence_code,
           annotation_id => $row->feature_cvterm_id(),
         };
+
+      my $taxonid = _get_taxonid($taxonid_cache, $organism);
+
+      if ($feature->type()->name() eq 'allele') {
+        my $feature_rels = $feature->feature_relationship_subjects();
+        my $gene;
+        while (defined (my $rel = $feature_rels->next())) {
+          if ($rel->type()->name() eq 'instance_of') {
+            $gene = $rel->object();
+          }
+        }
+        if (defined $gene) {
+          $new_res->{gene} = {
+            identifier => $gene->uniquename(),
+            name => $gene->name(),
+            organism_taxonid => $taxonid,
+          };
+        } else {
+          $new_res->{gene} = {
+            identifier => 'not_found',
+            organism_taxonid => $taxonid,
+          },
+        }
+        my $allele_description_prop =
+          $feature->featureprops()
+          ->search({ 'type.name' => 'description' }, { join => 'type' })->first();
+        my $allele_description = undef;
+        if (defined $allele_description_prop) {
+          $allele_description = $allele_description_prop->value();
+        }
+
+        $new_res->{allele} = {
+          identifier => $feature->uniquename(),
+          name => $feature->name(),
+          description => $allele_description,
+          organism_taxonid => $taxonid,
+        };
+      } else {
+        $new_res->{gene} = {
+          identifier => $feature->uniquename(),
+          name => $feature->name(),
+          organism_taxonid => $taxonid,
+        };
+      }
 
       if ($real_cvterm != $cvterm) {
         $new_res->{ontology_term}->{extension_term_name} = $cvterm->name();

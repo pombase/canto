@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::Deep;
 
 use PomCur::Chado::OntologyAnnotationLookup;
@@ -122,6 +122,7 @@ cmp_deeply($res->[0],
            });
 
 
+
 # check a phenotpe annotation for an allele
 $res = $lookup->lookup({
   pub_uniquename => 'PMID:10467002',
@@ -129,3 +130,31 @@ $res = $lookup->lookup({
 });
 
 is(@$res, 1);
+
+cmp_deeply($res->[0],
+           {
+             'gene' => {
+               'identifier' => 'SPBC12C2.02c',
+               'name' => 'ste20',
+               'organism_taxonid' => '4896'
+             },
+             'ontology_term' => {
+               'ontid' => 'FYPO:0000104',
+               'term_name' => 'sensitive to cycloheximide',
+               'ontology_name' => 'fission_yeast_phenotype'
+             },
+             'evidence_code' => 'UNK',
+             'annotation_id' => 3,
+             'from' => undef,
+             'is_not' => 'false',
+             'publication' => {
+               'uniquename' => 'PMID:10467002'
+             },
+             'allele' => {
+               'identifier' => 'SPBC12C2.02c:allele-1',
+               'name' => 'ste20delta',
+               'description' => 'del_x1',
+               'organism_taxonid' => '4896'
+             },
+             'with' => undef
+           });
