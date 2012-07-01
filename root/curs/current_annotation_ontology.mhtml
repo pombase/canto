@@ -48,7 +48,7 @@ $user_created
       </th>
 % }
       <th>
-        Qualifier
+        Qualifiers
       </th>
 % if ($needs_with_or_from) {
       <th>
