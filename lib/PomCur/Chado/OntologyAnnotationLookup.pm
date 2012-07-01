@@ -246,7 +246,7 @@ sub lookup
                               with => undef,
                               from => undef,
                               expression => undef,
-                              qualifier => undef,
+                              qualifier => [],
                               condition => [],
                               );
       for my $prop (@props) {
@@ -297,7 +297,7 @@ sub lookup
           conditions => $prop_type_values{condition},
           evidence_code => $evidence_code,
           expression => $prop_type_values{expression},
-          qualifier => $prop_type_values{expression},
+          qualifiers => $prop_type_values{qualifier},
           annotation_id => $row->feature_cvterm_id(),
         };
 

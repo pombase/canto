@@ -159,7 +159,7 @@ sub _make_ontology_annotation
     gene_product => $gene_product,
     gene_synonyms_string => $gene_synonyms_string,
     allele_display_name => $allele_display_name,
-    qualifier => '',
+    qualifiers => '',
     annotation_type => $annotation_type,
     annotation_type_display_name => $annotation_type_display_name,
     annotation_type_abbreviation => $annotation_type_abbreviation // '',
@@ -409,6 +409,11 @@ sub _process_ontology
 
 
   my $conditions_string = _get_conditions_string($ontology_lookup, $row->{conditions});
+  my $qualifier_string = '';
+
+  if (defined $row->{qualifiers}) {
+    $qualifier_string = join ', ', @{$row->{qualifiers}};
+  }
 
   return {
     annotation_id => $row->{annotation_id},
@@ -420,7 +425,7 @@ sub _process_ontology
     allele_display_name => $allele_display_name,
     expression_level => $row->{expression} // '',
     conditions => $conditions_string,
-    qualifier => $row->{qualifier} // '',
+    qualifiers => $qualifier_string,
     annotation_type => $ontology_name,
     term_ontid => $term_ontid,
     term_name => $term_name,

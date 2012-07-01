@@ -143,7 +143,14 @@ $user_created
     </td>
 % }
     <td>
-      <% $row->{is_not} ? 'NOT' : '' %>
+% if ($row->{is_not}) {
+%   if (length $row->{qualifiers} > 0) {
+NOT,
+%   } else {
+NOT
+%   }
+% }
+      <% $row->{qualifiers} %>
     </td>
 % if ($needs_with_or_from) {
     <td>
