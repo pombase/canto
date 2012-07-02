@@ -1206,6 +1206,8 @@ sub _allele_add_action_internal
 
   my $lookup = PomCur::Track::get_adaptor($config, 'ontology');
 
+  my $return_allele_data = clone $new_allele_data;
+
   if (exists $new_allele_data->{conditions}) {
     # replace term names with the ID if we know it otherwise assume that the
     # user has made up a condition
@@ -1227,9 +1229,9 @@ sub _allele_add_action_internal
     PomCur::Curs::Utils::make_allele_display_name($allele_data_ref->{name},
                                                   $allele_data_ref->{description});
 
-  $new_allele_data->{display_name} = $allele_display_name;
+  $return_allele_data->{display_name} = $allele_display_name;
 
-  return $new_allele_data;
+  return $return_allele_data;
 }
 
 sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') Args(1)
