@@ -861,7 +861,7 @@ $(document).ready(function() {
     hide_allele_description(add_allele_dialog);
     add_allele_dialog.find('.curs-allele-type-select select').val(undefined).trigger('change');
     add_allele_dialog.find('.curs-allele-name').val('');
-    var name_input = allele_dialog.find('.curs-allele-name');
+    var name_input = add_allele_dialog.find('.curs-allele-name');
     name_input.attr('placeholder', 'Allele name (optional)');
     add_allele_dialog.find('form').validate({
       rules: {
