@@ -211,6 +211,11 @@ sub front : Chained('top') PathPart('') Args(0)
   $c->stash->{template} = 'curs/front.mhtml';
 }
 
+=head2 read_only_summary
+
+ This action show the summary in readonly mode.
+
+=cut
 sub read_only_summary : Chained('top') PathPart('ro') Args(0)
 {
   my ($self, $c) = @_;
