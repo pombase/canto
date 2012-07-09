@@ -215,7 +215,8 @@ sub curs_iterator
  Function: use curs_iterator() to call the $proc for each Curs, CursDB pair
  Args    : $config - the PomCur::Config object
            $track_schema - the TrackDB schema
-           $proc - a function the gets passed a Curs, CursDB pair
+           $proc - a function the gets passed a Curs, CursDB and the
+                   TrackDB schema
  Returns : a list of the results of the calls to $proc
 
 =cut
@@ -229,7 +230,7 @@ sub curs_map
 
   my $iter = curs_iterator($config, $track_schema);
   while (my ($curs, $curs_schema) = $iter->()) {
-    push @ret, $func->($curs, $curs_schema);
+    push @ret, $func->($curs, $curs_schema, $track_schema);
   }
 
   return @ret;
