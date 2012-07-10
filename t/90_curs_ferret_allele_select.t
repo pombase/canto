@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 42;
+use Test::More tests => 44;
 
 use Data::Compare;
 
@@ -77,7 +77,14 @@ test_psgi $app, sub {
           qr/Choose allele\(s\) for $gene_display_name with $term_db_accession/);
 
     $new_annotation =
-    $curs_schema->find_with_type('Annotation', $new_annotation_id);
+      $curs_schema->find_with_type('Annotation', $new_annotation_id);
+
+    my $data = $new_annotation->data();
+
+    $data->{term_suggestion} = { name => 'sugg_name',
+                                 description => 'sugg_description' };
+    $new_annotation->data($data);
+    $new_annotation->update();
 
     is ($new_annotation->genes(), 1);
     is (($new_annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
@@ -218,8 +225,10 @@ test_psgi $app, sub {
 
     my ($allele_1_annotation, $allele_2_annotation) = @new_annotations;
 
+    use Data::Dumper;
     my ($allele_1, $allele_2) =
       map {
+        is($_->data()->{term_suggestion}->{name}, 'sugg_name');
         $_->alleles()->first();
       } @new_annotations;
 

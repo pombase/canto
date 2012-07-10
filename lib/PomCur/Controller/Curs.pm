@@ -1478,6 +1478,7 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
         evidence_code => $evidence,
         conditions => $conditions,
         term_ontid => $data->{term_ontid},
+        term_suggestion => $data->{term_suggestion},
       };
 
       my $annotation_create_args = {
