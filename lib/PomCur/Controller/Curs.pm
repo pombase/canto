@@ -1977,7 +1977,7 @@ sub finish_form : Chained('top') Args(0)
   $st->{finish_help} = $c->config()->{messages}->{finish_form};
 
   my $form = $self->form();
-  my @submit_buttons = ("Submit");
+  my @submit_buttons = ("Submit", "Back");
 
   my $finish_textarea = 'finish_textarea';
 
@@ -2001,17 +2001,21 @@ sub finish_form : Chained('top') Args(0)
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
-    my $text = $form->param_value($finish_textarea);
-    $text =~ s/^\s+//;
-    $text =~ s/\s+$//;
+    if (defined $c->req->params->{Submit}) {
+      my $text = $form->param_value($finish_textarea);
+      $text =~ s/^\s+//;
+      $text =~ s/\s+$//;
 
-    if (length $text > 0) {
-      $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
+      if (length $text > 0) {
+        $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
+      } else {
+        $self->unset_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
+      }
+
+      _redirect_and_detach($c, 'finished_publication');
     } else {
-      $self->unset_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
+      _redirect_and_detach($c, 'reactivate_session');
     }
-
-    _redirect_and_detach($c, 'finished_publication');
   } else {
     my $force = {};
     if (defined $arg && $arg eq 'no_genes') {
