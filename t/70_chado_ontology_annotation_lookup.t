@@ -38,6 +38,9 @@ sub check_res {
                with => 'GeneDB_Spombe:SPBC2G2.01c',
                from => undef,
                is_not => 0,
+               conditions => '',
+               expression => '',
+               qualifiers => '',
                annotation_id => 1,
                publication => {
                  uniquename => 'PMID:10467002'
