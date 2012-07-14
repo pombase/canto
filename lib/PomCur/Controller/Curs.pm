@@ -1977,7 +1977,7 @@ sub finish_form : Chained('top') Args(0)
   $st->{finish_help} = $c->config()->{messages}->{finish_form};
 
   my $form = $self->form();
-  my @submit_buttons = ("Submit", "Back");
+  my @submit_buttons = ("Finish", "Back");
 
   my $finish_textarea = 'finish_textarea';
 
@@ -2001,7 +2001,7 @@ sub finish_form : Chained('top') Args(0)
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
-    if (defined $c->req->params->{Submit}) {
+    if (defined $c->req->params->{Finish}) {
       my $text = $form->param_value($finish_textarea);
       $text =~ s/^\s+//;
       $text =~ s/\s+$//;
