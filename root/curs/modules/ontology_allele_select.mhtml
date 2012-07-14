@@ -96,6 +96,7 @@ var annotation_id = <% $annotation->annotation_id() %>;
     </table>
     <div class="curs-ui-dialog-subheading ui-widget-header ui-helper-clearfix ui-corner-all">
       <span class="ui-dialog-title">Conditions</span>
+      <& /curs/inline_help.mhtml, key => 'allele_choose_conditions' &>
     </div>
     <table>
       <tr>

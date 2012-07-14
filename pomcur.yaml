@@ -1290,6 +1290,18 @@ help_text:
     inline: >
       Once you have selected a gene to annotate you will be presented with a
       set of annotation options
+  allele_choose_conditions:
+    inline: >
+      Please describe any experimental conditions relevant to this
+      allele-phenotype combination:
+      Start typing a description of a condition. If one of the autocomplete
+      options matches, click it to add it to the box. If none match, you can type
+      out a new description and it will be saved.
+      If you tested a set of conditions all at once (e.g. grew cells at high
+      temperature and in minimal medium), put the condition descriptions together
+      in a single box. For conditions tested one at a time (e.g. separate
+      experiments at high and low temperature, or separate cultures with high and
+      low glucose levels), list each condition separately.
   genetic_interaction_evidence:
     url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions"
   physical_interaction_evidence:
