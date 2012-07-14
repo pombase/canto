@@ -38,9 +38,9 @@ sub check_res {
                with => 'GeneDB_Spombe:SPBC2G2.01c',
                from => undef,
                is_not => 0,
-               conditions => '',
-               expression => '',
-               qualifiers => '',
+               conditions => [],
+               expression => undef,
+               qualifiers => [],
                annotation_id => 1,
                publication => {
                  uniquename => 'PMID:10467002'
@@ -117,6 +117,9 @@ cmp_deeply($res->[0],
                'name' => 'ste20',
                'organism_taxonid' => '4896'
              },
+             'conditions' => [],
+             'expression' => undef,
+             'qualifiers' => [],
              'publication' => {
                'uniquename' => 'PMID:10467002'
              },
@@ -153,6 +156,9 @@ cmp_deeply($res->[0],
              'publication' => {
                'uniquename' => 'PMID:10467002'
              },
+             'conditions' => [],
+             'expression' => undef,
+             'qualifiers' => [],
              'allele' => {
                'identifier' => 'SPBC12C2.02c:allele-1',
                'name' => 'ste20delta',
