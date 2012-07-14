@@ -88,7 +88,7 @@ test_psgi $app, sub {
 
     my $uri = new URI("$root_url/finish_form");
     $uri->query_form(finish_textarea => $test_text,
-                     submit => 'Submit',
+                     Finish => "Finish",
                     );
 
     my $req = GET $uri;
