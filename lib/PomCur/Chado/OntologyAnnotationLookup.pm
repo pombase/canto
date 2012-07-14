@@ -138,6 +138,7 @@ sub _get_prop_type_cvterm_id
           - where annotation_id is a unique ID for this annotation
 
 =cut
+
 sub lookup
 {
   my $self = shift;
@@ -157,6 +158,14 @@ sub lookup
     $db_ontology_name = $db_ontology_names{$ontology_name};
   } else {
     $db_ontology_name = $ontology_name;
+  }
+
+  my $chado_conf = $self->config()->{chado};
+  my $evidence_codes_to_ignore_conf =
+    $chado_conf->{annotation_lookup}->{evidence_codes_to_ignore};
+  my @evidence_codes_to_ignore = ();
+  if (defined $evidence_codes_to_ignore_conf) {
+    @evidence_codes_to_ignore = @$evidence_codes_to_ignore_conf
   }
 
   my $schema = $self->schema();
@@ -179,7 +188,7 @@ sub lookup
       return [];
     }
 
-    my $annotation_extension_cv_name = $self->config()->{chado}->{ontology_cv_names}->{annotation_extension};
+    my $annotation_extension_cv_name = $chado_conf->{ontology_cv_names}->{annotation_extension};
     my $ext_cv = $schema->resultset('Cv')->find({ name => $annotation_extension_cv_name });
 
     my $is_a_term = $schema->resultset('Cvterm')->find({ name => 'is_a' });
@@ -268,6 +277,11 @@ sub lookup
       my $evidence = $prop_type_values{evidence};
       my $evidence_code =
         $self->config()->{evidence_types_by_name}->{lc $evidence};
+
+      if (grep { $_ eq $evidence } @evidence_codes_to_ignore or
+          grep { $_ eq $evidence_code } @evidence_codes_to_ignore) {
+        next;
+      }
 
       my $real_cvterm;
 

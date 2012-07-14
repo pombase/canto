@@ -1363,3 +1363,7 @@ chado:
     post_translational_modification: PSI-MOD
     phenotype: fission_yeast_phenotype
     annotation_extension: PomBase annotation extension terms
+  annotation_lookup:
+# feature_cvterms with these evidence code will be ignored
+    evidence_codes_to_ignore:
+      - TAS
