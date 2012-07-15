@@ -281,6 +281,32 @@ sub get_dbxref
       });
 }
 
+sub _get_dbxref_by_accession
+{
+  my $self = shift;
+  my $ontologyid = shift;
+  my $term_name = shift;
+
+  my $db_name;
+  my $accession;
+
+  if (defined $ontologyid && $ontologyid =~ /(.*):(.*)/) {
+    $db_name = $1;
+    $accession = $2
+  } else {
+    if (defined $term_name) {
+      $db_name = 'PomCur';
+      $accession = $term_name;
+    } else {
+      croak 'no $term_name passed for ', $ontologyid;
+    }
+  }
+
+  my $db = $self->get_db($db_name);
+  my $dbxref = $self->get_dbxref($db, $accession);
+
+}
+
 =head2 get_cvterm
 
  Usage   : my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
@@ -292,6 +318,8 @@ sub get_dbxref
            term_name - the cvterm name
            ontologyid - the id in the ontology, eg. "GO:0001234"
            definition - the term definition
+           alt_ids - an array ref of alternate ontology IDs for this
+                     term
  Returns : The new cvterm object
 
 =cut
@@ -311,19 +339,7 @@ sub get_cvterm
   my $definition = $args{definition};
   my $is_relationshiptype = $args{is_relationshiptype} // 0;
 
-  my $db_name;
-  my $accession;
-
-  if (defined $ontologyid && $ontologyid =~ /(.*):(.*)/) {
-    $db_name = $1;
-    $accession = $2
-  } else {
-    $db_name = 'PomCur';
-    $accession = $term_name;
-  }
-
-  my $db = $self->get_db($db_name);
-  my $dbxref = $self->get_dbxref($db, $accession);
+  my $dbxref = $self->_get_dbxref_by_accession($ontologyid, $term_name);
 
   my $schema = $self->schema();
 
@@ -338,10 +354,23 @@ sub get_cvterm
     $create_args{definition} = $definition;
   }
 
-  return $self->schema()->resultset('Cvterm')->find_or_create(
-      {
-        %create_args
+  my $cvterm =
+    $self->schema()->resultset('Cvterm')->find_or_create({
+      %create_args
+    });
+
+  if (defined $args{alt_ids}) {
+    for my $alt_id (@{$args{alt_ids}}) {
+      my $alt_dbxref = $self->_get_dbxref_by_accession($alt_id);
+
+      $self->schema()->resultset('CvtermDbxref')->create({
+        dbxref_id => $alt_dbxref->dbxref_id(),
+        cvterm_id => $cvterm->cvterm_id(),
       });
+    }
+  }
+
+  return $cvterm;
 }
 
 =head2 get_pub

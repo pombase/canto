@@ -71,12 +71,17 @@ sub _delete_term_by_cv
   my $guard = $schema->txn_scope_guard;
 
   my $cv_cvterms = $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
-     ->search_related('cvterms');
+    ->search_related('cvterms');
 
   $cv_cvterms->search_related('cvtermprop_cvterms')->delete();
   $cv_cvterms->search_related('cvtermsynonym_cvterms')->delete();
   $cv_cvterms->search_related('cvterm_relationship_objects')->delete();
   $cv_cvterms->search_related('cvterm_relationship_subjects')->delete();
+  my $delete_me = "DELETE_ME";
+  $cv_cvterms->search_related('cvterm_dbxrefs')->search_related('dbxref')
+    ->update({ description => $delete_me });
+  $cv_cvterms->search_related('cvterm_dbxrefs')->delete();
+  $schema->resultset('Dbxref')->search({ description => $delete_me })->delete();
   $cv_cvterms->delete();
 
   $guard->commit();
@@ -94,6 +99,7 @@ sub _delete_term_by_cv
  Returns : Nothing
 
 =cut
+
 sub load
 {
   my $self = shift;
@@ -213,6 +219,7 @@ sub load
                                             term_name => $term->name(),
                                             ontologyid => $term->acc(),
                                             definition => $term->definition(),
+                                            alt_ids => $term->alt_id_list(),
                                             is_relationshiptype =>
                                               $term->is_relationship_type());
 

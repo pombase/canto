@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 30;
 
 use Data::Compare;
 
@@ -23,19 +23,27 @@ my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
 my $test_relationship_ontology_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_relationship_obo_file};
+my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
 
 my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
-$ontology_index->initialise_index();
 my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
 my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
-$ontology_load->load($test_relationship_ontology_file, undef, $synonym_types);
-$ontology_load->load($test_go_file, $ontology_index, $synonym_types);
+sub load_all {
+  my $include_ro = shift;
 
-my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
-$ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
+  $ontology_index->initialise_index();
 
-$ontology_index->finish_index();
+  if ($include_ro) {
+    $ontology_load->load($test_relationship_ontology_file, undef, $synonym_types);
+  }
+  $ontology_load->load($test_go_file, $ontology_index, $synonym_types);
+  $ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
+
+  $ontology_index->finish_index();
+}
+
+load_all(1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
@@ -119,3 +127,12 @@ is($hits->doc(0)->get('cv_name'), 'molecular_function');
 
 is($hits->doc(0)->get('name'), 'dihydropteroate synthase activity');
 
+
+# check loading of alt_ids
+my $cvterm_dbxref_rs = $schema->resultset('CvtermDbxref');
+is($cvterm_dbxref_rs->count(), 32);
+
+
+# try re-loading
+load_all();
+is($cvterm_dbxref_rs->count(), 32);
