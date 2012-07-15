@@ -129,6 +129,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 cvterm_dbxrefs
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::CvtermDbxref>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvterm_dbxrefs",
+  "PomCur::TrackDB::CvtermDbxref",
+  { "foreign.cvterm_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 cvterm_relationship_objects
 
 Type: has_many
@@ -400,8 +415,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-12 03:16:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gbQ5AbhOZYcnIAsNdoC/rw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-07-15 05:57:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MwbNff7OzOAA3MWn3VwQ+g
 
 =head2 db_accession
 

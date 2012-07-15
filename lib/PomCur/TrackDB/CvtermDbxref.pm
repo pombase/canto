@@ -35,11 +35,13 @@ __PACKAGE__->table("cvterm_dbxref");
 =head2 cvterm_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 dbxref_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 is_for_definition
@@ -54,9 +56,9 @@ __PACKAGE__->add_columns(
   "cvterm_dbxref_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "cvterm_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "dbxref_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "is_for_definition",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
@@ -89,9 +91,41 @@ __PACKAGE__->set_primary_key("cvterm_dbxref_id");
 
 __PACKAGE__->add_unique_constraint("cvterm_id_dbxref_id_unique", ["cvterm_id", "dbxref_id"]);
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nliQ+xPMkpRfxRLkQ1Ioog
+=head2 cvterm
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "cvterm",
+  "PomCur::TrackDB::Cvterm",
+  { cvterm_id => "cvterm_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+=head2 dbxref
+
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Dbxref>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "dbxref",
+  "PomCur::TrackDB::Dbxref",
+  { dbxref_id => "dbxref_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-07-15 05:57:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:r689lVI9qn/FCDsiM++BfA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

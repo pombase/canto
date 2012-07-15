@@ -83,6 +83,21 @@ __PACKAGE__->set_primary_key("dbxref_id");
 
 =head1 RELATIONS
 
+=head2 cvterm_dbxrefs
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::CvtermDbxref>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvterm_dbxrefs",
+  "PomCur::TrackDB::CvtermDbxref",
+  { "foreign.dbxref_id" => "self.dbxref_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 cvterms
 
 Type: has_many
@@ -114,8 +129,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:t310dIDMHPlHBM0nsX1ZhQ
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-07-15 05:57:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wOD9oovp+bVMAGX3hxGfhw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

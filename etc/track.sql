@@ -100,8 +100,8 @@ CREATE INDEX cvtermprop_idx2 ON cvtermprop (type_id);
 
 CREATE TABLE cvterm_dbxref (
        cvterm_dbxref_id integer NOT NULL PRIMARY KEY,
-       cvterm_id integer NOT NULL,
-       dbxref_id integer NOT NULL,
+       cvterm_id integer NOT NULL REFERENCES cvterm (cvterm_id),
+       dbxref_id integer NOT NULL REFERENCES dbxref (dbxref_id),
        is_for_definition integer DEFAULT 0 NOT NULL
 );
 CREATE UNIQUE INDEX cvterm_dbxref_c1 on cvterm_dbxref (cvterm_id, dbxref_id);
