@@ -1218,7 +1218,7 @@ sub _allele_add_action_internal
     # user has made up a condition
     map { my $name = $_;
           my $res = $lookup->lookup_by_name(ontology_name => 'phenotype_condition',
-                                             term_name => $name);
+                                            term_name => $name);
           if (defined $res) {
             $_ = $res->{id};
           }
