@@ -283,7 +283,7 @@ my $add_expected = {
   'display_name' => 'an_allele(unknown)',
   'description' => undef,
   'conditions' => [
-    'PCO:0000006',
+    'low temperature',
     'late in the afternoon'
   ]
 };
