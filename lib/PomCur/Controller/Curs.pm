@@ -668,7 +668,7 @@ sub _store_suggestion_count
   while (defined (my $ann = $ann_rs->next())) {
     my $data = $ann->data();
 
-    if (exists $data->{term_suggestion}) {
+    if (defined $data->{term_suggestion}) {
       $count++;
     }
   }
