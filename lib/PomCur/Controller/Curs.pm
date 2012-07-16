@@ -2137,11 +2137,16 @@ sub complete_approval : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  $self->set_state($c->config(), $schema, APPROVED);
+  if ($self->get_metadata($schema, TERM_SUGGESTION_COUNT_KEY) > 0) {
+    $c->flash()->{message} =
+      q|Session can't be approved as there are outstanding term requests|;
+    _redirect_and_detach($c);
+  } else {
+    $self->set_state($c->config(), $schema, APPROVED);
+    $c->flash()->{message} = 'Session approved';
 
-  $c->flash()->{message} = 'Session approved';
-
-  _redirect_and_detach($c);
+    _redirect_and_detach($c);
+  }
 }
 
 sub cancel_approval : Chained('top') Args(0)
