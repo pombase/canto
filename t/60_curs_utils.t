@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 62;
+use Test::More tests => 117;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -13,72 +13,99 @@ my $config = $test_util->config();
 my $schema = $test_util->track_schema();
 
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
-
+sub check_new_annotations
 {
-  my ($completed_count, $annotations_ref) =
-    PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
-                                              'biological_process');
+  my $exp_term_ontid = shift // 'GO:0055085';
 
-  my @annotations = @$annotations_ref;
+  {
+    my ($completed_count, $annotations_ref) =
+      PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
+                                                'biological_process');
 
-  is (@annotations, 2);
+    my @annotations = @$annotations_ref;
 
-  is ($annotations[0]->{gene_identifier}, 'SPAC27D7.13c');
-  is ($annotations[0]->{term_ontid}, 'GO:0055085');
-  is ($annotations[0]->{taxonid}, '4896');
-  like ($annotations[0]->{creation_date}, qr/\d+-\d+-\d+/);
-  is ($annotations[0]->{gene_synonyms_string}, 'SPAC637.01c');
-}
+    is (@annotations, 2);
 
-{
-  my ($completed_count, $annotations_ref) =
-    PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
-                                              'genetic_interaction');
-
-  my @annotations = @$annotations_ref;
-
-  is (@$annotations_ref, 2);
-
-  for my $annotation (@annotations) {
-    is ($annotation->{gene_identifier}, 'SPCC63.05');
-    is ($annotation->{gene_taxonid}, '4896');
-    is ($annotation->{publication_uniquename}, 'PMID:19756689');
-    is ($annotation->{evidence_code}, 'Synthetic Haploinsufficiency');
+    is ($annotations[0]->{gene_identifier}, 'SPAC27D7.13c');
+    is ($annotations[0]->{term_ontid}, $exp_term_ontid);
+    is ($annotations[0]->{taxonid}, '4896');
+    like ($annotations[0]->{creation_date}, qr/\d+-\d+-\d+/);
+    is ($annotations[0]->{gene_synonyms_string}, 'SPAC637.01c');
   }
 
-  is ($annotations[0]->{interacting_gene_identifier}, 'SPBC14F5.07');
-  is ($annotations[1]->{interacting_gene_identifier}, 'SPAC27D7.13c');
-}
+  {
+    my ($completed_count, $annotations_ref) =
+      PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
+                                                'genetic_interaction');
 
-my @annotation_type_list = @{$config->{annotation_type_list}};
+    my @annotations = @$annotations_ref;
 
-my $allele_count = 0;
+    is (@$annotations_ref, 2);
 
-for my $annotation_type_config (@annotation_type_list) {
-  my ($completed_count, $annotations_ref) =
-    PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
-                                              $annotation_type_config->{name});
+    for my $annotation (@annotations) {
+      is ($annotation->{gene_identifier}, 'SPCC63.05');
+      is ($annotation->{gene_taxonid}, '4896');
+      is ($annotation->{publication_uniquename}, 'PMID:19756689');
+      is ($annotation->{evidence_code}, 'Synthetic Haploinsufficiency');
+    }
 
-  my @annotations = @$annotations_ref;
+    is ($annotations[0]->{interacting_gene_identifier}, 'SPBC14F5.07');
+    is ($annotations[1]->{interacting_gene_identifier}, 'SPAC27D7.13c');
+  }
 
-  for my $annotation_row (@annotations) {
-    ok (length $annotation_row->{annotation_type} > 0);
-    ok (length $annotation_row->{evidence_code} > 0);
+  my @annotation_type_list = @{$config->{annotation_type_list}};
 
-    if ($annotation_type_config->{category} eq 'ontology') {
-      ok (length $annotation_row->{gene_name_or_identifier} > 0);
-      ok (length $annotation_row->{term_ontid} > 0);
-      ok (length $annotation_row->{term_name} > 0);
+  my $allele_count = 0;
 
-      if ($annotation_type_config->{needs_allele}) {
-        ok (length $annotation_row->{allele_display_name} > 0);
-        $allele_count++;
+  for my $annotation_type_config (@annotation_type_list) {
+    my ($completed_count, $annotations_ref) =
+      PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
+                                                $annotation_type_config->{name});
+
+    my @annotations = @$annotations_ref;
+
+    for my $annotation_row (@annotations) {
+      ok (length $annotation_row->{annotation_type} > 0);
+      ok (length $annotation_row->{evidence_code} > 0);
+
+      if ($annotation_type_config->{category} eq 'ontology') {
+        ok (length $annotation_row->{gene_name_or_identifier} > 0);
+        ok (length $annotation_row->{term_ontid} > 0);
+        ok (length $annotation_row->{term_name} > 0);
+
+        if ($annotation_type_config->{needs_allele}) {
+          ok (length $annotation_row->{allele_display_name} > 0);
+          $allele_count++;
+        }
       }
     }
   }
+  ok ($allele_count > 0);
+
 }
 
-ok ($allele_count > 0);
+check_new_annotations();
+
+# change an ontid to an alt_id
+my $an_rs = $curs_schema->resultset('Annotation');
+my $dummy_alt_id = "GO:123456789";
+my $made_alt_id_change = 0;
+
+while (defined (my $an = $an_rs->next())) {
+  my $data = $an->data();
+
+  if (defined $data->{term_ontid} && $data->{term_ontid} eq "GO:0055085") {
+    $made_alt_id_change = 1;
+    $data->{term_ontid} = $dummy_alt_id;
+    $an->data($data);
+    $an->update();
+  }
+}
+
+ok($made_alt_id_change);
+
+check_new_annotations($dummy_alt_id);
+
 
 {
   my $options = { pub_uniquename => 'PMID:10467002',

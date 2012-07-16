@@ -158,9 +158,17 @@ sub add_to_index
   my $name_field = _process_field('name', $cvterm_name);
   my $all_words_field = _get_all_words_field($cvterm);
 
+  my @alt_id_keywords;
+  my @alt_ids = $cvterm->alt_ids();
+
+  for (my $i = 0; $i < @alt_ids; $i++) {
+    push @alt_id_keywords, Lucene::Document::Field->Keyword("alt_id_$i", $alt_ids[$i]);
+  }
+
   my @fields = (
     $name_field,
     Lucene::Document::Field->Keyword(ontid => $cvterm->db_accession()),
+    @alt_id_keywords,
     Lucene::Document::Field->Keyword(cv_name => $cv_name),
     Lucene::Document::Field->Keyword(cvterm_id => $cvterm->cvterm_id()),
     $all_words_field,

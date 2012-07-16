@@ -431,10 +431,7 @@ sub db_accession
 {
   my $cvterm = shift;
 
-  my $dbxref = $cvterm->dbxref();
-  my $db = $dbxref->db();
-
-  return $db->name() . ':' . $dbxref->accession();
+  return $cvterm->dbxref()->db_accession();
 }
 
 =head2 synonyms
@@ -449,6 +446,23 @@ sub db_accession
 sub synonyms
 {
   return cvtermsynonym_cvterms(@_);
+}
+
+=head2 alt_ids
+
+ Usage   : my @alt_ids = $cvterm->alt_ids();
+ Function: Returns the alternate/secondary IDs of this cvterm
+ Args    : none
+ Returns : the alt_ids
+
+=cut
+sub alt_ids
+{
+  my $cvterm = shift;
+
+  map {
+    $_->db_accession();
+  } $cvterm->search_related('cvterm_dbxrefs')->search_related('dbxref')->all();
 }
 
 __PACKAGE__->meta->make_immutable;

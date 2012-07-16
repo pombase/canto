@@ -353,14 +353,28 @@ sub lookup_by_id
 
   my @terms = $dbxref->cvterms();
 
-  if (@terms == 0) {
-    return undef;
-  }
   if (@terms > 1) {
     die "internal error: looked up $term_id and got more than one result";
   }
 
-  my $cvterm = $terms[0];
+  my $cvterm;
+
+  if (@terms == 0) {
+    my @cvterm_dbxrefs = $dbxref->cvterm_dbxrefs();
+
+    if (@cvterm_dbxrefs > 1) {
+      die "internal_error: looked up $term_id and got more than one " .
+        "result via the cvterm_dbxref table";
+    }
+
+    if (@cvterm_dbxrefs == 0) {
+      return undef;
+    } else {
+      $cvterm = $cvterm_dbxrefs[0]->cvterm();
+    }
+  } else {
+    $cvterm = $terms[0];
+  }
 
   return { _make_term_hash($cvterm, $include_definition, $include_children) };
 }

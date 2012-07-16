@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 39;
+use Test::More tests => 40;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -165,6 +165,12 @@ my $fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000114',
                                       include_definition => 1);
 cmp_deeply($fypo_term, $expected_fypo_term);
 
+# try looking up an alt_id
+$fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000028',
+                                   include_definition => 1);
+cmp_deeply($fypo_term, $expected_fypo_term);
 
+
+# test get_all()
 my @all_pco_terms = $lookup->get_all(ontology_name => 'phenotype_condition');
 is (@all_pco_terms, 5);

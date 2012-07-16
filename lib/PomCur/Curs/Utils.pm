@@ -115,15 +115,13 @@ sub _make_ontology_annotation
 
   my $pub_uniquename = $annotation->pub()->uniquename();
 
-  my $result =
-    $ontology_lookup->lookup(ontology_name => $annotation_type_namespace,
-                             search_string => $term_ontid);
+  my $result = $ontology_lookup->lookup_by_id(id => $term_ontid);
 
-  if (!@$result) {
+  if (! defined $result) {
     die qq(internal error: can't find details for "$term_ontid" in "$annotation_type");
   }
 
-  my $term_name = $result->[0]->{name};
+  my $term_name = $result->{name};
 
   my $evidence_code = $data->{evidence_code};
   my $with_gene_identifier = $data->{with_gene};

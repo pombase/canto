@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 5;
 
 use PomCur::TestUtil;
 use PomCur::TrackDB;
@@ -19,3 +19,11 @@ is(@results, 2);
 my $organism = $results[0];
 
 is($organism->taxonid(), 4896);
+
+# test getting alt_ids
+my $cvterm = $schema->resultset('Cvterm')->find({ name => 'cellular process phenotype' });
+ok(defined $cvterm);
+
+my @alt_ids = $cvterm->alt_ids();
+is(@alt_ids, 1);
+is($alt_ids[0], 'FYPO:0000028');

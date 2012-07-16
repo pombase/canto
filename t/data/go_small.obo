@@ -12,6 +12,7 @@ remark: cvs version: $Revision: 1.1536 $
 id: GO:0055085
 name: transmembrane transport
 namespace: biological_process
+alt_id: GO:123456789
 def: "The process whereby a solute is transported from one side of a membrane to the other." [GOC:dph, GOC:jid]
 subset: goslim_pombe
 xref: Reactome:1006403 "SLC-mediated transmembrane transport"

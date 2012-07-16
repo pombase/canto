@@ -132,6 +132,24 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-07-15 05:57:57
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wOD9oovp+bVMAGX3hxGfhw
 
+=head2 db_accession
+
+ Usage   : my $db_accession = $dbxref->db_accession();
+ Function: Return the identifier for this term in "<db>:<identifier>" form,
+           eg. "GO:0004022"
+ Args    : none
+ Returns : the database accession
+
+=cut
+sub db_accession
+{
+  my $dbxref = shift;
+
+  my $db = $dbxref->db();
+
+  return $db->name() . ':' . $dbxref->accession();
+}
+
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

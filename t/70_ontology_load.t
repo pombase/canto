@@ -130,9 +130,9 @@ is($hits->doc(0)->get('name'), 'dihydropteroate synthase activity');
 
 # check loading of alt_ids
 my $cvterm_dbxref_rs = $schema->resultset('CvtermDbxref');
-is($cvterm_dbxref_rs->count(), 32);
+is($cvterm_dbxref_rs->count(), 33);
 
 
 # try re-loading
 load_all();
-is($cvterm_dbxref_rs->count(), 32);
+is($cvterm_dbxref_rs->count(), 33);
