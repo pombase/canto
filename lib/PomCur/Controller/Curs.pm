@@ -1711,7 +1711,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   my $module_category = $annotation_config->{category};
 
   $st->{title} = "Annotating $gene_display_name";
-  $st->{show_title} = ;
+  $st->{show_title} = 0;
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/${module_category}_with_gene.mhtml";
