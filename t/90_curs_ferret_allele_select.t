@@ -82,7 +82,7 @@ test_psgi $app, sub {
     my $data = $new_annotation->data();
 
     $data->{term_suggestion} = { name => 'sugg_name',
-                                 description => 'sugg_description' };
+                                 definition => 'sugg_definition' };
     $new_annotation->data($data);
     $new_annotation->update();
 
@@ -95,7 +95,8 @@ test_psgi $app, sub {
   my $allele_name_param = 'an_allele_name';
   my $allele_desc_param = 'allele_desc';
   my $expression_param = 'Knockdown';
-  my @conditions_param = ("high temperature", "low temperature");
+  my @conditions_param = ("high temperature", "low temperature",
+                          "BOGUS:ACCESSION");
 
   my $do_add_allele = sub {
     my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
