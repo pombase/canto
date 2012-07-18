@@ -1373,8 +1373,17 @@ sub _allele_data_for_js : Private
       if (defined $data->{conditions}) {
         map {
           my $term_id = $_;
-          my $result = $ontology_lookup->lookup_by_id(id => $term_id);
-          $_ = $result->{name};
+          eval {
+            my $result = $ontology_lookup->lookup_by_id(id => $term_id);
+            if (defined $result) {
+              $_ = $result->{name};
+            } else {
+              # user has made up a condition
+            }
+          };
+          if ($@) {
+            # probably not in the form DB:ACCESSION - user made it up
+          }
         } @{$data->{conditions}};
       }
     }
