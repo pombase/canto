@@ -226,7 +226,6 @@ test_psgi $app, sub {
 
     my ($allele_1_annotation, $allele_2_annotation) = @new_annotations;
 
-    use Data::Dumper;
     my ($allele_1, $allele_2) =
       map {
         is($_->data()->{term_suggestion}->{name}, 'sugg_name');
