@@ -369,7 +369,11 @@ sub _get_conditions_string
     my $term_id = $_;
     if ($term_id =~ /^[A-Z]+:/) {
       my $result = $ontology_lookup->lookup_by_id(id => $term_id);
-      $result->{name};
+      if (defined $result) {
+        $result->{name};
+      } else {
+        $term_id;
+      }
     } else {
       # some conditions are just free text if the user couldn't find the
       # appropriate PCO term
