@@ -154,29 +154,35 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{gene_count} = $self->get_ordered_gene_rs($schema)->count();
 
-  if ($state eq APPROVAL_IN_PROGRESS &&
-      !($c->user_exists() && $c->user()->role()->name() eq 'admin')) {
-    $c->detach('finished_publication');
-  } else {
-    my $use_dispatch = 1;
-    if ($state eq SESSION_ACCEPTED &&
-        $path =~ /gene_upload|edit_genes|confirm_genes/) {
-      $use_dispatch = 0;
-    }
-    if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-        $path =~ /ro|finish_form|reactivate_session|begin_approval|restart_approval/) {
-      $use_dispatch = 0;
-    }
+  my $use_dispatch = 1;
 
-    if ($state eq CURATION_PAUSED && $path =~ /restart_curation/) {
-      $use_dispatch = 0;
-    }
-
-    if ($use_dispatch) {
-      my $dispatch_dest = $state_dispatch{$state};
-      if (defined $dispatch_dest) {
-        $c->detach($dispatch_dest);
+  if ($state eq APPROVAL_IN_PROGRESS) {
+    if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+      # fall through, use dispatch table
+    } else {
+      if ($path !~ m!/ro/?$!) {
+        $c->detach('finished_publication');
       }
+    }
+  }
+
+  if ($state eq SESSION_ACCEPTED &&
+      $path =~ /gene_upload|edit_genes|confirm_genes/) {
+    $use_dispatch = 0;
+  }
+  if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
+      $path =~ /ro|finish_form|reactivate_session|begin_approval|restart_approval/) {
+    $use_dispatch = 0;
+  }
+
+  if ($state eq CURATION_PAUSED && $path =~ /restart_curation/) {
+    $use_dispatch = 0;
+  }
+
+  if ($use_dispatch) {
+    my $dispatch_dest = $state_dispatch{$state};
+    if (defined $dispatch_dest) {
+      $c->detach($dispatch_dest);
     }
   }
 }
