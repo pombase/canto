@@ -345,7 +345,11 @@ sub lookup_by_id
     croak "no id passed to OntologyLookup::lookup_by_id()";
   }
 
-  my $dbxref = $self->load_util()->find_dbxref($term_id);
+  my $dbxref;
+
+  eval {
+    $dbxref = $self->load_util()->find_dbxref($term_id);
+  };
 
   if (!defined $dbxref) {
     return undef;
