@@ -99,7 +99,7 @@ db_initial_data:
               db:
                 name: PomCur
           - name: session_term_suggestions_count
-            # The number term suggestions made by the user in a session
+            # The number of term suggestions made by the user in a session
             dbxref:
               accession: session_term_suggestions_count
               db:
