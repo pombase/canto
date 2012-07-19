@@ -876,7 +876,6 @@ sub make_curs_db
     $cursdb_schema->txn_do(
       sub {
         _load_curs_db_data($config, $trackdb_schema, $cursdb_schema, $curs_config);
-        PomCur::Controller::Curs->_store_suggestion_count($cursdb_schema);
       });
   }
 

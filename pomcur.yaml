@@ -104,6 +104,13 @@ db_initial_data:
               accession: session_term_suggestions_count
               db:
                 name: PomCur
+          - name: session_unknown_conditions_count
+            # The number of times conditions name that don't match an ontology
+            # term are used in this session
+            dbxref:
+              accession: session_unknown_conditions_count
+              db:
+                name: PomCur
           - name: approver_name
             # The name of the person approving the session (if it is in the
             # APPROVAL_IN_PROGRESS state)

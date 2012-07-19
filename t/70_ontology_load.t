@@ -17,7 +17,7 @@ my $schema = PomCur::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is (@loaded_cvterms, 43);
+is (@loaded_cvterms, 44);
 
 my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
@@ -47,7 +47,7 @@ load_all(1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 107);
+is(@loaded_cvterms, 108);
 
 ok(grep {
   $_->name() eq 'regulation of transmembrane transport'

@@ -36,13 +36,14 @@ under the same terms as Perl itself.
 =cut
 
 use feature "switch";
-use Moose::Role;
+use Moose;
 use Carp qw(croak longmess);
 use Scalar::Util qw(reftype);
 
 use PomCur::Util;
 
-requires 'get_metadata', 'set_metadata', 'get_ordered_gene_rs';
+with 'PomCur::Role::MetadataAccess';
+with 'PomCur::Curs::Role::GeneResultSet';
 
 use constant {
   # user needs to confirm name and email address
@@ -70,6 +71,7 @@ use constant {
   APPROVAL_IN_PROGRESS_TIMESTAMP_KEY => 'approval_in_progress_timestamp',
   EXPORTED_TIMESTAMP_KEY => 'exported_timestamp',
   TERM_SUGGESTION_COUNT_KEY => 'term_suggestion_count',
+  UNKNOWN_CONDITIONS_COUNT_KEY => 'unknown_conditions_count',
   APPROVER_NAME_KEY => 'approver_name',
   APPROVER_EMAIL_KEY => 'approver_email',
 };
@@ -166,10 +168,23 @@ sub store_statuses
     $term_suggestion_count = 0;
   }
 
+  my $unknown_conditions_count_row =
+    $metadata_rs->search({ key => UNKNOWN_CONDITIONS_COUNT_KEY })->first();
+
+  my $unknown_conditions_count;
+
+  if (defined $unknown_conditions_count_row) {
+    $unknown_conditions_count = $unknown_conditions_count_row->value();
+  } else {
+    $unknown_conditions_count = 0;
+  }
+
   $adaptor->store($curs_key, 'annotation_status', $status);
   $adaptor->store($curs_key, 'session_genes_count', $gene_count // 0);
   $adaptor->store($curs_key, 'session_term_suggestions_count',
                   $term_suggestion_count);
+  $adaptor->store($curs_key, 'session_unknown_conditions_count',
+                  $unknown_conditions_count);
 
   my $approver_name_row = $metadata_rs->find({ key => 'approver_name' });
   if (defined $approver_name_row) {

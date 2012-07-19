@@ -52,6 +52,8 @@ $config->{data_directory} = $test_util->test_data_dir_full_path();
 
 my %test_cases = %{$config->{test_config}->{test_cases}};
 
+my $metadata_storer = PomCur::Curs::MetadataStorer->new();
+
 sub make_curs_dbs
 {
   my $config = shift;
@@ -63,11 +65,15 @@ sub make_curs_dbs
 
   return unless defined $test_case;
 
+  my @curs_schemas = ();
+
   my $process_test_case =
     sub {
       for my $curs_config (@$test_case) {
-        PomCur::TestUtil::make_curs_db($config, $curs_config, $trackdb_schema,
-                                       $load_util);
+        my ($curs_schema) =
+          PomCur::TestUtil::make_curs_db($config, $curs_config,
+                                         $trackdb_schema, $load_util);
+        push @curs_schemas, $curs_schema;
       }
     };
 
@@ -77,6 +83,11 @@ sub make_curs_dbs
   if ($@) {
     die "ROLLBACK called: $@\n";
   }
+
+  # wait until the transaction is finished
+  map {
+    $metadata_storer->store_counts($config, $_);
+  } @curs_schemas;
 }
 
 my ($fh_with_data, $temp_track_db_with_data) = tempfile();
@@ -100,8 +111,6 @@ for my $test_case_key (sort keys %test_cases) {
   ($test_schemas{$test_case_key}, $dbname) =
     PomCur::TestUtil::make_track_test_db($config, $test_case_key, $base_track_db);
 
-  make_curs_dbs($config, $test_case_key);
-
   my $config_copy = clone $config;
 
   $config_copy->{'Model::TrackModel'} = {
@@ -110,6 +119,8 @@ for my $test_case_key (sort keys %test_cases) {
       "dbi:SQLite:dbname=$dbname"
       ]
     };
+
+  make_curs_dbs($config_copy, $test_case_key);
 
   PomCur::Curs::Utils::store_all_statuses($config_copy, $test_schemas{$test_case_key});
 }

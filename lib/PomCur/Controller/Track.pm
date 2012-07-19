@@ -43,10 +43,6 @@ use Carp;
 
 use Moose;
 
-with 'PomCur::Role::MetadataAccess';
-with 'PomCur::Curs::Role::GeneResultSet';
-with 'PomCur::Curs::State';
-
 sub index_page :Path :Args(0) {
   my ($self, $c) = @_;
 
@@ -97,7 +93,7 @@ sub assign_pub :Local {
     if (defined $curs_schema) {
       # call after txn_do() because otherwise it will time out because
       # the database is locked
-      PomCur::Controller::Curs->store_statuses($config, $curs_schema);
+      PomCur::Curs::State->new()->store_statuses($config, $curs_schema);
     }
   } else {
     # cancelled

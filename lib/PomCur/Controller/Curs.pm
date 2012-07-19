@@ -44,7 +44,6 @@ use PomCur::Curs::State qw/:all/;
 
 with 'PomCur::Role::MetadataAccess';
 with 'PomCur::Curs::Role::GeneResultSet';
-with 'PomCur::Curs::State';
 
 use Archive::Zip qw(:CONSTANTS :ERROR_CODES);
 use IO::String;
@@ -52,10 +51,10 @@ use Clone qw(clone);
 
 use PomCur::Track;
 use PomCur::Curs::Utils;
+use PomCur::Curs::MetadataStorer;
 
 use constant {
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
-  TERM_SUGGESTION_COUNT_KEY => 'term_suggestion_count'
 };
 
 # actions to execute for each state, undef for special cases
@@ -72,6 +71,30 @@ my %state_dispatch = (
 
 # used by the tests to find the most reecently created annotation
 our $_debug_annotation_id = undef;
+
+has state => (is => 'ro', init_arg => undef,
+              isa => 'PomCur::Curs::State',
+              lazy_build => 1);
+
+has metadata_storer => (is => 'ro', init_arg => undef,
+                        isa => 'PomCur::Curs::MetadataStorer',
+                        lazy_build => 1);
+
+sub _build_state
+{
+  my $self = shift;
+  my $state = PomCur::Curs::State->new();
+
+  return $state;
+}
+
+sub _build_metadata_storer
+{
+  my $self = shift;
+  my $storer = PomCur::Curs::MetadataStorer->new();
+
+  return $storer;
+}
 
 =head2 top
 
@@ -113,7 +136,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{annotation_types} = $config->{annotation_types};
   $st->{annotation_type_list} = $config->{annotation_type_list};
 
-  my ($state, $submitter_email, $gene_count) = $self->get_state($schema);
+  my ($state, $submitter_email, $gene_count) = $self->state()->get_state($schema);
   $st->{state} = $state;
 
   if ($state eq APPROVAL_IN_PROGRESS) {
@@ -295,7 +318,7 @@ sub submitter_update : Private
 
     $schema->txn_do($add_submitter);
 
-    $self->store_statuses($c->config(), $schema);
+    $self->state()->store_statuses($c->config(), $schema);
 
     _redirect_and_detach($c);
   }
@@ -496,7 +519,7 @@ sub edit_genes : Chained('top') Args(0) Form
   my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 0);
-  $self->store_statuses($c->config(), $c->stash()->{schema});
+  $self->state()->store_statuses($c->config(), $c->stash()->{schema});
 }
 
 sub confirm_genes : Chained('top') Args(0) Form
@@ -505,7 +528,7 @@ sub confirm_genes : Chained('top') Args(0) Form
   my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 1);
-  $self->store_statuses($c->config(), $c->stash()->{schema});
+  $self->state()->store_statuses($c->config(), $c->stash()->{schema});
 }
 
 sub gene_upload : Chained('top') Args(0) Form
@@ -642,7 +665,7 @@ sub gene_upload : Chained('top') Args(0) Form
       }
       $st->{gene_upload_unknown} = [@missing];
     } else {
-      $self->store_statuses($c->config(), $schema);
+      $self->state()->store_statuses($c->config(), $schema);
 
       my $return_path = $form->param_value('return_path_input');
 
@@ -656,30 +679,6 @@ sub gene_upload : Chained('top') Args(0) Form
       }
     }
   }
-}
-
-sub _store_suggestion_count
-{
-  my $self = shift;
-  my $schema = shift;
-
-  if (!defined $schema) {
-    die "no schema passed to _store_suggestion_count()";
-  }
-
-  my $ann_rs = $schema->resultset('Annotation')->search();
-
-  my $count = 0;
-
-  while (defined (my $ann = $ann_rs->next())) {
-    my $data = $ann->data();
-
-    if (defined $data->{term_suggestion}) {
-      $count++;
-    }
-  }
-
-  $self->set_metadata($schema, TERM_SUGGESTION_COUNT_KEY, $count);
 }
 
 sub annotation_delete : Chained('top') PathPart('annotation/delete')
@@ -711,12 +710,10 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete')
     } else {
       $annotation->delete();
     }
-    $self->_store_suggestion_count($schema);
+    $self->metadata_storer()->store_counts($config, $schema);
   };
 
   $schema->txn_do($delete_sub);
-
-  $self->store_statuses($config, $schema);
 
   _redirect_and_detach($c);
 }
@@ -739,7 +736,7 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
 
   $schema->txn_do($delete_sub);
 
-  $self->store_statuses($config, $schema);
+  $self->state()->store_statuses($config, $schema);
 
   _redirect_and_detach($c);
 }
@@ -759,6 +756,7 @@ sub annotation_ontology_edit
   my $module_display_name = $annotation_config->{display_name};
 
   my $annotation_type_name = $annotation_config->{name};
+  my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
@@ -837,7 +835,7 @@ sub annotation_ontology_edit
         definition => $suggested_definition
       };
 
-      $self->_store_suggestion_count($schema);
+      $self->metadata_storer()->store_count($config, $schema);
 
       $c->flash()->{message} = 'Note that your term suggestion has been '
         . 'stored, but the gene will be temporarily '
@@ -861,7 +859,7 @@ sub annotation_ontology_edit
     my $annotation_id = $annotation->annotation_id();
     $_debug_annotation_id = $annotation_id;
 
-    $self->store_statuses($c->config(), $schema);
+    $self->state()->store_statuses($c->config(), $schema);
 
     if ($annotation_config->{needs_allele}) {
       _redirect_and_detach($c, 'annotation', 'allele_select', $annotation_id);
@@ -953,7 +951,7 @@ sub annotation_interaction_edit
     my $annotation_id = $annotation->annotation_id();
     $_debug_annotation_id = $annotation_id;
 
-    $self->store_statuses($config, $schema);
+    $self->state()->store_statuses($config, $schema);
 
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }
@@ -998,7 +996,7 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
     interaction => \&annotation_interaction_edit,
   );
 
-  $self->store_statuses($config, $schema);
+  $self->state()->store_statuses($config, $schema);
 
   &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene_proxy,
                                                     $annotation_config);
@@ -1154,7 +1152,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
     my $with_gene = $evidence_types->{$evidence_select}->{with_gene};
 
-    $self->store_statuses($config, $schema);
+    $self->state()->store_statuses($config, $schema);
 
     if ($with_gene) {
       _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
@@ -1534,6 +1532,8 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
 
   $schema->txn_do($process);
 
+  $self->metadata_storer->store_counts($config, $schema);
+
   _redirect_and_detach($c, 'gene', $gene->gene_id());
 }
 
@@ -1694,7 +1694,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     $guard->commit();
 
-    $self->store_statuses($config, $schema);
+    $self->state()->store_statuses($config, $schema);
 
     _redirect_and_detach($c, 'gene', $gene->gene_id());
   }
@@ -1781,7 +1781,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
     _maybe_transfer_annotation($c, $annotation, $annotation_config);
   }
 
-  $self->store_statuses($config, $schema);
+  $self->state()->store_statuses($config, $schema);
 }
 
 sub gene : Chained('top') Args(1)
@@ -2042,7 +2042,7 @@ sub finish_form : Chained('top') Args(0)
       $force = { force => SESSION_ACCEPTED };
     }
 
-    $self->set_state($config, $schema, NEEDS_APPROVAL, $force);
+    $self->state()->set_state($config, $schema, NEEDS_APPROVAL, $force);
   }
 }
 
@@ -2066,7 +2066,7 @@ sub pause_curation : Chained('top') Args(0)
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->set_state($c->config(), $schema, CURATION_PAUSED);
+  $self->state()->set_state($c->config(), $schema, CURATION_PAUSED);
 
   _redirect_and_detach($c);
 }
@@ -2089,7 +2089,7 @@ sub restart_curation : Chained('top') Args(0)
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS);
+  $self->state()->set_state($c->config(), $schema, CURATION_IN_PROGRESS);
 
   $c->flash()->{message} = 'Session has been restarted';
 
@@ -2107,7 +2107,7 @@ sub reactivate_session : Chained('top') Args(0)
   croak "invalid state: $state, when reactivating session"
     unless $state eq NEEDS_APPROVAL or $state eq APPROVED;
 
-  $self->set_state($c->config(), $schema, CURATION_IN_PROGRESS,
+  $self->state()->set_state($c->config(), $schema, CURATION_IN_PROGRESS,
                    { force => $state });
 
   $c->flash()->{message} = 'Session has been reactivated';
@@ -2124,7 +2124,7 @@ sub _start_approval
   my $current_user = $c->user();
 
   if (defined $current_user && $current_user->is_admin()) {
-    $self->set_state($c->config(), $schema, APPROVAL_IN_PROGRESS,
+    $self->state()->set_state($c->config(), $schema, APPROVAL_IN_PROGRESS,
                      {
                        current_user => $current_user,
                        force => $force,
@@ -2153,12 +2153,12 @@ sub complete_approval : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  if ($self->get_metadata($schema, TERM_SUGGESTION_COUNT_KEY) > 0) {
+  if ($self->get_metadata($schema, PomCur::Curs::State::TERM_SUGGESTION_COUNT_KEY) > 0) {
     $c->flash()->{message} =
       q|Session can't be approved as there are outstanding term requests|;
     _redirect_and_detach($c);
   } else {
-    $self->set_state($c->config(), $schema, APPROVED);
+    $self->state()->set_state($c->config(), $schema, APPROVED);
     $c->flash()->{message} = 'Session approved';
 
     _redirect_and_detach($c);
@@ -2170,8 +2170,8 @@ sub cancel_approval : Chained('top') Args(0)
   my ($self, $c) = @_;
 
   my $schema = $c->stash()->{schema};
-  $self->set_state($c->config(), $schema, NEEDS_APPROVAL,
-                   { force => APPROVAL_IN_PROGRESS });
+  $self->state()->set_state($c->config(), $schema, NEEDS_APPROVAL,
+                            { force => APPROVAL_IN_PROGRESS });
   $c->flash()->{message} = 'Session approval cancelled';
 
   _redirect_and_detach($c);

@@ -29,18 +29,7 @@ my $cookie_jar = $test_util->cookie_jar();
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
-package TestState;
-
-use Moose;
-
-with 'PomCur::Role::MetadataAccess';
-with 'PomCur::Curs::Role::GeneResultSet';
-with 'PomCur::Curs::State';
-
-package main;
-
-
-my $state = TestState->new();
+my $state = PomCur::Curs::MetadataStorer->new();
 
 test_psgi $app, sub {
   my $cb = shift;

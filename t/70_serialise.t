@@ -166,6 +166,7 @@ my $full_expected_curation_session =
         curs_key => 'aaaa0007',
         curation_pub_id => 'PMID:19756689',
         term_suggestion_count => 1,
+        unknown_conditions_count => 0,
       },
       organisms => {
         4896 => {
@@ -361,6 +362,7 @@ my %expected_pubs = ();
 my %extra_curs_statuses = (
         annotation_status => PomCur::Controller::Curs::CURATION_IN_PROGRESS,
         session_genes_count => 4,
+        session_unknown_conditions_count => 0,
         session_term_suggestions_count => 1,
 );
 
