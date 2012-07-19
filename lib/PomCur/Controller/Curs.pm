@@ -2153,7 +2153,9 @@ sub complete_approval : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  if ($self->get_metadata($schema, PomCur::Curs::State::TERM_SUGGESTION_COUNT_KEY) > 0) {
+  my $count = $self->get_metadata($schema, PomCur::Curs::State::TERM_SUGGESTION_COUNT_KEY);
+
+  if (defined $count && $count > 0) {
     $c->flash()->{message} =
       q|Session can't be approved as there are outstanding term requests|;
     _redirect_and_detach($c);
