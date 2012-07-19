@@ -129,12 +129,7 @@ sub initialise_app
     die "can't open $deploy_config_file_name for writing: $!\n";
 
   my $new_config = {
-    "Model::TrackModel" => {
-      schema_class => 'PomCur::TrackDB',
-      connect_info => [
-        "dbi:SQLite:dbname=$dest_file"
-      ]
-    },
+    get_track_model_conf($dest_file),
     data_directory => $init_dir
   };
 
@@ -143,6 +138,29 @@ sub initialise_app
   close $deploy_config_fh or die "can't close $deploy_config_file_name: $!\n";
 
   return 1;
+}
+
+=head2 get_track_model_conf
+
+ Usage   : my %conf = PomCur::Meta::Util::get_track_model_conf($db_file)
+ Function: Return a TrackDB configuration hash for adding to the Config
+           object
+ Args    : $db_file - the SQLite3 TrackDB database file
+ Returns : a hash with one key: "Model::TrackModel"
+
+=cut
+sub get_track_model_conf
+{
+  my $db_file = shift;
+
+  return (
+    "Model::TrackModel" => {
+      schema_class => 'PomCur::TrackDB',
+      connect_info => [
+        "dbi:SQLite:dbname=$db_file"
+      ],
+    }
+  );
 }
 
 =head2
