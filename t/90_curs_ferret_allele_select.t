@@ -96,7 +96,7 @@ test_psgi $app, sub {
   my $allele_desc_param = 'allele_desc';
   my $expression_param = 'Knockdown';
   my @conditions_param = ("high temperature", "low temperature",
-                          "BOGUS:ACCESSION");
+                          "on a Tuesday", "BOGUS:ACCESSION");
 
   my $do_add_allele = sub {
     my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
@@ -129,7 +129,7 @@ test_psgi $app, sub {
     is ($allele_in_progress->{evidence}, $evidence_param);
     my @conditions_from_db = @{$allele_in_progress->{conditions}};
 
-    is (@conditions_from_db, 2);
+    is (@conditions_from_db, 4);
 
     my $parsed_res = decode_json($res->content());
 
@@ -139,7 +139,7 @@ test_psgi $app, sub {
     is ($parsed_res->{expression}, $expression_param);
     is ($parsed_res->{evidence}, $evidence_param);
     @conditions_from_db = @{$parsed_res->{conditions}};
-    is (@conditions_from_db, 2);
+    is (@conditions_from_db, 4);
   }
 
   # test removing
