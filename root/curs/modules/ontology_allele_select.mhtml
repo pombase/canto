@@ -73,6 +73,10 @@ var annotation_id = <% $annotation->annotation_id() %>;
             <label>Knockdown</label>
             <input name="curs-allele-expression" type="radio" value="Knockdown" />
           </div>
+          <div>
+            <label>Not specified</label>
+            <input name="curs-allele-expression" type="radio" value="Not specified" />
+          </div>
         </td>
       </tr>
     </table>
