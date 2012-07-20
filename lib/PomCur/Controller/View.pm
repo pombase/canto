@@ -169,6 +169,13 @@ sub object : Local
   eval {
     my $object = get_object_by_id_or_name($c, $class_info, $object_key);
 
+    if (!defined $object) {
+      $c->stash->{error} =
+        qq(Cannot display object with type "$table" and key = $object_key);
+      $c->forward('/default');
+      return;
+    }
+
     $st->{title} = _make_title($c, $object, $class_info);
     $st->{template} = 'view/object/generic.mhtml';
 
@@ -190,8 +197,11 @@ sub object : Local
     }
   };
   if ($@ || !defined $st->{object}) {
-    $c->stash->{error} =
-      qq(Cannot display object with type "$table" and key = $object_key - $@);
+    my $error = qq(Cannot display object with type "$table" and key = $object_key);
+    if (defined $@ && length $@ > 0) {
+      $error .= " - $@";
+    }
+    $c->stash->{error} = $error;
     $c->forward('/front');
   }
 }
