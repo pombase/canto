@@ -220,20 +220,29 @@ sub find_cvterm
   my $self = shift;
   my %args = @_;
 
+  my $cv = $args{cv};
+
+  if (defined $args{cv_name}) {
+    if (defined $cv) {
+      croak "don't pass cv and cv_name";
+    }
+    $cv = $self->find_cv($args{cv_name});
+  }
+
   my $schema = $self->schema();
 
   croak "no cvterm name passed" unless defined $args{name};
 
   my $cvterm = $schema->resultset('Cvterm')->find(
       {
-        cv_id => $args{cv}->cv_id(),
+        cv_id => $cv->cv_id(),
         name => $args{name}
       });
 
   if (defined $cvterm) {
     return $cvterm;
   } else {
-    croak "no CV found for: $args{name}";
+    croak "no cvterm found for: $args{name}";
   }
 }
 

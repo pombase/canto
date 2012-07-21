@@ -25,6 +25,7 @@ use PomCur::Meta::Util;
 use PomCur::Track::PubmedUtil;
 
 my $add_cvterm = 0;
+my $add_person = 0;
 my $add_by_pubmed_id = 0;
 my $add_by_pubmed_query = 0;
 my $dry_run = 0;
@@ -43,6 +44,9 @@ if ($opt !~ /^--/) {
 given ($opt) {
   when ('--cvterm') {
     $add_cvterm = 1;
+  }
+  when ('--person') {
+    $add_person = 1;
   }
   when ('--pubmed-by-id') {
     $add_by_pubmed_id = 1;
@@ -74,6 +78,8 @@ sub usage
   die qq|${message}usage:
   $0 --cvterm cv_name term_name [db_name:accession [definition]]
 or:
+  $0 --person "name" email_address [user_type]
+or:
   $0 --pubmed-by-id <pubmed_id> [pubmed_id ...]
 or:
   $0 --pubmed-by-query <query>
@@ -87,6 +93,8 @@ Options:
         - definition - optionally, the term definition
       (if not given the termid defaults to the db_name:term_name where the
        db_name is the "name" from the pomcur.yaml file)
+  --person  - add a person to the database, the user_type can be "user"
+              or "admin" with the default being "user"
   --pubmed-by-id  - add publications by PubMed IDs
       The details will be fetched from PubMed.
   --pubmed-by-query  - add publications by querying PubMed
@@ -100,6 +108,10 @@ if ($do_help) {
 
 if ($add_cvterm && (@ARGV < 2 || @ARGV > 4)) {
   usage("--cvterm needs 2, 3 or 4 arguments");
+}
+
+if ($add_person && (@ARGV < 2 || @ARGV > 3)) {
+  usage("--person needs 2 or 3 arguments");
 }
 
 if (@ARGV == 0) {
@@ -151,6 +163,16 @@ my $proc = sub {
                            term_name => $term_name,
                            ontologyid => $termid,
                            definition => $definition);
+  }
+
+  if ($add_person) {
+    my $name = shift @ARGV;
+    my $email_address = shift @ARGV;
+    my $role_name = shift @ARGV // "user";
+
+    my $role = $load_util->find_cvterm(cv_name => 'PomCur user types',
+                                       name => $role_name);
+    $load_util->get_person($name, $email_address, $role);
   }
 
   if ($add_by_pubmed_id) {
