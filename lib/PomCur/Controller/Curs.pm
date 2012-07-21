@@ -2157,14 +2157,16 @@ sub complete_approval : Chained('top') Args(0)
 
   my $term_sugg_count = $self->get_metadata($schema, PomCur::Curs::State::TERM_SUGGESTION_COUNT_KEY);
   if (defined $term_sugg_count && $term_sugg_count > 0) {
-    push @messages,
-      q|Session can't be approved as there are outstanding term requests|;
+    push @messages, {
+      title => q|Session can't be approved as there are outstanding term requests|,
+    };
   }
 
   my $unknown_cond_count = $self->get_metadata($schema, PomCur::Curs::State::UNKNOWN_CONDITIONS_COUNT_KEY);
   if (defined $unknown_cond_count && $unknown_cond_count > 0) {
-    push @messages,
-      q|Session can't be approved as there are conditions that aren't in the condition ontology|;
+    push @messages, {
+      title => q|Session can't be approved as there are conditions that aren't in the condition ontology|,
+    };
   }
 
   if (@messages) {
