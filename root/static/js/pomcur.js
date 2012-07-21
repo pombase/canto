@@ -936,14 +936,15 @@ $(document).ready(function() {
   });
 
   function maybe_autopopulate(allele_type_config, name_input) {
-    if (typeof allele_type_config.autopopulate_name == 'undefined') {
-      return false;
-    } else {
-      var new_name =
-        allele_type_config.autopopulate_name.replace(/@@gene_name@@/, gene_display_name);
-      name_input.val(new_name);
-      return true;
+    if (typeof allele_type_config.autopopulate_name != 'undefined') {
+      if (name_input.val().length == 0) {
+        var new_name =
+          allele_type_config.autopopulate_name.replace(/@@gene_name@@/, gene_display_name);
+        name_input.val(new_name);
+        return true;
+      }
     }
+    return false;
   }
 
   function setup_description(selected_option) {
