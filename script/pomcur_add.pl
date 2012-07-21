@@ -78,7 +78,7 @@ sub usage
   die qq|${message}usage:
   $0 --cvterm cv_name term_name [db_name:accession [definition]]
 or:
-  $0 --person "name" email_address [user_type]
+  $0 --person "name" email_address password [user_type]
 or:
   $0 --pubmed-by-id <pubmed_id> [pubmed_id ...]
 or:
@@ -110,7 +110,7 @@ if ($add_cvterm && (@ARGV < 2 || @ARGV > 4)) {
   usage("--cvterm needs 2, 3 or 4 arguments");
 }
 
-if ($add_person && (@ARGV < 2 || @ARGV > 3)) {
+if ($add_person && (@ARGV < 3 || @ARGV > 4)) {
   usage("--person needs 2 or 3 arguments");
 }
 
@@ -168,11 +168,12 @@ my $proc = sub {
   if ($add_person) {
     my $name = shift @ARGV;
     my $email_address = shift @ARGV;
+    my $password = shift @ARGV;
     my $role_name = shift @ARGV // "user";
 
     my $role = $load_util->find_cvterm(cv_name => 'PomCur user types',
                                        name => $role_name);
-    $load_util->get_person($name, $email_address, $role);
+    $load_util->get_person($name, $email_address, $role, $password);
   }
 
   if ($add_by_pubmed_id) {

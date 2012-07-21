@@ -468,6 +468,7 @@ sub get_person
   my $name = shift;
   my $email_address = shift;
   my $role_cvterm = shift;
+  my $password = shift // $email_address;
 
   my $schema = $self->schema();
 
@@ -482,7 +483,7 @@ sub get_person
       {
         name => $name,
         email_address => $email_address,
-        password => $email_address,
+        password => $password,
         role => $role_cvterm,
       });
 }
