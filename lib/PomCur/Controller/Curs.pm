@@ -2153,18 +2153,28 @@ sub complete_approval : Chained('top') Args(0)
 
   my $schema = $c->stash()->{schema};
 
-  my $count = $self->get_metadata($schema, PomCur::Curs::State::TERM_SUGGESTION_COUNT_KEY);
+  my @messages = ();
 
-  if (defined $count && $count > 0) {
-    $c->flash()->{message} =
+  my $term_sugg_count = $self->get_metadata($schema, PomCur::Curs::State::TERM_SUGGESTION_COUNT_KEY);
+  if (defined $term_sugg_count && $term_sugg_count > 0) {
+    push @messages,
       q|Session can't be approved as there are outstanding term requests|;
-    _redirect_and_detach($c);
+  }
+
+  my $unknown_cond_count = $self->get_metadata($schema, PomCur::Curs::State::UNKNOWN_CONDITIONS_COUNT_KEY);
+  if (defined $unknown_cond_count && $unknown_cond_count > 0) {
+    push @messages,
+      q|Session can't be approved as there are conditions that aren't in the condition ontology|;
+  }
+
+  if (@messages) {
+    $c->flash()->{error} = [@messages];
   } else {
     $self->state()->set_state($c->config(), $schema, APPROVED);
     $c->flash()->{message} = 'Session approved';
-
-    _redirect_and_detach($c);
   }
+
+  _redirect_and_detach($c);
 }
 
 sub cancel_approval : Chained('top') Args(0)

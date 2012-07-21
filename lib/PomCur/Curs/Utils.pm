@@ -366,18 +366,20 @@ sub _get_conditions_string
   return '' unless defined $conditions;
 
   my @condition_names = map {
+    my $ret_val;
     my $term_id = $_;
     if ($term_id =~ /^[A-Z]+:/) {
       my $result = $ontology_lookup->lookup_by_id(id => $term_id);
       if (defined $result) {
-        $result->{name};
-      } else {
-        $term_id;
+        $ret_val = $result->{name} . " ($term_id)";
       }
+    }
+    if (defined $ret_val) {
+      $ret_val;
     } else {
       # some conditions are just free text if the user couldn't find the
       # appropriate PCO term
-      $term_id;
+      "$term_id (NEW)";
     }
   } @$conditions;
 
