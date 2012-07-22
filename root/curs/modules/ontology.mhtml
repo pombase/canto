@@ -104,7 +104,11 @@ it accurately describes your gene:
       </div>
       <div class="curs-box-body">
 <div id="ferret-linkouts" class="curs-external-links">
-
+  <div class="links-title">
+    View term ancestry in:
+  </div>
+  <div class="links-container">
+  </div>
 </div>
 
         <table class="curs-definition-table">

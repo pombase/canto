@@ -302,9 +302,9 @@ var ferret_choose = {
           var img_src =
             application_root + 'static/images/logos/' +
             link_conf['icon'];
-          var title = link_conf['title'];
+          var title = 'View in: ' + link_conf['name'];
           html += '<div class="curs-external-link"><a target="_blank" href="' +
-            url + '">';
+            url + '" title="' + title + '">';
           if (img_src) {
             html += '<img alt="' + title + '" src="' + img_src + '"/></a>'
           } else {
@@ -313,7 +313,7 @@ var ferret_choose = {
           var link_img_src = application_root + 'static/images/ext_link.png';
           html += '<img src="' + link_img_src + '"/></div>';
         });
-        $('#ferret-linkouts').html(html);
+        $('#ferret-linkouts .links-container').html(html);
       }
     }
 

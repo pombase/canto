@@ -828,9 +828,16 @@ span.pomcur-select-buttons {
   margin-top: 1.5em;
 }
 
-.curs-external-link {
+.curs-external-links {
   float: right;
   display: inline;
+  clear: right;
+}
+.curs-external-links .links-title {
+  font-size: 80%;
+}
+.curs-external-link {
+  float: right;
   clear: right;
 }
 
