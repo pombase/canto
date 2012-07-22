@@ -638,4 +638,36 @@ sub make_allele_display_name
 
   return "$name($description)";
 }
+
+=head2
+
+ Usage   : my $annotation_deleted =
+             PomCur::Curs::Utils::delete_interactor($annotation, $interactor_identifier);
+ Function: Remove an interactor from an interaction annotation and
+           remove the annotating if that interactor was the only one.
+ Args    : $annotation - the Annotation object
+           $interactor_identifier - the identifier of the interactor
+                                    to remove
+ Returns : 1 if the annotation was deleted, 0 otherwise
+
+=cut
+sub delete_interactor
+{
+  my $annotation = shift;
+  my $interactor_identifier = shift;
+
+  my $data = $annotation->data();
+  if (@{$data->{interacting_genes}} <= 1) {
+    $annotation->delete();
+  } else {
+    $data->{interacting_genes} =
+      [grep {
+        $_->{primary_identifier} ne $interactor_identifier;
+      } @{$data->{interacting_genes}}];
+    $annotation->data($data);
+    $annotation->update();
+  }
+
+}
+
 1;

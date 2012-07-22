@@ -696,17 +696,7 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete')
     my $annotation_type_name = $annotation->type();
     my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
     if ($annotation_config->{category} eq 'interaction') {
-      my $data = $annotation->data();
-      if (@{$data->{interacting_genes}} <= 1) {
-        $annotation->delete();
-      } else {
-        $data->{interacting_genes} =
-          [grep {
-            $_->{primary_identifier} ne $other_gene_identifier;
-          } @{$data->{interacting_genes}}];
-        $annotation->data($data);
-        $annotation->update();
-      }
+      PomCur::Curs::Utils::delete_interactor($annotation, $other_gene_identifier);
     } else {
       $annotation->delete();
     }
