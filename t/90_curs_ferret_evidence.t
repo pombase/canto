@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 106;
+use Test::More tests => 138;
 
 use Data::Compare;
 
@@ -43,10 +43,11 @@ for my $annotation_type (@annotation_type_list) {
              {
                order_by => 'name' })->first();
 
+  my $term_db_accession = $new_term->db_accession();
+
   test_psgi $app, sub {
     my $cb = shift;
 
-    my $term_db_accession = $new_term->db_accession();
     my $new_annotation_re = qr/<td>\s*SPCC1739.10\s*<\/td>.*$term_db_accession.*IMP/s;
 
     {
@@ -64,21 +65,35 @@ for my $annotation_type (@annotation_type_list) {
 
     }
 
+    my $make_annotation = sub {
+      my $use_term_suggestion = shift;
 
-    my $new_annotation = undef;
-    my $new_annotation_id = undef;
+      my $term_db_accession = $new_term->db_accession();
 
-    # test proceeding after choosing a term
-    {
+      my $new_annotation_id = undef;
+
+      # test proceeding after choosing a term
       my $gene_id = 2;
       my $uri = new URI("$root_url/annotation/edit/$gene_id/$annotation_type_name");
 
-      $uri->query_form('ferret-term-id' => $term_db_accession,
-                       'ferret-submit' => 'Proceed',
-                       'ferret-term-entry' => $new_term->name());
+      my %form_params = (
+        'ferret-term-id' => $term_db_accession,
+      );
+
+      if ($use_term_suggestion) {
+        $form_params{'ferret-suggest-name'} = 'new_suggested_name';
+        $form_params{'ferret-suggest-definition'} = 'new_suggested_definition';
+        $form_params{'ferret-submit'} = 'Submit suggestion';
+      } else {
+        $form_params{'ferret-term-entry'} = $new_term->name();
+        $form_params{'ferret-submit'} = 'Proceed';
+      }
+
+      $uri->query_form(%form_params);
 
       my $req = HTTP::Request->new(GET => $uri);
       my $res = $cb->($req);
+
       is $res->code, 302;
 
       my $redirect_url = $res->header('location');
@@ -105,13 +120,27 @@ for my $annotation_type (@annotation_type_list) {
               qr/Choose evidence for annotating $gene_display_name with $term_db_accession/);
       }
 
-      $new_annotation =
+      my $new_annotation =
         $curs_schema->find_with_type('Annotation', $new_annotation_id);
 
       is ($new_annotation->genes(), 1);
       is (($new_annotation->genes())[0]->primary_identifier(), "SPCC1739.10");
       is ($new_annotation->data()->{term_ontid}, $new_term->db_accession());
-    }
+
+      if ($use_term_suggestion) {
+        is($new_annotation->data()->{term_suggestion}->{name},
+           $form_params{'ferret-suggest-name'});
+        is($new_annotation->data()->{term_suggestion}->{definition},
+           $form_params{'ferret-suggest-definition'});
+      }
+
+      return $new_annotation_id;
+    };
+
+    # first try making an annotation with a term request/suggestion
+    $make_annotation->(1);
+
+    my $new_annotation_id = $make_annotation->(0);
 
     # test adding evidence to an annotation
     {
@@ -187,6 +216,6 @@ for my $annotation_type (@annotation_type_list) {
 }
 
 my $an_rs = $curs_schema->resultset('Annotation');
-is ($an_rs->count(), 10);
+is ($an_rs->count(), 14);
 
 done_testing;

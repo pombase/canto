@@ -835,7 +835,7 @@ sub annotation_ontology_edit
         definition => $suggested_definition
       };
 
-      $self->metadata_storer()->store_count($config, $schema);
+      $self->metadata_storer()->store_counts($config, $schema);
 
       $c->flash()->{message} = 'Note that your term suggestion has been '
         . 'stored, but the gene will be temporarily '
@@ -1532,7 +1532,7 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
 
   $schema->txn_do($process);
 
-  $self->metadata_storer->store_counts($config, $schema);
+  $self->metadata_storer()->store_counts($config, $schema);
 
   _redirect_and_detach($c, 'gene', $gene->gene_id());
 }
