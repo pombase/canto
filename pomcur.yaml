@@ -1330,9 +1330,6 @@ external_links:
         - name: PomBase
           icon: pombase_logo_small.png
           url: 'http://www.pombase.org/spombe/result/@@primary_identifier@@'
-        - name: GeneDB
-          icon: genedb.gif
-          url: 'http://old.genedb.org/genedb/Search?organism=pombe&name=@@primary_identifier@@'
   pub:
     - name: PubMed
       icon: PubMed_logo_small.png
