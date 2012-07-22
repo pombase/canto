@@ -303,7 +303,7 @@ var ferret_choose = {
             application_root + 'static/images/logos/' +
             link_conf['icon'];
           var title = link_conf['title'];
-          html += '<div class="curs-external-link"><a href="' +
+          html += '<div class="curs-external-link"><a target="_blank" href="' +
             url + '">';
           if (img_src) {
             html += '<img alt="' + title + '" src="' + img_src + '"/></a>'
