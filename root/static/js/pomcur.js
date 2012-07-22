@@ -795,11 +795,11 @@ $(document).ready(function() {
         source: existing_alleles_by_name,
         select: function(event, ui) {
           var new_select_val = 'other';
-          if (allele_types[ui.item.description] != 'undefined') {
+          if (allele_types[ui.item.description] != undefined) {
             new_select_val = ui.item.description;
           }
           add_allele_dialog.find('.curs-allele-type-select select').val(new_select_val).trigger('change');
-          add_allele_dialog.find('.curs-allele-description-input').val(ui.item.description);
+          add_allele_dialog.find('.curs-allele-description-input').val(ui.item.description).attr('disabled', true);
           var label = add_allele_dialog.find('.curs-allele-type-label');
           label.hide();
         }
