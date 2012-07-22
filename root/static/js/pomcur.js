@@ -794,7 +794,11 @@ $(document).ready(function() {
       $('#curs-allele-add .curs-allele-name').autocomplete({
         source: existing_alleles_by_name,
         select: function(event, ui) {
-          add_allele_dialog.find('.curs-allele-type-select select').val('other').trigger('change');
+          var new_select_val = 'other';
+          if (allele_types[ui.item.description] != 'undefined') {
+            new_select_val = ui.item.description;
+          }
+          add_allele_dialog.find('.curs-allele-type-select select').val(new_select_val).trigger('change');
           add_allele_dialog.find('.curs-allele-description-input').val(ui.item.description);
           var label = add_allele_dialog.find('.curs-allele-type-label');
           label.hide();
