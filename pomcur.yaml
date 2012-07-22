@@ -1327,7 +1327,7 @@ external_links:
         url: 'http://www.pombase.org/spombe/result/@@primary_identifier@@'
       - name: BioGRID
         icon: biogrid_logo_small.png
-        url: 'http://thebiogrid.org/275721/summary/schizosaccharomyces-pombe/@@primary_identifier@@.html'
+        url: 'http://thebiogrid.org/search.php?search=@@primary_identifier@@&organism=@@organism->taxonid@@'
     organism:
       Schizosaccharomyces pombe:
         - name: GeneDB
