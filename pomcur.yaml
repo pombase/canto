@@ -1322,14 +1322,14 @@ external_links:
       - name: AmiGO
         icon: amigo.png
         url: 'http://amigo.geneontology.org/cgi-bin/amigo/gp-assoc.cgi?gp=@@primary_identifier@@'
-      - name: PomBase
-        icon: pombase_logo_small.png
-        url: 'http://www.pombase.org/spombe/result/@@primary_identifier@@'
       - name: BioGRID
         icon: biogrid_logo_small.png
         url: 'http://thebiogrid.org/search.php?search=@@primary_identifier@@&organism=@@organism->taxonid@@'
     organism:
       Schizosaccharomyces pombe:
+        - name: PomBase
+          icon: pombase_logo_small.png
+          url: 'http://www.pombase.org/spombe/result/@@primary_identifier@@'
         - name: GeneDB
           icon: genedb.gif
           url: 'http://old.genedb.org/genedb/Search?organism=pombe&name=@@primary_identifier@@'
