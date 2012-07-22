@@ -950,13 +950,19 @@ input[readonly="1"] {
 }
 
 .curs-allele-description-delete {
-  padding-left: 20px;
+  padding-left: 5px;
 }
 
 #curs-allele-add .curs-allele-reuse {
   border-top: 1px solid grey;
   padding: 5px;
   float: right;
+}
+#curs-allele-add table {
+  width: 100%;
+}
+#curs-allele-add tr td:first-child {
+  width: 10em;
 }
 
 form label.error {
