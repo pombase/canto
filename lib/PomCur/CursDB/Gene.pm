@@ -146,7 +146,8 @@ __PACKAGE__->many_to_many('direct_annotations' => 'gene_annotations',
 sub _get_indirect_annotations
 {
   my $self = shift;
-  my $all_annotations = shift;
+  my $all_annotations = shift // 0;
+  my $remove_annotations = shift // 0;
 
   my %ids = ();
 
@@ -171,14 +172,20 @@ sub _get_indirect_annotations
         my $interacting_genes = $annotation->data()->{interacting_genes};
 
         if (defined $interacting_genes) {
-          my @interacting_genes = @$interacting_genes;
+          if ($remove_annotations) {
+            # special case - only delete the whole Annotation if we
+            # are deleting the last interactor
+            PomCur::Curs::Utils::delete_interactor($annotation, $self->primary_identifier());
+          } else {
+            my @interacting_genes = @$interacting_genes;
 
-          for my $interacting_gene (@interacting_genes) {
-            my $interacting_gene_identifier =
-              $interacting_gene->{primary_identifier};
-            if ($interacting_gene_identifier eq $self->primary_identifier()) {
-              $ids{$annotation->annotation_id()} = 1;
-              last;
+            for my $interacting_gene (@interacting_genes) {
+              my $interacting_gene_identifier =
+                $interacting_gene->{primary_identifier};
+              if ($interacting_gene_identifier eq $self->primary_identifier()) {
+                $ids{$annotation->annotation_id()} = 1;
+                last;
+              }
             }
           }
         }
@@ -186,16 +193,25 @@ sub _get_indirect_annotations
     }
   }
 
-  return $schema->resultset("Annotation")
+  my $return_rs = $schema->resultset("Annotation")
     ->search({ annotation_id => { -in => [keys %ids] }});
 
+  if ($remove_annotations) {
+    while (defined (my $annotation = $return_rs->next())) {
+      # delete one-by-one so that gene_annotation rows are deleted too
+      $annotation->delete();
+    }
+    return undef;
+  } else {
+    return $return_rs;
+  }
 }
 
 =head2 indirect_annotations
 
  Usage   : my @annotations = $gene->indirect_annotations();
  Function: Return those annotations that reference this Gene in data field of
-           the Annotations (eg. the "with_gene" field)
+           the Annotations (eg. the "with_gene" field or as an interactor)
  Args    : None
 
 =cut
@@ -211,7 +227,8 @@ sub indirect_annotations
  Usage   : my @annotations = $gene->all_annotations();
  Function: Return those annotations are related to this Gene via the
            gene_annotations tables or that reference this Gene in data
-           field of the Annotation (eg. the "with_gene" field)
+           field of the Annotation (eg. the "with_gene" field or as an
+           interactor)
  Args    : None
 
 =cut
@@ -252,9 +269,7 @@ sub delete
     $allele->delete();
   } $self->alleles();
 
-  my @annotations = $self->all_annotations()->all();
-  map { $_->gene_annotations()->delete() } @annotations;
-  map { $_->delete() } @annotations;
+  $self->_get_indirect_annotations(1, 1);
 
   $self->SUPER::delete();
 }

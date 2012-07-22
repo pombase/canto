@@ -88,13 +88,16 @@ test_psgi $app, sub {
   like ($content, qr/No annotation found with id &quot;2&quot;/);
 
   # delete one interaction from an annotation that has two interactions
-  my $annotation_rs =
+  my $interaction_annotation_rs =
     $curs_schema->resultset('Annotation')->search({ type => 'genetic_interaction' });
+
+  is($interaction_annotation_rs->count(), 1);
+
   my $interaction_annotation;
   my $ev_code = 'Synthetic Haploinsufficiency';
   my $interactor_to_delete = 'SPAC27D7.13c';
 
-  while (defined (my $ann = $annotation_rs->next())) {
+  while (defined (my $ann = $interaction_annotation_rs->next())) {
     my $data = $ann->data();
     if ($data->{evidence_code} eq $ev_code) {
       if (defined $interaction_annotation) {
@@ -116,6 +119,35 @@ test_psgi $app, sub {
 
   is (@{$data->{interacting_genes}}, 1);
   ok (!grep { $_->{primary_identifier} eq $interactor_to_delete } @{$data->{interacting_genes}});
+
+  my $all_annotation_rs = $curs_schema->resultset('Annotation');
+  is($all_annotation_rs->count(), 6);
+
+  # Regression test.  Add the interactor back to the interaction
+  # annotation, then try to delete the gene SPAC27D7.13c from the
+  # "edit gene list" page.  This should just delete SPAC27D7.13c as an
+  # interactor, not delete the Annotation.
+  push @{$data->{interacting_genes}}, {
+    primary_identifier => $interactor_to_delete,
+  };
+
+  $interaction_annotation->data($data);
+  $interaction_annotation->update();
+
+  my $interactor_to_delete_gene =
+    $curs_schema->resultset('Gene')->find({ primary_identifier => $interactor_to_delete });
+  $interactor_to_delete_gene->delete();
+
+  is($all_annotation_rs->count(), 3);
+  # deleting first interactor doesn't delete the annotation
+  is($interaction_annotation_rs->count(), 1);
+
+  my $doa10_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => 'SPBC14F5.07' });
+  $doa10_gene->delete();
+
+  is($all_annotation_rs->count(), 1);
+  # deleting second interactor does delete the annotation
+  is($interaction_annotation_rs->count(), 0);
 };
 
 done_testing;
