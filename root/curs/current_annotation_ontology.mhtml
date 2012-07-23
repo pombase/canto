@@ -108,7 +108,7 @@ $user_created
     </td>
     <td>
       <span>
-% if ($read_only_curs) {
+% if ($read_only_curs || !$user_created) {
 %   if (defined $row->{evidence_code}) {
    <% $row->{evidence_code} %>
 %   }
