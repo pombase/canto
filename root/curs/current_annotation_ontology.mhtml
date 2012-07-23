@@ -120,12 +120,12 @@ $user_created
 %     $url = $evidence_action_url . $row->{annotation_id};
 %   }
 <a href="<% $url %>"
-% if (defined $row->{evidence_code}) {
+%   if (defined $row->{evidence_code}) {
    title="Change evidence ...">
    <% $row->{evidence_code} %>
-% } else {
+%   } else {
    title="Set evidence ...">Set evidence ...
-% }
+%   }
 </a>
 % }
       </span>
