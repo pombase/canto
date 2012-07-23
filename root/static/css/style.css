@@ -47,7 +47,8 @@ img {
   margin:0 auto;
   width: 60%;
   padding: 10px;
-  font-size: 130%;
+  font-size: 150%;
+  font-weight: bold;
 }
 #heading .logo {
   padding: 5px;
@@ -164,11 +165,10 @@ div#footer .sponsor {
 }
 
 #curs-page-description {
-  clear: both;
-  font-size: 110%;
-  font-weight: bold;
-  float: left;
+  font-size: 130%;
   padding: 7px;
+  display: block;
+  text-align: center;
 }
 
 #breadcrumb-previous-button {

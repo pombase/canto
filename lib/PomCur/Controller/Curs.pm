@@ -234,9 +234,10 @@ sub front : Chained('top') PathPart('') Args(0)
 {
   my ($self, $c) = @_;
 
-  $c->stash->{title} = 'Front page';
+  my $pub_uniquename = $c->stash()->{pub}->uniquename();
+  $c->stash->{title} = "$pub_uniquename summary";
   # use only in header, not in body:
-  $c->stash->{show_title} = 0;
+  $c->stash->{show_title} = 1;
   $c->stash->{template} = 'curs/front.mhtml';
 }
 
@@ -1789,7 +1790,7 @@ sub gene : Chained('top') Args(1)
 
   $st->{title} = 'Gene: ' . $gene_proxy->display_name();
   # use only in header, not in body:
-  $st->{show_title} = 0;
+  $st->{show_title} = 1;
   $st->{template} = 'curs/gene_page.mhtml';
 }
 
