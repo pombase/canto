@@ -178,7 +178,7 @@ sub triage :Local {
     if (defined $community_curatable) {
       $schema->create_with_type('Pubprop',
                                 { type_id => $community_curatable_cvterm->cvterm_id(),
-                                  value => $community_curatable,
+                                  value => 'yes',
                                   pub_id => $pub_just_triaged->pub_id() });
     }
 

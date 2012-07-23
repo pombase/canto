@@ -66,7 +66,11 @@ $return_pub_id
           Triage flags
         </span>
         <div class="sect-content">
-          <input type="checkbox" name="community-curatable" value="yes">Community curatable<br>
+          <input type="checkbox"
+% if ($form_values{community_curatable}) {
+                 checked="checked"
+% }
+                 name="community-curatable">Community curatable<br>
         </div>
       </div>
       <div class="sect triage-assigned-curator">
@@ -74,7 +78,8 @@ $return_pub_id
           Assign to curator:
         </span>
         <div class="sect-content">
-          <& /person_picker.mhtml, id_prefix => 'triage-assigned-curator' &>
+          <& /person_picker.mhtml, id_prefix => 'triage-assigned-curator',
+             default_person => $pub->assigned_curator() &>
         </div>
       </div>
       <div class="sect triage-curation-priorities">
@@ -87,7 +92,7 @@ $return_pub_id
             <input type="radio" group="triage-curation-priorities"
                    name="triage-curation-priority"
                    value="<% $curation_priority->{cvterm_id} %>"
-%   if ($curation_priority->{name} eq $default_priority_name) {
+%   if ($curation_priority->{name} eq $form_values{priority}) {
                    checked="true"
 %   }
                    >
@@ -104,6 +109,9 @@ $return_pub_id
 % for my $experiment_type (@experiment_types) {
           <div>
             <input type="checkbox" name="experiment-type"
+%   if ($form_values{experiment_types}{$experiment_type}) {
+                   checked="checked"
+%   }
                    value="<% $experiment_type %>" ><% $experiment_type %><br>
           </div>
 % }
@@ -148,6 +156,8 @@ my $status_cv = $schema->find_with_type('Cv', { name => $status_cv_name });
 
 my @status_links = ();
 
+my %form_values = ();
+
 my @pub_statuses =
   $schema->resultset('Cvterm')->search({ cv_id => $status_cv->cv_id() });
 
@@ -164,12 +174,23 @@ for my $status (@pub_statuses) {
   my $link = $c->uri_for($path);
 
   push @status_links, { name => $name,
-                        link => $link };  
+                        link => $link };
 }
 
 my $experiment_type_cv_name = 'PomCur publication experiment types';
 my $experiment_type_cv =
   $schema->find_with_type('Cv', { name => $experiment_type_cv_name });
+
+my $pub_props_rs = $pub->pubprops();
+while (defined (my $prop = $pub_props_rs->next())) {
+  if ($prop->type()->name() eq 'experiment_type') {
+    $form_values{experiment_types}{$prop->value()} = 1;
+  } else {
+    if ($prop->type()->name() eq 'community_curatable') {
+      $form_values{community_curatable} = 1;
+    }
+  }
+}
 
 my @experiment_type_cvterms =
   $schema->resultset('Cvterm')->search({ cv_id => $experiment_type_cv->cv_id() });
@@ -183,7 +204,7 @@ my $curation_priority_cv =
 my @curation_priority_cvterms =
   $schema->resultset('Cvterm')->search({ cv_id => $curation_priority_cv->cv_id() });
 
-my @curation_priorities = 
+my @curation_priorities =
   map {
     {
       name => $_->[0],
@@ -199,6 +220,12 @@ my @curation_priorities =
   } @curation_priority_cvterms;
 
 my $default_priority_name = $c->config()->{default_curation_priority_name};
+if (defined $pub->curation_priority_id()) {
+  $form_values{priority} = $pub->curation_priority->name();
+} else {
+  $form_values{priority} = $default_priority_name;
+}
+
 
 my $pubmed_type = $pub->pubmed_type();
 my $pubmed_type_name;
@@ -208,4 +235,10 @@ if (defined $pubmed_type) {
 } else {
   $pubmed_type_name = 'Unknown';
 }
+
+use Data::Dumper;
+$Data::Dumper::Maxdepth = 5;
+warn Dumper([\%form_values]), "\n";
+
+
 </%init>

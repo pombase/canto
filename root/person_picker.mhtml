@@ -1,11 +1,20 @@
 <%args>
 $id_prefix
+$default_person
 </%args>
 
 <div class="curs-person-picker">
 
-<input class="curs-person-picker-input" id="<% $id_prefix %>-input" name="<% $id_prefix %>-input" size="30" />
-<input class="curs-person-picker-person-id" id="<% $id_prefix %>-person-id" name="<% $id_prefix %>-person-id" type="hidden"/>
+<input class="curs-person-picker-input" id="<% $id_prefix %>-input"
+% if (defined $default_person) {
+       value="<% $default_person->name() %>"
+% }
+       name="<% $id_prefix %>-input" size="30" />
+<input class="curs-person-picker-person-id" id="<% $id_prefix %>-person-id"
+% if (defined $default_person) {
+       value="<% $default_person->person_id() %>"
+% }
+       name="<% $id_prefix %>-person-id" type="hidden"/>
 <button class="curs-person-picker-add" type="button">New ...</button>
 <div class="curs-person-picker-add" style="display: none">
   <div>
