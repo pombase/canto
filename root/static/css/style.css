@@ -6,7 +6,7 @@ body
   min-width: 400px;
   margin-left: auto;
   margin-right: auto;
-  background-color:#ffffff; 
+  background-color: white; 
   color: #302226;
   font-size: 12pt;
   font-family: helvetica, "trebuchet MS", arial, sans-serif;
@@ -77,7 +77,7 @@ div#footer .sponsor {
 
 #notice-list .notice {
   border: 2px solid blue;
-  background-color: #fff;
+  background-color: white;
 }
 
 #error-list .error {
@@ -87,7 +87,7 @@ div#footer .sponsor {
 
 #message-list .message {
   border: 2px solid green;
-  background-color: #fff;
+  background-color: white;
 }
 
 #message-list .message .title, #error-list .error .title {
@@ -114,7 +114,7 @@ div#footer .sponsor {
 }
 #menu ul {
   background-color: #228;
-  color: #fff;
+  color: white;
   margin: 0; padding: 0;
 }
 #menu ul li {
@@ -135,7 +135,7 @@ div#footer .sponsor {
   color: white;
 }
 #menu ul li a:hover, .menu ul li .current {
-  color: #fff;
+  color: white;
   background-color:#0b75b2;
 }
 
@@ -275,6 +275,9 @@ table.list th {
 }
 table.list tr.even, table.list tr:nth-child(even) {
   background-color: #eed;
+}
+table.list tr.odd, table.list tr:nth-child(odd) {
+  background-color: white;
 }
 .list th a:link {
   color: #226
@@ -665,7 +668,9 @@ div.clearall {
 }
 
 .curs-box-body {
-  margin: 10px;
+  margin: 0px;
+  padding: 10px;
+  background-color: white;
 }
 
 #ferret-accept-term-details {
