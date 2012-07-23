@@ -186,9 +186,14 @@ my $proc = sub {
     if (@ARGV > 1) {
       usage (qq{need one argument to "$opt"});
     } else {
-      my $count = PomCur::Track::PubmedUtil::load_by_query($config, $schema,
-                                                           $ARGV[0], 'admin_load');
-      print "loaded $count publcations\n";
+      eval {
+        my $count = PomCur::Track::PubmedUtil::load_by_query($config, $schema,
+                                                             $ARGV[0], 'admin_load');
+        print "loaded $count publcations\n";
+      };
+      if ($@) {
+        die "loading failed: $@\n";
+      }
     }
   }
 };

@@ -378,6 +378,20 @@ sub load_by_query
   my $xml = get_pubmed_ids_by_query($config, $query);
   my $res_hash = XMLin($xml);
 
+  if (!defined $res_hash->{IdList}->{Id}) {
+    my $warning_list = $res_hash->{WarningList};
+    if (defined $warning_list) {
+      my $output_mesasge = $warning_list->{OutputMessage};
+      if (ref $output_mesasge eq 'ARRAY') {
+        die join ('  ', @$output_mesasge), "\n";;
+      } else {
+        die "$output_mesasge\n";
+      }
+    }
+
+    die "PubMed query failed, but returned no error\n";
+  }
+
   my @ids = @{$res_hash->{IdList}->{Id}};
 
   while (@ids) {
