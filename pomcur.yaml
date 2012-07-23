@@ -1330,6 +1330,7 @@ external_links:
         - name: PomBase
           icon: pombase_logo_small.png
           url: 'http://www.pombase.org/spombe/result/@@primary_identifier@@'
+          sysid_link: 1
   pub:
     - name: PubMed
       icon: PubMed_logo_small.png

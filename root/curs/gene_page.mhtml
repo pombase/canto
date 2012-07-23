@@ -46,7 +46,15 @@ Details for <% $gene->display_name() %>
     <table class="curs-definition-table">
       <tr>
         <td class="title">Identifier</td>
-        <td><% $gene->primary_identifier() %></td>
+        <td>
+% if (defined $sysid_url) {
+          <a href="<% $sysid_url %>" title="<% $sysid_url_title %>" target="_blank">
+% }
+          <% $gene->primary_identifier() %>
+% if (defined $sysid_url) {
+          </a>
+% }
+        </td>
       </tr>
       <tr>
         <td class="title">Name</td>
@@ -84,4 +92,19 @@ Details for <% $gene->display_name() %>
 <%init>
 my $gene_id = $gene->gene_id();
 my $gene_name = $gene->{primary_name} // '';
+
+my $gene_org_name = $gene->organism()->full_name();
+
+my $sysid_url = undef;
+my $sysid_url_title = undef;
+
+my $org_config = $c->config()->{external_links}->{gene}->{organism}->{$gene_org_name};
+if (defined $org_config) {
+  for my $conf (@$org_config) {
+    if ($conf->{sysid_link}) {
+      $sysid_url = PomCur::WebUtil::substitute_paths($conf->{url}, $gene);
+      $sysid_url_title = 'View at ' . $conf->{name};
+    }
+  }
+}
 </%init>
