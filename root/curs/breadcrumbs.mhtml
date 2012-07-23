@@ -6,22 +6,16 @@
     </a>
 % }
   <div id="breadcrumbs-gene-summary-link" class="breadcrumbs-link">
-% if (defined $gene) {
     <a href="<% $curs_root_uri %>" title="Go to the home page">
       <% $pub->uniquename() %> summary
     </a>
+% if (defined $gene) {
 %   my $gene_display_name = $gene->display_name();
     <div id="breadcrumbs-gene-link" class="breadcrumbs-link">
-%   if ($current_path_uri !~ m:/gene/:) {
       <a href="<% $gene_url %>" title="Go to the home page">
-%   }
       Gene: <% $gene_display_name %>
-%   if ($current_path_uri !~ m:/gene/:) {
       </a>
-%   }
     </div>
-% } else {
-  <% $pub->uniquename() %> summary
 % }
   </div>
 % if ($is_admin) {
