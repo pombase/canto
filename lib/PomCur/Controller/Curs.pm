@@ -1574,7 +1574,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     $gene = $allele->gene();
   }
 
-  $st->{title} = "Transfer annotation from $display_name";
+  $st->{title} = "Finalise annotation";
   $st->{show_title} = 0;
   $st->{template} = "curs/modules/${module_category}_transfer.mhtml";
 
