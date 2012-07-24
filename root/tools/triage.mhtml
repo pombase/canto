@@ -236,9 +236,4 @@ if (defined $pubmed_type) {
   $pubmed_type_name = 'Unknown';
 }
 
-use Data::Dumper;
-$Data::Dumper::Maxdepth = 5;
-warn Dumper([\%form_values]), "\n";
-
-
 </%init>
