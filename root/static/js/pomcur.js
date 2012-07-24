@@ -918,7 +918,7 @@ $(document).ready(function() {
     allele_dialog.find('.curs-allele-description-input').val('');
     allele_dialog.find('.curs-allele-type-select').show();
     $expression_row = allele_dialog.find('.curs-allele-expression');
-    $expression_row.find('input[value="Endogenous"]').attr('checked', true);
+    $expression_row.find('input[value="Not specified"]').attr('checked', true);
     allele_dialog.find('.curs-allele-evidence-select').val('');
     var name_input = allele_dialog.find('.curs-allele-name');
     name_input.removeAttr('disabled');
