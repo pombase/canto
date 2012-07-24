@@ -78,7 +78,7 @@ $is_admin_user
 %   }
 % }
       </div>
-      <div class="clearall"/>
+      <div class="clearall"></div>
 % $m->call_next;
     </div>
     <& footer.mhtml &>
