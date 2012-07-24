@@ -42,7 +42,7 @@ test_psgi $app, sub {
 
   my $term_db_accession = $new_term->db_accession();
 
-  my $new_annotation_re = qr/<td>\s*SPCC1739.10\s*<\/td>.*$term_db_accession.*IMP/s;
+  my $new_annotation_re = qr|SPCC1739.10\s*</a>\s*<\td>.*$term_db_accession.*IMP|s;
 
   my $new_annotation = undef;
   my $new_annotation_id = undef;
@@ -246,7 +246,7 @@ test_psgi $app, sub {
     like ($redirect_res->content(), qr/\Q$allele_1_display_name/);
     like ($redirect_res->content(), qr/$expression_param/);
 
-    my $conditions_param_re = join q(,\s+), @conditions_param;
+    my $conditions_param_re = "\Qhigh temperature (PCO:0000004), low temperature (PCO:0000006), on a Tuesday (NEW), BOGUS:ACCESSION (NEW)";
     like ($redirect_res->content(), qr/$conditions_param_re/);
 
     my $allele_2_display_name = $allele_2->display_name();

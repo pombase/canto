@@ -48,7 +48,8 @@ for my $annotation_type (@annotation_type_list) {
   test_psgi $app, sub {
     my $cb = shift;
 
-    my $new_annotation_re = qr/<td>\s*SPCC1739.10\s*<\/td>.*$term_db_accession.*IMP/s;
+    my $new_annotation_re =
+      qr|$term_db_accession.*IMP|s;
 
     {
       my $uri = new URI("$root_url");

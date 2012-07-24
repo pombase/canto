@@ -30,8 +30,7 @@ test_psgi $app, sub {
   my $cb = shift;
 
   my $term_id = 'GO:0080170';
-  my $new_annotation_re =
-    qr/<td>\s*SPCC1739.10\s*<\/td>.*$term_id.*IPI.*cdc11/s;
+  my $new_annotation_re = qr|.*$term_id.*IPI.*cdc11|s;
 
   my $annotation_evidence_url = "$root_url/annotation/evidence/3";
   my $annotation_with_gene_url = "$root_url/annotation/with_gene/3";
