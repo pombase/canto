@@ -271,7 +271,8 @@ sub load_pubmed_xml
 
       if (defined $article->{Pagination}) {
         my $pagination = $article->{Pagination};
-        if (defined $pagination->{MedlinePgn}) {
+        if (defined $pagination->{MedlinePgn} &&
+            !ref $pagination->{MedlinePgn}) {
           $citation .= ':' . $pagination->{MedlinePgn};
         }
       }
