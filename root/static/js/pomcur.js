@@ -360,22 +360,7 @@ $(document).ready(function() {
   var ferret_input = $("#ferret-term-input");
 
   if (ferret_input.size()) {
-    ferret_input.autocomplete({
-      minLength: 2,
-      source: ferret_choose.ontology_complete_url,
-      cacheLength: 100,
-      focus: function(event, ui) {
-        return false;
-      },
-      select: function(event, ui) {
-        ferret_choose.term_history = [trim(ferret_input.val())];
-        ferret_choose.set_current_term(ui.item.id);
-        ferret_choose.matching_synonym = ui.item.matching_synonym;
-        return false;
-      }
-    })
-    .data("autocomplete")._renderItem = function( ul, item ) {
-      var search_string = $('#ferret-term-input').val();
+    function render_term_item(ul, item, search_string, search_namespace) {
       var search_bits = search_string.split(/\W+/);
       var match_name = item.matching_synonym;
       var synonym_extra = '';
@@ -385,10 +370,10 @@ $(document).ready(function() {
         match_name = item.name;
       }
       var warning = '';
-      if (ferret_choose.annotation_namespace !== item.annotation_namespace) {
+      if (search_namespace !== item.annotation_namespace) {
         warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
           item.annotation_namespace + ' term but<br/>you are browsing ' +
-          ferret_choose.annotation_namespace + ' terms</span>';
+          search_namespace + ' terms</span>';
         var re = new RegExp('_', 'g');
         // unpleasant hack to make the namespaces look nicer
         warning = warning.replace(re,' ');
@@ -417,6 +402,26 @@ $(document).ready(function() {
         .append( "<a>" + match_name + " <span class='term-id'>(" +
                  item.id + ")</span>" + synonym_extra + warning + "</a>" )
         .appendTo( ul );
+    };
+
+
+    ferret_input.autocomplete({
+      minLength: 2,
+      source: ferret_choose.ontology_complete_url,
+      cacheLength: 100,
+      focus: function(event, ui) {
+        return false;
+      },
+      select: function(event, ui) {
+        ferret_choose.term_history = [trim(ferret_input.val())];
+        ferret_choose.set_current_term(ui.item.id);
+        ferret_choose.matching_synonym = ui.item.matching_synonym;
+        return false;
+      }
+    })
+    .data("autocomplete")._renderItem = function( ul, item ) {
+      var search_string = $('#ferret-term-input').val();
+      render_term_item(ul, item, search_string, ferret_choose.annotation_namespace);
     };
 
     function do_autocomplete () {
