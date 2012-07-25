@@ -2163,7 +2163,12 @@ sub complete_approval : Chained('top') Args(0)
   if (@messages) {
     $c->flash()->{error} = [@messages];
   } else {
-    $self->state()->set_state($c->config(), $schema, APPROVED);
+    my $current_user = $c->user();
+
+    $self->state()->set_state($c->config(), $schema, APPROVED,
+                              {
+                                current_user => $current_user,
+                              });
     $c->flash()->{message} = 'Session approved';
   }
 
