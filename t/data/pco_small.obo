@@ -28,9 +28,12 @@ creation_date: 2012-02-07T12:17:29Z
 
 [Term]
 id: PCO:0000005
-name: normal temperature
-def: "The experiment was performed at a temperature within the range 25-32 degrees Celsius." []
+name: standard temperature
+def: "The experiment was performed, or cells were grown, at a temperature within the range 25-32 degrees Celsius." []
+synonym: "normal temperature" EXACT []
 is_a: PCO:0000002 ! temperature
+disjoint_from: PCO:0000004 ! high temperature
+disjoint_from: PCO:0000006 ! low temperature
 created_by: antonialock
 creation_date: 2012-02-07T12:17:29Z
 
@@ -39,6 +42,7 @@ id: PCO:0000006
 name: low temperature
 def: "The experiment was performed at a temperature lower than 25 degrees Celsius." []
 is_a: PCO:0000002 ! temperature
+disjoint_from: PCO:0000004 ! high temperature
 created_by: antonialock
 creation_date: 2012-02-07T12:17:29Z
 
