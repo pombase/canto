@@ -269,7 +269,8 @@ sub set_state
     }
     when (APPROVAL_IN_PROGRESS) {
       if ($current_state ne NEEDS_APPROVAL && $force ne $current_state) {
-        carp "must be in state ", NEEDS_APPROVAL, " to change to ",
+        carp "must be in state ", NEEDS_APPROVAL,
+          " (not $current_state) to change to ",
           "state ", APPROVAL_IN_PROGRESS, " actually in state ",
           $current_state;
       }
@@ -293,7 +294,7 @@ sub set_state
       }
       if ($current_state ne APPROVAL_IN_PROGRESS) {
         carp "must be in state ", APPROVAL_IN_PROGRESS,
-          " to change to state ", APPROVED;
+          " (not $current_state) to change to state ", APPROVED;
       }
       $self->set_metadata($schema, APPROVED_TIMESTAMP_KEY,
                           PomCur::Util::get_current_datetime());
@@ -301,8 +302,8 @@ sub set_state
     }
     when (EXPORTED) {
       if ($current_state ne APPROVED) {
-        carp "must be in state ", APPROVED, " to change to state ",
-          EXPORTED;
+        carp "must be in state ", APPROVED,
+          " (not $current_state) to change to state ", EXPORTED;
       }
       $self->set_metadata($schema, EXPORTED_TIMESTAMP_KEY,
                           PomCur::Util::get_current_datetime());
