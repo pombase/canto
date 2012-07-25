@@ -42,7 +42,7 @@ __PACKAGE__->config(name => 'PomCur',
                     'View::JSON' => {
                       expose_stash => 'json_data',
                     },
-                    static => {
+                    'Plugin::Static::Simple' => {
                       ignore_extensions => [ qw/html xhtml mhtml tt tt2 tmpl/ ],
                       dirs => [
                         'static'
