@@ -194,7 +194,7 @@ sub lookup
     my $matching_synonym = undef;
 
     for my $synonym ($cvterm->synonyms()) {
-      my $synonym_name = $synonym->synonym();
+      my $synonym_name = lc $synonym->synonym();
       my $synonym_score = _get_score($search_string, $synonym_name);
 
       if ($synonym_score > $max_score) {
