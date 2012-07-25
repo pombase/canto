@@ -1190,7 +1190,7 @@ annotation_type_list:
       - Reporter gene assay
       - Other
     broad_term_suggestions: >
-      multinucleate, abnormal spindle, inviable
+      cell phenotype, multinucleate, abnormal spindle, inviable
     specific_term_examples: >
       growth auxotrophic for arginine, abnormal cytokinetic cell separation
     help_text: >
