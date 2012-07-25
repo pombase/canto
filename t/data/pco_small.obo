@@ -46,6 +46,56 @@ disjoint_from: PCO:0000004 ! high temperature
 created_by: antonialock
 creation_date: 2012-02-07T12:17:29Z
 
+[Term]
+id: PCO:0000009
+name: growth medium
+def: "Any experimental condition specifying the type of growth medium." []
+subset: Grouping_terms
+is_a: PCO:0000001 ! phenotype condition
+created_by: antonialock
+creation_date: 2012-02-07T12:28:25Z
+
+[Term]
+id: PCO:0000100
+name: medium components
+def: "Any experimental condition specifying the nutritional composition of the growth medium." []
+comment: Use this term to specify the general type of growth medium. \nIf certain chemicals not normally found in the medium were added, please also use the 'excess chemical added' conditions, for instance 'caffeine added' or 'thiamine added'.\n If a chemical was added in a much lower quantity than normal, please also use the 'limited chemical added' conditions, for instance 'limited adenine added'.
+subset: Grouping_terms
+synonym: "medium composition" RELATED []
+is_a: PCO:0000009 ! growth medium
+created_by: antonialock
+creation_date: 2012-05-04T07:48:31Z
+
+[Term]
+id: PCO:0000080
+name: rich medium
+comment: Use the medium terms to specify the general type of growth medium and its carbon source. \nIf certain chemicals not normally found in the medium were added, please also use the 'chemical added/excluded' terms, for instance 'caffeine added' or 'nitrogen excluded'.\n If a chemical was added in a much lower quantity than normal, please  use the 'limited chemical added' conditions, for instance 'limited adenine added'.
+subset: Grouping_terms
+is_a: PCO:0000100 ! medium components
+created_by: antonialock
+creation_date: 2012-03-14T01:33:58Z
+
+[Term]
+id: PCO:0000137
+name: glucose rich medium
+def: "Experiments were performed in rich medium  containing glucose as the sole carbon source, yeast extract and other components." []
+comment: Use the medium terms to specify the general type of growth medium and its carbon source. \nIf certain chemicals not normally found in the medium were added, please also use the 'chemical added/excluded' terms, for instance 'caffeine added' or 'nitrogen excluded'.\n If a chemical was added in a much lower quantity than normal, please  use the 'limited chemical added' conditions, for instance 'limited adenine added'.
+subset: Grouping_terms
+is_a: PCO:0000080 ! rich medium
+created_by: antonialock
+creation_date: 2012-06-14T20:35:20Z
+
+[Term]
+id: PCO:0000012
+name: standard glucose rich medium
+def: "Experiments were performed in rich medium containing yeast extract and other components. The concentration of glucose is typically around 2-3%." []
+comment: Use the medium terms to specify the general type of growth medium and its carbon source. \nIf certain chemicals not normally found in the medium were added, please also use the 'chemical added/excluded' terms, for instance 'caffeine added' or 'nitrogen excluded'.\n If a chemical was added in a much lower quantity than normal, please  use the 'limited chemical added' conditions, for instance 'limited adenine added'.
+synonym: "YE" BROAD []
+synonym: "YES" EXACT []
+is_a: PCO:0000137 ! glucose rich medium
+created_by: antonialock
+creation_date: 2012-02-07T12:39:25Z
+
 [Typedef]
 id: part_of
 name: part_of

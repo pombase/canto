@@ -173,4 +173,4 @@ cmp_deeply($fypo_term, $expected_fypo_term);
 
 # test get_all()
 my @all_pco_terms = $lookup->get_all(ontology_name => 'phenotype_condition');
-is (@all_pco_terms, 5);
+is (@all_pco_terms, 10);
