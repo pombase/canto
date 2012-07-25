@@ -37,7 +37,7 @@ under the same terms as Perl itself.
 
 use feature "switch";
 use Moose;
-use Carp qw(croak longmess);
+use Carp qw(carp croak longmess);
 use Scalar::Util qw(reftype);
 
 use PomCur::Util;
@@ -228,7 +228,7 @@ sub set_state
     when (CURATION_IN_PROGRESS) {
       if ($current_state ne CURATION_PAUSED &&
           $force ne $current_state) {
-        croak "use force flag to change state to ",
+        carp "use force flag to change state to ",
           CURATION_IN_PROGRESS, " from ", $current_state;
       }
       $self->unset_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY);
@@ -241,7 +241,7 @@ sub set_state
     }
     when (CURATION_PAUSED) {
       if ($current_state ne CURATION_IN_PROGRESS) {
-        croak "trying to pause a session that isn't in the state ",
+        carp "trying to pause a session that isn't in the state ",
           CURATION_IN_PROGRESS, " it's currently: ", $current_state;
       }
       $self->set_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY,
@@ -256,7 +256,7 @@ sub set_state
     when (NEEDS_APPROVAL) {
       if ($current_state ne CURATION_IN_PROGRESS &&
           $force ne $current_state) {
-        croak "trying to start approving a session that isn't in the state ",
+        carp "trying to start approving a session that isn't in the state ",
           CURATION_IN_PROGRESS, " it's currently: ", $current_state;
       }
       $self->set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY,
@@ -269,7 +269,7 @@ sub set_state
     }
     when (APPROVAL_IN_PROGRESS) {
       if ($current_state ne NEEDS_APPROVAL && $force ne $current_state) {
-        croak "must be in state ", NEEDS_APPROVAL, " to change to ",
+        carp "must be in state ", NEEDS_APPROVAL, " to change to ",
           "state ", APPROVAL_IN_PROGRESS, " actually in state ",
           $current_state;
       }
@@ -288,8 +288,11 @@ sub set_state
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
     }
     when (APPROVED) {
+      unless (defined $current_user && $current_user->is_admin()) {
+        croak "only admin users can approve sessions\n";
+      }
       if ($current_state ne APPROVAL_IN_PROGRESS) {
-        croak "must be in state ", APPROVAL_IN_PROGRESS,
+        carp "must be in state ", APPROVAL_IN_PROGRESS,
           " to change to state ", APPROVED;
       }
       $self->set_metadata($schema, APPROVED_TIMESTAMP_KEY,
@@ -298,7 +301,7 @@ sub set_state
     }
     when (EXPORTED) {
       if ($current_state ne APPROVED) {
-        croak "must be in state ", APPROVED, " to change to state ",
+        carp "must be in state ", APPROVED, " to change to state ",
           EXPORTED;
       }
       $self->set_metadata($schema, EXPORTED_TIMESTAMP_KEY,
