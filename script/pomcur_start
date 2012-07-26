@@ -66,6 +66,7 @@ require Plack::Middleware::ReverseProxy;
 require Plack::Middleware::Debug;
 require Plack::Middleware::Expires;
 require Plack::Middleware::Static;
+require Plack::Middleware::InteractiveDebugger;
 
 require PomCur;
 
