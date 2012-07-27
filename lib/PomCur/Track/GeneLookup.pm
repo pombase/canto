@@ -170,7 +170,7 @@ sub lookup
 
   $rs = $self->schema()->resultset('Genesynonym')
     ->search([_build_synonym_constraint(@lc_search_terms)])
-    ->search_related('gene');
+    ->search_related('gene', {}, { prefetch => 'organism' });
 
   my ($new_found_genes_ref, $dummy, $new_terms_found_ref) =
     _read_genes($rs, \%lc_search_terms, \%gene_ids);
