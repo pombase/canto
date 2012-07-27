@@ -427,7 +427,9 @@ __PACKAGE__->has_many(
  Returns : the database accession
 
 =cut
-sub db_accession
+has db_accession => (is => 'ro', init_arg => undef, lazy_build => 1);
+
+sub _build_db_accession
 {
   my $cvterm = shift;
 
