@@ -256,13 +256,13 @@ sub full_name {
 sub taxonid {
   my $self = shift;
 
-  for my $prop ($self->organismprops()) {
-    if ($prop->type()->name() eq 'taxon_id') {
-      return $prop->value();
-    }
+  if (! defined $self->{_taxonid}) {
+    my $prop = $self->organismprops()
+      ->search({ 'type.name' => 'taxon_id' }, { join => 'type' })->first();
+    $self->{_taxonid} = $prop->value();
   }
 
-  return undef;
+  return $self->{_taxonid};
 }
 
 __PACKAGE__->meta->make_immutable;

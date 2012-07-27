@@ -71,7 +71,8 @@ sub _make_ontology_annotation
 
   my $gene;
 
-  my @alleles = $annotation->alleles();
+  my @alleles = $annotation->search_related('allele_annotations')
+    ->search_related('allele')->search({}, { prefetch => 'gene' });;
 
   if ($annotation_type_config->{needs_allele} && @alleles) {
     if (@alleles > 1) {
@@ -334,7 +335,7 @@ sub get_annotation_table
     }
   }
 
-  my %options = ( order_by => 'annotation_id' );
+  my %options = ( order_by => 'annotation_id', prefetch => 'pub' );
 
   my $annotation_rs =
     $schema->resultset('Annotation')->search({ %constraints }, { %options });;

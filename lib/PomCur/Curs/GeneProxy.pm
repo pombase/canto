@@ -57,6 +57,7 @@ has synonyms_ref => (is => 'ro', init_arg => undef, lazy_build => 1,
                  handles => { synonyms => 'elements' },
                );
 has gene_data => (is => 'ro', init_arg => undef, lazy_build => 1);
+has organism => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 with 'PomCur::Role::Configurable';
 with 'PomCur::Role::GeneNames';
@@ -115,7 +116,7 @@ sub _build_synonyms_ref
   return $self->gene_data()->{synonyms};
 }
 
-sub organism
+sub _build_organism
 {
   my $self = shift;
 
