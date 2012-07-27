@@ -188,18 +188,17 @@ sub find_dbxref
     croak qq(dbxref "$termid" not in the form: <DB_NAME>:<ACCESSION>);
   }
 
-  my $db = $self->find_db($db_name);
-
   my $schema = $self->schema();
 
-  my $dbxref = $schema->resultset('Dbxref')->find(
-      {
-        accession => $dbxref_acc,
-        db => $db
-      });
+  my @dbxrefs = $schema->resultset('Db')->search({ name => $db_name })
+    ->search_related('dbxrefs', { accession => $dbxref_acc })->all();
 
-  if (defined $dbxref) {
-    return $dbxref;
+  if (@dbxrefs > 1) {
+    croak "internal error: looking up $termid returned more than one result";
+  }
+
+  if (@dbxrefs == 1) {
+    return $dbxrefs[0];
   } else {
     croak "no Dbxref found for $termid";
   }

@@ -86,6 +86,7 @@ requires 'HTML::HTML5::Builder';
 test_requires 'Test::More' => '0.88';
 test_requires 'Test::Deep';
 test_requires 'Test::MockObject';
+test_requires 'Test::Exception';
 test_requires 'Web::Scraper';
 test_requires 'LWP::Protocol::PSGI';
 test_requires 'LWP::Protocol::https';
