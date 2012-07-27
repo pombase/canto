@@ -154,19 +154,15 @@ sub full_name {
 sub taxonid {
   my $self = shift;
 
-  my $schema = $self->result_source()->schema();
-  my $taxonid_cvterm_id =
-    $schema->find_with_type('Cvterm',
-                            { name => 'taxonId' })->cvterm_id();
+  if (! defined $self->{_taxonid}) {
+    my $prop = $self->organismprops()
+      ->search({ 'type.name' => 'taxonId' }, { join => 'type' })->first();
+    croak "expected organismprop not found" unless defined $prop;
+    $self->{_taxonid} = $prop->value();
+  }
 
-  my $prop =
-    $self->organismprops->search({ type_id => $taxonid_cvterm_id })->first();
-
-  croak "expected organismprop not found" unless defined $prop;
-
-  return $prop->value();
+  return $self->{_taxonid};
 }
-
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
