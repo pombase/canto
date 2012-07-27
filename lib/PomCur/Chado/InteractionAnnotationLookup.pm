@@ -37,8 +37,23 @@ under the same terms as Perl itself.
 
 use Moose;
 
+use CHI;
+
+use feature "state";
+
 with 'PomCur::Role::Configurable';
 with 'PomCur::Chado::ChadoLookup';
+
+has cache => (is => 'ro', init_arg => undef, lazy_build => 1);
+
+sub _build_cache
+{
+  my $self = shift;
+
+  state $cache = CHI->new( driver => 'RawMemory', global => 1 );
+
+  return $cache;
+}
 
 =head2
 
@@ -65,7 +80,6 @@ with 'PomCur::Chado::ChadoLookup';
           - where annotation_id is a unique ID for this annotation
 
 =cut
-
 sub lookup
 {
   my $self = shift;
@@ -75,6 +89,20 @@ sub lookup
   my $pub_uniquename = $args{pub_uniquename};
   my $gene_identifier = $args{gene_identifier};
   my $interaction_type_name = $args{interaction_type_name};
+
+  my $cache_key;
+
+  if (defined $gene_identifier) {
+    $cache_key = "$pub_uniquename - $gene_identifier - $interaction_type_name";
+  } else {
+    $cache_key = "$pub_uniquename - $interaction_type_name";
+  }
+
+  my $cached_value = $self->cache->get($cache_key);
+
+  if (defined $cached_value) {
+    return $cached_value;
+  }
 
   my $schema = $self->schema();
 
@@ -145,7 +173,11 @@ sub lookup
 
   }
 
-  return \@res;
+  my $ret_val = \@res;
+
+  $self->cache()->set($cache_key, $ret_val, "2 hours");
+
+  return $ret_val;
 }
 
 1;

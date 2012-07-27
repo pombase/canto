@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 18;
 use Test::Deep;
 
 use PomCur::Chado::OntologyAnnotationLookup;
@@ -53,16 +53,27 @@ my $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
                            ontology_name => 'cellular_component',
                            }
                          );
-
 check_res($res);
+is($lookup->cache()->get_keys(), 1);
 
 $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
                         ontology_name => 'cellular_component',
                         gene_identifier => 'SPBC12C2.02c',
                       }
                      );
-
 check_res($res);
+is($lookup->cache()->get_keys(), 2);
+
+
+# try the same thing again to check the cache
+$res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
+                        ontology_name => 'cellular_component',
+                        gene_identifier => 'SPBC12C2.02c',
+                      }
+                     );
+check_res($res);
+is($lookup->cache()->get_keys(), 2);
+
 
 $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
                         ontology_name => 'cellular_component',
@@ -81,6 +92,8 @@ my $fcs = $spbc12c2_02c->feature_cvterms();
 is ($fcs->count(), 2);
 
 map { $_->is_not(1); $_->update(); } $fcs->all();
+
+$lookup->cache()->clear();
 
 $res = $lookup->lookup({pub_uniquename => 'PMID:10467002',
                         ontology_name => 'cellular_component',

@@ -39,8 +39,23 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
+use CHI;
+
+use feature "state";
+
 with 'PomCur::Role::Configurable';
 with 'PomCur::Chado::ChadoLookup';
+
+has cache => (is => 'ro', init_arg => undef, lazy_build => 1);
+
+sub _build_cache
+{
+  my $self = shift;
+
+  state $cache = CHI->new( driver => 'RawMemory', global => 1 );
+
+  return $cache;
+}
 
 sub _get_taxonid
 {
@@ -150,6 +165,20 @@ sub lookup
   my $ontology_name = $args{ontology_name};
 
   die "no ontology_name" unless defined $ontology_name;
+
+  my $cache_key;
+
+  if (defined $gene_identifier) {
+    $cache_key = "$pub_uniquename - $gene_identifier - $ontology_name";
+  } else {
+    $cache_key = "$pub_uniquename - $ontology_name";
+  }
+
+  my $cached_value = $self->cache->get($cache_key);
+
+  if (defined $cached_value) {
+    return $cached_value;
+  }
 
   my %db_ontology_names = %{$self->config()->{chado}->{ontology_cv_names}};
 
@@ -366,7 +395,11 @@ sub lookup
       push @res, $new_res;
     }
 
-    return [@res];
+    my $ret_val = [@res];
+
+    $self->cache()->set($cache_key, $ret_val, "2 hours");
+
+    return $ret_val;
   } else {
     return [];
   }
