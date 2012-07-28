@@ -122,12 +122,11 @@ $return_pub_id
           Trage comment:
         </span>
         <div class="sect-content">
-          <textarea cols="60" rows="5"
-                    name="triage-comment">
+<textarea cols="60" rows="5" name="triage-comment">
 % if (defined $form_values{comment}) {
 <% $form_values{comment} %>
 % }
-          </textarea>
+</textarea>
         </div>
       </div>
     </div>
