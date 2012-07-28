@@ -152,6 +152,7 @@ sub _make_ontology_annotation
     (!$needs_with || defined $with_gene_identifier);
 
   return {
+    gene_id => $gene->gene_id(),
     gene_identifier => $gene_identifier,
     gene_name => $gene_primary_name,
     gene_name_or_identifier => $gene_name_or_identifier,

@@ -70,6 +70,9 @@ $user_created
       <th>
         &nbsp
       </th>
+      <th>
+        &nbsp
+      </th>
 % }
 % }
     </tr>
@@ -219,6 +222,19 @@ NOT
       </a>
 % }
     </td>
+    <td>
+% my $gene_id = $row->{gene_id};
+% my $annotation_id = $row->{annotation_id};
+% my $edit_action_url =
+%   "$curs_root_uri/annotation/edit/$gene_id/$annotation_type_name/$annotation_id#s="
+%   . $row->{term_name} . "&c=" . $row->{term_ontid};
+
+      <a href="<% $edit_action_url %>"
+         id="curs-annotation-edit-<% $row->{annotation_id} %>"
+         title="Edit this annotation">
+edit...
+      </a>
+    </td>
 % }
 % }
   </tr>
@@ -236,6 +252,8 @@ NOT
 
 <%init>
 use HTML::Mason::Escapes;
+
+my $annotation_type_name = $annotation_type->{name};
 
 my $delete_action = $curs_root_uri . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');

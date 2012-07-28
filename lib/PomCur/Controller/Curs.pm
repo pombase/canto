@@ -48,6 +48,7 @@ with 'PomCur::Curs::Role::GeneResultSet';
 use Archive::Zip qw(:CONSTANTS :ERROR_CODES);
 use IO::String;
 use Clone qw(clone);
+use Hash::Merge;
 
 use PomCur::Track;
 use PomCur::Curs::Utils;
@@ -742,7 +743,7 @@ sub _get_iso_date
 
 sub annotation_ontology_edit
 {
-  my ($self, $c, $gene_proxy, $annotation_config) = @_;
+  my ($self, $c, $gene_proxy, $annotation_config, $annotation_id) = @_;
 
   my $module_display_name = $annotation_config->{display_name};
 
@@ -833,21 +834,38 @@ sub annotation_ontology_edit
         . 'annotated with the parent of your suggested new term';
     }
 
-    my $annotation =
-      $schema->create_with_type('Annotation',
-                                {
-                                  type => $annotation_type_name,
-                                  status => 'new',
-                                  pub => $st->{pub},
-                                  creation_date => _get_iso_date(),
-                                  data => { %annotation_data }
-                                });
+    my $annotation;
 
-    $annotation->set_genes($gene_proxy->cursdb_gene());
+    if (defined $annotation_id) {
+      # editing an exitsing annotation
+      $annotation = $schema->find_with_type('Annotation',
+                                            {
+                                              annotation_id => $annotation_id,
+                                            });
+      my $data = $annotation->data();
+      my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+      my $new_data = $merge->merge($data, \%annotation_data);
+
+      $annotation->data($new_data);
+      $annotation->update();
+    } else {
+      $annotation =
+        $schema->create_with_type('Annotation',
+                                  {
+                                    type => $annotation_type_name,
+                                    status => 'new',
+                                    pub => $st->{pub},
+                                    creation_date => _get_iso_date(),
+                                    data => { %annotation_data }
+                                  });
+
+      $annotation->set_genes($gene_proxy->cursdb_gene());
+
+      $annotation_id = $annotation->annotation_id();
+    }
 
     $guard->commit();
 
-    my $annotation_id = $annotation->annotation_id();
     $_debug_annotation_id = $annotation_id;
 
     $self->state()->store_statuses($c->config(), $schema);
@@ -961,9 +979,9 @@ sub _get_gene_proxy
                                       cursdb_gene => $gene);
 }
 
-sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
+sub _annotation_edit
 {
-  my ($self, $c, $gene_id, $annotation_type_name) = @_;
+  my ($self, $c, $gene_id, $annotation_type_name, $annotation_id) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -990,7 +1008,21 @@ sub annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
   $self->state()->store_statuses($config, $schema);
 
   &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene_proxy,
-                                                    $annotation_config);
+                                                    $annotation_config, $annotation_id);
+}
+
+sub new_annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
+{
+  my ($self, $c, $gene_id, $annotation_type_name) = @_;
+
+  _annotation_edit($self, $c, $gene_id, $annotation_type_name);
+}
+
+sub existing_annotation_edit : Chained('top') PathPart('annotation/edit') Args(3) Form
+{
+  my ($self, $c, $gene_id, $annotation_type_name, $annotation_id) = @_;
+
+  _annotation_edit($self, $c, $gene_id, $annotation_type_name, $annotation_id);
 }
 
 # redirect to the annotation transfer page only if we've just created an
