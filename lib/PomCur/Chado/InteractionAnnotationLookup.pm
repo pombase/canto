@@ -41,6 +41,8 @@ use CHI;
 
 use feature "state";
 
+use PomCur::Cache;
+
 with 'PomCur::Role::Configurable';
 with 'PomCur::Chado::ChadoLookup';
 
@@ -50,7 +52,7 @@ sub _build_cache
 {
   my $self = shift;
 
-  state $cache = CHI->new( driver => 'RawMemory', global => 1 );
+  my $cache = PomCur::Cache::get_cache($self->config(), __PACKAGE__);
 
   return $cache;
 }
@@ -93,9 +95,9 @@ sub lookup
   my $cache_key;
 
   if (defined $gene_identifier) {
-    $cache_key = "$pub_uniquename - $gene_identifier - $interaction_type_name";
+    $cache_key = "$pub_uniquename!$gene_identifier!$interaction_type_name";
   } else {
-    $cache_key = "$pub_uniquename - $interaction_type_name";
+    $cache_key = "$pub_uniquename!$interaction_type_name";
   }
 
   my $cached_value = $self->cache->get($cache_key);

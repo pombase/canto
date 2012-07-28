@@ -43,6 +43,8 @@ use CHI;
 
 use feature "state";
 
+use PomCur::Cache;
+
 with 'PomCur::Role::Configurable';
 with 'PomCur::Chado::ChadoLookup';
 
@@ -52,7 +54,7 @@ sub _build_cache
 {
   my $self = shift;
 
-  state $cache = CHI->new( driver => 'RawMemory', global => 1 );
+  my $cache = PomCur::Cache::get_cache($self->config(), __PACKAGE__);
 
   return $cache;
 }
@@ -169,9 +171,9 @@ sub lookup
   my $cache_key;
 
   if (defined $gene_identifier) {
-    $cache_key = "$pub_uniquename - $gene_identifier - $ontology_name";
+    $cache_key = "$pub_uniquename!$gene_identifier!$ontology_name";
   } else {
-    $cache_key = "$pub_uniquename - $ontology_name";
+    $cache_key = "$pub_uniquename!$ontology_name";
   }
 
   my $cached_value = $self->cache->get($cache_key);
@@ -200,6 +202,8 @@ sub lookup
   my $schema = $self->schema();
 
   my $pub = $schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
+
+  my $ret_val = undef;
 
   if (defined $pub) {
     my $prop_type_cv =
@@ -395,14 +399,14 @@ sub lookup
       push @res, $new_res;
     }
 
-    my $ret_val = [@res];
-
-    $self->cache()->set($cache_key, $ret_val, "2 hours");
-
-    return $ret_val;
+    $ret_val = [@res];
   } else {
-    return [];
+    $ret_val = [];
   }
+
+  $self->cache()->set($cache_key, $ret_val, "2 hours");
+
+  return $ret_val;
 }
 
 1;
