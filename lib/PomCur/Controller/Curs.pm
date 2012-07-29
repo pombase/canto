@@ -745,6 +745,7 @@ sub _get_iso_date
 sub _re_edit_annotation
 {
   my $c = shift;
+  my $annotation_config = shift;
   my $annotation_id = shift;
   my $new_annotation_data = shift;
 
@@ -757,6 +758,52 @@ sub _re_edit_annotation
                                              annotation_id => $annotation_id,
                                            });
   my $data = $annotation->data();
+
+  if ($annotation_config->{needs_allele}) {
+    # undo the work of annotation_process_alleles()
+    my %in_progress_data = ( id => 0 );
+    my @alleles = $annotation->alleles();
+    if (@alleles > 1) {
+      croak "can't handle multi-allele phenotypes";
+    }
+
+    my $allele = $alleles[0];
+
+    if (defined $allele->name()) {
+      $in_progress_data{name} = $allele->name();
+    }
+    if (defined $allele->description()) {
+      $in_progress_data{description} = $allele->description();
+    }
+
+    $in_progress_data{evidence} = delete $data->{evidence_code};
+
+    if (defined $data->{expression}) {
+      $in_progress_data{expression} = $data->{expression};
+    }
+    delete $data->{expression};
+
+    if (defined $data->{conditions}) {
+      $in_progress_data{conditions} = $data->{conditions};
+    }
+    delete $data->{conditions};
+
+    $schema->resultset('AlleleAnnotation')->search({ allele => $allele->allele_id(),
+                                                     annotation => $annotation->annotation_id() })
+      ->delete();
+
+    if ($schema->resultset('AlleleAnnotation')
+        ->search({ allele => $allele->allele_id() })->count() == 0) {
+      # unreferenced so delete
+      $allele->delete();
+    }
+
+    $schema->resultset('GeneAnnotation')->create({ gene => $allele->gene()->gene_id(),
+                                                   annotation => $annotation->annotation_id() });
+
+    $new_annotation_data->{alleles_in_progress}->{0} = \%in_progress_data;
+  }
+
   my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
   my $new_data = $merge->merge($data, $new_annotation_data);
 
@@ -862,7 +909,7 @@ sub annotation_ontology_edit
     my $annotation;
 
     if (defined $annotation_id) {
-      $annotation = _re_edit_annotation($c, $annotation_id, \%annotation_data);
+      $annotation = _re_edit_annotation($c, $annotation_config, $annotation_id, \%annotation_data);
     } else {
       $annotation =
         $schema->create_with_type('Annotation',
