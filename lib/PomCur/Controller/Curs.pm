@@ -741,6 +741,31 @@ sub _get_iso_date
   return sprintf "$iso_date_template", 1900+$year, $mon+1, $mday
 }
 
+# change the annotation data of an existing annotation
+sub _re_edit_annotation
+{
+  my $c = shift;
+  my $annotation_id = shift;
+  my $new_annotation_data = shift;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  # editing an exitsing annotation
+  my $annotation = $schema->find_with_type('Annotation',
+                                           {
+                                             annotation_id => $annotation_id,
+                                           });
+  my $data = $annotation->data();
+  my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+  my $new_data = $merge->merge($data, $new_annotation_data);
+
+  $annotation->data($new_data);
+  $annotation->update();
+
+  return $annotation;
+}
+
 sub annotation_ontology_edit
 {
   my ($self, $c, $gene_proxy, $annotation_config, $annotation_id) = @_;
@@ -837,17 +862,7 @@ sub annotation_ontology_edit
     my $annotation;
 
     if (defined $annotation_id) {
-      # editing an exitsing annotation
-      $annotation = $schema->find_with_type('Annotation',
-                                            {
-                                              annotation_id => $annotation_id,
-                                            });
-      my $data = $annotation->data();
-      my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
-      my $new_data = $merge->merge($data, \%annotation_data);
-
-      $annotation->data($new_data);
-      $annotation->update();
+      $annotation = _re_edit_annotation($c, $annotation_id, \%annotation_data);
     } else {
       $annotation =
         $schema->create_with_type('Annotation',
