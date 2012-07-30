@@ -148,6 +148,9 @@ var annotation_id = <% $annotation->annotation_id() %>;
           <th>
             &nbsp;
           </th>
+          <th>
+            &nbsp;
+          </th>
         </tr>
       </thead>
       <tbody>
