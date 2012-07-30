@@ -962,6 +962,8 @@ input[readonly="1"] {
   border-top: 1px solid grey;
   padding: 5px;
   float: right;
+  margin-top: 10px;
+  font-size: 90%;
 }
 #curs-allele-add table {
   width: 100%;
