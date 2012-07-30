@@ -819,9 +819,8 @@ var AlleleStuff = function($) {
         success: function(data) {
           try {
             var $new_row = add_allele_row($allele_table, data, $orig_allele_row);
-//          make_condition_buttons($allele_dialog, $allele_table);
             if (typeof($orig_allele_row) !== 'undefined') {
-              $orig_allele_row.remove();
+              $orig_allele_row.detach();
               remove_allele_row($orig_allele_row);
             }
             $new_row.effect("highlight", { color: "#aaf" }, 2500);
