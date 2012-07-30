@@ -813,7 +813,7 @@ var AlleleStuff = function($) {
   function add_allele_confirm($allele_dialog, $allele_table) {
     var $form = $('#curs-allele-add form');
     var $orig_allele_row = $allele_dialog.data('edit_allele_row');
-    if ($form.validate().form() || typeof($orig_allele_row) !== 'undefined') {
+    if (!$allele_dialog.data('validate_on_add') || $form.validate().form()) {
       $form.ajaxSubmit({
         dataType: 'json',
         success: function(data) {
@@ -1059,6 +1059,8 @@ var AlleleStuff = function($) {
     var $allele_dialog = $('#curs-allele-add');
     var $allele_table = $('#curs-allele-list');
 
+    $allele_dialog.data('validate_on_add', true);
+
     $($allele_table).on('click', '.curs-allele-delete-row', function (ev) {
       var $tr = $(this).closest('tr');
       remove_allele_row($tr);
@@ -1071,12 +1073,14 @@ var AlleleStuff = function($) {
       add_allele_dialog.dialog("open");
       var allele_data = $tr.data('allele_data');
       populate_dialog_from_data($allele_dialog, allele_data);
+      $allele_dialog.data('validate_on_add', false);
       $(add_allele_dialog).data('edit_allele_row', $tr);
     });
 
     $('#curs-add-allele-details').click(function () {
       add_allele_dialog.dialog("option", "buttons", add_allele_buttons);
       add_allele_dialog.dialog("open");
+      $allele_dialog.data('validate_on_add', true);
       $(add_allele_dialog).removeData('allele_data');
       return false;
     });
@@ -1203,6 +1207,7 @@ var AlleleStuff = function($) {
       $this.closest('tr').hide();
       var selected_option = $this.children('option[selected]');
       var name_input = get_allele_name_jq($allele_dialog);
+      $allele_dialog.data('validate_on_add', true);
       if (selected_option.val() === '') {
         hide_allele_description($allele_dialog);
         get_allele_expression_jq($allele_dialog).hide();
