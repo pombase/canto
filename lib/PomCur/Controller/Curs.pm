@@ -752,14 +752,14 @@ sub _re_edit_annotation
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  # editing an exitsing annotation
+  # editing an existing annotation
   my $annotation = $schema->find_with_type('Annotation',
                                            {
                                              annotation_id => $annotation_id,
                                            });
   my $data = $annotation->data();
 
-  if ($annotation_config->{needs_allele}) {
+  if ($annotation_config->{needs_allele} && !exists $data->{alleles_in_progress}) {
     # undo the work of annotation_process_alleles()
     my %in_progress_data = ( id => 0 );
     my @alleles = $annotation->alleles();
