@@ -810,6 +810,18 @@ sub _re_edit_annotation
   $annotation->data($new_data);
   $annotation->update();
 
+  my $gene = ($annotation->genes())[0];
+
+  my $was_bit = '';
+  if ($new_data->{term_ontid} ne $data->{term_ontid}) {
+    $was_bit = ' (was ' . $data->{term_ontid} . ')';
+  }
+
+  my $gene_proxy = _get_gene_proxy($c->config(), $gene);
+  $c->flash()->{message} = 'Editing annotation of ' .
+    $gene_proxy->display_name() . ' with ' . $new_data->{term_ontid} .
+    $was_bit;
+
   return $annotation;
 }
 
@@ -936,6 +948,26 @@ sub annotation_ontology_edit
       _redirect_and_detach($c, 'annotation', 'allele_select', $annotation_id);
     } else {
       _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    }
+  } else {
+    if (defined $annotation_id) {
+      my $annotation = $schema->find_with_type('Annotation',
+                                               {
+                                                 annotation_id => $annotation_id
+                                               });
+      my $data = $annotation->data();
+      my @genes = $annotation->genes();
+
+      if (@genes) {
+        my $gene = $genes[0];
+        my $gene_proxy = _get_gene_proxy($c->config(), $gene);
+        $c->stash()->{message} = 'Editing annotation of ' .
+          $gene_proxy->display_name() . ' with ' . $data->{term_ontid};
+      } else {
+        my $allele = ($annotation->alleles())[0];
+        $c->stash()->{message} = 'Editing annotation of ' .
+          $allele->display_name() . ' with ' . $data->{term_ontid};
+      }
     }
   }
 }
