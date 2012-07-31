@@ -148,9 +148,11 @@ var annotation_id = <% $annotation->annotation_id() %>;
           <th>
             &nbsp;
           </th>
-          <th>
+% if ($admin_user) {
+          <th class="curs-allele-edit-link-header">
             &nbsp;
           </th>
+% }
         </tr>
       </thead>
       <tbody>
@@ -194,4 +196,6 @@ my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 my $annotation_id = $annotation->annotation_id();
 
 my $allele_add_action = "$curs_root_uri/annotation/add_allele_action/$annotation_id" ;
+
+my $admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
 </%init>

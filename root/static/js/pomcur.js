@@ -729,8 +729,10 @@ var AlleleStuff = function($) {
       '<td>' + expression + '</td>' +
       '<td>' + data['evidence'] + '</td>' +
       '<td>' + conditions + '</td>' +
-      '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td>' +
-      '<td><a href="#" class="curs-allele-edit-row" id="curs-allele-edit-row-data-' + delete['id'] + '">edit&nbsp;...</a></td>';
+      '<td><img class="curs-allele-delete-row" src="' + delete_icon_uri + '"></td>';;
+    if ($allele_table.find('th.curs-allele-edit-link-header').length > 0) {
+      row_html += '<td><a href="#" class="curs-allele-edit-row" id="curs-allele-edit-row-data-' + delete['id'] + '">edit&nbsp;...</a></td>';
+    }
     var $new_row = $('<tr>' + row_html + '</tr>');
     if (typeof($previous_row) == 'undefined') {
       $allele_table.find('tbody').append($new_row);
