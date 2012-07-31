@@ -115,6 +115,21 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-23 03:55:13
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WBYeFJGM2uNPtJvwXEdtkw
 
+=head2 display_name
+
+ Usage   : my $allele_display_name = $allele->display_name();
+ Function: Return the user friendly name of this allele like:
+           "name(description)"
+ Args    : none
+
+=cut
+sub display_name
+{
+  my $self = shift;
+
+  return PomCur::Curs::Utils::make_allele_display_name($self->name(),
+                                                       $self->description());
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
