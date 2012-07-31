@@ -61,7 +61,7 @@ $user_created
         Term suggestion
       </th>
 %   }
-% #if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+% #if ($admin_user) {
       <th>
         Annotation extension
       </th>
@@ -70,9 +70,11 @@ $user_created
       <th>
         &nbsp
       </th>
+%   if ($admin_user) {
       <th>
         &nbsp
       </th>
+%   }
 % }
 % }
     </tr>
@@ -190,13 +192,13 @@ NOT
 %     my $extension = $row->{annotation_extension};
 %     HTML::Mason::Escapes::basic_html_escape(\$extension);
 %     $extension =~ s/([;|,])/$1&#8203;/g;
-%     if ($c->user_exists() && $c->user()->role()->name() eq 'admin' && !$read_only_curs) {
+%     if ($admin_user && !$read_only_curs) {
         <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"><% $extension |n %></a>
 %     } else {
         <% $extension |n %>
 %     }
 %   } else {
-%     if ($c->user_exists() && $c->user()->role()->name() eq 'admin' && !$read_only_curs) {
+%     if ($admin_user && !$read_only_curs) {
         <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
 %     }
 %   }
@@ -222,6 +224,7 @@ NOT
       </a>
 % }
     </td>
+% if ($admin_user) {
     <td>
 % my $gene_id = $row->{gene_id};
 % my $annotation_id = $row->{annotation_id};
@@ -235,6 +238,7 @@ NOT
 edit...
       </a>
     </td>
+% }
 % }
 % }
   </tr>
@@ -287,4 +291,6 @@ my $read_only_curs = $c->stash()->{read_only_curs};
 
 my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
 my $allele_select_url = $curs_root_uri . '/annotation/allele_select/';
+
+my $admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
 </%init>
