@@ -5,7 +5,7 @@ $form
 $pub
 </%args>
 
-<div id="phenotype-ferret">
+<div id="curs-ontology-transfer">
   <div class="curs-box">
     <div class="curs-box-title">
       You have just made the following annotation:

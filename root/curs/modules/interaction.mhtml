@@ -6,7 +6,7 @@ $pub
 $gene
 </%args>
 
-<div id="phenotype-ferret">
+<div id="curs-interaction">
   <div class="curs-box">
     <div class="curs-box-title">
       Select the gene or genes that interact with <% $gene_display_name %> ...
