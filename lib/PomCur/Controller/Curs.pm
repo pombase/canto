@@ -1126,7 +1126,7 @@ sub existing_annotation_edit : Chained('top') PathPart('annotation/edit') Args(3
 sub _maybe_transfer_annotation
 {
   my $c = shift;
-  my $annotation = shift;
+  my $annotation_ids = shift;
   my $annotation_config = shift;
 
   my $st = $c->stash();
@@ -1138,8 +1138,7 @@ sub _maybe_transfer_annotation
 
   if ($annotation_config->{category} eq 'ontology' &&
       ($gene_count > 1 || defined $current_user && $current_user->is_admin())) {
-    _redirect_and_detach($c, 'annotation', 'transfer',
-                         $annotation->annotation_id());
+    _redirect_and_detach($c, 'annotation', 'transfer', (join ',', @$annotation_ids));
   } else {
     _redirect_and_detach($c);
   }
@@ -1279,7 +1278,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
       if ($annotation_config->{needs_allele}) {
         _redirect_and_detach($c, 'gene', $gene->gene_id());
       } else {
-        _maybe_transfer_annotation($c, $annotation, $annotation_config);
+        _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
       }
     }
   }
@@ -1594,6 +1593,8 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
     die "internal error: no alleles defined";
   }
 
+  my @new_annotation_ids = ();
+
   my $gene = $annotation->genes()->first();
 
   my $process = sub {
@@ -1628,6 +1629,8 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
         $schema->create_with_type('Annotation',
                                   $annotation_create_args);
 
+      push @new_annotation_ids, $new_annotation->annotation_id();
+
       my %create_args = (
         type => 'new',
         description => $description,
@@ -1653,53 +1656,63 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
 
   $self->metadata_storer()->store_counts($config, $schema);
 
-  _redirect_and_detach($c, 'gene', $gene->gene_id());
+  _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
 }
 
 sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1) Form
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c, $annotation_ids) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->_check_annotation_exists($c, $annotation_id);
+  my @annotation_ids = split /,/, $annotation_ids;
+  my %annotation_by_id = ();
 
-  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
-  my $annotation_type_name = $annotation->type();
+  map {
+    $self->_check_annotation_exists($c, $_);
+  } @annotation_ids;
+
+  my @annotations = map {
+    my $annotation = $schema->find_with_type('Annotation', $_);
+    $annotation_by_id{$annotation->annotation_id()} = $annotation;
+    $annotation;
+  } @annotation_ids;
+
+  my $annotation_type_name = $annotations[0]->type();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   $st->{annotation_type} = $annotation_config;
-  $st->{annotation} = $annotation;
+  $st->{annotations} = \@annotations;
 
   my $module_category = $annotation_config->{category};
 
   my $display_name = undef;
 
-  my $gene = $annotation->genes()->first();
+  my $gene;
+
+  my @genes = $annotations[0]->genes();
+  if (@genes) {
+    $gene = $genes[0];
+  } else {
+    $gene = $annotations[0]->alleles()->first()->gene();
+  }
+
+  my $gene_proxy = _get_gene_proxy($config, $gene);
 
   my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
 
   my @options = ();
 
-  if (defined $gene) {
-    my $gene_proxy = _get_gene_proxy($config, $gene);
-    $display_name = $gene_proxy->display_name();
+  while (defined (my $other_gene = $genes_rs->next())) {
+    next if $gene->gene_id() == $other_gene->gene_id();
 
-    while (defined (my $other_gene = $genes_rs->next())) {
-      next if $gene->gene_id() == $other_gene->gene_id();
+    my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
 
-      my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
-
-      push @options, { value => $other_gene_proxy->gene_id(),
-                       label => $other_gene_proxy->long_display_name() };
-    }
-  } else {
-    my $allele = $annotation->alleles()->first();
-    $display_name = $allele->display_name();
-    $gene = $allele->gene();
+    push @options, { value => $other_gene_proxy->gene_id(),
+                     label => $other_gene_proxy->long_display_name() };
   }
 
   $st->{title} = "Finalise annotation";
@@ -1712,16 +1725,24 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my $gene_count = $genes_rs->count();
 
+  my $annotation_0_data = $annotations[0]->data();
+  my $evidence_or_term;
+  if ($annotation_config->{needs_allele}) {
+    my $term_ontid = $annotation_0_data->{term_ontid};
+    $evidence_or_term = "($term_ontid)";
+  } else {
+    $evidence_or_term = "and evidence";
+  }
   my $transfer_select_genes_text;
 
   if ($gene_count > 1) {
     $transfer_select_genes_text =
       'You can annotate other genes from your list with the '
-        . 'same term and evidence by selecting genes below.';
+        . "same term $evidence_or_term by selecting genes below:";
   } else {
     $transfer_select_genes_text =
-      'You can annotate other genes with the same term and '
-        . 'evidence by adding more genes from the publication.';
+      "You can annotate other genes with the same term $evidence_or_term "
+        . 'by adding more genes from the publication:';
   }
 
   my @all_elements = (
@@ -1747,27 +1768,30 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       );
   }
 
-  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
-    my %extension_def = (
-      name => 'annotation-extension',
-      label => 'Add optional annotation extension:',
-      type => 'Textarea',
-      container_tag => 'div',
-      attributes => { class => 'annotation-extension',
-                      style => 'display: block' },
-      cols => 90,
-      rows => 6,
-    );
+  if ($c->user_exists() && $c->user()->role()->name() eq 'admin' &&
+      !$annotation_config->{needs_allele}) {
+    for my $annotation (@annotations) {
+      my $existing_extension = $annotation->data()->{annotation_extension};
 
-    my $existing_extension = $annotation->data()->{annotation_extension};
+      my %extension_def = (
+        name => 'annotation-extension-' + $annotation->annotation_id(),
+        label => 'Add optional annotation extension:',
+        type => 'Textarea',
+        container_tag => 'div',
+        attributes => { class => 'annotation-extension',
+                        style => 'display: block' },
+        cols => 90,
+        rows => 6,
+      );
 
-    if (defined $existing_extension) {
-      $extension_def{'value'} = $existing_extension;
+      if (defined $existing_extension) {
+        $extension_def{'value'} = $existing_extension;
+      }
+
+      unshift @all_elements, {
+        %extension_def,
+      };
     }
-
-    unshift @all_elements, {
-      %extension_def,
-    };
   }
 
   $form->elements([@all_elements]);
@@ -1780,36 +1804,46 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     my $guard = $schema->txn_scope_guard;
 
     my @dest_params = @{$form->param_array('dest')};
-    my $extension = $form->param_value('annotation-extension');
 
-    my $data = $annotation->data();
-    if ($extension && $extension !~ /^\s*$/) {
-      $data->{annotation_extension} = $extension;
-    } else {
-      delete $data->{annotation_extension};
+    for my $annotation_id (@annotation_ids) {
+      my $extension = $form->param_value('annotation-extension-' . $annotation_id);
+      my $annotation = $annotation_by_id{$annotation_id};
+
+      my $data = $annotation->data();
+      if ($extension && $extension =~ /^\s*$/) {
+        delete $data->{annotation_extension};
+      } else {
+        $data->{annotation_extension} = $extension;
+      }
+
+      $annotation->data($data);
+      $annotation->update();
     }
 
-    $annotation->data($data);
-    $annotation->update();
-
-    my $cloned_data = clone $data;
-    delete $cloned_data->{with_gene};
-    delete $cloned_data->{annotation_extension};
+    my $data = $annotations[0]->data();
+    my $new_data = clone $data;
+    delete $new_data->{with_gene};
+    delete $new_data->{annotation_extension};
+    delete $new_data->{conditions};
+    delete $new_data->{expression};
+    if ($annotation_config->{needs_allele}) {
+      delete $new_data->{evidence_code};
+    }
 
     for my $dest_param (@dest_params) {
       my $dest_gene = $schema->find_with_type('Gene', $dest_param);
 
       my $new_annotation =
-        $schema->create_with_type('Annotation',
-                                  {
-                                    type => $annotation_type_name,
-                                    status => 'new',
-                                    pub => $annotation->pub(),
-                                    creation_date => _get_iso_date(),
-                                    data => $cloned_data,
-                                  });
+      $schema->create_with_type('Annotation',
+                                {
+                                  type => $annotation_type_name,
+                                  status => 'new',
+                                  pub => $annotations[0]->pub(),
+                                  creation_date => _get_iso_date(),
+                                  data => $new_data,
+                                });
       $new_annotation->set_genes($dest_gene);
-    };
+    }
 
     $guard->commit();
 
@@ -1897,7 +1931,7 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
     $annotation->data($data);
     $annotation->update();
 
-    _maybe_transfer_annotation($c, $annotation, $annotation_config);
+    _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
   }
 
   $self->state()->store_statuses($config, $schema);

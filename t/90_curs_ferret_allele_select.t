@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 44;
+use Test::More tests => 51;
 
 use Data::Compare;
 
@@ -163,6 +163,12 @@ test_psgi $app, sub {
     is ($parsed_res->{allele_id}, 0);
   }
 
+  my @new_annotations = ();
+
+  my @current_ids = map {
+    $_->annotation_id();
+  } $curs_schema->resultset('Annotation')->all();
+
   # add two alleles
   {
     # add 1
@@ -201,10 +207,6 @@ test_psgi $app, sub {
 
     is (keys %$alleles_in_progress, 2);
 
-    my @current_ids = map {
-      $_->annotation_id();
-    } $curs_schema->resultset('Annotation')->all();
-
     $uri = new URI("$root_url/annotation/process_alleles/$new_annotation_id");
     $req = HTTP::Request->new(GET => $uri);
     $res = $cb->($req);
@@ -215,14 +217,14 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/Choose curation type for $gene_display_name/);
+    like ($redirect_res->content(), qr/You can annotate other genes from your list with the same term \(FYPO:0000013\)/);
 
     my $rs = $curs_schema->resultset('Annotation');
     ok ($rs->count() == scalar(@current_ids) + 1);
 
     my $new_annotations_rs = $rs->search({ annotation_id => { -not_in => [@current_ids] }});
     is ($new_annotations_rs->count(), 2);
-    my @new_annotations = $new_annotations_rs->all();
+    @new_annotations = $new_annotations_rs->all();
 
     my ($allele_1_annotation, $allele_2_annotation) = @new_annotations;
 
@@ -246,11 +248,46 @@ test_psgi $app, sub {
     like ($redirect_res->content(), qr/\Q$allele_1_display_name/);
     like ($redirect_res->content(), qr/$expression_param/);
 
-    my $conditions_param_re = "\Qhigh temperature (PCO:0000004), low temperature (PCO:0000006), on a Tuesday (NEW), BOGUS:ACCESSION (NEW)";
-    like ($redirect_res->content(), qr/$conditions_param_re/);
-
     my $allele_2_display_name = $allele_2->display_name();
     like ($redirect_res->content(), qr/\Q$allele_2_display_name/);
+  }
+
+
+  {
+    my $cdc11 = $curs_schema->find_with_type('Gene',
+                                             {
+                                               primary_identifier => 'SPCC1739.11c',
+                                             });
+
+    is ($cdc11->all_annotations(), 0);
+
+    my $uri = new URI("$root_url/annotation/transfer/" . $new_annotations[0]->annotation_id());
+    $uri->query_form('dest' => [$cdc11->gene_id()],
+                     'transfer-submit' => 'Finish');
+
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    is ($res->code, 302);
+
+    my $redirect_url = $res->header('location');
+
+    is ($redirect_url, "$root_url/gene/2");
+
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    is ($cdc11->all_annotations(), 1);
+    my $cdc11_annotation = $cdc11->all_annotations()->first();
+    is ($cdc11_annotation->data()->{term_ontid}, 'FYPO:0000013');
+
+    like ($redirect_res->content(), qr/Choose curation type for $gene_display_name/);
+
+    my $rs = $curs_schema->resultset('Annotation');
+    ok ($rs->count() == scalar(@current_ids) + 2);
+
+    my $conditions_param_re = "\Qhigh temperature (PCO:0000004), low temperature (PCO:0000006), on a Tuesday (NEW), BOGUS:ACCESSION (NEW)";
+    like ($redirect_res->content(), qr/$conditions_param_re/);
   }
 };
 
