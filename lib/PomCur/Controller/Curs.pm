@@ -759,10 +759,12 @@ sub _re_edit_annotation
                                            });
   my $data = $annotation->data();
 
-  if ($annotation_config->{needs_allele} && !exists $data->{alleles_in_progress}) {
+  my @alleles = $annotation->alleles();
+
+  if ($annotation_config->{needs_allele} && !exists $data->{alleles_in_progress} &&
+      @alleles > 0) {
     # undo the work of annotation_process_alleles()
     my %in_progress_data = ( id => 0 );
-    my @alleles = $annotation->alleles();
     if (@alleles > 1) {
       croak "can't handle multi-allele phenotypes";
     }
