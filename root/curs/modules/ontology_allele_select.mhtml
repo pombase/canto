@@ -160,7 +160,7 @@ var annotation_id = <% $annotation->annotation_id() %>;
     </table>
   </div>
   <button id="curs-add-allele-details">
-    Add allele details +
+    Add allele and evidence +
   </button>
   <div class="submit">
   </div>
