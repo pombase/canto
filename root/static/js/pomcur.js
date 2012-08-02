@@ -814,6 +814,7 @@ var AlleleStuff = function($) {
 
   function add_allele_confirm($allele_dialog, $allele_table) {
     var $form = $('#curs-allele-add form');
+    $form.find('.curs-allele-description-input').removeAttr('disabled');
     var $orig_allele_row = $allele_dialog.data('edit_allele_row');
     if (!$allele_dialog.data('validate_on_add') || $form.validate().form()) {
       $form.ajaxSubmit({
