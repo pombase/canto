@@ -1656,7 +1656,11 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
 
   $self->metadata_storer()->store_counts($config, $schema);
 
-  _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
+  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+    _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
+  } else {
+    _redirect_and_detach($c, 'gene', $gene->gene_id());
+  }
 }
 
 sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1) Form
