@@ -168,69 +168,55 @@ sub lookup
     croak "no ontology_name passed to lookup()";
   }
 
-  my $hits = $ontology_index->lookup($ontology_name, $search_string,
-                                     $max_results);
-
-  my @ret_list = ();
+  my @results = $ontology_index->lookup($ontology_name, $search_string,
+                                        $max_results);
 
   my $schema = $self->schema();
-  my $fudge_factor = 1.05;
-
-  my $num_hits = $hits->length();
 
   my @limited_hits = ();
 
-  for (my $i = 0; $i < $max_results && $i < $num_hits; $i++) {
-    my $doc = $hits->doc($i);
+  for my $result (@results) {
+    my $doc = $result->{doc};
     my $cvterm_id = $doc->get('cvterm_id');
     my $cvterm = $schema->find_with_type('Cvterm', $cvterm_id);
 
-    # the $fudge_factor is to try to make sure that the cvterm name is nudged
-    # ahead if there is need for a tie-break
-    my $name_match_score =
-      _get_score($search_string, $cvterm->name()) * $fudge_factor;
+    my %ret_hit = (
+      doc => $doc, score => $result->{score},
+      cvterm => $cvterm,
+      cvterm_name => $cvterm->name(),
+    );
 
-    my $max_score = $name_match_score;
-    my $matching_synonym = undef;
-
-    for my $synonym ($cvterm->synonyms()) {
-      my $synonym_name = lc $synonym->synonym();
-      my $synonym_score = _get_score($search_string, $synonym_name);
-
-      if ($synonym_score > $max_score) {
-        $max_score = $synonym_score;
-        $matching_synonym = $synonym_name;
-      }
+    if ($cvterm->name() ne $doc->get('name')) {
+      $ret_hit{matching_synonym} = $doc->get('name');
     }
 
-    push @limited_hits, { doc => $doc, score => $hits->score($i),
-                          cvterm => $cvterm,
-                          cvterm_name => $cvterm->name(),
-                          matching_synonym => $matching_synonym };
+    push @limited_hits, \%ret_hit;
   }
 
-  # sort by score, then matching_synonym length or cvterm name length
-  @limited_hits = sort {
-    my $score_cmp = $b->{score} <=> $a->{score};
+  # # sort by score, then matching_synonym length or cvterm name length
+  # @limited_hits = sort {
+  #   my $score_cmp = $b->{score} <=> $a->{score};
 
-    if ($score_cmp == 0) {
-      my $a_length;
-      if ($a->{matching_synonym}) {
-        $a_length = length $a->{matching_synonym};
-      } else {
-        $a_length = length $a->{cvterm_name};
-      }
-      my $b_length;
-      if ($b->{matching_synonym}) {
-        $b_length = length $b->{matching_synonym};
-      } else {
-        $b_length = length $b->{cvterm_name};
-      }
-      $a_length <=> $b_length;
-    } else {
-      $score_cmp;
-    }
-  } @limited_hits;
+  #   if ($score_cmp == 0) {
+  #     my $a_length;
+  #     if ($a->{matching_synonym}) {
+  #       $a_length = length $a->{matching_synonym};
+  #     } else {
+  #       $a_length = length $a->{cvterm_name};
+  #     }
+  #     my $b_length;
+  #     if ($b->{matching_synonym}) {
+  #       $b_length = length $b->{matching_synonym};
+  #     } else {
+  #       $b_length = length $b->{cvterm_name};
+  #     }
+  #     $a_length <=> $b_length;
+  #   } else {
+  #     $score_cmp;
+  #   }
+  # } @limited_hits;
+
+  my @ret_list = ();
 
   for my $hit_hash (@limited_hits) {
     my $doc = $hit_hash->{doc};

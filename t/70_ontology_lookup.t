@@ -109,6 +109,7 @@ my $child_results =
 
 is(@$child_results, 1);
 
+
 my $child_res = $child_results->[0];
 
 is($child_res->{id}, $transport_id);
@@ -145,7 +146,6 @@ is($id_result->[0]->{name}, 'cellular process phenotype');
 is($id_result->[0]->{annotation_namespace}, 'fission_yeast_phenotype');
 
 cmp_deeply($id_result->[0], $expected_fypo_term);
-
 
 my $fypo_cpp = $lookup->lookup_by_name(ontology_name => 'fission_yeast_phenotype',
                                        term_name => 'cellular process phenotype',
