@@ -1778,7 +1778,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       my $existing_extension = $annotation->data()->{annotation_extension};
 
       my %extension_def = (
-        name => 'annotation-extension-' + $annotation->annotation_id(),
+        name => 'annotation-extension',
         label => 'Add optional annotation extension:',
         type => 'Textarea',
         container_tag => 'div',
@@ -1807,24 +1807,21 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     my $guard = $schema->txn_scope_guard;
 
+    my $first_annotation = $annotations[0];
+
     my @dest_params = @{$form->param_array('dest')};
+    my $extension = $form->param_value('annotation-extension');
 
-    for my $annotation_id (@annotation_ids) {
-      my $extension = $form->param_value('annotation-extension-' . $annotation_id);
-      my $annotation = $annotation_by_id{$annotation_id};
-
-      my $data = $annotation->data();
-      if ($extension && $extension =~ /^\s*$/) {
-        delete $data->{annotation_extension};
-      } else {
-        $data->{annotation_extension} = $extension;
-      }
-
-      $annotation->data($data);
-      $annotation->update();
+    my $data = $first_annotation->data();
+    if ($extension && $extension !~ /^\s*$/) {
+      $data->{annotation_extension} = $extension;
+    } else {
+      delete $data->{annotation_extension};
     }
 
-    my $data = $annotations[0]->data();
+    $first_annotation->data($data);
+    $first_annotation->update();
+
     my $new_data = clone $data;
     delete $new_data->{with_gene};
     delete $new_data->{annotation_extension};
