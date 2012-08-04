@@ -1773,7 +1773,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   }
 
   if ($c->user_exists() && $c->user()->role()->name() eq 'admin' &&
-      !$annotation_config->{needs_allele}) {
+      @annotations == 1) {
     for my $annotation (@annotations) {
       my $existing_extension = $annotation->data()->{annotation_extension};
 
