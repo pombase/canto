@@ -56,28 +56,6 @@ sub _build_load_util
   return PomCur::Track::LoadUtil->new(schema => $self->schema());
 }
 
-sub _clean_string
-{
-  my $text = shift;
-
-  $text =~ s/[\d\W]+/ /g;
-  $text =~ s/^\s+//;
-  $text =~ s/\s+$//;
-
-  return $text;
-}
-
-sub _get_score
-{
-  my $search_string = shift;
-  my $name = shift;
-
-  $name = _clean_string($name);
-  $search_string = _clean_string($search_string);
-
-  return similarity $search_string, $name;
-}
-
 sub _make_term_hash
 {
   my $cvterm = shift;

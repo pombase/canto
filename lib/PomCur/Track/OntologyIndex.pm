@@ -229,8 +229,6 @@ sub lookup
       qq{name_keyword:$search_string OR } .
       qq{name:($search_string)$wildcard)};
 
-    warn "query: $query_string\n";
-
     $query = $parser->parse($query_string);
   }
 
