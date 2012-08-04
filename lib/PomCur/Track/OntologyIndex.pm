@@ -90,29 +90,14 @@ sub _index_path
   return $config->data_dir_path('ontology_index_dir');
 }
 
-sub _clean_field_value
-{
-  my $field_value = shift;
-
-  my $processed_field_value = lc $field_value;
-  $processed_field_value =~ s/[^\d\w]+/ /g;
-  $processed_field_value =~ s/_/ /g;
-  $processed_field_value =~ s/\s+$//;
-  $processed_field_value =~ s/^\s+//;
-
-  return $processed_field_value;
-}
-
 sub _get_all_names
 {
   my $cvterm = shift;
 
-  return map {
-    _clean_field_value($_);
-  } ($cvterm->name(),
-     map {
-       $_->synonym();
-     } $cvterm->synonyms());
+  return ($cvterm->name(),
+          map {
+            $_->synonym();
+          } $cvterm->synonyms());
 }
 
 =head2 add_to_index
@@ -229,8 +214,6 @@ sub lookup
     $query = Lucene::Search::TermQuery->new($ontid_term);
   } else {
   # sanitise
-    $search_string = _clean_field_value($search_string);
-
     my $wildcard;
 
     if ($search_string =~ /^(.*?)\W+\w$/) {
