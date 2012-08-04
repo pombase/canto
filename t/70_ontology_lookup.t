@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 40;
+use Test::More tests => 45;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -36,6 +36,21 @@ my $ont_name = 'molecular_function';
           } @$results);
 
   is(scalar(map { $_->{name} =~ /^$search_string/ } @$results), 1);
+}
+
+{
+  my $results = $lookup->lookup(ontology_name => $ont_name,
+                                search_string => $ont_name,
+                                max_results => 10,
+                                include_definition => 1);
+
+  ok(defined $results);
+
+  is(scalar(@$results), 1);
+
+  is($results->[0]->{name}, $ont_name);
+  is($results->[0]->{id}, 'GO:0003674');
+  like($results->[0]->{definition}, qr/Elemental activities/);
 }
 
 {
@@ -109,6 +124,7 @@ my $child_results =
 
 is(@$child_results, 1);
 
+
 my $child_res = $child_results->[0];
 
 is($child_res->{id}, $transport_id);
@@ -145,7 +161,6 @@ is($id_result->[0]->{name}, 'cellular process phenotype');
 is($id_result->[0]->{annotation_namespace}, 'fission_yeast_phenotype');
 
 cmp_deeply($id_result->[0], $expected_fypo_term);
-
 
 my $fypo_cpp = $lookup->lookup_by_name(ontology_name => 'fission_yeast_phenotype',
                                        term_name => 'cellular process phenotype',

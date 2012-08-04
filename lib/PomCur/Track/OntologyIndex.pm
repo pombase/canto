@@ -90,48 +90,14 @@ sub _index_path
   return $config->data_dir_path('ontology_index_dir');
 }
 
-sub _clean_field_value
-{
-  my $field_value = shift;
-
-  my $processed_field_value = $field_value;
-  $processed_field_value =~ s/[^\d\w]+/ /g;
-  $processed_field_value =~ s/_/ /g;
-  $processed_field_value =~ s/\s+$//;
-  $processed_field_value =~ s/^\s+//;
-
-  return $processed_field_value;
-}
-
-sub _process_field
-{
-  my $key = shift;
-  my $field_value = _clean_field_value(shift);
-
-  my $name_field = Lucene::Document::Field->Text($key, $field_value);
-
-  return $name_field;
-}
-
-# returns a Field containing each word from the name and synonyms exactly once
-sub _get_all_words_field
+sub _get_all_names
 {
   my $cvterm = shift;
 
-  my %words = ();
-
-  for my $name ($cvterm->name(), map { $_->synonym() } $cvterm->synonyms()) {
-    my @bits = split /\W+/, $name;
-
-    for my $bit (@bits) {
-      $words{$bit}++;
-    }
-  }
-
-  my $word_string = join ' ', keys %words;
-
-  my $field = _process_field('all_words', $word_string);
-  return $field;
+  return ($cvterm->name(),
+          map {
+            $_->synonym();
+          } $cvterm->synonyms());
 }
 
 =head2 add_to_index
@@ -151,38 +117,22 @@ sub add_to_index
   $cv_name =~ s/-/_/g;
 
   my $writer = $self->{_index};
-  my $doc = new Lucene::Document;
 
-  my $cvterm_name = $cvterm->name();
+  for my $name (_get_all_names($cvterm)) {
+    my $doc = Lucene::Document->new();
 
-  my $name_field = _process_field('name', $cvterm_name);
-  my $all_words_field = _get_all_words_field($cvterm);
+    my @fields = (
+      Lucene::Document::Field->Text('name', $name),
+      Lucene::Document::Field->Keyword('name_keyword', $name),
+      Lucene::Document::Field->Keyword(ontid => $cvterm->db_accession()),
+      Lucene::Document::Field->Keyword(cv_name => $cv_name),
+      Lucene::Document::Field->Keyword(cvterm_id => $cvterm->cvterm_id()),
+    );
 
-  my @alt_id_keywords;
-  my @alt_ids = $cvterm->alt_ids();
+    map { $doc->add($_) } @fields;
 
-  for (my $i = 0; $i < @alt_ids; $i++) {
-    push @alt_id_keywords, Lucene::Document::Field->Keyword("alt_id_$i", $alt_ids[$i]);
+    $writer->addDocument($doc);
   }
-
-  my @fields = (
-    $name_field,
-    Lucene::Document::Field->Keyword(ontid => $cvterm->db_accession()),
-    @alt_id_keywords,
-    Lucene::Document::Field->Keyword(cv_name => $cv_name),
-    Lucene::Document::Field->Keyword(cvterm_id => $cvterm->cvterm_id()),
-    $all_words_field,
-  );
-
-  for my $synonym ($cvterm->synonyms()) {
-    # weight the synonyms slightly lower
-    my $name_field = _process_field($synonym->synonym(), 0.8);
-#    push @fields, $name_field;
-  }
-
-  map { $doc->add($_) } @fields;
-
-  $writer->addDocument($doc);
 }
 
 =head2 finish_index
@@ -226,6 +176,7 @@ sub _init_lookup
  Function: Return the search results for the $search_string
  Args    : $ontology_name - the ontology to search
            $search_string - the text to search for
+           $max_results - the maximum number of results to return
  Returns : the Lucene hits object
 
 =cut
@@ -233,6 +184,8 @@ sub lookup
 {
   my $self = shift;
   my $ontology_name = shift;
+  my $search_string = shift;
+  my $max_results = shift;
 
   if (!defined $ontology_name || length $ontology_name == 0) {
     croak "no ontology_name passed to lookup()";
@@ -243,8 +196,6 @@ sub lookup
   # keyword search must be lower case
   $ontology_name = lc $ontology_name;
   $ontology_name =~ s/-/_/g;
-
-  my $search_string = shift;
 
   my $searcher;
   my $parser;
@@ -262,18 +213,47 @@ sub lookup
     my $ontid_term = Lucene::Index::Term->new('ontid', $1);
     $query = Lucene::Search::TermQuery->new($ontid_term);
   } else {
-    # sanitise
-    $search_string = _clean_field_value($search_string);
+  # sanitise
+    my $wildcard;
+
+    if ($search_string =~ /^(.*?)\W+\w$/) {
+      # avoid a single character followed by a wildcard as it triggers
+      # a "Too Many Clauses" exception
+      $wildcard = " OR name:($1*)";
+    } else {
+      $wildcard = " OR name:($search_string*)";
+    }
 
     my $query_string =
       qq{cv_name:$ontology_name AND (} .
-        qq{name:($search_string) OR name:($search_string*) OR } .
-        qq{all_words:($search_string) OR all_words:($search_string*))};
+      qq{name_keyword:$search_string OR } .
+      qq{name:($search_string)$wildcard)};
 
     $query = $parser->parse($query_string);
   }
 
-  return $searcher->search($query);
+  my $hits = $searcher->search($query);
+
+  my @ret_list = ();
+  my %seen_terms = ();
+  my $num_hits = $hits->length();
+
+  for (my $i = 0; $i < $num_hits; $i++) {
+    my $doc = $hits->doc($i);
+    my $cvterm_id = $doc->get('cvterm_id');
+
+    if (!exists $seen_terms{$cvterm_id}) {
+      # slightly hacky as we're ignoring some docs
+      push @ret_list, { doc => $doc,
+                        score => $hits->score($i), };
+
+      last if @ret_list >= $max_results;
+
+      $seen_terms{$cvterm_id} = 1;
+    }
+  }
+
+  return @ret_list;
 }
 
 1;
