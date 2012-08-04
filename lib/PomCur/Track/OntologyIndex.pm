@@ -231,10 +231,22 @@ sub lookup
   # sanitise
     $search_string = _clean_field_value($search_string);
 
+    my $wildcard;
+
+    if ($search_string =~ /^(.*?)\W+\w$/) {
+      # avoid a single character followed by a wildcard as it triggers
+      # a "Too Many Clauses" exception
+      $wildcard = " OR name:($1*)";
+    } else {
+      $wildcard = " OR name:($search_string*)";
+    }
+
     my $query_string =
       qq{cv_name:$ontology_name AND (} .
       qq{name_keyword:$search_string OR } .
-      qq{name:($search_string) OR name:($search_string*))};
+      qq{name:($search_string)$wildcard)};
+
+    warn "query: $query_string\n";
 
     $query = $parser->parse($query_string);
   }
