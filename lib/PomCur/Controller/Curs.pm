@@ -1846,6 +1846,10 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       $new_annotation->set_genes($dest_gene);
     }
 
+    if (@dest_params > 0) {
+      $c->flash()->{message} = 'Transferred annotation to: ' . join ',', @dest_params;
+    }
+
     $guard->commit();
 
     $self->state()->store_statuses($config, $schema);
