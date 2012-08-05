@@ -22,7 +22,7 @@ my $ont_name = 'molecular_function';
 
 {
   my $results = $lookup->lookup(ontology_name => $ont_name,
-                                search_string => $search_string,
+                                search_string => "$search_string][)(-",
                                 max_results => 10,
                                 include_definition => 0);
 
@@ -91,9 +91,7 @@ my $ont_name = 'molecular_function';
   } @$results);
 }
 
-my $id_result = $lookup->lookup(ontology_name => 'biological_process',
-                                search_string => 'GO:0006810',
-                                max_results => 10,
+my $id_result = $lookup->lookup(search_string => 'GO:0006810',
                                 include_definition => 1);
 
 is(scalar(@$id_result), 1);

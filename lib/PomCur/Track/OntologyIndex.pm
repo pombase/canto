@@ -116,17 +116,23 @@ sub add_to_index
   my $cv_name = lc $cvterm->cv()->name();
   $cv_name =~ s/-/_/g;
 
+  my $term_name = $cvterm->name();
+  my $cvterm_id = $cvterm->cvterm_id();
+  my $db_accession = $cvterm->db_accession();
+
   my $writer = $self->{_index};
 
-  for my $name (_get_all_names($cvterm)) {
+  # $text can be the name or a synonym
+  for my $text (_get_all_names($cvterm)) {
     my $doc = Lucene::Document->new();
 
     my @fields = (
-      Lucene::Document::Field->Text('name', $name),
-      Lucene::Document::Field->Keyword('name_keyword', $name),
-      Lucene::Document::Field->Keyword(ontid => $cvterm->db_accession()),
+      Lucene::Document::Field->Text('text', $text),
+      Lucene::Document::Field->Keyword('text_keyword', $text),
+      Lucene::Document::Field->Keyword(ontid => $db_accession),
       Lucene::Document::Field->Keyword(cv_name => $cv_name),
-      Lucene::Document::Field->Keyword(cvterm_id => $cvterm->cvterm_id()),
+      Lucene::Document::Field->UnIndexed(cvterm_id => $cvterm_id),
+      Lucene::Document::Field->UnIndexed(term_name => $term_name),
     );
 
     map { $doc->add($_) } @fields;
@@ -207,30 +213,22 @@ sub lookup
   $searcher = $self->{searcher};
   $parser = $self->{parser};
 
-  my $query;
+  my $wildcard;
 
-  if ($search_string =~ /^\s*([a-zA-Z]+:\d+)\s*$/) {
-    my $ontid_term = Lucene::Index::Term->new('ontid', $1);
-    $query = Lucene::Search::TermQuery->new($ontid_term);
+  if ($search_string =~ /^(.*?)\W+\w$/) {
+    # avoid a single character followed by a wildcard as it triggers
+    # a "Too Many Clauses" exception
+    $wildcard = " OR text:($1*)";
   } else {
-  # sanitise
-    my $wildcard;
-
-    if ($search_string =~ /^(.*?)\W+\w$/) {
-      # avoid a single character followed by a wildcard as it triggers
-      # a "Too Many Clauses" exception
-      $wildcard = " OR name:($1*)";
-    } else {
-      $wildcard = " OR name:($search_string*)";
-    }
-
-    my $query_string =
-      qq{cv_name:$ontology_name AND (} .
-      qq{name_keyword:$search_string OR } .
-      qq{name:($search_string)$wildcard)};
-
-    $query = $parser->parse($query_string);
+    $wildcard = " OR text:($search_string*)";
   }
+
+  my $query_string =
+    qq{cv_name:$ontology_name AND (} .
+    qq{text_keyword:$search_string OR } .
+    qq{text:($search_string)$wildcard)};
+
+  my $query = $parser->parse($query_string);
 
   my $hits = $searcher->search($query);
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 31;
+use Test::More tests => 33;
 
 use Data::Compare;
 
@@ -49,9 +49,9 @@ load_all(1);
 
 is(@loaded_cvterms, 108);
 
-ok(grep {
+ok((grep {
   $_->name() eq 'regulation of transmembrane transport'
-} @loaded_cvterms);
+} @loaded_cvterms), 'has transmembrane transport term name');
 
 ok(grep {
   $_->name() eq 'negative regulation of transmembrane transport' &&
@@ -64,7 +64,7 @@ ok(grep {
 
 # biological_process
 my @results =
-  $ontology_index->lookup('biological_process', 'transmembrane transport()\:-', 100);
+  $ontology_index->lookup('biological_process', 'transmembrane transport', 100);
 
 for my $result (@results) {
   my $doc = $result->{doc};
@@ -76,8 +76,8 @@ for my $result (@results) {
   is($cv_name, 'biological_process');
 }
 
-is($results[0]->{doc}->get('name'), 'transmembrane transport');
-is($results[1]->{doc}->get('name'), 'hydrogen peroxide transmembrane transport');
+is($results[0]->{doc}->get('term_name'), 'transmembrane transport');
+is($results[1]->{doc}->get('term_name'), 'hydrogen peroxide transmembrane transport');
 
 
 # psi-mod
@@ -92,15 +92,12 @@ for my $result (@results) {
   is($cv_name, 'psi_mod');
 }
 
-is($results[0]->{doc}->get('name'), 'modified residue with a secondary neutral loss');
+is($results[0]->{doc}->get('term_name'), 'modified residue with a secondary neutral loss');
 
 
 # molecular_function with synonym
-my $long_ugly_synonym =
-  '(2-amino-4-hydroxy-7,8-dihydropteridin-6-yl)methyl-diphosphate:4-aminobenzoate ' .
-  '2-amino-4-hydroxydihydropteridine-6-methenyltransferase activity';
-@results = $ontology_index->lookup('molecular_function',
-                                $long_ugly_synonym, 100);
+my $long_ugly_synonym_query = 'aminobenzoate methenyltransferase activity';
+@results = $ontology_index->lookup('molecular_function', $long_ugly_synonym_query, 100);
 
 is(@results, 6);
 
@@ -111,24 +108,16 @@ for my $result (@results) {
   is($cv_name, 'molecular_function');
 }
 
-sub _clean
-{
-  my $str = shift;
-  $str =~ s/[^\d\w]/ /g;
-  $str =~ s/^\s+//;
-  return $str;
-}
+is($results[0]->{doc}->get('text'), '(2-amino-4-hydroxy-7,8-dihydropteridin-6-yl)methyl-diphosphate:4-aminobenzoate 2-amino-4-hydroxydihydropteridine-6-methenyltransferase activity');
+is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
-is($results[0]->{doc}->get('name'), _clean($long_ugly_synonym));
-
-my $ugly_synonym_substring =
-  ',8-dihydropteridin-6-yl)methyl-diphosphate:4-aminobenzoate methenyltransferase';
 @results = $ontology_index->lookup('molecular_function',
-                                   _clean($ugly_synonym_substring), 100);
+                                   'dihydropteroate synthetase activity', 100);
 
-is(@results, 1);
+is(@results, 6);
 is($results[0]->{doc}->get('cv_name'), 'molecular_function');
-is($results[0]->{doc}->get('name'), _clean($long_ugly_synonym));
+is($results[0]->{doc}->get('text'), 'dihydropteroate synthetase activity');
+is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
 
 # check loading of alt_ids

@@ -59,11 +59,10 @@ sub _build_load_util
 sub _make_term_hash
 {
   my $cvterm = shift;
+  my $cv_name = shift;
   my $include_definition = shift;
   my $include_children = shift;
   my $matching_synonym = shift;
-
-  my $cv = $cvterm->cv();
 
   my %term_hash = ();
 
@@ -94,9 +93,10 @@ sub _make_term_hash
       ->search_related('subject', {}, { order_by => 'name' })->all();
 
     for my $child_cvterm (@child_cvterms) {
-      if ($child_cvterm->cv()->name() eq $cv->name()) {
+      if ($child_cvterm->cv()->name() eq $cv_name) {
         push @{$term_hash{children}}, {
-          _make_term_hash($child_cvterm, 0, 0)
+          _make_term_hash($child_cvterm,
+                          $child_cvterm->cv()->name(), 0, 0)
         };
       }
     }
@@ -104,6 +104,18 @@ sub _make_term_hash
 
   return %term_hash;
 }
+
+sub _clean_string
+{
+  my $text = shift;
+
+  $text =~ s/\W+/ /g;
+  $text =~ s/^\s+//;
+  $text =~ s/\s+$//;
+
+  return $text;
+}
+
 
 =head2 lookup
 
@@ -142,34 +154,44 @@ sub lookup
   my $config = $self->config();
   my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
 
-  if (!defined $ontology_name || length $ontology_name == 0) {
-    croak "no ontology_name passed to lookup()";
-  }
+  my @results;
 
-  my @results = $ontology_index->lookup($ontology_name, $search_string,
-                                        $max_results);
-
-  my $schema = $self->schema();
-
-  my @limited_hits = ();
-
-  for my $result (@results) {
-    my $doc = $result->{doc};
-    my $cvterm_id = $doc->get('cvterm_id');
-    my $cvterm = $schema->find_with_type('Cvterm', $cvterm_id);
-
-    my %ret_hit = (
-      doc => $doc, score => $result->{score},
-      cvterm => $cvterm,
-      cvterm_name => $cvterm->name(),
-    );
-
-    if ($cvterm->name() ne $doc->get('name')) {
-      $ret_hit{matching_synonym} = $doc->get('name');
+  if ($search_string =~ /^\s*([a-zA-Z]+:\d+)\s*$/) {
+    return [$self->lookup_by_id(id => $search_string,
+                                include_definition => $include_definition,
+                                include_children => $include_children)];
+  } else {
+    if (!defined $ontology_name || length $ontology_name == 0) {
+      croak "no ontology_name passed to lookup()";
     }
 
-    push @limited_hits, \%ret_hit;
-  }
+    @results = $ontology_index->lookup($ontology_name, _clean_string($search_string),
+                                       $max_results);
+
+    my $schema = $self->schema();
+
+    my @limited_hits = ();
+
+    for my $result (@results) {
+      my $doc = $result->{doc};
+      my $cvterm_id = $doc->get('cvterm_id');
+      my $term_name = $doc->get('term_name');
+      my $cvterm = $schema->find_with_type('Cvterm', $cvterm_id);
+
+      my %ret_hit = (
+        doc => $doc, score => $result->{score},
+        cvterm_id => $cvterm_id,
+        cvterm_name => $term_name,
+        cvterm => $cvterm,
+        cv_name => $ontology_name,
+      );
+
+      if ($term_name ne $doc->get('text')) {
+        $ret_hit{matching_synonym} = $doc->get('text');
+      }
+
+      push @limited_hits, \%ret_hit;
+    }
 
   # # sort by score, then matching_synonym length or cvterm name length
   # @limited_hits = sort {
@@ -194,23 +216,25 @@ sub lookup
   #   }
   # } @limited_hits;
 
-  my @ret_list = ();
+    my @ret_list = ();
 
-  for my $hit_hash (@limited_hits) {
-    my $doc = $hit_hash->{doc};
-    my $name = $doc->get('name');
-    my $matching_synonym = $hit_hash->{matching_synonym};
-    my $cvterm = $hit_hash->{cvterm};
+    for my $hit_hash (@limited_hits) {
+      my $doc = $hit_hash->{doc};
+      my $name = $doc->get('name');
+      my $matching_synonym = $hit_hash->{matching_synonym};
+      my $cvterm = $hit_hash->{cvterm};
 
-    my %term_hash =
-      _make_term_hash($cvterm,
-                      $include_definition, $include_children,
-                      $matching_synonym);
+      my %term_hash =
+        _make_term_hash($cvterm,
+                        $ontology_name,
+                        $include_definition, $include_children,
+                        $matching_synonym);
 
-    push @ret_list, \%term_hash;
+      push @ret_list, \%term_hash;
+    }
+
+    return \@ret_list;
   }
-
-  return \@ret_list;
 }
 
 
@@ -271,7 +295,7 @@ sub lookup_by_name
                                                     name => $term_name });
 
   if (defined $cvterm) {
-    return { _make_term_hash($cvterm, $include_definition, $include_children) };
+    return { _make_term_hash($cvterm, $cv->name(), $include_definition, $include_children) };
   } else {
     return undef;
   }
@@ -344,7 +368,8 @@ sub lookup_by_id
     $cvterm = $terms[0];
   }
 
-  return { _make_term_hash($cvterm, $include_definition, $include_children) };
+  return { _make_term_hash($cvterm, $cvterm->cv()->name(),
+                           $include_definition, $include_children) };
 }
 
 
@@ -383,7 +408,8 @@ sub get_all
 
   while (defined (my $cvterm = $cvterm_rs->next())) {
     my %term_hash =
-      _make_term_hash($cvterm, $include_definition, $include_children);
+      _make_term_hash($cvterm, $ontology_name,
+                      $include_definition, $include_children);
 
     push @ret_list, \%term_hash;
   }
