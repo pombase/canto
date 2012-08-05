@@ -1835,14 +1835,14 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       my $dest_gene = $schema->find_with_type('Gene', $dest_param);
 
       my $new_annotation =
-      $schema->create_with_type('Annotation',
-                                {
-                                  type => $annotation_type_name,
-                                  status => 'new',
-                                  pub => $annotations[0]->pub(),
-                                  creation_date => _get_iso_date(),
-                                  data => $new_data,
-                                });
+        $schema->create_with_type('Annotation',
+                                  {
+                                   type => $annotation_type_name,
+                                   status => 'new',
+                                   pub => $annotations[0]->pub(),
+                                   creation_date => _get_iso_date(),
+                                   data => $new_data,
+                                 });
       $new_annotation->set_genes($dest_gene);
     }
 
