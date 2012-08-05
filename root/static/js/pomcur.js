@@ -23,7 +23,7 @@ $(document).ready(function() {
 });
 
 function make_ontology_complete_url(annotation_type) {
-  return application_root + 'ws/lookup/ontology/' + annotation_type;
+  return application_root + 'ws/lookup/ontology/' + annotation_type + '?def=1';
 }
 
 var ferret_choose = {
@@ -329,7 +329,35 @@ var ferret_choose = {
       .removeAttr('selected');
     ferret_choose.term_history = [ferret_choose.term_history.first()];
     return true;
-  }
+  },
+
+  show_autocomplete_def: function(event, ui) {
+    $('.curs-autocomplete-definition').remove();
+    var definition;
+    if (ui.item.definition == null) {
+      definition = '[no definition]';
+    } else {
+      definition = ui.item.definition;
+    }
+    var def =
+      $('<div class="curs-autocomplete-definition ui-widget-content ui-autocomplete ui-corner-all">' +
+        '<h3>Term name</h3><div>' +
+        ui.item.name + '</div>' +
+        '<h3>Definition</h3><div>' +
+        definition + '</div></div>');
+    def.appendTo('body');
+    var widget = $(this).autocomplete("widget");
+    def.position({
+      my: 'left top',
+      at: 'right top',
+      of: widget
+    });
+    return false;
+  },
+
+  hide_autocomplete_def: function() {
+    $('.curs-autocomplete-definition').remove();
+  },
 };
 
 
@@ -344,6 +372,7 @@ var curs_home = {
     $('#curs-dialog').dialog({ modal: true,
                                title: 'Child term suggestion for ' + term_ontid});
   }
+
 };
 
 var pomcur_util = {
@@ -355,6 +384,7 @@ var pomcur_util = {
                                title: title});
   }
 };
+
 
 $(document).ready(function() {
   var ferret_input = $("#ferret-term-input");
@@ -409,9 +439,8 @@ $(document).ready(function() {
       minLength: 2,
       source: ferret_choose.ontology_complete_url,
       cacheLength: 100,
-      focus: function(event, ui) {
-        return false;
-      },
+      focus: ferret_choose.show_autocomplete_def,
+      close: ferret_choose.hide_autocomplete_def,
       select: function(event, ui) {
         ferret_choose.term_history = [trim(ferret_input.val())];
         ferret_choose.set_current_term(ui.item.id);
@@ -764,6 +793,7 @@ var AlleleStuff = function($) {
           return {
             label: item.name,
             value: item.name,
+            name: item.name,
             definition: item.definition,
           }
         });
@@ -1171,25 +1201,8 @@ var AlleleStuff = function($) {
       placeholderText: 'Type a condition ...',
       tagSource: fetch_conditions,
       autocompleteOptions: {
-        focus: function(event, ui) {
-          $('.curs-autocomplete-definition').remove();
-          if (ui.item.definition != null) {
-            var def =
-              $('<div class="curs-autocomplete-definition"><h3>Definition</h3><div>' +
-                ui.item.definition + '</div></div>');
-	    def.addClass('ui-widget-content ui-autocomplete ui-corner-all')
-	      .appendTo('body');
-            var widget = $(this).autocomplete("widget");
-            def.position({
-              my: 'left top',
-              at: 'right top',
-              of: widget
-            });
-          }
-        },
-        close: function() {
-          $('.curs-autocomplete-definition').remove();
-        },
+        focus: ferret_choose.show_autocomplete_def,
+        close: ferret_choose.hide_autocomplete_def,
       },
     });
 
