@@ -790,8 +790,14 @@ var AlleleStuff = function($) {
       dataType: "json",
       success: function(data) {
         var choices = $.map( data, function( item ) {
+          var label;
+          if (item.matching_synonym == null) {
+            label = item.name;
+          } else {
+            label = item.matching_synonym + ' (synonym)';
+          }
           return {
-            label: item.name,
+            label: label,
             value: item.name,
             name: item.name,
             definition: item.definition,
