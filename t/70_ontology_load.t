@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 33;
+use Test::More tests => 38;
 
 use Data::Compare;
 
@@ -76,8 +76,20 @@ for my $result (@results) {
   is($cv_name, 'biological_process');
 }
 
-is($results[0]->{doc}->get('term_name'), 'transmembrane transport');
-is($results[1]->{doc}->get('term_name'), 'hydrogen peroxide transmembrane transport');
+is(@results, 7);
+
+my @expected_transport = (
+  "transmembrane transport",
+  "protein transmembrane transport",
+  "regulation of transmembrane transport",
+  "hydrogen peroxide transmembrane transport",
+  "negative regulation of transmembrane transport",
+  "positive regulation of transmembrane transport",
+);
+
+for (my $i = 0; $i < @expected_transport; $i++) {
+  is($results[$i]->{doc}->get('term_name'), $expected_transport[$i]);
+}
 
 
 # psi-mod
@@ -108,7 +120,7 @@ for my $result (@results) {
   is($cv_name, 'molecular_function');
 }
 
-is($results[0]->{doc}->get('text'), '(2-amino-4-hydroxy-7,8-dihydropteridin-6-yl)methyl-diphosphate:4-aminobenzoate 2-amino-4-hydroxydihydropteridine-6-methenyltransferase activity');
+is($results[0]->{doc}->get('text'), '2-amino-4-hydroxy-6-hydroxymethyl-7,8-dihydropteridine-diphosphate:4-aminobenzoate 2-amino-4-hydroxydihydropteridine-6-methenyltransferase activity');
 is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
 @results = $ontology_index->lookup('molecular_function',

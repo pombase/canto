@@ -94,11 +94,19 @@ sub _get_all_names
 {
   my $cvterm = shift;
 
-  return ($cvterm->name(),
+  return (['name', $cvterm->name()],
           map {
-            $_->synonym();
+            [$_->type()->name(), $_->synonym()];
           } $cvterm->synonyms());
 }
+
+my %boosts =
+  (
+    name => 1.1,
+    exact => 1.1,
+    broad => 0.01,
+    related => 0.01
+  );
 
 =head2 add_to_index
 
@@ -123,8 +131,11 @@ sub add_to_index
   my $writer = $self->{_index};
 
   # $text can be the name or a synonym
-  for my $text (_get_all_names($cvterm)) {
+  for my $details (_get_all_names($cvterm)) {
     my $doc = Lucene::Document->new();
+
+    my $type = $details->[0];
+    my $text = $details->[1];
 
     my @fields = (
       Lucene::Document::Field->Text('text', $text),
@@ -134,6 +145,10 @@ sub add_to_index
       Lucene::Document::Field->UnIndexed(cvterm_id => $cvterm_id),
       Lucene::Document::Field->UnIndexed(term_name => $term_name),
     );
+
+    if (exists $boosts{$type}) {
+      map { $_->setBoost($boosts{$type}); } @fields;
+    }
 
     map { $doc->add($_) } @fields;
 
