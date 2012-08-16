@@ -193,29 +193,6 @@ sub lookup
       push @limited_hits, \%ret_hit;
     }
 
-  # # sort by score, then matching_synonym length or cvterm name length
-  # @limited_hits = sort {
-  #   my $score_cmp = $b->{score} <=> $a->{score};
-
-  #   if ($score_cmp == 0) {
-  #     my $a_length;
-  #     if ($a->{matching_synonym}) {
-  #       $a_length = length $a->{matching_synonym};
-  #     } else {
-  #       $a_length = length $a->{cvterm_name};
-  #     }
-  #     my $b_length;
-  #     if ($b->{matching_synonym}) {
-  #       $b_length = length $b->{matching_synonym};
-  #     } else {
-  #       $b_length = length $b->{cvterm_name};
-  #     }
-  #     $a_length <=> $b_length;
-  #   } else {
-  #     $score_cmp;
-  #   }
-  # } @limited_hits;
-
     my @ret_list = ();
 
     for my $hit_hash (@limited_hits) {
