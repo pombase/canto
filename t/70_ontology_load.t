@@ -25,12 +25,14 @@ my $test_relationship_ontology_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_relationship_obo_file};
 my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
 
-my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
+my $ontology_index;
 my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
 my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
 sub load_all {
   my $include_ro = shift;
+
+  $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
 
   $ontology_index->initialise_index();
 
