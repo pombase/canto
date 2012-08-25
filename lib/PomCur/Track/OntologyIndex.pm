@@ -258,15 +258,31 @@ sub lookup
     if (!exists $seen_terms{$cvterm_id}) {
       # slightly hacky as we're ignoring some docs
       push @ret_list, { doc => $doc,
+                        term_name => $doc->get('term_name'),
                         score => $hits->score($i), };
-
-      last if @ret_list >= $max_results;
 
       $seen_terms{$cvterm_id} = 1;
     }
+
+    # include extra hits in the sort / truncate steps below to
+    # decrease the chance that we may a good hit if more than
+    # $max_results hits have the same scores
+    last if @ret_list >= $max_results * 2;
   }
 
-  return @ret_list;
+  # make sure short hits with short term names come first
+  my @sorted_results = sort {
+    $b->{score} <=> $a->{score}
+      ||
+    length $a->{term_name} <=> length $b->{term_name};
+  } @ret_list;
+
+  # truncate
+  if (@sorted_results > $max_results) {
+    $#sorted_results = $max_results-1;
+  }
+
+  return @sorted_results;
 }
 
 1;

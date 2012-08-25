@@ -1075,6 +1075,9 @@ evidence_types:
   'Co-immunoprecipitation experiment': ~
   'Electrophoretic mobility shift assay data': ~
   'Northern assay evidence': ~
+  'Particle size and count assay': ~
+  'Sodium dodecyl sulfate polyacrylamide gel electrophoresis': ~
+  'Substance quantification': ~
   'Western blot assay': ~
 
 annotation_type_list:
@@ -1184,8 +1187,11 @@ annotation_type_list:
       - Immunolocalization experiment data
       - Microscopy
       - Northern assay evidence
-      - Western blot assay
       - Protein localization experiment
+      - Particle size and count assay
+      - Sodium dodecyl sulfate polyacrylamide gel electrophoresis
+      - Substance quantification
+      - Western blot assay
       - Quantitative PCR
       - Reporter gene assay
       - Other
