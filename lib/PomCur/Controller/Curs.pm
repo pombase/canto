@@ -924,6 +924,8 @@ sub annotation_ontology_edit
 
     if (defined $annotation_id) {
       $annotation = _re_edit_annotation($c, $annotation_config, $annotation_id, \%annotation_data);
+
+      _redirect_and_detach($c, 'gene', $gene_proxy->gene_id());
     } else {
       $annotation =
         $schema->create_with_type('Annotation',
@@ -1263,19 +1265,29 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
       _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
     }
 
+    my $existing_evidence_code = $data->{evidence_code};
+
     $data->{evidence_code} = $evidence_select;
+
+    my $needs_with_gene = $evidence_types->{$evidence_select}->{with_gene};
+
+    if (!$needs_with_gene) {
+      delete $data->{with_gene};
+    }
 
     $annotation->data($data);
     $annotation->update();
 
-    my $with_gene = $evidence_types->{$evidence_select}->{with_gene};
-
     $self->state()->store_statuses($config, $schema);
 
-    if ($with_gene) {
-      _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
+    if ($needs_with_gene) {
+      my @parts = ('annotation', 'with_gene', $annotation_id);
+      if (defined $existing_evidence_code) {
+        push @parts, 'edit';
+      }
+      _redirect_and_detach($c, @parts);
     } else {
-      if ($annotation_config->{needs_allele}) {
+      if ($annotation_config->{needs_allele} || defined $existing_evidence_code) {
         _redirect_and_detach($c, 'gene', $gene->gene_id());
       } else {
         _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
@@ -1392,8 +1404,19 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   my $description = $params->{'curs-allele-description-input'};
 
+  my $allele_type = $params->{'curs-allele-type'};
+  my $allele_type_config = $config->{allele_types}->{$allele_type};
+
   if (!defined $description || length $description == 0) {
     $description = $params->{'curs-allele-type'};
+  }
+
+  if (exists $allele_type_config->{pre_store_substitution}) {
+    local $_ = $description;
+    eval $allele_type_config->{pre_store_substitution};
+    if ($@) {
+      die "internal error: pre_store_substitution for $allele_type has error: $@";
+    }
   }
 
   my %allele_data = (name => $allele_name,
@@ -1858,9 +1881,9 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   }
 }
 
-sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(1) Form
+sub _annotation_with_gene_internal
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c, $annotation_id, $editing) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -1928,7 +1951,11 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
 
     if ($with_gene_select eq '') {
       $c->flash()->{error} = 'Please choose a gene to continue';
-      _redirect_and_detach($c, 'annotation', 'with_gene', $annotation_id);
+      my @args = ($c, 'annotation', 'with_gene', $annotation_id);
+      if ($editing) {
+        push @args, 'edit';
+      }
+      _redirect_and_detach(@args);
     }
 
     $data->{with_gene} = $with_gene_select;
@@ -1936,10 +1963,31 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
     $annotation->data($data);
     $annotation->update();
 
-    _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
+    if ($editing) {
+      _redirect_and_detach($c, 'gene', $gene->gene_id())
+    } else {
+      _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
+    }
   }
 
   $self->state()->store_statuses($config, $schema);
+
+}
+
+sub annotation_with_gene_edit : Chained('top') PathPart('annotation/with_gene') Args(2) Form
+{
+  my ($self, $c, $annotation_id, $edit) = @_;
+
+  if ($edit eq 'edit') {
+    _annotation_with_gene_internal(@_, 1);
+  } else {
+    $self->not_found($c);
+  }
+}
+
+sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(1) Form
+{
+  _annotation_with_gene_internal(@_, 0);
 }
 
 sub gene : Chained('top') Args(1)

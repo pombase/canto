@@ -980,3 +980,20 @@ form label.error {
 .curs-allele-condition-button span.ui-button-text {
   font-size: 80%;
 }
+
+a.curs-editable-table-field {
+  white-space: nowrap;
+}
+
+a.curs-editable-table-field:hover img
+{
+  opacity:1.0;
+  filter:alpha(opacity=100); /* For IE8 and earlier */
+}
+
+a.curs-editable-table-field img
+{
+  opacity:0.4;
+  filter:alpha(opacity=40); /* For IE8 and earlier */
+}
+
