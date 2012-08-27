@@ -93,6 +93,7 @@ test_psgi $app, sub {
 
   my $evidence_param = 'Western blot assay';
   my $allele_name_param = 'an_allele_name';
+  my $allele_type_param = 'mutation of single amino acid residue';
   my $allele_desc_param = 'allele_desc';
   my $expression_param = 'Knockdown';
   my @conditions_param = ("high temperature", "low temperature",
@@ -102,6 +103,7 @@ test_psgi $app, sub {
     my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
     $uri->query_form('curs-allele-evidence-select' => $evidence_param,
                      'curs-allele-name' => $allele_name_param,
+                     'curs-allele-type' => $allele_type_param,
                      'curs-allele-description-input' => $allele_desc_param,
                      'curs-allele-expression' => $expression_param,
                      'curs-allele-condition-names[tags][]' => \@conditions_param);
@@ -177,6 +179,7 @@ test_psgi $app, sub {
     my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
     $uri->query_form('curs-allele-evidence-select' => $evidence_param,
                      'curs-allele-name' => $allele_name_param . '_2',
+                     'curs-allele-type' => $allele_type_param,
                      'curs-allele-description-input' => $allele_desc_param . '_2',
                      'curs-allele-expression' => $expression_param,
                      'curs-allele-condition-names[tags][]' => ['low temperature']);
@@ -217,7 +220,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/You can annotate other genes from your list with the same term \(FYPO:0000013\)/);
+    like ($redirect_res->content(), qr/Choose curation type for $gene_display_name/);
 
     my $rs = $curs_schema->resultset('Annotation');
     ok ($rs->count() == scalar(@current_ids) + 1);
