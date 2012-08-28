@@ -920,12 +920,12 @@ sub annotation_ontology_edit
         . 'annotated with the parent of your suggested new term';
     }
 
+    my $is_new_annotation = 0;
+
     my $annotation;
 
     if (defined $annotation_id) {
       $annotation = _re_edit_annotation($c, $annotation_config, $annotation_id, \%annotation_data);
-
-      _redirect_and_detach($c, 'gene', $gene_proxy->gene_id());
     } else {
       $annotation =
         $schema->create_with_type('Annotation',
@@ -940,6 +940,8 @@ sub annotation_ontology_edit
       $annotation->set_genes($gene_proxy->cursdb_gene());
 
       $annotation_id = $annotation->annotation_id();
+
+      $is_new_annotation = 1;
     }
 
     $guard->commit();
@@ -948,10 +950,14 @@ sub annotation_ontology_edit
 
     $self->state()->store_statuses($c->config(), $schema);
 
-    if ($annotation_config->{needs_allele}) {
-      _redirect_and_detach($c, 'annotation', 'allele_select', $annotation_id);
+    if ($is_new_annotation) {
+      if ($annotation_config->{needs_allele}) {
+        _redirect_and_detach($c, 'annotation', 'allele_select', $annotation_id);
+      } else {
+        _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+      }
     } else {
-      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+      _redirect_and_detach($c, 'gene', $gene_proxy->gene_id());
     }
   } else {
     if (defined $annotation_id) {
