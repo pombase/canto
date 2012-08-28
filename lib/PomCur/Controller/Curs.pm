@@ -1933,6 +1933,7 @@ sub _annotation_with_gene_internal
       {
         name => 'with-gene-select',
         type => 'Select', options => [ @genes ],
+        default => $annotation_data->{with_gene},
       },
       {
         name => 'with-gene-proceed', type => 'Submit', value => 'Proceed ->',
@@ -1946,7 +1947,6 @@ sub _annotation_with_gene_internal
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
-    my $data = $annotation->data();
     my $with_gene_select = $form->param_value('with-gene-select');
 
     if ($with_gene_select eq '') {
@@ -1958,9 +1958,9 @@ sub _annotation_with_gene_internal
       _redirect_and_detach(@args);
     }
 
-    $data->{with_gene} = $with_gene_select;
+    $annotation_data->{with_gene} = $with_gene_select;
 
-    $annotation->data($data);
+    $annotation->data($annotation_data);
     $annotation->update();
 
     if ($editing) {

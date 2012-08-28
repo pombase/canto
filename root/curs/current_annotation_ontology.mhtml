@@ -184,7 +184,17 @@ NOT
       <span>
 % if ($row->{needs_with} || defined $row->{with_or_from_display_name}) {
 %   if (defined $row->{with_or_from_display_name}) {
+% if ($read_only_curs || !$user_created) {
       <% $row->{with_or_from_display_name} %>
+% } else {
+      <a href="<% $edit_with_action_url . $annotation_id . '/edit' %>"
+         class="curs-editable-table-field"
+         id="curs-annotation-edit-<% $row->{annotation_id} %>"
+         title="Change the 'with' gene ...">
+        <% $row->{with_or_from_display_name} %>
+        <img src="<% $edit_icon_uri %>"/>
+      </a>
+% }
 %   } else {
 %     if (!$read_only_curs) {
       <a href="<% $curs_root_uri . '/annotation/with_gene/' . $row->{annotation_id} %>">Set with ...</a>
@@ -276,6 +286,8 @@ my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 my $undelete_action = $curs_root_uri . '/annotation/undelete/';
 my $undelete_icon_uri = $c->uri_for('/static/images/undo_icon.png');
 my $edit_icon_uri = $c->uri_for('/static/images/mini-edit.png');
+
+my $edit_with_action_url = "$curs_root_uri/annotation/with_gene/";
 
 my $some_incomplete = $completed_count != @annotations && $user_created;
 
