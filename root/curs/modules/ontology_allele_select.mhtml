@@ -1,10 +1,12 @@
 <%args>
 $annotation
+$gene_display_name
 $curs_root_uri
 $title
 </%args>
 
-<& ontology_allele_edit.mhtml, annotation => $annotation, curs_root_uri => $curs_root_uri &>
+<& ontology_allele_edit.mhtml, annotation => $annotation,
+  curs_root_uri => $curs_root_uri, gene_display_name => $gene_display_name &>
 
 <div class="curs-box curs-allele-select">
   <div class="curs-box-title">
