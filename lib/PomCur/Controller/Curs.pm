@@ -1827,6 +1827,31 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     }
   }
 
+  for (my $i = 0; $i < @annotations; $i++) {
+    my $annotation = $annotations[$i];
+
+    my $existing_comment = $annotation->data()->{annotation_extension};
+
+    my %extension_def = (
+      name => 'annotation-comment',
+      label => 'Optional comment: ',
+      type => 'Textarea',
+      container_tag => 'div',
+      attributes => { class => 'annotation-comment',
+                      style => 'display: block' },
+      cols => 90,
+      rows => 6,
+    );
+
+    if (defined $existing_comment) {
+      $extension_def{'value'} = $existing_comment;
+    }
+
+    unshift @all_elements, {
+      %extension_def,
+    };
+  }
+
   $form->elements([@all_elements]);
   $form->process();
   $st->{form} = $form;
@@ -1840,12 +1865,19 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     my @dest_params = @{$form->param_array('dest')};
     my $extension = $form->param_value('annotation-extension');
+    my $comment = $form->param_value('annotation-comment');
 
     my $data = $first_annotation->data();
     if ($extension && $extension !~ /^\s*$/) {
       $data->{annotation_extension} = $extension;
     } else {
       delete $data->{annotation_extension};
+    }
+
+    if ($comment && $comment !~ /^\s*$/) {
+      $data->{submitter_comment} = $comment;
+    } else {
+      delete $data->{submitter_extension};
     }
 
     $first_annotation->data($data);
