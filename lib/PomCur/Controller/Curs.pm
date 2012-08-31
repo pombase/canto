@@ -1912,6 +1912,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       delete $new_data->{evidence_code};
     }
 
+    my @dest_gene_identifiers = ();
+
     for my $dest_param (@dest_params) {
       my $dest_gene = $schema->find_with_type('Gene', $dest_param);
 
@@ -1925,10 +1927,15 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
                                    data => $new_data,
                                  });
       $new_annotation->set_genes($dest_gene);
+
+      my $gene_proxy = PomCur::Curs::GeneProxy->new(config => $config,
+                                                    cursdb_gene => $dest_gene);
+
+      push @dest_gene_identifiers, $gene_proxy->display_name();
     }
 
-    if (@dest_params > 0) {
-      $c->flash()->{message} = 'Transferred annotation to: ' . join ',', @dest_params;
+    if(@dest_params > 0) {
+      $c->flash()->{message} = 'Transferred annotation to: ' . join ',', @dest_gene_identifiers;
     }
 
     $guard->commit();
