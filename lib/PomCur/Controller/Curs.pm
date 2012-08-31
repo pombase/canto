@@ -1778,27 +1778,31 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
         . 'by adding more genes from the publication:';
   }
 
-  my @all_elements = (
-      {
-        name => 'transfer-submit', type => 'Submit', value => 'Finish',
-      }
+  my @all_elements = ();
+
+  for (my $i = 0; $i < @annotations; $i++) {
+    my $annotation = $annotations[$i];
+
+    my $existing_comment = $annotation->data()->{annotation_extension};
+
+    my %extension_def = (
+      name => 'annotation-comment',
+      label => 'Optional comment: ',
+      type => 'Textarea',
+      container_tag => 'div',
+      attributes => { class => 'annotation-comment',
+                      style => 'display: block' },
+      cols => 90,
+      rows => 6,
     );
 
-  if (@options) {
-    unshift @all_elements, (
-        {
-          type => 'Block',
-          tag => 'div',
-          content => $transfer_select_genes_text,
-        },
-        {
-          name => 'dest', label => 'dest',
-          type => 'Checkboxgroup',
-          container_tag => 'div',
-          label => '',
-          options => [@options],
-        },
-      );
+    if (defined $existing_comment) {
+      $extension_def{'value'} = $existing_comment;
+    }
+
+    push @all_elements, {
+      %extension_def,
+    };
   }
 
   if ($c->user_exists() && $c->user()->role()->name() eq 'admin' &&
@@ -1821,36 +1825,34 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
         $extension_def{'value'} = $existing_extension;
       }
 
-      unshift @all_elements, {
-        %extension_def,
-      };
+      push @all_elements, (
+        {
+          %extension_def,
+        }
+      );
     }
   }
 
-  for (my $i = 0; $i < @annotations; $i++) {
-    my $annotation = $annotations[$i];
-
-    my $existing_comment = $annotation->data()->{annotation_extension};
-
-    my %extension_def = (
-      name => 'annotation-comment',
-      label => 'Optional comment: ',
-      type => 'Textarea',
-      container_tag => 'div',
-      attributes => { class => 'annotation-comment',
-                      style => 'display: block' },
-      cols => 90,
-      rows => 6,
+  if (@options) {
+    push @all_elements, (
+      {
+        type => 'Block',
+        tag => 'div',
+        content => $transfer_select_genes_text,
+      },
+      {
+        name => 'dest', label => 'dest',
+        type => 'Checkboxgroup',
+        container_tag => 'div',
+        label => '',
+        options => [@options],
+      },
     );
-
-    if (defined $existing_comment) {
-      $extension_def{'value'} = $existing_comment;
-    }
-
-    unshift @all_elements, {
-      %extension_def,
-    };
   }
+
+  push @all_elements, {
+    name => 'transfer-submit', type => 'Submit', value => 'Finish',
+  };
 
   $form->elements([@all_elements]);
   $form->process();
