@@ -1787,7 +1787,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     my %extension_def = (
       name => 'annotation-comment',
-      label => 'Optional comment: ',
+      label => 'Optional comment for annotation ' . ($i + 1)  . ':',
       type => 'Textarea',
       container_tag => 'div',
       attributes => { class => 'annotation-comment',
