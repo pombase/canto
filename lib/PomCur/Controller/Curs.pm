@@ -1602,7 +1602,7 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
 }
 
-sub annotation_process_alleles : Chained('top') PathPart('annotation/process_alleles') Args(1)
+sub _annotation_process_alleles_internal
 {
   my ($self, $c, $annotation_id) = @_;
 
@@ -1689,6 +1689,22 @@ sub annotation_process_alleles : Chained('top') PathPart('annotation/process_all
     _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
   } else {
     _redirect_and_detach($c, 'gene', $gene->gene_id());
+  }
+}
+
+sub annotation_process_alleles : Chained('top') PathPart('annotation/process_alleles') Args(1)
+{
+  _annotation_process_alleles_internal(@_, 0);
+}
+
+sub annotation_process_alleles_edit : Chained('top') PathPart('annotation/process_alleles') Args(2)
+{
+  my ($self, $c, $annotation_id, $editing) = @_;
+
+  if (defined $editing && $editing eq 'edit') {
+    _annotation_process_alleles_internal(@_, 0);
+  } else {
+    $self->not_found($c);
   }
 }
 
