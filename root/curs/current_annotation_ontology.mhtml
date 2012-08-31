@@ -80,7 +80,7 @@ $user_created
 % my $annotation_id = $row->{annotation_id};
 % my $edit_action_url =
 %   "$curs_root_uri/annotation/edit/$gene_id/$annotation_type_name/$annotation_id#s="
-%   . $row->{term_name} . "&c=" . $row->{term_ontid};
+%   . $row->{term_name};
   <tr class="<% $row->{status} eq 'deleted' ? 'deleted-annotation' : '' %>">
 % if (!defined $gene) {
     <td>
