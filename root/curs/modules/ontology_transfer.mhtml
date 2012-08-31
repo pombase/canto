@@ -15,13 +15,21 @@ $pub
 % }
     </div>
     <div class="curs-box-body">
-% for my $annotation (@annotations) {
-<div id="curs-annotation-summary-<% $annotation->annotation_id() %>">
+      <div class="curs-transfer-summaries">
+% for (my $i = 0; $i < @annotations; $i++) {
+%   my $annotation = $annotations[$i];
+%   my $summary_id = 'curs-annotation-summary-' . $annotation->annotation_id();
+<div id="<% $summary_id %>">
 <& ../one_annotation_summary.mhtml,
    curs_root_uri => $curs_root_uri,
    annotation => $annotation &>
+  <div>
+    <a class="curs-transfer-comment-link"
+       href="javascript:$('[name=annotation-comment-<% $i %>]').parent().show(); $('#<% $summary_id %> .curs-transfer-comment-link').hide()">Add a comment ...</a>
+  </div>
 </div>
 % }
+      </div>
 
 <% $form |n %>
 

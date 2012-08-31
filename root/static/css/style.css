@@ -997,3 +997,10 @@ a.curs-editable-table-field img
   filter:alpha(opacity=40); /* For IE8 and earlier */
 }
 
+.curs-transfer-summaries {
+  padding-bottom: 0.5em;
+}
+
+.curs-transfer-comment-container {
+  padding-bottom: 1em;
+}

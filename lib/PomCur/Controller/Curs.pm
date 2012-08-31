@@ -1782,14 +1782,24 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   for (my $i = 0; $i < @annotations; $i++) {
     my $annotation = $annotations[$i];
-
     my $existing_comment = $annotation->data()->{annotation_extension};
+    my $label;
+
+    if (@annotations > 1) {
+      $label = 'Optional comment for annotation ' . ($i + 1)  . ':';
+    } else {
+      $label = 'Optional comment:'
+    }
 
     my %extension_def = (
-      name => 'annotation-comment',
-      label => 'Optional comment for annotation ' . ($i + 1)  . ':',
+      name => 'annotation-comment-' . $i,
+      label => $label,
       type => 'Textarea',
       container_tag => 'div',
+      container_attributes => {
+        style => 'display: none',
+        class => 'curs-transfer-comment-container',
+      },
       attributes => { class => 'annotation-comment',
                       style => 'display: block' },
       cols => 90,
@@ -1805,14 +1815,15 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     };
   }
 
-  if ($c->user_exists() && $c->user()->role()->name() eq 'admin' &&
-      @annotations == 1) {
-    for my $annotation (@annotations) {
+  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+    for (my $i = 0; $i < @annotations; $i++) {
+      my $annotation = $annotations[$i];
+
       my $existing_extension = $annotation->data()->{annotation_extension};
 
       my %extension_def = (
-        name => 'annotation-extension',
-        label => 'Add optional annotation extension:',
+        name => 'annotation-extension-' . $i,
+        label => 'Add optional annotation extension for annotation ' . ($i + 1) . ':',
         type => 'Textarea',
         container_tag => 'div',
         attributes => { class => 'annotation-extension',
@@ -1863,34 +1874,41 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     my $guard = $schema->txn_scope_guard;
 
-    my $first_annotation = $annotations[0];
-
     my @dest_params = @{$form->param_array('dest')};
-    my $extension = $form->param_value('annotation-extension');
-    my $comment = $form->param_value('annotation-comment');
 
-    my $data = $first_annotation->data();
-    if ($extension && $extension !~ /^\s*$/) {
-      $data->{annotation_extension} = $extension;
-    } else {
-      delete $data->{annotation_extension};
+    for (my $i = 0; $i < @annotations; $i++) {
+      my $annotation = $annotations[$i];
+
+      my $extension = $form->param_value('annotation-extension-' . $i);
+      my $comment = $form->param_value('annotation-comment-' . $i);
+
+      my $data = $annotation->data();
+      if ($extension && $extension !~ /^\s*$/) {
+        $data->{annotation_extension} = $extension;
+      } else {
+        delete $data->{annotation_extension};
+      }
+
+      if ($comment && $comment !~ /^\s*$/) {
+        $data->{submitter_comment} = $comment;
+      } else {
+        delete $data->{submitter_extension};
+      }
+
+      $annotation->data($data);
+      $annotation->update();
     }
 
-    if ($comment && $comment !~ /^\s*$/) {
-      $data->{submitter_comment} = $comment;
-    } else {
-      delete $data->{submitter_extension};
-    }
+    my $first_annotation = $annotations[0];
+    my $first_ann_data = $first_annotation->data();
 
-    $first_annotation->data($data);
-    $first_annotation->update();
-
-    my $new_data = clone $data;
+    my $new_data = clone $first_ann_data;
     delete $new_data->{with_gene};
     delete $new_data->{annotation_extension};
     delete $new_data->{conditions};
     delete $new_data->{expression};
     if ($annotation_config->{needs_allele}) {
+      # only transfer the term to the new annotation
       delete $new_data->{evidence_code};
     }
 
