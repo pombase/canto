@@ -982,6 +982,7 @@ evidence_types:
     name: Inferred from Expression Pattern
   ISS:
     name: Inferred from Sequence or Structural Similarity
+    with_gene: 1
   ISO:
     name: Inferred from Sequence Orthology
   ISA:
