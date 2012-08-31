@@ -86,6 +86,8 @@ $user_created
 % my $edit_term_action_url =
 %   "$curs_root_uri/annotation/edit/$gene_id/$annotation_type_name/$annotation_id#s="
 %   . $row->{term_name};
+% my $edit_allele_url =
+%   "$curs_root_uri/annotation/allele_select/$annotation_id/edit";
   <tr class="<% $row->{status} eq 'deleted' ? 'deleted-annotation' : '' %>">
 % if (!defined $gene) {
     <td>
@@ -102,7 +104,17 @@ $user_created
 % if ($needs_allele) {
     <td>
       <span>
+% if ($read_only_curs || !$user_created) {
       <% $row->{allele_display_name} %>
+% } else {
+      <a href="<% $edit_allele_url %>"
+         class="curs-editable-table-field"
+         id="curs-annotation-allele-edit-<% $row->{annotation_id} %>"
+         title="Change this allele ...">
+        <% $row->{allele_display_name} %>
+        <img src="<% $edit_icon_uri %>"/>
+      </a>
+% }
       </span>
     </td>
 % }
