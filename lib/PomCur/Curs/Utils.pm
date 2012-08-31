@@ -172,6 +172,7 @@ sub _make_ontology_annotation
     conditions => $conditions_string,
     creation_date => $annotation->creation_date(),
     creation_date_short => $short_date,
+    comment => $data->{submitter_comment},
     term_suggestion => $data->{term_suggestion},
     needs_with => $needs_with,
     with_or_from_identifier => $with_gene_identifier,

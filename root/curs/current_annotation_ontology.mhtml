@@ -61,6 +61,11 @@ $user_created
         Term suggestion
       </th>
 %   }
+%   if ($some_row_has_comment) {
+      <th>
+        Comment
+      </th>
+%   }
 % #if ($admin_user) {
       <th>
         Annotation extension
@@ -217,6 +222,17 @@ NOT
 %   }
       </span>
     </td>
+%   }
+%   if ($some_row_has_comment) {
+    <td>
+      <span>
+%   if ($row->{comment}) {
+      <a href="#" onclick="javascript:pomcur_util.show_message('Comment', '<% PomCur::WebUtil::escape_inline_js($row->{comment}) %>'); return false;">View ...</a>
+%   } else {
+      &nbsp;
+%   }
+      </span>
+    </td>
 % }
     <td>
       <span>
@@ -310,7 +326,8 @@ my $title = $new_or_db . "$annotation_type_display_name annotations " .
 my $needs_with_or_from = $annotation_type->{needs_with_or_from};
 my $needs_allele = $annotation_type->{needs_allele};
 
-my $some_row_has_term_suggestion = grep { $_-> {term_suggestion} } @annotations;
+my $some_row_has_term_suggestion = grep { $_->{term_suggestion} } @annotations;
+my $some_row_has_comment = grep { $_->{comment} } @annotations;
 
 my $read_only_curs = $c->stash()->{read_only_curs};
 
