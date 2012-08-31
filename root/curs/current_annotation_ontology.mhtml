@@ -83,7 +83,7 @@ $user_created
 % for my $row (@annotations) {
 % my $gene_id = $row->{gene_id};
 % my $annotation_id = $row->{annotation_id};
-% my $edit_action_url =
+% my $edit_term_action_url =
 %   "$curs_root_uri/annotation/edit/$gene_id/$annotation_type_name/$annotation_id#s="
 %   . $row->{term_name};
   <tr class="<% $row->{status} eq 'deleted' ? 'deleted-annotation' : '' %>">
@@ -111,7 +111,7 @@ $user_created
 % if ($read_only_curs || !$user_created) {
       <% $row->{term_ontid} %>
 % } else {
-      <a href="<% $edit_action_url %>"
+      <a href="<% $edit_term_action_url %>"
          class="curs-editable-table-field"
          id="curs-annotation-edit-<% $row->{annotation_id} %>"
          title="Change this term ...">
@@ -126,7 +126,7 @@ $user_created
 % if ($read_only_curs || !$user_created) {
       <% $row->{term_name} %>
 % } else {
-      <a href="<% $edit_action_url %>"
+      <a href="<% $edit_term_action_url %>"
          class="curs-editable-table-field"
          id="curs-annotation-edit-<% $row->{annotation_id} %>"
          title="Change this term ...">
