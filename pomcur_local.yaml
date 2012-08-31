@@ -17,3 +17,8 @@ front_page_template: local_templates/pombase_front_page.mhtml
 
 implementation_classes:
   ontology_annotation_adaptor: PomCur::Chado::OntologyAnnotationLookup
+
+annotation_types:
+  molecular_function:
+    evidence_codes:
+      - ISS

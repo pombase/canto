@@ -240,10 +240,18 @@ sub setup
   # create an annotation_types hash from the annotation_type_list
   if (defined $self->{annotation_type_list}) {
     for my $annotation_type (@{$self->{annotation_type_list}}) {
+      my $annotation_type_name = $annotation_type->{name};
+
+      if (exists $self->{annotation_types}->{$annotation_type_name}) {
+        my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+        $annotation_type =
+          $merge->merge($annotation_type,
+                        $self->{annotation_types}->{$annotation_type_name});
+      }
+
       if (!defined $annotation_type->{short_display_name}) {
         $annotation_type->{short_display_name} = $annotation_type->{display_name};
       }
-      my $annotation_type_name = $annotation_type->{name};
       $self->{annotation_types}->{$annotation_type_name} = $annotation_type;
       $annotation_type->{namespace} //= $annotation_type->{name};
       $annotation_type->{gene_cardinality} //= 'one';
