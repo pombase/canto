@@ -1782,7 +1782,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   for (my $i = 0; $i < @annotations; $i++) {
     my $annotation = $annotations[$i];
-    my $existing_comment = $annotation->data()->{annotation_extension};
+    my $existing_comment = $annotation->data()->{submitter_comment};
     my $label;
 
     if (@annotations > 1) {
@@ -1791,7 +1791,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       $label = 'Optional comment:'
     }
 
-    my %extension_def = (
+    my %comment_def = (
       name => 'annotation-comment-' . $i,
       label => $label,
       type => 'Textarea',
@@ -1807,11 +1807,11 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     );
 
     if (defined $existing_comment) {
-      $extension_def{'value'} = $existing_comment;
+      $comment_def{'value'} = $existing_comment;
     }
 
     push @all_elements, {
-      %extension_def,
+      %comment_def,
     };
   }
 
@@ -1892,7 +1892,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       if ($comment && $comment !~ /^\s*$/) {
         $data->{submitter_comment} = $comment;
       } else {
-        delete $data->{submitter_extension};
+        delete $data->{submitter_comment};
       }
 
       $annotation->data($data);
