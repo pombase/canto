@@ -65,7 +65,7 @@ sub _make_ontology_annotation
 
   my %evidence_types = %{$config->{evidence_types}};
 
-  my $allele_display_name = '';
+  my $allele_display_name = undef;
   my $expression_level = '';
   my $conditions_string = '';
 

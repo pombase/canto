@@ -747,12 +747,11 @@ sub _re_edit_annotation
   my $c = shift;
   my $annotation_config = shift;
   my $annotation_id = shift;
-  my $new_annotation_data = shift;
+  my $new_annotation_data = shift // {};
 
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  # editing an existing annotation
   my $annotation = $schema->find_with_type('Annotation',
                                            {
                                              annotation_id => $annotation_id,
@@ -811,18 +810,6 @@ sub _re_edit_annotation
 
   $annotation->data($new_data);
   $annotation->update();
-
-  my $gene = ($annotation->genes())[0];
-
-  my $was_bit = '';
-  if ($new_data->{term_ontid} ne $data->{term_ontid}) {
-    $was_bit = ' (was ' . $data->{term_ontid} . ')';
-  }
-
-  my $gene_proxy = _get_gene_proxy($c->config(), $gene);
-  $c->flash()->{message} = 'Editing annotation of ' .
-    $gene_proxy->display_name() . ' with ' . $new_data->{term_ontid} .
-    $was_bit;
 
   return $annotation;
 }
@@ -1538,9 +1525,9 @@ sub _allele_data_for_js : Private
   }
 }
 
-sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1)
+sub _annotation_allele_select_internal
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c, $annotation_id, $editing) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -1548,15 +1535,20 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   $self->_check_annotation_exists($c, $annotation_id);
 
+  my $guard = $schema->txn_scope_guard;
   my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+
   my $annotation_type_name = $annotation->type();
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+  if ($editing) {
+    $annotation = _re_edit_annotation($c, $annotation_config, $annotation_id);
+  }
 
   my $gene = $annotation->genes()->first();
   my $gene_proxy = _get_gene_proxy($config, $gene);
   $st->{gene} = $gene_proxy;
   my $gene_display_name = $gene_proxy->display_name();
 
-  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
   my $module_category = $annotation_config->{category};
 
   my $annotation_data = $annotation->data();
@@ -1599,12 +1591,31 @@ sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select
 
   $st->{alleles_in_progress} = _allele_data_for_js($config, $annotation);
 
+  $guard->commit();
+
+  $st->{editing} = $editing;
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
+}
+
+sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1)
+{
+  _annotation_allele_select_internal(@_, 0);
+}
+
+sub annotation_allele_select_edit : Chained('top') PathPart('annotation/allele_select') Args(2)
+{
+  my ($self, $c, $annotation_id, $editing) = @_;
+
+  if ($editing eq 'edit') {
+    _annotation_allele_select_internal(@_, 1);
+  } else {
+    $self->not_found($c);
+  }
 }
 
 sub _annotation_process_alleles_internal
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c, $annotation_id, $editing) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -1685,7 +1696,7 @@ sub _annotation_process_alleles_internal
 
   $self->metadata_storer()->store_counts($config, $schema);
 
-  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+  if (!$editing && $c->user_exists() && $c->user()->role()->name() eq 'admin') {
     _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
   } else {
     _redirect_and_detach($c, 'gene', $gene->gene_id());
@@ -1702,7 +1713,7 @@ sub annotation_process_alleles_edit : Chained('top') PathPart('annotation/proces
   my ($self, $c, $annotation_id, $editing) = @_;
 
   if (defined $editing && $editing eq 'edit') {
-    _annotation_process_alleles_internal(@_, 0);
+    _annotation_process_alleles_internal(@_, 1);
   } else {
     $self->not_found($c);
   }

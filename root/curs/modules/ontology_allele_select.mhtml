@@ -3,10 +3,15 @@ $annotation
 $gene_display_name
 $curs_root_uri
 $title
+$editing
 </%args>
 
 <& ontology_allele_edit.mhtml, annotation => $annotation,
   curs_root_uri => $curs_root_uri, gene_display_name => $gene_display_name &>
+
+<script language="javascript" type="text/javascript">
+var editing_allele = <% $editing ? 'true' : 'false' %>;
+</script>
 
 <div class="curs-box curs-allele-select">
   <div class="curs-box-title">

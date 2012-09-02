@@ -762,7 +762,7 @@ var AlleleStuff = function($) {
     if ($allele_table.find('th.curs-allele-edit-link-header').length > 0) {
       row_html += '<td><a href="#" class="curs-allele-edit-row" id="curs-allele-edit-row-data-' + delete['id'] + '">edit&nbsp;...</a></td>';
     }
-    var $new_row = $('<tr>' + row_html + '</tr>');
+    var $new_row = $('<tr class="curs-allele-select-row">' + row_html + '</tr>');
     if (typeof($previous_row) == 'undefined') {
       $allele_table.find('tbody').append($new_row);
     } else {
@@ -1105,8 +1105,7 @@ var AlleleStuff = function($) {
       remove_allele_row($tr);
     });
 
-    $($allele_table).on('click', '.curs-allele-edit-row', function (ev) {
-      var $tr = $(this).closest('tr');
+    function edit_row($tr) {
       var allele_id = $tr.data('allele_id');
       add_allele_dialog.dialog("option", "buttons", edit_allele_buttons);
       add_allele_dialog.dialog("open");
@@ -1114,6 +1113,11 @@ var AlleleStuff = function($) {
       populate_dialog_from_data($allele_dialog, allele_data);
       $allele_dialog.data('validate_on_add', false);
       $(add_allele_dialog).data('edit_allele_row', $tr);
+    }
+
+    $($allele_table).on('click', '.curs-allele-edit-row', function (ev) {
+      var $tr = $(this).closest('tr');
+      edit_row($tr);
     });
 
     $('#curs-add-allele-details').click(function () {
@@ -1131,8 +1135,12 @@ var AlleleStuff = function($) {
              });
 
       $('#curs-add-allele-proceed').click(function() {
-        window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id;
+        window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id +
+          (editing_allele ? '/edit' : '');
       });
+
+      var $tr = $('#curs-allele-list .curs-allele-edit-row');
+      edit_row($tr);
     }
 
     var add_allele_buttons = [

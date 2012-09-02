@@ -104,7 +104,7 @@ $user_created
 % if ($needs_allele) {
     <td>
       <span>
-% if ($read_only_curs || !$user_created) {
+% if ($read_only_curs || !$user_created || !defined $row->{allele_display_name}) {
       <% $row->{allele_display_name} %>
 % } else {
       <a href="<% $edit_allele_url %>"
