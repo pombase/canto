@@ -63,7 +63,23 @@ $user_created
     </td>
     <td>
       <span>
-      <% $row->{evidence_code} %>
+% if ($read_only_curs || !$user_created) {
+%   if (defined $row->{evidence_code}) {
+   <% $row->{evidence_code} %>
+%   }
+% } else { 
+%   my $url = $evidence_action_url . $row->{annotation_id};
+<a href="<% $url %>"
+   class="curs-editable-table-field"
+%   if (defined $row->{evidence_code}) {
+   title="Change evidence ...">
+   <% $row->{evidence_code} %>
+   <img src="<% $edit_icon_uri %>"/>
+%   } else {
+   title="Set evidence ...">Set evidence ...
+%   }
+</a>
+% }
       </span>
     </td>
 % if ($user_created && !$read_only_curs) {
@@ -93,6 +109,7 @@ my $delete_action = $curs_root_uri . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 my $undelete_action = $curs_root_uri . '/annotation/undelete/';
 my $undelete_icon_uri = $c->uri_for('/static/images/undo_icon.png');
+my $edit_icon_uri = $c->uri_for('/static/images/mini-edit.png');
 
 my $gene_text = "";
 if (defined $gene) {
@@ -108,6 +125,8 @@ if ($user_created) {
 
 my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
   $gene_text;
+
+my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
 
 my $read_only_curs = $c->stash()->{read_only_curs};
 
