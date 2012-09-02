@@ -36,7 +36,7 @@ $annotation_data
         Conditions
       </th>
 % }
-% if ($needs_with_or_from) {
+% if ($needs_with_or_from && defined $annotation_data->{with_or_from_display_name}) {
       <th>
         With
       </th>
@@ -80,7 +80,7 @@ $annotation_data
       <% $annotation_data->{conditions} %>
     </td>
 % }
-% if ($needs_with_or_from) {
+% if ($needs_with_or_from && defined $annotation_data->{with_or_from_display_name}) {
     <td>
       <% $annotation_data->{with_or_from_display_name} %>
     </td>
