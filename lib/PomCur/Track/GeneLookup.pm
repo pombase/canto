@@ -40,6 +40,7 @@ use Moose;
 
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackAdaptor';
+with 'PomCur::Role::GeneLookupCache';
 
 sub _build_constraint
 {

@@ -40,6 +40,7 @@ use Carp;
 use Moose;
 
 with 'PomCur::Role::Configurable';
+with 'PomCur::Role::GeneLookupCache';
 
 use Package::Alias UniProtUtil => 'PomCur::UniProt::UniProtUtil';
 use Clone qw(clone);

@@ -40,6 +40,8 @@ use strict;
 
 use feature "state";
 
+use CHI;
+
 =head2 get_cache
 
  Usage   : my $cache = PomCur::Cache::get_cache($config, $namespace);
