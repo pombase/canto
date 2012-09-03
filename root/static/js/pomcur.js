@@ -860,11 +860,14 @@ var AlleleStuff = function($) {
             var $new_row = add_allele_row($allele_table, data, $orig_allele_row);
             if (typeof($orig_allele_row) !== 'undefined') {
               $orig_allele_row.detach();
-              remove_allele_row($orig_allele_row);
+              remove_db_allele($orig_allele_row, false);
             }
             $new_row.effect("highlight", { color: "#aaf" }, 2500);
           } catch (err) {
             $allele_table.append($orig_allele_row);
+          }
+          if (editing_allele) {
+            window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id + '/edit';
           }
         },
       });
@@ -884,6 +887,9 @@ var AlleleStuff = function($) {
 
   function add_allele_cancel() {
     $(this).dialog("close");
+    if (editing_allele) {
+      window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id + '/edit';
+    }
   }
 
   function set_expression($allele_dialog, value) {
@@ -1036,18 +1042,23 @@ var AlleleStuff = function($) {
   }
 
   function remove_allele_row($tr) {
+    if ($tr.closest('tbody').children('tr').size() == 1) {
+      $tr.closest('table').hide();
+      $('#curs-add-allele-proceed').hide();
+    }
+    $tr.remove();
+  }
+
+  function remove_db_allele($tr, async) {
     var allele_id = $tr.data('allele_id');
 
     $.ajax({
       url: curs_root_uri + '/annotation/remove_allele_action/' + annotation_id +
         '/' + allele_id,
       cache: false,
+      async: async
     }).done(function() {
-      if ($tr.closest('tbody').children('tr').size() == 1) {
-        $tr.closest('table').hide();
-        $('#curs-add-allele-proceed').hide();
-      }
-      $tr.remove();
+      remove_allele_row($tr);
     });
   }
 
@@ -1102,22 +1113,7 @@ var AlleleStuff = function($) {
 
     $($allele_table).on('click', '.curs-allele-delete-row', function (ev) {
       var $tr = $(this).closest('tr');
-      remove_allele_row($tr);
-    });
-
-    function edit_row($tr) {
-      var allele_id = $tr.data('allele_id');
-      add_allele_dialog.dialog("option", "buttons", edit_allele_buttons);
-      add_allele_dialog.dialog("open");
-      var allele_data = $tr.data('allele_data');
-      populate_dialog_from_data($allele_dialog, allele_data);
-      $allele_dialog.data('validate_on_add', false);
-      $(add_allele_dialog).data('edit_allele_row', $tr);
-    }
-
-    $($allele_table).on('click', '.curs-allele-edit-row', function (ev) {
-      var $tr = $(this).closest('tr');
-      edit_row($tr);
+      remove_db_allele($tr, true);
     });
 
     $('#curs-add-allele-details').click(function () {
@@ -1127,21 +1123,6 @@ var AlleleStuff = function($) {
       $(add_allele_dialog).removeData('allele_data');
       return false;
     });
-
-    if (typeof(alleles_in_progress) != 'undefined') {
-      $.each(alleles_in_progress,
-             function(key, value) {
-               add_allele_row($allele_table, value);
-             });
-
-      $('#curs-add-allele-proceed').click(function() {
-        window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id +
-          (editing_allele ? '/edit' : '');
-      });
-
-      var $tr = $('#curs-allele-list .curs-allele-edit-row');
-      edit_row($tr);
-    }
 
     var add_allele_buttons = [
       {
@@ -1208,6 +1189,21 @@ var AlleleStuff = function($) {
       },
     });
 
+    function edit_row($tr) {
+      var allele_id = $tr.data('allele_id');
+      add_allele_dialog.dialog("option", "buttons", edit_allele_buttons);
+      add_allele_dialog.dialog("open");
+      var allele_data = $tr.data('allele_data');
+      populate_dialog_from_data($allele_dialog, allele_data);
+      $allele_dialog.data('validate_on_add', false);
+      $(add_allele_dialog).data('edit_allele_row', $tr);
+    }
+
+    $($allele_table).on('click', '.curs-allele-edit-row', function (ev) {
+      var $tr = $(this).closest('tr');
+      edit_row($tr);
+    });
+
     $('#curs-allele-add .curs-allele-conditions').tagit({
       minLength: 2,
       itemName: 'curs-allele-condition-names',
@@ -1248,6 +1244,23 @@ var AlleleStuff = function($) {
       }
       setup_description($allele_dialog, selected_option);
     });
+
+    if (typeof(alleles_in_progress) != 'undefined') {
+      $.each(alleles_in_progress,
+             function(key, value) {
+               add_allele_row($allele_table, value);
+             });
+
+      $('#curs-add-allele-proceed').click(function() {
+        window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id +
+          (editing_allele ? '/edit' : '');
+      });
+
+      if (editing_allele) {
+        var $tr = $('#curs-allele-list .curs-allele-select-row');
+        edit_row($tr);
+      }
+    }
   }
 
   return {
