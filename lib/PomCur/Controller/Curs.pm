@@ -786,6 +786,8 @@ sub _re_edit_annotation
 
     if (defined $data->{conditions}) {
       $in_progress_data{conditions} = $data->{conditions};
+    } else {
+      $in_progress_data{conditions} = [];
     }
     delete $data->{conditions};
 
