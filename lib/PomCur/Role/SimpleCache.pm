@@ -35,7 +35,6 @@ under the same terms as Perl itself.
 
 =cut
 
-use perl5i::2;
 use Moose::Role;
 
 use PomCur::Cache;
