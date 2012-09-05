@@ -1826,7 +1826,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       type => 'Textarea',
       container_tag => 'div',
       container_attributes => {
-        style => 'display: none',
+        style => 'display: ' . (@annotations == 1 ? 'block' : 'none'),
         class => 'curs-transfer-comment-container',
       },
       attributes => { class => 'annotation-comment',
