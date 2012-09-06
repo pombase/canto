@@ -49,8 +49,7 @@ test_psgi $app, sub {
        PomCur::Controller::Curs::CURATION_IN_PROGRESS);
   }
 
-  my $further_information =
-    "If there is any information in your paper";
+  my $further_information = "Your annotations will now be sent";
   my $thank_you ="Thank you for your contribution to PomBase";
   my $your_annotations = "Your annotations have been sent to the curation team for inclusion in the database";
 

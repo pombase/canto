@@ -277,7 +277,7 @@ test_psgi $app, sub {
     unlike ($res->content(), qr/Create gene list for $uniquename/);
     like ($res->content(), qr/Annotation complete/);
     like ($res->content(), qr/Thank you for your contribution to PomBase/);
-    like ($res->content(), qr/If there is any information in your paper/);
+    like ($res->content(), qr/annotations will now be sent/s);
     like ($res->content(), qr/email-address.*$test_email/);
   }
 };
