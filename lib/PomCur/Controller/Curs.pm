@@ -539,7 +539,14 @@ sub gene_upload : Chained('top') Args(0) Form
 
   my $st = $c->stash();
 
-  $st->{title} = 'Create gene list for ' . $st->{pub}->uniquename();
+  my $return_path = $c->req()->param("return_path");
+
+  if (defined $return_path) {
+    $st->{title} = 'Add to gene list for ' . $st->{pub}->uniquename();
+  } else {
+    $st->{title} = 'Create gene list for ' . $st->{pub}->uniquename();
+  }
+
   $st->{show_title} = 0;
 
   $st->{template} = 'curs/gene_upload.mhtml';
@@ -570,7 +577,7 @@ sub gene_upload : Chained('top') Args(0) Form
                        ],
       },
       { name => 'return_path_input', type => 'Hidden',
-        value => $c->req()->param("return_path") // '' },
+        value => $return_path // '' },
       @no_genes_element,
       map {
           {
