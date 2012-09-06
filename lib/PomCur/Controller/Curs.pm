@@ -1831,7 +1831,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       },
       attributes => { class => 'annotation-comment',
                       style => 'display: block' },
-      cols => 90,
+      cols => 80,
       rows => 6,
     );
 
@@ -1857,7 +1857,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
         container_tag => 'div',
         attributes => { class => 'annotation-extension',
                         style => 'display: block' },
-        cols => 90,
+        cols => 80,
         rows => 6,
       );
 
