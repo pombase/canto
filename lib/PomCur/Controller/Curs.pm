@@ -191,15 +191,15 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if ($state eq SESSION_ACCEPTED &&
-      $path =~ /gene_upload|edit_genes|confirm_genes/) {
+      $path =~ m:/(gene_upload|edit_genes|confirm_genes):) {
     $use_dispatch = 0;
   }
   if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-      $path =~ /ro|finish_form|reactivate_session|begin_approval|restart_approval/) {
+      $path =~ m:/(ro|finish_form|reactivate_session|begin_approval|restart_approval):) {
     $use_dispatch = 0;
   }
 
-  if ($state eq CURATION_PAUSED && $path =~ /restart_curation/) {
+  if ($state eq CURATION_PAUSED && $path =~ m:/restart_curation:) {
     $use_dispatch = 0;
   }
 
