@@ -1004,3 +1004,8 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
 .curs-transfer-comment-container {
   padding-bottom: 1em;
 }
+
+.upload-genes-link {
+  padding-top: 9px;
+  font-size: 90%;
+}
