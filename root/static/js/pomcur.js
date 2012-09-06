@@ -701,30 +701,48 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-  $(".confirm-delete").click(function(e) {
-    e.preventDefault();
-    var targetUrl = $(this).attr("href");
+  function make_confirm_dialog(link, prompt, confirm_button_label, cancel_button_label) {
+    var targetUrl = link.attr("href");
 
-    var deleteDialog = $('#delete-dialog');
-    if (deleteDialog.length == 0) {
-      deleteDialog =
-        $('<div id="delete-dialog" title="Confirmation needed">Really delete?</div>');
-      $('body').append(deleteDialog);
+    var confirmDialog = $('#confirm-dialog');
+    if (confirmDialog.length == 0) {
+      confirmDialog =
+        $('<div id="confirm-dialog" title="Confirmation needed">' + prompt + '</div>');
+      $('body').append(confirmDialog);
     }
-    deleteDialog.dialog({
+    var button_conf = new Object();
+    button_conf[confirm_button_label] = function() {
+      window.location.href = targetUrl;
+    };
+    button_conf[cancel_button_label] = function() {
+      $(this).dialog("close");
+      $(this).remove();
+    };
+
+    confirmDialog.dialog({
       autoOpen: false,
       modal: true,
-      buttons : {
-        "Confirm" : function() {
-          window.location.href = targetUrl;
-        },
-        "Cancel" : function() {
-          $(this).dialog("close");
-        }
-      }
+      buttons : button_conf
     });
 
-    deleteDialog.dialog("open");
+    confirmDialog.dialog("open");
+  }
+
+  $(".confirm-delete").click(function(e) {
+    make_confirm_dialog($(this), "Really delete?", "Confirm", "Cancel");
+    return false;
+  });
+
+  $("#curs-ontology-transfer .upload-genes-link a").click(function(e) {
+    function filter_func(i, e) {
+      return $.trim(e.value).length > 0;
+    }
+    if ($(".annotation-comment").filter(filter_func).size() > 0) {
+      make_confirm_dialog($(this), "Comment text will be lost.  Continue?", "Yes", "No");
+      return false;
+    } else {
+      return true
+    }
   });
 });
 
