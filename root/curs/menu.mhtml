@@ -1,5 +1,6 @@
 <%args>
 $submitter_email => undef
+$submitter_name => undef
 </%args>
 
 <div id="menu">
@@ -7,7 +8,7 @@ $submitter_email => undef
 % if (defined $submitter_email) {
     <li>
       <div class="useridentifier"> 
-        <div class="email-address"> <% $submitter_email %> </div>
+        <div class="email-address" title="<% $submitter_name %>"> <% $submitter_email %> </div>
         <div class="email-address logged-in-address"> <% $logged_in_username %> </div>
       </div>
     </li>
