@@ -1014,3 +1014,7 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   position: absolute;
   z-index: 1000;
 }
+
+.faded-overlay {
+  opacity: 0.5;
+}
