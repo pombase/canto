@@ -61,11 +61,9 @@ $user_created
         Term suggestion
       </th>
 %   }
-%   if ($some_row_has_comment) {
       <th>
         Comment
       </th>
-%   }
 % #if ($admin_user) {
       <th>
         Annotation extension
@@ -235,17 +233,19 @@ NOT
       </span>
     </td>
 %   }
-%   if ($some_row_has_comment) {
     <td>
       <span>
-%   if ($row->{comment}) {
-      <a href="#" onclick="javascript:pomcur_util.show_message('Comment', '<% PomCur::WebUtil::escape_inline_js($row->{comment}) %>'); return false;">View ...</a>
-%   } else {
-      &nbsp;
-%   }
+%     my $url = $comment_edit_url  . $row->{annotation_id};
+%     my $escaped_comment = PomCur::WebUtil::escape_inline_js($row->{comment});
+      <a href="#"
+         title="<% $escaped_comment %>"
+         onclick="javascript:pomcur_util.show_message('Comment', '<% PomCur::WebUtil::escape_inline_js($row->{comment}) %>'); return false;">View ...</a>
+      <br/>
+      <a href="#" class="curs-editable-table-field"
+         title="<% $escaped_comment %>"
+         onclick="javascript:EditDialog.create('Edit comment', '<% $escaped_comment %>', '<% $url %>'); return false;">Edit ...</a>
       </span>
     </td>
-% }
     <td>
       <span>
 %   if ($row->{annotation_extension} && $row->{annotation_extension} !~ /^\s*$/) {
@@ -315,6 +315,7 @@ my $undelete_action = $curs_root_uri . '/annotation/undelete/';
 my $undelete_icon_uri = $c->uri_for('/static/images/undo_icon.png');
 my $edit_icon_uri = $c->uri_for('/static/images/mini-edit.png');
 
+my $comment_edit_url = $curs_root_uri . '/annotation/comment_edit/';
 my $edit_with_action_url = "$curs_root_uri/annotation/with_gene/";
 
 my $some_incomplete = $completed_count != @annotations && $user_created;

@@ -1009,3 +1009,8 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   padding-top: 9px;
   font-size: 90%;
 }
+
+#loading {
+  position: absolute;
+  z-index: 1000;
+}

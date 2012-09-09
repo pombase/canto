@@ -7,6 +7,28 @@ function trim(a) {
 };
 
 $(document).ready(function() {
+  var loadingDiv = $('<div id="loading"><img src="' + application_root +
+                     '/static/images/spinner.gif"/></div>');
+  loadingDiv
+    .prependTo('body')
+    .position({
+      my: 'center',
+      at: 'center',
+      of: $('#heading'),
+      offset: '0 200'
+    })
+    .hide()  // hide it initially
+    .bind('ajaxStart.pomcur', function() {
+      $(this).show();
+      $('#content').addClass('faded-overlay');
+    })
+    .bind('ajaxStop.pomcur', function() {
+      $(this).hide();
+      $('#content').removeClass('faded-overlay');
+    });
+});
+
+$(document).ready(function() {
   $(".sect .undisclosed-title, .sect .disclosed-title").each(function(i) {
     $(this).click(function() {
       $(this).next().toggle();
@@ -390,6 +412,8 @@ $(document).ready(function() {
   var ferret_input = $("#ferret-term-input");
 
   if (ferret_input.size()) {
+    $('#loading').unbind('.pomcur');
+
     function render_term_item(ul, item, search_string, search_namespace) {
       var search_bits = search_string.split(/\W+/);
       var match_name = item.matching_synonym;
@@ -1283,5 +1307,70 @@ var AlleleStuff = function($) {
 
   return {
     pageInit: init
+  };
+}($);
+
+var EditDialog = function($) {
+  function confirm($dialog) {
+    var $form = $('#curs-edit-dialog form');
+    $dialog.dialog('close');
+    $('#loading').unbind('ajaxStop.pomcur');
+    $form.ajaxSubmit({
+          dataType: 'json',
+          success: function(data) {
+            $dialog.dialog("destroy");
+            var $dialog_div = $('#curs-edit-dialog');
+            $dialog_div.remove();
+            window.location.reload(false);
+          }
+        });
+  }
+
+  function cancel() {
+    $(this).dialog("destroy");
+    var $dialog_div = $('#curs-edit-dialog');
+    $dialog_div.remove();
+  }
+
+  function create(title, current_comment, form_url) {
+    var $dialog_div = $('#curs-edit-dialog');
+    if ($dialog_div.length) {
+      $dialog_div.remove()
+    }
+
+    var dialog_html =
+      '<div id="curs-edit-dialog" style="display: none">' +
+      '<form action="' + form_url + '" method="post">' +
+      '<textarea rows="8" cols="70" name="curs-edit-dialog-text">' + current_comment +
+      '</textarea></form></div>';
+
+    $dialog_div = $(dialog_html);
+    $('body').append($dialog);
+
+    var $dialog = $dialog_div.dialog({
+      modal: true,
+      autoOpen: true,
+      height: 'auto',
+      width: 600,
+      title: title,
+      buttons : [
+                 {
+                   text: "Cancel",
+                   click: cancel,
+                 },
+                 {
+                   text: "Edit",
+                   click: function() {
+                     confirm($dialog);
+                   },
+                 },
+                ]
+    });
+
+    return $dialog;
+  }
+
+  return {
+    create: create
   };
 }($);

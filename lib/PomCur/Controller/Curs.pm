@@ -740,6 +740,27 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
   _redirect_and_detach($c);
 }
 
+sub annotation_comment_edit : Chained('top') PathPart('annotation/comment_edit') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+  my $data = $annotation->data();
+
+  my $params = $c->req()->params();
+  my $new_comment = $params->{'curs-edit-dialog-text'};
+
+  $data->{submitter_comment} = $new_comment;
+
+  $annotation->data($data);
+  $annotation->update();
+
+  $c->stash->{json_data} = {
+    result => 'success',
+  };
+  $c->forward('View::JSON');
+}
+
 my $iso_date_template = "%4d-%02d-%02d";
 
 sub _get_iso_date
