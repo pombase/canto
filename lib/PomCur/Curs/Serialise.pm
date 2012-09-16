@@ -142,8 +142,18 @@ sub _get_alleles
       organism => $organism_full_name,
       uniquename => $gene->primary_identifier(),
     );
+
+    my $export_type =
+      $self->config()->{allele_types}->{$allele->type()}->{export_type};
+
+    if (defined $export_type) {
+      croak "can't find the export/database type for allele: ",
+        ($allele->name() // 'noname'), "(", ($allele->description() // 'unknown'),
+        ") of gene: ", $gene->primary_identifier();
+    }
+
     my %allele_data = (
-      type => $allele->type(),
+      allele_type => $export_type,
       gene => \%gene_data,
     );
     if (defined $allele->primary_identifier()) {

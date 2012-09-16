@@ -921,45 +921,54 @@ implementation_classes:
 
 allele_type_list:
   - name: wild type
+    export_type: wild_type
     description_required: 0
     allele_name_required: 1
     allow_expression_change: 1
     autopopulate_name: '@@gene_name@@+'
   - name: deletion
+    export_type: deletion
     description_required: 0
     allele_name_required: 1
     allow_expression_change: 0
     autopopulate_name: '@@gene_name@@delta'
   - name: unknown
+    export_type: unknown
     description_required: 0
     allele_name_required: 1
     allow_expression_change: 1
   - name: mutation of single amino acid residue
+    export_type: amino_acid_mutation
     description_required: 1
     allele_name_required: 0
     allow_expression_change: 1
     placeholder: eg. K132A
   - name: mutation of multiple amino acid residues
+    export_type: amino_acid_mutation
     description_required: 1
     allele_name_required: 0
     allow_expression_change: 1
     placeholder: eg. K132A,K144A
   - name: partial deletion, amino acid
+    export_type: partial_amino_acid_deletion
     description_required: 1
     allele_name_required: 0
     allow_expression_change: 1
     placeholder: eg. 100-200
   - name: partial deletion, nucleotide
+    export_type: partial_nucleotide_deletion
     description_required: 1
     allele_name_required: 0
     allow_expression_change: 1
     placeholder: eg. 100-200
   - name: mutation of a single nucleotide
+    export_type: nucleotide_mutation
     description_required: 1
     allele_name_required: 0
     allow_expression_change: 1
     placeholder: eg. A25G
   - name: other
+    export_type: other
     description_required: 1
     allele_name_required: 0
     allow_expression_change: 1
