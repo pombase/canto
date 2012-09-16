@@ -811,6 +811,7 @@ var AlleleStuff = function($) {
       $previous_row.after($new_row);
     }
     $new_row.data('allele_id', data['id']);
+    $new_row.data('allele_type', data['allele_type']);
 
     if ($.grep(existing_alleles_by_name,
                function(el) {

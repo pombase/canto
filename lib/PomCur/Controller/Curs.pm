@@ -798,6 +798,8 @@ sub _re_edit_annotation
 
     my $allele = $alleles[0];
 
+    $in_progress_data{allele_type} = $allele->type();
+
     if (defined $allele->name()) {
       $in_progress_data{name} = $allele->name();
     }
