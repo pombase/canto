@@ -112,7 +112,7 @@ my $full_expected_curation_session =
                 uniquename => 'SPAC27D7.13c',
                 organism => 'Schizosaccharomyces pombe'
               },
-              type => 'existing',
+              allele_type => 'deletion',
               description => 'deletion',
               name => 'ssm4delta',
             }
@@ -128,7 +128,7 @@ my $full_expected_curation_session =
                 uniquename => 'SPAC27D7.13c',
                 organism => 'Schizosaccharomyces pombe'
               },
-              type => 'new',
+              allele_type => 'partial_nucleotide_deletion',
               description => 'del_100-200',
             }
           ],
@@ -398,21 +398,21 @@ my $small_expected_track_data =
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
 
 {
-  my $curs_json = PomCur::Curs::Serialise::json($curs_schema, { dump_all => 1 });
+  my $curs_json = PomCur::Curs::Serialise::json($config, $curs_schema, { dump_all => 1 });
   my $curs_ref = decode_json($curs_json);
 
   cmp_deeply($curs_ref, $full_expected_curation_session);
 }
 
 {
-  my $curs_json = PomCur::Curs::Serialise::json($curs_schema, { dump_all => 0 });
+  my $curs_json = PomCur::Curs::Serialise::json($config, $curs_schema, { dump_all => 0 });
   my $curs_ref = decode_json($curs_json);
 
   cmp_deeply($curs_ref, $small_expected_curation_session);
 }
 
 {
-  my $curs_json = PomCur::Curs::Serialise::json($curs_schema);
+  my $curs_json = PomCur::Curs::Serialise::json($config, $curs_schema);
   my $curs_ref = decode_json($curs_json);
 
   cmp_deeply($curs_ref, $small_expected_curation_session);

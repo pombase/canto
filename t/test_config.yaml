@@ -106,16 +106,16 @@ test_config:
                - primary_identifier: 'SPAC27D7.13c:allele-1'
                  name: ssm4delta
                  description: deletion
-                 type: existing
+                 type: deletion
                - primary_identifier: 'SPAC27D7.13c:allele-2'
                  name: R344A
                  description: R344A
-                 type: existing
+                 type: 'mutation of single amino acid residue'
                - name: ssm4-D4
                  description: 'del_100-200'
-                 type: new
+                 type: 'partial deletion, nucleotide'
                - description: 'del_200-300'
-                 type: new
+                 type: 'partial deletion, nucleotide'
            - "SPBC14F5.07"
            - primary_identifier: "SPCC63.05"
              alleles:

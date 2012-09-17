@@ -67,6 +67,7 @@ sub _get_metadata
 
 sub _get_annotations
 {
+  my $config = shift;
   my $schema = shift;
 
   my $rs = $schema->resultset('Annotation');
@@ -90,7 +91,7 @@ sub _get_annotations
     );
 
     my $genes = _get_genes($schema, $annotation);
-    my @alleles = _get_alleles($schema, $annotation);
+    my @alleles = _get_alleles($config, $schema, $annotation);
 
     if (keys %$genes) {
       $data{genes} = $genes;
@@ -129,6 +130,7 @@ sub _get_genes
 
 sub _get_alleles
 {
+  my $config = shift;
   my $schema = shift;
   my $annotation = shift;
 
@@ -144,12 +146,12 @@ sub _get_alleles
     );
 
     my $export_type =
-      $self->config()->{allele_types}->{$allele->type()}->{export_type};
+      $config->{allele_types}->{$allele->type()}->{export_type};
 
-    if (defined $export_type) {
+    if (!defined $export_type) {
       croak "can't find the export/database type for allele: ",
         ($allele->name() // 'noname'), "(", ($allele->description() // 'unknown'),
-        ") of gene: ", $gene->primary_identifier();
+        ") of gene: ", $gene->primary_identifier(), '  type: ', $allele->type();
     }
 
     my %allele_data = (
@@ -211,25 +213,30 @@ sub _get_pubs
 
  Usage   : my $ser = PomCur::Curs::Serialise::json($curs_schema);
  Function: Return a JSON representation of the given CursDB
- Args    : $schema - the CursDB
+ Args    : $config - the PomCur::Config object
+           $schema - the CursDB
+           $options - export options - see documentation for
+             PomCur::Track::Serialise::json()
  Returns : A JSON string
 
 =cut
 sub json
 {
+  my $config = shift;
   my $schema = shift;
   my $options = shift;
 
   my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);
 
-  return $encoder->encode(perl($schema, $options));
+  return $encoder->encode(perl($config, $schema, $options));
 }
 
 =head2 perl
 
  Usage   : my $ser = PomCur::Curs::Serialise::perl($curs_schema);
  Function: Return a Perl hash representating all the data in the given CursDB
- Args    : $schema - the CursDB
+ Args    : $config - the PomCur::Config object
+           $schema - the CursDB
            $options - export options - see documentation for
              PomCur::Track::Serialise::json()
  Returns : A Perl hashref
@@ -237,12 +244,13 @@ sub json
 =cut
 sub perl
 {
+  my $config = shift;
   my $schema = shift;
   my $options = shift;
 
   return {
     metadata => _get_metadata($schema),
-    annotations => _get_annotations($schema),
+    annotations => _get_annotations($config, $schema),
     organisms => _get_organisms($schema, $options),
     publications => _get_pubs($schema, $options)
   };
