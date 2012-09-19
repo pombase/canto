@@ -407,6 +407,84 @@ var pomcur_util = {
   }
 };
 
+function make_ferret_name_input(search_namespace, ferret_input, select_callback) {
+  function render_term_item(ul, item, search_string, search_namespace) {
+    var search_bits = search_string.split(/\W+/);
+    var match_name = item.matching_synonym;
+    var synonym_extra = '';
+    if (match_name) {
+      synonym_extra = ' (synonym)';
+    } else {
+      match_name = item.name;
+    }
+    var warning = '';
+    if (search_namespace !== item.annotation_namespace) {
+      warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
+        item.annotation_namespace + ' term but<br/>you are browsing ' +
+        search_namespace + ' terms</span>';
+      var re = new RegExp('_', 'g');
+      // unpleasant hack to make the namespaces look nicer
+      warning = warning.replace(re,' ');
+    }
+    function length_compare(a,b) {
+      if (a.length < b.length) {
+        return 1;
+      } else {
+        if (a.length > b.length) {
+          return -1;
+        } else {
+          return 0;
+        }
+      }
+    };
+    search_bits.sort(length_compare);
+    for (var i = 0; i < search_bits.length; i++) {
+      var bit = search_bits[i];
+      if (bit.length > 1) {
+        var re = new RegExp('(\\b' + bit + ')', "gi");
+        match_name = match_name.replace(re,'<b>$1</b>');
+      }
+    }
+    return $( "<li></li>" )
+      .data( "item.autocomplete", item )
+      .append( "<a>" + match_name + " <span class='term-id'>(" +
+               item.id + ")</span>" + synonym_extra + warning + "</a>" )
+      .appendTo( ul );
+  };
+
+
+  ferret_input.autocomplete({
+     minLength: 2,
+        source: ferret_choose.ontology_complete_url,
+        cacheLength: 100,
+        focus: ferret_choose.show_autocomplete_def,
+        close: ferret_choose.hide_autocomplete_def,
+        select: select_callback
+    })
+    .data("autocomplete")._renderItem = function( ul, item ) {
+    var search_string = $('#ferret-term-input').val();
+    render_term_item(ul, item, search_string, search_namespace);
+  };
+
+  function do_autocomplete () {
+    ferret_input.focus();
+    ferret_input.autocomplete('search');
+  }
+
+  ferret_input.bind('paste', function() {
+      setTimeout(do_autocomplete, 10);
+    });
+
+  ferret_input.keypress(function(event) {
+      if (event.which == 13) {
+        // return should autocomplete not submit the form
+        event.preventDefault();
+        ferret_input.autocomplete('search');
+      }
+    });
+
+
+}
 
 $(document).ready(function() {
   var ferret_input = $("#ferret-term-input");
@@ -414,85 +492,14 @@ $(document).ready(function() {
   if (ferret_input.size()) {
     $('#loading').unbind('.pomcur');
 
-    function render_term_item(ul, item, search_string, search_namespace) {
-      var search_bits = search_string.split(/\W+/);
-      var match_name = item.matching_synonym;
-      var synonym_extra = '';
-      if (match_name) {
-        synonym_extra = ' (synonym)';
-      } else {
-        match_name = item.name;
-      }
-      var warning = '';
-      if (search_namespace !== item.annotation_namespace) {
-        warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
-          item.annotation_namespace + ' term but<br/>you are browsing ' +
-          search_namespace + ' terms</span>';
-        var re = new RegExp('_', 'g');
-        // unpleasant hack to make the namespaces look nicer
-        warning = warning.replace(re,' ');
-      }
-      function length_compare(a,b) {
-        if (a.length < b.length) {
-          return 1;
-        } else {
-          if (a.length > b.length) {
-            return -1;
-          } else {
-            return 0;
-          }
-        }
-      };
-      search_bits.sort(length_compare);
-      for (var i = 0; i < search_bits.length; i++) {
-        var bit = search_bits[i];
-        if (bit.length > 1) {
-          var re = new RegExp('(\\b' + bit + ')', "gi");
-          match_name = match_name.replace(re,'<b>$1</b>');
-        }
-      }
-      return $( "<li></li>" )
-        .data( "item.autocomplete", item )
-        .append( "<a>" + match_name + " <span class='term-id'>(" +
-                 item.id + ")</span>" + synonym_extra + warning + "</a>" )
-        .appendTo( ul );
+    var select_callback = function(event, ui) {
+      ferret_choose.term_history = [trim(ferret_input.val())];
+      ferret_choose.set_current_term(ui.item.id);
+      ferret_choose.matching_synonym = ui.item.matching_synonym;
+      return false;
     };
 
-
-    ferret_input.autocomplete({
-      minLength: 2,
-      source: ferret_choose.ontology_complete_url,
-      cacheLength: 100,
-      focus: ferret_choose.show_autocomplete_def,
-      close: ferret_choose.hide_autocomplete_def,
-      select: function(event, ui) {
-        ferret_choose.term_history = [trim(ferret_input.val())];
-        ferret_choose.set_current_term(ui.item.id);
-        ferret_choose.matching_synonym = ui.item.matching_synonym;
-        return false;
-      }
-    })
-    .data("autocomplete")._renderItem = function( ul, item ) {
-      var search_string = $('#ferret-term-input').val();
-      render_term_item(ul, item, search_string, ferret_choose.annotation_namespace);
-    };
-
-    function do_autocomplete () {
-      ferret_input.focus();
-      ferret_input.autocomplete('search');
-    }
-
-    ferret_input.bind('paste', function() {
-      setTimeout(do_autocomplete, 10);
-    });
-
-    ferret_input.keypress(function(event) {
-      if (event.which == 13) {
-        // return should autocomplete not submit the form
-        event.preventDefault();
-        ferret_input.autocomplete('search');
-      }
-    });
+    make_ferret_name_input(ferret_choose.annotation_namespace, ferret_input, select_callback);
 
     $("body").delegate("#ferret-term-children-list a", "click",
                        ferret_choose.child_click_handler);
