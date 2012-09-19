@@ -16,9 +16,10 @@ Choose curation type for <% $gene->display_name() %>:
 %   my $annotation_type_name = $annotation_type->{name};
 %   my $action_path = $curs_root_uri . '/annotation/edit/' .
 %                     $gene_id . '/' . $annotation_type_name;
+%   my $title = $annotation_type->{help_text} // '';
     <li>
 %   if (!$annotation_type->{disabled}) {
-      <a href="<% $action_path %>">
+      <a title="<% $title %>" href="<% $action_path %>">
 %   }
       <span class="annotation-type">
 %   if ($annotation_type->{gene_cardinality} eq 'one_or_more') {
