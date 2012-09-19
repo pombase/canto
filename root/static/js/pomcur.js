@@ -486,10 +486,6 @@ $(document).ready(function() {
       setTimeout(do_autocomplete, 10);
     });
 
-    $('#ferret-test-do-search').click(function () {
-      ferret_choose.term_selected($('#ferret-term-input').val());
-    });
-
     ferret_input.keypress(function(event) {
       if (event.which == 13) {
         // return should autocomplete not submit the form

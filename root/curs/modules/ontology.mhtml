@@ -87,13 +87,7 @@ Gene products may be annotated with multiple
         </div>
         <input id="ferret-term-input" name="ferret-term-entry"
                type="text" size="50" disabled="true"
-% if (!$c->session()->{testmode}) {
-               placeholder="start typing and suggestions will be made ..."
-% }
-               />
-% if ($c->session()->{testmode}) {
-        <a href="#" id="ferret-test-do-search">Go to term</a>
-% }
+               placeholder="start typing and suggestions will be made ..." />
       </div>
     </div>
 
