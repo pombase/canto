@@ -1446,6 +1446,7 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   my %allele_data = (name => $allele_name,
                      description => $description,
+                     allele_type => $allele_type,
                      evidence => $params->{'curs-allele-evidence-select'},
                      conditions => $condition_list);
 
@@ -1674,6 +1675,7 @@ sub _annotation_process_alleles_internal
     while (my ($id, $allele) = each %$alleles_in_progress) {
       my $name = $allele->{name};
       my $description = $allele->{description};
+      my $allele_type = $allele->{allele_type};
       my $expression = $allele->{expression};
       my $evidence = $allele->{evidence};
       my $conditions = $allele->{conditions};
@@ -1704,7 +1706,7 @@ sub _annotation_process_alleles_internal
       push @new_annotation_ids, $new_annotation->annotation_id();
 
       my %create_args = (
-        type => 'new',
+        type => $allele_type,
         description => $description,
         name => $name,
         gene => $gene->gene_id(),
