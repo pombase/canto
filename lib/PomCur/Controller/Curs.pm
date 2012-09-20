@@ -160,6 +160,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{multi_organism_mode} =
     $config->{multi_organism_mode} || $has_multiple_organisms;
 
+  my $evidence_by_annotation_type =
+    map { ($_->{name}, $_->{evidence_codes}); } @{$config->{annotation_type_list}};
+  $st->{evidence_by_annotation_type} = $evidence_by_annotation_type;
+
   # curation_pub_id will be set if we are annotating a particular publication,
   # rather than annotating genes without a publication
   my $pub_id = $self->get_metadata($schema, 'curation_pub_id');

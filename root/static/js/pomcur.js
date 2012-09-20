@@ -1349,7 +1349,6 @@ var EditDialog = function($) {
       '</textarea></form></div>';
 
     $dialog_div = $(dialog_html);
-    $('body').append($dialog);
 
     var $dialog = $dialog_div.dialog({
       modal: true,
@@ -1369,6 +1368,85 @@ var EditDialog = function($) {
                    },
                  },
                 ]
+    });
+
+    return $dialog;
+  }
+
+  return {
+    create: create
+  };
+}($);
+
+var QuickAddDialog = function($) {
+  function confirm($dialog) {
+    var $form = $('#curs-quick-add-dialog form');
+    $dialog.dialog('close');
+    $('#loading').unbind('ajaxStop.pomcur');
+    $form.ajaxSubmit({
+          dataType: 'json',
+          success: function(data) {
+            $dialog.dialog("destroy");
+            var $dialog_div = $('#curs-quick-add-dialog');
+            $dialog_div.remove();
+            window.location.reload(false);
+          }
+        });
+  }
+
+  function cancel() {
+    $(this).dialog("destroy");
+    var $dialog_div = $('#curs-quick-add-dialog');
+    $dialog_div.remove();
+  }
+
+  function create(title, search_namespace, form_url) {
+    var $dialog_div = $('#curs-quick-add-dialog');
+    if ($dialog_div.length) {
+      $dialog_div.remove()
+    }
+
+    var select_html = '<select></select>';
+
+    var dialog_html =
+      '<div id="curs-quick-add-dialog" style="display: none">' +
+      '<form action="' + form_url + '" method="post">' +
+      '<input type="hidden" id="ferret-quick-add-term-id" name="ferret-quick-add-term"/>' +
+      '<input id="ferret-quick-add-term-input" name="ferret-quick-add-term-entry" type="text"' +
+      '       size="50" disabled="true" ' +
+      '       placeholder="start typing and suggestions will be made ..." />' +
+      select_html +
+      '</form></div>';
+
+    $dialog_div = $(dialog_html);
+
+    var select_callback = function(event, ui) {
+      $('#ferret-quick-add-term-id').val(ui.item.id);
+    };
+
+    var $dialog = $dialog_div.dialog({
+      modal: true,
+      autoOpen: true,
+      height: 'auto',
+      width: 600,
+      title: title,
+      open: function() {
+        var ferret_input = $('#ferret-quick-add-term-input');
+        make_ferret_name_input(search_namespace, ferret_input, select_callback);
+        $('#ferret-term-input').attr('disabled', false);
+      },
+      buttons : [
+                 {
+                   text: "Cancel",
+                   click: cancel,
+                 },
+                 {
+                   text: "Edit",
+                   click: function() {
+                     confirm($dialog);
+                   },
+                 },
+               ],
     });
 
     return $dialog;
