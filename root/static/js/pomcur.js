@@ -953,7 +953,6 @@ var AlleleStuff = function($) {
     $allele_dialog.find('.curs-allele-description-input').val('');
     $allele_dialog.find('.curs-allele-type-select').show();
     set_expression($allele_dialog, "Not specified");
-    get_allele_evidence_select_jq($allele_dialog).val('');
     var name_input = get_allele_name_jq($allele_dialog);
     name_input.removeAttr('disabled');
     var label = $allele_dialog.find('.curs-allele-type-label');
@@ -1233,6 +1232,9 @@ var AlleleStuff = function($) {
 
         setup_allele_form_validate(add_allele_dialog);
       },
+      close: function() {
+        get_allele_evidence_select_jq($allele_dialog).val('');
+      }
     });
 
     function edit_row($tr) {
