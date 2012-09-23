@@ -1406,7 +1406,13 @@ var QuickAddDialog = function($) {
       $dialog_div.remove()
     }
 
-    var select_html = '<select></select>';
+    var select_html = '<select><option selected="selected" value="">Choose an evidence type ...</option>'
+    select_html += join('',
+                        $.map(evidence_by_annotation_type,
+                              function(item) {
+                                  return '<option value="' + item + '">' + item + '</option>';
+                              }));
+    select_html += '</select>';
 
     var dialog_html =
       '<div id="curs-quick-add-dialog" style="display: none">' +
