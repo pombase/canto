@@ -1238,7 +1238,7 @@ annotation_type_list:
   - name: genetic_interaction
     category: interaction
     display_name: 'genetic interaction'
-    help_text: Examples: synthetic lethality, dosage suppression, phenotype enhancement.
+    help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
     evidence_codes:
       - Dosage Growth Defect
       - Dosage Lethality
@@ -1254,7 +1254,7 @@ annotation_type_list:
   - name: physical_interaction
     category: interaction
     display_name: 'physical interaction'
-    help_text: Examples: Co-purification, two-hybrid, affinity capture
+    help_text: 'Examples: Co-purification, two-hybrid, affinity capture'
     evidence_codes:
       - Affinity Capture-Luminescence
       - Affinity Capture-MS
