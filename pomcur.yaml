@@ -1086,9 +1086,12 @@ evidence_types:
   'Electrophoretic mobility shift assay data': ~
   'Northern assay evidence': ~
   'Particle size and count assay': ~
-  'Sodium dodecyl sulfate polyacrylamide gel electrophoresis': ~
   'Substance quantification': ~
   'Western blot assay': ~
+  'Substance quantification evidence': ~
+  'Competitive growth assay evidence': ~
+  'Gel electrophoresis evidence': ~
+  'Plasmid maintenance assay evidence': ~
 
 annotation_type_list:
   - name: molecular_function
@@ -1197,13 +1200,17 @@ annotation_type_list:
       - Immunolocalization experiment data
       - Microscopy
       - Northern assay evidence
-      - Protein localization experiment
       - Particle size and count assay
+      - Protein localization experiment
+      - Quantitative PCR
+      - Reporter gene assay
       - Sodium dodecyl sulfate polyacrylamide gel electrophoresis
       - Substance quantification
       - Western blot assay
-      - Quantitative PCR
-      - Reporter gene assay
+      - Substance quantification evidence
+      - Competitive growth assay evidence
+      - Gel electrophoresis evidence
+      - Plasmid maintenance assay evidence
       - Other
     broad_term_suggestions: >
       cell phenotype, multinucleate, abnormal spindle, inviable
