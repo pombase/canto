@@ -1219,7 +1219,7 @@ annotation_type_list:
     help_text: >
       A phenotype is any observable characteristic or trait of an organism;
       such as its morphology, development, biochemical or physiological
-      properties, behavior, and products of behaviour.
+      properties, behaviour, and products of behaviour.
     more_help_text: >
       Phenotypes result from the expression of the genes of an organism as well
       as the influence of environmental factors and the interactions between
