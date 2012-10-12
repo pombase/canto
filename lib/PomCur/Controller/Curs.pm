@@ -161,7 +161,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $config->{multi_organism_mode} || $has_multiple_organisms;
 
   my $evidence_by_annotation_type =
-    { map { ($_->{name}, $_->{evidence_codes}); } @{$config->{annotation_type_list}} }
+    { map { ($_->{name}, $_->{evidence_codes}); } @{$config->{annotation_type_list}} };
   $st->{evidence_by_annotation_type} = $evidence_by_annotation_type;
 
   # curation_pub_id will be set if we are annotating a particular publication,
