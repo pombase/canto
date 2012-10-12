@@ -454,15 +454,14 @@ function make_ferret_name_input(search_namespace, ferret_input, select_callback)
 
 
   ferret_input.autocomplete({
-     minLength: 2,
-        source: ferret_choose.ontology_complete_url,
-        cacheLength: 100,
-        focus: ferret_choose.show_autocomplete_def,
-        close: ferret_choose.hide_autocomplete_def,
-        select: select_callback
-    })
-    .data("autocomplete")._renderItem = function( ul, item ) {
-    var search_string = $('#ferret-term-input').val();
+    minLength: 2,
+    source: make_ontology_complete_url(search_namespace),
+    cacheLength: 100,
+    focus: ferret_choose.show_autocomplete_def,
+    close: ferret_choose.hide_autocomplete_def,
+    select: select_callback
+  }).data("autocomplete")._renderItem = function( ul, item ) {
+    var search_string = ferret_input.val();
     render_term_item(ul, item, search_string, search_namespace);
   };
 
@@ -1406,21 +1405,21 @@ var QuickAddDialog = function($) {
       $dialog_div.remove()
     }
 
-    var select_html = '<select><option selected="selected" value="">Choose an evidence type ...</option>'
-    select_html += join('',
-                        $.map(evidence_by_annotation_type,
-                              function(item) {
-                                  return '<option value="' + item + '">' + item + '</option>';
-                              }));
+    var select_html = '<select name="ferret-quick-add-evidence"><option selected="selected" value="">Choose an evidence type ...</option>'
+    $.map(evidence_by_annotation_type[search_namespace],
+          function(item) {
+            select_html += '<option value="' + item + '">' + item + '</option>';
+          });
     select_html += '</select>';
 
     var dialog_html =
       '<div id="curs-quick-add-dialog" style="display: none">' +
       '<form action="' + form_url + '" method="post">' +
-      '<input type="hidden" id="ferret-quick-add-term-id" name="ferret-quick-add-term"/>' +
+      '<input type="hidden" id="ferret-quick-add-term-id" name="ferret-quick-add-term-id"/>' +
       '<input id="ferret-quick-add-term-input" name="ferret-quick-add-term-entry" type="text"' +
       '       size="50" disabled="true" ' +
       '       placeholder="start typing and suggestions will be made ..." />' +
+      '<br/>' +
       select_html +
       '</form></div>';
 
@@ -1438,8 +1437,13 @@ var QuickAddDialog = function($) {
       title: title,
       open: function() {
         var ferret_input = $('#ferret-quick-add-term-input');
-        make_ferret_name_input(search_namespace, ferret_input, select_callback);
-        $('#ferret-term-input').attr('disabled', false);
+        ferret_input.autocomplete({
+          minLength: 2,
+          source: make_ontology_complete_url(search_namespace),
+          select: select_callback,
+          cacheLength: 100,
+        });
+        ferret_input.attr('disabled', false);
       },
       buttons : [
                  {
