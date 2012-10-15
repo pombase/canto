@@ -1451,7 +1451,7 @@ var QuickAddDialog = function($) {
                    click: cancel,
                  },
                  {
-                   text: "Edit",
+                   text: "Add",
                    click: function() {
                      confirm($dialog);
                    },

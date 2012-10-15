@@ -850,6 +850,50 @@ sub _re_edit_annotation
   return $annotation;
 }
 
+sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(2)
+{
+  my ($self, $c, $gene_id, $annotation_type_name) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $params = $c->req()->params();
+
+  my $evidence_code = $params->{'ferret-quick-add-evidence'};
+  if (!defined $evidence_code) {
+    die "internal error - no evidence code\n";
+  }
+  my $termid = $params->{'ferret-quick-add-term-id'};
+  if (!defined $termid) {
+    die "internal error - no term id\n";
+  }
+
+  my $gene = $schema->find_with_type('Gene', $gene_id);
+
+  my %annotation_data = (
+    term_ontid => $termid,
+    evidence_code => $evidence_code,
+  );
+
+  my $new_annotation =
+    $schema->create_with_type('Annotation',
+                              {
+                                type => $annotation_type_name,
+                                status => 'new',
+                                pub => $st->{pub},
+                                creation_date => _get_iso_date(),
+                                data => { %annotation_data }
+                              });
+
+  $new_annotation->set_genes($gene);
+
+  $c->stash->{json_data} = {
+    new_annotation_id => $new_annotation->annotation_id(),
+  };
+  $c->forward('View::JSON');
+}
+
 sub annotation_ontology_edit
 {
   my ($self, $c, $gene_proxy, $annotation_config, $annotation_id) = @_;

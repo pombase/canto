@@ -17,26 +17,28 @@ Choose curation type for <% $gene->display_name() %>:
 %   my $action_path = $curs_root_uri . '/annotation/edit/' .
 %                     $gene_id . '/' . $annotation_type_name;
 %   my $title = $annotation_type->{help_text} // '';
+%   my $type_display_name = $annotation_type->{display_name};
     <li>
 %   if (!$annotation_type->{disabled}) {
       <a title="<% $title %>" href="<% $action_path %>">
 %   }
       <span class="annotation-type">
 %   if ($annotation_type->{gene_cardinality} eq 'one_or_more') {
-Single gene <% $annotation_type->{display_name} %>
+Single gene <% $type_display_name %>
 %   } else {
-<% ucfirst $annotation_type->{display_name} %>
+<% ucfirst $type_display_name %>
 %   }
       </span>
 %   if (!$annotation_type->{disabled}) {
       </a>
 %   }
 %   if ($is_admin) {
-%     my $add_url = $curs_root_uri . '/annotation/quick_add/' . $gene->gene_id();
+%     my $add_url = $curs_root_uri . '/annotation/quick_add/'
+%       . $gene->gene_id() . '/' . $annotation_type_name;
 
     <a href="#" class="curs-quick-add-annotation"
-       title="Add a <% $annotation_type_name %>"
-       onclick="javascript:QuickAddDialog.create('Add an annotation', '<% $annotation_type_name %>', '<% $add_url %>'); return false;">Add ...</a>
+       title="Add a <% $type_display_name %>"
+       onclick="javascript:QuickAddDialog.create('Add a <% $type_display_name %>', '<% $annotation_type_name %>', '<% $add_url %>'); return false;">Add ...</a>
 %   }
     </li>
 % }
