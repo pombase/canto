@@ -32,7 +32,7 @@ Single gene <% $annotation_type->{display_name} %>
       </a>
 %   }
 %   if ($is_admin) {
-%     my $add_url = $curs_root_uri . '/annotation/quick_add/';
+%     my $add_url = $curs_root_uri . '/annotation/quick_add/' . $gene->gene_id();
 
     <a href="#" class="curs-quick-add-annotation"
        title="Add a <% $annotation_type_name %>"
