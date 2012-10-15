@@ -1092,6 +1092,7 @@ evidence_types:
   'Competitive growth assay evidence': ~
   'Gel electrophoresis evidence': ~
   'Plasmid maintenance assay evidence': ~
+  'Sodium dodecyl sulfate polyacrylamide gel electrophoresis': ~
 
 annotation_type_list:
   - name: molecular_function
