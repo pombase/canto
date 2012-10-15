@@ -1248,8 +1248,15 @@ sub _generate_evidence_options
 
   my @codes = map {
     my $code = $_;
-    my $description = $evidence_types->{$_}->{name};
-    if ($evidence_types->{$_}->{name} !~ /^$code/) {
+    my $type_conf = $evidence_types->{$_};
+    if (!defined $type_conf) {
+      die "no configuration for $_\n";
+    }
+    my $description = $type_conf->{name};
+    if (!defined $description) {
+      die "missing description for $_\n";
+    }
+    if ($description !~ /^$code/) {
       $description .= " ($_)";
     }
     [ $_, $description]
