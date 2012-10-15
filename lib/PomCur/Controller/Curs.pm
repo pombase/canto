@@ -160,6 +160,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{multi_organism_mode} =
     $config->{multi_organism_mode} || $has_multiple_organisms;
 
+  my $evidence_by_annotation_type =
+    { map { ($_->{name}, $_->{evidence_codes}); } @{$config->{annotation_type_list}} };
+  $st->{evidence_by_annotation_type} = $evidence_by_annotation_type;
+
   # curation_pub_id will be set if we are annotating a particular publication,
   # rather than annotating genes without a publication
   my $pub_id = $self->get_metadata($schema, 'curation_pub_id');
@@ -844,6 +848,50 @@ sub _re_edit_annotation
   $annotation->update();
 
   return $annotation;
+}
+
+sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(2)
+{
+  my ($self, $c, $gene_id, $annotation_type_name) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $params = $c->req()->params();
+
+  my $evidence_code = $params->{'ferret-quick-add-evidence'};
+  if (!defined $evidence_code) {
+    die "internal error - no evidence code\n";
+  }
+  my $termid = $params->{'ferret-quick-add-term-id'};
+  if (!defined $termid) {
+    die "internal error - no term id\n";
+  }
+
+  my $gene = $schema->find_with_type('Gene', $gene_id);
+
+  my %annotation_data = (
+    term_ontid => $termid,
+    evidence_code => $evidence_code,
+  );
+
+  my $new_annotation =
+    $schema->create_with_type('Annotation',
+                              {
+                                type => $annotation_type_name,
+                                status => 'new',
+                                pub => $st->{pub},
+                                creation_date => _get_iso_date(),
+                                data => { %annotation_data }
+                              });
+
+  $new_annotation->set_genes($gene);
+
+  $c->stash->{json_data} = {
+    new_annotation_id => $new_annotation->annotation_id(),
+  };
+  $c->forward('View::JSON');
 }
 
 sub annotation_ontology_edit

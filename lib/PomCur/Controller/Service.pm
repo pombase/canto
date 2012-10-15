@@ -70,12 +70,17 @@ sub lookup : Local
   my $include_definition = $c->req()->param('def');
   my $include_children = $c->req()->param('children');
 
-  $c->stash->{json_data} =
+  my $results =
     $lookup->lookup(ontology_name => $ontology_name,
                     search_string => $search_string,
                     max_results => $max_results,
                     include_definition => $include_definition,
                     include_children => $include_children);
+
+  map { $_->{value} = $_->{name} } @$results;
+
+  $c->stash->{json_data} = $results;
+
   $c->forward('View::JSON');
 }
 
