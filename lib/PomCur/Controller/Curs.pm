@@ -865,10 +865,13 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
 
   my $params = $c->req()->params();
 
+  my $evidence_types = $config->{evidence_types};
+
   my $evidence_code = $params->{'ferret-quick-add-evidence'};
   if (!defined $evidence_code) {
     die "internal error - no evidence code\n";
   }
+
   my $termid = $params->{'ferret-quick-add-term-id'};
   if (!defined $termid) {
     die "internal error - no term id\n";
@@ -880,6 +883,16 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
     term_ontid => $termid,
     evidence_code => $evidence_code,
   );
+
+  my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
+  my $with_gene = $params->{'ferret-quick-add-with-gene'};
+  if (!defined $with_gene && $needs_with_gene) {
+    die "no with gene supplied\n";
+  }
+
+  if ($needs_with_gene) {
+    $annotation_data{with_gene} = $with_gene;
+  }
 
   my $new_annotation =
     $schema->create_with_type('Annotation',
