@@ -8,6 +8,7 @@ $pub
 <script language="javascript" type="text/javascript">
 var curs_root_uri = '<% $curs_root_uri %>';
 var annotation_id = <% $annotation_id %>;
+var with_gene_evidence_codes = <% $with_gene_evidence_codes_js |n %>;
 var evidence_by_annotation_type = <% $evidence_by_annotation_type_js |n %>;
 </script>
 
@@ -42,5 +43,8 @@ my $st = $c->stash();
 
 my $evidence_by_annotation_type = $st->{evidence_by_annotation_type};
 my $evidence_by_annotation_type_js = Data::JavaScript::Anon->anon_dump($evidence_by_annotation_type);
+
+my $with_gene_evidence_codes = $st->{with_gene_evidence_codes};
+my $with_gene_evidence_codes_js = Data::JavaScript::Anon->anon_dump($with_gene_evidence_codes);
 
 </%init>

@@ -160,6 +160,11 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{multi_organism_mode} =
     $config->{multi_organism_mode} || $has_multiple_organisms;
 
+  my $with_gene_evidence_codes =
+    { map { ( $_, 1 ) }
+      grep { $config->{evidence_types}->{$_}->{with_gene} } keys %{$config->{evidence_types}} };
+  $st->{with_gene_evidence_codes} = $with_gene_evidence_codes;
+
   my $evidence_by_annotation_type =
     { map { ($_->{name}, $_->{evidence_codes}); } @{$config->{annotation_type_list}} };
   $st->{evidence_by_annotation_type} = $evidence_by_annotation_type;
