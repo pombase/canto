@@ -1407,12 +1407,12 @@ var QuickAddDialog = function($) {
       $dialog_div.remove()
     }
 
-    var select_html = '<select name="ferret-quick-add-evidence"><option selected="selected" value="">Choose an evidence type ...</option>'
+    var evidence_select_html = '<select name="ferret-quick-add-evidence"><option selected="selected" value="">Choose an evidence type ...</option>'
     $.map(evidence_by_annotation_type[search_namespace],
           function(item) {
-            select_html += '<option value="' + item + '">' + item + '</option>';
+            evidence_select_html += '<option value="' + item + '">' + item + '</option>';
           });
-    select_html += '</select>';
+    evidence_select_html += '</select>';
 
     var dialog_html =
       '<div id="curs-quick-add-dialog" style="display: none">' +
@@ -1422,7 +1422,7 @@ var QuickAddDialog = function($) {
       '       size="50" disabled="true" ' +
       '       placeholder="start typing and suggestions will be made ..." />' +
       '<br/>' +
-      select_html +
+      evidence_select_html +
       '</form></div>';
 
     $dialog_div = $(dialog_html);
