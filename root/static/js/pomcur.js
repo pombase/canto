@@ -1407,7 +1407,7 @@ var QuickAddDialog = function($) {
       $dialog_div.remove()
     }
 
-    var evidence_select_html = '<select name="ferret-quick-add-evidence"><option selected="selected" value="">Choose an evidence type ...</option>'
+    var evidence_select_html = '<select id="ferret-quick-add-evidence" name="ferret-quick-add-evidence"><option selected="selected" value="">Choose an evidence type ...</option>'
     $.map(evidence_by_annotation_type[search_namespace],
           function(item) {
             evidence_select_html += '<option value="' + item + '">' + item + '</option>';
@@ -1423,6 +1423,9 @@ var QuickAddDialog = function($) {
       '       placeholder="start typing and suggestions will be made ..." />' +
       '<br/>' +
       evidence_select_html +
+      '<br/>' +
+      '<input id="ferret-quick-add-with-gene" name="ferret-quick-add-with-gene" ' +
+      '       type="text" size="30" style="display: none" placeholder="with ..."/>' +
       '</form></div>';
 
     $dialog_div = $(dialog_html);
@@ -1460,6 +1463,18 @@ var QuickAddDialog = function($) {
                  },
                ],
     });
+
+    var $with_gene_input = $('#ferret-quick-add-with-gene');
+
+    $('#ferret-quick-add-evidence').on('change',
+                                       function(event) {
+                                         var evidence = $(this).val();
+                                         if (evidence in with_gene_evidence_codes) {
+                                           $with_gene_input.show();
+                                         } else {
+                                           $with_gene_input.hide();
+                                         }
+                                       })
 
     return $dialog;
   }
