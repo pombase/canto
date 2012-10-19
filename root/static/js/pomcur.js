@@ -386,9 +386,10 @@ var ferret_choose = {
 var curs_home = {
   show_term_suggestion : function(term_ontid, name, definition) {
     var dialog_div = $('#curs-dialog');
-    var html = '<div> Term name:' +
+    var html = '<div><h4>Term name:</h4>' +
       '<span class="term-name">' + name + '</span></div>' +
-      'Definition: <div class="term-definition">' + definition +
+      '<div>' +
+      '<h4>Definition:</h4> <div class="term-definition">' + definition +
       '</div></div>';
     $('#curs-dialog').html(html);
     $('#curs-dialog').dialog({ modal: true,
