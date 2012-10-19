@@ -726,6 +726,30 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete')
   _redirect_and_detach($c);
 }
 
+sub annotation_delete_suggestion : Chained('top') PathPart('annotation/delete_suggestion')
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  $self->_check_annotation_exists($c, $annotation_id);
+
+  my $delete_sub = sub {
+    my $annotation = $schema->resultset('Annotation')->find($annotation_id);
+    my $data = $annotation->data();
+    delete $data->{term_suggestion};
+    $annotation->data($data);
+    $annotation->update();
+    $self->metadata_storer()->store_counts($config, $schema);
+  };
+
+  $schema->txn_do($delete_sub);
+
+  _redirect_and_detach($c);
+}
+
 sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;

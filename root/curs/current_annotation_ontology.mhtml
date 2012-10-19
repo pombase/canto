@@ -227,6 +227,10 @@ NOT
       <span>
 %   if ($row->{term_suggestion}) {
       <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{name}) %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{definition}) %>'); return false;">View ...</a>
+%     if ($admin_user && !$read_only_curs) {
+      <br/>
+      <a href="<% $curs_root_uri . '/annotation/delete_suggestion/' . $row->{annotation_id} %>" class="confirm-delete">Delete ...</a>
+%     }
 %   } else {
       &nbsp;
 %   }
