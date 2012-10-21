@@ -389,7 +389,7 @@ sub _get_conditions_string
   return join ', ', @condition_names;
 }
 
-sub _process_ontology
+sub _process_existing_db_ontology
 {
   my $ontology_lookup = shift;
   my $row = shift;
@@ -486,7 +486,7 @@ sub get_existing_ontology_annotations
 
   if (defined $annotation_lookup) {
     return map {
-      my $res = _process_ontology($ontology_lookup, $_);
+      my $res = _process_existing_db_ontology($ontology_lookup, $_);
       if (defined $res) {
         ($res);
       } else {
