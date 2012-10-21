@@ -36,7 +36,6 @@ under the same terms as Perl itself.
 
 =cut
 
-use perl5i::2;
 use Moose;
 
 sub update_curs_terms
