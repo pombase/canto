@@ -173,6 +173,7 @@ test_config:
                expression: Overexpression
                conditions:
                  - 'PCO:0000004'
+                 - 'rich medium'
            - type: phenotype
              status: new
              alleles(Allele:description):
