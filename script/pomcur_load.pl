@@ -21,11 +21,13 @@ use lib qw(lib);
 use PomCur::Meta::Util;
 use PomCur::TrackDB;
 use PomCur::Config;
+use PomCur::Track;
 use PomCur::Track::GeneLoad;
 use PomCur::Track::OntologyLoad;
 use PomCur::Track::OntologyIndex;
 use PomCur::Track::LoadUtil;
 use PomCur::Track::PubmedUtil;
+use PomCur::Curs::TermUpdate;
 
 my $do_genes = 0;
 my $do_pubmed_xml = 0;
@@ -161,6 +163,11 @@ if (@ontology_args) {
   }
 
   $guard->commit unless $dry_run;
+
+  my $iter = PomCur::Track::curs_iterator($config, $schema);
+  while (my ($curs, $cursdb) = $iter->()) {
+    PomCur::Curs::TermUpdate::update_curs_terms($config, $curs, $cursdb);
+  }
 }
 
 if ($do_organism) {
