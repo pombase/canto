@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 42;
+use Test::More tests => 43;
 use Test::Deep;
 
 use Data::Compare;
@@ -254,7 +254,7 @@ $curs_schema->create_with_type('GeneAnnotation',
 my %allele_creation_data_1 = (
   name => 'test_name_1',
   description => 'test_desc_1',
-  conditions => ['low temperature'],
+  conditions => ['cold'],
   evidence => 'Western blot assay',
   expression => 'Endogenous',
 );
@@ -263,10 +263,12 @@ PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
                                                       $annotation_for_allele_in_progress,
                                                       \%allele_creation_data_1);
 
+is($annotation_for_allele_in_progress->data()->{alleles_in_progress}->{0}->{conditions}->[0], 'PCO:0000006');
+
 my %allele_creation_data_2 = (
   name => 'an_allele',
   description => undef,
-  conditions => ['low temperature', 'late in the afternoon'],
+  conditions => ['cold', 'late in the afternoon'],
   evidence => 'Enzyme assay data',
   expression => 'Overexpression',
 );
@@ -283,7 +285,7 @@ my $add_expected = {
   'display_name' => 'an_allele(unknown)',
   'description' => undef,
   'conditions' => [
-    'low temperature',
+    'cold',
     'late in the afternoon'
   ]
 };

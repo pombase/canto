@@ -271,6 +271,20 @@ sub lookup_by_name
   my $cvterm = $schema->resultset('Cvterm')->find({ cv_id => $cv->cv_id(),
                                                     name => $term_name });
 
+  if (!defined $cvterm) {
+    my $synonym_rs =
+      $schema->resultset('Cvtermsynonym')
+        ->search({ synonym => $term_name })
+        ->search_related('cvterm', { cv_id => $cv->cv_id() });;
+    if ($synonym_rs->count() > 1) {
+      die qq(more than one cvterm matching "$term_name");
+    }
+
+    if ($synonym_rs->count() == 1) {
+      $cvterm = $synonym_rs->first();
+    }
+  }
+
   if (defined $cvterm) {
     return { _make_term_hash($cvterm, $cv->name(), $include_definition, $include_children) };
   } else {
