@@ -2,6 +2,7 @@
 $annotation
 $gene_display_name
 $curs_root_uri
+$editing
 </%args>
 
 <script language="javascript" type="text/javascript">
@@ -11,6 +12,7 @@ var existing_alleles_by_name = <% $existing_alleles_by_name_js |n %>;
 var gene_display_name = "<% $gene_display_name %>";
 var delete_icon_uri = "<% $delete_icon_uri %>";
 var annotation_id = <% $annotation->annotation_id() %>;
+var editing_allele = <% $editing ? 'true' : 'false' %>;
 </script>
 
 <div id="curs-allele-add" style="display: none">
@@ -112,12 +114,14 @@ var annotation_id = <% $annotation->annotation_id() %>;
         </td>
       </tr>
     </table>
+% if (!$editing) {
     <div class="curs-allele-condition-buttons">
       <div>Previously used conditions:</div>
     </div>
     <div class="curs-allele-reuse">
       <input type="checkbox" name="curs-allele-reuse-dialog" value="Reuse"/>Re-use allele name and description with a different set of conditions<br/>
     </div>
+% }
   </form>
 </div>
 

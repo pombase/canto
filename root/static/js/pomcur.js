@@ -926,15 +926,18 @@ var AlleleStuff = function($) {
         });
         $reuse_checkbox.attr('checked', false);
       } else {
-        $allele_dialog.dialog("close");
+        if (!editing_allele) {
+          $allele_dialog.dialog("close");
+        }
       }
     }
   }
 
   function add_allele_cancel() {
-    $(this).dialog("close");
     if (editing_allele) {
       window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id + '/edit';
+    } else {
+      $(this).dialog("close");
     }
   }
 
@@ -1132,11 +1135,7 @@ var AlleleStuff = function($) {
   function populate_dialog_from_data($allele_dialog, data) {
     get_allele_name_jq($allele_dialog).val(data.name);
     get_allele_desc_jq($allele_dialog).val(data.description);
-    get_allele_type_select_jq($allele_dialog).val('other').trigger('change');
-    // big hack:
-    get_allele_type_select_jq($allele_dialog).val(undefined);
-    // another hack:
-    get_allele_type_label_jq($allele_dialog).closest('tr').hide();
+    get_allele_type_select_jq($allele_dialog).val(data.allele_type).trigger('change');
     get_allele_evidence_select_jq($allele_dialog).val(data.evidence);
     if ("expression" in data) {
       set_expression($allele_dialog, data.expression);

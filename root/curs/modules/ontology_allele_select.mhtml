@@ -7,11 +7,8 @@ $editing
 </%args>
 
 <& ontology_allele_edit.mhtml, annotation => $annotation,
-  curs_root_uri => $curs_root_uri, gene_display_name => $gene_display_name &>
-
-<script language="javascript" type="text/javascript">
-var editing_allele = <% $editing ? 'true' : 'false' %>;
-</script>
+   editing => $editing,
+   curs_root_uri => $curs_root_uri, gene_display_name => $gene_display_name &>
 
 <div class="curs-box curs-allele-select">
   <div class="curs-box-title">

@@ -1578,6 +1578,7 @@ sub _get_all_alleles
       name => $allele->name(),
       description => $allele->description(),
       primary_identifier => $allele->primary_identifier(),
+      allele_type => $allele->type(),
     };
   }
 
@@ -1595,6 +1596,7 @@ sub _get_all_alleles
           $results{$allele_display_name} = {
             name => $allele_data->{name},
             description => $allele_data->{description},
+            allele_type => $allele_data->{allele_type},
           };
         }
       }
@@ -1714,6 +1716,7 @@ sub _annotation_allele_select_internal
         {
           value => $existing_alleles_by_name{$_}->{name},
           description => $existing_alleles_by_name{$_}->{description},
+          allele_type => $existing_alleles_by_name{$_}->{allele_type},
           display_name => $_,
         }
       } keys %existing_alleles_by_name
