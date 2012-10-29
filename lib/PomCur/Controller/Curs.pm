@@ -901,14 +901,27 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
 
   my $evidence_types = $config->{evidence_types};
 
+  my $_fail = sub {
+    my $message = shift;
+
+    $c->flash()->{error} = $message;
+    $c->stash->{json_data} = {
+      error => $message,
+    };
+    $c->forward('View::JSON');
+  };
+
   my $evidence_code = $params->{'ferret-quick-add-evidence'};
-  if (!defined $evidence_code) {
-    die "internal error - no evidence code\n";
+  if (!defined $evidence_code ||
+      !exists $config->{evidence_types}->{$evidence_code}) {
+    $_fail->("Adding annotation failed - invalid evidence code");
+    return;
   }
 
   my $termid = $params->{'ferret-quick-add-term-id'};
-  if (!defined $termid) {
-    die "internal error - no term id\n";
+  if (!defined $termid || !defined _term_name_from_id($config, $termid)) {
+    $_fail->("Adding annotation failed - invalid name");
+    return;
   }
 
   my $gene = $schema->find_with_type('Gene', $gene_id);
@@ -919,16 +932,23 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
   );
 
   my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
-  my $with_gene = $params->{'ferret-quick-add-with-gene'};
-  if (!defined $with_gene && $needs_with_gene) {
-    die "no with gene supplied\n";
-  }
-
   if ($needs_with_gene) {
-    my $with_gene_object =
-      $schema->find_with_type('Gene', { gene_id => $with_gene });
+    my $with_gene = $params->{'ferret-quick-add-with-gene'};
 
-    $annotation_data{with_gene} = $with_gene_object->primary_identifier();
+    my $with_gene_object;
+
+    if (defined $with_gene) {
+      eval {
+        $with_gene_object = $schema->find_with_type('Gene', { gene_id => $with_gene });
+      };
+    }
+
+    if (defined $with_gene_object) {
+      $annotation_data{with_gene} = $with_gene_object->primary_identifier();
+    } else {
+      $_fail->("Adding annotation failed - missing 'with' gene");
+      return;
+    }
   }
 
   my $new_annotation =
@@ -1622,16 +1642,16 @@ sub _get_all_alleles
 sub _term_name_from_id : Private
 {
   my $config = shift;
-  my $type_name = shift;
   my $term_id = shift;
 
   my $lookup = PomCur::Track::get_adaptor($config, 'ontology');
+  my $res = $lookup->lookup_by_id(id => $term_id);
 
-  my $res = $lookup->lookup(ontology_name => $type_name,
-                            search_string => $term_id,
-                            max_results => 1);
-
-  return $res->[0]->{name};
+  if (defined $res) {
+    return $res->{name};
+  } else {
+    return undef;
+  }
 }
 
 sub _allele_data_for_js : Private
@@ -1699,7 +1719,7 @@ sub _annotation_allele_select_internal
   my $annotation_data = $annotation->data();
   my $term_ontid = $annotation_data->{term_ontid};
 
-  my $term_name = _term_name_from_id($config, $annotation_type_name, $term_ontid);
+  my $term_name = _term_name_from_id($config, $term_ontid);
 
   $st->{title} = "Choose allele(s) for $gene_display_name with $term_ontid ($term_name)";
   $st->{show_title} = 0;
