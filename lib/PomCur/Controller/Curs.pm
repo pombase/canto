@@ -920,7 +920,7 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
 
   my $termid = $params->{'ferret-quick-add-term-id'};
   if (!defined $termid || !defined _term_name_from_id($config, $termid)) {
-    $_fail->("Adding annotation failed - invalid name");
+    $_fail->("Adding annotation failed - invalid term name");
     return;
   }
 
