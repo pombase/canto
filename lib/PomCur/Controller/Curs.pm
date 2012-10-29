@@ -931,6 +931,15 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
     evidence_code => $evidence_code,
   );
 
+  my $extension = $params->{'ferret-quick-add-extension'};
+
+  $extension =~ s/^\s+//;
+  $extension =~ s/\s+$//;
+
+  if (length $extension > 0) {
+    $annotation_data{annotation_extension} = $extension;
+  }
+
   my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
   if ($needs_with_gene) {
     my $with_gene = $params->{'ferret-quick-add-with-gene'};

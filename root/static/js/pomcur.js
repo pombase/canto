@@ -1437,6 +1437,9 @@ var QuickAddDialog = function($) {
       '<div id="ferret-quick-add-with-gene-wrapper" style="display:none">' +
       with_gene_html +
       '</div>' +
+      '<input id="ferret-quick-extension" name="ferret-quick-add-extension" type="text"' +
+      '       size="50" ' +
+      '       placeholder="Optional annotation extension ..." />' +
       '</form></div>';
 
     $dialog_div = $(dialog_html);
