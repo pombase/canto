@@ -1030,3 +1030,8 @@ a.curs-quick-add-annotation  {
   opacity: 0.3;
   filter: alpha(opacity=30); /* For IE8 and earlier */
 }
+
+/* initially hide links that only work with Javascript active */
+.curs-js-link {
+  display: none;
+}

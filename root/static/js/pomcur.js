@@ -1491,3 +1491,7 @@ var QuickAddDialog = function($) {
     create: create
   };
 }($);
+
+$(document).ready(function() {
+  $('.curs-js-link').show();
+});

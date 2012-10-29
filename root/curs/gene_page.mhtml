@@ -36,7 +36,7 @@ Single gene <% $type_display_name %>
 %     my $add_url = $curs_root_uri . '/annotation/quick_add/'
 %       . $gene->gene_id() . '/' . $annotation_type_name;
 
-    <a href="#" class="curs-quick-add-annotation"
+    <a href="#" class="curs-quick-add-annotation curs-js-link"
        title="Add a <% $type_display_name %>"
        onclick="javascript:QuickAddDialog.create('Add a <% $type_display_name %>', '<% $annotation_type_name %>', '<% $add_url %>'); return false;">Add ...</a>
 %   }
