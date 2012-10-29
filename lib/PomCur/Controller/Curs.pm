@@ -169,6 +169,16 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     { map { ($_->{name}, $_->{evidence_codes}); } @{$config->{annotation_type_list}} };
   $st->{evidence_by_annotation_type} = $evidence_by_annotation_type;
 
+  my $genes_rs = $schema->resultset('Gene');
+  my $genes_in_session =
+    [map {
+      my $gene = $_;
+      my $gene_proxy = _get_gene_proxy($config, $gene);
+
+      { id => $gene->gene_id(),
+        display_name => $gene_proxy->display_name() } } $genes_rs->all()];
+  $st->{genes_in_session} = $genes_in_session;
+
   # curation_pub_id will be set if we are annotating a particular publication,
   # rather than annotating genes without a publication
   my $pub_id = $self->get_metadata($schema, 'curation_pub_id');
@@ -915,7 +925,10 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
   }
 
   if ($needs_with_gene) {
-    $annotation_data{with_gene} = $with_gene;
+    my $with_gene_object =
+      $schema->find_with_type('Gene', { gene_id => $with_gene });
+
+    $annotation_data{with_gene} = $with_gene_object->primary_identifier();
   }
 
   my $new_annotation =

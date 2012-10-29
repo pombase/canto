@@ -1414,6 +1414,15 @@ var QuickAddDialog = function($) {
           });
     evidence_select_html += '</select>';
 
+    var with_gene_html =
+      '<select id="ferret-quick-add-with-gene" name="ferret-quick-add-with-gene" ' +
+      'style="display: none"><option selected="selected" value="">With gene ...</option>';
+    $.map(genes_in_session,
+          function(gene) {
+            with_gene_html += '<option value="' + gene.id + '">' + gene.display_name + '</option>';
+          });
+    with_gene_html += '</select>';
+
     var dialog_html =
       '<div id="curs-quick-add-dialog" style="display: none">' +
       '<form action="' + form_url + '" method="post">' +
@@ -1424,8 +1433,7 @@ var QuickAddDialog = function($) {
       '<br/>' +
       evidence_select_html +
       '<br/>' +
-      '<input id="ferret-quick-add-with-gene" name="ferret-quick-add-with-gene" ' +
-      '       type="text" size="30" style="display: none" placeholder="with ..."/>' +
+      with_gene_html +
       '</form></div>';
 
     $dialog_div = $(dialog_html);
