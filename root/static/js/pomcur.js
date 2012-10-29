@@ -1382,17 +1382,18 @@ var EditDialog = function($) {
 var QuickAddDialog = function($) {
   function confirm($dialog) {
     var $form = $('#curs-quick-add-dialog form');
-    $dialog.dialog('close');
-    $('#loading').unbind('ajaxStop.pomcur');
-    $form.ajaxSubmit({
-          dataType: 'json',
-          success: function(data) {
-            $dialog.dialog("destroy");
-            var $dialog_div = $('#curs-quick-add-dialog');
-            $dialog_div.remove();
-            window.location.reload(false);
-          }
-        });
+    if ($form.validate().form()) {
+      $('#loading').unbind('ajaxStop.pomcur');
+      $form.ajaxSubmit({
+        dataType: 'json',
+        success: function(data) {
+          $dialog.dialog("destroy");
+          var $dialog_div = $('#curs-quick-add-dialog');
+          $dialog_div.remove();
+          window.location.reload(false);
+        }
+      });
+    }
   }
 
   function cancel() {
@@ -1415,8 +1416,8 @@ var QuickAddDialog = function($) {
     evidence_select_html += '</select>';
 
     var with_gene_html =
-      '<select id="ferret-quick-add-with-gene" name="ferret-quick-add-with-gene" ' +
-      'style="display: none"><option selected="selected" value="">With gene ...</option>';
+      '<select id="ferret-quick-add-with-gene" name="ferret-quick-add-with-gene">' +
+      '<option selected="selected" value="">With gene ...</option>';
     $.map(genes_in_session,
           function(gene) {
             with_gene_html += '<option value="' + gene.id + '">' + gene.display_name + '</option>';
@@ -1433,7 +1434,9 @@ var QuickAddDialog = function($) {
       '<br/>' +
       evidence_select_html +
       '<br/>' +
+      '<div id="ferret-quick-add-with-gene-wrapper" style="display:none">' +
       with_gene_html +
+      '</div>' +
       '</form></div>';
 
     $dialog_div = $(dialog_html);
@@ -1441,6 +1444,23 @@ var QuickAddDialog = function($) {
     var select_callback = function(event, ui) {
       $('#ferret-quick-add-term-id').val(ui.item.id);
     };
+
+    var $form = $dialog_div.find('form');
+    $form.validate({
+      rules: {
+        'ferret-quick-add-term-entry': {
+          required: true,
+        },
+        'ferret-quick-add-evidence': {
+          required: true,
+        },
+        'ferret-quick-add-with-gene': {
+          required: function() {
+           return $('#ferret-quick-add-with-gene').is(':visible');
+          }
+        }
+      }
+    });
 
     var $dialog = $dialog_div.dialog({
       modal: true,
@@ -1472,15 +1492,15 @@ var QuickAddDialog = function($) {
                ],
     });
 
-    var $with_gene_input = $('#ferret-quick-add-with-gene');
+    var $with_gene_wrapper = $('#ferret-quick-add-with-gene-wrapper');
 
     $('#ferret-quick-add-evidence').on('change',
                                        function(event) {
                                          var evidence = $(this).val();
                                          if (evidence in with_gene_evidence_codes) {
-                                           $with_gene_input.show();
+                                           $with_gene_wrapper.show();
                                          } else {
-                                           $with_gene_input.hide();
+                                           $with_gene_wrapper.hide();
                                          }
                                        })
 
