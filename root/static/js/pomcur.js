@@ -800,6 +800,7 @@ var AlleleStuff = function($) {
     var row_html =
       '<td>' + name + '</td>' +
       '<td>' + description + '</td>' +
+      '<td>' + data.allele_type + '</td>' +
       '<td>' + expression + '</td>' +
       '<td>' + data['evidence'] + '</td>' +
       '<td>' + conditions + '</td>' +
@@ -821,6 +822,7 @@ var AlleleStuff = function($) {
                  return el.value === name && el.description === description;
                }).length == 0) {
       existing_alleles_by_name.push({ value: name, description: description,
+                                      allele_type: data.allele_type,
                                       display_name: data.display_name });
     }
 
@@ -1205,12 +1207,15 @@ var AlleleStuff = function($) {
         $('#curs-allele-add .curs-allele-name').autocomplete({
           source: existing_alleles_by_name,
           select: function(event, ui) {
-            var new_select_val = 'other';
-            if (allele_types[ui.item.description] != undefined) {
-              new_select_val = ui.item.description;
+            var $description = get_allele_desc_jq($allele_dialog).val(ui.item.description);
+            if (typeof(ui.item.allele_type) === 'undefined' ||
+                ui.item.allele_type === 'unknown') {
+              get_allele_type_select_jq($allele_dialog).val(undefined).trigger('change'); 
+              $description.attr('disabled', false);
+            } else {
+              get_allele_type_select_jq($allele_dialog).val(ui.item.allele_type).trigger('change');
+              $description.attr('disabled', true);
             }
-            get_allele_type_select_jq($allele_dialog).val(new_select_val).trigger('change');
-            get_allele_desc_jq($allele_dialog).val(ui.item.description).attr('disabled', true);
             var label = add_allele_dialog.find('.curs-allele-type-label');
             label.hide();
           }
