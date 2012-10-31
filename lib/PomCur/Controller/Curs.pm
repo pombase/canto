@@ -1061,8 +1061,6 @@ sub annotation_ontology_edit
         definition => $suggested_definition
       };
 
-      $self->metadata_storer()->store_counts($config, $schema);
-
       $c->flash()->{message} = 'Note that your term suggestion has been '
         . 'stored, but the gene will be temporarily '
         . 'annotated with the parent of your suggested new term';
@@ -1093,6 +1091,8 @@ sub annotation_ontology_edit
     }
 
     $guard->commit();
+
+    $self->metadata_storer()->store_counts($config, $schema);
 
     $_debug_annotation_id = $annotation_id;
 
