@@ -933,8 +933,7 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
 
   my $extension = $params->{'ferret-quick-add-extension'};
 
-  $extension =~ s/^\s+//;
-  $extension =~ s/\s+$//;
+  $extension = _trim($extension);
 
   if (length $extension > 0) {
     $annotation_data{annotation_extension} = $extension;
@@ -1054,10 +1053,8 @@ sub annotation_ontology_edit
       my $suggested_definition =
         $form->param_value('ferret-suggest-definition');
 
-      $suggested_name =~ s/^\s+//;
-      $suggested_name =~ s/\s+$//;
-      $suggested_definition =~ s/^\s+//;
-      $suggested_definition =~ s/\s+$//;
+      $suggested_name = _trim($suggested_name);
+      $suggested_definition = _trim($suggested_definition);
 
       $annotation_data{term_suggestion} = {
         name => $suggested_name,
@@ -1537,6 +1534,16 @@ sub _allele_add_action_internal
   return $return_allele_data;
 }
 
+sub _trim
+{
+  my $str = shift;
+
+  $str =~ s/\s+$//;
+  $str =~ s/^\s+//;
+
+  return $str;
+}
+
 sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;
@@ -1566,6 +1573,10 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
     $allele_name = undef;
   }
 
+  if (defined $allele_name) {
+    $allele_name = _trim($allele_name);
+  }
+
   my $description = $params->{'curs-allele-description-input'};
 
   my $allele_type = $params->{'curs-allele-type'};
@@ -1574,6 +1585,8 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
   if (!defined $description || length $description == 0) {
     $description = $params->{'curs-allele-type'};
   }
+
+  $description = _trim($description);
 
   if (exists $allele_type_config->{pre_store_substitution}) {
     local $_ = $description;
@@ -2496,8 +2509,7 @@ sub finish_form : Chained('top') Args(0)
   if ($form->submitted_and_valid()) {
     if (defined $c->req->params->{Finish}) {
       my $text = $form->param_value($finish_textarea);
-      $text =~ s/^\s+//;
-      $text =~ s/\s+$//;
+      $text = _trim($text);
 
       if (length $text > 0) {
         $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
