@@ -38,7 +38,7 @@ db_initial_data:
     cv:
       - name: organismprop_types
         cvterms:
-          - name: taxonId
+          - name: taxon_id
             dbxref:
               accession: taxonId
               db:

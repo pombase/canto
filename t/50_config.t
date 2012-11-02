@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More tests => 19;
 
 use PomCur::Config;
 use PomCur::TestUtil;
@@ -69,4 +69,4 @@ ok(defined $config_with_suffix->{"Model::TrackModel"});
 
 ok(defined $config_with_suffix->model_connect_string('Track'));
 
-
+is($config_with_suffix->{instance_organism}->{species}, 'pombe');

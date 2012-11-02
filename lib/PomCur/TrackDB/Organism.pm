@@ -156,7 +156,7 @@ sub taxonid {
 
   if (! defined $self->{_taxonid}) {
     my $prop = $self->organismprops()
-      ->search({ 'type.name' => 'taxonId' }, { join => 'type' })->first();
+      ->search({ 'type.name' => 'taxon_id' }, { join => 'type' })->first();
     croak "expected organismprop not found" unless defined $prop;
     $self->{_taxonid} = $prop->value();
   }

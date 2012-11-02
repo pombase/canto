@@ -10,6 +10,9 @@ Model::ChadoModel:
   connect_info:
     - "dbi:SQLite:dbname=t/data/chado_test_db.sqlite3"
 
+instance_organism:
+  taxonid: 4896
+
 extra_css: /static/css/test_style.css
 
 front_page_title: 'Welcome to Canto the PomBase community curation tool'

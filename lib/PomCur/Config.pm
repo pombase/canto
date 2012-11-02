@@ -45,6 +45,8 @@ use Cwd;
 
 use Hash::Merge;
 
+use PomCur::DBUtil;
+
 use v5.005;
 
 use vars qw($VERSION);
@@ -266,6 +268,42 @@ sub setup
       }
     }
   }
+
+  my $instance_organism = $self->{instance_organism};
+
+  my $connect_string = $self->model_connect_string('Track');
+
+  # we need to check that the track db exists in case we're using this
+  # Config before a track db is made
+  if (defined $instance_organism && defined $connect_string &&
+      -f PomCur::DBUtil::connect_string_file_name($connect_string)) {
+    my $track_schema = PomCur::TrackDB->new(config => $self);
+
+    my $taxonid = $instance_organism->{taxonid};
+
+    if (!defined $taxonid) {
+      die "instance_organism configuration has no taxonid field";
+    }
+
+    my $rs = $track_schema->resultset('Organismprop')
+      ->search({ value => $taxonid,
+                 'type.name' => 'taxon_id' },
+               { join => 'type' });
+    if ($rs->count() > 1) {
+      die "matched multiple organismprops with taxonid: $taxonid";
+    }
+
+    if ($rs->count() == 0) {
+      die qq(can't find an organism using taxonid "$taxonid" from ) .
+        qq("instance_organism" configuration);
+    }
+
+    my $organism = $rs->first()->organism();
+
+    $instance_organism->{organism_id} = $organism->organism_id();
+    $instance_organism->{species} = $organism->species();
+    $instance_organism->{genus} = $organism->genus();
+  }
 }
 
 =head2
@@ -320,7 +358,11 @@ sub model_connect_string
     croak("no model_name passed to function\n");
   }
 
-  return $self->{"Model::${model_name}Model"}->{connect_info}->[0];
+  my $model_class = "Model::${model_name}Model";
+
+  return undef unless defined $self->{$model_class};
+
+  return $self->{$model_class}->{connect_info}->[0];
 }
 
 =head2 get_config

@@ -97,23 +97,6 @@ sub new
   return bless $self, $class;
 }
 
-=head2 connect_string_file_name
-
- Usage   : my $file = PomCur::TestUtil::connect_string_file($connect_string);
- Function: Return the db file name from an sqlite connect string
- Args    : $connect_string
- Return  : the file name
-
-=cut
-sub connect_string_file_name
-{
-  my $connect_string = shift;
-
-  (my $db_file_name = $connect_string) =~ s/dbi:SQLite:dbname=(.*)/$1/;
-
-  return $db_file_name;
-}
-
 =head2 init_test
 
  Usage   : $test_util->init_test();
@@ -179,7 +162,7 @@ sub init_test
 
   $self->{track_schema} = PomCur::TrackDB->new(config => $config);
 
-  my $db_file_name = connect_string_file_name($connect_string);
+  my $db_file_name = PomCur::DBUtil::connect_string_file_name($connect_string);
   my $test_case_def = $test_config->{test_cases}->{$test_env_type};
 
   # copy the curs databases too

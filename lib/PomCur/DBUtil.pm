@@ -71,4 +71,21 @@ sub schema_for_file
   return $model_class_name->new(config => \%config_copy);
 }
 
+=head2 connect_string_file_name
+
+ Usage   : my $file = PomCur::TestUtil::connect_string_file($connect_string);
+ Function: Return the db file name from an sqlite connect string
+ Args    : $connect_string
+ Return  : the file name
+
+=cut
+sub connect_string_file_name
+{
+  my $connect_string = shift;
+
+  (my $db_file_name = $connect_string) =~ s/dbi:SQLite:dbname=(.*)/$1/;
+
+  return $db_file_name;
+}
+
 1;

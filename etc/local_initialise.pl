@@ -13,6 +13,7 @@ use Carp;
 use PomCur::TrackDB;
 use PomCur::Config;
 use PomCur::TestUtil;
+use PomCur::DBUtil;
 
 use File::Path qw(make_path remove_tree);
 use File::Copy qw(copy);
@@ -25,7 +26,7 @@ $config->merge_config("pomcur_local.yaml");
 my $connect_string = $config->model_connect_string('Track');
 
 my $db_file_name =
-  PomCur::TestUtil::connect_string_file_name($connect_string);
+  PomCur::DBUtil::connect_string_file_name($connect_string);
 
 (my $local_dir = $db_file_name) =~ s:(.*?)/.*:$1:;
 

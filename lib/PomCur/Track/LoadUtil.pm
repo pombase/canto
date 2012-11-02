@@ -77,7 +77,7 @@ sub get_organism
         genus => $genus,
         species => $species,
         organismprops => [ { value => $taxonid,
-                             type => { name => 'taxonId' },
+                             type => { name => 'taxon_id' },
                              rank => 0 } ]
       });
 }

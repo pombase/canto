@@ -154,11 +154,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{is_admin_session} =
     $self->get_metadata($schema, 'admin_session');
 
-  my $organism_rs = $schema->resultset('Organism')->search({}, { rows => 2});
-  my $has_multiple_organisms = $organism_rs->count() > 1;
-
-  $st->{multi_organism_mode} =
-    $config->{multi_organism_mode} || $has_multiple_organisms;
+  $st->{instance_organism} = $config->{instance_organism};
+  $st->{multi_organism_mode} = !defined $st->{instance_organism};
 
   my $with_gene_evidence_codes =
     { map { ( $_, 1 ) }

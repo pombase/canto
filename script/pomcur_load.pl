@@ -128,7 +128,7 @@ my $schema = PomCur::TrackDB->new(config => $config);
 
 if ($do_genes) {
   my $taxon_id = $for_taxon;
-  my $taxon_id_type = $schema->find_with_type('Cvterm', { name => 'taxonId' });
+  my $taxon_id_type = $schema->find_with_type('Cvterm', { name => 'taxon_id' });
   my $organism =
     $schema->resultset('Organismprop')
        ->search({ value => $taxon_id, type_id => $taxon_id_type->cvterm_id() })
