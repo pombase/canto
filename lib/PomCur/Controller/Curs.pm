@@ -454,9 +454,7 @@ sub _find_and_create_genes
 
     return ($result, \%identifiers_matching_more_than_once, \%genes_matched_more_than_once);
   } else {
-    $self->_create_genes($schema, $result);
-
-    return ();
+    return ({ $self->_create_genes($schema, $result) });
   }
 }
 
@@ -632,11 +630,13 @@ sub gene_upload : Chained('top') Args(0) Form
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
     my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $search_terms_text;
 
-    my ($result, $identifiers_matching_more_than_once, $genes_matched_more_than_once) =
-      $self->_find_and_create_genes($schema, $c->config(), \@search_terms);
+    my @res_list = $self->_find_and_create_genes($schema, $c->config(), \@search_terms);
 
-    if ($result) {
-      # the search result is returned only if there was a problem
+    if (@res_list > 1) {
+      # there was a problem
+      my ($result, $identifiers_matching_more_than_once,
+          $genes_matched_more_than_once) = @res_list;
+
       my @missing = @{$result->{missing}};
       my $error_title;
       my $error_text;
@@ -690,6 +690,16 @@ sub gene_upload : Chained('top') Args(0) Form
       }
       $st->{gene_upload_unknown} = [@missing];
     } else {
+      # no problems, so the result is the list of matching genes
+      my ($result) = @res_list;
+
+      my $matched_count = scalar(keys %$result);
+
+      my $message = "Uploaded $matched_count gene";
+      $message .= 's' if ($matched_count > 1);
+
+      $c->flash()->{message} = $message;
+
       $self->state()->store_statuses($c->config(), $schema);
 
       my $return_path = $form->param_value('return_path_input');
