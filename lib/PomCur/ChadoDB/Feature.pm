@@ -686,6 +686,37 @@ __PACKAGE__->many_to_many
      'feature_synonyms' => 'synonym',
     );
 
+=head2 search_featureprops
+
+  Status  : public
+  Usage   : $feat->search_featureprops('description')
+            # OR
+            $feat->search_featureprops({ name => 'description'})
+  Returns : DBIx::Class::ResultSet like other search() methods
+  Args    : single string to match cvterm name,
+            or hashref of search criteria.  This is passed
+            to $chado->resultset('Cv::Cvterm')
+                     ->search({ your criteria })
+
+  Convenience method to search featureprops for a feature that
+  match to Cvterms having the given criterion hash
+
+=cut
+
+sub search_featureprops {
+    my ($self, $cvt_criteria) = @_;
+
+    $cvt_criteria = { name => $cvt_criteria }
+        unless ref $cvt_criteria;
+
+     $self->result_source()->schema()
+          ->resultset('Cvterm')
+          ->search($cvt_criteria)
+          ->search_related('featureprops',
+                           { feature_id => $self->feature_id },
+                          );
+}
+
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
