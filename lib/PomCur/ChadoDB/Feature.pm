@@ -672,6 +672,20 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-04 16:45:42
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ryJUapFFhZDwWRh3b6Ml4Q
 
+=head2 synonyms
+
+Type: many_to_many
+
+Related object: L<Bio::Chado::Schema::Result::Sequence::Synonym>
+
+=cut
+
+__PACKAGE__->many_to_many
+    (
+     'synonyms',
+     'feature_synonyms' => 'synonym',
+    );
+
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

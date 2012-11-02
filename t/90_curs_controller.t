@@ -77,11 +77,11 @@ check_result($result, 2, 3, 0);
 
 check_result($result, 2, 3, 0);
 
-($result) =
+my @results =
   PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@known_genes);
 
-ok(!defined $result);
+ok(@results == 1);
 
 is($curs_schema->resultset('Gene')->count(), 3);
 

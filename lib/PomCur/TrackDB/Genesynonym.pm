@@ -87,6 +87,13 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3Tj1PeGbtqd4/M2IHz+XFw
 
+# alias for Chado compatibility
+sub name
+{
+  my $self = shift;
+
+  return $self->identifier();
+}
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
