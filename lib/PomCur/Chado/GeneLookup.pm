@@ -75,9 +75,6 @@ sub gene_product
     }
   }
 
-warn 'RET PRODUCT: ', $cache->{$gene->feature_id()};
-
-
   return $cache->{$gene->feature_id()};
 }
 
