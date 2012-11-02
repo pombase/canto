@@ -123,8 +123,19 @@ sub _read_genes
  Usage   : my $gene_lookup = PomCur::Track::get_adaptor($config, 'gene');
            my $results =
              $gene_lookup->lookup([qw(cdc11 SPCTRNASER.13 test foo)]);
+       or:
+           my $results =
+             $gene_lookup->lookup({ search_organism => {
+                                      genus => 'Schizosaccharomyces',
+                                      species => 'pombe',
+                                    }
+                                  },
+                                  [qw(cdc11 SPCTRNASER.13 test foo)]);
  Function: Search for genes by name or identifier
- Args    : $search_terms_ref - an array reference containing the terms to search
+ Args    : $options - a hash ref of options,optional
+              valid options: search_organism - restrict the search to the
+                                               given organism
+           $search_terms_ref - an array reference containing the terms to search
                                for
  Returns : All genes that match any of the search terms exactly.  The result
            should look like this hashref:
@@ -147,17 +158,39 @@ sub _read_genes
 sub lookup
 {
   my $self = shift;
+
+  my $options = {};
+  if (@_ == 2) {
+    $options = shift;
+  }
   my $search_terms_ref = shift;
 
   my @orig_search_terms = @{$search_terms_ref};
-
   my @lc_search_terms = map { lc } @{$search_terms_ref};
+
+  my $org_constraint = undef;
+
+  if (exists $options->{search_organism}) {
+    my $search_species = $options->{search_organism}->{species};
+    my $search_genus = $options->{search_organism}->{genus};
+
+    my $org_rs = $self->schema()->resultset('Organism')
+      ->search({ species => $search_species,
+                 genus => $search_genus });
+
+    $org_constraint = {
+      -in => $org_rs->get_column('organism_id')->as_query(),
+    };
+  }
 
   my %lc_search_terms = ();
   @lc_search_terms{@lc_search_terms} = @lc_search_terms;
 
   my $gene_rs = $self->schema()->resultset($self->feature_class());
   my $rs = $gene_rs->search([$self->_build_constraint(@lc_search_terms)]);
+  if (defined $org_constraint) {
+    $rs = $rs->search({ 'me.' . $self->organism_id_column() => $org_constraint });
+  }
 
   my ($found_genes_ref, $gene_ids_ref, $terms_found_ref) =
     $self->_read_genes($rs, \%lc_search_terms, {});
@@ -167,6 +200,9 @@ sub lookup
   my %terms_found = %$terms_found_ref;
 
   $rs = $self->lookup_by_synonym_rs($search_terms_ref);
+  if (defined $org_constraint) {
+    $rs = $rs->search({ lc $self->feature_class() . '.' . $self->organism_id_column() => $org_constraint });
+  }
 
   my ($new_found_genes_ref, $dummy, $new_terms_found_ref) =
     $self->_read_genes($rs, \%lc_search_terms, \%gene_ids);

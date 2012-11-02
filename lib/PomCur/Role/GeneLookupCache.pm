@@ -43,8 +43,21 @@ around 'lookup' => sub {
   my $orig = shift;
   my $self = shift;
 
-  my @args = @{$_[0]};
-  my $cache_key = join '#@%', @args;
+  my $organism_name = 'any';
+
+  my @args;
+  if (@_ == 1) {
+    @args = @{$_[0]};
+  } else {
+    my $options = $_[0];
+    if (exists $options->{search_organism}) {
+      $organism_name = $options->{search_organism}->{genus} . '_' .
+        $options->{search_organism}->{species};
+    }
+    @args = @{$_[1]};
+  }
+
+  my $cache_key = $organism_name . ':' . join '#@%', @args;
   my $cache = $self->cache();
 
   my $cached_value = $cache->get($cache_key);

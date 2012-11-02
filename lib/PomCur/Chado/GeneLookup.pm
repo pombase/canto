@@ -46,6 +46,7 @@ with 'PomCur::Chado::ChadoLookup';
 has 'feature_class' => (is => 'ro', default => 'Feature');
 has 'uniquename_column' => (is => 'ro', default => 'uniquename');
 has 'name_column' => (is => 'ro', default => 'name');
+has 'organism_id_column' => (is => 'ro', default => 'organism_id');
 
 sub gene_product
 {

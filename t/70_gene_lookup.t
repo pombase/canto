@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 36;
+use Test::More tests => 39;
 
 use PomCur::Track::GeneLookup;
 
@@ -90,3 +90,30 @@ is ($gene->{match_types}->{primary_name}, 'pkl1');
 is ($gene->{match_types}->{primary_identifier}, 'SPAC3A11.14c');
 is ($gene->{match_types}->{synonym}->[0], 'klp1');
 is ($gene->{primary_name}, 'pkl1');
+
+
+# S. cerevisiae lookup
+$result = $lookup->lookup([qw(ssf1)]);
+is(@{$result->{found}}, 1);
+
+# test constraining by organism
+$result = $lookup->lookup(
+  {
+    search_organism => {
+      genus => 'Schizosaccharomyces',
+      species => 'pombe',
+    },
+  },
+  [qw(ssf1)]);
+is(@{$result->{found}}, 0);
+
+$result = $lookup->lookup(
+  {
+    search_organism => {
+      genus => 'Schizosaccharomyces',
+      species => 'pombe',
+    },
+  },
+  [qw(wtf22)]);
+is(@{$result->{found}}, 1);
+

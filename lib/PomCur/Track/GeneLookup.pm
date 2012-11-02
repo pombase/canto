@@ -44,6 +44,7 @@ with 'PomCur::Track::TrackAdaptor';
 has 'feature_class' => (is => 'ro', default => 'Gene');
 has 'uniquename_column' => (is => 'ro', default => 'primary_identifier');
 has 'name_column' => (is => 'ro', default => 'primary_name');
+has 'organism_id_column' => (is => 'ro', default => 'organism');
 
 sub gene_product
 {

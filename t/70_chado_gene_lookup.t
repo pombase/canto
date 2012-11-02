@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 36;
+use Test::More tests => 16;
 
 use PomCur::Chado::GeneLookup;
 
@@ -41,4 +41,21 @@ is(@{$result->{found}->[0]->{synonyms}}, 2);
 my @synonyms = sort @{$result->{found}->[0]->{synonyms}};
 is ($synonyms[0], 'SPBC12C2.02c');
 is ($synonyms[1], 'ste20-synonyms');
+
+
+
+$result = $lookup->lookup([qw(cdc11)]);
+is(@{$result->{found}}, 2);
+
+
+$result =
+  $lookup->lookup(
+    {
+      search_organism => {
+        genus => 'Schizosaccharomyces',
+        species => 'pombe',
+      },
+    },
+    [qw(cdc11)]);
+is(@{$result->{found}}, 1);
 

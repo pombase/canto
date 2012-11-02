@@ -413,7 +413,21 @@ sub _find_and_create_genes
   my @search_terms = @$search_terms_ref;
   my $adaptor = PomCur::Track::get_adaptor($config, 'gene');
 
-  my $result = $adaptor->lookup([@search_terms]);
+  my $result;
+
+  if (exists $config->{instance_organism}) {
+    $result = $adaptor->lookup(
+      {
+        search_organism => {
+          genus => $config->{instance_organism}->{genus},
+          species => $config->{instance_organism}->{species},
+        }
+      },
+      [@search_terms]);
+  } else {
+    $result = $adaptor->lookup([@search_terms]);
+  }
+
 
   my %identifiers_matching_more_than_once = ();
   my %genes_matched_more_than_once = ();
