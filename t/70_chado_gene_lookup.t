@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 18;
 
 use PomCur::Chado::GeneLookup;
 
@@ -14,7 +14,6 @@ my $lookup = PomCur::Chado::GeneLookup->new(config => $test_util->config());
 
 ok(defined $lookup->schema());
 
-# test weird case
 my $result = $lookup->lookup([qw(SPBC12C2.02c)]);
 
 is(@{$result->{found}}, 1, 'look up one gene - found count');
@@ -33,6 +32,9 @@ is(@{$result->{missing}}, 3, 'look up with no results - missing count');
 $result = $lookup->lookup([qw(SPBC12C2.02c missing1 missing2 missing3)]);
 is(@{$result->{found}}, 1, 'look up by identifier - found count');
 is(@{$result->{missing}}, 3, 'look up two genes by identifier - missing count');
+
+$result = $lookup->lookup([qw(ste20)]);
+is(@{$result->{found}}, 1, 'look up by name');
 
 # test returning synonyms
 $result = $lookup->lookup([qw(ste20-synonym)]);
