@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 17;
 
 use PomCur::Chado::GeneLookup;
 
@@ -39,15 +39,14 @@ $result = $lookup->lookup([qw(ste20-synonym)]);
 is(@{$result->{found}}, 1);
 is(@{$result->{found}->[0]->{synonyms}}, 2);
 my @synonyms = sort @{$result->{found}->[0]->{synonyms}};
-is ($synonyms[0], 'SPBC12C2.02c');
-is ($synonyms[1], 'ste20-synonyms');
+is ($synonyms[0], 'ste16');
+is ($synonyms[1], 'ste20-synonym');
 
-
-
+# test an identifier from two organisms
 $result = $lookup->lookup([qw(cdc11)]);
 is(@{$result->{found}}, 2);
 
-
+# restrict organism
 $result =
   $lookup->lookup(
     {
