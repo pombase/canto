@@ -45,12 +45,14 @@ use PomCur::Track;
 
 __PACKAGE__->config->{namespace} = 'ws';
 
-sub lookup : Local
+sub _ontology_results
 {
-  my ($self, $c, $type_name, $component_name, $search_string) = @_;
+  my ($c, $component_name, $search_string) = @_;
 
   my $config = $c->config();
-  my $lookup = PomCur::Track::get_adaptor($config, $type_name);
+  my $lookup = PomCur::Track::get_adaptor($config, 'ontology');
+
+  my $max_results = $c->req()->param('max_results') || 10;
 
   my $component_config = $config->{annotation_types}->{$component_name};
 
@@ -66,7 +68,6 @@ sub lookup : Local
 
   $search_string ||= $c->req()->param('term');
 
-  my $max_results = $c->req()->param('max_results') || 10;
   my $include_definition = $c->req()->param('def');
   my $include_children = $c->req()->param('children');
 
@@ -78,6 +79,36 @@ sub lookup : Local
                     include_children => $include_children);
 
   map { $_->{value} = $_->{name} } @$results;
+
+  return $results;
+}
+
+sub _allele_results
+{
+  my ($c, $search_string) = @_;
+
+  my $config = $c->config();
+  my $lookup = PomCur::Track::get_adaptor($config, 'allele');
+
+  my $max_results = $c->req()->param('max_results') || 10;
+
+  return $lookup->lookup(search_string => $search_string,
+                         max_results => $max_results);
+}
+
+sub lookup : Local
+{
+  my $self = shift;
+  my $c = shift;
+  my $type_name = shift;
+
+  my $results;
+
+  if ($type_name eq 'allele') {
+    $results = _allele_results($c, @_);
+  } else {
+    $results = _ontology_results($c, @_);
+  }
 
   $c->stash->{json_data} = $results;
 

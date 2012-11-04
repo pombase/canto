@@ -2,7 +2,7 @@ package PomCur::Chado::GeneLookup;
 
 =head1 NAME
 
-PomCur::Track::GeneLookup - A GeneLookup that gets it's data from a ChadoDB
+PomCur::Track::GeneLookup - A GeneLookup that gets data from a ChadoDB
 
 =head1 SYNOPSIS
 
