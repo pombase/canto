@@ -90,6 +90,10 @@ sub _allele_results
   my $config = $c->config();
   my $lookup = PomCur::Track::get_adaptor($config, 'allele');
 
+  if (!defined $lookup) {
+    return [];
+  }
+
   my $max_results = $c->req()->param('max_results') || 10;
 
   return $lookup->lookup(search_string => $search_string,
