@@ -47,9 +47,11 @@ $user_created
         Conditions
       </th>
 % }
+% if ($some_row_has_qualifer) {
       <th>
         Qualifiers
       </th>
+% }
 % if ($needs_with_or_from) {
       <th>
         With
@@ -184,6 +186,7 @@ $user_created
       </span>
     </td>
 % }
+% if ($some_row_has_qualifer) {
     <td>
 % if ($row->{is_not}) {
 %   if (length $row->{qualifiers} > 0) {
@@ -194,6 +197,7 @@ NOT
 % }
       <% $row->{qualifiers} %>
     </td>
+% }
 % if ($needs_with_or_from) {
     <td>
       <span>
@@ -341,6 +345,7 @@ my $needs_allele = $annotation_type->{needs_allele};
 
 my $some_row_has_term_suggestion = grep { $_->{term_suggestion} } @annotations;
 my $some_row_has_comment = grep { $_->{comment} } @annotations;
+my $some_row_has_qualifer = grep { $_->{qualifiers} } @annotations;
 
 my $read_only_curs = $c->stash()->{read_only_curs};
 
