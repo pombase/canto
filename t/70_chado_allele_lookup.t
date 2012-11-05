@@ -20,6 +20,7 @@ cmp_deeply($res,
            {
              name => 'ste20delta',
              description => 'del_x1',
+             allele_type => 'deletion',
              uniquename => 'SPBC12C2.02c:allele-1',
            }
          ]);

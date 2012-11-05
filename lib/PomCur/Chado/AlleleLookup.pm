@@ -74,12 +74,19 @@ sub lookup
 
   my $desc_rs = $schema->resultset('Cv')
     ->search({ 'me.name' => 'PomBase feature property types' })
-    ->search_related('cvterms', { 'cvterms.name' => 'description' })
+    ->search_related('cvterms',
+                     {
+                       -or => [
+                         'cvterms.name' => 'description',
+                         'cvterms.name' => 'allele_type',
+                       ],
+                     })
     ->search_related('featureprops')
-    ->search({ feature_id => { -in => [ keys %res ] } });
+    ->search({ feature_id => { -in => [ keys %res ] } },
+             { prefetch => 'type' });
 
   while (defined (my $prop = $desc_rs->next())) {
-    $res{$prop->feature_id()}->{description} = $prop->value();
+    $res{$prop->feature_id()}->{$prop->type()->name()} = $prop->value();
   }
 
   return [sort { $a->{name} cmp $b->{name} } values %res];
