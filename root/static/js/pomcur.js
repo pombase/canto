@@ -60,6 +60,7 @@ var ferret_choose = {
 
   initialise : function(annotation_type, annotation_namespace) {
     ferret_choose.ontology_complete_url = make_ontology_complete_url(annotation_type);
+    ferret_choose.allele_lookup_url = application_root + 'ws/lookup/allele';
     ferret_choose.annotation_type = annotation_type;
     ferret_choose.annotation_namespace = annotation_namespace;
   },
@@ -1196,6 +1197,34 @@ var AlleleStuff = function($) {
       },
     ];
 
+    function allele_lookup(request, response) {
+      $.ajax({
+        url: ferret_choose.allele_lookup_url,
+        data: { term: request.term },
+        dataType: 'json',
+        success: function(data) {
+          var results =
+            $.grep(
+              existing_alleles_by_name,
+              function(el) {
+                return typeof(el.value) !== 'undefined' && el.value.indexOf(request.term) == 0;
+              })
+            .concat($.map(
+            data,
+            function(el) {
+              return {
+                value: el.name,
+                display_name: el.display_name,
+                description: el.description,
+                allele_type: el.allele_type
+              }
+            }));
+          response(results);
+        },
+        async: false
+      });
+    }
+
     var add_allele_dialog = $allele_dialog.dialog({
       modal: true,
       autoOpen: false,
@@ -1205,7 +1234,7 @@ var AlleleStuff = function($) {
       buttons : add_allele_buttons,
       open: function() {
         $('#curs-allele-add .curs-allele-name').autocomplete({
-          source: existing_alleles_by_name,
+          source: allele_lookup,
           select: function(event, ui) {
             var $description = get_allele_desc_jq($allele_dialog).val(ui.item.description);
             if (typeof(ui.item.allele_type) === 'undefined' ||

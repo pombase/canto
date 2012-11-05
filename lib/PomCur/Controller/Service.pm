@@ -87,6 +87,8 @@ sub _allele_results
 {
   my ($c, $search_string) = @_;
 
+  $search_string ||= $c->req()->param('term');
+
   my $config = $c->config();
   my $lookup = PomCur::Track::get_adaptor($config, 'allele');
 
