@@ -40,6 +40,7 @@ use Moose;
 with 'PomCur::Role::Configurable';
 with 'PomCur::Chado::ChadoLookup';
 
+use PomCur::Curs::Utils;
 
 sub lookup
 {
@@ -89,7 +90,17 @@ sub lookup
     $res{$prop->feature_id()}->{$prop->type()->name()} = $prop->value();
   }
 
-  return [sort { $a->{name} cmp $b->{name} } values %res];
+  my @res = sort { $a->{name} cmp $b->{name} } values %res;
+
+  return [ map {
+    my $display_name =
+      PomCur::Curs::Utils::make_allele_display_name($_->{name},
+                                                    $_->{description});
+
+
+    $_->{display_name} = $display_name;
+    $_;
+  } @res ];
 }
 
 1;
