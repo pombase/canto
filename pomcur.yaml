@@ -1086,6 +1086,7 @@ evidence_types:
   'Electrophoretic mobility shift assay data': ~
   'Northern assay evidence': ~
   'Particle size and count assay': ~
+  'Substance quantification': ~
   'Western blot assay': ~
   'Substance quantification evidence': ~
   'Competitive growth assay evidence': ~
