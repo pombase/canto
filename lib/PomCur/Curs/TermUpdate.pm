@@ -38,10 +38,25 @@ under the same terms as Perl itself.
 
 use Moose;
 
+with 'PomCur::Role::Configurable';
+
+has metadata_storer => (is => 'ro', init_arg => undef,
+                        isa => 'PomCur::Curs::MetadataStorer',
+                        lazy_build => 1);
+
+sub _build_metadata_storer
+{
+  my $self = shift;
+  my $storer = PomCur::Curs::MetadataStorer->new();
+
+  return $storer;
+}
+
 sub update_curs_terms
 {
-  my ($config, $curs, $cursdb) = @_;
+  my ($self, $curs, $cursdb) = @_;
 
+  my $config = $self->config();
   my $lookup = PomCur::Track::get_adaptor($config, 'ontology');
 
   my $annotation_rs = $cursdb->resultset('Annotation');
@@ -69,6 +84,8 @@ sub update_curs_terms
       }
     }
   }
+
+  $self->metadata_storer()->store_counts($config, $cursdb);
 }
 
 1;

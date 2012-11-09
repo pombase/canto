@@ -52,7 +52,7 @@ $config->{data_directory} = $test_util->test_data_dir_full_path();
 
 my %test_cases = %{$config->{test_config}->{test_cases}};
 
-my $metadata_storer = PomCur::Curs::MetadataStorer->new();
+my $metadata_storer = PomCur::Curs::MetadataStorer->new(config => $config);
 
 sub make_curs_dbs
 {
