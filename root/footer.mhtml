@@ -15,11 +15,15 @@
 var application_root = '<% $c->uri_for('/') %>';
 </script>
 
-% my $min_flag = '';
-% $min_flag = '.min' unless $c->debug();
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery<% $min_flag %>.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui<% $min_flag %>.js"></script>
-<script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/jquery.validate<% $min_flag %>.js"></script>
+% if ($c->debug()) {
+<script src="<% $c->uri_for('/static/js/jquery-1.7.1.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery-ui-1.8.19.custom.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery.validate-1.9.0.js') %>"></script>
+% } else {
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+% }
 <script src="<% $c->uri_for('/static/js/jquery.ba-bbq.min.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.shiftcheckbox.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.pnotify.min.js') %>"></script>

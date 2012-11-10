@@ -5,8 +5,13 @@ $title
 <title><% $c->config()->{long_name} %> - <% $title %></title>
 <meta charset="UTF-8"/>
 <meta name="robots" content="noindex">
+
+% if ($c->debug()) {
+<link href="<% $c->uri_for('/static/css/jquery-ui-1.8.19.custom.css') %>" type="text/css" rel="stylesheet" />
+% } else {
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" 
       type="text/css" rel="stylesheet"/>
+% }
 <link href="<% $c->uri_for('/static/css/style.css') %>" type="text/css" rel="stylesheet" />
 <link href="<% $c->uri_for('/static/css/jquery.tagit.css') %>" type="text/css" rel="stylesheet" />
 <link href="<% $c->uri_for('/static/css/jquery.pnotify.default.css') %>" type="text/css" rel="stylesheet" />
