@@ -245,9 +245,12 @@ NOT
       <span>
 %     my $url = $comment_edit_url  . $row->{annotation_id};
 %     my $escaped_comment = PomCur::WebUtil::escape_inline_js($row->{comment} // '');
+%     my $view_edit_text = $escaped_comment eq '' ? 'Add' : 'View/edit';
       <a href="#" class="curs-editable-table-field"
          title="<% $escaped_comment %>"
-         onclick="javascript:EditDialog.create('Edit comment', '<% $escaped_comment %>', '<% $url %>'); return false;">View/edit ...</a>
+         onclick="javascript:EditDialog.create('Edit comment',
+         '<% $escaped_comment %>', '<% $url %>'); return
+         false;"><% $view_edit_text %> ...</a>
       </span>
     </td>
     <td>
