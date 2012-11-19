@@ -971,6 +971,9 @@ input[readonly="1"] {
 #curs-allele-add tr td:first-child {
   width: 10em;
 }
+tr.curs-allele-expression td {
+  padding-top: 15px;
+}
 
 #curs-allele-description-example {
   font-size: 90%;
