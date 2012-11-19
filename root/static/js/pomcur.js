@@ -984,7 +984,6 @@ var AlleleStuff = function($) {
     var selected_text = selected_option.text();
     var allele_type_config = allele_types[selected_text];
     var label = $allele_dialog.find('.curs-allele-type-label');
-    var description_example_row = $('#curs-allele-description-example-row');
     var description_example = $('#curs-allele-description-example');
     description_example.html('');
 
@@ -1305,6 +1304,7 @@ var AlleleStuff = function($) {
       hide_allele_description($allele_dialog);
       get_allele_type_select_jq($allele_dialog).val(undefined).trigger('change');
       var name_input = get_allele_name_jq($allele_dialog);
+      $('#curs-allele-description-example').html('');
       if (typeof(name_input.data('autopopulated_name')) != 'undefined' &&
           name_input.val() === name_input.data('autopopulated_name')) {
         // clear the name if we created it
