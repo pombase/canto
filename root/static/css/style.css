@@ -976,6 +976,7 @@ input[readonly="1"] {
   font-size: 90%;
   color: #666;
   font-style: italic;
+  white-space: nowrap;
 }
 
 form label.error {

@@ -960,13 +960,13 @@ allele_type_list:
     description_required: 1
     allele_name_required: 0
     allow_expression_change: 1
-    placeholder: eg. 100-200
+    placeholder: eg. 100-200 OR -20--30 (for promoter region)
   - name: mutation of a single nucleotide
     export_type: nucleotide_mutation
     description_required: 1
     allele_name_required: 0
     allow_expression_change: 1
-    placeholder: eg. A25G
+    placeholder: eg. A25G, OR A-25G (for promoter region)
   - name: other
     export_type: other
     description_required: 1
