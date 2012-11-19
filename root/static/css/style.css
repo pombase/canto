@@ -972,6 +972,12 @@ input[readonly="1"] {
   width: 10em;
 }
 
+#curs-allele-description-example {
+  font-size: 90%;
+  color: #666;
+  font-style: italic;
+}
+
 form label.error {
   padding-left: 1em;
   color: red;

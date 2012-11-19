@@ -984,16 +984,19 @@ var AlleleStuff = function($) {
     var selected_text = selected_option.text();
     var allele_type_config = allele_types[selected_text];
     var label = $allele_dialog.find('.curs-allele-type-label');
+    var description_example_row = $('#curs-allele-description-example-row');
+    var description_example = $('#curs-allele-description-example');
+    description_example.html('');
+
     if (allele_type_config.description_required == 1) {
       label.show();
       label.find('span').text(selected_text);
       var description_placeholder_text = allele_type_config.placeholder;
-      if (allele_type_config.placeholder === '') {
-        description_input.attr('placeholder', '');
-      } else {
-        description_input.attr('placeholder', description_placeholder_text);
+      if (allele_type_config.placeholder !== '') {
+        description_example.html(description_placeholder_text);
       }
       description_input.removeAttr('disabled');
+      description_input.attr('placeholder', '');
     } else {
       label.hide();
       description_input.attr('placeholder', selected_text);

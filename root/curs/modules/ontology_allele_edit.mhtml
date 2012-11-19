@@ -54,6 +54,8 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </td>
         <td>
           <input name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
+          <span id="curs-allele-description-example">
+          </span>
           <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete"/>
         </td>
       </tr>
