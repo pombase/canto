@@ -164,7 +164,7 @@ if (@ontology_args) {
 
   $guard->commit unless $dry_run;
 
-  my $term_update = PomCur::Curs::TermUpdate(config => $config);
+  my $term_update = PomCur::Curs::TermUpdate->new(config => $config);
 
   my $iter = PomCur::Track::curs_iterator($config, $schema);
   while (my ($curs, $cursdb) = $iter->()) {
