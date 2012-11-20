@@ -84,7 +84,7 @@ $app = Plack::Middleware::Expires->wrap($app,
                                         content_type => $type_re,
                                         expires => 'access plus 999 days');
 
-if ($ENV{PLACK_DEBUG} > 1) {
+if (defined $ENV{PLACK_DEBUG} && $ENV{PLACK_DEBUG} > 1) {
   $app = Plack::Middleware::Debug->wrap($app);
   $app = Plack::Middleware::InteractiveDebugger->wrap($app);
 }
