@@ -40,6 +40,8 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
+use IO::All;
+
 =head2 page
 
  Function: Render an HTML template from the local_templates directory
@@ -55,7 +57,7 @@ sub local : Path :Args(1)
   my $st = $c->stash();
 
   $st->{title} = $config->{long_name};
-  $st->{show_title} = 0;
+  $st->{show_title} = 1;
 
   my $local_templates_dir_name = "local_templates";
   my $template_file_name = "$page_name.mhtml";
@@ -64,6 +66,12 @@ sub local : Path :Args(1)
     $c->path_to('root', $local_templates_dir_name, $template_file_name);
 
   if (-f $template_file) {
+    my @lines = io($template_file)->slurp;
+    for my $line (@lines) {
+      if ($line =~ /<!--\s*PAGE_TITLE:\s*(.*?)\s*-->/) {
+        $st->{title} = $1;
+      }
+    }
     $st->{template} = "$local_templates_dir_name/$template_file_name";
   } else {
     $c->stash()->{error} =

@@ -1,9 +1,10 @@
+<!-- PAGE_TITLE: Welcome to Canto -->
 <p>
-  Welcome to CANTO, the <a href="http://www.pombase.org">PomBase</a> community
-  curation tool.
+  This site hosts the <a href="http://www.pombase.org">PomBase</a> community
+  curation tool: Canto.
 </p>
 <p>
-  CANTO is an online annotation tool which has been developed to allow
+  Canto is an online annotation tool which has been developed to allow
   researchers to curate the genetic and molecular data from their publications
   for inclusion in public biological databases. Fission yeast data curated in
   Canto will have priority for inclusion in the PomBase model organism database,
@@ -11,9 +12,7 @@
   (e.g. GenBank/ENA/DDBJ, UniProt, BioGRID and GO).
 </p>
 <p>
-  Originally created for members of the fission yeast community, CANTO is a
+  Originally created for members of the fission yeast community, Canto is a
   generic tool which can be readily configured for use with other organisms and
   other databases.
 </p>
-
-
