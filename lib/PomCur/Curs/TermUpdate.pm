@@ -38,6 +38,8 @@ under the same terms as Perl itself.
 
 use Moose;
 
+use PomCur::Curs::MetadataStorer;
+
 with 'PomCur::Role::Configurable';
 
 has metadata_storer => (is => 'ro', init_arg => undef,

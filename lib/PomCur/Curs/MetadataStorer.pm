@@ -37,6 +37,8 @@ under the same terms as Perl itself.
 
 use Moose;
 
+use PomCur::Curs::State;
+
 with 'PomCur::Role::MetadataAccess';
 with 'PomCur::Curs::Role::GeneResultSet';
 
