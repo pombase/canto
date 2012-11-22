@@ -46,7 +46,7 @@ use base 'Catalyst::Controller';
  Args    : $name - page name
 
 =cut
-sub page : Local
+sub local : Path :Args(1)
 {
   my ($self, $c, $page_name) = @_;
 
@@ -63,7 +63,7 @@ sub page : Local
   my $template_file =
     $c->path_to('root', $local_templates_dir_name, $template_file_name);
 
-  if (-f $template_file->stat()) {
+  if (-f $template_file) {
     $st->{template} = "$local_templates_dir_name/$template_file_name";
   } else {
     $c->stash()->{error} =
