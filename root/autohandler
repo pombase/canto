@@ -20,7 +20,7 @@ $is_admin_user
     <div id="content">
       <div id="title-nav">
 <& breadcrumbs.mhtml &>
-<& contact.mhtml &>
+<span id="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
 
 <div id="notice-list">
 % for my $notice (@notices) {

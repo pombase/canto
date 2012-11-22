@@ -683,12 +683,7 @@ $(document).ready(function() {
 
   $('#pubmed-id-lookup-curate').click(function () {
     var pubmedid = $('#pub-details-uniquename').data('pubmedid');
-    var base = window.location.href.match(new RegExp('(http://[^/]+)/([^/]+)'));
-    var bits = base.splice(1);
-    if (bits[1] != 'tools') {
-      bits.push('tools');
-    }
-    window.location.href = bits.join('/') + '/start/' + pubmedid;
+    window.location.href = '/tools/start/' + pubmedid;
   });
 
   $('.non-key-attribute').jTruncate({

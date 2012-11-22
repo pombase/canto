@@ -1,0 +1,37 @@
+<!-- PAGE_TITLE: Curating a paper with Canto -->
+<p>
+For newly published papers, PomBase curators will email authors inviting them
+to participate, with specific instructions and links. Lab members are also
+welcome to evaluate existing annotations and create new annotations from past
+publications.
+</p>
+<p>
+  <& /tools/pubmed_id_start.mhtml, title => 'If you wish to curate a paper from your laboratory, please enter the PubMed ID and proceed as directed.' &>
+</p>
+<p>
+You will be asked to supply the genes from you publication. You can then
+annotate your genes with:
+</p>
+<ol>
+  <li>Phenotypes (including details of alleles and conditions)</li>
+  <li>GO terms (biological processes, cellular components, and molecular functions)</li>
+  <li>Genetic and physical interactions (BioGRID format)</li>
+  <li>Protein modifications</li>
+</ol>
+<p>
+Once you have begun curating the information will be preserved at this URL, so
+you do not need to complete the curation in one session. You can use the
+'Contact curators' link at any point if you get stuck, or have any questions.
+</p>
+<p>
+Please note that you should only curate information supported by experiments
+supported in the paper you are curating. If you want to capture other
+information not directly shown in a particular paper, please contact us
+directly.  [<& /contact.mhtml, link_text => 'contact curators ...' &>].
+</p>
+<p>
+If you have a large gene list with only one of two types of data (e.g. a
+phenotype screen), you may want to supply the data as spreadsheet rather than
+via Canto. Please contact us directly for format details.
+[<& /contact.mhtml, link_text => 'contact curators ...' &>].
+</p>
