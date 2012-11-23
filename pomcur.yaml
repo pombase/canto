@@ -1,5 +1,5 @@
 # PomCur config file  -*- conf -*-
-name: PomCur
+name: Canto
 long_name: Pombe community curation application
 database_name: PomBase
 header_image: logos/curation_tool.png

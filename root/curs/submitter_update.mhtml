@@ -1,6 +1,7 @@
 <%args>
 $form
 $title
+$pub
 </%args>
 
 <div id="curs-submitter-update" class="curs-box">
@@ -8,8 +9,19 @@ $title
 <% $title %>
   </div>
   <div class="curs-box-body">
-    <p>Please enter your name and email address:</p>
+    <p>
+You are about to start curating data from this paper:
 
+<div class="pub-details">
+<& /pub_details_contents.mhtml, pub => $pub &>
+</div>
+
+Please annotate only the data that you have determined directly in the
+experiments described in this paper. If you have any questions, help is
+available on many pages, or you can contact the PomBase staff for
+assistance at any time.
+    </p>
+    <p>Please enter your name and email address:</p>
     <% $form |n %>
   </div>
 </div>

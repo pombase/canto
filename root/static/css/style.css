@@ -875,6 +875,10 @@ span.pomcur-select-buttons {
   width: 70%;
 }
 
+#curs-submitter-update .pub-details {
+  padding: 5px 70px 10px 40px;
+}
+
 #curs-gene-update .textarea {
   padding-top: 15px;
 }

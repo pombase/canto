@@ -7,36 +7,6 @@ $pub
 Publication details
   </div>
   <div class="curs-box-body">
-<& /linkouts.mhtml, object => $pub, context => 'pub' &>
-    <table class="curs-definition-table">
-      <tr>
-        <td class="title"><% $uniquename_desc %></td>
-        <td id="pub-details-uniquename"><% $uniquename %></td>
-      </tr>
-      <tr>
-        <td class="title">Title</td>
-        <td id="pub-details-title"><% $title %></td>
-      </tr>
-      <tr>
-        <td class="title">Authors</td>
-        <td><% $authors %></td>
-      </tr>
-    </table>
+<& /pub_details_contents.mhtml, pub => $pub &>
   </div>
 </div>
-
-<%init>
-my $uniquename_desc;
-
-if ($pub->uniquename() =~ /PMID/) {
-  $uniquename_desc = 'ID';
-} else {
-  $uniquename_desc = 'Database ID';
-}
-
-my $uniquename = $pub->uniquename();
-my $title = $pub->title();
-my $authors = $pub->authors();
-my $abstract = $pub->abstract();
-
-</%init>

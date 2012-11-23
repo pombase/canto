@@ -283,8 +283,9 @@ sub submitter_update : Private
   my ($self, $c) = @_;
 
   my $st = $c->stash();
+  my $config = $c->config();
 
-  $st->{title} = 'Curator details';
+  $st->{title} = 'Welcome to ' . $config->{name} . ' at ' . $config->{database_name};
   $st->{show_title} = 0;
   $st->{template} = 'curs/submitter_update.mhtml';
 
@@ -336,7 +337,7 @@ sub submitter_update : Private
 
     $schema->txn_do($add_submitter);
 
-    $self->state()->store_statuses($c->config(), $schema);
+    $self->state()->store_statuses($config, $schema);
 
     _redirect_and_detach($c);
   }
