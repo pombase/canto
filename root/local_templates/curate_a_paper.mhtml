@@ -1,9 +1,8 @@
 <!-- PAGE_TITLE: Curating a paper with Canto -->
 <p>
-For newly published papers, PomBase curators will email authors inviting them
-to participate, with specific instructions and links. Lab members are also
-welcome to evaluate existing annotations and create new annotations from past
-publications.
+PomBase curators will email authors inviting them to curate newly published
+papers.  Lab members are also welcome to evaluate existing annotations and
+create new annotations from past publications.
 </p>
 <p>
   <& /tools/pubmed_id_start.mhtml, title => 'If you wish to curate a paper from your laboratory, please enter the PubMed ID and proceed as directed.' &>
