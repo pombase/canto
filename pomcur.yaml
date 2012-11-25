@@ -1192,24 +1192,24 @@ annotation_type_list:
       - Chromatin immunoprecipitation experiment
       - Chromatography evidence
       - Co-immunoprecipitation experiment
+      - Competitive growth assay evidence
       - Electrophoretic mobility shift assay data
       - Enzyme assay data
       - Epitope-tagged protein immunolocalization experiment data
       - Flow cytometry data
       - Fusion protein localization experiment
+      - Gel electrophoresis evidence
       - Immunolocalization experiment data
       - Microscopy
       - Northern assay evidence
+      - Other
       - Particle size and count assay
+      - Plasmid maintenance assay evidence
       - Protein localization experiment
       - Quantitative PCR
       - Reporter gene assay
-      - Western blot assay
       - Substance quantification evidence
-      - Competitive growth assay evidence
-      - Gel electrophoresis evidence
-      - Plasmid maintenance assay evidence
-      - Other
+      - Western blot assay
     broad_term_suggestions: >
       cell phenotype, multinucleate, abnormal spindle, inviable
     specific_term_examples: >
