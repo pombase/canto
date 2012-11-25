@@ -74,7 +74,7 @@ Details for <% $gene->display_name() %>
         <td class="title">Product</td>
         <td><% $gene->product() %></td>
       </tr>
-% if ($c->stash()->{multi_organism_mode}) {
+% if ($st->{multi_organism_mode}) {
       <tr>
         <td class="title">Organism</td>
         <td><% $gene->organism()->full_name() %></td>
@@ -86,7 +86,7 @@ Details for <% $gene->display_name() %>
 
 <div class="clearall"/>
 
-<button type="button" id="curs-finish-gene" class="curs-finish-button">Change gene</button>
+<button type="button" id="curs-finish-gene" class="curs-finish-button"><% $finish_text %></button>
 
 <div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {
@@ -118,5 +118,14 @@ if (defined $org_config) {
   }
 }
 
-my $is_admin = $c->stash()->{is_admin_user};
+my $st = $c->stash();
+
+my $gene_count = $st->{gene_count};
+my $finish_text;
+if ($gene_count > 1) {
+  $finish_text = 'Change gene';
+} else {
+  $finish_text = 'Back to summary';
+}
+my $is_admin = $st->{is_admin_user};
 </%init>
