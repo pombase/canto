@@ -1084,7 +1084,6 @@ evidence_types:
   'Protein localization experiment': ~
   'Co-immunoprecipitation experiment': ~
   'Electrophoretic mobility shift assay data': ~
-  'Northern assay evidence': ~
   'Particle size and count assay': ~
   'Substance quantification': ~
   'Western blot assay': ~
@@ -1201,7 +1200,6 @@ annotation_type_list:
       - Gel electrophoresis evidence
       - Immunolocalization experiment data
       - Microscopy
-      - Northern assay evidence
       - Other
       - Particle size and count assay
       - Plasmid maintenance assay evidence
@@ -1209,6 +1207,7 @@ annotation_type_list:
       - Quantitative PCR
       - Reporter gene assay
       - Substance quantification evidence
+      - Transcript expression level evidence
       - Western blot assay
     broad_term_suggestions: >
       cell phenotype, multinucleate, abnormal spindle, inviable
