@@ -4,7 +4,7 @@ long_name: Pombe community curation application
 database_name: PomBase
 header_image: logos/curation_tool.png
 
-app_version: v508
+app_version: v509
 
 schema_version: 0
 
