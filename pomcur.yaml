@@ -1078,10 +1078,8 @@ evidence_types:
   'Flow cytometry data': ~
   'Chromatin immunoprecipitation experiment': ~
   'Quantitative PCR': ~
-  'Fusion protein localization experiment': ~
   'Immunolocalization experiment data': ~
   'Epitope-tagged protein immunolocalization experiment data': ~
-  'Protein localization experiment': ~
   'Co-immunoprecipitation experiment': ~
   'Electrophoretic mobility shift assay data': ~
   'Particle size and count assay': ~
@@ -1196,14 +1194,12 @@ annotation_type_list:
       - Enzyme assay data
       - Epitope-tagged protein immunolocalization experiment data
       - Flow cytometry data
-      - Fusion protein localization experiment
       - Gel electrophoresis evidence
       - Immunolocalization experiment data
       - Microscopy
       - Other
       - Particle size and count assay
       - Plasmid maintenance assay evidence
-      - Protein localization experiment
       - Quantitative PCR
       - Reporter gene assay
       - Substance quantification evidence
