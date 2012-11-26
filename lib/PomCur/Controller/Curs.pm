@@ -53,6 +53,7 @@ use Hash::Merge;
 use PomCur::Track;
 use PomCur::Curs::Utils;
 use PomCur::Curs::MetadataStorer;
+use PomCur::MailSender;
 
 use constant {
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
@@ -2550,6 +2551,7 @@ sub finish_form : Chained('top') Args(0)
       $force = { force => SESSION_ACCEPTED };
     }
 
+    _send_admin_mail($self, $c, subject => 'Session ready for approval');
     $self->state()->set_state($config, $schema, NEEDS_APPROVAL, $force);
   }
 }
@@ -2645,8 +2647,32 @@ sub _start_approval
 
 }
 
+sub _send_admin_mail
+{
+  my $self = shift;
+  my $c = shift;
+
+  my %args = @_;
+
+  my $st = $c->stash();
+
+  my $body = "Curated by: " .$st->{submitter_name} . " <" .
+    $st->{submitter_email} .
+    ">\nPublication: " . $st->{pub}->uniquename() . ": " .
+    $st->{pub}->title() . "\n" .
+    "Session: " . $st->{curs_root_uri} . "\n";
+
+  my $config = $c->config();
+  my $mail_sender = PomCur::MailSender->new(config => $config);
+
+  $mail_sender->send_to_admin(subject => $args{subject},
+                              body => $body);
+}
+
 sub begin_approval : Chained('top') Args(0)
 {
+  my ($self, $c) = @_;
+
   _start_approval(@_);
 }
 
