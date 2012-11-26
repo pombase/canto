@@ -1094,7 +1094,10 @@ sub annotation_ontology_edit
     my $annotation;
 
     if (defined $annotation_id) {
-      $annotation = _re_edit_annotation($c, $annotation_config, $annotation_id, \%annotation_data);
+      $annotation = $schema->find_with_type('Annotation',
+                                            {
+                                              annotation_id => $annotation_id,
+                                            });
     } else {
       $annotation =
         $schema->create_with_type('Annotation',
