@@ -32,6 +32,13 @@ authentication:
 view_options:
   max_inline_results_length: 1000
 
+# from_address - used as the "from" field is all outgoing messages
+# admin_address - the contact address of the admin curators, used to
+#                 alert about completed sessions and problems
+email:
+  from_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
+  admin_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
+
 # see PomCur::Meta::Util::initialise_core_data()
 db_initial_data:
   track:

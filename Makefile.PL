@@ -85,6 +85,8 @@ requires 'HTML::HTML5::Builder';
 requires 'CHI';
 requires 'CHI::Driver::Memcached';
 requires 'Cache::Memcached';
+requires 'Email::Simple';
+requires 'Email::Sender';
 
 test_requires 'Test::More' => '0.88';
 test_requires 'Test::Deep';
