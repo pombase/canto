@@ -137,7 +137,7 @@ sub schema
   return $schema_class_name->new(config => $self->config());
 }
 
-=head2
+=head2 local_path
 
  Usage   : my $local_path = $c->local_path();
  Function: If Catalyst::TraitFor::Request::ProxyBase is enabled use the
