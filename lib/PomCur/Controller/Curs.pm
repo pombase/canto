@@ -2658,7 +2658,7 @@ sub _send_admin_mail
 
   my $body = "Curated by: " .$st->{submitter_name} . " <" .
     $st->{submitter_email} .
-    ">\nPublication: " . $st->{pub}->uniquename() . ": " .
+    ">\nPublication: " . $st->{pub}->uniquename() . " - " .
     $st->{pub}->title() . "\n" .
     "Session: " . $st->{curs_root_uri} . "\n";
 
