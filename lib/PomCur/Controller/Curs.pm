@@ -2558,7 +2558,10 @@ sub finish_form : Chained('top') Args(0)
       $force = { force => SESSION_ACCEPTED };
     }
 
-    _send_admin_mail($self, $c, subject => 'Session ready for approval');
+    if (!$st->{is_admin_session}) {
+      _send_admin_mail($self, $c,
+                       subject => 'Session ready for approval');
+    }
     $self->state()->set_state($config, $schema, NEEDS_APPROVAL, $force);
   }
 }
