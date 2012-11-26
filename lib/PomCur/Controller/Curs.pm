@@ -1098,6 +1098,10 @@ sub annotation_ontology_edit
                                             {
                                               annotation_id => $annotation_id,
                                             });
+      my %current_data = %{$annotation->data()};
+      @current_data{keys %annotation_data} = values %annotation_data;
+      $annotation->data(\%current_data);
+      $annotation->update();
     } else {
       $annotation =
         $schema->create_with_type('Annotation',
