@@ -8,7 +8,7 @@ create new annotations from past publications.
   <& /tools/pubmed_id_start.mhtml, title => 'If you wish to curate a paper from your laboratory, please enter the PubMed ID and proceed as directed.' &>
 </p>
 <p>
-You will be asked to supply the genes from you publication. You can then
+You will be asked to supply the genes from your publication. You can then
 annotate your genes with:
 </p>
 <ol>
@@ -18,19 +18,24 @@ annotate your genes with:
   <li>Protein modifications</li>
 </ol>
 <p>
-Once you have begun curating the information will be preserved at this URL, so
+At present, gene names and product descriptions cannot be changed using Canto. 
+Existing annotations also cannot be altered or deleted.
+If you have new gene names or updated product descriptions, or if you notice 
+any errors in existing annotations, please put them in the comment box that 
+you will see when you submit your annotations.
+</p>
+<p>
+Once you have begun curating the information will be preserved at a stable URL, so
 you do not need to complete the curation in one session. You can use the
 'Contact curators' link at any point if you get stuck, or have any questions.
 </p>
 <p>
 Please note that you should only curate information supported by experiments
 supported in the paper you are curating. If you want to capture other
-information not directly shown in a particular paper, please contact us
-directly.  [<& /contact.mhtml, link_text => 'contact curators ...' &>].
+information not directly shown in a particular paper, please <& /contact.mhtml, link_text => 'contact us directly' &>.
 </p>
 <p>
 If you have a large gene list with only one of two types of data (e.g. a
 phenotype screen), you may want to supply the data as spreadsheet rather than
-via Canto. Please contact us directly for format details.
-[<& /contact.mhtml, link_text => 'contact curators ...' &>].
+via Canto. Please <& /contact.mhtml, link_text => 'contact us directly' &> for format details.
 </p>
