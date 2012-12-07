@@ -464,7 +464,7 @@ function make_ferret_name_input(search_namespace, ferret_input, select_callback)
     select: select_callback
   }).data("autocomplete")._renderItem = function( ul, item ) {
     var search_string = ferret_input.val();
-    render_term_item(ul, item, search_string, search_namespace);
+    return render_term_item(ul, item, search_string, search_namespace);
   };
 
   function do_autocomplete () {
