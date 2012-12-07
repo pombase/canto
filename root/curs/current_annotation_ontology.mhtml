@@ -243,14 +243,29 @@ NOT
 %   }
     <td>
       <span>
-%     my $url = $comment_edit_url  . $row->{annotation_id};
-%     my $escaped_comment = PomCur::WebUtil::escape_inline_js($row->{comment} // '');
-%     my $view_edit_text = $escaped_comment eq '' ? 'Add' : 'View/edit';
-      <a href="#" class="curs-editable-table-field"
-         title="<% $escaped_comment %>"
-         onclick="javascript:EditDialog.create('Edit comment',
-         '<% $escaped_comment %>', '<% $url %>'); return
-         false;"><% $view_edit_text %> ...</a>
+<%perl>
+     my $url = $comment_edit_url  . $row->{annotation_id};
+     my $escaped_comment = PomCur::WebUtil::escape_inline_js($row->{comment} // '');
+     my $view_edit_text = undef;
+     my $comment_onclick;
+     if ($read_only_curs) {
+       if ($escaped_comment ne '') {
+         $view_edit_text = 'View';
+         $comment_onclick = "javascript:pomcur_util.show_message('View comment',  '$escaped_comment'); return false;";
+       }
+     } else {
+       if ($escaped_comment eq '') {
+         $view_edit_text = 'Add';
+       } else {
+         $view_edit_text = 'View/edit';
+       }
+       $comment_onclick = "javascript:EditDialog.create('Edit comment',  '$escaped_comment', '$url'); return false;";
+     }
+</%perl>
+% if (defined $view_edit_text) {
+      <a href="#" class="curs-editable-table-field" title="<% $escaped_comment %>"
+         onclick="<% $comment_onclick %>"><% $view_edit_text %> ...</a>
+% }
       </span>
     </td>
     <td>
