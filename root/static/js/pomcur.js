@@ -1021,6 +1021,12 @@ var AlleleStuff = function($) {
     }
 
     setup_allele_name($allele_dialog, allele_type_config);
+
+    // hack to make sure all contents are visible, from:
+    // http://stackoverflow.com/a/10457932
+    $allele_dialog.css('height', '');
+    // recentre:
+    $('#curs-allele-add').parent('.ui-dialog').position({ of: $(window) });
   }
 
   function setup_allele_name($allele_dialog, allele_type_config) {
