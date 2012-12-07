@@ -124,10 +124,10 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
     <div class="curs-allele-condition-buttons">
       <div>Previously used conditions:</div>
     </div>
+% }
     <div class="curs-allele-reuse">
       <input type="checkbox" name="curs-allele-reuse-dialog" value="Reuse"/>Re-use allele name and description with a different set of conditions<br/>
     </div>
-% }
   </form>
 </div>
 

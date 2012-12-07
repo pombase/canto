@@ -896,6 +896,8 @@ var AlleleStuff = function($) {
     var $form = $('#curs-allele-add form');
     $form.find('.curs-allele-description-input').removeAttr('disabled');
     var $orig_allele_row = $allele_dialog.data('edit_allele_row');
+    var $reuse_checkbox = $form.find('input[name="curs-allele-reuse-dialog"]');
+    var $reuse_checkbox_checked = $reuse_checkbox.is(':checked');
     if (!$allele_dialog.data('validate_on_add') || $form.validate().form()) {
       $form.ajaxSubmit({
         dataType: 'json',
@@ -911,13 +913,18 @@ var AlleleStuff = function($) {
             $allele_table.append($orig_allele_row);
           }
           if (editing_allele) {
-            window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id + '/edit';
+            if ($reuse_checkbox_checked) {
+              // we're not editing any more
+              editing_allele = false;
+              $allele_dialog.removeData('edit_allele_row');
+            } else {
+              window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id + '/edit';
+            }
           }
         },
       });
       $('#curs-allele-add .curs-allele-conditions').tagit("removeAll");
-      var $reuse_checkbox = $form.find('input[name="curs-allele-reuse-dialog"]');
-      if ($reuse_checkbox.is(':checked')) {
+      if ($reuse_checkbox_checked) {
         $.pnotify({
           pnotify_title: 'Notice',
           pnotify_text: 'Allele successfully added',
