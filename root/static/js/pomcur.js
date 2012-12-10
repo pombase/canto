@@ -1231,7 +1231,7 @@ var AlleleStuff = function($) {
             }));
           response(results);
         },
-        async: false
+        async: true
       });
     }
 
