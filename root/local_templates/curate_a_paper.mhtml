@@ -1,15 +1,11 @@
 <!-- PAGE_TITLE: Curating a paper with Canto -->
 <p>
-PomBase curators will email authors inviting them to curate newly published
-papers.  Lab members are also welcome to evaluate existing annotations and
-create new annotations from past publications.
+Curating a paper with Canto - Introduction
 </p>
+
 <p>
-  <& /tools/pubmed_id_start.mhtml, title => 'If you wish to curate a paper from your laboratory, please enter the PubMed ID and proceed as directed.' &>
-</p>
-<p>
-You will be asked to supply the genes from your publication. You can then
-annotate your genes with:
+When you start curating a paper, you will first be asked to supply the
+genes from your publication. You can then annotate your genes with:
 </p>
 <ol>
   <li>Phenotypes (including details of alleles and conditions)</li>
@@ -25,17 +21,18 @@ any errors in existing annotations, please put them in the comment box that
 you will see when you submit your annotations.
 </p>
 <p>
-Once you have begun curating the information will be preserved at a stable URL, so
+Once you have begun curating, the information will be preserved at a stable URL, so
 you do not need to complete the curation in one session. You can use the
 'Contact curators' link at any point if you get stuck, or have any questions.
 </p>
 <p>
-Please note that you should only curate information supported by experiments
-supported in the paper you are curating. If you want to capture other
-information not directly shown in a particular paper, please <& /contact.mhtml, link_text => 'contact us directly' &>.
+Please note that you should only curate information supported by
+experiments supported in the paper you are curating. If you want to
+capture other information not directly shown in a particular paper,
+please <& /contact.mhtml, link_text => 'contact us directly' &>.
 </p>
 <p>
-If you have a large gene list with only one of two types of data (e.g. a
+If you have a large gene list with only one or two types of data (e.g. a
 phenotype screen), you may want to supply the data as spreadsheet rather than
 via Canto. Please <& /contact.mhtml, link_text => 'contact us directly' &> for format details.
 </p>
