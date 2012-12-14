@@ -17,8 +17,8 @@
   other databases.
 </p>
 
-
-<a href="<% $c->uri_for('/local/curate_a_paper') %>">Curate a paper</a> <b>|</b>
+<a href="<% $c->uri_for('/local/canto_introduction') %>">About curating in Canto</a>
+<b>|</b>
 <a href="<% $c->uri_for('/local/about_pombase_curation_tool') %>">About community curation</a>
 
-<!-- <a href="demo">Demo</a> - <a href="help">Help</a> -->
+<!-- <a href="tutorial">Tutorial</a> - <a href="help">Help</a> -->
