@@ -17,7 +17,7 @@ $submitter_name => undef
       <& ../login_button.mhtml &>
     </li>
     <li>
-      <a href="<% $c->uri_for('/help') %>">Help</a>
+      <a href="<% $c->uri_for($c->config()->{help_path}) %>">Help</a>
     </li>
   </ul>
 </div>

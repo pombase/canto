@@ -10,6 +10,7 @@ schema_version: 0
 
 # the path that the home link goes to
 home_path: '/track/index_page'
+help_path: '/local/canto_introduction'
 
 # if zero, the user will need to log in before the links on the front page are
 # visible
