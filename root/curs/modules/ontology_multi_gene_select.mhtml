@@ -1,0 +1,30 @@
+<%args>
+xxxx
+$form
+$gene_display_name
+$term_ontid
+$pub
+</%args>
+
+<div class="curs-box with-gene-select">
+  <div class="curs-box-title">
+Genes to use in genotype for <% $term_ontid %>
+  </div>
+  <div class="curs-box-body">
+    <% $form |n %>
+  </div>
+
+  <div class="upload-genes-link">
+    <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
+  </div>
+</div>
+
+<%init>
+my $root_path = $c->stash()->{curs_root_path};
+
+my $local_path = $c->local_path();
+my $return_path_uri =
+  $c->uri_for($local_path, $c->req()->params());
+my $upload_path = $c->uri_for("$root_path/gene_upload",
+                              { return_path => $return_path_uri });
+</%init>
