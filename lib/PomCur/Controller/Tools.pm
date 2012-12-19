@@ -484,20 +484,6 @@ sub sessions_with_type_list : Local Args(0) {
   $st->{template} = 'tools/sessions_with_type_list.mhtml';
 }
 
-sub canto_front_page: Local Args(0)
-{
-  my ($self, $c) = @_;
-
-  my $st = $c->stash();
-
-  my $front_page_title = $c->config()->{front_page_title} // 'Front page';
-  my $front_page_template =
-    $c->config()->{front_page_template} // 'tools/default_front_page.mhtml';
-
-  $st->{title} = $front_page_title;
-  $st->{template} = $front_page_template;
-}
-
 =head1 LICENSE
 This library is free software. You can redistribute it and/or modify
 it under the same terms as Perl itself.

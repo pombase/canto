@@ -1,8 +1,8 @@
 <div id="breadcrumbs">
 % if ($is_admin) {
-  <div id="breadcrumbs-home-link" class="breadcrumbs-link">
-    <a href="<% $home_path %>" title="Go to the home page">
-      Home
+  <div id="breadcrumbs-admin-link" class="breadcrumbs-link">
+    <a href="<% $admin_path %>" title="Go to the admin page">
+      Admin
     </a>
 % }
   <div id="breadcrumbs-gene-summary-link" class="breadcrumbs-link">
@@ -34,7 +34,7 @@ if (defined $gene) {
   $gene_url = $curs_root_uri . '/gene/' . $gene->gene_id();
 }
 
-my $home_path = $c->uri_for('/');
+my $admin_path = $c->uri_for('/');
 
 my $is_admin = $c->stash()->{is_admin_user};
 </%init>

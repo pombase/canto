@@ -1,13 +1,23 @@
 <div id="breadcrumbs">
-% if ($current_path ne '/' && $current_path ne '/tools/canto_front_page') {
-  <a id="breadcrumbs-home-link" class="breadcrumbs-link" 
-     href="<% $home_path %>" title="Go to the home page">
-    Home
-  </a>
+% if ($current_path !~ m|/pombase_front_page|) {
+  <div class="breadcrumbs-link">
+    <a id="breadcrumbs-home-link"
+       href="/" title="Go to the home page">
+      Home
+    </a>
+% if ($current_path ne '/' && $current_path !~ m|/local/|) {
+  <div class="breadcrumbs-link">
+    <a id="breadcrumbs-admin-link"
+       href="<% $admin_path %>" title="Go to the admin page">
+      Admin
+    </a>
+  </div>
+%   }
+  </div>
 % }
 </div>
 
 <%init>
-my $home_path = $c->uri_for('/');
+my $admin_path = $c->uri_for('/');
 my $current_path = $c->local_path();
 </%init>
