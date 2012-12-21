@@ -22,8 +22,8 @@ $message_to_curators
 <button type="button" id="curs-stop-reviewing" class="curs-finish-button">Finish reviewing</button>
 % } else {
 % if ($state eq PomCur::Controller::Curs::CURATION_IN_PROGRESS) {
-<button type="button" id="curs-finish-publication" class="curs-finish-button">Submit to curators</button>
-<button type="button" id="curs-pause-publication" class="curs-finish-button">Pause curation</button>
+<button type="button" id="curs-finish-session" class="curs-finish-button">Submit to curators</button>
+<button type="button" id="curs-pause-session" class="curs-finish-button">Pause curation</button>
 % } else {
 <button type="button" id="curs-check-completed" class="curs-finish-button">Approve session</button>
 <button type="button" id="curs-cancel-approval" class="curs-finish-button">Cancel approval</button>

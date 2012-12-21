@@ -614,11 +614,11 @@ $(document).ready(function() {
     $(this).closest('div').find('input:checkbox').removeAttr('checked');
   });
 
-  $('#curs-finish-publication').click(function () {
+  $('#curs-finish-session').click(function () {
     window.location.href = curs_root_uri + '/finish_form';
   });
 
-  $('#curs-pause-publication').click(function () {
+  $('#curs-pause-session').click(function () {
     window.location.href = curs_root_uri + '/pause_curation';
   });
 
