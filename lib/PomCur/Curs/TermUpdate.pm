@@ -42,6 +42,9 @@ use PomCur::Curs::MetadataStorer;
 
 with 'PomCur::Role::Configurable';
 
+has config => (is => 'ro', isa => 'PomCur::Config',
+               required => 1);
+
 has metadata_storer => (is => 'ro', init_arg => undef,
                         isa => 'PomCur::Curs::MetadataStorer',
                         lazy_build => 1);
@@ -49,7 +52,7 @@ has metadata_storer => (is => 'ro', init_arg => undef,
 sub _build_metadata_storer
 {
   my $self = shift;
-  my $storer = PomCur::Curs::MetadataStorer->new();
+  my $storer = PomCur::Curs::MetadataStorer->new(config => $self->config());
 
   return $storer;
 }
@@ -87,7 +90,7 @@ sub update_curs_terms
     }
   }
 
-  $self->metadata_storer()->store_counts($config, $cursdb);
+  $self->metadata_storer()->store_counts($cursdb);
 }
 
 1;

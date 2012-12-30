@@ -617,11 +617,11 @@ sub store_all_statuses
   my $config = shift;
   my $track_schema = shift;
 
-  my $state = PomCur::Curs::State->new();
+  my $state = PomCur::Curs::State->new(config => $config);
 
   my $iter = PomCur::Track::curs_iterator($config, $track_schema);
   while (my ($curs, $cursdb) = $iter->()) {
-    $state->store_statuses($config, $cursdb);
+    $state->store_statuses($cursdb);
   }
 }
 

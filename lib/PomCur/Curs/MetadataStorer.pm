@@ -42,6 +42,9 @@ use PomCur::Curs::State;
 with 'PomCur::Role::MetadataAccess';
 with 'PomCur::Curs::Role::GeneResultSet';
 
+has config => (is => 'ro', isa => 'PomCur::Config',
+               required => 1);
+
 has state => (is => 'ro', init_arg => undef,
               isa => 'PomCur::Curs::State',
               lazy_build => 1);
@@ -49,7 +52,7 @@ has state => (is => 'ro', init_arg => undef,
 sub _build_state
 {
   my $self = shift;
-  my $state = PomCur::Curs::State->new();
+  my $state = PomCur::Curs::State->new(config => $self->config());
 
   return $state;
 }
@@ -81,7 +84,6 @@ sub _count_unknown_conditions
 sub store_counts
 {
   my $self = shift;
-  my $config = shift;
   my $schema = shift;
 
   if (!defined $schema) {
@@ -89,7 +91,7 @@ sub store_counts
   }
 
   my $ontology_lookup =
-    PomCur::Track::get_adaptor($config, 'ontology');
+    PomCur::Track::get_adaptor($self->config(), 'ontology');
 
   my $ann_rs = $schema->resultset('Annotation')->search();
 
@@ -112,7 +114,7 @@ sub store_counts
   $self->set_metadata($schema, PomCur::Curs::State::UNKNOWN_CONDITIONS_COUNT_KEY(),
                       $unknown_conditions_count);
 
-  $self->state()->store_statuses($config, $schema);
+  $self->state()->store_statuses($schema);
 }
 
 1;

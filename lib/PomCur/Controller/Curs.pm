@@ -74,29 +74,20 @@ my %state_dispatch = (
 # used by the tests to find the most reecently created annotation
 our $_debug_annotation_id = undef;
 
-has state => (is => 'ro', init_arg => undef,
+has state => (is => 'rw', init_arg => undef,
               isa => 'PomCur::Curs::State',
-              lazy_build => 1);
+              init_arg => undef);
 
-has metadata_storer => (is => 'ro', init_arg => undef,
+has metadata_storer => (is => 'rw', init_arg => undef,
                         isa => 'PomCur::Curs::MetadataStorer',
-                        lazy_build => 1);
+                        init_arg => undef);
 
-sub _build_state
-{
-  my $self = shift;
-  my $state = PomCur::Curs::State->new();
+#sub auto :Private
+#{
+#  my $self = shift;
+#  my $c = shift;
 
-  return $state;
-}
-
-sub _build_metadata_storer
-{
-  my $self = shift;
-  my $storer = PomCur::Curs::MetadataStorer->new();
-
-  return $storer;
-}
+#}
 
 =head2 top
 
@@ -106,6 +97,13 @@ sub _build_metadata_storer
 sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 {
   my ($self, $c, $curs_key) = @_;
+
+  if (!defined $self->state()) {
+    $self->state(PomCur::Curs::State->new(config => $c->config()));
+  }
+  if (!defined $self->metadata_storer()) {
+    $self->metadata_storer(PomCur::Curs::MetadataStorer->new(config => $c->config()));
+  }
 
   my $st = $c->stash();
 
@@ -338,7 +336,7 @@ sub submitter_update : Private
 
     $schema->txn_do($add_submitter);
 
-    $self->state()->store_statuses($config, $schema);
+    $self->state()->store_statuses($schema);
 
     _redirect_and_detach($c);
   }
@@ -551,7 +549,7 @@ sub edit_genes : Chained('top') Args(0) Form
   my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 0);
-  $self->state()->store_statuses($c->config(), $c->stash()->{schema});
+  $self->state()->store_statuses($c->stash()->{schema});
 }
 
 sub confirm_genes : Chained('top') Args(0) Form
@@ -560,7 +558,7 @@ sub confirm_genes : Chained('top') Args(0) Form
   my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 1);
-  $self->state()->store_statuses($c->config(), $c->stash()->{schema});
+  $self->state()->store_statuses($c->stash()->{schema});
 }
 
 sub gene_upload : Chained('top') Args(0) Form
@@ -716,7 +714,7 @@ sub gene_upload : Chained('top') Args(0) Form
 
       $c->flash()->{message} = $message;
 
-      $self->state()->store_statuses($c->config(), $schema);
+      $self->state()->store_statuses($schema);
 
       my $return_path = $form->param_value('return_path_input');
 
@@ -751,7 +749,7 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete')
     } else {
       $annotation->delete();
     }
-    $self->metadata_storer()->store_counts($config, $schema);
+    $self->metadata_storer()->store_counts($schema);
   };
 
   $schema->txn_do($delete_sub);
@@ -775,7 +773,7 @@ sub annotation_delete_suggestion : Chained('top') PathPart('annotation/delete_su
     delete $data->{term_suggestion};
     $annotation->data($data);
     $annotation->update();
-    $self->metadata_storer()->store_counts($config, $schema);
+    $self->metadata_storer()->store_counts($schema);
   };
 
   $schema->txn_do($delete_sub);
@@ -801,7 +799,7 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
 
   $schema->txn_do($delete_sub);
 
-  $self->state()->store_statuses($config, $schema);
+  $self->state()->store_statuses($schema);
 
   _redirect_and_detach($c);
 }
@@ -1122,11 +1120,11 @@ sub annotation_ontology_edit
 
     $guard->commit();
 
-    $self->metadata_storer()->store_counts($config, $schema);
+    $self->metadata_storer()->store_counts($schema);
 
     $_debug_annotation_id = $annotation_id;
 
-    $self->state()->store_statuses($c->config(), $schema);
+    $self->state()->store_statuses($schema);
 
     if ($is_new_annotation) {
       if ($annotation_config->{needs_allele}) {
@@ -1242,7 +1240,7 @@ sub annotation_interaction_edit
     my $annotation_id = $annotation->annotation_id();
     $_debug_annotation_id = $annotation_id;
 
-    $self->state()->store_statuses($config, $schema);
+    $self->state()->store_statuses($schema);
 
     _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
   }
@@ -1287,7 +1285,7 @@ sub _annotation_edit
     interaction => \&annotation_interaction_edit,
   );
 
-  $self->state()->store_statuses($config, $schema);
+  $self->state()->store_statuses($schema);
 
   &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene_proxy,
                                                     $annotation_config, $annotation_id);
@@ -1469,7 +1467,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     $annotation->data($data);
     $annotation->update();
 
-    $self->state()->store_statuses($config, $schema);
+    $self->state()->store_statuses($schema);
 
     if ($needs_with_gene) {
       my @parts = ('annotation', 'with_gene', $annotation_id);
@@ -1913,7 +1911,7 @@ sub _annotation_process_alleles_internal
 
   $schema->txn_do($process);
 
-  $self->metadata_storer()->store_counts($config, $schema);
+  $self->metadata_storer()->store_counts($schema);
 
   if (!$editing && $c->user_exists() && $c->user()->role()->name() eq 'admin') {
     _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
@@ -2186,7 +2184,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     $guard->commit();
 
-    $self->state()->store_statuses($config, $schema);
+    $self->state()->store_statuses($schema);
 
     _redirect_and_detach($c, 'gene', $gene->gene_id());
   }
@@ -2281,7 +2279,7 @@ sub _annotation_with_gene_internal
     }
   }
 
-  $self->state()->store_statuses($config, $schema);
+  $self->state()->store_statuses($schema);
 
 }
 
@@ -2562,7 +2560,7 @@ sub finish_form : Chained('top') Args(0)
       _send_admin_mail($self, $c,
                        subject => 'Session ready for approval');
     }
-    $self->state()->set_state($config, $schema, NEEDS_APPROVAL, $force);
+    $self->state()->set_state($schema, NEEDS_APPROVAL, $force);
   }
 }
 
@@ -2586,7 +2584,7 @@ sub pause_curation : Chained('top') Args(0)
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->state()->set_state($c->config(), $schema, CURATION_PAUSED);
+  $self->state()->set_state($schema, CURATION_PAUSED);
 
   _redirect_and_detach($c);
 }
@@ -2609,7 +2607,7 @@ sub restart_curation : Chained('top') Args(0)
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->state()->set_state($c->config(), $schema, CURATION_IN_PROGRESS);
+  $self->state()->set_state($schema, CURATION_IN_PROGRESS);
 
   $c->flash()->{message} = 'Session has been restarted';
 
@@ -2627,7 +2625,7 @@ sub reactivate_session : Chained('top') Args(0)
   croak "invalid state: $state, when reactivating session"
     unless $state eq NEEDS_APPROVAL or $state eq APPROVED;
 
-  $self->state()->set_state($c->config(), $schema, CURATION_IN_PROGRESS,
+  $self->state()->set_state($schema, CURATION_IN_PROGRESS,
                    { force => $state });
 
   $c->flash()->{message} = 'Session has been reactivated';
@@ -2644,7 +2642,7 @@ sub _start_approval
   my $current_user = $c->user();
 
   if (defined $current_user && $current_user->is_admin()) {
-    $self->state()->set_state($c->config(), $schema, APPROVAL_IN_PROGRESS,
+    $self->state()->set_state($schema, APPROVAL_IN_PROGRESS,
                      {
                        current_user => $current_user,
                        force => $force,
@@ -2718,7 +2716,7 @@ sub complete_approval : Chained('top') Args(0)
   } else {
     my $current_user = $c->user();
 
-    $self->state()->set_state($c->config(), $schema, APPROVED,
+    $self->state()->set_state($schema, APPROVED,
                               {
                                 current_user => $current_user,
                               });
@@ -2733,7 +2731,7 @@ sub cancel_approval : Chained('top') Args(0)
   my ($self, $c) = @_;
 
   my $schema = $c->stash()->{schema};
-  $self->state()->set_state($c->config(), $schema, NEEDS_APPROVAL,
+  $self->state()->set_state($schema, NEEDS_APPROVAL,
                             { force => APPROVAL_IN_PROGRESS });
   $c->flash()->{message} = 'Session approval cancelled';
 

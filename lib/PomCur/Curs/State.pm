@@ -82,12 +82,26 @@ use Sub::Exporter -setup => {
                   NEEDS_APPROVAL APPROVAL_IN_PROGRESS APPROVED EXPORTED/ ],
 };
 
+has config => (is => 'ro', isa => 'PomCur::Config', required => 1);
+has adaptor => (is => 'ro', init_arg => undef, lazy_build => 1);
+
+sub _build_adaptor
+{
+  my $self = shift;
+
+  return PomCur::Track::get_adaptor($self->config(), 'status');
+}
+
 # Return a constant describing the state of the application, eg. SESSION_ACCEPTED
 # or APPROVED
 sub get_state
 {
   my $self = shift;
   my $schema = shift;
+
+  if (@_ > 0) {
+    croak "too many arguments for get_state()";
+  }
 
   my $submitter_email = $self->get_metadata($schema, 'submitter_email');
 
@@ -131,20 +145,20 @@ sub get_state
 
 =head2
 
- Usage   : $self->store_statuses($config, $schema)
+ Usage   : $self->store_statuses($schema)
  Function: Store all the current state via the status adaptor
- Args    : $config - the Config object
-           $schema - the CursDB object
+ Args    : $schema - the CursDB object
  Returns : nothing
 
 =cut
 sub store_statuses
 {
   my $self = shift;
-  my $config = shift;
   my $schema = shift;
 
-  my $adaptor = PomCur::Track::get_adaptor($config, 'status');
+  if (@_ > 0) {
+    croak "too many arguments for store_statuses()";
+  }
 
   my ($status, $submitter_email, $gene_count) = $self->get_state($schema);
 
@@ -179,27 +193,26 @@ sub store_statuses
     $unknown_conditions_count = 0;
   }
 
-  $adaptor->store($curs_key, 'annotation_status', $status);
-  $adaptor->store($curs_key, 'session_genes_count', $gene_count // 0);
-  $adaptor->store($curs_key, 'session_term_suggestions_count',
-                  $term_suggestion_count);
-  $adaptor->store($curs_key, 'session_unknown_conditions_count',
-                  $unknown_conditions_count);
+  $self->adaptor()->store($curs_key, 'annotation_status', $status);
+  $self->adaptor()->store($curs_key, 'session_genes_count', $gene_count // 0);
+  $self->adaptor()->store($curs_key, 'session_term_suggestions_count',
+                          $term_suggestion_count);
+  $self->adaptor()->store($curs_key, 'session_unknown_conditions_count',
+                          $unknown_conditions_count);
 
   my $approver_name_row = $metadata_rs->find({ key => 'approver_name' });
   if (defined $approver_name_row) {
     my $approver_name = $approver_name_row->value();
-    $adaptor->store($curs_key, 'approver_name', $approver_name);
+    $self->adaptor()->store($curs_key, 'approver_name', $approver_name);
   } else {
     # remove name
-    $adaptor->store($curs_key, 'approver_name');
+    $self->adaptor()->store($curs_key, 'approver_name');
   }
 }
 
 sub set_state
 {
   my $self = shift;
-  my $config = shift;
   my $schema = shift;
   my $new_state = shift;
   my $options = shift;
@@ -319,7 +332,7 @@ sub set_state
     warn longmess(), "\n";
   }
 
-  $self->store_statuses($config, $schema);
+  $self->store_statuses($schema);
 }
 
 1;
