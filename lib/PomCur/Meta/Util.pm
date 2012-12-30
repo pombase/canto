@@ -89,7 +89,7 @@ sub initialise_app
   my $suffix = shift // 'deploy';
   my $config_dir = shift // '.';
 
-  my $app_name = lc $config->{name};
+  my $app_name = lc PomCur::Config::get_application_name();
 
   my $deploy_config_file_name = $app_name . '_' . $suffix . '.yaml';
 
