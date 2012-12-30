@@ -879,7 +879,7 @@ span.pomcur-select-buttons {
   float: left;
 }
 
-#pubmed-id-lookup-results, #curs-submitter-update, #curs-gene-update,
+#pubmed-id-lookup-results, #curs-assign-session, #curs-gene-update,
 #curs-gene-list-edit {
   width: 70%;
 }

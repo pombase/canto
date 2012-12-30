@@ -61,7 +61,7 @@ use constant {
 
 # actions to execute for each state, undef for special cases
 my %state_dispatch = (
-  SESSION_CREATED, 'submitter_update',
+  SESSION_CREATED, 'introduction',
   SESSION_ACCEPTED, 'gene_upload',
   CURATION_IN_PROGRESS, undef,
   CURATION_PAUSED, 'curation_paused',
@@ -277,7 +277,7 @@ sub read_only_summary : Chained('top') PathPart('ro') Args(0)
   $c->stash()->{message} = "Reviewing annotation session for $pub_uniquename";
 }
 
-sub submitter_update : Private
+sub introduction : Private
 {
   my ($self, $c) = @_;
 
@@ -286,60 +286,7 @@ sub submitter_update : Private
 
   $st->{title} = 'Welcome to ' . $config->{name} . ' at ' . $config->{database_name};
   $st->{show_title} = 0;
-  $st->{template} = 'curs/submitter_update.mhtml';
-
-  my $first_contact_name = $st->{first_contact_name};
-  my $first_contact_email = $st->{first_contact_email};
-
-  my $submitter_update_text_name = 'submitter_name';
-  my $submitter_update_text_email = 'submitter_email';
-
-  my $form = $self->form();
-
-  my @all_elements = (
-      {
-        name => 'submitter_name', label => 'Name', type => 'Text', size => 40,
-        value => $first_contact_name,
-        constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
-      },
-      {
-        name => 'submitter_email', label => 'Email', type => 'Text', size => 40,
-        value => $first_contact_email,
-        constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
-      },
-      {
-        name => 'submit', type => 'Submit', value => 'Continue',
-        attributes => { class => 'button', },
-      },
-    );
-
-  $form->elements([@all_elements]);
-
-  $form->process();
-
-  $st->{form} = $form;
-
-  if ($form->submitted_and_valid()) {
-    my $submitter_name = $form->param_value('submitter_name');
-    my $submitter_email = $form->param_value('submitter_email');
-
-    my $schema = PomCur::Curs::get_schema($c);
-
-
-    my $add_submitter = sub {
-      $schema->create_with_type('Metadata', { key => 'submitter_email',
-                                              value => $submitter_email });
-
-      $schema->create_with_type('Metadata', { key => 'submitter_name',
-                                              value => $submitter_name });
-    };
-
-    $schema->txn_do($add_submitter);
-
-    $self->state()->store_statuses($schema);
-
-    _redirect_and_detach($c);
-  }
+  $st->{template} = 'curs/introduction.mhtml';
 }
 
 my $gene_list_textarea_name = 'gene_identifiers';
@@ -2671,9 +2618,93 @@ sub pause_curation : Chained('top') Args(0)
   _redirect_and_detach($c);
 }
 
-sub reassign_session : Chainged('top') Args(0)
+sub _assign_session :Private
 {
-  ...;
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{template} = 'curs/assign_session.mhtml';
+
+  my $config = $c->config();
+
+  my $first_contact_name = $st->{first_contact_name};
+  my $first_contact_email = $st->{first_contact_email};
+
+  my $introduction_text_name = 'submitter_name';
+  my $introduction_text_email = 'submitter_email';
+
+  my $form = $self->form();
+
+  my @all_elements = (
+      {
+        name => 'submitter_name', label => 'Name', type => 'Text', size => 40,
+        value => $first_contact_name,
+        constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
+      },
+      {
+        name => 'submitter_email', label => 'Email', type => 'Text', size => 40,
+        value => $first_contact_email,
+        constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
+      },
+      {
+        name => 'submit', type => 'Submit', value => 'Continue',
+        attributes => { class => 'button', },
+      },
+    );
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $submitter_name = $form->param_value('submitter_name');
+    my $submitter_email = $form->param_value('submitter_email');
+
+    my $schema = PomCur::Curs::get_schema($c);
+
+
+    my $add_submitter = sub {
+      $schema->create_with_type('Metadata', { key => 'submitter_email',
+                                              value => $submitter_email });
+
+      $schema->create_with_type('Metadata', { key => 'submitter_name',
+                                              value => $submitter_name });
+    };
+
+    $schema->txn_do($add_submitter);
+
+    $self->state()->store_statuses($config, $schema);
+
+    _redirect_and_detach($c);
+  }
+
+}
+
+sub reassign_session : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Reassign session';
+  $st->{show_title} = 0;
+
+  $self->_assign_session($c);
+}
+
+sub assign_session : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Curator details';
+  $st->{show_title} = 0;
+
+  $self->_assign_session($c);
 }
 
 sub curation_paused : Chained('top') Args(0)

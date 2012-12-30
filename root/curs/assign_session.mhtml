@@ -4,7 +4,7 @@ $title
 $pub
 </%args>
 
-<div id="curs-submitter-update" class="curs-box">
+<div id="curs-assign-session" class="curs-box">
   <div class="curs-box-title">
 <% $title %>
   </div>
