@@ -61,6 +61,11 @@ sub send
   my $self = shift;
   my %args = @_;
   my $to = $args{to};
+
+  if ($self->config()->{test_mode} || $::test_mode) {
+    return;
+  }
+
   my $subject = $args{subject} // 'no_subject';
   my $body = $args{body} // '';
 

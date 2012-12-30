@@ -11,6 +11,7 @@ use HTTP::Request;
 my $test_util = PomCur::TestUtil->new();
 $test_util->init_test();
 
+my $config = $test_util->config();
 my $app = $test_util->plack_app()->{app};
 
 my $cookie_jar = $test_util->cookie_jar();
@@ -37,7 +38,8 @@ test_psgi $app, sub {
 
     $res = $cb->($req);
     ok ($res->content() =~ /Reports/);
-    like ($cookie_jar->as_string(), qr[PomCur_root_session=[0-9a-f]+]);
+    my $app_name = $config->{name};
+    like ($cookie_jar->as_string(), qr[${app_name}_root_session=[0-9a-f]+]);
 };
 
 done_testing;

@@ -53,7 +53,7 @@ delete $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"};
 
 my $config_no_suffix = PomCur::Config::get_config();
 
-is($config_no_suffix->{name}, "PomCur");
+is($config_no_suffix->{name}, "Canto");
 # only in <app_name>_local.yaml:
 ok(not defined $config_no_suffix->{"Model::TrackModel"});
 ok(keys %{$config_no_suffix->{class_info}} > 1);
@@ -63,7 +63,7 @@ $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"} = 'local';
 
 my $config_with_suffix = PomCur::Config::get_config();
 
-is($config_with_suffix->{name}, "PomCur");
+is($config_with_suffix->{name}, "Canto");
 # only in <app_name>_local.yaml:
 ok(defined $config_with_suffix->{"Model::TrackModel"});
 

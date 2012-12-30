@@ -102,6 +102,7 @@ sub new
  Usage   : $test_util->init_test();
  Function: set up the test environment by creating a test database and
            configuration
+           also sets $::test_mode to 1
  Args    : $arg - pass "empty_db" to set up the tests with an empty
                   tracking database
                 - pass "1_curs" to get a tracking database with one curation
@@ -198,6 +199,8 @@ sub init_test
     dircopy($test_ontology_index, $dest_ontology_index)
       or die "'$!' while copying $test_ontology_index to $dest_ontology_index\n";
   }
+
+  $::test_mode = 1;
 
   return (track_db_file_name => $db_file_name);
 }
