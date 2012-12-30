@@ -3,13 +3,12 @@ $model
 </%args>
 
 <div id="front-page">
-  <table id="main-actions">
-    <tr>
-      <td class="actionlist">
+  <div class="row-fluid">
+    <div class="span4">
         <div>
-          <div class="label">
+          <h3>
             View ...
-          </div>
+          </h3>
           <ul>
             <li>
               <a href="<% $c->uri_for('/view/list/person', { model => 'track'} ) %>">People</a>
@@ -27,11 +26,11 @@ $model
 %  }
           </ul>
         </div>
-      </td>
-      <td class="actionlist">
-        <div class="label">
+    </div>
+    <div class="span4">
+        <h3>
           Add ...
-        </div>
+        </h3>
         <div>
           <ul>
             <li>
@@ -53,13 +52,13 @@ $model
 % }
           </ul>
         </div>
-      </td>
+    </div>
 
 % if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
-      <td class="actionlist">
-        <div class="label">
+    <div class="span4">
+        <h3>
           Tools ...
-        </div>
+        </h3>
         <div>
           <ul>
             <li>
@@ -70,15 +69,14 @@ $model
             </li>
           </ul>
         </div>
-      </td>
+    </div>
 % }
-    </tr>
-    <tr>
-      <td class="actionlist" width="30%" valign="top">
+  </div>
+  <div class="row-fluid">
+    <div class="span4">
 <& /reports.mhtml, model => $model &>
-      </td>
-    </tr>
-  </table>
+      </div>
+  </div>
 </div>
 
 <div class="plugins">

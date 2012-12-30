@@ -20,7 +20,7 @@ $is_admin_user
     <& header.mhtml &>
 % }
 
-    <div id="content">
+    <div class="container-fluid" id="content">
       <div id="title-nav">
 <& breadcrumbs.mhtml &>
 <span id="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
