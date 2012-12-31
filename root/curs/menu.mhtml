@@ -10,7 +10,9 @@ $submitter_name => undef
       <div class="useridentifier"> 
         <div class="email-address" title="<% $submitter_name %>"> <% $submitter_email %> </div>
         <div class="email-address logged-in-address"> <% $logged_in_username %> </div>
+%   if ($show_reassign_button) {
         <button type="button" class="curs-reassign">Reassign paper</button>
+%   }
       </div>
     </li>
 % }
@@ -29,4 +31,11 @@ if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
   $logged_in_username = '(logged in as: ' . $c->user()->email_address() . ')';
 }
 
+my $current_path_uri = $c->stash()->{current_path_uri};
+
+my $show_reassign_button = 1;
+
+if ($current_path_uri =~ m:assign_session|session_reassigned:) {
+  $show_reassign_button = 0;
+}
 </%init>
