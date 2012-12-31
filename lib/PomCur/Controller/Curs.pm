@@ -75,19 +75,13 @@ my %state_dispatch = (
 our $_debug_annotation_id = undef;
 
 has state => (is => 'rw', init_arg => undef,
-              isa => 'PomCur::Curs::State',
-              init_arg => undef);
+              isa => 'PomCur::Curs::State');
 
 has metadata_storer => (is => 'rw', init_arg => undef,
-                        isa => 'PomCur::Curs::MetadataStorer',
-                        init_arg => undef);
+                        isa => 'PomCur::Curs::MetadataStorer');
 
-#sub auto :Private
-#{
-#  my $self = shift;
-#  my $c = shift;
-
-#}
+has curator_manager => (is => 'rw', init_arg => undef,
+                        isa => 'PomCur::Track::CuratorManager');
 
 =head2 top
 
@@ -103,6 +97,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
   if (!defined $self->metadata_storer()) {
     $self->metadata_storer(PomCur::Curs::MetadataStorer->new(config => $c->config()));
+  }
+  if (!defined $self->curator_manager()) {
+    $self->curator_manager(PomCur::Track::CuratorManager->new(config => $c->config()));
   }
 
   my $st = $c->stash();
@@ -2687,11 +2684,8 @@ sub _assign_session :Private
 
 
     my $add_submitter = sub {
-      $schema->create_with_type('Metadata', { key => 'submitter_email',
-                                              value => $submitter_email });
-
-      $schema->create_with_type('Metadata', { key => 'submitter_name',
-                                              value => $submitter_name });
+      $self->curator_manager()->set_curator($st->{curs_key}, $submitter_email,
+                                            $submitter_name);
     };
 
     $schema->txn_do($add_submitter);

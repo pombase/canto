@@ -50,6 +50,7 @@ sub end : Private
   if (scalar @{ $c->error }) {
     my @pomcur_errors =
       map {
+            warn 'internal error: ', $_;
             {
               title => 'Internal error',
               text => $_

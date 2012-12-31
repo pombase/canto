@@ -1,5 +1,4 @@
 <%args>
-$state
 $curs_root_uri
 $current_gene => undef
 $pub

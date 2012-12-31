@@ -42,8 +42,11 @@ use Scalar::Util qw(reftype);
 
 use PomCur::Util;
 
+use PomCur::Track::CuratorManager;
+
 with 'PomCur::Role::MetadataAccess';
 with 'PomCur::Curs::Role::GeneResultSet';
+with 'PomCur::Role::Configurable';
 
 use constant {
   # user needs to confirm name and email address
@@ -82,14 +85,24 @@ use Sub::Exporter -setup => {
                   NEEDS_APPROVAL APPROVAL_IN_PROGRESS APPROVED EXPORTED/ ],
 };
 
-has config => (is => 'ro', isa => 'PomCur::Config', required => 1);
 has status_adaptor => (is => 'ro', init_arg => undef, lazy_build => 1);
+
+has curator_manager => (is => 'ro', init_arg => undef,
+                        lazy_build => 1,
+                        isa => 'PomCur::Track::CuratorManager');
 
 sub _build_status_adaptor
 {
   my $self = shift;
 
   return PomCur::Track::get_adaptor($self->config(), 'status');
+}
+
+sub _build_curator_manager
+{
+  my $self = shift;
+
+  return PomCur::Track::CuratorManager->new(config => $self->config());
 }
 
 # Return a constant describing the state of the application, eg. SESSION_ACCEPTED
@@ -103,8 +116,15 @@ sub get_state
     croak "too many arguments for get_state()";
   }
 
-  my $submitter_email = $self->get_metadata($schema, 'submitter_email');
+  my $metadata_rs = $schema->resultset('Metadata');
+  my $curs_key_row = $metadata_rs->find({ key => 'curs_key' });
 
+  if (!defined $curs_key_row) {
+    croak 'failed to read curs_key from: ', $schema->storage()->connect_info();
+  }
+  my $curs_key = $curs_key_row->value();
+
+  my $submitter_email = $self->curator_manager()->current_curator($curs_key);
   my $state = undef;
 
   my $gene_rs = $self->get_ordered_gene_rs($schema);

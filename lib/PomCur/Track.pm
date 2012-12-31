@@ -261,6 +261,9 @@ sub delete_curs
   $track_schema->resultset('Cursprop')
     ->search({ curs => $curs->curs_id() })->delete();
 
+  $track_schema->resultset('CursCurator')
+    ->search({ curs => $curs->curs_id() })->delete();
+
   $curs->delete();
 
   my $db_file_name = PomCur::Curs::make_long_db_file_name($config, $curs_key);

@@ -40,6 +40,7 @@ use PomCur::Track::OntologyLoad;
 use PomCur::Track::OntologyIndex;
 use PomCur::Track::LoadUtil;
 use PomCur::Track::PubmedUtil;
+use PomCur::Track::CuratorManager;
 use PomCur::DBUtil;
 
 use Moose;
@@ -686,11 +687,6 @@ sub _load_curs_db_data
   my $gene_lookup = PomCur::Track::GeneLookup->new(config => $config,
                                                    schema => $trackdb_schema);
 
-  __PACKAGE__->set_metadata($cursdb_schema, 'submitter_email',
-                            $curs_config->{submitter_email});
-  __PACKAGE__->set_metadata($cursdb_schema, 'submitter_name',
-                            $curs_config->{submitter_name});
-
   for my $gene_details (@{$curs_config->{genes}}) {
     my @allele_detail_list = ();
     my $gene_identifier;
@@ -758,6 +754,10 @@ sub _load_curs_db_data
       $new_annotation->$method(@{$array_args{$key}});
     }
   }
+
+  my $curator_manager = PomCur::Track::CuratorManager->new(config => $config);
+  $curator_manager->set_curator($curs_config->{curs_key}, $curs_config->{submitter_email},
+                                $curs_config->{submitter_name});
 }
 
 sub _replace_object

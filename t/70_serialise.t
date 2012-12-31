@@ -160,8 +160,6 @@ my $full_expected_curation_session =
         },
       },
       metadata => {
-        submitter_email => 'Ken.Sawin@ed.ac.uk',
-        submitter_name =>'Ken Sawin',
         first_contact_email => 'Ken.Sawin@ed.ac.uk',
         first_contact_name => 'Ken Sawin',
         curs_key => 'aaaa0007',

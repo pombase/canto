@@ -7,7 +7,7 @@
 % }
   <div id="breadcrumbs-gene-summary-link" class="breadcrumbs-link">
     <a href="<% $curs_root_uri %>" title="Go to the home page">
-      <% defined $pub ? $pub->uniquename() : "UNKNOWN" %> summary
+      <% defined $pub ? $pub->uniquename() : "UNKNOWN PUBLICATION" %> summary
     </a>
 % if (defined $gene) {
 %   my $gene_display_name = $gene->display_name();
