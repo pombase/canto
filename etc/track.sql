@@ -155,8 +155,14 @@ CREATE TABLE curs (
        creation_date timestamp
 );
 
+CREATE TABLE curs_curator (
+       curs_curator_id integer NOT NULL PRIMARY KEY,
+       curs integer REFERENCES curs(curs_id) NOT NULL,
+       curator integer REFERENCES person(person_id) NOT NULL
+);
+
 CREATE TABLE cursprop (
-       cursprop_id integer NOT NULL PRIMARY KEY,
+       cursprop_id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
        curs integer REFERENCES curs(curs_id) NOT NULL,
        type integer REFERENCES cvterm(cvterm_id) NOT NULL,
        value text NOT NULL

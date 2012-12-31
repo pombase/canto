@@ -133,6 +133,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 curs_curators
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::CursCurator>
+
+=cut
+
+__PACKAGE__->has_many(
+  "curs_curators",
+  "PomCur::TrackDB::CursCurator",
+  { "foreign.curator" => "self.person_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 lab
 
 Type: belongs_to
