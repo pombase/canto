@@ -10,6 +10,7 @@ $submitter_name => undef
       <div class="useridentifier"> 
         <div class="email-address" title="<% $submitter_name %>"> <% $submitter_email %> </div>
         <div class="email-address logged-in-address"> <% $logged_in_username %> </div>
+        <button type="button" class="curs-reassign">Reassign paper</button>
       </div>
     </li>
 % }
