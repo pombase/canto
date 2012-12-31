@@ -154,6 +154,9 @@ __PACKAGE__->belongs_to(
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
+__PACKAGE__->many_to_many('curators' => 'curs_curators',
+                          'curator');
+
 use Carp;
 use PomCur::Util;
 
