@@ -2,6 +2,7 @@
 $form
 $title
 $pub
+$reassign
 </%args>
 
 <div id="curs-assign-session" class="curs-box">
@@ -9,19 +10,12 @@ $pub
 <% $title %>
   </div>
   <div class="curs-box-body">
-    <p>
-You are about to start curating data from this paper:
-
-<div class="pub-details">
-<& /pub_details_contents.mhtml, pub => $pub &>
-</div>
-
-Please annotate only the data that you have determined directly in the
-experiments described in this paper. If you have any questions, help is
-available on many pages, or you can contact the PomBase staff for
-assistance at any time.
-    </p>
-    <p>Please enter your name and email address:</p>
+% if ($reassign) {
+    <p>Please enter name and email address of the person you wish to assign
+    this paper to:</p>
+% } else {
+    <p>Please confirm your name and email address:</p>
+% }
     <% $form |n %>
   </div>
 </div>

@@ -218,6 +218,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
 
+  if ($state eq SESSION_CREATED && $path =~ m:/(re)?assign_session:) {
+    $use_dispatch = 0;
+  }
+
   if ($use_dispatch) {
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
@@ -2620,9 +2624,18 @@ sub pause_curation : Chained('top') Args(0)
 
 sub _assign_session :Private
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $reassign) = @_;
 
   my $st = $c->stash();
+
+  if ($reassign) {
+    $st->{title} = 'Reassign session';
+  } else {
+    $st->{title} = 'Curator details';
+  }
+
+  $st->{show_title} = 0;
+  $st->{reassign} = $reassign;
 
   $st->{template} = 'curs/assign_session.mhtml';
 
@@ -2680,31 +2693,20 @@ sub _assign_session :Private
 
     _redirect_and_detach($c);
   }
-
 }
 
 sub reassign_session : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
 
-  my $st = $c->stash();
-
-  $st->{title} = 'Reassign session';
-  $st->{show_title} = 0;
-
-  $self->_assign_session($c);
+  $self->_assign_session($c, 1);
 }
 
 sub assign_session : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
 
-  my $st = $c->stash();
-
-  $st->{title} = 'Curator details';
-  $st->{show_title} = 0;
-
-  $self->_assign_session($c);
+  $self->_assign_session($c, 0);
 }
 
 sub curation_paused : Chained('top') Args(0)
