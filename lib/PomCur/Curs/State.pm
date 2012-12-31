@@ -83,9 +83,9 @@ use Sub::Exporter -setup => {
 };
 
 has config => (is => 'ro', isa => 'PomCur::Config', required => 1);
-has adaptor => (is => 'ro', init_arg => undef, lazy_build => 1);
+has status_adaptor => (is => 'ro', init_arg => undef, lazy_build => 1);
 
-sub _build_adaptor
+sub _build_status_adaptor
 {
   my $self = shift;
 
@@ -193,20 +193,20 @@ sub store_statuses
     $unknown_conditions_count = 0;
   }
 
-  $self->adaptor()->store($curs_key, 'annotation_status', $status);
-  $self->adaptor()->store($curs_key, 'session_genes_count', $gene_count // 0);
-  $self->adaptor()->store($curs_key, 'session_term_suggestions_count',
-                          $term_suggestion_count);
-  $self->adaptor()->store($curs_key, 'session_unknown_conditions_count',
-                          $unknown_conditions_count);
+  $self->status_adaptor()->store($curs_key, 'annotation_status', $status);
+  $self->status_adaptor()->store($curs_key, 'session_genes_count', $gene_count // 0);
+  $self->status_adaptor()->store($curs_key, 'session_term_suggestions_count',
+                                 $term_suggestion_count);
+  $self->status_adaptor()->store($curs_key, 'session_unknown_conditions_count',
+                                 $unknown_conditions_count);
 
   my $approver_name_row = $metadata_rs->find({ key => 'approver_name' });
   if (defined $approver_name_row) {
     my $approver_name = $approver_name_row->value();
-    $self->adaptor()->store($curs_key, 'approver_name', $approver_name);
+    $self->status_adaptor()->store($curs_key, 'approver_name', $approver_name);
   } else {
     # remove name
-    $self->adaptor()->store($curs_key, 'approver_name');
+    $self->status_adaptor()->store($curs_key, 'approver_name');
   }
 }
 
