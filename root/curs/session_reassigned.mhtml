@@ -1,0 +1,8 @@
+<%args>
+$submitter_email
+</%args>
+
+<div id="curs-session-reassigned">
+<p>
+This session has now been assigned to <% $submitter_email %>.
+</p>

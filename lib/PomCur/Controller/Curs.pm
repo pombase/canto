@@ -222,7 +222,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if (($state eq SESSION_CREATED ||
        $state eq SESSION_ACCEPTED ||
        $state eq CURATION_IN_PROGRESS ||
-       $state eq CURATION_PAUSED) && $path =~ m:/reassign_session:) {
+       $state eq CURATION_PAUSED) && $path =~ m:/reassign_session|/session_reassigned:) {
     $use_dispatch = 0;
   }
 
@@ -2682,7 +2682,6 @@ sub _assign_session :Private
 
     my $schema = PomCur::Curs::get_schema($c);
 
-
     my $add_submitter = sub {
       $self->curator_manager()->set_curator($st->{curs_key}, $submitter_email,
                                             $submitter_name);
@@ -2692,7 +2691,11 @@ sub _assign_session :Private
 
     $self->state()->store_statuses($schema);
 
-    _redirect_and_detach($c);
+    if ($reassign) {
+      _redirect_and_detach($c, 'session_reassigned');
+    } else {
+      _redirect_and_detach($c);
+    }
   }
 }
 
@@ -2708,6 +2711,17 @@ sub assign_session : Chained('top') Args(0)
   my ($self, $c) = @_;
 
   $self->_assign_session($c, 0);
+}
+
+sub session_reassigned : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Session reassigned';
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/session_reassigned.mhtml';
 }
 
 sub curation_paused : Chained('top') Args(0)
