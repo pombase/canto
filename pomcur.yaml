@@ -572,6 +572,14 @@ class_info:
             sql: "cast((select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_term_suggestions_count') as int)"
 # if the hook dies the creation fails
       pre_create_hook: 'PomCur::Track::create_curs_db_hook'
+    curs_curator:
+      class_display_name: Session curator
+      editable: 1
+      field_info_list:
+        - name: curs
+          editable: 1
+        - name: curator
+          editable: 1
     gene:
       editable: 1
       display_field: primary_identifier
