@@ -62,6 +62,8 @@ sub set_metadata
   my $key = shift;
   my $value = shift;
 
+  die if $key eq 'submitter_email';  # temporary hack to catch old code
+
   if (defined $value) {
     $schema->resultset('Metadata')->update_or_create({ key => $key,
                                                        value => $value });
@@ -96,6 +98,8 @@ sub get_metadata
   if (!defined $key) {
     croak "not enough arguments to get_metadata()";
   }
+
+  die if $key eq 'submitter_email';  # temporary hack to catch old code
 
   my $metadata_obj = $schema->resultset('Metadata')->find({ key => $key });
   if (defined $metadata_obj) {
