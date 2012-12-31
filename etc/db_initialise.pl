@@ -30,8 +30,15 @@ my %db_template_files = (
 # rather than $cvterm->cv_id() to get the CV
 sub remove_id {
   my $relname = shift;
-  my $res = Lingua::EN::Inflect::Number::to_S($relname);
+
+  my $res;
+  if ($relname eq 'curs') {
+    $res = $relname;
+  } else {
+    $res = Lingua::EN::Inflect::Number::to_S($relname);
+  }
   $res =~ s/_id$//;
+
   return $res;
 }
 
