@@ -11,3 +11,10 @@ $class_info
   </a>
 </div>
 </&>
+
+<& /view/inline_list.mhtml, config_name => 'person', rs => $curator_rs,
+                       list_title => 'Past and current curators of this session' &>
+
+<%init>
+my $curator_rs = $object->curs_curators()->search_related('curator');
+</%init>
