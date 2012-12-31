@@ -218,7 +218,14 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
 
-  if ($state eq SESSION_CREATED && $path =~ m:/(re)?assign_session:) {
+  if ($state eq SESSION_CREATED && $path =~ m:/assign_session:) {
+    $use_dispatch = 0;
+  }
+
+  if (($state eq SESSION_CREATED ||
+       $state eq SESSION_ACCEPTED ||
+       $state eq CURATION_IN_PROGRESS ||
+       $state eq CURATION_PAUSED) && $path =~ m:/reassign_session:) {
     $use_dispatch = 0;
   }
 
