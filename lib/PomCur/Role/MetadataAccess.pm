@@ -99,8 +99,6 @@ sub get_metadata
     croak "not enough arguments to get_metadata()";
   }
 
-  die if $key eq 'submitter_email';  # temporary hack to catch old code
-
   my $metadata_obj = $schema->resultset('Metadata')->find({ key => $key });
   if (defined $metadata_obj) {
     return $metadata_obj->value();
