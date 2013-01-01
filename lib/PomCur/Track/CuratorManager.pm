@@ -54,6 +54,8 @@ sub current_curator
   my $schema = $self->schema();
   my $curs_rs = $schema->resultset('Curs')->search({ curs_key => $curs_key });
 
+  my $where = 'curs_curator_id = (select max(curs_curator_id) from curs_curator where curs = me.curs)';
+
   my $curs_curator_rs =
     $schema->resultset('CursCurator')
            ->search({
@@ -62,7 +64,7 @@ sub current_curator
              },
            },
            {
-             where => \'curs_curator_id = (select max(curs_curator_id) from curs_curator)'
+             where => \$where,
            });
 
   my $curs_curator_first = $curs_curator_rs->first();
