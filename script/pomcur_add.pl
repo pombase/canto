@@ -152,7 +152,7 @@ my $proc = sub {
     };
     die qq/term "$term_name" already exists in CV: $cv_name\n/ unless $@;
 
-    if (defined $termid) {
+    if (defined $termid && length $termid > 0) {
       eval {
         $load_util->find_dbxref($termid);
       };
