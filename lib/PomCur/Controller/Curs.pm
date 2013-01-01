@@ -133,7 +133,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{annotation_types} = $config->{annotation_types};
   $st->{annotation_type_list} = $config->{annotation_type_list};
 
-  my ($state, $submitter_email, $gene_count) = $self->state()->get_state($schema);
+  my ($state, $submitter, $gene_count) = $self->state()->get_state($schema);
+  my $submitter_email = $submitter->{email_address};
+  my $submitter_name = $submitter->{name};
+
   $st->{state} = $state;
 
   if ($state eq APPROVAL_IN_PROGRESS) {
@@ -182,7 +185,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   if ($state ne SESSION_CREATED) {
     $st->{submitter_email} = $submitter_email;
-    $st->{submitter_name} = $self->get_metadata($schema, 'submitter_name');
+    $st->{submitter_name} = $submitter_name;
   }
 
   $st->{message_to_curators} =

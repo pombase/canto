@@ -124,7 +124,8 @@ sub get_state
   }
   my $curs_key = $curs_key_row->value();
 
-  my $submitter_email = $self->curator_manager()->current_curator($curs_key);
+  my ($submitter_email, $submitter_name) =
+    $self->curator_manager()->current_curator($curs_key);
   my $state = undef;
 
   my $gene_rs = $self->get_ordered_gene_rs($schema);
@@ -160,7 +161,8 @@ sub get_state
     }
   }
 
-  return ($state, $submitter_email, $gene_count);
+  return ($state, { email_address => $submitter_email,
+                    name => $submitter_name }, $gene_count);
 }
 
 =head2
@@ -180,7 +182,7 @@ sub store_statuses
     croak "too many arguments for store_statuses()";
   }
 
-  my ($status, $submitter_email, $gene_count) = $self->get_state($schema);
+  my ($status, $submitter, $gene_count) = $self->get_state($schema);
 
   my $metadata_rs = $schema->resultset('Metadata');
   my $curs_key_row = $metadata_rs->find({ key => 'curs_key' });

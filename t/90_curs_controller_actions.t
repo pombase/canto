@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 64;
+use Test::More tests => 66;
 
 use Data::Compare;
 
@@ -115,14 +115,24 @@ test_psgi $app, sub {
     my $res = $cb->($req);
 
     is ($res->code, 200);
-    like ($res->content(), qr/<div id="curs-assign-session/);
-    like ($res->content(), qr/<form action="" method="post">/);
-    like ($res->content(), qr/<input name="submitter_name"/);
+    like ($res->content(), qr/<div id="curs-intro/);
+    like ($res->content(), qr/Curate this paper/);
+  }
+
+  # click "Curate this paper"
+  {
+    my $uri = new URI("$root_url/assign_session");
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    is ($res->code, 200);
+    like ($res->content(), qr/<div id="curs-assign-session"/);
+    like ($res->content(), qr/Curator details/);
   }
 
   # test submitting a name and email address
   {
-    my $uri = new URI("$root_url/");
+    my $uri = new URI("$root_url/assign_session");
     $uri->query_form(submitter_email => $test_email,
                      submitter_name => $test_name,
                      submit => 'Submit',

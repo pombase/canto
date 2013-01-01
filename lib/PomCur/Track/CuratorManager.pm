@@ -68,7 +68,13 @@ sub current_curator
   my $curs_curator_first = $curs_curator_rs->first();
 
   if (defined $curs_curator_first) {
-    return $curs_curator_first->curator()->email_address();
+    my $first_curator = $curs_curator_first->curator();
+    if (wantarray) {
+      return ($first_curator->email_address(),
+              $first_curator->name());
+    } else {
+      return $first_curator->email_address();
+    }
   } else {
     return undef;
   }
