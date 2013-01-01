@@ -87,13 +87,16 @@ sub set_curator
   my $self = shift;
   my $curs_key = shift;
   my $curs_curator_email = shift;
+
+  $curs_curator_email =~ s/(.*)\@(.*)/$1\@\L$2/;
+
   my $curs_curator_name = shift;
 
   my $schema = $self->schema();
 
   my $curator_rs = $schema->resultset('Person');
   my $curs_curator_email_rs =
-    $curator_rs->search({ email_address => $curs_curator_email });
+    $curator_rs->search({ 'lower(email_address)' => lc $curs_curator_email });
 
   my $curator;
 
