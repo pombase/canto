@@ -69,21 +69,6 @@ __PACKAGE__->set_primary_key("curs_curator_id");
 
 =head1 RELATIONS
 
-=head2 cur
-
-Type: belongs_to
-
-Related object: L<PomCur::TrackDB::Curs>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "cur",
-  "PomCur::TrackDB::Curs",
-  { curs_id => "curs" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
-);
-
 =head2 curator
 
 Type: belongs_to
@@ -99,9 +84,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 curs
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-31 21:59:42
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UNXL2EJw3B876sPcbSDeHg
+Type: belongs_to
+
+Related object: L<PomCur::TrackDB::Curs>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "curs",
+  "PomCur::TrackDB::Curs",
+  { curs_id => "curs" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-01 15:58:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Y4srHArqQghI0ClHvqUpoQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
