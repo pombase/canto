@@ -2685,8 +2685,10 @@ sub _assign_session :Private
 
     my $schema = PomCur::Curs::get_schema($c);
 
+    my $curs_key = $st->{curs_key};
+
     my $add_submitter = sub {
-      $self->curator_manager()->set_curator($st->{curs_key}, $submitter_email,
+      $self->curator_manager()->set_curator($curs_key, $submitter_email,
                                             $submitter_name);
     };
 
@@ -2695,6 +2697,9 @@ sub _assign_session :Private
     $self->state()->store_statuses($schema);
 
     if ($reassign) {
+      my $subject = "Session $curs_key reassigned to: $submitter_name <$submitter_email>";
+      _send_admin_mail($self, $c, subject => $subject);
+
       _redirect_and_detach($c, 'session_reassigned');
     } else {
       _redirect_and_detach($c);
@@ -2802,7 +2807,7 @@ sub _send_admin_mail
 
   my $st = $c->stash();
 
-  my $body = "Curated by: " .$st->{submitter_name} . " <" .
+  my $body = "Curator: " . $st->{submitter_name} . " <" .
     $st->{submitter_email} .
     ">\nPublication: " . $st->{pub}->uniquename() . " - " .
     $st->{pub}->title() . "\n" .
