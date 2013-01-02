@@ -558,6 +558,10 @@ class_info:
           source: pub
         - name: assigned_curator
           editable: 1
+        - name: current_curator
+          referenced_class: Person
+          source:
+            sql: "select curator from curs_curator where curs_curator_id = (select max(curs_curator_id) from curs_curator where curs = me.curs_id)"
         - name: status
           source:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status'"
