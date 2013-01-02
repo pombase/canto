@@ -310,6 +310,22 @@ sub class_name_of_relationship
   return $info{class};
 }
 
+=head2 primary_key_field_name
+
+ Usage   : my $field_name = PomCur::DB::primary_key_field_name($object);
+ Function: Return the name of the primary key field, which currently has to be
+           the ID column.
+           Multi-column primary keys aren't supported
+ Args    : $object - the DBIX::Class object
+
+=cut
+sub primary_key_field_name
+{
+  my $object = shift;
+
+  return ($object->primary_columns())[0];
+}
+
 =head2 id_of_object
 
  Usage   : my $id = PomCur::DB::id_of_object($object);
@@ -322,10 +338,9 @@ sub id_of_object
 {
   my $object = shift;
 
-  # multi-column primary keys aren't supported
-  my $table_pk_field = ($object->primary_columns())[0];
+  my $pk_field = primary_key_field_name($object);
 
-  return $object->$table_pk_field();
+  return $object->$pk_field();
 }
 
 =head2 display_name
