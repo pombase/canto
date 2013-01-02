@@ -178,6 +178,8 @@ sub get_field_value
     }
   }
 
+  my $schema = $c->schema();
+
   if (defined $col_conf->{source} && ref $col_conf->{source} eq 'HASH') {
     if (defined $col_conf->{source}->{perl}) {
       my $field_value = eval $col_conf->{source}->{perl};
@@ -189,7 +191,22 @@ sub get_field_value
       return ($field_value, 'attribute', undef);
     } else {
       if (defined $col_conf->{source}->{sql}) {
-        return ($object->get_column($field_name), 'attribute', undef);
+        my $col_value = $object->get_column($field_name);
+        if (defined $col_value && defined $col_conf->{referenced_class}) {
+          my $referenced_table = PomCur::DB::table_name_of_class($col_conf->{referenced_class});
+          my $referenced_object =
+            $schema->resultset($col_conf->{referenced_class})->find({ $referenced_table . "_id" => $col_value });
+          if (defined $referenced_object) {
+            my $ref_table_conf = $class_infos->{$referenced_table};
+            if (!defined $ref_table_conf) {
+              die "no class_info configuration for $referenced_table\n";
+            }
+            my $primary_key_name = $ref_table_conf->{display_field};
+            return ($referenced_object, 'foreign_key', $primary_key_name);
+          }
+        } else {
+          return ($col_value, 'attribute', undef);
+        }
       } else {
         use Data::Dumper;
         die "source not understood: ", Dumper([$col_conf->{source}]), "\n";
@@ -197,7 +214,6 @@ sub get_field_value
     }
   }
 
-  my $schema = $c->schema();
   my $parent_class_name = $schema->class_name_of_table($type);
 
   if ($schema->column_type($col_conf, $type) eq 'collection') {
