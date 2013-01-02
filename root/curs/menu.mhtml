@@ -8,7 +8,7 @@ $submitter_name => undef
 % if (defined $submitter_email) {
     <li>
       <div class="useridentifier"> 
-        <div class="email-address" title="<% $submitter_name %>"> <% $submitter_email %> </div>
+        <div class="email-address"><% $submitter_name %> &lt;<% $submitter_email %>&gt;</div>
         <div class="email-address logged-in-address"> <% $logged_in_username %> </div>
 %   if ($show_reassign_button) {
         <button type="button" class="curs-reassign">Reassign paper</button>
