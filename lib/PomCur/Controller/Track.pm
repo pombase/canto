@@ -46,7 +46,7 @@ use Moose;
 sub index_page :Path :Args(0) {
   my ($self, $c) = @_;
 
-  $c->stash->{title} = 'Start page';
+  $c->stash->{title} = 'Admin page';
   $c->stash->{template} = 'track/index.mhtml';
 
   $c->stash->{model} = 'track';
