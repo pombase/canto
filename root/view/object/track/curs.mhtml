@@ -12,9 +12,13 @@ $class_info
 </div>
 </&>
 
+<& /view/inline_list.mhtml, config_name => 'person', rs => $current_curator_rs,
+                       list_title => 'Current curator of this session' &>
 <& /view/inline_list.mhtml, config_name => 'person', rs => $curator_rs,
                        list_title => 'Past and current curators of this session' &>
 
 <%init>
 my $curator_rs = $object->curs_curators()->search_related('curator');
+my $where = "curs_curator_id = (select max(curs_curator_id) from curs_curator where curs = me.curs)";
+my $current_curator_rs = $object->curs_curators()->search({ }, { where => \$where })->search_related('curator');
 </%init>
