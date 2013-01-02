@@ -8,14 +8,24 @@ $class_info
 <div id="collections">
   <& /view/collection.mhtml, object => $object, collection_name => 'pubs',
     collection_title => 'Publications assigned to this person' &>
+  <& /view/inline_list.mhtml, config_name => 'curs', rs => $current_curator_sessions_rs,
+                              list_title => 'Sessions currently being curated by this user' &>
   <& /view/collection.mhtml, object => $object, collection_name => 'curs',
     collection_title => 'Sessions assigned to this person' &>
   <& /view/inline_list.mhtml, config_name => 'curs', rs => $approving_curs_rs,
-                       class_info => $class_info,
                        list_title => 'Sessions being approved by ' . $object->name() &>
 </div>
 
 <%init>
+my $current_curator_sessions_rs =
+  $c->schema()->resultset('Curs')->search(
+    \[qq{me.curs_id IN
+          (SELECT curs FROM curs_curator cc
+                       WHERE cc.curator = ?
+                       AND cc.curs_curator_id =
+                             (select max(curs_curator_id) from curs_curator where curator = cc.curator))},
+       ['cc.curator', $object->person_id()]]);
+
 my $approving_curs_rs =
   $c->schema()->resultset('Curs')->search(
     \[qq{me.curs_id in (select curs from cursprop p, cvterm t where
