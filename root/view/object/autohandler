@@ -8,9 +8,9 @@ $is_admin_user
 % if ($is_admin_user) {
 
 <div class="actionlist" style="float: right">
-  <div class="label">
+  <h3>
     Actions
-  </div>
+  </h3>
   <div>
     <ul>
 %  if ($editable) {

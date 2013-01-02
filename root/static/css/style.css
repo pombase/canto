@@ -171,7 +171,7 @@ div#footer .sponsor {
   float: left;
   right: 0px;
   top: 0px;
-  font-size: 80%;
+  font-size: 90%;
   margin-left: -10px;
   white-space: nowrap;
 }
@@ -209,7 +209,7 @@ div#footer .sponsor {
   margin-right: 20px;
   clear: right;
   float: right;
-  font-size: 80%;
+  font-size: 90%;
   white-space: nowrap;
 }
 .dialog-submit {
@@ -241,7 +241,7 @@ table.list {
   border-style: solid;
   border-color: gray;
   border-collapse: collapse;
-  font-size: 75%;
+  font-size: 90%;
 }
 table.list th {
   padding: 3px;
@@ -342,13 +342,10 @@ table.list thead img.sort-direction-icon {
 /* front page: */
 .actionlist {
     font-weight: bold;
+    border: 1px solid grey;
 }
-
-.actionlist .label {
-    font-size: 105%;
-    display: inline;
-    padding: 2px 0px 2px 0px;
-    border-bottom: 1px solid black;
+.actionlist h3 {
+    margin: 10px;
 }
 
 .actionlist ul {
@@ -357,7 +354,7 @@ table.list thead img.sort-direction-icon {
     font-size: 95%;
 }
 .actionlist li > ul {
-    padding: 3px 0px 3px 20px;;
+    padding: 3px 0px 3px 20px;
     margin: 0px;
 }
 .actionlist ul li {
@@ -390,10 +387,11 @@ span.error_constraint_required {
     margin: 15px 0px 10px 0px;
 }
 .page_nav_summary {
-    float: left;
+  display: inline;
 }
 .page_nav_actions {
-    float: right;
+  display: inline;
+  margin-left: 10em;
 }
 .page_nav_actions a:visited {
   color:#026; text-decoration:none;
