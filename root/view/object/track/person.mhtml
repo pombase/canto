@@ -23,7 +23,7 @@ my $current_curator_sessions_rs =
           (SELECT curs FROM curs_curator cc
                        WHERE cc.curator = ?
                        AND cc.curs_curator_id =
-                             (select max(curs_curator_id) from curs_curator where curator = cc.curator))},
+                             (select max(curs_curator_id) from curs_curator where curs = cc.curs))},
        ['cc.curator', $object->person_id()]]);
 
 my $approving_curs_rs =
