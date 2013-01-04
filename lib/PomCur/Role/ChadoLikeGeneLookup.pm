@@ -42,7 +42,7 @@ use Moose::Role;
 requires 'feature_class';
 requires 'lookup_by_synonym_rs';
 
-sub _build_constraint
+sub build_gene_constraint
 {
   my $self = shift;
 
@@ -57,6 +57,11 @@ sub _build_constraint
       "lower($name_column)" => $_
     }
   } @_;
+}
+
+sub gene_search_options
+{
+  return ();
 }
 
 sub _read_genes
@@ -187,7 +192,8 @@ sub lookup
   @lc_search_terms{@lc_search_terms} = @lc_search_terms;
 
   my $gene_rs = $self->schema()->resultset($self->feature_class());
-  my $rs = $gene_rs->search([$self->_build_constraint(@lc_search_terms)]);
+  my $rs = $gene_rs->search([$self->build_gene_constraint(@lc_search_terms)],
+                            { $self->gene_search_options(feature_alias => 'me') });
   if (defined $org_constraint) {
     $rs = $rs->search({ 'me.' . $self->organism_id_column() => $org_constraint });
   }
@@ -199,7 +205,7 @@ sub lookup
   my %gene_ids = %$gene_ids_ref;
   my %terms_found = %$terms_found_ref;
 
-  $rs = $self->lookup_by_synonym_rs($search_terms_ref);
+  $rs = $self->lookup_by_synonym_rs($search_terms_ref)->search({}, { $self->gene_search_options(feature_alias => 'feature') });
   if (defined $org_constraint) {
     $rs = $rs->search({ lc $self->feature_class() . '.' . $self->organism_id_column() => $org_constraint });
   }

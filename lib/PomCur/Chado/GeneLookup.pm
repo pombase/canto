@@ -88,6 +88,15 @@ sub _build_synonym_constraint
   } @_;
 }
 
+sub gene_search_options
+{
+  my $self = shift;
+  my %args = @_;
+  my $feature_alias = $args{feature_alias};
+
+  return (where => \"$feature_alias.type_id in (select cvterm_id from cvterm where name = 'gene')");
+}
+
 sub lookup_by_synonym_rs
 {
   my $self = shift;
