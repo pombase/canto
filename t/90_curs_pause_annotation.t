@@ -31,7 +31,7 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
 
-my $state = PomCur::Curs::MetadataStorer->new();
+my $state = PomCur::Curs::MetadataStorer->new(config => $config);
 
 test_psgi $app, sub {
   my $cb = shift;
