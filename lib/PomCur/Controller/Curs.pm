@@ -2560,7 +2560,7 @@ sub finish_form : Chained('top') Args(0)
       my $curs_key = $st->{curs_key};
 
       _send_admin_mail($self, $c,
-                       subject => 'Session $curs_key ready for approval');
+                       subject => "Session $curs_key ready for approval");
     }
     $self->state()->set_state($schema, NEEDS_APPROVAL, $force);
   }
