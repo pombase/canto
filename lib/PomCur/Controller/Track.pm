@@ -93,7 +93,7 @@ sub assign_pub :Local {
     if (defined $curs_schema) {
       # call after txn_do() because otherwise it will time out because
       # the database is locked
-      PomCur::Curs::State->new()->store_statuses($curs_schema);
+      PomCur::Curs::State->new(config => $config)->store_statuses($curs_schema);
     }
   } else {
     # cancelled
