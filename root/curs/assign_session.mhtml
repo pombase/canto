@@ -12,9 +12,11 @@ $reassign
   <div class="curs-box-body">
 % if ($reassign) {
     <p>Please enter name and email address of the person you wish to assign
-    this paper to:</p>
+    this paper to.</p>
+    <p>This person will receive an email with the link to the entry page to
+    curate the paper.</p>
 % } else {
-    <p>Please confirm your name and email address:</p>
+    <p>Before you start curating, Please confirm your name and email address:</p>
 % }
     <% $form |n %>
   </div>

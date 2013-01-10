@@ -9,7 +9,8 @@ $pub
   </div>
   <div class="curs-box-body">
     <p>
-You are about to start curating data from this paper:
+You are about to start curating data from this paper.  You can either curate
+this paper yourself, or send it to a member of your lab to curate.
 
 <div class="pub-details">
 <& /pub_details_contents.mhtml, pub => $pub &>
@@ -22,6 +23,6 @@ assistance at any time.
     </p>
   </div>
 
-  <button type="button" class="curs-assign curs-finish-button">Curate this paper</button>
+  <button type="button" class="curs-assign curs-finish-button">Start curating</button>
   <button type="button" class="curs-reassign curs-finish-button">Reassign paper</button>
 </div>
