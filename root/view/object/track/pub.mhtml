@@ -58,6 +58,7 @@ $is_admin_user
 <div class="clearall"/>
 
 % if (defined $curs_key) {
+%  if ($curs_count == 1) {
 <div class="curs-pub-go-to-curs-actions">
   <div class="object_sub_action">
     <a href="<% $c->uri_for('/curs/' . $curs_key) %>">
@@ -65,6 +66,7 @@ $is_admin_user
     </a>
   </div>
 </div>
+%   }
 % }
 
 </&>
@@ -105,7 +107,8 @@ my $assign_to_text;
 
 my $curs_key = undef;
 my $curs_rs = $schema->resultset('Curs')->search({ pub => $pub_id});
-my $curs = $curs_rs->next();
+my $curs_count = $curs_rs->count();
+my $curs = $curs_rs->first();
 
 if (defined $curs) {
   $curs_key = $curs->curs_key();
