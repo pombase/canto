@@ -2338,7 +2338,7 @@ sub _get_annotation_table_tsv
        evidence_code with_or_from_identifier
        annotation_type_abbreviation
        gene_product gene_synonyms_string db_object_type taxonid
-       creation_date_short db);
+       creation_date_short assigned_by);
 
   my @interaction_column_names =
     qw(gene_identifier interacting_gene_identifier
