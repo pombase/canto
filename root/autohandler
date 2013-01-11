@@ -80,6 +80,14 @@ $is_admin_user
       </div>
       <div class="clearall"></div>
 % $m->call_next;
+
+% my $curs_key = $c->session()->{curs_key};
+% if (defined $curs_key && !defined $c->stash()->{curs_key}) {
+        <div style="clear: all">
+          <button onclick="window.location.href='<% $c->uri_for(qq[/curs/] . $curs_key) %>'">Back to session</button>
+        </div>
+% }
+
     </div>
     <& footer.mhtml &>
   </body>

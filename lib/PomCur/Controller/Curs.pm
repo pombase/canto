@@ -105,6 +105,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $st = $c->stash();
 
   $st->{curs_key} = $curs_key;
+  $c->session()->{curs_key} = $curs_key;
   my $schema = PomCur::Curs::get_schema($c);
 
   if (!defined $schema) {
