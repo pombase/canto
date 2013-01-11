@@ -24,6 +24,15 @@ $title
     
   </span>
 </div>
+<div id="pubmed-id-existing-sessions" style="display: none">
+  <span class="error_constraint_required">
+  </span>
+% if ($is_admin) {
+<span id="pubmed-id-pub-link" class="error_constraint_required">
+  Refer to the <a href="<% $c->uri_for('/view/object/pub/?model=track') %>">publication page</a>.
+</span>
+% }
+</div>
 
 <div id="pubmed-id-lookup-pub-results" style="display: none">
   <div id="pubmed-id-lookup-pub-details">
@@ -59,3 +68,9 @@ Publication details
     <button type="button" id="pubmed-id-lookup-curate">Start curating</button>
   </div>
 </div>
+
+<%init>
+my $st = $c->stash();
+
+my $is_admin = $st->{is_admin_user};
+</%init>

@@ -653,11 +653,10 @@ $(document).ready(function() {
 
   $('#pubmed-id-lookup-form').ajaxForm({
     dataType: 'json',
-    beforeSubmit: function() {
-      $('#pubmed-id-lookup-waiting .ajax-spinner').show();
-    },
     success: function(data) {
       $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
+      $('#pubmed-id-existing-sessions').hide();
+      $('#pubmed-id-lookup-message').hide();
       if (data.pub) {
         $('#pub-details-uniquename').html(data.pub.uniquename);
         $('#pub-details-uniquename').data('pubmedid', data.pub.uniquename);
@@ -665,11 +664,19 @@ $(document).ready(function() {
         $('#pub-details-authors').html(data.pub.authors);
         $('#pub-details-abstract').html(data.pub.abstract);
         $('#pubmed-id-lookup').hide();
-        $('#pubmed-id-lookup-message').hide();
         $('#pubmed-id-lookup-pub-results').show();
       } else {
-        $('#pubmed-id-lookup-message').show();
-        $('#pubmed-id-lookup-message span').html(data.message);
+        if ("curation_sessions" in data) {
+          $('#pubmed-id-existing-sessions').show();
+          $('#pubmed-id-existing-sessions span:first').html(data.message);
+          var $link = $('#pubmed-id-pub-link a');
+          var href = $link.attr('href');
+          href = href.replace(new RegExp("(.*)/(.*)%3F(.*)"), "$1/" + data.pub_id + "?$3");
+          $link.attr('href', href);
+        } else {
+          $('#pubmed-id-lookup-message').show();
+          $('#pubmed-id-lookup-message span').html(data.message);
+        }
       }
     }
   });

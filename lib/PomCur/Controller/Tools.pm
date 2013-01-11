@@ -307,12 +307,24 @@ sub pubmed_id_lookup : Local Form {
       _load_one_pub($c->config, $c->schema('track'), $pubmedid);
 
     if (defined $pub) {
-      $result = {
-        pub => {
-          uniquename => $pub->uniquename(),
-          title => $pub->title(),
-          authors => $pub->authors(),
-          abstract => $pub->abstract(),
+      my $sessions_rs = $pub->curs();
+      if ($sessions_rs->count() > 0) {
+        my $uniquename = $pub->uniquename();
+        $result = {
+          message => "Sorry, $uniquename is currently being curated by someone " .
+            "else.  Please contact the curation team for more information.",
+          curation_sessions => [ map { $_->curs_key(); } $sessions_rs->all() ],
+          pubmedid => $pub->uniquename(),
+          pub_id => $pub->pub_id(),
+        };
+      } else {
+        $result = {
+          pub => {
+            uniquename => $pub->uniquename(),
+            title => $pub->title(),
+            authors => $pub->authors(),
+            abstract => $pub->abstract(),
+          }
         }
       }
     } else {
