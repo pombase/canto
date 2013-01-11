@@ -902,8 +902,8 @@ reports:
 
 export:
   gene_association_fields:
-    db: "GeneDB_Spombe"
-    assigned_by: "GeneDB_Spombe"
+    db: "PomBase"
+    assigned_by: "PomBase"
     db_object_type: gene
 
 load:

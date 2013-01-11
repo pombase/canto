@@ -31,7 +31,7 @@ test_psgi $app, sub {
     my $exported = '';
 
     $exported .= join ("	",
-                       ('GeneDB_Spombe',
+                       ('PomBase',
                         'SPAC27D7.13c',
                         'ssm4',
                         '',
@@ -45,23 +45,23 @@ test_psgi $app, sub {
                         'gene',
                         'taxon:4896',
                         '20100102',
-                        'GeneDB_Spombe')) . "\n";
+                        'PomBase')) . "\n";
     $exported .= join ("	",
-                       ('GeneDB_Spombe',
+                       ('PomBase',
                         'SPBC14F5.07',
                         'doa10',
                         '',
                         'GO:0034763',
                         'PMID:19756689',
                         'IPI',
-                        'GeneDB_Spombe:SPCC576.16c',
+                        'PomBase:SPCC576.16c',
                         'P',
                         'ER-localized ubiquitin ligase Doa10 (predicted)',
                         'ssm4',
                         'gene',
                         'taxon:4896',
                         '20100102',
-                        'GeneDB_Spombe')) . "\n";
+                        'PomBase')) . "\n";
 
     is $res->code, 200;
     is ($res->content(), $exported);
