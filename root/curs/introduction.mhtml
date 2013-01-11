@@ -1,6 +1,7 @@
 <%args>
 $title
 $pub
+$curs_root_uri
 </%args>
 
 <div id="curs-intro" class="curs-box">
@@ -21,8 +22,14 @@ experiments described in this paper. If you have any questions, help is
 available on many pages, or you can contact the PomBase staff for
 assistance at any time.
     </p>
-  </div>
+
+    <p>
+You may wish to read the <a href="<% $c->uri_for('/local/canto_introduction') %>">
+<% $c->config()->{name} %> introduction</a> if you are new to community
+curation.
+  </p>
 
   <button type="button" class="curs-assign curs-finish-button">Start curating</button>
   <button type="button" class="curs-reassign curs-finish-button">Reassign paper</button>
 </div>
+
