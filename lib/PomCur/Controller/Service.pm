@@ -52,7 +52,7 @@ sub _ontology_results
   my $config = $c->config();
   my $lookup = PomCur::Track::get_adaptor($config, 'ontology');
 
-  my $max_results = $c->req()->param('max_results') || 10;
+  my $max_results = $c->req()->param('max_results') || 15;
 
   my $component_config = $config->{annotation_types}->{$component_name};
 
