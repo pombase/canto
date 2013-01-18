@@ -190,6 +190,7 @@ sub _make_interaction_annotation
   my $config = shift;
   my $schema = shift;
   my $annotation = shift;
+  my $constrain_gene = shift;
 
   my @annotation_genes = $annotation->genes();
 
@@ -199,6 +200,8 @@ sub _make_interaction_annotation
   }
 
   my $gene = $annotation_genes[0];
+
+  my $is_inferred_annotation = 0;
 
   my $gene_proxy =
     PomCur::Curs::GeneProxy->new(config => $config,
@@ -216,8 +219,9 @@ sub _make_interaction_annotation
 
   my @interacting_genes = @{$data->{interacting_genes}};
 
-  return map {
-    my $interacting_gene_info = $_;
+  my @results = ();
+
+  for my $interacting_gene_info (@interacting_genes) {
     my $interacting_gene_primary_identifier =
       $interacting_gene_info->{primary_identifier};
     my $interacting_gene =
@@ -230,6 +234,18 @@ sub _make_interaction_annotation
 
     my $interacting_gene_display_name =
       $interacting_gene_proxy->display_name();
+
+    if (defined $constrain_gene) {
+      if ($constrain_gene->gene_id() != $gene->gene_id()) {
+        if ($interacting_gene->gene_id() == $constrain_gene->gene_id()) {
+          $is_inferred_annotation = 1;
+        } else {
+          # ignore bait or prey from this annotation if it isn't the
+          # current gene (on a gene page)
+          next;
+        }
+      }
+    }
 
     my $entry =
           {
@@ -252,9 +268,12 @@ sub _make_interaction_annotation
             annotation_id => $annotation->annotation_id(),
             annotation_type => $annotation_type,
             status => $annotation->status(),
+            is_inferred_annotation => $is_inferred_annotation,
           };
-    $entry;
-  } @interacting_genes;
+    push @results, $entry;
+  };
+
+  return @results;
 };
 
 =head2 get_annotation_table
@@ -268,6 +287,7 @@ sub _make_interaction_annotation
            $annotation_type_name - the type of annotation to show (eg.
                                    biological_process, phenotype)
            $constrain_annotations - restrict the table to these annotations
+           $constrain_gene        - the gene to show annotations for
  Returns : ($completed_count, $table)
            where:
              $completed_count - a count of the annotations that are incomplete
@@ -308,6 +328,7 @@ sub get_annotation_table
   my $schema = shift;
   my $annotation_type_name = shift;
   my $constrain_annotations = shift;
+  my $constrain_gene = shift;
 
   my @annotations = ();
 
@@ -317,8 +338,6 @@ sub get_annotation_table
 
   my $ontology_lookup =
     PomCur::Track::get_adaptor($config, 'ontology');
-
-  my $gene_rs = $schema->resultset('Gene');
 
   my $completed_count = 0;
 
@@ -349,7 +368,7 @@ sub get_annotation_table
                                             $ontology_lookup);
     } else {
       if ($annotation_type_category eq 'interaction') {
-        @entries = _make_interaction_annotation($config, $schema, $annotation);
+        @entries = _make_interaction_annotation($config, $schema, $annotation, $constrain_gene);
       } else {
         die "unknown annotation type category: $annotation_type_category\n";
       }
