@@ -1343,13 +1343,11 @@ contact_email:
 
 external_links:
   gene:
-    generic:
-      - name: AmiGO
-        icon: amigo.png
-        url: 'http://amigo.geneontology.org/cgi-bin/amigo/gp-assoc.cgi?gp=@@primary_identifier@@'
-      - name: BioGRID
-        icon: biogrid_logo_small.png
-        url: 'http://thebiogrid.org/search.php?search=@@primary_identifier@@&organism=@@organism->taxonid@@'
+#### use this style of configuration for links that work for all organisms
+#    generic:
+#      - name: AmiGO
+#        icon: amigo.png
+#        url: 'http://amigo.geneontology.org/cgi-bin/amigo/gp-assoc.cgi?gp=@@primary_identifier@@'
     organism:
       Schizosaccharomyces pombe:
         - name: PomBase
