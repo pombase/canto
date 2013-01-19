@@ -9,6 +9,7 @@ $gene
 <div class="curs-box">
   <div class="curs-box-title">
 Choose curation type for <% $gene->display_name() %>:
+    <& /curs/inline_help.mhtml, key => 'gene_page_choose_curation_type' &>
   </div>
   <div class="curs-box-body">
   <ul class="annotation-start">

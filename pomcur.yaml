@@ -1319,6 +1319,9 @@ help_text:
     inline: >
       Once you have selected a gene to annotate you will be presented with a
       set of annotation options
+  gene_page_choose_curation_type:
+    inline: >
+      These are the types of data you can annotate. Follow one of the links for more detailed instructions.
   allele_choose_conditions:
     inline: >
       Please describe any experimental conditions relevant to this
