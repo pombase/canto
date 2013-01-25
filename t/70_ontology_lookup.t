@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 45;
+use Test::More tests => 48;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -100,6 +100,24 @@ is($id_result->[0]->{id}, 'GO:0006810');
 is($id_result->[0]->{name}, 'transport');
 is($id_result->[0]->{annotation_namespace}, 'biological_process');
 like($id_result->[0]->{definition}, qr/^The directed movement of substances/);
+is($id_result->[0]->{exact_synonyms}, undef);
+
+
+# test getting exact synonyms
+my $exact_synonyms_result = $lookup->lookup(search_string => 'GO:0016023',
+                                            include_definition => 1,
+                                            include_exact_synonyms => 1);
+
+my @synonyms = @{$exact_synonyms_result->[0]->{synonyms}};
+
+is(@synonyms, 2);
+
+cmp_deeply(\@synonyms,
+           [ { synonym => "cytoplasmic membrane bounded vesicle",
+               type => 'exact' },
+             { synonym => "cytoplasmic membrane-enclosed vesicle",
+               type => 'exact' },
+            ]);
 
 # try looking up an ID from the wrong ontology
 $id_result = $lookup->lookup(ontology_name => 'biological_process',

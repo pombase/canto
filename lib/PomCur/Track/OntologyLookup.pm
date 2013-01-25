@@ -56,12 +56,29 @@ sub _build_load_util
   return PomCur::Track::LoadUtil->new(schema => $self->schema());
 }
 
+sub _get_synonyms
+{
+  my $cvterm = shift;
+  my $synonym_type = shift;
+
+  my $synonyms = $cvterm->synonyms()->search({}, { prefetch => 'type' });
+
+  return [
+    grep {
+      $_->{type} eq $synonym_type;
+    } map {
+      { synonym => $_->synonym(), type => $_->type()->name() };
+    } $synonyms->all()
+  ];
+}
+
 sub _make_term_hash
 {
   my $cvterm = shift;
   my $cv_name = shift;
   my $include_definition = shift;
   my $include_children = shift;
+  my $include_exact_synonyms = shift;
   my $matching_synonym = shift;
 
   my %term_hash = ();
@@ -96,10 +113,14 @@ sub _make_term_hash
       if ($child_cvterm->cv()->name() eq $cv_name) {
         push @{$term_hash{children}}, {
           _make_term_hash($child_cvterm,
-                          $child_cvterm->cv()->name(), 0, 0)
+                          $child_cvterm->cv()->name(), 0, 0, 0)
         };
       }
     }
+  }
+
+  if ($include_exact_synonyms) {
+    $term_hash{synonyms} = _get_synonyms($cvterm, 'exact');
   }
 
   return %term_hash;
@@ -130,6 +151,7 @@ sub _clean_string
                          an ontology ID)
            include_children - include data about the child terms (default: 0)
            include_definition - include the definition for terms (default: 0)
+           include_exact_synonyms - include all the exact synonyms in the result
  Returns : [ { id => '...', name => '...', definition => '...',
                matching_synonym => '...',
                children => [ { id => '...' }, { id => '...' }, ... ] } ]
@@ -150,6 +172,7 @@ sub lookup
   my $max_results = $args{max_results} || 10;
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
+  my $include_exact_synonyms = $args{include_exact_synonyms};
 
   my $config = $self->config();
   my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
@@ -159,7 +182,8 @@ sub lookup
   if ($search_string =~ /^\s*([a-zA-Z]+:\d+)\s*$/) {
     return [$self->lookup_by_id(id => $search_string,
                                 include_definition => $include_definition,
-                                include_children => $include_children)];
+                                include_children => $include_children,
+                                include_exact_synonyms => $include_exact_synonyms)];
   } else {
     if (!defined $ontology_name || length $ontology_name == 0) {
       croak "no ontology_name passed to lookup()";
@@ -205,6 +229,7 @@ sub lookup
         _make_term_hash($cvterm,
                         $ontology_name,
                         $include_definition, $include_children,
+                        $include_exact_synonyms,
                         $matching_synonym);
 
       push @ret_list, \%term_hash;
@@ -238,6 +263,7 @@ sub _find_cv
            term_name - the name of the term to find
            include_children - include data about the child terms (default: 0)
            include_definition - include the definition for terms (default: 0)
+           include_exact_synonyms - include all the exact synonyms in the result
  Returns : A hash ref of details about the term, or undef if there is no term
            with that name.  The hash will have the same field as returned by
            lookup().
@@ -264,6 +290,7 @@ sub lookup_by_name
 
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
+  my $include_exact_synonyms = $args{include_exact_synonyms};
 
   my $schema = $self->schema();
 
@@ -286,7 +313,8 @@ sub lookup_by_name
   }
 
   if (defined $cvterm) {
-    return { _make_term_hash($cvterm, $cv->name(), $include_definition, $include_children) };
+    return { _make_term_hash($cvterm, $cv->name(), $include_definition,
+                             $include_children, $include_exact_synonyms) };
   } else {
     return undef;
   }
@@ -318,6 +346,7 @@ sub lookup_by_id
 
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
+  my $include_exact_synonyms = $args{include_exact_synonyms};
 
   my $term_id = $args{id};
   if (!defined $term_id) {
@@ -360,7 +389,8 @@ sub lookup_by_id
   }
 
   return { _make_term_hash($cvterm, $cvterm->cv()->name(),
-                           $include_definition, $include_children) };
+                           $include_definition, $include_children,
+                           $include_exact_synonyms) };
 }
 
 
@@ -368,12 +398,15 @@ sub lookup_by_id
 
  Usage   : my $lookup = PomCur::Track::OntologyLookup->new(...);
            my @all_terms = $lookup->get_all(ontology_name => $ontology_name,
-                                            include_children => 1,
-                                            include_definition => 1);
+                                            include_children => 1|0,
+                                            include_definition => 1|0,
+                                            include_exact_synonyms => 1|0);
  Function: Return all the terms from an ontology
  Args    : ontology_name - the ontology to search
            include_children - include data about the child terms (default: 0)
            include_definition - include the definition for terms (default: 0)
+           include_exact_synonyms - include all the exact synonyms in the
+                                    result (default: 0)
  Returns : returns an array of hashes in the same format as lookup()
            but with no matching_synonym keys
 
@@ -390,6 +423,7 @@ sub get_all
 
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
+  my $include_exact_synonyms = $args{include_exact_synonyms};
 
   my $schema = $self->schema();
   my @ret_list = ();
@@ -400,7 +434,8 @@ sub get_all
   while (defined (my $cvterm = $cvterm_rs->next())) {
     my %term_hash =
       _make_term_hash($cvterm, $ontology_name,
-                      $include_definition, $include_children);
+                      $include_definition, $include_children,
+                      $include_exact_synonyms);
 
     push @ret_list, \%term_hash;
   }
