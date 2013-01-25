@@ -730,6 +730,23 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 }
 
+sub _delete_annotation : Private
+{
+  my $config = shift;
+  my $schema = shift;
+  my $annotation_id = shift;
+  my $other_gene_identifier = shift;
+
+  my $annotation = $schema->resultset('Annotation')->find($annotation_id);
+  my $annotation_type_name = $annotation->type();
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+  if ($annotation_config->{category} eq 'interaction') {
+    PomCur::Curs::Utils::delete_interactor($annotation, $other_gene_identifier);
+  } else {
+    $annotation->delete();
+  }
+}
+
 sub annotation_delete : Chained('top') PathPart('annotation/delete')
 {
   my ($self, $c, $annotation_id, $other_gene_identifier) = @_;
@@ -741,14 +758,7 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete')
   $self->_check_annotation_exists($c, $annotation_id);
 
   my $delete_sub = sub {
-    my $annotation = $schema->resultset('Annotation')->find($annotation_id);
-    my $annotation_type_name = $annotation->type();
-    my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
-    if ($annotation_config->{category} eq 'interaction') {
-      PomCur::Curs::Utils::delete_interactor($annotation, $other_gene_identifier);
-    } else {
-      $annotation->delete();
-    }
+    _delete_annotation($config, $schema, $annotation_id, $other_gene_identifier);
     $self->metadata_storer()->store_counts($schema);
   };
 
