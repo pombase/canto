@@ -179,7 +179,7 @@ __PACKAGE__->inflate_column('data', {
 =head2 delete
 
  Usage   : $annotation->delete();
- Function: Delete this Annotation and any genes and alleles that
+ Function: Delete this Annotation and any gene and allele references that
            depend on it
  Args    : none
  Returns : nothing

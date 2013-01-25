@@ -666,7 +666,7 @@ sub make_allele_display_name
  Usage   : my $annotation_deleted =
              PomCur::Curs::Utils::delete_interactor($annotation, $interactor_identifier);
  Function: Remove an interactor from an interaction annotation and
-           remove the annotating if that interactor was the only one.
+           remove the annotation if that interactor was the only one.
  Args    : $annotation - the Annotation object
            $interactor_identifier - the identifier of the interactor
                                     to remove
