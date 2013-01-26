@@ -70,13 +70,15 @@ sub _ontology_results
 
   my $include_definition = $c->req()->param('def');
   my $include_children = $c->req()->param('children');
+  my $include_exact_synonyms = $c->req()->param('exact_synonyms');
 
   my $results =
     $lookup->lookup(ontology_name => $ontology_name,
                     search_string => $search_string,
                     max_results => $max_results,
                     include_definition => $include_definition,
-                    include_children => $include_children);
+                    include_children => $include_children,
+                    include_exact_synonyms => $include_exact_synonyms);
 
   map { $_->{value} = $_->{name} } @$results;
 

@@ -79,7 +79,7 @@ var ferret_choose = {
     ferret_choose.debug("fetching: " + term_id);
     $.ajax({
       url: ferret_choose.ontology_complete_url,
-      data: { term: term_id, def: 1, children: 1 },
+      data: { term: term_id, def: 1, children: 1, exact_synonyms: 1 },
       dataType: 'json',
       success: ferret_choose.store_term_data,
       async: false
