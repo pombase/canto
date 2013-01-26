@@ -91,7 +91,7 @@ test_psgi $app, sub {
   {
     my $uri = new URI($annotation_evidence_url);
     $uri->query_form('evidence-select' => 'IPI',
-                     'evidence-proceed' => 'Proceed');
+                     'evidence-submit-proceed' => 'Proceed ->');
 
     my $req = HTTP::Request->new(GET => $uri);
 

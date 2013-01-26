@@ -147,7 +147,7 @@ for my $annotation_type (@annotation_type_list) {
     {
       my $uri = new URI("$root_url/annotation/evidence/$new_annotation_id");
       $uri->query_form('evidence-select' => 'IMP',
-                       'evidence-proceed' => 'Proceed');
+                       'evidence-submit-proceed' => 'Proceed ->');
 
       my $req = HTTP::Request->new(GET => $uri);
 

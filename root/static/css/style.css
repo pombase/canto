@@ -823,6 +823,12 @@ span.pomcur-select-buttons {
   margin-left: 8px;
 }
 
+.curs-back-button {
+  float: left;
+  margin-top: 10px;
+  margin-right: 8px;
+}
+
 .ui-dialog {
    font-size: 80%;
 }

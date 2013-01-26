@@ -1438,6 +1438,9 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
   my $form = $self->form();
 
+  my $form_back_string = '<- Back';
+  my $form_proceed_string = 'Proceed ->';
+
   my @all_elements = (
       {
         name => 'evidence-select',
@@ -1445,7 +1448,17 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
         default => $annotation_data->{evidence_code},
       },
       {
-        name => 'evidence-proceed', type => 'Submit', value => 'Proceed ->',
+        type => 'Block',
+        tag => 'div',
+        attributes => { class => 'clearall', },
+      },
+      {
+        name => 'evidence-submit-back', type => 'Submit', value => $form_back_string,
+        attributes => { class => 'curs-back-button', },
+      },
+      {
+        name => 'evidence-submit-proceed', type => 'Submit', value => $form_proceed_string,
+        attributes => { class => 'curs-finish-button', },
       },
     );
 
@@ -1462,6 +1475,18 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     if ($evidence_select eq '') {
       $c->flash()->{error} = 'Please choose an evidence type to continue';
       _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    }
+
+    my $evidence_submit_back = $c->req->params->{'evidence-submit-back'};
+    my $evidence_submit_proceed = $c->req->params->{'evidence-submit-proceed'};
+    if (!defined $evidence_submit_proceed && !defined $evidence_submit_back) {
+      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    }
+
+    if (defined $evidence_submit_back) {
+      _delete_annotation($config, $schema, $annotation_id);
+      my $gene_id = $gene->gene_id();
+      _redirect_and_detach($c, 'annotation', 'edit', $gene_id, $annotation_type_name);
     }
 
     my $existing_evidence_code = $data->{evidence_code};
