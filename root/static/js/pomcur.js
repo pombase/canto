@@ -294,6 +294,26 @@ var ferret_choose = {
         $('#ferret-term-matching-synonym').html('');
       }
 
+      var synonyms_html = '';
+      var synonyms_count = 0;
+
+      $.each(term.synonyms, function(idx, synonym) {
+        var synonym_name = synonym.name;
+        if (synonym_name !== ferret_choose.matching_synonym) {
+          synonyms_html += '<li>' + synonym_name + '</li>';
+          synonyms_count++;
+        }
+      });
+
+      $('#ferret-term-synonyms-row').remove();
+      if (synonyms_count > 0) {
+        var $new_synonym_row = $('<tr id="ferret-term-synonyms-row">' +
+                                 '<td class="title">Synonym</td>' +
+                                 '<td>' + synonyms_html + '</td></tr>');
+
+        $('#ferret-term-matching-synonym-row').after($new_synonym_row);
+      }
+
       ferret_choose.debug("render(): " + term_id + " " + term.name);
 
       var children = term.children;

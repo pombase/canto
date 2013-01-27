@@ -572,6 +572,10 @@ div.clearall {
   overflow: auto;
 }
 
+#ferret {
+  list-style-type: none;
+}
+
 #ferret-term-entry {
   width: 75%;
   margin-top: 10px;
@@ -693,7 +697,6 @@ div.clearall {
 #ferret-term-children ul li {
   padding: 2px;
   text-decoration: none;
-  list-style-type: none;
 }
 
 #ferret-suggest-link, #ferret-cancel-children {
