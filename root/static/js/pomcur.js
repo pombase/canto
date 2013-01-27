@@ -286,12 +286,12 @@ var ferret_choose = {
       }
 
       if (ferret_choose.matching_synonym && ferret_choose.term_history.length == 2) {
-        $('#ferret-term-synonym-row').show();
-        $('#ferret-term-synonym').html('<div class="term-synonym">' +
+        $('#ferret-term-matching-synonym-row').show();
+        $('#ferret-term-matching-synonym').html('<div class="term-synonym">' +
                                        ferret_choose.matching_synonym + '</div>');
       } else {
-        $('#ferret-term-synonym-row').hide();
-        $('#ferret-term-synonym').html('');
+        $('#ferret-term-matching-synonym-row').hide();
+        $('#ferret-term-matching-synonym').html('');
       }
 
       ferret_choose.debug("render(): " + term_id + " " + term.name);
