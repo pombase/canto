@@ -67,7 +67,7 @@ sub _get_synonyms
     grep {
       $_->{type} eq $synonym_type;
     } map {
-      { synonym => $_->synonym(), type => $_->type()->name() };
+      { name => $_->synonym(), type => $_->type()->name() };
     } $synonyms->all()
   ];
 }

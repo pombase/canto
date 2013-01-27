@@ -113,9 +113,9 @@ my @synonyms = @{$exact_synonyms_result->[0]->{synonyms}};
 is(@synonyms, 2);
 
 cmp_deeply(\@synonyms,
-           [ { synonym => "cytoplasmic membrane bounded vesicle",
+           [ { name => "cytoplasmic membrane bounded vesicle",
                type => 'exact' },
-             { synonym => "cytoplasmic membrane-enclosed vesicle",
+             { name => "cytoplasmic membrane-enclosed vesicle",
                type => 'exact' },
             ]);
 
