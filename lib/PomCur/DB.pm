@@ -72,7 +72,7 @@ sub new
     $config_key =~ s/.*::(.*)DB/Model::${1}Model/;
     $con_info = $config->{$config_key}{connect_info};
     if (!defined $con_info) {
-      die "can't find configuration for $self (looked for: $config_key)\n";
+      croak "can't find configuration for $self (looked for: $config_key)\n";
     }
   }
 
