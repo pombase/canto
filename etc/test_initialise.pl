@@ -86,7 +86,7 @@ sub make_curs_dbs
 
   # wait until the transaction is finished
   map {
-    $metadata_storer->store_counts($config, $_);
+    $metadata_storer->store_counts($_);
   } @curs_schemas;
 }
 
