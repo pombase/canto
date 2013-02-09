@@ -19,8 +19,12 @@ instance_organism:
 
 extra_css: /static/css/test_style.css
 
+home_path: local
+
 front_page_title: 'Welcome to Canto the PomBase community curation tool'
 front_page_template: local_templates/pombase_front_page.mhtml
+default_local_page: pombase_front_page
+
 
 implementation_classes:
   ontology_annotation_adaptor: PomCur::Chado::OntologyAnnotationLookup

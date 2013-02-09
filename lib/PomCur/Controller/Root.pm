@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
+use IO::All;
+
 __PACKAGE__->config->{namespace} = '';
 
 =head1 NAME
@@ -72,6 +74,15 @@ sub end : Private
   $c->forward('PomCur::View::Mason');
 }
 
+# go to the "local" front page
+sub local_front : Global
+{
+  my ($self, $c) = @_;
+
+  $c->forward($c->config()->{local_front_page});
+  $c->detach();
+}
+
 # redirect to the tracking application
 sub front :Path :Args(0)
 {
@@ -79,6 +90,55 @@ sub front :Path :Args(0)
 
   $c->forward($c->config()->{home_path});
   $c->detach();
+}
+
+=head2 page
+
+ Function: Render an HTML template from the local_templates directory
+ Args    : $name - page name
+
+=cut
+sub local : Global('local')
+{
+  my ($self, $c, $page_name) = @_;
+
+  my $config = $c->config();
+
+  my $st = $c->stash();
+
+  $st->{title} = $config->{long_name};
+  $st->{show_title} = 1;
+
+  if (!defined $page_name) {
+    my $default_local_page = $config->{default_local_page};
+    if (defined $default_local_page) {
+      $page_name = $default_local_page;
+    } else {
+      $page_name //= 'index';
+    }
+  }
+
+  my $local_templates_dir_name = "local_templates";
+  my $template_file_name = "$page_name.mhtml";
+
+  my $template_file =
+    $c->path_to('root', $local_templates_dir_name, $template_file_name);
+
+  if (-f $template_file) {
+    my @lines = io($template_file)->slurp;
+    for my $line (@lines) {
+      if ($line =~ /<!--\s*PAGE_TITLE:\s*(.*?)\s*-->/) {
+        $st->{title} = $1;
+      }
+    }
+    $st->{template} = "$local_templates_dir_name/$template_file_name";
+  } else {
+    $c->stash()->{error} =
+      { title => "No such page",
+        text => "$page_name doesn't exist" };
+    $c->forward($c->config()->{home_path});
+    $c->detach();
+  }
 }
 
 =head2 account

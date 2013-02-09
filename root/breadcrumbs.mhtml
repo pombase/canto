@@ -1,8 +1,8 @@
 <div id="breadcrumbs">
-% if ($current_path !~ m|/pombase_front_page|) {
+% if ($current_uri ne $home_path) {
   <div class="breadcrumbs-link">
     <a id="breadcrumbs-home-link"
-       href="/" title="Go to the home page">
+       href="<% $home_path %>" title="Go to the home page">
       Home
     </a>
 % if ($current_path ne '/' && $current_path !~ m|/local/| &&
@@ -21,4 +21,6 @@
 <%init>
 my $admin_path = $c->uri_for('/');
 my $current_path = $c->local_path();
+my $home_path = $c->uri_for($c->config()->{home_path});
+my $current_uri = $c->req->uri();
 </%init>
