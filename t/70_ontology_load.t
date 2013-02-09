@@ -32,7 +32,8 @@ my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 sub load_all {
   my $include_ro = shift;
 
-  $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
+  my $index_path = $config->data_dir_path('ontology_index_dir');
+  $ontology_index = PomCur::Track::OntologyIndex->new(index_path => $index_path);
 
   $ontology_index->initialise_index();
 

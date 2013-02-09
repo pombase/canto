@@ -152,7 +152,9 @@ if ($do_genes) {
 
 if (@ontology_args) {
   my $guard = $schema->txn_scope_guard;
-  my $index = PomCur::Track::OntologyIndex->new(config => $config);
+
+  my $index_path = $config->data_dir_path('ontology_index_dir');
+  my $index = PomCur::Track::OntologyIndex->new(index_path => $index_path);
   $index->initialise_index();
   my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
   my $synonym_types = $config->{load}->{ontology}->{synonym_types};

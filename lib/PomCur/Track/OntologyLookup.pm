@@ -175,7 +175,8 @@ sub lookup
   my $include_exact_synonyms = $args{include_exact_synonyms};
 
   my $config = $self->config();
-  my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
+  my $index_path = $config->data_dir_path('ontology_index_dir');
+  my $ontology_index = PomCur::Track::OntologyIndex->new(index_path => $index_path);
 
   my @results;
 

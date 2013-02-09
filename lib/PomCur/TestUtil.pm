@@ -575,7 +575,9 @@ sub make_base_track_db
       PomCur::Track::GeneLoad->new(schema => $schema,
                                    organism => $organism_2);
 
-    my $ontology_index = PomCur::Track::OntologyIndex->new(config => $config);
+    my $index_path = $config->data_dir_path('ontology_index_dir');
+
+    my $ontology_index = PomCur::Track::OntologyIndex->new(index_path => $index_path);
     $ontology_index->initialise_index();
     my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
 

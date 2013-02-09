@@ -42,7 +42,7 @@ use File::Path qw(remove_tree);
 
 use Lucene;
 
-with 'PomCur::Role::Configurable';
+has index_path => (is => 'rw', required => 1);
 
 =head2 initialise_index
 
@@ -56,11 +56,7 @@ sub initialise_index
 {
   my $self = shift;
 
-  my $config = $self->config();
-
-  my $ontology_index_path = _index_path($config);
-
-  remove_tree($ontology_index_path, { error => \my $rm_err } );
+  remove_tree($self->index_path(), { error => \my $rm_err } );
 
   if (@$rm_err) {
     for my $diag (@$rm_err) {
@@ -71,7 +67,7 @@ sub initialise_index
   }
 
   my $init_analyzer = new Lucene::Analysis::Standard::StandardAnalyzer();
-  my $store = Lucene::Store::FSDirectory->getDirectory($ontology_index_path, 1);
+  my $store = Lucene::Store::FSDirectory->getDirectory($self->index_path(), 1);
 
   my $tmp_writer = new Lucene::Index::IndexWriter($store, $init_analyzer, 1);
   $tmp_writer->close;
@@ -81,13 +77,6 @@ sub initialise_index
   my $writer = new Lucene::Index::IndexWriter($store, $analyzer, 0);
 
   $self->{_index} = $writer;
-}
-
-sub _index_path
-{
-  my $config = shift;
-
-  return $config->data_dir_path('ontology_index_dir');
 }
 
 sub _get_all_names
@@ -177,11 +166,8 @@ sub _init_lookup
 {
   my $self = shift;
 
-  my $config = $self->config();
-
   my $analyzer = new Lucene::Analysis::Standard::StandardAnalyzer();
-  my $ontology_index_path = _index_path($config);
-  my $store = Lucene::Store::FSDirectory->getDirectory($ontology_index_path, 0);
+  my $store = Lucene::Store::FSDirectory->getDirectory($self->index_path(), 0);
   my $searcher = new Lucene::Search::IndexSearcher($store);
   my $parser = new Lucene::QueryParser("name", $analyzer);
 
@@ -211,8 +197,6 @@ sub lookup
   if (!defined $ontology_name || length $ontology_name == 0) {
     croak "no ontology_name passed to lookup()";
   }
-
-  my $config = $self->config();
 
   # keyword search must be lower case
   $ontology_name = lc $ontology_name;
