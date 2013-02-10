@@ -77,9 +77,16 @@ var ferret_choose = {
 
   fetch_term_detail : function(term_id) {
     ferret_choose.debug("fetching: " + term_id);
+    var show_synonyms_config = annotation_type_config.show_synonyms;
+    var synonyms_flag = 0;
+    if (typeof(show_synonyms_config) !== "undefined") {
+      if (show_synonyms_config === "always") {
+        synonyms_flag = 1;
+      }
+    }
     $.ajax({
       url: ferret_choose.ontology_complete_url,
-      data: { term: term_id, def: 1, children: 1, exact_synonyms: 1 },
+      data: { term: term_id, def: 1, children: 1, exact_synonyms: synonyms_flag },
       dataType: 'json',
       success: ferret_choose.store_term_data,
       async: false

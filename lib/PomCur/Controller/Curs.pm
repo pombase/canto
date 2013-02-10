@@ -1284,6 +1284,8 @@ sub _annotation_edit
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
+  $st->{annotation_type_config} = $annotation_config;
+
   my $annotation_display_name = $annotation_config->{display_name};
   my $gene_display_name = $gene_proxy->display_name();
 

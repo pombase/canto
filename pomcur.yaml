@@ -1193,6 +1193,7 @@ annotation_type_list:
     very_short_display_name: 'phenotype'
     short_display_name: 'phenotype'
     display_name: 'phenotype'
+    show_synonyms: always
     evidence_codes:
       - Cell growth assay
       - Chromatin immunoprecipitation experiment
