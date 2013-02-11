@@ -314,8 +314,12 @@ var ferret_choose = {
 
       $('#ferret-term-synonyms-row').remove();
       if (synonyms_count > 0) {
+        var synonym_title = 'Synonym';
+        if (synonyms_count > 1) {
+          synonym_title = 'Synonyms';
+        }
         var $new_synonym_row = $('<tr id="ferret-term-synonyms-row">' +
-                                 '<td class="title">Synonym</td>' +
+                                 '<td class="title">' + synonym_title + '</td>' +
                                  '<td>' + synonyms_html + '</td></tr>');
 
         $('#ferret-term-matching-synonym-row').after($new_synonym_row);
