@@ -701,9 +701,11 @@ $(document).ready(function() {
           $('#pubmed-id-existing-sessions').show();
           $('#pubmed-id-existing-sessions span:first').html(data.message);
           var $link = $('#pubmed-id-pub-link a');
-          var href = $link.attr('href');
-          href = href.replace(new RegExp("(.*)/(.*)%3F(.*)"), "$1/" + data.pub_id + "?$3");
-          $link.attr('href', href);
+          if ($link.size()) {
+            var href = $link.attr('href');
+            href = href.replace(new RegExp("(.*)/(.*)%3F(.*)"), "$1/" + data.pub_id + "?$3");
+            $link.attr('href', href);
+          }
         } else {
           $('#pubmed-id-lookup-message').show();
           $('#pubmed-id-lookup-message span').html(data.message);
