@@ -132,11 +132,28 @@ sub lookup
     return [];
   }
 
+  my %gene_constraint = ();
+  my %gene_options = ();
+
+  if (defined $gene_identifier) {
+    $gene_constraint{'-or'} = {
+      'subject.uniquename' => $gene_identifier,
+      'object.uniquename' => $gene_identifier,
+    };
+    $gene_options{join} = [ 'subject', 'object' ];
+  }
+
   my $relations = $pub
       ->search_related('feature_relationship_pubs')
       ->search_related('feature_relationship')
-      ->search({ 'feature_relationship.type_id' => $interaction_type_cvterm->cvterm_id() },
-               { prefetch => [
+      ->search({ -and =>
+                   {
+                     'feature_relationship.type_id' => $interaction_type_cvterm->cvterm_id(),
+                     %gene_constraint,
+                   }
+                 },
+               { %gene_options,
+                 prefetch => [
                  { subject => 'organism' },
                  { object => 'organism' } ] });
 
