@@ -14,8 +14,7 @@ $pub
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
    annotation_type => $annotation_type, 
    annotations => [@existing_annotations], user_created => 0,
-   pub => $pub,
-   completed_count => $completed_count, gene => $gene &>
+   pub => $pub, gene => $gene &>
 
 <%init>
 use PomCur::Curs::Utils;

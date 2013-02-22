@@ -2,7 +2,7 @@
 $curs_root_uri
 $annotation_type
 @annotations
-$completed_count
+$completed_count => undef
 $gene
 $pub
 $user_created
@@ -340,7 +340,7 @@ my $edit_icon_uri = $c->uri_for('/static/images/mini-edit.png');
 my $comment_edit_url = $curs_root_uri . '/annotation/comment_edit/';
 my $edit_with_action_url = "$curs_root_uri/annotation/with_gene/";
 
-my $some_incomplete = $completed_count != @annotations && $user_created;
+my $some_incomplete = $user_created && $completed_count != scalar(@annotations);
 
 my $gene_text = "";
 if (defined $gene) {
