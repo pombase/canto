@@ -304,13 +304,15 @@ var ferret_choose = {
       var synonyms_html = '';
       var synonyms_count = 0;
 
-      $.each(term.synonyms, function(idx, synonym) {
-        var synonym_name = synonym.name;
-        if (synonym_name !== ferret_choose.matching_synonym) {
-          synonyms_html += '<li>' + synonym_name + '</li>';
-          synonyms_count++;
-        }
-      });
+      if ("synonyms" in term) {
+        $.each(term.synonyms, function(idx, synonym) {
+          var synonym_name = synonym.name;
+          if (synonym_name !== ferret_choose.matching_synonym) {
+            synonyms_html += '<li>' + synonym_name + '</li>';
+            synonyms_count++;
+          }
+        });
+      }
 
       $('#ferret-term-synonyms-row').remove();
       if (synonyms_count > 0) {
