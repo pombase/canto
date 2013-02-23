@@ -183,7 +183,7 @@ sub lookup
   my $cached_value = $self->cache->get($cache_key);
 
   if (defined $cached_value) {
-    return $cached_value;
+    return @{$cached_value};
   }
 
   my %db_ontology_names = %{$self->config()->{chado}->{ontology_cv_names}};
@@ -222,7 +222,7 @@ sub lookup
 
     if (!defined $cv) {
       warn "no Cv found with name: $db_ontology_name\n";
-      return [];
+      return ();
     }
 
     my $annotation_extension_cv_name = $chado_conf->{ontology_cv_names}->{annotation_extension};
