@@ -467,10 +467,11 @@ sub _process_existing_db_ontology
 =head2 get_existing_ontology_annotations
 
  Usage   :
-   my @annotations =
+   my ($all_annotations_count, $annotations) =
      PomCur::Curs::Utils::get_existing_ontology_annotations($config, $options);
- Function: Return a table of the existing ontology annotations from the database
- Args    : $config - the PomCur::Config object
+ Function: Return a count of the all the matching annotations and table of the
+           existing ontology annotations from the database with at most
+           max_results rows
  Args    : $options->{pub_uniquename} - the identifier of the publication,
                usually the PubMed ID to get annotations for
            $options->{gene_identifier} - the gene identifier to use to constrain
@@ -478,6 +479,7 @@ sub _process_existing_db_ontology
            $options->{ontology_name} - the ontology name to use to restrict the
                search; only annotations using terms from this ontology are
                returned (optional)
+           $options->{max_results} - maximum number of annotations to return
  Returns : An array of hashes containing the annotation in the same form as
            get_annotation_table() above, except that annotation_id will be a
            database identifier for the annotation.
@@ -491,11 +493,13 @@ sub get_existing_ontology_annotations
   my $pub_uniquename = $options->{pub_uniquename};
   my $gene_identifier = $options->{gene_identifier};
   my $ontology_name = $options->{annotation_type_name};
+  my $max_results = $options->{max_results} // 0;
 
   my $args = {
     pub_uniquename => $pub_uniquename,
     gene_identifier => $gene_identifier,
     ontology_name => $ontology_name,
+    max_results => $max_results,
   };
 
   my $ontology_lookup =
@@ -503,18 +507,26 @@ sub get_existing_ontology_annotations
   my $annotation_lookup =
     PomCur::Track::get_adaptor($config, 'ontology_annotation');
 
+  my @res = ();
+
+  my $all_annotations_count = 0;
+
   if (defined $annotation_lookup) {
-    return map {
+    my $lookup_ret_interactions;
+    ($all_annotations_count, $lookup_ret_interactions) =
+      $annotation_lookup->lookup($args);
+
+    @res = map {
       my $res = _process_existing_db_ontology($ontology_lookup, $_);
       if (defined $res) {
         ($res);
       } else {
         ();
       }
-    } @{$annotation_lookup->lookup($args)};
-  } else {
-    return ();
+    } @{$lookup_ret_interactions};
   }
+
+  return ($all_annotations_count, \@res);
 }
 
 sub _process_interaction
@@ -543,15 +555,16 @@ sub _process_interaction
 =head2 get_existing_interaction_annotations
 
  Usage   :
-   my @annotations =
-  PomCur::Curs::Utils::get_existing_interaction_annotations($config, $options);
- Function: Return a table of the existing interaction annotations from the
-           database
+   my ($all_existing_annotations_count, $annotations) =
+      PomCur::Curs::Utils::get_existing_interaction_annotations($config, $options);
+ Function: Return a count of the all the matching interactions and table of the
+           existing interactions from the database with at most max_results rows
  Args    : $config - the PomCur::Config object
            $options->{pub_uniquename} - the publication ID (eg. PubMed ID)
                to retrieve annotations from
            $options->{gene_identifier} - the gene identifier to use to constrain
                the search; only annotations for the gene are returned (optional)
+           $options->{max_results} - maximum number of interactions to return
  Returns : An array of hashes containing the annotation in the same form as
            get_annotation_table() above, except that annotation_id will be a
            database identifier for the annotation.
@@ -565,28 +578,36 @@ sub get_existing_interaction_annotations
   my $pub_uniquename = $options->{pub_uniquename};
   my $gene_identifier = $options->{gene_identifier};
   my $interaction_type_name = $options->{annotation_type_name};
+  my $max_results = $options->{max_results};
 
   my $args = {
     pub_uniquename => $pub_uniquename,
     gene_identifier => $gene_identifier,
     interaction_type_name => $interaction_type_name,
+    max_results => $max_results,
   };
 
   my $annotation_lookup =
     PomCur::Track::get_adaptor($config, 'interaction_annotation');
 
+  my $all_interactions_count = 0;
+  my @res = ();
+
   if (defined $annotation_lookup) {
-    return map {
+    my $lookup_ret_interactions;
+    ($all_interactions_count, $lookup_ret_interactions) =
+      $annotation_lookup->lookup($args);
+    @res = map {
       my $res = _process_interaction($annotation_lookup, $_);
       if (defined $res) {
         ($res);
       } else {
         ();
       }
-    } @{$annotation_lookup->lookup($args)};
-  } else {
-    return ();
+    } @{$lookup_ret_interactions};
   }
+
+  return ($all_interactions_count, \@res);
 }
 
 =head2 get_existing_annotations

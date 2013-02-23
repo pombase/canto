@@ -66,6 +66,7 @@ sub _build_cache
            $options->{gene_identifier} - the gene identifier to use to constrain
                the search; only annotations for the gene are returned (optional)
            $options->{interaction_type} - "physical" or "genetic"
+           $options->{max_results} - maximum number of interactions to return
  Returns : An array reference of annotation results:
             [ {
               gene => {
@@ -91,19 +92,20 @@ sub lookup
   my $pub_uniquename = $args{pub_uniquename};
   my $gene_identifier = $args{gene_identifier};
   my $interaction_type_name = $args{interaction_type_name};
+  my $max_results = $args{max_results} // 0;
 
   my $cache_key;
 
   if (defined $gene_identifier) {
-    $cache_key = "$pub_uniquename!$gene_identifier!$interaction_type_name";
+    $cache_key = "$pub_uniquename!$gene_identifier!$interaction_type_name!$max_results";
   } else {
-    $cache_key = "$pub_uniquename!$interaction_type_name";
+    $cache_key = "$pub_uniquename!$interaction_type_name!$max_results";
   }
 
   my $cached_value = $self->cache->get($cache_key);
 
   if (defined $cached_value) {
-    return $cached_value;
+    return @$cached_value;
   }
 
   my $schema = $self->schema();
@@ -133,14 +135,14 @@ sub lookup
   }
 
   my %gene_constraint = ();
-  my %gene_options = ();
+  my %query_options = ();
 
   if (defined $gene_identifier) {
     $gene_constraint{'-or'} = {
       'subject.uniquename' => $gene_identifier,
       'object.uniquename' => $gene_identifier,
     };
-    $gene_options{join} = [ 'subject', 'object' ];
+    $query_options{join} = [ 'subject', 'object' ];
   }
 
   my $relations = $pub
@@ -152,12 +154,18 @@ sub lookup
                      %gene_constraint,
                    }
                  },
-               { %gene_options,
+               { %query_options,
                  prefetch => [
                  { subject => 'organism' },
                  { object => 'organism' } ] });
 
+  my $all_interactions_count = $relations->count();
+
   my @res = ();
+
+  if ($max_results > 0) {
+    $relations = $relations->search({}, { rows => $max_results });
+  }
 
   while (defined (my $rel = $relations->next())) {
     my $subject = $rel->subject();
@@ -192,11 +200,11 @@ sub lookup
 
   }
 
-  my $ret_val = \@res;
+  my @ret_val = ($all_interactions_count, \@res);
 
-  $self->cache()->set($cache_key, $ret_val, "2 hours");
+  $self->cache()->set($cache_key, \@ret_val, "2 hours");
 
-  return $ret_val;
+  return @ret_val;
 }
 
 1;

@@ -125,7 +125,8 @@ sub _get_prop_type_cvterm_id
 
 =head2
 
- Usage   : my $res = PomCur::Chado::OntologyAnnotationLookup($options);
+ Usage   : my ($all_annotations_count, $res) =
+             PomCur::Chado::OntologyAnnotationLookup($options);
  Function: lookup ontology annotation in a Chado database
  Args    : $options->{pub_uniquename} - the identifier of the publication,
                usually the PubMed ID to get annotations for
@@ -134,7 +135,9 @@ sub _get_prop_type_cvterm_id
            $options->{ontology_name} - the ontology name to use to restrict the
                search; only annotations using terms from this ontology are
                returned (optional)
- Returns : An array reference of annotation results:
+ Returns : $all_annotations_count - the total matching annotations, ignoring
+                                    max_results
+           $res - an array reference of at most max_results annotation results:
             [ {
               gene => {
                 identifier => "SPAC22F3.13",
@@ -165,6 +168,7 @@ sub lookup
   my $pub_uniquename = $args{pub_uniquename};
   my $gene_identifier = $args{gene_identifier};
   my $ontology_name = $args{ontology_name};
+  my $max_results = $args{max_results} // 0;
 
   die "no ontology_name" unless defined $ontology_name;
 
@@ -276,6 +280,12 @@ sub lookup
                     join => ['cvterm', 'feature'] };
     my $rs = $schema->resultset('FeatureCvterm')->search($constraint, $options);
     my $taxonid_cache = {};
+
+    my $all_annotations_count = $rs->count();
+
+    if ($max_results > 0) {
+      $rs = $rs->search({}, { rows => $max_results });
+    }
 
     my @res = ();
 
@@ -399,14 +409,14 @@ sub lookup
       push @res, $new_res;
     }
 
-    $ret_val = [@res];
+    $ret_val = [$all_annotations_count, \@res];
   } else {
-    $ret_val = [];
+    $ret_val = [0, []];
   }
 
   $self->cache()->set($cache_key, $ret_val, "2 hours");
 
-  return $ret_val;
+  return @$ret_val;
 }
 
 1;

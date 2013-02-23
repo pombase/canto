@@ -9,12 +9,21 @@ $pub
    annotation_type => $annotation_type, 
    annotations => [@user_annotations], user_created => 1,
    pub => $pub,
+   all_annotation_count => scalar(@user_annotations),
    completed_count => $completed_count, gene => $gene &>
 
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
    annotation_type => $annotation_type, 
-   annotations => [@existing_annotations], user_created => 0,
+   annotations => $existing_annotations,
+   all_annotation_count => $all_existing_annotations_count,
+   user_created => 0,
    pub => $pub, gene => $gene &>
+
+% if ($all_existing_annotations_count != $returned_existing_count) {
+  <div style="padding-left: 20px; color: green;">Note: showing
+  only the first <% $returned_existing_count %> of
+  <% $all_existing_annotations_count %> existing annotations.</div>
+% }
 
 <%init>
 use PomCur::Curs::Utils;
@@ -36,6 +45,8 @@ if (defined $gene) {
   } $gene->alleles();
   $constrain_annotations = [@constrain_annotations];
   $options->{gene_identifier} = $gene->primary_identifier();
+} else {
+  $options->{max_results} = 10;
 }
 
 my ($completed_count, $annotations_ref) =
@@ -45,8 +56,12 @@ my ($completed_count, $annotations_ref) =
                                             $gene);
 my @user_annotations = @$annotations_ref;
 
-my @existing_annotations =
+# if max_results is set, $all_existing_annotations_count may be bigger than
+# the list of existing annotations returned - ie. scalar(@$existing_annotations)
+my ($all_existing_annotations_count, $existing_annotations) =
     PomCur::Curs::Utils::get_existing_annotations($config, $options);
+
+my $returned_existing_count = scalar(@$existing_annotations);
 
 my $annotation_view_template =
   "current_annotation_" . $annotation_type->{category} . ".mhtml";

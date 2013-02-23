@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 117;
+use Test::More tests => 119;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -111,11 +111,11 @@ check_new_annotations($dummy_alt_id);
   my $options = { pub_uniquename => 'PMID:10467002',
                   annotation_type_name => 'cellular_component',
                 };
-  my @annotations =
+  my ($all_annotation_count, $annotations) =
     PomCur::Curs::Utils::get_existing_ontology_annotations ($config, $options);
 
-  is (@annotations, 1);
-  cmp_deeply($annotations[0],
+  is (@$annotations, 1);
+  cmp_deeply($annotations->[0],
              {
                'taxonid' => '4896',
                'annotation_type' => 'cellular_component',
@@ -143,11 +143,11 @@ check_new_annotations($dummy_alt_id);
   my $options = { pub_uniquename => 'PMID:10467002',
                   annotation_type_name => 'biological_process',
                 };
-  my @annotations =
+  my ($all_annotation_count, $annotations) =
     PomCur::Curs::Utils::get_existing_ontology_annotations ($config, $options);
 
-  is (@annotations, 1);
-  cmp_deeply($annotations[0],
+  is (@$annotations, 1);
+  cmp_deeply($annotations->[0],
              {
                'taxonid' => '4896',
                'annotation_type' => 'biological_process',
@@ -173,9 +173,9 @@ check_new_annotations($dummy_alt_id);
 
 sub _test_interactions
 {
-  my @annotations = @_;
+  my ($expected_count, @annotations) = @_;
 
-  is (@annotations, 1);
+  is (@annotations, $expected_count);
   cmp_deeply($annotations[0],
              {
                'gene_identifier' => 'SPBC12C2.02c',
@@ -194,18 +194,29 @@ sub _test_interactions
   my $options = { pub_uniquename => 'PMID:10467002',
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
-  my @annotations =
+  my ($all_interactions_count, $annotations) =
     PomCur::Curs::Utils::get_existing_interaction_annotations ($config, $options);
 
-  _test_interactions(@annotations);
+  _test_interactions(2, @$annotations);
+}
+
+{
+  my $options = { pub_uniquename => 'PMID:10467002',
+                  annotation_type_name => 'genetic_interaction',
+                  annotation_type_category => 'interaction',
+                  max_results => 1, };
+  my ($all_interactions_count, $annotations) =
+    PomCur::Curs::Utils::get_existing_interaction_annotations ($config, $options);
+
+  _test_interactions(1, @$annotations);
 }
 
 {
   my $options = { pub_uniquename => 'PMID:10467002',
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
-  my @annotations =
+  my ($all_interactions_count, $annotations) =
     PomCur::Curs::Utils::get_existing_annotations($config, $options);
 
-  _test_interactions(@annotations);
+  _test_interactions(2, @$annotations);
 }
