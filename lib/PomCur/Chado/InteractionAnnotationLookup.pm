@@ -131,7 +131,7 @@ sub lookup
   my $pub = $schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
 
   if (!defined $pub) {
-    return [];
+    return ();
   }
 
   my %gene_constraint = ();
