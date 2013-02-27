@@ -1332,8 +1332,7 @@ sub _maybe_transfer_annotation
 
   my $current_user = $c->user();
 
-  if ($annotation_config->{category} eq 'ontology' &&
-      ($gene_count > 1 || defined $current_user && $current_user->is_admin())) {
+  if ($annotation_config->{category} eq 'ontology') {
     _redirect_and_detach($c, 'annotation', 'transfer', (join ',', @$annotation_ids));
   } else {
     _redirect_and_detach($c);
