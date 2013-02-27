@@ -59,3 +59,8 @@ finish_form:
       Most of these annotation-types will be handled in future releases of the
       curation tool.
     </p>
+
+cache:
+  memcached:
+    servers:
+      - 127.0.0.1:11211
