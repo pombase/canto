@@ -85,7 +85,9 @@ sub new
   my $dbh = $schema->storage()->dbh();
 
   if ((ref $schema->storage()) =~ /SQLite/) {
-    $dbh->do("PRAGMA foreign_keys = ON");
+    if (!$args{disable_foreign_keys}) {
+      $dbh->do("PRAGMA foreign_keys = ON");
+    }
 # enabling this causes test failures due to isolation level
 #    $dbh->do("PRAGMA journal_mode = WAL;");
   }

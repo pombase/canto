@@ -4,7 +4,7 @@ CREATE TABLE pub (
        pub_id integer NOT NULL PRIMARY KEY,
        uniquename text UNIQUE NOT NULL,
        type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
-       assigned_curator integer REFERENCES person (person_id),
+       corresponding_author integer REFERENCES person (person_id),
        title text,
        abstract text,
        authors text,
@@ -149,7 +149,7 @@ CREATE TABLE person (
 
 CREATE TABLE curs (
        curs_id integer NOT NULL PRIMARY KEY,
-       assigned_curator integer REFERENCES person (person_id),
+       corresponding_author integer REFERENCES person (person_id),
        pub integer NOT NULL REFERENCES pub (pub_id),
        curs_key text NOT NULL,
        creation_date timestamp

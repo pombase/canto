@@ -107,14 +107,14 @@ sub triage :Local {
                                     pub_id => $pub_just_triaged->pub_id() });
     }
 
-    my $assigned_curator_id =
+    my $corresponding_author_id =
       $c->req()->param('triage-assigned-curator-person-id');
-    if (defined $assigned_curator_id && length $assigned_curator_id > 0) {
-      if ($assigned_curator_id =~ /^\d+$/) {
+    if (defined $corresponding_author_id && length $corresponding_author_id > 0) {
+      if ($corresponding_author_id =~ /^\d+$/) {
         if (defined $schema->resultset('Person')->find({
-          person_id => $assigned_curator_id
+          person_id => $corresponding_author_id
         })) {
-          $pub_just_triaged->assigned_curator($assigned_curator_id);
+          $pub_just_triaged->corresponding_author($corresponding_author_id);
         }
       }
     } else {
@@ -152,7 +152,7 @@ sub triage :Local {
           email_address => $new_email,
           role => $user_cvterm,
         });
-        $pub_just_triaged->assigned_curator($new_person->person_id());
+        $pub_just_triaged->corresponding_author($new_person->person_id());
       } else {
         # they didn't enter a new person
       }

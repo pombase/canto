@@ -43,7 +43,7 @@ __PACKAGE__->table("pub");
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 assigned_curator
+=head2 corresponding_author
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -117,7 +117,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "type_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "assigned_curator",
+  "corresponding_author",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "title",
   { data_type => "text", is_nullable => 1 },
@@ -171,7 +171,7 @@ __PACKAGE__->add_unique_constraint("uniquename_unique", ["uniquename"]);
 
 =head1 RELATIONS
 
-=head2 assigned_curator
+=head2 corresponding_author
 
 Type: belongs_to
 
@@ -180,9 +180,9 @@ Related object: L<PomCur::TrackDB::Person>
 =cut
 
 __PACKAGE__->belongs_to(
-  "assigned_curator",
+  "corresponding_author",
   "PomCur::TrackDB::Person",
-  { person_id => "assigned_curator" },
+  { person_id => "corresponding_author" },
   {
     is_deferrable => 0,
     join_type     => "LEFT",

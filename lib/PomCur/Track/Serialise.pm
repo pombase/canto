@@ -162,7 +162,7 @@ sub _get_pubs
   while (defined (my $pub = $rs->next())) {
     my %pub_hash = (
       type => $pub->type()->name(),
-      assigned_curator => _get_name($pub->assigned_curator()),
+      corresponding_author => _get_name($pub->assigned_curator()),
       triage_status => _get_name($pub->triage_status()),
       properties => _get_pubprops($pub),
       curation_statuses => _get_pub_curation_statuses($pub),

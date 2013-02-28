@@ -36,7 +36,8 @@ if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
 
 
 my $config = PomCur::Config::get_config();
-my $track_schema = PomCur::TrackDB->new(config => $config);
+my $track_schema = PomCur::TrackDB->new(config => $config,
+                                        disable_foreign_keys => 1);
 
 my $schema_version_rs =
   $track_schema->resultset('Metadata')
@@ -60,6 +61,39 @@ CREATE TABLE curs_curator (
        curator integer REFERENCES person(person_id) NOT NULL
 );
 ");
+
+$dbh->do("
+CREATE TABLE pub_new (
+       pub_id integer NOT NULL PRIMARY KEY,
+       uniquename text UNIQUE NOT NULL,
+       type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
+       corresponding_author integer REFERENCES person (person_id),
+       title text,
+       abstract text,
+       authors text,
+       affiliation text,
+       citation text,
+       publication_date text,
+       pubmed_type integer REFERENCES cvterm (cvterm_id),
+       triage_status_id integer NOT NULL REFERENCES cvterm (cvterm_id),
+       load_type_id integer NOT NULL REFERENCES cvterm (cvterm_id),
+       curation_priority_id integer REFERENCES cvterm (cvterm_id),
+       added_date timestamp
+);
+");
+
+$dbh->do("
+INSERT INTO pub_new SELECT
+  pub_id, uniquename, type_id, assigned_curator corresponding_author, title,
+  abstract, authors, affiliation, citation, publication_date, pubmed_type,
+  triage_status_id, load_type_id, curation_priority_id, added_date FROM pub;
+");
+
+$dbh->do("DROP TABLE pub;");
+
+$dbh->do("ALTER TABLE pub_new RENAME TO pub;");
+
+$dbh->do("CREATE INDEX pub_triage_status_idx ON pub(triage_status_id);");
 
 my $iter = PomCur::Track::curs_iterator($config, $track_schema);
 

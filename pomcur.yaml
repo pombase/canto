@@ -478,7 +478,7 @@ class_info:
           hide_context:
             - list
             - inline_list
-        - name: assigned_curator
+        - name: corresponding_author
           editable: 1
         # - name: type
         #   source: type_id
@@ -709,7 +709,7 @@ class_info:
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_genes_count' and p.value = 0)) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
     unassigned_publications:
       extends: pub
-      constraint: "assigned_curator is null"
+      constraint: "corresponding_author is null"
     sessions_needing_approval:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS'))"

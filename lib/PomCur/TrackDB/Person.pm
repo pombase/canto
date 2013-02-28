@@ -194,7 +194,7 @@ Related object: L<PomCur::TrackDB::Pub>
 __PACKAGE__->has_many(
   "pubs",
   "PomCur::TrackDB::Pub",
-  { "foreign.assigned_curator" => "self.person_id" },
+  { "foreign.corresponding_author" => "self.person_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 

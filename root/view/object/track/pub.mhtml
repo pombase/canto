@@ -9,7 +9,7 @@ $is_admin_user
 <&| /view/object/object_top.mhtml, object => $object, class_info => $class_info &>
 
 % if ($is_admin_user) {
-%   if (defined $object->assigned_curator()) {
+%   if (defined $object->corresponding_author()) {
 %     if (scalar($object->curs()->all()) == 0) {
 <div class="long-action-link">
   <a href="<% $c->uri_for('/create/curs',
@@ -99,10 +99,10 @@ while (defined (my $person = $person_rs->next())) {
 
 my $assign_to_text;
 
-#if (defined $object->assigned_curator()) {
-#  $assign_to_text = 'Change curator ...';
+#if (defined $object->corresponding_author()) {
+#  $assign_to_text = 'Change the corresponding author ...';
 #} else {
-  $assign_to_text = 'Assign to curator ...';
+  $assign_to_text = 'Set the corresponding author ...';
 #}
 
 my $curs_key = undef;

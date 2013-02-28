@@ -71,7 +71,7 @@ while (my ($curs, $cursdb) = $iter->()) {
   if ($pub_uniquename eq $test_publication_uniquename ||
       $curs_key =~ /^aaaa000\d$/ ||
       grep { $_ eq $pub_uniquename } @command_line_pubs ||
-      !defined $curs->assigned_curator()) {
+      !defined $curs->corresponding_author()) {
     warn "deleting ", $curs->curs_key(), "\n";
     PomCur::Track::delete_curs($config, $track_schema, $curs_key);
   }

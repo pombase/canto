@@ -109,7 +109,7 @@ Delete the lab first with:
 
         my @assigned_publications = $person->pubs();
         map {
-          $_->assigned_curator(undef);
+          $_->corresponding_author(undef);
           $_->update();
         } @assigned_publications;
 
