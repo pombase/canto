@@ -39,9 +39,9 @@ img {
 #heading {
   position: relative;
   background-color: #eef;
-/*  -moz-box-shadow: 0px 3px 3px #666;
+  -moz-box-shadow: 0px 3px 3px #666;
   -webkit-box-shadow: 0px 3px 3px #666;
-  box-shadow: 0px 3px 3px #666; */
+  box-shadow: 0px 3px 3px #666;
   border-bottom-style: solid;
   border-bottom-width: 1px;
   text-align: center;
@@ -146,9 +146,9 @@ div#footer .sponsor {
 #content {
   padding: 15px;
   clear: both;
-  -moz-box-shadow: 0px 4px 3px #666;
+/*  -moz-box-shadow: 0px 4px 3px #666;
   -webkit-box-shadow: 0px 4px 3px #666;
-  box-shadow: 0px 4px 3px #666;
+  box-shadow: 0px 4px 3px #666; */
 }
 
 #page-description {
