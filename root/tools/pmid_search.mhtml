@@ -8,7 +8,7 @@ and create new annotations from their group's past publications.
 </p>
 <p>
 If you haven't used Canto before, you may want to read the
-<a href="<% $c->uri_for('/local/canto_introduction') %>">introduction</a>
+<a href="<% $c->uri_for('/local/about_pombase_curation_tool') %>">introduction</a>
 before you start.  Please
 <& /contact.mhtml, link_text => 'contact us' &>
 at any point if you have questions.

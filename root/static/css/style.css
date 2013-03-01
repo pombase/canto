@@ -8,6 +8,7 @@ body
   margin-right: auto;
   background-color: white; 
   color: #302226;
+  font-size: 16px;
 }
 
 a:link { text-decoration:none; cursor:pointer; }
@@ -17,6 +18,10 @@ a:visited:hover { text-decoration:underline }
 a:link:active { text-decoration:none }
 
 #heading a { color: black; }
+
+.hero-unit {
+  background-color: #fff
+}
 
 button, input[type=submit] {
   background-color: #c00;

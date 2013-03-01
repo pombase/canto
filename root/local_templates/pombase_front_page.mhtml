@@ -1,0 +1,43 @@
+<!-- PAGE_TITLE:  -->
+<div class="canto-front-page">
+
+  <div class="hero-unit">
+    <h1>Welcome to Canto</h1>
+    <p>
+      Canto is an online annotation tool which has been developed to allow
+      researchers to curate the genetic and molecular data from their publications
+      for inclusion in public biological databases.
+    </p>
+    <p><a href="<% $c->uri_for('/local/about_pombase_curation_tool') %>" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+  </div>
+
+  <div class="row">
+    <div class="span4">
+      <h2>Community curation</h2>
+      <p>
+        We encourage community members to contribute to PomBase by annotating
+        papers.  ...
+      </p>
+      <p><a class="btn" href="<% $c->uri_for('/local/commnuity_curation') %>">More &raquo;</a></p>
+    </div>
+
+    <div class="span4">
+      <h2>Start annotating</h2>
+      <p>
+        You can annotate your own paper, or any other pombe paper indexed by PubMed.
+      </p>
+      <p><a class="btn" href="<% $c->uri_for('/local/canto_pmid_search') %>">Start annotating &raquo;</a></p>
+    </div>
+
+    <div class="span4">
+      <h2>Other organisms</h2>
+      <p>
+        Originally created for members of the fission yeast community, Canto is a
+        generic tool which can be readily configured for use with other organisms and
+        other databases.
+      </p>
+      <p><a class="btn"
+      href="<% $c->uri_for('/local/canto_for_other_organisms') %>">More &raquo;</a></p>
+    </div>
+  </div>
+</div>
