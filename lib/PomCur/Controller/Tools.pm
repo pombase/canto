@@ -307,25 +307,22 @@ sub pubmed_id_lookup : Local Form {
       _load_one_pub($c->config, $c->schema('track'), $pubmedid);
 
     if (defined $pub) {
+      $result = {
+        pub => {
+          uniquename => $pub->uniquename(),
+          title => $pub->title(),
+          authors => $pub->authors(),
+          abstract => $pub->abstract(),
+          pub_id => $pub->pub_id(),
+        }
+      };
+
       my $sessions_rs = $pub->curs();
       if ($sessions_rs->count() > 0) {
         my $uniquename = $pub->uniquename();
-        $result = {
-          message => "Sorry, $uniquename is currently being curated by someone " .
-            "else.  Please contact the curation team for more information.",
-          curation_sessions => [ map { $_->curs_key(); } $sessions_rs->all() ],
-          pubmedid => $pub->uniquename(),
-          pub_id => $pub->pub_id(),
-        };
-      } else {
-        $result = {
-          pub => {
-            uniquename => $pub->uniquename(),
-            title => $pub->title(),
-            authors => $pub->authors(),
-            abstract => $pub->abstract(),
-          }
-        }
+        $result->{message} = "Sorry, $uniquename is currently being curated by someone " .
+            "else.  Please contact the curation team for more information.";
+        $result->{curation_sessions} = [ map { $_->curs_key(); } $sessions_rs->all() ],
       }
     } else {
       $result = {
@@ -376,6 +373,40 @@ sub start : Local Args(1) {
   my $curs_schema = PomCur::Track::create_curs_db($config, $curs);
 
   $c->res->redirect($c->uri_for("/curs/$curs_key"));
+}
+
+=head2 pub_session
+
+ Usage   : /pub_session/<pubmedid>
+ Function: If a session exists for the publication, go to it.  Otherwise create
+           a new session for a publication and redirect to it.
+           If there is more than one session, go to the first.
+ Args    : pubmedid
+
+=cut
+sub pub_session : Local Args(1) {
+  my ($self, $c, $pub_id) = @_;
+
+  my $st = $c->stash();
+
+  my $schema = $c->schema('track');
+  my $config = $c->config();
+
+  my $pub = $schema->find_with_type('Pub', { pub_id => $pub_id });
+
+  my $curs = $pub->curs()->first();
+
+  if (!defined $curs) {
+    my $curs_key = PomCur::Curs::make_curs_key();
+    $curs = $schema->create_with_type('Curs',
+                                       {
+                                         pub => $pub,
+                                         curs_key => $curs_key,
+                                       });
+    my $curs_schema = PomCur::Track::create_curs_db($config, $curs);
+  }
+
+  $c->res->redirect($c->uri_for("/curs/" . $curs->curs_key()));
 }
 
 =head2 store_all_statuses

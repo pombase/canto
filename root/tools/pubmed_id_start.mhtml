@@ -32,6 +32,11 @@ $title
   Refer to the <a href="<% $c->uri_for('/view/object/pub/?model=track') %>">publication page</a>.
 </span>
 % }
+<div>
+% if ($c->config()->{public_mode}) {
+In this demo version, you can proceed to the existing curation session: <a class="btn" id="pubmed-id-lookup-goto-pub-session" href="#">Proceed &raquo;</a>.
+% }
+</div>
 </div>
 
 <div id="pubmed-id-lookup-pub-results" style="display: none">
