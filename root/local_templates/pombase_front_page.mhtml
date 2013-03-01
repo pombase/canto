@@ -18,7 +18,7 @@
         We encourage community members to contribute to PomBase by annotating
         papers.  ...
       </p>
-      <p><a class="btn" href="<% $c->uri_for('/local/commnuity_curation') %>">More &raquo;</a></p>
+      <p><a class="btn" href="<% $c->uri_for('/local/community_curation') %>">More &raquo;</a></p>
     </div>
 
     <div class="span4">
