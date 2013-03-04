@@ -7,7 +7,7 @@ $class_info
 
 <div id="collections">
   <& /view/collection.mhtml, object => $object, collection_name => 'pubs',
-    collection_title => 'Publications assigned to this person' &>
+    collection_title => 'Corresponding author for these papers' &>
   <& /view/inline_list.mhtml, config_name => 'curs', rs => $current_curator_sessions_rs,
                               list_title => 'Sessions currently being curated by this user' &>
   <& /view/collection.mhtml, object => $object, collection_name => 'curs',
