@@ -108,7 +108,7 @@ sub triage :Local {
     }
 
     my $corresponding_author_id =
-      $c->req()->param('triage-assigned-curator-person-id');
+      $c->req()->param('triage-corresponding-author-person-id');
     if (defined $corresponding_author_id && length $corresponding_author_id > 0) {
       if ($corresponding_author_id =~ /^\d+$/) {
         if (defined $schema->resultset('Person')->find({
@@ -120,11 +120,11 @@ sub triage :Local {
     } else {
       # user may have used the "New ..." button
       my $new_name =
-        $c->req()->param('triage-assigned-curator-add-name') // '';
+        $c->req()->param('triage-corresponding-author-add-name') // '';
       $new_name =~ s/^\s+//;
       $new_name =~ s/\s+$//;
       my $new_email =
-        $c->req()->param('triage-assigned-curator-add-email') // '';
+        $c->req()->param('triage-corresponding-author-add-email') // '';
       $new_email =~ s/^\s+//;
       $new_email =~ s/\s+$//;
 

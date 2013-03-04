@@ -75,10 +75,10 @@ $return_pub_id
       </div>
       <div class="sect triage-assigned-curator">
         <span class="sect-title">
-          Assign to curator:
+          Corresponding author:
         </span>
         <div class="sect-content">
-          <& /person_picker.mhtml, id_prefix => 'triage-assigned-curator',
+          <& /person_picker.mhtml, id_prefix => 'triage-corresponding-author',
              default_person => $pub->corresponding_author() &>
         </div>
       </div>
