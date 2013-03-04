@@ -16,7 +16,7 @@ $is_admin_user
                           { pub => $pub_id,
                             curs_key => PomCur::Curs::make_curs_key(),
                             assigned_curator =>
-                              $object->assigned_curator()->person_id(),
+                              $object->corresponding_author()->person_id(),
                             model => $c->req()->param('model') }) %>">
     Create a new curation session for this publication
   </a>
