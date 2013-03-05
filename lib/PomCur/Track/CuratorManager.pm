@@ -42,6 +42,16 @@ use Carp;
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackAdaptor';
 
+=head2 current_curator
+
+ Usage   : $curator_manager->current_curator($curs_key);
+ Function: get the current curator of a curation session
+ Args    : $curs - a TrackDB Curs or a curs_key that will be looked up
+ Return  : ($email, name) - in an array context
+           $email - in a scalar context
+
+=cut
+
 sub current_curator
 {
   my $self = shift;
@@ -81,6 +91,17 @@ sub current_curator
     return undef;
   }
 }
+
+=head2 set_curator
+
+ Usage   : $curator_manager->set_curator($curs_key, $email, $name);
+ Function: set the curator of a curation session
+ Args    : $curs - a TrackDB Curs or a curs_key that will be looked up
+           $email - the email address of the curator
+           $name the name of the curator
+ Return  : nothing
+
+=cut
 
 sub set_curator
 {
