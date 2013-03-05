@@ -72,13 +72,13 @@ sub assign_pub :Local {
       $pub->corresponding_author($person_id);
       if ($pub->curs() == 0) {
         my $person =
-        $schema->resultset('Person')->find({ person_id => $person_id });
+          $schema->resultset('Person')->find({ person_id => $person_id });
         my $admin_session = 0;
         if ($person->role()->name() eq 'admin') {
           $admin_session = 1;
         }
         my %create_args = (
-          corresponding_author => $person_id,
+          assigned_curator => $person_id,
           pub => $pub_id,
           curs_key => PomCur::Curs::make_curs_key(),
         );
