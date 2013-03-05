@@ -103,8 +103,6 @@ sub create_curs_db
     __PACKAGE__->set_metadata($curs_schema, 'first_contact_name', $first_contact_name);
 
     if ($admin_session) {
-      __PACKAGE__->set_metadata($curs_schema, 'submitter_email', $first_contact_email);
-      __PACKAGE__->set_metadata($curs_schema, 'submitter_name', $first_contact_name);
       __PACKAGE__->set_metadata($curs_schema, 'admin_session', 1);
     }
   }
