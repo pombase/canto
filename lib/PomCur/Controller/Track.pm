@@ -61,7 +61,7 @@ sub assign_pub :Local {
 
   if (defined $c->req->param('curs-pub-assign-submit')) {
     my $pub_id = $c->req()->param('pub-id');
-    my $person_id = $c->req()->param('pub-assign-person');
+    my $person_id = $c->req()->param('pub-corresponding-author-person-id');
 
     my $schema = $c->schema('track');
 

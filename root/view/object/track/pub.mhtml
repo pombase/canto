@@ -30,11 +30,8 @@ $is_admin_user
     <input type="hidden" name="pub-id" value="<% $pub_id %>"/>
     <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
 
-    <select name="pub-assign-person">
-% for my $person_data (@people_data) {
-      <option value="<% $person_data->{id} %>"><% $person_data->{text} %></option>
-% }
-    </select>
+    <& /person_picker.mhtml, id_prefix => 'pub-corresponding-author',
+      default_person => $object->corresponding_author() &>
 
     <div id="curs-pub-assign-help" class="ferret-help-text">
       Choose a curator to assign this publication to.  A session will
@@ -81,6 +78,8 @@ $is_admin_user
     collection_name => 'pubprops',
     collection_title => 'Publication properties' &>
 </div>
+
+<& /person_picker_add.mhtml, default_person => $object->corresponding_author() &>
 
 <%init>
 use PomCur::Curs;
