@@ -7,7 +7,7 @@ use Package::Alias PubmedUtil => 'PomCur::Track::PubmedUtil',
                    LoadUtil => 'PomCur::Track::LoadUtil';
 
 use Clone qw(clone);
-
+use Try::Tiny;
 
 sub _get_status_cv
 {
@@ -526,6 +526,64 @@ sub sessions_with_type_list : Local Args(0) {
   $st->{title} = "Sessions listed by type";
   $st->{template} = 'tools/sessions_with_type_list.mhtml';
 }
+
+=head2 add_person
+
+ Function: Called with ajax by the person_picker_add template to add a person
+ Args    : person-picker-add-name - the name to add
+           person-picker-add-email - the email to add
+ Return  : a JSON object with fields:
+              person_id the database ID of the new Person
+              name - the name of the new Person
+
+=cut
+
+sub add_person : Local Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $track_schema = $c->schema('track');
+  my $config = $c->config();
+
+  my $load_util = LoadUtil->new(schema => $track_schema);
+  my $user_cvterm = $load_util->get_cvterm(cv_name => 'PomCur user types',
+                                           term_name => 'user');
+
+  my $name = $c->req()->param('person-picker-add-name');
+  my $email = $c->req()->param('person-picker-add-email');
+
+  my $result = { };
+
+  if (!defined $name || length $name == 0) {
+    $result->{error_message} = 'No name given';
+  } else {
+    if (!defined $email || length $email == 0) {
+      $result->{error_message} = 'No email address given';
+    } else {
+      my $person = $track_schema->resultset('Person')->find({ email_address => $email });
+      try {
+        if (!defined $person) {
+          $person = $track_schema->create_with_type('Person',
+                                                    {
+                                                      name => $name,
+                                                      email_address => $email,
+                                                      role => $user_cvterm,
+                                                    });
+        }
+        $result->{person_id} = $person->person_id();
+        $result->{name} = $person->name();
+      } catch {
+        $result->{error_message} = $_;
+      }
+    }
+  }
+
+  $c->stash->{json_data} = $result;
+  $c->forward('View::JSON');
+}
+
 
 =head1 LICENSE
 This library is free software. You can redistribute it and/or modify

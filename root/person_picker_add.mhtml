@@ -1,0 +1,19 @@
+<%args>
+$default_person => undef
+</%args>
+
+<div id="person-picker-popup" style="display: none">
+  <form method="get" action="<% $form_action %>">
+    <div>
+      Name: <input class="curs-person-picker-add-name" name="person-picker-add-name" size="30"/>
+    </div>
+    <div>
+      Email: <input class="curs-person-picker-add-email" name="person-picker-add-email" size="30"/>
+    </div>
+    <input type="submit" name="add" class="curs-person-picker-add-action" value="Add"/>
+  </form>
+</div>
+
+<%init>
+my $form_action = $c->uri_for('/tools/add_person');
+</%init>

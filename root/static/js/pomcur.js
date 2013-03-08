@@ -776,10 +776,6 @@ $(document).ready(function() {
         .append( "<a>" + item.label + "<br></a>" )
         .appendTo( ul );
     };
-    $(".curs-person-picker button.curs-person-picker-add").click(function () {
-      $(this).hide().siblings('div.curs-person-picker-add').show();
-      $(this).siblings('.curs-person-picker-input').hide();
-    });
   }
 });
 
@@ -826,6 +822,27 @@ $(document).ready(function() {
     } else {
       return true
     }
+  });
+
+  $('button.curs-person-picker-add').click(function(e) {
+    var $popup = $('#person-picker-popup');
+    var $picker_div = $(this).closest('div');
+    $popup.data('success_callback', function(data) {
+      $picker_div.children('.curs-person-picker-input').val(data.name);
+      $picker_div.children('.curs-person-picker-person-id').val(data.person_id);
+    });
+    $popup.dialog({ 
+      title: 'Add a person ...',
+      modal: true });
+  });
+
+  var $person_picker_popup = $('#person-picker-popup');
+  $person_picker_popup.find("form").ajaxForm({
+    success: function(data) {
+      ($person_picker_popup.data('success_callback'))(data);
+      $person_picker_popup.dialog( "close" );
+    },
+    dataType: 'json'
   });
 });
 

@@ -153,6 +153,8 @@ $return_pub_id
 
 </div>
 
+<& /person_picker_add.mhtml, default_person => $pub->corresponding_author() &>
+
 <%init>
 my $schema = $c->schema('track');
 my $status_cv_name = 'PomCur publication triage status';
