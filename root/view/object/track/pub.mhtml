@@ -44,7 +44,7 @@ $is_admin_user
 </div>
 
 <div class="curs-pub-assign-actions">
-  <button type="button" id="curs-pub-assign-popup-dialog"><% $assign_to_text %></button>
+  <button type="button" id="curs-pub-assign-popup-dialog">Set the corresponding author ...</button>
 </div>
 %   }
 <div class="curs-pub-assign-actions">
@@ -94,14 +94,6 @@ while (defined (my $person = $person_rs->next())) {
   push @people_data, { id => $person->person_id(),
                        text => $person->name() . ' <' . $person->email_address() . '>' };
 }
-
-my $assign_to_text;
-
-#if (defined $object->corresponding_author()) {
-#  $assign_to_text = 'Change the corresponding author ...';
-#} else {
-  $assign_to_text = 'Set the corresponding author ...';
-#}
 
 my $curs_key = undef;
 my $curs_rs = $schema->resultset('Curs')->search({ pub => $pub_id});
