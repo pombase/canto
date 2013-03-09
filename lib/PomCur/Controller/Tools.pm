@@ -584,16 +584,16 @@ sub add_person : Local Args(0)
   $c->forward('View::JSON');
 }
 
-=head2 create_curs
+=head2 create_session
 
- Function: Make a curs
+ Function: Make a Curs and a CursDB for it
  Args    : pub - the publication ID
            curator - the Person to curate the session
  Return  : none
 
 =cut
 
-sub create_curs : Local Args(0)
+sub create_session : Local Args(0)
 {
   my ($self, $c) = @_;
 
@@ -606,37 +606,47 @@ sub create_curs : Local Args(0)
   my $user_cvterm = $load_util->get_cvterm(cv_name => 'PomCur user types',
                                            term_name => 'user');
 
-  my $name = $c->req()->param('person-picker-add-name');
-  my $email = $c->req()->param('person-picker-add-email');
+  my $return_path = $c->req()->param('pub-view-path');
 
-  my $result = { };
+  my $pub_id = $c->req()->param('pub_id');
+  my $person_id = $c->req()->param('pub-create-session-person-id');
 
-  if (!defined $name || length $name == 0) {
-    $result->{error_message} = 'No name given';
-  } else {
-    if (!defined $email || length $email == 0) {
-      $result->{error_message} = 'No email address given';
-    } else {
-      my $person = $track_schema->resultset('Person')->find({ email_address => $email });
-      try {
-        if (!defined $person) {
-          $person = $track_schema->create_with_type('Person',
-                                                    {
-                                                      name => $name,
-                                                      email_address => $email,
-                                                      role => $user_cvterm,
-                                                    });
-        }
-        $result->{person_id} = $person->person_id();
-        $result->{name} = $person->name();
-      } catch {
-        $result->{error_message} = $_;
-      }
+  my $pub = $track_schema->find_with_type('Pub', { pub_id => $pub_id });
+
+  if ($pub->curs() == 0) {
+    my $person =
+      $track_schema->resultset('Person')->find({ person_id => $person_id });
+    my $admin_session = 0;
+    if ($person->role()->name() eq 'admin') {
+      $admin_session = 1;
+    }
+    my %create_args = (
+      pub => $pub_id,
+      curs_key => PomCur::Curs::make_curs_key(),
+    );
+    my $curs = $track_schema->create_with_type('Curs', { %create_args });
+    my ($curs_schema) = PomCur::Track::create_curs_db($c->config(), $curs, $admin_session);
+    my $corresponding_author = $pub->corresponding_author();
+
+    if (defined $corresponding_author) {
+      my $initial_curator_name = $corresponding_author->name();
+      my $initial_curator_email = $corresponding_author->email_address();
+
+      my $curator_manager =
+        PomCur::Track::CuratorManager->new(config => $config);
+
+      $curator_manager->set_curator($curs->curs_key, $initial_curator_email,
+                                    $initial_curator_name);
+    }
+
+    if (defined $curs_schema) {
+      PomCur::Curs::State->new(config => $config)->store_statuses($curs_schema);
     }
   }
 
-  $c->stash->{json_data} = $result;
-  $c->forward('View::JSON');
+
+  $c->res->redirect($return_path);
+  $c->detach();
 }
 
 

@@ -11,21 +11,34 @@ $is_admin_user
 % if ($is_admin_user) {
 %   if (defined $object->corresponding_author()) {
 %     if (scalar($object->curs()->all()) == 0) {
-<div class="long-action-link">
-  <a href="<% $c->uri_for('/tools/create_curs',
-                          { pub => $pub_id,
-                            curator =>
-                              $object->corresponding_author()->person_id()
-                          }) %>">
-    Create a curation session for this publication
-  </a>
+<div id="curs-pub-create-session-dialog" style="display: none">
+  <form id="curs-pub-create-session-form" method="put"
+        action="<% $c->uri_for('/tools/create_session') %>">
+    <input type="hidden" name="pub_id" value="<% $pub_id %>"/>
+    <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
+
+    <div id="curs-pub-create-session-help" class="ferret-help-text">
+      Choose a person to be the initial curator of this paper.
+    </div>
+    <& /person_picker.mhtml, id_prefix => 'pub-create-session',
+      default_person => $object->corresponding_author() &>
+
+    <input id="curs-pub-create-session-cancel" name="curs-pub-create-session-cancel" type="submit"
+           value="Cancel" class="button"/>
+    <input name="curs-pub-create-session-submit" type="submit"
+           value="Create" class="button"/>
+  </form>
+</div>
+<div class="curs-pub-assign-actions">
+  <button type="button" id="curs-pub-create-session-popup-dialog">Create a curation
+  session for this publication ...</button>
 </div>
 %     }
 %   } else {
 
 <div id="curs-pub-assign-dialog" style="display: none">
   <form id="curs-pub-assign-form" method="put"
-        action="<% $c->uri_for('/track/assign_pub') %>">
+        action="<% $c->uri_for('/track/set_corresponding_author') %>">
     <input type="hidden" name="pub-id" value="<% $pub_id %>"/>
     <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
 
@@ -33,8 +46,7 @@ $is_admin_user
       default_person => $object->corresponding_author() &>
 
     <div id="curs-pub-assign-help" class="ferret-help-text">
-      Choose a curator to assign this publication to.  A session will
-      then be automatically created for the publication.
+      Set the corresponding author of this publication.
     </div>
     <input id="curs-pub-assign-cancel" name="curs-pub-assign-cancel" type="submit"
            value="Cancel" class="button"/>

@@ -688,6 +688,12 @@ $(document).ready(function() {
                                           width: '50em' });
   });
 
+  $('#curs-pub-create-session-popup-dialog').click(function () {
+    $('#curs-pub-create-session-dialog').dialog({ modal: true,
+                                                  title: 'Create a session',
+                                                  width: '50em' });
+  });
+
   $('#curs-pub-triage-this-pub').click(function () {
     window.location.href = application_root + 'tools/triage?triage-return-pub-id=' + $(this).val();
   });

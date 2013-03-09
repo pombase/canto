@@ -52,7 +52,7 @@ sub index_page :Local :Args(0) {
   $c->stash->{model} = 'track';
 }
 
-sub assign_pub :Local {
+sub set_corresponding_author :Local {
   my ($self, $c) = @_;
 
   my $config = $c->config();
@@ -72,43 +72,10 @@ sub assign_pub :Local {
 
     my $proc = sub {
       $pub->corresponding_author($person_id);
-      if ($pub->curs() == 0) {
-        my $person =
-          $schema->resultset('Person')->find({ person_id => $person_id });
-        my $admin_session = 0;
-        if ($person->role()->name() eq 'admin') {
-          $admin_session = 1;
-        }
-        my %create_args = (
-          pub => $pub_id,
-          curs_key => PomCur::Curs::make_curs_key(),
-        );
-        $curs = $schema->create_with_type('Curs', { %create_args });
-        ($curs_schema) = PomCur::Track::create_curs_db($c->config(), $curs, $admin_session);
-      }
       $pub->update();
     };
 
     $schema->txn_do($proc);
-
-    my $corresponding_author = $pub->corresponding_author();
-
-    if (defined $corresponding_author) {
-      my $first_contact_name = $corresponding_author->name();
-      my $first_contact_email = $corresponding_author->email_address();
-
-      my $curator_manager =
-        PomCur::Track::CuratorManager->new(config => $config);
-
-      $curator_manager->set_curator($curs->curs_key, $first_contact_email,
-                                    $first_contact_name);
-    }
-
-    if (defined $curs_schema) {
-      # call after txn_do() because otherwise it will time out because
-      # the database is locked
-      PomCur::Curs::State->new(config => $config)->store_statuses($curs_schema);
-    }
   } else {
     # cancelled
   }
