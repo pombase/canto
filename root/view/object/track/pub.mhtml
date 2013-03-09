@@ -12,12 +12,11 @@ $is_admin_user
 %   if (defined $object->corresponding_author()) {
 %     if (scalar($object->curs()->all()) == 0) {
 <div class="long-action-link">
-  <a href="<% $c->uri_for('/create/curs',
+  <a href="<% $c->uri_for('/tools/create_curs',
                           { pub => $pub_id,
-                            curs_key => PomCur::Curs::make_curs_key(),
-                            assigned_curator =>
-                              $object->corresponding_author()->person_id(),
-                            model => $c->req()->param('model') }) %>">
+                            curator =>
+                              $object->corresponding_author()->person_id()
+                          }) %>">
     Create a new curation session for this publication
   </a>
 </div>

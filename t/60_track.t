@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 29;
+use Test::More tests => 28;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -20,22 +20,13 @@ my @results = $schema->resultset('Curs')->search();
 is(@results, 2);
 
 my $key = 'abcd0123';
-
-my $first_contact_email = 'val@sanger.ac.uk';
-
 my $pub = $schema->find_with_type('Pub', { uniquename => 'PMID:19056896' });
 
 is($pub->type()->name(), 'unknown');
 
-my $person = $schema->find_with_type('Person',
-                                     {
-                                       email_address => $first_contact_email
-                                     });
-
 my $curs = $schema->create_with_type('Curs',
                                      {
                                        pub => $pub,
-                                       assigned_curator => $person,
                                        curs_key => $key,
                                      });
 
@@ -80,7 +71,6 @@ while (defined (my $metadata = $curs_metadata_rs->next())) {
   $metadata_hash{$metadata->key()} = $metadata->value();
 }
 
-is($metadata_hash{first_contact_email}, $first_contact_email);
 is($metadata_hash{curs_key}, $curs->curs_key());
 
 my $curs_db_pub_id = $metadata_hash{curation_pub_id};

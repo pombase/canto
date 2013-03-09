@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 11;
 
 use PomCur::TestUtil;
 
@@ -48,7 +48,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr/<form/);
-    like ($res->content(), qr:<label>assigned curator</label>:i);
+    like ($res->content(), qr:<label>curs key</label>:i);
     like ($res->content(), qr /input name="curs_key" type="text" value="$curs_key"/);
   }
 
@@ -59,7 +59,6 @@ test_psgi $app, sub {
     my $uri = new URI('http://localhost:5000/new/object/curs');
     $uri->query_form(model => 'track',
                      publication => $pub->pub_id(),
-                     assigned_curator => $curator->person_id(),
                      curs_key => $curs_key,
                      submit => 'Submit',
                     );
@@ -83,18 +82,6 @@ test_psgi $app, sub {
     like ($redirect_res->content(), qr/Details for curation session $curs_key/);
     like ($redirect_res->content(), qr/$curs_key/);
     like ($redirect_res->content(), qr/$pub_uniquename/);
-
-    my $curs_connect_string =
-      PomCur::Curs::make_connect_string($test_util->config(), $curs_key);
-    my $curs_schema =
-      PomCur::CursDB->connect($curs_connect_string);
-
-    my $metadata = $curs_schema->find_with_type('Metadata',
-                                                {
-                                                  key => 'first_contact_email',
-                                                });
-
-    is ($metadata->value(), $curator->email_address());
   }
 };
 

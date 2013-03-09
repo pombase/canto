@@ -245,7 +245,6 @@ sub test_curs :Global {
   my $curs = $schema->create_with_type('Curs',
                                        {
                                          pub => $pub,
-                                         assigned_curator => $person,
                                          curs_key => $curs_key,
                                        });
 
@@ -255,11 +254,11 @@ sub test_curs :Global {
 
   if (defined $arg) {
     if ($arg >= 1) {
-      $curs_schema->create_with_type('Metadata', { key => 'submitter_email',
-                                                   value => 'test@test.com' });
+      my $curator_manager =
+        PomCur::Track::CuratorManager->new(config => $config);
 
-      $curs_schema->create_with_type('Metadata', { key => 'submitter_name',
-                                                   value => 'Dr T. Tester' });
+      $curator_manager->set_curator($curs->curs_key, 't.tester@example.com',
+                                    'Dr T. Tester');
     }
     if ($arg >= 2) {
       my $gene_track_rs = $schema->resultset('Gene');

@@ -116,7 +116,7 @@ test_psgi $app, sub {
 
     is ($res->code, 200);
     like ($res->content(), qr/<div id="curs-intro/);
-    like ($res->content(), qr/Curate this paper/);
+    like ($res->content(), qr/You are about to start curating/);
   }
 
   # click "Curate this paper"

@@ -160,8 +160,6 @@ my $full_expected_curation_session =
         },
       },
       metadata => {
-        first_contact_email => 'Ken.Sawin@ed.ac.uk',
-        first_contact_name => 'Ken Sawin',
         curs_key => 'aaaa0007',
         curation_pub_id => 'PMID:19756689',
         term_suggestion_count => 1,

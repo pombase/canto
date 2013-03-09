@@ -32,12 +32,6 @@ __PACKAGE__->table("curs");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 assigned_curator
-
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 1
-
 =head2 pub
 
   data_type: 'integer'
@@ -59,8 +53,6 @@ __PACKAGE__->table("curs");
 __PACKAGE__->add_columns(
   "curs_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "assigned_curator",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "pub",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "curs_key",
@@ -82,26 +74,6 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("curs_id");
 
 =head1 RELATIONS
-
-=head2 assigned_curator
-
-Type: belongs_to
-
-Related object: L<PomCur::TrackDB::Person>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "assigned_curator",
-  "PomCur::TrackDB::Person",
-  { person_id => "assigned_curator" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
-);
 
 =head2 curs_curators
 

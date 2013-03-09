@@ -118,21 +118,6 @@ __PACKAGE__->add_unique_constraint("email_address_unique", ["email_address"]);
 
 =head1 RELATIONS
 
-=head2 curs
-
-Type: has_many
-
-Related object: L<PomCur::TrackDB::Curs>
-
-=cut
-
-__PACKAGE__->has_many(
-  "curs",
-  "PomCur::TrackDB::Curs",
-  { "foreign.assigned_curator" => "self.person_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 curs_curators
 
 Type: has_many

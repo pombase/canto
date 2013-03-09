@@ -101,11 +101,10 @@ my $proc = sub {
 Delete the lab first with:
   $0 --lab '", $labs[0]->name(), "'\n";
       } else {
-        my @assigned_curation_sessions = $person->curs();
+        my @curs_curators = $person->curs_curators();
         map {
-          $_->assigned_curator(undef);
-          $_->update();
-        } @assigned_curation_sessions;
+          $_->delete();
+        } @curs_curators;
 
         my @assigned_publications = $person->pubs();
         map {

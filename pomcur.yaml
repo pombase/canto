@@ -556,8 +556,6 @@ class_info:
         - name: publication
           editable: 0
           source: pub
-        - name: assigned_curator
-          editable: 1
         - name: current_curator
           referenced_class: Person
           source:
@@ -701,13 +699,10 @@ class_info:
     publications_with_approved_session:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
-    publications_with_unassigned_session:
-      extends: pub
-      constraint: "pub_id in (select pub from curs where assigned_curator is null)"
     curatable_publications_with_no_annotatable_genes:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_genes_count' and p.value = 0)) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
-    unassigned_publications:
+    publications_without_corresponding_author:
       extends: pub
       constraint: "corresponding_author is null"
     sessions_needing_approval:
@@ -719,9 +714,6 @@ class_info:
     approved_sessions:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')"
-    unassigned_sessions:
-      extends: curs
-      constraint: "me.assigned_curator IS NULL"
     all_sessions:
       extends: curs
   chado:
@@ -881,7 +873,6 @@ reports:
                    - report: publications_with_active_sessions
                    - report: publications_with_session_needing_approval
                    - report: publications_with_approved_session
-                - report: publications_with_unassigned_session
                 - report: curatable_publications_without_sessions
                 - report: curatable_publications_with_no_annotatable_genes
             - report: high_priority_publications
@@ -900,13 +891,12 @@ reports:
                 - report: triage_phylogeny_paper_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
-        - report: unassigned_publications
+        - report: publications_without_corresponding_author
     - report: all_sessions
       children:
         - report: approved_sessions
         - report: sessions_with_term_requests
 #        - report: sessions_needing_approval
-#        - report: unassigned_sessions
 #    - report: named_genes
   chado:
     - report: protein_and_domain_terms

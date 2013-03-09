@@ -26,19 +26,15 @@ test_config:
     0_curs: []
     1_curs:
        - curs_key: aaaa0001
-         first_contact_email: "nick.rhind@umassmed.edu"
          uniquename: PMID:19664060
     3_curs:
        - curs_key: aaaa0002
-         first_contact_email: "hoffmacs@bc.edu"
          uniquename: PMID:19686603
        - curs_key: aaaa0003
-         first_contact_email: "kevin.hardwick@ed.ac.uk"
          uniquename: PMID:19436749
          submitter_email: "kevin.hardwick@ed.ac.uk"
          submitter_name: "Kevin Hardwick"
        - curs_key: aaaa0004
-         first_contact_email: "kevin.hardwick@ed.ac.uk"
          uniquename: PMID:18426916
          submitter_email: "fred.smith@ed.ac.uk"
          submitter_name: "Fred Smith"
@@ -48,7 +44,6 @@ test_config:
            - "SPCC1739.10"
     curs_annotations_1:
        - curs_key: aaaa0005
-         first_contact_email: "kevin.hardwick@ed.ac.uk"
          uniquename: PMID:18426916
          submitter_email: "fred.smith@ed.ac.uk"
          submitter_name: "Fred Smith"
@@ -77,7 +72,6 @@ test_config:
                with_gene: SPCC1739.10
     curs_annotations_2:
        - curs_key: aaaa0006
-         first_contact_email: "henar@usal.es"
          uniquename: PMID:18426916
          submitter_email: "henar@usal.es"
          submitter_name: "Henar Valdivieso"
@@ -94,7 +88,6 @@ test_config:
                evidence_code: IMP
                term_ontid: GO:0055085
        - curs_key: aaaa0007
-         first_contact_email: "Ken.Sawin@ed.ac.uk"
          uniquename: PMID:19756689
          submitter_email: "Ken.Sawin@ed.ac.uk"
          submitter_name: "Ken Sawin"

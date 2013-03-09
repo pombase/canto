@@ -149,7 +149,6 @@ CREATE TABLE person (
 
 CREATE TABLE curs (
        curs_id integer NOT NULL PRIMARY KEY,
-       corresponding_author integer REFERENCES person (person_id),
        pub integer NOT NULL REFERENCES pub (pub_id),
        curs_key text NOT NULL,
        creation_date timestamp

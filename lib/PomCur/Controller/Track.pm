@@ -64,11 +64,13 @@ sub assign_pub :Local {
     my $person_id = $c->req()->param('pub-corresponding-author-person-id');
 
     my $schema = $c->schema('track');
+    my $pub = $schema->resultset('Pub')->find({ pub_id => $pub_id });
 
     my $curs_schema;
 
+    my $curs;
+
     my $proc = sub {
-      my $pub = $schema->resultset('Pub')->find({ pub_id => $pub_id });
       $pub->corresponding_author($person_id);
       if ($pub->curs() == 0) {
         my $person =
@@ -78,17 +80,29 @@ sub assign_pub :Local {
           $admin_session = 1;
         }
         my %create_args = (
-          assigned_curator => $person_id,
           pub => $pub_id,
           curs_key => PomCur::Curs::make_curs_key(),
         );
-        my $curs = $schema->create_with_type('Curs', { %create_args });
+        $curs = $schema->create_with_type('Curs', { %create_args });
         ($curs_schema) = PomCur::Track::create_curs_db($c->config(), $curs, $admin_session);
       }
       $pub->update();
     };
 
     $schema->txn_do($proc);
+
+    my $corresponding_author = $pub->corresponding_author();
+
+    if (defined $corresponding_author) {
+      my $first_contact_name = $corresponding_author->name();
+      my $first_contact_email = $corresponding_author->email_address();
+
+      my $curator_manager =
+        PomCur::Track::CuratorManager->new(config => $config);
+
+      $curator_manager->set_curator($curs->curs_key, $first_contact_email,
+                                    $first_contact_name);
+    }
 
     if (defined $curs_schema) {
       # call after txn_do() because otherwise it will time out because

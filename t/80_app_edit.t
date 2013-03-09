@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 30;
+use Test::More tests => 29;
 
 use PomCur::TestUtil;
 
@@ -130,7 +130,6 @@ test_psgi $app, sub {
     $uri->query_form(model => 'track',
                      curs_key => $curs_key,
                      pub => $pub->pub_id(),
-                     assigned_curator => $new_person_id,
                     );
 
     my $req = HTTP::Request->new(GET => $uri);
@@ -146,7 +145,6 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     like ($redirect_res->content(), qr/Details for curation session $curs_key/);
-    like ($redirect_res->content(), qr/$test_name/);
     my $pub_uniquename = $pub->uniquename();
     like ($redirect_res->content(), qr/$pub_uniquename/);
   }

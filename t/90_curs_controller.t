@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 43;
+use Test::More tests => 42;
 use Test::Deep;
 
 use Data::Compare;
@@ -39,7 +39,6 @@ while (defined (my $metadata = $curs_metadata_rs->next())) {
 
 my $curs_db_pub = $curs_schema->resultset('Pub')->first();
 
-is($metadata{first_contact_email}, 'nick.rhind@umassmed.edu');
 is($metadata{curation_pub_id}, $curs_db_pub->pub_id());
 like($curs_db_pub->title(), qr/Inactivating pentapeptide insertions in the/);
 

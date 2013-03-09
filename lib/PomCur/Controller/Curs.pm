@@ -147,10 +147,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       "Session is being checked by $approver_name <$approver_email>";
   }
 
-  $st->{first_contact_email} =
-    $self->get_metadata($schema, 'first_contact_email');
-  $st->{first_contact_name} =
-    $self->get_metadata($schema, 'first_contact_name');
   $st->{is_admin_session} =
     $self->get_metadata($schema, 'admin_session');
 
@@ -2649,9 +2645,6 @@ sub _assign_session :Private
 
   my $config = $c->config();
 
-  my $first_contact_name = $st->{first_contact_name};
-  my $first_contact_email = $st->{first_contact_email};
-
   my $introduction_text_name = 'submitter_name';
   my $introduction_text_email = 'submitter_email';
 
@@ -2660,12 +2653,10 @@ sub _assign_session :Private
   my @all_elements = (
       {
         name => 'submitter_name', label => 'Name', type => 'Text', size => 40,
-        value => $first_contact_name,
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
       },
       {
         name => 'submitter_email', label => 'Email', type => 'Text', size => 40,
-        value => $first_contact_email,
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
       },
       {
