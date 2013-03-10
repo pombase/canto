@@ -964,12 +964,34 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
                                 data => { %annotation_data }
                               });
 
+  $self->_set_annotation_curator($st->{curs_key}, $new_annotation);
+
   $new_annotation->set_genes($gene);
 
   $c->stash->{json_data} = {
     new_annotation_id => $new_annotation->annotation_id(),
   };
   $c->forward('View::JSON');
+}
+
+# set the "curator" field of the data blob of an Annotation to be the current
+# curator
+sub _set_annotation_curator
+{
+  my $self = shift;
+  my $curs_key = shift;
+  my $annotation = shift;
+
+  my $data = $annotation->data();
+  my ($curator_email, $curator_name) =
+    $self->curator_manager()->current_curator($curs_key);
+  $data->{curator} = {
+    email => $curator_email,
+    name => $curator_name,
+  };
+
+  $annotation->data($data);
+  $annotation->update();
 }
 
 sub annotation_ontology_edit
@@ -1121,6 +1143,8 @@ sub annotation_ontology_edit
 
       $is_new_annotation = 1;
     }
+
+    $self->_set_annotation_curator($st->{curs_key}, $annotation);
 
     $guard->commit();
 
