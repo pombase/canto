@@ -138,12 +138,12 @@ __PACKAGE__->belongs_to(
   "organism",
   "PomCur::TrackDB::Organism",
   { organism_id => "organism" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-23 03:55:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0eAbSRfuzmFxzz2DWnmerQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ytr880f3vid8gOB5TrzGZQ
 
 use Moose;
 

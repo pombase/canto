@@ -88,7 +88,7 @@ __PACKAGE__->belongs_to(
   "cvterm",
   "PomCur::TrackDB::Cvterm",
   { cvterm_id => "cvterm_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 type
@@ -104,16 +104,16 @@ __PACKAGE__->belongs_to(
   "PomCur::TrackDB::Cvterm",
   { cvterm_id => "type_id" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9TX2qNH8TCzs9VKHy30HJw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2q9hs1I5iQ5vzw1VO36q1w
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

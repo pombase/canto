@@ -82,10 +82,10 @@ __PACKAGE__->belongs_to(
   "PomCur::CursDB::Allele",
   { allele_id => "allele" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
 );
 
@@ -102,16 +102,16 @@ __PACKAGE__->belongs_to(
   "PomCur::CursDB::Annotation",
   { annotation_id => "annotation" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-22 13:14:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CiAOhuRPuN6iS9z1NTRELw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2cuoDqiU++jybYNKxwJn7A
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

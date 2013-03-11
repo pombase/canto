@@ -96,10 +96,10 @@ __PACKAGE__->belongs_to(
   "PomCur::TrackDB::Person",
   { person_id => "assigned_curator" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
 );
 
@@ -130,12 +130,12 @@ __PACKAGE__->belongs_to(
   "pub",
   "PomCur::TrackDB::Pub",
   { pub_id => "pub" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iebOwdaSmGXEFwH2+nJXng
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zcpCa88tBqw4jG8GH2jN3Q
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 

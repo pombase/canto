@@ -88,7 +88,7 @@ __PACKAGE__->belongs_to(
   "pub",
   "PomCur::TrackDB::Pub",
   { pub_id => "pub_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 status
@@ -103,12 +103,12 @@ __PACKAGE__->belongs_to(
   "status",
   "PomCur::TrackDB::Cvterm",
   { cvterm_id => "status_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-12 03:42:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5/HZrJ/xTr0VAsjxXaTyQg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IpiYjjzuy/KSPq/qdgoQKw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

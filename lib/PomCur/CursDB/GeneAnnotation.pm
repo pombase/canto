@@ -82,10 +82,10 @@ __PACKAGE__->belongs_to(
   "PomCur::CursDB::Annotation",
   { annotation_id => "annotation" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
 );
 
@@ -102,16 +102,16 @@ __PACKAGE__->belongs_to(
   "PomCur::CursDB::Gene",
   { gene_id => "gene" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:50
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6oC98pJFLVEfP4CxrqCwmQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0j02FfYKAm9R/Gpt9bt5Ow
 
 
 __PACKAGE__->meta->make_immutable;

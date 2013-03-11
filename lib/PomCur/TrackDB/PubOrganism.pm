@@ -81,7 +81,7 @@ __PACKAGE__->belongs_to(
   "organism",
   "PomCur::TrackDB::Organism",
   { organism_id => "organism" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 pub
@@ -96,12 +96,12 @@ __PACKAGE__->belongs_to(
   "pub",
   "PomCur::TrackDB::Pub",
   { pub_id => "pub" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hXbGhbMXZdBnvTe5C8x0sA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7KojZWIU4C+zm9b2SFck8Q
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -153,16 +153,16 @@ __PACKAGE__->belongs_to(
   "PomCur::CursDB::Pub",
   { pub_id => "pub" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-22 13:09:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:39Q0CToWjKJYNiV03mqjvg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TwnwsW1NctI4poakpHZhfw
 
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');

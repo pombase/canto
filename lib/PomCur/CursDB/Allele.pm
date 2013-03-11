@@ -116,12 +116,12 @@ __PACKAGE__->belongs_to(
   "gene",
   "PomCur::CursDB::Gene",
   { gene_id => "gene" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-05-02 13:13:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2MdzsNBOPJI8vcJ3B967nQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ImehagSNKPG3BaribcYcvw
 
 __PACKAGE__->many_to_many('annotations' => 'allele_annotations',
                           'annotation');

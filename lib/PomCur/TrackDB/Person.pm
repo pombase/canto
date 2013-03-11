@@ -146,10 +146,10 @@ __PACKAGE__->belongs_to(
   "PomCur::TrackDB::Lab",
   { lab_id => "lab" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
 );
 
@@ -195,12 +195,12 @@ __PACKAGE__->belongs_to(
   "role",
   "PomCur::TrackDB::Cvterm",
   { cvterm_id => "role" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:itxL224SFYB29BV2KzlNsA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tY9g2wVkvfQgDEVTHMfT2A
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 

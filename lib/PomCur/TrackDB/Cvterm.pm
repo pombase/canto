@@ -126,7 +126,7 @@ __PACKAGE__->belongs_to(
   "cv",
   "PomCur::TrackDB::Cv",
   { cv_id => "cv_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 cvterm_dbxrefs
@@ -261,7 +261,7 @@ __PACKAGE__->belongs_to(
   "dbxref",
   "PomCur::TrackDB::Dbxref",
   { dbxref_id => "dbxref_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 metadatas
@@ -415,8 +415,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-07-15 05:57:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MwbNff7OzOAA3MWn3VwQ+g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4qgeaHCfkNGTS3mZZXsb+w
 
 =head2 db_accession
 
