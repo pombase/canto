@@ -62,6 +62,15 @@ has organism => (is => 'ro', init_arg => undef, lazy_build => 1);
 with 'PomCur::Role::Configurable';
 with 'PomCur::Role::GeneNames';
 
+sub BUILD
+{
+  my $self = shift;
+
+  if (!defined $self->cursdb_gene()) {
+    croak "No cursdb_gene passed to GeneProxy";
+  }
+}
+
 sub _build_gene_lookup
 {
   my $self = shift;
