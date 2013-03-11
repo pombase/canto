@@ -52,8 +52,6 @@ $config->{data_directory} = $test_util->test_data_dir_full_path();
 
 my %test_cases = %{$config->{test_config}->{test_cases}};
 
-my $metadata_storer = PomCur::Curs::MetadataStorer->new(config => $config);
-
 sub make_curs_dbs
 {
   my $config = shift;
@@ -86,6 +84,7 @@ sub make_curs_dbs
 
   # wait until the transaction is finished
   map {
+    my $metadata_storer = PomCur::Curs::MetadataStorer->new(config => $config);
     $metadata_storer->store_counts($_);
   } @curs_schemas;
 }
