@@ -732,10 +732,11 @@ sub gene_upload : Chained('top') Args(0) Form
 
 sub _delete_annotation : Private
 {
-  my $config = shift;
-  my $schema = shift;
-  my $annotation_id = shift;
-  my $other_gene_identifier = shift;
+  my ($self, $c, $annotation_id, $other_gene_identifier) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
 
   my $annotation = $schema->resultset('Annotation')->find($annotation_id);
   my $annotation_type_name = $annotation->type();
@@ -743,7 +744,15 @@ sub _delete_annotation : Private
   if ($annotation_config->{category} eq 'interaction') {
     PomCur::Curs::Utils::delete_interactor($annotation, $other_gene_identifier);
   } else {
-    $annotation->delete();
+    my $state = $st->{state};
+    if ($state eq APPROVAL_IN_PROGRESS) {
+      # during approval we want to keep the original, community curator
+      # annotation
+      $annotation->status('deleted');
+      $annotation->update();
+    } else {
+      $annotation->delete();
+    }
   }
 }
 
@@ -758,7 +767,7 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete')
   $self->_check_annotation_exists($c, $annotation_id);
 
   my $delete_sub = sub {
-    _delete_annotation($config, $schema, $annotation_id, $other_gene_identifier);
+    $self->_delete_annotation($c, $annotation_id, $other_gene_identifier);
     $self->metadata_storer()->store_counts($schema);
   };
 
@@ -1046,7 +1055,7 @@ sub annotation_ontology_edit
   $st->{annotation_extra_help_text} = $annotation_extra_help_text;
   $st->{template} = "curs/modules/$module_category.mhtml";
 
-  my $form = $self->form();
+ my $form = $self->form();
 
   my @all_elements = (
       {
@@ -1102,15 +1111,45 @@ sub annotation_ontology_edit
     my $annotation;
 
     if (defined $annotation_id) {
-      $annotation = $schema->find_with_type('Annotation',
-                                            {
-                                              annotation_id => $annotation_id,
-                                            });
-      my %current_data = %{$annotation->data()};
+      my $orig_annotation = $schema->find_with_type('Annotation',
+                                                    {
+                                                      annotation_id => $annotation_id,
+                                                    });
+      my %current_data = %{$orig_annotation->data()};
       @current_data{keys %annotation_data} = values %annotation_data;
-      $annotation->data(\%current_data);
-      $annotation->update();
-    } else {
+
+      my $state = $st->{state};
+      if ($state eq APPROVAL_IN_PROGRESS) {
+        # during approval we want to keep the original, community curator
+        # annotation
+        $orig_annotation->status('deleted');
+        $orig_annotation->update();
+
+        $annotation =
+          $schema->create_with_type('Annotation',
+                                    {
+                                      type => $annotation_type_name,
+                                      status => 'new',
+                                      pub => $st->{pub},
+                                      creation_date => _get_iso_date(),
+                                      data => { %current_data }
+                                    });
+
+        $annotation_id = $annotation->annotation_id();
+        my @orig_genes = $orig_annotation->genes()->all();
+        if (@orig_genes) {
+          $annotation->set_genes(@orig_genes);
+        }
+        my @orig_alleles = $orig_annotation->alleles()->all();
+        if (@orig_alleles) {
+          $annotation->set_alleles(@orig_alleles);
+        }
+      } else {
+        $annotation = $orig_annotation;
+        $annotation->data(\%current_data);
+        $annotation->update();
+      }
+   } else {
       $annotation =
         $schema->create_with_type('Annotation',
                                   {
@@ -1485,7 +1524,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     }
 
     if (defined $evidence_submit_back) {
-      _delete_annotation($config, $schema, $annotation_id);
+      $self->_delete_annotation($c, $annotation_id);
       my $gene_id = $gene->gene_id();
       _redirect_and_detach($c, 'annotation', 'edit', $gene_id, $annotation_type_name);
     }
