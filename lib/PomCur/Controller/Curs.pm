@@ -964,7 +964,7 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
                                 data => { %annotation_data }
                               });
 
-  $self->_set_annotation_curator($st->{curs_key}, $new_annotation);
+  $self->_set_annotation_curator($c, $new_annotation);
 
   $new_annotation->set_genes($gene);
 
@@ -974,17 +974,31 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
   $c->forward('View::JSON');
 }
 
-# set the "curator" field of the data blob of an Annotation to be the current
-# curator
+# Set the "curator" field of the data blob of an Annotation to be the current
+# curator.
+# The current curator will be the reviewer if approval is in progress.
 sub _set_annotation_curator
 {
   my $self = shift;
-  my $curs_key = shift;
+  my $c = shift;
   my $annotation = shift;
 
+  my $st = $c->stash();
+  my $curs_key = $st->{curs_key};
+
+  my $curator_email;
+  my $curator_name;
+
+  if ($st->{state} eq APPROVAL_IN_PROGRESS) {
+    my $schema = $st->{schema};
+    $curator_name = $self->get_metadata($schema, 'approver_name');
+    $curator_email = $self->get_metadata($schema, 'approver_email');
+  } else {
+    ($curator_email, $curator_name) =
+      $self->curator_manager()->current_curator($curs_key);
+  }
+
   my $data = $annotation->data();
-  my ($curator_email, $curator_name) =
-    $self->curator_manager()->current_curator($curs_key);
   $data->{curator} = {
     email => $curator_email,
     name => $curator_name,
@@ -1144,7 +1158,7 @@ sub annotation_ontology_edit
       $is_new_annotation = 1;
     }
 
-    $self->_set_annotation_curator($st->{curs_key}, $annotation);
+    $self->_set_annotation_curator($c, $annotation);
 
     $guard->commit();
 
@@ -1261,7 +1275,7 @@ sub annotation_interaction_edit
                                   data => { %annotation_data }
                                 });
 
-    $self->_set_annotation_curator($st->{curs_key}, $annotation);
+    $self->_set_annotation_curator($c, $annotation);
 
     $annotation->set_genes($gene_proxy->cursdb_gene());
 
