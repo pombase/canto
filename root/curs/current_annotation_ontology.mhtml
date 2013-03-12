@@ -94,6 +94,7 @@ $user_created
 % my $edit_allele_url =
 %   "$curs_root_uri/annotation/allele_select/$annotation_id/edit";
 % my $annotation_status = $row->{status};
+% next if ($state ne APPROVAL_IN_PROGRESS && $annotation_status eq 'deleted');
   <tr class="<% $annotation_status eq 'deleted' ? 'deleted-annotation' : '' %>">
 % if (!defined $gene) {
     <td>
