@@ -31,6 +31,11 @@ $user_created
       <th>
         Evidence code
       </th>
+% if ($approval_in_progress) {
+      <th>
+        Curator
+      </th>
+% }
 % if ($user_created && !$read_only_curs) {
       <th>
         &nbsp
@@ -82,6 +87,14 @@ $user_created
 % }
       </span>
     </td>
+
+% if ($approval_in_progress) {
+%   my $curator = $row->{curator} // '';
+    <td>
+      <% $curator %>
+    </td>
+% }
+
 % if ($user_created && !$read_only_curs) {
     <td>
 %   my $delete_url = $delete_action . $row->{annotation_id} . '/' .
@@ -128,6 +141,13 @@ my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
 
 my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
 
-my $read_only_curs = $c->stash()->{read_only_curs};
+my $st = $c->stash();
+my $read_only_curs = $st->{read_only_curs};
 
+my $state = $st->{state};
+
+my $approval_in_progress = 0;
+if ($state eq APPROVAL_IN_PROGRESS) {
+  $approval_in_progress = 1;
+}
 </%init>

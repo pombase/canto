@@ -221,6 +221,10 @@ sub _make_interaction_annotation
   my $annotation_type_display_name = $annotation_type_config->{display_name};
 
   my $pub_uniquename = $annotation->pub()->uniquename();
+  my $curator = undef;
+  if (defined $data->{curator}) {
+    $curator = $data->{curator}->{name} . ' <' . $data->{curator}->{email} . '>';
+  }
 
   my @interacting_genes = @{$data->{interacting_genes}};
 
@@ -273,6 +277,7 @@ sub _make_interaction_annotation
             annotation_id => $annotation->annotation_id(),
             annotation_type => $annotation_type,
             status => $annotation->status(),
+            curator => $curator,
             is_inferred_annotation => $is_inferred_annotation,
           };
     push @results, $entry;
