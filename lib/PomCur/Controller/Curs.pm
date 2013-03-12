@@ -1261,6 +1261,8 @@ sub annotation_interaction_edit
                                   data => { %annotation_data }
                                 });
 
+    $self->_set_annotation_curator($st->{curs_key}, $annotation);
+
     $annotation->set_genes($gene_proxy->cursdb_gene());
 
     $guard->commit();
