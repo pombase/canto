@@ -122,5 +122,15 @@ while (my ($curs, $cursdb) = $iter->()) {
 
   $curator_manager->set_curator($curs->curs_key(), $submitter_email,
                                 $submitter_name);
+
+  for my $annotation ($cursdb->resultset('Annotation')->all()) {
+    my $data = $annotation->data();
+    $data->{curator} = {
+      name => $submitter_name,
+      email => $submitter_email,
+    };
+    $annotation->data($data);
+    $annotation->update();
+  }
 }
 
