@@ -126,6 +126,10 @@ sub _make_ontology_annotation
 
   my $evidence_code = $data->{evidence_code};
   my $with_gene_identifier = $data->{with_gene};
+  my $curator = undef;
+  if (defined $data->{curator}) {
+    $curator = $data->{curator}->{name} . ' <' . $data->{curator}->{email} . '>';
+  }
 
   my $needs_with;
   if (defined $evidence_code) {
@@ -180,6 +184,7 @@ sub _make_ontology_annotation
     taxonid => $taxonid,
     completed => $completed,
     annotation_extension => $data->{annotation_extension} // '',
+    curator => $curator,
     status => $annotation->status(),
     is_not => 0,
   };

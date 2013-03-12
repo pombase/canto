@@ -71,6 +71,11 @@ $user_created
         Annotation extension
       </th>
 % #}
+% if ($approval_in_progress) {
+      <th>
+        Curator
+      </th>
+% }
 % if (!$read_only_curs) {
       <th>
         &nbsp
@@ -293,7 +298,13 @@ NOT
 %   }
       </span>
     </td>
-% # }
+
+% if ($approval_in_progress) {
+%   my $curator = $row->{curator} // '';
+    <td>
+      <% $curator %>
+    </td>
+% }
 % if (!$read_only_curs) {
     <td>
 % if ($annotation_status ne 'deleted') {
@@ -361,10 +372,22 @@ my $some_row_has_term_suggestion = grep { $_->{term_suggestion} } @annotations;
 my $some_row_has_comment = grep { $_->{comment} } @annotations;
 my $some_row_has_qualifer = grep { $_->{qualifiers} } @annotations;
 
-my $read_only_curs = $c->stash()->{read_only_curs};
+my $st = $c->stash();
+
+my $read_only_curs = $st->{read_only_curs};
 
 my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
 my $allele_select_url = $curs_root_uri . '/annotation/allele_select/';
 
 my $admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
+
+my $state = $st->{state};
+
+my $approval_in_progress = 0;
+
+use PomCur::Curs::State qw/:all/;
+
+if ($state eq APPROVAL_IN_PROGRESS) {
+  $approval_in_progress = 1;
+}
 </%init>
