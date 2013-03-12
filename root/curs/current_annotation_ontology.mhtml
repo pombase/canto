@@ -88,7 +88,8 @@ $user_created
 %   . $row->{term_name};
 % my $edit_allele_url =
 %   "$curs_root_uri/annotation/allele_select/$annotation_id/edit";
-  <tr class="<% $row->{status} eq 'deleted' ? 'deleted-annotation' : '' %>">
+% my $annotation_status = $row->{status};
+  <tr class="<% $annotation_status eq 'deleted' ? 'deleted-annotation' : '' %>">
 % if (!defined $gene) {
     <td>
       <span>
@@ -104,7 +105,8 @@ $user_created
 % if ($needs_allele) {
     <td>
       <span>
-% if ($read_only_curs || !$user_created || !defined $row->{allele_display_name}) {
+% if ($read_only_curs || !$user_created || !defined
+%     $row->{allele_display_name} || $annotation_status eq 'deleted') {
       <% $row->{allele_display_name} %>
 % } else {
       <a href="<% $edit_allele_url %>"
@@ -120,7 +122,7 @@ $user_created
 % }
     <td>
       <span>
-% if ($read_only_curs || !$user_created) {
+% if ($read_only_curs || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{term_ontid} %>
 % } else {
       <a href="<% $edit_term_action_url %>"
@@ -135,7 +137,7 @@ $user_created
     </td>
     <td>
       <span>
-% if ($read_only_curs || !$user_created) {
+% if ($read_only_curs || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{term_name} %>
 % } else {
       <a href="<% $edit_term_action_url %>"
@@ -150,7 +152,7 @@ $user_created
     </td>
     <td>
       <span>
-% if ($read_only_curs || !$user_created) {
+% if ($read_only_curs || !$user_created || $annotation_status eq 'deleted') {
 %   if (defined $row->{evidence_code}) {
    <% $row->{evidence_code} %>
 %   }
@@ -203,7 +205,7 @@ NOT
       <span>
 % if ($row->{needs_with} || defined $row->{with_or_from_display_name}) {
 %   if (defined $row->{with_or_from_display_name}) {
-% if ($read_only_curs || !$user_created) {
+% if ($read_only_curs || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{with_or_from_display_name} %>
 % } else {
       <a href="<% $edit_with_action_url . $annotation_id . '/edit' %>"
@@ -215,7 +217,7 @@ NOT
       </a>
 % }
 %   } else {
-%     if (!$read_only_curs) {
+%     if (!$read_only_curs || $annotation_status eq 'deleted') {
       <a href="<% $curs_root_uri . '/annotation/with_gene/' . $row->{annotation_id} %>">Set with ...</a>
 %     }
 %   }
@@ -248,7 +250,7 @@ NOT
      my $escaped_comment = PomCur::WebUtil::escape_inline_js($row->{comment} // '');
      my $view_edit_text = undef;
      my $comment_onclick;
-     if ($read_only_curs) {
+     if ($read_only_curs || $annotation_status eq 'deleted') {
        if ($escaped_comment ne '') {
          $view_edit_text = 'View';
          $comment_onclick = "javascript:pomcur_util.show_message('View comment',  '$escaped_comment'); return false;";
@@ -274,7 +276,7 @@ NOT
 %     my $extension = $row->{annotation_extension};
 %     HTML::Mason::Escapes::basic_html_escape(\$extension);
 %     $extension =~ s/([;|,])/$1&#8203;/g;
-%     if ($admin_user && !$read_only_curs) {
+%     if ($admin_user && !$read_only_curs && $annotation_status ne 'deleted') {
         <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"
            class="curs-editable-table-field"
            title="Edit extension ...">
@@ -285,7 +287,7 @@ NOT
         <% $extension |n %>
 %     }
 %   } else {
-%     if ($admin_user && !$read_only_curs) {
+%     if ($admin_user && !$read_only_curs && $annotation_status ne 'deleted') {
         <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
 %     }
 %   }
@@ -294,13 +296,7 @@ NOT
 % # }
 % if (!$read_only_curs) {
     <td>
-% if ($row->{status} eq 'deleted') {
-      <a href="<% $undelete_action . $row->{annotation_id} %>"
-         id="curs-annotation-undelete-<% $row->{annotation_id} %>"
-         title="Restore/undelete this annotation">
-        <img src="<% $undelete_icon_uri %>"/>
-      </a>
-% } else {
+% if ($annotation_status ne 'deleted') {
       <a href="<% $delete_action . $row->{annotation_id} %>"
          id="curs-annotation-delete-<% $row->{annotation_id} %>"
 %   if (!$c->user_exists() || !$c->user()->is_admin()) {
