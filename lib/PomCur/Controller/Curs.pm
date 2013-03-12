@@ -1523,13 +1523,18 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
       _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
     }
 
-    if (defined $evidence_submit_back) {
-      $self->_delete_annotation($c, $annotation_id);
-      my $gene_id = $gene->gene_id();
-      _redirect_and_detach($c, 'annotation', 'edit', $gene_id, $annotation_type_name);
-    }
-
     my $existing_evidence_code = $data->{evidence_code};
+
+    my $gene_id = $gene->gene_id();
+
+    if (defined $evidence_submit_back) {
+      if (defined $existing_evidence_code) {
+         _redirect_and_detach($c, 'gene', $gene_id);
+     } else {
+        $self->_delete_annotation($c, $annotation_id);
+        _redirect_and_detach($c, 'annotation', 'edit', $gene_id, $annotation_type_name);
+      }
+    }
 
     $data->{evidence_code} = $evidence_select;
 
@@ -1552,7 +1557,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
       _redirect_and_detach($c, @parts);
     } else {
       if ($annotation_config->{needs_allele} || defined $existing_evidence_code) {
-        _redirect_and_detach($c, 'gene', $gene->gene_id());
+        _redirect_and_detach($c, 'gene', $gene_id);
       } else {
         _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
       }
