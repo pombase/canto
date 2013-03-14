@@ -121,8 +121,9 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 23:28:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zcpCa88tBqw4jG8GH2jN3Q
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-14 13:53:29
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NLCAuyL7Tib0wOv1Az5wzQ
+
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
@@ -145,9 +146,6 @@ sub new {
 
   return $new;
 }
-
-1;
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
