@@ -33,7 +33,7 @@ test_config:
        - curs_key: aaaa0003
          uniquename: PMID:19436749
          submitter_email: "kevin.hardwick@ed.ac.uk"
-         submitter_name: "Kevin Hardwick"
+         submitter_name: "Foo Bar"
        - curs_key: aaaa0004
          uniquename: PMID:18426916
          submitter_email: "fred.smith@ed.ac.uk"
@@ -61,6 +61,9 @@ test_config:
              data:
                evidence_code: IMP
                term_ontid: GO:0055085
+               curator:
+                 email: kevin.hardwick@ed.ac.uk
+                 name: Kevin Hardwick
            - type: cellular_component
              status: new
              genes(Gene:primary_identifier):
@@ -70,6 +73,9 @@ test_config:
                evidence_code: IPI
                term_ontid: GO:0030133
                with_gene: SPCC1739.10
+               curator:
+                 email: fred.smith@ed.ac.uk
+                 name: Fred Smith
     curs_annotations_2:
        - curs_key: aaaa0006
          uniquename: PMID:18426916
@@ -87,6 +93,9 @@ test_config:
              data:
                evidence_code: IMP
                term_ontid: GO:0055085
+               curator:
+                 email: henar@usal.es
+                 name: Henar Valdivieso
        - curs_key: aaaa0007
          uniquename: PMID:19756689
          submitter_email: "Ken.Sawin@ed.ac.uk"
@@ -127,6 +136,9 @@ test_config:
                term_suggestion:
                  name: miscellaneous transmembrane transport
                  definition: The process in which miscellaneous stuff is transported from one side of a membrane to the other.
+               curator:
+                 email: "Ken.Sawin@ed.ac.uk"
+                 name: "Ken Sawin"
            - type: biological_process
              status: new
              genes(Gene:primary_identifier):
@@ -137,6 +149,9 @@ test_config:
                term_ontid: GO:0034763
                with_gene: SPCC576.16c
                annotation_extension: "annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PCO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)"
+               curator:
+                 email: "Ken.Sawin@ed.ac.uk"
+                 name: "Ken Sawin"
            - type: molecular_function
              status: new
              genes(Gene:primary_identifier):
@@ -145,6 +160,9 @@ test_config:
              data:
                evidence_code: IDA
                term_ontid: GO:0022857
+               curator:
+                 email: "Ken.Sawin@ed.ac.uk"
+                 name: "Ken Sawin"
            - type: genetic_interaction
              status: new
              genes(Gene:primary_identifier):
@@ -155,6 +173,9 @@ test_config:
                interacting_genes:
                  - primary_identifier: SPBC14F5.07
                  - primary_identifier: SPAC27D7.13c
+               curator:
+                 email: "Ken.Sawin@ed.ac.uk"
+                 name: "Ken Sawin"
            - type: phenotype
              status: new
              alleles(Allele:description):
@@ -167,6 +188,9 @@ test_config:
                conditions:
                  - 'PCO:0000004'
                  - 'rich medium'
+               curator:
+                 email: "Ken.Sawin@ed.ac.uk"
+                 name: "Ken Sawin"
            - type: phenotype
              status: new
              alleles(Allele:description):
@@ -175,6 +199,9 @@ test_config:
              data:
                evidence_code: Co-immunoprecipitation experiment
                term_ontid: FYPO:0000017
+               curator:
+                 email: "Ken.Sawin@ed.ac.uk"
+                 name: "Ken Sawin"
            - type: post_translational_modification
              status: new
              genes(Gene:primary_identifier):
@@ -183,4 +210,6 @@ test_config:
              data:
                evidence_code: ISS
                term_ontid: MOD:01157
-  
+               curator:
+                 email: "Ken.Sawin@ed.ac.uk"
+                 name: "Ken Sawin"

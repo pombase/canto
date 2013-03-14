@@ -30,6 +30,10 @@ my $full_expected_curation_session =
           status => "new",
           type => "biological_process",
           publication => 'PMID:19756689',
+          curator => {
+            name => 'Ken Sawin',
+            email => 'Ken.Sawin@ed.ac.uk',
+          },
           term_suggestion => {
             name => 'miscellaneous transmembrane transport',
             definition =>
@@ -49,6 +53,10 @@ my $full_expected_curation_session =
           status => "new",
           type => "biological_process",
           publication => 'PMID:19756689',
+           curator => {
+            name => 'Ken Sawin',
+            email => 'Ken.Sawin@ed.ac.uk',
+          },
           with_gene => "SPCC576.16c",
           annotation_extension => 'annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PCO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)',
           genes => {
@@ -65,6 +73,10 @@ my $full_expected_curation_session =
           status => 'new',
           type => 'molecular_function',
           publication => 'PMID:19756689',
+          curator => {
+            name => 'Ken Sawin',
+            email => 'Ken.Sawin@ed.ac.uk',
+          },
           term => 'GO:0022857',
           genes => {
             'Schizosaccharomyces pombe SPBC14F5.07' => {
@@ -76,6 +88,10 @@ my $full_expected_curation_session =
         {
           type => 'genetic_interaction',
           publication => 'PMID:19756689',
+          curator => {
+            name => 'Ken Sawin',
+            email => 'Ken.Sawin@ed.ac.uk',
+          },
           status => 'new',
           creation_date => "2010-01-02",
           evidence_code => 'Synthetic Haploinsufficiency',
@@ -101,6 +117,10 @@ my $full_expected_curation_session =
           creation_date => '2010-01-02',
           expression => 'Overexpression',
           publication => 'PMID:19756689',
+          curator => {
+            name => 'Ken Sawin',
+            email => 'Ken.Sawin@ed.ac.uk',
+          },
           type => 'phenotype',
           conditions => [
             'PCO:0000004',
@@ -136,6 +156,10 @@ my $full_expected_curation_session =
           status => 'new',
           type => 'phenotype',
           publication => 'PMID:19756689',
+          curator => {
+            name => 'Ken Sawin',
+            email => 'Ken.Sawin@ed.ac.uk',
+          },
           term => 'FYPO:0000017'
         },
         {
@@ -144,6 +168,10 @@ my $full_expected_curation_session =
           creation_date => "2010-01-02",
           evidence_code => 'ISS',
           publication => 'PMID:19756689',
+          curator => {
+            name => 'Ken Sawin',
+            email => 'Ken.Sawin@ed.ac.uk',
+          },
           term => 'MOD:01157',
           genes => {
             'Schizosaccharomyces pombe SPCC63.05' => {
