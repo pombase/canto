@@ -48,6 +48,11 @@ sub lookup
 
   my %args = @_;
 
+  my $gene_primary_identifier = $args{gene_primary_identifier};
+  if (!defined $gene_primary_identifier) {
+    die "no gene primary name passed to lookup()";
+  }
+
   my $search_string = $args{search_string};
   if (!defined $search_string) {
     die "no search_string parameter passed to lookup()";
@@ -57,11 +62,20 @@ sub lookup
 
   my $schema = $self->schema();
 
+  my $gene_constraint_rs =
+    $schema->resultset('FeatureRelationship')
+           ->search({ 'object.uniquename' => $gene_primary_identifier },
+                    { join => 'object' });
+
   my $rs = $schema->resultset('Cv')
     ->search({ 'me.name' => 'sequence' })
     ->search_related('cvterms', { 'cvterms.name' => 'allele' })
     ->search_related('features')
-    ->search({ 'features.name' => { -like => "$search_string\%" } },
+    ->search({ 'features.name' => { -like => "$search_string\%" },
+               feature_id => {
+                 -in => $gene_constraint_rs->get_column('subject_id')->as_query(),
+               },
+             },
              { rows => $max_results });
 
   my %res = map {

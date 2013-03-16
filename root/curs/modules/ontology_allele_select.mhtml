@@ -1,6 +1,6 @@
 <%args>
 $annotation
-$gene_display_name
+$gene
 $curs_root_uri
 $title
 $editing
@@ -8,7 +8,7 @@ $editing
 
 <& ontology_allele_edit.mhtml, annotation => $annotation,
    editing => $editing,
-   curs_root_uri => $curs_root_uri, gene_display_name => $gene_display_name &>
+   curs_root_uri => $curs_root_uri, gene_display_name => $gene->display_name &>
 
 <div class="curs-box curs-allele-select">
   <div class="curs-box-title">
@@ -61,6 +61,10 @@ $editing
     Proceed -&gt;
   </button>
 </div>
+
+<script language="javascript" type="text/javascript">
+var gene_primary_identifier = '<% $gene->primary_identifier()|n %>';
+</script>
 
 <%init>
 my $admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Test::Deep;
 
 use PomCur::Chado::AlleleLookup;
@@ -13,7 +13,8 @@ $test_util->init_test();
 
 my $lookup = PomCur::Chado::AlleleLookup->new(config => $test_util->config());
 
-my $res = $lookup->lookup(search_string => 'ste');
+my $res = $lookup->lookup(gene_primary_identifier => 'SPBC12C2.02c',
+                          search_string => 'ste');
 
 cmp_deeply($res,
            [
@@ -25,3 +26,9 @@ cmp_deeply($res,
              display_name => 'ste20delta(del_x1)',
            }
          ]);
+
+# search with gene constrained to a another gene
+$res = $lookup->lookup(gene_primary_identifier => 'SPCC16A11.14',
+                          search_string => 'ste');
+
+cmp_deeply($res, []);

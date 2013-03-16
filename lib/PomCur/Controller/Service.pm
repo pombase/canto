@@ -87,8 +87,9 @@ sub _ontology_results
 
 sub _allele_results
 {
-  my ($c, $search_string) = @_;
+  my ($c, $gene_primary_identifier, $search_string) = @_;
 
+  $gene_primary_identifier ||= $c->req()->param('gene_primary_identifier');
   $search_string ||= $c->req()->param('term');
 
   my $config = $c->config();
@@ -100,7 +101,8 @@ sub _allele_results
 
   my $max_results = $c->req()->param('max_results') || 10;
 
-  return $lookup->lookup(search_string => $search_string,
+  return $lookup->lookup(gene_primary_identifier => $gene_primary_identifier,
+                         search_string => $search_string,
                          max_results => $max_results);
 }
 
