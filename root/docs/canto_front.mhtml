@@ -1,8 +1,7 @@
 <!-- FLAGS: hide_header -->
-<style type="text/css">
-#content { background: url() };
-</style>
-
+<!-- PAGE_TITLE:  -->
+<div class="canto-front-page">
+<div class="hero-unit">
 <h2>Welcome to Canto</h2>
 <p>
 Canto is an online annotation tool which has been developed to allow
@@ -12,7 +11,10 @@ created for the fission yeast community, Canto is a generic
 tool that can be readily configured for use with other organisms and other
 databases.
 </p>
+</div>
 
+<div class="row">
+  <div class="span6">
 <h2>Canto in Use</h2>
 Canto is currently deployed for:
 <ul>
@@ -44,26 +46,35 @@ Canto is currently deployed for:
   </p>
 </li>
 </ul>
+</div>
 
-<h2>Canto Documentation</h2>
+<div class="span6">
+<h2>Documentation</h2>
 <p>
 Instructions for using Canto are available from
 the <a href="<% $c->uri_for('/docs/canto_introduction/') %>">documentation
 pages</a>, or via any of the specific instances of Canto listed above. See
-"Get Canto Code" below for information on configuring and installing Canto.
+"Get The Code" below for information on configuring and installing Canto.
 
-<h2>Canto Demo</h2>
+<h2>Demo</h2>
 <p>
 A demonstration setup of Canto, using S. pombe publications, is available.
 <a href="http://curation.pombase.org/demo" class="btn">Visit ...</a>
 </p>
 
+</div>
+</div>
+
+<div class="row">
+<div class="span6">
 <h2>How to Cite Canto</h2>
 <p>
 [citation will go here when the paper is published]
 </p>
+</div>
 
-<h2>Get Canto Code</h2>
+<div class="span6">
+<h2>Get The Code</h2>
 <p>
 Canto is a free, open source application [add a bit]. The source code is
 available from Github.
@@ -74,12 +85,18 @@ Further information is available on the code, and how to install and configure
 Canto [create some geek-oriented documentation
 and link here].
 </p>
+</div>
+</div>
 
+<div class="row">
+<div class="span6">
 <h2>[Publications]</h2>
 <p>
 [optional heading to add if & when there are papers that mention using Canto]
 </p>
+</div>
 
+<div class="span6">
 <h2>Acknowledgements</h2>
 <p>
 Canto is developed as part of the PomBase project, which provides a model
@@ -89,3 +106,6 @@ run by a consortium comprising the <a href="http://www.cam.ac.uk/">University
 of Cambridge</a>, the <a href="http://www.ebi.ac.uk/">European
 Bioinformatics Institute</a> and <a href="http://www.ucl.ac.uk/">University College London</a>.
 </p>
+</div>
+</div>
+</div>
