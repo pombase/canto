@@ -93,15 +93,10 @@ sub front :Path :Args(0)
   $c->detach();
 }
 
-=head2 page
 
- Function: Render an HTML template from the local_templates directory
- Args    : $name - page name
-
-=cut
-sub local : Global('local')
+sub _do_local_and_docs
 {
-  my ($self, $c, $page_name) = @_;
+  my ($docs_path, $self, $c, $page_name) = @_;
 
   my $config = $c->config();
 
@@ -111,28 +106,29 @@ sub local : Global('local')
   $st->{show_title} = 1;
 
   if (!defined $page_name) {
-    my $default_local_page = $config->{default_local_page};
-    if (defined $default_local_page) {
-      $page_name = $default_local_page;
+    my $default_page = $config->{"default_${docs_path}_page"};
+    if (defined $default_page) {
+      $page_name = $default_page;
     } else {
       $page_name //= 'index';
     }
   }
 
-  my $local_templates_dir_name = "local_templates";
   my $template_file_name = "$page_name.mhtml";
 
   my $template_file =
-    $c->path_to('root', $local_templates_dir_name, $template_file_name);
+    $c->path_to('root', $docs_path, $template_file_name);
+
 
   if (-f $template_file) {
     my @lines = io($template_file)->slurp;
     for my $line (@lines) {
       if ($line =~ /<!--\s*PAGE_TITLE:\s*(.*?)\s*-->/) {
-        $st->{title} = $1;
+        my $title = PomCur::WebUtil::substitute_paths($1, $config);
+        $st->{title} = $title;
       }
     }
-    $st->{template} = "$local_templates_dir_name/$template_file_name";
+    $st->{template} = "$docs_path/$template_file_name";
   } else {
     $c->stash()->{error} =
       { title => "No such page",
@@ -140,6 +136,28 @@ sub local : Global('local')
     $c->forward($c->config()->{home_path});
     $c->detach();
   }
+}
+
+=head2 local
+
+ Function: Render an HTML template from the local directory
+ Args    : $name - page name
+
+=cut
+sub local : Global('local')  # local, Global, local ... oh dear
+{
+  _do_local_and_docs('local', @_);
+}
+
+=head2 docs
+
+ Function: Render an HTML template from the docs directory
+ Args    : $name - page name
+
+=cut
+sub docs : Global('docs')
+{
+  _do_local_and_docs('docs', @_);
 }
 
 =head2 account

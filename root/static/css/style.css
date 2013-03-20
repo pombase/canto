@@ -148,13 +148,10 @@ div#footer .sponsor {
 }
 
 #page-description {
-  font-size: 120%;
-  font-weight: bold;
   display: block;
   margin: 5px 0px 15px 0px;
   clear: both;
   float: left;
-  border-bottom: 2px solid black;
 }
 
 #right-title {
@@ -1057,4 +1054,8 @@ a.curs-quick-add-annotation  {
 /* initially hide links that only work with Javascript active */
 .curs-js-link {
   display: none;
+}
+
+organism-name {
+  font-style: italic;
 }

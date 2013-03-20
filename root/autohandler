@@ -68,13 +68,13 @@ $is_admin_user
 </div>
 
 % if ($show_title) {
-      <div id="<% $page_description_id %>">
+      <h1 id="<% $page_description_id %>">
         <% $title %>
-      </div>
+      </h1>
 %   if (defined $right_title) {
-      <div id="right-title">
+      <h2 id="right-title">
         <% $right_title %>
-      </div>
+      </h2>
 %   }
 % }
       </div>

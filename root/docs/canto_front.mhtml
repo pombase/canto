@@ -1,0 +1,86 @@
+<h2>Welcome to Canto</h2>
+<p>
+Canto is an online annotation tool which has been developed to allow
+researchers to curate the genetic and molecular data from
+their publications for inclusion in public biological databases. Originally
+created for the fission yeast community, Canto is a generic
+tool that can be readily configured for use with other organisms and other
+databases.
+</p>
+
+<h2>Canto in Use</h2>
+Canto is currently deployed for:
+<ul>
+<li>
+  <p>
+    <span class="organism-name">Schizosaccharomyces pombe</span> (fission yeast)
+    at PomBase.  <a href="http://curation.pombase.org/pombe" class="btn">Visit ...</a>
+  </p>
+  <p>
+  curate GO, phenotypes, interactions, protein modifications for inclusion in
+  <a href="http://www.pombase.org">PomBase</a>
+  </p>
+</li>
+<li>
+  <p>
+    <span class="organism-name">Komagataella pastoris</span> (formerly known as Pichia pastoris)
+<a href="http://curation.pombase.org/pichia" class="btn">Visit ...</a>
+  </p>
+  <p>
+    [list what can be curated, when available] [find out where annotation goes]
+  </p>
+</li>
+<li>
+  <p>
+    UniProtKB proteins  <a href="http://curation.pombase.org/uniprot" class="btn">Visit ...</a>
+  </p>
+  <p>
+    curate GO for inclusion in GOA-UniProt
+  </p>
+</li>
+</ul>
+
+<h2>Canto Documentation</h2>
+<p>
+Instructions for using Canto are available from
+the <a href="<% $c->uri_for('/docs/canto_introduction/') %>">documentation
+pages</a>, or via any of the specific instances of Canto listed above. See
+"Get Canto Code" below for information on configuring and installing Canto.
+
+<h2>Canto Demo</h2>
+<p>
+A demonstration setup of Canto, using S. pombe publications, is available.
+<a href="http://curation.pombase.org/demo" class="btn">Visit ...</a>
+</p>
+
+<h2>How to Cite Canto</h2>
+<p>
+[citation will go here when the paper is published]
+</p>
+
+<h2>Get Canto Code</h2>
+<p>
+Canto is a free, open source application [add a bit]. The source code is
+available from Github.
+<a href="https://github.com/pombase/canto" class="btn">Visit ...</a>
+</p>
+<p>
+Further information is available on the code, and how to install and configure
+Canto [create some geek-oriented documentation
+and link here].
+</p>
+
+<h2>[Publications]</h2>
+<p>
+[optional heading to add if & when there are papers that mention using Canto]
+</p>
+
+<h2>Acknowledgements</h2>
+<p>
+Canto is developed as part of the PomBase project, which provides a model
+organism database for the fission yeast Schizosaccharomyces pombe. PomBase is
+funded by the <a href="http://www.wellcome.ac.uk/">Wellcome Trust</a> and is
+run by a consortium comprising the <a href="http://www.cam.ac.uk/">University
+of Cambridge</a>, the <a href="http://www.ebi.ac.uk/">European
+Bioinformatics Institute</a> and <a href="http://www.ucl.ac.uk/">University College London</a>.
+</p>

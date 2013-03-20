@@ -346,6 +346,16 @@ sub pubmed_id_start : Local {
   $st->{template} = 'tools/pubmed_id_start.mhtml';
 }
 
+sub pmid_search : Local {
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Find a publication to curate using a PubMed ID';
+  $st->{show_title} = 0;
+  $st->{template} = 'tools/pmid_search.mhtml';
+}
+
 =head2 start
 
  Usage   : /start/<pubmedid>
