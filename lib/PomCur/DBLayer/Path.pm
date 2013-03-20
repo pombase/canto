@@ -47,6 +47,7 @@ under the same terms as Perl itself.
 use strict;
 use warnings;
 use Carp;
+use Scalar::Util qw(blessed);
 
 use Moose;
 
@@ -95,7 +96,12 @@ sub resolve
   }
 
   for my $bit ($self->bits()) {
-    $current_value = $current_value->$bit();
+    if (blessed $current_value &&
+        $current_value->can($bit)) {
+      $current_value = $current_value->$bit();
+    } else {
+      $current_value = $current_value->{$bit};
+    }
   }
 
   return $current_value;

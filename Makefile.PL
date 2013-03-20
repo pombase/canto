@@ -87,6 +87,7 @@ requires 'CHI::Driver::Memcached';
 requires 'Cache::Memcached';
 requires 'Email::Simple';
 requires 'Email::Sender';
+requires 'Scalar::Util';
 
 test_requires 'Test::More' => '0.88';
 test_requires 'Test::Deep';

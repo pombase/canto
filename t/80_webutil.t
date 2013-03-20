@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Test::MockObject;
 
 use PomCur::TestUtil;
@@ -77,6 +77,19 @@ my $substituted_1 = PomCur::WebUtil::substitute_paths($paths_string, $person);
 
 is ($substituted_1, 'test string Nicholas Willis -- Rhind Lab more text Nick Rhind');
 
+my $person_hash = {
+  name => 'Nicholas Willis',
+  lab => {
+    name => 'Rhind Lab',
+    lab_head => {
+      name => 'Nick Rhind',
+    },
+  },
+};
+
+# substitute in using a hash instead
+my $substituted_2 = PomCur::WebUtil::substitute_paths($paths_string, $person_hash);
+is ($substituted_2, 'test string Nicholas Willis -- Rhind Lab more text Nick Rhind');
 
 my $js_test_string = qq~!@#$%^&*()_{}:"|<>?\
 foo~;
