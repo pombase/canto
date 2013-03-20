@@ -1,0 +1,7 @@
+<!-- PAGE_TITLE: Canto documentation -->
+<p>
+[top level documentation page with links to other pages]
+</p>
+<ul>
+  <il><a href="<% $c->uri_for('/docs/canto_introduction') %>">Introduction</a></il>
+</ul>
