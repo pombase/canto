@@ -2,7 +2,8 @@
 
 <p>
 Welcome to <% $config->{database_name} %> community curation. We invite you to use our
-online tool, <% $config->{name} %>, to contribute information to PomBase by
+online tool, <% $config->{name} %>, to contribute information to
+<% $config->{database_name} %> by
 annotating papers you have published.
 </p>
 
