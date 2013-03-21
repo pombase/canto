@@ -1,7 +1,7 @@
 # PomCur config file  -*- conf -*-
 name: Canto
-long_name: Pombe community curation application
-database_name: PomBase
+long_name: Community curation application
+database_name: Generic
 header_image: logos/curation_tool.png
 
 app_version: v540
@@ -10,7 +10,7 @@ schema_version: 1
 
 # the path that the home link goes to
 home_path: /docs/canto_front
-help_path: /docs/canto_front
+help_path: /docs/index
 
 # if zero, the user will need to log in before the links on the front page are
 # visible

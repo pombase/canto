@@ -1,3 +1,6 @@
+long_name: PomBase community curation application
+database_name: PomBase
+
 Model::TrackModel:
   schema_class: 'PomCur::TrackDB'
   connect_info:
