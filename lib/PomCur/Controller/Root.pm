@@ -119,6 +119,7 @@ sub _do_local_and_docs
   my $template_file =
     $c->path_to('root', $docs_path, $template_file_name);
 
+  my $hide_header = 0;
 
   if (-f $template_file) {
     my @lines = io($template_file)->slurp;
@@ -127,7 +128,13 @@ sub _do_local_and_docs
         my $title = PomCur::WebUtil::substitute_paths($1, $config);
         $st->{title} = $title;
       }
+      if ($line =~ /<!--\s*FLAGS:\s*(.*?)\s*-->/) {
+        if ($1 eq 'hide_header') {
+          $hide_header = 1;
+        }
+      }
     }
+    $st->{hide_header} = $hide_header;
     $st->{template} = "$docs_path/$template_file_name";
   } else {
     $c->stash()->{error} =

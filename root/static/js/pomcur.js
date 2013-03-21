@@ -14,7 +14,7 @@ $(document).ready(function() {
     .position({
       my: 'center',
       at: 'center',
-      of: $('#heading'),
+      of: $('#content'),
       offset: '0 200'
     })
     .hide()  // hide it initially
