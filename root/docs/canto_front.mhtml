@@ -1,4 +1,7 @@
 <!-- FLAGS: hide_header -->
+<style type="text/css">
+#content { background: url() };
+</style>
 
 <h2>Welcome to Canto</h2>
 <p>
