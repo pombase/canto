@@ -2,6 +2,8 @@
 <!-- PAGE_TITLE:  -->
 <div class="canto-front-page">
 <div class="hero-unit">
+<div class="row-fluid">
+<div class="span8">
 <h1>Welcome to Canto</h1>
 <p>
 Canto is an online annotation tool which has been developed to allow
@@ -11,6 +13,11 @@ created for the fission yeast community, Canto is a generic
 tool that can be readily configured for use with other organisms and other
 databases.
 </p>
+</div>
+<div class="span4">
+  <img src="<% $c->uri_for('/static/images/logos/curation_tool-250px.png') %>"/>
+</div>
+</div>
 </div>
 
 <div class="row">
