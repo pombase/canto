@@ -59,13 +59,14 @@ img {
 }
 
 div#footer {
-  padding-top: 40px;
+  padding-top: 30px;
 }
 div#footer .sponsor {
   float: right;
-  margin-top:30px;
+  margin-top:20px;
   padding-right: 25px;
   padding-left: 25px;
+  padding-bottom: 25px;
 }
 
 #error-list .error, #message-list .message, #notice-list .notice {
