@@ -44,7 +44,8 @@ Canto is currently deployed for:
 <li>
   <a href="http://curation.pombase.org/uniprot" class="btn visit">Visit ...</a>
   <p>
-    UniProtKB proteins: curate GO for inclusion in GOA-UniProt
+    Generic Gene Ontology Implementation: Curate any protein to GO terms 
+using UniProtKB identifiers
   </p>
 </li>
 </ul>
