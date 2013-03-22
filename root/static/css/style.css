@@ -28,6 +28,30 @@ a:link:active { text-decoration:none }
   font-size: 50px;
 }
 
+.canto-front-page .footer {
+  margin-top: 40px;
+}
+.canto-front-page .footer h2 {
+  font-size: 11pt;
+  line-height: 1.8ex;
+}
+.canto-front-page .footer p {
+  font-size: 9pt;
+  line-height: 2.2ex;
+}
+.canto-front-page .btn.visit {
+  float: right;
+}
+
+.canto-front-page .footer .sponsor {
+  float: right;
+  margin-top:20px;
+  padding-right: 25px;
+  padding-left: 25px;
+  padding-bottom: 25px;
+}
+
+
 button, input[type=submit] {
   background-color: #c00;
   color: white;

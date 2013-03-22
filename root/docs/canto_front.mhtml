@@ -1,5 +1,5 @@
-<!-- FLAGS: hide_header -->
 <!-- PAGE_TITLE:  -->
+<!-- FLAGS: hide_header hide_footer -->
 <div class="canto-front-page">
 <div class="hero-unit">
 <div class="row-fluid">
@@ -103,6 +103,7 @@ and link here].
 </p>
 </div>
 
+<div class="row footer">
 <div class="span6">
 <h2>Acknowledgements</h2>
 <p>
@@ -114,5 +115,7 @@ of Cambridge</a>, the <a href="http://www.ebi.ac.uk/">European
 Bioinformatics Institute</a> and <a href="http://www.ucl.ac.uk/">University College London</a>.
 </p>
 </div>
+<div class="span6">
+  <& ../sponsor_logos.mhtml &>
 </div>
 </div>

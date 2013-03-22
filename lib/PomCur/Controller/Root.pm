@@ -120,6 +120,7 @@ sub _do_local_and_docs
     $c->path_to('root', $docs_path, $template_file_name);
 
   my $hide_header = 0;
+  my $hide_footer = 0;
 
   if (-f $template_file) {
     my @lines = io($template_file)->slurp;
@@ -129,12 +130,18 @@ sub _do_local_and_docs
         $st->{title} = $title;
       }
       if ($line =~ /<!--\s*FLAGS:\s*(.*?)\s*-->/) {
-        if ($1 eq 'hide_header') {
+        my $all_flags = $1;
+        my @flags = split /\s+/, $all_flags;
+        if (grep { $_ eq 'hide_header' } @flags) {
           $hide_header = 1;
+        }
+        if (grep { $_ eq 'hide_footer' } @flags) {
+          $hide_footer = 1;
         }
       }
     }
     $st->{hide_header} = $hide_header;
+    $st->{hide_footer} = $hide_footer;
     $st->{template} = "$docs_path/$template_file_name";
   } else {
     $c->stash()->{error} =
