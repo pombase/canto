@@ -20,7 +20,7 @@ a:link:active { text-decoration:none }
 #heading a { color: black; }
 
 .hero-unit {
-  background-color: #fff
+  padding: 30px;
 }
 
 button, input[type=submit] {
