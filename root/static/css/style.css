@@ -24,6 +24,10 @@ a:link:active { text-decoration:none }
   line-height: 1.4em;
 }
 
+.hero-unit h1 {
+  font-size: 50px;
+}
+
 button, input[type=submit] {
   background-color: #c00;
   color: white;
