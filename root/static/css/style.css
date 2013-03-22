@@ -21,6 +21,7 @@ a:link:active { text-decoration:none }
 
 .hero-unit {
   padding: 30px;
+  line-height: 1.4em;
 }
 
 button, input[type=submit] {
