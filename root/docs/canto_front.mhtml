@@ -78,6 +78,10 @@ A demonstration setup of Canto, using S. pombe publications, is available.
 <p>
 [citation will go here when the paper is published]
 </p>
+<h2>[Publications]</h2>
+<p>
+[optional heading to add if & when there are papers that mention using Canto]
+</p>
 </div>
 
 <div class="span6">
@@ -93,14 +97,6 @@ Canto [create some geek-oriented documentation
 and link here].
 </p>
 </div>
-</div>
-
-<div class="row">
-<div class="span6">
-<h2>[Publications]</h2>
-<p>
-[optional heading to add if & when there are papers that mention using Canto]
-</p>
 </div>
 
 <div class="row footer">
