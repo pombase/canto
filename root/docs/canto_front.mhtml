@@ -26,30 +26,25 @@ databases.
 Canto is currently deployed for:
 <ul>
 <li>
+  <a href="http://curation.pombase.org/pombe" class="btn visit">Visit ...</a>
   <p>
     <span class="organism-name">Schizosaccharomyces pombe</span> (fission yeast)
-    at PomBase.  <a href="http://curation.pombase.org/pombe" class="btn">Visit ...</a>
-  </p>
-  <p>
-  curate GO, phenotypes, interactions, protein modifications for inclusion in
+    at PomBase.
+    Curate GO, phenotypes, interactions, protein modifications for inclusion in
   <a href="http://www.pombase.org">PomBase</a>
   </p>
 </li>
 <li>
+  <a href="http://curation.pombase.org/pichia" class="btn visit">Visit ...</a>
   <p>
     <span class="organism-name">Komagataella pastoris</span> (formerly known as Pichia pastoris)
-<a href="http://curation.pombase.org/pichia" class="btn">Visit ...</a>
-  </p>
-  <p>
     [list what can be curated, when available] [find out where annotation goes]
   </p>
 </li>
 <li>
+  <a href="http://curation.pombase.org/uniprot" class="btn visit">Visit ...</a>
   <p>
-    UniProtKB proteins  <a href="http://curation.pombase.org/uniprot" class="btn">Visit ...</a>
-  </p>
-  <p>
-    curate GO for inclusion in GOA-UniProt
+    UniProtKB proteins: curate GO for inclusion in GOA-UniProt
   </p>
 </li>
 </ul>
@@ -64,9 +59,9 @@ pages</a>, or via any of the specific instances of Canto listed above. See
 "Get The Code" below for information on configuring and installing Canto.
 
 <h2>Demo</h2>
+<a href="http://curation.pombase.org/demo" class="btn visit">Visit ...</a>
 <p>
 A demonstration setup of Canto, using S. pombe publications, is available.
-<a href="http://curation.pombase.org/demo" class="btn">Visit ...</a>
 </p>
 
 </div>
@@ -86,10 +81,10 @@ A demonstration setup of Canto, using S. pombe publications, is available.
 
 <div class="span6">
 <h2>Get The Code</h2>
+<a href="https://github.com/pombase/canto" class="btn visit">Visit ...</a>
 <p>
 Canto is a free, open source application [add a bit]. The source code is
 available from Github.
-<a href="https://github.com/pombase/canto" class="btn">Visit ...</a>
 </p>
 <p>
 Further information is available on the code, and how to install and configure
