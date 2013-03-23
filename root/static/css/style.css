@@ -9,6 +9,7 @@ body
   background-color: white; 
   color: #302226;
   font-size: 16px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 a:link { text-decoration:none; cursor:pointer; }
@@ -194,6 +195,13 @@ div#footer .sponsor {
   display: block;
   padding: 5px;
   float: right;
+}
+
+#curs-page-description {
+  font-size: 130%;
+  padding: 7px;
+  display: block;
+  text-align: center;
 }
 
 #breadcrumb-previous-button {

@@ -46,10 +46,14 @@ use Moose;
 sub index_page :Local :Args(0) {
   my ($self, $c) = @_;
 
-  $c->stash->{title} = 'Admin page';
-  $c->stash->{template} = 'track/index.mhtml';
+  my $st = $c->stash();
 
-  $c->stash->{model} = 'track';
+  $st->{title} = 'Admin page';
+  $st->{template} = 'track/index.mhtml';
+
+  $st->{model} = 'track';
+
+  $st->{use_bootstrap} = 1;
 }
 
 sub set_corresponding_author :Local {

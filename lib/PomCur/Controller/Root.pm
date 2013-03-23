@@ -121,6 +121,7 @@ sub _do_local_and_docs
 
   my $hide_header = 0;
   my $hide_footer = 0;
+  my $use_bootstrap = 0;
 
   if (-f $template_file) {
     my @lines = io($template_file)->slurp;
@@ -138,10 +139,14 @@ sub _do_local_and_docs
         if (grep { $_ eq 'hide_footer' } @flags) {
           $hide_footer = 1;
         }
+        if (grep { $_ eq 'use_bootstrap' } @flags) {
+          $use_bootstrap = 1;
+        }
       }
     }
     $st->{hide_header} = $hide_header;
     $st->{hide_footer} = $hide_footer;
+    $st->{use_bootstrap} = $use_bootstrap;
     $st->{template} = "$docs_path/$template_file_name";
   } else {
     $c->stash()->{error} =
