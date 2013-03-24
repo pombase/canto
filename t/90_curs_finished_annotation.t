@@ -50,7 +50,7 @@ test_psgi $app, sub {
   }
 
   my $further_information = "Your annotations will now be sent";
-  my $thank_you ="Thank you for your contribution to PomBase";
+  my $thank_you ="Thank you for your contribution to " . $config->{database_name};
   my $your_annotations = "Your annotations have been sent to the curation team for inclusion in the database";
 
   {

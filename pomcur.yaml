@@ -1,7 +1,7 @@
 # PomCur config file  -*- conf -*-
 name: Canto
 long_name: Community curation application
-database_name: Generic
+database_name: SET_DATABASE_NAME_IN_CONFIG
 header_image: logos/curation_tool.png
 
 app_version: v540

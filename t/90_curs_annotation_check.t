@@ -29,7 +29,7 @@ my $cookie_jar = $test_util->cookie_jar();
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
-my $thank_you ="Thank you for your contribution to PomBase";
+my $thank_you ="Thank you for your contribution to " . $config->{database_name};
 
 test_psgi $app, sub {
   my $cb = shift;
@@ -88,7 +88,7 @@ test_psgi $app, sub {
     (my $content = $redirect_res->content()) =~ s/\s+/ /g;
 
     like ($content, qr/Only admin users can approve sessions/s);
-    like ($content, qr/Thank you for your contribution to PomBase/s);
+    like ($content, qr/$thank_you/s);
     unlike ($content, qr/$admin_only/s);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
@@ -130,7 +130,7 @@ test_psgi $app, sub {
     (my $content = $redirect_res->content()) =~ s/\s+/ /g;
 
     like ($content, qr//s);
-    like ($content, qr/Thank you for your contribution to PomBase/s);
+    like ($content, qr/$thank_you/s);
     unlike ($content, qr/$admin_only/s);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");

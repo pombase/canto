@@ -286,7 +286,8 @@ test_psgi $app, sub {
 
     unlike ($res->content(), qr/Create gene list for $uniquename/);
     like ($res->content(), qr/Annotation complete/);
-    like ($res->content(), qr/Thank you for your contribution to PomBase/);
+    my $thank_you ="Thank you for your contribution to " . $config->{database_name};
+    like ($res->content(), qr/$thank_you/);
     like ($res->content(), qr/annotations will now be sent/s);
     like ($res->content(), qr/email-address.*$test_email/);
   }
