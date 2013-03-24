@@ -21,7 +21,7 @@ $test_util->enable_access_control();
 test_psgi $app, sub {
     my $cb = shift;
 
-    my $req = HTTP::Request->new(GET => 'http://localhost:5000/');
+    my $req = HTTP::Request->new(GET => 'http://localhost:5000/track/index_page');
 
     my $res = $cb->($req);
 
