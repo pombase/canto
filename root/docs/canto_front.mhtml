@@ -45,8 +45,8 @@ Canto is currently deployed for:
 <li>
   <a href="http://curation.pombase.org/uniprot" class="btn visit">Visit ...</a>
   <p>
-    Generic Gene Ontology Implementation: Curate any protein to GO terms 
-using UniProtKB identifiers
+    Generic Gene Ontology Implementation: Curate GO annotations for proteins,
+    using UniProtKB identifiers.
   </p>
 </li>
 </ul>
@@ -60,9 +60,9 @@ the <a href="<% $c->uri_for('/docs/canto_introduction/') %>">documentation
 pages</a>, or via any of the specific instances of Canto listed above.
 
 <h2>Demo</h2>
-<a href="http://curation.pombase.org/demo" class="btn visit">Visit ...</a>
+<a href="http://curation.pombase.org/demo" class="btn visit">Demo ...</a>
 <p>
-A demonstration setup of Canto, using S. pombe publications, is available.
+  Try the S. pombe demo tool.
 </p>
 
 </div>
