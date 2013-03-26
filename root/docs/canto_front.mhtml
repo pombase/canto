@@ -57,7 +57,7 @@ Canto is currently deployed for:
 <p>
 Instructions for using Canto are available from
 the <a href="<% $c->uri_for('/docs/canto_introduction/') %>">documentation
-pages</a>, or via any of the specific instances of Canto listed above.
+pages</a>, or via any of the specific instances of Canto.
 
 <h2>Demo</h2>
 <a href="http://curation.pombase.org/demo" class="btn visit">Demo ...</a>
