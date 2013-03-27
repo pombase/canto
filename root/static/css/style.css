@@ -72,6 +72,8 @@ img {
   border-width: 0px;
   /* fix bootstrap style which makes images small in tables: */
   max-width: 999px;
+  /* fix bootstrap vertical-align: middle */
+  vertical-align: bottom;
 }
 
 #heading {
