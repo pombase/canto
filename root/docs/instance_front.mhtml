@@ -1,43 +1,46 @@
-<!-- PAGE_TITLE: @@database_name@@ @@name@@ — Community Curation  -->
+<!-- PAGE_TITLE: -->
+<!-- FLAGS: use_bootstrap -->
 
+<div class="docs">
+<div class="row-fluid">
+<div class="span7">
+<h2><% $config->{database_name} %> <% $config->{name} %> Community Curation</h2>
 <p>
-Welcome to <% $config->{database_name} %> community curation. We invite you to use our
-online tool, <% $config->{name} %>, to contribute information to
-<% $config->{database_name} %> by
-annotating papers you have published.
+Welcome to <% $config->{database_name} %> community curation.
+This tool allows anyone in the community to curate papers for inclusion in
+<% $config->{database_name} %>.
 </p>
+<& /tools/pubmed_id_start.mhtml, title => 'Start curating using a PubMed ID:' &>
+</div>
 
-<h2>About <% $config->{name} %> Community Curation</h2>
+<div class="span5 docs">
+<h2>First time curator?</h2>
+<div>
+<a href="<% $c->uri_for('/docs/canto_introduction') %>" class="btn visit">Visit ...</a>
 <p>
-[add some text here - background, motivation, etc]
+Find out about community curation and the types of data that can be curating
+by viewing our help pages:
 </p>
+</div>
+% if (!$config->{demo_mode}) {
+<div>
+<a href="http://curation.pombase.org/demo/" class="btn visit">Demo ...</a>
+<p>
+Or try the demo version of Canto: curate using S. pombe gene IDs.
+</p>
+</div>
+% }
+</div>
+</div>
 
-<h2>Curating in Canto</h2>
-<p>
-Documentation is available for each type of data that you can annotate in
-Canto:
-</p>
-<p>
-[links to doc'n pages]
-</p>
-<p>
-Links to these documentation pages will also be available after you start
-curating a paper.
-</p>
+<div class="row-fluid docs">
+<div class="span6">
+</div>
 
-<h2>Find a Paper</h2>
-<p>
-If you have a paper that you would like to curate, but you haven't received an
-invitation from the curators with a specific link, you can use
-the <a href="<% $c->uri_for('/tools/pmid_search') %>">Canto PubMed search</a>
-to find the paper and then proceed to curation.
-</p>
-
-<h2>Canto Demo</h2>
-<p>
-If you would like to try using Canto before you curate any of your papers,
-please try the <a href="http://curation.pombase.org/demo">Canto demo</a>
-</p>
+<div class="span6">
+</div>
+</div>
+</div>
 
 <%init>
 my $config = $c->config();

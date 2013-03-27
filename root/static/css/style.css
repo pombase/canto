@@ -40,8 +40,14 @@ a:link:active { text-decoration:none }
   font-size: 9pt;
   line-height: 2.2ex;
 }
-.canto-front-page .btn.visit {
+.docs .row-fluid div {
+  clear: right;
+}
+.docs .btn.visit {
   float: right;
+  clear: right;
+  margin: 5px;
+  margin-bottom: 25px;
 }
 
 .canto-front-page .footer .sponsor {
