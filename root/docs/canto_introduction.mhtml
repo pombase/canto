@@ -7,7 +7,7 @@ these data types:
 </p>
 <ul>
 % for my $an_type (@annotation_type_list) {
-  <li><% $an_type->{display_name} %></li>
+  <li title="<% $an_type->{help_text} // '' %>"><% $an_type->{display_name} %></li>
 % }
 </ul>
 <p>
