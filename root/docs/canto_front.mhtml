@@ -54,6 +54,7 @@ Canto is currently deployed for:
 
 <div class="span6">
 <h2>Documentation</h2>
+<a href="<% $c->uri_for('/docs/canto_introduction/') %>" class="btn visit">View ...</a>
 <p>
 Instructions for using Canto are available from
 the <a href="<% $c->uri_for('/docs/canto_introduction/') %>">documentation
@@ -62,7 +63,8 @@ pages</a>, or via any of the specific instances of Canto.
 <h2>Demo</h2>
 <a href="http://curation.pombase.org/demo" class="btn visit">Demo ...</a>
 <p>
-  Try the S. pombe demo tool.
+  Try the demo version of Canto - curate GO, phenotypes,
+  interactions and protein modifications using S. pombe gene IDs.
 </p>
 
 </div>
@@ -74,10 +76,12 @@ pages</a>, or via any of the specific instances of Canto.
 <p>
 Please cite: K. Rutherford et. al. Manuscript in preparation
 </p>
+<!--
 <h2>[Publications]</h2>
 <p>
 [optional heading to add if & when there are papers that mention using Canto]
 </p>
+-->
 </div>
 
 <div class="span6">
