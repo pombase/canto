@@ -239,9 +239,35 @@ sub setup
     }
   }
 
-  # create an annotation_types hash from the annotation_type_list
-  if (defined $self->{annotation_type_list}) {
-    for my $annotation_type (@{$self->{annotation_type_list}}) {
+  # create an annotation_types hash from the available_annotation_types and
+  # enabled_annotation_type_list
+  if (defined $self->{available_annotation_type_list}) {
+    my @available_annotation_type_list =
+      @{$self->{available_annotation_type_list}};
+
+    my @annotation_type_list = ();
+
+    # default to enabling all annotation types
+    if (defined $self->{enabled_annotation_type_list}) {
+      my @enabled_annotation_type_list =
+        @{$self->{enabled_annotation_type_list}};
+      my %enabled_annotation_types = ();
+      map {
+        $enabled_annotation_types{$_} = 1;
+      } @enabled_annotation_type_list;
+      @annotation_type_list = map {
+        my $name = $_->{name};
+        if ($enabled_annotation_types{$name}) {
+          ($_);
+        } else {
+          ();
+        }
+      } @available_annotation_type_list;
+    } else {
+      @annotation_type_list = @available_annotation_type_list;
+    }
+
+    for my $annotation_type (@annotation_type_list) {
       my $annotation_type_name = $annotation_type->{name};
 
       if (exists $self->{annotation_types}->{$annotation_type_name}) {
@@ -267,6 +293,8 @@ sub setup
         }
       }
     }
+
+    $self->{annotation_type_list} = [@annotation_type_list];
   }
 
   my $instance_organism = $self->{instance_organism};

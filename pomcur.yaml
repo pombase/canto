@@ -1101,7 +1101,7 @@ evidence_types:
   'Gel electrophoresis evidence': ~
   'Plasmid maintenance assay evidence': ~
 
-annotation_type_list:
+available_annotation_type_list:
   - name: molecular_function
     category: ontology
     abbreviation: F

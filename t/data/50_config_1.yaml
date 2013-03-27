@@ -54,7 +54,7 @@ evidence_types:
     with_gene: 1
   'Cell growth assay': ~
 
-annotation_type_list:
+available_annotation_type_list:
   - name: cellular_component
     evidence_codes:
       - IDA
