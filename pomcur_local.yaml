@@ -26,9 +26,11 @@ front_page_title: 'Welcome to Canto the PomBase community curation tool'
 front_page_template: local/pombase_front.mhtml
 default_local_page: pombase_front
 
-enabled_annotation_type_list:
-  - biological_process
-  - cellular_component
+# restrict the list of annotation types
+#enabled_annotation_type_list:
+#  - molecular_function
+#  - biological_process
+#  - cellular_component
 
 implementation_classes:
   ontology_annotation_adaptor: PomCur::Chado::OntologyAnnotationLookup
