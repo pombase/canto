@@ -1,18 +1,15 @@
 <!-- PAGE_TITLE: Introduction to Canto -->
-<p>
-Curating a paper with Canto - Introduction
-</p>
 
 <p>
 When you start curating a paper, you will first be asked to supply the
-genes from your publication. You can then annotate your genes with:
+genes from your publication.  You can then annotate your genes with any of
+these data types:
 </p>
-<ol>
-  <li>Phenotypes (including details of alleles and conditions)</li>
-  <li>GO terms (biological processes, cellular components, and molecular functions)</li>
-  <li>Genetic and physical interactions (BioGRID format)</li>
-  <li>Protein modifications</li>
-</ol>
+<ul>
+% for my $an_type (@annotation_type_list) {
+  <li><% $an_type->{display_name} %></li>
+% }
+</ul>
 <p>
 At present, gene names and product descriptions cannot be changed using Canto. 
 Existing annotations also cannot be altered or deleted.
@@ -36,3 +33,7 @@ If you have a large gene list with only one or two types of data (e.g. a
 phenotype screen), you may want to supply the data as spreadsheet rather than
 via Canto. Please <& /contact.mhtml, link_text => 'contact us directly' &> for format details.
 </p>
+
+<%init>
+my @annotation_type_list = @{$c->config()->{annotation_type_list}};
+</%init>
