@@ -54,10 +54,10 @@ Canto is currently deployed for:
 
 <div class="span6">
 <h2>Documentation</h2>
-<a href="<% $c->uri_for('/docs/canto_introduction/') %>" class="btn visit">View ...</a>
+<a href="<% $c->uri_for('/docs/index/') %>" class="btn visit">View ...</a>
 <p>
 Instructions for using Canto are available from
-the <a href="<% $c->uri_for('/docs/canto_introduction/') %>">documentation
+the <a href="<% $c->uri_for('/docs/index/') %>">documentation
 pages</a>, or via any of the specific instances of Canto.
 
 <h2>Demo</h2>
