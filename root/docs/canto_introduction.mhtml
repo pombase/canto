@@ -5,11 +5,14 @@ When you start curating a paper, you will first be asked to supply the
 genes from your publication.  You can then annotate your genes with any of
 these data types:
 </p>
-<ul>
+<dl>
 % for my $an_type (@annotation_type_list) {
-  <li title="<% $an_type->{help_text} // '' %>"><% $an_type->{display_name} %></li>
+  <li>
+    <h3><% $an_type->{display_name} %></h3>
+    <div><% $an_type->{help_text} // '' %></div>
+  </li>
 % }
-</ul>
+</dl>
 <p>
 At present, gene names and product descriptions cannot be changed using Canto. 
 Existing annotations also cannot be altered or deleted.
