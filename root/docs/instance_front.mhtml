@@ -1,4 +1,5 @@
-<!-- PAGE_TITLE: -->
+<!-- PAGE_TITLE: @@database_name@@ Community Curation -->
+<!-- PAGE_SUBTITLE: Curate genetic and molecular data from your publications into <a href="@@database_url@@">@@database_name@@</a>. -->
 <!-- FLAGS: use_bootstrap -->
 
 <div class="docs">

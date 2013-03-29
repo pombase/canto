@@ -1,5 +1,6 @@
 long_name: PomBase community curation application
 database_name: PomBase
+database_url: 'http://www.pombase.org/'
 
 Model::TrackModel:
   schema_class: 'PomCur::TrackDB'

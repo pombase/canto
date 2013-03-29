@@ -198,6 +198,15 @@ div#footer .sponsor {
   float: left;
 }
 
+#canto-title-section {
+  padding: 7px;
+  margin: 5px 0px 15px 0px;
+  display: block;
+  text-align: center;
+  clear: right;
+  font-size: 120%;
+}
+
 #right-title {
   font-weight: bold;
   display: block;

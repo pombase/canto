@@ -130,6 +130,10 @@ sub _do_local_and_docs
         my $title = PomCur::WebUtil::substitute_paths($1, $config);
         $st->{title} = $title;
       }
+      if ($line =~ /<!--\s*PAGE_SUBTITLE:\s*(.*?)\s*-->/) {
+        my $sub_title = PomCur::WebUtil::substitute_paths($1, $config);
+        $st->{sub_title} = $sub_title;
+      }
       if ($line =~ /<!--\s*FLAGS:\s*(.*?)\s*-->/) {
         my $all_flags = $1;
         my @flags = split /\s+/, $all_flags;

@@ -1,0 +1,48 @@
+<%args>
+$title
+$show_title => 1
+$sub_title => undef
+</%args>
+
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <& head.mhtml, title => $title &>
+  </head>
+  <body>
+% if (!$st->{hide_header}) {
+% # hide the head on the Canto front page
+    <& header.mhtml &>
+% }
+
+    <div class="container-fluid" id="content">
+    <span id="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
+
+
+% if ($show_title) {
+  <div id="canto-title-section">
+    <h1>
+      <% $title %>
+    </h1>
+%   if (defined $sub_title) {
+    <div id="canto-sub-title">
+      <% $sub_title |n %>
+    </div>
+%   }
+  </div>
+% }
+      <div class="clearall"></div>
+% $m->call_next;
+
+    </div>
+    <& footer.mhtml &>
+  </body>
+</html>
+
+<%init>
+my $st = $c->stash();
+</%init>
+
+<%flags>
+inherit => undef
+</%flags>
