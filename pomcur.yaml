@@ -5,6 +5,8 @@ database_name: SET_DATABASE_NAME_IN_CONFIG
 database_url: SET_DATABASE_URL_IN_CONFIG
 header_image: logos/curation_tool.png
 
+canto_url: http://curation.pombase.org/
+
 app_version: v540
 
 schema_version: 1

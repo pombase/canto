@@ -5,16 +5,15 @@
 <div class="docs">
 <div class="row-fluid">
 <div class="span7">
-<h2><% $config->{database_name} %> <% $config->{name} %> Community Curation</h2>
-<p>
-Welcome to <% $config->{database_name} %> community curation.
-This tool allows anyone in the community to curate papers for inclusion in
-<% $config->{database_name} %>.
-</p>
+<h2>Curate a paper</h2>
 <& /tools/pubmed_id_start.mhtml, title => 'Start curating using a PubMed ID:' &>
+<div>
+Once you have found your paper, you can curate GO, phenotypes, interactions
+and protein modifications. See the <a href="<% $c->uri_for('/docs/index') %>">help pages</a> for more information
+</div>
 </div>
 
-<div class="span5 docs">
+<div class="span5">
 <h2>First time curator?</h2>
 <div>
 <a href="<% $c->uri_for('/docs/canto_introduction') %>" class="btn visit">Visit ...</a>
@@ -27,21 +26,16 @@ by viewing our help pages:
 <div>
 <a href="http://curation.pombase.org/demo/" class="btn visit">Demo ...</a>
 <p>
-Or try the demo version of Canto: curate using S. pombe gene IDs.
+  Or try the demo version of Canto: curate using <span class="organism-name">S. pombe</span> gene IDs.
 </p>
 </div>
 % }
 </div>
 </div>
 
-<div class="row-fluid docs">
-<div class="span6">
-</div>
-
-<div class="span6">
-</div>
-</div>
-</div>
+% if (defined $config->{instance_front_mhtml}) {
+<& $config->{instance_front_mhtml} &>
+% }
 
 <%init>
 my $config = $c->config();
