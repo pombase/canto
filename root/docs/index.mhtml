@@ -22,22 +22,22 @@ from your publication, and confirm the resulting gene list:
 
 <div class="row-fluid">
 <div class="span12">
-<div>
+<p>
 When you have entered genes, you can then annotate your genes with any of the
 data types listed in the next section.
-</div>
-<div>
+</p>
+<p>
 Once you have begun curating, the information will be preserved at a stable
 URL, so you do not need to complete the curation in one session. You can use
 the 'Contact curators' link at any point if you get stuck, or have any
 questions.
-</div>
-<div>
+</p>
+<p>
 Please note that you should only curate information supported by experiments
 supported in the paper you are curating. If you want to capture other
 information not directly shown in a particular paper, please
 <& /contact.mhtml, link_text => 'contact the curators' &> to discuss how to proceed.
-</div>
+</p>
 </div>
 </div>
 
@@ -46,10 +46,10 @@ information not directly shown in a particular paper, please
 <h2>
 Curating specific data types
 </h2>
-<div>
+<p>
 You can curate any of these types of data for any gene you have put on the
 list for the paper (follow links for specific instructions):
-</div>
+</p>
 <dl class="canto-type-list">
 % for my $an_type (@annotation_type_list) {
   <li>
@@ -66,12 +66,12 @@ list for the paper (follow links for specific instructions):
 <h2>
 Finishing and submitting
 </h2>
-<div>
+<p>
 When you have finished entering data from your paper, click 'Submit to
 curators'. You will see a box in which you can put any comments or questions
 for the curators (this is optional).
 
-</div>
+</p>
 </div>
 </div>
 

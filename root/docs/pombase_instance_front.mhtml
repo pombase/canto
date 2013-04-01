@@ -3,7 +3,7 @@
     <h2>
 More about community curation
     </h2>
-    <div>
+    <p>
 Once you have found your paper, you can curate GO, phenotypes, interactions
 and protein modifications. See the help pages for more information.
 By curating your papers here, you will make your work more visible to the
@@ -11,10 +11,10 @@ community. Your data will be available in PomBase and shared with
 other public databases. Read more about the motivation, background, and
 progress of the Fission Yeast Community Curation project at the
 <a href="<% $c->config()->{database_url} %>">PomBase web site</a>.
-    </div>
-    <div>
+    </p>
+    <p>
       <a href="<% $c->config()->{database_url} %>">PomBase</a> community
       curation uses <a href="<% $c->config()->{canto_url} %>">Canto</a>
-    </div>
+    </p>
   </div>
 </div>
