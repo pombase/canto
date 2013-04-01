@@ -1,7 +1,98 @@
-<!-- PAGE_TITLE: Canto documentation -->
+<!-- PAGE_TITLE: @@name@@ Documentation - @@database_name@@ Community Curation -->
+<!-- FLAGS: use_bootstrap -->
+
+<div class="docs">
+<div class="row-fluid">
+<div class="span12">
+<h1>Getting started</h1>
 <p>
-[top level documentation page with links to other pages]
+When you start curating a paper, you will first be asked to supply the genes
+from your publication, and confirm the resulting gene list:
 </p>
-<ul>
-  <il><a href="<% $c->uri_for('/docs/canto_introduction') %>">Introduction</a></il>
-</ul>
+</div>
+</div>
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/gene_list.png') %>"/><img src="<% $c->uri_for('/static/images/docs/gene_list_small.png') %>"/></a>
+</div>
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/uploaded.png') %>"/><img src="<% $c->uri_for('/static/images/docs/uploaded_small.png') %>"/></a>
+</div>
+</div>
+
+<div class="row-fluid">
+<div class="span12">
+<div>
+When you have entered genes, you can then annotate your genes with any of the
+data types listed in the next section.
+</div>
+<div>
+Once you have begun curating, the information will be preserved at a stable
+URL, so you do not need to complete the curation in one session. You can use
+the 'Contact curators' link at any point if you get stuck, or have any
+questions.
+</div>
+<div>
+Please note that you should only curate information supported by experiments
+supported in the paper you are curating. If you want to capture other
+information not directly shown in a particular paper, please
+<& /contact.mhtml, link_text => 'contact the curators' &> to discuss how to proceed.
+</div>
+</div>
+</div>
+
+<div class="row-fluid">
+<div class="span12">
+<h2>
+Curating specific data types
+</h2>
+<div>
+You can curate any of these types of data for any gene you have put on the
+list for the paper (follow links for specific instructions):
+</div>
+<dl class="canto-type-list">
+% for my $an_type (@annotation_type_list) {
+  <li>
+    <span class="canto-type-list-name"><% $an_type->{display_name} %></span> - 
+    <span class="canto-type-list-def"><% $an_type->{help_text} // '' %></span>
+  </li>
+% }
+</dl>
+</div>
+</div>
+
+<div class="row-fluid">
+<div class="span12">
+<h2>
+Finishing and submitting
+</h2>
+<div>
+When you have finished entering data from your paper, click 'Submit to
+curators'. You will see a box in which you can put any comments or questions
+for the curators (this is optional).
+
+</div>
+</div>
+</div>
+
+<h2>
+Notes
+</h2>
+<ol>
+  <li>At present, gene names and product descriptions cannot be changed using
+   Canto.  Existing annotations also cannot be altered or deleted. If you have
+   new gene names or updated product descriptions, or if you notice any errors
+   in existing annotations, please put them in a comment when you submit your
+   annotations.
+  </li>
+  <li>
+   If you have a large gene list with only one or two types of data (e.g. a
+   phenotype screen), you may want to supply the data as spreadsheet rather
+   than via Canto. Please <& /contact.mhtml, link_text => 'contact us
+   directly' &> for format details.
+  </li>
+</ol>
+
+<%init>
+my @annotation_type_list = @{$c->config()->{annotation_type_list}};
+</%init>
