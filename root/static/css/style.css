@@ -57,7 +57,10 @@ a:link:active { text-decoration:none }
   padding-left: 25px;
   padding-bottom: 25px;
 }
-
+ul li {
+  list-style-position: outside;
+  list-style-type: square;
+}
 
 button, input[type=submit] {
   background-color: #c00;
