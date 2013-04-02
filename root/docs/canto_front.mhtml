@@ -23,7 +23,7 @@ databases.
 
 <div class="row">
   <div class="span6">
-<h2>Canto in Use</h2>
+<h3>Canto in Use</h3>
 Canto is currently deployed for:
 <ul>
 <li>
@@ -53,14 +53,14 @@ Canto is currently deployed for:
 </div>
 
 <div class="span6">
-<h2>Documentation</h2>
+<h3>Documentation</h3>
 <a href="<% $c->uri_for('/docs/index/') %>" class="btn visit">View ...</a>
 <p>
 Instructions for using Canto are available from
 the <a href="<% $c->uri_for('/docs/index/') %>">documentation
 pages</a>, or via any of the specific instances of Canto.
 
-<h2>Demo</h2>
+<h3>Demo</h3>
 <a href="http://curation.pombase.org/demo" class="btn visit">Demo ...</a>
 <p>
   Try the demo version of Canto - curate GO, phenotypes,
@@ -72,12 +72,12 @@ pages</a>, or via any of the specific instances of Canto.
 
 <div class="row">
 <div class="span6">
-<h2>How to Cite Canto</h2>
+<h3>How to Cite Canto</h3>
 <p>
 Please cite: K. Rutherford et. al. Manuscript in preparation
 </p>
 <!--
-<h2>[Publications]</h2>
+<h3>[Publications]</h3>
 <p>
 [optional heading to add if & when there are papers that mention using Canto]
 </p>
@@ -85,7 +85,7 @@ Please cite: K. Rutherford et. al. Manuscript in preparation
 </div>
 
 <div class="span6">
-<h2>Get The Code</h2>
+<h3>Get The Code</h3>
 <a href="https://github.com/pombase/canto" class="btn visit">Visit ...</a>
 <p>
 Canto is a free, open source application [add a bit]. The source code is
@@ -101,7 +101,7 @@ and link here].
 
 <div class="row footer">
 <div class="span6">
-<h2>Acknowledgements</h2>
+<h3>Acknowledgements</h3>
 <p>
 Canto is developed as part of the PomBase project, which provides a model
 organism database for the fission yeast Schizosaccharomyces pombe. PomBase is

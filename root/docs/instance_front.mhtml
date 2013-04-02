@@ -5,7 +5,7 @@
 <div class="docs">
 <div class="row-fluid">
 <div class="span7">
-<h2>Curate a paper</h2>
+<h3>Curate a paper</h3>
 <& /tools/pubmed_id_start.mhtml, title => 'Start curating using a PubMed ID:' &>
 <p>
 Once you have found your paper, you can curate GO, phenotypes, interactions
@@ -14,7 +14,7 @@ and protein modifications. See the <a href="<% $c->uri_for('/docs/index') %>">he
 </div>
 
 <div class="span5">
-<h2>First time curator?</h2>
+<h3>First time curator?</h3>
 <div>
 <a href="<% $c->uri_for('/docs/canto_introduction') %>" class="btn visit">Visit ...</a>
 <p>

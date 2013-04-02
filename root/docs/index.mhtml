@@ -4,7 +4,7 @@
 <div class="docs">
 <div class="row-fluid">
 <div class="span12">
-<h1>Getting started</h1>
+<h2>Getting started</h2>
 </div>
 </div>
 
@@ -55,9 +55,9 @@ information not directly shown in a particular paper, please
 
 <div class="row-fluid">
 <div class="span12">
-<h2>
+<h3>
 Curating specific data types
-</h2>
+</h3>
 <p>
 You can curate any of these types of data for any gene you have put on the
 list for the paper (follow links for specific instructions):
@@ -75,9 +75,9 @@ list for the paper (follow links for specific instructions):
 
 <div class="row-fluid">
 <div class="span12">
-<h2>
+<h3>
 Finishing and submitting
-</h2>
+</h3>
 <p>
 When you have finished entering data from your paper, click 'Submit to
 curators'. You will see a box in which you can put any comments or questions
@@ -87,9 +87,9 @@ for the curators (this is optional).
 </div>
 </div>
 
-<h2>
+<h3>
 Notes
-</h2>
+</h3>
 <ol>
   <li>At present, gene names and product descriptions cannot be changed using
    Canto.  Existing annotations also cannot be altered or deleted. If you have
