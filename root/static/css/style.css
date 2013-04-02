@@ -57,6 +57,10 @@ a:link:active { text-decoration:none }
   padding-left: 25px;
   padding-bottom: 25px;
 }
+.canto-type-list-name {
+  font-weight: bold;
+}
+
 ul li {
   list-style-position: outside;
   list-style-type: square;

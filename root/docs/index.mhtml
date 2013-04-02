@@ -50,14 +50,14 @@ Curating specific data types
 You can curate any of these types of data for any gene you have put on the
 list for the paper (follow links for specific instructions):
 </p>
-<dl class="canto-type-list">
+<ul class="canto-type-list">
 % for my $an_type (@annotation_type_list) {
   <li>
-    <span class="canto-type-list-name"><% $an_type->{display_name} %></span> - 
+    <span class="canto-type-list-name"><% $an_type->{display_name} %></span>:
     <span class="canto-type-list-def"><% $an_type->{help_text} // '' %></span>
   </li>
 % }
-</dl>
+</ul>
 </div>
 </div>
 
