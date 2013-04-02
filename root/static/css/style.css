@@ -66,6 +66,10 @@ ul li {
   list-style-type: square;
 }
 
+.docs ul li {
+  padding-top: 10px;
+}
+
 button, input[type=submit] {
   background-color: #c00;
   color: white;
