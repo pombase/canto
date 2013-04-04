@@ -78,6 +78,7 @@ __PACKAGE__->deny_access_unless(
       !$access_control_enabled || $action eq 'front';
   },
 );
+__PACKAGE__->allow_access('/default');
 __PACKAGE__->allow_access('/end');
 __PACKAGE__->allow_access('/account');
 __PACKAGE__->allow_access('/login');

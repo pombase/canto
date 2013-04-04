@@ -28,6 +28,7 @@ sub default :Path
   my $st = $c->stash;
 
   $st->{title} = "Page not found";
+  $st->{show_title} = 0;
   $st->{template} = 'not_found_404.mhtml';
   $c->response->status(404);
 }
@@ -156,7 +157,7 @@ sub _do_local_and_docs
     $c->stash()->{error} =
       { title => "No such page",
         text => "$page_name doesn't exist" };
-    $c->forward($c->config()->{home_path});
+    $c->forward('/default');
     $c->detach();
   }
 }
