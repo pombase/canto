@@ -483,6 +483,10 @@ class_info:
             - inline_list
         - name: corresponding_author
           editable: 1
+        - name: current_curator
+          referenced_class: Person
+          source:
+            sql: "select curator from curs_curator where curs_curator_id = (select max(curs_curator_id) from curs_curator cc, curs c where cc.curs = c.curs_id and c.pub = me.pub_id)"
         # - name: type
         #   source: type_id
         #   values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication type")'
