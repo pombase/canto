@@ -16,7 +16,7 @@ and protein modifications. See the <a href="<% $c->uri_for('/docs/index') %>">he
 <div class="span5">
 <h3>First time curator?</h3>
 <div>
-<a href="<% $c->uri_for('/docs/canto_introduction') %>" class="btn visit">Visit ...</a>
+<a href="<% $c->uri_for('/docs/') %>" class="btn visit">Visit ...</a>
 <p>
 Find out about community curation and the types of data that can be curating
 by viewing our help pages:
