@@ -1,0 +1,18 @@
+<h3>
+Notes
+</h3>
+<ol>
+  <li>At present, gene names and product descriptions cannot be changed using
+   Canto.  Existing annotations also cannot be altered or deleted. If you have
+   new gene names or updated product descriptions, or if you notice any errors
+   in existing annotations, please put them in a comment when you submit your
+   annotations.
+  </li>
+  <li>
+   If you have a large gene list with only one or two types of data (e.g. a
+   phenotype screen), you may want to supply the data as spreadsheet rather
+   than via Canto. Please <& /contact.mhtml, link_text => 'contact us
+   directly' &> for format details.
+  </li>
+</ol>
+

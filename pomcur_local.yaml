@@ -22,6 +22,7 @@ instance_organism:
   taxonid: 4896
 
 instance_front_mhtml: /docs/pombase_instance_front.mhtml
+instance_index_mhtml: /docs/pombase_index.mhtml
 extra_css: /static/css/test_style.css
 
 front_page_title: 'Welcome to Canto the PomBase community curation tool'
