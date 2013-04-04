@@ -72,9 +72,10 @@ __PACKAGE__->setup();
 __PACKAGE__->deny_access_unless(
   '/',
   sub {
-    my $c = shift;
+    my ($c, $action) = @_;
+
     return $c->user_exists() || $c->config()->{public_mode} ||
-      !$access_control_enabled;
+      !$access_control_enabled || $action eq 'front';
   },
 );
 __PACKAGE__->allow_access('/end');
