@@ -1,2 +1,3 @@
-<div>
-</div>
+<h1>
+  Page not found: <% $c->local_path() %>
+</h1>
