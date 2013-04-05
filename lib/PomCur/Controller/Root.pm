@@ -90,7 +90,7 @@ sub front :Path :Args(0)
 {
   my ($self, $c) = @_;
 
-  $c->forward($c->config()->{home_path});
+  $c->forward($c->config()->{instance_front_path});
   $c->detach();
 }
 
@@ -228,7 +228,7 @@ sub login : Global {
       { title => "Login successful" };
 
     if ($return_path =~ m/logout|login/) {
-      $c->forward($c->config()->{home_path});
+      $c->forward($c->config()->{instance_front_path});
       return 0;
     }
   } else {

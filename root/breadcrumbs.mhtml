@@ -1,26 +1,24 @@
 <div id="breadcrumbs">
-% if ($current_uri ne $home_path) {
   <div class="breadcrumbs-link">
     <a id="breadcrumbs-home-link"
-       href="<% $home_path %>" title="Go to the home page">
-      Home
+       href="<% $instance_top_uri %>" title="Go to <% $instance_text %>">
+      <% $instance_text %>
     </a>
-% if ($current_path ne '/' && $current_path !~ m|/local/| &&
-%     $current_path !~ m:/(account|login)$:) {
+% if ($current_path =~ m|/view/|) {
   <div class="breadcrumbs-link">
     <a id="breadcrumbs-admin-link"
        href="<% $admin_path %>" title="Go to the admin page">
-      Admin
+      Admin page
     </a>
   </div>
 %   }
   </div>
-% }
 </div>
 
 <%init>
+my $config = $c->config();
 my $admin_path = $c->uri_for('/track/');
 my $current_path = $c->local_path();
-my $home_path = $c->uri_for($c->config()->{home_path});
-my $current_uri = $c->req->uri();
+my $instance_text = $config->{database_name} . ' ' . $config->{name};
+my $instance_top_uri = $c->uri_for('/');
 </%init>

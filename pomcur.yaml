@@ -12,7 +12,8 @@ app_version: v540
 schema_version: 1
 
 # the path that the home link goes to
-home_path: /docs/instance_front
+instance_front_path: /docs/instance_front
+canto_front_path: /docs/canto_front
 help_path: /docs/index
 
 # if zero, the user will need to log in before the links on the front page are

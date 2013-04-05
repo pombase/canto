@@ -1,4 +1,9 @@
 <div id="breadcrumbs">
+  <div class="breadcrumbs-link">
+    <a id="breadcrumbs-home-link"
+       href="<% $instance_top_uri %>" title="Go to <% $instance_text %>">
+      <% $instance_text %>
+    </a>
 % if ($is_admin) {
   <div id="breadcrumbs-admin-link" class="breadcrumbs-link">
     <a href="<% $admin_path %>" title="Go to the admin page">
@@ -22,12 +27,16 @@
   </div>
 % }
 </div>
+</div>
 
 <%init>
+my $config = $c->config();
 my $current_path_uri = $c->stash()->{current_path_uri};
 my $gene = $c->stash()->{gene};
 my $pub = $c->stash()->{pub};
 my $curs_root_uri = $c->stash()->{curs_root_uri};
+my $instance_text = $config->{database_name} . ' ' . $config->{name};
+my $instance_top_uri = $c->uri_for('/');
 my $gene_url;
 
 if (defined $gene) {
