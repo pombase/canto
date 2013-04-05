@@ -255,7 +255,7 @@ sub logout : Global {
   my ( $self, $c ) = @_;
   $c->logout;
 
-  $c->stash->{message} = "Logged out";
+  $c->stash()->{message} = "You have been logged out";
   $c->forward('front');
 }
 
