@@ -36,7 +36,6 @@ Canto is currently deployed for:
 <li>
   <a href="http://curation.pombase.org/pichia" class="btn visit">Visit ...</a>
   <span class="organism-name">Komagataella pastoris</span> (formerly known as Pichia pastoris)
-  [list what can be curated, when available] [find out where annotation goes]
 </li>
 <li>
   <a href="http://curation.pombase.org/uniprot" class="btn visit">Visit ...</a>
@@ -70,25 +69,14 @@ pages</a>, or via any of the specific instances of Canto.
 <p>
 Please cite: K. Rutherford et. al. Manuscript in preparation
 </p>
-<!--
-<h3>[Publications]</h3>
-<p>
-[optional heading to add if & when there are papers that mention using Canto]
-</p>
--->
 </div>
 
 <div class="span6">
 <h3>Get The Code</h3>
 <a href="https://github.com/pombase/canto" class="btn visit">Visit ...</a>
 <p>
-Canto is a free, open source application [add a bit]. The source code is
+Canto is a free, open source application. The source code is
 available from Github.
-</p>
-<p>
-Further information is available on the code, and how to install and configure
-Canto [create some geek-oriented documentation
-and link here].
 </p>
 </div>
 </div>
