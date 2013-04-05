@@ -2,6 +2,9 @@
 $title
 $show_title => 1
 $sub_title => undef
+$error => undef
+$message => undef
+$notice => undef
 </%args>
 
 <!DOCTYPE HTML>
@@ -18,6 +21,7 @@ $sub_title => undef
     <div class="container-fluid" id="content">
     <span id="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
 
+<& /err_mess_notice.mhtml, error => $error, message => $message, notice => $notice &>
 
 % if ($show_title) {
   <div id="canto-title-section">

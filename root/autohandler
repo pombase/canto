@@ -25,50 +25,7 @@ $is_admin_user
 <& breadcrumbs.mhtml &>
 <span id="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
 
-<div id="notice-list">
-% for my $notice (@notices) {
-<div class="notice">
-  <strong>
-    <% $notice->{title} %>
-  </strong>
-%   if (exists $notice->{text}) {
-  <div>
-    <% $notice->{text} %>
-  </div>
-%   }
-</div>
-% }
-</div>
-
-<div id="error-list">
-% for my $err (@errors) {
-<div class="error">
-  <strong>
-    <% $err->{title} %>
-  </strong>
-%   if (exists $err->{text}) {
-  <div>
-    <% $err->{text} %>
-  </div>
-%   }
-</div>
-% }
-</div>
-
-<div id="message-list">
-% for my $mess (@messages) {
-<div class="message">
-  <strong>
-    <% $mess->{title} %>
-  </strong>
-%   if (exists $mess->{text}) {
-  <div>
-    <% $mess->{text} %>
-  </div>
-%   }
-</div>
-% }
-</div>
+<& /err_mess_notice.mhtml, error => $error, message => $message, notice => $notice &>
 
 % if ($show_title) {
       <h1 id="<% $page_description_id %>">
@@ -98,37 +55,6 @@ $is_admin_user
 
 <%init>
 my $st = $c->stash();
-
-my $tidy = sub {
-  my $arg = shift;
-
-  if (!defined $arg) {
-    return ();
-  }
-
-  if (ref $arg) {
-    if (ref $arg eq 'ARRAY') {
-      return @$arg;
-    } else {
-      if (ref $arg eq 'HASH' && exists $arg->{title}) {
-        return $arg;
-      } else {
-        use Data::Dumper;
-        $Data::Dumper::Maxdepth = 5;
-        warn "error in stash is not an array, hash or scalar: ", Dumper([$arg]);
-
-        return ( { title => 'Internal error',
-                   text => 'The problem will be investigated' } );
-      }
-    }
-  } else {
-    return { title => $arg };
-  }
-};
-
-my @errors = $tidy->($error);
-my @messages = $tidy->($message);
-my @notices = $tidy->($notice);
 </%init>
 
 <%flags>
