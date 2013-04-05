@@ -126,7 +126,6 @@ my $tidy = sub {
   }
 };
 
-# flash_to_stash doesn't seem to work, so:
 my @errors = $tidy->($error);
 my @messages = $tidy->($message);
 my @notices = $tidy->($notice);
