@@ -49,7 +49,7 @@ test_psgi $app, sub {
 
   # make sure there is a link to the triage page
   {
-    my $uri = new URI("$root_url/track/index_page");
+    my $uri = new URI("$root_url/track/");
     my $req = HTTP::Request->new(GET => $uri);
     $cookie_jar->add_cookie_header($req);
 

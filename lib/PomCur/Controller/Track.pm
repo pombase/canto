@@ -43,7 +43,7 @@ use Carp;
 
 use Moose;
 
-sub index_page :Local :Args(0) {
+sub index_page :Path :Args(0) {
   my ($self, $c) = @_;
 
   my $st = $c->stash();
