@@ -1,0 +1,194 @@
+<!-- PAGE_TITLE: Gene Ontology Annotation -->
+
+<h2>General GO annotation</h2>
+<p>There are two parts to a GO annotation: first, the association between a gene
+product and GO term; and second, the source and evidence used to make the
+association.
+</p>
+<p>
+Each GO term represents an activity, process, or location in the cell of a
+gene product, and has a name (called the GO Term name), a numerical identifier
+(called the GO ID), and a text definition. The first part of the annotation
+involves selecting the "GO term" (see choosing the correct GO term)
+</p>
+
+<h2>Choosing the correct GO term (general)</h2>
+<p>
+Type text which represents your term into the search box. An autocomplete
+feature makes suggestions; choose one and proceed. If you do not find the term
+you are looking for with your initial search, begin with a broad term (see
+examples in specific sections below).
+</p>
+<p>
+Once you have selected a term from your search results, read the definition
+and make sure it describes the experiment you are trying to capture. It's very
+important to choose a term based on its definition, not the name, and to make
+sure that the results shown in the paper fit all parts of the term
+definition. More specific "child" terms will be shown (where available), and
+you can select one of these more specific terms in an iterative process. GO
+terms are organised in a hierarchical structure, and GO annotations should be
+as specific as possible to describe the data from your experiment. (More
+information
+on <a href="http://geneontology.org/GO.contents.doc.shtml#ontology">GO
+organisation</a> is available on the GO web site.)
+</p>
+<p>
+You will have the opportunity to request a new term if the most sp∑ecific term
+available does not describe your gene product adequately.
+</p>
+
+<h2>Choosing the Evidence code</h2>
+<p>
+After selecting a GO term, you must choose the evidence code that best
+describes your experiment.
+</p>
+<ul>
+  <li>Mutation(s) in a single gene: IMP (inferred from mutant phenotype)</li>
+  <li>Mutations in more than one gene in the same strain: IGI (inferred from genetic interaction)</li>
+  <li>Direct physical interaction of one single gene product with another: IPI (inferred from physical interaction)</li>
+  <li>Direct assay of the location, complex, function or process: IDA (inferred from direct assay)</li>
+</ul>
+
+<h2>Data supporting the evidence</h2>
+<p>
+"With" field: IGI or IPI evidence requires that you indicate the interacting
+gene product. Choose the appropriate gene from the list you initially entered
+(or add genes to the list if necessary).
+</p>
+<p>
+See the ontology aspect (cellular component, biological process, molecular
+function) specific sections below for more detailed trouble shooting.
+</p>
+
+<h2>Specific branches of GO</h2>
+<h3><a name="component">Cellular Component</a></h3>
+<p>
+Cellular component describes locations, at the levels of subcellular
+structures and macromolecular complexes. Examples of cellular components
+include nucleus, nuclear inner membrane, nuclear pore, and proteasome
+complex. Generally, a gene product is located in or is a subcomponent of a
+particular cellular component. The cellular component ontology includes
+multi-subunit enzymes and other protein complexes, but not individual proteins
+or nucleic acids.
+</p>
+<ul>
+  <li>Suggested broad terms to start searching
+    <ul>
+      <li>rough endoplasmic reticulum</li>
+      <li>nucleus</li>
+      <li>ribosome</li>
+    </ul>
+  </li>
+  <li>Be careful when interpreting subcellular locations, as certain tagged
+    proteins may be mis-targeted. For example, proteins are often mislocalized to
+    vacuole or other components upon addition of the tag.</li>
+  <li>When a macromolecular complex is characterized, all of the subunits should be
+    annotated to an appropriate complex term in the Cellular Component ontology
+    (example, GO:0005681, 'spliceosomal complex' or GO:0000786, 'nucleosome').</li>
+</ul>
+
+<h3><a name="function">Molecular Function</a></h3>
+<p>
+A molecular function is an activity, such as a catalytic or binding activity,
+that occurs at the molecular level. GO molecular function terms represent
+activities that perform the actions (protein serine/threonine kinase activity,
+pyruvate carboxylase activity), rather than the entities (gene products or
+complexes). As a general rule, molecular functions correspond to single step
+activities performed by individual gene products.
+</p>
+<ul>
+  <li>Suggested broad terms to start searching
+    <ul>
+      <li>transporter</li>
+      <li>transferase activity</li>
+    </ul>
+  </li>
+</ul>
+<p>
+It is sometimes difficult to distinguish between a Molecular Function and
+Biological Process term.  The key question to ask to establish if you need a
+Molecular Function term is whether the results shows how the gene product
+accomplishes its role. For example, if the result shows that a mutant version
+of a gene product affects transcription, by itself that doesn’t imply that the
+gene product is a transcription factor. If the study shows that the gene
+product binds to DNA or protein and thereby modulates transcription, then an
+appropriate Molecular Function term ('sequence-specific DNA binding RNA
+polymerase II transcription factor activity' or 'protein binding transcription
+factor activity') can be used. Data from the mutation experiment can be used
+to make an annotation to the Biological Process term ‘transcription, DNA
+dependent’ or to one of its child terms.
+</p>
+<p>
+Ensure that the experiment supports annotating to the GO term definition. For
+example, if a paper states in the introduction that a gene product is a
+transcription factor but provides results only showing DNA binding, then this
+paper should not be used to annotate to 'sequence-specific DNA binding RNA
+polymerase II transcription factor activity'. The appropriate term would be
+‘sequence specific DNA binding’ or one of its child terms. In another
+situation, if the author states that a protein is a serine/threonine/tyrosine
+kinase, but only shows experimental evidence for serine and threonine, the
+curator can only annotate to 'protein serine/threonine kinase activity'.
+•Annotating to 'protein binding' (GO:0005515), has to be done with caution as
+most proteins within the cell bind to other proteins at one time or another.
+Keep in mind is whether the gene product being annotated is accomplishing a
+biological purpose by binding to another protein: if so, protein binding is
+its function. Only annotate direct protein binding using the GO term "protein
+binding".
+</p>
+
+<h3><a name="process">Biological Process</a></h3>
+<p>
+A biological process is series of events accomplished by one or more ordered
+assemblies of molecular functions. It can be difficult to distinguish between
+a biological process and a molecular function, but the general rule is that a
+process must have more than one distinct step (e.g. cell cycle, transport,
+signal transduction).
+</p>
+<ul>
+  <li>Suggested broad terms to start searching</li>
+    <ul>
+      <li>cell cycle</li>
+      <li>transport</li>
+      <li>terms in
+      the <a href="http://www.pombase.org/browse-curation/fission-yeast-go-slim-terms">Biological
+      Process GO slim</a> may be useful starting points </li>
+    </ul>
+</ul>
+<p>
+Check that the selected GO term definition matches the specificity of the
+experiment. For example, if a paper shows experimental results that a gene
+product can transport specific amino acids and the authors extrapolate that
+the gene product can transport any amino acid, the gene product should be
+annotated only to transport of the amino acid that was shown experimentally.
+</p>
+<p>
+Direct vs. indirect effects: With mutant phenotypes, often it is hard to
+discern if a gene product is directly involved in a process or if its absence
+has an indirect/downstream effect. For example if any of the proteins involved
+in splicing is mutated, it affects translation. This is a downstream effect
+because most of the genes encoding ribosomal proteins have introns and if
+splicing genes are mutated, these ribosomal genes are not processed, thereby
+affecting ribosomal assembly and hence translation.  In this case the genes
+involved in splicing shouldn’t be annotated to translation. Instead, you
+should make a phenotype annotation to "abnormal translation" or one of its
+children.
+</p>
+<p>
+Annotating to "response to stimulus" terms: There are many RNA expression
+studies that measure the levels of RNA species when exposed to various stimuli
+and then suggest that the genes are over expressed and thus involved in
+responding to that stimulus. An increase in expression during a process does
+not always imply that the genes are directly involved in that process. The
+‘response to’ terms are intended to annotate gene products that are required
+for the response to occur (e.g. production of a gene product or hormone, or
+initiation of cell division). If nothing else is known about the gene product,
+make a phenotype annotation to "increased RNA level" or one of its children
+•Annotating to regulation terms: Regulation of a process is defined as any
+pathway that modulates the frequency, rate or extent of that process. To
+decide if the gene product participates directly in a process or regulates the
+process, consider: does the gene product being annotated perform within the
+pathway or upstream of the pathway to start or stop or change the rate of the
+process? Note that a gene product may be involved *both* directly in a
+process, and in its regulation (for example enzymes in a pathway which
+regulate the pathway via a feedback loop).
+</p>

@@ -1136,6 +1136,7 @@ available_annotation_type_list:
       the things that perform the actions (gene products or
       complexes). As a general rule, molecular functions correspond to
       single step activities performed by individual gene products.
+    detailed_help_path: /docs/go_annotation
   - name: biological_process
     category: ontology
     abbreviation: P
@@ -1169,6 +1170,7 @@ available_annotation_type_list:
       specific for this process, translation of histone H2a is not a valid
       term request because there is no translation machinery specifically for
       histone H2a.
+    detailed_help_path: /docs/go_annotation
   - name: cellular_component
     category: ontology
     abbreviation: C
@@ -1195,6 +1197,7 @@ available_annotation_type_list:
       multi-subunit enzymes and other protein complexes, but not individual
       proteins or nucleic acids. Cellular component also does not include
       multicellular anatomical terms.
+    detailed_help_path: /docs/go_annotation
   - name: phenotype
     needs_allele: 1
     gene_cardinality: one_or_more  # default is "one"
@@ -1240,6 +1243,7 @@ available_annotation_type_list:
     extra_help_text: >
       You can also annotate normal and abnormal phenotypes, such as normal
       flocculation or absent flocculation.
+    detailed_help_path: /docs/fypo_annotation
   - name: post_translational_modification
     category: ontology
     namespace: PSI-MOD
