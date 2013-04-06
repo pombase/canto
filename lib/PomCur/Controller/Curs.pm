@@ -104,8 +104,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   my $st = $c->stash();
 
+  my $all_sessions = $c->session()->{all_sessions} //= {};
+
   $st->{curs_key} = $curs_key;
-  $c->session()->{curs_key} = $curs_key;
   my $schema = PomCur::Curs::get_schema($c);
 
   if (!defined $schema) {
@@ -176,6 +177,11 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   # rather than annotating genes without a publication
   my $pub_id = $self->get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
+
+  $all_sessions->{$curs_key} = {
+    key => $curs_key,
+    pubid => $st->{pub}->uniquename(),
+  };
 
   die "internal error, can't find Pub for pub_id $pub_id"
     if not defined $st->{pub};

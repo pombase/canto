@@ -14,7 +14,22 @@ and protein modifications. See the <a href="<% $c->uri_for('/docs/index') %>">he
 </div>
 
 <div class="span5">
-<h3>First time curator?</h3>
+
+% if (@sessions) {
+  <h3>Your curation sessions</h3>
+  <ul>
+%   for my $session (@sessions) {
+%     my $curs_key = $session->{key};
+%     my $pubid = $session->{pubid};
+<li><a href='<% $c->uri_for("/curs/$curs_key") %>'"><% $pubid %></a></li>
+  </ul>
+% }
+
+
+% }
+
+
+<h3><% $docs_header %></h3>
 <div>
 <a href="<% $c->uri_for('/docs/') %>" class="btn visit">Visit ...</a>
 <p>
@@ -42,4 +57,22 @@ my $config = $c->config();
 
 my $database_name = $config->{database_name};
 my $tool_name = $config->{name};
+
+my @sessions = ();
+
+my $all_sessions = $c->session()->{all_sessions};
+
+if (defined $all_sessions) {
+  @sessions = sort {
+    $a->{pubid} cmp $b->{pubid};
+  } values %$all_sessions;
+}
+
+my $docs_header;
+
+if (@sessions) {
+  $docs_header = "Documentation";
+} else {
+  $docs_header = "First time curator?";
+}
 </%init>
