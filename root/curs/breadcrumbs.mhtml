@@ -4,12 +4,6 @@
        href="<% $instance_top_uri %>" title="Go to <% $instance_text %>">
       <% $instance_text %>
     </a>
-% if ($is_admin) {
-  <div id="breadcrumbs-admin-link" class="breadcrumbs-link">
-    <a href="<% $admin_path %>" title="Go to the admin page">
-      Admin
-    </a>
-% }
   <div id="breadcrumbs-gene-summary-link" class="breadcrumbs-link">
     <a href="<% $curs_root_uri %>" title="Go to the home page">
       <% defined $pub ? $pub->uniquename() : "UNKNOWN PUBLICATION" %> summary
@@ -23,15 +17,11 @@
     </div>
 % }
   </div>
-% if ($is_admin) {
-  </div>
-% }
 </div>
 </div>
 
 <%init>
 my $config = $c->config();
-my $current_path_uri = $c->stash()->{current_path_uri};
 my $gene = $c->stash()->{gene};
 my $pub = $c->stash()->{pub};
 my $curs_root_uri = $c->stash()->{curs_root_uri};
@@ -42,8 +32,4 @@ my $gene_url;
 if (defined $gene) {
   $gene_url = $curs_root_uri . '/gene/' . $gene->gene_id();
 }
-
-my $admin_path = $c->uri_for('/');
-
-my $is_admin = $c->stash()->{is_admin_user};
 </%init>
