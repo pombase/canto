@@ -391,7 +391,7 @@ sub start : Local Args(1) {
 
   my $subject = "Created new session $curs_key from $pub_uniquename";
   my $session_uri = $c->uri_for("/curs/$curs_key");
-  my $body = "Publication: pub_uniquename\n\n" .
+  my $body = "Publication: $pub_uniquename\n\n" .
     $pub->title() . "\n\n" .
     "Session: " . $session_uri . "\n";
 
