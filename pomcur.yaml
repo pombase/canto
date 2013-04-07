@@ -1275,6 +1275,7 @@ available_annotation_type_list:
       - Synthetic Haploinsufficiency
       - Synthetic Lethality
       - Synthetic Rescue
+    detailed_help_path: /docs/genetic_interaction_annotation
   - name: physical_interaction
     category: interaction
     display_name: 'physical interaction'
@@ -1294,6 +1295,7 @@ available_annotation_type_list:
       - Protein-RNA
       - Reconstituted Complex
       - Two-hybrid
+    detailed_help_path: /docs/physical_interaction_annotation
 
 default_curation_priority_name: low
 

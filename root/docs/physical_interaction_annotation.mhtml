@@ -1,0 +1,136 @@
+<!-- PAGE_TITLE: Curating Physical Interactions -->
+<!-- FLAGS: use_bootstrap -->
+
+<p>
+If you have physical interactions to curate, please read the
+Directionality section carefully.
+</p>
+<p>
+When you choose 'Physical interaction', you go to a page that lists
+all of the genes you have entered for the paper. Select one or more
+genes, then click 'Proceed' to go to the evidence selection page.
+</p>
+<p>
+Note that only pairwise physical interactions can be annotated in
+Canto. Thus, if you choose more than one interacting gene, you will
+create two or more separate interaction annotations, with the same
+evidence.
+</p>
+<p>
+On the evidence selection page, choose from the pulldown menu. Some
+evidence types have a brief description that indicates the
+directionality. Further information on evidence supporting physical
+interactions is available an the <a
+href="http://wiki.thebiogrid.org/doku.php/experimental_systems#physical_interactions">BioGRID
+help wiki</a> and in the Directionality section below. Click 'Proceed'
+to finish the annotation and return to the paper summary page.
+</p>
+
+<h2>Directionality</h2>
+<p>
+Some experiments that detect physical interactions
+have an inherent directionality. For example, in a typical two-hybrid
+experiment one protein (A) is fused to a DNA binding domain and a
+second (B) is fused to a transcription activation domain. The
+reciprocal experiment, with A fused to the activation domain and B
+fused to the DNA binding domain, may or may not have been done.
+</p>
+<p>
+For such "asymmetric" interactions, Canto allows you to curate in only
+one direction starting from the gene you have selected, as indicated
+in the evidence selector.
+</p>
+<p>
+If the evidence description looks the wrong way around, you will have
+to change genes and start again. (You can finish and then delete an
+interaction annotation if you find that you have started with the
+wrong gene.)
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Evidence</th>
+      <th>Relationship between Interactor A (bait) and Interactor B (prey)</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Affinity Capture-Luminescence</td>
+    <td>affinity captures</td>
+  </tr>
+  <tr>
+    <td>Affinity Capture-MS</td>
+    <td>affinity captures</td>
+  </tr>
+  <tr>
+    <td>Affinity Capture-RNA</td>
+    <td>affinity captures</td>
+  </tr>
+  <tr>
+    <td>Affinity Capture-Western</td>
+    <td>affinity captures</td>
+  </tr>
+  <tr>
+    <td>Far Western</td>
+    <td>captures</td>
+  </tr>
+  <tr>
+    <td>FRET</td>
+    <td>fluorescence resonance energy donor to</td>
+  </tr>
+  <tr>
+    <td>Protein-peptide</td>
+    <td>binds to peptide</td>
+  </tr>
+  <tr>
+    <td>Protein-RNA</td>
+    <td>binds to RNA</td>
+  </tr>
+  <tr>
+    <td>Two-hybrid</td>
+    <td>binds activation domain construct with</td>
+  </tr>
+</table>
+
+Use one of the Affinity Capture evidence types for
+co-immunoprecipitation.
+
+If you have done the experiment in both directions, you should curate
+two annotations to describe the interaction completely. Curate
+starting from one gene, then switch genes to annotate the reciprocal
+experiment.
+
+Other experiment types are "symmetric" and therefore only need to be
+entered once, and you can start from either of the interacting genes.
+
+<table>
+  <thead>
+    <tr>
+      <th>Evidence</th>
+      <th>Relationship between gene A and gene B products</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Co-crystal Structure</td>
+    <td>co-crystallizes with</td>
+  </tr>
+  <tr>
+    <td>Co-fractionation</td>
+    <td>co-fractionates with</td>
+  </tr>
+  <tr>
+    <td>Co-purification</td>
+    <td>co-purifies with</td>
+  </tr>
+  <tr>
+    <td>Reconstituted Complex</td>
+    <td>forms complex with</td>
+  </tr>
+  <tr>
+    <td>PCA*</td>
+    <td>interacts with</td>
+  </tr>
+</table>
+
+*Note that PCA is not exactly symmetric, since there will be one
+ N-terminal and one C-terminal reporter fusion construct, but it is
+ treated as symmetric in Canto.
