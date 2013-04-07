@@ -1259,6 +1259,7 @@ available_annotation_type_list:
     more_help_text: ~
     evidence_codes:
       - IDA
+    detailed_help_path: /docs/modification_annotation
   - name: genetic_interaction
     category: interaction
     display_name: 'genetic interaction'

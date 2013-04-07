@@ -1,0 +1,82 @@
+<!-- PAGE_TITLE: Curating Protein Modifications -->
+<p>
+A protein modification is any covalent modification or other change that
+alters the measured molecular mass of a peptide or protein amino acid residue.
+</p>
+
+<p>
+Canto uses the <a href="http://www.psidev.info/MOD">PSI-MOD</a> ontology for
+protein modification annotations. 
+</p>
+
+<p>
+When you choose 'Protein modification', you go to an ontology term search page
+that works the same way as those for GO and phenotype terms: start typing a
+term, and matching suggestions will appear.
+</p>
+
+<p>
+You may find it helpful to search for a broad term (e.g. phosphorylated,
+methylated, lysine), especially if you have trouble finding a specific term.
+</p>
+
+<p>
+After you choose a term from the autocomplete list, you will go to a page that
+shows the term definition and any more specific terms in the ontology. You can
+thus refine your search iteratively before making your final selection
+(examples of more specific terms are: O-phospho-L-serine, monomethylated
+L-lysine). Also see the hints below, which should help you search for, and
+recognize, the terms you need. Please read the definition carefully to ensure
+that it fits your results accurately and completely.
+</p>
+
+<p>
+When you have decided which term to use, click 'Proceed' on the term page. On
+the next page, select the applicable evidence from the pulldown, then
+"Proceed" again. On the final page, you can add a comment; for example, if you
+know which residues are modified, you can add a comment to indicate specific
+positions (e.g. "phosphorylated on T123"). Note that at present, Canto can
+only accept residue information in the annotation comment field or in the
+"message to curators" box (which you see when you submit your curation
+session).
+</p>
+
+<p>
+Gene products may be annotated with multiple protein modification terms.
+</p>
+
+<h4>Hints for finding useful modification terms</h4>
+<p>
+Because PSI-MOD contains a number of very specific terms that may not be
+familiar to all Canto users, PomBase curators have assembled a list of common
+modifications and the best PSI-MOD terms to use for them.
+</p>
+
+<ul>
+<li><strong>Phosphorylation:</strong> A search for "phosphorylated residue"
+will find the broadest term (MOD:00696). You can use this term directly, but
+the vast majority of phosphorylation fits the definition of "O-phosphorylated
+residue" (MOD:01455). If you know which residue(s) is/are phosphorylated, you
+can use one or more of the more specific terms. The most commonly applicable
+are:
+  <ul>
+  <li>phosphorylated serine: O-phospho-L-serine (MOD:00046)</li>
+  <li>phosphorylated threonine: O-phospho-L-threonine (MOD:00047)</li>
+  <li>phosphorylated tyrosine: O4'-phospho-L-tyrosine (MOD:00048)</li>
+  </ul>
+</li>
+<li><strong>Methylation:</strong> PSI-MOD conains many terms decribing
+methylation, for which the iterative search is particularly helpful. We
+therefore suggest that you start by searching for the most general term,
+"methylated residue" (MOD:00427). You can then work your way down to terms of
+intermediate specificity, such as "N-methylated residue" (MOD:00602),
+"methylated arginine" (MOD:00658), "methylated lysine" (MOD:00663), etc., and,
+if applicable, very detailed terms such as "N6,N6,N6-trimethyl-L-lysine"
+(MOD:00083).</li>
+<li><strong>Glycosylation:</strong> The broadest term is "glycosylated
+residue" (MOD:00693). Although many very specific terms are available in
+PSI-MOD, we anticipate that "glycosylated residue" or one of the child terms
+shown on the MOD:00693 page (e.g. "N-glycosylated residue" (MOD:00006),
+"O-glycosylated residue" (MOD:00396)) will suffice for most protein
+modification annotation in Canto.</li>
+</ul>
