@@ -1,4 +1,5 @@
 <!-- PAGE_TITLE: Gene Ontology Annotation -->
+<!-- FLAGS: use_bootstrap -->
 
 <h2>General GO annotation</h2>
 <p>There are two parts to a GO annotation: first, the association between a gene
