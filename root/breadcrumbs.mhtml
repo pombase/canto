@@ -6,8 +6,8 @@
     </a>
 % if ($current_path =~ "^/view/") {
     <div class="breadcrumbs-link">
-    <a id="breadcrumbs-docs-link"
-       href="<% $docs_uri %>" title="Go to data management pages">
+    <a id="breadcrumbs-admin-link"
+       href="<% $admin_uri %>" title="Go to data management pages">
       Admin
     </a>
     </div>
@@ -20,5 +20,5 @@ my $config = $c->config();
 my $instance_text = $config->{database_name} . ' ' . $config->{name};
 my $instance_top_uri = $c->uri_for('/');
 my $current_path = $c->local_path();
-my $docs_uri = $c->uri_for('/docs/');
+my $admin_uri = $c->uri_for('/admin/');
 </%init>
