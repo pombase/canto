@@ -1280,7 +1280,7 @@ available_annotation_type_list:
   - name: physical_interaction
     category: interaction
     display_name: 'physical interaction'
-    help_text: 'Examples: Co-purification, two-hybrid, affinity capture'
+    help_text: 'Examples: co-purification, two-hybrid, affinity capture'
     evidence_codes:
       - Affinity Capture-Luminescence
       - Affinity Capture-MS
