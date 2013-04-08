@@ -62,7 +62,7 @@ function) specific sections below for more detailed trouble shooting.
 </p>
 
 <h2>Specific branches of GO</h2>
-<h3><a name="component">Cellular Component</a></h3>
+<h3><a name="component"></a>Cellular Component</h3>
 <p>
 Cellular component describes locations, at the levels of subcellular
 structures and macromolecular complexes. Examples of cellular components
@@ -88,7 +88,7 @@ or nucleic acids.
     (example, GO:0005681, 'spliceosomal complex' or GO:0000786, 'nucleosome').</li>
 </ul>
 
-<h3><a name="function">Molecular Function</a></h3>
+<h3><a name="function"></a>Molecular Function</h3>
 <p>
 A molecular function is an activity, such as a catalytic or binding activity,
 that occurs at the molecular level. GO molecular function terms represent
@@ -137,7 +137,7 @@ its function. Only annotate direct protein binding using the GO term "protein
 binding".
 </p>
 
-<h3><a name="process">Biological Process</a></h3>
+<h3><a name="process"></a>Biological Process</h3>
 <p>
 A biological process is series of events accomplished by one or more ordered
 assemblies of molecular functions. It can be difficult to distinguish between
