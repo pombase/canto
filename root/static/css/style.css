@@ -53,6 +53,13 @@ a:link:active { text-decoration:none }
   margin: 5px;
   margin-bottom: 25px;
 }
+.docs th {
+  text-align: left;
+}
+.docs table {
+   width: auto;
+   margin: 10px;
+}
 
 .canto-front-page .footer .sponsor {
   float: right;

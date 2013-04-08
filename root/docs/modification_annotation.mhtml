@@ -1,4 +1,7 @@
 <!-- PAGE_TITLE: Curating Protein Modifications -->
+<!-- FLAGS: use_bootstrap -->
+
+
 <p>
 A protein modification is any covalent modification or other change that
 alters the measured molecular mass of a peptide or protein amino acid residue.

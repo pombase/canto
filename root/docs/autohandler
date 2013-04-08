@@ -41,8 +41,9 @@ $hide_header => 0
   </div>
 % }
       <div class="clearall"></div>
+      <div class="docs">
 % $m->call_next;
-
+      </div>
     </div>
     <& footer.mhtml &>
   </body>
