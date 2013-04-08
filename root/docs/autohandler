@@ -19,6 +19,8 @@ $notice => undef
 % }
 
     <div class="container-fluid" id="content">
+<& breadcrumbs.mhtml &>
+
     <span id="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
 
 <& /err_mess_notice.mhtml, error => $error, message => $message, notice => $notice &>

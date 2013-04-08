@@ -1,18 +1,20 @@
 <div id="breadcrumbs">
+% if ($current_path =~ "^/docs/") {
   <div class="breadcrumbs-link">
     <a id="breadcrumbs-home-link"
        href="<% $instance_top_uri %>" title="Go to <% $instance_text %>">
       <% $instance_text %>
     </a>
-% if ($current_path =~ "^/view/") {
-    <div class="breadcrumbs-link">
-    <a id="breadcrumbs-docs-link"
-       href="<% $docs_uri %>" title="Go to data management pages">
-      Admin
+%   if ($current_path ne "/docs/" && $current_path ne "/docs/index") {
+  <div class="breadcrumbs-link">
+    <a id="breadcrumbs-home-link"
+       href="<% $docs_uri %>" title="Go to documentation">
+      Documentation index
     </a>
-    </div>
-% }
   </div>
+%   }
+  </div>
+% }
 </div>
 
 <%init>
