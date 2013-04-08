@@ -1,11 +1,11 @@
 <div id="breadcrumbs">
-% if ($current_path =~ "^/docs/") {
+% if ($current_path =~ m|^/docs/| and $current_path !~ m|/docs/canto_front|) {
   <div class="breadcrumbs-link">
     <a id="breadcrumbs-home-link"
        href="<% $instance_top_uri %>" title="Go to <% $instance_text %>">
       <% $instance_text %>
     </a>
-%   if ($current_path ne "/docs/" && $current_path ne "/docs/index") {
+%   if ($current_path ne "/docs/" && $current_path !~ m|/docs/index/?$|) {
   <div class="breadcrumbs-link">
     <a id="breadcrumbs-home-link"
        href="<% $docs_uri %>" title="Go to documentation">
