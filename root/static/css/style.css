@@ -29,6 +29,10 @@ a:link:active { text-decoration:none }
   font-size: 50px;
 }
 
+.canto-front-page #curs-contact-page-link {
+  float: left;
+  padding: 10px;
+}
 .canto-front-page .footer {
   margin-top: 40px;
 }

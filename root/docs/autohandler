@@ -5,6 +5,7 @@ $sub_title => undef
 $error => undef
 $message => undef
 $notice => undef
+$hide_header => 0
 </%args>
 
 <!DOCTYPE HTML>
@@ -13,7 +14,7 @@ $notice => undef
     <& head.mhtml, title => $title &>
   </head>
   <body>
-% if (!$st->{hide_header}) {
+% if (!$hide_header) {
 % # hide the head on the Canto front page
     <& header.mhtml &>
 % }
@@ -21,11 +22,13 @@ $notice => undef
     <div class="container-fluid" id="content">
 <& breadcrumbs.mhtml &>
 
+% if (!$hide_header) {
     <span id="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
+% }
 
 <& /err_mess_notice.mhtml, error => $error, message => $message, notice => $notice &>
 
-% if ($show_title) {
+% if ($show_title && !$hide_header) {
   <div id="canto-title-section">
     <h1>
       <% $title %>
