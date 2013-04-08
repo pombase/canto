@@ -717,7 +717,7 @@ $(document).ready(function() {
           var $link = $('#pubmed-id-pub-link a');
           if ($link.size()) {
             var href = $link.attr('href');
-            href = href.replace(new RegExp("(.*)/(.*)%3F(.*)"), "$1/" + data.uniquename + "?$3");
+            href = href.replace(new RegExp("(.*)/(.*)%3F(.*)"), "$1/" + data.pub.uniquename + "?$3");
             $link.attr('href', href);
           }
         } else {
