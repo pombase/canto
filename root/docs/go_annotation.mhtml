@@ -129,7 +129,9 @@ polymerase II transcription factor activity'. The appropriate term would be
 situation, if the author states that a protein is a serine/threonine/tyrosine
 kinase, but only shows experimental evidence for serine and threonine, the
 curator can only annotate to 'protein serine/threonine kinase activity'.
-•Annotating to 'protein binding' (GO:0005515), has to be done with caution as
+</p>
+<p>
+Annotating to 'protein binding' (GO:0005515), has to be done with caution as
 most proteins within the cell bind to other proteins at one time or another.
 Keep in mind is whether the gene product being annotated is accomplishing a
 biological purpose by binding to another protein: if so, protein binding is
@@ -184,7 +186,8 @@ not always imply that the genes are directly involved in that process. The
 for the response to occur (e.g. production of a gene product or hormone, or
 initiation of cell division). If nothing else is known about the gene product,
 make a phenotype annotation to "increased RNA level" or one of its children
-•Annotating to regulation terms: Regulation of a process is defined as any
+</p>
+<p>Annotating to regulation terms: Regulation of a process is defined as any
 pathway that modulates the frequency, rate or extent of that process. To
 decide if the gene product participates directly in a process or regulates the
 process, consider: does the gene product being annotated perform within the
