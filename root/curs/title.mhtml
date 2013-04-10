@@ -5,7 +5,7 @@ $title
 <h1 id="curs-page-description">
   <% $title %>
 <div class="curs-user-and-reassign">
-% if (defined $submitter_email) {
+% if (defined $submitter_email && $show_curator_in_title) {
 <span class="useridentifier"> 
   Curated by: <% $submitter_email %>
 </span>
@@ -25,6 +25,8 @@ my $show_reassign_button = 1;
 if ($current_path_uri =~ m:assign_session|session_reassigned:) {
   $show_reassign_button = 0;
 }
+
+my $show_curator_in_title = $st->{show_curator_in_title};
 
 my $submitter_email = $st->{submitter_email};
 my $submitter_name = $st->{submitter_name};

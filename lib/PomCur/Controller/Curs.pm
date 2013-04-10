@@ -192,6 +192,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{message_to_curators} =
     $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
 
+  # enabled by default and disabled on /session_reassigned page
+  $st->{show_curator_in_title} = 1;
+
   $st->{gene_count} = $self->get_ordered_gene_rs($schema)->count();
 
   my $use_dispatch = 1;
@@ -2764,7 +2767,7 @@ sub session_reassigned : Chained('top') Args(0)
   my $st = $c->stash();
 
   $st->{title} = 'Session reassigned';
-  $st->{show_title} = 0;
+  $st->{show_curator_in_title} = 0;
   $st->{template} = 'curs/session_reassigned.mhtml';
 }
 
