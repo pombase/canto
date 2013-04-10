@@ -1,0 +1,13 @@
+<%args>
+$title
+$right_title => undef
+</%args>
+
+<h1 id="page-description">
+  <% $title %>
+</h1>
+% if (defined $right_title) {
+  <span id="right-title">
+    <% $right_title %>
+  </span>
+% }

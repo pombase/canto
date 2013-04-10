@@ -23,7 +23,7 @@ $hide_header => 0
 <& breadcrumbs.mhtml &>
 
 % if (!$hide_header) {
-    <span id="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
+    <span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
 % }
 
 <& /err_mess_notice.mhtml, error => $error, message => $message, notice => $notice &>

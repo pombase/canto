@@ -128,8 +128,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $root_uri = $c->uri_for($root_path);
   $st->{curs_root_uri} = $root_uri;
 
-  $st->{page_description_id} = 'curs-page-description';
-
   my $config = $c->config();
 
   $st->{annotation_types} = $config->{annotation_types};

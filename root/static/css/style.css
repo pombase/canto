@@ -29,7 +29,7 @@ a:link:active { text-decoration:none }
   font-size: 50px;
 }
 
-.canto-front-page #curs-contact-page-link {
+.canto-front-page .curs-contact-page-link {
   float: left;
   padding: 10px;
 }
@@ -191,13 +191,15 @@ div#footer .sponsor {
   display: inline;
 }
 #menu ul li a {
-  float: left; text-decoration: none;
+  float: left;
+  text-decoration: none;
   color: white;
   padding: 4px 10px;
   white-space: nowrap;
 }
 #menu ul li span {
-  float: left; text-decoration: none;
+  float: left;
+  text-decoration: none;
   padding: 4px 10px;
   color: #666;
 }
@@ -221,7 +223,11 @@ div#footer .sponsor {
   display: block;
   margin: 5px 0px 15px 0px;
   clear: both;
-  float: left;
+  text-align: center;
+  width: auto;
+}
+#title-nav {
+  position: relative;
 }
 
 #canto-title-section {
@@ -238,13 +244,20 @@ div#footer .sponsor {
   display: block;
   padding: 5px;
   float: right;
+  font-size: 120%;
 }
 
 #curs-page-description {
-  font-size: 130%;
+  font-size: 140%;
   padding: 7px;
   display: block;
   text-align: center;
+}
+#curs-page-description .curs-user-and-reassign {
+  font-size: 70%;
+}
+#curs-page-description .curs-reassign {
+  margin-left: 10px;
 }
 
 #breadcrumb-previous-button {
@@ -254,9 +267,9 @@ div#footer .sponsor {
 #breadcrumbs {
   margin: 0px;
   clear: both;
-  float: left;
-  right: 0px;
+  left: 0px;
   top: 0px;
+  position: absolute;
   font-size: 90%;
   margin-left: -10px;
   white-space: nowrap;
@@ -290,10 +303,11 @@ div#footer .sponsor {
   background-color:#0b75b2;
 }
 
-#curs-contact-page-link {
+#title-nav .curs-contact-page-link {
   margin-right: 20px;
-  clear: right;
-  float: right;
+  position: absolute;
+  right: 0px;
+  top: 0px;
   font-size: 90%;
   white-space: nowrap;
 }
