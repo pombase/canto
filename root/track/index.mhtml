@@ -73,7 +73,7 @@ $model
 % }
   </div>
   <div class="row-fluid">
-    <div class="span4">
+    <div class="span8">
 <& /reports.mhtml, model => $model &>
       </div>
   </div>
