@@ -692,6 +692,9 @@ class_info:
     curatable_publications_with_sessions:
       extends: pub
       constraint: "pub_id in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
+    publications_with_multiple_sessions:
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and exists (select * from curs c1, curs c2 where c1.pub = me.pub_id and c2.pub = me.pub_id and c1.curs_id <> c2.curs_id)"
     curatable_publications_without_sessions:
       extends: pub
       constraint: "pub_id not in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -881,6 +884,7 @@ reports:
                    - report: publications_with_active_sessions
                    - report: publications_with_session_needing_approval
                    - report: publications_with_approved_session
+                   - report: publications_with_multiple_sessions
                 - report: curatable_publications_without_sessions
                 - report: curatable_publications_with_no_annotatable_genes
             - report: high_priority_publications
