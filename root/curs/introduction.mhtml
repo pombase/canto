@@ -24,8 +24,8 @@ assistance at any time.
     </p>
 
     <p>
-You may wish to read the <a href="<% $c->uri_for('/local/canto_introduction') %>">
-<% $c->config()->{name} %> introduction</a> if you are new to community
+You may wish to read the <a href="<% $c->uri_for('/docs/') %>">
+<% $c->config()->{name} %> documentation</a> if you are new to community
 curation.
   </p>
 
