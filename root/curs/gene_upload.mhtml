@@ -10,8 +10,8 @@ $title
   </div>
   <div class="curs-box-body">
 <div>
-Please enter the <% $systematic_identifier_desc %> (eg. <% $example_identifier %>)
-or the <% $primary_name_desc %> (eg. <% $example_name %>) of the genes
+Please enter the <% $systematic_identifier_desc |n %> (eg. <% $example_identifier %>)
+or the <% $primary_name_desc |n %> (eg. <% $example_name %>) of the genes
 referred to in <span class="publication-name"><% $uniquename %></span>
 </div>
 
