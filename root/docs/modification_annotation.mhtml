@@ -13,7 +13,7 @@ protein modification annotations.
 </p>
 
 <p>
-When you choose 'Protein modification', you go to an ontology term search page
+When you choose "Protein modification", you go to an ontology term search page
 that works the same way as those for GO and phenotype terms: start typing a
 term, and matching suggestions will appear.
 </p>
@@ -34,7 +34,7 @@ that it fits your results accurately and completely.
 </p>
 
 <p>
-When you have decided which term to use, click 'Proceed' on the term page. On
+When you have decided which term to use, click "Proceed" on the term page. On
 the next page, select the applicable evidence from the pulldown, then
 "Proceed" again. On the final page, you can add a comment; for example, if you
 know which residues are modified, you can add a comment to indicate specific
