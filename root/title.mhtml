@@ -3,9 +3,9 @@ $title
 $right_title => undef
 </%args>
 
-<h1 id="page-description">
+<div id="page-description">
   <% $title %>
-</h1>
+</div>
 % if (defined $right_title) {
   <span id="right-title">
     <% $right_title %>

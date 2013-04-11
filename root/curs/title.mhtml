@@ -2,7 +2,7 @@
 $title
 </%args>
 
-<h1 id="curs-page-description">
+<div id="curs-page-description">
   <% $title %>
 <div class="curs-user-and-reassign">
 % if (defined $submitter_email && $show_curator_in_title) {
@@ -14,7 +14,7 @@ $title
 %   }
 % }
 </div>
-</h1>
+</div>
 
 <%init>
 my $st = $c->stash();
