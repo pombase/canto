@@ -137,7 +137,7 @@ sub _cached_lookup
     };
   }
 
-  return Dump([@ret]);
+  return Dump(scalar(@ret), [@ret]);
 }
 
 =head2
