@@ -12,6 +12,10 @@ $class_info
 </div>
 </&>
 
+<button type="button" class="confirm-delete curs-finish-button"
+        href="<% $c->uri_for('/tools/remove_curs/' . $object->curs_key()) %>">
+  Remove this session</button>
+
 <& /view/inline_list.mhtml, config_name => 'person', rs => $current_curator_rs,
                        list_title => 'Current curator of this session' &>
 <& /view/inline_list.mhtml, config_name => 'person', rs => $curator_rs,

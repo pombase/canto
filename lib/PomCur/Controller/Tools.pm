@@ -670,8 +670,36 @@ sub create_session : Local Args(0)
     }
   }
 
-
   $c->res->redirect($return_path);
+  $c->detach();
+}
+
+=head2 remove_curs
+
+ Function: remove the curs given by the argument curs_key and remove its cursdb
+ Args    : $curs_key = the curs key hash
+ Return  : nothing
+
+=cut
+
+sub remove_curs : Local Args(1)
+{
+  my ($self, $c, $curs_key) = @_;
+
+  my $st = $c->stash();
+
+  my $track_schema = $c->schema('track');
+  my $curs = $track_schema->find_with_type('Curs',
+                                           {
+                                             curs_key => $curs_key,
+                                           });
+  my $pub = $curs->pub();
+
+  $c->flash()->{message} = "Deleted session: $curs_key";
+
+  PomCur::Track::delete_curs($c->config(), $track_schema, $curs_key);
+
+  $c->res->redirect($c->uri_for('/view/object/pub/' . $pub->pub_id(), { model => 'track'} ));
   $c->detach();
 }
 
