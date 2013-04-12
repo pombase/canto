@@ -35,7 +35,7 @@ under the same terms as Perl itself.
 
 =cut
 
-use perl5i::2;
+use warnings;
 use Moose::Role;
 
 sub check_access
