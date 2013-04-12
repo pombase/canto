@@ -11,6 +11,10 @@ use Try::Tiny;
 
 use PomCur::MailSender;
 
+use Moose;
+
+with 'PomCur::Role::CheckACL';
+
 sub _get_status_cv
 {
   my $schema = shift;
@@ -685,6 +689,10 @@ sub create_session : Local Args(0)
 sub remove_curs : Local Args(1)
 {
   my ($self, $c, $curs_key) = @_;
+
+  if (!$self->check_access($c)->{delete}) {
+    die "insufficient privileges to remove a session";
+  }
 
   my $st = $c->stash();
 

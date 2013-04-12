@@ -42,7 +42,11 @@ use Carp;
 
 use base 'Catalyst::Controller::HTML::FormFu';
 
+use Moose;
+
 use PomCur::DBLayer::Path;
+
+with 'PomCur::Role::CheckACL';
 
 my $MAX_VALUE_LENGTH = 50;
 
@@ -614,9 +618,10 @@ sub _update_object {
 
 sub _check_auth
 {
+  my $self = shift;
   my $c = shift;
 
-  if (!$c->user_exists() || $c->user()->role()->name() ne 'admin') {
+  if (!$self->check_access($c)->{edit}) {
     $c->stash()->{error} = "Log in to allow editing";
     $c->forward('/front');
     $c->detach();
@@ -661,7 +666,7 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 
   my $st = $c->stash;
 
-  _check_auth($c);
+  $self->_check_auth($c);
 
   if (defined $object_id) {
     my $class_name = $schema->class_name_of_table($type);
@@ -740,7 +745,7 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 sub create : Global Args(1) {
   my ($self, $c, $type) = @_;
 
-  _check_auth($c);
+  $self->_check_auth($c);
 
   my %params = %{$c->request()->params()};
 
