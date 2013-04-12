@@ -795,19 +795,25 @@ $(document).ready(function() {
         $('<div id="confirm-dialog" title="Confirmation needed">' + prompt + '</div>');
       $('body').append(confirmDialog);
     }
-    var button_conf = new Object();
-    button_conf[confirm_button_label] = function() {
-      window.location.href = targetUrl;
-    };
-    button_conf[cancel_button_label] = function() {
-      $(this).dialog("close");
-      $(this).remove();
-    };
 
     confirmDialog.dialog({
       autoOpen: false,
       modal: true,
-      buttons : button_conf
+      buttons : [
+        {
+          text: cancel_button_label,
+          click: function() {
+            $(this).dialog("close");
+            $(this).remove();
+          }
+        },
+        {
+          text: confirm_button_label,
+          click: function() {
+            window.location.href = targetUrl;
+          }
+        }
+      ]
     });
 
     confirmDialog.dialog("open");
