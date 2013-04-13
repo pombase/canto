@@ -150,6 +150,10 @@ sub _do_local_and_docs
       }
     }
     $st->{hide_header} = $hide_header;
+    if ($hide_header) {
+      # no login button, so we can cache it
+      $c->cache_page(300);
+    }
     $st->{hide_footer} = $hide_footer;
     $st->{use_bootstrap} = $use_bootstrap;
     $st->{template} = "$docs_path/$template_file_name";

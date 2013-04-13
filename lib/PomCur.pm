@@ -13,6 +13,8 @@ use Catalyst qw/ConfigLoader
                 Authentication
                 Authorization::Roles
                 Authorization::ACL
+                Cache
+                PageCache
                 Session
                 Session::State::Cookie
                 Session::Store::DBI
@@ -48,9 +50,17 @@ __PACKAGE__->config(name => 'PomCur',
                         'static'
                       ],
                     },
+                    'Plugin::PageCache' => {
+                      set_http_headers => 1,
+                      disable_index => 1,
+                      debug => 1,
+                    },
                    );
 
 
+__PACKAGE__->config->{'Plugin::Cache'}{backend} = {
+  class => "Cache::Memory",
+};
 
 extends 'Catalyst';
 
