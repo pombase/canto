@@ -2641,8 +2641,8 @@ sub finish_form : Chained('top') Args(0)
     if (!$st->{is_admin_session}) {
       my $curs_key = $st->{curs_key};
 
-      _send_admin_mail($self, $c,
-                       subject => "Session $curs_key ready for approval");
+      _send_mail($self, $c, to => 'admin',
+                 subject => "Session $curs_key ready for approval");
     }
     $self->state()->set_state($schema, NEEDS_APPROVAL, $force);
   }
@@ -2737,7 +2737,8 @@ sub _assign_session :Private
 
     if ($reassign) {
       my $subject = "Session $curs_key reassigned to: $submitter_name <$submitter_email>";
-      _send_admin_mail($self, $c, subject => $subject);
+      _send_mail($self, $c, subject => $subject, to => 'admin');
+      _send_mail($self, $c, subject => $subject, to => $submitter_email);
 
       _redirect_and_detach($c, 'session_reassigned');
     } else {
@@ -2837,12 +2838,14 @@ sub _start_approval
 
 }
 
-sub _send_admin_mail
+sub _send_mail
 {
   my $self = shift;
   my $c = shift;
 
   my %args = @_;
+
+  my $dest_email = $args{to};
 
   my $st = $c->stash();
 
@@ -2855,8 +2858,14 @@ sub _send_admin_mail
   my $config = $c->config();
   my $mail_sender = PomCur::MailSender->new(config => $config);
 
-  $mail_sender->send_to_admin(subject => $args{subject},
-                              body => $body);
+  if ($dest_email eq 'admin') {
+   $mail_sender->send_to_admin(subject => $args{subject},
+                                body => $body);
+  } else {
+    $mail_sender->send(to => $dest_email,
+                       subject => $args{subject},
+                       body => $body);
+  }
 }
 
 sub begin_approval : Chained('top') Args(0)
