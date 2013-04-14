@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More tests => 4;
+use MooseX::Test::Role;
 
 use PomCur::TestUtil;
 
@@ -16,8 +17,8 @@ is(@curs_objects, 1);
 my $curs_key = $curs_objects[0]->curs_key();
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
-my $zip_data =
-  PomCur::Controller::Curs::get_all_annotation_zip($config, $curs_schema);
+my $mock_formatter = consumer_of('PomCur::Role::GAFFormatter');
+my $zip_data = $mock_formatter->get_all_annotation_zip($config, $curs_schema);
 
 use IO::String;
 
