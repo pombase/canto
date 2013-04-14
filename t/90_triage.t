@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 30;
+use Test::More tests => 31;
 
 use Plack::Test;
 use Plack::Util;
@@ -114,6 +114,8 @@ test_psgi $app, sub {
                      submit => $curatable_cvterm->name(),
                      'experiment-type' => [$curatable_cvterm->name()],
                      'triage-curation-priority' => [$low_cvterm->cvterm_id()],
+                     'triage-corresponding-author-add-name' => 'Val Wood',
+                     'triage-corresponding-author-add-email' => 'val@test.com',
                     );
 
     my $req = HTTP::Request->new(GET => $uri);
@@ -154,6 +156,8 @@ test_psgi $app, sub {
                      submit => $curatable_cvterm->name(),
                      'experiment-type' => [$curatable_cvterm->name()],
                      'triage-curation-priority' => [$high_cvterm->cvterm_id()],
+                     'triage-corresponding-author-add-name' => 'Val Wood',
+                     'triage-corresponding-author-add-email' => 'test@test.com',
                     );
 
     my $req = HTTP::Request->new(GET => $uri);
@@ -168,6 +172,10 @@ test_psgi $app, sub {
     $cookie_jar->add_cookie_header($redirect_req);
     my $redirect_res = $cb->($redirect_req);
 
+    my $content = $redirect_res->content();
+
+    unlike($content, qr|You must choose a corresponding author|);
+
     # refetch to get database changes
     $first_pub = $schema->find_with_type('Pub', $first_pub->pub_id());
 
@@ -181,8 +189,6 @@ test_psgi $app, sub {
     is ($pubprops[0]->type()->name(), "experiment_type");
 
     $second_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
-
-    my $content = $redirect_res->content();
 
     unlike($content, $triaging_re);
     my $pub_page_re = "Details for publication: " . $first_pub->uniquename();
@@ -210,8 +216,10 @@ test_psgi $app, sub {
 
   {
     my $uri = new URI($triage_url);
+    my $person = $schema->resultset('Person')->first();
     $uri->query_form('triage-pub-id' => $second_pub->pub_id(),
                      submit => $curatable_cvterm->name(),
+                     'triage-corresponding-author-person-id' => $person->person_id(),
                     );
     my $req = HTTP::Request->new(GET => $uri);
     $cookie_jar->add_cookie_header($req);
