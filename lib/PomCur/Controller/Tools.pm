@@ -142,11 +142,13 @@ sub triage :Local {
           $c->flash()->{error} =
             "No email address given for new user: $new_name";
           $c->res->redirect($redirect_uri);
+          $c->detach();
         }
         if (length $new_name == 0) {
           $c->flash()->{error} =
             "No name given for new email: $new_email";
           $c->res->redirect($redirect_uri);
+          $c->detach();
         }
         my $load_util = LoadUtil->new(schema => $schema);
         my $user_types_cv = $load_util->find_cv('PomCur user types');
