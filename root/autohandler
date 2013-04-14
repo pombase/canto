@@ -24,11 +24,10 @@ $is_admin_user
 <& breadcrumbs.mhtml &>
 <span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
 
+<& title.mhtml, show_title => $show_title, title => $title, right_title => $right_title &>
+
 <& /err_mess_notice.mhtml, error => $error, message => $message, notice => $notice &>
 
-% if ($show_title) {
-<& title.mhtml, title => $title, right_title => $right_title &>
-% }
       </div>
       <div class="clearall"></div>
 % $m->call_next;

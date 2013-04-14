@@ -1,9 +1,13 @@
 <%args>
 $title
+$show_title
 </%args>
 
 <div id="curs-page-description">
+% if ($show_title) {
   <% $title %>
+% }
+</div>
 <div class="curs-user-and-reassign">
 % if (defined $submitter_email && $show_curator_in_title) {
 <span class="useridentifier"> 

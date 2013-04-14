@@ -226,20 +226,11 @@ div#footer .sponsor {
   top: 0px;
   margin: auto;
   margin-top: 0px;
-  font-size: 1.5em;
+  font-size: 2em;
   font-weight: bold;
 }
 #title-nav {
   position: relative;
-}
-
-#canto-title-section {
-  padding: 7px;
-  margin: 5px 0px 15px 0px;
-  display: block;
-  text-align: center;
-  clear: right;
-  font-size: 120%;
 }
 
 #right-title {
@@ -252,6 +243,14 @@ div#footer .sponsor {
 
 #curs-page-description .curs-user-and-reassign {
   font-size: 70%;
+}
+#canto-sub-title, .curs-user-and-reassign {
+  display: block;
+  text-align: center;
+  width: 50%;
+  top: 0px;
+  margin: auto;
+  margin-top: 8px;
 }
 #curs-page-description .curs-reassign {
   margin-left: 10px;

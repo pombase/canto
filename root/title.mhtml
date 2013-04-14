@@ -1,8 +1,10 @@
 <%args>
 $title
+$show_title
 $right_title => undef
 </%args>
 
+% if ($show_title) {
 <div id="page-description">
   <% $title %>
 </div>
@@ -10,4 +12,5 @@ $right_title => undef
   <span id="right-title">
     <% $right_title %>
   </span>
+% }
 % }

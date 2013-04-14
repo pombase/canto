@@ -20,6 +20,7 @@ $hide_header => 0
 % }
 
     <div class="container-fluid" id="content">
+      <div id="title-nav">
 <& breadcrumbs.mhtml &>
 
 % if (!$hide_header) {
@@ -29,10 +30,9 @@ $hide_header => 0
 <& /err_mess_notice.mhtml, error => $error, message => $message, notice => $notice &>
 
 % if ($show_title && !$hide_header) {
-  <div id="canto-title-section">
-    <h1>
+  <div id="curs-page-description">
       <% $title %>
-    </h1>
+  </div>
 %   if (defined $sub_title) {
     <div id="canto-sub-title">
       <% $sub_title |n %>
@@ -40,6 +40,7 @@ $hide_header => 0
 %   }
   </div>
 % }
+</div>
       <div class="clearall"></div>
       <div class="docs">
 % $m->call_next;
