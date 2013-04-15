@@ -22,10 +22,8 @@ and protein modifications. See the <a href="<% $c->uri_for('/docs/index') %>">he
 %     my $curs_key = $session->{key};
 %     my $pubid = $session->{pubid};
 <li><a href='<% $c->uri_for("/curs/$curs_key") %>'"><% $pubid %></a></li>
+%   }
   </ul>
-% }
-
-
 % }
 
 
