@@ -2735,13 +2735,15 @@ sub _assign_session :Private
 
     $self->state()->store_statuses($schema);
 
+    my $subject = "A PomBase publication has been assigned to you for community curation";
+
     if ($reassign) {
-      my $subject = "Session $curs_key reassigned to: $submitter_name <$submitter_email>";
       _send_mail($self, $c, subject => $subject, to => 'admin');
       _send_mail($self, $c, subject => $subject, to => $submitter_email);
 
       _redirect_and_detach($c, 'session_reassigned');
     } else {
+      _send_mail($self, $c, subject => $subject, to => $submitter_email);
       _redirect_and_detach($c);
     }
   }
@@ -2849,17 +2851,16 @@ sub _send_mail
 
   my $st = $c->stash();
 
-  my $body = "Curator: " . $st->{submitter_name} . " <" .
-    $st->{submitter_email} .
-    ">\nPublication: " . $st->{pub}->uniquename() . " - " .
+  my $body = "Publication: " . $st->{pub}->uniquename() . " - " .
     $st->{pub}->title() . "\n" .
-    "Session: " . $st->{curs_root_uri} . "\n";
+    "Link to session: " . $st->{curs_root_uri} . "\n";
 
   my $config = $c->config();
   my $mail_sender = PomCur::MailSender->new(config => $config);
 
   if ($dest_email eq 'admin') {
-   $mail_sender->send_to_admin(subject => $args{subject},
+    $body .= "Curator: " . $st->{submitter_name} . " <" . $st->{submitter_email} . ">\n";
+    $mail_sender->send_to_admin(subject => $args{subject},
                                 body => $body);
   } else {
     $mail_sender->send(to => $dest_email,
