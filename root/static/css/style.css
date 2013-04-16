@@ -44,6 +44,9 @@ a:link:active { text-decoration:none }
   font-size: 9pt;
   line-height: 2.2ex;
 }
+.docs, #content {
+  margin: 0 8px 0 8px;
+}
 .docs .row-fluid div {
   clear: right;
 }
