@@ -2745,7 +2745,7 @@ sub _assign_session :Private
 
       _redirect_and_detach($c, 'session_reassigned');
     } else {
-      my $subject = "Link forcurate $pub_uniquename in PomBase";
+      my $subject = "Link for curating $pub_uniquename in PomBase";
       _send_mail($self, $c, subject => $subject, to => $submitter_email);
       _redirect_and_detach($c);
     }
