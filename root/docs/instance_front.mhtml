@@ -2,7 +2,6 @@
 <!-- PAGE_SUBTITLE: Curate genetic and molecular data from your publications into <a href="@@database_url@@">@@database_name@@</a>. -->
 <!-- FLAGS: use_bootstrap -->
 
-<div class="docs">
 <div class="row-fluid">
 <div class="span7">
 <h3>Curate a paper</h3>
@@ -43,7 +42,6 @@ by viewing our help pages:
 </p>
 </div>
 % }
-</div>
 </div>
 
 % if (defined $config->{instance_front_mhtml}) {
