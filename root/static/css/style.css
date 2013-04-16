@@ -222,12 +222,13 @@ div#footer .sponsor {
 #page-description, #curs-page-description {
   display: block;
   text-align: center;
-  width: 40%;
+  width: 55%;
   top: 0px;
   margin: auto;
   margin-top: 0px;
   font-size: 2em;
   font-weight: bold;
+  line-height: 1em;
 }
 #title-nav {
   position: relative;
