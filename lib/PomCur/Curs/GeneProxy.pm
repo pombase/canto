@@ -101,6 +101,10 @@ sub _build_gene_data
       $primary_identifier;
   }
 
+  if (@found_genes == 0) {
+    croak "lookup failed for gene: $primary_identifier";
+  }
+
   return $found_genes[0];
 }
 
