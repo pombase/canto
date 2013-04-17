@@ -43,6 +43,13 @@ view_options:
 email:
   from_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
   admin_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
+  templates:
+    session_assigned:
+      subject: "email_templates/generic/session_assigned_subject.mhtml"
+      body: "email_templates/generic/session_assigned_body.mhtml"
+    session_reassigned:
+      subject: "email_templates/generic/session_reassigned_subject.mhtml"
+      body: "email_templates/generic/session_reassigned_body.mhtml"
 
 # see PomCur::Meta::Util::initialise_core_data()
 db_initial_data:

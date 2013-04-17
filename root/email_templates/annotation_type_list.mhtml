@@ -1,0 +1,11 @@
+<%args>
+$config
+</%args>
+
+% for my $an_type (@annotation_type_list) {
+<% $an_type->{display_name} %>
+% }
+
+<%init>
+my @annotation_type_list = @{$config->{annotation_type_list}};
+</%init>

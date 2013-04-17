@@ -1,0 +1,40 @@
+<%args>
+$config
+$publication_uniquename
+$publication_title
+$session_link
+$curator_name
+$help_index
+</%args>
+Dear <% $curator_name %>,
+
+The curation link is:
+
+Congratulations on the recent publication of your paper,
+<% $publication_uniquename %> - "<% $publication_title %>".
+We invite you to contribute annotations based on this paper.
+
+Your curation link is:
+
+<% $session_link %>
+
+When you follow the above link and sign in, you will be guided step-by-step
+though the annotation process. You can annotate these data types in the tool:
+
+<& ../annotation_type_list.mhtml, config => $config &>
+
+Help is available on each page, and you can also read
+the Canto manual (<% $help_index %>) or contact
+the help desk (<% $config->{contact_email}->{address} %>)
+for assistance at any time. You will also have an opportunity to provide any
+data that the tool does not capture so that curators can include it with your
+curation.
+
+The curation link will work indefinitely, so you can leave and return to the
+same URL as often as you want. You can also invite a co-author to help curate
+the paper by changing the "session assignment" before submitting your
+annotations.
+
+We greatly appreciate your contribution.
+
+<% $session_link %>
