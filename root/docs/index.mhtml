@@ -86,5 +86,4 @@ for the curators (this is optional).
 
 <%init>
 my $config = $c->config();
-my @annotation_type_list = @{$c->config()->{annotation_type_list}};
 </%init>
