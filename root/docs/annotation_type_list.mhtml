@@ -8,9 +8,7 @@
 %   } else {
     <span class="canto-type-list-name"><% $an_type->{display_name} %></span>:
 %   }
-%   if ($show_help_text) {
     <span class="canto-type-list-def"><% $an_type->{help_text} // '' %></span>
-%   }
   </li>
 % }
 </ul>
