@@ -159,16 +159,30 @@ may result in the same phenotype). The allele box contain several fields:</p>
 <h2>Notes on some common phenotypes</h2>
 <ul>
   <li>
-    <h3>Slow cell growth, decreased cell density and
-      decreased cell growth</h3>
+    <h3>Cell growth vs. cell population growth</h3>
     <p>
-    "Slow cell growth" refers specifically to when the rate of growth (slope)
-    is decreased. "Decreased cell density in stationary phase" refers to when
-    a population reaches stationary phase at, and maintains, a lower cell
-    density than wild type (the rate of growth may still be the same as
-    wild-type). An allele may be annotated to both terms. If you do not know
-    which of these is decreased (typically if cells are grown on agar plates
-    for a number of days and then observed) use "decreased cell growth".
+    Most experiments that measure "growth" observe a population of
+    cells, such as a culture in liquid medium or a colony on a
+    plate. For these experimens, use one or more of the "cell
+    population growth" terms. In contrast, terms such as "normal cell
+    growth" refer specifically to growth in the sense of an increase
+    in cell size. Also see "Slow growth, decreased cell density and
+    decreased growth" below.
+    </p>
+  </li>
+
+  <li>
+    <h3>Slow growth, decreased cell density and decreased growth</h3>
+    <p>
+    "Slow cell population growth" refers specifically to when the rate
+    of growth (slope) of a cell population is decreased. "Decreased
+    cell density in stationary phase" refers to when a population
+    reaches stationary phase at, and maintains, a lower cell density
+    than wild type (the rate of growth may still be the same as
+    wild-type). An allele may be annotated to both terms. If you do
+    not know which of these is decreased (typically if cells are grown
+    on agar plates for a number of days and then observed) use
+    "decreased cell population growth".
     </p>
   </li>
 
