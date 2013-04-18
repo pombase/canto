@@ -44,6 +44,9 @@ email:
   from_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
   admin_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
   templates:
+    session_accepted:
+      subject: "email_templates/generic/session_accepted_subject.mhtml"
+      body: "email_templates/generic/session_accepted_body.mhtml"
     session_assigned:
       subject: "email_templates/generic/session_assigned_subject.mhtml"
       body: "email_templates/generic/session_assigned_body.mhtml"

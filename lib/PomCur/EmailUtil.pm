@@ -64,7 +64,7 @@ sub _process_template
 
 =head2 make_email_contents
 
- Usage   : my ($subject, $body) = $self->make_email_contents($type, %args);
+ Usage   : my ($subject, $body) = $email_util->make_email_contents($type, %args);
  Function: Return the subject and body text to send to users in various
            situations
  Args    : $type - the type of email to compose, one of:
@@ -75,6 +75,7 @@ sub _process_template
                                          email address
            %args - parameters that can be use in the templates:
                     - session_link - full URL of the session
+                    - curator_name - the user currently curating that session
                     - publication_uniquename - the PMID ID of the publication
                     - publication_title - the title of the publication
                     - help_index - the URL of the documentation
@@ -116,7 +117,9 @@ sub make_email_contents
   $args{existing_annotation_count} = $all_existing_annotations_count;
 
   my $subject = $self->_process_template($interp, $subject_component_path, %args);
-  chomp $subject;
+  $subject =~ s/^\n+//g;
+  $subject =~ s/\n+$//g;
+
   my $body = $self->_process_template($interp, $body_component_path, %args);
 
   return ($subject, $body);

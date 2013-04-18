@@ -1,1 +1,4 @@
-A research publication has been assigned to you for community curation
+<%args>
+$publication_uniquename
+</%args>
+Confirmation of curation session for <% $publication_uniquename %>

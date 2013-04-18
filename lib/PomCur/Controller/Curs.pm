@@ -54,6 +54,7 @@ use PomCur::Track;
 use PomCur::Curs::Utils;
 use PomCur::Curs::MetadataStorer;
 use PomCur::MailSender;
+use PomCur::EmailUtil;
 
 use constant {
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
@@ -2723,7 +2724,6 @@ sub _assign_session :Private
     my $submitter_email = $form->param_value('submitter_email');
 
     my $schema = PomCur::Curs::get_schema($c);
-
     my $curs_key = $st->{curs_key};
 
     my $add_submitter = sub {
@@ -2739,14 +2739,13 @@ sub _assign_session :Private
     my $pub_uniquename = $st->{pub}->uniquename();
 
     if ($reassign) {
-      my $subject = "Invitation to curate $pub_uniquename in PomBase";
-      _send_mail($self, $c, subject => $subject, to => 'admin');
-      _send_mail($self, $c, subject => $subject, to => $submitter_email);
+      my $subject = "Session $curs_key reassigned to $submitter_name";
+      $self->_send_mail($c, subject => $subject, body => '', to => 'admin');
 
+      $self->_send_email_from_template($c, 'session_reassigned');
       _redirect_and_detach($c, 'session_reassigned');
     } else {
-      my $subject = "Link for curating $pub_uniquename in PomBase";
-      _send_mail($self, $c, subject => $subject, to => $submitter_email);
+      $self->_send_email_from_template($c, 'session_accepted');
       _redirect_and_detach($c);
     }
   }
@@ -2848,28 +2847,56 @@ sub _send_mail
   my $self = shift;
   my $c = shift;
 
+  die "@_" unless @_ % 2 == 0;
+
   my %args = @_;
-
+  my $body = $args{body};
+  my $subject = $args{subject};
   my $dest_email = $args{to};
-
-  my $st = $c->stash();
-
-  my $body = "Publication: " . $st->{pub}->uniquename() . " - " .
-    $st->{pub}->title() . "\n" .
-    "Link to session: " . $st->{curs_root_uri} . "\n";
 
   my $config = $c->config();
   my $mail_sender = PomCur::MailSender->new(config => $config);
 
   if ($dest_email eq 'admin') {
-    $body .= "Curator: " . $st->{submitter_name} . " <" . $st->{submitter_email} . ">\n";
-    $mail_sender->send_to_admin(subject => $args{subject},
+    $mail_sender->send_to_admin(subject => $subject,
                                 body => $body);
   } else {
     $mail_sender->send(to => $dest_email,
-                       subject => $args{subject},
+                       subject => $subject,
                        body => $body);
   }
+}
+
+sub _send_email_from_template
+{
+  my $self = shift;
+  my $c = shift;
+  my $type = shift;
+
+  my $config = $c->config();
+
+  my $email_util = PomCur::EmailUtil->new(config => $config);
+
+  my $st = $c->stash();
+  my $curs_key = $st->{curs_key};
+  my $pub = $st->{pub};
+
+  my ($submitter_email, $submitter_name) =
+    $self->curator_manager()->current_curator($curs_key);
+
+  my $help_index = $c->uri_for($config->{help_path});
+
+  my %args = (
+    session_link => $st->{curs_root_uri},
+    curator_name => $submitter_name,
+    publication_uniquename => $pub->uniquename(),
+    publication_title => $pub->title(),
+    help_index => $help_index,
+  );
+
+  my ($subject, $body) = $email_util->make_email_contents($type, %args);
+
+  $self->_send_mail($c, subject => $subject, body => $body, to => $submitter_email);
 }
 
 sub begin_approval : Chained('top') Args(0)
