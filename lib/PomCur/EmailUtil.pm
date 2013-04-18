@@ -122,6 +122,8 @@ sub make_email_contents
 
   my $body = $self->_process_template($interp, $body_component_path, %args);
 
+  $body =~ s/\n\n+/\n/g;
+
   return ($subject, $body);
 }
 
