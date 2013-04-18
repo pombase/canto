@@ -44,6 +44,15 @@ sub _get_next_triage_pub
   return $schema->resultset('Pub')->search($constraint, $options)->single();
 }
 
+sub _redirect_to_pub
+{
+  my $c = shift;
+  my $pub = shift;
+
+  $c->res->redirect($c->uri_for('/view/object/pub/' . $pub->pub_id(), { model => 'track'} ));
+  $c->detach();
+}
+
 =head1 NAME
 
 PomCur::Controller::Tools - Controller for PomCur user tools
@@ -680,6 +689,46 @@ sub create_session : Local Args(0)
   $c->detach();
 }
 
+sub send_session : Local Args(1)
+{
+  my ($self, $c, $curs_key) = @_;
+
+  my $track_schema = $c->schema('track');
+  my $curs = $track_schema->find_with_type('Curs',
+                                           {
+                                             curs_key => $curs_key,
+                                           });
+  my $config = $c->config();
+  my $email_util = PomCur::EmailUtil->new(config => $config);
+  my $pub = $curs->pub();
+
+  my $curator_manager =
+    PomCur::Track::CuratorManager->new(config => $c->config());
+  my ($submitter_email, $submitter_name) =
+    $curator_manager->current_curator($curs_key);
+
+  my $help_index = $c->uri_for($config->{help_path});
+
+  my %args = (
+    session_link => $c->uri_for("/curs/$curs_key"),
+    curator_name => $submitter_name,
+    publication_uniquename => $pub->uniquename(),
+    publication_title => $pub->title(),
+    help_index => $help_index,
+  );
+
+  my ($subject, $body) = $email_util->make_email_contents('session_assigned', %args);
+
+  my $mail_sender = PomCur::MailSender->new(config => $config);
+
+  $mail_sender->send(to => $submitter_email,
+                     subject => $subject,
+                     body => $body);
+
+  _redirect_to_pub($c, $pub);
+}
+
+
 =head2 remove_curs
 
  Function: remove the curs given by the argument curs_key and remove its cursdb
@@ -709,8 +758,7 @@ sub remove_curs : Local Args(1)
 
   PomCur::Track::delete_curs($c->config(), $track_schema, $curs_key);
 
-  $c->res->redirect($c->uri_for('/view/object/pub/' . $pub->pub_id(), { model => 'track'} ));
-  $c->detach();
+  _redirect_to_pub($c, $pub);
 }
 
 
