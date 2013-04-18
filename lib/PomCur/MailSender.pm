@@ -99,7 +99,7 @@ sub send
                transport=>Email::Sender::Transport::Sendmail->new
              });
   } catch {
-    warn qq|Can't send mail to "$to" with subject "$subject": $_|;
+    warn qq|Cannot send mail to "$to" with subject "$subject": $_|;
   }
 }
 
