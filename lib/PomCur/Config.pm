@@ -272,9 +272,13 @@ sub setup
 
       if (exists $self->{annotation_types}->{$annotation_type_name}) {
         my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+        my $configured_type =
+          $self->{annotation_types}->{$annotation_type_name};
         $annotation_type =
-          $merge->merge($annotation_type,
-                        $self->{annotation_types}->{$annotation_type_name});
+          $merge->merge($annotation_type, $configured_type);
+
+        # handle evidence codes differently so codes don't get duplicated
+        $annotation_type->{evidence_codes} = $configured_type->{evidence_codes};
       }
 
       if (!defined $annotation_type->{short_display_name}) {
