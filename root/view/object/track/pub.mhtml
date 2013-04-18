@@ -133,7 +133,7 @@ if (defined $curs) {
                'cv.name' => 'PomCur cursprop types' },
              { join => 'cv' });
   my $link_sent_prop =
-    $curs->cursprops()->search(type => $link_sent_to_curator_date_cvterm->cvterm_id())->first();
+    $curs->cursprops()->search({ type => $link_sent_to_curator_date_cvterm->cvterm_id() })->first();
   if (defined $link_sent_prop) {
     $session_sent = 1;
   }
