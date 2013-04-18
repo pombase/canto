@@ -9,8 +9,6 @@ $existing_annotation_count
 </%args>
 Dear <% $curator_name %>,
 
-The curation link is:
-
 Congratulations on the recent publication of your paper,
 <% $publication_uniquename %> - "<% $publication_title %>".
 We invite you to contribute annotations based on this paper.

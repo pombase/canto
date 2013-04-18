@@ -9,20 +9,19 @@ $existing_annotation_count
 </%args>
 Dear <% $curator_name %>,
 
-The curation link is:
+Congratulations on the recent publication of your paper:
+  <% $publication_uniquename %> - "<% $publication_title %>".
 
-Congratulations on the recent publication of your paper,
-<% $publication_uniquename %> - "<% $publication_title %>".
 We invite you to contribute annotations based on this paper.
 
 Your curation link is:
-
-<% $session_link %>
+  <% $session_link %>
 
 When you follow the above link and sign in, you will be guided step-by-step
 though the annotation process. You can annotate these data types in the tool:
-<& ../annotation_type_list.mhtml, config => $config &>
+<& ../annotation_type_list.mhtml, config => $config &>\
 % if ($existing_annotation_count > 0) {
+
 For this paper, there are several previously curated annotations in the
 database. These existing annotations will be shown in the curation tool, but
 cannot be altered. If you notice any problems with existing annotations,
