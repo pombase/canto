@@ -33,6 +33,17 @@ $is_admin_user
   <button type="button" id="curs-pub-create-session-popup-dialog">Create a curation
   session for this publication ...</button>
 </div>
+%     } else {
+<div class="curs-pub-assign-actions">
+  <button href="<% $c->uri_for('/tools/send_session/' . $curs_key) %>"
+                type="button" id="curs-pub-send-session-popup-dialog">\
+%       if ($session_sent) {
+Resend session to curator ...\
+%       } else {
+Send session to curator ...\
+%       }
+  </button>
+</div>
 %     }
 %   } else {
 
@@ -112,7 +123,19 @@ my $not_exported_curs_rs = $object->not_exported_curs();
 
 my $curs = $not_exported_curs_rs->first();
 
+my $session_sent = 0;
+
 if (defined $curs) {
   $curs_key = $curs->curs_key();
+  my $link_sent_to_curator_date_cvterm =
+    $schema->resultset('Cvterm')
+      ->find({ name => 'link_sent_to_curator_date',
+               'cv.name' => 'PomCur cursprop types' },
+             { join => 'cv' });
+  my $link_sent_prop =
+    $curs->cursprops()->search(type => $link_sent_to_curator_date_cvterm->cvterm_id())->first();
+  if (defined $link_sent_prop) {
+    $session_sent = 1;
+  }
 }
 </%init>
