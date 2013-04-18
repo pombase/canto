@@ -5,6 +5,7 @@ $publication_title
 $session_link
 $curator_name
 $help_index
+$existing_annotation_count
 </%args>
 Dear <% $curator_name %>,
 
@@ -22,6 +23,15 @@ When you follow the above link and sign in, you will be guided step-by-step
 though the annotation process. You can annotate these data types in the tool:
 
 <& ../annotation_type_list.mhtml, config => $config &>
+
+You will also be able to modify the annotations your colleague made.
+
+% if ($existing_annotation_count > 0) {
+For this paper, there are also several previously curated annotations
+in the database. These existing annotations will be shown in the
+curation tool, but cannot be altered. If you notice any problems with existing
+annotations, please let the curators know.
+% }
 
 Help is available on each page, and you can also read
 the Canto manual (<% $help_index %>) or contact

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use Test::MockObject;
 
@@ -34,6 +34,8 @@ my %args = (
 my ($subject, $body) =
   PomCur::EmailUtil::make_email_contents($mock, 'session_assigned', %args);
 
+warn $body;
+
 ok ($subject =~ /Invitation/);
 
 ok ($body =~ /Dear $curator_name/);
@@ -41,4 +43,4 @@ ok ($body =~ /PMID:10467002 - "A clever paper"/);
 ok ($body =~ /GO cellular component/);
 ok ($body =~ /$help_url/);
 ok ($body =~ /$root_url/);
-
+ok ($body =~ /several previously curated annotations/);

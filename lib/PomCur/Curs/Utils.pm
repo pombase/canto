@@ -39,6 +39,7 @@ use strict;
 use warnings;
 use Carp;
 use Moose;
+use Clone qw(clone);
 
 use PomCur::Curs::GeneProxy;
 
@@ -623,7 +624,7 @@ sub get_existing_interaction_annotations
 =head2 get_existing_annotations
 
  Usage   :
-   my @annotations =
+   my ($all_annotations_count, $annotations) =
      PomCur::Curs::Utils::get_existing_annotations($config, $options);
  Function: Return a table of the existing interaction annotations from the
            database
@@ -634,8 +635,6 @@ sub get_existing_interaction_annotations
                the search; only annotations for the gene are returned (optional)
            $options->{annotation_type_name} - the annotation type eg.
                'biological_process', 'physical_interaction'
-           $options->{annotation_type_category} - the annotation category, eg.
-               'ontology' or 'interaction'
  Returns : An array of hashes containing the annotation in the same form as
            get_annotation_table() above, except that annotation_id will be a
            database identifier for the annotation.
@@ -646,11 +645,43 @@ sub get_existing_annotations
   my $config = shift;
   my $options = shift;
 
-  if ($options->{annotation_type_category} eq 'ontology') {
+  my $annotation_type_category =
+    $config->{annotation_types}->{$options->{annotation_type_name}};
+
+  if ($annotation_type_category eq 'ontology') {
     return get_existing_ontology_annotations($config, $options);
   } else {
     return get_existing_interaction_annotations($config, $options);
   }
+}
+
+=head2 get_existing_annotation_count
+
+ Usage   : my $count = PomCur::Curs::Utils::get_existing_annotation_count($config, $options);
+ Function: Return the total number of existing annotations for a publication
+ Args    : $config - the PomCur::Config object
+           $options -
+             $options->{pub_uniquename} - the publication ID (eg. PubMed ID)
+                 to count annotations of
+ Return  : the count
+
+=cut
+sub get_existing_annotation_count
+{
+  my $config = shift;
+  my $arg_options = shift;
+
+  my $count = 0;
+
+  for my $annotation_type (@{$config->{annotation_type_list}}) {
+    my $options = clone $arg_options;
+    $options->{annotation_type_name} = $annotation_type->{name};
+    my ($all_annotations_count, $annotations) =
+      PomCur::Curs::Utils::get_existing_annotations($config, $options);
+    $count += $all_annotations_count;
+  }
+
+  return $count;
 }
 
 =head2 store_all_statuses

@@ -44,6 +44,8 @@ use HTML::Mason;
 
 with 'PomCur::Role::Configurable';
 
+use PomCur::Curs::Utils;
+
 sub _process_template
 {
   my $self = shift;
@@ -104,6 +106,14 @@ sub make_email_contents
   }
 
   $args{config} = $self->config();
+
+  my %options = ( max_results => 1,
+                  pub_uniquename => $args{publication_uniquename} );
+
+  my ($all_existing_annotations_count, $existing_annotations) =
+    PomCur::Curs::Utils::get_existing_annotation_count($self->config(), \%options);
+
+  $args{existing_annotation_count} = $all_existing_annotations_count;
 
   my $subject = $self->_process_template($interp, $subject_component_path, %args);
   chomp $subject;
