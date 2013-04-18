@@ -645,7 +645,7 @@ sub create_session : Local Args(0)
 
   my $pub = $track_schema->find_with_type('Pub', { pub_id => $pub_id });
 
-  if ($pub->curs() == 0) {
+  if ($pub->not_exported_curs()->count() == 0) {
     my $person =
       $track_schema->resultset('Person')->find({ person_id => $person_id });
     my $admin_session = 0;

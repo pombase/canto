@@ -359,8 +359,21 @@ sub new {
   return $new;
 }
 
-1;
+# return a ResultSet for the curs objects of this pub that don't have the
+# status "EXPORTED"
+sub not_exported_curs
+{
+  my $self = shift;
 
+  my $curs_rs = $self->curs();
+
+  my $where = 'EXISTS (SELECT cursprop_id FROM cursprop p, cvterm t ' .
+    'WHERE p.curs = me.curs_id AND ' .
+    "t.cvterm_id = p.type AND t.name = 'annotation_status' AND " .
+    "p.value <> 'EXPORTED')";
+
+  return $curs_rs->search({}, { where => \$where });
+}
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

@@ -10,7 +10,7 @@ $is_admin_user
 
 % if ($is_admin_user) {
 %   if (defined $object->corresponding_author()) {
-%     if (scalar($object->curs()->all()) == 0) {
+%     if ($not_exported_curs_rs->count() == 0) {
 <div id="curs-pub-create-session-dialog" style="display: none">
   <form id="curs-pub-create-session-form" method="put"
         action="<% $c->uri_for('/tools/create_session') %>">
@@ -66,7 +66,7 @@ $is_admin_user
 <div class="clearall"/>
 
 % if (defined $curs_key) {
-%  if ($curs_count == 1) {
+%  if ($not_exported_curs_rs->count() == 1) {
 <div class="curs-pub-go-to-curs-actions">
   <div class="object_sub_action">
     <a href="<% $c->uri_for('/curs/' . $curs_key) %>">
@@ -108,9 +108,9 @@ while (defined (my $person = $person_rs->next())) {
 }
 
 my $curs_key = undef;
-my $curs_rs = $schema->resultset('Curs')->search({ pub => $pub_id});
-my $curs_count = $curs_rs->count();
-my $curs = $curs_rs->first();
+my $not_exported_curs_rs = $object->not_exported_curs();
+
+my $curs = $not_exported_curs_rs->first();
 
 if (defined $curs) {
   $curs_key = $curs->curs_key();
