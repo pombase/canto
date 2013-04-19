@@ -725,6 +725,24 @@ sub send_session : Local Args(1)
                      subject => $subject,
                      body => $body);
 
+  my $link_sent_to_curator_date_cvterm =
+    $track_schema->resultset('Cvterm')
+      ->find({ name => 'link_sent_to_curator_date',
+               'cv.name' => 'PomCur cursprop types' },
+             { join => 'cv' });
+
+  my $link_sent_date_cvterm_id = $link_sent_to_curator_date_cvterm->cvterm_id();
+  my $link_sent_prop =
+    $curs->cursprops()->search({ type => $link_sent_date_cvterm_id })->first();
+  my $now = PomCur::Util::get_current_datetime();
+  if (defined $link_sent_prop) {
+    $link_sent_prop->value($now);
+  } else {
+    $track_schema->resultset('Cursprop')->create({ curs => $curs->curs_id(),
+                                                   type => $link_sent_date_cvterm_id,
+                                                   value => $now });
+  }
+
   $c->flash()->{message} = "Session email sent to user";
 
   _redirect_to_pub($c, $pub);
