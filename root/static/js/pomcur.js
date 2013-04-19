@@ -837,7 +837,7 @@ $(document).ready(function() {
   });
 
   $("#curs-pub-send-session-popup-dialog").click(function(e) {
-    make_confirm_dialog($(this), "Send link to session curator?", "Yes", "No");
+    make_confirm_dialog($(this), "Send link to session curator?", "Send", "Cancel");
   });
 
   $('button.curs-person-picker-add').click(function(e) {
