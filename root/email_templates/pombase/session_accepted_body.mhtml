@@ -7,7 +7,7 @@ $curator_name
 $help_index
 </%args>
 Thank you for agreeing to curate:
-<% $publication_uniquename %> - "<% $publication_title %>"
+  <% $publication_uniquename %> - "<% $publication_title %>"
 
 You can return to your curation session at any time with this link:
 
