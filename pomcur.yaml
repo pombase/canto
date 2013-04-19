@@ -140,6 +140,11 @@ db_initial_data:
               accession: approver_name
               db:
                 name: PomCur
+          - name: link_sent_to_curator_date
+            dbxref:
+              accession: link_sent_to_curator_date
+              db:
+                name: PomCur
       - name: PomCur publication triage status
         cvterms:
           - name: New
