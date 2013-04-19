@@ -725,6 +725,8 @@ sub send_session : Local Args(1)
                      subject => $subject,
                      body => $body);
 
+  $c->flash()->{message} = "Session email sent to user";
+
   _redirect_to_pub($c, $pub);
 }
 
