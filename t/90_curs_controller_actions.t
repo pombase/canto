@@ -153,7 +153,7 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     like ($redirect_res->content(), qr/Create gene list for $uniquename/);
-    like ($redirect_res->content(), qr/email-address.*$test_email/);
+    like ($redirect_res->content(), qr/Curated by: $test_email/);
   }
 
   # try with and without the organism column
@@ -269,7 +269,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr/Create gene list for $uniquename/);
-    like ($res->content(), qr/email-address.*$test_email/);
+    like ($res->content(), qr/Curated by: $test_email/);
 
     my @genes_after_delete = $curs_schema->resultset('Gene')->all();
 
@@ -289,7 +289,7 @@ test_psgi $app, sub {
     my $thank_you ="Thank you for your contribution to " . $config->{database_name};
     like ($res->content(), qr/$thank_you/);
     like ($res->content(), qr/annotations will now be sent/s);
-    like ($res->content(), qr/email-address.*$test_email/);
+    like ($res->content(), qr/Curated by: $test_email/);
   }
 };
 
