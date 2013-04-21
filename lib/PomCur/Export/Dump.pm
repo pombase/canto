@@ -38,32 +38,11 @@ under the same terms as Perl itself.
 
 use Moose;
 use Carp;
-use Getopt::Long qw(GetOptionsFromArray);
 
 use PomCur::Track::Serialise;
 
 with 'PomCur::Role::Configurable';
-
-has options => (is => 'ro', isa => 'ArrayRef', required => 1);
-has parsed_options => (is => 'rw', isa => 'HashRef', init_arg => undef);
-
-sub BUILD
-{
-  my $self = shift;
-
-  my %parsed_options = ();
-
-  my @opt_config = ('stream-mode!' => \$parsed_options{stream_mode},
-                    'dump-all!' => \$parsed_options{dump_all},
-                    'dump-approved!' => \$parsed_options{dump_approved},
-                    'export-approved!' => \$parsed_options{export_approved},
-                    );
-  if (!GetOptionsFromArray($self->options(), @opt_config)) {
-    croak "option parsing failed";
-  }
-
-  $self->parsed_options(\%parsed_options);
-}
+with 'PomCur::Role::Exporter';
 
 sub export
 {
@@ -73,8 +52,8 @@ sub export
 
   my $track_schema = PomCur::TrackDB->new(config => $config);
 
-  print PomCur::Track::Serialise::json($config, $track_schema,
-                                       $self->parsed_options()), "\n";
+  return PomCur::Track::Serialise::json($config, $track_schema,
+                                        $self->parsed_options());
 }
 
 1;

@@ -68,8 +68,7 @@ sub _get_curation_sessions
 
   my %ret_map = ();
 
-  my $curs_rs = $schema->resultset('Curs');
-
+  my $curs_rs = $options->{curs_resultset} // $schema->resultset('Curs');
 
   while (defined (my $curs = $curs_rs->next())) {
     my $curs_key = $curs->curs_key();
@@ -80,16 +79,6 @@ sub _get_curation_sessions
       my $cursdb = PomCur::Curs::get_schema_for_key($config, $curs_key);
       $data = PomCur::Curs::Serialise::perl($config, $cursdb, $options);
       my $props = _get_cursprops($curs);
-
-      if ($options->{dump_approved} || $options->{export_approved}) {
-        my $annotation_status_prop =
-          (grep { $_->{type} eq 'annotation_status' } @$props)[0];
-
-        if (!defined $annotation_status_prop ||
-            $annotation_status_prop->{value} ne 'APPROVED') {
-          next;
-        }
-      }
 
       for my $prop_data (@$props) {
         if (exists $data->{$prop_data->{type}}) {
@@ -167,7 +156,7 @@ sub _get_pubs
       properties => _get_pubprops($pub),
       curation_statuses => _get_pub_curation_statuses($pub),
     );
-    if ($options->{dump_all}) {
+    if ($options->{all_data}) {
       $pub_hash{title} = $pub->title();
       $pub_hash{abstract} = $pub->abstract();
       $pub_hash{authors} = $pub->authors();
@@ -224,19 +213,15 @@ sub _get_labs
  Args    : $config - a Config object
            $schema - the TrackDB
            $options - a hash of settings
-             - stream-mode => (0|1) - if 1, change the behaviour to
-                 return two things: the JSON for the TrackDB and an
-                 iterator returning the JSON representation of each
-                 CursDB in turn - default 1
-             - dump-all => (0|1) - if 1, dump all data from the
-                 track and curs databases, including data that can be
-                 recreated (eg. publication title can be found from
-                 PubMed ID) - default 0
-             - dump-approved => (0|1) - if 1, only dump those curation
-                 sessions from the curs table that have the status of
-                 "APPROVED"
-             - export-approved => (0|1) - like dump-approved, but set
-                 the state of the exported sessions as "EXPORTED"
+#             - stream_mode => (0|1) - if 1, change the behaviour to
+#                 return two things: the JSON for the TrackDB and an
+#                 iterator returning the JSON representation of each
+#                 CursDB in turn - default 1
+             - all_data => (0|1) - if 1, include all data from the TrackDB,
+                 including publications and users.  If 0, just return the
+                 sessions
+             - curs_resultset - A ResultSet of the Curs (curation sessions)
+                 to export.  Defaults to all sessions.
 
  Returns : A JSON string containing all of the TrackDB and CursDB data
            or with stream_mode set, return a (JSON string, CursDB JSON
@@ -254,16 +239,16 @@ sub json
 
   my $hash;
 
-  if ($options->{dump_approved} || $options->{export_approved}) {
-    $hash = {
-      curation_sessions => $curation_sessions_hash
-    };
-  } else {
+  if ($options->{all_data}) {
     $hash = {
       curation_sessions => $curation_sessions_hash,
       publications => _get_pubs($schema, $options),
       people => _get_people($schema),
       labs => _get_labs($schema),
+    };
+  } else {
+    $hash = {
+      curation_sessions => $curation_sessions_hash
     };
   }
 

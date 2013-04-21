@@ -196,7 +196,7 @@ sub _get_pubs
   my %ret = ();
 
   while (defined (my $pub = $rs->next())) {
-    if ($options->{dump_all}) {
+    if ($options->{all_data}) {
       $ret{$pub->uniquename()} = {
         title => $pub->title(),
         abstract => $pub->abstract(),

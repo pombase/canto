@@ -327,7 +327,7 @@ sub set_state
       unless (defined $current_user && $current_user->is_admin()) {
         croak "only admin users can approve sessions\n";
       }
-      if ($current_state ne APPROVAL_IN_PROGRESS) {
+      if ($current_state ne APPROVAL_IN_PROGRESS && !$force) {
         carp "must be in state ", APPROVAL_IN_PROGRESS,
           " (not $current_state) to change to state ", APPROVED;
       }

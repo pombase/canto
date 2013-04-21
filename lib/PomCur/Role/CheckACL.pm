@@ -45,9 +45,11 @@ sub check_access
 
   if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
     return {
+      # not very subtle for now:
       view => 1,
       edit => 1,
       delete => 1,
+      export => 1,
     }
   } else {
     return {};

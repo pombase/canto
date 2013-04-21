@@ -78,7 +78,7 @@ $export_module->new(config => \$config, options => [\@options]);
 };
   die "$@" if $@;
 
-  $exporter->export();
+  print $exporter->export(), "\n";
 } else {
   die "unknown type to export: $export_type\n";
 }
