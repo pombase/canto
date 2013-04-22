@@ -20,18 +20,8 @@ my $config = $test_util->config();
 my $track_schema = PomCur::TrackDB->new(config => $config);
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
 
-sub _get_a_person
-{
-  my $role = shift;
-  my $admin_person_rs =
-    $track_schema->resultset('Person')->search({ 'role.name' => $role,
-                                                 'cv.name' => 'PomCur user types' },
-                                               { join => { role => 'cv' } });
-  return $admin_person_rs->first();
-}
-
-my $admin_person = _get_a_person('admin');
-my $user_person = _get_a_person('user');
+my $admin_person = $test_util->get_a_person($track_schema, 'admin');
+my $user_person = $test_util->get_a_person($track_schema, 'user');
 
 my $state = PomCur::Curs::State->new(config => $config);
 

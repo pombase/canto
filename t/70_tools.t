@@ -1,13 +1,17 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 11;
 use Package::Alias Tools => 'PomCur::Controller::Tools';
 use LWP::Protocol::PSGI;
+use Plack::Test;
+use HTTP::Request;
+use JSON;
 
 use PomCur::TestUtil;
+use PomCur::Curs::State qw/:all/;
 
 my $test_util = PomCur::TestUtil->new();
-$test_util->init_test();
+$test_util->init_test('curs_annotations_2');
 
 my $track_schema = $test_util->track_schema();
 my $config = $test_util->config();
@@ -39,6 +43,7 @@ my $app = sub {
   ];
 };
 
+# avoid accessing the pubmed server, fake it:
 LWP::Protocol::PSGI->register($app);
 
 my $extern_pubmedid = 'PMID:18910671';
@@ -59,3 +64,51 @@ my $db_pub = $track_schema->find_with_type('Pub',
                                            });
 
 is ($db_pub->uniquename(), $extern_pubmedid);
+
+my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
+my $admin_person = $test_util->get_a_person($track_schema, 'admin');
+my $state = PomCur::Curs::State->new(config => $config);
+
+$state->set_state($curs_schema, APPROVAL_IN_PROGRESS,
+                  { force => CURATION_IN_PROGRESS,
+                    current_user => $admin_person });
+
+$state->set_state($curs_schema, APPROVED,
+                  { force => APPROVAL_IN_PROGRESS,
+                    current_user => $admin_person });
+
+sub do_export_approved {
+  my $app = $test_util->plack_app()->{app};
+  my $cookie_jar = $test_util->cookie_jar();
+
+  my $content;
+
+  test_psgi $app, sub {
+    my $cb = shift;
+
+    $test_util->app_login($cookie_jar, $cb);
+
+    my $url = "http://localhost:5000/tools/export_approved/json";
+    my $req = HTTP::Request->new(GET => $url);
+    $cookie_jar->add_cookie_header($req);
+    my $res = $cb->($req);
+
+    $content = $res->content();
+  };
+
+  return $content;
+}
+
+my $content_1 = do_export_approved();
+my $content_1_parsed = decode_json($content_1);
+is (keys %{$content_1_parsed->{curation_sessions}}, 1);
+
+# slight anomaly, the status is the pre-export status
+is ($content_1_parsed->{curation_sessions}->{aaaa0007}->{annotation_status}, 'APPROVED');
+
+my $content_2 = do_export_approved();
+my $content_2_parsed = decode_json($content_2);
+# should be no results as the sessions are already exported
+is (keys %{$content_2_parsed->{curation_sessions}}, 0);
+
+

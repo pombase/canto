@@ -995,4 +995,28 @@ sub enable_access_control
   $PomCur::access_control_enabled = 1;
 }
 
+=head2 get_a_person
+
+ Usage   : my $admin_person = $test_util->get_a_person("admin")
+ Function: Return an arbitrary person with the given role from the database
+ Args    : $role - a role name like "admin" or "user"
+ Return  : A Person object
+
+=cut
+
+sub get_a_person
+{
+  my $self = shift;
+  my $track_schema = shift;
+  my $role = shift;
+
+  my $admin_person_rs =
+    $track_schema->resultset('Person')->search({ 'role.name' => $role,
+                                                 'cv.name' => 'PomCur user types' },
+                                               { join => { role => 'cv' } });
+  return $admin_person_rs->first();
+}
+
+
+
 1;

@@ -10,6 +10,7 @@ use Clone qw(clone);
 use Try::Tiny;
 
 use PomCur::MailSender;
+use PomCur::Export::Dump;
 
 use Moose;
 
@@ -781,6 +782,43 @@ sub remove_curs : Local Args(1)
   _redirect_to_pub($c, $pub);
 }
 
+=head2 export_approved
+
+ Function: Export the approved sessions in the requested format
+ Args    : $type - export type eg. json, tabzip (zip file of tab delimited data)
+ Return  : the exported data
+
+=cut
+
+sub export_approved : Local Args(1)
+{
+  my ($self, $c, $export_type) = @_;
+
+  if (!$self->check_access($c)->{export}) {
+    die "insufficient privileges to export sessions";
+  }
+
+  my $config = $c->config();
+  my $track_schema = PomCur::TrackDB->new(config => $config);
+
+  my @options = qw(--export-approved);
+
+  my $admin_person = $c->user()->get_object();
+
+  my $results;
+
+  if ($export_type eq 'json') {
+    my $exporter = PomCur::Export::Dump->new(config => $config,
+                                             options => \@options,
+                                             current_user => $admin_person);
+    $results = $exporter->export();
+
+    $c->res->content_type('text/plain');
+    $c->res->body($results);
+  } else {
+    die "unknown export type: $export_type\n";
+  }
+}
 
 =head1 LICENSE
 This library is free software. You can redistribute it and/or modify
