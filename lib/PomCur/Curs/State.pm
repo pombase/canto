@@ -116,6 +116,10 @@ sub get_state
     croak "too many arguments for get_state()";
   }
 
+  if (!defined $schema) {
+    croak "no schema passed to get_state()";
+  }
+
   my $metadata_rs = $schema->resultset('Metadata');
   my $curs_key_row = $metadata_rs->find({ key => 'curs_key' });
 
