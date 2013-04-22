@@ -29,7 +29,7 @@ my $do_help = 0;
 my $result = GetOptions ("help|h" => \$do_help);
 
 my %export_modules = (
-  dump => 'PomCur::Export::Dump',
+  'canto-json' => 'PomCur::Export::CantoJSON',
 );
 
 sub usage

@@ -10,7 +10,7 @@ use PomCur::Curs::State qw/:all/;
 use PomCur::TestUtil;
 use PomCur::TrackDB;
 use PomCur::Track::Serialise;
-use PomCur::Export::Dump;
+use PomCur::Export::CantoJSON;
 
 my $test_util = PomCur::TestUtil->new();
 
@@ -35,8 +35,8 @@ sub _get_data
   my $options = shift;
 
   my $dump_export =
-    PomCur::Export::Dump->new(config => $config, options => $options,
-                              current_user => $admin_person);
+    PomCur::Export::CantoJSON->new(config => $config, options => $options,
+                                   current_user => $admin_person);
 
   if (defined $prior_state) {
     $dump_export->state()->set_state($curs_schema, $prior_state,

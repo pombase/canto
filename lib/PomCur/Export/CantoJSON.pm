@@ -1,9 +1,9 @@
-package PomCur::Export::Dump;
+package PomCur::Export::CantoJSON;
 
 =head1 NAME
 
-PomCur::Dump::Dump - Code to export the contents of the track and
-                      curs databases
+PomCur::Export::CantoJSON - Code to export the contents of the track and
+                            curs databases
 
 =head1 SYNOPSIS
 
@@ -19,7 +19,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::Dump::Dump
+    perldoc PomCur::Export::CantoJSON
 
 =over 4
 

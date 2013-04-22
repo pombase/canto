@@ -10,7 +10,7 @@ use Clone qw(clone);
 use Try::Tiny;
 
 use PomCur::MailSender;
-use PomCur::Export::Dump;
+use PomCur::Export::CantoJSON;
 
 use Moose;
 
@@ -808,9 +808,9 @@ sub export_approved : Local Args(1)
   my $exporter;
 
   if ($export_type eq 'json') {
-    $exporter = PomCur::Export::Dump->new(config => $config,
-                                          options => \@options,
-                                          current_user => $admin_person);
+    $exporter = PomCur::Export::CantoJSON->new(config => $config,
+                                               options => \@options,
+                                               current_user => $admin_person);
     $c->res->content_type('text/plain');
   } else {
     if ($export_type eq 'tabzip') {
