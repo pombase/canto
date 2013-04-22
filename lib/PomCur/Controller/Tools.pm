@@ -805,19 +805,22 @@ sub export_approved : Local Args(1)
 
   my $admin_person = $c->user()->get_object();
 
-  my $results;
+  my $exporter;
 
   if ($export_type eq 'json') {
-    my $exporter = PomCur::Export::Dump->new(config => $config,
-                                             options => \@options,
-                                             current_user => $admin_person);
-    $results = $exporter->export();
-
+    $exporter = PomCur::Export::Dump->new(config => $config,
+                                          options => \@options,
+                                          current_user => $admin_person);
     $c->res->content_type('text/plain');
-    $c->res->body($results);
   } else {
+    if ($export_type eq 'tabzip') {
+
+    }
     die "unknown export type: $export_type\n";
   }
+
+  my $results = $exporter->export();
+  $c->res->body($results);
 }
 
 =head1 LICENSE
