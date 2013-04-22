@@ -7,8 +7,9 @@
 <h3>Curate a paper</h3>
 <& /tools/pubmed_id_start.mhtml, title => 'Start curating using a PubMed ID:' &>
 <p>
-Once you have found your paper, you can curate GO, phenotypes, interactions
-and protein modifications. See the <a href="<% $c->uri_for('/docs/index') %>">help pages</a> for more information
+ Once you have found your paper, you can curate GO, phenotypes,
+interactions and protein modifications -- or transfer the paper to a
+colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help pages</a> for more information.
 </p>
 </div>
 
