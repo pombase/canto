@@ -99,6 +99,8 @@ sub store_counts
   my $unknown_conditions_count = 0;
 
   while (defined (my $ann = $ann_rs->next())) {
+    next if $ann->status() eq 'deleted';
+
     my $data = $ann->data();
 
     $unknown_conditions_count +=
