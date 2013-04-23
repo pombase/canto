@@ -99,9 +99,17 @@ after 'export' => sub {
       $self->parsed_options()->{curs_resultset} // $track_schema->resultset('Curs');
     $curs_rs->reset();
 
+    my @curs_to_update = ();
+
     while (defined (my $curs = $curs_rs->next())) {
       my $curs_key = $curs->curs_key();
+      push @curs_to_update, $curs_key;
+    }
+
+    for my $curs_key (@curs_to_update) {
       my $curs_schema = PomCur::Curs::get_schema_for_key($self->config(), $curs_key);
+      # this writes to the TrackDB, so we need to set the state after we finish
+      # iterating with $curs_rs
       $self->state()->set_state($curs_schema, $self->state_after_export(),
                                 { current_user => $self->current_user() });
     }
