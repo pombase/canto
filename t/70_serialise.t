@@ -445,7 +445,7 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
 
 sub check_track {
   my $options = shift;
-  my $track_json = PomCur::Track::Serialise::json($config, $track_schema, $options);
+  my ($count, $track_json) = PomCur::Track::Serialise::json($config, $track_schema, $options);
   my $track_ref = decode_json($track_json);
 
   cmp_deeply($track_ref, $full_expected_track_data);

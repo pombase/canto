@@ -25,8 +25,10 @@ use PomCur::Track::Serialise;
 use PomCur::Meta::Util;
 
 my $do_help = 0;
+my $verbose = 0;
 
-my $result = GetOptions ("help|h" => \$do_help);
+my $result = GetOptions ("help|h" => \$do_help,
+                         "verbose|v" => \$verbose);
 
 my %export_modules = (
   'canto-json' => 'PomCur::Export::CantoJSON',
@@ -36,7 +38,11 @@ sub usage
 {
   my $types = join "", (map { "   $_\n"; } keys %export_modules);
   die "usage:
-   $0 export_type [options]
+   $0 [-v] [-u] export_type [options]
+
+options:
+  -v
+     verbose output
 
 Possible export types:
 $types
@@ -78,7 +84,17 @@ $export_module->new(config => \$config, options => [\@options]);
 };
   die "$@" if $@;
 
-  print $exporter->export(), "\n";
+  my ($count, $results) = $exporter->export();
+
+  if ($verbose) {
+    if ($count > 0) {
+      warn "$count sessions exported\n";
+    } else {
+      warn "no sessions exported\n";
+    }
+  }
+
+  print $results, "\n";
 } else {
   die "unknown type to export: $export_type\n";
 }
