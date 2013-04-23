@@ -809,8 +809,7 @@ sub export_approved : Local Args(1)
 
   if ($export_type eq 'json') {
     $exporter = PomCur::Export::CantoJSON->new(config => $config,
-                                               options => \@options,
-                                               current_user => $admin_person);
+                                               options => \@options);
     $c->res->content_type('text/plain');
   } else {
     if ($export_type eq 'tabzip') {
