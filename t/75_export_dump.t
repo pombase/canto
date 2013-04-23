@@ -35,8 +35,7 @@ sub _get_data
   my $options = shift;
 
   my $dump_export =
-    PomCur::Export::CantoJSON->new(config => $config, options => $options,
-                                   current_user => $admin_person);
+    PomCur::Export::CantoJSON->new(config => $config, options => $options);
 
   if (defined $prior_state) {
     $dump_export->state()->set_state($curs_schema, $prior_state,

@@ -45,8 +45,6 @@ has options => (is => 'ro', isa => 'ArrayRef', required => 1);
 has parsed_options => (is => 'rw', isa => 'HashRef', init_arg => undef);
 has state => (is => 'rw', isa => 'PomCur::Curs::State', init_arg => undef);
 has track_schema => (is => 'rw', isa => 'PomCur::TrackDB', init_arg => undef);
-has current_user => (is => 'ro', isa => 'PomCur::TrackDB::Person',
-                     required => 1);
 has state_after_export => (is => 'rw', init_arg => undef);
 
 requires 'config';
@@ -110,8 +108,7 @@ after 'export' => sub {
       my $curs_schema = PomCur::Curs::get_schema_for_key($self->config(), $curs_key);
       # this writes to the TrackDB, so we need to set the state after we finish
       # iterating with $curs_rs
-      $self->state()->set_state($curs_schema, $self->state_after_export(),
-                                { current_user => $self->current_user() });
+      $self->state()->set_state($curs_schema, $self->state_after_export());
     }
   }
 };
