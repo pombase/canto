@@ -41,7 +41,25 @@ use Getopt::Long qw(GetOptionsFromArray);
 
 use PomCur::Curs::State qw/:all/;
 
+=head2 options
+ possible options are:
+  dump_approved - only return the approved sessions
+  export_approved - only return the approved sessions, then mark those sessions
+                    as exported
+  all_data - return data from all the sessions and all data from the TrackDB,
+             including publication and user information
+=cut
 has options => (is => 'ro', isa => 'ArrayRef', required => 1);
+
+=head2 parsed_options
+ This attribute stores the parsed versions of the options attribute.
+ Parsed options available are:
+  curs_resultset - a TrackDB ResultSet of 'Curs' objects - only these objects
+                   are exported
+  all_data - return data from all the sessions and all data from the TrackDB,
+             including publication and user information
+=cut
+
 has parsed_options => (is => 'rw', isa => 'HashRef', init_arg => undef);
 has state => (is => 'rw', isa => 'PomCur::Curs::State', init_arg => undef);
 has track_schema => (is => 'rw', isa => 'PomCur::TrackDB', init_arg => undef);
