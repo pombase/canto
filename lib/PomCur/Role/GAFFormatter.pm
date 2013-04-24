@@ -111,8 +111,7 @@ sub get_curs_annotation_zip
   if (keys %$results > 0) {
     my $zip = Archive::Zip->new();
     for my $annotation_type_name (keys %$results) {
-      my $annotation_tsv =
-        $self->get_annotation_table_tsv($config, $schema, $annotation_type_name);
+      my $annotation_tsv = $results->{$annotation_type_name};
       my $file_name = "$annotation_type_name.tsv";
       my $member = $zip->addString($annotation_tsv, $file_name);
       $member->desiredCompressionMethod(COMPRESSION_DEFLATED);
