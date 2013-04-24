@@ -44,6 +44,18 @@ use PomCur::Track::Serialise;
 with 'PomCur::Role::Configurable';
 with 'PomCur::Role::Exporter';
 
+=head2 export
+
+ Usage   : my ($count, $json) = $exporter->export($config);
+ Function: Return the required TrackDB data and sessions in JSON format
+ Args    : $config - a PomCur::Config object
+ Return  : (count of sessions exported, JSON format data)
+
+ The options passed to PomCur::Track::Serialise::json() come from the
+ parsed_options attribute of Role::Exporter
+
+=cut
+
 sub export
 {
   my $self = shift;
