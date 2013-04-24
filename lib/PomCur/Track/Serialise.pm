@@ -234,7 +234,7 @@ sub json
   my $schema = shift;
   my $options = shift;
 
-  my ($curation_sessions_hash, $sessions_iter) =
+  my $curation_sessions_hash =
     _get_curation_sessions($config, $schema, $options);
 
   my $hash;
