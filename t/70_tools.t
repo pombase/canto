@@ -88,7 +88,7 @@ sub do_export_approved {
 
     $test_util->app_login($cookie_jar, $cb);
 
-    my $url = "http://localhost:5000/tools/export_approved/json";
+    my $url = "http://localhost:5000/tools/export/approved/json";
     my $req = HTTP::Request->new(GET => $url);
     $cookie_jar->add_cookie_header($req);
     my $res = $cb->($req);

@@ -785,14 +785,15 @@ sub remove_curs : Local Args(1)
 =head2 export_approved
 
  Function: Export the approved sessions in the requested format
- Args    : $type - export type eg. json, tabzip (zip file of tab delimited data)
+ Args    : $type - export type eg. cantojson, tabzip (zip file of tab delimited
+                   data)
  Return  : the exported data
 
 =cut
 
-sub export_approved : Local Args(1)
+sub export : Local Args(2)
 {
-  my ($self, $c, $export_type) = @_;
+  my ($self, $c, $export_type, $export_format) = @_;
 
   if (!$self->check_access($c)->{export}) {
     die "insufficient privileges to export sessions";
@@ -801,20 +802,22 @@ sub export_approved : Local Args(1)
   my $config = $c->config();
   my $track_schema = PomCur::TrackDB->new(config => $config);
 
-  my @options = qw(--export-approved);
+  my @options;
+  if ($export_type eq 'approved') {
+    @options = qw(--export-approved);
+  } else {
+    die "unknown export type '$export_type'\n";
+  }
 
   my $admin_person = $c->user()->get_object();
 
   my $exporter;
 
-  if ($export_type eq 'json') {
+  if ($export_format eq 'json') {
     $exporter = PomCur::Export::CantoJSON->new(config => $config,
                                                options => \@options);
     $c->res->content_type('text/plain');
   } else {
-    if ($export_type eq 'tabzip') {
-
-    }
     die "unknown export type: $export_type\n";
   }
 
