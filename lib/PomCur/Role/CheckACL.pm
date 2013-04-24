@@ -50,6 +50,7 @@ sub check_access
       edit => 1,
       delete => 1,
       export => 1,
+      dump => 1,
     }
   } else {
     return {};

@@ -65,8 +65,15 @@ $model
               <a href="<% $c->uri_for('/tools/triage') %>">Triage publications</a>
             </li>
             <li>
+              <a href="<% $c->uri_for('/tools/dump/all_sessions/tabzip') %>">Download all session data as Zip</a>
+            </li>
+            <li>
+              <a href="<% $c->uri_for('/tools/dump/approved/tabzip') %>">Download approved sessions data as Zip</a>
+            </li>
+            <li>
               <a href="<% $c->uri_for('/tools/export/approved/tabzip') %>">Export approved
               sessions as Zip file</a>
+              (marks the sessions as exported)
             </li>
             <li>
               <a href="<% $c->uri_for('/tools/sessions_with_type_list') %>">List sessions by annotation type</a>

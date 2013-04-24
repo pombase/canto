@@ -783,9 +783,68 @@ sub remove_curs : Local Args(1)
   _redirect_to_pub($c, $pub);
 }
 
-=head2 export_approved
 
- Function: Export the approved sessions in the requested format
+=head2 dump
+
+ Function: Retrieve the approved sessions in the requested format
+ Args    : $type - export type eg. cantojson, tabzip (zip file of tab delimited
+                   data)
+ Return  : the data
+
+=cut
+sub dump : Local Args(2)
+{
+  my ($self, $c, $dump_type, $dump_format) = @_;
+
+  if (!$self->check_access($c)->{dump}) {
+    die "insufficient privileges to dump sessions";
+  }
+
+  my $config = $c->config();
+  my $track_schema = PomCur::TrackDB->new(config => $config);
+
+  my $file_name_prefix;
+
+  my @options;
+  if ($dump_type eq 'approved') {
+    @options = qw(--dump-approved);
+    $file_name_prefix = "approved_session_annotation";
+  } else {
+    if ($dump_type eq 'all_sessions') {
+      # default is all sessions
+      @options = ();
+      $file_name_prefix = "all_session_annotation";
+    } else {
+      die "unknown export type '$dump_type'\n";
+    }
+  }
+
+  my $exporter;
+
+  if ($dump_format eq 'json') {
+    $exporter = PomCur::Export::CantoJSON->new(config => $config,
+                                               options => \@options);
+    $c->res->content_type('text/plain');
+  } else {
+    if ($dump_format eq 'tabzip') {
+      $exporter = PomCur::Export::TabZip->new(config => $config,
+                                              options => \@options);
+      $c->res->headers->header("Content-Disposition" =>
+                                 "attachment; filename=$file_name_prefix.zip");
+      $c->res->content_type('application/zip');
+    } else {
+      die "unknown export type: $dump_format\n";
+    }
+  }
+
+  my $results = $exporter->export();
+  $c->res->body($results);
+}
+
+=head2 export
+
+ Function: Export the approved sessions in the requested format then mark the
+           approved sessions as "EXPORTED".
  Args    : $type - export type eg. cantojson, tabzip (zip file of tab delimited
                    data)
  Return  : the exported data
@@ -821,13 +880,12 @@ sub export : Local Args(2)
   } else {
     if ($export_format eq 'tabzip') {
       $exporter = PomCur::Export::TabZip->new(config => $config,
-                                              options => \@options,
-                                              current_user => $admin_person);
+                                              options => \@options);
       $c->res->headers->header("Content-Disposition" =>
                                  "attachment; filename=approved_session_annotation.zip");
       $c->res->content_type('application/zip');
     } else {
-      die "unknown export type: $export_type\n";
+      die "unknown export type: $export_format\n";
     }
   }
 

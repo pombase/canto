@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests =>1;
+use Test::More tests => 19;
 use MooseX::Test::Role;
 use IO::String;
 
