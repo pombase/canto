@@ -18,7 +18,7 @@ my $curs_key = $curs_objects[0]->curs_key();
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
 my $mock_formatter = consumer_of('PomCur::Role::GAFFormatter');
-my $zip_data = $mock_formatter->get_all_annotation_zip($config, $curs_schema);
+my $zip_data = $mock_formatter->get_curs_annotation_zip($config, $curs_schema);
 
 use IO::String;
 
