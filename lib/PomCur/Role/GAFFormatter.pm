@@ -38,17 +38,69 @@ under the same terms as Perl itself.
 use Moose::Role;
 use Archive::Zip qw(:CONSTANTS :ERROR_CODES);
 
-=head2 get_all_annotation_zip
+=head2 get_all_curs_annotation_zip
 
- Usage   : my $zip_data = get_all_annotation_zip($config, $schema);
- Function: return a data string containing all the annotations, stored in
-           Zip format
+ Usage   : my $annotations = $self->get_all_curs_annotation_zip(...)
+  Usage   : my $zip_data = get_all_curs_annotation_zip($config, $curs_resultset);
+ Function: return a data string containing all the annotations from all the of
+           sessions the given by the $curs_resultset
+ Args    : $config - the Config object
+           $curs_resultset - the A TrackDB 'Curs' ResultSet
+ Returns : the Zip data
+
+=cut
+
+sub get_all_curs_annotation_zip
+{
+  my $self = shift;
+  my $config = shift;
+  my $curs_resultset = shift;
+
+  my $zip = Archive::Zip->new();
+  my %all_results_by_type = ();
+
+  my $session_count = $curs_resultset->count();
+
+  while (defined (my $curs = $curs_resultset->next())) {
+    my $curs_key = $curs->curs_key();
+    my $cursdb = PomCur::Curs::get_schema_for_key($config, $curs_key);
+
+    my $results = $self->get_all_annotation_tsv($config, $cursdb);
+
+    if (keys %$results > 0) {
+      for my $type_name (keys %$results) {
+        $all_results_by_type{$type_name} //= '';
+        $all_results_by_type{$type_name} .= $results->{$type_name}
+      }
+    }
+  }
+
+  my @annotation_type_names = keys %{$config->{annotation_types}};
+
+  for my $type_name (@annotation_type_names) {
+    my $file_name = "$type_name.tsv";
+    my $annotation_tsv = $all_results_by_type{$type_name} // '';
+    my $member = $zip->addString($annotation_tsv, $file_name);
+    $member->desiredCompressionMethod(COMPRESSION_DEFLATED);
+  }
+
+  my $io = IO::String->new();
+  $zip->writeToFileHandle($io);
+
+  return ${$io->string_ref()}
+}
+
+=head2 get_curs_annotation_zip
+
+ Usage   : my $zip_data = get_curs_annotation_zip($config, $schema);
+ Function: return a data string containing all the annotations from the given
+           CursDB, stored in Zip format
  Args    : $config - the Config object
            $schema - the CursDB object
  Returns : the Zip data, or undef if there are no annotations
 
 =cut
-sub get_all_annotation_zip
+sub get_curs_annotation_zip
 {
   my $self = shift;
   my $config = shift;

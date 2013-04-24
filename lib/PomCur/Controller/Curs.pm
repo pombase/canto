@@ -2421,7 +2421,7 @@ sub annotation_zipexport : Chained('top') PathPart('annotation/zipexport') Args(
   my $schema = $c->stash()->{schema};
   my $config = $c->config();
 
-  my $zip_data = $self->get_all_annotation_zip($config, $schema);
+  my $zip_data = $self->get_curs_annotation_zip($config, $schema);
 
   if (defined $zip_data) {
     my $st = $c->stash();

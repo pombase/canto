@@ -32,6 +32,7 @@ my $result = GetOptions ("help|h" => \$do_help,
 
 my %export_modules = (
   'canto-json' => 'PomCur::Export::CantoJSON',
+  'tab-zip' => 'PomCur::Export::CantoJSON',
 );
 
 sub usage

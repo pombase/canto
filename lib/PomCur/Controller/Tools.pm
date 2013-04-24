@@ -11,6 +11,7 @@ use Try::Tiny;
 
 use PomCur::MailSender;
 use PomCur::Export::CantoJSON;
+use PomCur::Export::TabZip;
 
 use Moose;
 
@@ -818,7 +819,16 @@ sub export : Local Args(2)
                                                options => \@options);
     $c->res->content_type('text/plain');
   } else {
-    die "unknown export type: $export_type\n";
+    if ($export_format eq 'tabzip') {
+      $exporter = PomCur::Export::TabZip->new(config => $config,
+                                              options => \@options,
+                                              current_user => $admin_person);
+      $c->res->headers->header("Content-Disposition" =>
+                                 "attachment; filename=approved_session_annotation.zip");
+      $c->res->content_type('application/zip');
+    } else {
+      die "unknown export type: $export_type\n";
+    }
   }
 
   my $results = $exporter->export();
