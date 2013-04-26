@@ -67,6 +67,17 @@ has state_after_export => (is => 'rw', init_arg => undef);
 
 requires 'config';
 
+sub _curs_rs_by_type
+{
+  my $curs_rs = shift;
+  my $session_state = shift;
+
+  return $curs_rs->search({ 'type.name' => 'annotation_status',
+                            'cursprops.value' => $session_state,
+                            'cv.name' => 'PomCur cursprop types', },
+                          { join => { cursprops => { type => 'cv' } } })
+}
+
 sub BUILD
 {
   my $self = shift;
@@ -76,6 +87,7 @@ sub BUILD
   my @opt_config = ('stream-mode!' => \$parsed_options{stream_mode},
                     'all-data!' => \$parsed_options{all_data},
                     'dump-approved!' => \$parsed_options{dump_approved},
+                    'dump-exported!' => \$parsed_options{dump_exported},
                     'export-approved!' => \$parsed_options{export_approved},
                     );
   if (!GetOptionsFromArray($self->options(), @opt_config)) {
@@ -96,10 +108,13 @@ sub BUILD
   my $curs_rs = $track_schema->resultset('Curs');
 
   if ($parsed_options{dump_approved} || $parsed_options{export_approved}) {
-    $curs_rs = $curs_rs->search({ 'type.name' => 'annotation_status',
-                                  'cursprops.value' => 'APPROVED',
-                                  'cv.name' => 'PomCur cursprop types', },
-                                { join => { cursprops => { type => 'cv' } } });
+    $curs_rs = _curs_rs_by_type($curs_rs, 'APPROVED');
+  } else {
+    if ($parsed_options{dump_exported}) {
+      $curs_rs = _curs_rs_by_type($curs_rs, 'EXPORTED');
+    } else {
+      # default is to export all
+    }
   }
 
   $parsed_options{curs_resultset} = $curs_rs;

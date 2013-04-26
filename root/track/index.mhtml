@@ -76,6 +76,9 @@ $model
               (marks the sessions as exported)
             </li>
             <li>
+              <a href="<% $c->uri_for('/tools/dump/exported/tabzip') %>">Download all exported sessions data as Zip</a>
+            </li>
+            <li>
               <a href="<% $c->uri_for('/tools/sessions_with_type_list') %>">List sessions by annotation type</a>
             </li>
           </ul>

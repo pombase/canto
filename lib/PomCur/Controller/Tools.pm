@@ -815,7 +815,12 @@ sub dump : Local Args(2)
       @options = ();
       $file_name_prefix = "all_session_annotation";
     } else {
-      die "unknown export type '$dump_type'\n";
+      if ($dump_type eq 'exported') {
+        @options = qw(--dump-exported);
+        $file_name_prefix = "exported_session_annotation";
+      } else {
+        die "unknown export type '$dump_type'\n";
+      }
     }
   }
 
