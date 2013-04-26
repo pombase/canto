@@ -162,16 +162,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     { map { ($_->{name}, $_->{evidence_codes}); } @{$config->{annotation_type_list}} };
   $st->{evidence_by_annotation_type} = $evidence_by_annotation_type;
 
-  my $genes_rs = $schema->resultset('Gene');
-  my $genes_in_session =
-    [map {
-      my $gene = $_;
-      my $gene_proxy = _get_gene_proxy($config, $gene);
-
-      { id => $gene->gene_id(),
-        display_name => $gene_proxy->display_name() } } $genes_rs->all()];
-  $st->{genes_in_session} = $genes_in_session;
-
   # curation_pub_id will be set if we are annotating a particular publication,
   # rather than annotating genes without a publication
   my $pub_id = $self->get_metadata($schema, 'curation_pub_id');
@@ -240,6 +230,24 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $c->detach($dispatch_dest);
     }
   }
+}
+
+sub _set_genes_in_session
+{
+  my $c = shift;
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $genes_rs = $schema->resultset('Gene');
+  my $genes_in_session =
+    [map {
+      my $gene = $_;
+      my $gene_proxy = _get_gene_proxy($config, $gene);
+
+      { id => $gene->gene_id(),
+        display_name => $gene_proxy->display_name() } } $genes_rs->all()];
+  $st->{genes_in_session} = $genes_in_session;
 }
 
 sub not_found: Private
@@ -2392,6 +2400,8 @@ sub gene : Chained('top') Args(1)
 
   my $gene = $schema->find_with_type('Gene', $gene_id);
   my $gene_proxy = _get_gene_proxy($config, $gene);
+
+  _set_genes_in_session($c);
 
   $st->{gene} = $gene_proxy;
 

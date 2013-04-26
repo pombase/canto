@@ -5,6 +5,10 @@ $gene
 @annotation_type_list
 </%args>
 
+<script language="javascript" type="text/javascript">
+var genes_in_session = <% $genes_in_session_js |n %>;
+</script>
+
 <div id="curs-annotation-actions">
 <div class="curs-box">
   <div class="curs-box-title">
@@ -129,4 +133,7 @@ if ($gene_count > 1) {
   $finish_text = 'Back to summary';
 }
 my $is_admin = $st->{is_admin_user};
+
+my $genes_in_session = $st->{genes_in_session};
+my $genes_in_session_js = Data::JavaScript::Anon->anon_dump($genes_in_session);
 </%init>
