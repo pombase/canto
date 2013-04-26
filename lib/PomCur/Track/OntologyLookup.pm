@@ -345,9 +345,9 @@ sub lookup_by_id
   my $self = shift;
   my %args = @_;
 
-  my $include_definition = $args{include_definition};
-  my $include_children = $args{include_children};
-  my $include_exact_synonyms = $args{include_exact_synonyms};
+  my $include_definition = $args{include_definition} // 0;
+  my $include_children = $args{include_children} // 0;
+  my $include_exact_synonyms = $args{include_exact_synonyms} // 0;
 
   my $term_id = $args{id};
   if (!defined $term_id) {
