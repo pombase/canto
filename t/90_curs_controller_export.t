@@ -45,7 +45,8 @@ test_psgi $app, sub {
                         'gene',
                         'taxon:4896',
                         '20100102',
-                        'PomBase')) . "\n";
+                        'PomBase',
+                        '')) . "\n";
     $exported .= join ("	",
                        ('PomBase',
                         'SPBC14F5.07',
@@ -61,7 +62,8 @@ test_psgi $app, sub {
                         'gene',
                         'taxon:4896',
                         '20100102',
-                        'PomBase')) . "\n";
+                        'PomBase',
+                        'annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PCO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)')) . "\n";
 
     is $res->code, 200;
     is ($res->content(), $exported);
