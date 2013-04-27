@@ -157,8 +157,6 @@ ok(grep { $_->{id} eq 'GO:0005487' &&
           $_->{id} eq 'GO:0022857' &&
           $_->{name} eq 'transmembrane transporter activity' } @children);
 
-warn "checking cache\n";
-
 my $cache_key = "FYPO:0000114#@%1#@%0#@%0";
 my $cached_value = $lookup->cache()->get($cache_key);
 ok(!defined $cached_value);
