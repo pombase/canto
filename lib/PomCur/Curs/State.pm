@@ -135,19 +135,21 @@ sub get_state
   my $gene_rs = $self->get_ordered_gene_rs($schema);
   my $gene_count = $gene_rs->count();
 
-  if (defined $self->get_metadata($schema, EXPORTED_TIMESTAMP_KEY)) {
+  my %all_metadata = $self->all_metadata($schema);
+
+  if (defined $all_metadata{EXPORTED_TIMESTAMP_KEY()}) {
     $state = EXPORTED;
   } else {
-    if (defined $self->get_metadata($schema, APPROVED_TIMESTAMP_KEY)) {
+    if (defined $all_metadata{APPROVED_TIMESTAMP_KEY()}) {
       $state = APPROVED;
     } else {
-      if (defined $self->get_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY)) {
+      if (defined $all_metadata{APPROVAL_IN_PROGRESS_TIMESTAMP_KEY()}) {
         $state = APPROVAL_IN_PROGRESS;
       } else {
-        if (defined $self->get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY)) {
+        if (defined $all_metadata{NEEDS_APPROVAL_TIMESTAMP_KEY()}) {
           $state = NEEDS_APPROVAL;
         } else {
-          if (defined $self->get_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY)) {
+          if (defined $all_metadata{CURATION_PAUSED_TIMESTAMP_KEY()}) {
             $state = CURATION_PAUSED;
           } else {
             if (defined $submitter_email) {
