@@ -1433,3 +1433,6 @@ chado:
 # feature_cvterms with these evidence code will be ignored
     evidence_codes_to_ignore:
       - TAS
+
+cache:
+  default_timeout: "2 hours"

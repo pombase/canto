@@ -39,6 +39,8 @@ use Moose::Role;
 
 with 'PomCur::Role::SimpleCache';
 
+requires 'config';
+
 around 'lookup' => sub {
   my $orig = shift;
   my $self = shift;
@@ -68,7 +70,7 @@ around 'lookup' => sub {
 
   my $ret_val = $self->$orig(@_);
 
-  $cache->set($cache_key, $ret_val, "2 hours");
+  $cache->set($cache_key, $ret_val, $self->config()->{cache}->{default_timeout});
 
   return $ret_val;
 };
