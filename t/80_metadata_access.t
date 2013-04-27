@@ -14,12 +14,14 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0001');
 
 package TestMetadata;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
+use Data::Compare;
+
 use Moose;
 
 with 'PomCur::Role::MetadataAccess';
 
-sub test
+sub test_metadata
 {
   my $self = shift;
 
@@ -34,6 +36,15 @@ sub test
 
   $self->unset_metadata($curs_schema, 'key1');
   ok(!defined $self->get_metadata($curs_schema, 'key1'));
+
+  my %all_metadata = $self->all_metadata($curs_schema);
+  ok(Compare(\%all_metadata,
+     {
+       curation_pub_id => 1,
+       curs_key => 'aaaa0001',
+       term_suggestion_count => 0,
+       unknown_conditions_count => 0,
+     }));
 }
 
 1;
@@ -42,4 +53,4 @@ package main;
 
 my $test = TestMetadata->new();
 
-$test->test();
+$test->test_metadata();

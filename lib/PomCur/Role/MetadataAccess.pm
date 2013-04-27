@@ -40,7 +40,7 @@ use Moose::Role;
 
 =head2 set_metadata
 
- Usage   : set_metadata($schema, $key, $value);
+ Usage   : $self->set_metadata($schema, $key, $value);
  Function: Set a key/value pair in the metadata table.  If value in undefined,
            remove the current row with the given key.  If a key already exists
            it will be updated with the new value
@@ -81,7 +81,7 @@ sub set_metadata
 
 =head2 get_metadata
 
- Usage   : my $value = get_metadata($schema, $key);
+ Usage   : my $value = $self->get_metadata($schema, $key);
  Function: Return the value in the row with the given key in the metadata table
            or undef if there is no row with that key
  Args    : $schema - the CursDB schema object
@@ -127,6 +127,23 @@ sub unset_metadata
   }
 
   $schema->resultset('Metadata')->search({ key => $key })->delete();
+}
+
+=head2 all_metadata
+
+ Usage   : my %all_metadata = $self->all_metadata($schema);
+ Function: Return a hash containing all the metadata from the given schema.
+ Args    : $schema - the CursDB schema object
+ Return  : a hash corresponding to the keys and values of the metadata table
+
+=cut
+
+sub all_metadata
+{
+  my $self = shift;
+  my $schema = shift;
+
+  return map { ($_->key(), $_->value()) } $schema->resultset('Metadata')->all();
 }
 
 1;
