@@ -45,6 +45,7 @@ use PomCur::Track::LoadUtil;
 
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackAdaptor';
+with 'PomCur::Role::SimpleCache';
 
 has load_util => (is => 'ro', isa => 'PomCur::Track::LoadUtil',
                   lazy_build => 1, init_arg => undef);
@@ -354,6 +355,17 @@ sub lookup_by_id
     croak "no id passed to OntologyLookup::lookup_by_id()";
   }
 
+  my @key_bits = ($term_id, $include_definition, $include_children, $include_exact_synonyms);
+  my $cache_key = join '#@%', @key_bits;
+
+  my $cache = $self->cache();
+
+  my $cached_value = $cache->get($cache_key);
+
+  if (defined $cached_value) {
+    return $cached_value;
+  }
+
   my $dbxref;
 
   eval {
@@ -389,9 +401,13 @@ sub lookup_by_id
     $cvterm = $terms[0];
   }
 
-  return { _make_term_hash($cvterm, $cvterm->cv()->name(),
+  my $ret_val = { _make_term_hash($cvterm, $cvterm->cv()->name(),
                            $include_definition, $include_children,
                            $include_exact_synonyms) };
+
+  $cache->set($cache_key, $ret_val, $self->config()->{cache}->{default_timeout});
+
+  return $ret_val;
 }
 
 
