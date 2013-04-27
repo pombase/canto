@@ -2,8 +2,6 @@ use strict;
 use warnings;
 use Test::More tests => 38;
 
-use Data::Compare;
-
 use PomCur::TestUtil;
 use PomCur::Track::OntologyLoad;
 use PomCur::Track::OntologyIndex;

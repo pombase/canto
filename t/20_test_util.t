@@ -3,7 +3,6 @@ use warnings;
 use Test::More tests => 15;
 use Test::Exception;
 use File::Temp qw(tempfile);
-use Data::Compare;
 use File::Copy qw(copy);
 
 use PomCur::TestUtil;

@@ -2,9 +2,6 @@ use strict;
 use warnings;
 use Test::More tests => 8;
 
-use Data::Compare;
-#use IO::String;
-
 use PomCur::TestUtil;
 use PomCur::Track::AlleleLoad;
 

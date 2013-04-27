@@ -2,8 +2,6 @@ use strict;
 use warnings;
 use Test::More tests => 47;
 
-use Data::Compare;
-
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
