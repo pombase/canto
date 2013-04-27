@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 48;
+use Test::More tests => 56;
 use Test::Deep;
 
 use PomCur::TestUtil;
@@ -157,6 +157,12 @@ ok(grep { $_->{id} eq 'GO:0005487' &&
           $_->{id} eq 'GO:0022857' &&
           $_->{name} eq 'transmembrane transporter activity' } @children);
 
+warn "checking cache\n";
+
+my $cache_key = "FYPO:0000114#@%1#@%0#@%0";
+my $cached_value = $lookup->cache()->get($cache_key);
+ok(!defined $cached_value);
+
 # try a phenotype name
 $id_result = $lookup->lookup(ontology_name => 'phenotype',
                              search_string => 'FYPO:0000114',
@@ -178,6 +184,12 @@ is($id_result->[0]->{annotation_namespace}, 'fission_yeast_phenotype');
 
 cmp_deeply($id_result->[0], $expected_fypo_term);
 
+# check that value was cached
+$cached_value = $lookup->cache()->get($cache_key);
+ok(defined $cached_value);
+is($cached_value->{name}, 'cellular process phenotype');
+
+
 my $fypo_cpp = $lookup->lookup_by_name(ontology_name => 'fission_yeast_phenotype',
                                        term_name => 'cellular process phenotype',
                                        include_definition => 1);
@@ -192,9 +204,27 @@ my $fypo_fail = $lookup->lookup_by_name(ontology_name => 'fission_yeast_phenotyp
 ok (!defined $fypo_fail);
 
 
+$lookup->cache()->remove($cache_key);
+
+$cached_value = $lookup->cache()->get($cache_key);
+ok(!defined $cached_value);
+
 my $fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000114',
                                       include_definition => 1);
 cmp_deeply($fypo_term, $expected_fypo_term);
+
+# check that value was cached
+$cached_value = $lookup->cache()->get($cache_key);
+ok(defined $cached_value);
+is($cached_value->{name}, 'cellular process phenotype');
+
+# check again to make sure that we are getting the cached value
+$lookup->cache()->set($cache_key, { name => 'aardvark' });
+$fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000114',
+                                   include_definition => 1);
+$cached_value = $lookup->cache()->get($cache_key);
+ok(defined $cached_value);
+is($cached_value->{name}, 'aardvark');
 
 # try looking up an alt_id
 $fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000028',
