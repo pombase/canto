@@ -2704,6 +2704,10 @@ sub reactivate_session : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
 
+  if ($c->stash()->{state} eq EXPORTED) {
+    die "can't reactivate an exported session";
+  }
+
   my $schema = $c->stash()->{schema};
 
   my $state = $c->stash()->{state};
@@ -2801,6 +2805,10 @@ sub _send_email_from_template
 sub begin_approval : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
+
+  if ($c->stash()->{state} eq EXPORTED) {
+    die "can't start approval of an exported session";
+  }
 
   _start_approval(@_);
 }
