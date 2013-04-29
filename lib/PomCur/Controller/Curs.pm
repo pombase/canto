@@ -69,7 +69,7 @@ my %state_dispatch = (
   NEEDS_APPROVAL, 'finished_publication',
   APPROVAL_IN_PROGRESS, undef,
   APPROVED, 'finished_publication',
-  EXPORTED, 'finished_publication',
+  EXPORTED, 'session_exported',
 );
 
 # used by the tests to find the most reecently created annotation
@@ -224,6 +224,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
 
+  if ($state eq EXPORTED && $path =~ m|/ro/?$|) {
+    $use_dispatch = 0;
+  }
+
   if ($use_dispatch) {
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
@@ -290,15 +294,23 @@ sub read_only_summary : Chained('top') PathPart('ro') Args(0)
 {
   my ($self, $c) = @_;
 
-  $c->stash->{title} = 'Read only session summary';
+  my $st = $c->stash();
+
+  my $pub_uniquename = $st->{pub}->uniquename();
+  $st->{title} = "Reviewing session for $pub_uniquename";
+
   # use only in header, not in body:
-  $c->stash->{show_title} = 0;
-  $c->stash->{read_only_curs} = 1;
-  $c->stash->{template} = 'curs/front.mhtml';
+  $st->{show_title} = 1;
+  $st->{read_only_curs} = 1;
+  $st->{template} = 'curs/front.mhtml';
 
-  my $pub_uniquename = $c->stash()->{pub}->uniquename();
-
-  $c->stash()->{message} = "Reviewing annotation session for $pub_uniquename";
+  if ($st->{state} eq EXPORTED) {
+    $st->{message} =
+      "Review only - this session has been exported so no changes are possible";
+  } else {
+    $st->{message} =
+      "Review only - this session has been submitted for approval so no changes are possible";
+  }
 }
 
 sub introduction : Private
@@ -2533,6 +2545,17 @@ sub finished_publication : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
 }
 
+sub session_exported : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Curation session exported';
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/session_exported.mhtml';
+}
+
 sub pause_curation : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
@@ -2550,6 +2573,11 @@ sub _assign_session :Private
   my ($self, $c, $reassign) = @_;
 
   my $st = $c->stash();
+
+  if ($c->stash()->{state} eq EXPORTED) {
+    die "This session has now been exported and cannot be assigned or " .
+      "reassigned";
+  }
 
   if ($reassign) {
     $st->{title} = 'Reassign session';

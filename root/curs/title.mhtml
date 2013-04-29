@@ -9,7 +9,7 @@ $show_title
 % }
 </div>
 <div class="curs-user-and-reassign">
-% if (defined $submitter_email && $show_curator_in_title) {
+% if ($show_curator_in_title && $can_reassign) {
 <span class="useridentifier"> 
   Curated by: <% $submitter_email %>
 </span>
@@ -21,6 +21,8 @@ $show_title
 </div>
 
 <%init>
+use PomCur::Curs::State qw(:all);
+
 my $st = $c->stash();
 my $current_path_uri = $st->{current_path_uri};
 
@@ -34,4 +36,12 @@ my $show_curator_in_title = $st->{show_curator_in_title};
 
 my $submitter_email = $st->{submitter_email};
 my $submitter_name = $st->{submitter_name};
+
+my $read_only_curs = $st->{read_only_curs};
+
+my $state = $st->{state};
+my $can_reassign = defined $submitter_email && !$read_only_curs && 
+  $state ne NEEDS_APPROVAL &&
+  $state ne APPROVAL_IN_PROGRESS && $state ne APPROVED &&
+  $state ne EXPORTED && $current_path_uri !~ m|/finish_form|;
 </%init>
