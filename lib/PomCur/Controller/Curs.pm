@@ -2470,8 +2470,8 @@ sub finish_form : Chained('top') Args(0)
 
   my $st = $c->stash();
 
-  $st->{title} = 'Finish curation session';
-  $st->{show_title} = 0;
+  $st->{title} = 'Curation finished';
+  $st->{show_title} = 1;
   $st->{template} = 'curs/finish_form.mhtml';
 
   $st->{finish_help} = $c->config()->{messages}->{finish_form};
