@@ -79,8 +79,8 @@ test_config:
     curs_annotations_2:
        - curs_key: aaaa0006
          uniquename: PMID:18426916
-         submitter_email: "henar@usal.es"
-         submitter_name: "Henar Valdivieso"
+         submitter_email: "other.tester@pombase.org"
+         submitter_name: "Other Tester"
          current_gene: "SPCC576.16c"
          genes:
            - "SPCC576.16c"
@@ -94,12 +94,12 @@ test_config:
                evidence_code: IMP
                term_ontid: GO:0055085
                curator:
-                 email: henar@usal.es
-                 name: Henar Valdivieso
+                 email: other.tester@pombase.org
+                 name: Other Tester
        - curs_key: aaaa0007
          uniquename: PMID:19756689
-         submitter_email: "Ken.Sawin@ed.ac.uk"
-         submitter_name: "Ken Sawin"
+         submitter_email: "some.testperson@pombase.org"
+         submitter_name: "Some Testperson"
          current_gene: "SPCC576.16c"
          genes:
            - "SPCC576.16c"
@@ -137,8 +137,8 @@ test_config:
                  name: miscellaneous transmembrane transport
                  definition: The process in which miscellaneous stuff is transported from one side of a membrane to the other.
                curator:
-                 email: "Ken.Sawin@ed.ac.uk"
-                 name: "Ken Sawin"
+                 email: "some.testperson@pombase.org"
+                 name: "Some Testperson"
            - type: biological_process
              status: new
              genes(Gene:primary_identifier):
@@ -150,8 +150,8 @@ test_config:
                with_gene: SPCC576.16c
                annotation_extension: "annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PCO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)"
                curator:
-                 email: "Ken.Sawin@ed.ac.uk"
-                 name: "Ken Sawin"
+                 email: "some.testperson@pombase.org"
+                 name: "Some Testperson"
            - type: molecular_function
              status: new
              genes(Gene:primary_identifier):
@@ -161,8 +161,8 @@ test_config:
                evidence_code: IDA
                term_ontid: GO:0022857
                curator:
-                 email: "Ken.Sawin@ed.ac.uk"
-                 name: "Ken Sawin"
+                 email: "some.testperson@pombase.org"
+                 name: "Some Testperson"
            - type: genetic_interaction
              status: new
              genes(Gene:primary_identifier):
@@ -174,8 +174,8 @@ test_config:
                  - primary_identifier: SPBC14F5.07
                  - primary_identifier: SPAC27D7.13c
                curator:
-                 email: "Ken.Sawin@ed.ac.uk"
-                 name: "Ken Sawin"
+                 email: "some.testperson@pombase.org"
+                 name: "Some Testperson"
            - type: phenotype
              status: new
              alleles(Allele:description):
@@ -189,8 +189,8 @@ test_config:
                  - 'PCO:0000004'
                  - 'rich medium'
                curator:
-                 email: "Ken.Sawin@ed.ac.uk"
-                 name: "Ken Sawin"
+                 email: "some.testperson@pombase.org"
+                 name: "Some Testperson"
            - type: phenotype
              status: new
              alleles(Allele:description):
@@ -200,8 +200,8 @@ test_config:
                evidence_code: Co-immunoprecipitation experiment
                term_ontid: FYPO:0000017
                curator:
-                 email: "Ken.Sawin@ed.ac.uk"
-                 name: "Ken Sawin"
+                 email: "some.testperson@pombase.org"
+                 name: "Some Testperson"
            - type: post_translational_modification
              status: new
              genes(Gene:primary_identifier):
@@ -211,5 +211,5 @@ test_config:
                evidence_code: ISS
                term_ontid: MOD:01157
                curator:
-                 email: "Ken.Sawin@ed.ac.uk"
-                 name: "Ken Sawin"
+                 email: "some.testperson@pombase.org"
+                 name: "Some Testperson"

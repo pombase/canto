@@ -27,7 +27,7 @@ my $pub = $schema->find_with_type('Pub',
 ok($pub);
 my $curator = $schema->find_with_type('Person',
                                       {
-                                        name => 'Henar Valdivieso',
+                                        name => 'Other Tester',
                                       });
 ok($curator);
 

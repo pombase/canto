@@ -31,8 +31,8 @@ my $full_expected_curation_session =
           type => "biological_process",
           publication => 'PMID:19756689',
           curator => {
-            name => 'Ken Sawin',
-            email => 'Ken.Sawin@ed.ac.uk',
+            name => 'Some Testperson',
+            email => 'some.testperson@pombase.org',
           },
           term_suggestion => {
             name => 'miscellaneous transmembrane transport',
@@ -54,8 +54,8 @@ my $full_expected_curation_session =
           type => "biological_process",
           publication => 'PMID:19756689',
            curator => {
-            name => 'Ken Sawin',
-            email => 'Ken.Sawin@ed.ac.uk',
+            name => 'Some Testperson',
+            email => 'some.testperson@pombase.org',
           },
           with_gene => "SPCC576.16c",
           annotation_extension => 'annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PCO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)',
@@ -74,8 +74,8 @@ my $full_expected_curation_session =
           type => 'molecular_function',
           publication => 'PMID:19756689',
           curator => {
-            name => 'Ken Sawin',
-            email => 'Ken.Sawin@ed.ac.uk',
+            name => 'Some Testperson',
+            email => 'some.testperson@pombase.org',
           },
           term => 'GO:0022857',
           genes => {
@@ -89,8 +89,8 @@ my $full_expected_curation_session =
           type => 'genetic_interaction',
           publication => 'PMID:19756689',
           curator => {
-            name => 'Ken Sawin',
-            email => 'Ken.Sawin@ed.ac.uk',
+            name => 'Some Testperson',
+            email => 'some.testperson@pombase.org',
           },
           status => 'new',
           creation_date => "2010-01-02",
@@ -118,8 +118,8 @@ my $full_expected_curation_session =
           expression => 'Overexpression',
           publication => 'PMID:19756689',
           curator => {
-            name => 'Ken Sawin',
-            email => 'Ken.Sawin@ed.ac.uk',
+            name => 'Some Testperson',
+            email => 'some.testperson@pombase.org',
           },
           type => 'phenotype',
           conditions => [
@@ -157,8 +157,8 @@ my $full_expected_curation_session =
           type => 'phenotype',
           publication => 'PMID:19756689',
           curator => {
-            name => 'Ken Sawin',
-            email => 'Ken.Sawin@ed.ac.uk',
+            name => 'Some Testperson',
+            email => 'some.testperson@pombase.org',
           },
           term => 'FYPO:0000017'
         },
@@ -169,8 +169,8 @@ my $full_expected_curation_session =
           evidence_code => 'ISS',
           publication => 'PMID:19756689',
           curator => {
-            name => 'Ken Sawin',
-            email => 'Ken.Sawin@ed.ac.uk',
+            name => 'Some Testperson',
+            email => 'some.testperson@pombase.org',
           },
           term => 'MOD:01157',
           genes => {
@@ -258,10 +258,10 @@ my %expected_people = (
     'name' => 'Mary Porter-Goff',
     'role' => 'user'
   },
-  'Ken.Sawin@ed.ac.uk' => {
-    'password' => 'Ken.Sawin@ed.ac.uk',
-    'lab' => 'Sawin Lab',
-    'name' => 'Ken Sawin',
+  'some.testperson@pombase.org' => {
+    'password' => 'some.testperson@pombase.org',
+    'lab' => 'Testperson Lab',
+    'name' => 'Some Testperson',
     'role' => 'user'
   },
   'val@sanger.ac.uk' => {
@@ -276,10 +276,10 @@ my %expected_people = (
     'name' => 'Midori Harris',
     'role' => 'admin'
   },
-  'henar@usal.es' => {
-    'password' => 'henar@usal.es',
-    'lab' => 'Valdivieso Lab',
-    'name' => 'Henar Valdivieso',
+  'other.tester@pombase.org' => {
+    'password' => 'other.tester@pombase.org',
+    'lab' => 'Tester Lab',
+    'name' => 'Other Tester',
     'role' => 'user'
   },
   'iwasaki@tsurumi.yokohama-cu.ac.jp' => {
@@ -337,8 +337,8 @@ my %expected_labs = (
   'Wahls Lab' => {
     'head' => 'Wayne Wahls'
   },
-  'Sawin Lab' => {
-    'head' => 'Ken Sawin'
+  'Testperson Lab' => {
+    'head' => 'Some Testperson'
   },
   'Macneill Lab' => {
     'head' => 'Stuart Macneill'
@@ -358,8 +358,8 @@ my %expected_labs = (
   'User Lab' => {
     'head' => 'Test User'
   },
-  'Valdivieso Lab' => {
-    'head' => 'Henar Valdivieso'
+  'Tester Lab' => {
+    'head' => 'Other Tester'
   },
   'Yamano Lab' => {
     'head' => 'Hiro Yamano'
