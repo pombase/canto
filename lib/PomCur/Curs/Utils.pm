@@ -646,7 +646,7 @@ sub get_existing_annotations
   my $options = shift;
 
   my $annotation_type_category =
-    $config->{annotation_types}->{$options->{annotation_type_name}};
+    $config->{annotation_types}->{$options->{annotation_type_name}}->{category};
 
   if ($annotation_type_category eq 'ontology') {
     return get_existing_ontology_annotations($config, $options);
