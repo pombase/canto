@@ -112,7 +112,7 @@ check_new_annotations($dummy_alt_id);
                   annotation_type_name => 'cellular_component',
                 };
   my ($all_annotation_count, $annotations) =
-    PomCur::Curs::Utils::get_existing_ontology_annotations ($config, $options);
+    PomCur::Curs::Utils::get_existing_annotations($config, $options);
 
   is (@$annotations, 1);
   cmp_deeply($annotations->[0],
