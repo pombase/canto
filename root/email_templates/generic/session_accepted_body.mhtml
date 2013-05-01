@@ -5,9 +5,39 @@ $publication_title
 $session_link
 $curator_name
 $help_index
+$existing_annotation_count
 </%args>
 Thank you for agreeing to curate:
   <% $publication_uniquename %> - "<% $publication_title %>"
 
-You can return to your curation session at any time with this link:
+You now have a curation link available here:
   <% $session_link %>
+
+You can use the above link to return to curation if you leave the page. 
+When you return, you will see the annotations you have already made.
+
+You can annotate these data types in the tool:
+<& ../annotation_type_list.mhtml, config => $config &>
+You will also be able to modify any annotations made by your colleague.
+
+% if ($existing_annotation_count > 0) {
+For this paper, there are also several previously curated annotations in the
+database.  These existing annotations will be shown in the curation tool, but
+cannot be altered. If you notice any problems with existing annotations,
+please let the curators know.
+
+% }
+Help is available on each page, and you can also read the Canto manual
+(<% $help_index %>) or contact the help desk
+(<% $config->{contact_email}->{address} %>) for assistance at any time. You
+will also have an opportunity to provide any data that the tool does not
+capture so that curators can include it with your curation.
+
+The curation link will work indefinitely, so you can leave and return to the
+same URL as often as you want. When you have added all the annotations you
+can, you may either submit the annotations to the curators, or send
+the paper to another co-author for further curation.
+
+We greatly appreciate your contribution.
+
+<% $session_link %>
