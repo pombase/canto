@@ -1,1 +1,4 @@
+<%args>
+$publication_uniquename
+</%args>
 Invitation to curate your publication <% $publication_uniquename %> for PomBase
