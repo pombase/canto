@@ -582,6 +582,8 @@ class_info:
         - name: publication
           editable: 0
           source: pub
+        - name: creation_date
+          editable: 0
         - name: current_curator
           referenced_class: Person
           source:
