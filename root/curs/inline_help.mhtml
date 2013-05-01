@@ -6,7 +6,7 @@ $key
 <span class="curs-inline-help-icon">
   <a href="<% $help_url %>" target="_blank">
     <img src="<% $help_icon_url %>"
-         alt="help" title="help link">
+         alt="help" title="<% $help_text %>">
   </a>
 </span>
 
@@ -31,12 +31,17 @@ my $help_url;
 
 if (exists $help_config->{inline}) {
   $help_text = $help_config->{inline};
-} else {
-  if (exists $help_config->{url}) {
-    $help_url = $help_config->{url};
-  } else {
-    die qq(configuration not "inline" or "url" for key: $key);
-  }
+}
+
+if (exists $help_config->{url}) {
+  $help_url = $help_config->{url};
+  (my $instance_top_uri = $c->uri_for('/')) =~ s|/$||;
+  $help_url =~ s/\@\@instance_top_uri\@\@/$instance_top_uri/;
+  $help_text //= "help link";
+}
+
+if (!defined $help_text && !defined $help_url) {
+  die qq(No "inline" or "url" configuration for key: $key);
 }
 
 my $popup_id = "curs-inline-help-popup-$key";

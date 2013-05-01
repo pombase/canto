@@ -55,8 +55,8 @@ information not directly shown in a particular paper, please
 
 <div class="row-fluid">
 <div class="span12">
-<h3>
-Curating specific data types
+<h3 id="docs-curating-specific-types">
+  Curating specific data types
 </h3>
 <p>
 You can curate any of these types of data for any gene you have put on the
