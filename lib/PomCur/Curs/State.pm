@@ -120,13 +120,7 @@ sub get_state
     croak "no schema passed to get_state()";
   }
 
-  my $metadata_rs = $schema->resultset('Metadata');
-  my $curs_key_row = $metadata_rs->find({ key => 'curs_key' });
-
-  if (!defined $curs_key_row) {
-    croak 'failed to read curs_key from: ', $schema->storage()->connect_info();
-  }
-  my $curs_key = $curs_key_row->value();
+  my $curs_key = $self->get_metadata($schema, 'curs_key');
 
   my ($submitter_email, $submitter_name) =
     $self->curator_manager()->current_curator($curs_key);

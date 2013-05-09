@@ -107,6 +107,9 @@ sub set_curator
 {
   my $self = shift;
   my $curs_key = shift;
+
+  die unless defined $curs_key;
+
   my $curs_curator_email = shift;
 
   $curs_curator_email =~ s/(.*)\@(.*)/$1\@\L$2/;
