@@ -44,6 +44,16 @@ __PACKAGE__->table("curs_curator");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 creation_date
+
+  data_type: 'timestamp'
+  is_nullable: 0
+
+=head2 accepted_date
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -53,6 +63,10 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "curator",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "creation_date",
+  { data_type => "timestamp", is_nullable => 0 },
+  "accepted_date",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -100,9 +114,27 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-01 15:58:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Y4srHArqQghI0ClHvqUpoQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-05-03 08:54:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Pk+T6BfYov5DaPiQnwCQ0Q
 
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
+
+use Carp;
+use PomCur::Util;
+
+sub new {
+  my ( $class, $attrs ) = @_;
+
+  if (defined $attrs->{creation_date}) {
+    croak "don't set creation_date in the constructor - it defaults to now";
+  }
+
+  $attrs->{creation_date} = PomCur::Util::get_current_datetime();
+
+  my $new = $class->next::method($attrs);
+
+  return $new;
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

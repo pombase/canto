@@ -73,7 +73,7 @@ sub schema_for_file
 
 =head2 connect_string_file_name
 
- Usage   : my $file = PomCur::TestUtil::connect_string_file($connect_string);
+ Usage   : my $file = PomCur::DBUtil::connect_string_file($connect_string);
  Function: Return the db file name from an sqlite connect string
  Args    : $connect_string
  Return  : the file name
@@ -86,6 +86,35 @@ sub connect_string_file_name
   (my $db_file_name = $connect_string) =~ s/dbi:SQLite:dbname=(.*)/$1/;
 
   return $db_file_name;
+}
+
+=head2 set_db_version
+
+ Usage   : PomCur::DBUtil::set_db_version($track_schema, $new_version);
+ Function: Set the version entry in the metadata table to $new_version,
+           which must be one more than the current version
+ Return  : nothing or die if the $new_version isn't one more than the current
+           version
+
+=cut
+sub set_db_version
+{
+  my $track_schema = shift;
+  my $new_version = shift;
+
+  my $schema_version_rs =
+    $track_schema->resultset('Metadata')
+                 ->search({ 'type.name' => 'schema_version' },
+                          { join => 'type' });
+  my $current_db_version = $schema_version_rs->first()->value();
+
+  if ($current_db_version + 1 == $new_version) {
+    my $schema_version_row = $schema_version_rs->first();
+    $schema_version_row->value($new_version);
+    $schema_version_row->update();
+  } else {
+    die "can't upgrade schema_version: $current_db_version\n";
+  }
 }
 
 1;

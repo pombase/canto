@@ -157,7 +157,9 @@ CREATE TABLE curs (
 CREATE TABLE curs_curator (
        curs_curator_id integer NOT NULL PRIMARY KEY,
        curs integer REFERENCES curs(curs_id) NOT NULL,
-       curator integer REFERENCES person(person_id) NOT NULL
+       curator integer REFERENCES person(person_id) NOT NULL,
+       creation_date timestamp NOT NULL,
+       accepted_date timestamp
 );
 
 CREATE TABLE cursprop (
