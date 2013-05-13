@@ -1074,7 +1074,7 @@ sub annotation_ontology_edit
   $st->{annotation_extra_help_text} = $annotation_extra_help_text;
   $st->{template} = "curs/modules/$module_category.mhtml";
 
- my $form = $self->form();
+  my $form = $self->form();
 
   my @all_elements = (
       {
