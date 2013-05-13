@@ -122,7 +122,7 @@ sub get_state
 
   my $curs_key = $self->get_metadata($schema, 'curs_key');
 
-  my ($submitter_email, $submitter_name) =
+  my ($submitter_email, $submitter_name, $accepted_date) =
     $self->curator_manager()->current_curator($curs_key);
   my $state = undef;
 
@@ -146,7 +146,7 @@ sub get_state
           if (defined $all_metadata{CURATION_PAUSED_TIMESTAMP_KEY()}) {
             $state = CURATION_PAUSED;
           } else {
-            if (defined $submitter_email) {
+            if (defined $submitter_email && defined $accepted_date) {
               if ($gene_count > 0) {
                 $state = CURATION_IN_PROGRESS;
               } else {
@@ -260,6 +260,14 @@ sub set_state
   my $guard = $schema->txn_scope_guard;
 
   given ($new_state) {
+    when (SESSION_ACCEPTED) {
+      if ($current_state ne SESSION_CREATED) {
+        carp "can't accept a session unless it's in the " . SESSION_CREATED .
+          " state";
+      }
+      $self->curator_manager()->accept_session();
+
+    }
     when (CURATION_IN_PROGRESS) {
       if ($current_state ne CURATION_PAUSED &&
           $force ne $current_state) {

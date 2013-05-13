@@ -42,24 +42,10 @@ use Carp;
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackAdaptor';
 
-=head2 current_curator
-
- Usage   : $curator_manager->current_curator($curs_key);
- Function: get the current curator of a curation session
- Args    : $curs - a TrackDB Curs or a curs_key that will be looked up
- Return  : ($email, name) - in an array context
-           $email - in a scalar context
-
-=cut
-
-sub current_curator
+sub _get_current_current_row
 {
   my $self = shift;
   my $curs_key = shift;
-
-  if (!defined $curs_key) {
-    croak "no curs_key passed to current_curator()\n";
-  }
 
   my $schema = $self->schema();
   my $curs_rs = $schema->resultset('Curs')->search({ curs_key => $curs_key });
@@ -79,13 +65,39 @@ sub current_curator
 
   my $curs_curator_first = $curs_curator_rs->first();
 
-  if (defined $curs_curator_first) {
-    my $first_curator = $curs_curator_first->curator();
+}
+
+=head2 current_curator
+
+ Usage   : $curator_manager->current_curator($curs_key);
+ Function: Get the current curator of a curation session.  ie the curator of the
+           curs_curator row with the highest curs_curator_id - the most recent.
+ Args    : $curs - a TrackDB Curs or a curs_key that will be looked up
+ Return  : ($email, $name, $accepted_date) - in an array context
+           $email - in a scalar context
+         note: the $accepted_date will be undef if the session hasn't been
+               accepted yet
+=cut
+
+sub current_curator
+{
+  my $self = shift;
+  my $curs_key = shift;
+
+  if (!defined $curs_key) {
+    croak "no curs_key passed to current_curator()\n";
+  }
+
+  my $curs_curator_row = $self->_get_current_current_row($curs_key);
+
+  if (defined $curs_curator_row) {
+    my $current_curator = $curs_curator_row->curator();
     if (wantarray) {
-      return ($first_curator->email_address(),
-              $first_curator->name());
+      return ($current_curator->email_address(),
+              $current_curator->name(),
+              $curs_curator_row->accepted_date());
     } else {
-      return $first_curator->email_address();
+      return $current_curator->email_address();
     }
   } else {
     return undef;
@@ -154,6 +166,35 @@ sub set_curator
       curator => $curator->person_id(),
     }
   );
+}
+
+=head2 accept_session
+
+ Usage   : $curator_manager->accept_session($curs_key);
+ Function: Set the "accepted" state on the curs_curator by setting the
+           accepted_date field to the current date (rather than the default,
+           null).
+ Args    : $curs_key - a curs_key that will be looked up to find the Curs and
+                       CursCurator to act on
+ Return  : Nothing, but dies if there is no current curator for the Curs given
+           by $curs_key.
+
+=cut
+
+sub accept_session
+{
+  my $self = shift;
+  my $curs_key = shift;
+
+  my $curs_curator_row = $self->_get_current_current_row($curs_key);
+
+  if (defined $curs_curator_row) {
+    my $current_date = PomCur::Util::get_current_datetime();
+    $curs_curator_row->accepted_date($current_date);
+    $curs_curator_row->update();
+  } else {
+    croak "can't accept session $curs_key as there is no current curator\n";
+  }
 }
 
 1;
