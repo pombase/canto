@@ -2631,9 +2631,15 @@ sub _assign_session :Private
     my $curs_key = $st->{curs_key};
 
     my $add_submitter = sub {
-      $self->curator_manager()->set_curator($curs_key, $submitter_email,
-                                            $submitter_name);
-    };
+      if ($submitter_email ne $current_submitter_email ||
+          $submitter_name ne $current_submitter_name) {
+        $curator_manager->set_curator($curs_key, $submitter_email,
+                                      $submitter_name);
+      }
+      if (!$reassign) {
+        $curator_manager->accept_session($curs_key);
+      }
+   };
 
     $schema->txn_do($add_submitter);
 
