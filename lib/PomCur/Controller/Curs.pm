@@ -175,10 +175,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   die "internal error, can't find Pub for pub_id $pub_id"
     if not defined $st->{pub};
 
-  if ($state ne SESSION_CREATED) {
-    $st->{submitter_email} = $submitter_email;
-    $st->{submitter_name} = $submitter_name;
-  }
+  $st->{submitter_email} = $submitter_email;
+  $st->{submitter_name} = $submitter_name;
 
   $st->{message_to_curators} =
     $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
@@ -2595,17 +2593,24 @@ sub _assign_session :Private
   my $introduction_text_name = 'submitter_name';
   my $introduction_text_email = 'submitter_email';
 
+  my $curator_manager = $self->curator_manager();
+
+  my ($current_submitter_email, $current_submitter_name) =
+    $curator_manager1->current_curator($st->{curs_key});
+
   my $form = $self->form();
 
   my @all_elements = (
       {
         name => 'submitter_name', label => 'Name', type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
+        default => $current_submitter_name,
       },
       {
         name => 'submitter_email', label => 'Email', type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
-      },
+        default => $current_submitter_email,
+     },
       {
         name => 'submit', type => 'Submit', value => 'Continue',
         attributes => { class => 'button', },
