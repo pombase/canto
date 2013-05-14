@@ -2596,7 +2596,7 @@ sub _assign_session :Private
   my $curator_manager = $self->curator_manager();
 
   my ($current_submitter_email, $current_submitter_name) =
-    $curator_manager1->current_curator($st->{curs_key});
+    $curator_manager->current_curator($st->{curs_key});
 
   my $form = $self->form();
 
