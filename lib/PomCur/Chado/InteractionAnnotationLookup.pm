@@ -67,7 +67,8 @@ sub _build_cache
                the search; only annotations for the gene are returned (optional)
            $options->{interaction_type} - "physical" or "genetic"
            $options->{max_results} - maximum number of interactions to return
- Returns : An array reference of annotation results:
+ Returns : A count of annotations and an array reference of annotation results:
+            (1,
             [ {
               gene => {
                 identifier => "SPAC22F3.13",
@@ -79,7 +80,7 @@ sub _build_cache
               },
               evidence_code => 'Phenotypic Enhancement',
               interacting_gene => { ... },
-            }, ... ]
+            }, ... ])
           - where annotation_id is a unique ID for this annotation
 
 =cut
@@ -131,7 +132,7 @@ sub lookup
   my $pub = $schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
 
   if (!defined $pub) {
-    return ();
+    return (0, []);
   }
 
   my %gene_constraint = ();
