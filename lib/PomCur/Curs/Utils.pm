@@ -608,6 +608,11 @@ sub get_existing_interaction_annotations
     my $lookup_ret_interactions;
     ($all_interactions_count, $lookup_ret_interactions) =
       $annotation_lookup->lookup($args);
+    if (!defined $all_interactions_count) {
+      use Data::Dumper;
+      die "annotation lookup returned undef count for args: ",
+        Dumper([$args]);
+    }
     @res = map {
       my $res = _process_interaction($annotation_lookup, $_);
       if (defined $res) {
