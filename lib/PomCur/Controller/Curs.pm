@@ -2631,7 +2631,8 @@ sub _assign_session :Private
     my $curs_key = $st->{curs_key};
 
     my $add_submitter = sub {
-      if ($submitter_email ne $current_submitter_email ||
+      if (!defined $current_submitter_email ||
+          $submitter_email ne $current_submitter_email ||
           $submitter_name ne $current_submitter_name) {
         $curator_manager->set_curator($curs_key, $submitter_email,
                                       $submitter_name);
