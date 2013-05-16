@@ -506,6 +506,11 @@ class_info:
           referenced_class: Person
           source:
             sql: "select curator from curs_curator where curs_curator_id = (select max(curs_curator_id) from curs_curator cc, curs c where cc.curs = c.curs_id and c.pub = me.pub_id)"
+        - name: session_sent
+          source:
+            sql: "select (case when (value is null) THEN 'no' ELSE value END) from curs, cursprop p, cvterm t where me.pub_id = curs.pub and curs.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'link_sent_to_curator_date'"
+          default: no
+          editable: 0
         # - name: type
         #   source: type_id
         #   values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "PomCur publication type")'

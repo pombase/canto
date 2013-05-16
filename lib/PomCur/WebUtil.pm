@@ -81,7 +81,7 @@ sub _format_field_value
     }
   }
 
-  return $field_value;
+  return $field_value // $col_conf->{default};
 }
 
 sub _get_cached_object
@@ -205,7 +205,7 @@ sub get_field_value
             return ($referenced_object, 'foreign_key', $primary_key_name);
           }
         } else {
-          return ($col_value, 'attribute', undef);
+          return ($col_value // $col_conf->{default}, 'attribute', undef);
         }
       } else {
         use Data::Dumper;
