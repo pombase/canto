@@ -654,11 +654,18 @@ sub create_session : Local Args(0)
   my $pub_id = $c->req()->param('pub_id');
   my $person_id = $c->req()->param('pub-create-session-person-id');
 
+  my $person =
+    $track_schema->resultset('Person')->find({ person_id => $person_id });
+
+  if (!defined $person) {
+    $c->flash()->{message} = "No curator chosen - session not created";
+    $c->res->redirect($return_path);
+    $c->detach();
+  }
+
   my $pub = $track_schema->find_with_type('Pub', { pub_id => $pub_id });
 
   if ($pub->not_exported_curs()->count() == 0) {
-    my $person =
-      $track_schema->resultset('Person')->find({ person_id => $person_id });
     my $admin_session = 0;
     if ($person->role()->name() eq 'admin') {
       $admin_session = 1;
