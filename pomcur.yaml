@@ -1020,6 +1020,10 @@ allele_type_list:
     allele_name_required: 0
     allow_expression_change: 1
     placeholder: eg. A25G, OR A-25G (for promoter region)
+  - name: nonsense mutation
+    export_type: nonsense_mutation
+    description_required: 1
+    allele_name_required: 0
   - name: other
     export_type: other
     description_required: 1
