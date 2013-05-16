@@ -30,7 +30,7 @@ $is_admin_user
 </div>
 
 <div class="curs-pub-assign-actions">
-  <button type="button" id="curs-pub-assign-popup-dialog">Set the corresponding author ...</button>
+  <button type="button" id="curs-pub-assign-popup-dialog">Set corresponding author ...</button>
 </div>
 %   }
 %     if ($not_exported_curs_rs->count() == 0) {
@@ -54,7 +54,7 @@ $is_admin_user
 </div>
 <div class="curs-pub-assign-actions">
   <button type="button" id="curs-pub-create-session-popup-dialog">Create a curation
-  session for this publication ...</button>
+  session ...</button>
 </div>
 %     } else {
 <div class="curs-pub-assign-actions">
