@@ -9,7 +9,30 @@ $is_admin_user
 <&| /view/object/object_top.mhtml, object => $object, class_info => $class_info &>
 
 % if ($is_admin_user) {
-%   if (defined $object->corresponding_author()) {
+% if (!defined $object->corresponding_author()) {
+<div id="curs-pub-assign-dialog" style="display: none">
+  <form id="curs-pub-assign-form" method="put"
+        action="<% $c->uri_for('/track/set_corresponding_author') %>">
+    <input type="hidden" name="pub-id" value="<% $pub_id %>"/>
+    <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
+
+    <& /person_picker.mhtml, id_prefix => 'pub-corresponding-author',
+      default_person => $object->corresponding_author() &>
+
+    <div id="curs-pub-assign-help" class="ferret-help-text">
+      Set the corresponding author of this publication.
+    </div>
+    <input id="curs-pub-assign-cancel" name="curs-pub-assign-cancel" type="submit"
+           value="Cancel" class="button"/>
+    <input name="curs-pub-assign-submit" type="submit"
+           value="Assign" class="button"/>
+  </form>
+</div>
+
+<div class="curs-pub-assign-actions">
+  <button type="button" id="curs-pub-assign-popup-dialog">Set the corresponding author ...</button>
+</div>
+%   }
 %     if ($not_exported_curs_rs->count() == 0) {
 <div id="curs-pub-create-session-dialog" style="display: none">
   <form id="curs-pub-create-session-form" method="put"
@@ -45,31 +68,7 @@ Send session to curator ...\
   </button>
 </div>
 %     }
-%   } else {
 
-<div id="curs-pub-assign-dialog" style="display: none">
-  <form id="curs-pub-assign-form" method="put"
-        action="<% $c->uri_for('/track/set_corresponding_author') %>">
-    <input type="hidden" name="pub-id" value="<% $pub_id %>"/>
-    <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
-
-    <& /person_picker.mhtml, id_prefix => 'pub-corresponding-author',
-      default_person => $object->corresponding_author() &>
-
-    <div id="curs-pub-assign-help" class="ferret-help-text">
-      Set the corresponding author of this publication.
-    </div>
-    <input id="curs-pub-assign-cancel" name="curs-pub-assign-cancel" type="submit"
-           value="Cancel" class="button"/>
-    <input name="curs-pub-assign-submit" type="submit"
-           value="Assign" class="button"/>
-  </form>
-</div>
-
-<div class="curs-pub-assign-actions">
-  <button type="button" id="curs-pub-assign-popup-dialog">Set the corresponding author ...</button>
-</div>
-%   }
 <div class="curs-pub-assign-actions">
   <button type="button" value="<% $pub_id %>" id="curs-pub-triage-this-pub">Triage</button>
 </div>
