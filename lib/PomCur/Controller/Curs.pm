@@ -272,6 +272,16 @@ sub _redirect_and_detach
   $c->detach();
 }
 
+sub _redirect_to_top_and_detach
+{
+  my $c = shift;
+
+  my $instance_top_uri = $c->uri_for('/');
+
+  $c->res->redirect($instance_top_uri);
+  $c->detach();
+}
+
 sub front : Chained('top') PathPart('') Args(0)
 {
   my ($self, $c) = @_;
@@ -2654,7 +2664,13 @@ sub _assign_session :Private
       $self->_send_mail($c, subject => $subject, body => '', to => 'admin');
 
       $self->_send_email_from_template($c, 'session_reassigned');
-      _redirect_and_detach($c, 'session_reassigned');
+
+      $c->flash()->{message} = "Session has been reassigned to: $submitter_email";
+
+      my $all_sessions = $c->session()->{all_sessions} //= {};
+      delete $all_sessions->{$curs_key};
+
+      _redirect_to_top_and_detach($c);
     } else {
       $self->_send_email_from_template($c, 'session_accepted');
       _redirect_and_detach($c);
@@ -2674,17 +2690,6 @@ sub assign_session : Chained('top') Args(0)
   my ($self, $c) = @_;
 
   $self->_assign_session($c, 0);
-}
-
-sub session_reassigned : Chained('top') Args(0)
-{
-  my ($self, $c) = @_;
-
-  my $st = $c->stash();
-
-  $st->{title} = 'Session reassigned';
-  $st->{show_curator_in_title} = 0;
-  $st->{template} = 'curs/session_reassigned.mhtml';
 }
 
 sub curation_paused : Chained('top') Args(0)
