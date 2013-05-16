@@ -2650,7 +2650,7 @@ sub _assign_session :Private
       if (!$reassign) {
         $curator_manager->accept_session($curs_key);
       }
-   };
+    };
 
     $schema->txn_do($add_submitter);
 
