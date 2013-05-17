@@ -761,7 +761,6 @@ $(document).ready(function() {
   });
 });
 
-// autocomplete for the traige tool
 $(document).ready(function() {
   if (typeof curs_people_autocomplete_list != 'undefined') {
     $(".curs-person-picker .curs-person-picker-input").autocomplete({
