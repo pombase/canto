@@ -173,10 +173,7 @@ sub triage :Local {
         });
         $pub_just_triaged->corresponding_author($new_person->person_id());
       } else {
-        # they didn't enter a new person
-        $c->flash()->{error} = "You must choose a corresponding author";
-        $c->res->redirect($c->uri_for('/tools/triage'));
-        $c->detach();
+        # they didn't enter a new person - that's OK
       }
     }
 
