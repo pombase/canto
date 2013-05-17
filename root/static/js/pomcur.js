@@ -698,9 +698,51 @@ $(document).ready(function() {
     window.location.href = application_root + 'tools/triage?triage-return-pub-id=' + $(this).val();
   });
 
-  $('#curs-pub-assign-cancel,#curs-pub-create-session-cancel').click(function () {
+  $('#curs-pub-assign-cancel,#curs-pub-create-session-cancel,.curs-dialog-cancel').click(function () {
     $(this).closest('.ui-dialog-content').dialog('close');
     return false;
+  });
+
+  function person_picker_add_person(current_this, initial_name) {
+    var $popup = $('#person-picker-popup');
+    $popup.find('.curs-person-picker-add-name').val(initial_name);
+    var $picker_div = $(current_this).closest('div');
+    $popup.data('success_callback', function(data) {
+      $picker_div.children('.curs-person-picker-input').val(data.name);
+      $picker_div.children('.curs-person-picker-person-id').val(data.person_id);
+    });
+    $popup.dialog({
+      title: 'Add a person ...',
+      modal: true });
+
+    $popup.find("form").ajaxForm({
+      success: function(data) {
+        if (typeof(data.error_message) == 'undefined') {
+          ($popup.data('success_callback'))(data);
+          $popup.dialog( "close" );
+        } else {
+          $.pnotify({
+            pnotify_title: 'Error',
+            pnotify_text: data.error_message,
+          });
+        }
+      },
+      dataType: 'json'
+    });
+  }
+
+  $('#curs-pub-assign-submit,#curs-pub-create-session-submit').click(function () {
+    var $dialog = $(this).closest('.ui-dialog-content');
+    // if the user types a name that doesn't autocomplete show the new person dialog
+    if ($dialog.find('.curs-person-picker-person-id').val().length == 0) {
+      var new_person_name = $dialog.find('.curs-person-picker-input').val();
+      person_picker_add_person(this, new_person_name);
+      return false;
+    } else {
+      $dialog.dialog('close');
+      var $form = $dialog.find('form');
+      return true;
+    }
   });
 
   $('#pubmed-id-lookup-form').ajaxForm({
@@ -759,9 +801,7 @@ $(document).ready(function() {
     moreText: "[show all]",
     lessText: "[hide]"
   });
-});
 
-$(document).ready(function() {
   if (typeof curs_people_autocomplete_list != 'undefined') {
     $(".curs-person-picker .curs-person-picker-input").autocomplete({
       minLength: 0,
@@ -783,9 +823,7 @@ $(document).ready(function() {
         .appendTo( ul );
     };
   }
-});
 
-$(document).ready(function() {
   function make_confirm_dialog(link, prompt, confirm_button_label, cancel_button_label) {
     var targetUrl = link.attr("href");
 
@@ -841,24 +879,7 @@ $(document).ready(function() {
   });
 
   $('button.curs-person-picker-add').click(function(e) {
-    var $popup = $('#person-picker-popup');
-    var $picker_div = $(this).closest('div');
-    $popup.data('success_callback', function(data) {
-      $picker_div.children('.curs-person-picker-input').val(data.name);
-      $picker_div.children('.curs-person-picker-person-id').val(data.person_id);
-    });
-    $popup.dialog({ 
-      title: 'Add a person ...',
-      modal: true });
-  });
-
-  var $person_picker_popup = $('#person-picker-popup');
-  $person_picker_popup.find("form").ajaxForm({
-    success: function(data) {
-      ($person_picker_popup.data('success_callback'))(data);
-      $person_picker_popup.dialog( "close" );
-    },
-    dataType: 'json'
+    person_picker_add_person(this);
   });
 });
 

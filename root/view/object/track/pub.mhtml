@@ -24,7 +24,7 @@ $is_admin_user
     </div>
     <input id="curs-pub-assign-cancel" name="curs-pub-assign-cancel" type="submit"
            value="Cancel" class="button"/>
-    <input name="curs-pub-assign-submit" type="submit"
+    <input id="curs-pub-assign-submit" name="curs-pub-assign-submit" type="submit"
            value="Assign" class="button"/>
   </form>
 </div>
@@ -48,8 +48,8 @@ $is_admin_user
 
     <input id="curs-pub-create-session-cancel" name="curs-pub-create-session-cancel" type="submit"
            value="Cancel" class="button"/>
-    <input name="curs-pub-create-session-submit" type="submit"
-           value="Create" class="button"/>
+    <input id="curs-pub-create-session-submit" name="curs-pub-create-session-submit" type="submit"
+           value="Create session" class="button"/>
   </form>
 </div>
 <div class="curs-pub-assign-actions">

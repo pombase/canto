@@ -10,7 +10,8 @@ $default_person => undef
     <div>
       Email: <input class="curs-person-picker-add-email" name="person-picker-add-email" size="30"/>
     </div>
-    <input type="submit" name="add" class="curs-person-picker-add-action" value="Add"/>
+    <input type="submit" name="cancel" class="curs-person-picker-add-cancel curs-dialog-cancel" value="Cancel"/>
+    <input type="submit" name="add" class="curs-person-picker-add-action" value="Add person"/>
   </form>
 </div>
 
