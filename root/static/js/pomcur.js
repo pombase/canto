@@ -708,8 +708,8 @@ $(document).ready(function() {
     $popup.find('.curs-person-picker-add-name').val(initial_name);
     var $picker_div = $(current_this).closest('div');
     $popup.data('success_callback', function(data) {
-      $picker_div.children('.curs-person-picker-input').val(data.name);
-      $picker_div.children('.curs-person-picker-person-id').val(data.person_id);
+      $picker_div.find('.curs-person-picker-input').val(data.name);
+      $picker_div.find('.curs-person-picker-person-id').val(data.person_id);
     });
     $popup.dialog({
       title: 'Add a person ...',
@@ -876,6 +876,10 @@ $(document).ready(function() {
 
   $("#curs-pub-send-session-popup-dialog").click(function(e) {
     make_confirm_dialog($(this), "Send link to session curator?", "Send", "Cancel");
+  });
+
+  $('button.curs-person-picker-add').click(function(e) {
+    person_picker_add_person(this);
   });
 });
 
