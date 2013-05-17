@@ -64,8 +64,15 @@ sub set_corresponding_author :Local {
   my $return_path = $c->req()->param('pub-view-path');
 
   if (defined $c->req->param('curs-pub-assign-submit')) {
-    my $pub_id = $c->req()->param('pub-id');
     my $person_id = $c->req()->param('pub-corresponding-author-person-id');
+
+    if (!defined $person_id || length $person_id == 0) {
+      $c->flash()->{message} = "No person chosen - corresponding author not set";
+      $c->res->redirect($return_path);
+      $c->detach();
+    }
+
+    my $pub_id = $c->req()->param('pub-id');
 
     my $schema = $c->schema('track');
     my $pub = $schema->resultset('Pub')->find({ pub_id => $pub_id });
