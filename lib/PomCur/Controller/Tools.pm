@@ -681,18 +681,15 @@ sub create_session : Local Args(0)
     );
     my $curs = $track_schema->create_with_type('Curs', { %create_args });
     my ($curs_schema) = PomCur::Track::create_curs_db($c->config(), $curs, $admin_session);
-    my $corresponding_author = $pub->corresponding_author();
 
-    if (defined $corresponding_author) {
-      my $initial_curator_name = $corresponding_author->name();
-      my $initial_curator_email = $corresponding_author->email_address();
+    my $curator_name = $person->name();
+    my $curator_email = $person->email_address();
 
-      my $curator_manager =
-        PomCur::Track::CuratorManager->new(config => $config);
+    my $curator_manager =
+      PomCur::Track::CuratorManager->new(config => $config);
 
-      $curator_manager->set_curator($curs->curs_key, $initial_curator_email,
-                                    $initial_curator_name);
-    }
+    $curator_manager->set_curator($curs->curs_key, $curator_email,
+                                  $curator_name);
 
     if (defined $curs_schema) {
       PomCur::Curs::State->new(config => $config)->store_statuses($curs_schema);
