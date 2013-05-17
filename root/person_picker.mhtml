@@ -16,8 +16,6 @@ $default_person
 % }
        name="<% $id_prefix %>-person-id" type="hidden"/>
 
-<button class="curs-person-picker-add" type="button">New ...</button>
-
 <script>
   var curs_people_autocomplete_list = [
 % for my $person_data (@people_data) {
