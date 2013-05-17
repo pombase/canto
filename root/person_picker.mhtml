@@ -22,7 +22,7 @@ $default_person
   var curs_people_autocomplete_list = [
 % for my $person_data (@people_data) {
     {
-      label: "<% $person_data->name() . ' <' . $person_data->email_address . '>' %>",
+      label: "<% $person_data->name() . ' <' . $person_data->email_address . '>' |n %>",
       name: "<% $person_data->name() %>",
       value: "<% $person_data->person_id() %>",
     },
