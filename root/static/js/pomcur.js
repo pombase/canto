@@ -698,8 +698,9 @@ $(document).ready(function() {
     window.location.href = application_root + 'tools/triage?triage-return-pub-id=' + $(this).val();
   });
 
-  $('#curs-pub-assign-cancel').click(function () {
-    $('#curs-pub-assign-dialog').hide();
+  $('#curs-pub-assign-cancel,#curs-pub-create-session-cancel').click(function () {
+    $(this).closest('.ui-dialog-content').dialog('close');
+    return false;
   });
 
   $('#pubmed-id-lookup-form').ajaxForm({
