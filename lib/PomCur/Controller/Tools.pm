@@ -663,6 +663,11 @@ sub create_session : Local Args(0)
     $c->detach();
   }
 
+  if ($c->req->param('curs-pub-create-session-cancel')) {
+    $c->res->redirect($return_path);
+    $c->detach();
+  }
+
   my $pub = $track_schema->find_with_type('Pub', { pub_id => $pub_id });
 
   if ($pub->not_exported_curs()->count() == 0) {
