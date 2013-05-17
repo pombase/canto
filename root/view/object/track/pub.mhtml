@@ -16,12 +16,12 @@ $is_admin_user
     <input type="hidden" name="pub-id" value="<% $pub_id %>"/>
     <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
 
-    <& /person_picker.mhtml, id_prefix => 'pub-corresponding-author',
-      default_person => $object->corresponding_author() &>
-
     <div id="curs-pub-assign-help" class="ferret-help-text">
       Set the corresponding author of this publication.
     </div>
+    <& /person_picker.mhtml, id_prefix => 'pub-corresponding-author',
+      default_person => $object->corresponding_author() &>
+
     <input id="curs-pub-assign-cancel" name="curs-pub-assign-cancel" type="submit"
            value="Cancel" class="button"/>
     <input id="curs-pub-assign-submit" name="curs-pub-assign-submit" type="submit"
