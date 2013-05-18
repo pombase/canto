@@ -685,6 +685,7 @@ $(document).ready(function() {
 
   $('#curs-pub-assign-popup-dialog').click(function () {
     $('#curs-pub-assign-dialog').dialog({ modal: true,
+                                          title: 'Set the corresponding author ...',
                                           width: '50em' });
   });
 
