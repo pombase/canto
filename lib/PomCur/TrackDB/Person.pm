@@ -239,6 +239,21 @@ sub is_admin
   }
 }
 
+=head2 name_and_email
+
+ Usage   : my $name_and_email = $person->name_and_email();
+ Function: Return a string like "Some Person <some_person@example.com>"
+ Args    : None
+
+=cut
+
+sub name_and_email
+{
+  my $self = shift;
+
+  return $self->name() . " <" . $self->email_address() . ">";
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

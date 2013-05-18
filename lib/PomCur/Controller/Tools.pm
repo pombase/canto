@@ -697,6 +697,62 @@ sub create_session : Local Args(0)
   $c->detach();
 }
 
+=head2 reassign_session
+
+ Function: Reassign a session
+
+=cut
+
+sub reassign_session : Local Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $return_path = $c->req()->param('pub-view-path');
+
+  my $track_schema = $c->schema('track');
+  my $config = $c->config();
+
+  my $pub_id = $c->req()->param('pub_id');
+  my $pub = $track_schema->find_with_type('Pub', { pub_id => $pub_id });
+
+  my $person_id = $c->req()->param('pub-reassign-session-person-id');
+
+  my $person =
+    $track_schema->resultset('Person')->find({ person_id => $person_id });
+
+  if (!defined $person) {
+    $c->flash()->{message} = "No curator chosen - session not reassigned";
+    $c->res->redirect($return_path);
+    $c->detach();
+  }
+
+  my $curs_rs = $pub->not_exported_curs();
+
+  my $curs = $curs_rs->first();
+  my $curs_key = $curs->curs_key();
+
+  my $curator_manager =
+    PomCur::Track::CuratorManager->new(config => $c->config());
+  my ($current_submitter_email, $current_submitter_name) =
+    $curator_manager->current_curator($curs_key);
+
+  if (defined $current_submitter_email &&
+      $current_submitter_email ne $person->email_address()) {
+    $curator_manager->set_curator($curs_key, $person->email_address(),
+                                  $person->name());
+    my $name_and_email = $person->name_and_email();
+    $c->flash()->{message} = "Session reassigned to: $name_and_email";
+  } else {
+    $c->flash()->{message} =
+      "New curator is the same as the previous curator - no action taken";
+  }
+
+  $c->res->redirect($return_path);
+  $c->detach();
+}
+
 sub send_session : Local Args(1)
 {
   my ($self, $c, $curs_key) = @_;

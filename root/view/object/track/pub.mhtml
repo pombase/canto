@@ -57,6 +57,27 @@ $is_admin_user
   session ...</button>
 </div>
 %     } else {
+<div id="curs-pub-reassign-session-dialog" style="display: none">
+  <form id="curs-pub-reassign-session-form" method="put"
+        action="<% $c->uri_for('/tools/reassign_session') %>">
+    <input type="hidden" name="pub_id" value="<% $pub_id %>"/>
+    <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
+
+    <div id="curs-pub-reassign-session-help" class="ferret-help-text">
+      Choose a person to curate of this paper.
+    </div>
+    <& /person_picker.mhtml, id_prefix => 'pub-reassign-session',
+      default_person => $object->corresponding_author() &>
+
+    <input id="curs-pub-reassign-session-cancel" name="curs-pub-reassign-session-cancel" type="submit"
+           value="Cancel" class="button"/>
+    <input id="curs-pub-reassign-session-submit" name="curs-pub-reassign-session-submit" type="submit"
+           value="Reassign session" class="button"/>
+  </form>
+</div>
+<div class="curs-pub-assign-actions">
+  <button type="button" id="curs-pub-reassign-session-popup-dialog">Reassign session ...</button>
+</div>
 <div class="curs-pub-assign-actions">
   <button href="<% $c->uri_for('/tools/send_session/' . $curs_key) %>"
                 type="button" id="curs-pub-send-session-popup-dialog">\

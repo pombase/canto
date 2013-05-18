@@ -694,6 +694,12 @@ $(document).ready(function() {
                                                   width: '50em' });
   });
 
+  $('#curs-pub-reassign-session-popup-dialog').click(function () {
+    $('#curs-pub-reassign-session-dialog').dialog({ modal: true,
+                                                    title: 'Reassign a session',
+                                                    width: '50em' });
+  });
+
   $('#curs-pub-triage-this-pub').click(function () {
     window.location.href = application_root + 'tools/triage?triage-return-pub-id=' + $(this).val();
   });
