@@ -688,6 +688,9 @@ sub create_session : Local Args(0)
     $curator_manager->set_curator($curs->curs_key, $curator_email,
                                   $curator_name);
 
+    my $name_and_email = $person->name_and_email();
+    $c->flash()->{message} = "Created session for: $name_and_email";
+
     if (defined $curs_schema) {
       PomCur::Curs::State->new(config => $config)->store_statuses($curs_schema);
     }
@@ -807,7 +810,7 @@ sub send_session : Local Args(1)
                                                    value => $now });
   }
 
-  $c->flash()->{message} = "Session email sent to user";
+  $c->flash()->{message} = "Session email sent to $submitter_name <$submitter_email>";
 
   _redirect_to_pub($c, $pub);
 }
