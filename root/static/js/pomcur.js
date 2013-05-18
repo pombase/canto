@@ -686,19 +686,19 @@ $(document).ready(function() {
   $('#curs-pub-assign-popup-dialog').click(function () {
     $('#curs-pub-assign-dialog').dialog({ modal: true,
                                           title: 'Set the corresponding author ...',
-                                          width: '50em' });
+                                          width: '40em' });
   });
 
   $('#curs-pub-create-session-popup-dialog').click(function () {
     $('#curs-pub-create-session-dialog').dialog({ modal: true,
                                                   title: 'Create a session',
-                                                  width: '50em' });
+                                                  width: '40em' });
   });
 
   $('#curs-pub-reassign-session-popup-dialog').click(function () {
     $('#curs-pub-reassign-session-dialog').dialog({ modal: true,
                                                     title: 'Reassign a session',
-                                                    width: '50em' });
+                                                    width: '40em' });
   });
 
   $('#curs-pub-triage-this-pub').click(function () {
