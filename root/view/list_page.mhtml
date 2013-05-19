@@ -128,9 +128,9 @@ Rows to display:
   numrows => $numrows, page => $page, column_confs => \@column_confs &>
 
 % } else {
-
+<p>
 No results
-
+</p>
 % }
 
 </div>
