@@ -47,6 +47,9 @@ use Moose;
 
 with 'PomCur::Role::MetadataAccess';
 
+has curator_manager => (is => 'rw', init_arg => undef,
+                        isa => 'PomCur::Track::CuratorManager');
+
 no Moose;
 
 $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} = 'test';
@@ -95,7 +98,11 @@ sub new
 
   $self->{config} = $config;
 
-  return bless $self, $class;
+  bless $self, $class;
+
+  $self->curator_manager(PomCur::Track::CuratorManager->new(config => $config));
+
+  return $self;
 }
 
 =head2 init_test
