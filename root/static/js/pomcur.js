@@ -774,7 +774,9 @@ $(document).ready(function() {
           $('#pub-details-uniquename').html(data.pub.uniquename);
           $('#pub-details-title').html(data.pub.title);
           $('#pub-details-authors').html(data.pub.authors);
-          $('#pub-details-abstract').html(data.pub.abstract);
+          var $abstract_details = $('#pub-details-abstract');
+          $abstract_details.html(data.pub.abstract);
+          add_jTruncate($abstract_details);
           $('#pubmed-id-lookup').hide();
           $('#pubmed-id-lookup-pub-results').show();
         }
@@ -802,12 +804,16 @@ $(document).ready(function() {
     window.location.href = application_root + '/tools/pub_session/' + pub_id;
   });
 
-  $('.non-key-attribute').jTruncate({
-    length: 300,
-    minTrail: 50,
-    moreText: "[show all]",
-    lessText: "[hide]"
-  });
+  function add_jTruncate($element) {
+    $element.jTruncate({
+      length: 300,
+      minTrail: 50,
+      moreText: "[show all]",
+      lessText: "[hide]"
+    });
+  }
+
+  add_jTruncate($('.non-key-attribute'));
 
   if (typeof curs_people_autocomplete_list != 'undefined') {
     $(".curs-person-picker .curs-person-picker-input").autocomplete({
