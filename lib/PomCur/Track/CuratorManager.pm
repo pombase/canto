@@ -137,12 +137,14 @@ sub set_curator
   my $curator;
 
   if ($curs_curator_email_rs->count() > 0) {
-    my $current_curator = $self->current_curator($curs_key);
-
-    if (defined $current_curator && $current_curator eq $curs_curator_email) {
-      return;
-    }
     $curator = $curs_curator_email_rs->first();
+
+    if (defined $curs_curator_name && length $curs_curator_name > 0 &&
+      (!defined $curator->name() || $curator->name() ne $curs_curator_name)) {
+
+      $curator->name($curs_curator_name);
+      $curator->update();
+    }
   } else {
     my $user_role_id =
       $schema->find_with_type('Cvterm', { name => 'user' })->cvterm_id();

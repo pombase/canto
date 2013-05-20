@@ -2608,18 +2608,54 @@ sub _assign_session :Private
   my ($current_submitter_email, $current_submitter_name) =
     $curator_manager->current_curator($st->{curs_key});
 
-  my $form = $self->form();
+  $st->{current_submitter_email} = $current_submitter_email;
 
-  my @all_elements = (
+  my $form = $self->form();
+  $form->attributes({ autocomplete => 'on' });
+
+  my @all_elements = ();
+
+  if ($reassign && !defined $current_submitter_email) {
+    push @all_elements, (
       {
-        name => 'submitter_name', label => 'Name', type => 'Text', size => 40,
-        constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
-        default => $current_submitter_name,
+        type => 'Block', tag => 'p',
+        content => 'Please let us know your name and email address for our records:'
       },
       {
-        name => 'submitter_email', label => 'Email', type => 'Text', size => 40,
+        name => 'reassigner_name', label => 'Your name', type => 'Text', size => 40,
+        constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
+        default => $c->session()->{last_reassigner_name},
+      },
+      {
+        name => 'reassigner_email', label => 'Your email address', type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
-        default => $current_submitter_email,
+        default => $c->session()->{last_reassigner_email},
+      },
+      {
+        type => 'Block', tag => 'p',
+        content =>
+          'Please enter name and email address of the person you wish to assign ' .
+          'this paper to.  ' .
+          'The new curator will receive an email with the link to the entry page to ' .
+          'curate the paper.',
+      }
+    );
+  }
+
+  push @all_elements, (
+      {
+        name => 'submitter_name',
+        label => ucfirst (($reassign ? 'new curator ' : '') . 'name'),
+        type => 'Text', size => 40,
+        constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
+        default => ($reassign ? undef : $current_submitter_name),
+      },
+      {
+        name => 'submitter_email',
+        label => ucfirst (($reassign ? 'new curator ' : '') . 'email'),
+        type => 'Text', size => 40,
+        constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
+        default => ($reassign ? undef : $current_submitter_email),
      },
       {
         name => 'submit', type => 'Submit', value => 'Continue',
@@ -2634,6 +2670,9 @@ sub _assign_session :Private
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
+    my $reassigner_name = $form->param_value('reassigner_name');
+    my $reassigner_email = $form->param_value('reassigner_email');
+
     my $submitter_name = $form->param_value('submitter_name');
     my $submitter_email = $form->param_value('submitter_email');
 
@@ -2641,6 +2680,13 @@ sub _assign_session :Private
     my $curs_key = $st->{curs_key};
 
     my $add_submitter = sub {
+      if (!defined $current_submitter_email && defined $reassigner_email) {
+        # used to pre-populate the reassign form next time
+        $c->session()->{last_reassigner_name} = $reassigner_name;
+        $c->session()->{last_reassigner_email} = $reassigner_email;
+        $curator_manager->set_curator($curs_key, $reassigner_email,
+                                      $reassigner_name);
+      }
       if (!defined $current_submitter_email ||
           $submitter_email ne $current_submitter_email ||
           $submitter_name ne $current_submitter_name) {
