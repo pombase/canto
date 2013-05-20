@@ -314,8 +314,7 @@ sub set_state
       if ($current_state ne NEEDS_APPROVAL && $force ne $current_state) {
         carp "must be in state ", NEEDS_APPROVAL,
           " (not $current_state) to change to ",
-          "state ", APPROVAL_IN_PROGRESS, " actually in state ",
-          $current_state;
+          "state ", APPROVAL_IN_PROGRESS;
       }
       if (defined $current_user && $current_user->is_admin()) {
         $self->set_metadata($schema, APPROVER_NAME_KEY,
