@@ -6,11 +6,13 @@ $session_link
 $curator_name
 $help_index
 $existing_annotation_count
+$reassigner_email
+$reassigner_name
 </%args>
 Dear <% $curator_name %>,
 
-A colleague has invited you to contribute annotations to based on this
-paper:
+<% $reassigner_name %> <<% $reassigner_email %>> has invited you to contribute
+annotations to based on this paper:
   <% $publication_uniquename %> - "<% $publication_title %>".
 
 The curation link is:

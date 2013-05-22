@@ -2670,8 +2670,10 @@ sub _assign_session :Private
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
-    my $reassigner_name = $form->param_value('reassigner_name');
-    my $reassigner_email = $form->param_value('reassigner_email');
+    my $reassigner_name =
+      $form->param_value('reassigner_name') // $current_submitter_name;
+    my $reassigner_email =
+      $form->param_value('reassigner_email') // $current_submitter_email;
 
     my $submitter_name = $form->param_value('submitter_name');
     my $submitter_email = $form->param_value('submitter_email');
@@ -2709,7 +2711,14 @@ sub _assign_session :Private
       my $subject = "Session $curs_key reassigned to $submitter_name <$submitter_email>";
       $self->_send_mail($c, subject => $subject, body => '', to => 'admin');
 
-      $self->_send_email_from_template($c, 'session_reassigned');
+      $self->_send_email_from_template($c, 'session_reassigned',
+                                       { reassigner_name => $reassigner_name,
+                                         reassigner_email => $reassigner_email } );
+      $self->_send_email_from_template($c, 'reassigner',
+                                       { recipient_name => $reassigner_name,
+                                         reassigner_name => $reassigner_name,
+                                         recipient_email => $reassigner_email,
+                                         reassigner_email => $reassigner_email } );
 
       $c->flash()->{message} = "Session has been reassigned to: $submitter_email";
 
@@ -2838,6 +2847,7 @@ sub _send_email_from_template
   my $self = shift;
   my $c = shift;
   my $type = shift;
+  my $extra_template_args = shift;
 
   my $config = $c->config();
 
@@ -2855,14 +2865,19 @@ sub _send_email_from_template
   my %args = (
     session_link => $st->{curs_root_uri},
     curator_name => $submitter_name,
+    curator_email => $submitter_email,
     publication_uniquename => $pub->uniquename(),
     publication_title => $pub->title(),
     help_index => $help_index,
   );
 
+  @args{keys %{$extra_template_args}} = values %{$extra_template_args};
+
+  my $recipient_email = $args{recipient_email} // $submitter_email;
+
   my ($subject, $body) = $email_util->make_email_contents($type, %args);
 
-  $self->_send_mail($c, subject => $subject, body => $body, to => $submitter_email);
+  $self->_send_mail($c, subject => $subject, body => $body, to => $recipient_email);
 }
 
 sub begin_approval : Chained('top') Args(0)

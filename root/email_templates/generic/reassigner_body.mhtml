@@ -1,0 +1,42 @@
+<%args>
+$config
+$publication_uniquename
+$publication_title
+$session_link
+$curator_name
+$curator_email
+$reassigner_name
+$reassigner_email
+$help_index
+$existing_annotation_count
+</%args>
+
+Thank you for reassigning <% $publication_uniquename %> to <% $curator_name %> <<% $curator_email %>>.
+
+Below is a copy of the email sent to your colleague.
+
+
+-------------------------------------------------------------------
+
+Subject: <& ./session_reassigned_subject.mhtml, config => $config,
+  publication_uniquename => $publication_uniquename,
+  publication_title => $publication_title,
+  session_link => $session_link,
+  curator_name => $curator_name,
+  curator_email => $curator_email,
+  help_index => $help_index,
+  reassigner_email => $reassigner_email,
+  reassigner_name => $reassigner_name,
+  existing_annotation_count => $existing_annotation_count &>
+
+
+<& ./session_reassigned_body.mhtml, config => $config,
+  publication_uniquename => $publication_uniquename,
+  publication_title => $publication_title,
+  session_link => $session_link,
+  curator_name => $curator_name,
+  curator_email => $curator_email,
+  help_index => $help_index,
+  reassigner_email => $reassigner_email,
+  reassigner_name => $reassigner_name,
+  existing_annotation_count => $existing_annotation_count &>

@@ -73,9 +73,13 @@ sub _process_template
                     - session_reassigned - user has reassigned a session
                     - session_accepted - the user has filled in their name and
                                          email address
+                    - reassigner - email sent to a user who reassigns a session
            %args - parameters that can be use in the templates:
                     - session_link - full URL of the session
                     - curator_name - the user currently curating that session
+                    - curator_email - the email of the user
+                    - reassigner_name - for the "reassigner" template, the name
+                                        of the person doing the reassigning
                     - publication_uniquename - the PMID ID of the publication
                     - publication_title - the title of the publication
                     - help_index - the URL of the documentation

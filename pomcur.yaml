@@ -53,6 +53,9 @@ email:
     session_reassigned:
       subject: "email_templates/generic/session_reassigned_subject.mhtml"
       body: "email_templates/generic/session_reassigned_body.mhtml"
+    reassigner:
+      subject: "email_templates/generic/reassigner_subject.mhtml"
+      body: "email_templates/generic/reassigner_body.mhtml"
 
 # see PomCur::Meta::Util::initialise_core_data()
 db_initial_data:

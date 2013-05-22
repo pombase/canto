@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::More tests => 11;
 
 use Test::MockObject;
 
@@ -22,12 +22,14 @@ my $pub_id = "PMID:10467002";
 my $pub_title = "A clever paper";
 my $help_url = "http://localhost:5000/docs/";
 my $curator_name = "Val Wood";
+my $curator_email = 'val@example.com';
 
 my %args = (
   session_link => $root_url,
   publication_uniquename => $pub_id,
   publication_title => $pub_title,
   curator_name => $curator_name,
+  curator_email => $curator_email,
   help_index => $help_url,
 );
 
@@ -42,3 +44,16 @@ ok ($body =~ /GO cellular component/);
 ok ($body =~ /$help_url/);
 ok ($body =~ /$root_url/);
 ok ($body =~ /several previously curated annotations/);
+
+$args{recipient_name} = "Test Name";
+$args{recipient_email} = 'test@example.com';
+$args{reassigner_name} = "Test Name";
+$args{reassigner_email} = 'test@example.com';
+
+($subject, $body) =
+  PomCur::EmailUtil::make_email_contents($mock, 'reassigner', %args);
+
+like ($body, qr/Thank you for reassigning/);
+like ($body, qr/Below is a copy/);
+like ($body, qr/Dear Val Wood/);
+like ($body, qr/Test Name <test\@example.com> has invited/);
