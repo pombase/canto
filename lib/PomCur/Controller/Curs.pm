@@ -509,6 +509,8 @@ sub _edit_genes_helper
         };
         $schema->txn_do($delete_sub);
 
+        $self->state()->store_statuses($c->stash()->{schema});
+
         if ($self->get_ordered_gene_rs($schema)->count() == 0) {
           $c->flash()->{message} = 'All genes removed from the list';
           _redirect_and_detach($c, 'gene_upload');
@@ -540,7 +542,6 @@ sub edit_genes : Chained('top') Args(0) Form
   my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 0);
-  $self->state()->store_statuses($c->stash()->{schema});
 }
 
 sub confirm_genes : Chained('top') Args(0) Form
@@ -549,7 +550,6 @@ sub confirm_genes : Chained('top') Args(0) Form
   my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 1);
-  $self->state()->store_statuses($c->stash()->{schema});
 }
 
 sub gene_upload : Chained('top') Args(0) Form
