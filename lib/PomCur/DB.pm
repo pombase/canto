@@ -88,8 +88,8 @@ sub new
     if (!$args{disable_foreign_keys}) {
       $dbh->do("PRAGMA foreign_keys = ON");
     }
-# enabling this causes test failures due to isolation level
-#    $dbh->do("PRAGMA journal_mode = WAL;");
+    $dbh->do("PRAGMA journal_mode = WAL;");
+    $dbh->do("PRAGMA mmap_size=268435456;;");
   }
 
   return $schema;
