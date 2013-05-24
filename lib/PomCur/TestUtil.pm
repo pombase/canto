@@ -765,6 +765,7 @@ sub _load_curs_db_data
   my $curator_manager = PomCur::Track::CuratorManager->new(config => $config);
   $curator_manager->set_curator($curs_config->{curs_key}, $curs_config->{submitter_email},
                                 $curs_config->{submitter_name});
+  $curator_manager->accept_session($curs_config->{curs_key});
 }
 
 sub _replace_object

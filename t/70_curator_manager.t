@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 14;
 
 use PomCur::TestUtil;
 use PomCur::TrackDB;
@@ -29,6 +29,14 @@ my $session_aaaa0007_row = _get_test_row();
 is ($session_aaaa0007_row->curator()->email_address(), 'some.testperson@pombase.org');
 
 my ($email, $name, $accepted_date) = $curator_manager->current_curator('aaaa0007');
+is ($email, 'some.testperson@pombase.org');
+is ($name, 'Some Testperson');
+ok (defined $accepted_date);
+
+$session_aaaa0007_row->accepted_date(undef);
+$session_aaaa0007_row->update();
+
+($email, $name, $accepted_date) = $curator_manager->current_curator('aaaa0007');
 is ($email, 'some.testperson@pombase.org');
 is ($name, 'Some Testperson');
 ok (!defined $accepted_date);
