@@ -67,6 +67,10 @@ sub create_curs_db
   my $curs = shift;
   my $admin_session = shift // 0;
 
+  if (!defined $curs) {
+    croak "No Curs object passed";
+  }
+
   my $uniquename = $curs->pub()->uniquename();
   my $curs_key = $curs->curs_key();
 
@@ -100,6 +104,21 @@ sub create_curs_db
   # the calling function will wrap this in a transaction if necessary
   __PACKAGE__->set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
   __PACKAGE__->set_metadata($curs_schema, 'curs_key', $curs->curs_key());
+
+  my $track_schema = $curs->result_source()->schema();
+
+  my $curatable_name = 'Curatable';
+  my $curatable_cvterm =
+    $track_schema->resultset('Cvterm')->find({ name => $curatable_name });
+
+  if (!defined $curatable_cvterm) {
+    croak "Can't find Cvterm with name '$curatable_name'";
+  }
+
+  my $pub = $curs->pub();
+
+  $pub->triage_status($curatable_cvterm);
+  $pub->update();
 
   if (wantarray) {
     return ($curs_schema, $db_file_name);
