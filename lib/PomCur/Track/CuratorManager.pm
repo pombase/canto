@@ -77,8 +77,8 @@ sub _get_current_current_row
            $email - in a scalar context
          note: the $accepted_date will be undef if the session hasn't been
                accepted yet
-=cut
 
+=cut
 sub current_curator
 {
   my $self = shift;
