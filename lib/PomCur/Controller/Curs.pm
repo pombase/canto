@@ -333,6 +333,14 @@ sub introduction : Private
   $st->{template} = 'curs/introduction.mhtml';
 }
 
+sub store_statuses : Chained('top') Args(0) Form
+{
+  my $self = shift;
+  my ($c) = @_;
+
+  $self->state()->store_statuses($c->stash()->{schema});
+}
+
 my $gene_list_textarea_name = 'gene_identifiers';
 
 # return a list of only those genes which aren't already in the database
