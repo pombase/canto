@@ -42,7 +42,7 @@ use Carp;
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::TrackAdaptor';
 
-sub _get_current_current_row
+sub _get_current_curator_row
 {
   my $self = shift;
   my $curs_key = shift;
@@ -88,7 +88,7 @@ sub current_curator
     croak "no curs_key passed to current_curator()\n";
   }
 
-  my $curs_curator_row = $self->_get_current_current_row($curs_key);
+  my $curs_curator_row = $self->_get_current_curator_row($curs_key);
 
   if (defined $curs_curator_row) {
     my $current_curator = $curs_curator_row->curator();
@@ -188,7 +188,7 @@ sub accept_session
   my $self = shift;
   my $curs_key = shift;
 
-  my $curs_curator_row = $self->_get_current_current_row($curs_key);
+  my $curs_curator_row = $self->_get_current_curator_row($curs_key);
 
   if (defined $curs_curator_row) {
     my $current_date = PomCur::Util::get_current_datetime();
