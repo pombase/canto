@@ -18,12 +18,17 @@ annotations to based on this paper:
 The curation link is:
   <% $session_link %>
 
-When you follow the above link and sign in, you will see any annotations that
-your co-author has already made, and you will be guided step-by-step though
+When you follow the above link and sign in, you will be guided step-by-step though
 the process to add more annotations. You can annotate these data types in the
 tool:
 <& ../annotation_type_list.mhtml, config => $config &>
-You will also be able to modify any annotations made by your colleague.
+
+Existing annotation
+You will be able to modify any annotations that your co-author has already
+made in this session. You cannot currently edit or delete existing annotation,
+but in many cases these annotations can be extended and refined. Please make
+any replacement annotations and alert the the curators to delete any legacy
+annotation in the feedback form.
 
 % if ($existing_annotation_count > 0) {
 For this paper, there are also several previously curated annotations in the
