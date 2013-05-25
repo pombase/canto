@@ -81,6 +81,16 @@ sub _count_unknown_conditions
   return $unknown_conditions_count;
 }
 
+=head2 store_counts
+
+ Usage   : $metadata_storer->store_counts($curs_schema);
+ Function: Update the counts that are cached in the metadata table, then
+           call State::store_statuses()
+ Args    : $curs_schema - the CursDB to update
+ Return  : nothing
+
+=cut
+
 sub store_counts
 {
   my $self = shift;
