@@ -15,12 +15,7 @@ $test_util->init_test('curs_annotations_2');
 my $config = $test_util->config();
 my $app = $test_util->plack_app()->{app};
 
-my $curs_key = 'aaaa0007';
-
-my $root_url = "http://localhost:5000/curs/$curs_key";
-
-my $curator_manager = $test_util->curator_manager();
-$curator_manager->accept_session($curs_key);
+my $root_url = "http://localhost:5000/curs/aaaa0007";
 
 test_psgi $app, sub {
   my $cb = shift;

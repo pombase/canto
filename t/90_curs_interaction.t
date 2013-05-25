@@ -23,9 +23,6 @@ my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
 
 my $app = $test_util->plack_app()->{app};
 
-my $curator_manager = $test_util->curator_manager();
-$curator_manager->accept_session($curs_key);
-
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
 my @annotation_type_list = @{$config->{annotation_type_list}};

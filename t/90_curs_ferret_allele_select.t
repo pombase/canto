@@ -26,9 +26,6 @@ my $app = $test_util->plack_app()->{app};
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
-my $curator_manager = $test_util->curator_manager();
-$curator_manager->accept_session($curs_key);
-
 my $annotation_type_name = 'phenotype';
 my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
 my $cv_name = $annotation_type_config->{namespace};
