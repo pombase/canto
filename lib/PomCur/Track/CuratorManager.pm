@@ -39,6 +39,8 @@ under the same terms as Perl itself.
 use Moose;
 use Carp;
 
+use PomCur::Hooks::SessionAccepted;
+
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::Role::Schema';
 
@@ -194,6 +196,24 @@ sub accept_session
     my $current_date = PomCur::Util::get_current_datetime();
     $curs_curator_row->accepted_date($current_date);
     $curs_curator_row->update();
+
+    my $accept_hook_key = 'accept_hooks';
+    my $hooks = $self->config()->{curator_manager}->{$accept_hook_key};
+
+    if (defined $hooks) {
+      if (ref $hooks eq 'ARRAY') {
+        for my $hook (@$hooks) {
+          no strict 'refs';
+          my $hook_name = "PomCur::Hooks::SessionAccepted::$hook";
+          &{$hook_name}($self->config,
+                        $self->schema(),
+                        $curs_curator_row->curs(),
+                        $curs_curator_row->curator());
+        }
+      } else {
+        die "the $accept_hook_key config is not an array";
+      }
+    }
   } else {
     croak "can't accept session $curs_key as there is no current curator\n";
   }

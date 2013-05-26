@@ -1460,5 +1460,10 @@ chado:
     evidence_codes_to_ignore:
       - TAS
 
+curator_manager:
+  accept_hooks:
+# call with args: $config, $track_schema, $curs
+    - set_pub_community_curatable
+
 cache:
   default_timeout: "2 hours"
