@@ -40,7 +40,7 @@ use Moose;
 use Carp;
 
 with 'PomCur::Role::Configurable';
-with 'PomCur::Track::TrackAdaptor';
+with 'PomCur::Track::Role::Schema';
 
 sub _get_current_curator_row
 {

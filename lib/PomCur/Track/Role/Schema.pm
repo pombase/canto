@@ -1,11 +1,8 @@
-package PomCur::Track::TrackAdaptor;
+package PomCur::Track::Role::Schema;
 
 =head1 NAME
 
-PomCur::Track::TrackAdaptor -
-   A role for Adaptor classes that get data from the TrackDB.  Note,
-   an adaptor can be either a Lookup (read-only) or a Storage object
-   (read-write)
+PomCur::Track::Role::Schema - A Role to add a (TrackDB) schema attribute
 
 =head1 SYNOPSIS
 
@@ -21,7 +18,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc PomCur::Track::TrackAdaptor
+    perldoc PomCur::Track::Role::Schema
 
 =over 4
 
@@ -29,7 +26,7 @@ You can find documentation for this module with the perldoc command.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 Kim Rutherford, all rights reserved.
+Copyright 2012 Kim Rutherford, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
@@ -38,11 +35,24 @@ under the same terms as Perl itself.
 
 =cut
 
-use Carp;
+use strict;
+use warnings;
+
 use Moose::Role;
 
-use PomCur::TrackDB;
+requires 'config';
 
-with 'PomCur::Track::Role::Schema';
+has 'schema' => (
+  is => 'ro',
+  lazy_build => 1,
+);
+
+sub _build_schema {
+  my $self = shift;
+
+  my $config = $self->config();
+
+  return PomCur::TrackDB->new(config => $config);
+};
 
 1;
