@@ -1703,7 +1703,7 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
 
   my $params = $c->req()->params();
 
-  my $condition_list = $params->{'curs-allele-condition-names[tags][]'};
+  my $condition_list = $params->{'curs-allele-condition-names'};
 
   if (defined $condition_list) {
     if (ref $condition_list) {

@@ -1425,11 +1425,11 @@ var AlleleStuff = function($) {
 
     $('#curs-allele-add .curs-allele-conditions').tagit({
       minLength: 2,
-      itemName: 'curs-allele-condition-names',
+      fieldName: 'curs-allele-condition-names',
       allowSpaces: true,
       placeholderText: 'Type a condition ...',
       tagSource: fetch_conditions,
-      autocompleteOptions: {
+      autocomplete: {
         focus: ferret_choose.show_autocomplete_def,
         close: ferret_choose.hide_autocomplete_def,
       },
