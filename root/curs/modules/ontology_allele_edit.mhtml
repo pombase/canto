@@ -9,6 +9,7 @@ $editing
 var allele_types = <% $allele_types_js |n %>;
 var alleles_in_progress = <% $alleles_in_progress_js |n %>;
 var existing_alleles_by_name = <% $existing_alleles_by_name_js |n %>;
+var current_conditions = <% $current_conditions_js |n %>;
 var gene_display_name = "<% $gene_display_name %>";
 var delete_icon_uri = "<% $delete_icon_uri %>";
 var annotation_id = <% $annotation->annotation_id() %>;
@@ -150,6 +151,9 @@ my @allele_type_options = @{$st->{allele_type_options}};
 
 my $existing_alleles_by_name = $st->{existing_alleles_by_name};
 my $existing_alleles_by_name_js = Data::JavaScript::Anon->anon_dump($existing_alleles_by_name);
+
+my $current_conditions = $st->{current_conditions};
+my $current_conditions_js = Data::JavaScript::Anon->anon_dump($current_conditions);
 
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 

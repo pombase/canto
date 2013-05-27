@@ -1823,6 +1823,60 @@ sub _term_name_from_id : Private
   }
 }
 
+sub _get_name_of_condition
+{
+  my $ontology_lookup = shift;
+  my $termid = shift;
+
+  eval {
+    my $result = $ontology_lookup->lookup_by_id(id => $termid);
+    if (defined $result) {
+      $termid = $result->{name};
+    } else {
+      # user has made up a condition and there is no ontology term for it yet
+    }
+  };
+  if ($@) {
+    # probably not in the form DB:ACCESSION - user made it up
+  }
+
+  return $termid
+}
+
+
+sub _get_all_conditions
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my $ontology_lookup = PomCur::Track::get_adaptor($config, 'ontology');
+  my $an_rs = $schema->resultset('Annotation');
+
+  my %conditions = ();
+
+  while (defined (my $an = $an_rs->next())) {
+    my $data = $an->data();
+
+    if (exists $data->{conditions}) {
+      for my $condition (@{$data->{conditions}}) {
+        $conditions{_get_name_of_condition($ontology_lookup, $condition)} = 1
+      }
+    }
+
+    if (exists $data->{alleles_in_progress}) {
+      while (my ($id, $allele_data) = each %{$data->{alleles_in_progress}}) {
+        if (defined $allele_data->{conditions}) {
+          map {
+            $conditions{_get_name_of_condition($ontology_lookup, $_)} = 1;
+          } @{$allele_data->{conditions}};
+        }
+      }
+    }
+  }
+
+  return \%conditions;
+}
+
 sub _allele_data_for_js : Private
 {
   my $config = shift;
@@ -1838,18 +1892,8 @@ sub _allele_data_for_js : Private
     while (my ($id, $data) = each %$ret) {
       if (defined $data->{conditions}) {
         map {
-          my $term_id = $_;
-          eval {
-            my $result = $ontology_lookup->lookup_by_id(id => $term_id);
-            if (defined $result) {
-              $_ = $result->{name};
-            } else {
-              # user has made up a condition
-            }
-          };
-          if ($@) {
-            # probably not in the form DB:ACCESSION - user made it up
-          }
+          my $termid = $_;
+          $_ = _get_name_of_condition($ontology_lookup, $termid);
         } @{$data->{conditions}};
       }
     }
@@ -1925,6 +1969,7 @@ sub _annotation_allele_select_internal
     ];
 
   $st->{alleles_in_progress} = _allele_data_for_js($config, $annotation);
+  $st->{current_conditions} = _get_all_conditions($config, $schema);
 
   $guard->commit();
 

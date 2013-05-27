@@ -979,8 +979,9 @@ var AlleleStuff = function($) {
     });
   };
 
+  var used_conditions = current_conditions;
+
   function make_condition_buttons($allele_dialog, $allele_table) {
-    var used_conditions = {};
     $allele_table.find('tr').map(function(idx, el) {
       var el_allele_data = $(el).data('allele_data');
       if (typeof(el_allele_data) != 'undefined') {
