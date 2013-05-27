@@ -708,7 +708,7 @@ sub gene_upload : Chained('top') Args(0) Form
 
       my $matched_count = scalar(keys %$result);
 
-      my $message = "Uploaded $matched_count gene";
+      my $message = "Added $matched_count gene";
       $message .= 's' if ($matched_count > 1);
 
       $c->flash()->{message} = $message;
