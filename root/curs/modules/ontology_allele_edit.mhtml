@@ -122,7 +122,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
     </table>
 % if (!$editing) {
     <div class="curs-allele-condition-buttons">
-      <div>Previously used conditions:</div>
+      <div>Previously used conditions (click to add):</div>
     </div>
 % }
     <div class="curs-allele-reuse">

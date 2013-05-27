@@ -999,7 +999,7 @@ var AlleleStuff = function($) {
     $.each(used_conditions,
            function(cond) {
              button_html += '<button class="ui-widget ui-state-default curs-allele-condition-button">' +
-               cond + '</button>';
+               '<span>' + cond + '</span></button>';
            });
 
     if (button_html === '') {
