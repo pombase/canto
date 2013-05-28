@@ -104,7 +104,7 @@ test_psgi $app, sub {
                      'curs-allele-type' => $allele_type_param,
                      'curs-allele-description-input' => $allele_desc_param,
                      'curs-allele-expression' => $expression_param,
-                     'curs-allele-condition-names[tags][]' => \@conditions_param);
+                     'curs-allele-condition-names' => \@conditions_param);
 
     my $req = HTTP::Request->new(GET => $uri);
     return $cb->($req);
