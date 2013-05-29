@@ -979,7 +979,7 @@ var AlleleStuff = function($) {
     });
   };
 
-  var used_conditions = current_conditions;
+  var used_conditions;
 
   function make_condition_buttons($allele_dialog, $allele_table) {
     $allele_table.find('tr').map(function(idx, el) {
@@ -1048,6 +1048,9 @@ var AlleleStuff = function($) {
             } else {
               window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id + '/edit';
             }
+          }
+          if ($reuse_checkbox_checked) {
+            make_condition_buttons($allele_dialog, $allele_table);
           }
         },
       });
@@ -1293,6 +1296,10 @@ var AlleleStuff = function($) {
   function init() {
     var $allele_dialog = $('#curs-allele-add');
     var $allele_table = $('#curs-allele-list');
+
+    if (typeof(current_conditions) != 'undefined') {
+      used_conditions = current_conditions;
+    }
 
     $allele_dialog.data('validate_on_add', true);
 
