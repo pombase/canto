@@ -169,8 +169,9 @@ my $full_expected_curation_session =
           evidence_code => 'ISS',
           publication => 'PMID:19756689',
           curator => {
-            name => 'Some Testperson',
-            email => 'some.testperson@pombase.org',
+            name => 'Another Testperson',
+            email => 'a.n.other.testperson@pombase.org',
+            community_curated => isa('JSON::Boolean'),
           },
           term => 'MOD:01157',
           genes => {

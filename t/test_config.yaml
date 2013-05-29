@@ -211,5 +211,6 @@ test_config:
                evidence_code: ISS
                term_ontid: MOD:01157
                curator:
-                 email: "some.testperson@pombase.org"
-                 name: "Some Testperson"
+                 email: "a.n.other.testperson@pombase.org"
+                 name: "Another Testperson"
+                 community_curated: 1

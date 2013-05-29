@@ -1032,13 +1032,15 @@ sub _set_annotation_curator
 
   my $curator_email;
   my $curator_name;
+  my $accepted_date;
+  my $community_curated;
 
   if ($st->{state} eq APPROVAL_IN_PROGRESS) {
     my $schema = $st->{schema};
     $curator_name = $self->get_metadata($schema, 'approver_name');
     $curator_email = $self->get_metadata($schema, 'approver_email');
   } else {
-    ($curator_email, $curator_name) =
+    ($curator_email, $curator_name, $accepted_date, $community_curated) =
       $self->curator_manager()->current_curator($curs_key);
   }
 
@@ -1046,6 +1048,7 @@ sub _set_annotation_curator
   $data->{curator} = {
     email => $curator_email,
     name => $curator_name,
+    community_curated => $community_curated // 0,
   };
 
   $annotation->data($data);

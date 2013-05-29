@@ -40,6 +40,7 @@ use warnings;
 use Carp;
 
 use JSON;
+use Clone qw(clone);
 
 sub _get_metadata_value
 {
@@ -75,7 +76,7 @@ sub _get_annotations
   my @ret = ();
 
   while (defined (my $annotation = $rs->next())) {
-    my %extra_data = %{$annotation->data()};
+    my %extra_data = %{clone $annotation->data()};
 
     my $term_ontid = delete $extra_data{term_ontid};
     if ($term_ontid) {
@@ -89,6 +90,11 @@ sub _get_annotations
       creation_date => $annotation->creation_date(),
       %extra_data,
     );
+
+    if (defined $data{curator} && $data{curator}->{community_curated}) {
+      # make sure that we have "true" in the JSON output, not "1"
+      $data{curator}->{community_curated} = JSON::true;
+    }
 
     my $genes = _get_genes($schema, $annotation);
     my @alleles = _get_alleles($config, $schema, $annotation);
