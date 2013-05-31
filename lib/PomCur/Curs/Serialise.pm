@@ -94,6 +94,8 @@ sub _get_annotations
     if (defined $data{curator} && $data{curator}->{community_curated}) {
       # make sure that we have "true" in the JSON output, not "1"
       $data{curator}->{community_curated} = JSON::true;
+    } else {
+      $data{curator}->{community_curated} = JSON::false;
     }
 
     my $genes = _get_genes($schema, $annotation);

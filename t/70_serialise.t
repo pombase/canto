@@ -33,6 +33,7 @@ my $full_expected_curation_session =
           curator => {
             name => 'Some Testperson',
             email => 'some.testperson@pombase.org',
+            community_curated => JSON::XS::false,
           },
           term_suggestion => {
             name => 'miscellaneous transmembrane transport',
@@ -56,6 +57,7 @@ my $full_expected_curation_session =
            curator => {
             name => 'Some Testperson',
             email => 'some.testperson@pombase.org',
+            community_curated => JSON::XS::false,
           },
           with_gene => "SPCC576.16c",
           annotation_extension => 'annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PCO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)',
@@ -76,6 +78,7 @@ my $full_expected_curation_session =
           curator => {
             name => 'Some Testperson',
             email => 'some.testperson@pombase.org',
+            community_curated => JSON::XS::false,
           },
           term => 'GO:0022857',
           genes => {
@@ -91,6 +94,7 @@ my $full_expected_curation_session =
           curator => {
             name => 'Some Testperson',
             email => 'some.testperson@pombase.org',
+            community_curated => JSON::XS::false,
           },
           status => 'new',
           creation_date => "2010-01-02",
@@ -120,6 +124,7 @@ my $full_expected_curation_session =
           curator => {
             name => 'Some Testperson',
             email => 'some.testperson@pombase.org',
+            community_curated => JSON::XS::false,
           },
           type => 'phenotype',
           conditions => [
@@ -159,6 +164,7 @@ my $full_expected_curation_session =
           curator => {
             name => 'Some Testperson',
             email => 'some.testperson@pombase.org',
+            community_curated => JSON::XS::false,
           },
           term => 'FYPO:0000017'
         },
@@ -171,7 +177,7 @@ my $full_expected_curation_session =
           curator => {
             name => 'Another Testperson',
             email => 'a.n.other.testperson@pombase.org',
-            community_curated => isa('JSON::Boolean'),
+            community_curated => JSON::XS::true,
           },
           term => 'MOD:01157',
           genes => {
