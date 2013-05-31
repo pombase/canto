@@ -3,97 +3,98 @@ date: 16:03:2012 09:11
 saved-by: antonialock
 auto-generated-by: OBO-Edit 2.1-rc3
 default-namespace: phenotype_condition
+ontology: peco
 
 [Term]
-id: PCO:0000001
+id: PECO:0000001
 name: phenotype condition
 created_by: antonialock
 creation_date: 2012-02-07T11:36:20Z
 
 [Term]
-id: PCO:0000002
+id: PECO:0000002
 name: temperature
 def: "The experiment was performed at a specific temperature." []
-is_a: PCO:0000001 ! phenotype condition
+is_a: PECO:0000001 ! phenotype condition
 created_by: antonialock
 creation_date: 2012-02-07T12:00:23Z
 
 [Term]
-id: PCO:0000004
+id: PECO:0000004
 name: high temperature
 def: "The experiment was performed at a temperature exceeding 32 degrees Celsius." []
-is_a: PCO:0000002 ! temperature
+is_a: PECO:0000002 ! temperature
 created_by: antonialock
 creation_date: 2012-02-07T12:17:29Z
 
 [Term]
-id: PCO:0000005
+id: PECO:0000005
 name: standard temperature
 def: "The experiment was performed, or cells were grown, at a temperature within the range 25-32 degrees Celsius." []
 synonym: "normal temperature" EXACT []
-is_a: PCO:0000002 ! temperature
-disjoint_from: PCO:0000004 ! high temperature
-disjoint_from: PCO:0000006 ! low temperature
+is_a: PECO:0000002 ! temperature
+disjoint_from: PECO:0000004 ! high temperature
+disjoint_from: PECO:0000006 ! low temperature
 created_by: antonialock
 creation_date: 2012-02-07T12:17:29Z
 
 [Term]
-id: PCO:0000006
+id: PECO:0000006
 name: low temperature
 def: "The experiment was performed at a temperature lower than 25 degrees Celsius." []
 synonym: "cold" EXACT []
-is_a: PCO:0000002 ! temperature
-disjoint_from: PCO:0000004 ! high temperature
+is_a: PECO:0000002 ! temperature
+disjoint_from: PECO:0000004 ! high temperature
 created_by: antonialock
 creation_date: 2012-02-07T12:17:29Z
 
 [Term]
-id: PCO:0000009
+id: PECO:0000009
 name: growth medium
 def: "Any experimental condition specifying the type of growth medium." []
 subset: Grouping_terms
-is_a: PCO:0000001 ! phenotype condition
+is_a: PECO:0000001 ! phenotype condition
 created_by: antonialock
 creation_date: 2012-02-07T12:28:25Z
 
 [Term]
-id: PCO:0000100
+id: PECO:0000100
 name: medium components
 def: "Any experimental condition specifying the nutritional composition of the growth medium." []
 comment: Use this term to specify the general type of growth medium. \nIf certain chemicals not normally found in the medium were added, please also use the 'excess chemical added' conditions, for instance 'caffeine added' or 'thiamine added'.\n If a chemical was added in a much lower quantity than normal, please also use the 'limited chemical added' conditions, for instance 'limited adenine added'.
 subset: Grouping_terms
 synonym: "medium composition" RELATED []
-is_a: PCO:0000009 ! growth medium
+is_a: PECO:0000009 ! growth medium
 created_by: antonialock
 creation_date: 2012-05-04T07:48:31Z
 
 [Term]
-id: PCO:0000080
+id: PECO:0000080
 name: rich medium
 comment: Use the medium terms to specify the general type of growth medium and its carbon source. \nIf certain chemicals not normally found in the medium were added, please also use the 'chemical added/excluded' terms, for instance 'caffeine added' or 'nitrogen excluded'.\n If a chemical was added in a much lower quantity than normal, please  use the 'limited chemical added' conditions, for instance 'limited adenine added'.
 subset: Grouping_terms
-is_a: PCO:0000100 ! medium components
+is_a: PECO:0000100 ! medium components
 created_by: antonialock
 creation_date: 2012-03-14T01:33:58Z
 
 [Term]
-id: PCO:0000137
+id: PECO:0000137
 name: glucose rich medium
 def: "Experiments were performed in rich medium  containing glucose as the sole carbon source, yeast extract and other components." []
 comment: Use the medium terms to specify the general type of growth medium and its carbon source. \nIf certain chemicals not normally found in the medium were added, please also use the 'chemical added/excluded' terms, for instance 'caffeine added' or 'nitrogen excluded'.\n If a chemical was added in a much lower quantity than normal, please  use the 'limited chemical added' conditions, for instance 'limited adenine added'.
 subset: Grouping_terms
-is_a: PCO:0000080 ! rich medium
+is_a: PECO:0000080 ! rich medium
 created_by: antonialock
 creation_date: 2012-06-14T20:35:20Z
 
 [Term]
-id: PCO:0000012
+id: PECO:0000012
 name: standard glucose rich medium
 def: "Experiments were performed in rich medium containing yeast extract and other components. The concentration of glucose is typically around 2-3%." []
 comment: Use the medium terms to specify the general type of growth medium and its carbon source. \nIf certain chemicals not normally found in the medium were added, please also use the 'chemical added/excluded' terms, for instance 'caffeine added' or 'nitrogen excluded'.\n If a chemical was added in a much lower quantity than normal, please  use the 'limited chemical added' conditions, for instance 'limited adenine added'.
 synonym: "YE" BROAD []
 synonym: "YES" EXACT []
-is_a: PCO:0000137 ! glucose rich medium
+is_a: PECO:0000137 ! glucose rich medium
 created_by: antonialock
 creation_date: 2012-02-07T12:39:25Z
 

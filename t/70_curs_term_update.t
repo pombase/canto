@@ -33,7 +33,7 @@ sub _get_annotation_with_conditions
 my $annotation = _get_annotation_with_conditions($curs_schema);
 my $conditions = $annotation->data()->{conditions};
 
-cmp_deeply(['PCO:0000004', 'rich medium'], $conditions);
+cmp_deeply(['PECO:0000004', 'rich medium'], $conditions);
 
 my $term_update = PomCur::Curs::TermUpdate->new(config => $config);
 $term_update->update_curs_terms($curs, $curs_schema);
@@ -41,4 +41,4 @@ $term_update->update_curs_terms($curs, $curs_schema);
 $annotation = _get_annotation_with_conditions($curs_schema);
 $conditions = $annotation->data()->{conditions};
 
-cmp_deeply(['PCO:0000004', 'PCO:0000080'], $conditions);
+cmp_deeply(['PECO:0000004', 'PECO:0000080'], $conditions);

@@ -15,7 +15,7 @@ test_config:
   test_go_obo_file: "t/data/go_small.obo"
   test_phenotype_obo_file: "t/data/phenotype_small.obo"
   test_psi_mod_obo_file: "t/data/psi_mod_small.obo"
-  test_pco_obo_file: "t/data/pco_small.obo"
+  test_peco_obo_file: "t/data/peco_small.obo"
   test_relationship_obo_file: "etc/ro.obo"
   test_pubmed_xml: 'entrez_pubmed.xml'
   test_extra_publication: 'pubmed_18910671.xml'
@@ -152,7 +152,7 @@ test_config:
                evidence_code: IPI
                term_ontid: GO:0034763
                with_gene: SPCC576.16c
-               annotation_extension: "annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PCO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)"
+               annotation_extension: "annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PECO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)"
                curator:
                  email: "some.testperson@pombase.org"
                  name: "Some Testperson"
@@ -193,7 +193,7 @@ test_config:
                term_ontid: FYPO:0000013
                expression: Overexpression
                conditions:
-                 - 'PCO:0000004'
+                 - 'PECO:0000004'
                  - 'rich medium'
                curator:
                  email: "some.testperson@pombase.org"

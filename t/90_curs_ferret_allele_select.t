@@ -287,7 +287,7 @@ test_psgi $app, sub {
     my $rs = $curs_schema->resultset('Annotation');
     ok ($rs->count() == scalar(@current_ids) + 2);
 
-    my $conditions_param_re = "\Qhigh temperature (PCO:0000004), low temperature (PCO:0000006), on a Tuesday (NEW), BOGUS:ACCESSION (NEW)";
+    my $conditions_param_re = "\Qhigh temperature (PECO:0000004), low temperature (PECO:0000006), on a Tuesday (NEW), BOGUS:ACCESSION (NEW)";
     like ($redirect_res->content(), qr/$conditions_param_re/);
   }
 };

@@ -60,7 +60,7 @@ my $full_expected_curation_session =
             community_curated => JSON::XS::false,
           },
           with_gene => "SPCC576.16c",
-          annotation_extension => 'annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PCO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)',
+          annotation_extension => 'annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PECO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)',
           genes => {
             'Schizosaccharomyces pombe SPBC14F5.07' => {
               uniquename => 'SPBC14F5.07',
@@ -128,7 +128,7 @@ my $full_expected_curation_session =
           },
           type => 'phenotype',
           conditions => [
-            'PCO:0000004',
+            'PECO:0000004',
             'rich medium',
           ],
           alleles => [

@@ -262,7 +262,7 @@ PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
                                                       $annotation_for_allele_in_progress,
                                                       \%allele_creation_data_1);
 
-is($annotation_for_allele_in_progress->data()->{alleles_in_progress}->{0}->{conditions}->[0], 'PCO:0000006');
+is($annotation_for_allele_in_progress->data()->{alleles_in_progress}->{0}->{conditions}->[0], 'PECO:0000006');
 
 my %allele_creation_data_2 = (
   name => 'an_allele',

@@ -82,7 +82,7 @@ test_psgi $app, sub {
 
     is (@$obj, 1);
 
-    ok(grep { $_->{id} =~ /PCO:0000004/ } @$obj);
+    ok(grep { $_->{id} =~ /PECO:0000004/ } @$obj);
     ok(grep { $_->{name} =~ /high temperature/ } @$obj);
     ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
   }

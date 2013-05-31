@@ -411,7 +411,7 @@ sub _get_conditions_string
       $ret_val;
     } else {
       # some conditions are just free text if the user couldn't find the
-      # appropriate PCO term
+      # appropriate PECO term
       "$term_id (NEW)";
     }
   } @$conditions;
