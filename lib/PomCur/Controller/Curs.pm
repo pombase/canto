@@ -2053,6 +2053,8 @@ sub _annotation_process_alleles_internal
         $schema->create_with_type('Annotation',
                                   $annotation_create_args);
 
+      $self->_set_annotation_curator($c, $new_annotation);
+
       push @new_annotation_ids, $new_annotation->annotation_id();
 
       my %create_args = (
