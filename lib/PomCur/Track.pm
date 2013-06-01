@@ -188,7 +188,8 @@ sub get_adaptor
            }
  Function: Return an iterator over the CursDB schema objects.  Each
            call to the iterator returns a (TrackDB::Curs, CursDB) pair, or
-           () when there are no more.
+           () when there are no more.  The TrackDB is open for writing while
+           iterating which may caused other writers to block.
  Args    : $config - the PomCur::Config object
            $track_schema - the TrackDB schema
 
