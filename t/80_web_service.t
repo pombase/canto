@@ -64,7 +64,7 @@ test_psgi $app, sub {
   # test "phenotype_condition" which is an ontology but not an
   # annotation type
   {
-    my $search_term = 'h';
+    my $search_term = 'gl';
     my $url = "http://localhost:5000/ws/lookup/ontology/phenotype_condition/?term=$search_term";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
@@ -80,10 +80,9 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    is (@$obj, 1);
-
-    ok(grep { $_->{id} =~ /PECO:0000004/ } @$obj);
-    ok(grep { $_->{name} =~ /high temperature/ } @$obj);
+    is (@$obj, 2);
+    ok(grep { $_->{id} =~ /PECO:0000137/ } @$obj);
+    ok(grep { $_->{name} =~ /glucose rich medium/ } @$obj);
     ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
   }
 

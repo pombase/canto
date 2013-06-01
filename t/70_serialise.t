@@ -128,7 +128,7 @@ my $full_expected_curation_session =
           },
           type => 'phenotype',
           conditions => [
-            'PECO:0000004',
+            'PECO:0000137',
             'rich medium',
           ],
           alleles => [

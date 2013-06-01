@@ -193,7 +193,7 @@ test_config:
                term_ontid: FYPO:0000013
                expression: Overexpression
                conditions:
-                 - 'PECO:0000004'
+                 - 'PECO:0000137'
                  - 'rich medium'
                curator:
                  email: "some.testperson@pombase.org"
