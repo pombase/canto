@@ -220,7 +220,7 @@ sub curs_iterator
 
  Usage   : my $proc = sub { ... };
            my @res = PomCur::Track::curs_map($config, $track_schema, $proc);
- Function: use curs_iterator() to call the $proc for each Curs, CursDB pair
+ Function: call the $proc for each Curs, CursDB pair
  Args    : $config - the PomCur::Config object
            $track_schema - the TrackDB schema
            $proc - a function the gets passed a Curs, CursDB and the
@@ -236,8 +236,12 @@ sub curs_map
 
   my @ret = ();
 
-  my $iter = curs_iterator($config, $track_schema);
-  while (my ($curs, $curs_schema) = $iter->()) {
+  my @curs_objects = $track_schema->resultset('Curs')->all();
+
+  while (defined (my $curs = shift @curs_objects)) {
+    my $curs_key = $curs->curs_key();
+    my $curs_schema =
+      PomCur::Curs::get_schema_for_key($config, $curs_key);
     push @ret, $func->($curs, $curs_schema, $track_schema);
   }
 
