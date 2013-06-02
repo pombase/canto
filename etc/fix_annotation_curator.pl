@@ -53,7 +53,11 @@ sub _is_community_curator
 {
   my $email = shift;
 
-  return !grep { $_ eq $email } @admin_emails;
+  if (grep { $_ eq $email } @admin_emails) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 my $proc = sub {
@@ -69,15 +73,9 @@ my $proc = sub {
     my $data = $an->data();
     my ($email, $name, $accepted_date) = $curator_manager->current_curator($curs->curs_key());
 
-    if (!defined $email) {
-      die "die!";
-    }
-
     if (defined $data->{curator}) {
-      if (!defined $data->{curator}->{community_curated}) {
-        $data->{curator}->{community_curated} = _is_community_curator($email);
-        print "setting community_curated flag\n";
-      }
+      $data->{curator}->{community_curated} = _is_community_curator($email);
+      print "setting community_curated flag\n";
     } else {
       print "storing curator\n";
 
