@@ -91,11 +91,25 @@ sub _get_annotations
       %extra_data,
     );
 
-    if (defined $data{curator} && $data{curator}->{community_curated}) {
-      # make sure that we have "true" in the JSON output, not "1"
-      $data{curator}->{community_curated} = JSON::true;
+    if (defined $data{curator}) {
+      if (defined $data{curator}->{community_curated}) {
+        if ($data{curator}->{community_curated}) {
+          # make sure that we have "true" in the JSON output, not "1"
+          $data{curator}->{community_curated} = JSON::true;
+        } else {
+          $data{curator}->{community_curated} = JSON::false;
+        }
+      } else {
+        my %metadata = _get_metadata($schema);
+        die "community_curated not set for annotation ",
+          $annotation->annotation_id(), " in session ",
+          $metadata{curs_key};
+      }
     } else {
-      $data{curator}->{community_curated} = JSON::false;
+      my %metadata = _get_metadata($schema);
+      die "community_curated not set for annotation ",
+        $annotation->annotation_id(), " in session ",
+        $metadata{curs_key};
     }
 
     my $genes = _get_genes($schema, $annotation);
