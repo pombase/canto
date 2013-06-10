@@ -105,8 +105,24 @@ sub _build_curator_manager
   return PomCur::Track::CuratorManager->new(config => $self->config());
 }
 
-# Return a constant describing the state of the application, eg. SESSION_ACCEPTED
-# or APPROVED
+=head2 get_state
+
+ Usage   : my ($current_state, $submitter, $gene_count, $datestamp) =
+             $state->get_state($curs_schema);
+ Function: Return a constant describing the state of the application,
+           eg. SESSION_ACCEPTED or APPROVED and some details about the current
+           state
+ Args    : $curs_schema - the CursDB object for a session
+ Return  : $current_state - a constant describing the state (eg. EXPORTED)
+           $submitter - a hash_ref with the details of the current curator if the
+                        state isn't SESSION_CREATED.  the keys of the hash_ref are:
+                         - email_address
+                         - name
+           $gene_count - the number of genes added to the session, if the state
+                         isn't SESSION_CREATED or SESSION_ACCEPTED
+
+=cut
+
 sub get_state
 {
   my $self = shift;

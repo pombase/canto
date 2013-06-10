@@ -48,7 +48,7 @@ use PomCur::Config;
 use PomCur::Curs;
 use PomCur::CursDB;
 
-=head2 create_curs
+=head2 create_curs_db
 
  Usage   : PomCur::Track::create_curs_db($config, $curs_object);
  Function: Create a database for a curs, using the curs_key field of the object
