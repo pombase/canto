@@ -125,7 +125,7 @@ my $proc = sub {
     $state->set_metadata($curs_schema,
                          PomCur::Curs::State::ACCEPTED_TIMESTAMP_KEY(),
                          $accepted_date);
-    warn "setting new date for the accepted timestamp: $new_datestamp\n";
+    warn "setting new date for the accepted timestamp: $accepted_date\n";
   }
 };
 
