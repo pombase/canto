@@ -70,18 +70,23 @@ my $proc = sub {
 
   my $an_rs = $curs_schema->resultset("Annotation");
 
-  print $curs->curs_key(), "\n";
+  warn $curs->curs_key(), "\n";
 
   my ($email, $name, $accepted_date) = $curator_manager->current_curator($curs->curs_key());
+
+  my ($current_state, $submitter, $gene_count, $datestamp) =
+    $state->get_state($curs_schema);
+
+  my $new_datestamp = $datestamp;
 
   while (defined (my $an = $an_rs->next())) {
     my $data = $an->data();
 
     if (defined $data->{curator}) {
       $data->{curator}->{community_curated} = _is_community_curator($email);
-      print "setting community_curated flag\n";
+      warn "setting community_curated flag\n";
     } else {
-      print "storing curator\n";
+      warn "storing curator in annotation ", $an->annotation_id(), "\n";
 
       $data->{curator}->{name} = $name;
       $data->{curator}->{email} = $email;
@@ -89,14 +94,38 @@ my $proc = sub {
       $data->{curator}->{community_curated} = _is_community_curator($email);
     }
 
-    $an->data($data);
+    if ($current_state eq PomCur::Curs::State::CURATION_IN_PROGRESS) {
+      if (!defined $new_datestamp) {
+        $new_datestamp = $an->creation_date();
+      } else {
+        if ($new_datestamp gt $an->creation_date()) {
+          $new_datestamp = $an->creation_date();
+        }
+      }
+    }
+  $an->data($data);
     $an->update();
+  }
+
+  if (!defined $datestamp) {
+    if (!defined $new_datestamp) {
+      $new_datestamp =
+        $state->get_metadata($curs_schema,
+                             PomCur::Curs::State::ACCEPTED_TIMESTAMP_KEY());
+    }
+    if (defined $new_datestamp) {
+      $state->set_metadata($curs_schema,
+                           PomCur::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY(),
+                           $new_datestamp);
+      warn "setting new date for curation_in_progress: $new_datestamp\n";
+    }
   }
 
   if ($accepted_date) {
     $state->set_metadata($curs_schema,
                          PomCur::Curs::State::ACCEPTED_TIMESTAMP_KEY(),
                          $accepted_date);
+    warn "setting new date for the accepted timestamp: $new_datestamp\n";
   }
 };
 
