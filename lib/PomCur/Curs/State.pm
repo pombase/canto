@@ -68,9 +68,12 @@ use constant {
 };
 
 use constant {
+  SESSION_CREATED_TIMESTAMP_KEY => 'session_created_timestamp',
   CURATION_PAUSED_TIMESTAMP_KEY => 'curation_paused_timestamp',
+  CURATION_IN_PROGRESS_TIMESTAMP_KEY => 'curation_in_progress_timestamp',
   NEEDS_APPROVAL_TIMESTAMP_KEY => 'needs_approval_timestamp',
   APPROVED_TIMESTAMP_KEY => 'approved_timestamp',
+  ACCEPTED_TIMESTAMP_KEY => 'accepted_timestamp',
   APPROVAL_IN_PROGRESS_TIMESTAMP_KEY => 'approval_in_progress_timestamp',
   EXPORTED_TIMESTAMP_KEY => 'exported_timestamp',
   TERM_SUGGESTION_COUNT_KEY => 'term_suggestion_count',
@@ -120,6 +123,8 @@ sub _build_curator_manager
                          - name
            $gene_count - the number of genes added to the session, if the state
                          isn't SESSION_CREATED or SESSION_ACCEPTED
+           $datestamp - the date and time when the session entered the given
+                        state, if known
 
 =cut
 
@@ -147,29 +152,39 @@ sub get_state
 
   my %all_metadata = $self->all_metadata($schema);
 
+  my $datestamp = undef;
+
   if (defined $all_metadata{EXPORTED_TIMESTAMP_KEY()}) {
     $state = EXPORTED;
+    $datestamp = $all_metadata{EXPORTED_TIMESTAMP_KEY()};
   } else {
     if (defined $all_metadata{APPROVED_TIMESTAMP_KEY()}) {
       $state = APPROVED;
+      $datestamp = $all_metadata{APPROVED_TIMESTAMP_KEY()};
     } else {
       if (defined $all_metadata{APPROVAL_IN_PROGRESS_TIMESTAMP_KEY()}) {
         $state = APPROVAL_IN_PROGRESS;
+        $datestamp = $all_metadata{APPROVAL_IN_PROGRESS_TIMESTAMP_KEY()};
       } else {
         if (defined $all_metadata{NEEDS_APPROVAL_TIMESTAMP_KEY()}) {
           $state = NEEDS_APPROVAL;
+          $datestamp = $all_metadata{NEEDS_APPROVAL_TIMESTAMP_KEY()};
         } else {
           if (defined $all_metadata{CURATION_PAUSED_TIMESTAMP_KEY()}) {
             $state = CURATION_PAUSED;
+            $datestamp = $all_metadata{CURATION_PAUSED_TIMESTAMP_KEY()};
           } else {
             if (defined $submitter_email && defined $accepted_date) {
               if ($gene_count > 0) {
                 $state = CURATION_IN_PROGRESS;
+                $datestamp = $all_metadata{CURATION_IN_PROGRESS_TIMESTAMP_KEY()};
               } else {
                 $state = SESSION_ACCEPTED;
+                $datestamp = $accepted_date;
               }
             } else {
               $state = SESSION_CREATED;
+              $datestamp = $all_metadata{SESSION_CREATED_TIMESTAMP_KEY()};
             }
           }
         }
@@ -178,7 +193,8 @@ sub get_state
   }
 
   return ($state, { email_address => $submitter_email,
-                    name => $submitter_name }, $gene_count);
+                    name => $submitter_name }, $gene_count,
+          $datestamp);
 }
 
 =head2
@@ -253,7 +269,7 @@ sub set_state
   my $self = shift;
   my $schema = shift;
   my $new_state = shift;
-  my $options = shift;
+  my $options = shift // {};
 
   if (defined $options && reftype($options) ne 'HASH') {
     croak "last argument must be a hash ref of options";
@@ -264,9 +280,9 @@ sub set_state
 
   my ($current_state) = $self->get_state($schema);
 
-  if ($current_state eq $new_state) {
+  if ($current_state eq $new_state && $force ne $current_state) {
     # nothing to do, but potentially a bug
-    warn longmess();
+    warn "NOOP: setting $current_state to $new_state - $force\n", longmess();
   }
 
   if ($current_state eq EXPORTED) {
@@ -277,12 +293,22 @@ sub set_state
 
   given ($new_state) {
     when (SESSION_ACCEPTED) {
-      if ($current_state ne SESSION_CREATED) {
+      if ($current_state ne SESSION_CREATED && $force ne $current_state) {
         carp "can't accept a session unless it's in the " . SESSION_CREATED .
-          " state";
+          qq|state (not "$current_state")|;
       }
-      $self->curator_manager()->accept_session();
-
+      my $curs_key = $self->get_metadata($schema, 'curs_key');
+      $self->curator_manager()->accept_session($curs_key);
+      $self->set_metadata($schema, ACCEPTED_TIMESTAMP_KEY,
+                        PomCur::Util::get_current_datetime());
+      $self->unset_metadata($schema, CURATION_IN_PROGRESS_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
+      $self->unset_metadata($schema, APPROVER_NAME_KEY);
+      $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
     }
     when (CURATION_IN_PROGRESS) {
       if ($current_state ne CURATION_PAUSED &&
@@ -290,6 +316,8 @@ sub set_state
         carp "use force flag to change state to ",
           CURATION_IN_PROGRESS, " from ", $current_state;
       }
+      $self->set_metadata($schema, CURATION_IN_PROGRESS_TIMESTAMP_KEY,
+                          PomCur::Util::get_current_datetime());
       $self->unset_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
@@ -365,6 +393,9 @@ sub set_state
       }
       $self->set_metadata($schema, EXPORTED_TIMESTAMP_KEY,
                           PomCur::Util::get_current_datetime());
+    }
+    default {
+      croak "can't handle state: $new_state";
     }
   };
 

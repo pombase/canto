@@ -55,6 +55,7 @@ use PomCur::Curs::Utils;
 use PomCur::Curs::MetadataStorer;
 use PomCur::MailSender;
 use PomCur::EmailUtil;
+use PomCur::Curs::State;
 
 use constant {
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
@@ -520,6 +521,7 @@ sub _edit_genes_helper
         $self->state()->store_statuses($c->stash()->{schema});
 
         if ($self->get_ordered_gene_rs($schema)->count() == 0) {
+          $self->unset_metadata($schema, PomCur::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY());
           $c->flash()->{message} = 'All genes removed from the list';
           _redirect_and_detach($c, 'gene_upload');
         } else {
@@ -712,6 +714,11 @@ sub gene_upload : Chained('top') Args(0) Form
       $message .= 's' if ($matched_count > 1);
 
       $c->flash()->{message} = $message;
+
+      if (!defined $self->get_metadata($schema, PomCur::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY())) {
+        $self->set_metadata($schema, PomCur::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY(),
+                            PomCur::Util::get_current_datetime());
+      }
 
       $self->state()->store_statuses($schema);
 

@@ -199,6 +199,9 @@ my $full_expected_curation_session =
         curation_pub_id => 'PMID:19756689',
         term_suggestion_count => 1,
         unknown_conditions_count => 1,
+        accepted_timestamp => '2012-02-15 13:45:00',
+        curation_in_progress_timestamp => '2012-02-15 13:45:00',
+        session_created_timestamp => '2012-02-15 13:45:00',
       },
       organisms => {
         4896 => {

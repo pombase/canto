@@ -40,6 +40,8 @@ use Moose;
 use Carp;
 
 use PomCur::Hooks::SessionAccepted;
+use PomCur::Curs;
+use PomCur::Util;
 
 with 'PomCur::Role::Configurable';
 with 'PomCur::Track::Role::Schema';
@@ -191,12 +193,23 @@ sub accept_session
   my $self = shift;
   my $curs_key = shift;
 
+  if (!defined $curs_key) {
+    croak "no curs_key passed to accept_session()\n";
+  }
+
   my $curs_curator_row = $self->_get_current_curator_row($curs_key);
 
   if (defined $curs_curator_row) {
     my $current_date = PomCur::Util::get_current_datetime();
     $curs_curator_row->accepted_date($current_date);
     $curs_curator_row->update();
+
+    my $curs_schema = PomCur::Curs::get_schema_for_key($self->config(), $curs_key);
+    my $state = PomCur::Curs::State->new(config => $self->config());
+    my $metadata_storer = PomCur::Curs::MetadataStorer->new(config => $self->config());
+    $metadata_storer->set_metadata($curs_schema,
+                                   PomCur::Curs::State::ACCEPTED_TIMESTAMP_KEY(),
+                                   PomCur::Util::get_current_datetime());
 
     my $accept_hook_key = 'accept_hooks';
     my $hooks = $self->config()->{curator_manager}->{$accept_hook_key};

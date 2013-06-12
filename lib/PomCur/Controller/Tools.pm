@@ -5,6 +5,7 @@ use warnings;
 use parent 'Catalyst::Controller';
 use Package::Alias PubmedUtil => 'PomCur::Track::PubmedUtil',
                    LoadUtil => 'PomCur::Track::LoadUtil';
+use POSIX qw/strftime/;
 
 use Clone qw(clone);
 use Try::Tiny;
@@ -961,6 +962,41 @@ sub export : Local Args(2)
 
   my $results = $exporter->export();
   $c->res->body($results);
+}
+
+sub _daily_summary_text : Private
+{
+  my $config = shift;
+  my $summary_date = shift;
+  my $app_prefix = shift;
+
+  my $track_schema = PomCur::TrackDB->new(config => $config);
+
+  my $mail_sender = PomCur::MailSender->new(config => $config);
+  my $email_util = PomCur::EmailUtil->new(config => $config);
+
+  my %args = (track_schema => $track_schema,
+              summary_date => $summary_date,
+              app_prefix => $app_prefix);
+
+  my ($subject, $body) = $email_util->make_email_contents('daily_summary', %args);
+
+  return $subject . "\n\n" . $body;
+}
+
+sub daily_summary : Local
+{
+  my ($self, $c, $summary_date) = @_;
+
+  if (!defined $summary_date) {
+    my ($s, $min, $h, $d, $month, $y) = localtime();
+    $summary_date = strftime "%Y-%m-%d", $s, $min, $h, $d - 1, $month, $y;
+  }
+
+  my $app_prefix = $c->uri_for('/');
+
+  $c->res->content_type('text/plain');
+  $c->res->body(_daily_summary_text($c->config(), $summary_date, $app_prefix));
 }
 
 =head1 LICENSE

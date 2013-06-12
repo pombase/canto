@@ -56,6 +56,10 @@ email:
     reassigner:
       subject: "email_templates/generic/reassigner_subject.mhtml"
       body: "email_templates/generic/reassigner_body.mhtml"
+    daily_summary:
+      global: 1  # not an email about a particular session/publication
+      subject: "email_templates/generic/daily_summary_subject.mhtml"
+      body: "email_templates/generic/daily_summary_body.mhtml"
 
 # see PomCur::Meta::Util::initialise_core_data()
 db_initial_data:

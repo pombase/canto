@@ -12,10 +12,10 @@ $test_util->init_test('1_curs');
 my $config = $test_util->config();
 my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0001');
 
-package TestMetadata;
-
+use Test::Deep;
 use Test::More tests => 5;
-use Data::Compare;
+
+package TestMetadata;
 
 use Moose;
 
@@ -26,25 +26,26 @@ sub test_metadata
   my $self = shift;
 
   $self->set_metadata($curs_schema, 'key1', 'value1');
-  is('value1', $self->get_metadata($curs_schema, 'key1'));
+  Test::More::is('value1', $self->get_metadata($curs_schema, 'key1'));
 
   $self->set_metadata($curs_schema, 'key1', undef);
-  ok(!defined $self->get_metadata($curs_schema, 'key1'));
+  Test::More::ok(!defined $self->get_metadata($curs_schema, 'key1'));
 
   $self->set_metadata($curs_schema, 'key1', 'value1');
-  is('value1', $self->get_metadata($curs_schema, 'key1'));
+  Test::More::is('value1', $self->get_metadata($curs_schema, 'key1'));
 
   $self->unset_metadata($curs_schema, 'key1');
-  ok(!defined $self->get_metadata($curs_schema, 'key1'));
+  Test::More::ok(!defined $self->get_metadata($curs_schema, 'key1'));
 
   my %all_metadata = $self->all_metadata($curs_schema);
-  ok(Compare(\%all_metadata,
-     {
-       curation_pub_id => 1,
-       curs_key => 'aaaa0001',
-       term_suggestion_count => 0,
-       unknown_conditions_count => 0,
-     }));
+  Test::Deep::cmp_deeply(\%all_metadata,
+                         {
+                           curation_pub_id => 1,
+                           curs_key => 'aaaa0001',
+                           term_suggestion_count => 0,
+                           unknown_conditions_count => 0,
+                           session_created_timestamp => '2012-02-15 13:45:00',
+                         });
 }
 
 1;

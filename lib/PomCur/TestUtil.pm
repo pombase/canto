@@ -766,6 +766,14 @@ sub _load_curs_db_data
   $curator_manager->set_curator($curs_config->{curs_key}, $curs_config->{submitter_email},
                                 $curs_config->{submitter_name});
   $curator_manager->accept_session($curs_config->{curs_key});
+
+  if (@{$curs_config->{genes}} > 0) {
+    my $state = PomCur::Curs::State->new(config => $config);
+    $state->set_state($cursdb_schema, PomCur::Curs::State::SESSION_ACCEPTED(),
+                      { force => PomCur::Curs::State::CURATION_IN_PROGRESS() });
+    $state->set_state($cursdb_schema, PomCur::Curs::State::CURATION_IN_PROGRESS(),
+                      { force => PomCur::Curs::State::CURATION_IN_PROGRESS() });
+  }
 }
 
 sub _replace_object
@@ -867,10 +875,7 @@ sub make_curs_db
     PomCur::Track::create_curs_db($config, $curs_object);
 
   if (exists $curs_config->{submitter_email}) {
-    $cursdb_schema->txn_do(
-      sub {
-        _load_curs_db_data($config, $trackdb_schema, $cursdb_schema, $curs_config);
-      });
+    _load_curs_db_data($config, $trackdb_schema, $cursdb_schema, $curs_config);
   }
 
   return ($cursdb_schema, $cursdb_file_name);

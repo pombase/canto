@@ -47,6 +47,42 @@ use File::Copy qw(copy);
 use PomCur::Config;
 use PomCur::Curs;
 use PomCur::CursDB;
+use PomCur::Util;
+use PomCur::Curs::State qw/:all/;
+
+=head2 create_curs
+
+ Usage   : my ($curs, $cursdb) =
+             PomCur::Track::create_curs($config, $track_schema, $pub_uniquename);
+ Function: Create a curation session and return the Curs object and the CursDB
+           object.
+ Args    : $config - the Config object
+           $track_schema - the TrackDB schema object
+           $pub_uniquename - the uniquename (PMID) of a publication; the Pub
+                             object will be created if it doesn't exist
+ Return  :
+
+=cut
+
+sub create_curs
+{
+  my $config = shift;
+  my $track_schema = shift;
+  my $pub_uniquename = shift;
+
+  my $pub = $track_schema->resultset('Pub')->find_or_create({ uniquename => $pub_uniquename });
+  my $curs_key = PomCur::Curs::make_curs_key();
+
+  my $curs = $track_schema->create_with_type('Curs',
+                                             {
+                                               pub => $pub,
+                                               curs_key => $curs_key,
+                                             });
+
+  my $curs_db = PomCur::Track::create_curs_db($config, $curs);
+
+  return ($curs, $curs_db);
+}
 
 =head2 create_curs_db
 
@@ -104,6 +140,9 @@ sub create_curs_db
   # the calling function will wrap this in a transaction if necessary
   __PACKAGE__->set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
   __PACKAGE__->set_metadata($curs_schema, 'curs_key', $curs->curs_key());
+  __PACKAGE__->set_metadata($curs_schema,
+                            PomCur::Curs::State::SESSION_CREATED_TIMESTAMP_KEY,
+                            PomCur::Util::get_current_datetime());
 
   my $track_schema = $curs->result_source()->schema();
 

@@ -1,11 +1,12 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 13;
 use Package::Alias Tools => 'PomCur::Controller::Tools';
 use LWP::Protocol::PSGI;
 use Plack::Test;
 use HTTP::Request;
 use JSON;
+use POSIX qw/strftime/;
 
 use PomCur::TestUtil;
 use PomCur::Curs::State qw/:all/;
@@ -112,3 +113,21 @@ my $content_2_parsed = decode_json($content_2);
 is (keys %{$content_2_parsed->{curation_sessions}}, 0);
 
 
+
+my $aaaa0006_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0006');
+$state->set_state($aaaa0006_schema, NEEDS_APPROVAL);
+
+my $pmid = 'PMID:19756689';
+my ($new_curs, $new_curs_db) = PomCur::Track::create_curs($config, $track_schema, $pmid);
+my $new_curs_key = $new_curs->curs_key();
+
+my ($s, $min, $h, $d, $month, $y) = localtime();
+my $today = strftime "%Y-%m-%d", $s, $min, $h, $d, $month, $y;
+
+my $app_prefix = 'http://localhost';
+
+my $daily_summary_text =
+  PomCur::Controller::Tools::_daily_summary_text($config, $today, $app_prefix);
+
+like($daily_summary_text, qr/activity for $today/);
+like($daily_summary_text, qr|not yet accepted\s+$app_prefix/curs/$new_curs_key\s+$pmid\s+"SUMOylation is required for normal|);

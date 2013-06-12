@@ -74,7 +74,11 @@ sub _process_template
                     - session_accepted - the user has filled in their name and
                                          email address
                     - reassigner - email sent to a user who reassigns a session
+                    - daily_summary - sent once a day to the admins, listing
+                                      new sessions, sessions needing approval,
+                                      and counts of session statuses
            %args - parameters that can be use in the templates:
+                    - track_schema - a TrackDB object
                     - session_link - full URL of the session
                     - curator_name - the user currently curating that session
                     - curator_email - the email of the user
@@ -83,6 +87,8 @@ sub _process_template
                     - publication_uniquename - the PMID ID of the publication
                     - publication_title - the title of the publication
                     - help_index - the URL of the documentation
+                    - summary_date - date to use in daily_summary template
+                    - app_prefix - the base URL of a application
  Return  : the subject and body of the email to send
 
 =cut
@@ -112,13 +118,15 @@ sub make_email_contents
 
   $args{config} = $self->config();
 
-  my %options = ( max_results => 1,
-                  pub_uniquename => $args{publication_uniquename} );
+  if (!$type_config->{global}) {
+    my %options = ( max_results => 1,
+                    pub_uniquename => $args{publication_uniquename} );
 
-  my ($all_existing_annotations_count, $existing_annotations) =
+    my ($all_existing_annotations_count, $existing_annotations) =
     PomCur::Curs::Utils::get_existing_annotation_count($self->config(), \%options);
 
-  $args{existing_annotation_count} = $all_existing_annotations_count;
+    $args{existing_annotation_count} = $all_existing_annotations_count;
+  }
 
   my $subject = $self->_process_template($interp, $subject_component_path, %args);
   $subject =~ s/^\n+//g;

@@ -1,0 +1,5 @@
+<%args>
+$config
+$summary_date
+</%args>
+Summary of <% $config->{database_name} %> activity for <% $summary_date %>
