@@ -420,4 +420,32 @@ sub validate_curs
 
   return @res;
 }
+
+=head2 update_metadata
+
+ Usage   : PomCur::Track::update_metadata($config);
+ Function: Set missing or out of date curs metadata.  Currently sets the
+           session_created_timestamp
+ Args    : $config - the PomCur::Config object
+ Return  : Nothing
+
+=cut
+
+sub update_metadata
+{
+  my $config = shift;
+
+  my $state = PomCur::Curs::State->new(config => $config);
+
+  my $track_schema = PomCur::TrackDB->new(config => $config);
+
+  my $iter = PomCur::Track::curs_iterator($config, $track_schema);
+
+  while (my ($curs, $cursdb) = $iter->()) {
+    $state->set_metadata($cursdb, PomCur::Curs::State::SESSION_CREATED_TIMESTAMP_KEY(),
+                         $curs->creation_date());
+    $state->store_statuses($cursdb);
+  }
+}
+
 1;
