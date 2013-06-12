@@ -21,6 +21,7 @@ use PomCur::TrackDB;
 use PomCur::Meta::Util;
 use PomCur::Track::CuratorManager;
 use PomCur::Config;
+use PomCur::Curs::State;
 
 
 my $app_name = PomCur::Config::get_application_name();
@@ -60,6 +61,8 @@ sub _is_community_curator
   }
 }
 
+my $state = PomCur::Curs::State->new(config => $config);
+
 my $proc = sub {
   my $curs = shift;
   my $curs_schema = shift;
@@ -69,9 +72,10 @@ my $proc = sub {
 
   print $curs->curs_key(), "\n";
 
+  my ($email, $name, $accepted_date) = $curator_manager->current_curator($curs->curs_key());
+
   while (defined (my $an = $an_rs->next())) {
     my $data = $an->data();
-    my ($email, $name, $accepted_date) = $curator_manager->current_curator($curs->curs_key());
 
     if (defined $data->{curator}) {
       $data->{curator}->{community_curated} = _is_community_curator($email);
@@ -87,6 +91,12 @@ my $proc = sub {
 
     $an->data($data);
     $an->update();
+  }
+
+  if ($accepted_date) {
+    $state->set_metadata($curs_schema,
+                         PomCur::Curs::State::ACCEPTED_TIMESTAMP_KEY(),
+                         $accepted_date);
   }
 };
 
