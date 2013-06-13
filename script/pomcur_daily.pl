@@ -57,7 +57,7 @@ my $mail_sender = PomCur::MailSender->new(config => $config);
 my $email_util = PomCur::EmailUtil->new(config => $config);
 
 my ($s, $min, $h, $d, $month, $y) = localtime();
-my $today = strftime "%Y-%m-%d", $s, $min, $h, $d, $month, $y;
+my $today = strftime "%Y-%m-%d", $s, $min, $h, $d - 1, $month, $y;
 
 my %args = (track_schema => $track_schema,
             summary_date => $today,
