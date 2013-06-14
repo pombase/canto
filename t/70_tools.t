@@ -121,13 +121,15 @@ my $pmid = 'PMID:19756689';
 my ($new_curs, $new_curs_db) = PomCur::Track::create_curs($config, $track_schema, $pmid);
 my $new_curs_key = $new_curs->curs_key();
 
-my ($s, $min, $h, $d, $month, $y) = localtime();
-my $today = strftime "%Y-%m-%d", $s, $min, $h, $d, $month, $y;
+my $created_date =
+  $state->get_metadata($new_curs_db, PomCur::Curs::State::SESSION_CREATED_TIMESTAMP_KEY);
+
+(my $test_date = $created_date) =~ s/^(\d\d\d\d-\d\d-\d\d)\s.*/$1/;
 
 my $app_prefix = 'http://localhost';
 
 my $daily_summary_text =
-  PomCur::Controller::Tools::_daily_summary_text($config, $today, $app_prefix);
+  PomCur::Controller::Tools::_daily_summary_text($config, $test_date, $app_prefix);
 
-like($daily_summary_text, qr/activity for $today/);
+like($daily_summary_text, qr/activity for $test_date/);
 like($daily_summary_text, qr|not yet accepted\s+$app_prefix/curs/$new_curs_key\s+$pmid\s+"SUMOylation is required for normal|);
