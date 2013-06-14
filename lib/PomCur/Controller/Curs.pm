@@ -1418,12 +1418,16 @@ sub _maybe_transfer_annotation
 
   my $gene_count = $schema->resultset('Gene')->count();
 
+  my $gene = $st->{gene};
+
   my $current_user = $c->user();
 
   if ($annotation_config->{category} eq 'ontology') {
     _redirect_and_detach($c, 'annotation', 'transfer', (join ',', @$annotation_ids));
   } else {
-    _redirect_and_detach($c);
+    if (defined $gene) {
+      _redirect_and_detach($c, 'gene', $gene->gene_id());
+    }
   }
 }
 

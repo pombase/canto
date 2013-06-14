@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 26;
 
 use Plack::Test;
 use Plack::Util;
@@ -117,13 +117,12 @@ for my $annotation_type (@annotation_type_list) {
       is $res->code, 302;
       my $redirect_url = $res->header('location');
 
-      is ($redirect_url, "$root_url");
+      is ($redirect_url, "$root_url/gene/" . $bait->gene_id());
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
 
-      like ($redirect_res->content(), qr/Choose a gene to annotate/);
-      like ($redirect_res->content(), qr/The anaphase-promoting complex/);
+      like ($redirect_res->content(), qr/Choose curation type for cdc11/);
 
       $new_annotation =
         $curs_schema->find_with_type('Annotation', $new_annotation_id);
