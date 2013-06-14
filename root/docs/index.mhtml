@@ -21,14 +21,12 @@ And then to confirm the resulting gene list:
 </p>
 </div>
 </div>
-<div class="thumbnails">
-<div class="span4">
-  <a class="thumbnail" href="<% $c->uri_for('/static/images/docs/gene_list.png') %>"/><img src="<% $c->uri_for('/static/images/docs/gene_list_small.png') %>"/></a>
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/gene_list.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/gene_list_small.png') %>"/></a>
 </div>
-<div class="span2">
-</div>
-<div class="span4">
-  <a class="thumbnail" href="<% $c->uri_for('/static/images/docs/uploaded.png') %>"/><img src="<% $c->uri_for('/static/images/docs/uploaded_small.png') %>"/></a>
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/uploaded.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/uploaded_small.png') %>"/></a>
 </div>
 </div>
 
@@ -78,14 +76,12 @@ for the curators (this is optional).
 </p>
 </div>
 </div>
-<div class="thumbnails">
-<div class="span4">
-  <a class="thumbnail" href="<% $c->uri_for('/static/images/docs/submit_n_comment.png') %> " /><img src="<% $c->uri_for('/static/images/docs/submit_n_comment_small.png') %>"/></a>
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/submit_n_comment.png') %> " /><img class="screenshot" src="<% $c->uri_for('/static/images/docs/submit_n_comment_small.png') %>"/></a>
 </div>
-<div class="span2">
-</div>
-<div class="span4">
-  <a class="thumbnail" href="<% $c->uri_for('/static/images/docs/curation_summary.png') %>"/><img src="<% $c->uri_for('/static/images/docs/curation_summary_small.png') %>"/></a>
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/curation_summary.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/curation_summary_small.png') %>"/></a>
 </div>
 </div>
 
