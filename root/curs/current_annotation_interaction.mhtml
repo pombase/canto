@@ -48,12 +48,20 @@ $user_created
   <tr class="<% $row->{status} eq 'deleted' ? 'deleted-annotation' : '' %>">
     <td>
       <span>
+% if ($user_created) {
+      <a href="<% $curs_root_uri . '/gene/' . $row->{gene_id} %>"><% $row->{gene_display_name} %></a>
+% } else {
       <% $row->{gene_display_name} %>
+% }
       </span>
     </td>
     <td>
       <span>
+% if ($user_created) {
+      <a href="<% $curs_root_uri . '/gene/' . $row->{interacting_gene_id} %>"><% $row->{interacting_gene_display_name} %></a>
+% } else {
       <% $row->{interacting_gene_display_name} %>
+% }
       </span>
     </td>
     <td>

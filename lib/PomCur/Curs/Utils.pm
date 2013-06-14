@@ -262,6 +262,7 @@ sub _make_interaction_annotation
             gene_identifier => $gene_proxy->primary_identifier(),
             gene_display_name => $gene_proxy->display_name(),
             gene_taxonid => $gene_proxy->organism()->taxonid(),
+            gene_id => $gene_proxy->gene_id(),
             publication_uniquename => $pub_uniquename,
             evidence_code => $evidence_code,
             interacting_gene_identifier =>
@@ -271,6 +272,7 @@ sub _make_interaction_annotation
             interacting_gene_taxonid =>
               $interacting_gene_info->{organism_taxon}
                 // $gene_proxy->organism()->taxonid(),
+            interacting_gene_id => $interacting_gene_proxy->gene_id(),
             score => '',  # for biogrid format output
             phenotypes => '',
             comment => '',
