@@ -400,18 +400,8 @@ sub start : Local Args(1) {
                                          curs_key => $curs_key,
                                        });
 
-  my $curs_schema = PomCur::Track::create_curs_db($config, $curs);
-
-  my $mail_sender = PomCur::MailSender->new(config => $config);
-
-  my $subject = "Created new session $curs_key from $pub_uniquename";
+  PomCur::Track::create_curs_db($config, $curs);
   my $session_uri = $c->uri_for("/curs/$curs_key");
-  my $body = "Publication: $pub_uniquename\n\n" .
-    $pub->title() . "\n\n" .
-    "Session: " . $session_uri . "\n";
-
-  $mail_sender->send_to_admin(subject => $subject,
-                              body => $body);
 
   $c->res->redirect($session_uri);
 }
