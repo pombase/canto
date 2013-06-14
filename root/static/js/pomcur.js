@@ -1346,6 +1346,7 @@ var AlleleStuff = function($) {
       $.ajax({
         url: ferret_choose.allele_lookup_url,
         data: { gene_primary_identifier: gene_primary_identifier,
+                ignore_case: true,
                 term: request.term },
         dataType: 'json',
         success: function(data) {

@@ -53,6 +53,7 @@ sub lookup
     die "no gene primary name passed to lookup()";
   }
 
+  my $ignore_case = $args{ignore_case};
   my $search_string = $args{search_string};
   if (!defined $search_string) {
     die "no search_string parameter passed to lookup()";
@@ -67,11 +68,19 @@ sub lookup
            ->search({ 'object.uniquename' => $gene_primary_identifier },
                     { join => 'object' });
 
+  my @search_args;
+
+  if ($ignore_case) {
+    @search_args = ('lower(features.name)', { -like => lc $search_string . '%' });
+  } else {
+    @search_args = ('features.name', { -like => $search_string . '%' });
+  }
+
   my $rs = $schema->resultset('Cv')
     ->search({ 'me.name' => 'sequence' })
     ->search_related('cvterms', { 'cvterms.name' => 'allele' })
     ->search_related('features')
-    ->search({ 'features.name' => { -like => "$search_string\%" },
+    ->search({ @search_args,
                feature_id => {
                  -in => $gene_constraint_rs->get_column('subject_id')->as_query(),
                },

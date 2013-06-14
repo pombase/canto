@@ -91,6 +91,11 @@ sub _allele_results
 
   $gene_primary_identifier ||= $c->req()->param('gene_primary_identifier');
   $search_string ||= $c->req()->param('term');
+  my $ignore_case = $c->req()->param('ignore_case') // 0;
+
+  if (lc $ignore_case eq 'false') {
+    $ignore_case = 0;
+  }
 
   my $config = $c->config();
   my $lookup = PomCur::Track::get_adaptor($config, 'allele');
@@ -103,6 +108,7 @@ sub _allele_results
 
   return $lookup->lookup(gene_primary_identifier => $gene_primary_identifier,
                          search_string => $search_string,
+                         ignore_case => $ignore_case,
                          max_results => $max_results);
 }
 
