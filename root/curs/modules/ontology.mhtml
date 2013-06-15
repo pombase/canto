@@ -97,7 +97,7 @@ Please read the definition of the currently selected term to ensure that
 it accurately describes your gene:
       </div>
       <div class="curs-box-body">
-<div id="ferret-linkouts" class="curs-external-links">
+<div id="ferret-linkouts" class="curs-external-links" style="display: none">
   <div class="links-title">
     View term ancestry in:
   </div>

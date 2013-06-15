@@ -369,7 +369,13 @@ var ferret_choose = {
           var link_img_src = application_root + 'static/images/ext_link.png';
           html += '<img src="' + link_img_src + '"/></div>';
         });
-        $('#ferret-linkouts .links-container').html(html);
+        var $linkouts = $('#ferret-linkouts');
+        if (html.length > 0) {
+          $linkouts.find('.links-container').html(html);
+          $linkouts.show();
+        } else {
+          $linkouts.hide();
+        }
       }
     }
 
