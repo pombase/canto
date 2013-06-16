@@ -37,6 +37,7 @@ Single gene <% $type_display_name %>
 %   if (!$annotation_type->{disabled}) {
       </a>
 %   }
+<& /curs/inline_help.mhtml, key => "${annotation_type_name}_gene_page" &>
 %   if ($is_admin && !$annotation_type->{needs_allele}) {
 %     my $add_url = $curs_root_uri . '/annotation/quick_add/'
 %       . $gene->gene_id() . '/' . $annotation_type_name;

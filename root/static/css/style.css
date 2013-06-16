@@ -745,7 +745,7 @@ div.clearall {
   font-weight: 700;
 }
 
-.curs-inline-help-icon {
+.curs-box-title .curs-inline-help-icon {
   float: right;
 }
 
@@ -1120,12 +1120,12 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   opacity: 0.5;
 }
 
-a.curs-quick-add-annotation:hover  {
+a.curs-quick-add-annotation:hover, .annotation-start .curs-inline-help-icon:hover {
   opacity: 1.0;
   filter: alpha(opacity=100); /* For IE8 and earlier */
 }
 
-a.curs-quick-add-annotation  {
+a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
   padding-left: 10px;
   font-size: 80%;
   opacity: 0.3;
