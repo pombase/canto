@@ -11,7 +11,7 @@ $key
 </span>
 
 % } else {
-
+%   if (defined $help_text) {
 <div id="<% $popup_id %>" title="Help" style="display:none">
   <% $help_text %>
 </div>
@@ -21,13 +21,13 @@ $key
        alt="help" title="<% $help_text %>"
        onclick="$('#<% $popup_id %>').dialog()"/>
 </span>
-
+%   }
 % }
 
 <%init>
 my $help_config = $c->config()->{help_text}->{$key};
-my $help_text;
-my $help_url;
+my $help_text = undef;
+my $help_url = undef;
 
 if (exists $help_config->{inline}) {
   $help_text = $help_config->{inline};
@@ -38,10 +38,6 @@ if (exists $help_config->{url}) {
   (my $instance_top_uri = $c->uri_for('/')) =~ s|/$||;
   $help_url =~ s/\@\@instance_top_uri\@\@/$instance_top_uri/;
   $help_text //= "help link";
-}
-
-if (!defined $help_text && !defined $help_url) {
-  die qq(No "inline" or "url" configuration for key: $key);
 }
 
 my $popup_id = "curs-inline-help-popup-$key";

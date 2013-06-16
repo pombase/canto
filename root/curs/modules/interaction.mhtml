@@ -10,6 +10,7 @@ $gene
   <div class="curs-box">
     <div class="curs-box-title">
       Select the gene or genes that interact with <% $gene_display_name %> ...
+<& /curs/inline_help.mhtml, key => "${current_component}_select_gene" &>
     </div>
     <div class="curs-box-body">
 <% $form |n %>

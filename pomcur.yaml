@@ -1402,9 +1402,27 @@ help_text:
     url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions"
   physical_interaction_evidence:
     url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#physical_interactions"
-  ferret_term_entry:
-    inline: Visit help pages
-    url: "@@instance_top_uri@@/docs/go_annotation#docs-curating-specific-types"
+  biological_process_definition:
+    inline: Click for help on biological process
+    url: "@@instance_top_uri@@/docs/go_annotation#process"
+  cellular_component_definition:
+    inline: Click for help on cellular component
+    url: "@@instance_top_uri@@/docs/go_annotation#component"
+  molecular_function_definition:
+    inline: Click for help on molecular function
+    url: "@@instance_top_uri@@/docs/go_annotation#function"
+  phenotype_definition:
+    inline: Click for help on phenotype annotation
+    url: "@@instance_top_uri@@/docs/fypo_annotation"
+  post_translational_modification_definition:
+    inline: Click for help on modification annotation
+    url: "@@instance_top_uri@@/docs/modification_annotation"
+  physical_interaction_select_gene:
+    inline: Click for help on physical interaction annotation
+    url: "@@instance_top_uri@@/docs/physical_interaction_annotation"
+  genetic_interaction_select_gene:
+    inline: Click for help on genetic interaction annotation
+    url: "@@instance_top_uri@@/docs/genetic_interaction_annotation"
 
 contact_email:
   address: "set_me@localhost"

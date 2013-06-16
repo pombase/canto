@@ -47,7 +47,7 @@ that differentiate your new term "A" from other members of the group "B")&rdquo;
     <div id="ferret-term-entry" class="curs-box">
       <div class="inline-help curs-box-title">
 Search for <% $current_component_display_name %> term
-<& /curs/inline_help.mhtml, key => "ferret_term_entry" &>
+<& /curs/inline_help.mhtml, key => "${current_component}_definition" &>
       </div>
       <div class="ferret-term-entry-inside curs-box-body">
         <div>
