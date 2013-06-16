@@ -1453,6 +1453,10 @@ ontology_external_links:
     - name: QuickGO
       icon: quickgo.png
       url: 'http://www.ebi.ac.uk/QuickGO/GTerm?id=@@term_ont_id@@#term=ancchart'
+  fission_yeast_phenotype:
+    - name: BioPortal
+      icon: bioportal.png
+      url: 'http://bioportal.bioontology.org/ontologies/1689?p=terms&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F@@term_ont_id@@#visualization'
 
 chado:
   ontology_cv_names:
