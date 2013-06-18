@@ -8,13 +8,20 @@ $app_prefix
 <% $type->{label} %>
 %   if (defined $sessions{$type->{state}}) {
 %     for my $session (@{$sessions{$type->{state}}}) {
- <% $app_prefix %>/curs/<% $session->{curs_key} %> 
-   <% $session->{submitter}->{name} // $session->{submitter}->{email_address} %>  <% $session->{pub_uniquename} %>
-   "<% $session->{pub_title} %>"
+%       print $format_session_details->($session);
 %     }
 %   } else {
 [none]
 %   }
+
+% }
+
+% if (@sessions_with_term_requests > 0) {
+Sessions with outstanding term requests
+%   for my $session (@sessions_with_term_requests) {
+%     print $format_session_details->($session);
+%   }
+% } else {
 
 % }
 
@@ -35,7 +42,13 @@ my @interesting_types =
    { state => APPROVED, label => "Sessions approved on $summary_date" },
    );
 
+my $session_term_suggestions_count_cvterm =
+  $track_schema->find_with_type('Cvterm',
+                                { name => 'session_term_suggestions_count' });
+
 my %sessions = ();
+
+my @sessions_with_term_requests = ();
 
 my $iter = PomCur::Track::curs_iterator($config, $track_schema);
 while (my ($curs, $cursdb) = $iter->()) {
@@ -44,19 +57,38 @@ while (my ($curs, $cursdb) = $iter->()) {
 
   my $pub = $curs->pub();
 
+  my $curs_details = {
+    curs_key => $curs->curs_key(),
+    datestamp => $datestamp,
+    pub_uniquename => $pub->uniquename(),
+    pub_title => $pub->title(),
+    submitter => $submitter,
+  };
+
+  my $suggest_rs = $curs->cursprops({
+    type => $session_term_suggestions_count_cvterm->cvterm_id()
+  });
+
+  my $suggest_row = $suggest_rs->first();
+  if (defined $suggest_row && $suggest_row->value() > 0) {
+    push @sessions_with_term_requests, $curs_details;
+  }
+
   next unless $datestamp =~ /^$summary_date($|\s+)/;
 
   if (grep { $_ eq $current_state } map { $_->{state} } @interesting_types) {
-    push @{$sessions{$current_state}}, {
-      curs_key => $curs->curs_key(),
-      datestamp => $datestamp,
-      pub_uniquename => $pub->uniquename(),
-      pub_title => $pub->title(),
-      submitter => $submitter,
-    };
+    push @{$sessions{$current_state}}, $curs_details;
   }
 }
 
 $app_prefix =~ s|/$||;
+
+my $format_session_details = sub {
+  my $session = shift;
+  return "  $app_prefix/curs/" . $session->{curs_key} . "\n" .
+    '    ' . ($session->{submitter}->{name} // $session->{submitter}->{email_address}) .
+    '  ' . $session->{pub_uniquename} . "\n" .
+    '    "' . $session->{pub_title} . '"' . "\n";
+};
 
 </%init>
