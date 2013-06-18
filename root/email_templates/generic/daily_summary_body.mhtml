@@ -8,8 +8,9 @@ $app_prefix
 <% $type->{label} %>
 %   if (defined $sessions{$type->{state}}) {
 %     for my $session (@{$sessions{$type->{state}}}) {
-<% $app_prefix %>/curs/<% $session->{curs_key} %> <% $session->{pub_uniquename} %>
-  "<% $session->{pub_title} %>"
+ <% $app_prefix %>/curs/<% $session->{curs_key} %> 
+   <% $session->{submitter}->{name} // $session->{submitter}->{email_address} %>  <% $session->{pub_uniquename} %>
+   "<% $session->{pub_title} %>"
 %     }
 %   } else {
 [none]
@@ -51,6 +52,7 @@ while (my ($curs, $cursdb) = $iter->()) {
       datestamp => $datestamp,
       pub_uniquename => $pub->uniquename(),
       pub_title => $pub->title(),
+      submitter => $submitter,
     };
   }
 }
