@@ -1,3 +1,5 @@
+
+
 <%args>
 $config
 $publication_uniquename
@@ -10,11 +12,8 @@ $existing_annotation_count
 Thank you for agreeing to curate:
   <% $publication_uniquename %> - "<% $publication_title %>"
 
-The curation link is:
+Your curation link is:
   <% $session_link %>
-
-You can use the above link to return to curation if you leave the page. 
-When you return, you will see the annotations you have already made.
 
 You can annotate these data types in the tool:
   Gene Ontology (molecular function, biological process, cellular component)
@@ -23,7 +22,8 @@ You can annotate these data types in the tool:
   Physical Interactions
   Protein Modifications
 
-You will also be able to modify the annotations your colleague made.
+If a colleague has asked you to annotate this paper, you will also be
+able to modify any annotations your colleague made.
 
 % if ($existing_annotation_count > 0) {
 For this paper, there are also several previously curated annotations in the

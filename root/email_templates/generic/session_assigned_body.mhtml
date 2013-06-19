@@ -12,13 +12,18 @@ Dear <% $curator_name %>,
 Congratulations on the recent publication of your paper:
   <% $publication_uniquename %> - "<% $publication_title %>".
 
-We invite you to contribute annotations based on this paper.
+We invite you to contribute annotations based on this paper. We have
+identified the paper as suitable for curation in Canto, but if it
+reports data for a large number of genes, please let us know so we can
+collect the data by a different route.
 
 Your curation link is:
   <% $session_link %>
 
-When you follow the above link and sign in, you will be guided step-by-step
-though the annotation process. You can annotate these data types in the tool:
+When you follow the above link and sign in, you can start curating, or
+assign the session to a colleague (e.g. a member of your lab). You can
+annotate these data types in the tool:
+
 <& ../annotation_type_list.mhtml, config => $config &>\
 % if ($existing_annotation_count > 0) {
 
@@ -36,9 +41,7 @@ data that the tool does not capture so that curators can include it with your
 curation.
 
 The curation link will work indefinitely, so you can leave and return to the
-same URL as often as you want. You can also invite a co-author to help curate
-the paper by changing the "session assignment" before submitting your
-annotations.
+same URL as often as you want.
 
 We greatly appreciate your contribution.
 
