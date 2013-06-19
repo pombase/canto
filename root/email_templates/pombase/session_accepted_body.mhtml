@@ -1,5 +1,3 @@
-
-
 <%args>
 $config
 $publication_uniquename
