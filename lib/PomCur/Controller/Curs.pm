@@ -1074,9 +1074,114 @@ sub _set_annotation_curator
   $annotation->update();
 }
 
+sub _find_or_create_annotation
+{
+  my ($self, $c, $annotation_id, $annotation_type_name, $gene_proxy, $annotation_data) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = undef;
+
+  my $guard = $schema->txn_scope_guard;
+
+  my $is_new_annotation = 0;
+
+  if (defined $annotation_id) {
+    my $orig_annotation = $schema->find_with_type('Annotation',
+                                                  {
+                                                    annotation_id => $annotation_id,
+                                                  });
+    my %current_data = %{$orig_annotation->data()};
+    @current_data{keys %$annotation_data} = values %$annotation_data;
+
+    my $state = $st->{state};
+    if ($state eq APPROVAL_IN_PROGRESS) {
+      # during approval we want to keep the original, community curator
+      # annotation
+      $orig_annotation->status('deleted');
+      $orig_annotation->update();
+
+      $annotation =
+        $schema->create_with_type('Annotation',
+                                  {
+                                    type => $annotation_type_name,
+                                    status => 'new',
+                                    pub => $st->{pub},
+                                    creation_date => _get_iso_date(),
+                                    data => { %current_data }
+                                  });
+
+      $annotation_id = $annotation->annotation_id();
+      my @orig_genes = $orig_annotation->genes()->all();
+      if (@orig_genes) {
+        $annotation->set_genes(@orig_genes);
+      }
+      my @orig_alleles = $orig_annotation->alleles()->all();
+      if (@orig_alleles) {
+        $annotation->set_alleles(@orig_alleles);
+      }
+    } else {
+      $annotation = $orig_annotation;
+      $annotation->data(\%current_data);
+      $annotation->update();
+    }
+  } else {
+    $annotation =
+      $schema->create_with_type('Annotation',
+                                {
+                                  type => $annotation_type_name,
+                                  status => 'new',
+                                  pub => $st->{pub},
+                                  creation_date => _get_iso_date(),
+                                  data => clone $annotation_data,
+                                });
+
+    $annotation->set_genes($gene_proxy->cursdb_gene());
+    $annotation_id = $annotation->annotation_id();
+
+    $is_new_annotation = 1;
+  }
+
+  $self->_set_annotation_curator($c, $annotation);
+
+  $guard->commit();
+
+  $self->metadata_storer()->store_counts($schema);
+
+  $_debug_annotation_id = $annotation_id;
+
+  $self->state()->store_statuses($schema);
+
+  return ($annotation, $is_new_annotation);
+}
+
+
 sub annotation_ontology_edit
 {
-  my ($self, $c, $gene_proxy, $annotation_config, $annotation_id) = @_;
+  my ($self, $c, $gene_proxy, $annotation_config, $single_or_multi_gene, $annotation_id) = @_;
+
+  if (defined $single_or_multi_gene) {
+    if ($single_or_multi_gene =~ /^\d+$/) {
+      if (defined $annotation_id) {
+        croak "too many arguments: @_\n";
+      } else {
+        $annotation_id = $single_or_multi_gene;
+        $single_or_multi_gene = undef;
+      }
+    } else {
+      if ($single_or_multi_gene eq 'single') {
+        # fall through
+      } else {
+        if ($single_or_multi_gene eq 'multi') {
+          $self->_annotation_multi_gene_select($c, $gene_proxy, $annotation_config,
+                                               $annotation_id);
+          return;
+        }
+      }
+    }
+  }
 
   my $module_display_name = $annotation_config->{display_name};
 
@@ -1141,8 +1246,6 @@ sub annotation_ontology_edit
     my $term_ontid = $form->param_value('ferret-term-id');
     my $submit_value = $form->param_value('ferret-submit');
 
-    my $guard = $schema->txn_scope_guard;
-
     my %annotation_data = (term_ontid => $term_ontid);
 
     if ($submit_value eq 'Submit suggestion') {
@@ -1165,76 +1268,11 @@ sub annotation_ontology_edit
 
     my $is_new_annotation = 0;
 
-    my $annotation;
+    my ($annotation, $is_new) =
+      $self->_find_or_create_annotation($c, $annotation_id, $annotation_type_name,
+                                        $gene_proxy, \%annotation_data);
 
-    if (defined $annotation_id) {
-      my $orig_annotation = $schema->find_with_type('Annotation',
-                                                    {
-                                                      annotation_id => $annotation_id,
-                                                    });
-      my %current_data = %{$orig_annotation->data()};
-      @current_data{keys %annotation_data} = values %annotation_data;
-
-      my $state = $st->{state};
-      if ($state eq APPROVAL_IN_PROGRESS) {
-        # during approval we want to keep the original, community curator
-        # annotation
-        $orig_annotation->status('deleted');
-        $orig_annotation->update();
-
-        $annotation =
-          $schema->create_with_type('Annotation',
-                                    {
-                                      type => $annotation_type_name,
-                                      status => 'new',
-                                      pub => $st->{pub},
-                                      creation_date => _get_iso_date(),
-                                      data => { %current_data }
-                                    });
-
-        $annotation_id = $annotation->annotation_id();
-        my @orig_genes = $orig_annotation->genes()->all();
-        if (@orig_genes) {
-          $annotation->set_genes(@orig_genes);
-        }
-        my @orig_alleles = $orig_annotation->alleles()->all();
-        if (@orig_alleles) {
-          $annotation->set_alleles(@orig_alleles);
-        }
-      } else {
-        $annotation = $orig_annotation;
-        $annotation->data(\%current_data);
-        $annotation->update();
-      }
-   } else {
-      $annotation =
-        $schema->create_with_type('Annotation',
-                                  {
-                                    type => $annotation_type_name,
-                                    status => 'new',
-                                    pub => $st->{pub},
-                                    creation_date => _get_iso_date(),
-                                    data => { %annotation_data }
-                                  });
-
-      $annotation->set_genes($gene_proxy->cursdb_gene());
-
-      $annotation_id = $annotation->annotation_id();
-
-      $is_new_annotation = 1;
-    }
-
-    $self->_set_annotation_curator($c, $annotation);
-
-    $guard->commit();
-
-    $self->metadata_storer()->store_counts($schema);
-
-    $_debug_annotation_id = $annotation_id;
-
-    $self->state()->store_statuses($schema);
-
-    if ($is_new_annotation) {
+    if ($is_new) {
       if ($annotation_config->{needs_allele}) {
         _redirect_and_detach($c, 'annotation', 'allele_select', $annotation_id);
       } else {
@@ -2485,6 +2523,86 @@ sub annotation_with_gene_edit : Chained('top') PathPart('annotation/with_gene') 
 sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(1) Form
 {
   _annotation_with_gene_internal(@_, 0);
+}
+
+sub _annotation_multi_gene_select
+{
+  my ($self, $c, $start_gene_proxy, $annotation_config, $annotation_id) = @_;
+
+  if (defined $annotation_id) {
+    croak "editing of multi gene/allele annotation is not implemented";
+  }
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation_type_name = $annotation_config->{name};
+
+  my $start_gene_display_name = $start_gene_proxy->display_name();
+
+  my $module_category = $annotation_config->{category};
+
+  $st->{title} = "Select genes for multi-gene phenotype";
+  $st->{show_title} = 0;
+  $st->{current_component} = $annotation_type_name;
+  $st->{current_component_display_name} = $annotation_config->{display_name};
+  $st->{template} = "curs/modules/${module_category}_multi_gene_select.mhtml";
+  $st->{start_gene_id} = $start_gene_proxy->gene_id();
+  $st->{start_gene_display_name} = $start_gene_display_name;
+
+  my @options = ();
+
+  my $gene_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
+
+  while (defined (my $gene = $gene_rs->next())) {
+    my $gene_proxy = _get_gene_proxy($config, $gene);
+    next if $gene_proxy->gene_id() == $start_gene_proxy->gene_id();
+    push @options, { value => $gene_proxy->gene_id(),
+                     label => $gene_proxy->long_display_name() };
+
+  }
+
+  my $form = $self->form();
+
+  $form->auto_fieldset(0);
+
+  my @all_elements = ();
+
+  push @all_elements, (
+    {
+      name => 'other-genes', label => 'other-genes',
+      type => 'Checkboxgroup',
+      container_tag => 'div',
+      label => '',
+      options => [@options],
+    },
+  );
+
+  push @all_elements, {
+    name => 'genes-submit', type => 'Submit', value => 'Continue',
+    attributes => { class => 'curs-continue-button', },
+  },
+  {
+    type => 'Block', tag => 'p',
+    content => 'After choosing genes you will be asked for information about ' .
+      'the alleles of those genes that contribute to the genotype you are annotating',
+  };
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $gene_submit = $form->param_value('genes-submit');
+    my $other_genes = $form->params->{other-genes};
+
+
+  }
+
+  $self->state()->store_statuses($schema);
 }
 
 sub gene : Chained('top') Args(1)

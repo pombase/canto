@@ -17,10 +17,14 @@ Choose curation type for <% $gene->display_name() %>:
   </div>
   <div class="curs-box-body">
   <ul class="annotation-start">
-% for my $annotation_type (@annotation_type_list) {
+% for my $annotation_type (@types_to_show) {
 %   my $annotation_type_name = $annotation_type->{name};
 %   my $action_path = $curs_root_uri . '/annotation/new/' .
 %                     $gene_id . '/' . $annotation_type_name;
+%   if ($annotation_type->{gene_cardinality} eq 'single' ||
+%       $annotation_type->{gene_cardinality} eq 'multi') {
+%     $action_path .= '/' . $annotation_type->{gene_cardinality};
+%   }
 %   my $title = $annotation_type->{help_text} // '';
 %   my $type_display_name = $annotation_type->{display_name};
     <li>
@@ -28,10 +32,14 @@ Choose curation type for <% $gene->display_name() %>:
       <a title="<% $title %>" href="<% $action_path %>">
 %   }
       <span class="annotation-type">
-%   if ($annotation_type->{gene_cardinality} eq 'one_or_more') {
+%   if ($annotation_type->{gene_cardinality} eq 'single') {
 Single gene <% $type_display_name %>
 %   } else {
+%     if ($annotation_type->{gene_cardinality} eq 'multi') {
+Multi gene <% ucfirst $type_display_name %>
+%     } else {
 <% ucfirst $type_display_name %>
+%     }
 %   }
       </span>
 %   if (!$annotation_type->{disabled}) {
@@ -137,4 +145,19 @@ my $is_admin = $st->{is_admin_user};
 
 my $genes_in_session = $st->{genes_in_session};
 my $genes_in_session_js = Data::JavaScript::Anon->anon_dump($genes_in_session);
+
+use Clone qw(clone);
+
+my @types_to_show = map {
+  if (defined $_->{gene_cardinality} && $_->{gene_cardinality} eq 'one_or_more') {
+    my $single_copy = clone $_;
+    $single_copy->{gene_cardinality} = 'single';
+    my $multi_copy = clone $_;
+    $multi_copy->{gene_cardinality} = 'multi';
+
+    ($single_copy, $multi_copy);
+  } else {
+    $_;
+  }
+} @annotation_type_list;
 </%init>
