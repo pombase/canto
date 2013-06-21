@@ -1,21 +1,19 @@
 <%args>
-xxxx
 $form
-$gene_display_name
-$term_ontid
+$start_gene_display_name
 $pub
 </%args>
 
 <div class="curs-box with-gene-select">
   <div class="curs-box-title">
-Genes to use in genotype for <% $term_ontid %>
+Genes to use with <% $start_gene_display_name %> in new genotype
   </div>
   <div class="curs-box-body">
     <% $form |n %>
   </div>
 
   <div class="upload-genes-link">
-    <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
+    <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> to this session ...</a>
   </div>
 </div>
 
