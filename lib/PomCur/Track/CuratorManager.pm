@@ -125,9 +125,12 @@ sub set_curator
   my $self = shift;
   my $curs_key = shift;
 
-  die unless defined $curs_key;
+  die 'no curs_key passed to set_curator()' unless defined $curs_key;
 
   my $curs_curator_email = shift;
+
+  die 'no curator email address passed to set_curator()'
+    unless defined $curs_curator_email;
 
   $curs_curator_email =~ s/(.*)\@(.*)/$1\@\L$2/;
 
