@@ -192,9 +192,16 @@ sub get_state
     }
   }
 
-  return ($state, { email_address => $submitter_email,
-                    name => $submitter_name }, $gene_count,
-          $datestamp);
+  my $submitter = undef;
+
+  if (defined $submitter_email && defined $submitter_name) {
+    $submitter = {
+      email_address => $submitter_email,
+      name => $submitter_name
+    }
+  }
+
+  return ($state, $submitter, $gene_count, $datestamp);
 }
 
 =head2

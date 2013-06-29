@@ -85,9 +85,12 @@ $app_prefix =~ s|/$||;
 
 my $format_session_details = sub {
   my $session = shift;
-  return "  $app_prefix/curs/" . $session->{curs_key} . "\n" .
-    '    ' . ($session->{submitter}->{name} // $session->{submitter}->{email_address}) .
-    '  ' . $session->{pub_uniquename} . "\n" .
+
+  my $details = "  $app_prefix/curs/" . $session->{curs_key} . "\n";
+  if (defined $session->{submitter}) {
+    $details .= '    ' . ($session->{submitter}->{name} // $session->{submitter}->{email_address});
+  }
+  $details .= '  ' . $session->{pub_uniquename} . "\n" .
     '    "' . $session->{pub_title} . '"' . "\n";
 };
 
