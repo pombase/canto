@@ -1164,28 +1164,7 @@ sub _find_or_create_annotation
 
 sub annotation_ontology_edit
 {
-  my ($self, $c, $gene_proxy, $annotation_config, $single_or_multi_gene, $annotation_id) = @_;
-
-  if (defined $single_or_multi_gene) {
-    if ($single_or_multi_gene =~ /^\d+$/) {
-      if (defined $annotation_id) {
-        croak "too many arguments: @_\n";
-      } else {
-        $annotation_id = $single_or_multi_gene;
-        $single_or_multi_gene = undef;
-      }
-    } else {
-      if ($single_or_multi_gene eq 'single') {
-        # fall through
-      } else {
-        if ($single_or_multi_gene eq 'multi') {
-          $self->_annotation_multi_gene_select($c, $gene_proxy, $annotation_config,
-                                               $annotation_id);
-          return;
-        }
-      }
-    }
-  }
+  my ($self, $c, $gene_proxy, $annotation_config, $new_or_edit, $annotation_id) = @_;
 
   my $module_display_name = $annotation_config->{display_name};
 
@@ -1310,7 +1289,11 @@ sub annotation_ontology_edit
 
 sub annotation_interaction_edit
 {
-  my ($self, $c, $gene_proxy, $annotation_config) = @_;
+  my ($self, $c, $gene_proxy, $annotation_config, $new_or_edit) = @_;
+
+  if ($new_or_edit eq 'edit') {
+    die "can't edit interactions yet";
+  }
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -1413,23 +1396,20 @@ sub _get_gene_proxy
 
 sub _annotation_edit
 {
-  my ($self, $c, $gene_id, $annotation_type_name, $annotation_id) = @_;
+  my ($self, $c, $annotation_type_name, $new_or_edit, $annotation_id) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $gene = $schema->find_with_type('Gene', $gene_id);
-
-  my $gene_proxy = _get_gene_proxy($config, $gene);
-  $st->{gene} = $gene_proxy;
+  my $gene = $st->{gene};
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   $st->{annotation_type_config} = $annotation_config;
 
   my $annotation_display_name = $annotation_config->{display_name};
-  my $gene_display_name = $gene_proxy->display_name();
+  my $gene_display_name = $gene->display_name();
 
   $st->{title} = "Curating $annotation_display_name for $gene_display_name\n";
   $st->{show_title} = 0;
@@ -1441,23 +1421,25 @@ sub _annotation_edit
 
   $self->state()->store_statuses($schema);
 
-  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene_proxy,
-                                                    $annotation_config, $annotation_id);
+  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene,
+                                                    $annotation_config, $new_or_edit,
+                                                    $annotation_id);
 }
 
-sub new_annotation : Chained('top') PathPart('annotation/new') Args(2) Form
+sub new_annotation : Chained('gene') PathPart('annotation/new') Args(1) Form
 {
-  my ($self, $c, $gene_id, $annotation_type_name) = @_;
+  my ($self, $c, $annotation_type_name) = @_;
 
-  _annotation_edit($self, $c, $gene_id, $annotation_type_name);
+  _annotation_edit($self, $c, $annotation_type_name, 'new');
 }
 
-sub existing_annotation_edit : Chained('top') PathPart('annotation/edit') Args(3) Form
+sub existing_annotation_edit : Chained('gene') PathPart('annotation/edit') Args(2) Form
 {
-  my ($self, $c, $gene_id, $annotation_type_name, $annotation_id) = @_;
+  my ($self, $c, $annotation_type_name, $annotation_id) = @_;
 
-  _annotation_edit($self, $c, $gene_id, $annotation_type_name, $annotation_id);
+  _annotation_edit($self, $c, $annotation_type_name, 'edit', $annotation_id);
 }
+
 
 # redirect to the annotation transfer page only if we've just created an
 # ontology annotation and we have more than one gene
@@ -1560,6 +1542,9 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   my $module_category = $annotation_config->{category};
+
+  $st->{annotation_config} = $annotation_config;
+  $st->{annotation_category} = $module_category;
 
   my $annotation_data = $annotation->data();
   my $term_ontid = $annotation_data->{term_ontid};
@@ -2523,16 +2508,16 @@ sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(
   _annotation_with_gene_internal(@_, 0);
 }
 
-sub _annotation_multi_gene_select
+sub multi_gene_select : Chained('gene') PathPart('annotation/select_multi_genes') Form
 {
-  my ($self, $c, $start_gene_proxy, $annotation_config, $annotation_id) = @_;
+  my ($self, $c) = @_;
 
-  if (defined $annotation_id) {
-    croak "editing of multi gene/allele annotation is not implemented";
-  }
+  my $st = $c->stash();
+
+  my $start_gene_proxy = $st->{gene};
+  my $annotation_config = $st->{annotation_config};
 
   my $config = $c->config();
-  my $st = $c->stash();
   my $schema = $st->{schema};
 
   my $annotation_type_name = $annotation_config->{name};
@@ -2614,7 +2599,7 @@ sub _annotation_multi_gene_select
   $self->state()->store_statuses($schema);
 }
 
-sub gene : Chained('top') Args(1)
+sub gene : Chained('top') CaptureArgs(1)
 {
   my ($self, $c, $gene_id) = @_;
 
@@ -2628,8 +2613,17 @@ sub gene : Chained('top') Args(1)
   _set_genes_in_session($c);
 
   $st->{gene} = $gene_proxy;
+}
 
-  $st->{title} = 'Gene: ' . $gene_proxy->display_name();
+sub gene_view : Chained('gene') PathPart('view')
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $gene = $st->{gene};
+
+  $st->{title} = 'Gene: ' . $gene->display_name();
   # use only in header, not in body:
   $st->{show_title} = 1;
   $st->{template} = 'curs/gene_page.mhtml';
