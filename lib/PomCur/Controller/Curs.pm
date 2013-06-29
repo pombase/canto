@@ -2580,6 +2580,10 @@ sub _annotation_multi_gene_select
   );
 
   push @all_elements, {
+    name => 'genes-cancel', type => 'Submit', value => 'Cancel',
+    attributes => { class => 'curs-continue-button', },
+  },
+  {
     name => 'genes-submit', type => 'Submit', value => 'Continue',
     attributes => { class => 'curs-continue-button', },
   },
@@ -2596,10 +2600,17 @@ sub _annotation_multi_gene_select
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
-    my $gene_submit = $form->param_value('genes-submit');
-    my $other_genes = $form->params->{other-genes};
+    my $genes_cancel = $c->req->params->{'genes-cancel'};
+    my $genes_submit = $c->req->params->{'genes-submit'};
 
+    if (defined $genes_cancel || !defined $genes_submit) {
+      _redirect_and_detach($c, 'gene', $start_gene_proxy->gene_id());
+    } else {
+      my $other_genes = $form->param_array('other-genes');
 
+      my $gene_id_arg = join (",", ($start_gene_proxy->gene_id(), @$other_genes));
+      _redirect_and_detach($c, 'annotation/allele_select_multi', $gene_id_arg);
+    }
   }
 
   $self->state()->store_statuses($schema);
