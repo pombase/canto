@@ -19,7 +19,7 @@ Choose curation type for <% $gene->display_name() %>:
   <ul class="annotation-start">
 % for my $annotation_type (@annotation_type_list) {
 %   my $annotation_type_name = $annotation_type->{name};
-%   my $action_path = $curs_root_uri . '/annotation/edit/' .
+%   my $action_path = $curs_root_uri . '/annotation/new/' .
 %                     $gene_id . '/' . $annotation_type_name;
 %   my $title = $annotation_type->{help_text} // '';
 %   my $type_display_name = $annotation_type->{display_name};

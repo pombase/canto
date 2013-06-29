@@ -51,7 +51,7 @@ test_psgi $app, sub {
   my $gene_display_name = $gene_proxy->display_name();
 
   {
-    my $uri = new URI("$root_url/annotation/edit/$gene_id/$annotation_type_name");
+    my $uri = new URI("$root_url/annotation/new/$gene_id/$annotation_type_name");
 
     $uri->query_form('ferret-term-id' => $term_db_accession,
                      'ferret-submit' => 'Proceed',

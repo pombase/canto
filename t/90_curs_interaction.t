@@ -69,7 +69,7 @@ for my $annotation_type (@annotation_type_list) {
 
     # test proceeding after choosing a term
     {
-      my $uri = new URI("$root_url/annotation/edit/$bait_id/$annotation_type_name");
+      my $uri = new URI("$root_url/annotation/new/$bait_id/$annotation_type_name");
 
       $uri->query_form('prey' => [$prey1_id, $prey2_id],
                        'interaction-submit' => 'Proceed');

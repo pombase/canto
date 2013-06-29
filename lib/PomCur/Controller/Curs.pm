@@ -1391,7 +1391,7 @@ sub _annotation_edit
                                                     $annotation_config, $annotation_id);
 }
 
-sub new_annotation_edit : Chained('top') PathPart('annotation/edit') Args(2) Form
+sub new_annotation : Chained('top') PathPart('annotation/new') Args(2) Form
 {
   my ($self, $c, $gene_id, $annotation_type_name) = @_;
 
