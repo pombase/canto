@@ -30,6 +30,6 @@ my $instance_top_uri = $c->uri_for('/');
 my $gene_url;
 
 if (defined $gene) {
-  $gene_url = $curs_root_uri . '/gene/' . $gene->gene_id();
+  $gene_url = $curs_root_uri . '/gene/' . $gene->gene_id() . '/view';
 }
 </%init>
