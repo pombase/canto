@@ -1137,7 +1137,7 @@ a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
   display: none;
 }
 
-organism-name {
+.organism-name {
   font-style: italic;
 }
 
