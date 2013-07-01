@@ -30,7 +30,7 @@ Click on a gene name to start entering data
 %       if (defined $gene) {
       <td>
 % if (!$read_only_curs) {
-        <a href="<% $start_path . '/gene/' .$gene->{gene_id} %>"
+        <a href="<% $start_path . '/gene/' . $gene->{gene_id} . '/view' %>"
 % }
           <span>
             <% $gene->{identifier} %>
