@@ -19,11 +19,12 @@ Choose curation type for <% $gene->display_name() %>:
   <ul class="annotation-start">
 % for my $annotation_type (@types_to_show) {
 %   my $annotation_type_name = $annotation_type->{name};
-%   my $action_path = $curs_root_uri . '/annotation/new/' .
-%                     $gene_id . '/' . $annotation_type_name;
-%   if ($annotation_type->{gene_cardinality} eq 'single' ||
-%       $annotation_type->{gene_cardinality} eq 'multi') {
-%     $action_path .= '/' . $annotation_type->{gene_cardinality};
+%   my $action_path = $curs_root_uri . '/gene/' . $gene_id . '/new_annotation/';
+%   $action_path .= $annotation_type_name;
+%   if ($annotation_type->{gene_cardinality} eq 'multi') {
+%     $action_path .= '/multi_gene_select';
+%   } else {
+%     $action_path .= '/choose_term';
 %   }
 %   my $title = $annotation_type->{help_text} // '';
 %   my $type_display_name = $annotation_type->{display_name};
