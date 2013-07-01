@@ -59,7 +59,7 @@ pages</a>, or via any of the specific instances of Canto.
 <p>
   Try the <a href="http://curation.pombase.org/demo">demo</a>
   version of Canto: curate GO, phenotypes,
-  interactions and protein modifications using S. pombe gene IDs.
+  interactions and protein modifications using <span class="organism-name">S. pombe</span> gene IDs.
 </p>
 
 </div>
@@ -88,7 +88,8 @@ available from Github.
 <h3>Acknowledgements</h3>
 <p>
 Canto is developed as part of the PomBase project, which provides a model
-organism database for the fission yeast Schizosaccharomyces pombe. PomBase is
+organism database for the fission yeast
+<span class="organism-name">Schizosaccharomyces pombe</span>. PomBase is
 funded by the <a href="http://www.wellcome.ac.uk/">Wellcome Trust</a> and is
 run by a consortium comprising the <a href="http://www.cam.ac.uk/">University
 of Cambridge</a>, the <a href="http://www.ebi.ac.uk/">European
