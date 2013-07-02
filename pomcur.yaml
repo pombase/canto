@@ -748,6 +748,9 @@ class_info:
     publications_with_approved_session:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
+    community_curatable_publications_with_approved_session:
+      extends: pub
+      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and pub_id in (select pub_id from pubprop where type_id = (select cvterm_id from cvterm where name = 'community_curatable') and value = 'yes')"
     curatable_publications_with_no_annotatable_genes:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_genes_count' and p.value = 0)) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -922,6 +925,8 @@ reports:
                    - report: publications_with_active_sessions
                    - report: publications_with_session_needing_approval
                    - report: publications_with_approved_session
+                     children:
+                      - report: community_curatable_publications_with_approved_session
                    - report: publications_with_multiple_sessions
                 - report: curatable_publications_without_sessions
                 - report: curatable_publications_with_no_annotatable_genes
