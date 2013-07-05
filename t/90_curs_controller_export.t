@@ -21,7 +21,7 @@ test_psgi $app, sub {
   my $cb = shift;
 
   {
-    my $uri = new URI("$root_url/annotation/export/biological_process");
+    my $uri = new URI("$root_url/annotation_export/biological_process");
 
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);
