@@ -73,7 +73,7 @@ for my $annotation_type (@annotation_type_list) {
 
       # test proceeding after choosing a term
       my $gene_id = 2;
-      my $uri = new URI("$root_url/annotation/new/$gene_id/$annotation_type_name");
+      my $uri = new URI("$root_url/gene/$gene_id/new_annotation/$annotation_type_name/choose_term");
 
       my %form_params = (
         'ferret-term-id' => $term_db_accession,
@@ -99,9 +99,9 @@ for my $annotation_type (@annotation_type_list) {
 
       $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_id;
       if ($annotation_type->{needs_allele}) {
-        is ($redirect_url, "$root_url/annotation/allele_select/$new_annotation_id");
+        is ($redirect_url, "$root_url/annotation/$new_annotation_id/allele_select");
       } else {
-        is ($redirect_url, "$root_url/annotation/evidence/$new_annotation_id");
+        is ($redirect_url, "$root_url/annotation/$new_annotation_id/evidence");
       }
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
@@ -143,7 +143,7 @@ for my $annotation_type (@annotation_type_list) {
 
     # test adding evidence to an annotation
     {
-      my $uri = new URI("$root_url/annotation/evidence/$new_annotation_id");
+      my $uri = new URI("$root_url/annotation/$new_annotation_id/evidence");
       $uri->query_form('evidence-select' => 'IMP',
                        'evidence-submit-proceed' => 'Proceed ->');
 
@@ -155,7 +155,7 @@ for my $annotation_type (@annotation_type_list) {
 
       my $redirect_url = $res->header('location');
 
-      is ($redirect_url, "$root_url/annotation/transfer/$new_annotation_id");
+      is ($redirect_url, "$root_url/annotation/$new_annotation_id/transfer");
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
@@ -177,9 +177,9 @@ for my $annotation_type (@annotation_type_list) {
                                                {
                                                  primary_identifier => 'SPCC1739.11c',
                                                });
-      my $uri = new URI("$root_url/annotation/transfer/$new_annotation_id");
+      my $uri = new URI("$root_url/annotation/$new_annotation_id/transfer");
       $uri->query_form('transfer' => 'transfer-submit',
-                       dest => [$cdc11->gene_id()]);
+                     dest => [$cdc11->gene_id()]);
 
       my $req = HTTP::Request->new(GET => $uri);
       my $res = $cb->($req);
@@ -188,7 +188,7 @@ for my $annotation_type (@annotation_type_list) {
 
       my $redirect_url = $res->header('location');
 
-      is ($redirect_url, "$root_url/gene/2");
+      is ($redirect_url, "$root_url/gene/2/view");
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);

@@ -71,5 +71,5 @@ sub _increment_annotation_count
   $$annotation_count_ref += $rs->count();
 }
 
-my $download_action = $curs_root_uri . '/annotation/zipexport';
+my $download_action = $curs_root_uri . '/annotation_zipexport';
 </%init>

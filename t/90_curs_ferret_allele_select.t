@@ -51,7 +51,7 @@ test_psgi $app, sub {
   my $gene_display_name = $gene_proxy->display_name();
 
   {
-    my $uri = new URI("$root_url/annotation/new/$gene_id/$annotation_type_name");
+    my $uri = new URI("$root_url/gene/$gene_id/new_annotation/$annotation_type_name/choose_term");
 
     $uri->query_form('ferret-term-id' => $term_db_accession,
                      'ferret-submit' => 'Proceed',
@@ -64,7 +64,7 @@ test_psgi $app, sub {
     my $redirect_url = $res->header('location');
 
     $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_id;
-    is ($redirect_url, "$root_url/annotation/allele_select/$new_annotation_id");
+    is ($redirect_url, "$root_url/annotation/$new_annotation_id/allele_select");
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
@@ -98,7 +98,7 @@ test_psgi $app, sub {
                           "on a Tuesday", "BOGUS:ACCESSION");
 
   my $do_add_allele = sub {
-    my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
+    my $uri = new URI("$root_url/annotation/$new_annotation_id/add_allele_action");
     $uri->query_form('curs-allele-evidence-select' => $evidence_param,
                      'curs-allele-name' => $allele_name_param,
                      'curs-allele-type' => $allele_type_param,
@@ -144,7 +144,7 @@ test_psgi $app, sub {
 
   # test removing
   {
-    my $uri = new URI("$root_url/annotation/remove_allele_action/$new_annotation_id/0");
+    my $uri = new URI("$root_url/annotation/$new_annotation_id/remove_allele_action/0");
 
     my $req = HTTP::Request->new(GET => $uri);
     my $res = $cb->($req);
@@ -174,7 +174,7 @@ test_psgi $app, sub {
     # add 1
     $do_add_allele->();
 
-    my $uri = new URI("$root_url/annotation/add_allele_action/$new_annotation_id");
+    my $uri = new URI("$root_url/annotation/$new_annotation_id/add_allele_action");
     $uri->query_form('curs-allele-evidence-select' => $evidence_param,
                      'curs-allele-name' => $allele_name_param . '_2',
                      'curs-allele-type' => $allele_type_param,
@@ -189,7 +189,7 @@ test_psgi $app, sub {
     is ($res->code, 200);
 
     {
-      my $uri = new URI("$root_url/annotation/allele_select/$new_annotation_id");
+      my $uri = new URI("$root_url/annotation/$new_annotation_id/allele_select");
       my $req = HTTP::Request->new(GET => $uri);
       my $res = $cb->($req);
 
@@ -208,7 +208,7 @@ test_psgi $app, sub {
 
     is (keys %$alleles_in_progress, 2);
 
-    $uri = new URI("$root_url/annotation/process_alleles/$new_annotation_id");
+    $uri = new URI("$root_url/annotation/$new_annotation_id/process_alleles");
     $req = HTTP::Request->new(GET => $uri);
     $res = $cb->($req);
 
@@ -262,7 +262,7 @@ test_psgi $app, sub {
 
     is ($cdc11->all_annotations(), 0);
 
-    my $uri = new URI("$root_url/annotation/transfer/" . $new_annotations[0]->annotation_id());
+    my $uri = new URI("$root_url/annotation/" . $new_annotations[0]->annotation_id() . '/transfer');
     $uri->query_form('dest' => [$cdc11->gene_id()],
                      'transfer-submit' => 'Finish');
 
@@ -273,7 +273,7 @@ test_psgi $app, sub {
 
     my $redirect_url = $res->header('location');
 
-    is ($redirect_url, "$root_url/gene/2");
+    is ($redirect_url, "$root_url/gene/2/view");
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);

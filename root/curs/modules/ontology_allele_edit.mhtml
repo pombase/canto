@@ -159,5 +159,5 @@ my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 
 my $annotation_id = $annotation->annotation_id();
 
-my $allele_add_action = "$curs_root_uri/annotation/add_allele_action/$annotation_id" ;
+my $allele_add_action = "$curs_root_uri/annotation/$annotation_id/add_allele_action" ;
 </%init>

@@ -69,7 +69,7 @@ for my $annotation_type (@annotation_type_list) {
 
     # test proceeding after choosing a term
     {
-      my $uri = new URI("$root_url/annotation/new/$bait_id/$annotation_type_name");
+      my $uri = new URI("$root_url/gene/$bait_id/new_annotation/$annotation_type_name/choose_term");
 
       $uri->query_form('prey' => [$prey1_id, $prey2_id],
                        'interaction-submit' => 'Proceed');
@@ -81,7 +81,7 @@ for my $annotation_type (@annotation_type_list) {
       my $redirect_url = $res->header('location');
 
       $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_id;
-      is ($redirect_url, "$root_url/annotation/evidence/$new_annotation_id");
+      is ($redirect_url, "$root_url/annotation/$new_annotation_id/evidence");
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
@@ -107,7 +107,7 @@ for my $annotation_type (@annotation_type_list) {
 
     # test adding evidence to an annotation
     {
-      my $uri = new URI("$root_url/annotation/evidence/$new_annotation_id");
+      my $uri = new URI("$root_url/annotation/$new_annotation_id/evidence");
       $uri->query_form('evidence-select' => 'Dosage Rescue',
                        'evidence-submit-proceed' => 'Proceed ->');
 
@@ -117,7 +117,7 @@ for my $annotation_type (@annotation_type_list) {
       is $res->code, 302;
       my $redirect_url = $res->header('location');
 
-      is ($redirect_url, "$root_url/gene/" . $bait->gene_id());
+      is ($redirect_url, "$root_url/gene/" . $bait->gene_id() . '/view');
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);

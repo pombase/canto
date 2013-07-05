@@ -55,7 +55,7 @@ test_psgi $app, sub {
     my $annotation_id = shift;
     my $interactor_identifier = shift;
 
-    my $uri_string = "$root_url/annotation/delete/$annotation_id";
+    my $uri_string = "$root_url/annotation/$annotation_id/delete";
     if (defined $interactor_identifier) {
       $uri_string .= "/$interactor_identifier";
     }
