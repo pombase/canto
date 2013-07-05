@@ -1061,7 +1061,7 @@ var AlleleStuff = function($) {
               editing_allele = false;
               $allele_dialog.removeData('edit_allele_row');
             } else {
-              window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id + '/edit';
+              window.location.href = curs_root_uri + '/annotation/' + annotation_id + '/process_alleles/edit';
             }
           }
           if ($reuse_checkbox_checked) {
@@ -1087,7 +1087,7 @@ var AlleleStuff = function($) {
 
   function add_allele_cancel() {
     if (editing_allele) {
-      window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id + '/edit';
+      window.location.href = curs_root_uri + '/annotation/' + annotation_id + '/process_alleles/edit';
     } else {
       $(this).dialog("close");
     }
@@ -1265,8 +1265,8 @@ var AlleleStuff = function($) {
     var allele_id = $tr.data('allele_id');
 
     $.ajax({
-      url: curs_root_uri + '/annotation/remove_allele_action/' + annotation_id +
-        '/' + allele_id,
+      url: curs_root_uri + '/annotation/' + annotation_id +
+        '/remove_allele_action/' + allele_id,
       cache: false,
       async: async
     }).done(function() {
@@ -1493,8 +1493,8 @@ var AlleleStuff = function($) {
              });
 
       $('#curs-add-allele-proceed').click(function() {
-        window.location.href = curs_root_uri + '/annotation/process_alleles/' + annotation_id +
-          (editing_allele ? '/edit' : '');
+        window.location.href = curs_root_uri + '/annotation/' + annotation_id + 
+          '/process_alleles/' + (editing_allele ? '/edit' : '');
       });
 
       if (editing_allele) {

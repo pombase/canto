@@ -840,18 +840,18 @@ sub _delete_annotation : Private
   }
 }
 
-sub annotation_delete : Chained('top') PathPart('annotation/delete')
+sub annotation_delete : Chained('annotation') PathPart('delete')
 {
-  my ($self, $c, $annotation_id, $other_gene_identifier) = @_;
+  my ($self, $c, $other_gene_identifier) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->_check_annotation_exists($c, $annotation_id);
+  my $annotation = $st->{annotation};
 
   my $delete_sub = sub {
-    $self->_delete_annotation($c, $annotation_id, $other_gene_identifier);
+    $self->_delete_annotation($c, $annotation->annotation_id(), $other_gene_identifier);
     $self->metadata_storer()->store_counts($schema);
   };
 
@@ -860,18 +860,17 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete')
   _redirect_and_detach($c);
 }
 
-sub annotation_delete_suggestion : Chained('top') PathPart('annotation/delete_suggestion')
+sub annotation_delete_suggestion : Chained('annotation') PathPart('delete_suggestion')
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->_check_annotation_exists($c, $annotation_id);
+  my $annotation = $st->{annotation};
 
   my $delete_sub = sub {
-    my $annotation = $schema->resultset('Annotation')->find($annotation_id);
     my $data = $annotation->data();
     delete $data->{term_suggestion};
     $annotation->data($data);
@@ -884,18 +883,17 @@ sub annotation_delete_suggestion : Chained('top') PathPart('annotation/delete_su
   _redirect_and_detach($c);
 }
 
-sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
+sub annotation_undelete : Chained('annotation') PathPart('undelete') Args(1)
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->_check_annotation_exists($c, $annotation_id);
+  my $annotation = $st->{annotation};
 
   my $delete_sub = sub {
-    my $annotation = $schema->resultset('Annotation')->find($annotation_id);
     $annotation->status('new');
     $annotation->update();
   };
@@ -909,9 +907,10 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
 
 sub _field_edit_internal
 {
-  my ($self, $c, $annotation_id, $field_name) = @_;
+  my ($self, $c, $field_name) = @_;
 
-  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+  my $st = $c->stash();
+  my $annotation = $st->{annotation};
   my $data = $annotation->data();
 
   my $params = $c->req()->params();
@@ -928,14 +927,12 @@ sub _field_edit_internal
   $c->forward('View::JSON');
 }
 
-sub annotation_comment_edit : Chained('top') PathPart('annotation/comment_edit') Args(1)
+sub annotation_comment_edit : Chained('annotation') PathPart('comment_edit') Args(1)
 {
-  my ($self, $c, $annotation_id) = @_;
-
   _field_edit_internal(@_, 'submitter_comment');
 }
 
-sub annotation_extension_edit : Chained('top') PathPart('annotation/extension_edit') Args(1)
+sub annotation_extension_edit : Chained('annotation') PathPart('extension_edit') Args(1)
 {
   _field_edit_internal(@_, 'annotation_extension');
 }
@@ -1337,9 +1334,9 @@ sub annotation_ontology_edit
 
 
       if ($annotation_config->{needs_allele}) {
-        _redirect_and_detach($c, 'annotation', 'allele_select', $annotation->annotation_id());
+        _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'allele_select');
       } else {
-        _redirect_and_detach($c, 'annotation', 'evidence', $annotation->annotation_id());
+        _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'evidence');
       }
     }
   } else {
@@ -1460,7 +1457,7 @@ sub annotation_interaction_edit
 
     $self->state()->store_statuses($schema);
 
-    _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    _redirect_and_detach($c, 'annotation', $annotation_id, 'evidence');
   }
 }
 
@@ -1540,15 +1537,28 @@ sub new_annotation_choose_term : Chained('new_annotation') PathPart('choose_term
   _annotation_edit($self, $c, $annotation_config);
 }
 
-sub existing_annotation_edit : Chained('gene') PathPart('annotation_edit') Args(1) Form
+sub annotation : Chained('top') CaptureArgs(1)
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c, $annotation_ids) = @_;
+
+  my $st = $c->stash();
+
+  my @annotations = $self->_check_annotation_exists($c, $annotation_ids);
+
+  $st->{annotations} = \@annotations;
+
+  $st->{annotation} = $annotations[0];
+}
+
+sub existing_annotation_edit : Chained('annotation') PathPart('edit') Args(1) Form
+{
+  my ($self, $c) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+  my $annotation = $st->{annotation};
   my $annotation_type_name = $annotation->type();
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
@@ -1573,10 +1583,10 @@ sub _maybe_transfer_annotation
   my $current_user = $c->user();
 
   if ($annotation_config->{category} eq 'ontology') {
-    _redirect_and_detach($c, 'annotation', 'transfer', (join ',', @$annotation_ids));
+    _redirect_and_detach($c, 'annotation', (join ',', @$annotation_ids), 'transfer');
   } else {
     if (defined $gene) {
-      _redirect_and_detach($c, 'gene', $gene->gene_id());
+      _redirect_and_detach($c, 'gene', $gene->gene_id(), 'view');
     }
   }
 }
@@ -1585,22 +1595,31 @@ sub _check_annotation_exists
 {
   my $self = shift;
   my $c = shift;
-  my $annotation_id = shift;
+  my $annotation_ids = shift;
 
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $annotation =
-    $schema->resultset('Annotation')->find($annotation_id);
+  my @annotation_ids = split /,/, $annotation_ids;
 
-  if (defined $annotation) {
-    $c->stash()->{annotation} = $annotation;
+  my @annotations = ();
 
-    return $annotation;
-  } else {
-    $c->flash()->{error} = qq|No annotation found with id "$annotation_id" |;
-    _redirect_and_detach($c);
+  for my $annotation_id (@annotation_ids) {
+    my $annotation =
+      $schema->resultset('Annotation')->find($annotation_id);
+
+    if (defined $annotation) {
+      $c->stash()->{annotation} = $annotation;
+
+      push @annotations, $annotation;
+    } else {
+      $c->flash()->{error} = qq|No annotation found with id "$annotation_id" |;
+      _redirect_and_detach($c);
+      return ();
+    }
   }
+
+  return @annotations;
 }
 
 sub _generate_evidence_options
@@ -1627,17 +1646,16 @@ sub _generate_evidence_options
   return @codes;
 }
 
-sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1) Form
+sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->_check_annotation_exists($c, $annotation_id);
-
-  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+  my $annotation = $st->{annotation};
+  my $annotation_id = $annotation->annotation_id();
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
@@ -1720,13 +1738,13 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
     if ($evidence_select eq '') {
       $c->flash()->{error} = 'Please choose an evidence type to continue';
-      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+      _redirect_and_detach($c, 'annotation', $annotation_id, 'evidence');
     }
 
     my $evidence_submit_back = $c->req->params->{'evidence-submit-back'};
     my $evidence_submit_proceed = $c->req->params->{'evidence-submit-proceed'};
     if (!defined $evidence_submit_proceed && !defined $evidence_submit_back) {
-      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+      _redirect_and_detach($c, 'annotation', $annotation_id, 'evidence');
     }
 
     my $existing_evidence_code = $data->{evidence_code};
@@ -1735,7 +1753,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
 
     if (defined $evidence_submit_back) {
       if (defined $existing_evidence_code) {
-         _redirect_and_detach($c, 'gene', $gene_id);
+         _redirect_and_detach($c, 'gene', $gene_id, 'view');
      } else {
         $self->_delete_annotation($c, $annotation_id);
         _redirect_and_detach($c, 'annotation', 'new', $gene_id, $annotation_type_name);
@@ -1799,14 +1817,14 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     $self->state()->store_statuses($schema);
 
     if ($needs_with_gene) {
-      my @parts = ('annotation', 'with_gene', $annotation_id);
+      my @parts = ('annotation', $annotation_id, 'with_gene');
       if (defined $existing_evidence_code) {
         push @parts, 'edit';
       }
       _redirect_and_detach($c, @parts);
     } else {
       if ($annotation_config->{needs_allele} || defined $existing_evidence_code) {
-        _redirect_and_detach($c, 'gene', $gene_id);
+        _redirect_and_detach($c, 'gene', $gene_id, 'view');
       } else {
         _maybe_transfer_annotation($c, [@annotation_ids], $annotation_config);
       }
@@ -1814,11 +1832,11 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   }
 }
 
-sub allele_remove_action : Chained('top') PathPart('annotation/remove_allele_action') Args(2)
+sub allele_remove_action : Chained('annotation') PathPart('remove_allele_action') Args(1)
 {
-  my ($self, $c, $annotation_id, $allele_id) = @_;
+  my ($self, $c, $allele_id) = @_;
 
-  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+  my $annotation = $c->stash()->{annotation};
 
   my $data = $annotation->data();
   my $alleles_in_progress = $data->{alleles_in_progress} // { };
@@ -1831,7 +1849,7 @@ sub allele_remove_action : Chained('top') PathPart('annotation/remove_allele_act
 
   $c->stash->{json_data} = {
     allele_id => $allele_id,
-    annotation_id => $annotation_id,
+    annotation_id => $annotation->annotation_id(),
   };
   $c->forward('View::JSON');
 }
@@ -1891,15 +1909,26 @@ sub _allele_add_action_internal
   return $return_allele_data;
 }
 
-sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') Args(1)
+sub _trim
 {
-  my ($self, $c, $annotation_id) = @_;
+  my $str = shift;
+
+  $str =~ s/\s+$//;
+  $str =~ s/^\s+//;
+
+  return $str;
+}
+
+sub allele_add_action : Chained('annotation') PathPart('add_allele_action')
+{
+  my ($self, $c) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+  my $annotation = $st->{annotation};
+  my $annotation_id = $annotation->annotation_id();
 
   my $params = $c->req()->params();
 
@@ -2105,21 +2134,19 @@ sub _allele_data_for_js : Private
 
 sub _annotation_allele_select_internal
 {
-  my ($self, $c, $annotation_id, $editing) = @_;
+  my ($self, $c, $editing) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->_check_annotation_exists($c, $annotation_id);
-
   my $guard = $schema->txn_scope_guard;
-  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
+  my $annotation = $st->{annotation};
 
   my $annotation_type_name = $annotation->type();
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
   if ($editing) {
-    $annotation = _re_edit_annotation($c, $annotation_config, $annotation_id);
+    $annotation = _re_edit_annotation($c, $annotation_config, $annotation->annotation_id());
   }
 
   my $gene = $annotation->genes()->first();
@@ -2177,14 +2204,14 @@ sub _annotation_allele_select_internal
   $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
 }
 
-sub annotation_allele_select : Chained('top') PathPart('annotation/allele_select') Args(1)
+sub annotation_allele_select : Chained('annotation') PathPart('allele_select')
 {
   _annotation_allele_select_internal(@_, 0);
 }
 
-sub annotation_allele_select_edit : Chained('top') PathPart('annotation/allele_select') Args(2)
+sub annotation_allele_select_edit : Chained('annotation') PathPart('allele_select') Args(1)
 {
-  my ($self, $c, $annotation_id, $editing) = @_;
+  my ($self, $c, $editing) = @_;
 
   if ($editing eq 'edit') {
     _annotation_allele_select_internal(@_, 1);
@@ -2195,13 +2222,14 @@ sub annotation_allele_select_edit : Chained('top') PathPart('annotation/allele_s
 
 sub _annotation_process_alleles_internal
 {
-  my ($self, $c, $annotation_id, $editing) = @_;
+  my ($self, $c, $editing) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $annotation = $self->_check_annotation_exists($c, $annotation_id);
+  my $annotation = $st->{annotation};
+  my $annotation_id = $annotation->annotation_id();
 
   my $annotation_type_name = $annotation->type();
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
@@ -2282,18 +2310,18 @@ sub _annotation_process_alleles_internal
   if (!$editing) {
     _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
   } else {
-    _redirect_and_detach($c, 'gene', $gene->gene_id());
+    _redirect_and_detach($c, 'gene', $gene->gene_id(), 'view');
   }
 }
 
-sub annotation_process_alleles : Chained('top') PathPart('annotation/process_alleles') Args(1)
+sub annotation_process_alleles : Chained('annotation') PathPart('process_alleles')
 {
   _annotation_process_alleles_internal(@_, 0);
 }
 
-sub annotation_process_alleles_edit : Chained('top') PathPart('annotation/process_alleles') Args(2)
+sub annotation_process_alleles_edit : Chained('annotation') PathPart('process_alleles') Args(1)
 {
-  my ($self, $c, $annotation_id, $editing) = @_;
+  my ($self, $c, $editing) = @_;
 
   if (defined $editing && $editing eq 'edit') {
     _annotation_process_alleles_internal(@_, 1);
@@ -2302,26 +2330,22 @@ sub annotation_process_alleles_edit : Chained('top') PathPart('annotation/proces
   }
 }
 
-sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1) Form
+sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 {
-  my ($self, $c, $annotation_ids) = @_;
+  my ($self, $c) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my @annotation_ids = split /,/, $annotation_ids;
+  my @annotations = @{$st->{annotations}};
+
   my %annotation_by_id = ();
 
   map {
-    $self->_check_annotation_exists($c, $_);
-  } @annotation_ids;
-
-  my @annotations = map {
-    my $annotation = $schema->find_with_type('Annotation', $_);
+    my $annotation = $_;
     $annotation_by_id{$annotation->annotation_id()} = $annotation;
-    $annotation;
-  } @annotation_ids;
+  } @annotations;
 
   my $annotation_type_name = $annotations[0]->type();
 
@@ -2552,21 +2576,20 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     $self->state()->store_statuses($schema);
 
-    _redirect_and_detach($c, 'gene', $gene->gene_id());
+    _redirect_and_detach($c, 'gene', $gene->gene_id(), 'view');
   }
 }
 
 sub _annotation_with_gene_internal
 {
-  my ($self, $c, $annotation_id, $editing) = @_;
+  my ($self, $c, $editing) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  $self->_check_annotation_exists($c, $annotation_id);
+  my $annotation = $st->{annotation};
 
-  my $annotation = $schema->find_with_type('Annotation', $annotation_id);
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
@@ -2626,7 +2649,7 @@ sub _annotation_with_gene_internal
 
     if ($with_gene_select eq '') {
       $c->flash()->{error} = 'Please choose a gene to continue';
-      my @args = ($c, 'annotation', 'with_gene', $annotation_id);
+      my @args = ($c, 'annotation', $annotation->annotation_id, 'with_gene');
       if ($editing) {
         push @args, 'edit';
       }
@@ -2639,7 +2662,7 @@ sub _annotation_with_gene_internal
     $annotation->update();
 
     if ($editing) {
-      _redirect_and_detach($c, 'gene', $gene->gene_id())
+      _redirect_and_detach($c, 'gene', $gene->gene_id(), 'view')
     } else {
       _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
     }
@@ -2649,9 +2672,9 @@ sub _annotation_with_gene_internal
 
 }
 
-sub annotation_with_gene_edit : Chained('top') PathPart('annotation/with_gene') Args(2) Form
+sub annotation_with_gene_edit : Chained('annotation') PathPart('with_gene') Args(1) Form
 {
-  my ($self, $c, $annotation_id, $edit) = @_;
+  my ($self, $c, $edit) = @_;
 
   if ($edit eq 'edit') {
     _annotation_with_gene_internal(@_, 1);
@@ -2660,7 +2683,7 @@ sub annotation_with_gene_edit : Chained('top') PathPart('annotation/with_gene') 
   }
 }
 
-sub annotation_with_gene : Chained('top') PathPart('annotation/with_gene') Args(1) Form
+sub annotation_with_gene : Chained('annotation') PathPart('with_gene') Args(0) Form
 {
   _annotation_with_gene_internal(@_, 0);
 }
@@ -2802,7 +2825,7 @@ sub gene_view : Chained('gene') PathPart('view')
   $st->{template} = 'curs/gene_page.mhtml';
 }
 
-sub annotation_export : Chained('top') PathPart('annotation/export') Args(1)
+sub annotation_export : Chained('top') PathPart('annotation_export') Args(1)
 {
   my ($self, $c, $annotation_type_name) = @_;
 
@@ -2815,7 +2838,7 @@ sub annotation_export : Chained('top') PathPart('annotation/export') Args(1)
   $c->res->body($results);
 }
 
-sub annotation_zipexport : Chained('top') PathPart('annotation/zipexport') Args(0)
+sub annotation_zipexport : Chained('top') PathPart('annotation_zipexport') Args(0)
 {
   my ($self, $c) = @_;
 
