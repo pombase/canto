@@ -392,8 +392,33 @@ sub start : Local Args(1) {
   my $config = $c->config();
 
   my $pub = $schema->find_with_type('Pub', { uniquename => $pub_uniquename });
-  my $curs_key = PomCur::Curs::make_curs_key();
 
+  my $state_constraints = '';
+
+  my @approval_not_started_states =
+    PomCur::Curs::State::approval_not_started_states();
+
+  if (@approval_not_started_states) {
+    $state_constraints = "AND (" . (join ' OR ', map {
+      "p.value = '" . $_ . "'";
+    } @approval_not_started_states) .  ")"
+  }
+
+  my $where = 'EXISTS (SELECT cursprop_id FROM cursprop p, cvterm t ' .
+    'WHERE p.curs = me.curs_id AND ' .
+    "t.cvterm_id = p.type AND t.name = 'annotation_status' " .
+    "$state_constraints)";
+
+  my $current_curs_rs = $pub->curs()->search({}, { where => \$where });
+
+  if ($current_curs_rs->count() > 0) {
+    $c->flash()->{error} = "can't create new session - a session already exists for: " .
+      $pub->uniquename();
+    $c->res->redirect($c->uri_for('/'));
+    return;
+  }
+
+  my $curs_key = PomCur::Curs::make_curs_key();
   my $curs = $schema->create_with_type('Curs',
                                        {
                                          pub => $pub,

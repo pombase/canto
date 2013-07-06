@@ -67,6 +67,14 @@ use constant {
   EXPORTED => "EXPORTED",
 };
 
+my @approval_not_started_states = (SESSION_CREATED, SESSION_ACCEPTED, CURATION_IN_PROGRESS,
+                                   CURATION_PAUSED);
+
+sub approval_not_started_states
+{
+  return @approval_not_started_states;
+}
+
 use constant {
   SESSION_CREATED_TIMESTAMP_KEY => 'session_created_timestamp',
   CURATION_PAUSED_TIMESTAMP_KEY => 'curation_paused_timestamp',
@@ -85,7 +93,8 @@ use constant {
 use Sub::Exporter -setup => {
   exports => [ qw/SESSION_CREATED SESSION_ACCEPTED CURATION_IN_PROGRESS
                   CURATION_PAUSED
-                  NEEDS_APPROVAL APPROVAL_IN_PROGRESS APPROVED EXPORTED/ ],
+                  NEEDS_APPROVAL APPROVAL_IN_PROGRESS APPROVED EXPORTED
+                  approval_not_started_states/ ],
 };
 
 has status_adaptor => (is => 'ro', init_arg => undef, lazy_build => 1);
