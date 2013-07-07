@@ -218,7 +218,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    like ($redirect_res->content(), qr/Choose curation type for $gene_display_name/);
+    like ($redirect_res->content(), qr/You have just made the following annotations/);
 
     my $rs = $curs_schema->resultset('Annotation');
     ok ($rs->count() == scalar(@current_ids) + 1);

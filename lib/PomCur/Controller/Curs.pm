@@ -2105,7 +2105,7 @@ sub _annotation_process_alleles_internal
 
   $self->metadata_storer()->store_counts($schema);
 
-  if (!$editing && $c->user_exists() && $c->user()->role()->name() eq 'admin') {
+  if (!$editing) {
     _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
   } else {
     _redirect_and_detach($c, 'gene', $gene->gene_id());
