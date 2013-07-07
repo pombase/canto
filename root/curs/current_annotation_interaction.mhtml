@@ -144,7 +144,12 @@ if ($user_created) {
   $new_or_db = 'Existing ';
 }
 
-my $title = $new_or_db . $annotation_type->{display_name} . ' annotations ' .
+my $plural = '';
+if (@annotations > 1) {
+  $plural = 's';
+}
+
+my $title = $new_or_db . $annotation_type->{display_name} . " annotation$plural " .
   $gene_text;
 
 my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
