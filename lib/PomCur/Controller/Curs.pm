@@ -829,17 +829,17 @@ sub annotation_undelete : Chained('top') PathPart('annotation/undelete') Args(1)
   _redirect_and_detach($c);
 }
 
-sub annotation_comment_edit : Chained('top') PathPart('annotation/comment_edit') Args(1)
+sub _field_edit_internal
 {
-  my ($self, $c, $annotation_id) = @_;
+  my ($self, $c, $annotation_id, $field_name) = @_;
 
   my $annotation = $self->_check_annotation_exists($c, $annotation_id);
   my $data = $annotation->data();
 
   my $params = $c->req()->params();
-  my $new_comment = $params->{'curs-edit-dialog-text'};
+  my $new_text = $params->{'curs-edit-dialog-text'};
 
-  $data->{submitter_comment} = $new_comment;
+  $data->{$field_name} = $new_text;
 
   $annotation->data($data);
   $annotation->update();
@@ -848,6 +848,18 @@ sub annotation_comment_edit : Chained('top') PathPart('annotation/comment_edit')
     result => 'success',
   };
   $c->forward('View::JSON');
+}
+
+sub annotation_comment_edit : Chained('top') PathPart('annotation/comment_edit') Args(1)
+{
+  my ($self, $c, $annotation_id) = @_;
+
+  _field_edit_internal(@_, 'submitter_comment');
+}
+
+sub annotation_extension_edit : Chained('top') PathPart('annotation/extension_edit') Args(1)
+{
+  _field_edit_internal(@_, 'annotation_extension');
 }
 
 my $iso_date_template = "%4d-%02d-%02d";
@@ -2204,24 +2216,18 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   my @all_elements = ();
 
-  for (my $i = 0; $i < @annotations; $i++) {
-    my $annotation = $annotations[$i];
+  if (@annotations == 1) {
+    my $annotation = $annotations[0];
     my $existing_comment = $annotation->data()->{submitter_comment};
-    my $label;
-
-    if (@annotations > 1) {
-      $label = 'Optional comment for annotation ' . ($i + 1)  . ':';
-    } else {
-      $label = 'Optional comment:'
-    }
+    my $label = 'Optional comment:';
 
     my %comment_def = (
-      name => 'annotation-comment-' . $i,
+      name => 'annotation-comment-0',
       label => $label,
       type => 'Textarea',
       container_tag => 'div',
       container_attributes => {
-        style => 'display: ' . (@annotations == 1 ? 'block' : 'none'),
+        style => 'display: block',
         class => 'curs-transfer-comment-container',
       },
       attributes => { class => 'annotation-comment',
@@ -2237,35 +2243,6 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     push @all_elements, {
       %comment_def,
     };
-  }
-
-  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
-    for (my $i = 0; $i < @annotations; $i++) {
-      my $annotation = $annotations[$i];
-
-      my $existing_extension = $annotation->data()->{annotation_extension};
-
-      my %extension_def = (
-        name => 'annotation-extension-' . $i,
-        label => 'Add optional annotation extension for annotation ' . ($i + 1) . ':',
-        type => 'Textarea',
-        container_tag => 'div',
-        attributes => { class => 'annotation-extension',
-                        style => 'display: block' },
-        cols => 80,
-        rows => 6,
-      );
-
-      if (defined $existing_extension) {
-        $extension_def{'value'} = $existing_extension;
-      }
-
-      push @all_elements, (
-        {
-          %extension_def,
-        }
-      );
-    }
   }
 
   if (@options) {

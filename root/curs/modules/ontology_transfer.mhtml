@@ -23,12 +23,6 @@ $pub
 <& ../one_annotation_summary.mhtml,
    curs_root_uri => $curs_root_uri,
    annotation => $annotation &>
-% if (@annotations > 1) {
-  <div>
-    <a class="curs-transfer-comment-link" href="#"
-       onclick="javascript:$('[name=annotation-comment-<% $i %>]').parent().show(); $('#<% $summary_id %> .curs-transfer-comment-link').hide()">Add a comment ...</a>
-  </div>
-% }
 </div>
 % }
       </div>

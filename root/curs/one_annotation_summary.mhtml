@@ -4,13 +4,17 @@ $annotation
 </%args>
 
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
-   annotation_type_config => $annotation_type_config,
-   annotation_data => $annotations[0] &>
+   annotation_type => $annotation_type_config, 
+   annotations => [@annotations], user_created => 1,
+   pub => $st->{pub},
+   all_annotation_count => scalar(@annotations),
+   completed_count => scalar(@annotations), gene => $st->{gene} &>
 
 <%init>
 use PomCur::Curs::Utils;
 
 my $st = $c->stash();
+
 my $schema = $st->{schema};
 my $config = $c->config();
 
@@ -27,6 +31,6 @@ my ($completed_count, $annotations_ref) =
 my @annotations = @$annotations_ref;
 
 my $annotation_view_template =
-  "one_annotation_summary_" . $annotation_type_category . ".mhtml";
+  "current_annotation_" . $annotation_type_category . ".mhtml";
 
 </%init>

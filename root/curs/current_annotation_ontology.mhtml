@@ -251,52 +251,26 @@ NOT
 %   }
     <td>
       <span>
-<%perl>
-     my $url = $comment_edit_url  . $row->{annotation_id};
-     my $escaped_comment = PomCur::WebUtil::escape_inline_js($row->{comment} // '');
-     my $view_edit_text = undef;
-     my $comment_onclick;
-     if ($read_only_curs || $annotation_status eq 'deleted') {
-       if ($escaped_comment ne '') {
-         $view_edit_text = 'View';
-         $comment_onclick = "javascript:pomcur_util.show_message('View comment',  '$escaped_comment'); return false;";
-       }
-     } else {
-       if ($escaped_comment eq '') {
-         $view_edit_text = 'Add';
-       } else {
-         $view_edit_text = 'View/edit';
-       }
-       $comment_onclick = "javascript:EditDialog.create('Edit comment',  '$escaped_comment', '$url'); return false;";
-     }
-</%perl>
-% if (defined $view_edit_text) {
-      <a href="#" class="curs-editable-table-field" title="<% $escaped_comment %>"
-         onclick="<% $comment_onclick %>"><% $view_edit_text %> ...</a>
+% {
+% my $url = $comment_edit_url  . $row->{annotation_id};
+% my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'comment', $row);
+%   if (defined $view_edit_text) {
+      <a href="#" class="curs-editable-table-field" title="<% $escaped_text %>"
+         onclick="<% $onclick %>"><% $view_edit_text %> ...</a>
+%   }
 % }
       </span>
     </td>
     <td>
       <span>
-%   if ($row->{annotation_extension} && $row->{annotation_extension} !~ /^\s*$/) {
-%     my $extension = $row->{annotation_extension};
-%     HTML::Mason::Escapes::basic_html_escape(\$extension);
-%     $extension =~ s/([;|,])/$1&#8203;/g;
-%     if ($admin_user && !$read_only_curs && $annotation_status ne 'deleted') {
-        <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>"
-           class="curs-editable-table-field"
-           title="Edit extension ...">
-          <% $extension |n %>
-          <img src="<% $edit_icon_uri %>"/>
-        </a>
-%     } else {
-        <% $extension |n %>
-%     }
-%   } else {
-%     if ($admin_user && !$read_only_curs && $annotation_status ne 'deleted') {
-        <a href="<% $curs_root_uri . '/annotation/transfer/' . $row->{annotation_id} %>">Add extension ...</a>
-%     }
+% {
+%   my $url = $extension_edit_url  . $row->{annotation_id};
+%   my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'annotation_extension', $row);
+%   if (defined $view_edit_text) {
+      <a href="#" class="curs-editable-table-field" title="<% $escaped_text %>"
+         onclick="<% $onclick %>"><% $view_edit_text %> ...</a>
 %   }
+% }
       </span>
     </td>
 
@@ -340,15 +314,48 @@ use HTML::Mason::Escapes;
 my $annotation_type_name = $annotation_type->{name};
 
 my $delete_action = $curs_root_uri . '/annotation/delete/';
-my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 my $undelete_action = $curs_root_uri . '/annotation/undelete/';
+my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 my $undelete_icon_uri = $c->uri_for('/static/images/undo_icon.png');
 my $edit_icon_uri = $c->uri_for('/static/images/mini-edit.png');
-
 my $comment_edit_url = $curs_root_uri . '/annotation/comment_edit/';
+my $extension_edit_url = $curs_root_uri . '/annotation/extension_edit/';
 my $edit_with_action_url = "$curs_root_uri/annotation/with_gene/";
 
 my $some_incomplete = $user_created && $completed_count != scalar(@annotations);
+
+my $st = $c->stash();
+
+my $read_only_curs = $st->{read_only_curs};
+
+my $field_edit_proc = sub {
+  my $url = shift;
+  my $type = shift;
+  my $row = shift;
+
+  my $current_value = $row->{$type} // '';
+
+  my $escaped_text = $current_value // '';
+  HTML::Mason::Escapes::basic_html_escape(\$escaped_text);
+  my $view_edit_text = undef;
+  my $onclick;
+  my $annotation_status = $row->{status};
+  if ($read_only_curs || $annotation_status eq 'deleted') {
+    if ($escaped_text ne '') {
+      $view_edit_text = 'View';
+      $onclick = "javascript:pomcur_util.show_message('View comment',  '$escaped_text'); return false;";
+    }
+  } else {
+    if ($escaped_text eq '') {
+      $view_edit_text = 'Add';
+    } else {
+      $view_edit_text = 'View/edit';
+    }
+    $onclick = "javascript:EditDialog.create('Edit comment',  '$escaped_text', '$url'); return false;";
+  }
+
+  return ($onclick, $escaped_text, $view_edit_text);
+};
 
 my $gene_text = "";
 if (defined $gene) {
@@ -378,10 +385,6 @@ my $needs_allele = $annotation_type->{needs_allele};
 my $some_row_has_term_suggestion = grep { $_->{term_suggestion} } @annotations;
 my $some_row_has_comment = grep { $_->{comment} } @annotations;
 my $some_row_has_qualifer = grep { $_->{qualifiers} } @annotations;
-
-my $st = $c->stash();
-
-my $read_only_curs = $st->{read_only_curs};
 
 my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
 my $allele_select_url = $curs_root_uri . '/annotation/allele_select/';
