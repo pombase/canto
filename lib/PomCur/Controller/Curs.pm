@@ -2217,6 +2217,7 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   my @all_elements = ();
 
   if (@annotations == 1) {
+    # hack: show a textfield for the comment if there is one annotation
     my $annotation = $annotations[0];
     my $existing_comment = $annotation->data()->{submitter_comment};
     my $label = 'Optional comment:';
@@ -2277,18 +2278,12 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     my @dest_params = @{$form->param_array('dest')};
 
-    for (my $i = 0; $i < @annotations; $i++) {
-      my $annotation = $annotations[$i];
+    if (@annotations == 1) {
+      # hack: use a textfield for the comment only if there is one annotation
+      my $annotation = $annotations[0];
 
-      my $extension = $form->param_value('annotation-extension-' . $i);
-      my $comment = $form->param_value('annotation-comment-' . $i);
-
+      my $comment = $form->param_value('annotation-comment-0');
       my $data = $annotation->data();
-      if ($extension && $extension !~ /^\s*$/) {
-        $data->{annotation_extension} = $extension;
-      } else {
-        delete $data->{annotation_extension};
-      }
 
       if ($comment && $comment !~ /^\s*$/) {
         $data->{submitter_comment} = $comment;
@@ -2300,42 +2295,42 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
       $annotation->update();
     }
 
-    my $first_annotation = $annotations[0];
-    my $first_ann_data = $first_annotation->data();
+    if (@dest_params > 0) {
+      my $first_annotation = $annotations[0];
+      my $first_ann_data = $first_annotation->data();
 
-    my $new_data = clone $first_ann_data;
-    delete $new_data->{with_gene};
-    delete $new_data->{annotation_extension};
-    delete $new_data->{conditions};
-    delete $new_data->{expression};
-    if ($annotation_config->{needs_allele}) {
-      # only transfer the term to the new annotation
-      delete $new_data->{evidence_code};
-    }
+      my $new_data = clone $first_ann_data;
+      delete $new_data->{with_gene};
+      delete $new_data->{annotation_extension};
+      delete $new_data->{conditions};
+      delete $new_data->{expression};
+      if ($annotation_config->{needs_allele}) {
+        # only transfer the term to the new annotation
+        delete $new_data->{evidence_code};
+      }
 
-    my @dest_gene_identifiers = ();
+      my @dest_gene_identifiers = ();
 
-    for my $dest_param (@dest_params) {
-      my $dest_gene = $schema->find_with_type('Gene', $dest_param);
+      for my $dest_param (@dest_params) {
+        my $dest_gene = $schema->find_with_type('Gene', $dest_param);
 
-      my $new_annotation =
-        $schema->create_with_type('Annotation',
-                                  {
-                                   type => $annotation_type_name,
-                                   status => 'new',
-                                   pub => $annotations[0]->pub(),
-                                   creation_date => _get_iso_date(),
-                                   data => $new_data,
-                                 });
-      $new_annotation->set_genes($dest_gene);
+        my $new_annotation =
+          $schema->create_with_type('Annotation',
+                                    {
+                                      type => $annotation_type_name,
+                                      status => 'new',
+                                      pub => $annotations[0]->pub(),
+                                      creation_date => _get_iso_date(),
+                                      data => $new_data,
+                                    });
+        $new_annotation->set_genes($dest_gene);
 
-      my $gene_proxy = PomCur::Curs::GeneProxy->new(config => $config,
-                                                    cursdb_gene => $dest_gene);
+        my $gene_proxy = PomCur::Curs::GeneProxy->new(config => $config,
+                                                      cursdb_gene => $dest_gene);
 
-      push @dest_gene_identifiers, $gene_proxy->display_name();
-    }
+        push @dest_gene_identifiers, $gene_proxy->display_name();
+      }
 
-    if(@dest_params > 0) {
       $c->flash()->{message} = 'Transferred annotation to: ' . join ',', @dest_gene_identifiers;
     }
 
