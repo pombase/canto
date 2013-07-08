@@ -37,7 +37,7 @@ Choose curation type for <% $gene->display_name() %>:
 Single gene <% $type_display_name %>
 %   } else {
 %     if ($annotation_type->{gene_cardinality} eq 'multi') {
-Multi gene <% ucfirst $type_display_name %>
+Multi gene <% $type_display_name %>
 %     } else {
 <% ucfirst $type_display_name %>
 %     }
