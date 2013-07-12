@@ -19,12 +19,12 @@ Choose curation type for <% $gene->display_name() %>:
   <ul class="annotation-start">
 % for my $annotation_type (@types_to_show) {
 %   my $annotation_type_name = $annotation_type->{name};
-%   my $action_path = $curs_root_uri . '/gene/' . $gene_id . '/new_annotation/';
-%   $action_path .= $annotation_type_name;
-%   if ($annotation_type->{gene_cardinality} eq 'multi') {
-%     $action_path .= '/multi_gene_select';
+%   my $action_path = $curs_root_uri . '/gene/' . $gene_id;
+%   my $annotation_target = $annotation_type->{target};
+%   if ($annotation_target eq 'multi_allele') {
+%     $action_path .= "/multi_gene_select/$annotation_type_name";
 %   } else {
-%     $action_path .= '/choose_term';
+%     $action_path .= "/new_annotation/$annotation_type_name/$annotation_target/choose_term";
 %   }
 %   my $title = $annotation_type->{help_text} // '';
 %   my $type_display_name = $annotation_type->{display_name};
@@ -33,11 +33,11 @@ Choose curation type for <% $gene->display_name() %>:
       <a title="<% $title %>" href="<% $action_path %>">
 %   }
       <span class="annotation-type">
-%   if ($annotation_type->{gene_cardinality} eq 'single') {
-Single gene <% $type_display_name %>
+%   if ($annotation_target eq 'single_allele') {
+Single allele <% $type_display_name %>
 %   } else {
-%     if ($annotation_type->{gene_cardinality} eq 'multi') {
-Multi gene <% $type_display_name %>
+%     if ($annotation_target eq 'multi_allele') {
+Multi allele <% $type_display_name %>
 %     } else {
 <% ucfirst $type_display_name %>
 %     }
@@ -150,14 +150,16 @@ my $genes_in_session_js = Data::JavaScript::Anon->anon_dump($genes_in_session);
 use Clone qw(clone);
 
 my @types_to_show = map {
-  if (defined $_->{gene_cardinality} && $_->{gene_cardinality} eq 'one_or_more') {
+  # a hack to add the annotation type to the list twice
+  if (defined $_->{needs_allele}) {
     my $single_copy = clone $_;
-    $single_copy->{gene_cardinality} = 'single';
+    $single_copy->{target} = 'single_allele';
     my $multi_copy = clone $_;
-    $multi_copy->{gene_cardinality} = 'multi';
+    $multi_copy->{target} = 'multi_allele';
 
     ($single_copy, $multi_copy);
   } else {
+    $_->{target} = 'gene';
     $_;
   }
 } @annotation_type_list;

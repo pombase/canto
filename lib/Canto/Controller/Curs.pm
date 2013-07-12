@@ -1124,7 +1124,7 @@ sub _update_annotation
 
 sub _create_annotation
 {
-  my ($self, $c, $annotation_type_name, $gene_proxy, $annotation_data) = @_;
+  my ($self, $c, $annotation_type_name, $gene_proxies, $annotation_data) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -1142,7 +1142,11 @@ sub _create_annotation
                                   data => clone $annotation_data,
                                 });
 
-  $annotation->set_genes($gene_proxy->cursdb_gene());
+  my @genes = map {
+    $_->cursdb_gene();
+  } @$gene_proxies;
+
+  $annotation->set_genes(@genes);
 
   my $annotation_id = $annotation->annotation_id();
 
@@ -1196,6 +1200,14 @@ sub annotation_ontology_edit
   my $annotation_extra_help_text = $annotation_config->{extra_help_text};
   $st->{annotation_extra_help_text} = $annotation_extra_help_text;
   $st->{template} = "curs/modules/$module_category.mhtml";
+
+  # if 1, this annotation much have an allele
+  my $needs_allele = $annotation_config->{needs_allele};
+
+  # if "single_allele", use "allele_select"
+  # if "multi_allele", use "multi_allele_select"
+  # otherwise go straight to evidence selection
+  my $target = $st->{target};
 
   my $form = $self->form();
 
@@ -1252,13 +1264,28 @@ sub annotation_ontology_edit
       $self->_update_annotation($c, $annotation, \%annotation_data);
       _redirect_and_detach($c, 'gene', $gene_proxy->gene_id());
     } else {
+      my @genes = ();
+
+      if ($target eq 'multi_allele') {
+        @genes = @{$st->{genes}};
+      } else {
+        push @genes, $gene_proxy;
+      }
+
       my $annotation =
         $self->_create_annotation($c, $annotation_type_name,
-                                  $gene_proxy, \%annotation_data);
-
+                                  \@genes, \%annotation_data);
 
       if ($annotation_config->{needs_allele}) {
-        _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'allele_select');
+        if ($target eq 'single_allele') {
+          _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'allele_select');
+        } else {
+          if ($target eq 'multi_allele') {
+            _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'multi_allele_select');
+          } else {
+            die "unknown annotation target: $target";
+          }
+        }
       } else {
         _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'evidence');
       }
@@ -1403,12 +1430,7 @@ sub _annotation_edit
 
   my $annotation_display_name = $annotation_config->{display_name};
 
-  my $gene_cardinality = $annotation_config->{gene_cardinality};
-
-  if ($gene_cardinality ne 'one_or_more' && @genes > 1) {
-    die "Cannot select multiple genes for $annotation_display_name " .
-      "annotation";
-  }
+  my $needs_allele = $annotation_config->{needs_allele};
 
   my $gene_display_names = join ',', map {
     $_->display_name();
@@ -1429,9 +1451,15 @@ sub _annotation_edit
                                                     $annotation);
 }
 
-sub new_annotation : Chained('gene') PathPart('new_annotation') CaptureArgs(1)
+# args:
+#   $annotation_type_name - the name from the annotation configuration
+#   $target - the feature type that this annotation should be attached to
+#                - gene
+#                - single_allele
+#                - multi_allele
+sub new_annotation : Chained('gene') PathPart('new_annotation') CaptureArgs(2)
 {
-  my ($self, $c, $annotation_type_name) = @_;
+  my ($self, $c, $annotation_type_name, $target) = @_;
 
   my $st = $c->stash();
 
@@ -1440,6 +1468,7 @@ sub new_annotation : Chained('gene') PathPart('new_annotation') CaptureArgs(1)
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   $st->{annotation_type_config} = $annotation_config;
+  $st->{target} = $target;
 }
 
 sub new_annotation_choose_term : Chained('new_annotation') PathPart('choose_term') Args(0) Form
@@ -2203,6 +2232,27 @@ sub annotation_process_alleles_edit : Chained('annotation') PathPart('process_al
   }
 }
 
+sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allele_select')
+{
+  my ($self, $c) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $annotation = $st->{annotation};
+  my $annotation_id = $annotation->annotation_id();
+
+  my $annotation_type_name = $annotation->type();
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  my $data = $annotation->data();
+
+  $self->metadata_storer()->store_counts($schema);
+
+#  _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
+}
+
 sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 {
   my ($self, $c) = @_;
@@ -2560,19 +2610,17 @@ sub annotation_with_gene : Chained('annotation') PathPart('with_gene') Args(0) F
   _annotation_with_gene_internal(@_, 0);
 }
 
-sub multi_gene_select : Chained('new_annotation') PathPart('multi_gene_select') Args(0) Form
+sub multi_gene_select : Chained('gene') PathPart('multi_gene_select') Args(1) Form
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $annotation_type_name) = @_;
 
   my $st = $c->stash();
-
-  my $start_gene_proxy = $st->{gene};
-  my $annotation_config = $st->{annotation_type_config};
 
   my $config = $c->config();
   my $schema = $st->{schema};
 
-  my $annotation_type_name = $annotation_config->{name};
+  my $start_gene_proxy = $st->{gene};
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   my $start_gene_display_name = $start_gene_proxy->display_name();
 
@@ -2645,7 +2693,7 @@ sub multi_gene_select : Chained('new_annotation') PathPart('multi_gene_select') 
 
       my $gene_id_arg = join (",", ($start_gene_proxy->gene_id(), @$other_genes));
       _redirect_and_detach($c, 'gene', $gene_id_arg, 'new_annotation', $annotation_type_name,
-                           'choose_term');
+                           'multi_allele', 'choose_term');
     }
   }
 
