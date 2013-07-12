@@ -52,7 +52,7 @@ test_psgi $app, sub {
   {
     my $term_id = 'GO:0080170';
     my $gene_id = 2;
-    my $uri = new URI("$root_url/gene/$gene_id/new_annotation/biological_process/choose_term");
+    my $uri = new URI("$root_url/gene/$gene_id/new_annotation/biological_process/single_allele/choose_term");
     $uri->query_form('ferret-term-id' => $term_id,
                      'ferret-submit' => 'Proceed',
                      'ferret-term-entry' => 'transport');

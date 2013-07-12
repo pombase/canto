@@ -69,7 +69,7 @@ for my $annotation_type (@annotation_type_list) {
 
     # test proceeding after choosing a term
     {
-      my $uri = new URI("$root_url/gene/$bait_id/new_annotation/$annotation_type_name/choose_term");
+      my $uri = new URI("$root_url/gene/$bait_id/new_annotation/$annotation_type_name/single_allele/choose_term");
 
       $uri->query_form('prey' => [$prey1_id, $prey2_id],
                        'interaction-submit' => 'Proceed');

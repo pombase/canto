@@ -73,7 +73,7 @@ for my $annotation_type (@annotation_type_list) {
 
       # test proceeding after choosing a term
       my $gene_id = 2;
-      my $uri = new URI("$root_url/gene/$gene_id/new_annotation/$annotation_type_name/choose_term");
+      my $uri = new URI("$root_url/gene/$gene_id/new_annotation/$annotation_type_name/single_allele/choose_term");
 
       my %form_params = (
         'ferret-term-id' => $term_db_accession,
