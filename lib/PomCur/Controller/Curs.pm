@@ -2235,6 +2235,10 @@ sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allel
   my $st = $c->stash();
   my $schema = $st->{schema};
 
+  $st->{title} = 'Allele selection';
+  $st->{show_title} = 0;
+  $st->{template} = "curs/modules/ontology_multi_allele_select.mhtml";
+
   my $annotation = $st->{annotation};
   my $annotation_id = $annotation->annotation_id();
 
@@ -2243,9 +2247,11 @@ sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allel
 
   my $data = $annotation->data();
 
+  $st->{annotation_genes} = [map { _get_gene_proxy($config, $_); } $annotation->genes()];
+
   $self->metadata_storer()->store_counts($schema);
 
-#  _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
+#  _maybe_transfer_annotation($c, [$annotation_id], $annotation_config);
 }
 
 sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
