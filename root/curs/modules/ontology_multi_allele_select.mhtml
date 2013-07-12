@@ -1,0 +1,77 @@
+<%args>
+$schema
+$title
+$pub
+@annotation_genes
+$curs_root_uri
+$multi_organism_mode
+</%args>
+
+<div id="curs-multi-allele-select" class="curs-box">
+  <div class="curs-box-title">
+<% $title %>
+  </div>
+  <div class="curs-box-body">
+  
+  <form name="multi-allele-select" method="get">
+
+  <table class="list">
+    <thead>
+      <tr>
+%     for my $col_name (@col_names) {
+        <th>
+          <% $col_name %>
+        </th>
+%     }
+        <th>
+          &nbsp;
+        </th>
+      </tr>
+    </thead>
+
+%   for my $gene (@gene_data) {
+    <tr>
+%     for my $col_name (@col_names) {
+      <td>
+        <% $gene->{$col_name} |n %>
+      </td>
+%     }
+      <td>
+        <button type="button"
+                name="gene-select"
+                value='<% $gene->{gene_id} %>'>Add allele ..</button>
+      </td>
+    </tr>
+%   }
+  </table>
+
+</form>
+</div>
+</div>
+
+<%init>
+use PomCur::Curs;
+use PomCur::Track;
+use PomCur::Curs::GeneProxy;
+
+my @gene_data = map {
+  my $gene = $_;
+
+  my $hash = {
+    'Systematic identifier' => $gene->primary_identifier(),
+    Name => $gene->primary_name(),
+    Product => $gene->product(),
+    gene_id => $gene->gene_id(),
+  };
+  if ($multi_organism_mode) {
+    $hash->{Organism} = $gene->organism()->full_name();
+  }
+  $hash
+} @annotation_genes;
+
+my @col_names = ("Systematic identifier", "Name", "Product");
+
+if ($multi_organism_mode) {
+  push @col_names, "Organism";
+}
+</%init>
