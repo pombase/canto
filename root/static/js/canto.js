@@ -4,7 +4,7 @@ function last(a) {
 
 function trim(a) {
   a=a.replace(/^\s+/,''); return a.replace(/\s+$/,'');
-};
+}
 
 $(document).ready(function() {
   var loadingDiv = $('<div id="loading"><img src="' + application_root +
@@ -427,8 +427,8 @@ var ferret_choose = {
 
   hide_autocomplete_def: function() {
     $('.curs-autocomplete-definition').remove();
-  },
-};
+  }
+}
 
 
 var curs_home = {
