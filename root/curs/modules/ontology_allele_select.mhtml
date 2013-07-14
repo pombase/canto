@@ -8,7 +8,7 @@ $editing
 
 <& ontology_allele_edit.mhtml, annotation => $annotation,
    editing => $editing,
-   curs_root_uri => $curs_root_uri, gene_display_name => $gene->display_name &>
+   curs_root_uri => $curs_root_uri &>
 
 <div class="curs-box curs-allele-select">
   <div class="curs-box-title">
@@ -64,6 +64,7 @@ $editing
 
 <script language="javascript" type="text/javascript">
 var gene_primary_identifier = '<% $gene->primary_identifier()|n %>';
+var gene_display_name = "<% $gene->display_name() %>";
 </script>
 
 <%init>

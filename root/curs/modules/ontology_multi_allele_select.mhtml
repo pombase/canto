@@ -2,12 +2,17 @@
 $schema
 $title
 $pub
+$annotation
 @annotation_genes
 $curs_root_uri
 $multi_organism_mode
 </%args>
 
-<div id="curs-multi-allele-select" class="curs-box">
+<& ontology_allele_edit.mhtml, annotation => $annotation,
+   editing => 0,
+   curs_root_uri => $curs_root_uri &>
+
+<div ng-app id="curs-multi-allele-select" class="curs-box">
   <div class="curs-box-title">
 <% $title %>
   </div>
@@ -39,12 +44,29 @@ $multi_organism_mode
       <td>
         <button type="button"
                 name="gene-select"
+                class="multi-allele-add-from-gene"
                 value='<% $gene->{gene_id} %>'>Add allele ..</button>
       </td>
     </tr>
 %   }
   </table>
 
+  <div class="ng-cloak">
+  <table ng-controller="AlleleCtrl" ng-model="allele">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody ng-repeat="allele in alleles">
+      <td>{{allele.name}}</td>
+      <td>{{allele.description}}</td>
+      <td>{{allele.type}}</td>
+    </tbody>
+  </table>
+  </div>
 </form>
 </div>
 </div>
