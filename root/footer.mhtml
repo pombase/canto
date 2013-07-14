@@ -12,11 +12,13 @@ var application_root = '<% $c->uri_for('/') %>';
 <script src="<% $c->uri_for('/static/js/jquery-1.8.3.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery-ui-1.9.2.custom.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.validate-1.9.0.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/angular-1.0.7.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/bootstrap.js') %>"></script>
 % } else {
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script src="http://ajax.microsoft.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
 % }
 <script src="<% $c->uri_for('/static/js/jquery.ba-bbq.min.js') %>"></script>
