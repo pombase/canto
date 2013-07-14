@@ -101,7 +101,7 @@ sub _make_ontology_annotation
     my @annotation_genes = $annotation->genes();
 
     if (@annotation_genes > 1) {
-      die "internal error, more than one gene for annotation: ",
+      warn "internal error, more than one gene for annotation: ",
         $annotation->annotation_id();
     }
 

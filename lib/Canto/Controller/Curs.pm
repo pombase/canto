@@ -2161,6 +2161,29 @@ sub _allele_data_for_js : Private
   }
 }
 
+sub _set_allele_select_stash
+{
+  my ($c, $annotation) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+
+  $st->{allele_type_config} = $config->{allele_types};
+
+  my @allele_type_options = map {
+    [ $_->{name}, $_->{name} ];
+  } @{$config->{allele_type_list}};
+
+  $st->{allele_type_options} = \@allele_type_options;
+
+  my $evidence_types = $config->{evidence_types};
+  my $annotation_type_name = $annotation->type();
+  my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
+  my @evidence_codes = _generate_evidence_options($evidence_types, $annotation_type_config);
+
+  $st->{evidence_select_options} = \@evidence_codes;
+}
+
 sub _annotation_allele_select_internal
 {
   my ($self, $c, $editing) = @_;
@@ -2197,32 +2220,7 @@ sub _annotation_allele_select_internal
   $st->{gene_id} = $gene->gene_id();
   $st->{annotation} = $annotation;
 
-  $st->{allele_type_config} = $config->{allele_types};
-
-  my @allele_type_options = map {
-    [ $_->{name}, $_->{name} ];
-  } @{$config->{allele_type_list}};
-
-  $st->{allele_type_options} = \@allele_type_options;
-
-  my $evidence_types = $config->{evidence_types};
-  my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
-  my @evidence_codes = _generate_evidence_options($evidence_types, $annotation_type_config);
-
-  $st->{evidence_select_options} = \@evidence_codes;
-
-  my %existing_alleles_by_name = _get_all_alleles($config, $schema, $gene);
-  $st->{existing_alleles_by_name} =
-    [
-      map {
-        {
-          value => $existing_alleles_by_name{$_}->{name},
-          description => $existing_alleles_by_name{$_}->{description},
-          allele_type => $existing_alleles_by_name{$_}->{allele_type},
-          display_name => $_,
-        }
-      } keys %existing_alleles_by_name
-    ];
+  _set_allele_select_stash($c, $annotation);
 
   $st->{alleles_in_progress} = _allele_data_for_js($config, $annotation);
   $st->{current_conditions} = _get_all_conditions($config, $schema);
@@ -2379,9 +2377,12 @@ sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allel
 
   my $data = $annotation->data();
 
+  _set_allele_select_stash($c, $annotation);
+
   $st->{annotation_genes} = [map { _get_gene_proxy($config, $_); } $annotation->genes()];
 
   $self->metadata_storer()->store_counts($schema);
+
 
 #  _maybe_transfer_annotation($c, [$annotation_id], $annotation_config);
 }

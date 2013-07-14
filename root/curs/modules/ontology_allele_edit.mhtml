@@ -1,6 +1,5 @@
 <%args>
 $annotation
-$gene_display_name
 $curs_root_uri
 $editing
 </%args>
@@ -10,7 +9,6 @@ var allele_types = <% $allele_types_js |n %>;
 var alleles_in_progress = <% $alleles_in_progress_js |n %>;
 var existing_alleles_by_name = <% $existing_alleles_by_name_js |n %>;
 var current_conditions = <% $current_conditions_js |n %>;
-var gene_display_name = "<% $gene_display_name %>";
 var delete_icon_uri = "<% $delete_icon_uri %>";
 var annotation_id = <% $annotation->annotation_id() %>;
 var editing_allele = <% $editing ? 'true' : 'false' %>;
