@@ -22,7 +22,9 @@ $pub
 <div id="<% $summary_id %>">
 <& ../one_annotation_summary.mhtml,
    curs_root_uri => $curs_root_uri,
-   annotation => $annotation, show_extension_column => $is_admin_user &>
+   annotation => $annotation,
+   allow_comment_edit => $allow_comment_edit,
+   show_extension_column => $is_admin_user &>
 </div>
 % }
       </div>
@@ -69,4 +71,6 @@ my $upload_path = $c->uri_for("$root_path/gene_upload",
 my $gene_count = $c->stash()->{schema}->resultset('Gene')->count();
 
 my $is_admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
+
+my $allow_comment_edit = @annotations != 1;
 </%init>

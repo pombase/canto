@@ -6,6 +6,7 @@ $completed_count => undef
 $gene
 $pub
 $user_created
+$allow_comment_edit => 1
 $show_extension_column => 0
 </%args>
 
@@ -255,9 +256,14 @@ NOT
 % {
 % my $url = $comment_edit_url  . $row->{annotation_id};
 % my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'comment', $row);
-%   if (defined $view_edit_text) {
+%   if ($allow_comment_edit) {
+%     if (defined $view_edit_text) {
       <a href="#" class="curs-editable-table-field" title="<% $escaped_text %>"
          onclick="<% $onclick %>"><% $view_edit_text %> ...</a>
+%     }
+%   } else {
+      <% $escaped_text %>
+
 %   }
 % }
       </span>
