@@ -621,20 +621,38 @@ sub add_person : Local Args(0)
       my $person = $track_schema->resultset('Person')->find({ email_address => $email });
       try {
         if (!defined $person) {
-          $person = $track_schema->create_with_type('Person',
-                                                    {
-                                                      name => $name,
-                                                      email_address => $email,
-                                                      role => $user_cvterm,
-                                                    });
+          my $person_rs = $track_schema->resultset('Person')->search({
+            'lower(name)' => lc $name,
+          });
+
+          if ($person_rs->count() == 0) {
+            $person = $track_schema->create_with_type('Person',
+                                                      {
+                                                        name => $name,
+                                                        email_address => $email,
+                                                        role => $user_cvterm,
+                                                      });
+          } else {
+            $result->{error_message} =
+              qq(There is already a person named "$name" in the database.  $name ) .
+              qq(has the email address: ) . $person_rs->first()->email_address();
+          }
         }
-        $result->{person_id} = $person->person_id();
-        $result->{name} = $person->name();
+
+        if (defined $person) {
+          $result->{person_id} = $person->person_id();
+          $result->{name} = $person->name();
+        }
       } catch {
         $result->{error_message} = $_;
       }
     }
   }
+
+  use Data::Dumper;
+$Data::Dumper::Maxdepth = 2;
+warn Dumper([$result]);
+
 
   $c->stash->{json_data} = $result;
   $c->forward('View::JSON');
