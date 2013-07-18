@@ -18,7 +18,7 @@ $multi_organism_mode
   </div>
   <div class="curs-box-body">
   
-  <form name="multi-allele-select" method="get">
+  <form name="multi-allele-select" ng-submit="addAlleles()">
 
   <table class="list">
     <thead>
@@ -44,6 +44,8 @@ $multi_organism_mode
       <td>
         <button type="button"
                 name="gene-select"
+                data-gene-display-name="<% $gene->{display_name} %>"
+                data-gene-primary-identifier="<% $gene->{'Systematic identifier'} %>"
                 class="multi-allele-add-from-gene"
                 value='<% $gene->{gene_id} %>'>Add allele ..</button>
       </td>
@@ -84,6 +86,7 @@ my @gene_data = map {
     Name => $gene->primary_name(),
     Product => $gene->product(),
     gene_id => $gene->gene_id(),
+    display_name => $gene->display_name(),
   };
   if ($multi_organism_mode) {
     $hash->{Organism} = $gene->organism()->full_name();

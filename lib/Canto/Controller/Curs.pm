@@ -2119,13 +2119,17 @@ sub annotation_allele_select_edit : Chained('annotation') PathPart('allele_selec
   }
 }
 
-sub _annotation_process_alleles_internal
+sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allele_select')
 {
-  my ($self, $c, $editing) = @_;
+  my ($self, $c) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
+
+  $st->{title} = 'Allele selection';
+  $st->{show_title} = 0;
+  $st->{template} = "curs/modules/ontology_multi_allele_select.mhtml";
 
   my $annotation = $st->{annotation};
   my $annotation_id = $annotation->annotation_id();
@@ -2134,15 +2138,19 @@ sub _annotation_process_alleles_internal
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
   my $data = $annotation->data();
-  my $alleles_in_progress = $data->{alleles_in_progress};
 
-  if (!defined $alleles_in_progress) {
-    die "internal error: no alleles defined";
-  }
+  _set_allele_select_stash($c, $annotation);
 
-  my @new_annotation_ids = ();
+  $st->{annotation_genes} = [map { _get_gene_proxy($config, $_); } $annotation->genes()];
+}
 
-  my $gene = $annotation->genes()->first();
+sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allele_finish')
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $annotation = $st->{annotation};
 
   my $process = sub {
     # create an annotation for each allele
@@ -2209,55 +2217,9 @@ sub _annotation_process_alleles_internal
 
   if (!$editing) {
     _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
-  } else {
-    _redirect_and_detach($c, 'gene', $gene->gene_id(), 'view');
-  }
-}
-
-sub annotation_process_alleles : Chained('annotation') PathPart('process_alleles')
-{
-  _annotation_process_alleles_internal(@_, 0);
-}
-
-sub annotation_process_alleles_edit : Chained('annotation') PathPart('process_alleles') Args(1)
-{
-  my ($self, $c, $editing) = @_;
-
-  if (defined $editing && $editing eq 'edit') {
-    _annotation_process_alleles_internal(@_, 1);
-  } else {
-    $self->not_found($c);
-  }
-}
-
-sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allele_select')
-{
-  my ($self, $c) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  $st->{title} = 'Allele selection';
-  $st->{show_title} = 0;
-  $st->{template} = "curs/modules/ontology_multi_allele_select.mhtml";
-
-  my $annotation = $st->{annotation};
-  my $annotation_id = $annotation->annotation_id();
-
-  my $annotation_type_name = $annotation->type();
-  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
-
-  my $data = $annotation->data();
-
-  _set_allele_select_stash($c, $annotation);
-
-  $st->{annotation_genes} = [map { _get_gene_proxy($config, $_); } $annotation->genes()];
-
-  $self->metadata_storer()->store_counts($schema);
-
 
 #  _maybe_transfer_annotation($c, [$annotation_id], $annotation_config);
+
 }
 
 sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
