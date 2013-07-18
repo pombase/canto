@@ -55,8 +55,6 @@ var application_root = '<% $c->uri_for('/') %>';
 $(function() {
   $('input, textarea').placeholder();
 });
-
-AlleleStuff.pageInit();
 </script>
 
 <%init>
