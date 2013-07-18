@@ -10,7 +10,8 @@ $pub
    annotations => [@user_annotations], user_created => 1,
    pub => $pub,
    all_annotation_count => scalar(@user_annotations),
-   completed_count => $completed_count, gene => $gene &>
+   completed_count => $completed_count, gene => $gene,
+   show_extension_column => 1 &>
 
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
    annotation_type => $annotation_type, 

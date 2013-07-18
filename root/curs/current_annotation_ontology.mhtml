@@ -6,6 +6,7 @@ $completed_count => undef
 $gene
 $pub
 $user_created
+$show_extension_column => 0
 </%args>
 
 % if (@annotations) {
@@ -66,11 +67,11 @@ $user_created
       <th>
         Comment
       </th>
-% #if ($admin_user) {
+% if ($show_extension_column) {
       <th>
         Annotation extension
       </th>
-% #}
+% }
 % if ($approval_in_progress) {
       <th>
         Curator
@@ -261,18 +262,24 @@ NOT
 % }
       </span>
     </td>
+% if ($show_extension_column) {
     <td>
       <span>
 % {
 %   my $url = $extension_edit_url  . $row->{annotation_id};
 %   my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'annotation_extension', $row);
-%   if (defined $view_edit_text) {
+%   if ($admin_user) {
+%     if (defined $view_edit_text) {
       <a href="#" class="curs-editable-table-field" title="<% $escaped_text %>"
          onclick="<% $onclick %>"><% $view_edit_text %> ...</a>
+%     }
+%   } else {
+      <% $escaped_text %>
 %   }
 % }
       </span>
     </td>
+% }
 
 % if ($approval_in_progress) {
 %   my $curator = $row->{curator} // '';

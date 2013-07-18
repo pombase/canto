@@ -1,6 +1,7 @@
 <%args>
 $curs_root_uri
 $annotation
+$show_extension_column => 0
 </%args>
 
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
@@ -8,7 +9,8 @@ $annotation
    annotations => [@annotations], user_created => 1,
    pub => $st->{pub},
    all_annotation_count => scalar(@annotations),
-   completed_count => scalar(@annotations), gene => $st->{gene} &>
+   completed_count => scalar(@annotations), gene => $st->{gene},
+   show_extension_column => $show_extension_column &>
 
 <%init>
 use PomCur::Curs::Utils;
