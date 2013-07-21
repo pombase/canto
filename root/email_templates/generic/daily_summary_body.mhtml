@@ -6,8 +6,8 @@ $app_prefix
 </%args>
 % for my $type (@interesting_types) {
 <% $type->{label} %>
-%   if (defined $sessions{$type->{state}}) {
-%     for my $session (@{$sessions{$type->{state}}}) {
+%   if (defined $sessions{$type->{key}}) {
+%     for my $session (@{$sessions{$type->{key}}}) {
 %       print $format_session_details->($session);
 %     }
 %   } else {
@@ -33,7 +33,13 @@ my $state = PomCur::Curs::State->new(config => $config);
 
 my @interesting_types =
   ({ state => SESSION_CREATED,
-     label => "Sessions created on $summary_date, but not yet accepted" },
+     key => "CREATED_NOT_ACCEPTED",
+     label => "Sessions created on $summary_date, but not yet accepted",
+     submitter_set => 1 },
+   { state => SESSION_CREATED,
+     key => "CREATED_NO_CURATOR",
+     label => "Sessions created on $summary_date with no curator",
+     submitter_set => 0 },
    { state => SESSION_ACCEPTED, label => "Sessions accepted on $summary_date" },
    { state => CURATION_IN_PROGRESS,
      label => "Sessions where curation started on $summary_date" },
@@ -41,6 +47,13 @@ my @interesting_types =
      label => "Sessions needing approval from $summary_date" },
    { state => APPROVED, label => "Sessions approved on $summary_date" },
    );
+
+map {
+  my $type = $_;
+  if (!exists $type->{key}) {
+    $type->{key} = $type->{state};
+  }
+} @interesting_types;
 
 my $session_term_suggestions_count_cvterm =
   $track_schema->find_with_type('Cvterm',
@@ -76,8 +89,18 @@ while (my ($curs, $cursdb) = $iter->()) {
 
   next unless $datestamp =~ /^$summary_date($|\s+)/;
 
-  if (grep { $_ eq $current_state } map { $_->{state} } @interesting_types) {
-    push @{$sessions{$current_state}}, $curs_details;
+  for my $type (@interesting_types) {
+    if ($type->{state} eq $current_state) {
+      if ($type->{submitter_set}) {
+        if (defined $curs_details->{submitter}) {
+          push @{$sessions{$type->{key}}}, $curs_details;
+        }
+      } else {
+        if (!defined $curs_details->{submitter}) {
+          push @{$sessions{$type->{key}}}, $curs_details;
+        }
+      }
+    }
   }
 }
 
@@ -92,6 +115,8 @@ my $format_session_details = sub {
   }
   $details .= '  ' . $session->{pub_uniquename} . "\n" .
     '    "' . $session->{pub_title} . '"' . "\n";
+
+  return $details;
 };
 
 </%init>

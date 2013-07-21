@@ -132,4 +132,4 @@ my $daily_summary_text =
   PomCur::Controller::Tools::_daily_summary_text($config, $test_date, $app_prefix);
 
 like($daily_summary_text, qr/activity for $test_date/);
-like($daily_summary_text, qr|not yet accepted\s+$app_prefix/curs/$new_curs_key\s+$pmid\s+"SUMOylation is required for normal|);
+like($daily_summary_text, qr|Sessions created on \d+-\d+-\d+ with no curator\s+$app_prefix/curs/$new_curs_key\s+$pmid\s+"SUMOylation is required for normal|);
