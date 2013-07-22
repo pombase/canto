@@ -919,11 +919,11 @@ function AlleleCtrl($scope) {
 $('.multi-allele-add-from-gene').click(function () {
   var $this = $(this);
   var addCallback = function(alleleData) {
-    var $scope = angular.element($("#outer")).scope();
+    var $scope = angular.element($("#multi-allele-genotype")).scope();
     $scope.$apply(function() {
       $scope.alleles.push(alleleData);
     });
-  }
+  };
 
   var alleleDialog = new AlleleDialog($this.attr('data-gene-primary-identifier'),
                                       $this.attr('data-gene-display-name'),
@@ -932,11 +932,21 @@ $('.multi-allele-add-from-gene').click(function () {
 });
 
 
-var AlleleDialog = function AlleleDialog(genePrimaryIdentifier, geneDisplayName,
-                                         addCallback, cancelCallback) {
+var AlleleDialog = function (genePrimaryIdentifier, geneDisplayName,
+                             addCallback, cancelCallback) {
   this.used_conditions = {};
 
+  this.geneDisplayName = geneDisplayName;
+  this.genePrimaryIdentifier = genePrimaryIdentifier;
+
   var $allele_dialog = $('#curs-allele-add');
+  $allele_dialog.data('dialogObject', this);
+
+  if (typeof(cancelCallback) === 'undefined') {
+    cancelCallback = function() {
+      $allele_dialog.dialog('close');
+    };
+  }
 
   function populate_dialog_from_data($allele_dialog, data) {
     get_allele_name_jq($allele_dialog).val(data.name);
@@ -961,7 +971,12 @@ var AlleleDialog = function AlleleDialog(genePrimaryIdentifier, geneDisplayName,
 
   // return the data from the dialog as an Object
   function dialogToData() {
-
+    return {
+      name: get_allele_name_jq($allele_dialog).val(),
+      description: get_allele_desc_jq($allele_dialog).val(),
+      type: get_allele_type_select_jq($allele_dialog).val(),
+      evidence: get_allele_evidence_select_jq($allele_dialog).val()
+    };
   }
 
   function allele_lookup(request, response) {
@@ -1098,6 +1113,7 @@ var AlleleDialog = function AlleleDialog(genePrimaryIdentifier, geneDisplayName,
 
     $allele_dialog.on('change', '.curs-allele-type-select select', function (ev) {
       var $this = $(this);
+      var dialogObject = $allele_dialog.data('dialogObject');
       $this.closest('tr').hide();
       var selected_option = $this.children('option[selected]');
       var name_input = get_allele_name_jq($allele_dialog);
@@ -1107,10 +1123,10 @@ var AlleleDialog = function AlleleDialog(genePrimaryIdentifier, geneDisplayName,
         get_allele_expression_jq($allele_dialog).hide();
         var selected_text = selected_option.text();
         var allele_type_config = allele_types[selected_text];
-        setup_allele_name($allele_dialog, allele_type_config);
+        setup_allele_name($allele_dialog, allele_type_config, dialogObject.geneDisplayName);
         return;
       }
-      setup_description($allele_dialog, selected_option);
+      setup_description($allele_dialog, selected_option, dialogObject.geneDisplayName);
     });
 
   $allele_dialog.dialog("option", "buttons", add_allele_buttons);
@@ -1253,7 +1269,7 @@ var AlleleDialog = function AlleleDialog(genePrimaryIdentifier, geneDisplayName,
     label.hide();
   }
 
-  function maybe_autopopulate(allele_type_config, name_input) {
+  function maybe_autopopulate(allele_type_config, name_input, geneDisplayName) {
     if (typeof allele_type_config.autopopulate_name != 'undefined') {
       var new_name =
         allele_type_config.autopopulate_name.replace(/@@gene_name@@/, geneDisplayName);
@@ -1263,7 +1279,7 @@ var AlleleDialog = function AlleleDialog(genePrimaryIdentifier, geneDisplayName,
     return false;
   }
 
-  function setup_description($allele_dialog, selected_option) {
+  function setup_description($allele_dialog, selected_option, geneDisplayName) {
     var description = $allele_dialog.find('.curs-allele-type-description');
     description.show();
     var description_input = description.find('input');
@@ -1314,7 +1330,7 @@ var AlleleDialog = function AlleleDialog(genePrimaryIdentifier, geneDisplayName,
       $not_specified_div.show();
     }
 
-    setup_allele_name($allele_dialog, allele_type_config);
+    setup_allele_name($allele_dialog, allele_type_config, geneDisplayName);
 
     // hack to make sure all contents are visible, from:
     // http://stackoverflow.com/a/10457932
@@ -1323,7 +1339,7 @@ var AlleleDialog = function AlleleDialog(genePrimaryIdentifier, geneDisplayName,
     $('#curs-allele-add').parent('.ui-dialog').position({ of: $(window) });
   }
 
-  function setup_allele_name($allele_dialog, allele_type_config) {
+  function setup_allele_name($allele_dialog, allele_type_config, geneDisplayName) {
     var name_input = get_allele_name_jq($allele_dialog);
 
     name_input.attr('disabled', false);
@@ -1331,7 +1347,7 @@ var AlleleDialog = function AlleleDialog(genePrimaryIdentifier, geneDisplayName,
     if (typeof(allele_type_config) === 'undefined') {
       name_input.attr('placeholder', 'Allele name (optional)');
     } else {
-      var autopopulated = maybe_autopopulate(allele_type_config, name_input);
+      var autopopulated = maybe_autopopulate(allele_type_config, name_input, geneDisplayName);
 
       if (allele_type_config.allele_name_required == 1 && !autopopulated) {
         name_input.attr('placeholder', 'Allele name required');
