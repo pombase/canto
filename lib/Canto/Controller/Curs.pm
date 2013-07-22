@@ -2148,11 +2148,14 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
 {
   my ($self, $c) = @_;
 
+  my $config = $c->config();
   my $st = $c->stash();
+  my $schema = $st->{schema};
 
   my $annotation = $st->{annotation};
 
   my $process = sub {
+<<'COMMENT';
     # create an annotation for each allele
     while (my ($id, $allele) = each %$alleles_in_progress) {
       my $name = $allele->{name};
@@ -2209,17 +2212,17 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
 
     # delete the original annotation now it's been split
     $annotation->delete();
+COMMENT
   };
 
   $schema->txn_do($process);
 
   $self->metadata_storer()->store_counts($schema);
 
-  if (!$editing) {
-    _maybe_transfer_annotation($c, \@new_annotation_ids, $annotation_config);
+  my $annotation_type_name = $annotation->type();
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
-#  _maybe_transfer_annotation($c, [$annotation_id], $annotation_config);
-
+  _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
 }
 
 sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
