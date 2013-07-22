@@ -20,6 +20,8 @@ $multi_organism_mode
   
   <form name="multi-allele-select" ng-submit="addAlleles()">
 
+Add alleles from the genes below until the genotype is fully specified.
+
   <table class="list">
     <thead>
       <tr>
@@ -53,8 +55,13 @@ $multi_organism_mode
 %   }
   </table>
 
-  <div class="ng-cloak">
-  <table ng-controller="AlleleCtrl" ng-model="allele">
+  <div class="ng-cloak" ng-controller="AlleleCtrl" ng-model="allele" ng-show="alleles.length">
+
+<div>
+The alleles for this genotype:
+</div>
+
+  <table class="list">
     <thead>
       <tr>
         <th>Name</th>
@@ -69,6 +76,9 @@ $multi_organism_mode
     </tbody>
   </table>
   </div>
+
+  <button type="button"
+          name="multi-allele-finish">Finish ...</button>
 </form>
 </div>
 </div>
