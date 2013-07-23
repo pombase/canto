@@ -908,35 +908,29 @@ function AlleleCtrl($scope) {
   ];
 }
 
-$('.multi-allele-add-from-gene').click(function () {
-  var $this = $(this);
-  var addCallback = function(alleleData) {
-    var $scope = angular.element($("#multi-allele-genotype")).scope();
-    $scope.$apply(function() {
-      $scope.alleles.push(alleleData);
-    });
-  };
+var addCallback = function(alleleData) {
+  var $scope = angular.element($("#multi-allele-genotype")).scope();
+  $scope.$apply(function() {
+    $scope.alleles.push(alleleData);
+  });
+};
 
-  var alleleDialog = new AlleleDialog($this.attr('data-gene-primary-identifier'),
-                                      $this.attr('data-gene-display-name'),
-                                      addCallback
-                                     );
-});
-
-
-var AlleleDialog = function (genePrimaryIdentifier, geneDisplayName,
-                             addCallback, cancelCallback) {
+var AlleleDialog = function (addCallback, cancelCallback) {
   this.used_conditions = {};
 
-  this.geneDisplayName = geneDisplayName;
-  this.genePrimaryIdentifier = genePrimaryIdentifier;
+  // current_conditions comes from the .mhtml file
+  if (typeof(current_conditions) != 'undefined') {
+    used_conditions = current_conditions;
+  }
 
   var $allele_dialog = $('#curs-allele-add');
-  $allele_dialog.data('dialogObject', this);
+
+  var dialogObject = this;
+
+  $allele_dialog.data('dialogObject', dialogObject);
 
   if (typeof(cancelCallback) === 'undefined') {
     cancelCallback = function() {
-      $allele_dialog.dialog('close');
     };
   }
 
@@ -957,9 +951,82 @@ var AlleleDialog = function (genePrimaryIdentifier, geneDisplayName,
     };
   }
 
+  this.open = function(genePrimaryIdentifier, geneDisplayName) {
   // if (data ...) {
   //   populate_dialog_from_data(...);
   // }
+
+    dialogObject.genePrimaryIdentifier = genePrimaryIdentifier;
+    dialogObject.geneDisplayName = geneDisplayName;
+
+    function allele_lookup(request, response) {
+      $.ajax({
+        url: ferret_choose.allele_lookup_url,
+        data: { gene_primary_identifier: genePrimaryIdentifier,
+                ignore_case: true,
+                term: request.term },
+        dataType: 'json',
+        success: function(data) {
+          var results =
+              $.grep(
+                existing_alleles_by_name,
+                function(el) {
+                  return typeof(el.value) !== 'undefined' && el.value.indexOf(request.term) == 0;
+                })
+              .concat($.map(
+                data,
+                function(el) {
+                  return {
+                    value: el.name,
+                    display_name: el.display_name,
+                    description: el.description,
+                    allele_type: el.allele_type
+                  }
+                }));
+          response(results);
+        },
+        async: true
+      });
+    }
+
+    $('#curs-allele-add .curs-allele-name').autocomplete({
+      source: allele_lookup,
+      select: function(event, ui) {
+        var $description = get_allele_desc_jq($allele_dialog).val(ui.item.description);
+        if (typeof(ui.item.allele_type) === 'undefined' ||
+            ui.item.allele_type === 'unknown') {
+          get_allele_type_select_jq($allele_dialog).val(undefined).trigger('change');
+          $description.attr('disabled', false);
+        } else {
+          get_allele_type_select_jq($allele_dialog).val(ui.item.allele_type).trigger('change');
+          $description.attr('disabled', true);
+        }
+        var label = $allele_dialog.find('.curs-allele-type-label');
+        label.hide();
+      }
+    }).data("autocomplete" )._renderItem = function(ul, item) {
+      return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append( "<a>" + item.display_name + "</a>" )
+        .appendTo( ul );
+    };
+
+    make_condition_buttons($allele_dialog);
+
+    hide_allele_description($allele_dialog);
+    get_allele_type_select_jq($allele_dialog).val(undefined).trigger('change');
+    $allele_dialog.find('.curs-allele-name').val('');
+    var name_input = $allele_dialog.find('.curs-allele-name');
+    name_input.attr('placeholder', 'Allele name (optional)');
+
+    setup_allele_form_validate($allele_dialog);
+
+    $allele_dialog.dialog('open');
+  };
+
+  this.close = function() {
+    $allele_dialog.dialog('close');
+  };
 
   // return the data from the dialog as an Object
   function dialogToData() {
@@ -971,45 +1038,19 @@ var AlleleDialog = function (genePrimaryIdentifier, geneDisplayName,
     };
   }
 
-  function allele_lookup(request, response) {
-    $.ajax({
-      url: ferret_choose.allele_lookup_url,
-      data: { gene_primary_identifier: genePrimaryIdentifier,
-              ignore_case: true,
-              term: request.term },
-      dataType: 'json',
-      success: function(data) {
-        var results =
-            $.grep(
-              existing_alleles_by_name,
-              function(el) {
-                return typeof(el.value) !== 'undefined' && el.value.indexOf(request.term) == 0;
-              })
-            .concat($.map(
-              data,
-              function(el) {
-                return {
-                  value: el.name,
-                  display_name: el.display_name,
-                  description: el.description,
-                  allele_type: el.allele_type
-                }
-              }));
-        response(results);
-      },
-      async: true
-    });
-  }
-
   var add_allele_buttons = [
       {
         text: "Cancel",
-        click: cancelCallback
+        click: function () {
+          cancelCallback();
+          $allele_dialog.dialog('close');
+        }
       },
       {
         text: "Add",
         click: function() {
           addCallback(dialogToData());
+          $allele_dialog.dialog('close');
         }
       },
     ] ;
@@ -1017,66 +1058,55 @@ var AlleleDialog = function (genePrimaryIdentifier, geneDisplayName,
   var edit_allele_buttons = [
       {
         text: "Cancel",
-        click: cancelCallback
+        click: function () {
+          cancelCallback();
+          $allele_dialog.dialog('close');
+        }
       },
       {
         text: "Edit",
         click: function() {
           addCallback(dialogToData());
+          $allele_dialog.dialog('close');
         }
       },
     ] ;
 
   $allele_dialog.dialog({
     modal: true,
-    autoOpen: true,
+    autoOpen: false,
     height: 'auto',
     width: 600,
     title: 'Add an allele for this phenotype',
-    buttons: add_allele_buttons,
-    open: function() {
-      $('#curs-allele-add .curs-allele-name').autocomplete({
-        source: allele_lookup,
-        select: function(event, ui) {
-          var $description = get_allele_desc_jq($allele_dialog).val(ui.item.description);
-          if (typeof(ui.item.allele_type) === 'undefined' ||
-              ui.item.allele_type === 'unknown') {
-            get_allele_type_select_jq($allele_dialog).val(undefined).trigger('change');
-            $description.attr('disabled', false);
-          } else {
-            get_allele_type_select_jq($allele_dialog).val(ui.item.allele_type).trigger('change');
-            $description.attr('disabled', true);
-          }
-          var label = $allele_dialog.find('.curs-allele-type-label');
-          label.hide();
-        }
-      }).data("autocomplete" )._renderItem = function(ul, item) {
-        return $( "<li></li>" )
-          .data( "item.autocomplete", item )
-          .append( "<a>" + item.display_name + "</a>" )
-          .appendTo( ul );
-      };
-
-      make_condition_buttons($allele_dialog);
-
-      hide_allele_description($allele_dialog);
-      get_allele_type_select_jq($allele_dialog).val(undefined).trigger('change');
-      $allele_dialog.find('.curs-allele-name').val('');
-      var name_input = $allele_dialog.find('.curs-allele-name');
-      name_input.attr('placeholder', 'Allele name (optional)');
-
-      setup_allele_form_validate($allele_dialog);
-    },
-    close: function() {
-      get_allele_evidence_select_jq($allele_dialog).val('');
-    }
+    buttons: add_allele_buttons
   });
 
-  if (typeof(current_conditions) != 'undefined') {
-    used_conditions = current_conditions;
-  }
-
   $allele_dialog.data('validate_on_add', true);
+
+  function fetch_conditions(search, showChoices) {
+    $.ajax({
+      url: make_ontology_complete_url('phenotype_condition'),
+      data: { term: search.term, def: 1, },
+      dataType: "json",
+      success: function(data) {
+        var choices = $.map( data, function( item ) {
+          var label;
+          if (item.matching_synonym == null) {
+            label = item.name;
+          } else {
+            label = item.matching_synonym + ' (synonym)';
+          }
+          return {
+            label: label,
+            value: item.name,
+            name: item.name,
+            definition: item.definition,
+          }
+        });
+        showChoices(choices);
+      },
+    });
+  }
 
     $('#curs-allele-add .curs-allele-conditions').tagit({
       minLength: 2,
@@ -1122,33 +1152,7 @@ var AlleleDialog = function (genePrimaryIdentifier, geneDisplayName,
     });
 
   $allele_dialog.dialog("option", "buttons", add_allele_buttons);
-  $allele_dialog.dialog("open");
   $allele_dialog.removeData('allele_data');
-
-  function fetch_conditions(search, showChoices) {
-    $.ajax({
-      url: make_ontology_complete_url('phenotype_condition'),
-      data: { term: search.term, def: 1, },
-      dataType: "json",
-      success: function(data) {
-        var choices = $.map( data, function( item ) {
-          var label;
-          if (item.matching_synonym == null) {
-            label = item.name;
-          } else {
-            label = item.matching_synonym + ' (synonym)';
-          }
-          return {
-            label: label,
-            value: item.name,
-            name: item.name,
-            definition: item.definition,
-          }
-        });
-        showChoices(choices);
-      },
-    });
-  }
 
   function make_condition_buttons($allele_dialog, $allele_table) {
     return;
@@ -1369,6 +1373,16 @@ var AlleleDialog = function (genePrimaryIdentifier, geneDisplayName,
     return $allele_dialog.find('.curs-allele-conditions');
   }
 };
+
+var alleleDialog = new AlleleDialog(addCallback);
+
+$('.multi-allele-add-from-gene').click(function () {
+  var $this = $(this);
+
+  alleleDialog.open($this.attr('data-gene-primary-identifier'),
+                    $this.attr('data-gene-display-name'))
+});
+
 
 var EditDialog = function($) {
   function confirm($dialog) {
