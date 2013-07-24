@@ -349,22 +349,22 @@ my $field_edit_proc = sub {
   my $current_value = $row->{$type} // '';
 
   my $escaped_text = $current_value // '';
-  HTML::Mason::Escapes::basic_html_escape(\$escaped_text);
+  my $js_escaped_text = PomCur::WebUtil::escape_inline_js($escaped_text);
   my $view_edit_text = undef;
   my $onclick;
   my $annotation_status = $row->{status};
   if ($read_only_curs || $annotation_status eq 'deleted') {
-    if ($escaped_text ne '') {
+    if ($js_escaped_text ne '') {
       $view_edit_text = 'View';
-      $onclick = "javascript:pomcur_util.show_message('View comment',  '$escaped_text'); return false;";
+      $onclick = "javascript:pomcur_util.show_message('View comment',  '$js_escaped_text'); return false;";
     }
   } else {
-    if ($escaped_text eq '') {
+    if ($js_escaped_text eq '') {
       $view_edit_text = 'Add';
     } else {
       $view_edit_text = 'View/edit';
     }
-    $onclick = "javascript:EditDialog.create('Edit comment',  '$escaped_text', '$url'); return false;";
+    $onclick = "javascript:EditDialog.create('Edit comment',  '$js_escaped_text', '$url'); return false;";
   }
 
   return ($onclick, $escaped_text, $view_edit_text);
