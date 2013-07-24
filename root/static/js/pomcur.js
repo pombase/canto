@@ -904,7 +904,6 @@ $(document).ready(function() {
 
 function AlleleCtrl($scope) {
   $scope.alleles = [
-    {name: 'name1', description: 'desc', type: 'type1'}
   ];
 }
 
