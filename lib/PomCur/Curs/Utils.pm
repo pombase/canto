@@ -202,7 +202,7 @@ sub _make_interaction_annotation
 
   if (@annotation_genes > 1) {
     die "internal error, more than one gene for annotation: ",
-    $annotation->annotation_id();
+      $annotation->annotation_id();
   }
 
   my $gene = $annotation_genes[0];
