@@ -353,10 +353,12 @@ my $field_edit_proc = sub {
   my $view_edit_text = undef;
   my $onclick;
   my $annotation_status = $row->{status};
+
+  (my $type_for_display = $type) =~ s/_/ /g;
   if ($read_only_curs || $annotation_status eq 'deleted') {
     if ($js_escaped_text ne '') {
       $view_edit_text = 'View';
-      $onclick = "javascript:pomcur_util.show_message('View comment',  '$js_escaped_text'); return false;";
+      $onclick = "javascript:pomcur_util.show_message('View $type_for_display',  '$js_escaped_text'); return false;";
     }
   } else {
     if ($js_escaped_text eq '') {
@@ -364,7 +366,7 @@ my $field_edit_proc = sub {
     } else {
       $view_edit_text = 'View/edit';
     }
-    $onclick = "javascript:EditDialog.create('Edit comment',  '$js_escaped_text', '$url'); return false;";
+    $onclick = "javascript:EditDialog.create('Edit $type_for_display',  '$js_escaped_text', '$url'); return false;";
   }
 
   return ($onclick, $escaped_text, $view_edit_text);
