@@ -922,8 +922,14 @@ var addCallback = function(alleleData) {
   });
 };
 
-var AlleleDialog = function (addCallback, cancelCallback) {
+var AlleleDialog = function(addCallback, cancelCallback, showEvidence) {
   this.used_conditions = {};
+
+  if (showEvidence) {
+    $('.curs-allele-dialog-evidence').show();
+  } else {
+    $('.curs-allele-dialog-evidence').hide();
+  }
 
   // current_conditions comes from the .mhtml file
   if (typeof(current_conditions) != 'undefined') {
@@ -1041,7 +1047,8 @@ var AlleleDialog = function (addCallback, cancelCallback) {
       name: get_allele_name_jq($allele_dialog).val(),
       description: get_allele_desc_jq($allele_dialog).val(),
       type: get_allele_type_select_jq($allele_dialog).val(),
-      evidence: get_allele_evidence_select_jq($allele_dialog).val()
+      evidence: get_allele_evidence_select_jq($allele_dialog).val(),
+      conditions: get_allele_conditions_jq($allele_dialog).val()
     };
   }
 
@@ -1434,7 +1441,7 @@ var AlleleDialog = function (addCallback, cancelCallback) {
   }
 };
 
-var alleleDialog = new AlleleDialog(addCallback);
+var alleleDialog = new AlleleDialog(addCallback, function() {}, false);
 
 $('.multi-allele-add-from-gene').click(function () {
   var $this = $(this);

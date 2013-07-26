@@ -1085,6 +1085,10 @@ input[readonly="1"] {
   clear: left;
 }
 
+.curs-allele-dialog-evidence {
+  display: none;
+}
+
 .curs-allele-evidence-select {
   width: 22em;
 }
