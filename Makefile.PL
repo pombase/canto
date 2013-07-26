@@ -81,6 +81,7 @@ requires 'Sub::Exporter';
 requires 'Config::General';
 requires 'MooseX::Traits::Pluggable';
 requires 'MooseX::MarkAsMethods';
+requires 'MooseX::Test::Role';
 requires 'DBD::Pg';
 requires 'URI::Escape';
 requires 'Data::JavaScript::Anon';
