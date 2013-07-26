@@ -86,6 +86,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </td>
       </tr>
     </table>
+<div class="curs-allele-dialog-evidence">
     <div class="curs-ui-dialog-subheading ui-widget-header ui-helper-clearfix ui-corner-all">
       <span class="ui-dialog-title">Evidence</span>
     </div>
@@ -128,6 +129,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
       <input type="checkbox" name="curs-allele-reuse-dialog" value="Reuse"/>Re-use allele name and description with a different set of conditions<br/>
     </div>
   </form>
+</div>
 </div>
 
 <%init>
