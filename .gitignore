@@ -16,6 +16,7 @@ PomCur-*.tar*
 *.bak
 MANIFEST
 *.tmp
+*.old
 cover_db
 pomcur.par
 MYMETA.json
