@@ -910,9 +910,18 @@ $(document).ready(function() {
   });
 });
 
-function AlleleCtrl($scope) {
+function AlleleCtrl($scope, $http) {
   $scope.alleles = [
   ];
+
+  $scope.addAlleles = function() {
+    $http.post('multi_allele_finish', $scope.alleles).success(function() {
+                console.debug("it worked!");
+            }).
+            error(function(data){
+                console.debug("failed test");
+            });
+  };
 }
 
 var addCallback = function(alleleData) {
