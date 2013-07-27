@@ -12,7 +12,7 @@ $multi_organism_mode
    editing => 0,
    curs_root_uri => $curs_root_uri &>
 
-<div ng-app id="curs-multi-allele-select" class="curs-box">
+<div ng-app ng-controller="AlleleCtrl" id="curs-multi-allele-select" class="curs-box">
   <div class="curs-box-title">
 <% $title %>
   </div>
@@ -55,7 +55,7 @@ Add alleles from the genes below until the genotype is fully specified.
 %   }
   </table>
 
-  <div id="multi-allele-genotype" class="ng-cloak" ng-controller="AlleleCtrl" ng-model="allele" ng-show="alleles.length">
+  <div id="multi-allele-genotype" class="ng-cloak" ng-model="allele" ng-show="alleles.length">
 
 <div>
 The alleles for this genotype:
@@ -77,8 +77,8 @@ The alleles for this genotype:
   </table>
   </div>
 
-  <button type="button" class="curs-finish-button"
-          name="multi-allele-finish">Finish ...</button>
+  <input type="submit" id="curs-multi-alleles-submit" class="curs-finish-button"
+          name="multi-allele-finish" value="Finish ..." />
 </form>
 </div>
 </div>
