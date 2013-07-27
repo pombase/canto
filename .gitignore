@@ -16,6 +16,7 @@ Canto-*.tar*
 *.bak
 MANIFEST
 *.tmp
+*.old
 cover_db
 canto.par
 MYMETA.json
