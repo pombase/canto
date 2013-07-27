@@ -49,6 +49,7 @@ with 'PomCur::Curs::Role::GeneResultSet';
 use IO::String;
 use Clone qw(clone);
 use Hash::Merge;
+use JSON;
 
 use PomCur::Track;
 use PomCur::Curs::Utils;
@@ -2148,6 +2149,16 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
   my $st = $c->stash();
   my $schema = $st->{schema};
 
+  my $content_file = $c->req()->body();
+  my $json_content;
+
+  {
+    local $/;
+    open my $fh, '<', $content_file or die "can't open $content_file\n";
+    $json_content = <$fh>;
+  }
+
+  my $data = decode_json($json_content);
   my $annotation = $st->{annotation};
 
   my $process = sub {
