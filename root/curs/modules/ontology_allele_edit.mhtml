@@ -14,15 +14,15 @@ var annotation_id = <% $annotation->annotation_id() %>;
 var editing_allele = <% $editing ? 'true' : 'false' %>;
 </script>
 
-<div id="curs-allele-add" style="display: none">
-  <form action="<% $allele_add_action %>" method="post"> <!-- submitted with Ajax -->
+<div ng-controller="AlleleDialogCtrl" id="curs-allele-add" style="display: none">
+  <form ng-submit="addAllele()">
     <table>
       <tr>
         <td>
           Allele name:
         </td>
         <td>
-          <input name="curs-allele-name" type="text" value="" class="curs-allele-name" style="disabled: true" />
+          <input ng-model="name" name="curs-allele-name" type="text" value="" class="curs-allele-name" style="disabled: true" />
         </td>
       </tr>
       <tr class="curs-allele-type-label" style="display: none">
@@ -39,7 +39,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
           Allele type
         </td>
         <td>
-          <select name="curs-allele-type" class="required">
+          <select ng-model="type" name="curs-allele-type" class="required">
             <option selected="selected" value="">Choose an allele type ...</option>
 % for my $opt (@allele_type_options) {
             <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
@@ -52,7 +52,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
           Allele description
         </td>
         <td>
-          <input name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
+          <input ng-model="description" name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
           <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete"/>
         </td>
       </tr>
@@ -69,19 +69,19 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         <td>
           <div>
             <label>Overexpression</label>
-            <input name="curs-allele-expression" type="radio" value="Overexpression" />
+            <input ng-model="expression" name="curs-allele-expression" type="radio" value="Overexpression" />
           </div>
           <div>
             <label>Endogenous</label>
-            <input name="curs-allele-expression" type="radio" value="Endogenous" />
+            <input ng-model="expression" name="curs-allele-expression" type="radio" value="Endogenous" />
           </div>
           <div>
             <label>Knockdown</label>
-            <input name="curs-allele-expression" type="radio" value="Knockdown" />
+            <input ng-model="expression" name="curs-allele-expression" type="radio" value="Knockdown" />
           </div>
           <div>
             <label>Not specified</label>
-            <input name="curs-allele-expression" type="radio" value="Not specified" />
+            <input ng-model="expression" name="curs-allele-expression" type="radio" value="Not specified" />
           </div>
         </td>
       </tr>
@@ -96,7 +96,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
           Evidence
         </td>
         <td>
-          <select name="curs-allele-evidence-select" class="required curs-allele-evidence-select">
+          <select ng-model="expression" name="curs-allele-evidence-select" class="required curs-allele-evidence-select">
             <option selected="selected" value="">Choose an evidence type ...</option>
 % for my $opt (@evidence_select_options) {
             <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
@@ -115,8 +115,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
           Select conditions
         </td>
         <td>
-          <ul class="curs-allele-conditions">
-          </ul>
+          <input class="curs-allele-conditions" name="curs-allele-condition-names"/>
         </td>
       </tr>
     </table>
