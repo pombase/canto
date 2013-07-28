@@ -12,7 +12,7 @@ $multi_organism_mode
    editing => 0,
    curs_root_uri => $curs_root_uri &>
 
-<div ng-app ng-controller="AlleleCtrl" id="curs-multi-allele-select" class="curs-box">
+<div ng-controller="AlleleCtrl" id="curs-multi-allele-select" class="curs-box">
   <div class="curs-box-title">
 <% $title %>
   </div>
