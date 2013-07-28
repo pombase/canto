@@ -72,6 +72,7 @@ The alleles for this genotype:
     <tbody ng-repeat="allele in alleles">
       <td>{{allele.name}}</td>
       <td>{{allele.description}}</td>
+      <td>{{allele.expression}}</td>
       <td>{{allele.type}}</td>
     </tbody>
   </table>
