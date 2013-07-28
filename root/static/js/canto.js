@@ -914,7 +914,7 @@ function AlleleCtrl($scope, $http) {
   $scope.alleles = [
   ];
 
-  $scope.addAlleles = function() {
+  $scope.storeAlleles = function() {
     $http.post('multi_allele_finish', $scope.alleles).success(function() {
                 console.debug("it worked!");
             }).
