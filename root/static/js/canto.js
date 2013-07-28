@@ -956,6 +956,10 @@ var AlleleDialog = function(addCallback, cancelCallback, showEvidence) {
 
   var $allele_dialog = $('#curs-allele-add');
 
+  // manually bootstrap the dialog so we don't have to have ng-app on the <HTML>
+  // element
+  angular.bootstrap($allele_dialog);
+
   var dialogObject = this;
 
   $allele_dialog.data('dialogObject', dialogObject);
