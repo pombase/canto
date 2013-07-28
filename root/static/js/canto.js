@@ -931,6 +931,15 @@ var addCallback = function(alleleData) {
   });
 };
 
+function AlleleDialogCtrl($scope, $http) {
+  $scope.name = '';
+  $scope.description = '';
+  $scope.type = '';
+  $scope.expression = '';
+  $scope.evidence = '';
+  $scope.conditions = '';
+}
+
 var AlleleDialog = function(addCallback, cancelCallback, showEvidence) {
   this.used_conditions = {};
 
@@ -1052,12 +1061,14 @@ var AlleleDialog = function(addCallback, cancelCallback, showEvidence) {
 
   // return the data from the dialog as an Object
   function dialogToData() {
+    var $scope = angular.element($("#curs-allele-add")).scope();
     return {
-      name: get_allele_name_jq($allele_dialog).val(),
-      description: get_allele_desc_jq($allele_dialog).val(),
-      type: get_allele_type_select_jq($allele_dialog).val(),
-      evidence: get_allele_evidence_select_jq($allele_dialog).val(),
-      conditions: get_allele_conditions_jq($allele_dialog).val()
+      name: $scope.name,
+      description: $scope.description,
+      type: $scope.type,
+      evidence: $scope.evidence,
+      expression: $scope.expression,
+      conditions: $scope.conditions
     };
   }
 
@@ -1400,7 +1411,7 @@ var AlleleDialog = function(addCallback, cancelCallback, showEvidence) {
         },
         'curs-allele-description-input': {
           required: function() {
-            var selected_text = get_allele_type_select_jq(this,add_allele_dialog).val();
+            var selected_text = get_allele_type_select_jq(add_allele_dialog).val();
             var allele_type_config = allele_types[selected_text];
             if (typeof(allele_type_config) == 'undefined') {
               return false;
@@ -1414,7 +1425,7 @@ var AlleleDialog = function(addCallback, cancelCallback, showEvidence) {
         },
         'curs-allele-expression': {
           required: function() {
-            var selected_text = get_allele_type_select_jq(this,add_allele_dialog).val();
+            var selected_text = get_allele_type_select_jq(add_allele_dialog).val();
             var allele_type_config = allele_types[selected_text];
             if (typeof(allele_type_config) == 'undefined') {
               return false;
