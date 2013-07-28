@@ -69,6 +69,7 @@ requires 'Try::Tiny';
 requires 'String::Similarity';
 requires 'Archive::Zip';
 requires 'File::Basename';
+requires 'File::Touch';
 requires 'Getopt::Long';
 requires 'Data::Dumper';
 requires 'Hash::Merge';

@@ -136,6 +136,10 @@ class pomcur {
     ensure => present,
   }
 
+  package { "libfile-touch-perl":
+    ensure => present,
+  }
+
   package { "libxml-simple-perl":
     ensure => present,
   }

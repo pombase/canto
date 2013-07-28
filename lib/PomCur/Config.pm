@@ -114,10 +114,13 @@ sub merge_config
 
   for my $file_name (@file_names) {
     my $new_config = LoadFile($file_name);
-    my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
-    my $new = $merge->merge({%$self}, $new_config);
-    %$self = %$new;
-
+    if (defined $new_config) {
+      my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+      my $new = $merge->merge({%$self}, $new_config);
+      %$self = %$new;
+    } else {
+      # empty file returns undef
+    }
   }
   $self->setup();
 }

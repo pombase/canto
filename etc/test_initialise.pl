@@ -9,6 +9,7 @@ use Carp;
 use Text::CSV;
 use File::Copy qw(copy);
 use File::Temp qw(tempfile);
+use File::Touch;
 use Clone;
 
 BEGIN {
@@ -42,6 +43,10 @@ package main;
 my %test_curators = ();
 my %test_publications = ();
 my %test_schemas = ();
+
+my $test_config_file = "pomcur_test.yaml";
+
+touch $test_config_file;
 
 my $test_util = PomCur::TestUtil->new();
 
