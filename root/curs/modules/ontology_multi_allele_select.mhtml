@@ -18,7 +18,7 @@ $multi_organism_mode
   </div>
   <div class="curs-box-body">
   
-  <form name="multi-allele-select" ng-submit="addAlleles()">
+  <form name="multi-allele-select" ng-submit="storeAlleles()">
 
 Add alleles from the genes below until the genotype is fully specified.
 
