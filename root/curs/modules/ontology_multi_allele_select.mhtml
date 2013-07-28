@@ -66,6 +66,7 @@ The alleles for this genotype:
       <tr>
         <th>Name</th>
         <th>Description</th>
+        <th>Expression</th>
         <th>Type</th>
       </tr>
     </thead>
