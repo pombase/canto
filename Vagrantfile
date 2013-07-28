@@ -1,11 +1,23 @@
 Vagrant::Config.run do |config|
 
 $pomcur_script = <<SCRIPT
-git clone /vagrant root-pomcur
-(cd root-pomcur; perl Makefile.PL < /dev/null; make)
-su - vagrant -c '
-  git clone /vagrant pomcur;
-  (cd pomcur && perl Makefile.PL < /dev/null && (./script/pomcur_start --initialise ~/data; ./script/pomcur_start ~/data > server.out 2> server.err & echo Canto server started) )'
+if [ ! -d root-pomcur ]
+then
+  git clone /vagrant root-pomcur
+  (cd root-pomcur; perl Makefile.PL < /dev/null; make)
+fi
+
+if [ ! -d pomcur ]
+then
+  su - vagrant -c '
+    git clone /vagrant pomcur;
+    (cd pomcur && perl Makefile.PL < /dev/null)'
+fi
+
+if [ ! -d data ]
+then
+  su - vagrant -c '(cd pomcur; ./script/pomcur_start --initialise ~/data && echo Canto data initialised)'
+fi
 SCRIPT
 
 config.vm.box = "precise64"
