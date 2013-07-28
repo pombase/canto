@@ -8,6 +8,7 @@ $curs_root_uri
 $multi_organism_mode
 </%args>
 
+<div ng-app>
 <& ontology_allele_edit.mhtml, annotation => $annotation,
    editing => 0,
    curs_root_uri => $curs_root_uri &>
@@ -82,6 +83,7 @@ The alleles for this genotype:
   <input type="submit" id="curs-multi-alleles-submit" class="curs-finish-button"
           name="multi-allele-finish" value="Finish ..." />
 </form>
+</div>
 </div>
 </div>
 
