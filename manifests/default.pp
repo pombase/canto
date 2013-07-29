@@ -8,6 +8,14 @@ class pomcur {
     ensure => present,
   }
 
+  package { "libemail-sender-perl":
+    ensure => present,
+  }
+
+  package { "libtest-output-perl":
+    ensure => present,
+  }
+
   package { "libcatalyst-devel-perl":
     ensure => present,
   }
