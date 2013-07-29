@@ -50,6 +50,7 @@ use IO::String;
 use Clone qw(clone);
 use Hash::Merge;
 use JSON;
+use List::MoreUtils;
 
 use PomCur::Track;
 use PomCur::Curs::Utils;
@@ -2141,6 +2142,40 @@ sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allel
   $st->{annotation_genes} = [map { _get_gene_proxy($config, $_); } $annotation->genes()];
 }
 
+# create a new Allele from the data or return an existing matching allele
+sub _allele_from_json: Private
+{
+  my $schema = shift;
+  my $gene = shift;
+  my $json_allele = shift;
+
+  my $name = $json_allele->{name};
+  my $description = $json_allele->{description};
+  my $allele_type = $json_allele->{type};
+  my $expression = $json_allele->{expression};
+
+  my $gene_id = $json_allele->{gene_id};
+
+  my %create_args = (
+    type => $allele_type,
+    description => $description,
+    name => $name,
+    gene => $gene_id,
+  );
+
+  my $allele = $schema->find_with_type('Allele',
+                                       {
+                                         name => $name,
+                                         description => $description,
+                                       });
+
+  if (defined $allele) {
+    return $allele;
+  } else {
+    return $schema->create_with_type('Allele', \%create_args);
+  }
+}
+
 sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allele_finish')
 {
   my ($self, $c) = @_;
@@ -2158,67 +2193,35 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
     $json_content = <$fh>;
   }
 
-  my $data = decode_json($json_content);
+  my $json_data = decode_json($json_content);
   my $annotation = $st->{annotation};
 
   my $process = sub {
-<<'COMMENT';
-    # create an annotation for each allele
-    while (my ($id, $allele) = each %$alleles_in_progress) {
-      my $name = $allele->{name};
-      my $description = $allele->{description};
-      my $allele_type = $allele->{allele_type};
-      my $expression = $allele->{expression};
-      my $evidence = $allele->{evidence};
-      my $conditions = $allele->{conditions};
+    my @allele_expression = ();
+    my @alleles = ();
 
-      my $new_data = {
-        expression => $expression,
-        evidence_code => $evidence,
-        conditions => $conditions,
-        term_ontid => $data->{term_ontid},
-      };
+    for my $json_allele (@$json_data) {
+      my $allele = $self->_allele_from_json($schema, $json_allele);
 
-      if (defined $data->{term_suggestion}) {
-        $new_data->{term_suggestion} = $data->{term_suggestion};
-      }
-
-      my $annotation_create_args = {
-        status => $annotation->status(),
-        pub => $annotation->pub(),
-        type => $annotation->type(),
-        creation_date => $annotation->creation_date(),
-        data => $new_data,
-      };
-
-      my $new_annotation =
-        $schema->create_with_type('Annotation',
-                                  $annotation_create_args);
-
-      $self->_set_annotation_curator($c, $new_annotation);
-
-      push @new_annotation_ids, $new_annotation->annotation_id();
-
-      my %create_args = (
-        type => $allele_type,
-        description => $description,
-        name => $name,
-        gene => $gene->gene_id(),
-      );
-
-      my $new_allele =
-        $schema->create_with_type('Allele', \%create_args);
-
-      $schema->create_with_type('AlleleAnnotation',
-                                {
-                                  allele => $new_allele->allele_id(),
-                                  annotation => $new_annotation->annotation_id(),
-                                });
+      push @alleles, $allele;
     }
 
-    # delete the original annotation now it's been split
-    $annotation->delete();
-COMMENT
+    my $it = each_array(@alleles, @allele_expression);
+
+    my $annotation_data = $annotation->data();
+
+    while (my ($allele, $expression) = $it->()) {
+      $schema->create_with_type('AlleleAnnotation',
+                                {
+                                  allele => $allele->allele_id(),
+                                  annotation => $annotation->annotation_id(),
+                                });
+
+      push @{$annotation_data->{allele_expression}}, $expression;
+    }
+
+    $annotation->data($annotation_data);
+    $annotation->update();
   };
 
   $schema->txn_do($process);

@@ -216,6 +216,10 @@ class pomcur {
   package { "libdata-dump-streamer-perl":
     ensure => present,
   }
+
+  package { "liblist-moreutils-perl":
+    ensure => present,
+  }
 }
 
 include pomcur
