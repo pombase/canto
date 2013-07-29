@@ -22,8 +22,6 @@ SCRIPT
 
 config.vm.box = "precise64"
   config.vm.forward_port 5000, 5500
-  config.vm.provision :shell,
-    :inline => 'apt-get update'
   config.vm.provision :puppet
   config.vm.provision :shell,
     :inline => $pomcur_script

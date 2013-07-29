@@ -1,8 +1,9 @@
-
 class pomcur {
-  exec { 'apt-get update':
-    command => '/usr/bin/apt-get update'
+  exec { "apt-update":
+    command => "/usr/bin/apt-get update"
   }
+
+  Exec["apt-update"] -> Package <| |>
 
   package { "libmodule-install-perl":
     ensure => present,
