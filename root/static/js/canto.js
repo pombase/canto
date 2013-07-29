@@ -986,13 +986,14 @@ var AlleleDialog = function(addCallback, cancelCallback, showEvidence) {
     };
   }
 
-  this.open = function(genePrimaryIdentifier, geneDisplayName) {
+  this.open = function(geneId, genePrimaryIdentifier, geneDisplayName) {
   // if (data ...) {
   //   populate_dialog_from_data(...);
   // }
 
     dialogObject.genePrimaryIdentifier = genePrimaryIdentifier;
     dialogObject.geneDisplayName = geneDisplayName;
+    dialogObject.geneId = geneId;
 
     function allele_lookup(request, response) {
       $.ajax({
@@ -1072,7 +1073,8 @@ var AlleleDialog = function(addCallback, cancelCallback, showEvidence) {
       type: $scope.type,
       evidence: $scope.evidence,
       expression: $scope.expression,
-      conditions: $scope.conditions
+      conditions: $scope.conditions,
+      gene_id: dialogObject.geneId,
     };
   }
 
@@ -1470,7 +1472,8 @@ var alleleDialog = new AlleleDialog(addCallback, function() {}, false);
 $('.multi-allele-add-from-gene').click(function () {
   var $this = $(this);
 
-  alleleDialog.open($this.attr('data-gene-primary-identifier'),
+  alleleDialog.open($this.val(),
+                    $this.attr('data-gene-primary-identifier'),
                     $this.attr('data-gene-display-name'))
 });
 
