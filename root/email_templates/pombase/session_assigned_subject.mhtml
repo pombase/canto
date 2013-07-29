@@ -1,4 +1,5 @@
 <%args>
 $publication_uniquename
+$config
 </%args>
-Invitation to curate your publication <% $publication_uniquename %> for PomBase
+Make your data visible in <% $config->{database_name} %> (Curate <% $publication_uniquename %>)
