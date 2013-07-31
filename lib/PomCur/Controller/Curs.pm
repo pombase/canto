@@ -2151,17 +2151,6 @@ sub _allele_from_json: Private
 
   my $name = $json_allele->{name};
   my $description = $json_allele->{description};
-  my $allele_type = $json_allele->{type};
-  my $expression = $json_allele->{expression};
-
-  my $gene_id = $json_allele->{gene_id};
-
-  my %create_args = (
-    type => $allele_type,
-    description => $description,
-    name => $name,
-    gene => $gene_id,
-  );
 
   my $allele = $schema->find_with_type('Allele',
                                        {
@@ -2172,6 +2161,18 @@ sub _allele_from_json: Private
   if (defined $allele) {
     return $allele;
   } else {
+    my $allele_type = $json_allele->{type};
+    my $expression = $json_allele->{expression};
+
+    my $gene_id = $json_allele->{gene_id};
+
+    my %create_args = (
+      type => $allele_type,
+      description => $description,
+      name => $name,
+      gene => $gene_id,
+    );
+
     return $schema->create_with_type('Allele', \%create_args);
   }
 }
