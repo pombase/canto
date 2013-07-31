@@ -110,21 +110,6 @@ __PACKAGE__->add_unique_constraint(
 
 =head1 RELATIONS
 
-=head2 allele_annotations
-
-Type: has_many
-
-Related object: L<Canto::CursDB::AlleleAnnotation>
-
-=cut
-
-__PACKAGE__->has_many(
-  "allele_annotations",
-  "Canto::CursDB::AlleleAnnotation",
-  { "foreign.annotation" => "self.annotation_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 gene_annotations
 
 Type: has_many
@@ -136,6 +121,21 @@ Related object: L<Canto::CursDB::GeneAnnotation>
 __PACKAGE__->has_many(
   "gene_annotations",
   "Canto::CursDB::GeneAnnotation",
+  { "foreign.annotation" => "self.annotation_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_annotations
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeAnnotation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_annotations",
+  "Canto::CursDB::GenotypeAnnotation",
   { "foreign.annotation" => "self.annotation_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -161,8 +161,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BkfZVwe52HONW+isiMCpsg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-29 18:14:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EwFDh75Jp2GaW8OGBgumaw
 
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');

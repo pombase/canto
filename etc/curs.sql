@@ -39,10 +39,21 @@ CREATE TABLE gene_annotation (
        annotation integer REFERENCES annotation(annotation_id)
 );
 
-CREATE TABLE allele_annotation (
-       allele_annotation_id integer PRIMARY KEY,
-       allele integer REFERENCES allele(allele_id),
+CREATE TABLE genotype_annotation (
+       genotype_annotation_id integer PRIMARY KEY,
+       genotype integer REFERENCES genotype(genotype_id),
        annotation integer REFERENCES annotation(annotation_id)
+);
+
+CREATE TABLE genotype (
+       genotype_id integer PRIMARY KEY,
+       primary_identifier text UNIQUE
+);
+
+CREATE TABLE allele_genotype (
+       allele_genotype_id integer PRIMARY KEY,
+       allele integer REFERENCES allele(allele_id),
+       genotype integer REFERENCES genotype(genotype_id)
 );
 
 CREATE TABLE pub (
