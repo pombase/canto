@@ -89,17 +89,17 @@ __PACKAGE__->set_primary_key("allele_id");
 
 =head1 RELATIONS
 
-=head2 allele_annotations
+=head2 allele_genotypes
 
 Type: has_many
 
-Related object: L<Canto::CursDB::AlleleAnnotation>
+Related object: L<Canto::CursDB::AlleleGenotype>
 
 =cut
 
 __PACKAGE__->has_many(
-  "allele_annotations",
-  "Canto::CursDB::AlleleAnnotation",
+  "allele_genotypes",
+  "Canto::CursDB::AlleleGenotype",
   { "foreign.allele" => "self.allele_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -120,8 +120,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pTJltMHsmB7sGMRZipuWmg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-29 18:14:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9OVSoU8MchuwXKPiNPhr0w
 
 __PACKAGE__->many_to_many('annotations' => 'allele_annotations',
                           'annotation');
