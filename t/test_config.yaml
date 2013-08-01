@@ -127,6 +127,10 @@ test_config:
                - name: SPCC63.05-unk
                  description: unknown
                  type: new
+         genotypes:
+           - primary_identifier: "SPAC27D7.13c-ssm4-D4(del_100-200)"
+             alleles(Allele:primary_identifier):
+               - 
          annotations:
            - type: biological_process
              status: new
@@ -201,7 +205,7 @@ test_config:
                  community_curated: 0
            - type: phenotype
              status: new
-             alleles(Allele:description):
+             genotype(Genotype:):
                - del_100-200
              pub(Pub:uniquename): PMID:19756689
              data:
