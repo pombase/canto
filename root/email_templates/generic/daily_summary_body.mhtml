@@ -64,14 +64,19 @@ my %sessions = ();
 my @sessions_with_term_requests = ();
 
 my $iter = PomCur::Track::curs_iterator($config, $track_schema);
+
 while (my ($curs, $cursdb) = $iter->()) {
+  my $curs_key = $curs->curs_key();
+
+  next unless $curs_key eq '54de4db66c7dfe2e';
+
   my ($current_state, $submitter, $gene_count, $datestamp) =
     $state->get_state($cursdb);
 
   my $pub = $curs->pub();
 
   my $curs_details = {
-    curs_key => $curs->curs_key(),
+    curs_key => $curs_key,
     datestamp => $datestamp,
     pub_uniquename => $pub->uniquename(),
     pub_title => $pub->title(),
@@ -87,19 +92,27 @@ while (my ($curs, $cursdb) = $iter->()) {
     push @sessions_with_term_requests, $curs_details;
   }
 
+  next unless defined $datestamp;
   next unless $datestamp =~ /^$summary_date($|\s+)/;
 
+
   for my $type (@interesting_types) {
-    if ($type->{state} eq $current_state) {
-      if ($type->{submitter_set}) {
-        if (defined $curs_details->{submitter}) {
-          push @{$sessions{$type->{key}}}, $curs_details;
-        }
-      } else {
-        if (!defined $curs_details->{submitter}) {
-          push @{$sessions{$type->{key}}}, $curs_details;
-        }
+    next unless $type->{state} eq $current_state;
+
+    my $save = 0;
+    if (defined $type->{submitter_set}) {
+      if ($type->{submitter_set} && defined $curs_details->{submitter}) {
+        $save = 1;
       }
+      if (!$type->{submitter_set} && !defined $curs_details->{submitter}) {
+        $save = 1;
+      }
+    } else {
+      $save = 1;
+    }
+
+    if ($save) {
+      push @{$sessions{$type->{key}}}, $curs_details;
     }
   }
 }
