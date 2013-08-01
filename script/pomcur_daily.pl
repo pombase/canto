@@ -36,7 +36,7 @@ if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
     "script\n";
 }
 
-if (@ARGV != 1) {
+if (@ARGV != 1 && @ARGV != 2) {
   die "$0: needs one argument:
 $0 <canto_base_url>
 
@@ -45,6 +45,13 @@ where <canto_base_url> is the root URL for the application
 }
 
 my $canto_base_url = shift;
+
+my $summary_date = shift;
+
+if (!defined $summary_date) {
+  my ($s, $min, $h, $d, $month, $y) = localtime();
+  $summary_date = strftime "%Y-%m-%d", $s, $min, $h, $d - 1, $month, $y;
+}
 
 if ($canto_base_url !~ m|://|) {
   die qq("$canto_base_url" doesn't look like a URL\n);
@@ -56,11 +63,8 @@ my $track_schema = PomCur::TrackDB->new(config => $config);
 my $mail_sender = PomCur::MailSender->new(config => $config);
 my $email_util = PomCur::EmailUtil->new(config => $config);
 
-my ($s, $min, $h, $d, $month, $y) = localtime();
-my $today = strftime "%Y-%m-%d", $s, $min, $h, $d - 1, $month, $y;
-
 my %args = (track_schema => $track_schema,
-            summary_date => $today,
+            summary_date => $summary_date,
             app_prefix => $canto_base_url);
 
 my ($subject, $body) = $email_util->make_email_contents('daily_summary', %args);
