@@ -4,50 +4,22 @@ $message => undef
 $notice => undef
 </%args>
 
-<div id="notice-list">
-% for my $notice (@notices) {
-<div class="notice">
+% for my $key (keys %all) {
+<div id="<% $key %>-list">
+% for my $item (@{$all{$key}}) {
+<div class="<% $key %>">
   <strong>
-    <% $notice->{title} %>
+    <% $item->{title} %>
   </strong>
-%   if (exists $notice->{text}) {
+%   if (exists $item->{text}) {
   <div>
-    <% $notice->{text} %>
+    <% $item->{text} %>
   </div>
 %   }
 </div>
 % }
 </div>
-
-<div id="error-list">
-% for my $err (@errors) {
-<div class="error">
-  <strong>
-    <% $err->{title} %>
-  </strong>
-%   if (exists $err->{text}) {
-  <div>
-    <% $err->{text} %>
-  </div>
-%   }
-</div>
 % }
-</div>
-
-<div id="message-list">
-% for my $mess (@messages) {
-<div class="message">
-  <strong>
-    <% $mess->{title} %>
-  </strong>
-%   if (exists $mess->{text}) {
-  <div>
-    <% $mess->{text} %>
-  </div>
-%   }
-</div>
-% }
-</div>
 
 <%init>
 my $tidy = sub {
@@ -80,4 +52,10 @@ my $tidy = sub {
 my @errors = $tidy->($error);
 my @messages = $tidy->($message);
 my @notices = $tidy->($notice);
+
+my %all = (
+  error => \@errors,
+  message => \@messages,
+  notice => \@notices,
+);
 </%init>
