@@ -479,11 +479,17 @@ sub _create_object {
     $object_params{$field_db_column} = $value;
   }
 
-  my $object = $schema->create_with_type($class_name, { %object_params });
+  my $existing_object = $schema->resultset($class_name)->find({ %object_params });
 
-  # set collections - this is a hack because the other fields will be set for a
-  # second time
-  _update_object($c, $object, $form);
+  if (defined $existing_object) {
+    return ($existing_object, 1);
+  } else {
+    my $object = $schema->create_with_type($class_name, { %object_params });
+
+    # set collections - this is a hack because the other fields will be set for a
+    # second time
+    return (_update_object($c, $object, $form), 0);
+  }
 }
 
 # update the object based on the form values
@@ -668,9 +674,10 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
 
   $self->_check_auth($c);
 
+  my $class_name = $schema->class_name_of_table($type);
+
   if (defined $object_id) {
-    my $class_name = $schema->class_name_of_table($type);
-    $object = $c->schema()->find_with_type($class_name, "${type}_id" => $object_id);
+    $object = $schema->find_with_type($class_name, "${type}_id" => $object_id);
   }
 
   my $display_type_name = $schema->display_name($type);
@@ -708,29 +715,36 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
   }
 
   if ($form->submitted_and_valid()) {
+    my $exists = undef;
+
     if ($req_type eq 'new') {
-      $c->schema()->txn_do(sub {
-                             my $object = _create_object($c, $type, $form);
+      $schema->txn_do(sub {
+                        ($object, $exists) = _create_object($c, $type, $form);
+                      });
 
-                             # multi-column primary keys aren't supported
-                             my $table_pk_field = ($object->primary_columns())[0];
+      # multi-column primary keys aren't supported
+      my $table_pk_field = ($object->primary_columns())[0];
 
-                             # get the id so we can redirect below
-                             $object_id = $object->$table_pk_field();
-
-                             _run_create_hook($c, $object);
-                           });
+      # get the id so we can redirect below
+      $object_id = $object->$table_pk_field();
     } else {
-      $c->schema()->txn_do(sub {
+      $schema->txn_do(sub {
                  _update_object($c, $object, $form);
                            });
     }
 
-    $c->res->redirect($c->uri_for("/view/object/$type/$object_id",
-                                 {
-                                  model => $model_name
-                                 }));
-    $c->detach();
+    (my $short_class_name = $class_name) =~ s/.*:://;
+    if ($exists) {
+      $c->stash()->{error} =
+        "Couldn't add the $short_class_name - that $short_class_name already exists";
+    } else {
+      $c->flash()->{notice} = "$short_class_name added";
+      $c->res->redirect($c->uri_for("/view/object/$type/$object_id",
+                                    {
+                                      model => $model_name
+                                    }));
+      $c->detach();
+    }
   }
 }
 
