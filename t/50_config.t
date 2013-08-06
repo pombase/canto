@@ -69,4 +69,4 @@ ok(defined $config_with_suffix->{"Model::TrackModel"});
 
 ok(defined $config_with_suffix->model_connect_string('Track'));
 
-is($config_with_suffix->{instance_organism}->{species}, 'pombe');
+is($config_with_suffix->{extra_css}, '/static/css/test_style.css');
