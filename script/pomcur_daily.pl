@@ -83,6 +83,6 @@ if ($send_mail) {
   $mail_sender->send_to_admin(subject => $subject,
                               body => $body);
 } else {
-  warn "Subject: $subject\n\ndetail: $body\n";
+  print "Subject: $subject\n\ndetail: $body\n";
 }
 
