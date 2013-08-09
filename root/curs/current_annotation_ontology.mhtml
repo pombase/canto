@@ -78,11 +78,6 @@ $show_extension_column => 0
         Curator
       </th>
 % }
-% if (!$read_only_curs) {
-      <th>
-        &nbsp
-      </th>
-% }
 % }
     </tr>
   </thead>
@@ -294,7 +289,7 @@ NOT
     </td>
 % }
 % if (!$read_only_curs) {
-    <td>
+    <td style="border: 0px solid white; background-color: white;">
 % if ($annotation_status ne 'deleted') {
       <a href="<% $delete_action . $row->{annotation_id} %>"
          id="curs-annotation-delete-<% $row->{annotation_id} %>"

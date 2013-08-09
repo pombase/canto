@@ -335,7 +335,7 @@ a.pomcur-toggle-button {
 
 table.list {
   margin: 10px;
-  border-width: 1px;
+  border-width: 0px;
   border-spacing: 5px;
   border-style: solid;
   border-color: gray;
