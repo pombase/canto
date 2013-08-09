@@ -302,7 +302,7 @@ NOT
          class="confirm-delete"
 %   }
          title="Remove this annotation">
-        <img src="<% $delete_icon_uri %>"/>
+        <img alt="Delete annotation ..." src="<% $delete_icon_uri %>"/>
       </a>
 % }
     </td>
