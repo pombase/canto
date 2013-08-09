@@ -36,16 +36,26 @@ if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
     "script\n";
 }
 
+my $send_mail = 1;
+
+if (@ARGV >= 1 && $ARGV[0] eq '-s') {
+  shift;
+  # stdout instead
+  $send_mail = 0;
+}
+
 if (@ARGV != 1 && @ARGV != 2) {
-  die "$0: needs one argument:
-$0 <canto_base_url>
+  die "$0: needs at least one argument:
+$0 [-s] <canto_base_url> [summary_date]
 
 where <canto_base_url> is the root URL for the application
+
+flags:
+  -s  send output to STDOUT instead of sending an email
 ";
 }
 
 my $canto_base_url = shift;
-
 my $summary_date = shift;
 
 if (!defined $summary_date) {
@@ -69,6 +79,10 @@ my %args = (track_schema => $track_schema,
 
 my ($subject, $body) = $email_util->make_email_contents('daily_summary', %args);
 
-$mail_sender->send_to_admin(subject => $subject,
-                            body => $body);
+if ($send_mail) {
+  $mail_sender->send_to_admin(subject => $subject,
+                              body => $body);
+} else {
+  warn "Subject: $subject\n\ndetail: $body\n";
+}
 
