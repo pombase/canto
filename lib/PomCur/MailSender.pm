@@ -39,7 +39,7 @@ use Moose;
 use Carp;
 
 use Email::Sender::Simple qw(sendmail);
-use Email::Simple;
+use Email::MIME;
 use Email::Sender::Transport::Sendmail qw();
 use Try::Tiny;
 
@@ -86,11 +86,14 @@ sub send
     return;
   }
 
-  my $email = Email::Simple->create(
+  my $email = Email::MIME->create(
     header=>[To=>$to, From=>$from,
              Subject=>$subject],
     body=>$body,
   );
+
+  $email->content_type_set('text/plain');
+  $email->header_set('MIME-Version', '1.0');
 
   try {
     sendmail($email,
