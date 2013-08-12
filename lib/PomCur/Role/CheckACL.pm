@@ -51,6 +51,7 @@ sub check_access
       delete => 1,
       export => 1,
       dump => 1,
+      user_management => 1,
     }
   } else {
     return {};

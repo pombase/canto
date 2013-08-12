@@ -790,9 +790,19 @@ sub reassign_session : Local Args(0)
   $c->detach();
 }
 
+=head2 send_session
+
+ Function: send a email to the current curator of a session
+
+=cut
+
 sub send_session : Local Args(1)
 {
   my ($self, $c, $curs_key) = @_;
+
+  if (!$self->check_access($c)->{user_management}) {
+    die "insufficient privileges to send a session";
+  }
 
   my $track_schema = $c->schema('track');
   my $curs = $track_schema->find_with_type('Curs',
