@@ -144,7 +144,9 @@ sub make_email
 
   if (defined $type_from) {
     if ($type_from eq 'CURRENT_USER') {
-      $from_email_address = $args{logged_in_user}->email_address();
+      my $user = $args{logged_in_user};
+      $from_email_address =
+        $user->name() . ' <' . $user->email_address() . '>';
     } else {
       $from_email_address = $type_from;
     }

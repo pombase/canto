@@ -51,7 +51,7 @@ my ($subject, $body, $from) =
   PomCur::EmailUtil::make_email($mock, 'session_assigned', %args);
 
 ok ($from ne $default_test_from);
-is ($from, $person_email);
+is ($from, "$person_name <$person_email>");
 
 like ($subject, qr/publication has been assigned to you/);
 
