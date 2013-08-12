@@ -829,11 +829,12 @@ sub send_session : Local Args(1)
     logged_in_user => $c->user(),
   );
 
-  my ($subject, $body) = $email_util->make_email('session_assigned', %args);
+  my ($subject, $body, $from) = $email_util->make_email('session_assigned', %args);
 
   my $mail_sender = PomCur::MailSender->new(config => $config);
 
   $mail_sender->send(to => $submitter_email,
+                     from => $from,
                      subject => $subject,
                      body => $body);
 
