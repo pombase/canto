@@ -2217,14 +2217,14 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
   my @all_elements = ();
 
   if (@annotations == 1) {
-    # hack: show a textfield for the comment if there is one annotation
+    # hack: show a textfield for the comment and extension if there is
+    # one annotation
     my $annotation = $annotations[0];
     my $existing_comment = $annotation->data()->{submitter_comment};
-    my $label = 'Optional comment:';
 
     my %comment_def = (
       name => 'annotation-comment-0',
-      label => $label,
+      label => 'Optional comment:',
       type => 'Textarea',
       container_tag => 'div',
       container_attributes => {
@@ -2244,6 +2244,35 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     push @all_elements, {
       %comment_def,
     };
+
+    my $current_user = $c->user();
+
+    if (defined $current_user && $current_user->is_admin()) {
+      my $existing_extension = $annotation->data()->{annotation_extension};
+
+      my %extension_def = (
+        name => 'annotation-extension-0',
+        label => 'Annotation extension:',
+        type => 'Textarea',
+        container_tag => 'div',
+        container_attributes => {
+          style => 'display: block',
+          class => 'curs-transfer-extension-container',
+        },
+        attributes => { class => 'annotation-extension',
+                        style => 'display: block' },
+        cols => 80,
+        rows => 6,
+      );
+
+      if (defined $existing_extension) {
+        $extension_def{'value'} = $existing_extension;
+      }
+
+      push @all_elements, {
+        %extension_def,
+      };
+    }
   }
 
   if (@options) {
@@ -2279,16 +2308,23 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
     my @dest_params = @{$form->param_array('dest')};
 
     if (@annotations == 1) {
-      # hack: use a textfield for the comment only if there is one annotation
+      # hack: use a textfield for the comment and extension only if there is one annotation
       my $annotation = $annotations[0];
 
       my $comment = $form->param_value('annotation-comment-0');
+      my $extension = $form->param_value('annotation-extension-0');
       my $data = $annotation->data();
 
       if ($comment && $comment !~ /^\s*$/) {
         $data->{submitter_comment} = $comment;
       } else {
         delete $data->{submitter_comment};
+      }
+
+      if ($extension && $extension !~ /^\s*$/) {
+        $data->{annotation_extension} = $extension;
+      } else {
+        delete $data->{annotation_extension};
       }
 
       $annotation->data($data);
