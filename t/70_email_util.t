@@ -24,6 +24,11 @@ my $help_url = "http://localhost:5000/docs/";
 my $curator_name = "Val Wood";
 my $curator_email = 'val@example.com';
 
+my $person_name = 'Logged In Person';
+
+my $mock_person = Test::MockObject->new();
+$mock_person->mock('name', sub { return $person_name; });
+
 my %args = (
   session_link => $root_url,
   publication_uniquename => $pub_id,
@@ -31,7 +36,10 @@ my %args = (
   curator_name => $curator_name,
   curator_email => $curator_email,
   help_index => $help_url,
+  logged_in_user => $mock_person,
 );
+
+$config->{email}->{templates}->{session_assigned}->{body} = "email_templates/pombase/session_assigned_body.mhtml";
 
 my ($subject, $body) =
   PomCur::EmailUtil::make_email_contents($mock, 'session_assigned', %args);
@@ -39,11 +47,11 @@ my ($subject, $body) =
 like ($subject, qr/publication has been assigned to you/);
 
 ok ($body =~ /Dear $curator_name/);
-ok ($body =~ /PMID:10467002 - "A clever paper"/);
-ok ($body =~ /GO cellular component/);
-ok ($body =~ /$help_url/);
+ok ($body =~ /PMID:10467002/);
+ok ($body =~ /"A clever paper"/);
 ok ($body =~ /$root_url/);
 ok ($body =~ /several previously curated annotations/);
+ok ($body =~ /$person_name/);
 
 $args{recipient_name} = "Test Name";
 $args{recipient_email} = 'test@example.com';

@@ -2940,6 +2940,7 @@ sub _send_email_from_template
     publication_uniquename => $pub->uniquename(),
     publication_title => $pub->title(),
     help_index => $help_index,
+    logged_in_user => $c->user(),
   );
 
   @args{keys %{$extra_template_args}} = values %{$extra_template_args};

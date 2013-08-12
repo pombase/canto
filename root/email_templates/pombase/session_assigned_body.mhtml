@@ -6,15 +6,16 @@ $session_link
 $curator_name
 $help_index
 $existing_annotation_count
+$logged_in_user
 </%args>
 Dear <% $curator_name %>,
 
 We invite you to contribute annotations based on your recently
 published paper, <% $publication_uniquename %> - 
-"<% $publication_title %>", to PomBase. We have identified the paper
-as suitable for curation in Canto, but if it reports data for a large
-number of genes, please let us know so we can collect the data by a
-different route.
+"<% $publication_title %>",
+to PomBase. We have identified the paper as suitable for curation in Canto,
+but if it reports data for a large number of genes, please let us know so we
+can collect the data by a different route.
 
 This is your permanent curation link, where you can sign in, and then
 either you can start curating, or assign the session to a colleague
@@ -40,5 +41,4 @@ to date.
 <% $session_link %>
 
 Sincerely yours,
-
-The PomBase Team
+<% $logged_in_user->name() %>

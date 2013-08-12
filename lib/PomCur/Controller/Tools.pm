@@ -816,6 +816,7 @@ sub send_session : Local Args(1)
     publication_uniquename => $pub->uniquename(),
     publication_title => $pub->title(),
     help_index => $help_index,
+    logged_in_user => $c->user(),
   );
 
   my ($subject, $body) = $email_util->make_email_contents('session_assigned', %args);

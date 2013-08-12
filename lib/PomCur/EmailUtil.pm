@@ -89,6 +89,7 @@ sub _process_template
                     - help_index - the URL of the documentation
                     - summary_date - date to use in daily_summary template
                     - app_prefix - the base URL of a application
+                    - logged_in_user - the current user
  Return  : the subject and body of the email to send
 
 =cut
