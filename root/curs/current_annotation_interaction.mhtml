@@ -108,7 +108,7 @@ $user_created
          class="confirm-delete"
 %   }
          title="Remove this annotation">
-        <img alt="Delete annotation ..." src="<% $delete_icon_uri %>"/>
+Delete
       </a>
     </td>
 % }
