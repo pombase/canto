@@ -9,9 +9,9 @@ $pub
   <div class="curs-box">
     <div class="curs-box-title">
 % if (@annotations > 1) {
-      You have just made the following annotations:
+      You have made the following annotations:
 % } else {
-      You have just made the following annotation:
+      You have made the following annotation:
 % }
     </div>
     <div class="curs-box-body">
