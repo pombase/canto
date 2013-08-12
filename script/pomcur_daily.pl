@@ -77,7 +77,7 @@ my %args = (track_schema => $track_schema,
             summary_date => $summary_date,
             app_prefix => $canto_base_url);
 
-my ($subject, $body) = $email_util->make_email_contents('daily_summary', %args);
+my ($subject, $body) = $email_util->make_email('daily_summary', %args);
 
 if ($send_mail) {
   $mail_sender->send_to_admin(subject => $subject,

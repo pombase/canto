@@ -62,9 +62,9 @@ sub _process_template
   return $buffer;
 }
 
-=head2 make_email_contents
+=head2 make_email
 
- Usage   : my ($subject, $body) = $email_util->make_email_contents($type, %args);
+ Usage   : my ($subject, $body, $from) = $email_util->make_email($type, %args);
  Function: Return the subject and body text to send to users in various
            situations
  Args    : $type - the type of email to compose, one of:
@@ -81,7 +81,8 @@ sub _process_template
                     - track_schema - a TrackDB object
                     - session_link - full URL of the session
                     - curator_name - the user currently curating that session
-                    - curator_email - the email of the user
+                    - curator_email - the email of the user - the recipient of
+                                      this email
                     - reassigner_name - for the "reassigner" template, the name
                                         of the person doing the reassigning
                     - publication_uniquename - the PMID ID of the publication
@@ -94,7 +95,7 @@ sub _process_template
 
 =cut
 
-sub make_email_contents
+sub make_email
 {
   my $self = shift;
   my $email_type = shift;
@@ -137,7 +138,33 @@ sub make_email_contents
 
   $body =~ s/\n\n+/\n\n/g;
 
-  return ($subject, $body);
+  my $from_email_address = undef;
+
+  my $type_from = $type_config->{from_address};
+
+  if (defined $type_from) {
+    if ($type_from eq 'CURRENT_USER') {
+      $from_email_address = $args{logged_in_user}->email_address();
+    } else {
+      $from_email_address = $type_from;
+    }
+  }
+
+  if (!defined $from_email_address) {
+    my $config = $self->config();
+
+    my $email_config = $config->{email};
+
+    if (!defined $email_config) {
+      warn "email addresses not configured - email not sent\n";
+      return;
+    }
+
+    # use the default from address
+    $from_email_address = $email_config->{from_address};
+  }
+
+  return ($subject, $body, $from_email_address);
 }
 
 1;

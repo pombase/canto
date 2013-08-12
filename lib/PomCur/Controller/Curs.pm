@@ -2899,6 +2899,7 @@ sub _send_mail
   my $body = $args{body};
   my $subject = $args{subject};
   my $dest_email = $args{to};
+  my $from = $args{from};
 
   my $config = $c->config();
   my $mail_sender = PomCur::MailSender->new(config => $config);
@@ -2908,6 +2909,7 @@ sub _send_mail
                                 body => $body);
   } else {
     $mail_sender->send(to => $dest_email,
+                       from => $from,
                        subject => $subject,
                        body => $body);
   }
@@ -2947,9 +2949,10 @@ sub _send_email_from_template
 
   my $recipient_email = $args{recipient_email} // $submitter_email;
 
-  my ($subject, $body) = $email_util->make_email_contents($type, %args);
+  my ($subject, $body, $from) = $email_util->make_email($type, %args);
 
-  $self->_send_mail($c, subject => $subject, body => $body, to => $recipient_email);
+  $self->_send_mail($c, subject => $subject, body => $body, to => $recipient_email,
+                    from => $from);
 }
 
 sub begin_approval : Chained('top') Args(0)

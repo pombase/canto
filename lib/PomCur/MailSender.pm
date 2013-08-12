@@ -53,6 +53,8 @@ with 'PomCur::Role::Configurable';
  Args    : subject - email subject
            body - email body or undef
            to - email recipient
+           from - (optional) the sender - defaults to email->from_address in the
+                                          config file
  Return  : nothing, failures are logged
 
 =cut
@@ -61,6 +63,7 @@ sub send
   my $self = shift;
   my %args = @_;
   my $to = $args{to};
+  my $from = $args{from};
 
   if ($self->config()->{test_mode} || $::test_mode) {
     return;
@@ -68,17 +71,6 @@ sub send
 
   my $subject = $args{subject} // 'no_subject';
   my $body = $args{body} // '';
-
-  my $config = $self->config();
-
-  my $email_config = $config->{email};
-
-  if (!defined $email_config) {
-    warn "email not configured - email to admin not sent\n";
-    return;
-  }
-
-  my $from = $email_config->{from_address};
 
   if (!defined $from) {
     warn "'from' email address not configured - email with subject " .
@@ -98,8 +90,8 @@ sub send
   try {
     sendmail($email,
              {
-               from=>$from,
-               transport=>Email::Sender::Transport::Sendmail->new
+               from => $from,
+               transport => Email::Sender::Transport::Sendmail->new()
              });
   } catch {
     warn qq|Cannot send mail to "$to" with subject "$subject": $_|;

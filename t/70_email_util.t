@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 14;
 
 use Test::MockObject;
 
@@ -25,9 +25,11 @@ my $curator_name = "Val Wood";
 my $curator_email = 'val@example.com';
 
 my $person_name = 'Logged In Person';
+my $person_email = 'mock_email@example.com';
 
 my $mock_person = Test::MockObject->new();
 $mock_person->mock('name', sub { return $person_name; });
+$mock_person->mock('email_address', sub { return $person_email; });
 
 my %args = (
   session_link => $root_url,
@@ -39,10 +41,17 @@ my %args = (
   logged_in_user => $mock_person,
 );
 
-$config->{email}->{templates}->{session_assigned}->{body} = "email_templates/pombase/session_assigned_body.mhtml";
+my $default_test_from = 'test_from@example.org';
 
-my ($subject, $body) =
-  PomCur::EmailUtil::make_email_contents($mock, 'session_assigned', %args);
+$config->{email}->{from_address} = $default_test_from;
+$config->{email}->{templates}->{session_assigned}->{body} =
+  "email_templates/pombase/session_assigned_body.mhtml";
+
+my ($subject, $body, $from) =
+  PomCur::EmailUtil::make_email($mock, 'session_assigned', %args);
+
+ok ($from ne $default_test_from);
+is ($from, $person_email);
 
 like ($subject, qr/publication has been assigned to you/);
 
@@ -58,10 +67,12 @@ $args{recipient_email} = 'test@example.com';
 $args{reassigner_name} = "Test Name";
 $args{reassigner_email} = 'test@example.com';
 
-($subject, $body) =
-  PomCur::EmailUtil::make_email_contents($mock, 'reassigner', %args);
+($subject, $body, $from) =
+  PomCur::EmailUtil::make_email($mock, 'reassigner', %args);
 
 like ($body, qr/Thank you for reassigning/);
 like ($body, qr/Below is a copy/);
 like ($body, qr/Dear Val Wood/);
 like ($body, qr/Test Name <test\@example.com> has invited/);
+
+is ($from, $default_test_from);

@@ -819,7 +819,7 @@ sub send_session : Local Args(1)
     logged_in_user => $c->user(),
   );
 
-  my ($subject, $body) = $email_util->make_email_contents('session_assigned', %args);
+  my ($subject, $body) = $email_util->make_email('session_assigned', %args);
 
   my $mail_sender = PomCur::MailSender->new(config => $config);
 
@@ -1013,7 +1013,7 @@ sub _daily_summary_text : Private
               summary_date => $summary_date,
               app_prefix => $app_prefix);
 
-  my ($subject, $body) = $email_util->make_email_contents('daily_summary', %args);
+  my ($subject, $body) = $email_util->make_email('daily_summary', %args);
 
   return $subject . "\n\n" . $body;
 }

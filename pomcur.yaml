@@ -48,6 +48,9 @@ email:
       subject: "email_templates/generic/session_accepted_subject.mhtml"
       body: "email_templates/generic/session_accepted_body.mhtml"
     session_assigned:
+      # Set the "From" to be the current, logged in admin user to make
+      # messages more personal - see SourceForge #604
+      from_address: CURRENT_USER
       subject: "email_templates/generic/session_assigned_subject.mhtml"
       body: "email_templates/generic/session_assigned_body.mhtml"
     session_reassigned:
