@@ -88,7 +88,7 @@ sub send
   $email->header_set('MIME-Version', '1.0');
 
   my $email_config = $self->config()->{email};
-  my $reply_to = $email_config->{email}->{reply_to};
+  my $reply_to = $email_config->{reply_to};
 
   if (defined $reply_to) {
     $email->header_set('Reply-To', $reply_to);
