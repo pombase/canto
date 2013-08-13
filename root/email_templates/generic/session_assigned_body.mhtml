@@ -10,7 +10,8 @@ $existing_annotation_count
 Dear <% $curator_name %>,
 
 Congratulations on the recent publication of your paper:
-  <% $publication_uniquename %> - "<% $publication_title %>".
+  <% $publication_uniquename %>
+<% wrap('  ', '  ', '"' . $publication_title . '"') %>
 
 We invite you to contribute annotations based on this paper. We have
 identified the paper as suitable for curation in Canto, but if it
@@ -47,3 +48,10 @@ We greatly appreciate your contribution.
 
 
 <% $session_link %>
+
+
+<%init>
+use Text::Wrap;
+
+$Text::Wrap::columns = 72;
+</%init>

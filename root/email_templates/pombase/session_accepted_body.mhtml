@@ -8,7 +8,8 @@ $help_index
 $existing_annotation_count
 </%args>
 Thank you for agreeing to curate:
-  <% $publication_uniquename %> - "<% $publication_title %>"
+  <% $publication_uniquename %>
+<% wrap('  ', '  ', '"' . $publication_title . '"') %>
 
 Your curation link is:
   <% $session_link %>
@@ -49,3 +50,10 @@ PomBase literature curation comprehensive, accurate, and up to date.
 Sincerely yours,
 
 The PomBase Team
+
+
+<%init>
+use Text::Wrap;
+
+$Text::Wrap::columns = 72;
+</%init>

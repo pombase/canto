@@ -12,7 +12,7 @@ Dear <% $curator_name %>,
 
 We invite you to contribute annotations based on your recently
 published paper, <% $publication_uniquename %> - 
-"<% $publication_title %>",
+<% wrap('  ', '  ', '"' . $publication_title . '"') %>,
 to PomBase. We have identified the paper as suitable for curation in Canto,
 but if it reports data for a large number of genes, please let us know so we
 can collect the data by a different route.
@@ -42,3 +42,10 @@ to date.
 
 Sincerely yours,
 <% $logged_in_user->name() %>
+
+
+<%init>
+use Text::Wrap;
+
+$Text::Wrap::columns = 72;
+</%init>
