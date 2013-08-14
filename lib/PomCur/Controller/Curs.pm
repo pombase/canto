@@ -2741,13 +2741,26 @@ sub _assign_session :Private
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
-    my $reassigner_name =
-      $form->param_value('reassigner_name') // $current_submitter_name;
+    my $reassigner_name_value = $form->param_value('reassigner_name');
+    if ($reassigner_name_value =~ /\@/) {
+      $c->stash()->{message} =
+        "Names can't contain the '\@' character: $reassigner_name_value - please " .
+        "try again";
+      return;
+    }
+    my $reassigner_name = $reassigner_name_value // $current_submitter_name;
     my $reassigner_email =
       $form->param_value('reassigner_email') // $current_submitter_email;
 
     my $submitter_name = $form->param_value('submitter_name');
     my $submitter_email = $form->param_value('submitter_email');
+
+    if ($submitter_name =~ /\@/) {
+      $c->stash()->{message} =
+        "Names can't contain the '\@' character: $submitter_name - please " .
+        "try again";
+      return;
+    }
 
     my $schema = PomCur::Curs::get_schema($c);
     my $curs_key = $st->{curs_key};
