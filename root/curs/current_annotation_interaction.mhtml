@@ -5,6 +5,7 @@ $annotation_type
 $gene
 $pub
 $user_created
+$view_only => 0
 </%args>
 
 % if (@annotations) {
@@ -52,7 +53,7 @@ $user_created
     </td>
     <td>
       <span>
-% if ($user_created) {
+% if ($user_created && !$view_only) {
       <a href="<% $curs_root_uri . '/gene/' . $row->{interacting_gene_id} %>"><% $row->{interacting_gene_display_name} %></a>
 % } else {
       <% $row->{interacting_gene_display_name} %>
@@ -71,7 +72,7 @@ $user_created
     </td>
     <td>
       <span>
-% if ($read_only_curs || !$user_created) {
+% if ($view_only || !$user_created) {
 %   if (defined $row->{evidence_code}) {
    <% $row->{evidence_code} %>
 %   }
@@ -98,7 +99,7 @@ $user_created
     </td>
 % }
 
-% if ($user_created && !$read_only_curs) {
+% if ($user_created && !$view_only) {
     <td style="border: 0px solid white; background-color: white;">
 %   my $delete_url = $delete_action . $row->{annotation_id} . '/' .
 %                    $row->{interacting_gene_identifier};
@@ -151,6 +152,9 @@ my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
 
 my $st = $c->stash();
 my $read_only_curs = $st->{read_only_curs};
+if ($read_only_curs) {
+  $view_only = 1;
+}
 
 my $state = $st->{state};
 

@@ -23,8 +23,9 @@ $pub
 <& ../one_annotation_summary.mhtml,
    curs_root_uri => $curs_root_uri,
    annotation => $annotation,
-   allow_comment_edit => $allow_comment_edit,
-   show_extension_column => $is_admin_user &>
+   force_comment_edit => $force_comment_edit,
+   show_extension_column => $is_admin_user,
+   view_only => 1 &>
 </div>
 % }
       </div>
@@ -72,5 +73,5 @@ my $gene_count = $c->stash()->{schema}->resultset('Gene')->count();
 
 my $is_admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
 
-my $allow_comment_edit = @annotations != 1;
+my $force_comment_edit = @annotations != 1;
 </%init>

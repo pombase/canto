@@ -6,8 +6,9 @@ $completed_count => undef
 $gene
 $pub
 $user_created
-$allow_comment_edit => 1
+$force_comment_edit => 0
 $show_extension_column => 0
+$view_only => 0
 </%args>
 
 % if (@annotations) {
@@ -108,7 +109,7 @@ $show_extension_column => 0
 % if ($needs_allele) {
     <td>
       <span>
-% if ($read_only_curs || !$user_created || !defined
+% if ($view_only || !$user_created || !defined
 %     $row->{allele_display_name} || $annotation_status eq 'deleted') {
       <% $row->{allele_display_name} %>
 % } else {
@@ -125,7 +126,7 @@ $show_extension_column => 0
 % }
     <td>
       <span>
-% if ($read_only_curs || !$user_created || $annotation_status eq 'deleted') {
+% if ($view_only || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{term_ontid} %>
 % } else {
       <a href="<% $edit_term_action_url %>"
@@ -140,7 +141,7 @@ $show_extension_column => 0
     </td>
     <td>
       <span>
-% if ($read_only_curs || !$user_created || $annotation_status eq 'deleted') {
+% if ($view_only || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{term_name} %>
 % } else {
       <a href="<% $edit_term_action_url %>"
@@ -155,7 +156,7 @@ $show_extension_column => 0
     </td>
     <td>
       <span>
-% if ($read_only_curs || !$user_created || $annotation_status eq 'deleted') {
+% if ($view_only || !$user_created || $annotation_status eq 'deleted') {
 %   if (defined $row->{evidence_code}) {
    <% $row->{evidence_code} %>
 %   }
@@ -208,7 +209,7 @@ NOT
       <span>
 % if ($row->{needs_with} || defined $row->{with_or_from_display_name}) {
 %   if (defined $row->{with_or_from_display_name}) {
-% if ($read_only_curs || !$user_created || $annotation_status eq 'deleted') {
+% if ($view_only || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{with_or_from_display_name} %>
 % } else {
       <a href="<% $edit_with_action_url . $annotation_id . '/edit' %>"
@@ -220,7 +221,7 @@ NOT
       </a>
 % }
 %   } else {
-%     if (!$read_only_curs || $annotation_status eq 'deleted') {
+%     if (!$view_only || $annotation_status eq 'deleted') {
       <a href="<% $curs_root_uri . '/annotation/with_gene/' . $row->{annotation_id} %>">Set with ...</a>
 %     }
 %   }
@@ -236,7 +237,7 @@ NOT
       <span>
 %   if ($row->{term_suggestion}) {
       <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{name}) %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{definition}) %>'); return false;">View ...</a>
-%     if ($admin_user && !$read_only_curs) {
+%     if ($admin_user && !$view_only) {
       <br/>
       <a href="<% $curs_root_uri . '/annotation/delete_suggestion/' . $row->{annotation_id} %>" class="confirm-delete">Delete ...</a>
 %     }
@@ -251,33 +252,29 @@ NOT
 % {
 % my $url = $comment_edit_url  . $row->{annotation_id};
 % my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'comment', $row);
-%   if ($allow_comment_edit) {
+%   if ($view_only && !$force_comment_edit) {
+      <% $escaped_text %>
+%   } else {
 %     if (defined $view_edit_text) {
       <a href="#" class="curs-editable-table-field" title="<% $escaped_text %>"
          onclick="<% $onclick %>"><% $view_edit_text %> ...</a>
 %     }
-%   } else {
-      <% $escaped_text %>
-
 %   }
 % }
       </span>
     </td>
+
 % if ($show_extension_column) {
     <td>
       <span>
 % {
 %   my $url = $extension_edit_url  . $row->{annotation_id};
 %   my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'annotation_extension', $row);
-%   if ($admin_user) {
-%     if ($allow_comment_edit) {
-%       if (defined $view_edit_text) {
+%   if ($admin_user && defined $view_edit_text && (!$view_only || $force_comment_edit)) {
       <a href="#" class="curs-editable-table-field" title="<% $escaped_text %>"
-         onclick="<% $onclick %>"><% $view_edit_text %> ...</a>
-%       }
-%     } else {
+         onclick="<% $onclick %>"><% $escaped_text || ($view_edit_text . ' ...') %></a>
+%   } else {
    <% $escaped_text %>
-%     }
 %   }
 % }
       </span>
@@ -290,7 +287,7 @@ NOT
       <% $curator %>
     </td>
 % }
-% if (!$read_only_curs) {
+% if (!$view_only) {
     <td style="border: 0px solid white; background-color: white;">
 % if ($annotation_status ne 'deleted') {
 <div>
@@ -348,6 +345,12 @@ my $st = $c->stash();
 
 my $read_only_curs = $st->{read_only_curs};
 
+if ($read_only_curs) {
+  $view_only = 1;
+}
+
+my $admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
+
 my $field_edit_proc = sub {
   my $url = shift;
   my $type = shift;
@@ -362,7 +365,7 @@ my $field_edit_proc = sub {
   my $annotation_status = $row->{status};
 
   (my $type_for_display = $type) =~ s/_/ /g;
-  if ($read_only_curs || $annotation_status eq 'deleted') {
+  if (!$admin_user && (($view_only && !$force_comment_edit) || $annotation_status eq 'deleted')) {
     if ($js_escaped_text ne '') {
       $view_edit_text = 'View';
       $onclick = "javascript:pomcur_util.show_message('View $type_for_display',  '$js_escaped_text'); return false;";
@@ -410,8 +413,6 @@ my $some_row_has_qualifer = grep { $_->{qualifiers} } @annotations;
 
 my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
 my $allele_select_url = $curs_root_uri . '/annotation/allele_select/';
-
-my $admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
 
 my $state = $st->{state};
 
