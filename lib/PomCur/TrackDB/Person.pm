@@ -37,6 +37,11 @@ __PACKAGE__->table("person");
   data_type: 'text'
   is_nullable: 0
 
+=head2 known_as
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 email_address
 
   data_type: 'text'
@@ -76,6 +81,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
   { data_type => "text", is_nullable => 0 },
+  "known_as",
+  { data_type => "text", is_nullable => 1 },
   "email_address",
   { data_type => "text", is_nullable => 0 },
   "role",
@@ -199,8 +206,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-14 13:52:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NJivh47mcBkEUsHGQ1KBQQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-08-16 00:57:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Kx4xSVGFe9U8PX4l9h6vTA
 
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
