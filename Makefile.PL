@@ -49,7 +49,7 @@ requires 'Data::Dumper';
 requires 'Data::JavaScript::Anon';
 requires 'Data::Rmap';
 requires 'Email::Sender';
-requires 'Email::MIME'
+requires 'Email::MIME';
 requires 'Email::Simple';
 requires 'File::Basename';
 requires 'File::Copy::Recursive';
