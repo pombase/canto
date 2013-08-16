@@ -43,6 +43,7 @@ view_options:
 email:
   from_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
   admin_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
+  noreply_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
   templates:
     session_accepted:
       subject: "email_templates/generic/session_accepted_subject.mhtml"

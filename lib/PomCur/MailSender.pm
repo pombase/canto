@@ -140,6 +140,7 @@ sub send_to_admin
   }
 
   $self->send(to => $admin_address,
+              from => $email_config->{noreply_address},
               subject => $subject,
               body => $body);
 }
