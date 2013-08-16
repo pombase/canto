@@ -11,6 +11,9 @@ $default_person => undef
       Name: <input class="curs-person-picker-add-name" name="person-picker-add-name" size="30"/>
     </div>
     <div>
+      Known as: <input class="curs-person-picker-add-knownas" name="person-picker-add-knownas" size="30"/>
+    </div>
+    <div>
       Email: <input class="curs-person-picker-add-email" name="person-picker-add-email" size="30"/>
     </div>
     <input type="submit" name="cancel" class="curs-person-picker-add-cancel curs-dialog-cancel" value="Cancel"/>
