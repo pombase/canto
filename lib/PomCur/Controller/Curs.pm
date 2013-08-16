@@ -56,6 +56,7 @@ use PomCur::Curs::MetadataStorer;
 use PomCur::MailSender;
 use PomCur::EmailUtil;
 use PomCur::Curs::State;
+use PomCur::Util qw(trim);
 
 use constant {
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
@@ -991,7 +992,7 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
 
   my $extension = $params->{'ferret-quick-add-extension'};
 
-  $extension = _trim($extension);
+  $extension = trim($extension);
 
   if (length $extension > 0) {
     $annotation_data{annotation_extension} = $extension;
@@ -1150,8 +1151,8 @@ sub annotation_ontology_edit
       my $suggested_definition =
         $form->param_value('ferret-suggest-definition');
 
-      $suggested_name = _trim($suggested_name);
-      $suggested_definition = _trim($suggested_definition);
+      $suggested_name = trim($suggested_name);
+      $suggested_definition = trim($suggested_definition);
 
       $annotation_data{term_suggestion} = {
         name => $suggested_name,
@@ -1707,16 +1708,6 @@ sub _allele_add_action_internal
   return $return_allele_data;
 }
 
-sub _trim
-{
-  my $str = shift;
-
-  $str =~ s/\s+$//;
-  $str =~ s/^\s+//;
-
-  return $str;
-}
-
 sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') Args(1)
 {
   my ($self, $c, $annotation_id) = @_;
@@ -1747,7 +1738,7 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
   }
 
   if (defined $allele_name) {
-    $allele_name = _trim($allele_name);
+    $allele_name = trim($allele_name);
   }
 
   my $description = $params->{'curs-allele-description-input'};
@@ -1759,7 +1750,7 @@ sub allele_add_action : Chained('top') PathPart('annotation/add_allele_action') 
     $description = $params->{'curs-allele-type'};
   }
 
-  $description = _trim($description);
+  $description = trim($description);
 
   if (exists $allele_type_config->{pre_store_substitution}) {
     local $_ = $description;
@@ -2588,7 +2579,7 @@ sub finish_form : Chained('top') Args(0)
   if ($form->submitted_and_valid()) {
     if (defined $c->req->params->{Finish}) {
       my $text = $form->param_value($finish_textarea);
-      $text = _trim($text);
+      $text = trim($text);
 
       if (length $text > 0) {
         $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
