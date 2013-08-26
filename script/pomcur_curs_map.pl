@@ -49,6 +49,9 @@ sub usage
   die qq|${message}usage:
   $0 'Perl code'
 or
+  $0 -
+  (to read code from STDIN)
+or
   $0 -h (or --help)
 to get this message
 
@@ -63,6 +66,14 @@ $0 'print \$curs->curs_key(), " ", \$curs_schema->resultset("Gene")->count(), "\
 |;
 }
 
+my $code;
+
+if ($ARGV[0] eq '-') {
+  local $/ = undef;
+  $code = <>;
+} else {
+  $code = $ARGV[0];
+}
 
 my $app_name = PomCur::Config::get_application_name();
 
@@ -83,7 +94,7 @@ my $user_proc = sub {
   my $curs_schema = shift;
   my $track_schema = shift;
 
-  eval $ARGV[0];
+  eval $code;
   if ($@) {
     die "error while executing use code: $@\n";
   }
