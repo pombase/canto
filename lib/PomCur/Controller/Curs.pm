@@ -2944,6 +2944,7 @@ sub _send_email_from_template
   my %args = (
     session_link => $st->{curs_root_uri},
     curator_name => $submitter_name,
+    curator_known_as => $submitter_known_as,
     curator_email => $submitter_email,
     publication_uniquename => $pub->uniquename(),
     publication_title => $pub->title(),
