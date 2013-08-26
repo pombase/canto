@@ -152,7 +152,7 @@ sub get_state
 
   my $curs_key = $self->get_metadata($schema, 'curs_key');
 
-  my ($submitter_email, $submitter_name, $accepted_date) =
+  my ($submitter_email, $submitter_name, $submitter_known_as, $accepted_date) =
     $self->curator_manager()->current_curator($curs_key);
   my $state = undef;
 

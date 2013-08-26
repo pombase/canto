@@ -72,7 +72,8 @@ my $proc = sub {
 
   warn $curs->curs_key(), "\n";
 
-  my ($email, $name, $accepted_date) = $curator_manager->current_curator($curs->curs_key());
+  my ($email, $name, $known_as, $accepted_date) =
+    $curator_manager->current_curator($curs->curs_key());
 
   my ($current_state, $submitter, $gene_count, $datestamp) =
     $state->get_state($curs_schema);

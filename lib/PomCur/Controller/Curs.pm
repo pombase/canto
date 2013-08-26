@@ -1052,6 +1052,7 @@ sub _set_annotation_curator
 
   my $curator_email;
   my $curator_name;
+  my $curator_known_as;
   my $accepted_date;
   my $community_curated;
 
@@ -1060,7 +1061,8 @@ sub _set_annotation_curator
     $curator_name = $self->get_metadata($schema, 'approver_name');
     $curator_email = $self->get_metadata($schema, 'approver_email');
   } else {
-    ($curator_email, $curator_name, $accepted_date, $community_curated) =
+    ($curator_email, $curator_name, $curator_known_as,
+     $accepted_date, $community_curated) =
       $self->curator_manager()->current_curator($curs_key);
   }
 
@@ -2934,7 +2936,7 @@ sub _send_email_from_template
   my $curs_key = $st->{curs_key};
   my $pub = $st->{pub};
 
-  my ($submitter_email, $submitter_name) =
+  my ($submitter_email, $submitter_name, $submitter_known_as) =
     $self->curator_manager()->current_curator($curs_key);
 
   my $help_index = $c->uri_for($config->{help_path});
