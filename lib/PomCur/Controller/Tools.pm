@@ -821,7 +821,7 @@ sub send_session : Local Args(1)
 
   my $curator_manager =
     PomCur::Track::CuratorManager->new(config => $c->config());
-  my ($submitter_email, $submitter_name) =
+  my ($submitter_email, $submitter_name, $submitter_known_as) =
     $curator_manager->current_curator($curs_key);
 
   my $help_index = $c->uri_for($config->{help_path});
@@ -829,6 +829,7 @@ sub send_session : Local Args(1)
   my %args = (
     session_link => $c->uri_for("/curs/$curs_key"),
     curator_name => $submitter_name,
+    curator_known_as => $submitter_known_as,
     publication_uniquename => $pub->uniquename(),
     publication_title => $pub->title(),
     help_index => $help_index,
