@@ -4,11 +4,12 @@ $publication_uniquename
 $publication_title
 $session_link
 $curator_name
+$curator_known_as
 $help_index
 $existing_annotation_count
 $logged_in_user
 </%args>
-Dear <% $curator_name %>,
+Dear <% $curator_known_as // $curator_name %>,
 
 We invite you to contribute annotations based on your recently
 published paper, <% $publication_uniquename %> - 

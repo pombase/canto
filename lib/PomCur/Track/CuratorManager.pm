@@ -77,7 +77,8 @@ sub _get_current_curator_row
  Function: Get the current curator of a curation session.  ie the curator of the
            curs_curator row with the highest curs_curator_id - the most recent.
  Args    : $curs - a TrackDB Curs or a curs_key that will be looked up
- Return  : ($email, $name, $accepted_date, $community_curated) - in an array context
+ Return  : ($email, $name, $known_as, $accepted_date, $community_curated)
+              - in an array context
            $email - in a scalar context
          note: the $accepted_date will be undef if the session hasn't been
                accepted yet
@@ -99,6 +100,7 @@ sub current_curator
     if (wantarray) {
       return ($current_curator->email_address(),
               $current_curator->name(),
+              $current_curator->known_as(),
               $curs_curator_row->accepted_date(),
               defined $current_curator->role() && $current_curator->role()->name() ne 'admin');
     } else {

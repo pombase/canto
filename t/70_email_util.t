@@ -23,6 +23,7 @@ my $pub_title = "A clever paper";
 my $help_url = "http://localhost:5000/docs/";
 my $curator_name = "Val Wood";
 my $curator_email = 'val@example.com';
+my $curator_known_as = 'Dr Val';
 
 my $person_name = 'Logged In Person';
 my $person_email = 'mock_email@example.com';
@@ -37,6 +38,7 @@ my %args = (
   publication_title => $pub_title,
   curator_name => $curator_name,
   curator_email => $curator_email,
+  curator_known_as => $curator_known_as,
   help_index => $help_url,
   logged_in_user => $mock_person,
 );
@@ -55,7 +57,7 @@ is ($from, "$person_name <$person_email>");
 
 like ($subject, qr/publication has been assigned to you/);
 
-ok ($body =~ /Dear $curator_name/);
+ok ($body =~ /Dear $curator_known_as/);
 ok ($body =~ /PMID:10467002/);
 ok ($body =~ /"A clever paper"/);
 ok ($body =~ /$root_url/);
