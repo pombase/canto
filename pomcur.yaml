@@ -886,13 +886,11 @@ class_info:
       editable: 1
       display_field: accession
       field_info_list:
-        - name: db
+        - name: db_id
           editable: 1
         - name: accession
           editable: 1
         - name: description
-          editable: 1
-        - name: cvterm
           editable: 1
     genes:
       extends: feature
