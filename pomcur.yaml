@@ -244,6 +244,11 @@ db_initial_data:
               accession: phylogeny_paper 
               db:
                 name: PomCur
+          - name: Phenotype screen
+            dbxref:
+              accession: phenotype_screen
+              db:
+                name: PomCur
           - name: Other
             definition: >
                 Triage status for a publication that will not be curated for
