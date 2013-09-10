@@ -49,6 +49,7 @@ with 'PomCur::Curs::Role::GeneResultSet';
 use IO::String;
 use Clone qw(clone);
 use Hash::Merge;
+use Carp qw(cluck);
 
 use PomCur::Track;
 use PomCur::Curs::Utils;
@@ -2861,7 +2862,7 @@ sub reactivate_session : Chained('top') Args(0)
 
   my $state = $c->stash()->{state};
 
-  croak "invalid state: $state, when reactivating session"
+  cluck "invalid state: $state, when reactivating session"
     unless $state eq NEEDS_APPROVAL or $state eq APPROVED;
 
   $self->state()->set_state($schema, CURATION_IN_PROGRESS,
