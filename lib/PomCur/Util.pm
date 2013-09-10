@@ -37,7 +37,9 @@ under the same terms as Perl itself.
 
 use strict;
 use warnings;
-use Moose;
+use Exporter qw(import);
+
+our @EXPORT_OK = qw(trim);
 
 my $iso_date_template = "%4d-%02d-%02d";
 
@@ -53,6 +55,25 @@ sub get_current_datetime
   my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time);
   return sprintf "$iso_date_template %02d:%02d:%02d",
     1900+$year, $mon+1, $mday, $hour, $min, $sec;
+}
+
+=head2 trim
+
+ Usage   : my $trimmed_string = PomCur::
+ Function:
+ Args    :
+ Return  :
+
+=cut
+
+sub trim
+{
+  my $str = shift;
+
+  $str =~ s/\s+$//;
+  $str =~ s/^\s+//;
+
+  return $str;
 }
 
 1;

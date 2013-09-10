@@ -135,10 +135,14 @@ sub load
   my $admin_cvterm = $self->load_util()->get_cvterm(cv => $cv,
                                                     term_name => 'admin');
 
+  # get_person() creates the person if not found
   $self->load_util()->get_person('Val Wood', 'val@sanger.ac.uk',
-                                             $admin_cvterm);
-  $self->load_util()->get_person('Midori Harris', 'mah79@cam.ac.uk',
                                  $admin_cvterm);
+  my $dr_harris =
+    $self->load_util()->get_person('Midori Harris', 'mah79@cam.ac.uk',
+                                   $admin_cvterm);
+  $dr_harris->known_as("Dr Harris");
+  $dr_harris->update();
 
   $self->load_util()->get_person('Antonia Nilsson', 'a.nilsson@warwick.ac.uk',
                                  $admin_cvterm);

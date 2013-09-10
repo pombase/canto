@@ -113,7 +113,7 @@ sub set_db_version
     $schema_version_row->value($new_version);
     $schema_version_row->update();
   } else {
-    die "can't upgrade schema_version: $current_db_version\n";
+    die "can't upgrade schema_version from $current_db_version to $new_version\n";
   }
 }
 

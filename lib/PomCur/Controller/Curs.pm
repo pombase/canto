@@ -51,6 +51,7 @@ use Clone qw(clone);
 use Hash::Merge;
 use JSON;
 use List::MoreUtils;
+use Carp qw(cluck);
 
 use PomCur::Track;
 use PomCur::Curs::Utils;
@@ -58,6 +59,7 @@ use PomCur::Curs::MetadataStorer;
 use PomCur::MailSender;
 use PomCur::EmailUtil;
 use PomCur::Curs::State;
+use PomCur::Util qw(trim);
 
 use constant {
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
@@ -990,7 +992,7 @@ sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(
 
   my $extension = $params->{'ferret-quick-add-extension'};
 
-  $extension = _trim($extension);
+  $extension = trim($extension);
 
   if (length $extension > 0) {
     $annotation_data{annotation_extension} = $extension;
@@ -1050,6 +1052,7 @@ sub _set_annotation_curator
 
   my $curator_email;
   my $curator_name;
+  my $curator_known_as;
   my $accepted_date;
   my $community_curated;
 
@@ -1058,7 +1061,8 @@ sub _set_annotation_curator
     $curator_name = $self->get_metadata($schema, 'approver_name');
     $curator_email = $self->get_metadata($schema, 'approver_email');
   } else {
-    ($curator_email, $curator_name, $accepted_date, $community_curated) =
+    ($curator_email, $curator_name, $curator_known_as,
+     $accepted_date, $community_curated) =
       $self->curator_manager()->current_curator($curs_key);
   }
 
@@ -1243,8 +1247,8 @@ sub annotation_ontology_edit
       my $suggested_definition =
         $form->param_value('ferret-suggest-definition');
 
-      $suggested_name = _trim($suggested_name);
-      $suggested_definition = _trim($suggested_definition);
+      $suggested_name = trim($suggested_name);
+      $suggested_definition = trim($suggested_definition);
 
       $annotation_data{term_suggestion} = {
         name => $suggested_name,
@@ -1849,7 +1853,7 @@ sub allele_add_action : Chained('annotation') PathPart('add_allele_action')
   }
 
   if (defined $allele_name) {
-    $allele_name = _trim($allele_name);
+    $allele_name = trim($allele_name);
   }
 
   my $description = $params->{'curs-allele-description-input'};
@@ -1861,7 +1865,7 @@ sub allele_add_action : Chained('annotation') PathPart('add_allele_action')
     $description = $params->{'curs-allele-type'};
   }
 
-  $description = _trim($description);
+  $description = trim($description);
 
   if (exists $allele_type_config->{pre_store_substitution}) {
     local $_ = $description;
@@ -2795,7 +2799,7 @@ sub finish_form : Chained('top') Args(0)
   if ($form->submitted_and_valid()) {
     if (defined $c->req->params->{Finish}) {
       my $text = $form->param_value($finish_textarea);
-      $text = _trim($text);
+      $text = trim($text);
 
       if (length $text > 0) {
         $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
@@ -3075,7 +3079,7 @@ sub reactivate_session : Chained('top') Args(0)
 
   my $state = $c->stash()->{state};
 
-  croak "invalid state: $state, when reactivating session"
+  cluck "invalid state: $state, when reactivating session"
     unless $state eq NEEDS_APPROVAL or $state eq APPROVED;
 
   $self->state()->set_state($schema, CURATION_IN_PROGRESS,
@@ -3150,7 +3154,7 @@ sub _send_email_from_template
   my $curs_key = $st->{curs_key};
   my $pub = $st->{pub};
 
-  my ($submitter_email, $submitter_name) =
+  my ($submitter_email, $submitter_name, $submitter_known_as) =
     $self->curator_manager()->current_curator($curs_key);
 
   my $help_index = $c->uri_for($config->{help_path});
@@ -3158,6 +3162,7 @@ sub _send_email_from_template
   my %args = (
     session_link => $st->{curs_root_uri},
     curator_name => $submitter_name,
+    curator_known_as => $submitter_known_as,
     curator_email => $submitter_email,
     publication_uniquename => $pub->uniquename(),
     publication_title => $pub->title(),

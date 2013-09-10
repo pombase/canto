@@ -80,7 +80,10 @@ sub _process_template
            %args - parameters that can be use in the templates:
                     - track_schema - a TrackDB object
                     - session_link - full URL of the session
-                    - curator_name - the user currently curating that session
+                    - curator_name - the name of the user currently curating
+                                     the session
+                    - curator_known_as - how to address the user, eg. "Dr Smith"
+                                         (could be undef)
                     - curator_email - the email of the user - the recipient of
                                       this email
                     - reassigner_name - for the "reassigner" template, the name

@@ -13,6 +13,7 @@ use Try::Tiny;
 use PomCur::MailSender;
 use PomCur::Export::CantoJSON;
 use PomCur::Export::TabZip;
+use PomCur::Util qw(trim);
 
 use Moose;
 
@@ -607,8 +608,9 @@ sub add_person : Local Args(0)
   my $user_cvterm = $load_util->get_cvterm(cv_name => 'PomCur user types',
                                            term_name => 'user');
 
-  my $name = $c->req()->param('person-picker-add-name');
-  my $email = $c->req()->param('person-picker-add-email');
+  my $name = trim($c->req()->param('person-picker-add-name'));
+  my $known_as = trim($c->req()->param('person-picker-add-knownas'));
+  my $email = trim($c->req()->param('person-picker-add-email'));
 
   my $result = { };
 
@@ -626,12 +628,16 @@ sub add_person : Local Args(0)
           });
 
           if ($person_rs->count() == 0) {
-            $person = $track_schema->create_with_type('Person',
-                                                      {
-                                                        name => $name,
-                                                        email_address => $email,
-                                                        role => $user_cvterm,
-                                                      });
+            my %create_args = (
+              name => $name,
+              known_as => $known_as,
+              email_address => $email,
+              role => $user_cvterm,
+            );
+            if (defined $known_as && $known_as !~ /^\s$/) {
+              $create_args{known_as} = $known_as;
+            }
+            $person = $track_schema->create_with_type('Person', \%create_args);
           } else {
             $result->{error_message} =
               qq(There is already a person named "$name" in the database.  $name ) .
@@ -815,7 +821,7 @@ sub send_session : Local Args(1)
 
   my $curator_manager =
     PomCur::Track::CuratorManager->new(config => $c->config());
-  my ($submitter_email, $submitter_name) =
+  my ($submitter_email, $submitter_name, $submitter_known_as) =
     $curator_manager->current_curator($curs_key);
 
   my $help_index = $c->uri_for($config->{help_path});
@@ -823,6 +829,7 @@ sub send_session : Local Args(1)
   my %args = (
     session_link => $c->uri_for("/curs/$curs_key"),
     curator_name => $submitter_name,
+    curator_known_as => $submitter_known_as,
     publication_uniquename => $pub->uniquename(),
     publication_title => $pub->title(),
     help_index => $help_index,

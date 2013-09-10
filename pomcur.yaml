@@ -7,7 +7,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v648
+app_version: v655
 
 schema_version: 2
 
@@ -43,6 +43,7 @@ view_options:
 email:
   from_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
   admin_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
+  noreply_address: CONFIGURE_ME_IN_POMCUR_DEPLOY.YAML
   templates:
     session_accepted:
       subject: "email_templates/generic/session_accepted_subject.mhtml"
@@ -241,6 +242,11 @@ db_initial_data:
           - name: Phylogeny and evolutionary studies
             dbxref:
               accession: phylogeny_paper 
+              db:
+                name: PomCur
+          - name: Phenotype screen
+            dbxref:
+              accession: phenotype_screen
               db:
                 name: PomCur
           - name: Other
@@ -452,6 +458,8 @@ class_info:
       field_info_list:
         - name: name
           source: name
+          editable: 1
+        - name: known_as
           editable: 1
         - name: Email address
           source: email_address
@@ -878,13 +886,11 @@ class_info:
       editable: 1
       display_field: accession
       field_info_list:
-        - name: db
+        - name: db_id
           editable: 1
         - name: accession
           editable: 1
         - name: description
-          editable: 1
-        - name: cvterm
           editable: 1
     genes:
       extends: feature
