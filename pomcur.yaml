@@ -475,8 +475,6 @@ class_info:
         - name: password
           editable: 1
           admin_only: 1
-        - name: lab
-          editable: 1
     lab:
       editable: 1
       display_field: name
