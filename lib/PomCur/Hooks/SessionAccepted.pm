@@ -60,23 +60,7 @@ sub set_pub_community_curatable
   my $role = $curator->role();
 
   if (!defined $role || $role->name() ne 'admin') {
-    my $community_curatable_cvterm =
-      $track_schema->resultset('Cvterm')->find({ name => "community_curatable" });
-    my $pub = $curs->pub();
-    my $prop_rs = $pub->pubprops()->search({
-      type_id => $community_curatable_cvterm->cvterm_id(),
-    });
-
-    if ($prop_rs->count() > 0) {
-      $prop_rs->delete();
-    }
-
-    $track_schema->create_with_type('Pubprop',
-                                    {
-                                      type_id => $community_curatable_cvterm->cvterm_id(),
-                                      value => 'yes',
-                                      pub_id => $pub->pub_id(),
-                                    });
+    $curs->pub()->set_community_curatable();
   }
 }
 

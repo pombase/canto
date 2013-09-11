@@ -426,7 +426,7 @@ sub start : Local Args(1) {
                                          curs_key => $curs_key,
                                        });
 
-  PomCur::Track::create_curs_db($config, $curs);
+  PomCur::Track::create_curs_db($config, $curs, $c->user());
   my $session_uri = $c->uri_for("/curs/$curs_key");
 
   $c->res->redirect($session_uri);
@@ -460,7 +460,7 @@ sub pub_session : Local Args(1) {
                                          pub => $pub,
                                          curs_key => $curs_key,
                                        });
-    my $curs_schema = PomCur::Track::create_curs_db($config, $curs);
+    my $curs_schema = PomCur::Track::create_curs_db($config, $curs, $c->user());
   }
 
   $c->res->redirect($c->uri_for("/curs/" . $curs->curs_key()));
@@ -712,7 +712,7 @@ sub create_session : Local Args(0)
       curs_key => PomCur::Curs::make_curs_key(),
     );
     my $curs = $track_schema->create_with_type('Curs', { %create_args });
-    my ($curs_schema) = PomCur::Track::create_curs_db($c->config(), $curs, $admin_session);
+    my ($curs_schema) = PomCur::Track::create_curs_db($c->config(), $curs, $c->user());
 
     my $curator_name = $person->name();
     my $curator_email = $person->email_address();

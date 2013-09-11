@@ -91,8 +91,8 @@ sub create_curs
            to create the database (file)name.
  Args    : $config - the Config object
            $curs - the Curs object
-           $admin_session - if true the curator is assumed to be an
-                            admin user so the "Curator details" page is skipped
+           $current_user - the current logged in user (or undef if no one is
+                           logged in)
  Returns : ($curs_schema, $cursdb_file_name) - A CursDB object for the new db,
            and its file name - die()s on failure
 
@@ -101,7 +101,7 @@ sub create_curs_db
 {
   my $config = shift;
   my $curs = shift;
-  my $admin_session = shift // 0;
+  my $current_user = shift;
 
   if (!defined $curs) {
     croak "No Curs object passed";
@@ -133,8 +133,12 @@ sub create_curs_db
                                      abstract => $track_db_pub->abstract(),
                                    });
 
-  if ($admin_session) {
+  my $pub = $curs->pub();
+
+  if (defined $current_user && $current_user->is_admin()) {
     __PACKAGE__->set_metadata($curs_schema, 'admin_session', 1);
+  } else {
+    $pub->set_community_curatable();
   }
 
   # the calling function will wrap this in a transaction if necessary
@@ -153,8 +157,6 @@ sub create_curs_db
   if (!defined $curatable_cvterm) {
     croak "Can't find Cvterm with name '$curatable_name'";
   }
-
-  my $pub = $curs->pub();
 
   $pub->triage_status($curatable_cvterm);
   $pub->update();
@@ -179,7 +181,7 @@ sub create_curs_db_hook
   my $c = shift;
   my $curs = shift;
 
-  create_curs_db($c->config(), $curs);
+  create_curs_db($c->config(), $curs, $c->user());
 }
 
 =head2

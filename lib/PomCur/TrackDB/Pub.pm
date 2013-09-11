@@ -375,6 +375,40 @@ sub not_exported_curs
   return $curs_rs->search({}, { where => \$where });
 }
 
+=head2
+
+ Usage   : $pub->set_community_curatable();
+ Function: flag this publication as community curatable by adding a pubprop
+ Args    : none
+ Return  : nothing - dies on failure
+
+=cut
+
+sub set_community_curatable
+{
+  my $self = shift;
+
+  my $schema = $self->result_source()->schema();
+
+  my $community_curatable_cvterm =
+    $schema->resultset('Cvterm')->find({ name => "community_curatable" });
+
+  my $prop_rs = $self->pubprops()->search({
+    type_id => $community_curatable_cvterm->cvterm_id(),
+  });
+
+  if ($prop_rs->count() > 0) {
+    $prop_rs->delete();
+  }
+
+  $schema->create_with_type('Pubprop',
+                            {
+                              type_id => $community_curatable_cvterm->cvterm_id(),
+                              value => 'yes',
+                              pub_id => $self->pub_id(),
+                            });
+}
+
 # You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;
