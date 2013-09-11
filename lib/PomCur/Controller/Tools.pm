@@ -655,11 +655,6 @@ sub add_person : Local Args(0)
     }
   }
 
-  use Data::Dumper;
-$Data::Dumper::Maxdepth = 2;
-warn Dumper([$result]);
-
-
   $c->stash->{json_data} = $result;
   $c->forward('View::JSON');
 }
