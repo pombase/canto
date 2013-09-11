@@ -66,7 +66,7 @@ a:link:active { text-decoration:none }
 
 .canto-front-page .footer .sponsor {
   float: right;
-  margin-top:20px;
+  padding-top: 3.5em;
   padding-right: 25px;
   padding-left: 25px;
   padding-bottom: 25px;
