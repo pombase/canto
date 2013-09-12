@@ -84,7 +84,7 @@ available from Github.
 </div>
 
 <div class="row footer">
-<div class="span6">
+<div class="span8">
 <h3>Acknowledgements</h3>
 <p>
 Canto is developed as part of the PomBase project, which provides a model
@@ -96,7 +96,7 @@ of Cambridge</a>, the <a href="http://www.ebi.ac.uk/">European
 Bioinformatics Institute</a> and <a href="http://www.ucl.ac.uk/">University College London</a>.
 </p>
 </div>
-<div class="span6">
+<div class="span4">
   <& ../sponsor_logos.mhtml &>
 </div>
 </div>

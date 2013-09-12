@@ -41,7 +41,7 @@ a:link:active { text-decoration:none }
   line-height: 1.8ex;
 }
 .canto-front-page .footer p {
-  font-size: 9pt;
+  font-size: 0.8em;
   line-height: 2.2ex;
 }
 .docs, #content {
@@ -130,8 +130,7 @@ div#footer {
 div#footer .sponsor, .canto-front-page .footer .sponsor {
   float: right;
   padding-top: 3.5em;
-  padding-right: 25px;
-  padding-left: 25px;
+  padding-left: 20px;
   padding-bottom: 25px;
 }
 
