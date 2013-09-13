@@ -409,7 +409,7 @@ my $needs_allele = $annotation_type->{needs_allele};
 
 my $some_row_has_term_suggestion = grep { $_->{term_suggestion} } @annotations;
 my $some_row_has_comment = grep { $_->{comment} } @annotations;
-my $some_row_has_qualifer = grep { $_->{qualifiers} } @annotations;
+my $some_row_has_qualifer = grep { $_->{qualifiers} || $_->{is_not}} @annotations;
 
 my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
 my $allele_select_url = $curs_root_uri . '/annotation/allele_select/';
