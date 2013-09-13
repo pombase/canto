@@ -44,7 +44,7 @@ $view_only => 0
   <tr class="<% $row->{status} eq 'deleted' ? 'deleted-annotation' : '' %>">
     <td>
       <span>
-% if ($user_created) {
+% if ($user_created && !$view_only) {
       <a href="<% $curs_root_uri . '/gene/' . $row->{gene_id} %>"><% $row->{gene_display_name} %></a>
 % } else {
       <% $row->{gene_display_name} %>
