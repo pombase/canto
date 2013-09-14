@@ -708,6 +708,10 @@ class_info:
       class_display_name: Other
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Other')"
+    triage_phenotype_screen_publications:
+      class_display_name: Phenotype screen
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Phenotype screen')"
     triage_review_or_comment_publications:
       class_display_name: Review or comment
       extends: pub
@@ -953,6 +957,7 @@ reports:
                 - report: triage_phylogeny_paper_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
+                - report: triage_phenotype_screen_publications:
         - report: publications_without_corresponding_author
     - report: all_sessions
       children:
