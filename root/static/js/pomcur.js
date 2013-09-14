@@ -1360,7 +1360,7 @@ var AlleleStuff = function($) {
             $.grep(
               existing_alleles_by_name,
               function(el) {
-                return typeof(el.value) !== 'undefined' && el.value.indexOf(request.term) == 0;
+                return typeof(el.value) !== 'undefined' && el.value.toLowerCase().indexOf(request.term.toLowerCase()) == 0;
               })
             .concat($.map(
             data,
