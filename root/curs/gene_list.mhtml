@@ -9,12 +9,17 @@ $pub
 % if ($read_only_curs) {
 Genes from this publication
 % } else {
-Choose a gene to annotate:
+Gene list
 % }
     <& /curs/inline_help.mhtml, key => 'choose_gene' &>
     </div>
   </div>
   <div class="curs-box-body">
+% if (!$read_only_curs) {
+   <div class="gene-list-instructions">
+Click on a gene name to start entering data
+   </div>
+% }
 % if (@gene_hashes) {
   <table>
 %   for (my $y = 0; $y < $row_max; $y++) {

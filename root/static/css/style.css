@@ -573,6 +573,11 @@ div.clearall {
   margin: 10px;
 }
 
+.gene-list .gene-list-instructions {
+  font-size: 95%;
+  margin-bottom: 10px;
+}
+
 .gene-list .view-edit {
   font-size: 85%;
   margin: 12px 2px 0px 2px;
