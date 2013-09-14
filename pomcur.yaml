@@ -957,7 +957,7 @@ reports:
                 - report: triage_phylogeny_paper_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
-                - report: triage_phenotype_screen_publications:
+                - report: triage_phenotype_screen_publications
         - report: publications_without_corresponding_author
     - report: all_sessions
       children:
