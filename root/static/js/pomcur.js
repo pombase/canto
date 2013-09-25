@@ -1357,21 +1357,22 @@ var AlleleStuff = function($) {
         dataType: 'json',
         success: function(data) {
           var results =
-            $.grep(
-              existing_alleles_by_name,
-              function(el) {
-                return typeof(el.value) !== 'undefined' && el.value.toLowerCase().indexOf(request.term.toLowerCase()) == 0;
-              })
-            .concat($.map(
-            data,
-            function(el) {
-              return {
-                value: el.name,
-                display_name: el.display_name,
-                description: el.description,
-                allele_type: el.allele_type
-              }
-            }));
+              $.grep(
+                existing_alleles_by_name,
+                function(el) {
+                  return typeof(el.value) !== 'undefined' &&
+                    el.value.toLowerCase().indexOf(request.term.toLowerCase()) == 0;
+                })
+              .concat($.map(
+                data,
+                function(el) {
+                  return {
+                    value: el.name,
+                    display_name: el.display_name,
+                    description: el.description,
+                    allele_type: el.allele_type
+                  }
+                }));
           response(results);
         },
         async: true
