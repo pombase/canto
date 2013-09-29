@@ -2149,6 +2149,9 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
   $st->{annotation_type} = $annotation_config;
   $st->{annotations} = \@annotations;
+  $st->{annotation_comment_help_text} = [
+    split /\n/, ($annotation_config->{annotation_comment_help_text} // '')
+  ];
 
   my $module_category = $annotation_config->{category};
 

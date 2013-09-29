@@ -3,6 +3,7 @@ $curs_root_uri
 @annotations
 $form
 $pub
+$annotation_comment_help_text
 </%args>
 
 <div id="curs-ontology-transfer">
@@ -31,6 +32,11 @@ $pub
       </div>
 
 <p style="width: 80%">
+% if (@annotation_comment_help_text) {
+%   for my $paragraph (@annotation_comment_help_text) {
+<% $paragraph %><br/>
+%   }
+% } else {
 If you have any additional information that you 
 haven't been able to represent using the ontology term and evidence please add
 a comment. For 
@@ -41,6 +47,7 @@ residues for a modification, etc. The curators may be able to capture this
 additional information in an "annotation extension". You can also include 
 the figure or table number that shows the results on which this annotation 
 is based.
+% }
 </p>
 
 <% $form |n %>
@@ -74,4 +81,6 @@ my $gene_count = $c->stash()->{schema}->resultset('Gene')->count();
 my $is_admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
 
 my $force_comment_edit = @annotations != 1;
+
+my @annotation_comment_help_text = @{$annotation_comment_help_text};
 </%init>
