@@ -1248,7 +1248,7 @@ available_annotation_type_list:
     annotation_comment_help_text: |
       Please provide any additional details you have about this process, such as:
       i) Direct or indirect targets of the process, such as gene targets of transcriptional or translational regulation, protein targets of a localisation process, etc.
-      ii) The period or phase (e.g. during S phase; during sporulation) when
+      ii) The period or phase (e.g. during S phase; during sporulation) when the gene product acts in the process
   - name: cellular_component
     category: ontology
     abbreviation: C
