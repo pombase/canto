@@ -1211,6 +1211,7 @@ available_annotation_type_list:
       i) Substrates, such as a protein modified by a kinase or phosphatase, or a DNA or RNA binding site
       ii) Direct or indirect regulatory targets, such as genes regulated by a transcription factor
       iii) The period or phase (e.g. during S phase; during sporulation) when the activity exists
+      The curators will record this additional information in PomBase.
   - name: biological_process
     category: ontology
     abbreviation: P
@@ -1249,6 +1250,7 @@ available_annotation_type_list:
       Please provide any additional details you have about this process, such as:
       i) Direct or indirect targets of the process, such as gene targets of transcriptional or translational regulation, protein targets of a localisation process, etc.
       ii) The period or phase (e.g. during S phase; during sporulation) when the gene product acts in the process
+      The curators will record this additional information in PomBase.
   - name: cellular_component
     category: ontology
     abbreviation: C
@@ -1280,6 +1282,7 @@ available_annotation_type_list:
       Please provide any additional details you have, such as:
       i) Any other protein, substance or modification required for this localisation
       ii) The period or phase (e.g. during S phase; during sporulation) when the localisation is observed
+      The curators will record this additional information in PomBase.
   - name: phenotype
     needs_allele: 1
     gene_cardinality: one_or_more  # default is "one"
@@ -1330,6 +1333,7 @@ available_annotation_type_list:
       Please provide any additional details you have, such as:
       i) Genes or proteins used in the assay (especially for phenotypes that affect protein or RNA level, or protein localization)
       ii) Penetrance or severity of the phenotype
+      The curators will record this additional information in PomBase.
   - name: post_translational_modification
     category: ontology
     namespace: PSI-MOD
@@ -1352,6 +1356,7 @@ available_annotation_type_list:
       ii) The period or phase (e.g. during S phase; during sporulation) when the modification is observed, added or removed
       iii) Any process for which the modification is required
       iv) The residue(s) modified
+      The curators will record this additional information in PomBase.
   - name: genetic_interaction
     category: interaction
     display_name: 'genetic interaction'
