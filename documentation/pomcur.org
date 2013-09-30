@@ -242,7 +242,14 @@ POMCUR_CONFIG_LOCAL_SUFFIX=local PERL5LIB=lib ./script/pomcur_server.pl -p 5000 
    "5000" is the local port to connect on.  The server should then be
    available at http://localhost:5000/
 
-* Config
+* Contact
+For questions or help please contact helpdesk@pombase.org or kim@pombase.org.
+
+Requests of new features can be made by email or by adding an issue here:
+  https://github.com/pombase/canto/issues
+
+
+
 ###+INFOJS_OPT: view:content toc:t ltoc:t mouse:#dddddd
 #+OPTIONS:     H:5
 #+STYLE: <style type="text/css">  html { font-family: Times, serif; font-size: 16pt; }</style>
