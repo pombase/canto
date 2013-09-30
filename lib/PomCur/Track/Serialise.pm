@@ -81,10 +81,23 @@ sub _get_curation_sessions
       my $props = _get_cursprops($curs);
 
       for my $prop_data (@$props) {
-        if (exists $data->{$prop_data->{type}}) {
-          die "attempted to overwritten data from curs with: ", $prop_data->{type};
+        my $prop_type = $prop_data->{type};
+
+        if (exists $data->{metadata}->{$prop_type}) {
+          my $new = $prop_data->{value};
+
+          if ($prop_type =~ /_date$/ &&
+              $data->{metadata}->{$prop_type} =~ /^\d\d\d\d-\d\d-\d\d/ &&
+              ($data->{metadata}->{$prop_type} cmp $new) < 0) {
+            # use the most recent date
+            $data->{metadata}->{$prop_type} = $new;
+          } else {
+            if ($data->{metadata}->{$prop_type} ne $new) {
+              die "attempted to overwrite data from curs with: ", $prop_data->{type};
+            }
+          }
         } else {
-          $data->{$prop_data->{type}} = $prop_data->{value};
+          $data->{metadata}->{$prop_type} = $prop_data->{value};
         }
       }
     }
