@@ -1,8 +1,8 @@
-PomCur installation and maintainence.
+Canto installation and maintainence.
 
 * Introduction
-  PomCur is a generic gene annotation tool with a focus on community curation.
-  This document describes PomCur from the adminstrators perspective.
+  Canto is a generic gene annotation tool with a focus on community curation.
+  This document describes Canto from the adminstrators perspective.
 * Requirements
   - Linux, BSD or UNIX
   - Perl, clucene
@@ -10,7 +10,7 @@ PomCur installation and maintainence.
   Currently the easiest way to get the code is via GitHub.  Run this command
   to get a copy of the code:
 #+BEGIN_SRC sh
-  git clone git://github.com/kimrutherford/pomcur.git pomcur
+  git clone https://github.com/pombase/canto.git
 #+END_SRC
   This creates a directory called "=pomcur=".  The directory can be updated
   later with the command:
@@ -100,7 +100,7 @@ make
      The maximum number of lines of results to show in a table on an object
      page.
 *** db_initial_data
-    Data needed to initialise a PomCur instance.
+    Data needed to initialise a Canto instance.
 *** class_info
     Descriptions of table in the database used by the interface.  This
     information is used for rendering the view and object pages.
@@ -111,7 +111,7 @@ make
 *** load
     Configuration for loading data.
 *** track_db_template_file
-    The template database to use when creating a new PomCur instance.
+    The template database to use when creating a new Canto instance.
 *** curs_db_template_file
     The template database to use when creating a new curation session.
 *** ontology_index_dir
@@ -124,7 +124,7 @@ make
     allows the implementations to be swapped from the defaults.
 **** gene_adaptor
      Used to lookup gene identifier, name, synonyms and products.  The default
-     is to use the internal PomCur database ("track").
+     is to use the internal Canto database ("track").
 *** evidence_types
      Short name (codes) and long names of evidence types.  Any evidence type
      configured with the option "with_gene" set to true will cause the
@@ -134,7 +134,7 @@ make
     :PROPERTIES:
     :ID:       7e618d95-78e6-4445-b7b4-52665fa723ea
     :END:
-    Configuration of the type of annotations possible in this PomCur instance.
+    Configuration of the type of annotations possible in this Canto instance.
 **** name
      The identifier for this annotation type, used internally and in URLs.
 **** category
@@ -190,7 +190,7 @@ The ontology must be [[id:3069044b-4da1-420c-8246-c01d7fd1e35e][configured]] in 
 ** Databases
 ** Database structure
 ** Code
-   PomCur is written in Perl, implemented using the Catalyst framework and
+   Canto is written in Perl, implemented using the Catalyst framework and
    running on a Plack server.
 ** Autocomplete searching
    - implemented using CLucene
@@ -199,7 +199,7 @@ The ontology must be [[id:3069044b-4da1-420c-8246-c01d7fd1e35e][configured]] in 
    - the term names are passed to CLucene for indexing
    - all words appearing in the name or synonyms are joined into one string
      for separate indexing by CLucene
-* Developing PomCur
+* Developing Canto
 ** Running tests
    :PROPERTIES:
    :ID:       7e75cddc-b9b9-410b-ac68-8900457483ad
@@ -210,8 +210,8 @@ The ontology must be [[id:3069044b-4da1-420c-8246-c01d7fd1e35e][configured]] in 
 ** Helper scripts
    Scripts to help developers:
    - =etc/db_initialise.pl= :: create empty template database from the schemas
-        and recreate the database classes in lib/PomCur/TrackDB and
-        lib/PomCur/CursDB
+        and recreate the database classes in lib/Canto/TrackDB and
+        lib/Canto/CursDB
    - =etc/test_data_initialise.pl= :: re-create test data files that don't change
         very often.  eg. the test PubMed XML file.  Currently this script only
         needs to be run if the list of publications for the test database
@@ -219,7 +219,7 @@ The ontology must be [[id:3069044b-4da1-420c-8246-c01d7fd1e35e][configured]] in 
    - =etc/test_initialise.pl= :: initialise the test databases in t/data with
         a small number of genes and a mini version of the Gene Ontology
         database
-   - =etc/local_initialise.pl= :: create a test instance of PomCur in ./local
+   - =etc/local_initialise.pl= :: create a test instance of Canto in ./local
 ** Initialising test data
    :PROPERTIES:
    :ID:       5867435c-b002-4c97-b912-1cf0d5167100
@@ -233,7 +233,7 @@ The ontology must be [[id:3069044b-4da1-420c-8246-c01d7fd1e35e][configured]] in 
 
    That will need to be done each time the schemas or test data change.
 
-   To create a local test instance of PomCur, run =local_initialise.pl=
+   To create a local test instance of Canto, run =local_initialise.pl=
 ** Running the test instance
    The server can be run from the top level directory with this command:
 #+BEGIN_SRC sh
