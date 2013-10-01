@@ -120,7 +120,7 @@ $return_pub_id
       </div>
       <div class="sect triage-comment">
         <span class="sect-title">
-          Trage comment:
+          Triage comment:
         </span>
         <div class="sect-content">
 <textarea cols="60" rows="5" name="triage-comment">
