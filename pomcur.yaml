@@ -9,7 +9,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v670
 
-schema_version: 2
+schema_version: 3
 
 # the path that the home link goes to
 instance_front_path: /docs/instance_front
