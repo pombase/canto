@@ -1,18 +1,22 @@
-Canto installation and maintainence.
-
 # Introduction
 Canto is a generic gene annotation tool with a focus on community curation.
 This document describes Canto from the adminstrators perspective.
+
 # Requirements
 - Linux, BSD or UNIX
 - Perl, clucene
+
 # Getting the code
 Currently the easiest way to get the code is via GitHub.  Run this command
 to get a copy of the code:
+
     git clone https://github.com/pombase/canto.git
+
 This creates a directory called "`pomcur`".  The directory can be updated
 later with the command:
+
     git pull
+
 # Installation
 ## Installing basic prerequisites
 ### Debian and Ubuntu
@@ -51,6 +55,8 @@ support:
 
     install Bundle::CPAN
 
+### Install dependencies
+
     perl Makefile.PL
     make
 
@@ -65,7 +71,10 @@ From the in the `pomcur` directory:
    `./script/pomcur_start`
 
 ## Visit the application start page
-http://localhost:5000
+The application should now be running at:
+
+   http://localhost:5000
+
 # Configuration
 ## pomcur.yaml
 ### name
@@ -170,6 +179,7 @@ publications and curation sessions to the database.
 ##### SQLite for main database
 ### Curs - curation sessions
 Each curation session has a cooresponding SQLite database.
+
 ## Databases
 ## Database structure
 ## Code
@@ -187,6 +197,7 @@ running on a Plack server.
 In general the tests can be run with: `make test` in the main pomcur
 directory.  If the schema or test genes or ontologies are is changed the
 test data will need to be re-initialised.
+
 ## Helper scripts
 Scripts to help developers:
 
@@ -224,5 +235,5 @@ available at http://localhost:5000/
 # Contact
 For questions or help please contact helpdesk@pombase.org or kim@pombase.org.
 
-Requests of new features can be made by email or by adding an issue here:
-  https://github.com/pombase/canto/issues
+Requests of new features can be made by email or by adding an issue on the
+[GitHub Canto issue tracker](https://github.com/pombase/canto/issues)
