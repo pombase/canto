@@ -147,7 +147,13 @@ sub schema
 
   eval "require $schema_class_name";
 
-  return $schema_class_name->new(config => $self->config());
+  my $schema = $schema_class_name->new(config => $self->config());
+
+  if ($model_name eq 'track') {
+    PomCur::DBUtil::check_schema_version($config, $schema);
+  }
+
+  return $schema;
 }
 
 =head2 local_path
@@ -205,5 +211,7 @@ around 'uri_for' => sub {
 
   $self->$orig($path, @_);
 };
+
+PomCur::DBUtil::check_schema_version($config, schema(__PACKAGE__, 'track'));
 
 1;

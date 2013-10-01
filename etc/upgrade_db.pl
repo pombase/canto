@@ -43,7 +43,7 @@ my $config = PomCur::Config::get_config();
 my $track_schema = PomCur::TrackDB->new(config => $config,
                                         disable_foreign_keys => 0);
 
-PomCur::DBUtil::set_db_version($track_schema, $new_version);
+PomCur::DBUtil::set_schema_version($track_schema, $new_version);
 
 my $dbh = $track_schema->storage()->dbh();
 

@@ -88,24 +88,31 @@ sub connect_string_file_name
   return $db_file_name;
 }
 
-=head2 set_db_version
+sub _schema_version_rs
+{
+  my $track_schema = shift;
 
- Usage   : PomCur::DBUtil::set_db_version($track_schema, $new_version);
+  return $track_schema->resultset('Metadata')
+    ->search({ 'type.name' => 'schema_version' },
+             { join => 'type' });
+
+}
+
+=head2 set_schema_version
+
+ Usage   : PomCur::DBUtil::set_schema_version($track_schema, $new_version);
  Function: Set the version entry in the metadata table to $new_version,
            which must be one more than the current version
  Return  : nothing or die if the $new_version isn't one more than the current
            version
 
 =cut
-sub set_db_version
+sub set_schema_version
 {
   my $track_schema = shift;
   my $new_version = shift;
 
-  my $schema_version_rs =
-    $track_schema->resultset('Metadata')
-                 ->search({ 'type.name' => 'schema_version' },
-                          { join => 'type' });
+  my $schema_version_rs = _schema_version_rs($track_schema);
   my $current_db_version = $schema_version_rs->first()->value();
 
   if ($current_db_version + 1 == $new_version) {
@@ -114,6 +121,48 @@ sub set_db_version
     $schema_version_row->update();
   } else {
     die "can't upgrade schema_version from $current_db_version to $new_version\n";
+  }
+}
+
+=head2 get_schema_version
+
+ Usage   : my $version = PomCur::DBUtil::get_schema_version($track_schema)
+ Function: Return the schema_version from the metadata table
+ Args    : $track_schema - a TrackDB object
+ Return  : the version
+
+=cut
+
+sub get_schema_version
+{
+  my $track_schema = shift;
+
+  my $schema_version_rs = _schema_version_rs($track_schema);
+  return $schema_version_rs->first()->value();
+}
+
+=head2 check_schema_version
+
+ Usage   : PomCur::DBUtil::check_schema_version($config, $track_schema);
+ Function: Check that the code matches the database schema version.
+ Args    : $config - a PomCur::Config object
+           $track_schema - a TrackDB object
+ Return  : nothing, dies if there is a mismatch
+
+=cut
+
+sub check_schema_version
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my $db_schema_version = get_schema_version($schema);
+  my $config_schema_version = $config->{schema_version};
+
+  if ($config_schema_version != $db_schema_version) {
+    die "Initialisation failed; the database schema version " .
+      "($db_schema_version) doesn't match the version expected by the code " .
+      "($config_schema_version)\n";
   }
 }
 
