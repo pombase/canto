@@ -1,10 +1,11 @@
 # Introduction
-Canto is a generic gene annotation tool with a focus on community curation.
-This document describes Canto from the adminstrators perspective.
+Canto is a generic genome annotation tool with a focus on community curation.
+This document describes Canto from the adminstrators perspective.  It covers
+installation and maintenance.
 
-# Requirements
+# Requirements for Canto
 - Linux, BSD or UNIX
-- Perl, clucene
+- Perl, clucene library
 
 # Getting the code
 Currently the easiest way to get the code is via GitHub.  Run this command
@@ -16,6 +17,9 @@ This creates a directory called "`pomcur`".  The directory can be updated
 later with the command:
 
     git pull
+
+# Virtual machine
+
 
 # Installation
 ## Installing basic prerequisites
@@ -60,39 +64,56 @@ support:
     perl Makefile.PL
     make
 
-# Quick start guide
-## Initialising the data directory
+# Quick start
+To check that all prerequisites are installed and Canto is working correctly: 
+
+## Initialise the data directory
 From the in the `pomcur` directory:
 
-   `./script/pomcur_start --init <some_directory>`
+   mkdir pomcur-test
+   ./script/pomcur_start --init pomcur-test
 
-## Running the server
+## Run the server
 
-   `./script/pomcur_start`
+   ./script/pomcur_start
 
 ## Visit the application start page
 The application should now be running at:
 
    http://localhost:5000
 
+
 # Configuration
 ## pomcur.yaml
+The default configuration is stored in `pomcur.yaml` in the top level
+directory.  Any installation specific settings can be added to
+`pomcur_deploy.yaml`, and will override the defaults.
+
+The configuration files are [YAML format](http://en.wikipedia.org/wiki/YAML).
+
 ### name
-A one word name for the site.
+A one word name for the site.  default: Canto
 ### long_name
-A longer description of the site.
+A longer description of the site.  eg. The SlugBase community annotation tool
 ### database_name
-Database name for prefixing identifiers when exporting.
+Database name for prefixing identifiers when exporting.  eg. PomBase
+### database_url
+The URL of the database that this instance is installed for.  eg.
+http://www.pombase.org
 ### header_image
 A the path relative to `root/static` of the logo to put in the header.
+### canto_url
+The link for the main Canto web site.
 ### app_version
-The software version.
-### home_path
-The path to use for the home link.
+The software version, automatically updated each release.
+### schema_version
+The version of the schema.  This is incremented when the schema changes in an
+incompatible way.
+
 ### authentication
-Configuration for the Catalyst authentication code.
+Configuration for the Catalyst authentication code.  This shouldn't need changing.
 ### view_options
-Configuration for the view.
+Configuration for the admin view pages.
 #### max_inline_results_length
 The maximum number of lines of results to show in a table on an object
 page.
