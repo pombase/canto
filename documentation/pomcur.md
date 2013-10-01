@@ -16,8 +16,9 @@ later with the command:
 # Installation
 ## Installing basic prerequisites
 ### Debian and Ubuntu
-To improve the installation speed, these packages can be installed before
-[running make](#installing other perl modules) in the `pomcur` directory:
+To improve the installation speed, these packages can be installed using the
+package manager before preceeding:
+
     sudo apt-get install perl gcc g++ tar gzip bzip2 make libmodule-install-perl
     sudo apt-get install libhash-merge-perl \
       libhtml-mason-perl libplack-perl libdbix-class-perl \
@@ -34,6 +35,7 @@ To improve the installation speed, these packages can be installed before
 
 
 If installing from the `git` repository, the git executable will be needed:
+
     sudo apt-get install git-core
 
 ### CPAN tip
@@ -55,9 +57,13 @@ support:
 # Quick start guide
 ## Initialising the data directory
 From the in the `pomcur` directory:
+
    `./script/pomcur_start --init <some_directory>`
+
 ## Running the server
+
    `./script/pomcur_start`
+
 ## Visit the application start page
 http://localhost:5000
 # Configuration
@@ -131,9 +137,13 @@ should be used for rendering and storing these annotation type.
 
 ## Loading data
 ### Organisms
+
     ./script/pomcur_load.pl --organism "<genus> <species> <taxon_id>"
+
 ### Gene data
+
     ./script/pomcur_load.pl --genes genes_file.tsv --for-taxon 4896
+
 #### gene data format
 Four tab separated columns with no header line:
 - systematic identifier
@@ -141,9 +151,12 @@ Four tab separated columns with no header line:
 - synonyms (comma separated)
 - product
 ### Ontology terms
+
     ./script/pomcur_load.pl --ontology ontology_file.obo
+
 The ontology must be configured in the [annotation_type_list](#annotation_type_list) section of the
 `pomcur.yaml` file.
+
 # Implementation details
 ## Structure
 There are two parts to the system.
@@ -168,6 +181,7 @@ running on a Plack server.
 - the term names are passed to CLucene for indexing
 - all words appearing in the name or synonyms are joined into one string
   for separate indexing by CLucene
+
 # Developing Canto
 ## Running tests
 In general the tests can be run with: `make test` in the main pomcur
@@ -175,26 +189,30 @@ directory.  If the schema or test genes or ontologies are is changed the
 test data will need to be re-initialised.
 ## Helper scripts
 Scripts to help developers:
-   - `etc/db_initialise.pl` :: create empty template database from the schemas
-     and recreate the database classes in lib/Canto/TrackDB and
-     lib/Canto/CursDB
-   - `etc/test_data_initialise.pl` :: re-create test data files that don't change
-     very often.  eg. the test PubMed XML file.  Currently this script only
-     needs to be run if the list of publications for the test database
-     changes
-   - `etc/test_initialise.pl` :: initialise the test databases in t/data with
-     a small number of genes and a mini version of the Gene Ontology
-     database
-   - `etc/local_initialise.pl` :: create a test instance of Canto in ./local
+
+- `etc/db_initialise.pl` :: create empty template database from the schemas
+  and recreate the database classes in lib/Canto/TrackDB and
+  lib/Canto/CursDB
+- `etc/test_data_initialise.pl` :: re-create test data files that don't change
+  very often.  eg. the test PubMed XML file.  Currently this script only
+  needs to be run if the list of publications for the test database
+  changes
+- `etc/test_initialise.pl` :: initialise the test databases in t/data with
+  a small number of genes and a mini version of the Gene Ontology
+  database
+- `etc/local_initialise.pl` :: create a test instance of Canto in ./local
+
 ## Initialising test data
 Run the following commands in the pomcur directory to create the test
 database and to populate it with test data:
+
     ./etc/db_initialise.pl
     ./etc/test_initialise.pl
 
 That will need to be done each time the schemas or test data change.
 
 To create a local test instance of Canto, run `local_initialise.pl`
+
 ## Running the test instance
 The server can be run from the top level directory with this command:
 
