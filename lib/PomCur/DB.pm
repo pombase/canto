@@ -79,7 +79,8 @@ sub new
   my $schema = $self->connect($con_info->[0], $con_info->[1], $con_info->[2],
                               {
                                 RaiseError => 1,
-                                AutoCommit => 1
+                                AutoCommit => 1,
+                                sqlite_use_immediate_transaction => 1,
                               });
 
   my $dbh = $schema->storage()->dbh();
