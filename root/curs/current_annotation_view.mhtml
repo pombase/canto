@@ -47,7 +47,7 @@ if (defined $gene) {
   $constrain_annotations = [@constrain_annotations];
   $options->{gene_identifier} = $gene->primary_identifier();
 } else {
-  $options->{max_results} = 10;
+  $options->{max_results} = $c->config()->{max_existing_annotations} // 10;
 }
 
 my ($completed_count, $annotations_ref) =

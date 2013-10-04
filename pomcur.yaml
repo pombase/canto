@@ -37,6 +37,10 @@ authentication:
 view_options:
   max_inline_results_length: 1000
 
+# the maximum number of lines of existing annotations to show on the
+# publication page - too many will slow the page loading
+max_existing_annotations: 100
+
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
 #                 alert about completed sessions and problems
