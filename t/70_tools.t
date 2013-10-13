@@ -105,7 +105,7 @@ my $content_1_parsed = decode_json($content_1);
 is (keys %{$content_1_parsed->{curation_sessions}}, 1);
 
 # slight anomaly, the status is the pre-export status
-is ($content_1_parsed->{curation_sessions}->{aaaa0007}->{annotation_status}, 'APPROVED');
+is ($content_1_parsed->{curation_sessions}->{aaaa0007}->{metadata}->{annotation_status}, 'APPROVED');
 
 my $content_2 = do_export_approved();
 my $content_2_parsed = decode_json($content_2);

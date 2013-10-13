@@ -57,13 +57,27 @@ sub _get_metadata_value
 
 sub _get_metadata
 {
-  my $schema = shift;
+  my $track_schema = shift;
+  my $curs_schema = shift;
+  my $curs_key = shift;
 
-  my @results = $schema->resultset('Metadata')->all();
+  confess() unless defined $curs_schema;
 
-  return { map {
-      ($_->key(), _get_metadata_value($schema, $_->key(), $_->value() ))
-    } @results };
+  my @results = $curs_schema->resultset('Metadata')->all();
+
+  my %ret = map {
+    ($_->key(), _get_metadata_value($curs_schema, $_->key(), $_->value() ))
+  } @results;
+
+  my $cursprops_rs =
+    $track_schema->resultset('Curs')->find({ curs_key => $curs_key })
+                 ->cursprops();
+
+  while (defined (my $prop = $cursprops_rs->next())) {
+    $ret{$prop->type()->name()} = $prop->value();
+  }
+
+  return \%ret;
 }
 
 sub _get_annotations
@@ -100,13 +114,13 @@ sub _get_annotations
           $data{curator}->{community_curated} = JSON::false;
         }
       } else {
-        my %metadata = _get_metadata($schema);
+        my %metadata = _get_metadata_xxx($schema);
         die "community_curated not set for annotation ",
           $annotation->annotation_id(), " in session ",
           $metadata{curs_key};
       }
     } else {
-      my %metadata = _get_metadata($schema);
+      my %metadata = _get_metadata_xxx($schema);
       die "community_curated not set for annotation ",
         $annotation->annotation_id(), " in session ",
         $metadata{curs_key};
@@ -233,10 +247,12 @@ sub _get_pubs
 
 =head2 json
 
- Usage   : my $ser = PomCur::Curs::Serialise::json($curs_schema);
+ Usage   : my $ser = PomCur::Curs::Serialise::json($config, $track_schema,
+                                                   $curs_key, $options);
  Function: Return a JSON representation of the given CursDB
  Args    : $config - the PomCur::Config object
-           $schema - the CursDB
+           $track_schema - the TrackDB
+           $curs_key - the curs key to serialise
            $options - export options - see documentation for
              PomCur::Track::Serialise::json()
  Returns : A JSON string
@@ -245,20 +261,24 @@ sub _get_pubs
 sub json
 {
   my $config = shift;
-  my $schema = shift;
+  my $track_schema = shift;
+  my $curs_key = shift;
+  die if ref $curs_key or not defined $curs_key;
   my $options = shift;
 
   my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);
 
-  return $encoder->encode(perl($config, $schema, $options));
+  return $encoder->encode(perl($config, $track_schema, $curs_key, $options));
 }
 
 =head2 perl
 
- Usage   : my $ser = PomCur::Curs::Serialise::perl($curs_schema);
+ Usage   : my $serialised =
+             PomCur::Curs::Serialise::perl($config, $curs_schema, $options);
  Function: Return a Perl hash representating all the data in the given CursDB
  Args    : $config - the PomCur::Config object
-           $schema - the CursDB
+           $track_schema - the TrackDB
+           $curs_key - the curs key to serialise
            $options - export options - see documentation for
              PomCur::Track::Serialise::json()
  Returns : A Perl hashref
@@ -267,14 +287,18 @@ sub json
 sub perl
 {
   my $config = shift;
-  my $schema = shift;
+  my $track_schema = shift;
+  my $curs_key = shift;
   my $options = shift;
 
+  my $curs_schema =
+    PomCur::Curs::get_schema_for_key($config, $curs_key);
+
   return {
-    metadata => _get_metadata($schema),
-    annotations => _get_annotations($config, $schema),
-    organisms => _get_organisms($schema, $options),
-    publications => _get_pubs($schema, $options)
+    metadata => _get_metadata($track_schema, $curs_schema, $curs_key),
+    annotations => _get_annotations($config, $curs_schema),
+    organisms => _get_organisms($curs_schema, $options),
+    publications => _get_pubs($curs_schema, $options)
   };
 }
 

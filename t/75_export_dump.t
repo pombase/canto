@@ -53,7 +53,7 @@ sub _get_data
   my $ref = _get_data(undef, \@options);
 
   my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
-  is ($aaaa0007->{annotation_status}, "APPROVAL_IN_PROGRESS");
+  is ($aaaa0007->{metadata}->{annotation_status}, "APPROVAL_IN_PROGRESS");
 
   is (keys (%{$ref->{curation_sessions}}), 2);
 }
@@ -74,7 +74,7 @@ sub _get_data
   is (keys (%{$ref->{curation_sessions}}), 1);
 
   my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
-  is ($aaaa0007->{annotation_status}, "APPROVED");
+  is ($aaaa0007->{metadata}->{annotation_status}, "APPROVED");
 }
 
 # export the sessions
@@ -86,7 +86,7 @@ sub _get_data
 
   my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
   # an anomaly - we return the status before exporting:
-  is ($aaaa0007->{annotation_status}, "APPROVED");
+  is ($aaaa0007->{metadata}->{annotation_status}, "APPROVED");
 }
 
 # the previous call should have changed the session state to "EXPORTED", so
@@ -104,7 +104,7 @@ sub _get_data
   my $ref = _get_data(undef, \@options);
 
   my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
-  is ($aaaa0007->{annotation_status}, "EXPORTED");
+  is ($aaaa0007->{metadata}->{annotation_status}, "EXPORTED");
 
   is (keys (%{$ref->{curation_sessions}}), 2);
 }

@@ -76,8 +76,7 @@ sub _get_curation_sessions
     if ($options->{stream_mode}) {
       $data = undef;
     } else {
-      my $cursdb = PomCur::Curs::get_schema_for_key($config, $curs_key);
-      $data = PomCur::Curs::Serialise::perl($config, $cursdb, $options);
+      $data = PomCur::Curs::Serialise::perl($config, $schema, $curs_key, $options);
       my $props = _get_cursprops($curs);
 
       for my $prop_data (@$props) {

@@ -18,6 +18,13 @@ $test_util->init_test('curs_annotations_2');
 my $config = $test_util->config();
 my $track_schema = PomCur::TrackDB->new(config => $config);
 
+my %extra_curs_statuses = (
+        annotation_status => PomCur::Controller::Curs::CURATION_IN_PROGRESS,
+        session_genes_count => 4,
+        session_unknown_conditions_count => 1,
+        session_term_suggestions_count => 1,
+);
+
 my $abstract =
  qr/In the fission yeast, Schizosaccharomyces pombe, synaptonemal complexes/;
 my $full_expected_curation_session =
@@ -202,6 +209,7 @@ my $full_expected_curation_session =
         accepted_timestamp => '2012-02-15 13:45:00',
         curation_in_progress_timestamp => '2012-02-15 13:45:00',
         session_created_timestamp => '2012-02-15 13:45:00',
+        %extra_curs_statuses,
       },
       organisms => {
         4896 => {
@@ -394,19 +402,11 @@ my @expected_pubs =
 my %expected_pubs = ();
 @expected_pubs{@expected_pubs} = (ignore()) x @expected_pubs;
 
-my %extra_curs_statuses = (
-        annotation_status => PomCur::Controller::Curs::CURATION_IN_PROGRESS,
-        session_genes_count => 4,
-        session_unknown_conditions_count => 1,
-        session_term_suggestions_count => 1,
-);
-
 my $full_expected_track_data =
   {
     publications => \%expected_pubs,
     curation_sessions => {
       aaaa0007 => {
-        %extra_curs_statuses,
         %$full_expected_curation_session,
       },
       aaaa0006 => ignore(),
@@ -420,7 +420,6 @@ my $small_expected_track_data =
     publications => \%expected_pubs,
     curation_sessions => {
       aaaa0007 => {
-        %extra_curs_statuses,
         %$small_expected_curation_session,
       },
       aaaa0006 => ignore(),
@@ -430,24 +429,25 @@ my $small_expected_track_data =
   };
 
 
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
-
 {
-  my $curs_json = PomCur::Curs::Serialise::json($config, $curs_schema, { all_data => 1 });
+  my $curs_json = PomCur::Curs::Serialise::json($config, $track_schema,
+                                                'aaaa0007', { all_data => 1 });
   my $curs_ref = decode_json($curs_json);
 
   cmp_deeply($curs_ref, $full_expected_curation_session);
 }
 
 {
-  my $curs_json = PomCur::Curs::Serialise::json($config, $curs_schema, { all_data => 0 });
+  my $curs_json = PomCur::Curs::Serialise::json($config, $track_schema,
+                                                'aaaa0007', { all_data => 0 });
   my $curs_ref = decode_json($curs_json);
 
   cmp_deeply($curs_ref, $small_expected_curation_session);
 }
 
 {
-  my $curs_json = PomCur::Curs::Serialise::json($config, $curs_schema);
+  my $curs_json = PomCur::Curs::Serialise::json($config, $track_schema,
+                                                'aaaa0007');
   my $curs_ref = decode_json($curs_json);
 
   cmp_deeply($curs_ref, $small_expected_curation_session);
@@ -465,8 +465,7 @@ sub check_track {
 
   my $curation_session = $curation_sessions{aaaa0007};
 
-  cmp_deeply($curation_session, { %extra_curs_statuses,
-                                  %$full_expected_curation_session });
+  cmp_deeply($curation_session, { %$full_expected_curation_session });
 }
 
 check_track({ all_data => 1 });
