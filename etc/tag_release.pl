@@ -48,7 +48,7 @@ sub tag_version
 
   local $/ = undef;
 
-  open my $config_fh, '<', 'pomcur.yaml' or die "$!";
+  open my $config_fh, '<', 'canto.yaml' or die "$!";
   my $contents = <$config_fh>;
   close $config_fh or die "$!";
 
@@ -56,11 +56,11 @@ sub tag_version
 
   $contents =~ s/(app_version:\s*)(.*)/$1$new_version/m;
 
-  open $config_fh, '>', 'pomcur.yaml' or die "$!";
+  open $config_fh, '>', 'canto.yaml' or die "$!";
   print $config_fh $contents;
   close $config_fh or die "$!";
 
-  system "git commit -m 'Update to version $new_version' pomcur.yaml";
+  system "git commit -m 'Update to version $new_version' canto.yaml";
 
 #  system "git tag -s -a -m 'Version $new_version' $new_version"
   system "git tag -a -m 'Version $new_version' $new_version"

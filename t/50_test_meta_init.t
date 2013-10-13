@@ -2,13 +2,13 @@ use strict;
 use warnings;
 use Test::More tests => 1;
 
-use PomCur::TestUtil;
-use PomCur::Meta::Util;
-use PomCur::Config;
+use Canto::TestUtil;
+use Canto::Meta::Util;
+use Canto::Config;
 
 use File::Path qw(remove_tree);
 
-my $config = PomCur::Config->new();
+my $config = Canto::Config->new();
 
 my $deploy_dir = 't/scratch';
 
@@ -22,6 +22,6 @@ if (@$rm_err) {
   exit (1);
 }
 
-PomCur::Meta::Util::initialise_app($config, $deploy_dir, 'test');
+Canto::Meta::Util::initialise_app($config, $deploy_dir, 'test');
 
 ok(-f "$deploy_dir/track.sqlite3");

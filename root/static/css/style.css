@@ -309,7 +309,7 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
   float: right;
 }
 
-a.pomcur-toggle-button {
+a.canto-toggle-button {
   margin-left: 5px;
   display: none;
 }
@@ -789,7 +789,7 @@ div.clearall {
   display: none;
 }
 
-.pomcur-more-button {
+.canto-more-button {
   white-space: nowrap;
 }
 
@@ -875,7 +875,7 @@ form .checkboxgroup span {
   font-weight: bold;
 }
 
-span.pomcur-select-buttons {
+span.canto-select-buttons {
   display: block;
   margin: 10px;
 }

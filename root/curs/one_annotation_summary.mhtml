@@ -17,7 +17,7 @@ $view_only => 0
    view_only => $view_only &>
 
 <%init>
-use PomCur::Curs::Utils;
+use Canto::Curs::Utils;
 
 my $st = $c->stash();
 
@@ -31,7 +31,7 @@ my $annotation_type_config = $annotation_types_config{$annotation_type_name};
 my $annotation_type_category = $annotation_type_config->{category};
 
 my ($completed_count, $annotations_ref) =
-  PomCur::Curs::Utils::get_annotation_table($config, $schema,
+  Canto::Curs::Utils::get_annotation_table($config, $schema,
                                             $annotation_type_name,
                                             $annotation);
 my @annotations = @$annotations_ref;

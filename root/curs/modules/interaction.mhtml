@@ -18,10 +18,10 @@ $gene
   </div>
 
 % if ($gene_count > 2) {
-<span class="pomcur-select-buttons">
+<span class="canto-select-buttons">
 Select:
- <a href="#" class="pomcur-select-all">all</a>
- <a href="#" class="pomcur-select-none">none</a>
+ <a href="#" class="canto-select-all">all</a>
+ <a href="#" class="canto-select-none">none</a>
 </span>
 % }
 

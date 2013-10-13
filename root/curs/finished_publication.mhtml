@@ -12,11 +12,11 @@ You curated <% $gene_count %> <% $gene_count == 1 ? 'gene' : 'genes' %> for
 </p>
 
 <p>
-% if ($state eq PomCur::Controller::Curs::NEEDS_APPROVAL) {
+% if ($state eq Canto::Controller::Curs::NEEDS_APPROVAL) {
 Your annotations have been sent to the curation team for inclusion in the
 database.
 % } else {
-%   if ($state eq PomCur::Controller::Curs::APPROVAL_IN_PROGRESS) {
+%   if ($state eq Canto::Controller::Curs::APPROVAL_IN_PROGRESS) {
 Your annotations are now being checked by the curation team.
 %   } else {
 Your annotations have been checked by the curation team and will be

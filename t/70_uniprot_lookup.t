@@ -5,11 +5,11 @@ use Test::More tests => 16;
 use LWP::Protocol::PSGI;
 use YAML qw(Load Dump);
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 use Package::Alias
-  OntologyAnnotationLookup => 'PomCur::UniProt::OntologyAnnotationLookup';
+  OntologyAnnotationLookup => 'Canto::UniProt::OntologyAnnotationLookup';
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test();
 my $config = $test_util->config();
@@ -48,7 +48,7 @@ sub _check_res
 
 
 my $lookup =
-  PomCur::UniProt::OntologyAnnotationLookup->new(config => $config);
+  Canto::UniProt::OntologyAnnotationLookup->new(config => $config);
 
 my $res = $lookup->lookup({ pub_uniquename => 'PMID:11676915',
                             gene_identifier => 'O74473',

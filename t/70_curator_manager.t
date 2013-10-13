@@ -2,16 +2,16 @@ use strict;
 use warnings;
 use Test::More tests => 14;
 
-use PomCur::TestUtil;
-use PomCur::TrackDB;
+use Canto::TestUtil;
+use Canto::TrackDB;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
 my $config = $test_util->config();
 
-my $track_schema = PomCur::TrackDB->new(config => $config);
+my $track_schema = Canto::TrackDB->new(config => $config);
 
-my $curator_manager = PomCur::Track::CuratorManager->new(config => $config);
+my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
 
 my $curs_curator_rs = $track_schema->resultset('CursCurator');
 is($curs_curator_rs->count(), 2);

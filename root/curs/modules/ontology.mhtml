@@ -53,7 +53,7 @@ Search for <% $current_component_display_name %> term
         <div>
           <% $annotation_help_text %>
 % if (defined $annotation_more_help_text) {
-          <a id="ferret-term-entry-type-help" class="pomcur-more-button" href='#'>more ...</a>
+          <a id="ferret-term-entry-type-help" class="canto-more-button" href='#'>more ...</a>
 % }
         </div>
 % if (defined $annotation_more_help_text) {
@@ -64,7 +64,7 @@ Search for <% $current_component_display_name %> term
         <div>
 You may find it helpful to search for a broad term (e.g. <% $broad_term_suggestions %>),
 especially if you have trouble finding a specific term.
-          <a id="ferret-term-entry-extra-help" class="pomcur-more-button" href='#'>more ...</a>
+          <a id="ferret-term-entry-extra-help" class="canto-more-button" href='#'>more ...</a>
         </div>
         <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
           <div>
@@ -163,7 +163,7 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
 The currently selected term has no children. If you need a more specific
 term to describe the experiment you are annotating, please follow the
 link below to suggest it:
-          <a id="ferret-help-step-2-suggest-help" class="pomcur-more-button" href='#'>more ...</a>
+          <a id="ferret-help-step-2-suggest-help" class="canto-more-button" href='#'>more ...</a>
 
           <div id="ferret-help-step-2-suggest-help-target" class="ferret-more-help">
             <div>

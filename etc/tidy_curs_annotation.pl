@@ -18,10 +18,10 @@ BEGIN {
 
 use lib qw(lib);
 
-use PomCur::Config;
-use PomCur::Meta::Util;
-use PomCur::TrackDB;
-use PomCur::Track;
+use Canto::Config;
+use Canto::Meta::Util;
+use Canto::TrackDB;
+use Canto::Track;
 
 sub usage
 {
@@ -40,22 +40,22 @@ Script to tidy cursdbs
 ";
 }
 
-my $app_name = PomCur::Config::get_application_name();
+my $app_name = Canto::Config::get_application_name();
 
-$ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+$ENV{CANTO_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
-my $suffix = $ENV{POMCUR_CONFIG_LOCAL_SUFFIX};
+my $suffix = $ENV{CANTO_CONFIG_LOCAL_SUFFIX};
 
-if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
-  die "The application is not yet initialised, try running the pomcur_start " .
+if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
+  die "The application is not yet initialised, try running the canto_start " .
     "script\n";
 }
 
 
-my $config = PomCur::Config::get_config();
-my $track_schema = PomCur::TrackDB->new(config => $config);
+my $config = Canto::Config::get_config();
+my $track_schema = Canto::TrackDB->new(config => $config);
 
-my $iter = PomCur::Track::curs_iterator($config, $track_schema);
+my $iter = Canto::Track::curs_iterator($config, $track_schema);
 
 my $test_publication_uniquename =
   $config->{test_publication_uniquename};
@@ -64,6 +64,6 @@ while (my ($curs, $cursdb) = $iter->()) {
   my $pub = $curs->pub();
   my $pub_uniquename = $pub->uniquename();
 
-  PomCur::Track::tidy_curs($config, $cursdb);
+  Canto::Track::tidy_curs($config, $cursdb);
 }
 

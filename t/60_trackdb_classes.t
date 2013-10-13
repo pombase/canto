@@ -2,15 +2,15 @@ use strict;
 use warnings;
 use Test::More tests => 5;
 
-use PomCur::TestUtil;
-use PomCur::TrackDB;
+use Canto::TestUtil;
+use Canto::TrackDB;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test();
 
 my $config = $test_util->config();
-my $schema = PomCur::TrackDB->new(config => $config);
+my $schema = Canto::TrackDB->new(config => $config);
 
 my @results = $schema->resultset('Organism')->search();
 

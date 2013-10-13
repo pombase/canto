@@ -2,15 +2,15 @@ use strict;
 use warnings;
 use Test::More tests => 14;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
 
-use PomCur::Track;
+use Canto::Track;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test();
 
 my $app = $test_util->plack_app()->{app};

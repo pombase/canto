@@ -22,15 +22,15 @@ use POSIX ":sys_wait_h";
 
 my $version_prefix = 'v';
 
-my $apache_dir = '/etc/apache2/pomcur.d';
-my $pomcur_dir = '/var/pomcur';
-my $run_dir = "$pomcur_dir/run";
-my $apps_dir = "$pomcur_dir/apps";
-my $repo = "$pomcur_dir/pomcur.git";
-my $apache_conf_dir = '/etc/apache2/pomcur.d/';
-my $config_file_name = 'pomcur_deploy.yaml';
+my $apache_dir = '/etc/apache2/canto.d';
+my $canto_dir = '/var/canto';
+my $run_dir = "$canto_dir/run";
+my $apps_dir = "$canto_dir/apps";
+my $repo = "$canto_dir/canto.git";
+my $apache_conf_dir = '/etc/apache2/canto.d/';
+my $config_file_name = 'canto_deploy.yaml';
 
-my $start_script = "script/pomcur_start";
+my $start_script = "script/canto_start";
 my $plack_handler = undef;
 my $preload = undef;
 my $workers = undef;
@@ -91,7 +91,7 @@ die "no application name given\n" unless $app_name;
 
 my $port = get_port($app_name);
 
-my $data_dir = "$pomcur_dir/data/${app_name}_data";
+my $data_dir = "$canto_dir/data/${app_name}_data";
 
 my $app_tag = shift;
 
@@ -143,7 +143,7 @@ if (-d $full_app_path) {
   chdir $full_app_path;
   system "git checkout $app_tag";
 
-  system "./script/pomcur_start --initialise $data_dir";
+  system "./script/canto_start --initialise $data_dir";
 
   if (defined $google_analytics_id) {
     open my $config_file, '>>', $config_file_name

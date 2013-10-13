@@ -13,7 +13,7 @@ $class_info
     config_name => 'pub',
     list_title => "Publications with this triage status" &>
 % }
-% if ($cv->name() eq 'PomCur curation priorities') {
+% if ($cv->name() eq 'Canto curation priorities') {
   <& /view/inline_list.mhtml, config_name => 'pub', rs => $curation_pri_pub_rs,
                        class_info => $class_info,
                        list_title => 'Publications with this priority' &>

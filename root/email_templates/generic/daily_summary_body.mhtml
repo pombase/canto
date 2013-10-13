@@ -26,10 +26,10 @@ Sessions with outstanding term requests
 % }
 
 <%init>
-use PomCur::Curs::State qw/:all/;
-use PomCur::Track;
+use Canto::Curs::State qw/:all/;
+use Canto::Track;
 
-my $state = PomCur::Curs::State->new(config => $config);
+my $state = Canto::Curs::State->new(config => $config);
 
 my @interesting_types =
   ({ state => SESSION_CREATED,
@@ -63,7 +63,7 @@ my %sessions = ();
 
 my @sessions_with_term_requests = ();
 
-my $iter = PomCur::Track::curs_iterator($config, $track_schema);
+my $iter = Canto::Track::curs_iterator($config, $track_schema);
 
 while (my ($curs, $cursdb) = $iter->()) {
   my $curs_key = $curs->curs_key();

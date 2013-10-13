@@ -16,27 +16,27 @@ BEGIN {
 
 use lib qw(lib);
 
-use PomCur::Config;
-use PomCur::Meta::Util;
-use PomCur::TrackDB;
-use PomCur::Track;
-use PomCur::Track::CuratorManager;
-use PomCur::Role::MetadataAccess;
+use Canto::Config;
+use Canto::Meta::Util;
+use Canto::TrackDB;
+use Canto::Track;
+use Canto::Track::CuratorManager;
+use Canto::Role::MetadataAccess;
 
-my $app_name = PomCur::Config::get_application_name();
+my $app_name = Canto::Config::get_application_name();
 
-$ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+$ENV{CANTO_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
-my $suffix = $ENV{POMCUR_CONFIG_LOCAL_SUFFIX};
+my $suffix = $ENV{CANTO_CONFIG_LOCAL_SUFFIX};
 
-if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
-  die "The application is not yet initialised, try running the pomcur_start " .
+if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
+  die "The application is not yet initialised, try running the canto_start " .
     "script\n";
 }
 
 
-my $config = PomCur::Config::get_config();
-my $track_schema = PomCur::TrackDB->new(config => $config,
+my $config = Canto::Config::get_config();
+my $track_schema = Canto::TrackDB->new(config => $config,
                                         disable_foreign_keys => 1);
 
 my $schema_version_rs =
@@ -95,19 +95,19 @@ $dbh->do("ALTER TABLE pub_new RENAME TO pub;");
 
 $dbh->do("CREATE INDEX pub_triage_status_idx ON pub(triage_status_id);");
 
-my $iter = PomCur::Track::curs_iterator($config, $track_schema);
+my $iter = Canto::Track::curs_iterator($config, $track_schema);
 
 my $curator_manager =
-  PomCur::Track::CuratorManager->new(config => $config);
+  Canto::Track::CuratorManager->new(config => $config);
 
 while (my ($curs, $cursdb) = $iter->()) {
   warn "upgrading: ", $curs->curs_key(), "\n";
   my $submitter_email =
-    PomCur::Role::MetadataAccess->get_metadata($cursdb, 'submitter_email');
-  PomCur::Role::MetadataAccess->unset_metadata($cursdb, 'submitter_email');
+    Canto::Role::MetadataAccess->get_metadata($cursdb, 'submitter_email');
+  Canto::Role::MetadataAccess->unset_metadata($cursdb, 'submitter_email');
   my $submitter_name =
-    PomCur::Role::MetadataAccess->get_metadata($cursdb, 'submitter_name');
-  PomCur::Role::MetadataAccess->unset_metadata($cursdb, 'submitter_name');
+    Canto::Role::MetadataAccess->get_metadata($cursdb, 'submitter_name');
+  Canto::Role::MetadataAccess->unset_metadata($cursdb, 'submitter_name');
 
   if (!defined $submitter_email) {
     die if defined $submitter_name;

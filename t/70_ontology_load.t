@@ -2,16 +2,16 @@ use strict;
 use warnings;
 use Test::More tests => 38;
 
-use PomCur::TestUtil;
-use PomCur::Track::OntologyLoad;
-use PomCur::Track::OntologyIndex;
+use Canto::TestUtil;
+use Canto::Track::OntologyLoad;
+use Canto::Track::OntologyIndex;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test('empty_db', { copy_ontology_index => 0 });
 
 my $config = $test_util->config();
-my $schema = PomCur::TrackDB->new(config => $config);
+my $schema = Canto::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
@@ -24,14 +24,14 @@ my $test_relationship_ontology_file =
 my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
 
 my $ontology_index;
-my $ontology_load = PomCur::Track::OntologyLoad->new(schema => $schema);
+my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema);
 my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
 sub load_all {
   my $include_ro = shift;
 
   my $index_path = $config->data_dir_path('ontology_index_dir');
-  $ontology_index = PomCur::Track::OntologyIndex->new(index_path => $index_path);
+  $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
   $ontology_index->initialise_index();
 

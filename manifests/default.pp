@@ -1,4 +1,4 @@
-class pomcur {
+class canto {
   exec { "apt-update":
     command => "/usr/bin/apt-get update"
   }
@@ -218,4 +218,4 @@ class pomcur {
   }
 }
 
-include pomcur
+include canto

@@ -236,7 +236,7 @@ NOT
     <td>
       <span>
 %   if ($row->{term_suggestion}) {
-      <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{name}) %>','<% PomCur::WebUtil::escape_inline_js($row->{term_suggestion}->{definition}) %>'); return false;">View ...</a>
+      <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% Canto::WebUtil::escape_inline_js($row->{term_suggestion}->{name}) %>','<% Canto::WebUtil::escape_inline_js($row->{term_suggestion}->{definition}) %>'); return false;">View ...</a>
 %     if ($admin_user && !$view_only) {
       <br/>
       <a href="<% $curs_root_uri . '/annotation/delete_suggestion/' . $row->{annotation_id} %>" class="confirm-delete">Delete ...</a>
@@ -359,7 +359,7 @@ my $field_edit_proc = sub {
   my $current_value = $row->{$type} // '';
 
   my $escaped_text = $current_value // '';
-  my $js_escaped_text = PomCur::WebUtil::escape_inline_js($escaped_text);
+  my $js_escaped_text = Canto::WebUtil::escape_inline_js($escaped_text);
   my $view_edit_text = undef;
   my $onclick;
   my $annotation_status = $row->{status};
@@ -368,7 +368,7 @@ my $field_edit_proc = sub {
   if (!$admin_user && (($view_only && !$force_comment_edit) || $annotation_status eq 'deleted')) {
     if ($js_escaped_text ne '') {
       $view_edit_text = 'View';
-      $onclick = "javascript:pomcur_util.show_message('View $type_for_display',  '$js_escaped_text'); return false;";
+      $onclick = "javascript:canto_util.show_message('View $type_for_display',  '$js_escaped_text'); return false;";
     }
   } else {
     if ($js_escaped_text eq '') {
@@ -418,7 +418,7 @@ my $state = $st->{state};
 
 my $approval_in_progress = 0;
 
-use PomCur::Curs::State qw/:all/;
+use Canto::Curs::State qw/:all/;
 
 if ($state eq APPROVAL_IN_PROGRESS) {
   $approval_in_progress = 1;

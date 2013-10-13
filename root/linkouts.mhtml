@@ -40,7 +40,7 @@ if (defined $context_config) {
 }
 
 my @url_details = map {
-  my $url = PomCur::WebUtil::substitute_paths($_->{url}, $object);
+  my $url = Canto::WebUtil::substitute_paths($_->{url}, $object);
   my $icon = $_->{icon};
 
   if ($icon !~ m{^http://}) {

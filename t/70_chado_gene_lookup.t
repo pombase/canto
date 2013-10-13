@@ -2,15 +2,15 @@ use strict;
 use warnings;
 use Test::More tests => 18;
 
-use PomCur::Chado::GeneLookup;
+use Canto::Chado::GeneLookup;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test();
 
-my $lookup = PomCur::Chado::GeneLookup->new(config => $test_util->config());
+my $lookup = Canto::Chado::GeneLookup->new(config => $test_util->config());
 
 ok(defined $lookup->schema());
 

@@ -5,9 +5,9 @@ use Test::More tests => 31;
 use Plack::Test;
 use Plack::Util;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('1_curs');
 
 my $config = $test_util->config();
@@ -70,12 +70,12 @@ test_psgi $app, sub {
   }
 
   my $cv = $schema->find_with_type('Cv',
-                                   { name => 'PomCur publication triage status' });
+                                   { name => 'Canto publication triage status' });
   my $new_cvterm = $schema->find_with_type('Cvterm',
                                            { cv_id => $cv->cv_id(),
                                              name => 'New' });
 
-  my $first_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
+  my $first_pub = Canto::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
 
   is ($first_pub->triage_status()->cvterm_id(), $new_cvterm->cvterm_id());
 
@@ -97,7 +97,7 @@ test_psgi $app, sub {
                                                    name => 'Curatable' });
 
   my $priority_cv = $schema->find_with_type('Cv',
-                                            { name => 'PomCur curation priorities' });
+                                            { name => 'Canto curation priorities' });
   my $low_cvterm = $schema->find_with_type('Cvterm',
                                            { cv_id => $priority_cv->cv_id(),
                                              name => 'low' });
@@ -143,7 +143,7 @@ test_psgi $app, sub {
     is ($pubprops[0]->value(), $curatable_cvterm->name());
     is ($pubprops[0]->type()->name(), "experiment_type");
 
-    $second_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
+    $second_pub = Canto::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
 
     _check_for_pub($redirect_res, $second_pub, 18);
   }
@@ -188,7 +188,7 @@ test_psgi $app, sub {
     is ($pubprops[0]->value(), $curatable_cvterm->name());
     is ($pubprops[0]->type()->name(), "experiment_type");
 
-    $second_pub = PomCur::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
+    $second_pub = Canto::Controller::Tools::_get_next_triage_pub($schema, $new_cvterm);
 
     unlike($content, $triaging_re);
     my $pub_page_re = "Details for publication: " . $first_pub->uniquename();

@@ -158,7 +158,7 @@ $return_pub_id
 
 <%init>
 my $schema = $c->schema('track');
-my $status_cv_name = 'PomCur publication triage status';
+my $status_cv_name = 'Canto publication triage status';
 my $status_cv = $schema->find_with_type('Cv', { name => $status_cv_name });
 
 my @status_links = ();
@@ -184,7 +184,7 @@ for my $status (@pub_statuses) {
                         link => $link };
 }
 
-my $experiment_type_cv_name = 'PomCur publication experiment types';
+my $experiment_type_cv_name = 'Canto publication experiment types';
 my $experiment_type_cv =
   $schema->find_with_type('Cv', { name => $experiment_type_cv_name });
 
@@ -209,7 +209,7 @@ my @experiment_type_cvterms =
 
 my @experiment_types = map { $_->name() } @experiment_type_cvterms;
 
-my $curation_priority_cv_name = 'PomCur curation priorities';
+my $curation_priority_cv_name = 'Canto curation priorities';
 my $curation_priority_cv =
   $schema->find_with_type('Cv', { name => $curation_priority_cv_name });
 
@@ -226,7 +226,7 @@ my @curation_priorities =
     $b->[1] <=> $a->[1];
   } map {
     my $numeric_priority = $_->cvtermprop_cvterms()->
-      search({ 'type.name' => 'PomCur numeric priority' },
+      search({ 'type.name' => 'Canto numeric priority' },
              { join => 'type' })->first()->value();
     [ $_->name(), $numeric_priority, $_->cvterm_id() ];
   } @curation_priority_cvterms;

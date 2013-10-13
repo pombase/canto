@@ -2,13 +2,13 @@ use strict;
 use warnings;
 use Test::More tests => 29;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test();
 
 my $return_path = 'http://localhost:5000/';

@@ -2,16 +2,16 @@ use strict;
 use warnings;
 use Test::More tests => 23;
 
-use PomCur::TestUtil;
-use PomCur::CursDB;
+use Canto::TestUtil;
+use Canto::CursDB;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
 
-my $schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
+my $schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 
 ok($schema);
 

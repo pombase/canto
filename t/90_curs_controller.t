@@ -9,10 +9,10 @@ use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
 
-use PomCur::TestUtil;
-use PomCur::Controller::Curs;
+use Canto::TestUtil;
+use Canto::Controller::Curs;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('1_curs');
 
 my $config = $test_util->config();
@@ -27,7 +27,7 @@ my @id_matching_two_genes = qw(ssm4);
 my @two_ids_matching_one_gene = qw(ste20 ste16);
 my @unknown_genes = qw(dummy SPCC999999.99);
 
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
+my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
 my $curs_metadata_rs = $curs_schema->resultset('Metadata');
 
@@ -46,7 +46,7 @@ like($curs_db_pub->title(), qr/Inactivating pentapeptide insertions in the/);
 my @search_list = (@known_genes, @unknown_genes);
 
 my ($result) =
-  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
+  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@search_list);
 sub check_result
 {
@@ -71,13 +71,13 @@ sub check_result
 check_result($result, 2, 3, 0);
 
 ($result) =
-  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
+  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@search_list);
 
 check_result($result, 2, 3, 0);
 
 my @results =
-  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
+  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    \@known_genes);
 
 ok(@results == 1);
@@ -107,7 +107,7 @@ my @genes_to_filter =
   map { _lookup_gene($_)} @gene_identifiers_to_filter;
 
 my @filtered_genes =
-  PomCur::Controller::Curs->_filter_existing_genes($curs_schema,
+  Canto::Controller::Curs->_filter_existing_genes($curs_schema,
                                                    @genes_to_filter);
 
 is(@filtered_genes, 1);
@@ -120,7 +120,7 @@ $curs_schema->resultset('Gene')->delete();
 my ($identifiers_matching_more_than_once, $genes_matched_more_than_once);
 
 ($result, $identifiers_matching_more_than_once, $genes_matched_more_than_once) =
-  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
+  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    [@known_genes,
                                                     @id_matching_two_genes,
                                                     'SPCC576.19c']);
@@ -136,7 +136,7 @@ cmp_deeply($genes_matched_more_than_once, {});
 is($curs_schema->resultset('Gene')->count(), 0);
 
 ($result, $identifiers_matching_more_than_once, $genes_matched_more_than_once) =
-  PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
+  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                    [@known_genes,
                                                     @two_ids_matching_one_gene,
                                                     'SPCC576.19c']);
@@ -154,7 +154,7 @@ is($curs_schema->resultset('Gene')->count(), 0);
 
 
 # utility methods
-my $iso_date = PomCur::Controller::Curs::_get_iso_date();
+my $iso_date = Canto::Controller::Curs::_get_iso_date();
 like ($iso_date, qr(^\d+-\d+-\d+$));
 
 
@@ -162,7 +162,7 @@ like ($iso_date, qr(^\d+-\d+-\d+$));
 
 my $pub_for_allele = $curs_schema->resultset('Pub')->first();
 
-PomCur::Controller::Curs->_find_and_create_genes($curs_schema, $config,
+Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
                                                  \@known_genes);
 
 my $gene_rs = $curs_schema->resultset('Gene');
@@ -258,7 +258,7 @@ my %allele_creation_data_1 = (
   expression => 'Endogenous',
 );
 
-PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
+Canto::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
                                                       $annotation_for_allele_in_progress,
                                                       \%allele_creation_data_1);
 
@@ -273,7 +273,7 @@ my %allele_creation_data_2 = (
 );
 
 my $add_res =
-  PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
+  Canto::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
                                                         $annotation_for_allele_in_progress,
                                                         \%allele_creation_data_2);
 my $add_expected = {
@@ -291,7 +291,7 @@ my $add_expected = {
 cmp_deeply($add_res, $add_expected);
 
 
-my %allele_data_1 = PomCur::Controller::Curs::_get_all_alleles($config, $curs_schema,
+my %allele_data_1 = Canto::Controller::Curs::_get_all_alleles($config, $curs_schema,
                                                                $gene_for_allele);
 
 is (scalar(keys %allele_data_1), 3);
@@ -301,7 +301,7 @@ is ($allele_data_1{'an_allele(unknown)'}->{description}, undef);
 is ($allele_data_1{'existing_allele_name(desc)'}->{primary_identifier}, 'SPCC1739.10:allele-1');
 
 
-my %allele_data_2 = PomCur::Controller::Curs::_get_all_alleles($config, $curs_schema,
+my %allele_data_2 = Canto::Controller::Curs::_get_all_alleles($config, $curs_schema,
                                                                $rna_gene_for_allele);
 
 is (scalar(keys %allele_data_2), 1);
@@ -320,7 +320,7 @@ my %allele_creation_data_3 = (
 );
 
 my $new_allele_data_3 =
-  PomCur::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
+  Canto::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
                                                         $annotation_for_allele,
                                                         \%allele_creation_data_3);
 

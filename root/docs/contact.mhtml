@@ -1,1 +1,14 @@
-../contact.mhtml
+<%args>
+$link_text
+</%args>
+
+<a href="mailto:<% $escaped_contact_email %>"><% $link_text %></a>
+
+<%init>
+use URI::Escape;
+
+my $subject = uri_escape("User enquiry");
+my $contact_address = $c->config()->{contact_email}->{address};
+
+my $escaped_contact_email = "$contact_address?subject=$subject";
+</%init>

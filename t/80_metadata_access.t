@@ -1,16 +1,16 @@
 use strict;
 use warnings;
 
-use PomCur::TestUtil;
-use PomCur::WebUtil;
-use PomCur::TrackDB;
+use Canto::TestUtil;
+use Canto::WebUtil;
+use Canto::TrackDB;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test('1_curs');
 
 my $config = $test_util->config();
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0001');
+my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0001');
 
 use Test::Deep;
 use Test::More tests => 5;
@@ -19,7 +19,7 @@ package TestMetadata;
 
 use Moose;
 
-with 'PomCur::Role::MetadataAccess';
+with 'Canto::Role::MetadataAccess';
 
 sub test_metadata
 {

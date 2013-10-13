@@ -16,27 +16,27 @@ BEGIN {
 
 use lib qw(lib);
 
-use PomCur::Track;
-use PomCur::TrackDB;
-use PomCur::Meta::Util;
-use PomCur::Track::CuratorManager;
-use PomCur::Config;
-use PomCur::Curs::State;
+use Canto::Track;
+use Canto::TrackDB;
+use Canto::Meta::Util;
+use Canto::Track::CuratorManager;
+use Canto::Config;
+use Canto::Curs::State;
 
 
-my $app_name = PomCur::Config::get_application_name();
+my $app_name = Canto::Config::get_application_name();
 
-$ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+$ENV{CANTO_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
-my $suffix = $ENV{POMCUR_CONFIG_LOCAL_SUFFIX};
+my $suffix = $ENV{CANTO_CONFIG_LOCAL_SUFFIX};
 
-if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
-  die "The application is not yet initialised, try running the pomcur_start " .
+if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
+  die "The application is not yet initialised, try running the canto_start " .
     "script\n";
 }
 
-my $config = PomCur::Config::get_config();
-my $track_schema = PomCur::TrackDB->new(config => $config);
+my $config = Canto::Config::get_config();
+my $track_schema = Canto::TrackDB->new(config => $config);
 
 my $people_rs = $track_schema->resultset("Person");
 
@@ -48,7 +48,7 @@ while (defined (my $person = $people_rs->next())) {
   }
 }
 
-my $curator_manager = PomCur::Track::CuratorManager->new(config => $config);
+my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
 
 sub _is_community_curator
 {
@@ -61,7 +61,7 @@ sub _is_community_curator
   }
 }
 
-my $state = PomCur::Curs::State->new(config => $config);
+my $state = Canto::Curs::State->new(config => $config);
 
 my $proc = sub {
   my $curs = shift;
@@ -95,7 +95,7 @@ my $proc = sub {
       $data->{curator}->{community_curated} = _is_community_curator($email);
     }
 
-    if ($current_state eq PomCur::Curs::State::CURATION_IN_PROGRESS) {
+    if ($current_state eq Canto::Curs::State::CURATION_IN_PROGRESS) {
       if (!defined $new_datestamp) {
         $new_datestamp = $an->creation_date();
       } else {
@@ -112,11 +112,11 @@ my $proc = sub {
     if (!defined $new_datestamp) {
       $new_datestamp =
         $state->get_metadata($curs_schema,
-                             PomCur::Curs::State::ACCEPTED_TIMESTAMP_KEY());
+                             Canto::Curs::State::ACCEPTED_TIMESTAMP_KEY());
     }
     if (defined $new_datestamp) {
       $state->set_metadata($curs_schema,
-                           PomCur::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY(),
+                           Canto::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY(),
                            $new_datestamp);
       warn "setting new date for curation_in_progress: $new_datestamp\n";
     }
@@ -124,10 +124,10 @@ my $proc = sub {
 
   if ($accepted_date) {
     $state->set_metadata($curs_schema,
-                         PomCur::Curs::State::ACCEPTED_TIMESTAMP_KEY(),
+                         Canto::Curs::State::ACCEPTED_TIMESTAMP_KEY(),
                          $accepted_date);
     warn "setting new date for the accepted timestamp: $accepted_date\n";
   }
 };
 
-my @res = PomCur::Track::curs_map($config, $track_schema, $proc);
+my @res = Canto::Track::curs_map($config, $track_schema, $proc);

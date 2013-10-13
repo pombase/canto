@@ -5,14 +5,14 @@ use Test::Exception;
 use File::Temp qw(tempfile);
 use File::Copy qw(copy);
 
-use PomCur::TestUtil;
-use PomCur::DBUtil;
-use PomCur::Track::LoadUtil;
+use Canto::TestUtil;
+use Canto::DBUtil;
+use Canto::Track::LoadUtil;
 
 {
   my $config = {};
   my $file_name = '/tmp/test_file.sqlite3';
-  my $schema = PomCur::DBUtil::schema_for_file($config, $file_name, 'Curs');
+  my $schema = Canto::DBUtil::schema_for_file($config, $file_name, 'Curs');
 
   my $storage = $schema->storage();
 
@@ -20,7 +20,7 @@ use PomCur::Track::LoadUtil;
 }
 
 {
-  my $test_util = PomCur::TestUtil->new();
+  my $test_util = Canto::TestUtil->new();
 
   ok(ref $test_util);
 
@@ -29,7 +29,7 @@ use PomCur::Track::LoadUtil;
 }
 
 {
-  my $test_util = PomCur::TestUtil->new();
+  my $test_util = Canto::TestUtil->new();
 
   ok(ref $test_util);
 
@@ -40,7 +40,7 @@ use PomCur::Track::LoadUtil;
 }
 
 {
-  my $test_util = PomCur::TestUtil->new();
+  my $test_util = Canto::TestUtil->new();
 
   ok(ref $test_util);
 
@@ -53,7 +53,7 @@ use PomCur::Track::LoadUtil;
 {
   # test _process_data()
 
-  my $config = PomCur::Config::get_config();
+  my $config = Canto::Config::get_config();
   $config->merge_config($config->{test_config_file});
 
   my $annotations_conf =
@@ -118,7 +118,7 @@ use PomCur::Track::LoadUtil;
     );
 
     my $obj_id = $res{$class_name}->{$field_name}->{$field_value};
-    my $table = PomCur::DB::table_name_of_class($class_name);
+    my $table = Canto::DB::table_name_of_class($class_name);
 
     return MockObject->new($table, $obj_id);
   }
@@ -128,7 +128,7 @@ use PomCur::Track::LoadUtil;
   my $test_curs_db = bless {}, 'MockCursDB';
 
   my $results =
-    PomCur::TestUtil::_process_data($test_curs_db, $annotations_conf);
+    Canto::TestUtil::_process_data($test_curs_db, $annotations_conf);
 
   is (@{$results->{genes}}, 1);
   is ($results->{genes}->[0]->gene_id(), 200);
@@ -228,7 +228,7 @@ sub track_init
 {
   # test make_curs_db
 
-  my $config = PomCur::Config::get_config();
+  my $config = Canto::Config::get_config();
   $config->merge_config($config->{test_config_file});
 
   my $curs_config =
@@ -241,14 +241,14 @@ sub track_init
   copy $track_db_template_file, $temp_track_db or die "$!\n";
 
   my $track_schema =
-    PomCur::DBUtil::schema_for_file($config, $temp_track_db, 'Track');
+    Canto::DBUtil::schema_for_file($config, $temp_track_db, 'Track');
 
-  my $load_util = PomCur::Track::LoadUtil->new(schema => $track_schema);
+  my $load_util = Canto::Track::LoadUtil->new(schema => $track_schema);
 
   track_init($track_schema, $load_util);
 
   my ($cursdb_schema, $cursdb_file_name) =
-    PomCur::TestUtil::make_curs_db($config, $curs_config,
+    Canto::TestUtil::make_curs_db($config, $curs_config,
                                    $track_schema, $load_util);
 
   my @res_annotations = $cursdb_schema->resultset('Annotation')->all();

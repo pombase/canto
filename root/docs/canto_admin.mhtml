@@ -7,7 +7,7 @@
 use Text::Markdown qw(markdown);
 use IO::All;
 
-my $docs_file = $c->path_to('documentation', 'pomcur.md');
+my $docs_file = $c->path_to('documentation', 'canto.md');
 
 my $markdown_docs = io($docs_file)->slurp;
 my $html_docs = markdown($markdown_docs);

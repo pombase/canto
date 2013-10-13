@@ -4,9 +4,9 @@ use Test::More tests => 19;
 use MooseX::Test::Role;
 use IO::String;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
@@ -17,9 +17,9 @@ my @curs_objects = $track_schema->resultset('Curs')
 is(@curs_objects, 1);
 
 my $curs_key = $curs_objects[0]->curs_key();
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
+my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
-my $mock_formatter = consumer_of('PomCur::Role::GAFFormatter');
+my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
 
 {
   my $zip_data = $mock_formatter->get_curs_annotation_zip($config, $curs_schema);

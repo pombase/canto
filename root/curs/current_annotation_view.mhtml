@@ -27,7 +27,7 @@ $pub
 % }
 
 <%init>
-use PomCur::Curs::Utils;
+use Canto::Curs::Utils;
 
 my $st = $c->stash();
 my $schema = $st->{schema};
@@ -51,7 +51,7 @@ if (defined $gene) {
 }
 
 my ($completed_count, $annotations_ref) =
-  PomCur::Curs::Utils::get_annotation_table($config, $schema,
+  Canto::Curs::Utils::get_annotation_table($config, $schema,
                                             $annotation_type->{name},
                                             $constrain_annotations,
                                             $gene);
@@ -60,7 +60,7 @@ my @user_annotations = @$annotations_ref;
 # if max_results is set, $all_existing_annotations_count may be bigger than
 # the list of existing annotations returned - ie. scalar(@$existing_annotations)
 my ($all_existing_annotations_count, $existing_annotations) =
-    PomCur::Curs::Utils::get_existing_annotations($config, $options);
+    Canto::Curs::Utils::get_existing_annotations($config, $options);
 
 my $returned_existing_count = scalar(@$existing_annotations);
 

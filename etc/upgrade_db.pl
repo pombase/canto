@@ -16,10 +16,10 @@ BEGIN {
 
 use lib qw(lib);
 
-use PomCur::Config;
-use PomCur::Meta::Util;
-use PomCur::TrackDB;
-use PomCur::DBUtil;
+use Canto::Config;
+use Canto::Meta::Util;
+use Canto::TrackDB;
+use Canto::DBUtil;
 
 if (@ARGV != 1) {
   die "$0: needs one argument - the version to upgrade to\n";
@@ -27,23 +27,23 @@ if (@ARGV != 1) {
 
 my $new_version = shift;
 
-my $app_name = PomCur::Config::get_application_name();
+my $app_name = Canto::Config::get_application_name();
 
-$ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+$ENV{CANTO_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
-my $suffix = $ENV{POMCUR_CONFIG_LOCAL_SUFFIX};
+my $suffix = $ENV{CANTO_CONFIG_LOCAL_SUFFIX};
 
-if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
-  die "The application is not yet initialised, try running the pomcur_start " .
+if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
+  die "The application is not yet initialised, try running the canto_start " .
     "script\n";
 }
 
 
-my $config = PomCur::Config::get_config();
-my $track_schema = PomCur::TrackDB->new(config => $config,
+my $config = Canto::Config::get_config();
+my $track_schema = Canto::TrackDB->new(config => $config,
                                         disable_foreign_keys => 0);
 
-PomCur::DBUtil::set_schema_version($track_schema, $new_version);
+Canto::DBUtil::set_schema_version($track_schema, $new_version);
 
 my $dbh = $track_schema->storage()->dbh();
 

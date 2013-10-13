@@ -2,14 +2,14 @@ use strict;
 use warnings;
 use Test::More tests => 26;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
 use Web::Scraper;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test();
 
 my $track_schema = $test_util->track_schema();
@@ -123,7 +123,7 @@ test_psgi $app, sub {
 
     is $res->code, 200;
     like ($res->content(), qr/List of all controlled vocabularies/);
-    like ($res->content(), qr/PSI-MOD.*19.*PomCur publication curation status/s);
+    like ($res->content(), qr/PSI-MOD.*19.*Canto publication curation status/s);
   }
 };
 

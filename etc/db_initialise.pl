@@ -13,13 +13,13 @@ use Carp;
 
 use DBIx::Class::Schema::Loader qw(make_schema_at);
 
-use PomCur::Config;
-use PomCur::Meta::Util;
+use Canto::Config;
+use Canto::Meta::Util;
 
 # Create empty databases
-PomCur::Meta::Util::create_template_dbs();
+Canto::Meta::Util::create_template_dbs();
 
-my $config = PomCur::Config::get_config();
+my $config = Canto::Config::get_config();
 
 my %db_template_files = (
   Track => $config->{track_db_template_file},
@@ -54,7 +54,7 @@ sub make_schema
                      debug => 0, dump_directory => './lib',
                      inflect_singular => \&remove_id,
                      naming => 'current',
-                     schema_base_class => 'PomCur::DB',
+                     schema_base_class => 'Canto::DB',
                      use_moose => 1, use_namespaces => 0,
                      moniker_map => { curs => 'Curs',
                                       sessions => 'Sessions' },
@@ -63,16 +63,16 @@ sub make_schema
 }
 
 for my $schema_name (keys %db_template_files) {
-  my $schema_class = "PomCur::${schema_name}DB";
+  my $schema_class = "Canto::${schema_name}DB";
   my $file_name = $db_template_files{$schema_name};
   my $connect_string = "dbi:SQLite:dbname=$file_name";
 
   make_schema($schema_class, $connect_string);
 
   my $schema =
-    PomCur::DBUtil::schema_for_file($config, $file_name, $schema_name);
+    Canto::DBUtil::schema_for_file($config, $file_name, $schema_name);
 
-  PomCur::Meta::Util::initialise_core_data($config, $schema, lc $schema_name);
+  Canto::Meta::Util::initialise_core_data($config, $schema, lc $schema_name);
 }
 
 warn "finished initialising development environment\n";

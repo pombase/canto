@@ -3,23 +3,23 @@ use warnings;
 use Test::More tests => 119;
 use Test::Deep;
 
-use PomCur::TestUtil;
-use PomCur::Curs::Utils;
+use Canto::TestUtil;
+use Canto::Curs::Utils;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
 my $schema = $test_util->track_schema();
 
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
+my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 sub check_new_annotations
 {
   my $exp_term_ontid = shift // 'GO:0055085';
 
   {
     my ($completed_count, $annotations_ref) =
-      PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
+      Canto::Curs::Utils::get_annotation_table($config, $curs_schema,
                                                 'biological_process');
 
     my @annotations = @$annotations_ref;
@@ -35,7 +35,7 @@ sub check_new_annotations
 
   {
     my ($completed_count, $annotations_ref) =
-      PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
+      Canto::Curs::Utils::get_annotation_table($config, $curs_schema,
                                                 'genetic_interaction');
 
     my @annotations = @$annotations_ref;
@@ -59,7 +59,7 @@ sub check_new_annotations
 
   for my $annotation_type_config (@annotation_type_list) {
     my ($completed_count, $annotations_ref) =
-      PomCur::Curs::Utils::get_annotation_table($config, $curs_schema,
+      Canto::Curs::Utils::get_annotation_table($config, $curs_schema,
                                                 $annotation_type_config->{name});
 
     my @annotations = @$annotations_ref;
@@ -112,7 +112,7 @@ check_new_annotations($dummy_alt_id);
                   annotation_type_name => 'cellular_component',
                 };
   my ($all_annotation_count, $annotations) =
-    PomCur::Curs::Utils::get_existing_annotations($config, $options);
+    Canto::Curs::Utils::get_existing_annotations($config, $options);
 
   is (@$annotations, 1);
   cmp_deeply($annotations->[0],
@@ -144,7 +144,7 @@ check_new_annotations($dummy_alt_id);
                   annotation_type_name => 'biological_process',
                 };
   my ($all_annotation_count, $annotations) =
-    PomCur::Curs::Utils::get_existing_ontology_annotations ($config, $options);
+    Canto::Curs::Utils::get_existing_ontology_annotations ($config, $options);
 
   is (@$annotations, 1);
   cmp_deeply($annotations->[0],
@@ -195,7 +195,7 @@ sub _test_interactions
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
   my ($all_interactions_count, $annotations) =
-    PomCur::Curs::Utils::get_existing_interaction_annotations ($config, $options);
+    Canto::Curs::Utils::get_existing_interaction_annotations ($config, $options);
 
   _test_interactions(2, @$annotations);
 }
@@ -206,7 +206,7 @@ sub _test_interactions
                   annotation_type_category => 'interaction',
                   max_results => 1, };
   my ($all_interactions_count, $annotations) =
-    PomCur::Curs::Utils::get_existing_interaction_annotations ($config, $options);
+    Canto::Curs::Utils::get_existing_interaction_annotations ($config, $options);
 
   _test_interactions(1, @$annotations);
 }
@@ -216,7 +216,7 @@ sub _test_interactions
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
   my ($all_interactions_count, $annotations) =
-    PomCur::Curs::Utils::get_existing_annotations($config, $options);
+    Canto::Curs::Utils::get_existing_annotations($config, $options);
 
   _test_interactions(2, @$annotations);
 }

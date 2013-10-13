@@ -43,6 +43,6 @@ my $_get_display_name_code = sub {
 my @field_info_list = @{$class_info->{field_info_list}};
 
 my @field_confs =
-  PomCur::WebUtil::get_column_confs($c, undef, $class_info, 'summary');
+  Canto::WebUtil::get_column_confs($c, undef, $class_info, 'summary');
 my @field_labels = map { $_->{name} } @field_confs;
 </%init>

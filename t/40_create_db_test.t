@@ -2,9 +2,9 @@ use strict;
 use warnings;
 use Test::More tests => 1;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 my %results = $test_util->init_test();
 
 my $db_file_name = $results{track_db_file_name};

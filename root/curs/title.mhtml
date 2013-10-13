@@ -21,7 +21,7 @@ $show_title
 </div>
 
 <%init>
-use PomCur::Curs::State qw(:all);
+use Canto::Curs::State qw(:all);
 
 my $st = $c->stash();
 my $current_path_uri = $st->{current_path_uri};

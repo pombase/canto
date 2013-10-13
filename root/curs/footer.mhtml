@@ -1,1 +1,62 @@
-../footer.mhtml
+% if (!$c->stash()->{hide_footer}) {
+<div id="footer">
+  <& sponsor_logos.mhtml &>
+</div>
+% }
+
+<script language="javascript" type="text/javascript">
+var application_root = '<% $c->uri_for('/') %>';
+</script>
+
+% if ($c->debug()) {
+<script src="<% $c->uri_for('/static/js/jquery-1.8.3.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery-ui-1.9.2.custom.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery.validate-1.9.0.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/bootstrap.js') %>"></script>
+% } else {
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<script src="http://ajax.microsoft.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+% }
+<script src="<% $c->uri_for('/static/js/jquery.ba-bbq.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery.shiftcheckbox.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery.pnotify.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery.placeholder.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery.jtruncate.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/tag-it.js') %>"></script>
+<script type="text/javascript" src="<% $c->uri_for('/static/js/canto.js') %>"></script>
+<script language="javascript" type="text/javascript">
+  if (typeof annotation_type != 'undefined') {
+    ferret_choose.initialise(annotation_type, annotation_namespace);
+  }
+</script>
+<script type="text/javascript" src="<% $c->uri_for('/static/js/jquery.form.2.47.js') %>"></script>
+
+% if (defined $site_tracking_id) {
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', '<% $site_tracking_id %>']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+% }
+
+<script language="javascript" type="text/javascript">
+$(function() {
+  $('input, textarea').placeholder();
+});
+
+AlleleStuff.pageInit();
+</script>
+
+<%init>
+my $site_tracking_id = $c->config()->{google_analytics_id};
+</%init>
