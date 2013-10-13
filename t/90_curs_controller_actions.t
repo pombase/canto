@@ -250,7 +250,7 @@ test_psgi $app, sub {
 
     my $scrape_res = $page_scrape->scrape($redirect_res->content());
 
-    like ($scrape_res->{gene_list}, qr/Choose a gene to annotate/);
+    like ($scrape_res->{gene_list}, qr/Click on a gene name to start entering data/);
     like ($scrape_res->{pub_title}, qr/Inactivating pentapeptide insertions/);
   }
 

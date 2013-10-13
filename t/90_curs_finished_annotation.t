@@ -42,7 +42,7 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    like ($res->content(), qr/Choose a gene to annotate/s);
+    like ($res->content(), qr/Click on a gene name to start entering data/s);
     like ($res->content(), qr/Publication details/s);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'),
