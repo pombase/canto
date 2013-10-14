@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Carp;
 use File::Basename;
+use feature qw(switch);
 
 BEGIN {
   my $script_name = basename $0;
@@ -47,10 +48,21 @@ Canto::DBUtil::set_schema_version($track_schema, $new_version);
 
 my $dbh = $track_schema->storage()->dbh();
 
-if ($new_version == 3) {
-  $dbh->do("
+given ($new_version) {
+  when (3) {
+    $dbh->do("
 ALTER TABLE person ADD COLUMN known_as TEXT;
 ");
-} else {
-die "don't know how to upgrade to version $new_version"
+  }
+  when (4) {
+    $dbh->do("
+UPDATE cvterm SET name = replace(name, 'PomCur', 'Canto');
+");
+    $dbh->do("
+UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
+");
+  }
+  default {
+    die "don't know how to upgrade to version $new_version";
+  }
 }
