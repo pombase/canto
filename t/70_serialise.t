@@ -402,13 +402,6 @@ my @expected_pubs =
 my %expected_pubs = ();
 @expected_pubs{@expected_pubs} = (ignore()) x @expected_pubs;
 
-my %extra_curs_statuses = (
-        annotation_status => Canto::Controller::Curs::CURATION_IN_PROGRESS,
-        session_genes_count => 4,
-        session_unknown_conditions_count => 1,
-        session_term_suggestions_count => 1,
-);
-
 my $full_expected_track_data =
   {
     publications => \%expected_pubs,
