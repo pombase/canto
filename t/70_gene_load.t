@@ -4,15 +4,15 @@ use Test::More tests => 8;
 
 use IO::String;
 
-use PomCur::TestUtil;
-use PomCur::Track::GeneLoad;
+use Canto::TestUtil;
+use Canto::Track::GeneLoad;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test('empty_db');
 
 my $config = $test_util->config();
-my $schema = PomCur::TrackDB->new(config => $config);
+my $schema = Canto::TrackDB->new(config => $config);
 
 my @loaded_genes = $schema->resultset('Gene')->all();
 
@@ -20,8 +20,8 @@ is (@loaded_genes, 0);
 
 my $test_genes_file = $test_util->root_dir() . '/t/data/pombe_genes.txt';
 
-my ($organism) = PomCur::TestUtil::add_test_organisms($config, $schema);
-my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema,
+my ($organism) = Canto::TestUtil::add_test_organisms($config, $schema);
+my $gene_load = Canto::Track::GeneLoad->new(schema => $schema,
                                              organism => $organism);
 
 open my $fh, '<', $test_genes_file

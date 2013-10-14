@@ -3,15 +3,15 @@ use warnings;
 use Test::More tests => 2;
 use Test::Deep;
 
-use PomCur::Chado::AlleleLookup;
+use Canto::Chado::AlleleLookup;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test();
 
-my $lookup = PomCur::Chado::AlleleLookup->new(config => $test_util->config());
+my $lookup = Canto::Chado::AlleleLookup->new(config => $test_util->config());
 
 my $res = $lookup->lookup(gene_primary_identifier => 'SPBC12C2.02c',
                           search_string => 'ste');

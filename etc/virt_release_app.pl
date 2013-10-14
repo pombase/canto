@@ -11,14 +11,14 @@ use Getopt::Long;
 
 use IO::All;
 
-my $pomcur_dir = '/var/pomcur';
+my $canto_dir = '/var/canto';
 
-my $apps_dir = "$pomcur_dir/apps";
-my $data_dir = "$pomcur_dir/data";
-my $repo = "git://github.com/kimrutherford/pomcur.git";
-my $config_file_name = 'pomcur_deploy.yaml';
+my $apps_dir = "$canto_dir/apps";
+my $data_dir = "$canto_dir/data";
+my $repo = "git://github.com/kimrutherford/canto.git";
+my $config_file_name = 'canto_deploy.yaml';
 
-my $start_script = "script/pomcur_start";
+my $start_script = "script/canto_start";
 
 my $google_analytics_id;
 

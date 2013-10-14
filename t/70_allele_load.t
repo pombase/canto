@@ -2,15 +2,15 @@ use strict;
 use warnings;
 use Test::More tests => 8;
 
-use PomCur::TestUtil;
-use PomCur::Track::AlleleLoad;
+use Canto::TestUtil;
+use Canto::Track::AlleleLoad;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test('empty_db');
 
 my $config = $test_util->config();
-my $schema = PomCur::TrackDB->new(config => $config);
+my $schema = Canto::TrackDB->new(config => $config);
 
 my @loaded_genes = $schema->resultset('Gene')->all();
 
@@ -19,8 +19,8 @@ is (@loaded_genes, 0);
 my $test_genes_file = $test_util->root_dir() . '/t/data/pombe_genes.txt';
 my $test_alleles_file = $test_util->root_dir() . '/t/data/pombe_alleles.txt';
 
-my ($organism) = PomCur::TestUtil::add_test_organisms($config, $schema);
-my $gene_load = PomCur::Track::GeneLoad->new(schema => $schema,
+my ($organism) = Canto::TestUtil::add_test_organisms($config, $schema);
+my $gene_load = Canto::Track::GeneLoad->new(schema => $schema,
                                              organism => $organism);
 
 open my $fh, '<', $test_genes_file
@@ -34,7 +34,7 @@ is(@loaded_genes, 15);
 my @loaded_alleles = $schema->resultset('Allele')->all();
 is(@loaded_alleles, 0);
 
-my $allele_load = PomCur::Track::AlleleLoad->new(schema => $schema,
+my $allele_load = Canto::Track::AlleleLoad->new(schema => $schema,
                                              organism => $organism);
 
 open $fh, '<', $test_alleles_file

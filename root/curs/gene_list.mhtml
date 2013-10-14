@@ -60,15 +60,15 @@ Click on a gene name to start entering data
 </div>
 
 <%init>
-use PomCur::Curs;
-use PomCur::Curs::GeneProxy;
+use Canto::Curs;
+use Canto::Curs::GeneProxy;
 
 my $schema = $c->stash()->{schema};
 my $config = $c->config();
 
 my @all_genes = map {
-  PomCur::Curs::GeneProxy->new(config => $config, cursdb_gene => $_);
-} PomCur::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all();
+  Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $_);
+} Canto::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all();
 
 my @gene_hashes = map {
      my $extra_text = '';

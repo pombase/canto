@@ -6,10 +6,10 @@ use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
 
-use PomCur::TestUtil;
-use PomCur::Controller::Curs;
+use Canto::TestUtil;
+use Canto::Controller::Curs;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
@@ -22,7 +22,7 @@ my $curs_key = 'aaaa0007';
 my $app = $test_util->plack_app()->{app};
 my $cookie_jar = $test_util->cookie_jar();
 
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
+my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 

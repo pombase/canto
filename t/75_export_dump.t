@@ -5,25 +5,25 @@ use Test::More tests => 10;
 use Clone qw(clone);
 use JSON;
 
-use PomCur::Curs::State qw/:all/;
+use Canto::Curs::State qw/:all/;
 
-use PomCur::TestUtil;
-use PomCur::TrackDB;
-use PomCur::Track::Serialise;
-use PomCur::Export::CantoJSON;
+use Canto::TestUtil;
+use Canto::TrackDB;
+use Canto::Track::Serialise;
+use Canto::Export::CantoJSON;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
-my $track_schema = PomCur::TrackDB->new(config => $config);
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
+my $track_schema = Canto::TrackDB->new(config => $config);
+my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 
 my $admin_person = $test_util->get_a_person($track_schema, 'admin');
 my $user_person = $test_util->get_a_person($track_schema, 'user');
 
-my $state = PomCur::Curs::State->new(config => $config);
+my $state = Canto::Curs::State->new(config => $config);
 
 $state->set_state($curs_schema, APPROVAL_IN_PROGRESS,
                   { force => CURATION_IN_PROGRESS,
@@ -35,7 +35,7 @@ sub _get_data
   my $options = shift;
 
   my $dump_export =
-    PomCur::Export::CantoJSON->new(config => $config, options => $options);
+    Canto::Export::CantoJSON->new(config => $config, options => $options);
 
   if (defined $prior_state) {
     $dump_export->state()->set_state($curs_schema, $prior_state,

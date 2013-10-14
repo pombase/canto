@@ -3,15 +3,15 @@ use warnings;
 use Test::More tests => 56;
 use Test::Deep;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
-use PomCur::Track;
+use Canto::Track;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test();
 
 my $config = $test_util->config();
-my $lookup = PomCur::Track::get_adaptor($config, 'ontology');
+my $lookup = Canto::Track::get_adaptor($config, 'ontology');
 
 my $search_string = 'transporter';
 my $transport_id = 'GO:0005215';

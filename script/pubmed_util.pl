@@ -8,7 +8,7 @@ use Getopt::Long;
 use File::Basename;
 
 BEGIN {
-  $ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+  $ENV{CANTO_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
   my $script_name = basename $0;
 
@@ -21,13 +21,13 @@ BEGIN {
 
 use lib qw(lib);
 
-use PomCur::TrackDB;
-use PomCur::Track::PubmedUtil;
-use PomCur::Config;
+use Canto::TrackDB;
+use Canto::Track::PubmedUtil;
+use Canto::Config;
 
 
-my $config = PomCur::Config::get_config();
-my $schema = PomCur::TrackDB->new(config => $config);
+my $config = Canto::Config::get_config();
+my $schema = Canto::TrackDB->new(config => $config);
 
 
 my $do_fields = 0;
@@ -44,7 +44,7 @@ if (!$result || $do_help) {
 }
 
 if ($do_fields) {
-  my $count = PomCur::Track::PubmedUtil::add_missing_fields($config, $schema);
+  my $count = Canto::Track::PubmedUtil::add_missing_fields($config, $schema);
 
   print "added missing fields to $count publications\n";
 }

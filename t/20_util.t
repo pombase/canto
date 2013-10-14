@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More tests => 1;
 
-use PomCur::Util;
+use Canto::Util;
 
-my $datetime = PomCur::Util::get_current_datetime();
+my $datetime = Canto::Util::get_current_datetime();
 like ($datetime, qr(^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$));

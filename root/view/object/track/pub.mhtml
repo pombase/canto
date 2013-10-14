@@ -121,7 +121,7 @@ Send session to curator ...\
 <& /person_picker_add.mhtml, default_person => $object->corresponding_author() &>
 
 <%init>
-use PomCur::Curs;
+use Canto::Curs;
 
 my $pub_id = $object->pub_id();
 
@@ -147,7 +147,7 @@ if (defined $curs) {
   my $link_sent_to_curator_date_cvterm =
     $schema->resultset('Cvterm')
       ->find({ name => 'link_sent_to_curator_date',
-               'cv.name' => 'PomCur cursprop types' },
+               'cv.name' => 'Canto cursprop types' },
              { join => 'cv' });
   my $link_sent_prop =
     $curs->cursprops()->search({ type => $link_sent_to_curator_date_cvterm->cvterm_id() })->first();

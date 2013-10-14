@@ -19,7 +19,7 @@ $cache => undef
 %   if ($field_type eq 'foreign_key' && $field_value && defined $ref_display_key) {
   <span class="ref-field">
   <a href='<% $c->uri_for("/view/object", $ref_table, 
-               PomCur::DB::id_of_object($field_value),
+               Canto::DB::id_of_object($field_value),
                { model => $model_name } ) %>'>
     <& field.mhtml, object => $referenced_object, class_info => $ref_class_info,
        field_name => $ref_display_key &>
@@ -29,7 +29,7 @@ $cache => undef
   <span class="attribute-field<% $extra_field_class %>">
 %     if ($field_type eq 'key_field') {
     <span class="display-key">
-      <a href='<% $c->uri_for("/view/object", $type, PomCur::DB::id_of_object($object),
+      <a href='<% $c->uri_for("/view/object", $type, Canto::DB::id_of_object($object),
                    { model => $model_name } ) %>'>
         <% $field_value %>
       </a>
@@ -45,8 +45,8 @@ $cache => undef
 </span>
 
 <%init>
-use PomCur::DB;
-use PomCur::WebUtil;
+use Canto::DB;
+use Canto::WebUtil;
 
 use Number::Format;
 use Data::Dumper;
@@ -55,7 +55,7 @@ my $col_conf = $class_info->{field_infos}->{$field_name};
 
 #warn "getting field value for $field_name\n";
 my ($field_value, $field_type, $ref_display_key) =
-  PomCur::WebUtil::get_field_value($c, $object, $class_info, $field_name, $cache);
+  Canto::WebUtil::get_field_value($c, $object, $class_info, $field_name, $cache);
 #warn "  got field value for $field_name\n";
 
 my $type = $object->table();

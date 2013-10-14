@@ -2,18 +2,18 @@ use strict;
 use warnings;
 use Test::More tests => 2;
 
-use PomCur::TestUtil;
-use PomCur::Track::StatusStorage;
-use PomCur::Track;
+use Canto::TestUtil;
+use Canto::Track::StatusStorage;
+use Canto::Track;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('1_curs');
 
 my $track_schema = $test_util->track_schema();
 
 my $curs_key = 'aaaa0001';
 
-my $storage = PomCur::Track::StatusStorage->new(config => $test_util->config(),
+my $storage = Canto::Track::StatusStorage->new(config => $test_util->config(),
                                                 schema => $track_schema,
                                                 curs_key => $curs_key);
 

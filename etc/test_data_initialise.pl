@@ -9,9 +9,9 @@ BEGIN {
 use strict;
 use warnings;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->create_pubmed_test_xml();
 

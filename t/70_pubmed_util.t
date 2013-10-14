@@ -2,17 +2,17 @@ use strict;
 use warnings;
 use Test::More tests => 66;
 
-use PomCur::TestUtil;
-use PomCur::Track::PubmedUtil;
-use PomCur::TrackDB;
+use Canto::TestUtil;
+use Canto::Track::PubmedUtil;
+use Canto::TrackDB;
 
 my $test_util;
 
 BEGIN {
-  $test_util = PomCur::TestUtil->new();
+  $test_util = Canto::TestUtil->new();
 }
 
-package PomCur::Track::PubmedUtil;
+package Canto::Track::PubmedUtil;
 
 no warnings;
 
@@ -39,7 +39,7 @@ package main;
 $test_util->init_test();
 
 my $config = $test_util->config();
-my $schema = PomCur::TrackDB->new(config => $config);
+my $schema = Canto::TrackDB->new(config => $config);
 
 my $pub_rs = $schema->resultset('Pub');
 my @pub_results = $pub_rs->search();
@@ -65,7 +65,7 @@ for my $pub (@pub_results) {
 }
 
 my $xml = $test_util->get_pubmed_test_xml();
-my $count = PomCur::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
+my $count = Canto::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
 
 is($count, 23);
 
@@ -96,7 +96,7 @@ $pub_rs->search({ -or => [ uniquename => 'PMID:19436749',
 
 is ($pub_rs->search({ abstract => undef })->count(), 2);
 
-PomCur::Track::PubmedUtil::add_missing_fields($config, $schema);
+Canto::Track::PubmedUtil::add_missing_fields($config, $schema);
 
 is ($pub_rs->search({ abstract => undef })->count(), 0);
 is ($pub_rs->search({ citation => undef })->count(), 0);

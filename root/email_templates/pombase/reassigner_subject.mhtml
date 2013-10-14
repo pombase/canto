@@ -1,1 +1,4 @@
-../generic/reassigner_subject.mhtml
+<%args>
+$publication_uniquename
+</%args>
+Thank you for reassigning <% $publication_uniquename %>

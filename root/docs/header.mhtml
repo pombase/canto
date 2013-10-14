@@ -1,1 +1,19 @@
-../header.mhtml
+<div id="heading">
+  <a href="/">
+    <div class="logo">
+      <img src="<% $c->uri_for('/static/images/' . $c->config()->{header_image}) %>"/>
+      <% $c->config()->{name} %> <span class="app_version"><% $c->config()->{app_version} %></span>
+    </div>
+  </a>
+
+  <& /menu.mhtml &>
+
+  <div class="text"><div> <% $c->config->{long_name} %> </div></div>
+
+  <div class="clearall"></div>
+</div>
+
+
+<%flags>
+inherit => undef
+</%flags>

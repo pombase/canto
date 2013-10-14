@@ -3,17 +3,17 @@ use warnings;
 use Test::More tests => 21;
 use Test::Deep;
 
-use PomCur::Chado::OntologyAnnotationLookup;
-use PomCur::TestUtil;
+use Canto::Chado::OntologyAnnotationLookup;
+use Canto::TestUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test();
 
 my $config = $test_util->config();
 
 my $lookup =
-  PomCur::Chado::OntologyAnnotationLookup->new(config => $test_util->config());
+  Canto::Chado::OntologyAnnotationLookup->new(config => $test_util->config());
 
 ok(defined $lookup->schema());
 
@@ -92,7 +92,7 @@ is(@$res, 0);
 
 
 # check that the is_not parameter is returned correctly
-my $chado_schema = PomCur::ChadoDB->new(config => $config);
+my $chado_schema = Canto::ChadoDB->new(config => $config);
 
 my $spbc12c2_02c = $chado_schema->resultset('Feature')->find({ uniquename => 'SPBC12C2.02c.1' });
 my $fcs = $spbc12c2_02c->feature_cvterms();

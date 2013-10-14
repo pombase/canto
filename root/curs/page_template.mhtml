@@ -1,1 +1,45 @@
-../autohandler
+<%args>
+$title
+$show_title => 1
+$right_title => undef
+$error => undef
+$message => undef
+$notice => undef
+$is_admin_user
+</%args>
+
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <& head.mhtml, title => $title &>
+  </head>
+  <body>
+% if (!$st->{hide_header}) {
+% # hide the head on the Canto front page
+    <& header.mhtml &>
+% }
+
+    <div class="container-fluid" id="content">
+      <div id="title-nav">
+<& breadcrumbs.mhtml &>
+<span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
+
+<& title.mhtml, show_title => $show_title, title => $title, right_title => $right_title &>
+
+<& /err_mess_notice.mhtml, error => $error, message => $message, notice => $notice &>
+
+      </div>
+      <div class="clearall"></div>
+% $m->call_next;
+    </div>
+    <& footer.mhtml &>
+  </body>
+</html>
+
+<%init>
+my $st = $c->stash();
+</%init>
+
+<%flags>
+inherit => undef
+</%flags>

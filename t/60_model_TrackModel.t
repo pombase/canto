@@ -2,5 +2,5 @@ use strict;
 use warnings;
 use Test::More tests => 1;
 
-BEGIN { use_ok 'PomCur::Model::TrackModel' }
+BEGIN { use_ok 'Canto::Model::TrackModel' }
 

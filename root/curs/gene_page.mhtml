@@ -118,7 +118,7 @@ my $org_config = $c->config()->{external_links}->{gene}->{organism}->{$gene_org_
 if (defined $org_config) {
   for my $conf (@$org_config) {
     if ($conf->{sysid_link}) {
-      $sysid_url = PomCur::WebUtil::substitute_paths($conf->{url}, $gene);
+      $sysid_url = Canto::WebUtil::substitute_paths($conf->{url}, $gene);
       $sysid_url_title = 'View at ' . $conf->{name};
     }
   }

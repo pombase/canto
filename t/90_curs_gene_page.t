@@ -5,10 +5,10 @@ use Test::More tests => 4;
 use Plack::Test;
 use Plack::Util;
 
-use PomCur::TestUtil;
-use PomCur::Controller::Curs;
+use Canto::TestUtil;
+use Canto::Controller::Curs;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 my $config = $test_util->config();
 
 $test_util->init_test('curs_annotations_2');
@@ -16,7 +16,7 @@ $test_util->init_test('curs_annotations_2');
 my $track_schema = $test_util->track_schema();
 
 my $curs_key = 'aaaa0007';
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
+my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
 my $app = $test_util->plack_app()->{app};
 
@@ -35,7 +35,7 @@ test_psgi $app, sub {
   is $res->code, 200;
 
   my $gene = $curs_schema->find_with_type('Gene', $gene_id);
-  my $gene_proxy = PomCur::Controller::Curs::_get_gene_proxy($config, $gene);
+  my $gene_proxy = Canto::Controller::Curs::_get_gene_proxy($config, $gene);
   my $gene_display_name = $gene_proxy->display_name();
 
   like ($res->content(), qr/Choose curation type for $gene_display_name/);

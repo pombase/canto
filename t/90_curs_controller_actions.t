@@ -7,10 +7,10 @@ use Plack::Util;
 use HTTP::Request;
 use Web::Scraper;
 
-use PomCur::TestUtil;
-use PomCur::Controller::Curs;
+use Canto::TestUtil;
+use Canto::Controller::Curs;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('1_curs');
 
 my $config = $test_util->config();
@@ -27,7 +27,7 @@ my $cookie_jar = $test_util->cookie_jar();
 my $test_name = 'Dr. Test Name';
 my $test_email = 'test.name@example.com';
 
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
+my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 my $uniquename = "PMID:19664060";
@@ -86,7 +86,7 @@ sub upload_genes
     my $found_match = 0;
     for my $stored_gene (@stored_genes) {
       my $stored_gene_proxy =
-        PomCur::Controller::Curs::_get_gene_proxy($config, $stored_gene);
+        Canto::Controller::Curs::_get_gene_proxy($config, $stored_gene);
       if ($stored_gene_proxy->primary_identifier() eq $gene_identifier ||
           ( defined $stored_gene_proxy->primary_name() &&
             $stored_gene_proxy->primary_name() eq $gene_identifier ) ||

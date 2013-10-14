@@ -20,24 +20,24 @@ BEGIN {
 
 use lib qw(lib);
 
-use PomCur::Config;
-use PomCur::Meta::Util;
-use PomCur::TrackDB;
-use PomCur::Track;
+use Canto::Config;
+use Canto::Meta::Util;
+use Canto::TrackDB;
+use Canto::Track;
 
-my $app_name = PomCur::Config::get_application_name();
+my $app_name = Canto::Config::get_application_name();
 
-$ENV{POMCUR_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+$ENV{CANTO_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
 
-my $suffix = $ENV{POMCUR_CONFIG_LOCAL_SUFFIX};
+my $suffix = $ENV{CANTO_CONFIG_LOCAL_SUFFIX};
 
-if (!PomCur::Meta::Util::app_initialised($app_name, $suffix)) {
-  die "The application is not yet initialised, try running the pomcur_start " .
+if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
+  die "The application is not yet initialised, try running the canto_start " .
     "script\n";
 }
 
 
-my $config = PomCur::Config::get_config();
+my $config = Canto::Config::get_config();
 
-PomCur::Track::update_metadata($config);
+Canto::Track::update_metadata($config);
 

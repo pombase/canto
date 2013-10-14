@@ -9,19 +9,19 @@ use Moose;
 
 has 'config' => (
   is => 'ro',
-  isa => 'PomCur::Config'
+  isa => 'Canto::Config'
 );
 
-with 'PomCur::Track::TrackAdaptor';
+with 'Canto::Track::TrackAdaptor';
 
 no Moose;
 
 
 package main;
 
-use PomCur::TestUtil;
+use Canto::TestUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test();
 

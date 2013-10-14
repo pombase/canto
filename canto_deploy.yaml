@@ -1,0 +1,13 @@
+---
+Model::TrackModel:
+  connect_info:
+    - dbi:SQLite:dbname=/home/kmr44/cur/local/track.sqlite3
+  schema_class: Canto::TrackDB
+
+data_directory: /home/kmr44/cur/local/
+
+extra_css: /static/css/test_style.css
+
+email:
+  from_address: noreply@pombase.org
+  admin_address: kmr@aska.gen.nz

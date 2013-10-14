@@ -6,10 +6,10 @@ use Plack::Test;
 use Plack::Util;
 use HTTP::Request;
 
-use PomCur::TestUtil;
-use PomCur::Controller::Curs;
+use Canto::TestUtil;
+use Canto::Controller::Curs;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();

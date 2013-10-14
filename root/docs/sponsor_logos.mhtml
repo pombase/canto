@@ -1,1 +1,10 @@
-../sponsor_logos.mhtml
+<div class="sponsor">
+  <a href="http://www.wellcome.ac.uk">
+    <img src="<% $c->uri_for('/static/images/wt_logo.png') %>"/>
+  </a>
+</div>
+<div class="sponsor">
+  <a href="http://www.cam.ac.uk">
+    <img src="<% $c->uri_for('/static/images/uni_of_cam.png') %>"/>
+  </a>
+</div>

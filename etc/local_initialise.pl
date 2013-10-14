@@ -10,28 +10,28 @@ use strict;
 use warnings;
 use Carp;
 
-use PomCur::TrackDB;
-use PomCur::Config;
-use PomCur::TestUtil;
-use PomCur::DBUtil;
+use Canto::TrackDB;
+use Canto::Config;
+use Canto::TestUtil;
+use Canto::DBUtil;
 
 use File::Path qw(make_path remove_tree);
 use File::Copy qw(copy);
 
 use File::Copy::Recursive qw(dircopy);
 
-my $config = PomCur::Config->new_test_config();
-$config->merge_config("pomcur_local.yaml");
+my $config = Canto::Config->new_test_config();
+$config->merge_config("canto_local.yaml");
 
 my $connect_string = $config->model_connect_string('Track');
 
 my $db_file_name =
-  PomCur::DBUtil::connect_string_file_name($connect_string);
+  Canto::DBUtil::connect_string_file_name($connect_string);
 
 (my $local_dir = $db_file_name) =~ s:(.*?)/.*:$1:;
 
 my $track_test_db =
-  PomCur::TestUtil::test_track_db_name($config, "curs_annotations_2");
+  Canto::TestUtil::test_track_db_name($config, "curs_annotations_2");
 
 (my $test_data_dir = $track_test_db) =~ s:(.*)/.*:$1:;
 

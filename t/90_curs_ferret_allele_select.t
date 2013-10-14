@@ -7,10 +7,10 @@ use Plack::Util;
 use HTTP::Request;
 use JSON;
 
-use PomCur::TestUtil;
-use PomCur::Controller::Curs;
+use Canto::TestUtil;
+use Canto::Controller::Curs;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 my $config = $test_util->config();
 
 $test_util->init_test('curs_annotations_1');
@@ -20,7 +20,7 @@ my @curs_objects = $track_schema->resultset('Curs')->all();
 is(@curs_objects, 1);
 
 my $curs_key = $curs_objects[0]->curs_key();
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, $curs_key);
+my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
 my $app = $test_util->plack_app()->{app};
 
@@ -47,7 +47,7 @@ test_psgi $app, sub {
 
   my $gene_id = 2;
   my $gene = $curs_schema->find_with_type('Gene', $gene_id);
-  my $gene_proxy = PomCur::Controller::Curs::_get_gene_proxy($config, $gene);
+  my $gene_proxy = Canto::Controller::Curs::_get_gene_proxy($config, $gene);
   my $gene_display_name = $gene_proxy->display_name();
 
   {
@@ -63,7 +63,7 @@ test_psgi $app, sub {
     is $res->code, 302;
     my $redirect_url = $res->header('location');
 
-    $new_annotation_id = $PomCur::Controller::Curs::_debug_annotation_id;
+    $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_id;
     is ($redirect_url, "$root_url/annotation/allele_select/$new_annotation_id");
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);

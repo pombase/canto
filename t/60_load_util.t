@@ -3,15 +3,15 @@ use warnings;
 use Test::More tests => 4;
 use Test::Exception;
 
-use PomCur::TestUtil;
-use PomCur::Track::LoadUtil;
+use Canto::TestUtil;
+use Canto::Track::LoadUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
 
 my $schema = $test_util->track_schema();
 
-my $load_util = PomCur::Track::LoadUtil->new(schema => $schema);
+my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
 
 my $dbxref = $load_util->find_dbxref("PECO:0000005");
 

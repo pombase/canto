@@ -1,17 +1,17 @@
 use strict;
 use warnings;
 use Test::More tests => 13;
-use Package::Alias Tools => 'PomCur::Controller::Tools';
+use Package::Alias Tools => 'Canto::Controller::Tools';
 use LWP::Protocol::PSGI;
 use Plack::Test;
 use HTTP::Request;
 use JSON;
 use POSIX qw/strftime/;
 
-use PomCur::TestUtil;
-use PomCur::Curs::State qw/:all/;
+use Canto::TestUtil;
+use Canto::Curs::State qw/:all/;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
 
 my $track_schema = $test_util->track_schema();
@@ -66,9 +66,9 @@ my $db_pub = $track_schema->find_with_type('Pub',
 
 is ($db_pub->uniquename(), $extern_pubmedid);
 
-my $curs_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0007');
+my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 my $admin_person = $test_util->get_a_person($track_schema, 'admin');
-my $state = PomCur::Curs::State->new(config => $config);
+my $state = Canto::Curs::State->new(config => $config);
 
 $state->set_state($curs_schema, APPROVAL_IN_PROGRESS,
                   { force => CURATION_IN_PROGRESS,
@@ -114,22 +114,22 @@ is (keys %{$content_2_parsed->{curation_sessions}}, 0);
 
 
 
-my $aaaa0006_schema = PomCur::Curs::get_schema_for_key($config, 'aaaa0006');
+my $aaaa0006_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0006');
 $state->set_state($aaaa0006_schema, NEEDS_APPROVAL);
 
 my $pmid = 'PMID:19756689';
-my ($new_curs, $new_curs_db) = PomCur::Track::create_curs($config, $track_schema, $pmid);
+my ($new_curs, $new_curs_db) = Canto::Track::create_curs($config, $track_schema, $pmid);
 my $new_curs_key = $new_curs->curs_key();
 
 my $created_date =
-  $state->get_metadata($new_curs_db, PomCur::Curs::State::SESSION_CREATED_TIMESTAMP_KEY);
+  $state->get_metadata($new_curs_db, Canto::Curs::State::SESSION_CREATED_TIMESTAMP_KEY);
 
 (my $test_date = $created_date) =~ s/^(\d\d\d\d-\d\d-\d\d)\s.*/$1/;
 
 my $app_prefix = 'http://localhost';
 
 my $daily_summary_text =
-  PomCur::Controller::Tools::_daily_summary_text($config, $test_date, $app_prefix);
+  Canto::Controller::Tools::_daily_summary_text($config, $test_date, $app_prefix);
 
 like($daily_summary_text, qr/activity for $test_date/);
 like($daily_summary_text, qr|Sessions created on \d+-\d+-\d+ with no curator\s+$app_prefix/curs/$new_curs_key\s+$pmid\s+"SUMOylation is required for normal|);

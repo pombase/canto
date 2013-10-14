@@ -4,17 +4,17 @@ use Test::More tests => 14;
 
 use Test::MockObject;
 
-use PomCur::TestUtil;
-use PomCur::EmailUtil;
+use Canto::TestUtil;
+use Canto::EmailUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 $test_util->init_test();
 
 my $config = $test_util->config();
 
 my $mock = Test::MockObject->new();
 $mock->mock('config', sub { return $config; });
-$mock->mock('_process_template', sub { PomCur::EmailUtil::_process_template(@_); });
+$mock->mock('_process_template', sub { Canto::EmailUtil::_process_template(@_); });
 
 my $curs_key = "aaaa0007";
 my $root_url = "http://localhost:5000/curs/$curs_key";
@@ -50,7 +50,7 @@ $config->{email}->{templates}->{session_assigned}->{body} =
   "email_templates/pombase/session_assigned_body.mhtml";
 
 my ($subject, $body, $from) =
-  PomCur::EmailUtil::make_email($mock, 'session_assigned', %args);
+  Canto::EmailUtil::make_email($mock, 'session_assigned', %args);
 
 ok ($from ne $default_test_from);
 is ($from, "$person_name <$person_email>");
@@ -70,7 +70,7 @@ $args{reassigner_name} = "Test Name";
 $args{reassigner_email} = 'test@example.com';
 
 ($subject, $body, $from) =
-  PomCur::EmailUtil::make_email($mock, 'reassigner', %args);
+  Canto::EmailUtil::make_email($mock, 'reassigner', %args);
 
 like ($body, qr/Thank you for reassigning/);
 like ($body, qr/Below is a copy/);

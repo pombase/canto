@@ -75,7 +75,7 @@ $order_by => undef
 </div>
 
 <%init>
-use PomCur::WebUtil;
+use Canto::WebUtil;
 
 my $st = $c->stash();
 
@@ -101,9 +101,9 @@ if ($is_inline) {
 }
 
 my @column_confs =
-  PomCur::WebUtil::get_column_confs($c, $rs, $class_info, $context);
+  Canto::WebUtil::get_column_confs($c, $rs, $class_info, $context);
 
-$rs = PomCur::WebUtil::process_rs_options($rs, [@column_confs]);
+$rs = Canto::WebUtil::process_rs_options($rs, [@column_confs]);
 
 $st->{column_confs} = [@column_confs];
 

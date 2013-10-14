@@ -3,17 +3,17 @@ use warnings;
 use Test::More tests => 28;
 use Test::Deep;
 
-use PomCur::TestUtil;
-use PomCur::Track;
-use PomCur::TrackDB;
-use PomCur::DBUtil;
+use Canto::TestUtil;
+use Canto::Track;
+use Canto::TrackDB;
+use Canto::DBUtil;
 
-my $test_util = PomCur::TestUtil->new();
+my $test_util = Canto::TestUtil->new();
 
 $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
-my $schema = PomCur::TrackDB->new(config => $config);
+my $schema = Canto::TrackDB->new(config => $config);
 
 my @results = $schema->resultset('Curs')->search();
 
@@ -38,7 +38,7 @@ my @existing_files = glob("$data_directory/*.sqlite3");
 is(@existing_files, 4);
 ok(grep { $_ eq "$data_directory/track.sqlite3" } @existing_files);
 
-PomCur::Track::create_curs_db($config, $curs);
+Canto::Track::create_curs_db($config, $curs);
 
 @results = $schema->resultset('Curs')->search();
 
@@ -60,7 +60,7 @@ cmp_deeply([@files_after],
            ]);
 
 my $curs_schema =
-  PomCur::DBUtil::schema_for_file($config, $new_curs_db, 'Curs');
+  Canto::DBUtil::schema_for_file($config, $new_curs_db, 'Curs');
 
 # make sure it's a valid sqlite3 database
 my $curs_metadata_rs = $curs_schema->resultset('Metadata');
@@ -82,13 +82,13 @@ is($curs_db_pub->abstract(), $pub->abstract());
 
 # test curs_iterator()
 my $track_schema = $test_util->track_schema();
-my $cursdb_iter = PomCur::Track::curs_iterator($config, $track_schema);
+my $cursdb_iter = Canto::Track::curs_iterator($config, $track_schema);
 
 my $cursdb_count = 0;
 
 while (my ($curs, $cursdb) = $cursdb_iter->()) {
   $cursdb_count++;
-  is(ref $cursdb, 'PomCur::CursDB');
+  is(ref $cursdb, 'Canto::CursDB');
 
   my $metadata_curs_key =
     $cursdb->resultset('Metadata')->find({ key => 'curs_key' });
@@ -109,7 +109,7 @@ my $count_proc = sub {
   return ($curs->curs_key(), $gene_count);
 };
 
-my @map_res = PomCur::Track::curs_map($config, $track_schema, $count_proc);
+my @map_res = Canto::Track::curs_map($config, $track_schema, $count_proc);
 my %map_res_hash = @map_res;
 cmp_deeply(\%map_res_hash,
           { aaaa0006 => 1, aaaa0007 => 4, abcd0123 => 0 });
@@ -119,10 +119,10 @@ my $curs_rs = $schema->resultset('Curs');
 
 my $curs_key = 'aaaa0006';
 is($curs_rs->search({ curs_key => $curs_key })->count(), 1);
-my $db_file_name = PomCur::Curs::make_long_db_file_name($config, $curs_key);
+my $db_file_name = Canto::Curs::make_long_db_file_name($config, $curs_key);
 ok(-f $db_file_name);
 
-PomCur::Track::delete_curs($config, $schema, $curs_key);
+Canto::Track::delete_curs($config, $schema, $curs_key);
 
 is($curs_rs->search({ curs_key => $curs_key })->count(), 0);
 ok(!-f $db_file_name);
@@ -131,18 +131,18 @@ ok(!-f $db_file_name);
 # test validate_curs() by changing the cursdb
 my $validate_key = 'aaaa0007';
 my $validate_curs = $curs_rs->find({ curs_key => $validate_key });
-my @validate_res = PomCur::Track::validate_curs($config, $track_schema, $validate_curs);
+my @validate_res = Canto::Track::validate_curs($config, $track_schema, $validate_curs);
 is (@validate_res, 0);
 
 my $validate_curs_schema =
-  PomCur::Curs::get_schema_for_key($config, $validate_key);
+  Canto::Curs::get_schema_for_key($config, $validate_key);
 my $validate_curs_pub_id =
   $validate_curs_schema->find_with_type('Metadata', 'key', 'curation_pub_id')->value();
 my $validate_curs_pub =
   $validate_curs_schema->find_with_type('Pub', $validate_curs_pub_id);
 $validate_curs_pub->uniquename('PMID:12345');
 $validate_curs_pub->update();
-@validate_res = PomCur::Track::validate_curs($config, $track_schema, $validate_curs);
+@validate_res = Canto::Track::validate_curs($config, $track_schema, $validate_curs);
 is (@validate_res, 1);
 my $validate_pub_mess = q/Pub uniquename in the trackdb ("PMID:19756689") doesn't match Pub uniquename in the cursdb ("PMID:12345")/;
 is ($validate_res[0], $validate_pub_mess);
@@ -151,7 +151,7 @@ my $validate_cursdb_curs_key =
   $validate_curs_schema->find_with_type('Metadata', 'key', 'curs_key');
 $validate_cursdb_curs_key->value('aaaa_no_match');
 $validate_cursdb_curs_key->update();
-@validate_res = PomCur::Track::validate_curs($config, $track_schema, $validate_curs);
+@validate_res = Canto::Track::validate_curs($config, $track_schema, $validate_curs);
 is (@validate_res, 2);
 is ($validate_res[0], $validate_pub_mess);
 my $validate_curs_key_mess = q/The curs_key stored in the trackdb ("aaaa0007") doesn't match curs_key in the metadata table of the cursdb ("aaaa_no_match")/;
