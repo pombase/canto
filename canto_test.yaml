@@ -1,6 +1,0 @@
----
-Model::TrackModel:
-  connect_info:
-    - dbi:SQLite:dbname=/tmp/canto_test_70_serialise.t_25274.iLMyL/track.sqlite3
-  schema_class: Canto::TrackDB
-data_directory: /tmp/canto_test_70_serialise.t_25274.iLMyL
