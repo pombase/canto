@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 26;
+use Test::More tests => 27;
 
 use Canto::TestUtil;
 
@@ -123,7 +123,8 @@ test_psgi $app, sub {
 
     is $res->code, 200;
     like ($res->content(), qr/List of all controlled vocabularies/);
-    like ($res->content(), qr/PSI-MOD.*19.*Canto publication curation status/s);
+    like ($res->content(), qr/PSI-MOD/);
+    like ($res->content(), qr/Canto publication curation status/s);
   }
 };
 
