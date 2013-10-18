@@ -31,6 +31,8 @@ Canto can be tested in a virtual machine using
 [Vagrant](http://www.vagrantup.com/).  This combination is available on Linux,
 MacOS and Windows.
 
+These instructions have been tested on a 64 bit host.
+
 ## Installing VirtualBox
 
 Installation packages for VirtualBox are available here:
@@ -53,18 +55,17 @@ Users of recent versions of Debian and Ubuntu can install with:
     apt-get install vagrant
 
 ## Canto via Vagrant
-Once VirtualBox and Vagrant are installed, use these commands to:
 
-- create a virtual machine
-- install the operating system
-- install Canto
-- start the Canto server
+Once VirtualBox and Vagrant are installed, use these commands to create a
+virtual machine, install the operating system (Ubuntu) and install Canto and
+its dependencies:
 
-    vagrant box add precise64 http://files.vagrantup.com/precise64.box
     cd canto
+    vagrant box add precise64 http://files.vagrantup.com/precise64.box
     vagrant up
 
-You can then `ssh` to the virtual machine with:
+These will take many minutes to complete.  If everything is succesful, once
+`vagrant up` returns you can `ssh` to the virtual machine with:
 
     vagrant ssh
 
@@ -76,7 +77,6 @@ From that shell, the Canto server can be started with:
 Once started the server can be accessed on port 5500 of the host:
 
     http://localhost:5500/
-
 
 # Manual installation
 ## Installing basic prerequisites
