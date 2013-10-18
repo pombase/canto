@@ -71,7 +71,7 @@ You can then `ssh` to the virtual machine with:
 From that shell, the Canto server can be started with:
 
     cd canto
-    ./script/pomcur_start
+    ./script/canto_start
 
 Once started the server can be accessed on port 5500 of the host:
 
