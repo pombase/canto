@@ -51,14 +51,14 @@ Installation packages for VirtualBox are available here:
 On some operating systems, packages may be available from the default
 repositories:
 
-* Debian: https://wiki.debian.org/VirtualBox
-* Ubuntu: https://help.ubuntu.com/community/VirtualBox
-* RedHat/Centos: http://wiki.centos.org/HowTos/Virtualization/VirtualBox
+* Debian: `https://wiki.debian.org/VirtualBox`
+* Ubuntu: `https://help.ubuntu.com/community/VirtualBox`
+* RedHat/Centos: `http://wiki.centos.org/HowTos/Virtualization/VirtualBox`
 
 ## Installing Vagrant
 
 Installation instructions for Vagrant are here:
-http://docs.vagrantup.com/v2/installation/index.html
+`http://docs.vagrantup.com/v2/installation/index.html`
 
 Users of recent versions of Debian and Ubuntu can install with:
 
@@ -171,7 +171,7 @@ A longer description of the site.  eg. The SlugBase community annotation tool
 Database name for prefixing identifiers when exporting.  eg. PomBase
 ### database_url
 The URL of the database that this instance is installed for.  eg.
-http://www.pombase.org
+`http://curation.pombase.org/pombe/`
 ### header_image
 A the path relative to `root/static` of the logo to put in the header.
 ### canto_url
@@ -296,17 +296,17 @@ test data will need to be re-initialised.
 ## Helper scripts
 Scripts to help developers:
 
-- `etc/db_initialise.pl` :: create empty template database from the schemas
+- `etc/db_initialise.pl` - create empty template database from the schemas
   and recreate the database classes in lib/Canto/TrackDB and
   lib/Canto/CursDB
-- `etc/test_data_initialise.pl` :: re-create test data files that don't change
+- `etc/test_data_initialise.pl` - re-create test data files that don't change
   very often.  eg. the test PubMed XML file.  Currently this script only
   needs to be run if the list of publications for the test database
   changes
-- `etc/test_initialise.pl` :: initialise the test databases in t/data with
+- `etc/test_initialise.pl` - initialise the test databases in t/data with
   a small number of genes and a mini version of the Gene Ontology
   database
-- `etc/local_initialise.pl` :: create a test instance of Canto in ./local
+- `etc/local_initialise.pl` - create a test instance of Canto in ./local
 
 ## Initialising test data
 Run the following commands in the canto directory to create the test
@@ -325,7 +325,7 @@ The server can be run from the top level directory with this command:
     CANTO_CONFIG_LOCAL_SUFFIX=local PERL5LIB=lib ./script/canto_server.pl -p 5000 -r -d
 
 "5000" is the local port to connect on.  The server should then be
-available at http://localhost:5000/
+available at `http://localhost:5000/`
 
 # Contact
 For questions or help please contact helpdesk@pombase.org or kim@pombase.org.
