@@ -12,29 +12,6 @@ source to it
 - Linux, BSD or UNIX
 - Perl, clucene library
 
-# Getting the code
-Currently the easiest way to get the code is via GitHub.  Run this command
-to get a copy of the code:
-
-    git clone https://github.com/pombase/canto.git
-
-This creates a directory called "`canto`".  The directory can be updated
-later with the command:
-
-    git pull
-
-## Downloading an archive file
-
-Alternatively, GitHub provides archive files for the current version:
-
-- https://github.com/pombase/canto/archive/master.zip
-- https://github.com/pombase/canto/archive/master.tar.gz
-
-Note after unpacking, you'll have a directory called `canto-master`.  The text
-below assumes `canto` so:
-
-    mv canto-master canto
-
 # Canto in a Virtual machine
 Canto can be tested in a virtual machine using
 [VirtualBox](http://www.virtualbox.org) and
@@ -74,8 +51,9 @@ its dependencies:
     vagrant box add precise64 http://files.vagrantup.com/precise64.box
     vagrant up
 
-These will take many minutes to complete.  If everything is succesful, once
-`vagrant up` returns you can `ssh` to the virtual machine with:
+The `vagrant` commands will many minutes to complete.  If everything is
+succesful, once `vagrant up` returns you can `ssh` to the virtual machine
+with:
 
     vagrant ssh
 
@@ -89,12 +67,25 @@ Once started the server can be accessed on port 5500 of the host:
     http://localhost:5500/
 
 # Manual installation
-## Installing basic prerequisites
-### Debian and Ubuntu
-These Debian packages need to be installed using the package managerbefore
-starting:
+
+## Software requirements
+
+The following software is needed for the installation:
+
+- Perl
+- Git
+- GCC (for compiling part of the Perl libraries)
+- Make
+- CLucene v0.9.*
+- Module::Install and Module::Install::Catalyst
+
+## Installing prerequisites on Debian and Ubuntu 
+
+On Debian and Ubuntu, the software requirements can be installed using the
+package manager:
 
     sudo apt-get install perl gcc g++ tar gzip bzip2 make git-core \
+      libclucene-dev libclucene0ldbl \
       libmodule-install-perl libcatalyst-devel-perl \
       libdist-checkconflicts-perl
   
@@ -104,15 +95,40 @@ before preceeding:
     sudo apt-get install libhash-merge-perl \
       libhtml-mason-perl libplack-perl libdbix-class-perl \
       libdbix-class-schema-loader-perl libcatalyst-modules-perl libio-all-lwp-perl \
-      libwww-perl perl gcc g++ tar gzip bzip2 make libmodule-install-perl \
-      libclucene-dev libclucene0ldbl libjson-xs-perl libio-all-perl \
+      libwww-perl libjson-xs-perl libio-all-perl \
       libio-string-perl libmemoize-expirelru-perl libtry-tiny-perl \
       libarchive-zip-perl libtext-csv-xs-perl liblingua-en-inflect-number-perl \
       libcatalyst-modules-perl libmoose-perl libdata-compare-perl \
       libmoosex-role-parameterized-perl libfile-copy-recursive-perl \
       libxml-simple-perl libtext-csv-perl libtest-deep-perl
 
-### CPAN tips
+If these packages aren't installed these Perl modules will be installed using
+CPAN, which is slower.
+
+## Getting the code
+Currently the easiest way to get the code is via GitHub.  Run this command
+to get a copy of the code:
+
+    git clone https://github.com/pombase/canto.git
+
+This creates a directory called "`canto`".  The directory can be updated
+later with the command:
+
+    git pull
+
+## Downloading an archive file
+
+Alternatively, GitHub provides archive files for the current version:
+
+- https://github.com/pombase/canto/archive/master.zip
+- https://github.com/pombase/canto/archive/master.tar.gz
+
+Note after unpacking, you'll have a directory called `canto-master`.  The text
+below assumes `canto` so:
+
+    mv canto-master canto
+
+## CPAN tips
 Use these commands at the `cpan` prompt avoid lots of questions while
 installing:
 
@@ -125,12 +141,12 @@ support:
 
     install Bundle::CPAN
 
-### Install dependencies
+## Install dependencies
 
     perl Makefile.PL
     make
 
-### Run the tests
+## Run the tests
 To check that all prerequisites are installed and that the code Canto tests
 pass:
 
