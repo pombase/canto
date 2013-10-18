@@ -142,17 +142,17 @@ To try the Canto server:
 ## Initialise the data directory
 From the in the `canto` directory:
 
-   mkdir canto-test
-   ./script/canto_start --init canto-test
+    mkdir canto-test
+    ./script/canto_start --init canto-test
 
 ## Run the server
 
-   ./script/canto_start
+    ./script/canto_start
 
 ## Visit the application start page
 The application should now be running at:
 
-   http://localhost:5000
+    http://localhost:5000
 
 
 # Configuration
@@ -248,10 +248,12 @@ should be used for rendering and storing these annotation type.
 
 #### gene data format
 Four tab separated columns with no header line:
+
 - systematic identifier
 - gene primary name
 - synonyms (comma separated)
 - product
+
 ### Ontology terms
 
     ./script/canto_load.pl --ontology ontology_file.obo
