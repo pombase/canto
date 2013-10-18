@@ -18,10 +18,67 @@ later with the command:
 
     git pull
 
-# Virtual machine
+## Downloading an archive file
+
+Alternatively, GitHub provides archive files for the current version:
+
+- https://github.com/pombase/canto/archive/master.zip
+- https://github.com/pombase/canto/archive/master.tar.gz
+
+# Canto in a Virtual machine
+Canto can be tested in a virtual machine using
+[VirtualBox](http://www.virtualbox.org) and
+[Vagrant](http://www.vagrantup.com/).  This combination is available on Linux,
+MacOS and Windows.
+
+## Installing VirtualBox
+
+Installation packages for VirtualBox are available here:
+  https://www.virtualbox.org/wiki/Downloads
+
+On some operating systems, packages may be available from the default
+repositories:
+
+* Debian: https://wiki.debian.org/VirtualBox
+* Ubuntu: https://help.ubuntu.com/community/VirtualBox
+* RedHat/Centos: http://wiki.centos.org/HowTos/Virtualization/VirtualBox
+
+## Installing Vagrant
+
+Installation instructions for Vagrant are here:
+http://docs.vagrantup.com/v2/installation/index.html
+
+Users of recent versions of Debian and Ubuntu can install with:
+
+    apt-get install vagrant
+
+## Canto via Vagrant
+Once VirtualBox and Vagrant are installed, use these commands to:
+
+- create a virtual machine
+- install the operating system
+- install Canto
+- start the Canto server
+
+    vagrant box add precise64 http://files.vagrantup.com/precise64.box
+    cd canto
+    vagrant up
+
+You can then `ssh` to the virtual machine with:
+
+    vagrant ssh
+
+From that shell, the Canto server can be started with:
+
+    cd canto
+    ./script/pomcur_start
+
+Once started the server can be accessed on port 5500 of the host:
+
+    http://localhost:5500/
 
 
-# Installation
+# Manual installation
 ## Installing basic prerequisites
 ### Debian and Ubuntu
 To improve the installation speed, these packages can be installed using the
