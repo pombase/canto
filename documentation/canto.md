@@ -1,7 +1,12 @@
 # Introduction
-Canto is a generic genome annotation tool with a focus on community curation.
-This document describes Canto from the adminstrators perspective.  It covers
-installation and maintenance.
+[Canto](http://curation.pombase.org/) is a generic genome annotation tool with
+a focus on community curation.  This document describes Canto from the
+adminstrators perspective.  It covers installation and maintenance.
+
+The latest version of this document can always be found on the main
+[Canto website](http://curation.pombase.org/pombe/docs/canto_admin) and the
+source to it
+[on GitHub](https://github.com/pombase/canto/blob/master/documentation/canto.md).
 
 # Requirements for Canto
 - Linux, BSD or UNIX
