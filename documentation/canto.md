@@ -30,6 +30,11 @@ Alternatively, GitHub provides archive files for the current version:
 - https://github.com/pombase/canto/archive/master.zip
 - https://github.com/pombase/canto/archive/master.tar.gz
 
+Note after unpacking, you'll have a directory called `canto-master`.  The text
+below assumes `canto` so:
+
+    mv canto-master canto
+
 # Canto in a Virtual machine
 Canto can be tested in a virtual machine using
 [VirtualBox](http://www.virtualbox.org) and
@@ -86,10 +91,16 @@ Once started the server can be accessed on port 5500 of the host:
 # Manual installation
 ## Installing basic prerequisites
 ### Debian and Ubuntu
-To improve the installation speed, these packages can be installed using the
-package manager before preceeding:
+These Debian packages need to be installed using the package managerbefore
+starting:
 
-    sudo apt-get install perl gcc g++ tar gzip bzip2 make libmodule-install-perl
+    sudo apt-get install perl gcc g++ tar gzip bzip2 make git-core \
+      libmodule-install-perl libcatalyst-devel-perl \
+      libdist-checkconflicts-perl
+  
+To improve the installation speed, these packages can optionally be installed
+before preceeding:
+
     sudo apt-get install libhash-merge-perl \
       libhtml-mason-perl libplack-perl libdbix-class-perl \
       libdbix-class-schema-loader-perl libcatalyst-modules-perl libio-all-lwp-perl \
@@ -100,15 +111,8 @@ package manager before preceeding:
       libcatalyst-modules-perl libmoose-perl libdata-compare-perl \
       libmoosex-role-parameterized-perl libfile-copy-recursive-perl \
       libxml-simple-perl libtext-csv-perl libtest-deep-perl
-    sudo cpan Dist::CheckConflicts
-    sudo cpan Module::Install::Catalyst
 
-
-If installing from the `git` repository, the git executable will be needed:
-
-    sudo apt-get install git-core
-
-### CPAN tip
+### CPAN tips
 Use these commands at the `cpan` prompt avoid lots of questions while
 installing:
 
@@ -126,8 +130,14 @@ support:
     perl Makefile.PL
     make
 
+### Run the tests
+To check that all prerequisites are installed and that the code Canto tests
+pass:
+
+    make test
+
 # Quick start
-To check that all prerequisites are installed and Canto is working correctly: 
+To try the Canto server:
 
 ## Initialise the data directory
 From the in the `canto` directory:
