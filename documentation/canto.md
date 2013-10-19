@@ -247,7 +247,38 @@ should be used for rendering and storing these annotation type.
 ### test_config_file
 The path to the extra configuration file needed while testing.
 ### help_text
+The keys under `help_text` identify a page in Canto and under the key is one
+or both of `inline` or `url`.  The help text and link is rendered by the
+`inline_help.mhtml` template.  If a `url` is given, the text under `inline`
+will be `title` attibute of a link with that URL.  Without a `url` a help link
+(a "?" icon) will be shown and the `inline` text will be displayed in a popup
+DIV.
+### contact_email
+This email address is shown anytime a contact address is needed.  See the
+`contact.mhtml` template.
 ### external_links
+Each external link configuration has three possible parameters:
+
+- `name` - The text to use as the title of the link.
+- `icon` - An image from the `root/static/images/logos` to use as the `<img>`
+  in the link.
+- `url` - The URL to the appropriate page on an external site.  This string
+  can contain text to substitute in the form `@@key@@`.  On the gene page, the
+  key can be `primary_identifier` (the gene systematic ID) or `primary_name`
+  (the gene name).  On the publication page the key should be `uniquename`
+  which will substitute the PubMed ID into the URL.
+- `sysid_link` - This external link will be used to hyperlink the primary
+  identifier on the gene page as well as being shown in the external links
+  section on the right of the page.
+
+There are two possible types of external link on the gene pages:
+
+- `generic` - These links will be shown on all gene pages.
+- `organism` - These links are specific to the given organism.  The keys under
+  the `organism` section will be the full organism name (ie "Genus species").
+
+The external links are implemented in the `linkouts.html` template.
+
 ### webservices
 ### ontology_external_links
 ### chado
