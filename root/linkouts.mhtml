@@ -6,12 +6,13 @@ $context
 <div class="curs-external-links">
 % if (@url_details) {
 %   for my $url_detail (@url_details) {
+%     my $name = $url_detail->{name};
   <div class="curs-external-link">
-    <a href="<% $url_detail->{url} %>" target="_blank">
+    <a href="<% $url_detail->{url} %>" target="_blank" title="<% $name %>">
 %     if (defined $url_detail->{icon}) {
-      <img src="<% $url_detail->{icon} %>"/>
+      <img src="<% $url_detail->{icon} %>" alt="<% $name %>" />
 %     }
-      <img src="<% $link_img_src %>"/>
+      <img src="<% $link_img_src %>" alt="<% $name %>"/>
     </a>
   </div>
 %   }
