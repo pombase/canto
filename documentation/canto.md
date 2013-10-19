@@ -85,7 +85,7 @@ package manager:
 
     sudo apt-get install perl gcc g++ tar gzip bzip2 make git-core wget \
       libmodule-install-perl libcatalyst-devel-perl \
-      libdist-checkconflicts-perl
+      libdist-checkconflicts-perl liblocal-lib-perl
 
 To improve the installation speed, these packages can optionally be installed
 before preceeding:
