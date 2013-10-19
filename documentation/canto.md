@@ -158,14 +158,6 @@ installing modules later.
     o conf build_requires_install_policy no
     o conf commit
 
-This command at the CPAN prompt will update CPAN and install Readline
-support (optional step):
-
-    install Bundle::CPAN
-
-This will take a few minutes.  You should be able just to press return if you
-are prompted at any point.
-
 Quit cpan and return to the shell prompt with:
 
     exit
