@@ -119,9 +119,9 @@ On Ubuntu v13.10 the old CLucene library can be installed with:
     wget http://www.mirrorservice.org/sites/archive.ubuntu.com/ubuntu//pool/main/c/clucene-core/libclucene-dev_0.9.21b-2build1_amd64.deb
     sudo dpkg -i libclucene0ldbl_0.9.21b-2build1_amd64.deb libclucene-dev_0.9.21b-2build1_amd64.deb
 
-## Getting the code
+## Getting the Canto source code
 Currently the easiest way to get the code is via GitHub.  Run this command
-to get a copy of the code:
+to get a copy:
 
     git clone https://github.com/pombase/canto.git
 
