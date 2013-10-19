@@ -98,7 +98,14 @@ before preceeding:
       libarchive-zip-perl libtext-csv-xs-perl liblingua-en-inflect-number-perl \
       libcatalyst-modules-perl libmoose-perl libdata-compare-perl \
       libmoosex-role-parameterized-perl libfile-copy-recursive-perl \
-      libxml-simple-perl libtext-csv-perl libtest-deep-perl
+      libxml-simple-perl libtext-csv-perl libtest-deep-perl \
+      libtext-markdown-perl libchi-driver-memcached-perl libchi-perl \
+      libcache-memcached-perl libcache-perl libfile-touch-perl \
+      libhtml-html5-builder-perl libplack-middleware-expires-perl \
+      libstring-similarity-perl libcatalyst-engine-psgi-perl \
+      liblwp-protocol-psgi-perl libweb-scraper-perl \
+      libdbd-pg-perl libdbd-sqlite3-perl libdata-javascript-anon-perl \
+      libdata-rmap-perl
 
 If these packages aren't installed these Perl modules will be installed using
 CPAN, which is slower.
@@ -168,6 +175,9 @@ In the `canto` directory:
     perl Makefile.PL
     make installdeps
     make
+
+Answer "yes" to the "Auto-install the X mandatory module(s) from CPAN?"
+prompt.
 
 ## Run the tests
 To check that all prerequisites are installed and that the code Canto tests
