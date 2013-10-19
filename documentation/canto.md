@@ -143,21 +143,37 @@ below assumes `canto` so:
     mv canto-master canto
 
 ## CPAN tips
+It's best to configure the CPAN client before starting the Canto
+installation.  Start it with:
+
+    cpan
+
+When started, cpan will attempt to configure itself.  Usually the default
+answer at each prompt will work.
+
 Use these commands at the `cpan` prompt avoid lots of questions while
-installing:
+installing modules later.
 
     o conf prerequisites_policy follow
     o conf build_requires_install_policy no
     o conf commit
 
 This command at the CPAN prompt will update CPAN and install Readline
-support:
+support (optional step):
 
     install Bundle::CPAN
 
+This will take a few minutes.
+
+Quit cpan and return to the shell prompt with:
+
+    exit
+
 ## Install dependencies
+In the `canto` directory:
 
     perl Makefile.PL
+    make installdeps
     make
 
 ## Run the tests
