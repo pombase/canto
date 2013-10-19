@@ -78,16 +78,15 @@ The following software is needed for the installation:
 - CLucene v0.9.*
 - Module::Install and Module::Install::Catalyst
 
-## Installing prerequisites on Debian and Ubuntu 
+## Installing prerequisites on Debian and Ubuntu
 
 On Debian and Ubuntu, the software requirements can be installed using the
 package manager:
 
-    sudo apt-get install perl gcc g++ tar gzip bzip2 make git-core \
-      libclucene-dev libclucene0ldbl \
+    sudo apt-get install perl gcc g++ tar gzip bzip2 make git-core wget \
       libmodule-install-perl libcatalyst-devel-perl \
       libdist-checkconflicts-perl
-  
+
 To improve the installation speed, these packages can optionally be installed
 before preceeding:
 
@@ -103,6 +102,22 @@ before preceeding:
 
 If these packages aren't installed these Perl modules will be installed using
 CPAN, which is slower.
+
+The [CLucene](http://clucene.sourceforge.net/) is required by Canto.  For
+Debian version 7 ("wheezy") and earlier and Ubuntu version 13.04 ("Raring")
+and earlier it can be installed with:
+
+    sudo apt-get install libclucene-dev libclucene0ldbl
+
+For Ubuntu version 13.10 the correct CLucene library version must bne
+installed manually.  The Perl CLucene modules is currently only compatible
+with CLucene version 0.9.* but Ubuntu v13.10 ships with CLucene v2.3.3.4.
+
+On Ubuntu v13.10 the old CLucene library can be installed with:
+
+    wget http://www.mirrorservice.org/sites/archive.ubuntu.com/ubuntu//pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2build1_amd64.deb
+    wget http://www.mirrorservice.org/sites/archive.ubuntu.com/ubuntu//pool/main/c/clucene-core/libclucene-dev_0.9.21b-2build1_amd64.deb
+    sudo dpkg -i libclucene0ldbl_0.9.21b-2build1_amd64.deb libclucene-dev_0.9.21b-2build1_amd64.deb
 
 ## Getting the code
 Currently the easiest way to get the code is via GitHub.  Run this command
