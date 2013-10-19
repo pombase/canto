@@ -28,14 +28,14 @@ Installation packages for VirtualBox are available here:
 On some operating systems, packages may be available from the default
 repositories:
 
-* Debian: `https://wiki.debian.org/VirtualBox`
-* Ubuntu: `https://help.ubuntu.com/community/VirtualBox`
-* RedHat/Centos: `http://wiki.centos.org/HowTos/Virtualization/VirtualBox`
+* Debian: https://wiki.debian.org/VirtualBox
+* Ubuntu: https://help.ubuntu.com/community/VirtualBox
+* RedHat/Centos: http://wiki.centos.org/HowTos/Virtualization/VirtualBox
 
 ## Installing Vagrant
 
 Installation instructions for Vagrant are here:
-`http://docs.vagrantup.com/v2/installation/index.html`
+http://docs.vagrantup.com/v2/installation/index.html
 
 Users of recent versions of Debian and Ubuntu can install with:
 
@@ -63,8 +63,7 @@ From that shell, the Canto server can be started with:
     ./script/canto_start
 
 Once started the server can be accessed on port 5500 of the host:
-
-    http://localhost:5500/
+http://localhost:5500/
 
 # Manual installation
 
@@ -166,9 +165,7 @@ From the in the `canto` directory:
     ./script/canto_start
 
 ## Visit the application start page
-The application should now be running at:
-
-    http://localhost:5000
+The application should now be running at: http://localhost:5000
 
 
 # Configuration
@@ -329,7 +326,7 @@ running on a Plack server.
 ## Autocomplete searching
 - implemented using CLucene
 - short names are weighted more highly so they appear at the top of the search list
-- the term names are passed to CLucene for indexing
+- the term names and synonyms are passed to CLucene for indexing
 - all words appearing in the name or synonyms are joined into one string
   for separate indexing by CLucene
 
@@ -371,7 +368,7 @@ The server can be run from the top level directory with this command:
     CANTO_CONFIG_LOCAL_SUFFIX=local PERL5LIB=lib ./script/canto_server.pl -p 5000 -r -d
 
 "5000" is the local port to connect on.  The server should then be
-available at `http://localhost:5000/`
+available at http://localhost:5000/
 
 # Contact
 For questions or help please contact helpdesk@pombase.org or kim@pombase.org.
