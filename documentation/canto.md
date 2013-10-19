@@ -176,6 +176,12 @@ installing modules later.
     o conf build_requires_install_policy no
     o conf commit
 
+Confirm that `Module::Install` and co are installed with (at the `cpan`
+prompt):
+
+    install Module::Install
+    install Module::Install::Catalyst
+
 Quit cpan and return to the shell prompt with:
 
     exit
