@@ -182,16 +182,23 @@ pass:
 
     make test
 
-# Quick start
+# Quick start - making a test server
 To try the Canto server:
 
 ## Initialise the data directory
-From the in the `canto` directory:
+Make a data directory somewhere:
 
-    mkdir canto-test
-    ./script/canto_start --init canto-test
+    mkdir /tmp/canto-test
+
+From the `canto` directory:
+
+    ./script/canto_start --init /tmp/canto-test
+
+This will initialise the `canto-test` directory and will create a
+configuration file (`canto_deploy.yaml`) that can be customised.
 
 ## Run the server
+Again, from the `canto` directory.
 
     ./script/canto_start
 
