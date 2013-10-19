@@ -10,7 +10,7 @@ source to it
 
 # Requirements for Canto
 - Linux, BSD or UNIX
-- Perl, clucene library
+- Perl, CLucene library
 
 # Canto in a Virtual machine
 Canto can be tested in a virtual machine using
@@ -125,6 +125,17 @@ On Ubuntu v13.10 the old CLucene library can be installed with:
     wget http://www.mirrorservice.org/sites/archive.ubuntu.com/ubuntu//pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2build1_amd64.deb
     wget http://www.mirrorservice.org/sites/archive.ubuntu.com/ubuntu//pool/main/c/clucene-core/libclucene-dev_0.9.21b-2build1_amd64.deb
     sudo dpkg -i libclucene0ldbl_0.9.21b-2build1_amd64.deb libclucene-dev_0.9.21b-2build1_amd64.deb
+
+## Installing prerequisites on Centos/RedHat
+If you have added
+[RPMforge](http://wiki.centos.org/AdditionalResources/Repositories/RPMForge)
+as an extra [Centos](http://www.centos.org/) pacakge repository many of the
+required Perl libraries can be installed with `yum`.  
+
+These are suggested packages to install:
+
+    sudo yum groupinstall "Development Tools"
+    sudo yum install perl cpan git perl-Module-Install
 
 ## Getting the Canto source code
 Currently the easiest way to get the code is via GitHub.  Run this command
