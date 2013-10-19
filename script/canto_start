@@ -44,7 +44,7 @@ if ($local_suffix eq 'deploy') {
   if ($init_dir) {
     my $config = Canto::Config->new("${lc_app_name}.yaml");
     Canto::Meta::Util::initialise_app($config, $init_dir);
-    print "Initialisation succesful, now run $0 without the initialise flag\n";
+    print "Initialisation succesful, now run $0 without arguments\n";
     exit(0);
   } else {
     if (!Canto::Meta::Util::app_initialised($lc_app_name)) {
@@ -60,6 +60,8 @@ to initialise
 } else {
   # we're testing
 }
+
+print "Canto loading ...\r";
 
 require Plack::Runner;
 require Plack::Middleware::ReverseProxy;
@@ -92,4 +94,6 @@ if (defined $ENV{PLACK_DEBUG} && $ENV{PLACK_DEBUG} > 1) {
 my $runner = Plack::Runner->new;
 
 $runner->parse_options(@ARGV);
+
+print "\rStarting Canto server\n";
 $runner->run($app);
