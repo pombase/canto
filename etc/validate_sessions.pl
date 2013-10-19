@@ -61,9 +61,6 @@ my $track_schema = Canto::TrackDB->new(config => $config);
 
 my $iter = Canto::Track::curs_iterator($config, $track_schema);
 
-my $test_publication_uniquename =
-  $config->{test_publication_uniquename};
-
 while (my ($curs, $cursdb) = $iter->()) {
   my $pub = $curs->pub();
   my $pub_uniquename = $pub->uniquename();

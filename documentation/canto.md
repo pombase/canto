@@ -245,8 +245,7 @@ One of: "ontology" or "interaction", used to select which Perl package
 should be used for rendering and storing these annotation type.
 ### messages
 ### test_config_file
-### test_gene_identifiers
-### test_publication_uniquename
+The path to the extra configuration file needed while testing.
 ### help_text
 ### external_links
 ### webservices
