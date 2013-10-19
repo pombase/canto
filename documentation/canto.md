@@ -163,7 +163,8 @@ support (optional step):
 
     install Bundle::CPAN
 
-This will take a few minutes.
+This will take a few minutes.  You should be able just to press return if you
+are prompted at any point.
 
 Quit cpan and return to the shell prompt with:
 
@@ -204,7 +205,6 @@ Again, from the `canto` directory.
 
 ## Visit the application start page
 The application should now be running at: http://localhost:5000
-
 
 # Configuration
 ## canto.yaml
