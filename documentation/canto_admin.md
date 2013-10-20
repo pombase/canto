@@ -6,7 +6,7 @@ administrators perspective.  It covers installation and maintenance.
 The latest version of this document can always be found on the main
 [Canto website](http://curation.pombase.org/pombe/docs/canto_admin) and the
 source to it
-[on GitHub](https://github.com/pombase/canto/blob/master/documentation/canto.md).
+[on GitHub](https://github.com/pombase/canto/blob/master/documentation/canto_admin.md).
 
 # Requirements for Canto
 - Linux, BSD or UNIX
