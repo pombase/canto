@@ -1,7 +1,7 @@
 # Introduction
 [Canto](http://curation.pombase.org/) is a generic genome annotation tool with
 a focus on community curation.  This document describes Canto from the
-adminstrators perspective.  It covers installation and maintenance.
+administrators perspective.  It covers installation and maintenance.
 
 The latest version of this document can always be found on the main
 [Canto website](http://curation.pombase.org/pombe/docs/canto_admin) and the
@@ -30,7 +30,7 @@ repositories:
 
 * Debian: https://wiki.debian.org/VirtualBox
 * Ubuntu: https://help.ubuntu.com/community/VirtualBox
-* RedHat/Centos: http://wiki.centos.org/HowTos/Virtualization/VirtualBox
+* Red Hat/Centos: http://wiki.centos.org/HowTos/Virtualization/VirtualBox
 
 ## Installing Vagrant
 
@@ -52,7 +52,7 @@ its dependencies:
     vagrant up
 
 The `vagrant` commands will many minutes to complete.  If everything is
-succesful, once `vagrant up` returns you can `ssh` to the virtual machine
+successful, once `vagrant up` returns you can `ssh` to the virtual machine
 with:
 
     vagrant ssh
@@ -88,7 +88,7 @@ package manager:
       libdist-checkconflicts-perl liblocal-lib-perl
 
 To improve the installation speed, these packages can optionally be installed
-before preceeding:
+before preceding:
 
     sudo apt-get install libhash-merge-perl \
       libhtml-mason-perl libplack-perl libdbix-class-perl \
@@ -116,7 +116,7 @@ and earlier it can be installed with:
 
     sudo apt-get install libclucene-dev libclucene0ldbl
 
-For Ubuntu version 13.10 the correct CLucene library version must bne
+For Ubuntu version 13.10 the correct CLucene library version must be
 installed manually.  The Perl CLucene modules is currently only compatible
 with CLucene version 0.9.* but Ubuntu v13.10 ships with CLucene v2.3.3.4.
 
@@ -126,10 +126,10 @@ On Ubuntu v13.10 the old CLucene library can be installed with:
     wget http://www.mirrorservice.org/sites/archive.ubuntu.com/ubuntu//pool/main/c/clucene-core/libclucene-dev_0.9.21b-2build1_amd64.deb
     sudo dpkg -i libclucene0ldbl_0.9.21b-2build1_amd64.deb libclucene-dev_0.9.21b-2build1_amd64.deb
 
-## Installing prerequisites on Centos/RedHat
+## Installing prerequisites on Centos/Red Hat
 If you have added
 [RPMforge](http://wiki.centos.org/AdditionalResources/Repositories/RPMForge)
-as an extra [Centos](http://www.centos.org/) pacakge repository many of the
+as an extra [Centos](http://www.centos.org/) package repository many of the
 required Perl libraries can be installed with `yum`.  
 
 These are suggested packages to install:
@@ -283,7 +283,7 @@ URLs of external services.
 Names of classes used to implement database query and storage.  This
 allows the implementations to be swapped from the defaults.
 #### gene_adaptor
-Used to lookup gene identifier, name, synonyms and products.  The default
+Used to look up gene identifier, name, synonyms and products.  The default
 is to use the internal Canto database ("track").
 ### evidence_types
 Short name (codes) and long names of evidence types.  Any evidence type
@@ -304,8 +304,8 @@ The path to the extra configuration file needed while testing.
 The keys under `help_text` identify a page in Canto and under the key is one
 or both of `inline` or `url`.  The help text and link is rendered by the
 `inline_help.mhtml` template.  If a `url` is given, the text under `inline`
-will be `title` attibute of a link with that URL.  Without a `url` a help link
-(a "?" icon) will be shown and the `inline` text will be displayed in a popup
+will be `title` attribute of a link with that URL.  Without a `url` a help link
+(a "?" icon) will be shown and the `inline` text will be displayed in a pop-up
 DIV.
 ### contact_email
 This email address is shown anytime a contact address is needed.  See the
@@ -365,7 +365,7 @@ The ontology must be configured in the [annotation_type_list](#annotation_type_l
 ## Structure
 There are two parts to the system.
 
-"Track" run is the part that the adminstrator uses to add people,
+"Track" run is the part that the administrator uses to add people,
 publications and curation sessions to the database.
 
 "Curs" handles the user curation sessions.
@@ -373,7 +373,7 @@ publications and curation sessions to the database.
 #### Database storage
 ##### SQLite for main database
 ### Curs - curation sessions
-Each curation session has a cooresponding SQLite database.
+Each curation session has a corresponding SQLite database.
 
 ## Databases
 ## Database structure
