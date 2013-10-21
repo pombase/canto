@@ -67,11 +67,16 @@ sub _delete_term_by_cv
 {
   my $schema = shift;
   my $cv_name = shift;
-
-  my $guard = $schema->txn_scope_guard;
+  my $delete_relations = shift;
 
   my $cv_cvterms = $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
     ->search_related('cvterms');
+
+  if ($delete_relations) {
+    $cv_cvterms = $cv_cvterms->search({ 'cvterms.is_relationshiptype' => 1 });
+  } else {
+    $cv_cvterms = $cv_cvterms->search({ 'cvterms.is_relationshiptype' => 0 });
+  }
 
   $cv_cvterms->search_related('cvtermprop_cvterms')->delete();
   $cv_cvterms->search_related('cvtermsynonym_cvterms')->delete();
@@ -82,9 +87,8 @@ sub _delete_term_by_cv
     ->update({ description => $delete_me });
   $cv_cvterms->search_related('cvterm_dbxrefs')->delete();
   $schema->resultset('Dbxref')->search({ description => $delete_me })->delete();
-  $cv_cvterms->delete();
 
-  $guard->commit();
+  $cv_cvterms->delete();
 }
 
 =head2 load
@@ -116,7 +120,7 @@ sub load
   }
 
   my $schema = $self->schema();
-  my $guard = $schema->txn_scope_guard;
+  my $guard = $schema->txn_scope_guard();
 
   my $load_util = $self->load_util();
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
@@ -141,11 +145,6 @@ sub load
   my $graph = $parser->handler->graph;
   my %cvterms = ();
 
-  # The first time we see a ontology mentioned in the input, delete all cvterms
-  # from that ontology from the database and add the name to this array.  This
-  # allows us to re-load ontologies.
-  my @seen_cvs = ();
-
   my @synonym_types_to_load = @$synonym_types_ref;
   my %synonym_type_ids = ();
 
@@ -168,7 +167,9 @@ sub load
     $relationship_cvterms{is_a} = $isa_cvterm;
   }
 
-  my $store_term_handler =
+  my %cvs = ();
+
+  my $collect_cvs_handler =
     sub {
       my $ni = shift;
       my $term = $ni->term;
@@ -179,9 +180,52 @@ sub load
         die "no namespace in $source";
       }
 
-      if (!grep { $_ eq $cv_name } @seen_cvs) {
-        push @seen_cvs, $cv_name;
-        _delete_term_by_cv($schema, $cv_name);
+      $cvs{$cv_name} = 1;
+    };
+
+  $graph->iterate($collect_cvs_handler);
+
+  # find cvs referenced by relation cvterms
+  my $cvs_terms_rels_rs =
+    $schema->resultset('Cv')->search({ 'me.name' => { -in => [keys %cvs]} })
+           ->search_related('cvterms')
+           ->search_related('cvterm_relationship_types');
+
+  my $rel_object_cvs =
+    $cvs_terms_rels_rs->search_related('object')
+                      ->search_related('cv', {}, { distinct => 1 });
+
+  while (defined (my $rel_cv = $rel_object_cvs->next())) {
+    $cvs{$rel_cv->name()} = 1;
+  }
+
+  my $rel_subject_cvs =
+    $cvs_terms_rels_rs->search_related('subject')
+                      ->search_related('cv', {}, { distinct => 1 });
+
+  while (defined (my $rel_cv = $rel_subject_cvs->next())) {
+    $cvs{$rel_cv->name()} = 1;
+  }
+
+  # delete existing terms
+  map {
+    _delete_term_by_cv($schema, $_, 0);
+  } keys %cvs;
+
+  # delete relations
+  map {
+    _delete_term_by_cv($schema, $_, 1);
+  } keys %cvs;
+
+  my $store_term_handler =
+    sub {
+      my $ni = shift;
+      my $term = $ni->term;
+
+      my $cv_name = $term->namespace();
+
+      if (!defined $cv_name) {
+        die "no namespace in $source";
       }
 
       my $comment = $term->comment();
