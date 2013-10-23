@@ -130,7 +130,7 @@ On Ubuntu v13.10 the old CLucene library can be installed with:
 If you have added
 [RPMforge](http://wiki.centos.org/AdditionalResources/Repositories/RPMForge)
 as an extra [Centos](http://www.centos.org/) package repository many of the
-required Perl libraries can be installed with `yum`.  
+required Perl libraries can be installed with `yum`.
 
 These are suggested packages to install:
 
@@ -360,6 +360,43 @@ Four tab separated columns with no header line:
 
 The ontology must be configured in the [annotation_type_list](#annotation_type_list) section of the
 `canto.yaml` file.
+
+# Import and Export
+## Exporting to JSON
+The curation data can be exported in [JSON](http://en.wikipedia.org/wiki/JSON)
+format with the `canto_export.pl` script from the `script` directory.  This
+JSON file can then be loaded into a Chado database (see below).
+
+To export the data from sessions that have been "approved" by the
+administrators using the admin interface use:
+
+    script/pomcur_export.pl canto-json --dump-approved > canto_approved.json
+
+(From the canto top level directory).
+
+If you use the flag `--export-approved` instead of `--dump-approved` then the
+exported sessions with be marked as "EXPORTED" in the Canto database.  These
+sessions won't be exported next time.  This option is provided so that
+annotation will be exported only once from Canto.
+
+To export the data from all the sessions, regardless of its state use:
+
+    script/pomcur_export.pl canto-json --dump-approved > canto_all.json
+
+## Reading Canto data into Chado
+The code for loading Canto JSON format files into a Chado database is
+available from the [pombase-chado](https://github.com/pombase/pombase-chado)
+code repository.  Follow the
+[installation instructions](https://github.com/pombase/pombase-chado/blob/master/README.md)
+then use this command:
+
+   ./script/pombase-import.pl load-config-example.yaml canto-json --organism-taxonid=4896 --db-prefix=PomBase $HOST DB_NAME $USER $PASSWORD
+
+where `HOST`, `DB_NAME`, `USER` and `PASSWORD` are the details of your local
+Chado database.
+
+The `pombase-import.pl` command will never delete or alter existing data it
+only adds annotation.
 
 # Implementation details
 ## Structure
