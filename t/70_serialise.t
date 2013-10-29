@@ -202,7 +202,7 @@ my $full_expected_curation_session =
         },
       },
       metadata => {
-        curs_key => 'aaaa0007',
+        canto_session => 'aaaa0007',
         curation_pub_id => 'PMID:19756689',
         term_suggestion_count => 1,
         unknown_conditions_count => 1,

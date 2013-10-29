@@ -50,9 +50,9 @@ sub _get_metadata_value
 
   if ($key eq 'curation_pub_id') {
     return $schema->find_with_type('Pub', $value)->uniquename();
-  } else {
-    return $value;
   }
+
+  return $value;
 }
 
 sub _get_metadata
@@ -66,7 +66,10 @@ sub _get_metadata
   my @results = $curs_schema->resultset('Metadata')->all();
 
   my %ret = map {
-    ($_->key(), _get_metadata_value($curs_schema, $_->key(), $_->value() ))
+    my $key = $_->key();
+    $key = "canto_session" if $key eq "curs_key";
+
+    ($key, _get_metadata_value($curs_schema, $_->key(), $_->value() ))
   } @results;
 
   my $cursprops_rs =
