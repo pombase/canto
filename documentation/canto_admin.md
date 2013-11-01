@@ -370,7 +370,7 @@ JSON file can then be loaded into a Chado database (see below).
 To export the data from sessions that have been "approved" by the
 administrators using the admin interface use:
 
-    script/pomcur_export.pl canto-json --dump-approved > canto_approved.json
+    script/canto_export.pl canto-json --dump-approved > canto_approved.json
 
 (From the canto top level directory).
 
@@ -381,7 +381,7 @@ annotation will be exported only once from Canto.
 
 To export the data from all the sessions, regardless of its state use:
 
-    script/pomcur_export.pl canto-json --dump-approved > canto_all.json
+    script/canto_export.pl canto-json --dump-approved > canto_all.json
 
 ## Reading Canto data into Chado
 The code for loading Canto JSON format files into a Chado database is
