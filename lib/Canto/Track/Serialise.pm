@@ -92,7 +92,8 @@ sub _get_curation_sessions
             $data->{metadata}->{$prop_type} = $new;
           } else {
             if ($data->{metadata}->{$prop_type} ne $new) {
-              die "attempted to overwrite data from curs with: ", $prop_data->{type};
+              warn "overwrite data from curs with: ", $prop_data->{type},
+                " from the TrackDB\n";
             }
           }
         } else {
