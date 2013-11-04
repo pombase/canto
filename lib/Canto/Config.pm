@@ -329,15 +329,17 @@ sub setup
     }
 
     if ($rs->count() == 0) {
-      die qq(can't find an organism using taxonid "$taxonid" from ) .
-        qq("instance_organism" configuration);
+      warn qq(can't find an organism in the DB using taxonid "$taxonid" from ) .
+        qq("instance_organism" configuration so this Canto will run in ) .
+        qq(multi-organism mode);
+      delete $self->{instance_organism};
+    } else {
+      my $organism = $rs->first()->organism();
+
+      $instance_organism->{organism_id} = $organism->organism_id();
+      $instance_organism->{species} = $organism->species();
+      $instance_organism->{genus} = $organism->genus();
     }
-
-    my $organism = $rs->first()->organism();
-
-    $instance_organism->{organism_id} = $organism->organism_id();
-    $instance_organism->{species} = $organism->species();
-    $instance_organism->{genus} = $organism->genus();
   }
 }
 
