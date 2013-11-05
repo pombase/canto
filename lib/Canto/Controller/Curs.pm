@@ -2052,6 +2052,7 @@ sub _annotation_process_alleles_internal
         evidence_code => $evidence,
         conditions => $conditions,
         term_ontid => $data->{term_ontid},
+        annotation_extension => $data->{annotation_extension},
       };
 
       if (defined $data->{term_suggestion}) {
