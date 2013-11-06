@@ -412,14 +412,16 @@ Chado database.
 The `pombase-import.pl` command will never delete or alter existing data it
 only adds annotation.
 
-# Implementation details
+# Canto implementation details
 ## Structure
 There are two parts to the system.
 
 "Track" run is the part that the administrator uses to add people,
-publications and curation sessions to the database.
+publications and curation sessions to the database.  In the web interface this
+is access using the Admin link in the top right of the page.
 
 "Curs" handles the user curation sessions.
+
 ### Track - user, publication and session tracking
 #### Database storage
 ##### SQLite for main database
