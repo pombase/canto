@@ -144,22 +144,12 @@ sub schema
   die "unknown model ($model_name) passed to schema()\n"
     unless defined $schema_class_name;
 
-  state $schema_cache = {};
+  eval "require $schema_class_name";
 
-  my $schema;
+  my $schema = $schema_class_name->new(config => $self->config());
 
-  if (exists $schema_cache->{$schema_class_name}) {
-    $schema = $schema_cache->{$schema_class_name};
-  } else {
-    eval "require $schema_class_name;";
-
-    $schema = $schema_class_name->new(config => $self->config());
-
-    if ($model_name eq 'track') {
-      Canto::DBUtil::check_schema_version($config, $schema);
-    }
-
-    $schema_cache->{$schema_class_name} = $schema;
+  if ($model_name eq 'track') {
+    Canto::DBUtil::check_schema_version($config, $schema);
   }
 
   return $schema;
