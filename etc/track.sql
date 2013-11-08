@@ -18,6 +18,13 @@ CREATE TABLE pub (
        added_date timestamp
 );
 CREATE INDEX pub_triage_status_idx ON pub(triage_status_id);
+
+CREATE INDEX pub_type_id_idx ON pub(type_id);
+CREATE INDEX pub_pubmed_type_idx ON pub(pubmed_type);
+CREATE INDEX pub_triage_status_id_idx ON pub(triage_status_id);
+CREATE INDEX pub_load_type_id_idx ON pub(load_type_id);
+CREATE INDEX pub_curation_priority_id_idx ON pub(curation_priority_id);
+
 CREATE TABLE pubprop (
        pubprop_id integer NOT NULL PRIMARY KEY,
        pub_id integer NOT NULL REFERENCES pub (pub_id),
@@ -25,6 +32,9 @@ CREATE TABLE pubprop (
        value text NOT NULL,
        rank integer DEFAULT 0 NOT NULL
 );
+
+CREATE INDEX pubprop_pub_id_idx ON pubprop(pub_id);
+CREATE INDEX pubprop_type_id_idx ON pubprop(type_id);
 
 CREATE TABLE pub_curation_status (
        pub_curation_status_id integer NOT NULL PRIMARY KEY,
@@ -38,6 +48,7 @@ CREATE TABLE cv (
        name text NOT NULL,
        definition text
 );
+
 
 CREATE TABLE db (
        db_id integer NOT NULL PRIMARY KEY,
@@ -77,6 +88,7 @@ CREATE TABLE cvtermsynonym (
        type_id integer references cvterm (cvterm_id)
 );
 CREATE INDEX cvtermsynonym_idx1 ON cvtermsynonym (cvterm_id);
+CREATE INDEX cvtermsynonym_type_id_idx ON cvtermsynonym (type_id);
 
 CREATE TABLE cvterm_relationship (
        cvterm_relationship_id integer NOT NULL PRIMARY KEY,
@@ -148,6 +160,8 @@ CREATE TABLE person (
        added_date timestamp
 );
 
+CREATE INDEX person_role_idx ON person(role);
+
 CREATE TABLE curs (
        curs_id integer NOT NULL PRIMARY KEY,
        pub integer NOT NULL REFERENCES pub (pub_id),
@@ -169,6 +183,8 @@ CREATE TABLE cursprop (
        type integer REFERENCES cvterm(cvterm_id) NOT NULL,
        value text NOT NULL
 );
+CREATE INDEX cursprop_type_id_idx ON cursprop(type);
+CREATE INDEX cursprop_curs_idx ON cursprop(curs);
 
 CREATE TABLE lab (
        lab_id integer NOT NULL PRIMARY KEY,
