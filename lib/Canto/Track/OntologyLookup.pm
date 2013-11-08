@@ -306,7 +306,8 @@ sub lookup_by_name
         ->search({ synonym => $term_name })
         ->search_related('cvterm', { cv_id => $cv->cv_id() });;
     if ($synonym_rs->count() > 1) {
-      die qq(more than one cvterm matching "$term_name");
+      warn qq(more than one cvterm matching "$term_name");
+      return undef;
     }
 
     if ($synonym_rs->count() == 1) {
