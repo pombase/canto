@@ -154,6 +154,9 @@ if (@ontology_args) {
   my $guard = $schema->txn_scope_guard;
 
   my $index_path = $config->data_dir_path('ontology_index_dir');
+
+  my $temp_index_path = "$index_path.tmp";
+
   my $index = Canto::Track::OntologyIndex->new(index_path => $index_path);
   $index->initialise_index();
   my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema);
@@ -163,6 +166,8 @@ if (@ontology_args) {
     print "loading $ontology_source\n" if $verbose;
     $ontology_load->load($ontology_source, $index, $synonym_types);
   }
+
+  $index->finish_index();
 
   $guard->commit unless $dry_run;
 

@@ -78,10 +78,11 @@ sub _delete_term_by_cv
     $cv_cvterms = $cv_cvterms->search({ 'cvterms.is_relationshiptype' => 0 });
   }
 
-  $cv_cvterms->search_related('cvtermprop_cvterms')->delete();
-  $cv_cvterms->search_related('cvtermsynonym_cvterms')->delete();
-  $cv_cvterms->search_related('cvterm_relationship_objects')->delete();
-  $cv_cvterms->search_related('cvterm_relationship_subjects')->delete();
+  for my $related (qw(cvtermprop_cvterms cvtermsynonym_cvterms
+                      cvterm_relationship_objects cvterm_relationship_subjects)) {
+    $cv_cvterms->search_related($related)->delete();
+  }
+
   my $delete_me = "DELETE_ME";
   $cv_cvterms->search_related('cvterm_dbxrefs')->search_related('dbxref')
     ->update({ description => $delete_me });

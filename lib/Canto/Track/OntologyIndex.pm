@@ -47,7 +47,7 @@ has index_path => (is => 'rw', required => 1);
 =head2 initialise_index
 
  Usage   : $ont_index->initialise_index();
- Function: Create a new empty index using the path in the configuration
+ Function: Create a new empty index in a temporary directory.
  Args    : None
  Returns : Nothing
 
@@ -56,18 +56,10 @@ sub initialise_index
 {
   my $self = shift;
 
-  remove_tree($self->index_path(), { error => \my $rm_err } );
-
-  if (@$rm_err) {
-    for my $diag (@$rm_err) {
-      my ($file, $message) = %$diag;
-      warn "error: $message\n";
-    }
-    exit (1);
-  }
+  $self->_remove_dir($self->_temp_index_path());
 
   my $init_analyzer = new Lucene::Analysis::Standard::StandardAnalyzer();
-  my $store = Lucene::Store::FSDirectory->getDirectory($self->index_path(), 1);
+  my $store = Lucene::Store::FSDirectory->getDirectory($self->_temp_index_path(), 1);
 
   my $tmp_writer = new Lucene::Index::IndexWriter($store, $init_analyzer, 1);
   $tmp_writer->close;
@@ -77,6 +69,30 @@ sub initialise_index
   my $writer = new Lucene::Index::IndexWriter($store, $analyzer, 0);
 
   $self->{_index} = $writer;
+}
+
+sub _remove_dir
+{
+  my $self = shift;
+
+  my $path = shift;
+
+  remove_tree($path, { error => \my $rm_err } );
+
+  if (@$rm_err) {
+    for my $diag (@$rm_err) {
+      my ($file, $message) = %$diag;
+      warn "error: $message\n";
+    }
+    die;
+  }
+}
+
+sub _temp_index_path
+{
+  my $self = shift;
+
+  return $self->index_path() . ".tmp";
 }
 
 sub _get_all_names
@@ -160,6 +176,10 @@ sub finish_index
   $self->{_index}->optimize();
   $self->{_index}->close();
   $self->{_index} = undef;
+
+  $self->_remove_dir($self->index_path());
+
+  rename($self->_temp_index_path(), $self->index_path());
 }
 
 sub _init_lookup
