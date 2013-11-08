@@ -91,7 +91,11 @@ sub make_long_db_file_name
 
   my $data_directory = $config->data_dir();
 
-  return "$data_directory/" . make_db_file_name($curs_key);
+  my $filename = "$data_directory/" . make_db_file_name($curs_key);
+
+  $filename =~ s://+:/:g;
+
+  return $filename;
 }
 
 =head2 make_db_file_name
