@@ -121,7 +121,7 @@ sub create_curs_db
   copy($curs_db_template_file, $db_file_name) or die "$!\n";
 
   my $connect_string = Canto::Curs::make_connect_string($config, $curs_key);
-  my $curs_schema = Canto::CursDB->connect($connect_string);
+  my $curs_schema = Canto::CursDB->cached_connect($connect_string);
 
   my $track_db_pub = $curs->pub();
   my $curs_db_pub =

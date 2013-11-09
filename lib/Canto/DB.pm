@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use base 'DBIx::Class::Schema';
+use feature 'state';
 
 __PACKAGE__->load_classes;
 
@@ -76,24 +77,64 @@ sub new
     }
   }
 
-  my $schema = $self->connect($con_info->[0], $con_info->[1], $con_info->[2],
-                              {
-                                RaiseError => 1,
-                                AutoCommit => 1,
-                                sqlite_use_immediate_transaction => 1,
-                              });
+  my $schema =
+    $self->cached_connect($con_info->[0], $con_info->[1], $con_info->[2],
+                          \%args);
+
+  return $schema;
+}
+
+=head2 cached_connect
+
+ Usage   : $schema = $class->cached_connect($connect_str, $user, $pass, $options)
+ Function: Call $calls->connect() and cache the results if the connection is to
+           an SQLite DB.
+ Args    : $connect_str - a DBI connect strings eg. "dbi:SQLite:/tmp/db"
+           $user        - the database user name (ignored by SQLite)
+           $pass        - the database password (ignored by SQLite)
+           $options     - valid options:
+                            disable_foreign_keys - disable SQLite foreign keys
+                                                   if tue
+ Return  : the new schema
+
+=cut
+
+sub cached_connect
+{
+  my $class = shift;
+
+  my ($connect_str, $user, $pass, $options) = @_;
+
+  state $cache = {};
+
+  my $is_sqlite_db = $connect_str =~ /SQLite/;
+
+  if ($is_sqlite_db && exists $cache->{$connect_str}) {
+    return $cache->{$connect_str};
+  }
+
+  my $connect_options = {
+    RaiseError => 1,
+    AutoCommit => 1,
+  };
+
+  if ($is_sqlite_db) {
+    $connect_options->{sqlite_use_immediate_transaction} = 1;
+  }
+
+  my $schema = $class->connect($connect_str, $user, $pass, $connect_options);
 
   my $dbh = $schema->storage()->dbh();
 
-  if ((ref $schema->storage()) =~ /SQLite/) {
-    if (!$args{disable_foreign_keys}) {
+  if ($is_sqlite_db) {
+    if (!$options->{disable_foreign_keys}) {
       $dbh->do("PRAGMA foreign_keys = ON");
     }
     $dbh->do("PRAGMA journal_mode = WAL;");
     $dbh->do("PRAGMA mmap_size=268435456;;");
-  }
 
-  return $schema;
+    $cache->{$connect_str} = $schema;
+  }
 }
 
 =head2 initialise
