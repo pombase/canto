@@ -305,8 +305,6 @@ sub set_state
     croak "can't change state from ", EXPORTED;
   }
 
-  my $guard = $schema->txn_scope_guard;
-
   given ($new_state) {
     when (SESSION_ACCEPTED) {
       if ($current_state ne SESSION_CREATED && $force ne $current_state) {
@@ -414,8 +412,6 @@ sub set_state
       croak "can't handle state: $new_state";
     }
   };
-
-  $guard->commit();
 
   my $approved_timestamp = $self->get_metadata($schema, APPROVED_TIMESTAMP_KEY);
   my $approver_email = $self->get_metadata($schema, APPROVER_EMAIL_KEY);
