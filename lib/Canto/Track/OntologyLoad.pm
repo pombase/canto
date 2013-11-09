@@ -121,7 +121,6 @@ sub load
   }
 
   my $schema = $self->schema();
-  my $guard = $schema->txn_scope_guard();
 
   my $load_util = $self->load_util();
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
@@ -348,8 +347,6 @@ sub load
                                 type => $rel_type_cvterm
                               });
   }
-
-  $guard->commit();
 }
 
 1;
