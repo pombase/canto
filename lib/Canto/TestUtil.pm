@@ -591,36 +591,31 @@ sub make_base_track_db
 
     my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
-    my $process =
-      sub {
-        $curation_load->load($curation_file);
-        _load_extra_pubs($schema);
-        _add_pub_details($config, $schema);
+    $curation_load->load($curation_file);
+    _load_extra_pubs($schema);
+    _add_pub_details($config, $schema);
 
-        open my $genes_fh, '<', $genes_file or die "can't open $genes_file: $!";
-        $gene_load->load($genes_fh);
-        close $genes_fh or die "can't close $genes_file: $!";
+    open my $genes_fh, '<', $genes_file or die "can't open $genes_file: $!";
+    $gene_load->load($genes_fh);
+    close $genes_fh or die "can't close $genes_file: $!";
 
-        open $genes_fh, '<', $genes_file_organism_2 or die "can't open $genes_file_organism_2: $!";
-        $gene_load_organism_2->load($genes_fh);
-        close $genes_fh or die "can't close $genes_file_organism_2: $!";
+    open $genes_fh, '<', $genes_file_organism_2 or die "can't open $genes_file_organism_2: $!";
+    $gene_load_organism_2->load($genes_fh);
+    close $genes_fh or die "can't close $genes_file_organism_2: $!";
 
-        $ontology_load->load($relationship_obo_file, undef, $synonym_types);
-        $ontology_load->load($go_obo_file, $ontology_index, $synonym_types);
-        $ontology_load->load($phenotype_obo_file, $ontology_index,
-                             $synonym_types);
-        $ontology_load->load($psi_mod_obo_file, $ontology_index,
-                             $synonym_types);
-        $ontology_load->load($pco_obo_file, $ontology_index,
-                             $synonym_types);
-      };
-
-    $schema->txn_do($process);
+    $ontology_load->load($relationship_obo_file, undef, $synonym_types);
+    $ontology_load->load($go_obo_file, $ontology_index, $synonym_types);
+    $ontology_load->load($phenotype_obo_file, $ontology_index,
+                         $synonym_types);
+    $ontology_load->load($psi_mod_obo_file, $ontology_index,
+                         $synonym_types);
+    $ontology_load->load($pco_obo_file, $ontology_index,
+                         $synonym_types);
 
     $ontology_index->finish_index();
   }
 
-  return $schema;
+  $schema->storage()->disconnect();
 }
 
 =head2 add_test_organisms
