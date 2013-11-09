@@ -63,19 +63,14 @@ sub set_metadata
   my $value = shift;
 
   die if $key eq 'submitter_email';  # temporary hack to catch old code
-
   if (defined $value) {
     $schema->resultset('Metadata')->update_or_create({ key => $key,
                                                        value => $value });
   } else {
-    my $guard = $schema->txn_scope_guard();
-
     my $metadata = $schema->resultset('Metadata')->find({ key => $key });
     if (defined $metadata) {
       $metadata->delete();
     }
-
-    $guard->commit();
   }
 }
 
