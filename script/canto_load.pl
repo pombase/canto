@@ -155,8 +155,6 @@ if (@ontology_args) {
 
   my $index_path = $config->data_dir_path('ontology_index_dir');
 
-  my $temp_index_path = "$index_path.tmp";
-
   my $index = Canto::Track::OntologyIndex->new(index_path => $index_path);
   $index->initialise_index();
   my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema);
