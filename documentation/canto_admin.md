@@ -104,7 +104,7 @@ before preceding:
       libhtml-html5-builder-perl libplack-middleware-expires-perl \
       libstring-similarity-perl libcatalyst-engine-psgi-perl \
       liblwp-protocol-psgi-perl libweb-scraper-perl \
-      libdbd-pg-perl libdbd-sqlite3-perl libdata-javascript-anon-perl \
+      libdbd-pg-perl libdata-javascript-anon-perl \
       libdata-rmap-perl
 
 If these packages aren't installed these Perl modules will be installed using

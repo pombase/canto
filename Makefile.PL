@@ -38,7 +38,7 @@ requires 'CatalystX::RoleApplicator';
 requires 'Clone';
 requires 'Config::General';
 requires 'DBD::Pg';
-requires 'DBD::SQLite';
+requires 'DBD::SQLite' => '1.40';
 requires 'DBIx::Class';
 requires 'DBIx::Class::ResultClass::HashRefInflator';
 requires 'DBIx::Class::ResultSet::Data::Pageset';

@@ -181,10 +181,6 @@ class canto {
     ensure => present,
   }
 
-  package { "libdbd-sqlite3-perl":
-    ensure => present,
-  }
-
   package { "libcatalyst-engine-psgi-perl":
     ensure => present,
   }
