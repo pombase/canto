@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 14;
 use Test::Exception;
 use File::Temp qw(tempfile);
 use File::Copy qw(copy);
