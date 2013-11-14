@@ -71,6 +71,21 @@ sub schema_for_file
   return $model_class_name->new(config => \%config_copy);
 }
 
+=head2 connect_string_of_schema
+
+ Usage   : my $connect_string = Canto::DBUtil::connect_string_of_schema($schema);
+ Function: Return the connect string that was passed to connect()
+ Args    : $schema - the DBIx::Class::Schema object
+
+=cut
+
+sub connect_string_of_schema
+{
+  my $schema = shift;
+
+  return ($schema->storage()->connect_info())[0];
+}
+
 =head2 connect_string_file_name
 
  Usage   : my $file = Canto::DBUtil::connect_string_file($connect_string);
