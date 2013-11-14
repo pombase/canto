@@ -41,6 +41,7 @@ use Moose::Role;
 
 requires 'feature_class';
 requires 'lookup_by_synonym_rs';
+requires 'schema';
 
 sub build_gene_constraint
 {
