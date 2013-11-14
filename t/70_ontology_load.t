@@ -24,12 +24,12 @@ my $test_relationship_ontology_file =
 my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
 
 my $ontology_index;
-my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema, default_db_name => 'Canto');
 my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
 sub load_all {
   my $include_ro = shift;
 
+  my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema, default_db_name => 'Canto');
   my $index_path = $config->data_dir_path('ontology_index_dir');
   $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
@@ -41,6 +41,7 @@ sub load_all {
   $ontology_load->load($test_go_file, $ontology_index, $synonym_types);
   $ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
 
+  $ontology_load->finalise();
   $ontology_index->finish_index();
 }
 

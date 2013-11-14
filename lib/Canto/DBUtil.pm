@@ -38,6 +38,8 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
+use File::Temp qw(tempfile);
+
 =head2
 
  Usage   : my $schema = Canto::DBUtil::schema_for_file($config, $file_name,
@@ -60,7 +62,7 @@ sub schema_for_file
 
   %{$config_copy{"Model::${model_name}Model"}} = (
     schema_class => "Canto::${model_name}DB",
-    connect_info => ["dbi:SQLite:dbname=$file_name"],
+    connect_info => [connect_string_for_file_name($file_name)],
   );
 
   my $model_class_name = "Canto::${model_name}DB";
@@ -69,6 +71,35 @@ sub schema_for_file
   die $@ if $@;
 
   return $model_class_name->new(config => \%config_copy);
+}
+
+=head2 connect_string_for_file_name
+
+ Usage   : my $dbi_connect_string = connect_string_for_file_name($file_name);
+ Function: Return a DBI connection string for SQLite: "dbi:SQLite:..."
+
+=cut
+
+sub connect_string_for_file_name
+{
+  my $file_name = shift;
+
+  return "dbi:SQLite:dbname=$file_name"
+}
+
+=head2 connect_string_of_schema
+
+ Usage   : my $connect_string = Canto::DBUtil::connect_string_of_schema($schema);
+ Function: Return the connect string that was passed to connect()
+ Args    : $schema - the DBIx::Class::Schema object
+
+=cut
+
+sub connect_string_of_schema
+{
+  my $schema = shift;
+
+  return $schema->storage()->connect_info()->[0];
 }
 
 =head2 connect_string_file_name
@@ -164,6 +195,23 @@ sub check_schema_version
       "($db_schema_version) doesn't match the version expected by the code " .
       "($config_schema_version)\n";
   }
+}
+
+=head2 copy_sqlite_database
+
+ Usage   : Canto::DBUtil::copy_sqlite_database($old_db, $new_db);
+ Function: Copy all tables and data from $old_db to $new_db.  Both args
+           must be DBI::db objects and $old_db must be an on-disk DB.
+ Return  : Nothing, dies on failure
+
+=cut
+sub copy_sqlite_database
+{
+  my $old_dbh = shift;
+  my $new_dbh = shift;
+
+  my $old_db_file_name = $old_dbh->sqlite_db_filename();
+  $new_dbh->sqlite_backup_from_file($old_db_file_name);
 }
 
 1;

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 14;
 use Test::Exception;
 use File::Temp qw(tempfile);
 use File::Copy qw(copy);
@@ -8,16 +8,6 @@ use File::Copy qw(copy);
 use Canto::TestUtil;
 use Canto::DBUtil;
 use Canto::Track::LoadUtil;
-
-{
-  my $config = {};
-  my $file_name = '/tmp/test_file.sqlite3';
-  my $schema = Canto::DBUtil::schema_for_file($config, $file_name, 'Curs');
-
-  my $storage = $schema->storage();
-
-  is ($storage->connect_info()->[0], "dbi:SQLite:dbname=$file_name");
-}
 
 {
   my $test_util = Canto::TestUtil->new();

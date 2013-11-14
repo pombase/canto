@@ -151,8 +151,6 @@ if ($do_genes) {
 }
 
 if (@ontology_args) {
-  my $guard = $schema->txn_scope_guard;
-
   my $index_path = $config->data_dir_path('ontology_index_dir');
 
   my $index = Canto::Track::OntologyIndex->new(index_path => $index_path);
@@ -166,6 +164,9 @@ if (@ontology_args) {
     $ontology_load->load($ontology_source, $index, $synonym_types);
   }
 
+  my $guard = $schema->txn_scope_guard;
+
+  $ontology_load->finalise();
   $index->finish_index();
 
   $guard->commit unless $dry_run;
