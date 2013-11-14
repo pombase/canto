@@ -591,8 +591,9 @@ sub make_base_track_db
 
     my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
     $ontology_index->initialise_index();
-    my $ontology_load = Canto::Track::OntologyLoad->new(default_db_name => $config->{default_db_name},
-                                                        schema => $schema);
+    my $ontology_load =
+      Canto::Track::OntologyLoad->new(default_db_name => $config->{default_db_name},
+                                      schema => $schema);
 
     my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
@@ -617,6 +618,7 @@ sub make_base_track_db
     $ontology_load->load($pco_obo_file, $ontology_index,
                          $synonym_types);
 
+    $ontology_load->finalise();
     $ontology_index->finish_index();
   }
 

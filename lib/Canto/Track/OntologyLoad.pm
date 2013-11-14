@@ -7,6 +7,16 @@ Canto::Track::OntologyLoad - Code for loading ontology information into a
 
 =head1 SYNOPSIS
 
+my $loader = Canto::Track::OntologyLoad->new(schema => $schema,
+                                             default_db_name => 'PomBase');
+
+my $index = Canto::Track::OntologyIndex->new(...);
+
+$loader->load($obo_file_name, $index, ["exact", "narrow"]);
+
+# finalise() must be called to store the new terms
+$loader->finalise();
+
 =head1 AUTHOR
 
 Kim Rutherford C<< <kmr44@cam.ac.uk> >>
@@ -54,10 +64,37 @@ has 'schema' => (
   required => 1,
 );
 
+has 'load_schema' => (
+  is => 'rw',
+  init_arg => undef,
+  isa => 'Maybe[Canto::TrackDB]',
+);
+
 has 'default_db_name' => (
   is => 'ro',
   required => 1,
 );
+
+sub BUILD
+{
+  my $self = shift;
+
+  # use load_schema as a temporary database for loading
+  my ($fh, $temp_file_name) = tempfile();
+
+  my $dbi_connect_string =
+    Canto::DBUtil::connect_string_for_file_name($temp_file_name);
+
+  my $load_schema =
+    Canto::TrackDB->cached_connect($dbi_connect_string, undef, undef, {});
+
+  my $orig_dbh = $self->schema->storage()->dbh();
+  my $load_dbh = $load_schema->storage()->dbh();
+
+  Canto::DBUtil::copy_sqlite_database($orig_dbh, $load_dbh);
+
+  $self->load_schema($load_schema);
+}
 
 sub _delete_term_by_cv
 {
@@ -116,7 +153,7 @@ sub load
     croak "no synonym_types passed to OntologyLoad::load()";
   }
 
-  my $schema = $self->schema();
+  my $schema = $self->load_schema();
 
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
   my $parser = GO::Parser->new({ handler=>'obj' });
@@ -218,7 +255,7 @@ sub load
 
   # create this object after deleting as LoadUtil has a dbxref cache (that
   # is a bit ugly ...)
-  my $load_util = Canto::Track::LoadUtil->new(schema => $self->schema(),
+  my $load_util = Canto::Track::LoadUtil->new(schema => $schema,
                                               default_db_name => $self->default_db_name());
   my $store_term_handler =
     sub {
@@ -360,6 +397,63 @@ sub load
                                 object => $object_cvterm,
                                 type => $rel_type_cvterm
                               });
+  }
+}
+
+=head2 finalise
+
+ Usage   : $loader->finalise();
+ Function: Finish an ontology load by copying the new terms into the schema
+           that was passed to the constructor.
+
+=cut
+sub finalise
+{
+  my $self = shift;
+
+  my $dest_dbh = $self->schema()->storage()->dbh();
+  my $load_schema = $self->load_schema();
+  my $load_dhb = $load_schema->storage()->dbh();
+
+  # SQLite locks the database while in a transaction.  This hack works around
+  # that by doing the loading into a temporary copy of the database, then
+  # copying the tables back to the original DB.
+  try {
+    my $load_db_connect_string =
+      Canto::DBUtil::connect_string_of_schema($load_schema);
+
+    my $load_db_file_name =
+      Canto::DBUtil::connect_string_file_name($load_db_connect_string);
+
+    $dest_dbh->do("ATTACH '$load_db_file_name' as load_db");
+    $dest_dbh->do("PRAGMA foreign_keys = OFF");
+
+    my @table_names =
+      qw(db dbxref cv cvterm cvterm_dbxref cvtermsynonym cvterm_relationship cvtermprop);
+
+    for my $table_name (reverse @table_names) {
+      $dest_dbh->do("DELETE FROM main.$table_name WHERE main.$table_name.${table_name}_id NOT IN (SELECT ${table_name}_id FROM load_db.$table_name)");
+    }
+
+    for my $table_name (@table_names) {
+      $dest_dbh->do("INSERT INTO main.$table_name SELECT * FROM load_db.$table_name WHERE load_db.$table_name.${table_name}_id NOT IN (SELECT ${table_name}_id FROM main.$table_name)");
+    }
+
+    $dest_dbh->do("DETACH load_db");
+
+    $self->load_schema(undef);
+  } catch {
+    $dest_dbh->do("PRAGMA foreign_keys = ON");
+    die "OntologyLoad::finalise() failed: $_\n";
+  };
+}
+
+sub DESTROY
+{
+  my $self = shift;
+
+  if (defined $self->load_schema()) {
+    die __PACKAGE__ . "::finalise() not called\n";
   }
 }
 
