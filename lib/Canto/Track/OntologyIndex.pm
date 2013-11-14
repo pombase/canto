@@ -97,12 +97,13 @@ sub _temp_index_path
 
 sub _get_all_names
 {
-  my $cvterm = shift;
+  my $term_name = shift;
+  my $synonym_details = shift;
 
-  return (['name', $cvterm->name()],
+  return (['name', $term_name],
           map {
-            [$_->type()->name(), $_->synonym()];
-          } $cvterm->synonyms());
+            [$_->{type}, $_->{synonym}];
+          } @$synonym_details);
 }
 
 my %boosts =
@@ -115,28 +116,33 @@ my %boosts =
 
 =head2 add_to_index
 
- Usage   : $ont_index->add_to_index($cvterm);
+ Usage   : $ont_index->add_to_index($cvterm, \@cvterm_synonyms);
  Function: Add a cvterm to the index
- Args    : $cvterm - the Cvterm object
+ Args    : $cv_name - the CV name for this term
+           $term_name - the cvterm name
+           $cvterm_id - the database ID for the term
+           $db_accession - the "DB_NAME:ACCESSION" string for this term
+           $synonym_details - an array of the name and type of the synonyms
+                              of $cvterm
+                              eg. [{ name => '...', type => '...'}, {...}]
  Returns : Nothing
 
 =cut
 sub add_to_index
 {
   my $self = shift;
-  my $cvterm = shift;
+  my $cv_name = lc shift;
+  my $term_name = shift;
+  my $cvterm_id = shift;
+  my $db_accession = shift;
+  my $synonym_details = shift;
 
-  my $cv_name = lc $cvterm->cv()->name();
   $cv_name =~ s/-/_/g;
-
-  my $term_name = $cvterm->name();
-  my $cvterm_id = $cvterm->cvterm_id();
-  my $db_accession = $cvterm->db_accession();
 
   my $writer = $self->{_index};
 
   # $text can be the name or a synonym
-  for my $details (_get_all_names($cvterm)) {
+  for my $details (_get_all_names($term_name, $synonym_details)) {
     my $doc = Lucene::Document->new();
 
     my $type = $details->[0];

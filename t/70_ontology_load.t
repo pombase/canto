@@ -24,7 +24,7 @@ my $test_relationship_ontology_file =
 my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
 
 my $ontology_index;
-my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema);
+my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema, default_db_name => 'Canto');
 my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
 sub load_all {

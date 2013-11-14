@@ -157,7 +157,8 @@ if (@ontology_args) {
 
   my $index = Canto::Track::OntologyIndex->new(index_path => $index_path);
   $index->initialise_index();
-  my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema);
+  my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema,
+                                                      default_db_name => $config->{default_db_name});
   my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
   for my $ontology_source (@ontology_args) {

@@ -11,3 +11,5 @@ extra_css: /static/css/test_style.css
 email:
   from_address: noreply@pombase.org
   admin_address: kmr@aska.gen.nz
+
+default_db_name: Canto

@@ -38,6 +38,9 @@ under the same terms as Perl itself.
 
 use Moose;
 use Carp;
+use feature qw(state);
+
+use Try::Tiny;
 
 use GO::Parser;
 use LWP::Simple;
@@ -47,21 +50,14 @@ use Canto::Track::LoadUtil;
 
 has 'schema' => (
   is => 'ro',
-  isa => 'Canto::TrackDB'
+  isa => 'Canto::TrackDB',
+  required => 1,
 );
 
-has 'load_util' => (
+has 'default_db_name' => (
   is => 'ro',
-  lazy => 1,
-  builder => '_build_load_util'
+  required => 1,
 );
-
-sub _build_load_util
-{
-  my $self = shift;
-
-  return Canto::Track::LoadUtil->new(schema => $self->schema());
-}
 
 sub _delete_term_by_cv
 {
@@ -122,7 +118,6 @@ sub load
 
   my $schema = $self->schema();
 
-  my $load_util = $self->load_util();
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
   my $parser = GO::Parser->new({ handler=>'obj' });
 
@@ -217,6 +212,14 @@ sub load
     _delete_term_by_cv($schema, $_, 1);
   } keys %cvs;
 
+  my $db_rs = $schema->resultset('Db');
+
+  my %db_ids = map { ($_->name(), $_->db_id()) } $db_rs->all();
+
+  # create this object after deleting as LoadUtil has a dbxref cache (that
+  # is a bit ugly ...)
+  my $load_util = Canto::Track::LoadUtil->new(schema => $self->schema(),
+                                              default_db_name => $self->default_db_name());
   my $store_term_handler =
     sub {
       my $ni = shift;
@@ -236,14 +239,18 @@ sub load
         my $x_db_name = $xref->xref_dbname();
         my $x_acc = $xref->xref_key();
 
-        my $x_db = $schema->resultset('Db')->find({ name => $x_db_name });
+        my $x_db_id = $db_ids{$x_db_name};
 
-        if (defined $x_db) {
-          my $x_dbxref =
-            $schema->resultset('Dbxref')->find({ accession => $x_acc,
-                                                 db_id => $x_db->db_id() });
+       if (defined $x_db_id) {
+         my $x_dbxref = undef;
 
-          if (defined $x_dbxref) {
+         try {
+           $x_dbxref = $load_util->find_dbxref("OBO_REL:$x_acc");
+         } catch {
+           # dbxref not found
+         };
+
+         if (defined $x_dbxref) {
             # no need to add it as it's already there, loaded from another
             # ontology
             if ($term->is_relationship_type()) {
@@ -259,8 +266,10 @@ sub load
       }
 
       if (!$term->is_obsolete()) {
+        my $term_name = $term->name();
+
         my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
-                                            term_name => $term->name(),
+                                            term_name => $term_name,
                                             ontologyid => $term->acc(),
                                             definition => $term->definition(),
                                             alt_ids => $term->alt_id_list(),
@@ -286,6 +295,8 @@ sub load
                                       });
         }
 
+        my @synonyms_for_index = ();
+
         for my $synonym_type (@synonym_types_to_load) {
           my $synonyms = $term->synonyms_by_type($synonym_type);
 
@@ -294,10 +305,12 @@ sub load
           for my $synonym (@$synonyms) {
             $schema->create_with_type('Cvtermsynonym',
                                       {
-                                        cvterm_id => $cvterm->cvterm_id(),
+                                        cvterm_id => $cvterm_id,
                                         synonym => $synonym,
                                         type_id => $type_id,
                                       });
+
+            push @synonyms_for_index, { synonym => $synonym, type => $synonym_type };
           }
         }
 
@@ -305,7 +318,8 @@ sub load
           $cvterms{$term->acc()} = $cvterm;
 
           if (defined $index) {
-            $index->add_to_index($cvterm);
+            $index->add_to_index($cv_name, $term_name, $cvterm_id,
+                                 $term->acc(), \@synonyms_for_index);
           }
         }
       }

@@ -57,13 +57,19 @@ has 'load_util' => (
   builder => '_make_load_util'
 );
 
+has 'default_db_name' => (
+  is => 'ro',
+  required => 1,
+);
+
 sub _make_load_util
 {
   my $self = shift;
 
   my $schema = $self->schema();
 
-  return Canto::Track::LoadUtil->new(schema => $schema);
+  return Canto::Track::LoadUtil->new(schema => $schema,
+                                     default_db_name => $self->default_db_name());
 }
 
 sub _fix_lab

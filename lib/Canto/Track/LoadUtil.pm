@@ -42,14 +42,33 @@ use Moose;
 
 has 'schema' => (
   is => 'ro',
-  isa => 'Canto::TrackDB'
+  isa => 'Canto::TrackDB',
+  required => 1,
 );
 
-sub BUILD
+has 'default_db_name' => (
+  is => 'ro'
+);
+
+has 'cache' => (
+  is => 'ro', init_arg => undef,
+  lazy_build => 1,
+);
+
+sub _build_cache
 {
   my $self = shift;
 
-  $self->{cache} = {};
+  my $cache = {};
+
+  my $dbxref_rs = $self->schema()->resultset('Dbxref')
+    ->search({}, { prefetch => 'db' });
+
+  while (defined (my $dbxref = $dbxref_rs->next())) {
+    $cache->{dbxref}->{$dbxref->db_accession()} = $dbxref;
+  }
+
+  return $cache;
 }
 
 =head2 get_organism
@@ -129,14 +148,14 @@ sub find_or_create_cv
     croak "no cv name passed to find_or_create_cv()";
   }
 
-  if (exists $self->{cache}->{cv}->{$cv_name}) {
-    return $self->{cache}->{cv}->{$cv_name};
+  if (exists $self->cache()->{cv}->{$cv_name}) {
+    return $self->cache()->{cv}->{$cv_name};
   } else {
     my $cv = $self->schema()->resultset('Cv')->find_or_create(
       {
         name => $cv_name
       });
-    $self->{cache}->{cv}->{$cv_name} = $cv;
+    $self->cache()->{cv}->{$cv_name} = $cv;
     return $cv;
   }
 }
@@ -257,24 +276,23 @@ sub get_db
   my $self = shift;
   my $db_name = shift;
 
+  if (exists $self->cache()->{db}->{$db_name}) {
+    return $self->cache()->{db}->{$db_name};
+  }
+
   my $schema = $self->schema();
 
-  return $schema->resultset('Db')->find_or_create(
+  my $db = $schema->resultset('Db')->find_or_create(
       {
         name => $db_name
       });
+
+  $self->cache()->{db}->{$db_name} = $db;
+
+  return $db;
 }
 
-=head2 get_dbxref
-
- Usage   : my $dbxref = $load_util->get_dbxref($db, $dbxref_acc);
- Function: Find or create, and then return the object matching the arguments
- Args    : $db - the Db object
-           $dbxref_acc - the accession
- Returns : The new dbxref object
-
-=cut
-sub get_dbxref
+sub _create_dbxref
 {
   my $self = shift;
   my $db = shift;
@@ -282,37 +300,65 @@ sub get_dbxref
 
   my $schema = $self->schema();
 
-  return $schema->resultset('Dbxref')->find_or_create(
+  my $dbxref = $schema->resultset('Dbxref')->create(
       {
         accession => $dbxref_acc,
         db => $db
       });
+
+  my $termid = $db->name() . ':' .$dbxref_acc;
+
+  $self->cache()->{dbxref}->{$termid} = $dbxref;
+
+  return $dbxref;
 }
 
-sub _get_dbxref_by_accession
+=head2 get_dbxref_by_accession
+
+ Usage   : my $dbxref = $load_util->get_dbxref($db, $dbxref_acc);
+ Function: Find or create, and then return the object matching the arguments
+ Args    : $termid - the term ID in the form "DB:ACCESSION"
+ Returns : The new dbxref object
+
+=cut
+sub get_dbxref_by_accession
 {
   my $self = shift;
-  my $ontologyid = shift;
+  my $termid = shift;
   my $term_name = shift;
 
   my $db_name;
   my $accession;
 
-  if (defined $ontologyid && $ontologyid =~ /(.*):(.*)/) {
-    $db_name = $1;
-    $accession = $2
+  if (defined $termid) {
+    if ($termid =~ /(.*):(.*)/) {
+      $db_name = $1;
+      $accession = $2
+    } else {
+      $db_name = 'Canto';
+      $accession = $termid;
+    }
   } else {
     if (defined $term_name) {
       $db_name = 'Canto';
       $accession = $term_name;
     } else {
-      croak 'no $term_name passed for ', $ontologyid;
+      croak "no termid or term_name passed to get_dbxref_by_accession()";
     }
   }
 
-  my $db = $self->get_db($db_name);
-  my $dbxref = $self->get_dbxref($db, $accession);
+  my $key = "$db_name:$accession";
 
+  if (exists $self->cache()->{dbxref}->{$key}) {
+    return $self->cache()->{dbxref}->{$key};
+  }
+
+  my $db = $self->get_db($db_name);
+  my $dbxref = $self->_create_dbxref($db, $accession);
+
+  $self->cache()->{dbxref}->{$key} = $dbxref;
+
+  return $dbxref;
 }
 
 =head2 get_cvterm
@@ -321,7 +367,8 @@ sub _get_dbxref_by_accession
                                                term_name => $term_name,
                                                ontologyid => $ontologyid,
                                                definition => $definition);
- Function: Find or create, and then return the object matching the arguments
+ Function: Find or create, and then return the object matching the arguments.
+           The result is cached using the cv_name and term_name.
  Args    : cv_name - the Cv name
            term_name - the cvterm name
            ontologyid - the id in the ontology, eg. "GO:0001234"
@@ -347,7 +394,7 @@ sub get_cvterm
   my $definition = $args{definition};
   my $is_relationshiptype = $args{is_relationshiptype} // 0;
 
-  my $dbxref = $self->_get_dbxref_by_accession($ontologyid, $term_name);
+  my $dbxref = $self->get_dbxref_by_accession($ontologyid, $term_name);
 
   my $schema = $self->schema();
 
@@ -369,7 +416,7 @@ sub get_cvterm
 
   if (defined $args{alt_ids}) {
     for my $alt_id (@{$args{alt_ids}}) {
-      my $alt_dbxref = $self->_get_dbxref_by_accession($alt_id);
+      my $alt_dbxref = $self->get_dbxref_by_accession($alt_id);
 
       $self->schema()->resultset('CvtermDbxref')->create({
         dbxref_id => $alt_dbxref->dbxref_id(),

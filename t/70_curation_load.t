@@ -19,7 +19,7 @@ is (@loaded_pubs, 0);
 my $test_curation_file =
   $test_util->root_dir() . '/t/data/community_curation_stats_small.txt';
 
-my $curation_load = Canto::Track::CurationLoad->new(schema => $schema);
+my $curation_load = Canto::Track::CurationLoad->new(schema => $schema, default_db_name => 'Canto');
 $curation_load->load($test_curation_file);
 
 @loaded_pubs = $schema->resultset('Pub')->all();

@@ -489,8 +489,10 @@ my @extra_test_pubs = (20976105, 20622008);
 sub _load_extra_pubs
 {
   my $schema = shift;
+  my $default_db_name = shift;
 
-  my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
+  my $load_util = Canto::Track::LoadUtil->new(schema => $schema,
+                                              default_db_name => $default_db_name);
 
   map {
     my $uniquename = $Canto::Track::PubmedUtil::PUBMED_PREFIX . ":$_";
@@ -569,12 +571,14 @@ sub make_base_track_db
   copy $track_db_template_file, $db_file_name or die "$!\n";
 
   my $schema = Canto::DBUtil::schema_for_file($config, $db_file_name, 'Track');
-  my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
+  my $load_util = Canto::Track::LoadUtil->new(schema => $schema,
+                                              default_db_name => $config->{default_db_name});
 
   if ($load_data) {
     my ($organism, $organism_2) = add_test_organisms($config, $schema);
 
-    my $curation_load = Canto::Track::CurationLoad->new(schema => $schema);
+    my $curation_load = Canto::Track::CurationLoad->new(schema => $schema,
+                                                        default_db_name => $config->{default_db_name} );
     my $gene_load = Canto::Track::GeneLoad->new(schema => $schema,
                                                  organism => $organism);
     my $allele_load = Canto::Track::AlleleLoad->new(schema => $schema,
@@ -587,12 +591,13 @@ sub make_base_track_db
 
     my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
     $ontology_index->initialise_index();
-    my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema);
+    my $ontology_load = Canto::Track::OntologyLoad->new(default_db_name => $config->{default_db_name},
+                                                        schema => $schema);
 
     my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
     $curation_load->load($curation_file);
-    _load_extra_pubs($schema);
+    _load_extra_pubs($schema, $config->{default_db_name});
     _add_pub_details($config, $schema);
 
     open my $genes_fh, '<', $genes_file or die "can't open $genes_file: $!";
@@ -635,7 +640,8 @@ sub add_test_organisms
   my @ret = ();
 
   my $test_config = $config->{test_config};
-  my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
+  my $load_util = Canto::Track::LoadUtil->new(schema => $schema,
+                                              default_db_name => $config->{default_db_name});
 
   for my $org_conf (@{$test_config->{organisms}}) {
     push @ret, $load_util->get_organism($org_conf->{genus},
