@@ -135,6 +135,8 @@ sub cached_connect
 
     $cache->{$connect_str} = $schema;
   }
+
+  return $schema;
 }
 
 =head2 initialise
