@@ -10,16 +10,6 @@ use Canto::DBUtil;
 use Canto::Track::LoadUtil;
 
 {
-  my $config = {};
-  my $file_name = '/tmp/test_file.sqlite3';
-  my $schema = Canto::DBUtil::schema_for_file($config, $file_name, 'Curs');
-
-  my $storage = $schema->storage();
-
-  is ($storage->connect_info()->[0], "dbi:SQLite:dbname=$file_name");
-}
-
-{
   my $test_util = Canto::TestUtil->new();
 
   ok(ref $test_util);
