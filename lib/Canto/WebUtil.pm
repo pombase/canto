@@ -376,14 +376,34 @@ sub get_column_confs
   return @column_confs;
 }
 
-sub _resolve_path
+sub _process_path
 {
   my $path_string = shift;
   my $object = shift;
 
-  my $path = Canto::DBLayer::Path->new(path_string => $1);
+  my $post_process = undef;
 
-  return $path->resolve($object);
+  if ($path_string =~ /^([^:]+):(.*)/) {
+    $path_string = $1;
+    $post_process = $2;
+  }
+
+  my $path = Canto::DBLayer::Path->new(path_string => $path_string);
+
+  my $res = $path->resolve($object);
+
+  if (defined $post_process) {
+    # alias $res to $_
+    for ($res) {
+      $res = eval $post_process;
+      if ($@) {
+        warn qq(post-process "$post_process" failed for path ) .
+          qq("$path_string" failed: $_\n);
+      }
+    }
+  }
+
+  return $res;
 }
 
 =head2 substitute_paths
@@ -394,6 +414,13 @@ sub _resolve_path
            a name of "John Smith" and a role of "user", that has a lab field
            that refers to a Lab with the name "Big Lab" this template:
              "person name: @@name@@, role: @@role@@, lab name: @@lab->name@@"
+           A path may optionally be followed by ":<perl_code>", where the
+           <perl_code> can operate on the result of evaluating the path (stored
+           in $_ and return an altered result. eg.
+             "name: @@lab->name:uc@@"
+           will return a string with an uppercase version of the lab name.
+           To use a regexp substitution use the "r" modifier. eg.
+             "name: @@lab->name:s/Group/Lab/r@@"
  Args    : $template - a template containing paths that can be resolved with
                        Canto::DBLayer::Path::resolve()
            $object - the object that will be passed to Path::resolve()
@@ -405,7 +432,7 @@ sub substitute_paths
   my $string = shift;
   my $object = shift;
 
-  $string =~ s/\@\@([^@]+)\@\@/_resolve_path($1, $object)/eg;
+  $string =~ s/\@\@([^@]+)\@\@/_process_path($1, $object)/eg;
 
   return $string;
 }

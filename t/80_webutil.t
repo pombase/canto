@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Test::MockObject;
 
 use Canto::TestUtil;
@@ -86,6 +86,12 @@ my $person_hash = {
     },
   },
 };
+
+my $post_process_path =
+  'upper case lab name: @@lab->name:uc@@ - @@lab->lab_head->name:s/Nick/N/r@@';
+my $substituted_ppp = Canto::WebUtil::substitute_paths($post_process_path, $person);
+
+is ($substituted_ppp, 'upper case lab name: RHIND LAB - N Rhind');
 
 # substitute in using a hash instead
 my $substituted_2 = Canto::WebUtil::substitute_paths($paths_string, $person_hash);

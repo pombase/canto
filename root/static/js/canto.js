@@ -353,8 +353,16 @@ var ferret_choose = {
         var html = '';
         $.each(link_confs, function(idx, link_conf) {
           var url = link_conf['url'];
-          var re = /(@@term_ont_id@@)/;
-          url = url.replace(re, term_id);
+          // hacky: allow a substitution like WebUtil::substitute_paths() 
+          var re = new RegExp("@@term_ont_id(?::s/(.+)/(.*)/r)?@@");
+          url = url.replace(re,
+                            function(match_str, p1, p2) {
+                              if (p1.length == 0) {
+                                return term_id;
+                              } else {
+                                return term_id.replace(new RegExp(p1), p2);
+                              }
+                            });
           var img_src =
             application_root + 'static/images/logos/' +
             link_conf['icon'];
