@@ -212,6 +212,7 @@ sub copy_sqlite_database
 
   my $old_db_file_name = $old_dbh->sqlite_db_filename();
   $new_dbh->sqlite_backup_from_file($old_db_file_name);
+  $new_dbh->do("ANALYZE");
 }
 
 1;
