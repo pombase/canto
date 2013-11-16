@@ -102,17 +102,23 @@ sub _delete_term_by_cv
   my $cv_name = shift;
   my $delete_relations = shift;
 
-  my $cv_cvterms = $schema->resultset('Cv')->search({ 'me.name' => $cv_name })
-    ->search_related('cvterms');
+  my $cv = $schema->resultset('Cv')->find(
+    {
+      name => $cv_name
+    });
 
-  if ($delete_relations) {
-    $cv_cvterms = $cv_cvterms->search({ 'cvterms.is_relationshiptype' => 1 });
-  } else {
-    $cv_cvterms = $cv_cvterms->search({ 'cvterms.is_relationshiptype' => 0 });
+  if (!defined $cv) {
+    # nothing to delete
+    return;
   }
 
+  my $cv_cvterms =
+    $schema->resultset('Cvterm')->search({ is_relationshiptype => $delete_relations,
+                                           cv_id => $cv->cv_id() });
+
   for my $related (qw(cvtermprop_cvterms cvtermsynonym_cvterms
-                      cvterm_relationship_objects cvterm_relationship_subjects)) {
+                      cvterm_relationship_objects cvterm_relationship_subjects
+                      cvterm_relationship_types)) {
     $cv_cvterms->search_related($related)->delete();
   }
 
@@ -217,31 +223,10 @@ sub load
 
   $graph->iterate($collect_cvs_handler);
 
-  # find cvs referenced by relation cvterms
-  my $cvs_terms_rels_rs =
-    $schema->resultset('Cv')->search({ 'me.name' => { -in => [keys %cvs]} })
-           ->search_related('cvterms')
-           ->search_related('cvterm_relationship_types');
 
-  my $rel_object_cvs =
-    $cvs_terms_rels_rs->search_related('object')
-                      ->search_related('cv', {}, { distinct => 1 });
-
-  while (defined (my $rel_cv = $rel_object_cvs->next())) {
-    $cvs{$rel_cv->name()} = 1;
-  }
-
-  my $rel_subject_cvs =
-    $cvs_terms_rels_rs->search_related('subject')
-                      ->search_related('cv', {}, { distinct => 1 });
-
-  while (defined (my $rel_cv = $rel_subject_cvs->next())) {
-    $cvs{$rel_cv->name()} = 1;
-  }
-
-  # delete existing terms
-  map {
-    _delete_term_by_cv($schema, $_, 0);
+   # delete existing terms
+   map {
+     _delete_term_by_cv($schema, $_, 0);
   } keys %cvs;
 
   # delete relations
