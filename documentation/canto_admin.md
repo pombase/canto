@@ -404,7 +404,7 @@ code repository.  Follow the
 [installation instructions](https://github.com/pombase/pombase-chado/blob/master/README.md)
 then use this command:
 
-   ./script/pombase-import.pl load-config-example.yaml canto-json --organism-taxonid=4896 --db-prefix=PomBase $HOST DB_NAME $USER $PASSWORD < canto_approved.json
+   ./script/pombase-import.pl load-config-example.yaml canto --organism-taxonid=4896 --db-prefix=PomBase $HOST DB_NAME $USER $PASSWORD < canto_approved.json
 
 where `HOST`, `DB_NAME`, `USER` and `PASSWORD` are the details of your local
 Chado database.
