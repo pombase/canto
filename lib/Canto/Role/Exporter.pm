@@ -82,16 +82,18 @@ sub BUILD
 {
   my $self = shift;
 
+  my @options = @{$self->options()};
+
   my %parsed_options = ();
 
   my @opt_config = ('stream-mode!' => \$parsed_options{stream_mode},
-                    'all-data!' => \$parsed_options{all_data},
+                    'all!' => \$parsed_options{all_data},
                     'dump-approved!' => \$parsed_options{dump_approved},
                     'dump-exported!' => \$parsed_options{dump_exported},
                     'export-approved!' => \$parsed_options{export_approved},
                     );
-  if (!GetOptionsFromArray($self->options(), @opt_config)) {
-    croak "option parsing failed for: @{$self->options()}";
+  if (!GetOptionsFromArray(\@options, @opt_config)) {
+    die "option parsing failed for: @{$self->options()}\n";
   }
 
   $self->parsed_options(\%parsed_options);

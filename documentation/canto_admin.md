@@ -395,7 +395,7 @@ annotation will be exported only once from Canto.
 
 To export the data from all the sessions, regardless of its state use:
 
-    script/canto_export.pl canto-json --dump-approved > canto_all.json
+    script/canto_export.pl canto-json --all  > canto_all.json
 
 ## Reading Canto data into Chado
 The code for loading Canto JSON format files into a Chado database is

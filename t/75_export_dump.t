@@ -49,7 +49,7 @@ sub _get_data
 
 # dump all
 {
-  my @options = qw(--all-data);
+  my @options = qw(--all);
   my $ref = _get_data(undef, \@options);
 
   my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
@@ -100,7 +100,7 @@ sub _get_data
 
 # but dump all should still return them all
 {
-  my @options = qw(--all-data);
+  my @options = qw(--all);
   my $ref = _get_data(undef, \@options);
 
   my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
