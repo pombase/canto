@@ -164,12 +164,10 @@ if (@ontology_args) {
     $ontology_load->load($ontology_source, $index, $synonym_types);
   }
 
-  my $guard = $schema->txn_scope_guard;
-
-  $ontology_load->finalise();
-  $index->finish_index();
-
-  $guard->commit unless $dry_run;
+  if (!$dry_run) {
+    $ontology_load->finalise();
+    $index->finish_index();
+  }
 
   my $term_update = Canto::Curs::TermUpdate->new(config => $config);
 

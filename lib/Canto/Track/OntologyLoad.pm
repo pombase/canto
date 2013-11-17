@@ -413,6 +413,8 @@ sub finalise
     $dest_dbh->do("ATTACH '$load_db_file_name' as load_db");
     $dest_dbh->do("PRAGMA foreign_keys = OFF");
 
+    $dest_dbh->begin_work();
+
     my @table_names =
       qw(db dbxref cv cvterm cvterm_dbxref cvtermsynonym cvterm_relationship cvtermprop);
 
@@ -423,6 +425,8 @@ sub finalise
     for my $table_name (@table_names) {
       $dest_dbh->do("INSERT INTO main.$table_name SELECT * FROM load_db.$table_name WHERE load_db.$table_name.${table_name}_id NOT IN (SELECT ${table_name}_id FROM main.$table_name)");
     }
+
+    $dest_dbh->commit();
 
     $dest_dbh->do("DETACH load_db");
 
