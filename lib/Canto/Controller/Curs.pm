@@ -1172,6 +1172,7 @@ sub annotation_ontology_edit
     my $annotation;
 
     if (defined $annotation_id) {
+      # change an existing annotation
       my $orig_annotation = $schema->find_with_type('Annotation',
                                                     {
                                                       annotation_id => $annotation_id,
@@ -1181,35 +1182,21 @@ sub annotation_ontology_edit
 
       my $state = $st->{state};
       if ($state eq APPROVAL_IN_PROGRESS) {
-        # during approval we want to keep the original, community curator
-        # annotation
-        $orig_annotation->status('deleted');
-        $orig_annotation->update();
+        # during approval add the approver details to the annotation if they
+        # make a change
+        my $curator_name = $self->get_metadata($schema, 'approver_name');
+        my $curator_email = $self->get_metadata($schema, 'approver_email');
 
-        $annotation =
-          $schema->create_with_type('Annotation',
-                                    {
-                                      type => $annotation_type_name,
-                                      status => 'new',
-                                      pub => $st->{pub},
-                                      creation_date => _get_iso_date(),
-                                      data => { %current_data }
-                                    });
-
-        $annotation_id = $annotation->annotation_id();
-        my @orig_genes = $orig_annotation->genes()->all();
-        if (@orig_genes) {
-          $annotation->set_genes(@orig_genes);
+        push @{$current_data{changed_by}}, {
+          curator_name => $curator_name,
+          curator_email => $curator_email,
+          change_date => _get_iso_date(),
         }
-        my @orig_alleles = $orig_annotation->alleles()->all();
-        if (@orig_alleles) {
-          $annotation->set_alleles(@orig_alleles);
-        }
-      } else {
-        $annotation = $orig_annotation;
-        $annotation->data(\%current_data);
-        $annotation->update();
       }
+
+      $annotation = $orig_annotation;
+      $annotation->data(\%current_data);
+      $annotation->update();
    } else {
       $annotation =
         $schema->create_with_type('Annotation',
@@ -1225,10 +1212,10 @@ sub annotation_ontology_edit
 
       $annotation_id = $annotation->annotation_id();
 
+      $self->_set_annotation_curator($c, $annotation);
+
       $is_new_annotation = 1;
     }
-
-    $self->_set_annotation_curator($c, $annotation);
 
     $guard->commit();
 
