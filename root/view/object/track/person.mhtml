@@ -8,25 +8,31 @@ $class_info
 <div id="collections">
   <& /view/collection.mhtml, object => $object, collection_name => 'pubs',
     collection_title => 'Corresponding author for these papers' &>
-  <& /view/inline_list.mhtml, config_name => 'curs', rs => $current_curator_sessions_rs,
-                              list_title => 'Sessions currently being curated by this user' &>
+  <& /view/inline_list.mhtml, config_name => 'pub', rs => $current_curator_pubs_rs,
+                              list_title => 'Publications currently being curated by this user' &>
   <& /view/inline_list.mhtml, config_name => 'curs', rs => $approving_curs_rs,
                        list_title => 'Sessions being approved by ' . $object->name() &>
 </div>
 
 <%init>
-my $current_curator_sessions_rs =
-  $c->schema()->resultset('Curs')->search(
-    \[qq{me.curs_id IN
+my $current_curator_pubs_rs =
+  $c->schema()->resultset('Pub')->search(
+    \["me.pub_id in
+        (SELECT pub FROM curs WHERE curs_id IN
           (SELECT curs FROM curs_curator cc
                        WHERE cc.curator = ?
                        AND cc.curs_curator_id =
-                             (select max(curs_curator_id) from curs_curator where curs = cc.curs))},
+                             (select max(curs_curator_id) from curs_curator where curs = cc.curs)))",
        ['cc.curator', $object->person_id()]]);
 
 my $approving_curs_rs =
   $c->schema()->resultset('Curs')->search(
-    \[qq{me.curs_id in (select curs from cursprop p, cvterm t where
-       t.cvterm_id = p.type and t.name = 'approver_name' and p.value = ?)},
-       ['p.value', $object->name()]]);
+    \["me.curs_id IN
+        (SELECT curs FROM cursprop approver_prop, cvterm t WHERE
+           t.cvterm_id = approver_prop.type AND
+           t.name = 'approver_name' AND approver_prop.value = ?) AND 
+        (SELECT curs FROM cursprop status_prop, cvterm t WHERE
+           t.cvterm_id = status_prop.type and t.name = 'annotation_status' AND
+           status_prop.value = 'APPROVAL_IN_PROGRESS')",
+       ['p1.value', $object->name()]]);
 </%init>
