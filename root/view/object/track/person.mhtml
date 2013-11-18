@@ -22,7 +22,13 @@ my $current_curator_pubs_rs =
           (SELECT curs FROM curs_curator cc
                        WHERE cc.curator = ?
                        AND cc.curs_curator_id =
-                             (select max(curs_curator_id) from curs_curator where curs = cc.curs)))",
+                             (select max(curs_curator_id) from curs_curator
+                             where curs = cc.curs)) AND
+          curs_id NOT IN
+            (SELECT curs FROM cursprop status_prop, cvterm t
+                    WHERE t.cvterm_id = status_prop.type AND
+                          t.name = 'annotation_status' AND
+                          (status_prop.value = 'APPROVED' OR status_prop.value = 'APPROVAL_IN_PROGRESS')))",
        ['cc.curator', $object->person_id()]]);
 
 my $approving_curs_rs =
@@ -30,7 +36,8 @@ my $approving_curs_rs =
     \["me.curs_id IN
         (SELECT curs FROM cursprop approver_prop, cvterm t WHERE
            t.cvterm_id = approver_prop.type AND
-           t.name = 'approver_name' AND approver_prop.value = ?) AND 
+           t.name = 'approver_name' AND approver_prop.value = ?) AND
+      me.curs_id IN
         (SELECT curs FROM cursprop status_prop, cvterm t WHERE
            t.cvterm_id = status_prop.type and t.name = 'annotation_status' AND
            status_prop.value = 'APPROVAL_IN_PROGRESS')",
