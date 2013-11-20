@@ -754,15 +754,7 @@ sub _delete_annotation : Private
   if ($annotation_config->{category} eq 'interaction') {
     Canto::Curs::Utils::delete_interactor($annotation, $other_gene_identifier);
   } else {
-    my $state = $st->{state};
-    if ($state eq APPROVAL_IN_PROGRESS) {
-      # during approval we want to keep the original, community curator
-      # annotation
-      $annotation->status('deleted');
-      $annotation->update();
-    } else {
-      $annotation->delete();
-    }
+    $annotation->delete();
   }
 }
 
