@@ -1114,12 +1114,10 @@ var AlleleStuff = function($) {
 
   function maybe_autopopulate(allele_type_config, name_input) {
     if (typeof allele_type_config.autopopulate_name != 'undefined') {
-      if (name_input.val().length == 0) {
-        var new_name =
-          allele_type_config.autopopulate_name.replace(/@@gene_name@@/, gene_display_name);
-        name_input.val(new_name);
-        return true;
-      }
+      var new_name =
+        allele_type_config.autopopulate_name.replace(/@@gene_name@@/, gene_display_name);
+      name_input.val(new_name);
+      return true;
     }
     return false;
   }
@@ -1184,6 +1182,8 @@ var AlleleStuff = function($) {
   function setup_allele_name($allele_dialog, allele_type_config) {
     var name_input = get_allele_name_jq($allele_dialog);
 
+    name_input.attr('disabled', false);
+
     if (typeof(allele_type_config) === 'undefined') {
       name_input.attr('placeholder', 'Allele name (optional)');
     } else {
@@ -1197,6 +1197,7 @@ var AlleleStuff = function($) {
 
       if (autopopulated) {
         name_input.data('autopopulated_name', name_input.val());
+        name_input.attr('disabled', true);
       }
     }
   }
