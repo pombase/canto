@@ -636,6 +636,18 @@ class_info:
             sql: "cast((select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_term_suggestions_count') as int)"
 # if the hook dies the creation fails
       pre_create_hook: 'Canto::Track::create_curs_db_hook'
+    cursprop:
+      class_display_name: Session properties
+      editable: 1
+      field_info_list:
+        - name: type
+          values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "Canto cursprop types")'
+          referenced_class: Cvterm
+          editable: 1
+        - name: value
+          editable: 1
+        - name: curs
+          editable: 1
     curs_curator:
       class_display_name: Session curator
       editable: 1
