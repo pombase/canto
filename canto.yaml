@@ -622,6 +622,12 @@ class_info:
         - name: last_assigned
           source:
             sql: "select creation_date from curs_curator where curs_curator_id = (select max(curs_curator_id) from curs_curator where curs = me.curs_id)"
+        - name: last_sent_date
+          source:
+            sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'link_sent_to_curator_date'"
+        - name: session_sent_count
+          source:
+            sql: "select count(value) from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'link_sent_to_curator_date'"
         - name: status
           source:
             sql: "select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status'"
