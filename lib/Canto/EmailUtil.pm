@@ -70,8 +70,11 @@ sub _process_template
  Function: Return the subject and body text to send to users in various
            situations
  Args    : $type - the type of email to compose, one of:
-                    - session_assigned - the curators has assigned a session to
+                    - session_assigned - a curator has assigned a session to
                                          community user/curator
+                    - session_resent - a session link needs to be resent to a
+                                       community user/curator who hasn't
+                                       started curation
                     - session_reassigned - user has reassigned a session
                     - session_accepted - the user has filled in their name and
                                          email address

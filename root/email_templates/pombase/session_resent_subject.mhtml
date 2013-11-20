@@ -1,0 +1,5 @@
+<%args>
+$publication_uniquename
+$config
+</%args>
+Make your data visible in <% $config->{database_name} %> (Curate <% $publication_uniquename %>) (reminder)

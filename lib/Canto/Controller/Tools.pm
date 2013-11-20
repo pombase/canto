@@ -791,6 +791,52 @@ sub reassign_session : Local Args(0)
   $c->detach();
 }
 
+sub _session_sent_cvterm
+{
+  my $track_schema = shift;
+
+  return
+    $track_schema->resultset('Cvterm')
+      ->find({ name => 'link_sent_to_curator_date',
+               'cv.name' => 'Canto cursprop types' },
+             { join => 'cv' });
+}
+
+sub _last_session_send_date
+{
+  my $self = shift;
+  my $track_schema = shift;
+  my $curs = shift;
+
+  my $link_sent_to_curator_date_cvterm = _session_sent_cvterm($track_schema);
+
+  my $link_sent_date_cvterm_id = $link_sent_to_curator_date_cvterm->cvterm_id();
+  my $link_sent_prop =
+    $curs->cursprops()->search({ type => $link_sent_date_cvterm_id })->first();
+  if (defined $link_sent_prop) {
+    return $link_sent_prop->value();
+  } else {
+    return undef;
+  }
+}
+
+
+sub _set_last_session_send_date
+{
+  my $self = shift;
+  my $track_schema = shift;
+  my $curs = shift;
+
+  my $link_sent_to_curator_date_cvterm = _session_sent_cvterm($track_schema);
+
+  my $link_sent_date_cvterm_id = $link_sent_to_curator_date_cvterm->cvterm_id();
+  my $now = Canto::Util::get_current_datetime();
+
+  $track_schema->resultset('Cursprop')->create({ curs => $curs->curs_id(),
+                                                 type => $link_sent_date_cvterm_id,
+                                                 value => $now });
+}
+
 =head2 send_session
 
  Function: send a email to the current curator of a session
@@ -831,7 +877,17 @@ sub send_session : Local Args(1)
     logged_in_user => $c->user(),
   );
 
-  my ($subject, $body, $from) = $email_util->make_email('session_assigned', %args);
+  my $last_send_date = $self->_last_session_send_date($track_schema, $curs);
+  my $template_type;
+
+  if (defined $last_send_date) {
+    $template_type = 'session_resent';
+  } else {
+    $template_type = 'session_assigned';
+  }
+
+  my ($subject, $body, $from)
+    = $email_util->make_email($template_type, %args);
 
   my $mail_sender = Canto::MailSender->new(config => $config);
 
@@ -840,25 +896,13 @@ sub send_session : Local Args(1)
                      subject => $subject,
                      body => $body);
 
-  my $link_sent_to_curator_date_cvterm =
-    $track_schema->resultset('Cvterm')
-      ->find({ name => 'link_sent_to_curator_date',
-               'cv.name' => 'Canto cursprop types' },
-             { join => 'cv' });
-
-  my $link_sent_date_cvterm_id = $link_sent_to_curator_date_cvterm->cvterm_id();
-  my $link_sent_prop =
-    $curs->cursprops()->search({ type => $link_sent_date_cvterm_id })->first();
-  my $now = Canto::Util::get_current_datetime();
-  if (defined $link_sent_prop) {
-    $link_sent_prop->value($now);
+  if ($last_send_date) {
+    $c->flash()->{message} = "Session email re-sent to $submitter_name <$submitter_email>";
   } else {
-    $track_schema->resultset('Cursprop')->create({ curs => $curs->curs_id(),
-                                                   type => $link_sent_date_cvterm_id,
-                                                   value => $now });
+    $c->flash()->{message} = "Session email sent to $submitter_name <$submitter_email>";
   }
 
-  $c->flash()->{message} = "Session email sent to $submitter_name <$submitter_email>";
+  $self->_set_last_session_send_date($track_schema, $curs);
 
   _redirect_to_pub($c, $pub);
 }
