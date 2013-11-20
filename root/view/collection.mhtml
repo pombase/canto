@@ -30,6 +30,10 @@ eval {
   my $model_name = $c->req()->param('model');
   my $class_info = $c->config()->class_info($model_name)->{$collection_table_name};
 
+  if (!defined $class_info) {
+    die "no class info for $collection_table_name in configuration of $model_name\n";
+  }
+
   $rs = Canto::Controller::View::order_list_rs($c, $rs, $class_info, $model_name);
 
   if (! defined $collection_title) {
