@@ -115,12 +115,26 @@ img {
   font-size: 150%;
   font-weight: bold;
 }
-#heading .logo {
+#logo-and-caption {
+  float: left;
+}
+#logo {
   padding: 5px;
-  float: left;
-  font-size: 150%;
-  float: left;
-  display: inline;
+}
+#logo, #logo-caption {
+  vertical-align: botton;
+  display: inline-block;
+  /* IE6/7 */
+  *display: inline;
+  zoom: 1;
+}
+#logo-caption-main {
+  font-size: 120%;
+  text-align: left;
+}
+#logo-sub-caption {
+  font-size: 50%;
+  text-align: left;
 }
 
 div#footer {

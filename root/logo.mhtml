@@ -1,4 +1,14 @@
-<div class="logo">
-  <img src="<% $c->uri_for('/static/images/' . $c->config()->{header_image}) %>"/>
-  <% $c->config()->{name} %> <span class="app_version"><% $c->config()->{app_version} %></span>
+<div id="logo-and-caption">
+  <div id="logo">
+    <img src="<% $c->uri_for('/static/images/' . $c->config()->{header_image}) %>"/>
+  </div>
+  <div id="logo-caption">
+    <div id="logo-caption-main">
+      <% $c->config()->{name} %>
+      <span class="app_version"><% $c->config()->{app_version} %></span>
+    </div>
+    <div id="logo-sub-caption">
+      Community curation
+    </div>
+  </div>
 </div>

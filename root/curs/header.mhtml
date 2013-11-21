@@ -6,8 +6,6 @@
   <& menu.mhtml, submitter_email => $c->stash()->{submitter_email},
      submitter_name => $c->stash()->{submitter_name}&>
 
-  <div class="text"><div> <% $c->config->{long_name} %> </div></div>
-
   <div class="clearall"></div>
 
 </div>

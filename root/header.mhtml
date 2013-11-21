@@ -5,7 +5,6 @@
 
   <& /menu.mhtml &>
 
-  <div class="text"><div> <% $c->config->{long_name} %> </div></div>
 
   <div class="clearall"></div>
 </div>
