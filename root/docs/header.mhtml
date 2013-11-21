@@ -1,9 +1,6 @@
 <div id="heading">
   <a href="/">
-    <div class="logo">
-      <img src="<% $c->uri_for('/static/images/' . $c->config()->{header_image}) %>"/>
-      <% $c->config()->{name} %> <span class="app_version"><% $c->config()->{app_version} %></span>
-    </div>
+    <& /logo.mhtml &>
   </a>
 
   <& /menu.mhtml &>
