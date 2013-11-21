@@ -117,6 +117,7 @@ img {
 }
 #logo-and-caption {
   float: left;
+  line-height: 1.5ex;
 }
 #logo {
   padding: 5px;
