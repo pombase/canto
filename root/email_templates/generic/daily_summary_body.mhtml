@@ -21,8 +21,6 @@ Sessions with outstanding term requests
 %   for my $session (@sessions_with_term_requests) {
 %     print $format_session_details->($session);
 %   }
-% } else {
-
 % }
 
 <%init>
