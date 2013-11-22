@@ -73,6 +73,22 @@ sub _get_current_curator_row
 
 }
 
+sub _format_curs_curator_row
+{
+  my $row = shift;
+
+  my $current_curator = $row->curator();
+  if (wantarray) {
+    return ($current_curator->email_address(),
+            $current_curator->name(),
+            $current_curator->known_as(),
+            $row->accepted_date(),
+            defined $current_curator->role() && $current_curator->role()->name() ne 'admin');
+  } else {
+    return $current_curator->email_address();
+  }
+}
+
 =head2 current_curator
 
  Usage   : $curator_manager->current_curator($curs_key);
@@ -98,17 +114,8 @@ sub current_curator
   my $curs_curator_row = $self->_get_current_curator_row($curs_key);
 
   if (defined $curs_curator_row) {
-    my $current_curator = $curs_curator_row->curator();
-    if (wantarray) {
-      return ($current_curator->email_address(),
-              $current_curator->name(),
-              $current_curator->known_as(),
-              $curs_curator_row->accepted_date(),
-              defined $current_curator->role() && $current_curator->role()->name() ne 'admin');
-    } else {
-      return $current_curator->email_address();
-    }
-  } else {
+    return _format_curs_curator_row($curs_curator_row);
+ } else {
     return undef;
   }
 }
