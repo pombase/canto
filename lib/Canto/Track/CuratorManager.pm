@@ -48,7 +48,7 @@ use Canto::Util;
 with 'Canto::Role::Configurable';
 with 'Canto::Track::Role::Schema';
 
-sub _get_current_curator_row
+sub _curs_curator_rs
 {
   my $self = shift;
   my $curs_key = shift;
@@ -56,21 +56,30 @@ sub _get_current_curator_row
   my $schema = $self->schema();
   my $curs_rs = $schema->resultset('Curs')->search({ curs_key => $curs_key });
 
+  return
+    $schema->resultset('CursCurator')
+      ->search({
+        'me.curs' => {
+          -in => $curs_rs->get_column('curs_id')->as_query(),
+        },
+      });
+}
+
+sub _get_current_curator_row
+{
+  my $self = shift;
+  my $curs_key = shift;
+
   my $where = 'curs_curator_id = (select max(curs_curator_id) from curs_curator where curs = me.curs)';
 
   my $curs_curator_rs =
-    $schema->resultset('CursCurator')
-           ->search({
-             'me.curs' => {
-               -in => $curs_rs->get_column('curs_id')->as_query(),
-             },
-           },
-           {
-             where => \$where,
-           });
+    $self->_curs_curator_rs($curs_key)
+         ->search({},
+                  {
+                    where => \$where,
+                  });
 
-  my $curs_curator_first = $curs_curator_rs->first();
-
+  return $curs_curator_rs->first();
 }
 
 sub _format_curs_curator_row
@@ -118,6 +127,30 @@ sub current_curator
  } else {
     return undef;
   }
+}
+
+=head2 session_curators
+
+ Usage   : $curator_manager->session_curators($curs_key);
+ Function: Return a summary of current and past curators of the given session.
+ Args    : $curs - a TrackDB Curs or a curs_key that will be looked up
+ Return  : An array of curator information, ordered from oldest to newest.
+           Each element in the array has the form:
+            [$email, $name, $known_as, $accepted_date, $community_curated]
+         note: the $accepted_date will be undef if the session hasn't been
+               accepted by that curator
+               $community_curated is a flag: 0 or 1
+
+=cut
+
+sub session_curators
+{
+  my $self = shift;
+  my $curs_key = shift;
+
+  return map {
+    [_format_curs_curator_row($_)];
+  } $self->_curs_curator_rs($curs_key)->search({}, { order_by => 'curs_curator_id' })->all();
 }
 
 =head2 set_curator

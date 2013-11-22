@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 16;
 
 use Canto::TestUtil;
 use Canto::TrackDB;
@@ -56,3 +56,8 @@ $session_aaaa0007_row = _get_test_row();
 ok (defined $session_aaaa0007_row->accepted_date());
 like ($session_aaaa0007_row->accepted_date(), qr/^2\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/);
 is($curs_curator_rs->count(), 3);
+
+my @all_curators = $curator_manager->session_curators('aaaa0007');
+
+is($all_curators[0]->[0], 'some.testperson@pombase.org');
+is($all_curators[1]->[0], 'val@sanger.ac.uk');
