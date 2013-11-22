@@ -1041,6 +1041,7 @@ var AlleleStuff = function($) {
     var $reuse_checkbox = $form.find('input[name="curs-allele-reuse-dialog"]');
     var $reuse_checkbox_checked = $reuse_checkbox.is(':checked');
     if (!$allele_dialog.data('validate_on_add') || $form.validate().form()) {
+      $form.find('.curs-allele-name').attr('disabled', false);
       $form.ajaxSubmit({
         dataType: 'json',
         success: function(data) {
