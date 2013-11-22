@@ -2772,7 +2772,6 @@ sub _assign_session :Private
 
     if ($reassign) {
       my $subject = "Session $curs_key reassigned to $submitter_name <$submitter_email>";
-      $self->_send_mail($c, subject => $subject, body => '', to => 'admin');
 
       $self->_send_email_from_template($c, 'session_reassigned',
                                        { reassigner_name => $reassigner_name,
