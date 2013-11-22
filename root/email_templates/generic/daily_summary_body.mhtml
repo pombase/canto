@@ -16,6 +16,13 @@ $app_prefix
 
 % }
 
+% if (@reassigned_sessions > 0) {
+Reassigned sessions
+%   for my $session (@reassigned_sessions) {
+%     print $format_session_details->($session);
+%   }
+% }
+
 % if (@sessions_with_term_requests > 0) {
 Sessions with outstanding term requests
 %   for my $session (@sessions_with_term_requests) {
@@ -26,8 +33,11 @@ Sessions with outstanding term requests
 <%init>
 use Canto::Curs::State qw/:all/;
 use Canto::Track;
+use Canto::Track::CuratorManager;
 
 my $state = Canto::Curs::State->new(config => $config);
+
+my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
 
 my @interesting_types =
   ({ state => SESSION_CREATED,
@@ -60,6 +70,26 @@ my $session_term_suggestions_count_cvterm =
 my %sessions = ();
 
 my @sessions_with_term_requests = ();
+my @reassigned_sessions = ();
+
+sub _truncate_date
+{
+  my $datestamp = shift;
+
+  if ($datestamp =~ /^(\d+-\d+\d+)/) {
+    return $1;
+  } else {
+    die "doesn't look like datestamp: $datestamp";
+  }
+}
+
+sub _date_equals
+{
+  my $date_1 = _truncate_date(shift);
+  my $date_2 = _truncate_date(shift);
+
+  return $date_1 eq $date_2;
+}
 
 my $iter = Canto::Track::curs_iterator($config, $track_schema);
 
@@ -88,8 +118,18 @@ while (my ($curs, $cursdb) = $iter->()) {
     push @sessions_with_term_requests, $curs_details;
   }
 
+  my @curs_curators = $curator_manager->session_curators($curs_key);
+
+  if (@curs_curators > 1) {
+    my ($email, $name, $known_as, $accepted_date, $community_curated) = @{$curs_curators[-1]};
+
+    if (_date_equals($accepted_date, $summary_date)) {
+      push @reassigned_sessions, $curs_details;
+    }
+  }
+
   next unless defined $datestamp;
-  next unless $datestamp =~ /^$summary_date($|\s+)/;
+  next unless _date_equals($datestamp, $summary_date);
 
 
   for my $type (@interesting_types) {

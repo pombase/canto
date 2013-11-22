@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 15;
 use Package::Alias Tools => 'Canto::Controller::Tools';
 use LWP::Protocol::PSGI;
 use Plack::Test;
@@ -133,3 +133,13 @@ my $daily_summary_text =
 
 like($daily_summary_text, qr/activity for $test_date/);
 like($daily_summary_text, qr|Sessions created on \d+-\d+-\d+ with no curator\s+$app_prefix/curs/$new_curs_key\s+$pmid\s+"SUMOylation is required for normal|);
+
+unlike($daily_summary_text, qr/Reassigned sessions/);
+
+my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
+$curator_manager->set_curator('aaaa0007', 'val@sanger.ac.uk');
+$curator_manager->accept_session('aaaa0007');
+
+$daily_summary_text =
+  Canto::Controller::Tools::_daily_summary_text($config, $test_date, $app_prefix);
+like($daily_summary_text, qr/Reassigned sessions/);
