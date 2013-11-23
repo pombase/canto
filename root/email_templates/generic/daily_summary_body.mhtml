@@ -121,9 +121,10 @@ while (my ($curs, $cursdb) = $iter->()) {
   my @curs_curators = $curator_manager->session_curators($curs_key);
 
   if (@curs_curators > 1) {
-    my ($email, $name, $known_as, $accepted_date, $community_curated) = @{$curs_curators[-1]};
+    my ($email, $name, $known_as, $accepted_date, $community_curated,
+        $creation_date) = @{$curs_curators[-1]};
 
-    if (_date_equals($accepted_date, $summary_date)) {
+    if (_date_equals($creation_date, $summary_date)) {
       push @reassigned_sessions, $curs_details;
     }
   }
