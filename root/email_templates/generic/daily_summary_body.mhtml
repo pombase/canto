@@ -124,7 +124,7 @@ while (my ($curs, $cursdb) = $iter->()) {
     my ($email, $name, $known_as, $accepted_date, $community_curated,
         $creation_date) = @{$curs_curators[-1]};
 
-    if (_date_equals($creation_date, $summary_date)) {
+    if (defined $creation_date && _date_equals($creation_date, $summary_date)) {
       push @reassigned_sessions, $curs_details;
     }
   }
