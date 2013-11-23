@@ -76,7 +76,7 @@ sub _truncate_date
 {
   my $datestamp = shift;
 
-  if ($datestamp =~ /^(\d+-\d+\d+)/) {
+  if ($datestamp =~ /^(\d+-\d+-\d+)/) {
     return $1;
   } else {
     die "doesn't look like datestamp: $datestamp";
