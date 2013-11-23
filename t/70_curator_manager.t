@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use Canto::TestUtil;
 use Canto::TrackDB;
@@ -28,10 +28,13 @@ my $session_aaaa0007_row = _get_test_row();
 
 is ($session_aaaa0007_row->curator()->email_address(), 'some.testperson@pombase.org');
 
-my ($email, $name, $known_as, $accepted_date) = $curator_manager->current_curator('aaaa0007');
+my ($email, $name, $known_as, $accepted_date, $community_curated, $creation_date) =
+  $curator_manager->current_curator('aaaa0007');
 is ($email, 'some.testperson@pombase.org');
 is ($name, 'Some Testperson');
 ok (defined $accepted_date);
+ok ($community_curated);
+like ($creation_date, qr/^\d\d\d\d-\d\d-\d\d/);
 
 $session_aaaa0007_row->accepted_date(undef);
 $session_aaaa0007_row->update();

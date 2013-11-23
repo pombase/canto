@@ -92,7 +92,8 @@ sub _format_curs_curator_row
             $current_curator->name(),
             $current_curator->known_as(),
             $row->accepted_date(),
-            defined $current_curator->role() && $current_curator->role()->name() ne 'admin');
+            defined $current_curator->role() && $current_curator->role()->name() ne 'admin',
+            $row->creation_date());
   } else {
     return $current_curator->email_address();
   }
