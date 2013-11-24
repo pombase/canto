@@ -120,8 +120,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-29 18:14:36
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9OVSoU8MchuwXKPiNPhr0w
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-24 19:46:37
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TDJYF62PWwjY3S6AbAFjww
 
 __PACKAGE__->many_to_many('annotations' => 'allele_annotations',
                           'annotation');

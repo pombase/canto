@@ -161,8 +161,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-29 18:14:36
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EwFDh75Jp2GaW8OGBgumaw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-24 19:46:37
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:67rVsz0WI4F0RjoiIWGFog
 
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');
