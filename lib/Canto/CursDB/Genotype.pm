@@ -108,6 +108,16 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-24 19:46:37
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mIM6ZtlpBS910GW/PNHYBg
 
+=head2 annotations
+ Usage   : my $annotation_rs = $genotype->annotations();
+ Function: Return the Annotations object related to this genotype via the
+           genotype_annotations table
+ Args    : None
+ Returns : An Annotation ResultSet
+
+=cut
+__PACKAGE__->many_to_many('annotations' => 'genotype_annotations',
+                          'annotation');
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

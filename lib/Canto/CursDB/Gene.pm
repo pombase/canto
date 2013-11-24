@@ -266,13 +266,23 @@ sub delete
 
   map {
     my $allele = $_;
-    my @allele_annotations = $allele->allele_annotations();
-    map {
-      my $allele_annotation = $_;
-      my $annotation = $allele_annotation->annotation();
-      $allele_annotation->delete();
-      $annotation->delete();
-    } @allele_annotations;
+    my $allele_genotype_rs =
+      $allele->allele_genotypes()->search({}, { prefetch => 'genotype' });
+
+    while (defined (my $allele_genotype = $allele_genotype_rs->next())) {
+      my $genotype = $allele_genotype->genotype();
+      my $genotype_annotation_rs =
+        $genotype->genotype_annotations()
+          ->search({}, { prefetch => 'annotation' });
+
+      while (defined (my $genotype_anno = $genotype_annotation_rs->next())) {
+        my $annotation = $genotype_anno->annotation();
+        $genotype_anno->delete();
+        $annotation->delete();
+      }
+
+      $genotype->delete();
+    };
     $allele->delete();
   } $self->alleles();
 
