@@ -16,15 +16,19 @@ $app_prefix
 
 % }
 
-% if (@reassigned_sessions > 0) {
-Reassigned sessions
+Reassigned sessions on <% $summary_date %>
+% if (@reassigned_sessions == 0) {
+[none]
+% } else {
 %   for my $session (@reassigned_sessions) {
 %     print $format_session_details->($session);
 %   }
 % }
 
-% if (@sessions_with_term_requests > 0) {
 Sessions with outstanding term requests
+% if (@sessions_with_term_requests == 0) {
+[none]
+% } else {
 %   for my $session (@sessions_with_term_requests) {
 %     print $format_session_details->($session);
 %   }
