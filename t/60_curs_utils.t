@@ -84,7 +84,7 @@ sub check_new_annotations
         ok (length $annotation_row->{term_ontid} > 0);
         ok (length $annotation_row->{term_name} > 0);
 
-        if ($annotation_type_config->{needs_allele}) {
+        if ($annotation_type_config->{needs_genotype}) {
           ok (length $annotation_row->{allele_display_name} > 0);
           $allele_count++;
         }

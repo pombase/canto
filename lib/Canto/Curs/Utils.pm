@@ -75,19 +75,9 @@ sub _make_ontology_annotation
 
   my $gene;
 
-  my @alleles = $annotation->search_related('allele_annotations')
-    ->search_related('allele')->search({}, { prefetch => 'gene' });;
-
-  if ($annotation_type_config->{needs_allele} && @alleles) {
-    if (@alleles > 1) {
-      die "more than one allele for annotation ", $annotation->annotation_id();
-    }
-
-    my $allele = $alleles[0];
-
-    $allele_display_name = $allele->display_name();
-
-    $gene = $allele->gene();
+  if ($annotation_type_config->{needs_genotype}) {
+    # FIXME
+    return;
 
     $expression_level = $data->{expression} // 'null';
 

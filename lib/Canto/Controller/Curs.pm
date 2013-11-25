@@ -964,57 +964,6 @@ sub _re_edit_annotation
                                            });
   my $data = $annotation->data();
 
-  my @alleles = $annotation->alleles();
-
-  if ($annotation_config->{needs_allele} && !exists $data->{alleles_in_progress} &&
-      @alleles > 0) {
-    # undo the work of annotation_process_alleles()
-    my %in_progress_data = ( id => 0 );
-    if (@alleles > 1) {
-      croak "can't handle multi-allele phenotypes";
-    }
-
-    my $allele = $alleles[0];
-
-    $in_progress_data{allele_type} = $allele->type();
-
-    if (defined $allele->name()) {
-      $in_progress_data{name} = $allele->name();
-    }
-    if (defined $allele->description()) {
-      $in_progress_data{description} = $allele->description();
-    }
-
-    $in_progress_data{evidence} = delete $data->{evidence_code};
-
-    if (defined $data->{expression}) {
-      $in_progress_data{expression} = $data->{expression};
-    }
-    delete $data->{expression};
-
-    if (defined $data->{conditions}) {
-      $in_progress_data{conditions} = $data->{conditions};
-    } else {
-      $in_progress_data{conditions} = [];
-    }
-    delete $data->{conditions};
-
-    $schema->resultset('AlleleAnnotation')->search({ allele => $allele->allele_id(),
-                                                     annotation => $annotation->annotation_id() })
-      ->delete();
-
-    if ($schema->resultset('AlleleAnnotation')
-        ->search({ allele => $allele->allele_id() })->count() == 0) {
-      # unreferenced so delete
-      $allele->delete();
-    }
-
-    $schema->resultset('GeneAnnotation')->create({ gene => $allele->gene()->gene_id(),
-                                                   annotation => $annotation->annotation_id() });
-
-    $new_annotation_data->{alleles_in_progress}->{0} = \%in_progress_data;
-  }
-
   my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
   my $new_data = $merge->merge($data, $new_annotation_data);
 
@@ -1279,8 +1228,8 @@ sub annotation_ontology_edit
   $st->{annotation_extra_help_text} = $annotation_extra_help_text;
   $st->{template} = "curs/modules/$module_category.mhtml";
 
-  # if 1, this annotation much have an allele
-  my $needs_allele = $annotation_config->{needs_allele};
+  # if 1, this annotation is for a genotype rather than gene
+  my $needs_genotype = $annotation_config->{needs_genotype};
 
   # if "single_allele", use "allele_select"
   # if "multi_allele", use "multi_allele_select"
@@ -1354,7 +1303,7 @@ sub annotation_ontology_edit
         $self->_create_annotation($c, $annotation_type_name,
                                   \@genes, \%annotation_data);
 
-      if ($annotation_config->{needs_allele}) {
+      if ($annotation_config->{needs_genotype}) {
         if ($target eq 'single_allele') {
           _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'allele_select');
         } else {
@@ -1516,8 +1465,6 @@ sub _annotation_edit
   my @genes = @{$st->{genes}};
 
   my $annotation_display_name = $annotation_config->{display_name};
-
-  my $needs_allele = $annotation_config->{needs_allele};
 
   my $gene_display_names = join ',', map {
     $_->display_name();
@@ -1857,7 +1804,7 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
       if ($annotation_config->{needs_allele} || defined $existing_evidence_code) {
         _redirect_and_detach($c, 'gene', $gene_id, 'view');
       } else {
-        _maybe_transfer_annotation($c, [@annotation_ids], $annotation_config);
+        _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
       }
     }
   }
@@ -2433,22 +2380,15 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
   my $gene_count = $genes_rs->count();
 
   my $annotation_0_data = $annotations[0]->data();
-  my $evidence_or_term;
-  if ($annotation_config->{needs_allele}) {
-    my $term_ontid = $annotation_0_data->{term_ontid};
-    $evidence_or_term = "($term_ontid)";
-  } else {
-    $evidence_or_term = "and evidence";
-  }
   my $transfer_select_genes_text;
 
   if ($gene_count > 1) {
     $transfer_select_genes_text =
       'You can annotate other genes from your list with the '
-        . "same term $evidence_or_term by selecting genes below:";
+        . "same term and evidence by selecting genes below:";
   } else {
     $transfer_select_genes_text =
-      "You can annotate other genes with the same term $evidence_or_term "
+      "You can annotate other genes with the same term and evidence "
         . 'by adding more genes from the publication:';
   }
 
@@ -2579,10 +2519,6 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
       delete $new_data->{annotation_extension};
       delete $new_data->{conditions};
       delete $new_data->{expression};
-      if ($annotation_config->{needs_allele}) {
-        # only transfer the term to the new annotation
-        delete $new_data->{evidence_code};
-      }
 
       my @dest_gene_identifiers = ();
 

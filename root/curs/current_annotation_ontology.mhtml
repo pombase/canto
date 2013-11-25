@@ -28,11 +28,6 @@ $view_only => 0
         Gene name
       </th>
 % }
-% if ($needs_allele) {
-      <th>
-        Allele
-      </th>
-% }
       <th>
         Term ID
       </th>
@@ -42,7 +37,7 @@ $view_only => 0
       <th>
         Evidence code
       </th>
-% if ($needs_allele) {
+% if ($needs_genotype) {
       <th>
         Expression
       </th>
@@ -107,24 +102,6 @@ $view_only => 0
       </span>
     </td>
 % }
-% if ($needs_allele) {
-    <td>
-      <span>
-% if ($view_only || !$user_created || !defined
-%     $row->{allele_display_name} || $annotation_status eq 'deleted') {
-      <% $row->{allele_display_name} %>
-% } else {
-      <a href="<% $edit_allele_url %>"
-         class="curs-editable-table-field"
-         id="curs-annotation-allele-edit-<% $row->{annotation_id} %>"
-         title="Change this allele ...">
-        <% $row->{allele_display_name} %>
-        <img src="<% $edit_icon_uri %>"/>
-      </a>
-% }
-      </span>
-    </td>
-% }
     <td>
       <span <% $obsolete_class |n %>>
 % if ($view_only || !$user_created || $annotation_status eq 'deleted') {
@@ -162,12 +139,7 @@ $view_only => 0
    <% $row->{evidence_code} %>
 %   }
 % } else { 
-%   my $url;
-%   if ($annotation_type->{needs_allele} && length $row->{allele_display_name} == 0) {
-%     $url = $allele_select_url . $row->{annotation_id};
-%   } else {
-%     $url = $evidence_action_url . $row->{annotation_id};
-%   }
+%   my $url = $evidence_action_url . $row->{annotation_id};
 <a href="<% $url %>"
    class="curs-editable-table-long-field"
 %   if (defined $row->{evidence_code}) {
@@ -181,7 +153,7 @@ $view_only => 0
 % }
       </span>
     </td>
-% if ($needs_allele) {
+% if ($needs_genotype) {
     <td>
       <span>
       <% $row->{expression_level} %>
@@ -406,7 +378,7 @@ my $title = $new_or_db . "$annotation_type_display_name annotation$plural " .
   $gene_text . ($user_created ? '' : ' from ' . $pub->uniquename());
 
 my $needs_with_or_from = $annotation_type->{needs_with_or_from};
-my $needs_allele = $annotation_type->{needs_allele};
+my $needs_genotype = $annotation_type->{needs_genotype};
 
 my $some_row_has_term_suggestion = grep { $_->{term_suggestion} } @annotations;
 my $some_row_has_comment = grep { $_->{comment} } @annotations;
