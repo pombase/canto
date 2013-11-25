@@ -88,9 +88,9 @@ The alleles for this genotype:
 </div>
 
 <%init>
-use PomCur::Curs;
-use PomCur::Track;
-use PomCur::Curs::GeneProxy;
+use Canto::Curs;
+use Canto::Track;
+use Canto::Curs::GeneProxy;
 
 my @gene_data = map {
   my $gene = $_;
