@@ -32,7 +32,7 @@ __PACKAGE__->table("genotype");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 primary_identifier
+=head2 name
 
   data_type: 'text'
   is_nullable: 1
@@ -42,7 +42,7 @@ __PACKAGE__->table("genotype");
 __PACKAGE__->add_columns(
   "genotype_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "primary_identifier",
+  "name",
   { data_type => "text", is_nullable => 1 },
 );
 
@@ -60,17 +60,17 @@ __PACKAGE__->set_primary_key("genotype_id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<primary_identifier_unique>
+=head2 C<name_unique>
 
 =over 4
 
-=item * L</primary_identifier>
+=item * L</name>
 
 =back
 
 =cut
 
-__PACKAGE__->add_unique_constraint("primary_identifier_unique", ["primary_identifier"]);
+__PACKAGE__->add_unique_constraint("name_unique", ["name"]);
 
 =head1 RELATIONS
 
@@ -105,10 +105,11 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-24 19:46:37
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mIM6ZtlpBS910GW/PNHYBg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-25 14:23:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uWBtLUXh4c1GzaGrwvqS7Q
 
 =head2 annotations
+
  Usage   : my $annotation_rs = $genotype->annotations();
  Function: Return the Annotations object related to this genotype via the
            genotype_annotations table
@@ -116,6 +117,7 @@ __PACKAGE__->has_many(
  Returns : An Annotation ResultSet
 
 =cut
+
 __PACKAGE__->many_to_many('annotations' => 'genotype_annotations',
                           'annotation');
 
