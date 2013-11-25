@@ -743,6 +743,29 @@ sub _load_curs_db_data
     }
   }
 
+  for my $genotype_details (@{$curs_config->{genotypes}}) {
+    my %create_args = %{_process_data($cursdb_schema, $genotype_details)};
+
+    # save the args that are arrays and set them after creation to cope with
+    # many-many relations
+    my %array_args = ();
+
+    for my $key (keys %create_args) {
+      if (ref $create_args{$key} eq 'ARRAY') {
+        $array_args{$key} = $create_args{$key};
+        delete $create_args{$key};
+      }
+    }
+
+    my $new_genotype =
+      $cursdb_schema->create_with_type('Genotype', { %create_args });
+
+   for my $key (keys %array_args) {
+      my $method = "set_$key";
+      $new_genotype->$method(@{$array_args{$key}});
+    }
+  }
+
   for my $annotation (@{$curs_config->{annotations}}) {
     my %create_args = %{_process_data($cursdb_schema, $annotation)};
 

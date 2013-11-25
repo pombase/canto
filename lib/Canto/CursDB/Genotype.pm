@@ -121,6 +121,9 @@ __PACKAGE__->has_many(
 __PACKAGE__->many_to_many('annotations' => 'genotype_annotations',
                           'annotation');
 
+__PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
+                          'allele');
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

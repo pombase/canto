@@ -127,9 +127,12 @@ test_config:
                  description: unknown
                  type: new
          genotypes:
-           - primary_identifier: "SPAC27D7.13c-ssm4-D4(del_100-200)"
+           - name: "h+ SPCC63.05-unk ssm4delta"
              alleles(Allele:primary_identifier):
-               - 
+               - 'SPAC27D7.13c:allele-1'
+           - name: "h+ ssm4-D4"
+             alleles(Allele:name):
+               - "ssm4-D4"
          annotations:
            - type: biological_process
              status: new
@@ -200,8 +203,8 @@ test_config:
                  community_curated: 0
            - type: phenotype
              status: new
-             alleles(Allele:description):
-               - deletion
+             genotypes(Genotype:name):
+               - "h+ SPCC63.05-unk ssm4delta"
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: Epitope-tagged protein immunolocalization experiment data
@@ -216,8 +219,8 @@ test_config:
                  community_curated: 0
            - type: phenotype
              status: new
-             genotype(Genotype:):
-               - del_100-200
+             genotypes(Genotype:name):
+               - "h+ ssm4-D4"
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: Co-immunoprecipitation experiment
