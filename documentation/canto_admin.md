@@ -1,7 +1,7 @@
 # Introduction
 [Canto](http://curation.pombase.org/) is a generic genome annotation tool with
-a focus on community curation.  This document describes Canto from the
-administrators perspective.  It covers installation and maintenance.
+a focus on community curation. This document describes Canto from the
+administrator's perspective. It covers installation and maintenance.
 
 The latest version of this document can always be found on the main
 [Canto website](http://curation.pombase.org/pombe/docs/canto_admin) and the
@@ -15,7 +15,7 @@ source to it
 # Canto in a Virtual machine
 Canto can be tested in a virtual machine using
 [VirtualBox](http://www.virtualbox.org) and
-[Vagrant](http://www.vagrantup.com/).  This combination is available on Linux,
+[Vagrant](http://www.vagrantup.com/). This combination is available on Linux,
 MacOS and Windows.
 
 These instructions have been tested on a 64 bit host.
@@ -51,7 +51,7 @@ its dependencies:
     vagrant box add precise64 http://files.vagrantup.com/precise64.box
     vagrant up
 
-The `vagrant` commands will many minutes to complete.  If everything is
+The `vagrant` commands will many minutes to complete. If everything is
 successful, once `vagrant up` returns you can `ssh` to the virtual machine
 with:
 
@@ -88,7 +88,7 @@ package manager:
       libdist-checkconflicts-perl liblocal-lib-perl
 
 To improve the installation speed, these packages can optionally be installed
-before preceding:
+before proceeding:
 
     sudo apt-get install libhash-merge-perl \
       libhtml-mason-perl libplack-perl libdbix-class-perl \
@@ -107,17 +107,17 @@ before preceding:
       libdbd-pg-perl libdata-javascript-anon-perl \
       libdata-rmap-perl
 
-If these packages aren't installed these Perl modules will be installed using
+If these packages aren't installed, these Perl modules will be installed using
 CPAN, which is slower.
 
-The [CLucene](http://clucene.sourceforge.net/) is required by Canto.  For
+[CLucene](http://clucene.sourceforge.net/) is required by Canto. For
 Debian version 7 ("wheezy") and earlier and Ubuntu version 13.04 ("Raring")
 and earlier it can be installed with:
 
     sudo apt-get install libclucene-dev libclucene0ldbl
 
 For Ubuntu version 13.10 the correct CLucene library version must be
-installed manually.  The Perl CLucene modules is currently only compatible
+installed manually. The Perl CLucene modules is currently only compatible
 with CLucene version 0.9.* but Ubuntu v13.10 ships with CLucene v2.3.3.4.
 
 On Ubuntu v13.10 the old CLucene library can be installed with:
@@ -138,12 +138,12 @@ These are suggested packages to install:
     sudo yum install perl cpan git perl-Module-Install
 
 ## Getting the Canto source code
-Currently the easiest way to get the code is via GitHub.  Run this command
+Currently the easiest way to get the code is via GitHub. Run this command
 to get a copy:
 
     git clone https://github.com/pombase/canto.git
 
-This creates a directory called "`canto`".  The directory can be updated
+This creates a directory called "`canto`". The directory can be updated
 later with the command:
 
     git pull
@@ -155,18 +155,18 @@ Alternatively, GitHub provides archive files for the current version:
 - https://github.com/pombase/canto/archive/master.zip
 - https://github.com/pombase/canto/archive/master.tar.gz
 
-Note after unpacking, you'll have a directory called `canto-master`.  The text
+Note after unpacking, you'll have a directory called `canto-master`. The text
 below assumes `canto` so:
 
     mv canto-master canto
 
 ## CPAN tips
 It's best to configure the CPAN client before starting the Canto
-installation.  Start it with:
+installation. Start it with:
 
     cpan
 
-When started, cpan will attempt to configure itself.  Usually the default
+When started, cpan will attempt to configure itself. Usually the default
 answer at each prompt will work.
 
 Use these commands at the `cpan` prompt avoid lots of questions while
@@ -223,7 +223,7 @@ Again, from the `canto` directory.
     ./script/canto_start
 
 ## Visit the application start page
-The application should now be running at: http://localhost:5000
+The application should now be running at http://localhost:5000
 
 # Configuration
 ## canto.yaml
@@ -234,23 +234,23 @@ directory.  Any installation specific settings can be added to
 The configuration files are [YAML format](http://en.wikipedia.org/wiki/YAML).
 
 ### name
-A one word name for the site.  default: Canto
+A one word name for the site. default: Canto
 ### long_name
-A longer description of the site.  eg. The SlugBase community annotation tool
+A longer description of the site. e.g. The SlugBase community annotation tool
 ### database_name
-Database name for prefixing identifiers when exporting.  eg. PomBase
+Database name for prefixing identifiers when exporting. e.g. PomBase
 ### database_url
-The URL of the database that this instance is installed for.  eg.
+The URL of the database that this instance is installed for. e.g.
 `http://curation.pombase.org/pombe/`
 ### header_image
 A the path relative to `root/static` of the logo to put in the header.
 ### instance_organism
-Canto has two modes: single or multi organism.  In multi organism mode, genes
-from any number of organisms can be annotated in each session.  In this mode
+Canto has two modes: single or multi organism. In multi organism mode, genes
+from any number of organisms can be annotated in each session. In this mode
 after uploading a list of gene identifiers, the user will be shown the
-organism name as well as the names, synonyms and products.  The organism is
+organism name as well as the names, synonyms and products. The organism is
 shown so the user can confirm that the identifier they gave matched the gene
-from the right organism.  In single organism mode the organism is not
+from the right organism. In single organism mode the organism is not
 displayed.
 
 Example:
@@ -263,11 +263,11 @@ The link for the main Canto web site.
 ### app_version
 The software version, automatically updated each release.
 ### schema_version
-The version of the schema.  This is incremented when the schema changes in an
+The version of the schema. This is incremented when the schema changes in an
 incompatible way.
 
 ### authentication
-Configuration for the Catalyst authentication code.  This shouldn't need changing.
+Configuration for the Catalyst authentication code. This shouldn't need changing.
 ### view_options
 Configuration for the admin view pages.
 #### max_inline_results_length
@@ -276,7 +276,7 @@ page.
 ### db_initial_data
 Data needed to initialise a Canto instance.
 ### class_info
-Descriptions of table in the database used by the interface.  This
+Descriptions of table in the database used by the interface. This
 information is used for rendering the view and object pages.
 ### reports
 A list of report names to show on the front page.
@@ -289,18 +289,18 @@ The template database to use when creating a new Canto instance.
 ### curs_db_template_file
 The template database to use when creating a new curation session.
 ### ontology_index_dir
-The name of the directory used for the ontology Lucene index.  This index
+The name of the directory used for the ontology Lucene index. This index
 is used to do autocompeletion in the interface.
 ### external_sources
 URLs of external services.
 ### implementation_classes
-Names of classes used to implement database query and storage.  This
+Names of classes used to implement database query and storage. This
 allows the implementations to be swapped from the defaults.
 #### gene_adaptor
-Used to look up gene identifier, name, synonyms and products.  The default
+Used to look up gene identifier, name, synonyms and products. The default
 is to use the internal Canto database ("track").
 ### evidence_types
-Short name (codes) and long names of evidence types.  Any evidence type
+Short name (codes) and long names of evidence types. Any evidence type
 configured with the option "with_gene" set to true will cause the
 interface to ask for a gene for later storage in the "with/from" column
 of a GAF file.
@@ -316,13 +316,13 @@ should be used for rendering and storing these annotation type.
 The path to the extra configuration file needed while testing.
 ### help_text
 The keys under `help_text` identify a page in Canto and under the key is one
-or both of `inline` or `url`.  The help text and link is rendered by the
-`inline_help.mhtml` template.  If a `url` is given, the text under `inline`
-will be `title` attribute of a link with that URL.  Without a `url` a help link
+or both of `inline` or `url`. The help text and link is rendered by the
+`inline_help.mhtml` template. If a `url` is given, the text under `inline`
+will be `title` attribute of a link with that URL. Without a `url` a help link
 (a "?" icon) will be shown and the `inline` text will be displayed in a pop-up
 DIV.
 ### contact_email
-This email address is shown anytime a contact address is needed.  See the
+This email address is shown anytime a contact address is needed. See the
 `contact.mhtml` template.
 ### external_links
 Each external link configuration has three possible parameters:
@@ -330,10 +330,10 @@ Each external link configuration has three possible parameters:
 - `name` - The text to use as the title of the link.
 - `icon` - An image from the `root/static/images/logos` to use as the `<img>`
   in the link.
-- `url` - The URL to the appropriate page on an external site.  This string
-  can contain text to substitute in the form `@@key@@`.  On the gene page, the
+- `url` - The URL to the appropriate page on an external site. This string
+  can contain text to substitute in the form `@@key@@`. On the gene page, the
   key can be `primary_identifier` (the gene systematic ID) or `primary_name`
-  (the gene name).  On the publication page the key should be `uniquename`
+  (the gene name). On the publication page the key should be `uniquename`
   which will substitute the PubMed ID into the URL.
 - `sysid_link` - This external link will be used to hyperlink the primary
   identifier on the gene page as well as being shown in the external links
@@ -342,7 +342,7 @@ Each external link configuration has three possible parameters:
 There are two possible types of external link on the gene pages:
 
 - `generic` - These links will be shown on all gene pages.
-- `organism` - These links are specific to the given organism.  The keys under
+- `organism` - These links are specific to the given organism. The keys under
   the `organism` section will be the full organism name (ie "Genus species").
 
 The external links are implemented in the `linkouts.html` template.
@@ -378,7 +378,7 @@ The ontology must be configured in the [annotation_type_list](#annotation_type_l
 # Import and Export
 ## Exporting to JSON
 The curation data can be exported in [JSON](http://en.wikipedia.org/wiki/JSON)
-format with the `canto_export.pl` script from the `script` directory.  This
+format with the `canto_export.pl` script from the `script` directory. This
 JSON file can then be loaded into a Chado database (see below).
 
 To export the data from sessions that have been "approved" by the
@@ -388,9 +388,9 @@ administrators using the admin interface use:
 
 (From the canto top level directory).
 
-If you use the flag `--export-approved` instead of `--dump-approved` then the
-exported sessions with be marked as "EXPORTED" in the Canto database.  These
-sessions won't be exported next time.  This option is provided so that
+If you use the flag `--export-approved` instead of `--dump-approved`, the
+exported sessions with be marked as "EXPORTED" in the Canto database. These
+sessions won't be exported next time. This option is provided so that
 annotation will be exported only once from Canto.
 
 To export the data from all the sessions, regardless of its state use:
@@ -400,7 +400,7 @@ To export the data from all the sessions, regardless of its state use:
 ## Reading Canto data into Chado
 The code for loading Canto JSON format files into a Chado database is
 available from the [pombase-chado](https://github.com/pombase/pombase-chado)
-code repository.  Follow the
+code repository. Follow the
 [installation instructions](https://github.com/pombase/pombase-chado/blob/master/README.md)
 then use this command:
 
@@ -417,7 +417,7 @@ only adds annotation.
 There are two parts to the system.
 
 "Track" run is the part that the administrator uses to add people,
-publications and curation sessions to the database.  In the web interface this
+publications and curation sessions to the database. In the web interface this
 is access using the Admin link in the top right of the page.
 
 "Curs" handles the user curation sessions.
@@ -443,7 +443,7 @@ running on a Plack server.
 # Developing Canto
 ## Running tests
 In general the tests can be run with: `make test` in the main canto
-directory.  If the schema or test genes or ontologies are is changed the
+directory. If the schema or test genes or ontologies are is changed the
 test data will need to be re-initialised.
 
 ## Helper scripts
@@ -453,7 +453,7 @@ Scripts to help developers:
   and recreate the database classes in lib/Canto/TrackDB and
   lib/Canto/CursDB
 - `etc/test_data_initialise.pl` - re-create test data files that don't change
-  very often.  eg. the test PubMed XML file.  Currently this script only
+  very often. e.g. the test PubMed XML file. Currently this script only
   needs to be run if the list of publications for the test database
   changes
 - `etc/test_initialise.pl` - initialise the test databases in t/data with
@@ -477,7 +477,7 @@ The server can be run from the top level directory with this command:
 
     CANTO_CONFIG_LOCAL_SUFFIX=local PERL5LIB=lib ./script/canto_server.pl -p 5000 -r -d
 
-"5000" is the local port to connect on.  The server should then be
+"5000" is the local port to connect on. The server should then be
 available at http://localhost:5000/
 
 # Contact
