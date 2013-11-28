@@ -2241,7 +2241,6 @@ sub _allele_from_json: Private
     return $allele;
   } else {
     my $allele_type = $json_allele->{type};
-    my $expression = $json_allele->{expression};
 
     my $gene_id = $json_allele->{gene_id};
 
@@ -2256,55 +2255,81 @@ sub _allele_from_json: Private
   }
 }
 
+sub maybe_make_genotype
+{
+  my $self = shift;
+  my $c = shift;
+  my $alleles = shift;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+
+  # FIXME - we always make a Genotype at the moment - there's no "maybe"
+
+  my $genotype_name = join " ", map { $_->display_name() } @$alleles;
+
+  my $genotype = $schema->create_with_type('Genotype',
+                                           {
+                                             name => $genotype_name,
+                                           });
+
+  $genotype->set_alleles($alleles);
+}
+
 sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allele_finish')
 {
   my ($self, $c) = @_;
-
-  my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
+
+  my $config = $c->config();
 
   my $content_file = $c->req()->body();
   my $json_content;
 
+  # FIXME
+  # body() returns a file name, so read the contents into a string - there
+  # must be a better way
   {
     local $/;
     open my $fh, '<', $content_file or die "can't open $content_file\n";
     $json_content = <$fh>;
   }
 
-  my $json_data = decode_json($json_content);
+  my $body_data = decode_json($json_content);
   my $annotation = $st->{annotation};
 
-  my $process = sub {
-    my @allele_expression = ();
-    my @alleles = ();
+  my %allele_expression = ();
+  my @alleles = ();
 
-    for my $json_allele (@$json_data) {
-      my $allele = $self->_allele_from_json($schema, $json_allele);
+  my $guard = $schema->txn_scope_guard();
 
-      push @alleles, $allele;
+  for my $allele_data (@$body_data) {
+    my $allele = $self->_allele_from_json($schema, $allele_data);
+
+    my $expression = $allele_data->{expression};
+
+    if (defined $expression && length $expression > 0) {
+      $allele_expression{$allele->allele_id()} = $expression;
     }
 
-    my $it = each_array(@alleles, @allele_expression);
+    push @alleles, $allele;
+  }
 
-    my $annotation_data = $annotation->data();
+  my $genotype = $self->maybe_make_genotype($c, \@alleles);
 
-    while (my ($allele, $expression) = $it->()) {
-      $schema->create_with_type('AlleleAnnotation',
-                                {
-                                  allele => $allele->allele_id(),
-                                  annotation => $annotation->annotation_id(),
-                                });
+  $schema->create_with_type('GenotypeAnnotation',
+                            {
+                              genotype => $genotype->genotype_id(),
+                              annotation => $annotation->annotation_id(),
+                            });
 
-      push @{$annotation_data->{allele_expression}}, $expression;
-    }
+  my $annotation_data = $annotation->data();
+  push @{$annotation_data->{allele_expression}}, \%allele_expression;
 
-    $annotation->data($annotation_data);
-    $annotation->update();
-  };
-
-  $schema->txn_do($process);
+  $annotation->data($annotation_data);
+  $annotation->update();
 
   $self->metadata_storer()->store_counts($schema);
 
