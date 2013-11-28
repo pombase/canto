@@ -54,6 +54,8 @@ no Moose;
 
 $ENV{CANTO_CONFIG_LOCAL_SUFFIX} = 'test';
 
+our $test_date = '2010-01-02';
+
 =head2 new
 
  Usage   : my $utils = Canto::TestUtil->new();
@@ -769,7 +771,7 @@ sub _load_curs_db_data
   for my $annotation (@{$curs_config->{annotations}}) {
     my %create_args = %{_process_data($cursdb_schema, $annotation)};
 
-    $create_args{creation_date} = '2010-01-02';
+    $create_args{creation_date} = $test_date;
 
     # save the args that are arrays and set them after creation to cope with
     # many-many relations
