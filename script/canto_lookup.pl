@@ -40,8 +40,25 @@ sub usage
     $message = '';
   }
 
-  warn "${message}usage:
-   $0 -t <type> [-n ontology-name ] search terms ...\n";
+  warn qq|$0: look up ontology terms in the Canto database in the same way the
+autocomplete works.
+
+${message}usage:
+   $0 -t <type> [-n ontology-name ] search terms ...
+
+<type> can be "gene" or "ontology"
+
+Examples:
+
+Search for full term name or synonym:
+   $0 -t ontology -n fission_yeast_phenotype 'long cells'
+Search for word prefix:
+   $0 -t ontology -n biological_process 'transpo'
+Search for term ID - ontology-name isn't needed
+   $0 -t ontology 'FYPO:0000114'
+Search for gene name or systematic ID
+   $0 -t gene 'cdc11'
+|;
 
   exit(1);
 }
@@ -98,11 +115,11 @@ if ($lookup_type eq 'gene') {
   }
 } else {
   if ($lookup_type eq 'ontology') {
-    if (!defined $ontology_name) {
+    my $search_string = "@ARGV";
+
+    if (!defined $ontology_name && $search_string !~ /^\w+:[\w\d]+$/) {
       usage("no ontology name argument");
     }
-
-    my $search_string = "@ARGV";
 
     my $res = $lookup->lookup(ontology_name => $ontology_name,
                               search_string => $search_string,
