@@ -48,6 +48,7 @@ use Cwd;
 use Hash::Merge;
 
 use Canto::DBUtil;
+use Canto::TrackDB;
 
 use v5.005;
 
