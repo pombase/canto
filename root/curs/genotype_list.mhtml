@@ -1,0 +1,80 @@
+<%args>
+$pub
+</%args>
+
+<div class="genotype-list curs-box">
+  <div class="curs-box-title">
+    <div>
+% if ($read_only_curs) {
+Genotypes from this publication
+% } else {
+Genotype list
+% }
+    <& /curs/inline_help.mhtml, key => 'choose_genotype' &>
+    </div>
+  </div>
+  <div class="curs-box-body">
+% if (!$read_only_curs) {
+   <div class="curs-genotype-list-instructions">
+Click on a genotype name to add a phenotype
+   </div>
+% }
+% if (@genotype_hashes) {
+  <table>
+%   for my $genotype (@genotype_hashes) {
+    <tr>
+      <td>
+% if (!$read_only_curs) {
+        <a href="<% $start_path . '/genotype/' . $genotype->{genotype_id} . '/view' %>"
+% }
+          <span>
+            <% $genotype->{name} %>
+          </span>
+% if (!$read_only_curs) {
+        </a>
+% }
+        <% $genotype->{extra_text} |n %>
+      </td>
+    </tr>
+%   }
+  </table>
+% } else {
+  <div class="curs-no-genotypes-message">
+    [No genotypes]
+  </div>
+% }
+  </div>
+</div>
+
+<%init>
+use Canto::Curs;
+
+my $schema = $c->stash()->{schema};
+my $config = $c->config();
+
+my @all_genotypes = $schema->resultset('Genotype')->all();
+
+my @genotype_hashes = map {
+  my $extra_text = '';
+  my @annotations = $_->annotations();
+  my $annotation_count = scalar(@annotations);
+  if ($annotation_count > 0) {
+    my $text;
+    if ($annotation_count == 1) {
+      $text = '1 annotation';
+    } else {
+      $text = "$annotation_count annotations";
+    }
+    $extra_text = "&nbsp;&nbsp;<span class='annotation-count'>($text)</span>";
+  }
+  {
+    name => $_->name(),
+    genotype_id => $_->genotype_id(),
+    extra_text => $extra_text,
+  }
+} @all_genotypes;
+
+my $start_path = $c->stash()->{curs_root_uri};
+
+my $read_only_curs = $c->stash()->{read_only_curs};
+</%init>

@@ -1151,7 +1151,8 @@ sub _update_annotation
 
 sub _create_annotation
 {
-  my ($self, $c, $annotation_type_name, $gene_proxies, $annotation_data) = @_;
+  my ($self, $c, $annotation_type_name, $gene_proxies, $genotypes, $annotation_data) =
+    @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -1169,11 +1170,15 @@ sub _create_annotation
                                   data => clone $annotation_data,
                                 });
 
-  my @genes = map {
-    $_->cursdb_gene();
-  } @$gene_proxies;
+  if (@$gene_proxies) {
+    my @genes = map {
+      $_->cursdb_gene();
+    } @$gene_proxies;
 
-  $annotation->set_genes(@genes);
+    $annotation->set_genes(@genes);
+  } else {
+    $annotation->set_genotypes(@$genotypes);
+  }
 
   my $annotation_id = $annotation->annotation_id();
 
@@ -1192,7 +1197,7 @@ sub _create_annotation
 
 sub annotation_ontology_edit
 {
-  my ($self, $c, $gene_proxy, $annotation_config, $annotation) = @_;
+  my ($self, $c, $feature, $annotation_config, $annotation) = @_;
 
   my $module_display_name = $annotation_config->{display_name};
 
@@ -1201,9 +1206,23 @@ sub annotation_ontology_edit
   my $st = $c->stash();
   my $schema = $st->{schema};
 
+  my $target = $st->{target};
+
+  my $gene_proxy;
+  my $genotype;
+
+  my $feature_id;
+
+  if ($target eq 'gene') {
+    $gene_proxy = _get_gene_proxy($c->config(), $feature);
+    $feature_id = $feature->gene_id();
+  } else {
+    $genotype = $feature;
+    $feature_id = $feature->genotype_id();
+  }
+
   my $module_category = $annotation_config->{category};
 
-  # don't set stash title - use default
   $st->{current_component} = $annotation_type_name;
   $st->{annotation_type_config} = $annotation_config;
   $st->{annotation_namespace} = $annotation_config->{namespace};
@@ -1227,14 +1246,6 @@ sub annotation_ontology_edit
   my $annotation_extra_help_text = $annotation_config->{extra_help_text};
   $st->{annotation_extra_help_text} = $annotation_extra_help_text;
   $st->{template} = "curs/modules/$module_category.mhtml";
-
-  # if 1, this annotation is for a genotype rather than gene
-  my $needs_genotype = $annotation_config->{needs_genotype};
-
-  # if "single_allele", use "allele_select"
-  # if "multi_allele", use "multi_allele_select"
-  # otherwise go straight to evidence selection
-  my $target = $st->{target};
 
   my $form = $self->form();
 
@@ -1281,7 +1292,7 @@ sub annotation_ontology_edit
       };
 
       $c->flash()->{message} = 'Note that your term suggestion has been '
-        . 'stored, but the gene will be temporarily '
+        . "stored, but the $target will be temporarily "
         . 'annotated with the parent of your suggested new term';
     }
 
@@ -1289,49 +1300,39 @@ sub annotation_ontology_edit
 
     if (defined $annotation) {
       $self->_update_annotation($c, $annotation, \%annotation_data);
-      _redirect_and_detach($c, 'gene', $gene_proxy->gene_id());
+      _redirect_and_detach($c, $target, $feature_id);
     } else {
-      my @genes = ();
-
-      if ($target eq 'multi_allele') {
-        @genes = @{$st->{genes}};
-      } else {
-        push @genes, $gene_proxy;
-      }
-
       my $annotation =
         $self->_create_annotation($c, $annotation_type_name,
-                                  \@genes, \%annotation_data);
+                                  [$gene_proxy], [$genotype], \%annotation_data);
 
-      if ($annotation_config->{needs_genotype}) {
-        if ($target eq 'single_allele') {
-          _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'allele_select');
-        } else {
-          if ($target eq 'multi_allele') {
-            _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'multi_allele_select');
-          } else {
-            die "unknown annotation target: $target";
-          }
-        }
+      if ($target eq 'genotype') {
+        _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'allele_select');
       } else {
-        _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'evidence');
+        if ($annotation_config->{needs_genotype}) {
+          _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'evidence');
+        } else {
+
+        }
       }
     }
   } else {
     if (defined $annotation) {
       my $data = $annotation->data();
-      my @genes = $annotation->genes();
 
-      if (@genes) {
-        my $gene = $genes[0];
-        my $gene_proxy = _get_gene_proxy($c->config(), $gene);
-        $c->stash()->{message} = 'Editing annotation of ' .
-          $gene_proxy->display_name() . ' with ' . $data->{term_ontid};
-      } else {
-        my $allele = ($annotation->alleles())[0];
-        $c->stash()->{message} = 'Editing annotation of ' .
-          $allele->display_name() . ' with ' . $data->{term_ontid};
-      }
+      # my @genes = $annotation->genes();
+
+      # if (@genes) {
+      #   my $gene = $genes[0];
+      #   my $gene_proxy = _get_gene_proxy($c->config(), $gene);
+      #   $c->stash()->{message} = 'Editing annotation of ' .
+      #     $gene_proxy->display_name() . ' with ' . $data->{term_ontid};
+      # } else {
+      #   my $allele = ($annotation->alleles())[0];
+      #   $c->stash()->{message} = 'Editing annotation of ' .
+      #     $allele->display_name() . ' with ' . $data->{term_ontid};
+      # }
+die "unimplemented";
     }
   }
 }
@@ -1489,8 +1490,7 @@ sub _annotation_edit
 #   $annotation_type_name - the name from the annotation configuration
 #   $target - the feature type that this annotation should be attached to
 #                - gene
-#                - single_allele
-#                - multi_allele
+#                - genotype
 sub new_annotation : Chained('gene') PathPart('new_annotation') CaptureArgs(2)
 {
   my ($self, $c, $annotation_type_name, $target) = @_;
@@ -2821,6 +2821,32 @@ sub gene_view : Chained('gene') PathPart('view')
   $st->{template} = 'curs/gene_page.mhtml';
 }
 
+sub genotype : Chained('top') CaptureArgs(1)
+{
+  my ($self, $c, $genotype_id) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+  my $config = $c->config();
+
+  my $genotype = $schema->find_with_type('Genotype', $genotype_id);
+
+  $st->{genotype} = $genotype_id;
+}
+
+sub genotype_view : Chained('gene') PathPart('view')
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $genotype = $st->{genotype};
+
+  $st->{title} = 'Genotype: ' . $genotype->name();
+  $st->{show_title} = 1;
+  $st->{template} = 'curs/genotype_page.mhtml';
+}
+
 sub annotation_export : Chained('top') PathPart('annotation_export') Args(1)
 {
   my ($self, $c, $annotation_type_name) = @_;
@@ -2952,7 +2978,7 @@ sub finish_form : Chained('top') Args(0)
       $text = trim($text);
 
       if (length $text > 0) {
-        $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
+ p       $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
       } else {
         $self->unset_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
       }

@@ -97,7 +97,6 @@ if (@gene_hashes <= 5) {
 }
 
 my $start_path = $c->stash()->{curs_root_uri};
-my $upload_path = "$start_path/gene_upload";
 my $edit_path = "$start_path/edit_genes";
 
 my $row_max = int((@gene_hashes + 1) / 2);

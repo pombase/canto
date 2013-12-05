@@ -1,0 +1,79 @@
+<%args>
+$curs_root_uri
+$pub
+$genotype
+@annotation_type_list
+</%args>
+
+<div id="curs-annotation-actions">
+<div class="curs-box">
+  <div class="curs-box-title">
+Add a annotation for <% $genotype_name %>:
+  </div>
+  <div class="curs-box-body">
+  <ul class="annotation-start">
+% for my $annotation_type (@types_to_show) {
+%   my $annotation_type_name = $annotation_type->{name};
+%   my $action_path = $curs_root_uri . '/genotype/' . $genotype_id;
+%     $action_path .= "/new_annotation/$annotation_type_name/$annotation_target/choose_term";
+%   my $annotation_target = $annotation_type->{target};
+%   my $type_display_name = $annotation_type->{display_name};
+    <li>
+      <span class="annotation-type">
+<% ucfirst $type_display_name %>
+%   }
+      </span>
+    </li>
+% }
+  </ul>
+  </div>
+</div>
+</div>
+
+<div id="curs-genotype-details" class="curs-box">
+  <div class="curs-box-title">
+Details for <% $genotype_name %>
+  </div>
+  <div class="curs-box-body">
+    <table class="curs-definition-table">
+      <tr>
+        <td class="title">Name</td>
+        <td>
+          <% $genotype_name %>
+        </td>
+        <td>
+          Alleles: ...
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="clearall"/>
+
+<button type="button" id="curs-finish-genotype" class="curs-finish-button"><% $finish_text %></button>
+
+<div id="curs-annotation-tables" class="sect">
+% for my $annotation_type (@types_to_show) {
+<& current_genotype_annotation_view.mhtml,
+   annotation_type => $annotation_type,
+   curs_root_uri => $curs_root_uri,
+   pub => $pub,
+   genotype => $genotype &>
+% }
+
+</div>
+
+<%init>
+my $genotype_id = $genotype->gene_id();
+my $genotype_name = $genotype->name();
+
+my $st = $c->stash();
+
+my $gene_count = $st->{gene_count};
+my $finish_text = 'Back to summary';
+
+my @types_to_show = grep {
+  $_->{needs_genotype};
+} @annotation_type_list;
+</%init>
