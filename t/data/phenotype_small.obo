@@ -2,7 +2,7 @@ format-version: 1.2
 date: 12:04:2011 18:01
 saved-by: mah79
 auto-generated-by: OBO-Edit 2.1-beta12
-default-namespace: file:/Users/mah79/pombase/phenotype_ontology/fypo.obo
+default-namespace: fission_yeast_phenotype
 remark: svn version: $Revision: 136 $
 ontology: fypo
 
@@ -150,6 +150,31 @@ intersection_of: FYPO:0000002 ! cell phenotype
 intersection_of: inheres_in GO:0044237
 created_by: mah79
 creation_date: 2011-04-12T02:23:26Z
+
+[Term]
+id: FYPO:0002060
+name: viable vegetative cell population
+def: "A cell population phenotype in which cells in the population are viable in the vegetative growth phase of the life cycle." [PomBase:mah]
+synonym: "viable cell population during vegetative growth" EXACT [PomBase:mah]
+is_a: FYPO:0000001 ! phenotype
+relationship: includes_cells_with_phenotype FYPO:0001491 ! viable vegetative cell
+created_by: midori
+creation_date: 2013-04-04T14:14:35Z
+namespace: fission_yeast_phenotype
+
+[Term]
+id: FYPO:0002233
+name: viable elongated vegetative cell population
+def: "A cell population phenotype in which all cells in the population are viable but longer than normal in the vegetative growth phase of the life cycle." [PomBase:mah]
+comment: This term was made obsolete because it is redundant with annotating to the equivalent cell phenotype plus a full-penetrance extension.
+synonym: "population of viable long cells" EXACT [PomBase:vw]
+synonym: "viable long vegetative cell population" EXACT [PomBase:mah]
+synonym: "viable population of elongated vegetative cells" EXACT [PomBase:vw]
+is_obsolete: true
+replaced_by: FYPO:0002060
+created_by: midori
+creation_date: 2013-06-06T14:39:45Z
+namespace: fission_yeast_phenotype
 
 [Typedef]
 id: inheres_in
