@@ -184,10 +184,15 @@ sub lookup
   my @results;
 
   if ($search_string =~ /^\s*([a-zA-Z]+:\d+)\s*$/) {
-    return [$self->lookup_by_id(id => $search_string,
-                                include_definition => $include_definition,
-                                include_children => $include_children,
-                                include_exact_synonyms => $include_exact_synonyms)];
+    my $res = $self->lookup_by_id(id => $search_string,
+                                  include_definition => $include_definition,
+                                  include_children => $include_children,
+                                  include_exact_synonyms => $include_exact_synonyms);
+    if (defined $res) {
+      return [$res];
+    } else {
+      return [];
+    }
   } else {
     if (!defined $ontology_name || length $ontology_name == 0) {
       croak "no ontology_name passed to lookup()";
