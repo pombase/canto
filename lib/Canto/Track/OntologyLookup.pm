@@ -112,15 +112,15 @@ sub _make_term_hash
     @{$term_hash{children}} = ();
 
     my @child_cvterms = $cvterm->cvterm_relationship_objects()
-      ->search_related('subject', {}, { order_by => 'name' })->all();
+      ->search_related('subject',
+                       { 'cv.name' => $cv_name, 'subject.is_obsolete' => 0 },
+                       { order_by => 'subject.name', join => 'cv' })->all();
 
     for my $child_cvterm (@child_cvterms) {
-      if ($child_cvterm->cv()->name() eq $cv_name) {
-        push @{$term_hash{children}}, {
-          _make_term_hash($child_cvterm,
-                          $child_cvterm->cv()->name(), 0, 0, 0)
-        };
-      }
+      push @{$term_hash{children}}, {
+        _make_term_hash($child_cvterm,
+                        $child_cvterm->cv()->name(), 0, 0, 0)
+      };
     }
   }
 
