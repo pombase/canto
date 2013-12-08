@@ -74,7 +74,7 @@ $view_only => 0
         Annotation extension
       </th>
 % }
-% if ($approval_in_progress) {
+% if ($session_submitted) {
       <th>
         Curator
       </th>
@@ -282,7 +282,7 @@ NOT
     </td>
 % }
 
-% if ($approval_in_progress) {
+% if ($session_submitted) {
 %   my $curator = $row->{curator} // '';
     <td>
       <% $curator %>
@@ -417,11 +417,12 @@ my $allele_select_url = $curs_root_uri . '/annotation/allele_select/';
 
 my $state = $st->{state};
 
-my $approval_in_progress = 0;
+my $session_submitted = 0;
 
 use Canto::Curs::State qw/:all/;
 
-if ($state eq APPROVAL_IN_PROGRESS) {
-  $approval_in_progress = 1;
+if ($state eq NEEDS_APPROVAL || $state eq APPROVAL_IN_PROGRESS ||
+    $state eq APPROVED || $state eq EXPORTED) {
+  $session_submitted = 1;
 }
 </%init>
