@@ -395,6 +395,7 @@ sub get_cvterm
   my $ontologyid = $args{ontologyid};
   my $definition = $args{definition};
   my $is_relationshiptype = $args{is_relationshiptype} // 0;
+  my $is_obsolete = $args{is_obsolete} // 0;
 
   my $dbxref = $self->get_dbxref_by_accession($ontologyid, $term_name);
 
@@ -405,6 +406,7 @@ sub get_cvterm
     cv => $cv,
     dbxref => $dbxref,
     is_relationshiptype => $is_relationshiptype,
+    is_obsolete => $is_obsolete,
   );
 
   if (defined $definition) {

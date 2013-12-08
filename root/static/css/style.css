@@ -730,6 +730,17 @@ div.clearall {
   display: block;
 }
 
+.curs-obsolete-term {
+  text-decoration: line-through;
+  color: #e22;
+  background-color: #eee;
+}
+
+.curs-obsolete-term:after {
+  text-decoration: none;
+  content: 'OBSOLETE';
+}
+
 #ferret-children-details {
   width: 90%;
   min-height: 10em;

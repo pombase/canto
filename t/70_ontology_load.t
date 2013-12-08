@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 38;
+use Test::More tests => 44;
 
 use Canto::TestUtil;
 use Canto::Track::OntologyLoad;
@@ -19,6 +19,8 @@ is (@loaded_cvterms, 46);
 
 my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
+my $test_fypo_file =
+  $test_util->root_dir() . '/' . $config->{test_config}->{test_phenotype_obo_file};
 my $test_relationship_ontology_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_relationship_obo_file};
 my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
@@ -28,6 +30,7 @@ my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
 sub load_all {
   my $include_ro = shift;
+  my $include_fypo = shift;
 
   my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema, default_db_name => 'Canto');
   my $index_path = $config->data_dir_path('ontology_index_dir');
@@ -39,6 +42,9 @@ sub load_all {
     $ontology_load->load($test_relationship_ontology_file, undef, $synonym_types);
   }
   $ontology_load->load($test_go_file, $ontology_index, $synonym_types);
+  if ($include_fypo) {
+    $ontology_load->load($test_fypo_file, $ontology_index, $synonym_types);
+  }
   $ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
 
   $ontology_load->finalise();
@@ -49,7 +55,7 @@ load_all(1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 110);
+is(@loaded_cvterms, 112);
 
 ok((grep {
   $_->name() eq 'regulation of transmembrane transport'
@@ -136,9 +142,39 @@ is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
 # check loading of alt_ids
 my $cvterm_dbxref_rs = $schema->resultset('CvtermDbxref');
-is($cvterm_dbxref_rs->count(), 33);
+is($cvterm_dbxref_rs->count(), 34);
 
 
 # try re-loading
 load_all();
-is($cvterm_dbxref_rs->count(), 33);
+is($cvterm_dbxref_rs->count(), 34);
+
+
+# test that obsolete terms are loaded but aren't indexed by Lucene
+load_all(1,1);
+@loaded_cvterms = $schema->resultset('Cvterm')->all();
+
+is(@loaded_cvterms, 130);
+
+ok((grep {
+  $_->name() eq 'viable elongated vegetative cell population'
+} @loaded_cvterms), '"viable elongated vegetative cell population" missing');
+
+# test that non-obsolete term is indexed
+my $viable = 'viable vegetative cell population';
+@results = $ontology_index->lookup('fission_yeast_phenotype', $viable, 100);
+is(@results, 6);
+
+ok((grep {
+  $_->{term_name} eq $viable;
+} @results), qq("$viable" missing));
+
+
+# test that obsolete terms aren't indexed
+my $viable_elongated = 'viable elongated vegetative cell population';
+@results = $ontology_index->lookup('fission_yeast_phenotype', $viable_elongated, 100);
+is(@results, 7);
+
+ok(!(grep {
+  $_->{term_name} eq $viable_elongated;
+} @results), qq("$viable_elongated" shouldn't be returned));

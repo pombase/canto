@@ -45,6 +45,7 @@ use Clone qw(clone);
 
 use Canto::Curs::GeneProxy;
 
+# retrieve annotation data from the CursDB
 sub _make_ontology_annotation
 {
   my $config = shift;
@@ -119,16 +120,17 @@ sub _make_ontology_annotation
 
   my $pub_uniquename = $annotation->pub()->uniquename();
 
-  my $result = $ontology_lookup->lookup_by_id(id => $term_ontid);
+  my $term_lookup_result = $ontology_lookup->lookup_by_id(id => $term_ontid);
 
-  if (! defined $result) {
+  if (! defined $term_lookup_result) {
     die qq(internal error: can't find details for "$term_ontid" in "$annotation_type");
   }
 
-  my $term_name = $result->{name};
+  my $term_name = $term_lookup_result->{name};
 
   my $evidence_code = $data->{evidence_code};
   my $with_gene_identifier = $data->{with_gene};
+  my $is_obsolete_term = $term_lookup_result->{is_obsolete};
   my $curator = undef;
   if (defined $data->{curator}) {
     $curator = $data->{curator}->{name} . ' <' . $data->{curator}->{email} . '>';
@@ -187,6 +189,7 @@ sub _make_ontology_annotation
     taxonid => $taxonid,
     completed => $completed,
     annotation_extension => $data->{annotation_extension} // '',
+    is_obsolete_term => $is_obsolete_term,
     curator => $curator,
     status => $annotation->status(),
     is_not => 0,

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 56;
+use Test::More tests => 60;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -174,6 +174,7 @@ my $expected_fypo_term = {
   name => 'cellular process phenotype',
   annotation_namespace => 'fission_yeast_phenotype',
   definition => 'A phenotype that affects a cellular process.',
+  is_obsolete => 0,
 };
 
 is($id_result->[0]->{id}, 'FYPO:0000114');
@@ -191,6 +192,26 @@ is($cached_value->{name}, 'cellular process phenotype');
 my $fypo_cpp = $lookup->lookup_by_name(ontology_name => 'fission_yeast_phenotype',
                                        term_name => 'cellular process phenotype',
                                        include_definition => 1);
+is ($fypo_cpp->{id}, 'FYPO:0000114');
+is ($fypo_cpp->{name}, 'cellular process phenotype');
+
+cmp_deeply($fypo_cpp, $expected_fypo_term);
+
+
+my $expected_fypo_obsolete_term = {
+  id => 'FYPO:0002233',
+  name => 'viable elongated vegetative cell population',
+  annotation_namespace => 'fission_yeast_phenotype',
+  definition => 'A cell population phenotype in which all cells in the population are viable but longer than normal in the vegetative growth phase of the life cycle.',
+  is_obsolete => 1,
+  comment => 'This term was made obsolete because it is redundant with annotating to the equivalent cell phenotype plus a full-penetrance extension.',
+};
+
+
+my $fypo_obsolete = $lookup->lookup_by_id(id => 'FYPO:0002233',
+                                          include_definition => 1);
+cmp_deeply($fypo_obsolete, $expected_fypo_obsolete_term);
+
 is ($fypo_cpp->{id}, 'FYPO:0000114');
 is ($fypo_cpp->{name}, 'cellular process phenotype');
 

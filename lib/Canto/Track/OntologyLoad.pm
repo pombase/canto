@@ -289,62 +289,61 @@ sub load
         }
       }
 
-      if (!$term->is_obsolete()) {
-        my $term_name = $term->name();
+      my $term_name = $term->name();
 
-        my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
-                                            term_name => $term_name,
-                                            ontologyid => $term->acc(),
-                                            definition => $term->definition(),
-                                            alt_ids => $term->alt_id_list(),
-                                            is_relationshiptype =>
-                                              $term->is_relationship_type());
+      my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
+                                          term_name => $term_name,
+                                          ontologyid => $term->acc(),
+                                          definition => $term->definition(),
+                                          alt_ids => $term->alt_id_list(),
+                                          is_obsolete => $term->is_obsolete(),
+                                          is_relationshiptype =>
+                                            $term->is_relationship_type());
 
-        if ($term->is_relationship_type()) {
-          (my $term_acc = $term->acc()) =~ s/OBO_REL://;
-          $relationship_cvterms{$term_acc} = $cvterm;
+      if ($term->is_relationship_type()) {
+        (my $term_acc = $term->acc()) =~ s/OBO_REL://;
+        $relationship_cvterms{$term_acc} = $cvterm;
+      }
+
+      my $cvterm_id = $cvterm->cvterm_id();
+
+      if (defined $comment) {
+        my $cvtermprop =
+          $schema->create_with_type('Cvtermprop',
+                                    {
+                                      cvterm_id => $cvterm_id,
+                                      type_id =>
+                                        $comment_cvterm->cvterm_id(),
+                                      value => $comment,
+                                      rank => 0,
+                                    });
+      }
+
+      my @synonyms_for_index = ();
+
+      for my $synonym_type (@synonym_types_to_load) {
+        my $synonyms = $term->synonyms_by_type($synonym_type);
+
+        my $type_id = $synonym_type_ids{$synonym_type};
+
+        for my $synonym (@$synonyms) {
+          $schema->create_with_type('Cvtermsynonym',
+                                    {
+                                      cvterm_id => $cvterm_id,
+                                      synonym => $synonym,
+                                      type_id => $type_id,
+                                    });
+
+          push @synonyms_for_index, { synonym => $synonym, type => $synonym_type };
         }
+      }
 
-        my $cvterm_id = $cvterm->cvterm_id();
+      if (!$term->is_relationship_type()) {
+        $cvterms{$term->acc()} = $cvterm;
 
-        if (defined $comment) {
-          my $cvtermprop =
-            $schema->create_with_type('Cvtermprop',
-                                      {
-                                        cvterm_id => $cvterm_id,
-                                        type_id =>
-                                          $comment_cvterm->cvterm_id(),
-                                        value => $comment,
-                                        rank => 0,
-                                      });
-        }
-
-        my @synonyms_for_index = ();
-
-        for my $synonym_type (@synonym_types_to_load) {
-          my $synonyms = $term->synonyms_by_type($synonym_type);
-
-          my $type_id = $synonym_type_ids{$synonym_type};
-
-          for my $synonym (@$synonyms) {
-            $schema->create_with_type('Cvtermsynonym',
-                                      {
-                                        cvterm_id => $cvterm_id,
-                                        synonym => $synonym,
-                                        type_id => $type_id,
-                                      });
-
-            push @synonyms_for_index, { synonym => $synonym, type => $synonym_type };
-          }
-        }
-
-        if (!$term->is_relationship_type()) {
-          $cvterms{$term->acc()} = $cvterm;
-
-          if (defined $index) {
-            $index->add_to_index($cv_name, $term_name, $cvterm_id,
-                                 $term->acc(), \@synonyms_for_index);
-          }
+        if (!$term->is_obsolete() && defined $index) {
+          $index->add_to_index($cv_name, $term_name, $cvterm_id,
+                               $term->acc(), \@synonyms_for_index);
         }
       }
     };

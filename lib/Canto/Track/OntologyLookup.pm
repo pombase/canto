@@ -88,6 +88,8 @@ sub _make_term_hash
 
   $term_hash{id} = $cvterm->db_accession();
   $term_hash{name} = $cvterm->name();
+  $term_hash{is_obsolete} = $cvterm->is_obsolete();
+
   if (defined $matching_synonym) {
     $term_hash{matching_synonym} = $matching_synonym;
   }

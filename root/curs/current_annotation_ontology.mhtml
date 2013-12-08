@@ -94,6 +94,7 @@ $view_only => 0
 % my $annotation_status = $row->{status};
 % next if ($state ne APPROVAL_IN_PROGRESS && $annotation_status eq 'deleted');
   <tr class="<% $annotation_status eq 'deleted' ? 'deleted-annotation' : '' %>">
+% my $obsolete_class = ($row->{is_obsolete_term} ? 'class="curs-obsolete-term"' : '');
 % if (!defined $gene) {
     <td>
       <span>
@@ -125,7 +126,7 @@ $view_only => 0
     </td>
 % }
     <td>
-      <span>
+      <span <% $obsolete_class |n %>>
 % if ($view_only || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{term_ontid} %>
 % } else {
@@ -140,7 +141,7 @@ $view_only => 0
       </span>
     </td>
     <td>
-      <span>
+      <span <% $obsolete_class |n %>>
 % if ($view_only || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{term_name} %>
 % } else {

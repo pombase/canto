@@ -2034,6 +2034,7 @@ sub _annotation_process_alleles_internal
         conditions => $conditions,
         term_ontid => $data->{term_ontid},
         annotation_extension => $data->{annotation_extension},
+        curator => $data->{curator},
       };
 
       if (defined $data->{term_suggestion}) {
@@ -2051,8 +2052,6 @@ sub _annotation_process_alleles_internal
       my $new_annotation =
         $schema->create_with_type('Annotation',
                                   $annotation_create_args);
-
-      $self->_set_annotation_curator($c, $new_annotation);
 
       push @new_annotation_ids, $new_annotation->annotation_id();
 
