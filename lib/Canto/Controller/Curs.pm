@@ -2970,6 +2970,40 @@ sub complete_approval : Chained('top') Args(0)
 
   my @messages = ();
 
+  my $obsolete_term_count = 0;
+
+  my $lookup = Canto::Track::get_adaptor($c->config(), 'ontology');
+
+  my $ann_rs = $schema->resultset('Annotation');
+
+  ANNOTATION:
+  while (defined (my $ann = $ann_rs->next())) {
+    my $data = $ann->data();
+
+    if (defined $data) {
+      my $term_ontid = $data->{term_ontid};
+
+      if (defined $term_ontid) {
+        my $term_details = $lookup->lookup_by_id(id => $term_ontid);
+
+        if (defined $term_details) {
+          if ($term_details->{is_obsolete}) {
+            push @messages, {
+              title => qq|Session can't be approved as there an obsolete term: $term_ontid|,
+            };
+            last ANNOTATION;
+          }
+        } else {
+          push @messages, {
+            title => qq|Session can't be approved as a term ID is not in the database: $term_ontid|,
+          };
+          last ANNOTATION;
+        }
+        ;
+      }
+    }
+  }
+
   my $term_sugg_count = $self->get_metadata($schema, Canto::Curs::State::TERM_SUGGESTION_COUNT_KEY);
   if (defined $term_sugg_count && $term_sugg_count > 0) {
     push @messages, {
