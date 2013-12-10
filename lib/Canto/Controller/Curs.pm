@@ -2832,10 +2832,10 @@ sub genotype : Chained('top') CaptureArgs(1)
 
   my $genotype = $schema->find_with_type('Genotype', $genotype_id);
 
-  $st->{genotype} = $genotype_id;
+  $st->{genotype} = $genotype;
 }
 
-sub genotype_view : Chained('gene') PathPart('view')
+sub genotype_view : Chained('genotype') PathPart('view')
 {
   my ($self, $c) = @_;
 

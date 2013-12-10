@@ -925,7 +925,7 @@ span.canto-select-buttons {
   margin: 10px;
 }
 
-#curs-gene-list, #curs-genotype-list, #curs-annotation-actions, #curs-front-page .pub-title, #curs-gene-details {
+#curs-gene-list, #curs-genotype-list, #curs-annotation-actions, #curs-front-page .pub-title, #curs-gene-details, #curs-genotype-details {
   font-size: 90%;
   float: left;
   width: 30%;

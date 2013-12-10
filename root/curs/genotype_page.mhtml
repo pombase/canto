@@ -8,21 +8,27 @@ $genotype
 <div id="curs-annotation-actions">
 <div class="curs-box">
   <div class="curs-box-title">
-Add a annotation for <% $genotype_name %>:
+Add an annotation for <% $genotype_name %>:
   </div>
   <div class="curs-box-body">
   <ul class="annotation-start">
 % for my $annotation_type (@types_to_show) {
 %   my $annotation_type_name = $annotation_type->{name};
+%   my $annotation_target = $annotation_type->{target};
+%   my $title = $annotation_type->{help_text} // '';
 %   my $action_path = $curs_root_uri . '/genotype/' . $genotype_id;
 %     $action_path .= "/new_annotation/$annotation_type_name/$annotation_target/choose_term";
-%   my $annotation_target = $annotation_type->{target};
 %   my $type_display_name = $annotation_type->{display_name};
     <li>
+%   if (!$annotation_type->{disabled}) {
+      <a title="<% $title %>" href="<% $action_path %>">
+%   }
       <span class="annotation-type">
 <% ucfirst $type_display_name %>
-%   }
       </span>
+%   if (!$annotation_type->{disabled}) {
+      </a>
+%   }
     </li>
 % }
   </ul>
@@ -32,7 +38,7 @@ Add a annotation for <% $genotype_name %>:
 
 <div id="curs-genotype-details" class="curs-box">
   <div class="curs-box-title">
-Details for <% $genotype_name %>
+Genotype details
   </div>
   <div class="curs-box-body">
     <table class="curs-definition-table">
@@ -41,8 +47,15 @@ Details for <% $genotype_name %>
         <td>
           <% $genotype_name %>
         </td>
+      </tr>
+      <tr>
+        <td class="title">
+          Alleles
+        </td>
         <td>
-          Alleles: ...
+% for my $allele ($genotype->alleles()) {
+  <% $allele->display_name() %>
+% }
         </td>
       </tr>
     </table>
@@ -54,6 +67,7 @@ Details for <% $genotype_name %>
 <button type="button" id="curs-finish-genotype" class="curs-finish-button"><% $finish_text %></button>
 
 <div id="curs-annotation-tables" class="sect">
+% if (0) {
 % for my $annotation_type (@types_to_show) {
 <& current_genotype_annotation_view.mhtml,
    annotation_type => $annotation_type,
@@ -61,11 +75,12 @@ Details for <% $genotype_name %>
    pub => $pub,
    genotype => $genotype &>
 % }
+% }
 
 </div>
 
 <%init>
-my $genotype_id = $genotype->gene_id();
+my $genotype_id = $genotype->genotype_id();
 my $genotype_name = $genotype->name();
 
 my $st = $c->stash();

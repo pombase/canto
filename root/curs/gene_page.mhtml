@@ -20,8 +20,7 @@ Choose curation type for <% $gene->display_name() %>:
 % for my $annotation_type (@types_to_show) {
 %   my $annotation_type_name = $annotation_type->{name};
 %   my $action_path = "$curs_root_uri/gene/$gene_id/" .
-%     "new_annotation/$annotation_type_name/$annotation_target/choose_term";
-%   my $annotation_target = $annotation_type->{target};
+%     "new_annotation/$annotation_type_name/choose_term";
 %   my $title = $annotation_type->{help_text} // '';
 %   my $type_display_name = $annotation_type->{display_name};
     <li>
@@ -29,11 +28,7 @@ Choose curation type for <% $gene->display_name() %>:
       <a title="<% $title %>" href="<% $action_path %>">
 %   }
       <span class="annotation-type">
-%   if ($annotation_target eq 'single_allele') {
-Single allele <% $type_display_name %>
-%   } else {
 <% ucfirst $type_display_name %>
-%   }
       </span>
 %   if (!$annotation_type->{disabled}) {
       </a>
@@ -57,7 +52,7 @@ Single allele <% $type_display_name %>
 
 <div id="curs-gene-details" class="curs-box">
   <div class="curs-box-title">
-Details for <% $gene->display_name() %>
+Gene details
   </div>
   <div class="curs-box-body">
 <& /linkouts.mhtml, object => $gene, context => 'gene' &>
