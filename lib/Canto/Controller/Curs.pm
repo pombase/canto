@@ -61,6 +61,7 @@ use Canto::Curs::MetadataStorer;
 use Canto::MailSender;
 use Canto::EmailUtil;
 use Canto::Curs::State;
+use Canto::Curs::ServiceUtils;
 use Canto::Util qw(trim);
 
 use constant {
@@ -3444,13 +3445,13 @@ sub complete_approval : Chained('top') Args(0)
         if (defined $term_details) {
           if ($term_details->{is_obsolete}) {
             push @messages, {
-              title => qq|Session can't be approved as there an obsolete term: $term_ontid|,
+              title => "Session can't be approved as there an obsolete term: $term_ontid",
             };
             last ANNOTATION;
           }
         } else {
           push @messages, {
-            title => qq|Session can't be approved as a term ID is not in the database: $term_ontid|,
+            title => "Session can't be approved as a term ID is not in the database: $term_ontid",
           };
           last ANNOTATION;
         }
@@ -3485,6 +3486,37 @@ sub complete_approval : Chained('top') Args(0)
   }
 
   _redirect_and_detach($c);
+}
+
+
+sub ws : Chained('top') CaptureArgs(1)
+{
+  my ($self, $c, $type) = @_;
+
+  $c->stash()->{ws_list_type} = $type;
+}
+
+=head2 ws_list
+
+ Function: Web service for returning the data from a Curs as lists
+ Args    : $type (from sub ws) - the type to pass to ServiceUtils
+
+=cut
+
+
+sub ws_list : Chained('ws') PathPart('list')
+{
+  my ($self, $c) = @_;
+
+  my $type = $c->stash()->{ws_list_type};
+
+  my $schema = $c->stash()->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema);
+
+  $c->stash->{json_data} = $service_utils->list_for_service($type);
+
+  $c->forward('View::JSON');
 }
 
 sub cancel_approval : Chained('top') Args(0)
