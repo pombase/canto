@@ -69,17 +69,22 @@ sub _make_ontology_annotation
 
   my %evidence_types = %{$config->{evidence_types}};
 
-  my $allele_display_name = undef;
-  my $expression_level = '';
-  my $conditions_string = '';
+  my $taxonid;
 
-  my $gene;
+  my %gene_details;
+  my %genotype_details;
 
   if ($annotation_type_config->{needs_genotype}) {
-    # FIXME
-    return;
+    my @annotation_genotypes = $annotation->genotypes();
 
-    $expression_level = $data->{expression} // 'null';
+    if (@annotation_genotypes > 1) {
+      warn "internal error, more than one genotype for annotation: ",
+        $annotation->annotation_id();
+    }
+
+    my $genotype = $annotation_genotypes[0];
+
+    my $conditions_string = '';
 
     if ($data->{conditions}) {
       $conditions_string = _get_conditions_string($ontology_lookup,
@@ -87,6 +92,12 @@ sub _make_ontology_annotation
     } else {
       $conditions_string = '';
     }
+
+    %genotype_details = (
+      expression_level => $data->{expression} // 'null',
+      conditions => $conditions_string,
+      genotype_name => $genotype->name(),
+    );
   } else {
     my @annotation_genes = $annotation->genes();
 
@@ -95,18 +106,27 @@ sub _make_ontology_annotation
         $annotation->annotation_id();
     }
 
-    $gene = $annotation_genes[0];
+    my $gene = $annotation_genes[0];
+
+    my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
+                                                 cursdb_gene => $gene);
+    my $gene_identifier = $gene_proxy->primary_identifier();
+    my $gene_primary_name = $gene_proxy->primary_name() || '';
+    my $gene_name_or_identifier = $gene_proxy->primary_name() || $gene_proxy->primary_identifier();
+    my $gene_product = $gene_proxy->product() || '',
+      my $gene_synonyms_string = join '|', $gene_proxy->synonyms();
+
+    $taxonid = $gene_proxy->organism()->taxonid();
+
+    %gene_details = (
+      gene_id => $gene->gene_id(),
+      gene_identifier => $gene_identifier,
+      gene_name => $gene_primary_name,
+      gene_name_or_identifier => $gene_name_or_identifier,
+      gene_product => $gene_product,
+      gene_synonyms_string => $gene_synonyms_string,
+    );
   }
-
-  my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
-                                                cursdb_gene => $gene);
-  my $gene_identifier = $gene_proxy->primary_identifier();
-  my $gene_primary_name = $gene_proxy->primary_name() || '';
-  my $gene_name_or_identifier = $gene_proxy->primary_name() || $gene_proxy->primary_identifier();
-  my $gene_product = $gene_proxy->product() || '',
-  my $gene_synonyms_string = join '|', $gene_proxy->synonyms();
-
-  my $taxonid = $gene_proxy->organism()->taxonid();
 
   my $pub_uniquename = $annotation->pub()->uniquename();
 
@@ -150,14 +170,10 @@ sub _make_ontology_annotation
   my $completed = defined $evidence_code &&
     (!$needs_with || defined $with_gene_identifier);
 
+
   return {
-    gene_id => $gene->gene_id(),
-    gene_identifier => $gene_identifier,
-    gene_name => $gene_primary_name,
-    gene_name_or_identifier => $gene_name_or_identifier,
-    gene_product => $gene_product,
-    gene_synonyms_string => $gene_synonyms_string,
-    allele_display_name => $allele_display_name,
+    %gene_details,
+    %genotype_details,
     qualifiers => '',
     annotation_type => $annotation_type,
     annotation_type_display_name => $annotation_type_display_name,
@@ -167,8 +183,6 @@ sub _make_ontology_annotation
     term_ontid => $term_ontid,
     term_name => $term_name,
     evidence_code => $evidence_code,
-    expression_level => $expression_level,
-    conditions => $conditions_string,
     creation_date => $annotation->creation_date(),
     creation_date_short => $short_date,
     comment => $data->{submitter_comment},
@@ -288,14 +302,16 @@ sub _make_interaction_annotation
 
  Usage   : my @annotations =
              Canto::Curs::Utils::get_annotation_table($config, $schema,
-                                                       $annotation_type_name);
+                                                      $annotation_type_name,
+                                                      $constrain_annotations,
+                                                      $constrain_target);
  Function: Return a table of the current annotations
  Args    : $config - the Canto::Config object
            $schema - a Canto::CursDB object
            $annotation_type_name - the type of annotation to show (eg.
                                    biological_process, phenotype)
            $constrain_annotations - restrict the table to these annotations
-           $constrain_gene        - the gene to show annotations for
+           $constrain_target      - the gene or genotype to show annotations for
  Returns : ($completed_count, $table)
            where:
              $completed_count - a count of the annotations that are incomplete

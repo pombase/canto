@@ -1,7 +1,7 @@
 <%args>
 $curs_root_uri
 $annotation_type
-$gene => undef
+$target => undef
 $pub
 </%args>
 
@@ -10,7 +10,7 @@ $pub
    annotations => [@user_annotations], user_created => 1,
    pub => $pub,
    all_annotation_count => scalar(@user_annotations),
-   completed_count => $completed_count, gene => $gene,
+   completed_count => $completed_count, target => $target,
    show_extension_column => 1 &>
 
 <& $annotation_view_template, curs_root_uri => $curs_root_uri,
@@ -18,7 +18,7 @@ $pub
    annotations => $existing_annotations,
    all_annotation_count => $all_existing_annotations_count,
    user_created => 0,
-   pub => $pub, gene => $gene &>
+   pub => $pub, target => $target &>
 
 % if ($all_existing_annotations_count != $returned_existing_count) {
   <div style="padding-left: 20px; color: green;">Note: showing
@@ -39,13 +39,13 @@ my $options = { pub_uniquename => $pub->uniquename(),
                 annotation_type_name => $annotation_type->{name},
                 annotation_type_category => $annotation_type->{category},
                 };
-if (defined $gene) {
+if (defined $target) {
   my @constrain_annotations = $gene->all_annotations(include_with => 0)->all();
   map {
     push @constrain_annotations, $_->annotations();
   } $gene->alleles();
   $constrain_annotations = [@constrain_annotations];
-  $options->{gene_identifier} = $gene->primary_identifier();
+#  $options->{gene_identifier} = $target->primary_identifier();
 } else {
   $options->{max_results} = $c->config()->{max_existing_annotations} // 10;
 }
@@ -54,13 +54,13 @@ my ($completed_count, $annotations_ref) =
   Canto::Curs::Utils::get_annotation_table($config, $schema,
                                             $annotation_type->{name},
                                             $constrain_annotations,
-                                            $gene);
+                                            $target);
 my @user_annotations = @$annotations_ref;
 
 # if max_results is set, $all_existing_annotations_count may be bigger than
 # the list of existing annotations returned - ie. scalar(@$existing_annotations)
-my ($all_existing_annotations_count, $existing_annotations) =
-    Canto::Curs::Utils::get_existing_annotations($config, $options);
+my ($all_existing_annotations_count, $existing_annotations) = (0,[]);
+#    Canto::Curs::Utils::get_existing_annotations($config, $options);
 
 my $returned_existing_count = scalar(@$existing_annotations);
 

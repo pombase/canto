@@ -17,7 +17,7 @@ Add an annotation for <% $genotype_name %>:
 %   my $annotation_target = $annotation_type->{target};
 %   my $title = $annotation_type->{help_text} // '';
 %   my $action_path = $curs_root_uri . '/genotype/' . $genotype_id;
-%     $action_path .= "/new_annotation/$annotation_type_name/$annotation_target/choose_term";
+%     $action_path .= "/new_annotation/$annotation_type_name";
 %   my $type_display_name = $annotation_type->{display_name};
     <li>
 %   if (!$annotation_type->{disabled}) {
@@ -53,9 +53,7 @@ Genotype details
           Alleles
         </td>
         <td>
-% for my $allele ($genotype->alleles()) {
-  <% $allele->display_name() %>
-% }
+         <% join ",", map { $_->display_name() } $genotype->alleles() %>
         </td>
       </tr>
     </table>
@@ -67,14 +65,12 @@ Genotype details
 <button type="button" id="curs-finish-genotype" class="curs-finish-button"><% $finish_text %></button>
 
 <div id="curs-annotation-tables" class="sect">
-% if (0) {
 % for my $annotation_type (@types_to_show) {
-<& current_genotype_annotation_view.mhtml,
+<& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
    curs_root_uri => $curs_root_uri,
    pub => $pub,
-   genotype => $genotype &>
-% }
+   target => $genotype &>
 % }
 
 </div>

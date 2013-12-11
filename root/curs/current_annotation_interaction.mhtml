@@ -2,7 +2,7 @@
 $curs_root_uri
 $annotation_type
 @annotations
-$gene
+$target
 $pub
 $user_created
 $view_only => 0
@@ -128,9 +128,9 @@ my $undelete_action = $curs_root_uri . '/annotation/undelete/';
 my $undelete_icon_uri = $c->uri_for('/static/images/undo_icon.png');
 my $edit_icon_uri = $c->uri_for('/static/images/mini-edit.png');
 
-my $gene_text = "";
-if (defined $gene) {
-  $gene_text = ' for ' . $gene->display_name();
+my $target_text = "";
+if (defined $target) {
+  $target_text = ' for ' . $target->display_name();
 }
 
 my $new_or_db;
@@ -146,7 +146,7 @@ if (@annotations > 1) {
 }
 
 my $title = $new_or_db . $annotation_type->{display_name} . " annotation$plural " .
-  $gene_text;
+  $target_text;
 
 my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
 

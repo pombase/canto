@@ -121,6 +121,17 @@ __PACKAGE__->has_many(
 __PACKAGE__->many_to_many('annotations' => 'genotype_annotations',
                           'annotation');
 
+# aliases to make current_annotation_view.mhtml simpler
+__PACKAGE__->many_to_many('all_annotations' => 'genotype_annotations',
+                          'annotation');
+
+sub display_name
+{
+  my $self = shift;
+
+  return $self->name();
+}
+
 __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
                           'allele');
 
