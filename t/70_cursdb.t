@@ -27,10 +27,10 @@ $schema->txn_do(
 
 
 # get allele annotations
-my $allele = $schema->resultset('Allele')->find({ primary_identifier => 'SPAC27D7.13c:allele-1' });
-my @allele_annotations = $allele->allele_annotations();
+my $allele = $schema->resultset('Genotype')->find({ name => 'h+ SPCC63.05-unk ssm4delta' });
+my @genotype_annotations = $allele->annotations();
 
-is (@allele_annotations, 1);
+is (@genotype_annotations, 1);
 
 
 # test that a phenotype annotation exists and has the right type
@@ -68,10 +68,10 @@ is ($spbc14f5_07->all_annotations(include_with => 1)->count(), 2);
 my $annotation_2 = $spbc14f5_07->all_annotations(include_with => 1)->first();
 my $annotation_2_id = $annotation_2->annotation_id();
 
-my $spac27d7_13c_allele_1 = $schema->find_with_type('Allele', { primary_identifier => 'SPAC27D7.13c:allele-1' });
-ok (defined $spac27d7_13c_allele_1);
+my $genotype_1 = $schema->find_with_type('Genotype', { name => 'h+ SPCC63.05-unk ssm4delta' });
+ok (defined $genotype_1);
 
-is ($spac27d7_13c_allele_1->annotations()->count(), 1);
+is ($genotype_1->annotations()->count(), 1);
 
 
 # delete gene and make sure the annotation goes too

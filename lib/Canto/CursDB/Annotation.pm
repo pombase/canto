@@ -190,7 +190,7 @@ sub delete
   my $self = shift;
 
   $self->gene_annotations()->delete();
-  $self->allele_annotations()->delete();
+  $self->genotype_annotations()->delete();
   $self->SUPER::delete();
 }
 

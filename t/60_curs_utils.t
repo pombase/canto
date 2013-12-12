@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 117;
+use Test::More tests => 115;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -66,7 +66,7 @@ sub check_new_annotations
 
   my @annotation_type_list = @{$config->{annotation_type_list}};
 
-  my $allele_count = 0;
+  my $genotype_count = 0;
 
   for my $annotation_type_config (@annotation_type_list) {
     my ($completed_count, $annotations_ref) =
@@ -80,18 +80,19 @@ sub check_new_annotations
       ok (length $annotation_row->{evidence_code} > 0);
 
       if ($annotation_type_config->{category} eq 'ontology') {
-        ok (length $annotation_row->{gene_name_or_identifier} > 0);
         ok (length $annotation_row->{term_ontid} > 0);
         ok (length $annotation_row->{term_name} > 0);
 
         if ($annotation_type_config->{needs_genotype}) {
-          ok (length $annotation_row->{allele_display_name} > 0);
-          $allele_count++;
+          ok (length $annotation_row->{genotype_name} > 0);
+          $genotype_count++;
+        } else {
+          ok (length $annotation_row->{gene_name_or_identifier} > 0);
         }
       }
     }
   }
-  ok ($allele_count > 0);
+  ok ($genotype_count > 0);
 
 }
 
