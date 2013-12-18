@@ -4,11 +4,11 @@ $form
 $title
 </%args>
 
-<div id="curs-gene-update" class="curs-box">
+<div id="curs-gene-update" class="curs-box" ng-app>
     <div class="curs-box-title">
 <% $title %>
   </div>
-  <div class="curs-box-body">
+  <div class="curs-box-body" ng-controller='UploadGenesCtrl'>
 <div>
 Please list the genes studied in this paper using the <% $systematic_identifier_desc |n %>
 (eg. <% $example_identifier %>) or <% $primary_name_desc |n %> (eg. <% $example_name %>)

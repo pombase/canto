@@ -585,39 +585,71 @@ sub gene_upload : Chained('top') Args(0) Form
   $st->{template} = 'curs/gene_upload.mhtml';
 
   my $form = $self->form();
+
+  # to prevent AngularJS from doing preventDefault on the form
+  $form->action('?');
   my @submit_buttons = ("Continue");
 
   my $schema = $st->{schema};
 
-  my @no_genes_element = ();
+  my @no_genes_elements = ();
+  my @no_genes_reasons =
+    ( [ '', 'Please choose a reason ...' ],
+      map { [ $_, $_ ] } @{$c->config()->{curs_config}->{no_annotation_reasons}} );
   my @required_when = ();
 
   if ($st->{gene_count} > 0) {
     push @submit_buttons, "Back";
   } else {
-    @no_genes_element = {
-      name => 'no-genes', type => 'Checkbox',
-      label => 'Or: no for annotation in this paper',
-      default_empty_value => 1
-    };
+    @no_genes_elements = (
+      {
+        name => 'no-genes', type => 'Checkbox',
+        label => 'Or: no for annotation in this paper',
+        default_empty_value => 1,
+        attributes => { 'ng-model' => 'data.noAnnotation',
+                        'ng-disabled' => 'data.geneIdentifiers.length > 0'  },
+      },
+      {
+        name => 'no-genes-reason',
+        type => 'Select', options => [ @no_genes_reasons ],
+        attributes => { 'ng-model' => 'data.noAnnotationReason',
+                        'ng-show' => 'data.noAnnotation' },
+      },
+      {
+        name => 'no-genes-other', type => 'Text',
+        attributes => { 'ng-show' => 'data.noAnnotation && data.noAnnotationReason === "Other"',
+                        'ng-model' => 'data.otherText',
+                        placeholder => 'Please specify' },
+      },
+    );
     @required_when = (when => { field => 'no-genes', not => 1, value => 1 });
   }
 
+  my $not_valid_message = "Please enter some gene identifiers or choose a " .
+    "reason for this paper having no annotatable genes";
+
   my @all_elements = (
       { name => $gene_list_textarea_name, type => 'Textarea', cols => 80, rows => 10,
+        attributes => { 'ng-model' => 'data.geneIdentifiers',
+                        'ng-disabled' => 'data.noAnnotation',
+                        placeholder => "{{ data.noAnnotation ? 'No genes in this publication ' : '' }}" },
         constraints => [ { type => 'Length',  min => 1 },
                          { type => 'Required', @required_when },
                        ],
       },
       { name => 'return_path_input', type => 'Hidden',
         value => $return_path // '' },
-      @no_genes_element,
-      map {
+      (map {
           {
             name => $_, type => 'Submit', value => $_,
-              attributes => { class => 'button', },
-            }
-        } @submit_buttons,
+            attributes => {
+              class => 'button',
+              title => "{{ isValid() ? '' : '$not_valid_message' }}",
+              'ng-disabled' => '!isValid()',
+            },
+          }
+        } @submit_buttons),
+      @no_genes_elements,
     );
 
   $form->elements([@all_elements]);
@@ -642,8 +674,21 @@ sub gene_upload : Chained('top') Args(0) Form
 
   if ($form->submitted_and_valid()) {
     if ($form->param_value('no-genes')) {
+      my $no_genes_reason =
+        $form->param_value('no-genes-reason') // $form->param_value('no-genes-other');
+
+      $no_genes_reason =~ s/^\s+//;
+      $no_genes_reason =~ s/\s+$//;
+      if (length $no_genes_reason > 0) {
+        $self->set_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY(),
+                            $no_genes_reason);
+      } else {
+        $st->{message} = $not_valid_message;
+        return;
+      }
+
       $st->{message} = "Annotation complete";
-      $c->detach('finish_form', ['no_genes']);
+      $c->detach('finish_form');
     }
 
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
@@ -2580,7 +2625,7 @@ sub finish_form : Chained('top') Args(0)
     }
   } else {
     my $force = {};
-    if (defined $arg && $arg eq 'no_genes') {
+    if (defined $self->get_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY())) {
       # user ticked the "no genes" checkbox on the gene upload page
       $force = { force => SESSION_ACCEPTED };
     }
@@ -2850,6 +2895,8 @@ sub reactivate_session : Chained('top') Args(0)
 
   $self->state()->set_state($schema, CURATION_IN_PROGRESS,
                    { force => $state });
+
+  $self->unset_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY());
 
   $c->flash()->{message} = 'Session has been reactivated';
 

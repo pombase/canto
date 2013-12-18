@@ -1566,6 +1566,16 @@ curator_manager:
 # call with args: $config, $track_schema, $curs
     - set_pub_community_curatable
 
+curs_config:
+  # Possible reasons for a paper to have no annotation, shown on the gene upload
+  # page.  The "Other" reason will have a text box beside it.
+  no_annotation_reasons:
+    - No gene specific data
+    - Review
+    - HTP data only
+    - Methods paper
+    - Other
+
 cache:
   default_timeout: "2 hours"
 

@@ -276,6 +276,7 @@ test_psgi $app, sub {
     $uri = new URI("$root_url/");
     $uri->query_form(gene_identifiers => "",
                      'no-genes' => 1,
+                     'no-genes-reason' => 'Review',
                      submit => 'Submit',
                    );
 

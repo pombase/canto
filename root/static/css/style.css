@@ -89,6 +89,14 @@ button, input[type=submit] {
   font-weight: bold;
   cursor: pointer;
 }
+button:disabled, input[type=submit]:disabled {
+  background-color: #777;
+  color: eee;
+  border-color: #666;
+  white-space: nowrap;
+  font-weight: bold;
+  cursor: pointer;
+}
 
 img {
   border-width: 0px;
@@ -1167,4 +1175,9 @@ a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
 
 .screenshot {
   border: 1px solid black;
+}
+
+/* Hide AngularJS stuff on startup */
+.ng-cloak, .x-ng-cloak {
+  display: none;
 }

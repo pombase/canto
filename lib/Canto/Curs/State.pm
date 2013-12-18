@@ -90,6 +90,7 @@ use constant {
   UNKNOWN_CONDITIONS_COUNT_KEY => 'unknown_conditions_count',
   APPROVER_NAME_KEY => 'approver_name',
   APPROVER_EMAIL_KEY => 'approver_email',
+  NO_ANNOTATION_REASON_KEY => 'no_annotation_reason',
 };
 
 use Sub::Exporter -setup => {

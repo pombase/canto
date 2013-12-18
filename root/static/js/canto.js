@@ -1717,3 +1717,20 @@ var QuickAddDialog = function($) {
 $(document).ready(function() {
   $('.curs-js-link').show();
 });
+
+function UploadGenesCtrl($scope) {
+  $scope.data = {
+    geneIdentifiers: '',
+    noAnnotation: false,
+    noAnnotationReason: '',
+    otherText: '',
+    geneList: '',
+  };
+  $scope.isValid = function() {
+    return $scope.data.geneIdentifiers.length > 0 ||
+      $scope.data.noAnnotation &&
+      $scope.data.noAnnotationReason.length > 0 &&
+      ($scope.data.noAnnotationReason !== "Other" ||
+       $scope.data.otherText.length > 0);
+  }
+}
