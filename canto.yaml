@@ -1425,7 +1425,7 @@ default_curation_priority_name: low
 messages:
   gene_upload:
     systematic_identifier_desc: systematic identifier
-    primary_name_desc: primary identifier
+    primary_name_desc: standard name
     examples:
       gene_identifier: 'SPCC1739.10'
       gene_name: 'cdc11'
