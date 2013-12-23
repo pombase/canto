@@ -1181,3 +1181,12 @@ a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
 .ng-cloak, .x-ng-cloak {
   display: none;
 }
+
+/* warning for old IE version */
+#ie-browser-warning {
+  color: red;
+  font-size: 140%;
+  border: 3px solid red;
+  padding: 20px;
+  background-color: white;
+}

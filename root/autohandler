@@ -19,6 +19,8 @@ $is_admin_user
     <& header.mhtml &>
 % }
 
+<& /browser_warning.mhtml &>
+
     <div class="container-fluid" id="content">
       <div id="title-nav">
 <& breadcrumbs.mhtml &>
