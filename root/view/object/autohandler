@@ -15,7 +15,7 @@ $is_admin_user
     <ul>
 %  if ($editable) {
       <li>
-        <a href="<% $c->uri_for('/edit/object/' . $type . '/' . $object_id, {
+        <a href="<% $c->uri_for('/object/edit/' . $type . '/' . $object_id, {
         model => $model_name }) %>">Edit</a>
       </li>
 %  }

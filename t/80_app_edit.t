@@ -30,7 +30,7 @@ test_psgi $app, sub {
 
   # test visiting the create object page
   {
-    my $url = 'http://localhost:5000/new/object/person?model=track';
+    my $url = 'http://localhost:5000/object/new/person?model=track';
     my $req = HTTP::Request->new(GET => $url);
     $cookie_jar->add_cookie_header($req);
 
@@ -44,7 +44,7 @@ test_psgi $app, sub {
 
   # test creating an object
   {
-    my $uri = new URI('http://localhost:5000/new/object/person');
+    my $uri = new URI('http://localhost:5000/object/new/person');
     $uri->query_form(model => 'track',
                      name => $test_name,
                      'Email address' => $test_email,
@@ -77,7 +77,7 @@ test_psgi $app, sub {
 
   # test visiting the edit object page
   {
-    my $url = "http://localhost:5000/edit/object/person/$new_person_id?model=track";
+    my $url = "http://localhost:5000/object/edit/person/$new_person_id?model=track";
     my $req = HTTP::Request->new(GET => $url);
     $cookie_jar->add_cookie_header($req);
 
@@ -93,7 +93,7 @@ test_psgi $app, sub {
   {
     my $test_name = 'Test name';
 
-    my $uri = new URI("http://localhost:5000/edit/object/person/$new_person_id");
+    my $uri = new URI("http://localhost:5000/object/edit/person/$new_person_id");
     $uri->query_form(model => 'track',
                      name => $test_name,
                      'Email address' => $test_email2,
@@ -162,7 +162,7 @@ test_psgi $app, sub {
     ok (defined $pub);
     my $pub_id = $pub->pub_id();
 
-    my $url = "http://localhost:5000/edit/object/pub/$pub_id?model=track";
+    my $url = "http://localhost:5000/object/edit/pub/$pub_id?model=track";
     my $uri = new URI($url);
 
     $uri->query_form(model => 'track',
@@ -198,7 +198,7 @@ test_psgi $app, sub {
     ok (defined $pub);
     my $pub_id = $pub->pub_id();
 
-    my $url = "http://localhost:5000/edit/object/pub/$pub_id?model=track";
+    my $url = "http://localhost:5000/object/edit/pub/$pub_id?model=track";
     my $uri = new URI($url);
     $uri->query_form(model => 'track',
                      'Publication ID' => 'TEST:2',

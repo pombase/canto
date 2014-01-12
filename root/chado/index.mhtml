@@ -38,13 +38,13 @@
         <div>
           <ul>
             <li>
-              <a href="<% $c->uri_for('/new/object/feature', { model => 'chado'} ) %>">Feature</a>
+              <a href="<% $c->uri_for('/object/new/feature', { model => 'chado'} ) %>">Feature</a>
             </li>
             <li>
-              <a href="<% $c->uri_for('/new/object/cv', { model => 'chado' } ) %>">Controlled vocabulary</a>
+              <a href="<% $c->uri_for('/object/new/cv', { model => 'chado' } ) %>">Controlled vocabulary</a>
             </li>
             <li>
-              <a href="<% $c->uri_for('/new/object/cvterm', { model => 'chado'} ) %>">Controlled vocabulary term</a>
+              <a href="<% $c->uri_for('/object/new/cvterm', { model => 'chado'} ) %>">Controlled vocabulary term</a>
             </li>
           </ul>
         </div>

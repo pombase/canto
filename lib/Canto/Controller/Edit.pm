@@ -666,9 +666,9 @@ sub _run_create_hook
 
 }
 
-sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
-  my ($self, $c) = @_;
-  my ($req_type, $type, $object_id) = @{$c->req->captures()};
+# create or edit an object based on the value of the $req_type argument
+sub object : Global {
+  my ($self, $c, $req_type, $type, $object_id) = @_;
   my $schema = $c->schema();
   my $object = undef;
 
@@ -758,6 +758,7 @@ sub object : Regex('(new|edit)/object/([^/]+)(?:/([^/]+))?') {
  Args    : type - the table for the new object
 
 =cut
+
 sub create : Global Args(1) {
   my ($self, $c, $type) = @_;
 

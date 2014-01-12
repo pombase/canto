@@ -39,7 +39,7 @@ test_psgi $app, sub {
   # test visiting the create curs page
   {
     my $params = "model=track&object.curs_key=$curs_key&pub.pub_id=5";
-    my $url = "http://localhost:5000/new/object/curs?$params";
+    my $url = "http://localhost:5000/object/new/curs?$params";
     my $req = HTTP::Request->new(GET => $url);
     $cookie_jar->add_cookie_header($req);
 
@@ -56,7 +56,7 @@ test_psgi $app, sub {
 
   # test creating a curs
   {
-    my $uri = new URI('http://localhost:5000/new/object/curs');
+    my $uri = new URI('http://localhost:5000/object/new/curs');
     $uri->query_form(model => 'track',
                      publication => $pub->pub_id(),
                      curs_key => $curs_key,
