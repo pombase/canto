@@ -274,16 +274,16 @@ sub load
 
         my $x_db_id = $db_ids{$x_db_name};
 
-       if (defined $x_db_id) {
-         my $x_dbxref = undef;
+        if (defined $x_db_id) {
+          my $x_dbxref = undef;
 
-         try {
-           $x_dbxref = $load_util->find_dbxref("OBO_REL:$x_acc");
-         } catch {
-           # dbxref not found
-         };
+          try {
+            $x_dbxref = $load_util->find_dbxref("OBO_REL:$x_acc");
+          } catch {
+            # dbxref not found
+          };
 
-         if (defined $x_dbxref) {
+          if (defined $x_dbxref) {
             # no need to add it as it's already there, loaded from another
             # ontology
             if ($term->is_relationship_type()) {
