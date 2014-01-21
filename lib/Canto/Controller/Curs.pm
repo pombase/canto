@@ -604,7 +604,7 @@ sub gene_upload : Chained('top') Args(0) Form
     @no_genes_elements = (
       {
         name => 'no-genes', type => 'Checkbox',
-        label => 'Or: no for annotation in this paper',
+        label => 'This paper is not suitable for gene-specific curation in Canto',
         default_empty_value => 1,
         attributes => { 'ng-model' => 'data.noAnnotation',
                         'ng-disabled' => 'data.geneIdentifiers.length > 0'  },
