@@ -1697,6 +1697,7 @@ function UploadGenesCtrl($scope) {
       ($scope.data.noAnnotationReason !== "Other" ||
        $scope.data.otherText.length > 0);
   }
+}
 
 function AlleleCtrl($scope) {
   $scope.alleles = [
