@@ -11,7 +11,7 @@ $reassign
   </div>
   <div class="curs-box-body">
 % if (!$reassign) {
-    <p>Before you start curating, Please confirm your name and email address:</p>
+    <p>Before you start curating, please confirm your name and email address:</p>
 % }
     <% $form |n %>
   </div>
