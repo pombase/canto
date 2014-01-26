@@ -12,6 +12,10 @@ $reassign
   <div class="curs-box-body">
 % if (!$reassign) {
     <p>Before you start curating, please confirm your name and email address:</p>
+%   if ($c->config()->{demo_mode}) {
+      <p class="demo-messages">(As this is a demonstration instance of
+      <% $c->config()->{name} %>, just click continue)</p>
+%   }
 % }
     <% $form |n %>
   </div>

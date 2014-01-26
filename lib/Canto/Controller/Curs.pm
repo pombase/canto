@@ -2709,7 +2709,23 @@ sub _assign_session :Private
 
   my @all_elements = ();
 
+  # $current_submitter_* will be set if the session has been assigned and sent
+  # out by the curators
+  my $default_submitter_name = ($reassign ? undef : $current_submitter_name);
+  my $default_submitter_email = ($reassign ? undef : $current_submitter_email);
+
+  my $demo_user_name = $config->{curs_config}->{demo_user_name};
+  my $demo_user_email_address = $config->{curs_config}->{demo_user_email_address};
+
   if ($reassign && !defined $current_submitter_email) {
+    my $last_reassigner_name = $c->session()->{last_reassigner_name};
+    my $last_reassigner_email_address = $c->session()->{last_reassigner_email_address};
+
+    if ($config->{demo_mode}) {
+      $last_reassigner_name //= $demo_user_name;
+      $last_reassigner_email_address //= $demo_user_email_address;
+    }
+
     push @all_elements, (
       {
         type => 'Block', tag => 'p',
@@ -2718,12 +2734,12 @@ sub _assign_session :Private
       {
         name => 'reassigner_name', label => 'Your name', type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
-        default => $c->session()->{last_reassigner_name},
+        default => $last_reassigner_name,
       },
       {
         name => 'reassigner_email', label => 'Your email address', type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
-        default => $c->session()->{last_reassigner_email},
+        default => $last_reassigner_email_address,
       },
       {
         type => 'Block', tag => 'p',
@@ -2734,22 +2750,27 @@ sub _assign_session :Private
           'curate the paper.',
       }
     );
+  } else {
+    if ($config->{demo_mode}) {
+      $default_submitter_name //= $demo_user_name;
+      $default_submitter_email //= $demo_user_email_address;
+    }
   }
 
   push @all_elements, (
       {
-        name => 'submitter_name',
+  name => 'submitter_name',
         label => ucfirst (($reassign ? 'new curator ' : '') . 'name'),
         type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
-        default => ($reassign ? undef : $current_submitter_name),
+        default => $default_submitter_name,
       },
       {
         name => 'submitter_email',
         label => ucfirst (($reassign ? 'new curator ' : '') . 'email'),
         type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
-        default => ($reassign ? undef : $current_submitter_email),
+        default => $default_submitter_email,
      },
       {
         name => 'submit', type => 'Submit', value => 'Continue',
