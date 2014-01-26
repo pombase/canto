@@ -251,11 +251,22 @@ sub load_pubmed_xml
 
         if (defined $journal->{JournalIssue}) {
           my $journal_issue = $journal->{JournalIssue};
-          if (defined $journal_issue->{PubDate}) {
+          my $pub_date = $journal_issue->{PubDate};
+
+          if (defined $pub_date) {
             my $pub_date = $journal_issue->{PubDate};
             my @date_bits = ($pub_date->{Year} // (),
                              $pub_date->{Month} // (),
                              $pub_date->{Day} // ());
+
+            if (!@date_bits) {
+              my $medline_date = $pub_date->{MedlineDate};
+              if (defined $medline_date &&
+                  $medline_date =~ /(\d\d\d\d)(?:\s+(\w+)(?:\s+(\d+))?)?/) {
+                @date_bits = ($1, $2 // (), $3 // ());
+              }
+            }
+
             my $cite_date = join (' ', @date_bits);
             $citation .= ' ' . $cite_date;
 
@@ -422,7 +433,6 @@ sub add_missing_fields
   my $config = shift;
   my $schema = shift;
 
-  my @missing_field_ids = ();
   my $rs = $schema->resultset('Pub')->search({
     -or => [
       title => undef,
@@ -432,6 +442,7 @@ sub add_missing_fields
       pubmed_type => undef,
       citation => undef,
       publication_date => undef,
+      \'length(publication_date) = 0',
     ]
    });
   my $max_batch_size = 300;
