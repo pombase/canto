@@ -25,7 +25,7 @@ Click on a genotype name to add a phenotype
     <tr>
       <td>
 % if (!$read_only_curs) {
-        <a href="<% $start_path . '/genotype/' . $genotype->{genotype_id} . '/view' %>"
+        <a href="<% $start_path . '/feature/genotype/' . $genotype->{genotype_id} . '/view' %>"
 % }
           <span>
             <% $genotype->{name} %>

@@ -8,23 +8,22 @@ $genotype
 <div id="curs-annotation-actions">
 <div class="curs-box">
   <div class="curs-box-title">
-Add an annotation for <% $genotype_name %>:
+Actions:
   </div>
   <div class="curs-box-body">
   <ul class="annotation-start">
 % for my $annotation_type (@types_to_show) {
 %   my $annotation_type_name = $annotation_type->{name};
-%   my $annotation_target = $annotation_type->{target};
 %   my $title = $annotation_type->{help_text} // '';
-%   my $action_path = $curs_root_uri . '/genotype/' . $genotype_id;
-%     $action_path .= "/new_annotation/$annotation_type_name";
+%   my $action_path = $curs_root_uri . '/feature/genotype/' . $genotype_id;
+%     $action_path .= "/new_annotation/$annotation_type_name/choose_term";
 %   my $type_display_name = $annotation_type->{display_name};
     <li>
 %   if (!$annotation_type->{disabled}) {
       <a title="<% $title %>" href="<% $action_path %>">
 %   }
       <span class="annotation-type">
-<% ucfirst $type_display_name %>
+Add a new <% $type_display_name %> for <% $genotype_name %> ...
       </span>
 %   if (!$annotation_type->{disabled}) {
       </a>

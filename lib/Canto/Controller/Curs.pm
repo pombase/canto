@@ -1152,8 +1152,8 @@ sub _update_annotation
 
 sub _create_annotation
 {
-  my ($self, $c, $annotation_type_name, $gene_proxies, $genotypes, $annotation_data) =
-    @_;
+  my ($self, $c, $annotation_type_name, $feature_type,
+      $features, $annotation_data) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -1171,25 +1171,22 @@ sub _create_annotation
                                   data => clone $annotation_data,
                                 });
 
-  if (@$gene_proxies) {
+  if ($feature_type eq 'gene') {
     my @genes = map {
       $_->cursdb_gene();
-    } @$gene_proxies;
+    } @$features;
 
     $annotation->set_genes(@genes);
   } else {
-    $annotation->set_genotypes(@$genotypes);
+    $annotation->set_genotypes(@$features);
   }
 
-  my $annotation_id = $annotation->annotation_id();
-
   $self->_set_annotation_curator($c, $annotation);
-
   $guard->commit();
 
   $self->metadata_storer()->store_counts($schema);
 
-  $_debug_annotation_ids = [$annotation_id];
+  $_debug_annotation_ids = [$annotation->annotation_id()];
 
   $self->state()->store_statuses($schema);
 
@@ -1207,18 +1204,13 @@ sub annotation_ontology_edit
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $target = $st->{target};
-
-  my $gene_proxy;
-  my $genotype;
+  my $feature_type = $st->{feature_type};
 
   my $feature_id;
 
-  if ($target eq 'gene') {
-    $gene_proxy = _get_gene_proxy($c->config(), $feature);
+  if ($feature_type eq 'gene') {
     $feature_id = $feature->gene_id();
   } else {
-    $genotype = $feature;
     $feature_id = $feature->genotype_id();
   }
 
@@ -1293,7 +1285,7 @@ sub annotation_ontology_edit
       };
 
       $c->flash()->{message} = 'Note that your term suggestion has been '
-        . "stored, but the $target will be temporarily "
+        . "stored, but the $feature_type will be temporarily "
         . 'annotated with the parent of your suggested new term';
     }
 
@@ -1301,21 +1293,19 @@ sub annotation_ontology_edit
 
     if (defined $annotation) {
       $self->_update_annotation($c, $annotation, \%annotation_data);
-      _redirect_and_detach($c, $target, $feature_id);
+      _redirect_and_detach($c, $feature_type, $feature_id);
     } else {
       my $annotation =
         $self->_create_annotation($c, $annotation_type_name,
-                                  [$gene_proxy], [$genotype], \%annotation_data);
+                                  $feature_type, [$feature], \%annotation_data);
 
-      if ($target eq 'genotype') {
-        _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'allele_select');
-      } else {
+#      if ($feature_type eq 'genotype') {
+#        _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'allele_select');
+#      } else {
         if ($annotation_config->{needs_genotype}) {
           _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'evidence');
-        } else {
-
         }
-      }
+#      }
     }
   } else {
     if (defined $annotation) {
@@ -1447,7 +1437,7 @@ sub _get_gene_proxy
   my $gene = shift;
 
   if (!defined $gene) {
-    croak "no gene passed to _get_gene_proxy()";
+    confess "no gene passed to _get_gene_proxy()";
   }
 
   return Canto::Curs::GeneProxy->new(config => $config,
@@ -1463,16 +1453,16 @@ sub _annotation_edit
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $gene = $st->{gene};
-  my @genes = @{$st->{genes}};
+  my $feature = $st->{feature};
+  my @features = @{$st->{features}};
 
   my $annotation_display_name = $annotation_config->{display_name};
 
-  my $gene_display_names = join ',', map {
+  my $display_names = join ',', map {
     $_->display_name();
-  } @genes;
+  } @features;
 
-  $st->{title} = "Curating $annotation_display_name for $gene_display_names\n";
+  $st->{title} = "Curating $annotation_display_name for $display_names\n";
   $st->{show_title} = 0;
 
   my %type_dispatch = (
@@ -1482,28 +1472,21 @@ sub _annotation_edit
 
   $self->state()->store_statuses($schema);
 
-  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $gene,
+  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $feature,
                                                     $annotation_config,
                                                     $annotation);
 }
 
 # args:
 #   $annotation_type_name - the name from the annotation configuration
-#   $target - the feature type that this annotation should be attached to
-#                - gene
-#                - genotype
-sub new_annotation : Chained('gene') PathPart('new_annotation') CaptureArgs(2)
+sub new_annotation : Chained('feature') PathPart('new_annotation') CaptureArgs(1)
 {
-  my ($self, $c, $annotation_type_name, $target) = @_;
+  my ($self, $c, $annotation_type_name) = @_;
 
   my $st = $c->stash();
-
   my $config = $c->config();
-
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
-
   $st->{annotation_type_config} = $annotation_config;
-  $st->{target} = $target;
 }
 
 sub new_annotation_choose_term : Chained('new_annotation') PathPart('choose_term') Args(0) Form
@@ -1638,17 +1621,18 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
   my $annotation_type_name = $annotation->type();
 
   my $gene = $annotation->genes()->first();
-  if (!defined $gene) {
-    $gene = $annotation->alleles()->first()->gene();
+  if (defined $gene) {
+    my $gene_proxy = _get_gene_proxy($config, $gene);
+    $st->{gene} = $gene_proxy;
+    $st->{feature} = $gene_proxy;
+  } else {
+    my $genotype = $annotation->genotypes()->first();
+    $st->{genotype} = $genotype;
+    $st->{feature} = $genotype;
   }
 
-  if (!defined $gene) {
-    die "could not find a gene for annotation: " . $annotation_id;
-  };
-
-  my $gene_proxy = _get_gene_proxy($config, $gene);
-  $st->{gene} = $gene_proxy;
-  my $gene_display_name = $gene_proxy->display_name();
+  my $display_name = $st->{feature}->display_name();
+  $st->{display_name} = $display_name;
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
@@ -1661,14 +1645,12 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
   my $term_ontid = $annotation_data->{term_ontid};
 
   if (defined $term_ontid) {
-    $st->{title} = "Evidence for annotating $gene_display_name with $term_ontid";
+    $st->{title} = "Evidence for annotating $display_name with $term_ontid";
   } else {
-    $st->{title} = "Evidence for annotating $gene_display_name";
+    $st->{title} = "Evidence for annotating $display_name";
   }
 
   $st->{show_title} = 0;
-
-  $st->{gene_display_name} = $gene_display_name;
 
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
@@ -1728,11 +1710,11 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
 
     my $existing_evidence_code = $data->{evidence_code};
 
-    my $gene_id = $gene->gene_id();
-
     if (defined $evidence_submit_back) {
+      my $gene_id = $gene->gene_id();
+
       if (defined $existing_evidence_code) {
-         _redirect_and_detach($c, 'gene', $gene_id, 'view');
+         _redirect_and_detach($c, 'feature', 'gene', $gene_id, 'view');
      } else {
         $self->_delete_annotation($c, $annotation_id);
         _redirect_and_detach($c, 'annotation', 'new', $gene_id, $annotation_type_name);
@@ -1803,7 +1785,7 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
       _redirect_and_detach($c, @parts);
     } else {
       if ($annotation_config->{needs_allele} || defined $existing_evidence_code) {
-        _redirect_and_detach($c, 'gene', $gene_id, 'view');
+#        _redirect_and_detach($c, 'gene', $gene_id, 'view');
       } else {
         _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
       }
@@ -2340,6 +2322,20 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
   _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
 }
 
+sub _annotation_features
+{
+  my $config = shift;
+  my $annotation = shift;
+
+  my @genes = $annotation->genes();
+
+  if (@genes) {
+    return ('gene', map { _get_gene_proxy($config, $_); } @genes);
+  } else {
+    return ('genotype', $annotation->genotypes());
+  }
+}
+
 sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 {
   my ($self, $c) = @_;
@@ -2371,13 +2367,17 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 
   my $display_name = undef;
 
-  my $gene;
+  my ($feature_type, $gene) = _annotation_features($config, $annotations[0]);
+
+  if ($feature_type ne 'gene') {
+    die "only gene annotation transfer is implemented";
+  }
 
   my @genes = $annotations[0]->genes();
   if (@genes) {
     $gene = $genes[0];
   } else {
-    $gene = $annotations[0]->alleles()->first()->gene();
+    die "no genes";
   }
 
   my $gene_proxy = _get_gene_proxy($config, $gene);
@@ -2777,25 +2777,17 @@ sub multi_gene_select : Chained('gene') PathPart('multi_gene_select') Args(1) Fo
   $self->state()->store_statuses($schema);
 }
 
-sub gene : Chained('top') CaptureArgs(1)
+sub feature : Chained('top') CaptureArgs(2)
 {
-  my ($self, $c, $gene_ids) = @_;
+  my ($self, $c, $feature_type, $ids) = @_;
 
   my $st = $c->stash();
   my $schema = $st->{schema};
   my $config = $c->config();
 
-  my @gene_ids = split /,/, $gene_ids;
+  my @ids = split /,/, $ids;
 
-  my @gene_proxies = map {
-    my $gene = $schema->find_with_type('Gene', $_);
-    _get_gene_proxy($config, $gene);
-  } @gene_ids;
-
-  my $first_gene_proxy = $gene_proxies[0];
-
-  _set_genes_in_session($c);
-
+<<<<<<< HEAD
   my $total_annotation_count = $schema->resultset('Annotation')->count();
 
   if ($total_annotation_count == 0 && $st->{state} eq CURATION_IN_PROGRESS) {
@@ -2811,41 +2803,53 @@ sub gene : Chained('top') CaptureArgs(1)
 sub gene_view : Chained('gene') PathPart('view')
 {
   my ($self, $c) = @_;
+=======
+  if ($feature_type eq 'gene') {
+    my @gene_proxies = map {
+      my $gene = $schema->find_with_type('Gene', $_);
+      _get_gene_proxy($config, $gene);
+    } @ids;
+>>>>>>> Unify the handling of gene and genotype pages
 
-  my $st = $c->stash();
+    my $first_gene_proxy = $gene_proxies[0];
 
-  my $gene = $st->{gene};
+    _set_genes_in_session($c);
 
-  $st->{title} = 'Gene: ' . $gene->display_name();
-  # use only in header, not in body:
-  $st->{show_title} = 1;
-  $st->{template} = 'curs/gene_page.mhtml';
+    $st->{gene} = $first_gene_proxy;
+    $st->{genes} = [@gene_proxies];
+
+    $st->{feature} = $st->{gene};
+    $st->{features} = $st->{genes};
+  } else {
+    if ($feature_type eq 'genotype') {
+      my $genotype = $schema->find_with_type('Genotype', $ids[0]);
+
+      $st->{genotype} = $genotype;
+
+      $st->{feature} = $genotype;
+      $st->{features} = [$genotype];
+    } else {
+      die "no such feature type: $feature_type\n";
+    }
+  }
+
+  $st->{feature_type} = $feature_type;
 }
 
-sub genotype : Chained('top') CaptureArgs(1)
-{
-  my ($self, $c, $genotype_id) = @_;
-
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-  my $config = $c->config();
-
-  my $genotype = $schema->find_with_type('Genotype', $genotype_id);
-
-  $st->{genotype} = $genotype;
-}
-
-sub genotype_view : Chained('genotype') PathPart('view')
+sub feature_view : Chained('feature') PathPart('view')
 {
   my ($self, $c) = @_;
 
   my $st = $c->stash();
 
-  my $genotype = $st->{genotype};
-
-  $st->{title} = 'Genotype: ' . $genotype->name();
+  # use only in header, not in body:
   $st->{show_title} = 1;
-  $st->{template} = 'curs/genotype_page.mhtml';
+
+  my $feature_type = $st->{feature_type};
+  my $display_name = $st->{feature}->display_name();
+
+  $st->{title} = ucfirst $feature_type . ": $display_name";
+  $st->{template} = "curs/${feature_type}_page.mhtml";
 }
 
 sub annotation_export : Chained('top') PathPart('annotation_export') Args(1)
