@@ -2238,7 +2238,7 @@ sub _allele_from_json: Private
   }
 }
 
-sub maybe_make_genotype
+sub _maybe_make_genotype
 {
   my $self = shift;
   my $c = shift;
@@ -2300,7 +2300,7 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
     push @alleles, $allele;
   }
 
-  my $genotype = $self->maybe_make_genotype($c, \@alleles);
+  my $genotype = $self->_maybe_make_genotype($c, \@alleles);
 
   $schema->create_with_type('GenotypeAnnotation',
                             {
