@@ -14,12 +14,12 @@ Genotype list
     </div>
   </div>
   <div class="curs-box-body">
+% if (@genotype_hashes) {
 % if (!$read_only_curs) {
    <div class="curs-genotype-list-instructions">
 Click on a genotype name to add a phenotype
    </div>
 % }
-% if (@genotype_hashes) {
   <table>
 %   for my $genotype (@genotype_hashes) {
     <tr>
@@ -39,10 +39,14 @@ Click on a genotype name to add a phenotype
 %   }
   </table>
 % } else {
-  <div class="curs-no-genotypes-message">
-    [No genotypes]
+  <div>
+    No genotypes - add a genotype to make a phenotype annotation.
   </div>
 % }
+
+  <p>
+    <a href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
+  </p>
   </div>
 </div>
 

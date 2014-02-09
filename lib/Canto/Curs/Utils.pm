@@ -93,6 +93,10 @@ sub _make_ontology_annotation
       $conditions_string = '';
     }
 
+    if (!defined $genotype) {
+      warn $annotation->annotation_id();
+    }
+
     %genotype_details = (
       expression_level => $data->{expression} // 'null',
       conditions => $conditions_string,

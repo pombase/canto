@@ -6,7 +6,7 @@ $title
 $editing
 </%args>
 
-<& ontology_allele_edit.mhtml, annotation => $annotation,
+<& allele_edit.mhtml, annotation => $annotation,
    editing => $editing,
    curs_root_uri => $curs_root_uri &>
 

@@ -2095,7 +2095,7 @@ sub _allele_data_for_js : Private
 
 sub _set_allele_select_stash
 {
-  my ($c, $annotation) = @_;
+  my ($c, $annotation_type_name) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -2108,12 +2108,14 @@ sub _set_allele_select_stash
 
   $st->{allele_type_options} = \@allele_type_options;
 
-  my $evidence_types = $config->{evidence_types};
-  my $annotation_type_name = $annotation->type();
-  my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
-  my @evidence_codes = _generate_evidence_options($evidence_types, $annotation_type_config);
+  if (defined $annotation_type_name) {
+    my $evidence_types = $config->{evidence_types};
 
-  $st->{evidence_select_options} = \@evidence_codes;
+    my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
+    my @evidence_codes = _generate_evidence_options($evidence_types, $annotation_type_config);
+
+    $st->{evidence_select_options} = \@evidence_codes;
+  }
 }
 
 sub _annotation_allele_select_internal
@@ -2152,7 +2154,7 @@ sub _annotation_allele_select_internal
   $st->{gene_id} = $gene->gene_id();
   $st->{annotation} = $annotation;
 
-  _set_allele_select_stash($c, $annotation);
+  _set_allele_select_stash($c, $annotation_type_name);
 
   $st->{alleles_in_progress} = _allele_data_for_js($config, $annotation);
   $st->{current_conditions} = _get_all_conditions($config, $schema);
@@ -2199,7 +2201,7 @@ sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allel
 
   my $data = $annotation->data();
 
-  _set_allele_select_stash($c, $annotation);
+  _set_allele_select_stash($c, $annotation_type_name);
 
   $st->{annotation_genes} = [map { _get_gene_proxy($config, $_); } $annotation->genes()];
 }
@@ -2777,11 +2779,22 @@ sub multi_gene_select : Chained('gene') PathPart('multi_gene_select') Args(1) Fo
   $self->state()->store_statuses($schema);
 }
 
-sub feature : Chained('top') CaptureArgs(2)
+sub feature : Chained('top') CaptureArgs(1)
 {
-  my ($self, $c, $feature_type, $ids) = @_;
+  my ($self, $c, $feature_type) = @_;
 
   my $st = $c->stash();
+
+  $st->{feature_type} = $feature_type;
+}
+
+sub feature_view : Chained('feature') PathPart('view') CaptureArgs(1)
+{
+  my ($self, $c, $ids) = @_;
+
+  my $st = $c->stash();
+  $st->{show_title} = 1;
+  my $feature_type = $st->{feature_type};
   my $schema = $st->{schema};
   my $config = $c->config();
 
@@ -2820,7 +2833,7 @@ sub gene_view : Chained('gene') PathPart('view')
 
     $st->{feature} = $st->{gene};
     $st->{features} = $st->{genes};
-  } else {
+ } else {
     if ($feature_type eq 'genotype') {
       my $genotype = $schema->find_with_type('Genotype', $ids[0]);
 
@@ -2833,23 +2846,28 @@ sub gene_view : Chained('gene') PathPart('view')
     }
   }
 
-  $st->{feature_type} = $feature_type;
+  my $display_name = $st->{feature}->display_name();
+
+  $st->{title} = ucfirst $feature_type . ": $display_name";
+  $st->{template} = "curs/${feature_type}_page.mhtml";
 }
 
-sub feature_view : Chained('feature') PathPart('view')
+sub feature_add : Chained('feature') PathPart('add')
 {
   my ($self, $c) = @_;
 
   my $st = $c->stash();
 
-  # use only in header, not in body:
   $st->{show_title} = 1;
 
   my $feature_type = $st->{feature_type};
-  my $display_name = $st->{feature}->display_name();
 
-  $st->{title} = ucfirst $feature_type . ": $display_name";
-  $st->{template} = "curs/${feature_type}_page.mhtml";
+  if ($feature_type eq 'genotype') {
+    _set_allele_select_stash($c);
+  }
+
+  $st->{title} = "Add a $feature_type";
+  $st->{template} = "curs/${feature_type}_add.mhtml";
 }
 
 sub annotation_export : Chained('top') PathPart('annotation_export') Args(1)

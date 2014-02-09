@@ -1,0 +1,163 @@
+<%args>
+$curs_root_uri
+$editing
+</%args>
+
+<script language="javascript" type="text/javascript">
+var allele_types = <% $allele_types_js |n %>;
+var alleles_in_progress = <% $alleles_in_progress_js |n %>;
+var existing_alleles_by_name = <% $existing_alleles_by_name_js |n %>;
+var current_conditions = <% $current_conditions_js |n %>;
+var delete_icon_uri = "<% $delete_icon_uri %>";
+var editing_allele = <% $editing ? 'true' : 'false' %>;
+</script>
+
+<script type="text/ng-template" id="alleleEdit.html">
+  <div class="curs-allele-edit-dialog">
+    <div class="modal-header">
+      <h3>Allele details</h3>
+    </div>
+    <div class="modal-body">
+      <table>
+        <tr>
+          <td>
+            Allele name:
+          </td>
+          <td>
+            <input ng-model="name" name="curs-allele-name" type="text" value="" class="curs-allele-name" style="disabled: true" />
+          </td>
+        </tr>
+        <tr class="curs-allele-type-label" style="display: none">
+          <td>
+            Allele type
+          </td>
+          <td>
+            <span class="curs-allele-type-label-span">
+            </span>
+          </td>
+        </tr>
+        <tr class="curs-allele-type-select">
+          <td>
+            Allele type
+          </td>
+          <td>
+            <select ng-model="type" name="curs-allele-type" class="required">
+              <option selected="selected" value="">Choose an allele type ...</option>
+% for my $opt (@allele_type_options) {
+              <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
+% }
+            </select>
+          </td>
+        </tr>
+        <tr class="curs-allele-type-description" style="display: none">
+          <td>
+            Allele description
+          </td>
+          <td>
+            <input ng-model="description" name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
+            <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete" 
+                 ng-click="clearDescription()"/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+          </td>
+          <td id="curs-allele-description-example">
+          </td>
+        </tr>
+        <tr class="curs-allele-expression" style="display:none">
+          <td valign="top">
+            Expression
+          </td>
+          <td>
+            <div>
+              <label>Overexpression</label>
+              <input ng-model="expression" name="curs-allele-expression" type="radio" value="Overexpression" />
+            </div>
+            <div>
+              <label>Endogenous</label>
+              <input ng-model="expression" name="curs-allele-expression" type="radio" value="Endogenous" />
+            </div>
+            <div>
+              <label>Knockdown</label>
+              <input ng-model="expression" name="curs-allele-expression" type="radio" value="Knockdown" />
+            </div>
+            <div>
+              <label>Not specified</label>
+              <input ng-model="expression" name="curs-allele-expression" type="radio" value="Not specified" />
+            </div>
+          </td>
+        </tr>
+      </table>
+      <div class="curs-allele-dialog-evidence">
+        <div class="curs-ui-dialog-subheading ui-widget-header ui-helper-clearfix ui-corner-all">
+          <span class="ui-dialog-title">Evidence</span>
+        </div>
+        <table>
+          <tr>
+            <td>
+              Evidence
+            </td>
+            <td>
+              <select ng-model="expression" name="curs-allele-evidence-select" class="required curs-allele-evidence-select">
+                <option selected="selected" value="">Choose an evidence type ...</option>
+% for my $opt (@evidence_select_options) {
+                <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
+% }
+              </select>
+            </td>
+          </tr>
+        </table>
+        <div class="curs-ui-dialog-subheading ui-widget-header ui-helper-clearfix ui-corner-all">
+          <span class="ui-dialog-title">Conditions</span>
+          <& /curs/inline_help.mhtml, key => 'allele_choose_conditions' &>
+        </div>
+        <table>
+          <tr>
+            <td>
+              Select conditions
+            </td>
+            <td>
+              <input class="curs-allele-conditions" name="curs-allele-condition-names"/>
+            </td>
+          </tr>
+        </table>
+% if (!$editing) {
+        <div class="curs-allele-condition-buttons">
+          <div>Previously used conditions (click to add):</div>
+        </div>
+% }
+        <div class="curs-allele-reuse">
+          <input type="checkbox" name="curs-allele-reuse-dialog" value="Reuse"/>Re-use allele name and description with a different set of conditions<br/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</script>
+
+<%init>
+use Data::JavaScript::Anon;
+
+my $st = $c->stash();
+
+my $allele_type_config = $st->{allele_type_config};
+my $allele_types_js = Data::JavaScript::Anon->anon_dump($allele_type_config);
+
+my $alleles_in_progress = $st->{alleles_in_progress};
+my $alleles_in_progress_js = Data::JavaScript::Anon->anon_dump($alleles_in_progress);
+
+my @evidence_select_options = @{$st->{evidence_select_options} // []};
+my @allele_type_options = @{$st->{allele_type_options}};
+
+my $existing_alleles_by_name = $st->{existing_alleles_by_name};
+my $existing_alleles_by_name_js = Data::JavaScript::Anon->anon_dump($existing_alleles_by_name);
+
+my $current_conditions = $st->{current_conditions};
+my $current_conditions_js = Data::JavaScript::Anon->anon_dump($current_conditions);
+
+my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
+</%init>

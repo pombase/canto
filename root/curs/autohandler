@@ -11,7 +11,7 @@ var annotation_type_config = <% $annotation_type_config_js |n %>;
 </script>
 
 
-<div class="curs-content">
+<div class="curs-content" ng-app="cantoApp">
 
 <div id="curs-dialog" style="display: none">
 

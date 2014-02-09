@@ -5,7 +5,7 @@ $form
 $title
 </%args>
 
-<div id="curs-gene-update" class="curs-box" ng-app>
+<div id="curs-gene-update" class="curs-box">
     <div class="curs-box-title">
 <% $title %>
   </div>

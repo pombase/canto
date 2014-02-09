@@ -2,17 +2,16 @@
 $schema
 $title
 $pub
-$annotation
-@annotation_genes
-$curs_root_uri
 $multi_organism_mode
+$curs_root_uri
 </%args>
 
 <div>
-<& allele_edit.mhtml, annotation => $annotation,
-   editing => 0, curs_root_uri => $curs_root_uri &>
+<& allele_edit.mhtml,
+   editing => 0,
+   curs_root_uri => $curs_root_uri &>
 
-<div ng-controller="AlleleCtrl" id="curs-multi-allele-select" class="curs-box">
+<div ng-controller="MultiAlleleCtrl" id="curs-multi-allele-select" class="curs-box">
   <div class="curs-box-title">
 <% $title %>
   </div>
@@ -44,22 +43,18 @@ Add alleles from the genes below until the genotype is fully specified.
       </td>
 %     }
       <td>
-        <button type="button"
-                name="gene-select"
-                data-gene-display-name="<% $gene->{display_name} %>"
-                data-gene-primary-identifier="<% $gene->{'Systematic identifier'} %>"
-                class="multi-allele-add-from-gene"
-                value='<% $gene->{gene_id} %>'>Add allele ..</button>
+        <button class="btn btn-default"
+                ng-click="openAlleleEditDialog('<% $gene->{display_name} %>', '<% $gene->{qq|Systematic identifier|} %>', <% $gene->{gene_id} %>)">Add allele ..</button>
       </td>
     </tr>
 %   }
   </table>
 
-  <div id="multi-allele-genotype" class="ng-cloak" ng-model="allele" ng-show="alleles.length">
+  <div id="multi-allele-genotype" class="ng-cloak" ng-show="alleles.length">
 
-<div>
-The alleles for this genotype:
-</div>
+    <div>
+      The alleles for this genotype:
+    </div>
 
   <table class="list">
     <thead>
@@ -91,6 +86,12 @@ use Canto::Curs;
 use Canto::Track;
 use Canto::Curs::GeneProxy;
 
+my $config = $c->config();
+
+my @all_genes = map {
+  Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $_);
+} Canto::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all();
+
 my @gene_data = map {
   my $gene = $_;
 
@@ -105,7 +106,7 @@ my @gene_data = map {
     $hash->{Organism} = $gene->organism()->full_name();
   }
   $hash
-} @annotation_genes;
+} @all_genes;
 
 my @col_names = ("Systematic identifier", "Name", "Product");
 
