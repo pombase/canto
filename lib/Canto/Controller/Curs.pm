@@ -2102,11 +2102,11 @@ sub _set_allele_select_stash
 
   $st->{allele_type_config} = $config->{allele_types};
 
-  my @allele_type_options = map {
-    [ $_->{name}, $_->{name} ];
-  } @{$config->{allele_type_list}};
-
-  $st->{allele_type_options} = \@allele_type_options;
+  $st->{allele_type_names} = [
+    map {
+      $_->{name};
+    } @{$config->{allele_type_list}}
+  ];
 
   if (defined $annotation_type_name) {
     my $evidence_types = $config->{evidence_types};

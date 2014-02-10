@@ -9,6 +9,7 @@ var alleles_in_progress = <% $alleles_in_progress_js |n %>;
 var existing_alleles_by_name = <% $existing_alleles_by_name_js |n %>;
 var current_conditions = <% $current_conditions_js |n %>;
 var delete_icon_uri = "<% $delete_icon_uri %>";
+var allele_type_names = <% $allele_type_name_js |n %>;
 var editing_allele = <% $editing ? 'true' : 'false' %>;
 </script>
 
@@ -24,9 +25,10 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
             Allele name:
           </td>
           <td>
-            <input ng-model="name" name="curs-allele-name" type="text" value="" class="curs-allele-name" style="disabled: true" />
+            <input ng-model="alleleData.name" name="curs-allele-name" type="text" value="" class="curs-allele-name" style="disabled: true" />
           </td>
         </tr>
+
         <tr class="curs-allele-type-label" style="display: none">
           <td>
             Allele type
@@ -36,55 +38,58 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
             </span>
           </td>
         </tr>
+
         <tr class="curs-allele-type-select">
           <td>
             Allele type
           </td>
           <td>
-            <select ng-model="type" name="curs-allele-type" class="required">
+            <select ng-model="alleleData.type" name="curs-allele-type" class="required"
+                    ng-change="typeChange()"
+                    ng-options="name for name in env.allele_type_names">
               <option selected="selected" value="">Choose an allele type ...</option>
-% for my $opt (@allele_type_options) {
-              <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
-% }
             </select>
           </td>
         </tr>
-        <tr class="curs-allele-type-description" style="display: none">
+
+        <tr class="curs-allele-type-description ng-cloak" ng-show="!!alleleData.type">
           <td>
             Allele description
           </td>
           <td>
-            <input ng-model="description" name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
+            <input ng-model="alleleData.description" name="curs-allele-description-input" type="text" value="" class="curs-allele-description-input" />
             <img src="<% $delete_icon_uri %>" class="curs-allele-description-delete" 
                  ng-click="clearDescription()"/>
           </td>
         </tr>
+
         <tr>
           <td>
           </td>
           <td id="curs-allele-description-example">
           </td>
         </tr>
-        <tr class="curs-allele-expression" style="display:none">
+
+        <tr class="curs-allele-expression ng-cloak" ng-show="!!alleleData.type">
           <td valign="top">
             Expression
           </td>
           <td>
             <div>
               <label>Overexpression</label>
-              <input ng-model="expression" name="curs-allele-expression" type="radio" value="Overexpression" />
+              <input ng-model="alleleData.expression" name="curs-allele-expression" type="radio" value="Overexpression" />
             </div>
             <div>
               <label>Endogenous</label>
-              <input ng-model="expression" name="curs-allele-expression" type="radio" value="Endogenous" />
+              <input ng-model="alleleData.expression" name="curs-allele-expression" type="radio" value="Endogenous" />
             </div>
             <div>
               <label>Knockdown</label>
-              <input ng-model="expression" name="curs-allele-expression" type="radio" value="Knockdown" />
+              <input ng-model="alleleData.expression" name="curs-allele-expression" type="radio" value="Knockdown" />
             </div>
             <div>
               <label>Not specified</label>
-              <input ng-model="expression" name="curs-allele-expression" type="radio" value="Not specified" />
+              <input ng-model="alleleData.expression" name="curs-allele-expression" type="radio" value="Not specified" />
             </div>
           </td>
         </tr>
@@ -99,7 +104,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
               Evidence
             </td>
             <td>
-              <select ng-model="expression" name="curs-allele-evidence-select" class="required curs-allele-evidence-select">
+              <select ng-model="alleleData.expression" name="curs-allele-evidence-select" class="required curs-allele-evidence-select">
                 <option selected="selected" value="">Choose an evidence type ...</option>
 % for my $opt (@evidence_select_options) {
                 <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
@@ -151,7 +156,7 @@ my $alleles_in_progress = $st->{alleles_in_progress};
 my $alleles_in_progress_js = Data::JavaScript::Anon->anon_dump($alleles_in_progress);
 
 my @evidence_select_options = @{$st->{evidence_select_options} // []};
-my @allele_type_options = @{$st->{allele_type_options}};
+my $allele_type_name_js = Data::JavaScript::Anon->anon_dump($st->{allele_type_names});
 
 my $existing_alleles_by_name = $st->{existing_alleles_by_name};
 my $existing_alleles_by_name_js = Data::JavaScript::Anon->anon_dump($existing_alleles_by_name);

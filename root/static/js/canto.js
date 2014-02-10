@@ -913,17 +913,51 @@ $(document).ready(function() {
 var canto = angular.module('cantoApp', ['ui.bootstrap']);
 
 canto.controller('AlleleEditDialogCtrl', ['$scope', '$http', '$modalInstance', 'gene_display_name', 'gene_systemtic_id', 'gene_id', function($scope, $http, $modalInstance, gene_display_name, gene_systemtic_id, gene_id) {
-  $scope.gene_display_name = gene_display_name;
-  $scope.gene_systemtic_id = gene_systemtic_id;
-  $scope.gene_id = gene_id;
-  $scope.name = '';
-  $scope.description = '';
-  $scope.type = '';
-  $scope.expression = '';
-  $scope.evidence = '';
-  $scope.conditions = '';
+  $scope.gene = {
+    display_name: gene_display_name,
+    systemtic_id: gene_systemtic_id,
+    gene_id: gene_id
+  };
+  $scope.alleleData = {
+    name: '',
+    description: '',
+    type: '',
+    expression: '',
+    evidence: '',
+    conditions: ''
+  };
 
-  $scope.used_conditions = {};
+  $scope.env = {
+    used_conditions: {}
+  };
+
+  $scope.name_autopopulated = false;
+
+  // should be a service
+  $scope.env.allele_type_names = window.allele_type_names;
+
+  $scope.alleleTypeConfig = function(type) {
+    // global - needs to be a service
+    return allele_types[type];
+  }
+
+  $scope.maybe_autopopulate = function() {
+    if (typeof this.current_type_config == 'undefined') {
+      return false;
+    }
+    var autopopulate_name = this.current_type_config.autopopulate_name;
+    if (typeof autopopulate_name == 'undefined') {
+      return false;
+    } else {
+      this.alleleData.name = autopopulate_name.replace(/@@gene_name@@/, this.gene.display_name);
+      return true;
+    }
+  }
+
+  $scope.typeChange = function() {
+    $scope.current_type_config = $scope.alleleTypeConfig(this.alleleData.type);
+    $scope.name_autopopulated = $scope.maybe_autopopulate();
+  }
 
   // if (data ...) {
   //   populate_dialog_from_data(...);
@@ -931,7 +965,7 @@ canto.controller('AlleleEditDialogCtrl', ['$scope', '$http', '$modalInstance', '
 
   // current_conditions comes from the .mhtml file
   if (typeof(current_conditions) != 'undefined') {
-    $scope.used_conditions = current_conditions;
+    $scope.env.used_conditions = current_conditions;
   }
 
   function populate_dialog_from_data($allele_dialog, data) {
@@ -1009,13 +1043,13 @@ canto.controller('AlleleEditDialogCtrl', ['$scope', '$http', '$modalInstance', '
   // return the data from the dialog as an Object
   $scope.dialogToData = function() {
     return {
-      name: this.name,
-      description: this.description,
-      type: this.type,
-      evidence: this.evidence,
-      expression: this.expression,
-      conditions: this.conditions,
-      gene_id: this.geneId
+      name: this.alleleData.name,
+      description: this.alleleData.description,
+      type: this.alleleData.type,
+      evidence: this.alleleData.evidence,
+      expression: this.alleleData.expression,
+      conditions: this.alleleData.conditions,
+      gene_id: this.gene.geneId
     };
   }
 
@@ -1057,8 +1091,12 @@ canto.controller('AlleleEditDialogCtrl', ['$scope', '$http', '$modalInstance', '
   });
 
   $scope.clearDescription = function() {
-    $scope.description = undefined;
-    $scope.type = undefined;
+    this.alleleData.description = '';
+    this.alleleData.type = '';
+    if (this.name_autopopulated) {
+      this.alleleData.name = '';
+      this.name_autopopulated = false;
+    }
   }
 
   function make_condition_buttons($allele_dialog, $allele_table) {
@@ -1069,7 +1107,7 @@ canto.controller('AlleleEditDialogCtrl', ['$scope', '$http', '$modalInstance', '
       if (typeof(el_allele_data) != 'undefined') {
         $.map(el_allele_data.conditions,
               function(cond, idx) {
-                $scope.used_conditions[cond] = true;
+                $scope.env.used_conditions[cond] = true;
               });
       }
     });
@@ -1079,7 +1117,7 @@ canto.controller('AlleleEditDialogCtrl', ['$scope', '$http', '$modalInstance', '
 
     used_buttons.find('button').remove();
 
-    $.each($scope.used_conditions,
+    $.each($scope.env.used_conditions,
            function(cond) {
              button_html += '<button class="ui-widget ui-state-default curs-allele-condition-button">' +
                '<span>' + cond + '</span></button>';
@@ -1100,16 +1138,6 @@ canto.controller('AlleleEditDialogCtrl', ['$scope', '$http', '$modalInstance', '
         }
       });
     }
-  }
-
-  function maybe_autopopulate(allele_type_config, name_input, geneDisplayName) {
-    if (typeof allele_type_config.autopopulate_name != 'undefined') {
-      var new_name =
-        allele_type_config.autopopulate_name.replace(/@@gene_name@@/, geneDisplayName);
-      name_input.val(new_name);
-      return true;
-    }
-    return false;
   }
 
   $scope.ok = function () {
@@ -1142,18 +1170,20 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', function($scop
         controller: 'AlleleEditDialogCtrl',
         title: 'Add an allele for this phenotype',
         resolve: {
-          gene_display_name: gene_display_name,
-          gene_systemtic_id: gene_systemtic_id,
-          gene_id: gene_id
+          gene_display_name: function() { return gene_display_name; },
+          gene_systemtic_id: function () { return gene_systemtic_id; },
+          gene_id: function () { return gene_id; }
         }
       });
 
       editInstance.result.then(function (alleleData) {
         $scope.alleles.push(alleleData);
       }, function () {
-        alert('Modal dismissed at: ' + new Date());
+        // cancelled
       });
     };
+
+  $scope.openAlleleEditDialog('cdc11', 'SPAC111c.22', 1);
 }]);
 
 
