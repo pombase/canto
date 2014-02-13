@@ -78,14 +78,18 @@ The following software is needed for the installation:
 - CLucene v0.9.*
 - Module::Install and Module::Install::Catalyst
 
+## Supported systems
+
+Canto should be installable on any system that supports the software requirements.
+These instructions have been tested on Debian (v7.0+) and Ubuntu (v12.04+).
+
 ## Installing prerequisites on Debian and Ubuntu
 
 On Debian and Ubuntu, the software requirements can be installed using the
 package manager:
 
     sudo apt-get install perl gcc g++ tar gzip bzip2 make git-core wget \
-      libmodule-install-perl libcatalyst-devel-perl \
-      libdist-checkconflicts-perl liblocal-lib-perl
+      libmodule-install-perl libcatalyst-devel-perl liblocal-lib-perl
 
 To improve the installation speed, these packages can optionally be installed
 before proceeding:
@@ -101,11 +105,9 @@ before proceeding:
       libxml-simple-perl libtext-csv-perl libtest-deep-perl \
       libtext-markdown-perl libchi-driver-memcached-perl libchi-perl \
       libcache-memcached-perl libcache-perl libfile-touch-perl \
-      libhtml-html5-builder-perl libplack-middleware-expires-perl \
-      libstring-similarity-perl libcatalyst-engine-psgi-perl \
+      libcatalyst-engine-psgi-perl \
       liblwp-protocol-psgi-perl libweb-scraper-perl \
-      libdbd-pg-perl libdata-javascript-anon-perl \
-      libdata-rmap-perl
+      libdbd-pg-perl libdata-javascript-anon-perl
 
 If these packages aren't installed, these Perl modules will be installed using
 CPAN, which is slower.
@@ -352,13 +354,26 @@ The external links are implemented in the `linkouts.html` template.
 ### chado
 
 ## Loading data
+
+You will need to load at least one organisms, a list of genes and one or more
+ontologies before using Canto.
+
 ### Organisms
+
+Add an organism using this command in the `canto` directory:
 
     ./script/canto_load.pl --organism "<genus> <species> <taxon_id>"
 
 ### Gene data
 
+Load genes with:
+
     ./script/canto_load.pl --genes genes_file.tsv --for-taxon 4896
+
+All genes in an input file must be from one organism.   
+Use the `--for-taxon` argument with an NCBI taxon ID to specify the
+organism.
+which needs to have been loaded with the --organism option before loading the genes.
 
 #### gene data format
 Four tab separated columns with no header line:
@@ -368,9 +383,23 @@ Four tab separated columns with no header line:
 - synonyms (comma separated)
 - product
 
+There is a small example file in the test directory:
+
+    ./script/canto_load.pl --genes t/data/pombe_genes.txt --for-taxon 4896
+
 ### Ontology terms
 
+OBO format ontology data can be imported or updated with:
+
     ./script/canto_load.pl --ontology ontology_file.obo
+
+Multiple ontology files can be imported at once:
+
+    ./script/canto_load.pl --ontology ontology_file.obo \
+       --ontology another_ontology_file.obo
+
+Note that ontology loading is currently very slow.  This will be fixed in
+a future release.
 
 The ontology must be configured in the [annotation_type_list](#annotation_type_list) section of the
 `canto.yaml` file.
@@ -390,6 +419,15 @@ administrators using the admin interface use:
 
 If you use the flag `--export-approved` instead of `--dump-approved`, the
 exported sessions with be marked as "EXPORTED" in the Canto database. These
+sessions won't be exported next time. This option is provided so that
+annotation will be exported only once from Canto.
+
+To export the data from all the sessions, regardless of its state use:
+
+    script/canto_export.pl canto-json --all  > canto_all.json
+
+## Reading Canto data into Chado
+The code for loading Canto JSON format files into a Chado database is
 sessions won't be exported next time. This option is provided so that
 annotation will be exported only once from Canto.
 
@@ -477,12 +515,3 @@ To create a local test instance of Canto, run `local_initialise.pl`
 The server can be run from the top level directory with this command:
 
     CANTO_CONFIG_LOCAL_SUFFIX=local PERL5LIB=lib ./script/canto_server.pl -p 5000 -r -d
-
-"5000" is the local port to connect on. The server should then be
-available at http://localhost:5000/
-
-# Contact
-For questions or help please contact helpdesk@pombase.org or kim@pombase.org.
-
-Requests of new features can be made by email or by adding an issue on the
-[GitHub Canto issue tracker](https://github.com/pombase/canto/issues)
