@@ -1078,6 +1078,7 @@ allele_type_list:
   - name: nonsense mutation
     export_type: nonsense_mutation
     description_required: 1
+    allow_expression_change: 1
     allele_name_required: 0
   - name: other
     export_type: other
