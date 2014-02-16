@@ -85,6 +85,10 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
             <label>Not specified</label>
             <input name="curs-allele-expression" type="radio" value="Not specified" />
           </div>
+          <div>
+            <label>Null</label>
+            <input name="curs-allele-expression" type="radio" value="Null" />
+          </div>
         </td>
       </tr>
     </table>

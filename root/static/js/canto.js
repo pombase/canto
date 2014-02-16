@@ -1161,11 +1161,14 @@ var AlleleStuff = function($) {
 
     var $endogenous_div = $endogenous_input.parent('div');
     var $not_specified_div = $expression_span.find("input[value='Not specified']").parent('div');
+    var $null_div = $expression_span.find("input[value='Null']").parent('div');
     if (allele_type_config.name === 'wild type') {
       $endogenous_div.hide();
       $endogenous_input.attr('checked', false);
       $not_specified_div.hide();
       $not_specified_div.attr('checked', false);
+      $null_div.hide();
+      $null_div.attr('checked', false);
     } else {
       $endogenous_div.show();
       $not_specified_div.show();
