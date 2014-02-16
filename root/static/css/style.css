@@ -1207,3 +1207,27 @@ a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
   padding: 20px;
   background-color: white;
 }
+
+.modal.fade .modal-dialog {
+  -webkit-transition: none;
+     -moz-transition: none;
+       -o-transition: none;
+          transition: none;
+   -webkit-transform: none;
+       -ms-transform: none;
+           transform: none;
+}
+
+.modal.fade {
+  opacity: 1;
+}
+
+.modal-backdrop.fade {
+  opacity: .5;
+  filter: alpha(opacity=50);
+}
+
+.form-control, .help-block {
+  width: auto;
+  display: inline;
+}
