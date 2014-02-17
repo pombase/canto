@@ -695,9 +695,10 @@ $(document).ready(function() {
     window.location.href = curs_root_uri + '/';
   });
 
-  $('#curs-finish-gene').click(function () {
-    window.location.href = curs_root_uri;
-  });
+  $('#curs-finish-gene,#curs-finish-genotype').on('click',
+                                                  function () {
+                                                    window.location.href = curs_root_uri;
+                                                  });
 
   $('#curs-pub-assign-popup-dialog').click(function () {
     $('#curs-pub-assign-dialog').dialog({ modal: true,
