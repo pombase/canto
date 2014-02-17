@@ -1664,6 +1664,8 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
   my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
   my $form = $self->form();
 
+  $form->attributes({ action => '?' });
+
   my $form_back_string = '<- Back';
   my $form_proceed_string = 'Proceed ->';
 
