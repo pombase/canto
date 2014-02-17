@@ -1478,24 +1478,32 @@ sub _annotation_edit
                                                     $annotation);
 }
 
+sub annotate : Chained('feature') CaptureArgs(1)
+{
+  my ($self, $c, $id) = @_;
+
+  my $st = $c->stash();
+  my $config = $c->config();
+
+  my $feature_type = $st->{feature_type};
+
+  my $feature = $st->{schema}->find_with_type($feature_type, $feature_type . "_id", $id);
+
+  $st->{feature} = $feature;
+  $st->{features} = [$feature];
+}
+
 # args:
 #   $annotation_type_name - the name from the annotation configuration
-sub new_annotation : Chained('feature') PathPart('new_annotation') CaptureArgs(1)
+sub new_annotation_choose_term : Chained('annotate') PathPart('choose_term') Args(1) Form
 {
   my ($self, $c, $annotation_type_name) = @_;
 
   my $st = $c->stash();
   my $config = $c->config();
+
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
   $st->{annotation_type_config} = $annotation_config;
-}
-
-sub new_annotation_choose_term : Chained('new_annotation') PathPart('choose_term') Args(0) Form
-{
-  my ($self, $c) = @_;
-
-  my $st = $c->stash();
-  my $annotation_config = $st->{annotation_type_config};
 
   _annotation_edit($self, $c, $annotation_config);
 }
