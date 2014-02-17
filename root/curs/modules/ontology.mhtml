@@ -14,7 +14,7 @@ $pub
 </%args>
 
 <div id="ferret-suggest" style="display: none">
-  <form id="ferret-suggest-form" action="" method="post">
+  <form id="ferret-suggest-form" action="?" method="post">
     <input type="hidden" id="ferret-suggest-term-id" name="ferret-term-id"/>
     <table>
       <tr>
@@ -40,7 +40,7 @@ that differentiate your new term "A" from other members of the group "B")&rdquo;
 </div>
 
 <div id="ferret">
-  <form id="ferret-form" action="" method="post">
+  <form id="ferret-form" action="?" method="post">
 
     <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
 
