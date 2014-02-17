@@ -54,6 +54,7 @@ use Hash::Merge;
 use Carp qw(cluck);
 use JSON;
 use List::MoreUtils;
+use Try::Tiny;
 
 use Canto::Track;
 use Canto::Curs::Utils;
@@ -2209,22 +2210,20 @@ sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allel
 # create a new Allele from the data or return an existing matching allele
 sub _allele_from_json: Private
 {
+  my $self = shift;
   my $schema = shift;
-  my $gene = shift;
   my $json_allele = shift;
 
   my $name = $json_allele->{name};
   my $description = $json_allele->{description};
 
-  my $allele = $schema->find_with_type('Allele',
-                                       {
-                                         name => $name,
-                                         description => $description,
-                                       });
-
-  if (defined $allele) {
-    return $allele;
-  } else {
+  try {
+    return $schema->find_with_type('Allele',
+                                      {
+                                        name => $name,
+                                        description => $description,
+                                      });
+  } catch {
     my $allele_type = $json_allele->{type};
 
     my $gene_id = $json_allele->{gene_id};
@@ -2237,7 +2236,8 @@ sub _allele_from_json: Private
     );
 
     return $schema->create_with_type('Allele', \%create_args);
-  }
+  };
+
 }
 
 sub _maybe_make_genotype
@@ -2260,6 +2260,8 @@ sub _maybe_make_genotype
                                            });
 
   $genotype->set_alleles($alleles);
+
+  return $genotype;
 }
 
 sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allele_finish')
@@ -2788,7 +2790,7 @@ sub feature : Chained('top') CaptureArgs(1)
   $st->{feature_type} = $feature_type;
 }
 
-sub feature_view : Chained('feature') PathPart('view') CaptureArgs(1)
+sub feature_view : Chained('feature') PathPart('view')
 {
   my ($self, $c, $ids) = @_;
 
@@ -2869,6 +2871,51 @@ sub feature_add : Chained('feature') PathPart('add')
   $st->{title} = "Add a $feature_type";
   $st->{template} = "curs/${feature_type}_add.mhtml";
 }
+
+sub genotype_store : Chained('feature') PathPart('store')
+{
+  my ($self, $c) = @_;
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $config = $c->config();
+
+  my $content_file = $c->req()->body();
+  my $json_content;
+
+  # FIXME
+  # body() returns a file name, so read the contents into a string - there
+  # must be a better way
+  {
+    local $/;
+    open my $fh, '<', $content_file or die "can't open $content_file\n";
+    $json_content = <$fh>;
+  }
+
+  my $body_data = decode_json($json_content);
+
+  my @alleles = ();
+
+  my $guard = $schema->txn_scope_guard();
+
+  for my $allele_data (@$body_data) {
+    my $allele = $self->_allele_from_json($schema, $allele_data);
+
+    push @alleles, $allele;
+  }
+
+  my $genotype = $self->_maybe_make_genotype($c, \@alleles);
+
+  $guard->commit();
+
+  $c->stash->{json_data} = {
+    status => "success",
+    location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
+  };
+
+  $c->forward('View::JSON');
+}
+
 
 sub annotation_export : Chained('top') PathPart('annotation_export') Args(1)
 {
@@ -3103,7 +3150,7 @@ sub _assign_session :Private
   $st->{current_submitter_email} = $current_submitter_email;
 
   my $form = $self->form();
-  $form->attributes({ autocomplete => 'on' });
+  $form->attributes({ autocomplete => 'on', action => '?' });
 
   my @all_elements = ();
 

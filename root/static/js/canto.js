@@ -1,3 +1,5 @@
+"use strict";
+
 function last(a) {
   return a[a.length-1];
 }
