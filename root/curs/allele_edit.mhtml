@@ -29,7 +29,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
                    class="form-control"
                    value=""/>
             <span ng-show="!isValidName()"
-                  class="help-block">Name is required for this allele type</span>
+                  class="help-block">required for this allele type</span>
           </td>
         </tr>
 
@@ -58,7 +58,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
                    name="curs-allele-description-input" type="text" value=""
                    class="form-control" />
             <span ng-show="!isValidDescription()"
-                  class="help-block">Description is required for this type</span>
+                  class="help-block">required for this allele type</span>
           </td>
         </tr>
 
