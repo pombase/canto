@@ -90,6 +90,11 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
                      type="radio" value="Knockdown" />
             </div>
             <div ng-show="alleleData.type !== 'wild type'">
+              <label>Null</label>
+              <input ng-model="alleleData.expression" name="curs-allele-expression"
+                     type="radio" value="Null" />
+            </div>
+            <div ng-show="alleleData.type !== 'wild type'">
               <label>Not specified</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression"
                      type="radio" value="Not specified" />
