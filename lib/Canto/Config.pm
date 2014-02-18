@@ -239,13 +239,17 @@ sub setup
   }
 
   delete $self->{export_type_to_allele_type};
+  delete $self->{allele_type_names};
 
-  # create an allele_types map and the export_type_to_allele_type map
+  # create allele_types, a hash of allele type names to config, the
+  # export_type_to_allele_type map and allele_type_names to make
+  # Service::canto_config() simpler
   if (defined $self->{allele_type_list}) {
     for my $allele_type (@{$self->{allele_type_list}}) {
-      $self->{allele_types}->{$allele_type->{name}} = $allele_type;
       my $export_type = $allele_type->{export_type} // $allele_type->{name};
       push @{$self->{export_type_to_allele_type}->{$export_type}}, $allele_type;
+      $self->{allele_types}->{$allele_type->{name}} = $allele_type;
+      push @{$self->{allele_type_names}}, $allele_type->{name};
     }
   }
 

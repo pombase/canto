@@ -1,7 +1,7 @@
 var canto = angular.module('cantoApp', ['ui.bootstrap']);
 
 var alleleEditDialogCtrl =
-  function($scope, $http, $modalInstance, gene_display_name, gene_systemtic_id, gene_id) {
+  function($scope, $http, $modalInstance, CantoConfig, gene_display_name, gene_systemtic_id, gene_id) {
     $scope.gene = {
       display_name: gene_display_name,
       systemtic_id: gene_systemtic_id,
@@ -22,13 +22,16 @@ var alleleEditDialogCtrl =
 
     $scope.name_autopopulated = false;
 
-    // should be a service
-    $scope.env.allele_type_names = window.allele_type_names;
+    $scope.env.allele_type_names_promise = CantoConfig.get('allele_type_names');
+    $scope.env.allele_types_promise = CantoConfig.get('allele_types');
 
-    $scope.alleleTypeConfig = function(type) {
-      // global - needs to be a service
-      return allele_types[type];
-    }
+    $scope.env.allele_type_names_promise.then(function(response) {
+      $scope.env.allele_type_names = response.data;
+    });
+
+    $scope.env.allele_types_promise.then(function(response) {
+      $scope.env.allele_types = response.data;
+    });
 
     $scope.maybe_autopopulate = function() {
       if (typeof this.current_type_config == 'undefined') {
@@ -45,17 +48,20 @@ var alleleEditDialogCtrl =
     }
 
     $scope.typeChange = function(curType) {
-      this.current_type_config = $scope.alleleTypeConfig(this.alleleData.type);
+      var that = this;
+      $scope.env.allele_types_promise.then(function(response) {
+        that.current_type_config = response.data[curType];
 
-      if (this.name_autopopulated) {
-        if (this.name_autopopulated == this.alleleData.name) {
-          this.alleleData.name = '';
+        if (that.name_autopopulated) {
+          if (that.name_autopopulated == that.alleleData.name) {
+            that.alleleData.name = '';
+          }
+          that.name_autopopulated = '';
         }
-        this.name_autopopulated = '';
-      }
 
-      this.name_autopopulated = this.maybe_autopopulate();
-      this.alleleData.description = '';
+        that.name_autopopulated = that.maybe_autopopulate();
+        that.alleleData.description = '';
+      });
     };
 
     $scope.isValidType = function() {
@@ -258,7 +264,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$http', '$modalInstance', 'gene_display_name', 'gene_systemtic_id', 'gene_id',
+                 ['$scope', '$http', '$modalInstance', 'CantoConfig', 'gene_display_name', 'gene_systemtic_id', 'gene_id',
                  alleleEditDialogCtrl]);
 
 canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', function($scope, $http, $modal, $location) {
@@ -526,3 +532,11 @@ function UploadGenesCtrl($scope) {
        $scope.data.otherText.length > 0);
   }
 }
+
+canto.factory('CantoConfig', function($http) {
+  return {
+    get : function(key){
+      return $http.get(canto_root_uri + 'ws/canto_config/' + key);
+    }
+  }
+});

@@ -1609,6 +1609,14 @@ webservices:
   uniprot_batch_lookup_url: 'http://www.uniprot.org/batch/'
   quickgo_annotation_lookup_url: 'http://www.ebi.ac.uk/QuickGO/GAnnotation?format=gaf&ref='
 
+config_service:
+  allowed_keys:
+    allele_types: 1
+    allele_type_list: 1
+    allele_type_names: 1
+    annotation_types: 1
+    annotation_type_list: 1
+
 ontology_external_links:
   cellular_component:
     - name: AmiGO

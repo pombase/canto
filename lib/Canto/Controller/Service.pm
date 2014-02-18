@@ -162,4 +162,36 @@ sub lookup : Local
   $c->forward('View::JSON');
 }
 
+sub canto_config : Local
+{
+  my $self = shift;
+  my $c = shift;
+  my $config_key = shift;
+
+  my $config = $c->config();
+
+  my $allowed_keys = $config->{config_service}->{allowed_keys};
+
+  if ($allowed_keys->{$config_key}) {
+    my $key_config = $config->{$config_key};
+    if (defined $key_config) {
+      $c->stash->{json_data} = $key_config;
+    } else {
+      $c->stash->{json_data} = {
+        status => 'error',
+        message => qq(no config for key "$config_key")
+      };
+      $c->response->status(400);
+    }
+  } else {
+    $c->stash->{json_data} = {
+      status => 'error',
+      message => qq(config key "$config_key" not allowed for this service),
+    };
+    $c->response->status(403);
+  }
+
+  $c->forward('View::JSON');
+}
+
 1;

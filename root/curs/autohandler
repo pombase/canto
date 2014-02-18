@@ -3,6 +3,7 @@ $curs_root_uri
 </%args>
 
 <script language="javascript" type="text/javascript">
+var canto_root_uri = '<% $c->uri_for('/') %>';
 var curs_root_uri = '<% $curs_root_uri %>';
 var annotation_id = <% $annotation_id %>;
 var with_gene_evidence_codes = <% $with_gene_evidence_codes_js |n %>;
