@@ -52,7 +52,7 @@ Click on a gene name to start entering data
 % }
 
 % if (!$read_only_curs) {
-  <div class="view-edit">
+  <div class="feature-list-edit-add">
     <a href="<% $edit_path %>">Edit gene list ...</a>
   </div>
 % }
