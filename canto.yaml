@@ -1088,6 +1088,7 @@ allele_type_list:
     description_required: 1
     allow_expression_change: 1
     allele_name_required: 0
+    placeholder: 'AA123->stop, AA1299->amber'
   - name: other
     export_type: other
     description_required: 1
