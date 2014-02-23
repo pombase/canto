@@ -1489,6 +1489,10 @@ sub annotate : Chained('feature') CaptureArgs(1)
 
   my $feature = $st->{schema}->find_with_type($feature_type, $feature_type . "_id", $id);
 
+  if ($feature_type eq 'gene') {
+    $feature = _get_gene_proxy($config, $feature);
+  }
+
   $st->{feature} = $feature;
   $st->{features} = [$feature];
 }
