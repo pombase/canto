@@ -65,7 +65,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
           </td>
         </tr>
 
-        <tr class="ng-cloak" ng-show="current_type_config">
+        <tr class="ng-cloak" ng-show="!!alleleData.type">
           <td>
           </td>
           <td id="curs-allele-description-example">
@@ -107,7 +107,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </tr>
       </table>
 
-      <div ng-show="!!alleleData.type && isValidDescription()">
+      <div class="ng-cloak" ng-show="!!alleleData.type">
         <table>
           <tr>
             <td>
@@ -125,7 +125,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </table>
       </div>
 
-      <div ng-show="!!alleleData.type && isValidDescription()">
+      <div class="ng-cloak" ng-show="!!alleleData.type">
         <table>
           <tr>
             <td>
