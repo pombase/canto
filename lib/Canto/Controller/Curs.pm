@@ -694,6 +694,8 @@ sub gene_upload : Chained('top') Args(0) Form
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
     my @search_terms = grep { length $_ > 0 } split /[\s,]+/, $search_terms_text;
 
+    $st->{search_terms_text} = $search_terms_text;
+
     my @res_list = $self->_find_and_create_genes($schema, $c->config(), \@search_terms);
 
     if (@res_list > 1) {

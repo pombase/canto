@@ -1,5 +1,6 @@
 <%args>
 $gene_upload_unknown => undef
+$search_terms_text => ''
 $form
 $title
 </%args>
@@ -8,7 +9,7 @@ $title
     <div class="curs-box-title">
 <% $title %>
   </div>
-  <div class="curs-box-body" ng-controller='UploadGenesCtrl'>
+  <div class="curs-box-body" ng-controller='UploadGenesCtrl' ng-init='data.geneIdentifiers="<% $search_terms_text %>"'>
 <div>
 Please list the genes studied in this paper using the <% $systematic_identifier_desc |n %>
 (eg. <% $example_identifier %>) or <% $primary_name_desc |n %> (eg. <% $example_name %>)
