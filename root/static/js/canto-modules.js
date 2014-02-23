@@ -41,44 +41,43 @@ var alleleEditDialogCtrl =
       if (typeof autopopulate_name == 'undefined') {
         return '';
       } else {
-        this.alleleData.name =
+        $scope.alleleData.name =
           autopopulate_name.replace(/@@gene_name@@/, this.gene.display_name);
         return this.alleleData.name;
       }
     }
 
     $scope.typeChange = function(curType) {
-      var that = this;
       $scope.env.allele_types_promise.then(function(response) {
-        that.current_type_config = response.data[curType];
+        $scope.current_type_config = response.data[curType];
 
-        if (that.name_autopopulated) {
-          if (that.name_autopopulated == that.alleleData.name) {
-            that.alleleData.name = '';
+        if ($scope.name_autopopulated) {
+          if ($scope.name_autopopulated == $scope.alleleData.name) {
+            $scope.alleleData.name = '';
           }
-          that.name_autopopulated = '';
+          $scope.name_autopopulated = '';
         }
 
-        that.name_autopopulated = that.maybe_autopopulate();
-        that.alleleData.description = '';
+        $scope.name_autopopulated = $scope.maybe_autopopulate();
+        $scope.alleleData.description = '';
       });
     };
 
     $scope.isValidType = function() {
-      return !!this.alleleData.type;
+      return !!$sope.alleleData.type;
     };
 
     $scope.isValidName = function() {
-      return !this.current_type_config || !this.current_type_config.allele_name_required || this.alleleData.name;
+      return !$scope.current_type_config || !$scope.current_type_config.allele_name_required || $scope.alleleData.name;
     };
 
     $scope.isValidDescription = function() {
-      return !this.current_type_config || !this.current_type_config.description_required || this.alleleData.description;
+      return !$scope.current_type_config || !$scope.current_type_config.description_required || $scope.alleleData.description;
     };
 
     $scope.isValid = function() {
-      return this.isValidType() &&
-        this.isValidName() && this.isValidDescription();
+      return $scope.isValidType() &&
+        $scope.isValidName() && $scope.isValidDescription();
       // evidence and expression ...
     };
 
