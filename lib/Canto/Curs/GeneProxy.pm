@@ -47,7 +47,6 @@ has cursdb_gene => (is => 'ro', required => 1,
                                    direct_annotations
                                    indirect_annotations
                                    all_annotations
-                                   allele_annotations
                                    primary_identifier
                                    delete)]);
 has gene_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);

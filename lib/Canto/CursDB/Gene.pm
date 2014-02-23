@@ -246,20 +246,6 @@ sub all_annotations
   return $self->_get_indirect_annotations(1, 0, $include_with);
 }
 
-=head2 allele_annotations
-
- Usage   : my @annotations = $gene->allele_annotations();
- Function: Return the annotations of the alleles of this gene
- Args    : none
-
-=cut
-sub allele_annotations
-{
-  my $self = shift;
-
-  return map { $_->annotations()->all() } $self->alleles();
-}
-
 sub delete
 {
   my $self = shift;
