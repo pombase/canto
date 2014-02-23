@@ -1,7 +1,7 @@
 var canto = angular.module('cantoApp', ['ui.bootstrap']);
 
 var alleleEditDialogCtrl =
-  function($scope, $http, $modalInstance, CantoConfig, gene_display_name, gene_systemtic_id, gene_id) {
+  function($scope, $http, $modalInstance, $q, $timeout, CantoConfig, gene_display_name, gene_systemtic_id, gene_id) {
     $scope.gene = {
       display_name: gene_display_name,
       systemtic_id: gene_systemtic_id,
@@ -13,7 +13,15 @@ var alleleEditDialogCtrl =
       type: '',
       expression: '',
       evidence: '',
-      conditions: ''
+      conditions: []
+    };
+
+    $scope.loadConditions = function() {
+      var deferred = $q.defer();
+
+      deferred.resolve(['foo', 'bar']);
+
+      return deferred.promise;
     };
 
     $scope.env = {
@@ -64,7 +72,7 @@ var alleleEditDialogCtrl =
     };
 
     $scope.isValidType = function() {
-      return !!$sope.alleleData.type;
+      return !!$scope.alleleData.type;
     };
 
     $scope.isValidName = function() {
@@ -88,25 +96,6 @@ var alleleEditDialogCtrl =
     // current_conditions comes from the .mhtml file
     if (typeof(current_conditions) != 'undefined') {
       $scope.env.used_conditions = current_conditions;
-    }
-
-    function populate_dialog_from_data($allele_dialog, data) {
-      // Use Angular!!!!:
-
-      //    get_allele_name_jq($allele_dialog).val(data.name);
-      //    get_allele_desc_jq($allele_dialog).val(data.description);
-      //    get_allele_type_select_jq($allele_dialog).val(data.allele_type).trigger('change');
-      //    get_allele_evidence_select_jq($allele_dialog).val(data.evidence);
-      //    if ("expression" in data) {
-      //      set_expression($allele_dialog, data.expression);
-      //    } else {
-      //      unset_expression($allele_dialog);
-      //    }
-      //    if ("conditions" in data) {
-      //      $.map(data.conditions, function(item) {
-      //        get_allele_conditions_jq($allele_dialog).tagit("createTag", item);
-      //      });
-      //    };
     }
 
     function allele_lookup(request, response) {
@@ -200,17 +189,30 @@ var alleleEditDialogCtrl =
       });
     }
 
-    $('#curs-allele-add .curs-allele-conditions').tagit({
-      minLength: 2,
-      fieldName: 'curs-allele-condition-names',
-      allowSpaces: true,
-      placeholderText: 'Type a condition ...',
-      tagSource: fetch_conditions,
-      autocomplete: {
-        focus: ferret_choose.show_autocomplete_def,
-        close: ferret_choose.hide_autocomplete_def,
-      },
-    });
+    $timeout(function() {
+      var updateScopeConditions = function() {
+        var conditions = $('.curs-allele-conditions').val();
+
+        $scope.alleleData.conditions = conditions.split(',');
+      };
+
+      // this is a hack and there will be a better way -
+      // .curs-allele-conditions isn't available until after the
+      // constructor finishes
+      $('.curs-allele-conditions').tagit({
+        minLength: 2,
+        fieldName: 'curs-allele-condition-names',
+        allowSpaces: true,
+        placeholderText: 'Type a condition ...',
+        tagSource: fetch_conditions,
+        afterTagAdded: updateScopeConditions,
+        afterTagRemoved: updateScopeConditions,
+        autocomplete: {
+          focus: ferret_choose.show_autocomplete_def,
+          close: ferret_choose.hide_autocomplete_def,
+        },
+      });
+    }, 0);
 
     function make_condition_buttons($allele_dialog, $allele_table) {
       return;
@@ -254,7 +256,7 @@ var alleleEditDialogCtrl =
     }
 
     $scope.ok = function () {
-      $modalInstance.close(this.dialogToData($scope));
+      $modalInstance.close($scope.dialogToData($scope));
     };
 
     $scope.cancel = function () {
@@ -263,7 +265,8 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$http', '$modalInstance', 'CantoConfig', 'gene_display_name', 'gene_systemtic_id', 'gene_id',
+                 ['$scope', '$http', '$modalInstance', '$q', '$timeout',
+                  'CantoConfig', 'gene_display_name', 'gene_systemtic_id', 'gene_id',
                  alleleEditDialogCtrl]);
 
 canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', function($scope, $http, $modal, $location) {

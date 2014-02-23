@@ -954,6 +954,7 @@ span.canto-select-buttons {
 
 .ui-dialog {
    font-size: 80%;
+   z-index: 2000 !important; /* in front of AngularJS modal */
 }
 .ui-dialog .ui-dialog-titlebar, .curs-ui-dialog-subheading .ui-dialog-title {
    padding: .2em 1em .1em;
@@ -1078,10 +1079,6 @@ input[readonly="1"] {
 
 .sect.triage-comment {
   clear: left;
-}
-
-.curs-allele-dialog-evidence {
-  display: none;
 }
 
 .curs-allele-evidence-select {
@@ -1230,4 +1227,11 @@ a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
 .form-control, .help-block {
   width: auto;
   display: inline;
+}
+
+.modal-content {
+  background-color: #24a0ff;
+}
+.modal-body {
+  background-color: #fff;
 }

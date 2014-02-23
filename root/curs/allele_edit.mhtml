@@ -14,10 +14,13 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
 </script>
 
 <script type="text/ng-template" id="alleleEdit.html">
-  <form name="cursAlleleEdit" class="curs-allele-edit-dialog">
+  <form name="cursAlleleEdit" class="curs-allele-edit-dialog modal-content">
     <div class="modal-header">
-      <h3>Allele details</h3>
+      <h4 class="modal-title">
+        Allele details
+      </h4>
     </div>
+
     <div class="modal-body">
       <table>
         <tr>
@@ -49,7 +52,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </tr>
 
         <tr class="curs-allele-type-description ng-cloak"
-            ng-show="!!alleleData.type && !!current_type_config && current_type_config.description_required">
+            ng-show="!!alleleData.type && !!alleleData.type && current_type_config.description_required">
           <td>
             Allele description
           </td>
@@ -62,10 +65,11 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
           </td>
         </tr>
 
-        <tr class="ng-cloak" ng-show="alleleData">
+        <tr class="ng-cloak" ng-show="current_type_config">
           <td>
           </td>
           <td id="curs-allele-description-example">
+            {{ current_type_config.placeholder }}
           </td>
         </tr>
 
@@ -103,10 +107,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </tr>
       </table>
 
-      <div class="curs-allele-dialog-evidence">
-        <div class="curs-ui-dialog-subheading ui-widget-header ui-helper-clearfix ui-corner-all">
-          <span class="ui-dialog-title">Evidence</span>
-        </div>
+      <div ng-show="!!alleleData.type && isValidDescription()">
         <table>
           <tr>
             <td>
@@ -122,14 +123,14 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
             </td>
           </tr>
         </table>
-        <div class="curs-ui-dialog-subheading ui-widget-header ui-helper-clearfix ui-corner-all">
-          <span class="ui-dialog-title">Conditions</span>
-          <& /curs/inline_help.mhtml, key => 'allele_choose_conditions' &>
-        </div>
+      </div>
+
+      <div ng-show="!!alleleData.type && isValidDescription()">
         <table>
           <tr>
             <td>
               Select conditions
+              <& /curs/inline_help.mhtml, key => 'allele_choose_conditions' &>
             </td>
             <td>
               <input class="curs-allele-conditions" name="curs-allele-condition-names"/>
@@ -146,7 +147,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-warning" ng-click="cancel()"">Cancel</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
         <button class="btn btn-primary" ng-click="ok()" ng-disabled="!isValid()">OK</button>
       </div>
     </div>
