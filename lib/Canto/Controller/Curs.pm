@@ -524,6 +524,7 @@ sub _edit_genes_helper
   my $schema = $st->{schema};
 
   my $form = $self->form();
+  $form->attributes({ action => '?' });
 
   my @all_elements = (
       {
@@ -1300,13 +1301,7 @@ sub annotation_ontology_edit
         $self->_create_annotation($c, $annotation_type_name,
                                   $feature_type, [$feature], \%annotation_data);
 
-#      if ($feature_type eq 'genotype') {
-#        _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'allele_select');
-#      } else {
-        if ($annotation_config->{needs_genotype}) {
-          _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'evidence');
-        }
-#      }
+      _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'evidence');
     }
   } else {
     if (defined $annotation) {
@@ -2385,27 +2380,21 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 
   my $display_name = undef;
 
-  my ($feature_type, $gene) = _annotation_features($config, $annotations[0]);
+  my ($feature_type, $feature) = _annotation_features($config, $annotations[0]);
+
+  $st->{feature} = $feature;
+  $st->{feature_type} = $feature_type;
 
   if ($feature_type ne 'gene') {
     die "only gene annotation transfer is implemented";
   }
-
-  my @genes = $annotations[0]->genes();
-  if (@genes) {
-    $gene = $genes[0];
-  } else {
-    die "no genes";
-  }
-
-  my $gene_proxy = _get_gene_proxy($config, $gene);
 
   my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
 
   my @options = ();
 
   while (defined (my $other_gene = $genes_rs->next())) {
-    next if $gene->gene_id() == $other_gene->gene_id();
+    next if $feature->gene_id() == $other_gene->gene_id();
 
     my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
 
@@ -2418,6 +2407,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
   $st->{template} = "curs/modules/${module_category}_transfer.mhtml";
 
   my $form = $self->form();
+  $form->attributes({ action => '?' });
 
   $form->auto_fieldset(0);
 
@@ -2593,7 +2583,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 
     $self->state()->store_statuses($schema);
 
-    _redirect_and_detach($c, 'gene', $gene->gene_id(), 'view');
+    _redirect_and_detach($c, 'gene', $feature->gene_id(), 'view');
   }
 }
 
@@ -2643,6 +2633,7 @@ sub _annotation_with_gene_internal
   unshift @genes, [ '', 'Choose a gene ...' ];
 
   my $form = $self->form();
+  $form->attributes({ action => '?' });
 
   my @all_elements = (
       {
@@ -3033,6 +3024,7 @@ sub finish_form : Chained('top') Args(0)
   $st->{finish_help} = $c->config()->{messages}->{finish_form};
 
   my $form = $self->form();
+  $form->attributes({ action => '?' });
   my @submit_buttons = ("Finish", "Back");
 
   my $finish_textarea = 'finish_textarea';

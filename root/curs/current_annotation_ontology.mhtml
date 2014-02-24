@@ -3,7 +3,8 @@ $curs_root_uri
 $annotation_type
 @annotations
 $completed_count => undef
-$target
+$feature
+$feature_type
 $pub
 $user_created
 $force_comment_edit => 0
@@ -19,9 +20,9 @@ $view_only => 0
   <div class="annotation-table sect-content">
 <table class="list">
   <thead>
-% if (!defined $target) {
+% if (!defined $feature) {
     <tr>
-%   if ($target_type eq 'gene') {
+%   if ($feature_type eq 'gene') {
       <th>
         Systematic identifier
       </th>
@@ -29,7 +30,7 @@ $view_only => 0
         Gene name
       </th>
 %   } else {
-%     if ($target_type eq 'genotype') {
+%     if ($feature_type eq 'genotype') {
       <th>
         Genotype name
       </th>
@@ -45,7 +46,7 @@ $view_only => 0
       <th>
         Evidence code
       </th>
-% if ($target_type eq 'genotype') {
+% if ($feature_type eq 'genotype') {
       <th>
         Expression
       </th>
@@ -95,8 +96,8 @@ $view_only => 0
 
   <tr class="<% $annotation_status eq 'deleted' ? 'deleted-annotation' : '' %>">
 % my $obsolete_class = ($row->{is_obsolete_term} ? 'class="curs-obsolete-term"' : '');
-% if (!defined $target) {
-%   if ($target_type eq 'gene') {
+% if (!defined $feature) {
+%   if ($feature_type eq 'gene') {
     <td>
       <span>
       <% $row->{gene_identifier} %>
@@ -108,7 +109,7 @@ $view_only => 0
       </span>
     </td>
 %   } else {
-%     if ($target_type eq 'genotype') {
+%     if ($feature_type eq 'genotype') {
     <td>
       <span>
       <% $row->{genotype_name} %>
@@ -168,7 +169,7 @@ $view_only => 0
 % }
       </span>
     </td>
-% if ($target_type eq 'genotype') {
+% if ($feature_type eq 'genotype') {
     <td>
       <span>
       <% $row->{expression_level} %>
@@ -281,7 +282,7 @@ NOT
 <div>
       <a href="<% $transfer_action . $row->{annotation_id} %>"
          id="curs-annotation-transfer-<% $row->{annotation_id} %>"
-         title="Copy this annotation to another <% $target_type %>">
+         title="Copy this annotation to another <% $feature_type %>">
 Transfer
       </a>
 </div>
@@ -302,7 +303,7 @@ Delete
   </tr>
 % }
 </table>
-% if ($some_incomplete && !$target) {
+% if ($some_incomplete && !$feature) {
 <div class="curs-annotation-incomplete-message">
   Note that some of the annotations are incomplete, and only complete
   annotations are included in the downloaded table.
@@ -370,9 +371,9 @@ my $field_edit_proc = sub {
   return ($onclick, $escaped_text, $view_edit_text);
 };
 
-my $target_text = "";
-if (defined $target) {
-  $target_text = ' for ' . $target->display_name();
+my $feature_text = "";
+if (defined $feature) {
+  $feature_text = ' for ' . $feature->display_name();
 }
 
 my $new_or_db;
@@ -390,17 +391,9 @@ if (@annotations > 1) {
 }
 
 my $title = $new_or_db . "$annotation_type_display_name annotation$plural " .
-  $target_text . ($user_created ? '' : ' from ' . $pub->uniquename());
+  $feature_text . ($user_created ? '' : ' from ' . $pub->uniquename());
 
 my $needs_with_or_from = $annotation_type->{needs_with_or_from};
-
-my $target_type;
-
-if ($annotation_type->{needs_genotype}) {
-  $target_type = 'genotype';
-} else {
-  $target_type = 'gene';
-}
 
 my $some_row_has_term_suggestion = grep { $_->{term_suggestion} } @annotations;
 my $some_row_has_comment = grep { $_->{comment} } @annotations;
