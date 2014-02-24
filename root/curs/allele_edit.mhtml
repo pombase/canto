@@ -9,7 +9,6 @@ var alleles_in_progress = <% $alleles_in_progress_js |n %>;
 var existing_alleles_by_name = <% $existing_alleles_by_name_js |n %>;
 var current_conditions = <% $current_conditions_js |n %>;
 var delete_icon_uri = "<% $delete_icon_uri %>";
-var allele_type_names = <% $allele_type_name_js |n %>;
 var editing_allele = <% $editing ? 'true' : 'false' %>;
 </script>
 
@@ -166,7 +165,6 @@ my $alleles_in_progress = $st->{alleles_in_progress};
 my $alleles_in_progress_js = Data::JavaScript::Anon->anon_dump($alleles_in_progress);
 
 my @evidence_select_options = @{$st->{evidence_select_options} // []};
-my $allele_type_name_js = Data::JavaScript::Anon->anon_dump($st->{allele_type_names});
 
 my $existing_alleles_by_name = $st->{existing_alleles_by_name};
 my $existing_alleles_by_name_js = Data::JavaScript::Anon->anon_dump($existing_alleles_by_name);
