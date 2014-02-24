@@ -542,3 +542,12 @@ canto.factory('CantoConfig', function($http) {
     }
   }
 });
+
+// to be implemented
+var ferretCtrl = function($scope) {
+
+};
+
+// add ng-controller="FerretCtrl" to <div id="ferret"> in ontology.mhtml
+
+canto.controller('FerretCtrl', ['$scope', 'CantoConfig'], ferretCtrl);
