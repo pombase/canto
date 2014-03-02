@@ -37,7 +37,7 @@ $message_to_curators
   </div>
   <div class="ng-cloak">
     <label>
-      No annotation for these genes:
+      No experimental results to add?:
     </label>
     <input name="no-annotation" type="Checkbox" ng-model="data.noAnnotation"></input>
   </div>
