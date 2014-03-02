@@ -291,11 +291,24 @@ sub front : Chained('top') PathPart('') Args(0)
 {
   my ($self, $c) = @_;
 
-  my $pub_uniquename = $c->stash()->{pub}->uniquename();
-  $c->stash->{title} = "$pub_uniquename summary";
+  my $st = $c->stash();
+
+  my $pub_uniquename = $st->{pub}->uniquename();
+  $st->{title} = "$pub_uniquename summary";
   # use only in header, not in body:
-  $c->stash->{show_title} = 1;
-  $c->stash->{template} = 'curs/front.mhtml';
+  $st->{show_title} = 1;
+  $st->{template} = 'curs/front.mhtml';
+
+  my $schema = $st->{schema};
+
+  my $total_annotation_count = $schema->resultset('Annotation')->count();
+
+  $st->{total_annotation_count} = $total_annotation_count;
+
+  if ($total_annotation_count == 0) {
+    $st->{message} =
+      ["If you do not know which annotation type to use to describe your experiment, please contact the helpdesk"];
+  }
 }
 
 =head2 read_only_summary

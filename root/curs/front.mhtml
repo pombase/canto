@@ -7,6 +7,7 @@ $pub
 $is_admin_session
 $read_only_curs => 0
 $message_to_curators
+$total_annotation_count
 </%args>
 
 <div ng-app id="curs-front-page">
@@ -103,11 +104,6 @@ sub _increment_annotation_count
 }
 
 my $download_action = $curs_root_uri . '/annotation/zipexport';
-
-my $st = $c->stash();
-my $schema = $st->{schema};
-
-my $total_annotation_count = $schema->resultset('Annotation')->count();
 
 my $config = $c->config();
 
