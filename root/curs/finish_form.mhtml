@@ -10,7 +10,7 @@ annotations will now be sent to the curation team for inclusion in the
 database.
 </p>
 
-<% $c->config()->{finish_form}->{extra_text} |n %>
+<% $c->config()->{curs_config}->{finish_form}->{extra_text} |n %>
 
 <& no_annotation_message.mhtml,
    no_annotation_reason => $no_annotation_reason &>
