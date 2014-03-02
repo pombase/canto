@@ -16,11 +16,6 @@ Please list the genes studied in this paper using the <% $systematic_identifier_
 separated by commas, spaces, tabs or one per line.
 </div>
 
-<div id="curs-upload-help">
-The list of gene identifiers can be separated by commas, spaces, tabs or there
-can be one per line.
-</div>
-
   <% $form |n %>
   </div>
 </div>
