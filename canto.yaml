@@ -1589,6 +1589,9 @@ curs_config:
   # where genes are mentioned - so no annotation of gene functions etc.
   no_annotation_reasons:
     - Review
+    - Opinion or Comment
+    - Experimental data, not of available types
+    - Method
   demo_user_name: Demo User
   demo_user_email_address: "demo@example.com"
 
