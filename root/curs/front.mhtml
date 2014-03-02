@@ -9,7 +9,7 @@ $read_only_curs => 0
 $message_to_curators
 </%args>
 
-<div id="curs-front-page">
+<div ng-app id="curs-front-page">
 <div id="curs-gene-list">
 <& /curs/gene_list.mhtml, pub => $pub &>
 </div>
@@ -22,8 +22,39 @@ $message_to_curators
 <button type="button" id="curs-stop-reviewing" class="curs-finish-button">Finish reviewing</button>
 % } else {
 % if ($state eq Canto::Controller::Curs::CURATION_IN_PROGRESS) {
+%     if ($total_annotation_count > 0) {
 <button type="button" id="curs-finish-session" class="curs-finish-button">Submit to curators</button>
 <button type="button" id="curs-pause-session" class="curs-finish-button">Pause curation</button>
+%     } else {
+<form action="<% $finish_form_url %>" class="curs-finish-buttons" method="POST"
+      ng-controller="SubmitToCuratorsCtrl" ng-init='init(<% $no_annotations_reasons_init_js |n%>)'>
+  <div>
+    <button type="button" id="curs-pause-session">Pause curation</button>
+    <input class="button ng-cloak" type="submit"
+           ng-disabled="!data.noAnnotation || !validReason()" id="curs-finish-session"
+           title="{{ validReason() ? '' : 'Please add annotation or check the no annotation box' }}"
+           name="submit" value="Submit to curators"></input>
+  </div>
+  <div class="ng-cloak">
+    <label>
+      No annotation for these genes:
+    </label>
+    <input name="no-annotation" type="Checkbox" ng-model="data.noAnnotation"></input>
+  </div>
+  <div ng-show="data.noAnnotation" class="ng-cloak">
+    <label>
+      Please choose a reason:
+    </label>
+    <select name="reason" ng-model="data.reason" ng-options="r as r for r in noAnnotationReasons">
+      <option value=""></option>
+    </select>
+% # this field exists so the text of the 'reason' is submitted, not just
+% # the option index from the <select>
+    <input type="hidden" name="reasonText" value="{{data.reason}}"/>
+  </div>
+</form>
+%     }
+</div>
 % } else {
 <button type="button" id="curs-check-completed" class="curs-finish-button">Approve session</button>
 <button type="button" id="curs-cancel-approval" class="curs-finish-button">Cancel approval</button>
@@ -72,4 +103,17 @@ sub _increment_annotation_count
 }
 
 my $download_action = $curs_root_uri . '/annotation/zipexport';
+
+my $st = $c->stash();
+my $schema = $st->{schema};
+
+my $total_annotation_count = $schema->resultset('Annotation')->count();
+
+my $config = $c->config();
+
+use Data::JavaScript::Anon;
+my $no_annotations_reasons_init_js = 
+  Data::JavaScript::Anon->anon_dump($config->{curs_config}->{no_annotation_reasons});
+
+my $finish_form_url = $curs_root_uri . '/finish_session';
 </%init>

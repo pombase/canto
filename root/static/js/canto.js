@@ -1737,3 +1737,19 @@ function UploadGenesCtrl($scope) {
        $scope.data.otherText.length > 0);
   }
 }
+
+function SubmitToCuratorsCtrl($scope) {
+  $scope.data = {
+    reason: null,
+    hasAnnotation: false
+  };
+  $scope.noAnnotationReasons = ['Review'];
+
+  $scope.init = function(reasons) {
+    $scope.noAnnotationReasons = reasons;
+  };
+
+  $scope.validReason = function() {
+    return $scope.data.reason != null && $scope.data.reason.length > 0;
+  };
+}

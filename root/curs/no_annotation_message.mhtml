@@ -1,0 +1,23 @@
+<%args>
+$no_annotation_reason => undef
+</%args>
+
+% if ($total_annotation_count == 0 && defined $no_annotation_reason) {
+<p>
+%   if ($gene_count == 0) {
+  This publication has no genes and no annotation.
+%   } else {
+  This publication has no gene annotation. 
+%   }
+  Reason given: <% $no_annotation_reason %>
+</p>
+% }
+
+<%init>
+my $st = $c->stash();
+my $schema = $st->{schema};
+
+my $gene_count = $st->{gene_count};
+
+my $total_annotation_count = $schema->resultset('Annotation')->count();
+</%init>

@@ -1577,14 +1577,18 @@ curator_manager:
     - set_pub_community_curatable
 
 curs_config:
-  # Possible reasons for a paper to have no annotation, shown on the gene upload
+  # Possible reasons for a paper to have no genes, shown on the gene upload
   # page.  The "Other" reason will have a text box beside it.
-  no_annotation_reasons:
+  no_genes_reasons:
     - No gene specific data
     - Review
     - HTP data only
     - Methods paper
     - Other
+  # Possible reasons for a paper to have no annotation in the case
+  # where genes are mentioned - so no annotation of gene functions etc.
+  no_annotation_reasons:
+    - Review
   demo_user_name: Demo User
   demo_user_email_address: "demo@example.com"
 

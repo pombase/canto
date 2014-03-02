@@ -2,6 +2,7 @@
 $state
 $curs_root_uri
 $message_to_curators => undef
+$no_annotation_reason => undef
 </%args>
 
 <div id="curs-pub-finished">
@@ -28,6 +29,9 @@ included in the next database update.
 If you wish to modify an annotation you have made, please contact
 the curators.
 </p>
+
+<& no_annotation_message.mhtml,
+   no_annotation_reason => $no_annotation_reason &>
 
 <div class="curs-box" id="curs-pub-finished-admin">
   <div class="curs-box-title">

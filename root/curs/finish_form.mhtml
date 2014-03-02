@@ -1,6 +1,7 @@
 <%args>
 $form
 $finish_help
+$no_annotation_reason => undef
 </%args>
 
 <p>
@@ -10,6 +11,9 @@ database.
 </p>
 
 <% $c->config()->{finish_form}->{extra_text} |n %>
+
+<& no_annotation_message.mhtml,
+   no_annotation_reason => $no_annotation_reason &>
 
 <% $form |n %>
 

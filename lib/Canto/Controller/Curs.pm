@@ -303,6 +303,7 @@ sub front : Chained('top') PathPart('') Args(0)
  This action show the summary in readonly mode.
 
 =cut
+
 sub read_only_summary : Chained('top') PathPart('ro') Args(0)
 {
   my ($self, $c) = @_;
@@ -319,10 +320,19 @@ sub read_only_summary : Chained('top') PathPart('ro') Args(0)
 
   if ($st->{state} eq EXPORTED) {
     $st->{message} =
-      "Review only - this session has been exported so no changes are possible";
+      ["Review only - this session has been exported so no changes are possible"];
   } else {
     $st->{message} =
-      "Review only - this session has been submitted for approval so no changes are possible";
+      ["Review only - this session has been submitted for approval so no changes are possible"];
+  }
+
+  my $schema = $c->stash()->{schema};
+
+  my $no_annotation_reason =
+    $self->get_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY());
+
+  if (defined $no_annotation_reason) {
+    push @{$st->{message}}, "Reason given for no annotation: $no_annotation_reason";
   }
 }
 
@@ -595,7 +605,7 @@ sub gene_upload : Chained('top') Args(0) Form
   my @no_genes_elements = ();
   my @no_genes_reasons =
     ( [ '', 'Please choose a reason ...' ],
-      map { [ $_, $_ ] } @{$c->config()->{curs_config}->{no_annotation_reasons}} );
+      map { [ $_, $_ ] } @{$c->config()->{curs_config}->{no_genes_reasons}} );
   my @required_when = ();
 
   if ($st->{gene_count} > 0) {
@@ -2571,6 +2581,46 @@ sub annotation_zipexport : Chained('top') PathPart('annotation/zipexport') Args(
   }
 }
 
+sub finish_session : Chained('top') Arg(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+  my $form = $self->form();
+
+  my @all_elements = (
+      {
+        name => 'submit', type => 'Submit', value => 'Submit to curators',
+      },
+      {
+        name => 'reasonText', type => 'Hidden',
+      }
+    );
+
+  $form->elements([@all_elements]);
+
+  $form->process();
+
+  $st->{form} = $form;
+
+  if ($form->submitted_and_valid()) {
+    my $no_annotation = $form->param_value('no-annotation');
+    my $reason = $form->param_value('reasonText');
+
+    if ($no_annotation eq 'on' && !defined $reason) {
+      $c->stash()->{message} =
+        'No reason given for having no annotation';
+      _redirect_and_detach($c);
+    } else {
+      $self->set_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY(), $reason);
+      _redirect_and_detach($c, 'finish_form');
+    }
+  } else {
+    _redirect_and_detach($c);
+  }
+}
+
 sub finish_form : Chained('top') Args(0)
 {
   my ($self, $c, $arg) = @_;
@@ -2627,9 +2677,13 @@ sub finish_form : Chained('top') Args(0)
     }
   } else {
     my $force = {};
-    if (defined $self->get_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY())) {
+    my $no_annotation_reason =
+      $self->get_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY());
+    if (defined $no_annotation_reason) {
       # user ticked the "no genes" checkbox on the gene upload page
       $force = { force => SESSION_ACCEPTED };
+
+      $st->{no_annotation_reason} = $no_annotation_reason;
     }
 
     $self->state()->set_state($schema, NEEDS_APPROVAL, $force);
@@ -2647,6 +2701,13 @@ sub finished_publication : Chained('top') Args(0)
   $st->{template} = 'curs/finished_publication.mhtml';
 
   my $schema = $c->stash()->{schema};
+
+  my $no_annotation_reason =
+    $self->get_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY());
+
+  if (defined $no_annotation_reason) {
+    $st->{no_annotation_reason} = $no_annotation_reason;
+  }
 }
 
 sub session_exported : Chained('top') Args(0)
