@@ -63,7 +63,7 @@ test_psgi $app, sub {
     is $res->code, 302;
     my $redirect_url = $res->header('location');
 
-    $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_id;
+    $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_ids->[0];
     is ($redirect_url, "$root_url/annotation/allele_select/$new_annotation_id");
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);

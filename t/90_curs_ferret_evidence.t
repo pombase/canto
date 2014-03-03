@@ -97,7 +97,7 @@ for my $annotation_type (@annotation_type_list) {
 
       my $redirect_url = $res->header('location');
 
-      $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_id;
+      $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_ids->[0];
       if ($annotation_type->{needs_allele}) {
         is ($redirect_url, "$root_url/annotation/allele_select/$new_annotation_id");
       } else {

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 26;
+use Test::More tests => 28;
 
 use Plack::Test;
 use Plack::Util;
@@ -47,6 +47,7 @@ for my $annotation_type (@annotation_type_list) {
     }
 
     my $new_annotation = undef;
+    my @new_annotation_ids = ();
     my $new_annotation_id = undef;
 
     my $bait = $curs_schema->find_with_type('Gene',
@@ -80,7 +81,8 @@ for my $annotation_type (@annotation_type_list) {
       is $res->code, 302;
       my $redirect_url = $res->header('location');
 
-      $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_id;
+      @new_annotation_ids = @{$Canto::Controller::Curs::_debug_annotation_ids};
+      $new_annotation_id = $new_annotation_ids[0];
       is ($redirect_url, "$root_url/annotation/evidence/$new_annotation_id");
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
@@ -124,16 +126,22 @@ for my $annotation_type (@annotation_type_list) {
 
       like ($redirect_res->content(), qr/Choose curation type for cdc11/);
 
-      $new_annotation =
-        $curs_schema->find_with_type('Annotation', $new_annotation_id);
+      # get the new IDs - they may have changed if there was more than
+      # one prey
+      @new_annotation_ids = @{$Canto::Controller::Curs::_debug_annotation_ids};
 
-      my $new_annotation_data = $new_annotation->data();
-      is ($new_annotation_data->{evidence_code}, 'Dosage Rescue');
+      map {
+        $new_annotation =
+          $curs_schema->find_with_type('Annotation', $_);
+
+        my $new_annotation_data = $new_annotation->data();
+        is ($new_annotation_data->{evidence_code}, 'Dosage Rescue');
+      } @new_annotation_ids;
     }
   };
 }
 
 my $an_rs = $curs_schema->resultset('Annotation');
-is ($an_rs->count(), 4);
+is ($an_rs->count(), 6);
 
 done_testing;

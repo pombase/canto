@@ -77,8 +77,8 @@ my %state_dispatch = (
   EXPORTED, 'session_exported',
 );
 
-# used by the tests to find the most reecently created annotation
-our $_debug_annotation_id = undef;
+# used by the tests to find the most recently created annotations
+our $_debug_annotation_ids = undef;
 
 has state => (is => 'rw', init_arg => undef,
               isa => 'Canto::Curs::State');
@@ -1289,7 +1289,7 @@ sub annotation_ontology_edit
 
     $self->metadata_storer()->store_counts($schema);
 
-    $_debug_annotation_id = $annotation_id;
+    $_debug_annotation_ids = [$annotation_id];
 
     $self->state()->store_statuses($schema);
 
@@ -1407,7 +1407,7 @@ sub annotation_interaction_edit
     $guard->commit();
 
     my $annotation_id = $annotation->annotation_id();
-    $_debug_annotation_id = $annotation_id;
+    $_debug_annotation_ids = [$annotation_id];
 
     $self->state()->store_statuses($schema);
 
@@ -1671,6 +1671,49 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     $annotation->data($data);
     $annotation->update();
 
+    my @annotation_ids = ($annotation->annotation_id());
+
+    # Hack to cope with interactions: at this stage we potentially
+    # have one Annotation object for multiple interactions (one bait,
+    # multi prey) because the user can choose more than one prey.
+    # After choosing the evidence, delete the original Annotation and
+    # create one per prey.
+    if ($module_category eq 'interaction') {
+      my @interacting_genes = @{$data->{interacting_genes}};
+
+      if (@interacting_genes > 1) {
+        my $bait_gene = $annotation->genes()->first();
+        delete $data->{interacting_genes};
+
+        my @new_annotations =
+          map {
+            my $data_clone = clone $data;
+
+            $data_clone->{interacting_genes} = [$_];
+
+            my $new_annotation =
+              $schema->create_with_type('Annotation',
+                                        {
+                                          type => $annotation->type(),
+                                          status => $annotation->status(),
+                                          pub => $annotation->pub(),
+                                          creation_date => _get_iso_date(),
+                                          data => $data_clone,
+                                        });
+
+            $new_annotation->set_genes($bait_gene);
+
+            $new_annotation;
+          } @interacting_genes;
+
+        $annotation->delete();
+
+        @annotation_ids = map{ $_->annotation_id(); } @new_annotations;
+
+        $_debug_annotation_ids = [@annotation_ids];
+      }
+    }
+
     $self->state()->store_statuses($schema);
 
     if ($needs_with_gene) {
@@ -1683,7 +1726,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
       if ($annotation_config->{needs_allele} || defined $existing_evidence_code) {
         _redirect_and_detach($c, 'gene', $gene_id);
       } else {
-        _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
+        _maybe_transfer_annotation($c, [@annotation_ids], $annotation_config);
       }
     }
   }
