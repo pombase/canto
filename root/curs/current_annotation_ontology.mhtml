@@ -3,8 +3,7 @@ $curs_root_uri
 $annotation_type
 @annotations
 $completed_count => undef
-$feature
-$feature_type
+$feature => undef
 $pub
 $user_created
 $force_comment_edit => 0
@@ -412,4 +411,6 @@ if ($state eq NEEDS_APPROVAL || $state eq APPROVAL_IN_PROGRESS ||
     $state eq APPROVED || $state eq EXPORTED) {
   $session_submitted = 1;
 }
+
+my $feature_type = $annotation_type->{feature_type};
 </%init>

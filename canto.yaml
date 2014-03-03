@@ -1296,6 +1296,7 @@ available_annotation_type_list:
     very_short_display_name: 'function'
     short_display_name: 'molecular function'
     display_name: 'GO molecular function'
+    feature_type: 'gene'
     evidence_codes:
       - IDA
       - IGI
@@ -1329,6 +1330,7 @@ available_annotation_type_list:
     very_short_display_name: 'process'
     short_display_name: 'biological process'
     display_name: 'GO biological process'
+    feature_type: 'gene'
     evidence_codes:
       - IMP
       - IDA
@@ -1368,6 +1370,7 @@ available_annotation_type_list:
     very_short_display_name: 'component'
     short_display_name: 'cellular component'
     display_name: 'GO cellular component'
+    feature_type: 'gene'
     evidence_codes:
       - IDA
       - IGI
@@ -1402,6 +1405,7 @@ available_annotation_type_list:
     short_display_name: 'phenotype'
     display_name: 'phenotype'
     show_synonyms: always
+    feature_type: 'genotype'
     evidence_codes:
       - Cell growth assay
       - Chromatin immunoprecipitation experiment
@@ -1450,6 +1454,7 @@ available_annotation_type_list:
     category: ontology
     namespace: PSI-MOD
     display_name: 'protein modification'
+    feature_type: 'gene'
     broad_term_suggestions: >
       phosphorylated, methylated, lysine
     specific_term_examples: >
@@ -1472,6 +1477,7 @@ available_annotation_type_list:
   - name: genetic_interaction
     category: interaction
     display_name: 'genetic interaction'
+    feature_type: 'gene'
     help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
     evidence_codes:
       - Dosage Growth Defect
@@ -1487,6 +1493,7 @@ available_annotation_type_list:
   - name: physical_interaction
     category: interaction
     display_name: 'physical interaction'
+    feature_type: 'gene'
     help_text: 'Examples: co-purification, two-hybrid, affinity capture'
     evidence_codes:
       - Affinity Capture-Luminescence
