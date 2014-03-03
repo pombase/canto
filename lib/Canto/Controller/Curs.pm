@@ -347,6 +347,10 @@ sub read_only_summary : Chained('top') PathPart('ro') Args(0)
   if (defined $no_annotation_reason) {
     push @{$st->{message}}, "Reason given for no annotation: $no_annotation_reason";
   }
+
+  my $total_annotation_count = $schema->resultset('Annotation')->count();
+
+  $st->{total_annotation_count} = $total_annotation_count;
 }
 
 sub introduction : Private
