@@ -2882,7 +2882,7 @@ sub _assign_session :Private
 
   push @all_elements, (
       {
-  name => 'submitter_name',
+        name => 'submitter_name',
         label => ucfirst (($reassign ? 'new curator ' : '') . 'name'),
         type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
