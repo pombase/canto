@@ -2335,20 +2335,6 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
   _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
 }
 
-sub _annotation_features
-{
-  my $config = shift;
-  my $annotation = shift;
-
-  my @genes = $annotation->genes();
-
-  if (@genes) {
-    return ('gene', map { _get_gene_proxy($config, $_); } @genes);
-  } else {
-    return ('genotype', $annotation->genotypes());
-  }
-}
-
 sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 {
   my ($self, $c) = @_;
@@ -2380,7 +2366,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 
   my $display_name = undef;
 
-  my ($feature_type, $feature) = _annotation_features($config, $annotations[0]);
+  my ($feature_type, $feature) = Canto::Curs::Utils::annotation_features($config, $annotations[0]);
 
   $st->{feature} = $feature;
   $st->{feature_type} = $feature_type;
