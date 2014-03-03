@@ -1596,12 +1596,16 @@ curs_config:
   demo_user_email_address: "demo@example.com"
 
   finish_form:
+    # the "extra_text" is always shown on the finish form, the
+    # extra_text_gene_information is only shown if the user added some genes to
+    # the session
     extra_text: >
       <p>
         If there is any information in your paper which you could not capture in
         the curation tool, please describe the data briefly, as the
         curators may be able to include it in the database.
       </p>
+    extra_text_gene_information: >
       <p>
         Examples include:
         <ul>
