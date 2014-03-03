@@ -535,6 +535,22 @@ function UploadGenesCtrl($scope) {
   }
 }
 
+function SubmitToCuratorsCtrl($scope) {
+  $scope.data = {
+    reason: null,
+    hasAnnotation: false
+  };
+  $scope.noAnnotationReasons = ['Review'];
+
+  $scope.init = function(reasons) {
+    $scope.noAnnotationReasons = reasons;
+  };
+
+  $scope.validReason = function() {
+    return $scope.data.reason != null && $scope.data.reason.length > 0;
+  };
+}
+
 canto.factory('CantoConfig', function($http) {
   return {
     get : function(key){
@@ -551,3 +567,44 @@ var ferretCtrl = function($scope) {
 // add ng-controller="FerretCtrl" to <div id="ferret"> in ontology.mhtml
 
 canto.controller('FerretCtrl', ['$scope', 'CantoConfig'], ferretCtrl);
+
+function UploadGenesCtrl($scope) {
+  $scope.data = {
+    geneIdentifiers: '',
+    noAnnotation: false,
+    noAnnotationReason: '',
+    otherText: '',
+    geneList: '',
+  };
+  $scope.isValid = function() {
+    return $scope.data.geneIdentifiers.length > 0 ||
+      $scope.data.noAnnotation &&
+      $scope.data.noAnnotationReason.length > 0 &&
+      ($scope.data.noAnnotationReason !== "Other" ||
+       $scope.data.otherText.length > 0);
+  }
+}
+
+function AlleleCtrl($scope) {
+  $scope.alleles = [
+  {name: 'name1', description: 'desc', type: 'type1'}
+  ];
+}
+
+function SubmitToCuratorsCtrl($scope) {
+  $scope.data = {
+    reason: null,
+    otherReason: '',
+    hasAnnotation: false
+  };
+  $scope.noAnnotationReasons = [];
+
+  $scope.init = function(reasons) {
+    $scope.noAnnotationReasons = reasons;
+  };
+
+  $scope.validReason = function() {
+    return $scope.data.reason != null && $scope.data.reason.length > 0 &&
+      ($scope.data.reason !== 'Other' || $scope.data.otherReason.length > 0);
+  };
+}
