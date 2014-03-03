@@ -148,6 +148,7 @@ sub _get_indirect_annotations
   my $self = shift;
   my $all_annotations = shift // 0;
   my $remove_annotations = shift // 0;
+  my $include_with_annotations = shift // 1;
 
   my %ids = ();
 
@@ -166,7 +167,8 @@ sub _get_indirect_annotations
       my $data = $annotation->data();
       my $with_gene = $data->{with_gene};
 
-      if (defined $with_gene && $with_gene eq $self->primary_identifier()) {
+      if ($include_with_annotations &&
+          defined $with_gene && $with_gene eq $self->primary_identifier()) {
         $ids{$annotation->annotation_id()} = 1;
       } else {
         my $interacting_genes = $annotation->data()->{interacting_genes};
@@ -224,19 +226,24 @@ sub indirect_annotations
 
 =head2 all_annotations
 
- Usage   : my @annotations = $gene->all_annotations();
+ Usage   : my @annotations =
+             $gene->all_annotations(include_with => 1);
  Function: Return those annotations are related to this Gene via the
            gene_annotations tables or that reference this Gene in data
            field of the Annotation (eg. the "with_gene" field or as an
            interactor)
- Args    : None
+ Args    : include_with - if true, annotations that reference this
+           gene via a "with" field will be included in the results
 
 =cut
 sub all_annotations
 {
   my $self = shift;
+  my %args = @_;
 
-  return $self->_get_indirect_annotations(1);
+  my $include_with = $args{include_with} // 0;
+
+  return $self->_get_indirect_annotations(1, 0, $include_with);
 }
 
 =head2 allele_annotations

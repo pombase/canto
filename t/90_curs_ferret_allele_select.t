@@ -260,7 +260,7 @@ test_psgi $app, sub {
                                                primary_identifier => 'SPCC1739.11c',
                                              });
 
-    is ($cdc11->all_annotations(), 0);
+    is ($cdc11->all_annotations(include_with => 1), 0);
 
     my $uri = new URI("$root_url/annotation/transfer/" . $new_annotations[0]->annotation_id());
     $uri->query_form('dest' => [$cdc11->gene_id()],
@@ -278,7 +278,7 @@ test_psgi $app, sub {
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
 
-    is ($cdc11->all_annotations(), 1);
+    is ($cdc11->all_annotations(include_with => 1), 1);
     my $cdc11_annotation = $cdc11->all_annotations()->first();
     is ($cdc11_annotation->data()->{term_ontid}, 'FYPO:0000013');
 

@@ -72,8 +72,9 @@ my @all_genes = map {
 
 my @gene_hashes = map {
      my $extra_text = '';
-     my @annotations = $_->direct_annotations();
+     my @annotations = $_->all_annotations(include_with => 0)->all();
      my $annotation_count = scalar(@annotations) + $_->allele_annotations();
+
      if ($annotation_count > 0) {
        my $text;
        if ($annotation_count == 1) {

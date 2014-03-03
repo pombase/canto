@@ -49,23 +49,23 @@ my $spcc576_16c = $schema->find_with_type('Gene',
                                           { primary_identifier => 'SPCC576.16c' });
 is ($spcc576_16c->direct_annotations()->count(), 0);
 is ($spcc576_16c->indirect_annotations()->count(), 1);
-is ($spcc576_16c->all_annotations()->count(), 1);
+is ($spcc576_16c->all_annotations(include_with => 1)->count(), 1);
 
 my $spcc63_05 = $schema->find_with_type('Gene',
                                { primary_identifier => 'SPCC63.05' });
 is ($spcc63_05->direct_annotations()->count(), 2);
 is ($spcc63_05->indirect_annotations()->count(), 0);
-is ($spcc63_05->all_annotations()->count(), 2);
+is ($spcc63_05->all_annotations(include_with => 1)->count(), 2);
 
-my $annotation_1_id = $spcc63_05->all_annotations()->first()->annotation_id();
+my $annotation_1_id = $spcc63_05->all_annotations(include_with => 1)->first()->annotation_id();
 
 my $spbc14f5_07 = $schema->find_with_type('Gene',
                                           { primary_identifier => 'SPAC27D7.13c' });
 is ($spbc14f5_07->direct_annotations()->count(), 1);
 is ($spbc14f5_07->indirect_annotations()->count(), 1);
-is ($spbc14f5_07->all_annotations()->count(), 2);
+is ($spbc14f5_07->all_annotations(include_with => 1)->count(), 2);
 
-my $annotation_2 = $spbc14f5_07->all_annotations()->first();
+my $annotation_2 = $spbc14f5_07->all_annotations(include_with => 1)->first();
 my $annotation_2_id = $annotation_2->annotation_id();
 
 my $spac27d7_13c_allele_1 = $schema->find_with_type('Allele', { primary_identifier => 'SPAC27D7.13c:allele-1' });

@@ -40,7 +40,7 @@ my $options = { pub_uniquename => $pub->uniquename(),
                 annotation_type_category => $annotation_type->{category},
                 };
 if (defined $gene) {
-  my @constrain_annotations = $gene->all_annotations()->all();
+  my @constrain_annotations = $gene->all_annotations(include_with => 0)->all();
   map {
     push @constrain_annotations, $_->annotations();
   } $gene->alleles();
