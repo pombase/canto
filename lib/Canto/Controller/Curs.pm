@@ -3190,7 +3190,6 @@ sub complete_approval : Chained('top') Args(0)
           };
           last ANNOTATION;
         }
-        ;
       }
     }
   }
