@@ -724,7 +724,9 @@ sub gene_upload : Chained('top') Args(0) Form
       }
 
       $st->{message} = "Annotation complete";
-      $c->detach('finish_form');
+      $self->state()->set_state($schema, NEEDS_APPROVAL);
+
+      _redirect_and_detach($c, 'finish_form');
     }
 
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
