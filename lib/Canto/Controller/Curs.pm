@@ -309,6 +309,15 @@ sub front : Chained('top') PathPart('') Args(0)
     $st->{message} =
       ["If you do not know which annotation type to use to describe your experiment, please contact the helpdesk"];
   }
+
+  if ($st->{state} eq APPROVAL_IN_PROGRESS) {
+    my $no_annotation_reason =
+      $self->get_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY());
+
+    if (defined $no_annotation_reason) {
+      push @{$st->{message}}, "Reason given for no annotation: $no_annotation_reason";
+    }
+  }
 }
 
 =head2 read_only_summary
