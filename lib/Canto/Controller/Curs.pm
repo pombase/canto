@@ -305,7 +305,7 @@ sub front : Chained('top') PathPart('') Args(0)
 
   $st->{total_annotation_count} = $total_annotation_count;
 
-  if ($total_annotation_count == 0) {
+  if ($total_annotation_count == 0 && $st->{state} eq CURATION_IN_PROGRESS) {
     $st->{message} =
       ["If you do not know which annotation type to use to describe your experiment, please contact the helpdesk"];
   }
