@@ -14,6 +14,7 @@ use Canto::MailSender;
 use Canto::Export::CantoJSON;
 use Canto::Export::TabZip;
 use Canto::Util qw(trim);
+use Canto::Track::CuratorManager;
 
 use Moose;
 
@@ -340,10 +341,16 @@ sub pubmed_id_lookup : Local Form {
 
       my $sessions_rs = $pub->curs();
       if ($sessions_rs->count() > 0) {
-        my $uniquename = $pub->uniquename();
-        $result->{message} = "Sorry, $uniquename is currently being curated by someone " .
+        my $first_session = $sessions_rs->first();
+
+        my $curator_manager = Canto::Track::CuratorManager->new(config => $c->config());
+
+        if (defined $curator_manager->current_curator($first_session->curs_key())) {
+          my $uniquename = $pub->uniquename();
+          $result->{message} = "Sorry, $uniquename is currently being curated by someone " .
             "else.  Please contact the curation team for more information.";
-        $result->{curation_sessions} = [ map { $_->curs_key(); } $sessions_rs->all() ],
+          $result->{curation_sessions} = [ map { $_->curs_key(); } $sessions_rs->all() ],
+        }
       }
     } else {
       $result = {
@@ -394,29 +401,55 @@ sub start : Local Args(1) {
 
   my $pub = $schema->find_with_type('Pub', { uniquename => $pub_uniquename });
 
-  my $state_constraints = '';
-
-  my @approval_not_started_states =
-    Canto::Curs::State::approval_not_started_states();
-
-  if (@approval_not_started_states) {
-    $state_constraints = "AND (" . (join ' OR ', map {
-      "p.value = '" . $_ . "'";
-    } @approval_not_started_states) .  ")"
-  }
-
-  my $where = 'EXISTS (SELECT cursprop_id FROM cursprop p, cvterm t ' .
-    'WHERE p.curs = me.curs_id AND ' .
-    "t.cvterm_id = p.type AND t.name = 'annotation_status' " .
-    "$state_constraints)";
-
-  my $current_curs_rs = $pub->curs()->search({}, { where => \$where });
+  my $current_curs_rs = $pub->curs()->search();
 
   if ($current_curs_rs->count() > 0) {
-    $c->flash()->{error} = "can't create new session - a session already exists for: " .
-      $pub->uniquename();
-    $c->res->redirect($c->uri_for('/'));
-    return;
+    my $where_not_started =
+      'NOT EXISTS (SELECT cursprop_id FROM cursprop p, cvterm t ' .
+      'WHERE p.curs = me.curs_id)';
+
+    my $where_not_started_rs =
+      $current_curs_rs->search({}, { where => \$where_not_started });
+
+    if ($where_not_started_rs->count() > 0) {
+      # Adopt the first un-started session.
+      # This is a hack.
+      # Users sometimes start a session and then bail out.  When they try
+      # again it would say the session is "currently being curated by someone
+      # else" when it isn't.  This hack prevents that.
+      my $first = $where_not_started_rs->first();
+
+      my $session_uri = $c->uri_for('/curs/' . $first->curs_key());
+
+      $c->res->redirect($session_uri);
+      return;
+    }
+
+    my $state_constraints = '';
+
+    my @approval_not_started_states =
+      Canto::Curs::State::approval_not_started_states();
+
+    if (@approval_not_started_states) {
+      $state_constraints = "AND (" . (join ' OR ', map {
+        "p.value = '" . $_ . "'";
+      } @approval_not_started_states) .  ")"
+    }
+
+    my $where_in_progress =
+      'EXISTS (SELECT cursprop_id FROM cursprop p, cvterm t ' .
+      'WHERE p.curs = me.curs_id AND ' .
+      "t.cvterm_id = p.type AND t.name = 'annotation_status' " .
+      "$state_constraints)";
+
+    if ($current_curs_rs->search({}, { where => \$where_in_progress })->count() > 0) {
+      # don't create a session if there is one in progress but if there are only
+      # EXPORTED and APPROVED sessions, that's OK
+      $c->flash()->{error} = "can't create new session - a session already exists for: " .
+        $pub->uniquename();
+      $c->res->redirect($c->uri_for('/'));
+      return;
+    }
   }
 
   my $curs_key = Canto::Curs::make_curs_key();
