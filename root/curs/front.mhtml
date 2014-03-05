@@ -43,11 +43,8 @@ $total_annotation_count
     <input name="no-annotation" type="Checkbox" ng-model="data.noAnnotation"></input>
   </div>
   <div ng-show="data.noAnnotation" class="ng-cloak">
-    <label>
-      Please choose a reason:
-    </label>
     <select name="reason" ng-model="data.reason" ng-options="r as r for r in noAnnotationReasons">
-      <option value=""></option>
+      <option value="">Please choose a reason ...</option>
     </select>
 % # this field exists so the text of the 'reason' is submitted, not just
 % # the option index from the <select>
