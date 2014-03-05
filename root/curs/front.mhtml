@@ -36,7 +36,7 @@ $total_annotation_count
            title="{{ validReason() ? '' : 'Please add annotation or check the no annotation box' }}"
            name="submit" value="Submit to curators"></input>
   </div>
-  <div class="ng-cloak">
+  <div title="Select this if you can provide a list of genes mentioned in the paper, but you cannot make gene-specific annotations based on experiments in the paper" class="ng-cloak">
     <label>
       No experimental results to add?:
     </label>
