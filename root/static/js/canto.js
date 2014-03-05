@@ -1741,15 +1741,18 @@ function UploadGenesCtrl($scope) {
 function SubmitToCuratorsCtrl($scope) {
   $scope.data = {
     reason: null,
+    otherReason: '',
     hasAnnotation: false
   };
-  $scope.noAnnotationReasons = ['Review'];
+  $scope.noAnnotationReasons = [];
 
   $scope.init = function(reasons) {
     $scope.noAnnotationReasons = reasons;
   };
 
   $scope.validReason = function() {
-    return $scope.data.reason != null && $scope.data.reason.length > 0;
+    return $scope.data.reason != null && $scope.data.reason.length > 0 &&
+      ($scope.data.reason !== 'Other' || $scope.data.otherReason.length > 0);
   };
 }
+

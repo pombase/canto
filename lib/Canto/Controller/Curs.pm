@@ -2669,6 +2669,9 @@ sub finish_session : Chained('top') Arg(0)
       },
       {
         name => 'reasonText', type => 'Hidden',
+      },
+      {
+        name => 'otherReason', type => 'Text',
       }
     );
 
@@ -2681,12 +2684,17 @@ sub finish_session : Chained('top') Arg(0)
   if ($form->submitted_and_valid()) {
     my $no_annotation = $form->param_value('no-annotation');
     my $reason = $form->param_value('reasonText');
+    my $other_reason = $form->param_value('otherReason');
 
     if ($no_annotation eq 'on' && !defined $reason) {
       $c->stash()->{message} =
         'No reason given for having no annotation';
       _redirect_and_detach($c);
     } else {
+      if (lc $reason eq 'other' && defined $other_reason) {
+        $reason = $other_reason;
+      }
+
       $self->set_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY(), $reason);
       _redirect_and_detach($c, 'finish_form');
     }

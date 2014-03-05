@@ -33,7 +33,7 @@ $total_annotation_count
     <button type="button" id="curs-pause-session">Pause curation</button>
     <input class="button ng-cloak" type="submit"
            ng-disabled="!data.noAnnotation || !validReason()" id="curs-finish-session"
-           title="{{ validReason() ? '' : 'Please add annotation or check the no annotation box' }}"
+           title="{{ validReason() ? '' : 'Please add annotation or check the no results box' }}"
            name="submit" value="Submit to curators"></input>
   </div>
   <div title="Select this if you can provide a list of genes mentioned in the paper, but you cannot make gene-specific annotations based on experiments in the paper" class="ng-cloak">
@@ -43,12 +43,20 @@ $total_annotation_count
     <input name="no-annotation" type="Checkbox" ng-model="data.noAnnotation"></input>
   </div>
   <div ng-show="data.noAnnotation" class="ng-cloak">
-    <select name="reason" ng-model="data.reason" ng-options="r as r for r in noAnnotationReasons">
+    <div>
+    <select name="reason" ng-model="data.reason"ng-options="r as r for r in noAnnotationReasons">
       <option value="">Please choose a reason ...</option>
     </select>
+    </div>
+    <div>
 % # this field exists so the text of the 'reason' is submitted, not just
 % # the option index from the <select>
     <input type="hidden" name="reasonText" value="{{data.reason}}"/>
+% # reason if "Other" is chosen from the <select>
+    <input ng-show="data.reason === 'Other'" size="30"
+           placeholder="Please type a reason here ..." 
+           type="text" name="otherReason" ng-model="data.otherReason"/>
+    </div>
   </div>
 </form>
 %     }

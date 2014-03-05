@@ -1592,6 +1592,7 @@ curs_config:
     - Opinion or Comment
     - Experimental data, not of available types
     - Method
+    - Other
   demo_user_name: Demo User
   demo_user_email_address: "demo@example.com"
 
