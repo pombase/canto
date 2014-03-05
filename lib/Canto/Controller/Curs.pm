@@ -305,11 +305,6 @@ sub front : Chained('top') PathPart('') Args(0)
 
   $st->{total_annotation_count} = $total_annotation_count;
 
-  if ($total_annotation_count == 0 && $st->{state} eq CURATION_IN_PROGRESS) {
-    $st->{message} =
-      ["If you do not know which annotation type to use to describe your experiment, please contact the helpdesk"];
-  }
-
   if ($st->{state} eq APPROVAL_IN_PROGRESS) {
     my $no_annotation_reason =
       $self->get_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY());
@@ -2607,6 +2602,14 @@ sub gene : Chained('top') Args(1)
   _set_genes_in_session($c);
 
   $st->{gene} = $gene_proxy;
+
+  my $total_annotation_count = $schema->resultset('Annotation')->count();
+
+  if ($total_annotation_count == 0 && $st->{state} eq CURATION_IN_PROGRESS) {
+    $st->{message} =
+      [qq|If you do not know which annotation type to use to describe your | .
+        qq|experiment, please contact the helpdesk using the "Contact curators" link|];
+  }
 
   $st->{title} = 'Gene: ' . $gene_proxy->display_name();
   # use only in header, not in body:
