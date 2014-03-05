@@ -325,6 +325,9 @@ sub lookup
 
       if (grep { $_ eq $evidence } @evidence_codes_to_ignore or
           grep { $_ eq $evidence_code } @evidence_codes_to_ignore) {
+        # adjust the total, but this is dodgy as the total will be too high if
+        # there are more than $max_results results
+        $all_annotations_count--;
         next;
       }
 
