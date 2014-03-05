@@ -1588,10 +1588,11 @@ curs_config:
   # Possible reasons for a paper to have no annotation in the case
   # where genes are mentioned - so no annotation of gene functions etc.
   no_annotation_reasons:
-    - Review
-    - Opinion or Comment
+    - Double mutant phenotypes only
     - Experimental data, not of available types
     - Method
+    - Opinion or Comment
+    - Review
     - Other
   demo_user_name: Demo User
   demo_user_email_address: "demo@example.com"
