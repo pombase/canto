@@ -371,24 +371,28 @@ Add an organism using this command in the `canto` directory:
 
     ./script/canto_load.pl --organism "<genus> <species> <taxon_id>"
 
+At least one organism is needed in the Canto database before genes can be
+loaded.
+
 ### Gene data
 
 Load genes with:
 
     ./script/canto_load.pl --genes genes_file.tsv --for-taxon 4896
 
-All genes in an input file must be from one organism.   
-Use the `--for-taxon` argument with an NCBI taxon ID to specify the
-organism.
-which needs to have been loaded with the --organism option before loading the genes.
+All genes in an input file must be from one organism.  Use the `--for-taxon`
+argument with an NCBI taxon ID to specify the organism, which needs to have
+been loaded with the --organism option (see above).
 
 #### gene data format
-Four tab separated columns with no header line:
+
+A gene data file consists of four tab separated columns with no header line.
+The columns are:
 
 - systematic identifier
 - gene primary name
 - synonyms (comma separated)
-- product
+- gene product or description
 
 There is a small example file in the test directory:
 
