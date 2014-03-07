@@ -428,15 +428,6 @@ To export the data from all the sessions, regardless of its state use:
 
 ## Reading Canto data into Chado
 The code for loading Canto JSON format files into a Chado database is
-sessions won't be exported next time. This option is provided so that
-annotation will be exported only once from Canto.
-
-To export the data from all the sessions, regardless of its state use:
-
-    script/canto_export.pl canto-json --all  > canto_all.json
-
-## Reading Canto data into Chado
-The code for loading Canto JSON format files into a Chado database is
 available from the [pombase-chado](https://github.com/pombase/pombase-chado)
 code repository. Follow the
 [installation instructions](https://github.com/pombase/pombase-chado/blob/master/README.md)
