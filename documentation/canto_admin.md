@@ -449,6 +449,9 @@ Chado database.
 The `pombase-import.pl` command will never delete or alter existing data it
 only adds annotation.
 
+To test loading without modifying the Chado database, add the `-d` or
+`--dry-run` option to the command line.
+
 # Canto implementation details
 ## Structure
 There are two parts to the system.
