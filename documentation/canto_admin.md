@@ -353,6 +353,13 @@ The external links are implemented in the `linkouts.html` template.
 ### ontology_external_links
 ### chado
 
+## Creating users
+
+To manage sessions and users from the web interface there needs to be at least
+one "admin" user.  Users can be added with the `canto_add.pl` script:
+
+    ./script/canto_add.pl --person "Kim Rutherford" kim@pombase.org secret_password admin
+
 ## Loading data
 
 You will need to load at least one organisms, a list of genes and one or more
