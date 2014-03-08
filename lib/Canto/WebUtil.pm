@@ -49,10 +49,11 @@ sub _format_field_value
 {
   my $col_conf = shift;
   my $field_value = shift;
+  my $attribute_type = shift;
 
   my $fmt = Number::Format->new();
 
-  my $format_def = $col_conf->{format};
+  my $format_def = $col_conf->{format} // $attribute_type;
 
   if (defined $field_value && defined $format_def) {
     if (ref $format_def) {
@@ -77,7 +78,19 @@ sub _format_field_value
           return 0 unless $field_value;
           return sprintf $format_def, $field_value;
         } else {
-          die "unknown column format: $format_def\n";
+          if ($format_def eq 'text' || $format_def eq 'timestamp') {
+            # fall through
+          } else {
+            if ($format_def eq 'boolean') {
+              if ($field_value) {
+                $field_value = 'yes';
+              } else {
+                $field_value = 'no';
+              }
+            } else {
+              die "unknown column format: $format_def\n";
+            }
+          }
         }
       }
     }
@@ -137,6 +150,8 @@ sub _get_cached_object
            $class_info - the configuration for the object
            $ref_display_key - the display key of the referenced object
                               (or undef)
+           $attribute_type - if $field_type is 'attribute' this is the data type
+                             ('integer', 'text', 'boolean', ...)
 
  Note    : This function uses the field_infos section of the configuration and
            uses the source field (if present) to get the field value
@@ -273,8 +288,11 @@ sub get_field_value
       $return_type = 'attribute';
     }
 
-    return (_format_field_value($col_conf, $field_value),
-            $return_type, undef);
+    my $column_info = $object->result_source()->column_info($field_db_column);
+    my $attribute_type = $column_info->{data_type};
+
+    return (_format_field_value($col_conf, $field_value, $attribute_type),
+            $return_type, undef, $attribute_type);
   }
 }
 
