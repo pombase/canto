@@ -44,8 +44,6 @@ my $config = Canto::Config::get_config();
 my $track_schema = Canto::TrackDB->new(config => $config,
                                         disable_foreign_keys => 0);
 
-Canto::DBUtil::set_schema_version($track_schema, $new_version);
-
 my $dbh = $track_schema->storage()->dbh();
 
 given ($new_version) {
@@ -75,3 +73,5 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
     die "don't know how to upgrade to version $new_version";
   }
 }
+
+Canto::DBUtil::set_schema_version($track_schema, $new_version);
