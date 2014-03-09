@@ -204,7 +204,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if ($state eq SESSION_ACCEPTED &&
-      $path =~ m:/(gene_upload|edit_genes|confirm_genes):) {
+      $path =~ m:/(gene_upload|edit_genes|confirm_genes|finish_form):) {
     $use_dispatch = 0;
   }
   if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
@@ -718,8 +718,7 @@ sub gene_upload : Chained('top') Args(0) Form
         return;
       }
 
-      $st->{message} = "Annotation complete";
-      $self->state()->set_state($schema, NEEDS_APPROVAL);
+      $c->flash()->{message} = "Annotation complete";
 
       _redirect_and_detach($c, 'finish_form');
     }
@@ -2930,16 +2929,24 @@ sub _assign_session :Private
   $st->{form} = $form;
 
   if ($form->submitted_and_valid()) {
-    my $reassigner_name_value = trim($form->param_value('reassigner_name'));
-    if (defined $reassigner_name_value && $reassigner_name_value =~ /\@/) {
-      $c->stash()->{message} =
-        "Names can't contain the '\@' character: $reassigner_name_value - please " .
-        "try again";
-      return;
+    my $reassigner_name_value = $form->param_value('reassigner_name');
+    if (defined $reassigner_name_value) {
+      $reassigner_name_value = trim($reassigner_name_value);
+      if ($reassigner_name_value =~ /\@/) {
+        $c->stash()->{message} =
+          "Names can't contain the '\@' character: $reassigner_name_value - please " .
+            "try again";
+        return;
+      }
     }
+
     my $reassigner_name = $reassigner_name_value // $current_submitter_name;
     my $reassigner_email =
-      trim($form->param_value('reassigner_email') // $current_submitter_email);
+      $form->param_value('reassigner_email') // $current_submitter_email;
+
+    if (defined $reassigner_email) {
+      $reassigner_email = trim($reassigner_email);
+    }
 
     my $submitter_name = trim($form->param_value('submitter_name'));
     my $submitter_email = trim($form->param_value('submitter_email'));

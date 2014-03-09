@@ -283,12 +283,17 @@ test_psgi $app, sub {
     $req = HTTP::Request->new(GET => $uri);
     $res = $cb->($req);
 
-    unlike ($res->content(), qr/Create gene list for $uniquename/);
-    like ($res->content(), qr/Annotation complete/);
+    is $res->code, 302, $res->content();
+
+    my $redirect_url = $res->header('location');
+    is ($redirect_url, "$root_url/finish_form");
+    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
+    my $redirect_res = $cb->($redirect_req);
+
+    unlike ($redirect_res->content(), qr/Create gene list for $uniquename/);
     my $thank_you ="Thank you for your contribution to " . $config->{database_name};
-    like ($res->content(), qr/$thank_you/);
-    like ($res->content(), qr/annotations will now be sent/s);
-    like ($res->content(), qr/Curated by: $test_email/);
+    like ($redirect_res->content(), qr/$thank_you/);
+    like ($redirect_res->content(), qr/annotations will now be sent/s);
   }
 };
 
