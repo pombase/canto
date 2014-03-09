@@ -327,12 +327,28 @@ sub _init_form_field
                                             [@current_values], $field_info,
                                             'Checkboxgroup')];
     } else {
-      $elem->{type} = 'Text';
+      my $model_name = $c->request()->param('model');
+
+      my $column_info =
+        $schema->source($class_name)->column_info($field_db_column);
+      my $attribute_type = $column_info->{data_type};
+
+      if ($attribute_type eq 'boolean') {
+        $elem->{type} = 'Checkbox';
+      } else {
+        $elem->{type} = 'Text';
+      }
       if (!$db_source->column_info($field_db_column)->{is_nullable}) {
         $elem->{constraints} = [ { type => 'Length',  min => 1 }, 'Required' ];
       }
       if (defined $object) {
-        $elem->{value} = $object->$field_db_column();
+        if ($attribute_type eq 'boolean') {
+          if ($object->$field_db_column()) {
+            $elem->{attributes}->{checked} = "checked";
+          }
+        } else {
+          $elem->{value} = $object->$field_db_column();
+        }
       } else {
         my $param_default_value = $c->req->param("object.$field_db_column");
 
@@ -614,7 +630,15 @@ sub _update_object {
       }
     } else {
       if ($column_type eq 'attribute') {
-        $object->$field_db_column($value);
+        my $column_info = $object->result_source()->column_info($field_db_column);
+        my $attribute_type = $column_info->{data_type};
+        if ($attribute_type eq 'boolean') {
+          $object->$field_db_column(defined $value &&
+                                    ($value eq 1 || lc $value eq 'on' ||
+                                     lc $value eq 'yes'));
+        } else {
+          $object->$field_db_column($value);
+        }
       } else {
         # can't set computed columns
       }

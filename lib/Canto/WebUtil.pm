@@ -55,6 +55,14 @@ sub _format_field_value
 
   my $format_def = $col_conf->{format} // $attribute_type;
 
+  if ($format_def eq 'boolean') {
+    if ($field_value) {
+      return 'yes';
+    } else {
+      return 'no';
+    }
+  }
+
   if (defined $field_value && defined $format_def) {
     if (ref $format_def) {
       if ($format_def->{type} eq 'perl') {
@@ -81,15 +89,7 @@ sub _format_field_value
           if ($format_def eq 'text' || $format_def eq 'timestamp') {
             # fall through
           } else {
-            if ($format_def eq 'boolean') {
-              if ($field_value) {
-                $field_value = 'yes';
-              } else {
-                $field_value = 'no';
-              }
-            } else {
-              die "unknown column format: $format_def\n";
-            }
+            die "unknown column format: $format_def\n";
           }
         }
       }
@@ -128,7 +128,8 @@ sub _get_cached_object
 
 =head2
 
- Usage   : my ($field_value, $field_type) =
+ Usage   : my ($field_value, $field_type, $ref_class_info,
+               $ref_display_key, $attribute_type) =
              Canto::WebUtil::get_field_value($c, $object, $class_info,
                                               $field_name);
  Function: Get the real value of a field, for display.  The value may be
@@ -147,9 +148,7 @@ sub _get_cached_object
                                natural primary key for this class
                             'method': $field_name is a method name on the object,
                                which will be called and it's value returned
-           $class_info - the configuration for the object
-           $ref_display_key - the display key of the referenced object
-                              (or undef)
+           $ref_class_info - the configuration for the referenced object
            $attribute_type - if $field_type is 'attribute' this is the data type
                              ('integer', 'text', 'boolean', ...)
 

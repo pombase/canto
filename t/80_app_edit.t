@@ -174,6 +174,7 @@ test_psgi $app, sub {
                      load_type => $load_type_cvterm->cvterm_id(),
                      triage_status => $pub->triage_status()->cvterm_id(),
                      curation_priority => 0,
+                     community_curatable => 'on',
                      submit => 'Submit',
                     );
 
