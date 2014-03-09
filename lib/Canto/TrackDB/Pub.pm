@@ -103,6 +103,11 @@ __PACKAGE__->table("pub");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 community_curatable
+
+  data_type: 'boolean'
+  is_nullable: 1
+
 =head2 added_date
 
   data_type: 'timestamp'
@@ -139,6 +144,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "curation_priority_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "community_curatable",
+  { data_type => "boolean", is_nullable => 1 },
   "added_date",
   { data_type => "timestamp", is_nullable => 1 },
 );
@@ -337,8 +344,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WPHM0W45P3mqSwkRVQRbHA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-03-08 16:58:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h7yW1YbWW1QgNU10Y6Tiig
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
@@ -373,40 +380,6 @@ sub not_exported_curs
     "p.value <> 'EXPORTED')";
 
   return $curs_rs->search({}, { where => \$where });
-}
-
-=head2
-
- Usage   : $pub->set_community_curatable();
- Function: flag this publication as community curatable by adding a pubprop
- Args    : none
- Return  : nothing - dies on failure
-
-=cut
-
-sub set_community_curatable
-{
-  my $self = shift;
-
-  my $schema = $self->result_source()->schema();
-
-  my $community_curatable_cvterm =
-    $schema->resultset('Cvterm')->find({ name => "community_curatable" });
-
-  my $prop_rs = $self->pubprops()->search({
-    type_id => $community_curatable_cvterm->cvterm_id(),
-  });
-
-  if ($prop_rs->count() > 0) {
-    $prop_rs->delete();
-  }
-
-  $schema->create_with_type('Pubprop',
-                            {
-                              type_id => $community_curatable_cvterm->cvterm_id(),
-                              value => 'yes',
-                              pub_id => $self->pub_id(),
-                            });
 }
 
 # You can replace this text with custom content, and it will be preserved on regeneration

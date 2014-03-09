@@ -62,6 +62,15 @@ UPDATE cvterm SET name = replace(name, 'PomCur', 'Canto');
 UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
 ");
   }
+  when (5) {
+    for my $sql ("PRAGMA foreign_keys = ON;",
+                 "ALTER TABLE pub ADD COLUMN community_curatable BOOLEAN DEFAULT false;",
+                 "UPDATE pub SET community_curatable = (SELECT pp.value = 'yes' FROM pubprop pp WHERE pub.pub_id = pp.pub_id AND pp.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'community_curatable'));",
+                 "DELETE FROM pubprop WHERE type_id IN (SELECT cvterm_id FROM cvterm WHERE name = 'community_curatable');",
+                 "DELETE FROM cvterm WHERE name = 'community_curatable';") {
+      $dbh->do($sql);
+    }
+  }
   default {
     die "don't know how to upgrade to version $new_version";
   }

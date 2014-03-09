@@ -140,7 +140,7 @@ sub create_curs_db
   if (defined $current_user && $current_user->is_admin()) {
     __PACKAGE__->set_metadata($curs_schema, 'admin_session', 1);
   } else {
-    $pub->set_community_curatable();
+    $pub->community_curatable(1);
   }
 
   # the calling function will wrap this in a transaction if necessary

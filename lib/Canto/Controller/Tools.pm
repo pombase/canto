@@ -187,21 +187,11 @@ sub triage :Local {
     $pub_just_triaged->curation_priority($priority_cvterm);
 
     my $community_curatable = $c->req()->param('community-curatable');
-    my $community_curatable_cvterm =
-      $schema->resultset('Cvterm')->find({ name => "community_curatable" });
-
-    if (!defined $community_curatable_cvterm) {
-      die "Can't find term for: community_curatable";
-    }
-
-    $pub_just_triaged->pubprops()->search({ type_id => $community_curatable_cvterm->cvterm_id() })
-      ->delete();
 
     if (defined $community_curatable) {
-      $schema->create_with_type('Pubprop',
-                                { type_id => $community_curatable_cvterm->cvterm_id(),
-                                  value => 'yes',
-                                  pub_id => $pub_just_triaged->pub_id() });
+      $pub_just_triaged->community_curatable(1);
+    } else {
+      $pub_just_triaged->community_curatable(0);
     }
 
     my $triage_comment = $c->req()->param('triage-comment');

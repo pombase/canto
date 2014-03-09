@@ -9,7 +9,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v730
 
-schema_version: 4
+schema_version: 5
 
 # the path that the home link goes to
 instance_front_path: /docs/instance_front
@@ -334,11 +334,6 @@ db_initial_data:
               accession: experiment_type
               db:
                 name: Canto
-          - name: community_curatable
-            dbxref:
-              accession: community_curatable
-              db:
-                name: Canto
           - name: triage_comment
             dbxref:
               accession: triage_comment
@@ -525,6 +520,8 @@ class_info:
             - inline_list
         - name: corresponding_author
           editable: 1
+        - name: community_curatable
+          editable: 1
         - name: current_curator
           referenced_class: Person
           source:
@@ -554,10 +551,6 @@ class_info:
         - name: approver_name
           source:
             sql: "select value from curs, cursprop p, cvterm t where me.pub_id = curs.pub and curs.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'approver_name'"
-          editable: 0
-        - name: community_curatable
-          source:
-            sql: "select value from pubprop p, cvterm t where me.pub_id = p.pub_id and t.cvterm_id = p.type_id and t.name = 'community_curatable'"
           editable: 0
         - name: load_type
           source: load_type_id
@@ -720,7 +713,7 @@ class_info:
       constraint: "curation_priority_id in (select cvterm_id from cvterm where name = 'high')"
     community_curatable_publications:
       extends: pub
-      constraint: "pub_id in (select pub_id from pubprop where type_id = (select cvterm_id from cvterm where name = 'community_curatable') and value = 'yes')"
+      constraint: "pub_id in (select pub_id from pub where community_curatable)"
     triage_sequence_feature_or_region_publications:
       class_display_name: Sequence feature or region
       extends: pub
@@ -796,7 +789,7 @@ class_info:
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
     community_curatable_publications_with_approved_session:
       extends: pub
-      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and pub_id in (select pub_id from pubprop where type_id = (select cvterm_id from cvterm where name = 'community_curatable') and value = 'yes')"
+      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and pub_id in (select pub_id from pub where community_curatable)"
     curatable_publications_with_no_annotatable_genes:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_genes_count' and p.value = 0)) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"

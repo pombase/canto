@@ -62,7 +62,8 @@ sub set_pub_community_curatable
   my $role = $curator->role();
 
   if (!defined $role || $role->name() ne 'admin') {
-    $curs->pub()->set_community_curatable();
+    $curs->pub()->community_curatable(1);
+    $curs->pub()->update();
   }
 }
 
