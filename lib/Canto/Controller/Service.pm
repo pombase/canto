@@ -41,6 +41,8 @@ use strict;
 use warnings;
 use Carp;
 
+use feature ':5.10';
+
 use base 'Catalyst::Controller';
 
 use Canto::Track;
@@ -114,6 +116,25 @@ sub _allele_results
                          max_results => $max_results);
 }
 
+# provide /ws/person/name/Some%20Name => [{ details }, { details}] and
+# /ws/person/email/some@emailaddress.com => { details }
+sub _person_results
+{
+  my ($c, $search_type, $search_string) = @_;
+
+  my $config = $c->config();
+
+  my $lookup = Canto::Track::get_adaptor($config, 'person');
+
+  my @results = $lookup->lookup($search_type, $search_string);
+
+  if ($search_type eq 'name') {
+    return \@results;
+  } else {
+    return $results[0];
+  }
+}
+
 sub lookup : Local
 {
   my $self = shift;
@@ -122,10 +143,19 @@ sub lookup : Local
 
   my $results;
 
-  if ($type_name eq 'allele') {
-    $results = _allele_results($c, @_);
-  } else {
-    $results = _ontology_results($c, @_);
+  given ($type_name) {
+    when ('allele') {
+      $results = _allele_results($c, @_);
+    }
+    when ('ontology') {
+      $results = _ontology_results($c, @_);
+    }
+    when ('person') {
+      $results = _person_results($c, @_);
+    }
+    default {
+      $results = { error => "unknown lookup type: $type_name" };
+    }
   }
 
   $c->stash->{json_data} = $results;

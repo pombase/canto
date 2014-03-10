@@ -1021,6 +1021,7 @@ implementation_classes:
   gene_adaptor: Canto::Track::GeneLookup
   ontology_adaptor: Canto::Track::OntologyLookup
   status_adaptor: Canto::Track::StatusStorage
+  person_adaptor: Canto::Track::PersonLookup
 
 allele_type_list:
   - name: wild type
