@@ -61,10 +61,9 @@ sub get_current_datetime
 
 =head2 trim
 
- Usage   : my $trimmed_string = Canto::
- Function:
- Args    :
- Return  :
+ Usage   : use Canto::Util qw(trim);
+           my $trimmed_string = trim($some_string);
+ Function: Return the string with start and ending whitespace removed
 
 =cut
 
