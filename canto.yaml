@@ -1153,7 +1153,8 @@ evidence_types:
     name: 'Affinity Capture-Western (affinity captures)'
   'Biochemical Activity': ~
   'Chromatography evidence': ~
-  'Co-crystal Structure': ~
+  'Co-crystal Structure':
+    name: 'Co-crystal structure (or NMR structure)'
   'Co-fractionation': ~
   'Co-localization': ~
   'Co-purification': ~
