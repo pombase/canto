@@ -1154,7 +1154,7 @@ evidence_types:
   'Biochemical Activity': ~
   'Chromatography evidence': ~
   'Co-crystal Structure':
-    name: 'Co-crystal structure (or NMR structure)'
+    name: 'Co-crystal Structure (or NMR structure)'
   'Co-fractionation': ~
   'Co-localization': ~
   'Co-purification': ~
