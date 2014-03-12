@@ -106,6 +106,7 @@ __PACKAGE__->table("pub");
 =head2 community_curatable
 
   data_type: 'boolean'
+  default_value: false
   is_nullable: 1
 
 =head2 added_date
@@ -145,7 +146,7 @@ __PACKAGE__->add_columns(
   "curation_priority_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "community_curatable",
-  { data_type => "boolean", is_nullable => 1 },
+  { data_type => "boolean", default_value => \"false", is_nullable => 1 },
   "added_date",
   { data_type => "timestamp", is_nullable => 1 },
 );
@@ -344,8 +345,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-03-08 16:58:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h7yW1YbWW1QgNU10Y6Tiig
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-03-12 15:01:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ST957xEdZFbfrB72vHpzXA
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
