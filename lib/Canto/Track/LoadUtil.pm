@@ -42,6 +42,8 @@ use warnings;
 use Carp;
 use Moose;
 
+use feature qw(state);
+
 has 'schema' => (
   is => 'ro',
   isa => 'Canto::TrackDB',
@@ -454,17 +456,17 @@ sub get_pub
 
   my $schema = $self->schema();
 
-  my $load_type_cv = $self->find_cv('Canto publication load types');
-  my $load_type_term = $self->find_cvterm(cv => $load_type_cv,
-                                          name => $load_type);
+  state $load_type_cv = $self->find_cv('Canto publication load types');
+  state $load_type_term = $self->find_cvterm(cv => $load_type_cv,
+                                             name => $load_type);
 
-  my $pub_type_cv = $self->find_cv('Canto publication type');
-  my $pub_type = $self->find_cvterm(cv => $pub_type_cv,
-                                    name => 'unknown');
+  state $pub_type_cv = $self->find_cv('Canto publication type');
+  state $pub_type = $self->find_cvterm(cv => $pub_type_cv,
+                                       name => 'unknown');
 
-  my $pub_status_cv = $self->find_cv('Canto publication triage status');
-  my $pub_new_status = $self->find_cvterm(cv => $pub_status_cv,
-                                          name => 'New');
+  state $pub_status_cv = $self->find_cv('Canto publication triage status');
+  state $pub_new_status = $self->find_cvterm(cv => $pub_status_cv,
+                                             name => 'New');
 
   return $schema->resultset('Pub')->find_or_create(
       {
