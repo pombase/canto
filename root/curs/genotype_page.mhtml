@@ -43,9 +43,9 @@ Alleles
 % for my $allele ($genotype->alleles()) {
 <% $allele->display_name() %>
 % if (!$read_only_curs) {
- - <a href="<% $start_path . '/feature/gene/view/' . $gene->{gene_id} %>"
+ - <a href="<% $start_path . '/feature/gene/view/' . $allele->gene()->gene_id() %>">
      <span>
-       <% $gene->{identifier} %>
+       <% $_proxy_gene->($allele->gene())->display_name() %>
      </span>
    </a>
 % }
@@ -84,4 +84,10 @@ my @types_to_show = grep {
 
 my $start_path = $c->stash()->{curs_root_uri};
 my $read_only_curs = $c->stash()->{read_only_curs};
+
+my $_proxy_gene = sub {
+  return Canto::Curs::GeneProxy->new(config => $c->config(),
+                                     cursdb_gene => shift);
+
+};
 </%init>
