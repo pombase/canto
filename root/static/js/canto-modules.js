@@ -86,7 +86,7 @@ var alleleEditDialogCtrl =
     $scope.isValid = function() {
       return $scope.isValidType() &&
         $scope.isValidName() && $scope.isValidDescription();
-      // evidence and expression ...
+      // evidence and expression if needed ...
     };
 
     // if (data ...) {

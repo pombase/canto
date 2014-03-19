@@ -106,7 +106,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </tr>
       </table>
 
-      <div class="ng-cloak" ng-show="!!alleleData.type">
+      <div class="ng-cloak" ng-show="!!alleleData.type && false">
         <table>
           <tr>
             <td>
@@ -124,7 +124,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </table>
       </div>
 
-      <div class="ng-cloak" ng-show="!!alleleData.type">
+      <div class="ng-cloak" ng-show="!!alleleData.type && false">
         <table>
           <tr>
             <td>
