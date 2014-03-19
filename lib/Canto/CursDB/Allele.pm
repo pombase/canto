@@ -141,7 +141,8 @@ sub display_name
   my $self = shift;
 
   return Canto::Curs::Utils::make_allele_display_name($self->name(),
-                                                       $self->description());
+                                                      $self->description(),
+                                                      $self->type());
 }
 
 

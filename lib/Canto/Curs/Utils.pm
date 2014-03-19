@@ -459,7 +459,8 @@ sub _process_existing_db_ontology
 
   my $allele_display_name =
     Canto::Curs::Utils::make_allele_display_name($row->{allele}->{name},
-                                                  $row->{allele}->{description});
+                                                 $row->{allele}->{description},
+                                                 $row->{allele}->{type});
 
 
   my $conditions_string = _get_conditions_string($ontology_lookup, $row->{conditions});
@@ -734,13 +735,17 @@ sub store_all_statuses
  Function: make an allele display name from a name and description
  Args    : $name - the allele name (can be undef)
            $description - the allele description (can be undef)
+           $type - the allele type (deletion, unknown, ...)
  Returns : a display name of the form "name(description)"
 
 =cut
 sub make_allele_display_name
 {
-  my $name = shift // 'noname';
-  my $description = shift // 'unknown';
+  my $name = shift || 'noname';
+  my $description = shift;
+  my $type = shift;
+
+  $description ||= $type || 'unknown';
 
   return "$name($description)";
 }

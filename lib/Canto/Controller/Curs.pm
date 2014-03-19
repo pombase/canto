@@ -1873,7 +1873,8 @@ sub _allele_add_action_internal
 
   my $allele_display_name =
     Canto::Curs::Utils::make_allele_display_name($allele_data_ref->{name},
-                                                  $allele_data_ref->{description});
+                                                 $allele_data_ref->{description},
+                                                 $allele_data_ref->{type});
 
   $return_allele_data->{display_name} = $allele_display_name;
 
@@ -1993,7 +1994,8 @@ sub _get_all_alleles
       for my $allele_data (values %{$data->{alleles_in_progress}}) {
         my $allele_display_name =
           Canto::Curs::Utils::make_allele_display_name($allele_data->{name},
-                                                        $allele_data->{description});
+                                                       $allele_data->{description},
+                                                       $allele_data->{type});
         if (!exists $results{$allele_display_name}) {
           $results{$allele_display_name} = {
             name => $allele_data->{name},

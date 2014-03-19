@@ -194,8 +194,8 @@ sub lookup
   return [ map {
     my $display_name =
       Canto::Curs::Utils::make_allele_display_name($_->{name},
-                                                   $_->{description});
-
+                                                   $_->{description},
+                                                   $_->{type});
 
     $_->{display_name} = $display_name;
     $_->{allele_type} = $self->_canto_allele_type($_->{allele_type},
