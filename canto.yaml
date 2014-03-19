@@ -1623,6 +1623,7 @@ config_service:
     allele_type_names: 1
     annotation_types: 1
     annotation_type_list: 1
+    curs_config: 1
 
 ontology_external_links:
   cellular_component:
@@ -1724,6 +1725,9 @@ curs_config:
         Most of these annotation-types will be handled in future releases of the
         curation tool.
       </p>
+
+  genotype_config:
+    default_strain_name: 'h+'
 
 cache:
   default_timeout: "2 hours"

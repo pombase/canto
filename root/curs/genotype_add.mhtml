@@ -59,7 +59,7 @@ Add alleles from the genes below until the genotype is fully specified.
   <div id="multi-allele-genotype" class="ng-cloak" ng-show="alleles.length">
 
     <div>
-      The alleles for this genotype:
+      The alleles for <b>{{ data.genotype_name }}</b>:
     </div>
 
   <table class="list">

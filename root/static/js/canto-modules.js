@@ -269,9 +269,34 @@ canto.controller('AlleleEditDialogCtrl',
                   'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
 
-canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', function($scope, $http, $modal, $location) {
+canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', 'CantoConfig', function($scope, $http, $modal, $location, CantoConfig) {
   $scope.alleles = [
   ];
+
+  $scope.data = {
+    genotype_name: ''
+  };
+
+  $scope.env = {
+    curs_config_promise: CantoConfig.get('curs_config')
+  };
+
+  $scope.$watch('alleles',
+                function() {
+                  $scope.env.curs_config_promise.then(function(response) {
+                    $scope.data.genotype_name =
+                      response.data.genotype_config.default_strain_name +
+                      " " +
+                      $.map($scope.alleles, function(val, i) {
+                        if (val.description === '') {
+                          return val.name + "(" + val.type + ")";
+                        } else {
+                          return val.name + "(" + val.description + ")";
+                        }
+                      }).join(" ");
+                  });
+                },
+                true);
 
   $scope.storeAlleles = function() {
     $http.post('store', $scope.alleles).
