@@ -1,11 +1,11 @@
 var canto = angular.module('cantoApp', ['ui.bootstrap']);
 
 var alleleEditDialogCtrl =
-  function($scope, $http, $modalInstance, $q, $timeout, CantoConfig, gene_display_name, gene_systemtic_id, gene_id) {
+  function($scope, $http, $modalInstance, $q, $timeout, CantoConfig, args) {
     $scope.gene = {
-      display_name: gene_display_name,
-      systemtic_id: gene_systemtic_id,
-      gene_id: gene_id
+      display_name: args.gene_display_name,
+      systemtic_id: args.gene_systemtic_id,
+      gene_id: args.gene_id
     };
     $scope.alleleData = {
       name: '',
@@ -266,7 +266,7 @@ var alleleEditDialogCtrl =
 
 canto.controller('AlleleEditDialogCtrl',
                  ['$scope', '$http', '$modalInstance', '$q', '$timeout',
-                  'CantoConfig', 'gene_display_name', 'gene_systemtic_id', 'gene_id',
+                  'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
 
 canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', function($scope, $http, $modal, $location) {
@@ -293,9 +293,13 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', f
         animate: false,
         windowClass: "modal",
         resolve: {
-          gene_display_name: function() { return gene_display_name; },
-          gene_systemtic_id: function () { return gene_systemtic_id; },
-          gene_id: function () { return gene_id; }
+          args: function() {
+            return {
+              gene_display_name: gene_display_name,
+              gene_systemtic_id: gene_systemtic_id,
+              gene_id: gene_id
+            }
+          }
         }
       });
 
