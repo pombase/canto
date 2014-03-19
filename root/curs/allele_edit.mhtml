@@ -16,7 +16,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
   <form name="cursAlleleEdit" class="curs-allele-edit-dialog modal-content">
     <div class="modal-header">
       <h4 class="modal-title">
-        Allele details
+        Allele details for {{ gene.display_name }}
       </h4>
     </div>
 
