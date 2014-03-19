@@ -335,7 +335,7 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', '
       });
     };
 
-  $scope.openAlleleEditDialog('cdc11', 'SPAC111c.22', 1);
+  $scope.openAlleleEditDialog('wtf22', 'SPCC576.16c', 1);
 
   $scope.isValid = function() {
     return $scope.alleles.length > 0;
