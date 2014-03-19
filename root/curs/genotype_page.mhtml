@@ -37,25 +37,20 @@ Add a new <% $type_display_name %> for <% $genotype_name %> ...
 
 <div id="curs-genotype-details" class="curs-box">
   <div class="curs-box-title">
-Genotype details
+Alleles
   </div>
   <div class="curs-box-body">
-    <table class="curs-definition-table">
-      <tr>
-        <td class="title">Name</td>
-        <td>
-          <% $genotype_name %>
-        </td>
-      </tr>
-      <tr>
-        <td class="title">
-          Alleles
-        </td>
-        <td>
-         <% join ",", map { $_->display_name() } $genotype->alleles() %>
-        </td>
-      </tr>
-    </table>
+% for my $allele ($genotype->alleles()) {
+<% $allele->display_name() %>
+% if (!$read_only_curs) {
+ - <a href="<% $start_path . '/feature/gene/view/' . $gene->{gene_id} %>"
+     <span>
+       <% $gene->{identifier} %>
+     </span>
+   </a>
+% }
+   <br/>
+% }
   </div>
 </div>
 
@@ -86,4 +81,7 @@ my $finish_text = 'Back to summary';
 my @types_to_show = grep {
   $_->{needs_genotype};
 } @annotation_type_list;
+
+my $start_path = $c->stash()->{curs_root_uri};
+my $read_only_curs = $c->stash()->{read_only_curs};
 </%init>
