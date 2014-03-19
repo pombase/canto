@@ -112,8 +112,8 @@ test_config:
                  description: deletion
                  type: deletion
                - primary_identifier: 'SPAC27D7.13c:allele-2'
-                 name: R344A
-                 description: R344A
+                 name: ssm4KE
+                 description: G40A,K43E
                  type: 'mutation of single amino acid residue'
                - name: ssm4-D4
                  description: 'del_100-200'
@@ -123,13 +123,15 @@ test_config:
            - "SPBC14F5.07"
            - primary_identifier: "SPCC63.05"
              alleles:
-               - name: SPCC63.05-unk
-                 description: unknown
+               - primary_identifier: 'SPCC63.05:allele-1'
+                 name: SPCC63.05delta
+                 description: deletion
                  type: new
          genotypes:
-           - name: "h+ SPCC63.05-unk ssm4delta"
+           - name: "h+ SPCC63.05delta ssm4KE"
              alleles(Allele:primary_identifier):
                - 'SPAC27D7.13c:allele-1'
+               - 'SPCC63.05:allele-1'
            - name: "h+ ssm4-D4"
              alleles(Allele:name):
                - "ssm4-D4"
@@ -204,7 +206,7 @@ test_config:
            - type: phenotype
              status: new
              genotypes(Genotype:name):
-               - "h+ SPCC63.05-unk ssm4delta"
+               - "h+ SPCC63.05delta ssm4KE"
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: Epitope-tagged protein immunolocalization experiment data
