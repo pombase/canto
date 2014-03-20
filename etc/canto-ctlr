@@ -1,0 +1,34 @@
+#! /bin/sh
+# /etc/init.d/blah
+#
+
+app=$1
+port=$3
+
+WORKERS=24
+CANTO=/var/pomcur
+cd $CANTO/apps/$app
+
+# Carry out specific functions when asked to by the system
+case "$2" in
+  start)
+    (date; PLACK_ENV=test /usr/local/bin/start_server --pid-file=$CANTO/run/$app --port $port -- ./script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman --preload) 2>&1 | tee -a $CANTO/logs/$app.log &
+    ;;
+  stop)
+    pid=`cat $CANTO/run/$app`
+    echo stopping $pid
+    kill -TERM $pid
+    ;;
+  restart)
+    pid=`cat $CANTO/run/$app`
+    echo restarting $pid
+    kill -HUP $pid
+    ;;
+  *)
+    echo "Usage: /etc/init.d/blah {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
