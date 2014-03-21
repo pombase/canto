@@ -86,7 +86,8 @@ sub _format_field_value
           return 0 unless $field_value;
           return sprintf $format_def, $field_value;
         } else {
-          if ($format_def eq 'text' || $format_def eq 'timestamp') {
+          if ($format_def eq 'text' || $format_def eq 'varchar' ||
+              $format_def eq 'timestamp') {
             # fall through
           } else {
             die "unknown column format: $format_def\n";
