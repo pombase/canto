@@ -233,7 +233,7 @@ sub store_statuses
     croak "too many arguments for store_statuses()";
   }
 
-  my ($status, $submitter, $gene_count) = $self->get_state($schema);
+  my ($status, $submitter, $gene_count, $datestamp) = $self->get_state($schema);
 
   my $metadata_rs = $schema->resultset('Metadata');
   my $curs_key_row = $metadata_rs->find({ key => 'curs_key' });
@@ -267,6 +267,7 @@ sub store_statuses
   }
 
   $self->status_adaptor()->store($curs_key, 'annotation_status', $status);
+  $self->status_adaptor()->store($curs_key, 'annotation_status_datestamp', $datestamp);
   $self->status_adaptor()->store($curs_key, 'session_genes_count', $gene_count // 0);
   $self->status_adaptor()->store($curs_key, 'session_term_suggestions_count',
                                  $term_suggestion_count);

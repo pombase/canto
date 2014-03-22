@@ -132,6 +132,12 @@ db_initial_data:
               accession: annotation_status
               db:
                 name: Canto
+          - name: annotation_status_datestamp
+            # The date+time of the last status change
+            dbxref:
+              accession: annotation_status_datestamp
+              db:
+                name: Canto
           - name: session_genes_count
             # The number of genes the user has added to the session
             dbxref:
