@@ -15,7 +15,7 @@ my $schema = Canto::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is (@loaded_cvterms, 45);
+is (@loaded_cvterms, 46);
 
 my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
@@ -55,7 +55,7 @@ load_all(1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 111);
+is(@loaded_cvterms, 112);
 
 ok((grep {
   $_->name() eq 'regulation of transmembrane transport'
@@ -154,7 +154,7 @@ is($cvterm_dbxref_rs->count(), 34);
 load_all(1,1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 129);
+is(@loaded_cvterms, 130);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'

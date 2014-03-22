@@ -20,6 +20,7 @@ my $track_schema = Canto::TrackDB->new(config => $config);
 
 my %extra_curs_statuses = (
         annotation_status => Canto::Controller::Curs::CURATION_IN_PROGRESS,
+        annotation_status_datestamp => '2012-02-15 13:45:00',
         session_genes_count => 4,
         session_unknown_conditions_count => 1,
         session_term_suggestions_count => 1,
