@@ -163,6 +163,8 @@ sub load
 
   my $schema = $self->load_schema();
 
+  my $guard = $schema->txn_scope_guard;
+
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
   my $parser = GO::Parser->new({ handler=>'obj' });
 
@@ -384,6 +386,8 @@ sub load
                                 type => $rel_type_cvterm
                               });
   }
+
+  $guard->commit();
 }
 
 =head2 finalise
