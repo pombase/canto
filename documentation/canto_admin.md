@@ -240,7 +240,8 @@ A one word name for the site. default: Canto
 ### long_name
 A longer description of the site. e.g. The SlugBase community annotation tool
 ### database_name
-Database name for prefixing identifiers when exporting. e.g. PomBase
+The destination database name.  This is used whenever we need to refer to the
+destination of the annotations while curating.
 ### database_url
 The URL of the database that this instance is installed for. e.g.
 `http://www.pombase.org/`
