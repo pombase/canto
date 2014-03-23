@@ -401,6 +401,10 @@ sub _process_path
   my $path_string = shift;
   my $object = shift;
 
+  if (!defined $object) {
+    croak "no object didn't resolve in _process_path()";
+  }
+
   my $post_process = undef;
 
   if ($path_string =~ /^([^:]+):(.*)/) {
@@ -421,6 +425,10 @@ sub _process_path
           qq("$path_string" failed: $_\n);
       }
     }
+  }
+
+  if (!defined $res) {
+    croak qq(path "$path_string" resolved to undef);
   }
 
   return $res;
@@ -451,6 +459,10 @@ sub substitute_paths
 {
   my $string = shift;
   my $object = shift;
+
+  if (!defined $object) {
+    croak "no object passed to substitute_paths()";
+  }
 
   $string =~ s/\@\@([^@]+)\@\@/_process_path($1, $object)/eg;
 
