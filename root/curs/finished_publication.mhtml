@@ -7,7 +7,7 @@ $no_annotation_reason => undef
 
 <div id="curs-pub-finished">
 <p>
-Thank you for your contribution to <% $c->config()->{database_name} %>.
+Thank you for your contribution<% $contrib_destination %>.
 You curated <% $gene_count %> <% $gene_count == 1 ? 'gene' : 'genes' %> for
 <% $pub->uniquename() %>.
 </p>
@@ -81,6 +81,13 @@ if ($state eq 'APPROVED') {
   $begin_approval_uri = $curs_root_uri . '/begin_approval/';
 }
 
+my $contrib_destination;
+my $database_name = $c->config()->{database_name};
+if (defined $database_name) {
+  $contrib_destination = " to $database_name";
+} else {
+  $contrib_destination = "";
+}
 my $gene_count = $c->stash()->{gene_count};
 my $pub = $c->stash()->{pub};
 </%init>

@@ -5,7 +5,7 @@ $no_annotation_reason => undef
 </%args>
 
 <p>
-Thank you for your contribution to <% $c->config()->{database_name} %>.  Your
+Thank you for your contribution<% $contrib_destination %>.  Your
 annotations will now be sent to the curation team for inclusion in the
 database.
 </p>
@@ -24,5 +24,13 @@ database.
 
 <%init>
 my $session_gene_count = $c->stash()->{gene_count};
+
+my $contrib_destination;
+my $database_name = $c->config()->{database_name};
+if (defined $database_name) {
+  $contrib_destination = " to $database_name";
+} else {
+  $contrib_destination = "";
+}
 </%init>
 

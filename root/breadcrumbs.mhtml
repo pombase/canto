@@ -17,7 +17,12 @@
 
 <%init>
 my $config = $c->config();
-my $instance_text = $config->{database_name} . ' ' . $config->{name};
+my $instance_text;
+if (defined $config->{database_name}) {
+  $instance_text = $config->{database_name} . ' ' . $config->{name};
+} else {
+  $instance_text = $config->{name};
+}
 my $instance_top_uri = $c->uri_for('/');
 my $current_path = $c->local_path();
 my $admin_uri = $c->uri_for('/track/');

@@ -364,7 +364,10 @@ sub introduction : Private
   my $st = $c->stash();
   my $config = $c->config();
 
-  $st->{title} = 'Welcome to ' . $config->{name} . ' at ' . $config->{database_name};
+  $st->{title} = 'Welcome to ' . $config->{name};
+  if (defined $config->{database_name}) {
+    $st->{title} .= ' at ' . $config->{database_name};
+  }
   $st->{show_title} = 0;
   $st->{template} = 'curs/introduction.mhtml';
 }

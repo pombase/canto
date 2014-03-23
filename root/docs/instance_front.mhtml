@@ -1,10 +1,10 @@
 <!-- PAGE_TITLE: @@long_name@@ -->
-<!-- PAGE_SUBTITLE: Curate genetic and molecular data from your publications into <a href="@@database_url@@">@@database_name@@</a>. -->
+<!-- PAGE_SUBTITLE: Curate genetic and molecular data from your publications -->
 <!-- FLAGS: use_bootstrap -->
 
 <div class="row-fluid">
 <div class="span7">
-<h3>Curate a paper</h3>
+<h3>Curate a paper<% $dest_db_link |n%></h3>
 <& /tools/pubmed_id_start.mhtml, title => 'Start curating using a PubMed ID:' &>
 <p>
  Once you have found your paper, you can curate GO, phenotypes,
@@ -52,7 +52,6 @@ by viewing our help pages:
 <%init>
 my $config = $c->config();
 
-my $database_name = $config->{database_name};
 my $tool_name = $config->{name};
 
 my @sessions = ();
@@ -71,5 +70,12 @@ if (@sessions) {
   $docs_header = "Documentation";
 } else {
   $docs_header = "First time curator?";
+}
+
+my $dest_db_link = '';
+my $database_name = $c->config()->{database_name};
+my $database_url = $c->config()->{database_url};
+if (defined $database_name) {
+  $dest_db_link = qq| for $database_name|;
 }
 </%init>

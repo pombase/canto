@@ -29,7 +29,7 @@ my $cookie_jar = $test_util->cookie_jar();
 my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
-my $thank_you ="Thank you for your contribution to " . $config->{database_name};
+my $thank_you = "Thank you for your contribution";
 
 test_psgi $app, sub {
   my $cb = shift;

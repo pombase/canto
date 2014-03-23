@@ -291,7 +291,7 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     unlike ($redirect_res->content(), qr/Create gene list for $uniquename/);
-    my $thank_you ="Thank you for your contribution to " . $config->{database_name};
+    my $thank_you ="Thank you for your contribution";
     like ($redirect_res->content(), qr/$thank_you/);
     like ($redirect_res->content(), qr/annotations will now be sent/s);
   }

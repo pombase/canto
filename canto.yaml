@@ -1,8 +1,19 @@
 # Canto config file  -*- conf -*-
 name: Canto
 long_name: Community curation application
-database_name: SET_DATABASE_NAME_IN_CONFIG
-database_url: SET_DATABASE_URL_IN_CONFIG
+
+# The name of the destination database for the annotations from this instance.
+# eg. "PomBase".
+# If not set a generic text will be used instead.
+# database_name: SET_ME
+
+# Set this to the URL of the destination database for the annotations
+# from this Canto.  
+# e.g "www.pombase.org"
+# If not set the link will be replaced with some generic text.
+#
+# database_url: SET_ME
+
 header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
