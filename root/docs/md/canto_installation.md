@@ -58,7 +58,7 @@ http://localhost:5500/
 
 ## Manual installation
 
-# Software requirements
+### Software requirements
 
 The following software is needed for the installation:
 
@@ -219,7 +219,7 @@ Again, from the `canto` directory.
 The application should now be running at http://localhost:5000
 
 ## Configuration
-# canto.yaml
+### canto.yaml
 The default configuration is stored in `canto.yaml` in the top level
 directory.  Any installation specific settings can be added to
 `canto_deploy.yaml`, and will override the defaults.
@@ -345,7 +345,7 @@ The external links are implemented in the `linkouts.html` template.
 ## ontology_external_links
 #### chado
 
-# Creating users
+## Creating users
 
 To manage sessions and users from the web interface there needs to be at least
 one "admin" user.  Users can be added with the `canto_add.pl` script:
@@ -408,7 +408,7 @@ The ontology must be configured in the [annotation_type_list](#annotation_type_l
 `canto.yaml` file.
 
 ## Import and Export
-# Exporting to JSON
+### Exporting to JSON
 The curation data can be exported in [JSON](http://en.wikipedia.org/wiki/JSON)
 format with the `canto_export.pl` script from the `script` directory. This
 JSON file can then be loaded into a Chado database (see below).
