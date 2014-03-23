@@ -243,9 +243,9 @@ A longer description of the site. e.g. The SlugBase community annotation tool
 Database name for prefixing identifiers when exporting. e.g. PomBase
 ### database_url
 The URL of the database that this instance is installed for. e.g.
-`http://curation.pombase.org/pombe/`
+`http://www.pombase.org/`
 ### header_image
-A the path relative to `root/static` of the logo to put in the header.
+A path (relative to `root/static`) of the logo to put in the header.
 ### instance_organism
 Canto has two modes: single or multi organism. In multi organism mode, genes
 from any number of organisms can be annotated in each session. In this mode
