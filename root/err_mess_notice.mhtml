@@ -31,7 +31,7 @@ my $tidy = sub {
 
   if (ref $arg) {
     if (ref $arg eq 'ARRAY') {
-      return map { { title => $_ } } @$arg;
+      return map { if (ref $_) { $_ } else { { title => $_ } } } @$arg;
     } else {
       if (ref $arg eq 'HASH' && exists $arg->{title}) {
         return $arg;
