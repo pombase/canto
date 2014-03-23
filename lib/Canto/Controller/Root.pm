@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
+use Text::Markdown qw(markdown);
 use IO::All;
 
 __PACKAGE__->config->{namespace} = '';
@@ -115,48 +116,75 @@ sub _do_local_and_docs
     }
   }
 
-  my $template_file_name = "$page_name.mhtml";
+  my $template_file_name;
+  my $template_file = $c->path_to('root', $docs_path, "$page_name.mhtml");
 
-  my $template_file =
-    $c->path_to('root', $docs_path, $template_file_name);
+  if (-f $template_file) {
+    $template_file_name = "$docs_path/$page_name.mhtml";
+  } else {
+    my $markdown_file = $c->path_to('root', $docs_path, 'md', "$page_name.md");
+
+    if (-f $markdown_file) {
+      my $markdown_text = io($markdown_file)->slurp;
+      $markdown_text =~ s/^#\w*([^\n]+)\n(.*)/$2/;
+      my $page_title = $1;
+      $st->{title} = $page_title;
+      $st->{rendered_markdown_html} = markdown($markdown_text);
+
+      $template_file_name = "render_markdown.mhtml";
+      $template_file = $c->path_to('root', $template_file_name);
+    }
+  }
 
   my $hide_header = 0;
   my $hide_footer = 0;
+  my $hide_breadcrumbs = 0;
+  my $static_page = 0;
   my $use_bootstrap = 0;
 
   if (-f $template_file) {
-    my @lines = io($template_file)->slurp;
-    for my $line (@lines) {
-      if ($line =~ /<!--\s*PAGE_TITLE:\s*(.*?)\s*-->/) {
-        my $title = Canto::WebUtil::substitute_paths($1, $config);
-        $st->{title} = $title;
+    my $template_contents = io($template_file)->slurp();
+
+    if ($template_contents =~ /<!--\s*PAGE_TITLE:\s*(.*?)\s*-->/) {
+      my $title = Canto::WebUtil::substitute_paths($1, $config);
+      $st->{title} = $title;
+    }
+    if ($template_contents =~ /<!--\s*PAGE_SUBTITLE:\s*(.*?)\s*-->/) {
+      my $sub_title = Canto::WebUtil::substitute_paths($1, $config);
+      $st->{sub_title} = $sub_title;
+    }
+
+    if ($template_contents =~ /<!--\s*FLAGS:\s*(.*?)\s*-->/) {
+      my $all_flags = $1;
+      my @flags = split /\s+/, $all_flags;
+      if (grep { $_ eq 'hide_header' } @flags) {
+        $hide_header = 1;
+        $static_page = 1;
       }
-      if ($line =~ /<!--\s*PAGE_SUBTITLE:\s*(.*?)\s*-->/) {
-        my $sub_title = Canto::WebUtil::substitute_paths($1, $config);
-        $st->{sub_title} = $sub_title;
+      if (grep { $_ eq 'hide_footer' } @flags) {
+        $hide_footer = 1;
       }
-      if ($line =~ /<!--\s*FLAGS:\s*(.*?)\s*-->/) {
-        my $all_flags = $1;
-        my @flags = split /\s+/, $all_flags;
-        if (grep { $_ eq 'hide_header' } @flags) {
-          $hide_header = 1;
-        }
-        if (grep { $_ eq 'hide_footer' } @flags) {
-          $hide_footer = 1;
-        }
-        if (grep { $_ eq 'use_bootstrap' } @flags) {
-          $use_bootstrap = 1;
-        }
+      if (grep { $_ eq 'hide_breadcrumbs' } @flags) {
+        $hide_breadcrumbs = 1;
+      }
+      if (grep { $_ eq 'use_bootstrap' } @flags) {
+        $use_bootstrap = 1;
+      }
+      if (grep { $_ eq 'static_page' } @flags) {
+        $static_page = 1;
       }
     }
+
     $st->{hide_header} = $hide_header;
-    if ($hide_header) {
+    $st->{static_page} = $static_page;
+    if ($static_page) {
       # no login button, so we can cache it
       $c->cache_page(300);
     }
     $st->{hide_footer} = $hide_footer;
+    $st->{hide_breadcrumbs} = $hide_breadcrumbs;
     $st->{use_bootstrap} = $use_bootstrap;
-    $st->{template} = "$docs_path/$template_file_name";
+    $st->{template} = $template_file_name;
   } else {
     $c->stash()->{error} =
       { title => "No such page",

@@ -1,0 +1,8 @@
+<!-- FLAGS: static_page hide_breadcrumbs use_bootstrap -->
+
+<%args>
+$rendered_markdown_html
+</%args>
+
+<% $rendered_markdown_html |n %>
+

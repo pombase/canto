@@ -6,6 +6,8 @@ $error => undef
 $message => undef
 $notice => undef
 $is_admin_user
+$hide_header => 0
+$hide_breadcrumbs => 0
 </%args>
 
 <!DOCTYPE HTML>
@@ -14,7 +16,7 @@ $is_admin_user
     <& head.mhtml, title => $title &>
   </head>
   <body>
-% if (!$st->{hide_header}) {
+% if (!$hide_header) {
 % # hide the head on the Canto front page
     <& header.mhtml &>
 % }
@@ -23,7 +25,9 @@ $is_admin_user
 
     <div class="container-fluid" id="content">
       <div id="title-nav">
+% if (!$hide_breadcrumbs) {
 <& breadcrumbs.mhtml &>
+% }
 <span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
 
 <& title.mhtml, show_title => $show_title, title => $title, right_title => $right_title &>

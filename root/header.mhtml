@@ -3,8 +3,9 @@
     <& /logo.mhtml &>
   </a>
 
+% if (!$c->stash()->{static_page}) {
   <& /menu.mhtml &>
-
+% }
 
   <div class="clearall"></div>
 </div>
