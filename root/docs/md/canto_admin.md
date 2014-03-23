@@ -11,4 +11,5 @@ source to it
 
 ## Contents
 
-* [Installation](canto_installation)
+* [Installation](canto_installation) - How to install Canto
+* [Implementation and development](canto_development) - Implementation details
