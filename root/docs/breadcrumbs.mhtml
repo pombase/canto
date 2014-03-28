@@ -1,5 +1,5 @@
 <div id="breadcrumbs">
-% if ($current_path =~ m|^/docs/| and $current_path !~ m|/docs/canto_front|) {
+% if ($current_path =~ m|^docs/| and $current_path !~ m|docs/canto_front|) {
   <div class="breadcrumbs-link">
     <a id="breadcrumbs-home-link"
        href="<% $instance_top_uri %>" title="Go to <% $instance_text %>">
@@ -41,7 +41,7 @@ if (defined $config->{database_name}) {
   $instance_text = $config->{name};
 }
 my $instance_top_uri = $c->uri_for('/');
-my $current_path = $c->local_path();
+my $current_path = $c->req()->path();
 my $docs_uri = $c->uri_for('/docs/');
 
 my @doc_path = @{$c->stash()->{doc_path}};

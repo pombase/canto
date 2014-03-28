@@ -4,7 +4,7 @@
        href="<% $instance_top_uri %>" title="Go to <% $instance_text %>">
       <% $instance_text %>
     </a>
-% if ($current_path =~ "^/view/") {
+% if ($current_path =~ "^view/") {
     <div class="breadcrumbs-link">
     <a id="breadcrumbs-admin-link"
        href="<% $admin_uri %>" title="Go to data management pages">
@@ -24,6 +24,6 @@ if (defined $config->{database_name}) {
   $instance_text = $config->{name};
 }
 my $instance_top_uri = $c->uri_for('/');
-my $current_path = $c->local_path();
+my $current_path = $c->req()->path();
 my $admin_uri = $c->uri_for('/track/');
 </%init>

@@ -54,6 +54,7 @@ __PACKAGE__->config(name => 'Canto',
                       disable_index => 1,
                       debug => 1,
                     },
+                    using_frontend_proxy => 1,
                    );
 
 
@@ -115,7 +116,8 @@ my %_schema_map = ( track => "TrackDB",
 before 'prepare_action' => sub {
   my $self = shift;
 
-  my $base_path = $self->request_base_path() // '/root';
+  my $base_path = $self->uri_for('/')->path() || 'root';
+
   (my $cookie_path = $base_path) =~ s:/:_:g;
 
   # make sure the cookie name is unique if there are multiple
@@ -163,44 +165,6 @@ sub schema
   }
 
   return $schema;
-}
-
-=head2 local_path
-
- Usage   : my $local_path = $c->local_path();
- Function: If Catalyst::TraitFor::Request::ProxyBase is enabled use the
-           'X-Request-Base' header to find the base path, remove it from
-           the request path, then return the result.  If ProxyBase isn't
-           enabled, just return the path from the URI of the current request
- Args    : None
- Return  : The local path
-
-=cut
-sub local_path
-{
-  my $self = shift;
-
-  my $path = $self->req->uri()->path();
-  my $base = $self->request_base_path();
-
-  if ($base) {
-    $path =~ s/\Q$base//;
-  }
-
-  return $path;
-}
-
-=head2 request_base_path
-
- Usage   : $base_path = $c->request_base_path();
- Function: Return the value of the X-Request-Base header.
-
-=cut
-sub request_base_path
-{
-  my $self = shift;
-
-  return $self->req()->header('X-Request-Base');
 }
 
 # this code adds the application version to the paths of all static content so

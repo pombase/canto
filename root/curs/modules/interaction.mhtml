@@ -33,11 +33,8 @@ Select:
 <%init>
 my $root_path = $c->stash()->{curs_root_path};
 
-my $local_path = $c->local_path();
-my $return_path_uri =
-  $c->uri_for($local_path, $c->req()->params());
 my $upload_path = $c->uri_for("$root_path/gene_upload",
-                              { return_path => $return_path_uri });
+                              { return_path => $c->req()->uri() });
 
 my $gene_count = $c->stash()->{schema}->resultset('Gene')->count();
 

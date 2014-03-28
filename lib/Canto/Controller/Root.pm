@@ -321,11 +321,9 @@ sub logout : Global {
 =cut
 sub access_denied : Private {
   my ($self, $c, $action) = @_;
-  my $local_path = $c->local_path();
-  my $return_path_uri =
-    $c->uri_for($local_path, $c->req()->params());
+
   $c->res->redirect($c->uri_for('/account',
-                                { return_path => $return_path_uri }));
+                                { return_path => $c->req()->uri() }));
   $c->detach();
 }
 
