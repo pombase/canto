@@ -25,7 +25,7 @@
     </div>
 % }
 
-% if (@doc_path > 0) {
+% if (@doc_path > 1) {
   </div>
 %   }
   </div>
