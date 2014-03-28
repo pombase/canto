@@ -98,7 +98,7 @@ sub front :Path :Args(0)
 
 sub _do_local_and_docs
 {
-  my ($docs_path, $self, $c, $page_name) = @_;
+  my ($docs_path, $self, $c, @page_path) = @_;
 
   my $config = $c->config();
 
@@ -107,22 +107,33 @@ sub _do_local_and_docs
   $st->{title} = $config->{long_name};
   $st->{show_title} = 1;
 
-  if (!defined $page_name) {
+  if (!@page_path) {
     my $default_page = $config->{"default_${docs_path}_page"};
     if (defined $default_page) {
-      $page_name = $default_page;
+      push @page_path, $default_page;
     } else {
-      $page_name //= 'index';
+      push @page_path, 'index';
     }
   }
 
   my $template_file_name;
-  my $template_file = $c->path_to('root', $docs_path, "$page_name.mhtml");
+  my @page_path_with_suffix = @page_path;
+  $page_path_with_suffix[-1] .= '.mhtml';
+  my $template_file = $c->path_to('root', $docs_path, @page_path_with_suffix);
+
+  my @doc_path = @page_path;
+
+  if (@doc_path > 1 || $doc_path[0] ne "index") {
+    unshift @doc_path, "index";
+  }
 
   if (-f $template_file) {
-    $template_file_name = "$docs_path/$page_name.mhtml";
+    $template_file_name = "$docs_path/" . join "/", @page_path_with_suffix;
   } else {
-    my $markdown_file = $c->path_to('root', $docs_path, 'md', "$page_name.md");
+    my @page_path_with_suffix = @page_path;
+    $page_path_with_suffix[-1] .= '.md';
+
+    my $markdown_file = $c->path_to('root', $docs_path, 'md', @page_path_with_suffix);
 
     if (-f $markdown_file) {
       my $markdown_text = io($markdown_file)->slurp;
@@ -131,7 +142,7 @@ sub _do_local_and_docs
       $st->{title} = $page_title;
       $st->{rendered_markdown_html} = markdown($markdown_text);
 
-      $template_file_name = "render_markdown.mhtml";
+      $template_file_name = "docs/render_markdown.mhtml";
       $template_file = $c->path_to('root', $template_file_name);
     }
   }
@@ -185,10 +196,19 @@ sub _do_local_and_docs
     $st->{hide_breadcrumbs} = $hide_breadcrumbs;
     $st->{use_bootstrap} = $use_bootstrap;
     $st->{template} = $template_file_name;
+
+    $st->{doc_path} = [map {
+      my $el = $_;
+      (my $description = ucfirst $_) =~ s/_/ /g;
+      {
+        el => $el,
+        description => $description,
+      };
+    } @doc_path];
   } else {
     $c->stash()->{error} =
       { title => "No such page",
-        text => "$page_name doesn't exist" };
+        text => (join "/", @page_path) . " doesn't exist" };
     $c->forward('/default');
     $c->detach();
   }

@@ -1,0 +1,14 @@
+<!-- FLAGS: static_page use_bootstrap -->
+
+<div id="breadcrumbs">
+  <a href="canto_admin">&lt;- Back to index</a>
+</div>
+
+<div class="clearall"></div>
+
+<%args>
+$rendered_markdown_html
+</%args>
+
+<% $rendered_markdown_html |n %>
+
