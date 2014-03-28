@@ -1,13 +1,1 @@
-<div id="heading">
-  <a href="/">
-    <& /logo.mhtml &>
-  </a>
-
-  <& /menu.mhtml &>
-
-  <div class="clearall"></div>
-</div>
-
-<%flags>
-inherit => undef
-</%flags>
+../header.mhtml
