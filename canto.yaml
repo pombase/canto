@@ -21,7 +21,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v744
 
-schema_version: 5
+schema_version: 6
 
 # the path that the home link goes to
 instance_front_path: /docs/instance_front
@@ -41,7 +41,8 @@ authentication:
       credential:
         class: 'Password'
         password_field: 'password'
-        password_type: 'clear'
+        password_type: 'hashed'
+        password_hash_type: 'SHA-1'
       store:
         class: DBIx::Class
         user_class: TrackModel::Person

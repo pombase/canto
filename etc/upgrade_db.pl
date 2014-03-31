@@ -69,6 +69,20 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
       $dbh->do($sql);
     }
   }
+  when (6) {
+    use Digest::SHA qw(sha1_base64);
+
+    my $proc = sub {
+      my $person_rs = $track_schema->resultset('Person');
+
+      while (defined (my $person = $person_rs->next())) {
+        $person->password(sha1_base64($person->password()));
+        $person->update();
+      }
+    };
+
+    $track_schema->txn_do($proc);
+  }
   default {
     die "don't know how to upgrade to version $new_version";
   }

@@ -41,6 +41,7 @@ use strict;
 use warnings;
 use Carp;
 use Moose;
+use Digest::SHA qw(sha1_base64);
 
 use feature qw(state);
 
@@ -520,7 +521,7 @@ sub get_person
   my $name = shift;
   my $email_address = shift;
   my $role_cvterm = shift;
-  my $password = shift // $email_address;
+  my $password = shift;
 
   my $schema = $self->schema();
 
@@ -530,12 +531,20 @@ sub get_person
   if (!defined $name || length $name == 0) {
     die "name not set for $email_address\n";
   }
+  if (!defined $password) {
+    die "no password passed to get_person()\n";
+  }
+  if (!$password) {
+    die "empty password passed to get_person()\n";
+  }
+
+  my $hashed_password = sha1_base64($password);
 
   return $schema->resultset('Person')->find_or_create(
       {
         name => $name,
         email_address => $email_address,
-        password => $password,
+        password => $hashed_password,
         role => $role_cvterm,
       });
 }
