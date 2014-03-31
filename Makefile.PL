@@ -93,6 +93,7 @@ requires 'Text::Markdown';
 requires 'Try::Tiny';
 requires 'URI::Escape';
 requires 'XML::Simple';
+requires 'Starman';
 
 test_requires 'LWP::Protocol::PSGI';
 test_requires 'LWP::Protocol::https';
