@@ -39,7 +39,7 @@ test_psgi $app, sub {
     $res = $cb->($req);
     ok ($res->content() =~ /Reports/);
     my $app_name = $config->{name};
-    like ($cookie_jar->as_string(), qr[${app_name}_root_session=[0-9a-f]+]);
+    like ($cookie_jar->as_string(), qr[${app_name}__session=[0-9a-f]+]);
 };
 
 done_testing;

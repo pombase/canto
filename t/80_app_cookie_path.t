@@ -24,7 +24,7 @@ test_psgi $app, sub {
     my $res = $test_util->app_login($cookie_jar, $cb, $test_base);
 
     my $app_name = $config->{name};
-    like ($cookie_jar->as_string(), qr{${app_name}_tools_session=[a-f0-9]+});
+    like ($cookie_jar->as_string(), qr{${app_name}_tools__session=[a-f0-9]+});
 };
 
 done_testing;
