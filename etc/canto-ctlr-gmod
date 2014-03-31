@@ -6,13 +6,13 @@ app=$1
 port=$3
 
 WORKERS=8
-CANTO_DATA=/data/canto/
+CANTO_DATA=/data/canto
 PID_FILE=/var/run/canto-$app-$port
 
 # Carry out specific functions when asked to by the system
 case "$2" in
   start)
-    (date; /usr/local/bin/start_server --pid-file=$PID_FILE --port $port -- /usr/local/share/canto/script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman --preload) 2>&1 | tee -a $CANTO_DATA/logs/$app.log &
+    (date; cd /usr/local/share/canto; /usr/local/bin/start_server --pid-file=$PID_FILE --port $port -- ./script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman --preload) 2>&1 | tee -a $CANTO_DATA/logs/$app.log &
     ;;
   stop)
     pid=`cat $PID_FILE`
