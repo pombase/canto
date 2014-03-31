@@ -4,6 +4,8 @@
 a focus on community curation.  This document describes Canto from the
 administrator's perspective.  It covers installation and maintenance.
 
+Canto is open source and available [from GitHub](https://github.com/pombase/canto).
+
 The latest version of this document can always be found on the main
 [Canto website](http://curation.pombase.org/docs/canto_admin) and the
 source to it
