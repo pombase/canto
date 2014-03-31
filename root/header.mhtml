@@ -1,5 +1,5 @@
 <div id="heading">
-  <a href="/">
+  <a href="<% $c->config()->{header_image_url} // '/' %>">
     <& /logo.mhtml &>
   </a>
 

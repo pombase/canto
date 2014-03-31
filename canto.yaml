@@ -14,6 +14,7 @@ long_name: Community curation application
 #
 # database_url: SET_ME
 
+header_image_url: '/'
 header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
