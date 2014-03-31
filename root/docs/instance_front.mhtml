@@ -21,7 +21,7 @@ colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help 
 %   for my $session (@sessions) {
 %     my $curs_key = $session->{key};
 %     my $pubid = $session->{pubid};
-<li><a href='<% $c->uri_for("/curs/$curs_key") %>'"><% $pubid %></a></li>
+<li><a href='<% $c->uri_for("/curs/$curs_key") %>'><% $pubid %></a></li>
 %   }
   </ul>
 % }
