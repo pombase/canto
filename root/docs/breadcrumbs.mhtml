@@ -15,7 +15,7 @@
 
 % for my $path_bit (@path_link_bits) {
     <div class="breadcrumbs-link">
-      <a href="<% $docs_uri . '/'. $path_bit->{el} %>"
+      <a href="<% $docs_uri . $path_bit->{el} %>"
          title="<% $path_bit->{description} %>">
         <% $path_bit->{description} %>
 % }
