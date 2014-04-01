@@ -15,7 +15,7 @@ source to it
 
 * [Installation](canto_admin/installation) - How to install Canto
 * [Setup](canto_admin/setup) - Configuring Canto and loading genome data
-* [Good practises](canto_admin/good_practices) - A walk through of a setting up and
+* [Good practices](canto_admin/good_practices) - A walk through of a setting up and
   maintaining a Canto instance
 * [Export](canto_admin/data_export) - Getting annotation from Canto into a file
 * [Configuration file](canto_admin/configuration_file) - Descriptions of the
