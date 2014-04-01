@@ -64,15 +64,21 @@ sub gene_product
       $schema->resultset('Cv')
         ->search({ name => 'PomBase gene products' })->first();
 
-    my $gene_uniquename = $gene->uniquename();
-    my $transcript_rs = $schema->resultset('Feature')
+    # this is a temporary fix as we shouldn't be hard coding the products
+    # CV name
+    if (defined $product_cv) {
+      my $gene_uniquename = $gene->uniquename();
+      my $transcript_rs = $schema->resultset('Feature')
         ->search({ uniquename => { -like => "$gene_uniquename.%" }});
-    my $rs = $transcript_rs ->search_related('feature_cvterms')
+      my $rs = $transcript_rs ->search_related('feature_cvterms')
         ->search_related('cvterm', { cv_id => $product_cv->cv_id() });
-    my $term = $rs->first();
+      my $term = $rs->first();
 
-    if (defined $term) {
-      $cache->{$gene->feature_id()} = $term->name();
+      if (defined $term) {
+        $cache->{$gene->feature_id()} = $term->name();
+      } else {
+        $cache->{$gene->feature_id()} = undef;
+      }
     } else {
       $cache->{$gene->feature_id()} = undef;
     }
