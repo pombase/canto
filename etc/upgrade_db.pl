@@ -76,8 +76,11 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
       my $person_rs = $track_schema->resultset('Person');
 
       while (defined (my $person = $person_rs->next())) {
-        $person->password(sha1_base64($person->password()));
-        $person->update();
+        my $current_password = $person->password();
+        if (defined $current_password) {
+          $person->password(sha1_base64($current_password));
+          $person->update();
+        }
       }
     };
 
