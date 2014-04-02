@@ -45,7 +45,8 @@ before proceeding:
       libcache-memcached-perl libcache-perl libfile-touch-perl \
       libcatalyst-engine-psgi-perl \
       liblwp-protocol-psgi-perl libweb-scraper-perl \
-      libdbd-pg-perl libdata-javascript-anon-perl starman libnet-server-perl
+      libdbd-pg-perl libdata-javascript-anon-perl starman libnet-server-perl \
+      libautobox-list-util-perl libwant-perl libautobox-core-perl
 
 If these packages aren't installed, these Perl modules will be installed using
 CPAN, which is slower.
