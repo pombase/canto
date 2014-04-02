@@ -2795,29 +2795,11 @@ sub feature_view : Chained('feature') PathPart('view')
 
   my @ids = split /,/, $ids;
 
-<<<<<<< HEAD
-  my $total_annotation_count = $schema->resultset('Annotation')->count();
-
-  if ($total_annotation_count == 0 && $st->{state} eq CURATION_IN_PROGRESS) {
-    $st->{message} =
-      [qq|If you do not know which annotation type to use to describe your | .
-        qq|experiment, please contact the helpdesk using the "Contact curators" link|];
-  }
-
-  $st->{gene} = $first_gene_proxy;
-  $st->{genes} = [@gene_proxies];
-}
-
-sub gene_view : Chained('gene') PathPart('view')
-{
-  my ($self, $c) = @_;
-=======
   if ($feature_type eq 'gene') {
     my @gene_proxies = map {
       my $gene = $schema->find_with_type('Gene', $_);
       _get_gene_proxy($config, $gene);
     } @ids;
->>>>>>> Unify the handling of gene and genotype pages
 
     my $first_gene_proxy = $gene_proxies[0];
 
