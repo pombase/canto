@@ -529,6 +529,7 @@ sub _edit_genes_helper
   my @all_elements = (
       {
         name => 'gene-select', label => 'gene-select',
+        label_tag => 'formfu-label',
         type => 'Checkbox', default_empty_value => 1
       },
       {
@@ -644,6 +645,7 @@ sub gene_upload : Chained('top') Args(0) Form
       {
         name => 'no-genes', type => 'Checkbox',
         label => 'This paper does not contain any gene-specific information',
+        label_tag => 'formfu-label',
         default_empty_value => 1,
         attributes => { 'ng-model' => 'data.noAnnotation',
                         'ng-disabled' => 'data.geneIdentifiers.length > 0'  },
@@ -1251,11 +1253,13 @@ sub annotation_ontology_edit
       },
       {
         name => 'ferret-suggest-name', label => 'ferret-suggest-name',
+        label_tag => 'formfu-label',
         type => 'Text',
       },
       {
         name =>'ferret-suggest-definition',
         label => 'ferret-suggest-definition',
+        label_tag => 'formfu-label',
         type => 'Text',
       },
       {
@@ -1362,7 +1366,7 @@ sub annotation_interaction_edit
 
   my @all_elements = (
       {
-        name => 'prey', label => 'prey',
+        name => 'prey',
         type => 'Checkboxgroup',
         container_tag => 'div',
         label => '',
@@ -2425,6 +2429,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
     my %comment_def = (
       name => 'annotation-comment-0',
       label => 'Optional comment:',
+      label_tag => 'formfu-label',
       type => 'Textarea',
       container_tag => 'div',
       container_attributes => {
@@ -2454,6 +2459,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
       my %extension_def = (
         name => 'annotation-extension-0',
         label => 'Annotation extension:',
+        label_tag => 'formfu-label',
         type => 'Textarea',
         container_tag => 'div',
         container_attributes => {
@@ -2484,7 +2490,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
         content => $transfer_select_genes_text,
       },
       {
-        name => 'dest', label => 'dest',
+        name => 'dest',
         type => 'Checkboxgroup',
         container_tag => 'div',
         label => '',
@@ -2728,7 +2734,7 @@ sub multi_gene_select : Chained('gene') PathPart('multi_gene_select') Args(1) Fo
 
   push @all_elements, (
     {
-      name => 'other-genes', label => 'other-genes',
+      name => 'other-genes',
       type => 'Checkboxgroup',
       container_tag => 'div',
       label => '',
@@ -3154,11 +3160,13 @@ sub _assign_session :Private
       },
       {
         name => 'reassigner_name', label => 'Your name', type => 'Text', size => 40,
+        label_tag => 'formfu-label',
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
         default => $last_reassigner_name,
       },
       {
         name => 'reassigner_email', label => 'Your email address', type => 'Text', size => 40,
+        label_tag => 'formfu-label',
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
         default => $last_reassigner_email_address,
       },
@@ -3182,6 +3190,7 @@ sub _assign_session :Private
       {
         name => 'submitter_name',
         label => ucfirst (($reassign ? 'new curator ' : '') . 'name'),
+        label_tag => 'formfu-label',
         type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required' ],
         default => $default_submitter_name,
@@ -3189,6 +3198,7 @@ sub _assign_session :Private
       {
         name => 'submitter_email',
         label => ucfirst (($reassign ? 'new curator ' : '') . 'email'),
+        label_tag => 'formfu-label',
         type => 'Text', size => 40,
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
         default => $default_submitter_email,
