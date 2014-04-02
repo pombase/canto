@@ -40,12 +40,12 @@ my $options = { pub_uniquename => $pub->uniquename(),
                 annotation_type_category => $annotation_type->{category},
                 };
 if (defined $target) {
-  my @constrain_annotations = $gene->all_annotations(include_with => 0)->all();
-  map {
-    push @constrain_annotations, $_->annotations();
-  } $gene->alleles();
+  my @constrain_annotations = $target->all_annotations(include_with => 0)->all();
   $constrain_annotations = [@constrain_annotations];
-#  $options->{gene_identifier} = $target->primary_identifier();
+  $options->{gene_identifier} =
+    $target->can('primary_identifier') ?
+    $target->primary_identifier() :
+    $target->name()
 } else {
   $options->{max_results} = $c->config()->{max_existing_annotations} // 10;
 }

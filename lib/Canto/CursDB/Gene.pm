@@ -131,6 +131,34 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:25
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I6/rCQDKf0kw6LxxvOgunA
 
+=head2 feature_id
+
+ Usage   : $gene->feature_id()
+ Function: Return the gene_id of this gene.  This is an alias for gene_id()
+           that exists to make gene and genotype handling easier.
+
+=cut
+
+sub feature_id
+{
+  my $self = shift;
+
+  return $self->gene_id();
+}
+
+=head2 feature_type
+
+ Usage   : $gene->feature_type();
+ Function: Return 'gene'.  This exists to make gene and genotype handling
+           easier.
+
+=cut
+
+sub feature_type
+{
+  return 'gene';
+}
+
 =head2 direct_annotations
 
  Usage   : my $annotations_rs = $gene->direct_annotations();

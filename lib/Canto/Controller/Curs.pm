@@ -1540,7 +1540,7 @@ sub existing_annotation_edit : Chained('annotation') PathPart('edit') Args(1) Fo
 }
 
 # redirect to the annotation transfer page only if we've just created an
-# ontology annotation and we have more than one gene
+# ontology annotation for a gene
 sub _maybe_transfer_annotation
 {
   my $c = shift;
@@ -1550,18 +1550,15 @@ sub _maybe_transfer_annotation
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $gene_count = $schema->resultset('Gene')->count();
-
-  my $gene = $st->{gene};
+  my ($feature_type, $feature) =
+    Canto::Curs::Utils::annotation_features($c->config(), $st->{annotation});
 
   my $current_user = $c->user();
 
-  if ($annotation_config->{category} eq 'ontology') {
+  if ($annotation_config->{category} eq 'ontology' && $feature_type eq 'gene') {
     _redirect_and_detach($c, 'annotation', (join ',', @$annotation_ids), 'transfer');
   } else {
-    if (defined $gene) {
-      _redirect_and_detach($c, 'gene', $gene->gene_id(), 'view');
-    }
+    _redirect_and_detach($c, 'feature', $feature_type, 'view', $feature->feature_id());
   }
 }
 
@@ -1798,11 +1795,7 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
       }
       _redirect_and_detach($c, @parts);
     } else {
-      if ($annotation_config->{needs_allele} || defined $existing_evidence_code) {
-#        _redirect_and_detach($c, 'gene', $gene_id, 'view');
-      } else {
-        _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
-      }
+      _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
     }
   }
 }

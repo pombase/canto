@@ -121,9 +121,41 @@ __PACKAGE__->has_many(
 __PACKAGE__->many_to_many('annotations' => 'genotype_annotations',
                           'annotation');
 
+=head2 feature_id
+
+ Usage   : $genotype->feature_id()
+ Function: Return the genotype_id of this genotype.  This is an alias for
+           genotype_id() that exists to make gene and genotype handling easier.
+
+=cut
+
+sub feature_id
+{
+  my $self = shift;
+
+  return $self->genotype_id();
+}
+
+=head2 feature_type
+
+ Usage   : $gene->feature_type();
+ Function: Return 'genotype'.  This exists to make gene and genotype handling
+           easier.
+
+=cut
+
+sub feature_type
+{
+  return 'genotype';
+}
+
 # aliases to make current_annotation_view.mhtml simpler
-__PACKAGE__->many_to_many('all_annotations' => 'genotype_annotations',
-                          'annotation');
+sub all_annotations
+{
+  my $self = shift;
+
+  return $self->annotations();
+}
 
 sub display_name
 {
