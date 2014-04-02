@@ -36,7 +36,8 @@ under the same terms as Perl itself.
 
 =cut
 
-use perl5i::2;
+use strict;
+use warnings;
 use Moose;
 
 use JSON;
