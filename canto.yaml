@@ -803,7 +803,7 @@ class_info:
     publications_with_session_needing_approval:
       extends: pub
       '+field_info_list':
-        - name: status_change_datestamp
+        - name: last_status_change
           source:
             sql: "select value from curs, cursprop p, cvterm t where me.pub_id = curs.pub and curs.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status_datestamp'"
           editable: 0
