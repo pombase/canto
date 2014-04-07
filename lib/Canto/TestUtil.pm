@@ -958,7 +958,7 @@ sub app_login
   $admin_people->reset();
 
   my $first_admin_email_address = $first_admin->email_address();
-  my $first_admin_password = $first_admin->password();
+  my $first_admin_password = $first_admin->email_address();
 
   my $uri = new URI("http://localhost:5000/login");
   $uri->query_form(email_address => $first_admin_email_address,
@@ -974,7 +974,7 @@ sub app_login
 
   my $res = $cb->($req);
   if ($res->code != 302) {
-    croak "couldn't login";
+    croak "couldn't login: " . $res->content();
   }
   $cookie_jar->extract_cookies($res);
 

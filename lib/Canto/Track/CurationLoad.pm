@@ -150,7 +150,7 @@ sub load
                                  $admin_cvterm, 'val@sanger.ac.uk');
   my $dr_harris =
     $self->load_util()->get_person('Midori Harris', 'mah79@cam.ac.uk',
-                                   $admin_cvterm, 'mah79@cama.ac.uk');
+                                   $admin_cvterm, 'mah79@cam.ac.uk');
   $dr_harris->known_as("Dr Harris");
   $dr_harris->update();
 
