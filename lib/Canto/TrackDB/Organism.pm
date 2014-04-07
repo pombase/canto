@@ -150,20 +150,6 @@ sub full_name {
   return $self->genus() . ' ' . $self->species();
 }
 
-# return the taxon ID of this organism, from the organismprop table
-sub taxonid {
-  my $self = shift;
-
-  if (! defined $self->{_taxonid}) {
-    my $prop = $self->organismprops()
-      ->search({ 'type.name' => 'taxon_id' }, { join => 'type' })->first();
-    croak "expected organismprop not found" unless defined $prop;
-    $self->{_taxonid} = $prop->value();
-  }
-
-  return $self->{_taxonid};
-}
-
 # You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

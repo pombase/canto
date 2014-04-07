@@ -44,6 +44,7 @@ use Moose::Role;
 requires 'feature_class';
 requires 'lookup_by_synonym_rs';
 requires 'schema';
+requires 'taxon_id_lookup';
 
 sub build_gene_constraint
 {
@@ -118,7 +119,7 @@ sub _read_genes
       product => $self->gene_product($found_gene),
       synonyms => [@synonym_identifiers],
       organism_full_name => $found_gene->organism()->full_name(),
-      organism_taxonid => $found_gene->organism()->taxonid(),
+      organism_taxonid => $self->taxon_id_lookup($found_gene->organism()),
       match_types => \%match_types,
     }
   }

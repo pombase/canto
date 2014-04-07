@@ -78,5 +78,6 @@ sub lookup_by_synonym_rs
 }
 
 
+with 'Canto::Role::TaxonIDLookup';
 with 'Canto::Role::ChadoLikeGeneLookup';
 with 'Canto::Role::GeneLookupCache';

@@ -118,5 +118,6 @@ sub lookup_by_synonym_rs
     ->search_related('feature', {}, { prefetch => 'organism' });
 }
 
+with 'Canto::Role::TaxonIDLookup';
 with 'Canto::Role::ChadoLikeGeneLookup';
 with 'Canto::Role::GeneLookupCache';

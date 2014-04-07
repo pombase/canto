@@ -23,6 +23,19 @@ app_version: v746
 
 schema_version: 6
 
+## Set this to create a Canto instance for a particular organism.  If not set,
+## all gene lookups with match genes from any organism (and will return the
+## organism).
+#instance_organism:
+#  taxonid: 4896
+
+## If set, use this map to get the NCBI taxon ID of an organism.  If not set,
+## look for an Organismprop for the Organism with type "taxon_id" .
+## see also: Canto::Role::TaxonIDLookup
+# organism_taxon_id:
+#   Schizosaccharomyces:
+#     pombe: 4896
+
 # the path that the home link goes to
 instance_front_path: /docs/instance_front
 canto_front_path: /docs/canto_front

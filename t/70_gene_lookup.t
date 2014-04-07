@@ -1,6 +1,8 @@
 use strict;
 use warnings;
-use Test::More tests => 39;
+use Test::More tests => 42;
+
+use Try::Tiny;
 
 use Canto::Track::GeneLookup;
 
@@ -117,3 +119,55 @@ $result = $lookup->lookup(
   [qw(wtf22)]);
 is(@{$result->{found}}, 1);
 
+
+# test that we get a failure if there is no taxon_id organismprop
+my $track_schema = $test_util->track_schema();
+
+my $organismprop_rs = $track_schema->resultset('Organismprop');
+$organismprop_rs
+  ->search({'type.name' => 'taxon_id' },
+           { join => 'type' })->delete();
+
+$lookup->cache()->clear();
+
+# test that the taxon ID cache works
+$result = $lookup->lookup(
+  {
+    search_organism => {
+      genus => 'Schizosaccharomyces',
+      species => 'pombe',
+    },
+  },
+  [qw(klp1)]);
+is(@{$result->{found}}, 1);
+
+$lookup->{_taxonid_cache} = {};
+$lookup->cache()->clear();
+
+# should fail because taxon ID not found
+try {
+  $result = $lookup->lookup(
+    {
+      search_organism => {
+        genus => 'Schizosaccharomyces',
+        species => 'pombe',
+      },
+    },
+    [qw(klp1)]);
+  fail("lookup() should have failed");
+} catch {
+  like ($_, qr/no 'organism_taxon_id' configuration found and no 'taxon_id' organismprop found/);
+};
+
+# set the taxon config - needed when the taxon ID isn't in Chado
+$test_util->config()->{organism_taxon_id}->{Schizosaccharomyces}->{pombe} = 4896;
+$result = $lookup->lookup(
+  {
+    search_organism => {
+      genus => 'Schizosaccharomyces',
+      species => 'pombe',
+    },
+  },
+  [qw(klp1)]);
+
+is(@{$result->{found}}, 1);

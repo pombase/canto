@@ -47,6 +47,7 @@ use Canto::Cache;
 
 with 'Canto::Role::Configurable';
 with 'Canto::Chado::ChadoLookup';
+with 'Canto::Role::TaxonIDLookup';
 
 has cache => (is => 'ro', init_arg => undef, lazy_build => 1);
 
@@ -188,12 +189,12 @@ sub lookup
       gene => {
         identifier => $subject->uniquename(),
         name => $subject->name(),
-        taxonid => $subject->organism()->taxonid(),
+        taxonid => $self->taxon_id_lookup($subject->organism()),
       },
       interacting_gene => {
         identifier => $object->uniquename(),
         name => $object->name(),
-        taxonid => $object->organism()->taxonid(),
+        taxonid => $self->taxon_id_lookup($object->organism()),
       },
       publication => {
         uniquename => $pub_uniquename,
