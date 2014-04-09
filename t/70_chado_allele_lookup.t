@@ -18,13 +18,27 @@ my $res = $lookup->lookup(gene_primary_identifier => 'SPBC12C2.02c',
 
 cmp_deeply($res,
            [
-           {
-             name => 'ste20delta',
-             description => 'del_x1',
-             allele_type => 'deletion',
-             uniquename => 'SPBC12C2.02c:allele-1',
-             display_name => 'ste20delta(del_x1)',
-           }
+            {
+              'description' => 'K132A',
+              'uniquename' => 'SPBC12C2.02c:allele-2',
+              'name' => 'ste20-c1',
+              'display_name' => 'ste20-c1(K132A)',
+              'allele_type' => 'mutation of single amino acid residue'
+            },
+            {
+              'uniquename' => 'SPBC12C2.02c:allele-3',
+              'name' => 'ste20-c2',
+              'display_name' => 'ste20-c2(K132A,K144A)',
+              'allele_type' => 'mutation of multiple amino acid residues',
+              'description' => 'K132A,K144A'
+            },
+            {
+              'name' => 'ste20delta',
+              'uniquename' => 'SPBC12C2.02c:allele-1',
+              'allele_type' => 'deletion',
+              'display_name' => 'ste20delta(del_x1)',
+              'description' => 'del_x1'
+            }
          ]);
 
 # search with gene constrained to a another gene

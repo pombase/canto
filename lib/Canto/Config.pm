@@ -238,10 +238,14 @@ sub setup
     }
   }
 
-  # create an allele_type_list
+  delete $self->{export_type_to_allele_type};
+
+  # create an allele_types map and the export_type_to_allele_type map
   if (defined $self->{allele_type_list}) {
     for my $allele_type (@{$self->{allele_type_list}}) {
       $self->{allele_types}->{$allele_type->{name}} = $allele_type;
+      my $export_type = $allele_type->{export_type} // $allele_type->{name};
+      push @{$self->{export_type_to_allele_type}->{$export_type}}, $allele_type;
     }
   }
 
