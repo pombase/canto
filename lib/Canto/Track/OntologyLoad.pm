@@ -354,7 +354,15 @@ sub load
 
   my $rels = $graph->get_all_relationships();
 
-  for my $rel (@$rels) {
+  my @sorted_rels = sort {
+    $a->{type} cmp $b->{type}
+      ||
+    $a->{acc1} cmp $b->{acc1}
+      ||
+    $a->{acc2} cmp $b->{acc2};
+  } @$rels;
+
+  for my $rel (@sorted_rels) {
     my $subject_term_acc = $rel->subject_acc();
     my $object_term_acc = $rel->object_acc();
 
