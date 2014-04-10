@@ -309,8 +309,8 @@ sub set_state
     croak "can't change state from ", EXPORTED;
   }
 
-  given ($new_state) {
-    when (SESSION_ACCEPTED) {
+  my %dispatch = (
+    SESSION_ACCEPTED, sub {
       if ($current_state ne SESSION_CREATED && $force ne $current_state) {
         carp "can't accept a session unless it's in the " . SESSION_CREATED .
           qq|state (not "$current_state")|;
@@ -327,8 +327,8 @@ sub set_state
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVER_NAME_KEY);
       $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
-    }
-    when (CURATION_IN_PROGRESS) {
+    },
+    CURATION_IN_PROGRESS, sub {
       if ($current_state ne CURATION_PAUSED &&
           $force ne $current_state) {
         carp "use force flag to change state to ",
@@ -343,8 +343,8 @@ sub set_state
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVER_NAME_KEY);
       $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
-    }
-    when (CURATION_PAUSED) {
+    },
+    CURATION_PAUSED, sub {
       if ($current_state ne CURATION_IN_PROGRESS) {
         carp "trying to pause a session that isn't in the state ",
           CURATION_IN_PROGRESS, " it's currently: ", $current_state;
@@ -357,8 +357,8 @@ sub set_state
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVER_NAME_KEY);
       $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
-    }
-    when (NEEDS_APPROVAL) {
+    },
+    NEEDS_APPROVAL, sub {
       if ($current_state ne CURATION_IN_PROGRESS &&
           $force ne $current_state) {
         carp "trying to start approving a session that isn't in the state ",
@@ -371,8 +371,8 @@ sub set_state
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVER_NAME_KEY);
       $self->unset_metadata($schema, APPROVER_EMAIL_KEY);
-    }
-    when (APPROVAL_IN_PROGRESS) {
+    },
+    APPROVAL_IN_PROGRESS, sub {
       if ($current_state ne NEEDS_APPROVAL && $force ne $current_state) {
         carp "must be in state ", NEEDS_APPROVAL,
           " (not $current_state) to change to ",
@@ -391,8 +391,8 @@ sub set_state
                           Canto::Util::get_current_datetime());
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
-    }
-    when (APPROVED) {
+    },
+    APPROVED, sub {
       unless (defined $current_user && $current_user->is_admin()) {
         croak "only admin users can approve sessions\n";
       }
@@ -403,19 +403,24 @@ sub set_state
       $self->set_metadata($schema, APPROVED_TIMESTAMP_KEY,
                           Canto::Util::get_current_datetime());
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
-    }
-    when (EXPORTED) {
+    },
+    EXPORTED, sub {
       if ($current_state ne APPROVED) {
         carp "must be in state ", APPROVED,
           " (not $current_state) to change to state ", EXPORTED;
       }
       $self->set_metadata($schema, EXPORTED_TIMESTAMP_KEY,
                           Canto::Util::get_current_datetime());
-    }
-    default {
-      croak "can't handle state: $new_state";
-    }
-  };
+    },
+  );
+
+  my $dispatch_sub = $dispatch{$new_state};
+
+  if (defined $dispatch_sub) {
+    $dispatch_sub->();
+  } else {
+    croak "can't handle state: $new_state";
+  }
 
   my $approved_timestamp = $self->get_metadata($schema, APPROVED_TIMESTAMP_KEY);
   my $approver_email = $self->get_metadata($schema, APPROVER_EMAIL_KEY);

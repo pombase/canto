@@ -41,33 +41,38 @@ if ($opt !~ /^--/) {
   usage (qq{first argument must be an option, not "$opt"});
 }
 
-given ($opt) {
-  when ('--cvterm') {
+my %dispatch = (
+  '--cvterm' => sub {
     $add_cvterm = 1;
-  }
-  when ('--person') {
+  },
+  '--person' => sub {
     $add_person = 1;
-  }
-  when ('--pubmed-by-id') {
+  },
+  '--pubmed-by-id' => sub {
     $add_by_pubmed_id = 1;
-  }
-  when ('--pubmed-by-query') {
+  },
+  '--pubmed-by-query' => sub {
     $add_by_pubmed_query = 1;
-  }
-  when ('--help') {
+  },
+  '--help' => sub {
     $do_help = 1;
-  }
-  when ('--dry-run') {
+  },
+  '--dry-run' => sub {
     $dry_run = 1;
-  }
-  default {
-    usage ();
-  }
+  },
+);
+
+my $dispatch_sub = $dispatch{$opt};
+
+if (defined $dispatch_sub) {
+  $dispatch_sub->();
+} else {
+  usage ();
 }
 
 sub usage
 {
-  my $message = shift;
+  my $message= shift;
 
   if (defined $message) {
     $message .= "\n";

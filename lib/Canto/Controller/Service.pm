@@ -143,19 +143,18 @@ sub lookup : Local
 
   my $results;
 
-  given ($type_name) {
-    when ('allele') {
-      $results = _allele_results($c, @_);
-    }
-    when ('ontology') {
-      $results = _ontology_results($c, @_);
-    }
-    when ('person') {
-      $results = _person_results($c, @_);
-    }
-    default {
-      $results = { error => "unknown lookup type: $type_name" };
-    }
+  my %dispatch = (
+    allele => \&_allele_results,
+    ontology => \&_ontology_results,
+    person => \&_person_results,
+  );
+
+  my $res_sub = $dispatch{$type_name};
+
+  if (defined $res_sub) {
+    $results = $res_sub->($c, @_);
+  } else {
+    $results = { error => "unknown lookup type: $type_name" };
   }
 
   $c->stash->{json_data} = $results;
