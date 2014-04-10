@@ -1412,8 +1412,6 @@ var AlleleStuff = function($) {
               get_allele_type_select_jq($allele_dialog).val(ui.item.allele_type).trigger('change');
               $description.attr('disabled', true);
             }
-            var label = add_allele_dialog.find('.curs-allele-type-label');
-            label.hide();
           }
         }).data("autocomplete" )._renderItem = function(ul, item) {
           return $( "<li></li>" )
