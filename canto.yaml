@@ -88,6 +88,7 @@ email:
       subject: "email_templates/generic/session_reassigned_subject.mhtml"
       body: "email_templates/generic/session_reassigned_body.mhtml"
     session_resent:
+      from_address: CURRENT_USER
       subject: "email_templates/generic/session_resent_subject.mhtml"
       body: "email_templates/generic/session_resent_body.mhtml"
     reassigner:
