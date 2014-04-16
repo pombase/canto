@@ -49,7 +49,7 @@ use Clone qw(clone);
 
 =head2 lookup
 
- Usage   : my $gene_lookup = Canto::UniProt::get_adaptor($config, 'gene');
+ Usage   : my $gene_lookup = Canto::Track::get_adaptor($config, 'gene');
            my $results =
              $gene_lookup->lookup(['O74473', 'DPOD_YEAST', 'test')]);
  Function: Search for proteins by accession or identifier
@@ -67,7 +67,7 @@ use Clone qw(clone);
                          match_types => { primary_name => 'DPOD_YEAST',
                                         },
                         }, ... ],
-              missing => ['test'] }
+              missing => ['O74473', 'test'] }
 
 =cut
 sub lookup
