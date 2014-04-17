@@ -81,6 +81,50 @@ sub _canto_allele_type
   }
 }
 
+=head2 lookup
+
+ Usage   : my $allele_lookup = Canto::Track::get_adaptor($config, 'allele');
+           my $results = $allele_lookup->lookup(gene_primary_identifier => 'SPAC1556.01c',
+                                                search_string => 'rad50',
+                                                max_results => 10);
+ Function: Look up allele details by allele name prefix.  This only searches the
+           alleles of the gene given by the gene_primary_identifier argument.
+           This function is used for autocompleting in the allele selection
+           dialog and the search should be case insensitive.
+ Args    : gene_primary_identifier - the gene to restrict the search to
+           search_string - the prefix of the allele name, eg. "rad" for pombe
+                           "SPAC1556.01c" could return "rad50-c1" or
+                           "rad50delta"
+           max_results - maximum matches to return [optional, default 10]
+ Return  : [ { description: "some allele description",
+               display_name: "a pretty name for the user",
+               uniquename: "database unique identifier for the allele",
+               name: "allele name"
+               allele_type: "allele type"
+             }, { < next match > }, ... ]
+           Notes:
+             - the "name" field of each returned match should have the
+               search_string argument as a prefix
+             - the "allele_type" should be one of the entries in the
+               allele_type_list configuration map in canto.yaml
+           Example result searching for "rad":
+             [{
+               "description": "wild type",
+               "display_name": "ste20+(wild type)",
+               "uniquename": "SPBC12C2.02c:allele-5",
+               "name": "ste20+",
+               "allele_type": "wild type"
+             },
+             {
+               "uniquename": "SPBC12C2.02c:allele-3",
+               "display_name": "ste20delta(deletion)",
+               "description": "deletion",
+               "name": "ste20delta",
+               "allele_type": "deletion"
+             }]
+
+=cut
+
 sub lookup
 {
   my $self = shift;
