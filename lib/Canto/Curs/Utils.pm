@@ -781,31 +781,5 @@ sub delete_interactor
 
 }
 
-=head2 annotation_features
-
- Usage   : my ($feature_type, @features) =
-             Canto::Curs::Utils::annotation_features($config, $annotation);
- Function: Return the features and type of features for an annotation
- Args    : $config - an Canto::Config object
-           $annotation - an Annotation object
- Return  : $feature_type - "gene" or "genotype"
-           @features - the features of an annotation
-
-=cut
-
-sub annotation_features
-{
-  my $config = shift;
-  my $annotation = shift;
-
-  my @genes = $annotation->genes();
-
-  if (@genes) {
-    return ('gene', map { _get_gene_proxy($config, $_); } @genes);
-  } else {
-    return ('genotype', $annotation->genotypes());
-  }
-}
-
 1;
 

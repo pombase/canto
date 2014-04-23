@@ -1539,6 +1539,32 @@ sub existing_annotation_edit : Chained('annotation') PathPart('edit') Args(1) Fo
   _annotation_edit($self, $c, $annotation_config, $annotation);
 }
 
+=head2 annotation_features
+
+ Usage   : my ($feature_type, @features) =
+             annotation_features($config, $annotation);
+ Function: Return the features and type of features for an annotation
+ Args    : $config - an Canto::Config object
+           $annotation - an Annotation object
+ Return  : $feature_type - "gene" or "genotype"
+           @features - the features of an annotation
+
+=cut
+
+sub annotation_features
+{
+  my $config = shift;
+  my $annotation = shift;
+
+  my @genes = $annotation->genes();
+
+  if (@genes) {
+    return ('gene', map { _get_gene_proxy($config, $_); } @genes);
+  } else {
+    return ('genotype', $annotation->genotypes());
+  }
+}
+
 # redirect to the annotation transfer page only if we've just created an
 # ontology annotation for a gene
 sub _maybe_transfer_annotation
@@ -1551,7 +1577,7 @@ sub _maybe_transfer_annotation
   my $schema = $st->{schema};
 
   my ($feature_type, $feature) =
-    Canto::Curs::Utils::annotation_features($c->config(), $st->{annotation});
+    annotation_features($c->config(), $st->{annotation});
 
   my $current_user = $c->user();
 
@@ -2365,7 +2391,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 
   my $display_name = undef;
 
-  my ($feature_type, $feature) = Canto::Curs::Utils::annotation_features($config, $annotations[0]);
+  my ($feature_type, $feature) = annotation_features($config, $annotations[0]);
 
   $st->{feature} = $feature;
   $st->{feature_type} = $feature_type;
