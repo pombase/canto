@@ -95,19 +95,5 @@ my $runner = Plack::Runner->new;
 
 $runner->parse_options(@ARGV);
 
-use DBI;
-use Data::Dumper;
-use Hook::WrapSub qw( wrap_subs unwrap_subs );
-
-#wrap_subs \&log_prepare, 'DBI::db::prepare';
-#wrap_subs \&log_execute, 'DBI::st::execute';
-
-#sub log_prepare {
-#   warn "prepare called:\n", Dumper \@_;
-#}
-#sub log_execute {
-#   warn "execute called:\n", Dumper \@_;
-#}
-
 print "\rStarting Canto server\n";
 $runner->run($app);
