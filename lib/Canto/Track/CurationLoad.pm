@@ -138,11 +138,9 @@ sub load
 
   my $schema = $self->schema();
 
-  my $cv = $self->load_util()->find_cv('Canto user types');
-
-  my $user_cvterm = $self->load_util()->get_cvterm(cv => $cv,
+  my $user_cvterm = $self->load_util()->get_cvterm(cv_name => 'Canto user types',
                                                    term_name => 'user');
-  my $admin_cvterm = $self->load_util()->get_cvterm(cv => $cv,
+  my $admin_cvterm = $self->load_util()->get_cvterm(cv_name => 'Canto user types',
                                                     term_name => 'admin');
 
   # get_person() creates the person if not found

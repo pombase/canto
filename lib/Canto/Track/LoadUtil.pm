@@ -64,14 +64,11 @@ sub _build_cache
 {
   my $self = shift;
 
-  my $cache = {};
-
-  my $dbxref_rs = $self->schema()->resultset('Dbxref')
-    ->search({}, { prefetch => 'db' });
-
-  while (defined (my $dbxref = $dbxref_rs->next())) {
-    $cache->{dbxref}->{$dbxref->db_accession()} = $dbxref;
-  }
+  my $cache = {
+    cv => {},
+    cvterm => {},
+    dbxref => {},
+  };
 
   return $cache;
 }
@@ -123,12 +120,22 @@ sub find_cv
 
   croak "no cv name supplied" unless defined $cv_name;
 
-  my $cv = $schema->resultset('Cv')->find(
+  my $cv_cache = $self->cache()->{cv};
+
+  my $cv = $cv_cache->{$cv_name};
+
+  if (defined $cv) {
+    return $cv;
+  }
+
+  $cv = $schema->resultset('Cv')->find(
       {
         name => $cv_name
       });
 
   if (defined $cv) {
+    $cv_cache->{$cv_name} = $cv;
+
     return $cv;
   } else {
     croak "no CV found for: $cv_name";
@@ -318,6 +325,20 @@ sub _create_dbxref
   return $dbxref;
 }
 
+sub _preload_dbxref_cache()
+{
+  my $self = shift;
+
+  my $cache = $self->cache();
+
+  my $dbxref_rs = $self->schema()->resultset('Dbxref')
+    ->search({}, { prefetch => 'db' });
+
+  while (defined (my $dbxref = $dbxref_rs->next())) {
+    $cache->{dbxref}->{$dbxref->db_accession()} = $dbxref;
+  }
+}
+
 =head2 get_dbxref_by_accession
 
  Usage   : my $dbxref = $load_util->get_dbxref($db, $dbxref_acc);
@@ -353,6 +374,10 @@ sub get_dbxref_by_accession
   }
 
   my $key = "$db_name:$accession";
+
+  if (!exists $self->cache()->{dbxref}) {
+    $self->_preload_dbxref_cache();
+  }
 
   if (exists $self->cache()->{dbxref}->{$key}) {
     return $self->cache()->{dbxref}->{$key};
@@ -390,12 +415,28 @@ sub get_cvterm
   my %args = @_;
 
   my $cv_name = $args{cv_name};
+
+  if (!defined $cv_name) {
+    croak "no cv_name passed to get_cvterm()";
+  }
+
   my $cv = $args{cv};
   if (!defined $cv) {
     $cv = $self->find_or_create_cv($cv_name);
   }
   my $term_name = $args{term_name};
   my $ontologyid = $args{ontologyid};
+
+  my $key = "$cv_name--$term_name";
+
+  my $cvterm_cache = $self->cache()->{cvterm};
+
+  my $cached_cvterm = $cvterm_cache->{$key};
+
+  if (defined $cached_cvterm) {
+    return $cached_cvterm;
+  }
+
   my $definition = $args{definition};
   my $is_relationshiptype = $args{is_relationshiptype} // 0;
   my $is_obsolete = $args{is_obsolete} // 0;
@@ -431,6 +472,8 @@ sub get_cvterm
       });
     }
   }
+
+  $cvterm_cache->{$key} = $cvterm;
 
   return $cvterm;
 }

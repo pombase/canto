@@ -165,8 +165,7 @@ sub triage :Local {
           $c->detach();
         }
         my $load_util = LoadUtil->new(schema => $schema);
-        my $user_types_cv = $load_util->find_cv('Canto user types');
-        my $user_cvterm = $load_util->get_cvterm(cv => $user_types_cv,
+        my $user_cvterm = $load_util->get_cvterm(cv_name => 'Canto user types',
                                                  term_name => 'user');
 
         my $new_person = $schema->resultset('Person')->create({

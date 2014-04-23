@@ -154,7 +154,7 @@ is($cvterm_dbxref_rs->count(), 34);
 load_all(1,1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 130);
+is(@loaded_cvterms, 132);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'

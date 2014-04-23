@@ -4,7 +4,7 @@ $default_person => undef
 
 <div id="person-picker-popup" style="display: none">
   <form method="get" action="<% $form_action %>">
-    <div id="class="ferret-help-text">
+    <div class="ferret-help-text">
       Enter the details of the new person
     </div>
     <div>
