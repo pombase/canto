@@ -1404,14 +1404,7 @@ var AlleleStuff = function($) {
           source: allele_lookup,
           select: function(event, ui) {
             var $description = get_allele_desc_jq($allele_dialog).val(ui.item.description);
-            if (typeof(ui.item.allele_type) === 'undefined' ||
-                ui.item.allele_type === 'unknown') {
-              get_allele_type_select_jq($allele_dialog).val(undefined).trigger('change'); 
-              $description.attr('disabled', false);
-            } else {
-              get_allele_type_select_jq($allele_dialog).val(ui.item.allele_type).trigger('change');
-              $description.attr('disabled', true);
-            }
+            get_allele_type_select_jq($allele_dialog).val(ui.item.allele_type).trigger('change');
           }
         }).data("autocomplete" )._renderItem = function(ul, item) {
           return $( "<li></li>" )
