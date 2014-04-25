@@ -81,6 +81,7 @@ CREATE TABLE cvterm (
 );
 CREATE INDEX cvterm_idx1 ON cvterm (cv_id);
 CREATE INDEX cvterm_idx2 ON cvterm (name);
+CREATE UNIQUE INDEX cvterm_name_cv_unique ON cvterm(name, cv_id);
 
 CREATE TABLE cvtermsynonym (
        cvtermsynonym_id integer NOT NULL PRIMARY KEY,

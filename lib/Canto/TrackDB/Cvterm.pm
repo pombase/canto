@@ -97,6 +97,22 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("cvterm_id");
 
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<name_cv_id_unique>
+
+=over 4
+
+=item * L</name>
+
+=item * L</cv_id>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("name_cv_id_unique", ["name", "cv_id"]);
+
 =head1 RELATIONS
 
 =head2 cursprops
@@ -415,8 +431,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PISA8VnnH9uamCNuXHTu6Q
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-04-25 15:38:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z1o9WRlCof5hFB5/S0SNKQ
 
 =head2 db_accession
 

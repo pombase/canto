@@ -334,12 +334,12 @@ db_initial_data:
         cvterms:
           - name: not started
             dbxref:
-              accession: admin
+              accession: not_started
               db:
                 name: Canto
           - name: complete
             dbxref:
-              accession: admin
+              accession: complete
               db:
                 name: Canto
       - name: Canto publication experiment types
