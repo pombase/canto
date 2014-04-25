@@ -124,13 +124,12 @@ sub _delete_term_by_cv
     $cv_cvterms->search_related($related)->delete();
   }
 
-  my $delete_me = "DELETE_ME";
-  $cv_cvterms->search_related('cvterm_dbxrefs')->search_related('dbxref')
-    ->update({ description => $delete_me });
   $cv_cvterms->search_related('cvterm_dbxrefs')->delete();
-  $schema->resultset('Dbxref')->search({ description => $delete_me })->delete();
-
   $cv_cvterms->delete();
+
+  my $dbxref_where = \"dbxref_id NOT IN (SELECT dbxref_id FROM cvterm) AND dbxref_id NOT IN (SELECT dbxref_id FROM cvterm_dbxref)";
+
+  $schema->resultset('Dbxref')->search({ }, { where => $dbxref_where })->delete();
 }
 
 =head2 load
