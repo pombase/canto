@@ -167,6 +167,14 @@ sub display_name
 __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
                           'allele');
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
+sub delete
+{
+  my $self = shift;
+
+  $self->allele_genotypes()->search({})->delete();
+
+  $self->SUPER::delete();
+}
+
 __PACKAGE__->meta->make_immutable;
 1;

@@ -295,6 +295,7 @@ sub delete
         $annotation->delete();
       }
 
+      $allele_genotype->delete();
       $genotype->delete();
     };
     $allele->delete();
