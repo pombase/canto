@@ -156,12 +156,21 @@ sub get_annotation_table_tsv
   my @annotations = @$annotations_ref;
   my %common_values = %{$config->{export}->{gene_association_fields}};
 
+  $common_values{db_object_type} = $annotation_type->{feature_type};
+
   my @ontology_column_names =
     qw(db gene_identifier gene_name_or_identifier
        qualifiers term_ontid publication_uniquename
        evidence_code with_or_from_identifier
        annotation_type_abbreviation
        gene_product gene_synonyms_string db_object_type taxonid
+       creation_date_short assigned_by annotation_extension);
+
+  my @phenotype_column_names =
+    qw(db genotype_name
+       term_ontid publication_uniquename
+       evidence_code
+       db_object_type
        creation_date_short assigned_by annotation_extension);
 
   my @interaction_column_names =
@@ -172,7 +181,11 @@ sub get_annotation_table_tsv
   my @column_names;
 
   if ($annotation_type->{category} eq 'ontology') {
-    @column_names = @ontology_column_names;
+    if ($annotation_type->{feature_type} eq 'gene') {
+      @column_names = @ontology_column_names;
+    } else {
+      @column_names = @phenotype_column_names;
+    }
   } else {
     @column_names = @interaction_column_names;
   }
@@ -185,14 +198,20 @@ sub get_annotation_table_tsv
     next unless $annotation->{completed};
 
     $results .= join "\t", map {
-      my $val = $common_values{$_};
+      my $column_name = $_;
+      my $val = $common_values{$column_name};
       if (!defined $val) {
-        $val = $annotation->{$_};
+        $val = $annotation->{$column_name};
       }
-      if ($_ eq 'taxonid') {
+      if ($column_name eq 'taxonid') {
+        if (!defined $val) {
+          use Data::Dumper;
+          $Data::Dumper::Maxdepth = 3;
+          die Dumper([$annotation]);
+        }
         $val = "taxon:$val";
       }
-      if ($_ eq 'with_or_from_identifier') {
+      if ($column_name eq 'with_or_from_identifier') {
         if (defined $val && length $val > 0) {
           $val = "$db:$val";
         } else {
@@ -201,7 +220,7 @@ sub get_annotation_table_tsv
       }
 
       if (!defined $val) {
-        die "no value for field $_";
+        die "no value for field $column_name";
       }
 
       $val;

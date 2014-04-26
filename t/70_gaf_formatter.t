@@ -42,7 +42,7 @@ my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
     $member->extractToFileHandle($file_io);
 
     # a poor check, just confirms that there is some content:
-    like(${$file_io->string_ref()}, qr/\t.*\t/);
+    like(${$file_io->string_ref()}, qr/\t.*\t/, 'checking: ' . $member->fileName());
   }
 
   is(keys %expected_filenames, 0);

@@ -1057,7 +1057,6 @@ export:
   gene_association_fields:
     db: "PomBase"
     assigned_by: "PomBase"
-    db_object_type: gene
 
 load:
   ontology:

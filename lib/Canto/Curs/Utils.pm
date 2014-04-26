@@ -174,8 +174,7 @@ sub _make_ontology_annotation
   my $completed = defined $evidence_code &&
     (!$needs_with || defined $with_gene_identifier);
 
-
-  return {
+  my $ret = {
     %gene_details,
     %genotype_details,
     qualifiers => '',
@@ -202,6 +201,8 @@ sub _make_ontology_annotation
     status => $annotation->status(),
     is_not => 0,
   };
+
+  return $ret;
 }
 
 sub _make_interaction_annotation
