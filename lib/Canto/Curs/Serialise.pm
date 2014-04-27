@@ -133,13 +133,13 @@ sub _get_annotations
     }
 
     my $genes = _get_genes($schema, $annotation);
-    my @alleles = _get_alleles($config, $schema, $annotation);
+    my @genotypes = _get_genotypes($config, $schema, $annotation);
 
     if (keys %$genes) {
       $data{genes} = $genes;
     }
-    if (@alleles) {
-      $data{alleles} = \@alleles;
+    if (@genotypes) {
+      $data{genotypes} = \@genotypes;
     }
 
     rmap_hash {
@@ -183,13 +183,13 @@ sub _get_genes
   return \%ret;
 }
 
-sub _get_alleles
+sub _get_genotype_alleles
 {
   my $config = shift;
   my $schema = shift;
-  my $annotation = shift;
+  my $genotype = shift;
 
-  my $rs = $annotation->alleles();
+  my $rs = $genotype->alleles();
   my @ret = ();
 
   while (defined (my $allele = $rs->next())) {
@@ -228,6 +228,25 @@ sub _get_alleles
   return @ret;
 }
 
+sub _get_genotypes
+{
+  my $config = shift;
+  my $schema = shift;
+  my $annotation = shift;
+
+  my $rs = $annotation->genotypes();
+  my @ret = ();
+
+  while (defined (my $genotype = $rs->next())) {
+    push @ret, {
+      name => $genotype->name(),
+      alleles => [_get_genotype_alleles($config, $schema, $genotype)]
+    }
+  }
+
+  return @ret;
+}
+
 sub _get_organisms
 {
   my $schema = shift;
@@ -235,7 +254,7 @@ sub _get_organisms
   my $rs = $schema->resultset('Organism');
   my %ret = ();
 
-  while (defined (my $organism = $rs->next())) {
+  while (defined (my $organism= $rs->next())) {
     $ret{$organism->taxonid()} = { full_name => $organism->full_name() };
   }
 

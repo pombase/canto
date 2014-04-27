@@ -163,32 +163,52 @@ my $full_expected_curation_session =
             'PECO:0000137',
             'rich medium',
           ],
-          alleles => [
+          genotypes => [
             {
-              primary_identifier => 'SPAC27D7.13c:allele-1',
-              gene => {
-                uniquename => 'SPAC27D7.13c',
-                organism => 'Schizosaccharomyces pombe'
-              },
-              allele_type => 'deletion',
-              description => 'deletion',
-              name => 'ssm4delta',
-            }
+              name => 'h+ SPCC63.05delta ssm4KE',
+              alleles => [
+                {
+                  primary_identifier => 'SPAC27D7.13c:allele-1',
+                  gene => {
+                    uniquename => 'SPAC27D7.13c',
+                    organism => 'Schizosaccharomyces pombe'
+                  },
+                  allele_type => 'deletion',
+                  description => 'deletion',
+                  name => 'ssm4delta',
+                },
+                {
+                  primary_identifier => 'SPCC63.05:allele-1',
+                  gene => {
+                    uniquename => 'SPCC63.05',
+                    organism => 'Schizosaccharomyces pombe'
+                  },
+                  name => 'SPCC63.05delta',
+                  description => 'deletion',
+                  allele_type => 'deletion',
+                },
+              ],
+            },
           ],
         },
         {
           evidence_code => 'Co-immunoprecipitation experiment',
           creation_date => '2010-01-02',
-          alleles => [
+          genotypes => [
             {
-              name => 'ssm4-D4',
-              gene => {
-                uniquename => 'SPAC27D7.13c',
-                organism => 'Schizosaccharomyces pombe'
-              },
-              allele_type => 'partial_nucleotide_deletion',
-              description => 'del_100-200',
-            }
+              name => 'h+ ssm4-D4',
+              alleles => [
+                {
+                  name => 'ssm4-D4',
+                  gene => {
+                    uniquename => 'SPAC27D7.13c',
+                    organism => 'Schizosaccharomyces pombe'
+                  },
+                  allele_type => 'partial_nucleotide_deletion',
+                  description => 'del_100-200',
+                }
+              ],
+            },
           ],
           status => 'new',
           type => 'phenotype',

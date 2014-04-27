@@ -126,7 +126,7 @@ test_config:
                - primary_identifier: 'SPCC63.05:allele-1'
                  name: SPCC63.05delta
                  description: deletion
-                 type: new
+                 type: deletion
          genotypes:
            - name: "h+ SPCC63.05delta ssm4KE"
              alleles(Allele:primary_identifier):
