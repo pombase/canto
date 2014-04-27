@@ -25,16 +25,14 @@ my $test_relationship_ontology_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_relationship_obo_file};
 my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
 
-my $ontology_index;
 my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
 sub load_all {
+  my $ontology_index = shift;
   my $include_ro = shift;
   my $include_fypo = shift;
 
   my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema, default_db_name => 'Canto');
-  my $index_path = $config->data_dir_path('ontology_index_dir');
-  $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
   $ontology_index->initialise_index();
 
@@ -51,7 +49,10 @@ sub load_all {
   $ontology_index->finish_index();
 }
 
-load_all(1);
+my $index_path = $config->data_dir_path('ontology_index_dir');
+my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+
+load_all($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
@@ -144,14 +145,20 @@ is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 my $cvterm_dbxref_rs = $schema->resultset('CvtermDbxref');
 is($cvterm_dbxref_rs->count(), 34);
 
+undef $ontology_index;
+
+$ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
 # try re-loading
-load_all();
+load_all($ontology_index);
 is($cvterm_dbxref_rs->count(), 34);
 
+undef $ontology_index;
+
+$ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
 # test that obsolete terms are loaded but aren't indexed by Lucene
-load_all(1,1);
+load_all($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
 is(@loaded_cvterms, 130);
@@ -178,3 +185,5 @@ is(@results, 7);
 ok(!(grep {
   $_->{term_name} eq $viable_elongated;
 } @results), qq("$viable_elongated" shouldn't be returned));
+
+undef $ontology_index;

@@ -297,5 +297,11 @@ sub lookup
   return @sorted_results;
 }
 
-1;
+sub DESTROY
+{
+  my $self = shift;
 
+  $self->{_index}->close() if defined $self->{_index};
+}
+
+1;
