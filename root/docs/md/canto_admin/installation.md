@@ -57,14 +57,16 @@ and earlier it can be installed with:
 
     sudo apt-get install libclucene-dev libclucene0ldbl
 
-For Ubuntu version 13.10 the correct CLucene library version must be
-installed manually. The Perl CLucene modules is currently only compatible
-with CLucene version 0.9.* but Ubuntu v13.10 ships with CLucene v2.3.3.4.
+### CLucene on Ubuntu v13.10 and later
 
-On Ubuntu v13.10 the old CLucene library can be installed with:
+For these Ubuntu versions the correct version of the CLucene library must be
+installed manually.  The Perl CLucene module is currently only compatible with
+CLucene version 0.9.* but Ubuntu v13.10 and later ship with CLucene v2.3.3.4.
 
-    wget http://www.mirrorservice.org/sites/archive.ubuntu.com/ubuntu//pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2build1_amd64.deb
-    wget http://www.mirrorservice.org/sites/archive.ubuntu.com/ubuntu//pool/main/c/clucene-core/libclucene-dev_0.9.21b-2build1_amd64.deb
+The required CLucene library can be installed with:
+
+    wget http://archive.ubuntu.com/ubuntu/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2build1_amd64.deb
+    wget http://archive.ubuntu.com/ubuntu/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2build1_amd64.deb
     sudo dpkg -i libclucene0ldbl_0.9.21b-2build1_amd64.deb libclucene-dev_0.9.21b-2build1_amd64.deb
 
 ### Installing prerequisites on Centos/Red Hat
