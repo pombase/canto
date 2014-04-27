@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 1;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -17,14 +17,12 @@ my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $curs_schema);
 
 my $res = $service_utils->list_for_service('genotype');
 
-cmp_deeply([
+cmp_deeply($res,
+           [
             {
-              'name' => 'h+ SPCC63.05-unk ssm4delta'
+              'name' => 'h+ SPCC63.05delta ssm4KE'
             },
             {
               'name' => 'h+ ssm4-D4'
             }
-          ], $res);
-
-is($service_utils->json_list_for_service('genotype'),
-   '[{"name":"h+ SPCC63.05-unk ssm4delta"},{"name":"h+ ssm4-D4"}]');
+          ]);
