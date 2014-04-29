@@ -1,7 +1,6 @@
 # Configuring Canto and loading data
 
-After the software is installed a small amount of configuration is needed and
-some 
+After the software is installed some configuration is needed.
 
 ## Creating users
 
