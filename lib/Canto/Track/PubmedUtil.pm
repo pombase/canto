@@ -63,7 +63,11 @@ sub _get_url
   my $res = $ua->request($req);
 
   if ($res->is_success) {
-    return $res->content;
+    if ($res->content()) {
+      return $res->content();
+    } else {
+      die "query returned no content: $url";
+    }
   } else {
     die "Couldn't read from $url: ", $res->status_line, "\n";
   }
@@ -320,17 +324,8 @@ sub _process_batch
 
   my $count = 0;
 
-  eval {
-    $schema->txn_do(
-      sub {
-        my $content = get_pubmed_xml_by_ids($config, @ids);
-        die "Failed to get results" unless defined $content;
-        $count += load_pubmed_xml($schema, $content, $load_type);
-      });
-  };
-  if ($@) {
-    die "ROLLBACK called: $@\n";
-  }
+  my $content = get_pubmed_xml_by_ids($config, @ids);
+  $count += load_pubmed_xml($schema, $content, $load_type);
 
   return $count;
 }
