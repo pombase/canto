@@ -180,27 +180,28 @@ my $proc = sub {
                                        name => $role_name);
     $load_util->get_person($name, $email_address, $role, $password);
   }
-
-  if ($add_by_pubmed_id) {
-    my $count = Canto::Track::PubmedUtil::load_by_ids($config, $schema,
-                                                       [@ARGV], 'admin_load');
-    print "loaded $count publcations\n";
-  }
-
-  if ($add_by_pubmed_query) {
-    if (@ARGV > 1) {
-      usage (qq{need one argument to "$opt"});
-    } else {
-      eval {
-        my $count = Canto::Track::PubmedUtil::load_by_query($config, $schema,
-                                                             $ARGV[0], 'admin_load');
-        print "loaded $count publcations\n";
-      };
-      if ($@) {
-        die "loading failed: $@\n";
-      }
-    }
-  }
 };
 
 $schema->txn_do($proc);
+
+# these actions start a transactions when needed for consistency:
+if ($add_by_pubmed_id) {
+  my $count = Canto::Track::PubmedUtil::load_by_ids($config, $schema,
+                                                    [@ARGV], 'admin_load');
+  print "loaded $count publcations\n";
+}
+
+if ($add_by_pubmed_query) {
+  if (@ARGV > 1) {
+    usage (qq{need one argument to "$opt"});
+  } else {
+    eval {
+      my $count = Canto::Track::PubmedUtil::load_by_query($config, $schema,
+                                                          $ARGV[0], 'admin_load');
+      print "loaded $count publcations\n";
+    };
+    if ($@) {
+      die "loading failed: $@\n";
+    }
+  }
+}
