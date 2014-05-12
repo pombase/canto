@@ -43,6 +43,7 @@ use Carp;
 
 use JSON;
 use Clone qw(clone);
+use Data::Rmap ':all';
 
 sub _get_metadata_value
 {
@@ -140,6 +141,19 @@ sub _get_annotations
     if (@alleles) {
       $data{alleles} = \@alleles;
     }
+
+    rmap_hash {
+      my $current = $_;
+      if (exists $current->{email}) {
+        # this is a curator section - don't modify
+        cut();
+      }
+      while (my ($key, $value) = each %$current) {
+        if (!ref $value) {
+          $current->{$key} =~ s/[[:^ascii:]]//g;
+        }
+      }
+    } %data;
 
     push @ret, \%data;
   }
