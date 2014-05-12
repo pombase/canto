@@ -119,13 +119,13 @@ sub _get_annotations
           $data{curator}->{community_curated} = JSON::false;
         }
       } else {
-        my %metadata = _get_metadata_xxx($schema);
+        my %metadata = _get_metadata($schema);
         die "community_curated not set for annotation ",
           $annotation->annotation_id(), " in session ",
           $metadata{curs_key};
       }
     } else {
-      my %metadata = _get_metadata_xxx($schema);
+      my %metadata = _get_metadata($schema);
       die "community_curated not set for annotation ",
         $annotation->annotation_id(), " in session ",
         $metadata{curs_key};
