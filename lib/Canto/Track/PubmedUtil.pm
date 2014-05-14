@@ -214,7 +214,11 @@ sub load_pubmed_xml
         $abstract = join ("\n",
                           map {
                             if (ref $_ eq 'HASH') {
-                              $_->{content};
+                              if (defined $_->{content}) {
+                                $_->{content};
+                              } else {
+                                ();
+                              }
                             } else {
                               $_;
                             }
