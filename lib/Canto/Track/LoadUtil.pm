@@ -425,6 +425,11 @@ sub get_cvterm
     $cv = $self->find_or_create_cv($cv_name);
   }
   my $term_name = $args{term_name};
+
+  if (!defined $term_name) {
+    confess "no term name passed to get_cvterm() for $cv_name";
+  }
+
   my $ontologyid = $args{ontologyid};
 
   my $key = "$cv_name--$term_name";
