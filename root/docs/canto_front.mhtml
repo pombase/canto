@@ -85,7 +85,7 @@ Canto is a free, open source application. The source code is
 available from Github.
 </p>
 <p>
-Canto is a <a href="http://www.gmod.org">component of <img src="<% $c->uri_for('/static/images/logos/gmod_logo_small.png') %>"/></a>
+Canto is a <a href="http://gmod.org/wiki/Canto">component</a> of <a href="http://www.gmod.org/"><img src="<% $c->uri_for('/static/images/logos/gmod_logo_small.png') %>"/></a>
 </p>
 </div>
 </div>
