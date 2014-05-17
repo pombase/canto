@@ -1664,7 +1664,7 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
          _redirect_and_detach($c, 'gene', $gene_id);
      } else {
         $self->_delete_annotation($c, $annotation_id);
-        _redirect_and_detach($c, 'annotation', 'edit', $gene_id, $annotation_type_name);
+        _redirect_and_detach($c, 'annotation', 'new', $gene_id, $annotation_type_name);
       }
     }
 
