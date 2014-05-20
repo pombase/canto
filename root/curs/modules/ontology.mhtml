@@ -62,8 +62,9 @@ Search for <% $current_component_display_name %> term
         </div>
 % }
         <div>
-You may find it helpful to search for a broad term (e.g. <% $broad_term_suggestions %>),
-especially if you have trouble finding a specific term.
+Start typing a <% $current_component_short_display_name %> in the search
+box. If you do not find the term you are looking for with your initial search,
+begin with a broad term (<% $broad_term_suggestions %>)
           <a id="ferret-term-entry-extra-help" class="canto-more-button" href='#'>more ...</a>
         </div>
         <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">

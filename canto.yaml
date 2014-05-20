@@ -1398,16 +1398,18 @@ available_annotation_type_list:
     specific_term_examples: >
       growth auxotrophic for arginine, abnormal cytokinetic cell separation
     help_text: >
-      A phenotype is any observable characteristic or trait of an organism;
-      such as its morphology, development, biochemical or physiological
-      properties, behaviour, and products of behaviour.
+      Annotate normal or abnormal phenotypes, and the associated alleles.
+      A phenotype is any observable characteristic or trait of an organism.
     more_help_text: >
+      Examples include morphology, development, biochemical or
+      physiological properties, behaviour, and products of behaviour of the
+      organism.
       Phenotypes result from the expression of the genes of an organism as well
       as the influence of environmental factors and the interactions between
       the two.
     extra_help_text: >
-      You can also annotate normal and abnormal phenotypes, such as normal
-      flocculation or absent flocculation.
+      Alleles may be annotated with multiple phenotype terms,
+      including both normal and abnormal phenotypes for one allele.
     detailed_help_path: /docs/fypo_annotation
     annotation_comment_help_text: |
       Please provide any additional details you have, such as:
