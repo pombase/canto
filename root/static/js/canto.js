@@ -1068,6 +1068,7 @@ var AlleleStuff = function($) {
             make_condition_buttons($allele_dialog, $allele_table);
           }
         },
+        timeout: 10000,
       });
       $('#curs-allele-add .curs-allele-conditions').tagit("removeAll");
       if ($reuse_checkbox_checked) {
