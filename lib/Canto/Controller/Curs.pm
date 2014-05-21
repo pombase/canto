@@ -1387,9 +1387,16 @@ sub annotation_interaction_edit
   if ($form->submitted_and_valid()) {
     my $submit_value = $form->param_value('interaction-submit');
 
+    my @prey_params = @{$form->param_array('prey')};
+
+    if (!@prey_params) {
+      $st->{message} = 'You must select at least one gene that interacts with ' .
+        $st->{gene}->display_name();
+      return;
+    }
+
     my $guard = $schema->txn_scope_guard;
 
-    my @prey_params = @{$form->param_array('prey')};
     my @prey_identifiers =
       map {
         my $prey_gene = $schema->find_with_type('Gene', $_);
