@@ -201,7 +201,7 @@ http://localhost:5500/
 ## Testing the installation
 To try the Canto server:
 
-### Initialise the data directory
+### Initialise a test data directory
 Make a data directory somewhere:
 
     mkdir /tmp/canto-test
@@ -213,11 +213,11 @@ From the `canto` directory:
 This will initialise the `canto-test` directory and will create a
 configuration file (`canto_deploy.yaml`) that can be customised.
 
-### Run the server
+### Run a test server
 Again, from the `canto` directory.
 
     ./script/canto_start
 
 ### Visit the application start page
-The application should now be running at http://localhost:5000
+The test application should now be running at http://localhost:5000
 
