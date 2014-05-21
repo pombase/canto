@@ -1374,7 +1374,9 @@ sub annotation_interaction_edit
         options => [@options],
       },
       {
-        name => 'interaction-submit', type => 'Submit', value => 'Proceed ->',
+        name => 'interaction-submit', type => 'Submit',
+        attributes => { class => 'curs-finish-button', },
+        value => 'Proceed ->',
       }
     );
 
