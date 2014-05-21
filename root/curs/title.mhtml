@@ -3,19 +3,22 @@ $title
 $show_title
 </%args>
 
+<div class="curs-user-and-reassign">
+% if ($show_curator_in_title && $can_reassign) {
+<div class="useridentifier">
+  <div>Curated by:</div>
+  <div><% $submitter_email %></div>
+</div>
+%   if ($show_reassign_button) {
+<div style="display: inline-block">
+<button type="button" class="curs-reassign">Reassign</button>
+</div>
+%   }
+% }
+</div>
 <div id="curs-page-description">
 % if ($show_title) {
   <% $title %>
-% }
-</div>
-<div class="curs-user-and-reassign">
-% if ($show_curator_in_title && $can_reassign) {
-<span class="useridentifier"> 
-  Curated by: <% $submitter_email %>
-</span>
-%   if ($show_reassign_button) {
-<button type="button" class="curs-reassign">Reassign</button>
-%   }
 % }
 </div>
 </div>
