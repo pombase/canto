@@ -700,7 +700,7 @@ div.clearall {
   font-size: 95%;
 }
 
-#ferret-term-details {
+#ferret-term-details, #curs-interaction {
   width: 90%;
   margin-top: 10px;
   margin-bottom: 25px;
