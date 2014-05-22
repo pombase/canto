@@ -10,8 +10,10 @@ $class_info
     collection_title => 'Corresponding author for these papers' &>
   <& /view/inline_list.mhtml, config_name => 'pub', rs => $current_curator_pubs_rs,
                               list_title => 'Publications currently being curated by this user' &>
+% if ($object->role()->name() ne 'admin') {
   <& /view/inline_list.mhtml, config_name => 'curs', rs => $current_curator_curs_rs,
                               list_title => 'All sessions curated by this person (including APPROVED)' &>
+% }
   <& /view/inline_list.mhtml, config_name => 'curs', rs => $approving_curs_rs,
                        list_title => 'Sessions being approved by ' . $object->name() &>
 </div>
