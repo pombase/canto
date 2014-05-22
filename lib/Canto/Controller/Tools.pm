@@ -795,10 +795,13 @@ sub reassign_session : Local Args(0)
 
   my $curator_manager =
     Canto::Track::CuratorManager->new(config => $c->config());
+
+  warn "----current_curator():\n";
+
   my ($current_submitter_email, $current_submitter_name) =
     $curator_manager->current_curator($curs_key);
 
-  if (defined $current_submitter_email &&
+  if (!defined $current_submitter_email ||
       $current_submitter_email ne $person->email_address()) {
     $curator_manager->set_curator($curs_key, $person->email_address(),
                                   $person->name());
