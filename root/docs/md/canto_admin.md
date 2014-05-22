@@ -11,6 +11,11 @@ The latest version of this document can always be found on the main
 source to it
 [on GitHub](https://github.com/pombase/canto/blob/master/root/docs/md/canto_admin.md).
 
+## Mailing list
+
+We have a general discussion list about Canto,
+[hosted by GMOD](https://lists.sourceforge.net/lists/listinfo/gmod-canto).
+
 ## Sections
 
 * [Installation](canto_admin/installation) - How to install Canto
