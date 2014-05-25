@@ -526,6 +526,8 @@ class_info:
       object_title_format: 'Details for publication: @@$object->uniquename()@@'
       class_display_name: publication
       display_field: 'Publication ID'
+      search_fields:
+        - uniquename
       editable: 1
       # hack to order by pubmed id, or by doi number
       order_by: "cast((case me.uniquename like 'PMID:%' WHEN 1 THEN substr(me.uniquename, 6) ELSE me.uniquename END) as integer)"

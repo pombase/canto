@@ -72,9 +72,10 @@ sub get_object_by_id_or_name
   if ($object_key =~ /^\d+$/) {
     $search = { $table . "_id", $object_key };
   } else {
-    # try looking up by display name
-    if (defined $class_info->{display_field}) {
-      $search = { $class_info->{display_field}, $object_key };
+    # try looking up using the search fields
+    if (defined $class_info->{search_fields}) {
+      $search = { -OR =>
+                    [ map { $_, $object_key } @{$class_info->{search_fields}} ] };
     }
   }
 
