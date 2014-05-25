@@ -9,7 +9,7 @@ $is_admin_user
 <&| /view/object/object_top.mhtml, object => $object, class_info => $class_info &>
 
 % if ($is_admin_user) {
-% if (!defined $object->corresponding_author()) {
+%   if (!defined $object->corresponding_author()) {
 <div id="curs-pub-assign-dialog" style="display: none">
   <form id="curs-pub-assign-form" method="put"
         action="<% $c->uri_for('/track/set_corresponding_author') %>">
@@ -30,7 +30,7 @@ $is_admin_user
   <button type="button" id="curs-pub-assign-popup-dialog">Set corresponding author ...</button>
 </div>
 %   }
-%     if ($not_exported_curs_rs->count() == 0) {
+%   if ($not_exported_curs_rs->count() == 0) {
 <div id="curs-pub-create-session-dialog" style="display: none">
   <form id="curs-pub-create-session-form" method="put"
         action="<% $c->uri_for('/tools/create_session') %>">
@@ -53,7 +53,7 @@ $is_admin_user
   <button type="button" id="curs-pub-create-session-popup-dialog">Create a curation
   session ...</button>
 </div>
-%     } else {
+%   } else {
 <div id="curs-pub-reassign-session-dialog" style="display: none">
   <form id="curs-pub-reassign-session-form" method="put"
         action="<% $c->uri_for('/tools/reassign_session') %>">
@@ -78,14 +78,14 @@ $is_admin_user
 <div class="curs-pub-assign-actions">
   <button href="<% $c->uri_for('/tools/send_session/' . $curs_key) %>"
                 type="button" id="curs-pub-send-session-popup-dialog">\
-%       if ($session_sent) {
+%     if ($session_sent) {
 Resend session to curator ...\
-%       } else {
+%     } else {
 Send session to curator ...\
-%       }
+%     }
   </button>
 </div>
-%     }
+%   }
 
 <div class="curs-pub-assign-actions">
   <button type="button" value="<% $pub_id %>" id="curs-pub-triage-this-pub">Triage</button>
@@ -94,7 +94,7 @@ Send session to curator ...\
 <div class="clearall"/>
 
 % if (defined $curs_key) {
-%  if ($not_exported_curs_rs->count() == 1) {
+%   if ($not_exported_curs_rs->count() == 1) {
 <div class="curs-pub-go-to-curs-actions">
   <div class="object_sub_action">
     <a href="<% $c->uri_for('/curs/' . $curs_key) %>">
