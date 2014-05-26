@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 10;
 
 use Canto::Track::PersonLookup;
 use Canto::TestUtil;
@@ -15,7 +15,10 @@ ok(defined $lookup->schema());
 my @test_user_details_by_name = $lookup->lookup('name', 'Test User');
 
 is(scalar(@test_user_details_by_name), 1);
-is($test_user_details_by_name[0]->{email}, 'test.user@pombase.org');
+my %user_details_hash = %{$test_user_details_by_name[0]};
+is($user_details_hash{email}, 'test.user@pombase.org');
+ok($user_details_hash{id} =~ /^\d+$/ && $user_details_hash{id} > 0);
+is(keys(%user_details_hash), 4);
 
 my $test_user_details_by_email = $lookup->lookup('email', 'test.user@pombase.org');
 

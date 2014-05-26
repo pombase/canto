@@ -82,7 +82,7 @@ sub lookup
   if ($lookup_type eq 'name') {
     return map {
       { name => $_->name(), email => $_->email_address(),
-          role => $_->role()->name() };
+        role => $_->role()->name(), id => $_->person_id(), };
     } $person_rs->search({ 'me.name' => $search_string })->all();
   } else {
     if ($lookup_type eq 'email') {
@@ -92,6 +92,7 @@ sub lookup
         name => $person->name(),
         email => $person->email_address(),
         role => $person->role()->name(),
+        id => $person->person_id(),
       };
     } else {
       return {
