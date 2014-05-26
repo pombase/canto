@@ -22,7 +22,7 @@ $default_person
     {
 %  my $name = $person_data->name();
 %  $name =~ s/"/\\"/g;
-%  my $label = $name . ' <' . $person_data->email_address . '>';
+%  my $label = $name . ' - ' . $person_data->email_address();
       label: "<% $label %>",
       name: "<% $name %>",
       value: "<% $person_data->person_id() %>",
