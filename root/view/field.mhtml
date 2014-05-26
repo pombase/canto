@@ -18,12 +18,8 @@ $cache => undef
 % } else {
 %   if ($field_type eq 'foreign_key' && $field_value && defined $ref_display_key) {
   <span class="ref-field">
-  <a href='<% $c->uri_for("/view/object", $ref_table, 
-               Canto::DB::id_of_object($field_value),
-               { model => $model_name } ) %>'>
     <& field.mhtml, object => $referenced_object, class_info => $ref_class_info,
        field_name => $ref_display_key &>
-  </a>
   </span>
 %   } else {
   <span class="attribute-field<% $extra_field_class %>">
