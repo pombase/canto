@@ -144,6 +144,8 @@ my $curs = $not_exported_curs_rs->first();
 
 my $session_sent = 0;
 
+my $session_assigned = 0;
+
 if (defined $curs) {
   $curs_key = $curs->curs_key();
   my $link_sent_to_curator_date_cvterm =
@@ -156,9 +158,10 @@ if (defined $curs) {
   if (defined $link_sent_prop) {
     $session_sent = 1;
   }
+
+  my $curator_manager = Canto::Track::CuratorManager->new(config => $c->config());
+
+  $session_assigned = defined $curator_manager->current_curator($curs->curs_key());
 }
 
-my $curator_manager = Canto::Track::CuratorManager->new(config => $c->config());
-
-my $session_assigned = defined $curator_manager->current_curator($curs->curs_key());
 </%init>
