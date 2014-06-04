@@ -8,7 +8,7 @@ use Canto::DBUtil;
 
 {
   my $config = {};
-  my $file_name = '/tmp/test_file.sqlite3';
+  my ($fh, $file_name) = tempfile();
   my $schema = Canto::DBUtil::schema_for_file($config, $file_name, 'Curs');
 
   my $storage = $schema->storage();
