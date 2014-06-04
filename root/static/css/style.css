@@ -264,7 +264,13 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
 #curs-page-description .curs-user-and-reassign {
   font-size: 70%;
 }
-#canto-sub-title, .curs-user-and-reassign {
+#canto-sub-title {
+  display: block;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.curs-user-and-reassign {
   display: block;
   top: 0px;
   margin: auto;
