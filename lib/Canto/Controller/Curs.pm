@@ -2971,7 +2971,7 @@ sub finish_form : Chained('top') Args(0)
       $text = trim($text);
 
       if (length $text > 0) {
- p       $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
+         $self->set_metadata($schema, MESSAGE_FOR_CURATORS_KEY, $text);
       } else {
         $self->unset_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
       }
