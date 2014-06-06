@@ -61,7 +61,7 @@ test_psgi $app, sub {
   my $uri = new URI("$root_url/annotation/$annotation_id/multi_allele_finish");
 
   $uri->query_form();
-x
+
   my $req = HTTP::Request->new(GET => $uri);
   $req->header('Content-Type' => 'application/json');
 
