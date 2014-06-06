@@ -2210,11 +2210,11 @@ sub _maybe_make_genotype
 
   # FIXME - we always make a Genotype at the moment - there's no "maybe"
 
-  my $genotype_name = join " ", map { $_->display_name() } @$alleles;
+  my $genotype_identifier = join " ", map { $_->display_name() } @$alleles;
 
   my $genotype = $schema->create_with_type('Genotype',
                                            {
-                                             name => $genotype_name,
+                                             name => $genotype_identifier,
                                            });
 
   $genotype->set_alleles($alleles);

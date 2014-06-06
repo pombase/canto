@@ -71,7 +71,7 @@ Alleles
 
 <%init>
 my $genotype_id = $genotype->genotype_id();
-my $genotype_name = $genotype->name();
+my $genotype_identifier = $genotype->identifier();
 
 my $st = $c->stash();
 

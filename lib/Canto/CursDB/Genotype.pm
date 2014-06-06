@@ -32,6 +32,11 @@ __PACKAGE__->table("genotype");
   is_auto_increment: 1
   is_nullable: 0
 
+=head2 identifier
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 name
 
   data_type: 'text'
@@ -42,6 +47,8 @@ __PACKAGE__->table("genotype");
 __PACKAGE__->add_columns(
   "genotype_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  "identifier",
+  { data_type => "text", is_nullable => 1 },
   "name",
   { data_type => "text", is_nullable => 1 },
 );
@@ -59,6 +66,18 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("genotype_id");
 
 =head1 UNIQUE CONSTRAINTS
+
+=head2 C<identifier_unique>
+
+=over 4
+
+=item * L</identifier>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("identifier_unique", ["identifier"]);
 
 =head2 C<name_unique>
 
@@ -105,8 +124,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-25 14:23:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uWBtLUXh4c1GzaGrwvqS7Q
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-06-06 22:21:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cVuqRflx9DTPVCKgfPPx4Q
 
 =head2 annotations
 
@@ -161,7 +180,7 @@ sub display_name
 {
   my $self = shift;
 
-  return $self->name();
+  return $self->name() // $self->identifier();
 }
 
 __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',

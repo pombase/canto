@@ -167,7 +167,7 @@ sub get_annotation_table_tsv
        creation_date_short assigned_by annotation_extension);
 
   my @phenotype_column_names =
-    qw(db genotype_name
+    qw(db genotype_identifier
        term_ontid publication_uniquename
        evidence_code
        db_object_type

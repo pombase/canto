@@ -239,7 +239,7 @@ sub _get_genotypes
 
   while (defined (my $genotype = $rs->next())) {
     push @ret, {
-      name => $genotype->name(),
+      identifier => $genotype->identifier(),
       alleles => [_get_genotype_alleles($config, $schema, $genotype)]
     }
   }

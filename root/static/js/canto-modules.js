@@ -274,7 +274,7 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', '
   ];
 
   $scope.data = {
-    genotype_name: ''
+    genotype_identifier: ''
   };
 
   $scope.env = {
@@ -284,7 +284,7 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', '
   $scope.$watch('alleles',
                 function() {
                   $scope.env.curs_config_promise.then(function(response) {
-                    $scope.data.genotype_name =
+                    $scope.data.genotype_identifier =
                       response.data.genotype_config.default_strain_name +
                       " " +
                       $.map($scope.alleles, function(val, i) {

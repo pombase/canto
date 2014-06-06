@@ -27,7 +27,7 @@ $schema->txn_do(
 
 
 # get allele annotations
-my $genotype = $schema->resultset('Genotype')->find({ name => 'h+ SPCC63.05delta ssm4KE' });
+my $genotype = $schema->resultset('Genotype')->find({ identifier => 'h+ SPCC63.05delta ssm4KE' });
 my @genotype_annotations = $genotype->annotations();
 
 is (@genotype_annotations, 1);
@@ -68,7 +68,7 @@ is ($spbc14f5_07->all_annotations(include_with => 1)->count(), 2);
 my $annotation_2 = $spbc14f5_07->all_annotations(include_with => 1)->first();
 my $annotation_2_id = $annotation_2->annotation_id();
 
-my $genotype_1 = $schema->find_with_type('Genotype', { name => 'h+ ssm4-D4' });
+my $genotype_1 = $schema->find_with_type('Genotype', { identifier => 'h+ ssm4-D4' });
 ok (defined $genotype_1);
 
 is ($genotype_1->annotations()->count(), 1);

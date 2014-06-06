@@ -20,9 +20,9 @@ my $res = $service_utils->list_for_service('genotype');
 cmp_deeply($res,
            [
             {
-              'name' => 'h+ SPCC63.05delta ssm4KE'
+              'identifier' => 'h+ SPCC63.05delta ssm4KE'
             },
             {
-              'name' => 'h+ ssm4-D4'
+              'identifier' => 'h+ ssm4-D4'
             }
           ]);

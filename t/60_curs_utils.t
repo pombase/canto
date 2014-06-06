@@ -84,7 +84,7 @@ sub check_new_annotations
         ok (length $annotation_row->{term_name} > 0);
 
         if ($annotation_type_config->{needs_genotype}) {
-          ok (length $annotation_row->{genotype_name} > 0);
+          ok (length $annotation_row->{genotype_identifier} > 0);
           $genotype_count++;
         } else {
           ok (length $annotation_row->{gene_name_or_identifier} > 0);

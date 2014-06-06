@@ -111,7 +111,7 @@ $view_only => 0
 %     if ($feature_type eq 'genotype') {
     <td>
       <span>
-      <% $row->{genotype_name} %>
+      <% $row->{genotype_identifier} %>
       </span>
     </td>
 %     }

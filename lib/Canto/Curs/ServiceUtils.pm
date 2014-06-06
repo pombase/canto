@@ -56,7 +56,7 @@ my %list_for_service_subs =
 
         my @res = map {
           {
-            name => $_->name(),
+            identifier => $_->identifier(),
           }
         } $genotype_rs->all();
       },
@@ -69,7 +69,7 @@ my %list_for_service_subs =
            the browser.
  Args    : $type - the data type: eg. "genotype"
  Return  : a list of hash refs summarising a type.  Example for genotype:
-           [ { name => 'h+ SPCC63.05-unk ssm4delta' }, { ... }, ... ]
+           [ { identifier => 'h+ SPCC63.05-unk ssm4delta' }, { ... }, ... ]
 
 =cut
 
