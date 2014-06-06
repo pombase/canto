@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 42;
+use Test::More tests => 28;
 use Test::Deep;
 
 use Data::Compare;
@@ -194,13 +194,6 @@ my $allele =
                                    gene => $gene_for_allele->gene_id(),
                                  });
 
-$curs_schema->create_with_type('AlleleAnnotation',
-                               {
-                                 allele => $allele->allele_id(),
-                                 annotation => $annotation_for_allele->annotation_id(),
-                               });
-
-
 my $annotation_for_rna_allele =
   $curs_schema->create_with_type('Annotation',
                                  {
@@ -226,111 +219,10 @@ my $rna_allele =
                                    gene => $rna_gene_for_allele->gene_id(),
                                  });
 
-$curs_schema->create_with_type('AlleleAnnotation',
-                               {
-                                 allele => $rna_allele->allele_id(),
-                                 annotation => $annotation_for_rna_allele->annotation_id(),
-                               });
-
-
-my $annotation_for_allele_in_progress =
-  $curs_schema->create_with_type('Annotation',
-                                 {
-                                   type => 'phenotype',
-                                   status => 'new',
-                                   pub => $pub_for_allele,
-                                   creation_date => $iso_date,
-                                   data => {
-                                     term_ontid => 'FYPO:0000128',
-                                   },
-                                 });
-$curs_schema->create_with_type('GeneAnnotation',
-                               {
-                                 gene => $gene_for_allele->gene_id(),
-                                 annotation => $annotation_for_allele_in_progress->annotation_id(),
-                               });
-
-my %allele_creation_data_1 = (
-  name => 'test_name_1',
-  description => 'test_desc_1',
-  conditions => ['cold'],
-  evidence => 'Western blot assay',
-  expression => 'Endogenous',
-);
-
-Canto::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
-                                                      $annotation_for_allele_in_progress,
-                                                      \%allele_creation_data_1);
-
-is($annotation_for_allele_in_progress->data()->{alleles_in_progress}->{0}->{conditions}->[0], 'PECO:0000006');
-
-my %allele_creation_data_2 = (
-  name => 'an_allele',
-  description => undef,
-  conditions => ['cold', 'late in the afternoon'],
-  evidence => 'Enzyme assay data',
-  expression => 'Overexpression',
-);
-
-my $add_res =
-  Canto::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
-                                                        $annotation_for_allele_in_progress,
-                                                        \%allele_creation_data_2);
-my $add_expected = {
-  'expression' => 'Overexpression',
-  'name' => 'an_allele',
-  'evidence' => 'Enzyme assay data',
-  'id' => 1,
-  'display_name' => 'an_allele(unknown)',
-  'description' => undef,
-  'conditions' => [
-    'cold',
-    'late in the afternoon'
-  ]
-};
-cmp_deeply($add_res, $add_expected);
-
 
 my %allele_data_1 = Canto::Controller::Curs::_get_all_alleles($config, $curs_schema,
                                                                $gene_for_allele);
 
-is (scalar(keys %allele_data_1), 3);
-
-is ($allele_data_1{'test_name_1(test_desc_1)'}->{name}, $allele_creation_data_1{name});
-is ($allele_data_1{'an_allele(unknown)'}->{description}, undef);
-is ($allele_data_1{'existing_allele_name(desc)'}->{primary_identifier}, 'SPCC1739.10:allele-1');
-
-
-my %allele_data_2 = Canto::Controller::Curs::_get_all_alleles($config, $curs_schema,
-                                                               $rna_gene_for_allele);
-
-is (scalar(keys %allele_data_2), 1);
-
-is ($allele_data_2{'existing_rna_allele_name(rna_desc)'}->{name}, 'existing_rna_allele_name');
-is ($allele_data_2{'existing_rna_allele_name(rna_desc)'}->{description}, 'rna_desc');
-is ($allele_data_2{'existing_rna_allele_name(rna_desc)'}->{primary_identifier}, 'SPNCRNA.119:allele-2');
-
-
-
-my %allele_creation_data_3 = (
-  name => '',
-  description => 'unknown',
-  evidence => 'Enzyme assay data',
-  expression => 'Overexpression',
-);
-
-my $new_allele_data_3 =
-  Canto::Controller::Curs::_allele_add_action_internal($config, $curs_schema,
-                                                        $annotation_for_allele,
-                                                        \%allele_creation_data_3);
-
-
-is (scalar(keys %$new_allele_data_3), 6);
-
-is ($new_allele_data_3->{'expression'}, 'Overexpression');
-is ($new_allele_data_3->{'name'}, '');
-is ($new_allele_data_3->{'display_name'}, '(unknown)');
-is ($new_allele_data_3->{'id'}, 0);
-
+is (scalar(keys %allele_data_1), 1);
 
 done_testing;

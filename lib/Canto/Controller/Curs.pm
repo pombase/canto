@@ -1848,62 +1848,6 @@ sub allele_remove_action : Chained('annotation') PathPart('remove_allele_action'
   $c->forward('View::JSON');
 }
 
-# add a new blob of allele data to alleles_in_progress in the annotation
-sub _allele_add_action_internal
-{
-  my $config = shift;
-  my $schema = shift;
-  my $annotation = shift;
-  my $allele_data_ref = shift;
-
-  my $data = $annotation->data();
-  my $alleles_in_progress = $data->{alleles_in_progress} // { };
-  my $max_id = -1;
-
-  map {
-    if ($_ > $max_id) {
-      $max_id = $_;
-    }
-  } keys %$alleles_in_progress;
-
-  my $new_allele_id = $max_id + 1;
-
-  my $new_allele_data = {
-    id => $new_allele_id,
-    %$allele_data_ref,
-  };
-
-  my $lookup = Canto::Track::get_adaptor($config, 'ontology');
-
-  my $return_allele_data = clone $new_allele_data;
-
-  if (exists $new_allele_data->{conditions}) {
-    # replace term names with the ID if we know it otherwise assume that the
-    # user has made up a condition
-    map { my $name = $_;
-          my $res = $lookup->lookup_by_name(ontology_name => 'phenotype_condition',
-                                            term_name => $name);
-          if (defined $res) {
-            $_ = $res->{id};
-          }
-        } @{$new_allele_data->{conditions}};
-  }
-
-  $alleles_in_progress->{$new_allele_id} = $new_allele_data;
-  $data->{alleles_in_progress} = $alleles_in_progress;
-  $annotation->data($data);
-  $annotation->update();
-
-  my $allele_display_name =
-    Canto::Curs::Utils::make_allele_display_name($allele_data_ref->{name},
-                                                 $allele_data_ref->{description},
-                                                 $allele_data_ref->{type});
-
-  $return_allele_data->{display_name} = $allele_display_name;
-
-  return $return_allele_data;
-}
-
 sub _trim
 {
   my $str = shift;
@@ -2006,28 +1950,6 @@ sub _get_all_alleles
       primary_identifier => $allele->primary_identifier(),
       allele_type => $allele->type(),
     };
-  }
-
-  my $ann_rs = $gene->direct_annotations();
-
-  while (defined (my $annotation = $ann_rs->next())) {
-    my $data = $annotation->data();
-
-    if (exists $data->{alleles_in_progress}) {
-      for my $allele_data (values %{$data->{alleles_in_progress}}) {
-        my $allele_display_name =
-          Canto::Curs::Utils::make_allele_display_name($allele_data->{name},
-                                                       $allele_data->{description},
-                                                       $allele_data->{type});
-        if (!exists $results{$allele_display_name}) {
-          $results{$allele_display_name} = {
-            name => $allele_data->{name},
-            description => $allele_data->{description},
-            allele_type => $allele_data->{allele_type},
-          };
-        }
-      }
-    }
   }
 
   return %results;
