@@ -2196,6 +2196,8 @@ sub _allele_from_json: Private
 
 }
 
+# make a genotype object if one doesn't exist already with this combination of
+# alleles
 sub _maybe_make_genotype
 {
   my $self = shift;
