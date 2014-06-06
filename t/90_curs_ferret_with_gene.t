@@ -52,7 +52,7 @@ test_psgi $app, sub {
   {
     my $term_id = 'GO:0080170';
     my $gene_id = 2;
-    my $uri = new URI("$root_url/gene/$gene_id/new_annotation/biological_process/single_allele/choose_term");
+    my $uri = new URI("$root_url/feature/gene/annotate/$gene_id/choose_term/biological_process");
     $uri->query_form('ferret-term-id' => $term_id,
                      'ferret-submit' => 'Proceed',
                      'ferret-term-entry' => 'transport');
@@ -223,7 +223,7 @@ test_psgi $app, sub {
 
     my $redirect_url = $res->header('location');
 
-    is ($redirect_url, "$root_url/gene/2/view");
+    is ($redirect_url, "$root_url/feature/gene/view/2");
 
     my $redirect_req = HTTP::Request->new(GET => $redirect_url);
     my $redirect_res = $cb->($redirect_req);
