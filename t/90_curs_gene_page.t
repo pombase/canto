@@ -28,7 +28,7 @@ test_psgi $app, sub {
   my $cb = shift;
 
   my $gene_id = 2;
-  my $uri = new URI("$root_url/gene/$gene_id/view");
+  my $uri = new URI("$root_url/feature/gene/view/$gene_id");
 
   my $req = HTTP::Request->new(GET => $uri);
   my $res = $cb->($req);
