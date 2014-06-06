@@ -73,7 +73,7 @@ for my $annotation_type (@annotation_type_list) {
 
       # test proceeding after choosing a term
       my $gene_id = 2;
-      my $uri = new URI("$root_url/gene/$gene_id/new_annotation/$annotation_type_name/single_allele/choose_term");
+      my $uri = new URI("$root_url/feature/gene/annotate/$gene_id/choose_term/$annotation_type_name");
 
       my %form_params = (
         'ferret-term-id' => $term_db_accession,
@@ -98,11 +98,7 @@ for my $annotation_type (@annotation_type_list) {
       my $redirect_url = $res->header('location');
 
       $new_annotation_id = $Canto::Controller::Curs::_debug_annotation_ids->[0];
-      if ($annotation_type->{needs_genotype}) {
-        is ($redirect_url, "$root_url/annotation/$new_annotation_id/allele_select");
-      } else {
-        is ($redirect_url, "$root_url/annotation/$new_annotation_id/evidence");
-      }
+      is ($redirect_url, "$root_url/annotation/$new_annotation_id/evidence");
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
@@ -188,7 +184,7 @@ for my $annotation_type (@annotation_type_list) {
 
       my $redirect_url = $res->header('location');
 
-      is ($redirect_url, "$root_url/gene/2/view");
+      is ($redirect_url, "$root_url/feature/gene/view/2");
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);

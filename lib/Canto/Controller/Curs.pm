@@ -2518,7 +2518,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 
     $self->state()->store_statuses($schema);
 
-    _redirect_and_detach($c, 'gene', $feature->gene_id(), 'view');
+    _redirect_and_detach($c, 'feature', 'gene', 'view', $feature->gene_id());
   }
 }
 
