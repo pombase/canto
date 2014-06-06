@@ -8,7 +8,7 @@ $genotype
 <div id="curs-annotation-actions">
 <div class="curs-box">
   <div class="curs-box-title">
-Actions:
+Action:
   </div>
   <div class="curs-box-body">
   <ul class="annotation-start">
@@ -23,7 +23,7 @@ Actions:
       <a title="<% $title %>" href="<% $action_path %>">
 %   }
       <span class="annotation-type">
-Add a new <% $type_display_name %> for <% $genotype_name %> ...
+Add a new <% $type_display_name %> for this genotype ...
       </span>
 %   if (!$annotation_type->{disabled}) {
       </a>
