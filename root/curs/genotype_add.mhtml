@@ -89,6 +89,11 @@ Add alleles from the genes below until the genotype is fully specified.
         ng-click="storeAlleles()" ng-disabled="!isValid()">Finish</button>
 <button type="submit" class="btn btn-warning curs-finish-button"
         ng-click="cancel()">Cancel</button>
+
+<div class="upload-genes-link">
+  <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
+</div>
+
 </div>
 </div>
 </div>
@@ -124,4 +129,8 @@ my @col_names = ("Systematic identifier", "Name");
 if ($multi_organism_mode) {
   push @col_names, "Organism";
 }
+
+my $root_path = $c->stash()->{curs_root_path};
+my $upload_path = $c->uri_for("$root_path/gene_upload",
+                              { return_path => $c->req()->uri() });
 </%init>
