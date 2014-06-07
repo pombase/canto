@@ -1,4 +1,8 @@
-var canto = angular.module('cantoApp', ['ui.bootstrap']);
+var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
+
+canto.run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+});
 
 var alleleEditDialogCtrl =
   function($scope, $http, $modalInstance, $q, $timeout, CantoConfig, args) {
@@ -274,7 +278,8 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', '
   ];
 
   $scope.data = {
-    genotype_identifier: ''
+    genotype_identifier: '',
+    genotype_name: ''
   };
 
   $scope.env = {

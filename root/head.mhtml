@@ -2,23 +2,20 @@
 $title
 </%args>
 
-<title><% $c->config()->{name} %> - <% $title %></title>
+<title><% $c->config()->{long_name} %> - <% $title %></title>
 <meta charset="UTF-8"/>
 <meta name="robots" content="noindex">
 
 % if ($c->debug()) {
 <link href="<% $c->uri_for('/static/css/jquery-ui-1.9.2.custom.css') %>" type="text/css" rel="stylesheet" />
-%   if ($c->stash()->{use_bootstrap}) {
-<link href="<% $c->uri_for('/static/css/bootstrap.css') %>" type="text/css" rel="stylesheet" />
-%   }
+<link href="<% $c->uri_for('/static/css/bootstrap-3.1.0.css') %>" type="text/css" rel="stylesheet" />
 % } else {
 <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" 
       type="text/css" rel="stylesheet"/>
-%   if ($c->stash()->{use_bootstrap}) {
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
-%   }
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
 % }
 <link href="<% $c->uri_for('/static/css/style.css') %>" type="text/css" rel="stylesheet" />
+<link href="<% $c->uri_for('/static/css/angular-xeditable.css') %>" type="text/css" rel="stylesheet" />
 <link href="<% $c->uri_for('/static/css/jquery.tagit.css') %>" type="text/css" rel="stylesheet" />
 <link href="<% $c->uri_for('/static/css/jquery.pnotify.default.css') %>" type="text/css" rel="stylesheet" />
 % if (defined $c->config()->{extra_css}) {
