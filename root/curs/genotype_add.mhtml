@@ -23,9 +23,9 @@ Choose the genes for this genotype
           <table class="list">
             <thead>
               <tr>
-                <td>Identifier</td>
-                <td>Name</td>
-                <td>&nbsp;</td>
+                <th>Identifier</th>
+                <th>Name</th>
+                <th>&nbsp;</th>
               </tr>
             </thead>
             <tbody>
@@ -54,47 +54,72 @@ Add alleles from the genes below until the genotype is fully specified.
     </div>
     <div class="curs-box-body">
 
-  <a title="Click to genotype edit name" href="#"
-     editable-text="data.genotype_name">{{ data.genotype_name ? ('Name: ' + data.genotype_name) : "click to add genotype name" }}</a>
+      <a title="Click to genotype edit name" href="#"
+         editable-text="data.genotype_name">{{ data.genotype_name ? ('Name: ' + data.genotype_name) : "click to add genotype name" }}</a>
 
-  <div ng-show="alleles.length == 0">
-    [No alleles added yet]
-  </div>
+      <div class="row">
+        <div class="col-sm-6 col-md-6">
+          <table class="list">
+            <thead>
+              <tr>
+                <th>Identifier</th>
+                <th>Name</th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="gene in selectedGenes">
+                <td>{{gene.primary_identifier}}</td>
+                <td>{{gene.primary_name}}</td>
+                <td>
+                  <button class="btn btn-xs"
+                          ng-click="openAlleleEditDialog(gene.primary_identifier, gene.primary_identifier, gene.gene_id)">Add allele ..</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm-6 col-md-6">
+          <div ng-show="alleles.length == 0">
+[No alleles added yet]
+          </div>
 
-  <div id="multi-allele-genotype" class="ng-cloak" ng-show="alleles.length">
+          <div id="multi-allele-genotype" class="ng-cloak" ng-show="alleles.length">
 
-    <div>
-      The alleles for <b>{{ data.genotype_identifier }}</b>:
+            <div>
+The alleles for <b>{{ data.genotype_identifier }}</b>:
+            </div>
+
+            <table class="list">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Expression</th>
+                </tr>
+              </thead>
+              <tbody ng-repeat="allele in alleles">
+                <td>{{allele.name}}</td>
+                <td>{{allele.type}}</td>
+                <td>{{allele.description}}</td>
+                <td>{{allele.expression}}</td>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary curs-back-button"
+              title="Back to choose genes"
+              ng-click="clearSelectedGene()" ng-disabled="false">Back</button>
+      <button type="submit" class="btn btn-primary curs-finish-button"
+              title="{{ isValid() ? '' : 'No alleles yet' }}"
+              ng-click="storeAlleles()" ng-disabled="!isValid()">Finish</button>
+      <button type="submit" class="btn btn-warning curs-finish-button"
+              ng-click="cancel()">Cancel</button>
+      
     </div>
-
-  <table class="list">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Expression</th>
-      </tr>
-    </thead>
-    <tbody ng-repeat="allele in alleles">
-      <td>{{allele.name}}</td>
-      <td>{{allele.type}}</td>
-      <td>{{allele.description}}</td>
-      <td>{{allele.expression}}</td>
-    </tbody>
-  </table>
-</div>
-<button type="submit" class="btn btn-primary curs-back-button"
-        title="Back to choose genes"
-        ng-click="clearSelectedGene()" ng-disabled="false">Back</button>
-<button type="submit" class="btn btn-primary curs-finish-button"
-        title="{{ isValid() ? '' : 'No alleles yet' }}"
-        ng-click="storeAlleles()" ng-disabled="!isValid()">Finish</button>
-<button type="submit" class="btn btn-warning curs-finish-button"
-        ng-click="cancel()">Cancel</button>
-
-</div>
-</div>
+  </div>
 </div>
 
 <%init>
@@ -104,29 +129,8 @@ use Canto::Curs::GeneProxy;
 
 my $config = $c->config();
 
-my @all_genes = map {
-  Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $_);
-} Canto::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all();
-
-my @gene_data = map {
-  my $gene = $_;
-
-  my $hash = {
-    'Systematic identifier' => $gene->primary_identifier(),
-    Name => $gene->primary_name(),
-    gene_id => $gene->gene_id(),
-    display_name => $gene->display_name(),
-  };
-  if ($multi_organism_mode) {
-    $hash->{Organism} = $gene->organism()->full_name();
-  }
-  $hash
-} @all_genes;
-
-my @col_names = ("Systematic identifier", "Name");
-
 if ($multi_organism_mode) {
-  push @col_names, "Organism";
+  # ...
 }
 
 my $root_path = $c->stash()->{curs_root_path};
