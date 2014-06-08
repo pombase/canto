@@ -56,7 +56,7 @@ Alleles
 
 <div class="clearall"/>
 
-<button type="button" id="curs-finish-genotype" class="curs-finish-button"><% $finish_text %></button>
+<button type="button" id="curs-finish-genotype" class="curs-back-button"><% $finish_text %></button>
 
 <div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@types_to_show) {
