@@ -23,10 +23,12 @@ cmp_deeply($res,
             {
               'identifier' => 'h+ SPCC63.05delta ssm4KE',
               'name' => undef,
+              genotype_id => 1,
             },
             {
               'identifier' => 'h+ ssm4-D4',
               'name' => undef,
+              genotype_id => 2,
             }
           ]);
 
@@ -36,18 +38,22 @@ cmp_deeply($res,
            [
             {
               'primary_identifier' => 'SPCC576.16c',
-              'primary_name' => 'wtf22'
+              'primary_name' => 'wtf22',
+               gene_id => 1,
             },
             {
               'primary_name' => 'ssm4',
-              'primary_identifier' => 'SPAC27D7.13c'
+              'primary_identifier' => 'SPAC27D7.13c',
+               gene_id => 2,
             },
             {
               'primary_name' => 'doa10',
-              'primary_identifier' => 'SPBC14F5.07'
+              'primary_identifier' => 'SPBC14F5.07',
+               gene_id => 3,
             },
             {
               'primary_identifier' => 'SPCC63.05',
-              'primary_name' => undef
+              'primary_name' => undef,
+               gene_id => 4,
             },
           ]);
