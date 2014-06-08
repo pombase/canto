@@ -42,21 +42,41 @@ use Moose;
 
 use JSON;
 
+use Canto::Curs::GeneProxy;
+
+with 'Canto::Role::Configurable';
+
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB');
+
 
 my %list_for_service_subs =
   (
+    gene =>
+      sub {
+        my $self = shift;
+        my $curs_schema = $self->curs_schema();
+        my $gene_rs = $curs_schema->resultset('Gene');
+        my @res = map {
+          my $proxy =
+            Canto::Curs::GeneProxy->new(config => $self->config(),
+                                        cursdb_gene => $_);
+          {
+            primary_identifier => $proxy->primary_identifier(),
+            primary_name => $proxy->primary_name(),
+            gene_id => $proxy->gene_id(),
+        }
+        } $gene_rs->all();
+      },
     genotype =>
       sub {
         my $self = shift;
-
         my $curs_schema = $self->curs_schema();
-
         my $genotype_rs = $curs_schema->resultset('Genotype');
-
         my @res = map {
           {
             identifier => $_->identifier(),
+            name => $_->name(),
+            genotype_id => $_->genotype_id(),
           }
         } $genotype_rs->all();
       },
@@ -76,7 +96,6 @@ my %list_for_service_subs =
 sub list_for_service
 {
   my $self = shift;
-
   my $type = shift;
 
   my $proc = $list_for_service_subs{$type};
