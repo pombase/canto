@@ -396,6 +396,10 @@ table.list tr td {
   border-color: #bbb;
 }
 
+table.list thead {
+  font-weight: bold;
+}
+
 table.list thead img.sort-direction-icon {
   padding-right: 5px;
 }

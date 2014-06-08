@@ -11,46 +11,48 @@ $curs_root_uri
    editing => 0,
    curs_root_uri => $curs_root_uri &>
 
-<div ng-controller="MultiAlleleCtrl" id="curs-multi-allele-select" class="curs-box">
-  <div class="curs-box-title">
-Add alleles from the genes below until the genotype is fully specified.
+<div ng-controller="MultiAlleleCtrl" id="curs-multi-allele-select"
+     class="curs-box ng-cloak">
+  <div ng-show="selectedGenes.length == 0">
+    <div class="curs-box-title">
+Choose the genes for this genotype
+    </div>
+    <div class="curs-box-body">
+      <div class="row">
+        <div class="col-sm-6 col-md-6">
+          <table class="list">
+            <thead>
+              <tr>
+                <td>Identifier</td>
+                <td>Name</td>
+                <td>&nbsp;</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="gene in genes">
+                <td>{{gene.primary_identifier}}</td>
+                <td>{{gene.primary_name}}</td>
+                <td><input type="checkbox" value="{{gene.selected}}" ng-model="gene.selected"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <button type="button" class="btn curs-finish-button"
+              title="{{ 'Continue' }}"
+              ng-disabled="currentlySelectedGenes() == 0"
+              ng-click="selectGenes()">Continue</button>
+      <div class="upload-genes-link">
+        <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
+      </div>
+    </div>
   </div>
-  <div class="curs-box-body">
 
-<div class="row">
-<div class="col-sm-6 col-md-6">
-  <table class="list">
-    <thead>
-      <tr>
-%     for my $col_name (@col_names) {
-        <th>
-          <% $col_name %>
-        </th>
-%     }
-        <th>
-          &nbsp;
-        </th>
-      </tr>
-    </thead>
-
-%   for my $gene (@gene_data) {
-    <tr>
-%     for my $col_name (@col_names) {
-      <td>
-        <% $gene->{$col_name} |n %>
-      </td>
-%     }
-      <td>
-        <button class="btn btn-xs"
-                ng-click="openAlleleEditDialog('<% $gene->{display_name} %>', '<% $gene->{qq|Systematic identifier|} %>', <% $gene->{gene_id} %>)">Add allele ..</button>
-      </td>
-    </tr>
-%   }
-  </table>
-
-</div>
-
-<div class="col-sm-6 col-md-6">
+  <div ng-show="selectedGenes.length > 0">
+    <div class="curs-box-title">
+Add alleles from the genes below until the genotype is fully specified.
+    </div>
+    <div class="curs-box-body">
 
   <a title="Click to genotype edit name" href="#"
      editable-text="data.genotype_name">{{ data.genotype_name ? ('Name: ' + data.genotype_name) : "click to add genotype name" }}</a>
@@ -81,18 +83,15 @@ Add alleles from the genes below until the genotype is fully specified.
       <td>{{allele.expression}}</td>
     </tbody>
   </table>
-  </div>
 </div>
-</div>
+<button type="submit" class="btn btn-primary curs-back-button"
+        title="Back to choose genes"
+        ng-click="clearSelectedGene()" ng-disabled="false">Back</button>
 <button type="submit" class="btn btn-primary curs-finish-button"
         title="{{ isValid() ? '' : 'No alleles yet' }}"
         ng-click="storeAlleles()" ng-disabled="!isValid()">Finish</button>
 <button type="submit" class="btn btn-warning curs-finish-button"
         ng-click="cancel()">Cancel</button>
-
-<div class="upload-genes-link">
-  <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
-</div>
 
 </div>
 </div>

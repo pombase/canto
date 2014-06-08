@@ -1,5 +1,13 @@
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
 
+canto.factory('Curs', function($http) {
+  return {
+    list : function(key) {
+      return $http.get(curs_root_uri + '/ws/' + key + '/list');
+    }
+  }
+});
+
 canto.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
@@ -273,9 +281,34 @@ canto.controller('AlleleEditDialogCtrl',
                   'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
 
-canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', 'CantoConfig', function($scope, $http, $modal, $location, CantoConfig) {
+canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', 'CantoConfig', 'Curs', function($scope, $http, $modal, $location, CantoConfig, Curs) {
   $scope.alleles = [
   ];
+  $scope.genes = [
+  ];
+  $scope.selectedGenes = [
+  ];
+
+  Curs.list('gene').success(function(results) {
+    $scope.genes = results;
+  })
+  .error(function() {
+    alert('failed to get gene list from server');
+  });
+
+  $scope.currentlySelectedGenes = function() {
+    return $.grep($scope.genes, function(value, index) {
+      return value.selected;
+    });
+  };
+
+  $scope.selectGenes = function() {
+    $scope.selectedGenes = $scope.currentlySelectedGenes();
+  };
+
+  $scope.clearSelectedGene = function() {
+    $scope.selectedGenes = [];
+  };
 
   $scope.data = {
     genotype_identifier: '',
