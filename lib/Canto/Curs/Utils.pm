@@ -74,7 +74,7 @@ sub _make_ontology_annotation
   my %gene_details;
   my %genotype_details;
 
-  if ($annotation_type_config->{needs_genotype}) {
+  if ($annotation_type_config->{feature_type} eq 'genotype') {
     my @annotation_genotypes = $annotation->genotypes();
 
     if (@annotation_genotypes > 1) {

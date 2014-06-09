@@ -79,7 +79,7 @@ my $gene_count = $st->{gene_count};
 my $finish_text = 'Back to summary';
 
 my @types_to_show = grep {
-  $_->{needs_genotype};
+  $_->{feature_type} eq 'genotype'
 } @annotation_type_list;
 
 my $start_path = $c->stash()->{curs_root_uri};

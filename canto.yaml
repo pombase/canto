@@ -1397,7 +1397,6 @@ available_annotation_type_list:
       ii) The period or phase (e.g. during S phase; during sporulation) when the localisation is observed
       The curators will record this additional information in PomBase.
   - name: phenotype
-    needs_genotype: 1
     category: ontology
     namespace: fission_yeast_phenotype
     very_short_display_name: 'phenotype'

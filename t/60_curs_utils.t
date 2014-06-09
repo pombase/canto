@@ -83,7 +83,7 @@ sub check_new_annotations
         ok (length $annotation_row->{term_ontid} > 0);
         ok (length $annotation_row->{term_name} > 0);
 
-        if ($annotation_type_config->{needs_genotype}) {
+        if ($annotation_type_config->{feature_type} eq 'genotype') {
           ok (length $annotation_row->{genotype_identifier} > 0);
           $genotype_count++;
         } else {

@@ -31,7 +31,7 @@ for my $annotation_type (@annotation_type_list) {
   my $annotation_type_name = $annotation_type->{name};
 
   next unless $annotation_type->{category} eq 'ontology';
-  next if $annotation_type->{needs_genotype};
+  next if $annotation_type->{feature_type} eq 'genotype';
 
   my $cv_name = $annotation_type->{namespace} // $annotation_type->{name};
   my $cv = $track_schema->find_with_type('Cv', { name => $cv_name });
@@ -107,7 +107,7 @@ for my $annotation_type (@annotation_type_list) {
       my $gene_proxy = Canto::Controller::Curs::_get_gene_proxy($config, $gene);
       my $gene_display_name = $gene_proxy->display_name();
 
-      if ($annotation_type->{needs_genotype}) {
+      if ($annotation_type->{feature_type} eq 'genotype') {
         like ($redirect_res->content(),
               qr/Specify the allele\(s\) of $gene_display_name to annotate with $term_db_accession/);
       } else {
