@@ -337,7 +337,9 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', '
                 true);
 
   $scope.storeAlleles = function() {
-    $http.post('store', $scope.alleles).
+    $http.post('store', { genotype_name: $scope.data.genotype_name,
+                          genotype_identifier: $scope.data.genotype_identifier,
+                          alleles: $scope.alleles }).
       success(function(data) {
         window.location.href = data.location;
         console.debug(data);

@@ -28,7 +28,7 @@ Click on a genotype name to add a phenotype
         <a href="<% $start_path . '/feature/genotype/view/' . $genotype->{genotype_id} %>"
 % }
           <span>
-            <% $genotype->{identifier} %>
+            <% $genotype->{display_name} %>
           </span>
 % if (!$read_only_curs) {
         </a>
@@ -73,6 +73,7 @@ my @genotype_hashes = map {
   }
   {
     identifier => $_->identifier(),
+    display_name => $_->display_name(),
     name => $_->name(),
     genotype_id => $_->genotype_id(),
     extra_text => $extra_text,

@@ -2203,6 +2203,7 @@ sub _maybe_make_genotype
   my $self = shift;
   my $c = shift;
   my $alleles = shift;
+  my $name = shift;
 
   my $st = $c->stash();
   my $schema = $st->{schema};
@@ -2214,7 +2215,8 @@ sub _maybe_make_genotype
 
   my $genotype = $schema->create_with_type('Genotype',
                                            {
-                                             name => $genotype_identifier,
+                                             identifier => $genotype_identifier,
+                                             name => $name,
                                            });
 
   $genotype->set_alleles($alleles);
@@ -2222,6 +2224,7 @@ sub _maybe_make_genotype
   return $genotype;
 }
 
+# FIX_ME - this isn't called
 sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allele_finish')
 {
   my ($self, $c) = @_;
@@ -2243,6 +2246,10 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
   }
 
   my $body_data = decode_json($json_content);
+
+  my @alleles_data = @{$body_data->{alleles}};
+  my $genotype_name = $body_data->{genotype_name};
+
   my $annotation = $st->{annotation};
 
   my %allele_expression = ();
@@ -2250,7 +2257,7 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
 
   my $guard = $schema->txn_scope_guard();
 
-  for my $allele_data (@$body_data) {
+  for my $allele_data (@alleles_data) {
     my $allele = $self->_allele_from_json($schema, $allele_data);
 
     my $expression = $allele_data->{expression};
@@ -2262,7 +2269,8 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
     push @alleles, $allele;
   }
 
-  my $genotype = $self->_maybe_make_genotype($c, \@alleles);
+
+  my $genotype = $self->_maybe_make_genotype($c, \@alleles, $genotype_name);
 
   $schema->create_with_type('GenotypeAnnotation',
                             {
@@ -2818,17 +2826,20 @@ sub genotype_store : Chained('feature') PathPart('store')
 
   my $body_data = decode_json($json_content);
 
+  my @alleles_data = @{$body_data->{alleles}};
+  my $genotype_name = $body_data->{genotype_name};
+
   my @alleles = ();
 
   my $guard = $schema->txn_scope_guard();
 
-  for my $allele_data (@$body_data) {
+  for my $allele_data (@alleles_data) {
     my $allele = $self->_allele_from_json($schema, $allele_data);
 
     push @alleles, $allele;
   }
 
-  my $genotype = $self->_maybe_make_genotype($c, \@alleles);
+  my $genotype = $self->_maybe_make_genotype($c, \@alleles, $genotype_name);
 
   $guard->commit();
 
