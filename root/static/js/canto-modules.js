@@ -349,6 +349,10 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', '
       });
   };
 
+  $scope.removeAllele = function (allele) {
+    $scope.alleles.splice($scope.alleles.indexOf(allele), 1);
+  };
+
   $scope.openAlleleEditDialog =
     function(gene_display_name, gene_systemtic_id, gene_id) {
       var editInstance = $modal.open({

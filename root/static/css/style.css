@@ -1239,3 +1239,12 @@ a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
 .modal-body {
   background-color: #fff;
 }
+
+
+table tr td.curs-table-row-remove {
+  border-style: none;
+}
+
+table tr td.curs-table-row-remove a span {
+  color: red;
+}

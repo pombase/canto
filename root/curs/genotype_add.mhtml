@@ -104,7 +104,10 @@ The alleles for <b>{{ data.genotype_identifier }}</b>:
                 <td>{{allele.type}}</td>
                 <td>{{allele.description}}</td>
                 <td>{{allele.expression}}</td>
-              </tbody>
+                <td class="curs-table-row-remove">
+                  <a href="#"> <span class="glyphicon glyphicon-remove" ng-click="removeAllele(allele)"></span></a>
+                </td>
+            </tbody>
             </table>
           </div>
         </div>
