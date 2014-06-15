@@ -710,10 +710,10 @@ div.clearall {
   margin-bottom: 25px;
 }
 
-.curs-definition-table {
+.curs-definition-table, .curs-allele-list {
   table-layout: fixed;
   border-collapse: collapse;
-  margin: 15px;
+  margin: 10px;
 }
 
 .curs-definition-table tbody {
