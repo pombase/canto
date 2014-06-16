@@ -1,3 +1,7 @@
+'use strict';
+
+/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose */
+
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
 
 canto.factory('Curs', function($http) {
@@ -5,12 +9,91 @@ canto.factory('Curs', function($http) {
     list : function(key) {
       return $http.get(curs_root_uri + '/ws/' + key + '/list');
     }
-  }
+  };
 });
 
 canto.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
+
+function fetch_conditions(search, showChoices) {
+  $.ajax({
+    url: make_ontology_complete_url('phenotype_condition'),
+    data: { term: search.term, def: 1, },
+    dataType: "json",
+    success: function(data) {
+      var choices = $.map( data, function( item ) {
+        var label;
+        if (item.matching_synonym === null) {
+          label = item.name;
+        } else {
+          label = item.matching_synonym + ' (synonym)';
+        }
+        return {
+          label: label,
+          value: item.name,
+          name: item.name,
+          definition: item.definition,
+        };
+      });
+      showChoices(choices);
+    },
+  });
+}
+
+var conditionPicker =
+  function() {
+    return {
+      scope: {},
+      restrict: 'E',
+      replace: true,
+      templateId: 'condition_picker.html',
+      link: function(scope, elem) {
+        var button_html = '';
+        var used_buttons = elem.find('.curs-allele-condition-buttons');
+
+        elem.find('.curs-allele-conditions').tagit({
+          minLength: 2,
+          fieldName: 'curs-allele-condition-names',
+          allowSpaces: true,
+          placeholderText: 'Type a condition ...',
+          tagSource: fetch_conditions,
+          //          afterTagAdded: updateScopeConditions,
+          //          afterTagRemoved: updateScopeConditions,
+          autocomplete: {
+            focus: ferret_choose.show_autocomplete_def,
+            close: ferret_choose.hide_autocomplete_def,
+          },
+        });
+
+        used_buttons.find('button').remove();
+
+        $.each(scope.data.used_conditions,
+               function(cond) {
+                 button_html += '<button class="ui-widget ui-state-default curs-allele-condition-button">' +
+                   '<span>' + cond + '</span></button>';
+               });
+
+        if (button_html === '') {
+          used_buttons.hide();
+        } else {
+          used_buttons.show();
+          used_buttons.append(button_html);
+
+          $('.curs-allele-condition-buttons button').click(function() {
+            elem.find('curs-allele-conditions').tagit("createTag", $(this).find('span').text());
+            return false;
+          }).button({
+            icons: {
+              secondary: "ui-icon-plus"
+            }
+          });
+        }
+      }
+    };
+  };
+
+canto.directive('condition-picker', conditionPicker);
 
 var alleleEditDialogCtrl =
   function($scope, $http, $modalInstance, $q, $timeout, CantoConfig, args) {
@@ -54,18 +137,18 @@ var alleleEditDialogCtrl =
     });
 
     $scope.maybe_autopopulate = function() {
-      if (typeof this.current_type_config == 'undefined') {
-        return ''
+      if (typeof this.current_type_config === 'undefined') {
+        return '';
       }
       var autopopulate_name = this.current_type_config.autopopulate_name;
-      if (typeof autopopulate_name == 'undefined') {
+      if (autopopulate_name === undefined) {
         return '';
-      } else {
-        $scope.alleleData.name =
-          autopopulate_name.replace(/@@gene_name@@/, this.gene.display_name);
-        return this.alleleData.name;
       }
-    }
+
+      $scope.alleleData.name =
+        autopopulate_name.replace(/@@gene_name@@/, this.gene.display_name);
+      return this.alleleData.name;
+    };
 
     $scope.typeChange = function(curType) {
       $scope.env.allele_types_promise.then(function(response) {
