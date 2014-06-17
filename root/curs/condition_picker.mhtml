@@ -1,0 +1,19 @@
+<script type="text/ng-template" id="condition_picker.html">
+  <div>
+    <table>
+      <tr>
+        <td>
+Select conditions <& /curs/inline_help.mhtml, key => 'allele_choose_conditions' &>
+        </td>
+        <td>
+          <input class="curs-allele-conditions" name="curs-allele-condition-names"/>
+        </td>
+      </tr>
+    </table>
+    <div class="curs-allele-condition-buttons">
+      <div>
+Previously used conditions (click to add):
+      </div>
+    </div>
+  </div>
+</script>

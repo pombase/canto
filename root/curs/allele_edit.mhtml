@@ -125,26 +125,11 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
       </div>
 
       <div class="ng-cloak" ng-show="!!alleleData.type && false">
-        <table>
-          <tr>
-            <td>
-              Select conditions
-              <& /curs/inline_help.mhtml, key => 'allele_choose_conditions' &>
-            </td>
-            <td>
-              <input class="curs-allele-conditions" name="curs-allele-condition-names"/>
-            </td>
-          </tr>
-        </table>
-% if (!$editing) {
-        <div class="curs-allele-condition-buttons">
-          <div>Previously used conditions (click to add):</div>
-        </div>
-% }
         <div class="curs-allele-reuse">
           <input type="checkbox" name="curs-allele-reuse-dialog" value="Reuse"/>Re-use allele name and description with a different set of conditions<br/>
         </div>
       </div>
+
       <div class="modal-footer">
         <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
         <button class="btn btn-primary" ng-click="ok()" ng-disabled="!isValid()">OK</button>

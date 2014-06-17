@@ -24,7 +24,7 @@ function fetch_conditions(search, showChoices) {
     success: function(data) {
       var choices = $.map( data, function( item ) {
         var label;
-        if (item.matching_synonym === null) {
+        if (typeof(item.matching_synonym) === 'undefined') {
           label = item.name;
         } else {
           label = item.matching_synonym + ' (synonym)';
@@ -43,11 +43,12 @@ function fetch_conditions(search, showChoices) {
 
 var conditionPicker =
   function() {
-    return {
-      scope: {},
+    var directive = {
+      scope: {
+      },
       restrict: 'E',
       replace: true,
-      templateId: 'condition_picker.html',
+      templateUrl: 'condition_picker.html',
       link: function(scope, elem) {
         var button_html = '';
         var used_buttons = elem.find('.curs-allele-condition-buttons');
@@ -68,11 +69,11 @@ var conditionPicker =
 
         used_buttons.find('button').remove();
 
-        $.each(scope.data.used_conditions,
-               function(cond) {
-                 button_html += '<button class="ui-widget ui-state-default curs-allele-condition-button">' +
-                   '<span>' + cond + '</span></button>';
-               });
+//        $.each(scope.data.used_conditions,
+//               function(cond) {
+//                 button_html += '<button class="ui-widget ui-state-default curs-allele-condition-button">' +
+//                   '<span>' + cond + '</span></button>';
+//               });
 
         if (button_html === '') {
           used_buttons.hide();
@@ -91,9 +92,11 @@ var conditionPicker =
         }
       }
     };
+
+    return directive;
   };
 
-canto.directive('condition-picker', conditionPicker);
+canto.directive('conditionPicker', conditionPicker);
 
 var alleleEditDialogCtrl =
   function($scope, $http, $modalInstance, $q, $timeout, CantoConfig, args) {
@@ -110,6 +113,7 @@ var alleleEditDialogCtrl =
       evidence: '',
       conditions: []
     };
+    $scope.current_type_config = undefined;
 
     $scope.loadConditions = function() {
       var deferred = $q.defer();
@@ -257,98 +261,7 @@ var alleleEditDialogCtrl =
         conditions: $scope.alleleData.conditions,
         gene_id: $scope.gene.gene_id
       };
-    }
-
-    function fetch_conditions(search, showChoices) {
-      $.ajax({
-        url: make_ontology_complete_url('phenotype_condition'),
-        data: { term: search.term, def: 1, },
-        dataType: "json",
-        success: function(data) {
-          var choices = $.map( data, function( item ) {
-            var label;
-            if (item.matching_synonym == null) {
-              label = item.name;
-            } else {
-              label = item.matching_synonym + ' (synonym)';
-            }
-            return {
-              label: label,
-              value: item.name,
-              name: item.name,
-              definition: item.definition,
-            }
-          });
-          showChoices(choices);
-        },
-      });
-    }
-
-    $timeout(function() {
-      var updateScopeConditions = function() {
-        var conditions = $('.curs-allele-conditions').val();
-
-        $scope.alleleData.conditions = conditions.split(',');
-      };
-
-      // this is a hack and there will be a better way -
-      // .curs-allele-conditions isn't available until after the
-      // constructor finishes
-      $('.curs-allele-conditions').tagit({
-        minLength: 2,
-        fieldName: 'curs-allele-condition-names',
-        allowSpaces: true,
-        placeholderText: 'Type a condition ...',
-        tagSource: fetch_conditions,
-        afterTagAdded: updateScopeConditions,
-        afterTagRemoved: updateScopeConditions,
-        autocomplete: {
-          focus: ferret_choose.show_autocomplete_def,
-          close: ferret_choose.hide_autocomplete_def,
-        },
-      });
-    }, 0);
-
-    function make_condition_buttons($allele_dialog, $allele_table) {
-      return;
-
-      $allele_table.find('tr').map(function(idx, el) {
-        var el_allele_data = $(el).data('allele_data');
-        if (typeof(el_allele_data) != 'undefined') {
-          $.map(el_allele_data.conditions,
-                function(cond, idx) {
-                  $scope.env.used_conditions[cond] = true;
-                });
-        }
-      });
-      var button_html = '';
-
-      var used_buttons = $allele_dialog.find('.curs-allele-condition-buttons');
-
-      used_buttons.find('button').remove();
-
-      $.each($scope.env.used_conditions,
-             function(cond) {
-               button_html += '<button class="ui-widget ui-state-default curs-allele-condition-button">' +
-                 '<span>' + cond + '</span></button>';
-             });
-
-      if (button_html === '') {
-        used_buttons.hide();
-      } else {
-        used_buttons.show();
-        used_buttons.append(button_html);
-
-        $('.curs-allele-condition-buttons button').click(function() {
-          get_allele_conditions_jq($allele_dialog).tagit("createTag", $(this).find('span').text());
-          return false;
-        }).button({
-          icons: {
-            secondary: "ui-icon-plus"
-          }
-        });
-      }
-    }
+    };
 
     $scope.ok = function () {
       $modalInstance.close($scope.dialogToData($scope));
@@ -720,7 +633,7 @@ var ferretCtrl = function($scope) {
 
 // add ng-controller="FerretCtrl" to <div id="ferret"> in ontology.mhtml
 
-canto.controller('FerretCtrl', ['$scope', 'CantoConfig'], ferretCtrl);
+canto.controller('FerretCtrl', ['$scope', 'CantoConfig', ferretCtrl]);
 
 function UploadGenesCtrl($scope) {
   $scope.data = {
@@ -762,3 +675,12 @@ function SubmitToCuratorsCtrl($scope) {
       ($scope.data.reason !== 'Other' || $scope.data.otherReason.length > 0);
   };
 }
+
+
+var evidenceSelectCtrl =
+  function ($scope) {
+    $scope.data = {};
+  };
+
+canto.controller('EvidenceSelectCtrl',
+                 ['$scope', evidenceSelectCtrl]);

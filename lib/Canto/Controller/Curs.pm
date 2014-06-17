@@ -1700,6 +1700,21 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
 
   $form->attributes({ action => '?' });
 
+  my $needs_conditions = $annotation_type_config->{feature_type} eq 'genotype';
+
+  my @condition_elements;
+
+  if ($needs_conditions) {
+    @condition_elements = (
+      {
+        type => 'Block',
+        tag => 'condition-picker',
+      }
+    );
+  } else {
+    @condition_elements = ();
+  }
+
   my $form_back_string = '<- Back';
   my $form_proceed_string = 'Proceed ->';
 
@@ -1714,6 +1729,7 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
         tag => 'div',
         attributes => { class => 'clearall', },
       },
+      @condition_elements,
       {
         name => 'evidence-submit-back', type => 'Submit', value => $form_back_string,
         attributes => { class => 'curs-back-button', },
@@ -1745,6 +1761,20 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
       _redirect_and_detach($c, 'annotation', $annotation_id, 'evidence');
     }
 
+    my $params = $c->req()->params();
+
+    my $condition_list = $params->{'curs-allele-condition-names'};
+
+    if (defined $condition_list) {
+      if (ref $condition_list) {
+        # it's already a list
+      } else {
+        $condition_list = [$condition_list];
+      }
+    } else {
+      $condition_list = [];
+    }
+
     my $existing_evidence_code = $data->{evidence_code};
 
     if (defined $evidence_submit_back) {
@@ -1765,6 +1795,8 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
     if (!$needs_with_gene) {
       delete $data->{with_gene};
     }
+
+    $data->{conditions} = $condition_list;
 
     $annotation->data($data);
     $annotation->update();
@@ -1858,77 +1890,6 @@ sub _trim
   return $str;
 }
 
-sub allele_add_action : Chained('annotation') PathPart('add_allele_action')
-{
-  my ($self, $c) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $annotation = $st->{annotation};
-  my $annotation_id = $annotation->annotation_id();
-
-  my $params = $c->req()->params();
-
-  my $condition_list = $params->{'curs-allele-condition-names'};
-
-  if (defined $condition_list) {
-    if (ref $condition_list) {
-      # it's already a list
-    } else {
-      $condition_list = [$condition_list];
-    }
-  } else {
-    $condition_list = [];
-  }
-
-  my $allele_name = $params->{'curs-allele-name'};
-  if (defined $allele_name && length $allele_name == 0) {
-    $allele_name = undef;
-  }
-
-  if (defined $allele_name) {
-    $allele_name = trim($allele_name);
-  }
-
-  my $description = $params->{'curs-allele-description-input'};
-
-  my $allele_type = $params->{'curs-allele-type'};
-  my $allele_type_config = $config->{allele_types}->{$allele_type};
-
-  if (!defined $description || length $description == 0) {
-    $description = $params->{'curs-allele-type'};
-  }
-
-  $description = trim($description);
-
-  if (exists $allele_type_config->{pre_store_substitution}) {
-    local $_ = $description;
-    eval $allele_type_config->{pre_store_substitution};
-    if ($@) {
-      die "internal error: pre_store_substitution for $allele_type has error: $@";
-    }
-  }
-
-  my %allele_data = (name => $allele_name,
-                     description => $description,
-                     allele_type => $allele_type,
-                     evidence => $params->{'curs-allele-evidence-select'},
-                     conditions => $condition_list);
-
-  if (defined $params->{'curs-allele-expression'}) {
-    $allele_data{expression} = $params->{'curs-allele-expression'};
-  }
-
-  my $new_allele_data =
-    _allele_add_action_internal($config, $schema, $annotation,
-                                \%allele_data);
-
-  $c->stash->{json_data} = $new_allele_data;
-  $c->forward('View::JSON');
-}
-
 sub _get_all_alleles
 {
   my $config = shift;
@@ -2009,45 +1970,9 @@ sub _get_all_conditions
         $conditions{_get_name_of_condition($ontology_lookup, $condition)} = 1
       }
     }
-
-    if (exists $data->{alleles_in_progress}) {
-      while (my ($id, $allele_data) = each %{$data->{alleles_in_progress}}) {
-        if (defined $allele_data->{conditions}) {
-          map {
-            $conditions{_get_name_of_condition($ontology_lookup, $_)} = 1;
-          } @{$allele_data->{conditions}};
-        }
-      }
-    }
   }
 
   return \%conditions;
-}
-
-sub _allele_data_for_js : Private
-{
-  my $config = shift;
-  my $annotation = shift;
-
-  my $alleles_in_progress = $annotation->data()->{alleles_in_progress};
-
-  if (defined $alleles_in_progress) {
-    my $ontology_lookup =
-      Canto::Track::get_adaptor($config, 'ontology');
-
-    my $ret = clone $alleles_in_progress;
-    while (my ($id, $data) = each %$ret) {
-      if (defined $data->{conditions}) {
-        map {
-          my $termid = $_;
-          $_ = _get_name_of_condition($ontology_lookup, $termid);
-        } @{$data->{conditions}};
-      }
-    }
-    return $ret;
-  } else {
-    return {};
-  }
 }
 
 sub _set_allele_select_stash
@@ -2113,7 +2038,6 @@ sub _annotation_allele_select_internal
 
   _set_allele_select_stash($c, $annotation_type_name);
 
-  $st->{alleles_in_progress} = _allele_data_for_js($config, $annotation);
   $st->{current_conditions} = _get_all_conditions($config, $schema);
 
   $guard->commit();
