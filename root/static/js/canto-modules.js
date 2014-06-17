@@ -581,10 +581,6 @@ var QuickAddDialog = function($) {
   };
 }($);
 
-$(document).ready(function() {
-  $('.curs-js-link').show();
-});
-
 function UploadGenesCtrl($scope) {
   $scope.data = {
     geneIdentifiers: '',
