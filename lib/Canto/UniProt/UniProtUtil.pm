@@ -156,7 +156,8 @@ sub retrieve_entries
       return ();
     } else {
       die 'Failed, got ' . $response->status_line .
-        ' for ' . $response->request->uri . "\n";
+        ' for ' . $response->request->uri .
+        " ($batch_service_url + @identifiers)\n";
     }
   }
 }
