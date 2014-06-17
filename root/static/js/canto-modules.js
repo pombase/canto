@@ -4,6 +4,10 @@
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
 
+canto.config(function($logProvider){
+    $logProvider.debugEnabled(true);
+});
+
 canto.factory('Curs', function($http) {
   return {
     list : function(key) {
