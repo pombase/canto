@@ -648,7 +648,9 @@ function SubmitToCuratorsCtrl($scope) {
 canto.factory('CantoConfig', function($http) {
   return {
     get : function(key){
-      return $http.get(canto_root_uri + 'ws/canto_config/' + key);
+      return $http({method: 'GET',
+                    url: canto_root_uri + 'ws/canto_config/' + key,
+                    cache: true});
     }
   }
 });
