@@ -114,22 +114,9 @@ var alleleEditDialogCtrl =
       description: '',
       type: '',
       expression: '',
-      evidence: '',
-      conditions: []
+      evidence: ''
     };
     $scope.current_type_config = undefined;
-
-    $scope.loadConditions = function() {
-      var deferred = $q.defer();
-
-      deferred.resolve(['foo', 'bar']);
-
-      return deferred.promise;
-    };
-
-    $scope.env = {
-      used_conditions: {}
-    };
 
     $scope.name_autopopulated = false;
 
@@ -196,11 +183,6 @@ var alleleEditDialogCtrl =
     //   populate_dialog_from_data(...);
     // }
 
-    // current_conditions comes from the .mhtml file
-    if (typeof(current_conditions) != 'undefined') {
-      $scope.env.used_conditions = current_conditions;
-    }
-
     function allele_lookup(request, response) {
       $.ajax({
         url: application_root + 'ws/lookup/allele',
@@ -263,7 +245,6 @@ var alleleEditDialogCtrl =
         type: $scope.alleleData.type,
         evidence: $scope.alleleData.evidence,
         expression: $scope.alleleData.expression,
-        conditions: $scope.alleleData.conditions,
         gene_id: $scope.gene.gene_id
       };
     };
