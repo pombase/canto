@@ -62,7 +62,6 @@ var ferret_choose = {
 
   initialise : function(annotation_type, annotation_namespace) {
     ferret_choose.ontology_complete_url = make_ontology_complete_url(annotation_type);
-    ferret_choose.allele_lookup_url = application_root + 'ws/lookup/allele';
     ferret_choose.annotation_type = annotation_type;
     ferret_choose.annotation_namespace = annotation_namespace;
   },

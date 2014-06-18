@@ -27,8 +27,8 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
             Allele name:
           </td>
           <td ng-class="{ 'has-error': !isValidName() }">
-            <input ng-model="alleleData.name" name="curs-allele-name" type="text"
-                   class="form-control"
+            <input ng-model="alleleData.name" name="curs-allele-name" 
+                   type="text" class="curs-allele-name aform-control"
                    value=""/>
             <span ng-show="!isValidName()"
                   class="help-block">required for this allele type</span>
@@ -151,7 +151,7 @@ my $alleles_in_progress_js = Data::JavaScript::Anon->anon_dump($alleles_in_progr
 
 my @evidence_select_options = @{$st->{evidence_select_options} // []};
 
-my $existing_alleles_by_name = $st->{existing_alleles_by_name};
+my $existing_alleles_by_name = $st->{existing_alleles_by_name} // [];
 my $existing_alleles_by_name_js = Data::JavaScript::Anon->anon_dump($existing_alleles_by_name);
 
 my $current_conditions = $st->{current_conditions};

@@ -1,6 +1,6 @@
 'use strict';
 
-/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose */
+/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
 
@@ -203,8 +203,8 @@ var alleleEditDialogCtrl =
 
     function allele_lookup(request, response) {
       $.ajax({
-        url: ferret_choose.allele_lookup_url,
-        data: { gene_primary_identifier: genePrimaryIdentifier,
+        url: application_root + 'ws/lookup/allele',
+        data: { gene_primary_identifier: $scope.gene.systemtic_id,
                 ignore_case: true,
                 term: request.term },
         dataType: 'json',
@@ -231,25 +231,26 @@ var alleleEditDialogCtrl =
       });
     }
 
-    //  $('#curs-allele-add .curs-allele-name').autocomplete({
-    //    source: allele_lookup,
-    //    select: function(event, ui) {
-    //      var $description = get_allele_desc_jq($allele_dialog).val(ui.item.description);
-    //      if (typeof(ui.item.allele_type) === 'undefined' ||
-    //          ui.item.allele_type === 'unknown') {
-    //        $scope.type = undefined;
-    //      } else {
-    //        $scope.type = ui.item.allele_type;
-    //      }
-    //    }
-    //  }).data("autocomplete" )._renderItem = function(ul, item) {
-    //    return $( "<li></li>" )
-    //      .data( "item.autocomplete", item )
-    //      .append( "<a>" + item.display_name + "</a>" )
-    //      .appendTo( ul );
-    //  };
-
-    //  make_condition_buttons($allele_dialog);
+    $timeout(function() {
+      // this is a hack - curs-allele-name isn't in the DOM until after this
+      // executes
+      $('input.curs-allele-name').autocomplete({
+        source: allele_lookup,
+        select: function(event, ui) {
+          if (typeof(ui.item.allele_type) === 'undefined' ||
+              ui.item.allele_type === 'unknown') {
+            $scope.type = undefined;
+          } else {
+            $scope.type = ui.item.allele_type;
+          }
+        }
+      }).data("autocomplete" )._renderItem = function(ul, item) {
+        return $( "<li></li>" )
+          .data( "item.autocomplete", item )
+          .append( "<a>" + item.display_name + "</a>" )
+          .appendTo( ul );
+      };
+    });
 
     //  var name_input = $allele_dialog.find('.curs-allele-name');
     //  name_input.attr('placeholder', 'Allele name (optional)');
