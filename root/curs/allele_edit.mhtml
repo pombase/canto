@@ -27,9 +27,11 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
             Allele name:
           </td>
           <td ng-class="{ 'has-error': !isValidName() }">
-            <input ng-model="alleleData.name" name="curs-allele-name" 
-                   type="text" class="curs-allele-name aform-control"
-                   value=""/>
+            <allele-name-complete allele-name="alleleData.name"
+                                  allele-description="alleleData.description"
+                                  allele-type="alleleData.type"
+                                  gene-identifier="gene.systemtic_id">
+            </allele-name-complete>
             <span ng-show="!isValidName()"
                   class="help-block">required for this allele type</span>
           </td>
@@ -41,7 +43,6 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
           </td>
           <td ng-class="{ 'has-error': !isValidType() }">
             <select ng-model="alleleData.type" name="curs-allele-type"
-                    ng-change="typeChange(alleleData.type)"
                     ng-options="name for name in env.allele_type_names">
               <option selected="selected" value="">Choose an allele type ...</option>
             </select>
@@ -51,7 +52,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
         </tr>
 
         <tr class="curs-allele-type-description ng-cloak"
-            ng-show="!!alleleData.type && !!alleleData.type && current_type_config.description_required">
+            ng-show="!!alleleData.type && current_type_config.description_required">
           <td>
             Allele description
           </td>

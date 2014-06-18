@@ -16,6 +16,29 @@ canto.factory('Curs', function($http) {
   };
 });
 
+canto.factory('CantoService', function($http) {
+  return {
+    lookup : function(key, params) {
+      return $http.get(application_root + '/ws/lookup/' + key,
+                      {
+                        params: params
+                      });
+    }
+  };
+});
+
+canto.factory('AlleleService', function(CantoService) {
+  return {
+    lookup: function(genePrimaryIdentifier, searchTerm, success, error) {
+      var q = CantoService.lookup('allele',
+                                  { gene_primary_identifier: genePrimaryIdentifier,
+                                    ignore_case: true,
+                                    term: searchTerm });
+      q.success(success).error(error);
+    }
+  };
+});
+
 canto.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
@@ -102,6 +125,76 @@ var conditionPicker =
 
 canto.directive('conditionPicker', conditionPicker);
 
+var alleleNameComplete =
+  function(AlleleService) {
+    var directive = {
+      scope: {
+        alleleName: '=',
+        alleleDescription: '=',
+        alleleType: '=',
+        geneIdentifier: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      template: '<input ng-model="alleleName" type="text" class="curs-allele-name aform-control" value=""/>',
+      link: function(scope, elem) {
+        var processResponse = function(lookupResponse) {
+          return $.map(
+            lookupResponse,
+            function(el) {
+              return {
+                value: el.name,
+                display_name: el.display_name,
+                description: el.description,
+                allele_type: el.allele_type
+              };
+            });
+        };
+        elem.autocomplete({
+          source: function(request, response) {
+            AlleleService.lookup(scope.geneIdentifier, request.term,
+                                 function(lookupResponse) {
+                                   response(processResponse(lookupResponse));
+                                 },
+                                 function() {
+                                   alert("failed to lookup allele of: " + scope.geneName);
+                                 });
+          },
+          select: function(event, ui) {
+            scope.$apply(function() {
+            if (typeof(ui.item.allele_type) === 'undefined' ||
+                ui.item.allele_type === 'unknown') {
+              scope.type = '';
+            } else {
+              scope.alleleType = ui.item.allele_type;
+            }
+            if (typeof(ui.item.label) === 'undefined') {
+              scope.alleleName = '';
+            } else {
+              scope.alleleName = ui.item.label;
+            }
+            if (typeof(ui.item.description) === 'undefined') {
+              scope.alleleDescription = '';
+            } else {
+              scope.alleleDescription = ui.item.description;
+            }
+            });
+          }
+        }).data("autocomplete" )._renderItem = function(ul, item) {
+          return $( "<li></li>" )
+            .data( "item.autocomplete", item )
+            .append( "<a>" + item.display_name + "</a>" )
+            .appendTo( ul );
+        };
+      }
+    };
+
+    return directive;
+  };
+
+canto.directive('alleleNameComplete', ['AlleleService', alleleNameComplete]);
+
+
 var alleleEditDialogCtrl =
   function($scope, $http, $modalInstance, $q, $timeout, CantoConfig, args) {
     $scope.gene = {
@@ -115,6 +208,8 @@ var alleleEditDialogCtrl =
       type: '',
       expression: '',
       evidence: ''
+    };
+    $scope.env = {
     };
     $scope.current_type_config = undefined;
 
@@ -145,21 +240,22 @@ var alleleEditDialogCtrl =
       return this.alleleData.name;
     };
 
-    $scope.typeChange = function(curType) {
-      $scope.env.allele_types_promise.then(function(response) {
-        $scope.current_type_config = response.data[curType];
+    $scope.$watch('alleleData.type',
+                  function(newType) {
+                    $scope.env.allele_types_promise.then(function(response) {
+                      $scope.current_type_config = response.data[newType];
 
-        if ($scope.name_autopopulated) {
-          if ($scope.name_autopopulated == $scope.alleleData.name) {
-            $scope.alleleData.name = '';
-          }
-          $scope.name_autopopulated = '';
-        }
+                      if ($scope.name_autopopulated) {
+                        if ($scope.name_autopopulated == $scope.alleleData.name) {
+                          $scope.alleleData.name = '';
+                        }
+                        $scope.name_autopopulated = '';
+                      }
 
-        $scope.name_autopopulated = $scope.maybe_autopopulate();
-        $scope.alleleData.description = '';
-      });
-    };
+                      $scope.name_autopopulated = $scope.maybe_autopopulate();
+                      $scope.alleleData.description = '';
+                    });
+                  });
 
     $scope.isValidType = function() {
       return !!$scope.alleleData.type;
@@ -182,57 +278,6 @@ var alleleEditDialogCtrl =
     // if (data ...) {
     //   populate_dialog_from_data(...);
     // }
-
-    function allele_lookup(request, response) {
-      $.ajax({
-        url: application_root + 'ws/lookup/allele',
-        data: { gene_primary_identifier: $scope.gene.systemtic_id,
-                ignore_case: true,
-                term: request.term },
-        dataType: 'json',
-        success: function(data) {
-          var results =
-            $.grep(
-              existing_alleles_by_name,
-              function(el) {
-                return typeof(el.value) !== 'undefined' && el.value.indexOf(request.term) == 0;
-              })
-            .concat($.map(
-              data,
-              function(el) {
-                return {
-                  value: el.name,
-                  display_name: el.display_name,
-                  description: el.description,
-                  allele_type: el.allele_type
-                }
-              }));
-          response(results);
-        },
-        async: true
-      });
-    }
-
-    $timeout(function() {
-      // this is a hack - curs-allele-name isn't in the DOM until after this
-      // executes
-      $('input.curs-allele-name').autocomplete({
-        source: allele_lookup,
-        select: function(event, ui) {
-          if (typeof(ui.item.allele_type) === 'undefined' ||
-              ui.item.allele_type === 'unknown') {
-            $scope.type = undefined;
-          } else {
-            $scope.type = ui.item.allele_type;
-          }
-        }
-      }).data("autocomplete" )._renderItem = function(ul, item) {
-        return $( "<li></li>" )
-          .data( "item.autocomplete", item )
-          .append( "<a>" + item.display_name + "</a>" )
-          .appendTo( ul );
-      };
-    });
 
     //  var name_input = $allele_dialog.find('.curs-allele-name');
     //  name_input.attr('placeholder', 'Allele name (optional)');
