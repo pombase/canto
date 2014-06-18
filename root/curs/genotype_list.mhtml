@@ -45,7 +45,7 @@ Click on a genotype name to add a phenotype
 % }
 
   <div class="feature-list-edit-add">
-    <a href="<% $start_path . '/feature/genotype/add' %>">Select a genotype ...</a>
+    <a href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
   </div>
   </div>
 </div>
