@@ -263,7 +263,7 @@ canto.controller('AlleleEditDialogCtrl',
                   'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
 
-canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', '$location', 'CantoConfig', 'Curs', function($scope, $http, $modal, $location, CantoConfig, Curs) {
+canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig', 'Curs', function($scope, $http, $modal, CantoConfig, Curs) {
   $scope.alleles = [
   ];
   $scope.genes = [
