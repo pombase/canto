@@ -2096,6 +2096,7 @@ sub _allele_from_json: Private
 
   my $name = $json_allele->{name};
   my $description = $json_allele->{description};
+  my $expression = $json_allele->{expression};
 
   try {
     return $schema->find_with_type('Allele',
@@ -2113,6 +2114,7 @@ sub _allele_from_json: Private
       description => $description,
       name => $name,
       gene => $gene_id,
+      expression => $expression,
     );
 
     return $schema->create_with_type('Allele', \%create_args);

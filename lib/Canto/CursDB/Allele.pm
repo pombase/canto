@@ -47,6 +47,11 @@ __PACKAGE__->table("allele");
   data_type: 'text'
   is_nullable: 1
 
+=head2 expression
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 name
 
   data_type: 'text'
@@ -68,6 +73,8 @@ __PACKAGE__->add_columns(
   "type",
   { data_type => "text", is_nullable => 0 },
   "description",
+  { data_type => "text", is_nullable => 1 },
+  "expression",
   { data_type => "text", is_nullable => 1 },
   "name",
   { data_type => "text", is_nullable => 1 },
@@ -120,8 +127,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-24 19:46:37
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TDJYF62PWwjY3S6AbAFjww
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-06-19 16:38:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eI2hLYp653G18y5JYXor6Q
 
 __PACKAGE__->many_to_many('genotypes' => 'allele_genotypes',
                           'genotype');

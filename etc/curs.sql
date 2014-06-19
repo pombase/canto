@@ -17,6 +17,7 @@ CREATE TABLE allele (
        primary_identifier text,  -- if null this is a new allele
        type text NOT NULL,  -- 'deletion', 'partial deletion, nucleotide' etc.
        description text,
+       expression text,
        name text,
        gene integer NOT NULL REFERENCES gene(gene_id)
 );

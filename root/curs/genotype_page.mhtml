@@ -43,6 +43,9 @@ Alleles
     <div class="curs-allele-list">
 % for my $allele ($genotype->alleles()) {
 <% $allele->display_name() %>
+%   if ($allele->expression()) {
+-     <i><% $allele->expression() %></i>
+%   }
 % if (!$read_only_curs) {
  - <a href="<% $start_path . '/feature/gene/view/' . $allele->gene()->gene_id() %>">
      <span>

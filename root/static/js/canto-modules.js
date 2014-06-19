@@ -146,7 +146,8 @@ var alleleNameComplete =
                 value: el.name,
                 display_name: el.display_name,
                 description: el.description,
-                allele_type: el.allele_type
+                allele_type: el.allele_type,
+                allele_expression: el.expression
               };
             });
         };
@@ -177,6 +178,11 @@ var alleleNameComplete =
               scope.alleleDescription = '';
             } else {
               scope.alleleDescription = ui.item.description;
+            }
+            if (typeof(ui.item.expression) === 'undefined') {
+              scope.alleleExpression = '';
+            } else {
+              scope.alleleExpression = ui.item.expresion;
             }
             });
           }
