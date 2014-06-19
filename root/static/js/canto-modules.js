@@ -379,8 +379,12 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
                           genotype_identifier: $scope.data.genotype_identifier,
                           alleles: $scope.alleles }).
       success(function(data) {
-        window.location.href = data.location;
-        console.debug(data);
+        if (data.status === "success") {
+          window.location.href = data.location;
+        } else {
+          alert("Storing new genotype failed: " +
+                data.message);
+        }
       }).
       error(function(){
         console.debug("failed test");

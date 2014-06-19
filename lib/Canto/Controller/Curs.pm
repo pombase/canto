@@ -2762,22 +2762,36 @@ sub genotype_store : Chained('feature') PathPart('store')
 
   my @alleles = ();
 
-  my $guard = $schema->txn_scope_guard();
+  if ($genotype_name) {
+    try {
+      my $guard = $schema->txn_scope_guard();
 
-  for my $allele_data (@alleles_data) {
-    my $allele = $self->_allele_from_json($schema, $allele_data);
+      for my $allele_data (@alleles_data) {
+        my $allele = $self->_allele_from_json($schema, $allele_data);
 
-    push @alleles, $allele;
+        push @alleles, $allele;
+      }
+
+      my $genotype = $self->_maybe_make_genotype($c, \@alleles, $genotype_name);
+
+      $guard->commit();
+
+      $c->stash->{json_data} = {
+        status => "success",
+        location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
+      };
+    } catch {
+      $c->stash->{json_data} = {
+        status => "error",
+        message => "internal error - please report this to the Canto developers",
+      };
+    };
+  } else {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "no genotype name provided",
+    };
   }
-
-  my $genotype = $self->_maybe_make_genotype($c, \@alleles, $genotype_name);
-
-  $guard->commit();
-
-  $c->stash->{json_data} = {
-    status => "success",
-    location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
-  };
 
   $c->forward('View::JSON');
 }
