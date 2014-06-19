@@ -1,6 +1,6 @@
 'use strict';
 
-/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root */
+/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
 
@@ -202,7 +202,7 @@ canto.directive('alleleNameComplete', ['AlleleService', alleleNameComplete]);
 
 
 var alleleEditDialogCtrl =
-  function($scope, $http, $modalInstance, $q, $timeout, CantoConfig, args) {
+  function($scope, $http, $modalInstance, $q, CantoConfig, args) {
     $scope.gene = {
       display_name: args.gene_display_name,
       systemtic_id: args.gene_systemtic_id,
@@ -310,7 +310,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$http', '$modalInstance', '$q', '$timeout',
+                 ['$scope', '$http', '$modalInstance', '$q',
                   'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
 
@@ -330,7 +330,7 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
   });
 
   $scope.currentlySelectedGenes = function() {
-    return $.grep($scope.genes, function(value, index) {
+    return $.grep($scope.genes, function(value) {
       return value.selected;
     });
   };
@@ -358,12 +358,11 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
                     $scope.data.genotype_identifier =
                       response.data.genotype_config.default_strain_name +
                       " " +
-                      $.map($scope.alleles, function(val, i) {
+                      $.map($scope.alleles, function(val) {
                         if (val.description === '') {
                           return val.name + "(" + val.type + ")";
-                        } else {
-                          return val.name + "(" + val.description + ")";
                         }
+                        return val.name + "(" + val.description + ")";
                       }).join(" ");
                   });
                 },
@@ -377,7 +376,7 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
         window.location.href = data.location;
         console.debug(data);
       }).
-      error(function(data){
+      error(function(){
         console.debug("failed test");
       });
   };
@@ -400,21 +399,19 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
               gene_display_name: gene_display_name,
               gene_systemtic_id: gene_systemtic_id,
               gene_id: gene_id
-            }
+            };
           }
         }
       });
 
       editInstance.result.then(function (alleleData) {
         $scope.alleles.push(alleleData);
-      }, function () {
-        // cancelled
       });
     };
 
   $scope.isValid = function() {
     return $scope.alleles.length > 0;
-  }
+  };
 }]);
 
 
@@ -425,7 +422,7 @@ var EditDialog = function($) {
     $('#loading').unbind('ajaxStop.canto');
     $form.ajaxSubmit({
           dataType: 'json',
-          success: function(data) {
+          success: function() {
             $dialog.dialog("destroy");
             var $dialog_div = $('#curs-edit-dialog');
             $dialog_div.remove();
@@ -443,7 +440,7 @@ var EditDialog = function($) {
   function create(title, current_comment, form_url) {
     var $dialog_div = $('#curs-edit-dialog');
     if ($dialog_div.length) {
-      $dialog_div.remove()
+      $dialog_div.remove();
     }
 
     var dialog_html =
@@ -489,7 +486,7 @@ var QuickAddDialog = function($) {
       $('#loading').unbind('ajaxStop.canto');
       $form.ajaxSubmit({
         dataType: 'json',
-        success: function(data) {
+        success: function() {
           $dialog.dialog("destroy");
           var $dialog_div = $('#curs-quick-add-dialog');
           $dialog_div.remove();
@@ -508,10 +505,10 @@ var QuickAddDialog = function($) {
   function create(title, search_namespace, form_url) {
     var $dialog_div = $('#curs-quick-add-dialog');
     if ($dialog_div.length) {
-      $dialog_div.remove()
+      $dialog_div.remove();
     }
 
-    var evidence_select_html = '<select id="ferret-quick-add-evidence" name="ferret-quick-add-evidence"><option selected="selected" value="">Choose an evidence type ...</option>'
+    var evidence_select_html = '<select id="ferret-quick-add-evidence" name="ferret-quick-add-evidence"><option selected="selected" value="">Choose an evidence type ...</option>';
     $.map(evidence_by_annotation_type[search_namespace],
           function(item) {
             evidence_select_html += '<option value="' + item + '">' + item + '</option>';
@@ -601,14 +598,14 @@ var QuickAddDialog = function($) {
     var $with_gene_wrapper = $('#ferret-quick-add-with-gene-wrapper');
 
     $('#ferret-quick-add-evidence').on('change',
-                                       function(event) {
+                                       function() {
                                          var evidence = $(this).val();
                                          if (evidence in with_gene_evidence_codes) {
                                            $with_gene_wrapper.show();
                                          } else {
                                            $with_gene_wrapper.hide();
                                          }
-                                       })
+                                       });
 
     return $dialog;
   }
@@ -628,11 +625,11 @@ function UploadGenesCtrl($scope) {
   };
   $scope.isValid = function() {
     return $scope.data.geneIdentifiers.length > 0 ||
-      $scope.data.noAnnotation &&
+      ($scope.data.noAnnotation &&
       $scope.data.noAnnotationReason.length > 0 &&
       ($scope.data.noAnnotationReason !== "Other" ||
-       $scope.data.otherText.length > 0);
-  }
+       $scope.data.otherText.length > 0));
+  };
 }
 
 function SubmitToCuratorsCtrl($scope) {
@@ -658,17 +655,14 @@ canto.factory('CantoConfig', function($http) {
                     url: canto_root_uri + 'ws/canto_config/' + key,
                     cache: true});
     }
-  }
+  };
 });
 
 // to be implemented
-var ferretCtrl = function($scope) {
-
-};
-
+//var ferretCtrl = function($scope) {
+//};
 // add ng-controller="FerretCtrl" to <div id="ferret"> in ontology.mhtml
-
-canto.controller('FerretCtrl', ['$scope', 'CantoConfig', ferretCtrl]);
+//canto.controller('FerretCtrl', ['$scope', 'CantoConfig', ferretCtrl]);
 
 function UploadGenesCtrl($scope) {
   $scope.data = {
@@ -680,11 +674,11 @@ function UploadGenesCtrl($scope) {
   };
   $scope.isValid = function() {
     return $scope.data.geneIdentifiers.length > 0 ||
-      $scope.data.noAnnotation &&
-      $scope.data.noAnnotationReason.length > 0 &&
-      ($scope.data.noAnnotationReason !== "Other" ||
-       $scope.data.otherText.length > 0);
-  }
+      ($scope.data.noAnnotation &&
+       $scope.data.noAnnotationReason.length > 0 &&
+       ($scope.data.noAnnotationReason !== "Other" ||
+        $scope.data.otherText.length > 0));
+  };
 }
 
 function AlleleCtrl($scope) {
