@@ -117,7 +117,7 @@ The alleles for <b>{{ data.genotype_identifier }}</b>:
               ng-click="clearSelectedGene()" ng-disabled="false">Back</button>
       <button type="submit" class="btn btn-primary curs-finish-button"
               title="{{ isValid() ? '' : 'No alleles yet' }}"
-              ng-click="storeAlleles()" ng-disabled="!isValid()">Finish</button>
+              ng-click="store()" ng-disabled="!isValid()">Finish</button>
       <button type="submit" class="btn btn-warning curs-finish-button"
               ng-click="cancel()">Cancel</button>
       
