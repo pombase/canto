@@ -359,10 +359,16 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
                       response.data.genotype_config.default_strain_name +
                       " " +
                       $.map($scope.alleles, function(val) {
+                        var newName = val.name || 'no_name';
                         if (val.description === '') {
-                          return val.name + "(" + val.type + ")";
+                          newName += "(" + val.type + ")";
+                        } else {
+                          newName += "(" + val.description + ")";
                         }
-                        return val.name + "(" + val.description + ")";
+                        if (val.expression !== '') {
+                          newName += "[" + val.expression + "]";
+                        }
+                        return newName;
                       }).join(" ");
                   });
                 },

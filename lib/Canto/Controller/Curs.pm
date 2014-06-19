@@ -2137,7 +2137,10 @@ sub _maybe_make_genotype
 
   # FIXME - we always make a Genotype at the moment - there's no "maybe"
 
-  my $genotype_identifier = join " ", map { $_->display_name() } @$alleles;
+  my $genotype_identifier =
+    join " ", map {
+      $_->display_name() . ($_->expression() ? '[' . $_->expression() . ']' : '');
+    } @$alleles;
 
   # FIXME - duplicate genotype_identifier causing a bad FAIL
 
