@@ -2139,6 +2139,8 @@ sub _maybe_make_genotype
 
   my $genotype_identifier = join " ", map { $_->display_name() } @$alleles;
 
+  # FIXME - duplicate genotype_identifier causing a bad FAIL
+
   my $genotype = $schema->create_with_type('Genotype',
                                            {
                                              identifier => $genotype_identifier,
