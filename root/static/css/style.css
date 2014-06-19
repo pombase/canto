@@ -1209,6 +1209,11 @@ a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
   background-color: white;
 }
 
+/* allow tooltips/titles to work on disabled buttons */
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+  pointer-events: auto !important;
+}
+
 .modal.fade .modal-dialog {
   -webkit-transition: none;
      -moz-transition: none;
