@@ -97,7 +97,7 @@ Gene details
    annotation_type => $annotation_type,
    curs_root_uri => $curs_root_uri,
    pub => $pub,
-   gene => $gene &>
+   target => $gene &>
 % }
 
 </div>
