@@ -1349,7 +1349,10 @@ sub annotation_interaction_edit
 
   my $form = $self->form();
 
-  $form->auto_fieldset(0);
+  $form->auto_fieldset({ attributes => { class => 'curs-genes' }});
+
+  # form needs an action if AngularJS is active but not controlling the form
+  $form->attributes({ action => '?' });
 
   my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
 
@@ -1365,14 +1368,12 @@ sub annotation_interaction_edit
       {
         name => 'prey',
         type => 'Checkboxgroup',
-        container_tag => 'div',
-        label => '',
         options => [@options],
       },
       {
-        name => 'interaction-submit', type => 'Submit',
-        attributes => { class => 'curs-finish-button', },
-        value => 'Proceed ->',
+        name => 'interaction-submit',
+        attributes => { class => 'btn btn-primary curs-finish-button', },
+        type => 'Submit', value => 'Proceed ->',
       }
     );
 
@@ -1493,9 +1494,7 @@ sub annotate : Chained('feature') CaptureArgs(1)
   $st->{features} = [$feature];
 }
 
-# args:
-#   $annotation_type_name - the name from the annotation configuration
-sub new_annotation_choose_term : Chained('annotate') PathPart('choose_term') Args(1) Form
+sub _new_annotation_impl
 {
   my ($self, $c, $annotation_type_name) = @_;
 
@@ -1506,6 +1505,18 @@ sub new_annotation_choose_term : Chained('annotate') PathPart('choose_term') Arg
   $st->{annotation_type_config} = $annotation_config;
 
   _annotation_edit($self, $c, $annotation_config);
+}
+
+# args:
+#   $annotation_type_name - the name from the annotation configuration
+sub new_annotation_choose_term : Chained('annotate') PathPart('choose_term') Args(1) Form
+{
+  _new_annotation_impl(@_);
+}
+
+sub new_interaction_annotation : Chained('annotate') PathPart('interaction') Args(1) Form
+{
+  _new_annotation_impl(@_);
 }
 
 sub annotation : Chained('top') CaptureArgs(1)

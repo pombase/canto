@@ -879,11 +879,7 @@ div.clearall {
   background-color:#0b75b2;
 }
 
-form .checkboxgroup {
-  margin-top: 10px;
-
-}
-form .checkboxgroup span {
+fieldset.curs-genes span {
   display: block;
 }
 

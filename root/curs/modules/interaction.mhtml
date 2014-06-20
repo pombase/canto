@@ -3,7 +3,7 @@ $current_component_display_name
 $current_component
 $form
 $pub
-$gene
+$feature
 </%args>
 
 <div id="curs-interaction">
@@ -38,5 +38,5 @@ my $upload_path = $c->uri_for("$root_path/gene_upload",
 
 my $gene_count = $c->stash()->{schema}->resultset('Gene')->count();
 
-my $gene_display_name = $gene->display_name();
+my $gene_display_name = $feature->display_name();
 </%init>
