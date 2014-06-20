@@ -419,6 +419,10 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
       });
     };
 
+  $scope.cancel = function() {
+    window.location.href = curs_root_uri;
+  };
+
   $scope.isValid = function() {
     if (!$scope.data.genotype_name) {
       return false;
