@@ -12,7 +12,8 @@ $return_path
     </div>
     <input type="hidden" name="return_path" 
            value="<% $return_path %>"/>
-    <input id="submit" name="submit" type="submit" value="login"/>
+    <input class="btn btn-primary curs-finish-button" 
+           id="submit" name="submit" type="submit" value="login"/>
   </form>
 </div>
 

@@ -89,7 +89,7 @@ Gene details
 
 <div class="clearall"/>
 
-<button type="button" id="curs-finish-gene" class="curs-finish-button"><% $finish_text %></button>
+<button type="button" id="curs-finish-gene" class="btn btn-primary curs-back-button"><% $finish_text %></button>
 
 <div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {

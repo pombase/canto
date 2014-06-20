@@ -29,7 +29,7 @@ You may wish to read the <a href="<% $c->uri_for('/docs/') %>">
 curation.
   </p>
 
-  <button type="button" class="curs-assign curs-finish-button">Start curating</button>
-  <button type="button" class="curs-reassign curs-finish-button">Reassign paper</button>
+  <button type="button" class="btn btn-primary curs-assign curs-finish-button">Start curating</button>
+  <button type="button" class="btn btn-primary curs-reassign curs-finish-button">Reassign paper</button>
 </div>
 

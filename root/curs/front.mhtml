@@ -24,18 +24,18 @@ $total_annotation_count
 <div class="clearall"/>
 
 % if ($read_only_curs) {
-<button type="button" id="curs-stop-reviewing" class="curs-finish-button">Finish reviewing</button>
+<button type="button" id="curs-stop-reviewing" class="btn btn-primary curs-finish-button">Finish reviewing</button>
 % } else {
 % if ($state eq Canto::Controller::Curs::CURATION_IN_PROGRESS) {
 %     if ($total_annotation_count > 0) {
-<button type="button" id="curs-finish-session" class="curs-finish-button">Submit to curators</button>
-<button type="button" id="curs-pause-session" class="curs-finish-button">Pause curation</button>
+<button type="button" id="curs-finish-session" class="btn btn-primary curs-finish-button">Submit to curators</button>
+<button type="button" id="curs-pause-session" class="btn btn-primary curs-finish-button">Pause curation</button>
 %     } else {
 <form action="<% $finish_form_url %>" class="curs-finish-buttons" method="POST"
       ng-controller="SubmitToCuratorsCtrl" ng-init='init(<% $no_annotations_reasons_init_js |n%>)'>
   <div>
-    <button type="button" id="curs-pause-session">Pause curation</button>
-    <input class="button ng-cloak" type="submit"
+    <button type="button" class="btn btn-primary" id="curs-pause-session">Pause curation</button>
+    <input class="btn btn-primary button ng-cloak" type="submit"
            ng-disabled="!data.noAnnotation || !validReason()" id="curs-finish-session"
            title="{{ validReason() ? '' : 'Please add annotation or check the no results box' }}"
            name="submit" value="Submit to curators"></input>
@@ -66,8 +66,8 @@ $total_annotation_count
 %     }
 </div>
 % } else {
-<button type="button" id="curs-check-completed" class="curs-finish-button">Approve session</button>
-<button type="button" id="curs-cancel-approval" class="curs-finish-button">Cancel approval</button>
+<button type="button" id="curs-check-completed" class="btn btn-primary curs-finish-button">Approve session</button>
+<button type="button" id="curs-cancel-approval" class="btn btn-primary curs-finish-button">Cancel approval</button>
 % }
 %   if (defined $message_to_curators) {
 <div class="curs-inline-message-to-curators">

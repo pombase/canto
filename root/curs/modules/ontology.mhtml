@@ -195,7 +195,8 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
       <div id="ferret-accept-term-proceed-message">
         Otherwise, use the currently selected term:
 
-        <input id="ferret-accept-term-proceed" name="ferret-submit"
+        <input class="btn btn-primary"
+               id="ferret-accept-term-proceed" name="ferret-submit"
                type="submit" value="Proceed -&gt;" class="button"/>
       </div>
     </div>

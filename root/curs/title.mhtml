@@ -11,7 +11,7 @@ $show_title
 </div>
 %   if ($show_reassign_button) {
 <div style="display: inline-block">
-<button type="button" class="curs-reassign">Reassign</button>
+<button type="button" class="btn btn-primary btn-xs curs-reassign">Reassign</button>
 </div>
 %   }
 % }

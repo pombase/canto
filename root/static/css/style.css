@@ -82,19 +82,7 @@ ul li {
 }
 
 button, input[type=submit] {
-  background-color: #c00;
-  color: white;
-  border-color: #c00;
   white-space: nowrap;
-  font-weight: bold;
-  cursor: pointer;
-}
-button:disabled, input[type=submit]:disabled {
-  background-color: #777;
-  color: eee;
-  border-color: #666;
-  white-space: nowrap;
-  font-weight: bold;
   cursor: pointer;
 }
 

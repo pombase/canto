@@ -47,10 +47,10 @@ $multi_organism_mode
 %   }
   </table>
   <div class="submit">
-    <input type="submit" name="continue" value="Continue"/>
+    <input type="submit" class="btn btn-primary" name="continue" value="Continue"/>
   </div>
   <div class="submit">
-    <input type="submit" name="submit" value="Remove selected"/>
+    <input type="submit" class="btn btn-primary" name="submit" value="Remove selected"/>
   </div>
 % } else {
   <div class="no-genes-message">

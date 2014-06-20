@@ -5,10 +5,10 @@ $curs_root_uri
 <div id="curs-curation-paused">
 <p>
 Your work is permanently saved.  You can return and continue curating at any
-time.
+time by returning to the page.
 </p>
 
-<a href="<% $restart_curation_uri %>">Continue curation</a>
+<a class="btn btn-primary" href="<% $restart_curation_uri %>">Continue curation</a>
 
 <%init>
 my $restart_curation_uri = $curs_root_uri . '/restart_curation/';

@@ -27,7 +27,7 @@ $is_admin_user
 </div>
 
 <div class="curs-pub-assign-actions">
-  <button type="button" id="curs-pub-assign-popup-dialog">Set corresponding author ...</button>
+  <button type="button" class="btn btn-primary" id="curs-pub-assign-popup-dialog">Set corresponding author ...</button>
 </div>
 %   }
 %   if ($not_exported_curs_rs->count() == 0) {
@@ -50,7 +50,7 @@ $is_admin_user
   </form>
 </div>
 <div class="curs-pub-assign-actions">
-  <button type="button" id="curs-pub-create-session-popup-dialog">Create a curation
+  <button type="button" class="btn btn-primary" id="curs-pub-create-session-popup-dialog">Create a curation
   session ...</button>
 </div>
 %   } else {
@@ -73,7 +73,7 @@ $is_admin_user
   </form>
 </div>
 <div class="curs-pub-assign-actions">
-  <button type="button" id="curs-pub-reassign-session-popup-dialog">Reassign session ...</button>
+  <button type="button" class="btn btn-primary" id="curs-pub-reassign-session-popup-dialog">Reassign session ...</button>
 </div>
 %     if ($session_assigned) {
 <div class="curs-pub-assign-actions">
@@ -90,7 +90,7 @@ Send session to curator ...\
 %   }
 
 <div class="curs-pub-assign-actions">
-  <button type="button" value="<% $pub_id %>" id="curs-pub-triage-this-pub">Triage</button>
+  <button type="button" class="btn btn-primary" value="<% $pub_id %>" id="curs-pub-triage-this-pub">Triage</button>
 </div>
 % }
 <div class="clearall"/>

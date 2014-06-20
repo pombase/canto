@@ -1732,11 +1732,11 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
       @condition_elements,
       {
         name => 'evidence-submit-back', type => 'Submit', value => $form_back_string,
-        attributes => { class => 'curs-back-button', },
+        attributes => { class => 'btn btn-primary curs-back-button', },
       },
       {
         name => 'evidence-submit-proceed', type => 'Submit', value => $form_proceed_string,
-        attributes => { class => 'curs-finish-button', },
+        attributes => { class => 'btn btn-primary curs-finish-button', },
       },
     );
 
@@ -2382,7 +2382,9 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
   }
 
   push @all_elements, {
-    name => 'transfer-submit', type => 'Submit', value => 'Finish',
+    name => 'transfer-submit', type => 'Submit',
+    attributes => { class => 'btn btn-primary curs-finish-button', },
+    value => 'Finish',
   };
 
   $form->elements([@all_elements]);
@@ -2912,7 +2914,9 @@ sub finish_form : Chained('top') Args(0)
       map {
           {
             name => $_, type => 'Submit', value => $_,
-              attributes => { class => 'button', },
+              attributes => {
+                class => 'btn btn-primary curs-' . lc $_ . '-button',
+              },
             }
         } @submit_buttons,
     );
@@ -3104,7 +3108,7 @@ sub _assign_session :Private
      },
       {
         name => 'submit', type => 'Submit', value => 'Continue',
-        attributes => { class => 'button', },
+        attributes => { class => 'btn btn-primary curs-finish-button', },
       },
     );
 

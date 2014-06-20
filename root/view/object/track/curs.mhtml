@@ -26,7 +26,7 @@ Send session to curator ...\
 </div>
 % }
 
-<button type="button" class="confirm-delete curs-finish-button"
+<button type="button" class="btn btn-primary confirm-delete curs-finish-button"
         href="<% $c->uri_for('/tools/remove_curs/' . $object->curs_key()) %>">
   Remove this session</button>
 </div>

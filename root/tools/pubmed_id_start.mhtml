@@ -69,8 +69,8 @@ Publication details
   </div>
 
   <div id="pubmed-id-lookup-buttons">
-    <button type="button" id="pubmed-id-lookup-reset">Find another</button>
-    <button type="button" id="pubmed-id-lookup-curate">Continue</button>
+    <button type="button" class="btn btn-primary" id="pubmed-id-lookup-reset">Find another</button>
+    <button type="button" class="btn btn-primary" id="pubmed-id-lookup-curate">Continue</button>
   </div>
 </div>
 
