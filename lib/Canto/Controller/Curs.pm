@@ -681,7 +681,7 @@ sub gene_upload : Chained('top') Args(0) Form
           {
             name => $_, type => 'Submit', value => $_,
             attributes => {
-              class => 'button',
+              class => 'btn btn-primary curs-finish-button button',
               title => "{{ isValid() ? '' : '$not_valid_message' }}",
               'ng-disabled' => '!isValid()',
             },
