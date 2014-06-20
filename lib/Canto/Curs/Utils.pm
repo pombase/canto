@@ -101,6 +101,8 @@ sub _make_ontology_annotation
       expression_level => $data->{expression} // 'null',
       conditions => $conditions_string,
       genotype_identifier => $genotype->identifier(),
+      genotype_name => $genotype->name(),
+      genotype_display_name => $genotype->display_name(),
     );
   } else {
     my @annotation_genes = $annotation->genes();
