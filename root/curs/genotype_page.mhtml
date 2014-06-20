@@ -89,7 +89,8 @@ Name
 
 <div class="clearall"/>
 
-<button type="button" id="curs-finish-genotype" class="curs-back-button"><% $finish_text %></button>
+<button type="button" id="curs-finish-genotype" class="btn btn-primary
+curs-back-button"><% $finish_text %></button>
 
 <div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@types_to_show) {
@@ -108,8 +109,13 @@ my $genotype_identifier = $genotype->identifier();
 
 my $st = $c->stash();
 
-my $gene_count = $st->{gene_count};
-my $finish_text = 'Back to summary';
+my $genotype_count = $st->{genotype_count};
+my $finish_text;
+if ($genotype_count > 1) {
+  $finish_text = 'Change genotype';
+} else {
+  $finish_text = 'Back to summary';
+}
 
 my @types_to_show = grep {
   $_->{feature_type} eq 'genotype'

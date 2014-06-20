@@ -193,7 +193,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   # enabled by default and disabled on /session_reassigned page
   $st->{show_curator_in_title} = 1;
 
-  $st->{gene_count} = $self->get_ordered_gene_rs($schema)->count();
+  $st->{gene_count} = $schema->resultset('Gene')->count();
+  $st->{genotype_count} = $schema->resultset('Genotype')->count();
 
   my $use_dispatch = 1;
 
