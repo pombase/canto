@@ -279,7 +279,7 @@ NOT
     <td style="border: 0px solid white; background-color: white;">
 % if ($annotation_status ne 'deleted') {
 <div>
-      <a href="<% $transfer_action . $row->{annotation_id} %>"
+      <a href="<% $curs_root_uri . '/annotation/' . $row->{annotation_id} . '/transfer' %>"
          id="curs-annotation-transfer-<% $row->{annotation_id} %>"
          title="Copy this annotation to another <% $feature_type %>">
 Transfer
@@ -318,8 +318,6 @@ use HTML::Mason::Escapes;
 my $annotation_type_name = $annotation_type->{name};
 
 my $delete_action = sub { "$curs_root_uri/annotation/$_[0]/delete/" };
-my $undelete_action = $curs_root_uri . '/annotation/undelete/';
-my $transfer_action = $curs_root_uri . '/annotation/transfer/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 my $undelete_icon_uri = $c->uri_for('/static/images/undo_icon.png');
 my $edit_icon_uri = $c->uri_for('/static/images/mini-edit.png');
