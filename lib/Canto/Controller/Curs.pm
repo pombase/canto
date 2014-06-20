@@ -2801,6 +2801,7 @@ sub genotype_store : Chained('feature') PathPart('store')
         status => "error",
         message => "internal error - please report this to the Canto developers",
       };
+      warn $_;
     };
   } else {
     $c->stash->{json_data} = {
