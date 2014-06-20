@@ -2154,15 +2154,17 @@ sub _maybe_make_genotype
       $_->display_name() . ($_->expression() ? '[' . $_->expression() . ']' : '');
     } @$alleles;
 
-  # FIXME - duplicate genotype_identifier causing a bad FAIL
+  my $genotype = $schema->resultset('Genotype')->find({ identifier => $genotype_identifier });
 
-  my $genotype = $schema->create_with_type('Genotype',
-                                           {
-                                             identifier => $genotype_identifier,
-                                             name => $name,
-                                           });
+  if (!defined $genotype) {
+    $genotype = $schema->create_with_type('Genotype',
+                                          {
+                                            identifier => $genotype_identifier,
+                                            name => $name,
+                                          });
 
-  $genotype->set_alleles($alleles);
+    $genotype->set_alleles($alleles);
+  }
 
   return $genotype;
 }
