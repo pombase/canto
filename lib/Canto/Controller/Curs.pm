@@ -2532,7 +2532,9 @@ sub _annotation_with_gene_internal
         default => $annotation_data->{with_gene},
       },
       {
-        name => 'with-gene-proceed', type => 'Submit', value => 'Proceed ->',
+        name => 'with-gene-proceed',
+        attributes => { class => 'btn btn-primary curs-finish-button', },
+        type => 'Submit', value => 'Proceed ->',
       },
     );
 
