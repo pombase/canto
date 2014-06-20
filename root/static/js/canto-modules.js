@@ -420,7 +420,21 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
     };
 
   $scope.isValid = function() {
-    return $scope.alleles.length > 0;
+    if (!$scope.data.genotype_name) {
+      return false;
+    }
+
+    var alleleGeneIds = {};
+
+    $.map($scope.alleles,
+          function(allele) {
+            alleleGeneIds[allele.gene_id] = true;
+          });
+
+    return $.grep($scope.selectedGenes,
+                  function(gene) {
+                    return ! alleleGeneIds[gene.gene_id];
+                  }).length == 0;
   };
 }]);
 
