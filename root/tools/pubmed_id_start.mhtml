@@ -10,7 +10,7 @@ $title
 <form id="pubmed-id-lookup-form"
       action="<% $c->uri_for('/tools/pubmed_id_lookup') %>" method="get">
   <input name="pubmed-id-lookup-input" id="pubmed-id-lookup-input"/>
-  <input type="submit" id="pubmed-id-lookup-submit"
+  <input type="submit" class="btn btn-primary" id="pubmed-id-lookup-submit"
          name="pubmed-id-lookup-submit" value="Find ..."/>
   <div id="pubmed-id-lookup-waiting">
     <img class="ajax-spinner"
