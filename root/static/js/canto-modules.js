@@ -324,6 +324,11 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
 
   Curs.list('gene').success(function(results) {
     $scope.genes = results;
+
+    $.map($scope.genes,
+          function(gene) {
+            gene.display_name = gene.primary_name || gene.primary_identifier;
+          });
   })
   .error(function() {
     alert('failed to get gene list from server');
