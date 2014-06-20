@@ -242,7 +242,7 @@ var alleleEditDialogCtrl =
       }
 
       $scope.alleleData.name =
-        autopopulate_name.replace(/@@gene_name@@/, this.gene.display_name);
+        autopopulate_name.replace(/@@gene_display_name@@/, this.gene.display_name);
       return this.alleleData.name;
     };
 

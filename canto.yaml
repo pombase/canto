@@ -1099,13 +1099,13 @@ allele_type_list:
     description_required: 0
     allele_name_required: 1
     allow_expression_change: 1
-    autopopulate_name: '@@gene_name@@+'
+    autopopulate_name: '@@gene_display_name@@+'
   - name: deletion
     export_type: deletion
     description_required: 0
     allele_name_required: 1
     allow_expression_change: 0
-    autopopulate_name: '@@gene_name@@delta'
+    autopopulate_name: '@@gene_display_name@@delta'
   - name: unknown
     export_type: unknown
     description_required: 0
