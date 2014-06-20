@@ -47,9 +47,6 @@ $view_only => 0
       </th>
 % if ($feature_type eq 'genotype') {
       <th>
-        Expression
-      </th>
-      <th>
         Conditions
       </th>
 % }
@@ -169,11 +166,6 @@ $view_only => 0
       </span>
     </td>
 % if ($feature_type eq 'genotype') {
-    <td>
-      <span>
-      <% $row->{expression_level} %>
-      </span>
-    </td>
     <td>
       <span>
       <% $row->{conditions} %>

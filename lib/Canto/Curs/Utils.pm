@@ -98,7 +98,6 @@ sub _make_ontology_annotation
     }
 
     %genotype_details = (
-      expression_level => $data->{expression} // 'null',
       conditions => $conditions_string,
       genotype_identifier => $genotype->identifier(),
       genotype_name => $genotype->name(),
@@ -481,7 +480,6 @@ sub _process_existing_db_ontology
       $gene->{name} || $gene->{identifier},
     gene_product => $gene->{product} || '',
     allele_display_name => $allele_display_name,
-    expression_level => $row->{expression} // '',
     conditions => $conditions_string,
     qualifiers => $qualifier_string,
     annotation_type => $ontology_name,
