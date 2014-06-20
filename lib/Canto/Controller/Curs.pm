@@ -842,6 +842,8 @@ sub _delete_annotation : Private
   } else {
     $annotation->delete();
   }
+
+  $c->flash()->{message} = "Annotation deleted";
 }
 
 sub annotation_delete : Chained('annotation') PathPart('delete')
