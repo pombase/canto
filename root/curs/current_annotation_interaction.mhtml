@@ -101,8 +101,7 @@ $view_only => 0
 
 % if ($user_created && !$view_only) {
     <td style="border: 0px solid white; background-color: white;">
-%   my $delete_url = $delete_action . $row->{annotation_id} . '/' .
-%                    $row->{interacting_gene_identifier};
+%   my $delete_url = "$curs_root_uri/annotation/" . $row->{annotation_id} . "/delete/" . $row->{interacting_gene_identifier};
       <a href="<% $delete_url %>"
          id="curs-annotation-delete-<% $row->{annotation_id} %>"
 %   if (!$c->user_exists() || !$c->user()->is_admin()) {
@@ -122,7 +121,6 @@ Delete
 % }
 
 <%init>
-my $delete_action = $curs_root_uri . '/annotation/delete/';
 my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
 my $undelete_action = $curs_root_uri . '/annotation/undelete/';
 my $undelete_icon_uri = $c->uri_for('/static/images/undo_icon.png');

@@ -1580,19 +1580,19 @@ sub annotation_features
 sub _maybe_transfer_annotation
 {
   my $c = shift;
-  my $annotation_ids = shift;
+  my $annotations = shift;
   my $annotation_config = shift;
 
   my $st = $c->stash();
   my $schema = $st->{schema};
 
   my ($feature_type, $feature) =
-    annotation_features($c->config(), $st->{annotation});
+    annotation_features($c->config(), $annotations->[0]);
 
   my $current_user = $c->user();
 
   if ($annotation_config->{category} eq 'ontology' && $feature_type eq 'gene') {
-    _redirect_and_detach($c, 'annotation', (join ',', @$annotation_ids), 'transfer');
+    _redirect_and_detach($c, 'annotation', (join ',', map { $_->annotation_id(); } @$annotations), 'transfer');
   } else {
     _redirect_and_detach($c, 'feature', $feature_type, 'view', $feature->feature_id());
   }
@@ -1850,6 +1850,8 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
 
         @annotation_ids = map{ $_->annotation_id(); } @new_annotations;
 
+        $annotation = $new_annotations[0];
+
         $_debug_annotation_ids = [@annotation_ids];
       }
     }
@@ -1863,7 +1865,7 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
       }
       _redirect_and_detach($c, @parts);
     } else {
-      _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
+      _maybe_transfer_annotation($c, [$annotation], $annotation_config);
     }
   }
 }
@@ -2230,7 +2232,7 @@ sub annotation_multi_allele_finish : Chained('annotation') PathPart('multi_allel
   my $annotation_type_name = $annotation->type();
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
-  _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
+  _maybe_transfer_annotation($c, [$annotation], $annotation_config);
 }
 
 sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
@@ -2560,7 +2562,7 @@ sub _annotation_with_gene_internal
     if ($editing) {
       _redirect_and_detach($c, 'gene', $gene->gene_id(), 'view')
     } else {
-      _maybe_transfer_annotation($c, [$annotation->annotation_id()], $annotation_config);
+      _maybe_transfer_annotation($c, [$annotation], $annotation_config);
     }
   }
 

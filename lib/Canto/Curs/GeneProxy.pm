@@ -42,13 +42,16 @@ use Moose;
 use Carp;
 
 has cursdb_gene => (is => 'ro', required => 1,
-                    handles => [qw(gene_id
-                                   alleles
-                                   direct_annotations
-                                   indirect_annotations
-                                   all_annotations
-                                   primary_identifier
-                                   delete)]);
+                    handles => {
+                      gene_id => 'gene_id',
+                      feature_id => 'gene_id',
+                      alleles => 'alleles',
+                      direct_annotations => 'direct_annotations',
+                      indirect_annotations => 'indirect_annotations',
+                      all_annotations => 'all_annotations',
+                      primary_identifier => 'primary_identifier',
+                      delete => 'delete',
+                    });
 has gene_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has primary_name => (is => 'ro', init_arg => undef, lazy_build => 1);
 has product => (is => 'ro', init_arg => undef, lazy_build => 1);
