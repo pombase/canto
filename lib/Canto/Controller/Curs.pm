@@ -533,10 +533,6 @@ sub _edit_genes_helper
         label_tag => 'formfu-label',
         type => 'Checkbox', default_empty_value => 1
       },
-      {
-        name => 'submit', type => 'Submit', value => 'Remove selected',
-        name => 'continue', type => 'Submit', value => 'Continue',
-      },
     );
 
 
