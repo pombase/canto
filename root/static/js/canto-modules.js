@@ -33,6 +33,27 @@ canto.service('AlleleService', function(CantoService) {
   };
 });
 
+canto.service('AnnotationProxy', function(Curs, $q) {
+  this.allAnnotationQ = Curs.list('annotation');
+  this.getByType =
+    function(type) {
+      var q = $q.defer();
+
+      this.allAnnotationQ.success(function(annotations) {
+        var filteredAnnotations =
+          $.grep(annotations,
+                 function(elem) {
+                   return elem.annotation_type === type;
+                 });
+        q.resolve(filteredAnnotations);
+      }).error(function() {
+        q.reject();
+      });
+
+      return q.promise;
+    };
+});
+
 canto.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
@@ -323,6 +344,12 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
           function(gene) {
             gene.display_name = gene.primary_name || gene.primary_identifier;
           });
+    // DEBUG
+    $scope.genes[1].selected = true;
+    $scope.genes[2].selected = true;
+    $scope.selectGenes();
+    $scope.openAlleleEditDialog("ssm4", "SPAC27D7.13c", 2);
+    $scope.openAlleleEditDialog("doa10", "SPBC14F5.07", 3);
   })
   .error(function() {
     alert('failed to get gene list from server');
@@ -740,3 +767,54 @@ var evidenceSelectCtrl =
 
 canto.controller('EvidenceSelectCtrl',
                  ['$scope', evidenceSelectCtrl]);
+
+
+var annotationTable =
+  function(AnnotationProxy) {
+    return {
+      scope: {
+        geneIdentifier: '@',
+        annotationType: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: application_root + '/static/ng_templates/annotation_table.html',
+      link: function(scope, elem) {
+        scope.annotations = [];
+        AnnotationProxy.getByType(scope.annotationType).then(function(annotations) {
+          scope.annotations = annotations;
+        });
+      },
+    }
+  };
+
+canto.directive('annotationTable', ['AnnotationProxy', annotationTable]);
+
+var annotationTableList =
+  function(CantoConfig) {
+    return {
+      scope: {
+        geneIdentifier: '@',
+        genotypeIdentifier: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: application_root + '/static/ng_templates/annotation_table_list.html',
+      link: function(scope) {
+        CantoConfig.get('annotation_type_list').then(function(response) {
+          scope.annotationTypes =
+            $.grep(response.data,
+                  function(annotationType) {
+                    if ((typeof(scope.geneIdentifier) !== 'undefined' &&
+                         annotationType.feature_type === 'gene') ||
+                       (typeof(scope.genotypeIdentifier) !== 'undefined' &&
+                         annotationType.feature_type === 'genotype')) {
+                      return annotationType;
+                    }
+                  });
+        });
+      }
+    };
+  };
+
+canto.directive('annotationTableList', ['CantoConfig', annotationTableList]);

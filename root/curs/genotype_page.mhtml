@@ -87,6 +87,10 @@ Name
   </div>
 </div>
 
+NEW TABLE:
+
+<annotation-table-list genotype-identifier="<% $genotype_identifier %>"></annotation-table-list>
+
 <div class="clearall"/>
 
 <button type="button" id="curs-finish-genotype" class="btn btn-primary

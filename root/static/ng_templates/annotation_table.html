@@ -1,0 +1,21 @@
+<div>
+  <div>
+    type: {{annotationType}}
+  </div>
+
+  <table class="list">
+    <thead>
+      <tr>
+        <th>Identifier</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr ng-repeat="annotation in annotations">
+        <td>{{annotation.gene_identifier}}</td>
+        <td>{{annotation.gene_name}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
