@@ -8,34 +8,28 @@ canto.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });
 
-canto.factory('Curs', function($http) {
-  return {
-    list : function(key) {
-      return $http.get(curs_root_uri + '/ws/' + key + '/list');
-    }
+canto.service('Curs', function($http) {
+  this.list = function(key) {
+    return $http.get(curs_root_uri + '/ws/' + key + '/list');
   };
 });
 
-canto.factory('CantoService', function($http) {
-  return {
-    lookup : function(key, params) {
-      return $http.get(application_root + '/ws/lookup/' + key,
-                      {
-                        params: params
-                      });
-    }
+canto.service('CantoService', function($http) {
+  this.lookup = function(key, params) {
+    return $http.get(application_root + '/ws/lookup/' + key,
+                     {
+                       params: params
+                     });
   };
 });
 
-canto.factory('AlleleService', function(CantoService) {
-  return {
-    lookup: function(genePrimaryIdentifier, searchTerm, success, error) {
-      var q = CantoService.lookup('allele',
-                                  { gene_primary_identifier: genePrimaryIdentifier,
-                                    ignore_case: true,
-                                    term: searchTerm });
-      q.success(success).error(error);
-    }
+canto.service('AlleleService', function(CantoService) {
+  this.lookup = function(genePrimaryIdentifier, searchTerm, success, error) {
+    var q = CantoService.lookup('allele',
+                                { gene_primary_identifier: genePrimaryIdentifier,
+                                  ignore_case: true,
+                                  term: searchTerm });
+    q.success(success).error(error);
   };
 });
 
