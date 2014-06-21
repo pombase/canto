@@ -43,11 +43,53 @@ use Moose;
 use JSON;
 
 use Canto::Curs::GeneProxy;
+use Canto::Curs::Utils;
 
 with 'Canto::Role::Configurable';
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB');
 
+sub _get_annotation
+{
+  my $self = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $pub_rs = $curs_schema->resultset('Pub');
+
+  my @pubs = $pub_rs->all();
+
+  if (@pubs > 1) {
+    die "internal error - more than one publication stored in session: ",
+      $curs_schema->resultset('Metadata')->find({ key => 'curs_key' })->value();
+  }
+
+  if (@pubs == 0) {
+    die "internal error - one publications stored in session: ",
+      $curs_schema->resultset('Metadata')->find({ key => 'curs_key' })->value();
+  }
+
+  my $pub = $pubs[0];
+  my $pub_uniquename = $pub->uniquename();
+
+  my @annotation_type_list = @{$self->config()->{annotation_type_list}};
+
+  return
+    map {
+      my ($completed_count, $rows) =
+        Canto::Curs::Utils::get_annotation_table($self->config(),
+                                                 $self->curs_schema(),
+                                                 $_->{name});
+      my @new_annotations = @$rows;
+
+      ($completed_count, $rows) =
+        Canto::Curs::Utils::get_existing_annotations($self->config(),
+                                                     { pub_uniquename => $pub_uniquename,
+                                                       annotation_type_name => $_->{name} });
+
+      (@new_annotations, @$rows);
+    } @annotation_type_list,
+}
 
 my %list_for_service_subs =
   (
@@ -80,6 +122,7 @@ my %list_for_service_subs =
           }
         } $genotype_rs->all();
       },
+    annotation => \&_get_annotation,
   );
 
 =head2 list_for_service
@@ -97,11 +140,12 @@ sub list_for_service
 {
   my $self = shift;
   my $type = shift;
+  my @args = @_;
 
   my $proc = $list_for_service_subs{$type};
 
   if (defined $proc) {
-    return [$proc->($self)];
+    return [$proc->($self, @args)];
   } else {
     die "unknown list type: $type\n";
   }

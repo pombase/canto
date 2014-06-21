@@ -3481,14 +3481,14 @@ sub ws : Chained('top') CaptureArgs(1)
 
 sub ws_list : Chained('ws') PathPart('list')
 {
-  my ($self, $c) = @_;
+  my ($self, $c, @args) = @_;
 
   my $type = $c->stash()->{ws_list_type};
   my $schema = $c->stash()->{schema};
   my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
                                                      config => $c->config());
 
-  $c->stash->{json_data} = $service_utils->list_for_service($type);
+  $c->stash->{json_data} = $service_utils->list_for_service($type, @args);
 
   $c->forward('View::JSON');
 }
