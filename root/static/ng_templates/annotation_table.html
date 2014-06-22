@@ -1,45 +1,44 @@
 <div ng-switch="annotationType.category">
   <div ng-switch-when="ontology">
-    <div class="title sect-title">
-      New {{annotationType.display_name}} annotations
-    </div>
-    <div class="annotation-table sect-content">
-      <div ng-switch="annotationType.feature_type">
-        <div ng-switch-when="gene" class="sect">
-          <table class="list">
-            <thead>
-              <tr>
-                <th>Identifier</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              <tr ng-repeat="annotation in annotations">
-                <td>{{annotation.gene_identifier}}</td>
-                <td>{{annotation.gene_name}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div ng-switch-when="genotype">
-          <table class="list">
-            <thead>
-              <tr>
-                <th>Identifier</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              <tr ng-repeat="annotation in annotations">
-                <td>{{annotation.genotype_identifier}}</td>
-                <td>{{annotation.genotype_name}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <div ng-if="annotations.length > 0">
+      <div class="title sect-title">
+        New {{annotationType.display_name}} annotations
+      </div>
+      <div class="annotation-table sect-content">
+        <table class="list">
+          <thead>
+            <tr>
+              <th ng-if="annotationType.feature_type === 'gene'">Gene name</th>
+              <th ng-if="annotationType.feature_type === 'genotype'">Genotype name</th>
+              <th ng-if="annotationType.feature_type === 'genotype'">Systematic identifier</th>
+              <th>Term ID</th>
+              <th>Term name</th>
+              <th>Evidence code</th>
+              <th>Conditions</th>
+              <th>Qualifiers</th>
+              <th>Term suggestion</th>
+              <th>Comment</th>
+              <th>Annotation extension</th>
+              <th>Curator</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="annotation in annotations">
+              <td ng-if="annotationType.feature_type === 'gene'">{{annotation.term_name}}</td>
+              <td ng-if="annotationType.feature_type === 'genotype'">{{annotation.genotype_display_name}}</td>
+              <td ng-if="annotationType.feature_type === 'genotype'">{{annotation.term_ontid}}</td>
+              <td>{{annotation.term_id}}</td>
+              <td>{{annotation.term_name}}</td>
+              <td>{{annotation.evidence_code}}</td>
+              <td>{{annotation.conditions}}</td>
+              <td>{{annotation.qualifiers}}</td>
+              <td>{{annotation.term_suggestion.name}}</td>
+              <td>{{annotation.comment}}</td>
+              <td>{{annotation.annotation_extension}}</td>
+              <td>{{annotation.curator}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
