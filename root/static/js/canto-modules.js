@@ -35,15 +35,17 @@ canto.service('AlleleService', function(CantoService) {
 
 canto.service('AnnotationProxy', function(Curs, $q) {
   this.allAnnotationQ = Curs.list('annotation');
-  this.getByType =
-    function(type) {
+  this.getFiltered =
+    function(params) {
       var q = $q.defer();
 
       this.allAnnotationQ.success(function(annotations) {
         var filteredAnnotations =
           $.grep(annotations,
                  function(elem) {
-                   return elem.annotation_type === type;
+                   return elem.annotation_type === params.annotationTypeName &&
+                     (elem.genotype_identifier === params.genotypeIdentifier ||
+                      elem.gene_identifier === params.geneIdentifier);
                  });
         q.resolve(filteredAnnotations);
       }).error(function() {
@@ -805,6 +807,7 @@ var annotationTable =
     return {
       scope: {
         geneIdentifier: '@',
+        genotypeIdentifier: '@',
         annotationTypeName: '@',
       },
       restrict: 'E',
@@ -812,9 +815,11 @@ var annotationTable =
       templateUrl: application_root + '/static/ng_templates/annotation_table.html',
       link: function(scope) {
         scope.annotations = [];
-        AnnotationProxy.getByType(scope.annotationTypeName).then(function(annotations) {
-          scope.annotations = annotations;
-        });
+        AnnotationProxy.getFiltered({annotationTypeName: scope.annotationTypeName,
+                                     genotypeIdentifier: scope.genotypeIdentifier,
+                                     geneIdentifier: scope.geneIdentifier }).then(function(annotations) {
+                                       scope.annotations = annotations;
+                                     });
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
           scope.annotationType = annotationType;
         });
@@ -848,7 +853,10 @@ var annotationTableList =
                     }
                   });
         });
-        AnnotationProxy.getByType(scope.annotationTypeName).then(function(annotations) {
+        AnnotationProxy.getFiltered({ annotationTypeName: scope.annotationTypeName,
+                                      genotypeIdentifier: scope.genotypeIdentifier,
+                                      geneIdentifier: scope.geneIdentifier,
+                                    }).then(function(annotations) {
           scope.annotations = annotations;
         });
       }

@@ -1,46 +1,46 @@
-<div>
-NAME: {{annotationType.name}}
 <div ng-switch="annotationType.category">
   <div ng-switch-when="ontology">
-    <div ng-switch="annotationType.feature_type">
-      <div ng-switch-when="gene">
-        <div>
-          type: {{annotationTypeName}}
+    <div class="title sect-title">
+      New {{annotationType.display_name}} annotations
+    </div>
+    <div class="annotation-table sect-content">
+      <div ng-switch="annotationType.feature_type">
+        <div ng-switch-when="gene" class="sect">
+          <table class="list">
+            <thead>
+              <tr>
+                <th>Identifier</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr ng-repeat="annotation in annotations">
+                <td>{{annotation.gene_identifier}}</td>
+                <td>{{annotation.gene_name}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="list">
-          <thead>
-            <tr>
-              <th>Identifier</th>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
 
-            <tr ng-repeat="annotation in annotations">
-              <td>{{annotation.gene_identifier}}</td>
-              <td>{{annotation.gene_name}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div ng-switch-when="genotype">
-        <table class="list">
-          <thead>
-            <tr>
-              <th>Identifier</th>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
+        <div ng-switch-when="genotype">
+          <table class="list">
+            <thead>
+              <tr>
+                <th>Identifier</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
 
-            <tr ng-repeat="annotation in annotations">
-              <td>{{annotation.genotype_identifier}}</td>
-              <td>{{annotation.genotype_name}}</td>
-            </tr>
-          </tbody>
-        </table>
+              <tr ng-repeat="annotation in annotations">
+                <td>{{annotation.genotype_identifier}}</td>
+                <td>{{annotation.genotype_name}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>

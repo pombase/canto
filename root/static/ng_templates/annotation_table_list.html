@@ -4,10 +4,15 @@ ANNOTATION_TABLE_LIST
 <div ng-hide="annotations && annotationTypes">
   LOADING ...
 </div>
-<div ng-show="annotations && annotationTypes">
+<div ng-show="annotations && annotationTypes"
+     id="curs-annotation-tables" class="sect">
 <div ng-repeat="annotationType in annotationTypes">
+
+
   TABLE:
-  <annotation-table annotation-type-name="{{annotationType.name}}"></annotation-table>
+  <annotation-table annotation-type-name="{{annotationType.name}}"
+                    gene-identifier="{{geneIdentifier}}"
+                    genotype-identifier="{{genotypeIdentifier}}"></annotation-table>
 </div>
 </div>
 </div>
