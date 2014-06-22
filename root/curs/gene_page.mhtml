@@ -92,9 +92,7 @@ Gene details
 
 <button type="button" id="curs-finish-gene" class="btn btn-primary curs-back-button"><% $finish_text %></button>
 
-NEW TABLES: 
 <annotation-table-list gene-identifier="<% $gene->primary_identifier() %>"></annotation-table-list>
-
 
 <div id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {
