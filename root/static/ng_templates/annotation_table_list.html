@@ -1,3 +1,13 @@
+<div>
+
+ANNOTATION_TABLE_LIST
+<div ng-hide="annotations && annotationTypes">
+  LOADING ...
+</div>
+<div ng-show="annotations && annotationTypes">
 <div ng-repeat="annotationType in annotationTypes">
-  <annotation-table annotation-type="{{annotationType.name}}"></annotation-table>
+  TABLE:
+  <annotation-table annotation-type-name="{{annotationType.name}}"></annotation-table>
+</div>
+</div>
 </div>

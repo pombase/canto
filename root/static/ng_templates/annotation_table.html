@@ -1,21 +1,46 @@
 <div>
-  <div>
-    type: {{annotationType}}
+NAME: {{annotationType.name}}
+<div ng-switch="annotationType.category">
+  <div ng-switch-when="ontology">
+    <div ng-switch="annotationType.feature_type">
+      <div ng-switch-when="gene">
+        <div>
+          type: {{annotationTypeName}}
+        </div>
+        <table class="list">
+          <thead>
+            <tr>
+              <th>Identifier</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr ng-repeat="annotation in annotations">
+              <td>{{annotation.gene_identifier}}</td>
+              <td>{{annotation.gene_name}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div ng-switch-when="genotype">
+        <table class="list">
+          <thead>
+            <tr>
+              <th>Identifier</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr ng-repeat="annotation in annotations">
+              <td>{{annotation.genotype_identifier}}</td>
+              <td>{{annotation.genotype_name}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-
-  <table class="list">
-    <thead>
-      <tr>
-        <th>Identifier</th>
-        <th>Name</th>
-      </tr>
-    </thead>
-    <tbody>
-
-      <tr ng-repeat="annotation in annotations">
-        <td>{{annotation.gene_identifier}}</td>
-        <td>{{annotation.gene_name}}</td>
-      </tr>
-    </tbody>
-  </table>
+</div>
 </div>

@@ -232,7 +232,6 @@ var alleleEditDialogCtrl =
     };
     $scope.env = {
     };
-    $scope.current_type_config = undefined;
 
     $scope.name_autopopulated = false;
 
@@ -252,7 +251,7 @@ var alleleEditDialogCtrl =
         return '';
       }
       var autopopulate_name = this.current_type_config.autopopulate_name;
-      if (autopopulate_name === undefined) {
+      if (typeof(autopopulate_name) === 'undefined') {
         return '';
       }
 
@@ -702,13 +701,45 @@ function SubmitToCuratorsCtrl($scope) {
   };
 }
 
-canto.factory('CantoConfig', function($http) {
-  return {
-    get : function(key){
-      return $http({method: 'GET',
-                    url: canto_root_uri + 'ws/canto_config/' + key,
-                    cache: true});
+canto.service('CantoConfig', function($http) {
+  this.get = function(key) {
+      if (typeof(this.promise) === 'undefined') {
+        this.promise =
+          $http({method: 'GET',
+                 url: canto_root_uri + 'ws/canto_config/' + key,
+                 cache: true});
+      }
+      return this.promise;
+    };
+});
+
+canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
+  this.getAll = function() {
+    if (typeof(this.listPromise) === 'undefined') {
+      this.listPromise = CantoConfig.get('annotation_type_list');
     }
+
+    return this.listPromise;
+  };
+  this.getByName = function(typeName) {
+    var q = $q.defer();
+
+    this.getAll().success(function(annotationTypeList) {
+      var filteredAnnotationTypes =
+        $.grep(annotationTypeList,
+               function(annotationType) {
+                 return annotationType.name === typeName;
+               });
+      if (filteredAnnotationTypes.length > 0){
+        q.resolve(filteredAnnotationTypes[0]);
+      } else {
+        q.resolve(undefined);
+      }
+    }).error(function() {
+      q.reject();
+    });
+
+    return q.promise;
   };
 });
 
@@ -770,28 +801,31 @@ canto.controller('EvidenceSelectCtrl',
 
 
 var annotationTable =
-  function(AnnotationProxy) {
+  function(AnnotationProxy, AnnotationTypeConfig) {
     return {
       scope: {
         geneIdentifier: '@',
-        annotationType: '@',
+        annotationTypeName: '@',
       },
       restrict: 'E',
       replace: true,
       templateUrl: application_root + '/static/ng_templates/annotation_table.html',
-      link: function(scope, elem) {
+      link: function(scope) {
         scope.annotations = [];
-        AnnotationProxy.getByType(scope.annotationType).then(function(annotations) {
+        AnnotationProxy.getByType(scope.annotationTypeName).then(function(annotations) {
           scope.annotations = annotations;
         });
-      },
-    }
+        AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
+          scope.annotationType = annotationType;
+        });
+      }
+    };
   };
 
-canto.directive('annotationTable', ['AnnotationProxy', annotationTable]);
+canto.directive('annotationTable', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTable]);
 
 var annotationTableList =
-  function(CantoConfig) {
+  function(AnnotationProxy, AnnotationTypeConfig) {
     return {
       scope: {
         geneIdentifier: '@',
@@ -801,7 +835,8 @@ var annotationTableList =
       replace: true,
       templateUrl: application_root + '/static/ng_templates/annotation_table_list.html',
       link: function(scope) {
-        CantoConfig.get('annotation_type_list').then(function(response) {
+        scope.annotationTypes = [];
+        AnnotationTypeConfig.getAll().then(function(response) {
           scope.annotationTypes =
             $.grep(response.data,
                   function(annotationType) {
@@ -813,8 +848,11 @@ var annotationTableList =
                     }
                   });
         });
+        AnnotationProxy.getByType(scope.annotationTypeName).then(function(annotations) {
+          scope.annotations = annotations;
+        });
       }
     };
   };
 
-canto.directive('annotationTableList', ['CantoConfig', annotationTableList]);
+canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTableList]);
