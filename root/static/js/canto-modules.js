@@ -803,7 +803,7 @@ canto.controller('EvidenceSelectCtrl',
 
 
 var annotationTable =
-  function(AnnotationProxy, AnnotationTypeConfig) {
+  function(AnnotationProxy, AnnotationTypeConfig, $compile) {
     return {
       scope: {
         geneIdentifier: '@',
@@ -813,7 +813,15 @@ var annotationTable =
       restrict: 'E',
       replace: true,
       templateUrl: application_root + '/static/ng_templates/annotation_table.html',
-      link: function(scope) {
+      controller: function($scope) {
+        $scope.edit = function(annotation) {
+          annotation.editing = true;
+        };
+        $scope.cancelEdit = function(annotation) {
+          annotation.editing = false;
+        };
+      },
+      link: function(scope, elem) {
         scope.annotations = [];
         AnnotationProxy.getFiltered({annotationTypeName: scope.annotationTypeName,
                                      genotypeIdentifier: scope.genotypeIdentifier,
@@ -827,7 +835,7 @@ var annotationTable =
     };
   };
 
-canto.directive('annotationTable', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTable]);
+canto.directive('annotationTable', ['AnnotationProxy', 'AnnotationTypeConfig', '$compile', annotationTable]);
 
 var annotationTableList =
   function(AnnotationProxy, AnnotationTypeConfig) {
@@ -864,3 +872,50 @@ var annotationTableList =
   };
 
 canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTableList]);
+
+
+var annotationTableRow =
+  function(AnnotationProxy, AnnotationTypeConfig) {
+    return {
+      restrict: 'A',
+      replace: true,
+      templateUrl: application_root + '/static/ng_templates/annotation_table_row.html',
+      link: function(scope) {
+
+      }
+    };
+  };
+
+canto.directive('annotationTableRow', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTableRow]);
+
+
+var termNameComplete =
+  function() {
+    return {
+      scope: {
+        annotationTypeName: '@',
+        currentTermName: '@',
+        foundTermId: '=',
+        foundTermName: '=',
+      },
+      replace: true,
+      restrict: 'E',
+      template: '<input type="text" class="form-control" value="{{currentTermName}}"/>',
+      link: function(scope, elem) {
+        elem.autocomplete({
+          minLength: 2,
+          source: make_ontology_complete_url(scope.annotationTypeName),
+          select: function(event, ui) {
+            scope.$apply(function() {
+              scope.foundTermId = ui.item.id;
+              scope.foundTermName = ui.item.value;
+            });
+          },
+          cacheLength: 100
+        });
+        elem.attr('disabled', false);
+      }
+    };
+  };
+
+canto.directive('termNameComplete', [termNameComplete]);

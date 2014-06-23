@@ -1,0 +1,33 @@
+<tr>
+  <td ng-if="annotationType.feature_type === 'gene'">{{annotation.term_name}}</td>
+  <td ng-if="annotationType.feature_type === 'genotype'">{{annotation.genotype_display_name}}</td>
+  <td ng-if="annotationType.feature_type === 'genotype'">{{annotation.term_ontid}}</td>
+  <td>{{annotation.term_id}}</td>
+  <td>
+    <span ng-if="!annotation.editing">{{annotation.to_store.new_term_name || annotation.term_name}}</span>
+    <term-name-complete ng-if="annotation.editing"
+                        current-term-name="{{annotation.to_store.new_term_name || annotation.term_name}}"
+                        found-term-id="annotation.to_store.new_term_ontid"
+                        found-term-name="annotation.to_store.new_term_name"
+                        annotation-type-name="{{annotationType.name}}">
+    </term-name-complete>
+  </td>
+  <td>{{annotation.evidence_code}}</td>
+  <td>{{annotation.conditions}}</td>
+  <td>{{annotation.qualifiers}}</td>
+  <td>{{annotation.term_suggestion.name}}</td>
+  <td>{{annotation.comment}}</td>
+  <td>{{annotation.annotation_extension}}</td>
+  <td>{{annotation.curator}}</td>
+  <td>
+    <a ng-if="!annotation.editing" ng-click="edit(annotation)">Edit</a> 
+    <div ng-if="annotation.editing">
+      <div>
+        <a ng-click="saveEdit(annotation)">Save</a>
+      </div>
+      <div>
+        <a ng-click="cancelEdit(annotation)">Cancel</a>
+      </div>
+    </div>
+  </td>
+</tr>
