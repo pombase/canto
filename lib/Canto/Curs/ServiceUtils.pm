@@ -46,6 +46,7 @@ use Canto::Curs::GeneProxy;
 use Canto::Curs::Utils;
 
 with 'Canto::Role::Configurable';
+with 'Canto::Role::MetadataAccess';
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB');
 
@@ -173,7 +174,13 @@ sub change_annotation
   my $self = shift;
   my $annotation_id = shift;
   my $annotation_status = shift;
+
+  my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
   my $changes = shift;
+
+  if (!defined $changes->{key} || $changes->{key} ne $curs_key) {
+    return { status => 'error', message => 'incorrect key' };
+  }
 
   my $annotation;
 
@@ -191,6 +198,8 @@ sub change_annotation
 
   $annotation->data($data);
   $annotation->update();
+
+  return { status => 'success' };
 }
 
 1;

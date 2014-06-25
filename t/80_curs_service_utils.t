@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -11,7 +11,8 @@ my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
-my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
+my $curs_key = 'aaaa0007';
+my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
 my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $curs_schema,
                                                    config => $config);
@@ -65,11 +66,14 @@ my $first_genotype_annotation = $first_genotype->annotations()->first();
 
 my $new_comment = "new service comment";
 my $changes = {
+  key => $curs_key,
   comment => $new_comment,
 };
 
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
                                          'new', $changes);
+
+is ($res->{status}, 'success');
 
 # re-query
 $first_genotype_annotation = $first_genotype->annotations()->first();

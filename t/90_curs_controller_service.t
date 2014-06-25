@@ -37,6 +37,7 @@ test_psgi $app, sub {
   $req->header('Content-Type' => 'application/json');
   my $new_comment = "new service comment";
   my $changes = {
+    key => $curs_key,
     comment => $new_comment,
   };
 
