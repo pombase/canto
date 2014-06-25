@@ -151,4 +151,46 @@ sub list_for_service
   }
 }
 
+=head2
+
+ Usage   : $service_utils->change_annotation($annotation_id, 'new'|'existing',
+                                             $changes);
+ Function: Change an annotation in the Curs database based on the $changes hash.
+ Args    : $annotation_id
+           $status - 'new' if the annotation ID refers to a user created
+                      annotation
+                     'existing' if the ID refers to a existing Chado/external
+                     ID, probably a feature_id
+           $changes - a hash that specifies which parts of the annotation are
+                      to change, with these possible keys:
+                      comment - set the comment
+ Return  :
+
+=cut
+
+sub change_annotation
+{
+  my $self = shift;
+  my $annotation_id = shift;
+  my $annotation_status = shift;
+  my $changes = shift;
+
+  my $annotation;
+
+  if ($annotation_status eq 'new') {
+    $annotation = $self->curs_schema()->resultset('Annotation')->find($annotation_id);
+  } else {
+    die "annotation status unsupported: $annotation_status\n";
+  }
+
+  my $data = $annotation->data();
+
+  for my $key (keys %$changes) {
+    $data->{$key} = $changes->{$key};
+  }
+
+  $annotation->data($data);
+  $annotation->update();
+}
+
 1;

@@ -3468,7 +3468,7 @@ sub ws : Chained('top') CaptureArgs(1)
 {
   my ($self, $c, $type) = @_;
 
-  $c->stash()->{ws_list_type} = $type;
+  $c->stash()->{ws_type} = $type;
 }
 
 =head2 ws_list
@@ -3478,17 +3478,48 @@ sub ws : Chained('top') CaptureArgs(1)
 
 =cut
 
-
 sub ws_list : Chained('ws') PathPart('list')
 {
   my ($self, $c, @args) = @_;
 
-  my $type = $c->stash()->{ws_list_type};
+  my $type = $c->stash()->{ws_type};
   my $schema = $c->stash()->{schema};
   my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
                                                      config => $c->config());
 
   $c->stash->{json_data} = $service_utils->list_for_service($type, @args);
+
+  $c->forward('View::JSON');
+}
+
+sub ws_annotation : Chained('top') PathPart('ws/annotation') CaptureArgs(2)
+{
+  my ($self, $c, $annotation_id, $status) = @_;
+
+  $c->stash()->{annotation_id} = $annotation_id;
+  $c->stash()->{annotation_status} = $status;
+}
+
+sub ws_change_annotation : Chained('ws_annotation') PathPart('change')
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $type = $st->{ws_type};
+  my $schema = $st->{schema};
+
+  my $annotation_id = $st->{annotation_id};
+  my $status = $st->{annotation_status};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  my $json_data = $c->req()->body_data();
+
+  $c->stash->{json_data} =
+    $service_utils->change_annotation($annotation_id, $status, $json_data);
+  $c->stash->{json_data} = { status => "success" };
 
   $c->forward('View::JSON');
 }

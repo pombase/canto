@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -57,3 +57,21 @@ cmp_deeply($res,
                gene_id => 4,
             },
           ]);
+
+my $first_genotype =
+  $curs_schema->resultset('Genotype')->find({ identifier => 'h+ SPCC63.05delta ssm4KE' });
+
+my $first_genotype_annotation = $first_genotype->annotations()->first();
+
+my $new_comment = "new service comment";
+my $changes = {
+  comment => $new_comment,
+};
+
+$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                         'new', $changes);
+
+# re-query
+$first_genotype_annotation = $first_genotype->annotations()->first();
+
+is ($first_genotype_annotation->data()->{comment}, $new_comment);
