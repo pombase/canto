@@ -813,14 +813,6 @@ var annotationTable =
       restrict: 'E',
       replace: true,
       templateUrl: application_root + '/static/ng_templates/annotation_table.html',
-      controller: function($scope) {
-        $scope.edit = function(annotation) {
-          annotation.editing = true;
-        };
-        $scope.cancelEdit = function(annotation) {
-          annotation.editing = false;
-        };
-      },
       link: function(scope, elem) {
         scope.annotations = [];
         AnnotationProxy.getFiltered({annotationTypeName: scope.annotationTypeName,
@@ -880,8 +872,17 @@ var annotationTableRow =
       restrict: 'A',
       replace: true,
       templateUrl: application_root + '/static/ng_templates/annotation_table_row.html',
+      controller: function($scope) {
+        $scope.data = { editing: false };
+        $scope.edit = function() {
+          $scope.data.editing = true;
+        };
+        $scope.cancelEdit = function() {
+          $scope.data.editing = false;
+        };
+      },
       link: function(scope) {
-
+        scope.test = true;
       }
     };
   };
