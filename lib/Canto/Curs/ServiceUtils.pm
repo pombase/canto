@@ -44,6 +44,7 @@ use JSON;
 
 use Canto::Curs::GeneProxy;
 use Canto::Curs::Utils;
+use Try::Tiny;
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::MetadataAccess';
@@ -170,41 +171,91 @@ sub list_for_service
 =cut
 
 sub change_annotation
-{
-  my $self = shift;
-  my $annotation_id = shift;
-  my $annotation_status = shift;
+  {
+    my $self = shift;
+    my $annotation_id = shift;
+    my $annotation_status = shift;
 
-  my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
-  my $changes = shift;
+    my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
+    my $changes = shift;
 
-  if (!defined $changes->{key} || $changes->{key} ne $curs_key) {
-    return { status => 'error', message => 'incorrect key' };
-  }
+    if (!defined $changes->{key} || $changes->{key} ne $curs_key) {
+      return { status => 'error', message => 'incorrect key' };
+    }
 
-  my $annotation;
+    my $annotation;
 
-  if ($annotation_status eq 'new') {
-    $annotation = $self->curs_schema()->resultset('Annotation')->find($annotation_id);
-  } else {
-    die "annotation status unsupported: $annotation_status\n";
-  }
+    if ($annotation_status eq 'new') {
+      $annotation = $self->curs_schema()->resultset('Annotation')->find($annotation_id);
+    } else {
+      die "annotation status unsupported: $annotation_status\n";
+    }
 
-  my $data = $annotation->data();
+    my $data = $annotation->data();
 
-  my %legal_keys = (
-    term_ontid => 1,
-  );
+    my %valid_change_keys = (
+      term_ontid => sub {
+        my $term_ontid = shift;
 
-  for my $key (keys %$changes) {
-    next unless $legal_keys{$key};
+        my $lookup = Canto::Track::get_adaptor($self->config(), 'ontology');
+        my $term_ontid = $changes->{term_ontid};
+        my $res = $lookup->lookup_by_id({ id => $term_ontid });
+
+        if (defined $res) {
+          # do the default - set Annotation->data()->{...}
+          return 0;
+        } else {
+          die "no such term ID: $term_ontid";
+        }
+      },
+      evidence_code => sub {
+        my $evidence_code = shift;
+
+        if (defined $self->config()->{evidence_types}->{$evidence_code}) {
+          # do the default - set Annotation->data()->{...}
+          return 0
+        } else {
+          die "no such evidence code: $evidence_code\n";
+        }
+      },
+      gene_identifier => sub {
+        my $gene_identifier = shift;
+
+#        if (valid gene_identifier) {
+#          <change it>
+#          return 1;
+#        } else { die "...." }
+        die;
+      },
+      comment => 1,
+      annotation_extension => 1,
+    );
+
+ CHANGE: for my $key (keys %$changes) {
+    my $conf = $valid_change_keys{$key};
+
+    next unless defined $conf;
+
+    my $value = $changes->{$key};
+
+    if (ref $conf eq 'CODE') {
+      try {
+        my $res = $conf->($value);
+        next CHANGE if $res;
+
+        # otherwise, fail through
+      } catch {
+        return { status => 'error', message => $_ };
+      };
+    }
+
     $data->{$key} = $changes->{$key};
   }
 
   $annotation->data($data);
   $annotation->update();
 
-  return { status => 'success', %$changes };
+  return { status => 'success' };
 }
 
 1;
