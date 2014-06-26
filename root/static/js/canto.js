@@ -1,5 +1,7 @@
 "use strict";
 
+/*global $,document,application_root */
+
 function last(a) {
   return a[a.length-1];
 }
@@ -8,9 +10,20 @@ function trim(a) {
   a=a.replace(/^\s+/,''); return a.replace(/\s+$/,'');
 }
 
+var loadingDiv = $('<div id="loading"><img src="' + application_root +
+                   '/static/images/spinner.gif"/></div>');
+
+function loadingStart() {
+  loadingDiv.show();
+  $('#content').addClass('faded-overlay');
+}
+
+function loadingEnd() {
+  loadingDiv.hide();
+  $('#content').removeClass('faded-overlay');
+}
+
 $(document).ready(function() {
-  var loadingDiv = $('<div id="loading"><img src="' + application_root +
-                     '/static/images/spinner.gif"/></div>');
   loadingDiv
     .prependTo('body')
     .position({

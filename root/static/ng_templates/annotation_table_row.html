@@ -1,14 +1,13 @@
 <tr>
   <td ng-if="annotationType.feature_type === 'gene'">{{annotation.term_name}}</td>
   <td ng-if="annotationType.feature_type === 'genotype'">{{annotation.genotype_display_name}}</td>
-  <td ng-if="annotationType.feature_type === 'genotype'">{{annotation.term_ontid}}</td>
-  <td>{{annotation.term_id}}</td>
+  <td>{{annotation.term_ontid}}</td>
   <td>
-    <span ng-if="!data.editing">{{annotation.to_store.new_term_name || annotation.term_name}}</span>
-    <term-name-complete ng-if="data.editing"
-                        current-term-name="{{annotation.to_store.new_term_name || annotation.term_name}}"
-                        found-term-id="annotation.to_store.new_term_ontid"
-                        found-term-name="annotation.to_store.new_term_name"
+    <span ng-if="!data.changes">{{annotation.term_name}}</span>
+    <term-name-complete ng-if="data.changes"
+                        current-term-name="{{annotation.term_name}}"
+                        found-term-id="data.changes.term_ontid"
+                        found-term-name="data.changes.term_name"
                         annotation-type-name="{{annotationType.name}}">
     </term-name-complete>
   </td>
@@ -20,8 +19,8 @@
   <td>{{annotation.annotation_extension}}</td>
   <td>{{annotation.curator}}</td>
   <td>
-    <a ng-if="!data.editing" ng-click="edit()">Edit</a> 
-    <div ng-if="data.editing">
+    <a ng-if="!data.changes" ng-click="edit()">Edit</a> 
+    <div ng-if="data.changes">
       <div>
         <a ng-click="saveEdit()">Save</a>
       </div>

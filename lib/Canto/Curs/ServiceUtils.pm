@@ -192,14 +192,19 @@ sub change_annotation
 
   my $data = $annotation->data();
 
+  my %legal_keys = (
+    term_ontid => 1,
+  );
+
   for my $key (keys %$changes) {
+    next unless $legal_keys{$key};
     $data->{$key} = $changes->{$key};
   }
 
   $annotation->data($data);
   $annotation->update();
 
-  return { status => 'success' };
+  return { status => 'success', %$changes };
 }
 
 1;

@@ -1150,8 +1150,9 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   z-index: 1000;
 }
 
-.faded-overlay {
+.faded-overlay, .edit-pending {
   opacity: 0.5;
+  filter: alpha(opacity=50); /* For IE8 and earlier */
 }
 
 a.curs-quick-add-annotation:hover, .annotation-start .curs-inline-help-icon:hover {

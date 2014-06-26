@@ -1,6 +1,6 @@
 'use strict';
 
-/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri */
+/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
 
@@ -33,13 +33,22 @@ canto.service('AlleleService', function(CantoService) {
   };
 });
 
-canto.service('AnnotationProxy', function(Curs, $q) {
-  this.allAnnotationQ = Curs.list('annotation');
+canto.service('AnnotationProxy', function(Curs, $q, $http) {
+  this.allAnnotationQ = undefined;
+
+  this.getAllAnnotation = function() {
+    if (typeof(this.allAnnotationQ) === 'undefined') {
+      this.allAnnotationQ = Curs.list('annotation');
+    }
+
+    return this.allAnnotationQ;
+  };
+
   this.getFiltered =
     function(params) {
       var q = $q.defer();
 
-      this.allAnnotationQ.success(function(annotations) {
+      this.getAllAnnotation().success(function(annotations) {
         var filteredAnnotations =
           $.grep(annotations,
                  function(elem) {
@@ -54,6 +63,29 @@ canto.service('AnnotationProxy', function(Curs, $q) {
 
       return q.promise;
     };
+
+  this.storeChanges = function(annotation, changes) {
+    changes.key = curs_key;
+    var q = $q.defer();
+
+    var putQ = $http.put(curs_root_uri + '/ws/annotation/' + annotation.annotation_id +
+                      '/new/change', changes);
+    putQ.success(function(response) {
+      if (response.status === 'success') {
+        // update local copy
+        Object.getOwnPropertyNames(changes).forEach(function(key) {
+          annotation[key] = changes[key];
+        });
+        q.resolve(annotation);
+      } else {
+        q.reject(response.message);
+      }
+    }).error(function() {
+      q.reject();
+    });
+
+    return q.promise;
+  };
 });
 
 canto.run(function(editableOptions) {
@@ -872,13 +904,27 @@ var annotationTableRow =
       restrict: 'A',
       replace: true,
       templateUrl: application_root + '/static/ng_templates/annotation_table_row.html',
-      controller: function($scope) {
-        $scope.data = { editing: false };
+      controller: function($scope, $element) {
+        $scope.data = {};
         $scope.edit = function() {
-          $scope.data.editing = true;
+          $scope.data.changes = {};
+        };
+        $scope.saveEdit = function() {
+          var changes = $scope.data.changes;
+          delete $scope.data.changes;
+          loadingStart();
+          $element.addClass('edit-pending');
+          var q = AnnotationProxy.storeChanges($scope.annotation, changes);
+          q.catch(function(message) {
+            alert("saving annotation failed: " + message);
+          })
+          .finally(function() {
+            loadingEnd();
+            $element.removeClass('edit-pending');
+          });
         };
         $scope.cancelEdit = function() {
-          $scope.data.editing = false;
+          delete $scope.data.changes;
         };
       },
       link: function(scope) {
