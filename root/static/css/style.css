@@ -1239,3 +1239,8 @@ table tr td.curs-table-row-remove {
 table tr td.curs-table-row-remove a span {
   color: red;
 }
+
+/* Bootstrap doesn't change the cursor if there is no href */
+a:not([href]) {
+  cursor:pointer;
+}
