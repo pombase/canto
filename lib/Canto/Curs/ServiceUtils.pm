@@ -230,6 +230,7 @@ sub change_annotation
       },
       comment => 1,
       annotation_extension => 1,
+      term_suggestion => 1,
     );
 
  CHANGE: for my $key (keys %$changes) {
