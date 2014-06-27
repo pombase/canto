@@ -11,7 +11,14 @@
                         annotation-type-name="{{annotationType.name}}">
     </term-name-complete>
   </td>
-  <td>{{annotation.evidence_code}}</td>
+  <td>
+    <span ng-if="!data.changes">{{annotation.evidence_code}}</span>
+    <select ng-if="data.changes"
+            ng-model="data.changes.evidence_code"
+            ng-options="code for code in annotationType.evidence_codes">
+      <option selected="selected" value="">Choose an allele type ...</option>
+    </select>
+  </td>
   <td>{{annotation.conditions}}</td>
   <td>{{annotation.qualifiers}}</td>
   <td>{{annotation.term_suggestion.name}}</td>

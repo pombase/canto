@@ -916,6 +916,12 @@ var annotationTableRow =
       templateUrl: application_root + '/static/ng_templates/annotation_table_row.html',
       controller: function($scope, $element) {
         $scope.data = {};
+
+        AnnotationTypeConfig.getByName($scope.annotation.annotation_type)
+          .then(function(annotationType) {
+            $scope.annotationType = annotationType;
+          });
+
         $scope.edit = function() {
           $scope.data.changes = {};
         };
