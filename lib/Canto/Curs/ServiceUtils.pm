@@ -198,7 +198,6 @@ sub change_annotation
         my $term_ontid = shift;
 
         my $lookup = Canto::Track::get_adaptor($self->config(), 'ontology');
-        my $term_ontid = $changes->{term_ontid};
         my $res = $lookup->lookup_by_id({ id => $term_ontid });
 
         if (defined $res) {
