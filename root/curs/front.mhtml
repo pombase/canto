@@ -48,7 +48,8 @@ $total_annotation_count
   </div>
   <div ng-show="data.noAnnotation" class="ng-cloak">
     <div>
-    <select name="reason" ng-model="data.reason"ng-options="r as r for r in noAnnotationReasons">
+    <select name="reason" ng-model="data.reason"
+            ng-options="r as r for r in noAnnotationReasons">
       <option value="">Please choose a reason ...</option>
     </select>
     </div>
