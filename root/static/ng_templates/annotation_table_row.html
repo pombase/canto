@@ -1,6 +1,6 @@
 <tr>
-  <td ng-if="annotationType.feature_type === 'gene'">{{annotation.term_name}}</td>
-  <td ng-if="annotationType.feature_type === 'genotype'">{{annotation.genotype_display_name}}</td>
+  <td ng-if="annotationType.feature_type === 'gene' && !geneIdentifier">{{annotation.gene_identifier}}</td>
+  <td ng-if="annotationType.feature_type === 'genotype' && !genotypeIdentifier">{{annotation.genotype_display_name}}</td>
   <td>{{annotation.term_ontid}}</td>
   <td>
     <span ng-if="!data.changes">{{annotation.term_name}}</span>

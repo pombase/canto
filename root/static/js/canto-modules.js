@@ -44,6 +44,11 @@ canto.service('AnnotationProxy', function(Curs, $q, $http) {
     return this.allAnnotationQ;
   };
 
+  // filter the list of annotation based on the params argument
+  // possibilities:
+  //   annotationTypeName (required)
+  //   genotypeIdentifier
+  //   geneIdentifier 
   this.getFiltered =
     function(params) {
       var q = $q.defer();
@@ -53,7 +58,8 @@ canto.service('AnnotationProxy', function(Curs, $q, $http) {
           $.grep(annotations,
                  function(elem) {
                    return elem.annotation_type === params.annotationTypeName &&
-                     (elem.genotype_identifier === params.genotypeIdentifier ||
+                     ((!params.geneIdentifier && !params.genotypeIdentifier) ||
+                      elem.genotype_identifier === params.genotypeIdentifier ||
                       elem.gene_identifier === params.geneIdentifier);
                  });
         q.resolve(filteredAnnotations);
@@ -877,7 +883,9 @@ var annotationTableList =
           scope.annotationTypes =
             $.grep(response.data,
                   function(annotationType) {
-                    if ((typeof(scope.geneIdentifier) !== 'undefined' &&
+                    if ((typeof(scope.geneIdentifier) === 'undefined' &&
+                         typeof(scope.genotypeIdentifier) === 'undefined') ||
+                        (typeof(scope.geneIdentifier) !== 'undefined' &&
                          annotationType.feature_type === 'gene') ||
                        (typeof(scope.genotypeIdentifier) !== 'undefined' &&
                          annotationType.feature_type === 'genotype')) {

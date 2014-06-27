@@ -8,8 +8,8 @@
         <table class="list">
           <thead>
             <tr>
-              <th ng-if="annotationType.feature_type === 'gene'">Gene name</th>
-              <th ng-if="annotationType.feature_type === 'genotype'">Genotype name</th>
+              <th ng-if="annotationType.feature_type === 'gene' && !geneIdentifier">Gene name</th>
+              <th ng-if="annotationType.feature_type === 'genotype' && !genotypeIdentifier">Genotype name</th>
               <th>Term ID</th>
               <th>Term name</th>
               <th>Evidence code</th>
