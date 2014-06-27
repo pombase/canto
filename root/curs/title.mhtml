@@ -21,7 +21,6 @@ $show_title
   <% $title %>
 % }
 </div>
-</div>
 
 <%init>
 use Canto::Curs::State qw(:all);
