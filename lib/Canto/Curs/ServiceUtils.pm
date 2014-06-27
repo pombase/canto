@@ -193,6 +193,8 @@ sub change_annotation
 
     my $data = $annotation->data();
 
+    my $result = undef;
+
     my %valid_change_keys = (
       term_ontid => sub {
         my $term_ontid = shift;
@@ -210,7 +212,7 @@ sub change_annotation
       evidence_code => sub {
         my $evidence_code = shift;
 
-        if (defined $self->config()->{evidence_types}->{$evidence_code}) {
+        if ($self->config()->{evidence_types}->{$evidence_code}) {
           # do the default - set Annotation->data()->{...}
           return 0
         } else {
@@ -244,9 +246,15 @@ sub change_annotation
 
         # otherwise, fail through
       } catch {
-        return { status => 'error', message => $_ };
+        $result = { status => 'error', message => $_ };
       };
     }
+
+    if ($result) {
+      # error result
+      return $result;
+    }
+
 
     $data->{$key} = $changes->{$key};
   }
