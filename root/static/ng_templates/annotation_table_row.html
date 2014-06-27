@@ -15,7 +15,12 @@
   <td>{{annotation.conditions}}</td>
   <td>{{annotation.qualifiers}}</td>
   <td>{{annotation.term_suggestion.name}}</td>
-  <td>{{annotation.comment}}</td>
+  <td>
+    <span ng-if="!data.changes">{{annotation.comment}}</span>
+    <input ng-if="data.changes" type="text"
+           ng-model="data.changes.comment"
+           value="{{annotation.comment}}"/>
+  </td>
   <td>
     <span ng-if="!data.changes">{{annotation.annotation_extension | breakExtensions}}</span>
     <textarea ng-if="data.changes"
