@@ -749,14 +749,10 @@ function SubmitToCuratorsCtrl($scope) {
 
 canto.service('CantoConfig', function($http) {
   this.get = function(key) {
-      if (typeof(this.promise) === 'undefined') {
-        this.promise =
-          $http({method: 'GET',
-                 url: canto_root_uri + 'ws/canto_config/' + key,
-                 cache: true});
-      }
-      return this.promise;
-    };
+    return $http({method: 'GET',
+                  url: canto_root_uri + 'ws/canto_config/' + key,
+                  cache: true});
+  };
 });
 
 canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
