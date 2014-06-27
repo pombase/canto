@@ -4,6 +4,12 @@
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
 
+canto.filter('breakExtensions', function() {
+  return function(text) {
+    return text.replace(/,/g, ', ').replace(/\|/, " | ");
+  };
+});
+
 canto.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });

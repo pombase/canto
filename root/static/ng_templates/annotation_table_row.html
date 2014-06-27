@@ -16,7 +16,7 @@
   <td>{{annotation.qualifiers}}</td>
   <td>{{annotation.term_suggestion.name}}</td>
   <td>{{annotation.comment}}</td>
-  <td>{{annotation.annotation_extension}}</td>
+  <td>{{annotation.annotation_extension | breakExtensions}}</td>
   <td>{{annotation.curator}}</td>
   <td>
     <a ng-if="!data.changes" ng-click="edit()">Edit</a> 
