@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 7;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -79,3 +79,25 @@ is ($res->{status}, 'success');
 $first_genotype_annotation = $first_genotype->annotations()->first();
 
 is ($first_genotype_annotation->data()->{comment}, $new_comment);
+
+# test setting evidence_code
+$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+              'new',
+                                         {
+                                           key => $curs_key,
+                                           evidence_code => "IDA",
+                                         });
+is ($res->{status}, 'success');
+# re-query
+$first_genotype_annotation = $first_genotype->annotations()->first();
+is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
+
+
+# test illegal evidence_code
+$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           evidence_code => "illegal",
+                                         });
+is ($res->{status}, 'error');
