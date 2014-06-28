@@ -376,6 +376,9 @@ table.list tr.odd, table.list tr:nth-child(odd) {
 .list th a:link {
   color: #226
 }
+table.list td {
+  vertical-align: top;
+}
 
 table.list tr td {
   border-width: 1px;
