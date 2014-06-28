@@ -13,7 +13,8 @@
   </td>
   <td>
     <span ng-if="!data.changes">{{annotation.evidence_code}}</span>
-    <select ng-if="data.changes"
+    <select class="form-control"
+            ng-if="data.changes"
             ng-model="data.changes.evidence_code"
             ng-options="code for code in annotationType.evidence_codes">
       <option selected="selected" value="">Choose an evidence code ...</option>
@@ -27,22 +28,27 @@
             title="{{annotation.term_suggestion.definition}}">{{annotation.term_suggestion.name}}</span>
     </span>
     <div ng-if="data.changes">
-      <input type="text" placeholder="Name ..."
+      <input class="form-control"
+             type="text" placeholder="Name ..."
              ng-model="data.changes.term_suggestion.name"
              value="{{annotation.term_suggestion.name}}"/>
-      <textarea ng-if="data.changes" placeholder="Definition ..."
+      <textarea class="form-control"
+                ng-if="data.changes" placeholder="Definition ..."
                 ng-model="data.changes.term_suggestion.definition"
                 value="{{annotation.term_suggestion.definition}}"/>
     </div>
+  </td>
   <td>
     <span ng-if="!data.changes">{{annotation.comment}}</span>
-    <input ng-if="data.changes" type="text"
+    <input class="form-control"
+           ng-if="data.changes" type="text"
            ng-model="data.changes.comment"
            value="{{annotation.comment}}"/>
   </td>
   <td>
     <span ng-if="!data.changes">{{annotation.annotation_extension | breakExtensions}}</span>
-    <textarea ng-if="data.changes"
+    <textarea class="form-control"
+              ng-if="data.changes"
               ng-model="data.changes.annotation_extension"
               value="{{annotation.annotation_extension}}"/>
   </td>
