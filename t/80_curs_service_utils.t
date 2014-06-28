@@ -67,7 +67,7 @@ my $first_genotype_annotation = $first_genotype->annotations()->first();
 my $new_comment = "new service comment";
 my $changes = {
   key => $curs_key,
-  comment => $new_comment,
+  submitter_comment => $new_comment,
 };
 
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
@@ -78,7 +78,7 @@ is ($res->{status}, 'success');
 # re-query
 $first_genotype_annotation = $first_genotype->annotations()->first();
 
-is ($first_genotype_annotation->data()->{comment}, $new_comment);
+is ($first_genotype_annotation->data()->{submitter_comment}, $new_comment);
 
 # test setting evidence_code
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
