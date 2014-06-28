@@ -1,33 +1,39 @@
-<tr>
+<tr ng-class="{'inline-edit-active-row': data.changes}">
   <td ng-if="annotationType.feature_type === 'gene' && !geneIdentifier">{{annotation.gene_name_or_identifier}}</td>
   <td ng-if="annotationType.feature_type === 'genotype' && !genotypeIdentifier">{{annotation.genotype_display_name}}</td>
   <td>{{annotation.term_ontid}}</td>
   <td>
     <span ng-if="!data.changes">{{annotation.term_name}}</span>
+    <div ng-class="{'inline-edit-active': data.changes}">
     <term-name-complete ng-if="data.changes"
                         current-term-name="{{annotation.term_name}}"
                         found-term-id="data.changes.term_ontid"
                         found-term-name="data.changes.term_name"
                         annotation-type-name="{{annotationType.name}}">
     </term-name-complete>
+    </div>
   </td>
   <td>
     <span ng-if="!data.changes">{{annotation.evidence_code}}</span>
+    <div ng-class="{'inline-edit-active': data.changes}">
     <select class="form-control"
             ng-if="data.changes"
             ng-model="data.changes.evidence_code"
             ng-options="code for code in annotationType.evidence_codes">
       <option selected="selected" value="">Choose an evidence code ...</option>
     </select>
+    </div>
   </td>
   <td>
     <span ng-if="!data.changes">{{annotation.with_or_from_display_name || annotation.with_or_from_identifier}}</span>
+    <div ng-class="{'inline-edit-active': data.changes}">
     <select class="form-control"
             ng-if="data.changes && evidenceTypes[data.changes.evidence_code || annotation.evidence_code].with_gene"
             ng-model="data.changes.with_or_from_identifier"
             ng-options="gene.primary_identifier as gene.display_name for gene in genes">
       <option selected="selected" value="">Choose a gene ...</option>
     </select>
+    </div>
   </td>
   <td>{{annotation.conditions}}</td>
   <td>{{annotation.qualifiers}}</td>
@@ -36,7 +42,7 @@
       <span ng-if="annotation.term_suggestion"
             title="{{annotation.term_suggestion.definition}}">{{annotation.term_suggestion.name}}</span>
     </span>
-    <div ng-if="data.changes">
+    <div ng-if="data.changes" ng-class="{'inline-edit-active': data.changes}">
       <input class="form-control"
              type="text" placeholder="Name ..."
              ng-model="data.changes.term_suggestion.name"
@@ -49,22 +55,27 @@
   </td>
   <td>
     <span ng-if="!data.changes">{{annotation.submitter_comment}}</span>
+    <div ng-class="{'inline-edit-active': data.changes}">
     <input class="form-control"
            ng-if="data.changes" type="text"
            ng-model="data.changes.submitter_comment"
            value="{{annotation.submitter_comment}}"/>
+    </div>
   </td>
   <td>
     <span ng-if="!data.changes">{{annotation.annotation_extension | breakExtensions}}</span>
+    <div ng-class="{'inline-edit-active': data.changes}">
     <textarea class="form-control"
               ng-if="data.changes"
               ng-model="data.changes.annotation_extension"
               value="{{annotation.annotation_extension}}"/>
+    </div>
   </td>
   <td>{{annotation.curator}}</td>
   <td>
     <a ng-if="!data.changes" ng-click="edit()">Edit</a> 
-    <div ng-if="data.changes">
+    <div ng-class="{'inline-edit-active': data.changes}"
+         ng-if="data.changes">
       <div>
         <a ng-click="saveEdit()">Save</a>
       </div>

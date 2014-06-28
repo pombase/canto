@@ -15,12 +15,12 @@ var loadingDiv = $('<div id="loading"><img src="' + application_root +
 
 function loadingStart() {
   loadingDiv.show();
-  $('#content').addClass('faded-overlay');
+  $('#ajax-loading-overlay').show();
 }
 
 function loadingEnd() {
   loadingDiv.hide();
-  $('#content').removeClass('faded-overlay');
+  $('#ajax-loading-overlay').hide();  
 }
 
 $(document).ready(function() {
@@ -33,14 +33,8 @@ $(document).ready(function() {
       offset: '0 200'
     })
     .hide()  // hide it initially
-    .bind('ajaxStart.canto', function() {
-      $(this).show();
-      $('#content').addClass('faded-overlay');
-    })
-    .bind('ajaxStop.canto', function() {
-      $(this).hide();
-      $('#content').removeClass('faded-overlay');
-    });
+    .bind('ajaxStart.canto', loadingStart)
+    .bind('ajaxStop.canto', loadingEnd);
 });
 
 $(document).ready(function() {

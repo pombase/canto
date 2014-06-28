@@ -1244,3 +1244,24 @@ table tr td.curs-table-row-remove a span {
 a:not([href]) {
   cursor:pointer;
 }
+
+#disabled-overlay, #ajax-loading-overlay {
+  position: fixed;
+  display: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1500;
+}
+
+#disabled-overlay {
+  background-color: rgba(0,0,0,0.2);
+}
+
+.inline-edit-active {
+  z-index: 3000;
+  position: relative;
+  background-color: white;
+}
+

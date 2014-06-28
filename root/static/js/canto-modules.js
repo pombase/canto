@@ -957,6 +957,7 @@ var annotationTableRow =
         $scope.edit = function() {
           $scope.data.changes = {};
           copyObject($scope.annotation, $scope.data.changes);
+          $('#disabled-overlay').show();
         };
         $scope.saveEdit = function() {
           var changes = $scope.data.changes;
@@ -969,10 +970,12 @@ var annotationTableRow =
           })
           .finally(function() {
             loadingEnd();
+            $('#disabled-overlay').hide();
             $element.removeClass('edit-pending');
           });
         };
         $scope.cancelEdit = function() {
+          $('#disabled-overlay').hide();
           delete $scope.data.changes;
         };
       },
