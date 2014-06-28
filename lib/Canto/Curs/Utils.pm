@@ -45,13 +45,23 @@ use Clone qw(clone);
 
 use Canto::Curs::GeneProxy;
 
-# retrieve annotation data from the CursDB
-sub _make_ontology_annotation
+=head2 make_ontology_annotation
+
+ Usage   : my $hash = Canto::Curs::Utils::make_ontology_annotation(...);
+ Function: Retrieve the details of an annotation from the CursDB has a hash
+ Args    : $config - a Config object
+           $schema - the CursDB schema
+           $annotation - the Annotation to dump as a hash
+
+=cut
+
+sub make_ontology_annotation
 {
   my $config = shift;
   my $schema = shift;
   my $annotation = shift;
-  my $ontology_lookup = shift;
+  my $ontology_lookup = shift //
+    Canto::Track::get_adaptor($config, 'ontology');
 
   my $data = $annotation->data();
   my $term_ontid = $data->{term_ontid};
@@ -91,10 +101,6 @@ sub _make_ontology_annotation
                                                   $data->{conditions});
     } else {
       $conditions_string = '';
-    }
-
-    if (!defined $genotype) {
-      warn $annotation->annotation_id();
     }
 
     %genotype_details = (
@@ -394,8 +400,8 @@ sub get_annotation_table
   while (defined (my $annotation = $annotation_rs->next())) {
     my @entries;
     if ($annotation_type_category eq 'ontology') {
-      @entries = _make_ontology_annotation($config, $schema, $annotation,
-                                            $ontology_lookup);
+      @entries = make_ontology_annotation($config, $schema, $annotation,
+                                          $ontology_lookup);
     } else {
       if ($annotation_type_category eq 'interaction') {
         @entries = _make_interaction_annotation($config, $schema, $annotation, $constrain_gene);

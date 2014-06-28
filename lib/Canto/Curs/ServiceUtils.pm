@@ -238,7 +238,10 @@ sub change_annotation
  CHANGE: for my $key (keys %$changes) {
     my $conf = $valid_change_keys{$key};
 
-    next unless defined $conf;
+    if (!defined $conf) {
+      return { status => 'error',
+               message => "no such annotation field type: $key" };
+    }
 
     my $value = $changes->{$key};
 
@@ -249,6 +252,7 @@ sub change_annotation
 
         # otherwise, fail through
       } catch {
+        chomp $_;
         $result = { status => 'error', message => $_ };
       };
     }
@@ -258,14 +262,19 @@ sub change_annotation
       return $result;
     }
 
-
     $data->{$key} = $changes->{$key};
   }
 
   $annotation->data($data);
   $annotation->update();
 
-  return { status => 'success' };
+  my $annotation_hash =
+    Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                 $self->curs_schema(),
+                                                 $annotation);
+
+  return { status => 'success',
+           annotation => $annotation_hash };
 }
 
 1;

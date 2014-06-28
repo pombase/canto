@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::More tests => 14;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -59,8 +59,10 @@ cmp_deeply($res,
             },
           ]);
 
+my $genotype_identifier = 'h+ SPCC63.05delta ssm4KE';
+
 my $first_genotype =
-  $curs_schema->resultset('Genotype')->find({ identifier => 'h+ SPCC63.05delta ssm4KE' });
+  $curs_schema->resultset('Genotype')->find({ identifier => $genotype_identifier });
 
 my $first_genotype_annotation = $first_genotype->annotations()->first();
 
@@ -74,6 +76,8 @@ $res = $service_utils->change_annotation($first_genotype_annotation->annotation_
                                          'new', $changes);
 
 is ($res->{status}, 'success');
+is ($res->{annotation}->{term_ontid}, 'FYPO:0000013');
+is ($res->{annotation}->{genotype_identifier}, $genotype_identifier);
 
 # re-query
 $first_genotype_annotation = $first_genotype->annotations()->first();
@@ -82,7 +86,7 @@ is ($first_genotype_annotation->data()->{submitter_comment}, $new_comment);
 
 # test setting evidence_code
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-              'new',
+                                         'new',
                                          {
                                            key => $curs_key,
                                            evidence_code => "IDA",
@@ -101,3 +105,26 @@ $res = $service_utils->change_annotation($first_genotype_annotation->annotation_
                                            evidence_code => "illegal",
                                          });
 is ($res->{status}, 'error');
+is ($res->{message}, 'no such evidence code: illegal');
+
+
+# test illegal curs_key
+$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => 'illegal',
+                                           evidence_code => "IDA",
+                                         });
+is ($res->{status}, 'error');
+is ($res->{message}, 'incorrect key');
+
+
+# test illegal field type
+$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           illegal => "something",
+                                         });
+is ($res->{status}, 'error');
+is ($res->{message}, 'no such annotation field type: illegal');

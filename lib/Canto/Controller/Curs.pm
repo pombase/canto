@@ -3519,7 +3519,6 @@ sub ws_change_annotation : Chained('ws_annotation') PathPart('change')
 
   $c->stash->{json_data} =
     $service_utils->change_annotation($annotation_id, $status, $json_data);
-  $c->stash->{json_data} = { status => "success" };
 
   $c->forward('View::JSON');
 }
