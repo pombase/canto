@@ -189,7 +189,7 @@ sub _make_ontology_annotation
     evidence_code => $evidence_code,
     creation_date => $annotation->creation_date(),
     creation_date_short => $short_date,
-    comment => $data->{submitter_comment},
+    submitter_comment => $data->{submitter_comment},
     term_suggestion => $data->{term_suggestion},
     needs_with => $needs_with,
     with_or_from_identifier => $with_gene_identifier,
@@ -290,7 +290,7 @@ sub _make_interaction_annotation
             interacting_gene_id => $interacting_gene_proxy->gene_id(),
             score => '',  # for biogrid format output
             phenotypes => '',
-            comment => '',
+            submitter_comment => '',
             completed => 1,
             annotation_id => $annotation->annotation_id(),
             annotation_type => $annotation_type,

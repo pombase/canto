@@ -48,11 +48,11 @@
     </div>
   </td>
   <td>
-    <span ng-if="!data.changes">{{annotation.comment}}</span>
+    <span ng-if="!data.changes">{{annotation.submitter_comment}}</span>
     <input class="form-control"
            ng-if="data.changes" type="text"
-           ng-model="data.changes.comment"
-           value="{{annotation.comment}}"/>
+           ng-model="data.changes.submitter_comment"
+           value="{{annotation.submitter_comment}}"/>
   </td>
   <td>
     <span ng-if="!data.changes">{{annotation.annotation_extension | breakExtensions}}</span>

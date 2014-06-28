@@ -67,7 +67,7 @@ $view_only => 0
       </th>
 %   }
       <th>
-        Comment
+        Submitter comment
       </th>
 % if ($show_extension_column) {
       <th>
@@ -231,7 +231,7 @@ NOT
       <span>
 % {
 % my $url = $comment_edit_url  . $row->{annotation_id};
-% my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'comment', $row);
+% my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'submitter_comment', $row);
 %   if ($view_only && !$force_comment_edit) {
       <% $escaped_text %>
 %   } else {

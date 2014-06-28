@@ -228,7 +228,7 @@ sub change_annotation
 #        } else { die "...." }
         die;
       },
-      comment => 1,
+      submitter_comment => 1,
       annotation_extension => 1,
       term_suggestion => 1,
     );
