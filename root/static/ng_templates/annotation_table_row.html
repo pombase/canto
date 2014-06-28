@@ -21,10 +21,10 @@
     </select>
   </td>
   <td>
-    <span ng-if="!data.changes">{{annotation.with_or_from_display_name}}</span>
+    <span ng-if="!data.changes">{{annotation.with_or_from_display_name || annotation.with_or_from_identifier}}</span>
     <select class="form-control"
             ng-if="data.changes && evidenceTypes[data.changes.evidence_code || annotation.evidence_code].with_gene"
-            ng-model="data.changes.with_or_from_identifer"
+            ng-model="data.changes.with_or_from_identifier"
             ng-options="gene.primary_identifier as gene.display_name for gene in genes">
       <option selected="selected" value="">Choose a gene ...</option>
     </select>
