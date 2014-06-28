@@ -107,7 +107,7 @@ canto.service('AnnotationProxy', function(Curs, $q, $http) {
     putQ.success(function(response) {
       if (response.status === 'success') {
         // update local copy
-        copyObject(changes, annotation);
+        copyObject(response.annotation, annotation);
         q.resolve(annotation);
       } else {
         q.reject(response.message);
