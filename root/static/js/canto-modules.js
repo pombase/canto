@@ -909,7 +909,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function(AnnotationProxy, AnnotationTypeConfig) {
+  function(AnnotationProxy, AnnotationTypeConfig, CantoConfig, Curs) {
     return {
       restrict: 'A',
       replace: true,
@@ -921,6 +921,21 @@ var annotationTableRow =
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
           });
+
+        CantoConfig.get('evidence_types').success(function(results) {
+          $scope.evidenceTypes = results;
+        });
+
+        Curs.list('gene').success(function(results) {
+          $scope.genes = results;
+
+          $.map($scope.genes,
+                function(gene) {
+                  gene.display_name = gene.primary_name || gene.primary_identifier;
+                });
+        }).error(function() {
+          alert("couldn't read the gene list from the server");
+        });
 
         $scope.edit = function() {
           $scope.data.changes = {};
@@ -949,7 +964,7 @@ var annotationTableRow =
     };
   };
 
-canto.directive('annotationTableRow', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTableRow]);
+canto.directive('annotationTableRow', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoConfig', 'Curs', annotationTableRow]);
 
 
 var termNameComplete =
