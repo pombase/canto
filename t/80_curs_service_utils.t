@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 19;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -78,6 +78,7 @@ $res = $service_utils->change_annotation($first_genotype_annotation->annotation_
 is ($res->{status}, 'success');
 is ($res->{annotation}->{term_ontid}, 'FYPO:0000013');
 is ($res->{annotation}->{genotype_identifier}, $genotype_identifier);
+is ($res->{annotation}->{submitter_comment}, $new_comment);
 
 # re-query
 $first_genotype_annotation = $first_genotype->annotations()->first();
@@ -95,6 +96,24 @@ is ($res->{status}, 'success');
 # re-query
 $first_genotype_annotation = $first_genotype->annotations()->first();
 is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
+is ($res->{annotation}->{with_or_from_identifier}, undef);
+
+
+# test setting with_gene/with_or_from_identifier
+my $new_with = "SPCC63.05";
+$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           with_or_from_identifier => $new_with,
+                                         });
+is ($res->{status}, 'success');
+is ($res->{annotation}->{with_or_from_identifier}, $new_with);
+
+# re-query
+$first_genotype_annotation = $first_genotype->annotations()->first();
+is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
+
 
 
 # test illegal evidence_code

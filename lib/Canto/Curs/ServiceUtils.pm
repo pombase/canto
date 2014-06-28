@@ -45,6 +45,7 @@ use JSON;
 use Canto::Curs::GeneProxy;
 use Canto::Curs::Utils;
 use Try::Tiny;
+use Scalar::Util qw(looks_like_number);
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::MetadataAccess';
@@ -153,6 +154,18 @@ sub list_for_service
   }
 }
 
+sub _check_gene_identifier
+{
+  my $schema = shift;
+  my $gene_identifier = shift;
+
+  if (defined $schema->resultset('Gene')->find({ primary_identifier => $gene_identifier })) {
+    return;
+  } else {
+    die "no such gene: $gene_identifier\n";
+  }
+}
+
 =head2
 
  Usage   : $service_utils->change_annotation($annotation_id, 'new'|'existing',
@@ -232,6 +245,15 @@ sub change_annotation
       },
       submitter_comment => 1,
       annotation_extension => 1,
+      with_or_from_identifier => sub {
+        my $gene_identifier = shift;
+
+        # dies on failure
+        _check_gene_identifier($self->curs_schema(), $gene_identifier);
+
+        # set this field
+        return "with_gene";
+      },
       term_suggestion => 1,
     );
 
@@ -245,10 +267,20 @@ sub change_annotation
 
     my $value = $changes->{$key};
 
+    my $key_to_set = $key;
+
     if (ref $conf eq 'CODE') {
       try {
         my $res = $conf->($value);
-        next CHANGE if $res;
+
+        if ($res) {
+          if (looks_like_number($res)) {
+            next CHANGE;
+          } else {
+            # it returns a different key to set
+            $key_to_set = $res;
+          }
+        }
 
         # otherwise, fail through
       } catch {
@@ -262,7 +294,7 @@ sub change_annotation
       return $result;
     }
 
-    $data->{$key} = $changes->{$key};
+    $data->{$key_to_set} = $changes->{$key};
   }
 
   $annotation->data($data);
