@@ -94,7 +94,7 @@ Gene details
 
 <annotation-table-list gene-identifier="<% $gene->primary_identifier() %>"></annotation-table-list>
 
-<div id="curs-annotation-tables" class="sect">
+<div id="curs-annotation-tables" class="sect" style="display: none">
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,

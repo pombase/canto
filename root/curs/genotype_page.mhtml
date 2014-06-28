@@ -87,14 +87,14 @@ Name
   </div>
 </div>
 
-<annotation-table-list genotype-identifier="<% $genotype_identifier %>"></annotation-table-list>
-
 <div class="clearall"/>
 
 <button type="button" id="curs-finish-genotype" class="btn btn-primary
 curs-back-button"><% $finish_text %></button>
 
-<div id="curs-annotation-tables" class="sect">
+<annotation-table-list genotype-identifier="<% $genotype_identifier %>"></annotation-table-list>
+
+<div id="curs-annotation-tables" class="sect" style="display: none">
 % for my $annotation_type (@types_to_show) {
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
