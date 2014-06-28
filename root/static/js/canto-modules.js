@@ -99,6 +99,9 @@ canto.service('AnnotationProxy', function(Curs, $q, $http) {
     copyIfChanged(annotation, changes, changesToStore);
     changesToStore.key = curs_key;
 
+    // we send term_ontid, so this is unneeded
+    delete changesToStore.term_name;
+
     var putQ = $http.put(curs_root_uri + '/ws/annotation/' + annotation.annotation_id +
                          '/new/change', changesToStore);
     putQ.success(function(response) {

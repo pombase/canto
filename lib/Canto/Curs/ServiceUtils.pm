@@ -214,8 +214,12 @@ sub change_annotation
     term_ontid => sub {
       my $term_ontid = shift;
 
+      if (!defined $term_ontid) {
+        die "no term_ontid passed to change_annotation()\n";
+      }
+
       my $lookup = Canto::Track::get_adaptor($self->config(), 'ontology');
-      my $res = $lookup->lookup_by_id({ id => $term_ontid });
+      my $res = $lookup->lookup_by_id( id => $term_ontid );
 
       if (defined $res) {
         # do the default - set Annotation->data()->{...}

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 23;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -84,6 +84,22 @@ is ($res->{annotation}->{submitter_comment}, $new_comment);
 $first_genotype_annotation = $first_genotype->annotations()->first();
 
 is ($first_genotype_annotation->data()->{submitter_comment}, $new_comment);
+
+
+# test change a term
+$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           term_ontid => 'FYPO:0000133'
+                                         });
+is ($res->{status}, 'success');
+# re-query
+$first_genotype_annotation = $first_genotype->annotations()->first();
+is ($first_genotype_annotation->data()->{term_ontid}, "FYPO:0000133");
+is ($res->{annotation}->{term_ontid}, 'FYPO:0000133');
+is ($res->{annotation}->{term_name}, 'elongated multinucleate cells');
+
 
 # test setting evidence_code
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
