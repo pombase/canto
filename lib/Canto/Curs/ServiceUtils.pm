@@ -184,78 +184,78 @@ sub _check_gene_identifier
 =cut
 
 sub change_annotation
-  {
-    my $self = shift;
-    my $annotation_id = shift;
-    my $annotation_status = shift;
+{
+  my $self = shift;
+  my $annotation_id = shift;
+  my $annotation_status = shift;
 
-    my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
-    my $changes = shift;
+  my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
+  my $changes = shift;
 
-    if (!defined $changes->{key} || $changes->{key} ne $curs_key) {
-      return { status => 'error', message => 'incorrect key' };
-    }
+  if (!defined $changes->{key} || $changes->{key} ne $curs_key) {
+    return { status => 'error', message => 'incorrect key' };
+  }
 
-    delete $changes->{key};
+  delete $changes->{key};
 
-    my $annotation;
+  my $annotation;
 
-    if ($annotation_status eq 'new') {
-      $annotation = $self->curs_schema()->resultset('Annotation')->find($annotation_id);
-    } else {
-      die "annotation status unsupported: $annotation_status\n";
-    }
+  if ($annotation_status eq 'new') {
+    $annotation = $self->curs_schema()->resultset('Annotation')->find($annotation_id);
+  } else {
+    die "annotation status unsupported: $annotation_status\n";
+  }
 
-    my $data = $annotation->data();
+  my $data = $annotation->data();
 
-    my $result = undef;
+  my $result = undef;
 
-    my %valid_change_keys = (
-      term_ontid => sub {
-        my $term_ontid = shift;
+  my %valid_change_keys = (
+    term_ontid => sub {
+      my $term_ontid = shift;
 
-        my $lookup = Canto::Track::get_adaptor($self->config(), 'ontology');
-        my $res = $lookup->lookup_by_id({ id => $term_ontid });
+      my $lookup = Canto::Track::get_adaptor($self->config(), 'ontology');
+      my $res = $lookup->lookup_by_id({ id => $term_ontid });
 
-        if (defined $res) {
-          # do the default - set Annotation->data()->{...}
-          return 0;
-        } else {
-          die "no such term ID: $term_ontid";
-        }
-      },
-      evidence_code => sub {
-        my $evidence_code = shift;
+      if (defined $res) {
+        # do the default - set Annotation->data()->{...}
+        return 0;
+      } else {
+        die "no such term ID: $term_ontid";
+      }
+    },
+    evidence_code => sub {
+      my $evidence_code = shift;
 
-        if ($self->config()->{evidence_types}->{$evidence_code}) {
-          # do the default - set Annotation->data()->{...}
-          return 0
-        } else {
-          die "no such evidence code: $evidence_code\n";
-        }
-      },
-      gene_identifier => sub {
-        my $gene_identifier = shift;
+      if ($self->config()->{evidence_types}->{$evidence_code}) {
+        # do the default - set Annotation->data()->{...}
+        return 0
+      } else {
+        die "no such evidence code: $evidence_code\n";
+      }
+    },
+    gene_identifier => sub {
+      my $gene_identifier = shift;
 
 #        if (valid gene_identifier) {
 #          <change it>
 #          return 1;
 #        } else { die "...." }
-        die;
-      },
-      submitter_comment => 1,
-      annotation_extension => 1,
-      with_or_from_identifier => sub {
-        my $gene_identifier = shift;
+      die;
+    },
+    submitter_comment => 1,
+    annotation_extension => 1,
+    with_or_from_identifier => sub {
+      my $gene_identifier = shift;
 
-        # dies on failure
-        _check_gene_identifier($self->curs_schema(), $gene_identifier);
+      # dies on failure
+      _check_gene_identifier($self->curs_schema(), $gene_identifier);
 
-        # set this field
-        return "with_gene";
-      },
-      term_suggestion => 1,
-    );
+      # set this field
+      return "with_gene";
+    },
+    term_suggestion => 1,
+  );
 
  CHANGE: for my $key (keys %$changes) {
     my $conf = $valid_change_keys{$key};
