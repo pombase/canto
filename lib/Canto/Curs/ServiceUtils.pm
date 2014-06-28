@@ -183,6 +183,8 @@ sub change_annotation
       return { status => 'error', message => 'incorrect key' };
     }
 
+    delete $changes->{key};
+
     my $annotation;
 
     if ($annotation_status eq 'new') {
