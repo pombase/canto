@@ -4,6 +4,21 @@
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
 
+function copyObject(src, dest) {
+  Object.getOwnPropertyNames(src).forEach(function(key) {
+    dest[key] = src[key];
+  });
+}
+
+// for each property in changedObj, copy to dest when it's different to origObj
+function copyIfChanged(origObj, changedObj, dest) {
+  Object.getOwnPropertyNames(changedObj).forEach(function(key) {
+    if (changedObj[key] !== origObj[key]) {
+      dest[key] = changedObj[key];
+    }
+  });
+}
+
 canto.filter('breakExtensions', function() {
   return function(text) {
     return text.replace(/,/g, ', ').replace(/\|/, " | ");
@@ -77,17 +92,19 @@ canto.service('AnnotationProxy', function(Curs, $q, $http) {
     };
 
   this.storeChanges = function(annotation, changes) {
-    changes.key = curs_key;
     var q = $q.defer();
 
+    var changesToStore = {};
+
+    copyIfChanged(annotation, changes, changesToStore);
+    changesToStore.key = curs_key;
+
     var putQ = $http.put(curs_root_uri + '/ws/annotation/' + annotation.annotation_id +
-                      '/new/change', changes);
+                         '/new/change', changesToStore);
     putQ.success(function(response) {
       if (response.status === 'success') {
         // update local copy
-        Object.getOwnPropertyNames(changes).forEach(function(key) {
-          annotation[key] = changes[key];
-        });
+        copyObject(changes, annotation);
         q.resolve(annotation);
       } else {
         q.reject(response.message);
@@ -939,6 +956,7 @@ var annotationTableRow =
 
         $scope.edit = function() {
           $scope.data.changes = {};
+          copyObject($scope.annotation, $scope.data.changes);
         };
         $scope.saveEdit = function() {
           var changes = $scope.data.changes;
