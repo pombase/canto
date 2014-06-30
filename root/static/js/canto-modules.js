@@ -21,6 +21,9 @@ function copyIfChanged(origObj, changedObj, dest) {
 
 canto.filter('breakExtensions', function() {
   return function(text) {
+    if (typeof(text) === 'undefined') {
+      return '';
+    }
     return text.replace(/,/g, ', ').replace(/\|/, " | ");
   };
 });
