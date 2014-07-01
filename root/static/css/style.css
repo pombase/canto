@@ -1268,3 +1268,7 @@ a:not([href]) {
   background-color: white;
 }
 
+.curs-no-annotations-message {
+  margin: 10px 10px 10px 20px;
+  color: grey;
+}

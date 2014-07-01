@@ -1,15 +1,13 @@
 <div ng-switch="annotationType.category">
   <div ng-switch-when="ontology">
-    <div ng-if="annotations.length > 0">
-      <div>
-        <span class="title sect-title">
+    <span class="title sect-title">
 {{annotationType.display_name}} annotations from this session
-        </span>
-        <span>
-          <a ng-click="addNew(geneIdentifier)">Add ...</a>
-        </span>
-      </div>
-      <div class="annotation-table sect-content">
+    </span>
+    <span>
+      <a ng-click="addNew(geneIdentifier)">Add ...</a>
+    </span>
+    <div ng-switch="annotations.length > 0">
+      <div ng-switch-when="true" class="annotation-table sect-content">
         <table class="list">
           <thead>
             <tr>
@@ -32,6 +30,9 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div ng-switch-when="false" class="curs-no-annotations-message">
+        No annotations yet
       </div>
     </div>
   </div>
