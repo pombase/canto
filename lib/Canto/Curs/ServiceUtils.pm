@@ -39,6 +39,7 @@ under the same terms as Perl itself.
 use strict;
 use warnings;
 use Moose;
+use Carp;
 
 use JSON;
 
@@ -46,11 +47,32 @@ use Canto::Curs::GeneProxy;
 use Canto::Curs::Utils;
 use Try::Tiny;
 use Scalar::Util qw(looks_like_number);
+use Clone qw(clone);
+
+has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
+
+has ontology_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
+
+has state => (is => 'rw', init_arg => undef,
+              isa => 'Canto::Curs::State', lazy_build => 1);
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::MetadataAccess';
+with 'Canto::Curs::Role::CuratorSet';
 
-has curs_schema => (is => 'ro', isa => 'Canto::CursDB');
+sub _build_state
+{
+  my $self = shift;
+
+  return $self->state(Canto::Curs::State->new(config => $self->config()));
+}
+
+sub _build_ontology_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'ontology');
+}
 
 sub _get_annotation
 {
@@ -166,45 +188,119 @@ sub _check_gene_identifier
   }
 }
 
-=head2
-
- Usage   : $service_utils->change_annotation($annotation_id, 'new'|'existing',
-                                             $changes);
- Function: Change an annotation in the Curs database based on the $changes hash.
- Args    : $annotation_id
-           $status - 'new' if the annotation ID refers to a user created
-                      annotation
-                     'existing' if the ID refers to a existing Chado/external
-                     ID, probably a feature_id
-           $changes - a hash that specifies which parts of the annotation are
-                      to change, with these possible keys:
-                      comment - set the comment
- Return  :
-
-=cut
-
-sub change_annotation
+sub _term_name_from_id
 {
   my $self = shift;
-  my $annotation_id = shift;
-  my $annotation_status = shift;
+  my $term_id = shift;
+
+  my $lookup = $self->ontology_lookup();
+  my $res = $lookup->lookup_by_id(id => $term_id);
+
+  if (defined $res) {
+    return $res->{name};
+  } else {
+    return undef;
+  }
+}
+
+sub make_annotation
+{
+  my ($self, $gene_identifier, $pub, $annotation_type_name, $data_arg) = @_;
+
+  if (!$data_arg) {
+    croak "no \$data passed to make_annotation()\n";
+  }
+
+  my $data = clone $data_arg;
+
+  if (!$gene_identifier) {
+    croak "no gene_identifier passed to make_annotation()\n";
+  }
+
+  if (!$pub) {
+    croak "no publication passed to make_annotation()\n";
+  }
+
+  if (!$annotation_type_name) {
+    croak "no annotation_type_name passed to make_annotation()\n";
+  }
+
+  my $curs_schema = self->curs_schema();
+
+  my $gene = $curs_schema->find_with_type('Gene', { primary_identifier => $gene_identifier });
+
+  my $evidence_types = $self->config()->{evidence_types};
+
+  my $evidence_code = $data->{evidence_code};
+  if (!defined $evidence_code) {
+    croak "Adding annotation failed - no evidence_code\n";
+  }
+
+  my $term_ontid = $data->{term_ontid};
+  if (!defined $term_ontid) {
+    croak "Adding annotation failed - no term ID\n";
+  }
+  if (!defined $self->_term_name_from_id($term_ontid)) {
+    croak "Adding annotation failed - invalid term ID\n";
+  }
+
+  my %annotation_data = (
+    term_ontid => $term_ontid,
+  );
+
+  my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
+  if ($needs_with_gene) {
+    if ($data->{with_gene}) {
+      my $with_gene_object;
+
+      eval {
+        $with_gene_object =
+          $curs_schema->find_with_type('Gene', { gene_id => $data->{with_gene} });
+      };
+
+      if (defined $with_gene_object) {
+        $data->{with_gene} = $with_gene_object->primary_identifier();
+      } else {
+        die "can't find 'with' gene: ", $data->{with_gene}, "\n";
+      }
+    } else {
+      die "no 'with' with passed in the data object to make_annotation()\n";
+    }
+  }
+
+  my $current_date = Canto::Curs::Utils::get_iso_date();
+  my $new_annotation =
+    $curs_schema->create_with_type('Annotation',
+                                   {
+                                     type => $annotation_type_name,
+                                     status => 'new',
+                                     pub => $pub,
+                                     creation_date => $current_date,
+                                     data => { },
+                                   });
+
+  $self->_store_change_hash($new_annotation, $data);
+
+  $self->set_annotation_curator($new_annotation);
+
+  $new_annotation->set_genes($gene);
+
+  return $new_annotation;
+}
+
+sub _store_change_hash
+{
+  my $self = shift;
+  my $annotation = shift;
+  my $changes = shift;
 
   my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
-  my $changes = shift;
 
   if (!defined $changes->{key} || $changes->{key} ne $curs_key) {
     return { status => 'error', message => 'incorrect key' };
   }
 
   delete $changes->{key};
-
-  my $annotation;
-
-  if ($annotation_status eq 'new') {
-    $annotation = $self->curs_schema()->resultset('Annotation')->find($annotation_id);
-  } else {
-    die "annotation status unsupported: $annotation_status\n";
-  }
 
   my $data = $annotation->data();
 
@@ -303,14 +399,112 @@ sub change_annotation
 
   $annotation->data($data);
   $annotation->update();
+}
 
-  my $annotation_hash =
-    Canto::Curs::Utils::make_ontology_annotation($self->config(),
-                                                 $self->curs_schema(),
-                                                 $annotation);
 
-  return { status => 'success',
-           annotation => $annotation_hash };
+=head2
+
+ Usage   : $service_utils->change_annotation($annotation_id, 'new'|'existing',
+                                             $changes);
+ Function: Change an annotation in the Curs database based on the $changes hash.
+ Args    : $annotation_id
+           $status - 'new' if the annotation ID refers to a user created
+                      annotation
+                     'existing' if the ID refers to a existing Chado/external
+                     ID, probably a feature_id
+           $changes - a hash that specifies which parts of the annotation are
+                      to change, with these possible keys:
+                      comment - set the comment
+ Return  :
+
+=cut
+
+sub change_annotation
+{
+  my $self = shift;
+  my $annotation_id = shift;
+  my $annotation_status = shift;
+
+  my $pub_id = $self->get_metadata($self->curs_schema(), 'curation_pub_id');
+  my $pub = $self->curs_schema()->resultset('Pub')->find($pub_id);
+
+  my $changes = shift;
+
+  my $annotation = undef;
+
+  if ($annotation_status eq 'new') {
+    $annotation = $self->curs_schema()->resultset('Annotation')->find($annotation_id);
+  } else {
+    die "annotation status unsupported: $annotation_status\n";
+  }
+
+  try {
+    $self->_store_change_hash($annotation, $changes);
+
+    my $annotation_hash =
+      Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                   $self->curs_schema(),
+                                                   $annotation);
+    return { status => 'success',
+             annotation => $annotation_hash };
+  } catch {
+    chomp $_;
+    return { status => 'error',
+             message => $_ };
+  };
+}
+
+=head2
+
+ Usage   : $service_utils->create_annotation($data_hash);
+ Function: Create an annotation in the Curs database based on the $details hash.
+ Args    : $details - annotation details:
+             - gene_identifier: a valid gene primary_identifier
+                                (eg. "SPAC27D7.13c") - required
+             - annotation_type: a CV name (eg. "molecular_function") - required
+             - term_ontid: a term accession (eg. "GO:0000137") - required
+
+ Return  : A hash of information about the new annotation suitable for returning
+           as a JSON string
+
+=cut
+
+sub create_annotation
+{
+  my $self = shift;
+  my $details = shift;
+
+  my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
+  my $pub_id = $self->get_metadata($self->curs_schema(), 'curation_pub_id');
+  my $pub = $self->curs_schema()->resultset('Pub')->find($pub_id);
+
+  my $gene_identifier = delete $details->{gene_identifier};
+
+  if (!defined $gene_identifier) {
+    croak "no gene_identifier passed in changes hash\n";
+  }
+
+  my $annotation_type_name = delete $details->{annotation_type};
+
+  if (!defined $annotation_type_name) {
+    croak "no annotation_type passed in changes hash\n";
+  }
+
+  try {
+    my $annotation = $self->make_annotation($gene_identifier, $pub,
+                                            $annotation_type_name, $details);
+    my $annotation_hash =
+      Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                   $self->curs_schema(),
+                                                   $annotation);
+
+    return { status => 'success',
+             annotation => $annotation_hash };
+  } catch {
+    chomp $_;
+    return { status => 'error',
+             message => $_ };
+  };
 }
 
 1;

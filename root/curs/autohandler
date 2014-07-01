@@ -17,6 +17,8 @@ var annotation_type_config = <% $annotation_type_config_js |n %>;
 
 <div class="curs-content" ng-app="cantoApp">
 
+<toaster-container></toaster-container>
+
 <div id="curs-dialog" style="display: none">
 
 </div>

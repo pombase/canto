@@ -163,3 +163,20 @@ $res = $service_utils->change_annotation($first_genotype_annotation->annotation_
                                          });
 is ($res->{status}, 'error');
 is ($res->{message}, 'no such annotation field type: illegal');
+
+
+# create a new Annotation
+$res = $service_utils->change_annotation(undef,
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           gene_identifier => 'SPAC27D7.13c',
+                                           annotation_type => 'molecular_function',
+                                           term_ontid => 'GO:0022857',
+                                           evidence_code => 'IDA',
+                                         });
+is ($res->{status}, 'success');
+
+use Data::Dumper;
+$Data::Dumper::Maxdepth = 3;
+warn Dumper([$res->{annotation}]);

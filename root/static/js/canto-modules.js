@@ -2,7 +2,24 @@
 
 /*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key */
 
-var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable']);
+var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable', 'toaster']);
+
+function countKeys(o) {
+  var size = 0, key;
+  for (key in o) {
+    if (key.indexOf('$$') !== 0 && o.hasOwnProperty(key)) {
+      size++;
+    }
+  }
+  return size;
+}
+
+function arrayRemoveOne(array, item) {
+  var i = array.indexOf(item);
+  if (i >= 0) {
+    array.splice(i, 1);
+  }
+};
 
 function copyObject(src, dest) {
   Object.getOwnPropertyNames(src).forEach(function(key) {
@@ -57,7 +74,8 @@ canto.service('AlleleService', function(CantoService) {
   };
 });
 
-canto.service('AnnotationProxy', function(Curs, $q, $http) {
+var annotationProxy =
+  function(Curs, $q, $http) {
   this.allAnnotationQ = undefined;
 
   this.getAllAnnotation = function() {
@@ -99,14 +117,31 @@ canto.service('AnnotationProxy', function(Curs, $q, $http) {
 
     var changesToStore = {};
 
-    copyIfChanged(annotation, changes, changesToStore);
+    if (changes.newly_added) {
+      // special case, copy everything
+      changesToStore = changes;
+    } else {
+      copyIfChanged(annotation, changes, changesToStore);
+
+      if (countKeys(changesToStore) === 0) {
+        q.reject('No changes to store');
+        return q.promise;
+      }
+    }
+
     changesToStore.key = curs_key;
 
     // we send term_ontid, so this is unneeded
     delete changesToStore.term_name;
 
-    var putQ = $http.put(curs_root_uri + '/ws/annotation/' + annotation.annotation_id +
-                         '/new/change', changesToStore);
+    var putQ;
+
+    if (annotation.annotation_id === undefined) {
+      putQ = $http.put(curs_root_uri + '/ws/annotation/create', changesToStore);
+    } else {
+      putQ = $http.put(curs_root_uri + '/ws/annotation/' + annotation.annotation_id +
+                       '/new/change', changesToStore);
+    }
     putQ.success(function(response) {
       if (response.status === 'success') {
         // update local copy
@@ -121,7 +156,9 @@ canto.service('AnnotationProxy', function(Curs, $q, $http) {
 
     return q.promise;
   };
-});
+};
+
+canto.service('AnnotationProxy', ['Curs', '$q', '$http', annotationProxy]);
 
 canto.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
@@ -876,13 +913,22 @@ var annotationTable =
       restrict: 'E',
       replace: true,
       templateUrl: application_root + '/static/ng_templates/annotation_table.html',
-      link: function(scope, elem) {
+      controller: function($scope) {
+        $scope.addNew = function() {
+          $scope.annotations.push({
+            newly_added: true,
+            gene_identifier: $scope.geneIdentifier,
+            annotation_type: $scope.annotationTypeName });
+        };
+      },
+      link: function(scope) {
         scope.annotations = [];
         AnnotationProxy.getFiltered({annotationTypeName: scope.annotationTypeName,
                                      genotypeIdentifier: scope.genotypeIdentifier,
-                                     geneIdentifier: scope.geneIdentifier }).then(function(annotations) {
-                                       scope.annotations = annotations;
-                                     });
+                                     geneIdentifier: scope.geneIdentifier
+                                    }).then(function(annotations) {
+                                      scope.annotations = annotations;
+                                    });
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
           scope.annotationType = annotationType;
         });
@@ -932,7 +978,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function(AnnotationProxy, AnnotationTypeConfig, CantoConfig, Curs) {
+  function(AnnotationProxy, AnnotationTypeConfig, CantoConfig, Curs, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -940,7 +986,10 @@ var annotationTableRow =
       controller: function($scope, $element) {
         $scope.data = {};
 
-        AnnotationTypeConfig.getByName($scope.annotation.annotation_type)
+        var annotation = $scope.annotation;
+
+        AnnotationTypeConfig.getByName(annotation.annotation_type ||
+                                       annotation.changes.annotation_type)
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
           });
@@ -961,18 +1010,20 @@ var annotationTableRow =
         });
 
         $scope.edit = function() {
-          $scope.data.changes = {};
-          copyObject($scope.annotation, $scope.data.changes);
+          var changes = {};
+          copyObject($scope.annotation, changes);
+          $scope.annotation.changes = changes;
           $('#disabled-overlay').show();
         };
         $scope.saveEdit = function() {
-          var changes = $scope.data.changes;
-          delete $scope.data.changes;
+          var changes = $scope.annotation.changes;
+          delete $scope.annotation.changes;
+          delete $scope.annotation.newly_added;
           loadingStart();
           $element.addClass('edit-pending');
           var q = AnnotationProxy.storeChanges($scope.annotation, changes);
           q.catch(function(message) {
-            alert("saving annotation failed: " + message);
+            toaster.pop('note', message);
           })
           .finally(function() {
             loadingEnd();
@@ -982,8 +1033,20 @@ var annotationTableRow =
         };
         $scope.cancelEdit = function() {
           $('#disabled-overlay').hide();
-          delete $scope.data.changes;
+          delete $scope.annotation.changes;
+          var newly_added = $scope.annotation.newly_added;
+          delete $scope.annotation.newly_added;
+
+          if (newly_added) {
+            // this annotation was just added, so delete it
+            arrayRemoveOne($scope.annotations, $scope.annotation);
+          }
         };
+
+        if ($scope.annotation.newly_added) {
+          // hack: this is a new annotation created with the "Add ..." button
+          $scope.edit();
+        }
       },
       link: function(scope) {
         scope.test = true;
@@ -991,7 +1054,7 @@ var annotationTableRow =
     };
   };
 
-canto.directive('annotationTableRow', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoConfig', 'Curs', annotationTableRow]);
+canto.directive('annotationTableRow', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoConfig', 'Curs', 'toaster', annotationTableRow]);
 
 
 var termNameComplete =

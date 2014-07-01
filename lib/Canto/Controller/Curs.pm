@@ -44,10 +44,6 @@ use Moose;
 
 use Canto::Curs::State qw/:all/;
 
-with 'Canto::Role::MetadataAccess';
-with 'Canto::Role::GAFFormatter';
-with 'Canto::Curs::Role::GeneResultSet';
-
 use IO::String;
 use Clone qw(clone);
 use Hash::Merge;
@@ -92,6 +88,11 @@ has metadata_storer => (is => 'rw', init_arg => undef,
 
 has curator_manager => (is => 'rw', init_arg => undef,
                         isa => 'Canto::Track::CuratorManager');
+
+with 'Canto::Role::MetadataAccess';
+with 'Canto::Role::GAFFormatter';
+with 'Canto::Curs::Role::GeneResultSet';
+with 'Canto::Curs::Role::CuratorSet';
 
 =head2 top
 
@@ -943,14 +944,6 @@ sub annotation_extension_edit : Chained('annotation') PathPart('extension_edit')
   _field_edit_internal(@_, 'annotation_extension');
 }
 
-my $iso_date_template = "%4d-%02d-%02d";
-
-sub _get_iso_date
-{
-  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time);
-  return sprintf "$iso_date_template", 1900+$year, $mon+1, $mday
-}
-
 # change the annotation data of an existing annotation
 sub _re_edit_annotation
 {
@@ -975,135 +968,6 @@ sub _re_edit_annotation
   $annotation->update();
 
   return $annotation;
-}
-
-sub annotation_quick_add : Chained('top') PathPart('annotation/quick_add') Args(2)
-{
-  my ($self, $c, $gene_id, $annotation_type_name) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $params = $c->req()->params();
-
-  my $evidence_types = $config->{evidence_types};
-
-  my $_fail = sub {
-    my $message = shift;
-
-    $c->flash()->{error} = $message;
-    $c->stash->{json_data} = {
-      error => $message,
-    };
-    $c->forward('View::JSON');
-  };
-
-  my $evidence_code = $params->{'ferret-quick-add-evidence'};
-  if (!defined $evidence_code ||
-      !exists $config->{evidence_types}->{$evidence_code}) {
-    $_fail->("Adding annotation failed - invalid evidence code");
-    return;
-  }
-
-  my $termid = $params->{'ferret-quick-add-term-id'};
-  if (!defined $termid || !defined _term_name_from_id($config, $termid)) {
-    $_fail->("Adding annotation failed - invalid term name");
-    return;
-  }
-
-  my $gene = $schema->find_with_type('Gene', $gene_id);
-
-  my %annotation_data = (
-    term_ontid => $termid,
-    evidence_code => $evidence_code,
-  );
-
-  my $extension = $params->{'ferret-quick-add-extension'};
-
-  $extension = trim($extension);
-
-  if (length $extension > 0) {
-    $annotation_data{annotation_extension} = $extension;
-  }
-
-  my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
-  if ($needs_with_gene) {
-    my $with_gene = $params->{'ferret-quick-add-with-gene'};
-
-    my $with_gene_object;
-
-    if (defined $with_gene) {
-      eval {
-        $with_gene_object = $schema->find_with_type('Gene', { gene_id => $with_gene });
-      };
-    }
-
-    if (defined $with_gene_object) {
-      $annotation_data{with_gene} = $with_gene_object->primary_identifier();
-    } else {
-      $_fail->("Adding annotation failed - missing 'with' gene");
-      return;
-    }
-  }
-
-  my $new_annotation =
-    $schema->create_with_type('Annotation',
-                              {
-                                type => $annotation_type_name,
-                                status => 'new',
-                                pub => $st->{pub},
-                                creation_date => _get_iso_date(),
-                                data => { %annotation_data }
-                              });
-
-  $self->_set_annotation_curator($c, $new_annotation);
-
-  $new_annotation->set_genes($gene);
-
-  $c->stash->{json_data} = {
-    new_annotation_id => $new_annotation->annotation_id(),
-  };
-  $c->forward('View::JSON');
-}
-
-# Set the "curator" field of the data blob of an Annotation to be the current
-# curator.
-# The current curator will be the reviewer if approval is in progress.
-sub _set_annotation_curator
-{
-  my $self = shift;
-  my $c = shift;
-  my $annotation = shift;
-
-  my $st = $c->stash();
-  my $curs_key = $st->{curs_key};
-
-  my $curator_email;
-  my $curator_name;
-  my $curator_known_as;
-  my $accepted_date;
-  my $community_curated;
-
-  if ($st->{state} eq APPROVAL_IN_PROGRESS) {
-    my $schema = $st->{schema};
-    $curator_name = $self->get_metadata($schema, 'approver_name');
-    $curator_email = $self->get_metadata($schema, 'approver_email');
-  } else {
-    ($curator_email, $curator_name, $curator_known_as,
-     $accepted_date, $community_curated) =
-      $self->curator_manager()->current_curator($curs_key);
-  }
-
-  my $data = $annotation->data();
-  $data->{curator} = {
-    email => $curator_email,
-    name => $curator_name,
-    community_curated => $community_curated // 0,
-  };
-
-  $annotation->data($data);
-  $annotation->update();
 }
 
 sub _update_annotation
@@ -1132,7 +996,7 @@ sub _update_annotation
                                   type => $orig_annotation->type(),
                                   status => 'new',
                                   pub => $st->{pub},
-                                  creation_date => _get_iso_date(),
+                                  creation_date => Canto::Curs::Utils::get_iso_date(),
                                   data => { %current_data }
                                 });
 
@@ -1170,7 +1034,7 @@ sub _create_annotation
                                   type => $annotation_type_name,
                                   status => 'new',
                                   pub => $st->{pub},
-                                  creation_date => _get_iso_date(),
+                                  creation_date => Canto::Curs::Utils::get_iso_date(),
                                   data => clone $annotation_data,
                                 });
 
@@ -1184,7 +1048,7 @@ sub _create_annotation
     $annotation->set_genotypes(@$features);
   }
 
-  $self->_set_annotation_curator($c, $annotation);
+  $self->set_annotation_curator($c, $annotation);
   $guard->commit();
 
   $self->metadata_storer()->store_counts($schema);
@@ -1412,11 +1276,11 @@ sub annotation_interaction_edit
                                   type => $annotation_type_name,
                                   status => 'new',
                                   pub => $st->{pub},
-                                  creation_date => _get_iso_date(),
+                                  creation_date => Canto::Curs::Utils::get_iso_date(),
                                   data => { %annotation_data }
                                 });
 
-    $self->_set_annotation_curator($c, $annotation);
+    $self->set_annotation_curator($c, $annotation);
 
     $annotation->set_genes($gene_proxy->cursdb_gene());
 
@@ -1837,7 +1701,7 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
                                           type => $annotation->type(),
                                           status => $annotation->status(),
                                           pub => $annotation->pub(),
-                                          creation_date => _get_iso_date(),
+                                          creation_date => Canto::Curs::Utils::get_iso_date(),
                                           data => $data_clone,
                                         });
 
@@ -1928,21 +1792,6 @@ sub _get_all_alleles
   return %results;
 }
 
-sub _term_name_from_id : Private
-{
-  my $config = shift;
-  my $term_id = shift;
-
-  my $lookup = Canto::Track::get_adaptor($config, 'ontology');
-  my $res = $lookup->lookup_by_id(id => $term_id);
-
-  if (defined $res) {
-    return $res->{name};
-  } else {
-    return undef;
-  }
-}
-
 sub _get_name_of_condition
 {
   my $ontology_lookup = shift;
@@ -2009,68 +1858,6 @@ sub _set_allele_select_stash
     my @evidence_codes = _generate_evidence_options($evidence_types, $annotation_type_config);
 
     $st->{evidence_select_options} = \@evidence_codes;
-  }
-}
-
-sub _annotation_allele_select_internal
-{
-  my ($self, $c, $editing) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $guard = $schema->txn_scope_guard;
-  my $annotation = $st->{annotation};
-
-  my $annotation_type_name = $annotation->type();
-  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
-  if ($editing) {
-    $annotation = _re_edit_annotation($c, $annotation_config, $annotation->annotation_id());
-  }
-
-  my $gene = $annotation->genes()->first();
-  my $gene_proxy = _get_gene_proxy($config, $gene);
-  $st->{gene} = $gene_proxy;
-  my $gene_display_name = $gene_proxy->display_name();
-
-  my $module_category = $annotation_config->{category};
-
-  my $annotation_data = $annotation->data();
-  my $term_ontid = $annotation_data->{term_ontid};
-
-  my $term_name = _term_name_from_id($config, $term_ontid);
-
-  $st->{title} = "Choose allele(s) for $gene_display_name with $term_ontid ($term_name)";
-  $st->{show_title} = 0;
-
-  $st->{gene_display_name} = $gene_display_name;
-  $st->{gene_id} = $gene->gene_id();
-  $st->{annotation} = $annotation;
-
-  _set_allele_select_stash($c, $annotation_type_name);
-
-  $st->{current_conditions} = _get_all_conditions($config, $schema);
-
-  $guard->commit();
-
-  $st->{editing} = $editing;
-  $st->{template} = "curs/modules/${module_category}_allele_select.mhtml";
-}
-
-sub annotation_allele_select : Chained('annotation') PathPart('allele_select')
-{
-  _annotation_allele_select_internal(@_, 0);
-}
-
-sub annotation_allele_select_edit : Chained('annotation') PathPart('allele_select') Args(1)
-{
-  my ($self, $c, $editing) = @_;
-
-  if ($editing eq 'edit') {
-    _annotation_allele_select_internal(@_, 1);
-  } else {
-    $self->not_found($c);
   }
 }
 
@@ -2457,7 +2244,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
                                       type => $annotation_type_name,
                                       status => 'new',
                                       pub => $annotations[0]->pub(),
-                                      creation_date => _get_iso_date(),
+                                      creation_date => Canto::Curs::Utils::get_iso_date(),
                                       data => $new_data,
                                     });
         $new_annotation->set_genes($dest_gene);
@@ -3519,6 +3306,25 @@ sub ws_change_annotation : Chained('ws_annotation') PathPart('change')
 
   $c->stash->{json_data} =
     $service_utils->change_annotation($annotation_id, $status, $json_data);
+
+  $c->forward('View::JSON');
+}
+
+sub ws_annotation_create : Chained('top') PathPart('ws/annotation/create')
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $type = $st->{ws_type};
+  my $schema = $st->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  my $json_data = $c->req()->body_data();
+
+  $c->stash->{json_data} = $service_utils->create_annotation($json_data);
 
   $c->forward('View::JSON');
 }

@@ -34,17 +34,6 @@ Choose curation type for <% $gene->display_name() %>:
 %   if (!$annotation_type->{disabled}) {
       </a>
 %   }
-%#<& /curs/inline_help.mhtml, key => "${annotation_type_name}_gene_page" &>
-%   if ($is_admin && $annotation_type->{feature_type} ne 'genotype' &&
-%       $annotation_type->{category} eq 'ontology') {
-%     my $add_url = $curs_root_uri . '/annotation/quick_add/'
-%       . $gene->gene_id() . '/' . $annotation_type_name;
-
-    <a href="#" class="curs-quick-add-annotation curs-js-link"
-       title="Add a <% $type_display_name %>"
-       onclick="javascript:QuickAddDialog.create('Add a <% $type_display_name %>', '<% $annotation_type_name %>', '<% $add_url %>'); return false;">Add ...</a>
-%   }
-    </li>
 % }
   </ul>
   </div>
