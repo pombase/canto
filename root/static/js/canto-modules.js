@@ -903,7 +903,7 @@ canto.controller('EvidenceSelectCtrl',
 
 
 var annotationTable =
-  function(AnnotationProxy, AnnotationTypeConfig, $compile) {
+  function(AnnotationProxy, AnnotationTypeConfig) {
     return {
       scope: {
         geneIdentifier: '@',
@@ -936,7 +936,7 @@ var annotationTable =
     };
   };
 
-canto.directive('annotationTable', ['AnnotationProxy', 'AnnotationTypeConfig', '$compile', annotationTable]);
+canto.directive('annotationTable', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTable]);
 
 var annotationTableList =
   function(AnnotationProxy, AnnotationTypeConfig) {
