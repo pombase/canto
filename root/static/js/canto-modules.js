@@ -247,7 +247,7 @@ var conditionPicker =
 canto.directive('conditionPicker', conditionPicker);
 
 var alleleNameComplete =
-  function(AlleleService) {
+  function(AlleleService, toaster) {
     var directive = {
       scope: {
         alleleName: '=',
@@ -279,7 +279,7 @@ var alleleNameComplete =
                                    response(processResponse(lookupResponse));
                                  },
                                  function() {
-                                   alert("failed to lookup allele of: " + scope.geneName);
+                                   toaster.pop("failed to lookup allele of: " + scope.geneName);
                                  });
           },
           select: function(event, ui) {
@@ -319,7 +319,7 @@ var alleleNameComplete =
     return directive;
   };
 
-canto.directive('alleleNameComplete', ['AlleleService', alleleNameComplete]);
+canto.directive('alleleNameComplete', ['AlleleService', 'toaster', alleleNameComplete]);
 
 
 var alleleEditDialogCtrl =
@@ -434,7 +434,8 @@ canto.controller('AlleleEditDialogCtrl',
                   'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
 
-canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig', 'Curs', function($scope, $http, $modal, CantoConfig, Curs) {
+canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig', 'Curs', 'toaster',
+                                     function($scope, $http, $modal, CantoConfig, Curs, toaster) {
   $scope.alleles = [
   ];
   $scope.genes = [
@@ -457,7 +458,7 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
     $scope.openAlleleEditDialog("doa10", "SPBC14F5.07", 3);
   })
   .error(function() {
-    alert('failed to get gene list from server');
+    toaster.pop('failed to get gene list from server');
   });
 
   $scope.currentlySelectedGenes = function() {
@@ -513,8 +514,7 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
         if (data.status === "success") {
           window.location.href = data.location;
         } else {
-          alert("Storing new genotype failed: " +
-                data.message);
+          toaster.pop("Storing new genotype failed: " + data.message);
         }
       }).
       error(function(){
@@ -1006,7 +1006,7 @@ var annotationTableRow =
                   gene.display_name = gene.primary_name || gene.primary_identifier;
                 });
         }).error(function() {
-          alert("couldn't read the gene list from the server");
+          toaster.pop('note', "couldn't read the gene list from the server");
         });
 
         $scope.edit = function() {
