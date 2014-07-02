@@ -420,15 +420,19 @@ sub change_annotation
   my $annotation_id = shift;
   my $annotation_status = shift;
 
-  my $pub_id = $self->get_metadata($self->curs_schema(), 'curation_pub_id');
-  my $pub = $self->curs_schema()->resultset('Pub')->find($pub_id);
+  my $curs_schema = $self->curs_schema();
+
+  $curs_schema->txn_begin();
+
+  my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
+  my $pub = $curs_schema->resultset('Pub')->find($pub_id);
 
   my $changes = shift;
 
   my $annotation = undef;
 
   if ($annotation_status eq 'new') {
-    $annotation = $self->curs_schema()->resultset('Annotation')->find($annotation_id);
+    $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
   } else {
     die "annotation status unsupported: $annotation_status\n";
   }
@@ -438,11 +442,15 @@ sub change_annotation
 
     my $annotation_hash =
       Canto::Curs::Utils::make_ontology_annotation($self->config(),
-                                                   $self->curs_schema(),
+                                                   $curs_schema,
                                                    $annotation);
+    $curs_schema->txn_commit();
+
     return { status => 'success',
              annotation => $annotation_hash };
   } catch {
+    $curs_schema->txn_rollback();
+
     chomp $_;
     return { status => 'error',
              message => $_ };
@@ -470,9 +478,12 @@ sub create_annotation
   my $self = shift;
   my $details = shift;
 
-  my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
-  my $pub_id = $self->get_metadata($self->curs_schema(), 'curation_pub_id');
-  my $pub = $self->curs_schema()->resultset('Pub')->find($pub_id);
+  my $curs_schema = $self->curs_schema();
+  $curs_schema->txn_begin();
+
+  my $curs_key = $self->get_metadata($curs_schema, 'curs_key');
+  my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
+  my $pub = $curs_schema->resultset('Pub')->find($pub_id);
 
   my $gene_identifier = delete $details->{gene_identifier};
   my $genotype_identifier = delete $details->{genotype_identifier};
@@ -502,12 +513,17 @@ sub create_annotation
                                             $annotation_type_name, $details);
     my $annotation_hash =
       Canto::Curs::Utils::make_ontology_annotation($self->config(),
-                                                   $self->curs_schema(),
+                                                   $curs_schema,
                                                    $annotation);
+
+
+    $curs_schema->txn_commit();
 
     return { status => 'success',
              annotation => $annotation_hash };
   } catch {
+    $curs_schema->txn_rollback();
+
     chomp $_;
     return { status => 'error',
              message => $_ };
