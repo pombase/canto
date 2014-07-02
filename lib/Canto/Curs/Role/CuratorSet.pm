@@ -63,8 +63,6 @@ sub set_annotation_curator
 
   my $schema = $annotation->result_source()->schema();
 
-
-warn "HERE2";
   my $curs_key = $self->get_metadata($schema, 'curs_key');
 
   my $curator_email;
@@ -93,9 +91,6 @@ warn "HERE2";
 
   $annotation->data($data);
   $annotation->update();
-
-warn "HEREDONE";
-
 }
 
 1;
