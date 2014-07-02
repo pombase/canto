@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 31;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -131,7 +131,6 @@ $first_genotype_annotation = $first_genotype->annotations()->first();
 is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
 
 
-
 # test illegal evidence_code
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
                                          'new',
@@ -165,18 +164,25 @@ is ($res->{status}, 'error');
 is ($res->{message}, 'no such annotation field type: illegal');
 
 
+my $c2d7_identifier = 'SPAC27D7.13c';
+my $c2d7_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $c2d7_identifier });
+
+is ($c2d7_gene->direct_annotations()->count(), 1);
+
+
 # create a new Annotation
-$res = $service_utils->change_annotation(undef,
-                                         'new',
-                                         {
+$res = $service_utils->create_annotation({
                                            key => $curs_key,
-                                           gene_identifier => 'SPAC27D7.13c',
+                                           gene_identifier => $c2d7_identifier,
                                            annotation_type => 'molecular_function',
                                            term_ontid => 'GO:0022857',
                                            evidence_code => 'IDA',
                                          });
 is ($res->{status}, 'success');
+is ($res->{annotation}->{gene_identifier}, $c2d7_identifier);
+is ($res->{annotation}->{annotation_type}, 'molecular_function');
+is ($res->{annotation}->{term_ontid}, 'GO:0022857');
+is ($res->{annotation}->{term_name}, 'transmembrane transporter activity');
+is ($res->{annotation}->{evidence_code}, 'IDA');
 
-use Data::Dumper;
-$Data::Dumper::Maxdepth = 3;
-warn Dumper([$res->{annotation}]);
+is ($c2d7_gene->direct_annotations()->count(), 2);

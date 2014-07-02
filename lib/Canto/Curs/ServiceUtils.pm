@@ -205,7 +205,7 @@ sub _term_name_from_id
 
 sub make_annotation
 {
-  my ($self, $gene_identifier, $pub, $annotation_type_name, $data_arg) = @_;
+  my ($self, $feature_identifier, $feature_type, $pub, $annotation_type_name, $data_arg) = @_;
 
   if (!$data_arg) {
     croak "no \$data passed to make_annotation()\n";
@@ -213,8 +213,12 @@ sub make_annotation
 
   my $data = clone $data_arg;
 
-  if (!$gene_identifier) {
-    croak "no gene_identifier passed to make_annotation()\n";
+  if (!$feature_identifier) {
+    croak "no feature_identifier passed to make_annotation()\n";
+  }
+
+  if (!$feature_type) {
+    croak "no feature_type passed to make_annotation()\n";
   }
 
   if (!$pub) {
@@ -225,9 +229,7 @@ sub make_annotation
     croak "no annotation_type_name passed to make_annotation()\n";
   }
 
-  my $curs_schema = self->curs_schema();
-
-  my $gene = $curs_schema->find_with_type('Gene', { primary_identifier => $gene_identifier });
+  my $curs_schema = $self->curs_schema();
 
   my $evidence_types = $self->config()->{evidence_types};
 
@@ -283,7 +285,13 @@ sub make_annotation
 
   $self->set_annotation_curator($new_annotation);
 
-  $new_annotation->set_genes($gene);
+  if ($feature_type eq 'gene') {
+    my $gene = $curs_schema->find_with_type('Gene', { primary_identifier => $feature_identifier });
+    $new_annotation->set_genes($gene);
+  } else {
+    my $genotype = $curs_schema->find_with_type('Genotype', { identifier => $feature_identifier });
+    $new_annotation->set_genotypes($genotype);
+  }
 
   return $new_annotation;
 }
@@ -297,14 +305,12 @@ sub _store_change_hash
   my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
 
   if (!defined $changes->{key} || $changes->{key} ne $curs_key) {
-    return { status => 'error', message => 'incorrect key' };
+    die "incorrect key\n";
   }
 
   delete $changes->{key};
 
   my $data = $annotation->data();
-
-  my $result = undef;
 
   my %valid_change_keys = (
     term_ontid => sub {
@@ -361,8 +367,7 @@ sub _store_change_hash
     my $conf = $valid_change_keys{$key};
 
     if (!defined $conf) {
-      return { status => 'error',
-               message => "no such annotation field type: $key" };
+      die "no such annotation field type: $key\n";
     }
 
     my $value = $changes->{$key};
@@ -370,28 +375,18 @@ sub _store_change_hash
     my $key_to_set = $key;
 
     if (ref $conf eq 'CODE') {
-      try {
-        my $res = $conf->($value);
+      my $result = undef;
 
-        if ($res) {
-          if (looks_like_number($res)) {
-            next CHANGE;
-          } else {
-            # it returns a different key to set
-            $key_to_set = $res;
-          }
+      my $res = $conf->($value);
+
+      if ($res) {
+        if (looks_like_number($res)) {
+          next CHANGE;
+        } else {
+          # it returns a different key to set
+          $key_to_set = $res;
         }
-
-        # otherwise, fail through
-      } catch {
-        chomp $_;
-        $result = { status => 'error', message => $_ };
-      };
-    }
-
-    if ($result) {
-      # error result
-      return $result;
+      }
     }
 
     $data->{$key_to_set} = $changes->{$key};
@@ -459,8 +454,9 @@ sub change_annotation
  Usage   : $service_utils->create_annotation($data_hash);
  Function: Create an annotation in the Curs database based on the $details hash.
  Args    : $details - annotation details:
-             - gene_identifier: a valid gene primary_identifier
+             - gene_identifier: a gene primary_identifier
                                 (eg. "SPAC27D7.13c") - required
+             - genotype_identifier: a genotype identifier
              - annotation_type: a CV name (eg. "molecular_function") - required
              - term_ontid: a term accession (eg. "GO:0000137") - required
 
@@ -479,10 +475,21 @@ sub create_annotation
   my $pub = $self->curs_schema()->resultset('Pub')->find($pub_id);
 
   my $gene_identifier = delete $details->{gene_identifier};
+  my $genotype_identifier = delete $details->{genotype_identifier};
 
-  if (!defined $gene_identifier) {
-    croak "no gene_identifier passed in changes hash\n";
+  if (!$gene_identifier && !$genotype_identifier) {
+    croak "no gene or genotype identifier passed in changes hash\n";
   }
+
+  my $feature_type;
+
+  if ($gene_identifier) {
+    $feature_type = 'gene';
+  } else {
+    $feature_type = 'genotype';
+  }
+
+  my $feature_identifier = $gene_identifier || $genotype_identifier;
 
   my $annotation_type_name = delete $details->{annotation_type};
 
@@ -491,7 +498,7 @@ sub create_annotation
   }
 
   try {
-    my $annotation = $self->make_annotation($gene_identifier, $pub,
+    my $annotation = $self->make_annotation($feature_identifier, $feature_type, $pub,
                                             $annotation_type_name, $details);
     my $annotation_hash =
       Canto::Curs::Utils::make_ontology_annotation($self->config(),

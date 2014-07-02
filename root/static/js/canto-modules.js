@@ -915,10 +915,17 @@ var annotationTable =
       templateUrl: application_root + '/static/ng_templates/annotation_table.html',
       controller: function($scope) {
         $scope.addNew = function() {
-          $scope.annotations.push({
+          var newAnnotation = {
             newly_added: true,
-            gene_identifier: $scope.geneIdentifier,
-            annotation_type: $scope.annotationTypeName });
+            annotation_type: $scope.annotationTypeName
+          };
+          if ($scope.geneIdentifier) {
+            newAnnotation.gene_identifier = $scope.geneIdentifier;
+          }
+          if ($scope.genotypeIdentifier) {
+            newAnnotation.genotype_identifier = $scope.genotypeIdentifier;
+          }
+          $scope.annotations.push(newAnnotation);
         };
       },
       link: function(scope) {
