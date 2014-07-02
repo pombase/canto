@@ -112,12 +112,12 @@ var annotationProxy =
       return q.promise;
     };
 
-  this.storeChanges = function(annotation, changes) {
+  this.storeChanges = function(annotation, changes, newly_added) {
     var q = $q.defer();
 
     var changesToStore = {};
 
-    if (changes.newly_added) {
+    if (newly_added) {
       // special case, copy everything
       changesToStore = changes;
     } else {
@@ -1019,16 +1019,18 @@ var annotationTableRow =
         $scope.edit = function() {
           var changes = {};
           copyObject($scope.annotation, changes);
+          delete changes.newly_added;
           $scope.annotation.changes = changes;
           $('#disabled-overlay').show();
         };
         $scope.saveEdit = function() {
           var changes = $scope.annotation.changes;
           delete $scope.annotation.changes;
+          var newly_added = $scope.annotation.newly_added;
           delete $scope.annotation.newly_added;
           loadingStart();
           $element.addClass('edit-pending');
-          var q = AnnotationProxy.storeChanges($scope.annotation, changes);
+          var q = AnnotationProxy.storeChanges($scope.annotation, changes, newly_added);
           q.catch(function(message) {
             toaster.pop('note', message);
           })
