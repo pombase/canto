@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 31;
+use Test::More tests => 33;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -184,5 +184,7 @@ is ($res->{annotation}->{annotation_type}, 'molecular_function');
 is ($res->{annotation}->{term_ontid}, 'GO:0022857');
 is ($res->{annotation}->{term_name}, 'transmembrane transporter activity');
 is ($res->{annotation}->{evidence_code}, 'IDA');
+is ($res->{annotation}->{submitter_comment}, undef);
+is ($res->{annotation}->{curator}, 'Some Testperson <some.testperson@pombase.org>');
 
 is ($c2d7_gene->direct_annotations()->count(), 2);
