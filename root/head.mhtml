@@ -12,7 +12,7 @@ $title
 <link href="<% $c->uri_for('/static/css/bootstrap.css') %>" type="text/css" rel="stylesheet" />
 %   }
 % } else {
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" 
+<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" 
       type="text/css" rel="stylesheet"/>
 %   if ($c->stash()->{use_bootstrap}) {
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
