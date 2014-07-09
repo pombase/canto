@@ -112,8 +112,8 @@ my %boosts =
   (
     name => 1.1,
     exact => 1.1,
-    broad => 0.01,
-    related => 0.01
+    broad => 0.2,
+    related => 0.2,
   );
 
 =head2 add_to_index
