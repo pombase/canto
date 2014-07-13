@@ -4,15 +4,14 @@
 {{annotationType.display_name}} annotations from this session
     </span>
     <span>
-      <a ng-click="addNew(geneIdentifier)">Add ...</a>
+      <a ng-click="addNew(featureType, featureId)">Add ...</a>
     </span>
     <div ng-switch="annotations.length > 0">
       <div ng-switch-when="true" class="annotation-table sect-content">
         <table class="list">
           <thead>
             <tr>
-              <th ng-if="annotationType.feature_type === 'gene' && !geneIdentifier">Gene</th>
-              <th ng-if="annotationType.feature_type === 'genotype' && !genotypeIdentifier">Genotype</th>
+              <th ng-if="featureType">{{displayFeatureType()}}</th>
               <th>Term ID</th>
               <th>Term name</th>
               <th>Evidence code</th>

@@ -1,5 +1,5 @@
 <tr ng-class="{'inline-edit-active-row': annotation.changes}">
-  <td ng-if="annotationType.feature_type === 'gene' && !geneIdentifier">{{annotation.gene_name_or_identifier}}</td>
+  <td ng-if="Type.feature_type === 'gene' && !geneIdentifier">{{annotation.gene_name_or_identifier}}</td>
   <td ng-if="annotationType.feature_type === 'genotype' && !genotypeIdentifier">{{annotation.genotype_display_name}}</td>
   <td>{{annotation.term_ontid}}</td>
   <td>
@@ -73,7 +73,7 @@
   </td>
   <td>{{annotation.curator}}</td>
   <td>
-    <a ng-if="!annotation.changes" ng-click="edit()">Edit</a> 
+    <a ng-if="!annotation.changes" ng-click="edit()">Edit</a>
     <div ng-class="{'inline-edit-active': annotation.changes}"
          ng-if="annotation.changes">
       <div>

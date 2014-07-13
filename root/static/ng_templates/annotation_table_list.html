@@ -1,13 +1,14 @@
 <div class="clearall">
   <div ng-hide="annotations && annotationTypes">
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img></img>
 Annotation loading ...
   </div>
   <div ng-show="annotations && annotationTypes"
        id="curs-annotation-tables" class="sect">
     <div ng-repeat="annotationType in annotationTypes">
       <annotation-table annotation-type-name="{{annotationType.name}}"
-                        gene-identifier="{{geneIdentifier}}"
-                        genotype-identifier="{{genotypeIdentifier}}"></annotation-table>
+                        feature-id-filter="{{featureIdFilter}}"
+                        feature-type-filter="{{featureTypeFilter}}"></annotation-table>
     </div>
   </div>
 </div>

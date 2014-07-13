@@ -92,7 +92,7 @@ Name
 <button type="button" id="curs-finish-genotype" class="btn btn-primary
 curs-back-button"><% $finish_text %></button>
 
-<annotation-table-list genotype-identifier="<% $genotype_identifier %>"></annotation-table-list>
+<annotation-table-list feature-type-filter="genotype" feature-id-filter="<% $genotype_id %>"></annotation-table-list>
 
 <div id="curs-annotation-tables" class="sect" style="display: none">
 % for my $annotation_type (@types_to_show) {

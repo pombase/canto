@@ -55,6 +55,10 @@ canto.service('Curs', function($http) {
   };
 });
 
+canto.service('CantoGlobals', function($window) {
+  this.app_static_path = $window.app_static_path;
+});
+
 canto.service('CantoService', function($http) {
   this.lookup = function(key, params) {
     return $http.get(application_root + '/ws/lookup/' + key,
@@ -89,8 +93,8 @@ var annotationProxy =
   // filter the list of annotation based on the params argument
   // possibilities:
   //   annotationTypeName (required)
-  //   genotypeIdentifier
-  //   geneIdentifier 
+  //   featureId (optional)
+  //   featureType (optional)
   this.getFiltered =
     function(params) {
       var q = $q.defer();
@@ -100,9 +104,12 @@ var annotationProxy =
           $.grep(annotations,
                  function(elem) {
                    return elem.annotation_type === params.annotationTypeName &&
-                     ((!params.geneIdentifier && !params.genotypeIdentifier) ||
-                      elem.genotype_identifier === params.genotypeIdentifier ||
-                      elem.gene_identifier === params.geneIdentifier);
+                     (!params.featureId ||
+                      (params.featureType &&
+                       ((params.featureType === 'gene' &&
+                         elem.gene_id == params.featureId) ||
+                       (params.featureType === 'genotype' &&
+                        elem.genotype_id == params.featureId))));
                  });
         q.resolve(filteredAnnotations);
       }).error(function() {
@@ -906,8 +913,8 @@ var annotationTable =
   function(AnnotationProxy, AnnotationTypeConfig) {
     return {
       scope: {
-        geneIdentifier: '@',
-        genotypeIdentifier: '@',
+        featureIdFilter: '@',
+        featureTypeFilter: '@',
         annotationTypeName: '@',
       },
       restrict: 'E',
@@ -917,13 +924,11 @@ var annotationTable =
         $scope.addNew = function() {
           var newAnnotation = {
             newly_added: true,
-            annotation_type: $scope.annotationTypeName
+            annotation_type: $scope.annotationTypeName,
+            feature_type: $scope.featureTypeFilter
           };
-          if ($scope.geneIdentifier) {
-            newAnnotation.gene_identifier = $scope.geneIdentifier;
-          }
-          if ($scope.genotypeIdentifier) {
-            newAnnotation.genotype_identifier = $scope.genotypeIdentifier;
+          if ($scope.featureIdFilter) {
+            newAnnotation.feature_id = $scope.featureId;
           }
           $scope.annotations.push(newAnnotation);
         };
@@ -931,8 +936,8 @@ var annotationTable =
       link: function(scope) {
         scope.annotations = [];
         AnnotationProxy.getFiltered({annotationTypeName: scope.annotationTypeName,
-                                     genotypeIdentifier: scope.genotypeIdentifier,
-                                     geneIdentifier: scope.geneIdentifier
+                                     featureId: scope.featureIdFilter,
+                                     featureType: scope.featureTypeFilter
                                     }).then(function(annotations) {
                                       scope.annotations = annotations;
                                     });
@@ -946,42 +951,47 @@ var annotationTable =
 canto.directive('annotationTable', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTable]);
 
 var annotationTableList =
-  function(AnnotationProxy, AnnotationTypeConfig) {
+  function(AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
     return {
       scope: {
-        geneIdentifier: '@',
-        genotypeIdentifier: '@',
+        featureIdFilter: '@',
+        featureTypeFilter: '@',
       },
       restrict: 'E',
       replace: true,
       templateUrl: application_root + '/static/ng_templates/annotation_table_list.html',
+      controller: function($scope) {
+        function capitalize (text) {
+          return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+        }
+        $scope.displayFeatureType = function() {
+          return capitalize($scope.featureType);
+        };
+        $scope.app_static_path = CantoGlobals.app_static_path;
+      },
       link: function(scope) {
         scope.annotationTypes = [];
         AnnotationTypeConfig.getAll().then(function(response) {
           scope.annotationTypes =
             $.grep(response.data,
-                  function(annotationType) {
-                    if ((typeof(scope.geneIdentifier) === 'undefined' &&
-                         typeof(scope.genotypeIdentifier) === 'undefined') ||
-                        (typeof(scope.geneIdentifier) !== 'undefined' &&
-                         annotationType.feature_type === 'gene') ||
-                       (typeof(scope.genotypeIdentifier) !== 'undefined' &&
-                         annotationType.feature_type === 'genotype')) {
-                      return annotationType;
-                    }
-                  });
+                   function(annotationType) {
+                     if (scope.featureTypeFilter === undefined ||
+                         annotationType.feature_type === scope.featureTypeFilter) {
+                       return annotationType;
+                     }
+                   });
         });
         AnnotationProxy.getFiltered({ annotationTypeName: scope.annotationTypeName,
-                                      genotypeIdentifier: scope.genotypeIdentifier,
-                                      geneIdentifier: scope.geneIdentifier,
+                                      featureId: scope.featureIdFilter,
+                                      featureType: scope.featureTypeFilter,
                                     }).then(function(annotations) {
-          scope.annotations = annotations;
-        });
+                                      scope.annotations = annotations;
+                                    });
       }
     };
   };
 
-canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTableList]);
+canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoGlobals', annotationTableList]);
 
 
 var annotationTableRow =

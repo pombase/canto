@@ -105,6 +105,7 @@ sub make_ontology_annotation
 
     %genotype_details = (
       conditions => $conditions_string,
+      genotype_id => $genotype->genotype_id(),
       genotype_identifier => $genotype->identifier(),
       genotype_name => $genotype->name(),
       genotype_display_name => $genotype->display_name(),
