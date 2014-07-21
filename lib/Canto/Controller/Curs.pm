@@ -1048,7 +1048,7 @@ sub _create_annotation
     $annotation->set_genotypes(@$features);
   }
 
-  $self->set_annotation_curator($c, $annotation);
+  $self->set_annotation_curator($annotation);
   $guard->commit();
 
   $self->metadata_storer()->store_counts($schema);
@@ -1280,7 +1280,7 @@ sub annotation_interaction_edit
                                   data => { %annotation_data }
                                 });
 
-    $self->set_annotation_curator($c, $annotation);
+    $self->set_annotation_curator($annotation);
 
     $annotation->set_genes($gene_proxy->cursdb_gene());
 
