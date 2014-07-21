@@ -70,7 +70,7 @@ for my $annotation_type (@annotation_type_list) {
 
     # test proceeding after choosing a term
     {
-      my $uri = new URI("$root_url/gene/$bait_id/new_annotation/$annotation_type_name/single_allele/choose_term");
+      my $uri = new URI("$root_url/feature/gene/annotate/$bait_id/interaction/$annotation_type_name");
 
       $uri->query_form('prey' => [$prey1_id, $prey2_id],
                        'interaction-submit' => 'Proceed');
@@ -119,7 +119,7 @@ for my $annotation_type (@annotation_type_list) {
       is $res->code, 302;
       my $redirect_url = $res->header('location');
 
-      is ($redirect_url, "$root_url/gene/" . $bait->gene_id() . '/view');
+      is ($redirect_url, "$root_url/feature/gene/view/" . $bait->gene_id());
 
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 use Plack::Test;
 use Plack::Util;
@@ -38,17 +38,21 @@ test_psgi $app, sub {
   my $new_comment = "new service comment";
   my $changes = {
     key => $curs_key,
-    comment => $new_comment,
+    submitter_comment => $new_comment,
   };
 
-  ok(!defined($first_genotype_annotation->data()->{comment}));
+  ok(!defined($first_genotype_annotation->data()->{submitter_comment}));
 
   $req->content(to_json($changes));
 
   my $res = $cb->($req);
 
+  my $perl_res = decode_json $res->content();
+
+  is($perl_res->{status}, 'success');
+
   # re-query
   $first_genotype_annotation = $first_genotype->annotations()->first();
 
-  is ($first_genotype_annotation->data()->{comment}, "$new_comment");
+  is ($first_genotype_annotation->data()->{submitter_comment}, "$new_comment");
 };

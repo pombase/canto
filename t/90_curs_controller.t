@@ -11,6 +11,7 @@ use HTTP::Request;
 
 use Canto::TestUtil;
 use Canto::Controller::Curs;
+use Canto::Curs::Utils;
 
 my $test_util = Canto::TestUtil->new();
 $test_util->init_test('1_curs');
@@ -154,7 +155,7 @@ is($curs_schema->resultset('Gene')->count(), 0);
 
 
 # utility methods
-my $iso_date = Canto::Controller::Curs::_get_iso_date();
+my $iso_date = Canto::Curs::Utils::get_iso_date();
 like ($iso_date, qr(^\d+-\d+-\d+$));
 
 

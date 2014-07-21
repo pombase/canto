@@ -176,7 +176,7 @@ sub get_annotation_table_tsv
   my @interaction_column_names =
     qw(gene_identifier interacting_gene_identifier
        gene_taxonid interacting_gene_taxonid evidence_code
-       publication_uniquename score phenotypes comment);
+       publication_uniquename score phenotypes submitter_comment);
 
   my @column_names;
 

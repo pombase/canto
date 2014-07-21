@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 33;
+use Test::More tests => 34;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -59,12 +59,19 @@ cmp_deeply($res,
             },
           ]);
 
+my $gene_identifier = 'SPBC14F5.07';
 my $genotype_identifier = 'h+ SPCC63.05delta ssm4KE';
 
+my $first_gene =
+  $curs_schema->resultset('Gene')->find({ primary_identifier => $gene_identifier });
 my $first_genotype =
   $curs_schema->resultset('Genotype')->find({ identifier => $genotype_identifier });
 
+my $first_gene_annotation = $first_gene->direct_annotations()->first();
 my $first_genotype_annotation = $first_genotype->annotations()->first();
+
+my $c2d7_identifier = 'SPAC27D7.13c';
+my $c2d7_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $c2d7_identifier });
 
 my $new_comment = "new service comment";
 my $changes = {
@@ -115,22 +122,6 @@ is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
 is ($res->{annotation}->{with_or_from_identifier}, undef);
 
 
-# test setting with_gene/with_or_from_identifier
-my $new_with = "SPCC63.05";
-$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                         'new',
-                                         {
-                                           key => $curs_key,
-                                           with_or_from_identifier => $new_with,
-                                         });
-is ($res->{status}, 'success');
-is ($res->{annotation}->{with_or_from_identifier}, $new_with);
-
-# re-query
-$first_genotype_annotation = $first_genotype->annotations()->first();
-is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
-
-
 # test illegal evidence_code
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
                                          'new',
@@ -164,13 +155,27 @@ is ($res->{status}, 'error');
 is ($res->{message}, 'no such annotation field type: illegal');
 
 
-my $c2d7_identifier = 'SPAC27D7.13c';
-my $c2d7_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $c2d7_identifier });
+# test setting with_gene/with_or_from_identifier for a gene
+$res = $service_utils->change_annotation($first_gene_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           submitter_comment => 'a short comment',
+                                           with_gene_id => $c2d7_gene->gene_id(),
+                                         });
+is ($res->{status}, 'success');
+is ($res->{annotation}->{with_or_from_identifier}, $c2d7_gene->primary_identifier());
+is ($res->{annotation}->{submitter_comment}, 'a short comment');
 
-is ($c2d7_gene->direct_annotations()->count(), 1);
+# re-query
+$first_genotype_annotation = $first_genotype->annotations()->first();
+is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
+
 
 
 # create a new Annotation
+is ($c2d7_gene->direct_annotations()->count(), 1);
+
 $res = $service_utils->create_annotation({
                                            key => $curs_key,
                                            feature_id => $c2d7_gene->gene_id(),
