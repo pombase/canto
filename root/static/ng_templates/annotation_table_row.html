@@ -29,8 +29,8 @@
     <div ng-class="{'inline-edit-active': annotation.changes}">
     <select class="form-control"
             ng-if="annotation.changes && evidenceTypes[annotation.changes.evidence_code || annotation.evidence_code].with_gene"
-            ng-model="annotation.changes.with_or_from_identifier"
-            ng-options="gene.primary_identifier as gene.display_name for gene in genes">
+            ng-model="annotation.changes.with_gene_id"
+            ng-options="gene.gene_id as gene.display_name for gene in genes">
       <option selected="selected" value="">Choose a gene ...</option>
     </select>
     </div>
@@ -73,7 +73,14 @@
   </td>
   <td>{{annotation.curator}}</td>
   <td>
-    <a ng-if="!annotation.changes" ng-click="edit()">Edit</a>
+    <div ng-if="!annotation.changes && evidenceTypes && annotationType">
+      <div>
+        <a ng-click="edit()">Edit</a>
+      </div>
+      <div>
+        <a ng-click="duplicate()">Duplicate</a>
+      </div>
+    </div>
     <div ng-class="{'inline-edit-active': annotation.changes}"
          ng-if="annotation.changes">
       <div>

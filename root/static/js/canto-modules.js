@@ -19,10 +19,19 @@ function arrayRemoveOne(array, item) {
   if (i >= 0) {
     array.splice(i, 1);
   }
-};
+}
 
-function copyObject(src, dest) {
+function copyObject(src, dest, keysFilter) {
   Object.getOwnPropertyNames(src).forEach(function(key) {
+    if (key.indexOf('$$') === 0) {
+      // ignore AngularJS data
+      return;
+    }
+    if (keysFilter) {
+      if (!keysFilter[key]) {
+        return;
+      }
+    }
     dest[key] = src[key];
   });
 }
@@ -52,6 +61,23 @@ canto.config(function($logProvider){
 canto.service('Curs', function($http) {
   this.list = function(key) {
     return $http.get(curs_root_uri + '/ws/' + key + '/list');
+  };
+});
+
+// gene list cache
+canto.service('CursGeneList', function($q, Curs) {
+  this.cursPromise = Curs.list('gene');
+
+  this.geneList = function() {
+    var q = $q.defer();
+
+    this.cursPromise.success(function(genes) {
+      q.resolve(genes);
+    }).error(function() {
+      q.reject();
+    });
+
+    return q.promise;
   };
 });
 
@@ -143,7 +169,7 @@ var annotationProxy =
 
     var putQ;
 
-    if (annotation.annotation_id === undefined) {
+    if (newly_added) {
       putQ = $http.put(curs_root_uri + '/ws/annotation/create', changesToStore);
     } else {
       putQ = $http.put(curs_root_uri + '/ws/annotation/' + annotation.annotation_id +
@@ -908,6 +934,33 @@ var evidenceSelectCtrl =
 canto.controller('EvidenceSelectCtrl',
                  ['$scope', evidenceSelectCtrl]);
 
+var keysForServer = {
+  annotation_extension: true,
+  annotation_type: true,
+  evidence_code: true,
+  feature_id: true,
+  feature_type: true,
+//  is_not: true,
+//  qualifiers: true,
+  submitter_comment: true,
+  term_ontid: true,
+  term_suggestion: true,
+  with_gene_id: true,
+};
+
+function startEditing(annotation) {
+  var changes = {};
+  copyObject(annotation, changes, keysForServer);
+  annotation.changes = changes;
+  $('#disabled-overlay').show();
+}
+
+function makeNewAnnotation(template) {
+  var copy = {};
+  copyObject(template, copy);
+  copy.newly_added = true;
+  return copy;
+}
 
 var annotationTable =
   function(AnnotationProxy, AnnotationTypeConfig) {
@@ -922,15 +975,16 @@ var annotationTable =
       templateUrl: application_root + '/static/ng_templates/annotation_table.html',
       controller: function($scope) {
         $scope.addNew = function() {
-          var newAnnotation = {
-            newly_added: true,
+          var template = {
             annotation_type: $scope.annotationTypeName,
             feature_type: $scope.featureTypeFilter
           };
           if ($scope.featureIdFilter) {
-            newAnnotation.feature_id = $scope.featureId;
+            template.feature_id = $scope.featureIdFilter;
           }
+          var newAnnotation = makeNewAnnotation(template);
           $scope.annotations.push(newAnnotation);
+          startEditing(newAnnotation);
         };
       },
       link: function(scope) {
@@ -995,7 +1049,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function(AnnotationProxy, AnnotationTypeConfig, CantoConfig, Curs, toaster) {
+  function(AnnotationProxy, AnnotationTypeConfig, CantoConfig, CursGeneList, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -1015,34 +1069,39 @@ var annotationTableRow =
           $scope.evidenceTypes = results;
         });
 
-        Curs.list('gene').success(function(results) {
+        CursGeneList.geneList().then(function(results) {
           $scope.genes = results;
 
           $.map($scope.genes,
                 function(gene) {
                   gene.display_name = gene.primary_name || gene.primary_identifier;
                 });
-        }).error(function() {
+        }).catch(function() {
           toaster.pop('note', "couldn't read the gene list from the server");
         });
 
         $scope.edit = function() {
-          var changes = {};
-          copyObject($scope.annotation, changes);
-          delete changes.newly_added;
-          $scope.annotation.changes = changes;
-          $('#disabled-overlay').show();
+          startEditing($scope.annotation);
+        };
+        $scope.duplicate = function() {
+          var newAnnotation = makeNewAnnotation($scope.annotation);
+          var index = $scope.annotations.indexOf($scope.annotation);
+          $scope.annotations.splice(index + 1, 0, newAnnotation);
+          startEditing(newAnnotation);
         };
         $scope.saveEdit = function() {
           var changes = $scope.annotation.changes;
           delete $scope.annotation.changes;
+          if (!$scope.evidenceTypes[changes.evidence_code].with_gene) {
+            delete changes.with_gene_id;
+          }
           var newly_added = $scope.annotation.newly_added;
           delete $scope.annotation.newly_added;
           loadingStart();
           $element.addClass('edit-pending');
           var q = AnnotationProxy.storeChanges($scope.annotation, changes, newly_added);
           q.catch(function(message) {
-            toaster.pop('note', message);
+            toaster.pop('error', message);
           })
           .finally(function() {
             loadingEnd();
@@ -1061,19 +1120,11 @@ var annotationTableRow =
             arrayRemoveOne($scope.annotations, $scope.annotation);
           }
         };
-
-        if ($scope.annotation.newly_added) {
-          // hack: this is a new annotation created with the "Add ..." button
-          $scope.edit();
-        }
       },
-      link: function(scope) {
-        scope.test = true;
-      }
     };
   };
 
-canto.directive('annotationTableRow', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoConfig', 'Curs', 'toaster', annotationTableRow]);
+canto.directive('annotationTableRow', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', 'toaster', annotationTableRow]);
 
 
 var termNameComplete =

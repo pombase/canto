@@ -109,6 +109,8 @@ sub make_ontology_annotation
       genotype_identifier => $genotype->identifier(),
       genotype_name => $genotype->name(),
       genotype_display_name => $genotype->display_name(),
+      feature_type => 'genotype',
+      feature_id => $genotype->genotype_id(),
     );
   } else {
     my @annotation_genes = $annotation->genes();
@@ -137,6 +139,8 @@ sub make_ontology_annotation
       gene_name_or_identifier => $gene_name_or_identifier,
       gene_product => $gene_product,
       gene_synonyms_string => $gene_synonyms_string,
+      feature_type => 'gene',
+      feature_id => $gene->gene_id(),
     );
   }
 
@@ -166,6 +170,7 @@ sub make_ontology_annotation
   }
 
   my $with_gene;
+  my $with_gene_id;
   my $with_gene_display_name;
 
   if ($with_gene_identifier) {
@@ -174,7 +179,8 @@ sub make_ontology_annotation
                                              $with_gene_identifier });
     my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
                                                   cursdb_gene => $with_gene);
-    $with_gene_display_name = $gene_proxy->display_name()
+    $with_gene_display_name = $gene_proxy->display_name();
+    $with_gene_id = $with_gene->gene_id();
   }
 
   (my $short_date = $annotation->creation_date()) =~ s/-//g;
@@ -201,6 +207,7 @@ sub make_ontology_annotation
     needs_with => $needs_with,
     with_or_from_identifier => $with_gene_identifier,
     with_or_from_display_name => $with_gene_display_name,
+    with_gene_id => $with_gene_id,
     taxonid => $taxonid,
     completed => $completed,
     annotation_extension => $data->{annotation_extension} // '',

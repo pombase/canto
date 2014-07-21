@@ -173,7 +173,8 @@ is ($c2d7_gene->direct_annotations()->count(), 1);
 # create a new Annotation
 $res = $service_utils->create_annotation({
                                            key => $curs_key,
-                                           gene_identifier => $c2d7_identifier,
+                                           feature_id => $c2d7_gene->gene_id(),
+                                           feature_type => 'gene',
                                            annotation_type => 'molecular_function',
                                            term_ontid => 'GO:0022857',
                                            evidence_code => 'IDA',

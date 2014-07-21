@@ -176,16 +176,12 @@ sub list_for_service
   }
 }
 
-sub _check_gene_identifier
+sub _lookup_gene_id
 {
   my $schema = shift;
-  my $gene_identifier = shift;
+  my $gene_id = shift;
 
-  if (defined $schema->resultset('Gene')->find({ primary_identifier => $gene_identifier })) {
-    return;
-  } else {
-    die "no such gene: $gene_identifier\n";
-  }
+  return $schema->resultset('Gene')->find({ gene_id => $gene_id });
 }
 
 sub _term_name_from_id
@@ -205,7 +201,7 @@ sub _term_name_from_id
 
 sub make_annotation
 {
-  my ($self, $feature_identifier, $feature_type, $pub, $annotation_type_name, $data_arg) = @_;
+  my ($self, $pub, $data_arg) = @_;
 
   if (!$data_arg) {
     croak "no \$data passed to make_annotation()\n";
@@ -213,16 +209,14 @@ sub make_annotation
 
   my $data = clone $data_arg;
 
-  if (!$feature_identifier) {
-    croak "no feature_identifier passed to make_annotation()\n";
-  }
-
-  if (!$feature_type) {
-    croak "no feature_type passed to make_annotation()\n";
-  }
-
   if (!$pub) {
     croak "no publication passed to make_annotation()\n";
+  }
+
+  my $annotation_type_name = delete $data->{annotation_type};
+
+  if (!defined $annotation_type_name) {
+    croak "no annotation_type passed in changes hash\n";
   }
 
   if (!$annotation_type_name) {
@@ -252,21 +246,12 @@ sub make_annotation
 
   my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
   if ($needs_with_gene) {
-    if ($data->{with_gene}) {
-      my $with_gene_object;
-
-      eval {
-        $with_gene_object =
-          $curs_schema->find_with_type('Gene', { gene_id => $data->{with_gene} });
-      };
-
-      if (defined $with_gene_object) {
-        $data->{with_gene} = $with_gene_object->primary_identifier();
-      } else {
-        die "can't find 'with' gene: ", $data->{with_gene}, "\n";
-      }
-    } else {
-      die "no 'with' with passed in the data object to make_annotation()\n";
+    if (!$data->{with_gene_id}) {
+      die "no 'with_gene_id' with passed in the data object to make_annotation()\n";
+    }
+  } else {
+    if ($data->{with_gene_id}) {
+      die "annotation with evidence code '$evidence_code' shouldn't have a 'with_gene_id' passed in the data\n";
     }
   }
 
@@ -284,14 +269,6 @@ sub make_annotation
   $self->_store_change_hash($new_annotation, $data);
 
   $self->set_annotation_curator($new_annotation);
-
-  if ($feature_type eq 'gene') {
-    my $gene = $curs_schema->find_with_type('Gene', { primary_identifier => $feature_identifier });
-    $new_annotation->set_genes($gene);
-  } else {
-    my $genotype = $curs_schema->find_with_type('Genotype', { identifier => $feature_identifier });
-    $new_annotation->set_genotypes($genotype);
-  }
 
   return $new_annotation;
 }
@@ -340,25 +317,46 @@ sub _store_change_hash
         die "no such evidence code: $evidence_code\n";
       }
     },
-    gene_identifier => sub {
-      my $gene_identifier = shift;
+    feature_type => sub {
+      return 0;
+    },
+    feature_id => sub {
+      my $feature_id = shift;
 
-#        if (valid gene_identifier) {
-#          <change it>
-#          return 1;
-#        } else { die "...." }
-      die;
+      if (!defined $changes->{feature_type}) {
+        die "no feature_type passed to ServiceUtils\n";
+      }
+
+      if ($changes->{feature_type} eq 'gene') {
+        my $gene = $self->curs_schema()->find_with_type('Gene', { gene_id => $feature_id });
+        $annotation->gene_annotations()->delete();
+        $annotation->set_genes($gene);
+      } else {
+        my $genotype =
+          $self->curs_schema()->find_with_type('Genotype', { genotype_id => $feature_id });
+        $annotation->genotype_annotations()->delete();
+        $annotation->set_genotypes($genotype);
+      }
+      return 1;
     },
     submitter_comment => 1,
     annotation_extension => 1,
-    with_or_from_identifier => sub {
-      my $gene_identifier = shift;
+    with_gene_id => sub {
+      my $gene_id = shift;
 
-      # dies on failure
-      _check_gene_identifier($self->curs_schema(), $gene_identifier);
+      if ($gene_id) {
+        my $gene = _lookup_gene_id($self->curs_schema(), $gene_id);
 
-      # set this field
-      return "with_gene";
+        if (defined $gene) {
+          $data->{with_gene} = $gene->primary_identifier();
+          return 1;
+        } else {
+          die "can't find gene with id: $gene_id\n";
+        }
+      } else {
+        # set with_gene to undef
+        return undef;
+      }
     },
     term_suggestion => 1,
   );
@@ -381,9 +379,10 @@ sub _store_change_hash
 
       if ($res) {
         if (looks_like_number($res)) {
+          # non-zero was returned - do nothing
           next CHANGE;
         } else {
-          # it returns a different key to set
+          # it returned a different key to set
           $key_to_set = $res;
         }
       }
@@ -394,6 +393,12 @@ sub _store_change_hash
 
   $annotation->data($data);
   $annotation->update();
+
+  if (!$annotation->gene_annotations() &&
+      !$annotation->genotype_annotations()) {
+    die "annotation ", $annotation->annotation_id(),
+      " has no gene or genotype\n";
+  }
 }
 
 
@@ -462,9 +467,8 @@ sub change_annotation
  Usage   : $service_utils->create_annotation($data_hash);
  Function: Create an annotation in the Curs database based on the $details hash.
  Args    : $details - annotation details:
-             - gene_identifier: a gene primary_identifier
-                                (eg. "SPAC27D7.13c") - required
-             - genotype_identifier: a genotype identifier
+             - gene_id: a gene_id
+             - genotype_id: a genotype id
              - annotation_type: a CV name (eg. "molecular_function") - required
              - term_ontid: a term accession (eg. "GO:0000137") - required
 
@@ -485,32 +489,8 @@ sub create_annotation
   my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
   my $pub = $curs_schema->resultset('Pub')->find($pub_id);
 
-  my $gene_identifier = delete $details->{gene_identifier};
-  my $genotype_identifier = delete $details->{genotype_identifier};
-
-  if (!$gene_identifier && !$genotype_identifier) {
-    croak "no gene or genotype identifier passed in changes hash\n";
-  }
-
-  my $feature_type;
-
-  if ($gene_identifier) {
-    $feature_type = 'gene';
-  } else {
-    $feature_type = 'genotype';
-  }
-
-  my $feature_identifier = $gene_identifier || $genotype_identifier;
-
-  my $annotation_type_name = delete $details->{annotation_type};
-
-  if (!defined $annotation_type_name) {
-    croak "no annotation_type passed in changes hash\n";
-  }
-
   try {
-    my $annotation = $self->make_annotation($feature_identifier, $feature_type, $pub,
-                                            $annotation_type_name, $details);
+    my $annotation = $self->make_annotation($pub, $details);
     my $annotation_hash =
       Canto::Curs::Utils::make_ontology_annotation($self->config(),
                                                    $curs_schema,
