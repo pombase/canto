@@ -1296,6 +1296,7 @@ available_annotation_type_list:
     short_display_name: 'molecular function'
     display_name: 'GO molecular function'
     feature_type: 'gene'
+    can_have_with: 1
     evidence_codes:
       - IDA
       - IGI
@@ -1330,6 +1331,7 @@ available_annotation_type_list:
     short_display_name: 'biological process'
     display_name: 'GO biological process'
     feature_type: 'gene'
+    can_have_with: 1
     evidence_codes:
       - IMP
       - IDA
@@ -1370,6 +1372,7 @@ available_annotation_type_list:
     short_display_name: 'cellular component'
     display_name: 'GO cellular component'
     feature_type: 'gene'
+    can_have_with: 1
     evidence_codes:
       - IDA
       - IGI
@@ -1404,6 +1407,7 @@ available_annotation_type_list:
     display_name: 'phenotype'
     show_synonyms: always
     feature_type: 'genotype'
+    can_have_conditions: 1
     evidence_codes:
       - Cell growth assay
       - Chromatin immunoprecipitation experiment

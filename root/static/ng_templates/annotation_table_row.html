@@ -1,7 +1,25 @@
 <tr ng-class="{'inline-edit-active-row': annotation.changes}">
-  <td ng-if="Type.feature_type === 'gene' && !geneIdentifier">{{annotation.gene_name_or_identifier}}</td>
-  <td ng-if="annotationType.feature_type === 'genotype' && !genotypeIdentifier">{{annotation.genotype_display_name}}</td>
-  <td>{{annotation.term_ontid}}</td>
+  <td ng-if="annotation.feature_type === 'gene' && !featureIdFilter">
+    <span ng-if="annotation.changes">
+      &nbsp;
+    </span>
+    <span ng-if="!annotation.changes">
+      {{annotation.gene_name_or_identifier}}
+    </span>
+  </td>
+  <td ng-if="annotation.feature_type === 'genotype' && !featureIdFilter">
+    <span ng-if="annotation.changes">
+      &nbsp;
+    </span>
+    <span ng-if="!annotation.changes">
+      {{annotation.genotype_display_name}}
+    </span>
+  </td>
+  <td>
+    <span ng-if="!annotation.changes">
+      {{annotation.term_ontid}}
+    </span>
+  </td>
   <td>
     <span ng-if="!annotation.changes">{{annotation.term_name}}</span>
     <div ng-class="{'inline-edit-active': annotation.changes}">
@@ -24,7 +42,7 @@
     </select>
     </div>
   </td>
-  <td>
+  <td ng-if="annotationType.can_have_with">
     <span ng-if="!annotation.changes">{{annotation.with_or_from_display_name || annotation.with_or_from_identifier}}</span>
     <div ng-class="{'inline-edit-active': annotation.changes}">
     <select class="form-control"
@@ -35,7 +53,7 @@
     </select>
     </div>
   </td>
-  <td>{{annotation.conditions}}</td>
+  <td ng-if="annotationType.can_have_conditions">{{annotation.conditions}}</td>
   <td>{{annotation.qualifiers}}</td>
   <td>
     <span ng-if="!annotation.changes">

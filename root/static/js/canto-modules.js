@@ -962,6 +962,10 @@ function makeNewAnnotation(template) {
   return copy;
 }
 
+function capitalize (text) {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+}
+
 var annotationTable =
   function(AnnotationProxy, AnnotationTypeConfig) {
     return {
@@ -997,6 +1001,7 @@ var annotationTable =
                                     });
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
           scope.annotationType = annotationType;
+          scope.displayAnnotationFeatureType = capitalize(annotationType.feature_type);
         });
       }
     };
@@ -1015,12 +1020,6 @@ var annotationTableList =
       replace: true,
       templateUrl: application_root + '/static/ng_templates/annotation_table_list.html',
       controller: function($scope) {
-        function capitalize (text) {
-          return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-        }
-        $scope.displayFeatureType = function() {
-          return capitalize($scope.featureType);
-        };
         $scope.app_static_path = CantoGlobals.app_static_path;
       },
       link: function(scope) {

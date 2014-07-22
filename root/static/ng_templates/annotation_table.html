@@ -11,12 +11,12 @@
         <table class="list">
           <thead>
             <tr>
-              <th ng-if="featureType">{{displayFeatureType()}}</th>
+              <th ng-if="!featureIdFilter">{{displayAnnotationFeatureType}}</th>
               <th>Term ID</th>
               <th>Term name</th>
               <th>Evidence code</th>
-              <th>With</th>
-              <th>Conditions</th>
+              <th ng-if="annotationType.can_have_with">With</th>
+              <th ng-if="annotationType.can_have_conditions">Conditions</th>
               <th>Qualifiers</th>
               <th>Term suggestion</th>
               <th>Comment</th>
