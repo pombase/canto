@@ -110,6 +110,7 @@ sub make_ontology_annotation
       genotype_name => $genotype->name(),
       genotype_display_name => $genotype->display_name(),
       feature_type => 'genotype',
+      feature_display_name => $genotype->display_name(),
       feature_id => $genotype->genotype_id(),
     );
   } else {
@@ -140,6 +141,7 @@ sub make_ontology_annotation
       gene_product => $gene_product,
       gene_synonyms_string => $gene_synonyms_string,
       feature_type => 'gene',
+      feature_display_name => $gene_name_or_identifier,
       feature_id => $gene->gene_id(),
     );
   }

@@ -310,7 +310,9 @@ sub _store_change_hash
     evidence_code => sub {
       my $evidence_code = shift;
 
-      if ($self->config()->{evidence_types}->{$evidence_code}) {
+      my $evidence_config = $self->config()->{evidence_types}->{$evidence_code};
+
+      if (defined $evidence_config) {
         # do the default - set Annotation->data()->{...}
         return 0
       } else {
@@ -391,14 +393,27 @@ sub _store_change_hash
     $data->{$key_to_set} = $changes->{$key};
   }
 
-  $annotation->data($data);
-  $annotation->update();
+  my $evidence_code = $data->{evidence_code};
+
+  if (!defined $evidence_code) {
+    die "annotation ", $annotation->annotation_id(),
+      "has no evidence_code";
+  }
+
+  my $evidence_config = $self->config()->{evidence_types}->{$evidence_code};
+
+  if (!$evidence_config->{with_gene}) {
+    delete $data->{with_gene};
+  }
 
   if (!$annotation->gene_annotations() &&
       !$annotation->genotype_annotations()) {
     die "annotation ", $annotation->annotation_id(),
       " has no gene or genotype\n";
   }
+
+  $annotation->data($data);
+  $annotation->update();
 }
 
 

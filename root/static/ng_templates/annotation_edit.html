@@ -1,0 +1,95 @@
+<div class="modal-content"
+     ng-if="annotationType && evidenceTypes && genes">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      Edit {{annotationType.display_name}} annotation for {{annotation.feature_display_name}}
+    </h4>
+  </div>
+  <div class="modal-body">
+    <table class="curs-definition-table">
+      <tr ng-if="!featureIdFilter">
+        <td class="title">{{displayAnnotationFeatureType}}</td>
+        <td>{{annotation.feature_display_name}}</td>
+      </tr>
+      <tr>
+        <td class="title">Term name</td>
+        <td>
+          <term-name-complete current-term-name="{{annotation.term_name}}"
+                              found-term-id="annotation.term_ontid"
+                              found-term-name="annotation.term_name"
+                              annotation-type-name="{{annotationType.name}}">
+          </term-name-complete>
+        </td>
+      </tr>
+      <tr>
+        <td class="title">Evidence code</td>
+        <td>
+          <select class="form-control"
+                  ng-model="annotation.evidence_code"
+                  ng-options="code for code in annotationType.evidence_codes">
+            <option selected="selected" value="">Choose an evidence code ...</option>
+          </select>
+        </td>
+      </tr>
+      <tr ng-if="evidenceTypes[annotation.evidence_code].with_gene">
+        <td class="title">With</td>
+        <td>
+          <select class="form-control"
+                  ng-model="annotation.with_gene_id"
+                  ng-options="gene.gene_id as gene.display_name for gene in genes">
+            <option selected="selected" value="">Choose a gene ...</option>
+          </select>
+        </td>
+      </tr>
+      <tr ng-if="annotationType.can_have_conditions">
+        <td class="title">Conditions</td>
+        <td>
+          {{annotation.conditions}}
+        </td>
+      </tr>
+      <tr>
+        <td class="title" rowspan="2">Term suggestion</td>
+        <td>
+          <input class="form-control"
+                 type="text" placeholder="Name ..."
+                 ng-model="annotation.term_suggestion.name"
+                 value="{{annotation.term_suggestion.name}}"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <textarea class="form-control"
+                    placeholder="Definition ..."
+                    ng-model="annotation.term_suggestion.definition"
+                    value="{{annotation.term_suggestion.definition}}"/>
+        </td>
+      </tr>
+      <tr>
+        <td class="title">Comment</td>
+        <td>
+          <input class="form-control"
+                 type="text"
+                 ng-model="annotation.submitter_comment"
+                 value="{{annotation.submitter_comment}}"/>
+        </td>
+      </tr>
+      <tr>
+        <td class="title">Annotation extension</td>
+        <td>
+          <textarea class="form-control"
+                    ng-model="annotation.annotation_extension"
+                    value="{{annotation.annotation_extension}}"/>
+        </td>
+      </tr>
+      <tr>
+        <td class="title">Curator</td>
+        <td>{{annotation.curator}}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok()" ng-disabled="!isValid()">OK</button>
+  </div>
+
+</div>

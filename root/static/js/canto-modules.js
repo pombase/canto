@@ -4,6 +4,10 @@
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable', 'toaster']);
 
+function capitalize (text) {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+}
+
 function countKeys(o) {
   var size = 0, key;
   for (key in o) {
@@ -356,7 +360,7 @@ canto.directive('alleleNameComplete', ['AlleleService', 'toaster', alleleNameCom
 
 
 var alleleEditDialogCtrl =
-  function($scope, $http, $modalInstance, $q, CantoConfig, args) {
+  function($scope, $modalInstance, CantoConfig, args) {
     $scope.gene = {
       display_name: args.gene_display_name,
       systemtic_id: args.gene_systemtic_id,
@@ -463,7 +467,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$http', '$modalInstance', '$q',
+                 ['$scope', '$modalInstance',
                   'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
 
@@ -812,11 +816,93 @@ var keysForServer = {
   with_gene_id: true,
 };
 
-function startEditing(annotation) {
-  var changes = {};
-  copyObject(annotation, changes, keysForServer);
-  annotation.changes = changes;
-  $('#disabled-overlay').show();
+var annotationEditDialogCtrl =
+  function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
+           CursGeneList, CantoConfig, toaster, args) {
+    $scope.annotation = {};
+    $scope.annotationTypeName = args.annotationTypeName;
+
+    copyObject(args.annotation, $scope.annotation);
+
+    $scope.isValid = function() {
+      var annotation = $scope.annotation;
+      return annotation.term_ontid && annotation.evidence_code &&
+        (!$scope.evidenceTypes[annotation.evidence_code].with_gene ||
+         annotation.with_gene_id);
+    };
+
+    $scope.ok = function() {
+      if (!$scope.evidenceTypes[$scope.annotation.evidence_code].with_gene) {
+        $scope.annotation.with_gene_id = undefined;
+      }
+
+      var q = AnnotationProxy.storeChanges(args.annotation,
+                                           $scope.annotation, args.newlyAdded);
+      q.then(function(annotation) {
+        copyObject(annotation, args.annotation);
+      })
+      .catch(function(message) {
+        toaster.pop('error', message);
+      })
+      .finally(function() {
+        $modalInstance.close($scope.annotation);
+      });
+    };
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('cancel');
+    };
+
+    CantoConfig.get('evidence_types').success(function(results) {
+      $scope.evidenceTypes = results;
+    });
+
+    AnnotationTypeConfig.getByName($scope.annotationTypeName)
+      .then(function(annotationType) {
+        $scope.annotationType = annotationType;
+        $scope.displayAnnotationFeatureType = capitalize(annotationType.feature_type);
+      });
+
+    CursGeneList.geneList().then(function(results) {
+      $scope.genes = results;
+
+      $.map($scope.genes,
+            function(gene) {
+              gene.display_name = gene.primary_name || gene.primary_identifier;
+            });
+    }).catch(function() {
+      toaster.pop('note', "couldn't read the gene list from the server");
+    });
+  };
+
+
+canto.controller('AnnotationEditDialogCtrl',
+                 ['$scope', '$modalInstance', 'AnnotationProxy',
+                  'AnnotationTypeConfig', 'CursGeneList', 'CantoConfig', 'toaster',
+                  'args',
+                  annotationEditDialogCtrl]);
+
+
+
+function startEditing($modal, annotationTypeName, annotation, newlyAdded) {
+  var editInstance = $modal.open({
+    templateUrl: application_root + '/static/ng_templates/annotation_edit.html',
+    controller: 'AnnotationEditDialogCtrl',
+    title: 'Edit this annotation',
+    animate: false,
+    size: 'lg',
+    resolve: {
+      args: function() {
+        return {
+          annotation: annotation,
+          annotationTypeName: annotationTypeName,
+          newlyAdded: newlyAdded,
+        };
+      }
+    }
+  });
+  
+  return editInstance.result;
 }
 
 function makeNewAnnotation(template) {
@@ -826,12 +912,8 @@ function makeNewAnnotation(template) {
   return copy;
 }
 
-function capitalize (text) {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-}
-
-var annotationTable =
-  function(AnnotationProxy, AnnotationTypeConfig) {
+var annotationTableCtrl =
+  function($modal, AnnotationProxy, AnnotationTypeConfig) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -852,7 +934,12 @@ var annotationTable =
           }
           var newAnnotation = makeNewAnnotation(template);
           $scope.annotations.push(newAnnotation);
-          startEditing(newAnnotation);
+          var editPromise = 
+            startEditing($modal, $scope.annotationTypeName, newAnnotation, true);
+
+          editPromise.catch(function() {
+            arrayRemoveOne($scope.annotations, newAnnotation);
+          });
         };
       },
       link: function(scope) {
@@ -871,7 +958,7 @@ var annotationTable =
     };
   };
 
-canto.directive('annotationTable', ['AnnotationProxy', 'AnnotationTypeConfig', annotationTable]);
+canto.directive('annotationTable', ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig', annotationTableCtrl]);
 
 var annotationTableList =
   function(AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
@@ -912,7 +999,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function(AnnotationProxy, AnnotationTypeConfig, CantoConfig, CursGeneList, toaster) {
+  function($modal, AnnotationTypeConfig, CantoConfig, CursGeneList, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -944,50 +1031,23 @@ var annotationTableRow =
         });
 
         $scope.edit = function() {
-          startEditing($scope.annotation);
+          startEditing($modal, annotation.annotation_type, $scope.annotation, false);
         };
         $scope.duplicate = function() {
           var newAnnotation = makeNewAnnotation($scope.annotation);
           var index = $scope.annotations.indexOf($scope.annotation);
           $scope.annotations.splice(index + 1, 0, newAnnotation);
-          startEditing(newAnnotation);
-        };
-        $scope.saveEdit = function() {
-          var changes = $scope.annotation.changes;
-          delete $scope.annotation.changes;
-          if (!$scope.evidenceTypes[changes.evidence_code].with_gene) {
-            delete changes.with_gene_id;
-          }
-          var newly_added = $scope.annotation.newly_added;
-          delete $scope.annotation.newly_added;
-          loadingStart();
-          $element.addClass('edit-pending');
-          var q = AnnotationProxy.storeChanges($scope.annotation, changes, newly_added);
-          q.catch(function(message) {
-            toaster.pop('error', message);
-          })
-          .finally(function() {
-            loadingEnd();
-            $('#disabled-overlay').hide();
-            $element.removeClass('edit-pending');
-          });
-        };
-        $scope.cancelEdit = function() {
-          $('#disabled-overlay').hide();
-          delete $scope.annotation.changes;
-          var newly_added = $scope.annotation.newly_added;
-          delete $scope.annotation.newly_added;
+          var editPromise = startEditing($modal, annotation.annotation_type, newAnnotation, true);
 
-          if (newly_added) {
-            // this annotation was just added, so delete it
-            arrayRemoveOne($scope.annotations, $scope.annotation);
-          }
+          editPromise.catch(function() {
+            arrayRemoveOne($scope.annotations, newAnnotation);
+          });
         };
       },
     };
   };
 
-canto.directive('annotationTableRow', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', 'toaster', annotationTableRow]);
+canto.directive('annotationTableRow', ['$modal', 'AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', 'toaster', annotationTableRow]);
 
 
 var termNameComplete =
