@@ -1228,12 +1228,8 @@ a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
 }
 
 .modal-content {
-  background-color: #24a0ff;
+  margin-top: 20%;
 }
-.modal-body {
-  background-color: #fff;
-}
-
 
 table tr td.curs-table-row-remove {
   border-style: none;
