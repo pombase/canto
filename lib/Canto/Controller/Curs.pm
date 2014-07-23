@@ -3329,6 +3329,25 @@ sub ws_annotation_create : Chained('top') PathPart('ws/annotation/create')
   $c->forward('View::JSON');
 }
 
+sub ws_annotation_delete : Chained('top') PathPart('ws/annotation/delete')
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  my $type = $st->{ws_type};
+  my $schema = $st->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  my $json_data = $c->req()->body_data();
+
+  $c->stash->{json_data} = $service_utils->delete_annotation($json_data);
+
+  $c->forward('View::JSON');
+}
+
 sub cancel_approval : Chained('top') Args(0)
 {
   my ($self, $c) = @_;

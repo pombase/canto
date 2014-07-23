@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 34;
+use Test::More tests => 39;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -194,3 +194,25 @@ is ($res->{annotation}->{submitter_comment}, undef);
 is ($res->{annotation}->{curator}, 'Some Testperson <some.testperson@pombase.org>');
 
 is ($c2d7_gene->direct_annotations()->count(), 2);
+
+my $new_annotation_id = $res->{annotation}->{annotation_id};
+
+my $new_annotation = $curs_schema->find_with_type('Annotation', $new_annotation_id);
+is ($new_annotation->data()->{term_ontid}, 'GO:0022857');
+
+
+# test lack of information
+$res = $service_utils->create_annotation({
+                                           key => $curs_key,
+                                         });
+is ($res->{status}, 'error');
+is ($res->{message}, 'no annotation_type passed in changes hash');
+
+# delete
+$res = $service_utils->delete_annotation({
+                                           key => $curs_key,
+                                           annotation_id => $new_annotation_id,
+                                         });
+
+is ($c2d7_gene->direct_annotations()->count(), 1);
+is ($curs_schema->resultset('Annotation')->search({ annotation_id => $new_annotation_id })->count(), 0);

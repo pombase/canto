@@ -216,11 +216,11 @@ sub make_annotation
   my $annotation_type_name = delete $data->{annotation_type};
 
   if (!defined $annotation_type_name) {
-    croak "no annotation_type passed in changes hash\n";
+    die "no annotation_type passed in changes hash\n";
   }
 
   if (!$annotation_type_name) {
-    croak "no annotation_type_name passed to make_annotation()\n";
+    die "no annotation_type_name passed to make_annotation()\n";
   }
 
   my $curs_schema = $self->curs_schema();
@@ -229,15 +229,15 @@ sub make_annotation
 
   my $evidence_code = $data->{evidence_code};
   if (!defined $evidence_code) {
-    croak "Adding annotation failed - no evidence_code\n";
+    die "Adding annotation failed - no evidence_code\n";
   }
 
   my $term_ontid = $data->{term_ontid};
   if (!defined $term_ontid) {
-    croak "Adding annotation failed - no term ID\n";
+    die "Adding annotation failed - no term ID\n";
   }
   if (!defined $self->_term_name_from_id($term_ontid)) {
-    croak "Adding annotation failed - invalid term ID\n";
+    die "Adding annotation failed - invalid term ID\n";
   }
 
   my %annotation_data = (
@@ -273,19 +273,27 @@ sub make_annotation
   return $new_annotation;
 }
 
+sub _check_curs_key
+{
+  my $self = shift;
+  my $details = shift;
+
+  my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
+
+  if (!defined $details->{key} || $details->{key} ne $curs_key) {
+    die "incorrect key\n";
+  }
+
+  delete $details->{key};
+}
+
 sub _store_change_hash
 {
   my $self = shift;
   my $annotation = shift;
   my $changes = shift;
 
-  my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
-
-  if (!defined $changes->{key} || $changes->{key} ne $curs_key) {
-    die "incorrect key\n";
-  }
-
-  delete $changes->{key};
+  $self->_check_curs_key($changes);
 
   my $data = $annotation->data();
 
@@ -479,7 +487,7 @@ sub change_annotation
 
 =head2
 
- Usage   : $service_utils->create_annotation($data_hash);
+ Usage   : $service_utils->create_annotation($details);
  Function: Create an annotation in the Curs database based on the $details hash.
  Args    : $details - annotation details:
              - gene_id: a gene_id
@@ -523,6 +531,46 @@ sub create_annotation
     return { status => 'error',
              message => $_ };
   };
+}
+
+=head2
+
+ Usage   : $service_utils->delete_annotation($details);
+ Function: Delete an annotation in the Curs database
+ Args    : $details - annotation details:
+             - key: the curs key
+             - annotation_id: ID of the annotation to delete
+
+ Return  : { status: 'success' }
+         or:
+           { status: 'error', message: '...' }
+
+=cut
+
+sub delete_annotation
+{
+  my $self = shift;
+  my $details = shift;
+
+  my $curs_schema = $self->curs_schema();
+  $curs_schema->txn_begin();
+
+  try {
+    $self->_check_curs_key($details);
+
+    my $annotation_id = $details->{annotation_id};
+    $curs_schema->find_with_type('Annotation', $annotation_id)->delete();
+
+    $curs_schema->txn_commit();
+
+    return { status => 'success' };
+  } catch {
+    $curs_schema->txn_rollback();
+
+    chomp $_;
+    return { status => 'error',
+             message => $_ };
+  }
 }
 
 1;

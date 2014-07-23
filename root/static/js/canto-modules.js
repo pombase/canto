@@ -1,6 +1,6 @@
 'use strict';
 
-/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key */
+/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable', 'toaster']);
 
@@ -144,6 +144,27 @@ var annotationProxy =
         q.resolve(filteredAnnotations);
       }).error(function() {
         q.reject();
+      });
+
+      return q.promise;
+    };
+
+    this.deleteAnnotation = function(annotation) {
+      var q = $q.defer();
+
+      var details = { key: curs_key,
+                      annotation_id: annotation.annotation_id };
+
+      var putQ = $http.put(curs_root_uri + '/ws/annotation/delete', details);
+
+      putQ.success(function(response) {
+        if (response.status === 'success') {
+          q.resolve();
+        } else {
+          q.reject(response.message);
+        }
+      }).error(function(data, status) {
+        q.reject('Deletion request to server failed: ' + status);
       });
 
       return q.promise;
@@ -999,7 +1020,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function($modal, AnnotationTypeConfig, CantoConfig, CursGeneList, toaster) {
+  function($modal, AnnotationProxy, AnnotationTypeConfig, CantoConfig, CursGeneList, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -1043,11 +1064,26 @@ var annotationTableRow =
             arrayRemoveOne($scope.annotations, newAnnotation);
           });
         };
+        $scope.delete = function() {
+          bootbox.confirm("Are you sure?", function(confirmed) {
+            if (confirmed) {
+              AnnotationProxy.deleteAnnotation(annotation)
+                .then(function() {
+                  arrayRemoveOne($scope.annotations, annotation);
+                })
+                .catch(function(message) {
+                  toaster.pop('note', "couldn't delete the annotation: " + message);
+                });
+            }
+          }); 
+        };
       },
     };
   };
 
-canto.directive('annotationTableRow', ['$modal', 'AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', 'toaster', annotationTableRow]);
+canto.directive('annotationTableRow',
+                ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig',
+                 'CantoConfig', 'CursGeneList', 'toaster', annotationTableRow]);
 
 
 var termNameComplete =
