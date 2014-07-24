@@ -505,6 +505,11 @@ sub create_annotation
   my $self = shift;
   my $details = shift;
 
+  if (!defined $details->{feature_id}) {
+    return { status => 'error',
+             message => 'No feature_id passed to create annotation service' };
+  }
+
   my $curs_schema = $self->curs_schema();
   $curs_schema->txn_begin();
 
