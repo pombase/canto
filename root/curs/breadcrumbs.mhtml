@@ -8,11 +8,10 @@
     <a href="<% $curs_root_uri %>" title="Go to the home page">
       <% defined $pub ? $pub->uniquename() : "UNKNOWN PUBLICATION" %> summary
     </a>
-% if (defined $gene) {
-%   my $gene_display_name = $gene->display_name();
+% if (defined $feature_url) {
     <div id="breadcrumbs-gene-link" class="breadcrumbs-link">
-      <a href="<% $gene_url %>" title="Go to the home page">
-      Gene: <% $gene_display_name %>
+      <a href="<% $feature_url %>" title="<% $display_name %>">
+      <% $display_name %>
       </a>
     </div>
 % }
@@ -22,7 +21,23 @@
 
 <%init>
 my $config = $c->config();
-my $gene = $c->stash()->{gene};
+my $feature_id;
+my $feature_type;
+my $display_name;
+
+if ($c->stash()->{gene}) {
+  my $gene = $c->stash()->{gene};
+  $feature_id = $gene->gene_id();
+  $feature_type = 'gene';
+  $display_name = $gene->display_name();
+}
+if ($c->stash()->{genotype}) {
+  my $genotype = $c->stash()->{genotype};
+  $feature_id = $genotype->genotype_id();
+  $feature_type = 'genotype';
+  $display_name = $genotype->display_name();
+}
+
 my $pub = $c->stash()->{pub};
 my $curs_root_uri = $c->stash()->{curs_root_uri};
 my $instance_text;
@@ -32,9 +47,9 @@ if (defined $config->{database_name}) {
   $instance_text = $config->{name};
 }
 my $instance_top_uri = $c->uri_for('/');
-my $gene_url;
+my $feature_url;
 
-if (defined $gene) {
-  $gene_url = $curs_root_uri . '/feature/gene/view/' . $gene->gene_id();
+if (defined $feature_id) {
+  $feature_url = "$curs_root_uri/feature/$feature_type/view/$feature_id";
 }
 </%init>
