@@ -490,8 +490,8 @@ sub change_annotation
  Usage   : $service_utils->create_annotation($details);
  Function: Create an annotation in the Curs database based on the $details hash.
  Args    : $details - annotation details:
-             - gene_id: a gene_id
-             - genotype_id: a genotype id
+             - feature_id: a gene_id or a genotype_id
+             - feature_type: "gene" or "genotype"
              - annotation_type: a CV name (eg. "molecular_function") - required
              - term_ontid: a term accession (eg. "GO:0000137") - required
 
