@@ -91,6 +91,7 @@ my $track_schema = Canto::TrackDB->new(config => $config);
 
 my $user_proc = sub {
   my $curs = shift;
+  my $curs_key = $curs->curs_key();
   my $curs_schema = shift;
   my $track_schema = shift;
 
