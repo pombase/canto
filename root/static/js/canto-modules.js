@@ -845,11 +845,29 @@ var annotationEditDialogCtrl =
 
     copyObject(args.annotation, $scope.annotation);
 
-    $scope.isValid = function() {
+    $scope.isValidFeature = function() {
+      return $scope.annotation.feature_id;
+    };
+
+    $scope.isValidTerm = function() {
+      return $scope.annotation.term_ontid;
+    };
+
+    $scope.isValidEvidence = function() {
+      return $scope.annotation.evidence_code;
+    };
+
+    $scope.isValidWithGene = function() {
       var annotation = $scope.annotation;
-      return annotation.term_ontid && annotation.evidence_code &&
+      return annotation.evidence_code &&
         (!$scope.evidenceTypes[annotation.evidence_code].with_gene ||
          annotation.with_gene_id);
+    };
+
+    $scope.isValid = function() {
+      return $scope.isValidFeature() &&
+        $scope.isValidTerm() && $scope.isValidEvidence() &&
+        $scope.isValidWithGene();
     };
 
     $scope.ok = function() {
