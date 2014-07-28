@@ -124,6 +124,20 @@ canto.service('AlleleService', function(CantoService) {
   };
 });
 
+var keysForServer = {
+  annotation_extension: true,
+  annotation_type: true,
+  evidence_code: true,
+  feature_id: true,
+  feature_type: true,
+//  is_not: true,
+//  qualifiers: true,
+  submitter_comment: true,
+  term_ontid: true,
+  term_suggestion: true,
+  with_gene_id: true,
+};
+
 var annotationProxy =
   function(Curs, $q, $http) {
   this.allAnnotationQ = undefined;
@@ -193,13 +207,17 @@ var annotationProxy =
 
     if (newly_added) {
       // special case, copy everything
-      changesToStore = changes;
+      copyObject(changes, changesToStore, keysForServer);
     } else {
       copyIfChanged(annotation, changes, changesToStore);
 
       if (countKeys(changesToStore) === 0) {
         q.reject('No changes to store');
         return q.promise;
+      }
+
+      if (changesToStore.feature_id) {
+        changesToStore.feature_type = annotation.feature_type;
       }
     }
 
@@ -839,20 +857,6 @@ var evidenceSelectCtrl =
 canto.controller('EvidenceSelectCtrl',
                  ['$scope', evidenceSelectCtrl]);
 
-var keysForServer = {
-  annotation_extension: true,
-  annotation_type: true,
-  evidence_code: true,
-  feature_id: true,
-  feature_type: true,
-//  is_not: true,
-//  qualifiers: true,
-  submitter_comment: true,
-  term_ontid: true,
-  term_suggestion: true,
-  with_gene_id: true,
-};
-
 var annotationEditDialogCtrl =
   function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
            CursGeneList, CursGenotypeList, CantoConfig, toaster, args) {
@@ -895,12 +899,11 @@ var annotationEditDialogCtrl =
                                            $scope.annotation, args.newlyAdded);
       q.then(function(annotation) {
         copyObject(annotation, args.annotation);
+        $modalInstance.close($scope.annotation);
       })
       .catch(function(message) {
         toaster.pop('error', message);
-      })
-      .finally(function() {
-        $modalInstance.close($scope.annotation);
+        $modalInstance.dismiss();
       });
     };
 
@@ -999,12 +1002,11 @@ var annotationTableCtrl =
             template.feature_id = $scope.featureIdFilter;
           }
           var newAnnotation = makeNewAnnotation(template);
-          $scope.annotations.push(newAnnotation);
           var editPromise = 
             startEditing($modal, $scope.annotationTypeName, newAnnotation, true);
 
-          editPromise.catch(function() {
-            arrayRemoveOne($scope.annotations, newAnnotation);
+          editPromise.then(function() {
+            $scope.annotations.push(newAnnotation);
           });
         };
       },
@@ -1101,12 +1103,11 @@ var annotationTableRow =
         };
         $scope.duplicate = function() {
           var newAnnotation = makeNewAnnotation($scope.annotation);
-          var index = $scope.annotations.indexOf($scope.annotation);
-          $scope.annotations.splice(index + 1, 0, newAnnotation);
           var editPromise = startEditing($modal, annotation.annotation_type, newAnnotation, true);
 
-          editPromise.catch(function() {
-            arrayRemoveOne($scope.annotations, newAnnotation);
+          editPromise.then(function() {
+            var index = $scope.annotations.indexOf($scope.annotation);
+            $scope.annotations.splice(index + 1, 0, newAnnotation);
           });
         };
         $scope.delete = function() {
