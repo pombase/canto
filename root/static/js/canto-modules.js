@@ -1,6 +1,6 @@
 'use strict';
 
-/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox */
+/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable', 'toaster']);
 
@@ -955,7 +955,7 @@ canto.controller('AnnotationEditDialogCtrl',
 
 function startEditing($modal, annotationTypeName, annotation, newlyAdded) {
   var editInstance = $modal.open({
-    templateUrl: application_root + '/static/ng_templates/annotation_edit.html',
+    templateUrl: app_static_path + 'ng_templates/annotation_edit.html',
     controller: 'AnnotationEditDialogCtrl',
     title: 'Edit this annotation',
     animate: false,
@@ -991,7 +991,7 @@ var annotationTableCtrl =
       },
       restrict: 'E',
       replace: true,
-      templateUrl: application_root + '/static/ng_templates/annotation_table.html',
+      templateUrl: app_static_path + 'ng_templates/annotation_table.html',
       controller: function($scope) {
         $scope.addNew = function() {
           var template = {
@@ -1037,7 +1037,7 @@ var annotationTableList =
       },
       restrict: 'E',
       replace: true,
-      templateUrl: application_root + '/static/ng_templates/annotation_table_list.html',
+      templateUrl: app_static_path + 'ng_templates/annotation_table_list.html',
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
       },
@@ -1071,7 +1071,7 @@ var annotationTableRow =
     return {
       restrict: 'A',
       replace: true,
-      templateUrl: application_root + '/static/ng_templates/annotation_table_row.html',
+      templateUrl: app_static_path + 'ng_templates/annotation_table_row.html',
       controller: function($scope, $element) {
         $scope.data = {};
 
