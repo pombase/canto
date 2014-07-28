@@ -36,7 +36,6 @@ under the same terms as Perl itself.
 
 =cut
 
-use perl5i::2;
 use Moose::Role;
 
 use Canto::Curs::State qw(APPROVAL_IN_PROGRESS);
