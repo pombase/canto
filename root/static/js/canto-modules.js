@@ -1143,7 +1143,7 @@ var termNameComplete =
       },
       replace: true,
       restrict: 'E',
-      template: '<input type="text" class="form-control" value="{{currentTermName}}"/>',
+      template: '<input size="40" type="text" class="form-control" value="{{currentTermName}}"/>',
       link: function(scope, elem) {
         elem.autocomplete({
           minLength: 2,
