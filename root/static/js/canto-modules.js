@@ -85,6 +85,22 @@ canto.service('CursGeneList', function($q, Curs) {
   };
 });
 
+canto.service('CursGenotypeList', function($q, Curs) {
+  this.cursPromise = Curs.list('genotype');
+
+  this.genotypeList = function() {
+    var q = $q.defer();
+
+    this.cursPromise.success(function(genotypes) {
+      q.resolve(genotypes);
+    }).error(function() {
+      q.reject();
+    });
+
+    return q.promise;
+  };
+});
+
 canto.service('CantoGlobals', function($window) {
   this.app_static_path = $window.app_static_path;
 });
@@ -839,7 +855,7 @@ var keysForServer = {
 
 var annotationEditDialogCtrl =
   function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
-           CursGeneList, CantoConfig, toaster, args) {
+           CursGeneList, CursGenotypeList, CantoConfig, toaster, args) {
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
 
@@ -912,12 +928,23 @@ var annotationEditDialogCtrl =
     }).catch(function() {
       toaster.pop('note', "couldn't read the gene list from the server");
     });
+
+    CursGenotypeList.genotypeList().then(function(results) {
+      $scope.genotypes = results;
+
+      $.map($scope.genotypes,
+            function(genotype) {
+              genotype.display_name = genotype.identifier;
+            });
+    }).catch(function() {
+      toaster.pop('note', "couldn't read the genotype list from the server");
+    });
   };
 
 
 canto.controller('AnnotationEditDialogCtrl',
                  ['$scope', '$modalInstance', 'AnnotationProxy',
-                  'AnnotationTypeConfig', 'CursGeneList', 'CantoConfig', 'toaster',
+                  'AnnotationTypeConfig', 'CursGeneList', 'CursGenotypeList', 'CantoConfig', 'toaster',
                   'args',
                   annotationEditDialogCtrl]);
 
