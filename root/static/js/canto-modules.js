@@ -919,6 +919,7 @@ var annotationEditDialogCtrl =
       .then(function(annotationType) {
         $scope.annotationType = annotationType;
         $scope.displayAnnotationFeatureType = capitalize(annotationType.feature_type);
+        $scope.annotation.feature_type = annotationType.feature_type;
       });
 
     CursGeneList.geneList().then(function(results) {
