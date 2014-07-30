@@ -415,13 +415,15 @@ sub get_cvterm
   my %args = @_;
 
   my $cv_name = $args{cv_name};
+  my $cv = $args{cv};
 
-  if (!defined $cv_name) {
-    croak "no cv_name passed to get_cvterm()";
+  if (!defined $cv_name && !defined $cv) {
+    croak "no cv_name or cv passed to get_cvterm()";
   }
 
-  my $cv = $args{cv};
-  if (!defined $cv) {
+  if (defined $cv) {
+    $cv_name = $cv->name();
+  } else {
     $cv = $self->find_or_create_cv($cv_name);
   }
   my $term_name = $args{term_name};
