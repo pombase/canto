@@ -543,11 +543,11 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
             gene.display_name = gene.primary_name || gene.primary_identifier;
           });
     // DEBUG
-    $scope.genes[1].selected = true;
-    $scope.genes[2].selected = true;
-    $scope.selectGenes();
-    $scope.openAlleleEditDialog("ssm4", "SPAC27D7.13c", 2);
-    $scope.openAlleleEditDialog("doa10", "SPBC14F5.07", 3);
+//    $scope.genes[1].selected = true;
+//    $scope.genes[2].selected = true;
+//    $scope.selectGenes();
+//    $scope.openAlleleEditDialog("ssm4", "SPAC27D7.13c", 2);
+//    $scope.openAlleleEditDialog("doa10", "SPBC14F5.07", 3);
   })
   .error(function() {
     toaster.pop('failed to get gene list from server');
