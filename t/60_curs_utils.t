@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 115;
+use Test::More tests => 117;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -136,9 +136,7 @@ check_new_annotations($dummy_alt_id);
                'with_or_from_identifier' => undef,
                'gene_identifier' => 'SPBC12C2.02c',
                'gene_name_or_identifier' => 'ste20',
-               'allele_display_name' => 'noname(unknown)',
                'conditions' => '',
-               'expression_level' => '',
                'qualifiers' => '',
                'evidence_code' => 'IMP',
                'annotation_id' => 1,
@@ -169,11 +167,41 @@ check_new_annotations($dummy_alt_id);
                'gene_identifier' => 'SPBC12C2.02c',
                'gene_name_or_identifier' => 'ste20',
                'qualifiers' => '',
-               'allele_display_name' => 'noname(unknown)',
                'conditions' => '',
-               'expression_level' => '',
                'evidence_code' => 'UNK',
                'annotation_id' => 2,
+               'gene_name' => 'ste20',
+               'gene_product' => '',
+               'is_not' => 0,
+               'status' => 'existing',
+               'with_or_from_display_name' => undef,
+               'with_or_from_identifier' => undef,
+             });
+}
+
+
+{
+  my $options = { pub_uniquename => 'PMID:10467002',
+                  annotation_type_name => 'phenotype',
+                };
+  my ($all_annotation_count, $annotations) =
+    Canto::Curs::Utils::get_existing_ontology_annotations ($config, $options);
+
+  is (@$annotations, 1);
+  cmp_deeply($annotations->[0],
+             {
+               'taxonid' => '4896',
+               'annotation_type' => 'fission_yeast_phenotype',
+               'term_ontid' => 'FYPO:0000104',
+               'term_name' => 'sensitive to cycloheximide',
+               'with_or_from_identifier' => undef,
+               'gene_identifier' => 'SPBC12C2.02c',
+               'gene_name_or_identifier' => 'ste20',
+               'qualifiers' => '',
+               'allele_display_name' => 'ste20delta(del_x1)',
+               'conditions' => '',
+               'evidence_code' => 'UNK',
+               'annotation_id' => 3,
                'gene_name' => 'ste20',
                'gene_product' => '',
                'is_not' => 0,

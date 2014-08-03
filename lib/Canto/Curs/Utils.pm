@@ -475,12 +475,6 @@ sub _process_existing_db_ontology
     $is_not = 0;
   }
 
-  my $allele_display_name =
-    Canto::Curs::Utils::make_allele_display_name($row->{allele}->{name},
-                                                 $row->{allele}->{description},
-                                                 $row->{allele}->{type});
-
-
   my $conditions_string = _get_conditions_string($ontology_lookup, $row->{conditions});
   my $qualifier_string = '';
 
@@ -488,14 +482,13 @@ sub _process_existing_db_ontology
     $qualifier_string = join ', ', @{$row->{qualifiers}};
   }
 
-  return {
+  my %ret = (
     annotation_id => $row->{annotation_id},
     gene_identifier => $gene->{identifier},
     gene_name => $gene->{name} || '',
     gene_name_or_identifier =>
       $gene->{name} || $gene->{identifier},
     gene_product => $gene->{product} || '',
-    allele_display_name => $allele_display_name,
     conditions => $conditions_string,
     qualifiers => $qualifier_string,
     annotation_type => $ontology_name,
@@ -507,7 +500,17 @@ sub _process_existing_db_ontology
     taxonid => $gene->{organism_taxonid},
     status => 'existing',
     is_not => $is_not,
-  };
+  );
+
+  if (defined $row->{allele}) {
+    my $allele_display_name =
+      Canto::Curs::Utils::make_allele_display_name($row->{allele}->{name},
+                                                   $row->{allele}->{description},
+                                                   $row->{allele}->{type});
+    $ret{allele_display_name} = $allele_display_name;
+  }
+
+  return \%ret;
 }
 
 =head2 get_existing_ontology_annotations

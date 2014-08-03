@@ -206,7 +206,7 @@ $res = $service_utils->create_annotation({
                                            key => $curs_key,
                                          });
 is ($res->{status}, 'error');
-is ($res->{message}, 'no annotation_type passed in changes hash');
+is ($res->{message}, 'No feature_id passed to create annotation service');
 
 # delete
 $res = $service_utils->delete_annotation({
