@@ -1,11 +1,15 @@
 <div ng-if="annotationType && evidenceTypes && (annotationType.feature_type === 'gene' && genes || annotationType.feature_type === 'genotype' && genotypes)">
+
   <div class="modal-header">
     <h4 class="modal-title">
       Edit {{annotationType.display_name}} annotation <span ng-if="annotation.feature_display_name">for {{annotation.feature_display_name}}</span>
     </h4>
   </div>
+
   <div class="modal-body">
+
     <table class="curs-definition-table">
+
       <tr ng-if="annotationType.feature_type === 'gene'"
           ng-class="{ 'has-error': !isValidFeature() }">
         <td class="title">{{displayAnnotationFeatureType}}-{{annotation.feature_id}}
@@ -20,6 +24,7 @@
                 class="help-block">Please choose a feature</span>
         </td>
       </tr>
+
       <tr ng-if="annotationType.feature_type === 'genotype'"
           ng-class="{ 'has-error': !isValidFeature() }">
         <td class="title">{{displayAnnotationFeatureType}}-{{annotation.feature_id}}
@@ -34,6 +39,7 @@
                 class="help-block">Please choose a feature</span>
         </td>
       </tr>
+
       <tr ng-class="{ 'has-error': !isValidTerm() }">
         <td class="title">Term name</td>
         <td>
@@ -46,6 +52,7 @@
                 class="help-block">Start typing to choose a term</span>
         </td>
       </tr>
+
       <tr ng-class="{ 'has-error': !isValidEvidence() }">
         <td class="title">Evidence code</td>
         <td>
@@ -58,6 +65,7 @@
                 class="help-block">Please select an evidence code</span>
         </td>
       </tr>
+
       <tr ng-if="evidenceTypes[annotation.evidence_code].with_gene"
           ng-class="{ 'has-error': !isValidWithGene() }">
         <td class="title">With</td>
@@ -71,12 +79,14 @@
                 class="help-block">Please select a 'with' gene</span>
         </td>
       </tr>
+
       <tr ng-if="annotationType.can_have_conditions">
         <td class="title">Conditions</td>
         <td>
           {{annotation.conditions}}
         </td>
       </tr>
+
       <tr>
         <td class="title" rowspan="2">Term suggestion</td>
         <td>
@@ -86,6 +96,7 @@
                  value="{{annotation.term_suggestion.name}}"/>
         </td>
       </tr>
+
       <tr>
         <td>
           <textarea class="form-control"
@@ -94,6 +105,7 @@
                     value="{{annotation.term_suggestion.definition}}"/>
         </td>
       </tr>
+
       <tr>
         <td class="title">Comment</td>
         <td>
@@ -103,6 +115,7 @@
                  value="{{annotation.submitter_comment}}"/>
         </td>
       </tr>
+
       <tr>
         <td class="title">Annotation extension</td>
         <td>
@@ -111,12 +124,16 @@
                     value="{{annotation.annotation_extension}}"/>
         </td>
       </tr>
+
       <tr>
         <td class="title">Curator</td>
         <td>{{annotation.curator}}</td>
       </tr>
+
     </table>
+
   </div>
+
   <div class="modal-footer">
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
     <button class="btn btn-primary" ng-click="ok()" ng-disabled="!isValid()">OK</button>
