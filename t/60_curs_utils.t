@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 117;
+use Test::More tests => 119;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -62,6 +62,95 @@ sub check_new_annotations
     }
 
     is ($interacting_gene_count, 2);
+  }
+
+  {
+    my ($completed_count, $annotations_ref) =
+      Canto::Curs::Utils::get_annotation_table($config, $curs_schema,
+                                               'phenotype');
+
+    my @annotations =
+      sort { $a->{genotype_identifier} cmp $b->{genotype_identifier} } @$annotations_ref;
+
+  cmp_deeply(\@annotations,
+             [
+               {
+                 'genotype_id' => 1,
+                 'annotation_extension' => '',
+                 'status' => 'new',
+                 'term_suggestion' => undef,
+                 'with_gene_id' => undef,
+                 'curator' => 'Some Testperson <some.testperson@pombase.org>',
+                 'genotype_identifier' => 'h+ SPCC63.05delta ssm4KE',
+                 'taxonid' => undef,
+                 'conditions' => [
+                   {
+                     'term_id' => 'PECO:0000137',
+                     'name' => 'glucose rich medium'
+                   },
+                   {
+                     'name' => 'rich medium'
+                   }
+                 ],
+                 'term_ontid' => 'FYPO:0000013',
+                 'with_or_from_identifier' => undef,
+                 'term_name' => 'T-shaped cells',
+                 'needs_with' => undef,
+                 'completed' => 1,
+                 'annotation_type' => 'phenotype',
+                 'annotation_id' => 5,
+                 'is_not' => 0,
+                 'evidence_code' => 'Epitope-tagged protein immunolocalization experiment data',
+                 'annotation_type_abbreviation' => '',
+                 'annotation_type_display_name' => 'phenotype',
+                 'genotype_name' => undef,
+                 'is_obsolete_term' => 0,
+                 'creation_date_short' => '20100102',
+                 'with_or_from_display_name' => undef,
+                 'qualifiers' => '',
+                 'creation_date' => '2010-01-02',
+                 'submitter_comment' => undef,
+                 'publication_uniquename' => 'PMID:19756689',
+                 'feature_type' => 'genotype',
+                 'feature_id' => 1,
+                 'genotype_display_name' => 'h+ SPCC63.05delta ssm4KE',
+                 'feature_display_name' => 'h+ SPCC63.05delta ssm4KE'
+               },
+               {
+                 'publication_uniquename' => 'PMID:19756689',
+                 'feature_type' => 'genotype',
+                 'feature_id' => 2,
+                 'genotype_display_name' => 'h+ ssm4-D4',
+                 'feature_display_name' => 'h+ ssm4-D4',
+                 'is_not' => 0,
+                 'evidence_code' => 'Co-immunoprecipitation experiment',
+                 'annotation_type_abbreviation' => '',
+                 'annotation_type_display_name' => 'phenotype',
+                 'genotype_name' => undef,
+                 'is_obsolete_term' => 0,
+                 'creation_date_short' => '20100102',
+                 'with_or_from_display_name' => undef,
+                 'qualifiers' => '',
+                 'submitter_comment' => undef,
+                 'creation_date' => '2010-01-02',
+                 'taxonid' => undef,
+                 'conditions' => [],
+                 'term_ontid' => 'FYPO:0000017',
+                 'with_or_from_identifier' => undef,
+                 'term_name' => 'elongated cells',
+                 'needs_with' => undef,
+                 'completed' => 1,
+                 'annotation_id' => 6,
+                 'annotation_type' => 'phenotype',
+                 'genotype_id' => 2,
+                 'annotation_extension' => '',
+                 'status' => 'new',
+                 'term_suggestion' => undef,
+                 'with_gene_id' => undef,
+                 'curator' => 'Some Testperson <some.testperson@pombase.org>',
+                 'genotype_identifier' => 'h+ ssm4-D4'
+               }
+             ]);
   }
 
   my @annotation_type_list = @{$config->{annotation_type_list}};
@@ -136,7 +225,7 @@ check_new_annotations($dummy_alt_id);
                'with_or_from_identifier' => undef,
                'gene_identifier' => 'SPBC12C2.02c',
                'gene_name_or_identifier' => 'ste20',
-               'conditions' => '',
+               'conditions' => [],
                'qualifiers' => '',
                'evidence_code' => 'IMP',
                'annotation_id' => 1,
@@ -167,7 +256,7 @@ check_new_annotations($dummy_alt_id);
                'gene_identifier' => 'SPBC12C2.02c',
                'gene_name_or_identifier' => 'ste20',
                'qualifiers' => '',
-               'conditions' => '',
+               'conditions' => [],
                'evidence_code' => 'UNK',
                'annotation_id' => 2,
                'gene_name' => 'ste20',
@@ -180,6 +269,7 @@ check_new_annotations($dummy_alt_id);
 }
 
 
+# test existing phenotype annotation
 {
   my $options = { pub_uniquename => 'PMID:10467002',
                   annotation_type_name => 'phenotype',
@@ -199,7 +289,7 @@ check_new_annotations($dummy_alt_id);
                'gene_name_or_identifier' => 'ste20',
                'qualifiers' => '',
                'allele_display_name' => 'ste20delta(del_x1)',
-               'conditions' => '',
+               'conditions' => [],
                'evidence_code' => 'UNK',
                'annotation_id' => 3,
                'gene_name' => 'ste20',

@@ -94,17 +94,8 @@ sub make_ontology_annotation
 
     my $genotype = $annotation_genotypes[0];
 
-    my $conditions_string = '';
-
-    if ($data->{conditions}) {
-      $conditions_string = _get_conditions_string($ontology_lookup,
-                                                  $data->{conditions});
-    } else {
-      $conditions_string = '';
-    }
-
     %genotype_details = (
-      conditions => $conditions_string,
+      conditions => [_get_condition_data($ontology_lookup, $data->{conditions})],
       genotype_id => $genotype->genotype_id(),
       genotype_identifier => $genotype->identifier(),
       genotype_name => $genotype->name(),
@@ -426,20 +417,23 @@ sub get_annotation_table
   return ($completed_count, [@annotations])
 }
 
-sub _get_conditions_string
+sub _get_condition_data
 {
   my $ontology_lookup = shift;
   my $conditions = shift;
 
-  return '' unless defined $conditions;
+  return () unless defined $conditions;
 
-  my @condition_names = map {
+  my @condition_data = map {
     my $ret_val;
-    my $term_id = $_;
-    if ($term_id =~ /^[A-Z]+:/) {
-      my $result = $ontology_lookup->lookup_by_id(id => $term_id);
+    my $term_name_or_id = $_;
+    if ($term_name_or_id =~ /^[A-Z]+:/) {
+      my $result = $ontology_lookup->lookup_by_id(id => $term_name_or_id);
       if (defined $result) {
-        $ret_val = $result->{name} . " ($term_id)";
+        $ret_val = {
+          term_id => $term_name_or_id,
+          name => $result->{name},
+        };
       }
     }
     if (defined $ret_val) {
@@ -447,11 +441,11 @@ sub _get_conditions_string
     } else {
       # some conditions are just free text if the user couldn't find the
       # appropriate PECO term
-      "$term_id (NEW)";
+      { name => $term_name_or_id };
     }
   } @$conditions;
 
-  return join ', ', @condition_names;
+  return @condition_data;
 }
 
 sub _process_existing_db_ontology
@@ -475,7 +469,6 @@ sub _process_existing_db_ontology
     $is_not = 0;
   }
 
-  my $conditions_string = _get_conditions_string($ontology_lookup, $row->{conditions});
   my $qualifier_string = '';
 
   if (defined $row->{qualifiers}) {
@@ -489,7 +482,7 @@ sub _process_existing_db_ontology
     gene_name_or_identifier =>
       $gene->{name} || $gene->{identifier},
     gene_product => $gene->{product} || '',
-    conditions => $conditions_string,
+    conditions => [_get_condition_data($ontology_lookup, $row->{conditions})],
     qualifiers => $qualifier_string,
     annotation_type => $ontology_name,
     term_ontid => $term_ontid,
