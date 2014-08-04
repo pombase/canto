@@ -609,8 +609,8 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
           toaster.pop("Storing new genotype failed: " + data.message);
         }
       }).
-      error(function(){
-        console.debug("failed test");
+      error(function(data, status){
+        toaster.pop("Storing new genotype failed: " + (data || status) );
       });
   };
 
