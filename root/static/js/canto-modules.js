@@ -49,6 +49,20 @@ function copyIfChanged(origObj, changedObj, dest) {
   });
 }
 
+function simpleHttpPost(toaster, $http, url, data) {
+  $http.post(url, data).
+    success(function(data) {
+      if (data.status === "success") {
+        window.location.href = data.location;
+      } else {
+        toaster.pop(data.message);
+      }
+    }).
+    error(function(data, status){
+      toaster.pop("Accessing server failed: " + (data || status) );
+    });
+}
+
 canto.filter('breakExtensions', function() {
   return function(text) {
     if (typeof(text) === 'undefined') {
@@ -599,19 +613,10 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
                 true);
 
   $scope.store = function() {
-    $http.post('store', { genotype_name: $scope.data.genotype_name,
-                          genotype_identifier: $scope.data.genotype_identifier,
-                          alleles: $scope.alleles }).
-      success(function(data) {
-        if (data.status === "success") {
-          window.location.href = data.location;
-        } else {
-          toaster.pop("Storing new genotype failed: " + data.message);
-        }
-      }).
-      error(function(data, status){
-        toaster.pop("Storing new genotype failed: " + (data || status) );
-      });
+    simpleHttpPost(toaster, $http, 'store',
+                   { genotype_name: $scope.data.genotype_name,
+                     genotype_identifier: $scope.data.genotype_identifier,
+                     alleles: $scope.alleles });
   };
 
   $scope.removeAllele = function (allele) {

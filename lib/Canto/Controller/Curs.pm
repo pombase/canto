@@ -2588,14 +2588,15 @@ sub genotype_store : Chained('feature') PathPart('store')
     } catch {
       $c->stash->{json_data} = {
         status => "error",
-        message => "internal error - please report this to the Canto developers",
+        message => "Storing new genotype failed: internal error - " .
+          "please report this to the Canto developers",
       };
       warn $_;
     };
   } else {
     $c->stash->{json_data} = {
       status => "error",
-      message => "no genotype name provided",
+      message => "Storing new genotype failed: no genotype name provided",
     };
   }
 
