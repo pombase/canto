@@ -4,8 +4,6 @@ $annotation
 $display_name
 </%args>
 
-<& /curs/condition_picker.mhtml &>
-
 <div class="curs-box evidence-select" >
   <div class="curs-box-title">
 Choose evidence for annotating <% $display_name %> with <% $term_ontid %>

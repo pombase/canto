@@ -63,6 +63,10 @@ function simpleHttpPost(toaster, $http, url, data) {
     });
 }
 
+function conditionsToString(conditions) {
+  return $.map(conditions, function(el) { return el.name; }).join (", ");
+}
+
 canto.filter('breakExtensions', function() {
   return function(text) {
     if (typeof(text) === 'undefined') {
@@ -299,27 +303,57 @@ var conditionPicker =
   function() {
     var directive = {
       scope: {
+        conditions: '=',
       },
       restrict: 'E',
       replace: true,
-      templateUrl: 'condition_picker.html',
+      templateUrl: app_static_path + 'ng_templates/condition_picker.html',
+      controller: function($scope) {
+        $scope.conditionsString = conditionsToString($scope.conditions);
+      },
       link: function(scope, elem) {
         var button_html = '';
         var used_buttons = elem.find('.curs-allele-condition-buttons');
 
-        elem.find('.curs-allele-conditions').tagit({
-          minLength: 2,
-          fieldName: 'curs-allele-condition-names',
-          allowSpaces: true,
-          placeholderText: 'Type a condition ...',
-          tagSource: fetch_conditions,
-          //          afterTagAdded: updateScopeConditions,
-          //          afterTagRemoved: updateScopeConditions,
-          autocomplete: {
-            focus: ferret_choose.show_autocomplete_def,
-            close: ferret_choose.hide_autocomplete_def,
-          },
-        });
+        setTimeout(function() {
+          // do this later because tagit() triggers a digest() and we're already
+          // in a digest cycle
+          var $field = elem.find('.curs-allele-conditions');
+
+          $field.val(scope.conditionsString);
+
+          var updateScopeConditions = function() {
+            scope.$apply(function() {
+              scope.conditionsString = $field.val().trim();
+              if (scope.conditionsString.length > 0) {
+                scope.conditions = $.map(scope.conditionsString.split(/,\s*/),
+                                         function(el) {
+                                           return {
+                                             name: el
+                                           };
+                                         });
+              } else {
+                scope.conditions = [];
+              }
+            });
+          };
+
+          $field.tagit({
+            minLength: 2,
+            fieldName: 'curs-allele-condition-names',
+            allowSpaces: true,
+            placeholderText: 'Type a condition ...',
+            tagSource: fetch_conditions,
+            afterTagAdded: updateScopeConditions,
+            afterTagRemoved: updateScopeConditions,
+            //          afterTagAdded: updateScopeConditions,
+            //          afterTagRemoved: updateScopeConditions,
+            autocomplete: {
+              focus: ferret_choose.show_autocomplete_def,
+              close: ferret_choose.hide_autocomplete_def,
+            },
+          });
+        }, 1);
 
         used_buttons.find('button').remove();
 
@@ -350,7 +384,7 @@ var conditionPicker =
     return directive;
   };
 
-canto.directive('conditionPicker', conditionPicker);
+canto.directive('conditionPicker', [conditionPicker]);
 
 var alleleNameComplete =
   function(AlleleService, toaster) {
@@ -1078,7 +1112,7 @@ var annotationTableRow =
       restrict: 'A',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/annotation_table_row.html',
-      controller: function($scope, $element) {
+      controller: function($scope) {
         $scope.data = {};
 
         var annotation = $scope.annotation;
@@ -1103,6 +1137,10 @@ var annotationTableRow =
         }).catch(function() {
           toaster.pop('note', "couldn't read the gene list from the server");
         });
+
+        $scope.conditionsString = function() {
+          return conditionsToString(annotation.conditions);
+        };
 
         $scope.edit = function() {
           startEditing($modal, annotation.annotation_type, $scope.annotation, false);

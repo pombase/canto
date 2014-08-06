@@ -1583,6 +1583,7 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
       {
         type => 'Block',
         tag => 'condition-picker',
+#        attributes => {
       }
     );
   } else {
@@ -1792,27 +1793,6 @@ sub _get_all_alleles
   return %results;
 }
 
-sub _get_name_of_condition
-{
-  my $ontology_lookup = shift;
-  my $termid = shift;
-
-  eval {
-    my $result = $ontology_lookup->lookup_by_id(id => $termid);
-    if (defined $result) {
-      $termid = $result->{name};
-    } else {
-      # user has made up a condition and there is no ontology term for it yet
-    }
-  };
-  if ($@) {
-    # probably not in the form DB:ACCESSION - user made it up
-  }
-
-  return $termid
-}
-
-
 sub _get_all_conditions
 {
   my $config = shift;
@@ -1828,7 +1808,7 @@ sub _get_all_conditions
 
     if (exists $data->{conditions}) {
       for my $condition (@{$data->{conditions}}) {
-        $conditions{_get_name_of_condition($ontology_lookup, $condition)} = 1
+        $conditions{Canto::Curs::ConditionUtil::get_name_of_condition($ontology_lookup, $condition)} = 1
       }
     }
   }

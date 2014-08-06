@@ -295,6 +295,8 @@ sub _store_change_hash
 
   $self->_check_curs_key($changes);
 
+  my $lookup = Canto::Track::get_adaptor($self->config(), 'ontology');
+
   my $data = $annotation->data();
 
   my %valid_change_keys = (
@@ -305,7 +307,6 @@ sub _store_change_hash
         die "no term_ontid passed to change_annotation()\n";
       }
 
-      my $lookup = Canto::Track::get_adaptor($self->config(), 'ontology');
       my $res = $lookup->lookup_by_id( id => $term_ontid );
 
       if (defined $res) {
@@ -369,6 +370,11 @@ sub _store_change_hash
       }
     },
     term_suggestion => 1,
+    conditions => sub {
+      my $condition_data = shift;
+      $data->{conditions} = [ map { $_->{id} // $_->{name} } @$condition_data ];
+      return 1;
+    },
   );
 
  CHANGE: for my $key (keys %$changes) {
@@ -387,8 +393,10 @@ sub _store_change_hash
 
       my $res = $conf->($value);
 
+warn "CHANGE KEY: $key $res\n";
+
       if ($res) {
-        if (looks_like_number($res)) {
+        if (!ref $res && looks_like_number($res)) {
           # non-zero was returned - do nothing
           next CHANGE;
         } else {

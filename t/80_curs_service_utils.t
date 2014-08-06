@@ -121,6 +121,27 @@ $first_genotype_annotation = $first_genotype->annotations()->first();
 is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
 is ($res->{annotation}->{with_or_from_identifier}, undef);
 
+# test setting conditions
+my $new_conditions = [
+  {
+    name => 'low temperature',
+  },
+  {
+    name => 'some free text cond',
+  }
+];
+$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           conditions => $new_conditions,
+                                         });
+is ($res->{status}, 'success');
+# re-query
+$first_genotype_annotation = $first_genotype->annotations()->first();
+cmp_deeply($first_genotype_annotation->data()->{conditions},
+           $new_conditions);
+
 
 # test illegal evidence_code
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
