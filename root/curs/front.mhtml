@@ -79,7 +79,7 @@ $total_annotation_count
 
 <annotation-table-list></annotation-table-list>
 
-<div id="curs-annotation-tables" class="sect">
+<div style="font-size: 50%; " id="curs-annotation-tables" class="sect">
 % for my $annotation_type (@annotation_type_list) {
 <& current_annotation_view.mhtml,
    annotation_type => $annotation_type,
