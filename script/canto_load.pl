@@ -173,7 +173,7 @@ if (@ontology_args) {
 
   my $iter = Canto::Track::curs_iterator($config, $schema);
   while (my ($curs, $cursdb) = $iter->()) {
-    $term_update->update_curs_terms($curs, $cursdb);
+    $term_update->update_curs_terms($cursdb);
   }
 }
 

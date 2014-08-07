@@ -15,8 +15,6 @@ my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
 my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 
-my $curs = $track_schema->find_with_type('Curs', { curs_key => 'aaaa0007' });
-
 sub _get_annotation_with_conditions
 {
   my $curs_schema = shift;
@@ -36,7 +34,7 @@ my $conditions = $annotation->data()->{conditions};
 cmp_deeply(['PECO:0000137', 'rich medium'], $conditions);
 
 my $term_update = Canto::Curs::TermUpdate->new(config => $config);
-$term_update->update_curs_terms($curs, $curs_schema);
+$term_update->update_curs_terms($curs_schema);
 
 $annotation = _get_annotation_with_conditions($curs_schema);
 $conditions = $annotation->data()->{conditions};

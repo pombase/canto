@@ -59,9 +59,21 @@ sub _build_metadata_storer
   return $storer;
 }
 
+=head2 update_curs_terms
+
+ Usage   : my $term_update = Canto::Curs::TermUpdate->new(config => $config);
+           $term_update->update_curs_terms($cursdb);
+ Function: Update data in the Curs DB after re-loading an ontology.
+             - upgrade condition names to term ids in the annotation when a new
+               term name matches an existing condition name
+ Args    : $cursdb - the CursDB object
+ Return  : none
+
+=cut
+
 sub update_curs_terms
 {
-  my ($self, $curs, $cursdb) = @_;
+  my ($self, $cursdb) = @_;
 
   my $config = $self->config();
   my $lookup = Canto::Track::get_adaptor($config, 'ontology');
