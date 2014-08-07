@@ -100,7 +100,21 @@ if (defined $ENV{PLACK_DEBUG} && $ENV{PLACK_DEBUG} > 1) {
 
 my $runner = Plack::Runner->new;
 
+my $port = undef;
+
+for (my $i = 0; $i < @ARGV; $i++) {
+  if ($ARGV[$i] eq '--port') {
+    $port = $ARGV[$i + 1];
+    last;
+  }
+}
+
+if (!defined $port) {
+  $port = 5000;
+  push @ARGV, '--port', $port;
+}
+
 $runner->parse_options(@ARGV);
 
-print "\rStarting Canto server\n";
+print "\rStarting Canto server on port $port\n";
 $runner->run($app);
