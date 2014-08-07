@@ -375,7 +375,7 @@ sub get_dbxref_by_accession
 
   my $key = "$db_name:$accession";
 
-  if (!exists $self->cache()->{dbxref}) {
+  if (!exists $self->cache()->{dbxref} || keys %{$self->cache()->{dbxref}} == 0) {
     $self->_preload_dbxref_cache();
   }
 
