@@ -53,7 +53,8 @@ OBO format ontology data can be imported or updated with:
 
     ./script/canto_load.pl --ontology ontology_file.obo
 
-Multiple ontology files can be imported at once:
+If you need to import multiple ontology files, they all must be included in
+the same command line:
 
     ./script/canto_load.pl --ontology ontology_file.obo \
        --ontology another_ontology_file.obo
@@ -63,5 +64,6 @@ The OBO file can also be given by URL.  eg.
     ./script/canto_load.pl --ontology \
        http://purl.obolibrary.org/obo/go/go-basic.obo
 
-The ontology must be configured in the [annotation_type_list](#annotation_type_list) section of the
-`canto.yaml` file.
+Each ontology must be configured in the
+[annotation_type_list](configuration_file#annotation_type_list) section of
+the `canto.yaml` file.
