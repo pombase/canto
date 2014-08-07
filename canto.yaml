@@ -1061,6 +1061,7 @@ load:
 track_db_template_file: db_templates/track_db_template.sqlite3
 curs_db_template_file: db_templates/curs_db_template.sqlite3
 ontology_index_dir: ontology_index
+relationship_ontology_path: etc/ro.obo
 
 external_sources:
   pubmed_efetch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&retmax=99999&id='

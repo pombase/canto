@@ -49,6 +49,8 @@ use File::Copy qw(copy);
 use Canto::Config;
 use Canto::DBUtil;
 use Canto::DB;
+use Canto::Track::OntologyIndex;
+use Canto::Track::OntologyLoad;
 
 use YAML qw(Load Dump);
 
@@ -195,11 +197,13 @@ sub create_template_dbs
 
 =head2 initialise_core_data
 
- Usage   : Canto::Meta::Util::initialise_core_data($config, $schema, $key);
+ Usage   : Canto::Meta::Util::initialise_core_data($config, $schema, $db_dir, $key);
  Function: Load core data into the given schema.  eg. cvterms used by other
            loaders
  Args    : $config - the Canto::Config object
            $schema - the schema to write to
+           $db_dir - the directory containing the new database, used for
+                     ontology index creation
            $key - the key to use when accessing the config hash
  Returns : Nothing
 
@@ -208,6 +212,7 @@ sub initialise_core_data
 {
   my $config = shift;
   my $schema = shift;
+  my $db_dir = shift;
   my $config_key = shift;
 
   my $initial_data_ref = $config->{db_initial_data}->{$config_key};
@@ -232,6 +237,20 @@ sub initialise_core_data
     $schema->resultset('Metadata')->
       create({ type => $schema_version_cvterm->cvterm_id(),
                value => $schema_version });
+
+    my $index_path = "$db_dir/ontology_index_dir";
+
+    my $index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+    $index->initialise_index();
+
+    my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema,
+                                                        default_db_name => $config->{default_db_name});
+    my $synonym_types = $config->{load}->{ontology}->{synonym_types};
+
+    $ontology_load->load($config->{relationship_ontology_path}, $index, $synonym_types);
+
+    $ontology_load->finalise();
+    $index->finish_index();
   }
 }
 

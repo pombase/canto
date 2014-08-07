@@ -16,7 +16,6 @@ test_config:
   test_phenotype_obo_file: "t/data/phenotype_small.obo"
   test_psi_mod_obo_file: "t/data/psi_mod_small.obo"
   test_peco_obo_file: "t/data/peco_small.obo"
-  test_relationship_obo_file: "etc/ro.obo"
   test_pubmed_xml: 'entrez_pubmed.xml'
   test_extra_publication: 'pubmed_18910671.xml'
   test_uniprot_entries: 'uniprot_lookup.xml'

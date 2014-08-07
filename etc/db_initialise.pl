@@ -10,6 +10,8 @@ BEGIN {
 use strict;
 use warnings;
 use Carp;
+use File::Basename;
+use File::Spec;
 
 use DBIx::Class::Schema::Loader qw(make_schema_at);
 
@@ -69,10 +71,12 @@ for my $schema_name (keys %db_template_files) {
 
   make_schema($schema_class, $connect_string);
 
+  my $dir_name = File::Spec->rel2abs(dirname($file_name));
+
   my $schema =
     Canto::DBUtil::schema_for_file($config, $file_name, $schema_name);
 
-  Canto::Meta::Util::initialise_core_data($config, $schema, lc $schema_name);
+  Canto::Meta::Util::initialise_core_data($config, $schema, $dir_name, lc $schema_name);
 }
 
 warn "finished initialising development environment\n";
