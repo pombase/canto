@@ -393,8 +393,6 @@ sub _store_change_hash
 
       my $res = $conf->($value);
 
-warn "CHANGE KEY: $key $res\n";
-
       if ($res) {
         if (!ref $res && looks_like_number($res)) {
           # non-zero was returned - do nothing
