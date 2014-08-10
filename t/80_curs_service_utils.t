@@ -139,7 +139,7 @@ $res = $service_utils->change_annotation($first_genotype_annotation->annotation_
 is ($res->{status}, 'success');
 # re-query
 $first_genotype_annotation = $first_genotype->annotations()->first();
-cmp_deeply($first_genotype_annotation->data()->{conditions},
+cmp_deeply([map { { name => $_ } } @{$first_genotype_annotation->data()->{conditions}}],
            $new_conditions);
 
 
