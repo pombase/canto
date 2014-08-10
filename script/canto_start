@@ -103,7 +103,7 @@ my $runner = Plack::Runner->new;
 my $port = undef;
 
 for (my $i = 0; $i < @ARGV; $i++) {
-  if ($ARGV[$i] eq '--port') {
+  if ($ARGV[$i] eq '--port' || $ARGV[$i] eq '-p') {
     $port = $ARGV[$i + 1];
     last;
   }
