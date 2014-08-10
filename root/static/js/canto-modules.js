@@ -308,36 +308,22 @@ var conditionPicker =
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/condition_picker.html',
-      controller: function($scope) {
-        $scope.conditionsString = conditionsToString($scope.conditions);
-      },
       link: function(scope, elem) {
         var button_html = '';
         var used_buttons = elem.find('.curs-allele-condition-buttons');
 
-        setTimeout(function() {
-          // do this later because tagit() triggers a digest() and we're already
-          // in a digest cycle
-          var $field = elem.find('.curs-allele-conditions');
+        var $field = elem.find('.curs-allele-conditions');
 
-          $field.val(scope.conditionsString);
-
-          var updateScopeConditions = function() {
-            scope.$apply(function() {
-              scope.conditionsString = $field.val().trim();
-              if (scope.conditionsString.length > 0) {
-                scope.conditions = $.map(scope.conditionsString.split(/,\s*/),
-                                         function(el) {
-                                           return {
-                                             name: el
-                                           };
-                                         });
-              } else {
-                scope.conditions = [];
-              }
+        var updateScopeConditions = function() {
+          scope.$apply(function() {
+            scope.conditions = [];
+            $field.find('li .tagit-label').map(function(index, $elem) {
+              scope.conditions.push( { name: $elem.textContent.trim() } );
             });
-          };
+          });
+        };
 
+        setTimeout(function() {
           $field.tagit({
             minLength: 2,
             fieldName: 'curs-allele-condition-names',
@@ -346,14 +332,16 @@ var conditionPicker =
             tagSource: fetch_conditions,
             afterTagAdded: updateScopeConditions,
             afterTagRemoved: updateScopeConditions,
-            //          afterTagAdded: updateScopeConditions,
-            //          afterTagRemoved: updateScopeConditions,
             autocomplete: {
               focus: ferret_choose.show_autocomplete_def,
               close: ferret_choose.hide_autocomplete_def,
             },
           });
-        }, 1);
+          $.map(scope.conditions,
+                function(cond) {
+                  $field.tagit("createTag", cond.name);
+                });
+        }, 1000);
 
         used_buttons.find('button').remove();
 
