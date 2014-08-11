@@ -119,6 +119,22 @@ canto.service('CursGenotypeList', function($q, Curs) {
   };
 });
 
+canto.service('CursConditionList', function($q, Curs) {
+  this.cursPromise = Curs.list('condition');
+
+  this.conditionList = function() {
+    var q = $q.defer();
+
+    this.cursPromise.success(function(conditions) {
+      q.resolve(conditions);
+    }).error(function() {
+      q.reject();
+    });
+
+    return q.promise;
+  };
+});
+
 canto.service('CantoGlobals', function($window) {
   this.app_static_path = $window.app_static_path;
 });
@@ -300,7 +316,7 @@ function fetch_conditions(search, showChoices) {
 }
 
 var conditionPicker =
-  function() {
+  function(CursConditionList, toaster) {
     var directive = {
       scope: {
         conditions: '=',
@@ -308,10 +324,17 @@ var conditionPicker =
       restrict: 'E',
       replace: true,
       controller: function($scope) {
-        $scope.usedConditions = [ { name: 'foo' }, { name: 'bar' } ];
+        $scope.usedConditions = [];
         $scope.addCondition = function(condName) {
           $scope.tagitList.tagit("createTag", condName);
         };
+
+        CursConditionList.conditionList().then(function(results) {
+          $scope.usedConditions = results;
+        }).catch(function() {
+          toaster.pop('error', "couldn't read the condition list from the server");
+        });
+
       },
       templateUrl: app_static_path + 'ng_templates/condition_picker.html',
       link: function(scope, elem) {
@@ -354,7 +377,7 @@ var conditionPicker =
     return directive;
   };
 
-canto.directive('conditionPicker', [conditionPicker]);
+canto.directive('conditionPicker', ['CursConditionList', 'toaster', conditionPicker]);
 
 var alleleNameComplete =
   function(AlleleService, toaster) {
