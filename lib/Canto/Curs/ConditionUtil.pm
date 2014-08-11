@@ -40,7 +40,7 @@ use warnings;
 
 =head2 get_conditions_with_names
 
- Usage   : my @cond_data = get_conditions_with_names($ontology_lookup, [$@conditions]);
+ Usage   : my @cond_data = get_conditions_with_names($ontology_lookup, [@conditions]);
  Function: From an array of condition names or IDS, return an array of hashes of
            condition names and IDs
  Args    : $ontology_lookup - An OntologyLookup object
@@ -48,7 +48,7 @@ use warnings;
                               is a condition name or ontology ID.
                               eg. ['PECO:0000137', 'rich medium']
  Return  : an array of hashes of the form:
-             [ { id => 'PECO:0000137', name => 'glucose rich medium' },
+             [ { term_id => 'PECO:0000137', name => 'glucose rich medium' },
                { name => 'rich medium' } ]
            PECO IDs are looked up to get the term name.  If the input element
            is not an ID, assume that condition is free text from the user to
@@ -116,6 +116,53 @@ sub get_name_of_condition
   }
 
   return $termid_or_name;
+}
+
+sub _get_id_from_name
+{
+  my $ontology_lookup = shift;
+  my $name = shift;
+
+  my $result = $ontology_lookup->lookup_by_name(ontology_name => 'phenotype_condition',
+                                                term_name => $name);
+  if (defined $result) {
+    return $result->{id};
+  } else {
+    return undef;
+  }
+}
+
+=head2 get_conditions_from_names
+
+ Usage   : my @cond_data = get_conditions_from_names($ontology_lookup, [@conditions]);
+ Function: From an array of condition names, return an array of hashes of
+           condition names and IDs
+ Args    : $ontology_lookup - An OntologyLookup object
+           $conditions_ref  - a reference to an array of strings, each string
+                              is a condition name
+                              eg. ['glucose rich medium', 'really cold and dark']
+ Return  : an array of hashes of the form:
+             [ { term_id => 'PECO:0000137', name => 'glucose rich medium' },
+               { name => 'really cold and dark' } ]
+           the conditions are looked up by term name.  If the input element
+           is not a term name, assume that condition is free text from the user to
+           be fixed by curators later and return id without an ID
+
+=cut
+
+sub get_conditions_from_names
+{
+  my $ontology_lookup = shift;
+  my $conditions = shift;
+
+  return map {
+    my %res = (name => $_);
+    my $id = _get_id_from_name($ontology_lookup, $_);
+    if (defined $id) {
+      $res{term_id} = $id;
+    }
+    \%res;
+  } @$conditions;
 }
 
 1;
