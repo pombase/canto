@@ -1228,7 +1228,7 @@ a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
 }
 
 .modal-dialog {
-  margin-top: 15%;
+/*  margin-top: 5%;*/
 }
 
 table tr td.curs-table-row-remove {
