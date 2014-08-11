@@ -43,11 +43,13 @@ use Carp;
 
 use JSON;
 
-use Canto::Curs::GeneProxy;
-use Canto::Curs::Utils;
 use Try::Tiny;
 use Scalar::Util qw(looks_like_number);
 use Clone qw(clone);
+
+use Canto::Curs::GeneProxy;
+use Canto::Curs::Utils;
+use Canto::Curs::ConditionUtil;
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 
@@ -72,6 +74,35 @@ sub _build_ontology_lookup
   my $self = shift;
 
   return Canto::Track::get_adaptor($self->config(), 'ontology');
+}
+
+# return a list of conditions used by this session
+sub _get_conditions
+{
+  my $self = shift;
+
+  my $curs_schema = $self->curs_schema();
+  my $lookup = $self->ontology_lookup();
+
+  my %conds = ();
+
+  my $rs = $curs_schema->resultset('Annotation');
+
+  while (defined (my $annotation = $rs->next())) {
+    my $data = $annotation->data();
+
+    my @conditions_with_names =
+      Canto::Curs::ConditionUtil::get_conditions_with_names($lookup, $data->{conditions});
+
+    map {
+      my $key = $_->{name} . '_' . ($_->{id} // 'NONE');
+      if (!exists $conds{$key}) {
+        $conds{$key} = $_;
+      }
+    } @conditions_with_names;
+  }
+
+  return map { $conds{$_}; } sort keys %conds;
 }
 
 sub _get_annotation
@@ -148,6 +179,7 @@ my %list_for_service_subs =
         } $genotype_rs->all();
       },
     annotation => \&_get_annotation,
+    condition => \&_get_conditions,
   );
 
 =head2 list_for_service
@@ -372,7 +404,14 @@ sub _store_change_hash
     term_suggestion => 1,
     conditions => sub {
       my $condition_data = shift;
-      $data->{conditions} = [ map { $_->{id} // $_->{name} } @$condition_data ];
+      my @condition_names =
+        map { $_->{name}; } @$condition_data;
+      my @conditions_with_ids =
+        Canto::Curs::ConditionUtil::get_conditions_from_names($lookup,
+                                                              \@condition_names);
+      $data->{conditions} =
+        [ map { $_->{term_id} // $_->{name} } @conditions_with_ids ];
+
       return 1;
     },
   );

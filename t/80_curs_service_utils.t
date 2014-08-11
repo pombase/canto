@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 41;
+use Test::More tests => 42;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -139,8 +139,9 @@ $res = $service_utils->change_annotation($first_genotype_annotation->annotation_
 is ($res->{status}, 'success');
 # re-query
 $first_genotype_annotation = $first_genotype->annotations()->first();
-cmp_deeply([map { { name => $_ } } @{$first_genotype_annotation->data()->{conditions}}],
-           $new_conditions);
+my @res_conditions = @{$first_genotype_annotation->data()->{conditions}};
+
+cmp_deeply(\@res_conditions, ['PECO:0000006', 'some free text cond']);
 
 
 # test illegal evidence_code
@@ -237,3 +238,9 @@ $res = $service_utils->delete_annotation({
 
 is ($c2d7_gene->direct_annotations()->count(), 1);
 is ($curs_schema->resultset('Annotation')->search({ annotation_id => $new_annotation_id })->count(), 0);
+
+
+my $cond_res = $service_utils->list_for_service('condition');
+
+cmp_deeply($cond_res, [ { term_id => 'PECO:0000006', name => 'low temperature' },
+                        { name => 'some free text cond' } ]);
