@@ -307,23 +307,27 @@ var conditionPicker =
       },
       restrict: 'E',
       replace: true,
+      controller: function($scope) {
+        $scope.usedConditions = [ { name: 'foo' }, { name: 'bar' } ];
+        $scope.addCondition = function(condName) {
+          $scope.tagitList.tagit("createTag", condName);
+        };
+      },
       templateUrl: app_static_path + 'ng_templates/condition_picker.html',
       link: function(scope, elem) {
-        var button_html = '';
-        var used_buttons = elem.find('.curs-allele-condition-buttons');
-
         var $field = elem.find('.curs-allele-conditions');
 
-        var updateScopeConditions = function() {
-          scope.$apply(function() {
-            scope.conditions = [];
-            $field.find('li .tagit-label').map(function(index, $elem) {
-              scope.conditions.push( { name: $elem.textContent.trim() } );
-            });
-          });
-        };
-
         setTimeout(function() {
+
+          var updateScopeConditions = function() {
+            scope.$apply(function() {
+              scope.conditions = [];
+              $field.find('li .tagit-label').map(function(index, $elem) {
+                scope.conditions.push( { name: $elem.textContent.trim() } );
+              });
+            });
+          };
+
           $field.tagit({
             minLength: 2,
             fieldName: 'curs-allele-condition-names',
@@ -341,31 +345,9 @@ var conditionPicker =
                 function(cond) {
                   $field.tagit("createTag", cond.name);
                 });
-        }, 1000);
 
-        used_buttons.find('button').remove();
-
-//        $.each(scope.data.used_conditions,
-//               function(cond) {
-//                 button_html += '<button class="ui-widget ui-state-default curs-allele-condition-button">' +
-//                   '<span>' + cond + '</span></button>';
-//               });
-
-        if (button_html === '') {
-          used_buttons.hide();
-        } else {
-          used_buttons.show();
-          used_buttons.append(button_html);
-
-          $('.curs-allele-condition-buttons button').click(function() {
-            elem.find('curs-allele-conditions').tagit("createTag", $(this).find('span').text());
-            return false;
-          }).button({
-            icons: {
-              secondary: "ui-icon-plus"
-            }
-          });
-        }
+          scope.tagitList = $field;
+        }, 1);
       }
     };
 

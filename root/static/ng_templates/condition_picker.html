@@ -1,4 +1,6 @@
 <span>
+<div class="row">
+  <div class="col-md-12">
   <table>
     <tr>
       <td>
@@ -10,9 +12,20 @@ Select conditions
       </td>
     </tr>
   </table>
-  <div class="curs-allele-condition-buttons">
-    <div>
-Previously used conditions (click to add):
+  </div>
+</div>
+  <div class="curs-allele-condition-buttons row">
+    <div class="col-md-1"></div>
+    <div class="col-md-11">
+      <div>
+Previously used conditions (click to add to list):
+      </div>
+      <span ng-repeat="cond in usedConditions">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-click="addCondition(cond.name)">
+          <i class="glyphicon glyphicon-plus"></i> {{cond.name}}
+        </button>
+      </span>
     </div>
   </div>
 </span>
