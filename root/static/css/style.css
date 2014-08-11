@@ -1268,3 +1268,6 @@ a:not([href]) {
   margin: 10px 10px 10px 20px;
   color: grey;
 }
+
+.voffset1 { margin-top: 5px; }
+.voffset2 { margin-top: 10px; }
