@@ -77,12 +77,19 @@ has 'default_db_name' => (
   required => 1,
 );
 
+has 'temp_file_name' => (
+  is => 'rw',
+  init_arg => undef
+);
+
 sub BUILD
 {
   my $self = shift;
 
   # use load_schema as a temporary database for loading
   my ($fh, $temp_file_name) = tempfile();
+
+  $self->temp_file_name($temp_file_name);
 
   my $dbi_connect_string =
     Canto::DBUtil::connect_string_for_file_name($temp_file_name);
@@ -456,6 +463,8 @@ sub DESTROY
   if (defined $self->load_schema()) {
     die __PACKAGE__ . "::finalise() not called\n";
   }
+
+  unlink($self->temp_file_name());
 }
 
 1;
