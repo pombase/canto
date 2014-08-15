@@ -299,6 +299,10 @@ sub load
 
       my $term_name = $term->name();
 
+      if (!defined $term_name) {
+        die "Term ", $term->acc(), " from $cv_name has no name - cannot continue\n";
+      }
+
       my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
                                           term_name => $term_name,
                                           ontologyid => $term->acc(),
