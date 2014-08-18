@@ -45,6 +45,15 @@ my $config = Canto::Config::get_config();
 my $track_schema = Canto::TrackDB->new(config => $config,
                                         disable_foreign_keys => 0);
 
+my $current_version = Canto::DBUtil::get_schema_version($track_schema);
+
+if ($current_version + 1 != $new_version) {
+  warn "can only upgrade from version ", ($new_version - 1), " schema to $new_version, " .
+    "database is currently version $current_version\n" .
+    "exiting ...\n";
+  exit (1);
+}
+
 my $dbh = $track_schema->storage()->dbh();
 
 given ($new_version) {
