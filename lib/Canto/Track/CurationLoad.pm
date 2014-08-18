@@ -71,7 +71,8 @@ sub _make_load_util
   my $schema = $self->schema();
 
   return Canto::Track::LoadUtil->new(schema => $schema,
-                                     default_db_name => $self->default_db_name());
+                                     default_db_name => $self->default_db_name(),
+                                     preload_cache => 1);
 }
 
 sub _fix_lab

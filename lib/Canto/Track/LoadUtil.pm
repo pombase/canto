@@ -42,6 +42,7 @@ use warnings;
 use Carp;
 use Moose;
 use Digest::SHA qw(sha1_base64);
+use Try::Tiny;
 
 use feature qw(state);
 
@@ -53,6 +54,10 @@ has 'schema' => (
 
 has 'default_db_name' => (
   is => 'ro'
+);
+
+has 'preload_cache' => (
+  is => 'ro',
 );
 
 has 'cache' => (
@@ -69,6 +74,10 @@ sub _build_cache
     cvterm => {},
     dbxref => {},
   };
+
+  if ($self->preload_cache()) {
+    $self->_preload_dbxref_cache($cache);
+  }
 
   return $cache;
 }
@@ -325,16 +334,15 @@ sub _create_dbxref
   return $dbxref;
 }
 
-sub _preload_dbxref_cache()
+sub _preload_dbxref_cache
 {
   my $self = shift;
-
-  my $cache = $self->cache();
+  my $cache = shift;
 
   my $dbxref_rs = $self->schema()->resultset('Dbxref')
     ->search({}, { prefetch => 'db' });
 
-  while (defined (my $dbxref = $dbxref_rs->next())) {
+  for my $dbxref ($dbxref_rs->all()) {
     $cache->{dbxref}->{$dbxref->db_accession()} = $dbxref;
   }
 }
@@ -375,12 +383,21 @@ sub get_dbxref_by_accession
 
   my $key = "$db_name:$accession";
 
-  if (!exists $self->cache()->{dbxref} || keys %{$self->cache()->{dbxref}} == 0) {
-    $self->_preload_dbxref_cache();
-  }
-
   if (exists $self->cache()->{dbxref}->{$key}) {
     return $self->cache()->{dbxref}->{$key};
+  } else {
+    my $dbxref = undef;
+
+    try {
+      $dbxref = $self->find_dbxref($key);
+      $self->cache()->{dbxref}->{$key} = $dbxref;
+    } catch {
+      # fall through - dbxref not in DB
+    };
+
+    if (defined $dbxref) {
+      return $dbxref;
+    }
   }
 
   my $db = $self->get_db($db_name);

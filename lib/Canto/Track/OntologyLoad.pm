@@ -251,7 +251,8 @@ sub load
   # create this object after deleting as LoadUtil has a dbxref cache (that
   # is a bit ugly ...)
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema,
-                                              default_db_name => $self->default_db_name());
+                                              default_db_name => $self->default_db_name(),
+                                              preload_cache => 1);
   my $store_term_handler =
     sub {
       my $ni = shift;
