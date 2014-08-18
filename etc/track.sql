@@ -69,6 +69,7 @@ CREATE TABLE dbxref (
 CREATE INDEX dbxref_idx1 ON dbxref (db_id);
 CREATE INDEX dbxref_idx2 ON dbxref (accession);
 CREATE INDEX dbxref_idx3 ON dbxref (version);
+CREATE UNIQUE INDEX dbxref_db_accession_unique ON dbxref(accession, db_id);
 
 CREATE TABLE cvterm (
        cvterm_id integer NOT NULL PRIMARY KEY,

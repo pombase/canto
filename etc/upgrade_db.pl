@@ -96,6 +96,10 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
 
     $track_schema->txn_do($proc);
   }
+  when (7) {
+    $dbh->do("CREATE UNIQUE INDEX dbxref_db_accession_unique ON dbxref(accession, db_id);");
+    $dbh->do("CREATE UNIQUE INDEX cvterm_name_cv_unique ON cvterm(name, cv_id);");
+  }
   default {
     die "don't know how to upgrade to version $new_version";
   }

@@ -21,7 +21,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v783
 
-schema_version: 6
+schema_version: 7
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## all gene lookups with match genes from any organism (and will return the
