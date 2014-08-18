@@ -5,6 +5,7 @@ use warnings;
 use Carp;
 use File::Basename;
 use feature qw(switch);
+no if $] >= 5.018, warnings => "experimental::smartmatch";
 
 BEGIN {
   my $script_name = basename $0;
