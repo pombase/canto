@@ -894,6 +894,8 @@ var annotationEditDialogCtrl =
            CursGeneList, CursGenotypeList, CantoConfig, toaster, args) {
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
+    $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
+    $scope.newlyAdded = args.newlyAdded;
 
     copyObject(args.annotation, $scope.annotation);
 
@@ -986,7 +988,7 @@ canto.controller('AnnotationEditDialogCtrl',
 
 
 
-function startEditing($modal, annotationTypeName, annotation, newlyAdded) {
+function startEditing($modal, annotationTypeName, annotation, currentFeatureDisplayName, newlyAdded) {
   var editInstance = $modal.open({
     templateUrl: app_static_path + 'ng_templates/annotation_edit.html',
     controller: 'AnnotationEditDialogCtrl',
@@ -998,6 +1000,7 @@ function startEditing($modal, annotationTypeName, annotation, newlyAdded) {
         return {
           annotation: annotation,
           annotationTypeName: annotationTypeName,
+          currentFeatureDisplayName: currentFeatureDisplayName,
           newlyAdded: newlyAdded,
         };
       }
@@ -1020,6 +1023,7 @@ var annotationTableCtrl =
       scope: {
         featureIdFilter: '@',
         featureTypeFilter: '@',
+        featureFilterDisplayName: '@',
         annotationTypeName: '@',
       },
       restrict: 'E',
@@ -1036,7 +1040,7 @@ var annotationTableCtrl =
           }
           var newAnnotation = makeNewAnnotation(template);
           var editPromise = 
-            startEditing($modal, $scope.annotationTypeName, newAnnotation, true);
+            startEditing($modal, $scope.annotationTypeName, newAnnotation, $scope.featureFilterDisplayName, true);
 
           editPromise.then(function() {
             $scope.annotations.push(newAnnotation);
@@ -1067,6 +1071,7 @@ var annotationTableList =
       scope: {
         featureIdFilter: '@',
         featureTypeFilter: '@',
+        featureFilterDisplayName: '@',
       },
       restrict: 'E',
       replace: true,
@@ -1136,11 +1141,11 @@ var annotationTableRow =
         };
 
         $scope.edit = function() {
-          startEditing($modal, annotation.annotation_type, $scope.annotation, false);
+          startEditing($modal, annotation.annotation_type, $scope.annotation, undefined, false);
         };
         $scope.duplicate = function() {
           var newAnnotation = makeNewAnnotation($scope.annotation);
-          var editPromise = startEditing($modal, annotation.annotation_type, newAnnotation, true);
+          var editPromise = startEditing($modal, annotation.annotation_type, newAnnotation, undefined, true);
 
           editPromise.then(function() {
             var index = $scope.annotations.indexOf($scope.annotation);

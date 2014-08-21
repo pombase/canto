@@ -12,9 +12,13 @@
 
       <tr ng-if="annotationType.feature_type === 'gene'"
           ng-class="{ 'has-error': !isValidFeature() }">
-        <td class="title">{{displayAnnotationFeatureType}}-{{annotation.feature_id}}
+        <td class="title">{{displayAnnotationFeatureType}}
         </td>
         <td>
+          <div ng-if="newlyAdded && currentFeatureDisplayName">
+            {{currentFeatureDisplayName}}
+          </div>
+          <div ng-if="!(newlyAdded && currentFeatureDisplayName)">
           <select class="form-control"
                   ng-model="annotation.feature_id"
                   ng-options="gene.gene_id as gene.display_name for gene in genes">
@@ -22,6 +26,7 @@
           </select>
           <span ng-show="!isValidFeature()"
                 class="help-block">Please choose a feature</span>
+          </div>
         </td>
       </tr>
 
