@@ -89,7 +89,7 @@
         <td class="title" rowspan="2">Term suggestion</td>
         <td>
           <input class="form-control"
-                 type="text" placeholder="Name ..."
+                 type="text" placeholder="Name ..." size="60"
                  ng-model="annotation.term_suggestion.name"
                  value="{{annotation.term_suggestion.name}}"/>
         </td>
@@ -98,7 +98,7 @@
       <tr>
         <td>
           <textarea class="form-control"
-                    placeholder="Definition ..."
+                    placeholder="Definition ..." cols="60"
                     ng-model="annotation.term_suggestion.definition"
                     value="{{annotation.term_suggestion.definition}}"/>
         </td>
@@ -108,7 +108,7 @@
         <td class="title">Comment</td>
         <td>
           <input class="form-control"
-                 type="text"
+                 type="text" size="60"
                  ng-model="annotation.submitter_comment"
                  value="{{annotation.submitter_comment}}"/>
         </td>
@@ -117,7 +117,7 @@
       <tr>
         <td class="title">Annotation extension</td>
         <td>
-          <textarea class="form-control"
+          <textarea class="form-control" cols="60"
                     ng-model="annotation.annotation_extension"
                     value="{{annotation.annotation_extension}}"/>
         </td>
