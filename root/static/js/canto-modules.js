@@ -374,25 +374,19 @@ var conditionPicker =
         $scope.addCondition = function(condName) {
           $scope.tagitList.tagit("createTag", condName);
         };
+      },
+      templateUrl: app_static_path + 'ng_templates/condition_picker.html',
+      link: function($scope, elem) {
+        var $field = elem.find('.curs-allele-conditions');
 
         CursConditionList.conditionList().then(function(results) {
           $scope.usedConditions = results;
-        }).catch(function() {
-          toaster.pop('error', "couldn't read the condition list from the server");
-        });
-
-      },
-      templateUrl: app_static_path + 'ng_templates/condition_picker.html',
-      link: function(scope, elem) {
-        var $field = elem.find('.curs-allele-conditions');
-
-        setTimeout(function() {
 
           var updateScopeConditions = function() {
-            scope.$apply(function() {
-              scope.conditions = [];
+            $scope.$apply(function() {
+              $scope.conditions = [];
               $field.find('li .tagit-label').map(function(index, $elem) {
-                scope.conditions.push( { name: $elem.textContent.trim() } );
+                $scope.conditions.push( { name: $elem.textContent.trim() } );
               });
             });
           };
@@ -410,13 +404,15 @@ var conditionPicker =
               close: ferret_choose.hide_autocomplete_def,
             },
           });
-          $.map(scope.conditions,
+          $.map($scope.conditions,
                 function(cond) {
                   $field.tagit("createTag", cond.name);
                 });
 
-          scope.tagitList = $field;
-        }, 1);
+          $scope.tagitList = $field;
+        }).catch(function() {
+          toaster.pop('error', "couldn't read the condition list from the server");
+        });
       }
     };
 
