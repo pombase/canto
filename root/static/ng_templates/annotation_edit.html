@@ -21,7 +21,7 @@
           </div>
           <div ng-if="!(newlyAdded && currentFeatureDisplayName)">
             <feature-chooser feature-type="annotationType.feature_type"
-                          chosen-feature-id="annotation.feature_id"></feature-chooser>
+                             chosen-feature-id="annotation.feature_id"></feature-chooser>
             <span ng-show="!isValidFeature()"
                   class="help-block">Please select a gene</span>
           </div>
@@ -70,12 +70,9 @@
       <tr ng-if="evidenceTypes[annotation.evidence_code].with_gene"
           ng-class="{ 'has-error': !isValidWithGene() }">
         <td class="title">With</td>
-        <td>
-          <select class="form-control"
-                  ng-model="annotation.with_gene_id"
-                  ng-options="gene.gene_id as gene.display_name for gene in genes">
-            <option selected="selected" value="">Choose a gene ...</option>
-          </select>
+        <td> 
+          <feature-chooser feature-type="gene"
+                           chosen-feature-id="annotation.with_gene_id"></feature-chooser>
           <span ng-show="isValidEvidence() && !isValidWithGene()"
                 class="help-block">Please select a 'with' gene</span>
         </td>
