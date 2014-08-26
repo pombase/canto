@@ -315,6 +315,52 @@ function fetch_conditions(search, showChoices) {
   });
 }
 
+var featureChooser =
+  function(CursGeneList, CursGenotypeList, toaster) {
+    return {
+      scope: {
+        featureType: '=',
+        chosenFeatureId: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      controller: function($scope) {
+        if ($scope.featureType === 'gene') {
+          CursGeneList.geneList().then(function(results) {
+            $scope.features = results;
+
+            $.map($scope.features,
+                  function(gene) {
+                    gene.display_name = gene.primary_name || gene.primary_identifier;
+                    gene.feature_id = gene.gene_id;
+                  });
+          }).catch(function() {
+            toaster.pop('note', "couldn't read the gene list from the server");
+          });
+        } else {
+          CursGenotypeList.genotypeList().then(function(results) {
+            $scope.features = results;
+
+            $.map($scope.features,
+                  function(genotype) {
+                    genotype.display_name = genotype.identifier;
+                    genotype.feature_id = genotype.genotype_id;
+                  });
+          }).catch(function() {
+            toaster.pop('note', "couldn't read the genotype list from the server");
+          });
+        }
+      },
+      template:
+        '<select class="form-control" ng-model="chosenFeatureId" ' +
+        'ng-options="feature.feature_id as feature.display_name for feature in features">' +
+            '<option selected="selected" value="">Choose a {{featureType}} ...</option>' +
+        '</select>'
+    }
+  };
+
+canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
+
 var conditionPicker =
   function(CursConditionList, toaster) {
     var directive = {
@@ -891,7 +937,7 @@ canto.controller('EvidenceSelectCtrl',
 
 var annotationEditDialogCtrl =
   function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
-           CursGeneList, CursGenotypeList, CantoConfig, toaster, args) {
+           CantoConfig, toaster, args) {
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
@@ -955,34 +1001,12 @@ var annotationEditDialogCtrl =
         $scope.displayAnnotationFeatureType = capitalize(annotationType.feature_type);
         $scope.annotation.feature_type = annotationType.feature_type;
       });
-
-    CursGeneList.geneList().then(function(results) {
-      $scope.genes = results;
-
-      $.map($scope.genes,
-            function(gene) {
-              gene.display_name = gene.primary_name || gene.primary_identifier;
-            });
-    }).catch(function() {
-      toaster.pop('note', "couldn't read the gene list from the server");
-    });
-
-    CursGenotypeList.genotypeList().then(function(results) {
-      $scope.genotypes = results;
-
-      $.map($scope.genotypes,
-            function(genotype) {
-              genotype.display_name = genotype.identifier;
-            });
-    }).catch(function() {
-      toaster.pop('note', "couldn't read the genotype list from the server");
-    });
   };
 
 
 canto.controller('AnnotationEditDialogCtrl',
                  ['$scope', '$modalInstance', 'AnnotationProxy',
-                  'AnnotationTypeConfig', 'CursGeneList', 'CursGenotypeList', 'CantoConfig', 'toaster',
+                  'AnnotationTypeConfig', 'CantoConfig', 'toaster',
                   'args',
                   annotationEditDialogCtrl]);
 

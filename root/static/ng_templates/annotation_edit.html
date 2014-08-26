@@ -1,4 +1,4 @@
-<div ng-if="annotationType && evidenceTypes && (annotationType.feature_type === 'gene' && genes || annotationType.feature_type === 'genotype' && genotypes)">
+<div ng-if="annotationType && evidenceTypes">
 
   <div class="modal-header">
     <h4 class="modal-title">
@@ -12,36 +12,32 @@
 
       <tr ng-if="annotationType.feature_type === 'gene'"
           ng-class="{ 'has-error': !isValidFeature() }">
-        <td class="title">{{displayAnnotationFeatureType}}
+        <td class="title">
+          {{displayAnnotationFeatureType}}
         </td>
         <td>
           <div ng-if="newlyAdded && currentFeatureDisplayName">
             {{currentFeatureDisplayName}}
           </div>
           <div ng-if="!(newlyAdded && currentFeatureDisplayName)">
-          <select class="form-control"
-                  ng-model="annotation.feature_id"
-                  ng-options="gene.gene_id as gene.display_name for gene in genes">
-            <option selected="selected" value="">Choose a gene ...</option>
-          </select>
-          <span ng-show="!isValidFeature()"
-                class="help-block">Please choose a feature</span>
+            <feature-chooser feature-type="annotationType.feature_type"
+                          chosen-feature-id="annotation.feature_id"></feature-chooser>
+            <span ng-show="!isValidFeature()"
+                  class="help-block">Please select a gene</span>
           </div>
         </td>
       </tr>
 
       <tr ng-if="annotationType.feature_type === 'genotype'"
           ng-class="{ 'has-error': !isValidFeature() }">
-        <td class="title">{{displayAnnotationFeatureType}}-{{annotation.feature_id}}
+        <td class="title">
+          {{displayAnnotationFeatureType}}
         </td>
         <td>
-          <select class="form-control"
-                  ng-model="annotation.feature_id"
-                  ng-options="genotype.genotype_id as genotype.display_name for genotype in genotypes">
-            <option selected="selected" value="">Choose a genotype ...</option>
-          </select>
+          <feature-chooser feature-type="annotationType.feature_type"
+                           chosen-feature-id="annotation.feature_id"></feature-chooser>
           <span ng-show="!isValidFeature()"
-                class="help-block">Please choose a feature</span>
+                class="help-block">Please select a genotype</span>
         </td>
       </tr>
 
