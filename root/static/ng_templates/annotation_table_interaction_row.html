@@ -1,0 +1,36 @@
+<tr>
+  <td>
+    {{annotation.gene_display_name}}
+  </td>
+  <td>
+    {{annotation.interacting_gene_display_name}}
+  </td>
+  <td>
+    {{annotation.gene_taxonid}}
+  </td>
+  <td>
+    {{annotation.interacting_gene_taxonid}}
+  </td>
+  <td>
+    {{annotation.evidence_code}}
+  </td>
+  <td>
+    {{annotation.submitter_comment}}
+  </td>
+  <td>
+    {{annotation.curator}}
+  </td>
+  <td class="annotation-row-actions">
+    <div ng-if="evidenceTypes && annotationType">
+      <div>
+        <a ng-click="edit()">Edit</a>
+      </div>
+      <div>
+        <a ng-click="duplicate()">Duplicate</a>
+      </div>
+      <div>
+        <a ng-click="delete()">Delete</a>
+      </div>
+    </div>
+  </td>
+</tr>

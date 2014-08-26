@@ -1,4 +1,4 @@
-<tr ng-class="{'inline-edit-active-row': annotation.changes}">
+<tr>
   <td ng-if="annotation.feature_type === 'gene' && !featureIdFilter">
     {{annotation.gene_name_or_identifier}}
   </td>
@@ -36,7 +36,7 @@
   <td>
     {{annotation.curator}}
   </td>
-  <td>
+  <td class="annotation-row-actions">
     <div ng-if="evidenceTypes && annotationType">
       <div>
         <a ng-click="edit()">Edit</a>
@@ -50,3 +50,4 @@
     </div>
   </td>
 </tr>
+

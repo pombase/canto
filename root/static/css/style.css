@@ -431,6 +431,11 @@ table.list thead img.sort-direction-icon {
   background-position: center left
 }
 
+td.annotation-row-actions {
+  border: 0px solid white !important;
+  background-color: white !important;
+}
+
 .sect .sect-title a {
   margin-left: 9px;
 }

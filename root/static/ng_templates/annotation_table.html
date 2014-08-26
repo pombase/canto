@@ -1,14 +1,14 @@
-<div ng-switch="annotationType.category">
-  <div ng-switch-when="ontology">
-    <span class="title sect-title">
+<div>
+  <span class="title sect-title">
 {{annotationType.display_name}} annotations from this session
-    </span>
-    <span>
-      <a ng-click="addNew(featureType, featureId)">Add ...</a>
-    </span>
-    <div ng-switch="annotations.length > 0">
-      <div ng-switch-when="true" class="annotation-table sect-content">
-        <table class="list">
+  </span>
+  <span>
+    <a ng-click="addNew(featureType, featureId)">Add ...</a>
+  </span>
+  <div ng-switch="annotations.length > 0">
+    <div ng-switch-when="true" class="annotation-table sect-content">
+      <div class="list" ng-switch="annotationType.category">
+        <table ng-switch-when="ontology" class="list">
           <thead>
             <tr>
               <th ng-if="!featureIdFilter">{{displayAnnotationFeatureType}}</th>
@@ -25,14 +25,31 @@
             </tr>
           </thead>
           <tbody>
-            <tr annotation-table-row ng-repeat="annotation in annotations">
+            <tr annotation-table-row annotation-type="ontology" ng-repeat="annotation in annotations">
+            </tr>
+          </tbody>
+        </table>
+        <table ng-switch-when="interaction" class="list">
+          <thead>
+            <tr ng-switch-when="interaction">
+              <th>Interactor A</th>
+              <th>Interactor B</th>
+              <th>Interactor A taxon id</th>
+              <th>Interactor B taxon id</th>
+              <th>Evidence code</th>
+              <th>Comment</th>
+              <th>Curator</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr annotation-table-row annotation-type="interaction" ng-repeat="annotation in annotations">
             </tr>
           </tbody>
         </table>
       </div>
-      <div ng-switch-when="false" class="curs-no-annotations-message">
-        No annotations yet
-      </div>
+    </div>
+    <div ng-switch-when="false" class="curs-no-annotations-message">
+      No annotations yet
     </div>
   </div>
 </div>

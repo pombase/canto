@@ -1129,7 +1129,10 @@ var annotationTableRow =
     return {
       restrict: 'A',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/annotation_table_row.html',
+      templateUrl: function(elem,attrs) {
+        return app_static_path + 'ng_templates/annotation_table_' +
+          attrs.annotationType + '_row.html'
+      },
       controller: function($scope) {
         $scope.data = {};
 
