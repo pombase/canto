@@ -945,6 +945,10 @@ var annotationEditDialogCtrl =
       return $scope.annotation.feature_id;
     };
 
+    $scope.isValidInteractingGene = function() {
+      return $scope.annotation.interacting_gene_id;
+    };
+
     $scope.isValidTerm = function() {
       return $scope.annotation.term_ontid;
     };
@@ -961,9 +965,14 @@ var annotationEditDialogCtrl =
     };
 
     $scope.isValid = function() {
-      return $scope.isValidFeature() &&
-        $scope.isValidTerm() && $scope.isValidEvidence() &&
-        $scope.isValidWithGene();
+      if ($scope.annotationType.category === 'ontology') {
+        return $scope.isValidFeature() &&
+          $scope.isValidTerm() && $scope.isValidEvidence() &&
+          $scope.isValidWithGene();
+      } else {
+        return $scope.isValidFeature() &&
+          $scope.isValidInteractingGene() && $scope.isValidEvidence();
+      }
     };
 
     $scope.ok = function() {

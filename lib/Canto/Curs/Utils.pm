@@ -286,6 +286,8 @@ sub _make_interaction_annotation
             gene_display_name => $gene_proxy->display_name(),
             gene_taxonid => $gene_proxy->organism()->taxonid(),
             gene_id => $gene_proxy->gene_id(),
+            feature_display_name => $gene_proxy->display_name(),
+            feature_id => $gene_proxy->gene_id(),
             publication_uniquename => $pub_uniquename,
             evidence_code => $evidence_code,
             interacting_gene_identifier =>

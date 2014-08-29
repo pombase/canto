@@ -1,5 +1,4 @@
 <div ng-if="annotationType && evidenceTypes">
-
   <div class="modal-header">
     <h4 class="modal-title">
       Edit {{annotationType.display_name}} annotation <span ng-if="annotation.feature_display_name">for {{annotation.feature_display_name}}</span>
@@ -7,8 +6,8 @@
   </div>
 
   <div class="modal-body">
-
-    <table class="curs-definition-table">
+    <div ng-switch="annotationType.category">
+    <table ng-switch-when="ontology" class="curs-definition-table">
 
       <tr ng-if="annotationType.feature_type === 'gene'"
           ng-class="{ 'has-error': !isValidFeature() }">
@@ -67,7 +66,7 @@
         </td>
       </tr>
 
-      <tr ng-if="evidenceTypes[annotation.evidence_code].with_gene"
+      <tr ng-if="isValidEvidence() && evidenceTypes[annotation.evidence_code].with_gene"
           ng-class="{ 'has-error': !isValidWithGene() }">
         <td class="title">With</td>
         <td> 
@@ -130,6 +129,68 @@
 
     </table>
 
+    <table ng-switch-when="interaction" class="curs-definition-table">
+
+      <tr ng-class="{ 'has-error': !isValidFeature() }">
+        <td class="title">
+          {{displayAnnotationFeatureType}}
+        </td>
+        <td>
+          <div ng-if="newlyAdded && currentFeatureDisplayName">
+            {{currentFeatureDisplayName}}
+          </div>
+          <div ng-if="!(newlyAdded && currentFeatureDisplayName)">
+            <feature-chooser feature-type="annotationType.feature_type"
+                             chosen-feature-id="annotation.feature_id"></feature-chooser>
+            <span ng-show="!isValidFeature()"
+                  class="help-block">Please select a gene</span>
+          </div>
+        </td>
+      </tr>
+
+      <tr ng-class="{ 'has-error': !isValidInteractingGene() }">
+        <td class="title">
+          Interacting gene
+        </td>
+        <td>
+          <div>
+            <feature-chooser feature-type="annotationType.feature_type"
+                             chosen-feature-id="annotation.interacting_gene_id"></feature-chooser>
+            <span ng-show="!isValidFeature()"
+                  class="help-block">Please select a gene</span>
+          </div>
+        </td>
+      </tr>
+
+      <tr ng-class="{ 'has-error': !isValidEvidence() }">
+        <td class="title">Evidence code</td>
+        <td>
+          <select class="form-control"
+                  ng-model="annotation.evidence_code"
+                  ng-options="code for code in annotationType.evidence_codes">
+            <option selected="selected" value="">Choose an evidence code ...</option>
+          </select>
+          <span ng-show="isValidTerm() && !isValidEvidence()"
+                class="help-block">Please select an evidence code</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="title">Comment</td>
+        <td>
+          <input class="form-control"
+                 type="text" size="60"
+                 ng-model="annotation.submitter_comment"
+                 value="{{annotation.submitter_comment}}"/>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="title">Curator</td>
+        <td>{{annotation.curator}}</td>
+      </tr>
+
+    </table>
   </div>
 
   <div class="modal-footer">
