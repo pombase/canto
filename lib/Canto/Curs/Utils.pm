@@ -214,7 +214,18 @@ sub make_ontology_annotation
   return $ret;
 }
 
-sub _make_interaction_annotation
+=head2 make_interaction_annotation
+
+ Usage   : my $hash = Canto::Curs::Utils::make_interaction_annotation(...);
+ Function: Retrieve the details of an interaction annotation from the CursDB as
+           a hash
+ Args    : $config - a Config object
+           $schema - the CursDB schema
+           $annotation - the Annotation to dump as a hash
+
+=cut
+
+sub make_interaction_annotation
 {
   my $config = shift;
   my $schema = shift;
@@ -408,7 +419,7 @@ sub get_annotation_table
                                           $ontology_lookup);
     } else {
       if ($annotation_type_category eq 'interaction') {
-        @entries = _make_interaction_annotation($config, $schema, $annotation, $constrain_gene);
+        @entries = make_interaction_annotation($config, $schema, $annotation, $constrain_gene);
       } else {
         die "unknown annotation type category: $annotation_type_category\n";
       }
