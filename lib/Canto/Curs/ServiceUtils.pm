@@ -319,19 +319,16 @@ sub _check_curs_key
   delete $details->{key};
 }
 
-sub _store_change_hash
+sub _ontology_change_keys
 {
   my $self = shift;
   my $annotation = shift;
   my $changes = shift;
 
-  $self->_check_curs_key($changes);
-
   my $lookup = Canto::Track::get_adaptor($self->config(), 'ontology');
-
   my $data = $annotation->data();
 
-  my %valid_change_keys = (
+  return (
     term_ontid => sub {
       my $term_ontid = shift;
 
@@ -414,7 +411,37 @@ sub _store_change_hash
 
       return 1;
     },
-  );
+  )
+}
+
+sub _interaction_change_keys
+{
+  my $self = shift;
+  my $annotation = shift;
+  my $changes = shift;
+
+  my $data = $annotation->data();
+
+  return ();
+}
+
+sub _store_change_hash
+{
+  my $self = shift;
+  my $annotation = shift;
+  my $changes = shift;
+
+  $self->_check_curs_key($changes);
+
+  my %valid_change_keys;
+
+  if ($self->_category_from_type($annotation->type()) eq 'ontology') {
+    %valid_change_keys = $self->_ontology_change_keys($annotation, $changes);
+  } else {
+    %valid_change_keys = $self->_interaction_change_keys($annotation, $changes);
+  }
+
+  my $data = $annotation->data();
 
  CHANGE: for my $key (keys %$changes) {
     my $conf = $valid_change_keys{$key};
@@ -470,6 +497,16 @@ sub _store_change_hash
 }
 
 
+sub _category_from_type
+{
+  my $self = shift;
+  my $type_name = shift;
+
+  my $annotation_config = $self->config()->{annotation_types}->{$type_name};
+
+  return $annotation_config->{category};
+}
+
 =head2
 
  Usage   : $service_utils->change_annotation($annotation_id, 'new'|'existing',
@@ -513,10 +550,20 @@ sub change_annotation
   try {
     $self->_store_change_hash($annotation, $changes);
 
-    my $annotation_hash =
-      Canto::Curs::Utils::make_ontology_annotation($self->config(),
-                                                   $curs_schema,
-                                                   $annotation);
+    my $annotation_hash;
+
+    if ($self->_category_from_type($annotation->type()) eq 'ontology') {
+      $annotation_hash =
+        Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                     $curs_schema,
+                                                     $annotation);
+    } else {
+      $annotation_hash =
+        Canto::Curs::Utils::make_interaction_annotation($self->config(),
+                                                        $curs_schema,
+                                                        $annotation);
+    }
+
     $curs_schema->txn_commit();
 
     return { status => 'success',
