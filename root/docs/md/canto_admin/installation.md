@@ -65,9 +65,9 @@ CLucene version 0.9.* but Ubuntu v13.10 and later ship with CLucene v2.3.3.4.
 
 The required CLucene library can be installed with:
 
-    wget http://archive.ubuntu.com/ubuntu/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2build1_amd64.deb
-    wget http://archive.ubuntu.com/ubuntu/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2build1_amd64.deb
-    sudo dpkg -i libclucene0ldbl_0.9.21b-2build1_amd64.deb libclucene-dev_0.9.21b-2build1_amd64.deb
+    wget http://archive.ubuntu.com/ubuntu/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2_amd64.deb
+    wget http://archive.ubuntu.com/ubuntu/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2_amd64.deb
+    sudo dpkg -i libclucene0ldbl_0.9.21b-2_amd64.deb libclucene-dev_0.9.21b-2_amd64.deb
 
 ### Installing prerequisites on Centos/Red Hat
 If you have added
