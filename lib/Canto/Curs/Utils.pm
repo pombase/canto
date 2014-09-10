@@ -49,7 +49,8 @@ use Canto::Curs::ConditionUtil;
 =head2 make_ontology_annotation
 
  Usage   : my $hash = Canto::Curs::Utils::make_ontology_annotation(...);
- Function: Retrieve the details of an annotation from the CursDB has a hash
+ Function: Retrieve the details of an ontology annotation from the CursDB
+           as a hash
  Args    : $config - a Config object
            $schema - the CursDB schema
            $annotation - the Annotation to dump as a hash
