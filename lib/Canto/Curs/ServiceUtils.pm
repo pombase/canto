@@ -534,11 +534,11 @@ sub change_annotation
 
   $curs_schema->txn_begin();
 
+  my $changes = shift;
+
   try {
     my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
     my $pub = $curs_schema->resultset('Pub')->find($pub_id);
-
-    my $changes = shift;
 
     my $annotation = undef;
 
@@ -597,24 +597,44 @@ sub create_annotation
   my $self = shift;
   my $details = shift;
 
-  if (!defined $details->{feature_id}) {
+  my $feature_id = $details->{feature_id};
+
+  if (!defined $feature_id) {
     return { status => 'error',
-             message => 'No feature_id passed to create annotation service' };
+             message => 'No feature_id passed to annotation creation service' };
+  }
+
+  my $annotation_type = $details->{annotation_type};
+
+  if (!defined $annotation_type) {
+    return { status => 'error',
+             message => 'No annotation_type passed to annotation creation service' };
   }
 
   my $curs_schema = $self->curs_schema();
   $curs_schema->txn_begin();
 
-  my $curs_key = $self->get_metadata($curs_schema, 'curs_key');
-  my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
-  my $pub = $curs_schema->resultset('Pub')->find($pub_id);
-
   try {
+    my $curs_key = $self->get_metadata($curs_schema, 'curs_key');
+    my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
+    my $pub = $curs_schema->resultset('Pub')->find($pub_id);
+
     my $annotation = $self->make_annotation($pub, $details);
-    my $annotation_hash =
-      Canto::Curs::Utils::make_ontology_annotation($self->config(),
-                                                   $curs_schema,
-                                                   $annotation);
+
+    my $annotation_hash;
+
+    if ($self->_category_from_type($annotation_type) eq 'ontology') {
+      $annotation_hash =
+        Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                     $curs_schema,
+                                                     $annotation);
+    } else {
+      $annotation_hash =
+        Canto::Curs::Utils::make_interaction_annotation($self->config(),
+                                                        $curs_schema,
+                                                        $annotation);
+    }
+
 
 
     $curs_schema->txn_commit();
