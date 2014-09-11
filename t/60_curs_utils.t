@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 119;
+use Test::More tests => 117;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -98,7 +98,7 @@ sub check_new_annotations
                  'needs_with' => undef,
                  'completed' => 1,
                  'annotation_type' => 'phenotype',
-                 'annotation_id' => 5,
+                 'annotation_id' => 6,
                  'is_not' => 0,
                  'evidence_code' => 'Epitope-tagged protein immunolocalization experiment data',
                  'annotation_type_abbreviation' => '',
@@ -140,7 +140,7 @@ sub check_new_annotations
                  'term_name' => 'elongated cells',
                  'needs_with' => undef,
                  'completed' => 1,
-                 'annotation_id' => 6,
+                 'annotation_id' => 7,
                  'annotation_type' => 'phenotype',
                  'genotype_id' => 2,
                  'annotation_extension' => '',
