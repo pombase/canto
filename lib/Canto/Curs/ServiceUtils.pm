@@ -534,20 +534,20 @@ sub change_annotation
 
   $curs_schema->txn_begin();
 
-  my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
-  my $pub = $curs_schema->resultset('Pub')->find($pub_id);
-
-  my $changes = shift;
-
-  my $annotation = undef;
-
-  if ($annotation_status eq 'new') {
-    $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
-  } else {
-    die "annotation status unsupported: $annotation_status\n";
-  }
-
   try {
+    my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
+    my $pub = $curs_schema->resultset('Pub')->find($pub_id);
+
+    my $changes = shift;
+
+    my $annotation = undef;
+
+    if ($annotation_status eq 'new') {
+      $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
+    } else {
+      die "annotation status unsupported: $annotation_status\n";
+    }
+
     $self->_store_change_hash($annotation, $changes);
 
     my $annotation_hash;
