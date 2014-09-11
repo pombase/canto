@@ -177,6 +177,18 @@ test_config:
                evidence_code: Synthetic Haploinsufficiency
                interacting_genes:
                  - primary_identifier: SPBC14F5.07
+               curator:
+                 email: "some.testperson@pombase.org"
+                 name: "Some Testperson"
+                 community_curated: 0
+           - type: genetic_interaction
+             status: new
+             genes(Gene:primary_identifier):
+               - SPCC63.05
+             pub(Pub:uniquename): PMID:19756689
+             data:
+               evidence_code: Far Western
+               interacting_genes:
                  - primary_identifier: SPAC27D7.13c
                curator:
                  email: "some.testperson@pombase.org"

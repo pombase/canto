@@ -119,6 +119,26 @@ my $full_expected_curation_session =
             {
               primary_identifier => 'SPBC14F5.07',
             },
+          ]
+        },
+        {
+          type => 'genetic_interaction',
+          publication => 'PMID:19756689',
+          curator => {
+            name => 'Some Testperson',
+            email => 'some.testperson@pombase.org',
+            community_curated => JSON::XS::false,
+          },
+          status => 'new',
+          creation_date => "2010-01-02",
+          evidence_code => 'Far Western',
+          genes => {
+            'Schizosaccharomyces pombe SPCC63.05' => {
+              uniquename => 'SPCC63.05',
+              organism => 'Schizosaccharomyces pombe',
+            },
+          },
+          interacting_genes => [
             {
               primary_identifier => 'SPAC27D7.13c',
             }

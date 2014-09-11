@@ -53,9 +53,9 @@ is ($spcc576_16c->all_annotations(include_with => 1)->count(), 1);
 
 my $spcc63_05 = $schema->find_with_type('Gene',
                                { primary_identifier => 'SPCC63.05' });
-is ($spcc63_05->direct_annotations()->count(), 2);
+is ($spcc63_05->direct_annotations()->count(), 3);
 is ($spcc63_05->indirect_annotations()->count(), 0);
-is ($spcc63_05->all_annotations(include_with => 1)->count(), 2);
+is ($spcc63_05->all_annotations(include_with => 1)->count(), 3);
 
 my $annotation_1_id = $spcc63_05->all_annotations(include_with => 1)->first()->annotation_id();
 
