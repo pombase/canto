@@ -264,66 +264,70 @@ sub make_interaction_annotation
 
   my @interacting_genes = @{$data->{interacting_genes}};
 
+  if (@interacting_genes > 1) {
+    die "more than one interacting gene in annotation with ID: ",
+      $annotation->annotation_id(), " - update the database\n";
+  }
+
   my @results = ();
 
-  for my $interacting_gene_info (@interacting_genes) {
-    my $interacting_gene_primary_identifier =
-      $interacting_gene_info->{primary_identifier};
-    my $interacting_gene =
-      $schema->find_with_type('Gene',
-                              { primary_identifier =>
+  my $interacting_gene_info = $interacting_genes[0];
+
+  my $interacting_gene_primary_identifier =
+    $interacting_gene_info->{primary_identifier};
+  my $interacting_gene =
+    $schema->find_with_type('Gene',
+                            { primary_identifier =>
                                 $interacting_gene_primary_identifier});
-    my $interacting_gene_proxy =
-      Canto::Curs::GeneProxy->new(config => $config,
-                                   cursdb_gene => $interacting_gene);
+  my $interacting_gene_proxy =
+    Canto::Curs::GeneProxy->new(config => $config,
+                                cursdb_gene => $interacting_gene);
 
-    my $interacting_gene_display_name =
-      $interacting_gene_proxy->display_name();
+  my $interacting_gene_display_name =
+    $interacting_gene_proxy->display_name();
 
-    if (defined $constrain_gene) {
-      if ($constrain_gene->gene_id() != $gene->gene_id()) {
-        if ($interacting_gene->gene_id() == $constrain_gene->gene_id()) {
-          $is_inferred_annotation = 1;
-        } else {
-          # ignore bait or prey from this annotation if it isn't the
-          # current gene (on a gene page)
-          next;
-        }
+  if (defined $constrain_gene) {
+    if ($constrain_gene->gene_id() != $gene->gene_id()) {
+      if ($interacting_gene->gene_id() == $constrain_gene->gene_id()) {
+        $is_inferred_annotation = 1;
+      } else {
+        # ignore bait or prey from this annotation if it isn't the
+        # current gene (on a gene page)
+        next;
       }
     }
+  }
 
-    my $entry =
-          {
-            gene_identifier => $gene_proxy->primary_identifier(),
-            gene_display_name => $gene_proxy->display_name(),
-            gene_taxonid => $gene_proxy->organism()->taxonid(),
-            gene_id => $gene_proxy->gene_id(),
-            feature_display_name => $gene_proxy->display_name(),
-            feature_id => $gene_proxy->gene_id(),
-            publication_uniquename => $pub_uniquename,
-            evidence_code => $evidence_code,
-            interacting_gene_identifier =>
-              $interacting_gene_primary_identifier,
-            interacting_gene_display_name =>
-              $interacting_gene_display_name,
-            interacting_gene_taxonid =>
-              $interacting_gene_info->{organism_taxon}
-                // $gene_proxy->organism()->taxonid(),
-            interacting_gene_id => $interacting_gene_proxy->gene_id(),
-            score => '',  # for biogrid format output
-            phenotypes => '',
-            submitter_comment => '',
-            completed => 1,
-            annotation_id => $annotation->annotation_id(),
-            annotation_type => $annotation_type,
-            status => $annotation->status(),
-            curator => $curator,
-            is_inferred_annotation => $is_inferred_annotation,
-          };
-    push @results, $entry;
-  };
+  my $entry =
+    {
+      gene_identifier => $gene_proxy->primary_identifier(),
+      gene_display_name => $gene_proxy->display_name(),
+      gene_taxonid => $gene_proxy->organism()->taxonid(),
+      gene_id => $gene_proxy->gene_id(),
+      feature_display_name => $gene_proxy->display_name(),
+      feature_id => $gene_proxy->gene_id(),
+      publication_uniquename => $pub_uniquename,
+      evidence_code => $evidence_code,
+      interacting_gene_identifier =>
+        $interacting_gene_primary_identifier,
+      interacting_gene_display_name =>
+        $interacting_gene_display_name,
+      interacting_gene_taxonid =>
+        $interacting_gene_info->{organism_taxon}
+          // $gene_proxy->organism()->taxonid(),
+      interacting_gene_id => $interacting_gene_proxy->gene_id(),
+      score => '',  # for biogrid format output
+      phenotypes => '',
+      submitter_comment => '',
+      completed => 1,
+      annotation_id => $annotation->annotation_id(),
+      annotation_type => $annotation_type,
+      status => $annotation->status(),
+      curator => $curator,
+      is_inferred_annotation => $is_inferred_annotation,
+    };
 
-  return @results;
+  return $entry;
 };
 
 =head2 get_annotation_table

@@ -422,7 +422,60 @@ sub _interaction_change_keys
 
   my $data = $annotation->data();
 
-  return ();
+  return (
+    evidence_code => sub {
+      my $evidence_code = shift;
+
+      my $evidence_config = $self->config()->{evidence_types}->{$evidence_code};
+
+      if (defined $evidence_config) {
+        # do the default - set Annotation->data()->{...}
+        return 0
+      } else {
+        die "no such evidence code: $evidence_code\n";
+      }
+    },
+    feature_id => sub {
+      my $feature_id = shift;
+
+      my $gene = $self->curs_schema()->find_with_type('Gene', { gene_id => $feature_id });
+      $annotation->gene_annotations()->delete();
+      $annotation->set_genes($gene);
+
+      return 1;
+    },
+    feature_type => sub {
+      my $feature_type = shift;
+
+      if ($feature_type ne 'gene') {
+        die qq(incorrect feature_type "$feature_type" for interaction - needed "gene"\n);
+      }
+
+      return 1;
+    },
+    interacting_gene_id => sub {
+      my $gene_id = shift;
+
+      if ($gene_id) {
+        my $gene = _lookup_gene_id($self->curs_schema(), $gene_id);
+
+        if (defined $gene) {
+          $data->{interacting_genes} =
+            [
+              {
+                primary_identifier => $gene->primary_identifier(),
+              },
+            ];
+          return 1;
+        } else {
+          die "can't find gene with id: $gene_id\n";
+        }
+      } else {
+        die "no interacting_gene_id passed to service\n";
+      }
+    },
+    submitter_comment => 1,
+);
 }
 
 sub _store_change_hash

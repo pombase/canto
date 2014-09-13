@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 42;
+use Test::More tests => 46;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -240,6 +240,62 @@ is ($c2d7_gene->direct_annotations()->count(), 1);
 is ($curs_schema->resultset('Annotation')->search({ annotation_id => $new_annotation_id })->count(), 0);
 
 
+# test interaction annotation services
+
+my $genetic_interaction_annotation =
+  $curs_schema->resultset('Annotation')->find({ type => 'genetic_interaction',
+                                                data => { -like => '%Far Western%' } });
+
+
+# test illegal field type
+$res = $service_utils->change_annotation($genetic_interaction_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           illegal => "something",
+                                         });
+
+is ($res->{status}, 'error');
+is ($res->{message}, 'no such annotation field type: illegal');
+
+
+# test editing
+$res = $service_utils->change_annotation($genetic_interaction_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           interacting_gene_id => 3,
+                                         });
+
+is ($res->{status}, 'success');
+cmp_deeply ($res->{annotation},
+            {
+              'publication_uniquename' => 'PMID:19756689',
+              'interacting_gene_taxonid' => 4896,
+              'score' => '',
+              'annotation_id' => $genetic_interaction_annotation->annotation_id(),
+              'curator' => 'Some Testperson <some.testperson@pombase.org>',
+              'feature_id' => 4,
+              'interacting_gene_identifier' => 'SPBC14F5.07',
+              'interacting_gene_display_name' => 'doa10',
+              'gene_display_name' => 'SPCC63.05',
+              'gene_id' => 4,
+              'feature_display_name' => 'SPCC63.05',
+              'gene_taxonid' => 4896,
+              'is_inferred_annotation' => 0,
+              'gene_identifier' => 'SPCC63.05',
+              'evidence_code' => 'Far Western',
+              'interacting_gene_id' => 3,
+              'status' => 'new',
+              'completed' => 1,
+              'submitter_comment' => '',
+              'phenotypes' => '',
+              'annotation_type' => 'genetic_interaction'
+            }
+          );
+
+
+# test condition list service
 my $cond_res = $service_utils->list_for_service('condition');
 
 cmp_deeply($cond_res, [ { term_id => 'PECO:0000006', name => 'low temperature' },
