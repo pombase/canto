@@ -264,26 +264,28 @@ sub make_annotation
     die "Adding annotation failed - no evidence_code\n";
   }
 
-  my $term_ontid = $data->{term_ontid};
-  if (!defined $term_ontid) {
-    die "Adding annotation failed - no term ID\n";
-  }
-  if (!defined $self->_term_name_from_id($term_ontid)) {
-    die "Adding annotation failed - invalid term ID\n";
-  }
+  my %annotation_data = ();
 
-  my %annotation_data = (
-    term_ontid => $term_ontid,
-  );
-
-  my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
-  if ($needs_with_gene) {
-    if (!$data->{with_gene_id}) {
-      die "no 'with_gene_id' with passed in the data object to make_annotation()\n";
+  if ($self->_category_from_type($annotation_type_name) eq 'ontology') {
+    my $term_ontid = $data->{term_ontid};
+    if (!defined $term_ontid) {
+      die "Adding annotation failed - no term ID\n";
     }
-  } else {
-    if ($data->{with_gene_id}) {
-      die "annotation with evidence code '$evidence_code' shouldn't have a 'with_gene_id' passed in the data\n";
+    if (!defined $self->_term_name_from_id($term_ontid)) {
+      die "Adding annotation failed - invalid term ID\n";
+    }
+
+    $annotation_data{term_ontid} = $term_ontid;
+
+    my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
+    if ($needs_with_gene) {
+      if (!$data->{with_gene_id}) {
+        die "no 'with_gene_id' with passed in the data object to make_annotation()\n";
+      }
+    } else {
+      if ($data->{with_gene_id}) {
+        die "annotation with evidence code '$evidence_code' shouldn't have a 'with_gene_id' passed in the data\n";
+      }
     }
   }
 
@@ -297,6 +299,12 @@ sub make_annotation
                                      creation_date => $current_date,
                                      data => { },
                                    });
+
+use Data::Dumper;
+$Data::Dumper::Maxdepth = 3;
+warn Dumper([$data]);
+
+
 
   $self->_store_change_hash($new_annotation, $data);
 

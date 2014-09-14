@@ -170,6 +170,7 @@ var keysForServer = {
   term_ontid: true,
   term_suggestion: true,
   with_gene_id: true,
+  interacting_gene_id: true,
 };
 
 var annotationProxy =
