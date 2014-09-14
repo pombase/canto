@@ -665,6 +665,7 @@ sub get_existing_interaction_annotations
            database identifier for the annotation.
 
 =cut
+
 sub get_existing_annotations
 {
   my $config = shift;
@@ -691,6 +692,7 @@ sub get_existing_annotations
  Return  : the count
 
 =cut
+
 sub get_existing_annotation_count
 {
   my $config = shift;
@@ -718,6 +720,7 @@ sub get_existing_annotation_count
  Returns :
 
 =cut
+
 sub store_all_statuses
 {
   my $config = shift;
@@ -741,6 +744,7 @@ sub store_all_statuses
  Returns : a display name of the form "name(description)"
 
 =cut
+
 sub make_allele_display_name
 {
   my $name = shift || 'noname';
@@ -764,6 +768,7 @@ sub make_allele_display_name
  Returns : 1 if the annotation was deleted, 0 otherwise
 
 =cut
+
 sub delete_interactor
 {
   my $annotation = shift;
