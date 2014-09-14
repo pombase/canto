@@ -1,9 +1,13 @@
 <tr>
   <td ng-if="annotation.feature_type === 'gene' && !featureIdFilter">
-    {{annotation.gene_name_or_identifier}}
+    <a href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id}}">
+      {{annotation.gene_name_or_identifier}}
+    </a>
   </td>
   <td ng-if="annotation.feature_type === 'genotype' && !featureIdFilter">
-    {{annotation.genotype_display_name}}
+    <a href="{{curs_root_uri + '/feature/genotype/view/' + annotation.feature_id}}">
+      {{annotation.genotype_display_name}}
+    </a>
   </td>
   <td>
     {{annotation.term_ontid}}
@@ -15,7 +19,11 @@
     {{annotation.evidence_code}}
   </td>
   <td ng-if="annotationType.can_have_with">
-    {{annotation.with_or_from_display_name || annotation.with_or_from_identifier}}
+    <span ng-if="annotation.with_gene_id">
+      <a href="{{curs_root_uri + '/feature/gene/view/' + annotation.with_gene_id}}">
+        {{annotation.with_or_from_display_name || annotation.with_or_from_identifier}}
+      </a>
+    </span>
   </td>
   <td ng-if="annotationType.can_have_conditions">
     {{conditionsString()}}
