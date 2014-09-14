@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Carp;
 use File::Basename;
+use Clone qw(clone);
 use feature qw(switch);
 no if $] >= 5.018, warnings => "experimental::smartmatch";
 
@@ -20,8 +21,11 @@ use lib qw(lib);
 
 use Canto::Config;
 use Canto::Meta::Util;
+use Canto::Track;
 use Canto::TrackDB;
+use Canto::CursDB;
 use Canto::DBUtil;
+use Canto::Curs::Utils;
 
 if (@ARGV != 1) {
   die "$0: needs one argument - the version to upgrade to\n";
@@ -99,6 +103,63 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
   when (7) {
     $dbh->do("CREATE UNIQUE INDEX dbxref_db_accession_unique ON dbxref(accession, db_id);");
     $dbh->do("CREATE UNIQUE INDEX cvterm_name_cv_unique ON cvterm(name, cv_id);");
+  }
+  when (8) {
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_key = $curs->curs_key();
+      my $curs_schema = shift;
+
+      my $guard = $curs_schema->txn_scope_guard();
+
+      my $rs = $curs_schema->resultset('Annotation')
+        ->search({ type => { -like => '%interaction' } });
+
+      for my $an ($rs->all()) {
+        my $data = $an->data();
+
+        my $interacting_genes = $data->{interacting_genes};
+
+        if ($interacting_genes && @$interacting_genes > 1) {
+          warn "splitting interaction annotation ID ", $an->annotation_id(),
+            " in session $curs_key\n";
+
+          for my $interacting_gene (@$interacting_genes) {
+            my $new_data = clone $data;
+
+            delete $new_data->{interacting_genes};
+
+            $new_data->{interacting_genes} = [
+              $interacting_gene,
+            ];
+
+            my $date_string = Canto::Curs::Utils::get_iso_date();
+
+            my $new_annotation =
+              $curs_schema->create_with_type('Annotation',
+                                             {
+                                               status => $an->status(),
+                                               pub => $an->pub(),
+                                               type => $an->type(),
+                                               creation_date => $date_string,
+                                               data => $new_data,
+                                             });
+
+            $curs_schema->create_with_type('GeneAnnotation',
+                                           {
+                                             gene => ($an->genes())[0],
+                                             annotation => $new_annotation,
+                                           });
+          }
+
+          $an->delete();
+        }
+      }
+
+      $guard->commit();
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
   }
   default {
     die "don't know how to upgrade to version $new_version";

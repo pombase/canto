@@ -766,4 +766,20 @@ sub delete_interactor
 
 }
 
+
+my $iso_date_template = "%4d-%02d-%02d";
+
+=head2 get_iso_date
+
+ Usage   : $date_string = Canto::Curs::get_iso_date();
+ Function: return the current date and time in ISO format
+
+=cut
+
+sub get_iso_date
+{
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time);
+  return sprintf "$iso_date_template", 1900+$year, $mon+1, $mday
+}
+
 1;
