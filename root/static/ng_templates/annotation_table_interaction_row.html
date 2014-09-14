@@ -1,6 +1,8 @@
 <tr>
   <td>
-    {{annotation.gene_display_name}}
+    <a href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id}}">
+      {{annotation.gene_display_name}}
+    </a>
   </td>
   <td>
     {{annotation.gene_taxonid}}
