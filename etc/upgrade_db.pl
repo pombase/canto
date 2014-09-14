@@ -141,7 +141,7 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
                                                status => $an->status(),
                                                pub => $an->pub(),
                                                type => $an->type(),
-                                               creation_date => $date_string,
+                                               creation_date => $an->creation_date(),
                                                data => $new_data,
                                              });
 
