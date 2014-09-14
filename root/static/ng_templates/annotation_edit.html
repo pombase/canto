@@ -19,7 +19,7 @@
             {{currentFeatureDisplayName}}
           </div>
           <div ng-if="!(newlyAdded && currentFeatureDisplayName)">
-            <feature-chooser feature-type="annotationType.feature_type"
+            <feature-chooser feature-type="{{annotationType.feature_type}}"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
             <span ng-show="!isValidFeature()"
                   class="help-block">Please select a gene</span>
@@ -33,7 +33,7 @@
           {{displayAnnotationFeatureType}}
         </td>
         <td>
-          <feature-chooser feature-type="annotationType.feature_type"
+          <feature-chooser feature-type="{{annotationType.feature_type}}"
                            chosen-feature-id="annotation.feature_id"></feature-chooser>
           <span ng-show="!isValidFeature()"
                 class="help-block">Please select a genotype</span>
@@ -140,7 +140,7 @@
             {{currentFeatureDisplayName}}
           </div>
           <div ng-if="!(newlyAdded && currentFeatureDisplayName)">
-            <feature-chooser feature-type="annotationType.feature_type"
+            <feature-chooser feature-type="{{annotationType.feature_type}}"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
             <span ng-show="!isValidFeature()"
                   class="help-block">Please select a gene</span>
@@ -154,7 +154,7 @@
         </td>
         <td>
           <div>
-            <feature-chooser feature-type="annotationType.feature_type"
+            <feature-chooser feature-type="{{annotationType.feature_type}}"
                              chosen-feature-id="annotation.interacting_gene_id"></feature-chooser>
             <span ng-show="!isValidInteractingGene()"
                   class="help-block">Please select a gene</span>

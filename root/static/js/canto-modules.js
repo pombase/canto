@@ -320,7 +320,7 @@ var featureChooser =
   function(CursGeneList, CursGenotypeList, toaster) {
     return {
       scope: {
-        featureType: '=',
+        featureType: '@',
         chosenFeatureId: '=',
       },
       restrict: 'E',
