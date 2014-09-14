@@ -204,7 +204,10 @@ var annotationProxy =
                      (!params.featureId ||
                       (params.featureType &&
                        ((params.featureType === 'gene' &&
-                         elem.gene_id == params.featureId) ||
+                         (elem.gene_id == params.featureId ||
+                          (typeof(elem.interacting_gene_id) !== 'undefined' &&
+                           elem.interacting_gene_id == params.featureId)
+                         )) ||
                        (params.featureType === 'genotype' &&
                         elem.genotype_id == params.featureId))));
                  });
