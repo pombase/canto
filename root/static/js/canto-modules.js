@@ -376,7 +376,11 @@ var conditionPicker =
       controller: function($scope) {
         $scope.usedConditions = [];
         $scope.addCondition = function(condName) {
-          $scope.tagitList.tagit("createTag", condName);
+          // this hack stop apply() being called twice when user clicks an add
+          // button
+          setTimeout(function() {
+            $scope.tagitList.tagit("createTag", condName);
+          }, 1);
         };
       },
       templateUrl: app_static_path + 'ng_templates/condition_picker.html',
@@ -387,6 +391,8 @@ var conditionPicker =
           $scope.usedConditions = results;
 
           var updateScopeConditions = function() {
+            // apply() is needed so the scope is update when a tag is added in
+            // the Tagit field
             $scope.$apply(function() {
               $scope.conditions = [];
               $field.find('li .tagit-label').map(function(index, $elem) {
@@ -401,8 +407,6 @@ var conditionPicker =
             allowSpaces: true,
             placeholderText: 'Type a condition ...',
             tagSource: fetch_conditions,
-            afterTagAdded: updateScopeConditions,
-            afterTagRemoved: updateScopeConditions,
             autocomplete: {
               focus: ferret_choose.show_autocomplete_def,
               close: ferret_choose.hide_autocomplete_def,
@@ -412,6 +416,12 @@ var conditionPicker =
                 function(cond) {
                   $field.tagit("createTag", cond.name);
                 });
+
+          // don't start updating until all initial tags are added
+          $field.tagit({
+            afterTagAdded: updateScopeConditions,
+            afterTagRemoved: updateScopeConditions,
+          });
 
           $scope.tagitList = $field;
         }).catch(function() {
