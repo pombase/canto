@@ -120,12 +120,10 @@ canto.service('CursGenotypeList', function($q, Curs) {
 });
 
 canto.service('CursConditionList', function($q, Curs) {
-  this.cursPromise = Curs.list('condition');
-
   this.conditionList = function() {
     var q = $q.defer();
 
-    this.cursPromise.success(function(conditions) {
+    Curs.list('condition').success(function(conditions) {
       q.resolve(conditions);
     }).error(function() {
       q.reject();
