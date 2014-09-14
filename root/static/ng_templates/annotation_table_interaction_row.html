@@ -6,7 +6,9 @@
     {{annotation.gene_taxonid}}
   </td>
   <td>
-    {{annotation.interacting_gene_display_name}}
+    <a href="{{curs_root_uri + '/feature/gene/view/' + annotation.interacting_gene_id}}">
+      {{annotation.interacting_gene_display_name}}
+    </a>
   </td>
   <td>
     {{annotation.interacting_gene_taxonid}}

@@ -137,6 +137,8 @@ canto.service('CursConditionList', function($q, Curs) {
 
 canto.service('CantoGlobals', function($window) {
   this.app_static_path = $window.app_static_path;
+  this.application_root = $window.application_root;
+  this.curs_root_uri = $window.curs_root_uri;
 });
 
 canto.service('CantoService', function($http) {
@@ -1135,7 +1137,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function($modal, AnnotationProxy, AnnotationTypeConfig, CantoConfig, CursGeneList, toaster) {
+  function($modal, AnnotationProxy, AnnotationTypeConfig, CantoConfig, CursGeneList, CantoGlobals, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -1145,6 +1147,8 @@ var annotationTableRow =
       },
       controller: function($scope) {
         $scope.data = {};
+
+        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
 
         var annotation = $scope.annotation;
 
@@ -1204,7 +1208,8 @@ var annotationTableRow =
 
 canto.directive('annotationTableRow',
                 ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig',
-                 'CantoConfig', 'CursGeneList', 'toaster', annotationTableRow]);
+                 'CantoConfig', 'CursGeneList', 'CantoGlobals', 'toaster',
+                 annotationTableRow]);
 
 
 var termNameComplete =
