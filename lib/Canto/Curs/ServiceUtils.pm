@@ -300,12 +300,6 @@ sub make_annotation
                                      data => { },
                                    });
 
-use Data::Dumper;
-$Data::Dumper::Maxdepth = 3;
-warn Dumper([$data]);
-
-
-
   $self->_store_change_hash($new_annotation, $data);
 
   $self->set_annotation_curator($new_annotation);

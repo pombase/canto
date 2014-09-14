@@ -206,8 +206,7 @@ sub get_annotation_table_tsv
       if ($column_name eq 'taxonid') {
         if (!defined $val) {
           use Data::Dumper;
-          $Data::Dumper::Maxdepth = 3;
-          die Dumper([$annotation]);
+          die "no value for column: $column_name from: ", Dumper([$annotation]);
         }
         $val = "taxon:$val";
       }

@@ -45,7 +45,6 @@ use Canto::DB;
 use Canto::WebUtil;
 
 use Number::Format;
-use Data::Dumper;
 
 my $col_conf = $class_info->{field_infos}->{$field_name};
 
