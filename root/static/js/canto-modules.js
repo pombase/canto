@@ -55,11 +55,11 @@ function simpleHttpPost(toaster, $http, url, data) {
       if (data.status === "success") {
         window.location.href = data.location;
       } else {
-        toaster.pop(data.message);
+        toaster.pop('error', data.message);
       }
     }).
     error(function(data, status){
-      toaster.pop("Accessing server failed: " + (data || status) );
+      toaster.pop('error', "Accessing server failed: " + (data || status) );
     });
 }
 

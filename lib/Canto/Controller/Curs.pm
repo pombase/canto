@@ -2548,31 +2548,39 @@ sub genotype_store : Chained('feature') PathPart('store')
   my @alleles = ();
 
   if ($genotype_name) {
-    try {
-      my $guard = $schema->txn_scope_guard();
-
-      for my $allele_data (@alleles_data) {
-        my $allele = $self->_allele_from_json($schema, $allele_data);
-
-        push @alleles, $allele;
-      }
-
-      my $genotype = $self->_maybe_make_genotype($c, \@alleles, $genotype_name);
-
-      $guard->commit();
-
-      $c->stash->{json_data} = {
-        status => "success",
-        location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
-      };
-    } catch {
+    if ($schema->resultset('Genotype')->find( { name => $genotype_name } )) {
       $c->stash->{json_data} = {
         status => "error",
-        message => "Storing new genotype failed: internal error - " .
-          "please report this to the Canto developers",
+        message => qq(A genotype already exists with the name "$genotype_name" - ) .
+          "please choose another",
       };
-      warn $_;
-    };
+    } else {
+      try {
+        my $guard = $schema->txn_scope_guard();
+
+        for my $allele_data (@alleles_data) {
+          my $allele = $self->_allele_from_json($schema, $allele_data);
+
+          push @alleles, $allele;
+        }
+
+        my $genotype = $self->_maybe_make_genotype($c, \@alleles, $genotype_name);
+
+        $guard->commit();
+
+        $c->stash->{json_data} = {
+          status => "success",
+          location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
+        };
+      } catch {
+        $c->stash->{json_data} = {
+          status => "error",
+          message => "Storing new genotype failed: internal error - " .
+            "please report this to the Canto developers",
+        };
+        warn $_;
+      };
+    }
   } else {
     $c->stash->{json_data} = {
       status => "error",
