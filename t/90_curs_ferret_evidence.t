@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 138;
+use Test::More tests => 126;
 
 use Plack::Test;
 use Plack::Util;
@@ -45,24 +45,6 @@ for my $annotation_type (@annotation_type_list) {
 
   test_psgi $app, sub {
     my $cb = shift;
-
-    my $new_annotation_re =
-      qr|$term_db_accession.*IMP|s;
-
-    {
-      my $uri = new URI("$root_url");
-      my $req = HTTP::Request->new(GET => $uri);
-
-      my $res = $cb->($req);
-
-      # make sure we actually change the list of annotations later
-      unlike ($res->content(), $new_annotation_re);
-
-      # and make sure we have the right test data set
-      like ($res->content(),
-            qr/SPAC3A11.14c.*pkl1.*GO:0030133/s);
-
-    }
 
     my $make_annotation = sub {
       my $use_term_suggestion = shift;
@@ -189,7 +171,6 @@ for my $annotation_type (@annotation_type_list) {
       my $redirect_req = HTTP::Request->new(GET => $redirect_url);
       my $redirect_res = $cb->($redirect_req);
 
-      like ($redirect_res->content(), $new_annotation_re);
 
       my $annotation =
         $curs_schema->find_with_type('Annotation', $new_annotation_id);

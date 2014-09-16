@@ -94,17 +94,6 @@ curs-back-button"><% $finish_text %></button>
 
 <annotation-table-list feature-type-filter="genotype" feature-id-filter="<% $genotype_id %>"></annotation-table-list>
 
-<div id="curs-annotation-tables" class="sect" style="display: none">
-% for my $annotation_type (@types_to_show) {
-<& current_annotation_view.mhtml,
-   annotation_type => $annotation_type,
-   curs_root_uri => $curs_root_uri,
-   pub => $pub,
-   target => $genotype &>
-% }
-
-</div>
-
 <%init>
 my $genotype_id = $genotype->genotype_id();
 my $genotype_identifier = $genotype->identifier();

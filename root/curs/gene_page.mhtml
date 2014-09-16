@@ -84,17 +84,6 @@ Gene details
 <annotation-table-list feature-type-filter="gene" feature-id-filter="<% $gene_id %>"
                        feature-filter-display-name="<% $gene->display_name() %>"></annotation-table-list>
 
-<div id="curs-annotation-tables" class="sect" style="display: none">
-% for my $annotation_type (@annotation_type_list) {
-<& current_annotation_view.mhtml,
-   annotation_type => $annotation_type,
-   curs_root_uri => $curs_root_uri,
-   pub => $pub,
-   target => $gene &>
-% }
-
-</div>
-
 <%init>
 my $gene_id = $gene->gene_id();
 my $gene_name = $gene->{primary_name} // '';

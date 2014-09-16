@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 47;
+use Test::More tests => 44;
 
 use Plack::Test;
 use Plack::Util;
@@ -28,25 +28,10 @@ test_psgi $app, sub {
   my $cb = shift;
 
   my $term_id = 'GO:0080170';
-  my $new_annotation_re = qr|.*$term_id.*IPI.*cdc11|s;
 
   my $annotation_evidence_url = "$root_url/annotation/3/evidence";
   my $annotation_with_gene_url = "$root_url/annotation/3/with_gene";
   my $transfer_url = "$root_url/annotation/3/transfer";
-
-  {
-    my $uri = new URI("$root_url");
-    my $req = HTTP::Request->new(GET => $uri);
-
-    my $res = $cb->($req);
-
-    # make sure we actually change the list of annotations later
-    unlike ($res->content(), $new_annotation_re);
-
-    # and make sure we have the right test data set
-    like ($res->content(),
-          qr/SPAC3A11.14c.*pkl1.*GO:0030133/s);
-  }
 
   # test proceeding after choosing a term
   {
@@ -229,8 +214,6 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     is ($an_rs->count(), 4);
-
-    like ($redirect_res->content(), $new_annotation_re);
 
     my $original_annotation =
       $curs_schema->find_with_type('Annotation', 3);

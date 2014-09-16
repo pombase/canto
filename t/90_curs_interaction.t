@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 26;
 
 use Plack::Test;
 use Plack::Util;
@@ -34,17 +34,6 @@ for my $annotation_type (@annotation_type_list) {
 
   test_psgi $app, sub {
     my $cb = shift;
-
-    {
-      my $uri = new URI("$root_url");
-      my $req = HTTP::Request->new(GET => $uri);
-
-      my $res = $cb->($req);
-
-      # and make sure we have the right test data set
-      like ($res->content(),
-            qr/SPAC3A11.14c.*pkl1.*GO:0030133/s);
-    }
 
     my $new_annotation = undef;
     my @new_annotation_ids = ();

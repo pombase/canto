@@ -168,7 +168,7 @@ sub feature_type
   return 'genotype';
 }
 
-# aliases to make current_annotation_view.mhtml simpler
+# aliases to make Genotype look like Gene
 sub all_annotations
 {
   my $self = shift;
