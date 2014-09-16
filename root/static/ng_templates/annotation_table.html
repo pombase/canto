@@ -1,8 +1,13 @@
-<div>
+<div ng-if="annotations.length > 0 || featureStatusFilter === 'new'">
   <span class="title sect-title">
-{{annotationType.display_name}} annotations from this session
+    <span ng-if="featureStatusFilter === 'new'">
+New {{annotationType.display_name}} annotations from this session
+    </span>
+    <span ng-if="featureStatusFilter === 'existing'">
+Existing {{annotationType.display_name}} annotations
+    </span>
   </span>
-  <span>
+  <span ng-if="featureStatusFilter === 'new'">
     <a ng-click="addNew(featureType, featureId)">Add ...</a>
   </span>
   <div ng-switch="annotations.length > 0">

@@ -1,13 +1,19 @@
 <tr>
   <td ng-if="annotation.feature_type === 'gene' && !featureIdFilter">
-    <a href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id}}">
+    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id}}">
       {{annotation.gene_name_or_identifier}}
     </a>
+    <span ng-if="annotation.status === 'existing'">
+      {{annotation.gene_name_or_identifier}}
+    </span>
   </td>
   <td ng-if="annotation.feature_type === 'genotype' && !featureIdFilter">
-    <a href="{{curs_root_uri + '/feature/genotype/view/' + annotation.feature_id}}">
+    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.feature_id}}">
       {{annotation.genotype_display_name}}
     </a>
+    <span ng-if="annotation.status === 'existing'">
+      {{annotation.genotype_display_name}}
+    </span>
   </td>
   <td>
     {{annotation.term_ontid}}
@@ -45,7 +51,7 @@
     {{annotation.curator}}
   </td>
   <td class="annotation-row-actions">
-    <div ng-if="evidenceTypes && annotationType">
+    <div ng-if="evidenceTypes && annotationType && featureStatusFilter === 'new'">
       <div>
         <a ng-click="edit()">Edit</a>
       </div>

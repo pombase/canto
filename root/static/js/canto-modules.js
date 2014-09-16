@@ -190,6 +190,7 @@ var annotationProxy =
   //   annotationTypeName (required)
   //   featureId (optional)
   //   featureType (optional)
+  //   featureStatus (optional)
   this.getFiltered =
     function(params) {
       var q = $q.defer();
@@ -199,6 +200,8 @@ var annotationProxy =
           $.grep(annotations,
                  function(elem) {
                    return elem.annotation_type === params.annotationTypeName &&
+                     (!params.featureStatus ||
+                      elem.status === params.featureStatus) &&
                      (!params.featureId ||
                       (params.featureType &&
                        ((params.featureType === 'gene' &&
@@ -1066,6 +1069,7 @@ var annotationTableCtrl =
       scope: {
         featureIdFilter: '@',
         featureTypeFilter: '@',
+        featureStatusFilter: '@',
         featureFilterDisplayName: '@',
         annotationTypeName: '@',
       },
@@ -1094,6 +1098,7 @@ var annotationTableCtrl =
         scope.annotations = [];
         AnnotationProxy.getFiltered({annotationTypeName: scope.annotationTypeName,
                                      featureId: scope.featureIdFilter,
+                                     featureStatus: scope.featureStatusFilter,
                                      featureType: scope.featureTypeFilter
                                     }).then(function(annotations) {
                                       scope.annotations = annotations;

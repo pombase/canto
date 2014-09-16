@@ -470,8 +470,10 @@ sub _process_existing_db_ontology
     gene_name_or_identifier =>
       $gene->{name} || $gene->{identifier},
     gene_product => $gene->{product} || '',
+    feature_type => 'gene',
+    feature_display_name =>
+      $gene->{name} || $gene->{identifier},
     conditions => [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $row->{conditions})],
-
     qualifiers => $qualifier_string,
     annotation_type => $ontology_name,
     term_ontid => $term_ontid,
