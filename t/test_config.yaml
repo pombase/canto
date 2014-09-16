@@ -160,7 +160,7 @@ test_config:
                evidence_code: IPI
                term_ontid: GO:0034763
                with_gene: SPCC576.16c
-               annotation_extension: "annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(GeneDB_Spombe:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PECO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(GeneDB_Spombe:SPBC1105.11c)"
+               annotation_extension: "annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(PomBase:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PECO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(PomBase:SPBC1105.11c)"
                curator:
                  email: "some.testperson@pombase.org"
                  name: "Some Testperson"

@@ -209,7 +209,7 @@ check_new_annotations($dummy_alt_id);
 
 
 {
-  my $options = { pub_uniquename => 'PMID:10467002',
+  my $options = { pub_uniquename => 'PMID:19756689',
                   annotation_type_name => 'cellular_component',
                 };
   my ($all_annotation_count, $annotations) =
@@ -233,13 +233,13 @@ check_new_annotations($dummy_alt_id);
                'gene_product' => '',
                'is_not' => 0,
                'status' => 'existing',
-               'with_or_from_display_name' => 'GeneDB_Spombe:SPBC2G2.01c',
-               'with_or_from_identifier' => 'GeneDB_Spombe:SPBC2G2.01c',
+               'with_or_from_display_name' => 'PomBase:SPBC2G2.01c',
+               'with_or_from_identifier' => 'PomBase:SPBC2G2.01c',
              });
 }
 
 {
-  my $options = { pub_uniquename => 'PMID:10467002',
+  my $options = { pub_uniquename => 'PMID:19756689',
                   annotation_type_name => 'biological_process',
                 };
   my ($all_annotation_count, $annotations) =
@@ -271,7 +271,7 @@ check_new_annotations($dummy_alt_id);
 
 # test existing phenotype annotation
 {
-  my $options = { pub_uniquename => 'PMID:10467002',
+  my $options = { pub_uniquename => 'PMID:19756689',
                   annotation_type_name => 'phenotype',
                 };
   my ($all_annotation_count, $annotations) =
@@ -315,13 +315,13 @@ sub _test_interactions
                'interacting_gene_display_name' => 'cdc11',
                'interacting_gene_taxonid' => '4896',
                'evidence_code' => 'Phenotypic Enhancement',
-               'publication_uniquename' => 'PMID:10467002',
+               'publication_uniquename' => 'PMID:19756689',
                'status' => 'existing',
            });
 }
 
 {
-  my $options = { pub_uniquename => 'PMID:10467002',
+  my $options = { pub_uniquename => 'PMID:19756689',
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
   my ($all_interactions_count, $annotations) =
@@ -331,7 +331,7 @@ sub _test_interactions
 }
 
 {
-  my $options = { pub_uniquename => 'PMID:10467002',
+  my $options = { pub_uniquename => 'PMID:19756689',
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction',
                   max_results => 1, };
@@ -342,7 +342,7 @@ sub _test_interactions
 }
 
 {
-  my $options = { pub_uniquename => 'PMID:10467002',
+  my $options = { pub_uniquename => 'PMID:19756689',
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
   my ($all_interactions_count, $annotations) =

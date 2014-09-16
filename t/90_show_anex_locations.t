@@ -26,7 +26,7 @@ test_psgi $app, sub {
 
   is $res->code, 200;
 
-  like ($res->content(), qr/has_substrate\(GeneDB_Spombe:SPBC1105.11c\)/);
+  like ($res->content(), qr/has_substrate\(PomBase:SPBC1105.11c\)/);
 };
 
 done_testing;

@@ -38,7 +38,7 @@ sub check_res {
                  ontology_name => 'cellular_component'
                },
                evidence_code => 'IMP',
-               with => 'GeneDB_Spombe:SPBC2G2.01c',
+               with => 'PomBase:SPBC2G2.01c',
                from => undef,
                is_not => 0,
                conditions => [],
@@ -46,14 +46,14 @@ sub check_res {
                qualifiers => [],
                annotation_id => 1,
                publication => {
-                 uniquename => 'PMID:10467002'
+                 uniquename => 'PMID:19756689'
                }
              });
 
 }
 
 my ($all_annotations_count, $res) =
-  $lookup->lookup({pub_uniquename => 'PMID:10467002',
+  $lookup->lookup({pub_uniquename => 'PMID:19756689',
                    ontology_name => 'cellular_component',
                  }
                 );
@@ -61,7 +61,7 @@ check_res($all_annotations_count, $res);
 is($lookup->cache()->get_keys(), 1);
 
 ($all_annotations_count, $res) =
-  $lookup->lookup({pub_uniquename => 'PMID:10467002',
+  $lookup->lookup({pub_uniquename => 'PMID:19756689',
                    ontology_name => 'cellular_component',
                    gene_identifier => 'SPBC12C2.02c',
                  }
@@ -72,7 +72,7 @@ is($lookup->cache()->get_keys(), 2);
 
 # try the same thing again to check the cache
 ($all_annotations_count, $res) =
-  $lookup->lookup({pub_uniquename => 'PMID:10467002',
+  $lookup->lookup({pub_uniquename => 'PMID:19756689',
                    ontology_name => 'cellular_component',
                    gene_identifier => 'SPBC12C2.02c',
                  }
@@ -82,7 +82,7 @@ is($lookup->cache()->get_keys(), 2);
 
 
 ($all_annotations_count, $res) =
-  $lookup->lookup({pub_uniquename => 'PMID:10467002',
+  $lookup->lookup({pub_uniquename => 'PMID:19756689',
                    ontology_name => 'cellular_component',
                    gene_identifier => 'unknown_id',
                  }
@@ -103,7 +103,7 @@ map { $_->is_not(1); $_->update(); } $fcs->all();
 $lookup->cache()->clear();
 
 ($all_annotations_count, $res) =
-  $lookup->lookup({pub_uniquename => 'PMID:10467002',
+  $lookup->lookup({pub_uniquename => 'PMID:19756689',
                    ontology_name => 'cellular_component',
                    gene_identifier => 'SPBC12C2.02c',
                  }
@@ -117,7 +117,7 @@ is ($res->[0]->{is_not}, 1);
 # check a annotation to a term from the "PomBase annotation extension
 # terms" cv - make sure we get the right name and ID back
 ($all_annotations_count, $res) =
-  $lookup->lookup({pub_uniquename => 'PMID:10467002',
+  $lookup->lookup({pub_uniquename => 'PMID:19756689',
                    ontology_name => 'biological_process',
                  }
                 );
@@ -143,7 +143,7 @@ cmp_deeply($res->[0],
              'expression' => undef,
              'qualifiers' => [],
              'publication' => {
-               'uniquename' => 'PMID:10467002'
+               'uniquename' => 'PMID:19756689'
              },
              'is_not' => 1,
              'with' => undef
@@ -154,7 +154,7 @@ cmp_deeply($res->[0],
 # check a phenotpe annotation for an allele
 ($all_annotations_count, $res) =
   $lookup->lookup({
-    pub_uniquename => 'PMID:10467002',
+    pub_uniquename => 'PMID:19756689',
     ontology_name => 'phenotype',
   });
 
@@ -177,7 +177,7 @@ cmp_deeply($res->[0],
              'from' => undef,
              'is_not' => 'false',
              'publication' => {
-               'uniquename' => 'PMID:10467002'
+               'uniquename' => 'PMID:19756689'
              },
              'conditions' => [],
              'expression' => undef,

@@ -18,7 +18,7 @@ $mock->mock('_process_template', sub { Canto::EmailUtil::_process_template(@_); 
 
 my $curs_key = "aaaa0007";
 my $root_url = "http://localhost:5000/curs/$curs_key";
-my $pub_id = "PMID:10467002";
+my $pub_id = "PMID:19756689";
 my $pub_title = "A clever paper";
 my $help_url = "http://localhost:5000/docs/";
 my $curator_name = "Val Wood";
@@ -58,7 +58,7 @@ is ($from, "$person_name <$person_email>");
 like ($subject, qr/publication has been assigned to you/);
 
 ok ($body =~ /Dear $curator_known_as/);
-ok ($body =~ /PMID:10467002/);
+ok ($body =~ /PMID:19756689/);
 ok ($body =~ /"A clever paper"/);
 ok ($body =~ /$root_url/);
 ok ($body =~ /several previously curated annotations/);
