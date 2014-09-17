@@ -115,10 +115,12 @@ test_config:
                  name: ssm4KE
                  description: G40A,K43E
                  type: 'mutation of single amino acid residue'
-               - name: ssm4-D4
+               - primary_identifier: 'SPAC27D7.13c:aaaa0007-1'
+                 name: ssm4-D4
                  description: 'del_100-200'
                  type: 'partial deletion, nucleotide'
-               - description: 'del_200-300'
+               - primary_identifier: 'SPAC27D7.13c:aaaa0007-2'
+                 description: 'del_200-300'
                  type: 'partial deletion, nucleotide'
            - "SPBC14F5.07"
            - primary_identifier: "SPCC63.05"

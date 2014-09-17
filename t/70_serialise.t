@@ -199,6 +199,7 @@ my $full_expected_curation_session =
               identifier => 'h+ ssm4-D4',
               alleles => [
                 {
+                  primary_identifier => 'SPAC27D7.13c:aaaa0007-1',
                   name => 'ssm4-D4',
                   gene => {
                     uniquename => 'SPAC27D7.13c',
