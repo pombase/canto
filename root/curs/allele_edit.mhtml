@@ -21,13 +21,16 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
     </div>
 
     <div class="modal-body">
+      <div ng-switch="!!alleleData.primary_identifier">
+      <div ng-switch-when="false">
       <table>
         <tr>
           <td>
             Allele name:
           </td>
           <td ng-class="{ 'has-error': !isValidName() }">
-            <allele-name-complete allele-name="alleleData.name"
+            <allele-name-complete allele-primary-identifier="alleleData.primary_identifier"
+                                  allele-name="alleleData.name"
                                   allele-description="alleleData.description"
                                   allele-type="alleleData.type"
                                   gene-identifier="gene.systemtic_id">
@@ -123,6 +126,50 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
             </td>
           </tr>
         </table>
+      </div>
+      </div>
+      <div ng-switch-when="true" class="curs-box">
+        <div class="curs-box-title">
+          This is an existing allele, click "OK" to use this allele or
+          "Cancel" to create a new allele
+        </div>
+        <div class="curs-box-body">
+          <table class="curs-definition-table">
+            <tr>
+              <td class="title">
+                Allele name
+              </td>
+              <td>
+                {{alleleData.name}}
+              </td>
+            </tr>
+            <tr>
+              <td class="title">
+                Type
+              </td>
+              <td>
+                {{alleleData.type}}
+              </td>
+            </tr>
+            <tr>
+              <td class="title">
+                Description
+              </td>
+              <td>
+                {{alleleData.description}}
+              </td>
+            </tr>
+            <tr ng-if="current_type_config.allow_expression_change">
+              <td class="title">
+                Expression
+              </td>
+              <td>
+                {{alleleData.expression}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
       </div>
 
       <div class="ng-cloak" ng-show="!!alleleData.type && false">

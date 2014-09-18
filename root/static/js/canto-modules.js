@@ -442,6 +442,7 @@ var alleleNameComplete =
   function(AlleleService, toaster) {
     var directive = {
       scope: {
+        allelePrimaryIdentifier: '=',
         alleleName: '=',
         alleleDescription: '=',
         alleleType: '=',
@@ -457,6 +458,7 @@ var alleleNameComplete =
             function(el) {
               return {
                 value: el.name,
+                allele_primary_identifier: el.uniquename,
                 display_name: el.display_name,
                 description: el.description,
                 allele_type: el.allele_type,
@@ -476,6 +478,11 @@ var alleleNameComplete =
           },
           select: function(event, ui) {
             scope.$apply(function() {
+            if (typeof(ui.item.allele_primary_identifier) === 'undefined') {
+              scope.allelePrimaryIdentifier = '';
+            } else {
+              scope.allelePrimaryIdentifier = ui.item.allele_primary_identifier;
+            }
             if (typeof(ui.item.allele_type) === 'undefined' ||
                 ui.item.allele_type === 'unknown') {
               scope.type = '';
@@ -495,7 +502,7 @@ var alleleNameComplete =
             if (typeof(ui.item.expression) === 'undefined') {
               scope.alleleExpression = '';
             } else {
-              scope.alleleExpression = ui.item.expresion;
+              scope.alleleExpression = ui.item.allele_expresion;
             }
             });
           }
@@ -522,6 +529,7 @@ var alleleEditDialogCtrl =
       gene_id: args.gene_id
     };
     $scope.alleleData = {
+      primary_identifier: '',
       name: '',
       description: '',
       type: '',
@@ -587,8 +595,13 @@ var alleleEditDialogCtrl =
       return !$scope.current_type_config || $scope.current_type_config.description_required == 0 || $scope.alleleData.description;
     };
 
+    $scope.isExistingAllele = function() {
+      return !!$scope.alleleData.primary_identifier;
+    };
+
     $scope.isValid = function() {
-      return $scope.isValidType() &&
+      return $scope.isExistingAllele() ||
+        $scope.isValidType() &&
         $scope.isValidName() && $scope.isValidDescription();
       // evidence and expression if needed ...
     };
@@ -603,6 +616,7 @@ var alleleEditDialogCtrl =
     // return the data from the dialog as an Object
     $scope.dialogToData = function($scope) {
       return {
+        primary_identifier: $scope.alleleData.primary_identifier,
         name: $scope.alleleData.name,
         description: $scope.alleleData.description,
         type: $scope.alleleData.type,
