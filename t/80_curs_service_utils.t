@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 47;
+use Test::More tests => 49;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -13,6 +13,9 @@ $test_util->init_test('curs_annotations_2');
 my $config = $test_util->config();
 my $curs_key = 'aaaa0007';
 my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
+
+$config->{implementation_classes}->{allele_adaptor} =
+  'Canto::Chado::AlleleLookup';
 
 my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $curs_schema,
                                                    config => $config);
@@ -656,3 +659,59 @@ cmp_deeply($annotation_res,
               'gene_identifier' => 'SPBC12C2.02c'
             }
           ]);
+
+
+# read from CursDB
+my $allele_res = $service_utils->list_for_service('allele', 'SPAC27D7.13c', 'ssm');
+
+cmp_deeply($allele_res,
+           [
+             {
+               'description' => 'deletion',
+               'allele_type' => 'deletion',
+               'name' => 'ssm4delta',
+               'uniquename' => 'SPAC27D7.13c:allele-1',
+               'expression' => undef
+             },
+             {
+               'description' => 'G40A,K43E',
+               'allele_type' => 'mutation of single amino acid residue',
+               'expression' => undef,
+               'uniquename' => 'SPAC27D7.13c:allele-2',
+               'name' => 'ssm4KE'
+             },
+             {
+               'expression' => undef,
+               'name' => 'ssm4-D4',
+               'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+               'allele_type' => 'partial deletion, nucleotide',
+               'description' => 'del_100-200'
+             }
+           ]);
+
+$allele_res = $service_utils->list_for_service('allele', 'SPBC12C2.02c', 'ste');
+
+cmp_deeply($allele_res,
+           [
+             {
+               'display_name' => 'ste20-c1(K132A)',
+               'description' => 'K132A',
+               'allele_type' => 'mutation of single amino acid residue',
+               'uniquename' => 'SPBC12C2.02c:allele-2',
+               'name' => 'ste20-c1',
+             },
+             {
+               'name' => 'ste20-c2',
+               'uniquename' => 'SPBC12C2.02c:allele-3',
+               'description' => 'K132A,K144A',
+               'allele_type' => 'mutation of multiple amino acid residues',
+               'display_name' => 'ste20-c2(K132A,K144A)'
+             },
+             {
+               'display_name' => 'ste20delta(del_x1)',
+               'description' => 'del_x1',
+               'allele_type' => 'deletion',
+               'uniquename' => 'SPBC12C2.02c:allele-1',
+               'name' => 'ste20delta'
+             }
+           ]);

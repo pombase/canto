@@ -54,6 +54,7 @@ use Canto::Curs::ConditionUtil;
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 
 has ontology_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
+has allele_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 has state => (is => 'rw', init_arg => undef,
               isa => 'Canto::Curs::State', lazy_build => 1);
@@ -74,6 +75,13 @@ sub _build_ontology_lookup
   my $self = shift;
 
   return Canto::Track::get_adaptor($self->config(), 'ontology');
+}
+
+sub _build_allele_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'allele');
 }
 
 # return a list of conditions used by this session
@@ -147,6 +155,45 @@ sub _get_annotation
     } @annotation_type_list,
 }
 
+sub _get_alleles
+{
+  my $self = shift;
+  my $gene_primary_identifier = shift;
+  my $search_string = shift;
+  my $curs_schema = $self->curs_schema();
+  my $allele_rs = $curs_schema->resultset('Allele')
+    ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
+               name => { -like => $search_string . '%' } }, { join => 'gene' });
+  my @res = map {
+    my $display_name =
+      Canto::Curs::Utils::make_allele_display_name($_->name(),
+                                                   $_->description(),
+                                                   $_->type());
+
+    {
+      uniquename => $_->primary_identifier(),
+      name => $_->name(),
+      description => $_->description(),
+      allele_type => $_->type(),
+      expression => $_->expression(),
+    }
+  } $allele_rs->all();
+
+  my $allele_lookup = $self->allele_lookup();
+
+  if (@res < 10 && $allele_lookup) {
+    my $lookup_res = $allele_lookup->lookup(gene_primary_identifier =>
+                                              $gene_primary_identifier,
+                                            search_string => $search_string);
+
+    while (@res < 10 && @$lookup_res > 0) {
+      push @res, shift @$lookup_res;
+    }
+  }
+
+  return @res;
+}
+
 my %list_for_service_subs =
   (
     gene =>
@@ -178,6 +225,7 @@ my %list_for_service_subs =
           }
         } $genotype_rs->all();
       },
+    allele => \&_get_alleles,
     annotation => \&_get_annotation,
     condition => \&_get_conditions,
   );
