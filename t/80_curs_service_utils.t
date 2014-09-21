@@ -305,12 +305,6 @@ cmp_deeply($cond_res, [ { term_id => 'PECO:0000006', name => 'low temperature' }
 # test annotation list service
 my $annotation_res = $service_utils->list_for_service('annotation');
 
-use Data::Dumper;
-$Data::Dumper::Maxdepth = 5;
-warn Dumper([$annotation_res]);
-
-
-
 cmp_deeply($annotation_res,
            [
             {
