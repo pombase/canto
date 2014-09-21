@@ -39,47 +39,13 @@ the Free Software Foundation, either version 3 of the License, or
 
 use Moose;
 
+use Canto::Curs::Utils;
+
 with 'Canto::Role::Configurable';
 with 'Canto::Chado::ChadoLookup';
 
 use Canto::Curs::Utils;
 
-# Return the Canto allele type given a Chado (or "export") allele type
-# and the allele description - Canto has different types for a single
-# amino acid residue change and a multi amino acid change but Chado
-# just has "amino_acid_mutation".  Here we use the
-# export_type_reverse_map config field to map the Chado type to the
-# Canto type.
-sub _canto_allele_type
-{
-  my $self = shift;
-  my $chado_type = shift;
-  my $allele_description = shift;
-
-  my @canto_allele_types = @{$self->config()->{export_type_to_allele_type}->{$chado_type}};
-
-  if (@canto_allele_types == 0) {
-    warn qq(no allele type found for Chado allele_type "$chado_type"\n);
-    return $chado_type;
-  } else {
-    if (@canto_allele_types == 1) {
-      return $canto_allele_types[0]->{name};
-    } else {
-      for my $allele_type (@canto_allele_types) {
-        my $export_type_reverse_map_re =
-          $allele_type->{export_type_reverse_map_re};
-        if (!defined $export_type_reverse_map_re) {
-          die "no export_type_reverse_map_re config found for ", $allele_type->{name};
-        }
-        if ($allele_description =~ /$export_type_reverse_map_re/) {
-          return $allele_type->{name};
-        }
-      }
-
-      die "no Canto allele type found for: $chado_type";
-    }
-  }
-}
 
 =head2 lookup
 
@@ -196,10 +162,11 @@ sub lookup
       Canto::Curs::Utils::make_allele_display_name($_->{name},
                                                    $_->{description},
                                                    $_->{type});
-
     $_->{display_name} = $display_name;
-    $_->{allele_type} = $self->_canto_allele_type($_->{allele_type},
-                                                  $_->{description});
+    $_->{allele_type} =
+      Canto::Curs::Utils::canto_allele_type($self->config(),
+                                            $_->{allele_type},
+                                            $_->{description});
     $_;
   } @res ];
 }

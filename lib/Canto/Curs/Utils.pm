@@ -736,6 +736,59 @@ sub store_all_statuses
   }
 }
 
+=head2 canto_allele_type
+
+ Usage   : my $type_name =
+             Canto::Curs::Utils::canto_allele_type($chado_type, $allele_description);
+ Function:
+    Return the Canto allele type given a Chado (or "export") allele
+    type and the allele description - Canto has different types for a
+    single amino acid residue change and a multi amino acid change but
+    Chado just has "amino_acid_mutation".  We use the
+    export_type_reverse_map config field from the allele_type YAML config
+    to map the Chado type to the Canto type.
+ Args    : $config - the Config object
+           $chado_type - the allele_type of the allele from the featureprop
+                         table
+           $allele_description - the allele description from the featureprop
+                                 table
+ Return  : a allele type for the Canto interface
+
+=cut
+
+sub canto_allele_type
+{
+  my $config = shift;
+  my $chado_type = shift;
+  my $allele_description = shift;
+
+  my @canto_allele_types = @{$config->{export_type_to_allele_type}->{$chado_type}};
+
+  if (@canto_allele_types == 0) {
+    warn qq(no allele type found for Chado allele_type "$chado_type"\n);
+    return $chado_type;
+  } else {
+    if (@canto_allele_types == 1) {
+      return $canto_allele_types[0]->{name};
+    } else {
+      for my $allele_type (@canto_allele_types) {
+        my $export_type_reverse_map_re =
+          $allele_type->{export_type_reverse_map_re};
+        if (!defined $export_type_reverse_map_re) {
+          die "no export_type_reverse_map_re config found for ", $allele_type->{name};
+        }
+        if ($allele_description =~ /$export_type_reverse_map_re/) {
+          return $allele_type->{name};
+        }
+      }
+
+      die "no Canto allele type found for: $chado_type";
+    }
+  }
+}
+
+
+
 =head2 make_allele_display_name
 
  Usage   : $dis_name = make_allele_display_name($name, $description);
