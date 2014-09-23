@@ -194,8 +194,9 @@ sub lookup_by_uniquename
 
   my $schema = $self->schema();
 
-  my $allele = $schema->resultset('Allele')->find({ uniquename => $uniquename,
-                                                    'type.name' => 'allele' });
+  my $allele = $schema->resultset('Feature')->find({ uniquename => $uniquename,
+                                                     'type.name' => 'allele' },
+                                                   { join => 'type' });
 
   if (defined $allele) {
     my %props = map {

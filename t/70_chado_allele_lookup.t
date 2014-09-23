@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Deep;
 
 use Canto::Chado::AlleleLookup;
@@ -43,6 +43,17 @@ cmp_deeply($res,
 
 # search with gene constrained to a another gene
 $res = $lookup->lookup(gene_primary_identifier => 'SPCC16A11.14',
-                          search_string => 'ste');
+                       search_string => 'ste');
 
 cmp_deeply($res, []);
+
+my $id_res = $lookup->lookup_by_uniquename('SPBC12C2.02c:allele-3');
+
+cmp_deeply($id_res,
+{
+            'display_name' => 'ste20-c2(K132A,K144A)',
+            'description' => 'K132A,K144A',
+            'allele_type' => 'amino_acid_mutation',
+            'name' => 'ste20-c2',
+            'uniquename' => 'SPBC12C2.02c:allele-3'
+          });
