@@ -670,22 +670,25 @@ cmp_deeply($allele_res,
                'description' => 'deletion',
                'allele_type' => 'deletion',
                'name' => 'ssm4delta',
-               'uniquename' => 'SPAC27D7.13c:allele-1',
-               'expression' => undef
+               'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+               'expression' => undef,
+               'display_name' => 'ssm4delta(deletion)',
              },
              {
                'description' => 'G40A,K43E',
                'allele_type' => 'mutation of single amino acid residue',
                'expression' => undef,
-               'uniquename' => 'SPAC27D7.13c:allele-2',
-               'name' => 'ssm4KE'
+               'uniquename' => 'SPAC27D7.13c:aaaa0007-2',
+               'name' => 'ssm4KE',
+               'display_name' => 'ssm4KE(G40A,K43E)',
              },
              {
                'expression' => undef,
                'name' => 'ssm4-D4',
-               'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+               'uniquename' => 'SPAC27D7.13c:aaaa0007-3',
                'allele_type' => 'partial deletion, nucleotide',
-               'description' => 'del_100-200'
+               'description' => 'del_100-200',
+               'display_name' => 'ssm4-D4(del_100-200)',
              }
            ]);
 

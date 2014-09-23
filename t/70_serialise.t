@@ -168,7 +168,7 @@ my $full_expected_curation_session =
               identifier => 'h+ SPCC63.05delta ssm4KE',
               alleles => [
                 {
-                  primary_identifier => 'SPAC27D7.13c:allele-1',
+                  primary_identifier => 'SPAC27D7.13c:aaaa0007-1',
                   gene => {
                     uniquename => 'SPAC27D7.13c',
                     organism => 'Schizosaccharomyces pombe'
@@ -178,7 +178,7 @@ my $full_expected_curation_session =
                   name => 'ssm4delta',
                 },
                 {
-                  primary_identifier => 'SPCC63.05:allele-1',
+                  primary_identifier => 'SPCC63.05:aaaa0007-1',
                   gene => {
                     uniquename => 'SPCC63.05',
                     organism => 'Schizosaccharomyces pombe'
@@ -199,7 +199,7 @@ my $full_expected_curation_session =
               identifier => 'h+ ssm4-D4',
               alleles => [
                 {
-                  primary_identifier => 'SPAC27D7.13c:aaaa0007-1',
+                  primary_identifier => 'SPAC27D7.13c:aaaa0007-3',
                   name => 'ssm4-D4',
                   gene => {
                     uniquename => 'SPAC27D7.13c',

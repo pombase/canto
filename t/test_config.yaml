@@ -107,33 +107,33 @@ test_config:
            - "SPCC576.16c"
            - primary_identifier: "SPAC27D7.13c"
              alleles:
-               - primary_identifier: 'SPAC27D7.13c:allele-1'
+               - primary_identifier: 'SPAC27D7.13c:aaaa0007-1'
                  name: ssm4delta
                  description: deletion
                  type: deletion
-               - primary_identifier: 'SPAC27D7.13c:allele-2'
+               - primary_identifier: 'SPAC27D7.13c:aaaa0007-2'
                  name: ssm4KE
                  description: G40A,K43E
                  type: 'mutation of single amino acid residue'
-               - primary_identifier: 'SPAC27D7.13c:aaaa0007-1'
+               - primary_identifier: 'SPAC27D7.13c:aaaa0007-3'
                  name: ssm4-D4
                  description: 'del_100-200'
                  type: 'partial deletion, nucleotide'
-               - primary_identifier: 'SPAC27D7.13c:aaaa0007-2'
+               - primary_identifier: 'SPAC27D7.13c:aaaa0007-4'
                  description: 'del_200-300'
                  type: 'partial deletion, nucleotide'
            - "SPBC14F5.07"
            - primary_identifier: "SPCC63.05"
              alleles:
-               - primary_identifier: 'SPCC63.05:allele-1'
+               - primary_identifier: 'SPCC63.05:aaaa0007-1'
                  name: SPCC63.05delta
                  description: deletion
                  type: deletion
          genotypes:
            - identifier: "h+ SPCC63.05delta ssm4KE"
              alleles(Allele:primary_identifier):
-               - 'SPAC27D7.13c:allele-1'
-               - 'SPCC63.05:allele-1'
+               - 'SPAC27D7.13c:aaaa0007-1'
+               - 'SPCC63.05:aaaa0007-1'
            - identifier: "h+ ssm4-D4"
              alleles(Allele:name):
                - "ssm4-D4"

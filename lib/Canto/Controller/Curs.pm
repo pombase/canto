@@ -1866,39 +1866,94 @@ sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allel
   $st->{annotation_genes} = [map { _get_gene_proxy($config, $_); } $annotation->genes()];
 }
 
+sub _create_allele_uniquename: Private
+{
+  my $self = shift;
+  my $gene_primary_identifier = shift;
+  my $schema = shift;
+  my $curs_key = shift;
+
+  my $prefix = "$gene_primary_identifier:$curs_key-";
+
+  my $rs = $schema->resultset('Allele')
+    ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
+               'me.primary_identifier' => { -like => "$prefix%" } },
+             { join => 'gene' });
+
+  my $new_index = 1;
+
+  while (defined (my $allele = $rs->next())) {
+    if ($allele->primary_identifier() =~ /^$prefix(\d+)$/) {
+       if ($1 >= $new_index) {
+         $new_index = $1 + 1;
+       }
+     }
+   }
+
+   return "$gene_primary_identifier:$curs_key-$new_index";
+}
+
 # create a new Allele from the data or return an existing matching allele
 sub _allele_from_json: Private
 {
   my $self = shift;
   my $schema = shift;
   my $json_allele = shift;
+  my $curs_key = shift;
 
+  my $primary_identifier = $json_allele->{primary_identifier};
   my $name = $json_allele->{name};
   my $description = $json_allele->{description};
   my $expression = $json_allele->{expression};
+  my $allele_type = $json_allele->{type};
+  my $gene_id = $json_allele->{gene_id};
 
-  try {
-    return $schema->find_with_type('Allele',
-                                      {
-                                        name => $name,
-                                        description => $description,
-                                      });
-  } catch {
-    my $allele_type = $json_allele->{type};
+  if (defined $primary_identifier) {
+    my $allele = undef;
 
-    my $gene_id = $json_allele->{gene_id};
+    try {
+      $allele = $schema->find_with_type('Allele',
+                                        {
+                                          primary_identifier => $primary_identifier,
+                                        });
 
-    my %create_args = (
-      type => $allele_type,
-      description => $description,
-      name => $name,
-      gene => $gene_id,
-      expression => $expression,
-    );
+    } catch {
+      my $lookup = Canto::Track::get_adaptor($self->config(), 'allele');
 
-    return $schema->create_with_type('Allele', \%create_args);
-  };
+      my $allele_details = $lookup->lookup_by_uniquename($primary_identifier);
 
+      if (($name // '') ne ($allele_details->{name} // '') ||
+          ($description // '') ne ($allele_details->{description} // '') ||
+          ($allele_type // '') ne ($allele_details->{allele_type} // '')) {
+        use Data::Dumper;
+        $Data::Dumper::Maxdepth = 3;
+        warn 'allele details from Chado "', Dumper([$allele_details]),
+          '" do not match details from client "',
+          Dumper([$json_allele]), '"';
+      }
+    };
+
+    if ($allele) {
+      return $allele;
+    }
+  } else {
+    my $gene = $schema->find_with_type('Gene', $gene_id);
+
+    $primary_identifier =
+      $self->_create_allele_uniquename($gene->primary_identifier(),
+                                       $schema, $curs_key);
+  }
+
+  my %create_args = (
+    primary_identifier => $primary_identifier,
+    type => $allele_type,
+    description => $description,
+    name => $name,
+    gene => $gene_id,
+    expression => $expression,
+  );
+
+  return $schema->create_with_type('Allele', \%create_args);
 }
 
 # make a genotype object if one doesn't exist already with this combination of
@@ -1912,9 +1967,6 @@ sub _maybe_make_genotype
 
   my $st = $c->stash();
   my $schema = $st->{schema};
-
-
-  # FIXME - we always make a Genotype at the moment - there's no "maybe"
 
   my $genotype_identifier =
     join " ", map {
@@ -2454,6 +2506,7 @@ sub feature_add : Chained('feature') PathPart('add')
 
 sub genotype_store : Chained('feature') PathPart('store')
 {
+
   my ($self, $c) = @_;
   my $st = $c->stash();
   my $schema = $st->{schema};
@@ -2490,8 +2543,11 @@ sub genotype_store : Chained('feature') PathPart('store')
       try {
         my $guard = $schema->txn_scope_guard();
 
+        my $curs_key = $st->{curs_key};
+
         for my $allele_data (@alleles_data) {
-          my $allele = $self->_allele_from_json($schema, $allele_data);
+          my $allele = $self->_allele_from_json($schema, $allele_data, $curs_key,
+                                                \@alleles);
 
           push @alleles, $allele;
         }

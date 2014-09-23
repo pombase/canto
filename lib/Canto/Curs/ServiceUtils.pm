@@ -176,6 +176,7 @@ sub _get_alleles
       description => $_->description(),
       allele_type => $_->type(),
       expression => $_->expression(),
+      display_name => $display_name,
     }
   } $allele_rs->all();
 

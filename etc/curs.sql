@@ -14,7 +14,7 @@ CREATE TABLE gene (
 
 CREATE TABLE allele (
        allele_id integer PRIMARY KEY,
-       primary_identifier text,  -- if null this is a new allele
+       primary_identifier text NOT NULL UNIQUE,  -- if null this is a new allele
        type text NOT NULL,  -- 'deletion', 'partial deletion, nucleotide' etc.
        description text,
        expression text,

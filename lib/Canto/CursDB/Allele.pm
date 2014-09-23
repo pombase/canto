@@ -35,7 +35,7 @@ __PACKAGE__->table("allele");
 =head2 primary_identifier
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 type
 
@@ -69,7 +69,7 @@ __PACKAGE__->add_columns(
   "allele_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "primary_identifier",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "type",
   { data_type => "text", is_nullable => 0 },
   "description",
@@ -93,6 +93,20 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("allele_id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<primary_identifier_unique>
+
+=over 4
+
+=item * L</primary_identifier>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("primary_identifier_unique", ["primary_identifier"]);
 
 =head1 RELATIONS
 
@@ -127,8 +141,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-06-19 16:38:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eI2hLYp653G18y5JYXor6Q
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-09-22 16:57:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iDIJM2amH5SeS7cGqF331w
 
 __PACKAGE__->many_to_many('genotypes' => 'allele_genotypes',
                           'genotype');

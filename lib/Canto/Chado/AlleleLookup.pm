@@ -170,6 +170,50 @@ sub lookup
     $_;
   } @res ];
 }
+=head2 lookup_by_uniquename
+
+ Usage   : my $allele_details = $lookup->lookup_by_uniquename($allele_uniquename);
+ Function: Return the details of a given allele
+ Args    : $allele_uniquename - the uniquename of the allele in the feature
+                                table eg. "SPBC12C2.02c:allele-5"
+ Return  : Returns a hash ref in the form:
+             {
+               "uniquename": "SPBC12C2.02c:allele-5",
+               "name": "ste20+",
+               "description": "wild type",
+               "display_name": "ste20+(wild type)",
+               "allele_type": "wild type"
+             }
+
+=cut
+
+sub lookup_by_uniquename
+{
+  my $self = shift;
+  my $uniquename = shift;
+
+  my $schema = $self->schema();
+
+  my $allele = $schema->resultset('Allele')->find({ uniquename => $uniquename,
+                                                    'type.name' => 'allele' });
+
+  if (defined $allele) {
+    my %props = map {
+      ($_->type()->name(), $_->value())
+    } $allele->featureprops()->all();
+
+    my $display_name =
+      Canto::Curs::Utils::make_allele_display_name($allele->name(),
+                                                   $props{description},
+                                                   $props{allele_type});
+    return {
+      uniquename => $uniquename,
+      display_name => $display_name,
+      name => $allele->name(),
+      description => $props{description},
+      allele_type => $props{allele_type},
+    }
+  }
+}
 
 1;
-

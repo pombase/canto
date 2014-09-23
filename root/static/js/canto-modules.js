@@ -81,8 +81,11 @@ canto.config(function($logProvider){
 });
 
 canto.service('Curs', function($http) {
-  this.list = function(key) {
-    return $http.get(curs_root_uri + '/ws/' + key + '/list');
+  this.list = function(key, args) {
+    if (typeof(args) === 'undefined') {
+      args = [];
+    }
+    return $http.get(curs_root_uri + '/ws/' + key + '/list/' + args.join('/'));
   };
 });
 
@@ -119,6 +122,22 @@ canto.service('CursGenotypeList', function($q, Curs) {
   };
 });
 
+canto.service('CursAlleleList', function($q, Curs) {
+  this.alleleList = function(genePrimaryIdentifier, searchTerm) {
+    var q = $q.defer();
+
+    Curs.list('allele', [genePrimaryIdentifier, searchTerm])
+      .success(function(alleles) {
+        q.resolve(alleles);
+      })
+      .error(function() {
+        q.reject();
+      });
+
+    return q.promise;
+  };
+});
+
 canto.service('CursConditionList', function($q, Curs) {
   this.conditionList = function() {
     var q = $q.defer();
@@ -145,16 +164,6 @@ canto.service('CantoService', function($http) {
                      {
                        params: params
                      });
-  };
-});
-
-canto.service('AlleleService', function(CantoService) {
-  this.lookup = function(genePrimaryIdentifier, searchTerm, success, error) {
-    var q = CantoService.lookup('allele',
-                                { gene_primary_identifier: genePrimaryIdentifier,
-                                  ignore_case: true,
-                                  term: searchTerm });
-    q.success(success).error(error);
   };
 });
 
@@ -439,7 +448,7 @@ var conditionPicker =
 canto.directive('conditionPicker', ['CursConditionList', 'toaster', conditionPicker]);
 
 var alleleNameComplete =
-  function(AlleleService, toaster) {
+  function(CursAlleleList, toaster) {
     var directive = {
       scope: {
         allelePrimaryIdentifier: '=',
@@ -468,13 +477,13 @@ var alleleNameComplete =
         };
         elem.autocomplete({
           source: function(request, response) {
-            AlleleService.lookup(scope.geneIdentifier, request.term,
-                                 function(lookupResponse) {
-                                   response(processResponse(lookupResponse));
-                                 },
-                                 function() {
-                                   toaster.pop("failed to lookup allele of: " + scope.geneName);
-                                 });
+            CursAlleleList.alleleList(scope.geneIdentifier, request.term)
+              .then(function(lookupResponse) {
+                response(processResponse(lookupResponse));
+              })
+            .catch(function() {
+              toaster.pop("failed to lookup allele of: " + scope.geneName);
+            });
           },
           select: function(event, ui) {
             scope.$apply(function() {
@@ -518,7 +527,7 @@ var alleleNameComplete =
     return directive;
   };
 
-canto.directive('alleleNameComplete', ['AlleleService', 'toaster', alleleNameComplete]);
+canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameComplete]);
 
 
 var alleleEditDialogCtrl =
