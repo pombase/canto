@@ -48,7 +48,7 @@ CREATE TABLE genotype_annotation (
 
 CREATE TABLE genotype (
        genotype_id integer PRIMARY KEY,
-       identifier text UNIQUE,
+       identifier text NOT NULL UNIQUE,
        name text UNIQUE
 );
 

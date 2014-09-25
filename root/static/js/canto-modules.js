@@ -761,10 +761,6 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
   };
 
   $scope.isValid = function() {
-    if (!$scope.data.genotype_name) {
-      return false;
-    }
-
     var alleleGeneIds = {};
 
     $.map($scope.alleles,
