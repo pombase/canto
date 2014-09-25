@@ -21,6 +21,14 @@ my $track_schema = $test_util->track_schema();
 my $curs_key = 'aaaa0007';
 my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
+my $organism = $curs_schema->resultset('Organism')->first();
+
+my $c12c2_gene =
+  $curs_schema->resultset('Gene')->create({
+    primary_identifier => 'SPBC12C2.02c',
+    organism => $organism->organism_id(),
+  });
+
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
 test_psgi $app, sub {
@@ -42,6 +50,7 @@ test_psgi $app, sub {
         alleles =>
           [
             {
+              # previously stored allele
               primary_identifier => "SPAC27D7.13c:aaaa0007-1",
               name => "ssm4delta",
               description => "",
@@ -50,6 +59,7 @@ test_psgi $app, sub {
               gene_id => 2
             },
             {
+              # new allele
               name => "ssm4-h1",
               description => "K10G",
               type => "mutation of single amino acid residue",
@@ -57,12 +67,10 @@ test_psgi $app, sub {
               gene_id => 2,
             },
             {
-              name => "doa10-d1",
-              description => "",
-              type => "nonsense mutation",
-              expression => "",
-              gene_id => 3,
-            },
+              # allele from Chado
+              primary_identifier => 'SPBC12C2.02c:allele-3',
+              gene_id => $c12c2_gene->gene_id(),
+           },
           ]
         };
 
@@ -77,12 +85,12 @@ test_psgi $app, sub {
   my $start_allele_count = $curs_schema->resultset('Allele')->count();
 
   $test_create_1_proc->("h+ abc-1", "h+ ssm4delta(deletion)");
-
+  # create new allele in the TrackDB and allele from Chado
   is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 2);
 
   $test_create_1_proc->("h+ abc-1 g-2", "h+ ssm4delta(deletion) g-2");
-
-  is($curs_schema->resultset('Allele')->count(), $start_allele_count + 4);
+  # create new allele in the TrackDB, not the allele from Chado
+  is($curs_schema->resultset('Allele')->count(), $start_allele_count + 3);
 
   {
     my $req = HTTP::Request->new(POST => $uri);
@@ -96,8 +104,7 @@ test_psgi $app, sub {
           map {
             { primary_identifier => $_->primary_identifier() }
           } $curs_schema->resultset('Genotype')
-            ->find({ identifier => 'ssm4delta(deletion) ssm4-h1(K10G)[knockdown] doa10-d1(nonsense mutation)' })
-            ->alleles()->all()
+            ->first()->alleles()->all()
         ]
       };
 
@@ -111,12 +118,12 @@ test_psgi $app, sub {
 
   my $new_genotype =
     $curs_schema->resultset('Genotype')
-      ->find({ identifier => 'ssm4delta(deletion) ssm4-h1(K10G)[knockdown] doa10-d1(nonsense mutation)' });
+      ->find({ name => 'h+ xyz-aa-1' });
 
-  is ($new_genotype->alleles()->count(), 3);
+  is ($new_genotype->alleles()->count(), 2);
 
   # shouldn't have created any new alleles:
-  is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 4);
+  is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 3);
 };
 
 1;

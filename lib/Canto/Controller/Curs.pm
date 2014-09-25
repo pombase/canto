@@ -1868,7 +1868,6 @@ sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allel
 
 sub _create_allele_uniquename: Private
 {
-  my $self = shift;
   my $gene_primary_identifier = shift;
   my $schema = shift;
   my $curs_key = shift;
@@ -1896,7 +1895,7 @@ sub _create_allele_uniquename: Private
 # create a new Allele from the data or return an existing matching allele
 sub _allele_from_json: Private
 {
-  my $self = shift;
+  my $config = shift;
   my $schema = shift;
   my $json_allele = shift;
   my $curs_key = shift;
@@ -1918,19 +1917,29 @@ sub _allele_from_json: Private
                                         });
 
     } catch {
-      my $lookup = Canto::Track::get_adaptor($self->config(), 'allele');
+      my $lookup = Canto::Track::get_adaptor($config, 'allele');
 
       my $allele_details = $lookup->lookup_by_uniquename($primary_identifier);
 
-      if (($name // '') ne ($allele_details->{name} // '') ||
-          ($description // '') ne ($allele_details->{description} // '') ||
-          ($allele_type // '') ne ($allele_details->{allele_type} // '')) {
-        use Data::Dumper;
-        $Data::Dumper::Maxdepth = 3;
-        warn 'allele details from Chado "', Dumper([$allele_details]),
-          '" do not match details from client "',
-          Dumper([$json_allele]), '"';
+      if (keys %$json_allele > 2) {
+        # the client is trying to store an allele with a primary_identifier and
+        # some details
+        if (($name // '') ne ($allele_details->{name} // '') ||
+              ($description // '') ne ($allele_details->{description} // '') ||
+                ($allele_type // '') ne ($allele_details->{allele_type} // '')) {
+          use Data::Dumper;
+          $Data::Dumper::Maxdepth = 3;
+          die 'allele details from Chado "', Dumper([$allele_details]),
+            '" do not match details from client "',
+              Dumper([$json_allele]), '"';
+        }
       }
+
+      # we will store the allele from Chado in the TrackDB
+      $allele_type = $allele_details->{allele_type};
+      $description = $allele_details->{description};
+      $name = $allele_details->{name};
+      $expression = $allele_details->{expression};
     };
 
     if ($allele) {
@@ -1940,8 +1949,8 @@ sub _allele_from_json: Private
     my $gene = $schema->find_with_type('Gene', $gene_id);
 
     $primary_identifier =
-      $self->_create_allele_uniquename($gene->primary_identifier(),
-                                       $schema, $curs_key);
+      _create_allele_uniquename($gene->primary_identifier(),
+                                $schema, $curs_key);
   }
 
   my %create_args = (
@@ -2546,8 +2555,8 @@ sub genotype_store : Chained('feature') PathPart('store')
         my $curs_key = $st->{curs_key};
 
         for my $allele_data (@alleles_data) {
-          my $allele = $self->_allele_from_json($schema, $allele_data, $curs_key,
-                                                \@alleles);
+          my $allele = _allele_from_json($config, $schema, $allele_data, $curs_key,
+                                         \@alleles);
 
           push @alleles, $allele;
         }

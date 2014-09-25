@@ -245,3 +245,7 @@ test_config:
                  email: "a.n.other.testperson@pombase.org"
                  name: "Another Testperson"
                  community_curated: 1
+implementation_classes:
+  ontology_annotation_adaptor: 'Canto::Chado::OntologyAnnotationLookup'
+  interaction_annotation_adaptor: 'Canto::Chado::InteractionAnnotationLookup'
+  allele_adaptor: 'Canto::Chado::AlleleLookup'

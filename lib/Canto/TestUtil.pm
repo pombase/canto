@@ -19,6 +19,7 @@ use Data::Rmap ':all';
 use Clone qw(clone);
 use XML::Simple;
 use IO::All;
+use YAML qw(Dump);
 
 use Plack::Test;
 use Plack::Util;
@@ -93,11 +94,6 @@ sub new
   my $test_config_file_name = "$root_dir/" . $config->{test_config_file};
   $config->merge_config($test_config_file_name);
 
-  $config->{implementation_classes}->{ontology_annotation_adaptor} =
-    'Canto::Chado::OntologyAnnotationLookup';
-  $config->{implementation_classes}->{interaction_annotation_adaptor} =
-    'Canto::Chado::InteractionAnnotationLookup';
-
   $self->{config} = $config;
 
   bless $self, $class;
@@ -167,7 +163,36 @@ sub init_test
     die "failed to initialise application: $@\n";
   }
 
-  $config->merge_config("$root_dir/${app_name}_test.yaml");
+  my $chado_test_db_file = $test_config->{test_chado_db};
+  copy "$data_dir/$chado_test_db_file", $temp_dir or die "$!";
+  my $test_chado_db_copy ="$temp_dir/$chado_test_db_file";
+  $self->{chado_schema} =
+    Canto::DBUtil::schema_for_file($config, $test_chado_db_copy,
+                                    'Chado');
+  $config->{'Model::ChadoModel'} = {
+    schema_class => 'Canto::ChadoDB',
+    connect_info => [
+      "dbi:SQLite:dbname=$test_chado_db_copy",
+    ],
+  };
+
+
+  my $app_test_config_file = "$root_dir/${app_name}_test.yaml";
+  $config->merge_config($app_test_config_file);
+
+  # append the test settings to the config file that Catalyst reads
+  open my $app_test_config_fh, '>>', $app_test_config_file
+    or die "can't open $app_test_config_file\n";
+  open my $test_config_fh, '<', $test_config_file_name
+    or die "can't open $test_config_file_name\n";
+  while (defined (my $line = <$test_config_fh>)) {
+    print $app_test_config_fh $line;
+  }
+  my $chado_yaml = Dump({'Model::ChadoModel' => $config->{'Model::ChadoModel'}});
+  $chado_yaml =~ s/^---\n//;
+  print $app_test_config_fh $chado_yaml;
+  close $test_config_fh;
+  close $app_test_config_fh;
 
   my $connect_string = $config->model_connect_string('Track');
 
@@ -187,19 +212,6 @@ sub init_test
       copy "$data_dir/$db_file_name", $temp_dir or die "$!";
     }
   }
-
-  my $chado_test_db_file = $test_config->{test_chado_db};
-  copy "$data_dir/$chado_test_db_file", $temp_dir or die "$!";
-  my $test_chado_db_copy ="$temp_dir/$chado_test_db_file";
-  $self->{chado_schema} =
-    Canto::DBUtil::schema_for_file($config, $test_chado_db_copy,
-                                    'Chado');
-  $config->{'Model::ChadoModel'} = {
-    schema_class => 'Canto::ChadoDB',
-    connect_info => [
-      "dbi:SQLite:dbname=$test_chado_db_copy",
-    ],
-  };
 
   if ($args->{copy_ontology_index}) {
     my $ontology_index_dir = $config->{ontology_index_dir};
