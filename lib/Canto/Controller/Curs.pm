@@ -1979,7 +1979,7 @@ sub _maybe_make_genotype
 
   my $genotype_identifier =
     join " ", map {
-      $_->display_name() . ($_->expression() ? '[' . $_->expression() . ']' : '');
+      $_->long_identifier()
     } @$alleles;
 
   my $genotype = $schema->resultset('Genotype')->find({ identifier => $genotype_identifier });

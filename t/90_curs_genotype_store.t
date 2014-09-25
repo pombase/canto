@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use Plack::Test;
 
@@ -121,6 +121,8 @@ test_psgi $app, sub {
       ->find({ name => 'h+ xyz-aa-1' });
 
   is ($new_genotype->alleles()->count(), 2);
+
+  is ($new_genotype->identifier(), "ssm4delta(deletion)-deletion SPCC63.05delta(deletion)-deletion");
 
   # shouldn't have created any new alleles:
   is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 3);

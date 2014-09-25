@@ -157,6 +157,7 @@ use Canto::Curs::Utils;
  Args    : none
 
 =cut
+
 sub display_name
 {
   my $self = shift;
@@ -166,6 +167,21 @@ sub display_name
                                                       $self->type());
 }
 
+=head2 long_identifier
+
+ Usage   : my $long_identifier = $allele->long_identifier();
+ Function: Return a unique long identifier for this allele that includes all
+           fields, eg.
+           "ssm4KE(G40A,K43E)-mutation_of_single_amino_acid_residue[overexpression]"
+
+=cut
+
+sub long_identifier
+{
+  my $self = shift;
+
+  $self->display_name() . '-' . ($self->type() =~ s/\s+/_/gr) . ($self->expression() ? '[' . $self->expression() . ']' : '');
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
