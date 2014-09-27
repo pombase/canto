@@ -69,7 +69,7 @@ pages</a>, or via the "Help" link at the top right of every Canto instance.
 <div class="span6">
 <h3>How to Cite Canto</h3>
 <p>
-Please cite: Rutherford KM, Harris MA, Lock A, Oliver SG, Wood V. (2014)
+Please cite: Rutherford KM, Harris MA, Lock A, Oliver SG, Wood V.
 Canto: An online tool for community literature
 curation. <em>Bioinformatics</em> (2014) <a href="http://www.biomedcentral.com/1471-2105/9/278">doi:
 10.1093/bioinformatics/btu103</a> <a href="http://www.ncbi.nlm.nih.gov/pubmed/24574118">PMID:24574118</a>
@@ -83,6 +83,10 @@ curation. <em>Bioinformatics</em> (2014) <a href="http://www.biomedcentral.com/1
 <p>
 Canto is a free, open source application. The source code is
 available from Github.
+</p>
+<p>
+There is <a href="http://curation.pombase.org/docs/canto_admin">documentation</a>
+for local installation and administration.
 </p>
 <p>
 Canto is a <a href="http://gmod.org/wiki/Canto">component</a> of <a href="http://www.gmod.org/"><img src="<% $c->uri_for('/static/images/logos/gmod_logo_small.png') %>"/></a>
