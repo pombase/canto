@@ -242,6 +242,9 @@ sub lookup
 
   my $wildcard;
 
+  $search_string =~ s/\b(or|and)\b/ /gi;
+  $search_string =~ s/\s+$//;
+
   if ($search_string =~ /^(.*?)\W+\w$/) {
     # avoid a single character followed by a wildcard as it triggers
     # a "Too Many Clauses" exception
