@@ -29,7 +29,7 @@ package manager:
     sudo apt-get install perl gcc g++ tar gzip bzip2 make git-core wget \
       libmodule-install-perl libcatalyst-devel-perl liblocal-lib-perl
 
-To improve the installation speed, these packages can optionally be installed
+Optional: to improve the installation speed, these Perl packages can be installed
 before proceeding:
 
     sudo apt-get install libhash-merge-perl \
@@ -48,7 +48,7 @@ before proceeding:
       libdbd-pg-perl libdata-javascript-anon-perl starman libnet-server-perl \
       libautobox-list-util-perl libwant-perl libautobox-core-perl
 
-If these packages aren't installed, these Perl modules will be installed using
+If these packages aren't installed, the required Perl modules will be installed using
 CPAN, which is slower.
 
 [CLucene](http://clucene.sourceforge.net/) is required by Canto. For
