@@ -69,7 +69,16 @@ The required CLucene library can be installed with:
     wget http://archive.ubuntu.com/ubuntu/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2_amd64.deb
     sudo dpkg -i libclucene0ldbl_0.9.21b-2_amd64.deb libclucene-dev_0.9.21b-2_amd64.deb
 
+### CLucene on Debian v8 ("Jessie") and later
+
+The CLucene libraries must be manually installed for Debian v8 with:
+
+    wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2+b1_amd64.deb
+    wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2+b1_amd64.deb
+    sudo dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb
+
 ### Installing prerequisites on Centos/Red Hat
+
 If you have added
 [RPMforge](http://wiki.centos.org/AdditionalResources/Repositories/RPMForge)
 as an extra [Centos](http://www.centos.org/) package repository many of the
