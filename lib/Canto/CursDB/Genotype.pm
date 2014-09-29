@@ -176,11 +176,21 @@ sub all_annotations
   return $self->annotations();
 }
 
+sub allele_string
+{
+  my $self = shift;
+
+  return
+    join " ", map {
+      $_->long_identifier()
+    } $self->alleles();
+}
+
 sub display_name
 {
   my $self = shift;
 
-  return $self->name() // $self->identifier();
+  return $self->name() // $self->allele_string();
 }
 
 __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
