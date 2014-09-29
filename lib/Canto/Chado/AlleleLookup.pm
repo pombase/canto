@@ -184,6 +184,7 @@ sub lookup
                "display_name": "ste20+(wild type)",
                "allele_type": "wild type"
              }
+           or undef if no allele is found
 
 =cut
 
@@ -215,6 +216,8 @@ sub lookup_by_uniquename
       allele_type => $props{allele_type},
     }
   }
+
+  return undef;
 }
 
 1;

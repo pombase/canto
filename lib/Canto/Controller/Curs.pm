@@ -1907,7 +1907,7 @@ sub _allele_from_json: Private
   my $allele_type = $json_allele->{type};
   my $gene_id = $json_allele->{gene_id};
 
-  if (defined $primary_identifier) {
+  if ($primary_identifier) {
     my $allele = undef;
 
     try {
@@ -1921,18 +1921,8 @@ sub _allele_from_json: Private
 
       my $allele_details = $lookup->lookup_by_uniquename($primary_identifier);
 
-      if (keys %$json_allele > 2) {
-        # the client is trying to store an allele with a primary_identifier and
-        # some details
-        if (($name // '') ne ($allele_details->{name} // '') ||
-              ($description // '') ne ($allele_details->{description} // '') ||
-                ($allele_type // '') ne ($allele_details->{allele_type} // '')) {
-          use Data::Dumper;
-          $Data::Dumper::Maxdepth = 3;
-          die 'allele details from Chado "', Dumper([$allele_details]),
-            '" do not match details from client "',
-              Dumper([$json_allele]), '"';
-        }
+      if (!defined $allele_details) {
+        die qq(internal error - allele "$primary_identifier" is missing);
       }
 
       # we will store the allele from Chado in the TrackDB
