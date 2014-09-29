@@ -68,14 +68,6 @@ Details
       <tbody>
         <tr>
           <td class="title">
-Identifier
-          </td>
-          <td>
-<% $genotype->identifier() %>
-          </td>
-        </tr>
-        <tr>
-          <td class="title">
 Name
           </td>
           <td>
@@ -96,7 +88,6 @@ curs-back-button"><% $finish_text %></button>
 
 <%init>
 my $genotype_id = $genotype->genotype_id();
-my $genotype_identifier = $genotype->identifier();
 
 my $st = $c->stash();
 

@@ -691,7 +691,7 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
   };
 
   $scope.data = {
-    genotype_identifier: '',
+    genotype_long_name: '',
     genotype_name: ''
   };
 
@@ -702,7 +702,7 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
   $scope.$watch('alleles',
                 function() {
                   $scope.env.curs_config_promise.then(function(response) {
-                    $scope.data.genotype_identifier =
+                    $scope.data.genotype_long_name =
                       response.data.genotype_config.default_strain_name +
                       " " +
                       $.map($scope.alleles, function(val) {
@@ -724,7 +724,6 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
   $scope.store = function() {
     simpleHttpPost(toaster, $http, 'store',
                    { genotype_name: $scope.data.genotype_name,
-                     genotype_identifier: $scope.data.genotype_identifier,
                      alleles: $scope.alleles });
   };
 
