@@ -12,7 +12,18 @@ data_directory: "local"
 Model::ChadoModel:
   schema_class: 'Canto::ChadoDB'
   connect_info:
-    - "dbi:SQLite:dbname=t/data/chado_test_db.sqlite3"
+    - dbi:Pg:dbname=pombase-chado-v46-2014-08-30;host=localhost
+    - kmr44
+    - kmr44
+
+implementation_classes:
+  gene_adaptor: Canto::Chado::GeneLookup
+  ontology_annotation_adaptor: Canto::Chado::OntologyAnnotationLookup
+  interaction_annotation_adaptor: Canto::Chado::InteractionAnnotationLookup
+  go_adaptor: Canto::Track::OntologyLookup
+  ontology_adaptor: Canto::Track::OntologyLookup
+  allele_adaptor: Canto::Chado::AlleleLookup
+
 
 email:
   from_address: noreply@curation.pombase.org
@@ -34,9 +45,6 @@ default_local_page: pombase_front
 #  - molecular_function
 #  - biological_process
 #  - cellular_component
-
-implementation_classes:
-  ontology_annotation_adaptor: Canto::Chado::OntologyAnnotationLookup
 
 annotation_types:
   molecular_function:
