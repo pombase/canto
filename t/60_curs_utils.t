@@ -81,7 +81,7 @@ sub check_new_annotations
                  'term_suggestion' => undef,
                  'with_gene_id' => undef,
                  'curator' => 'Some Testperson <some.testperson@pombase.org>',
-                 'genotype_identifier' => 'h+ SPCC63.05delta ssm4KE',
+                 'genotype_identifier' => 'aaaa0007-genotype-1',
                  'taxonid' => undef,
                  'conditions' => [
                    {
@@ -103,7 +103,7 @@ sub check_new_annotations
                  'evidence_code' => 'Epitope-tagged protein immunolocalization experiment data',
                  'annotation_type_abbreviation' => '',
                  'annotation_type_display_name' => 'phenotype',
-                 'genotype_name' => undef,
+                 'genotype_name' => "h+ SPCC63.05delta ssm4KE",
                  'is_obsolete_term' => 0,
                  'creation_date_short' => '20100102',
                  'with_or_from_display_name' => undef,
@@ -120,8 +120,8 @@ sub check_new_annotations
                  'publication_uniquename' => 'PMID:19756689',
                  'feature_type' => 'genotype',
                  'feature_id' => 2,
-                 'genotype_display_name' => 'h+ ssm4-D4',
-                 'feature_display_name' => 'h+ ssm4-D4',
+                 'genotype_display_name' => 'ssm4-D4(del_100-200)-partial_deletion,_nucleotide',
+                 'feature_display_name' => 'ssm4-D4(del_100-200)-partial_deletion,_nucleotide',
                  'is_not' => 0,
                  'evidence_code' => 'Co-immunoprecipitation experiment',
                  'annotation_type_abbreviation' => '',
@@ -148,7 +148,7 @@ sub check_new_annotations
                  'term_suggestion' => undef,
                  'with_gene_id' => undef,
                  'curator' => 'Some Testperson <some.testperson@pombase.org>',
-                 'genotype_identifier' => 'h+ ssm4-D4'
+                 'genotype_identifier' => 'aaaa0007-genotype-2'
                }
              ]);
   }

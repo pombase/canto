@@ -25,12 +25,12 @@ my $res = $service_utils->list_for_service('genotype');
 cmp_deeply($res,
            [
             {
-              'identifier' => 'h+ SPCC63.05delta ssm4KE',
-              'name' => undef,
+              'identifier' => 'aaaa0007-genotype-1',
+              'name' => 'h+ SPCC63.05delta ssm4KE',
               genotype_id => 1,
             },
             {
-              'identifier' => 'h+ ssm4-D4',
+              'identifier' => 'aaaa0007-genotype-2',
               'name' => undef,
               genotype_id => 2,
             }
@@ -63,7 +63,7 @@ cmp_deeply($res,
           ]);
 
 my $gene_identifier = 'SPBC14F5.07';
-my $genotype_identifier = 'h+ SPCC63.05delta ssm4KE';
+my $genotype_identifier = 'aaaa0007-genotype-1';
 
 my $first_gene =
   $curs_schema->resultset('Gene')->find({ primary_identifier => $gene_identifier });
@@ -494,10 +494,10 @@ cmp_deeply($annotation_res,
               'curator' => 'Some Testperson <some.testperson@pombase.org>',
               'with_or_from_identifier' => undef,
               'needs_with' => undef,
-              'genotype_name' => undef,
+              'genotype_name' => 'h+ SPCC63.05delta ssm4KE',
               'term_suggestion' => undef,
               'is_obsolete_term' => 0,
-              'genotype_identifier' => 'h+ SPCC63.05delta ssm4KE',
+              'genotype_identifier' => 'aaaa0007-genotype-1',
               'annotation_type_abbreviation' => ''
             },
             {
@@ -507,10 +507,10 @@ cmp_deeply($annotation_res,
               'with_gene_id' => undef,
               'conditions' => [],
               'with_or_from_display_name' => undef,
-              'genotype_display_name' => 'h+ ssm4-D4',
+              'genotype_display_name' => 'ssm4-D4(del_100-200)-partial_deletion,_nucleotide',
               'submitter_comment' => undef,
               'feature_type' => 'genotype',
-              'feature_display_name' => 'h+ ssm4-D4',
+              'feature_display_name' => 'ssm4-D4(del_100-200)-partial_deletion,_nucleotide',
               'term_ontid' => 'FYPO:0000017',
               'term_name' => 'elongated cells',
               'is_not' => 0,
@@ -519,7 +519,7 @@ cmp_deeply($annotation_res,
               'taxonid' => undef,
               'annotation_type_display_name' => 'phenotype',
               'needs_with' => undef,
-              'genotype_identifier' => 'h+ ssm4-D4',
+              'genotype_identifier' => 'aaaa0007-genotype-2',
               'annotation_type_abbreviation' => '',
               'genotype_name' => undef,
               'term_suggestion' => undef,

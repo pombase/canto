@@ -22,7 +22,7 @@ my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 my $root_url = "http://localhost:5000/curs/$curs_key";
 
 my $first_genotype =
- $curs_schema->resultset('Genotype')->find({ identifier => 'h+ SPCC63.05delta ssm4KE' });
+ $curs_schema->resultset('Genotype')->find({ identifier => 'aaaa0007-genotype-1' });
 
 my $first_genotype_annotation = $first_genotype->annotations()->first();
 

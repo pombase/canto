@@ -130,11 +130,12 @@ test_config:
                  description: deletion
                  type: deletion
          genotypes:
-           - identifier: "h+ SPCC63.05delta ssm4KE"
+           - identifier: "aaaa0007-genotype-1"
+             name: "h+ SPCC63.05delta ssm4KE"
              alleles(Allele:primary_identifier):
                - 'SPAC27D7.13c:aaaa0007-1'
                - 'SPCC63.05:aaaa0007-1'
-           - identifier: "h+ ssm4-D4"
+           - identifier: "aaaa0007-genotype-2"
              alleles(Allele:name):
                - "ssm4-D4"
          annotations:
@@ -208,7 +209,7 @@ test_config:
            - type: phenotype
              status: new
              genotypes(Genotype:identifier):
-               - "h+ SPCC63.05delta ssm4KE"
+               - "aaaa0007-genotype-1"
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: Epitope-tagged protein immunolocalization experiment data
@@ -224,7 +225,7 @@ test_config:
            - type: phenotype
              status: new
              genotypes(Genotype:identifier):
-               - "h+ ssm4-D4"
+               - "aaaa0007-genotype-2"
              pub(Pub:uniquename): PMID:19756689
              data:
                evidence_code: Co-immunoprecipitation experiment

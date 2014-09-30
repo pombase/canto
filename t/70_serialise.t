@@ -165,7 +165,7 @@ my $full_expected_curation_session =
           ],
           genotypes => [
             {
-              identifier => 'h+ SPCC63.05delta ssm4KE',
+              identifier => 'aaaa0007-genotype-1',
               alleles => [
                 {
                   primary_identifier => 'SPAC27D7.13c:aaaa0007-1',
@@ -196,7 +196,7 @@ my $full_expected_curation_session =
           creation_date => '2010-01-02',
           genotypes => [
             {
-              identifier => 'h+ ssm4-D4',
+              identifier => 'aaaa0007-genotype-2',
               alleles => [
                 {
                   primary_identifier => 'SPAC27D7.13c:aaaa0007-3',
