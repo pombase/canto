@@ -137,7 +137,7 @@ test_config:
                - 'SPCC63.05:aaaa0007-1'
            - identifier: "aaaa0007-genotype-2"
              alleles(Allele:primary_identifier):
-               - "SPAC27D7.13c:aaaa0007-1"
+               - "SPAC27D7.13c:aaaa0007-3"
          annotations:
            - type: biological_process
              status: new

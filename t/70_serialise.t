@@ -98,7 +98,7 @@ my $full_expected_curation_session =
       },
       'aaaa0007-genotype-2' => {
         alleles => [
-          'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1',
+          'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3',
         ],
       },
     },

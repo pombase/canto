@@ -180,7 +180,7 @@ sub long_identifier
 {
   my $self = shift;
 
-  $self->display_name() . '-' . ($self->type() =~ s/\s+/_/gr) . ($self->expression() ? '[' . $self->expression() . ']' : '');
+  $self->display_name() . '-' . ($self->type() =~ s/[\s,]+/-/gr) . ($self->expression() ? '[' . $self->expression() . ']' : '');
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
