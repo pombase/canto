@@ -231,3 +231,5 @@ Again, from the `canto` directory.
 ### Visit the application start page
 The test application should now be running at http://localhost:5000
 
+# Next step
+[Setting up Canto](setup)
