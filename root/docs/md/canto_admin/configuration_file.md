@@ -107,8 +107,9 @@ configured with the option "with_gene" set to true will cause the
 interface to ask for a gene for later storage in the "with/from" column
 of a GAF file.
 
-New evidence codes must also be configured in
-`available_annotation_type_list`.  See [`evidence_codes`](#evidence_codes).
+Evidence codes must also be configured for in
+`available_annotation_type_list`.  See [`evidence_codes`](#evidence_codes) in
+the [Configuring annotation types](configuringannotationtypes) section.
 
 Example:
 
