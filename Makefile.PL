@@ -89,7 +89,7 @@ requires 'Scalar::Util';
 requires 'String::Similarity';
 requires 'Sub::Exporter';
 requires 'Text::CSV';
-requires 'Text::Markdown';
+requires 'Text::MultiMarkdown';
 requires 'Try::Tiny';
 requires 'URI::Escape';
 requires 'XML::Simple';

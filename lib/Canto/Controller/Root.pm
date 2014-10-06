@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
-use Text::Markdown qw(markdown);
+use Text::MultiMarkdown qw(markdown);
 use IO::All;
 
 __PACKAGE__->config->{namespace} = '';
