@@ -213,14 +213,15 @@ To try the Canto server:
 ### Initialise a test data directory
 Make a data directory somewhere:
 
-    mkdir /tmp/canto-test
+    mkdir /var/canto-data
 
 From the `canto` directory:
 
-    ./script/canto_start --init /tmp/canto-test
+    ./script/canto_start --init /var/canto-data
 
-This will initialise the `canto-test` directory and will create a
-configuration file (`canto_deploy.yaml`) that can be customised.
+This will initialise the `canto-data` directory and will create a
+configuration file (`canto_deploy.yaml`) in the `canto` directory that can be
+customised.
 
 ### Run a test server
 Again, from the `canto` directory.
