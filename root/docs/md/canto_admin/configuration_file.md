@@ -26,13 +26,18 @@ The URL of the database that this instance is installed for. e.g.
 A path (relative to `root/static`) of the logo to put in the header.
 
 ### instance_organism
-Canto has two modes: single or multi organism. In multi organism mode, genes
-from any number of organisms can be annotated in each session. In this mode
-after uploading a list of gene identifiers, the user will be shown the
-organism name as well as the names, synonyms and products. The organism is
-shown so the user can confirm that the identifier they gave matched the gene
-from the right organism. In single organism mode the organism is not
-displayed.
+Canto has two modes: single or multi organism.  Single organism mode is
+activated by setting an "instance organism".  That organism will be assumed
+throughout the interface.  Only genes from that single organism can be
+annotated and the user will not be shown the organism name.
+
+In multi organism mode, genes from any number of organisms can be annotated in
+each session.  In this mode after uploading a list of gene identifiers, the
+user will be shown the organism name as well as the names, synonyms and
+products.  The organism is shown so the user can confirm that the identifier
+they gave matched the gene from the right organism.  Generally an external
+gene adaptor should be configured using the [instance_organism](`instance_organism`)
+setting in the multi-organism case.
 
 Example:
 
