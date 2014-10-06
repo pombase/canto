@@ -128,9 +128,10 @@ description.
 ### available_annotation_type_list
 List of possible annotation type and their configuration details.
 
-See [Configuring annotation types](#configuring-annotation-types) for details.
+See [Configuring annotation types](configuration_file#configuringannotationtypes)
+for details.
 
-### enable_annotation_type_list
+### enabled_annotation_type_list
 The names of the types that are enabled in this Canto instance.  If not set
 all annotation types from `available_annotation_type_list` will be enabled.
 
