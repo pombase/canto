@@ -69,5 +69,5 @@ The OBO file can also be given by URL.  eg.
        http://purl.obolibrary.org/obo/go/go-basic.obo
 
 Each ontology must be configured in the
-[annotation_type_list](configuration_file#annotation_type_list) section of
-the `canto.yaml` file.
+[available_annotation_type_list](configuration_file#available_annotation_type_list)
+section of the `canto.yaml` file before it can be used in the interface.
