@@ -9,7 +9,11 @@ one "admin" user.  Users can be added with the `canto_add.pl` script:
 
     ./script/canto_add.pl --person "Kim Rutherford" kim@pombase.org secret_password admin
 
+The `secret_password` is stored as a SHA1 hash.
+
 ## Loading data
+
+Canto operates in two modes: "single organism" and "multi organism".
 
 You will need to load at least one organisms, a list of genes and one or more
 ontologies before using Canto.
