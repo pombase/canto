@@ -50,6 +50,7 @@ use Clone qw(clone);
 use Canto::Curs::GeneProxy;
 use Canto::Curs::Utils;
 use Canto::Curs::ConditionUtil;
+use Canto::Curs::MetadataStorer;
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 
@@ -58,6 +59,8 @@ has allele_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 has state => (is => 'rw', init_arg => undef,
               isa => 'Canto::Curs::State', lazy_build => 1);
+has metadata_storer => (is => 'rw', init_arg => undef, lazy_build => 1,
+                        isa => 'Canto::Curs::MetadataStorer');
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::MetadataAccess';
@@ -68,6 +71,13 @@ sub _build_state
   my $self = shift;
 
   return $self->state(Canto::Curs::State->new(config => $self->config()));
+}
+
+sub _build_metadata_storer
+{
+  my $self = shift;
+
+  return Canto::Curs::MetadataStorer->new(config => $self->config());
 }
 
 sub _build_ontology_lookup
@@ -352,6 +362,7 @@ sub make_annotation
   $self->_store_change_hash($new_annotation, $data);
 
   $self->set_annotation_curator($new_annotation);
+  $self->metadata_storer()->store_counts($curs_schema);
 
   return $new_annotation;
 }
@@ -449,7 +460,7 @@ sub _ontology_change_keys
         return undef;
       }
     },
-    term_suggestion => 1,
+    term_suggestion => 0,
     conditions => sub {
       my $condition_data = shift;
       my @condition_names =
@@ -525,7 +536,7 @@ sub _interaction_change_keys
         die "no interacting_gene_id passed to service\n";
       }
     },
-    submitter_comment => 1,
+    submitter_comment => 0,
 );
 }
 
@@ -667,6 +678,7 @@ sub change_annotation
                                                         $curs_schema,
                                                         $annotation);
     }
+    $self->metadata_storer()->store_counts($curs_schema);
 
     $curs_schema->txn_commit();
 
@@ -739,7 +751,7 @@ sub create_annotation
                                                         $annotation);
     }
 
-
+    $self->metadata_storer()->store_counts($curs_schema);
 
     $curs_schema->txn_commit();
 
@@ -781,6 +793,8 @@ sub delete_annotation
 
     my $annotation_id = $details->{annotation_id};
     $curs_schema->find_with_type('Annotation', $annotation_id)->delete();
+
+    $self->metadata_storer()->store_counts($curs_schema);
 
     $curs_schema->txn_commit();
 
