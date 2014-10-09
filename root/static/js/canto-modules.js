@@ -36,7 +36,12 @@ function copyObject(src, dest, keysFilter) {
         return;
       }
     }
-    dest[key] = src[key];
+    if (src[key] !== null && typeof src[key] === 'object') {
+      dest[key] = {};
+      copyObject(src[key], dest[key]);
+    } else {
+      dest[key] = src[key];
+    }
   });
 }
 
