@@ -182,7 +182,8 @@ var keysForServer = {
 //  qualifiers: true,
   submitter_comment: true,
   term_ontid: true,
-  term_suggestion: true,
+  term_suggestion_name: true,
+  term_suggestion_definition: true,
   with_gene_id: true,
   interacting_gene_id: true,
 };

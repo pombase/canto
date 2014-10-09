@@ -38,8 +38,8 @@
     {{annotation.qualifiers}}
   </td>
   <td>
-    <span ng-if="annotation.term_suggestion"
-          title="{{annotation.term_suggestion.definition}}">{{annotation.term_suggestion.name}}</span>
+    <span ng-if="annotation.term_suggestion_name || annotation.term_suggestion_definition"
+          title="{{annotation.term_suggestion_definition}}">{{annotation.term_suggestion_name || annotation.term_suggestion_definition}}</span>
   </td>
   <td>
     {{annotation.submitter_comment}}

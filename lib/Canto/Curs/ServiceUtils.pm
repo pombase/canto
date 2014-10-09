@@ -460,7 +460,14 @@ sub _ontology_change_keys
         return undef;
       }
     },
-    term_suggestion => 0,
+    term_suggestion_name => sub {
+      $data->{term_suggestion}->{name} = shift;
+      return 1;
+    },
+    term_suggestion_definition => sub {
+      $data->{term_suggestion}->{definition} = shift;
+      return 1;
+    },
     conditions => sub {
       my $condition_data = shift;
       my @condition_names =
