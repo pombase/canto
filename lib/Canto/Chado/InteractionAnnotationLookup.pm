@@ -200,6 +200,7 @@ sub lookup
         uniquename => $pub_uniquename,
       },
       evidence_code => $evidence_code,
+      annotation_type => $interaction_type_name,
     };
 
   }

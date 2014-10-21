@@ -293,7 +293,8 @@ cmp_deeply ($res->{annotation},
               'completed' => 1,
               'submitter_comment' => '',
               'phenotypes' => '',
-              'annotation_type' => 'genetic_interaction'
+              'annotation_type' => 'genetic_interaction',
+              'annotation_type_display_name' => 'genetic interaction',
             }
           );
 
@@ -610,6 +611,7 @@ cmp_deeply($annotation_res,
               'feature_display_name' => 'SPCC63.05',
               'status' => 'new',
               'annotation_type' => 'genetic_interaction',
+              'annotation_type_display_name' => 'genetic interaction',
               'phenotypes' => '',
               'interacting_gene_id' => 3,
               'curator' => 'Some Testperson <some.testperson@pombase.org>',
@@ -627,6 +629,7 @@ cmp_deeply($annotation_res,
               'feature_display_name' => 'SPCC63.05',
               'status' => 'new',
               'annotation_type' => 'genetic_interaction',
+              'annotation_type_display_name' => 'genetic interaction',
               'score' => '',
               'annotation_id' => 5,
               'feature_id' => 4,
@@ -648,6 +651,7 @@ cmp_deeply($annotation_res,
               'gene_identifier' => 'SPBC12C2.02c',
               'interacting_gene_identifier' => 'SPCC1739.11c',
               'interacting_gene_taxonid' => '4896',
+              'annotation_type' => 'genetic_interaction',
               'gene_taxonid' => '4896'
             },
             {
@@ -659,6 +663,7 @@ cmp_deeply($annotation_res,
               'gene_taxonid' => '4896',
               'interacting_gene_taxonid' => '4896',
               'interacting_gene_identifier' => 'SPCC16A11.14',
+              'annotation_type' => 'genetic_interaction',
               'gene_identifier' => 'SPBC12C2.02c'
             }
           ]);

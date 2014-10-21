@@ -325,6 +325,7 @@ sub _test_interactions
                'evidence_code' => 'Phenotypic Enhancement',
                'publication_uniquename' => 'PMID:19756689',
                'status' => 'existing',
+               'annotation_type' => 'genetic_interaction',
            });
 }
 

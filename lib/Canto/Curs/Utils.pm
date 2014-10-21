@@ -301,6 +301,8 @@ sub make_interaction_annotation
 
   my $entry =
     {
+      annotation_type => $annotation_type,
+      annotation_type_display_name => $annotation_type_display_name,
       gene_identifier => $gene_proxy->primary_identifier(),
       gene_display_name => $gene_proxy->display_name(),
       gene_taxonid => $gene_proxy->organism()->taxonid(),
@@ -567,12 +569,14 @@ sub _process_interaction
 {
   my $ontology_lookup = shift;
   my $row = shift;
+  my $annotation_type = shift;
 
   my $gene = $row->{gene};
   my $interacting_gene = $row->{interacting_gene};
   my $publication = $row->{publication};
 
   return {
+    annotation_type => $row->{annotation_type},
     gene_identifier => $gene->{identifier},
     gene_display_name => $gene->{name} // $gene->{identifier},
     gene_taxonid => $gene->{taxonid},
