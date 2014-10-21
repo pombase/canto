@@ -1960,7 +1960,7 @@ sub _create_genotype_uniquename: Private
   my $schema = shift;
   my $curs_key = shift;
 
-  my $prefix = "$curs_key-genotype:";
+  my $prefix = "$curs_key-genotype-1";
 
   my $rs = $schema->resultset('Genotype')
     ->search({ identifier => { -like => "$prefix%" } });
