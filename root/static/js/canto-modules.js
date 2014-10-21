@@ -1163,12 +1163,6 @@ var annotationTableList =
                      }
                    });
         });
-        AnnotationProxy.getFiltered({ annotationTypeName: scope.annotationTypeName,
-                                      featureId: scope.featureIdFilter,
-                                      featureType: scope.featureTypeFilter,
-                                    }).then(function(annotations) {
-                                      scope.annotations = annotations;
-                                    });
       }
     };
   };

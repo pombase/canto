@@ -1,9 +1,9 @@
 <div class="clearall">
-  <div ng-hide="annotations && annotationTypes">
-    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img></img>
+  <div ng-hide="annotationTypes.length">
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
 Annotation loading ...
   </div>
-  <div ng-show="annotations && annotationTypes"
+  <div ng-show="annotationTypes.length"
        id="curs-annotation-tables" class="sect">
     <div ng-repeat="annotationType in annotationTypes">
       <annotation-table annotation-type-name="{{annotationType.name}}"
