@@ -1186,8 +1186,7 @@ var annotationTableRow =
 
         var annotation = $scope.annotation;
 
-        AnnotationTypeConfig.getByName(annotation.annotation_type ||
-                                       annotation.changes.annotation_type)
+        AnnotationTypeConfig.getByName(annotation.annotation_type)
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
           });
