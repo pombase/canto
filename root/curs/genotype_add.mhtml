@@ -54,8 +54,10 @@ Add alleles from the genes below until the genotype is fully specified.
     </div>
     <div class="curs-box-body">
 
-      <a title="Click to genotype edit name" href="#"
-         editable-text="data.genotype_name">{{ data.genotype_name ? ('Name: ' + data.genotype_name) : "click to add genotype name" }}</a>
+      <input type="text" title="Click to genotype edit name" href="#"
+             placeholder="add optional genotype name ..."
+             size="50"
+             ng-model="data.genotype_name" />
 
       <div class="row">
         <div class="col-sm-6 col-md-6">
