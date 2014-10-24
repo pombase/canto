@@ -1996,7 +1996,7 @@ sub _make_genotype
     $schema->create_with_type('Genotype',
                               {
                                 identifier => $genotype_identifier,
-                                name => $name,
+                                name => $name || undef,
                               });
 
     $genotype->set_alleles($alleles);

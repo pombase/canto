@@ -182,7 +182,16 @@ sub long_identifier
 
   (my $type_tidy = $self->type()) =~ s/[\s,]+/-/g;
 
-  $self->display_name() . '-' . $type_tidy . ($self->expression() ? '[' . $self->expression() . ']' : '');
+  my $ret = $self->display_name();
+
+  if ($ret !~ /$type_tidy/) {
+    # prevent "ssm4delta(deletion)-deletion"
+    $ret .= '-' . $type_tidy;
+  }
+
+  $ret .= ($self->expression() ? '[' . $self->expression() . ']' : '');
+
+  return $ret;
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

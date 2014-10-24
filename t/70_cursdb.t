@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More tests => 23;
+use Test::Deep;
 
 use Canto::TestUtil;
 use Canto::CursDB;
@@ -26,12 +27,53 @@ $schema->txn_do(
   });
 
 
-# get allele annotations
+# get genotype annotations
 my $genotype = $schema->resultset('Genotype')->find({ identifier => 'aaaa0007-genotype-1' });
 my @genotype_annotations = $genotype->annotations();
 
 is (@genotype_annotations, 1);
 
+my $genotype_0 = ($genotype_annotations[0]->genotypes())[0];
+
+my @alleles_0 =
+  sort {
+    $a->long_identifier()
+      cmp
+    $b->long_identifier()
+  } $genotype_0->alleles();
+
+cmp_deeply(
+  [
+    {
+      'name' => 'SPCC63.05delta',
+      'primary_identifier' => 'SPCC63.05:aaaa0007-1',
+      'description' => 'deletion',
+      'type' => 'deletion',
+      'expression' => undef,
+      'long_identifier' => 'SPCC63.05delta(deletion)',
+      'display_name' => 'SPCC63.05delta(deletion)',
+    },
+    {
+      'name' => 'ssm4delta',
+      'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
+      'description' => 'deletion',
+      'type' => 'deletion',
+      'expression' => undef,
+      'long_identifier' => 'ssm4delta(deletion)',
+      'display_name' => 'ssm4delta(deletion)',
+    }
+   ],
+  [map {
+    {
+      primary_identifier => $_->primary_identifier(),
+      type => $_->type(),
+      description => $_->description(),
+      expression => $_->expression(),
+      name => $_->name(),
+      long_identifier => $_->long_identifier(),
+      display_name => $_->display_name()
+    };
+  } @alleles_0]);
 
 # test that a phenotype annotation exists and has the right type
 my $phenotype_annotation_rs =
