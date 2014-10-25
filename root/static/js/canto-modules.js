@@ -2,7 +2,7 @@
 
 /*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path */
 
-var canto = angular.module('cantoApp', ['ui.bootstrap', 'xeditable', 'toaster']);
+var canto = angular.module('cantoApp', ['ui.bootstrap', 'toaster']);
 
 function capitalize (text) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -307,10 +307,6 @@ var annotationProxy =
 };
 
 canto.service('AnnotationProxy', ['Curs', '$q', '$http', annotationProxy]);
-
-canto.run(function(editableOptions) {
-  editableOptions.theme = 'bs3';
-});
 
 function fetch_conditions(search, showChoices) {
   $.ajax({

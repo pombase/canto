@@ -17,7 +17,6 @@ $title
 <link href="http://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.4/toaster.css" rel="stylesheet" />
 % }
 <link href="<% $c->uri_for('/static/css/style.css') %>" type="text/css" rel="stylesheet" />
-<link href="<% $c->uri_for('/static/css/angular-xeditable.css') %>" type="text/css" rel="stylesheet" />
 <link href="<% $c->uri_for('/static/css/jquery.tagit.css') %>" type="text/css" rel="stylesheet" />
 <link href="<% $c->uri_for('/static/css/jquery.pnotify.default.css') %>" type="text/css" rel="stylesheet" />
 % if (defined $c->config()->{extra_css}) {

@@ -26,7 +26,6 @@
 <script src="<% $c->uri_for('/static/js/jquery.pnotify.min.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.placeholder.min.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.jtruncate.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/angular-xeditable.min.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/ui-bootstrap-tpls-0.11.0.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/tag-it.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/bootbox.min.js') %>"></script>
