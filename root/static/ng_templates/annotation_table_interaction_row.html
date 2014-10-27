@@ -1,16 +1,22 @@
 <tr>
   <td>
-    <a href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id}}">
+    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id}}">
       {{annotation.gene_display_name}}
     </a>
+    <span ng-if="annotation.status === 'existing'">
+      {{annotation.gene_display_name}}
+    </span>
   </td>
   <td>
     {{annotation.gene_taxonid}}
   </td>
   <td>
-    <a href="{{curs_root_uri + '/feature/gene/view/' + annotation.interacting_gene_id}}">
+    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/gene/view/' + annotation.interacting_gene_id}}">
       {{annotation.interacting_gene_display_name}}
     </a>
+    <span ng-if="annotation.status === 'existing'">
+      {{annotation.interacting_gene_display_name}}
+    </span>
   </td>
   <td>
     {{annotation.interacting_gene_taxonid}}
