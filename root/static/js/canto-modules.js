@@ -1020,7 +1020,6 @@ var annotationEditDialogCtrl =
       var q = AnnotationProxy.storeChanges(args.annotation,
                                            $scope.annotation, args.newlyAdded);
       q.then(function(annotation) {
-        copyObject(annotation, args.annotation);
         $modalInstance.close($scope.annotation);
       })
       .catch(function(message) {
@@ -1109,8 +1108,8 @@ var annotationTableCtrl =
           var editPromise = 
             startEditing($modal, $scope.annotationTypeName, newAnnotation, $scope.featureFilterDisplayName, true);
 
-          editPromise.then(function() {
-            $scope.annotations.push(newAnnotation);
+          editPromise.then(function(editedAnnotation) {
+            $scope.annotations.push(editedAnnotation);
           });
         };
       },
@@ -1182,6 +1181,9 @@ var annotationTableRow =
 
         var annotation = $scope.annotation;
 
+        $scope.annotation.conditionsString =
+          conditionsToString($scope.annotation.conditions);
+
         AnnotationTypeConfig.getByName(annotation.annotation_type)
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
@@ -1202,20 +1204,24 @@ var annotationTableRow =
           toaster.pop('note', "couldn't read the gene list from the server");
         });
 
-        $scope.conditionsString = function() {
-          return conditionsToString(annotation.conditions);
-        };
-
         $scope.edit = function() {
-          startEditing($modal, annotation.annotation_type, $scope.annotation, undefined, false);
+          var editPromise =
+            startEditing($modal, annotation.annotation_type, $scope.annotation, undefined, false);
+
+          editPromise.then(function(editedAnnotation) {
+            $scope.annotation = editedAnnotation;
+            $scope.annotation.conditionsString =
+              conditionsToString($scope.annotation.conditions);
+          });
         };
         $scope.duplicate = function() {
           var newAnnotation = makeNewAnnotation($scope.annotation);
-          var editPromise = startEditing($modal, annotation.annotation_type, newAnnotation, undefined, true);
+          var editPromise = startEditing($modal, annotation.annotation_type,
+                                         newAnnotation, undefined, true);
 
-          editPromise.then(function() {
+          editPromise.then(function(editedAnnotation) {
             var index = $scope.annotations.indexOf($scope.annotation);
-            $scope.annotations.splice(index + 1, 0, newAnnotation);
+            $scope.annotations.splice(index + 1, 0, editedAnnotation);
           });
         };
         $scope.delete = function() {
