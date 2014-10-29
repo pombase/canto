@@ -89,6 +89,8 @@ requires 'Plack::Middleware::Debug';
 requires 'Plack::Middleware::Expires';
 requires 'Plack::Middleware::InteractiveDebugger';
 requires 'Plack::Middleware::ReverseProxy';
+requires 'Plack::Middleware::Conditional';
+requires 'Plack::Middleware::Expires';
 requires 'Scalar::Util';
 requires 'String::Similarity';
 requires 'Sub::Exporter';

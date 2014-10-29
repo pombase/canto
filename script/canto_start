@@ -88,14 +88,25 @@ $app = Plack::Middleware::Static->wrap($app,
                                          s!^/+static/v\d+[\d\w\-]+/!! },
                                        root => 'root/static');
 
-my $type_re = qr!^image/|^application/javascript$|^text/css!;
-$app = Plack::Middleware::Expires->wrap($app,
-                                        content_type => $type_re,
-                                        expires => 'access plus 999 days');
-
-if (defined $ENV{PLACK_DEBUG} && $ENV{PLACK_DEBUG} > 1) {
-  $app = Plack::Middleware::Debug->wrap($app);
-  $app = Plack::Middleware::InteractiveDebugger->wrap($app);
+if (defined $ENV{PLACK_DEBUG}) {
+  if ($ENV{PLACK_DEBUG} > 1) {
+    $app = Plack::Middleware::Debug->wrap($app);
+    $app = Plack::Middleware::InteractiveDebugger->wrap($app);
+  }
+} else {
+  # cache the static files
+  $app = Plack::Middleware::Conditional->wrap(
+    $app,
+    condition  => sub {
+      $_[0]->{PATH_INFO} =~ m:^/static/:;
+    },
+    builder => sub {
+      my $type_re = qr!^image/|^application/javascript$|^text/css|^text/html!;
+      Plack::Middleware::Expires->wrap($app,
+                                       content_type => $type_re,
+                                       expires => 'access plus 999 days');
+    },
+  );
 }
 
 my $runner = Plack::Runner->new;

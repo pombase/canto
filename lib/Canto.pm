@@ -44,7 +44,6 @@ __PACKAGE__->config(name => 'Canto',
                       expose_stash => 'json_data',
                     },
                     'Plugin::Static::Simple' => {
-                      ignore_extensions => [ qw/html xhtml mhtml tt tt2 tmpl/ ],
                       dirs => [
                         'static'
                       ],
@@ -52,7 +51,6 @@ __PACKAGE__->config(name => 'Canto',
                     'Plugin::PageCache' => {
                       set_http_headers => 1,
                       disable_index => 1,
-                      debug => 1,
                     },
                     using_frontend_proxy => 1,
                    );
