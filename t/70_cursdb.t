@@ -85,7 +85,7 @@ my $res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
 
 $res_pub->update();
 
-my $new_res_pub = $schema->find_with_type('Pub', { uniquename => l12345678 });
+my $new_res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
 
 my $spcc576_16c = $schema->find_with_type('Gene',
                                           { primary_identifier => 'SPCC576.16c' });
