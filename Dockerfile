@@ -13,3 +13,5 @@ RUN cpan -i Module::Install Module::Install::Catalyst
 RUN git clone https://github.com/pombase/canto.git
 
 RUN (cd canto; perl Makefile.PL; make installdeps; make; make test)
+
+EXPOSE 7000
