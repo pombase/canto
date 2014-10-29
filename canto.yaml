@@ -1618,7 +1618,7 @@ ontology_external_links:
   fission_yeast_phenotype:
     - name: BioPortal
       icon: bioportal.png
-      url: 'http://bioportal.bioontology.org/ontologies/FYPO?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F@@term_ont_id:s/:/_/r@@&t=visualization'
+      url: 'http://bioportal.bioontology.org/ontologies/FYPO?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F@@term_ont_id:s/:/_/r@@#visualization'
 
 chado:
   ontology_cv_names:
