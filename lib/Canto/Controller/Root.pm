@@ -66,7 +66,7 @@ sub end : Private
     return 0;
   }
 
-  if (delete $st->{cache_this_link}) {
+  if (delete $st->{cache_this_link} && !$ENV{CANTO_DEBUG}) {
     $c->cache_page(99999);
   }
 

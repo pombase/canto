@@ -1181,8 +1181,10 @@ var annotationTableRow =
 
         var annotation = $scope.annotation;
 
-        $scope.annotation.conditionsString =
-          conditionsToString($scope.annotation.conditions);
+        if (typeof($scope.annotation.conditions) !== 'undefined') {
+          $scope.annotation.conditionsString =
+            conditionsToString($scope.annotation.conditions);
+        }
 
         AnnotationTypeConfig.getByName(annotation.annotation_type)
           .then(function(annotationType) {
