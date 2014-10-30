@@ -7,6 +7,8 @@ use Test::More tests => 6;
 use Clone qw(clone);
 use JSON;
 
+use utf8;
+
 use Digest::SHA qw(sha1_base64);
 
 use Canto::TestUtil;
@@ -325,8 +327,8 @@ my %expected_people = (
   },
   'iwasaki@tsurumi.yokohama-cu.ac.jp' => {
     'password' => sha1_base64('iwasaki@tsurumi.yokohama-cu.ac.jp'),
-    'lab' => "\x{e5}\x{b2}\x{a9}\x{e5}\x{b4}\x{8e}\x{e3}\x{81}\x{b2}\x{e3}\x{82}\x{8d}\x{e3}\x{81}\x{97} Lab",
-    'name' => "\x{e5}\x{b2}\x{a9}\x{e5}\x{b4}\x{8e}\x{e3}\x{81}\x{b2}\x{e3}\x{82}\x{8d}\x{e3}\x{81}\x{97}",
+    'lab' => '岩崎ひろし Lab',
+    'name' => '岩崎ひろし',
     'role' => 'user'
   },
   'Nicholas.Willis@umassmed.edu' => {
@@ -408,8 +410,8 @@ my %expected_labs = (
   'Hardwick Lab' => {
     'head' => 'Kevin Hardwick'
   },
-  "\x{e5}\x{b2}\x{a9}\x{e5}\x{b4}\x{8e}\x{e3}\x{81}\x{b2}\x{e3}\x{82}\x{8d}\x{e3}\x{81}\x{97} Lab" => {
-    'head' => "\x{e5}\x{b2}\x{a9}\x{e5}\x{b4}\x{8e}\x{e3}\x{81}\x{b2}\x{e3}\x{82}\x{8d}\x{e3}\x{81}\x{97}"
+  '岩崎ひろし Lab', => {
+    'head' => '岩崎ひろし',
   },
   'Winston Lab' => {
     'head' => 'Fred Winston'
