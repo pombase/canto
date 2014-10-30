@@ -1572,7 +1572,8 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
   my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
   my $form = $self->form();
 
-  $form->attributes({ action => '?' });
+  $form->attributes({ action => '?',
+                      'ng-controller' => "AnnotationEvidenceCtrl" });
 
   my $needs_conditions = $annotation_type_config->{feature_type} eq 'genotype';
 
@@ -1583,7 +1584,9 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
       {
         type => 'Block',
         tag => 'condition-picker',
-#        attributes => {
+        attributes => {
+          conditions => "conditions"
+        }
       }
     );
   } else {

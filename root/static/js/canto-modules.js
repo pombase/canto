@@ -379,6 +379,15 @@ var featureChooser =
 
 canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
 
+var annotationEvidenceCtrl =
+  function($scope, args) {
+    $scope.conditions = [];
+}
+
+canto.controller('AnnotationEvidenceCtrl',
+                 ['$scope',
+                 annotationEvidenceCtrl]);
+
 var conditionPicker =
   function(CursConditionList, toaster) {
     var directive = {
