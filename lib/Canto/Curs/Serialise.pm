@@ -285,7 +285,7 @@ sub json
   die if ref $curs_key or not defined $curs_key;
   my $options = shift;
 
-  my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);
+  my $encoder = JSON->new()->pretty(1)->canonical(1);
 
   return $encoder->encode(perl($config, $track_schema, $curs_key, $options));
 }

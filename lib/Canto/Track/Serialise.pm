@@ -267,7 +267,7 @@ sub json
     };
   }
 
-  my $encoder = JSON->new()->utf8()->pretty(1)->canonical(1);
+  my $encoder = JSON->new()->pretty(1)->canonical(1);
 
   my $curs_count = scalar(keys(%{$hash->{curation_sessions}}));
 
