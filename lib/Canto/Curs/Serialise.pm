@@ -62,7 +62,6 @@ sub _get_metadata
 {
   my $track_schema = shift;
   my $curs_schema = shift;
-  my $curs_key = shift;
 
   confess() unless defined $curs_schema;
 
@@ -76,7 +75,7 @@ sub _get_metadata
   } @results;
 
   my $cursprops_rs =
-    $track_schema->resultset('Curs')->find({ curs_key => $curs_key })
+    $track_schema->resultset('Curs')->find({ curs_key => $ret{canto_session} })
                  ->cursprops();
 
   while (defined (my $prop = $cursprops_rs->next())) {
@@ -89,7 +88,10 @@ sub _get_metadata
 sub _get_annotations
 {
   my $config = shift;
+  my $track_schema = shift;
   my $schema = shift;
+
+  die "no schema" unless $schema;
 
   my $rs = $schema->resultset('Annotation');
 
@@ -135,16 +137,16 @@ sub _get_annotations
           $data{curator}->{community_curated} = JSON::false;
         }
       } else {
-        my %metadata = _get_metadata($schema);
+        my $metadata = _get_metadata($track_schema, $schema);
         die "community_curated not set for annotation ",
           $annotation->annotation_id(), " in session ",
-          $metadata{curs_key};
+          $metadata->{curs_key};
       }
     } else {
-      my %metadata = _get_metadata($schema);
+      my $metadata = _get_metadata($track_schema, $schema);
       die "community_curated not set for annotation ",
         $annotation->annotation_id(), " in session ",
-        $metadata{curs_key};
+        $metadata->{curs_key};
     }
 
     my $gene = _get_annotation_gene($schema, $annotation);
@@ -163,9 +165,14 @@ sub _get_annotations
         # this is a curator section - don't modify
         cut();
       }
-      while (my ($key, $value) = each %$current) {
-        if (!ref $value) {
-          $current->{$key} =~ s/[[:^ascii:]]//g;
+      for my $key (keys %$current) {
+        my $value = $current->{$key};
+        if (defined $value) {
+          if (!ref $value) {
+            $current->{$key} =~ s/[[:^ascii:]]//g;
+          }
+        } else {
+          $current->{$key} = '';
         }
       }
     } %data;
@@ -415,8 +422,8 @@ sub perl
                                     });
 
   my %ret = (
-    metadata => _get_metadata($track_schema, $curs_schema, $curs_key),
-    annotations => _get_annotations($config, $curs_schema),
+    metadata => _get_metadata($track_schema, $curs_schema),
+    annotations => _get_annotations($config, $track_schema, $curs_schema),
     organisms => _get_organisms($curs_schema, $options),
     publications => _get_pubs($curs_schema, $options)
   );
