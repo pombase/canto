@@ -379,20 +379,20 @@ var featureChooser =
 
 canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
 
-var annotationEvidenceCtrl =
-  function($scope, args) {
-    $scope.conditions = [];
-}
+ var annotationEvidenceCtrl =
+   function($scope, args) {
+     $scope.conditions = [];
+ }
 
-canto.controller('AnnotationEvidenceCtrl',
-                 ['$scope',
-                 annotationEvidenceCtrl]);
+ canto.controller('AnnotationEvidenceCtrl',
+                  ['$scope',
+                  annotationEvidenceCtrl]);
 
-var conditionPicker =
-  function(CursConditionList, toaster) {
-    var directive = {
-      scope: {
-        conditions: '=',
+ var conditionPicker =
+   function(CursConditionList, toaster) {
+     var directive = {
+       scope: {
+         conditions: '=',
       },
       restrict: 'E',
       replace: true,
@@ -980,7 +980,7 @@ canto.controller('EvidenceSelectCtrl',
 var annotationEditDialogCtrl =
   function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
            CantoConfig, toaster, args) {
-    $scope.annotation = {};
+    $scope.annotation = { conditions: [] };
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
