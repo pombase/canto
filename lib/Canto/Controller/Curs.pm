@@ -3083,6 +3083,9 @@ sub reactivate_session : Chained('top') Args(0)
 
   $self->unset_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY());
 
+  $self->set_metadata($schema, Canto::Curs::State::REACTIVATED_TIMESTAMP_KEY,
+                      Canto::Util::get_current_datetime());
+
   $c->flash()->{message} = 'Session has been reactivated';
 
   _redirect_and_detach($c);

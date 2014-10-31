@@ -91,6 +91,7 @@ use constant {
   APPROVER_NAME_KEY => 'approver_name',
   APPROVER_EMAIL_KEY => 'approver_email',
   NO_ANNOTATION_REASON_KEY => 'no_annotation_reason',
+  REACTIVATED_TIMESTAMP_KEY => 'reactivated_timestamp',
 };
 
 use Sub::Exporter -setup => {
