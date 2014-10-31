@@ -275,6 +275,14 @@ sub store_statuses
   $self->status_adaptor()->store($curs_key, 'session_unknown_conditions_count',
                                  $unknown_conditions_count);
 
+  my $reactivated_timestamp_row =
+    $metadata_rs->search({ key => REACTIVATED_TIMESTAMP_KEY })->first();
+
+  if (defined $reactivated_timestamp_row) {
+    $self->status_adaptor()->store($curs_key, 'session_reactivated_timestamp',
+                                   $reactivated_timestamp_row->value());
+  }
+
   my $approver_name_row = $metadata_rs->find({ key => 'approver_name' });
   if (defined $approver_name_row) {
     my $approver_name = $approver_name_row->value();

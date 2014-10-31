@@ -3085,6 +3085,7 @@ sub reactivate_session : Chained('top') Args(0)
 
   $self->set_metadata($schema, Canto::Curs::State::REACTIVATED_TIMESTAMP_KEY,
                       Canto::Util::get_current_datetime());
+  $self->state()->store_statuses($c->stash()->{schema});
 
   $c->flash()->{message} = 'Session has been reactivated';
 
