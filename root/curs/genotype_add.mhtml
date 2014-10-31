@@ -115,7 +115,7 @@ The alleles of this genotype:
         </div>
       </div>
       <button type="submit" class="btn btn-primary curs-back-button"
-              title="Back to choose genes"
+              title="Back to summary"
               ng-click="clearSelectedGene()" ng-disabled="false">Back</button>
       <button type="submit" class="btn btn-primary curs-finish-button"
               title="{{ isValid() ? 'Add genotype' : 'At least one allele for each gene is required' }}"
