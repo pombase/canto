@@ -1,15 +1,40 @@
 <%args>
-$form
 $annotation
 $display_name
 </%args>
 
-<div class="curs-box evidence-select" >
-  <div class="curs-box-title">
-Choose evidence for annotating <% $display_name %> with <% $term_ontid %>
+<div class="curs-box evidence-select"
+     annotation-type-name='<% $annotation->type() %>'
+     ng-controller="AnnotationEvidenceCtrl">
+  <div ng-if="!annotationType">
+    Loading ...
   </div>
-  <div class="curs-box-body">
-    <% $form |n %>
+  <div ng-if="annotationType">
+
+    <div class="curs-box-title">
+Choose evidence for annotating <% $display_name %> with <% $term_ontid %>
+    </div>
+    <div class="curs-box-body">
+      <div ng-class="{ 'has-error': !isValidEvidence() }">
+        <select class="form-control"
+                ng-model="data.evidence_code"
+                ng-options="code for code in annotationType.evidence_codes">
+          <option selected="selected" value="">Choose an evidence code ...</option>
+        </select>
+%#        <span ng-show="!isValidEvidence()"
+%#              class="help-block">Please select an evidence code</span>
+      </div>
+
+      <div ng-if="annotationType.feature === 'gene'">
+        <condition-picker conditions="data.conditions"></condition-picker>
+      </div>
+
+      <button type="submit" class="btn btn-primary curs-back-button"
+              title="<- Back"
+              ng-click="back()" ng-disabled="false">Back</button>
+      <button type="submit" class="btn btn-primary curs-finish-button"
+              ng-click="setEvidence()" >Proceed -></button>
+    </div>
   </div>
 </div>
 

@@ -503,13 +503,28 @@ var OntologyTermLocatorCtrl =
 canto.controller('OntologyTermLocatorCtrl',
                  ['$scope', 'CantoGlobals', OntologyTermLocatorCtrl]);
 
- var annotationEvidenceCtrl =
-   function($scope, args) {
-     $scope.conditions = [];
- }
 
- canto.controller('AnnotationEvidenceCtrl',
-                  ['$scope',
+var annotationEvidenceCtrl =
+  function($scope, AnnotationTypeConfig, $attrs) {
+    AnnotationTypeConfig.getByName($attrs.annotationTypeName)
+      .then(function(annotationType) {
+        $scope.annotationType = annotationType;
+      });
+
+    $scope.annotationType = '';
+    $scope.data = { conditions: [] };
+
+    $scope.isValidEvidence = function() {
+      return $scope.data.evidence_code;
+    };
+
+    $scope.back = function() {
+      history.go(-1);
+    }
+  }
+
+canto.controller('AnnotationEvidenceCtrl',
+                 ['$scope', 'AnnotationTypeConfig', '$attrs',
                   annotationEvidenceCtrl]);
 
  var conditionPicker =
