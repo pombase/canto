@@ -161,6 +161,7 @@ canto.service('CantoGlobals', function($window) {
   this.app_static_path = $window.app_static_path;
   this.application_root = $window.application_root;
   this.curs_root_uri = $window.curs_root_uri;
+  this.ferret_choose = $window.ferret_choose;
 });
 
 canto.service('CantoService', function($http) {
@@ -378,6 +379,129 @@ var featureChooser =
   };
 
 canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
+
+var OntologyTermLocatorCtrl =
+  function($scope, CantoGlobals) {
+    $scope.back = function() {
+      history.go(-1);
+    };
+
+    $scope.init = function() {
+      $scope.annotationTypeName = CantoGlobals.ferret_choose.annotation_namespace;
+
+      var ferret_input = $("#ferret-term-input");
+
+      $('#loading').unbind('.canto');
+
+      var set_term_callback = function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          CantoGlobals.ferret_choose.term_history = [trim($scope.data.searchString)];
+          CantoGlobals.ferret_choose.set_current_term(newValue);
+          CantoGlobals.ferret_choose.matching_synonym = $scope.data.matchingSynonym;
+        }
+      };
+
+      $scope.$watch('data.term_ontid', set_term_callback);
+
+      $("body").delegate("#ferret-term-children-list a", "click",
+                         CantoGlobals.ferret_choose.child_click_handler);
+      $("body").delegate("#breadcrumbs .breadcrumbs-term a", "click",
+                         CantoGlobals.ferret_choose.term_click_handler);
+      $("body").delegate("#breadcrumbs-search a", "click",
+                         CantoGlobals.ferret_choose.term_click_handler);
+
+      $("#breadcrumb-previous-button").click(function () {
+        CantoGlobals.ferret_choose.term_history.length -= 1;
+        if (CantoGlobals.ferret_choose.term_history.length > 0) {
+          if (CantoGlobals.ferret_choose.term_history.length == 1) {
+            CantoGlobals.ferret_choose.set_current_term();
+          } else {
+            CantoGlobals.ferret_choose.set_current_term(last(CantoGlobals.ferret_choose.term_history));
+          }
+        } else {
+          window.location.href = curs_root_uri;
+        }
+      });
+
+      $('#ferret-term-input').attr('disabled', false);
+
+      $('#ferret-suggest-link').click(CantoGlobals.ferret_choose.suggest_dialog);
+      $('#ferret-suggest-link-leaf').click(CantoGlobals.ferret_choose.suggest_dialog);
+
+      $("#ferret-suggest-form").validate({
+        rules: {
+          'ferret-suggest-name': "required",
+          'ferret-suggest-definition': "required"
+        },
+        messages: {
+          'ferret-suggest-name': "Please enter a name for the term",
+          'ferret-suggest-definition': "Please enter a definition for the term"
+        }
+      });
+
+      $("#curs-contact-form").validate({
+        rules: {
+          'curs-contact-name': "required",
+          'curs-contact-definition': "required"
+        },
+        messages: {
+          'curs-contact-name': "Please enter a name for the term",
+          'curs-contact-definition': "Please enter a definition for the term"
+        }
+      });
+
+      $('.canto-toggle-button').each(function (index, element) {
+        var this_id = $(element).attr('id');
+        var target = $('#' + this_id + '-target');
+        $(element).click(
+          function () {
+            target.toggle()
+          }
+        );
+        $(element).show();
+      });
+
+      $('.canto-more-button').each(function (index, element) {
+        var this_id = $(element).attr('id');
+        var target = $('#' + this_id + '-target');
+        $(element).click(
+          function () {
+            target.show()
+            $(element).hide();
+            return false;
+          }
+        );
+        $(element).show();
+      });
+
+      $(window).bind('hashchange', function(e) {
+        var state = $.bbq.getState( this.id, true );
+        var search_string = state.s;
+
+        if (search_string) {
+          if (state.c) {
+            var crumbs = trim(state.c);
+            var new_history = [search_string].concat(crumbs.split(","));
+            CantoGlobals.ferret_choose.term_history = new_history
+            $('#ferret-term-id').val(last(new_history));
+          } else {
+            CantoGlobals.ferret_choose.term_history = [search_string];
+          }
+        } else {
+          CantoGlobals.ferret_choose.term_history = [];
+        }
+
+        $('#ferret-term-input').val(search_string);
+
+        CantoGlobals.ferret_choose.render();
+      })
+    };
+
+    $scope.init();
+  };
+
+canto.controller('OntologyTermLocatorCtrl',
+                 ['$scope', 'CantoGlobals', OntologyTermLocatorCtrl]);
 
  var annotationEvidenceCtrl =
    function($scope, args) {
@@ -1080,7 +1204,7 @@ function startEditing($modal, annotationTypeName, annotation, currentFeatureDisp
       }
     }
   });
-  
+
   return editInstance.result;
 }
 
@@ -1114,7 +1238,7 @@ var annotationTableCtrl =
             template.feature_id = $scope.featureIdFilter;
           }
           var newAnnotation = makeNewAnnotation(template);
-          var editPromise = 
+          var editPromise =
             startEditing($modal, $scope.annotationTypeName, newAnnotation, $scope.featureFilterDisplayName, true);
 
           editPromise.then(function(editedAnnotation) {
@@ -1246,7 +1370,7 @@ var annotationTableRow =
                   toaster.pop('note', "couldn't delete the annotation: " + message);
                 });
             }
-          }); 
+          });
         };
       },
     };
@@ -1266,6 +1390,55 @@ var termNameComplete =
         currentTermName: '@',
         foundTermId: '=',
         foundTermName: '=',
+        searchString: '=',
+        matchingSynonym: '=',
+      },
+      controller: function($scope) {
+        $scope.render_term_item =
+          function(ul, item, search_string) {
+            var search_namespace = $scope.annotationTypeName;
+            var search_bits = search_string.split(/\W+/);
+            var match_name = item.matching_synonym;
+            var synonym_extra = '';
+            if (match_name) {
+              synonym_extra = ' (synonym)';
+            } else {
+              match_name = item.name;
+            }
+            var warning = '';
+            if (search_namespace !== item.annotation_namespace) {
+              warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
+                item.annotation_namespace + ' term but<br/>you are browsing ' +
+                search_namespace + ' terms</span>';
+              var re = new RegExp('_', 'g');
+              // unpleasant hack to make the namespaces look nicer
+              warning = warning.replace(re,' ');
+            }
+            function length_compare(a,b) {
+              if (a.length < b.length) {
+                return 1;
+              } else {
+                if (a.length > b.length) {
+                  return -1;
+                } else {
+                  return 0;
+                }
+              }
+            };
+            search_bits.sort(length_compare);
+            for (var i = 0; i < search_bits.length; i++) {
+              var bit = search_bits[i];
+              if (bit.length > 1) {
+                var re = new RegExp('(\\b' + bit + ')', "gi");
+                match_name = match_name.replace(re,'<b>$1</b>');
+              }
+            }
+            return $( "<li></li>" )
+              .data( "item.autocomplete", item )
+              .append( "<a>" + match_name + " <span class='term-id'>(" +
+                       item.id + ")</span>" + synonym_extra + warning + "</a>" )
+              .appendTo( ul );
+          };
       },
       replace: true,
       restrict: 'E',
@@ -1274,15 +1447,41 @@ var termNameComplete =
         elem.autocomplete({
           minLength: 2,
           source: make_ontology_complete_url(scope.annotationTypeName),
+          cacheLength: 100,
+          focus: ferret_choose.show_autocomplete_def,
+          close: ferret_choose.hide_autocomplete_def,
           select: function(event, ui) {
             scope.$apply(function() {
               scope.foundTermId = ui.item.id;
               scope.foundTermName = ui.item.value;
+              scope.searchString = elem.val();
+              scope.matchingSynonym = ui.item.matching_synonym;
             });
           },
-          cacheLength: 100
-        });
+        }).data("autocomplete")._renderItem = function( ul, item ) {
+          var search_string = elem.val();
+          return scope.render_term_item(ul, item, search_string);
+        };
         elem.attr('disabled', false);
+
+        function do_autocomplete (){
+          elem.focus();
+          scope.$apply(function() {
+            elem.autocomplete('search');
+          });
+        }
+
+        elem.bind('paste', function() {
+          setTimeout(do_autocomplete, 10);
+        });
+
+        elem.keypress(function(event) {
+          if (event.which == 13) {
+            // return should autocomplete not submit the form
+            event.preventDefault();
+            do_autocomplete();
+          }
+        });
       }
     };
   };

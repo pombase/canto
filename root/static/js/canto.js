@@ -99,7 +99,6 @@ var ferret_choose = {
       success: ferret_choose.store_term_data,
       async: false
     });
-    $('#ferret-term-entry').hide();
   },
 
   get_term_by_id : function(term_id) {
@@ -274,16 +273,10 @@ var ferret_choose = {
 
   render : function() {
     if (ferret_choose.term_history.length <= 1) {
-      $('#ferret-term-details').hide();
-      $('#ferret-term-entry').show();
-
       var term_input = $('#ferret-term-input');
       term_input.focus();
       term_input.autocomplete('search');
     } else {
-      $('#ferret-term-details').show();
-      $('#ferret-term-entry').hide();
-
       var term_id = last(ferret_choose.term_history);
       var term = ferret_choose.get_term_by_id(term_id);
 
@@ -464,201 +457,7 @@ var canto_util = {
   }
 };
 
-function make_ferret_name_input(search_namespace, ferret_input, select_callback) {
-  function render_term_item(ul, item, search_string, search_namespace) {
-    var search_bits = search_string.split(/\W+/);
-    var match_name = item.matching_synonym;
-    var synonym_extra = '';
-    if (match_name) {
-      synonym_extra = ' (synonym)';
-    } else {
-      match_name = item.name;
-    }
-    var warning = '';
-    if (search_namespace !== item.annotation_namespace) {
-      warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
-        item.annotation_namespace + ' term but<br/>you are browsing ' +
-        search_namespace + ' terms</span>';
-      var re = new RegExp('_', 'g');
-      // unpleasant hack to make the namespaces look nicer
-      warning = warning.replace(re,' ');
-    }
-    function length_compare(a,b) {
-      if (a.length < b.length) {
-        return 1;
-      } else {
-        if (a.length > b.length) {
-          return -1;
-        } else {
-          return 0;
-        }
-      }
-    };
-    search_bits.sort(length_compare);
-    for (var i = 0; i < search_bits.length; i++) {
-      var bit = search_bits[i];
-      if (bit.length > 1) {
-        var re = new RegExp('(\\b' + bit + ')', "gi");
-        match_name = match_name.replace(re,'<b>$1</b>');
-      }
-    }
-    return $( "<li></li>" )
-      .data( "item.autocomplete", item )
-      .append( "<a>" + match_name + " <span class='term-id'>(" +
-               item.id + ")</span>" + synonym_extra + warning + "</a>" )
-      .appendTo( ul );
-  };
-
-
-  ferret_input.autocomplete({
-    minLength: 2,
-    source: make_ontology_complete_url(search_namespace),
-    cacheLength: 100,
-    focus: ferret_choose.show_autocomplete_def,
-    close: ferret_choose.hide_autocomplete_def,
-    select: select_callback
-  }).data("autocomplete")._renderItem = function( ul, item ) {
-    var search_string = ferret_input.val();
-    return render_term_item(ul, item, search_string, search_namespace);
-  };
-
-  function do_autocomplete () {
-    ferret_input.focus();
-    ferret_input.autocomplete('search');
-  }
-
-  ferret_input.bind('paste', function() {
-      setTimeout(do_autocomplete, 10);
-    });
-
-  ferret_input.keypress(function(event) {
-      if (event.which == 13) {
-        // return should autocomplete not submit the form
-        event.preventDefault();
-        ferret_input.autocomplete('search');
-      }
-    });
-
-
-}
-
 $(document).ready(function() {
-  var ferret_input = $("#ferret-term-input");
-
-  if (ferret_input.size()) {
-    $('#loading').unbind('.canto');
-
-    var select_callback = function(event, ui) {
-      ferret_choose.term_history = [trim(ferret_input.val())];
-      ferret_choose.set_current_term(ui.item.id);
-      ferret_choose.matching_synonym = ui.item.matching_synonym;
-      return false;
-    };
-
-    make_ferret_name_input(ferret_choose.annotation_namespace, ferret_input, select_callback);
-
-    $("body").delegate("#ferret-term-children-list a", "click",
-                       ferret_choose.child_click_handler);
-    $("body").delegate("#breadcrumbs .breadcrumbs-term a", "click",
-                       ferret_choose.term_click_handler);
-    $("body").delegate("#breadcrumbs-search a", "click",
-                       ferret_choose.term_click_handler);
-
-    $("#breadcrumb-previous-button").click(function () {
-      ferret_choose.term_history.length -= 1;
-      if (ferret_choose.term_history.length > 0) {
-        if (ferret_choose.term_history.length == 1) {
-          ferret_choose.set_current_term();
-        } else {
-          ferret_choose.set_current_term(last(ferret_choose.term_history));
-        }
-      } else {
-        window.location.href = curs_root_uri;
-      }
-    });
-
-    $('#ferret-term-input').attr('disabled', false);
-
-    $('#ferret-suggest-link').click(ferret_choose.suggest_dialog);
-    $('#ferret-suggest-link-leaf').click(ferret_choose.suggest_dialog);
-
-    $("#ferret-suggest-form").validate({
-      rules: {
-        'ferret-suggest-name': "required",
-        'ferret-suggest-definition': "required"
-      },
-      messages: {
-        'ferret-suggest-name': "Please enter a name for the term",
-        'ferret-suggest-definition': "Please enter a definition for the term"
-      }
-    });
-
-    $("#curs-contact-form").validate({
-      rules: {
-        'curs-contact-name': "required",
-        'curs-contact-definition': "required"
-      },
-      messages: {
-        'curs-contact-name': "Please enter a name for the term",
-        'curs-contact-definition': "Please enter a definition for the term"
-      }
-    });
-
-    $('.canto-toggle-button').each(function (index, element) {
-      var this_id = $(element).attr('id');
-      var target = $('#' + this_id + '-target');
-      $(element).click(
-        function () {
-          target.toggle()
-        }
-      );
-      $(element).show();
-    });
-
-    $('.canto-more-button').each(function (index, element) {
-      var this_id = $(element).attr('id');
-      var target = $('#' + this_id + '-target');
-      $(element).click(
-        function () {
-          target.show()
-          $(element).hide();
-          return false;
-        }
-      );
-      $(element).show();
-    });
-
-    $(window).bind('hashchange', function(e) {
-      var state = $.bbq.getState( this.id, true );
-      var search_string = state.s;
-
-      if (search_string) {
-        if (state.c) {
-          var crumbs = trim(state.c);
-          var new_history = [search_string].concat(crumbs.split(","));
-          ferret_choose.term_history = new_history
-          $('#ferret-term-id').val(last(new_history));
-        } else {
-          ferret_choose.term_history = [search_string];
-        }
-      } else {
-        ferret_choose.term_history = [];
-      }
-
-      $('#ferret-term-input').val(search_string);
-
-      ferret_choose.render();
-    })
-
-    $(window).trigger( 'hashchange' );
-  } else {
-
-    $('#breadcrumb-previous-button').click(function () {
-      window.location.href = curs_root_uri;
-    });
-
-  }
-
   $('input[type=checkbox]').shiftcheckbox();
 
   $('a.canto-select-all').click(function () {

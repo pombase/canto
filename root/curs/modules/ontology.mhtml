@@ -13,7 +13,8 @@ $annotation_extra_help_text
 $pub
 </%args>
 
-<div id="ferret-suggest" style="display: none">
+<div ng-controller="OntologyTermLocatorCtrl">
+<div style="display: none" id="ferret-suggest">
   <form id="ferret-suggest-form" action="?" method="post">
     <input type="hidden" id="ferret-suggest-term-id" name="ferret-term-id"/>
     <table>
@@ -41,10 +42,8 @@ that differentiate your new term "A" from other members of the group "B")&rdquo;
 
 <div id="ferret">
   <form id="ferret-form" action="?" method="post">
+    <div ng-hide="data.term_ontid" id="ferret-term-entry" class="curs-box">
 
-    <input type="hidden" id="ferret-term-id" name="ferret-term-id"/>
-
-    <div id="ferret-term-entry" class="curs-box">
       <div class="inline-help curs-box-title">
 Search for <% $current_component_display_name %> term
 <& /curs/inline_help.mhtml, key => "${current_component}_definition" &>
@@ -86,13 +85,17 @@ Gene products may be annotated with multiple
         <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
           <% $annotation_help_text %>
         </div>
-        <input id="ferret-term-input" name="ferret-term-entry"
-               type="text" size="50" disabled="true"
-               placeholder="start typing and suggestions will be made ..." />
+        <term-name-complete id="ferret-term-input" name="ferret-term-entry"
+                            current-term-name=""
+                            found-term-id="data.term_ontid"
+                            found-term-name="data.term_name"
+                            search-string="data.searchString"
+                            matching-synonym="data.matchingSynonym"
+                            annotation-type-name="{{annotationTypeName}}"></term-name-complete>
       </div>
     </div>
 
-    <div id="ferret-term-details" style="display: none" class="curs-box">
+    <div ng-show="data.term_ontid" id="ferret-term-details" class="curs-box">
       <div id="ferret-help-step-1" class="inline-help curs-box-title">
 Please read the definition of the currently selected term to ensure that
 it accurately describes your gene:
@@ -201,6 +204,7 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
       </div>
     </div>
   </form>
+</div>
 </div>
 
 <script language="javascript" type="text/javascript">
