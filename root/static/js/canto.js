@@ -67,9 +67,9 @@ var ferret_choose = {
   // the synonym we match when searching, if any
   matching_synonym : undefined,
 
-  initialise : function(annotation_type, annotation_namespace) {
+  initialise : function(annotation_type_name, annotation_namespace) {
     ferret_choose.ontology_complete_url = make_ontology_complete_url(annotation_type);
-    ferret_choose.annotation_type = annotation_type;
+    ferret_choose.annotation_type_name = annotation_type_name;
     ferret_choose.annotation_namespace = annotation_namespace;
   },
 

@@ -382,12 +382,29 @@ canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster'
 
 var OntologyTermLocatorCtrl =
   function($scope, CantoGlobals) {
+    $scope.data = {
+      termConfirmed: false
+    };
+
+    $scope.confirmTerm = function() {
+      $scope.data.termConfirmed = true;
+    };
+
+    $scope.unconfirmTerm = function() {
+      $scope.data.termConfirmed = false;
+    };
+
+    $scope.unsetTerm = function() {
+      $scope.data.term_name = '';
+      $scope.data.term_ontid = '';
+    };
+
     $scope.back = function() {
       history.go(-1);
     };
 
     $scope.init = function() {
-      $scope.annotationTypeName = CantoGlobals.ferret_choose.annotation_namespace;
+      $scope.annotationTypeName = CantoGlobals.ferret_choose.annotation_type_name;
 
       var ferret_input = $("#ferret-term-input");
 
@@ -504,28 +521,36 @@ canto.controller('OntologyTermLocatorCtrl',
                  ['$scope', 'CantoGlobals', OntologyTermLocatorCtrl]);
 
 
-var annotationEvidenceCtrl =
-  function($scope, AnnotationTypeConfig, $attrs) {
-    AnnotationTypeConfig.getByName($attrs.annotationTypeName)
-      .then(function(annotationType) {
-        $scope.annotationType = annotationType;
-      });
+var annotationEvidence =
+  function(AnnotationTypeConfig) {
+    var directive = {
+      scope: {
+        annotationTypeName: '@',
+        featureDisplayName: '@',
+        termOntid: '@'
+      },
+      restrict: 'E',
+      replace: true,
+      controller: function($scope) {
+        $scope.annotationType = '';
 
-    $scope.annotationType = '';
-    $scope.data = { conditions: [] };
+        AnnotationTypeConfig.getByName($scope.annotationTypeName)
+          .then(function(annotationType) {
+            $scope.annotationType = annotationType;
+          });
 
-    $scope.isValidEvidence = function() {
-      return $scope.data.evidence_code;
+        $scope.data = { conditions: [] };
+
+        $scope.isValidEvidence = function() {
+          return $scope.data.evidence_code;
+        };
+      },
+      templateUrl: app_static_path + 'ng_templates/annotation_evidence.html'
     };
+    return directive;
+  };
 
-    $scope.back = function() {
-      history.go(-1);
-    }
-  }
-
-canto.controller('AnnotationEvidenceCtrl',
-                 ['$scope', 'AnnotationTypeConfig', '$attrs',
-                  annotationEvidenceCtrl]);
+canto.directive('annotationEvidence', ['AnnotationTypeConfig', annotationEvidence]);
 
  var conditionPicker =
    function(CursConditionList, toaster) {
@@ -1038,14 +1063,14 @@ canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
 
     return this.listPromise;
   };
-  this.getByName = function(typeName) {
+  this.getByKeyValue = function(key, value) {
     var q = $q.defer();
 
     this.getAll().success(function(annotationTypeList) {
       var filteredAnnotationTypes =
         $.grep(annotationTypeList,
                function(annotationType) {
-                 return annotationType.name === typeName;
+                 return annotationType[key] === value;
                });
       if (filteredAnnotationTypes.length > 0){
         q.resolve(filteredAnnotationTypes[0]);
@@ -1057,6 +1082,13 @@ canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
     });
 
     return q.promise;
+
+  }
+  this.getByName = function(typeName) {
+    return this.getByKeyValue('name', typeName);
+  };
+  this.getByNamespace = function(namespace) {
+    return this.getByKeyValue('namespace', namespace);
   };
 });
 
@@ -1411,7 +1443,7 @@ var termNameComplete =
       controller: function($scope) {
         $scope.render_term_item =
           function(ul, item, search_string) {
-            var search_namespace = $scope.annotationTypeName;
+            var searchAnnotationTypeName = $scope.annotationTypeName;
             var search_bits = search_string.split(/\W+/);
             var match_name = item.matching_synonym;
             var synonym_extra = '';
@@ -1421,9 +1453,9 @@ var termNameComplete =
               match_name = item.name;
             }
             var warning = '';
-            if (search_namespace !== item.annotation_namespace) {
+            if (searchAnnotationTypeName !== item.annotation_type_name) {
               warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
-                item.annotation_namespace + ' term but<br/>you are browsing ' +
+                item.annotation_type_name + ' term but<br/>you are browsing ' +
                 search_namespace + ' terms</span>';
               var re = new RegExp('_', 'g');
               // unpleasant hack to make the namespaces look nicer

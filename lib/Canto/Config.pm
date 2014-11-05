@@ -300,6 +300,8 @@ sub setup
       }
       $self->{annotation_types}->{$annotation_type_name} = $annotation_type;
       $annotation_type->{namespace} //= $annotation_type->{name};
+      $self->{annotation_types_by_namespace}->{$annotation_type->{namespace}} =
+        $annotation_type;
 
       # if any evidence code for this type needs a with or from field, set
       # needs_with_or_from in the type

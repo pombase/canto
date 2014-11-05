@@ -1107,6 +1107,9 @@ sub annotation_ontology_edit
   $st->{annotation_extra_help_text} = $annotation_extra_help_text;
   $st->{template} = "curs/modules/$module_category.mhtml";
 
+  my $display_name = $st->{feature}->display_name();
+  $st->{feature_display_name} = $display_name;
+
   my $form = $self->form();
 
   my @all_elements = (
@@ -1517,7 +1520,7 @@ sub _generate_evidence_options
   return @codes;
 }
 
-sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
+sub annotation_evidence : Chained('annotation') PathPart('evidence')
 {
   my ($self, $c) = @_;
 
@@ -1570,172 +1573,8 @@ sub annotation_evidence : Chained('annotation') PathPart('evidence') Form
   my $evidence_types = $config->{evidence_types};
 
   my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
-  my $form = $self->form();
 
-  $form->attributes({ action => '?',
-                      'ng-controller' => "AnnotationEvidenceCtrl" });
-
-  my $needs_conditions = $annotation_type_config->{feature_type} eq 'genotype';
-
-  my @condition_elements;
-
-  if ($needs_conditions) {
-    @condition_elements = (
-      {
-        type => 'Block',
-        tag => 'condition-picker',
-        attributes => {
-          conditions => "conditions"
-        }
-      }
-    );
-  } else {
-    @condition_elements = ();
-  }
-
-  my $form_back_string = '<- Back';
-  my $form_proceed_string = 'Proceed ->';
-
-  my @all_elements = (
-      {
-        name => 'evidence-select',
-        type => 'Select', options => [ @codes ],
-        default => $annotation_data->{evidence_code},
-      },
-      {
-        type => 'Block',
-        tag => 'div',
-        attributes => { class => 'clearall', },
-      },
-      @condition_elements,
-      {
-        name => 'evidence-submit-back', type => 'Submit', value => $form_back_string,
-        attributes => { class => 'btn btn-primary curs-back-button', },
-      },
-      {
-        name => 'evidence-submit-proceed', type => 'Submit', value => $form_proceed_string,
-        attributes => { class => 'btn btn-primary curs-finish-button', },
-      },
-    );
-
-  $form->elements([@all_elements]);
-
-  $form->process();
-
-  $st->{form} = $form;
-
-  if ($form->submitted_and_valid()) {
-    my $data = $annotation->data();
-    my $evidence_select = $form->param_value('evidence-select');
-
-    if ($evidence_select eq '') {
-      $c->flash()->{error} = 'Please choose an evidence type to continue';
-      _redirect_and_detach($c, 'annotation', $annotation_id, 'evidence');
-    }
-
-    my $evidence_submit_back = $c->req->params->{'evidence-submit-back'};
-    my $evidence_submit_proceed = $c->req->params->{'evidence-submit-proceed'};
-    if (!defined $evidence_submit_proceed && !defined $evidence_submit_back) {
-      _redirect_and_detach($c, 'annotation', $annotation_id, 'evidence');
-    }
-
-    my $params = $c->req()->params();
-
-    my $condition_list = $params->{'curs-allele-condition-names'};
-
-    if (defined $condition_list) {
-      if (ref $condition_list) {
-        # it's already a list
-      } else {
-        $condition_list = [$condition_list];
-      }
-    } else {
-      $condition_list = [];
-    }
-
-    my $existing_evidence_code = $data->{evidence_code};
-
-    if (defined $evidence_submit_back) {
-      my $gene_id = $gene->gene_id();
-
-      if (defined $existing_evidence_code) {
-         _redirect_and_detach($c, 'feature', 'gene', $gene_id, 'view');
-     } else {
-        $self->_delete_annotation($c, $annotation_id);
-        _redirect_and_detach($c, 'annotation', 'new', $gene_id, $annotation_type_name);
-      }
-    }
-
-    $data->{evidence_code} = $evidence_select;
-
-    my $needs_with_gene = $evidence_types->{$evidence_select}->{with_gene};
-
-    if (!$needs_with_gene) {
-      delete $data->{with_gene};
-    }
-
-    $data->{conditions} = $condition_list;
-
-    $annotation->data($data);
-    $annotation->update();
-
-    my @annotation_ids = ($annotation->annotation_id());
-
-    # Hack to cope with interactions: at this stage we potentially
-    # have one Annotation object for multiple interactions (one bait,
-    # multi prey) because the user can choose more than one prey.
-    # After choosing the evidence, delete the original Annotation and
-    # create one per prey.
-    if ($module_category eq 'interaction') {
-      my @interacting_genes = @{$data->{interacting_genes}};
-
-      if (@interacting_genes > 1) {
-        my $bait_gene = $annotation->genes()->first();
-        delete $data->{interacting_genes};
-
-        my @new_annotations =
-          map {
-            my $data_clone = clone $data;
-
-            $data_clone->{interacting_genes} = [$_];
-
-            my $new_annotation =
-              $schema->create_with_type('Annotation',
-                                        {
-                                          type => $annotation->type(),
-                                          status => $annotation->status(),
-                                          pub => $annotation->pub(),
-                                          creation_date => Canto::Curs::Utils::get_iso_date(),
-                                          data => $data_clone,
-                                        });
-
-            $new_annotation->set_genes($bait_gene);
-
-            $new_annotation;
-          } @interacting_genes;
-
-        $annotation->delete();
-
-        @annotation_ids = map{ $_->annotation_id(); } @new_annotations;
-
-        $annotation = $new_annotations[0];
-
-        $_debug_annotation_ids = [@annotation_ids];
-      }
-    }
-
-    $self->state()->store_statuses($schema);
-
-    if ($needs_with_gene) {
-      my @parts = ('annotation', $annotation_id, 'with_gene');
-      if (defined $existing_evidence_code) {
-        push @parts, 'edit';
-      }
-      _redirect_and_detach($c, @parts);
-    } else {
-      _maybe_transfer_annotation($c, [$annotation], $annotation_config);
-    }
-  }
+  die "UNIMPLEMENTED";
 }
 
 sub allele_remove_action : Chained('annotation') PathPart('remove_allele_action') Args(1)
