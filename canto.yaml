@@ -1627,6 +1627,7 @@ config_service:
     annotation_type_list: 1
     curs_config: 1
     evidence_types: 1
+    ontology_external_links: 1
 
 ontology_external_links:
   cellular_component:
