@@ -1401,21 +1401,6 @@ sub annotation : Chained('top') CaptureArgs(1)
   $st->{annotation} = $annotations[0];
 }
 
-sub existing_annotation_edit : Chained('annotation') PathPart('edit') Args(1) Form
-{
-  my ($self, $c) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $annotation = $st->{annotation};
-  my $annotation_type_name = $annotation->type();
-  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
-
-  _annotation_edit($self, $c, $annotation_config, $annotation);
-}
-
 =head2 annotation_features
 
  Usage   : my ($feature_type, @features) =
@@ -1681,31 +1666,6 @@ sub _set_allele_select_stash
 
     $st->{evidence_select_options} = \@evidence_codes;
   }
-}
-
-sub annotation_multi_allele_select : Chained('annotation') PathPart('multi_allele_select')
-{
-  my ($self, $c) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  $st->{title} = 'Allele selection';
-  $st->{show_title} = 0;
-  $st->{template} = "curs/modules/ontology_multi_allele_select.mhtml";
-
-  my $annotation = $st->{annotation};
-  my $annotation_id = $annotation->annotation_id();
-
-  my $annotation_type_name = $annotation->type();
-  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
-
-  my $data = $annotation->data();
-
-  _set_allele_select_stash($c, $annotation_type_name);
-
-  $st->{annotation_genes} = [map { _get_gene_proxy($config, $_); } $annotation->genes()];
 }
 
 sub _create_allele_uniquename: Private
