@@ -8,9 +8,21 @@ $genotype
 <div id="curs-annotation-actions">
 <div class="curs-box">
   <div class="curs-box-title">
-Action
+Details
   </div>
   <div class="curs-box-body">
+    <table class="curs-definition-table">
+      <tbody>
+        <tr>
+          <td class="title">
+Name
+          </td>
+          <td>
+<% $genotype->name() || '[no name]' %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   <ul class="annotation-start">
 % for my $annotation_type (@types_to_show) {
 %   my $annotation_type_name = $annotation_type->{name};
@@ -56,26 +68,6 @@ Alleles
    <br/>
 % }
     </div>
-  </div>
-</div>
-
-<div id="curs-genotype-details" class="curs-box">
-  <div class="curs-box-title">
-Details
-  </div>
-  <div class="curs-box-body">
-    <table class="curs-definition-table">
-      <tbody>
-        <tr>
-          <td class="title">
-Name
-          </td>
-          <td>
-<% $genotype->name() || '[no name]' %>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </div>
 

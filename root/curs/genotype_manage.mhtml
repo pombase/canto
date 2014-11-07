@@ -5,6 +5,89 @@ $is_admin_session
 $read_only_curs => 0
 </%args>
 
-<div id="curs-genotype-list">
-<& /curs/genotype_list.mhtml, pub => $pub &>
+<div id="curs-genotype-manage" class="genotype-list curs-box">
+  <div class="curs-box-title">
+    <div>
+% if ($read_only_curs) {
+Genotypes from this publication
+% } else {
+Genotype list
+% }
+    <& /curs/inline_help.mhtml, key => 'choose_genotype' &>
+    </div>
+  </div>
+  <div class="curs-box-body">
+% if (@genotype_hashes) {
+% if (!$read_only_curs) {
+   <div class="curs-genotype-list-instructions">
+Click on a genotype name to add a phenotype
+   </div>
+% }
+  <table class="list">
+    <thead>
+      <tr>
+        <td>
+          Name
+        </td>
+        <td>
+          Annotation count
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+%   for my $genotype (@genotype_hashes) {
+    <tr>
+      <td>
+% if (!$read_only_curs) {
+        <a href="<% $start_path . '/feature/genotype/view/' . $genotype->{genotype_id} %>"
+% }
+          <span>
+            <% $genotype->{display_name} %>
+          </span>
+% if (!$read_only_curs) {
+        </a>
+% }
+      </td>
+      <td>
+        <% $genotype->{annotation_count} %>
+      </td>
+    </tr>
+%   }
+  </tbody>
+  </table>
+% } else {
+  <div>
+    No genotypes - add a genotype to make a phenotype annotation.
+  </div>
+% }
+
+  <div class="feature-list-action">
+    <a href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
+  </div>
+</div>
+</div>
+
+
+<%init>
+use Canto::Curs;
+
+my $schema = $c->stash()->{schema};
+my $config = $c->config();
+
+my @all_genotypes = $schema->resultset('Genotype')->all();
+
+my @genotype_hashes = map {
+  my @annotations = $_->annotations();
+  my $annotation_count = scalar(@annotations);
+  {
+    identifier => $_->identifier(),
+    display_name => $_->display_name(),
+    name => $_->name(),
+    genotype_id => $_->genotype_id(),
+    annotation_count => $annotation_count,
+  }
+} @all_genotypes;
+
+my $start_path = $c->stash()->{curs_root_uri};
+</%init>
 </div>
