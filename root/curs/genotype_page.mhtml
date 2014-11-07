@@ -16,7 +16,7 @@ Action
 %   my $annotation_type_name = $annotation_type->{name};
 %   my $title = $annotation_type->{help_text} // '';
 %   my $action_path = $curs_root_uri . '/feature/genotype/annotate/' . $genotype_id;
-%     $action_path .= "/choose_term/$annotation_type_name";
+%     $action_path .= "/start/$annotation_type_name";
 %   my $type_display_name = $annotation_type->{display_name};
     <li>
 %   if (!$annotation_type->{disabled}) {

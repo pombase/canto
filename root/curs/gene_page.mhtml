@@ -21,7 +21,7 @@ Choose curation type for <% $gene->display_name() %>:
 %   next if $annotation_type->{feature_type} ne 'gene';
 %   my $annotation_type_name = $annotation_type->{name};
 %   my $action_path = "$curs_root_uri/feature/gene/annotate/$gene_id/" .
-%     "choose_term/$annotation_type_name";
+%     "start/$annotation_type_name";
 %   my $title = $annotation_type->{help_text} // '';
 %   my $type_display_name = $annotation_type->{display_name};
     <li>

@@ -381,9 +381,10 @@ var featureChooser =
 canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
 
 var OntologyTermLocatorCtrl =
-  function($scope, CantoGlobals) {
+  function($scope, CantoGlobals, $http, toaster) {
     $scope.data = {
-      termConfirmed: false
+      termConfirmed: false,
+      conditions: [],
     };
 
     $scope.confirmTerm = function() {
@@ -401,6 +402,13 @@ var OntologyTermLocatorCtrl =
 
     $scope.back = function() {
       history.go(-1);
+    };
+
+    $scope.setTermAndEvidence = function() {
+      simpleHttpPost(toaster, $http, '../set_term/' + $scope.annotationTypeName,
+                     { term_ontid: $scope.data.term_ontid,
+                       evidence: $scope.data.evidence_code,
+                       conditions: $scope.data.conditions, });
     };
 
     $scope.init = function() {
@@ -518,16 +526,18 @@ var OntologyTermLocatorCtrl =
   };
 
 canto.controller('OntologyTermLocatorCtrl',
-                 ['$scope', 'CantoGlobals', OntologyTermLocatorCtrl]);
+                 ['$scope', 'CantoGlobals', '$http', 'toaster', OntologyTermLocatorCtrl]);
 
 
 var annotationEvidence =
   function(AnnotationTypeConfig) {
     var directive = {
       scope: {
+        evidenceCode: '=',
+        conditions: '=',
         annotationTypeName: '@',
         featureDisplayName: '@',
-        termOntid: '@'
+        termOntid: '@',
       },
       restrict: 'E',
       replace: true,
@@ -539,10 +549,8 @@ var annotationEvidence =
             $scope.annotationType = annotationType;
           });
 
-        $scope.data = { conditions: [] };
-
         $scope.isValidEvidence = function() {
-          return $scope.data.evidence_code;
+          return $scope.evidence_code;
         };
       },
       templateUrl: app_static_path + 'ng_templates/annotation_evidence.html'

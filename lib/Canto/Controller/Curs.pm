@@ -1062,7 +1062,7 @@ sub _create_annotation
 
 sub annotation_ontology_edit
 {
-  my ($self, $c, $feature, $annotation_config, $annotation) = @_;
+  my ($self, $c, $feature, $annotation_config) = @_;
 
   my $module_display_name = $annotation_config->{display_name};
 
@@ -1109,98 +1109,11 @@ sub annotation_ontology_edit
 
   my $display_name = $st->{feature}->display_name();
   $st->{feature_display_name} = $display_name;
-
-  my $form = $self->form();
-
-  my @all_elements = (
-      {
-        name => 'ferret-term-id', label => 'ferret-term-id',
-        type => 'Hidden',
-      },
-      {
-        name => 'ferret-suggest-name', label => 'ferret-suggest-name',
-        label_tag => 'formfu-label',
-        type => 'Text',
-      },
-      {
-        name =>'ferret-suggest-definition',
-        label => 'ferret-suggest-definition',
-        label_tag => 'formfu-label',
-        type => 'Text',
-      },
-      {
-        name => 'ferret-submit', type => 'Submit',
-      }
-    );
-
-  $form->elements([@all_elements]);
-  $form->process();
-  $st->{form} = $form;
-
-  if ($form->submitted_and_valid()) {
-    my $term_ontid = $form->param_value('ferret-term-id');
-    my $submit_value = $form->param_value('ferret-submit');
-
-    my %annotation_data = (term_ontid => $term_ontid);
-
-    if ($submit_value eq 'Submit suggestion') {
-      my $suggested_name = $form->param_value('ferret-suggest-name');
-      my $suggested_definition =
-        $form->param_value('ferret-suggest-definition');
-
-      $suggested_name = trim($suggested_name);
-      $suggested_definition = trim($suggested_definition);
-
-      $annotation_data{term_suggestion} = {
-        name => $suggested_name,
-        definition => $suggested_definition
-      };
-
-      $c->flash()->{message} = 'Note that your term suggestion has been '
-        . "stored, but the $feature_type will be temporarily "
-        . 'annotated with the parent of your suggested new term';
-    }
-
-    my $is_new_annotation = 0;
-
-    if (defined $annotation) {
-      $self->_update_annotation($c, $annotation, \%annotation_data);
-      _redirect_and_detach($c, $feature_type, $feature_id);
-    } else {
-      my $annotation =
-        $self->_create_annotation($c, $annotation_type_name,
-                                  $feature_type, [$feature], \%annotation_data);
-
-      _redirect_and_detach($c, 'annotation', $annotation->annotation_id(), 'evidence');
-    }
-  } else {
-    if (defined $annotation) {
-      my $data = $annotation->data();
-
-      # my @genes = $annotation->genes();
-
-      # if (@genes) {
-      #   my $gene = $genes[0];
-      #   my $gene_proxy = _get_gene_proxy($c->config(), $gene);
-      #   $c->stash()->{message} = 'Editing annotation of ' .
-      #     $gene_proxy->display_name() . ' with ' . $data->{term_ontid};
-      # } else {
-      #   my $allele = ($annotation->alleles())[0];
-      #   $c->stash()->{message} = 'Editing annotation of ' .
-      #     $allele->display_name() . ' with ' . $data->{term_ontid};
-      # }
-die "unimplemented";
-    }
-  }
 }
 
 sub annotation_interaction_edit
 {
-  my ($self, $c, $gene_proxy, $annotation_config, $annotation_id) = @_;
-
-  if (defined $annotation_id) {
-    die "can't edit interactions yet";
-  }
+  my ($self, $c, $gene_proxy, $annotation_config) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
@@ -1311,38 +1224,6 @@ sub _get_gene_proxy
                                       cursdb_gene => $gene);
 }
 
-# if $annotation is undef, create a new Annotation
-sub _annotation_edit
-{
-  my ($self, $c, $annotation_config, $annotation) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $feature = $st->{feature};
-  my @features = @{$st->{features}};
-
-  my $annotation_display_name = $annotation_config->{display_name};
-
-  my $display_names = join ',', map {
-    $_->display_name();
-  } @features;
-
-  $st->{title} = "Curating $annotation_display_name for $display_names\n";
-  $st->{show_title} = 0;
-
-  my %type_dispatch = (
-    ontology => \&annotation_ontology_edit,
-    interaction => \&annotation_interaction_edit,
-  );
-
-  $self->state()->store_statuses($schema);
-
-  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $feature,
-                                                    $annotation_config,
-                                                    $annotation);
-}
 
 sub annotate : Chained('feature') CaptureArgs(1)
 {
@@ -1363,29 +1244,39 @@ sub annotate : Chained('feature') CaptureArgs(1)
   $st->{features} = [$feature];
 }
 
-sub _new_annotation_impl
+sub start_annotation : Chained('annotate') PathPart('start') Args(1)
 {
   my ($self, $c, $annotation_type_name) = @_;
 
-  my $st = $c->stash();
   my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $feature = $st->{feature};
+  my @features = @{$st->{features}};
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
   $st->{annotation_type_config} = $annotation_config;
+  $st->{annotation_type_name} = $annotation_type_name;
 
-  _annotation_edit($self, $c, $annotation_config);
-}
+  my $annotation_display_name = $annotation_config->{display_name};
 
-# args:
-#   $annotation_type_name - the name from the annotation configuration
-sub new_annotation_choose_term : Chained('annotate') PathPart('choose_term') Args(1) Form
-{
-  _new_annotation_impl(@_);
-}
+  my $display_names = join ',', map {
+    $_->display_name();
+  } @features;
 
-sub new_interaction_annotation : Chained('annotate') PathPart('interaction') Args(1) Form
-{
-  _new_annotation_impl(@_);
+  $st->{title} = "Curating $annotation_display_name for $display_names\n";
+  $st->{show_title} = 0;
+
+  my %type_dispatch = (
+    ontology => \&annotation_ontology_edit,
+    interaction => \&annotation_interaction_edit,
+  );
+
+  $self->state()->store_statuses($schema);
+
+  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $feature,
+                                                    $annotation_config);
 }
 
 sub annotation : Chained('top') CaptureArgs(1)
@@ -1444,7 +1335,7 @@ sub _maybe_transfer_annotation
   my $current_user = $c->user();
 
   if ($annotation_config->{category} eq 'ontology' && $feature_type eq 'gene') {
-    _redirect_and_detach($c, 'annotation', (join ',', map { $_->annotation_id(); } @$annotations), 'transfer');
+    die "internal error - this shouldn't be called for ontologies";
   } else {
     _redirect_and_detach($c, 'feature', $feature_type, 'view', $feature->feature_id());
   }
@@ -1505,61 +1396,85 @@ sub _generate_evidence_options
   return @codes;
 }
 
-sub annotation_evidence : Chained('annotation') PathPart('evidence')
+sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $annotation_type_name) = @_;
 
   my $config = $c->config();
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $annotation = $st->{annotation};
-  my $annotation_id = $annotation->annotation_id();
-  my $annotation_type_name = $annotation->type();
+  my $body_data = _decode_json_content($c);
 
-  my $gene = $annotation->genes()->first();
-  if (defined $gene) {
-    my $gene_proxy = _get_gene_proxy($config, $gene);
-    $st->{gene} = $gene_proxy;
-    $st->{feature} = $gene_proxy;
-  } else {
-    my $genotype = $annotation->genotypes()->first();
-    $st->{genotype} = $genotype;
-    $st->{feature} = $genotype;
+  my $term_ontid = $body_data->{term_ontid};
+  my $evidence_code = $body_data->{evidence_code};
+
+  my @conditions = ();
+
+  if (defined $body_data->{conditions}) {
+    @conditions = @{$body_data->{conditions}};
   }
 
-  my $display_name = $st->{feature}->display_name();
-  $st->{display_name} = $display_name;
-
-  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+  my $annotation_config = $st->{annotation_type_config};
+  my $feature_type = $st->{feature_type};
+  my $feature = $st->{feature};
 
   my $module_category = $annotation_config->{category};
 
   $st->{annotation_config} = $annotation_config;
   $st->{annotation_category} = $module_category;
 
-  my $annotation_data = $annotation->data();
-  my $term_ontid = $annotation_data->{term_ontid};
+  my %annotation_data = (term_ontid => $term_ontid);
 
-  if (defined $term_ontid) {
-    $st->{title} = "Evidence for annotating $display_name with $term_ontid";
-  } else {
-    $st->{title} = "Evidence for annotating $display_name";
-  }
+  # if ('Submit suggestion') {
+  #   my $suggested_name = $form->param_value('ferret-suggest-name');
+  #   my $suggested_definition =
+  #     $form->param_value('ferret-suggest-definition');
+
+  #   $suggested_name = trim($suggested_name);
+  #   $suggested_definition = trim($suggested_definition);
+
+  #   $annotation_data{term_suggestion} = {
+  #     name => $suggested_name,
+  #     definition => $suggested_definition
+  #   };
+
+  #   $c->flash()->{message} = 'Note that your term suggestion has been '
+  #     . "stored, but the $feature_type will be temporarily "
+  #       . 'annotated with the parent of your suggested new term';
+  # }
 
   $st->{show_title} = 0;
 
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
-  $st->{template} = "curs/modules/${module_category}_evidence.mhtml";
-  $st->{annotation} = $annotation;
 
   my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
   my $evidence_types = $config->{evidence_types};
 
   my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
 
-  die "UNIMPLEMENTED";
+
+  my $annotation =
+    $self->_create_annotation($c, $annotation_type_name,
+                                  $feature_type, [$feature], \%annotation_data);
+
+
+  if ($feature_type eq 'gene') {
+    $c->stash->{json_data} = {
+      status => "success",
+      location => $st->{curs_root_uri} . "/annotation/" .
+        $annotation->annotation_id() . "/transfer",
+    };
+  } else {
+    $c->stash->{json_data} = {
+      status => "success",
+      location => $st->{curs_root_uri} . "/feature/$feature_type/view/" .
+        $feature->feature_id(),
+    };
+  }
+
+  $c->forward('View::JSON');
 }
 
 sub allele_remove_action : Chained('annotation') PathPart('remove_allele_action') Args(1)
@@ -2322,14 +2237,9 @@ sub feature_add : Chained('feature') PathPart('add')
   $st->{template} = "curs/${feature_type}_add.mhtml";
 }
 
-sub genotype_store : Chained('feature') PathPart('store')
+sub _decode_json_content
 {
-
-  my ($self, $c) = @_;
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $config = $c->config();
+  my $c = shift;
 
   my $content_file = $c->req()->body();
   my $json_content;
@@ -2343,7 +2253,19 @@ sub genotype_store : Chained('feature') PathPart('store')
     $json_content = <$fh>;
   }
 
-  my $body_data = decode_json($json_content);
+  return decode_json($json_content);
+}
+
+sub genotype_store : Chained('feature') PathPart('store')
+{
+
+  my ($self, $c) = @_;
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $config = $c->config();
+
+  my $body_data = _decode_json_content($c);
 
   my @alleles_data = @{$body_data->{alleles}};
   my $genotype_name = $body_data->{genotype_name};

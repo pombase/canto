@@ -211,16 +211,19 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
 
 <div ng-show="data.termConfirmed" class="ng-cloak">
 
-<annotation-evidence annotation-type-name="{{annotationTypeName}}"
-                     termOntid="{{data.term_ontid}}"
-                     feature-display-name="<% $feature_display_name %>"></annotation-evidence>
+  <annotation-evidence evidence-code="data.evidence_code"
+                       conditions="data.conditions"
+                       annotation-type-name="{{annotationTypeName}}"
+                       termOntid="{{data.term_ontid}}"
+                       feature-display-name="<% $feature_display_name %>"></annotation-evidence>
 
 <button type="submit" class="btn btn-primary curs-back-button"
         title="&lt;- Back"
         ng-click="unconfirmTerm()">&lt;- Back</button>
 <button type="submit" class="btn btn-primary curs-finish-button"
-        ng-click="setEvidence()" >Proceed -&gt;</button>
+        ng-click="setTermAndEvidence()" >Proceed -&gt;</button>
 
+</div>
 </div>
 
 <script language="javascript" type="text/javascript">
