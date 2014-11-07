@@ -210,7 +210,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if ($state eq SESSION_ACCEPTED &&
-      $path =~ m:/(gene_upload|edit_genes|confirm_genes|finish_form):) {
+      $path =~ m:/(gene_upload|edit_genes|genotype_manage|confirm_genes|finish_form):) {
     $use_dispatch = 0;
   }
   if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
@@ -826,6 +826,21 @@ sub gene_upload : Chained('top') Args(0) Form
     }
   }
 }
+
+sub genotype_manage : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Manage genotypes for: ' . $st->{pub}->uniquename();
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/genotype_manage.mhtml';
+
+
+}
+
+
 
 sub _delete_annotation : Private
 {

@@ -1,0 +1,10 @@
+<%args>
+$curs_root_uri
+$pub
+$is_admin_session
+$read_only_curs => 0
+</%args>
+
+<div id="curs-genotype-list">
+<& /curs/genotype_list.mhtml, pub => $pub &>
+</div>

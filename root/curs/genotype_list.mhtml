@@ -44,11 +44,12 @@ Click on a genotype name to add a phenotype
   </div>
 % }
 
-  <div class="feature-list-edit-add">
+  <div class="feature-list-action">
     <a href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
   </div>
-  </div>
 </div>
+</div>
+
 
 <%init>
 use Canto::Curs;

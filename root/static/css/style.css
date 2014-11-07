@@ -612,7 +612,7 @@ div.clearall {
   margin-bottom: 10px;
 }
 
-.feature-list-edit-add {
+.feature-list-action {
   font-size: 85%;
   margin: 12px 2px 0px 2px;
 }
@@ -924,7 +924,7 @@ span.canto-select-buttons {
 #curs-gene-list, #curs-genotype-list, #curs-annotation-actions, #curs-front-page .pub-title, #curs-gene-details, #curs-genotype-details {
   font-size: 90%;
   float: left;
-  width: 30%;
+  width: 45%;
   margin-right: 2%;
 }
 

@@ -9,7 +9,7 @@ $pub
 % if ($read_only_curs) {
 Genes from this publication
 % } else {
-Gene list
+Genes and genotypes
 % }
     <& /curs/inline_help.mhtml, key => 'choose_gene' &>
     </div>
@@ -52,11 +52,15 @@ Click on a gene name to start entering data
 % }
 
 % if (!$read_only_curs) {
-  <div class="feature-list-edit-add">
+  <div class="feature-list-action">
     <a href="<% $edit_path %>">Edit gene list ...</a>
+  </div>
+  <div class="feature-list-action">
+    <a href="<% $genotype_manage %>">Genotype management ...</a>
   </div>
 % }
   </div>
+</div>
 </div>
 
 <%init>
@@ -98,6 +102,7 @@ if (@gene_hashes <= 5) {
 
 my $start_path = $c->stash()->{curs_root_uri};
 my $edit_path = "$start_path/edit_genes";
+my $genotype_manage = "$start_path/genotype_manage";
 
 my $row_max = int((@gene_hashes + 1) / 2);
 my $col_count = 2;

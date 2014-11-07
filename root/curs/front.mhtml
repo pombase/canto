@@ -15,9 +15,6 @@ $total_annotation_count
 <div id="curs-gene-list">
 <& /curs/gene_list.mhtml, pub => $pub &>
 </div>
-<div id="curs-genotype-list">
-<& /curs/genotype_list.mhtml, pub => $pub &>
-</div>
 
 <& /pub_details.mhtml, pub => $pub &>
 
