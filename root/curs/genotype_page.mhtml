@@ -92,12 +92,7 @@ my $genotype_id = $genotype->genotype_id();
 my $st = $c->stash();
 
 my $genotype_count = $st->{genotype_count};
-my $finish_text;
-if ($genotype_count > 1) {
-  $finish_text = 'Change genotype';
-} else {
-  $finish_text = 'Back to summary';
-}
+my $finish_text = '<- Back to summary';
 
 my @types_to_show = grep {
   $_->{feature_type} eq 'genotype'

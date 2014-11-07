@@ -106,12 +106,8 @@ if (defined $org_config) {
 my $st = $c->stash();
 
 my $gene_count = $st->{gene_count};
-my $finish_text;
-if ($gene_count > 1) {
-  $finish_text = 'Change gene';
-} else {
-  $finish_text = 'Back to summary';
-}
+my $finish_text = '<- Back to summary';
+
 my $is_admin = $st->{is_admin_user};
 
 my $genes_in_session = $st->{genes_in_session};
