@@ -550,7 +550,7 @@ var annotationEvidence =
           });
 
         $scope.isValidEvidence = function() {
-          return $scope.evidence_code;
+          return $scope.evidenceCode;
         };
       },
       templateUrl: app_static_path + 'ng_templates/annotation_evidence.html'
