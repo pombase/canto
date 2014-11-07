@@ -17,7 +17,10 @@ Choose evidence for annotating {{featureDisplayName}} with {{termOntid}}
       </div>
 
       <div ng-show="annotationType.feature_type === 'genotype'">
-        <condition-picker conditions="conditions"></condition-picker>
+        <div class="curs-evidence-conditions">
+Please add experimental conditions:
+          <condition-picker conditions="conditions"></condition-picker>
+        </div>
       </div>
     </div>
   </div>

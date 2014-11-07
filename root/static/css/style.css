@@ -436,6 +436,10 @@ td.table-row-actions {
   background-color: white !important;
 }
 
+.curs-evidence-conditions {
+  margin: 30px 0px 5px 0px;
+}
+
 .sect .sect-title a {
   margin-left: 9px;
 }
