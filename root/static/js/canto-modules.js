@@ -387,20 +387,20 @@ var OntologyTermLocatorCtrl =
       conditions: [],
     };
 
-  $scope.openTermSuggestDialog =
-    function(feature_display_name) {
-      var suggestInstance = $modal.open({
-        templateUrl: 'term_suggest.html',
-        controller: 'TermSuggestDialogCtrl',
-        title: 'Suggest a new term for ' + feature_display_name,
-        animate: false,
-        windowClass: "modal",
-      });
+    $scope.openTermSuggestDialog =
+      function(feature_display_name) {
+        var suggestInstance = $modal.open({
+          templateUrl: 'term_suggest.html',
+          controller: 'TermSuggestDialogCtrl',
+          title: 'Suggest a new term for ' + feature_display_name,
+          animate: false,
+          windowClass: "modal",
+        });
 
-      editInstance.result.then(function (termSuggestion) {
-        $scope.data.termSuggestion = termSuggestion;
-      });
-    };
+        editInstance.result.then(function (termSuggestion) {
+          $scope.data.termSuggestion = termSuggestion;
+        });
+      };
 
     $scope.confirmTerm = function() {
       $scope.data.termConfirmed = true;
