@@ -450,31 +450,6 @@ var OntologyTermLocatorCtrl =
 
       $('#ferret-term-input').attr('disabled', false);
 
-      $('#ferret-suggest-link').click(CantoGlobals.ferret_choose.suggest_dialog);
-      $('#ferret-suggest-link-leaf').click(CantoGlobals.ferret_choose.suggest_dialog);
-
-      $("#ferret-suggest-form").validate({
-        rules: {
-          'ferret-suggest-name': "required",
-          'ferret-suggest-definition': "required"
-        },
-        messages: {
-          'ferret-suggest-name': "Please enter a name for the term",
-          'ferret-suggest-definition': "Please enter a definition for the term"
-        }
-      });
-
-      $("#curs-contact-form").validate({
-        rules: {
-          'curs-contact-name': "required",
-          'curs-contact-definition': "required"
-        },
-        messages: {
-          'curs-contact-name': "Please enter a name for the term",
-          'curs-contact-definition': "Please enter a definition for the term"
-        }
-      });
-
       $('.canto-toggle-button').each(function (index, element) {
         var this_id = $(element).attr('id');
         var target = $('#' + this_id + '-target');

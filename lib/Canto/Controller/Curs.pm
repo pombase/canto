@@ -905,28 +905,6 @@ sub annotation_delete_suggestion : Chained('annotation') PathPart('delete_sugges
   _redirect_and_detach($c);
 }
 
-sub annotation_undelete : Chained('annotation') PathPart('undelete') Args(1)
-{
-  my ($self, $c) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $annotation = $st->{annotation};
-
-  my $delete_sub = sub {
-    $annotation->status('new');
-    $annotation->update();
-  };
-
-  $schema->txn_do($delete_sub);
-
-  $self->state()->store_statuses($schema);
-
-  _redirect_and_detach($c);
-}
-
 sub _field_edit_internal
 {
   my ($self, $c, $field_name) = @_;
