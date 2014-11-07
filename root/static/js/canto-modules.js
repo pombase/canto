@@ -407,7 +407,7 @@ var OntologyTermLocatorCtrl =
     $scope.setTermAndEvidence = function() {
       simpleHttpPost(toaster, $http, '../set_term/' + $scope.annotationTypeName,
                      { term_ontid: $scope.data.term_ontid,
-                       evidence: $scope.data.evidence_code,
+                       evidence_code: $scope.data.evidence_code,
                        conditions: $scope.data.conditions, });
     };
 

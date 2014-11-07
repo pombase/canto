@@ -1427,7 +1427,17 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
   my @conditions = ();
 
   if (defined $body_data->{conditions}) {
-    @conditions = @{$body_data->{conditions}};
+    my $lookup = Canto::Track::get_adaptor($config, 'ontology');
+
+    my @condition_names = map {
+      $_->{name};
+    } @{$body_data->{conditions}};
+
+    my @conditions_with_ids =
+      Canto::Curs::ConditionUtil::get_conditions_from_names($lookup,
+                                                            \@condition_names);
+    @conditions =
+      map { $_->{term_id} // $_->{name} } @conditions_with_ids;
   }
 
   my $annotation_config = $st->{annotation_type_config};
@@ -1439,7 +1449,10 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
   $st->{annotation_config} = $annotation_config;
   $st->{annotation_category} = $module_category;
 
-  my %annotation_data = (term_ontid => $term_ontid);
+  my %annotation_data = (term_ontid => $term_ontid,
+                         evidence_code => $evidence_code,
+                         conditions => \@conditions,
+                       );
 
   # if ('Submit suggestion') {
   #   my $suggested_name = $form->param_value('ferret-suggest-name');
@@ -1468,7 +1481,6 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
   my $evidence_types = $config->{evidence_types};
 
   my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
-
 
   my $annotation =
     $self->_create_annotation($c, $annotation_type_name,
@@ -1548,29 +1560,6 @@ sub _get_all_alleles
   }
 
   return %results;
-}
-
-sub _get_all_conditions
-{
-  my $config = shift;
-  my $schema = shift;
-
-  my $ontology_lookup = Canto::Track::get_adaptor($config, 'ontology');
-  my $an_rs = $schema->resultset('Annotation');
-
-  my %conditions = ();
-
-  while (defined (my $an = $an_rs->next())) {
-    my $data = $an->data();
-
-    if (exists $data->{conditions}) {
-      for my $condition (@{$data->{conditions}}) {
-        $conditions{Canto::Curs::ConditionUtil::get_name_of_condition($ontology_lookup, $condition)} = 1
-      }
-    }
-  }
-
-  return \%conditions;
 }
 
 sub _set_allele_select_stash
