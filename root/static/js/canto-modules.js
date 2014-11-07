@@ -387,6 +387,21 @@ var OntologyTermLocatorCtrl =
       conditions: [],
     };
 
+  $scope.openTermSuggestDialog =
+    function(feature_display_name) {
+      var suggestInstance = $modal.open({
+        templateUrl: 'term_suggest.html',
+        controller: 'TermSuggestDialogCtrl',
+        title: 'Suggest a new term for ' + feature_display_name,
+        animate: false,
+        windowClass: "modal",
+      });
+
+      editInstance.result.then(function (termSuggestion) {
+        $scope.data.termSuggestion = termSuggestion;
+      });
+    };
+
     $scope.confirmTerm = function() {
       $scope.data.termConfirmed = true;
     };
@@ -408,7 +423,9 @@ var OntologyTermLocatorCtrl =
       simpleHttpPost(toaster, $http, '../set_term/' + $scope.annotationTypeName,
                      { term_ontid: $scope.data.term_ontid,
                        evidence_code: $scope.data.evidence_code,
-                       conditions: $scope.data.conditions, });
+                       conditions: $scope.data.conditions,
+                       termSuggestion: $scope.data.termSuggestion,
+                     });
     };
 
     $scope.init = function() {
@@ -806,6 +823,46 @@ canto.controller('AlleleEditDialogCtrl',
                  ['$scope', '$modalInstance',
                   'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
+
+var termSuggestDialogCtrl =
+  function($scope, $modalInstance) {
+    $scope.suggestion = {
+      name: '',
+      definition: '',
+    };
+
+    $scope.isValidName = function() {
+      return $scope.alleleData.name;
+    };
+
+    $scope.isValidDefinition = function() {
+      return $scope.alleleData.description;
+    };
+
+    $scope.isValid = function() {
+      return $scope.isValidName() && $scope.isValidDefinition();
+    };
+
+    // return the data from the dialog as an Object
+    $scope.dialogToData = function($scope) {
+      return {
+        name: $scope.suggestion.name,
+        definition: $scope.suggestion.definition,
+      };
+    };
+
+    $scope.ok = function () {
+      $modalInstance.close($scope.dialogToData($scope));
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('TermSuggestDialogCtrl',
+                 ['$scope', '$modalInstance',
+                 termSuggestDialogCtrl]);
 
 canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig', 'Curs', 'toaster',
                                      function($scope, $http, $modal, CantoConfig, Curs, toaster) {
