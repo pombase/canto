@@ -399,6 +399,7 @@ var OntologyTermLocatorCtrl =
 
         editInstance.result.then(function (termSuggestion) {
           $scope.data.termSuggestion = termSuggestion;
+          $scope.data.termConfirmed = true;
         });
       };
 
