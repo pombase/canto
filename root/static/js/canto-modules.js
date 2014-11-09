@@ -559,7 +559,8 @@ var annotationEvidence =
         };
 
         $scope.showWith = function() {
-          return $scope.evidenceTypes && $scope.isValidEvidence() && $scope.evidenceTypes[$scope.evidenceCode].with_gene;
+          return $scope.evidenceTypes && $scope.isValidEvidence() && 
+            $scope.evidenceTypes[$scope.evidenceCode].with_gene;
         };
 
         $scope.showConditions = function() {
