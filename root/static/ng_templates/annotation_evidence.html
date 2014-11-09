@@ -16,11 +16,9 @@
     </div>
   </div>
 
-  <div ng-show="annotationType.feature_type === 'genotype'">
-    <div class="curs-evidence-conditions">
-      Please add experimental conditions:
-      <condition-picker conditions="conditions"></condition-picker>
-    </div>
+  <div ng-show="showConditions()" class="curs-evidence-conditions">
+    Please add experimental conditions:
+    <condition-picker conditions="conditions"></condition-picker>
   </div>
 </div>
 

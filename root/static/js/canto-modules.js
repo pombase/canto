@@ -562,6 +562,10 @@ var annotationEvidence =
           return $scope.evidenceTypes && $scope.isValidEvidence() && $scope.evidenceTypes[$scope.evidenceCode].with_gene;
         };
 
+        $scope.showConditions = function() {
+          return $scope.isValidEvidence() && $scope.annotationType.feature_type === 'genotype';
+        };
+
         CantoConfig.get('evidence_types').success(function(results) {
           $scope.evidenceTypes = results;
 
