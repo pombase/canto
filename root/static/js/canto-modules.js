@@ -536,6 +536,7 @@ var annotationEvidence =
         evidenceCode: '=',
         conditions: '=',
         withGeneId: '=',
+        validEvidence: '=', // true when evidence and with_gene_id are valid
         annotationTypeName: '@',
       },
       restrict: 'E',
@@ -553,12 +554,12 @@ var annotationEvidence =
         };
 
         $scope.isValidWithGene = function() {
-          return $scope.evidenceCode &&
+          return $scope.evidenceTypes && $scope.evidenceCode &&
             (!$scope.evidenceTypes[$scope.evidenceCode].with_gene || $scope.withGeneId);
         };
 
         $scope.showWith = function() {
-          return $scope.isValidEvidence() && $scope.evidenceTypes[$scope.evidenceCode].with_gene;
+          return $scope.evidenceTypes && $scope.isValidEvidence() && $scope.evidenceTypes[$scope.evidenceCode].with_gene;
         };
 
         CantoConfig.get('evidence_types').success(function(results) {
@@ -570,9 +571,16 @@ var annotationEvidence =
                               !$scope.evidenceTypes[$scope.evidenceCode].with_gene) {
                             $scope.withGeneId = undefined;
                           }
-                        });
 
+                          $scope.validEvidence = $scope.isValidEvidence();
+                        });
         });
+
+        $scope.$watch('withGeneId',
+                      function(newType) {
+                        $scope.validEvidence = $scope.isValidEvidence();
+                      });
+
       },
       templateUrl: app_static_path + 'ng_templates/annotation_evidence.html'
     };
@@ -1235,7 +1243,7 @@ var annotationEditDialogCtrl =
     };
 
     $scope.isValidEvidence = function() {
-      return $scope.annotation.evidence_code;
+      return $scope.validEvidence;
     };
 
     $scope.isValid = function() {

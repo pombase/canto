@@ -194,6 +194,7 @@ Choose evidence for annotating {{featureDisplayName}} with {{termOntid}}
       <annotation-evidence evidence-code="data.evidence_code"
                            conditions="data.conditions"
                            with-gene-id="data.with_gene_id"
+                           valid-evidence="validEvidence"
                            annotation-type-name="{{annotationTypeName}}"></annotation-evidence>
     </div>
   </div>
