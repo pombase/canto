@@ -1,27 +1,35 @@
 <div id="ferret-suggest">
-  <table>
-    <tr>
-      <td> Suggested term name: </td>
-      <td> <input ng-model="suggestion.name"/> 
-        <span ng-show="!isValidName()" class="help-block">Required</span>
-      </td>
-    </tr>
-    <tr>
-      <td> Suggested definition: </td>
-      <td>
-        <textarea ng-model="suggestion.definition" cols="60" rows="10"></textarea>
-        <span ng-show="!isValidDefinition()" class="help-block">Required</span>
-      </td>
-    </tr>
-  </table>
-  <div id="ferret-suggest-help" class="ferret-help-text">
+  <div class="modal-header">
+New term suggestion
+  </div>
+  <div class="modal-body">
+    <table>
+      <tr>
+        <td style="white-space: nowrap;">Term name:</td>
+        <td>
+          <input ng-model="suggestion.name"/> 
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div>Definition:</div>
+        </td>
+        <td>
+          <textarea ng-model="suggestion.definition" cols="60" rows="10"></textarea>
+        </td>
+      </tr>
+    </table>
+    <div id="ferret-suggest-help" class="ferret-help-text">
 Please suggest a definition for your new term request. The pattern for
 the formal  definition is &ldquo;An A (the term you are describing) is a B
 (the parent of the term you are describing) that C (the characteristics
 that differentiate your new term "A" from other members of the group "B")&rdquo;.
+    </div>
   </div>
   <div class="modal-footer">
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    <button class="btn btn-primary" ng-click="ok()" ng-disabled="!isValid()">Submit suggestion</button>
+    <button class="btn btn-primary" ng-click="ok()"
+            title="{{ isValid() ? 'Submit suggestion' : 'Please suggest a name and definition' }}"
+            ng-disabled="!isValid()">Submit suggestion</button>
   </div>
 </div>

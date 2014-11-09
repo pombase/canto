@@ -130,7 +130,7 @@ if any):
         <div id="ferret-suggest-link" class="curs-box-body">
           <ul>
             <li>
-              <a href="#">
+              <a ng-click="openTermSuggestDialog()">
 Suggest a new child term for <span class="ferret-term-id-display"></span> ...
               </a>
             </li>

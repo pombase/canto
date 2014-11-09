@@ -381,7 +381,7 @@ var featureChooser =
 canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
 
 var OntologyTermLocatorCtrl =
-  function($scope, CantoGlobals, $http, toaster) {
+  function($scope, CantoGlobals, $http, $modal, toaster) {
     $scope.data = {
       termConfirmed: false,
       conditions: [],
@@ -390,16 +390,21 @@ var OntologyTermLocatorCtrl =
     $scope.openTermSuggestDialog =
       function(feature_display_name) {
         var suggestInstance = $modal.open({
-          templateUrl: 'term_suggest.html',
+          templateUrl: app_static_path + 'ng_templates/term_suggest.html',
           controller: 'TermSuggestDialogCtrl',
           title: 'Suggest a new term for ' + feature_display_name,
           animate: false,
           windowClass: "modal",
         });
 
-        editInstance.result.then(function (termSuggestion) {
+        suggestInstance.result.then(function (termSuggestion) {
           $scope.data.termSuggestion = termSuggestion;
           $scope.data.termConfirmed = true;
+
+          toaster.pop('note',
+                      'Your term suggestion will be stored, but ' +
+                      feature_display_name + ' will be temporarily ' +
+                      'annotated with the parent of your suggested new term');
         });
       };
 
@@ -425,7 +430,7 @@ var OntologyTermLocatorCtrl =
                      { term_ontid: $scope.data.term_ontid,
                        evidence_code: $scope.data.evidence_code,
                        conditions: $scope.data.conditions,
-                       termSuggestion: $scope.data.termSuggestion,
+                       term_suggestion: $scope.data.termSuggestion,
                      });
     };
 
@@ -519,7 +524,8 @@ var OntologyTermLocatorCtrl =
   };
 
 canto.controller('OntologyTermLocatorCtrl',
-                 ['$scope', 'CantoGlobals', '$http', 'toaster', OntologyTermLocatorCtrl]);
+                 ['$scope', 'CantoGlobals', '$http', '$modal', 'toaster',
+                  OntologyTermLocatorCtrl]);
 
 
 var annotationEvidence =
@@ -833,11 +839,11 @@ var termSuggestDialogCtrl =
     };
 
     $scope.isValidName = function() {
-      return $scope.alleleData.name;
+      return $scope.suggestion.name;
     };
 
     $scope.isValidDefinition = function() {
-      return $scope.alleleData.description;
+      return $scope.suggestion.definition;
     };
 
     $scope.isValid = function() {

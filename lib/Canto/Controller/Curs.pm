@@ -1432,23 +1432,13 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
                          conditions => \@conditions,
                        );
 
-  # if ('Submit suggestion') {
-  #   my $suggested_name = $form->param_value('ferret-suggest-name');
-  #   my $suggested_definition =
-  #     $form->param_value('ferret-suggest-definition');
+  my $suggested_name = trim($body_data->{term_suggestion}->{name});
+  my $suggested_definition = trim($body_data->{term_suggestion}->{definition});
 
-  #   $suggested_name = trim($suggested_name);
-  #   $suggested_definition = trim($suggested_definition);
-
-  #   $annotation_data{term_suggestion} = {
-  #     name => $suggested_name,
-  #     definition => $suggested_definition
-  #   };
-
-  #   $c->flash()->{message} = 'Note that your term suggestion has been '
-  #     . "stored, but the $feature_type will be temporarily "
-  #       . 'annotated with the parent of your suggested new term';
-  # }
+  $annotation_data{term_suggestion} = {
+    name => $suggested_name,
+    definition => $suggested_definition
+  };
 
   $st->{show_title} = 0;
 
