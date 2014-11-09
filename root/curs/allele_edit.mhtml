@@ -45,7 +45,8 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
             Allele type
           </td>
           <td ng-class="{ 'has-error': !isValidType() }">
-            <select ng-model="alleleData.type" name="curs-allele-type"
+            <select class="form-control"
+                    ng-model="alleleData.type" name="curs-allele-type"
                     ng-options="name for name in env.allele_type_names">
               <option selected="selected" value="">Choose an allele type ...</option>
             </select>
