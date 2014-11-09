@@ -430,6 +430,7 @@ var OntologyTermLocatorCtrl =
                      { term_ontid: $scope.data.term_ontid,
                        evidence_code: $scope.data.evidence_code,
                        conditions: $scope.data.conditions,
+                       with_gene_id: $scope.data.with_gene_id,
                        term_suggestion: $scope.data.termSuggestion,
                      });
     };
@@ -529,14 +530,13 @@ canto.controller('OntologyTermLocatorCtrl',
 
 
 var annotationEvidence =
-  function(AnnotationTypeConfig) {
+  function(AnnotationTypeConfig, CantoConfig) {
     var directive = {
       scope: {
         evidenceCode: '=',
         conditions: '=',
+        withGeneId: '=',
         annotationTypeName: '@',
-        featureDisplayName: '@',
-        termOntid: '@',
       },
       restrict: 'E',
       replace: true,
@@ -549,15 +549,38 @@ var annotationEvidence =
           });
 
         $scope.isValidEvidence = function() {
-          return $scope.evidenceCode;
+          return !!$scope.evidenceCode;
         };
+
+        $scope.isValidWithGene = function() {
+          return $scope.evidenceCode &&
+            (!$scope.evidenceTypes[$scope.evidenceCode].with_gene || $scope.withGeneId);
+        };
+
+        $scope.showWith = function() {
+          return $scope.isValidEvidence() && $scope.evidenceTypes[$scope.evidenceCode].with_gene;
+        };
+
+        CantoConfig.get('evidence_types').success(function(results) {
+          $scope.evidenceTypes = results;
+
+          $scope.$watch('evidenceCode',
+                        function(newType) {
+                          if (!$scope.isValidEvidence() ||
+                              !$scope.evidenceTypes[$scope.evidenceCode].with_gene) {
+                            $scope.withGeneId = undefined;
+                          }
+                        });
+
+        });
       },
       templateUrl: app_static_path + 'ng_templates/annotation_evidence.html'
     };
     return directive;
   };
 
-canto.directive('annotationEvidence', ['AnnotationTypeConfig', annotationEvidence]);
+canto.directive('annotationEvidence',
+                ['AnnotationTypeConfig', 'CantoConfig', annotationEvidence]);
 
  var conditionPicker =
    function(CursConditionList, toaster) {
@@ -1221,18 +1244,10 @@ var annotationEditDialogCtrl =
       return $scope.annotation.evidence_code;
     };
 
-    $scope.isValidWithGene = function() {
-      var annotation = $scope.annotation;
-      return annotation.evidence_code &&
-        (!$scope.evidenceTypes[annotation.evidence_code].with_gene ||
-         annotation.with_gene_id);
-    };
-
     $scope.isValid = function() {
       if ($scope.annotationType.category === 'ontology') {
         return $scope.isValidFeature() &&
-          $scope.isValidTerm() && $scope.isValidEvidence() &&
-          $scope.isValidWithGene();
+          $scope.isValidTerm() && $scope.isValidEvidence();
       } else {
         return $scope.isValidFeature() &&
           $scope.isValidInteractingGene() && $scope.isValidEvidence();
@@ -1240,10 +1255,6 @@ var annotationEditDialogCtrl =
     };
 
     $scope.ok = function() {
-      if (!$scope.evidenceTypes[$scope.annotation.evidence_code].with_gene) {
-        $scope.annotation.with_gene_id = undefined;
-      }
-
       var q = AnnotationProxy.storeChanges(args.annotation,
                                            $scope.annotation, args.newlyAdded);
       q.then(function(annotation) {
@@ -1258,10 +1269,6 @@ var annotationEditDialogCtrl =
     $scope.cancel = function() {
       $modalInstance.dismiss('cancel');
     };
-
-    CantoConfig.get('evidence_types').success(function(results) {
-      $scope.evidenceTypes = results;
-    });
 
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
       .then(function(annotationType) {
@@ -1393,7 +1400,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function($modal, AnnotationProxy, AnnotationTypeConfig, CantoConfig, CursGeneList, CantoGlobals, toaster) {
+  function($modal, AnnotationProxy, AnnotationTypeConfig, CursGeneList, CantoGlobals, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -1417,10 +1424,6 @@ var annotationTableRow =
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
           });
-
-        CantoConfig.get('evidence_types').success(function(results) {
-          $scope.evidenceTypes = results;
-        });
 
         CursGeneList.geneList().then(function(results) {
           $scope.genes = results;
@@ -1472,7 +1475,7 @@ var annotationTableRow =
 
 canto.directive('annotationTableRow',
                 ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig',
-                 'CantoConfig', 'CursGeneList', 'CantoGlobals', 'toaster',
+                 'CursGeneList', 'CantoGlobals', 'toaster',
                  annotationTableRow]);
 
 

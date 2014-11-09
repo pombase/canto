@@ -1440,6 +1440,12 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
     definition => $suggested_definition
   };
 
+  if ($body_data->{with_gene_id}) {
+    my $with_gene = $schema->find_with_type('Gene', $body_data->{with_gene_id});
+
+    $annotation_data{with_gene} = $with_gene->primary_identifier();
+  }
+
   $st->{show_title} = 0;
 
   $st->{current_component} = $annotation_type_name;

@@ -1,4 +1,4 @@
-<div ng-if="annotationType && evidenceTypes">
+<div ng-if="annotationType">
   <div class="modal-header">
     <h4 class="modal-title">
       Edit {{annotationType.display_name}} annotation <span ng-if="annotation.feature_display_name">for {{annotation.feature_display_name}}</span>
@@ -63,17 +63,6 @@
           </select>
           <span ng-show="isValidTerm() && !isValidEvidence()"
                 class="help-block">Please select an evidence code</span>
-        </td>
-      </tr>
-
-      <tr ng-if="isValidEvidence() && evidenceTypes[annotation.evidence_code].with_gene"
-          ng-class="{ 'has-error': !isValidWithGene() }">
-        <td class="title">With</td>
-        <td> 
-          <feature-chooser feature-type="gene"
-                           chosen-feature-id="annotation.with_gene_id"></feature-chooser>
-          <span ng-show="isValidEvidence() && !isValidWithGene()"
-                class="help-block">Please select a 'with' gene</span>
         </td>
       </tr>
 

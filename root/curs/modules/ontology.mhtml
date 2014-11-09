@@ -186,11 +186,17 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
 
 <div ng-show="data.termConfirmed" class="ng-cloak">
 
-  <annotation-evidence evidence-code="data.evidence_code"
-                       conditions="data.conditions"
-                       annotation-type-name="{{annotationTypeName}}"
-                       termOntid="{{data.term_ontid}}"
-                       feature-display-name="<% $feature_display_name %>"></annotation-evidence>
+  <div class="curs-box evidence-select">
+    <div class="curs-box-title">
+Choose evidence for annotating {{featureDisplayName}} with {{termOntid}}
+    </div>
+    <div class="curs-box-body">
+      <annotation-evidence evidence-code="data.evidence_code"
+                           conditions="data.conditions"
+                           with-gene-id="data.with_gene_id"
+                           annotation-type-name="{{annotationTypeName}}"></annotation-evidence>
+    </div>
+  </div>
 
 <button type="submit" class="btn btn-primary curs-back-button"
         title="&lt;- Back"
