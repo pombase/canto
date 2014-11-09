@@ -1212,14 +1212,6 @@ function SubmitToCuratorsCtrl($scope) {
 }
 
 
-var evidenceSelectCtrl =
-  function ($scope) {
-    $scope.data = {};
-  };
-
-canto.controller('EvidenceSelectCtrl',
-                 ['$scope', evidenceSelectCtrl]);
-
 var annotationEditDialogCtrl =
   function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
            CantoConfig, toaster, args) {
