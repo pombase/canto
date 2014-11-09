@@ -1162,12 +1162,6 @@ canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
   };
 });
 
-// to be implemented
-//var ferretCtrl = function($scope) {
-//};
-// add ng-controller="FerretCtrl" to <div id="ferret"> in ontology.mhtml
-//canto.controller('FerretCtrl', ['$scope', 'CantoConfig', ferretCtrl]);
-
 function UploadGenesCtrl($scope) {
   $scope.data = {
     geneIdentifiers: '',
