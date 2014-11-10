@@ -54,6 +54,7 @@ has cursdb_gene => (is => 'ro', required => 1,
                     });
 has gene_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has primary_name => (is => 'ro', init_arg => undef, lazy_build => 1);
+has display_name => (is => 'ro', init_arg => undef, lazy_build => 1);
 has product => (is => 'ro', init_arg => undef, lazy_build => 1);
 has synonyms_ref => (is => 'ro', init_arg => undef, lazy_build => 1,
                  isa => 'ArrayRef[Str]',
@@ -117,6 +118,13 @@ sub _build_primary_name
   my $self = shift;
 
   return $self->gene_data()->{primary_name};
+}
+
+sub _build_display_name
+{
+  my $self = shift;
+
+  return $self->primary_name() // $self->primary_identifier();
 }
 
 sub _build_product

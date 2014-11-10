@@ -350,7 +350,6 @@ var featureChooser =
 
             $.map($scope.features,
                   function(gene) {
-                    gene.display_name = gene.primary_name || gene.primary_identifier;
                     gene.feature_id = gene.gene_id;
                   });
           }).catch(function() {
@@ -362,7 +361,6 @@ var featureChooser =
 
             $.map($scope.features,
                   function(genotype) {
-                    genotype.display_name = genotype.identifier;
                     genotype.feature_id = genotype.genotype_id;
                   });
           }).catch(function() {

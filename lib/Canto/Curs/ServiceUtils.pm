@@ -219,8 +219,9 @@ my %list_for_service_subs =
           {
             primary_identifier => $proxy->primary_identifier(),
             primary_name => $proxy->primary_name(),
+            display_name => $proxy->display_name(),
             gene_id => $proxy->gene_id(),
-        }
+          }
         } $gene_rs->all();
       },
     genotype =>
@@ -232,6 +233,7 @@ my %list_for_service_subs =
           {
             identifier => $_->identifier(),
             name => $_->name(),
+            display_name => $_->display_name(),
             genotype_id => $_->genotype_id(),
           }
         } $genotype_rs->all();
