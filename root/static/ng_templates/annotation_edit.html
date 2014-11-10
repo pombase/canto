@@ -49,6 +49,8 @@
           <term-name-complete current-term-name="{{annotation.term_name}}"
                               found-term-id="annotation.term_ontid"
                               found-term-name="annotation.term_name"
+                              search-string="searchString"
+                              matching-synonym="matchingSynonym"
                               annotation-type-name="{{annotationType.name}}">
           </term-name-complete>
           <span ng-show="isValidFeature() && !isValidTerm()"
@@ -62,7 +64,7 @@
           <annotation-evidence evidence-code="annotation.evidence_code"
                                conditions="annotation.conditions"
                                with-gene-id="annotation.with_gene_id"
-                               valid-evidence="validEvidence"
+                               valid-evidence="status.validEvidence"
                                annotation-type-name="{{annotationType.name}}"></annotation-evidence>
         </td>
       </tr>
@@ -145,16 +147,14 @@
         </td>
       </tr>
 
-      <tr ng-class="{ 'has-error': !isValidEvidence() }">
+      <tr>
         <td class="title">Evidence code</td>
         <td>
-          <select class="form-control"
-                  ng-model="annotation.evidence_code"
-                  ng-options="code for code in annotationType.evidence_codes">
-            <option selected="selected" value="">Choose an evidence code ...</option>
-          </select>
-          <span ng-show="isValidTerm() && !isValidEvidence()"
-                class="help-block">Please select an evidence code</span>
+          <annotation-evidence evidence-code="annotation.evidence_code"
+                               conditions="annotation.conditions"
+                               with-gene-id="annotation.with_gene_id"
+                               valid-evidence="validEvidence"
+                               annotation-type-name="{{annotationType.name}}"></annotation-evidence
         </td>
       </tr>
 

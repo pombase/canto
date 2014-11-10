@@ -1,5 +1,5 @@
 <div>
-  <div ng-class="{ 'has-error': !isValidEvidence() }">
+  <div ng-class="{ 'has-error': !isValidEvidenceCode() }">
     <select class="form-control"
             ng-model="evidenceCode"
             ng-options="code for code in annotationType.evidence_codes">
@@ -11,7 +11,7 @@
     <div>
       <feature-chooser feature-type="gene"
                        chosen-feature-id="withGeneId"></feature-chooser>
-      <span ng-show="isValidEvidence() && !isValidWithGene()"
+      <span ng-show="isValidEvidenceCode() && !isValidWithGene()"
             class="help-block">Please select a 'with' gene</span>
     </div>
   </div>

@@ -549,41 +549,47 @@ var annotationEvidence =
             $scope.annotationType = annotationType;
           });
 
-        $scope.isValidEvidence = function() {
+        $scope.isValidEvidenceCode = function() {
           return !!$scope.evidenceCode;
         };
 
         $scope.isValidWithGene = function() {
           return $scope.evidenceTypes && $scope.evidenceCode &&
-            (!$scope.evidenceTypes[$scope.evidenceCode].with_gene || $scope.withGeneId);
+            (!$scope.evidenceTypes[$scope.evidenceCode].with_gene || !!$scope.withGeneId);
         };
 
         $scope.showWith = function() {
-          return $scope.evidenceTypes && $scope.isValidEvidence() && 
+          return $scope.evidenceTypes && $scope.isValidEvidenceCode() && 
             $scope.evidenceTypes[$scope.evidenceCode].with_gene;
         };
 
         $scope.showConditions = function() {
-          return $scope.isValidEvidence() && $scope.annotationType.can_have_conditions;
+          return $scope.isValidEvidenceCode() && $scope.annotationType.can_have_conditions;
         };
+
+        $scope.isValidCodeAndWith = function() {
+          return $scope.isValidEvidenceCode() && $scope.isValidWithGene();
+        };
+
+        $scope.validEvidence = $scope.isValidCodeAndWith();
 
         CantoConfig.get('evidence_types').success(function(results) {
           $scope.evidenceTypes = results;
 
           $scope.$watch('evidenceCode',
                         function(newType) {
-                          if (!$scope.isValidEvidence() ||
+                          if (!$scope.isValidEvidenceCode() ||
                               !$scope.evidenceTypes[$scope.evidenceCode].with_gene) {
                             $scope.withGeneId = undefined;
                           }
 
-                          $scope.validEvidence = $scope.isValidEvidence();
+                          $scope.validEvidence = $scope.isValidCodeAndWith();
                         });
         });
 
         $scope.$watch('withGeneId',
                       function(newType) {
-                        $scope.validEvidence = $scope.isValidEvidence();
+                        $scope.validEvidence = $scope.isValidCodeAndWith();
                       });
 
       },
@@ -1224,6 +1230,9 @@ var annotationEditDialogCtrl =
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
+    $scope.status = {
+      // validEvidence: false;
+    };
 
     copyObject(args.annotation, $scope.annotation);
 
@@ -1240,7 +1249,7 @@ var annotationEditDialogCtrl =
     };
 
     $scope.isValidEvidence = function() {
-      return $scope.validEvidence;
+      return $scope.status.validEvidence;
     };
 
     $scope.isValid = function() {
