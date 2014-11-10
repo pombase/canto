@@ -1620,7 +1620,7 @@ sub _allele_from_json: Private
         die qq(internal error - allele "$primary_identifier" is missing);
       }
 
-      # we will store the allele from Chado in the TrackDB
+      # we will store the allele from Chado in the CursDB
       $allele_type = $allele_details->{allele_type};
       $description = $allele_details->{description};
       $name = $allele_details->{name};
