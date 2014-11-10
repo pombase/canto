@@ -184,11 +184,11 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
     </div>
 </div>
 
-<div ng-show="data.termConfirmed" class="ng-cloak">
+<div ng-show="data.termConfirmed && annotationType" class="ng-cloak">
 
   <div class="curs-box evidence-select">
     <div class="curs-box-title">
-Choose evidence for annotating {{featureDisplayName}} with {{termOntid}}
+Choose evidence <span ng-show="annotationType.can_have_conditions">and conditions</span> for annotating <% $feature_display_name %> with {{data.term_ontid}}
     </div>
     <div class="curs-box-body">
       <annotation-evidence evidence-code="data.evidence_code"

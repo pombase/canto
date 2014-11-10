@@ -381,7 +381,7 @@ var featureChooser =
 canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
 
 var OntologyTermLocatorCtrl =
-  function($scope, CantoGlobals, $http, $modal, toaster) {
+  function($scope, CantoGlobals, AnnotationTypeConfig, $http, $modal, toaster) {
     $scope.data = {
       termConfirmed: false,
       conditions: [],
@@ -446,6 +446,11 @@ var OntologyTermLocatorCtrl =
 
     $scope.init = function() {
       $scope.annotationTypeName = CantoGlobals.ferret_choose.annotation_type_name;
+
+      AnnotationTypeConfig.getByName($scope.annotationTypeName)
+        .then(function(annotationType) {
+          $scope.annotationType = annotationType;
+        });
 
       var ferret_input = $("#ferret-term-input");
 
@@ -534,7 +539,7 @@ var OntologyTermLocatorCtrl =
   };
 
 canto.controller('OntologyTermLocatorCtrl',
-                 ['$scope', 'CantoGlobals', '$http', '$modal', 'toaster',
+                 ['$scope', 'CantoGlobals', 'AnnotationTypeConfig', '$http', '$modal', 'toaster',
                   OntologyTermLocatorCtrl]);
 
 
