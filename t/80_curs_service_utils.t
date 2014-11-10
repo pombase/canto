@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 49;
+use Test::More tests => 50;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -27,13 +27,31 @@ cmp_deeply($res,
             {
               'identifier' => 'aaaa0007-genotype-1',
               'name' => 'h+ SPCC63.05delta ssm4KE',
+              display_name => 'h+ SPCC63.05delta ssm4KE',
               genotype_id => 1,
             },
             {
               'identifier' => 'aaaa0007-genotype-2',
               'name' => undef,
+              display_name => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
               genotype_id => 2,
             }
+          ]);
+
+my $spcc63_05 =
+  $curs_schema->resultset('Gene')
+    ->find({ primary_identifier => 'SPCC63.05' });
+
+$res = $service_utils->list_for_service('genotype', 'with_gene', $spcc63_05->primary_identifier());
+
+cmp_deeply($res,
+           [
+            {
+              identifier => 'aaaa0007-genotype-1',
+              name => 'h+ SPCC63.05delta ssm4KE',
+              display_name => 'h+ SPCC63.05delta ssm4KE',
+              genotype_id => 1,
+            },
           ]);
 
 $res = $service_utils->list_for_service('gene');
@@ -43,21 +61,25 @@ cmp_deeply($res,
             {
               'primary_identifier' => 'SPCC576.16c',
               'primary_name' => 'wtf22',
+              display_name => 'wtf22',
                gene_id => 1,
             },
             {
               'primary_name' => 'ssm4',
               'primary_identifier' => 'SPAC27D7.13c',
+              display_name => 'ssm4',
                gene_id => 2,
             },
             {
               'primary_name' => 'doa10',
               'primary_identifier' => 'SPBC14F5.07',
+              display_name => 'doa10',
                gene_id => 3,
             },
             {
               'primary_identifier' => 'SPCC63.05',
               'primary_name' => undef,
+              display_name => 'SPCC63.05',
                gene_id => 4,
             },
           ]);

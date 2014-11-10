@@ -165,6 +165,39 @@ sub _get_annotation
     } @annotation_type_list,
 }
 
+sub _get_genotypes
+{
+  my $self = shift;
+  my $action = shift;
+  my $action_arg = shift;
+  my $curs_schema = $self->curs_schema();
+  my $genotype_rs = $curs_schema->resultset('Genotype');
+
+  if (defined $action && defined $action_arg) {
+    if ($action eq 'with_gene') {
+      $genotype_rs = $genotype_rs->search({ 'gene.primary_identifier' => $action_arg },
+                                          {
+                                            join => {
+                                              allele_genotypes => {
+                                                allele => 'gene'
+                                              }
+                                            }
+                                          });
+    } else {
+      croak "unknown action for genotypes list: $action\n";
+    }
+  }
+
+  my @res = map {
+    {
+      identifier => $_->identifier(),
+      name => $_->name(),
+      display_name => $_->display_name(),
+      genotype_id => $_->genotype_id(),
+    }
+  } $genotype_rs->all();
+}
+
 sub _get_alleles
 {
   my $self = shift;
@@ -224,20 +257,7 @@ my %list_for_service_subs =
           }
         } $gene_rs->all();
       },
-    genotype =>
-      sub {
-        my $self = shift;
-        my $curs_schema = $self->curs_schema();
-        my $genotype_rs = $curs_schema->resultset('Genotype');
-        my @res = map {
-          {
-            identifier => $_->identifier(),
-            name => $_->name(),
-            display_name => $_->display_name(),
-            genotype_id => $_->genotype_id(),
-          }
-        } $genotype_rs->all();
-      },
+    genotype => \&_get_genotypes,
     allele => \&_get_alleles,
     annotation => \&_get_annotation,
     condition => \&_get_conditions,
