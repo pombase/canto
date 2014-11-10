@@ -1,7 +1,10 @@
 <div ng-if="annotationType">
   <div class="modal-header">
-    <h4 class="modal-title">
-      Edit {{annotationType.display_name}} annotation <span ng-if="annotation.feature_display_name">for {{annotation.feature_display_name}}</span>
+    <h4 ng-show="newlyAdded" class="modal-title">
+      Edit fields to create a new {{annotationType.display_name}} annotation <span ng-show="annotation.feature_display_name">for {{annotation.feature_display_name}}</span>
+    </h4>
+    <h4 ng-hide="newlyAdded" class="modal-title">
+      Edit {{annotationType.display_name}} annotation <span ng-show="annotation.feature_display_name">for {{annotation.feature_display_name}}</span>
     </h4>
   </div>
 
