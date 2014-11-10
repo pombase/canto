@@ -7,7 +7,7 @@ New {{annotationType.display_name}} annotations from this session
 Existing {{annotationType.display_name}} annotations
     </span>
   </span>
-  <span ng-if="featureStatusFilter === 'new'">
+  <span ng-if="featureStatusFilter === 'new' && data.hasFeatures">
     <a ng-click="addNew(featureType, featureId)">Add ...</a>
   </span>
   <div ng-switch="annotations.length > 0">

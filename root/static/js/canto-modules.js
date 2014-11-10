@@ -1334,7 +1334,7 @@ function makeNewAnnotation(template) {
 }
 
 var annotationTableCtrl =
-  function($modal, AnnotationProxy, AnnotationTypeConfig) {
+  function($modal, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -1347,6 +1347,9 @@ var annotationTableCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/annotation_table.html',
       controller: function($scope) {
+        $scope.data = {
+          hasFeatures: false, // set to true if there are feature of type featureTypeFilter
+        };
         $scope.addNew = function() {
           var template = {
             annotation_type: $scope.annotationTypeName,
@@ -1376,12 +1379,25 @@ var annotationTableCtrl =
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
           scope.annotationType = annotationType;
           scope.displayAnnotationFeatureType = capitalize(annotationType.feature_type);
+
+          if (annotationType.feature_type === 'genotype') {
+            CursGenotypeList.genotypeList().then(function(results) {
+              scope.data.hasFeatures = (results.length > 0);
+            }).catch(function() {
+              toaster.pop('error', "couldn't read the genotype list from the server");
+            });
+          } else {
+            // if we're here the user has some genes in their list
+            scope.data.hasFeatures = true;
+          }
         });
       }
     };
   };
 
-canto.directive('annotationTable', ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig', annotationTableCtrl]);
+canto.directive('annotationTable',
+                ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig', 'CursGenotypeList',
+                 annotationTableCtrl]);
 
 var annotationTableList =
   function(AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
