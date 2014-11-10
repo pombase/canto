@@ -439,6 +439,9 @@ td.table-row-actions {
 .curs-evidence-conditions {
   margin: 30px 0px 5px 0px;
 }
+.curs-evidence-conditions .tagit {
+  font-size: 80%;
+}
 
 .sect .sect-title a {
   margin-left: 9px;
