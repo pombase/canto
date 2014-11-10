@@ -27,10 +27,13 @@ Click on a genotype name to add a phenotype
     <thead>
       <tr>
         <td>
-          Name
+Alleles
         </td>
         <td>
-          Annotation count
+Name (optional)
+        </td>
+        <td>
+Annotations
         </td>
       </tr>
     </thead>
@@ -38,18 +41,24 @@ Click on a genotype name to add a phenotype
 %   for my $genotype (@genotype_hashes) {
     <tr>
       <td>
-% if (!$read_only_curs) {
-        <a href="<% $start_path . '/feature/genotype/view/' . $genotype->{genotype_id} %>"
-% }
-          <span>
-            <% $genotype->{display_name} %>
-          </span>
-% if (!$read_only_curs) {
-        </a>
-% }
+        <span>
+<% $genotype->{allele_string} %>
+        </span>
       </td>
       <td>
-        <% $genotype->{annotation_count} %>
+        <span>
+<% $genotype->{name} %>
+        </span>
+      </td>
+      <td>
+<% $genotype->{annotation_count} %>
+      </td>
+      <td class="table-row-actions">
+        <div>
+          <a href="<% $start_path . '/feature/genotype/view/' . $genotype->{genotype_id} %>">
+Annotate ..
+          </a>
+        </div>
       </td>
     </tr>
 %   }
@@ -84,6 +93,7 @@ my @genotype_hashes = map {
     display_name => $_->display_name(),
     name => $_->name(),
     genotype_id => $_->genotype_id(),
+    allele_string => $_->allele_string(),
     annotation_count => $annotation_count,
   }
 } @all_genotypes;
