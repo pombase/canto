@@ -933,8 +933,6 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
   ];
   $scope.genes = [
   ];
-  $scope.selectedGenes = [
-  ];
 
   Curs.list('gene').success(function(results) {
     $scope.genes = results;
@@ -943,30 +941,10 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
           function(gene) {
             gene.display_name = gene.primary_name || gene.primary_identifier;
           });
-    // DEBUG
-//    $scope.genes[1].selected = true;
-//    $scope.genes[2].selected = true;
-//    $scope.selectGenes();
-//    $scope.openAlleleEditDialog("ssm4", "SPAC27D7.13c", 2);
-//    $scope.openAlleleEditDialog("doa10", "SPBC14F5.07", 3);
   })
   .error(function() {
     toaster.pop('failed to get gene list from server');
   });
-
-  $scope.currentlySelectedGenes = function() {
-    return $.grep($scope.genes, function(value) {
-      return value.selected;
-    });
-  };
-
-  $scope.selectGenes = function() {
-    $scope.selectedGenes = $scope.currentlySelectedGenes();
-  };
-
-  $scope.clearSelectedGene = function() {
-    $scope.selectedGenes = [];
-  };
 
   $scope.data = {
     genotype_long_name: '',
@@ -1034,21 +1012,11 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
     };
 
   $scope.cancel = function() {
-    window.location.href = curs_root_uri;
+    window.location.href = curs_root_uri + '/genotype_manage';
   };
 
   $scope.isValid = function() {
-    var alleleGeneIds = {};
-
-    $.map($scope.alleles,
-          function(allele) {
-            alleleGeneIds[allele.gene_id] = true;
-          });
-
-    return $.grep($scope.selectedGenes,
-                  function(gene) {
-                    return ! alleleGeneIds[gene.gene_id];
-                  }).length == 0;
+    return $scope.alleles.length > 0;
   };
 }]);
 

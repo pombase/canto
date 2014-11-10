@@ -13,42 +13,6 @@ $curs_root_uri
 
 <div ng-controller="MultiAlleleCtrl" id="curs-multi-allele-select"
      class="curs-box ng-cloak">
-  <div ng-show="selectedGenes.length == 0">
-    <div class="curs-box-title">
-Choose the genes for this genotype
-    </div>
-    <div class="curs-box-body">
-      <div class="row">
-        <div class="col-sm-6 col-md-6">
-          <table class="list">
-            <thead>
-              <tr>
-                <th>Identifier</th>
-                <th>Name</th>
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="gene in genes">
-                <td>{{gene.primary_identifier}}</td>
-                <td>{{gene.primary_name}}</td>
-                <td><input type="checkbox" value="{{gene.selected}}" ng-model="gene.selected"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <button type="button" class="btn btn-primary curs-finish-button"
-              title="{{ 'Continue' }}"
-              ng-disabled="currentlySelectedGenes() == 0"
-              ng-click="selectGenes()">Continue</button>
-      <div class="upload-genes-link">
-        <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
-      </div>
-    </div>
-  </div>
-
-  <div ng-show="selectedGenes.length > 0">
     <div class="curs-box-title">
 Add alleles from the genes below until the genotype is fully specified.
     </div>
@@ -70,7 +34,7 @@ Add alleles from the genes below until the genotype is fully specified.
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="gene in selectedGenes">
+              <tr ng-repeat="gene in genes">
                 <td>{{gene.primary_identifier}}</td>
                 <td>{{gene.primary_name}}</td>
                 <td>
@@ -114,16 +78,15 @@ The alleles of this genotype:
           </div>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary curs-back-button"
-              title="Back to summary"
-              ng-click="clearSelectedGene()" ng-disabled="false">Back</button>
       <button type="submit" class="btn btn-primary curs-finish-button"
               title="{{ isValid() ? 'Add genotype' : 'At least one allele for each gene is required' }}"
               ng-click="store()" ng-disabled="!isValid()">Finish</button>
       <button type="submit" class="btn btn-warning curs-finish-button"
               ng-click="cancel()">Cancel</button>
+      <div class="upload-genes-link">
+        <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
+      </div>
       
-    </div>
   </div>
 </div>
 
