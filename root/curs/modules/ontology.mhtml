@@ -194,7 +194,7 @@ Choose evidence for annotating {{featureDisplayName}} with {{termOntid}}
       <annotation-evidence evidence-code="data.evidence_code"
                            conditions="data.conditions"
                            with-gene-id="data.with_gene_id"
-                           valid-evidence="validEvidence"
+                           valid-evidence="data.validEvidence"
                            annotation-type-name="{{annotationTypeName}}"></annotation-evidence>
     </div>
   </div>
@@ -203,6 +203,7 @@ Choose evidence for annotating {{featureDisplayName}} with {{termOntid}}
         title="&lt;- Back"
         ng-click="unconfirmTerm()">&lt;- Back</button>
 <button type="submit" class="btn btn-primary curs-finish-button"
+        ng-disabled="!isValid()"
         ng-click="setTermAndEvidence()" >Proceed -&gt;</button>
 
 </div>

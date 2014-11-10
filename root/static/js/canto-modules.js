@@ -385,6 +385,7 @@ var OntologyTermLocatorCtrl =
     $scope.data = {
       termConfirmed: false,
       conditions: [],
+      validEvidence: false,
     };
 
     $scope.openTermSuggestDialog =
@@ -433,6 +434,14 @@ var OntologyTermLocatorCtrl =
                        with_gene_id: $scope.data.with_gene_id,
                        term_suggestion: $scope.data.termSuggestion,
                      });
+    };
+
+    $scope.isValidEvidence = function() {
+      return !!$scope.data.validEvidence;
+    };
+
+    $scope.isValid = function() {
+      return $scope.data.termConfirmed && $scope.isValidEvidence();
     };
 
     $scope.init = function() {
