@@ -192,6 +192,7 @@ sub _get_genotypes
     {
       identifier => $_->identifier(),
       name => $_->name(),
+      allele_string => $_->allele_string(),
       display_name => $_->display_name(),
       genotype_id => $_->genotype_id(),
     }

@@ -125,6 +125,27 @@ canto.service('CursGenotypeList', function($q, Curs) {
 
     return q.promise;
   };
+
+  this.filteredGenotypeList = function(filter) {
+    var filteredCursPromise;
+
+    if (filter.genes) {
+      filteredCursPromise =
+        Curs.list('genotype', 'gene', filter.genes.join(' '));
+    } else {
+      filteredCursPromise = Curs.list('genotype');
+    }
+
+    var q = $q.defer();
+
+    filteredCursPromise.success(function(genotypes) {
+      q.resolve(genotypes);
+    }).error(function() {
+      q.reject();
+    });
+
+    return q.promise;
+  };
 });
 
 canto.service('CursAlleleList', function($q, Curs) {
@@ -1017,6 +1038,117 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
     return $scope.alleles.length > 0;
   };
 }]);
+
+var GenotypeManageCtrl =
+  function($scope, CursGenotypeList, toaster) {
+    $scope.data = {
+      genotypeSearching: false,
+      genotypes: [], 
+    };
+
+    $scope.startSearch = function() {
+      $scope.data.genotypeSearching = true;
+    }
+
+    CursGenotypeList.genotypeList().then(function(results) {
+      $scope.data.genotypes = results;
+    }).catch(function() {
+      toaster.pop('error', "couldn't read the genotype list from the server");
+    });
+  };
+
+canto.controller('GenotypeManageCtrl',
+                 ['$scope', 'CursGenotypeList', 'toaster',
+                 GenotypeManageCtrl]);
+
+var genotypeSearchCtrl =
+  function($scope, CursGeneList, CursGenotypeList) {
+    return {
+      scope: {
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/genotype_search.html',
+      controller: function($scope) {
+        $scope.data = {
+          genes: [],
+          filteredGenotypes: [],
+        };
+      },
+      link: function(scope) {
+        CursGeneList.geneList().then(function(results) {
+          $scope.data.genes = results;
+        }).catch(function() {
+          toaster.pop('note', "couldn't read the gene list from the server");
+        });
+
+        $scope.selectedGenes = function() {
+          return $.grep($scope.genes, function(gene) {
+            return gene.selected;
+          });
+        };
+
+        $scope.$watch('selectedGenes()',
+                      function() {
+                        $scope.selectedGeneIdentifiers =
+                          $.map($scope.selectedGenes(),
+                                function(gene) {
+                                  return gene.primary_identifier;
+                                });
+                        if ($scope.selectedGeneIdentifiers.length == 0) {
+                          $scope.filteredGenotypes = [];
+                        } else {
+                          CursGenotypeList.filteredGenotypeList({ genes: $scope.selectedGeneIdentifiers })
+                            .then(function(results) {
+                              $scope.filteredGenotypeList = results;
+                            }).catch(function() {
+                              toaster.pop('error', "couldn't read the genotype list from the server");
+                            });
+                        }
+                      });
+      },
+    }
+  };
+
+canto.directive('genotypeSearch',
+                 ['CursGenotypeList', 'CursGeneList', 'toaster',
+                  genotypeSearchCtrl]);
+
+var genotypeListRowCtrl =
+  function() {
+    return {
+      restrict: 'A',
+      replace: true,
+      templateUrl: function(elem,attrs) {
+        return app_static_path + 'ng_templates/genotype_list_row.html'
+      },
+      controller: function($scope) {
+        console.log($scope.genotype);
+      },
+    };
+  };
+
+canto.directive('genotypeListRow',
+                [genotypeListRowCtrl]);
+
+
+var genotypeListViewCtrl =
+  function() {
+    return {
+      scope: {
+        genotypeList: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
+      controller: function($scope) {
+
+      },
+    }
+  };
+
+canto.directive('genotypeListView',
+                 [genotypeListViewCtrl]);
 
 
 var EditDialog = function($) {

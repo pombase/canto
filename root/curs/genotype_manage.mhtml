@@ -1,79 +1,51 @@
 <%args>
 $curs_root_uri
 $pub
-$is_admin_session
 $read_only_curs => 0
 </%args>
 
-<div id="curs-genotype-manage" class="genotype-list curs-box">
-  <div class="curs-box-title">
-    <div>
-% if ($read_only_curs) {
-Genotypes from this publication
-% } else {
+<div ng-controller="GenotypeManageCtrl"
+     id="curs-genotype-manage" class="genotype-list curs-box">
+  <div ng-hide="data.genotypeSearching">
+    <div class="curs-box-title">
+      <div>
 Genotype list
-% }
-    <& /curs/inline_help.mhtml, key => 'choose_genotype' &>
+      </div>
+    </div>
+    <div class="curs-box-body">
+      <div ng-show="data.genotypes">
+        <div class="curs-genotype-list-instructions">
+Genotypes used in this curation session:
+        </div>
+
+        <genotype-list-view genotype-list="data.genotypes"></genotype-list-view>
+      </div>
+      <div class="ng-cloak" ng-hide="data.genotypes">
+No genotypes in this session, try 
+<a href="<% $start_path . '/feature/genotype/add' %>">adding one</a>.
+
+      </div>
+
+      <div>
+Actions:
+      </div>
+      <div class="feature-list-action">
+        <a ng-click="startSearch()" href="#">Find an existing genotype ...</a>
+      </div>
+      <div class="feature-list-action">
+        <a href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
+      </div>
+    </div>
+
+  </div>  
+  <div ng-show="data.genotypeSearching">
+    <div class="curs-box-title">
+Search
+    </div>
+    <div class="curs-box-body">
     </div>
   </div>
-  <div class="curs-box-body">
-% if (@genotype_hashes) {
-% if (!$read_only_curs) {
-   <div class="curs-genotype-list-instructions">
-Click on a genotype name to add a phenotype
-   </div>
-% }
-  <table class="list">
-    <thead>
-      <tr>
-        <td>
-Alleles
-        </td>
-        <td>
-Name (optional)
-        </td>
-        <td>
-Annotations
-        </td>
-      </tr>
-    </thead>
-    <tbody>
-%   for my $genotype (@genotype_hashes) {
-    <tr>
-      <td>
-        <span>
-<% $genotype->{allele_string} %>
-        </span>
-      </td>
-      <td>
-        <span>
-<% $genotype->{name} %>
-        </span>
-      </td>
-      <td>
-<% $genotype->{annotation_count} %>
-      </td>
-      <td class="table-row-actions">
-        <div>
-          <a href="<% $start_path . '/feature/genotype/view/' . $genotype->{genotype_id} %>">
-Annotate ..
-          </a>
-        </div>
-      </td>
-    </tr>
-%   }
-  </tbody>
-  </table>
-% } else {
-  <div>
-    No genotypes - add a genotype to make a phenotype annotation.
-  </div>
-% }
 
-  <div class="feature-list-action">
-    <a href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
-  </div>
-</div>
 </div>
 
 

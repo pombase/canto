@@ -1,0 +1,31 @@
+<div ng-show="genes">
+  <div class="curs-box-title">
+Select some genes to find a genotype
+  </div>
+  <div class="curs-box-body">
+    <div class="row">
+      <div class="col-sm-6 col-md-6">
+        <table class="list">
+          <thead>
+            <tr>
+              <th>Identifier</th>
+              <th>Name</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="gene in genes">
+              <td>{{gene.primary_identifier}}</td>
+              <td>{{gene.primary_name}}</td>
+              <td><input type="checkbox" value="{{gene.selected}}"
+                         ng-model="gene.selected"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-sm-6 col-md-6">
+        <genotype-list-view genotype-list="filteredGenotypes"></genotype-list-view>
+      </div>
+    </div>
+  </div>
+</div>
