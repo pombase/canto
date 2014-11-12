@@ -5,8 +5,7 @@ $genotype
 @annotation_type_list
 </%args>
 
-<div id="curs-annotation-actions">
-<div class="curs-box">
+<div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
 Details
   </div>
@@ -44,7 +43,6 @@ Add a new <% $type_display_name %> for this genotype ...
 % }
   </ul>
   </div>
-</div>
 </div>
 
 <div id="curs-genotype-details" class="curs-box">

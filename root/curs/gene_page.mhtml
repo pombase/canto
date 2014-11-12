@@ -9,8 +9,7 @@ $gene
 var genes_in_session = <% $genes_in_session_js |n %>;
 </script>
 
-<div id="curs-annotation-actions">
-<div class="curs-box">
+<div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
 Choose curation type for <% $gene->display_name() %>:
     <& /curs/inline_help.mhtml, key => 'gene_page_choose_curation_type' &>
@@ -38,9 +37,8 @@ Choose curation type for <% $gene->display_name() %>:
   </ul>
   </div>
 </div>
-</div>
 
-<div id="curs-gene-details" class="curs-box">
+<div id="curs-gene-details" class="curs-box curs-half-width-section">
   <div class="curs-box-title">
 Gene details
   </div>

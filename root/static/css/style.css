@@ -620,7 +620,7 @@ div.clearall {
 }
 
 .feature-list-action {
-  font-size: 85%;
+  font-size: 90%;
   margin: 12px 2px 0px 2px;
 }
 
@@ -928,14 +928,7 @@ span.canto-select-buttons {
   margin: 10px;
 }
 
-#curs-gene-list, #curs-genotype-list, #curs-annotation-actions, #curs-front-page .pub-title, #curs-gene-details, #curs-genotype-details {
-  font-size: 90%;
-  float: left;
-  width: 45%;
-  margin-right: 2%;
-}
-
-#curs-gene-list, #curs-genotype-list, #curs-annotation-actions, #curs-front-page .pub-title, #curs-gene-details, #curs-genotype-details {
+#curs-gene-list, #curs-genotype-list, #curs-front-page .pub-title, .curs-half-width-section {
   font-size: 90%;
   float: left;
   width: 45%;

@@ -833,14 +833,9 @@ sub genotype_manage : Chained('top') Args(0)
 
   my $st = $c->stash();
 
-  $st->{title} = 'Manage genotypes for: ' . $st->{pub}->uniquename();
-  $st->{show_title} = 0;
+  $st->{title} = 'Genotypes for: ' . $st->{pub}->uniquename();
   $st->{template} = 'curs/genotype_manage.mhtml';
-
-
 }
-
-
 
 sub _delete_annotation : Private
 {
