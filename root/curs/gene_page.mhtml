@@ -35,6 +35,10 @@ Choose curation type for <% $gene->display_name() %>:
 %   }
 % }
   </ul>
+  <div class="feature-list-action">
+To annotate a multi-gene phenotype involving this gene, go to
+<a href='<% "$curs_root_uri/genotype_manage" %>'>the genotype page</a>
+  </div>
   </div>
 </div>
 
