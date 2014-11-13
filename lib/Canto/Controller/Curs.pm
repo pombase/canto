@@ -1094,9 +1094,6 @@ sub annotation_ontology_edit
   my $annotation_extra_help_text = $annotation_config->{extra_help_text};
   $st->{annotation_extra_help_text} = $annotation_extra_help_text;
   $st->{template} = "curs/modules/$module_category.mhtml";
-
-  my $display_name = $st->{feature}->display_name();
-  $st->{feature_display_name} = $display_name;
 }
 
 sub annotation_interaction_edit

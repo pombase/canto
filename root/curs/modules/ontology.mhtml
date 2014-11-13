@@ -10,7 +10,9 @@ $specific_term_examples
 $annotation_help_text
 $annotation_more_help_text
 $annotation_extra_help_text
-$feature_display_name
+$curs_root_uri
+$feature_type
+$feature
 $pub
 </%args>
 
@@ -67,6 +69,11 @@ Gene products may be annotated with multiple
                             search-string="data.searchString"
                             matching-synonym="data.matchingSynonym"
                             annotation-type-name="{{annotationTypeName}}"></term-name-complete>
+
+        <div class="clearall">
+          <a href='<% "$curs_root_uri/feature/$feature_type/view/$feature_id" %>'
+             class="btn btn-primary curs-back-button">&lt;- Back</a>
+        </div>
       </div>
     </div>
 
@@ -218,4 +225,7 @@ use JSON;
 
 my $ontology_external_links_json =
   encode_json $c->config()->{ontology_external_links};
+
+my $feature_display_name = $feature->display_name();
+my $feature_id = $feature->feature_id();
 </%init>
