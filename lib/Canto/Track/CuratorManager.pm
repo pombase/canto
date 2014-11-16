@@ -105,7 +105,7 @@ sub _format_curs_curator_row
  Usage   : $curator_manager->current_curator($curs_key);
  Function: Get the current curator of a curation session.  ie the curator of the
            curs_curator row with the highest curs_curator_id - the most recent.
- Args    : $curs - a TrackDB Curs or a curs_key that will be looked up
+ Args    : $curs_key - the curs_key for the session
  Return  : ($email, $name, $known_as, $accepted_date, $community_curated)
               - in an array context
            $email - in a scalar context
@@ -135,7 +135,7 @@ sub current_curator
 
  Usage   : $curator_manager->session_curators($curs_key);
  Function: Return a summary of current and past curators of the given session.
- Args    : $curs - a TrackDB Curs or a curs_key that will be looked up
+ Args    : $curs_key - the curs_key for the session
  Return  : An array of curator information, ordered from oldest to newest.
            Each element in the array has the form:
             [$email, $name, $known_as, $accepted_date, $community_curated]
@@ -157,11 +157,10 @@ sub session_curators
 
 =head2 set_curator
 
- Usage   : $curator_manager->set_curator($curs_key, $email, $name);
+ Usage   : $curator_manager->set_curator($curs_key, $email);
  Function: set the curator of a curation session
- Args    : $curs - a TrackDB Curs or a curs_key that will be looked up
+ Args    : $curs_key - the curs_key for the session
            $email - the email address of the curator
-           $name the name of the curator
  Return  : nothing
 
 =cut
