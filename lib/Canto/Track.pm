@@ -146,6 +146,9 @@ sub create_curs_db
   # the calling function will wrap this in a transaction if necessary
   __PACKAGE__->set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
   __PACKAGE__->set_metadata($curs_schema, 'curs_key', $curs->curs_key());
+  __PACKAGE__->set_metadata($curs_schema,
+                            Canto::Curs::State::SESSION_CREATED_TIMESTAMP_KEY,
+                            Canto::Util::get_current_datetime());
 
   my $track_schema = $curs->result_source()->schema();
 
