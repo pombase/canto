@@ -146,9 +146,6 @@ sub create_curs_db
   # the calling function will wrap this in a transaction if necessary
   __PACKAGE__->set_metadata($curs_schema, 'curation_pub_id', $curs_db_pub->pub_id);
   __PACKAGE__->set_metadata($curs_schema, 'curs_key', $curs->curs_key());
-  __PACKAGE__->set_metadata($curs_schema,
-                            Canto::Curs::State::SESSION_CREATED_TIMESTAMP_KEY,
-                            Canto::Util::get_current_datetime());
 
   my $track_schema = $curs->result_source()->schema();
 
@@ -162,6 +159,9 @@ sub create_curs_db
 
   $pub->triage_status($curatable_cvterm);
   $pub->update();
+
+  my $state = Canto::Curs::State->new(config => $config);
+  $state->store_statuses($curs_schema);
 
   if (wantarray) {
     return ($curs_schema, $db_file_name);

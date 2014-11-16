@@ -28,6 +28,7 @@ my $add_cvterm = 0;
 my $add_person = 0;
 my $add_by_pubmed_id = 0;
 my $add_by_pubmed_query = 0;
+my $add_session = 0;
 my $dry_run = 0;
 my $do_help = 0;
 
@@ -53,6 +54,9 @@ my %dispatch = (
   },
   '--pubmed-by-query' => sub {
     $add_by_pubmed_query = 1;
+  },
+  '--session' => sub {
+    $add_session = 1;
   },
   '--help' => sub {
     $do_help = 1;
@@ -88,6 +92,8 @@ or:
   $0 --pubmed-by-id <pubmed_id> [pubmed_id ...]
 or:
   $0 --pubmed-by-query <query>
+or:
+  $0 --session <pubmed_id> <user_email_address>
 
 Options:
   --cvterm  - add a cvterm to the database
@@ -104,6 +110,7 @@ Options:
       The details will be fetched from PubMed.
   --pubmed-by-query  - add publications by querying PubMed
       eg. 'pombe OR "fission yeast"'
+  --session - create a session for a publication
 |;
 }
 
@@ -117,6 +124,10 @@ if ($add_cvterm && (@ARGV < 2 || @ARGV > 4)) {
 
 if ($add_person && (@ARGV < 3 || @ARGV > 4)) {
   usage("--person needs 2 or 3 arguments");
+}
+
+if ($add_session && @ARGV != 2) {
+  usage("--session needs 2 or 3 arguments");
 }
 
 if (@ARGV == 0) {
@@ -179,6 +190,23 @@ my $proc = sub {
     my $role = $load_util->find_cvterm(cv_name => 'Canto user types',
                                        name => $role_name);
     $load_util->get_person($name, $email_address, $role, $password);
+  }
+
+  if ($add_session) {
+    my $pubmedid = shift @ARGV;
+    my $email_address = shift @ARGV;
+
+    my ($curs, $cursdb, $curator) =
+      $load_util->create_user_session($config, $pubmedid, $email_address);
+
+    my $pub = $curs->pub();
+
+    if (!$pub->corresponding_author()) {
+      $pub->corresponding_author($curator);
+      $pub->update();
+    }
+
+    print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(), " for: $email_address\n";
   }
 };
 
