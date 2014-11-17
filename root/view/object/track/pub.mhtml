@@ -148,14 +148,9 @@ my $session_assigned = 0;
 
 if (defined $curs) {
   $curs_key = $curs->curs_key();
-  my $link_sent_to_curator_date_cvterm =
-    $schema->resultset('Cvterm')
-      ->find({ name => 'link_sent_to_curator_date',
-               'cv.name' => 'Canto cursprop types' },
-             { join => 'cv' });
-  my $link_sent_prop =
-    $curs->cursprops()->search({ type => $link_sent_to_curator_date_cvterm->cvterm_id() })->first();
-  if (defined $link_sent_prop) {
+  my $link_sent_date = $curs->prop_value('link_sent_to_curator_date');
+
+  if (defined $link_sent_date) {
     $session_sent = 1;
   }
 

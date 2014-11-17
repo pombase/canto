@@ -12,19 +12,51 @@ $class_info
 </div>
 </&>
 
+<div>
+% if ($session_assigned) {
+<div class="curs-pub-assign-actions">
+  <button href="<% $c->uri_for('/tools/send_session/' . $curs_key) %>"
+                type="button" id="curs-pub-send-session-popup-dialog">\
+%   if ($session_sent) {
+Resend session to curator ...\
+%   } else {
+Send session to curator ...\
+%   }
+  </button>
+</div>
+% }
+
 <button type="button" class="confirm-delete curs-finish-button"
         href="<% $c->uri_for('/tools/remove_curs/' . $object->curs_key()) %>">
   Remove this session</button>
+</div>
 
+<div class="clearall">
 <& /view/inline_list.mhtml, config_name => 'person', rs => $current_curator_rs,
                        list_title => 'Current curator of this session' &>
 <& /view/inline_list.mhtml, config_name => 'person', rs => $curator_rs,
                        list_title => 'Past and current curators of this session' &>
 <& /view/collection.mhtml, object => $object, collection_name => 'cursprops',
                            collection_title => 'Database properties of this session' &>
-
+</div>
 <%init>
 my $curator_rs = $object->curs_curators()->search_related('curator');
 my $where = "curs_curator_id = (select max(curs_curator_id) from curs_curator where curs = me.curs)";
 my $current_curator_rs = $object->curs_curators()->search({ }, { where => \$where })->search_related('curator');
+
+my $session_sent = 0;
+my $session_assigned = 0;
+
+my $curs_key = $object->curs_key();
+
+my $link_sent_date = $object->prop_value('link_sent_to_curator_date');
+
+if (defined $link_sent_date) {
+  $session_sent = 1;
+}
+
+my $curator_manager = Canto::Track::CuratorManager->new(config => $c->config());
+
+$session_assigned = defined $curator_manager->current_curator($object->curs_key());
+
 </%init>

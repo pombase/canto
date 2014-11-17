@@ -147,6 +147,33 @@ sub new {
   return $new;
 }
 
+=head2 prop_value
+
+ Usage   : $value = $curs->prop_value('some_cursprop_type_name');
+ Function: Lookup a Cursprop value by name.  If the property doesn't
+           exist return undef.
+ Args    : $prop_name
+ Return  : The Cursprop value
+
+=cut
+
+sub prop_value
+{
+  my $self = shift;
+  my $prop_name = shift;
+
+  my $prop =
+    $self->cursprops()->search({ 'type.name' => $prop_name,
+                                 'cv.name' => 'Canto cursprop types' },
+                               { join => { type => 'cv' } })->first();
+
+  if (defined $prop) {
+    return $prop->value();
+  } else {
+    return undef;
+  }
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;
