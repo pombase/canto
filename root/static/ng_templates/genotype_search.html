@@ -5,7 +5,7 @@
       </div>
       <div class="col-sm-7 col-md-7">
         <div ng-show="data.waitingForServer">
-Loading ...
+          <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
         </div>
         <div ng-hide="data.waitingForServer">
           <div ng-show="data.filteredGenotypes.length > 0">

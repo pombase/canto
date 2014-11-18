@@ -1044,10 +1044,13 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
 }]);
 
 var GenotypeManageCtrl =
-  function($scope, CursGenotypeList, toaster) {
+  function($scope, CursGenotypeList, CantoGlobals, toaster) {
+    $scope.app_static_path = CantoGlobals.app_static_path;
+
     $scope.data = {
       genotypeSearching: false,
-      // genotypes: undefined,
+      genotypes: [],
+      waitingForServer: true,
     };
 
     $scope.startSearch = function() {
@@ -1060,13 +1063,15 @@ var GenotypeManageCtrl =
 
     CursGenotypeList.genotypeList().then(function(results) {
       $scope.data.genotypes = results;
+      $scope.data.waitingForServer = false;
     }).catch(function() {
       toaster.pop('error', "couldn't read the genotype list from the server");
+      $scope.data.waitingForServer = false;
     });
   };
 
 canto.controller('GenotypeManageCtrl',
-                 ['$scope', 'CursGenotypeList', 'toaster',
+                 ['$scope', 'CursGenotypeList', 'CantoGlobals', 'toaster',
                  GenotypeManageCtrl]);
 
 var geneSelectorCtrl =
@@ -1104,7 +1109,7 @@ canto.directive('geneSelector',
                   geneSelectorCtrl]);
 
 var genotypeSearchCtrl =
-  function(CursGenotypeList) {
+  function(CursGenotypeList, CantoGlobals, toaster) {
     return {
       scope: {
       },
@@ -1117,6 +1122,7 @@ var genotypeSearchCtrl =
           searchGenes: [],
           waitingForServer: false,
         };
+        $scope.app_static_path = CantoGlobals.app_static_path;
       },
       link: function(scope) {
         scope.$watch('data.searchGenes',
@@ -1144,7 +1150,7 @@ var genotypeSearchCtrl =
   };
 
 canto.directive('genotypeSearch',
-                 ['CursGenotypeList', 'toaster',
+                 ['CursGenotypeList', 'CantoGlobals', 'toaster',
                   genotypeSearchCtrl]);
 
 var genotypeListRowCtrl =
