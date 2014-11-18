@@ -19,8 +19,8 @@ annotations to PomBase based on this paper:
 The curation link is:
   <% $session_link %>
 
-When you follow the above link and sign in, you will be guided step-by-step though
-the process to add more annotations. You can annotate these data types in the
+When you follow the above link, you will be guided step-by-step though the
+process to add more annotations. You can annotate these data types in the
 tool:
 <& ../annotation_type_list.mhtml, config => $config &>
 

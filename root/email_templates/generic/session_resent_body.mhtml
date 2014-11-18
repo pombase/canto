@@ -21,9 +21,9 @@ collect the data by a different route.
 Your curation link is:
   <% $session_link %>
 
-When you follow the above link and sign in, you can start curating, or
-assign the session to a colleague (e.g. a member of your lab). You can
-annotate these data types in the tool:
+When you follow the above link, you can start curating, or assign the session
+to a colleague (e.g. a member of your lab). You can annotate these data types
+in the tool:
 
 <& ../annotation_type_list.mhtml, config => $config &>\
 % if ($existing_annotation_count > 0) {
