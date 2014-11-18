@@ -2954,6 +2954,12 @@ sub ws_list : Chained('ws') PathPart('list')
   my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
                                                      config => $c->config());
 
+  my $json_data = $c->req()->body_data();
+
+  if ($json_data) {
+    push @args, $json_data;
+  }
+
   $c->stash->{json_data} = $service_utils->list_for_service($type, @args);
 
   $c->forward('View::JSON');

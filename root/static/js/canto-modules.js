@@ -87,10 +87,20 @@ canto.config(function($logProvider){
 
 canto.service('Curs', function($http) {
   this.list = function(key, args) {
+    var data = null;
+
     if (typeof(args) === 'undefined') {
       args = [];
     }
-    return $http.get(curs_root_uri + '/ws/' + key + '/list/' + args.join('/'));
+
+    var url = curs_root_uri + '/ws/' + key + '/list/';
+
+    if (args.length > 0 && typeof(args[args.length - 1]) === 'object') {
+      data = args.pop();
+      return $http.post(url + args.join('/'), data);
+    } else {
+      return $http.get(url + args.join('/'));
+    }
   };
 });
 
@@ -127,14 +137,8 @@ canto.service('CursGenotypeList', function($q, Curs) {
   };
 
   this.filteredGenotypeList = function(filter) {
-    var filteredCursPromise;
-
-    if (filter.genes) {
-      filteredCursPromise =
-        Curs.list('genotype', 'gene', filter.genes.join(' '));
-    } else {
-      filteredCursPromise = Curs.list('genotype');
-    }
+    var filteredCursPromise =
+      Curs.list('genotype', ['filtered', filter]);
 
     var q = $q.defer();
 
@@ -1043,12 +1047,16 @@ var GenotypeManageCtrl =
   function($scope, CursGenotypeList, toaster) {
     $scope.data = {
       genotypeSearching: false,
-      genotypes: [], 
+      // genotypes: undefined,
     };
 
     $scope.startSearch = function() {
       $scope.data.genotypeSearching = true;
-    }
+    };
+
+    $scope.cancelSearch = function() {
+      $scope.data.genotypeSearching = false;
+    };
 
     CursGenotypeList.genotypeList().then(function(results) {
       $scope.data.genotypes = results;
@@ -1061,8 +1069,42 @@ canto.controller('GenotypeManageCtrl',
                  ['$scope', 'CursGenotypeList', 'toaster',
                  GenotypeManageCtrl]);
 
+var geneSelectorCtrl =
+  function(CursGeneList, toaster) {
+    return {
+      scope: {
+        selectedGenes: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/gene_selector.html',
+      controller: function($scope) {
+        $scope.data = {
+          genes: [],
+        };
+      },
+      link: function(scope) {
+        CursGeneList.geneList().then(function(results) {
+          scope.data.genes = results;
+        }).catch(function() {
+          toaster.pop('note', "couldn't read the gene list from the server");
+        });
+
+        scope.selectedGenesFilter = function() {
+          scope.selectedGenes = $.grep(scope.data.genes, function(gene) {
+            return gene.selected;
+          });
+        };
+      },
+    }
+  }
+
+canto.directive('geneSelector',
+                 ['CursGeneList', 'toaster',
+                  geneSelectorCtrl]);
+
 var genotypeSearchCtrl =
-  function($scope, CursGeneList, CursGenotypeList) {
+  function(CursGenotypeList) {
     return {
       scope: {
       },
@@ -1071,39 +1113,30 @@ var genotypeSearchCtrl =
       templateUrl: app_static_path + 'ng_templates/genotype_search.html',
       controller: function($scope) {
         $scope.data = {
-          genes: [],
           filteredGenotypes: [],
+          searchGenes: [],
+          waitingForServer: false,
         };
       },
       link: function(scope) {
-        CursGeneList.geneList().then(function(results) {
-          $scope.data.genes = results;
-        }).catch(function() {
-          toaster.pop('note', "couldn't read the gene list from the server");
-        });
-
-        $scope.selectedGenes = function() {
-          return $.grep($scope.genes, function(gene) {
-            return gene.selected;
-          });
-        };
-
-        $scope.$watch('selectedGenes()',
+        scope.$watch('data.searchGenes',
                       function() {
-                        $scope.selectedGeneIdentifiers =
-                          $.map($scope.selectedGenes(),
-                                function(gene) {
-                                  return gene.primary_identifier;
-                                });
-                        if ($scope.selectedGeneIdentifiers.length == 0) {
-                          $scope.filteredGenotypes = [];
+                        if (scope.data.searchGenes.length == 0) {
+                          scope.data.filteredGenotypes.length = 0;
                         } else {
-                          CursGenotypeList.filteredGenotypeList({ genes: $scope.selectedGeneIdentifiers })
-                            .then(function(results) {
-                              $scope.filteredGenotypeList = results;
-                            }).catch(function() {
-                              toaster.pop('error', "couldn't read the genotype list from the server");
-                            });
+                          scope.data.waitingForServer = true;
+                          CursGenotypeList.filteredGenotypeList({
+                            gene_identifiers: $.map(scope.data.searchGenes,
+                                                    function(gene_data) {
+                                                      return gene_data.primary_identifier
+                                                    })
+                          }).then(function(results) {
+                            scope.data.filteredGenotypes = results;
+                            scope.data.waitingForServer = false;
+                          }).catch(function() {
+                            toaster.pop('error', "couldn't read the genotype list from the server");
+                            scope.data.waitingForServer = false;
+                          });
                         }
                       });
       },
@@ -1111,7 +1144,7 @@ var genotypeSearchCtrl =
   };
 
 canto.directive('genotypeSearch',
-                 ['CursGenotypeList', 'CursGeneList', 'toaster',
+                 ['CursGenotypeList', 'toaster',
                   genotypeSearchCtrl]);
 
 var genotypeListRowCtrl =
@@ -1123,7 +1156,6 @@ var genotypeListRowCtrl =
         return app_static_path + 'ng_templates/genotype_list_row.html'
       },
       controller: function($scope) {
-        console.log($scope.genotype);
       },
     };
   };

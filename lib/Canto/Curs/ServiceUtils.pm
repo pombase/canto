@@ -174,15 +174,35 @@ sub _get_genotypes
   my $genotype_rs = $curs_schema->resultset('Genotype');
 
   if (defined $action && defined $action_arg) {
-    if ($action eq 'with_gene') {
-      $genotype_rs = $genotype_rs->search({ 'gene.primary_identifier' => $action_arg },
-                                          {
-                                            join => {
-                                              allele_genotypes => {
-                                                allele => 'gene'
-                                              }
-                                            }
-                                          });
+    if ($action eq 'filtered') {
+      my $gene_identifiers = delete $action_arg->{gene_identifiers};
+
+      my @sub_queries = map {
+        my $gene_identifier = $_;
+        my $sub_query =
+          $curs_schema->resultset('Genotype')
+            ->search({ 'gene.primary_identifier' => $gene_identifier },
+                     {
+                       join => {
+                         allele_genotypes => {
+                           allele => 'gene'
+                         }
+                       }
+                     });
+        {
+          'genotype_id' =>
+            {
+              -in => $sub_query->get_column('genotype_id')->as_query()
+            }
+          }
+      } @$gene_identifiers;
+
+      my $search_arg = {
+        -and => \@sub_queries,
+      };
+
+      $genotype_rs = $genotype_rs->search($search_arg);
+
     } else {
       croak "unknown action for genotypes list: $action\n";
     }

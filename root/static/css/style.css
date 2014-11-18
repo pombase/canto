@@ -435,6 +435,11 @@ td.table-row-actions {
   border: 0px solid white !important;
   background-color: white !important;
 }
+td.table-row-actions div {
+  white-space: nowrap;
+  font-size: 95%;
+}
+
 
 .curs-evidence-conditions {
   margin: 30px 0px 5px 0px;

@@ -1,31 +1,26 @@
-<div ng-show="genes">
-  <div class="curs-box-title">
-Select some genes to find a genotype
-  </div>
-  <div class="curs-box-body">
+<div>
     <div class="row">
-      <div class="col-sm-6 col-md-6">
-        <table class="list">
-          <thead>
-            <tr>
-              <th>Identifier</th>
-              <th>Name</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="gene in genes">
-              <td>{{gene.primary_identifier}}</td>
-              <td>{{gene.primary_name}}</td>
-              <td><input type="checkbox" value="{{gene.selected}}"
-                         ng-model="gene.selected"></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="col-sm-5 col-md-5">
+        <gene-selector selected-genes="data.searchGenes"></gene-selector>
       </div>
-      <div class="col-sm-6 col-md-6">
-        <genotype-list-view genotype-list="filteredGenotypes"></genotype-list-view>
+      <div class="col-sm-7 col-md-7">
+        <div ng-show="data.waitingForServer">
+Loading ...
+        </div>
+        <div ng-hide="data.waitingForServer">
+          <div ng-show="data.filteredGenotypes.length > 0">
+Matching genotypes:
+            <genotype-list-view genotype-list="data.filteredGenotypes"></genotype-list-view>
+          </div>
+          <div ng-show="data.filteredGenotypes.length == 0">
+            <div ng-show="data.searchGenes.length == 1">
+(No genotypes match the selected gene)
+            </div>
+            <div ng-show="data.searchGenes.length > 1">
+(No genotypes match all the selected genes)
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 </div>
