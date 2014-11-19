@@ -29,12 +29,14 @@ cmp_deeply($res,
               'name' => 'h+ SPCC63.05delta ssm4KE',
               display_name => 'h+ SPCC63.05delta ssm4KE',
               genotype_id => 1,
+              allele_string => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
             },
             {
               'identifier' => 'aaaa0007-genotype-2',
               'name' => undef,
               display_name => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
               genotype_id => 2,
+              allele_string => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
             }
           ]);
 
@@ -42,7 +44,12 @@ my $spcc63_05 =
   $curs_schema->resultset('Gene')
     ->find({ primary_identifier => 'SPCC63.05' });
 
-$res = $service_utils->list_for_service('genotype', 'with_gene', $spcc63_05->primary_identifier());
+$res = $service_utils->list_for_service('genotype', 'filtered',
+                                        { gene_identifiers =>
+                                            [
+                                              $spcc63_05->primary_identifier()
+                                            ]
+                                          });
 
 cmp_deeply($res,
            [
@@ -51,6 +58,7 @@ cmp_deeply($res,
               name => 'h+ SPCC63.05delta ssm4KE',
               display_name => 'h+ SPCC63.05delta ssm4KE',
               genotype_id => 1,
+              allele_string => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
             },
           ]);
 

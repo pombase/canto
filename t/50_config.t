@@ -14,7 +14,7 @@ my $config_single = Canto::Config->new($config_yaml_1);
 
 is($config_single->{some_key}, 'some_value_1');
 
-is(keys %{$config_single}, 8);
+is(keys %{$config_single}, 9);
 
 ok(!$config_single->{annotation_types}->{phenotype}->{needs_with_or_from});
 ok($config_single->{annotation_types}->{cellular_component}->{needs_with_or_from});
@@ -34,7 +34,7 @@ my $config_two = Canto::Config->new($config_yaml_1, $config_yaml_2);
 
 is($config_two->{some_key}, 'some_value_1');
 is($config_two->{some_key_for_overriding}, 'overidden_value');
-is(keys %{$config_two}, 8);
+is(keys %{$config_two}, 9);
 
 
 # test loading then merging
@@ -43,7 +43,7 @@ $config_merge->merge_config($config_yaml_2);
 
 is($config_merge->{some_key}, 'some_value_1');
 is($config_merge->{some_key_for_overriding}, 'overidden_value');
-is(keys %{$config_merge}, 8);
+is(keys %{$config_merge}, 9);
 
 my $lc_app_name = lc Canto::Config::get_application_name();
 my $uc_app_name = uc $lc_app_name;

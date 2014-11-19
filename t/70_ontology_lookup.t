@@ -173,6 +173,7 @@ my $expected_fypo_term = {
   id => 'FYPO:0000114',
   name => 'cellular process phenotype',
   annotation_namespace => 'fission_yeast_phenotype',
+  annotation_type_name => 'phenotype',
   definition => 'A phenotype that affects a cellular process.',
   is_obsolete => 0,
 };
@@ -202,6 +203,7 @@ my $expected_fypo_obsolete_term = {
   id => 'FYPO:0002233',
   name => 'viable elongated vegetative cell population',
   annotation_namespace => 'fission_yeast_phenotype',
+  annotation_type_name => 'phenotype',
   definition => 'A cell population phenotype in which all cells in the population are viable but longer than normal in the vegetative growth phase of the life cycle.',
   is_obsolete => 1,
   comment => 'This term was made obsolete because it is redundant with annotating to the equivalent cell phenotype plus a full-penetrance extension.',
