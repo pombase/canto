@@ -165,6 +165,39 @@ sub _get_annotation
     } @annotation_type_list,
 }
 
+sub _filter_by_gene_identifiers
+{
+  my $curs_schema = shift;
+  my $genotype_rs = shift;
+  my $gene_identifiers = shift;
+
+  my @sub_queries = map {
+    my $gene_identifier = $_;
+    my $sub_query =
+      $curs_schema->resultset('Genotype')
+        ->search({ 'gene.primary_identifier' => $gene_identifier },
+                 {
+                   join => {
+                     allele_genotypes => {
+                       allele => 'gene'
+                     }
+                   }
+                 });
+    {
+      'genotype_id' =>
+        {
+          -in => $sub_query->get_column('genotype_id')->as_query()
+        }
+      }
+  } @$gene_identifiers;
+
+  my $search_arg = {
+    -and => \@sub_queries,
+  };
+
+  return $genotype_rs->search($search_arg);
+}
+
 sub _get_genotypes
 {
   my $self = shift;
@@ -176,33 +209,8 @@ sub _get_genotypes
   if (defined $action && defined $action_arg) {
     if ($action eq 'filtered') {
       my $gene_identifiers = delete $action_arg->{gene_identifiers};
-
-      my @sub_queries = map {
-        my $gene_identifier = $_;
-        my $sub_query =
-          $curs_schema->resultset('Genotype')
-            ->search({ 'gene.primary_identifier' => $gene_identifier },
-                     {
-                       join => {
-                         allele_genotypes => {
-                           allele => 'gene'
-                         }
-                       }
-                     });
-        {
-          'genotype_id' =>
-            {
-              -in => $sub_query->get_column('genotype_id')->as_query()
-            }
-          }
-      } @$gene_identifiers;
-
-      my $search_arg = {
-        -and => \@sub_queries,
-      };
-
-      $genotype_rs = $genotype_rs->search($search_arg);
-
+      $genotype_rs = _filter_by_gene_identifiers($curs_schema, $genotype_rs,
+                                                 $gene_identifiers);
     } else {
       croak "unknown action for genotypes list: $action\n";
     }
