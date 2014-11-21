@@ -44,8 +44,6 @@ use Canto::Curs::Utils;
 with 'Canto::Role::Configurable';
 with 'Canto::Chado::ChadoLookup';
 
-use Canto::Curs::Utils;
-
 
 =head2 lookup
 

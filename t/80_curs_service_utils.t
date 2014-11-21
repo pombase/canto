@@ -20,7 +20,7 @@ $config->{implementation_classes}->{allele_adaptor} =
 my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $curs_schema,
                                                    config => $config);
 
-my $res = $service_utils->list_for_service('genotype');
+my $res = $service_utils->list_for_service('genotype', 'curs_only');
 
 cmp_deeply($res,
            [
@@ -44,12 +44,16 @@ my $spcc63_05 =
   $curs_schema->resultset('Gene')
     ->find({ primary_identifier => 'SPCC63.05' });
 
-$res = $service_utils->list_for_service('genotype', 'filtered',
-                                        { gene_identifiers =>
-                                            [
-                                              $spcc63_05->primary_identifier()
-                                            ]
+$res = $service_utils->list_for_service('genotype', 'all',
+                                        {
+                                          filter =>
+                                            { gene_identifiers =>
+                                                [
+                                                  $spcc63_05->primary_identifier()
+                                                ]
+                                              }
                                           });
+
 
 cmp_deeply($res,
            [

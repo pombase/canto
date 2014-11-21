@@ -198,22 +198,54 @@ sub _filter_by_gene_identifiers
   return $genotype_rs->search($search_arg);
 }
 
+sub _filter_by_gene_identifiers_chado
+{
+  my $self = shift;
+  my $max = shift;
+  my $gene_identifiers = shift;
+
+  my $genotype_lookup = $self->genotype_lookup();
+
+  if ($max == 0) {
+    return ();
+  } else {
+    my @res = ();
+
+    my $lookup_res = $genotype_lookup->lookup(gene_primary_identifiers =>
+                                                $gene_identifiers);
+
+    while (@$lookup_res > 0 && (!defined $max || @res < $max)) {
+      push @res, shift @$lookup_res;
+    }
+
+    return @res;
+  }
+}
+
 sub _get_genotypes
 {
   my $self = shift;
-  my $action = shift;
-  my $action_arg = shift;
+  my $arg = shift; # "curs_only" or "all"
+  my $options = shift;
   my $curs_schema = $self->curs_schema();
   my $genotype_rs = $curs_schema->resultset('Genotype');
 
-  if (defined $action && defined $action_arg) {
-    if ($action eq 'filtered') {
-      my $gene_identifiers = delete $action_arg->{gene_identifiers};
-      $genotype_rs = _filter_by_gene_identifiers($curs_schema, $genotype_rs,
-                                                 $gene_identifiers);
-    } else {
-      croak "unknown action for genotypes list: $action\n";
-    }
+  my $filter = undef;
+  my $max = undef;
+
+  if (defined $options) {
+    $filter = $options->{filter};
+    $max = $options->{max};
+  }
+
+  if ($filter) {
+    my $gene_identifiers = $filter->{gene_identifiers};
+    $genotype_rs = _filter_by_gene_identifiers($curs_schema, $genotype_rs,
+                                               $gene_identifiers);
+  }
+
+  if ($max) {
+    $genotype_rs = $genotype_rs->search({}, { rows => $max });
   }
 
   my @res = map {
@@ -225,6 +257,19 @@ sub _get_genotypes
       genotype_id => $_->genotype_id(),
     }
   } $genotype_rs->all();
+
+  if ($arg eq 'all') {
+    if ($filter) {
+      my $gene_identifiers = $filter->{gene_identifiers};
+      my @chado_genotypes =
+        $self->_filter_by_gene_identifiers_chado($max, $gene_identifiers);
+
+      die "unimplemented";
+
+    }
+  }
+
+  return @res;
 }
 
 sub _get_alleles

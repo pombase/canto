@@ -122,12 +122,12 @@ canto.service('CursGeneList', function($q, Curs) {
 });
 
 canto.service('CursGenotypeList', function($q, Curs) {
-  this.cursPromise = Curs.list('genotype');
+  this.cursGenotypesPromise = Curs.list('genotype', ['curs_only']);
 
-  this.genotypeList = function() {
+  this.cursGenotypeList = function() {
     var q = $q.defer();
 
-    this.cursPromise.success(function(genotypes) {
+    this.cursGenotypesPromise.success(function(genotypes) {
       q.resolve(genotypes);
     }).error(function() {
       q.reject();
@@ -137,8 +137,11 @@ canto.service('CursGenotypeList', function($q, Curs) {
   };
 
   this.filteredGenotypeList = function(filter) {
+    var options = {
+      filter: filter,
+    };
     var filteredCursPromise =
-      Curs.list('genotype', ['filtered', filter]);
+      Curs.list('genotype', ['all', options]);
 
     var q = $q.defer();
 
@@ -381,7 +384,7 @@ var featureChooser =
             toaster.pop('note', "couldn't read the gene list from the server");
           });
         } else {
-          CursGenotypeList.genotypeList().then(function(results) {
+          CursGenotypeList.cursGenotypeList().then(function(results) {
             $scope.features = results;
 
             $.map($scope.features,
@@ -1061,7 +1064,7 @@ var GenotypeManageCtrl =
       $scope.data.genotypeSearching = false;
     };
 
-    CursGenotypeList.genotypeList().then(function(results) {
+    CursGenotypeList.cursGenotypeList().then(function(results) {
       $scope.data.genotypes = results;
       $scope.data.waitingForServer = false;
     }).catch(function() {
@@ -1522,7 +1525,7 @@ var annotationTableCtrl =
           scope.displayAnnotationFeatureType = capitalize(annotationType.feature_type);
 
           if (annotationType.feature_type === 'genotype') {
-            CursGenotypeList.genotypeList().then(function(results) {
+            CursGenotypeList.cursGenotypeList().then(function(results) {
               scope.data.hasFeatures = (results.length > 0);
             }).catch(function() {
               toaster.pop('error', "couldn't read the genotype list from the server");
