@@ -1642,30 +1642,6 @@ sub _allele_from_json: Private
   return $schema->create_with_type('Allele', \%create_args);
 }
 
-sub _create_genotype_uniquename: Private
-{
-  my $schema = shift;
-  my $curs_key = shift;
-
-  my $prefix = "$curs_key-genotype-1";
-
-  my $rs = $schema->resultset('Genotype')
-    ->search({ identifier => { -like => "$prefix%" } });
-
-  my $new_index = 1;
-
-  while (defined (my $genotype = $rs->next())) {
-    if ($genotype->identifier() =~ /^$prefix(\d+)$/) {
-       if ($1 >= $new_index) {
-         $new_index = $1 + 1;
-       }
-     }
-   }
-
-   return "$prefix$new_index";
-}
-
-
 sub _make_genotype
 {
   my $self = shift;
@@ -1677,12 +1653,9 @@ sub _make_genotype
   my $schema = $st->{schema};
   my $curs_key = $st->{curs_key};
 
-  my $genotype_identifier = _create_genotype_uniquename($schema, $curs_key);
-
   my $genotype =
     $schema->create_with_type('Genotype',
                               {
-                                identifier => $genotype_identifier,
                                 name => $name || undef,
                               });
 
