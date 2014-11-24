@@ -16,7 +16,7 @@ $class_info
 % if ($session_assigned) {
 <div class="curs-pub-assign-actions">
   <button href="<% $c->uri_for('/tools/send_session/' . $curs_key) %>"
-                type="button" id="curs-pub-send-session-popup-dialog">\
+          class="btn btn-primary" type="button" id="curs-pub-send-session-popup-dialog">\
 %   if ($session_sent) {
 Resend session to curator ...\
 %   } else {
