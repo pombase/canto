@@ -42,6 +42,103 @@ use Canto::Curs::Utils;
 
 with 'Canto::Role::Configurable';
 with 'Canto::Chado::ChadoLookup';
+with 'Canto::Role::SimpleCache';
+
+sub _long_allele_identifier
+{
+  my $allele_feature = shift;
+
+  my %props = map {
+    ($_->type()->name(), $_->value());
+  } $allele_feature->featureprops()->search({}, { prefetch => 'type' })->all();
+
+  $props{allele_type} //= 'unknown';
+
+  (my $type_tidy = $props{allele_type}) =~ s/[\s,]+/-/g;
+
+  my $ret = Canto::Curs::Utils::make_allele_display_name($allele_feature->name(),
+                                                         $props{description},
+                                                         $props{allele_type});
+  if ($ret !~ /$type_tidy/) {
+    # prevent "ssm4delta(deletion)-deletion"
+    $ret .= '-' . $type_tidy;
+  }
+
+  return $ret;
+}
+
+sub _allele_string
+{
+  my @alleles = @_;
+
+  return
+    join " ", sort map {
+      _long_allele_identifier($_);
+    } @alleles;
+}
+
+sub _get_alleles
+{
+  my $self = shift;
+  my $genotype = shift;
+
+  my $schema = $self->schema();
+
+  return $schema->resultset('Feature')
+    ->search({ 'type.name' => 'allele',
+               'type_2.name' => 'part_of',
+               'type_3.name' => 'genotype',
+               'object.feature_id' => $genotype->feature_id(),
+             },
+             { join => [ 'type',
+                         {
+                           feature_relationship_subjects =>
+                             [
+                               'type',
+                               {
+                                 object => [
+                                   'type',
+                                 ]
+                               }
+                             ]
+                           }
+                       ]
+                   })
+      ->all();
+
+}
+
+sub _genotype_details
+{
+  my $self = shift;
+  my $genotype = shift;
+
+  my $cache = $self->cache();
+
+  my $cache_key = 'genotype_details:' . $genotype->feature_id();
+
+  my $cached_value = $cache->get($cache_key);
+
+  if (defined $cached_value) {
+    return $cached_value;
+  }
+
+  my @alleles = $self->_get_alleles($genotype);
+
+  my $allele_string = _allele_string(@alleles);
+
+  my $ret_val =
+    {
+      identifier => $_->uniquename(),
+      name => $_->name(),
+      allele_string => $allele_string,
+      display_name => $_->name() || $allele_string,
+    };
+
+  $cache->set($cache_key, $ret_val, $self->config()->{cache}->{default_timeout});
+
+  return $ret_val;
+}
 
 sub lookup
 {
@@ -50,36 +147,57 @@ sub lookup
   my %options = @_;
 
   if ($options{gene_primary_identifiers}) {
+    my $gene_identifiers = $options{gene_primary_identifiers};
+
+    my $cache = $self->cache();
+
+    my $cache_key = 'genotype_gene_lookup:' .
+      (join ' ', @$gene_identifiers) . ' max: ' .
+      ($options{max_results} ? $options{max_results} : 'none');
+
+    my $cached_value = $cache->get($cache_key);
+
+    if (defined $cached_value) {
+      return $cached_value;
+    }
+
     my $schema = $self->schema();
+
     my $genotype_rs =
       $schema->resultset('Feature')->search({ 'type.name' => 'genotype' },
                                             { join => 'type' });
-
-    my $gene_identifiers = $options{gene_primary_identifiers};
 
     my @sub_queries = map {
       my $gene_identifier = $_;
       my $sub_query =
         $schema->resultset('Feature')
           ->search({ 'type.name' => 'genotype',
-                     'object_2.uniquename' => $gene_identifier,
-                     'type_2.name' => 'allele',
-                     'type_3.name' => 'gene',
+                     'type_2.name' => 'part_of',
+                     'type_3.name' => 'allele',
+                     'type_4.name' => 'instance_of',
+                     'type_5.name' => 'gene',
+                     'object.uniquename' => $gene_identifier,
                    },
                    { join => [ 'type',
                                {
-                                 feature_relationship_subjects =>
-                                   {
-                                     object => [
-                                       'type',
-                                       {
-                                         feature_relationship_subjects =>
-                                           {
-                                             object => 'type',
+                                 feature_relationship_objects =>
+                                   [
+                                     'type',
+                                     {
+                                       subject => [
+                                         'type',
+                                         {
+                                           feature_relationship_subjects =>
+                                             [
+                                               'type',
+                                               {
+                                                 object => 'type',
+                                               }
+                                             ]
                                            }
-                                         }
-                                     ]
-                                   }
+                                       ]
+                                     }
+                                   ]
                                  }
                              ]
                    });
@@ -99,16 +217,18 @@ sub lookup
       $genotype_rs = $genotype_rs->search({}, { rows => $options{max_results} });
     }
 
-    return
+    my $res =
       {
         results => [
           map {
-            {
-              primary_identifier => $_->uniquename()
-            }
+            $self->_genotype_details($_);
           } $genotype_rs->search($search_arg)->all(),
         ],
       };
+
+    $cache->set($cache_key, $res, $self->config()->{cache}->{default_timeout});
+
+    return $res;
   } else {
     die "no gene_primary_identifiers option passed to lookup()";
   }

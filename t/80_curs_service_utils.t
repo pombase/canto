@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 50;
+use Test::More tests => 52;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -16,6 +16,8 @@ my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
 $config->{implementation_classes}->{allele_adaptor} =
   'Canto::Chado::AlleleLookup';
+$config->{implementation_classes}->{genotype_adaptor} =
+  'Canto::Chado::GenotypeLookup';
 
 my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $curs_schema,
                                                    config => $config);
@@ -64,6 +66,62 @@ cmp_deeply($res,
               genotype_id => 1,
               allele_string => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
             },
+          ]);
+
+$res = $service_utils->list_for_service('genotype', 'all',
+                                        {
+                                          max => 10,
+                                          filter =>
+                                            { gene_identifiers =>
+                                                [
+                                                  'SPCC576.16c', 'SPCC1739.11c'
+                                                ]
+                                              }
+                                          });
+
+cmp_deeply($res,
+           [
+             {
+              'name' => 'h+ cdc11-33 wtf22-a1',
+              'identifier' => 'aaaa0007-genotype-2',
+              'allele_string' => 'cdc11-33(unknown) wtf22-a1(T11C)-amino_acid_mutation',
+              'display_name' => 'h+ cdc11-33 wtf22-a1'
+            },
+          ]);
+
+$res = $service_utils->list_for_service('genotype', 'all',
+                                        {
+                                          max => 10,
+                                          filter =>
+                                            { gene_identifiers =>
+                                                [
+                                                  'SPAC27D7.13c'
+                                                ]
+                                              }
+                                          });
+
+cmp_deeply($res,
+          [
+            {
+              'name' => 'h+ SPCC63.05delta ssm4KE',
+              'allele_string' => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
+              'genotype_id' => 1,
+              'display_name' => 'h+ SPCC63.05delta ssm4KE',
+              'identifier' => 'aaaa0007-genotype-1'
+            },
+            {
+              'name' => undef,
+              'allele_string' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
+              'display_name' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
+              'genotype_id' => 2,
+              'identifier' => 'aaaa0007-genotype-2'
+            },
+            {
+              'name' => 'h+ cdc11-33 ssm4delta',
+              'display_name' => 'h+ cdc11-33 ssm4delta',
+              'identifier' => 'aaaa0007-genotype-3',
+              'allele_string' => 'ssm4delta(deletion)'
+            }
           ]);
 
 $res = $service_utils->list_for_service('gene');
@@ -708,31 +766,37 @@ my $allele_res = $service_utils->list_for_service('allele', 'SPAC27D7.13c', 'ssm
 
 cmp_deeply($allele_res,
            [
-             {
-               'description' => 'deletion',
-               'allele_type' => 'deletion',
-               'name' => 'ssm4delta',
-               'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
-               'expression' => undef,
-               'display_name' => 'ssm4delta(deletion)',
-             },
-             {
-               'description' => 'G40A,K43E',
-               'allele_type' => 'mutation of single amino acid residue',
-               'expression' => undef,
-               'uniquename' => 'SPAC27D7.13c:aaaa0007-2',
-               'name' => 'ssm4KE',
-               'display_name' => 'ssm4KE(G40A,K43E)',
-             },
-             {
-               'expression' => undef,
-               'name' => 'ssm4-D4',
-               'uniquename' => 'SPAC27D7.13c:aaaa0007-3',
-               'allele_type' => 'partial deletion, nucleotide',
-               'description' => 'del_100-200',
-               'display_name' => 'ssm4-D4(del_100-200)',
-             }
-           ]);
+            {
+              'display_name' => 'ssm4delta(deletion)',
+              'expression' => undef,
+              'allele_type' => 'deletion',
+              'description' => 'deletion',
+              'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+              'name' => 'ssm4delta'
+            },
+            {
+              'description' => 'G40A,K43E',
+              'expression' => undef,
+              'display_name' => 'ssm4KE(G40A,K43E)',
+              'allele_type' => 'mutation of single amino acid residue',
+              'name' => 'ssm4KE',
+              'uniquename' => 'SPAC27D7.13c:aaaa0007-2'
+            },
+            {
+              'name' => 'ssm4-D4',
+              'uniquename' => 'SPAC27D7.13c:aaaa0007-3',
+              'description' => 'del_100-200',
+              'expression' => undef,
+              'display_name' => 'ssm4-D4(del_100-200)',
+              'allele_type' => 'partial deletion, nucleotide'
+            },
+            {
+              'display_name' => 'ssm4delta(unknown)',
+              'allele_type' => 'deletion',
+              'uniquename' => 'SPAC27D7.13c:allele-1',
+              'name' => 'ssm4delta'
+            }
+          ]);
 
 $allele_res = $service_utils->list_for_service('allele', 'SPBC12C2.02c', 'ste');
 

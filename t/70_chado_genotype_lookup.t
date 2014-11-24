@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use Test::Deep;
 
@@ -14,10 +14,50 @@ $test_util->init_test();
 
 my $lookup = Canto::Chado::GenotypeLookup->new(config => $test_util->config());
 
-my $res = $lookup->lookup(gene_primary_identifiers => ['SPBC12C2.02c']);
+my $res = $lookup->lookup(gene_primary_identifiers => ['SPCC576.16c']);
 
-use Data::Dumper;
-$Data::Dumper::Maxdepth = 3;
-die Dumper([$res]);
+cmp_deeply($res,
+           {
+             results => [
+               {
+                 primary_identifier => 'aaaa0007-genotype-2',
+                 alleles => [
+                   {
+                     primary_identifier => '',
+                     name => '',
+                     description => '',
+                     type => '',
+                   }
+                 ]
+               },
+             ]
+           });
+
+
+$res = $lookup->lookup(gene_primary_identifiers => ['SPCC576.16c', 'SPCC1739.11c']);
+
+cmp_deeply($res,
+           {
+             results => [
+               {
+                 primary_identifier => 'aaaa0007-genotype-2',
+               },
+             ]
+           });
+
+
+$res = $lookup->lookup(gene_primary_identifiers => ['SPCC1739.11c']);
+
+cmp_deeply($res,
+           {
+             results => [
+               {
+                 primary_identifier => 'aaaa0007-genotype-1',
+               },
+               {
+                 primary_identifier => 'aaaa0007-genotype-2',
+               },
+             ]
+           });
 
 

@@ -56,6 +56,7 @@ has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 
 has ontology_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has allele_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
+has genotype_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 has state => (is => 'rw', init_arg => undef,
               isa => 'Canto::Curs::State', lazy_build => 1);
@@ -92,6 +93,13 @@ sub _build_allele_lookup
   my $self = shift;
 
   return Canto::Track::get_adaptor($self->config(), 'allele');
+}
+
+sub _build_genotype_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'genotype');
 }
 
 # return a list of conditions used by this session
@@ -198,7 +206,7 @@ sub _filter_by_gene_identifiers
   return $genotype_rs->search($search_arg);
 }
 
-sub _filter_by_gene_identifiers_chado
+sub _filter_lookup_genotypes
 {
   my $self = shift;
   my $max = shift;
@@ -206,20 +214,21 @@ sub _filter_by_gene_identifiers_chado
 
   my $genotype_lookup = $self->genotype_lookup();
 
-  if ($max == 0) {
-    return ();
-  } else {
-    my @res = ();
+  my %options = ();
 
-    my $lookup_res = $genotype_lookup->lookup(gene_primary_identifiers =>
-                                                $gene_identifiers);
-
-    while (@$lookup_res > 0 && (!defined $max || @res < $max)) {
-      push @res, shift @$lookup_res;
+  if (defined $max) {
+    if ($max == 0) {
+      return ();
+    } else {
+      $options{max_results} = $max;
     }
-
-    return @res;
   }
+
+  if (defined $gene_identifiers && @$gene_identifiers > 0) {
+    $options{gene_primary_identifiers} = $gene_identifiers;
+  }
+
+  return @{$genotype_lookup->lookup(%options)->{results}};
 }
 
 sub _get_genotypes
@@ -259,13 +268,23 @@ sub _get_genotypes
   } $genotype_rs->all();
 
   if ($arg eq 'all') {
-    if ($filter) {
-      my $gene_identifiers = $filter->{gene_identifiers};
-      my @chado_genotypes =
-        $self->_filter_by_gene_identifiers_chado($max, $gene_identifiers);
+    my $lookup_max = undef;
 
-      die "unimplemented";
+    if (defined $max) {
+      $lookup_max = $max - scalar(@res);
+    } else {
+      $lookup_max = undef;
+    }
 
+    if (!defined $lookup_max || $lookup_max > 0) {
+      if ($filter) {
+        my $gene_identifiers = $filter->{gene_identifiers};
+        push @res,
+          $self->_filter_lookup_genotypes($lookup_max, $gene_identifiers);
+      } else {
+        push @res,
+          $self->_filter_lookup_genotypes($lookup_max);
+      }
     }
   }
 
