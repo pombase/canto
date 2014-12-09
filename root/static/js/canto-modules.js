@@ -1419,7 +1419,7 @@ var annotationEditDialogCtrl =
       var q = AnnotationProxy.storeChanges(args.annotation,
                                            $scope.annotation, args.newlyAdded);
       q.then(function(annotation) {
-        $modalInstance.close($scope.annotation);
+        $modalInstance.close(annotation);
       })
       .catch(function(message) {
         toaster.pop('error', message);
