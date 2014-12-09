@@ -1505,6 +1505,7 @@ var annotationTableCtrl =
       controller: function($scope) {
         $scope.data = {
           hasFeatures: false, // set to true if there are feature of type featureTypeFilter
+          annotations: null
         };
         $scope.addNew = function() {
           var template = {
@@ -1519,18 +1520,18 @@ var annotationTableCtrl =
             startEditing($modal, $scope.annotationTypeName, newAnnotation, $scope.featureFilterDisplayName, true);
 
           editPromise.then(function(editedAnnotation) {
-            $scope.annotations.push(editedAnnotation);
+            $scope.data.annotations.push(editedAnnotation);
           });
         };
       },
       link: function(scope) {
-        scope.annotations = [];
+        scope.data.annotations = null;
         AnnotationProxy.getFiltered({annotationTypeName: scope.annotationTypeName,
                                      featureId: scope.featureIdFilter,
                                      featureStatus: scope.featureStatusFilter,
                                      featureType: scope.featureTypeFilter
                                     }).then(function(annotations) {
-                                      scope.annotations = annotations;
+                                      scope.data.annotations = annotations;
                                     });
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
           scope.annotationType = annotationType;
@@ -1643,8 +1644,8 @@ var annotationTableRow =
                                          newAnnotation, undefined, true);
 
           editPromise.then(function(editedAnnotation) {
-            var index = $scope.annotations.indexOf($scope.annotation);
-            $scope.annotations.splice(index + 1, 0, editedAnnotation);
+            var index = $scope.data.annotations.indexOf($scope.annotation);
+            $scope.data.annotations.splice(index + 1, 0, editedAnnotation);
           });
         };
         $scope.delete = function() {

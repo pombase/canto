@@ -1,4 +1,5 @@
-<div ng-if="annotations.length > 0 || featureStatusFilter === 'new'">
+<div>
+<div ng-if="data.annotations !== null && (data.annotations.length > 0 || featureStatusFilter === 'new')">
   <span class="title sect-title">
     <span ng-if="featureStatusFilter === 'new'">
 New {{annotationType.display_name}} annotations from this session
@@ -10,7 +11,7 @@ Existing {{annotationType.display_name}} annotations
   <span ng-if="featureStatusFilter === 'new' && data.hasFeatures">
     <a ng-click="addNew(featureType, featureId)">Add ...</a>
   </span>
-  <div ng-switch="annotations.length > 0">
+  <div ng-switch="data.annotations.length > 0">
     <div ng-switch-when="true" class="annotation-table sect-content">
       <div class="list" ng-switch="annotationType.category">
         <table ng-switch-when="ontology" class="list">
@@ -30,7 +31,7 @@ Existing {{annotationType.display_name}} annotations
             </tr>
           </thead>
           <tbody>
-            <tr annotation-table-row annotation-type="ontology" ng-repeat="annotation in annotations">
+            <tr annotation-table-row annotation-type="ontology" ng-repeat="annotation in data.annotations">
             </tr>
           </tbody>
         </table>
@@ -47,7 +48,7 @@ Existing {{annotationType.display_name}} annotations
             </tr>
           </thead>
           <tbody>
-            <tr annotation-table-row annotation-type="interaction" ng-repeat="annotation in annotations">
+            <tr annotation-table-row annotation-type="interaction" ng-repeat="annotation in data.annotations">
             </tr>
           </tbody>
         </table>
@@ -57,4 +58,5 @@ Existing {{annotationType.display_name}} annotations
       No annotations yet
     </div>
   </div>
+</div>
 </div>
