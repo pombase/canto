@@ -36,11 +36,23 @@ function copyObject(src, dest, keysFilter) {
         return;
       }
     }
-    if (src[key] !== null && typeof src[key] === 'object') {
+
+    if (null == src[key] || "object" != typeof src[key]) {
+      dest[key] = src[key];
+      return;
+    }
+
+    if (src[key] instanceof Array) {
+      dest[key] = [];
+      for (var i = 0, len = src[key].length; i < len; i++) {
+        dest[key][i] = src[key][i];
+      }
+      return;
+    }
+
+    if (src[key] instanceof Object) {
       dest[key] = {};
       copyObject(src[key], dest[key]);
-    } else {
-      dest[key] = src[key];
     }
   });
 }
@@ -1619,8 +1631,10 @@ var annotationTableRow =
 
           editPromise.then(function(editedAnnotation) {
             $scope.annotation = editedAnnotation;
-            $scope.annotation.conditionsString =
-              conditionsToString($scope.annotation.conditions);
+            if (typeof($scope.annotation.conditions) !== 'undefined') {
+              $scope.annotation.conditionsString =
+                conditionsToString($scope.annotation.conditions);
+            }
           });
         };
         $scope.duplicate = function() {
