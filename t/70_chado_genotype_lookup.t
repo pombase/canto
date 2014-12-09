@@ -20,7 +20,7 @@ cmp_deeply($res,
            {
              results => [
                {
-                 primary_identifier => 'aaaa0007-genotype-2',
+                 primary_identifier => 'aaaa0007-genotype-test-2',
                  alleles => [
                    {
                      primary_identifier => '',
@@ -40,7 +40,7 @@ cmp_deeply($res,
            {
              results => [
                {
-                 primary_identifier => 'aaaa0007-genotype-2',
+                 primary_identifier => 'aaaa0007-genotype-test-2',
                },
              ]
            });
@@ -52,10 +52,10 @@ cmp_deeply($res,
            {
              results => [
                {
-                 primary_identifier => 'aaaa0007-genotype-1',
+                 primary_identifier => 'aaaa0007-genotype-test-1',
                },
                {
-                 primary_identifier => 'aaaa0007-genotype-2',
+                 primary_identifier => 'aaaa0007-genotype-test-2',
                },
              ]
            });

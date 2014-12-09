@@ -27,14 +27,14 @@ my $res = $service_utils->list_for_service('genotype', 'curs_only');
 cmp_deeply($res,
            [
             {
-              'identifier' => 'aaaa0007-genotype-1',
+              'identifier' => 'aaaa0007-genotype-test-1',
               'name' => 'h+ SPCC63.05delta ssm4KE',
               display_name => 'h+ SPCC63.05delta ssm4KE',
               genotype_id => 1,
               allele_string => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
             },
             {
-              'identifier' => 'aaaa0007-genotype-2',
+              'identifier' => 'aaaa0007-genotype-test-2',
               'name' => undef,
               display_name => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
               genotype_id => 2,
@@ -60,7 +60,7 @@ $res = $service_utils->list_for_service('genotype', 'all',
 cmp_deeply($res,
            [
             {
-              identifier => 'aaaa0007-genotype-1',
+              identifier => 'aaaa0007-genotype-test-1',
               name => 'h+ SPCC63.05delta ssm4KE',
               display_name => 'h+ SPCC63.05delta ssm4KE',
               genotype_id => 1,
@@ -83,7 +83,7 @@ cmp_deeply($res,
            [
              {
               'name' => 'h+ cdc11-33 wtf22-a1',
-              'identifier' => 'aaaa0007-genotype-2',
+              'identifier' => 'aaaa0007-genotype-test-2',
               'allele_string' => 'cdc11-33(unknown) wtf22-a1(T11C)-amino_acid_mutation',
               'display_name' => 'h+ cdc11-33 wtf22-a1'
             },
@@ -107,19 +107,19 @@ cmp_deeply($res,
               'allele_string' => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
               'genotype_id' => 1,
               'display_name' => 'h+ SPCC63.05delta ssm4KE',
-              'identifier' => 'aaaa0007-genotype-1'
+              'identifier' => 'aaaa0007-genotype-test-1'
             },
             {
               'name' => undef,
               'allele_string' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
               'display_name' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
               'genotype_id' => 2,
-              'identifier' => 'aaaa0007-genotype-2'
+              'identifier' => 'aaaa0007-genotype-test-2'
             },
             {
               'name' => 'h+ cdc11-33 ssm4delta',
               'display_name' => 'h+ cdc11-33 ssm4delta',
-              'identifier' => 'aaaa0007-genotype-3',
+              'identifier' => 'aaaa0007-genotype-test-3',
               'allele_string' => 'ssm4delta(deletion)'
             }
           ]);
@@ -155,7 +155,7 @@ cmp_deeply($res,
           ]);
 
 my $gene_identifier = 'SPBC14F5.07';
-my $genotype_identifier = 'aaaa0007-genotype-1';
+my $genotype_identifier = 'aaaa0007-genotype-test-1';
 
 my $first_gene =
   $curs_schema->resultset('Gene')->find({ primary_identifier => $gene_identifier });
@@ -591,7 +591,7 @@ cmp_deeply($annotation_res,
               'term_suggestion_name' => undef,
               'term_suggestion_definition' => undef,
               'is_obsolete_term' => 0,
-              'genotype_identifier' => 'aaaa0007-genotype-1',
+              'genotype_identifier' => 'aaaa0007-genotype-test-1',
               'annotation_type_abbreviation' => ''
             },
             {
@@ -613,7 +613,7 @@ cmp_deeply($annotation_res,
               'taxonid' => undef,
               'annotation_type_display_name' => 'phenotype',
               'needs_with' => undef,
-              'genotype_identifier' => 'aaaa0007-genotype-2',
+              'genotype_identifier' => 'aaaa0007-genotype-test-2',
               'annotation_type_abbreviation' => '',
               'genotype_name' => undef,
               'term_suggestion_name' => undef,

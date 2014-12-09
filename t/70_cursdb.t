@@ -28,7 +28,7 @@ $schema->txn_do(
 
 
 # get genotype annotations
-my $genotype = $schema->resultset('Genotype')->find({ identifier => 'aaaa0007-genotype-1' });
+my $genotype = $schema->resultset('Genotype')->find({ identifier => 'aaaa0007-genotype-test-1' });
 my @genotype_annotations = $genotype->annotations();
 
 is (@genotype_annotations, 1);
@@ -110,7 +110,7 @@ is ($spbc14f5_07->all_annotations(include_with => 1)->count(), 2);
 my $annotation_2 = $spbc14f5_07->all_annotations(include_with => 1)->first();
 my $annotation_2_id = $annotation_2->annotation_id();
 
-my $genotype_1 = $schema->find_with_type('Genotype', { identifier => 'aaaa0007-genotype-2' });
+my $genotype_1 = $schema->find_with_type('Genotype', { identifier => 'aaaa0007-genotype-test-2' });
 ok (defined $genotype_1);
 
 is ($genotype_1->annotations()->count(), 1);

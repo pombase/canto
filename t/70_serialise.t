@@ -89,14 +89,14 @@ my $full_expected_curation_session =
       }
     },
     genotypes => {
-      'aaaa0007-genotype-1' => {
+      'aaaa0007-genotype-test-1' => {
         'name' => 'h+ SPCC63.05delta ssm4KE',
         alleles => [
           'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1',
           'Schizosaccharomyces pombe SPCC63.05:aaaa0007-1',
         ],
       },
-      'aaaa0007-genotype-2' => {
+      'aaaa0007-genotype-test-2' => {
         alleles => [
           'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3',
         ],
@@ -201,12 +201,12 @@ my $full_expected_curation_session =
           'PECO:0000137',
           'rich medium',
         ],
-        genotype => 'aaaa0007-genotype-1',
+        genotype => 'aaaa0007-genotype-test-1',
       },
       {
         evidence_code => 'Co-immunoprecipitation experiment',
         creation_date => '2010-01-02',
-        genotype => 'aaaa0007-genotype-2',
+        genotype => 'aaaa0007-genotype-test-2',
         status => 'new',
         type => 'phenotype',
         publication => 'PMID:19756689',

@@ -82,7 +82,7 @@ sub check_new_annotations
                  'term_suggestion_definition' => undef,
                  'with_gene_id' => undef,
                  'curator' => 'Some Testperson <some.testperson@pombase.org>',
-                 'genotype_identifier' => 'aaaa0007-genotype-1',
+                 'genotype_identifier' => 'aaaa0007-genotype-test-1',
                  'taxonid' => undef,
                  'conditions' => [
                    {
@@ -150,7 +150,7 @@ sub check_new_annotations
                  'term_suggestion_definition' => undef,
                  'with_gene_id' => undef,
                  'curator' => 'Some Testperson <some.testperson@pombase.org>',
-                 'genotype_identifier' => 'aaaa0007-genotype-2'
+                 'genotype_identifier' => 'aaaa0007-genotype-test-2'
                }
              ]);
   }

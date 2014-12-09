@@ -122,7 +122,7 @@ test_psgi $app, sub {
 
   is ($new_genotype->alleles()->count(), 2);
 
-  is ($new_genotype->identifier(), "aaaa0007-genotype-13");
+  is ($new_genotype->identifier(), "aaaa0007-genotype-test-13");
 
   # shouldn't have created any new alleles:
   is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 3);
