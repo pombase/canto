@@ -35,7 +35,7 @@ __PACKAGE__->table("genotype");
 =head2 identifier
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 name
 
@@ -48,7 +48,7 @@ __PACKAGE__->add_columns(
   "genotype_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "identifier",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "name",
   { data_type => "text", is_nullable => 1 },
 );
@@ -124,8 +124,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-11-22 11:48:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EkXgNvVKFd7nijyow2/9Kg
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-09 16:36:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:duftvEt9F+KV4pm3cQhtJQ
 
 =head2 annotations
 
