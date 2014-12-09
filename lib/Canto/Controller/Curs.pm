@@ -1656,10 +1656,16 @@ sub _make_genotype
   my $genotype =
     $schema->create_with_type('Genotype',
                               {
+                                identifier => 'canto-genotype-temp-' . int(rand 10000000),
                                 name => $name || undef,
                               });
 
-    $genotype->set_alleles($alleles);
+  my $genotype_id = $genotype->genotype_id();
+  $genotype->identifier("$curs_key-genotype-$genotype_id");
+
+  $genotype->set_alleles($alleles);
+
+  $genotype->update();
 
   return $genotype;
 }
