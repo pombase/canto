@@ -168,6 +168,7 @@ sub lookup
     $_;
   } @res ];
 }
+
 =head2 lookup_by_uniquename
 
  Usage   : my $allele_details = $lookup->lookup_by_uniquename($allele_uniquename);
