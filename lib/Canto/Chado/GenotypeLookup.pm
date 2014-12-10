@@ -133,6 +133,9 @@ sub _genotype_details
       name => $_->name(),
       allele_string => $allele_string,
       display_name => $_->name() || $allele_string,
+      allele_identifiers => [
+        map { $_->uniquename(); } @alleles
+      ],
     };
 
   $cache->set($cache_key, $ret_val, $self->config()->{cache}->{default_timeout});
