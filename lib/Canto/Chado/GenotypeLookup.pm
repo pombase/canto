@@ -146,12 +146,13 @@ sub lookup
 
   my %options = @_;
 
+  my $cache = $self->cache();
+  my $schema = $self->schema();
+
   if ($options{gene_primary_identifiers}) {
     my $gene_identifiers = $options{gene_primary_identifiers};
 
-    my $cache = $self->cache();
-
-    my $cache_key = 'genotype_gene_lookup:' .
+    my $cache_key = 'genotype_lookup_by_gene:' .
       (join ' ', @$gene_identifiers) . ' max: ' .
       ($options{max_results} ? $options{max_results} : 'none');
 
@@ -160,8 +161,6 @@ sub lookup
     if (defined $cached_value) {
       return $cached_value;
     }
-
-    my $schema = $self->schema();
 
     my $genotype_rs =
       $schema->resultset('Feature')->search({ 'type.name' => 'genotype' },
@@ -230,7 +229,32 @@ sub lookup
 
     return $res;
   } else {
-    die "no gene_primary_identifiers option passed to lookup()";
+    if ($options{identifier}) {
+      my $cache_key = 'genotype_lookup_by_identifier: ' . $options{identifier};
+
+      my $cached_value = $cache->get($cache_key);
+
+      if (defined $cached_value) {
+        return $cached_value;
+      }
+
+      my $genotype =
+        $schema->resultset('Feature')->search({ 'type.name' => 'genotype' },
+                                              { join => 'type' })
+          ->find({ uniquename => $options{identifier} }) ;
+
+      if ($genotype) {
+        my $res = $self->_genotype_details($genotype);
+
+        $cache->set($cache_key, $res, $self->config()->{cache}->{default_timeout});
+
+        return $res;
+      } else {
+        return undef;
+      }
+    } else {
+      die "wrong options passed to genotype lookup";
+    }
   }
 }
 
