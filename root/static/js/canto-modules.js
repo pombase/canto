@@ -158,6 +158,9 @@ canto.service('CursGenotypeList', function($q, Curs) {
     var q = $q.defer();
 
     filteredCursPromise.success(function(genotypes) {
+      $.map(genotypes, function(genotype) {
+        genotype.id_or_identifier = genotype.genotype_id || genotype.identifier;
+      });
       q.resolve(genotypes);
     }).error(function() {
       q.reject();
