@@ -69,6 +69,17 @@ The required CLucene library can be installed with:
     wget http://archive.ubuntu.com/ubuntu/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2_amd64.deb
     sudo dpkg -i libclucene0ldbl_0.9.21b-2_amd64.deb libclucene-dev_0.9.21b-2_amd64.deb
 
+You may need to "pin" those version in v14.10.  For example, add a file
+called `/etc/apt/preferences.d/clucene-pin` with these contents:
+
+   Package: libclucene0ldbl
+   Pin: release a=precise
+   Pin-Priority: 999
+
+   Package: libclucene-dev
+   Pin: release a=precise
+   Pin-Priority: 999
+
 ### CLucene on Debian v8 ("Jessie") and later
 
 The CLucene libraries must be manually installed for Debian v8 with:
