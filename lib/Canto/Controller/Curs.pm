@@ -958,53 +958,6 @@ sub _re_edit_annotation
   return $annotation;
 }
 
-sub _update_annotation
-{
-  my ($self, $c, $orig_annotation, $new_annotation_data) = @_;
-
-  my $config = $c->config();
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my $guard = $schema->txn_scope_guard;
-
-  my %current_data = %{$orig_annotation->data()};
-  @current_data{keys %$new_annotation_data} = values %$new_annotation_data;
-
-  my $state = $st->{state};
-  if ($state eq APPROVAL_IN_PROGRESS) {
-    # during approval we want to keep the original, community curator
-    # annotation
-    $orig_annotation->status('deleted');
-    $orig_annotation->update();
-
-    my $new_annotation =
-      $schema->create_with_type('Annotation',
-                                {
-                                  type => $orig_annotation->type(),
-                                  status => 'new',
-                                  pub => $st->{pub},
-                                  creation_date => Canto::Curs::Utils::get_iso_date(),
-                                  data => { %current_data }
-                                });
-
-    my @orig_genes = $orig_annotation->genes()->all();
-    if (@orig_genes) {
-      $new_annotation->set_genes(@orig_genes);
-    }
-    my @orig_alleles = $orig_annotation->alleles()->all();
-    if (@orig_alleles) {
-      $new_annotation->set_alleles(@orig_alleles);
-    }
-  } else {
-    my $annotation = $orig_annotation;
-    $annotation->data(\%current_data);
-    $annotation->update();
-  }
-
-  $guard->commit();
-}
-
 sub _create_annotation
 {
   my ($self, $c, $annotation_type_name, $feature_type,
