@@ -15,7 +15,12 @@ genotype.annotation_count
   <td class="table-row-actions">
     <div>
       <a href="feature/genotype/view/{{genotype.id_or_identifier}}">
+        <span ng-if="genotype.genotype_id">
 Details ...
+        </span>
+        <span ng-if="!genotype.genotype_id">
+Add to session ...
+        </span>
       </a>
     </div>
   </td>
