@@ -55,5 +55,6 @@ cmp_deeply($id_res,
             'description' => 'K132A,K144A',
             'allele_type' => 'amino_acid_mutation',
             'name' => 'ste20-c2',
-            'uniquename' => 'SPBC12C2.02c:allele-3'
+            'uniquename' => 'SPBC12C2.02c:allele-3',
+            'gene_uniquename' => 'SPBC12C2.02c',
           });

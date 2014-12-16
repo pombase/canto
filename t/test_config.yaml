@@ -250,3 +250,8 @@ implementation_classes:
   ontology_annotation_adaptor: 'Canto::Chado::OntologyAnnotationLookup'
   interaction_annotation_adaptor: 'Canto::Chado::InteractionAnnotationLookup'
   allele_adaptor: 'Canto::Chado::AlleleLookup'
+
+chado_feature_implementation_classes:
+  allele_adaptor: 'Canto::Chado::AlleleLookup'
+  gene_adaptor: 'Canto::Chado::GeneLookup'
+  genotype_adaptor: 'Canto::Chado::GenotypeLookup'

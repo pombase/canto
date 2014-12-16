@@ -55,6 +55,9 @@ use Try::Tiny;
 use Canto::Track;
 use Canto::Curs::Utils;
 use Canto::Curs::MetadataStorer;
+use Canto::Curs::AlleleManager;
+use Canto::Curs::GeneManager;
+use Canto::Curs::GenotypeManager;
 use Canto::MailSender;
 use Canto::EmailUtil;
 use Canto::Curs::State;
@@ -89,6 +92,15 @@ has metadata_storer => (is => 'rw', init_arg => undef,
 has curator_manager => (is => 'rw', init_arg => undef,
                         isa => 'Canto::Track::CuratorManager');
 
+has gene_manager => (is => 'rw', init_arg => undef,
+                     isa => 'Canto::Curs::GeneManager');
+
+has allele_manager => (is => 'rw', init_arg => undef,
+                       isa => 'Canto::Curs::AlleleManager');
+
+has genotype_manager => (is => 'rw', init_arg => undef,
+                         isa => 'Canto::Curs::GenotypeManager');
+
 with 'Canto::Role::MetadataAccess';
 with 'Canto::Role::GAFFormatter';
 with 'Canto::Curs::Role::GeneResultSet';
@@ -119,6 +131,21 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{curs_key} = $curs_key;
   my $schema = Canto::Curs::get_schema($c);
+
+  if (!defined $self->gene_manager()) {
+    $self->gene_manager(Canto::Curs::GeneManager->new(config => $c->config(),
+                                                      curs_schema => $schema));
+  }
+
+  if (!defined $self->allele_manager()) {
+    $self->allele_manager(Canto::Curs::AlleleManager->new(config => $c->config(),
+                                                          curs_schema => $schema));
+  }
+
+  if (!defined $self->genotype_manager()) {
+    $self->genotype_manager(Canto::Curs::GenotypeManager->new(config => $c->config(),
+                                                              curs_schema => $schema));
+  }
 
   if (!defined $schema) {
     $c->forward('not_found');
@@ -388,134 +415,6 @@ sub store_statuses : Chained('top') Args(0) Form
 
 my $gene_list_textarea_name = 'gene_identifiers';
 
-# return a list of only those genes which aren't already in the database
-sub _filter_existing_genes
-{
-  my $self = shift;
-  my $schema = shift;
-  my @genes = @_;
-
-  my @gene_primary_identifiers = map { $_->{primary_identifier} } @genes;
-
-  my $gene_rs = $self->get_ordered_gene_rs($schema);
-  my $rs = $gene_rs->search({
-    primary_identifier => {
-      -in => [@gene_primary_identifiers],
-    }
-  });
-
-  my %found_genes = ();
-  while (defined (my $gene = $rs->next())) {
-    $found_genes{$gene->primary_identifier()} = 1;
-  }
-
-  return grep { !exists $found_genes{ $_->{primary_identifier} } } @genes;
-}
-
-# create genes in the Curs database from a lookup() result
-sub _create_genes
-{
-  my $self = shift;
-  my $schema = shift;
-  my $result = shift;
-
-  my %ret = ();
-
-  my $_create_curs_genes = sub
-      {
-        my @genes = @{$result->{found}};
-
-        @genes = $self->_filter_existing_genes($schema, @genes);
-
-        for my $gene (@genes) {
-          my $org_full_name = $gene->{organism_full_name};
-          my $org_taxonid = $gene->{organism_taxonid};
-          my $curs_org =
-            Canto::CursDB::Organism::get_organism($schema, $org_full_name,
-                                                   $org_taxonid);
-
-          my $primary_identifier = $gene->{primary_identifier};
-
-          my $new_gene = $schema->create_with_type('Gene', {
-            primary_identifier => $primary_identifier,
-            organism => $curs_org
-          });
-
-          $ret{$primary_identifier} = $new_gene
-        }
-      };
-
-  $schema->txn_do($_create_curs_genes);
-
-  return %ret;
-}
-
-sub _find_and_create_genes
-{
-  my ($self, $schema, $config, $search_terms_ref, $create_when_missing) = @_;
-
-  my @search_terms = @$search_terms_ref;
-  my $adaptor = Canto::Track::get_adaptor($config, 'gene');
-
-  my $result;
-
-  if (exists $config->{instance_organism}) {
-    $result = $adaptor->lookup(
-      {
-        search_organism => {
-          genus => $config->{instance_organism}->{genus},
-          species => $config->{instance_organism}->{species},
-        }
-      },
-      [@search_terms]);
-  } else {
-    $result = $adaptor->lookup([@search_terms]);
-  }
-
-
-  my %identifiers_matching_more_than_once = ();
-  my %genes_matched_more_than_once = ();
-
-  map {
-    my $match = $_;
-    my $primary_identifier = $match->{primary_identifier};
-    map {
-      my $identifier = $_;
-      $identifiers_matching_more_than_once{$identifier}->{$primary_identifier} = 1;
-      $genes_matched_more_than_once{$primary_identifier}->{$identifier} = 1;
-    } (@{$match->{match_types}->{synonym} // []},
-       $match->{match_types}->{primary_identifier} // (),
-       $match->{match_types}->{primary_name} // ());
-  } @{$result->{found}};
-
-  sub _remove_single_matches {
-    my $hash = shift;
-    map {
-      my $identifier = $_;
-
-      if (keys %{$hash->{$identifier}} == 1) {
-        delete $hash->{$identifier};
-      } else {
-        $hash->{$identifier} = [sort keys %{$hash->{$identifier}}];
-      }
-    } keys %$hash;
-  }
-
-  _remove_single_matches(\%identifiers_matching_more_than_once);
-  _remove_single_matches(\%genes_matched_more_than_once);
-
-  if (@{$result->{missing}} || keys %identifiers_matching_more_than_once > 0 ||
-      keys %genes_matched_more_than_once > 0) {
-    if ($create_when_missing) {
-      $self->_create_genes($schema, $result);
-    }
-
-    return ($result, \%identifiers_matching_more_than_once, \%genes_matched_more_than_once);
-  } else {
-    return ({ $self->_create_genes($schema, $result) });
-  }
-}
-
 # $confirm_genes will be true if we have just uploaded some genes
 sub _edit_genes_helper
 {
@@ -736,7 +635,7 @@ sub gene_upload : Chained('top') Args(0) Form
 
     $st->{search_terms_text} = $search_terms_text;
 
-    my @res_list = $self->_find_and_create_genes($schema, $c->config(), \@search_terms);
+    my @res_list = $self->gene_manager()->find_and_create_genes(\@search_terms);
 
     if (@res_list > 1) {
       # there was a problem
@@ -1506,123 +1405,6 @@ sub _set_allele_select_stash
   }
 }
 
-sub _create_allele_uniquename: Private
-{
-  my $gene_primary_identifier = shift;
-  my $schema = shift;
-  my $curs_key = shift;
-
-  my $prefix = "$gene_primary_identifier:$curs_key-";
-
-  my $rs = $schema->resultset('Allele')
-    ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
-               'me.primary_identifier' => { -like => "$prefix%" } },
-             { join => 'gene' });
-
-  my $new_index = 1;
-
-  while (defined (my $allele = $rs->next())) {
-    if ($allele->primary_identifier() =~ /^$prefix(\d+)$/) {
-       if ($1 >= $new_index) {
-         $new_index = $1 + 1;
-       }
-     }
-   }
-
-   return "$gene_primary_identifier:$curs_key-$new_index";
-}
-
-# create a new Allele from the data or return an existing matching allele
-sub _allele_from_json: Private
-{
-  my $config = shift;
-  my $schema = shift;
-  my $json_allele = shift;
-  my $curs_key = shift;
-
-  my $primary_identifier = $json_allele->{primary_identifier};
-  my $name = $json_allele->{name};
-  my $description = $json_allele->{description};
-  my $expression = $json_allele->{expression};
-  my $allele_type = $json_allele->{type};
-  my $gene_id = $json_allele->{gene_id};
-
-  if ($primary_identifier) {
-    my $allele = undef;
-
-    try {
-      $allele = $schema->find_with_type('Allele',
-                                        {
-                                          primary_identifier => $primary_identifier,
-                                        });
-
-    } catch {
-      my $lookup = Canto::Track::get_adaptor($config, 'allele');
-
-      my $allele_details = $lookup->lookup_by_uniquename($primary_identifier);
-
-      if (!defined $allele_details) {
-        die qq(internal error - allele "$primary_identifier" is missing);
-      }
-
-      # we will store the allele from Chado in the CursDB
-      $allele_type = $allele_details->{allele_type};
-      $description = $allele_details->{description};
-      $name = $allele_details->{name};
-      $expression = $allele_details->{expression};
-    };
-
-    if ($allele) {
-      return $allele;
-    }
-  } else {
-    my $gene = $schema->find_with_type('Gene', $gene_id);
-
-    $primary_identifier =
-      _create_allele_uniquename($gene->primary_identifier(),
-                                $schema, $curs_key);
-  }
-
-  my %create_args = (
-    primary_identifier => $primary_identifier,
-    type => $allele_type,
-    description => $description,
-    name => $name,
-    gene => $gene_id,
-    expression => $expression,
-  );
-
-  return $schema->create_with_type('Allele', \%create_args);
-}
-
-sub _make_genotype
-{
-  my $self = shift;
-  my $c = shift;
-  my $alleles = shift;
-  my $name = shift;
-
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-  my $curs_key = $st->{curs_key};
-
-  my $genotype =
-    $schema->create_with_type('Genotype',
-                              {
-                                identifier => 'canto-genotype-temp-' . int(rand 10000000),
-                                name => $name || undef,
-                              });
-
-  my $genotype_id = $genotype->genotype_id();
-  $genotype->identifier("$curs_key-genotype-$genotype_id");
-
-  $genotype->set_alleles($alleles);
-
-  $genotype->update();
-
-  return $genotype;
-}
-
 sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 {
   my ($self, $c) = @_;
@@ -2014,7 +1796,20 @@ sub feature_view : Chained('feature') PathPart('view')
     $st->{features} = $st->{genes};
  } else {
     if ($feature_type eq 'genotype') {
-      my $genotype = $schema->find_with_type('Genotype', $ids[0]);
+      my $genotype;
+
+      my $genotype_id = $ids[0];
+
+      # a bit hacky: if the ID is an integer assume it's CursDB Genotype,
+      # otherwise it's an identifier of a Genotype from Chado
+      if ($genotype_id =~ /^\d+$/) {
+        $genotype = $schema->find_with_type('Genotype', $genotype_id);
+      } else {
+        # pull from Chado and store in CursDB, $genotype_id is an
+        # identifier/uniquename
+        $genotype =
+          $self->genotype_manager()->find_and_create_genotype($st->{curs_key}, $genotype_id);
+      }
 
       $st->{genotype} = $genotype;
 
@@ -2097,8 +1892,8 @@ sub genotype_store : Chained('feature') PathPart('store')
       my $curs_key = $st->{curs_key};
 
       for my $allele_data (@alleles_data) {
-        my $allele = _allele_from_json($config, $schema, $allele_data, $curs_key,
-                                       \@alleles);
+        my $allele = $self->allele_manager()->allele_from_json($allele_data, $curs_key,
+                                                               \@alleles);
 
         push @alleles, $allele;
       }

@@ -199,6 +199,24 @@ sub lookup_by_uniquename
                                                    { join => 'type' });
 
   if (defined $allele) {
+    my $allele_gene = $allele->feature_relationship_subjects()
+      ->search({ 'type.name' => 'instance_of' },
+               {
+                 join => 'type' })
+        ->search_related('object',
+                         {
+                           'type_2.name' => 'gene',},
+                         {
+                           join => 'type' })->first();
+
+    my $gene_uniquename = undef;
+
+    if ($allele_gene) {
+      $gene_uniquename = $allele_gene->uniquename();
+    } else {
+      die qq(allele "$uniquename" has no gene\n);
+    }
+
     my %props = map {
       ($_->type()->name(), $_->value())
     } $allele->featureprops()->all();
@@ -213,6 +231,7 @@ sub lookup_by_uniquename
       name => $allele->name(),
       description => $props{description},
       allele_type => $props{allele_type},
+      gene_uniquename => $gene_uniquename,
     }
   }
 

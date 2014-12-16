@@ -129,10 +129,10 @@ sub _genotype_details
 
   my $ret_val =
     {
-      identifier => $_->uniquename(),
-      name => $_->name(),
+      identifier => $genotype->uniquename(),
+      name => $genotype->name(),
       allele_string => $allele_string,
-      display_name => $_->name() || $allele_string,
+      display_name => $genotype->name() || $allele_string,
       allele_identifiers => [
         map { $_->uniquename(); } @alleles
       ],

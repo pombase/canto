@@ -32,6 +32,9 @@ my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
 my $curs_metadata_rs = $curs_schema->resultset('Metadata');
 
+my $gene_manager = Canto::Curs::GeneManager->new(config => $config,
+                                                 curs_schema => $curs_schema);
+
 my %metadata = ();
 
 while (defined (my $metadata = $curs_metadata_rs->next())) {
@@ -47,8 +50,8 @@ like($curs_db_pub->title(), qr/Inactivating pentapeptide insertions in the/);
 my @search_list = (@known_genes, @unknown_genes);
 
 my ($result) =
-  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
-                                                   \@search_list);
+  $gene_manager->find_and_create_genes(\@search_list);
+
 sub check_result
 {
   my $result = shift;
@@ -71,15 +74,11 @@ sub check_result
 
 check_result($result, 2, 3, 0);
 
-($result) =
-  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
-                                                   \@search_list);
+($result) = $gene_manager->find_and_create_genes(\@search_list);
 
 check_result($result, 2, 3, 0);
 
-my @results =
-  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
-                                                   \@known_genes);
+my @results = $gene_manager->find_and_create_genes(\@known_genes);
 
 ok(@results == 1);
 
@@ -108,8 +107,7 @@ my @genes_to_filter =
   map { _lookup_gene($_)} @gene_identifiers_to_filter;
 
 my @filtered_genes =
-  Canto::Controller::Curs->_filter_existing_genes($curs_schema,
-                                                   @genes_to_filter);
+  $gene_manager->_filter_existing_genes(@genes_to_filter);
 
 is(@filtered_genes, 1);
 is($filtered_genes[0]->{primary_identifier}, 'SPCC1739.11c');
@@ -121,10 +119,9 @@ $curs_schema->resultset('Gene')->delete();
 my ($identifiers_matching_more_than_once, $genes_matched_more_than_once);
 
 ($result, $identifiers_matching_more_than_once, $genes_matched_more_than_once) =
-  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
-                                                   [@known_genes,
-                                                    @id_matching_two_genes,
-                                                    'SPCC576.19c']);
+  $gene_manager->find_and_create_genes([@known_genes,
+                                        @id_matching_two_genes,
+                                        'SPCC576.19c']);
 ok(defined $result);
 cmp_deeply($identifiers_matching_more_than_once,
            {
@@ -137,10 +134,9 @@ cmp_deeply($genes_matched_more_than_once, {});
 is($curs_schema->resultset('Gene')->count(), 0);
 
 ($result, $identifiers_matching_more_than_once, $genes_matched_more_than_once) =
-  Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
-                                                   [@known_genes,
-                                                    @two_ids_matching_one_gene,
-                                                    'SPCC576.19c']);
+  $gene_manager->find_and_create_genes([@known_genes,
+                                        @two_ids_matching_one_gene,
+                                        'SPCC576.19c']);
 ok(defined $result);
 cmp_deeply($identifiers_matching_more_than_once, {});
 cmp_deeply($genes_matched_more_than_once,
@@ -163,8 +159,7 @@ like ($iso_date, qr(^\d+-\d+-\d+$));
 
 my $pub_for_allele = $curs_schema->resultset('Pub')->first();
 
-Canto::Controller::Curs->_find_and_create_genes($curs_schema, $config,
-                                                 \@known_genes);
+$gene_manager->find_and_create_genes(\@known_genes);
 
 my $gene_rs = $curs_schema->resultset('Gene');
 is ($gene_rs->count(), 3);
