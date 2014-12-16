@@ -38,6 +38,7 @@ the Free Software Foundation, either version 3 of the License, or
 =cut
 
 use Moose::Role;
+use Carp;
 
 with 'Canto::Role::SimpleCache';
 
@@ -59,6 +60,10 @@ around 'lookup' => sub {
         $options->{search_organism}->{species};
     }
     @args = @{$_[1]};
+  }
+
+  if (!defined $args[0]) {
+    confess "no argument passed to lookup()";
   }
 
   my $cache_key = $organism_name . ':' . join '#@%', @args;
