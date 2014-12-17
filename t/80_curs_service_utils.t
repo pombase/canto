@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 52;
+use Test::More tests => 54;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -83,9 +83,10 @@ cmp_deeply($res,
            [
              {
               'name' => 'h+ cdc11-33 wtf22-a1',
-              'identifier' => 'aaaa0007-genotype-test-2',
+              'identifier' => 'aaaa0007-test-genotype-2',
               'allele_string' => 'cdc11-33(unknown) wtf22-a1(T11C)-amino_acid_mutation',
-              'display_name' => 'h+ cdc11-33 wtf22-a1'
+              'display_name' => 'h+ cdc11-33 wtf22-a1',
+              'allele_identifiers' => ['SPCC1739.11c:allele-1','SPCC576.16c:allele-1'],
             },
           ]);
 
@@ -119,8 +120,11 @@ cmp_deeply($res,
             {
               'name' => 'h+ cdc11-33 ssm4delta',
               'display_name' => 'h+ cdc11-33 ssm4delta',
-              'identifier' => 'aaaa0007-genotype-test-3',
-              'allele_string' => 'ssm4delta(deletion)'
+              'identifier' => 'aaaa0007-test-genotype-3',
+              'allele_string' => 'ssm4delta(deletion)',
+              'allele_identifiers' => [
+                                        'SPAC27D7.13c:allele-1'
+                                      ],
             }
           ]);
 
@@ -824,3 +828,20 @@ cmp_deeply($allele_res,
                'name' => 'ste20delta'
              }
            ]);
+
+my $add_gene_result = $service_utils->add_gene_by_identifier('SPBC12C2.02c');
+
+cmp_deeply($add_gene_result,
+           {
+             'gene_id' => 5,
+             'status' => 'success'
+           });
+
+$add_gene_result = $service_utils->add_gene_by_identifier('dummy');
+
+cmp_deeply($add_gene_result,
+           {
+             'status' => 'error',
+             'message' => 'error: couldn\'t find gene "dummy"',
+           });
+

@@ -930,4 +930,40 @@ sub delete_annotation
   }
 }
 
+=head2 add_gene_by_identifier
+
+ Usage   :
+ Function: Find a gene with a call to lookup() then store and return it
+ Args    : $gene_identifier - the gene to find
+ Return  : a hash, with keys:
+              status - "success" or "error"
+              gene_id - on success, the id of the new Gene
+              message - on error, the error message
+
+=cut
+
+sub add_gene_by_identifier
+{
+  my $self = shift;
+  my $gene_identifier = shift;
+
+  my $gene_manager =
+    Canto::Curs::GeneManager->new(config => $self->config(),
+                                  curs_schema => $self->curs_schema());
+
+  my @result = $gene_manager->find_and_create_genes([$gene_identifier]);
+
+  if (@result == 1) {
+    return {
+      status => 'success',
+      gene_id => $result[0]->{$gene_identifier}->gene_id(),
+    };
+  } else {
+    return {
+      status => 'error',
+      message => qq(error: couldn't find gene "$gene_identifier"),
+    };
+  }
+}
+
 1;
