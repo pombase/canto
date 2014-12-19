@@ -186,7 +186,7 @@ sub lookup
 
   if (defined $cached_value) {
 use Data::Dumper;
-warn 'returning cached result from Chado ontology lookup: ', Dumper([$cached_value]);
+warn qq(returning cached result from Chado ontology lookup using key "$cache_key": ), Dumper([$cached_value]);
 
     return @{$cached_value};
   }
@@ -423,7 +423,8 @@ warn 'returning cached result from Chado ontology lookup: ', Dumper([$cached_val
   }
 
 use Data::Dumper;
-warn 'adding result to cache in Chado ontology lookup: ', Dumper([$ret_val]);
+warn qq(adding result to cache in Chado ontology lookup with cache key "$cache_key": ),
+  Dumper([$ret_val]);
 
   $self->cache()->set($cache_key, $ret_val, "2 hours");
 
