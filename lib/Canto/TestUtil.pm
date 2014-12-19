@@ -744,7 +744,10 @@ sub _load_curs_db_data
       die "Expected 1 result for $gene_identifier not ", scalar(@found)
     }
 
-    my %new_genes = Canto::Controller::Curs->_create_genes($cursdb_schema, $result);
+    my $gene_manager = Canto::Curs::GeneManager->new(config => $config,
+                                                     curs_schema => $cursdb_schema);
+
+    my %new_genes = $gene_manager->create_genes_from_lookup($result);
 
     if (keys %new_genes != 1) {
       die "Expected only 1 gene to be created";

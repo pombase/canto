@@ -216,6 +216,8 @@ sub track_init
 }
 
 {
+  Canto::TestUtil->new()->init_test('empty_db');
+
   # test make_curs_db
 
   my $config = Canto::Config::get_config();
