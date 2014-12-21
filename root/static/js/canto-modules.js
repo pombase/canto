@@ -498,8 +498,6 @@ var OntologyTermLocatorCtrl =
           $scope.annotationType = annotationType;
         });
 
-      var ferret_input = $("#ferret-term-input");
-
       $('#loading').unbind('.canto');
 
       var set_term_callback = function(newValue, oldValue) {
@@ -1680,7 +1678,7 @@ canto.directive('annotationTableRow',
 
 
 var termNameComplete =
-  function() {
+  function($timeout) {
     return {
       scope: {
         annotationTypeName: '@',
@@ -1748,12 +1746,12 @@ var termNameComplete =
           focus: ferret_choose.show_autocomplete_def,
           close: ferret_choose.hide_autocomplete_def,
           select: function(event, ui) {
-            scope.$apply(function() {
+            $timeout(function() {
               scope.foundTermId = ui.item.id;
               scope.foundTermName = ui.item.value;
               scope.searchString = elem.val();
               scope.matchingSynonym = ui.item.matching_synonym;
-            });
+            }, 1);
           },
         }).data("autocomplete")._renderItem = function( ul, item ) {
           var search_string = elem.val();
@@ -1783,4 +1781,4 @@ var termNameComplete =
     };
   };
 
-canto.directive('termNameComplete', [termNameComplete]);
+canto.directive('termNameComplete', ['$timeout', termNameComplete]);
