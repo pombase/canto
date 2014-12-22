@@ -172,7 +172,7 @@ sub get_schema_for_key
     Canto::Curs::make_connect_string($config, $curs_key);
 
   if ($exists_flag) {
-    my $schema = Canto::CursDB->connect($connect_string);
+    my $schema = Canto::CursDB->cached_connect($connect_string);
 
     my $dbh = $schema->storage()->dbh();
     $dbh->do("PRAGMA foreign_keys = ON");
