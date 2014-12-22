@@ -1898,7 +1898,10 @@ sub genotype_store : Chained('feature') PathPart('store')
         push @alleles, $allele;
       }
 
-      my $genotype = $self->_make_genotype($c, \@alleles, $genotype_name);
+      my $genotype_manager = $self->genotype_manager();
+
+      my $genotype = $genotype_manager->make_genotype($curs_key,
+                                                      $genotype_name, \@alleles);
 
       $guard->commit();
 

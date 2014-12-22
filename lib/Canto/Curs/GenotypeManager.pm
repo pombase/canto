@@ -54,7 +54,25 @@ sub _build_allele_manager
                                          curs_schema => $self->curs_schema());
 }
 
-sub _make_genotype
+=head2 make_genotype
+
+ Usage   : $genotype_manager->make_genotype($curs_key, $name, \@allele_objects,
+                                            $identifier);
+ Function: Create a Genotype object in the CursDB
+ Args    : $curs_key - the key for this session
+           $name - the name for the new object (required)
+           \@allele_objects - a list of Allele objects to attach to the new
+                              Genotype
+           $identifier - the identifier of the new object if the Genotype
+                         details are from an external source (Chado) or undef
+                         for Genotypes created in this session.  If not defined
+                         a new unique identifier will be created based on the
+                         $curs_key
+ Return  : the new Genotype
+
+=cut
+
+sub make_genotype
 {
   my $self = shift;
   my $curs_key = shift;
@@ -120,7 +138,7 @@ sub _store_chado_genotype
   my $name = $chado_genotype_details->{name};
   my $identifier = $chado_genotype_details->{identifier};
 
-  return $self->_make_genotype($curs_key, $name, \@alleles, $identifier);
+  return $self->make_genotype($curs_key, $name, \@alleles, $identifier);
 }
 
 sub find_and_create_genotype
