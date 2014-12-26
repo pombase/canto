@@ -96,7 +96,10 @@ sub new
            $pass        - the database password (ignored by SQLite)
            $options     - valid options:
                             disable_foreign_keys - disable SQLite foreign keys
-                                                   if tue
+                                                   if true
+                            cache_connection - cache the connection if 1
+                                               (default: 1)
+
  Return  : the new schema
 
 =cut
@@ -107,11 +110,14 @@ sub cached_connect
 
   my ($connect_str, $user, $pass, $options) = @_;
 
+  $options->{cache_connection} //= 1;
+
   state $cache = {};
 
   my $is_sqlite_db = $connect_str =~ /SQLite/;
 
-  if ($is_sqlite_db && exists $cache->{$connect_str}) {
+  if ($options->{cache_connection} &&
+      $is_sqlite_db && exists $cache->{$connect_str}) {
     return $cache->{$connect_str};
   }
 
@@ -135,7 +141,9 @@ sub cached_connect
     $dbh->do("PRAGMA journal_mode = WAL;");
     $dbh->do("PRAGMA mmap_size=268435456;;");
 
-    $cache->{$connect_str} = $schema;
+    if ($options->{cache_connection}) {
+      $cache->{$connect_str} = $schema;
+    }
   }
 
   return $schema;

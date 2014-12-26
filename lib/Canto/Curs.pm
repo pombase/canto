@@ -160,6 +160,8 @@ sub get_schema
  Function: Get a schema object for the given curs_key
  Args    : $config - the config object
            $curs_key - the key (as a string) of the curation session
+           $options
+             - "cache_connection" - passed to cached_connect
  Return  : the schema or undef if the corresponding database doesn't exist
 
 =cut
@@ -167,12 +169,17 @@ sub get_schema_for_key
 {
   my $config = shift;
   my $curs_key = shift;
+  my $options = shift // {};
+
+  $options->{cache_connection} //= 1;
 
   my ($connect_string, $exists_flag) =
     Canto::Curs::make_connect_string($config, $curs_key);
 
   if ($exists_flag) {
-    my $schema = Canto::CursDB->cached_connect($connect_string);
+    my $schema =
+      Canto::CursDB->cached_connect($connect_string, undef, undef,
+                                    $options);
 
     my $dbh = $schema->storage()->dbh();
     $dbh->do("PRAGMA foreign_keys = ON");
