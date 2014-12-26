@@ -251,7 +251,8 @@ sub curs_iterator
     while (defined (my $curs = shift @curs_objects)) {
       my $curs_key = $curs->curs_key();
       my $curs_schema =
-        Canto::Curs::get_schema_for_key($config, $curs_key);
+        Canto::Curs::get_schema_for_key($config, $curs_key,
+                                        { cache_connection => 0 });
       if (defined $curs_schema) {
         return ($curs, $curs_schema);
       } else {
