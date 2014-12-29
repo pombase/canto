@@ -311,7 +311,10 @@ sub perl
   my $options = shift;
 
   my $curs_schema =
-    Canto::Curs::get_schema_for_key($config, $curs_key);
+    Canto::Curs::get_schema_for_key($config, $curs_key,
+                                    {
+                                      cache_connection => 0,
+                                    });
 
   return {
     metadata => _get_metadata($track_schema, $curs_schema, $curs_key),
