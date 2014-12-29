@@ -932,7 +932,7 @@ sub delete_annotation
 
 =head2 add_gene_by_identifier
 
- Usage   :
+ Usage   : $service_utils->add_gene_by_identifier($gene_identifier);
  Function: Find a gene with a call to lookup() then store and return it
  Args    : $gene_identifier - the gene to find
  Return  : a hash, with keys:
