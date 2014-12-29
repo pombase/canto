@@ -961,7 +961,7 @@ sub add_gene_by_identifier
   } else {
     return {
       status => 'error',
-      message => qq(error: couldn't find gene "$gene_identifier"),
+      message => qq(couldn't find gene "$gene_identifier"),
     };
   }
 }
