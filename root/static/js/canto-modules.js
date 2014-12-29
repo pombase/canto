@@ -426,7 +426,7 @@ var featureChooser =
 
 canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
 
-var OntologyTermLocatorCtrl =
+var ontologyTermLocatorCtrl =
   function($scope, CantoGlobals, AnnotationTypeConfig, $http, $modal, toaster) {
     $scope.data = {
       termConfirmed: false,
@@ -584,7 +584,7 @@ var OntologyTermLocatorCtrl =
 
 canto.controller('OntologyTermLocatorCtrl',
                  ['$scope', 'CantoGlobals', 'AnnotationTypeConfig', '$http', '$modal', 'toaster',
-                  OntologyTermLocatorCtrl]);
+                  ontologyTermLocatorCtrl]);
 
 
 var annotationEvidence =
