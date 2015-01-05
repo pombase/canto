@@ -89,6 +89,19 @@ sub _ontology_results
   return $results;
 }
 
+sub _gene_results
+{
+  my ($c, $search_string) = @_;
+
+  my $config = $c->config();
+
+  my $lookup = Canto::Track::get_adaptor($config, 'gene');
+
+  my $results = $lookup->lookup([$search_string]);
+
+  return $results;
+}
+
 sub _allele_results
 {
   my ($c, $gene_primary_identifier, $search_string) = @_;
@@ -144,6 +157,7 @@ sub lookup : Local
   my $results;
 
   my %dispatch = (
+    gene => \&_gene_results,
     allele => \&_allele_results,
     ontology => \&_ontology_results,
     person => \&_person_results,

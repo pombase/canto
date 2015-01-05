@@ -1,0 +1,22 @@
+<div>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      Add a gene
+    </h4>
+  </div>
+
+  <div class="modal-body">
+    <input ng-model="gene.searchIdentifier">
+    {{gene.searchIdentifier}}
+    <span ng-show="!!gene.searchIdentifier">
+      <span ng-show="isValid()">Found gene.name</span>
+      <span ng-hide="isValid()"
+            class="help-block">Not found</span>
+    </span>
+
+    <div class="modal-footer">
+      <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-primary" ng-click="ok()" ng-disabled="!isValid()">OK</button>
+    </div>
+  </div>
+</div>

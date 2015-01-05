@@ -114,16 +114,26 @@ canto.service('Curs', function($http) {
       return $http.get(url + args.join('/'));
     }
   };
+
+  this.add = function(key, args) {
+    if (typeof(args) === 'undefined') {
+      args = [];
+    }
+
+    var url = curs_root_uri + '/ws/' + key + '/add/' + args.join('/');
+    return $http.get(url);
+  };
 });
 
-// gene list cache
 canto.service('CursGeneList', function($q, Curs) {
-  this.cursPromise = Curs.list('gene');
-
   this.geneList = function() {
     var q = $q.defer();
 
-    this.cursPromise.success(function(genes) {
+    Curs.list('gene').success(function(genes) {
+      $.map(genes,
+            function(gene) {
+              gene.feature_id = gene.gene_id;
+            });
       q.resolve(genes);
     }).error(function() {
       q.reject();
@@ -139,8 +149,9 @@ canto.service('CursGenotypeList', function($q, Curs) {
   function add_id_or_identifier(genotypes) {
     $.map(genotypes, function(genotype) {
       genotype.id_or_identifier = genotype.genotype_id || genotype.identifier;
+      genotype.feature_id = genotype.genotype_id;
     });
-  };    
+  };
 
   this.cursGenotypeList = function() {
     var q = $q.defer();
@@ -213,10 +224,11 @@ canto.service('CantoGlobals', function($window) {
 });
 
 canto.service('CantoService', function($http) {
-  this.lookup = function(key, params) {
+  this.lookup = function(key, params, timeout) {
     return $http.get(application_root + '/ws/lookup/' + key,
                      {
-                       params: params
+                       params: params,
+                       timeout: timeout
                      });
   };
 });
@@ -383,7 +395,7 @@ function fetch_conditions(search, showChoices) {
 }
 
 var featureChooser =
-  function(CursGeneList, CursGenotypeList, toaster) {
+  function($modal, CursGeneList, CursGenotypeList, toaster) {
     return {
       scope: {
         featureType: '@',
@@ -392,39 +404,41 @@ var featureChooser =
       restrict: 'E',
       replace: true,
       controller: function($scope) {
-        if ($scope.featureType === 'gene') {
+        function get_genes_from_server() {
           CursGeneList.geneList().then(function(results) {
             $scope.features = results;
-
-            $.map($scope.features,
-                  function(gene) {
-                    gene.feature_id = gene.gene_id;
-                  });
           }).catch(function() {
             toaster.pop('note', "couldn't read the gene list from the server");
           });
+        };
+        if ($scope.featureType === 'gene') {
+          get_genes_from_server();
         } else {
           CursGenotypeList.cursGenotypeList().then(function(results) {
             $scope.features = results;
-
-            $.map($scope.features,
-                  function(genotype) {
-                    genotype.feature_id = genotype.genotype_id;
-                  });
           }).catch(function() {
             toaster.pop('note', "couldn't read the genotype list from the server");
           });
         }
+
+        $scope.openSingleGeneAddDialog = function() {
+          var modal = $modal.open({
+            templateUrl: app_static_path + 'ng_templates/single_gene_add.html',
+            controller: 'SingleGeneAddDialogCtrl',
+            title: 'Add a new gene by name or identifier',
+            animate: false,
+            windowClass: "modal",
+          });
+          modal.result.then(function () {
+            get_genes_from_server();
+          });
+        };
       },
-      template:
-        '<select class="form-control" ng-model="chosenFeatureId" ' +
-        'ng-options="feature.feature_id as feature.display_name for feature in features">' +
-            '<option selected="selected" value="">Choose a {{featureType}} ...</option>' +
-        '</select>'
+      templateUrl: app_static_path + 'ng_templates/feature_chooser.html',
     }
   };
 
-canto.directive('featureChooser', ['CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
+canto.directive('featureChooser', ['$modal', 'CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
 
 var ontologyTermLocatorCtrl =
   function($scope, CantoGlobals, AnnotationTypeConfig, $http, $modal, toaster) {
@@ -970,6 +984,82 @@ var termSuggestDialogCtrl =
 canto.controller('TermSuggestDialogCtrl',
                  ['$scope', '$modalInstance',
                  termSuggestDialogCtrl]);
+
+
+var singleGeneAddDialogCtrl =
+  function($scope, $modalInstance, $q, toaster, CantoService, Curs) {
+    $scope.gene = {
+      searchIdentifier: '',
+      details: null,
+    };
+
+    $scope.isValid = function() {
+      return $scope.gene.details != null;
+    };
+
+    var cancelPromise = null;
+
+    $scope.$watch('gene.searchIdentifier',
+                  function() {
+                    $scope.gene.details = null;
+
+                    if (cancelPromise != null) {
+                      cancelPromise.resolve();
+                      cancelPromise = null;
+                    }
+
+                    if ($scope.gene.searchIdentifier.length >= 2) {
+                      cancelPromise = $q.defer();
+
+                      var promise = CantoService.lookup($scope.gene.searchIdentifier, undefined,
+                                                        cancelPromise);
+
+                      promise.success(function(data) {
+                        if (data.missing.length > 0) {
+                          toaster.pop('error',
+                                      'There is no gene with the identifier: "' +
+                                      $scope.gene.searchIdentifier + '"');
+                        } else {
+                          if (data.found.length > 1) {
+                            toaster.pop('error',
+                                        'There is more than one gene with the identifier: "' +
+                                        $scope.gene.searchIdentifier + '" (' +
+                                        $.map(function(gene) {
+                                          return gene.primary_identifier || gene.primary_name
+                                        }, data.found).join(', ') + ')');
+                          } else {
+                            $scope.gene.details = data.found[0];
+                          }
+                        }
+                      });
+                    }
+                  });
+
+    $scope.ok = function () {
+      var promise = Curs.add('gene', $scope.gene.searchIdentifier);
+
+      promise.success(function(data) {
+        if (data.status === 'error') {
+          toaster.pop('error', data.message);
+        } else {
+          $modalInstance.close({
+            details: data.found[0]
+          });
+        }
+      })
+      .error(function() {
+        toaster.pop('error', 'Failed to add gene, could not contact the Canto server');
+      });
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('SingleGeneAddDialogCtrl',
+                 ['$scope', '$modalInstance', '$q', 'toaster', 'CantoService', 'Curs',
+                 singleGeneAddDialogCtrl]);
 
 canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig', 'Curs', 'toaster',
                                      function($scope, $http, $modal, CantoConfig, Curs, toaster) {

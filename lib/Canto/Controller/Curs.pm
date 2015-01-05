@@ -2668,6 +2668,21 @@ sub ws_annotation_delete : Chained('top') PathPart('ws/annotation/delete')
   $c->forward('View::JSON');
 }
 
+sub ws_add_gene : Chained('top') PathPart('ws/gene/add')
+{
+  my ($self, $c, $gene_identifier) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  $st->{json_data} = $service_utils->add_gene_by_identifier($gene_identifier);
+
+  $c->forward('View::JSON');
+}
+
 sub cancel_approval : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
