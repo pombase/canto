@@ -2618,8 +2618,6 @@ sub ws_change_annotation : Chained('ws_annotation') PathPart('change')
   my ($self, $c) = @_;
 
   my $st = $c->stash();
-
-  my $type = $st->{ws_type};
   my $schema = $st->{schema};
 
   my $annotation_id = $st->{annotation_id};
@@ -2641,8 +2639,6 @@ sub ws_annotation_create : Chained('top') PathPart('ws/annotation/create')
   my ($self, $c) = @_;
 
   my $st = $c->stash();
-
-  my $type = $st->{ws_type};
   my $schema = $st->{schema};
 
   my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
@@ -2660,8 +2656,6 @@ sub ws_annotation_delete : Chained('top') PathPart('ws/annotation/delete')
   my ($self, $c) = @_;
 
   my $st = $c->stash();
-
-  my $type = $st->{ws_type};
   my $schema = $st->{schema};
 
   my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
