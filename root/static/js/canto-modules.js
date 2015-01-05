@@ -224,8 +224,9 @@ canto.service('CantoGlobals', function($window) {
 });
 
 canto.service('CantoService', function($http) {
-  this.lookup = function(key, params, timeout) {
-    return $http.get(application_root + '/ws/lookup/' + key,
+  this.lookup = function(key, path_parts, params, timeout) {
+    return $http.get(application_root + '/ws/lookup/' + key + '/' +
+                     path_parts.join('/'),
                      {
                        params: params,
                        timeout: timeout
@@ -1011,8 +1012,8 @@ var singleGeneAddDialogCtrl =
                     if ($scope.gene.searchIdentifier.length >= 2) {
                       cancelPromise = $q.defer();
 
-                      var promise = CantoService.lookup($scope.gene.searchIdentifier, undefined,
-                                                        cancelPromise);
+                      var promise = CantoService.lookup('gene', [$scope.gene.searchIdentifier],
+                                                        undefined, cancelPromise);
 
                       promise.success(function(data) {
                         if (data.missing.length > 0) {
