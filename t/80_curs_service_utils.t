@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 54;
+use Test::More tests => 55;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -837,11 +837,21 @@ cmp_deeply($add_gene_result,
              'status' => 'success'
            });
 
+# if we try to add it a second time it won't be added and we'll get a
+# "gene_id" of undef
+$add_gene_result = $service_utils->add_gene_by_identifier('SPBC12C2.02c');
+
+cmp_deeply($add_gene_result,
+           {
+             'gene_id' => undef,
+             'status' => 'success'
+           });
+
 $add_gene_result = $service_utils->add_gene_by_identifier('dummy');
 
 cmp_deeply($add_gene_result,
            {
              'status' => 'error',
-             'message' => 'error: couldn\'t find gene "dummy"',
+             'message' => 'couldn\'t find gene "dummy"',
            });
 

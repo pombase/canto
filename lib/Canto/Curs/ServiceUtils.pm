@@ -954,10 +954,20 @@ sub add_gene_by_identifier
   my @result = $gene_manager->find_and_create_genes([$gene_identifier]);
 
   if (@result == 1) {
-    return {
+    my %ret = (
       status => 'success',
-      gene_id => $result[0]->{$gene_identifier}->gene_id(),
-    };
+    );
+
+    my $new_gene = $result[0]->{$gene_identifier};
+
+    if (defined $new_gene) {
+      $ret{gene_id} = $new_gene->gene_id(),
+    } else {
+      # the gene was already in the session and wasn't added again
+      $ret{gene_id} = undef;
+    }
+
+    return \%ret;
   } else {
     return {
       status => 'error',

@@ -991,18 +991,20 @@ var singleGeneAddDialogCtrl =
   function($scope, $modalInstance, $q, toaster, CantoService, Curs) {
     $scope.gene = {
       searchIdentifier: '',
-      details: null,
+      message: null,
+      valid: false,
     };
 
     $scope.isValid = function() {
-      return $scope.gene.details != null;
+      return $scope.gene.primaryIdentifier != null;
     };
 
     var cancelPromise = null;
 
     $scope.$watch('gene.searchIdentifier',
                   function() {
-                    $scope.gene.details = null;
+                    $scope.gene.message = null;
+                    $scope.gene.primaryIdentifier = null;
 
                     if (cancelPromise != null) {
                       cancelPromise.resolve();
@@ -1017,19 +1019,27 @@ var singleGeneAddDialogCtrl =
 
                       promise.success(function(data) {
                         if (data.missing.length > 0) {
-                          toaster.pop('error',
-                                      'There is no gene with the identifier: "' +
-                                      $scope.gene.searchIdentifier + '"');
+                          $scope.gene.message = 'Not found';
+                          $scope.gene.primaryIdentifier = null;
                         } else {
                           if (data.found.length > 1) {
-                            toaster.pop('error',
-                                        'There is more than one gene with the identifier: "' +
-                                        $scope.gene.searchIdentifier + '" (' +
-                                        $.map(function(gene) {
-                                          return gene.primary_identifier || gene.primary_name
-                                        }, data.found).join(', ') + ')');
+                            $scope.gene.message =
+                              'There is more than one gene matching gene: ' +
+                              $.map(data.found,
+                                    function(gene) {
+                                      return gene.primary_identifier || gene.primary_name
+                                    }).join(', ');
+                            $scope.gene.primaryIdentifier = null;
                           } else {
-                            $scope.gene.details = data.found[0];
+                            $scope.gene.message = 'Found: ';
+
+                            if (data.found[0].primary_name) {
+                              $scope.gene.message +=
+                                data.found[0].primary_name + '(' + data.found[0].primary_identifier + ')';
+                            } else {
+                              $scope.gene.message += data.found[0].primary_identifier;
+                            }
+                            $scope.gene.primaryIdentifier = data.found[0].primary_identifier;
                           }
                         }
                       });
@@ -1037,7 +1047,7 @@ var singleGeneAddDialogCtrl =
                   });
 
     $scope.ok = function () {
-      var promise = Curs.add('gene', $scope.gene.searchIdentifier);
+      var promise = Curs.add('gene', [$scope.gene.primaryIdentifier]);
 
       promise.success(function(data) {
         if (data.status === 'error') {
