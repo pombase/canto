@@ -357,7 +357,7 @@ var ferret_choose = {
           var re = new RegExp("@@term_ont_id(?::s/(.+)/(.*)/r)?@@");
           url = url.replace(re,
                             function(match_str, p1, p2) {
-                              if (p1.length == 0) {
+                              if (!p1 || p1.length == 0) {
                                 return term_id;
                               } else {
                                 return term_id.replace(new RegExp(p1), p2);
