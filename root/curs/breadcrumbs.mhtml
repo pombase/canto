@@ -21,21 +21,19 @@
 
 <%init>
 my $config = $c->config();
-my $feature_id;
-my $feature_type;
+my $feature_id = undef;
+my $feature = $c->stash()->{feature};
+my $feature_type = $c->stash()->{feature_type};
 my $display_name;
 
-if ($c->stash()->{gene}) {
-  my $gene = $c->stash()->{gene};
-  $feature_id = $gene->gene_id();
-  $feature_type = 'gene';
-  $display_name = $gene->display_name();
-}
-if ($c->stash()->{genotype}) {
-  my $genotype = $c->stash()->{genotype};
-  $feature_id = $genotype->genotype_id();
-  $feature_type = 'genotype';
-  $display_name = $genotype->display_name();
+if (defined $feature) {
+  if ($feature_type eq 'gene') {
+    $feature_id = $feature->gene_id();
+  } else {
+    $feature_id = $feature->genotype_id();
+  }
+
+  $display_name = $feature->display_name();
 }
 
 my $pub = $c->stash()->{pub};
