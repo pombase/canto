@@ -1053,8 +1053,13 @@ var singleGeneAddDialogCtrl =
         if (data.status === 'error') {
           toaster.pop('error', data.message);
         } else {
+          if (data.gene_id == null) {
+            // null if the gene was already in the list
+            toaster.pop('info', $scope.gene.primaryIdentifier +
+                        ' is already added to this session');
+          }
           $modalInstance.close({
-            details: data.found[0]
+            new_gene_id: data.gene_id,
           });
         }
       })
