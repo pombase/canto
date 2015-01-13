@@ -95,11 +95,24 @@ sub _gene_results
 
   my $config = $c->config();
 
-  my $lookup = Canto::Track::get_adaptor($config, 'gene');
+  my $adaptor = Canto::Track::get_adaptor($config, 'gene');
 
-  my $results = $lookup->lookup([$search_string]);
+  my $result;
 
-  return $results;
+  if (exists $config->{instance_organism}) {
+    $result = $adaptor->lookup(
+      {
+        search_organism => {
+          genus => $config->{instance_organism}->{genus},
+          species => $config->{instance_organism}->{species},
+        }
+      },
+      [$search_string]);
+  } else {
+    $result = $adaptor->lookup([$search_string]);
+  }
+
+  return $result;
 }
 
 sub _allele_results
