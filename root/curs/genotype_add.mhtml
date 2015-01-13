@@ -19,7 +19,7 @@ Add alleles from the genes below until the genotype is fully specified.
     <div class="curs-box-body">
 
       <input type="text" title="Click to genotype edit name" href="#"
-             placeholder="add optional genotype name ..."
+             placeholder="short genotype name (optional) ..."
              size="50"
              ng-model="data.genotype_name" />
 
