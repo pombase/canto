@@ -576,11 +576,21 @@ sub _ontology_change_keys
       }
     },
     term_suggestion_name => sub {
-      $data->{term_suggestion}->{name} = shift;
+      my $suggested_name = shift;
+      if ($suggested_name) {
+        $data->{term_suggestion}->{name} = $suggested_name;
+      } else {
+        delete $data->{term_suggestion}->{name};
+      }
       return 1;
     },
     term_suggestion_definition => sub {
-      $data->{term_suggestion}->{definition} = shift;
+      my $suggested_definition = shift;
+      if ($suggested_definition) {
+        $data->{term_suggestion}->{definition} = $suggested_definition;
+      } else {
+        delete $data->{term_suggestion}->{definition};
+      }
       return 1;
     },
     conditions => sub {
@@ -721,6 +731,12 @@ sub _store_change_hash
 
   if (!$evidence_config->{with_gene}) {
     delete $data->{with_gene};
+  }
+
+  if ($data->{term_suggestion} &&
+      (keys (%{$data->{term_suggestion}}) == 0 ||
+         !$data->{term_suggestion}->{name} && !$data->{term_suggestion}->{definition})) {
+    delete $data->{term_suggestion};
   }
 
   if (!$annotation->gene_annotations() &&
