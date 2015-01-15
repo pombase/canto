@@ -341,7 +341,7 @@ var annotationProxy =
 
     changesToStore.key = curs_key;
 
-    // we send term_ontid, so this is unneeded
+    // we send term_ontid, so this is not needed
     delete changesToStore.term_name;
 
     var putQ;
