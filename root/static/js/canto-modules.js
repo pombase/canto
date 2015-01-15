@@ -520,6 +520,11 @@ var ontologyTermLocatorCtrl =
           CantoGlobals.ferret_choose.term_history = [trim($scope.data.searchString)];
           CantoGlobals.ferret_choose.set_current_term(newValue);
           CantoGlobals.ferret_choose.matching_synonym = $scope.data.matchingSynonym;
+
+          CantoGlobals.ferret_choose.get_term_by_id(newValue,
+                                                    function(term) {
+                                                      CantoGlobals.ferret_choose.render(term);
+                                                    });
         }
       };
 
@@ -531,19 +536,6 @@ var ontologyTermLocatorCtrl =
                          CantoGlobals.ferret_choose.term_click_handler);
       $("body").delegate("#breadcrumbs-search a", "click",
                          CantoGlobals.ferret_choose.term_click_handler);
-
-      $("#breadcrumb-previous-button").click(function () {
-        CantoGlobals.ferret_choose.term_history.length -= 1;
-        if (CantoGlobals.ferret_choose.term_history.length > 0) {
-          if (CantoGlobals.ferret_choose.term_history.length == 1) {
-            CantoGlobals.ferret_choose.set_current_term();
-          } else {
-            CantoGlobals.ferret_choose.set_current_term(last(CantoGlobals.ferret_choose.term_history));
-          }
-        } else {
-          window.location.href = curs_root_uri;
-        }
-      });
 
       $('#ferret-term-input').attr('disabled', false);
 
@@ -570,28 +562,6 @@ var ontologyTermLocatorCtrl =
         );
         $(element).show();
       });
-
-      $(window).bind('hashchange', function(e) {
-        var state = $.bbq.getState( this.id, true );
-        var search_string = state.s;
-
-        if (search_string) {
-          if (state.c) {
-            var crumbs = trim(state.c);
-            var new_history = [search_string].concat(crumbs.split(","));
-            CantoGlobals.ferret_choose.term_history = new_history
-            $('#ferret-term-id').val(last(new_history));
-          } else {
-            CantoGlobals.ferret_choose.term_history = [search_string];
-          }
-        } else {
-          CantoGlobals.ferret_choose.term_history = [];
-        }
-
-        $('#ferret-term-input').val(search_string);
-
-        CantoGlobals.ferret_choose.render();
-      })
     };
 
     $scope.init();

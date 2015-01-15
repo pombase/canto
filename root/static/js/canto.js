@@ -77,14 +77,7 @@ var ferret_choose = {
 //    $("#ferret").append("<div>" + message + "</div>");
   },
 
-  store_term_data : function(data) {
-    var term = data[0];
-    ferret_choose.debug("adding to cache: " + term.id + " " + term.name);
-    ferret_choose.term_detail_cache[term.id] = term;
-  },
-
-  fetch_term_detail : function(term_id) {
-    ferret_choose.debug("fetching: " + term_id);
+  fetch_term_detail : function(term_id, callback) {
     var show_synonyms_config = annotation_type_config.show_synonyms;
     var synonyms_flag = 0;
     if (typeof(show_synonyms_config) !== "undefined") {
@@ -96,21 +89,14 @@ var ferret_choose = {
       url: ferret_choose.ontology_complete_url,
       data: { term: term_id, def: 1, children: 1, exact_synonyms: synonyms_flag },
       dataType: 'json',
-      success: ferret_choose.store_term_data,
-      async: false
+      success: function(data) {
+        callback(data[0]);
+      },
     });
   },
 
-  get_term_by_id : function(term_id) {
-    if (!ferret_choose.term_detail_cache[term_id]) {
-      ferret_choose.fetch_term_detail(term_id);
-    }
-
-    ferret_choose.debug("looking for in cache: " + term_id);
-    ferret_choose.debug("returning from cache: " + ferret_choose.term_detail_cache[term_id]);
-    var term = ferret_choose.term_detail_cache[term_id];
-
-    return term;
+  get_term_by_id : function(term_id, callback) {
+    ferret_choose.fetch_term_detail(term_id, callback);
   },
 
   get_current_term : function() {
@@ -141,13 +127,6 @@ var ferret_choose = {
         }
       }
     }
-
-    var bbq_state = {
-      "s" : ferret_choose.term_history[0],
-      "c" : ferret_choose.term_history.slice(1).join(",")
-    };
-
-    $.bbq.pushState(bbq_state);
   },
 
   add_to_breadcrumbs : function(term, make_link) {
@@ -209,9 +188,11 @@ var ferret_choose = {
     if (ferret_choose.term_history.length > 1) {
       for (var i = 1; i < history_length; i++) {
         var term_id = ferret_choose.term_history[i];
-        var term = ferret_choose.get_term_by_id(term_id);
-        var make_link = (i != history_length - 1);
-        ferret_choose.add_to_breadcrumbs(term, make_link);
+        ferret_choose.get_term_by_id(term_id,
+                                     function(term) {
+                                       var make_link = (i != history_length - 1);
+                                       ferret_choose.add_to_breadcrumbs(term, make_link);
+                                     });
       }
     };
   },
@@ -271,14 +252,13 @@ var ferret_choose = {
     return false;
   },
 
-  render : function() {
+  render : function(term) {
     if (ferret_choose.term_history.length <= 1) {
       var term_input = $('#ferret-term-input');
       term_input.focus();
       term_input.autocomplete('search');
     } else {
       var term_id = last(ferret_choose.term_history);
-      var term = ferret_choose.get_term_by_id(term_id);
 
       $('.ferret-term-name').text(term.name);
       $('#ferret-term-definition').text(term.definition);
