@@ -436,6 +436,13 @@ td.table-row-actions div {
   font-size: 95%;
 }
 
+.curs-evidence-directive > div {
+  margin: 5px 0px 5px 0px;
+}
+
+.curs-evidence-directive-with {
+  margin: 8px 0px 8px 0px;
+}
 
 .curs-evidence-conditions {
   margin: 30px 0px 5px 0px;

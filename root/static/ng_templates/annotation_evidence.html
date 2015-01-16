@@ -1,4 +1,4 @@
-<div>
+<div class="curs-evidence-directive">
   <div ng-class="{ 'has-error': !isValidEvidenceCode() }">
     <select class="form-control"
             ng-model="evidenceCode"
@@ -8,12 +8,13 @@
   </div>
 
   <div ng-show="showWith()" ng-class="{ 'has-error': !isValidWithGene() }">
-    <div>
-      <feature-chooser feature-type="gene"
-                       chosen-feature-id="withGeneId"></feature-chooser>
-      <span ng-show="isValidEvidenceCode() && !isValidWithGene()"
-            class="help-block">Please select a 'with' gene</span>
+    <div class="curs-evidence-directive-with">
+      <span>With:</span>
+      <span><feature-chooser feature-type="gene"
+                             chosen-feature-id="withGeneId"></feature-chooser></span>
     </div>
+    <div ng-show="isValidEvidenceCode() && !isValidWithGene()"
+          class="help-block">Please select a 'with' gene</div>
   </div>
 
   <div ng-show="showConditions()" class="curs-evidence-conditions">
