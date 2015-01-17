@@ -539,17 +539,6 @@ var ontologyTermLocatorCtrl =
 
       $('#ferret-term-input').attr('disabled', false);
 
-      $('.canto-toggle-button').each(function (index, element) {
-        var this_id = $(element).attr('id');
-        var target = $('#' + this_id + '-target');
-        $(element).click(
-          function () {
-            target.toggle()
-          }
-        );
-        $(element).show();
-      });
-
       $('.canto-more-button').each(function (index, element) {
         var this_id = $(element).attr('id');
         var target = $('#' + this_id + '-target');
