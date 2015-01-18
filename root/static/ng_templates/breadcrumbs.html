@@ -1,0 +1,11 @@
+<div class="breadcrumbs-directive">
+  <div ng-hide="CantoBreadcrumbsService.searchString == null"
+       id="breadcrumbs-search" class="breadcrumbs-link">
+    <span ng-hide="CantoBreadcrumbsService.searchString == ''">
+      Search: "{{CantoBreadcrumbsService.searchString}}"
+    </span>
+    <span ng-show="CantoBreadcrumbsService.searchString == ''">
+      Search
+    </span>
+  </div>
+</div>

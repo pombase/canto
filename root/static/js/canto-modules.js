@@ -395,6 +395,80 @@ function fetch_conditions(search, showChoices) {
   });
 }
 
+var cantoBreadcrumbsService =
+  function($rootScope) {
+    // var gene = null
+    this.searchString = null;
+    this.termHistory = [];
+  };
+
+canto.service('CantoBreadcrumbsService', ['$rootScope', cantoBreadcrumbsService]);
+
+
+var breadcrumbsDirective =
+  function($compile, CantoBreadcrumbsService) {
+    return {
+      scope: {
+      },
+      restrict: 'E',
+      replace: true,
+      controller: function($scope) {
+        $scope.CantoBreadcrumbsService = CantoBreadcrumbsService;
+      },
+      link: function($scope, elem) {
+        $scope.$watch('CantoBreadcrumbsService.termHistory',
+                      function() {
+                        $('#breadcrumbs-terms').remove();
+                        var termList = CantoBreadcrumbsService.termHistory;
+                        var $dest = $('#breadcrumbs-search');
+                        var html = '<div id="breadcrumbs-terms">';
+
+                        for (var i = 0; i < termList.length; i++) {
+                          var termId = termList[i];
+                          var makeLink = (i != termList.length - 1);
+
+                          html += '<div class="breadcrumbs-link">' +
+                            '<breadcrumb-term term-id="' + termId + '"></breadcrumb-term>';
+                        }
+
+                        for (var i = 0; i < termList.length; i++) {
+                          html += '</div>';
+                        }
+
+                        html += '</div>';
+
+                        $dest.append($compile(html)($scope));
+                      });
+      },
+      templateUrl: app_static_path + 'ng_templates/breadcrumbs.html',
+    }
+  };
+
+canto.directive('breadcrumbs', ['$compile', 'CantoBreadcrumbsService', breadcrumbsDirective]);
+
+
+var breadcrumbTermDirective =
+  function(CantoService) {
+    return {
+      scope: {
+        termId: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      controller: function($scope) {
+        var promise = CantoService.lookup('ontology', [$scope.termId]);
+
+        promise.success(function(data) {
+          $scope.termName = data.name;
+        });
+      },
+      templateUrl: app_static_path + 'ng_templates/breadcrumb_term.html',
+    }
+  };
+
+canto.directive('breadcrumbTerm', ['CantoService', breadcrumbTermDirective]);
+
+
 var featureChooser =
   function($modal, CursGeneList, CursGenotypeList, toaster) {
     return {
@@ -442,7 +516,7 @@ var featureChooser =
 canto.directive('featureChooser', ['$modal', 'CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
 
 var ontologyTermLocatorCtrl =
-  function($scope, CantoGlobals, AnnotationTypeConfig, $http, $modal, toaster) {
+  function($scope, CantoGlobals, AnnotationTypeConfig, CantoBreadcrumbsService, $http, $modal, toaster) {
     $scope.data = {
       termConfirmed: false,
       conditions: [],
@@ -481,6 +555,8 @@ var ontologyTermLocatorCtrl =
     $scope.unsetTerm = function() {
       $scope.data.term_name = '';
       $scope.data.term_ontid = '';
+      CantoBreadcrumbsService.searchString = null;
+      CantoBreadcrumbsService.termHistory = [];
     };
 
     $scope.back = function() {
@@ -517,7 +593,8 @@ var ontologyTermLocatorCtrl =
 
       var set_term_callback = function(newValue, oldValue) {
         if (newValue !== oldValue) {
-          CantoGlobals.ferret_choose.term_history = [trim($scope.data.searchString)];
+          CantoBreadcrumbsService.searchString = trim($scope.data.searchString);
+          CantoBreadcrumbsService.termHistory = [newValue];
           CantoGlobals.ferret_choose.set_current_term(newValue);
           CantoGlobals.ferret_choose.matching_synonym = $scope.data.matchingSynonym;
 
@@ -557,7 +634,8 @@ var ontologyTermLocatorCtrl =
   };
 
 canto.controller('OntologyTermLocatorCtrl',
-                 ['$scope', 'CantoGlobals', 'AnnotationTypeConfig', '$http', '$modal', 'toaster',
+                 ['$scope', 'CantoGlobals', 'AnnotationTypeConfig', 'CantoBreadcrumbsService',
+                  '$http', '$modal', 'toaster',
                   ontologyTermLocatorCtrl]);
 
 
@@ -591,7 +669,7 @@ var annotationEvidence =
         };
 
         $scope.showWith = function() {
-          return $scope.evidenceTypes && $scope.isValidEvidenceCode() && 
+          return $scope.evidenceTypes && $scope.isValidEvidenceCode() &&
             $scope.evidenceTypes[$scope.evidenceCode].with_gene;
         };
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 18;
 
 use Canto::TestUtil;
 
@@ -84,6 +84,29 @@ test_psgi $app, sub {
     ok(grep { $_->{id} =~ /PECO:0000137/ } @$obj);
     ok(grep { $_->{name} =~ /glucose rich medium/ } @$obj);
     ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
+  }
+
+  # try lookup_by_id()
+  {
+    my $search_term = 'GO:0055085';
+    my $url = "http://localhost:5000/ws/lookup/ontology/?term=$search_term";
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    use JSON::Any;
+
+    my $json_any = JSON::Any->new();
+    my $obj;
+    eval { $obj = $json_any->jsonToObj($res->content()); };
+    if ($@) {
+      die "$@\n", $res->content();
+    }
+
+    is($obj->{id}, $search_term);
+    is($obj->{name}, 'transmembrane transport');
+    is($obj->{annotation_namespace}, 'biological_process');
   }
 
 };

@@ -10,7 +10,7 @@ $message_to_curators
 $total_annotation_count
 </%args>
 
-<div ng-app id="curs-front-page">
+<div id="curs-front-page">
 <div>
 <div id="curs-gene-list">
 <& /curs/gene_list.mhtml, pub => $pub &>

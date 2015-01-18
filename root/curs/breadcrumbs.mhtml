@@ -13,7 +13,10 @@
       <a href="<% $feature_url %>" title="<% $display_name %>">
       <% $display_name %>
       </a>
+      <breadcrumbs></breadcrumbs>
     </div>
+% } else {
+    <breadcrumbs></breadcrumbs>
 % }
   </div>
 </div>

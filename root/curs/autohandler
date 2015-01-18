@@ -15,7 +15,7 @@ var annotation_type_config = <% $annotation_type_config_js |n %>;
 <div id="disabled-overlay"></div>
 <div id="ajax-loading-overlay"></div>
 
-<div class="curs-content" ng-app="cantoApp">
+<div class="curs-content">
 
 <toaster-container></toaster-container>
 

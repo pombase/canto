@@ -13,7 +13,7 @@ $is_admin_user
   <head>
     <& head.mhtml, title => $title &>
   </head>
-  <body>
+  <body ng-app="cantoApp">
 % if (!$st->{hide_header}) {
 % # hide the head on the Canto front page
     <& header.mhtml &>

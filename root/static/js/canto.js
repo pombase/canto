@@ -129,74 +129,6 @@ var ferret_choose = {
     }
   },
 
-  add_to_breadcrumbs : function(term, make_link) {
-    var dest = $('#breadcrumbs-search');
-    // find the most nested div
-    while (true) {
-      var children = dest.children('div');
-      if (children.length > 0) {
-        dest = children.first();
-      } else {
-        break;
-      }
-    }
-    var link_start;
-    var link_end;
-
-    if (make_link) {
-      link_start = '<a title="' + term.name + '" href="#' + term.id + '">';
-      link_end = '</a>';
-    } else {
-      link_start = '';
-      link_end = '';
-    }
-    var div = $('<div class="breadcrumbs-link breadcrumbs-ferret-term">' +
-                link_start + term.name + link_end + '</div>');
-    div.data('term', term);
-    dest.append(div);
-  },
-
-  render_breadcrumbs : function(term_id) {
-    $('#breadcrumbs-search').remove();
-    var history_length = ferret_choose.term_history.length;
-    var search_string = ferret_choose.term_history[0];
-
-    if (!search_string) {
-      search_string = '';
-    }
-
-    var link_start;
-    var link_end;
-    if (history_length > 1) {
-      link_start = '<a href="#search">';
-      link_end = '</a>';
-    } else {
-      link_start = '';
-      link_end = '';
-    }
-    var search_text;
-    if (search_string.length == 0) {
-      search_text = "Search";
-    } else {
-      search_text = 'Search: "' + search_string + '"';
-    }
-    var html = '<div class="breadcrumbs-link" id="breadcrumbs-search">' +
-      link_start + search_text + link_end +
-      '</div>';
-    $('#breadcrumbs-gene-link').append(html);
-
-    if (ferret_choose.term_history.length > 1) {
-      for (var i = 1; i < history_length; i++) {
-        var term_id = ferret_choose.term_history[i];
-        ferret_choose.get_term_by_id(term_id,
-                                     function(term) {
-                                       var make_link = (i != history_length - 1);
-                                       ferret_choose.add_to_breadcrumbs(term, make_link);
-                                     });
-      }
-    };
-  },
-
   // if link has no fragment, go to search page
   move_to_hash_term : function(link) {
     var href = link.attr('href');
@@ -367,8 +299,6 @@ var ferret_choose = {
         }
       }
     }
-
-    ferret_choose.render_breadcrumbs();
   },
 
   ferret_reset : function() {
