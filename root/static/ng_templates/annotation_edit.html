@@ -47,10 +47,7 @@
         <td class="title">Term name</td>
         <td>
           <term-name-complete current-term-name="{{annotation.term_name}}"
-                              found-term-id="annotation.term_ontid"
-                              found-term-name="annotation.term_name"
-                              search-string="searchString"
-                              matching-synonym="matchingSynonym"
+                              found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
                               annotation-type-name="{{annotationType.name}}">
           </term-name-complete>
           <span ng-show="isValidFeature() && !isValidTerm()"

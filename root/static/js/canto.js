@@ -58,14 +58,7 @@ function make_ontology_complete_url(annotation_type) {
 }
 
 var ferret_choose = {
-  // element 0 is the orginal text we searched for, last element is the current
-  // selected term, the other elements are the history/trail
-  term_history : [undefined],
-  term_detail_cache : {},
   annotation_namespace: undefined,
-
-  // the synonym we match when searching, if any
-  matching_synonym : undefined,
 
   initialise : function(annotation_type_name, annotation_namespace) {
     ferret_choose.ontology_complete_url = make_ontology_complete_url(annotation_type);
@@ -103,54 +96,6 @@ var ferret_choose = {
     return last(ferret_choose.term_history);
   },
 
-  set_current_term : function(term_id) {
-    $('#ferret-term-id').val(term_id);
-
-    ferret_choose.debug("set_current_term: " + term_id);
-
-    if (term_id) {
-      if (term_id == 'search') {
-        ferret_choose.term_history.length = 1;
-      } else {
-        var i;
-        for (i = 1; i < ferret_choose.term_history.length; i++) {
-          var value = ferret_choose.term_history[i];
-          if (term_id == value) {
-            // truncate the array, making term_id the last element
-            ferret_choose.term_history.length = i + 1;
-            break;
-          }
-        }
-
-        if (i == ferret_choose.term_history.length) {
-          ferret_choose.term_history.push(term_id);
-        }
-      }
-    }
-  },
-
-  // if link has no fragment, go to search page
-  move_to_hash_term : function(link) {
-    var href = link.attr('href');
-    var index = href.indexOf('#');
-    if (index < 0) {
-      ferret_choose.set_current_term();
-    } else {
-      var term_id = href.substring(index + 1);
-      ferret_choose.set_current_term(term_id);
-    }
-  },
-
-  term_click_handler : function(event) {
-    ferret_choose.move_to_hash_term($(event.target));
-    return false;
-  },
-
-  child_click_handler : function(event) {
-    ferret_choose.move_to_hash_term($(event.target).closest('a'));
-    return false;
-  },
-
   show_children : function() {
     var term_children = $('#ferret-term-children');
     term_children.show();
@@ -182,123 +127,6 @@ var ferret_choose = {
                                    term_name + '"',
                                   width: 800 });
     return false;
-  },
-
-  render : function(term) {
-    if (ferret_choose.term_history.length <= 1) {
-      var term_input = $('#ferret-term-input');
-      term_input.focus();
-      term_input.autocomplete('search');
-    } else {
-      var term_id = last(ferret_choose.term_history);
-
-      $('.ferret-term-name').text(term.name);
-      $('#ferret-term-definition').text(term.definition);
-      $('.ferret-term-id-display').text(term_id);
-
-      if (term.comment) {
-        $('#ferret-term-comment-row').show();
-        $('#ferret-term-comment').html('<div class="term-comment">' +
-                                       term.comment + '</div>');
-      } else {
-        $('#ferret-term-comment-row').hide();
-        $('#ferret-term-comment').html('');
-      }
-
-      if (ferret_choose.matching_synonym && ferret_choose.term_history.length == 2) {
-        $('#ferret-term-matching-synonym-row').show();
-        $('#ferret-term-matching-synonym').html('<div class="term-synonym">' +
-                                       ferret_choose.matching_synonym + '</div>');
-      } else {
-        $('#ferret-term-matching-synonym-row').hide();
-        $('#ferret-term-matching-synonym').html('');
-      }
-
-      var synonyms_html = '';
-      var synonyms_count = 0;
-
-      if ("synonyms" in term) {
-        $.each(term.synonyms, function(idx, synonym) {
-          var synonym_name = synonym.name;
-          if (synonym_name !== ferret_choose.matching_synonym) {
-            synonyms_html += '<li>' + synonym_name + '</li>';
-            synonyms_count++;
-          }
-        });
-      }
-
-      $('#ferret-term-synonyms-row').remove();
-      if (synonyms_count > 0) {
-        var synonym_title = 'Synonym';
-        if (synonyms_count > 1) {
-          synonym_title = 'Synonyms';
-        }
-        var $new_synonym_row = $('<tr id="ferret-term-synonyms-row">' +
-                                 '<td class="title">' + synonym_title + '</td>' +
-                                 '<td>' + synonyms_html + '</td></tr>');
-
-        $('#ferret-term-matching-synonym-row').after($new_synonym_row);
-      }
-
-      ferret_choose.debug("render(): " + term_id + " " + term.name);
-
-      var children = term.children;
-      var children_html = '';
-
-      $.each(children, function(idx, child) {
-        var img_html =
-          '<img src="' + application_root + 'static/images/right_arrow.png"/>';
-        children_html += '<li><a href="#' + child.id + '">' +
-          child.name + img_html + '</li></a>';
-      });
-
-      $('#ferret-term-children').data('child-count', children.length);
-      $('#ferret-term-children-list').html($('<ul/>').append($(children_html)));
-
-      if (children.length == 0) {
-        ferret_choose.show_leaf();
-      } else {
-        ferret_choose.show_children();
-      }
-
-      var link_confs = ontology_external_links[ferret_choose.annotation_namespace];
-      if (link_confs) {
-        var html = '';
-        $.each(link_confs, function(idx, link_conf) {
-          var url = link_conf['url'];
-          // hacky: allow a substitution like WebUtil::substitute_paths()
-          var re = new RegExp("@@term_ont_id(?::s/(.+)/(.*)/r)?@@");
-          url = url.replace(re,
-                            function(match_str, p1, p2) {
-                              if (!p1 || p1.length == 0) {
-                                return term_id;
-                              } else {
-                                return term_id.replace(new RegExp(p1), p2);
-                              }
-                            });
-          var img_src =
-            application_root + 'static/images/logos/' +
-            link_conf['icon'];
-          var title = 'View in: ' + link_conf['name'];
-          html += '<div class="curs-external-link"><a target="_blank" href="' +
-            url + '" title="' + title + '">';
-          if (img_src) {
-            html += '<img alt="' + title + '" src="' + img_src + '"/></a>'
-          } else {
-            html += title;
-          }
-          var link_img_src = application_root + 'static/images/ext_link.png';
-          html += '<img src="' + link_img_src + '"/></div>';
-        });
-        var $linkouts = $('#ferret-linkouts');
-        if (html.length > 0) {
-          $linkouts.find('.links-container').html(html);
-          $linkouts.show();
-        } else {
-          $linkouts.hide();
-        }
-      }
-    }
   },
 
   ferret_reset : function() {

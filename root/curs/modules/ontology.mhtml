@@ -19,7 +19,7 @@ $pub
 <div ng-controller="OntologyTermLocatorCtrl">
 
 <div id="ferret">
-    <div ng-hide="data.term_ontid || data.termConfirmed" id="ferret-term-entry" class="curs-box">
+    <div ng-hide="CursStateService.currentTerm()" id="ferret-term-entry" class="curs-box">
 
       <div class="inline-help curs-box-title">
 Search for <% $current_component_display_name %> term
@@ -64,10 +64,7 @@ Gene products may be annotated with multiple
         </div>
         <term-name-complete id="ferret-term-input" name="ferret-term-entry"
                             current-term-name=""
-                            found-term-id="data.term_ontid"
-                            found-term-name="data.term_name"
-                            search-string="data.searchString"
-                            matching-synonym="data.matchingSynonym"
+                            found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
                             annotation-type-name="{{annotationTypeName}}"></term-name-complete>
 
         <div class="clearall">
@@ -77,25 +74,27 @@ Gene products may be annotated with multiple
       </div>
     </div>
 
-    <div ng-show="data.term_ontid && !data.termConfirmed" id="ferret-term-details" 
+    TERM: {{CursStateService.currentTerm()}} - {{tmpTerm}}
+
+    <div ng-show="CursStateService.currentTerm() && !CursStateService.termConfirmed()" id="ferret-term-details" 
          class="curs-box ng-cloak">
       <div id="ferret-help-step-1" class="inline-help curs-box-title">
 Please read the definition of the currently selected term to ensure that
 it accurately describes your gene:
       </div>
       <div class="curs-box-body">
-<div id="ferret-linkouts" class="curs-external-links" style="display: none">
-  <div class="links-title">
-    View term ancestry in:
-  </div>
-  <div class="links-container">
-  </div>
-</div>
+        <div id="ferret-linkouts" class="curs-external-links" style="display: none">
+          <div class="links-title">
+            View term ancestry in:
+          </div>
+          <div class="links-container">
+          </div>
+        </div>
 
         <table class="curs-definition-table">
           <tr>
             <td class="title">ID</td>
-            <td class="term-id ferret-term-id-display"></td>
+            <td class="term-id ferret-term-id-display">{{getCurrentTermDetails('id')}}</td>
           </tr>
           <tr>
             <td class="title">Ontology</td>
@@ -103,30 +102,41 @@ it accurately describes your gene:
           </tr>
           <tr>
             <td class="title">Term name</td>
-            <td class="term-name ferret-term-name"></td>
+            <td class="term-name ferret-term-name">{{getCurrentTermDetails('name')}}</td>
           </tr>
           <tr>
             <td class="title">Definition</td>
-            <td id="ferret-term-definition" class="term-definition"></td>
+            <td id="ferret-term-definition" class="term-definition">{{getCurrentTermDetails('definition')}}</td>
           </tr>
-          <tr id="ferret-term-matching-synonym-row">
+          <tr ng-show="CursStateService.matchingSynonym()">
             <td class="title">Matching synonym</td>
-            <td id="ferret-term-matching-synonym"></td>
+            <td>{{CursStateService.matchingSynonym()}}</td>
           </tr>
-          <tr id="ferret-term-comment-row">
+          <tr ng-show="getCurrentTermDetails('comment')">
             <td class="title">Comment</td>
-            <td id="ferret-term-comment"></td>
+            <td>{{getCurrentTermDetails('comment')}}</td>
+          </tr>
+          <tr ng-show="getCurrentTermDetails('synonyms')">
+            <td class="title">Comment</td>
+            <td>{{getCurrentTermDetails('synonyms')}}</td>
           </tr>
         </table>
       </div>
 
-      <div id="ferret-term-children" style="display: none">
+      <div ng-show="getCurrentTermDetails('children')" id="ferret-term-children">
         <div id="ferret-help-step-2" class="inline-help curs-box-title">
 If possible, please refine your term selection. Clicking on a child term
 from the list below selects it and shows its definition (and children,
 if any):
         </div>
         <div id="ferret-term-children-list" class="curs-box-body">
+          <ul>
+            <li ng-repeat="child in getCurrentTermDetails('children')">
+              <a href="#" ng-click="goToChild(child.id)">{{child.name}}
+                <img ng-src="{{CantoGlobals.application_root}}/static/images/right_arrow.png"></img>
+              </a>
+            </li>
+          </ul>
         </div>
 
         <div class="inline-help curs-box-title">
@@ -145,7 +155,7 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
         </div>
       </div>
 
-      <div id="ferret-leaf" style="display: none">
+      <div ng-hide="getCurrentTermDetails('children')" id="ferret-leaf">
         <div id="ferret-help-step-2-suggest" class="inline-help curs-box-title">
 The currently selected term has no children. If you need a more specific
 term to describe the experiment you are annotating, please follow the
