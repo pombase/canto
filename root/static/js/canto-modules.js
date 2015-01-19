@@ -413,6 +413,10 @@ var cursStateService =
       this.state.termHistory = [];
     };
 
+    this.searchString = function() {
+      return this.state.searchString;
+    };
+
     this.setSearchResults = function(matchingTermId, matchingSynonym) {
       this.state.matchingSynonym = matchingSynonym;
       this.state.termHistory = [matchingTermId];
@@ -450,7 +454,7 @@ var cursStateService =
 
     this.gotoTerm = function(termId) {
       var i, value;
-      for (i = 1; i < this.state.termHistory.length; i++) {
+      for (i = 0; i < this.state.termHistory.length; i++) {
         value = this.state.termHistory[i];
         if (termId == value) {
           // truncate the array, making term_id the last element
@@ -477,7 +481,7 @@ canto.service('CursStateService', [cursStateService]);
 
 
 var breadcrumbsDirective =
-  function($compile, CursStateService) {
+  function($compile, CursStateService, CantoService) {
     return {
       scope: {
       },
@@ -485,60 +489,64 @@ var breadcrumbsDirective =
       replace: true,
       controller: function($scope) {
         $scope.CursStateService = CursStateService;
+
+        $scope.termDetails = {};
+
+        $scope.clearSearchResults = function() {
+          CursStateService.clearSearchResults();
+        };
+
+        $scope.gotoTerm = function(termId) {
+          CursStateService.gotoTerm(termId);
+        };
       },
-      link: function($scope, elem) {
+      link: function($scope) {
         $scope.$watch('CursStateService.currentTerm()',
                       function() {
-                        $('#breadcrumbs-terms').remove();
                         var termList = CursStateService.termHistory();
-                        var $dest = $('#breadcrumbs-search');
-                        var html = '<div id="breadcrumbs-terms">';
+                        var html = '';
+
+                        function saveDetails(details) {
+                          $scope.termDetails[details.id] = details;
+                        };
 
                         var i, termId;
                         for (i = 0; i < termList.length; i++) {
                           termId = termList[i];
                           var makeLink = (i != termList.length - 1);
 
-                          html += '<div class="breadcrumbs-link">' +
-                            '<breadcrumb-term term-id="' + termId + '"></breadcrumb-term>';
+                          html += '<div class="breadcrumbs-link">';
+
+                          if (makeLink) {
+                            html += '<a href="#" ng-click="' +
+                              "gotoTerm('" + termId + "'" + ')">';
+                          }
+
+                          html += '{{termDetails["' + termId + '"].name}}';
+
+                          if (makeLink) {
+                            html += '</a>';
+                          }
+
+                          CantoService.lookup('ontology', [termId])
+                            .success(saveDetails);
                         }
 
                         for (i = 0; i < termList.length; i++) {
                           html += '</div>';
                         }
 
-                        html += '</div>';
-
-                        $dest.append($compile(html)($scope));
+                        $('#breadcrumb-terms').html($compile(html)($scope));
                       });
+
+
       },
       templateUrl: app_static_path + 'ng_templates/breadcrumbs.html',
     };
   };
 
-canto.directive('breadcrumbs', ['$compile', 'CursStateService', breadcrumbsDirective]);
-
-
-var breadcrumbTermDirective =
-  function(CantoService) {
-    return {
-      scope: {
-        termId: '@',
-      },
-      restrict: 'E',
-      replace: true,
-      controller: function($scope) {
-        var promise = CantoService.lookup('ontology', [$scope.termId]);
-
-        promise.success(function(data) {
-          $scope.termName = data.name;
-        });
-      },
-      templateUrl: app_static_path + 'ng_templates/breadcrumb_term.html',
-    };
-  };
-
-canto.directive('breadcrumbTerm', ['CantoService', breadcrumbTermDirective]);
+canto.directive('breadcrumbs', ['$compile', 'CursStateService', 'CantoService',
+                                breadcrumbsDirective]);
 
 
 var featureChooser =
@@ -606,14 +614,6 @@ var ontologyTermLocatorCtrl =
       var termId = CursStateService.currentTerm();
 
       if ($scope.termDetails[termId]) {
-
-        if (fieldName === 'children') {
-          if (!$scope.termDetails[termId][fieldName] ||
-              $scope.termDetails[termId][fieldName].length == 0) {
-            return null;
-          }
-        }
-
         return $scope.termDetails[termId][fieldName];
       } else {
         return null;
@@ -764,6 +764,17 @@ var ontologyTermLocatorCtrl =
                                         });
 
       promise.success(function(data) {
+        if (!data.children || data.children.length == 0) {
+          data.children = null;
+        }
+        if (!data.synonyms || data.synonyms.length == 0) {
+          data.synonyms = null;
+        } else {
+          data.synonyms = $.map(data.synonyms,
+                                function(synonym) {
+                                  return synonym.name;
+                                });
+        }
         $scope.termDetails[termId] = data;
       });
     };

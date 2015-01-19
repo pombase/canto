@@ -1,11 +1,14 @@
 <div class="breadcrumbs-directive">
-  <div ng-show="CursStateService.currentTerm()"
+  <div ng-show="CursStateService.searchString() != null"
        id="breadcrumbs-search" class="breadcrumbs-link">
-    <span ng-show="CursStateService.currentTerm.searchString">
-      Search: "{{CursStateService.searchString}}"
+    <span ng-show="CursStateService.currentTerm()">
+      <a href="#" ng-click="clearSearchResults()">Search: "{{CursStateService.searchString()}}"</a>
     </span>
-    <span ng-hide="CantoBreadcrumbsService.searchString">
+    <span ng-hide="CursStateService.currentTerm()">
       Search
     </span>
+    
+    <div id="breadcrumb-terms">
+    </div>
   </div>
 </div>

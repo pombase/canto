@@ -74,8 +74,6 @@ Gene products may be annotated with multiple
       </div>
     </div>
 
-    TERM: {{CursStateService.currentTerm()}} - {{tmpTerm}}
-
     <div ng-show="CursStateService.currentTerm() && !CursStateService.termConfirmed()" id="ferret-term-details" 
          class="curs-box ng-cloak">
       <div id="ferret-help-step-1" class="inline-help curs-box-title">
@@ -94,7 +92,10 @@ it accurately describes your gene:
         <table class="curs-definition-table">
           <tr>
             <td class="title">ID</td>
-            <td class="term-id ferret-term-id-display">{{getCurrentTermDetails('id')}}</td>
+            <td class="term-id ferret-term-id-display">
+              <span ng-hide="getCurrentTermDetails('id')">Loading ...</span>
+              <span ng-show="getCurrentTermDetails('id')">{{getCurrentTermDetails('id')}}</span>
+            </td>
           </tr>
           <tr>
             <td class="title">Ontology</td>
@@ -102,7 +103,10 @@ it accurately describes your gene:
           </tr>
           <tr>
             <td class="title">Term name</td>
-            <td class="term-name ferret-term-name">{{getCurrentTermDetails('name')}}</td>
+            <td class="term-name ferret-term-name">
+              <span ng-hide="getCurrentTermDetails('name')">Loading ...</span>
+              <span ng-show="getCurrentTermDetails('name')">{{getCurrentTermDetails('name')}}</span>
+            </td>
           </tr>
           <tr>
             <td class="title">Definition</td>
@@ -117,8 +121,12 @@ it accurately describes your gene:
             <td>{{getCurrentTermDetails('comment')}}</td>
           </tr>
           <tr ng-show="getCurrentTermDetails('synonyms')">
-            <td class="title">Comment</td>
-            <td>{{getCurrentTermDetails('synonyms')}}</td>
+            <td class="title">Synonym<span ng-show="getCurrentTermDetails('synonyms').length != 1">s</span> </td>
+            <td>
+              <div ng-repeat="synonym in getCurrentTermDetails('synonyms')">
+                {{synonym}}
+              </div>
+            </td>
           </tr>
         </table>
       </div>
