@@ -209,7 +209,7 @@ Suggest a new child term for <span class="ferret-term-id-display"></span> ...
     </div>
 </div>
 
-<div ng-show="data.termConfirmed && annotationType" class="ng-cloak">
+<div ng-show="CursStateService.termConfirmed() && annotationType" class="ng-cloak">
 
   <div class="curs-box evidence-select">
     <div class="curs-box-title">

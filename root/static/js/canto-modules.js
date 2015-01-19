@@ -472,6 +472,10 @@ var cursStateService =
       this.state.termConfirmed = true;
     };
 
+    this.unconfirmTerm = function() {
+      this.state.termConfirmed = false;
+    };
+
     this.getState = function() {
       return this.state;
     };
@@ -692,7 +696,7 @@ var ontologyTermLocatorCtrl =
       };
 
     $scope.confirmTerm = function() {
-      CursStateService.confirmTerm(null);
+      CursStateService.confirmTerm();
     };
 
     $scope.unconfirmTerm = function() {
