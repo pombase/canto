@@ -11,8 +11,10 @@ function capitalize (text) {
 function countKeys(o) {
   var size = 0, key;
   for (key in o) {
-    if (key.indexOf('$$') !== 0 && o.hasOwnProperty(key)) {
-      size++;
+    if (o.hasOwnProperty(key)) {
+      if (key.indexOf('$$') !== 0) {
+        size++;
+      }
     }
   }
   return size;
@@ -44,7 +46,9 @@ function copyObject(src, dest, keysFilter) {
 
     if (src[key] instanceof Array) {
       dest[key] = [];
-      for (var i = 0, len = src[key].length; i < len; i++) {
+      var len = src[key].length;
+      var i;
+      for (i = 0; i < len; i++) {
         dest[key][i] = src[key][i];
       }
       return;
