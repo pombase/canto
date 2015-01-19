@@ -717,7 +717,7 @@ var ontologyTermLocatorCtrl =
 
     $scope.setTermAndEvidence = function() {
       simpleHttpPost(toaster, $http, '../set_term/' + $scope.annotationTypeName,
-                     { term_ontid: $scope.data.term_ontid,
+                     { term_ontid: CursStateService.currentTerm(),
                        evidence_code: $scope.data.evidence_code,
                        conditions: $scope.data.conditions,
                        with_gene_id: $scope.data.with_gene_id,
@@ -730,7 +730,7 @@ var ontologyTermLocatorCtrl =
     };
 
     $scope.isValid = function() {
-      return $scope.data.termConfirmed && $scope.isValidEvidence();
+      return CursStateService.termConfirmed() && $scope.isValidEvidence();
     };
 
     $scope.init = function() {
