@@ -26,6 +26,7 @@ use Canto::TrackDB;
 use Canto::CursDB;
 use Canto::DBUtil;
 use Canto::Curs::Utils;
+use Canto::Curs::GenotypeManager;
 
 if (@ARGV != 1) {
   die "$0: needs one argument - the version to upgrade to\n";
@@ -155,6 +156,96 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
           $an->delete();
         }
       }
+
+      $guard->commit();
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  }
+  when (9) {
+    my $strain_name = $config->{curs_config}->{genotype_config}->{default_strain_name};
+
+    # upgrade to multi-allele genotypes
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_key = $curs->curs_key();
+      my $curs_schema = shift;
+
+      my %seen_alleles = ();
+
+      warn "upgrading: $curs_key\n";
+
+      my $guard = $curs_schema->txn_scope_guard();
+
+      my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
+                                                               curs_schema => $curs_schema);
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("ALTER TABLE allele ADD COLUMN expression TEXT;");
+
+      $curs_dbh->do("
+CREATE TABLE genotype_annotation (
+       genotype_annotation_id integer PRIMARY KEY,
+       genotype integer REFERENCES genotype(genotype_id),
+       annotation integer REFERENCES annotation(annotation_id)
+);
+");
+
+      $curs_dbh->do("
+CREATE TABLE genotype (
+       genotype_id integer PRIMARY KEY AUTOINCREMENT,
+       identifier text UNIQUE NOT NULL,
+       name text UNIQUE
+);
+");
+
+      $curs_dbh->do("
+CREATE TABLE allele_genotype (
+       allele_genotype_id integer PRIMARY KEY,
+       allele integer REFERENCES allele(allele_id),
+       genotype integer REFERENCES genotype(genotype_id)
+);
+");
+
+      my $allele_rs = $curs_schema->resultset('Allele');
+
+      while (defined (my $allele = $allele_rs->next())) {
+        my $display_name = $allele->display_name();
+
+        if ($seen_alleles{$display_name}) {
+          warn "WARNING - skipping: $display_name\n";
+          next;
+        }
+
+        $seen_alleles{$display_name} = 1;
+
+        my $genotype_name = "$strain_name " . $display_name;
+
+        warn "  genotype name: $genotype_name  allele_id: ", $allele->allele_id(), "\n";
+        my $genotype = $genotype_manager->make_genotype($curs_key, $genotype_name,
+                                                        [$allele]);
+
+        my $sth = $curs_dbh->prepare("select annotation from allele_annotation where allele = ? " .
+                                       "and annotation in (select annotation_id from annotation)");
+
+        $sth->execute($allele->allele_id());
+
+        while (my ($annotation_id) = $sth->fetchrow_array()) {
+          my $insert_sth =
+            $curs_dbh->prepare("insert into genotype_annotation(genotype, annotation) " .
+                               "values (?, ?)");
+          $insert_sth->execute($genotype->genotype_id(), $annotation_id);
+        }
+      }
+
+      my $an_rs = $curs_schema->resultset('Annotation');
+
+      for my $an ($an_rs->all()) {
+        my $data = $an->data();
+      }
+
+      $curs_dbh->do("drop table allele_annotation");
 
       $guard->commit();
     };
