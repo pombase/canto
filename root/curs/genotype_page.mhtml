@@ -17,7 +17,7 @@ Details
 Name
           </td>
           <td>
-<% $genotype->name() || '[no name]' %>
+<% $genotype->name() || '[none]' %>
           </td>
         </tr>
       </tbody>
