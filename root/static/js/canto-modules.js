@@ -1427,7 +1427,7 @@ var geneSelectorCtrl =
         };
       },
     }
-  }
+  };
 
 canto.directive('geneSelector',
                  ['CursGeneList', 'toaster',
@@ -1578,39 +1578,6 @@ var EditDialog = function($) {
   };
 }($);
 
-function UploadGenesCtrl($scope) {
-  $scope.data = {
-    geneIdentifiers: '',
-    noAnnotation: false,
-    noAnnotationReason: '',
-    otherText: '',
-    geneList: '',
-  };
-  $scope.isValid = function() {
-    return $scope.data.geneIdentifiers.length > 0 ||
-      ($scope.data.noAnnotation &&
-      $scope.data.noAnnotationReason.length > 0 &&
-      ($scope.data.noAnnotationReason !== "Other" ||
-       $scope.data.otherText.length > 0));
-  };
-}
-
-function SubmitToCuratorsCtrl($scope) {
-  $scope.data = {
-    reason: null,
-    hasAnnotation: false
-  };
-  $scope.noAnnotationReasons = ['Review'];
-
-  $scope.init = function(reasons) {
-    $scope.noAnnotationReasons = reasons;
-  };
-
-  $scope.validReason = function() {
-    return $scope.data.reason != null && $scope.data.reason.length > 0;
-  };
-}
-
 canto.service('CantoConfig', function($http) {
   this.get = function(key) {
     return $http({method: 'GET',
@@ -1696,6 +1663,8 @@ function SubmitToCuratorsCtrl($scope) {
       ($scope.data.reason !== 'Other' || $scope.data.otherReason.length > 0);
   };
 }
+
+canto.controller('SubmitToCuratorsCtrl', SubmitToCuratorsCtrl);
 
 
 var annotationEditDialogCtrl =
