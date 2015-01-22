@@ -232,6 +232,19 @@ CREATE TABLE allele_genotype (
         $sth->execute($allele->allele_id());
 
         while (my ($annotation_id) = $sth->fetchrow_array()) {
+          my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
+
+          my $data = $annotation->data();
+          my $expression = delete $data->{expression};
+
+          if ($expression) {
+            warn "    moved '$expression'\n";
+            $allele->expression($expression);
+          }
+
+          $annotation->data($data);
+          $annotation->update();
+
           my $insert_sth =
             $curs_dbh->prepare("insert into genotype_annotation(genotype, annotation) " .
                                "values (?, ?)");
