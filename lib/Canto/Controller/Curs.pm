@@ -240,8 +240,9 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $path =~ m:/(gene_upload|edit_genes|genotype_manage|confirm_genes|finish_form):) {
     $use_dispatch = 0;
   }
+
   if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-      $path =~ m:/(ro|finish_form|reactivate_session|begin_approval|restart_approval|annotation/zipexport):) {
+      $path =~ m:/(ro|finish_form|reactivate_session|begin_approval|restart_approval|annotation/zipexport|ws/annotation/list):) {
     $use_dispatch = 0;
   }
 
