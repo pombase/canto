@@ -21,7 +21,10 @@ configuration option.  Multi-organism mode is assumed otherwise.  See the
 of the two modes.
 
 The default implementation stores the details of the organism and genes for
-annotation in Canto's own database but it's also possible to configure
+annotation in Canto's own database.  The `canto_load.pl` in the sections below
+loads data from flat files into Canto's database.
+
+But it's also possible to configure
 ["adaptors"](configuration_file#implementation_classes) to retreive these
 details as needed from an external database or webserver.  At PomBase for
 example, gene information is read from the Chado curation database.  See the
