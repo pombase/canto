@@ -1883,11 +1883,9 @@ var annotationTableRow =
       replace: true,
       templateUrl: function(elem,attrs) {
         return app_static_path + 'ng_templates/annotation_table_' +
-          attrs.annotationType + '_row.html'
+          attrs.annotationType + '_row.html';
       },
       controller: function($scope) {
-        $scope.data = {};
-
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
 
         var annotation = $scope.annotation;
@@ -1931,6 +1929,8 @@ var annotationTableRow =
                                          newAnnotation, undefined, true);
 
           editPromise.then(function(editedAnnotation) {
+            // FIXME: $scope.data.annotations is from the parent scope so this
+            // is very brittle
             var index = $scope.data.annotations.indexOf($scope.annotation);
             $scope.data.annotations.splice(index + 1, 0, editedAnnotation);
           });
@@ -1940,7 +1940,9 @@ var annotationTableRow =
             if (confirmed) {
               AnnotationProxy.deleteAnnotation(annotation)
                 .then(function() {
-                  arrayRemoveOne($scope.annotations, annotation);
+                  // FIXME: $scope.data.annotations is from the parent
+                  // scope so this is very brittle
+                  arrayRemoveOne($scope.data.annotations, annotation);
                 })
                 .catch(function(message) {
                   toaster.pop('note', "couldn't delete the annotation: " + message);
