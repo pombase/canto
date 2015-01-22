@@ -1623,6 +1623,7 @@ canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
   };
 });
 
+
 function UploadGenesCtrl($scope) {
   $scope.data = {
     geneIdentifiers: '',
@@ -1640,11 +1641,8 @@ function UploadGenesCtrl($scope) {
   };
 }
 
-function AlleleCtrl($scope) {
-  $scope.alleles = [
-  {name: 'name1', description: 'desc', type: 'type1'}
-  ];
-}
+canto.controller('UploadGenesCtrl', UploadGenesCtrl);
+
 
 function SubmitToCuratorsCtrl($scope) {
   $scope.data = {
