@@ -150,9 +150,7 @@ sub find_and_create_genotype
   my $lookup = Canto::Track::get_adaptor($self->config(), 'genotype');
 
   if (!$lookup) {
-    use Data::Dumper;
-$Data::Dumper::Maxdepth = 3;
-die 'NO genotype adaptor: ', Dumper([$self->config()]);
+    die 'NO genotype adaptor configured';
 
   }
 

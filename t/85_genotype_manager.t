@@ -9,6 +9,10 @@ my $test_util = Canto::TestUtil->new('t/chado_test_config.yaml');
 $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
+$config->{implementation_classes}->{allele_adaptor} =
+  'Canto::Chado::AlleleLookup';
+$config->{implementation_classes}->{genotype_adaptor} =
+  'Canto::Chado::GenotypeLookup';
 
 my $track_schema = $test_util->track_schema();
 my @curs_objects = $track_schema->resultset('Curs')->all();
