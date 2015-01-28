@@ -1875,7 +1875,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function($modal, AnnotationProxy, AnnotationTypeConfig, CursGeneList, CantoGlobals, toaster) {
+  function($modal, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -1897,17 +1897,6 @@ var annotationTableRow =
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
           });
-
-        CursGeneList.geneList().then(function(results) {
-          $scope.genes = results;
-
-          $.map($scope.genes,
-                function(gene) {
-                  gene.display_name = gene.primary_name || gene.primary_identifier;
-                });
-        }).catch(function() {
-          toaster.pop('note', "couldn't read the gene list from the server");
-        });
 
         $scope.edit = function() {
           var editPromise =
@@ -1954,7 +1943,7 @@ var annotationTableRow =
 
 canto.directive('annotationTableRow',
                 ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig',
-                 'CursGeneList', 'CantoGlobals', 'toaster',
+                 'CantoGlobals', 'toaster',
                  annotationTableRow]);
 
 
