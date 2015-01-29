@@ -135,23 +135,21 @@ sub _make_term_hash
   if ($include_children) {
     @{$term_hash{children}} = ();
 
+    my $search_details;
+
+    if (grep { $_ eq $cv_name } @{$follow_inverse_cv_names}) {
+      $search_details = {};
+    } else {
+      $search_details = { 'type.name' => { 'not in' => $inverse_relationships }};
+    }
+
     my @child_cvterms =
       $cvterm->cvterm_relationship_objects()
-        ->search({ 'type.name' => { 'not in' => $inverse_relationships }},
+        ->search($search_details,
                  { join => 'type' })
         ->search_related('subject',
                          { 'cv.name' => $cv_name, 'subject.is_obsolete' => 0 },
                          { join => 'cv' })->all();
-
-    if (grep { $_ eq $cv_name } @{$follow_inverse_cv_names}) {
-      push @child_cvterms,
-        $cvterm->cvterm_relationship_subjects()
-          ->search({ 'type.name' => { 'in' => $inverse_relationships }},
-                   { join => 'type' })
-            ->search_related('object',
-                             { 'cv.name' => $cv_name, 'object.is_obsolete' => 0 },
-                             { join => 'cv' })->all();
-    }
 
     my @child_hashes = ();
 
