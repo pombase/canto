@@ -170,7 +170,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 load_all($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 132);
+is(@loaded_cvterms, 133);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'
@@ -179,7 +179,7 @@ ok((grep {
 # test that non-obsolete term is indexed
 my $viable = 'viable vegetative cell population';
 @results = $ontology_index->lookup('fission_yeast_phenotype', $viable, 100);
-is(@results, 6);
+is(@results, 7);
 
 ok((grep {
   $_->{term_name} eq $viable;
