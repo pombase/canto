@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 44;
+use Test::More tests => 45;
 
 use Canto::TestUtil;
 use Canto::Track::OntologyLoad;
@@ -57,6 +57,10 @@ load_all($ontology_index, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
 is(@loaded_cvterms, 114);
+
+my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
+
+is(@cvterm_relationships, 34);
 
 ok((grep {
   $_->name() eq 'regulation of transmembrane transport'
