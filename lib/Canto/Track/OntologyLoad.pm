@@ -50,7 +50,6 @@ the Free Software Foundation, either version 3 of the License, or
 
 use Moose;
 use Carp;
-use feature qw(state);
 
 use Try::Tiny;
 
