@@ -1075,6 +1075,9 @@ load:
       - regulates
       - negatively_regulates
       - positively_regulates
+    inverse_relationships:
+      # relationships where the more specific term is the object
+      - has_part
 
 track_db_template_file: db_templates/track_db_template.sqlite3
 curs_db_template_file: db_templates/curs_db_template.sqlite3

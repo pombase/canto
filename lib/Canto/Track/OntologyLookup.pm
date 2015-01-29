@@ -52,11 +52,24 @@ with 'Canto::Role::SimpleCache';
 has load_util => (is => 'ro', isa => 'Canto::Track::LoadUtil',
                   lazy_build => 1, init_arg => undef);
 
+has inverse_relationships => (is => 'rw', init_arg => undef);
+
 sub _build_load_util
 {
   my $self = shift;
 
   return Canto::Track::LoadUtil->new(schema => $self->schema());
+}
+
+sub BUILD
+{
+  my $self = shift;
+
+  # "inverse" relationships are where the more specific term is the object
+  my @inverse_relationships =
+    @{$self->config()->{load}->{ontology}->{inverse_relationships} // []};
+
+  $self->inverse_relationships(\@inverse_relationships);
 }
 
 sub _get_synonyms
@@ -83,6 +96,7 @@ sub _make_term_hash
   my $include_children = shift;
   my $include_exact_synonyms = shift;
   my $matching_synonym = shift;
+  my $inverse_relationships = shift;
 
   my %term_hash = ();
 
@@ -111,17 +125,36 @@ sub _make_term_hash
   if ($include_children) {
     @{$term_hash{children}} = ();
 
-    my @child_cvterms = $cvterm->cvterm_relationship_objects()
-      ->search_related('subject',
-                       { 'cv.name' => $cv_name, 'subject.is_obsolete' => 0 },
-                       { order_by => 'subject.name', join => 'cv' })->all();
+    my @child_cvterms =
+      $cvterm->cvterm_relationship_objects()
+        ->search({ 'type.name' => { 'not in' => $inverse_relationships }},
+                 { join => 'type' })
+        ->search_related('subject',
+                         { 'cv.name' => $cv_name, 'subject.is_obsolete' => 0 },
+                         { join => 'cv' })->all();
+
+    push @child_cvterms,
+      $cvterm->cvterm_relationship_subjects()
+        ->search({ 'type.name' => { 'in' => $inverse_relationships }},
+                 { join => 'type' })
+        ->search_related('object',
+                         { 'cv.name' => $cv_name, 'object.is_obsolete' => 0 },
+                         { join => 'cv' })->all();
+
+    my @child_hashes = ();
 
     for my $child_cvterm (@child_cvterms) {
-      push @{$term_hash{children}}, {
-        _make_term_hash($child_cvterm,
-                        $child_cvterm->cv()->name(), 0, 0, 0)
-      };
+      push @child_hashes,
+        {_make_term_hash($child_cvterm,
+                         $child_cvterm->cv()->name(), 0, 0, 0, undef,
+                         $inverse_relationships)};
     }
+
+    @child_hashes = sort {
+      $a->{name} cmp $b->{name};
+    } @child_hashes;
+
+    $term_hash{children} = \@child_hashes;
   }
 
   if ($include_exact_synonyms) {
@@ -240,8 +273,8 @@ sub lookup
         _make_term_hash($cvterm,
                         $ontology_name,
                         $include_definition, $include_children,
-                        $include_exact_synonyms,
-                        $matching_synonym);
+                        $include_exact_synonyms, undef,
+                        $matching_synonym, $self->inverse_relationships());
 
       push @ret_list, \%term_hash;
     }
@@ -326,7 +359,8 @@ sub lookup_by_name
 
   if (defined $cvterm) {
     return { _make_term_hash($cvterm, $cv->name(), $include_definition,
-                             $include_children, $include_exact_synonyms) };
+                             $include_children, $include_exact_synonyms, undef,
+                             $self->inverse_relationships()) };
   } else {
     return undef;
   }
@@ -413,7 +447,8 @@ sub lookup_by_id
 
   my $ret_val = { _make_term_hash($cvterm, $cvterm->cv()->name(),
                            $include_definition, $include_children,
-                           $include_exact_synonyms) };
+                           $include_exact_synonyms, undef,
+                           $self->inverse_relationships()) };
 
   $cache->set($cache_key, $ret_val, $self->config()->{cache}->{default_timeout});
 
@@ -462,7 +497,8 @@ sub get_all
     my %term_hash =
       _make_term_hash($cvterm, $ontology_name,
                       $include_definition, $include_children,
-                      $include_exact_synonyms);
+                      $include_exact_synonyms, undef,
+                      $self->inverse_relationships());
 
     push @ret_list, \%term_hash;
   }
