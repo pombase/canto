@@ -32,7 +32,12 @@ sub load_all {
   my $include_ro = shift;
   my $include_fypo = shift;
 
-  my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema, default_db_name => 'Canto');
+  my @relationships_to_load = @{$config->{load}->{ontology}->{relationships_to_load}};
+
+  my $ontology_load =
+    Canto::Track::OntologyLoad->new(schema => $schema,
+                                    relationships_to_load => \@relationships_to_load,
+                                    default_db_name => 'Canto');
 
   $ontology_index->initialise_index();
 
@@ -61,6 +66,9 @@ is(@loaded_cvterms, 114);
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 
 is(@cvterm_relationships, 34);
+
+map { warn $_->subject()->name() . ' <= ' . $_->type()->name() .
+        ' => ' .$_->object()->name(), "\n"; } @cvterm_relationships;
 
 ok((grep {
   $_->name() eq 'regulation of transmembrane transport'

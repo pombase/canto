@@ -1066,6 +1066,15 @@ load:
       - narrow
       - broad
       - related
+    relationships_to_load:
+      - is_a
+      - has_output
+      - output_of
+      - part_of
+      - has_part
+      - regulates
+      - negatively_regulates
+      - positively_regulates
 
 track_db_template_file: db_templates/track_db_template.sqlite3
 curs_db_template_file: db_templates/curs_db_template.sqlite3

@@ -590,8 +590,12 @@ sub make_base_track_db
 
     my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
     $ontology_index->initialise_index();
+
+    my @relationships_to_load = @{$config->{load}->{ontology}->{relationships_to_load}};
+
     my $ontology_load =
       Canto::Track::OntologyLoad->new(default_db_name => $config->{default_db_name},
+                                      relationships_to_load => \@relationships_to_load,
                                       schema => $schema);
 
     my $synonym_types = $config->{load}->{ontology}->{synonym_types};

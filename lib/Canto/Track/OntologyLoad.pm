@@ -82,6 +82,12 @@ has 'temp_file_name' => (
   init_arg => undef
 );
 
+has 'relationships_to_load' => (
+  is => 'ro',
+  required => 1,
+  isa => 'ArrayRef[Str]',
+);
+
 sub BUILD
 {
   my $self = shift;
@@ -373,17 +379,15 @@ sub load
     $a->{acc2} cmp $b->{acc2};
   } @$rels;
 
+  my %relationships_to_load = ();
+
+  map { $relationships_to_load{$_} = 1; } @{$self->relationships_to_load()};
+
   for my $rel (@sorted_rels) {
     my $subject_term_acc = $rel->subject_acc();
     my $object_term_acc = $rel->object_acc();
 
-    next if $rel->type() eq 'has_part' ||
-      $rel->type() eq 'has_functional_part' ||
-      $rel->type() eq 'has_functional_parent' ||
-      $rel->type() eq 'derives_from' ||
-      $rel->type() eq 'contains' ||
-      $rel->type() eq 'includes_cells_with_phenotype' ||
-      $rel->type() eq 'comprises_cells_with_phenotype';
+    next unless $relationships_to_load{$rel->type()};
 
     my $rel_type = $rel->type();
     my $rel_type_cvterm = $relationship_cvterms{$rel_type};
