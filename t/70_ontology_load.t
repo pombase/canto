@@ -67,9 +67,6 @@ my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 
 is(@cvterm_relationships, 34);
 
-map { warn $_->subject()->name() . ' <= ' . $_->type()->name() .
-        ' => ' .$_->object()->name(), "\n"; } @cvterm_relationships;
-
 ok((grep {
   $_->name() eq 'regulation of transmembrane transport'
 } @loaded_cvterms), 'has transmembrane transport term name');
