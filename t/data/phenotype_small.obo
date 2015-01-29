@@ -50,7 +50,7 @@ creation_date: 2011-03-29T05:53:56Z
 
 [Term]
 id: FYPO:0000017
-name: elongated cells
+name: elongated cell
 namespace: fission_yeast_phenotype
 synonym: "cell morphology, elongated cells" EXACT []
 is_a: FYPO:0000005 ! abnormal cell morphology
@@ -107,11 +107,12 @@ creation_date: 2011-03-29T05:54:40Z
 
 [Term]
 id: FYPO:0000133
-name: elongated multinucleate cells
+name: elongated multinucleate cell
 namespace: fission_yeast_phenotype
 def: "A cell phenotype in which cells contain more than one nucleus apiece and are elongated." [PomBase:mah]
-is_a: FYPO:0000017 ! elongated cells
-is_a: FYPO:0000061 ! multinucleate
+is_a: FYPO:0000001
+relationship: has_part FYPO:0000017 ! elongated cell
+relationship: has_part FYPO:0000061 ! multinucleate
 intersection_of: PATO:0000573
 intersection_of: PATO:0001908
 intersection_of: inheres_in CL:0000000 ! cell
@@ -195,3 +196,12 @@ namespace: fission_yeast_phenotype
 comment: relation binding a relational quality or disposition to the relevant type of entity
 xref: OBO_REL:towards
 
+[Typedef]
+id: has_part
+name: has_part
+namespace: sequence
+def: "Inverse of part_of." [http://precedings.nature.com/documents/3495/version/1]
+comment: Example: operon has_part gene.
+xref: BFO:0000051
+property_value: IAO:0000412 http://purl.obolibrary.org/obo/so-xp.obo.owl
+is_transitive: true

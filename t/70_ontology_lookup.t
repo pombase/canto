@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 60;
+use Test::More tests => 62;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -254,3 +254,15 @@ cmp_deeply($fypo_term, $expected_fypo_term);
 # test get_all()
 my @all_pco_terms = $lookup->get_all(ontology_name => 'phenotype_condition');
 is (@all_pco_terms, 10);
+
+
+# test that we follow has_part
+my $elongated_cell = 'elongated cell';
+my $elongated_cell_results =
+  $lookup->lookup_by_id(id => 'FYPO:0000017',
+                        include_children => 1);
+
+my $children = $elongated_cell_results->{children};
+
+is (@$children, 1);
+is ($children->[0]->{id}, 'FYPO:0000133');
