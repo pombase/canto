@@ -1677,6 +1677,10 @@ curs_config:
   demo_user_name: Demo User
   demo_user_email_address: "demo@example.com"
 
+  # we should only follow relationships like has_part in some CVs
+  follow_inverse_cv_names:
+    - fission_yeast_phenotype
+
   finish_form:
     # the "extra_text" is always shown on the finish form, the
     # extra_text_gene_information is only shown if the user added some genes to
