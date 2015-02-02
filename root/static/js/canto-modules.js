@@ -750,7 +750,7 @@ var ontologyTermLocatorCtrl =
         var target = $('#' + this_id + '-target');
         $(element).click(
           function () {
-            target.show()
+            target.show();
             $(element).hide();
             return false;
           }
