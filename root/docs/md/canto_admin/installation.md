@@ -204,7 +204,7 @@ its dependencies:
     vagrant box add precise64 http://files.vagrantup.com/precise64.box
     vagrant up
 
-The `vagrant` commands will many minutes to complete. If everything is
+The `vagrant` command will take many minutes to complete. If everything is
 successful, once `vagrant up` returns you can `ssh` to the virtual machine
 with:
 
