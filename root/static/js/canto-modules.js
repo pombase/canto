@@ -1,6 +1,6 @@
 'use strict';
 
-/*global curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links */
+/*global history,curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'toaster']);
 
@@ -553,6 +553,76 @@ canto.directive('breadcrumbs', ['$compile', 'CursStateService', 'CantoService',
                                 breadcrumbsDirective]);
 
 
+function featureChooserControlHelper($scope, $modal, CursGeneList,
+                                     CursGenotypeList, toaster) {
+  function getGenesFromServer() {
+    CursGeneList.geneList().then(function(results) {
+      $scope.features = results;
+    }).catch(function() {
+      toaster.pop('note', "couldn't read the gene list from the server");
+    });
+  }
+  if ($scope.featureType === 'gene') {
+    getGenesFromServer();
+  } else {
+    CursGenotypeList.cursGenotypeList().then(function(results) {
+      $scope.features = results;
+    }).catch(function() {
+      toaster.pop('note', "couldn't read the genotype list from the server");
+    });
+  }
+
+  $scope.openSingleGeneAddDialog = function() {
+    var modal = $modal.open({
+      templateUrl: app_static_path + 'ng_templates/single_gene_add.html',
+      controller: 'SingleGeneAddDialogCtrl',
+      title: 'Add a new gene by name or identifier',
+      animate: false,
+      windowClass: "modal",
+    });
+    modal.result.then(function () {
+      getGenesFromServer();
+    });
+  };
+}
+
+
+var multiFeatureChooser =
+  function($modal, CursGeneList, CursGenotypeList, toaster) {
+    return {
+      scope: {
+        featureType: '@',
+        selectedFeatureIds: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      controller: function($scope) {
+        featureChooserControlHelper($scope, $modal, CursGeneList,
+                                    CursGenotypeList, toaster);
+
+        $scope.toggleSelection = function toggleSelection(featureId) {
+          var idx = $scope.selectedFeatureIds.indexOf(featureId);
+
+          // is currently selected
+          if (idx > -1) {
+            $scope.selectedFeatureIds.splice(idx, 1);
+          }
+
+          // is newly selected
+          else {
+            $scope.selectedFeatureIds.push(featureId);
+          }
+        };
+      },
+      templateUrl: app_static_path + 'ng_templates/multi_feature_chooser.html',
+    };
+  };
+
+canto.directive('multiFeatureChooser',
+                ['$modal', 'CursGeneList', 'CursGenotypeList', 'toaster',
+                 multiFeatureChooser]);
+
+
 var featureChooser =
   function($modal, CursGeneList, CursGenotypeList, toaster) {
     return {
@@ -563,41 +633,16 @@ var featureChooser =
       restrict: 'E',
       replace: true,
       controller: function($scope) {
-        function get_genes_from_server() {
-          CursGeneList.geneList().then(function(results) {
-            $scope.features = results;
-          }).catch(function() {
-            toaster.pop('note', "couldn't read the gene list from the server");
-          });
-        }
-        if ($scope.featureType === 'gene') {
-          get_genes_from_server();
-        } else {
-          CursGenotypeList.cursGenotypeList().then(function(results) {
-            $scope.features = results;
-          }).catch(function() {
-            toaster.pop('note', "couldn't read the genotype list from the server");
-          });
-        }
-
-        $scope.openSingleGeneAddDialog = function() {
-          var modal = $modal.open({
-            templateUrl: app_static_path + 'ng_templates/single_gene_add.html',
-            controller: 'SingleGeneAddDialogCtrl',
-            title: 'Add a new gene by name or identifier',
-            animate: false,
-            windowClass: "modal",
-          });
-          modal.result.then(function () {
-            get_genes_from_server();
-          });
-        };
+        featureChooserControlHelper($scope, $modal, CursGeneList, CursGenotypeList,
+                                    toaster);
       },
       templateUrl: app_static_path + 'ng_templates/feature_chooser.html',
     };
   };
 
-canto.directive('featureChooser', ['$modal', 'CursGeneList', 'CursGenotypeList', 'toaster', featureChooser]);
+canto.directive('featureChooser',
+                ['$modal', 'CursGeneList', 'CursGenotypeList', 'toaster',
+                 featureChooser]);
 
 var ontologyTermLocatorCtrl =
   function($scope, CantoGlobals, AnnotationTypeConfig, CantoService,
@@ -800,6 +845,52 @@ canto.controller('OntologyTermLocatorCtrl',
                   ontologyTermLocatorCtrl]);
 
 
+var interactionWizardCtrl =
+  function($scope, $http, toaster, CantoGlobals) {
+
+    $scope.annotationTypeName = CantoGlobals.ferret_choose.annotation_type_name;
+
+    $scope.data = {
+      validEvidence: false,
+      interactorsConfirmed: false,
+    };
+
+    $scope.selectedFeatureIds = [];
+
+    $scope.confirmSelection = function() {
+      $scope.data.interactorsConfirmed = true;
+    };
+
+    $scope.unconfirmSelection = function() {
+      $scope.data.interactorsConfirmed = false;
+    };
+
+    $scope.someFeaturesSelected = function() {
+      return $scope.selectedFeatureIds.length > 0;
+    };
+
+    $scope.isValidEvidence = function() {
+      return $scope.data.validEvidence;
+    };
+
+    $scope.backToGene = function() {
+      history.go(-1);
+    };
+
+    $scope.addInteractionAndEvidence = function() {
+      simpleHttpPost(toaster, $http, '../add_interaction/' + $scope.annotationTypeName,
+                     { 
+                       evidence_code: $scope.data.evidence_code,
+                       prey_gene_ids: $scope.selectedFeatureIds,
+                     });
+    };
+  };
+
+canto.controller('InteractionWizardCtrl',
+                 ['$scope', '$http', 'toaster', 'CantoGlobals',
+                  interactionWizardCtrl]);
+
+
 var annotationEvidence =
   function(AnnotationTypeConfig, CantoConfig) {
     var directive = {
@@ -894,46 +985,48 @@ canto.directive('annotationEvidence',
       link: function($scope, elem) {
         var $field = elem.find('.curs-allele-conditions');
 
-        CursConditionList.conditionList().then(function(results) {
-          $scope.usedConditions = results;
+        if (typeof($scope.conditions) != 'undefined') {
+          CursConditionList.conditionList().then(function(results) {
+            $scope.usedConditions = results;
 
-          var updateScopeConditions = function() {
-            // apply() is needed so the scope is update when a tag is added in
-            // the Tagit field
-            $scope.$apply(function() {
-              $scope.conditions = [];
-              $field.find('li .tagit-label').map(function(index, $elem) {
-                $scope.conditions.push( { name: $elem.textContent.trim() } );
-              });
-            });
-          };
-
-          $field.tagit({
-            minLength: 2,
-            fieldName: 'curs-allele-condition-names',
-            allowSpaces: true,
-            placeholderText: 'Type a condition ...',
-            tagSource: fetch_conditions,
-            autocomplete: {
-              focus: ferret_choose.show_autocomplete_def,
-              close: ferret_choose.hide_autocomplete_def,
-            },
-          });
-          $.map($scope.conditions,
-                function(cond) {
-                  $field.tagit("createTag", cond.name);
+            var updateScopeConditions = function() {
+              // apply() is needed so the scope is update when a tag is added in
+              // the Tagit field
+              $scope.$apply(function() {
+                $scope.conditions = [];
+                $field.find('li .tagit-label').map(function(index, $elem) {
+                  $scope.conditions.push( { name: $elem.textContent.trim() } );
                 });
+              });
+            };
 
-          // don't start updating until all initial tags are added
-          $field.tagit({
-            afterTagAdded: updateScopeConditions,
-            afterTagRemoved: updateScopeConditions,
+            $field.tagit({
+              minLength: 2,
+              fieldName: 'curs-allele-condition-names',
+              allowSpaces: true,
+              placeholderText: 'Type a condition ...',
+              tagSource: fetch_conditions,
+              autocomplete: {
+                focus: ferret_choose.show_autocomplete_def,
+                close: ferret_choose.hide_autocomplete_def,
+              },
+            });
+            $.map($scope.conditions,
+                  function(cond) {
+                    $field.tagit("createTag", cond.name);
+                  });
+
+            // don't start updating until all initial tags are added
+            $field.tagit({
+              afterTagAdded: updateScopeConditions,
+              afterTagRemoved: updateScopeConditions,
+            });
+
+            $scope.tagitList = $field;
+          }).catch(function() {
+            toaster.pop('error', "couldn't read the condition list from the server");
           });
-
-          $scope.tagitList = $field;
-        }).catch(function() {
-          toaster.pop('error', "couldn't read the condition list from the server");
-        });
+        }
       }
     };
 

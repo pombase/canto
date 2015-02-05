@@ -1,42 +1,59 @@
 <%args>
 $current_component_display_name
 $current_component
-$form
 $pub
 $feature
 </%args>
 
-<div id="curs-interaction">
-  <div class="curs-box">
+<div ng-controller="InteractionWizardCtrl" id="curs-interaction">
+  <div ng-show="!data.interactorsConfirmed"  class="curs-box">
     <div class="curs-box-title">
-      Select the gene or genes that interact with <% $gene_display_name %> ...
+      Select the gene or genes that interact with <% $feature_display_name %> ...
 <& /curs/inline_help.mhtml, key => "${current_component}_select_gene" &>
     </div>
     <div class="curs-box-body">
-<% $form |n %>
+      <multi-feature-chooser feature-type="gene" selected-feature-ids="selectedFeatureIds">
+      </multi-feature-chooser>
+
+      <button type="submit" class="btn btn-primary curs-back-button"
+              title="Back to previous page"
+              ng-click="backToGene()">&lt;- Back</button>
+
+      <button type="submit" class="btn btn-primary curs-finish-button"
+              title="{{someFeaturesSelected() ? 'Confirm' : 'Select some genes to continue'}}"
+              ng-disabled="!someFeaturesSelected()"
+              ng-click="confirmSelection()">Confirm -&gt;</button>
     </div>
   </div>
 
-% if ($gene_count > 2) {
-<span class="canto-select-buttons">
-Select:
- <a href="#" class="canto-select-all">all</a>
- <a href="#" class="canto-select-none">none</a>
-</span>
-% }
+  <div ng-show="data.interactorsConfirmed" class="ng-cloak">
 
-  <div class="upload-genes-link">
-    <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
+    <div class="curs-box evidence-select">
+      <div class="curs-box-title">
+        Choose evidence <span ng-show="annotationType.can_have_conditions">and conditions</span> for annotating <% $feature_display_name %> with {{data.term_ontid}}
+      </div>
+      <div class="curs-box-body">
+        <annotation-evidence evidence-code="data.evidence_code"
+                             with-gene-id="data.with_gene_id"
+                             valid-evidence="data.validEvidence"
+                             annotation-type-name="{{annotationTypeName}}"></annotation-evidence>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary curs-back-button"
+            title="&lt;- Back"
+            ng-click="unconfirmSelection()">&lt;- Back</button>
+    <button type="submit" class="btn btn-primary curs-finish-button"
+            ng-disabled="!isValidEvidence()"
+            ng-click="addInteractionAndEvidence()" >Proceed -&gt;</button>
+
   </div>
 </div>
 
 <%init>
 my $root_path = $c->stash()->{curs_root_path};
 
-my $upload_path = $c->uri_for("$root_path/gene_upload",
-                              { return_path => $c->req()->uri() });
-
 my $gene_count = $c->stash()->{schema}->resultset('Gene')->count();
 
-my $gene_display_name = $feature->display_name();
+my $feature_display_name = $feature->display_name();
 </%init>

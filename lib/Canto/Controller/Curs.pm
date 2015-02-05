@@ -966,87 +966,6 @@ sub annotation_interaction_edit
   $st->{current_component} = $annotation_type_name;
   $st->{current_component_display_name} = $annotation_config->{display_name};
   $st->{template} = "curs/modules/$module_category.mhtml";
-
-  my $form = $self->form();
-
-  $form->auto_fieldset({ attributes => { class => 'curs-genes' }});
-
-  # form needs an action if AngularJS is active but not controlling the form
-  $form->attributes({ action => '?' });
-
-  my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
-
-  my @options = ();
-
-  while (defined (my $g = $genes_rs->next())) {
-    my $g_proxy = _get_gene_proxy($config, $g);
-    push @options, { value => $g_proxy->gene_id(),
-                     label => $g_proxy->long_display_name() };
-  }
-
-  my @all_elements = (
-      {
-        name => 'prey',
-        type => 'Checkboxgroup',
-        options => [@options],
-      },
-      {
-        name => 'interaction-submit',
-        attributes => { class => 'btn btn-primary curs-finish-button', },
-        type => 'Submit', value => 'Proceed ->',
-      }
-    );
-
-  $form->elements([@all_elements]);
-  $form->process();
-  $st->{form} = $form;
-
-  if ($form->submitted_and_valid()) {
-    my $submit_value = $form->param_value('interaction-submit');
-
-    my @prey_params = @{$form->param_array('prey')};
-
-    if (!@prey_params) {
-      $st->{message} = 'You must select at least one gene that interacts with ' .
-        $st->{gene}->display_name();
-      return;
-    }
-
-    my $guard = $schema->txn_scope_guard;
-
-    my @prey_identifiers =
-      map {
-        my $prey_gene = $schema->find_with_type('Gene', $_);
-        {
-          primary_identifier => $prey_gene->primary_identifier(),
-        }
-      } @prey_params;
-
-    my %annotation_data = (interacting_genes => [@prey_identifiers]);
-
-    my $annotation =
-      $schema->create_with_type('Annotation',
-                                {
-                                  type => $annotation_type_name,
-                                  status => 'new',
-                                  pub => $st->{pub},
-                                  creation_date => Canto::Curs::Utils::get_iso_date(),
-                                  data => { %annotation_data }
-                                });
-
-    $self->set_annotation_curator($annotation);
-
-    $annotation->set_genes($gene_proxy->cursdb_gene());
-
-    $guard->commit();
-
-    my $annotation_id = $annotation->annotation_id();
-    $_debug_annotation_ids = [$annotation_id];
-
-    $self->state()->store_statuses($schema);
-
-    _redirect_and_detach($c, 'annotation', $annotation_id, 'evidence');
-  }
 }
 
 sub _get_gene_proxy
@@ -1299,8 +1218,6 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
   my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
   my $evidence_types = $config->{evidence_types};
 
-  my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
-
   my $annotation =
     $self->_create_annotation($c, $annotation_type_name,
                                   $feature_type, [$feature], \%annotation_data);
@@ -1319,6 +1236,49 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
         $feature->feature_id(),
     };
   }
+
+  $c->forward('View::JSON');
+}
+
+sub annotation_add_interaction : Chained('annotate') PathPart('add_interaction') Args(1)
+{
+  my ($self, $c, $annotation_type_name) = @_;
+
+  my $config = $c->config();
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $body_data = _decode_json_content($c);
+
+  my $evidence_code = $body_data->{evidence_code};
+  my @prey_gene_ids = @{$body_data->{prey_gene_ids}};
+
+  my $annotation_config = $st->{annotation_type_config};
+  my $feature_type = $st->{feature_type};
+  my $feature = $st->{feature};
+
+  my $module_category = $annotation_config->{category};
+
+  my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
+  my $evidence_types = $config->{evidence_types};
+
+  for my $prey_gene_id (@prey_gene_ids) {
+    my $prey_gene = $schema->find_with_type('Gene', $prey_gene_id);
+
+    my %annotation_data = (evidence_code => $evidence_code,
+                           interacting_genes =>
+                             [{ primary_identifier => $prey_gene->primary_identifier() }]);
+
+    my $annotation =
+      $self->_create_annotation($c, $annotation_type_name,
+                                $feature_type, [$feature], \%annotation_data);
+  }
+
+  $c->stash->{json_data} = {
+    status => "success",
+    location => $st->{curs_root_uri} . "/feature/$feature_type/view/" .
+      $feature->feature_id(),
+  };
 
   $c->forward('View::JSON');
 }

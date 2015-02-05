@@ -779,6 +779,15 @@ div.clearall {
   font-size: 90%;
 }
 
+#curs-interaction .curs-multi-feature-chooser {
+  width: 80%;
+}
+
+#curs-interaction .curs-multi-feature-chooser-element {
+  width: 12em;
+  float: left;
+}
+
 .curs-box {
   border: 1px solid #ddd;
   -moz-border-radius: 4px;
