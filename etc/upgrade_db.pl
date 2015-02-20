@@ -6,7 +6,7 @@ use Carp;
 use File::Basename;
 use Clone qw(clone);
 use feature qw(switch);
-no if $] >= 5.018, warnings => "experimental::smartmatch";
+use feature 'unicode_strings';
 
 BEGIN {
   my $script_name = basename $0;
@@ -31,6 +31,16 @@ use Canto::Curs::GenotypeManager;
 if (@ARGV != 1) {
   die "$0: needs one argument - the version to upgrade to\n";
 }
+
+package Canto::Upgrade::Helper;
+
+use Moose;
+
+with 'PomBase::Role::LegacyAlleleHandler';
+
+package main;
+
+no if $] >= 5.018, warnings => "experimental::smartmatch";
 
 my $new_version = shift;
 
@@ -60,6 +70,24 @@ if ($current_version + 1 != $new_version) {
 }
 
 my $dbh = $track_schema->storage()->dbh();
+
+my $comma_substitute = "<<COMMA>>";
+
+sub _replace_commas
+{
+  my $string = shift;
+
+  $string =~ s/,/$comma_substitute/g;
+  return $string;
+}
+
+sub _unreplace_commas
+{
+  my $string = shift;
+
+  $string =~ s/$comma_substitute/,/g;
+  return $string;
+}
 
 given ($new_version) {
   when (3) {
@@ -171,20 +199,175 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
       my $curs_key = $curs->curs_key();
       my $curs_schema = shift;
 
+      my $upgrade_helper = Canto::Upgrade::Helper->new();
+
       my %seen_alleles = ();
 
       warn "upgrading: $curs_key\n";
 
       my $guard = $curs_schema->txn_scope_guard();
 
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      my $gene_rs = $curs_schema->resultset('Gene');
+
+    GENE: while (defined (my $gene = $gene_rs->next())) {
+        for my $annotation ($gene->direct_annotations()) {
+          my $data = $annotation->data();
+          my $extension = $data->{annotation_extension};
+          if ($extension) {
+            # remove some crud
+            $extension =~ s/[\s\N{ZERO WIDTH SPACE}]/ /g;
+            $extension =~ s/
+                             (
+                               \N{ZERO WIDTH SPACE}
+                             |
+                               \N{LATIN SMALL LETTER A WITH CIRCUMFLEX}
+                             |
+                               \N{PADDING CHARACTER}
+                               \N{PARTIAL LINE FORWARD}
+                             |
+                               \x{80}
+                               \x{8B}
+                             )
+                             \s*/ /gx;
+
+
+            chomp $extension;
+
+            $extension =~ s/\|\s*$//;
+
+            my @parts = split /\|/, $extension;
+
+            for my $part (@parts) {
+              my @rest = ();
+              my $allele = undef;
+              my $allele_type = undef;
+              my @conditions = ();
+
+              $part =~ s/(\([^\)]+\))/_replace_commas($1)/eg;
+
+              chomp $part;
+              $part =~ s/,\s*$//;
+
+              my @bits = split /,/, $part;
+
+              for my $bit (@bits) {
+                $bit = _unreplace_commas($bit);
+
+                if ($bit =~ /^\s*(\S+)=(.+)\s*$/) {
+                  if ($1 eq 'allele') {
+                    if ($allele) {
+                      die "'allele=' occurs twice in extension: $extension\n";
+                    } else {
+                      $allele = $2;
+                    }
+                  } else {
+                    if ($1 eq 'allele_type') {
+                      if ($allele_type) {
+                        die "'allele_type=' occurs twice in extension: $extension\n";
+                      } else {
+                        $allele_type = $2;
+                      }
+                    } else {
+                      if ($1 eq 'condition') {
+                        push @conditions, $2
+                      } else {
+                        push @rest, $bit;
+                      }
+                    }
+                  }
+                } else {
+                  if ($bit =~ /^\s*\S+\([^\)]+\)\s*$/) {
+                    # an "relation(id)" without "extension="
+                    push @rest, $bit;
+                  } else {
+                    warn "'$bit', skipping gene with non-parsable extension: $extension\n";
+                    next GENE;
+                  }
+                }
+              }
+
+              if (@conditions && !$allele) {
+                die "no allele= for $extension\n";
+              }
+
+              if (@rest) {
+                $data->{annotation_extension} = join ',', @rest;
+              } else {
+                delete $data->{annotation_extension};
+              }
+
+              my $new_annotation =
+                $curs_schema->resultset('Annotation')
+                  ->create({ status => $annotation->status(),
+                             pub => $annotation->pub(),
+                             type => $annotation->type(),
+                             creation_date => $annotation->creation_date(),
+                             data => $data });
+
+              if ($allele) {
+                if ($allele =~ /^(\S+)delta$/) {
+                  $allele = "$allele(deletion)";
+                }
+                if (my ($name, $description) = $allele =~ /(\S+)\(([^\)]+)\)/) {
+                  my $expression = $data->{expression};
+
+                  if ($name eq 'noname') {
+                    if (grep {
+                      $_ eq $description;
+                    } qw(overexpression endogenous knockdown)) {
+                      if ($expression && lc $expression ne lc $description) {
+                        die "can't have $expression AND allele=$name($description)\n";
+                      } else {
+                        $data->{expression} = ucfirst $description;
+                        $description = 'wild type';
+                      }
+                    }
+                  }
+
+                  my $allele_type = $upgrade_helper->allele_type_from_desc($description);
+
+                  if (!$allele_type) {
+                    warn "can't guess allele type for $allele\n";
+                    next;
+                  }
+
+                  my $new_allele =
+                    $curs_schema->resultset('Allele')
+                      ->create({
+                        name => $name,
+                        description => $description,
+                        type => $allele_type,
+                        gene => $gene->gene_id(),
+                      });
+
+                  $curs_schema->resultset('AlleleAnnotation')
+                    ->create({ allele => $new_allele,
+                               annotation => $new_annotation });
+                  $new_annotation->data($data);
+                  $new_annotation->update();
+                } else {
+                  die "can't parse: $allele\n";
+                }
+              } else {
+                $curs_schema->resultset('GeneAnnotation')
+                  ->create({ gene => $gene, annotation => $new_annotation });
+              }
+            }
+
+            $curs_dbh->do("DELETE FROM gene_annotation WHERE annotation = " . $annotation->annotation_id());
+            $curs_dbh->do("DELETE FROM annotation WHERE annotation_id = " . $annotation->annotation_id());
+          }
+        }
+      }
+
       my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
                                                                curs_schema => $curs_schema);
 
-      my $curs_dbh = $curs_schema->storage()->dbh();
+        $curs_dbh->do("ALTER TABLE allele ADD COLUMN expression TEXT;");
 
-      $curs_dbh->do("ALTER TABLE allele ADD COLUMN expression TEXT;");
-
-      $curs_dbh->do("
+        $curs_dbh->do("
 CREATE TABLE genotype_annotation (
        genotype_annotation_id integer PRIMARY KEY,
        genotype integer REFERENCES genotype(genotype_id),
@@ -192,7 +375,7 @@ CREATE TABLE genotype_annotation (
 );
 ");
 
-      $curs_dbh->do("
+        $curs_dbh->do("
 CREATE TABLE genotype (
        genotype_id integer PRIMARY KEY AUTOINCREMENT,
        identifier text UNIQUE NOT NULL,
@@ -200,7 +383,7 @@ CREATE TABLE genotype (
 );
 ");
 
-      $curs_dbh->do("
+        $curs_dbh->do("
 CREATE TABLE allele_genotype (
        allele_genotype_id integer PRIMARY KEY,
        allele integer REFERENCES allele(allele_id),
@@ -208,59 +391,71 @@ CREATE TABLE allele_genotype (
 );
 ");
 
-      my $allele_rs = $curs_schema->resultset('Allele');
+        my $allele_rs = $curs_schema->resultset('Allele');
 
-      while (defined (my $allele = $allele_rs->next())) {
-        my $display_name = $allele->display_name();
+        while (defined (my $allele = $allele_rs->next())) {
+          my $display_name = $allele->display_name();
 
-        if ($seen_alleles{$display_name}) {
-          warn "WARNING - skipping: $display_name\n";
-          next;
-        }
-
-        $seen_alleles{$display_name} = 1;
-
-        my $genotype_name = "$strain_name " . $display_name;
-
-        warn "  genotype name: $genotype_name  allele_id: ", $allele->allele_id(), "\n";
-        my $genotype = $genotype_manager->make_genotype($curs_key, $genotype_name,
-                                                        [$allele]);
-
-        my $sth = $curs_dbh->prepare("select annotation from allele_annotation where allele = ? " .
-                                       "and annotation in (select annotation_id from annotation)");
-
-        $sth->execute($allele->allele_id());
-
-        while (my ($annotation_id) = $sth->fetchrow_array()) {
-          my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
-
-          my $data = $annotation->data();
-          my $expression = delete $data->{expression};
-
-          if ($expression) {
-            warn "    moved '$expression'\n";
-            $allele->expression($expression);
+          if ($seen_alleles{$display_name}) {
+            warn "WARNING - skipping: $display_name\n";
+            next;
           }
 
-          $annotation->data($data);
-          $annotation->update();
+          $seen_alleles{$display_name} = 1;
 
-          my $insert_sth =
-            $curs_dbh->prepare("insert into genotype_annotation(genotype, annotation) " .
-                               "values (?, ?)");
-          $insert_sth->execute($genotype->genotype_id(), $annotation_id);
+          my $genotype_name = "$strain_name $display_name()";
+
+          warn "  new genotype name: $genotype_name  allele_id: ", $allele->allele_id(), "\n";
+          my $genotype = $genotype_manager->make_genotype($curs_key, $genotype_name,
+                                                          [$allele]);
+
+          my $sth = $curs_dbh->prepare("select annotation from allele_annotation where allele = ? " .
+                                         "and annotation in (select annotation_id from annotation)");
+
+          $sth->execute($allele->allele_id());
+
+          my @annotation_ids = ();
+
+          while (my ($annotation_id) = $sth->fetchrow_array()) {
+            push @annotation_ids, $annotation_id;
+          }
+
+          $sth->finish();
+
+          for my $annotation_id (@annotation_ids) {
+            my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
+
+            my $data = $annotation->data();
+            my $expression = delete $data->{expression};
+
+            if ($expression) {
+              warn "    moved '$expression'\n";
+              $allele->expression($expression);
+
+              $annotation->data($data);
+              $annotation->update();
+            }
+
+            my $insert_sth =
+              $curs_dbh->prepare("insert into genotype_annotation(genotype, annotation) " .
+                                   "values (?, ?)");
+            $insert_sth->execute($genotype->genotype_id(), $annotation_id);
+
+            $insert_sth->finish();
+          }
         }
-      }
 
-      my $an_rs = $curs_schema->resultset('Annotation');
+        my $an_rs = $curs_schema->resultset('Annotation');
 
-      for my $an ($an_rs->all()) {
-        my $data = $an->data();
-      }
+        for my $an ($an_rs->all()) {
+          my $data = $an->data();
+        }
 
-      $curs_dbh->do("drop table allele_annotation");
+        $allele_rs = undef;
 
-      $guard->commit();
+        $curs_dbh->do("drop table allele_annotation");
+
+        $guard->commit();
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
