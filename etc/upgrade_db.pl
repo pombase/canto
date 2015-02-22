@@ -215,7 +215,7 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
         for my $annotation ($gene->direct_annotations()) {
           my $data = $annotation->data();
           my $extension = $data->{annotation_extension};
-          if ($extension) {
+          if ($extension && $extension =~ /allele=/) {
             # remove some crud
             $extension =~ s/[\s\N{ZERO WIDTH SPACE}]/ /g;
             $extension =~ s/
