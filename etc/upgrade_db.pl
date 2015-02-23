@@ -201,8 +201,6 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
 
       my $upgrade_helper = Canto::Upgrade::Helper->new();
 
-      my %seen_alleles = ();
-
       warn "upgrading: $curs_key\n";
 
       my $guard = $curs_schema->txn_scope_guard();
@@ -342,9 +340,11 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
                         gene => $gene->gene_id(),
                       });
 
-                  $curs_schema->resultset('AlleleAnnotation')
-                    ->create({ allele => $new_allele,
-                               annotation => $new_annotation });
+                  my $allele_annotation_create_sth =
+                    $curs_dbh->prepare("insert into allele_annotation (allele, annotation) " .
+                                       "values (?, ?)");
+                  $allele_annotation_create_sth->execute($new_allele->allele_id(),
+                                                         $new_annotation->annotation_id());
                   $new_annotation->data($data);
                   $new_annotation->update();
                 } else {
@@ -391,67 +391,89 @@ CREATE TABLE allele_genotype (
 );
 ");
 
-      my $allele_rs = $curs_schema->resultset('Allele');
+      my @annotation_and_allele_data = ();
 
-      while (defined (my $allele = $allele_rs->next())) {
-        my $display_name = $allele->display_name();
+      my $annotation_rs = $curs_schema->resultset('Annotation');
 
-        if ($seen_alleles{$display_name}) {
-          warn "WARNING - skipping: $display_name\n";
-          next;
-        }
+      while (defined (my $annotation = $annotation_rs->next())) {
+        my $alleles_sth = $curs_dbh->prepare("select allele from allele_annotation where annotation = ?");
 
-        $seen_alleles{$display_name} = 1;
+        $alleles_sth->execute($annotation->annotation_id());
 
-        my $genotype_name = "$strain_name $display_name()";
+        while (my ($allele_id) = $alleles_sth->fetchrow_array()) {
+          my $allele = $curs_schema->resultset('Allele')->find({ allele_id => $allele_id });
 
-        warn "  new genotype name: $genotype_name  allele_id: ", $allele->allele_id(), "\n";
-        my $genotype = $genotype_manager->make_genotype($curs_key, $genotype_name,
-                                                        [$allele]);
+          push @annotation_and_allele_data,
+            {
+              annotation => $annotation,
+              allele_data => {
+                primary_identifier => $allele->primary_identifier(),
+                type => $allele->type(),
+                description => $allele->description(),
+                name => $allele->name(),
+                gene => $allele->gene(),
+              },
+            };
 
-        my $sth = $curs_dbh->prepare("select annotation from allele_annotation where allele = ? " .
-                                       "and annotation in (select annotation_id from annotation)");
+          my $allele_annotation_delete_sth =
+            $curs_dbh->prepare("delete from allele_annotation where allele = ? and " .
+                               "annotation = ?");
 
-        $sth->execute($allele->allele_id());
+          $allele_annotation_delete_sth->execute($allele_id, $annotation->annotation_id());
+          $allele_annotation_delete_sth->finish();
 
-        my @annotation_ids = ();
-
-        while (my ($annotation_id) = $sth->fetchrow_array()) {
-          push @annotation_ids, $annotation_id;
-        }
-
-        $sth->finish();
-
-        for my $annotation_id (@annotation_ids) {
-          my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
-
-          my $data = $annotation->data();
-          my $expression = delete $data->{expression};
-
-          if ($expression) {
-            warn "    moved '$expression'\n";
-            $allele->expression($expression);
-
-            $annotation->data($data);
-            $annotation->update();
-          }
-
-          my $insert_sth =
-            $curs_dbh->prepare("insert into genotype_annotation(genotype, annotation) " .
-                                 "values (?, ?)");
-          $insert_sth->execute($genotype->genotype_id(), $annotation_id);
-
-          $insert_sth->finish();
+          $allele->delete();
         }
       }
 
-      my $an_rs = $curs_schema->resultset('Annotation');
+      my %new_alleles = ();
 
-      for my $an ($an_rs->all()) {
-        my $data = $an->data();
+      for my $annotation_and_allele (@annotation_and_allele_data) {
+        my $annotation = $annotation_and_allele->{annotation};
+        my $allele_data = $annotation_and_allele->{allele_data};
+
+        my $data = $annotation->data();
+        my $expression = delete $data->{expression};
+
+        if ($expression) {
+          warn "    moved '$expression'\n";
+          $allele_data->{expression} = $expression;
+
+          $annotation->data($data);
+          $annotation->update();
+        }
+
+        my $key = ($allele_data->{primary_identifier} // 'no_primary_id') . '-' .
+          ($allele_data->{name} // 'no_name') . '-' .
+          ($allele_data->{description} // 'no_description') . '-' .
+          ($allele_data->{type} // 'no_type') . '-' .
+          ($allele_data->{expression} // 'no_expression') . '-' .
+          $allele_data->{gene}->primary_identifier();
+
+        my $annotation_genotype;
+        my $annotation_allele;
+
+        if ($new_alleles{$key}) {
+          ($annotation_genotype, $annotation_allele) = @{$new_alleles{$key}};
+        } else {
+          $annotation_allele = $curs_schema->resultset('Allele')->create($allele_data);
+
+          my $genotype_name = "$strain_name " . $allele_data->{gene}->primary_identifier() .
+            '-' . $annotation_allele->long_identifier();
+          warn "  made new genotype: $genotype_name  from allele: $key\n";
+
+          $annotation_genotype = $genotype_manager->make_genotype($curs_key, $genotype_name,
+                                                        [$annotation_allele]);
+
+          $new_alleles{$key} = [$annotation_genotype, $annotation_allele];
+        }
+
+        my $insert_sth =
+          $curs_dbh->prepare("insert into genotype_annotation(genotype, annotation) " .
+                               "values (?, ?)");
+        $insert_sth->execute($annotation_genotype->genotype_id(), $annotation->annotation_id());
+        $insert_sth->finish();
       }
-
-      $allele_rs = undef;
 
       $curs_dbh->do("drop table allele_annotation");
 
