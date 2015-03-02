@@ -293,6 +293,10 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
                 die "no allele= for $extension\n";
               }
 
+              if (@conditions) {
+                $data->{conditions} = [@conditions];
+              }
+
               if (@rest) {
                 $data->{annotation_extension} = join ',', @rest;
               } else {
