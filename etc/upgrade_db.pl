@@ -253,7 +253,10 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
               for my $bit (@bits) {
                 $bit = _unreplace_commas($bit);
 
-                if ($bit =~ /^\s*(\S+)=(.+)\s*$/) {
+                $bit =~ s/^\s+//;
+                $bit =~ s/\s+$//;
+
+                if ($bit =~ /^\s*(\S+)=\s*(.+)\s*$/) {
                   if ($1 eq 'allele') {
                     if ($allele) {
                       die "'allele=' occurs twice in extension: $extension\n";
