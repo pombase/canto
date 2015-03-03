@@ -58,7 +58,7 @@
     {{annotation.curator}}
   </td>
   <td class="table-row-actions">
-    <div ng-if="annotationType && featureStatusFilter === 'new'">
+    <div ng-if="annotationType && featureStatusFilter === 'new' && !read_only_curs">
       <div>
         <a ng-click="edit()">Edit</a>
       </div>

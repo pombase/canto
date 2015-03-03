@@ -5,6 +5,7 @@ $curs_root_uri
 <script language="javascript" type="text/javascript">
 var canto_root_uri = '<% $c->uri_for('/') %>';
 var curs_root_uri = '<% $curs_root_uri %>';
+var read_only_curs = <% $read_only_curs %>;
 var curs_key = '<% $curs_key %>';
 var annotation_id = <% $annotation_id %>;
 var with_gene_evidence_codes = <% $with_gene_evidence_codes_js |n %>;
@@ -37,15 +38,16 @@ inherit => '/curs/page_template.mhtml'
 <%init>
 use Data::JavaScript::Anon;
 
-my $curs_key = $c->stash()->{curs_key};
+my $st = $c->stash();
+
+my $curs_key = $st->{curs_key};
+my $read_only_curs = $st->{read_only_curs} // 0;
 
 my $annotation_id = 'undefined';
 
-if (defined $c->stash()->{annotation}) {
-  $annotation_id = $c->stash()->{annotation}->annotation_id();
+if (defined $st->{annotation}) {
+  $annotation_id = $st->{annotation}->annotation_id();
 }
-
-my $st = $c->stash();
 
 my $evidence_by_annotation_type = $st->{evidence_by_annotation_type};
 my $evidence_by_annotation_type_js = Data::JavaScript::Anon->anon_dump($evidence_by_annotation_type);

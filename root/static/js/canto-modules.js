@@ -225,6 +225,7 @@ canto.service('CantoGlobals', function($window) {
   this.application_root = $window.application_root;
   this.curs_root_uri = $window.curs_root_uri;
   this.ferret_choose = $window.ferret_choose;
+  this.read_only_curs = $window.read_only_curs;
 });
 
 canto.service('CantoService', function($http) {
@@ -1868,7 +1869,7 @@ function makeNewAnnotation(template) {
 }
 
 var annotationTableCtrl =
-  function($modal, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList) {
+  function($modal, CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -1881,6 +1882,7 @@ var annotationTableCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/annotation_table.html',
       controller: function($scope) {
+        $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.data = {
           hasFeatures: false, // set to true if there are feature of type featureTypeFilter
           annotations: null
@@ -1931,8 +1933,10 @@ var annotationTableCtrl =
   };
 
 canto.directive('annotationTable',
-                ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig', 'CursGenotypeList',
+                ['$modal', 'CantoGlobals', 'AnnotationProxy',
+                 'AnnotationTypeConfig', 'CursGenotypeList',
                  annotationTableCtrl]);
+
 
 var annotationTableList =
   function(AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
@@ -1978,6 +1982,7 @@ var annotationTableRow =
       },
       controller: function($scope) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+        $scope.read_only_curs = CantoGlobals.read_only_curs;
 
         var annotation = $scope.annotation;
 

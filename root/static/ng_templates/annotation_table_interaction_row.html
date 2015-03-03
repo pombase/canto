@@ -31,7 +31,7 @@
     {{annotation.curator}}
   </td>
   <td class="table-row-actions">
-    <div ng-if="annotationType">
+    <div ng-if="annotationType && !read_only_curs">
       <div>
         <a ng-click="edit()">Edit</a>
       </div>
