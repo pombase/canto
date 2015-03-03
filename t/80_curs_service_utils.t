@@ -204,7 +204,7 @@ is ($res->{status}, 'success');
 $first_genotype_annotation = $first_genotype->annotations()->first();
 is ($first_genotype_annotation->data()->{term_ontid}, "FYPO:0000133");
 is ($res->{annotation}->{term_ontid}, 'FYPO:0000133');
-is ($res->{annotation}->{term_name}, 'elongated multinucleate cells');
+is ($res->{annotation}->{term_name}, 'elongated multinucleate cell');
 
 
 # test setting evidence_code
@@ -557,7 +557,7 @@ cmp_deeply($annotation_res,
             },
             {
               'term_ontid' => 'FYPO:0000133',
-              'term_name' => 'elongated multinucleate cells',
+              'term_name' => 'elongated multinucleate cell',
               'feature_type' => 'genotype',
               'feature_display_name' => 'h+ SPCC63.05delta ssm4KE',
               'annotation_type_display_name' => 'phenotype',
@@ -610,7 +610,7 @@ cmp_deeply($annotation_res,
               'feature_type' => 'genotype',
               'feature_display_name' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
               'term_ontid' => 'FYPO:0000017',
-              'term_name' => 'elongated cells',
+              'term_name' => 'elongated cell',
               'is_not' => 0,
               'completed' => 1,
               'creation_date_short' => '20100102',

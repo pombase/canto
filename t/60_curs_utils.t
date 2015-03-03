@@ -138,7 +138,7 @@ sub check_new_annotations
                  'conditions' => [],
                  'term_ontid' => 'FYPO:0000017',
                  'with_or_from_identifier' => undef,
-                 'term_name' => 'elongated cells',
+                 'term_name' => 'elongated cell',
                  'needs_with' => undef,
                  'completed' => 1,
                  'annotation_id' => 7,
