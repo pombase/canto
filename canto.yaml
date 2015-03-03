@@ -1096,20 +1096,20 @@ implementation_classes:
 allele_type_list:
   - name: wild type
     export_type: wild_type
-    description_required: 0
-    allele_name_required: 1
+    description_required: false
+    allele_name_required: true
     allow_expression_change: true
     autopopulate_name: '@@gene_display_name@@+'
   - name: deletion
     export_type: deletion
-    description_required: 0
-    allele_name_required: 1
+    description_required: false
+    allele_name_required: true
     allow_expression_change: false
     autopopulate_name: '@@gene_display_name@@delta'
   - name: unknown
     export_type: unknown
-    description_required: 0
-    allele_name_required: 1
+    description_required: false
+    allele_name_required: true
     allow_expression_change: true
   - name: mutation of single amino acid residue
     export_type: amino_acid_mutation
@@ -1117,8 +1117,8 @@ allele_type_list:
     # we use this to undo that mapping - if the RE matches the description
     # from Chado then we use this allele type
     export_type_reverse_map_re: "^[^,]+$"
-    description_required: 1
-    allele_name_required: 0
+    description_required: true
+    allele_name_required: false
     allow_expression_change: true
     placeholder: eg. K132A
   - name: mutation of multiple amino acid residues
@@ -1127,48 +1127,48 @@ allele_type_list:
     # we use this to undo that mapping - if the RE matches the description
     # from Chado then we use this allele type
     export_type_reverse_map_re: ","
-    description_required: 1
-    allele_name_required: 0
+    description_required: true
+    allele_name_required: false
     allow_expression_change: true
     placeholder: eg. K132A,K144A
   - name: partial deletion, amino acid
     export_type: partial_amino_acid_deletion
-    description_required: 1
-    allele_name_required: 0
+    description_required: true
+    allele_name_required: false
     allow_expression_change: true
     placeholder: eg. 100-200
   - name: partial deletion, nucleotide
     export_type: partial_nucleotide_deletion
-    description_required: 1
-    allele_name_required: 0
+    description_required: true
+    allele_name_required: false
     allow_expression_change: true
     placeholder: eg. 100-200 OR -20--30 (for promoter region)
   - name: mutation of a single nucleotide
     export_type: nucleotide_mutation
     # see comment above:
     export_type_reverse_map_re: "^[^,]+$"
-    description_required: 1
-    allele_name_required: 0
+    description_required: true
+    allele_name_required: false
     allow_expression_change: true
     placeholder: eg. A25G, OR A-25G (for promoter region)
   - name: mutation of multiple nucleotides
     export_type: nucleotide_mutation
     # see comment above:
     export_type_reverse_map_re: ","
-    description_required: 1
-    allele_name_required: 0
+    description_required: true
+    allele_name_required: false
     allow_expression_change: true
     placeholder: eg. A25G,T40G
   - name: nonsense mutation
     export_type: nonsense_mutation
-    description_required: 1
+    description_required: true
     allow_expression_change: true
-    allele_name_required: 0
+    allele_name_required: false
     placeholder: 'AA123->stop, AA1299->amber'
   - name: other
     export_type: other
-    description_required: 1
-    allele_name_required: 0
+    description_required: true
+    allele_name_required: false
     allow_expression_change: true
     placeholder: Please provide a description
 

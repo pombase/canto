@@ -1186,11 +1186,11 @@ var alleleEditDialogCtrl =
     };
 
     $scope.isValidName = function() {
-      return !$scope.current_type_config || $scope.current_type_config.allele_name_required == 0 || $scope.alleleData.name;
+      return !$scope.current_type_config || !$scope.current_type_config.allele_name_required || $scope.alleleData.name;
     };
 
     $scope.isValidDescription = function() {
-      return !$scope.current_type_config || $scope.current_type_config.description_required == 0 || $scope.alleleData.description;
+      return !$scope.current_type_config || !$scope.current_type_config.description_required || $scope.alleleData.description;
     };
 
     $scope.isExistingAllele = function() {
