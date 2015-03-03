@@ -95,12 +95,6 @@ use Canto::Curs;
 use Canto::Track;
 use Canto::Curs::GeneProxy;
 
-my $config = $c->config();
-
-if ($multi_organism_mode) {
-  # ...
-}
-
 my $root_path = $c->stash()->{curs_root_path};
 my $upload_path = $c->uri_for("$root_path/gene_upload",
                               { return_path => $c->req()->uri() });
