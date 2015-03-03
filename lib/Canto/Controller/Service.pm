@@ -226,7 +226,6 @@ sub canto_config : Local
     my $key_config = $config->{$config_key};
     if (defined $key_config) {
       $c->stash->{json_data} = $key_config;
-      $c->stash->{cache_this_link} = 1;
     } else {
       $c->stash->{json_data} = {
         status => 'error',
