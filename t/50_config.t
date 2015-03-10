@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 23;
 
 use Canto::Config;
 use Canto::TestUtil;
@@ -70,3 +70,19 @@ ok(defined $config_with_suffix->{"Model::TrackModel"});
 ok(defined $config_with_suffix->model_connect_string('Track'));
 
 is($config_with_suffix->{extra_css}, '/static/css/test_style.css');
+
+
+use JSON;
+
+my $config_for_json = $config_with_suffix->for_json('allele_types');
+
+my $description_required =
+  $config_for_json->{'mutation of a single nucleotide'}->{description_required};
+my $allele_name_required =
+  $config_for_json->{'mutation of a single nucleotide'}->{allele_name_required};
+
+ok ($description_required);
+ok (!$allele_name_required);
+
+ok ($description_required == JSON::true);
+ok ($allele_name_required == JSON::false);

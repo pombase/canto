@@ -40,11 +40,13 @@ the Free Software Foundation, either version 3 of the License, or
 use strict;
 
 use Params::Validate qw(:all);
-use YAML qw(LoadFile);
+use Config::Any;
 use Clone qw(clone);
+use JSON;
 use Carp;
 use Cwd;
 
+use Data::Rmap qw(rmap_to HASH);
 use Hash::Merge;
 
 use Canto::DBUtil;
@@ -74,7 +76,11 @@ sub new
     push @config_file_names, $app_config_file;
   }
 
-  my $self = LoadFile(shift @config_file_names);
+  my $config_file_name = shift @config_file_names;
+  my $cfg = Config::Any->load_files({ files => [$config_file_name],
+                                      use_ext => 1, });
+
+  my ($file_name, $self) = %{$cfg->[0]};
 
   bless $self, $class;
 
@@ -115,8 +121,10 @@ sub merge_config
   my $self = shift;
   my @file_names = @_;
 
-  for my $file_name (@file_names) {
-    my $new_config = LoadFile($file_name);
+  my $cfg = Config::Any->load_files({ files => \@file_names,
+                                      use_ext => 1, });
+
+  for my $new_config (map { my ($file_name, $config) = %$_; $config } @$cfg) {
     if (defined $new_config) {
       my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
       my $new = $merge->merge({%$self}, $new_config);
@@ -497,6 +505,30 @@ sub class_info
   }
 
   return $self->{class_info}->{$model_name};
+}
+
+my @boolean_field_names = qw|description_required allele_name_required allow_expression_change|;
+
+sub for_json
+{
+  my $self = shift;
+  my $key = shift;
+
+  my $data = clone $self->{$key};
+
+  rmap_to {
+    for my $key (keys %$_) {
+      if (grep { $key eq $_; } @boolean_field_names) {
+        if ($_->{$key}) {
+          $_->{$key} = JSON::true;
+        } else {
+          $_->{$key} = JSON::false;
+        }
+      }
+    }
+  } HASH, $data;
+
+  return $data;
 }
 
 1;

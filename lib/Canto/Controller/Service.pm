@@ -223,7 +223,7 @@ sub canto_config : Local
   my $allowed_keys = $config->{config_service}->{allowed_keys};
 
   if ($allowed_keys->{$config_key}) {
-    my $key_config = $config->{$config_key};
+    my $key_config = $config->for_json($config_key);
     if (defined $key_config) {
       $c->stash->{json_data} = $key_config;
     } else {

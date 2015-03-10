@@ -39,7 +39,7 @@ requires 'Catalyst::View::JSON';
 requires 'Catalyst::View::Mason';
 requires 'CatalystX::RoleApplicator';
 requires 'Clone';
-requires 'Config::General';
+requires 'Config::Any';
 requires 'DBD::Pg';
 requires 'DBD::SQLite' => '1.40';
 requires 'DBIx::Class';
