@@ -940,7 +940,7 @@ var annotationEvidence =
           $scope.evidenceTypes = results;
 
           $scope.$watch('evidenceCode',
-                        function(newType) {
+                        function() {
                           if (!$scope.isValidEvidenceCode() ||
                               !$scope.evidenceTypes[$scope.evidenceCode].with_gene) {
                             $scope.withGeneId = undefined;
@@ -948,10 +948,12 @@ var annotationEvidence =
 
                           $scope.validEvidence = $scope.isValidCodeAndWith();
                         });
+
+          $scope.validEvidence = $scope.isValidCodeAndWith();
         });
 
         $scope.$watch('withGeneId',
-                      function(newType) {
+                      function() {
                         $scope.validEvidence = $scope.isValidCodeAndWith();
                       });
 
