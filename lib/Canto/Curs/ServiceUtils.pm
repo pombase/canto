@@ -231,6 +231,19 @@ sub _filter_lookup_genotypes
   return @{$genotype_lookup->lookup(%options)->{results}};
 }
 
+sub _genotype_details_hash
+{
+  my $genotype = shift;
+
+  return {
+    identifier => $genotype->identifier(),
+    name => $genotype->name(),
+    allele_string => $genotype->allele_string(),
+    display_name => $genotype->display_name(),
+    genotype_id => $genotype->genotype_id(),
+  };
+}
+
 sub _get_genotypes
 {
   my $self = shift;
@@ -258,13 +271,7 @@ sub _get_genotypes
   }
 
   my @res = map {
-    {
-      identifier => $_->identifier(),
-      name => $_->name(),
-      allele_string => $_->allele_string(),
-      display_name => $_->display_name(),
-      genotype_id => $_->genotype_id(),
-    }
+    _genotype_details_hash($_);
   } $genotype_rs->all();
 
   if ($arg eq 'all') {
@@ -291,6 +298,25 @@ sub _get_genotypes
   return @res;
 }
 
+sub _allele_details_hash
+{
+  my $allele = shift;
+
+  my $display_name =
+    Canto::Curs::Utils::make_allele_display_name($allele->name(),
+                                                 $allele->description(),
+                                                 $allele->type());
+
+  return {
+    uniquename => $allele->primary_identifier(),
+    name => $allele->name(),
+    description => $allele->description(),
+    allele_type => $allele->type(),
+    expression => $allele->expression(),
+    display_name => $display_name,
+  }
+}
+
 sub _get_alleles
 {
   my $self = shift;
@@ -301,19 +327,7 @@ sub _get_alleles
     ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
                name => { -like => $search_string . '%' } }, { join => 'gene' });
   my @res = map {
-    my $display_name =
-      Canto::Curs::Utils::make_allele_display_name($_->name(),
-                                                   $_->description(),
-                                                   $_->type());
-
-    {
-      uniquename => $_->primary_identifier(),
-      name => $_->name(),
-      description => $_->description(),
-      allele_type => $_->type(),
-      expression => $_->expression(),
-      display_name => $display_name,
-    }
+    _allele_details_hash($_);
   } $allele_rs->all();
 
   my $allele_lookup = $self->allele_lookup();
