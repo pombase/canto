@@ -1,6 +1,7 @@
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 4;
+use Test::Deep;
 
 use Plack::Test;
 use Plack::Util;
@@ -27,6 +28,7 @@ my $first_genotype =
 my $first_genotype_annotation = $first_genotype->annotations()->first();
 
 my $first_genotype_annotation_id = $first_genotype_annotation->annotation_id();
+my $first_genotype_id = $first_genotype->genotype_id();
 
 test_psgi $app, sub {
   my $cb = shift;
@@ -55,4 +57,44 @@ test_psgi $app, sub {
   $first_genotype_annotation = $first_genotype->annotations()->first();
 
   is ($first_genotype_annotation->data()->{submitter_comment}, "$new_comment");
+};
+
+test_psgi $app, sub {
+  my $cb = shift;
+
+  # retrieve a single genotype
+  my $uri = new URI("$root_url/ws/genotype/details/$first_genotype_id");
+
+  my $req = HTTP::Request->new(GET => $uri);
+
+  my $res = $cb->($req);
+
+  my $perl_res = decode_json $res->content();
+
+  cmp_deeply($perl_res,
+             {
+               'allele_string' => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
+               'genotype_id' => 1,
+               'alleles' => [
+                 {
+                   'display_name' => 'ssm4delta(deletion)',
+                   'name' => 'ssm4delta',
+                   'expression' => undef,
+                   'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+                   'allele_type' => 'deletion',
+                   'description' => 'deletion'
+                 },
+                 {
+                   'uniquename' => 'SPCC63.05:aaaa0007-1',
+                   'allele_type' => 'deletion',
+                   'description' => 'deletion',
+                   'display_name' => 'SPCC63.05delta(deletion)',
+                   'expression' => undef,
+                   'name' => 'SPCC63.05delta'
+                 }
+               ],
+               'display_name' => 'h+ SPCC63.05delta ssm4KE',
+               'identifier' => 'aaaa0007-genotype-test-1',
+               'name' => 'h+ SPCC63.05delta ssm4KE'
+             });
 };

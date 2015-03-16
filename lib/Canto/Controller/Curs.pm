@@ -2542,7 +2542,7 @@ sub ws : Chained('top') CaptureArgs(1)
 =head2 ws_list
 
  Function: Web service for returning the data from a Curs as lists
- Args    : $type (from sub ws) - the type to pass to ServiceUtils
+ Args    : None - the $type comes from the stash
 
 =cut
 
@@ -2562,6 +2562,34 @@ sub ws_list : Chained('ws') PathPart('list')
   }
 
   $c->stash->{json_data} = $service_utils->list_for_service($type, @args);
+
+  $c->forward('View::JSON');
+}
+
+=head2 ws_details
+
+ Function: Web service for returning information about out Curs object
+ Args    : $type - object type from the stash
+           $id   - the object id (eg. geneotype_id)
+
+=cut
+
+sub ws_details : Chained('ws') PathPart('details')
+{
+  my ($self, $c, @args) = @_;
+
+  my $type = $c->stash()->{ws_type};
+  my $schema = $c->stash()->{schema};
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  my $json_data = $c->req()->body_data();
+
+  if ($json_data) {
+    push @args, $json_data;
+  }
+
+  $c->stash->{json_data} = $service_utils->details_for_service($type, @args);
 
   $c->forward('View::JSON');
 }
