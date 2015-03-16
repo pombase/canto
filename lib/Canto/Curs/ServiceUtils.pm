@@ -234,14 +234,23 @@ sub _filter_lookup_genotypes
 sub _genotype_details_hash
 {
   my $genotype = shift;
+  my $include_allele = shift;
 
-  return {
+  my %ret = (
     identifier => $genotype->identifier(),
     name => $genotype->name(),
     allele_string => $genotype->allele_string(),
     display_name => $genotype->display_name(),
     genotype_id => $genotype->genotype_id(),
-  };
+  );
+
+  if ($include_allele) {
+    my @alleles = $genotype->alleles()->all();
+
+    $ret{alleles} = [map { _allele_details_hash($_); } @alleles];
+  }
+
+  return \%ret;
 }
 
 sub _get_genotypes
@@ -395,6 +404,53 @@ sub list_for_service
     die "unknown list type: $type\n";
   }
 }
+
+sub _get_genotype
+{
+  my $self = shift;
+
+  my $genotype_id = shift;
+
+  my $curs_schema = $self->curs_schema();
+  my $genotype_rs = $curs_schema->resultset('Genotype');
+
+  my $genotype = $genotype_rs->find({ genotype_id => $genotype_id });
+
+  return _genotype_details_hash($genotype, 1);
+}
+
+my %details_for_service_subs =
+  (
+    genotype => \&_get_genotype,
+  );
+
+=head2 details_for_service
+
+ Usage   : my $result = $service_utils->details_for_service('genotype', $id);
+ Function: Return the details of the given curs data for sending as JSON to
+           the browser.
+ Args    : $type - the data type: eg. "genotype"
+           $id - the database ID of the feature
+ Return  : hash summarising the data.  Example for genotype:
+           { identifier => 'h+ SPCC63.05-unk ssm4delta', alleles => [ {...}, ... ] }
+
+=cut
+
+sub details_for_service
+{
+  my $self = shift;
+  my $type = shift;
+  my @args = @_;
+
+  my $proc = $details_for_service_subs{$type};
+
+  if (defined $proc) {
+    return $proc->($self, @args);
+  } else {
+    die "unknown list type: $type\n";
+  }
+}
+
 
 sub _lookup_gene_id
 {
