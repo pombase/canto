@@ -23,19 +23,19 @@ cmp_deeply($res,
               'uniquename' => 'SPBC12C2.02c:allele-2',
               'name' => 'ste20-c1',
               'display_name' => 'ste20-c1(K132A)',
-              'allele_type' => 'mutation of single amino acid residue'
+              'type' => 'mutation of single amino acid residue'
             },
             {
               'uniquename' => 'SPBC12C2.02c:allele-3',
               'name' => 'ste20-c2',
               'display_name' => 'ste20-c2(K132A,K144A)',
-              'allele_type' => 'mutation of multiple amino acid residues',
+              'type' => 'mutation of multiple amino acid residues',
               'description' => 'K132A,K144A'
             },
             {
               'name' => 'ste20delta',
               'uniquename' => 'SPBC12C2.02c:allele-1',
-              'allele_type' => 'deletion',
+              'type' => 'deletion',
               'display_name' => 'ste20delta(del_x1)',
               'description' => 'del_x1'
             }
@@ -53,7 +53,7 @@ cmp_deeply($id_res,
 {
             'display_name' => 'ste20-c2(K132A,K144A)',
             'description' => 'K132A,K144A',
-            'allele_type' => 'amino_acid_mutation',
+            'type' => 'amino_acid_mutation',
             'name' => 'ste20-c2',
             'uniquename' => 'SPBC12C2.02c:allele-3',
             'gene_uniquename' => 'SPBC12C2.02c',

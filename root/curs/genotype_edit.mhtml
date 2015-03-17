@@ -4,6 +4,7 @@ $title
 $pub
 $multi_organism_mode
 $curs_root_uri
+$genotype_identifier => ''
 </%args>
 
 <div>
@@ -12,6 +13,7 @@ $curs_root_uri
    curs_root_uri => $curs_root_uri &>
 
 <div ng-controller="MultiAlleleCtrl" id="curs-multi-allele-select"
+     ng-init="init('<% $genotype_identifier %>')";
      class="curs-box ng-cloak">
     <div class="curs-box-title">
 Add alleles from the genes below until the genotype is fully specified.

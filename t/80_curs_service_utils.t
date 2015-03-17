@@ -773,7 +773,7 @@ cmp_deeply($allele_res,
             {
               'display_name' => 'ssm4delta(deletion)',
               'expression' => undef,
-              'allele_type' => 'deletion',
+              'type' => 'deletion',
               'description' => 'deletion',
               'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
               'name' => 'ssm4delta'
@@ -782,7 +782,7 @@ cmp_deeply($allele_res,
               'description' => 'G40A,K43E',
               'expression' => undef,
               'display_name' => 'ssm4KE(G40A,K43E)',
-              'allele_type' => 'mutation of single amino acid residue',
+              'type' => 'mutation of single amino acid residue',
               'name' => 'ssm4KE',
               'uniquename' => 'SPAC27D7.13c:aaaa0007-2'
             },
@@ -792,11 +792,11 @@ cmp_deeply($allele_res,
               'description' => 'del_100-200',
               'expression' => undef,
               'display_name' => 'ssm4-D4(del_100-200)',
-              'allele_type' => 'partial deletion, nucleotide'
+              'type' => 'partial deletion, nucleotide'
             },
             {
               'display_name' => 'ssm4delta(unknown)',
-              'allele_type' => 'deletion',
+              'type' => 'deletion',
               'uniquename' => 'SPAC27D7.13c:allele-1',
               'name' => 'ssm4delta'
             }
@@ -809,7 +809,7 @@ cmp_deeply($allele_res,
              {
                'display_name' => 'ste20-c1(K132A)',
                'description' => 'K132A',
-               'allele_type' => 'mutation of single amino acid residue',
+               'type' => 'mutation of single amino acid residue',
                'uniquename' => 'SPBC12C2.02c:allele-2',
                'name' => 'ste20-c1',
              },
@@ -817,13 +817,13 @@ cmp_deeply($allele_res,
                'name' => 'ste20-c2',
                'uniquename' => 'SPBC12C2.02c:allele-3',
                'description' => 'K132A,K144A',
-               'allele_type' => 'mutation of multiple amino acid residues',
+               'type' => 'mutation of multiple amino acid residues',
                'display_name' => 'ste20-c2(K132A,K144A)'
              },
              {
                'display_name' => 'ste20delta(del_x1)',
                'description' => 'del_x1',
-               'allele_type' => 'deletion',
+               'type' => 'deletion',
                'uniquename' => 'SPBC12C2.02c:allele-1',
                'name' => 'ste20delta'
              }
@@ -842,12 +842,12 @@ my $expected_genotype_detail_res =
         'expression' => undef,
         'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
         'display_name' => 'ssm4delta(deletion)',
-        'allele_type' => 'deletion',
+        'type' => 'deletion',
         'name' => 'ssm4delta',
         'description' => 'deletion'
       },
       {
-        'allele_type' => 'deletion',
+        'type' => 'deletion',
         'name' => 'SPCC63.05delta',
         'description' => 'deletion',
         'display_name' => 'SPCC63.05delta(deletion)',

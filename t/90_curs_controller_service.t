@@ -81,12 +81,12 @@ test_psgi $app, sub {
                    'name' => 'ssm4delta',
                    'expression' => undef,
                    'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
-                   'allele_type' => 'deletion',
+                   'type' => 'deletion',
                    'description' => 'deletion'
                  },
                  {
                    'uniquename' => 'SPCC63.05:aaaa0007-1',
-                   'allele_type' => 'deletion',
+                   'type' => 'deletion',
                    'description' => 'deletion',
                    'display_name' => 'SPCC63.05delta(deletion)',
                    'expression' => undef,

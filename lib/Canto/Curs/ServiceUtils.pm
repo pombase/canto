@@ -320,7 +320,7 @@ sub _allele_details_hash
     uniquename => $allele->primary_identifier(),
     name => $allele->name(),
     description => $allele->description(),
-    allele_type => $allele->type(),
+    type => $allele->type(),
     expression => $allele->expression(),
     display_name => $display_name,
   }

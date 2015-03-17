@@ -64,12 +64,12 @@ with 'Canto::Chado::ChadoLookup';
                display_name: "a pretty name for the user",
                uniquename: "database unique identifier for the allele",
                name: "allele name"
-               allele_type: "allele type"
+               type: "allele type"
              }, { < next match > }, ... ]
            Notes:
              - the "name" field of each returned match should have the
                search_string argument as a prefix
-             - the "allele_type" should be one of the entries in the
+             - the "type" should be one of the entries in the
                allele_type_list configuration map in canto.yaml
            Example result searching for "rad":
              [{
@@ -77,14 +77,14 @@ with 'Canto::Chado::ChadoLookup';
                "display_name": "ste20+(wild type)",
                "uniquename": "SPBC12C2.02c:allele-5",
                "name": "ste20+",
-               "allele_type": "wild type"
+               "type": "wild type"
              },
              {
                "uniquename": "SPBC12C2.02c:allele-3",
                "display_name": "ste20delta(deletion)",
                "description": "deletion",
                "name": "ste20delta",
-               "allele_type": "deletion"
+               "type": "deletion"
              }]
 
 =cut
@@ -161,10 +161,11 @@ sub lookup
                                                    $_->{description},
                                                    $_->{type});
     $_->{display_name} = $display_name;
-    $_->{allele_type} =
+    $_->{type} =
       Canto::Curs::Utils::canto_allele_type($self->config(),
                                             $_->{allele_type},
                                             $_->{description});
+    delete $_->{allele_type};
     $_;
   } @res ];
 }
@@ -181,7 +182,7 @@ sub lookup
                "name": "ste20+",
                "description": "wild type",
                "display_name": "ste20+(wild type)",
-               "allele_type": "wild type"
+               "type": "wild type"
              }
            or undef if no allele is found
 
@@ -224,13 +225,13 @@ sub lookup_by_uniquename
     my $display_name =
       Canto::Curs::Utils::make_allele_display_name($allele->name(),
                                                    $props{description},
-                                                   $props{allele_type});
+                                                   $props{type});
     return {
       uniquename => $uniquename,
       display_name => $display_name,
       name => $allele->name(),
       description => $props{description},
-      allele_type => $props{allele_type},
+      type => $props{allele_type},
       gene_uniquename => $gene_uniquename,
     }
   }

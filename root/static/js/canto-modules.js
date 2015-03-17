@@ -119,6 +119,23 @@ canto.service('Curs', function($http) {
     }
   };
 
+  this.details = function(key, args) {
+    var data = null;
+
+    if (typeof(args) === 'undefined') {
+      args = [];
+    }
+
+    var url = curs_root_uri + '/ws/' + key + '/details/';
+
+    if (args.length > 0 && typeof(args[args.length - 1]) === 'object') {
+      data = args.pop();
+      return $http.post(url + args.join('/'), data);
+    } else {
+      return $http.get(url + args.join('/'));
+    }
+  };
+
   this.add = function(key, args) {
     if (typeof(args) === 'undefined') {
       args = [];
@@ -1061,8 +1078,8 @@ var alleleNameComplete =
                 allele_primary_identifier: el.uniquename,
                 display_name: el.display_name,
                 description: el.description,
-                allele_type: el.allele_type,
-                allele_expression: el.expression
+                type: el.type,
+                expression: el.expression
               };
             });
         };
@@ -1083,8 +1100,8 @@ var alleleNameComplete =
             } else {
               scope.allelePrimaryIdentifier = ui.item.allele_primary_identifier;
             }
-            if (typeof(ui.item.allele_type) === 'undefined' ||
-                ui.item.allele_type === 'unknown') {
+            if (typeof(ui.item.type) === 'undefined' ||
+                ui.item.type === 'unknown') {
               scope.type = '';
             } else {
               scope.alleleType = ui.item.allele_type;
@@ -1397,6 +1414,18 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
 
   $scope.env = {
     curs_config_promise: CantoConfig.get('curs_config')
+  };
+
+  $scope.init = function(genotype_identifier) {
+    if (genotype_identifier) {
+      $scope.data.genotype_identifier = genotype_identifier;
+
+      Curs.details('genotype', ['by_identifier', $scope.data.genotype_identifier])
+        .success(function(genotype_details) {
+          $scope.alleles = genotype_details.alleles;
+          $scope.data.genotype_name = genotype_details.name;
+        });
+    }
   };
 
   $scope.$watch('alleles',

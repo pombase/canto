@@ -1802,7 +1802,36 @@ sub feature_add : Chained('feature') PathPart('add')
   }
 
   $st->{title} = "Add a $feature_type";
-  $st->{template} = "curs/${feature_type}_add.mhtml";
+  $st->{template} = "curs/${feature_type}_edit.mhtml";
+}
+
+sub feature_edit : Chained('feature') PathPart('edit')
+{
+  my ($self, $c, $genotype_id) = @_;
+
+  my $st = $c->stash();
+  $st->{show_title} = 1;
+  my $feature_type = $st->{feature_type};
+
+  my $schema = $st->{schema};
+
+  if ($feature_type eq 'genotype') {
+    my $genotype = $schema->find_with_type('Genotype', $genotype_id);
+
+    $st->{genotype_identifier} = $genotype->identifier();
+
+    _set_allele_select_stash($c);
+
+    $st->{feature} = $genotype;
+    $st->{features} = [$genotype];
+  } else {
+    die "can't edit feature type: $feature_type\n";
+  }
+
+  my $display_name = $st->{feature}->display_name();
+
+  $st->{title} = "Editing: $display_name";
+  $st->{template} = "curs/${feature_type}_edit.mhtml";
 }
 
 sub _decode_json_content
