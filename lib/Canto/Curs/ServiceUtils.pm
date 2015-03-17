@@ -409,12 +409,25 @@ sub _get_genotype
 {
   my $self = shift;
 
-  my $genotype_id = shift;
+  my $query_type = shift;
+  my $arg = shift;
 
   my $curs_schema = $self->curs_schema();
   my $genotype_rs = $curs_schema->resultset('Genotype');
 
-  my $genotype = $genotype_rs->find({ genotype_id => $genotype_id });
+  my %find_arg = ();
+
+  if ($query_type eq 'by_id') {
+    $find_arg{genotype_id} = $arg;
+  } else {
+    $find_arg{identifier} = $arg;
+  }
+
+  my $genotype = $genotype_rs->find(\%find_arg);
+
+  if (!$genotype) {
+    return undef;
+  }
 
   return _genotype_details_hash($genotype, 1);
 }
@@ -445,7 +458,13 @@ sub details_for_service
   my $proc = $details_for_service_subs{$type};
 
   if (defined $proc) {
-    return $proc->($self, @args);
+    my $res = $proc->($self, @args);
+
+    if ($res) {
+      return $res;
+    } else {
+      return {};
+    }
   } else {
     die "unknown list type: $type\n";
   }

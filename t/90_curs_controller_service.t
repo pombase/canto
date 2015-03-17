@@ -63,7 +63,7 @@ test_psgi $app, sub {
   my $cb = shift;
 
   # retrieve a single genotype
-  my $uri = new URI("$root_url/ws/genotype/details/$first_genotype_id");
+  my $uri = new URI("$root_url/ws/genotype/details/by_id/$first_genotype_id");
 
   my $req = HTTP::Request->new(GET => $uri);
 

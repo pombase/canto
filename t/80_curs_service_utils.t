@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 56;
+use Test::More tests => 57;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -830,35 +830,46 @@ cmp_deeply($allele_res,
            ]);
 
 
+my $expected_genotype_detail_res =
+  {
+    'name' => 'h+ SPCC63.05delta ssm4KE',
+    'identifier' => 'aaaa0007-genotype-test-1',
+    'allele_string' => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
+    'genotype_id' => 1,
+    'display_name' => 'h+ SPCC63.05delta ssm4KE',
+    'alleles' => [
+      {
+        'expression' => undef,
+        'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+        'display_name' => 'ssm4delta(deletion)',
+        'allele_type' => 'deletion',
+        'name' => 'ssm4delta',
+        'description' => 'deletion'
+      },
+      {
+        'allele_type' => 'deletion',
+        'name' => 'SPCC63.05delta',
+        'description' => 'deletion',
+        'display_name' => 'SPCC63.05delta(deletion)',
+        'uniquename' => 'SPCC63.05:aaaa0007-1',
+        'expression' => undef
+      }
+    ],
+  };
+
 my $genotype_detail_res =
-  $service_utils->details_for_service('genotype', $first_genotype->genotype_id());
+  $service_utils->details_for_service('genotype', 'by_id',
+                                      $first_genotype->genotype_id());
 
 cmp_deeply($genotype_detail_res,
-           {
-             'name' => 'h+ SPCC63.05delta ssm4KE',
-             'identifier' => 'aaaa0007-genotype-test-1',
-             'allele_string' => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
-             'genotype_id' => 1,
-             'display_name' => 'h+ SPCC63.05delta ssm4KE',
-             'alleles' => [
-               {
-                 'expression' => undef,
-                 'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
-                 'display_name' => 'ssm4delta(deletion)',
-                 'allele_type' => 'deletion',
-                 'name' => 'ssm4delta',
-                 'description' => 'deletion'
-               },
-               {
-                 'allele_type' => 'deletion',
-                 'name' => 'SPCC63.05delta',
-                 'description' => 'deletion',
-                 'display_name' => 'SPCC63.05delta(deletion)',
-                 'uniquename' => 'SPCC63.05:aaaa0007-1',
-                 'expression' => undef
-               }
-             ],
-           });
+           $expected_genotype_detail_res);
+
+$genotype_detail_res =
+  $service_utils->details_for_service('genotype', 'by_identifier',
+                                      $first_genotype->identifier());
+
+cmp_deeply($genotype_detail_res,
+           $expected_genotype_detail_res);
 
 
 my $add_gene_result = $service_utils->add_gene_by_identifier('SPBC12C2.02c');
