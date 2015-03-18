@@ -97,6 +97,18 @@ canto.filter('breakExtensions', function() {
   };
 });
 
+canto.filter('toTrusted', ['$sce', function($sce){
+  return function(text) {
+    return $sce.trustAsHtml(text);
+  };
+}]);
+
+canto.filter('addZeroWidthSpace', function () {
+  return function (item) {
+    return item.replace(/,/g, ',&#8203;');
+  }
+});
+
 canto.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });
