@@ -73,7 +73,11 @@ sub _allele_string
 
   return
     join " ", sort map {
-      _long_allele_identifier($_);
+      if (defined $_->name()) {
+        $_->name();
+      } else {
+        $_->display_name();
+      }
     } @alleles;
 }
 
