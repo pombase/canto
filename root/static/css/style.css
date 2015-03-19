@@ -813,7 +813,7 @@ div.clearall {
 
 .curs-box-body {
   margin: 0px;
-  padding: 10px;
+  padding: 5px;
 }
 
 #ferret-accept-term-details {
@@ -944,7 +944,7 @@ span.canto-select-buttons {
   font-size: 90%;
   float: left;
   width: 45%;
-  margin-right: 2%;
+  margin: 5px 10px 5px 5px;
 }
 
 .curs-finish-buttons {
