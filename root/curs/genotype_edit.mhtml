@@ -27,25 +27,31 @@ Add alleles from the genes below until the genotype is fully specified.
 
       <div class="row">
         <div class="col-sm-6 col-md-6">
-          <table class="list">
-            <thead>
-              <tr>
-                <th>Identifier</th>
-                <th>Name</th>
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="gene in genes">
-                <td>{{gene.primary_identifier}}</td>
-                <td>{{gene.primary_name}}</td>
-                <td>
-                  <button class="btn btn-primary btn-xs"
-                          ng-click="openAlleleEditDialog(gene.display_name, gene.primary_identifier, gene.gene_id)">Add allele ..</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div ng-hide="genes.length">
+            <img src="<% $c->uri_for('/static/images/spinner.gif') %>"/>
+            Loading genes ...
+          </div>
+          <div ng-show="genes.length">
+            <table class="list">
+              <thead>
+                <tr>
+                  <th>Identifier</th>
+                  <th>Name</th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="gene in genes">
+                  <td>{{gene.primary_identifier}}</td>
+                  <td>{{gene.primary_name}}</td>
+                  <td>
+                    <button class="btn btn-primary btn-xs"
+                            ng-click="openAlleleEditDialog(gene.display_name, gene.primary_identifier, gene.gene_id)">Add allele ..</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         <div class="col-sm-6 col-md-6">
           <div ng-show="alleles.length == 0">
