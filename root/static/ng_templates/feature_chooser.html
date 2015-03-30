@@ -3,7 +3,7 @@
           ng-options="feature.feature_id as feature.display_name for feature in features">
             <option value="">Choose a {{featureType}} ...</option>
   </select>
-  <span>
+  <span ng-if="featureType === 'gene'">
     <a ng-click="openSingleGeneAddDialog()">Add another gene ...</a>
   </span>
 </span>
