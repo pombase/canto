@@ -450,6 +450,12 @@ CREATE TABLE allele_genotype (
           $annotation->update();
         }
 
+        if ($allele_data->{type} eq 'unknown' &&
+            $allele_data->{description} eq 'deletion') {
+          warn "    allele " . ($allele_data->{name} // 'no_name') .
+            " with type 'unknown' has description 'deletion'\n";
+        }
+
         my $key = ($allele_data->{primary_identifier} // 'no_primary_id') . '-' .
           ($allele_data->{name} // 'no_name') . '-' .
           ($allele_data->{description} // 'no_description') . '-' .
