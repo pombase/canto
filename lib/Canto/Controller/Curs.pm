@@ -242,7 +242,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-      $path =~ m:/(ro|finish_form|reactivate_session|begin_approval|restart_approval|annotation/zipexport|ws/annotation/list):) {
+      $path =~ m:/(ro|finish_form|reactivate_session|begin_approval|restart_approval|annotation/zipexport|ws/\w+/list):) {
     $use_dispatch = 0;
   }
 
