@@ -94,6 +94,10 @@ sub make_ontology_annotation
         $annotation->annotation_id();
     }
 
+    if (@annotation_genotypes == 0) {
+      die "no genotype for annotation: ", $annotation->annotation_id();
+    }
+
     my $genotype = $annotation_genotypes[0];
 
     %genotype_details = (
