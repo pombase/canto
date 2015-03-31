@@ -94,6 +94,8 @@ requires 'Try::Tiny';
 requires 'URI::Escape';
 requires 'XML::Simple';
 requires 'Starman';
+requires 'Net::Server::SS::PreFork';
+requires 'Server::Starter';
 
 test_requires 'LWP::Protocol::PSGI';
 test_requires 'LWP::Protocol::https';
