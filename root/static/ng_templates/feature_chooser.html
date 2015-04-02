@@ -1,8 +1,13 @@
 <span>
-  <select class="form-control" ng-model="chosenFeatureId"
-          ng-options="feature.feature_id as feature.display_name for feature in features">
-            <option value="">Choose a {{featureType}} ...</option>
-  </select>
+  <span ng-if="!features">
+Loading ...
+  </span>
+  <span ng-if="features">
+    <select class="form-control" ng-model="chosenFeatureId"
+            ng-options="feature.feature_id as feature.display_name for feature in features">
+      <option value="">Choose a {{featureType}} ...</option>
+    </select>
+  </span>
   <span ng-if="featureType === 'gene'">
     <a ng-click="openSingleGeneAddDialog()">Add another gene ...</a>
   </span>
