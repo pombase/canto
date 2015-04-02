@@ -592,6 +592,7 @@ function featureChooserControlHelper($scope, $modal, CursGeneList,
       toaster.pop('note', "couldn't read the gene list from the server");
     });
   }
+
   if ($scope.featureType === 'gene') {
     getGenesFromServer();
   } else {
