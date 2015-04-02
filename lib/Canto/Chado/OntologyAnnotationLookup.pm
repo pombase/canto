@@ -185,9 +185,6 @@ sub lookup
   my $cached_value = $self->cache->get($cache_key);
 
   if (defined $cached_value) {
-use Data::Dumper;
-warn qq(returning cached result from Chado ontology lookup using key "$cache_key": ), Dumper([$cached_value]);
-
     return @{$cached_value};
   }
 
