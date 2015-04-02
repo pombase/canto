@@ -39,7 +39,7 @@ under the same terms as Perl itself.
 use strict;
 use warnings;
 use Moose;
-use Carp;
+use Carp qw(carp croak cluck);
 
 use JSON;
 
@@ -849,6 +849,18 @@ sub _category_from_type
   return $annotation_config->{category};
 }
 
+sub _make_error
+{
+  my $message = shift;
+
+  cluck "error in ServiceUtils: $message";
+
+  return {
+    status => 'error',
+    message => $message,
+  };
+}
+
 =head2
 
  Usage   : $service_utils->change_annotation($annotation_id, 'new'|'existing',
@@ -915,8 +927,8 @@ sub change_annotation
     $curs_schema->txn_rollback();
 
     chomp $_;
-    return { status => 'error',
-             message => $_ };
+
+    return _make_error($_);
   };
 }
 
@@ -943,15 +955,13 @@ sub create_annotation
   my $feature_id = $details->{feature_id};
 
   if (!defined $feature_id) {
-    return { status => 'error',
-             message => 'No feature_id passed to annotation creation service' };
+    return _make_error('No feature_id passed to annotation creation service');
   }
 
   my $annotation_type = $details->{annotation_type};
 
   if (!defined $annotation_type) {
-    return { status => 'error',
-             message => 'No annotation_type passed to annotation creation service' };
+    return _make_error('No annotation_type passed to annotation creation service');
   }
 
   my $curs_schema = $self->curs_schema();
@@ -988,8 +998,7 @@ sub create_annotation
     $curs_schema->txn_rollback();
 
     chomp $_;
-    return { status => 'error',
-             message => $_ };
+    return _make_error($_);
   };
 }
 
@@ -1030,8 +1039,7 @@ sub delete_annotation
     $curs_schema->txn_rollback();
 
     chomp $_;
-    return { status => 'error',
-             message => $_ };
+    return _make_error($_);
   }
 }
 
@@ -1074,10 +1082,7 @@ sub add_gene_by_identifier
 
     return \%ret;
   } else {
-    return {
-      status => 'error',
-      message => qq(couldn't find gene "$gene_identifier"),
-    };
+    return _make_error(qq(couldn't find gene "$gene_identifier"));
   }
 }
 

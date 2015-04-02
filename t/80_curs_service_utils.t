@@ -1,7 +1,9 @@
 use strict;
 use warnings;
-use Test::More tests => 57;
+use Test::More tests => 63;
 use Test::Deep;
+
+use Capture::Tiny 'capture_stderr';
 
 use Canto::TestUtil;
 use Canto::Curs::ServiceUtils;
@@ -36,9 +38,9 @@ cmp_deeply($res,
             {
               'identifier' => 'aaaa0007-genotype-test-2',
               'name' => undef,
-              display_name => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
+              display_name => 'ssm4-D4(del_100-200)',
               genotype_id => 2,
-              allele_string => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
+              allele_string => 'ssm4-D4(del_100-200)',
             }
           ]);
 
@@ -84,7 +86,7 @@ cmp_deeply($res,
              {
               'name' => 'h+ cdc11-33 wtf22-a1',
               'identifier' => 'aaaa0007-test-genotype-2',
-              'allele_string' => 'cdc11-33(unknown) wtf22-a1(T11C)-amino_acid_mutation',
+              'allele_string' => 'cdc11-33 wtf22-a1',
               'display_name' => 'h+ cdc11-33 wtf22-a1',
               'allele_identifiers' => ['SPCC1739.11c:allele-1','SPCC576.16c:allele-1'],
             },
@@ -112,8 +114,8 @@ cmp_deeply($res,
             },
             {
               'name' => undef,
-              'allele_string' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
-              'display_name' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
+              'allele_string' => 'ssm4-D4(del_100-200)',
+              'display_name' => 'ssm4-D4(del_100-200)',
               'genotype_id' => 2,
               'identifier' => 'aaaa0007-genotype-test-2'
             },
@@ -121,7 +123,7 @@ cmp_deeply($res,
               'name' => 'h+ cdc11-33 ssm4delta',
               'display_name' => 'h+ cdc11-33 ssm4delta',
               'identifier' => 'aaaa0007-test-genotype-3',
-              'allele_string' => 'ssm4delta(deletion)',
+              'allele_string' => 'ssm4delta',
               'allele_identifiers' => [
                                         'SPAC27D7.13c:allele-1'
                                       ],
@@ -244,36 +246,49 @@ cmp_deeply(\@res_conditions, ['PECO:0000006', 'some free text cond']);
 
 
 # test illegal evidence_code
-$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                         'new',
-                                         {
-                                           key => $curs_key,
-                                           evidence_code => "illegal",
-                                         });
+my $stderr = capture_stderr {
+  $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                           'new',
+                                           {
+                                             key => $curs_key,
+                                             evidence_code => "illegal",
+                                           });
+};
+
 is ($res->{status}, 'error');
-is ($res->{message}, 'no such evidence code: illegal');
+my $illegal_ev_code_message = 'no such evidence code: illegal';
+is ($res->{message}, $illegal_ev_code_message);
+
+like ($stderr, qr/$illegal_ev_code_message/);
 
 
 # test illegal curs_key
-$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                         'new',
-                                         {
-                                           key => 'illegal',
-                                           evidence_code => "IDA",
-                                         });
+$stderr = capture_stderr {
+  $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                           'new',
+                                           {
+                                             key => 'illegal',
+                                             evidence_code => "IDA",
+                                           });
+};
 is ($res->{status}, 'error');
 is ($res->{message}, 'incorrect key');
+like ($stderr, qr/incorrect key/);
 
 
 # test illegal field type
-$res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                         'new',
-                                         {
-                                           key => $curs_key,
-                                           illegal => "something",
-                                         });
+$stderr = capture_stderr {
+  $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
+                                           'new',
+                                           {
+                                             key => $curs_key,
+                                             illegal => "something",
+                                           });
+};
 is ($res->{status}, 'error');
-is ($res->{message}, 'no such annotation field type: illegal');
+my $illegal_field_message = 'no such annotation field type: illegal';
+is ($res->{message}, $illegal_field_message);
+like ($stderr, qr/$illegal_field_message/);
 
 
 # test setting with_gene/with_or_from_identifier for a gene
@@ -323,11 +338,16 @@ is ($new_annotation->data()->{term_ontid}, 'GO:0022857');
 
 
 # test lack of information
-$res = $service_utils->create_annotation({
-                                           key => $curs_key,
-                                         });
+$stderr = capture_stderr {
+  $res = $service_utils->create_annotation({
+    key => $curs_key,
+  });
+};
 is ($res->{status}, 'error');
-is ($res->{message}, 'No feature_id passed to annotation creation service');
+my $lack_of_info_message = 'No feature_id passed to annotation creation service';
+is ($res->{message}, $lack_of_info_message);
+like ($stderr, qr/$lack_of_info_message/);
+
 
 # delete
 $res = $service_utils->delete_annotation({
@@ -347,15 +367,18 @@ my $genetic_interaction_annotation =
 
 
 # test illegal field type
-$res = $service_utils->change_annotation($genetic_interaction_annotation->annotation_id(),
-                                         'new',
-                                         {
-                                           key => $curs_key,
-                                           illegal => "something",
-                                         });
-
+$stderr = capture_stderr {
+  $res = $service_utils->change_annotation($genetic_interaction_annotation->annotation_id(),
+                                           'new',
+                                           {
+                                             key => $curs_key,
+                                             illegal => "something",
+                                           });
+};
 is ($res->{status}, 'error');
-is ($res->{message}, 'no such annotation field type: illegal');
+my $illegal_field_type_message = 'no such annotation field type: illegal';
+is ($res->{message}, $illegal_field_type_message);
+like ($stderr, qr/$illegal_field_type_message/);
 
 
 # test editing
@@ -605,10 +628,10 @@ cmp_deeply($annotation_res,
               'with_gene_id' => undef,
               'conditions' => [],
               'with_or_from_display_name' => undef,
-              'genotype_display_name' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
+              'genotype_display_name' => 'ssm4-D4(del_100-200)',
               'submitter_comment' => undef,
               'feature_type' => 'genotype',
-              'feature_display_name' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
+              'feature_display_name' => 'ssm4-D4(del_100-200)',
               'term_ontid' => 'FYPO:0000017',
               'term_name' => 'elongated cell',
               'is_not' => 0,
@@ -890,11 +913,14 @@ cmp_deeply($add_gene_result,
              'status' => 'success'
            });
 
-$add_gene_result = $service_utils->add_gene_by_identifier('dummy');
+$stderr = capture_stderr {
+  $add_gene_result = $service_utils->add_gene_by_identifier('dummy');
+};
 
+my $add_dummy_gene_message = qq(couldn\'t find gene "dummy");
 cmp_deeply($add_gene_result,
            {
              'status' => 'error',
-             'message' => 'couldn\'t find gene "dummy"',
+             'message' => $add_dummy_gene_message,
            });
-
+like ($stderr, qr/$add_dummy_gene_message/);
