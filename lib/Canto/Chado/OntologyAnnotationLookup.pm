@@ -422,10 +422,6 @@ warn qq(returning cached result from Chado ontology lookup using key "$cache_key
     $ret_val = [0, []];
   }
 
-use Data::Dumper;
-warn qq(adding result to cache in Chado ontology lookup with cache key "$cache_key": ),
-  Dumper([$ret_val]);
-
   $self->cache()->set($cache_key, $ret_val, "2 hours");
 
   return @$ret_val;
