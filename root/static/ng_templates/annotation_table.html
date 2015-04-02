@@ -2,10 +2,13 @@
 <div ng-if="data.annotations !== null && (data.annotations.length > 0 || featureStatusFilter === 'new')">
   <span class="title sect-title">
     <span ng-if="featureStatusFilter === 'new'">
-New {{annotationType.display_name}} annotations from this session
+      New {{annotationType.display_name}} annotations from this session
     </span>
     <span ng-if="featureStatusFilter === 'existing'">
-Existing {{annotationType.display_name}} annotations
+      Existing {{annotationType.display_name}} annotations
+    </span>
+    <span ng-show="featureFilterDisplayName">
+      for {{featureFilterDisplayName}}
     </span>
   </span>
   <span ng-if="featureStatusFilter === 'new' && data.hasFeatures && !read_only_curs">
