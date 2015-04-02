@@ -1810,7 +1810,7 @@ var annotationEditDialogCtrl =
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
     $scope.status = {
-      // validEvidence: false;
+      validEvidence: false
     };
 
     copyObject(args.annotation, $scope.annotation);
