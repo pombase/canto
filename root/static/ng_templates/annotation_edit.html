@@ -139,8 +139,8 @@
             <feature-chooser feature-type="{{annotationType.feature_type}}"
                              chosen-feature-id="annotation.interacting_gene_id"></feature-chooser>
           </div>
-          <span ng-show="!isValidInteractingGene()"
-                class="help-block">Please select a gene</span>
+          <span ng-show="isValidFeature() && !isValidInteractingGene()"
+                class="help-block">Please select an interacting gene</span>
         </td>
       </tr>
 
