@@ -17,7 +17,7 @@
           class="help-block">Please select a 'with' gene</div>
   </div>
 
-  <div ng-show="showConditions()" class="curs-evidence-conditions">
+  <div ng-if="showConditions()" class="curs-evidence-conditions">
     Please add experimental conditions:
     <condition-picker conditions="conditions"></condition-picker>
   </div>

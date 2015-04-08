@@ -1806,7 +1806,10 @@ canto.controller('SubmitToCuratorsCtrl', SubmitToCuratorsCtrl);
 var annotationEditDialogCtrl =
   function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
            CantoConfig, toaster, args) {
-    $scope.annotation = { conditions: [] };
+    $scope.annotation = { };
+    if (AnnotationTypeConfig.can_have_conditions) {
+      $scope.annotation.conditions = [];
+    }
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
