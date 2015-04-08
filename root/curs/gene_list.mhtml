@@ -74,7 +74,9 @@ my @all_genes = map {
   Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $_);
 } Canto::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all();
 
-my @gene_hashes = map {
+my @gene_hashes = sort {
+     $a->{identifier} cmp $b->{identifier};
+   } map {
      my $extra_text = '';
      my @annotations = $_->all_annotations(include_with => 0)->all();
      my $annotation_count = scalar(@annotations);
