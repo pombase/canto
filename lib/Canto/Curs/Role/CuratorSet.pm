@@ -73,8 +73,8 @@ sub set_annotation_curator
   my ($state, $submitter, $gene_count) = $self->state()->get_state($schema);
 
   if ($state eq APPROVAL_IN_PROGRESS) {
-    $curator_name = $self->get_metadata($self->schema(), 'approver_name');
-    $curator_email = $self->get_metadata($self->schema(), 'approver_email');
+    $curator_name = $self->get_metadata($schema, 'approver_name');
+    $curator_email = $self->get_metadata($schema, 'approver_email');
   } else {
     ($curator_email, $curator_name, $curator_known_as,
      $accepted_date, $community_curated) =
