@@ -909,6 +909,8 @@ var interactionWizardCtrl =
     };
 
     $scope.addInteractionAndEvidence = function() {
+      $scope.postInProgress = true;
+      toaster.pop('info', 'Creating interaction ...');
       simpleHttpPost(toaster, $http, '../add_interaction/' + $scope.annotationTypeName,
                      { 
                        evidence_code: $scope.data.evidence_code,
