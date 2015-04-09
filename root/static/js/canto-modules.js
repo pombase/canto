@@ -1815,6 +1815,7 @@ var annotationEditDialogCtrl =
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
+    $scope.featureEditable = args.featureEditable;
     $scope.status = {
       validEvidence: false
     };
@@ -1888,7 +1889,7 @@ canto.controller('AnnotationEditDialogCtrl',
 
 
 
-function startEditing($modal, annotationTypeName, annotation, currentFeatureDisplayName, newlyAdded) {
+function startEditing($modal, annotationTypeName, annotation, currentFeatureDisplayName, newlyAdded, featureEditable) {
   var editInstance = $modal.open({
     templateUrl: app_static_path + 'ng_templates/annotation_edit.html',
     controller: 'AnnotationEditDialogCtrl',
@@ -1902,7 +1903,8 @@ function startEditing($modal, annotationTypeName, annotation, currentFeatureDisp
           annotationTypeName: annotationTypeName,
           currentFeatureDisplayName: currentFeatureDisplayName,
           newlyAdded: newlyAdded,
-        };
+          featureEditable: featureEditable,
+       };
       }
     }
   });
@@ -1944,9 +1946,10 @@ var annotationTableCtrl =
           if ($scope.featureIdFilter) {
             template.feature_id = $scope.featureIdFilter;
           }
+          var featureEditable = !$scope.featureIdFilter;
           var newAnnotation = makeNewAnnotation(template);
           var editPromise =
-            startEditing($modal, $scope.annotationTypeName, newAnnotation, $scope.featureFilterDisplayName, true);
+            startEditing($modal, $scope.annotationTypeName, newAnnotation, $scope.featureFilterDisplayName, true, featureEditable);
 
           editPromise.then(function(editedAnnotation) {
             $scope.data.annotations.push(editedAnnotation);
@@ -2045,9 +2048,12 @@ var annotationTableRow =
             $scope.annotationType = annotationType;
           });
 
+        var featureEditable = !$scope.featureIdFilter;
+
         $scope.edit = function() {
           var editPromise =
-            startEditing($modal, annotation.annotation_type, $scope.annotation, undefined, false);
+            startEditing($modal, annotation.annotation_type, $scope.annotation,
+                         $scope.featureFilterDisplayName, false, featureEditable);
 
           editPromise.then(function(editedAnnotation) {
             $scope.annotation = editedAnnotation;
@@ -2060,7 +2066,8 @@ var annotationTableRow =
         $scope.duplicate = function() {
           var newAnnotation = makeNewAnnotation($scope.annotation);
           var editPromise = startEditing($modal, annotation.annotation_type,
-                                         newAnnotation, undefined, true);
+                                         newAnnotation, $scope.featureFilterDisplayName,
+                                         true, featureEditable);
 
           editPromise.then(function(editedAnnotation) {
             // FIXME: $scope.data.annotations is from the parent scope so this

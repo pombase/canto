@@ -18,10 +18,10 @@
           {{displayAnnotationFeatureType}}
         </td>
         <td>
-          <div ng-if="newlyAdded && currentFeatureDisplayName">
+          <div ng-if="!featureEditable">
             {{currentFeatureDisplayName}}
           </div>
-          <div ng-if="!(newlyAdded && currentFeatureDisplayName)">
+          <div ng-if="featureEditable">
             <feature-chooser feature-type="{{annotationType.feature_type}}"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
             <span ng-show="!isValidFeature()"
@@ -36,10 +36,15 @@
           {{displayAnnotationFeatureType}}
         </td>
         <td>
-          <feature-chooser feature-type="{{annotationType.feature_type}}"
-                           chosen-feature-id="annotation.feature_id"></feature-chooser>
-          <span ng-show="!isValidFeature()"
-                class="help-block">Please select a genotype</span>
+          <div ng-if="!featureEditable">
+            {{currentFeatureDisplayName}}
+          </div>
+          <div ng-if="featureEditable">
+            <feature-chooser feature-type="{{annotationType.feature_type}}"
+                             chosen-feature-id="annotation.feature_id"></feature-chooser>
+            <span ng-show="!isValidFeature()"
+                  class="help-block">Please select a genotype</span>
+          </div>
         </td>
       </tr>
 
