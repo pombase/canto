@@ -1423,6 +1423,8 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
                    };
   }
 
+  @options = sort { $a->{label} cmp $b->{label} } @options;
+
   $st->{title} = "Finalise annotation";
   $st->{show_title} = 0;
   $st->{template} = "curs/modules/${module_category}_transfer.mhtml";
