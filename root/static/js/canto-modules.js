@@ -2051,6 +2051,7 @@ var annotationTableRow =
         var featureEditable = !$scope.featureIdFilter;
 
         $scope.edit = function() {
+          // FIXME: featureFilterDisplayName is from the parent scope
           var editPromise =
             startEditing($modal, annotation.annotation_type, $scope.annotation,
                          $scope.featureFilterDisplayName, false, featureEditable);
