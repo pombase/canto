@@ -1416,7 +1416,11 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
     my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
 
     push @options, { value => $other_gene_proxy->gene_id(),
-                     label => $other_gene_proxy->long_display_name() };
+                     label => $other_gene_proxy->long_display_name(),
+                     container_attributes => {
+                       class => 'checkbox-gene-list',
+                     }
+                   };
   }
 
   $st->{title} = "Finalise annotation";

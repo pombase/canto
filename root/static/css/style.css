@@ -1296,3 +1296,7 @@ a:not([href]) {
 
 .voffset1 { margin-top: 5px; }
 .voffset2 { margin-top: 10px; }
+
+.checkbox-gene-list {
+  display: block;
+}
