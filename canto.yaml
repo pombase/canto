@@ -1252,14 +1252,12 @@ evidence_types:
   'Far Western':
     name: 'Far Western (captures)'
   'Microarray RNA expression level data': ~
-  'Negative Genetic': ~
   'PCA':
     name: 'PCA (interacts with)'
   'Phenotypic Enhancement':
     name: 'Phenotypic Enhancement (phenotype enhanced by)'
   'Phenotypic Suppression':
     name: 'Phenotypic Suppression (rescued by)'
-  'Positive Genetic': ~
   'Protein-RNA':
     name: 'Protein-RNA (binds to RNA)'
   'Protein-peptide':
@@ -1480,10 +1478,8 @@ available_annotation_type_list:
       - Dosage Growth Defect
       - Dosage Lethality
       - Dosage Rescue
-      - Negative Genetic
       - Phenotypic Enhancement
       - Phenotypic Suppression
-      - Positive Genetic
       - Synthetic Growth Defect
       - Synthetic Haploinsufficiency
       - Synthetic Lethality
