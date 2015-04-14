@@ -1652,6 +1652,10 @@ curator_manager:
 # call with args: $config, $track_schema, $curs
     - set_pub_community_curatable
 
+# if set to "yes", always prompt for an annotation extension on the
+# annotation transfer page
+always_show_extensions: yes
+
 curs_config:
   # Possible reasons for a paper to have no genes, shown on the gene upload
   # page.  The "Other" reason will have a text box beside it.

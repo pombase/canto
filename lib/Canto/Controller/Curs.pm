@@ -2359,7 +2359,8 @@ sub annotation_transfer : Chained('top') PathPart('annotation/transfer') Args(1)
 
     my $current_user = $c->user();
 
-    if (defined $current_user && $current_user->is_admin()) {
+    if (defined $current_user && $current_user->is_admin() ||
+        $config->{always_show_extensions} && lc $config->{always_show_extensions} ne 'no') {
       my $existing_extension = $annotation->data()->{annotation_extension};
 
       my %extension_def = (
