@@ -1,6 +1,7 @@
 <div>
     <div class="row">
       <div class="col-sm-5 col-md-5">
+Select one or more genes to find matching genotypes:
         <gene-selector selected-genes="data.searchGenes"></gene-selector>
       </div>
       <div class="col-sm-7 col-md-7">
@@ -9,7 +10,7 @@
         </div>
         <div ng-hide="data.waitingForServer">
           <div ng-show="data.filteredGenotypes.length > 0">
-Matching genotypes:
+Matches:
             <genotype-list-view genotype-list="data.filteredGenotypes"></genotype-list-view>
           </div>
           <div ng-show="data.filteredGenotypes.length == 0">
