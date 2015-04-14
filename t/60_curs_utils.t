@@ -13,6 +13,7 @@ my $config = $test_util->config();
 my $schema = $test_util->track_schema();
 
 my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
+
 sub check_new_annotations
 {
   my $exp_term_ontid = shift // 'GO:0055085';
@@ -121,8 +122,8 @@ sub check_new_annotations
                  'publication_uniquename' => 'PMID:19756689',
                  'feature_type' => 'genotype',
                  'feature_id' => 2,
-                 'genotype_display_name' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
-                 'feature_display_name' => 'ssm4-D4(del_100-200)-partial-deletion-nucleotide',
+                 'genotype_display_name' => 'ssm4-D4(del_100-200)',
+                 'feature_display_name' => 'ssm4-D4(del_100-200)',
                  'is_not' => 0,
                  'evidence_code' => 'Co-immunoprecipitation experiment',
                  'annotation_type_abbreviation' => '',
