@@ -76,7 +76,7 @@ sub _allele_string
       if (defined $_->name()) {
         $_->name();
       } else {
-        $_->display_name();
+        _long_allele_identifier($_);
       }
     } @alleles;
 }
