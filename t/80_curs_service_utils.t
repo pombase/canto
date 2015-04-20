@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 63;
+use Test::More tests => 64;
 use Test::Deep;
 
 use Capture::Tiny 'capture_stderr';
@@ -924,3 +924,16 @@ cmp_deeply($add_gene_result,
              'message' => $add_dummy_gene_message,
            });
 like ($stderr, qr/$add_dummy_gene_message/);
+
+# curator details
+my $curator_detail_res =
+  $service_utils->details_for_service('curator');
+
+cmp_deeply($curator_detail_res,
+          {
+            'curator_name' => 'Some Testperson',
+            'curator_known_as' => undef,
+            'curator_email' => 'some.testperson@pombase.org',
+            'community_curated' => JSON::true,
+            'accepted_date' => '2012-02-15 13:45:00'
+          });

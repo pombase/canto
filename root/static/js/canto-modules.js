@@ -1810,7 +1810,7 @@ canto.controller('SubmitToCuratorsCtrl', SubmitToCuratorsCtrl);
 
 var annotationEditDialogCtrl =
   function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
-           CantoConfig, toaster, args) {
+           Curs, toaster, args) {
     $scope.annotation = { };
     if (AnnotationTypeConfig.can_have_conditions) {
       $scope.annotation.conditions = [];
@@ -1875,6 +1875,11 @@ var annotationEditDialogCtrl =
       $modalInstance.dismiss('cancel');
     };
 
+    Curs.details('curator')
+      .success(function(curator_details) {
+        $scope.curatorDetails = curator_details;
+      });
+
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
       .then(function(annotationType) {
         $scope.annotationType = annotationType;
@@ -1886,7 +1891,7 @@ var annotationEditDialogCtrl =
 
 canto.controller('AnnotationEditDialogCtrl',
                  ['$scope', '$modalInstance', 'AnnotationProxy',
-                  'AnnotationTypeConfig', 'CantoConfig', 'toaster',
+                  'AnnotationTypeConfig', 'Curs', 'toaster',
                   'args',
                   annotationEditDialogCtrl]);
 

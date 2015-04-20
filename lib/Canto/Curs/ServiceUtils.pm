@@ -62,6 +62,8 @@ has state => (is => 'rw', init_arg => undef,
               isa => 'Canto::Curs::State', lazy_build => 1);
 has metadata_storer => (is => 'rw', init_arg => undef, lazy_build => 1,
                         isa => 'Canto::Curs::MetadataStorer');
+has curator_manager => (is => 'rw', init_arg => undef, lazy_build => 1,
+                        isa => 'Canto::Track::CuratorManager');
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::MetadataAccess';
@@ -100,6 +102,13 @@ sub _build_genotype_lookup
   my $self = shift;
 
   return Canto::Track::get_adaptor($self->config(), 'genotype');
+}
+
+sub _build_curator_manager
+{
+  my $self = shift;
+
+  return Canto::Track::CuratorManager->new(config => $self->config());
 }
 
 # return a list of conditions used by this session
@@ -432,9 +441,31 @@ sub _get_genotype
   return _genotype_details_hash($genotype, 1);
 }
 
+sub _get_curator_details
+{
+  my $self = shift;
+
+  my $curs_key = $self->get_metadata($self->curs_schema(), 'curs_key');
+
+  my $curator_manager = $self->curator_manager();
+
+  my ($curator_email, $curator_name, $curator_known_as,
+      $accepted_date, $community_curated) =
+        $self->state()->curator_manager()->current_curator($curs_key);
+
+  return {
+    curator_email => $curator_email,
+    curator_name => $curator_name,
+    curator_known_as => $curator_known_as,
+    accepted_date => $accepted_date,
+    community_curated => $community_curated ? JSON::true : JSON::false,
+  };
+}
+
 my %details_for_service_subs =
   (
     genotype => \&_get_genotype,
+    curator => \&_get_curator_details,
   );
 
 =head2 details_for_service
