@@ -2603,8 +2603,8 @@ sub ws_list : Chained('ws') PathPart('list')
 
 =head2 ws_details
 
- Function: Web service for returning information about out Curs object
- Args    : $type - object type from the stash
+ Function: Web service for returning information about a Curs object
+ Args    : $ws_type - object type from the stash (from sub ws)
            $id   - the object id (eg. geneotype_id)
 
 =cut
