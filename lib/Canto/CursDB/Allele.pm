@@ -170,9 +170,8 @@ sub display_name
 =head2 long_identifier
 
  Usage   : my $long_identifier = $allele->long_identifier();
- Function: Return a unique long identifier for this allele that includes all
-           fields, eg.
-           "ssm4KE(G40A,K43E)-mutation_of_single_amino_acid_residue[overexpression]"
+ Function: Return a long display string for this allele that includes the expresion
+           eg. "ssm4KE(G40A,K43E)[overexpression]"
 
 =cut
 
@@ -180,14 +179,7 @@ sub long_identifier
 {
   my $self = shift;
 
-  (my $type_tidy = $self->type()) =~ s/[\s,]+/-/g;
-
   my $ret = $self->display_name();
-
-  if ($ret !~ /$type_tidy/) {
-    # prevent "ssm4delta(deletion)-deletion"
-    $ret .= '-' . $type_tidy;
-  }
 
   $ret .= ($self->expression() ? '[' . $self->expression() . ']' : '');
 

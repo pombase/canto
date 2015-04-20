@@ -32,4 +32,4 @@ my $genotype_from_chado =
 is ($genotype_from_chado->identifier(), $curs_key . '-test-genotype-3');
 is ($genotype_from_chado->name(), 'h+ cdc11-33 ssm4delta');
 is ($genotype_from_chado->alleles(), 1);
-is (($genotype_from_chado->alleles())[0]->display_name(), 'ssm4delta(deletion)');
+is (($genotype_from_chado->alleles())[0]->display_name(), 'ssm4delta');

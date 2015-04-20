@@ -33,7 +33,7 @@ cmp_deeply($res,
               'name' => 'h+ SPCC63.05delta ssm4KE',
               display_name => 'h+ SPCC63.05delta ssm4KE',
               genotype_id => 1,
-              allele_string => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
+              allele_string => 'ssm4delta SPCC63.05delta',
             },
             {
               'identifier' => 'aaaa0007-genotype-test-2',
@@ -66,7 +66,7 @@ cmp_deeply($res,
               name => 'h+ SPCC63.05delta ssm4KE',
               display_name => 'h+ SPCC63.05delta ssm4KE',
               genotype_id => 1,
-              allele_string => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
+              allele_string => 'ssm4delta SPCC63.05delta',
             },
           ]);
 
@@ -107,7 +107,7 @@ cmp_deeply($res,
           [
             {
               'name' => 'h+ SPCC63.05delta ssm4KE',
-              'allele_string' => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
+              'allele_string' => 'ssm4delta SPCC63.05delta',
               'genotype_id' => 1,
               'display_name' => 'h+ SPCC63.05delta ssm4KE',
               'identifier' => 'aaaa0007-genotype-test-1'
@@ -794,7 +794,7 @@ my $allele_res = $service_utils->list_for_service('allele', 'SPAC27D7.13c', 'ssm
 cmp_deeply($allele_res,
            [
             {
-              'display_name' => 'ssm4delta(deletion)',
+              'display_name' => 'ssm4delta',
               'expression' => undef,
               'type' => 'deletion',
               'description' => 'deletion',
@@ -857,14 +857,14 @@ my $expected_genotype_detail_res =
   {
     'name' => 'h+ SPCC63.05delta ssm4KE',
     'identifier' => 'aaaa0007-genotype-test-1',
-    'allele_string' => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
+    'allele_string' => 'ssm4delta SPCC63.05delta',
     'genotype_id' => 1,
     'display_name' => 'h+ SPCC63.05delta ssm4KE',
     'alleles' => [
       {
         'expression' => undef,
         'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
-        'display_name' => 'ssm4delta(deletion)',
+        'display_name' => 'ssm4delta',
         'type' => 'deletion',
         'name' => 'ssm4delta',
         'description' => 'deletion'
@@ -873,7 +873,7 @@ my $expected_genotype_detail_res =
         'type' => 'deletion',
         'name' => 'SPCC63.05delta',
         'description' => 'deletion',
-        'display_name' => 'SPCC63.05delta(deletion)',
+        'display_name' => 'SPCC63.05delta',
         'uniquename' => 'SPCC63.05:aaaa0007-1',
         'expression' => undef
       }

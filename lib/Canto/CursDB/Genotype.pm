@@ -182,7 +182,7 @@ sub allele_string
 
   return
     join " ", map {
-      $_->display_name()
+      $_->long_identifier()
     } $self->alleles();
 }
 

@@ -73,11 +73,11 @@ test_psgi $app, sub {
 
   cmp_deeply($perl_res,
              {
-               'allele_string' => 'ssm4delta(deletion) SPCC63.05delta(deletion)',
+               'allele_string' => 'ssm4delta SPCC63.05delta',
                'genotype_id' => 1,
                'alleles' => [
                  {
-                   'display_name' => 'ssm4delta(deletion)',
+                   'display_name' => 'ssm4delta',
                    'name' => 'ssm4delta',
                    'expression' => undef,
                    'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
@@ -88,7 +88,7 @@ test_psgi $app, sub {
                    'uniquename' => 'SPCC63.05:aaaa0007-1',
                    'type' => 'deletion',
                    'description' => 'deletion',
-                   'display_name' => 'SPCC63.05delta(deletion)',
+                   'display_name' => 'SPCC63.05delta',
                    'expression' => undef,
                    'name' => 'SPCC63.05delta'
                  }

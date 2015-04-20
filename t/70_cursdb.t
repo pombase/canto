@@ -50,8 +50,8 @@ cmp_deeply(
       'description' => 'deletion',
       'type' => 'deletion',
       'expression' => undef,
-      'long_identifier' => 'SPCC63.05delta(deletion)',
-      'display_name' => 'SPCC63.05delta(deletion)',
+      'long_identifier' => 'SPCC63.05delta',
+      'display_name' => 'SPCC63.05delta',
     },
     {
       'name' => 'ssm4delta',
@@ -59,8 +59,8 @@ cmp_deeply(
       'description' => 'deletion',
       'type' => 'deletion',
       'expression' => undef,
-      'long_identifier' => 'ssm4delta(deletion)',
-      'display_name' => 'ssm4delta(deletion)',
+      'long_identifier' => 'ssm4delta',
+      'display_name' => 'ssm4delta',
     }
    ],
   [map {

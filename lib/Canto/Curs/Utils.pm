@@ -805,7 +805,8 @@ sub canto_allele_type
  Args    : $name - the allele name (can be undef)
            $description - the allele description (can be undef)
            $type - the allele type (deletion, unknown, ...)
- Returns : a display name of the form "name(description)"
+ Returns : a display name of the form "name(description)" or "name" (if the
+           description is "deletion" or "wild type")
 
 =cut
 
@@ -816,6 +817,11 @@ sub make_allele_display_name
   my $type = shift;
 
   $description ||= $type || 'unknown';
+
+  if ($type && ($type eq 'deletion' || $type =~ /^wild[\s_]?type$/)
+      && $name ne 'noname') {
+    return $name;
+  }
 
   return "$name($description)";
 }
