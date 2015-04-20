@@ -21,8 +21,15 @@ RUN apt-get update && apt-get install -y libmodule-install-perl libemail-sender-
 RUN cpan -i Lucene
 
 RUN cpan -i \
-    DBIx::Class::ResultSet::Data::Pageset Data::Rmap GO::Parser \
-    HTML::HTML5::Builder HTML::Mason MooseX::Test::Role Package::Alias \
+    DBIx::Class::ResultSet::Data::Pageset Data::Rmap GO::Parser
+
+RUN cpan -i \
+    Role::Tiny HTML::HTML5::Builder HTML::Mason
+
+RUN cpan -i \
+    MooseX::Test::Role Package::Alias
+
+RUN cpan -i \
     String::Similarity Text::MultiMarkdown
 
 RUN cpan -i \
