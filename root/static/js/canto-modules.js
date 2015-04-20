@@ -105,8 +105,11 @@ canto.filter('toTrusted', ['$sce', function($sce){
 
 canto.filter('addZeroWidthSpace', function () {
   return function (item) {
+    if (item == null) {
+      return null;
+    }
     return item.replace(/,/g, ',&#8203;');
-  }
+  };
 });
 
 canto.config(function($logProvider){
