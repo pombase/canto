@@ -92,15 +92,6 @@ has metadata_storer => (is => 'rw', init_arg => undef,
 has curator_manager => (is => 'rw', init_arg => undef,
                         isa => 'Canto::Track::CuratorManager');
 
-has gene_manager => (is => 'rw', init_arg => undef,
-                     isa => 'Canto::Curs::GeneManager');
-
-has allele_manager => (is => 'rw', init_arg => undef,
-                       isa => 'Canto::Curs::AlleleManager');
-
-has genotype_manager => (is => 'rw', init_arg => undef,
-                         isa => 'Canto::Curs::GenotypeManager');
-
 with 'Canto::Role::MetadataAccess';
 with 'Canto::Role::GAFFormatter';
 with 'Canto::Curs::Role::GeneResultSet';
@@ -131,21 +122,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{curs_key} = $curs_key;
   my $schema = Canto::Curs::get_schema($c);
-
-  if (!defined $self->gene_manager()) {
-    $self->gene_manager(Canto::Curs::GeneManager->new(config => $c->config(),
-                                                      curs_schema => $schema));
-  }
-
-  if (!defined $self->allele_manager()) {
-    $self->allele_manager(Canto::Curs::AlleleManager->new(config => $c->config(),
-                                                          curs_schema => $schema));
-  }
-
-  if (!defined $self->genotype_manager()) {
-    $self->genotype_manager(Canto::Curs::GenotypeManager->new(config => $c->config(),
-                                                              curs_schema => $schema));
-  }
 
   if (!defined $schema) {
     $c->forward('not_found');
@@ -636,7 +612,11 @@ sub gene_upload : Chained('top') Args(0) Form
 
     $st->{search_terms_text} = $search_terms_text;
 
-    my @res_list = $self->gene_manager()->find_and_create_genes(\@search_terms);
+    my $gene_manager =
+      Canto::Curs::GeneManager->new(config => $c->config(),
+                                    curs_schema => $schema);
+
+    my @res_list = $gene_manager->find_and_create_genes(\@search_terms);
 
     if (@res_list > 1) {
       # there was a problem
@@ -1772,10 +1752,15 @@ sub feature_view : Chained('feature') PathPart('view')
       if ($genotype_id =~ /^\d+$/) {
         $genotype = $schema->find_with_type('Genotype', $genotype_id);
       } else {
+        my $genotype_manager =
+          Canto::Curs::GenotypeManager->new(config => $c->config(),
+                                            curs_schema => $schema);
+
+
         # pull from Chado and store in CursDB, $genotype_id is an
         # identifier/uniquename
         $genotype =
-          $self->genotype_manager()->find_and_create_genotype($st->{curs_key}, $genotype_id);
+          $genotype_manager->find_and_create_genotype($st->{curs_key}, $genotype_id);
       }
 
       $st->{genotype} = $genotype;
@@ -1887,14 +1872,20 @@ sub genotype_store : Chained('feature') PathPart('store')
 
       my $curs_key = $st->{curs_key};
 
+      my $allele_manager =
+        Canto::Curs::AlleleManager->new(config => $c->config(),
+                                        curs_schema => $schema);
+
       for my $allele_data (@alleles_data) {
-        my $allele = $self->allele_manager()->allele_from_json($allele_data, $curs_key,
+        my $allele = $allele_manager->allele_from_json($allele_data, $curs_key,
                                                                \@alleles);
 
         push @alleles, $allele;
       }
 
-      my $genotype_manager = $self->genotype_manager();
+      my $genotype_manager =
+        Canto::Curs::GenotypeManager->new(config => $c->config(),
+                                          curs_schema => $schema);
 
       my $genotype = $genotype_manager->make_genotype($curs_key,
                                                       $genotype_name, \@alleles);
