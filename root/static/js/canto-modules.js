@@ -1164,6 +1164,9 @@ var alleleEditDialogCtrl =
       systemtic_id: args.gene_systemtic_id,
       gene_id: args.gene_id
     };
+    $scope.config = {
+      endogenousWildtypeAllowed: args.endogenousWildtypeAllowed,
+    };
     $scope.alleleData = {
       primary_identifier: '',
       name: '',
@@ -1481,6 +1484,17 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
 
   $scope.openAlleleEditDialog =
     function(gene_display_name, gene_systemtic_id, gene_id) {
+      var endogenousWildtypeAllowed = false;
+
+      // see: https://sourceforge.net/p/pombase/curation-tool/782/
+      $.map($scope.alleles,
+            function(allele) {
+              if (allele.gene_id == gene_id &&
+                  allele.type == 'wild type') {
+                endogenousWildtypeAllowed = true;
+              }
+            });
+
       var editInstance = $modal.open({
         templateUrl: 'alleleEdit.html',
         controller: 'AlleleEditDialogCtrl',
@@ -1492,7 +1506,8 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
             return {
               gene_display_name: gene_display_name,
               gene_systemtic_id: gene_systemtic_id,
-              gene_id: gene_id
+              gene_id: gene_id,
+              endogenousWildtypeAllowed: endogenousWildtypeAllowed,
             };
           }
         }

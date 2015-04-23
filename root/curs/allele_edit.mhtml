@@ -87,7 +87,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
               <input ng-model="alleleData.expression" name="curs-allele-expression"
                      type="radio" value="Overexpression" />
             </div>
-            <div ng-show="alleleData.type !== 'wild type'">
+            <div ng-show="alleleData.type !== 'wild type' || config.endogenousWildtypeAllowed">
               <label>Endogenous</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression"
                      type="radio" value="Endogenous" />
