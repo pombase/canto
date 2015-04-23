@@ -275,6 +275,7 @@ var keysForServer = {
   annotation_extension: true,
   annotation_type: true,
   evidence_code: true,
+  conditions: true,
   feature_id: true,
   feature_type: true,
 //  is_not: true,
@@ -1031,7 +1032,7 @@ canto.directive('annotationEvidence',
               // apply() is needed so the scope is update when a tag is added in
               // the Tagit field
               $scope.$apply(function() {
-                $scope.conditions = [];
+                $scope.conditions.length = 0;
                 $field.find('li .tagit-label').map(function(index, $elem) {
                   $scope.conditions.push( { name: $elem.textContent.trim() } );
                 });
@@ -1811,10 +1812,7 @@ canto.controller('SubmitToCuratorsCtrl', SubmitToCuratorsCtrl);
 var annotationEditDialogCtrl =
   function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
            Curs, toaster, args) {
-    $scope.annotation = { };
-    if (AnnotationTypeConfig.can_have_conditions) {
-      $scope.annotation.conditions = [];
-    }
+    $scope.annotation = { conditions: [] };
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
@@ -1885,6 +1883,10 @@ var annotationEditDialogCtrl =
         $scope.annotationType = annotationType;
         $scope.displayAnnotationFeatureType = capitalize(annotationType.feature_type);
         $scope.annotation.feature_type = annotationType.feature_type;
+
+        if (! annotationType.can_have_conditions) {
+          delete $scope.annotation.conditions;
+        }
       });
   };
 
