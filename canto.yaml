@@ -1099,6 +1099,7 @@ allele_type_list:
     description_required: false
     allele_name_required: true
     allow_expression_change: true
+    expression_required: true
     autopopulate_name: '@@gene_display_name@@+'
   - name: deletion
     export_type: deletion
