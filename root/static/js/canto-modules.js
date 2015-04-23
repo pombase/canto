@@ -1219,6 +1219,7 @@ var alleleEditDialogCtrl =
 
                       $scope.name_autopopulated = $scope.maybe_autopopulate();
                       $scope.alleleData.description = '';
+                      $scope.alleleData.expression = '';
                     });
                   });
 
@@ -1234,23 +1235,21 @@ var alleleEditDialogCtrl =
       return !$scope.current_type_config || !$scope.current_type_config.description_required || $scope.alleleData.description;
     };
 
+    $scope.isValidExpression = function() {
+      return $scope.current_type_config &&
+        (!$scope.current_type_config.expression_required ||
+         $scope.alleleData.expression);
+    };
+
     $scope.isExistingAllele = function() {
       return !!$scope.alleleData.primary_identifier;
     };
 
     $scope.isValid = function() {
       return $scope.isExistingAllele() ||
-        $scope.isValidType() &&
-        $scope.isValidName() && $scope.isValidDescription();
-      // evidence and expression if needed ...
+        ($scope.isValidType() && $scope.isValidName() &&
+         $scope.isValidDescription() && $scope.isValidExpression());
     };
-
-    // if (data ...) {
-    //   populate_dialog_from_data(...);
-    // }
-
-    //  var name_input = $allele_dialog.find('.curs-allele-name');
-    //  name_input.attr('placeholder', 'Allele name (optional)');
 
     // return the data from the dialog as an Object
     $scope.dialogToData = function($scope) {

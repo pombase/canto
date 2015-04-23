@@ -26,7 +26,7 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
       <table>
         <tr>
           <td>
-            Allele name:
+            Allele name
           </td>
           <td ng-class="{ 'has-error': !isValidName() }">
             <allele-name-complete allele-primary-identifier="alleleData.primary_identifier"
@@ -77,11 +77,14 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
           </td>
         </tr>
 
-        <tr class="curs-allele-expression ng-cloak" ng-show="!!alleleData.type && current_type_config.allow_expression_change">
+        <tr class="curs-allele-expression ng-cloak"
+            ng-show="!!alleleData.type && current_type_config != undefined && current_type_config.allow_expression_change">
           <td valign="top">
             Expression
           </td>
-          <td>
+          <td ng-class="{ 'has-error': !isValidExpression() }">
+            <div ng-show="!isValidExpression()"
+                 class="help-block">required for this allele type</div>
             <div>
               <label>Overexpression</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression"
