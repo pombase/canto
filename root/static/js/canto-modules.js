@@ -1409,8 +1409,8 @@ canto.controller('SingleGeneAddDialogCtrl',
                  ['$scope', '$modalInstance', '$q', 'toaster', 'CantoService', 'Curs',
                  singleGeneAddDialogCtrl]);
 
-canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig', 'Curs', 'toaster',
-                                     function($scope, $http, $modal, CantoConfig, Curs, toaster) {
+var multiAlleleCtrl =
+  function($scope, $http, $modal, CantoConfig, Curs, toaster) {
   $scope.alleles = [
   ];
   $scope.genes = [
@@ -1524,7 +1524,10 @@ canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig',
   $scope.isValid = function() {
     return $scope.alleles.length > 0;
   };
-}]);
+};
+
+canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig', 'Curs', 'toaster',
+                                     multiAlleleCtrl]);
 
 var GenotypeManageCtrl =
   function($scope, CursGenotypeList, CantoGlobals, toaster) {
