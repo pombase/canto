@@ -1,6 +1,6 @@
 "use strict";
 
-/*global $,document,application_root */
+/*global $,document,application_root,window */
 
 function last(a) {
   return a[a.length-1];
@@ -38,7 +38,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-  $(".sect .undisclosed-title, .sect .disclosed-title").each(function(i) {
+  $(".sect .undisclosed-title, .sect .disclosed-title").each(function() {
     $(this).click(function() {
       $(this).next().toggle();
       $(this).toggleClass('undisclosed-title');
@@ -187,7 +187,6 @@ var curs_home = {
 
 var canto_util = {
   show_message : function(title, message) {
-    var dialog_div = $('#curs-dialog');
     var html = '<div>' + message + '</div>';
     $('#curs-dialog').html(html);
     $('#curs-dialog').dialog({ modal: true,
@@ -305,11 +304,10 @@ $(document).ready(function() {
       var new_person_name = $dialog.find('.curs-person-picker-input').val();
       person_picker_add_person(this, new_person_name);
       return false;
-    } else {
-      $dialog.dialog('close');
-      var $form = $dialog.find('form');
-      return true;
     }
+    
+    $dialog.dialog('close');
+    return true;
   });
 
   $('#pubmed-id-lookup-form').ajaxForm({
@@ -335,7 +333,7 @@ $(document).ready(function() {
           $('#pub-details-title').html(data.pub.title);
           $('#pub-details-authors').html(data.pub.authors);
           var $abstract_details = $('#pub-details-abstract');
-          $abstract_details.html(data.pub['abstract']);
+          $abstract_details.html(data.pub.abstract);
           add_jTruncate($abstract_details);
           $('#pubmed-id-lookup').hide();
           $('#pubmed-id-lookup-pub-results').show();
@@ -430,28 +428,28 @@ $(document).ready(function() {
     confirmDialog.dialog("open");
   }
 
-  $(".confirm-delete").click(function(e) {
+  $(".confirm-delete").click(function() {
     make_confirm_dialog($(this), "Really delete?", "Confirm", "Cancel");
     return false;
   });
 
-  $("#curs-ontology-transfer .upload-genes-link a").click(function(e) {
+  $("#curs-ontology-transfer .upload-genes-link a").click(function() {
     function filter_func(i, e) {
       return $.trim(e.value).length > 0;
     }
     if ($(".annotation-comment").filter(filter_func).size() > 0) {
       make_confirm_dialog($(this), "Comment text will be lost.  Continue?", "Yes", "No");
       return false;
-    } else {
-      return true
     }
+
+    return true;
   });
 
-  $("#curs-pub-send-session-popup-dialog").click(function(e) {
+  $("#curs-pub-send-session-popup-dialog").click(function() {
     make_confirm_dialog($(this), "Send link to session curator?", "Send", "Cancel");
   });
 
-  $('button.curs-person-picker-add').click(function(e) {
+  $('button.curs-person-picker-add').click(function() {
     person_picker_add_person(this);
   });
 });
