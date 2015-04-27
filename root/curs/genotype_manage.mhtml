@@ -35,7 +35,7 @@ Genotypes used in this session
         </div>
 
         <div ng-hide="data.waitingForServer">
-        <div ng-show="data.genotypes.length > 0">
+        <div ng-show="data.genotypes.length != 0">
           <div class="curs-genotype-list-instructions">
           </div>
 
