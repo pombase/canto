@@ -143,6 +143,11 @@ sub allele_from_json
       return $allele;
     }
   } else {
+    if (!$gene_id) {
+      use Data::Dumper;
+      confess "internal error, no gene_id for: ", Dumper([$json_allele]);
+    }
+
     my $gene = $schema->find_with_type('Gene', $gene_id);
 
     $primary_identifier =

@@ -1437,11 +1437,11 @@ var multiAlleleCtrl =
     curs_config_promise: CantoConfig.get('curs_config')
   };
 
-  $scope.init = function(genotype_identifier) {
-    if (genotype_identifier) {
-      $scope.data.genotype_identifier = genotype_identifier;
+  $scope.init = function(genotype_id) {
+    if (genotype_id) {
+      $scope.data.genotype_id = genotype_id;
 
-      Curs.details('genotype', ['by_identifier', $scope.data.genotype_identifier])
+      Curs.details('genotype', ['by_id', genotype_id])
         .success(function(genotype_details) {
           $scope.alleles = genotype_details.alleles;
           $scope.data.genotype_name = genotype_details.name;
@@ -1472,7 +1472,18 @@ var multiAlleleCtrl =
                 true);
 
   $scope.store = function() {
-    simpleHttpPost(toaster, $http, 'store',
+    var arg;
+    // hacky: if genotype_id is defined the URL will be:
+    // http.../feature/genotype/edit/<id> if not it will be:
+    // http.../feature/genotype/add
+    // simpleHttpPost() will strip the last part of the URL before adding the
+    // arg
+    if ($scope.data.genotype_id) {
+      arg = $scope.data.genotype_id;
+    } else {
+      arg = 'store';
+    }
+    simpleHttpPost(toaster, $http, arg,
                    { genotype_name: $scope.data.genotype_name,
                      alleles: $scope.alleles });
   };

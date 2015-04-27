@@ -1809,20 +1809,70 @@ sub feature_edit : Chained('feature') PathPart('edit')
   if ($feature_type eq 'genotype') {
     my $genotype = $schema->find_with_type('Genotype', $genotype_id);
 
-    $st->{genotype_identifier} = $genotype->identifier();
+    if ($c->req()->method() eq 'POST') {
+      # store the changes
+      my $body_data = _decode_json_content($c);
 
-    _set_allele_select_stash($c);
+      my @alleles_data = @{$body_data->{alleles}};
+      my $genotype_name = $body_data->{genotype_name};
 
-    $st->{feature} = $genotype;
-    $st->{features} = [$genotype];
+      try {
+        my $guard = $schema->txn_scope_guard();
+
+        my $allele_manager =
+          Canto::Curs::AlleleManager->new(config => $c->config(),
+                                          curs_schema => $schema);
+
+        my @alleles = ();
+
+        my $curs_key = $st->{curs_key};
+
+        for my $allele_data (@alleles_data) {
+          my $allele = $allele_manager->allele_from_json($allele_data, $curs_key,
+                                                         \@alleles);
+
+          push @alleles, $allele;
+        }
+
+        my $genotype_manager =
+          Canto::Curs::GenotypeManager->new(config => $c->config(),
+                                            curs_schema => $schema);
+
+        $genotype_manager->store_genotype_changes($curs_key, $genotype,
+                                                  $genotype_name, \@alleles);
+
+        $guard->commit();
+
+        $c->stash->{json_data} = {
+          status => "success",
+          location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
+        };
+      } catch {
+        $c->stash->{json_data} = {
+          status => "error",
+          message => "Storing changes to genotype failed: internal error - " .
+            "please report this to the Canto developers",
+        };
+        warn $_;
+      };
+
+      $c->forward('View::JSON');
+    } else {
+      $st->{genotype_id} = $genotype->id();
+
+      _set_allele_select_stash($c);
+
+      $st->{feature} = $genotype;
+      $st->{features} = [$genotype];
+
+      my $display_name = $st->{feature}->display_name();
+
+      $st->{title} = "Editing genotype: $display_name";
+      $st->{template} = "curs/${feature_type}_edit.mhtml";
+    }
   } else {
     die "can't edit feature type: $feature_type\n";
   }
-
-  my $display_name = $st->{feature}->display_name();
-
-  $st->{title} = "Editing: $display_name";
-  $st->{template} = "curs/${feature_type}_edit.mhtml";
 }
 
 sub _decode_json_content

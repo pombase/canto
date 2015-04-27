@@ -362,6 +362,8 @@ sub _allele_details_hash
     type => $allele->type(),
     expression => $allele->expression(),
     display_name => $display_name,
+    allele_id => $allele->allele_id(),
+    gene_id => $allele->gene()->gene_id(),
   }
 }
 
