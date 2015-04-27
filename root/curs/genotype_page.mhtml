@@ -90,7 +90,6 @@ my $genotype_id = $genotype->genotype_id();
 
 my $st = $c->stash();
 
-my $genotype_count = $st->{genotype_count};
 my $finish_text = '<- Back to summary';
 
 my @types_to_show = grep {
