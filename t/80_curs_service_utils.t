@@ -135,10 +135,10 @@ $res = $service_utils->list_for_service('gene');
 cmp_deeply($res,
            [
             {
-              'primary_identifier' => 'SPCC576.16c',
-              'primary_name' => 'wtf22',
-              display_name => 'wtf22',
-               gene_id => 1,
+              'primary_name' => 'doa10',
+              'primary_identifier' => 'SPBC14F5.07',
+              display_name => 'doa10',
+               gene_id => 3,
             },
             {
               'primary_name' => 'ssm4',
@@ -147,10 +147,10 @@ cmp_deeply($res,
                gene_id => 2,
             },
             {
-              'primary_name' => 'doa10',
-              'primary_identifier' => 'SPBC14F5.07',
-              display_name => 'doa10',
-               gene_id => 3,
+              'primary_identifier' => 'SPCC576.16c',
+              'primary_name' => 'wtf22',
+              display_name => 'wtf22',
+               gene_id => 1,
             },
             {
               'primary_identifier' => 'SPCC63.05',

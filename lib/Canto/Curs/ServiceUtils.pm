@@ -262,6 +262,36 @@ sub _genotype_details_hash
   return \%ret;
 }
 
+sub _get_genes
+{
+  my $self = shift;
+  my $curs_schema = $self->curs_schema();
+  my $gene_rs = $curs_schema->resultset('Gene');
+  my @res = sort {
+    if ($a->{display_name} =~ /^[A-Z]/ &&
+        $b->{display_name} !~ /^[A-Z]/) {
+      1;
+    } else {
+      if ($a->{display_name} !~ /^[A-Z]/ &&
+          $b->{display_name} =~ /^[A-Z]/) {
+        -1;
+      } else {
+        $a->{display_name} cmp $b->{display_name};
+      }
+    }
+  } map {
+    my $proxy =
+      Canto::Curs::GeneProxy->new(config => $self->config(),
+                                  cursdb_gene => $_);
+    {
+      primary_identifier => $proxy->primary_identifier(),
+      primary_name => $proxy->primary_name(),
+      display_name => $proxy->display_name(),
+      gene_id => $proxy->gene_id(),
+    }
+  } $gene_rs->all();
+}
+
 sub _get_genotypes
 {
   my $self = shift;
@@ -365,23 +395,7 @@ sub _get_alleles
 
 my %list_for_service_subs =
   (
-    gene =>
-      sub {
-        my $self = shift;
-        my $curs_schema = $self->curs_schema();
-        my $gene_rs = $curs_schema->resultset('Gene');
-        my @res = map {
-          my $proxy =
-            Canto::Curs::GeneProxy->new(config => $self->config(),
-                                        cursdb_gene => $_);
-          {
-            primary_identifier => $proxy->primary_identifier(),
-            primary_name => $proxy->primary_name(),
-            display_name => $proxy->display_name(),
-            gene_id => $proxy->gene_id(),
-          }
-        } $gene_rs->all();
-      },
+    gene => \&_get_genes,
     genotype => \&_get_genotypes,
     allele => \&_get_alleles,
     annotation => \&_get_annotation,
