@@ -794,34 +794,40 @@ my $allele_res = $service_utils->list_for_service('allele', 'SPAC27D7.13c', 'ssm
 cmp_deeply($allele_res,
            [
             {
-              'display_name' => 'ssm4delta',
-              'expression' => undef,
-              'type' => 'deletion',
-              'description' => 'deletion',
               'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
-              'name' => 'ssm4delta'
-            },
-            {
-              'description' => 'G40A,K43E',
+              'description' => 'deletion',
               'expression' => undef,
-              'display_name' => 'ssm4KE(G40A,K43E)',
-              'type' => 'mutation of single amino acid residue',
-              'name' => 'ssm4KE',
-              'uniquename' => 'SPAC27D7.13c:aaaa0007-2'
+              'display_name' => 'ssm4delta',
+              'name' => 'ssm4delta',
+              'type' => 'deletion',
+              'allele_id' => 1,
+              'gene_id' => 2,
             },
             {
-              'name' => 'ssm4-D4',
-              'uniquename' => 'SPAC27D7.13c:aaaa0007-3',
+              'display_name' => 'ssm4KE(G40A,K43E)',
+              'expression' => undef,
+              'name' => 'ssm4KE',
+              'type' => 'mutation of single amino acid residue',
+              'gene_id' => 2,
+              'allele_id' => 2,
+              'uniquename' => 'SPAC27D7.13c:aaaa0007-2',
+              'description' => 'G40A,K43E'
+            },
+            {
+              'allele_id' => 3,
+              'gene_id' => 2,
               'description' => 'del_100-200',
+              'uniquename' => 'SPAC27D7.13c:aaaa0007-3',
               'expression' => undef,
               'display_name' => 'ssm4-D4(del_100-200)',
+              'name' => 'ssm4-D4',
               'type' => 'partial deletion, nucleotide'
             },
             {
-              'display_name' => 'ssm4delta(unknown)',
               'type' => 'deletion',
+              'name' => 'ssm4delta',
               'uniquename' => 'SPAC27D7.13c:allele-1',
-              'name' => 'ssm4delta'
+              'display_name' => 'ssm4delta(unknown)',
             }
           ]);
 
@@ -830,25 +836,25 @@ $allele_res = $service_utils->list_for_service('allele', 'SPBC12C2.02c', 'ste');
 cmp_deeply($allele_res,
            [
              {
-               'display_name' => 'ste20-c1(K132A)',
                'description' => 'K132A',
+               'display_name' => 'ste20-c1(K132A)',
+               'name' => 'ste20-c1',
                'type' => 'mutation of single amino acid residue',
                'uniquename' => 'SPBC12C2.02c:allele-2',
-               'name' => 'ste20-c1',
              },
              {
-               'name' => 'ste20-c2',
-               'uniquename' => 'SPBC12C2.02c:allele-3',
                'description' => 'K132A,K144A',
+               'display_name' => 'ste20-c2(K132A,K144A)',
+               'name' => 'ste20-c2',
                'type' => 'mutation of multiple amino acid residues',
-               'display_name' => 'ste20-c2(K132A,K144A)'
+               'uniquename' => 'SPBC12C2.02c:allele-3',
              },
              {
-               'display_name' => 'ste20delta(del_x1)',
                'description' => 'del_x1',
+               'display_name' => 'ste20delta(del_x1)',
+               'name' => 'ste20delta',
                'type' => 'deletion',
                'uniquename' => 'SPBC12C2.02c:allele-1',
-               'name' => 'ste20delta'
              }
            ]);
 
@@ -862,21 +868,25 @@ my $expected_genotype_detail_res =
     'display_name' => 'h+ SPCC63.05delta ssm4KE',
     'alleles' => [
       {
-        'expression' => undef,
-        'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+        'allele_id' => 1,
+        'description' => 'deletion',
         'display_name' => 'ssm4delta',
-        'type' => 'deletion',
+        'expression' => undef,
+        'gene_id' => 2,
         'name' => 'ssm4delta',
-        'description' => 'deletion'
+        'type' => 'deletion',
+        'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
       },
       {
-        'type' => 'deletion',
-        'name' => 'SPCC63.05delta',
+        'allele_id' => 5,
         'description' => 'deletion',
         'display_name' => 'SPCC63.05delta',
+        'expression' => undef,
+        'gene_id' => 4,
+        'name' => 'SPCC63.05delta',
+        'type' => 'deletion',
         'uniquename' => 'SPCC63.05:aaaa0007-1',
-        'expression' => undef
-      }
+      },
     ],
   };
 

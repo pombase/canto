@@ -77,20 +77,24 @@ test_psgi $app, sub {
                'genotype_id' => 1,
                'alleles' => [
                  {
-                   'display_name' => 'ssm4delta',
-                   'name' => 'ssm4delta',
-                   'expression' => undef,
-                   'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
                    'type' => 'deletion',
-                   'description' => 'deletion'
+                   'name' => 'ssm4delta',
+                   'allele_id' => 1,
+                   'description' => 'deletion',
+                   'gene_id' => 2,
+                   'display_name' => 'ssm4delta',
+                   'expression' => undef,
+                   'uniquename' => 'SPAC27D7.13c:aaaa0007-1'
                  },
                  {
-                   'uniquename' => 'SPCC63.05:aaaa0007-1',
-                   'type' => 'deletion',
-                   'description' => 'deletion',
                    'display_name' => 'SPCC63.05delta',
                    'expression' => undef,
-                   'name' => 'SPCC63.05delta'
+                   'uniquename' => 'SPCC63.05:aaaa0007-1',
+                   'gene_id' => 4,
+                   'description' => 'deletion',
+                   'name' => 'SPCC63.05delta',
+                   'allele_id' => 5,
+                   'type' => 'deletion'
                  }
                ],
                'display_name' => 'h+ SPCC63.05delta ssm4KE',
