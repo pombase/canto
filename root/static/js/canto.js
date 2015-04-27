@@ -57,6 +57,39 @@ function make_ontology_complete_url(annotation_type) {
   return application_root + 'ws/lookup/ontology/' + annotation_type + '?def=1';
 }
 
+function make_confirm_dialog(link, prompt, confirm_button_label, cancel_button_label) {
+  var targetUrl = link.attr("href");
+
+  var confirmDialog = $('#confirm-dialog');
+  if (confirmDialog.length == 0) {
+    confirmDialog =
+      $('<div id="confirm-dialog" title="Confirmation needed">' + prompt + '</div>');
+    $('body').append(confirmDialog);
+  }
+
+  confirmDialog.dialog({
+    autoOpen: false,
+    modal: true,
+    buttons : [
+      {
+        text: cancel_button_label,
+        click: function() {
+          $(this).dialog("close");
+          $(this).remove();
+        }
+      },
+      {
+        text: confirm_button_label,
+        click: function() {
+          window.location.href = targetUrl;
+        }
+      }
+    ]
+  });
+
+  confirmDialog.dialog("open");
+}
+
 var ferret_choose = {
   annotation_namespace: undefined,
 
@@ -393,39 +426,6 @@ $(document).ready(function() {
         .append( "<a>" + item.label + "<br></a>" )
         .appendTo( ul );
     };
-  }
-
-  function make_confirm_dialog(link, prompt, confirm_button_label, cancel_button_label) {
-    var targetUrl = link.attr("href");
-
-    var confirmDialog = $('#confirm-dialog');
-    if (confirmDialog.length == 0) {
-      confirmDialog =
-        $('<div id="confirm-dialog" title="Confirmation needed">' + prompt + '</div>');
-      $('body').append(confirmDialog);
-    }
-
-    confirmDialog.dialog({
-      autoOpen: false,
-      modal: true,
-      buttons : [
-        {
-          text: cancel_button_label,
-          click: function() {
-            $(this).dialog("close");
-            $(this).remove();
-          }
-        },
-        {
-          text: confirm_button_label,
-          click: function() {
-            window.location.href = targetUrl;
-          }
-        }
-      ]
-    });
-
-    confirmDialog.dialog("open");
   }
 
   $(".confirm-delete").click(function() {

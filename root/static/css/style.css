@@ -1300,3 +1300,12 @@ a:not([href]) {
 .checkbox-gene-list {
   display: block;
 }
+
+.curs-right-info-message {
+  color: #722;
+  background-color: #bbf;
+  border: 1px solid #aae;
+  padding: 2px;
+  margin: 6px;
+  margin-bottom: 12px;
+}

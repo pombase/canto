@@ -2,9 +2,11 @@
 $curs_root_uri
 $pub
 $genotype
+$annotation_count
 @annotation_type_list
 </%args>
 
+<div ng-controller="GenotypeViewCtrl" ng-init="init(<% $annotation_count %>)">
 <div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
 Details
@@ -73,7 +75,7 @@ Alleles
 Actions
   </div>
   <div class="curs-box-body">
-    <a href="<% $start_path . '/feature/genotype/edit/' . $genotype->genotype_id() %>">Edit ...</a>
+    <a ng-click="checkEditIsSensible($event)" href="<% $start_path . '/feature/genotype/edit/' . $genotype->genotype_id() %>">Edit ...</a>
   </div>
 </div>
 

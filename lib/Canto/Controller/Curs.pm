@@ -1764,6 +1764,7 @@ sub feature_view : Chained('feature') PathPart('view')
       }
 
       $st->{genotype} = $genotype;
+      $st->{annotation_count} = $genotype->annotations()->count();
 
       $st->{feature} = $genotype;
       $st->{features} = [$genotype];
@@ -1864,6 +1865,8 @@ sub feature_edit : Chained('feature') PathPart('edit')
 
       $st->{feature} = $genotype;
       $st->{features} = [$genotype];
+
+      $st->{annotation_count} = $genotype->annotations()->count();
 
       my $display_name = $st->{feature}->display_name();
 

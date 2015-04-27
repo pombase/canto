@@ -1,6 +1,6 @@
 'use strict';
 
-/*global history,curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links */
+/*global history,curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links,make_confirm_dialog */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'toaster']);
 
@@ -1539,6 +1539,28 @@ var multiAlleleCtrl =
 
 canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig', 'Curs', 'toaster',
                                      multiAlleleCtrl]);
+
+
+var genotypeViewCtrl =
+  function($scope) {
+    $scope.init = function(annotationCount) {
+      $scope.annotationCount = annotationCount;
+    };
+
+    $scope.checkEditIsSensible = function($event) {
+      if ($scope.annotationCount > 0) {
+        $event.preventDefault();
+        make_confirm_dialog($($event.currentTarget),
+                            "This genotype has existing annotations.  Really edit?",
+                            "Confirm", "Cancel");
+      }
+    };
+  };
+
+canto.controller('GenotypeViewCtrl',
+                 ['$scope',
+                 genotypeViewCtrl]);
+
 
 var GenotypeManageCtrl =
   function($scope, CursGenotypeList, CantoGlobals, toaster) {

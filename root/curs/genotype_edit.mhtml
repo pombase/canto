@@ -4,6 +4,7 @@ $title
 $pub
 $multi_organism_mode
 $curs_root_uri
+$annotation_count
 $genotype_id => ''
 </%args>
 
@@ -20,11 +21,25 @@ Add alleles from the genes below until the genotype is fully specified.
     </div>
     <div class="curs-box-body">
 
-      <input type="text" title="Click to genotype edit name" href="#"
+      <div class="row">
+        <div class="col-sm-6 col-md-6">
+      Name: <input type="text" title="Click to genotype edit name" href="#"
              placeholder="short genotype name (optional) ..."
              size="50"
              ng-model="data.genotype_name" />
-
+        </div>
+        <div class="col-sm-6 col-md-6">
+% if ($annotation_count > 0) {
+      <div class="curs-right-info-message">
+%   if ($annotation_count == 1) {
+        Note: this genotype has an existing annotation
+%   } else {
+        Note: this genotype has <% $annotation_count %> existing annotations
+%   }
+      </div>
+% }
+        </div>
+      </div>
       <div class="row">
         <div class="col-sm-6 col-md-6">
           <div ng-hide="genes.length">
