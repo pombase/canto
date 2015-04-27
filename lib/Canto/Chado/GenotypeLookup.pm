@@ -147,6 +147,94 @@ sub _genotype_details
   return $ret_val;
 }
 
+sub _lookup_with_gene_filter
+{
+  my $self = shift;
+  my $gene_identifiers_ref = shift;
+  my $max_results = shift;
+
+  my $cache = $self->cache();
+  my $schema = $self->schema();
+
+  my $cache_key = 'genotype_lookup_by_gene:' .
+    (join ' ', @$gene_identifiers_ref) . ' max: ' .
+    ($max_results ? $max_results : 'none');
+
+  my $cached_value = $cache->get($cache_key);
+
+  if (defined $cached_value) {
+    return $cached_value;
+  }
+
+  my $genotype_rs =
+    $schema->resultset('Feature')->search({ 'type.name' => 'genotype' },
+                                          {
+                                            join => 'type' });
+
+  my @sub_queries = map {
+    my $gene_identifier = $_;
+    my $sub_query =
+      $schema->resultset('Feature')
+      ->search({ 'type.name' => 'genotype',
+                 'type_2.name' => 'part_of',
+                 'type_3.name' => 'allele',
+                 'type_4.name' => 'instance_of',
+                 'type_5.name' => 'gene',
+                 'object.uniquename' => $gene_identifier,
+               },
+               { join => [ 'type',
+                           {
+                             feature_relationship_objects =>
+                               [
+                                 'type',
+                                 {
+                                   subject => [
+                                     'type',
+                                     {
+                                       feature_relationship_subjects =>
+                                         [
+                                           'type',
+                                           {
+                                             object => 'type',
+                                           }
+                                         ]
+                                       }
+                                   ]
+                                 }
+                               ]
+                             }
+                         ]
+               });
+    {
+      'me.feature_id' =>
+        {
+          -in => $sub_query->get_column('feature_id')->as_query()
+        }
+      }
+  } @$gene_identifiers_ref;
+
+  my $search_arg = {
+    -and => \@sub_queries,
+  };
+
+  if ($max_results) {
+    $genotype_rs = $genotype_rs->search({}, { rows => $max_results });
+  }
+
+  my $res =
+    {
+      results => [
+        map {
+          $self->_genotype_details($_);
+        } $genotype_rs->search($search_arg)->all(),
+      ],
+    };
+
+  $cache->set($cache_key, $res, $self->config()->{cache}->{default_timeout});
+
+  return $res;
+}
+
 sub lookup
 {
   my $self = shift;
@@ -158,83 +246,7 @@ sub lookup
 
   if ($options{gene_primary_identifiers}) {
     my $gene_identifiers = $options{gene_primary_identifiers};
-
-    my $cache_key = 'genotype_lookup_by_gene:' .
-      (join ' ', @$gene_identifiers) . ' max: ' .
-      ($options{max_results} ? $options{max_results} : 'none');
-
-    my $cached_value = $cache->get($cache_key);
-
-    if (defined $cached_value) {
-      return $cached_value;
-    }
-
-    my $genotype_rs =
-      $schema->resultset('Feature')->search({ 'type.name' => 'genotype' },
-                                            { join => 'type' });
-
-    my @sub_queries = map {
-      my $gene_identifier = $_;
-      my $sub_query =
-        $schema->resultset('Feature')
-          ->search({ 'type.name' => 'genotype',
-                     'type_2.name' => 'part_of',
-                     'type_3.name' => 'allele',
-                     'type_4.name' => 'instance_of',
-                     'type_5.name' => 'gene',
-                     'object.uniquename' => $gene_identifier,
-                   },
-                   { join => [ 'type',
-                               {
-                                 feature_relationship_objects =>
-                                   [
-                                     'type',
-                                     {
-                                       subject => [
-                                         'type',
-                                         {
-                                           feature_relationship_subjects =>
-                                             [
-                                               'type',
-                                               {
-                                                 object => 'type',
-                                               }
-                                             ]
-                                           }
-                                       ]
-                                     }
-                                   ]
-                                 }
-                             ]
-                   });
-      {
-        'me.feature_id' =>
-          {
-            -in => $sub_query->get_column('feature_id')->as_query()
-          }
-        }
-    } @$gene_identifiers;
-
-    my $search_arg = {
-      -and => \@sub_queries,
-    };
-
-    if ($options{max_results}) {
-      $genotype_rs = $genotype_rs->search({}, { rows => $options{max_results} });
-    }
-
-    my $res =
-      {
-        results => [
-          map {
-            $self->_genotype_details($_);
-          } $genotype_rs->search($search_arg)->all(),
-        ],
-      };
-
-    $cache->set($cache_key, $res, $self->config()->{cache}->{default_timeout});
-
-    return $res;
+    return $self->_lookup_with_gene_filter($gene_identifiers, $options{max_results});
   } else {
     if ($options{identifier}) {
       my $cache_key = 'genotype_lookup_by_identifier: ' . $options{identifier};
