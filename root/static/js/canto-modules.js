@@ -1552,7 +1552,7 @@ var genotypeViewCtrl =
         $event.preventDefault();
         make_confirm_dialog($($event.currentTarget),
                             "This genotype has existing annotations.  Really edit?",
-                            "Confirm", "Cancel");
+                            "Edit", "Cancel");
       }
     };
   };
