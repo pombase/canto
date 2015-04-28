@@ -223,6 +223,10 @@ sub _filter_lookup_genotypes
 
   my $genotype_lookup = $self->genotype_lookup();
 
+  if (!$genotype_lookup) {
+    return ();
+  }
+
   my %options = ();
 
   if (defined $max) {
