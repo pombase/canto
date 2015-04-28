@@ -1793,6 +1793,8 @@ sub feature_add : Chained('feature') PathPart('add')
     _set_allele_select_stash($c);
   }
 
+  $st->{annotation_count} = 0;
+
   $st->{title} = "Add a $feature_type";
   $st->{template} = "curs/${feature_type}_edit.mhtml";
 }
