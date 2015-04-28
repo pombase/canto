@@ -1,19 +1,19 @@
 <tr>
   <td>
     <span>
-      <a href="feature/genotype/view/{{genotype.id_or_identifier}}">
+      <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier}}">
         <p ng-bind-html="genotype.allele_string | addZeroWidthSpace | toTrusted"></p></a>
     </span>
   </td>
   <td>
     <span>
-      <a href="feature/genotype/view/{{genotype.id_or_identifier}}">
+      <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier}}">
         <p ng-bind-html="genotype.name | addZeroWidthSpace | toTrusted"></p></a>
     </span>
   </td>
   <td class="table-row-actions">
     <div>
-      <a href="feature/genotype/view/{{genotype.id_or_identifier}}">
+      <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier}}">
         <span ng-if="genotype.genotype_id">
 Details ...
         </span>

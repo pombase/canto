@@ -1673,20 +1673,19 @@ canto.directive('genotypeSearch',
                   genotypeSearchCtrl]);
 
 var genotypeListRowCtrl =
-  function() {
+  function(CantoGlobals) {
     return {
       restrict: 'A',
       replace: true,
-      templateUrl: function(elem,attrs) {
-        return app_static_path + 'ng_templates/genotype_list_row.html'
-      },
+      templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row.html',
       controller: function($scope) {
+        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
       },
     };
   };
 
 canto.directive('genotypeListRow',
-                [genotypeListRowCtrl]);
+                ['CantoGlobals', genotypeListRowCtrl]);
 
 
 var genotypeListViewCtrl =
@@ -1706,6 +1705,41 @@ var genotypeListViewCtrl =
 
 canto.directive('genotypeListView',
                  [genotypeListViewCtrl]);
+
+
+var singleGeneGenotypeList =
+  function(CursGenotypeList, CantoGlobals, toaster) {
+    return {
+      scope: {
+        genePrimaryIdentifier: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/single_gene_genotype_list.html',
+      controller: function($scope) {
+        $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+        $scope.data = {
+          filteredGenotypes: [],
+          waitingForServer: true,
+        };
+
+        CursGenotypeList.filteredGenotypeList({
+          gene_identifiers: [$scope.genePrimaryIdentifier],
+        }).then(function(results) {
+          $scope.data.filteredGenotypes = results;
+          $scope.data.waitingForServer = false;
+        }).catch(function() {
+          toaster.pop('error', "couldn't read the genotype list from the server");
+          $scope.data.waitingForServer = false;
+        });
+
+      },
+    };
+  };
+
+canto.directive('singleGeneGenotypeList',
+                ['CursGenotypeList', 'CantoGlobals', 'toaster', singleGeneGenotypeList]);
 
 
 var EditDialog = function($) {

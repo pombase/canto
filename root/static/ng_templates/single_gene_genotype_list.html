@@ -1,0 +1,16 @@
+<div>
+<div>
+  <div ng-if="data.waitingForServer">
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+  </div>
+
+  <div ng-if="!data.waitingForServer">
+    <div ng-show="data.filteredGenotypes.length > 0">
+      <genotype-list-view genotype-list="data.filteredGenotypes"></genotype-list-view>
+    </div>
+    <div ng-show="data.filteredGenotypes.length == 0">
+      This gene is not part of a genotype in this session
+    </div>
+  </div>
+</div>
+</div>

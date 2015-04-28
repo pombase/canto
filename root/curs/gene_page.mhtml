@@ -79,6 +79,15 @@ Gene details
   </div>
 </div>
 
+<div id="curs-gene-details" class="curs-box curs-half-width-section">
+  <div class="curs-box-title">
+Genotypes for this gene
+  </div>
+  <div class="curs-box-body">
+    <single-gene-genotype-list gene-primary-identifier="'<% $gene->primary_identifier() %>'"></single-gene-genotype-list>
+  </div>
+</div>
+
 <div class="clearall"/>
 
 <button type="button" id="curs-finish-gene" class="btn btn-primary curs-back-button"><% $finish_text %></button>
