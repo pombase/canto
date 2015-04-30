@@ -9,21 +9,9 @@ $annotation_count
 <div ng-controller="GenotypeViewCtrl" ng-init="init(<% $annotation_count %>)">
 <div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
-Details
+Actions ...
   </div>
   <div class="curs-box-body">
-    <table class="curs-definition-table">
-      <tbody>
-        <tr>
-          <td class="title">
-Name
-          </td>
-          <td>
-<% $genotype->name() || '[none]' %>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   <ul class="annotation-start">
 % for my $annotation_type (@types_to_show) {
 %   my $annotation_type_name = $annotation_type->{name};
@@ -49,10 +37,23 @@ Add a new <% $type_display_name %> for this genotype ...
 
 <div id="curs-genotype-details" class="curs-box curs-half-width-section">
   <div class="curs-box-title">
-Alleles
+Genotype details
   </div>
   <div class="curs-box-body">
     <div class="curs-allele-list">
+    <table class="curs-definition-table">
+      <tbody>
+        <tr>
+          <td class="title">
+Name
+          </td>
+          <td>
+<% $genotype->name() || '[none]' %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
 % for my $allele ($genotype->alleles()) {
 <% $allele->display_name() %>
 %   if ($allele->expression()) {
@@ -68,14 +69,9 @@ Alleles
    <br/>
 % }
     </div>
-  </div>
-</div>
-<div id="curs-genotype-actions" class="curs-box curs-half-width-section">
-  <div class="curs-box-title">
-Actions
-  </div>
-  <div class="curs-box-body">
-    <a ng-click="checkEditIsSensible($event)" href="<% $start_path . '/feature/genotype/edit/' . $genotype->genotype_id() %>">Edit ...</a>
+    <div>
+      <a ng-click="checkEditIsSensible($event)" href="<% $start_path . '/feature/genotype/edit/' . $genotype->genotype_id() %>">Edit ...</a>
+    </div>
   </div>
 </div>
 
