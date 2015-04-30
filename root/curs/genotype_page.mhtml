@@ -51,6 +51,14 @@ Name
 <% $genotype->name() || '[none]' %>
           </td>
         </tr>
+        <tr>
+          <td class="title">
+Description
+          </td>
+          <td>
+<% $genotype->display_name() || '[none]' %>
+          </td>
+        </tr>
       </tbody>
     </table>
 
