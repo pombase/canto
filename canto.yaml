@@ -1071,7 +1071,6 @@ load:
       - has_output
       - output_of
       - part_of
-      - has_part
       - regulates
       - negatively_regulates
       - positively_regulates
