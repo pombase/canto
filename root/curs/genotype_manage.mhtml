@@ -42,7 +42,7 @@ Genotypes used in this session
           <genotype-list-view genotype-list="data.genotypes"></genotype-list-view>
         </div>
         <div ng-show="data.genotypes.length == 0">
-No genotypes in this session, try <a href="<% $start_path . '/feature/genotype/add' %>">adding one</a>.
+No genotypes in this session.  Try adding one.
 
         </div>
         </div>
