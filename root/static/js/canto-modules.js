@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /*global history,curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links,make_confirm_dialog */
 
@@ -1082,11 +1082,16 @@ var alleleNameComplete =
         alleleName: '=',
         alleleDescription: '=',
         alleleType: '=',
-        geneIdentifier: '=',
+        geneIdentifier: '@',
       },
       restrict: 'E',
       replace: true,
-      template: '<input ng-model="alleleName" type="text" class="curs-allele-name aform-control" value=""/>',
+      template: '<div><input ng-model="alleleName" type="text" class="curs-allele-name aform-control" value=""/></div>',
+      controller: function ($scope) {
+        $scope.clicked = function () {
+          $scope.merge = $scope.alleleDescription + ' ' + $scope.allelePrimaryIdentifier;
+        };
+      },
       link: function(scope, elem) {
         var processResponse = function(lookupResponse) {
           return $.map(
@@ -1102,7 +1107,7 @@ var alleleNameComplete =
               };
             });
         };
-        elem.autocomplete({
+        elem.find('input').autocomplete({
           source: function(request, response) {
             CursAlleleList.alleleList(scope.geneIdentifier, request.term)
               .then(function(lookupResponse) {
@@ -1119,12 +1124,7 @@ var alleleNameComplete =
             } else {
               scope.allelePrimaryIdentifier = ui.item.allele_primary_identifier;
             }
-            if (typeof(ui.item.type) === 'undefined' ||
-                ui.item.type === 'unknown') {
-              scope.type = '';
-            } else {
-              scope.alleleType = ui.item.allele_type;
-            }
+            scope.alleleType = ui.item.type;
             if (typeof(ui.item.label) === 'undefined') {
               scope.alleleName = '';
             } else {
@@ -1208,6 +1208,10 @@ var alleleEditDialogCtrl =
     $scope.$watch('alleleData.type',
                   function(newType) {
                     $scope.env.allele_types_promise.then(function(response) {
+                      if ($scope.alleleData.primary_identifier) {
+                        return;
+                      }
+
                       $scope.current_type_config = response.data[newType];
 
                       if ($scope.name_autopopulated) {
@@ -1506,7 +1510,7 @@ var multiAlleleCtrl =
             });
 
       var editInstance = $modal.open({
-        templateUrl: 'alleleEdit.html',
+        templateUrl: app_static_path + 'ng_templates/allele_edit.html',
         controller: 'AlleleEditDialogCtrl',
         title: 'Add an allele for this phenotype',
         animate: false,

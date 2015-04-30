@@ -9,10 +9,6 @@ $genotype_id => ''
 </%args>
 
 <div>
-<& allele_edit.mhtml,
-   editing => 0,
-   curs_root_uri => $curs_root_uri &>
-
 <div ng-controller="MultiAlleleCtrl" id="curs-multi-allele-select"
      ng-init="init('<% $genotype_id %>')";
      class="curs-box ng-cloak">

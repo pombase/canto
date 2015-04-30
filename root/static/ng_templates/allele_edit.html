@@ -1,18 +1,3 @@
-<%args>
-$curs_root_uri
-$editing
-</%args>
-
-<script language="javascript" type="text/javascript">
-var allele_types = <% $allele_types_js |n %>;
-var alleles_in_progress = <% $alleles_in_progress_js |n %>;
-var existing_alleles_by_name = <% $existing_alleles_by_name_js |n %>;
-var current_conditions = <% $current_conditions_js |n %>;
-var delete_icon_uri = "<% $delete_icon_uri %>";
-var editing_allele = <% $editing ? 'true' : 'false' %>;
-</script>
-
-<script type="text/ng-template" id="alleleEdit.html">
   <form name="cursAlleleEdit" class="curs-allele-edit-dialog modal-content">
     <div class="modal-header">
       <h4 class="modal-title">
@@ -33,7 +18,8 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
                                   allele-name="alleleData.name"
                                   allele-description="alleleData.description"
                                   allele-type="alleleData.type"
-                                  gene-identifier="gene.systemtic_id">
+                                  allele-test-value="alleleData.test_value"
+                                  gene-identifier="{{gene.systemtic_id}}">
             </allele-name-complete>
             <span ng-show="!isValidName()"
                   class="help-block">required for this allele type</span>
@@ -113,25 +99,8 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
           </td>
         </tr>
       </table>
+      </div>
 
-      <div class="ng-cloak" ng-show="!!alleleData.type && false">
-        <table>
-          <tr>
-            <td>
-              Evidence
-            </td>
-            <td>
-              <select ng-model="alleleData.expression" name="curs-allele-evidence-select" class="required curs-allele-evidence-select">
-                <option selected="selected" value="">Choose an evidence type ...</option>
-% for my $opt (@evidence_select_options) {
-                <option value="<% $opt->[0] %>"><% $opt->[1] %></option>
-% }
-              </select>
-            </td>
-          </tr>
-        </table>
-      </div>
-      </div>
       <div ng-switch-when="true" class="curs-box">
         <div class="curs-box-title">
           This is an existing allele, click "OK" to use this allele or
@@ -188,26 +157,3 @@ var editing_allele = <% $editing ? 'true' : 'false' %>;
       </div>
     </div>
   </form>
-</script>
-
-<%init>
-use Data::JavaScript::Anon;
-
-my $st = $c->stash();
-
-my $allele_type_config = $st->{allele_type_config};
-my $allele_types_js = Data::JavaScript::Anon->anon_dump($allele_type_config);
-
-my $alleles_in_progress = $st->{alleles_in_progress};
-my $alleles_in_progress_js = Data::JavaScript::Anon->anon_dump($alleles_in_progress);
-
-my @evidence_select_options = @{$st->{evidence_select_options} // []};
-
-my $existing_alleles_by_name = $st->{existing_alleles_by_name} // [];
-my $existing_alleles_by_name_js = Data::JavaScript::Anon->anon_dump($existing_alleles_by_name);
-
-my $current_conditions = $st->{current_conditions};
-my $current_conditions_js = Data::JavaScript::Anon->anon_dump($current_conditions);
-
-my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
-</%init>
