@@ -1760,7 +1760,7 @@ sub feature_view : Chained('feature') PathPart('view')
         # pull from Chado and store in CursDB, $genotype_id is an
         # identifier/uniquename
         $genotype =
-          $genotype_manager->find_and_create_genotype($st->{curs_key}, $genotype_id);
+          $genotype_manager->find_and_create_genotype($genotype_id);
       }
 
       $st->{genotype} = $genotype;

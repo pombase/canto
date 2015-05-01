@@ -173,10 +173,21 @@ sub _store_chado_genotype
   return $self->make_genotype($curs_key, $name, \@alleles, $identifier);
 }
 
+=head2 find_and_create_genotype
+
+ Usage   : $genotype_manager->find_and_create_genotype($genotype_identifier);
+ Function: Find the genotype given by $genotype_identifier in Chado and copy to
+           the CursDB
+ Args    : $genotype_identifier
+ Return  : the new Genotype object from the CursDB
+
+=cut
+
 sub find_and_create_genotype
 {
   my $self = shift;
-  my $curs_key = shift;
+  my $curs_key = $self->curs_key();
+
   my $genotype_identifier = shift;
 
   my $lookup = Canto::Track::get_adaptor($self->config(), 'genotype');
