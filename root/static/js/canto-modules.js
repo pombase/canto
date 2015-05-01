@@ -202,12 +202,12 @@ canto.service('CursGenotypeList', function($q, Curs) {
     return q.promise;
   };
 
-  this.filteredGenotypeList = function(filter) {
+  this.filteredGenotypeList = function(cursOrAll, filter) {
     var options = {
       filter: filter,
     };
     var filteredCursPromise =
-      Curs.list('genotype', ['all', options]);
+      Curs.list('genotype', [cursOrAll, options]);
 
     var q = $q.defer();
 
@@ -1654,7 +1654,8 @@ var genotypeSearchCtrl =
                           scope.data.filteredGenotypes.length = 0;
                         } else {
                           scope.data.waitingForServer = true;
-                          CursGenotypeList.filteredGenotypeList({
+                          CursGenotypeList.filteredGenotypeList('all',
+                                                                {
                             gene_identifiers: $.map(scope.data.searchGenes,
                                                     function(gene_data) {
                                                       return gene_data.primary_identifier
@@ -1728,7 +1729,7 @@ var singleGeneGenotypeList =
           waitingForServer: true,
         };
 
-        CursGenotypeList.filteredGenotypeList({
+        CursGenotypeList.filteredGenotypeList('curs_only', {
           gene_identifiers: [$scope.genePrimaryIdentifier],
         }).then(function(results) {
           $scope.data.filteredGenotypes = results;
