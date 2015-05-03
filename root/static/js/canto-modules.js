@@ -1323,17 +1323,34 @@ canto.controller('TermSuggestDialogCtrl',
                  termSuggestDialogCtrl]);
 
 
+function makeAlleleEditInstance($modal, gene_display_name, gene_systemtic_id,
+                                gene_id, endogenousWildtypeAllowed)
+{
+  return $modal.open({
+    templateUrl: app_static_path + 'ng_templates/allele_edit.html',
+    controller: 'AlleleEditDialogCtrl',
+    title: 'Add an allele for this phenotype',
+    animate: false,
+    windowClass: "modal",
+    resolve: {
+      args: function() {
+        return {
+          gene_display_name: gene_display_name,
+          gene_systemtic_id: gene_systemtic_id,
+          gene_id: gene_id,
+          endogenousWildtypeAllowed: endogenousWildtypeAllowed,
+        };
+      }
+    }
+  });
+}
+
+
 var genePageCtrl =
   function($scope, $modal) {
-    $scope = {
-    };
-
-    $scope.init = function(gene_display_name, gene_systemtic_id, gene_id) {
-
-    };
-
-    $scope.singleAlleleQuick = function() {
-      var editInstance = makeAlleleEditInstance($modal, gene_display_name, gene_systemtic_id, gene_id);
+    $scope.singleAlleleQuick = function(gene_display_name, gene_systemtic_id, gene_id) {
+      var editInstance = makeAlleleEditInstance($modal, gene_display_name,
+                                                gene_systemtic_id, gene_id);
 
       editInstance.result.then(function (alleleData) {
         alert("implement me");
