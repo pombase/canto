@@ -9,6 +9,9 @@ $gene
 var genes_in_session = <% $genes_in_session_js |n %>;
 </script>
 
+<div ng-controller="GenePageCtrl"
+     ng-init="init('<% $gene->display_name() |n %>', '<% $gene->primary_identifier() |n %>', '<% $gene->gene_id() |n%>')">
+>
 <div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
 Choose curation type for <% $gene->display_name() %>:
@@ -35,6 +38,9 @@ Choose curation type for <% $gene->display_name() %>:
 %   }
 % }
   </ul>
+  <div class="feature-list-action">
+    <a href="" ng-click="singleAlleleQuick()">Add a new single allele genotype using this gene ...</a>
+  </div>
   <div class="feature-list-action">
 To annotate a multi-gene phenotype involving this gene, go to
 <a href='<% "$curs_root_uri/genotype_manage" %>'>the genotype page</a>
@@ -94,6 +100,8 @@ Genotypes for this gene
 
 <annotation-table-list feature-type-filter="gene" feature-id-filter="<% $gene_id %>"
                        feature-filter-display-name="<% $gene->display_name() %>"></annotation-table-list>
+
+</div>
 
 <%init>
 my $gene_id = $gene->gene_id();
