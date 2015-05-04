@@ -1947,6 +1947,8 @@ sub genotype_store : Chained('feature') PathPart('store')
 
       $guard->commit();
 
+      $c->flash()->{message} = 'Created new genotype';
+
       $c->stash->{json_data} = {
         status => "success",
         location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
@@ -2736,6 +2738,17 @@ sub ws_annotation_delete : Chained('top') PathPart('ws/annotation/delete')
   $c->stash->{json_data} = $service_utils->delete_annotation($json_data);
 
   $c->forward('View::JSON');
+}
+
+sub ws_genotype_delete : Chained('top') PathPart('ws/genotype/delete')
+{
+  my ($self, $c) = @_;
+
+  my $genotype_manager =
+    Canto::Curs::GenotypeManager->new(config => $c->config(),
+                                      curs_schema => $c->curs_schema());
+
+  #$genotype_manager->delete_genotype($genotype_identifier);
 }
 
 sub ws_add_gene : Chained('top') PathPart('ws/gene/add')
