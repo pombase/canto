@@ -14,12 +14,13 @@ Matches:
             <genotype-list-view genotype-list="data.filteredGenotypes"></genotype-list-view>
           </div>
           <div ng-show="data.filteredGenotypes.length == 0">
-            <div ng-show="data.searchGenes.length == 1">
-(No genotypes match the selected gene)
-            </div>
-            <div ng-show="data.searchGenes.length > 1">
-(No genotypes match all the selected genes)
-            </div>
+            <span ng-show="data.searchGenes.length == 1">
+No genotypes match the selected gene.
+            </span>
+            <span ng-show="data.searchGenes.length > 1">
+No genotypes match all the selected genes.
+            </span>
+            <a ng-click="addGenotype()">Add a genotype ...</a>
           </div>
         </div>
       </div>
