@@ -1,6 +1,6 @@
 "use strict";
 
-/*global history,curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links,make_confirm_dialog,loadingStart,loadingEnd */
+/*global history,curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links,loadingStart,loadingEnd */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'toaster']);
 
@@ -1618,9 +1618,13 @@ var genotypeViewCtrl =
     $scope.checkEditIsSensible = function($event) {
       if ($scope.annotationCount > 0) {
         $event.preventDefault();
-        make_confirm_dialog($($event.currentTarget),
-                            "This genotype has existing annotations.  Really edit?",
-                            "Edit", "Cancel");
+        bootbox.confirm("This genotype has existing annotations.  Really edit?",
+                        function(confirmed) {
+                          if (confirmed) {
+                            var targetUrl = $($event.currentTarget).attr("href");
+                            window.location.href = targetUrl;
+                          }
+                        });
       }
     };
   };
