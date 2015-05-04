@@ -1714,6 +1714,10 @@ var genotypeSearchCtrl =
           waitingForServer: false,
         };
         $scope.app_static_path = CantoGlobals.app_static_path;
+
+        $scope.addGenotype = function() {
+          window.location.href = CantoGlobals.curs_root_uri + '/feature/genotype/add';
+        };
       },
       link: function(scope) {
         scope.$watch('data.searchGenes',
