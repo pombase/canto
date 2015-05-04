@@ -1323,6 +1323,20 @@ canto.controller('TermSuggestDialogCtrl',
                  termSuggestDialogCtrl]);
 
 
+function storeGenotype(toaster, $http, genotype_id, genotype_name, alleles) {
+  var url = curs_root_uri + '/feature/genotype';
+
+  if (genotype_id) {
+    url += '/edit/' + genotype_id;
+  } else {
+    url += '/store';
+  }
+
+  return simpleHttpPost(toaster, $http, url,
+                        { genotype_name: genotype_name,
+                          alleles: alleles });
+}
+
 function makeAlleleEditInstance($modal, gene_display_name, gene_systemtic_id,
                                 gene_id, endogenousWildtypeAllowed)
 {
@@ -1347,18 +1361,18 @@ function makeAlleleEditInstance($modal, gene_display_name, gene_systemtic_id,
 
 
 var genePageCtrl =
-  function($scope, $modal) {
+  function($scope, $modal, toaster, $http) {
     $scope.singleAlleleQuick = function(gene_display_name, gene_systemtic_id, gene_id) {
       var editInstance = makeAlleleEditInstance($modal, gene_display_name,
                                                 gene_systemtic_id, gene_id);
 
       editInstance.result.then(function (alleleData) {
-        alert("implement me");
+        storeGenotype(toaster, $http, undefined, undefined, [alleleData]);
       });
     };
   };
 
-canto.controller('GenePageCtrl', ['$scope', '$modal', genePageCtrl]);
+canto.controller('GenePageCtrl', ['$scope', '$modal', 'toaster', '$http', genePageCtrl]);
 
 
 var singleGeneAddDialogCtrl =
@@ -1514,20 +1528,8 @@ var multiAlleleCtrl =
                 true);
 
   $scope.store = function() {
-    var arg;
-    // hacky: if genotype_id is defined the URL will be:
-    // http.../feature/genotype/edit/<id> if not it will be:
-    // http.../feature/genotype/add
-    // simpleHttpPost() will strip the last part of the URL before adding the
-    // arg
-    if ($scope.data.genotype_id) {
-      arg = $scope.data.genotype_id;
-    } else {
-      arg = 'store';
-    }
-    simpleHttpPost(toaster, $http, arg,
-                   { genotype_name: $scope.data.genotype_name,
-                     alleles: $scope.alleles });
+    storeGenotype(toaster, $http, $scope.data.genotype_id,
+                  $scope.data.genotype_name, $scope.alleles);
   };
 
   $scope.removeAllele = function (allele) {
