@@ -1827,6 +1827,15 @@ var singleGeneGenotypeList =
         $scope.data = {
           filteredGenotypes: [],
           waitingForServer: true,
+          showAll: false,
+        };
+
+        $scope.showAll = function() {
+          $scope.data.showAll = true;
+        };
+
+        $scope.hideAll = function() {
+          $scope.data.showAll = false;
         };
 
         CursGenotypeList.filteredGenotypeList('curs_only', {

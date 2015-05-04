@@ -5,8 +5,18 @@
   </div>
 
   <div ng-if="!data.waitingForServer">
-    <div ng-show="data.filteredGenotypes.length > 0">
+    <div ng-show="data.filteredGenotypes.length > 0 && data.filteredGenotypes.length <= 5 || data.showAll">
       <genotype-list-view genotype-list="data.filteredGenotypes"></genotype-list-view>
+      <a ng-click="hideAll()">Hide</a>
+    </div>
+    <div ng-show="data.filteredGenotypes.length > 5 && !data.showAll">
+      <div>
+This session has {{data.filteredGenotypes.length}} genotypes that include this
+gene.
+      </div>
+      <div>
+        <a ng-click="showAll()">View</a>
+      </div>
     </div>
     <div ng-show="data.filteredGenotypes.length == 0">
       This gene is not part of a genotype in this session
