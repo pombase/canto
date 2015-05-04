@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 64;
+use Test::More tests => 58;
 use Test::Deep;
 
 use Capture::Tiny 'capture_stderr';
@@ -259,9 +259,6 @@ is ($res->{status}, 'error');
 my $illegal_ev_code_message = 'no such evidence code: illegal';
 is ($res->{message}, $illegal_ev_code_message);
 
-like ($stderr, qr/$illegal_ev_code_message/);
-
-
 # test illegal curs_key
 $stderr = capture_stderr {
   $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
@@ -273,7 +270,6 @@ $stderr = capture_stderr {
 };
 is ($res->{status}, 'error');
 is ($res->{message}, 'incorrect key');
-like ($stderr, qr/incorrect key/);
 
 
 # test illegal field type
@@ -288,7 +284,6 @@ $stderr = capture_stderr {
 is ($res->{status}, 'error');
 my $illegal_field_message = 'no such annotation field type: illegal';
 is ($res->{message}, $illegal_field_message);
-like ($stderr, qr/$illegal_field_message/);
 
 
 # test setting with_gene/with_or_from_identifier for a gene
@@ -346,7 +341,6 @@ $stderr = capture_stderr {
 is ($res->{status}, 'error');
 my $lack_of_info_message = 'No feature_id passed to annotation creation service';
 is ($res->{message}, $lack_of_info_message);
-like ($stderr, qr/$lack_of_info_message/);
 
 
 # delete
@@ -378,7 +372,6 @@ $stderr = capture_stderr {
 is ($res->{status}, 'error');
 my $illegal_field_type_message = 'no such annotation field type: illegal';
 is ($res->{message}, $illegal_field_type_message);
-like ($stderr, qr/$illegal_field_type_message/);
 
 
 # test editing
@@ -933,7 +926,6 @@ cmp_deeply($add_gene_result,
              'status' => 'error',
              'message' => $add_dummy_gene_message,
            });
-like ($stderr, qr/$add_dummy_gene_message/);
 
 # curator details
 my $curator_detail_res =

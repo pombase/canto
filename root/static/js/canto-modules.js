@@ -1,6 +1,6 @@
 "use strict";
 
-/*global history,curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links,make_confirm_dialog */
+/*global history,curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links,make_confirm_dialog,loadingStart,loadingEnd */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'toaster']);
 
@@ -116,7 +116,7 @@ canto.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });
 
-canto.service('Curs', function($http) {
+canto.service('Curs', function($http, $q) {
   this.list = function(key, args) {
     var data = null;
 
@@ -158,6 +158,29 @@ canto.service('Curs', function($http) {
 
     var url = curs_root_uri + '/ws/' + key + '/add/' + args.join('/');
     return $http.get(url);
+  };
+
+  this.delete = function(objectType, objectId) {
+    var q = $q.defer();
+
+    // POST the curs_key so that a crawled GET can't delete a feature
+    // the key is checked on the server
+    var details = { key: curs_key };
+
+    var putQ = $http.put(curs_root_uri + '/ws/' + objectType + '/delete/' + objectId,
+                        details);
+
+    putQ.success(function(response) {
+      if (response.status === 'success') {
+        q.resolve();
+      } else {
+        q.reject(response.message);
+      }
+    }).error(function(data, status) {
+      q.reject('Deletion request failed: ' + status);
+    });
+
+    return q.promise;
   };
 });
 
@@ -216,6 +239,21 @@ canto.service('CursGenotypeList', function($q, Curs) {
       q.resolve(genotypes);
     }).error(function() {
       q.reject();
+    });
+
+    return q.promise;
+  };
+
+  this.deleteGenotype = function(genotypeList, genotype) {
+    var q = $q.defer();
+
+    Curs.delete('genotype', genotype.genotype_id)
+    .then(function() {
+      arrayRemoveOne(genotypeList, genotype);
+      q.resolve();
+    })
+    .catch(function(message) {
+      q.reject(message);
     });
 
     return q.promise;
@@ -350,7 +388,7 @@ var annotationProxy =
           q.reject(response.message);
         }
       }).error(function(data, status) {
-        q.reject('Deletion request to server failed: ' + status);
+        q.reject('Deletion request failed: ' + status);
       });
 
       return q.promise;
@@ -1704,19 +1742,47 @@ canto.directive('genotypeSearch',
                   genotypeSearchCtrl]);
 
 var genotypeListRowCtrl =
-  function(CantoGlobals) {
+  function(toaster, CantoGlobals, CursGenotypeList) {
     return {
       restrict: 'A',
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row.html',
       controller: function($scope) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+
+        $scope.deleteGenotype = function() {
+          bootbox.confirm("Are you sure you want to delete this genotype?",
+                          function(confirmed) {
+            if (confirmed) {
+              loadingStart();
+
+              // using $parent is brittle
+              var q = CursGenotypeList.deleteGenotype($scope.$parent.genotypeList, $scope.genotype);
+
+              q.then(function() {
+                toaster.pop('success', 'Genotype deleted');
+              });
+
+              q.catch(function(message) {
+                if (message === 'has_annotations') {
+                  toaster.pop('warning', "couldn't delete the genotype: delete the annotations that use it first");
+                } else {
+                  toaster.pop('error', "couldn't delete the genotype: " + message);
+                }
+              });
+
+              q.finally(function() {
+                loadingEnd();
+              });
+            }
+          });
+        };
       },
     };
   };
 
 canto.directive('genotypeListRow',
-                ['CantoGlobals', genotypeListRowCtrl]);
+                ['toaster', 'CantoGlobals', 'CursGenotypeList', genotypeListRowCtrl]);
 
 
 var genotypeListViewCtrl =
@@ -2203,16 +2269,21 @@ var annotationTableRow =
           });
         };
         $scope.delete = function() {
-          bootbox.confirm("Are you sure?", function(confirmed) {
+          bootbox.confirm("Are you sure you want to delete this annotation?", function(confirmed) {
             if (confirmed) {
+              loadingStart();
               AnnotationProxy.deleteAnnotation(annotation)
                 .then(function() {
                   // FIXME: $scope.data.annotations is from the parent
                   // scope so this is very brittle
                   arrayRemoveOne($scope.data.annotations, annotation);
+                  toaster.pop('success', 'Annotation deleted');
                 })
                 .catch(function(message) {
-                  toaster.pop('note', "couldn't delete the annotation: " + message);
+                  toaster.pop('note', "Couldn't delete the annotation: " + message);
+                })
+                .finally(function() {
+                  loadingEnd();
                 });
             }
           });

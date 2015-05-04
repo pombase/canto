@@ -45,6 +45,7 @@ has allele_manager => (is => 'rw', isa => 'Canto::Curs::AlleleManager',
                        lazy_build => 1);
 
 with 'Canto::Role::Configurable';
+with 'Canto::Role::MetadataAccess';
 
 sub _build_allele_manager
 {
@@ -186,7 +187,9 @@ sub _store_chado_genotype
 sub find_and_create_genotype
 {
   my $self = shift;
-  my $curs_key = $self->curs_key();
+
+  my $schema = $self->curs_schema();
+  my $curs_key = $self->get_metadata($schema, 'curs_key');
 
   my $genotype_identifier = shift;
 
@@ -200,6 +203,32 @@ sub find_and_create_genotype
   my $chado_genotype_details = $lookup->lookup(identifier => $genotype_identifier);
 
   return $self->_store_chado_genotype($curs_key, $chado_genotype_details);
+}
+
+=head2 delete_genotype
+
+ Usage   : $utils->delete_genotype($genotype_identifier);
+ Function: Remove a genotype from the CursDB if it has no annotations.
+           Any alleles not referenced by another Genotype will be removed too.
+ Args    : $genotype_id
+ Return  : Nothing - dies on error or if the genotype has some annotations
+
+=cut
+
+sub delete_genotype
+{
+  my $self = shift;
+  my $genotype_id = shift;
+
+  my $schema = $self->curs_schema();
+
+  my $genotype = $schema->resultset('Genotype')->find($genotype_id);
+
+  if ($genotype->annotations()->count() > 0) {
+    die "has_annotations\n";
+  }
+
+  $genotype->delete();
 }
 
 1;

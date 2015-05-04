@@ -904,8 +904,6 @@ sub _make_error
 {
   my $message = shift;
 
-  cluck "error in ServiceUtils: $message";
-
   return {
     status => 'error',
     message => $message,
@@ -1093,6 +1091,54 @@ sub delete_annotation
     return _make_error($_);
   }
 }
+
+=head2 delete_genotype
+
+ Usage   : $utils->delete_genotype($details);
+ Function: Remove a genotype from the CursDB if it has no annotations.
+           Any alleles not referenced by another Genotype will be removed too.
+ Args    : $details - annotation details:
+             - key: the curs key
+             - genotype_identifier: ID of the annotation to delete
+ Return  : Nothing - dies on error
+
+ Return  : { status: 'success' }
+         or:
+           { status: 'error', message: '...' }
+
+=cut
+
+sub delete_genotype
+{
+  my $self = shift;
+  my $genotype_id = shift;
+  my $details = shift;
+
+  my $curs_schema = $self->curs_schema();
+  $curs_schema->txn_begin();
+
+  try {
+    $self->_check_curs_key($details);
+
+    my $genotype_manager =
+      Canto::Curs::GenotypeManager->new(config => $self->config(),
+                                        curs_schema => $self->curs_schema());
+
+    $genotype_manager->delete_genotype($genotype_id);
+
+    $self->metadata_storer()->store_counts($curs_schema);
+
+    $curs_schema->txn_commit();
+
+    return { status => 'success' };
+  } catch {
+    $curs_schema->txn_rollback();
+
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
 
 =head2 add_gene_by_identifier
 

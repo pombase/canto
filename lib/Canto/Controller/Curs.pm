@@ -2742,13 +2742,19 @@ sub ws_annotation_delete : Chained('top') PathPart('ws/annotation/delete')
 
 sub ws_genotype_delete : Chained('top') PathPart('ws/genotype/delete')
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $feature_id) = @_;
 
-  my $genotype_manager =
-    Canto::Curs::GenotypeManager->new(config => $c->config(),
-                                      curs_schema => $c->curs_schema());
+  my $st = $c->stash();
+  my $schema = $st->{schema};
 
-  #$genotype_manager->delete_genotype($genotype_identifier);
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  my $json_data = $c->req()->body_data();
+
+  $c->stash->{json_data} = $service_utils->delete_genotype($feature_id, $json_data);
+
+  $c->forward('View::JSON');
 }
 
 sub ws_add_gene : Chained('top') PathPart('ws/gene/add')
