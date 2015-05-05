@@ -1141,7 +1141,6 @@ var alleleNameComplete =
                 display_name: el.display_name,
                 description: el.description,
                 type: el.type,
-                expression: el.expression
               };
             });
         };
@@ -1172,11 +1171,6 @@ var alleleNameComplete =
               scope.alleleDescription = '';
             } else {
               scope.alleleDescription = ui.item.description;
-            }
-            if (typeof(ui.item.expression) === 'undefined') {
-              scope.alleleExpression = '';
-            } else {
-              scope.alleleExpression = ui.item.allele_expresion;
             }
             });
           }
@@ -1246,6 +1240,8 @@ var alleleEditDialogCtrl =
     $scope.$watch('alleleData.type',
                   function(newType) {
                     $scope.env.allele_types_promise.then(function(response) {
+                      $scope.current_type_config = response.data[newType];
+
                       if ($scope.alleleData.primary_identifier) {
                         return;
                       }

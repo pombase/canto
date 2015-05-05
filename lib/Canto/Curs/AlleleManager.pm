@@ -115,10 +115,8 @@ sub allele_from_json
       }
 
       # we will store the allele from Chado in the CursDB
-      $allele_type = $allele_details->{type};
       $description = $allele_details->{description};
       $name = $allele_details->{name};
-      $expression = $allele_details->{expression};
 
       my $gene_identifier = $allele_details->{gene_uniquename};
 
