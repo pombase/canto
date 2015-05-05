@@ -1097,6 +1097,10 @@ input[readonly="1"] {
   clear: left;
 }
 
+.curs-allele-edit-dialog td {
+  padding-right: 1em;
+}
+
 .curs-allele-evidence-select {
   width: 22em;
 }
