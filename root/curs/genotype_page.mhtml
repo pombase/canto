@@ -56,7 +56,7 @@ Name
 Description
           </td>
           <td>
-<% $genotype->display_name() || '[none]' %>
+<% $genotype->allele_string() || '[none]' %>
           </td>
         </tr>
       </tbody>
