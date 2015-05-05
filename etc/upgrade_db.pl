@@ -402,6 +402,8 @@ CREATE TABLE allele_genotype (
 
       my $annotation_rs = $curs_schema->resultset('Annotation');
 
+      my %seen_genotype_names = ();
+
       while (defined (my $annotation = $annotation_rs->next())) {
         my $alleles_sth = $curs_dbh->prepare("select allele from allele_annotation where annotation = ?");
 
@@ -463,6 +465,8 @@ CREATE TABLE allele_genotype (
           ($allele_data->{expression} // 'no_expression') . '-' .
           $allele_data->{gene}->primary_identifier();
 
+        die "unexpected primary_identifier" if $allele_data->{primary_identifier};
+
         my $annotation_genotype;
         my $annotation_allele;
 
@@ -471,12 +475,31 @@ CREATE TABLE allele_genotype (
         } else {
           $annotation_allele = $curs_schema->resultset('Allele')->create($allele_data);
 
+          my $annotation_allele_primary_identifier =
+            $allele_data->{gene}->primary_identifier() . ":$curs_key-" . $annotation_allele->allele_id();
+
+          $annotation_allele->primary_identifier($annotation_allele_primary_identifier);
+          $annotation_allele->update();
+
           my $genotype_name = "$strain_name " . $allele_data->{gene}->primary_identifier() .
             '-' . $annotation_allele->long_identifier();
-          warn "  made new genotype: $genotype_name  from allele: $key\n";
+
+          if (exists $seen_genotype_names{$genotype_name}) {
+            my $extra_index = 2;
+
+            while (exists $seen_genotype_names{$genotype_name . "-$extra_index"}) {
+              $extra_index++;
+            }
+
+            $genotype_name .= "-$extra_index";
+          }
+
+          warn "  making new genotype: $genotype_name  from allele: $key\n";
 
           $annotation_genotype = $genotype_manager->make_genotype($curs_key, $genotype_name,
                                                         [$annotation_allele]);
+
+          $seen_genotype_names{$genotype_name} = 1;
 
           $new_alleles{$key} = [$annotation_genotype, $annotation_allele];
         }
