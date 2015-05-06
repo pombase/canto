@@ -12,14 +12,9 @@
     </span>
   </td>
   <td class="table-row-actions">
-    <div>
+    <div ng-if="!genotype.genotype_id">
       <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier}}">
-        <span ng-if="genotype.genotype_id">
-View ...
-        </span>
-        <span ng-if="!genotype.genotype_id">
 Add to session ...
-        </span>
       </a>
     </div>
     <div ng-if="genotype.genotype_id">
