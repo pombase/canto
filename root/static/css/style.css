@@ -567,6 +567,13 @@ div.clearall {
   margin-top: 1em;
 }
 
+.curs-top-help {
+  font-weight: bold;
+  font-size: 105%;
+  padding-left: 20px;
+  padding-bottom: 10px;
+}
+
 .annotation-start {
   margin-left: 30px;
   padding: 5px;
