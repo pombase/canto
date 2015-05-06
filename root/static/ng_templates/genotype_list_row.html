@@ -18,6 +18,9 @@ Add to session ...
       </a>
     </div>
     <div ng-if="genotype.genotype_id">
+      <a href="{{curs_root_uri + '/feature/genotype/annotate/' + genotype.id_or_identifier + '/start/phenotype'}}">Add phenotype ...</a>
+    </div>
+    <div ng-if="genotype.genotype_id">
       <a href="#" ng-click="deleteGenotype()">Delete ...</a>
     </div>
   </td>
