@@ -625,6 +625,18 @@ canto.directive('breadcrumbs', ['$compile', 'CursStateService', 'CantoService',
                                 breadcrumbsDirective]);
 
 
+function openSingleGeneAddDialog($modal)
+{
+  return $modal.open({
+    templateUrl: app_static_path + 'ng_templates/single_gene_add.html',
+    controller: 'SingleGeneAddDialogCtrl',
+    title: 'Add a new gene by name or identifier',
+    animate: false,
+    windowClass: "modal",
+  });
+}
+
+
 function featureChooserControlHelper($scope, $modal, CursGeneList,
                                      CursGenotypeList, toaster) {
   function getGenesFromServer() {
@@ -646,13 +658,7 @@ function featureChooserControlHelper($scope, $modal, CursGeneList,
   }
 
   $scope.openSingleGeneAddDialog = function() {
-    var modal = $modal.open({
-      templateUrl: app_static_path + 'ng_templates/single_gene_add.html',
-      controller: 'SingleGeneAddDialogCtrl',
-      title: 'Add a new gene by name or identifier',
-      animate: false,
-      windowClass: "modal",
-    });
+    var modal = openSingleGeneAddDialog($modal);
     modal.result.then(function () {
       getGenesFromServer();
     });
@@ -1662,7 +1668,7 @@ canto.controller('GenotypeManageCtrl',
                  GenotypeManageCtrl]);
 
 var geneSelectorCtrl =
-  function(CursGeneList, toaster) {
+  function(CursGeneList, $modal, toaster) {
     return {
       scope: {
         selectedGenes: '=',
@@ -1674,14 +1680,26 @@ var geneSelectorCtrl =
         $scope.data = {
           genes: [],
         };
+
+        function getGenesFromServer() {
+          CursGeneList.geneList().then(function(results) {
+            $scope.data.genes = results;
+          }).catch(function() {
+            toaster.pop('note', "couldn't read the gene list from the server");
+          });
+        }
+
+        getGenesFromServer();
+
+        $scope.addAnotherGene = function() {
+          var modal = openSingleGeneAddDialog($modal);
+          modal.result.then(function () {
+            getGenesFromServer();
+          });
+        };
+
       },
       link: function(scope) {
-        CursGeneList.geneList().then(function(results) {
-          scope.data.genes = results;
-        }).catch(function() {
-          toaster.pop('note', "couldn't read the gene list from the server");
-        });
-
         scope.selectedGenesFilter = function() {
           scope.selectedGenes = $.grep(scope.data.genes, function(gene) {
             return gene.selected;
@@ -1692,7 +1710,7 @@ var geneSelectorCtrl =
   };
 
 canto.directive('geneSelector',
-                 ['CursGeneList', 'toaster',
+                ['CursGeneList', '$modal', 'toaster',
                   geneSelectorCtrl]);
 
 var genotypeSearchCtrl =
