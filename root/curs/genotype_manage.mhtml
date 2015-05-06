@@ -40,6 +40,7 @@ Genotypes used in this session
         <div ng-hide="data.waitingForServer">
         <div ng-show="data.genotypes.length != 0">
           <div class="curs-genotype-list-instructions">
+Click a name or description to view and edit genotype details
           </div>
 
           <genotype-list-view genotype-list="data.genotypes"></genotype-list-view>
