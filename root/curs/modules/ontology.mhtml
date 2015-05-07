@@ -155,8 +155,8 @@ if any):
         <div id="ferret-suggest-link" class="curs-box-body">
           <ul>
             <li>
-              <a ng-click="openTermSuggestDialog()">
-Suggest a new child term for <span class="ferret-term-id-display"></span> ...
+              <a ng-click="openTermSuggestDialog('<% $feature_display_name %>')">
+                Suggest a new child term for <span class="ferret-term-id-display">{{getCurrentTermDetails('id')}}</span> ...
               </a>
             </li>
           </ul>
@@ -188,8 +188,8 @@ previously described, and so is not yet included in the ontology.
         <div id="ferret-suggest-link-leaf" class="curs-box-body">
           <ul>
             <li>
-              <a ng-click="openTermSuggestDialog()">
-Suggest a new child term for <span class="ferret-term-id-display"></span> ...
+              <a ng-click="openTermSuggestDialog('<% $feature_display_name %>')">
+Suggest a new child term for <span class="ferret-term-id-display">{{getCurrentTermDetails('id')}}</span> ...
               </a>
             </li>
           </ul>
