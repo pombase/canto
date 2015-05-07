@@ -10,7 +10,7 @@ Select one or more genes to find matching genotypes:
         </div>
         <div ng-hide="data.waitingForServer">
           <div ng-show="data.filteredGenotypes.length > 0">
-Matches:
+Matching genotypes:
             <genotype-list-view genotype-list="data.filteredGenotypes"></genotype-list-view>
           </div>
           <div ng-show="data.filteredGenotypes.length == 0">
