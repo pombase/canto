@@ -1055,29 +1055,6 @@ sub annotation_features
   }
 }
 
-# redirect to the annotation transfer page only if we've just created an
-# ontology annotation for a gene
-sub _maybe_transfer_annotation
-{
-  my $c = shift;
-  my $annotations = shift;
-  my $annotation_config = shift;
-
-  my $st = $c->stash();
-  my $schema = $st->{schema};
-
-  my ($feature_type, $feature) =
-    annotation_features($c->config(), $annotations->[0]);
-
-  my $current_user = $c->user();
-
-  if ($annotation_config->{category} eq 'ontology' && $feature_type eq 'gene') {
-    die "internal error - this shouldn't be called for ontologies";
-  } else {
-    _redirect_and_detach($c, 'feature', $feature_type, 'view', $feature->feature_id());
-  }
-}
-
 sub _check_annotation_exists
 {
   my $self = shift;
@@ -1203,19 +1180,11 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
                                   $feature_type, [$feature], \%annotation_data);
 
 
-  if ($feature_type eq 'gene') {
-    $c->stash->{json_data} = {
-      status => "success",
-      location => $st->{curs_root_uri} . "/annotation/" .
-        $annotation->annotation_id() . "/transfer",
-    };
-  } else {
-    $c->stash->{json_data} = {
-      status => "success",
-      location => $st->{curs_root_uri} . "/feature/$feature_type/view/" .
-        $feature->feature_id(),
-    };
-  }
+  $c->stash->{json_data} = {
+    status => "success",
+    location => $st->{curs_root_uri} . "/annotation/" .
+      $annotation->annotation_id() . "/transfer",
+  };
 
   $c->forward('View::JSON');
 }
@@ -1382,28 +1351,26 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
   $st->{feature} = $feature;
   $st->{feature_type} = $feature_type;
 
-  if ($feature_type ne 'gene') {
-    die "only gene annotation transfer is implemented";
-  }
-
   my $genes_rs = $self->get_ordered_gene_rs($schema, 'primary_identifier');
 
   my @options = ();
 
-  while (defined (my $other_gene = $genes_rs->next())) {
-    next if $feature->gene_id() == $other_gene->gene_id();
+  if ($feature_type eq 'gene') {
+    while (defined (my $other_gene = $genes_rs->next())) {
+      next if $feature->gene_id() == $other_gene->gene_id();
 
-    my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
+      my $other_gene_proxy = _get_gene_proxy($config, $other_gene);
 
-    push @options, { value => $other_gene_proxy->gene_id(),
-                     label => $other_gene_proxy->long_display_name(),
-                     container_attributes => {
-                       class => 'checkbox-gene-list',
-                     }
-                   };
+      push @options, { value => $other_gene_proxy->gene_id(),
+                       label => $other_gene_proxy->long_display_name(),
+                       container_attributes => {
+                         class => 'checkbox-gene-list',
+                       }
+                     };
+    }
+
+    @options = sort { $a->{label} cmp $b->{label} } @options;
   }
-
-  @options = sort { $a->{label} cmp $b->{label} } @options;
 
   $st->{title} = "Finalise annotation";
   $st->{show_title} = 0;
@@ -1469,7 +1436,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 
       my %extension_def = (
         name => 'annotation-extension-0',
-        label => 'Annotation extension:',
+        label => 'Optional annotation extension:',
         label_tag => 'formfu-label',
         type => 'Textarea',
         container_tag => 'div',
@@ -1590,7 +1557,7 @@ sub annotation_transfer : Chained('annotation') PathPart('transfer') Form
 
     $self->state()->store_statuses($schema);
 
-    _redirect_and_detach($c, 'feature', 'gene', 'view', $feature->gene_id());
+    _redirect_and_detach($c, 'feature', $feature_type, 'view', $feature->feature_id());
   }
 }
 

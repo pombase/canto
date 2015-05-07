@@ -1,7 +1,6 @@
 <%args>
 $curs_root_uri
 $annotation
-$force_comment_edit => 0
 $show_extension_column => 0
 $view_only => 0
 </%args>
@@ -12,7 +11,6 @@ $view_only => 0
    pub => $st->{pub},
    all_annotation_count => scalar(@annotations),
    completed_count => scalar(@annotations), gene => $st->{gene},
-   force_comment_edit => $force_comment_edit,
    show_extension_column => $show_extension_column,
    view_only => $view_only &>
 

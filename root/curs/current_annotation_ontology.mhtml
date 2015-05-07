@@ -1,25 +1,14 @@
 <%args>
-$curs_root_uri
 $annotation_type
 @annotations
-$completed_count => undef
-$feature => undef
 $pub
-$user_created
-$force_comment_edit => 0
-$show_extension_column => 0
-$view_only => 0
 </%args>
 
 % if (@annotations) {
 <div class="sect">
-  <div class="title sect-title">
-<% $title %>
-  </div>
   <div class="annotation-table sect-content">
 <table class="list">
   <thead>
-% if (!defined $feature) {
     <tr>
 %   if ($feature_type eq 'gene') {
       <th>
@@ -60,116 +49,42 @@ $view_only => 0
         With
       </th>
 % }
-% if ($user_created) {
 %   if ($some_row_has_term_suggestion) {
       <th>
         Term suggestion
       </th>
 %   }
-      <th>
-        Submitter comment
-      </th>
-% if ($show_extension_column) {
-      <th>
-        Annotation extension
-      </th>
-% }
-% if ($session_submitted) {
-      <th>
-        Curator
-      </th>
-% }
-% }
     </tr>
   </thead>
 
 % for my $row (@annotations) {
-% my $annotation_id = $row->{annotation_id};
-% my $edit_term_action_url =
-%   "$curs_root_uri/annotation/$annotation_id/edit#s=" . $row->{term_name};
-% my $annotation_status = $row->{status};
-% next if ($state ne APPROVAL_IN_PROGRESS && $annotation_status eq 'deleted');
-
-  <tr class="<% $annotation_status eq 'deleted' ? 'deleted-annotation' : '' %>">
-% my $obsolete_class = ($row->{is_obsolete_term} ? 'class="curs-obsolete-term"' : '');
-% if (!defined $feature) {
+  <tr>
 %   if ($feature_type eq 'gene') {
     <td>
-      <span>
       <% $row->{gene_identifier} %>
-      </span>
     </td>
     <td>
-      <span>
       <% $row->{gene_name} %>
-      </span>
     </td>
 %   } else {
 %     if ($feature_type eq 'genotype') {
     <td>
-      <span>
       <% $row->{genotype_display_name} %>
-      </span>
     </td>
 %     }
 %   }
-% }
     <td>
-      <span <% $obsolete_class |n %>>
-% if ($view_only || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{term_ontid} %>
-% } else {
-      <a href="<% $edit_term_action_url %>"
-         class="curs-editable-table-field"
-         id="curs-annotation-edit-<% $row->{annotation_id} %>"
-         title="Change this term ...">
-        <% $row->{term_ontid} %>
-        <img src="<% $edit_icon_uri %>"/>
-      </a>
-% }
-      </span>
     </td>
     <td>
-      <span <% $obsolete_class |n %>>
-% if ($view_only || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{term_name} %>
-% } else {
-      <a href="<% $edit_term_action_url %>"
-         class="curs-editable-table-long-field"
-         id="curs-annotation-edit-<% $row->{annotation_id} %>"
-         title="Change this term ...">
-        <% $row->{term_name} %>
-        <img src="<% $edit_icon_uri %>"/>
-      </a>
-% }
-      </span>
     </td>
     <td>
-      <span>
-% if ($view_only || !$user_created || $annotation_status eq 'deleted') {
-%   if (defined $row->{evidence_code}) {
-   <% $row->{evidence_code} %>
-%   }
-% } else {
-%   my $url = $evidence_action_url . $row->{annotation_id};
-<a href="<% $url %>"
-   class="curs-editable-table-long-field"
-%   if (defined $row->{evidence_code}) {
-   title="Change evidence ...">
-   <% $row->{evidence_code} %>
-   <img src="<% $edit_icon_uri %>"/>
-%   } else {
-   title="Set evidence ...">Set evidence ...
-%   }
-</a>
-% }
-      </span>
+     <% $row->{evidence_code} %>
     </td>
 % if ($feature_type eq 'genotype') {
     <td>
-      <span>
       <% $row->{conditions} %>
-      </span>
     </td>
 % }
 % if ($some_row_has_qualifer) {
@@ -186,221 +101,32 @@ NOT
 % }
 % if ($needs_with_or_from) {
     <td>
-      <span>
 % if ($row->{needs_with} || defined $row->{with_or_from_display_name}) {
 %   if (defined $row->{with_or_from_display_name}) {
-% if ($view_only || !$user_created || $annotation_status eq 'deleted') {
       <% $row->{with_or_from_display_name} %>
-% } else {
-      <a href="<% $edit_with_action_url . $annotation_id . '/edit' %>"
-         class="curs-editable-table-field"
-         id="curs-annotation-edit-<% $row->{annotation_id} %>"
-         title="Change the 'with' gene ...">
-        <% $row->{with_or_from_display_name} %>
-        <img src="<% $edit_icon_uri %>"/>
-      </a>
-% }
-%   } else {
-%     if (!$view_only || $annotation_status eq 'deleted') {
-      <a href="<% $curs_root_uri . '/annotation/with_gene/' . $row->{annotation_id} %>">Set with ...</a>
-%     }
 %   }
 % } else {
      &nbsp;
 % }
-      </span>
-    </td>
-% }
-% if ($user_created) {
-%   if ($some_row_has_term_suggestion) {
-    <td>
-      <span>
-%   if ($row->{term_suggestion}) {
-      <a href="#" onclick="javascript:curs_home.show_term_suggestion('<% $row->{term_ontid} %>','<% Canto::WebUtil::escape_inline_js($row->{term_suggestion}->{name}) %>','<% Canto::WebUtil::escape_inline_js($row->{term_suggestion}->{definition}) %>'); return false;">View ...</a>
-%     if ($admin_user && !$view_only) {
-      <br/>
-      <a href="<% $curs_root_uri . '/annotation/delete_suggestion/' . $row->{annotation_id} %>" class="confirm-delete">Delete ...</a>
-%     }
-%   } else {
-      &nbsp;
-%   }
-      </span>
-    </td>
-%   }
-    <td>
-      <span>
-% {
-% my $url = $comment_edit_url  . $row->{annotation_id};
-% my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'submitter_comment', $row);
-%   if ($view_only && !$force_comment_edit) {
-      <% $escaped_text %>
-%   } else {
-%     if (defined $view_edit_text) {
-      <a href="#" class="curs-editable-table-field" title="<% $escaped_text %>"
-         onclick="<% $onclick %>"><% $view_edit_text %> ...</a>
-%     }
-%   }
-% }
-      </span>
-    </td>
-
-% if ($show_extension_column) {
-    <td>
-      <span>
-% {
-%   my $url = $extension_edit_url  . $row->{annotation_id};
-%   my ($onclick, $escaped_text, $view_edit_text) = $field_edit_proc->($url, 'annotation_extension', $row);
-%   if ($admin_user && defined $view_edit_text && (!$view_only || $force_comment_edit)) {
-      <a href="#" class="curs-editable-table-field" title="<% $escaped_text %>"
-         onclick="<% $onclick %>"><% $escaped_text || ($view_edit_text . ' ...') %></a>
-%   } else {
-   <% $escaped_text %>
-%   }
-% }
-      </span>
     </td>
 % }
 
-% if ($session_submitted) {
-%   my $curator = $row->{curator} // '';
-    <td>
-      <% $curator %>
-    </td>
-% }
-% if (!$view_only) {
-    <td style="border: 0px solid white; background-color: white;">
-% if ($annotation_status ne 'deleted') {
-<div>
-      <a href="<% $curs_root_uri . '/annotation/' . $row->{annotation_id} . '/transfer' %>"
-         id="curs-annotation-transfer-<% $row->{annotation_id} %>"
-         title="Copy this annotation to another <% $feature_type %>">
-Transfer
-      </a>
-</div>
-<div>
-      <a href="<% $delete_action->($row->{annotation_id}) %>"
-         id="curs-annotation-delete-<% $row->{annotation_id} %>"
-%   if (!$c->user_exists() || !$c->user()->is_admin()) {
-         class="confirm-delete"
-%   }
-         title="Remove this annotation">
-Delete
-      </a>
-% }
-</div>
-    </td>
-% }
-% }
   </tr>
-% }
 </table>
-% if ($some_incomplete && !$feature) {
-<div class="curs-annotation-incomplete-message">
-  Note that some of the annotations are incomplete, and only complete
-  annotations are included in the downloaded table.
-</div>
-% }
-</div>
+  </div>
 </div>
 % }
 
 <%init>
 use HTML::Mason::Escapes;
 
-my $annotation_type_name = $annotation_type->{name};
-
-my $delete_action = sub { "$curs_root_uri/annotation/$_[0]/delete/" };
-my $delete_icon_uri = $c->uri_for('/static/images/delete_icon.png');
-my $undelete_icon_uri = $c->uri_for('/static/images/undo_icon.png');
-my $edit_icon_uri = $c->uri_for('/static/images/mini-edit.png');
-my $comment_edit_url = $curs_root_uri . '/annotation/comment_edit/';
-my $extension_edit_url = $curs_root_uri . '/annotation/extension_edit/';
-my $edit_with_action_url = "$curs_root_uri/annotation/with_gene/";
-
-my $some_incomplete = $user_created && $completed_count != scalar(@annotations);
-
-my $st = $c->stash();
-
-my $read_only_curs = $st->{read_only_curs};
-
-if ($read_only_curs) {
-  $view_only = 1;
-}
-
-my $admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
-
-my $field_edit_proc = sub {
-  my $url = shift;
-  my $type = shift;
-  my $row = shift;
-
-  my $current_value = $row->{$type} // '';
-
-  my $escaped_text = $current_value // '';
-  my $js_escaped_text = Canto::WebUtil::escape_inline_js($escaped_text);
-  my $view_edit_text = undef;
-  my $onclick;
-  my $annotation_status = $row->{status};
-
-  (my $type_for_display = $type) =~ s/_/ /g;
-  if (!$admin_user && (($view_only && !$force_comment_edit) || $annotation_status eq 'deleted')) {
-    if ($js_escaped_text ne '') {
-      $view_edit_text = 'View';
-      $onclick = "javascript:canto_util.show_message('View $type_for_display',  '$js_escaped_text'); return false;";
-    }
-  } else {
-    if ($js_escaped_text eq '') {
-      $view_edit_text = 'Add';
-    } else {
-      $view_edit_text = 'View/edit';
-    }
-    $onclick = "javascript:EditDialog.create('Edit $type_for_display',  '$js_escaped_text', '$url'); return false;";
-  }
-
-  return ($onclick, $escaped_text, $view_edit_text);
-};
-
-my $feature_text = "";
-if (defined $feature) {
-  $feature_text = ' for ' . $feature->display_name();
-}
-
-my $new_or_db;
-if ($user_created) {
-  $new_or_db = 'New ';
-} else {
-  $new_or_db = 'Existing ';
-}
-
 my $annotation_type_display_name = $annotation_type->{display_name};
-
-my $plural = '';
-if (@annotations > 1) {
-  $plural = 's';
-}
-
-my $title = $new_or_db . "$annotation_type_display_name annotation$plural " .
-  $feature_text . ($user_created ? '' : ' from ' . $pub->uniquename());
 
 my $needs_with_or_from = $annotation_type->{needs_with_or_from};
 
 my $some_row_has_term_suggestion = grep { $_->{term_suggestion} } @annotations;
 my $some_row_has_comment = grep { $_->{comment} } @annotations;
 my $some_row_has_qualifer = grep { $_->{qualifiers} || $_->{is_not}} @annotations;
-
-my $evidence_action_url = $curs_root_uri . '/annotation/evidence/';
-my $allele_select_url = $curs_root_uri . '/annotation/allele_select/';
-
-my $state = $st->{state};
-
-my $session_submitted = 0;
-
-use Canto::Curs::State qw/:all/;
-
-if ($state eq NEEDS_APPROVAL || $state eq APPROVAL_IN_PROGRESS ||
-    $state eq APPROVED || $state eq EXPORTED) {
-  $session_submitted = 1;
-}
 
 my $feature_type = $annotation_type->{feature_type};
 </%init>

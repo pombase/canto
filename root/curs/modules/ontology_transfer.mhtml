@@ -9,28 +9,19 @@ $annotation_comment_help_text
 <div id="curs-ontology-transfer">
   <div class="curs-box">
     <div class="curs-box-title">
-% if (@annotations > 1) {
-      You have made the following annotations:
-% } else {
       You have made the following annotation:
-% }
     </div>
     <div class="curs-box-body">
       <div class="curs-transfer-summaries">
-% for (my $i = 0; $i < @annotations; $i++) {
-%   my $annotation = $annotations[$i];
-%   my $summary_id = 'curs-annotation-summary-' . $annotation->annotation_id();
-<div id="<% $summary_id %>">
 <& ../one_annotation_summary.mhtml,
    curs_root_uri => $curs_root_uri,
    annotation => $annotation,
-   force_comment_edit => $force_comment_edit,
    show_extension_column => $is_admin_user,
    view_only => 1 &>
-</div>
-% }
       </div>
-
+    </div>
+  </div>
+  
 <p style="width: 80%">
 % if (@annotation_comment_help_text) {
 %   for my $paragraph (@annotation_comment_help_text) {
@@ -52,6 +43,7 @@ is based.
 
 <% $form |n %>
 
+% if ($feature_type eq 'gene') {
 % if ($gene_count > 2) {
 <span class="canto-select-buttons">
 Select:
@@ -63,6 +55,7 @@ Select:
   <div class="upload-genes-link">
     <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
   </div>
+% }
     </div>
   </div>
 </div>
@@ -77,7 +70,13 @@ my $gene_count = $c->stash()->{schema}->resultset('Gene')->count();
 
 my $is_admin_user = $c->user_exists() && $c->user()->role()->name() eq 'admin';
 
-my $force_comment_edit = @annotations != 1;
+my $annotation = $annotations[0];
+my $annotation_type_name = $annotation->type();
+my $config = $c->config();
+my %annotation_types_config = %{$config->{annotation_types}};
+my $annotation_type_config = $annotation_types_config{$annotation_type_name};
+my $annotation_type_category = $annotation_type_config->{category};
+my $feature_type = $annotation_type_config->{feature_type};
 
 my @annotation_comment_help_text = @{$annotation_comment_help_text};
 </%init>
