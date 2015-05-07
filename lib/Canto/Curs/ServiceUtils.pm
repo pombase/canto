@@ -299,7 +299,7 @@ sub _get_genes
 sub _get_genotypes
 {
   my $self = shift;
-  my $arg = shift; # "curs_only" or "all"
+  my $arg = shift; # "curs_only", "external_only" or "all"
   my $options = shift;
   my $curs_schema = $self->curs_schema();
   my $genotype_rs = $curs_schema->resultset('Genotype');
@@ -322,11 +322,15 @@ sub _get_genotypes
     $genotype_rs = $genotype_rs->search({}, { rows => $max });
   }
 
-  my @res = map {
-    _genotype_details_hash($_);
-  } $genotype_rs->all();
+  my @res = ();
 
-  if ($arg eq 'all') {
+  if ($arg eq 'curs_only' || $arg eq 'all') {
+    @res = map {
+      _genotype_details_hash($_);
+    } $genotype_rs->all();
+  }
+
+  if ($arg eq 'external_only' || $arg eq 'all') {
     my $lookup_max = undef;
 
     if (defined $max) {

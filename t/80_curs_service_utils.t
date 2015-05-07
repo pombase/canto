@@ -130,6 +130,36 @@ cmp_deeply($res,
             }
           ]);
 
+
+# find genotypes in Chado only
+$res = $service_utils->list_for_service('genotype', 'external_only',
+                                        {
+                                          max => 10,
+                                          filter =>
+                                            { gene_identifiers =>
+                                                [
+                                                  'SPAC27D7.13c'
+                                                ]
+                                              }
+                                          });
+
+cmp_deeply($res,
+           [
+            {
+              'allele_identifiers' => [
+                                        'SPAC27D7.13c:allele-1'
+                                      ],
+              'name' => 'h+ cdc11-33 ssm4delta',
+              'allele_string' => 'ssm4delta',
+              'identifier' => 'aaaa0007-test-genotype-3',
+              'display_name' => 'h+ cdc11-33 ssm4delta'
+            }
+          ]);
+
+
+
+# test gene list service
+
 $res = $service_utils->list_for_service('gene');
 
 cmp_deeply($res,

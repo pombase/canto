@@ -1723,35 +1723,58 @@ var genotypeSearchCtrl =
       templateUrl: app_static_path + 'ng_templates/genotype_search.html',
       controller: function($scope) {
         $scope.data = {
-          filteredGenotypes: [],
+          filteredCursGenotypes: [],
+          filteredExternalGenotypes: [],
           searchGenes: [],
-          waitingForServer: false,
+          waitingForServerCurs: false,
+          waitingForServerExternal: false,
         };
         $scope.app_static_path = CantoGlobals.app_static_path;
 
         $scope.addGenotype = function() {
           window.location.href = CantoGlobals.curs_root_uri + '/feature/genotype/add';
         };
+
+        $scope.waitingForServer = function() {
+          return $scope.data.waitingForServerCurs || $scope.data.waitingForServerExternal;
+        };
+
+        $scope.filteredGenotypeCount = function() {
+          return $scope.data.filteredCursGenotypes.length +
+            $scope.data.filteredExternalGenotypes.length;
+        };
       },
       link: function(scope) {
         scope.$watch('data.searchGenes',
                       function() {
                         if (scope.data.searchGenes.length == 0) {
-                          scope.data.filteredGenotypes.length = 0;
+                          scope.data.filteredCursGenotypes.length = 0;
+                          scope.data.filteredExternalGenotypes.length = 0;
                         } else {
-                          scope.data.waitingForServer = true;
-                          CursGenotypeList.filteredGenotypeList('all',
-                                                                {
-                            gene_identifiers: $.map(scope.data.searchGenes,
-                                                    function(gene_data) {
-                                                      return gene_data.primary_identifier
-                                                    })
+                          scope.data.waitingForServerCurs = true;
+                          scope.data.waitingForServerExternal = true;
+                          var geneIdentifiers = $.map(scope.data.searchGenes,
+                                                      function(gene_data) {
+                                                        return gene_data.primary_identifier;
+
+                                                      });
+                          CursGenotypeList.filteredGenotypeList('curs_only', {
+                            gene_identifiers: geneIdentifiers
                           }).then(function(results) {
-                            scope.data.filteredGenotypes = results;
-                            scope.data.waitingForServer = false;
+                            scope.data.filteredCursGenotypes = results;
+                            scope.data.waitingForServerCurs = false;
                           }).catch(function() {
                             toaster.pop('error', "couldn't read the genotype list from the server");
-                            scope.data.waitingForServer = false;
+                            scope.data.waitingForServerCurs = false;
+                          });
+                          CursGenotypeList.filteredGenotypeList('external_only', {
+                            gene_identifiers: geneIdentifiers
+                          }).then(function(results) {
+                            scope.data.filteredExternalGenotypes = results;
+                            scope.data.waitingForServerExternal = false;
+                          }).catch(function() {
+                            toaster.pop('error', "couldn't read the genotype list from the server");
+                            scope.data.waitingForServerExternal = false;
                           });
                         }
                       });
