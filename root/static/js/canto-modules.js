@@ -1867,6 +1867,10 @@ var singleGeneGenotypeList =
           showAll: false,
         };
 
+        $scope.shouldShowAll = function() {
+          return $scope.data.showAll;
+        };
+
         $scope.showAll = function() {
           $scope.data.showAll = true;
         };
@@ -1880,6 +1884,9 @@ var singleGeneGenotypeList =
         }).then(function(results) {
           $scope.data.filteredGenotypes = results;
           $scope.data.waitingForServer = false;
+          if (results.length > 0 && results.length <= 5) {
+            $scope.data.showAll = true;
+          }
         }).catch(function() {
           toaster.pop('error', "couldn't read the genotype list from the server");
           $scope.data.waitingForServer = false;

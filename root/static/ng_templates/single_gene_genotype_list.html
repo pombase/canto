@@ -5,17 +5,21 @@
   </div>
 
   <div ng-if="!data.waitingForServer">
-    <div ng-show="data.filteredGenotypes.length > 0 && data.filteredGenotypes.length <= 5 || data.showAll">
-      <genotype-list-view genotype-list="data.filteredGenotypes"></genotype-list-view>
-      <a ng-click="hideAll()">Hide</a>
-    </div>
-    <div ng-show="data.filteredGenotypes.length > 5 && !data.showAll">
-      <div>
-This session has {{data.filteredGenotypes.length}} genotypes that include this
-gene.
+    <div ng-show="data.filteredGenotypes.length > 0">
+      <div ng-show="shouldShowAll()">
+        <genotype-list-view genotype-list="data.filteredGenotypes"></genotype-list-view>
+        <a ng-show="data.filteredGenotypes.length > 1" ng-click="hideAll()"
+           style="font-size: 80%; ">Hide list</a>
       </div>
-      <div>
-        <a ng-click="showAll()">View</a>
+      <div ng-hide="shouldShowAll()">
+        <div>
+          This session has
+<span ng-show="data.filteredGenotypes.length > 1">{{data.filteredGenotypes.length}} genotypes that include this gene. </span>
+<span ng-show="data.filteredGenotypes.length == 1">a genotype that includes this gene.</span>
+        </div>
+        <div>
+          <a ng-click="showAll()">View list</a>
+        </div>
       </div>
     </div>
     <div ng-show="data.filteredGenotypes.length == 0">
