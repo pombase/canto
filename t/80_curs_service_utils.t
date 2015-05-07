@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 58;
+use Test::More tests => 59;
 use Test::Deep;
 
 use Capture::Tiny 'capture_stderr';
