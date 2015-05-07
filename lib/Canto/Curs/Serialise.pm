@@ -240,6 +240,10 @@ sub _get_genotype_alleles
     my $gene = $allele->gene();
     my $organism_full_name = $gene->organism()->full_name();
 
+    if (!defined $allele->primary_identifier()) {
+      warn "undefined primary_identifier: ", $allele->name(), "\n";
+    }
+
     push @ret, "$organism_full_name " . $allele->primary_identifier();
   }
 
