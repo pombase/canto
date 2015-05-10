@@ -56,7 +56,7 @@ Name
 Description
           </td>
           <td>
-<% $genotype->allele_string() || '[none]' %>
+<% $nowrap_allele_string |n %>
           </td>
         </tr>
       </tbody>
@@ -110,4 +110,11 @@ my $_proxy_gene = sub {
                                      cursdb_gene => shift);
 
 };
+
+my $nowrap_allele_string = $genotype->allele_string() || '[none]';
+
+use Canto::WebUtil;
+
+$nowrap_allele_string = Canto::WebUtil::nowrap_words($nowrap_allele_string);
+
 </%init>

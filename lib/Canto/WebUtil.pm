@@ -495,4 +495,18 @@ sub escape_inline_js
   return $string;
 }
 
+=head2 nowrap_words
+
+ Usage   : my $text = Canto::WebUtil::nowrap_words($text);
+ Function: Force wrapping only at whitespaces by adding nowrap spans around
+           all text
+
+=cut
+
+sub nowrap_words
+{
+  my $text = shift;
+  return $text =~ s|(\S+)|<span style="white-space: nowrap;">$1</span>|gr;
+}
+
 1;
