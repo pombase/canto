@@ -35,14 +35,22 @@ Choose curation type for <% $gene->display_name() %>:
       </a>
 %   }
 % }
+  <li class="annotation-type">
+    <div>
+      Phenotypes:
+    </div>
+    <ul style="padding-left: 10px; font-size: 95%; ">
+      <li class="annotation-type">
+        <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n
+        %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id()
+        |n%>)">Single gene</a> <span style="color: #333; font-size: 95%">(add allele details and phenotype)</span>
+      </li>
+      <li class="annotation-type">
+        <a href='<% "$curs_root_uri/genotype_manage" %>'>Multiple
+        allele</a> <span style="color: #333; font-size: 95%">(specify a genotype, and then add a phenotype)</span>
+      </li>
+    </ul>
   </ul>
-  <div class="feature-list-action">
-    <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id() |n%>)">Add a new single allele genotype using this gene ...</a>
-  </div>
-  <div class="feature-list-action">
-To annotate a multi-gene phenotype involving this gene, go to
-<a href='<% "$curs_root_uri/genotype_manage" %>'>the genotype page</a>
-  </div>
   </div>
 </div>
 
