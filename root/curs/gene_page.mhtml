@@ -43,7 +43,7 @@ Choose curation type for <% $gene->display_name() %>:
       <li class="annotation-type">
         <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n
         %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id()
-        |n%>)">Single gene</a> <span style="color: #333; font-size: 95%">(add allele details and phenotype)</span>
+        |n%>)">Single allele</a> <span style="color: #333; font-size: 95%">(add allele details and phenotype)</span>
       </li>
       <li class="annotation-type">
         <a href='<% "$curs_root_uri/genotype_manage" %>'>Multiple
