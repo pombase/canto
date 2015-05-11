@@ -112,6 +112,15 @@ canto.filter('addZeroWidthSpace', function () {
   };
 });
 
+canto.filter('wrapAtSpaces', function () {
+  return function (item) {
+    if (item == null) {
+      return null;
+    }
+    return item.replace(/(\S+)/g, '<span style="white-space: nowrap">$1</span>');
+  };
+});
+
 canto.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });
