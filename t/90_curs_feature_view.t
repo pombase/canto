@@ -85,7 +85,7 @@ test_psgi $app, sub {
         name => 'cdc11-33',
       });
 
-    is ($cdc11_33->primary_identifier(), 'SPCC1739.11c:allele-1');
+    is ($cdc11_33->primary_identifier(), 'SPCC1739.11c:aaaa0007-1');
 
     my $new_genotype = $curs_schema->resultset('Genotype')
       ->find({
@@ -98,11 +98,11 @@ test_psgi $app, sub {
 
     map {
       if ($_->name() eq 'cdc11-33') {
-        is ($_->primary_identifier(), 'SPCC1739.11c:allele-1');
+        is ($_->primary_identifier(), 'SPCC1739.11c:aaaa0007-1');
         is ($_->gene()->primary_identifier(), 'SPCC1739.11c');
       } else {
         if ($_->name() eq 'wtf22-a1') {
-          is ($_->primary_identifier(), 'SPCC576.16c:allele-1');
+          is ($_->primary_identifier(), 'SPCC576.16c:aaaa0007-1');
           is ($_->gene()->primary_identifier(), 'SPCC576.16c');
         } else {
           fail "unknown allele: ", $_->name();

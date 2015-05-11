@@ -105,7 +105,15 @@ sub allele_from_json
         primary_identifier => $primary_identifier,
       });
 
-    if (!$allele) {
+    if ($allele) {
+      if (($expression // '') eq ($allele->expression() // '')) {
+        return $allele;
+      } else {
+        # fall through and find another allele that matches, or create
+        # another
+      }
+    } else {
+      # find the Chado allele and add to the CursDB
       my $lookup = Canto::Track::get_adaptor($config, 'allele');
 
       my $allele_details = $lookup->lookup_by_uniquename($primary_identifier);
@@ -114,7 +122,6 @@ sub allele_from_json
         die qq(internal error - allele "$primary_identifier" is missing);
       }
 
-      # we will store the allele from Chado in the CursDB
       $allele_type = $allele_details->{type};
       $description = $allele_details->{description};
       $name = $allele_details->{name};
@@ -136,30 +143,41 @@ sub allele_from_json
       }
 
       $gene_id = $curs_gene->gene_id();
-    };
-
-    if ($allele) {
-      return $allele;
     }
-  } else {
-    if (!$gene_id) {
-      use Data::Dumper;
-      confess "internal error, no gene_id for: ", Dumper([$json_allele]);
-    }
-
-    my $gene = $schema->find_with_type('Gene', $gene_id);
-
-    $primary_identifier =
-      _create_allele_uniquename($gene->primary_identifier(),
-                                $schema, $curs_key);
   }
 
-  my %create_args = (
-    primary_identifier => $primary_identifier,
+  # find existing or make a new allele in the CursDB
+
+  my %search_args = (
     type => $allele_type,
     description => $description,
     name => $name,
     gene => $gene_id,
+  );
+
+  my $allele_rs = $schema->resultset('Allele')
+    ->search({ %search_args });
+
+  while (defined (my $allele = $allele_rs->next())) {
+    if (($allele->expression() // '') eq ($expression // '')) {
+      return $allele;
+    }
+  }
+
+  if (!$gene_id) {
+    use Data::Dumper;
+    confess "internal error, no gene_id for: ", Dumper([$json_allele]);
+  }
+
+  my $gene = $schema->find_with_type('Gene', $gene_id);
+
+  my $new_primary_identifier =
+    _create_allele_uniquename($gene->primary_identifier(),
+                              $schema, $curs_key);
+
+  my %create_args = (
+    primary_identifier => $new_primary_identifier,
+    %search_args,
     expression => $expression,
   );
 

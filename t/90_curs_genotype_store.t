@@ -85,12 +85,12 @@ test_psgi $app, sub {
   my $start_allele_count = $curs_schema->resultset('Allele')->count();
 
   $test_create_1_proc->("h+ abc-1", "h+ ssm4delta(deletion)");
-  # create new allele in the TrackDB and allele from Chado
+  # create new allele in the CursDB and allele from Chado
   is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 2);
 
   $test_create_1_proc->("h+ abc-1 g-2", "h+ ssm4delta(deletion) g-2");
-  # create new allele in the TrackDB, not the allele from Chado
-  is($curs_schema->resultset('Allele')->count(), $start_allele_count + 3);
+  # create new allele in the CursDB, not the allele from Chado
+  is($curs_schema->resultset('Allele')->count(), $start_allele_count + 2);
 
   {
     my $req = HTTP::Request->new(POST => $uri);
@@ -125,7 +125,7 @@ test_psgi $app, sub {
   is ($new_genotype->identifier(), "aaaa0007-genotype-5");
 
   # shouldn't have created any new alleles:
-  is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 3);
+  is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 2);
 };
 
 1;
