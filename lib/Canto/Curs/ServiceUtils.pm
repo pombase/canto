@@ -246,6 +246,7 @@ sub _filter_lookup_genotypes
 
 sub _genotype_details_hash
 {
+  my $self = shift;
   my $genotype = shift;
   my $include_allele = shift;
 
@@ -260,7 +261,7 @@ sub _genotype_details_hash
   if ($include_allele) {
     my @alleles = $genotype->alleles()->all();
 
-    $ret{alleles} = [map { _allele_details_hash($_); } @alleles];
+    $ret{alleles} = [map { $self->_allele_details_hash($_); } @alleles];
   }
 
   return \%ret;
@@ -326,7 +327,7 @@ sub _get_genotypes
 
   if ($arg eq 'curs_only' || $arg eq 'all') {
     @res = map {
-      _genotype_details_hash($_);
+      $self->_genotype_details_hash($_);
     } $genotype_rs->all();
   }
 
@@ -356,12 +357,21 @@ sub _get_genotypes
 
 sub _allele_details_hash
 {
+  my $self = shift;
   my $allele = shift;
+
+  if (ref $allele ne 'Canto::CursDB::Allele') {
+    confess();
+  }
 
   my $display_name =
     Canto::Curs::Utils::make_allele_display_name($allele->name(),
                                                  $allele->description(),
                                                  $allele->type());
+
+  my $gene_proxy =
+    Canto::Curs::GeneProxy->new(config => $self->config(),
+                                cursdb_gene => $allele->gene());
 
   return {
     uniquename => $allele->primary_identifier(),
@@ -372,6 +382,7 @@ sub _allele_details_hash
     display_name => $display_name,
     allele_id => $allele->allele_id(),
     gene_id => $allele->gene()->gene_id(),
+    gene_display_name => $gene_proxy->display_name(),
   }
 }
 
@@ -385,7 +396,7 @@ sub _get_alleles
     ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
                name => { -like => $search_string . '%' } }, { join => 'gene' });
   my @res = map {
-    _allele_details_hash($_);
+    $self->_allele_details_hash($_);
   } $allele_rs->all();
 
   my $allele_lookup = $self->allele_lookup();
@@ -462,7 +473,7 @@ sub _get_genotype
     return undef;
   }
 
-  return _genotype_details_hash($genotype, 1);
+  return $self->_genotype_details_hash($genotype, 1);
 }
 
 sub _get_curator_details

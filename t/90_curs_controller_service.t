@@ -84,7 +84,8 @@ test_psgi $app, sub {
                    'gene_id' => 2,
                    'display_name' => 'ssm4delta',
                    'expression' => undef,
-                   'uniquename' => 'SPAC27D7.13c:aaaa0007-1'
+                   'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+                   'gene_display_name' => 'ssm4',
                  },
                  {
                    'display_name' => 'SPCC63.05delta',
@@ -94,7 +95,8 @@ test_psgi $app, sub {
                    'description' => 'deletion',
                    'name' => 'SPCC63.05delta',
                    'allele_id' => 5,
-                   'type' => 'deletion'
+                   'type' => 'deletion',
+                   'gene_display_name' => 'SPCC63.05',
                  }
                ],
                'display_name' => 'h+ SPCC63.05delta ssm4KE',

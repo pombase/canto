@@ -825,6 +825,7 @@ cmp_deeply($allele_res,
               'type' => 'deletion',
               'allele_id' => 1,
               'gene_id' => 2,
+              'gene_display_name' => 'ssm4',
             },
             {
               'display_name' => 'ssm4KE(G40A,K43E)',
@@ -834,7 +835,8 @@ cmp_deeply($allele_res,
               'gene_id' => 2,
               'allele_id' => 2,
               'uniquename' => 'SPAC27D7.13c:aaaa0007-2',
-              'description' => 'G40A,K43E'
+              'description' => 'G40A,K43E',
+              'gene_display_name' => 'ssm4',
             },
             {
               'allele_id' => 3,
@@ -844,7 +846,8 @@ cmp_deeply($allele_res,
               'expression' => undef,
               'display_name' => 'ssm4-D4(del_100-200)',
               'name' => 'ssm4-D4',
-              'type' => 'partial deletion, nucleotide'
+              'type' => 'partial deletion, nucleotide',
+              'gene_display_name' => 'ssm4',
             },
             {
               'type' => 'deletion',
@@ -899,6 +902,7 @@ my $expected_genotype_detail_res =
         'name' => 'ssm4delta',
         'type' => 'deletion',
         'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+        'gene_display_name' => 'ssm4',
       },
       {
         'allele_id' => 5,
@@ -909,6 +913,7 @@ my $expected_genotype_detail_res =
         'name' => 'SPCC63.05delta',
         'type' => 'deletion',
         'uniquename' => 'SPCC63.05:aaaa0007-1',
+        'gene_display_name' => 'SPCC63.05',
       },
     ],
   };
