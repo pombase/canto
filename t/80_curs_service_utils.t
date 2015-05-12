@@ -856,12 +856,6 @@ cmp_deeply($allele_res,
               'description' => '80-90',
               'name' => 'ssm4-L1',
             },
-            {
-              'type' => 'deletion',
-              'name' => 'ssm4delta',
-              'uniquename' => 'SPAC27D7.13c:allele-1',
-              'display_name' => 'ssm4delta(unknown)',
-            }
           ]);
 
 $allele_res = $service_utils->list_for_service('allele', 'SPBC12C2.02c', 'ste');

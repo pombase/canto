@@ -407,7 +407,13 @@ sub _get_alleles
                                             search_string => $search_string);
 
     while (@res < 10 && @$lookup_res > 0) {
-      push @res, shift @$lookup_res;
+      my $new_res = shift @$lookup_res;
+      # add if there are no alleles with that name
+      if (!grep {
+        ($_->{name} // 'no_name') eq ($new_res->{name} // 'no_name');
+      } @res) {
+        push @res, $new_res;
+      }
     }
   }
 
