@@ -850,6 +850,13 @@ cmp_deeply($allele_res,
               'gene_display_name' => 'ssm4',
             },
             {
+              'uniquename' => 'SPAC27D7.13c:allele-2',
+              'type' => 'partial deletion, nucleotide',
+              'display_name' => 'ssm4-L1(80-90)',
+              'description' => '80-90',
+              'name' => 'ssm4-L1',
+            },
+            {
               'type' => 'deletion',
               'name' => 'ssm4delta',
               'uniquename' => 'SPAC27D7.13c:allele-1',
