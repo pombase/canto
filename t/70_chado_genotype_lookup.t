@@ -57,21 +57,32 @@ cmp_deeply($res,
              results => [
                            {
                              'allele_string' => 'cdc11-33',
-                             'name' => 'h+ cdc11-33',
-                           'identifier' => 'aaaa0007-test-genotype-1',
+                             'identifier' => 'aaaa0007-test-genotype-1',
                              'display_name' => 'h+ cdc11-33',
-                             allele_identifiers => [
-                               'SPCC1739.11c:allele-1',
-                             ]
+                             'allele_identifiers' => [
+                                                       'SPCC1739.11c:allele-1'
+                                                     ],
+                             'name' => 'h+ cdc11-33'
                            },
                            {
                              'allele_string' => 'cdc11-33 wtf22-a1',
-                             'name' => 'h+ cdc11-33 wtf22-a1',
                              'identifier' => 'aaaa0007-test-genotype-2',
-                             'display_name' => 'h+ cdc11-33 wtf22-a1',
-                             allele_identifiers => [
-                               'SPCC1739.11c:allele-1', 'SPCC576.16c:allele-1',
-                             ]
+                             'allele_identifiers' => [
+                                                       'SPCC1739.11c:allele-1',
+                                                       'SPCC576.16c:allele-1'
+                                                     ],
+                             'name' => 'h+ cdc11-33 wtf22-a1',
+                             'display_name' => 'h+ cdc11-33 wtf22-a1'
+                           },
+                           {
+                             'allele_string' => 'cdc11-33 ssm4delta',
+                             'identifier' => 'aaaa0007-test-genotype-3',
+                             'allele_identifiers' => [
+                                                       'SPCC1739.11c:allele-1',
+                                                       'SPAC27D7.13c:allele-1'
+                                                     ],
+                             'name' => 'h+ cdc11-33 ssm4delta',
+                             'display_name' => 'h+ cdc11-33 ssm4delta'
                            }
                          ]
            });

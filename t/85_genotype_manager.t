@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use Try::Tiny;
 
@@ -35,8 +35,9 @@ my $genotype_from_chado =
 
 is ($genotype_from_chado->identifier(), $created_genotype_identifier);
 is ($genotype_from_chado->name(), 'h+ cdc11-33 ssm4delta');
-is ($genotype_from_chado->alleles(), 1);
-is (($genotype_from_chado->alleles())[0]->display_name(), 'ssm4delta');
+is ($genotype_from_chado->alleles(), 2);
+is (($genotype_from_chado->alleles())[0]->display_name(), 'cdc11-33(unknown)');
+is (($genotype_from_chado->alleles())[1]->display_name(), 'ssm4delta');
 
 
 is ($curs_schema->resultset('Genotype')->find({ identifier => $created_genotype_identifier })

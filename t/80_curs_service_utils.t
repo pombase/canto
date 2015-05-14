@@ -123,8 +123,9 @@ cmp_deeply($res,
               'name' => 'h+ cdc11-33 ssm4delta',
               'display_name' => 'h+ cdc11-33 ssm4delta',
               'identifier' => 'aaaa0007-test-genotype-3',
-              'allele_string' => 'ssm4delta',
+              'allele_string' => 'cdc11-33 ssm4delta',
               'allele_identifiers' => [
+                                        'SPCC1739.11c:allele-1',
                                         'SPAC27D7.13c:allele-1'
                                       ],
             }
@@ -147,10 +148,11 @@ cmp_deeply($res,
            [
             {
               'allele_identifiers' => [
+                                        'SPCC1739.11c:allele-1',
                                         'SPAC27D7.13c:allele-1'
                                       ],
               'name' => 'h+ cdc11-33 ssm4delta',
-              'allele_string' => 'ssm4delta',
+              'allele_string' => 'cdc11-33 ssm4delta',
               'identifier' => 'aaaa0007-test-genotype-3',
               'display_name' => 'h+ cdc11-33 ssm4delta'
             }
