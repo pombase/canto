@@ -55,6 +55,60 @@ sub _build_allele_manager
                                          curs_schema => $self->curs_schema());
 }
 
+sub _string_or_undef
+{
+  my $string = shift;
+
+  return $string // '<__UNDEF__>';
+}
+
+=head2 find_with_alleles
+
+ Usage   : my $existing = $manager->find_with_alleles(\@alleles);
+ Function: Return any existing genotype with exactly the given alleles.
+           We should have at most one in the CursDB.
+ Return  : the found Genotype or undef if there is no Genotype with those
+           alleles
+
+=cut
+
+sub find_with_alleles
+{
+  my $self = shift;
+  my $search_alleles = shift;
+
+  my @sorted_search_allele_ids =
+    sort {
+      $a <=> $b;
+    } map {
+      $_->allele_id();
+    } @$search_alleles;
+
+  my $joined_search_ids = join " ", @sorted_search_allele_ids;
+
+  my $schema = $self->curs_schema();
+
+  my $genotype_rs = $schema->resultset('Genotype');
+
+  while (defined (my $genotype = $genotype_rs->next())) {
+    my @alleles = $genotype->alleles();
+
+    next if scalar(@alleles) != scalar(@$search_alleles);
+
+    my @sorted_allele_ids = sort {
+      $a <=> $b;
+    } map {
+      $_->allele_id();
+    } $genotype->alleles();
+
+    if ((join " ", @sorted_allele_ids) eq $joined_search_ids) {
+      return $genotype;
+    }
+  }
+
+  return undef;
+}
+
 =head2 make_genotype
 
  Usage   : $genotype_manager->make_genotype($curs_key, $name, \@allele_objects,
