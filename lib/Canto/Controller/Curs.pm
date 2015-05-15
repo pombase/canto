@@ -1781,8 +1781,6 @@ sub genotype_store : Chained('feature') PathPart('store')
     };
   } else {
     try {
-      my $guard = $schema->txn_scope_guard();
-
       my $curs_key = $st->{curs_key};
 
       my $allele_manager =
@@ -1800,17 +1798,35 @@ sub genotype_store : Chained('feature') PathPart('store')
         Canto::Curs::GenotypeManager->new(config => $c->config(),
                                           curs_schema => $schema);
 
-      my $genotype = $genotype_manager->make_genotype($curs_key,
-                                                      $genotype_name, \@alleles);
+      my $existing_genotype = $genotype_manager->find_with_alleles(\@alleles);
 
-      $guard->commit();
+      if ($existing_genotype) {
+        if (defined $existing_genotype->name()) {
+          $c->flash()->{message} = 'Using existing genotype with the same alleles: ' .
+            $existing_genotype->name();
+        } else {
+          $c->flash()->{message} = 'Using existing genotype with the same alleles';
+        }
 
-      $c->flash()->{message} = 'Created new genotype';
+        $c->stash->{json_data} = {
+          status => "success",
+          location => $st->{curs_root_uri} . "/feature/genotype/view/" . $existing_genotype->genotype_id(),
+        };
+      } else {
+        my $guard = $schema->txn_scope_guard();
 
-      $c->stash->{json_data} = {
-        status => "success",
-        location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
-      };
+        my $genotype = $genotype_manager->make_genotype($curs_key,
+                                                        $genotype_name, \@alleles);
+
+        $guard->commit();
+
+        $c->flash()->{message} = 'Created new genotype';
+
+        $c->stash->{json_data} = {
+          status => "success",
+          location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
+        };
+      }
     } catch {
       $c->stash->{json_data} = {
         status => "error",

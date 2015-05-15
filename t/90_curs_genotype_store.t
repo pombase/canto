@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 10;
 
 use Plack::Test;
 
@@ -92,7 +92,10 @@ test_psgi $app, sub {
   # create new allele in the CursDB, not the allele from Chado
   is($curs_schema->resultset('Allele')->count(), $start_allele_count + 2);
 
+  my $_create_test_genotype = sub
   {
+    my @alleles = @_;
+
     my $req = HTTP::Request->new(POST => $uri);
     $req->header('Content-Type' => 'application/json');
 
@@ -101,10 +104,7 @@ test_psgi $app, sub {
       genotype_identifier => "h+ test-3",
       alleles =>
         [
-          map {
-            { primary_identifier => $_->primary_identifier() }
-          } $curs_schema->resultset('Genotype')
-            ->first()->alleles()->all()
+          @alleles,
         ]
       };
 
@@ -114,15 +114,36 @@ test_psgi $app, sub {
     my $perl_res = decode_json $res->content();
 
     is($perl_res->{status}, 'success');
-  }
+  };
+
+  $_create_test_genotype->(
+    map {
+      { primary_identifier => $_->primary_identifier() }
+    } $curs_schema->resultset('Genotype')
+      ->first()->alleles()->all());
 
   my $new_genotype =
     $curs_schema->resultset('Genotype')
       ->find({ name => 'h+ xyz-aa-1' });
 
-  is ($new_genotype->alleles()->count(), 2);
+  # genotype not create because it's a dulpicate
+  ok(!defined $new_genotype);
 
-  is ($new_genotype->identifier(), "aaaa0007-genotype-5");
+  # add an extra allele and try again
+  $_create_test_genotype->(
+    (map {
+      { primary_identifier => $_->primary_identifier() }
+    } $curs_schema->resultset('Genotype')
+      ->first()->alleles()->all()),
+    { primary_identifier => 'SPAC27D7.13c:aaaa0007-2' });
+
+  $new_genotype =
+    $curs_schema->resultset('Genotype')
+      ->find({ name => 'h+ xyz-aa-1' });
+
+  is ($new_genotype->alleles()->count(), 3);
+
+  is ($new_genotype->identifier(), "aaaa0007-genotype-4");
 
   # shouldn't have created any new alleles:
   is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 2);
