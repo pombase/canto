@@ -821,6 +821,8 @@ var ontologyTermLocatorCtrl =
         suggestInstance.result.then(function (termSuggestion) {
           CursStateService.confirmTerm(termSuggestion);
 
+          $scope.data.termSuggestion = termSuggestion;
+
           toaster.pop('note',
                       'Your term suggestion will be stored, but ' +
                       feature_display_name + ' will be temporarily ' +
