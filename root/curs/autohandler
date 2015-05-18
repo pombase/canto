@@ -18,7 +18,7 @@ var annotation_type_config = <% $annotation_type_config_js |n %>;
 
 <div class="curs-content">
 
-<toaster-container></toaster-container>
+<toaster-container toaster-options="{ 'time-out': 5000, 'close-button': true }"></toaster-container>
 
 <div id="curs-dialog" style="display: none">
 

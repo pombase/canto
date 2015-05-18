@@ -11,7 +11,7 @@
 <script src="<% $c->uri_for('/static/js/angular-1.4.0-rc.2.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/bootstrap-3.1.0.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/angular-animate-1.4.0-rc.2.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/toaster-0.4.4.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/toaster-0.4.12.js') %>"></script>
 % } else {
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
@@ -19,7 +19,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-animate.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.4/toaster.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.12/toaster.js"></script>
 % }
 <script src="<% $c->uri_for('/static/js/jquery.shiftcheckbox.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.pnotify.min.js') %>"></script>
