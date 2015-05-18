@@ -84,7 +84,7 @@ $pub
     </td>
 % if ($feature_type eq 'genotype') {
     <td>
-      <% $row->{conditions} %>
+      <% join ", ", map { $_->{name} } @{$row->{conditions} // []} %>
     </td>
 % }
 % if ($some_row_has_qualifer) {
