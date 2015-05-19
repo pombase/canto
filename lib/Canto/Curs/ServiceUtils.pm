@@ -499,6 +499,7 @@ sub _get_curator_details
     curator_name => $curator_name,
     curator_known_as => $curator_known_as,
     accepted_date => $accepted_date,
+    # false means that an admin user is doing the curation
     community_curated => $community_curated ? JSON::true : JSON::false,
   };
 }
