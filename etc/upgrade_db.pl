@@ -32,13 +32,70 @@ if (@ARGV != 1) {
   die "$0: needs one argument - the version to upgrade to\n";
 }
 
-package Canto::Upgrade::Helper;
+sub is_aa_mutation_desc
+{
+  my $description = shift;
 
-use Moose;
+  return 0 unless defined $description;
 
-with 'PomBase::Role::LegacyAlleleHandler';
+  my $seen_aa_desc = 0;
 
-package main;
+  if ($description =~ /\s*,\s*/) {
+    for my $bit (split /\s*,\s*/, $description) {
+      if (_could_be_aa_mutation_desc($bit)) {
+        if (!_is_na_mutation_desc($bit)) {
+          $seen_aa_desc = 1;
+        }
+      } else {
+        return 0;
+      }
+    }
+
+    return $seen_aa_desc;
+  }
+
+  return _could_be_aa_mutation_desc($description) && !_is_na_mutation_desc($description);
+}
+
+sub _could_be_aa_mutation_desc
+{
+  my $description = shift;
+
+  return $description =~ /^[a-z]+\d+[a-z]+$/i;
+}
+
+sub _is_na_mutation_desc
+{
+  my $description = shift;
+
+  return $description =~ /^[atgc]+\d+[atgc]+$/i;
+}
+
+sub allele_type_from_desc
+{
+  my ($description, $gene_name) = @_;
+
+  $description =~ s/^\s+//;
+  $description =~ s/\s+$//;
+
+  if (grep { $_ eq $description } ('deletion', 'wild_type', 'wild type', 'unknown', 'other', 'unrecorded')) {
+    return ($description =~ s/\s+/_/r);
+  } else {
+    if (is_aa_mutation_desc($description)) {
+      return 'amino_acid_mutation';
+    } else {
+      if ($description =~ /^[A-Z]\d+\s*->\s*(amber|ochre|opal|stop)$/i) {
+        return 'nonsense_mutation';
+      } else {
+        if (defined $gene_name && $description =~ /^$gene_name/) {
+          return 'other';
+        }
+      }
+    }
+  }
+
+  return undef;
+}
 
 no if $] >= 5.018, warnings => "experimental::smartmatch";
 
@@ -199,8 +256,6 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
       my $curs_key = $curs->curs_key();
       my $curs_schema = shift;
 
-      my $upgrade_helper = Canto::Upgrade::Helper->new();
-
       warn "upgrading: $curs_key\n";
 
       my $guard = $curs_schema->txn_scope_guard();
@@ -331,7 +386,7 @@ UPDATE cv SET name = replace(name, 'PomCur', 'Canto');
                     }
                   }
 
-                  my $allele_type = $upgrade_helper->allele_type_from_desc($description);
+                  my $allele_type = allele_type_from_desc($description);
 
                   if (!$allele_type) {
                     warn "can't guess allele type for $allele\n";
