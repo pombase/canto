@@ -7,6 +7,7 @@ use File::Basename;
 use Clone qw(clone);
 use feature qw(switch);
 use feature 'unicode_strings';
+use charnames ':full';
 
 BEGIN {
   my $script_name = basename $0;
