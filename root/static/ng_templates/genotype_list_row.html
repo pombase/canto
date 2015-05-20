@@ -1,18 +1,20 @@
 <tr>
   <td>
     <span>
-      <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier}}">
+      <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier + (read_only_curs ? '/ro' : '')}}">
         <p ng-bind-html="genotype.allele_string | wrapAtSpaces | toTrusted"></p></a>
     </span>
   </td>
   <td>
     <span>
-      <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier}}">
+      <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier + (read_only_curs ? '/ro' : '')}}">
         <p ng-bind-html="genotype.name | wrapAtSpaces | toTrusted"></p></a>
     </span>
   </td>
-  <td class="table-row-actions">
+  <td ng-if="!read_only_curs" class="table-row-actions">
     <div ng-if="!genotype.genotype_id">
+      {{read_only_curs}}
+
       <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier}}">
 Use this genotype ...
       </a>
@@ -25,4 +27,3 @@ Use this genotype ...
     </div>
   </td>
 </tr>
-55

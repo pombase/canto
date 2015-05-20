@@ -7,6 +7,7 @@ $annotation_count
 </%args>
 
 <div ng-controller="GenotypeViewCtrl" ng-init="init(<% $annotation_count %>)">
+% if (!$read_only_curs) {
 <div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
 Actions ...
@@ -34,6 +35,7 @@ Add a new <% $type_display_name %> for this genotype ...
   </ul>
   </div>
 </div>
+% }
 
 <div id="curs-genotype-details" class="curs-box curs-half-width-section">
   <div class="curs-box-title">
@@ -77,9 +79,11 @@ Description
    <br/>
 % }
     </div>
+% if (!$read_only_curs) {
     <div>
       <a ng-click="checkEditIsSensible($event)" href="<% $start_path . '/feature/genotype/edit/' . $genotype->genotype_id() %>">Edit ...</a>
     </div>
+% }
   </div>
 </div>
 

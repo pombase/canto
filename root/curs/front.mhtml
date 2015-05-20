@@ -21,7 +21,10 @@ $total_annotation_count
 <div class="clearall"/>
 
 % if ($read_only_curs) {
-<button type="button" id="curs-stop-reviewing" class="btn btn-primary curs-finish-button">Finish reviewing</button>
+%   if ($state ne Canto::Controller::Curs::CURATION_IN_PROGRESS) {
+<button type="button" id="curs-stop-reviewing" class="btn btn-primary
+        curs-finish-button">Finish reviewing</button>
+%   }
 % } else {
 % if ($state eq Canto::Controller::Curs::CURATION_IN_PROGRESS) {
 %     if ($total_annotation_count > 0) {

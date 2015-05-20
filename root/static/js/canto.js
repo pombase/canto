@@ -1,6 +1,6 @@
 "use strict";
 
-/*global $,document,application_root,window */
+/*global $,document,application_root,window,curs_root_uri,read_only_curs */
 
 function last(a) {
   return a[a.length-1];
@@ -272,7 +272,8 @@ $(document).ready(function() {
 
   $('#curs-finish-gene,#curs-finish-genotype').on('click',
                                                   function () {
-                                                    window.location.href = curs_root_uri;
+                                                    window.location.href = curs_root_uri +
+                                                      (read_only_curs ? '/ro' : '');
                                                   });
 
   $('#curs-pub-assign-popup-dialog').click(function () {

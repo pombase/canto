@@ -1,6 +1,7 @@
 <tr>
   <td ng-if="annotation.feature_type === 'gene' && !featureIdFilter">
-    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id}}">
+    <a ng-if="annotation.status === 'new'"
+       href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id + (read_only_curs ? '/ro' : '') }}">
       {{annotation.gene_name_or_identifier}}
     </a>
     <span ng-if="annotation.status === 'existing'">
@@ -8,7 +9,7 @@
     </span>
   </td>
   <td ng-if="annotation.feature_type === 'genotype' && !featureIdFilter">
-    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.feature_id}}">
+    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.feature_id + (read_only_curs ? '/ro' : '')}}">
       {{annotation.genotype_display_name}}
     </a>
     <span ng-if="annotation.status === 'existing'">
@@ -26,7 +27,7 @@
   </td>
   <td ng-if="annotationType.can_have_with">
     <span ng-if="annotation.with_gene_id">
-      <a href="{{curs_root_uri + '/feature/gene/view/' + annotation.with_gene_id}}">
+      <a href="{{curs_root_uri + '/feature/gene/view/' + annotation.with_gene_id + (read_only_curs ? '/ro' : '')}}">
         {{annotation.with_or_from_display_name || annotation.with_or_from_identifier}}
       </a>
     </span>

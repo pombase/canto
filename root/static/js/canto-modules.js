@@ -1805,6 +1805,7 @@ var genotypeListRowCtrl =
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row.html',
       controller: function($scope) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+        $scope.read_only_curs = CantoGlobals.read_only_curs;
 
         $scope.deleteGenotype = function() {
           bootbox.confirm("Are you sure you want to delete this genotype?",

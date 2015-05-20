@@ -25,8 +25,9 @@
 <%init>
 my $config = $c->config();
 my $feature_id = undef;
-my $feature = $c->stash()->{feature};
-my $feature_type = $c->stash()->{feature_type};
+my $st = $c->stash();
+my $feature = $st->{feature};
+my $feature_type = $st->{feature_type};
 my $display_name;
 
 if (defined $feature) {
@@ -39,8 +40,15 @@ if (defined $feature) {
   $display_name = $feature->display_name();
 }
 
-my $pub = $c->stash()->{pub};
-my $curs_root_uri = $c->stash()->{curs_root_uri};
+my $pub = $st->{pub};
+my $curs_root_uri = $st->{curs_root_uri};
+
+my $read_only_curs = $st->{read_only_curs} // 0;
+
+if ($read_only_curs) {
+  $curs_root_uri .= '/ro'
+}
+
 my $instance_text;
 if (defined $config->{database_name}) {
   $instance_text = $config->{database_name} . ' ' . $config->{name};

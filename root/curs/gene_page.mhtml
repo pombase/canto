@@ -10,6 +10,7 @@ var genes_in_session = <% $genes_in_session_js |n %>;
 </script>
 
 <div ng-controller="GenePageCtrl">
+% if (!$read_only_curs) {
 <div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
 Choose curation type for <% $gene->display_name() %>:
@@ -53,6 +54,7 @@ Choose curation type for <% $gene->display_name() %>:
   </ul>
   </div>
 </div>
+% }
 
 <div id="curs-gene-details" class="curs-box curs-half-width-section">
   <div class="curs-box-title">
@@ -132,6 +134,7 @@ my $st = $c->stash();
 
 my $gene_count = $st->{gene_count};
 my $finish_text = '<- Back to summary';
+my $read_only_curs = $st->{read_only_curs};
 
 my $is_admin = $st->{is_admin_user};
 

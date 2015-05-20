@@ -200,6 +200,17 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{gene_count} = $schema->resultset('Gene')->count();
   $st->{genotype_count} = $schema->resultset('Genotype')->count();
 
+  if ($path =~ m!/ro/?$!) {
+    $st->{read_only_curs} = 1;
+    if ($state eq EXPORTED) {
+      $st->{message} =
+        ["Review only - this session has been exported so no changes are possible"];
+    } else {
+      $st->{message} =
+        ["Review only - this session has been submitted for approval so no changes are possible"];
+    }
+  }
+
   my $use_dispatch = 1;
 
   if ($state eq APPROVAL_IN_PROGRESS) {
@@ -342,16 +353,7 @@ sub read_only_summary : Chained('top') PathPart('ro') Args(0)
 
   # use only in header, not in body:
   $st->{show_title} = 1;
-  $st->{read_only_curs} = 1;
   $st->{template} = 'curs/front.mhtml';
-
-  if ($st->{state} eq EXPORTED) {
-    $st->{message} =
-      ["Review only - this session has been exported so no changes are possible"];
-  } else {
-    $st->{message} =
-      ["Review only - this session has been submitted for approval so no changes are possible"];
-  }
 
   my $schema = $c->stash()->{schema};
 
@@ -1574,13 +1576,17 @@ sub feature : Chained('top') CaptureArgs(1)
 
 sub feature_view : Chained('feature') PathPart('view')
 {
-  my ($self, $c, $ids) = @_;
+  my ($self, $c, $ids, $flag) = @_;
 
   my $st = $c->stash();
   $st->{show_title} = 1;
   my $feature_type = $st->{feature_type};
   my $schema = $st->{schema};
   my $config = $c->config();
+
+  if (defined $flag && $flag eq 'ro') {
+    $st->{read_only_curs} = 1;
+  }
 
   my @ids = split /,/, $ids;
 
