@@ -3,12 +3,15 @@
   <span class="title sect-title">
     <span ng-if="featureStatusFilter === 'new'">
       New {{annotationType.display_name}} annotations from this session
+      <span ng-show="featureFilterDisplayName">
+        for {{featureFilterDisplayName}}
+      </span>
     </span>
     <span ng-if="featureStatusFilter === 'existing' && data.annotations !== null && data.annotations.length > 0">
       Existing {{annotationType.display_name}} annotations
-    </span>
-    <span ng-show="featureFilterDisplayName">
-      for {{featureFilterDisplayName}}
+      <span ng-show="featureFilterDisplayName">
+        for {{featureFilterDisplayName}}
+      </span>
     </span>
   </span>
   <span ng-if="featureStatusFilter === 'new' && data.hasFeatures && !read_only_curs">
