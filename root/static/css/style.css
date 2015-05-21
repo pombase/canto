@@ -548,7 +548,8 @@ span.error_constraint_required {
 }
 .page_nav_number_current {
   font-weight: bold;
-  border: 1px solid #666;
+  font-size: 110%;
+  border: 1.8px solid #666;
   background-color: #ddf;
 }
 
