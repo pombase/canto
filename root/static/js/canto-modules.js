@@ -2198,6 +2198,7 @@ var annotationTableCtrl =
       templateUrl: app_static_path + 'ng_templates/annotation_table.html',
       controller: function($scope) {
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+        $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.data = {
           hasFeatures: false, // set to true if there are feature of type featureTypeFilter
           annotations: null

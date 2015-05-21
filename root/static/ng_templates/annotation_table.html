@@ -1,10 +1,10 @@
 <div>
-<div ng-if="data.annotations !== null && (data.annotations.length > 0 || featureStatusFilter === 'new')">
+<div>
   <span class="title sect-title">
     <span ng-if="featureStatusFilter === 'new'">
       New {{annotationType.display_name}} annotations from this session
     </span>
-    <span ng-if="featureStatusFilter === 'existing'">
+    <span ng-if="featureStatusFilter === 'existing' && data.annotations !== null && data.annotations.length > 0">
       Existing {{annotationType.display_name}} annotations
     </span>
     <span ng-show="featureFilterDisplayName">
@@ -14,6 +14,11 @@
   <span ng-if="featureStatusFilter === 'new' && data.hasFeatures && !read_only_curs">
     <a ng-click="addNew(featureType, featureId)">Add ...</a>
   </span>
+  <div ng-if="data.annotations === null && featureStatusFilter === 'new'">
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+Loading ...
+  </div>
+  <div ng-if="data.annotations !== null && (data.annotations.length > 0 || featureStatusFilter === 'new')">
   <div ng-switch="data.annotations.length > 0">
     <div ng-switch-when="true" class="annotation-table sect-content">
       <div class="list" ng-switch="annotationType.category">
@@ -60,6 +65,7 @@
     <div ng-switch-when="false" class="curs-no-annotations-message">
       No annotations yet
     </div>
+  </div>
   </div>
 </div>
 </div>
