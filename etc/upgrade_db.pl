@@ -537,7 +537,7 @@ CREATE TABLE allele_genotype (
           $annotation_allele->primary_identifier($annotation_allele_primary_identifier);
           $annotation_allele->update();
 
-          my $genotype_name = "$strain_name " . $allele_data->{gene}->primary_identifier() .
+          my $genotype_name = $allele_data->{gene}->primary_identifier() .
             '-' . $annotation_allele->long_identifier();
 
           if (exists $seen_genotype_names{$genotype_name}) {
