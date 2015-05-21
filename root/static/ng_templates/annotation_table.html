@@ -1,19 +1,18 @@
 <div>
 <div>
-  <span class="title sect-title">
-    <span ng-if="featureStatusFilter === 'new'">
+    <span ng-if="featureStatusFilter === 'new'" class="title sect-title">
       New {{annotationType.display_name}} annotations from this session
       <span ng-show="featureFilterDisplayName">
         for {{featureFilterDisplayName}}
       </span>
     </span>
-    <span ng-if="featureStatusFilter === 'existing' && data.annotations !== null && data.annotations.length > 0">
+    <span ng-if="featureStatusFilter === 'existing' && data.annotations !== null && data.annotations.length > 0"
+          class="title sect-title">
       Existing {{annotationType.display_name}} annotations
       <span ng-show="featureFilterDisplayName">
         for {{featureFilterDisplayName}}
       </span>
     </span>
-  </span>
   <span ng-if="featureStatusFilter === 'new' && data.hasFeatures && !read_only_curs">
     <a ng-click="addNew(featureType, featureId)">Add ...</a>
   </span>
