@@ -253,6 +253,7 @@ sub _genotype_details_hash
   my %ret = (
     identifier => $genotype->identifier(),
     name => $genotype->name(),
+    background => $genotype->background(),
     allele_string => $genotype->allele_string(),
     display_name => $genotype->display_name(),
     genotype_id => $genotype->genotype_id(),

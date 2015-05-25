@@ -55,6 +55,14 @@ Name
         </tr>
         <tr>
           <td class="title">
+Background
+          </td>
+          <td>
+<% $genotype->background() || '' %>
+          </td>
+        </tr>
+        <tr>
+          <td class="title">
 Description
           </td>
           <td>

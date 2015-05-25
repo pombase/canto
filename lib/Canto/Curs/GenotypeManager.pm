@@ -111,7 +111,7 @@ sub find_with_alleles
 
 =head2 make_genotype
 
- Usage   : $genotype_manager->make_genotype($curs_key, $name, \@allele_objects,
+ Usage   : $genotype_manager->make_genotype($curs_key, $name, $background, \@allele_objects,
                                             $identifier);
  Function: Create a Genotype object in the CursDB
  Args    : $curs_key - the key for this session
@@ -132,6 +132,7 @@ sub make_genotype
   my $self = shift;
   my $curs_key = shift;
   my $name = shift;
+  my $background = shift;
   my $alleles = shift;
   my $identifier = shift;  # defined if this genotype is from Chado
 
@@ -150,6 +151,7 @@ sub make_genotype
                               {
                                 identifier => $new_identifier,
                                 name => $name || undef,
+                                background => $background || undef,
                               });
 
   if (!defined $identifier) {
@@ -223,9 +225,10 @@ sub _store_chado_genotype
   }
 
   my $name = $chado_genotype_details->{name};
+  my $background = $chado_genotype_details->{background};
   my $identifier = $chado_genotype_details->{identifier};
 
-  return $self->make_genotype($curs_key, $name, \@alleles, $identifier);
+  return $self->make_genotype($curs_key, $name, $background, \@alleles, $identifier);
 }
 
 =head2 find_and_create_genotype

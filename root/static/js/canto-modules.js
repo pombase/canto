@@ -1374,7 +1374,7 @@ canto.controller('TermSuggestDialogCtrl',
                  termSuggestDialogCtrl]);
 
 
-function storeGenotype(toaster, $http, genotype_id, genotype_name, alleles) {
+function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
   var url = curs_root_uri + '/feature/genotype';
 
   if (genotype_id) {
@@ -1385,6 +1385,7 @@ function storeGenotype(toaster, $http, genotype_id, genotype_name, alleles) {
 
   return simpleHttpPost(toaster, $http, url,
                         { genotype_name: genotype_name,
+                          genotype_background: genotype_background,
                           alleles: alleles });
 }
 
@@ -1418,7 +1419,7 @@ var genePageCtrl =
                                                 gene_systemtic_id, gene_id);
 
       editInstance.result.then(function (alleleData) {
-        storeGenotype(toaster, $http, undefined, undefined, [alleleData]);
+        storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData]);
       });
     };
   };
@@ -1580,7 +1581,8 @@ var multiAlleleCtrl =
 
   $scope.store = function() {
     storeGenotype(toaster, $http, $scope.data.genotype_id,
-                  $scope.data.genotype_name, $scope.alleles);
+                  $scope.data.genotype_name, $scope.data.genotype_background,
+                  $scope.alleles);
   };
 
   $scope.removeAllele = function (allele) {

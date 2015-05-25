@@ -46,7 +46,8 @@ test_psgi $app, sub {
 
       my $params = {
         genotype_name => $genotype_name,
-        genotype_identifier => $genotype_identifier,
+#        genotype_background => 'h+',
+       genotype_identifier => $genotype_identifier,
         alleles =>
           [
             {

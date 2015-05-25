@@ -8,7 +8,7 @@ $annotation_count
 $genotype_id => ''
 </%args>
 
-<div>
+<div class="curs-genotype-edit">
 <div ng-controller="MultiAlleleCtrl" id="curs-multi-allele-select"
      ng-init="init('<% $genotype_id %>')";
      class="curs-box ng-cloak">
@@ -19,10 +19,18 @@ Add alleles from the genes below until the genotype is fully specified.
 
       <div class="row">
         <div class="col-sm-6 col-md-6">
-      Name: <input type="text" title="Click to genotype edit name" href="#"
+          <div>
+      Name: <input type="text" title="Click to edit (optional) genotype name" href="#"
              placeholder="short genotype name (optional) ..."
              size="50"
              ng-model="data.genotype_name" />
+          </div>
+          <div>
+      Background: <input type="text" title="Click to edit (options) genotype background" href="#"
+             placeholder="genotype background (optional) ..."
+             size="50"
+             ng-model="data.genotype_background" />
+          </div>
         </div>
         <div class="col-sm-6 col-md-6">
 % if ($annotation_count > 0) {
@@ -42,7 +50,7 @@ Add alleles from the genes below until the genotype is fully specified.
             <img src="<% $c->uri_for('/static/images/spinner.gif') %>"/>
             Loading genes ...
           </div>
-          <div ng-show="genes.length">
+          <div class="curs-genotype-edit-gene-list" ng-show="genes.length">
             <table class="list">
               <thead>
                 <tr>

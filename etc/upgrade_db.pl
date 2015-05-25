@@ -442,6 +442,7 @@ CREATE TABLE genotype_annotation (
 CREATE TABLE genotype (
        genotype_id integer PRIMARY KEY AUTOINCREMENT,
        identifier text UNIQUE NOT NULL,
+       background text,
        name text UNIQUE
 );
 ");
@@ -552,7 +553,9 @@ CREATE TABLE allele_genotype (
 
           warn "  making new genotype: $genotype_name  from allele: $key\n";
 
-          $annotation_genotype = $genotype_manager->make_genotype($curs_key, $genotype_name,
+          my $background = '';
+
+          $annotation_genotype = $genotype_manager->make_genotype($curs_key, $genotype_name, $background,
                                                         [$annotation_allele]);
 
           $seen_genotype_names{$genotype_name} = 1;

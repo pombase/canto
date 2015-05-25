@@ -1776,6 +1776,7 @@ sub genotype_store : Chained('feature') PathPart('store')
 
   my @alleles_data = @{$body_data->{alleles}};
   my $genotype_name = $body_data->{genotype_name};
+  my $genotype_background = $body_data->{genotype_background};
 
   my @alleles = ();
 
@@ -1822,7 +1823,7 @@ sub genotype_store : Chained('feature') PathPart('store')
         my $guard = $schema->txn_scope_guard();
 
         my $genotype = $genotype_manager->make_genotype($curs_key,
-                                                        $genotype_name, \@alleles);
+                                                        $genotype_name, $genotype_background, \@alleles);
 
         $guard->commit();
 

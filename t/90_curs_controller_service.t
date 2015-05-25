@@ -101,6 +101,7 @@ test_psgi $app, sub {
                ],
                'display_name' => 'h+ SPCC63.05delta ssm4KE',
                'identifier' => 'aaaa0007-genotype-test-1',
-               'name' => 'h+ SPCC63.05delta ssm4KE'
+               'name' => 'h+ SPCC63.05delta ssm4KE',
+               background => 'h+',
              });
 };
