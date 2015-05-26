@@ -3,7 +3,7 @@
 <!-- FLAGS: use_bootstrap -->
 
 <div class="row-fluid">
-<div class="span7">
+<div class="col-sm-6 col-md-6">
 % if (!$canto_offline) {
 <h3>Curate a paper<% $dest_db_link |n%></h3>
 <& /tools/pubmed_id_start.mhtml, title => 'Start curating using a PubMed ID:' &>
@@ -14,7 +14,7 @@ colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help 
 </p>
 </div>
 
-<div class="span5">
+<div class="col-sm-6 col-md-6">
 
 % if (@sessions) {
   <h3>Your curation sessions</h3>
@@ -27,28 +27,29 @@ colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help 
   </ul>
 % }
 % }
+</div>
 
+<div class="col-sm-6 col-md-6">
 <h3><% $docs_header %></h3>
-<div>
 <a href="<% $c->uri_for('/docs/') %>" class="btn btn-primary visit">Visit ...</a>
 <p>
 Find out about community curation and the types of data that can be curating
 by viewing our help pages:
 </p>
-</div>
 % if (!$config->{demo_mode}) {
-<div>
 <a href="http://curation.pombase.org/demo/" class="btn btn-primary visit">Demo ...</a>
 <p>
   Or try the demo version of Canto: curate using <span class="organism-name">S. pombe</span> gene IDs.
 </p>
 </div>
 % }
-</div>
 
 % if (defined $config->{instance_front_mhtml}) {
+<div class="col-sm-10 col-md-10">
 <& $config->{instance_front_mhtml} &>
+</div>
 % }
+</div>
 
 <%init>
 my $config = $c->config();
