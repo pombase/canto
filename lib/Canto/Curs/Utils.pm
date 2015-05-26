@@ -476,13 +476,33 @@ sub _process_existing_db_ontology
 
   my $annotation_type = $annotation_type_config->{name};
 
+  my $with_or_from_identifier = $row->{with} // $row->{from};
+
   my $gene_id = undef;
+  my $with_gene_id = undef;
 
   if (defined $curs_schema) {
     my $db_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $gene->{identifier} });
 
     if (defined $db_gene) {
       $gene_id = $db_gene->gene_id();
+    }
+
+    # disabled for now - no linking for with identifiers in existing annotations
+    if (0 && defined $with_or_from_identifier) {
+      my $db_with_gene = $curs_schema->resultset('Gene')->find({
+        primary_identifier => $with_or_from_identifier,
+      });
+
+      if (!defined $db_with_gene && $with_or_from_identifier =~ /.*:(\S+)/) {
+        $db_with_gene = $curs_schema->resultset('Gene')->find({
+          primary_identifier => $1,
+        });
+      }
+
+      if (defined $db_with_gene) {
+        $with_gene_id = $db_with_gene->gene_id();
+      }
     }
   }
 
@@ -503,8 +523,9 @@ sub _process_existing_db_ontology
     term_ontid => $term_ontid,
     term_name => $term_name,
     evidence_code => $evidence_code,
-    with_or_from_identifier => $row->{with} // $row->{from},
-    with_or_from_display_name => $row->{with} // $row->{from},
+    with_or_from_identifier => $with_or_from_identifier,
+    with_or_from_display_name => $with_or_from_identifier,
+    with_gene_id => $with_gene_id,
     taxonid => $gene->{organism_taxonid},
     status => 'existing',
     is_not => $is_not,

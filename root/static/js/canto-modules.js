@@ -326,7 +326,7 @@ var keysForServer = {
   feature_id: true,
   feature_type: true,
 //  is_not: true,
-//  qualifiers: true,
+  qualifiers: true,
   submitter_comment: true,
   term_ontid: true,
   term_suggestion_name: true,
