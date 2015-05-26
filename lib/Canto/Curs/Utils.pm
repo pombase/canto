@@ -591,6 +591,7 @@ sub get_existing_ontology_annotations
 
 sub _process_interaction
 {
+  my $curs_schema = shift;
   my $ontology_lookup = shift;
   my $row = shift;
   my $annotation_type = shift;
@@ -599,17 +600,36 @@ sub _process_interaction
   my $interacting_gene = $row->{interacting_gene};
   my $publication = $row->{publication};
 
+  my $gene_id = undef;
+  my $interacting_gene_id = undef;
+
+  if (defined $curs_schema) {
+    my $gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $gene->{identifier} });
+
+    if (defined $gene) {
+      $gene_id = $gene->gene_id();
+    }
+
+    my $interacting_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $interacting_gene->{identifier} });
+
+    if (defined $interacting_gene) {
+      $interacting_gene_id = $interacting_gene->gene_id();
+    }
+  }
+
   return {
     annotation_type => $row->{annotation_type},
     gene_identifier => $gene->{identifier},
     gene_display_name => $gene->{name} // $gene->{identifier},
     gene_taxonid => $gene->{taxonid},
+    gene_id => $gene_id,
     publication_uniquename => $publication->{uniquename},
     evidence_code => $row->{evidence_code},
     interacting_gene_identifier => $interacting_gene->{identifier},
     interacting_gene_display_name =>
       $interacting_gene->{name} // $interacting_gene->{identifier},
     interacting_gene_taxonid => $interacting_gene->{taxonid},
+    interacting_gene_id => $interacting_gene_id,
     status => 'existing',
   };
 }
@@ -666,7 +686,7 @@ sub get_existing_interaction_annotations
         Dumper([$args]);
     }
     @res = map {
-      my $res = _process_interaction($annotation_lookup, $_);
+      my $res = _process_interaction($curs_schema, $annotation_lookup, $_);
       if (defined $res) {
         ($res);
       } else {
