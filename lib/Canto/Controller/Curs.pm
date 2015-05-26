@@ -206,8 +206,13 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $st->{message} =
         ["Review only - this session has been exported so no changes are possible"];
     } else {
-      $st->{message} =
-        ["Review only - this session has been submitted for approval so no changes are possible"];
+      if ($state eq NEEDS_APPROVAL || $state eq APPROVAL_IN_PROGRESS) {
+        $st->{message} =
+          ["Review only - this session has been submitted for approval so no changes are possible"];
+      } else {
+        $st->{message} =
+          ["Review only - this session can be viewed but not edited"];
+      }
     }
   }
 
