@@ -445,6 +445,7 @@ sub get_annotation_table
 
 sub _process_existing_db_ontology
 {
+  my $config = shift;
   my $ontology_lookup = shift;
   my $row = shift;
 
@@ -470,6 +471,12 @@ sub _process_existing_db_ontology
     $qualifier_string = join ', ', @{$row->{qualifiers}};
   }
 
+  my $annotation_type_config =
+    $config->{annotation_types_by_namespace}->{$ontology_name} //
+    $config->{annotation_types}->{$ontology_name};
+
+  my $annotation_type = $annotation_type_config->{name};
+
   my %ret = (
     annotation_id => $row->{annotation_id},
     gene_identifier => $gene->{identifier},
@@ -482,7 +489,7 @@ sub _process_existing_db_ontology
       $gene->{name} || $gene->{identifier},
     conditions => [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $row->{conditions})],
     qualifiers => $qualifier_string,
-    annotation_type => $ontology_name,
+    annotation_type => $annotation_type,
     term_ontid => $term_ontid,
     term_name => $term_name,
     evidence_code => $evidence_code,
@@ -557,7 +564,7 @@ sub get_existing_ontology_annotations
       $annotation_lookup->lookup($args);
 
     @res = map {
-      my $res = _process_existing_db_ontology($ontology_lookup, $_);
+      my $res = _process_existing_db_ontology($config, $ontology_lookup, $_);
       if (defined $res) {
         ($res);
       } else {

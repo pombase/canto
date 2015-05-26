@@ -288,7 +288,7 @@ check_new_annotations($dummy_alt_id);
   cmp_deeply($annotations->[0],
              {
                'taxonid' => '4896',
-               'annotation_type' => 'fission_yeast_phenotype',
+               'annotation_type' => 'phenotype',
                'term_ontid' => 'FYPO:0000104',
                'term_name' => 'sensitive to cycloheximide',
                'with_or_from_identifier' => undef,
