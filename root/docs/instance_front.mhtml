@@ -4,6 +4,7 @@
 
 <div class="row-fluid">
 <div class="span7">
+% if (!$canto_offline) {
 <h3>Curate a paper<% $dest_db_link |n%></h3>
 <& /tools/pubmed_id_start.mhtml, title => 'Start curating using a PubMed ID:' &>
 <p>
@@ -25,7 +26,7 @@ colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help 
 %   }
   </ul>
 % }
-
+% }
 
 <h3><% $docs_header %></h3>
 <div>
@@ -51,6 +52,7 @@ by viewing our help pages:
 
 <%init>
 my $config = $c->config();
+my $st = $c->stash();
 
 my $tool_name = $config->{name};
 
@@ -63,6 +65,8 @@ if (defined $all_sessions) {
     $a->{pubid} cmp $b->{pubid};
   } values %$all_sessions;
 }
+
+my $canto_offline = $st->{canto_offline};
 
 my $docs_header;
 

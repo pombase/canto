@@ -211,7 +211,24 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     }
   }
 
+  my $canto_offline = $config->{canto_offline};
+
+  my $current_user = $c->user();
+
+  if (!defined $current_user || !$current_user->is_admin()) {
+    if (!$st->{read_only_curs}) {
+      $canto_offline = 1;
+    }
+  }
+
+  $st->{canto_offline} = $canto_offline;
+
   my $use_dispatch = 1;
+
+  if ($canto_offline) {
+    $c->detach('offline_message');
+    $use_dispatch = 0;
+  }
 
   if ($state eq APPROVAL_IN_PROGRESS) {
     if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
@@ -2024,6 +2041,17 @@ sub finished_publication : Chained('top') Args(0)
   if (defined $no_annotation_reason) {
     $st->{no_annotation_reason} = $no_annotation_reason;
   }
+}
+
+sub offline_message : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+
+  $st->{title} = 'Canto preview';
+  $st->{show_title} = 0;
+  $st->{template} = 'curs/offline_message.mhtml';
 }
 
 sub session_exported : Chained('top') Args(0)

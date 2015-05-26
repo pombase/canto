@@ -4,7 +4,7 @@ $show_title
 </%args>
 
 <div class="curs-user-and-reassign">
-% if ($show_curator_in_title && $can_reassign) {
+% if ($show_curator_in_title && $can_reassign && !$canto_offline) {
 <div class="useridentifier">
   <div>Curated by:</div>
   <div><% $submitter_email %></div>
@@ -40,6 +40,7 @@ my $submitter_email = $st->{submitter_email};
 my $submitter_name = $st->{submitter_name};
 
 my $read_only_curs = $st->{read_only_curs};
+my $canto_offline = $st->{canto_offline};
 
 my $state = $st->{state};
 my $can_reassign = defined $submitter_email && !$read_only_curs && 
