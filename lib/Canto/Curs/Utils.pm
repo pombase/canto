@@ -191,7 +191,7 @@ sub make_ontology_annotation
   my $ret = {
     %gene_details,
     %genotype_details,
-    qualifiers => $data->{qualifiers},
+    qualifiers => $data->{qualifiers} // [],
     annotation_type => $annotation_type,
     annotation_type_display_name => $annotation_type_display_name,
     annotation_type_abbreviation => $annotation_type_abbreviation // '',
@@ -498,7 +498,7 @@ sub _process_existing_db_ontology
     feature_display_name =>
       $gene->{name} || $gene->{identifier},
     conditions => [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $row->{conditions})],
-    qualifiers => $row->{qualifiers},
+    qualifiers => $row->{qualifiers} // [],
     annotation_type => $annotation_type,
     term_ontid => $term_ontid,
     term_name => $term_name,

@@ -218,6 +218,14 @@ sub get_annotation_table_tsv
         }
       }
 
+      if ($column_name eq 'qualifiers') {
+        if (defined $val) {
+          $val = join(",", @$val);
+        } else {
+          $val = '';
+        }
+      }
+
       if (!defined $val) {
         die "no value for field $column_name";
       }
