@@ -71,6 +71,8 @@ sub trim
 {
   my $str = shift;
 
+  return undef unless defined $str;
+
   $str =~ s/\s+$//;
   $str =~ s/^\s+//;
 
