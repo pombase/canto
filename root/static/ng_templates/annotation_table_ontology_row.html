@@ -31,6 +31,9 @@
         {{annotation.with_or_from_display_name || annotation.with_or_from_identifier}}
       </a>
     </span>
+    <span ng-if="!annotation.with_gene_id">
+      {{annotation.with_or_from_display_name || annotation.with_or_from_identifier}}
+    </span>
   </td>
   <td ng-if="annotationType.can_have_conditions">
     {{annotation.conditionsString}}
