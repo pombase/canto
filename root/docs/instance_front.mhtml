@@ -30,7 +30,7 @@ colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help 
 
 <h3><% $docs_header %></h3>
 <div>
-<a href="<% $c->uri_for('/docs/') %>" class="btn visit">Visit ...</a>
+<a href="<% $c->uri_for('/docs/') %>" class="btn btn-primary visit">Visit ...</a>
 <p>
 Find out about community curation and the types of data that can be curating
 by viewing our help pages:
@@ -38,7 +38,7 @@ by viewing our help pages:
 </div>
 % if (!$config->{demo_mode}) {
 <div>
-<a href="http://curation.pombase.org/demo/" class="btn visit">Demo ...</a>
+<a href="http://curation.pombase.org/demo/" class="btn btn-primary visit">Demo ...</a>
 <p>
   Or try the demo version of Canto: curate using <span class="organism-name">S. pombe</span> gene IDs.
 </p>
