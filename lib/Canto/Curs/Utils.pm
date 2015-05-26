@@ -481,10 +481,10 @@ sub _process_existing_db_ontology
   my $gene_id = undef;
 
   if (defined $curs_schema) {
-    my $gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $gene->{identifier} });
+    my $db_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $gene->{identifier} });
 
-    if (defined $gene) {
-      $gene_id = $gene->gene_id();
+    if (defined $db_gene) {
+      $gene_id = $db_gene->gene_id();
     }
   }
 
@@ -604,16 +604,16 @@ sub _process_interaction
   my $interacting_gene_id = undef;
 
   if (defined $curs_schema) {
-    my $gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $gene->{identifier} });
+    my $db_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $gene->{identifier} });
 
-    if (defined $gene) {
-      $gene_id = $gene->gene_id();
+    if (defined $db_gene) {
+      $gene_id = $db_gene->gene_id();
     }
 
-    my $interacting_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $interacting_gene->{identifier} });
+    my $db_interacting_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $interacting_gene->{identifier} });
 
-    if (defined $interacting_gene) {
-      $interacting_gene_id = $interacting_gene->gene_id();
+    if (defined $db_interacting_gene) {
+      $interacting_gene_id = $db_interacting_gene->gene_id();
     }
   }
 
