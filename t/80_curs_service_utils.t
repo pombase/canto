@@ -592,6 +592,7 @@ cmp_deeply($annotation_res,
             {
               'evidence_code' => 'IMP',
               'gene_name' => 'ste20',
+              'gene_id' => undef,
               'with_or_from_display_name' => 'PomBase:SPBC2G2.01c',
               'gene_name_or_identifier' => 'ste20',
               'gene_identifier' => 'SPBC12C2.02c',
@@ -706,6 +707,7 @@ cmp_deeply($annotation_res,
               'gene_name' => 'ste20',
               'gene_name_or_identifier' => 'ste20',
               'gene_identifier' => 'SPBC12C2.02c',
+              'gene_id' => undef,
               'conditions' => []
             },
             {
@@ -801,8 +803,10 @@ cmp_deeply($annotation_res,
               'gene_identifier' => 'SPBC12C2.02c',
               'interacting_gene_identifier' => 'SPCC1739.11c',
               'interacting_gene_taxonid' => '4896',
+              'interacting_gene_id' => undef,
               'annotation_type' => 'genetic_interaction',
-              'gene_taxonid' => '4896'
+              'gene_taxonid' => '4896',
+              'gene_id' => undef,
             },
             {
               'interacting_gene_display_name' => 'sfh1',
@@ -811,8 +815,10 @@ cmp_deeply($annotation_res,
               'evidence_code' => undef,
               'publication_uniquename' => 'PMID:19756689',
               'gene_taxonid' => '4896',
+              'gene_id' => undef,
               'interacting_gene_taxonid' => '4896',
               'interacting_gene_identifier' => 'SPCC16A11.14',
+              'interacting_gene_id' => undef,
               'annotation_type' => 'genetic_interaction',
               'gene_identifier' => 'SPBC12C2.02c'
             }
