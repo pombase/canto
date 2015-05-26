@@ -769,6 +769,10 @@ sub _ontology_change_keys
 
       return 1;
     },
+    qualifiers => sub {
+      warn "storing of qualifiers is not implemented\n";
+      return 1;
+    },
   )
 }
 
