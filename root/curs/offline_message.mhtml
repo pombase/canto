@@ -1,0 +1,11 @@
+<%args>
+</%args>
+
+<div style="width: 70%" class="curs-box">
+  <div class="curs-box-title">
+Kaput
+  </div>
+  <div class="curs-box-body">
+Message
+  </div>
+</div>

@@ -46,3 +46,6 @@ cache:
   memcached:
     servers:
       - 127.0.0.1:11211
+
+canto_offline: 0
+canto_offline_message: ~

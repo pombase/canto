@@ -40,7 +40,7 @@ my $submitter_email = $st->{submitter_email};
 my $submitter_name = $st->{submitter_name};
 
 my $read_only_curs = $st->{read_only_curs};
-my $canto_offline = $st->{canto_offline};
+my $canto_offline = $c->config()->{canto_offline};
 
 my $state = $st->{state};
 my $can_reassign = defined $submitter_email && !$read_only_curs && 

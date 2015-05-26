@@ -216,21 +216,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     }
   }
 
-  my $canto_offline = $config->{canto_offline};
+  my $use_dispatch = 1;
 
   my $current_user = $c->user();
 
-  if (!defined $current_user || !$current_user->is_admin()) {
-    if (!$st->{read_only_curs}) {
-      $canto_offline = 1;
-    }
-  }
-
-  $st->{canto_offline} = $canto_offline;
-
-  my $use_dispatch = 1;
-
-  if ($canto_offline) {
+  if ($config->{canto_offline} && !$st->{read_only_curs} &&
+        (!defined $current_user || !$current_user->is_admin())) {
     $c->detach('offline_message');
     $use_dispatch = 0;
   }
