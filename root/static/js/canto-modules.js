@@ -2310,6 +2310,18 @@ var annotationTableRow =
             conditionsToString($scope.annotation.conditions);
         }
 
+        var qualifiersList = [];
+
+        if ($scope.annotation.qualifiers !== null) {
+          qualifiersList = $scope.annotation.qualifiers;
+        }
+
+        if ($scope.annotation.is_not) {
+          qualifiersList.unshift('NOT');
+        }
+
+        $scope.annotation.qualifiersString = qualifiersList.join(', ');
+
         AnnotationTypeConfig.getByName(annotation.annotation_type)
           .then(function(annotationType) {
             $scope.annotationType = annotationType;

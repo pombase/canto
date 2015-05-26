@@ -42,6 +42,7 @@ use warnings;
 use Carp;
 use Moose;
 use Clone qw(clone);
+use JSON;
 
 use Canto::Curs::GeneProxy;
 use Canto::Curs::ConditionUtil;
@@ -190,7 +191,7 @@ sub make_ontology_annotation
   my $ret = {
     %gene_details,
     %genotype_details,
-    qualifiers => '',
+    qualifiers => $data->{qualifiers},
     annotation_type => $annotation_type,
     annotation_type_display_name => $annotation_type_display_name,
     annotation_type_abbreviation => $annotation_type_abbreviation // '',
@@ -214,7 +215,7 @@ sub make_ontology_annotation
     is_obsolete_term => $is_obsolete_term,
     curator => $curator,
     status => $annotation->status(),
-    is_not => 0,
+    is_not => JSON::false,
   };
 
   return $ret;
@@ -461,15 +462,12 @@ sub _process_existing_db_ontology
 
   my $term_ontid = $ontology_term->{ontid};
 
-  my $is_not = $row->{is_not} // 0;
-  if ($is_not eq 'false') {
-    $is_not = 0;
-  }
+  my $is_not;
 
-  my $qualifier_string = '';
-
-  if (defined $row->{qualifiers}) {
-    $qualifier_string = join ', ', @{$row->{qualifiers}};
+  if ($row->{is_not}) {
+    $is_not = JSON::true;
+  } else {
+    $is_not = JSON::false;
   }
 
   my $annotation_type_config =
@@ -500,7 +498,7 @@ sub _process_existing_db_ontology
     feature_display_name =>
       $gene->{name} || $gene->{identifier},
     conditions => [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $row->{conditions})],
-    qualifiers => $qualifier_string,
+    qualifiers => $row->{qualifiers},
     annotation_type => $annotation_type,
     term_ontid => $term_ontid,
     term_name => $term_name,
