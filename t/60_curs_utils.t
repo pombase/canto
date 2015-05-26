@@ -216,7 +216,7 @@ check_new_annotations($dummy_alt_id);
                   annotation_type_name => 'cellular_component',
                 };
   my ($all_annotation_count, $annotations) =
-    Canto::Curs::Utils::get_existing_annotations($config, $options);
+    Canto::Curs::Utils::get_existing_annotations($config, $curs_schema, $options);
 
   is (@$annotations, 1);
   cmp_deeply($annotations->[0],
@@ -248,7 +248,7 @@ check_new_annotations($dummy_alt_id);
                   annotation_type_name => 'biological_process',
                 };
   my ($all_annotation_count, $annotations) =
-    Canto::Curs::Utils::get_existing_ontology_annotations ($config, $options);
+    Canto::Curs::Utils::get_existing_ontology_annotations ($config, $curs_schema, $options);
 
   is (@$annotations, 1);
   cmp_deeply($annotations->[0],
@@ -282,7 +282,7 @@ check_new_annotations($dummy_alt_id);
                   annotation_type_name => 'phenotype',
                 };
   my ($all_annotation_count, $annotations) =
-    Canto::Curs::Utils::get_existing_ontology_annotations ($config, $options);
+    Canto::Curs::Utils::get_existing_ontology_annotations ($config, $curs_schema, $options);
 
   is (@$annotations, 1);
   cmp_deeply($annotations->[0],
@@ -335,7 +335,7 @@ sub _test_interactions
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
   my ($all_interactions_count, $annotations) =
-    Canto::Curs::Utils::get_existing_interaction_annotations ($config, $options);
+    Canto::Curs::Utils::get_existing_interaction_annotations ($config, $curs_schema, $options);
 
   _test_interactions(2, @$annotations);
 }
@@ -346,7 +346,7 @@ sub _test_interactions
                   annotation_type_category => 'interaction',
                   max_results => 1, };
   my ($all_interactions_count, $annotations) =
-    Canto::Curs::Utils::get_existing_interaction_annotations ($config, $options);
+    Canto::Curs::Utils::get_existing_interaction_annotations ($config, $curs_schema, $options);
 
   _test_interactions(1, @$annotations);
 }
@@ -356,7 +356,7 @@ sub _test_interactions
                   annotation_type_name => 'genetic_interaction',
                   annotation_type_category => 'interaction', };
   my ($all_interactions_count, $annotations) =
-    Canto::Curs::Utils::get_existing_annotations($config, $options);
+    Canto::Curs::Utils::get_existing_annotations($config, $curs_schema, $options);
 
   _test_interactions(2, @$annotations);
 }

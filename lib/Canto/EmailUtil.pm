@@ -133,7 +133,7 @@ sub make_email
                     pub_uniquename => $args{publication_uniquename} );
 
     my ($all_existing_annotations_count, $existing_annotations) =
-    Canto::Curs::Utils::get_existing_annotation_count($self->config(), \%options);
+    Canto::Curs::Utils::get_existing_annotation_count($self->config(), undef, \%options);
 
     $args{existing_annotation_count} = $all_existing_annotations_count;
   }

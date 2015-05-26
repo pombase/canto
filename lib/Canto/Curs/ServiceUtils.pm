@@ -175,6 +175,7 @@ sub _get_annotation
 
       ($completed_count, $rows) =
         Canto::Curs::Utils::get_existing_annotations($self->config(),
+                                                     $self->curs_schema(),
                                                      { pub_uniquename => $pub_uniquename,
                                                        annotation_type_name => $_->{name} });
 

@@ -446,6 +446,7 @@ sub get_annotation_table
 sub _process_existing_db_ontology
 {
   my $config = shift;
+  my $curs_schema = shift;
   my $ontology_lookup = shift;
   my $row = shift;
 
@@ -477,6 +478,16 @@ sub _process_existing_db_ontology
 
   my $annotation_type = $annotation_type_config->{name};
 
+  my $gene_id = undef;
+
+  if (defined $curs_schema) {
+    my $gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $gene->{identifier} });
+
+    if (defined $gene) {
+      $gene_id = $gene->gene_id();
+    }
+  }
+
   my %ret = (
     annotation_id => $row->{annotation_id},
     gene_identifier => $gene->{identifier},
@@ -484,6 +495,7 @@ sub _process_existing_db_ontology
     gene_name_or_identifier =>
       $gene->{name} || $gene->{identifier},
     gene_product => $gene->{product} || '',
+    gene_id => $gene_id,
     feature_type => 'gene',
     feature_display_name =>
       $gene->{name} || $gene->{identifier},
@@ -515,7 +527,7 @@ sub _process_existing_db_ontology
 
  Usage   :
    my ($all_annotations_count, $annotations) =
-     Canto::Curs::Utils::get_existing_ontology_annotations($config, $options);
+     Canto::Curs::Utils::get_existing_ontology_annotations($config, $curs_schema, $options);
  Function: Return a count of the all the matching annotations and table of the
            existing ontology annotations from the database with at most
            max_results rows
@@ -535,6 +547,7 @@ sub _process_existing_db_ontology
 sub get_existing_ontology_annotations
 {
   my $config = shift;
+  my $curs_schema = shift;
   my $options = shift;
 
   my $pub_uniquename = $options->{pub_uniquename};
@@ -564,7 +577,7 @@ sub get_existing_ontology_annotations
       $annotation_lookup->lookup($args);
 
     @res = map {
-      my $res = _process_existing_db_ontology($config, $ontology_lookup, $_);
+      my $res = _process_existing_db_ontology($config, $curs_schema, $ontology_lookup, $_);
       if (defined $res) {
         ($res);
       } else {
@@ -605,7 +618,7 @@ sub _process_interaction
 
  Usage   :
    my ($all_existing_annotations_count, $annotations) =
-      Canto::Curs::Utils::get_existing_interaction_annotations($config, $options);
+      Canto::Curs::Utils::get_existing_interaction_annotations($config, $curs_schema, $options);
  Function: Return a count of the all the matching interactions and table of the
            existing interactions from the database with at most max_results rows
  Args    : $config - the Canto::Config object
@@ -622,6 +635,7 @@ sub _process_interaction
 sub get_existing_interaction_annotations
 {
   my $config = shift;
+  my $curs_schema = shift;
   my $options = shift;
 
   my $pub_uniquename = $options->{pub_uniquename};
@@ -668,7 +682,7 @@ sub get_existing_interaction_annotations
 
  Usage   :
    my ($all_annotations_count, $annotations) =
-     Canto::Curs::Utils::get_existing_annotations($config, $options);
+     Canto::Curs::Utils::get_existing_annotations($config, $curs_schema, $options);
  Function: Return a table of the existing interaction annotations from the
            database
  Args    : $config - the Canto::Config object
@@ -687,15 +701,16 @@ sub get_existing_interaction_annotations
 sub get_existing_annotations
 {
   my $config = shift;
+  my $curs_schema = shift;
   my $options = shift;
 
   my $annotation_type_category =
     $config->{annotation_types}->{$options->{annotation_type_name}}->{category};
 
   if ($annotation_type_category eq 'ontology') {
-    return get_existing_ontology_annotations($config, $options);
+    return get_existing_ontology_annotations($config, $curs_schema, $options);
   } else {
-    return get_existing_interaction_annotations($config, $options);
+    return get_existing_interaction_annotations($config, $curs_schema, $options);
   }
 }
 
@@ -714,6 +729,7 @@ sub get_existing_annotations
 sub get_existing_annotation_count
 {
   my $config = shift;
+  my $curs_schema = shift;
   my $arg_options = shift;
 
   my $count = 0;
@@ -722,7 +738,7 @@ sub get_existing_annotation_count
     my $options = clone $arg_options;
     $options->{annotation_type_name} = $annotation_type->{name};
     my ($all_annotations_count, $annotations) =
-      Canto::Curs::Utils::get_existing_annotations($config, $options);
+      Canto::Curs::Utils::get_existing_annotations($config, $curs_schema, $options);
     $count += $all_annotations_count;
   }
 
