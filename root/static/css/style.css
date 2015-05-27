@@ -9,7 +9,6 @@ body
   background-color: white; 
   color: #302226;
   font-size: 16px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 a:link { text-decoration:none; cursor:pointer; }
@@ -20,12 +19,12 @@ a:link:active { text-decoration:none }
 
 #heading a { color: black; }
 
-.hero-unit {
+.jumbotron {
   padding: 30px;
-  line-height: 1.4em;
+  line-height: 1.6em;
 }
 
-.hero-unit h1 {
+.jumbotron h1 {
   font-size: 50px;
 }
 
