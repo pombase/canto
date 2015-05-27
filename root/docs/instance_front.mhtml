@@ -3,7 +3,7 @@
 <!-- FLAGS: use_bootstrap -->
 
 <div class="row-fluid">
-% if ($canto_offline) {
+% if ($canto_offline && !$is_admin_user) {
 <& /curs/offline_message.mhtml &>
 % } else {
 <div class="col-sm-6 col-md-6">
@@ -67,6 +67,12 @@ if (defined $all_sessions) {
   @sessions = sort {
     $a->{pubid} cmp $b->{pubid};
   } values %$all_sessions;
+}
+
+my $current_user = $c->user();
+my $is_admin_user = 0;
+if (defined $current_user && $current_user->is_admin()) {
+  $is_admin_user = 1;
 }
 
 my $canto_offline = $config->{canto_offline};
