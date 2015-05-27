@@ -1,11 +1,29 @@
 <%args>
 </%args>
 
-<div style="width: 70%" class="curs-box">
+<div style="width: 70%; font-size: 120%;" class="curs-box">
   <div class="curs-box-title">
-Kaput
+Canto is offline
   </div>
   <div class="curs-box-body">
-Message
+    <p>
+Canto, PomBase's literature curation tool, will be unavailable for
+approximately 3 weeks starting on 2015-05-28 while we deploy an upgraded
+version.
+    </p>
+    <p>
+The upgraded Canto will feature an entirely new interface for annotating
+multi-allele phenotypes and the corresponding genotypes, as well as improved
+workflows for single-allele phenotypes, GO, etc.
+    </p>
+    <p>
+All of your existing annotations will be retained, and you can resume curation
+using the new and improved features in any unfinished sessions when Canto is
+back online.
+    </p>
+    <p>
+Watch for the next announcement here, when the new version of Canto is
+released to the public.
+    </p>
   </div>
 </div>
