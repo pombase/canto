@@ -3,8 +3,10 @@
 <!-- FLAGS: use_bootstrap -->
 
 <div class="row-fluid">
+% if ($canto_offline) {
+<& /curs/offline_message.mhtml &>
+% } else {
 <div class="col-sm-6 col-md-6">
-% if (!$canto_offline) {
 <h3>Curate a paper<% $dest_db_link |n%></h3>
 <& /tools/pubmed_id_start.mhtml, title => 'Start curating using a PubMed ID:' &>
 <p>
@@ -26,8 +28,8 @@ colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help 
 %   }
   </ul>
 % }
-% }
 </div>
+% }
 
 <div class="col-sm-6 col-md-6">
 <h3><% $docs_header %></h3>
