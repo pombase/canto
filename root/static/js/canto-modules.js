@@ -2499,21 +2499,21 @@ var initiallyHiddenText =
       },
       restrict: 'E',
       replace: true,
-      controller: function($scope) {
-        $scope.show = function() {
-        };
-      },
       link: function($scope, elem) {
         var $view = $(elem).find('a');
         var $element = $(elem).find('span');
-        $element.hide();
-        $view.on('click',
-                 function () {
-                   $view.hide();
-                   $element.show();
-                 });
+        if ($.trim($scope.text).length > 0) {
+          $element.hide();
+          $view.on('click',
+                   function () {
+                     $view.hide();
+                     $element.show();
+                   });
+        } else {
+          $view.hide();
+        }
       },
-      template: '<span><span title="{{text}}">{{text}}</span><a href="#">{{linkLabel}}</a></span>',
+      template: '<span><span title="{{text}}">{{text}}</span><a class="ng-cloak" title="{{text}}" tooltip="{{text}}" >{{linkLabel}}</a></span>',
     };
   };
 
