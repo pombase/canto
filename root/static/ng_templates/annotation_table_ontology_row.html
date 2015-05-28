@@ -48,12 +48,12 @@
 {{annotation.term_suggestion_name}}
       </div>
       <div>
-{{annotation.term_suggestion_definition}}
+        <initially-hidden-text text="{{annotation.term_suggestion_definition}}" link-label="View definition..."></initially-hidden-text>
       </div>
     </div>
   </td>
   <td>
-    {{annotation.submitter_comment}}
+    <initially-hidden-text text="{{annotation.submitter_comment}}" link-label="View comment..."></initially-hidden-text>
   </td>
   <td>
     {{annotation.annotation_extension | breakExtensions}}

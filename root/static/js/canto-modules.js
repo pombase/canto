@@ -2489,3 +2489,33 @@ var termNameComplete =
   };
 
 canto.directive('termNameComplete', ['$timeout', termNameComplete]);
+
+var initiallyHiddenText =
+  function() {
+    return {
+      scope: {
+        text: '@',
+        linkLabel: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      controller: function($scope) {
+        $scope.show = function() {
+        };
+      },
+      link: function($scope, elem) {
+        var $view = $(elem).find('a');
+        var $element = $(elem).find('span');
+        $element.hide();
+        $view.on('click',
+                 function () {
+                   $view.hide();
+                   $element.show();
+                 });
+      },
+      template: '<span><span title="{{text}}">{{text}}</span><a href="#">{{linkLabel}}</a></span>',
+    };
+  };
+
+canto.directive('initiallyHiddenText', [initiallyHiddenText]);
+
