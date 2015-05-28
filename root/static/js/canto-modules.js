@@ -2312,7 +2312,7 @@ var annotationTableRow =
 
         var qualifiersList = [];
 
-        if ($scope.annotation.qualifiers !== null) {
+        if (typeof($scope.annotation.qualifiers) !== 'undefined' && $scope.annotation.qualifiers !== null) {
           qualifiersList = $scope.annotation.qualifiers;
         }
 
