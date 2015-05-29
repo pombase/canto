@@ -2502,16 +2502,21 @@ var initiallyHiddenText =
       link: function($scope, elem) {
         var $view = $(elem).find('a');
         var $element = $(elem).find('span');
-        if ($.trim($scope.text).length > 0) {
-          $element.hide();
-          $view.on('click',
-                   function () {
-                     $view.hide();
-                     $element.show();
-                   });
-        } else {
-          $view.hide();
-        }
+        $view.on('click',
+                 function () {
+                   $view.hide();
+                   $element.show();
+                 });
+
+        $scope.$watch('text',
+                      function() {
+                        if ($.trim($scope.text).length > 0) {
+                          $element.hide();
+                          $view.show();
+                        } else {
+                          $view.hide();
+                        }
+                      });
       },
       template: '<span><span title="{{text}}">{{text}}</span><a class="ng-cloak" title="{{text}}" tooltip="{{text}}" >{{linkLabel}}</a></span>',
     };
