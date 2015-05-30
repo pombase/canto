@@ -46,6 +46,7 @@ use JSON;
 
 use Canto::Curs::GeneProxy;
 use Canto::Curs::ConditionUtil;
+use Canto::Curs::MetadataStorer;
 
 =head2 make_ontology_annotation
 
@@ -799,11 +800,12 @@ sub store_all_statuses
   my $config = shift;
   my $track_schema = shift;
 
-  my $state = Canto::Curs::State->new(config => $config);
+  my $metadata_storer =
+   Canto::Curs::MetadataStorer->new(config => $config);
 
   my $iter = Canto::Track::curs_iterator($config, $track_schema);
   while (my ($curs, $cursdb) = $iter->()) {
-    $state->store_statuses($cursdb);
+    $metadata_storer->store_counts($cursdb);
   }
 }
 

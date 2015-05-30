@@ -118,7 +118,8 @@ sub store_counts
     $unknown_conditions_count +=
       _count_unknown_conditions($ontology_lookup, $data->{conditions});
 
-    if (defined $data->{term_suggestion}) {
+    if (defined $data->{term_suggestion} &&
+        ($data->{term_suggestion}->{name} || $data->{term_suggestion}->{definition})) {
       $term_suggestion_count++;
     }
   }
