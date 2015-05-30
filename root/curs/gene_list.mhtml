@@ -34,7 +34,6 @@ Click on a gene name to start entering data
             <% $gene->{identifier} %>
           </span>
         </a>
-        <% $gene->{extra_text} |n %>
 </td>
 %       }
 %     }
@@ -74,22 +73,9 @@ my @gene_hashes = sort {
      $a->{identifier} cmp $b->{identifier};
    } map {
      my $extra_text = '';
-     my @annotations = $_->all_annotations(include_with => 0)->all();
-     my $annotation_count = scalar(@annotations);
-
-     if ($annotation_count > 0) {
-       my $text;
-       if ($annotation_count == 1) {
-         $text = '1 annotation';
-       } else {
-         $text = "$annotation_count annotations";
-       }
-       $extra_text = "&nbsp;&nbsp;<span class='annotation-count'>($text)</span>";
-     }
      {
        identifier => $_->primary_name() || $_->primary_identifier(),
        gene_id => $_->gene_id(),
-       extra_text => $extra_text,
      }
    } @all_genes;
 
