@@ -95,22 +95,24 @@ if (!defined $lookup) {
 }
 
 if ($lookup_type eq 'gene') {
-  my $res = $lookup->lookup([@ARGV]);
+  for my $search_string (@ARGV) {
+    my $res = $lookup->lookup([$search_string]);
 
-  for my $gene (@{$res->{found}}) {
-    print
-      ($gene->{primary_identifier}, "\t",
-       $gene->{primary_name} // '', "\t",
-       $gene->{product}, "\t",
-       (join ",", @{$gene->{synonyms}}), "\t",
-       $gene->{organism_full_name}, "\t",
-       $gene->{organism_taxonid}, "\n");
-  }
+    for my $gene (@{$res->{found}}) {
+      print
+        ($gene->{primary_identifier}, "\t",
+         $gene->{primary_name} // '', "\t",
+         $gene->{product}, "\t",
+         (join ",", @{$gene->{synonyms}}), "\t",
+         $gene->{organism_full_name}, "\t",
+         $gene->{organism_taxonid}, "\n");
+    }
 
-  if (@{$res->{missing}}) {
-    print "Not found:\n";
-    for my $identifier (@{$res->{missing}}) {
-      print "$identifier\n";
+    if (@{$res->{missing}}) {
+      print "Not found:\n";
+      for my $identifier (@{$res->{missing}}) {
+        print "$identifier\n";
+      }
     }
   }
 } else {
