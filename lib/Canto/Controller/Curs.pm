@@ -221,7 +221,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $current_user = $c->user();
 
   if ($config->{canto_offline} && !$st->{read_only_curs} &&
-        (!defined $current_user || !$current_user->is_admin())) {
+        (!defined $current_user || !$current_user->is_admin()) &&
+        $path !~ m:/(ws/\w+/list):) {
     $c->detach('offline_message');
     $use_dispatch = 0;
   }
