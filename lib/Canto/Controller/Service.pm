@@ -209,6 +209,9 @@ sub lookup : Local
 
   $c->stash->{json_data} = $results;
 
+  # FIXME - this is a bit dodgy
+  $c->cache_page(100);
+
   $c->forward('View::JSON');
 }
 
@@ -226,6 +229,10 @@ sub canto_config : Local
     my $key_config = $config->for_json($config_key);
     if (defined $key_config) {
       $c->stash->{json_data} = $key_config;
+
+      # FIXME - the URL for canto_config should have a version number so
+      # we can have a far future expiry date
+      $c->cache_page(600);
     } else {
       $c->stash->{json_data} = {
         status => 'error',
