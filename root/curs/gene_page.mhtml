@@ -18,7 +18,7 @@ Choose curation type for <% $gene->display_name() %>:
   </div>
   <div class="curs-box-body">
   <ul class="annotation-start">
-% for my $annotation_type (@types_to_show) {
+% for my $annotation_type (@annotation_type_list) {
 %   next if $annotation_type->{feature_type} ne 'gene';
 %   my $annotation_type_name = $annotation_type->{name};
 %   my $action_path = "$curs_root_uri/feature/gene/annotate/$gene_id/" .
@@ -140,18 +140,4 @@ my $is_admin = $st->{is_admin_user};
 
 my $genes_in_session = $st->{genes_in_session};
 my $genes_in_session_js = Data::JavaScript::Anon->anon_dump($genes_in_session);
-
-use Clone qw(clone);
-
-my @types_to_show = map {
-  # a bit of a hack:
-  if (defined $_->{feature_type} eq 'genotype') {
-    my $single_copy = clone $_;
-    $single_copy->{target} = 'single_allele';
-    $single_copy;
-  } else {
-    $_->{target} = 'gene';
-    $_;
-  }
-} @annotation_type_list;
 </%init>
