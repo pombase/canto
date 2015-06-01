@@ -337,14 +337,15 @@ var keysForServer = {
 
 var annotationProxy =
   function(Curs, $q, $http) {
-  this.allAnnotationQ = undefined;
+  var that = this;
+  this.allQs = {};
 
-  this.getAllAnnotation = function() {
-    if (typeof(this.allAnnotationQ) === 'undefined') {
-      this.allAnnotationQ = Curs.list('annotation');
+  this.getAnnotation = function(annotation_type_name) {
+    if (!this.allQs[annotation_type_name]) {
+      this.allQs[annotation_type_name] = Curs.list('annotation', [annotation_type_name]);
     }
 
-    return this.allAnnotationQ;
+    return this.allQs[annotation_type_name];
   };
 
   // filter the list of annotation based on the params argument
@@ -357,12 +358,11 @@ var annotationProxy =
     function(params) {
       var q = $q.defer();
 
-      this.getAllAnnotation().success(function(annotations) {
+      that.getAnnotation(params.annotationTypeName).success(function(annotations) {
         var filteredAnnotations =
           $.grep(annotations,
                  function(elem) {
-                   return elem.annotation_type === params.annotationTypeName &&
-                     (!params.featureStatus ||
+                   return (!params.featureStatus ||
                       elem.status === params.featureStatus) &&
                      (!params.featureId ||
                       (params.featureType &&
