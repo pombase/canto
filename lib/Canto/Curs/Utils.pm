@@ -130,7 +130,7 @@ sub make_ontology_annotation
     my $gene_product = $gene_proxy->product() || '',
       my $gene_synonyms_string = join '|', $gene_proxy->synonyms();
 
-    $taxonid = $gene_proxy->organism()->taxonid();
+    $taxonid = $gene_proxy->taxonid();
 
     %gene_details = (
       gene_id => $gene->gene_id(),
@@ -311,7 +311,7 @@ sub make_interaction_annotation
       annotation_type_display_name => $annotation_type_display_name,
       gene_identifier => $gene_proxy->primary_identifier(),
       gene_display_name => $gene_proxy->display_name(),
-      gene_taxonid => $gene_proxy->organism()->taxonid(),
+      gene_taxonid => $gene_proxy->taxonid(),
       gene_id => $gene_proxy->gene_id(),
       feature_display_name => $gene_proxy->display_name(),
       feature_id => $gene_proxy->gene_id(),
@@ -323,7 +323,7 @@ sub make_interaction_annotation
         $interacting_gene_display_name,
       interacting_gene_taxonid =>
         $interacting_gene_info->{organism_taxon}
-          // $gene_proxy->organism()->taxonid(),
+          // $gene_proxy->taxonid(),
       interacting_gene_id => $interacting_gene_proxy->gene_id(),
       score => '',  # for biogrid format output
       phenotypes => '',

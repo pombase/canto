@@ -63,6 +63,7 @@ has synonyms_ref => (is => 'ro', init_arg => undef, lazy_build => 1,
                );
 has gene_data => (is => 'ro', init_arg => undef, lazy_build => 1);
 has organism => (is => 'ro', init_arg => undef, lazy_build => 1);
+has taxonid => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::GeneNames';
@@ -139,6 +140,13 @@ sub _build_synonyms_ref
   my $self = shift;
 
   return $self->gene_data()->{synonyms};
+}
+
+sub _build_taxonid
+{
+  my $self = shift;
+
+  return $self->gene_data()->{organism_taxonid};
 }
 
 sub _build_organism
