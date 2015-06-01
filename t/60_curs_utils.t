@@ -241,6 +241,7 @@ check_new_annotations($dummy_alt_id);
                'status' => 'existing',
                'with_or_from_display_name' => 'PomBase:SPBC2G2.01c',
                'with_or_from_identifier' => 'PomBase:SPBC2G2.01c',
+               'with_gene_id' => undef,
              });
 }
 
@@ -274,7 +275,8 @@ check_new_annotations($dummy_alt_id);
                'status' => 'existing',
                'with_or_from_display_name' => undef,
                'with_or_from_identifier' => undef,
-             });
+               'with_gene_id' => undef,
+           });
 }
 
 
@@ -310,6 +312,7 @@ check_new_annotations($dummy_alt_id);
                'status' => 'existing',
                'with_or_from_display_name' => undef,
                'with_or_from_identifier' => undef,
+               'with_gene_id' => undef,
              });
 }
 
