@@ -156,7 +156,7 @@ sub _get_annotation
   }
 
   if (@pubs == 0) {
-    die "internal error - one publications stored in session: ",
+    die "internal error - no publications stored in session: ",
       $curs_schema->resultset('Metadata')->find({ key => 'curs_key' })->value();
   }
 
