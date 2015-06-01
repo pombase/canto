@@ -459,6 +459,44 @@ cmp_deeply($cond_res, [ { term_id => 'PECO:0000006', name => 'low temperature' }
 # test annotation list service
 my $annotation_res = $service_utils->list_for_service('annotation');
 
+my $post_translational_modification_res =
+  {
+    'evidence_code' => 'ISS',
+    'creation_date' => '2010-01-02',
+    'with_gene_id' => undef,
+    'gene_identifier' => 'SPCC63.05',
+    'submitter_comment' => undef,
+    'gene_name' => '',
+    'with_or_from_display_name' => undef,
+    'feature_display_name' => 'SPCC63.05',
+    'feature_type' => 'gene',
+    'term_name' => 'protein modification categorized by amino acid modified',
+    'gene_synonyms_string' => '',
+    'term_ontid' => 'MOD:01157',
+    'gene_id' => 4,
+    'taxonid' => 4896,
+    'creation_date_short' => '20100102',
+    'completed' => '',
+    'is_not' => JSON::false,
+    'annotation_type_display_name' => 'protein modification',
+    'needs_with' => '1',
+    'annotation_type_abbreviation' => '',
+    'gene_name_or_identifier' => 'SPCC63.05',
+    'is_obsolete_term' => 0,
+    'term_suggestion_name' => undef,
+    'term_suggestion_definition' => undef,
+    'annotation_extension' => '',
+    'annotation_type' => 'post_translational_modification',
+    'gene_product' => 'TAP42 family protein involved in TOR signalling (predicted)',
+    'status' => 'new',
+    'annotation_id' => 8,
+    'feature_id' => 4,
+    'publication_uniquename' => 'PMID:19756689',
+    'with_or_from_identifier' => undef,
+    'curator' => 'Another Testperson <a.n.other.testperson@pombase.org>',
+    'qualifiers' => [],
+  };
+
 cmp_deeply($annotation_res,
            [
             {
@@ -715,42 +753,7 @@ cmp_deeply($annotation_res,
               'conditions' => [],
               'with_gene_id' => undef,
             },
-            {
-              'evidence_code' => 'ISS',
-              'creation_date' => '2010-01-02',
-              'with_gene_id' => undef,
-              'gene_identifier' => 'SPCC63.05',
-              'submitter_comment' => undef,
-              'gene_name' => '',
-              'with_or_from_display_name' => undef,
-              'feature_display_name' => 'SPCC63.05',
-              'feature_type' => 'gene',
-              'term_name' => 'protein modification categorized by amino acid modified',
-              'gene_synonyms_string' => '',
-              'term_ontid' => 'MOD:01157',
-              'gene_id' => 4,
-              'taxonid' => 4896,
-              'creation_date_short' => '20100102',
-              'completed' => '',
-              'is_not' => JSON::false,
-              'annotation_type_display_name' => 'protein modification',
-              'needs_with' => '1',
-              'annotation_type_abbreviation' => '',
-              'gene_name_or_identifier' => 'SPCC63.05',
-              'is_obsolete_term' => 0,
-              'term_suggestion_name' => undef,
-              'term_suggestion_definition' => undef,
-              'annotation_extension' => '',
-              'annotation_type' => 'post_translational_modification',
-              'gene_product' => 'TAP42 family protein involved in TOR signalling (predicted)',
-              'status' => 'new',
-              'annotation_id' => 8,
-              'feature_id' => 4,
-              'publication_uniquename' => 'PMID:19756689',
-              'with_or_from_identifier' => undef,
-              'curator' => 'Another Testperson <a.n.other.testperson@pombase.org>',
-              'qualifiers' => [],
-            },
+            $post_translational_modification_res,
             {
               'interacting_gene_display_name' => 'doa10',
               'evidence_code' => 'Synthetic Haploinsufficiency',
@@ -828,6 +831,13 @@ cmp_deeply($annotation_res,
               'gene_identifier' => 'SPBC12C2.02c'
             }
           ]);
+
+$annotation_res = $service_utils->list_for_service('annotation', 'post_translational_modification');
+
+cmp_deeply($annotation_res,
+           [
+             $post_translational_modification_res,
+           ]);
 
 
 # read from CursDB

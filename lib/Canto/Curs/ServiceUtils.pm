@@ -140,9 +140,31 @@ sub _get_conditions
   return map { $conds{$_}; } sort keys %conds;
 }
 
+sub _get_annotation_by_type
+{
+  my $self = shift;
+  my $annotation_type_name = shift;
+  my $pub_uniquename = shift;
+
+  my ($completed_count, $rows) =
+    Canto::Curs::Utils::get_annotation_table($self->config(),
+                                             $self->curs_schema(),
+                                             $annotation_type_name);
+  my @new_annotations = @$rows;
+
+  ($completed_count, $rows) =
+    Canto::Curs::Utils::get_existing_annotations($self->config(),
+                                                 $self->curs_schema(),
+                                                 { pub_uniquename => $pub_uniquename,
+                                                   annotation_type_name => $annotation_type_name });
+
+  return (@new_annotations, @$rows);
+}
+
 sub _get_annotation
 {
   my $self = shift;
+  my $annotation_type_name = shift;
 
   my $curs_schema = $self->curs_schema();
 
@@ -163,24 +185,16 @@ sub _get_annotation
   my $pub = $pubs[0];
   my $pub_uniquename = $pub->uniquename();
 
-  my @annotation_type_list = @{$self->config()->{annotation_type_list}};
+  if ($annotation_type_name) {
+    return $self->_get_annotation_by_type($annotation_type_name, $pub_uniquename)
+  } else {
+    my @annotation_type_list = @{$self->config()->{annotation_type_list}};
 
-  return
-    map {
-      my ($completed_count, $rows) =
-        Canto::Curs::Utils::get_annotation_table($self->config(),
-                                                 $self->curs_schema(),
-                                                 $_->{name});
-      my @new_annotations = @$rows;
-
-      ($completed_count, $rows) =
-        Canto::Curs::Utils::get_existing_annotations($self->config(),
-                                                     $self->curs_schema(),
-                                                     { pub_uniquename => $pub_uniquename,
-                                                       annotation_type_name => $_->{name} });
-
-      (@new_annotations, @$rows);
-    } @annotation_type_list,
+    return
+      map {
+        $self->_get_annotation_by_type($_->{name}, $pub_uniquename);
+      } @annotation_type_list;
+  }
 }
 
 sub _filter_by_gene_identifiers
