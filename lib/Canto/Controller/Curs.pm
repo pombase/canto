@@ -571,14 +571,17 @@ sub gene_upload : Chained('top') Args(0) Form
       { name => 'return_path_input', type => 'Hidden',
         value => $return_path // '' },
       (map {
-          {
+          my $ret = {
             name => $_, type => 'Submit', value => $_,
             attributes => {
               class => 'btn btn-primary curs-finish-button button',
               title => "{{ isValid() ? '' : '$not_valid_message' }}",
-              'ng-disabled' => '!isValid()',
             },
+          };
+          if ($_ eq 'Continue') {
+            $ret->{attributes}->{'ng-disabled'} = '!isValid()';
           }
+          $ret;
         } @submit_buttons),
       @no_genes_elements,
     );
