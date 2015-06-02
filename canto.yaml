@@ -1736,6 +1736,7 @@ curs_config:
 
 cache:
   default_timeout: "2 hours"
+  chado_gene_timeout: "24 hours"
 
 # the default DB name to use when loading ontologies in the case where the
 # termid doesn't have a DB name prefix

@@ -77,7 +77,7 @@ around 'lookup' => sub {
 
   my $ret_val = $self->$orig(@_);
 
-  $cache->set($cache_key, $ret_val, $self->config()->{cache}->{default_timeout});
+  $cache->set($cache_key, $ret_val, $self->config()->{cache}->{chado_gene_timeout});
 
   return $ret_val;
 };
