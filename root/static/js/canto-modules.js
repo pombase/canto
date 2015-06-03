@@ -340,12 +340,13 @@ var annotationProxy =
   var that = this;
   this.allQs = {};
 
-  this.getAnnotation = function(annotation_type_name) {
-    if (!this.allQs[annotation_type_name]) {
-      this.allQs[annotation_type_name] = Curs.list('annotation', [annotation_type_name]);
+  this.getAnnotation = function(annotationTypeName) {
+    if (!this.allQs[annotationTypeName]) {
+      this.allQs[annotationTypeName] =
+        Curs.list('annotation', [annotationTypeName]);
     }
 
-    return this.allQs[annotation_type_name];
+    return this.allQs[annotationTypeName];
   };
 
   // filter the list of annotation based on the params argument
