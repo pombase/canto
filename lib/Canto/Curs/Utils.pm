@@ -102,6 +102,18 @@ sub make_ontology_annotation
 
     my $genotype = $annotation_genotypes[0];
 
+    my @alleles = map {
+      {
+        allele_id => $_->allele_id(),
+        primary_identifier => $_->primary_identifier(),
+        type => $_->type(),
+        description => $_->description(),
+        expression => $_->expression(),
+        name => $_->name(),
+        gene_id => $_->gene()->gene_id(),
+      };
+    } $genotype->alleles()->search({}, { prefetch => 'gene' });
+
     %genotype_details = (
       conditions => [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $data->{conditions})],
       genotype_id => $genotype->genotype_id(),
@@ -111,6 +123,7 @@ sub make_ontology_annotation
       feature_type => 'genotype',
       feature_display_name => $genotype->display_name(),
       feature_id => $genotype->genotype_id(),
+      alleles => [@alleles],
     );
   } else {
     my @annotation_genes = $annotation->genes();

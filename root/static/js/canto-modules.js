@@ -370,7 +370,12 @@ var annotationProxy =
                        ((params.featureType === 'gene' &&
                          (elem.gene_id == params.featureId ||
                           (typeof(elem.interacting_gene_id) !== 'undefined' &&
-                           elem.interacting_gene_id == params.featureId)
+                           elem.interacting_gene_id == params.featureId) ||
+                          (elem.alleles !== undefined &&
+                           $.grep(elem.alleles,
+                                  function(alleleData) {
+                                    return alleleData.gene_id.toString() === params.featureId;
+                                  }).length > 0)
                          )) ||
                        (params.featureType === 'genotype' &&
                         elem.genotype_id == params.featureId))));
@@ -2279,6 +2284,7 @@ var annotationTableList =
             $.grep(response.data,
                    function(annotationType) {
                      if (scope.featureTypeFilter === undefined ||
+                         scope.featureTypeFilter === 'gene' ||
                          annotationType.feature_type === scope.featureTypeFilter) {
                        return annotationType;
                      }

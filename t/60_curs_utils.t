@@ -116,7 +116,27 @@ sub check_new_annotations
                  'feature_type' => 'genotype',
                  'feature_id' => 1,
                  'genotype_display_name' => 'h+ SPCC63.05delta ssm4KE',
-                 'feature_display_name' => 'h+ SPCC63.05delta ssm4KE'
+                 'feature_display_name' => 'h+ SPCC63.05delta ssm4KE',
+                 'alleles' => [
+                   {
+                     'description' => 'deletion',
+                     'name' => 'ssm4delta',
+                     'gene_id' => 2,
+                     'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
+                     'type' => 'deletion',
+                     'expression' => undef,
+                     'allele_id' => 1
+                   },
+                   {
+                     'gene_id' => 4,
+                     'name' => 'SPCC63.05delta',
+                     'description' => 'deletion',
+                     'type' => 'deletion',
+                     'expression' => undef,
+                     'allele_id' => 5,
+                     'primary_identifier' => 'SPCC63.05:aaaa0007-1'
+                   }
+                 ],
                },
                {
                  'publication_uniquename' => 'PMID:19756689',
@@ -151,7 +171,18 @@ sub check_new_annotations
                  'term_suggestion_definition' => undef,
                  'with_gene_id' => undef,
                  'curator' => 'Some Testperson <some.testperson@pombase.org>',
-                 'genotype_identifier' => 'aaaa0007-genotype-test-2'
+                 'genotype_identifier' => 'aaaa0007-genotype-test-2',
+                 'alleles' => [
+                   {
+                     'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3',
+                     'expression' => undef,
+                     'allele_id' => 3,
+                     'type' => 'partial deletion, nucleotide',
+                     'description' => 'del_100-200',
+                     'name' => 'ssm4-D4',
+                     'gene_id' => 2
+                   }
+                 ],
                }
              ]);
   }

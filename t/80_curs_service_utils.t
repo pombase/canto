@@ -693,7 +693,27 @@ cmp_deeply($annotation_res,
               'term_suggestion_definition' => undef,
               'is_obsolete_term' => 0,
               'genotype_identifier' => 'aaaa0007-genotype-test-1',
-              'annotation_type_abbreviation' => ''
+              'annotation_type_abbreviation' => '',
+              'alleles' => [
+                {
+                  'gene_id' => 2,
+                  'allele_id' => 1,
+                  'expression' => undef,
+                  'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
+                  'name' => 'ssm4delta',
+                  'description' => 'deletion',
+                  'type' => 'deletion'
+                },
+                {
+                  'description' => 'deletion',
+                  'type' => 'deletion',
+                  'expression' => undef,
+                  'gene_id' => 4,
+                  'allele_id' => 5,
+                  'name' => 'SPCC63.05delta',
+                  'primary_identifier' => 'SPCC63.05:aaaa0007-1'
+                }
+              ],
             },
             {
               'evidence_code' => 'Co-immunoprecipitation experiment',
@@ -728,7 +748,18 @@ cmp_deeply($annotation_res,
               'status' => 'new',
               'curator' => 'Some Testperson <some.testperson@pombase.org>',
               'with_or_from_identifier' => undef,
-              'qualifiers' => []
+              'qualifiers' => [],
+              'alleles' => [
+                {
+                  'name' => 'ssm4-D4',
+                  'gene_id' => 2,
+                  'expression' => undef,
+                  'description' => 'del_100-200',
+                  'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3',
+                  'allele_id' => 3,
+                  'type' => 'partial deletion, nucleotide'
+                }
+              ],
             },
             {
               'term_ontid' => 'FYPO:0000104',
