@@ -787,6 +787,10 @@ sub _ontology_change_keys
       warn "storing of qualifiers is not implemented\n";
       return 1;
     },
+    alleles => sub {
+      warn "storing of alleles is not implemented\n";
+      return 1;
+    },
   )
 }
 
