@@ -6,6 +6,11 @@ Annotation loading ...
   <div ng-show="annotationTypes.length"
        id="curs-annotation-tables" class="sect">
     <div ng-repeat="annotationType in annotationTypes">
+      <div class="curs-box">
+        <div class="curs-box-title">
+          {{annotationType.display_name}}
+        </div>
+        <div class="curs-box-body">
       <annotation-table annotation-type-name="{{annotationType.name}}"
                         feature-id-filter="{{featureIdFilter}}"
                         feature-type-filter="{{featureTypeFilter}}"
@@ -16,6 +21,7 @@ Annotation loading ...
                         feature-type-filter="{{featureTypeFilter}}"
                         feature-status-filter="existing"
                         feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+        </div>
     </div>
   </div>
 </div>

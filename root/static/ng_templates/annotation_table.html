@@ -1,14 +1,14 @@
 <div>
 <div>
     <span ng-if="featureStatusFilter === 'new'" class="title sect-title">
-      New {{annotationType.display_name}} annotations from this session
+      New annotations from this session
       <span ng-show="featureFilterDisplayName">
         for {{featureFilterDisplayName}}
       </span>
     </span>
     <span ng-if="featureStatusFilter === 'existing' && data.annotations !== null && data.annotations.length > 0"
           class="title sect-title">
-      Existing {{annotationType.display_name}} annotations
+      Existing annotations
       <span ng-show="featureFilterDisplayName">
         for {{featureFilterDisplayName}}
       </span>
