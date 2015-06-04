@@ -10,7 +10,9 @@
   </td>
   <td ng-if="annotation.feature_type === 'genotype' && !featureIdFilter">
     <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.feature_id + (read_only_curs ? '/ro' : '')}}">
-      {{annotation.genotype_display_name}}
+      <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
+        {{allele.long_display_name}}
+      </div>
     </a>
     <span ng-if="annotation.status === 'existing'">
       {{annotation.genotype_display_name}}

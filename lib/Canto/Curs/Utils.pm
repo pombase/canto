@@ -111,6 +111,7 @@ sub make_ontology_annotation
         expression => $_->expression(),
         name => $_->name(),
         gene_id => $_->gene()->gene_id(),
+        long_display_name => $_->long_identifier(),
       };
     } $genotype->alleles()->search({}, { prefetch => 'gene' });
 
