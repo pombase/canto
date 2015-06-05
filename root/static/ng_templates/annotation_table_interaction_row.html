@@ -24,10 +24,10 @@
   <td>
     {{annotation.evidence_code}}
   </td>
-  <td>
+  <td ng-if="!data.hideColumns.submitter_comment">
     {{annotation.submitter_comment}}
   </td>
-  <td>
+  <td ng-if="!data.hideColumns.curator">
     {{annotation.curator}}
   </td>
   <td class="table-row-actions">

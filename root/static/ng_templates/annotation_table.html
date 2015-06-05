@@ -31,13 +31,13 @@ Loading ...
               <th>Term ID</th>
               <th>Term name</th>
               <th>Evidence code</th>
-              <th ng-if="annotationType.can_have_with">With</th>
+              <th ng-if="annotationType.can_have_with && !data.hideColumns.with_or_from_identifier">With</th>
               <th ng-if="annotationType.can_have_conditions">Conditions</th>
-              <th>Qualifiers</th>
+              <th ng-if="!data.hideColumns.qualifiers">Qualifiers</th>
               <th>Term suggestion</th>
-              <th>Comment</th>
-              <th>Annotation extension</th>
-              <th>Curator</th>
+              <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
+              <th ng-if="!data.hideColumns.annotation_extension">Annotation extension</th>
+              <th ng-if="!data.hideColumns.curator">Curator</th>
             </tr>
           </thead>
           <tbody>
@@ -53,8 +53,8 @@ Loading ...
               <th>Interactor B</th>
               <th>Taxon Id B</th>
               <th>Evidence code</th>
-              <th>Comment</th>
-              <th>Curator</th>
+              <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
+              <th ng-if="!data.hideColumns.curator">Curator</th>
             </tr>
           </thead>
           <tbody>

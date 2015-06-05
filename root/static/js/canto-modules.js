@@ -2192,7 +2192,8 @@ function makeNewAnnotation(template) {
 }
 
 var annotationTableCtrl =
-  function($modal, CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList) {
+  function($modal, CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList,
+          toaster) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -2207,10 +2208,23 @@ var annotationTableCtrl =
       controller: function($scope) {
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.app_static_path = CantoGlobals.app_static_path;
+
+        var initialHideColumns = {      // columns to hide because they're empty
+          with_or_from_identifier: true,  // set to false when a row has a non empty element
+          qualifiers: true,
+          submitter_comment: true,
+          annotation_extension: true,
+          curator: true,
+        };
+
         $scope.data = {
           hasFeatures: false, // set to true if there are feature of type featureTypeFilter
-          annotations: null
+          annotations: null,
+          hideColumns: {},
         };
+
+        copyObject(initialHideColumns, $scope.data.hideColumns);
+
         $scope.addNew = function() {
           var template = {
             annotation_type: $scope.annotationTypeName,
@@ -2228,6 +2242,40 @@ var annotationTableCtrl =
             $scope.data.annotations.push(editedAnnotation);
           });
         };
+
+        $scope.updateColumns = function() {
+          if ($scope.data.annotations) {
+            copyObject(initialHideColumns, $scope.data.hideColumns);
+            $.map($scope.data.annotations,
+                  function(annotation) {
+                    $.map(initialHideColumns,
+                          function(prop, key) {
+                            if (annotation[key] &&
+                                (!$.isArray(annotation[key]) || annotation[key].length > 0)) {
+                              $scope.data.hideColumns[key] = false;
+                            }
+                          })
+                  });
+          }
+        };
+
+        $scope.addAfter = function(oldAnnotation, newAnnotation) {
+          var index = $scope.data.annotations.indexOf(oldAnnotation);
+          $scope.data.annotations.splice(index + 1, 0, newAnnotation);
+          $scope.updateColumns();
+        };
+
+        $scope.annotationEdited = function(oldAnnotation, newAnnotation) {
+          var index = $scope.data.annotations.indexOf(oldAnnotation);
+          $scope.data.annotations[index] = newAnnotation;
+          $scope.updateColumns();
+        };
+
+        $scope.deleteAnnotation = function(annotation) {
+          arrayRemoveOne($scope.data.annotations, annotation);
+          $scope.updateColumns();
+          toaster.pop('success', 'Annotation deleted');
+        };
       },
       link: function(scope) {
         scope.data.annotations = null;
@@ -2237,6 +2285,7 @@ var annotationTableCtrl =
                                      featureType: scope.featureTypeFilter
                                     }).then(function(annotations) {
                                       scope.data.annotations = annotations;
+                                      scope.updateColumns();
                                     });
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
           scope.annotationType = annotationType;
@@ -2259,7 +2308,7 @@ var annotationTableCtrl =
 
 canto.directive('annotationTable',
                 ['$modal', 'CantoGlobals', 'AnnotationProxy',
-                 'AnnotationTypeConfig', 'CursGenotypeList',
+                 'AnnotationTypeConfig', 'CursGenotypeList', 'toaster',
                  annotationTableCtrl]);
 
 
@@ -2343,6 +2392,7 @@ var annotationTableRow =
                          $scope.featureFilterDisplayName, false, featureEditable);
 
           editPromise.then(function(editedAnnotation) {
+            $scope.annotationEdited($scope.annotation, editedAnnotation);
             $scope.annotation = editedAnnotation;
             if (typeof($scope.annotation.conditions) !== 'undefined') {
               $scope.annotation.conditionsString =
@@ -2350,6 +2400,7 @@ var annotationTableRow =
             }
           });
         };
+
         $scope.duplicate = function() {
           var newAnnotation = makeNewAnnotation($scope.annotation);
           var editPromise = startEditing($modal, annotation.annotation_type,
@@ -2357,22 +2408,21 @@ var annotationTableRow =
                                          true, featureEditable);
 
           editPromise.then(function(editedAnnotation) {
-            // FIXME: $scope.data.annotations is from the parent scope so this
-            // is very brittle
-            var index = $scope.data.annotations.indexOf($scope.annotation);
-            $scope.data.annotations.splice(index + 1, 0, editedAnnotation);
+            // FIXME: $scope.addAfter() is from the parent scope so
+            // this is brittle
+             $scope.addAfter($scope.annotation, editedAnnotation);
           });
         };
+
         $scope.delete = function() {
           bootbox.confirm("Are you sure you want to delete this annotation?", function(confirmed) {
             if (confirmed) {
               loadingStart();
               AnnotationProxy.deleteAnnotation(annotation)
                 .then(function() {
-                  // FIXME: $scope.data.annotations is from the parent
-                  // scope so this is very brittle
-                  arrayRemoveOne($scope.data.annotations, annotation);
-                  toaster.pop('success', 'Annotation deleted');
+                  // FIXME: $scope.deleteAnnotation() is from the
+                  // parent scope so this is brittle
+                  $scope.deleteAnnotation(annotation);
                 })
                 .catch(function(message) {
                   toaster.pop('note', "Couldn't delete the annotation: " + message);
