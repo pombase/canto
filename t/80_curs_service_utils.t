@@ -702,7 +702,8 @@ cmp_deeply($annotation_res,
                   'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
                   'name' => 'ssm4delta',
                   'description' => 'deletion',
-                  'type' => 'deletion'
+                  'type' => 'deletion',
+                  'long_display_name' => 'ssm4delta',
                 },
                 {
                   'description' => 'deletion',
@@ -711,7 +712,8 @@ cmp_deeply($annotation_res,
                   'gene_id' => 4,
                   'allele_id' => 5,
                   'name' => 'SPCC63.05delta',
-                  'primary_identifier' => 'SPCC63.05:aaaa0007-1'
+                  'primary_identifier' => 'SPCC63.05:aaaa0007-1',
+                  'long_display_name' => 'SPCC63.05delta',
                 }
               ],
             },
@@ -757,7 +759,9 @@ cmp_deeply($annotation_res,
                   'description' => 'del_100-200',
                   'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3',
                   'allele_id' => 3,
-                  'type' => 'partial deletion, nucleotide'
+                  'type' => 'partial deletion, nucleotide',
+                  'long_display_name' => 'ssm4delta',
+                  'long_display_name' => 'ssm4-D4(del_100-200)',
                 }
               ],
             },

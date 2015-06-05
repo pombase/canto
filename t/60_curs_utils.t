@@ -125,7 +125,8 @@ sub check_new_annotations
                      'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
                      'type' => 'deletion',
                      'expression' => undef,
-                     'allele_id' => 1
+                     'allele_id' => 1,
+                     'long_display_name' => 'ssm4delta',
                    },
                    {
                      'gene_id' => 4,
@@ -134,7 +135,8 @@ sub check_new_annotations
                      'type' => 'deletion',
                      'expression' => undef,
                      'allele_id' => 5,
-                     'primary_identifier' => 'SPCC63.05:aaaa0007-1'
+                     'primary_identifier' => 'SPCC63.05:aaaa0007-1',
+                     'long_display_name' => 'SPCC63.05delta',
                    }
                  ],
                },
@@ -180,7 +182,8 @@ sub check_new_annotations
                      'type' => 'partial deletion, nucleotide',
                      'description' => 'del_100-200',
                      'name' => 'ssm4-D4',
-                     'gene_id' => 2
+                     'gene_id' => 2,
+                     'long_display_name' => 'ssm4-D4(del_100-200)',
                    }
                  ],
                }
