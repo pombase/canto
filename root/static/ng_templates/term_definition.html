@@ -1,0 +1,28 @@
+<div>
+  <table class="curs-definition-table">
+    <tr>
+      <td class="title">ID</td>
+      <td class="term-id ferret-term-id-display">
+        {{termData.id}}
+      </td>
+    </tr>
+    <tr>
+      <td class="title">Ontology</td>
+      <td>{{termData.annotation_namespace}}</td>
+    </tr>
+    <tr>
+      <td class="title">Term name</td>
+      <td class="term-name ferret-term-name">
+        {{termData.name}}
+      </td>
+    </tr>
+    <tr>
+      <td class="title">Definition</td>
+      <td class="term-definition">{{termData.definition}}</td>
+    </tr>
+    <tr ng-show="getCurrentTermDetails('comment')">
+      <td class="title">Comment</td>
+      <td>{{termData.comment}}</td>
+    </tr>
+  </table>
+</div>

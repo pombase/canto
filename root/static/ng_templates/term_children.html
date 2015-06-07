@@ -1,0 +1,9 @@
+<div>
+  <ul>
+    <li ng-repeat="child in termData.children">
+      <a href="#" ng-click="gotoChild(child.id)">{{child.name}}
+        <img ng-src="{{CantoGlobals.application_root}}/static/images/right_arrow.png"></img>
+      </a>
+    </li>
+  </ul>
+</div>

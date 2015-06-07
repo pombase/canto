@@ -1,0 +1,37 @@
+<div>
+  <div class="modal-header">
+    <h4 class="modal-title">
+Term confirm
+    </h4>
+  </div>
+
+  <div class="modal-body">
+    <div class="curs-box-body" ng-if="!data.termData">
+      <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+      Loading ...
+    </div>
+    <div ng-if="data.termData">
+      <div ng-if="data.state === 'definition'" class="curs-box-body">
+        <div class="inline-help curs-box-title">
+          Please read the definition of the currently selected term to ensure that
+          it accurately describes your gene:
+        </div>
+        <term-definition-display term-data="data.termData"></term-definition-display>
+      </div>
+      <div ng-if="data.state === 'children'" class="curs-box-body">
+        <div class="inline-help curs-box-title">
+          If possible, please refine your term selection. Clicking on a child term
+          from the list below selects it and shows its definition (and children,
+          if any):
+        </div>
+        <term-children-display term-data="data.termData" goto-child-callback="gotoChild(childId)"></term-children-display>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button ng-if="data.state == 'definition'" class="btn btn-primary" ng-click="next()">Next</button>
+    <button ng-if="data.state == 'children'" class="btn btn-primary" ng-click="finish()">Finish</button>
+  </div>
+</div>

@@ -2070,9 +2070,117 @@ function SubmitToCuratorsCtrl($scope) {
 
 canto.controller('SubmitToCuratorsCtrl', SubmitToCuratorsCtrl);
 
+var termConfirmDialogCtrl =
+  function($scope, $modalInstance, CantoService, args) {
+    $scope.data = {
+      initialTermId: args.termId,
+      state: 'definition',
+      termData: null,
+    };
+
+    $scope.setTerm = function(termId) {
+      var promise = CantoService.lookup('ontology', [termId],
+                                        {
+                                          def: 1,
+                                          children: 1,
+                                          exact_synonyms: 1,
+                                        });
+
+      promise.success(function(termData) {
+        $scope.data.state = 'definition';
+        $scope.data.termData = termData;
+      });
+    };
+
+    $scope.setTerm($scope.data.initialTermId);
+
+    $scope.gotoChild = function(childId) {
+      $scope.setTerm(childId);
+    };
+
+    $scope.next = function() {
+      $scope.data.state = 'children';
+    };
+
+    $scope.finish = function() {
+      $modalInstance.close({ newTermId: $scope.data.termData.id,
+                             newTermName: $scope.data.termData.name });
+    };
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('cancel');
+    };
+  };
+
+
+canto.controller('TermConfirmDialogCtrl',
+                 ['$scope', '$modalInstance', 'CantoService', 'args',
+                  termConfirmDialogCtrl]);
+
+
+function openTermConfirmDialog($modal, termId)
+{
+  return $modal.open({
+    templateUrl: app_static_path + 'ng_templates/term_confirm.html',
+    controller: 'TermConfirmDialogCtrl',
+    title: 'Confirm term',
+    animate: false,
+    windowClass: "modal",
+    size: 'lg',
+    resolve: {
+      args: function() {
+        return {
+          termId: termId,
+        };
+      }
+    },
+  });
+}
+
+
+var termDefinitionDisplayCtrl =
+  function($modal, toaster) {
+    return {
+      scope: {
+        termData: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/term_definition.html',
+    };
+  };
+
+canto.directive('termDefinitionDisplay',
+                ['$modal', 'toaster',
+                 termDefinitionDisplayCtrl]);
+
+
+var termChildrenDisplayCtrl =
+  function($modal, CantoGlobals, toaster) {
+    return {
+      scope: {
+        termData: '=',
+        gotoChildCallback: '&',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/term_children.html',
+      controller: function($scope) {
+        $scope.CantoGlobals = CantoGlobals;
+        $scope.gotoChild = function(childId) {
+          $scope.gotoChildCallback({ childId: childId });
+        }
+      },
+    };
+  };
+
+canto.directive('termChildrenDisplay',
+                ['$modal', 'CantoGlobals', 'toaster',
+                 termChildrenDisplayCtrl]);
+
 
 var annotationEditDialogCtrl =
-  function($scope, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
+  function($scope, $modal, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
            Curs, toaster, args) {
     $scope.annotation = { conditions: [] };
     $scope.annotationTypeName = args.annotationTypeName;
@@ -2112,11 +2220,16 @@ var annotationEditDialogCtrl =
     };
 
     $scope.termFoundCallback =
-      function(termId, termName, searchString, matchingSynonym) {
+      function(termId, termName) {
         $scope.annotation.term_ontid = termId;
         $scope.annotation.term_name = termName;
-        $scope.searchString = searchString;
-        $scope.matchingSynonym = matchingSynonym;
+
+        var termConfirm = openTermConfirmDialog($modal, termId);
+
+        termConfirm.result.then(function(result) {
+          $scope.annotation.term_ontid = result.newTermId;
+          $scope.annotation.term_name = result.newTermName;
+        });
       };
 
     $scope.ok = function() {
@@ -2154,7 +2267,7 @@ var annotationEditDialogCtrl =
 
 
 canto.controller('AnnotationEditDialogCtrl',
-                 ['$scope', '$modalInstance', 'AnnotationProxy',
+                 ['$scope', '$modal', '$modalInstance', 'AnnotationProxy',
                   'AnnotationTypeConfig', 'Curs', 'toaster',
                   'args',
                   annotationEditDialogCtrl]);
