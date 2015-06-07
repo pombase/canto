@@ -2240,6 +2240,7 @@ var annotationTableCtrl =
 
           editPromise.then(function(editedAnnotation) {
             $scope.data.annotations.push(editedAnnotation);
+            $scope.updateColumns();
           });
         };
 
