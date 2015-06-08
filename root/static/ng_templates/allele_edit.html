@@ -100,9 +100,8 @@
         </div>
       </div>
 
-      <table>
-        <tr class="curs-allele-expression ng-cloak"
-            ng-show="!!alleleData.type && current_type_config != undefined && current_type_config.allow_expression_change">
+      <table ng-show="!!alleleData.type && current_type_config != undefined && current_type_config.allow_expression_change">
+        <tr class="curs-allele-expression ng-cloak">
           <td valign="top">
             Expression
           </td>
