@@ -159,7 +159,8 @@ sub lookup
     my $display_name =
       Canto::Curs::Utils::make_allele_display_name($_->{name},
                                                    $_->{description},
-                                                   $_->{type});
+                                                   $_->{allele_type});
+
     $_->{display_name} = $display_name;
     $_->{type} =
       Canto::Curs::Utils::canto_allele_type($self->config(),
