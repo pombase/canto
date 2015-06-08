@@ -181,6 +181,10 @@ sub allele_from_json
     expression => $expression,
   );
 
+  if ($allele_type =~ /_/) {
+    die "internal error, underscore in allele type in Canto - probably an problem";
+  }
+
   return $schema->create_with_type('Allele', \%create_args);
 }
 
