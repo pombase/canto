@@ -226,13 +226,19 @@ sub lookup_by_uniquename
     my $display_name =
       Canto::Curs::Utils::make_allele_display_name($allele->name(),
                                                    $props{description},
-                                                   $props{type});
+                                                   $props{allele_type});
+
+    my $allele_type =
+      Canto::Curs::Utils::canto_allele_type($self->config(),
+                                            $props{allele_type},
+                                            $props{description});
+
     return {
       uniquename => $uniquename,
       display_name => $display_name,
       name => $allele->name(),
       description => $props{description},
-      type => $props{allele_type},
+      type => $allele_type,
       gene_uniquename => $gene_uniquename,
     }
   }

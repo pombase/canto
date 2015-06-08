@@ -942,7 +942,7 @@ cmp_deeply($allele_res,
              },
              {
                'description' => 'del_x1',
-               'display_name' => 'ste20delta(del_x1)',
+               'display_name' => 'ste20delta',
                'name' => 'ste20delta',
                'type' => 'deletion',
                'uniquename' => 'SPBC12C2.02c:allele-1',
