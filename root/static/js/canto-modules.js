@@ -2100,6 +2100,10 @@ var termConfirmDialogCtrl =
       $scope.data.state = 'children';
     };
 
+    $scope.back = function() {
+      $scope.data.state = 'definition';
+    };
+
     $scope.finish = function() {
       $modalInstance.close({ newTermId: $scope.data.termData.id,
                              newTermName: $scope.data.termData.name });
