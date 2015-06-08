@@ -1269,8 +1269,6 @@ var alleleEditDialogCtrl =
                         return;
                       }
 
-                      $scope.current_type_config = response.data[newType];
-
                       if ($scope.name_autopopulated) {
                         if ($scope.name_autopopulated == $scope.alleleData.name) {
                           $scope.alleleData.name = '';
