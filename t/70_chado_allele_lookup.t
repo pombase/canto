@@ -17,29 +17,7 @@ my $res = $lookup->lookup(gene_primary_identifier => 'SPBC12C2.02c',
                           search_string => 'ste');
 
 cmp_deeply($res,
-           [
-            {
-              'description' => 'K132A',
-              'uniquename' => 'SPBC12C2.02c:allele-2',
-              'name' => 'ste20-c1',
-              'display_name' => 'ste20-c1(K132A)',
-              'type' => 'mutation of single amino acid residue'
-            },
-            {
-              'uniquename' => 'SPBC12C2.02c:allele-3',
-              'name' => 'ste20-c2',
-              'display_name' => 'ste20-c2(K132A,K144A)',
-              'type' => 'mutation of multiple amino acid residues',
-              'description' => 'K132A,K144A'
-            },
-            {
-              'name' => 'ste20delta',
-              'uniquename' => 'SPBC12C2.02c:allele-1',
-              'type' => 'deletion',
-              'display_name' => 'ste20delta',
-              'description' => 'del_x1'
-            }
-         ]);
+           $Canto::TestUtil::shared_test_results{allele}{ste});
 
 # search with gene constrained to a another gene
 $res = $lookup->lookup(gene_primary_identifier => 'SPCC16A11.14',

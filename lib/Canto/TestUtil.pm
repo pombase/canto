@@ -56,6 +56,35 @@ $ENV{CANTO_CONFIG_LOCAL_SUFFIX} = 'test';
 
 our $test_date = '2010-01-02';
 
+our %shared_test_results = (
+  allele => {
+    ste =>
+      [
+        {
+          'description' => 'K132A',
+          'display_name' => 'ste20-c1(K132A)',
+          'name' => 'ste20-c1',
+          'type' => 'mutation of single amino acid residue',
+          'uniquename' => 'SPBC12C2.02c:allele-2',
+        },
+        {
+          'description' => 'K132A,K144A',
+          'display_name' => 'ste20-c2(K132A,K144A)',
+          'name' => 'ste20-c2',
+          'type' => 'mutation of multiple amino acid residues',
+          'uniquename' => 'SPBC12C2.02c:allele-3',
+        },
+        {
+          'description' => 'del_x1',
+          'display_name' => 'ste20delta',
+          'name' => 'ste20delta',
+          'type' => 'deletion',
+          'uniquename' => 'SPBC12C2.02c:allele-1',
+        }
+      ],
+  },
+);
+
 
 =head2 new
 
