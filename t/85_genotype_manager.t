@@ -33,7 +33,7 @@ my $created_genotype_identifier = $curs_key . '-test-genotype-3';
 my $genotype_from_chado =
   $genotype_manager->find_and_create_genotype($created_genotype_identifier);
 
-my $genotype_name = 'h+ cdc11-33 ssm4delta';
+my $genotype_name = 'cdc11-33 ssm4delta';
 
 is ($genotype_from_chado->identifier(), $created_genotype_identifier);
 is ($genotype_from_chado->name(), $genotype_name);

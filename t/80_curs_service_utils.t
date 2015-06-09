@@ -88,10 +88,10 @@ $res = $service_utils->list_for_service('genotype', 'all',
 cmp_deeply($res,
            [
              {
-              'name' => 'h+ cdc11-33 wtf22-a1',
+              'name' => 'cdc11-33 wtf22-a1',
               'identifier' => 'aaaa0007-test-genotype-2',
               'allele_string' => 'cdc11-33 wtf22-a1',
-              'display_name' => 'h+ cdc11-33 wtf22-a1',
+              'display_name' => 'cdc11-33 wtf22-a1',
               'allele_identifiers' => ['SPCC1739.11c:allele-1','SPCC576.16c:allele-1'],
             },
           ]);
@@ -126,8 +126,8 @@ cmp_deeply($res,
               'identifier' => 'aaaa0007-genotype-test-2'
             },
             {
-              'name' => 'h+ cdc11-33 ssm4delta',
-              'display_name' => 'h+ cdc11-33 ssm4delta',
+              'name' => 'cdc11-33 ssm4delta',
+              'display_name' => 'cdc11-33 ssm4delta',
               'identifier' => 'aaaa0007-test-genotype-3',
               'allele_string' => 'cdc11-33 ssm4delta',
               'allele_identifiers' => [
@@ -157,10 +157,10 @@ cmp_deeply($res,
                                         'SPCC1739.11c:allele-1',
                                         'SPAC27D7.13c:allele-1'
                                       ],
-              'name' => 'h+ cdc11-33 ssm4delta',
+              'name' => 'cdc11-33 ssm4delta',
               'allele_string' => 'cdc11-33 ssm4delta',
               'identifier' => 'aaaa0007-test-genotype-3',
-              'display_name' => 'h+ cdc11-33 ssm4delta'
+              'display_name' => 'cdc11-33 ssm4delta'
             }
           ]);
 

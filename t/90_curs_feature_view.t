@@ -74,7 +74,7 @@ test_psgi $app, sub {
     my $res = $cb->($req);
     is $res->code, 200;
 
-    like ($res->content(), qr/h\+ cdc11-33 wtf22-a1/);
+    like ($res->content(), qr/cdc11-33 wtf22-a1/);
     like ($res->content(), qr/cdc11-33\(unknown\)/);
     like ($res->content(), qr/wtf22-a1\(T11C\)/);
     like ($res->content(), qr/Annotate normal or abnormal phenotypes, and the associated alleles/);
@@ -92,7 +92,7 @@ test_psgi $app, sub {
         identifier => 'aaaa0007-test-genotype-2',
       });
 
-    is ($new_genotype->name(), 'h+ cdc11-33 wtf22-a1');
+    is ($new_genotype->name(), 'cdc11-33 wtf22-a1');
 
     is ($new_genotype->alleles(), 2);
 
