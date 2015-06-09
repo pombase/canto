@@ -118,6 +118,21 @@ sub make_ontology_annotation
       };
     } $genotype->alleles()->search({}, { prefetch => 'gene' });
 
+    @alleles = sort {
+      my $a_gene = $a->{gene_display_name};
+      my $b_gene = $b->{gene_display_name};
+
+      # sort upper case last
+      if ($a_gene =~ /[A-Z]/) {
+        $a_gene = '~' . $a_gene;
+      }
+      if ($b_gene =~ /[A-Z]/) {
+        $b_gene = '~' . $b_gene;
+      }
+
+      $a_gene cmp $b_gene;
+    } @alleles;
+
     %genotype_details = (
       conditions => [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $data->{conditions})],
       genotype_id => $genotype->genotype_id(),
