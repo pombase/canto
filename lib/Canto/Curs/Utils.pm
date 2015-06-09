@@ -103,6 +103,8 @@ sub make_ontology_annotation
     my $genotype = $annotation_genotypes[0];
 
     my @alleles = map {
+      my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
+                                                   cursdb_gene => $_->gene());
       {
         allele_id => $_->allele_id(),
         primary_identifier => $_->primary_identifier(),
@@ -111,6 +113,7 @@ sub make_ontology_annotation
         expression => $_->expression(),
         name => $_->name(),
         gene_id => $_->gene()->gene_id(),
+        gene_display_name => $gene_proxy->display_name(),
         long_display_name => $_->long_identifier(),
       };
     } $genotype->alleles()->search({}, { prefetch => 'gene' });

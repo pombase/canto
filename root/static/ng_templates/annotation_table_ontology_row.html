@@ -1,5 +1,10 @@
 <tr>
-  <td ng-if="annotation.feature_type === 'gene' && !featureIdFilter">
+  <td ng-if="annotationType.feature_type == 'genotype'">
+    <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
+      {{allele.gene_display_name}}
+    </div>
+  </td>
+  <td ng-if="annotationType.feature_type === 'gene' && !featureIdFilter">
     <a ng-if="annotation.status === 'new'"
        href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id + (read_only_curs ? '/ro' : '') }}">
       {{annotation.gene_name_or_identifier}}
@@ -8,7 +13,7 @@
       {{annotation.gene_name_or_identifier}}
     </span>
   </td>
-  <td ng-if="annotation.feature_type != 'gene'">
+  <td ng-if="annotationType.feature_type != 'gene'">
     <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.feature_id + (read_only_curs ? '/ro' : '')}}">
       <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
         {{allele.long_display_name}}

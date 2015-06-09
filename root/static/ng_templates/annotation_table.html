@@ -24,10 +24,12 @@ Loading ...
   <div ng-switch="data.annotations.length > 0">
     <div ng-switch-when="true" class="annotation-table sect-content">
       <div class="list" ng-switch="annotationType.category">
+        {{featureTypeFilter}}
         <table ng-switch-when="ontology" class="list">
           <thead>
             <tr>
-              <th ng-if="featureType != 'gene' || !featureIdFilter">{{displayAnnotationFeatureType}}</th>
+              <th ng-if="annotationType.feature_type == 'genotype'">Genes</th>
+              <th ng-if="annotationType.feature_type == 'genotype' || !featureIdFilter">{{displayAnnotationFeatureType}}</th>
               <th>Term ID</th>
               <th>Term name</th>
               <th>Evidence code</th>
