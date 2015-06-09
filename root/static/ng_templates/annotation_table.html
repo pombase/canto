@@ -27,7 +27,7 @@ Loading ...
         <table ng-switch-when="ontology" class="list">
           <thead>
             <tr>
-              <th ng-if="!featureIdFilter">{{displayAnnotationFeatureType}}</th>
+              <th ng-if="featureType != 'gene' || !featureIdFilter">{{displayAnnotationFeatureType}}</th>
               <th>Term ID</th>
               <th>Term name</th>
               <th>Evidence code</th>
