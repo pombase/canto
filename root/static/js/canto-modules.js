@@ -2673,6 +2673,49 @@ var termNameComplete =
 
 canto.directive('termNameComplete', ['$timeout', termNameComplete]);
 
+
+var termChildrenQuery =
+  function(CantoService) {
+    return {
+      scope: {
+        termId: '=',
+        termName: '=',
+      },
+      controller: function($scope) {
+        $scope.data = { children: [] };
+      },
+      replace: true,
+      restrict: 'E',
+      templateUrl: app_static_path + 'ng_templates/term_children_query.html',
+      link: function($scope) {
+        $scope.$watch('termId',
+                      function(newTermId) {
+                        if (newTermId) {
+                          var promise = CantoService.lookup('ontology', [$scope.termId],
+                                                            {
+                                                              def: 1,
+                                                              children: 1,
+                                                              exact_synonyms: 1,
+                                                            });
+                          
+                          promise.success(function(data) {
+                            if (!data.children || data.children.length == 0) {
+                              $scope.data.children = [];
+                            } else {
+                              $scope.data.children = data.children;
+                            }
+                          });
+                        } else {
+                          $scope.data.children = [];
+                        }
+                      });
+      }
+    };
+  };
+
+canto.directive('termChildrenQuery', ['CantoService', termChildrenQuery]);
+
+
 var initiallyHiddenText =
   function() {
     return {

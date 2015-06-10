@@ -51,12 +51,17 @@
       <tr ng-class="{ 'has-error': !isValidTerm() }">
         <td class="title">Term name</td>
         <td>
-          <term-name-complete current-term-name="{{annotation.term_name}}"
-                              found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
-                              annotation-type-name="{{annotationType.name}}">
-          </term-name-complete>
-          <span ng-show="isValidFeature() && !isValidTerm()"
-                class="help-block">Start typing to choose a term</span>
+          <div>
+            <term-name-complete current-term-name="{{annotation.term_name}}"
+                                found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
+                                annotation-type-name="{{annotationType.name}}">
+            </term-name-complete>
+            <span ng-show="isValidFeature() && !isValidTerm()"
+                  class="help-block">Start typing to choose a term</span>
+          </div>
+          <div>
+            <term-children-query term-id="annotation.term_ontid"></term-children-query>
+          </div>
         </td>
       </tr>
 
