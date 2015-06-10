@@ -363,22 +363,35 @@ var annotationProxy =
         var filteredAnnotations =
           $.grep(annotations,
                  function(elem) {
-                   return (!params.featureStatus ||
-                      elem.status === params.featureStatus) &&
-                     (!params.featureId ||
-                      (params.featureType &&
-                       ((params.featureType === 'gene' &&
-                         (elem.gene_id == params.featureId ||
-                          (typeof(elem.interacting_gene_id) !== 'undefined' &&
-                           elem.interacting_gene_id == params.featureId) ||
-                          (elem.alleles !== undefined &&
-                           $.grep(elem.alleles,
-                                  function(alleleData) {
-                                    return alleleData.gene_id.toString() === params.featureId;
-                                  }).length > 0)
-                         )) ||
-                       (params.featureType === 'genotype' &&
-                        elem.genotype_id == params.featureId))));
+                   if (!params.featureStatus ||
+                       elem.status === params.featureStatus) {
+                     if (!params.featureId) {
+                       return true;
+                     }
+                     if (params.featureType) {
+                       if (params.featureType === 'gene') {
+                         if (elem.gene_id == params.featureId) {
+                           return true;
+                         }
+                         if (typeof(elem.interacting_gene_id) !== 'undefined' &&
+                             elem.interacting_gene_id == params.featureId) {
+                           return true;
+                         }
+                         if (elem.alleles !== undefined &&
+                             $.grep(elem.alleles,
+                                    function(alleleData) {
+                                      return alleleData.gene_id.toString() === params.featureId;
+                                    }).length > 0) {
+                           return true;
+                         }
+                       }
+                       if (params.featureType === 'genotype' &&
+                           elem.genotype_id == params.featureId) {
+                         return true;
+                       }
+                     }
+                   }
+                   return false;
                  });
         q.resolve(filteredAnnotations);
       }).error(function() {
