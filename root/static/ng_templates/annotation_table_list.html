@@ -11,6 +11,7 @@ Annotation loading ...
           {{annotationType.display_name}}
         </div>
         <div class="curs-box-body">
+          <div ng-if="annotationType.feature_type != 'genotype'">
       <annotation-table annotation-type-name="{{annotationType.name}}"
                         feature-id-filter="{{featureIdFilter}}"
                         feature-type-filter="{{featureTypeFilter}}"
@@ -21,6 +22,33 @@ Annotation loading ...
                         feature-type-filter="{{featureTypeFilter}}"
                         feature-status-filter="existing"
                         feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+          </div>
+          <div ng-if="annotationType.feature_type == 'genotype'">
+            <annotation-table annotation-type-name="{{annotationType.name}}"
+                              feature-id-filter="{{featureIdFilter}}"
+                              feature-type-filter="{{featureTypeFilter}}"
+                              feature-status-filter="new"
+                              allele-count-filter="single"
+                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+            <annotation-table annotation-type-name="{{annotationType.name}}"
+                              feature-id-filter="{{featureIdFilter}}"
+                              feature-type-filter="{{featureTypeFilter}}"
+                              feature-status-filter="new"
+                              allele-count-filter="multi"
+                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+            <annotation-table annotation-type-name="{{annotationType.name}}"
+                              feature-id-filter="{{featureIdFilter}}"
+                              feature-type-filter="{{featureTypeFilter}}"
+                              feature-status-filter="existing"
+                              allele-count-filter="single"
+                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+            <annotation-table annotation-type-name="{{annotationType.name}}"
+                              feature-id-filter="{{featureIdFilter}}"
+                              feature-type-filter="{{featureTypeFilter}}"
+                              feature-status-filter="existing"
+                              allele-count-filter="multi"
+                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+          </div>
         </div>
     </div>
   </div>

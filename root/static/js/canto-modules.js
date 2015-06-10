@@ -355,6 +355,7 @@ var annotationProxy =
   //   featureId (optional)
   //   featureType (optional)
   //   featureStatus (optional)
+  //   alleleCount (optional)
   this.getFiltered =
     function(params) {
       var q = $q.defer();
@@ -363,6 +364,15 @@ var annotationProxy =
         var filteredAnnotations =
           $.grep(annotations,
                  function(elem) {
+                   if (elem.feature_type == 'genotype' && params.alleleCount && elem.alleles != undefined) {
+                     if (params.alleleCount == 'single' && elem.alleles.length != 1) {
+                       return false;
+                     }
+                     if (params.alleleCount == 'multi' && elem.alleles.length == 1) {
+                       return false;
+                     }
+                   }
+
                    if (!params.featureStatus ||
                        elem.status === params.featureStatus) {
                      if (!params.featureId) {
@@ -2340,6 +2350,7 @@ var annotationTableCtrl =
         featureTypeFilter: '@',
         featureStatusFilter: '@',
         featureFilterDisplayName: '@',
+        alleleCountFilter: '@',
         annotationTypeName: '@',
       },
       restrict: 'E',
@@ -2423,7 +2434,8 @@ var annotationTableCtrl =
         AnnotationProxy.getFiltered({annotationTypeName: scope.annotationTypeName,
                                      featureId: scope.featureIdFilter,
                                      featureStatus: scope.featureStatusFilter,
-                                     featureType: scope.featureTypeFilter
+                                     featureType: scope.featureTypeFilter,
+                                     alleleCount: scope.alleleCountFilter,
                                     }).then(function(annotations) {
                                       scope.data.annotations = annotations;
                                       scope.updateColumns();
