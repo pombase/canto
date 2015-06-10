@@ -121,6 +121,15 @@ canto.filter('wrapAtSpaces', function () {
   };
 });
 
+canto.filter('unicodeAlleleSymbol', function () {
+  return function (item) {
+    if (item == null) {
+      return null;
+    }
+    return item.replace(/(delta)\b/g, '&Delta;');
+  };
+});
+
 canto.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });

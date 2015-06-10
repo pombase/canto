@@ -66,14 +66,14 @@ Background
 Description
           </td>
           <td>
-<% $nowrap_allele_string |n %>
+<% $_unicode_allele_symbol->($nowrap_allele_string) |n %>
           </td>
         </tr>
       </tbody>
     </table>
 
 % for my $allele ($genotype->alleles()) {
-<% $allele->display_name() %>
+<% $_unicode_allele_symbol->($allele->display_name()) |n %>
 %   if ($allele->expression()) {
 -     <i><% $allele->expression() %></i>
 %   }
@@ -128,5 +128,10 @@ my $nowrap_allele_string = $genotype->allele_string() || '[none]';
 use Canto::WebUtil;
 
 $nowrap_allele_string = Canto::WebUtil::nowrap_words($nowrap_allele_string);
+
+my $_unicode_allele_symbol = sub {
+  my $text = shift;
+  $text =~ s/(delta)\b/&Delta;/gr;
+};
 
 </%init>

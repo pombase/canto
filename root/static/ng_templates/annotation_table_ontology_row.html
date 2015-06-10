@@ -16,11 +16,11 @@
   <td ng-if="annotationType.feature_type != 'gene'">
     <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.feature_id + (read_only_curs ? '/ro' : '')}}">
       <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-        {{allele.long_display_name}}
+        <span ng-bind-html="allele.long_display_name | unicodeAlleleSymbol | toTrusted"></span>
       </div>
     </a>
     <span ng-if="annotation.status === 'existing'">
-      {{annotation.genotype_display_name}}
+      {{annotation.genotype_display_name | unicodeAlleleSymbol | toTrusted}}
     </span>
   </td>
   <td>
