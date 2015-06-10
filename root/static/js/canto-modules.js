@@ -2092,7 +2092,9 @@ function SubmitToCuratorsCtrl($scope) {
 canto.controller('SubmitToCuratorsCtrl', SubmitToCuratorsCtrl);
 
 var termConfirmDialogCtrl =
-  function($scope, $modalInstance, CantoService, args) {
+  function($scope, $modalInstance, CantoService, CantoGlobals, args) {
+    $scope.app_static_path = CantoGlobals.app_static_path;
+
     $scope.data = {
       initialTermId: args.termId,
       state: 'definition',
@@ -2139,7 +2141,7 @@ var termConfirmDialogCtrl =
 
 
 canto.controller('TermConfirmDialogCtrl',
-                 ['$scope', '$modalInstance', 'CantoService', 'args',
+                 ['$scope', '$modalInstance', 'CantoService', 'CantoGlobals', 'args',
                   termConfirmDialogCtrl]);
 
 
