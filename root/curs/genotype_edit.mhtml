@@ -111,7 +111,7 @@ The alleles of this genotype:
       <button type="submit" class="btn btn-warning curs-finish-button"
               ng-click="cancel()">Cancel</button>
       <div class="upload-genes-link">
-        <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
+        <a ng-click="openSingleGeneAddDialog()">Add another gene ...</a>
       </div>
       
   </div>

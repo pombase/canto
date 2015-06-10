@@ -1528,17 +1528,20 @@ var multiAlleleCtrl =
   $scope.genes = [
   ];
 
-  Curs.list('gene').success(function(results) {
-    $scope.genes = results;
+  $scope.getGenesFromServer = function() {
+    Curs.list('gene').success(function(results) {
+      $scope.genes = results;
 
-    $.map($scope.genes,
-          function(gene) {
-            gene.display_name = gene.primary_name || gene.primary_identifier;
-          });
-  })
-  .error(function() {
-    toaster.pop('failed to get gene list from server');
-  });
+      $.map($scope.genes,
+            function(gene) {
+              gene.display_name = gene.primary_name || gene.primary_identifier;
+            });
+    }).error(function() {
+      toaster.pop('failed to get gene list from server');
+    });
+  };
+
+  $scope.getGenesFromServer();
 
   $scope.data = {
     genotype_long_name: '',
@@ -1614,6 +1617,13 @@ var multiAlleleCtrl =
         $scope.alleles.push(alleleData);
       });
     };
+
+  $scope.openSingleGeneAddDialog = function() {
+    var modal = openSingleGeneAddDialog($modal);
+    modal.result.then(function () {
+      $scope.getGenesFromServer();
+    });
+  };
 
   $scope.cancel = function() {
     window.location.href = curs_root_uri + '/genotype_manage';
