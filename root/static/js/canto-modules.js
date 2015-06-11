@@ -2383,6 +2383,7 @@ var annotationTableCtrl =
           submitter_comment: true,
           annotation_extension: true,
           curator: true,
+          genotype_name: true,
         };
 
         $scope.data = {
