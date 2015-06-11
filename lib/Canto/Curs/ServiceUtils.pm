@@ -520,10 +520,25 @@ sub _get_curator_details
   };
 }
 
+sub _get_session_details
+{
+  my $self = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $pub_id = $self->get_metadata($self->curs_schema(), 'curation_pub_id');
+  my $pub = $curs_schema->find_with_type('Pub', $pub_id);
+
+  return {
+    publication_uniquename => $pub->uniquename(),
+    curator => $self->_get_curator_details(),
+  };
+}
+
 my %details_for_service_subs =
   (
     genotype => \&_get_genotype,
-    curator => \&_get_curator_details,
+    session => \&_get_session_details,
   );
 
 =head2 details_for_service

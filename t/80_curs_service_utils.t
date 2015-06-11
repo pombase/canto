@@ -1009,15 +1009,18 @@ cmp_deeply($add_gene_result,
              'message' => $add_dummy_gene_message,
            });
 
-# curator details
-my $curator_detail_res =
-  $service_utils->details_for_service('curator');
+# session details
+my $session_detail_res =
+  $service_utils->details_for_service('session');
 
-cmp_deeply($curator_detail_res,
-          {
-            'curator_name' => 'Some Testperson',
-            'curator_known_as' => undef,
-            'curator_email' => 'some.testperson@pombase.org',
-            'community_curated' => JSON::true,
-            'accepted_date' => '2012-02-15 13:45:00'
-          });
+cmp_deeply($session_detail_res,
+           {
+             publication_uniquename => 'PMID:19756689',
+             curator => {
+               'curator_name' => 'Some Testperson',
+               'curator_known_as' => undef,
+               'curator_email' => 'some.testperson@pombase.org',
+               'community_curated' => JSON::true,
+               'accepted_date' => '2012-02-15 13:45:00'
+             }
+           });

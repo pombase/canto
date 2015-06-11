@@ -308,6 +308,14 @@ canto.service('CursConditionList', function($q, Curs) {
   };
 });
 
+canto.service('CursSessionDetails', function(Curs) {
+  this.promise = Curs.details('session');
+
+  this.get = function() {
+    return this.promise;
+  };
+});
+
 canto.service('CantoGlobals', function($window) {
   this.app_static_path = $window.app_static_path;
   this.application_root = $window.application_root;
@@ -2227,7 +2235,7 @@ canto.directive('termChildrenDisplay',
 
 var annotationEditDialogCtrl =
   function($scope, $modal, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
-           Curs, toaster, args) {
+           CursSessionDetails, toaster, args) {
     $scope.annotation = { conditions: [] };
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
@@ -2294,9 +2302,9 @@ var annotationEditDialogCtrl =
       $modalInstance.dismiss('cancel');
     };
 
-    Curs.details('curator')
-      .success(function(curator_details) {
-        $scope.curatorDetails = curator_details;
+    CursSessionDetails.get()
+      .success(function(sessionDetails) {
+        $scope.curatorDetails = sessionDetails.curator;
       });
 
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
@@ -2314,7 +2322,7 @@ var annotationEditDialogCtrl =
 
 canto.controller('AnnotationEditDialogCtrl',
                  ['$scope', '$modal', '$modalInstance', 'AnnotationProxy',
-                  'AnnotationTypeConfig', 'Curs', 'toaster',
+                  'AnnotationTypeConfig', 'CursSessionDetails', 'toaster',
                   'args',
                   annotationEditDialogCtrl]);
 
@@ -2352,7 +2360,7 @@ function makeNewAnnotation(template) {
 
 var annotationTableCtrl =
   function($modal, CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList,
-          toaster) {
+           CursSessionDetails, toaster) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -2381,7 +2389,13 @@ var annotationTableCtrl =
           hasFeatures: false, // set to true if there are feature of type featureTypeFilter
           annotations: null,
           hideColumns: {},
+          publicationUniquename: null,
         };
+
+        CursSessionDetails.get()
+          .success(function(sessionDetails) {
+            $scope.data.publicationUniquename = sessionDetails.publication_uniquename;
+          });
 
         copyObject(initialHideColumns, $scope.data.hideColumns);
 
@@ -2470,7 +2484,7 @@ var annotationTableCtrl =
 
 canto.directive('annotationTable',
                 ['$modal', 'CantoGlobals', 'AnnotationProxy',
-                 'AnnotationTypeConfig', 'CursGenotypeList', 'toaster',
+                 'AnnotationTypeConfig', 'CursGenotypeList', 'CursSessionDetails', 'toaster',
                  annotationTableCtrl]);
 
 

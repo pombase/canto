@@ -10,12 +10,18 @@
       <span ng-show="featureFilterDisplayName">
         for {{featureFilterDisplayName}}
       </span>
+      <span ng-show="data.publicationUniquename">
+        for {{data.publicationUniquename}}
+      </span>
     </span>
     <span ng-if="featureStatusFilter === 'existing' && data.annotations !== null && data.annotations.length > 0"
           class="title sect-title">
       Existing annotations
       <span ng-show="featureFilterDisplayName">
         for {{featureFilterDisplayName}}
+      </span>
+      <span ng-show="data.publicationUniquename">
+        for {{data.publicationUniquename}}
       </span>
     </span>
   <span ng-if="featureStatusFilter === 'new' && data.hasFeatures && !read_only_curs && (!alleleCountFilter || alleleCountFilter == 'single')">
