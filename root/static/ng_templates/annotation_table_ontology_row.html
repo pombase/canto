@@ -4,6 +4,9 @@
       {{allele.gene_display_name}}
     </div>
   </td>
+  <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">
+    {{annotation.genotype_background}}
+  </td>
   <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
     {{annotation.genotype_name}}
   </td>
