@@ -1359,6 +1359,7 @@ var alleleEditDialogCtrl =
         type: $scope.alleleData.type,
         evidence: $scope.alleleData.evidence,
         expression: $scope.alleleData.expression,
+        gene_display_name: $scope.gene.display_name,
         gene_id: $scope.gene.gene_id
       };
     };

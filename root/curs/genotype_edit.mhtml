@@ -86,6 +86,7 @@ The alleles of this genotype:
             <table class="list">
               <thead>
                 <tr>
+                  <th>Gene</th>
                   <th>Name</th>
                   <th>Type</th>
                   <th>Description</th>
@@ -93,6 +94,7 @@ The alleles of this genotype:
                 </tr>
               </thead>
               <tbody ng-repeat="allele in alleles">
+                <td>{{allele.gene_display_name}}</td>
                 <td>{{allele.name}}</td>
                 <td>{{allele.type}}</td>
                 <td>{{allele.description}}</td>
