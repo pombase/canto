@@ -8,7 +8,7 @@
     {{annotation.genotype_background}}
   </td>
   <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
-    {{annotation.genotype_name}}
+    <span ng-bind-html="annotation.genotype_name | unicodeAlleleSymbol | toTrusted"></span>
   </td>
   <td ng-if="annotationType.feature_type === 'gene' && !featureIdFilter">
     <a ng-if="annotation.status === 'new'"
@@ -26,7 +26,7 @@
       </div>
     </a>
     <span ng-if="annotation.status === 'existing'">
-      {{annotation.genotype_display_name | unicodeAlleleSymbol | toTrusted}}
+      <span ng-bind-html="annotation.genotype_display_name | unicodeAlleleSymbol | toTrusted"></span>
     </span>
   </td>
   <td>

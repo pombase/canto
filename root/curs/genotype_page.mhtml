@@ -50,7 +50,7 @@ Genotype details
 Name
           </td>
           <td>
-<% $genotype->name() || '[none]' %>
+<% $_unicode_allele_symbol->($genotype->name() || '[none]') |n %>
           </td>
         </tr>
         <tr>
