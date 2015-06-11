@@ -2427,6 +2427,9 @@ var annotationTableCtrl =
                   function(annotation) {
                     $.map(initialHideColumns,
                           function(prop, key) {
+                            if (key == 'qualifiers' && annotation.is_not) {
+                              $scope.data.hideColumns[key] = false;
+                            }
                             if (annotation[key] &&
                                 (!$.isArray(annotation[key]) || annotation[key].length > 0)) {
                               $scope.data.hideColumns[key] = false;
