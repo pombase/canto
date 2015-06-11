@@ -170,12 +170,13 @@ sub make_genotype
 =head2 store_genotype_changes
 
  Usage   : $genotype_manager->store_genotype_changes($curs_key, $genotype,
-                                                     $name, \@allele_objects);
+                                                     $name, $background, \@allele_objects);
  Function: Store changes to a Genotype object in the CursDB
  Args    : $curs_key - the key for this session
            $genotype_id - the Genotype's ID in the CursDB
            $name - new name for the genotype, note: if undef the name will be
-                   set to undef rather than keeping the old version
+                   set to undef rather than keeping the old version (optional)
+           $background - the genotype background (optional)
            \@allele_objects - a list of Allele objects to attach to the new
                               Genotype
  Return  : nothing, dies on error
@@ -188,11 +189,13 @@ sub store_genotype_changes
   my $curs_key = shift;
   my $genotype = shift;
   my $name = shift;
+  my $background = shift;
   my $alleles = shift;
 
   my $schema = $self->curs_schema();
 
   $genotype->name($name);
+  $genotype->background($background);
   $genotype->set_alleles($alleles);
 
   $genotype->update();

@@ -1601,6 +1601,7 @@ var multiAlleleCtrl =
         .success(function(genotype_details) {
           $scope.alleles = genotype_details.alleles;
           $scope.data.genotype_name = genotype_details.name;
+          $scope.data.genotype_background = genotype_details.background;
         });
     }
   };

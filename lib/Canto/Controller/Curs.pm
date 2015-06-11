@@ -1699,6 +1699,7 @@ sub feature_edit : Chained('feature') PathPart('edit')
 
       my @alleles_data = @{$body_data->{alleles}};
       my $genotype_name = $body_data->{genotype_name};
+      my $genotype_background = $body_data->{genotype_background};
 
       try {
         my $guard = $schema->txn_scope_guard();
@@ -1723,7 +1724,8 @@ sub feature_edit : Chained('feature') PathPart('edit')
                                             curs_schema => $schema);
 
         $genotype_manager->store_genotype_changes($curs_key, $genotype,
-                                                  $genotype_name, \@alleles);
+                                                  $genotype_name, $genotype_background,
+                                                  \@alleles);
 
         $guard->commit();
 
