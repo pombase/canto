@@ -1345,7 +1345,8 @@ available_annotation_type_list:
       pyrimidine metabolic process or alpha-glucoside transport
     help_text: >
       A biological process is series of events accomplished by one or more
-      ordered assemblies of molecular functions.
+      ordered assemblies of molecular functions, such as cell cycle, 
+      transport, or signal transduction.
     more_help_text: >
       It can be difficult to distinguish between a biological process
       and a molecular function, but the general rule is that a process must
@@ -1436,9 +1437,10 @@ available_annotation_type_list:
       growth auxotrophic for arginine, abnormal cytokinetic cell separation
     help_text: >
       Annotate normal or abnormal phenotypes, and the associated alleles.
-      A phenotype is any observable characteristic or trait of an organism.
+      A phenotype is any observable characteristic or trait of an organism; 
+      examples include multinucleate, abnormal spindle, inviable.
     more_help_text: >
-      Examples include morphology, development, biochemical or
+      Observable characteristics include morphology, development, biochemical or
       physiological properties, behaviour, and products of behaviour of the
       organism.
       Phenotypes result from the expression of the genes of an organism as well
