@@ -2387,6 +2387,7 @@ var annotationTableCtrl =
           curator: true,
           genotype_name: true,
           genotype_background: true,
+          term_suggestion: true,
         };
 
         $scope.data = {
@@ -2431,6 +2432,11 @@ var annotationTableCtrl =
                           function(prop, key) {
                             if (key == 'qualifiers' && annotation.is_not) {
                               $scope.data.hideColumns[key] = false;
+                            }
+                            if (key == 'term_suggestion') {
+                              if (annotation.term_suggestion_name || annotation.term_suggestion_definition) {
+                                $scope.data.hideColumns[key] = false;
+                              }
                             }
                             if (annotation[key] &&
                                 (!$.isArray(annotation[key]) || annotation[key].length > 0)) {

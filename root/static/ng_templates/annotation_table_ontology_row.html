@@ -54,7 +54,7 @@
   <td ng-if="!data.hideColumns.qualifiers">
     {{annotation.qualifiersString}}
   </td>
-  <td>
+  <td ng-if="!data.hideColumns.term_suggestion">
     <div ng-if="annotation.term_suggestion_name || annotation.term_suggestion_definition">
       <div style="font-weight: bold">
 {{annotation.term_suggestion_name}}
