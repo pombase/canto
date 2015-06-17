@@ -485,7 +485,18 @@ sub _process_existing_db_ontology
   my $ontology_lookup = shift;
   my $row = shift;
 
+  my $feature = $row->{gene} // $row->{genotype};
   my $gene = $row->{gene};
+  my $genotype = $row->{genotype};
+  my $feature_type;
+
+  if ($gene) {
+    $feature_type = 'gene';
+  } else {
+    $feature_type = 'genotype';
+  }
+
+
   my $ontology_term = $row->{ontology_term};
   my $publication = $row->{publication};
   my $evidence_code = $row->{evidence_code};
@@ -515,62 +526,84 @@ sub _process_existing_db_ontology
   my $gene_id = undef;
   my $with_gene_id = undef;
 
+  my $genotype_id = undef;
+
   if (defined $curs_schema) {
-    my $db_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $gene->{identifier} });
+    if ($gene) {
+      my $db_gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $gene->{identifier} });
 
-    if (defined $db_gene) {
-      $gene_id = $db_gene->gene_id();
-    }
-
-    # disabled for now - no linking for with identifiers in existing annotations
-    if (0 && defined $with_or_from_identifier) {
-      my $db_with_gene = $curs_schema->resultset('Gene')->find({
-        primary_identifier => $with_or_from_identifier,
-      });
-
-      if (!defined $db_with_gene && $with_or_from_identifier =~ /.*:(\S+)/) {
-        $db_with_gene = $curs_schema->resultset('Gene')->find({
-          primary_identifier => $1,
-        });
+      if (defined $db_gene) {
+        $gene_id = $db_gene->gene_id();
       }
 
-      if (defined $db_with_gene) {
-        $with_gene_id = $db_with_gene->gene_id();
+      # disabled for now - no linking for with identifiers in existing annotations
+      if (0 && defined $with_or_from_identifier) {
+        my $db_with_gene = $curs_schema->resultset('Gene')->find({
+          primary_identifier => $with_or_from_identifier,
+        });
+
+        if (!defined $db_with_gene && $with_or_from_identifier =~ /.*:(\S+)/) {
+          $db_with_gene = $curs_schema->resultset('Gene')->find({
+            primary_identifier => $1,
+          });
+        }
+
+        if (defined $db_with_gene) {
+          $with_gene_id = $db_with_gene->gene_id();
+        }
+      }
+    } else {
+      my $db_genotype = $curs_schema->resultset('Genotype')->find({ identifier => $genotype->{identifier} });
+
+      if (defined $db_genotype) {
+        $genotype_id = $db_genotype->genotype_id();
       }
     }
   }
 
   my %ret = (
     annotation_id => $row->{annotation_id},
-    gene_identifier => $gene->{identifier},
-    gene_name => $gene->{name} || '',
-    gene_name_or_identifier =>
-      $gene->{name} || $gene->{identifier},
-    gene_product => $gene->{product} || '',
-    gene_id => $gene_id,
-    feature_type => 'gene',
+    feature_type => $feature_type,
     feature_display_name =>
-      $gene->{name} || $gene->{identifier},
+      $feature->{name} || $feature->{identifier},
+    feature_id => $gene_id // $genotype_id,
     conditions => [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $row->{conditions})],
     qualifiers => $row->{qualifiers} // [],
     annotation_type => $annotation_type,
     term_ontid => $term_ontid,
     term_name => $term_name,
     evidence_code => $evidence_code,
-    with_or_from_identifier => $with_or_from_identifier,
-    with_or_from_display_name => $with_or_from_identifier,
-    with_gene_id => $with_gene_id,
-    taxonid => $gene->{organism_taxonid},
     status => 'existing',
     is_not => $is_not,
   );
 
-  if (defined $row->{allele}) {
-    my $allele_display_name =
-      Canto::Curs::Utils::make_allele_display_name($row->{allele}->{name},
-                                                   $row->{allele}->{description},
-                                                   $row->{allele}->{type});
-    $ret{allele_display_name} = $allele_display_name;
+  if ($gene) {
+    $ret{gene_identifier} = $gene->{identifier};
+    $ret{gene_name} = $gene->{name} || '';
+    $ret{gene_name_or_identifier} = $gene->{name} || $gene->{identifier};
+    $ret{gene_product} = $gene->{product} || '';
+    $ret{gene_id} = $gene_id;
+    $ret{taxonid} = $gene->{organism_taxonid};
+    $ret{with_or_from_identifier} = $with_or_from_identifier;
+    $ret{with_or_from_display_name} = $with_or_from_identifier;
+    $ret{with_gene_id} = $with_gene_id;
+  } else {
+    $ret{genotype_identifier} = $genotype->{identifier};
+    $ret{genotype_name} = $genotype->{name} || '';
+    $ret{genotype_name_or_identifier} = $genotype->{name} || $genotype->{identifier};
+    $ret{genotype_id} = $genotype_id;
+    $ret{alleles} = [map {
+      my %ret = %$_;
+      $ret{long_display_name} =
+        ($_->{name} || $_->{primary_identifier} || 'unknown') .
+        '(' . ($_->{description} || 'unknown') . ')';
+
+      if ($_->{expression}) {
+        $ret{long_display_name} .= '[' . $_->{expression} . ']';
+      }
+
+      \%ret;
+    } @{$genotype->{alleles}}]
   }
 
   return \%ret;

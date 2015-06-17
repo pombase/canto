@@ -58,7 +58,7 @@ my ($all_annotations_count, $res) =
                  }
                 );
 check_res($all_annotations_count, $res);
-is($lookup->cache()->get_keys(), 1);
+is($lookup->cache()->get_keys(), 2);
 
 ($all_annotations_count, $res) =
   $lookup->lookup({pub_uniquename => 'PMID:19756689',
@@ -67,7 +67,7 @@ is($lookup->cache()->get_keys(), 1);
                  }
                 );
 check_res($all_annotations_count, $res);
-is($lookup->cache()->get_keys(), 2);
+is($lookup->cache()->get_keys(), 3);
 
 
 # try the same thing again to check the cache
@@ -78,7 +78,7 @@ is($lookup->cache()->get_keys(), 2);
                  }
                 );
 check_res($all_annotations_count, $res);
-is($lookup->cache()->get_keys(), 2);
+is($lookup->cache()->get_keys(), 3);
 
 
 ($all_annotations_count, $res) =
@@ -160,33 +160,45 @@ cmp_deeply($res->[0],
 
 is(@$res, 1);
 
+
 cmp_deeply($res->[0],
            {
-             'gene' => {
-               'identifier' => 'SPBC12C2.02c',
-               'name' => 'ste20',
-               'organism_taxonid' => '4896'
-             },
-             'ontology_term' => {
-               'ontid' => 'FYPO:0000104',
-               'term_name' => 'sensitive to cycloheximide',
-               'ontology_name' => 'fission_yeast_phenotype'
-             },
-             'evidence_code' => 'UNK',
-             'annotation_id' => 3,
-             'from' => undef,
+             'with' => undef,
+             'qualifiers' => [],
              'is_not' => 'false',
+             'conditions' => [],
+             'ontology_term' => {
+               'ontology_name' => 'fission_yeast_phenotype',
+               'term_name' => 'sensitive to cycloheximide',
+               'ontid' => 'FYPO:0000104'
+             },
              'publication' => {
                'uniquename' => 'PMID:19756689'
              },
-             'conditions' => [],
+             'annotation_id' => 3,
              'expression' => undef,
-             'qualifiers' => [],
-             'allele' => {
-               'identifier' => 'SPBC12C2.02c:allele-1',
-               'name' => 'ste20delta',
-               'description' => 'del_x1',
-               'organism_taxonid' => '4896'
-             },
-             'with' => undef
+             'from' => undef,
+             'evidence_code' => 'UNK',
+             'genotype' => {
+               'identifier' => 'aaaa0007-test-genotype-3',
+               'alleles' => [
+                 {
+                   'primary_identifier' => 'SPCC1739.11c:allele-1',
+                   'gene_display_name' => 'cdc11',
+                   'name' => 'cdc11-33',
+                   'type' => undef,
+                   'taxonid' => '4896',
+                   'description' => 'unknown'
+                 },
+                 {
+                   'taxonid' => '4896',
+                   'description' => 'deletion',
+                   'type' => undef,
+                   'name' => 'ssm4delta',
+                   'primary_identifier' => 'SPAC27D7.13c:allele-1',
+                   'gene_display_name' => 'ssm4'
+                 }
+               ],
+               'name' => 'cdc11-33 ssm4delta'
+             }
            });

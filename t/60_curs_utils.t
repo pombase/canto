@@ -274,6 +274,7 @@ check_new_annotations($dummy_alt_id);
                'gene_name' => 'ste20',
                'gene_product' => '',
                'gene_id' => undef,
+               'feature_id' => undef,
                'feature_display_name' => 'ste20',
                'feature_type' => 'gene',
                'is_not' => JSON::false,
@@ -308,6 +309,7 @@ check_new_annotations($dummy_alt_id);
                'annotation_id' => 2,
                'gene_name' => 'ste20',
                'gene_product' => '',
+               'feature_id' => undef,
                'feature_display_name' => 'ste20',
                'feature_type' => 'gene',
                'is_not' => JSON::true,
@@ -330,28 +332,42 @@ check_new_annotations($dummy_alt_id);
   is (@$annotations, 1);
   cmp_deeply($annotations->[0],
              {
-               'taxonid' => '4896',
-               'annotation_type' => 'phenotype',
-               'term_ontid' => 'FYPO:0000104',
                'term_name' => 'sensitive to cycloheximide',
-               'with_or_from_identifier' => undef,
-               'gene_identifier' => 'SPBC12C2.02c',
-               'gene_name_or_identifier' => 'ste20',
-               'qualifiers' => [],
-               'allele_display_name' => 'ste20delta(del_x1)',
-               'conditions' => [],
-               'evidence_code' => 'UNK',
+               'feature_id' => undef,
+               'is_not' => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean' ),
+               'genotype_name' => 'cdc11-33 ssm4delta',
+               'genotype_identifier' => 'aaaa0007-test-genotype-3',
+               'alleles' => [
+                 {
+                   'type' => undef,
+                   'gene_display_name' => 'cdc11',
+                   'taxonid' => '4896',
+                   'primary_identifier' => 'SPCC1739.11c:allele-1',
+                   'long_display_name' => 'cdc11-33(unknown)',
+                   'description' => 'unknown',
+                   'name' => 'cdc11-33'
+                 },
+                 {
+                   'long_display_name' => 'ssm4delta(deletion)',
+                   'primary_identifier' => 'SPAC27D7.13c:allele-1',
+                   'name' => 'ssm4delta',
+                   'description' => 'deletion',
+                   'gene_display_name' => 'ssm4',
+                   'type' => undef,
+                   'taxonid' => '4896'
+                 }
+               ],
+               'feature_type' => 'genotype',
                'annotation_id' => 3,
-               'gene_name' => 'ste20',
-               'gene_product' => '',
-               'gene_id' => undef,
-               'feature_display_name' => 'ste20',
-               'feature_type' => 'gene',
-               'is_not' => JSON::true,
+               'term_ontid' => 'FYPO:0000104',
+               'qualifiers' => [],
+               'conditions' => [],
                'status' => 'existing',
-               'with_or_from_display_name' => undef,
-               'with_or_from_identifier' => undef,
-               'with_gene_id' => undef,
+               'feature_display_name' => 'cdc11-33 ssm4delta',
+               'genotype_id' => undef,
+               'evidence_code' => 'UNK',
+               'genotype_name_or_identifier' => 'cdc11-33 ssm4delta',
+               'annotation_type' => 'phenotype'
              });
 }
 
