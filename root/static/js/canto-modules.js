@@ -4,7 +4,7 @@
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'toaster']);
 
-function capitalize (text) {
+function capitalizeFirstLetter(text) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
@@ -2312,7 +2312,7 @@ var annotationEditDialogCtrl =
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
       .then(function(annotationType) {
         $scope.annotationType = annotationType;
-        $scope.displayAnnotationFeatureType = capitalize(annotationType.feature_type);
+        $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
         $scope.annotation.feature_type = annotationType.feature_type;
 
         if (! annotationType.can_have_conditions) {
@@ -2478,7 +2478,7 @@ var annotationTableCtrl =
                                     });
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
           scope.annotationType = annotationType;
-          scope.displayAnnotationFeatureType = capitalize(annotationType.feature_type);
+          scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
 
           if (annotationType.feature_type === 'genotype') {
             CursGenotypeList.cursGenotypeList().then(function(results) {
