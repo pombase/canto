@@ -148,7 +148,9 @@ canto.service('Curs', function($http, $q) {
       data = args.pop();
       return $http.post(url + args.join('/'), data);
     } else {
-      return $http.get(url + args.join('/'));
+      // force IE not to cache
+      var unique = '?u=' + (new Date()).getTime();
+      return $http.get(url + args.join('/') + unique);
     }
   };
 
@@ -165,7 +167,8 @@ canto.service('Curs', function($http, $q) {
       data = args.pop();
       return $http.post(url + args.join('/'), data);
     } else {
-      return $http.get(url + args.join('/'));
+      var unique = '?u=' + (new Date()).getTime();
+      return $http.get(url + args.join('/') + unique);
     }
   };
 
