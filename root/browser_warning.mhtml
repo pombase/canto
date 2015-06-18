@@ -1,6 +1,6 @@
-<!--[if lte IE 7]>
+<!--[if lte IE 8]>
 <div id="ie-browser-warning">
-  Sorry, your browser is not supported.  The <% $c->config()->{name} %> interface requires <a href="http://windows.microsoft.com/en-nz/internet-explorer/download-ie">Internet explorer version 8+</a>, <a href="https://www.mozilla.org/firefox/">Firefox</a>, <a href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>, <a href="https://www.apple.com/safari/">Safari</a> or <a href="http://www.opera.com/">Opera</a>.
+  Sorry, your browser is not supported.  The <% $c->config()->{name} %> interface requires <a href="http://windows.microsoft.com/en-nz/internet-explorer/download-ie">Internet explorer version 9+</a>, <a href="https://www.mozilla.org/firefox/">Firefox</a>, <a href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>, <a href="https://www.apple.com/safari/">Safari</a> or <a href="http://www.opera.com/">Opera</a>.
 </div>
 <style type="text/css">
 .curs-content, #pubmed-id-lookup {
