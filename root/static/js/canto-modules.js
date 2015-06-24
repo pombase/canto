@@ -357,78 +357,28 @@ var keysForServer = {
 
 var annotationProxy =
   function(Curs, $q, $http) {
-  var that = this;
-  this.allQs = {};
+    var proxy = this;
+    this.allQs = {};
+    this.annotationsByType = {};
 
-  this.getAnnotation = function(annotationTypeName) {
-    if (!this.allQs[annotationTypeName]) {
-      this.allQs[annotationTypeName] =
-        Curs.list('annotation', [annotationTypeName]);
-    }
+    this.getAnnotation = function(annotationTypeName) {
+      if (!proxy.allQs[annotationTypeName]) {
+        var q = $q.defer();
+        proxy.allQs[annotationTypeName] = q.promise;
 
-    return this.allQs[annotationTypeName];
-  };
+        var cursQ = Curs.list('annotation', [annotationTypeName]);
 
-  // filter the list of annotation based on the params argument
-  // possibilities:
-  //   annotationTypeName (required)
-  //   featureId (optional)
-  //   featureType (optional)
-  //   featureStatus (optional)
-  //   alleleCount (optional)
-  this.getFiltered =
-    function(params) {
-      var q = $q.defer();
+        cursQ.success(function(annotations) {
+          proxy.annotationsByType[annotationTypeName] = annotations;
+          q.resolve(annotations);
+        });
 
-      that.getAnnotation(params.annotationTypeName).success(function(annotations) {
-        var filteredAnnotations =
-          $.grep(annotations,
-                 function(elem) {
-                   if (elem.feature_type == 'genotype' && params.alleleCount && elem.alleles != undefined) {
-                     if (params.alleleCount == 'single' && elem.alleles.length != 1) {
-                       return false;
-                     }
-                     if (params.alleleCount == 'multi' && elem.alleles.length == 1) {
-                       return false;
-                     }
-                   }
+        cursQ.error(function() {
+          q.reject();
+        });
+      }
 
-                   if (!params.featureStatus ||
-                       elem.status === params.featureStatus) {
-                     if (!params.featureId) {
-                       return true;
-                     }
-                     if (params.featureType) {
-                       if (params.featureType === 'gene') {
-                         if (elem.gene_id == params.featureId) {
-                           return true;
-                         }
-                         if (typeof(elem.interacting_gene_id) !== 'undefined' &&
-                             elem.interacting_gene_id == params.featureId) {
-                           return true;
-                         }
-                         if (elem.alleles !== undefined &&
-                             $.grep(elem.alleles,
-                                    function(alleleData) {
-                                      return alleleData.gene_id.toString() === params.featureId;
-                                    }).length > 0) {
-                           return true;
-                         }
-                       }
-                       if (params.featureType === 'genotype' &&
-                           elem.genotype_id == params.featureId) {
-                         return true;
-                       }
-                     }
-                   }
-                   return false;
-                 });
-        q.resolve(filteredAnnotations);
-      }).error(function() {
-        q.reject();
-      });
-
-      return q.promise;
+      return proxy.allQs[annotationTypeName];
     };
 
     this.deleteAnnotation = function(annotation) {
@@ -441,6 +391,13 @@ var annotationProxy =
 
       putQ.success(function(response) {
         if (response.status === 'success') {
+          var annotations = proxy.annotationsByType[annotation.annotation_type];
+          if (annotations) {
+            var index = annotations.indexOf(annotation);
+            if (index >= 0) {
+              annotations.splice(index, 1);
+            }
+          }
           q.resolve();
         } else {
           q.reject(response.message);
@@ -2356,6 +2313,50 @@ function startEditing($modal, annotationTypeName, annotation, currentFeatureDisp
   return editInstance.result;
 }
 
+function filterAnnotations(annotations, params) {
+  return annotations.filter(function(annotation) {
+                              if (annotation.feature_type == 'genotype' && params.alleleCount && annotation.alleles != undefined) {
+                                if (params.alleleCount == 'single' && annotation.alleles.length != 1) {
+                                  return false;
+                                }
+                                if (params.alleleCount == 'multi' && annotation.alleles.length == 1) {
+                                  return false;
+                                }
+                              }
+
+                              if (!params.featureStatus ||
+                                  annotation.status === params.featureStatus) {
+                                if (!params.featureId) {
+                                  return true;
+                                }
+                                if (params.featureType) {
+                                  if (params.featureType === 'gene') {
+                                    if (annotation.gene_id == params.featureId) {
+                                      return true;
+                                    }
+                                    if (typeof(annotation.interacting_gene_id) !== 'undefined' &&
+                                        annotation.interacting_gene_id == params.featureId) {
+                                      return true;
+                                    }
+                                    if (annotation.alleles !== undefined &&
+                                        $.grep(annotation.alleles,
+                                               function(alleleData) {
+                                                 return alleleData.gene_id.toString() === params.featureId;
+                                               }).length > 0) {
+                                      return true;
+                                    }
+                                  }
+                                  if (params.featureType === 'genotype' &&
+                                      annotation.genotype_id == params.featureId) {
+                                    return true;
+                                  }
+                                }
+                              }
+                              return false;
+                            });
+};
+
+
 function makeNewAnnotation(template) {
   var copy = {};
   copyObject(template, copy);
@@ -2381,6 +2382,24 @@ var annotationTableCtrl =
       controller: function($scope) {
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.app_static_path = CantoGlobals.app_static_path;
+
+        $scope.filterParams = {
+          annotationTypeName: $scope.annotationTypeName,
+          featureId: $scope.featureIdFilter,
+          featureStatus: $scope.featureStatusFilter,
+          featureType: $scope.featureTypeFilter,
+          alleleCount: $scope.alleleCountFilter,
+        };
+
+        $scope.$watchCollection('data.annotations',
+                                function(newAnnotations) {
+                                  if (newAnnotations) {
+                                    $scope.data.filteredAnnotations =
+                                      filterAnnotations(newAnnotations, $scope.filterParams);
+                                  } else {
+                                    $scope.data.filteredAnnotations = [];
+                                  }
+                                });
 
         var initialHideColumns = {      // columns to hide because they're empty
           with_or_from_identifier: true,  // set to false when a row has a non empty element
@@ -2470,15 +2489,13 @@ var annotationTableCtrl =
       },
       link: function(scope) {
         scope.data.annotations = null;
-        AnnotationProxy.getFiltered({annotationTypeName: scope.annotationTypeName,
-                                     featureId: scope.featureIdFilter,
-                                     featureStatus: scope.featureStatusFilter,
-                                     featureType: scope.featureTypeFilter,
-                                     alleleCount: scope.alleleCountFilter,
-                                    }).then(function(annotations) {
-                                      scope.data.annotations = annotations;
-                                      scope.updateColumns();
-                                    });
+        AnnotationProxy.getAnnotation(scope.annotationTypeName)
+          .then(function(annotations) {
+            scope.data.annotations = annotations;
+            scope.updateColumns();
+          }).catch(function() {
+            toaster.pop('error', "couldn't read annotations from the server");
+          });
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
           scope.annotationType = annotationType;
           scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);

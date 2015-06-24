@@ -32,7 +32,7 @@
 Loading ...
   </div>
   <div ng-if="data.annotations !== null && (data.annotations.length > 0 || featureStatusFilter === 'new')">
-  <div ng-switch="data.annotations.length > 0">
+  <div ng-switch="data.filteredAnnotations.length > 0">
     <div ng-switch-when="true" class="annotation-table sect-content">
       <div class="list" ng-switch="annotationType.category">
         <table ng-switch-when="ontology" class="list">
@@ -55,7 +55,8 @@ Loading ...
             </tr>
           </thead>
           <tbody>
-            <tr annotation-table-row annotation-type="ontology" ng-repeat="annotation in data.annotations">
+            <tr annotation-table-row annotation-type="ontology"
+                ng-repeat="annotation in data.filteredAnnotations">
             </tr>
           </tbody>
         </table>
@@ -72,7 +73,8 @@ Loading ...
             </tr>
           </thead>
           <tbody>
-            <tr annotation-table-row annotation-type="interaction" ng-repeat="annotation in data.annotations">
+            <tr annotation-table-row annotation-type="interaction"
+                ng-repeat="annotation in data.filteredAnnotations">
             </tr>
           </tbody>
         </table>
