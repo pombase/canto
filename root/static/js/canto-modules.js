@@ -147,11 +147,10 @@ canto.service('Curs', function($http, $q) {
     if (args.length > 0 && typeof(args[args.length - 1]) === 'object') {
       data = args.pop();
       return $http.post(url + args.join('/'), data);
-    } else {
-      // force IE not to cache
-      var unique = '?u=' + (new Date()).getTime();
-      return $http.get(url + args.join('/') + unique);
     }
+    // force IE not to cache
+    var unique = '?u=' + (new Date()).getTime();
+    return $http.get(url + args.join('/') + unique);
   };
 
   this.details = function(key, args) {
@@ -166,10 +165,9 @@ canto.service('Curs', function($http, $q) {
     if (args.length > 0 && typeof(args[args.length - 1]) === 'object') {
       data = args.pop();
       return $http.post(url + args.join('/'), data);
-    } else {
-      var unique = '?u=' + (new Date()).getTime();
-      return $http.get(url + args.join('/') + unique);
     }
+    var unique = '?u=' + (new Date()).getTime();
+    return $http.get(url + args.join('/') + unique);
   };
 
   this.add = function(key, args) {
@@ -231,7 +229,7 @@ canto.service('CursGenotypeList', function($q, Curs) {
       genotype.id_or_identifier = genotype.genotype_id || genotype.identifier;
       genotype.feature_id = genotype.genotype_id;
     });
-  };
+  }
 
   this.cursGenotypeList = function() {
     var q = $q.defer();
@@ -521,9 +519,8 @@ var cursStateService =
     this.currentTerm = function() {
       if (this.state.termHistory.length > 0) {
         return this.state.termHistory[this.state.termHistory.length - 1];
-      } else {
-        return null;
       }
+      return null;
     };
 
     this.termHistory = function() {
@@ -599,12 +596,12 @@ var breadcrumbsDirective =
 
                         function saveDetails(details) {
                           $scope.termDetails[details.id] = details;
-                        };
+                        }
 
-                        var i, termId;
+                        var i, termId, makeLink;
                         for (i = 0; i < termList.length; i++) {
                           termId = termList[i];
-                          var makeLink = (i != termList.length - 1);
+                          makeLink = (i != termList.length - 1);
 
                           html += '<div class="breadcrumbs-link">';
 
@@ -758,9 +755,8 @@ var ontologyTermLocatorCtrl =
 
       if ($scope.termDetails[termId]) {
         return $scope.termDetails[termId][fieldName];
-      } else {
-        return null;
       }
+      return null;
     };
 
     $scope.$watch('CursStateService.currentTerm()',
@@ -786,9 +782,8 @@ var ontologyTermLocatorCtrl =
                                           function(match_str, p1, p2) {
                                             if (!p1 || p1.length == 0) {
                                               return termId;
-                                            } else {
-                                              return termId.replace(new RegExp(p1), p2);
                                             }
+                                            return termId.replace(new RegExp(p1), p2);
                                           });
                         var img_src =
                           application_root + 'static/images/logos/' +
@@ -2030,7 +2025,7 @@ canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
 
     return q.promise;
 
-  }
+  };
   this.getByName = function(typeName) {
     return this.getByKeyValue('name', typeName);
   };
@@ -2155,7 +2150,7 @@ function openTermConfirmDialog($modal, termId)
 
 
 var termDefinitionDisplayCtrl =
-  function($modal, toaster) {
+  function($modal) {
     return {
       scope: {
         termData: '=',
@@ -2167,12 +2162,12 @@ var termDefinitionDisplayCtrl =
   };
 
 canto.directive('termDefinitionDisplay',
-                ['$modal', 'toaster',
+                ['$modal',
                  termDefinitionDisplayCtrl]);
 
 
 var termChildrenDisplayCtrl =
-  function($modal, CantoGlobals, toaster) {
+  function(CantoGlobals) {
     return {
       scope: {
         termData: '=',
@@ -2191,7 +2186,7 @@ var termChildrenDisplayCtrl =
   };
 
 canto.directive('termChildrenDisplay',
-                ['$modal', 'CantoGlobals', 'toaster',
+                ['CantoGlobals',
                  termChildrenDisplayCtrl]);
 
 
@@ -2229,10 +2224,9 @@ var annotationEditDialogCtrl =
       if ($scope.annotationType.category === 'ontology') {
         return $scope.isValidFeature() &&
           $scope.isValidTerm() && $scope.isValidEvidence();
-      } else {
-        return $scope.isValidFeature() &&
-          $scope.isValidInteractingGene() && $scope.isValidEvidence();
       }
+      return $scope.isValidFeature() &&
+        $scope.isValidInteractingGene() && $scope.isValidEvidence();
     };
 
     $scope.termFoundCallback =
