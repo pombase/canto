@@ -6,7 +6,8 @@ Annotation loading ...
   <div ng-show="annotationTypes.length"
        id="curs-annotation-tables" class="sect">
     <div ng-repeat="annotationType in annotationTypes">
-      <div class="curs-box">
+      <div class="curs-box"
+           ng-show="annotationsByType[annotationType.name] && annotationsByType[annotationType.name].length > 0">
         <div class="curs-box-title">
           {{annotationType.display_name}}
         </div>

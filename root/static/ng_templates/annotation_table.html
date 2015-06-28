@@ -1,5 +1,4 @@
-<div>
-<div>
+<div ng-show="data.filteredAnnotations.length > 0">
     <span ng-if="featureStatusFilter === 'new'" class="title sect-title">
       <span ng-if="!alleleCountFilter">
         New annotations from this session
@@ -24,13 +23,7 @@
         for {{data.publicationUniquename}}
       </span>
     </span>
-  <div ng-if="data.annotations === null && featureStatusFilter === 'new'">
-    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
-Loading ...
-  </div>
-  <div ng-if="data.annotations !== null && (data.annotations.length > 0 || featureStatusFilter === 'new')">
-  <div ng-switch="data.filteredAnnotations.length > 0">
-    <div ng-switch-when="true" class="annotation-table sect-content">
+    <div class="annotation-table sect-content">
       <div class="list" ng-switch="annotationType.category">
         <table ng-switch-when="ontology" class="list">
           <thead>
@@ -77,10 +70,4 @@ Loading ...
         </table>
       </div>
     </div>
-    <div ng-switch-when="false" class="curs-no-annotations-message">
-      No annotations yet
-    </div>
   </div>
-  </div>
-</div>
-</div>

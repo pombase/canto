@@ -2533,7 +2533,7 @@ canto.directive('annotationTable',
 
 
 var annotationTableList =
-  function(AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
+  function(toaster, AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -2545,25 +2545,35 @@ var annotationTableList =
       templateUrl: app_static_path + 'ng_templates/annotation_table_list.html',
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
-      },
-      link: function(scope) {
-        scope.annotationTypes = [];
+        $scope.annotationTypes = [];
+        $scope.annotationsByType = {};
+
         AnnotationTypeConfig.getAll().then(function(response) {
-          scope.annotationTypes =
+          $scope.annotationTypes =
             $.grep(response.data,
                    function(annotationType) {
-                     if (scope.featureTypeFilter === undefined ||
-                         scope.featureTypeFilter === 'gene' ||
-                         annotationType.feature_type === scope.featureTypeFilter) {
+                     if ($scope.featureTypeFilter === undefined ||
+                         $scope.featureTypeFilter === 'gene' ||
+                         annotationType.feature_type === $scope.featureTypeFilter) {
                        return annotationType;
                      }
                    });
+
+          $.map($scope.annotationTypes,
+                function(annotationType) {
+                  AnnotationProxy.getAnnotation(annotationType.name)
+                    .then(function(annotations) {
+                      $scope.annotationsByType[annotationType.name] = annotations;
+                    }).catch(function() {
+                      toaster.pop('error', "couldn't read annotations from the server");
+                    });
+                });
         });
-      }
+      },
     };
   };
 
-canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoGlobals', annotationTableList]);
+canto.directive('annotationTableList', ['toaster', 'AnnotationProxy', 'AnnotationTypeConfig', 'CantoGlobals', annotationTableList]);
 
 
 var annotationTableRow =
