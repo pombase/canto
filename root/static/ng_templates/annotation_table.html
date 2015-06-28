@@ -24,9 +24,6 @@
         for {{data.publicationUniquename}}
       </span>
     </span>
-  <span ng-if="featureStatusFilter === 'new' && data.hasFeatures && !read_only_curs && (!alleleCountFilter || alleleCountFilter == 'single')">
-    <a ng-click="addNew(featureType, featureId)">Add ...</a>
-  </span>
   <div ng-if="data.annotations === null && featureStatusFilter === 'new'">
     <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
 Loading ...

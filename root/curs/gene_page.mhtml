@@ -35,6 +35,11 @@ Choose curation type for <% $gene->display_name() %>:
 %   if (!$annotation_type->{disabled}) {
       </a>
 %   }
+      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
+                            feature-type="gene" feature-id="<% $gene->gene_id() %>"
+                            feature-display-name="<% $gene_proxy->display_name() %>">
+      </annotation-quick-add>
+    </li>
 % }
   <li class="annotation-type">
     <div>
@@ -140,4 +145,9 @@ my $is_admin = $st->{is_admin_user};
 
 my $genes_in_session = $st->{genes_in_session};
 my $genes_in_session_js = Data::JavaScript::Anon->anon_dump($genes_in_session);
+
+use Canto::Curs::GeneProxy;
+
+my $gene_proxy =
+  Canto::Curs::GeneProxy->new(config => $c->config(), cursdb_gene => $gene);
 </%init>

@@ -445,6 +445,14 @@ var annotationProxy =
       if (response.status === 'success') {
         // update local copy
         copyObject(response.annotation, annotation);
+        if (newly_added) {
+          var annotations = proxy.annotationsByType[annotation.annotation_type];
+          if (!annotations) {
+            proxy.annotationsByType[annotation.annotation_type] = [];
+            annotations = proxy.annotationsByType[annotation.annotation_type];
+          }
+          annotations.push(annotation);
+        }
         q.resolve(annotation);
       } else {
         q.reject(response.message);
@@ -2284,7 +2292,8 @@ canto.controller('AnnotationEditDialogCtrl',
 
 
 
-function startEditing($modal, annotationTypeName, annotation, currentFeatureDisplayName, newlyAdded, featureEditable) {
+function startEditing($modal, annotationTypeName, annotation,
+                      currentFeatureDisplayName, newlyAdded, featureEditable) {
   var editInstance = $modal.open({
     templateUrl: app_static_path + 'ng_templates/annotation_edit.html',
     controller: 'AnnotationEditDialogCtrl',
@@ -2306,6 +2315,55 @@ function startEditing($modal, annotationTypeName, annotation, currentFeatureDisp
 
   return editInstance.result;
 }
+
+
+function makeNewAnnotation(template) {
+  var copy = {};
+  copyObject(template, copy);
+  copy.newly_added = true;
+  return copy;
+}
+
+
+function addAnnotation($modal, annotationTypeName, featureType, featureId,
+                       featureDisplayName) {
+  var template = {
+    annotation_type: annotationTypeName,
+    feature_type: featureType,
+  };
+  if (featureId) {
+    template.feature_id = featureId;
+  }
+  var featureEditable = !featureId;
+  var newAnnotation = makeNewAnnotation(template);
+  startEditing($modal, annotationTypeName, newAnnotation,
+               featureDisplayName, true, featureEditable);
+}
+
+var annotationQuickAdd =
+  function($modal, CantoGlobals) {
+    return {
+      scope: {
+        annotationTypeName: '@',
+        featureType: '@',
+        featureId: '@',
+        featureDisplayName: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/annotation_quick_add.html',
+      controller: function($scope) {
+        $scope.read_only_curs = CantoGlobals.read_only_curs;
+        $scope.add = function() {
+          addAnnotation($modal, $scope.annotationTypeName, $scope.featureType,
+                        $scope.featureId, $scope.featureDisplayName);
+        };
+      },
+    };
+  };
+
+canto.directive('annotationQuickAdd', ['$modal', 'CantoGlobals', annotationQuickAdd]);
+
 
 function filterAnnotations(annotations, params) {
   return annotations.filter(function(annotation) {
@@ -2351,12 +2409,6 @@ function filterAnnotations(annotations, params) {
 };
 
 
-function makeNewAnnotation(template) {
-  var copy = {};
-  copyObject(template, copy);
-  copy.newly_added = true;
-  return copy;
-}
 
 var annotationTableCtrl =
   function($modal, CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList,
@@ -2390,6 +2442,7 @@ var annotationTableCtrl =
                                   if (newAnnotations) {
                                     $scope.data.filteredAnnotations =
                                       filterAnnotations(newAnnotations, $scope.filterParams);
+                                    $scope.updateColumns();
                                   } else {
                                     $scope.data.filteredAnnotations = [];
                                   }
@@ -2411,6 +2464,7 @@ var annotationTableCtrl =
           annotations: null,
           hideColumns: {},
           publicationUniquename: null,
+          filteredAnnotations: [],
         };
 
         CursSessionDetails.get()
@@ -2420,27 +2474,8 @@ var annotationTableCtrl =
 
         copyObject(initialHideColumns, $scope.data.hideColumns);
 
-        $scope.addNew = function() {
-          var template = {
-            annotation_type: $scope.annotationTypeName,
-            feature_type: $scope.featureTypeFilter
-          };
-          if ($scope.featureIdFilter) {
-            template.feature_id = $scope.featureIdFilter;
-          }
-          var featureEditable = !$scope.featureIdFilter;
-          var newAnnotation = makeNewAnnotation(template);
-          var editPromise =
-            startEditing($modal, $scope.annotationTypeName, newAnnotation, $scope.featureFilterDisplayName, true, featureEditable);
-
-          editPromise.then(function(editedAnnotation) {
-            $scope.data.annotations.push(editedAnnotation);
-            $scope.updateColumns();
-          });
-        };
-
         $scope.updateColumns = function() {
-          if ($scope.data.annotations) {
+          if ($scope.data.filteredAnnotations) {
             copyObject(initialHideColumns, $scope.data.hideColumns);
             $.map($scope.data.annotations,
                   function(annotation) {
@@ -2458,27 +2493,9 @@ var annotationTableCtrl =
                                 (!$.isArray(annotation[key]) || annotation[key].length > 0)) {
                               $scope.data.hideColumns[key] = false;
                             }
-                          })
+                          });
                   });
           }
-        };
-
-        $scope.addAfter = function(oldAnnotation, newAnnotation) {
-          var index = $scope.data.annotations.indexOf(oldAnnotation);
-          $scope.data.annotations.splice(index + 1, 0, newAnnotation);
-          $scope.updateColumns();
-        };
-
-        $scope.annotationEdited = function(oldAnnotation, newAnnotation) {
-          var index = $scope.data.annotations.indexOf(oldAnnotation);
-          $scope.data.annotations[index] = newAnnotation;
-          $scope.updateColumns();
-        };
-
-        $scope.deleteAnnotation = function(annotation) {
-          arrayRemoveOne($scope.data.annotations, annotation);
-          $scope.updateColumns();
-          toaster.pop('success', 'Annotation deleted');
         };
       },
       link: function(scope) {
@@ -2486,10 +2503,10 @@ var annotationTableCtrl =
         AnnotationProxy.getAnnotation(scope.annotationTypeName)
           .then(function(annotations) {
             scope.data.annotations = annotations;
-            scope.updateColumns();
           }).catch(function() {
             toaster.pop('error', "couldn't read annotations from the server");
           });
+
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
           scope.annotationType = annotationType;
           scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
@@ -2595,7 +2612,6 @@ var annotationTableRow =
                          $scope.featureFilterDisplayName, false, featureEditable);
 
           editPromise.then(function(editedAnnotation) {
-            $scope.annotationEdited($scope.annotation, editedAnnotation);
             $scope.annotation = editedAnnotation;
             if (typeof($scope.annotation.conditions) !== 'undefined') {
               $scope.annotation.conditionsString =
@@ -2606,15 +2622,9 @@ var annotationTableRow =
 
         $scope.duplicate = function() {
           var newAnnotation = makeNewAnnotation($scope.annotation);
-          var editPromise = startEditing($modal, annotation.annotation_type,
-                                         newAnnotation, $scope.featureFilterDisplayName,
-                                         true, featureEditable);
-
-          editPromise.then(function(editedAnnotation) {
-            // FIXME: $scope.addAfter() is from the parent scope so
-            // this is brittle
-             $scope.addAfter($scope.annotation, editedAnnotation);
-          });
+          startEditing($modal, annotation.annotation_type,
+                       newAnnotation, $scope.featureFilterDisplayName,
+                       true, featureEditable);
         };
 
         $scope.delete = function() {
@@ -2623,9 +2633,7 @@ var annotationTableRow =
               loadingStart();
               AnnotationProxy.deleteAnnotation(annotation)
                 .then(function() {
-                  // FIXME: $scope.deleteAnnotation() is from the
-                  // parent scope so this is brittle
-                  $scope.deleteAnnotation(annotation);
+                  toaster.pop('success', 'Annotation deleted');
                 })
                 .catch(function(message) {
                   toaster.pop('note', "Couldn't delete the annotation: " + message);

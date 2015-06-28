@@ -30,6 +30,10 @@ Add a new <% $type_display_name %> for this genotype ...
 %   if (!$annotation_type->{disabled}) {
       </a>
 %   }
+      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
+                            feature-type="genotype" feature-id="<% $genotype->genotype_id() %>"
+                            feature-display-name="<% $genotype->display_name() %>">
+      </annotation-quick-add>
     </li>
 % }
   </ul>

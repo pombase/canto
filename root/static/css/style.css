@@ -1198,16 +1198,18 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   filter: alpha(opacity=50); /* For IE8 and earlier */
 }
 
-a.curs-quick-add-annotation:hover, .annotation-start .curs-inline-help-icon:hover {
+.curs-annotation-quick-add a:hover, .annotation-start .curs-inline-help-icon:hover {
   opacity: 1.0;
-  filter: alpha(opacity=100); /* For IE8 and earlier */
 }
 
-a.curs-quick-add-annotation, .annotation-start .curs-inline-help-icon {
+.curs-annotation-quick-add a, .annotation-start .curs-inline-help-icon {
   padding-left: 10px;
   font-size: 80%;
-  opacity: 0.3;
-  filter: alpha(opacity=30); /* For IE8 and earlier */
+  opacity: 0.5;
+}
+
+.curs-annotation-quick-add {
+  display: inline;
 }
 
 /* initially hide links that only work with Javascript active */
