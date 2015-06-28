@@ -174,47 +174,20 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
   float: right;
   right: 0px;
   top: 0px;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
-#menu li a {
-  background-color: #333;
-  font-size: 90%;
+#menu span, #menu button {
+  float: none;
 }
 #menu .useridentifier {
   margin: 0; padding: 0 8px 0 8px;
   display: inline;
-  float: left;
   text-decoration: none;
 }
 #menu .useridentifier .logged-in-address {
   font-size: 80%;
-}
-#menu ul {
-  background-color: #228;
-  color: white;
-  margin: 0; padding: 0;
-}
-#menu ul li {
-  display: inline;
-}
-#menu ul li a {
-  float: left;
-  text-decoration: none;
-  color: white;
-  padding: 4px 10px;
-  white-space: nowrap;
-}
-#menu ul li span {
-  float: left;
-  text-decoration: none;
-  padding: 4px 10px;
-  color: #666;
-}
-#menu ul li a:visited {
-  color: white;
-}
-#menu ul li a:hover, .menu ul li .current {
-  color: white;
-  background-color:#0b75b2;
 }
 
 #content {

@@ -1,20 +1,41 @@
 <div id="menu">
-  <ul>
-    <li>
+  <span>
 % if ($c->user_exists()) {
      <div class="useridentifier">
        <span class="email-address"> <% $c->user()->email_address() %> </span>
      </div>
 % }
-    </li>
-    <li>
-      <& login_button.mhtml &>
-    </li>
-    <li>
-      <a href="<% $c->uri_for('/track') %>">Admin</a>
-    </li>
-    <li>
+  </span>
+  <span class="btn-group" role="group">
+    <span class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span>Admin actions<span class="caret"></span> </span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li><a href="#">Admin</a></li>
+        <li><a href="#">Advanced mode</a></li>
+% if ($c->user_exists()) {
+        <li>
+          <a href="<% $c->uri_for('/logout') %>">Logout</a>
+        </li>
+% } else {
+%   if ($local_path !~ m:account|login:) {
+        <li><a href="<% $login_url %>">Log in</a></li>
+%   }
+% }
+        </li>
+      </ul>
+    </span>
+    <button class="btn btn-default">
       <a href="<% $c->uri_for($c->config()->{help_path}) %>">Help</a>
-    </li>
-  </ul>
+    </button>
+  </span>
 </div>
+
+
+<%init>
+my $local_path = $c->req()->path();
+my $return_path_uri = $c->req()->uri();
+my $login_url = $c->uri_for('/account', { return_path => $return_path_uri });
+</%init>
