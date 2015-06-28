@@ -2437,16 +2437,17 @@ var annotationTableCtrl =
           alleleCount: $scope.alleleCountFilter,
         };
 
-        $scope.$watchCollection('data.annotations',
-                                function(newAnnotations) {
-                                  if (newAnnotations) {
-                                    $scope.data.filteredAnnotations =
-                                      filterAnnotations(newAnnotations, $scope.filterParams);
-                                    $scope.updateColumns();
-                                  } else {
-                                    $scope.data.filteredAnnotations = [];
-                                  }
-                                });
+        $scope.$watch('data.annotations',
+                      function(newAnnotations) {
+                        if (newAnnotations) {
+                          $scope.data.filteredAnnotations =
+                            filterAnnotations(newAnnotations, $scope.filterParams);
+                          $scope.updateColumns();
+                        } else {
+                          $scope.data.filteredAnnotations = [];
+                        }
+                      },
+                      true);
 
         var initialHideColumns = {      // columns to hide because they're empty
           with_or_from_identifier: true,  // set to false when a row has a non empty element
