@@ -2367,47 +2367,46 @@ canto.directive('annotationQuickAdd', ['$modal', 'CantoGlobals', annotationQuick
 
 function filterAnnotations(annotations, params) {
   return annotations.filter(function(annotation) {
-                              if (annotation.feature_type == 'genotype' && params.alleleCount && annotation.alleles != undefined) {
-                                if (params.alleleCount == 'single' && annotation.alleles.length != 1) {
-                                  return false;
-                                }
-                                if (params.alleleCount == 'multi' && annotation.alleles.length == 1) {
-                                  return false;
-                                }
-                              }
+    if (annotation.feature_type == 'genotype' && params.alleleCount && annotation.alleles != undefined) {
+      if (params.alleleCount == 'single' && annotation.alleles.length != 1) {
+        return false;
+      }
+      if (params.alleleCount == 'multi' && annotation.alleles.length == 1) {
+        return false;
+      }
+    }
 
-                              if (!params.featureStatus ||
-                                  annotation.status === params.featureStatus) {
-                                if (!params.featureId) {
-                                  return true;
-                                }
-                                if (params.featureType) {
-                                  if (params.featureType === 'gene') {
-                                    if (annotation.gene_id == params.featureId) {
-                                      return true;
-                                    }
-                                    if (typeof(annotation.interacting_gene_id) !== 'undefined' &&
-                                        annotation.interacting_gene_id == params.featureId) {
-                                      return true;
-                                    }
-                                    if (annotation.alleles !== undefined &&
-                                        $.grep(annotation.alleles,
-                                               function(alleleData) {
-                                                 return alleleData.gene_id.toString() === params.featureId;
-                                               }).length > 0) {
-                                      return true;
-                                    }
-                                  }
-                                  if (params.featureType === 'genotype' &&
-                                      annotation.genotype_id == params.featureId) {
-                                    return true;
-                                  }
-                                }
-                              }
-                              return false;
-                            });
+    if (!params.featureStatus ||
+        annotation.status === params.featureStatus) {
+      if (!params.featureId) {
+        return true;
+      }
+      if (params.featureType) {
+        if (params.featureType === 'gene') {
+          if (annotation.gene_id == params.featureId) {
+            return true;
+          }
+          if (typeof(annotation.interacting_gene_id) !== 'undefined' &&
+              annotation.interacting_gene_id == params.featureId) {
+            return true;
+          }
+          if (annotation.alleles !== undefined &&
+              $.grep(annotation.alleles,
+                     function(alleleData) {
+                       return alleleData.gene_id.toString() === params.featureId;
+                     }).length > 0) {
+            return true;
+          }
+        }
+        if (params.featureType === 'genotype' &&
+            annotation.genotype_id == params.featureId) {
+          return true;
+        }
+      }
+    }
+    return false;
+  });
 };
-
 
 
 var annotationTableCtrl =
