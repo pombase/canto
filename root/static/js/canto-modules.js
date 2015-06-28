@@ -2158,7 +2158,7 @@ function openTermConfirmDialog($modal, termId)
 
 
 var termDefinitionDisplayCtrl =
-  function($modal) {
+  function() {
     return {
       scope: {
         termData: '=',
@@ -2169,9 +2169,7 @@ var termDefinitionDisplayCtrl =
     };
   };
 
-canto.directive('termDefinitionDisplay',
-                ['$modal',
-                 termDefinitionDisplayCtrl]);
+canto.directive('termDefinitionDisplay', [termDefinitionDisplayCtrl]);
 
 
 var termChildrenDisplayCtrl =
