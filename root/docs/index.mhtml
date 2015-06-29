@@ -9,11 +9,17 @@
 </div>
 
 <div class="row-fluid">
+
 <div class="span5">
 <p>
 When you start curating a paper, you will first be asked to supply the genes
 from your publication:
 </p>
+</div>
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/gene_list.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/gene_list_small.png') %>"/></a>
+</div>
 </div>
 <div class="span6 offset1">
 <p>
@@ -22,9 +28,6 @@ And then to confirm the resulting gene list:
 </div>
 </div>
 <div class="row-fluid">
-<div class="span6">
-  <a href="<% $c->uri_for('/static/images/docs/gene_list.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/gene_list_small.png') %>"/></a>
-</div>
 <div class="span6">
   <a href="<% $c->uri_for('/static/images/docs/uploaded.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/uploaded_small.png') %>"/></a>
 </div>
@@ -37,9 +40,11 @@ When you have entered genes, you can then annotate your genes with any of the
 data types listed in the next section.
 </p>
 <p>
-Once you have begun curating, the information will be preserved at a stable
-URL, so you do not need to complete the curation in one session. You can use
-the 'Contact curators' link at any point if you get stuck, or have any
+Once you have begun curating, the information will be preserved at a
+stable URL, so you do not need to complete the curation in one
+session. Most pages have at least one '?' icon, which link to help
+documentation (mouse over to see a brief description). You can use the
+'Contact curators' link at any point if you get stuck, or have any
 questions.
 </p>
 <p>
@@ -71,8 +76,20 @@ Finishing and submitting
 </h3>
 <p>
 When you have finished entering data from your paper, click 'Submit to
-curators'. You will see a box in which you can put any comments or questions
-for the curators (this is optional).
+curators':
+</p>
+</div>
+</div>
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/curation_summary.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/curation_summary_small.png') %>"/></a>
+</div>
+</div>
+<div class="row-fluid">
+<div class="span12">
+<p>
+You will see a box in which you can put any comments or questions for
+the curators (this is optional):
 </p>
 </div>
 </div>
