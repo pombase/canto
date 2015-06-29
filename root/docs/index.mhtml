@@ -97,9 +97,6 @@ the curators (this is optional):
 <div class="span6">
   <a href="<% $c->uri_for('/static/images/docs/submit_n_comment.png') %> " /><img class="screenshot" src="<% $c->uri_for('/static/images/docs/submit_n_comment_small.png') %>"/></a>
 </div>
-<div class="span6">
-  <a href="<% $c->uri_for('/static/images/docs/curation_summary.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/curation_summary_small.png') %>"/></a>
-</div>
 </div>
 
 % if (defined $config->{instance_index_mhtml}) {
