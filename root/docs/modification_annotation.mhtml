@@ -68,7 +68,7 @@ are:
   <li>phosphorylated tyrosine: O4'-phospho-L-tyrosine (MOD:00048)</li>
   </ul>
 </li>
-<li><strong>Methylation:</strong> PSI-MOD conains many terms decribing
+<li><strong>Methylation:</strong> PSI-MOD contains many terms decribing
 methylation, for which the iterative search is particularly helpful. We
 therefore suggest that you start by searching for the most general term,
 "methylated residue" (MOD:00427). You can then work your way down to terms of
