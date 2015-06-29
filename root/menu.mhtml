@@ -10,11 +10,11 @@
     <span class="dropdown">
       <button class="btn btn-default dropdown-toggle" type="button"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span>Admin actions<span class="caret"></span> </span>
+        <span><span class="glyphicon glyphicon-cog"></span><span class="caret"></span> </span>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li><a href="#">Admin</a></li>
-        <li><a href="#">Advanced mode</a></li>
+        <li><a href="<% $c->uri_for('/track') %>">Admin</a></li>
+        <li><advanced-mode-toggle></advanced-mode-toggle></li>
 % if ($c->user_exists()) {
         <li>
           <a href="<% $c->uri_for('/logout') %>">Logout</a>

@@ -575,6 +575,19 @@ var cursStateService =
 
 canto.service('CursStateService', [cursStateService]);
 
+var advancedModeToggle =
+  function() {
+    return {
+      scope: {
+      },
+      restrict: 'E',
+      replace: true,
+      template: '<a ng-click="$event.stopPropagation()" href="#"><input ng-model="advanced" type="checkbox"/>Advanced mode</a>',
+    };
+  };
+
+canto.directive('advancedModeToggle', [advancedModeToggle]);
+
 
 var breadcrumbsDirective =
   function($compile, CursStateService, CantoService) {
