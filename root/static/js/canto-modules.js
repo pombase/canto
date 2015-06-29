@@ -575,18 +575,44 @@ var cursStateService =
 
 canto.service('CursStateService', [cursStateService]);
 
-var advancedModeToggle =
+
+var cursSettingsService =
   function() {
+    this.settings = {
+      advancedMode: true,
+    };
+
+    this.advancedMode = function() {
+      return this.settings.advancedMode;
+    };
+
+    this.changeAdvancedMode = function(advancedMode) {
+      this.settings.advancedMode = advancedMode;
+    };
+  };
+
+canto.service('CursSettings', [cursSettingsService]);
+
+
+var advancedModeToggle =
+  function(CursSettings) {
     return {
       scope: {
       },
       restrict: 'E',
       replace: true,
-      template: '<a ng-click="$event.stopPropagation()" href="#"><input ng-model="advanced" type="checkbox"/>Advanced mode</a>',
+      template: '<label ng-click="$event.stopPropagation()"><input ng-change="change()" ng-model="advanced" type="checkbox"/>Advanced mode</label>',
+      controller: function($scope) {
+        $scope.advanced = CursSettings.advancedMode();
+
+        $scope.change = function() {
+          CursSettings.changeAdvancedMode($scope.advanced);
+        };
+      }
     };
   };
 
-canto.directive('advancedModeToggle', [advancedModeToggle]);
+canto.directive('advancedModeToggle', ['CursSettings', advancedModeToggle]);
 
 
 var breadcrumbsDirective =
