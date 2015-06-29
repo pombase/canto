@@ -2378,7 +2378,7 @@ function addAnnotation($modal, annotationTypeName, featureType, featureId,
 }
 
 var annotationQuickAdd =
-  function($modal, CantoGlobals) {
+  function($modal, CursSettings, CantoGlobals) {
     return {
       scope: {
         annotationTypeName: '@',
@@ -2391,6 +2391,11 @@ var annotationQuickAdd =
       templateUrl: app_static_path + 'ng_templates/annotation_quick_add.html',
       controller: function($scope) {
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+
+        $scope.enabled = function() {
+          return CursSettings.advancedMode();
+        };
+
         $scope.add = function() {
           addAnnotation($modal, $scope.annotationTypeName, $scope.featureType,
                         $scope.featureId, $scope.featureDisplayName);
@@ -2399,7 +2404,7 @@ var annotationQuickAdd =
     };
   };
 
-canto.directive('annotationQuickAdd', ['$modal', 'CantoGlobals', annotationQuickAdd]);
+canto.directive('annotationQuickAdd', ['$modal', 'CursSettings', 'CantoGlobals', annotationQuickAdd]);
 
 
 function filterAnnotations(annotations, params) {
