@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 
 # This script will tag the current master with the next available
-# version number (v321), then creates a branch release/v321 and
-# updates the release/latest branch to point to latest release
+# version number (eg. v321) and then pushing the changes to GitHub
+# and Bitbucket
 
 use strict;
 use warnings;
