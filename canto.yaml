@@ -1632,6 +1632,10 @@ config_service:
     evidence_types: 1
     ontology_external_links: 1
 
+curs_settings_service:
+  allowed_keys:
+    annotation_mode: 1
+
 ontology_external_links:
   cellular_component:
     - name: AmiGO

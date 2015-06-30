@@ -2683,6 +2683,47 @@ sub ws_add_gene : Chained('top') PathPart('ws/gene/add')
   $c->forward('View::JSON');
 }
 
+sub ws_settings_get_all : Chained('top') PathPart('ws/settings/get_all')
+{
+  my ($self, $c) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $data = {
+    $self->all_metadata($schema),
+  };
+
+  $st->{json_data} = $data;
+
+  $c->forward('View::JSON');
+}
+
+sub ws_settings_set : Chained('top') PathPart('ws/settings/set')
+{
+  my ($self, $c, $key, $value) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $allowed_keys = $c->config()->{curs_settings_service}->{allowed_keys};
+
+  if ($allowed_keys->{$key}) {
+    $self->set_metadata($schema, $key, $value);
+
+    $st->{json_data} = {
+      status => 'success',
+    }
+  } else {
+    $st->{json_data} = {
+      status => 'error',
+      message => qq(setting with key "$key" not allowed),
+    }
+  }
+
+  $c->forward('View::JSON');
+}
+
 sub cancel_approval : Chained('top') Args(0)
 {
   my ($self, $c) = @_;

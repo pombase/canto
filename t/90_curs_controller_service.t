@@ -105,3 +105,47 @@ test_psgi $app, sub {
                background => 'h+',
              });
 };
+
+test_psgi $app, sub {
+  my $cb = shift;
+
+  {
+    my $uri = new URI("$root_url/ws/settings/get_all");
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    my $perl_res = decode_json $res->content();
+
+    is($perl_res->{annotation_mode}, undef);
+  }
+
+  {
+    my $uri = new URI("$root_url/ws/settings/set/annotation_mode/advanced");
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    my $perl_res = decode_json $res->content();
+
+    is($perl_res->{status}, 'success');
+  }
+
+  {
+    my $uri = new URI("$root_url/ws/settings/get_all");
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    my $perl_res = decode_json $res->content();
+
+    is($perl_res->{annotation_mode}, 'advanced');
+  }
+
+  {
+    my $uri = new URI("$root_url/ws/settings/set/dummy/dummy");
+    my $req = HTTP::Request->new(GET => $uri);
+    my $res = $cb->($req);
+
+    my $perl_res = decode_json $res->content();
+
+    is($perl_res->{status}, 'error');
+  }
+};
