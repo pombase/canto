@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # This script will tag the current master with the next available
-# version number (eg. v321) and then pushing the changes to GitHub
+# version number (eg. v321) and then push the changes to GitHub
 # and Bitbucket
 
 use strict;
