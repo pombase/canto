@@ -577,21 +577,68 @@ canto.service('CursStateService', [cursStateService]);
 
 
 var cursSettingsService =
-  function() {
-    this.settings = {
-      advancedMode: true,
+  function($http, $timeout, $q) {
+    var service = this;
+
+    this.data = {
     };
 
-    this.advancedMode = function() {
-      return this.settings.advancedMode;
+    this.getAll = function() {
+      if (!curs_root_uri) {
+        return {
+          then: function (successCallback, errorCallback) {
+            errorCallback();
+          },
+        };
+      }
+      var unique = '?u=' + (new Date()).getTime();
+      return $http.get(curs_root_uri + '/ws/settings/get_all' + unique);
     };
 
-    this.changeAdvancedMode = function(advancedMode) {
-      this.settings.advancedMode = advancedMode;
+    this.set = function(key, value) {
+      var q = $q.defer();
+
+      var unique = '?u=' + (new Date()).getTime();
+      var getRes = $http.get(curs_root_uri + '/ws/settings/set/' + key + '/' + value + unique);
+
+      getRes.success(function(result) {
+        if (result.status == 'success') {
+          service.data[key] = value;
+          q.resolve();
+        } else {
+          q.reject(result.message);
+        }
+      }).error(function(data, status) {
+        q.reject('request failed: ' + status);
+      });
+
+      return q.promise;
+    };
+
+    service.getAll().success(function(data) {
+      $timeout(function() {
+              service.data.annotation_mode = data.annotation_mode;
+      });
+    });
+
+    this.getAnnotationMode = function() {
+      return this.data.annotation_mode;
+    };
+
+    this.setAnnotationMode = function(mode) {
+      service.set('annotation_mode', mode);
+    };
+
+    this.setAdvancedMode = function() {
+      return service.setAnnotationMode('advanced');
+    };
+
+    this.setStandardMode = function() {
+      return service.setAnnotationMode('standard');
     };
   };
 
-canto.service('CursSettings', [cursSettingsService]);
+canto.service('CursSettings', ['$http', '$timeout', '$q', cursSettingsService]);
 
 
 var advancedModeToggle =
@@ -603,10 +650,21 @@ var advancedModeToggle =
       replace: true,
       template: '<label ng-click="$event.stopPropagation()"><input ng-change="change()" ng-model="advanced" type="checkbox"/>Advanced mode</label>',
       controller: function($scope) {
-        $scope.advanced = CursSettings.advancedMode();
+        $scope.CursSettings = CursSettings;
+
+        $scope.advanced = CursSettings.getAnnotationMode() == 'advanced';
+
+        $scope.$watch('CursSettings.getAnnotationMode()',
+                      function(newValue) {
+                        $scope.advanced = newValue == 'advanced';
+                      });
 
         $scope.change = function() {
-          CursSettings.changeAdvancedMode($scope.advanced);
+          if ($scope.advanced) {
+            CursSettings.setAdvancedMode();
+          } else {
+            CursSettings.setStandardMode();
+          }
         };
       }
     };
@@ -2393,7 +2451,7 @@ var annotationQuickAdd =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
 
         $scope.enabled = function() {
-          return CursSettings.advancedMode();
+          return CursSettings.getAnnotationMode() == 'advanced';
         };
 
         $scope.add = function() {
