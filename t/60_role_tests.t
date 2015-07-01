@@ -62,7 +62,8 @@ my $expected_wtf22_details =
     'taxonid' => '4896',
     'type' => undef,
     'primary_identifier' => 'SPCC576.16c:allele-1',
-    'gene_display_name' => 'wtf22'
+    'gene_display_name' => 'wtf22',
+    'gene_id' => 13,
   };
 
 cmp_deeply($allele_details,
@@ -82,7 +83,8 @@ cmp_deeply($genotype_details,
                  'type' => undef,
                  'gene_display_name' => 'cdc11',
                  'primary_identifier' => 'SPCC1739.11c:allele-1',
-                 'name' => 'cdc11-33'
+                 'name' => 'cdc11-33',
+                 'gene_id' => 4,
                },
                $expected_wtf22_details,
              ],

@@ -83,6 +83,47 @@ our %shared_test_results = (
         }
       ],
   },
+  cycloheximide_annotation => {
+    'term_name' => 'sensitive to cycloheximide',
+    'feature_id' => undef,
+    'is_not' => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean' ),
+    'genotype_name' => 'cdc11-33 ssm4delta',
+    'genotype_identifier' => 'aaaa0007-test-genotype-3',
+    'alleles' => [
+      {
+        'type' => undef,
+        'gene_display_name' => 'cdc11',
+        'taxonid' => '4896',
+        'primary_identifier' => 'SPCC1739.11c:allele-1',
+        'long_display_name' => 'cdc11-33(unknown)',
+        'description' => 'unknown',
+        'name' => 'cdc11-33',
+        'gene_id' => 4,
+      },
+      {
+        'long_display_name' => 'ssm4delta(deletion)',
+        'primary_identifier' => 'SPAC27D7.13c:allele-1',
+        'name' => 'ssm4delta',
+        'description' => 'deletion',
+        'gene_display_name' => 'ssm4',
+        'type' => undef,
+        'taxonid' => '4896',
+        'gene_id' => 15,
+      }
+    ],
+    'feature_type' => 'genotype',
+    'annotation_id' => 3,
+    'term_ontid' => 'FYPO:0000104',
+    'qualifiers' => [],
+    'conditions' => [],
+    'status' => 'existing',
+    'feature_display_name' => 'cdc11-33 ssm4delta',
+    'genotype_id' => undef,
+    'evidence_code' => 'UNK',
+    'genotype_name_or_identifier' => 'cdc11-33 ssm4delta',
+    'annotation_type' => 'phenotype'
+
+  },
   post_translational_modification => {
     'evidence_code' => 'ISS',
     'creation_date' => '2010-01-02',

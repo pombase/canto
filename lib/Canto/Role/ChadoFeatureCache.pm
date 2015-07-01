@@ -103,6 +103,7 @@ sub get_cached_allele_details
       description => $props{description},
       type => $props{type},
       gene_display_name => $gene->name() || $gene->uniquename(),
+      gene_id => $gene->feature_id(),
       taxonid => $taxonid,
     );
 

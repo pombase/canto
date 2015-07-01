@@ -160,6 +160,7 @@ cmp_deeply($res->[0],
 
 is(@$res, 1);
 
+my $cycloheximide_annotation_res = $Canto::TestUtil::shared_test_results{cycloheximide_annotation};
 
 cmp_deeply($res->[0],
            {
@@ -188,7 +189,8 @@ cmp_deeply($res->[0],
                    'name' => 'cdc11-33',
                    'type' => undef,
                    'taxonid' => '4896',
-                   'description' => 'unknown'
+                   'description' => 'unknown',
+                   'gene_id' => 4,
                  },
                  {
                    'taxonid' => '4896',
@@ -196,7 +198,8 @@ cmp_deeply($res->[0],
                    'type' => undef,
                    'name' => 'ssm4delta',
                    'primary_identifier' => 'SPAC27D7.13c:allele-1',
-                   'gene_display_name' => 'ssm4'
+                   'gene_display_name' => 'ssm4',
+                   'gene_id' => 15,
                  }
                ],
                'name' => 'cdc11-33 ssm4delta'

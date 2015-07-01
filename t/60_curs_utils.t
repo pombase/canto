@@ -345,7 +345,8 @@ check_new_annotations($dummy_alt_id);
                    'primary_identifier' => 'SPCC1739.11c:allele-1',
                    'long_display_name' => 'cdc11-33(unknown)',
                    'description' => 'unknown',
-                   'name' => 'cdc11-33'
+                   'name' => 'cdc11-33',
+                   'gene_id' => 4,
                  },
                  {
                    'long_display_name' => 'ssm4delta(deletion)',
@@ -354,7 +355,8 @@ check_new_annotations($dummy_alt_id);
                    'description' => 'deletion',
                    'gene_display_name' => 'ssm4',
                    'type' => undef,
-                   'taxonid' => '4896'
+                   'taxonid' => '4896',
+                   'gene_id' => 15,
                  }
                ],
                'feature_type' => 'genotype',

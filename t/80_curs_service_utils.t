@@ -459,6 +459,7 @@ cmp_deeply($cond_res, [ { term_id => 'PECO:0000006', name => 'low temperature' }
 # test annotation list service
 my $annotation_res = $service_utils->list_for_service('annotation');
 
+my $cycloheximide_annotation_res = $Canto::TestUtil::shared_test_results{cycloheximide_annotation};
 my $post_translational_modification_res = $Canto::TestUtil::shared_test_results{post_translational_modification};
 
 cmp_deeply($annotation_res,
@@ -736,44 +737,7 @@ cmp_deeply($annotation_res,
                 }
               ],
             },
-            {
-              'conditions' => [],
-              'is_not' => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean' ),
-              'evidence_code' => 'UNK',
-              'genotype_id' => undef,
-              'annotation_id' => 3,
-              'feature_id' => undef,
-              'term_name' => 'sensitive to cycloheximide',
-              'annotation_type' => 'phenotype',
-              'genotype_name' => 'cdc11-33 ssm4delta',
-              'genotype_name_or_identifier' => 'cdc11-33 ssm4delta',
-              'alleles' => [
-                {
-                  'taxonid' => '4896',
-                  'type' => undef,
-                  'long_display_name' => 'cdc11-33(unknown)',
-                  'primary_identifier' => 'SPCC1739.11c:allele-1',
-                  'name' => 'cdc11-33',
-                  'description' => 'unknown',
-                  'gene_display_name' => 'cdc11'
-                },
-                {
-                  'type' => undef,
-                  'taxonid' => '4896',
-                  'long_display_name' => 'ssm4delta(deletion)',
-                  'description' => 'deletion',
-                  'primary_identifier' => 'SPAC27D7.13c:allele-1',
-                  'gene_display_name' => 'ssm4',
-                  'name' => 'ssm4delta'
-                }
-              ],
-              'status' => 'existing',
-              'feature_type' => 'genotype',
-              'qualifiers' => [],
-              'term_ontid' => 'FYPO:0000104',
-              'genotype_identifier' => 'aaaa0007-test-genotype-3',
-              'feature_display_name' => 'cdc11-33 ssm4delta'
-            },
+            $cycloheximide_annotation_res,
             $post_translational_modification_res,
             {
               'interacting_gene_display_name' => 'doa10',
