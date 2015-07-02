@@ -36,11 +36,14 @@ sub usage
   die qq"${message}usage:
   $0
 
-Checks for inconsistencies in the database.
+Checks and possibly fixes inconsistencies in the database.
 
 Current checks:
   - the PMID in the cursdb metadata table should match the PMID in the
     trackdb for that curs
+  - the curs_key stored in the metadata table matches the curs_key
+    in the Track DB
+  - make sure that all Alleles have a primary_identifier
 ";
 }
 
@@ -74,4 +77,6 @@ while (my ($curs, $cursdb) = $iter->()) {
       print "  $mess\n";
     }
   }
+
+  $cursdb->disconnect();
 }

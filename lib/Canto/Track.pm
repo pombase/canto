@@ -382,12 +382,13 @@ sub tidy_curs
 =head2 validate_curs
 
  Usage   : Canto::Track::validate_curs($config, $track_schema, $curs);
- Function: Report inconsistencies in the given curation session.
+ Function: Report and possibly fix inconsistencies in the given curation session
            Checks that:
              - the PMID stored in the cursdb is the same as stored in
                trackdb
              - the curs_key stored in the metadata table matches the curs_key
                in the Track DB
+             - all Alleles have a primary_identifier (fixes those that don't)
  Args    : $config - the Canto::Config object
            $track_schema - the schema object for the trackdb
            $curs - the Curs object of interest
@@ -405,6 +406,8 @@ sub validate_curs
   my $trackdb_curs_key = $curs->curs_key();
   my $curs_schema =
     Canto::Curs::get_schema_for_key($config, $trackdb_curs_key);
+
+  my $guard = $curs_schema->txn_scope_guard();
 
   my $track_pub = $curs->pub();
   my $track_pub_uniquename = $track_pub->uniquename();
@@ -426,6 +429,21 @@ sub validate_curs
                qq{match curs_key in the metadata table of the cursdb } .
                qq{("$cursdb_curs_key")};
   }
+
+  my $allele_rs = $curs_schema->resultset('Allele');
+
+  my $curs_key = $curs->curs_key();
+
+  while (defined (my $allele = $allele_rs->next())) {
+    if (!$allele->primary_identifier()) {
+      my $new_primary_identifier = $allele->gene()->primary_identifier() . ":$curs_key-" . $allele->allele_id();
+      warn $curs_key, " ", $allele->allele_id(), " $new_primary_identifier\n";
+      $allele->primary_identifier($new_primary_identifier);
+      $allele->update();
+    }
+  }
+
+  $guard->commit();
 
   return @res;
 }
