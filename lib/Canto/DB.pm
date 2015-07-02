@@ -6,6 +6,8 @@ use warnings;
 use base 'DBIx::Class::Schema';
 use feature 'state';
 
+use Canto::DBUtil;
+
 __PACKAGE__->load_classes;
 
 for my $source (__PACKAGE__->sources()) {
@@ -86,6 +88,8 @@ sub new
   return $schema;
 }
 
+state $cache = {};
+
 =head2 cached_connect
 
  Usage   : $schema = $class->cached_connect($connect_str, $user, $pass, $options)
@@ -111,8 +115,6 @@ sub cached_connect
   my ($connect_str, $user, $pass, $options) = @_;
 
   $options->{cache_connection} //= 1;
-
-  state $cache = {};
 
   my $is_sqlite_db = $connect_str =~ /SQLite/;
 
@@ -459,6 +461,28 @@ sub column_type {
       return 'computed';
     }
   }
+}
+
+=head2 disconnect
+
+ Function: Disconnect from the underlying storage and remove this DB from the
+           connection cache
+ Usage   : $db->disconnect();
+ Args    : none
+
+=cut
+
+sub disconnect
+{
+  my $self = shift;
+
+  my $connect_string = Canto::DBUtil::connect_string_of_schema($self);
+
+  if ($cache->{$connect_string}) {
+    delete $cache->{$connect_string};
+  }
+
+  $self->storage()->disconnect();
 }
 
 1;
