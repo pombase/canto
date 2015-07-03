@@ -18,7 +18,7 @@ from your publication:
 </div>
 <div class="row-fluid">
 <div class="span6">
-  <a href="<% $c->uri_for('/static/images/docs/gene_list.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/gene_list_small.png') %>"/></a>
+  <a href="<% $c->uri_for('/static/images/docs/gene_list.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/gene_list_small.png') %>" alt="gene list box"/></a>
 </div>
 </div>
 <div class="span6 offset1">
@@ -29,7 +29,7 @@ And then to confirm the resulting gene list:
 </div>
 <div class="row-fluid">
 <div class="span6">
-  <a href="<% $c->uri_for('/static/images/docs/uploaded.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/uploaded_small.png') %>"/></a>
+  <a href="<% $c->uri_for('/static/images/docs/uploaded.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/uploaded_small.png') %>" alt="uploaded gene list"/></a>
 </div>
 </div>
 
@@ -82,7 +82,7 @@ curators':
 </div>
 <div class="row-fluid">
 <div class="span6">
-  <a href="<% $c->uri_for('/static/images/docs/curation_summary.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/curation_summary_small.png') %>"/></a>
+  <a href="<% $c->uri_for('/static/images/docs/curation_summary.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/curation_summary_small.png') %>" alt="curation summary page"/></a>
 </div>
 </div>
 <div class="row-fluid">
@@ -95,7 +95,7 @@ the curators (this is optional):
 </div>
 <div class="row-fluid">
 <div class="span6">
-  <a href="<% $c->uri_for('/static/images/docs/submit_n_comment.png') %> " /><img class="screenshot" src="<% $c->uri_for('/static/images/docs/submit_n_comment_small.png') %>"/></a>
+  <a href="<% $c->uri_for('/static/images/docs/submit_n_comment.png') %> " /><img class="screenshot" src="<% $c->uri_for('/static/images/docs/submit_n_comment_small.png') %>" alt="submission page"/></a>
 </div>
 </div>
 
