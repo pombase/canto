@@ -15,21 +15,25 @@ involves selecting the "GO term" (see choosing the correct GO term)
 
 <h2>Choosing the correct GO term (general)</h2>
 <p>
-Type text which represents your term into the search box. An autocomplete
-feature makes suggestions; choose one and proceed. If you do not find the term
-you are looking for with your initial search, begin with a broad term (see
-examples in specific sections below).
+When using GO terms -- or terms from any ontology -- always pay
+careful attention to the term definitions. They are usually more
+detailed, and often more informative, than the term names alone. For
+each annotation, ensure that the definition of the selected term
+accurately describes the experiment you are trying to capture, and
+that the results shown in the paper fit all parts of the term
+definition.
 </p>
 <p>
-Once you have selected a term from your search results, read the definition
-and make sure it describes the experiment you are trying to capture. It's very
-important to choose a term based on its definition, not the name, and to make
-sure that the results shown in the paper fit all parts of the term
-definition. More specific "child" terms will be shown (where available), and
-you can select one of these more specific terms in an iterative process. GO
-terms are organised in a hierarchical structure, and GO annotations should be
-as specific as possible to describe the data from your experiment. (More
-information
+To find a GO term, type text into the search box. When suggestions
+from the autocomplete feature appear, choose one and proceed. If your
+initial search does not find any suitable terms, try again with a
+broader term (some examples are provided in the specific sections
+below). Selecting a term takes you to a page where you can read the
+definition to confirm that it is applicable. More specific "child"
+terms will be shown (where available), and you can select one of these
+more specific terms in an iterative process. GO terms are organised in
+a hierarchical structure, and GO annotations should be as specific as
+possible to describe the data from your experiment. (More information
 on <a href="http://geneontology.org/GO.contents.doc.shtml#ontology">GO
 organisation</a> is available on the GO web site.)
 </p>
@@ -60,6 +64,42 @@ gene product. Choose the appropriate gene from the list you initially entered
 See the ontology aspect (cellular component, biological process, molecular
 function) specific sections below for more detailed trouble shooting.
 </p>
+
+
+<h2>Editing, deleting and duplicating GO annotations</h2>
+
+<p>
+<strong>Edit:</strong> If you want to make changes to an annotation
+you have made, use the "Edit" link next to the annotation in the
+table. In the pop-up edit the appropriate fields, then click "OK".
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/go_edit.png') %>" alt="GO editing interface"/>
+</div>
+
+<p>
+<strong>Delete:</strong> The "Delete" link will ask you to confirm
+that you want to remove an annotation, and then delete it.
+</p>
+<p> <strong>Duplicate:</strong> The "Duplicate" link in the table on a
+gene page allows you to make another annotation to the same gene. For
+example, you may want to indicate that genetic interactions with two
+different genes both support annotation to the same GO term. The
+interface works the same way as for editing an annotation, except that
+a new annotation is created, and the old annotation is retained
+without changes.
+</p>
+
+<p>
+On the paper summary page, the "Duplicate" link adds one more feature:
+the annotation can be transferred, with or without other changes, to
+any other gene in the gene list, by changing the top pulldown:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/go_dup_summary.png') %>" alt="GO duplication on summary page"/>
+</div>
 
 <h2>Specific branches of GO</h2>
 <h3><a name="component"></a>Cellular Component</h3>
