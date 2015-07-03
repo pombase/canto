@@ -3,162 +3,357 @@
 
 <h2>Introduction </h2>
 <p>
-A phenotype is any observable characteristic
-or trait of an organism resulting from the interactions between its genotype with
-the environment. PomBase aims to get full coverage of phenotypes
-described in the literature - therefore we strongly encourage community
-curators to request new terms if an appropriate term to describe a phenotype does
-not yet exist.
+This document describes how to use the Canto phenotype curation
+interface, and provides general and specific tips for choosing and
+interpreting terms from the Fission Yeast Phenotype Ontology (FYPO).
 </p>
-<p>Please note that <i>annotations should always be made to the term
-definition</i>, not the term name.</p>
 
-<h2>Types of phenotypes</h2>
 <p>
-Phenotypes may be observed on a population level (for instance
-"flocculating cells"), a cellular level (for instance "abnormal morphology"),
-or a sub-cellular level (for instance the abnormal localization of a protein
-in a cell deleted for a different gene). Additionally, annotations may also be
-made where an enzyme activity is lost in a mutant (for instance through
-mutations in an active site or deletion of an activator).
+A phenotype is any observable characteristic or trait of an organism
+that results from the interactions between its genotype and the
+environment. For PomBase, Canto supports annotation of single- and
+multiple-allele phenotypes using FYPO terms and additional useful
+details such as evidence and experimental conditions.
 </p>
 
-<h2>Normal phenotypes</h2>
 <p>
-Often, a mutant will be assayed for a phenotype but the mutation has had no
-observable effect compared to wild-type cells. These mutants may be annotated
-to the sub-set of "normal" phenotypes (where normal is defined as no
-observable difference to wild-type cells). For instance, a mutant may be
-annotated to normal cell growth on amphotericin B or normal cell morphology. A
-mutant may be "normal" in one respect, but abnormal in another (for instance,
-cells may grow at a normal rate, but have an abnormal morphology).
+When using FYPO terms -- or terms from any ontology -- always pay
+careful attention to the term definitions. They are usually more
+detailed, and often more informative, than the term names alone. For
+each annotation, ensure that the definition of the selected term
+accurately describes the experiment you are trying to capture, and
+that the results shown in the paper fit all parts of the term
+definition.
 </p>
 
-<h2>Targets of mutated genes</h2>
 <p>
-Where appropriate, a comment should always be included to specify which gene
-products (proteins or RNA) were quantified in an experiment. This is because
-the product quantified may not be originate from the gene that was mutated in
-the first place. Sometimes, a mutation in gene A will lead to a change in the
-behavior of protein B. For instance, deletion of gene A may cause normally
-nuclear protein B to localize to the cytoplasm, or perhaps the amount of RNA
-from gene B is increased. In these cases the annotation should be made to gene
-A, and a comment should be included that it is gene B that is
-affected. Sometimes it may be necessary to specify two targets. For instance,
-if a mutation in gene A cause "decreased binding" between protein B and
-protein C.
+<ul>
+  <li><a href=#interface>Using the interface</a></li>
+  <li><a href=#gentips>General phenotype tips</a></li>
+  <li><a href=#sptips>Specific phenotype tips</a></li>
+</ul>
 </p>
 
-<h2>Phenotypes of wild-type cells</h2>
+<h2><a name="interface">Using the interface</h2>
+
+<h3>Single-allele phenotypes</h3>
 <p>
-Please note that only <b>mutant</b> phenotypes are curated using the tool
-- i.e. changes observed in cells compared to wild-type cells when the
-DNA sequence of a gene is altered, or when its expression level is changed (or
-both). Any changes occurring in wild-type cells in response to a stimulus (for
-instance a phenotype resulting from the inhibition of a wild-type gene when it
-binds a substance) can therefore not be captured in the phenotype section of
-the tool.  In this particular case, we can attach an "annotation extension" to
-a gene stating that the substance inhibits its gene product. Please include
-information of this sort in a coment.
+To annotate the phenotype of a single mutation, click "Single allele"
+in the list of curation types. A box will pop up where you can add
+allele details:
 </p>
 
-<h2>Making annotations - Locating a term</h2>
-
-<p>Phenotype terms can be located by typing
-relevant keywords into the search-box. For instance, if cells grow slowly on galactose
-typing "slow growth" will retrieve a number of terms (se image below, left
-panel). Mousing over a term name will show its definition and any relevant
-comments. If you cannot immediately see an appropriate term in the box, click
-on a more general term, e.g. "slow cell growth", and a list of more specific
-terms will be displayed underneath. You may from here select a more specific
-term (for instance "slow cell growth on galactose carbon source" - see
-the right panel below) or keep the more general term. If you think a more
-specific child term is appropriate but it does not yet exist you may click the &nbsp;"suggest
-a new child term" link found below the list of child terms. </p>
-
-<div class="thumbnails">
-  <div class="span4">
-    <img src="<% $c->uri_for('/static/images/docs/fypo_search.png') %>"/>
-  </div>
-  <div class="span2">
-  </div>
-  <div class="span4">
-    <img src="<% $c->uri_for('/static/images/docs/fypo_def.png') %>"/>
-  </div>
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/fypo_allele.png') %>" alt="add allele details"/>
 </div>
-
-<h2>Making annotations - adding alleles</h2>
-
-<p>Once a term has been selected the option of
-adding an allele and evidence becomes available. Several alleles can be added
-to the same phenotype term (for instance, different point mutations in a gene
-may result in the same phenotype). The allele box contain several fields:</p>
 
 <ol>
   <li>
-    <b>Allele name</b>: this field is optional.
-    Fill this in if the allele is named, for instance cdc25-22.
+    <b>Allele name</b>: this field is optional. Fill this in if the
+    allele is named, e.g. "cdc25-22". For the "wild type" and
+    "deletion" types, a default name will be assigned. For other
+    types, the allele will be denoted "unnamed" if no name is filled
+    in.
   </li>
   <li>
-    <b>Allele type</b>: choose an allele type in the dropdown menu. Different
-    options are available. For some choices, e.g. partial deletions or
-    mutations, further specifications are needed and a grey-font help-text
-    will be displayed in the box (note that mutations in promoter regions can
-    also be specified by prefixing the numbers with a minus "-" sign). If the
-    specific mutations are not known choose "unknown". If the alterations are
-    complex (for instance a mixture of insertions and mutations etc) choose
-    "other" and free-text the information.
+    <b>Allele type</b>: choose an allele type in the dropdown
+    menu. For some types, e.g. partial deletions or substitution,
+    further specifications are needed, and in these cases an example
+    will be displayed in the box in grey text. Number nucleotide
+    positions starting with the "A" of the initiator ATG for
+    protein-coding genes. (Note that mutations in promoter regions can
+    also be specified by prefixing the numbers with a minus "-" sign.)
+    If the specific mutations are not known choose "unknown". If the
+    alterations are complex (for instance, a mixture of insertions,
+    point mutations, etc.), choose "other" and describe the changes in
+    free text.
   </li>
   <li>
-    <b>Expression level</b>: You will be prompted
-    to define the expression level relative to wild-type (deletion mutants are
-    automatically set to null). The default for all other mutants is "not specified"
-    but may be changed to endogenous, overexpression or knockdown. If a wild-type
-    allele was investigated then an altered expression level must be set.
+    <b>Expression level</b>: You will be prompted to define the
+    expression level relative to wild-type (deletion mutants are
+    automatically set to null). If a wild-type allele was investigated
+    then an altered expression level must be set.
   </li>
-  <li>
-    <b>Evidence</b>: Select the evidence code that best describes the assay
-    employed.
-  </li>
-  <li>
-    <p>
-    <b>Conditions</b>: You may add a set of
-    experimental conditions that were employed during the assay and may have had an
-    impact on the cells. Several conditions can be added for one experiment. If you
-    have performed the same experiment under several different conditions and
-    observed the same phenotype you can tick the box "Re-use
-    allele name and description with a different set of conditions".
-    </p>
+</ol>
+
+<p>
+Next, to find a FYPO term, type text into the search box. When
+suggestions from the autocomplete feature appear, choose one and
+proceed.
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/fypo_search.png') %>" alt="FYPO term search"/>
+</div>
+
+<p>
+If your initial search does not find any suitable terms, try again
+with a broader term (some examples are provided in the specific
+sections below). Selecting a term takes you to a page where you can
+read the definition to confirm that it is applicable. More specific
+"child" terms will be shown (where available), and you can select one
+of these more specific terms in an iterative process.
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/fypo_def.png') %>" alt="FYPO term details with definition"/>
+</div>
+
+<p>
+FYPO terms are organised in a hierarchical structure, and FYPO
+annotations should be as specific as possible to describe the data
+from your experiment. (More information on <a
+href="http://curation.pombase.org/pombase-trac/wiki/FYPOContentStructure">FYPO
+organisation</a> is available on the PomBase wiki.) You will have the
+opportunity to request a new term if the most specific term available
+does not describe your gene product adequately.
+</p>
+
+<p>
+After you choose a term, you will then be prompted to select evidence
+from a pulldown menu, and then to enter any (optional) experimental
+conditions. For conditions, type text and select from the autocomplete
+options. Several conditions can be added for one experiment. Condition
+terms previously used in the session appear below the text box and can
+be re-used by clicking on them.
+</p>
+
     <p>Examples include:</p>
     <ul>
       <li>
         Glucose minimal medium vs. glucose rich medium (synonyms for some
-        standard media are available, for instance EMM or YES and carbon
-        sources other than glucose can be specified)
+        standard media are available, such as EMM or YES; carbon
+        sources other than glucose can be specified).
       </li>
       <li>
         Agar plates vs. liquid medium
       </li>
       <li>
-        Addition of certain chemicals, for instance in a salt stress
+        Addition of certain chemicals; for instance, in a salt stress
         experiment it may be of interest to note what salts were added.
       </li>
-      <li>Temperature</li>
+      <li>Temperature (high, standard or low).</li>
       <li>
         Exclusion of some chemicals that one might normally expect to be
         present.
       </li>
     </ul>
-  </li>
-</ol>
+
+
+<p>
+Note: you can also enter a single allele as a genotype using the
+genotype management interface, which is described below for
+multi-allele phenotypes. This is because the Chado database that Canto
+uses links all phenotypes to a genotype, whether that genotype
+specifies one or more alleles.
+</p>
+
+
+<h3>Multiple-allele phenotypes and genotypes</h3>
+
+<p>
+To annotate the phenotype of a double mutant, triple mutant, or any
+strain in which more than one gene has its sequence or expression
+altered, you must enter details of all relevant alleles in the
+genotype (background details such as mating type and markers are
+optional). There are two routes to do this: select the "Multiple
+allele" phenotype option in the curation types list on a gene-specific
+page, or follow the "Genotype management" link on the paper summary
+page. Either link takes you to the Genotypes page, which displays
+genotypes added or selected for the paper on the right-hand side of
+the page. On the left you can search for a genotype in the Canto
+database or enter a new genotype.
+</p>
+
+<p>
+To search, click "Find an existing genotype...", then select the
+relevant genes from the list. Any matches will appear on the right,
+and you can click the link to use one.
+</p>
+
+<p>
+If the genotype you need isn't available, go back to the Genotypes
+page, and click "Add a genotype..." The allele curation interface is
+the same as for single alleles, as described above. Simply add one or
+more allele(s) for each gene using the "Add allele..." button, and
+click "Finish" when you have finished entering all genotype
+details.
+</p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/fypo_allele.png') %>"/>
+  <img src="<% $c->uri_for('/static/images/docs/add_genotype.png') %>" alt="adding a genotype"/>
 </div>
 
-<h2>Notes on some common phenotypes</h2>
-<ul>
-  <li>
+<p>
+You can edit or delete a genotype that you have entered for the paper
+you are curating (but you cannot change an existing genotype that you
+have found and used). Thereafter, the rest of the phenotype annotation
+procedure is identical to the single-allele curation interface -- find
+a suitable FYPO term, enter evidence and conditions, and finish the
+annotation all as described above. You can return to the Genotypes
+page at any time to select a genotype and add a phenotype for it, or
+to find, add or edit genotypes.
+</p>
+
+<h3>Editing, deleting and duplicating phenotypes</h3>
+
+<p>
+<strong>Edit:</strong> If you want to make changes to an annotation
+you have made, use the "Edit" link next to the annotation in the
+table. In the pop-up edit the appropriate fields, then click "OK".
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/fypo_edit.png') %>" alt="phenotype editing interface"/>
+</div>
+
+<p>
+<strong>Delete:</strong> The "Delete" link will ask you to confirm
+that you want to remove an annotation, and then delete it.
+</p>
+
+<p>
+<strong>Duplicate:</strong> The "Duplicate" link in the table on the
+gene page allows you to make a new annotation to the same allele or
+genotype. For example, you may want to indicate that you have observed
+a phenotype under more than one set of conditions, e.g. at both
+standard and high temperatures. The interface works the same way as
+for editing an annotation, except that a new annotation is created,
+and the old annotation is retained without changes.
+</p>
+
+<p>
+On the paper summary page, the "Duplicate" link adds one more feature:
+the annotation can be transferred, with or without other changes, to
+any other genotype in the genotype list, by changing the top pulldown:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/fypo_dup_summary.png') %>" alt="phenotype duplication on summary page"/>
+</div>
+
+<h2><a name="gentips">General phenotype tips</h2>
+
+<h3>Phenotype vs. GO annotations</h3>
+<p>
+  GO annotations should always reflect a gene's direct involvement in,
+  or role in regulating, processes or functions. In contrast,
+  phenotype annotations indicate that a mutation causes a change in a
+  process, but may reflect downstream or indirect effects.
+</p>
+<p>
+  For example, cells mutated for a gene involved in cell wall
+  biosynthesis may display defects in cytokinesis. This gene should
+  not be annotated to the GO process term "cytokinesis" because its
+  effect on cytokinesis is an indirect effect of improper cell wall
+  biosynthesis, but the mutant allele may be annotated to the FYPO
+  term "abnormal cytokinesis".
+</p>
+<p>
+  Most commonly, more phenotypes than GO terms can be extracted from a
+  paper. Sometimes, several phenotype annotations but no GO
+  annotations can be made, because the experiments do not definitively
+  resolve the exact process that the gene is involved in.
+</p>
+
+
+<h3>Phenotype categories</h3>
+<p>
+Phenotypes may be observed at the level of a cell or its parts
+(e.g. "elongated cell", "abnormal cytokinesis", "abnormal microtubule
+cytoskeleton morphology"), or at a population level
+(e.g. "flocculating cells"). In particular, note that viability can be
+described at either the cell or population level, or both (also see
+below). Phenotypes affecting binding or enzymatic activities, such as
+cases where a mutation decreases enzymatic activity, can also be
+annotated. Phenotypes affecting molecular functions will be displayed
+with the "cell phenotypes" on PomBase gene pages (even if the activity
+was assayed in vitro).
+
+</p>
+
+<h3>Normal phenotypes</h3>
+<p>
+Often, a mutant will be assayed for a phenotype but will appear
+identical to wild-type cells in the assay. One or more of the "normal
+phenotype" terms, which are defined as having no observable difference
+from wild type under the given conditions, can be used to annotate
+these mutants. For example, an allele may be annotated to "normal
+growth on amphotericin B" or "normal cell morphology". A mutant may be
+"normal" in one respect, but abnormal in another (for instance, cells
+may grow at a normal rate, but have an abnormal morphology). Note that
+it is not necessary to annotate all respects in which a mutant cell is
+normal, only those that are unexpected or otherwise interesting.
+</p>
+
+<h3>Targets of mutated genes</h3>
+<p>
+For any phenotype where an effect on the amount, stability,
+localization, etc. of a specific gene or gene product (protein or RNA)
+was measured, a comment should be included to identify the genes,
+RNAs, or proteins used in the experiment. The reasons are that the
+measured product may be that of a gene that was not mutated, and that
+the mutation may affect different gene products differently. For
+example, deletion of gene A may result in an increased amount of RNA
+transcribed from gene B; or a point mutation in A may cause decreased
+phosphorylation of protein B but not protein C. In these cases the
+annotation should be made to gene A, and a comment should be included
+that gene B is affected (and that C is not affected, in the second
+example). Sometimes it may be necessary to specify two targets. For
+instance, if a mutation in gene A cause "decreased binding" between
+protein B and protein C, include both B and C in the comment.
+</p>
+
+<h3>Localization phenotypes</h3>
+<p>
+If the localization of a protein or RNA is altered in a mutant
+compared to wild type, this should be annotated as a phenotype of the
+mutated gene (which may be different from the gene encoding the
+mislocalized product). Include a comment to identify the mislocalized
+protein/RNA, as described above. For example, if deletion of gene A
+causes gene B to localize to the cytoplasm instead of the nucleus,
+annotate A to an "abnormal protein localization" term (such as
+"abolished protein localization to nucleus, with protein mislocalized
+to cytoplasm"), and mention B in a comment.
+</p>
+
+<h3>Phenotypes of wild-type cells</h3>
+<p>
+Please note that only <b>mutant</b> phenotypes should be annotated in
+Canto -- i.e., the characteristics of cells in which DNA sequence of a
+gene is altered, or when its expression level is changed (or
+both). Any changes occurring in wild-type cells in response to a
+stimulus (such as an effect resulting from the inhibition of a
+wild-type gene when it binds a substance) can therefore not be
+captured as a phenotype. Please include information of this sort in a
+comment, and PomBase curators will advise you how to proceed (for
+example, it may be possible to use a GO annotation with an extension).
+</p>
+
+
+<h2><a name="sptips">Specific phenotype tips</h2>
+
+<h3>Cell and population viability</h3>
+
+<p>
+To capture whether a mutant is viable or inviable overall, use one of
+the cell population viability terms. As noted in the <a
+href="http://www.pombase.org/faqs/can-i-get-list-essential-pombe-genes">PomBase
+FAQ on essential genes</a>, the most commonly used terms are "viable
+vegetative cell population" (FYPO:0002060) and "inviable vegetative
+cell population" (FYPO:0002061).
+</p>
+<p>
+To describe characteristics of viable or inviable cells, FYPO has a
+wide selection of "viable cell" and "inviable cell" terms that also
+specify other features such as shape, presence and number of nuclei or
+septa, etc. If one mutation gives rise to a mixed population, more
+than one term may be used for the same allele, including both "viable"
+and "inviable" terms; see the <a
+href="http://dev.pombase.org/faqs/why-are-some-genes-annotated-both-viable-and-inviable-phenotypes">relevant
+FAQ</a> for more information.
+</p>
+
     <h3>Cell growth vs. cell population growth</h3>
     <p>
     Most experiments that measure "growth" observe a population of
@@ -169,9 +364,7 @@ may result in the same phenotype). The allele box contain several fields:</p>
     in cell size. Also see "Slow growth, decreased cell density and
     decreased growth" below.
     </p>
-  </li>
 
-  <li>
     <h3>Slow growth, decreased cell density and decreased growth</h3>
     <p>
     "Slow cell population growth" refers specifically to when the rate
@@ -184,50 +377,25 @@ may result in the same phenotype). The allele box contain several fields:</p>
     on agar plates for a number of days and then observed) use
     "decreased cell population growth".
     </p>
-  </li>
 
-  <li>
     <h3>Translation vs. protein level</h3>
     <p>
-      Typically, assays such as western
-      blots will not distinguish between increased translation or decreased
-      degradation. If these cannot be distinguished between then the correct terms to
-      use are increased, decreased, or normal protein level. If the assay is
-      sensitive enough to distinguish between these, then the translation or
-      degradation terms may be used (for instance decreased translation or increased
-      protein degradation).
+      Typically, assays such as western blots do not distinguish
+      between increased translation or decreased degradation. If these
+      cannot be distinguished between then the correct terms to use
+      are increased, decreased, or normal protein level. If the assay
+      is specific enough, then the translation or degradation terms
+      may be used (e.g. "decreased translation" or "increased protein
+      degradation").
     </p>
-  </li>
 
-  <li>
     <h3>Transcription vs. RNA level</h3>
     <p>
-      Typically, assays such as northern blots will not distinguish between
-      increased transcription or decreased degradation.  If these cannot be
-      distinguished between then the correct terms to use are increased,
-      decreased, or normal RNA level. If the assay is sensitive enough to
-      distinguish between these, then the transcription or degradation terms
-      may be used (for instance decreased transcription).
+      Typically, assays such as northern blots do not distinguish
+      between increased transcription or decreased degradation. If
+      these cannot be distinguished between then the correct terms to
+      use are increased, decreased, or normal RNA level. If the assay
+      is specific enough, then the transcription or degradation terms
+      may be used (e.g. a run-on assay can support annotation to
+      "decreased transcription").
     </p>
-  </li>
-</ul>
-
-<h2>Phenotype vs. GO annotations</h2>
-<p>
-  GO annotations should always reflect a
-  gene"s direct involvement in, or regulatory role of, processes or functions. In
-  contrast, phenotype annotations may reflect downstream or indirect effects.
-</p>
-<p>
-  For instance, cells mutated for a gene involved in cell wall biosynthesis
-  may display defects in cytokinesis. This gene should not be annotated to the
-  GO process term "cytokinesis" but may be annotated to the FYPO term
-  "cytokinesis defects" because its effect on cytokinesis is an indirect
-  effect of improper cell wall biosynthesis.
-</p>
-<p>
-  Most commonly, more phenotypes than GO
-  terms can be extracted from a paper. Sometimes, several phenotype annotations
-  but no GO annotations can be made, because the experiments do not definitely
-  home in on the exact process that the gene is involved in.
-</p>
