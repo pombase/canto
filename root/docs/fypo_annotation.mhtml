@@ -34,7 +34,7 @@ definition.
 </ul>
 </p>
 
-<h2><a name="interface">Using the interface</h2>
+<h2><a name="interface">Using the interface</a></h2>
 
 <h3>Single-allele phenotypes</h3>
 <p>
@@ -232,7 +232,7 @@ any other genotype in the genotype list, by changing the top pulldown:
   <img src="<% $c->uri_for('/static/images/docs/fypo_dup_summary.png') %>" alt="phenotype duplication on summary page"/>
 </div>
 
-<h2><a name="gentips">General phenotype tips</h2>
+<h2><a name="gentips">General phenotype tips</a></h2>
 
 <h3>Phenotype vs. GO annotations</h3>
 <p>
@@ -331,7 +331,7 @@ example, it may be possible to use a GO annotation with an extension).
 </p>
 
 
-<h2><a name="sptips">Specific phenotype tips</h2>
+<h2><a name="sptips">Specific phenotype tips</a></h2>
 
 <h3>Cell and population viability</h3>
 
