@@ -73,7 +73,7 @@ pages</a>, or via the "Help" link at the top right of every Canto instance.
         <p>
 Please cite: Rutherford KM, Harris MA, Lock A, Oliver SG, Wood V.
 Canto: An online tool for community literature
-curation. <em>Bioinformatics</em> (2014) <a href="http://www.biomedcentral.com/1471-2105/9/278">doi:
+curation. <em>Bioinformatics</em> (2014) <a href="http://doi.org/10.1093/bioinformatics/btu103">doi:
 10.1093/bioinformatics/btu103</a> <a href="http://www.ncbi.nlm.nih.gov/pubmed/24574118">PMID:24574118</a>
 <a href="http://en.wikipedia.org/wiki/Open_access"><img src="<% $c->uri_for('/static/images/logos/open_access_logo_small.png') %>"/></a>
         </p>
