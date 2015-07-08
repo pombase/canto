@@ -1721,7 +1721,6 @@ curs_config:
       <p>
         Examples include:
         <ul>
-        <li> multi-gene phenotypes
         <li> substrates of gene products (e.g. protein substrates of kinases or protein transporters)
         <li> "targets" of localization dependencies (e.g. gene A localizes gene B) 
         <li> cell cycle phases when a process occurs (during)
