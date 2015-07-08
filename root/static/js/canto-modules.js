@@ -1703,6 +1703,7 @@ var multiAlleleCtrl =
       var endogenousWildtypeAllowed = false;
 
       // see: https://sourceforge.net/p/pombase/curation-tool/782/
+      // and: https://sourceforge.net/p/pombase/curation-tool/576/
       $.map($scope.alleles,
             function(allele) {
               if (allele.gene_id == gene_id) {
