@@ -114,10 +114,10 @@ tag_version($new_version);
 # make_release_branch($new_version);
 
 print "pushing to GitHub\n";
-system "git push --tags -v github master";
+system "git push --tags github master";
 
 print "pushing to Bitbucket\n";
-system "git push --tags -v bitb master";
+system "git push --tags bitb master";
 
 END {
   if ($stashed) {
