@@ -1705,8 +1705,7 @@ var multiAlleleCtrl =
       // see: https://sourceforge.net/p/pombase/curation-tool/782/
       $.map($scope.alleles,
             function(allele) {
-              if (allele.gene_id == gene_id &&
-                  allele.type == 'wild type') {
+              if (allele.gene_id == gene_id) {
                 endogenousWildtypeAllowed = true;
               }
             });
