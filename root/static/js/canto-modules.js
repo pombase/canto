@@ -2663,7 +2663,13 @@ var annotationTableList =
                 function(annotationType) {
                   AnnotationProxy.getAnnotation(annotationType.name)
                     .then(function(annotations) {
-                      $scope.annotationsByType[annotationType.name] = annotations;
+
+                      var params = {
+                        featureId: $scope.featureIdFilter,
+                        featureType: $scope.featureTypeFilter,
+                      };
+                      $scope.annotationsByType[annotationType.name] =
+                        filterAnnotations(annotations, params);
                     }).catch(function() {
                       toaster.pop('error', "couldn't read annotations from the server");
                     });
