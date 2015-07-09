@@ -2719,13 +2719,11 @@ var annotationTableRow =
             $scope.annotationType = annotationType;
           });
 
-        var featureEditable = !$scope.featureIdFilter;
-
         $scope.edit = function() {
           // FIXME: featureFilterDisplayName is from the parent scope
           var editPromise =
             startEditing($modal, annotation.annotation_type, $scope.annotation,
-                         $scope.featureFilterDisplayName, false, featureEditable);
+                         $scope.featureFilterDisplayName, false, true);
 
           editPromise.then(function(editedAnnotation) {
             $scope.annotation = editedAnnotation;
@@ -2740,7 +2738,7 @@ var annotationTableRow =
           var newAnnotation = makeNewAnnotation($scope.annotation);
           startEditing($modal, annotation.annotation_type,
                        newAnnotation, $scope.featureFilterDisplayName,
-                       true, featureEditable);
+                       true, true);
         };
 
         $scope.delete = function() {
