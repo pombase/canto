@@ -865,6 +865,7 @@ sub _load_curs_db_data
       my $allele_description = $allele_details->{description};
       my $allele_name = $allele_details->{name};
       my $allele_type = $allele_details->{type};
+      my $allele_expression = $allele_details->{expression};
 
       my %create_args = (
         primary_identifier => $allele_primary_identifier,
@@ -872,6 +873,7 @@ sub _load_curs_db_data
         description => $allele_description,
         name => $allele_name,
         gene => $new_gene->gene_id(),
+        expression => $allele_expression,
       );
 
       my $allele = $cursdb_schema->create_with_type('Allele', \%create_args);

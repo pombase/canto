@@ -244,7 +244,15 @@ sub _get_genotype_alleles
       warn "undefined primary_identifier: ", $allele->name(), "\n";
     }
 
-    push @ret, "$organism_full_name " . $allele->primary_identifier();
+    my %ret_hash = (
+      id => "$organism_full_name " . $allele->primary_identifier(),
+    );
+
+    if ($allele->expression()) {
+      $ret_hash{expression} = $allele->expression();
+    }
+
+    push @ret, \%ret_hash;
   }
 
   return @ret;
@@ -284,9 +292,6 @@ sub _get_alleles
     }
     if (defined $allele->description()) {
       $allele_data{description} = $allele->description();
-    }
-    if (defined $allele->expression()) {
-      $allele_data{expression} = $allele->expression();
     }
     if (defined $allele->name()) {
       $allele_data{name} = $allele->name();

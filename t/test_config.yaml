@@ -119,6 +119,7 @@ test_config:
                  name: ssm4-D4
                  description: 'del_100-200'
                  type: 'partial deletion, nucleotide'
+                 expression: 'Knockdown'
                - primary_identifier: 'SPAC27D7.13c:aaaa0007-4'
                  description: 'del_200-300'
                  type: 'partial deletion, nucleotide'
@@ -215,7 +216,6 @@ test_config:
              data:
                evidence_code: Epitope-tagged protein immunolocalization experiment data
                term_ontid: FYPO:0000013
-               expression: Overexpression
                conditions:
                  - 'PECO:0000137'
                  - 'rich medium'

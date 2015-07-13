@@ -92,13 +92,20 @@ my $full_expected_curation_session =
       'aaaa0007-genotype-test-1' => {
         'name' => 'h+ SPCC63.05delta ssm4KE',
         alleles => [
-          'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1',
-          'Schizosaccharomyces pombe SPCC63.05:aaaa0007-1',
+          {
+            id => 'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1',
+          },
+          {
+            id => 'Schizosaccharomyces pombe SPCC63.05:aaaa0007-1',
+          },
         ],
       },
       'aaaa0007-genotype-test-2' => {
         alleles => [
-          'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3',
+          {
+            id => 'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3',
+            expression => 'Knockdown',
+         },
         ],
       },
     },
@@ -189,7 +196,6 @@ my $full_expected_curation_session =
         term => 'FYPO:0000013',
         evidence_code => 'Epitope-tagged protein immunolocalization experiment data',
         creation_date => '2010-01-02',
-        expression => 'Overexpression',
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
@@ -472,8 +478,6 @@ my $small_expected_track_data =
   my $curs_ref = decode_json($curs_json);
 
   cmp_deeply($curs_ref, $full_expected_curation_session);
-
-
 }
 
 {

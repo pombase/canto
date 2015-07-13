@@ -147,8 +147,8 @@ sub check_new_annotations
                  'publication_uniquename' => 'PMID:19756689',
                  'feature_type' => 'genotype',
                  'feature_id' => 2,
-                 'genotype_display_name' => 'ssm4-D4(del_100-200)',
-                 'feature_display_name' => 'ssm4-D4(del_100-200)',
+                 'genotype_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
+                 'feature_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
                  'is_not' => JSON::false,
                  'evidence_code' => 'Co-immunoprecipitation experiment',
                  'annotation_type_abbreviation' => '',
@@ -181,13 +181,13 @@ sub check_new_annotations
                  'alleles' => [
                    {
                      'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3',
-                     'expression' => undef,
+                     'expression' => 'Knockdown',
                      'allele_id' => 3,
                      'type' => 'partial deletion, nucleotide',
                      'description' => 'del_100-200',
                      'name' => 'ssm4-D4',
                      'gene_id' => 2,
-                     'long_display_name' => 'ssm4-D4(del_100-200)',
+                     'long_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
                      'gene_display_name' => 'ssm4',
                    }
                  ],
