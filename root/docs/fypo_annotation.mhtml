@@ -185,6 +185,23 @@ details.
 </div>
 
 <p>
+<strong>Using wild-type alleles in genotypes:</strong> For
+single-allele phenotypes, the wild-type allele must be expressed at a
+higher (overexpression) or lower (knockdown) level than normal to
+create a genotype and use it for FYPO annotations; wild type at its
+normal (endogenous) expression level should not have phenotypes
+annotated in Canto. Similarly, in a multi-allele genotype, the
+wild-type allele of any gene must be over- or underexpressed if it is
+the only allele of the gene present. If both wild-type and mutant
+alleles of the same gene are present (usually done to test whether the
+mutation is dominant over wild type), the wild-type allele can have
+endogenous expression specified. In the genotype addition interface,
+select the gene and enter details for the mutant allele first. You can
+then select the same gene, choose "wild type", and "endogenous" will
+be offered as one of the expression level options.
+</p>
+
+<p>
 You can edit or delete a genotype that you have entered for the paper
 you are curating (but you cannot change an existing genotype that you
 have found and used). Thereafter, the rest of the phenotype annotation
