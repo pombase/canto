@@ -39,6 +39,16 @@ And then to confirm the resulting gene list:
 When you have entered genes, you can then annotate your genes with any of the
 data types listed in the next section.
 </p>
+
+<p>
+If the paper does not mention individual genes -- typical of methods
+papers, many types of high-throughput study, reviews, etc. -- check
+the box labeled "This paper does not contain any gene-specific
+information", and select a reason from the pulldown that
+appears. Complete the session by clicking "Continue" and then
+"Finish"; further comment is optional.
+</p>
+
 <p>
 Once you have begun curating, the information will be preserved at a
 stable URL, so you do not need to complete the curation in one
