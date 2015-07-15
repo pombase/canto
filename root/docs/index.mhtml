@@ -50,6 +50,13 @@ appears. Complete the session by clicking "Continue" and then
 </p>
 
 <p>
+If the paper mentions specific genes, but does not contain any data
+that can be curated in Canto for them (see the list of available
+annotation types below), enter the genes and finish the session as
+described below.
+</p>
+
+<p>
 Once you have begun curating, the information will be preserved at a
 stable URL, so you do not need to complete the curation in one
 session. Most pages have at least one '?' icon, which link to help
@@ -76,6 +83,10 @@ You can curate any of these types of data for any gene you have put on the
 list for the paper (follow links for specific instructions):
 </p>
 <& /docs/annotation_type_list.mhtml &>
+<p>
+If the paper does not have experimental data to support any of these
+types of annotation, proceed as described below.
+</p>
 </div>
 </div>
 
@@ -95,6 +106,24 @@ curators':
   <a href="<% $c->uri_for('/static/images/docs/curation_summary.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/curation_summary_small.png') %>" alt="curation summary page"/></a>
 </div>
 </div>
+
+
+<div class="row-fluid">
+<div class="span12">
+<p>
+To submit a curation session that does not contain any annotations
+based on experimental data, check the "No experimental results to
+add?" box and select a reason from the pulldown menu that appears:
+</p>
+</div>
+</div>
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/no_expt.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/no_expt.png') %>" alt="option for paper without curatable experimental data"/></a>
+</div>
+</div>
+
+
 <div class="row-fluid">
 <div class="span12">
 <p>
