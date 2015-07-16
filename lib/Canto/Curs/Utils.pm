@@ -70,7 +70,7 @@ sub make_ontology_annotation
   my $data = $annotation->data();
   my $term_ontid = $data->{term_ontid};
 
-  die "no term_ontid for annotation"
+  die "no term_ontid for annotation " . $annotation->annotation_id()
     unless defined $term_ontid and length $term_ontid > 0;
 
   my $annotation_type = $annotation->type();
