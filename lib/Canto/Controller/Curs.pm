@@ -866,6 +866,13 @@ sub _create_annotation
   my $st = $c->stash();
   my $schema = $st->{schema};
 
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  if ($annotation_config->{category} eq 'ontology' &&
+      !$annotation_data->{term_ontid}) {
+    die "internal error: no term ontology ID (term_ontid) passed to _create_annotation()";
+  }
+
   my $guard = $schema->txn_scope_guard;
 
   my $annotation =
