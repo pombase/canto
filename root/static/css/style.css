@@ -413,10 +413,14 @@ td.table-row-actions div {
 }
 
 .curs-evidence-conditions {
-  margin: 30px 0px 5px 0px;
+  padding: 20px 0px 0px 0px;
 }
 .curs-evidence-conditions .tagit {
   font-size: 80%;
+}
+.curs-evidence-conditions-help {
+  font-size: 90%;
+  color: #222;
 }
 
 .sect .sect-title a {
