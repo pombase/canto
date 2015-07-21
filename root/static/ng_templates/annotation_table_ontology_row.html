@@ -8,7 +8,7 @@
     {{annotation.genotype_background}}
   </td>
   <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
-    <span ng-bind-html="annotation.genotype_name | unicodeAlleleSymbol | toTrusted"></span>
+    <span ng-bind-html="annotation.genotype_name | encodeAlleleSymbols | toTrusted"></span>
   </td>
   <td ng-if="annotationType.feature_type === 'gene' && !featureIdFilter">
     <a ng-if="annotation.status === 'new'"
@@ -22,12 +22,12 @@
   <td ng-if="annotationType.feature_type != 'gene'">
     <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.feature_id + (read_only_curs ? '/ro' : '')}}">
       <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-        <span ng-bind-html="allele.long_display_name | unicodeAlleleSymbol | toTrusted"></span>
+        <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
       </div>
     </a>
     <span ng-if="annotation.status === 'existing'">
       <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-        <span ng-bind-html="allele.long_display_name | unicodeAlleleSymbol | toTrusted"></span>
+        <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
       </div>
     </span>
   </td>

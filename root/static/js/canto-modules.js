@@ -121,7 +121,7 @@ canto.filter('wrapAtSpaces', function () {
   };
 });
 
-canto.filter('unicodeAlleleSymbol', function () {
+canto.filter('encodeAlleleSymbols', function () {
   return function (item) {
     if (item == null) {
       return null;

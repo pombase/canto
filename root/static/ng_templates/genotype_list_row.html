@@ -7,7 +7,7 @@
   </td>
   <td>
     <span style="font-weight: bold"  ng-bind-html="genotype.background | wrapAtSpaces | toTrusted"></span>
-    <span ng-bind-html="genotype.name | wrapAtSpaces | unicodeAlleleSymbol | toTrusted"></span>
+    <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
   <td ng-if="!read_only_curs" class="table-row-actions">
     <div ng-if="!genotype.genotype_id">
