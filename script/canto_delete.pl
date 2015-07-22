@@ -132,6 +132,7 @@ Delete the lab first with:
   }
   if (defined $remove_curs) {
     Canto::Track::delete_curs($config, $schema, $remove_curs);
+    $exit_flag = 0;
   }
 };
 
