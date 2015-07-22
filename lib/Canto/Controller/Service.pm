@@ -215,6 +215,46 @@ sub lookup : Local
   $c->forward('View::JSON');
 }
 
+sub details : Local
+{
+  my $self = shift;
+  my $c = shift;
+  my $key = shift;
+
+  if ($key eq 'user') {
+    # get logged in user
+    my $email = undef;
+    my $name = undef;
+    my $known_as = undef;
+    my $is_admin = undef;
+
+    if ($c->user()) {
+      my $user = $c->user();
+      $email = $user->email_address();
+      $name = $user->name();
+      $known_as = $user->known_as();
+      $is_admin = $user->is_admin() ? JSON::true : JSON::false;
+    }
+
+    $c->stash->{json_data} = {
+      status => 'success',
+      details => {
+        email => $email,
+        name => $name,
+        known_as => $known_as,
+        is_admin => $is_admin,
+      }
+    };
+  } else {
+    $c->stash->{json_data} = {
+      status => 'error',
+      message => qq(unknown detail type "$key"),
+    };
+  }
+
+  $c->forward('View::JSON');
+}
+
 sub canto_config : Local
 {
   my $self = shift;

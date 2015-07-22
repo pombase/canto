@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 27;
 
 use Canto::TestUtil;
 
@@ -12,9 +12,12 @@ use JSON;
 use Canto::Track;
 
 my $test_util = Canto::TestUtil->new();
-$test_util->init_test();
+$test_util->init_test('curs_annotations_1');
+
+my $cookie_jar = $test_util->cookie_jar();
 
 my $app = $test_util->plack_app()->{app};
+
 
 test_psgi $app, sub {
   my $cb = shift;
@@ -116,6 +119,27 @@ test_psgi $app, sub {
 
     ok ($obj->{'partial deletion, nucleotide'}->{allow_expression_change});
     ok (!$obj->{'partial deletion, nucleotide'}->{allele_name_required});
+  }
+
+  {
+    $test_util->app_login($cookie_jar, $cb);
+
+    my $url = "http://localhost:5000/ws/details/user";
+    my $req = HTTP::Request->new(GET => $url);
+    $cookie_jar->add_cookie_header($req);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my $obj;
+    eval { $obj = decode_json($res->content()); };
+    if ($@) {
+      die "$@\n", $res->content();
+    }
+
+    is ($obj->{status}, 'success');
+    is ($obj->{details}->{email}, 'val@sanger.ac.uk');
+    is ($obj->{details}->{is_admin}, JSON::true);
   }
 };
 
