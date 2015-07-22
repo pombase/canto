@@ -102,7 +102,7 @@
         </td>
       </tr>
 
-      <tr ng-show="curatorDetails && !curatorDetails.community_curated">
+      <tr ng-show="curatorDetails && !curatorDetails.community_curated || userDetails && userDetails.is_admin">
         <td class="title">Annotation extension</td>
         <td>
           <textarea class="form-control" cols="60"

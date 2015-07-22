@@ -334,6 +334,15 @@ canto.service('CantoService', function($http) {
                        timeout: timeout
                      });
   };
+
+  this.details = function(key, params, timeout) {
+    return $http.get(application_root + '/ws/details/' + key,
+                     {
+                       params: params,
+                       timeout: timeout
+                     });
+
+  }
 });
 
 var keysForServer = {
@@ -2295,7 +2304,7 @@ canto.directive('termChildrenDisplay',
 
 var annotationEditDialogCtrl =
   function($scope, $modal, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
-           CursSessionDetails, toaster, args) {
+           CursSessionDetails, CantoService, toaster, args) {
     $scope.annotation = { conditions: [] };
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
@@ -2366,6 +2375,11 @@ var annotationEditDialogCtrl =
         $scope.curatorDetails = sessionDetails.curator;
       });
 
+    CantoService.details('user')
+      .success(function(user) {
+        $scope.userDetails = user.details;
+      });
+
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
       .then(function(annotationType) {
         $scope.annotationType = annotationType;
@@ -2381,8 +2395,8 @@ var annotationEditDialogCtrl =
 
 canto.controller('AnnotationEditDialogCtrl',
                  ['$scope', '$modal', '$modalInstance', 'AnnotationProxy',
-                  'AnnotationTypeConfig', 'CursSessionDetails', 'toaster',
-                  'args',
+                  'AnnotationTypeConfig', 'CursSessionDetails', 'CantoService',
+                  'toaster', 'args',
                   annotationEditDialogCtrl]);
 
 
