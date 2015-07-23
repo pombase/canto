@@ -271,6 +271,10 @@ sub _get_alleles
     my $gene = $allele->gene();
     my $organism_full_name = $gene->organism()->full_name();
 
+    if (!$allele->primary_identifier()) {
+      die 'no primary_identifier for allele with ID: ', $allele->allele_id();
+    }
+
     my $key = "$organism_full_name " . $allele->primary_identifier();
     my $gene_key = "$organism_full_name " . $gene->primary_identifier();
 
