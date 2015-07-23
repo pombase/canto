@@ -118,7 +118,10 @@ terms previously used in the session appear below the text box and can
 be re-used by clicking on them.
 </p>
 
-    <p>Examples include:</p>
+    <p>Conditions are aspects of the experimental setup that may be
+    relevant to various different methods, and are independent of what
+    cells, strain, organism, etc. are used. Examples include:</p>
+
     <ul>
       <li>
         Glucose minimal medium vs. glucose rich medium (synonyms for some
