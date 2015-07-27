@@ -457,6 +457,8 @@ sub perl
     $ret{genotypes} = \%genotypes;
   }
 
+  $curs_schema->disconnect();
+
   return \%ret;
 }
 

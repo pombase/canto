@@ -146,6 +146,8 @@ after 'export' => sub {
       # this writes to the TrackDB, so we need to set the state after we finish
       # iterating with $curs_rs
       $self->state()->set_state($curs_schema, $self->state_after_export());
+
+      $curs_schema->disconnect();
     }
   }
 };
