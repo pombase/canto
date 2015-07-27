@@ -728,7 +728,7 @@ sub _ontology_change_keys
       }
     },
     feature_type => sub {
-      return 0;
+      return 1;
     },
     feature_id => sub {
       my $feature_id = shift;
