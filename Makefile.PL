@@ -40,6 +40,8 @@ requires 'Catalyst::View::JSON';
 requires 'Catalyst::View::Mason';
 requires 'CatalystX::RoleApplicator';
 requires 'Clone';
+requires 'Exception::Class';
+requires 'Class::Container';
 requires 'Config::Any';
 requires 'DBD::Pg';
 requires 'DBD::SQLite' => '1.40';
