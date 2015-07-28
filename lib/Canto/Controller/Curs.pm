@@ -231,7 +231,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
       # fall through, use dispatch table
     } else {
-      if ($path !~ m!/ro/?$!) {
+      if ($path !~ m!/ro/?$|ws/\w+/list!) {
         $c->detach('finished_publication');
       }
     }
