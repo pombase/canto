@@ -1142,6 +1142,20 @@ var annotationEvidence =
 
         $scope.validEvidence = $scope.isValidCodeAndWith();
 
+        $scope.getDisplayCode = function(code) {
+          if ($scope.evidenceTypes) {
+            var name = $scope.evidenceTypes[code].name;
+            if (name) {
+              if (name.match('^' + code)) {
+                return name;
+              }
+              return name + ' (' + code + ')';
+            }
+          }
+
+          return code;
+        };
+
         CantoConfig.get('evidence_types').success(function(results) {
           $scope.evidenceTypes = results;
 

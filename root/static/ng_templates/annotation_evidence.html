@@ -2,7 +2,7 @@
   <div ng-class="{ 'has-error': !isValidEvidenceCode() }">
     <select class="form-control"
             ng-model="evidenceCode"
-            ng-options="code for code in annotationType.evidence_codes">
+            ng-options="code as getDisplayCode(code) for code in annotationType.evidence_codes">
       <option value="">Choose an evidence code ...</option>
     </select>
   </div>
