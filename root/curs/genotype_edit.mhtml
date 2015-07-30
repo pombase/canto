@@ -65,7 +65,7 @@ Add alleles from the genes below until the genotype is fully specified.
                   <td>{{gene.primary_identifier}}</td>
                   <td>
                     <button class="btn btn-primary btn-xs"
-                            ng-click="openAlleleEditDialog(gene.display_name, gene.primary_identifier, gene.gene_id)">Add allele ..</button>
+                            ng-click="openAlleleEditDialog({gene: gene})">Add allele ..</button>
                   </td>
                 </tr>
               </tbody>
@@ -100,7 +100,12 @@ The alleles of this genotype:
                 <td>{{allele.description}}</td>
                 <td>{{allele.expression}}</td>
                 <td class="curs-table-row-remove">
-                  <a href="#"> <span class="glyphicon glyphicon-remove" ng-click="removeAllele(allele)"></span></a>
+                  <div>
+                    <a href="#" style="white-space: nowrap;" ng-click="openAlleleEditDialog(allele)">Edit</a>
+                  </div>
+                  <div>
+                    <a href="#" style="white-space: nowrap;" ng-click="removeAllele(allele)">Delete</a>
+                  </div>
                 </td>
             </tbody>
             </table>

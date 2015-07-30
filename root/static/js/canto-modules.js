@@ -1337,22 +1337,18 @@ canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameCo
 
 var alleleEditDialogCtrl =
   function($scope, $modalInstance, CantoConfig, args) {
-    $scope.gene = {
-      display_name: args.gene_display_name,
-      systemtic_id: args.gene_systemtic_id,
-      gene_id: args.gene_id
-    };
     $scope.config = {
       endogenousWildtypeAllowed: args.endogenousWildtypeAllowed,
     };
-    $scope.alleleData = {
-      primary_identifier: '',
-      name: '',
-      description: '',
-      type: '',
-      expression: '',
-      evidence: ''
-    };
+    $scope.alleleData = {};
+    copyObject(args.allele, $scope.alleleData);
+    $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
+    $scope.alleleData.name = $scope.alleleData.name || '';
+    $scope.alleleData.description = $scope.alleleData.description || '';
+    $scope.alleleData.type = $scope.alleleData.type || '';
+    $scope.alleleData.expression = $scope.alleleData.expression || '';
+    $scope.alleleData.evidence = $scope.alleleData.evidence || '';
+
     $scope.env = {
     };
 
@@ -1379,14 +1375,18 @@ var alleleEditDialogCtrl =
       }
 
       $scope.alleleData.name =
-        autopopulate_name.replace(/@@gene_display_name@@/, this.gene.display_name);
+        autopopulate_name.replace(/@@gene_display_name@@/, $scope.alleleData.gene_display_name);
       return this.alleleData.name;
     };
 
     $scope.$watch('alleleData.type',
-                  function(newType) {
+                  function(newType, oldType) {
                     $scope.env.allele_types_promise.then(function(response) {
                       $scope.current_type_config = response.data[newType];
+
+                      if (newType === oldType) {
+                        return;
+                      }
 
                       if ($scope.alleleData.primary_identifier) {
                         return;
@@ -1433,22 +1433,9 @@ var alleleEditDialogCtrl =
          $scope.isValidDescription() && $scope.isValidExpression());
     };
 
-    // return the data from the dialog as an Object
-    $scope.dialogToData = function($scope) {
-      return {
-        primary_identifier: $scope.alleleData.primary_identifier,
-        name: $scope.alleleData.name,
-        description: $scope.alleleData.description,
-        type: $scope.alleleData.type,
-        evidence: $scope.alleleData.evidence,
-        expression: $scope.alleleData.expression,
-        gene_display_name: $scope.gene.display_name,
-        gene_id: $scope.gene.gene_id
-      };
-    };
-
     $scope.ok = function () {
-      $modalInstance.close($scope.dialogToData($scope));
+      copyObject($scope.alleleData, args.allele);
+      $modalInstance.close(args.allele);
     };
 
     $scope.cancel = function () {
@@ -1517,8 +1504,7 @@ function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_back
                           alleles: alleles });
 }
 
-function makeAlleleEditInstance($modal, gene_display_name, gene_systemtic_id,
-                                gene_id, endogenousWildtypeAllowed)
+function makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed)
 {
   return $modal.open({
     templateUrl: app_static_path + 'ng_templates/allele_edit.html',
@@ -1529,10 +1515,8 @@ function makeAlleleEditInstance($modal, gene_display_name, gene_systemtic_id,
     resolve: {
       args: function() {
         return {
-          gene_display_name: gene_display_name,
-          gene_systemtic_id: gene_systemtic_id,
-          gene_id: gene_id,
           endogenousWildtypeAllowed: endogenousWildtypeAllowed,
+          allele: allele,
         };
       }
     }
@@ -1543,8 +1527,14 @@ function makeAlleleEditInstance($modal, gene_display_name, gene_systemtic_id,
 var genePageCtrl =
   function($scope, $modal, toaster, $http) {
     $scope.singleAlleleQuick = function(gene_display_name, gene_systemtic_id, gene_id) {
-      var editInstance = makeAlleleEditInstance($modal, gene_display_name,
-                                                gene_systemtic_id, gene_id);
+      var editInstance = makeAlleleEditInstance($modal,
+                                                {
+                                                  gene: {
+                                                    display_name: gene_display_name,
+                                                    systemtic_id: gene_systemtic_id,
+                                                    gene_id: gene_id
+                                                  }
+                                                });
 
       editInstance.result.then(function (alleleData) {
         storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData]);
@@ -1722,24 +1712,32 @@ var multiAlleleCtrl =
   };
 
   $scope.openAlleleEditDialog =
-    function(gene_display_name, gene_systemtic_id, gene_id) {
+    function(allele) {
       var endogenousWildtypeAllowed = false;
+
+      if (allele.gene) {
+        allele.gene_display_name = allele.gene.display_name;
+        allele.gene_systemtic_id = allele.gene.systemtic_id;
+        allele.gene_id = allele.gene.gene_id;
+        delete allele.gene;
+      }
 
       // see: https://sourceforge.net/p/pombase/curation-tool/782/
       // and: https://sourceforge.net/p/pombase/curation-tool/576/
       $.map($scope.alleles,
-            function(allele) {
-              if (allele.gene_id == gene_id) {
+            function(existingAllele) {
+              if (existingAllele.gene_id == allele.gene_id) {
                 endogenousWildtypeAllowed = true;
               }
             });
 
       var editInstance =
-        makeAlleleEditInstance($modal, gene_display_name, gene_systemtic_id,
-                               gene_id, endogenousWildtypeAllowed);
+        makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed);
 
-      editInstance.result.then(function (alleleData) {
-        $scope.alleles.push(alleleData);
+      editInstance.result.then(function (editedAllele) {
+        if ($scope.alleles.indexOf(editedAllele) < 0) {
+          $scope.alleles.push(editedAllele);
+        }
       });
     };
 
@@ -2120,8 +2118,7 @@ var EditDialog = function($) {
 canto.service('CantoConfig', function($http) {
   this.get = function(key) {
     return $http({method: 'GET',
-                  url: canto_root_uri + 'ws/canto_config/' + key,
-                  cache: true});
+                  url: canto_root_uri + 'ws/canto_config/' + key});
   };
 });
 
