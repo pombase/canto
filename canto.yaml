@@ -1112,6 +1112,7 @@ allele_type_list:
     description_required: false
     allele_name_required: true
     allow_expression_change: true
+    expression_required: true
   - name: mutation of single amino acid residue
     export_type: amino_acid_mutation
     # all multi and single mutations map to "amino_acid_mutation" in Chado so
@@ -1121,6 +1122,7 @@ allele_type_list:
     description_required: true
     allele_name_required: false
     allow_expression_change: true
+    expression_required: true
     placeholder: eg. K132A
   - name: mutation of multiple amino acid residues
     export_type: amino_acid_mutation
@@ -1131,18 +1133,21 @@ allele_type_list:
     description_required: true
     allele_name_required: false
     allow_expression_change: true
+    expression_required: true
     placeholder: eg. K132A,K144A
   - name: partial deletion, amino acid
     export_type: partial_amino_acid_deletion
     description_required: true
     allele_name_required: false
     allow_expression_change: true
+    expression_required: true
     placeholder: eg. 100-200
   - name: partial deletion, nucleotide
     export_type: partial_nucleotide_deletion
     description_required: true
     allele_name_required: false
     allow_expression_change: true
+    expression_required: true
     placeholder: eg. 100-200 OR -20--30 (for promoter region)
   - name: mutation of a single nucleotide
     export_type: nucleotide_mutation
@@ -1151,6 +1156,7 @@ allele_type_list:
     description_required: true
     allele_name_required: false
     allow_expression_change: true
+    expression_required: true
     placeholder: eg. A25G, OR A-25G (for promoter region)
   - name: mutation of multiple nucleotides
     export_type: nucleotide_mutation
@@ -1159,11 +1165,13 @@ allele_type_list:
     description_required: true
     allele_name_required: false
     allow_expression_change: true
+    expression_required: true
     placeholder: eg. A25G,T40G
   - name: nonsense mutation
     export_type: nonsense_mutation
     description_required: true
     allow_expression_change: true
+    expression_required: true
     allele_name_required: false
     placeholder: 'AA123->stop, AA1299->amber'
   - name: other
@@ -1171,6 +1179,7 @@ allele_type_list:
     description_required: true
     allele_name_required: false
     allow_expression_change: true
+    expression_required: true
     placeholder: Please provide a description
 
 evidence_types:
