@@ -120,6 +120,12 @@ sub _get_annotations
       $extra_data{term} = $term_ontid;
     }
 
+    if ($extra_data{term_suggestion} &&
+        !$extra_data{term_suggestion}->{name} &&
+        !$extra_data{term_suggestion}->{definition}) {
+      delete $extra_data{term_suggestion};
+    }
+
     my %data = (
       status => $annotation->status(),
       publication => $annotation->pub->uniquename(),
