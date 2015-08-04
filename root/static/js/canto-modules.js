@@ -1717,7 +1717,7 @@ var multiAlleleCtrl =
 
       if (allele.gene) {
         allele.gene_display_name = allele.gene.display_name;
-        allele.gene_systemtic_id = allele.gene.systemtic_id;
+        allele.gene_systemtic_id = allele.gene.primary_identifier;
         allele.gene_id = allele.gene.gene_id;
         delete allele.gene;
       }
