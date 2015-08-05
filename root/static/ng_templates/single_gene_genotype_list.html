@@ -1,5 +1,8 @@
 <div>
-<div>
+  <div class="error_message" ng-if="data.serverError">
+    Error: {{data.serverError}}
+  </div>
+<div ng-if="!data.serverError">
   <div ng-if="data.waitingForServer">
     <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
   </div>

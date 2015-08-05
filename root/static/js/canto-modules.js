@@ -2003,7 +2003,7 @@ canto.directive('genotypeListView',
 
 
 var singleGeneGenotypeList =
-  function(CursGenotypeList, CantoGlobals, toaster) {
+  function(CursGenotypeList, CantoGlobals) {
     return {
       scope: {
         genePrimaryIdentifier: '=',
@@ -2040,9 +2040,10 @@ var singleGeneGenotypeList =
           if (results.length > 0 && results.length <= 5) {
             $scope.data.showAll = true;
           }
+          delete $scope.data.serverError;
         }).catch(function() {
-          toaster.pop('error', "couldn't read the genotype list from the server");
           $scope.data.waitingForServer = false;
+          $scope.data.serverError = "couldn't read the genotype list from the server";
         });
 
       },
@@ -2050,7 +2051,7 @@ var singleGeneGenotypeList =
   };
 
 canto.directive('singleGeneGenotypeList',
-                ['CursGenotypeList', 'CantoGlobals', 'toaster', singleGeneGenotypeList]);
+                ['CursGenotypeList', 'CantoGlobals', singleGeneGenotypeList]);
 
 
 var EditDialog = function($) {
