@@ -1864,7 +1864,7 @@ canto.directive('geneSelector',
                   geneSelectorCtrl]);
 
 var genotypeSearchCtrl =
-  function(CursGenotypeList, CantoGlobals, toaster) {
+  function(CursGenotypeList, CantoGlobals) {
     return {
       scope: {
       },
@@ -1913,18 +1913,20 @@ var genotypeSearchCtrl =
                           }).then(function(results) {
                             scope.data.filteredCursGenotypes = results;
                             scope.data.waitingForServerCurs = false;
+                            delete scope.data.serverError;
                           }).catch(function() {
-                            toaster.pop('error', "couldn't read the genotype list from the server");
                             scope.data.waitingForServerCurs = false;
+                            scope.data.serverError = "couldn't read the genotype list from the server";
                           });
                           CursGenotypeList.filteredGenotypeList('external_only', {
                             gene_identifiers: geneIdentifiers
                           }).then(function(results) {
                             scope.data.filteredExternalGenotypes = results;
                             scope.data.waitingForServerExternal = false;
+                            delete scope.data.serverError;
                           }).catch(function() {
-                            toaster.pop('error', "couldn't read the genotype list from the server");
                             scope.data.waitingForServerExternal = false;
+                            scope.data.serverError = "couldn't read the genotype list from the server";
                           });
                         }
                       });
@@ -1933,7 +1935,7 @@ var genotypeSearchCtrl =
   };
 
 canto.directive('genotypeSearch',
-                 ['CursGenotypeList', 'CantoGlobals', 'toaster',
+                 ['CursGenotypeList', 'CantoGlobals',
                   genotypeSearchCtrl]);
 
 var genotypeListRowCtrl =

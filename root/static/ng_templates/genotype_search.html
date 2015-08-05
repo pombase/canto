@@ -9,6 +9,10 @@ Select one or more genes to find matching genotypes:
           <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
         </div>
         <div ng-hide="waitingForServer()">
+  <div class="error_message" ng-if="data.serverError">
+    Error: {{data.serverError}}
+  </div>
+  <div ng-if="!data.serverError">
           <div ng-show="filteredGenotypeCount() > 0">
             <div ng-show="data.filteredCursGenotypes.length > 0">
 Matching genotypes from this session:
@@ -28,6 +32,7 @@ No genotypes match all the selected genes.
             </span>
             <a ng-click="addGenotype()">Add a genotype ...</a>
           </div>
+        </div>
         </div>
       </div>
     </div>

@@ -474,7 +474,7 @@ td.table-row-actions div {
     white-space: nowrap;
 }
 
-/* FormFu errors */
+/* FormFu and misc inline errors */
 .error_message {
   color: red;
 }
