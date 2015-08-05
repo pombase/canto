@@ -410,7 +410,10 @@ sub _get_alleles
   my $curs_schema = $self->curs_schema();
   my $allele_rs = $curs_schema->resultset('Allele')
     ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
-               name => { -like => $search_string . '%' } }, { join => 'gene' });
+               name => { -like => $search_string . '%' },
+               # only return alleles that are part of a genotype
+               allele_genotype_id => { '!=' => undef } },
+             { join => [ 'gene', 'allele_genotypes' ] });
   my @res = map {
     $self->_allele_details_hash($_);
   } $allele_rs->all();
