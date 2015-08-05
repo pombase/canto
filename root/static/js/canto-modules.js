@@ -2538,7 +2538,7 @@ function filterAnnotations(annotations, params) {
 
 
 var annotationTableCtrl =
-  function($modal, CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList,
+  function(CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList,
            CursSessionDetails, toaster) {
     return {
       scope: {
@@ -2655,7 +2655,7 @@ var annotationTableCtrl =
   };
 
 canto.directive('annotationTable',
-                ['$modal', 'CantoGlobals', 'AnnotationProxy',
+                ['CantoGlobals', 'AnnotationProxy',
                  'AnnotationTypeConfig', 'CursGenotypeList', 'CursSessionDetails', 'toaster',
                  annotationTableCtrl]);
 
