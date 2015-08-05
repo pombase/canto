@@ -61,6 +61,7 @@ sub end : Private
     $st->{error} = \@canto_errors;
     $st->{title} = 'Error';
     $st->{template} = $st->{error_template} // 'error.mhtml';
+    $c->response()->status(500);
     $c->forward('Canto::View::Mason');
     $c->error(0);
     return 0;
