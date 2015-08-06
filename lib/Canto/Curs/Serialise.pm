@@ -347,6 +347,9 @@ sub _get_genotypes
     if ($genotype->name()) {
       $ret{$genotype->identifier()}->{name} = $genotype->name(),
     }
+    if ($genotype->background()) {
+      $ret{$genotype->identifier()}->{background} = $genotype->background(),
+    }
   }
 
   return %ret;
