@@ -1,4 +1,5 @@
-<div ng-show="data.filteredAnnotations.length > 0">
+<div>
+  <div ng-show="!data.serverError && data.filteredAnnotations.length > 0">
     <span ng-if="featureStatusFilter === 'new'" class="title sect-title">
       <span ng-if="!alleleCountFilter">
         New annotations from this session

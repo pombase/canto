@@ -2539,7 +2539,7 @@ function filterAnnotations(annotations, params) {
 
 var annotationTableCtrl =
   function(CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList,
-           CursSessionDetails, toaster) {
+           CursSessionDetails) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -2563,6 +2563,8 @@ var annotationTableCtrl =
           featureType: $scope.featureTypeFilter,
           alleleCount: $scope.alleleCountFilter,
         };
+
+        $scope.data = {};
 
         $scope.$watch('data.annotations',
                       function(newAnnotations) {
@@ -2632,7 +2634,7 @@ var annotationTableCtrl =
           .then(function(annotations) {
             scope.data.annotations = annotations;
           }).catch(function() {
-            toaster.pop('error', "couldn't read annotations from the server");
+            scope.data.serverError = "couldn't read annotations from the server";
           });
 
         AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
@@ -2643,7 +2645,7 @@ var annotationTableCtrl =
             CursGenotypeList.cursGenotypeList().then(function(results) {
               scope.data.hasFeatures = (results.length > 0);
             }).catch(function() {
-              toaster.pop('error', "couldn't read the genotype list from the server");
+              scope.data.serverError = "couldn't read the genotype list from the server";
             });
           } else {
             // if we're here the user has some genes in their list
@@ -2656,12 +2658,12 @@ var annotationTableCtrl =
 
 canto.directive('annotationTable',
                 ['CantoGlobals', 'AnnotationProxy',
-                 'AnnotationTypeConfig', 'CursGenotypeList', 'CursSessionDetails', 'toaster',
+                 'AnnotationTypeConfig', 'CursGenotypeList', 'CursSessionDetails',
                  annotationTableCtrl]);
 
 
 var annotationTableList =
-  function(toaster, AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
+  function(AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -2675,6 +2677,9 @@ var annotationTableList =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.annotationTypes = [];
         $scope.annotationsByType = {};
+        $scope.serverErrorsByType = {};
+
+        $scope.data = {};
 
         AnnotationTypeConfig.getAll().then(function(response) {
           $scope.annotationTypes =
@@ -2699,15 +2704,18 @@ var annotationTableList =
                       $scope.annotationsByType[annotationType.name] =
                         filterAnnotations(annotations, params);
                     }).catch(function() {
-                      toaster.pop('error', "couldn't read annotations from the server");
+                      $scope.serverErrorsByType[annotationType.name] =
+                        "couldn't read annotations from the server - please contact the curators";
                     });
                 });
+        }).catch(function() {
+          $scope.data.serverError = "couldn't read annotation types from the server";
         });
       },
     };
   };
 
-canto.directive('annotationTableList', ['toaster', 'AnnotationProxy', 'AnnotationTypeConfig', 'CantoGlobals', annotationTableList]);
+canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoGlobals', annotationTableList]);
 
 
 var annotationTableRow =

@@ -3,13 +3,21 @@
     <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
 Annotation loading ...
   </div>
-  <div ng-show="annotationTypes.length"
+  <div class="error_message" ng-show="data.serverError">
+    Error: {{data.serverError}}
+  </div>
+  <div ng-show="!data.serverError && annotationTypes.length"
        id="curs-annotation-tables" class="sect">
     <div ng-repeat="annotationType in annotationTypes">
       <div class="curs-box"
-           ng-show="annotationsByType[annotationType.name] && annotationsByType[annotationType.name].length > 0">
+           ng-show="serverErrorsByType[annotationType.name] || annotationsByType[annotationType.name] && annotationsByType[annotationType.name].length > 0">
         <div class="curs-box-title">
           {{annotationType.display_name}}
+        </div>
+        <div class="curs-box-body" ng-show="serverErrorsByType[annotationType.name]">
+          <div class="error_message" >
+            Error for {{annotationType.name}}: {{serverErrorsByType[annotationType.name]}}
+          </div>
         </div>
         <div class="curs-box-body">
           <div ng-if="annotationType.feature_type != 'genotype'">
