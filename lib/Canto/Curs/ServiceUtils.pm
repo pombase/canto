@@ -455,7 +455,7 @@ my %list_for_service_subs =
            the browser.
  Args    : $type - the data type: eg. "genotype"
  Return  : a list of hash refs summarising a type.  Example for genotype:
-           [ { identifier => 'h+ SPCC63.05-unk ssm4delta' }, { ... }, ... ]
+           [ { identifier => 'SPCC63.05-unk ssm4delta' }, { ... }, ... ]
 
 =cut
 
@@ -552,7 +552,7 @@ my %details_for_service_subs =
  Args    : $type - the data type: eg. "genotype"
            $id - the database ID of the feature
  Return  : hash summarising the data.  Example for genotype:
-           { identifier => 'h+ SPCC63.05-unk ssm4delta', alleles => [ {...}, ... ] }
+           { identifier => 'SPCC63.05-unk ssm4delta', alleles => [ {...}, ... ] }
 
 =cut
 

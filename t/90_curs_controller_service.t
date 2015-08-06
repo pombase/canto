@@ -99,9 +99,9 @@ test_psgi $app, sub {
                    'gene_display_name' => 'SPCC63.05',
                  }
                ],
-               'display_name' => 'h+ SPCC63.05delta ssm4KE',
+               'display_name' => 'SPCC63.05delta ssm4KE',
                'identifier' => 'aaaa0007-genotype-test-1',
-               'name' => 'h+ SPCC63.05delta ssm4KE',
+               'name' => 'SPCC63.05delta ssm4KE',
                background => 'h+',
              });
 };

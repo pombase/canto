@@ -54,7 +54,7 @@ test_psgi $app, sub {
     my $res = $cb->($req);
     is $res->code, 200;
 
-    like ($res->content(), qr|Genotype: h\+ SPCC63.05delta ssm4KE</title|);
+    like ($res->content(), qr|Genotype: SPCC63.05delta ssm4KE</title|);
     like ($res->content(), qr/Annotate normal or abnormal phenotypes, and the associated alleles/);
   }
 

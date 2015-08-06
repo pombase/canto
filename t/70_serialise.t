@@ -90,7 +90,7 @@ my $full_expected_curation_session =
     },
     genotypes => {
       'aaaa0007-genotype-test-1' => {
-        'name' => 'h+ SPCC63.05delta ssm4KE',
+        'name' => 'SPCC63.05delta ssm4KE',
         'background' => 'h+',
         alleles => [
           {

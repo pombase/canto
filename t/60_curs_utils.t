@@ -105,7 +105,7 @@ sub check_new_annotations
                  'evidence_code' => 'Epitope-tagged protein immunolocalization experiment data',
                  'annotation_type_abbreviation' => '',
                  'annotation_type_display_name' => 'phenotype',
-                 'genotype_name' => "h+ SPCC63.05delta ssm4KE",
+                 'genotype_name' => "SPCC63.05delta ssm4KE",
                  'genotype_background' => "h+",
                  'is_obsolete_term' => 0,
                  'creation_date_short' => '20100102',
@@ -116,8 +116,8 @@ sub check_new_annotations
                  'publication_uniquename' => 'PMID:19756689',
                  'feature_type' => 'genotype',
                  'feature_id' => 1,
-                 'genotype_display_name' => 'h+ SPCC63.05delta ssm4KE',
-                 'feature_display_name' => 'h+ SPCC63.05delta ssm4KE',
+                 'genotype_display_name' => 'SPCC63.05delta ssm4KE',
+                 'feature_display_name' => 'SPCC63.05delta ssm4KE',
                  'alleles' => [
                    {
                      'description' => 'deletion',

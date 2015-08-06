@@ -132,7 +132,7 @@ test_config:
                  type: deletion
          genotypes:
            - identifier: "aaaa0007-genotype-test-1"
-             name: "h+ SPCC63.05delta ssm4KE"
+             name: "SPCC63.05delta ssm4KE"
              background: "h+"
              alleles(Allele:primary_identifier):
                - 'SPAC27D7.13c:aaaa0007-1'
