@@ -1526,14 +1526,12 @@ function makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed)
 
 var genePageCtrl =
   function($scope, $modal, toaster, $http) {
-    $scope.singleAlleleQuick = function(gene_display_name, gene_systemtic_id, gene_id) {
+    $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {
       var editInstance = makeAlleleEditInstance($modal,
                                                 {
-                                                  gene: {
-                                                    display_name: gene_display_name,
-                                                    systemtic_id: gene_systemtic_id,
-                                                    gene_id: gene_id
-                                                  }
+                                                  gene_display_name: gene_display_name,
+                                                  gene_systematic_id: gene_systematic_id,
+                                                  gene_id: gene_id,
                                                 });
 
       editInstance.result.then(function (alleleData) {
@@ -1717,7 +1715,7 @@ var multiAlleleCtrl =
 
       if (allele.gene) {
         allele.gene_display_name = allele.gene.display_name;
-        allele.gene_systemtic_id = allele.gene.primary_identifier;
+        allele.gene_systematic_id = allele.gene.primary_identifier;
         allele.gene_id = allele.gene.gene_id;
         delete allele.gene;
       }
