@@ -1038,8 +1038,19 @@ sub start_annotation : Chained('annotate') PathPart('start') Args(1)
 
   $self->state()->store_statuses($schema);
 
-  &{$type_dispatch{$annotation_config->{category}}}($self, $c, $feature,
-                                                    $annotation_config);
+  my $category = $annotation_config->{category};
+
+  if (!defined $category) {
+    die "no category configured for annotation type: $annotation_type_name\n";
+  }
+
+  my $edit_func = $type_dispatch{$category};
+
+  if (!defined $edit_func) {
+    die qq(unknown category "$category" for annotation type: $annotation_type_name\n);
+  }
+
+  &{$edit_func}($self, $c, $feature, $annotation_config);
 }
 
 sub annotation : Chained('top') CaptureArgs(1)
