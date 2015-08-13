@@ -2681,7 +2681,11 @@ sub ws_genotype_delete : Chained('top') PathPart('ws/genotype/delete')
 
   my $json_data = $c->req()->body_data();
 
+  my $guard = $schema->txn_scope_guard();
+
   $c->stash->{json_data} = $service_utils->delete_genotype($feature_id, $json_data);
+
+  $guard->commit();
 
   $c->forward('View::JSON');
 }

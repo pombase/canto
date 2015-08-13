@@ -289,6 +289,14 @@ sub delete_genotype
   }
 
   $genotype->delete();
+
+  my $alleles_with_no_genotype_rs =
+    $schema->resultset('Allele')->search({},
+                                         {
+                                           where => \"allele_id NOT IN (SELECT allele FROM allele_genotype)",
+                                         });
+
+  $alleles_with_no_genotype_rs->delete();
 }
 
 1;

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 67;
+use Test::More tests => 68;
 use Test::Deep;
 use JSON;
 
@@ -932,8 +932,8 @@ is ($genotype_delete_res->{message}, 'genotype 1 has annotations - delete failed
 my $second_genotype =
   $curs_schema->resultset('Genotype')->find({ identifier => 'aaaa0007-genotype-test-2' });
 
-# remove the annotations so we can delete it
-$curs_schema->resultset('GenotypeAnnotation')->search({ genotype => $second_genotype->genotype_id() })->delete();
+# remove the annotations so we can delete genotypes
+$curs_schema->resultset('GenotypeAnnotation')->delete();
 
 sub unused_alleles_count
 {
@@ -956,7 +956,8 @@ is (unused_alleles_count(), 0);
 $genotype_delete_res = $service_utils->delete_genotype($second_genotype->genotype_id(), { key => 'aaaa0007' });
 is ($genotype_delete_res->{status}, 'success');
 
-#is (unused_alleles_count(), 0);
+
+is (unused_alleles_count(), 0);
 
 
 my $add_gene_result = $service_utils->add_gene_by_identifier('SPBC12C2.02c');
