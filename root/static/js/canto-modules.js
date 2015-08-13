@@ -1958,9 +1958,9 @@ var genotypeListRowCtrl =
               q.then(function() {
                 toaster.pop('success', 'Genotype deleted');
               });
-
+              
               q.catch(function(message) {
-                if (message === 'has_annotations') {
+                if (message.match('genotype .* has annotations')) {
                   toaster.pop('warning', "couldn't delete the genotype: delete the annotations that use it first");
                 } else {
                   toaster.pop('error', "couldn't delete the genotype: " + message);

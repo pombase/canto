@@ -285,7 +285,7 @@ sub delete_genotype
   my $genotype = $schema->resultset('Genotype')->find($genotype_id);
 
   if ($genotype->annotations()->count() > 0) {
-    die "has_annotations\n";
+    die "genotype $genotype_id has annotations - delete failed\n";
   }
 
   $genotype->delete();
