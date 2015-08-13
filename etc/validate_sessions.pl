@@ -44,6 +44,7 @@ Current checks:
   - the curs_key stored in the metadata table matches the curs_key
     in the Track DB
   - make sure that all Alleles have a primary_identifier
+  - remove alleles that aren't part of a genotype
 ";
 }
 

@@ -389,6 +389,7 @@ sub tidy_curs
              - the curs_key stored in the metadata table matches the curs_key
                in the Track DB
              - all Alleles have a primary_identifier (fixes those that don't)
+             - remove alleles that aren't part of a genotype
  Args    : $config - the Canto::Config object
            $track_schema - the schema object for the trackdb
            $curs - the Curs object of interest
@@ -442,6 +443,14 @@ sub validate_curs
       $allele->update();
     }
   }
+
+  my $alleles_with_no_genotype_rs =
+    $allele_rs->search({},
+                       {
+                         where => \"allele_id NOT IN (SELECT allele FROM allele_genotype)",
+                       });
+
+  $alleles_with_no_genotype_rs->delete();
 
   $guard->commit();
 
