@@ -411,9 +411,12 @@ sub _get_alleles
   my $allele_rs = $curs_schema->resultset('Allele')
     ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
                name => { -like => $search_string . '%' },
+             },
+             {
+               join => 'gene',
                # only return alleles that are part of a genotype
-               allele_genotype_id => { '!=' => undef } },
-             { join => [ 'gene', 'allele_genotypes' ] });
+               where => \"me.allele_id IN (SELECT allele FROM allele_genotype)",
+             });
   my @res = map {
     $self->_allele_details_hash($_);
   } $allele_rs->all();
