@@ -1,12 +1,13 @@
 use strict;
 use warnings;
-use Test::More tests => 60;
+use Test::More tests => 67;
 use Test::Deep;
 use JSON;
 
 use Capture::Tiny 'capture_stderr';
 
 use Canto::TestUtil;
+use Canto::Track;
 use Canto::Curs::ServiceUtils;
 
 my $test_util = Canto::TestUtil->new();
@@ -914,6 +915,48 @@ $genotype_detail_res =
 
 cmp_deeply($genotype_detail_res,
            $expected_genotype_detail_res);
+
+
+# deletion
+my $genotype_delete_res = $service_utils->delete_genotype($first_genotype->genotype_id());
+
+# fails because no curs_key is passed
+is ($genotype_delete_res->{status}, 'error');
+is ($genotype_delete_res->{message}, 'incorrect key');
+
+# fails because first_genotype has annotations
+$genotype_delete_res = $service_utils->delete_genotype($first_genotype->genotype_id(), { key => 'aaaa0007' });
+is ($genotype_delete_res->{status}, 'error');
+is ($genotype_delete_res->{message}, 'genotype 1 has annotations - delete failed');
+
+my $second_genotype =
+  $curs_schema->resultset('Genotype')->find({ identifier => 'aaaa0007-genotype-test-2' });
+
+# remove the annotations so we can delete it
+$curs_schema->resultset('GenotypeAnnotation')->search({ genotype => $second_genotype->genotype_id() })->delete();
+
+sub unused_alleles_count
+{
+  my $unused_alleles_rs =
+    $curs_schema->resultset('Allele')
+    ->search({},
+             {
+               where => \"allele_id NOT IN (SELECT allele FROM allele_genotype)",
+             });
+}
+
+is (unused_alleles_count(), 2);
+
+# clean test data
+Canto::Track::validate_curs($config, $test_util->track_schema(),
+                            $test_util->track_schema()->find_with_type('Curs', { curs_key => 'aaaa0007' }));
+
+is (unused_alleles_count(), 0);
+
+$genotype_delete_res = $service_utils->delete_genotype($second_genotype->genotype_id(), { key => 'aaaa0007' });
+is ($genotype_delete_res->{status}, 'success');
+
+#is (unused_alleles_count(), 0);
 
 
 my $add_gene_result = $service_utils->add_gene_by_identifier('SPBC12C2.02c');
