@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 16;
 
 use Try::Tiny;
 
@@ -24,9 +24,13 @@ my $curs_key = 'aaaa0007';
 
 my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
+is ($curs_schema->resultset('Allele')->count(), 5);
 
 my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
                                                          curs_schema => $curs_schema);
+
+$genotype_manager->_remove_unused_alleles();
+is ($curs_schema->resultset('Allele')->count(), 3);
 
 my $created_genotype_identifier = $curs_key . '-test-genotype-3';
 

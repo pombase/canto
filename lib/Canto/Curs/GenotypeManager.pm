@@ -109,6 +109,19 @@ sub find_with_alleles
   return undef;
 }
 
+sub _remove_unused_alleles
+{
+  my $self = shift;
+
+  my $alleles_with_no_genotype_rs =
+    $self->curs_schema()->resultset('Allele')->search({},
+                                         {
+                                           where => \"allele_id NOT IN (SELECT allele FROM allele_genotype)",
+                                         });
+
+  $alleles_with_no_genotype_rs->delete();
+}
+
 =head2 make_genotype
 
  Usage   : $genotype_manager->make_genotype($curs_key, $name, $background, \@allele_objects,
@@ -163,6 +176,8 @@ sub make_genotype
 
   $genotype->update();
 
+  $self->_remove_unused_alleles();
+
   return $genotype;
 }
 
@@ -197,6 +212,8 @@ sub store_genotype_changes
   $genotype->name($name);
   $genotype->background($background);
   $genotype->set_alleles($alleles);
+
+  $self->_remove_unused_alleles();
 
   $genotype->update();
 }
@@ -285,18 +302,14 @@ sub delete_genotype
   my $genotype = $schema->resultset('Genotype')->find($genotype_id);
 
   if ($genotype->annotations()->count() > 0) {
-    die "genotype $genotype_id has annotations - delete failed\n";
+    return "genotype $genotype_id has annotations - delete failed";
   }
 
   $genotype->delete();
 
-  my $alleles_with_no_genotype_rs =
-    $schema->resultset('Allele')->search({},
-                                         {
-                                           where => \"allele_id NOT IN (SELECT allele FROM allele_genotype)",
-                                         });
+  $self->_remove_unused_alleles();
 
-  $alleles_with_no_genotype_rs->delete();
+  return 0;
 }
 
 1;

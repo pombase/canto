@@ -6,6 +6,7 @@ use Plack::Test;
 
 use Canto::TestUtil;
 use Canto::Controller::Curs;
+use Canto::Curs::GenotypeManager;
 
 use JSON;
 
@@ -83,6 +84,10 @@ test_psgi $app, sub {
       is($perl_res->{status}, 'success');
     };
 
+  my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
+                                                           curs_schema => $curs_schema);
+  $genotype_manager->_remove_unused_alleles();
+
   my $start_allele_count = $curs_schema->resultset('Allele')->count();
 
   $test_create_1_proc->("h+ abc-1", "h+ ssm4delta(deletion)");
@@ -136,7 +141,7 @@ test_psgi $app, sub {
       { primary_identifier => $_->primary_identifier() }
     } $curs_schema->resultset('Genotype')
       ->first()->alleles()->all()),
-    { primary_identifier => 'SPAC27D7.13c:aaaa0007-2' });
+    { primary_identifier => 'SPAC27D7.13c:allele-2' });
 
   $new_genotype =
     $curs_schema->resultset('Genotype')
@@ -146,8 +151,7 @@ test_psgi $app, sub {
 
   is ($new_genotype->identifier(), "aaaa0007-genotype-4");
 
-  # shouldn't have created any new alleles:
-  is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 2);
+  is ($curs_schema->resultset('Allele')->count(), $start_allele_count + 3);
 };
 
 1;

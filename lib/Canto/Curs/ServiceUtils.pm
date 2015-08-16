@@ -1167,8 +1167,6 @@ sub delete_annotation
  Args    : $details - annotation details:
              - key: the curs key
              - genotype_identifier: ID of the annotation to delete
- Return  : Nothing - dies on error
-
  Return  : { status: 'success' }
          or:
            { status: 'error', message: '...' }
@@ -1191,13 +1189,22 @@ sub delete_genotype
       Canto::Curs::GenotypeManager->new(config => $self->config(),
                                         curs_schema => $self->curs_schema());
 
-    $genotype_manager->delete_genotype($genotype_id);
+    my $ret = $genotype_manager->delete_genotype($genotype_id);
 
     $self->metadata_storer()->store_counts($curs_schema);
 
     $curs_schema->txn_commit();
 
-    return { status => 'success' };
+    if ($ret) {
+      return {
+        status => 'error',
+        message => $ret,
+      };
+    } else {
+      return {
+        status => 'success',
+      };
+    }
   } catch {
     $curs_schema->txn_rollback();
 
