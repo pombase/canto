@@ -2826,7 +2826,7 @@ var termNameComplete =
             if (searchAnnotationTypeName !== item.annotation_type_name) {
               warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
                 item.annotation_type_name + ' term but<br/>you are browsing ' +
-                search_namespace + ' terms</span>';
+                searchAnnotationTypeName + ' terms</span>';
               var re = new RegExp('_', 'g');
               // unpleasant hack to make the namespaces look nicer
               warning = warning.replace(re,' ');
