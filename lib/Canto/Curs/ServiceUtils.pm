@@ -714,6 +714,8 @@ sub _ontology_change_keys
 
       my $res = $lookup->lookup_by_id( id => $term_ontid );
 
+      $annotation->type($res->{annotation_type_name});
+
       if (defined $res) {
         # do the default - set Annotation->data()->{...}
         return 0;

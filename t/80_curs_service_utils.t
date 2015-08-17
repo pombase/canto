@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 68;
+use Test::More tests => 74;
 use Test::Deep;
 use JSON;
 
@@ -253,12 +253,12 @@ $res = $service_utils->change_annotation($first_genotype_annotation->annotation_
                                          'new',
                                          {
                                            key => $curs_key,
-                                           evidence_code => "IDA",
+                                           evidence_code => "Cell growth assay",
                                          });
 is ($res->{status}, 'success');
 # re-query
 $first_genotype_annotation = $first_genotype->annotations()->first();
-is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
+is ($first_genotype_annotation->data()->{evidence_code}, "Cell growth assay");
 is ($res->{annotation}->{with_or_from_identifier}, undef);
 
 # test setting conditions
@@ -304,7 +304,7 @@ $stderr = capture_stderr {
                                            'new',
                                            {
                                              key => 'illegal',
-                                             evidence_code => "IDA",
+                                             evidence_code => "Cell growth assay",
                                            });
 };
 is ($res->{status}, 'error');
@@ -338,8 +338,28 @@ is ($res->{annotation}->{with_or_from_identifier}, $c2d7_gene->primary_identifie
 is ($res->{annotation}->{submitter_comment}, 'a short comment');
 
 # re-query
-$first_genotype_annotation = $first_genotype->annotations()->first();
-is ($first_genotype_annotation->data()->{evidence_code}, "IDA");
+$first_gene_annotation->discard_changes();
+is ($first_gene_annotation->data()->{evidence_code}, "IPI");
+is ($first_gene_annotation->data()->{with_gene}, $c2d7_gene->primary_identifier());
+is ($first_gene_annotation->data()->{submitter_comment}, 'a short comment');
+
+
+# test setting to a term from a different ontology
+# biological_process -> molecular_function
+$res = $service_utils->change_annotation($first_gene_annotation->annotation_id(),
+                                         'new',
+                                         {
+                                           key => $curs_key,
+                                           term_ontid => 'GO:0004156',
+                                         });
+is ($res->{status}, 'success');
+is ($res->{annotation}->{term_ontid}, 'GO:0004156');
+# annotation type should change:
+is ($res->{annotation}->{annotation_type}, 'molecular_function');
+
+# re-query
+$first_gene_annotation->discard_changes();
+is ($first_gene_annotation->type(), 'molecular_function');
 
 
 
@@ -466,6 +486,42 @@ my $post_translational_modification_res = $Canto::TestUtil::shared_test_results{
 cmp_deeply($annotation_res,
            [
             {
+              'annotation_id' => 2,
+              'annotation_extension' => 'annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(PomBase:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PECO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(PomBase:SPBC1105.11c)',
+              'gene_product' => 'ER-localized ubiquitin ligase Doa10 (predicted)',
+              'annotation_type' => 'molecular_function',
+              'status' => 'new',
+              'publication_uniquename' => 'PMID:19756689',
+              'feature_id' => 3,
+              'qualifiers' => [],
+              'with_or_from_identifier' => 'SPAC27D7.13c',
+              'curator' => 'Some Testperson <some.testperson@pombase.org>',
+              'needs_with' => '1',
+              'gene_name_or_identifier' => 'doa10',
+              'is_obsolete_term' => 0,
+              'term_suggestion_name' => undef,
+              'term_suggestion_definition' => undef,
+              'annotation_type_abbreviation' => 'F',
+              'gene_synonyms_string' => 'ssm4',
+              'term_name' => 'dihydropteroate synthase activity',
+              'gene_id' => 3,
+              'term_ontid' => 'GO:0004156',
+              'feature_display_name' => 'doa10',
+              'feature_type' => 'gene',
+              'annotation_type_display_name' => 'GO molecular function',
+              'creation_date_short' => '20100102',
+              'completed' => 1,
+              'taxonid' => 4896,
+              'is_not' => JSON::false,
+              'creation_date' => '2010-01-02',
+              'evidence_code' => 'IPI',
+              'submitter_comment' => 'a short comment',
+              'with_or_from_display_name' => 'ssm4',
+              'gene_name' => 'doa10',
+              'gene_identifier' => 'SPBC14F5.07',
+              'with_gene_id' => 2
+            },
+            {
               'evidence_code' => 'IDA',
               'creation_date' => '2010-01-02',
               'with_gene_id' => undef,
@@ -539,42 +595,6 @@ cmp_deeply($annotation_res,
               'publication_uniquename' => 'PMID:19756689'
             },
             {
-              'annotation_id' => 2,
-              'annotation_extension' => 'annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(PomBase:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PECO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(PomBase:SPBC1105.11c)',
-              'gene_product' => 'ER-localized ubiquitin ligase Doa10 (predicted)',
-              'annotation_type' => 'biological_process',
-              'status' => 'new',
-              'publication_uniquename' => 'PMID:19756689',
-              'feature_id' => 3,
-              'qualifiers' => [],
-              'with_or_from_identifier' => 'SPAC27D7.13c',
-              'curator' => 'Some Testperson <some.testperson@pombase.org>',
-              'needs_with' => '1',
-              'gene_name_or_identifier' => 'doa10',
-              'is_obsolete_term' => 0,
-              'term_suggestion_name' => undef,
-              'term_suggestion_definition' => undef,
-              'annotation_type_abbreviation' => 'P',
-              'gene_synonyms_string' => 'ssm4',
-              'term_name' => 'negative regulation of transmembrane transport',
-              'gene_id' => 3,
-              'term_ontid' => 'GO:0034763',
-              'feature_display_name' => 'doa10',
-              'feature_type' => 'gene',
-              'annotation_type_display_name' => 'GO biological process',
-              'creation_date_short' => '20100102',
-              'completed' => 1,
-              'taxonid' => 4896,
-              'is_not' => JSON::false,
-              'creation_date' => '2010-01-02',
-              'evidence_code' => 'IPI',
-              'submitter_comment' => 'a short comment',
-              'with_or_from_display_name' => 'ssm4',
-              'gene_name' => 'doa10',
-              'gene_identifier' => 'SPBC14F5.07',
-              'with_gene_id' => 2
-            },
-            {
               'evidence_code' => 'UNK',
               'gene_name_or_identifier' => 'ste20',
               'with_or_from_display_name' => undef,
@@ -631,7 +651,7 @@ cmp_deeply($annotation_res,
               'creation_date_short' => '20100102',
               'taxonid' => undef,
               'creation_date' => '2010-01-02',
-              'evidence_code' => 'IDA',
+              'evidence_code' => 'Cell growth assay',
               'genotype_id' => 1,
               'with_or_from_display_name' => undef,
               'genotype_display_name' => 'SPCC63.05delta ssm4KE',
