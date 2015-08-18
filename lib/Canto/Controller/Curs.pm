@@ -1694,6 +1694,8 @@ sub feature_add : Chained('feature') PathPart('add')
 
   $st->{annotation_count} = 0;
 
+  $st->{edit_or_duplicate} = 'edit';
+
   $st->{title} = "Add a $feature_type";
   $st->{template} = "curs/${feature_type}_edit.mhtml";
 }
