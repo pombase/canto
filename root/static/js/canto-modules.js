@@ -2220,8 +2220,14 @@ var termConfirmDialogCtrl =
                                         });
 
       promise.success(function(termData) {
-        $scope.data.state = 'definition';
         $scope.data.termData = termData;
+
+        if (args.initialState) {
+          $scope.data.state = args.initialState;
+          delete args.initialState;
+        } else {
+          $scope.data.state = 'definition';
+        }
       });
     };
 
@@ -2255,7 +2261,7 @@ canto.controller('TermConfirmDialogCtrl',
                   termConfirmDialogCtrl]);
 
 
-function openTermConfirmDialog($modal, termId)
+function openTermConfirmDialog($modal, termId, initialState)
 {
   return $modal.open({
     templateUrl: app_static_path + 'ng_templates/term_confirm.html',
@@ -2268,6 +2274,7 @@ function openTermConfirmDialog($modal, termId)
       args: function() {
         return {
           termId: termId,
+          initialState: initialState,
         };
       }
     },
@@ -2906,7 +2913,7 @@ canto.directive('termNameComplete', ['$timeout', termNameComplete]);
 
 
 var termChildrenQuery =
-  function(CantoService) {
+  function($modal, CantoService) {
     return {
       scope: {
         termId: '=',
@@ -2914,6 +2921,15 @@ var termChildrenQuery =
       },
       controller: function($scope) {
         $scope.data = { children: [] };
+
+        $scope.confirmTerm = function() {
+          var termConfirm = openTermConfirmDialog($modal, $scope.termId, 'children');
+
+          termConfirm.result.then(function(result) {
+            $scope.termOntid = result.newTermId;
+            $scope.termName = result.newTermName;
+          });
+        };
       },
       replace: true,
       restrict: 'E',
@@ -2928,7 +2944,7 @@ var termChildrenQuery =
                                                               children: 1,
                                                               exact_synonyms: 1,
                                                             });
-                          
+
                           promise.success(function(data) {
                             if (!data.children || data.children.length == 0) {
                               $scope.data.children = [];
@@ -2944,7 +2960,7 @@ var termChildrenQuery =
     };
   };
 
-canto.directive('termChildrenQuery', ['CantoService', termChildrenQuery]);
+canto.directive('termChildrenQuery', ['$modal', 'CantoService', termChildrenQuery]);
 
 
 var initiallyHiddenText =
