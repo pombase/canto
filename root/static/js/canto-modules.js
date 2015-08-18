@@ -1664,16 +1664,21 @@ var multiAlleleCtrl =
     curs_config_promise: CantoConfig.get('curs_config')
   };
 
-  $scope.init = function(genotype_id) {
-    if (genotype_id) {
-      $scope.data.genotype_id = genotype_id;
+  $scope.init_from = function(genotype_id) {
+    Curs.details('genotype', ['by_id', genotype_id])
+      .success(function(genotype_details) {
+        $scope.alleles = genotype_details.alleles;
+        $scope.data.genotype_name = genotype_details.name;
+        $scope.data.genotype_background = genotype_details.background;
+      });
+  };
 
-      Curs.details('genotype', ['by_id', genotype_id])
-        .success(function(genotype_details) {
-          $scope.alleles = genotype_details.alleles;
-          $scope.data.genotype_name = genotype_details.name;
-          $scope.data.genotype_background = genotype_details.background;
-        });
+  $scope.init = function(edit_or_duplicate, genotype_id) {
+    if (genotype_id) {
+      if (edit_or_duplicate === 'edit') {
+        $scope.data.genotype_id = genotype_id;
+      }
+      $scope.init_from(genotype_id);
     }
   };
 

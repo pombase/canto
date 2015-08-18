@@ -4,13 +4,14 @@ $title
 $pub
 $multi_organism_mode
 $curs_root_uri
-$annotation_count
+$annotation_count => 0
 $genotype_id => ''
+$edit_or_duplicate
 </%args>
 
 <div class="curs-genotype-edit">
 <div ng-controller="MultiAlleleCtrl" id="curs-multi-allele-select"
-     ng-init="init('<% $genotype_id %>')";
+     ng-init="init('<% $edit_or_duplicate %>', '<% $genotype_id %>')";
      class="curs-box ng-cloak">
     <div class="curs-box-title">
 Add alleles from the genes below until the genotype is fully specified.

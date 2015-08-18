@@ -1698,13 +1698,15 @@ sub feature_add : Chained('feature') PathPart('add')
   $st->{template} = "curs/${feature_type}_edit.mhtml";
 }
 
-sub feature_edit : Chained('feature') PathPart('edit')
+sub _feature_edit_helper
 {
-  my ($self, $c, $genotype_id) = @_;
+  my ($self, $c, $edit_or_duplicate, $genotype_id) = @_;
 
   my $st = $c->stash();
   $st->{show_title} = 1;
   my $feature_type = $st->{feature_type};
+
+  $st->{edit_or_duplicate} = $edit_or_duplicate;
 
   my $schema = $st->{schema};
 
@@ -1769,16 +1771,36 @@ sub feature_edit : Chained('feature') PathPart('edit')
       $st->{feature} = $genotype;
       $st->{features} = [$genotype];
 
-      $st->{annotation_count} = $genotype->annotations()->count();
+      if ($edit_or_duplicate eq 'edit') {
+        $st->{annotation_count} = $genotype->annotations()->count();
+      }
 
       my $display_name = $st->{feature}->display_name();
 
-      $st->{title} = "Editing genotype: $display_name";
+      if ($edit_or_duplicate eq 'edit') {
+        $st->{title} = "Editing genotype: $display_name";
+      } else {
+        $st->{title} = "Adding a genotype";
+      }
       $st->{template} = "curs/${feature_type}_edit.mhtml";
     }
   } else {
     die "can't edit feature type: $feature_type\n";
   }
+}
+
+sub feature_duplicate : Chained('feature') PathPart('duplicate')
+{
+  my ($self, $c, $genotype_id) = @_;
+
+  $self->_feature_edit_helper($c, 'duplicate', $genotype_id);
+}
+
+sub feature_edit : Chained('feature') PathPart('edit')
+{
+  my ($self, $c, $genotype_id) = @_;
+
+  $self->_feature_edit_helper($c, 'edit', $genotype_id);
 }
 
 sub _decode_json_content

@@ -95,6 +95,9 @@ Description
     <div>
       <a ng-click="checkEditIsSensible($event)" href="<% $start_path . '/feature/genotype/edit/' . $genotype->genotype_id() %>">Edit ...</a>
     </div>
+    <div>
+      <a href="<% $start_path . '/feature/genotype/duplicate/' . $genotype->genotype_id() %>">Duplicate ...</a>
+    </div>
 % }
   </div>
 </div>
