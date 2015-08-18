@@ -2898,6 +2898,10 @@ var termNameComplete =
           setTimeout(do_autocomplete, 10);
         });
 
+        elem.bind('click', function() {
+          setTimeout(do_autocomplete, 10);
+        });
+
         elem.keypress(function(event) {
           if (event.which == 13) {
             // return should autocomplete not submit the form
