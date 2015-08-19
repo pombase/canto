@@ -1107,6 +1107,11 @@ allele_type_list:
     allele_name_required: true
     allow_expression_change: false
     autopopulate_name: '@@gene_display_name@@delta'
+  - name: disruption
+    export_type: disruption
+    description_required: false
+    allele_name_required: true
+    allow_expression_change: true
   - name: unknown
     export_type: unknown
     description_required: false
