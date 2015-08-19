@@ -339,14 +339,15 @@ check_new_annotations($dummy_alt_id);
                'genotype_identifier' => 'aaaa0007-test-genotype-3',
                'alleles' => [
                  {
-                   'type' => undef,
+                   'type' => 'unknown',
                    'gene_display_name' => 'cdc11',
                    'taxonid' => '4896',
                    'primary_identifier' => 'SPCC1739.11c:allele-1',
-                   'long_display_name' => 'cdc11-33(unknown)',
+                   'long_display_name' => 'cdc11-33(unknown)[Knockdown]',
                    'description' => 'unknown',
                    'name' => 'cdc11-33',
                    'gene_id' => 4,
+                   expression => 'Knockdown',
                  },
                  {
                    'long_display_name' => 'ssm4delta(deletion)',
@@ -354,9 +355,10 @@ check_new_annotations($dummy_alt_id);
                    'name' => 'ssm4delta',
                    'description' => 'deletion',
                    'gene_display_name' => 'ssm4',
-                   'type' => undef,
+                   'type' => 'deletion',
                    'taxonid' => '4896',
                    'gene_id' => 15,
+                   expression => undef,
                  }
                ],
                'feature_type' => 'genotype',

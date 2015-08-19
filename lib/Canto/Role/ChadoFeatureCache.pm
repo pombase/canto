@@ -101,7 +101,7 @@ sub get_cached_allele_details
       primary_identifier => $allele->uniquename(),
       name => $allele->name(),
       description => $props{description},
-      type => $props{type},
+      type => $props{allele_type},
       gene_display_name => $gene->name() || $gene->uniquename(),
       gene_id => $gene->feature_id(),
       taxonid => $taxonid,
@@ -126,19 +126,33 @@ sub get_cached_genotype_details
   } else {
     my @alleles = ();
 
-    my $allele_rs = $genotype->feature_relationship_objects()
+    my $rel_rs = $genotype->feature_relationship_objects()
       ->search({ 'type.name' => 'part_of' },
-               { join => 'type' })
-      ->search_related('subject', { 'type_2.name' => 'allele' }, { join => 'type' });
+               { join => [ 'type', { subject => 'type' } ] });
 
-    while (defined (my $allele = $allele_rs->next())) {
-      push @alleles, $self->get_cached_allele_details($allele);
+    while (defined (my $rel = $rel_rs->next())) {
+      next unless $rel->subject()->type()->name() eq 'allele';
+      my $allele = $rel->subject();
+      my $expression;
+
+      my $expression_prop = $rel
+        ->feature_relationshipprops()
+        ->search({ 'type.name' => 'expression' }, { join => 'type' })->first();
+
+      if ($expression_prop) {
+        $expression = $expression_prop->value();
+      }
+
+      push @alleles, {
+        %{$self->get_cached_allele_details($allele)},
+        expression => $expression,
+      };
     }
 
     @alleles = sort {
-      ($a->{name} // $a->{uniquename})
+      ($a->{name} // $a->{primary_identifier})
         cmp
-      ($b->{name} // $b->{uniquename});
+      ($b->{name} // $b->{primary_identifier});
     } @alleles;
 
     my %details = (

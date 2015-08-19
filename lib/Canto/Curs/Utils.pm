@@ -595,8 +595,8 @@ sub _process_existing_db_ontology
     $ret{alleles} = [map {
       my %ret = %$_;
       $ret{long_display_name} =
-        ($_->{name} || $_->{primary_identifier} || 'unknown') .
-        '(' . ($_->{description} || 'unknown') . ')';
+        ($ret{name} || 'unknown') .
+        '(' . ($ret{description} || 'unknown') . ')';
 
       if ($_->{expression}) {
         $ret{long_display_name} .= '[' . $_->{expression} . ']';

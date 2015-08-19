@@ -42,7 +42,6 @@ sub check_res {
                from => undef,
                is_not => 0,
                conditions => [],
-               expression => undef,
                qualifiers => [],
                annotation_id => 1,
                publication => {
@@ -140,7 +139,6 @@ cmp_deeply($res->[0],
                'organism_taxonid' => '4896'
              },
              'conditions' => [],
-             'expression' => undef,
              'qualifiers' => [],
              'publication' => {
                'uniquename' => 'PMID:19756689'
@@ -177,7 +175,6 @@ cmp_deeply($res->[0],
                'uniquename' => 'PMID:19756689'
              },
              'annotation_id' => 3,
-             'expression' => undef,
              'from' => undef,
              'evidence_code' => 'UNK',
              'genotype' => {
@@ -187,19 +184,21 @@ cmp_deeply($res->[0],
                    'primary_identifier' => 'SPCC1739.11c:allele-1',
                    'gene_display_name' => 'cdc11',
                    'name' => 'cdc11-33',
-                   'type' => undef,
+                   'type' => 'unknown',
                    'taxonid' => '4896',
                    'description' => 'unknown',
                    'gene_id' => 4,
+                   expression => 'Knockdown',
                  },
                  {
                    'taxonid' => '4896',
                    'description' => 'deletion',
-                   'type' => undef,
+                   'type' => 'deletion',
                    'name' => 'ssm4delta',
                    'primary_identifier' => 'SPAC27D7.13c:allele-1',
                    'gene_display_name' => 'ssm4',
                    'gene_id' => 15,
+                   expression => undef,
                  }
                ],
                'name' => 'cdc11-33 ssm4delta'
