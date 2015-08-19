@@ -1237,13 +1237,28 @@ evidence_types:
   'Other': ~
   'Affinity Capture-Luminescence':
     name: 'Affinity Capture-Luminescence (affinity captures)'
+    non_symmetric_interaction_labels:
+      interactor_a: affinity captures
+      interactor_b: affinity captured by
   'Affinity Capture-MS':
     name: 'Affinity Capture-MS (affinity captures)'
+    non_symmetric_interaction_labels:
+      interactor_a: affinity captures
+      interactor_b: affinity captured by
   'Affinity Capture-RNA':
     name: 'Affinity Capture-RNA (affinity captures)'
+    non_symmetric_interaction_labels:
+      interactor_a: affinity captures
+      interactor_b: affinity captured by
   'Affinity Capture-Western':
     name: 'Affinity Capture-Western (affinity captures)'
-  'Biochemical Activity': ~
+    non_symmetric_interaction_labels:
+      interactor_a: affinity captures
+      interactor_b: affinity captured by
+  'Biochemical Activity':
+    non_symmetric_interaction_labels:
+      interactor_a: n/a (would be modifies)
+      interactor_b: (would be modified by)
   'Chromatography evidence': ~
   'Co-crystal Structure':
     name: 'Co-crystal Structure (or NMR structure)'
@@ -1252,25 +1267,52 @@ evidence_types:
   'Co-purification': ~
   'Dosage Growth Defect':
     name: 'Dosage Growth Defect (growth defect in presence of overexpressed)'
+    non_symmetric_interaction_labels:
+      interactor_a: growth defect in presence of overexpressed
+      interactor_b: overexpression causes growth defect to
   'Dosage Lethality':
     name: 'Dosage Lethality (inviable in presence of overexpressed)'
+    non_symmetric_interaction_labels:
+      interactor_a: inviable in presence of overexpressed
+      interactor_b: overexpression lethal to
   'Dosage Rescue':
     name: 'Dosage Rescue (rescued by overexpression of)'
+    non_symmetric_interaction_labels:
+      interactor_a: rescued by overexpression of
+      interactor_b: overexpression rescues
   'FRET':
     name: 'FRET (fluorescence resonance energy donor to)'
+    non_symmetric_interaction_labels:
+      interactor_a: fluorescence resonance energy donor to
+      interactor_b: fluorescence resonance energy acceptor from
   'Far Western':
     name: 'Far Western (captures)'
+    non_symmetric_interaction_labels:
+      interactor_a: captures
+      interactor_b: captured by
   'Microarray RNA expression level data': ~
   'PCA':
     name: 'PCA (interacts with)'
   'Phenotypic Enhancement':
     name: 'Phenotypic Enhancement (phenotype enhanced by)'
+    non_symmetric_interaction_labels:
+      interactor_a: phenotype enhanced by
+      interactor_b: enhances phenotype of
   'Phenotypic Suppression':
     name: 'Phenotypic Suppression (rescued by)'
+    non_symmetric_interaction_labels:
+      interactor_a: rescued by
+      interactor_b: rescues
   'Protein-RNA':
     name: 'Protein-RNA (binds to RNA)'
+    non_symmetric_interaction_labels:
+      interactor_a: binds to RNA
+      interactor_b: binds to protein
   'Protein-peptide':
     name: 'Protein-peptide (binds to peptide)'
+    non_symmetric_interaction_labels:
+      interactor_a: binds to peptide
+      interactor_b: (peptide) binds to protein
   'Reconstituted Complex': ~
   'RNA protection assay evidence': ~
   'Synthetic Growth Defect': ~
@@ -1278,8 +1320,14 @@ evidence_types:
   'Synthetic Lethality': ~
   'Synthetic Rescue':
     name: 'Synthetic Rescue (synthetically rescued by)'
+    non_symmetric_interaction_labels:
+      interactor_a: synthetically rescued by
+      interactor_b: synthetically rescues
   'Two-hybrid':
     name: 'Two-hybrid (binds activation domain construct with)'
+    non_symmetric_interaction_labels:
+      interactor_a: binds activation domain construct with
+      interactor_b: binds DNA-binding domain construct with
   'Reporter gene assay': ~
   'Enzyme assay data': ~
   'Flow cytometry data': ~
