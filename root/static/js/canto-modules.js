@@ -1270,7 +1270,7 @@ var alleleNameComplete =
       },
       restrict: 'E',
       replace: true,
-      template: '<div><input ng-model="alleleName" type="text" class="curs-allele-name aform-control" value=""/></div>',
+      template: '<span><input ng-model="alleleName" type="text" class="curs-allele-name aform-control" value=""/></span>',
       controller: function ($scope) {
         $scope.clicked = function () {
           $scope.merge = $scope.alleleDescription + ' ' + $scope.allelePrimaryIdentifier;
