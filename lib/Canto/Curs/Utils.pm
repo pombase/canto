@@ -595,7 +595,7 @@ sub _process_existing_db_ontology
     $ret{alleles} = [map {
       my %ret = %$_;
       $ret{long_display_name} =
-        ($ret{name} || 'unknown') .
+        ($ret{name} || $ret{gene_display_name} . ':unnamed') .
         '(' . ($ret{description} || 'unknown') . ')';
 
       if ($_->{expression}) {
@@ -942,7 +942,7 @@ sub canto_allele_type
 
 sub make_allele_display_name
 {
-  my $name = shift || 'noname';
+  my $name = shift || 'unnamed';
   my $description = shift;
   my $type = shift;
 
