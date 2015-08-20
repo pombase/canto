@@ -7,8 +7,11 @@
       {{annotation.gene_display_name}}
     </span>
   </td>
-  <td>
+  <td ng-if="multiOrganismMode">
     {{annotation.gene_taxonid}}
+  </td>
+  <td>
+    {{displayEvidence}}
   </td>
   <td>
     <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/gene/view/' + annotation.interacting_gene_id + (read_only_curs ? '/ro' : '')}}">
@@ -18,11 +21,8 @@
       {{annotation.interacting_gene_display_name}}
     </span>
   </td>
-  <td>
+  <td ng-if="multiOrganismMode">
     {{annotation.interacting_gene_taxonid}}
-  </td>
-  <td>
-    {{annotation.evidence_code}}
   </td>
   <td ng-if="!data.hideColumns.submitter_comment">
     {{annotation.submitter_comment}}

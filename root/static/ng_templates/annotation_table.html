@@ -55,10 +55,10 @@
           <thead>
             <tr>
               <th>Interactor A</th>
-              <th>Taxon Id A</th>
-              <th>Interactor B</th>
-              <th>Taxon Id B</th>
+              <th ng-if="multiOrganismMode">Taxon Id A</th>
               <th>Evidence code</th>
+              <th>Interactor B</th>
+              <th ng-if="multiOrganismMode">Taxon Id B</th>
               <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
               <th ng-if="!data.hideColumns.curator">Curator</th>
             </tr>

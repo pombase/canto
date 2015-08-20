@@ -2549,7 +2549,7 @@ function filterAnnotations(annotations, params) {
 
 var annotationTableCtrl =
   function(CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList,
-           CursSessionDetails) {
+           CursSessionDetails, CantoConfig) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -2565,6 +2565,8 @@ var annotationTableCtrl =
       controller: function($scope) {
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.app_static_path = CantoGlobals.app_static_path;
+
+        $scope.multiOrganismMode = false;
 
         $scope.filterParams = {
           annotationTypeName: $scope.annotationTypeName,
@@ -2611,6 +2613,12 @@ var annotationTableCtrl =
           .success(function(sessionDetails) {
             $scope.data.publicationUniquename = sessionDetails.publication_uniquename;
           });
+
+        CantoConfig.get('instance_organism').success(function(results) {
+          if (!results) {
+            $scope.multiOrganismMode = true;
+          }
+        });
 
         copyObject(initialHideColumns, $scope.data.hideColumns);
 
@@ -2668,7 +2676,7 @@ var annotationTableCtrl =
 
 canto.directive('annotationTable',
                 ['CantoGlobals', 'AnnotationProxy',
-                 'AnnotationTypeConfig', 'CursGenotypeList', 'CursSessionDetails',
+                 'AnnotationTypeConfig', 'CursGenotypeList', 'CursSessionDetails', 'CantoConfig',
                  annotationTableCtrl]);
 
 
@@ -2729,7 +2737,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function($modal, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, toaster) {
+  function($modal, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, CantoConfig, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -2740,8 +2748,11 @@ var annotationTableRow =
       controller: function($scope) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+        $scope.multiOrganismMode = false;
 
         var annotation = $scope.annotation;
+
+        $scope.displayEvidence = annotation.evidence_code;
 
         if (typeof($scope.annotation.conditions) !== 'undefined') {
           $scope.annotation.conditionsString =
@@ -2760,10 +2771,26 @@ var annotationTableRow =
 
         $scope.annotation.qualifiersString = qualifiersList.join(', ');
 
-        AnnotationTypeConfig.getByName(annotation.annotation_type)
+        var annotationTypePromise =
+            AnnotationTypeConfig.getByName(annotation.annotation_type);
+        annotationTypePromise
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
           });
+
+        CantoConfig.get('instance_organism').success(function(results) {
+          if (!results) {
+            $scope.multiOrganismMode = true;
+          }
+        });
+
+        CantoConfig.get('evidence_types').success(function(results) {
+          $scope.evidenceTypes = results;
+
+          annotationTypePromise.then(function() {
+            $scope.displayEvidence = results[annotation.evidence_code].name;
+          });
+        });
 
         $scope.edit = function() {
           // FIXME: featureFilterDisplayName is from the parent scope
@@ -2810,7 +2837,7 @@ var annotationTableRow =
 
 canto.directive('annotationTableRow',
                 ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig',
-                 'CantoGlobals', 'toaster',
+                 'CantoGlobals', 'CantoConfig', 'toaster',
                  annotationTableRow]);
 
 

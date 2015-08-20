@@ -1684,6 +1684,7 @@ webservices:
   quickgo_annotation_lookup_url: 'http://www.ebi.ac.uk/QuickGO/GAnnotation?format=gaf&ref='
 
 config_service:
+  # settings visible via the config web service
   allowed_keys:
     allele_types: 1
     allele_type_list: 1
@@ -1693,6 +1694,7 @@ config_service:
     curs_config: 1
     evidence_types: 1
     ontology_external_links: 1
+    instance_organism: 1
 
 curs_settings_service:
   allowed_keys:
