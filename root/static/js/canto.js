@@ -276,6 +276,13 @@ $(document).ready(function() {
                                                       (read_only_curs ? '/ro' : '');
                                                   });
 
+  $('#curs-genotype-page-back').on('click',
+                                   function () {
+                                     window.location.href = curs_root_uri +
+                                       '/genotype_manage' +
+                                       (read_only_curs ? '/ro' : '');
+                                   });
+
   $('#curs-pub-assign-popup-dialog').click(function () {
     $('#curs-pub-assign-dialog').dialog({ modal: true,
                                           title: 'Set the corresponding author ...',
