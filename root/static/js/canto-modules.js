@@ -2366,16 +2366,18 @@ var annotationEditDialogCtrl =
     };
 
     $scope.termFoundCallback =
-      function(termId, termName) {
+      function(termId, termName, searchString) {
         $scope.annotation.term_ontid = termId;
         $scope.annotation.term_name = termName;
 
-        var termConfirm = openTermConfirmDialog($modal, termId);
+        if (searchString !== termId) {
+          var termConfirm = openTermConfirmDialog($modal, termId);
 
-        termConfirm.result.then(function(result) {
-          $scope.annotation.term_ontid = result.newTermId;
-          $scope.annotation.term_name = result.newTermName;
-        });
+          termConfirm.result.then(function(result) {
+            $scope.annotation.term_ontid = result.newTermId;
+            $scope.annotation.term_name = result.newTermName;
+          });
+        } // else: user pasted a term ID - skip confirmation
       };
 
     $scope.ok = function() {
@@ -2898,20 +2900,29 @@ var termNameComplete =
       restrict: 'E',
       template: '<input size="40" type="text" class="form-control" autofocus value="{{currentTermName}}"/>',
       link: function(scope, elem) {
+        var valBeforeComplete = null;
         elem.autocomplete({
           minLength: 2,
           source: make_ontology_complete_url(scope.annotationTypeName),
           cacheLength: 100,
           focus: ferret_choose.show_autocomplete_def,
+          open: function(ev) {
+            valBeforeComplete = elem.val();
+          },
           close: ferret_choose.hide_autocomplete_def,
           select: function(event, ui) {
+            var trimmedValBeforeComplete = null;
+            if (valBeforeComplete) {
+              trimmedValBeforeComplete = trim(valBeforeComplete);
+            }
             $timeout(function() {
               scope.foundCallback({ termId: ui.item.id,
                                     termName: ui.item.value,
-                                    searchString: trim(elem.val()),
+                                    searchString: trimmedValBeforeComplete,
                                     matchingSynonym: ui.item.matching_synonym,
                                   });
             }, 1);
+            valBeforeComplete = null;
           },
         }).data("autocomplete")._renderItem = function( ul, item ) {
           var search_string = elem.val();
