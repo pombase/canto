@@ -2370,14 +2370,14 @@ var annotationEditDialogCtrl =
         $scope.annotation.term_ontid = termId;
         $scope.annotation.term_name = termName;
 
-        if (searchString !== termId) {
+        if (!searchString.match(/^".*"$/) && searchString !== termId) {
           var termConfirm = openTermConfirmDialog($modal, termId);
 
           termConfirm.result.then(function(result) {
             $scope.annotation.term_ontid = result.newTermId;
             $scope.annotation.term_name = result.newTermName;
           });
-        } // else: user pasted a term ID - skip confirmation
+        } // else: user pasted a term ID or user quoted the search - skip confirmation
       };
 
     $scope.ok = function() {
