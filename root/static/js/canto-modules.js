@@ -2973,7 +2973,7 @@ var termChildrenQuery =
           var termConfirm = openTermConfirmDialog($modal, $scope.termId, 'children');
 
           termConfirm.result.then(function(result) {
-            $scope.termOntid = result.newTermId;
+            $scope.termId = result.newTermId;
             $scope.termName = result.newTermName;
           });
         };
