@@ -193,7 +193,7 @@ sub _do_local_and_docs
 
     $st->{hide_header} = $hide_header;
     $st->{static_page} = $static_page;
-    if ($static_page) {
+    if ($static_page && !$ENV{CANTO_DEBUG}) {
       # no login button, so we can cache it
       $c->cache_page(300);
     }
