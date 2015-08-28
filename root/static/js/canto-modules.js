@@ -1156,6 +1156,17 @@ var annotationEvidence =
           return code;
         };
 
+        $scope.getDefinition = function(code) {
+          if ($scope.evidenceTypes) {
+            var def = $scope.evidenceTypes[code].definition;
+            if (def) {
+              return def;
+            }
+          }
+
+          return $scope.getDisplayCode(code);
+        };
+
         CantoConfig.get('evidence_types').success(function(results) {
           $scope.evidenceTypes = results;
 

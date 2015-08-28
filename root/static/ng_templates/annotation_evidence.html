@@ -1,9 +1,9 @@
 <div class="curs-evidence-directive">
   <div ng-class="{ 'has-error': !isValidEvidenceCode() }">
     <select class="form-control"
-            ng-model="evidenceCode"
-            ng-options="code as getDisplayCode(code) for code in annotationType.evidence_codes">
+            ng-model="evidenceCode">
       <option value="">Choose an evidence code ...</option>
+      <option ng-repeat="code in annotationType.evidence_codes" value="{{code}}" title="{{getDefinition(code)}}">{{getDisplayCode(code)}}</option>
     </select>
   </div>
 
