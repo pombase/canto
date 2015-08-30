@@ -24,7 +24,6 @@
         <li><a href="<% $login_url %>">Log in</a></li>
 %   }
 % }
-        </li>
       </ul>
     </span>
     <button class="btn btn-default">
