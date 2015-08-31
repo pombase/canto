@@ -1086,7 +1086,7 @@ var interactionWizardCtrl =
       $scope.postInProgress = true;
       toaster.pop('info', 'Creating interaction ...');
       simpleHttpPost(toaster, $http, '../add_interaction/' + $scope.annotationTypeName,
-                     { 
+                     {
                        evidence_code: $scope.data.evidence_code,
                        prey_gene_ids: $scope.selectedFeatureIds,
                      });
@@ -1594,7 +1594,7 @@ var singleGeneAddDialogCtrl =
                               'There is more than one gene matching gene: ' +
                               $.map(data.found,
                                     function(gene) {
-                                      return gene.primary_identifier || gene.primary_name
+                                      return gene.primary_identifier || gene.primary_name;
                                     }).join(', ');
                             $scope.gene.primaryIdentifier = null;
                           } else {
@@ -1870,7 +1870,7 @@ var geneSelectorCtrl =
           });
         };
       },
-    }
+    };
   };
 
 canto.directive('geneSelector',
@@ -1945,7 +1945,7 @@ var genotypeSearchCtrl =
                         }
                       });
       },
-    }
+    };
   };
 
 canto.directive('genotypeSearch',
@@ -1974,7 +1974,7 @@ var genotypeListRowCtrl =
               q.then(function() {
                 toaster.pop('success', 'Genotype deleted');
               });
-              
+
               q.catch(function(message) {
                 if (message.match('genotype .* has annotations')) {
                   toaster.pop('warning', "couldn't delete the genotype: delete the annotations that use it first");
