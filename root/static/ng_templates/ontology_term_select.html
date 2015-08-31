@@ -1,0 +1,49 @@
+<div id="ferret">
+  <div id="ferret-term-entry" class="curs-box">
+    <div class="inline-help curs-box-title">
+Search for {{annotationType.display_name}} term
+    </div>
+    <div class="ferret-term-entry-inside curs-box-body">
+      <div>
+        <div>
+{{annotationType.help_text}}
+        </div>
+        <div ng-if="annotationType.more_help_text">
+          <a id="ferret-term-entry-type-help" class="canto-more-button" href='#'>more ...</a>
+          <div id="ferret-term-entry-type-help-target" class="ferret-more-help">
+{{annotationType.more_help_text}}
+          </div>
+          <div>
+Start typing a {{annotationType.short_display_name}} in the search
+box. If you do not find the term you are looking for with your initial search,
+begin with a broad term ({{annotationType.broad_term_suggestions}})
+<a id="ferret-term-entry-extra-help" class="canto-more-button" href='#'>more ...</a>
+          </div>
+          <div id="ferret-term-entry-extra-help-target" class="ferret-more-help">
+            <div>
+More specific terms will be suggested allowing you to refine your search
+iteratively before making your final selection (examples of more specific
+terms are: {{annotationType.specific_term_examples}}).
+            </div>
+            <div>
+Gene products may be annotated with multiple
+{{annotationType.short_display_name}} terms.
+            </div>
+            <div ng-if="annotationType.extra_help_text">
+{{annotationType.extra_help_text}}
+            </div>
+          </div>
+          <term-name-complete id="ferret-term-input" name="ferret-term-entry"
+                              current-term-name=""
+                              found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
+                              annotation-type-name="{{annotationType.name}}"></term-name-complete>
+
+          <div class="clearall">
+            <a href="{{curs_root_uri + '/feature/' + featureType + '/view/' + featureId)}"
+               class="btn btn-primary curs-back-button">&lt;- Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

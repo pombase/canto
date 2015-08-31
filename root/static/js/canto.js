@@ -91,88 +91,6 @@ function make_confirm_dialog(link, prompt, confirm_button_label, cancel_button_l
 }
 
 var ferret_choose = {
-  annotation_namespace: undefined,
-
-  initialise : function(annotation_type_name, annotation_namespace) {
-    ferret_choose.ontology_complete_url = make_ontology_complete_url(annotation_type);
-    ferret_choose.annotation_type_name = annotation_type_name;
-    ferret_choose.annotation_namespace = annotation_namespace;
-  },
-
-  debug : function(message) {
-//    $("#ferret").append("<div>" + message + "</div>");
-  },
-
-  fetch_term_detail : function(term_id, callback) {
-    var show_synonyms_config = annotation_type_config.show_synonyms;
-    var synonyms_flag = 0;
-    if (typeof(show_synonyms_config) !== "undefined") {
-      if (show_synonyms_config === "always") {
-        synonyms_flag = 1;
-      }
-    }
-    $.ajax({
-      url: ferret_choose.ontology_complete_url,
-      data: { term: term_id, def: 1, children: 1, exact_synonyms: synonyms_flag },
-      dataType: 'json',
-      success: function(data) {
-        callback(data[0]);
-      },
-    });
-  },
-
-  get_term_by_id : function(term_id, callback) {
-    ferret_choose.fetch_term_detail(term_id, callback);
-  },
-
-  get_current_term : function() {
-    return last(ferret_choose.term_history);
-  },
-
-  show_children : function() {
-    var term_children = $('#ferret-term-children');
-    term_children.show();
-    ferret_choose.hide_leaf();
-  },
-
-  hide_children : function() {
-    var term_children = $('#ferret-term-children');
-    term_children.hide();
-  },
-
-  show_leaf : function() {
-    var leaf = $('#ferret-leaf');
-    leaf.show();
-    ferret_choose.hide_children();
-  },
-
-  hide_leaf : function() {
-    var leaf = $('#ferret-leaf');
-    leaf.hide();
-  },
-
-  suggest_dialog : function() {
-    $('#ferret-suggest-term-id').val($('#ferret-term-id').val());
-    var term_name = $('.ferret-term-name').first().text();
-    $('#ferret-suggest').dialog({ modal: true,
-                                  title:
-                                  'Suggest a new child term of "' +
-                                   term_name + '"',
-                                  width: 800 });
-    return false;
-  },
-
-  ferret_reset : function() {
-    // from: http://stackoverflow.com/questions/680241/blank-out-a-form-with-jquery
-    $(':input','#ferret-form')
-      .not(':button, :submit, :reset, :hidden')
-      .val('')
-      .removeAttr('checked')
-      .removeAttr('selected');
-    ferret_choose.term_history = [ferret_choose.term_history.first()];
-    return true;
-  },
-
   show_autocomplete_def: function(event, ui) {
     $('.curs-autocomplete-definition').remove();
     var definition;
@@ -202,21 +120,6 @@ var ferret_choose = {
   }
 }
 
-
-var curs_home = {
-  show_term_suggestion : function(term_ontid, name, definition) {
-    var dialog_div = $('#curs-dialog');
-    var html = '<div><h4>Term name:</h4>' +
-      '<span class="term-name">' + name + '</span></div>' +
-      '<div>' +
-      '<h4>Definition:</h4> <div class="term-definition">' + definition +
-      '</div></div>';
-    $('#curs-dialog').html(html);
-    $('#curs-dialog').dialog({ modal: true,
-                               title: 'Child term suggestion for ' + term_ontid});
-  }
-
-};
 
 var canto_util = {
   show_message : function(title, message) {

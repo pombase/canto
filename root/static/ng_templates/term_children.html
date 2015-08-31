@@ -1,9 +1,17 @@
 <div>
-  <ul>
-    <li ng-repeat="child in termData.children">
-      <a href="#" ng-click="gotoChild(child.id)">{{child.name}}
-        <img ng-src="{{CantoGlobals.application_root}}/static/images/right_arrow.png"></img>
-      </a>
-    </li>
-  </ul>
+  <div class="inline-help curs-box-title">
+    If possible, please refine your term selection. Clicking on a child term
+    from the list below selects it and shows its definition (and children,
+    if any):
+  </div>
+
+  <div>
+    <ul>
+      <li ng-repeat="child in termDetails.children">
+        <a href="#" ng-click="gotoChild(child.id)">{{child.name}}
+          <img ng-src="{{CantoGlobals.application_root}}/static/images/right_arrow.png"></img>
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>

@@ -3,26 +3,40 @@
     <tr>
       <td class="title">ID</td>
       <td class="term-id ferret-term-id-display">
-        {{termData.id}}
+        {{termDetails.id}}
       </td>
     </tr>
     <tr>
       <td class="title">Ontology</td>
-      <td>{{termData.annotation_namespace}}</td>
+      <td>{{termDetails.annotation_namespace}}</td>
     </tr>
     <tr>
       <td class="title">Term name</td>
       <td class="term-name ferret-term-name">
-        {{termData.name}}
+        {{termDetails.name}}
+      </td>
+    </tr>
+    <tr ng-if="termDetails.matchingSynonym">
+      <td class="title">Matching synonym</td>
+      <td class="ferret-matching-synonym">
+        {{termDetails.matchingSynonym}}
       </td>
     </tr>
     <tr>
       <td class="title">Definition</td>
-      <td class="term-definition">{{termData.definition}}</td>
+      <td class="term-definition">{{termDetails.definition}}</td>
     </tr>
-    <tr ng-show="getCurrentTermDetails('comment')">
+    <tr>
       <td class="title">Comment</td>
-      <td>{{termData.comment}}</td>
+      <td class="term-comment">{{termDetails.comment}}</td>
+    </tr>
+    <tr ng-if="termDetails.synonyms">
+      <td class="title">Synonym<span ng-show="termDetails.synonyms.length != 1">s</span> </td>
+      <td>
+        <div ng-repeat="synonym in termDetails.synonyms">
+          {{synonym}}
+        </div>
+      </td>
     </tr>
   </table>
 </div>

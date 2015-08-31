@@ -30,11 +30,6 @@
 <script src="<% $c->uri_for('/static/js/bootbox.min.js') %>"></script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/canto.js') %>"></script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/canto-modules.js') %>"></script>
-<script language="javascript" type="text/javascript">
-  if (typeof annotation_type != 'undefined') {
-    ferret_choose.initialise(annotation_type, annotation_namespace);
-  }
-</script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/jquery.form.2.47.js') %>"></script>
 
 % if (defined $site_tracking_id) {

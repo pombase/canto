@@ -1,0 +1,26 @@
+<div>
+  <div ng-show="annotation_comment_help_text">
+    {{annotation_comment_help_text}}
+  </div>
+  <div ng-hide="annotation_comment_help_text">
+If you have any additional information that you 
+haven't been able to represent using the ontology term and evidence please add
+a comment. For 
+example, you may provide the target of a protein kinase or transcription 
+factor (use the gene name or systematic ID), the cell cycle phase when a 
+specific process occurs or a localization is observed, the amino acid 
+residues for a modification, etc. The curators may be able to capture this 
+additional information in an "annotation extension". You can also include 
+the figure or table number that shows the results on which this annotation 
+is based.
+  </div>
+  <textarea ng-model="data.comment" class="annotation-comment" cols="80"
+            rows="6" style="display: block"></textarea>
+
+  <button type="submit" class="btn btn-primary curs-back-button"
+          title="&lt;- Back"
+          ng-click="unsetEvidence()">&lt;- Back</button>
+  <button type="submit" class="btn btn-primary curs-finish-button"
+          ng-disabled="!isValid()"
+          ng-click="setComment()" >Proceed -&gt;</button>
+</div>

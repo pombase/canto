@@ -1,6 +1,8 @@
 "use strict";
 
-/*global history,curs_root_uri,angular,$,make_ontology_complete_url,ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,app_static_path,ontology_external_links,loadingStart,loadingEnd */
+/*global history,curs_root_uri,angular,$,make_ontology_complete_url,
+  ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,
+  app_static_path,ontology_external_links,loadingStart,loadingEnd */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'toaster']);
 
@@ -502,87 +504,166 @@ function fetch_conditions(search, showChoices) {
 }
 
 var cursStateService =
-  function() {
+  function($q, CantoService) {
     // var gene = null
-    this.state = {
+    this.data = {
       searchString: null,
       termHistory: [],
       termConfirmed: false,
+      evidence: null,
+      termDetailsPromises: {},
     };
 
     this.setSearchString = function(searchString) {
-      this.state.searchString = searchString;
-      this.state.termHistory = [];
+      this.data.searchString = searchString;
+      this.data.termHistory = [];
+      this.unconfirmTerm();
     };
 
     this.searchString = function() {
-      return this.state.searchString;
+      return this.data.searchString;
     };
 
     this.setSearchResults = function(matchingTermId, matchingSynonym) {
-      this.state.matchingSynonym = matchingSynonym;
-      this.state.termHistory = [matchingTermId];
-    };
-
-    this.clearSearchResults = function() {
-      this.state.matchingSynonym = null;
-      this.state.termHistory = [];
+      this.data.matchingSynonym = matchingSynonym;
+      this.termDetailsPromise(matchingTermId);
+      this.data.termHistory = [matchingTermId];
     };
 
     this.addTerm = function(termId) {
-      this.state.termHistory.push(termId);
+      this.data.termHistory.push(termId);
     };
 
     this.currentTerm = function() {
-      if (this.state.termHistory.length > 0) {
-        return this.state.termHistory[this.state.termHistory.length - 1];
+      if (this.data.termHistory.length > 0) {
+        return this.data.termHistory[this.data.termHistory.length - 1];
       }
       return null;
     };
 
     this.termHistory = function() {
-      return this.state.termHistory;
+      return this.data.termHistory;
+    };
+
+    this.termHistoryPromise = function() {
+      var that = this;
+      return $q.all($.map(this.data.termHistory,
+                          function(termId) {
+                            return that.data.termDetailsPromises[termId];
+                          }));
     };
 
     this.matchingSynonym = function() {
-      return this.state.matchingSynonym;
+      return this.data.matchingSynonym;
     };
 
     this.clearTerms = function() {
-      this.state.matchingSynonym = null;
-      this.state.termHistory = [];
+      this.data.matchingSynonym = null;
+      this.data.termHistory = [];
     };
 
     this.gotoTerm = function(termId) {
       var i, value;
-      for (i = 0; i < this.state.termHistory.length; i++) {
-        value = this.state.termHistory[i];
+      for (i = 0; i < this.data.termHistory.length; i++) {
+        value = this.data.termHistory[i];
         if (termId == value) {
           // truncate the array, making term_id the last element
-          this.state.termHistory.length = i + 1;
+          this.data.termHistory.length = i + 1;
           break;
         }
       }
     };
 
+    this.termDetailsPromise = function(termId) {
+      if (this.data.termDetailsPromises[termId]) {
+        return this.data.termDetailsPromises[termId];
+      }
+
+      var q = $q.defer();
+
+      var lookupPromise = CantoService.lookup('ontology', [termId],
+                                        {
+                                          def: 1,
+                                          children: 1,
+                                          exact_synonyms: 1,
+                                        });
+
+      lookupPromise.success(function(data) {
+        if (!data.children || data.children.length == 0) {
+          data.children = null;
+        }
+        if (!data.synonyms || data.synonyms.length == 0) {
+          data.synonyms = null;
+        } else {
+          data.synonyms = $.map(data.synonyms,
+                                function(synonym) {
+                                  return synonym.name;
+                                });
+        }
+        q.resolve(data);
+      });
+
+      this.data.termDetailsPromises[termId] = q.promise;
+
+      return q.promise;
+    };
+
+    this.currentTermDetails = function() {
+      var currentTerm = this.currentTerm();
+
+      if (currentTerm) {
+        return this.termDetailsPromise(currentTerm);
+      }
+
+      return $q.resolved(null);
+    };
+
     this.termConfirmed = function() {
-      return this.state.termConfirmed;
+      return this.data.termConfirmed;
     };
 
     this.confirmTerm = function() {
-      this.state.termConfirmed = true;
+      this.data.termConfirmed = true;
     };
 
     this.unconfirmTerm = function() {
-      this.state.termConfirmed = false;
+      this.data.termConfirmed = false;
+      this.data.termSuggestion = null;
+      this.unsetEvidence();
+    };
+
+    this.suggestTerm = function(termSuggestion) {
+      this.confirmTerm();
+      this.data.termSuggestion = termSuggestion;
+    };
+
+    this.setEvidence = function(evidence) {
+      this.data.evidence = evidence;
+    };
+
+    this.unsetEvidence = function() {
+      this.data.evidence = null;
+    };
+
+    this.evidence = function() {
+      return this.data.evidence;
     };
 
     this.getState = function() {
-      return this.state;
+      if (this.currentTerm() && this.termConfirmed() && this.evidence()) {
+        return 'commenting';
+      }
+      if (this.currentTerm() && this.termConfirmed()) {
+        return 'selectingEvidence';
+      }
+      if (this.currentTerm()) {
+        return 'confirmingTerm';
+      }
+      return 'searching';
     };
   };
 
-canto.service('CursStateService', [cursStateService]);
+canto.service('CursStateService', ['$q', 'CantoService', cursStateService]);
 
 
 var cursSettingsService =
@@ -683,7 +764,7 @@ canto.directive('advancedModeToggle', ['CursSettings', advancedModeToggle]);
 
 
 var breadcrumbsDirective =
-  function($compile, CursStateService, CantoService) {
+  function($q, $compile, CursStateService, CantoService) {
     return {
       scope: {
       },
@@ -692,10 +773,8 @@ var breadcrumbsDirective =
       controller: function($scope) {
         $scope.CursStateService = CursStateService;
 
-        $scope.termDetails = {};
-
-        $scope.clearSearchResults = function() {
-          CursStateService.clearSearchResults();
+        $scope.clearTerms = function() {
+          CursStateService.clearTerms();
         };
 
         $scope.gotoTerm = function(termId) {
@@ -705,49 +784,43 @@ var breadcrumbsDirective =
       link: function($scope) {
         $scope.$watch('CursStateService.currentTerm()',
                       function() {
-                        var termList = CursStateService.termHistory();
-                        var html = '';
+                        CursStateService.termHistoryPromise()
+                          .then(function(termDetailsList) {
+                            var html = '';
 
-                        function saveDetails(details) {
-                          $scope.termDetails[details.id] = details;
-                        }
+                            var i, termDetails, makeLink;
+                            for (i = 0; i < termDetailsList.length; i++) {
+                              termDetails = termDetailsList[i];
+                              makeLink = (i != termDetailsList.length - 1);
 
-                        var i, termId, makeLink;
-                        for (i = 0; i < termList.length; i++) {
-                          termId = termList[i];
-                          makeLink = (i != termList.length - 1);
+                              html += '<div class="breadcrumbs-link">';
 
-                          html += '<div class="breadcrumbs-link">';
+                              if (makeLink) {
+                                html += '<a href="#" ng-click="' +
+                                  "gotoTerm('" + termDetails.id + "'" + ')">';
+                              }
 
-                          if (makeLink) {
-                            html += '<a href="#" ng-click="' +
-                              "gotoTerm('" + termId + "'" + ')">';
-                          }
+                              html += termDetails.name;
 
-                          html += '{{termDetails["' + termId + '"].name}}';
+                              if (makeLink) {
+                                html += '</a>';
+                              }
+                            }
 
-                          if (makeLink) {
-                            html += '</a>';
-                          }
+                            for (i = 0; i < termDetailsList.length; i++) {
+                              html += '</div>';
+                            }
 
-                          CantoService.lookup('ontology', [termId])
-                            .success(saveDetails);
-                        }
-
-                        for (i = 0; i < termList.length; i++) {
-                          html += '</div>';
-                        }
-
-                        $('#breadcrumb-terms').html($compile(html)($scope));
+                            $('#breadcrumb-terms').html($compile(html)($scope));
+                          });
                       });
-
 
       },
       templateUrl: app_static_path + 'ng_templates/breadcrumbs.html',
     };
   };
 
-canto.directive('breadcrumbs', ['$compile', 'CursStateService', 'CantoService',
+canto.directive('breadcrumbs', ['$q', '$compile', 'CursStateService', 'CantoService',
                                 breadcrumbsDirective]);
 
 
@@ -849,209 +922,263 @@ canto.directive('featureChooser',
                 ['$modal', 'CursGeneList', 'CursGenotypeList', 'toaster',
                  featureChooser]);
 
-var ontologyTermLocatorCtrl =
-  function($scope, CantoGlobals, AnnotationTypeConfig, CantoService,
-           CursStateService, $http, $modal, toaster) {
 
-    $scope.CantoGlobals = CantoGlobals;
-    $scope.CursStateService = CursStateService;
+var ontologyTermSelect =
+  function(CursStateService) {
+    return {
+      scope: {
+        annotationType: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/ontology_term_select.html',
+      controller: function($scope) {
 
-    $scope.data = {
-      termConfirmed: false,
-      conditions: [],
-      validEvidence: false,
-    };
+        $('#loading').unbind('.canto');
 
-    $scope.termDetails = {};
+        $('#ferret-term-input').attr('disabled', false);
 
-    $scope.getCurrentTermDetails = function(fieldName) {
-      var termId = CursStateService.currentTerm();
-
-      if ($scope.termDetails[termId]) {
-        return $scope.termDetails[termId][fieldName];
-      }
-      return null;
-    };
-
-    $scope.$watch('CursStateService.currentTerm()',
-                  function() {
-                    var termId = CursStateService.currentTerm();
-
-                    if (!termId) {
-                      return;
-                    }
-
-                    if (!$scope.termDetails[termId]) {
-                      $scope.lookupTerm(termId);
-                    }
-
-                    var link_confs = ontology_external_links[ferret_choose.annotation_namespace];
-                    if (link_confs) {
-                      var html = '';
-                      $.each(link_confs, function(idx, link_conf) {
-                        var url = link_conf.url;
-                        // hacky: allow a substitution like WebUtil::substitute_paths()
-                        var re = new RegExp("@@term_ont_id(?::s/(.+)/(.*)/r)?@@");
-                        url = url.replace(re,
-                                          function(match_str, p1, p2) {
-                                            if (!p1 || p1.length == 0) {
-                                              return termId;
-                                            }
-                                            return termId.replace(new RegExp(p1), p2);
-                                          });
-                        var img_src =
-                          application_root + 'static/images/logos/' +
-                          link_conf.icon;
-                        var title = 'View in: ' + link_conf.name;
-                        html += '<div class="curs-external-link"><a target="_blank" href="' +
-                          url + '" title="' + title + '">';
-                        if (img_src) {
-                          html += '<img alt="' + title + '" src="' + img_src + '"/></a>';
-                        } else {
-                          html += title;
-                        }
-                        var link_img_src = application_root + 'static/images/ext_link.png';
-                        html += '<img src="' + link_img_src + '"/></div>';
-                      });
-                      var $linkouts = $('#ferret-linkouts');
-                      if (html.length > 0) {
-                        $linkouts.find('.links-container').html(html);
-                        $linkouts.show();
-                      } else {
-                        $linkouts.hide();
-                      }
-                    }
-                  });
-
-    $scope.openTermSuggestDialog =
-      function(feature_display_name) {
-        var suggestInstance = $modal.open({
-          templateUrl: app_static_path + 'ng_templates/term_suggest.html',
-          controller: 'TermSuggestDialogCtrl',
-          title: 'Suggest a new term for ' + feature_display_name,
-          animate: false,
-          windowClass: "modal",
+        $('.canto-more-button').each(function (index, element) {
+          var this_id = $(element).attr('id');
+          var target = $('#' + this_id + '-target');
+          $(element).click(
+            function () {
+              target.show();
+              $(element).hide();
+              return false;
+            }
+          );
+          $(element).show();
         });
 
-        suggestInstance.result.then(function (termSuggestion) {
-          CursStateService.confirmTerm(termSuggestion);
+        $scope.testButton = function() {  alert("TEST"); };
 
-          $scope.data.termSuggestion = termSuggestion;
+        $scope.termFoundCallback =
+          function(termId, termName, searchString, matchingSynonym) {
+            CursStateService.setSearchString(searchString);
+            CursStateService.setSearchResults(termId, matchingSynonym);
+          };
+      },
+      link: function($scope) {
+        $scope.testFunc = function() {  return "TEST"; };
 
-          toaster.pop('note',
-                      'Your term suggestion will be stored, but ' +
-                      feature_display_name + ' will be temporarily ' +
-                      'annotated with the parent of your suggested new term');
-        });
-      };
-
-    $scope.confirmTerm = function() {
-      CursStateService.confirmTerm();
+        $scope.testVal = "VAL";
+      },
     };
-
-    $scope.unconfirmTerm = function() {
-      CursStateService.unconfirmTerm();
-    };
-
-    $scope.unsetTerm = function() {
-      CursStateService.clearSearchResults();
-    };
-
-    $scope.goToChild = function(termId) {
-      CursStateService.addTerm(termId);
-    };
-
-    $scope.back = function() {
-      history.go(-1);
-    };
-
-    $scope.setTermAndEvidence = function() {
-      simpleHttpPost(toaster, $http, '../set_term/' + $scope.annotationTypeName,
-                     { term_ontid: CursStateService.currentTerm(),
-                       evidence_code: $scope.data.evidence_code,
-                       conditions: $scope.data.conditions,
-                       with_gene_id: $scope.data.with_gene_id,
-                       term_suggestion: $scope.data.termSuggestion,
-                     });
-    };
-
-    $scope.isValidEvidence = function() {
-      return !!$scope.data.validEvidence;
-    };
-
-    $scope.isValid = function() {
-      return CursStateService.termConfirmed() && $scope.isValidEvidence();
-    };
-
-    $scope.init = function() {
-      $scope.annotationTypeName = CantoGlobals.ferret_choose.annotation_type_name;
-
-      AnnotationTypeConfig.getByName($scope.annotationTypeName)
-        .then(function(annotationType) {
-          $scope.annotationType = annotationType;
-        });
-
-      $('#loading').unbind('.canto');
-
-      $('#ferret-term-input').attr('disabled', false);
-
-      $('.canto-more-button').each(function (index, element) {
-        var this_id = $(element).attr('id');
-        var target = $('#' + this_id + '-target');
-        $(element).click(
-          function () {
-            target.show();
-            $(element).hide();
-            return false;
-          }
-        );
-        $(element).show();
-      });
-    };
-
-    $scope.lookupTerm = function(termId) {
-      var promise = CantoService.lookup('ontology', [termId],
-                                        {
-                                          def: 1,
-                                          children: 1,
-                                          exact_synonyms: 1,
-                                        });
-
-      promise.success(function(data) {
-        if (!data.children || data.children.length == 0) {
-          data.children = null;
-        }
-        if (!data.synonyms || data.synonyms.length == 0) {
-          data.synonyms = null;
-        } else {
-          data.synonyms = $.map(data.synonyms,
-                                function(synonym) {
-                                  return synonym.name;
-                                });
-        }
-        $scope.termDetails[termId] = data;
-      });
-    };
-
-    $scope.termFoundCallback =
-      function(termId, termName, searchString, matchingSynonym) {
-        CursStateService.setSearchString(searchString);
-        CursStateService.setSearchResults(termId, matchingSynonym);
-
-        $scope.lookupTerm(termId);
-      };
-
-    $scope.init();
   };
 
-canto.controller('OntologyTermLocatorCtrl',
-                 ['$scope', 'CantoGlobals', 'AnnotationTypeConfig', 'CantoService',
-                  'CursStateService', '$http', '$modal', 'toaster',
-                  ontologyTermLocatorCtrl]);
+canto.directive('ontologyTermSelect',
+                ['CursStateService', ontologyTermSelect]);
+
+
+var ontologyTermConfirm =
+  function($modal, toaster, CursStateService, CantoConfig, CantoGlobals) {
+    return {
+      scope: {
+        annotationType: '=',
+        featureDisplayName: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/ontology_term_confirm.html',
+      controller: function($scope) {
+        $scope.app_static_path = CantoGlobals.app_static_path;
+
+        $scope.isValid = function() {
+          return CursStateService.termConfirmed();
+        };
+
+        $scope.currentTerm = function() {
+          return CursStateService.currentTerm();
+        };
+
+        $scope.$watch('currentTerm()',
+                      function(newTermId) {
+                        if (!newTermId) {
+                          return;
+                        }
+
+                        CursStateService.currentTermDetails()
+                          .then(function(details) {
+                            $scope.termDetails = details;
+
+                            return CantoConfig.get('ontology_external_links');
+                          })
+                          .then(function(results) {
+                            var ontology_external_links = results.data;
+
+                            var link_confs = ontology_external_links[$scope.termDetails.annotation_namespace];
+                            if (link_confs) {
+                              var html = '';
+                              $.each(link_confs, function(idx, link_conf) {
+                                var url = link_conf.url;
+                                // hacky: allow a substitution like WebUtil::substitute_paths()
+                                var re = new RegExp("@@term_ont_id(?::s/(.+)/(.*)/r)?@@");
+                                url = url.replace(re,
+                                                  function(match_str, p1, p2) {
+                                                    if (!p1 || p1.length == 0) {
+                                                      return newTermId;
+                                                    }
+                                                    return newTermId.replace(new RegExp(p1), p2);
+                                                  });
+                                var img_src =
+                                    application_root + 'static/images/logos/' +
+                                    link_conf.icon;
+                                var title = 'View in: ' + link_conf.name;
+                                html += '<div class="curs-external-link"><a target="_blank" href="' +
+                                  url + '" title="' + title + '">';
+                                if (img_src) {
+                                  html += '<img alt="' + title + '" src="' + img_src + '"/></a>';
+                                } else {
+                                  html += title;
+                                }
+                                var link_img_src = application_root + 'static/images/ext_link.png';
+                                html += '<img src="' + link_img_src + '"/></div>';
+                              });
+                              var $linkouts = $('#ferret-linkouts');
+                              if (html.length > 0) {
+                                $linkouts.find('.links-container').html(html);
+                                $linkouts.show();
+                              } else {
+                                $linkouts.hide();
+                              }
+                            }
+                          });
+                      });
+
+        $scope.openTermSuggestDialog =
+          function(featureDisplayName) {
+            var suggestInstance = $modal.open({
+              templateUrl: app_static_path + 'ng_templates/term_suggest.html',
+              controller: 'TermSuggestDialogCtrl',
+              title: 'Suggest a new term for ' + featureDisplayName,
+              animate: false,
+              windowClass: "modal",
+            });
+
+            suggestInstance.result.then(function (termSuggestion) {
+              CursStateService.suggestTerm(termSuggestion);
+
+              toaster.pop('note',
+                          'Your term suggestion will be stored, but ' +
+                          featureDisplayName + ' will be temporarily ' +
+                          'annotated with the parent of your suggested new term');
+            });
+          };
+
+        $scope.confirmTerm = function() {
+          CursStateService.confirmTerm();
+        };
+
+        $scope.unsetTerm = function() {
+          CursStateService.clearSearchResults();
+        };
+
+        $scope.gotoChild = function(termId) {
+          CursStateService.addTerm(termId);
+        };
+      },
+    };
+  };
+
+
+canto.directive('ontologyTermConfirm',
+                ['$modal', 'toaster', 'CursStateService', 'CantoConfig', 'CantoGlobals',
+                 ontologyTermConfirm]);
+
+
+var ontologyTermEvidenceSelect =
+  function(CursStateService, CantoGlobals) {
+    return {
+      scope: {
+        annotationType: '=',
+        featureDisplayName: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/ontology_term_evidence_select.html',
+      controller: function($scope) {
+        $scope.data = {
+          validEvidence: false,
+        };
+
+        $scope.app_static_path = CantoGlobals.app_static_path;
+
+        $scope.isValid = function() {
+          return $scope.data.validEvidence;
+        };
+
+        $scope.unconfirmTerm = function() {
+          CursStateService.unconfirmTerm();
+        };
+
+        $scope.setEvidence = function() {
+          CursStateService.setEvidence({
+            evidence_code: $scope.data.evidence_code,
+            with_gene_id: $scope.data.with_gene_id,
+          });
+        };
+      },
+    };
+  };
+
+canto.directive('ontologyTermEvidenceSelect',
+                ['CursStateService', 'CantoGlobals',ontologyTermEvidenceSelect]);
+
+
+var ontologyTermCommentTransfer =
+  function(CursStateService, toaster, $http) {
+    return {
+      scope: {
+        annotationType: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/ontology_term_comment_transfer.html',
+      controller: function($scope) {
+        $scope.unsetEvidence = function() {
+          CursStateService.unsetEvidence();
+        };
+
+        $scope.setComment = function() {
+          simpleHttpPost(toaster, $http, '../set_term/' + $scope.annotationType.name,
+                         { term_ontid: CursStateService.currentTerm(),
+                           evidence_code: CursStateService.evidence().evidence_code,
+                           conditions: $scope.data.conditions,
+                           with_gene_id: CursStateService.evidence().with_gene_id,
+                           term_suggestion: $scope.data.termSuggestion,
+                         });
+        };
+      },
+    };
+  };
+
+canto.directive('ontologyTermCommentTransfer',
+                ['CursStateService', 'toaster', '$http', ontologyTermCommentTransfer]);
+
+
+
+var ontologyWorkflowCtrl =
+  function($scope, AnnotationTypeConfig, CursStateService, $attrs) {
+    $scope.annotationTypeName = $attrs.annotationTypeName;
+
+    $scope.getState = function() {
+      return CursStateService.getState();
+    };
+
+    AnnotationTypeConfig.getByName($scope.annotationTypeName)
+      .then(function(annotationType) {
+        $scope.annotationType = annotationType;
+      });
+  };
+
+canto.controller('OntologyWorkflowCtrl',
+                 ['$scope', 'AnnotationTypeConfig', 'CursStateService', '$attrs',
+                  ontologyWorkflowCtrl]);
 
 
 var interactionWizardCtrl =
-  function($scope, $http, toaster, CantoGlobals) {
+  function($scope, $http, CantoGlobals) {
 
     $scope.annotationTypeName = CantoGlobals.ferret_choose.annotation_type_name;
 
@@ -2224,7 +2351,7 @@ var termConfirmDialogCtrl =
     $scope.data = {
       initialTermId: args.termId,
       state: 'definition',
-      termData: null,
+      termDetail: null,
     };
 
     $scope.setTerm = function(termId) {
@@ -2235,8 +2362,8 @@ var termConfirmDialogCtrl =
                                           exact_synonyms: 1,
                                         });
 
-      promise.success(function(termData) {
-        $scope.data.termData = termData;
+      promise.success(function(termDetails) {
+        $scope.data.termDetails = termDetails;
 
         if (args.initialState) {
           $scope.data.state = args.initialState;
@@ -2262,8 +2389,8 @@ var termConfirmDialogCtrl =
     };
 
     $scope.finish = function() {
-      $modalInstance.close({ newTermId: $scope.data.termData.id,
-                             newTermName: $scope.data.termData.name });
+      $modalInstance.close({ newTermId: $scope.data.termDetails.id,
+                             newTermName: $scope.data.termDetails.name });
     };
 
     $scope.cancel = function() {
@@ -2302,7 +2429,7 @@ var termDefinitionDisplayCtrl =
   function() {
     return {
       scope: {
-        termData: '=',
+        termDetails: '=',
       },
       restrict: 'E',
       replace: true,
@@ -2317,7 +2444,7 @@ var termChildrenDisplayCtrl =
   function(CantoGlobals) {
     return {
       scope: {
-        termData: '=',
+        termDetails: '=',
         gotoChildCallback: '&',
       },
       restrict: 'E',
