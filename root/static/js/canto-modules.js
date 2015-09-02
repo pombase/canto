@@ -2260,9 +2260,13 @@ var EditDialog = function($) {
 }($);
 
 canto.service('CantoConfig', function($http) {
+  var promises = {};
   this.get = function(key) {
-    return $http({method: 'GET',
-                  url: canto_root_uri + 'ws/canto_config/' + key});
+    if (!promises[key]) {
+      promises[key] = $http({method: 'GET',
+                       url: canto_root_uri + 'ws/canto_config/' + key});
+    }
+    return promises[key];
   };
 });
 
