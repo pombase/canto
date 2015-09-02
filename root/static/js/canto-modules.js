@@ -539,8 +539,8 @@ var cursStateService =
           }
 
           if (that.data.termSuggestion) {
-            retVal.term_suggestion_name = that.data.term_suggestion.name;
-            retVal.term_suggestion_definition = that.data.term_suggestion.definition;
+            retVal.term_suggestion_name = that.data.termSuggestion.name;
+            retVal.term_suggestion_definition = that.data.termSuggestion.definition;
           }
 
           return retVal;
@@ -1098,7 +1098,8 @@ var ontologyTermConfirm =
               toaster.pop('note',
                           'Your term suggestion will be stored, but ' +
                           featureDisplayName + ' will be temporarily ' +
-                          'annotated with the parent of your suggested new term');
+                          'annotated with the parent of your suggested new term',
+                          null, 20000);
             });
           };
 
@@ -1163,7 +1164,7 @@ canto.directive('ontologyTermEvidenceSelect',
 
 
 var ontologyTermCommentTransfer =
-  function(CursStateService, toaster, $http) {
+  function(CursStateService, CantoConfig, toaster, $http) {
     return {
       scope: {
         annotationType: '=',
@@ -1175,6 +1176,8 @@ var ontologyTermCommentTransfer =
       templateUrl: app_static_path + 'ng_templates/ontology_term_comment_transfer.html',
       controller: function($scope) {
         $scope.canSetComment = false;
+
+        $scope.annotationDetails = {};
 
         CursStateService.asAnnotationDetails().then(function(annotationDetails) {
           copyObject(annotationDetails, $scope.annotationDetails);
@@ -1189,13 +1192,14 @@ var ontologyTermCommentTransfer =
           simpleHttpPost(toaster, $http,
                          '../set_term/' + $scope.annotationType.name,
                          $scope.annotationDetails);
+          toaster.pop('info', 'Creating annotation ...');
         };
       },
     };
   };
 
 canto.directive('ontologyTermCommentTransfer',
-                ['CursStateService', 'toaster', '$http',
+                ['CursStateService', 'CantoConfig', 'toaster', '$http',
                  ontologyTermCommentTransfer]);
 
 
@@ -3059,7 +3063,7 @@ var annotationSingleRow =
 
         var annotationDetails = $scope.annotationDetails;
 
-        $scope.displayEvidence = annotationDetails.evidence_code;
+        $scope.displayEvidence = '';
         $scope.conditionsString = '';
         $scope.withGeneDisplayName = '';
 
@@ -3068,10 +3072,14 @@ var annotationSingleRow =
             $scope.annotationType = annotationType;
           });
 
-        if (annotationDetails.conditions) {
-          $scope.conditionsString =
-            conditionsToString($scope.annotationDetails.conditions);
-        }
+        $scope.$watch('annotationDetails.conditions',
+                      function(newConditions) {
+                        if (newConditions) {
+                          $scope.conditionsString =
+                            conditionsToString(newConditions);
+                        }
+                      },
+                      true);
 
         $scope.$watch('annotationDetails.evidence_code',
                       function(newVal) {

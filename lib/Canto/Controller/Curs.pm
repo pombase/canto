@@ -1124,8 +1124,8 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
                          conditions => \@conditions,
                        );
 
-  my $suggested_name = trim($body_data->{term_suggestion}->{name});
-  my $suggested_definition = trim($body_data->{term_suggestion}->{definition});
+  my $suggested_name = trim($body_data->{term_suggestion_name});
+  my $suggested_definition = trim($body_data->{term_suggestion_definition});
 
   $annotation_data{term_suggestion} = {
     name => $suggested_name,
@@ -1138,23 +1138,18 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
     $annotation_data{with_gene} = $with_gene->primary_identifier();
   }
 
-  $st->{show_title} = 0;
-
-  $st->{current_component} = $annotation_type_name;
-  $st->{current_component_display_name} = $annotation_config->{display_name};
-
-  my $annotation_type_config = $config->{annotation_types}->{$annotation_type_name};
-  my $evidence_types = $config->{evidence_types};
+  if ($body_data->{submitter_comment}) {
+    $annotation_data{submitter_comment} = $body_data->{submitter_comment};
+  }
 
   my $annotation =
     $self->_create_annotation($c, $annotation_type_name,
                                   $feature_type, [$feature], \%annotation_data);
 
-
   $c->stash->{json_data} = {
     status => "success",
-    location => $st->{curs_root_uri} . "/annotation/" .
-      $annotation->annotation_id() . "/transfer",
+    location => $st->{curs_root_uri} . "/feature/$feature_type/view/" .
+      $feature->feature_id(),
   };
 
   $c->forward('View::JSON');

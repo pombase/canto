@@ -10,10 +10,10 @@ You have made the following annotation:
                              annotation-details="annotationDetails"></annotation-single-row>
     </div>
 
-  <div ng-show="annotation_comment_help_text">
-    {{annotation_comment_help_text}}
+  <div ng-show="annotationType && annotationType.annotation_comment_help_text">
+    {{annotationType.annotation_comment_help_text}}
   </div>
-  <div ng-hide="annotation_comment_help_text">
+  <div ng-hide="annotationType.annotation_comment_help_text">
 If you have any additional information that you 
 haven't been able to represent using the ontology term and evidence please add
 a comment. For 
