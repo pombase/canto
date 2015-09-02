@@ -2574,6 +2574,7 @@ var annotationEditDialogCtrl =
     $scope.ok = function() {
       var q = AnnotationProxy.storeChanges(args.annotation,
                                            $scope.annotation, args.newlyAdded);
+      toaster.pop('info', 'Creating annotation ...');
       q.then(function(annotation) {
         $modalInstance.close(annotation);
       })
