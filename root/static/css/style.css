@@ -359,6 +359,11 @@ table.list thead img.sort-direction-icon {
   padding-right: 5px;
 }
 
+.annotation-single-row td {
+  padding: 5px !important;
+  padding-right: 8px !important;
+}
+
 .field-label {
   color: #226;
   white-space: nowrap;
