@@ -1071,7 +1071,7 @@ var ontologyTermConfirm =
         };
 
         $scope.unsetTerm = function() {
-          CursStateService.clearSearchResults();
+          CursStateService.clearTerms();
         };
 
         $scope.gotoChild = function(termId) {
