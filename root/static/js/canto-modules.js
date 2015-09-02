@@ -1205,6 +1205,30 @@ canto.directive('ontologyTermCommentTransfer',
                  ontologyTermCommentTransfer]);
 
 
+var extensionBuilder =
+  function(AnnotationTypeConfig, CursStateService, CantoConfig, toaster, $http) {
+    return {
+      scope: {
+        extension: '=',
+        annotationTypeName: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/extension_builder.html',
+      controller: function($scope) {
+        AnnotationTypeConfig.getByName($scope.annotationTypeName)
+          .then(function(annotationType) {
+            $scope.annotationType = annotationType;
+          });
+      },
+    };
+  };
+
+canto.directive('extensionBuilder',
+                ['AnnotationTypeConfig', 'CursStateService', 'CantoConfig', 'toaster', '$http',
+                 extensionBuilder]);
+
+
 
 var ontologyWorkflowCtrl =
   function($scope, AnnotationTypeConfig, CursStateService, $attrs) {

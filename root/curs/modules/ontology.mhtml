@@ -9,6 +9,8 @@ $pub
 <div ng-controller="OntologyWorkflowCtrl"
      annotation-type-name="<% $annotation_type_name %>"
      ng-show="annotationType">
+  <extension-builder ng-if="false && annotationType" extension="extension" annotation-type-name="{{annotationType.name}}"></extension-builder>
+
   <ontology-term-select ng-show="getState() == 'searching'"
                         annotation-type="annotationType"></ontology-term-select>
   <ontology-term-confirm ng-show="getState() == 'confirmingTerm'"
