@@ -518,28 +518,36 @@ var cursStateService =
     // return the data in a obj with keys keys suitable for sending to the
     // server
     this.asAnnotationDetails = function() {
+      var that = this;
       return this.currentTermDetails().then(function(termDetails) {
         if (termDetails) {
           var retVal = {
             term_ontid: termDetails.id,
-            annotation_extension: this.data.extension,
+            term_name: termDetails.name,
+            annotation_extension: that.data.extension,
+            conditions: null,
+            evidence_code: null,
+            with_gene_id: null,
+            term_suggestion_name: null,
+            term_suggestion_definition: null,
           };
 
-          if (termDetails.evidence) {
-            retVal.evidence_code = this.data.evidence.evidence_code;
-            retVal.with_gene_id = this.data.evidence.with_gene_id;
-            retVal.conditions = this.data.evidence.conditions;
+          if (that.data.evidence) {
+            retVal.evidence_code = that.data.evidence.evidence_code;
+            retVal.with_gene_id = that.data.evidence.with_gene_id;
+            retVal.conditions = that.data.evidence.conditions;
           }
 
-          if (termDetails.termSuggestion) {
-            retVal.term_suggestion_name = this.data.term_suggestion.name
-            retVal.term_suggestion_definition = this.data.term_suggestion.definition
+          if (that.data.termSuggestion) {
+            retVal.term_suggestion_name = that.data.term_suggestion.name;
+            retVal.term_suggestion_definition = that.data.term_suggestion.definition;
           }
 
           return retVal;
         }
 
         return null;
+      });
     };
 
     this.setSearchString = function(searchString) {
@@ -1159,32 +1167,36 @@ var ontologyTermCommentTransfer =
     return {
       scope: {
         annotationType: '=',
+        featureType: '@',
+        featureDisplayName: '@',
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/ontology_term_comment_transfer.html',
       controller: function($scope) {
-        $scope.data.comment = '';
+        $scope.canSetComment = false;
+
+        CursStateService.asAnnotationDetails().then(function(annotationDetails) {
+          copyObject(annotationDetails, $scope.annotationDetails);
+          $scope.canSetComment = true;
+        });
 
         $scope.unsetEvidence = function() {
           CursStateService.unsetEvidence();
         };
 
         $scope.setComment = function() {
-          var annotationDetails = CursStateService.asAnnotationDetails();
-
-          annotationDetails.submitter_comment = $scope.data.comment;
-
           simpleHttpPost(toaster, $http,
                          '../set_term/' + $scope.annotationType.name,
-                         annotationDetails);
+                         $scope.annotationDetails);
         };
       },
     };
   };
 
 canto.directive('ontologyTermCommentTransfer',
-                ['CursStateService', 'toaster', '$http', ontologyTermCommentTransfer]);
+                ['CursStateService', 'toaster', '$http',
+                 ontologyTermCommentTransfer]);
 
 
 
@@ -3026,6 +3038,79 @@ canto.directive('annotationTableRow',
                 ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig',
                  'CantoGlobals', 'CantoConfig', 'toaster',
                  annotationTableRow]);
+
+
+var annotationSingleRow =
+ function(AnnotationTypeConfig, CantoConfig, Curs) {
+    return {
+      restrict: 'E',
+      scope: {
+        featureType: '@',
+        featureDisplayName: '@',
+        annotationTypeName: '@',
+        annotationDetails: '=',
+      },
+      replace: true,
+      templateUrl: function(elem,attrs) {
+        return app_static_path + 'ng_templates/annotation_single_row.html';
+      },
+      controller: function($scope) {
+        $scope.displayFeatureType = capitalizeFirstLetter($scope.featureType);
+
+        var annotationDetails = $scope.annotationDetails;
+
+        $scope.displayEvidence = annotationDetails.evidence_code;
+        $scope.conditionsString = '';
+        $scope.withGeneDisplayName = '';
+
+        AnnotationTypeConfig.getByName($scope.annotationTypeName)
+          .then(function(annotationType) {
+            $scope.annotationType = annotationType;
+          });
+
+        if (annotationDetails.conditions) {
+          $scope.conditionsString =
+            conditionsToString($scope.annotationDetails.conditions);
+        }
+
+        $scope.$watch('annotationDetails.evidence_code',
+                      function(newVal) {
+                        $scope.displayEvidence = newVal;
+
+                        if (newVal) {
+                          CantoConfig.get('evidence_types').success(function(results) {
+                            $scope.evidenceTypes = results;
+                            $scope.displayEvidence =
+                              results[annotationDetails.evidence_code].name;
+                          });
+                        }
+                      });
+
+        $scope.$watch('annotationDetails.with_gene_id',
+                      function(newWithId) {
+                        if (newWithId) {
+                          Curs.list('gene').success(function(results) {
+                            $scope.genes = results;
+
+                            $.map($scope.genes,
+                                  function(gene) {
+                                    if (gene.gene_id == newWithId) {
+                                      $scope.withGeneDisplayName =
+                                        gene.primary_name || gene.primary_identifier;
+                                    }
+                                  });
+                          });
+                        } else {
+                          $scope.withGeneDisplayName = '';
+                        }
+                      });
+      },
+    };
+  };
+
+canto.directive('annotationSingleRow',
+                ['AnnotationTypeConfig', 'CantoConfig', 'Curs',
+                 annotationSingleRow]);
 
 
 var termNameComplete =

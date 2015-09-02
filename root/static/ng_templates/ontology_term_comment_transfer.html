@@ -1,4 +1,15 @@
 <div>
+  <div class="curs-box">
+    <div class="curs-box-title">
+You have made the following annotation:
+    </div>
+    <div class="curs-box-body">
+      <annotation-single-row feature-type="{{featureType}}"
+                             feature-display-name="{{featureDisplayName}}"
+                             annotation-type-name="{{annotationType.name}}"
+                             annotation-details="annotationDetails"></annotation-single-row>
+    </div>
+
   <div ng-show="annotation_comment_help_text">
     {{annotation_comment_help_text}}
   </div>
@@ -14,13 +25,15 @@ additional information in an "annotation extension". You can also include
 the figure or table number that shows the results on which this annotation 
 is based.
   </div>
-  <textarea ng-model="data.comment" class="annotation-comment" cols="80"
+  <textarea ng-model="annotationDetails.submitter_comment"
+            class="annotation-comment" cols="80"
             rows="6" style="display: block"></textarea>
 
   <button type="submit" class="btn btn-primary curs-back-button"
           title="&lt;- Back"
           ng-click="unsetEvidence()">&lt;- Back</button>
-  <button type="submit" class="btn btn-primary curs-finish-button"
-          ng-disabled="!isValid()"
+  <button type="submit" ng-disabled="!canSetComment"
+          class="btn btn-primary curs-finish-button"
           ng-click="setComment()" >Proceed -&gt;</button>
+</div>
 </div>

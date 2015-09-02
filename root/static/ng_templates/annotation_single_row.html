@@ -1,0 +1,60 @@
+<div class="annotation-table">
+<table ng-if="annotationType" class="list">
+  <thead>
+    <tr>
+      <th>
+        {{displayFeatureType}}
+      </th>
+      <th>
+        Term ID
+      </th>
+      <th>
+        Term name
+      </th>
+      <th>
+        Evidence
+      </th>
+      <th ng-if="annotationType.can_have_with && annotationDetails.with_gene_id">
+        With
+      </th>
+      <th ng-if="annotationType.can_have_conditions && annotationDetails.conditionsString">
+        Conditions
+      </th>
+      <th ng-if="annotationDetails.term_suggestion_name || annotationDetails.term_suggestion_definition">
+        Term suggestion
+      </th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>
+      <span ng-bind-html="featureDisplayName | encodeAlleleSymbols | toTrusted"></span>
+    </td>
+    <td>
+      {{annotationDetails.term_ontid}}
+    </td>
+    <td>
+      {{annotationDetails.term_name}}
+    </td>
+    <td>
+      {{displayEvidence}}
+    </td>
+    <td ng-if="annotationType.can_have_with && annotationDetails.with_gene_id">
+      {{withGeneDisplayName}}
+    </td>
+    <td ng-if="annotationType.can_have_conditions && annotationDetails.conditionsString">
+      {{conditionsString}}
+    </td>
+    <td ng-if="annotationDetails.term_suggestion_name || annotationDetails.term_suggestion_definition">
+      <div>
+        <div style="font-weight: bold">
+          {{annotation.term_suggestion_name}}
+        </div>
+        <div>
+          {{annotation.term_suggestion_definition}}
+        </div>
+      </div>
+    </td>
+  </tr>
+</table>
+</div>
