@@ -1154,6 +1154,7 @@ var ontologyTermEvidenceSelect =
           CursStateService.setEvidence({
             evidence_code: $scope.data.evidence_code,
             with_gene_id: $scope.data.with_gene_id,
+            conditions: $scope.data.conditions,
           });
         };
       },

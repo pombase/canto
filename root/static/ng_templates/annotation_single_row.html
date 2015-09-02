@@ -1,4 +1,4 @@
-<div class="annotation-table">
+<div class="annotation-table annotation-single-row">
 <table ng-if="annotationType" class="list">
   <thead>
     <tr>
@@ -17,7 +17,7 @@
       <th ng-if="annotationType.can_have_with && annotationDetails.with_gene_id">
         With
       </th>
-      <th ng-if="annotationType.can_have_conditions && annotationDetails.conditionsString">
+      <th ng-if="annotationType.can_have_conditions && annotationDetails.conditions.length > 0">
         Conditions
       </th>
       <th ng-if="annotationDetails.term_suggestion_name || annotationDetails.term_suggestion_definition">
@@ -42,7 +42,7 @@
     <td ng-if="annotationType.can_have_with && annotationDetails.with_gene_id">
       {{withGeneDisplayName}}
     </td>
-    <td ng-if="annotationType.can_have_conditions && annotationDetails.conditionsString">
+    <td ng-if="annotationType.can_have_conditions && annotationDetails.conditions.length > 0">
       {{conditionsString}}
     </td>
     <td ng-if="annotationDetails.term_suggestion_name || annotationDetails.term_suggestion_definition">
