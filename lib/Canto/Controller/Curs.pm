@@ -799,38 +799,6 @@ sub annotation_delete_suggestion : Chained('annotation') PathPart('delete_sugges
   _redirect_and_detach($c);
 }
 
-sub _field_edit_internal
-{
-  my ($self, $c, $field_name) = @_;
-
-  my $st = $c->stash();
-  my $annotation = $st->{annotation};
-  my $data = $annotation->data();
-
-  my $params = $c->req()->params();
-  my $new_text = $params->{'curs-edit-dialog-text'};
-
-  $data->{$field_name} = $new_text;
-
-  $annotation->data($data);
-  $annotation->update();
-
-  $c->stash->{json_data} = {
-    result => 'success',
-  };
-  $c->forward('View::JSON');
-}
-
-sub annotation_comment_edit : Chained('annotation') PathPart('comment_edit') Args(1)
-{
-  _field_edit_internal(@_, 'submitter_comment');
-}
-
-sub annotation_extension_edit : Chained('annotation') PathPart('extension_edit') Args(1)
-{
-  _field_edit_internal(@_, 'annotation_extension');
-}
-
 # change the annotation data of an existing annotation
 sub _re_edit_annotation
 {
