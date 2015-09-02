@@ -1137,6 +1137,7 @@ var ontologyTermEvidenceSelect =
       controller: function($scope) {
         $scope.data = {
           validEvidence: false,
+          conditions: [],
         };
 
         $scope.app_static_path = CantoGlobals.app_static_path;
