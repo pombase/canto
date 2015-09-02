@@ -18,5 +18,6 @@ $pub
                                  annotation-type="annotationType"
                                  feature-display-name="<% $feature->display_name() %>"></ontology-term-evidence-select>
   <ontology-term-comment-transfer ng-if="getState() == 'commenting'"
+                                  feature-display-name="<% $feature->display_name() %>"
                                   annotation-type="annotationType"></ontology-comment-transfer>
 </div>

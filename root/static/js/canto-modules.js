@@ -512,6 +512,34 @@ var cursStateService =
       termConfirmed: false,
       evidence: null,
       termDetailsPromises: {},
+      extension: null,
+    };
+
+    // return the data in a obj with keys keys suitable for sending to the
+    // server
+    this.asAnnotationDetails = function() {
+      return this.currentTermDetails().then(function(termDetails) {
+        if (termDetails) {
+          var retVal = {
+            term_ontid: termDetails.id,
+            annotation_extension: this.data.extension,
+          };
+
+          if (termDetails.evidence) {
+            retVal.evidence_code = this.data.evidence.evidence_code;
+            retVal.with_gene_id = this.data.evidence.with_gene_id;
+            retVal.conditions = this.data.evidence.conditions;
+          }
+
+          if (termDetails.termSuggestion) {
+            retVal.term_suggestion_name = this.data.term_suggestion.name
+            retVal.term_suggestion_definition = this.data.term_suggestion.definition
+          }
+
+          return retVal;
+        }
+
+        return null;
     };
 
     this.setSearchString = function(searchString) {
@@ -1136,18 +1164,20 @@ var ontologyTermCommentTransfer =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/ontology_term_comment_transfer.html',
       controller: function($scope) {
+        $scope.data.comment = '';
+
         $scope.unsetEvidence = function() {
           CursStateService.unsetEvidence();
         };
 
         $scope.setComment = function() {
-          simpleHttpPost(toaster, $http, '../set_term/' + $scope.annotationType.name,
-                         { term_ontid: CursStateService.currentTerm(),
-                           evidence_code: CursStateService.evidence().evidence_code,
-                           conditions: $scope.data.conditions,
-                           with_gene_id: CursStateService.evidence().with_gene_id,
-                           term_suggestion: $scope.data.termSuggestion,
-                         });
+          var annotationDetails = CursStateService.asAnnotationDetails();
+
+          annotationDetails.submitter_comment = $scope.data.comment;
+
+          simpleHttpPost(toaster, $http,
+                         '../set_term/' + $scope.annotationType.name,
+                         annotationDetails);
         };
       },
     };
@@ -1238,11 +1268,13 @@ var annotationEvidence =
       restrict: 'E',
       replace: true,
       controller: function($scope) {
-        $scope.annotationType = '';
+        $scope.annotationType = null;
+        $scope.evidenceCodes = [];
 
         AnnotationTypeConfig.getByName($scope.annotationTypeName)
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
+            $scope.evidenceCodes = annotationType.evidence_codes;
           });
 
         $scope.isValidEvidenceCode = function() {
@@ -1260,7 +1292,8 @@ var annotationEvidence =
         };
 
         $scope.showConditions = function() {
-          return $scope.isValidEvidenceCode() && $scope.annotationType.can_have_conditions;
+          return $scope.isValidEvidenceCode() &&
+            $scope.annotationType && $scope.annotationType.can_have_conditions;
         };
 
         $scope.isValidCodeAndWith = function() {
@@ -2355,7 +2388,7 @@ var termConfirmDialogCtrl =
     $scope.data = {
       initialTermId: args.termId,
       state: 'definition',
-      termDetail: null,
+      termDetails: null,
     };
 
     $scope.setTerm = function(termId) {
@@ -2887,7 +2920,7 @@ var annotationTableRow =
       replace: true,
       templateUrl: function(elem,attrs) {
         return app_static_path + 'ng_templates/annotation_table_' +
-          attrs.annotationType + '_row.html';
+          attrs.annotationTypeName + '_row.html';
       },
       controller: function($scope) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
@@ -2935,6 +2968,16 @@ var annotationTableRow =
             $scope.displayEvidence = results[annotation.evidence_code].name;
           });
         });
+
+        $scope.addLinks = function() {
+          return true;
+        };
+
+        $scope.featureLink = function(featureType, featureId) {
+          return $scope.curs_root_uri + '/feature/' +
+            featureType + '/view/' +
+            featureId + ($scope.read_only_curs ? '/ro' : '');
+        };
 
         $scope.edit = function() {
           // FIXME: featureFilterDisplayName is from the parent scope

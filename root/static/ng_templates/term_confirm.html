@@ -1,7 +1,7 @@
 <div>
   <div class="modal-header">
     <h4 class="modal-title">
-Term confirm
+Confirm term
     </h4>
   </div>
 
@@ -16,7 +16,7 @@ Term confirm
           Please read the definition of the currently selected term to ensure that
           it accurately describes your gene:
         </div>
-        <term-definition-display term-data="data.termDetails"></term-definition-display>
+        <term-definition-display term-details="data.termDetails"></term-definition-display>
       </div>
       <div ng-if="data.state === 'children'" class="curs-box-body">
         <div ng-if="data.termDetails.children.length == 0" class="inline-help curs-box-title">
@@ -24,7 +24,7 @@ Term confirm
           choose the current term.
         </div>
         <div ng-if="data.termDetails.children.length != 0">
-          <term-children-display term-data="data.termDetails" goto-child-callback="gotoChild(childId)"></term-children-display>
+          <term-children-display term-details="data.termDetails" goto-child-callback="gotoChild(childId)"></term-children-display>
         </div>
       </div>
     </div>
