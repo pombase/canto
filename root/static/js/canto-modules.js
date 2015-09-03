@@ -2,7 +2,7 @@
 
 /*global history,curs_root_uri,angular,$,make_ontology_complete_url,
   ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,
-  app_static_path,ontology_external_links,loadingStart,loadingEnd */
+  app_static_path,ontology_external_links,loadingStart,loadingEnd,alert */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'toaster']);
 
@@ -92,10 +92,10 @@ function conditionsToString(conditions) {
 
 canto.filter('breakExtensions', function() {
   return function(text) {
-    if (typeof(text) === 'undefined') {
-      return '';
+    if (text) {
+      return text.replace(/,/g, ', ').replace(/\|/, " | ");
     }
-    return text.replace(/,/g, ', ').replace(/\|/, " | ");
+    return '';
   };
 });
 
@@ -140,7 +140,7 @@ canto.service('Curs', function($http, $q) {
   this.list = function(key, args) {
     var data = null;
 
-    if (typeof(args) === 'undefined') {
+    if (!args) {
       args = [];
     }
 
@@ -158,7 +158,7 @@ canto.service('Curs', function($http, $q) {
   this.details = function(key, args) {
     var data = null;
 
-    if (typeof(args) === 'undefined') {
+    if (!args) {
       args = [];
     }
 
@@ -173,7 +173,7 @@ canto.service('Curs', function($http, $q) {
   };
 
   this.add = function(key, args) {
-    if (typeof(args) === 'undefined') {
+    if (!args) {
       args = [];
     }
 
@@ -344,7 +344,7 @@ canto.service('CantoService', function($http) {
                        timeout: timeout
                      });
 
-  }
+  };
 });
 
 var keysForServer = {
@@ -800,7 +800,7 @@ canto.directive('advancedModeToggle', ['CursSettings', advancedModeToggle]);
 
 
 var breadcrumbsDirective =
-  function($q, $compile, CursStateService, CantoService) {
+  function($q, $compile, CursStateService) {
     return {
       scope: {
       },
@@ -856,7 +856,7 @@ var breadcrumbsDirective =
     };
   };
 
-canto.directive('breadcrumbs', ['$q', '$compile', 'CursStateService', 'CantoService',
+canto.directive('breadcrumbs', ['$q', '$compile', 'CursStateService',
                                 breadcrumbsDirective]);
 
 
@@ -986,8 +986,6 @@ var ontologyTermSelect =
           );
           $(element).show();
         });
-
-        $scope.testButton = function() {  alert("TEST"); };
 
         $scope.termFoundCallback =
           function(termId, termName, searchString, matchingSynonym) {
@@ -1166,7 +1164,7 @@ canto.directive('ontologyTermEvidenceSelect',
 
 
 var ontologyTermCommentTransfer =
-  function(CursStateService, CantoConfig, toaster, $http) {
+  function(CursStateService, toaster, $http) {
     return {
       scope: {
         annotationType: '=',
@@ -1201,7 +1199,7 @@ var ontologyTermCommentTransfer =
   };
 
 canto.directive('ontologyTermCommentTransfer',
-                ['CursStateService', 'CantoConfig', 'toaster', '$http',
+                ['CursStateService', 'toaster', '$http',
                  ontologyTermCommentTransfer]);
 
 
@@ -1250,7 +1248,7 @@ canto.controller('OntologyWorkflowCtrl',
 
 
 var interactionWizardCtrl =
-  function($scope, $http, CantoGlobals) {
+  function($scope, $http, toaster, CantoGlobals) {
 
     $scope.annotationTypeName = CantoGlobals.ferret_choose.annotation_type_name;
 
@@ -2208,10 +2206,7 @@ var genotypeListViewCtrl =
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
-      controller: function($scope) {
-
-      },
-    }
+    };
   };
 
 canto.directive('genotypeListView',
@@ -2533,7 +2528,7 @@ var termChildrenDisplayCtrl =
         $scope.CantoGlobals = CantoGlobals;
         $scope.gotoChild = function(childId) {
           $scope.gotoChildCallback({ childId: childId });
-        }
+        };
       },
     };
   };
@@ -2764,7 +2759,7 @@ function filterAnnotations(annotations, params) {
     }
     return false;
   });
-};
+}
 
 
 var annotationTableCtrl =
