@@ -12,7 +12,26 @@
 
 <div class="span5">
 <p>
-When you start curating a paper, you will first be asked to supply the genes
+When you first follow a link to a curation session in Canto, you will see a message with a few basic details about the paper and how to proceed:
+</p>
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for('/static/images/docs/session_welcome.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/session_welcome_small.png') %>" alt="session welcome page"/></a>
+</div>
+</div>
+
+<p>
+If you want to delegate curation to someone else (e.g. the first author or another current lab member), click "Reassign paper", and fill in the name and email address of the intended recipient on the next page. Note: you can also begin curation and then reassign a session later; there is a "Reassign" button at the upper left of the page.
+</p>
+
+<p>
+Otherwise, click "Start curating", confirm your name and email address on the next page, and carry on. (Meanwhile, you'll receive an email reminding you of the curation link and basic instructions.)
+</p>
+</div>
+
+<div class="span5">
+<p>
+To start curating a paper, you will first be asked to supply the genes
 from your publication:
 </p>
 </div>

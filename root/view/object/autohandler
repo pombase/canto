@@ -5,7 +5,7 @@ $object
 $is_admin_user
 </%args>
 
-% if ($is_admin_user) {
+% if ($is_admin_user && $editable) {
 
 <div class="actionlist" style="float: right">
   <h3>

@@ -19,7 +19,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v884
+app_version: v887
 
 schema_version: 9
 
@@ -650,7 +650,7 @@ class_info:
     curs:
       class_display_name: curation session
       display_field: curs_key
-      editable: 1
+      editable: 0
       field_info_list:
         - name: curs_key
           editable: 0

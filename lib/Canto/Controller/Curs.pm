@@ -726,11 +726,15 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 }
 
-sub genotype_manage : Chained('top') Args(0)
+sub genotype_manage : Chained('top')
 {
-  my ($self, $c) = @_;
+  my ($self, $c, $flag) = @_;
 
   my $st = $c->stash();
+
+  if (defined $flag && $flag eq 'ro') {
+    $st->{read_only_curs} = 1;
+  }
 
   $st->{title} = 'Genotypes for: ' . $st->{pub}->uniquename();
   $st->{template} = 'curs/genotype_manage.mhtml';

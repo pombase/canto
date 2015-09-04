@@ -162,7 +162,7 @@ subset: goslim_yeast
 subset: gosubset_prok
 synonym: "cytoplasmic membrane bounded vesicle" EXACT []
 synonym: "cytoplasmic membrane-enclosed vesicle" EXACT []
-is_a: GO:0005575 | cellular_component
+is_a: GO:0005575 ! cellular_component
 
 [Term]
 id: GO:0030133
