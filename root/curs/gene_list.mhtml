@@ -50,10 +50,10 @@ Click on a gene name to start entering data
   <div class="feature-list-action">
     <a href="<% $edit_path %>">Edit gene list ...</a>
   </div>
-  <div class="feature-list-action">
-    <a href="<% $genotype_manage %>">Genotype management ...</a>
-  </div>
 % }
+  <div class="feature-list-action">
+    <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes ...' : 'Genotype management ...' %></a>
+  </div>
   </div>
 </div>
 </div>
@@ -84,12 +84,17 @@ if (@gene_hashes <= 5) {
   push @gene_hashes, (undef) x @gene_hashes;
 }
 
+my $read_only_curs = $c->stash()->{read_only_curs};
+
 my $start_path = $c->stash()->{curs_root_uri};
 my $edit_path = "$start_path/edit_genes";
-my $genotype_manage = "$start_path/genotype_manage";
+my $genotype_manage_url = "$start_path/genotype_manage";
+
+if ($read_only_curs) {
+  $genotype_manage_url .= '/ro';
+}
 
 my $row_max = int((@gene_hashes + 1) / 2);
 my $col_count = 2;
 
-my $read_only_curs = $c->stash()->{read_only_curs};
 </%init>

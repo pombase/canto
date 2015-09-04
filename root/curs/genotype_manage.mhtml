@@ -8,6 +8,7 @@ $read_only_curs => 0
      id="curs-genotype-manage" class="genotype-list">
   <div ng-hide="data.genotypeSearching">
   <div class="row">
+% if (!$read_only_curs) {
     <div class="curs-top-help">
 Search, view, and edit genotypes for phenotype annotation in this session
     </div>
@@ -26,6 +27,7 @@ Actions
       </div>
     </div>
     </div>
+% }
     <div class="col-sm-7 col-md-7">
     <div class="curs-box">
       <div class="curs-box-title">
