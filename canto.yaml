@@ -650,7 +650,7 @@ class_info:
     curs:
       class_display_name: curation session
       display_field: curs_key
-      editable: 1
+      editable: 0
       field_info_list:
         - name: curs_key
           editable: 0
