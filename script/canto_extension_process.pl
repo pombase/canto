@@ -149,6 +149,15 @@ my $canto_subset_term =
 while (defined (my $cvterm = $cvterm_rs->next())) {
   print $cvterm->name(), " ", $cvterm->db_accession(), "\n";
 
+  my $db_accession = $cvterm->db_accession();
+
+  if ($conf{$db_accession}) {
+    if ($conf{$db_accession}->{domain_name} ne $cvterm->name()) {
+      warn "domain ID and name don't match: ",
+        $conf{$db_accession}->{domain_name}, ' <> ', $cvterm->name(), "\n";
+    }
+  }
+
   my $prop_rs =
     $cvterm->cvtermprop_cvterms()
     ->search({
@@ -161,7 +170,7 @@ while (defined (my $cvterm = $cvterm_rs->next())) {
 
   $prop_rs->delete();
 
-  my $subset_ids = $subsets{$cvterm->db_accession()};
+  my $subset_ids = $subsets{$db_accession};
 
   if ($subset_ids) {
     my @subset_ids = keys %{$subset_ids};
