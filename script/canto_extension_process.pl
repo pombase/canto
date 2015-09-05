@@ -173,6 +173,8 @@ while (defined (my $cvterm = $cvterm_rs->next())) {
       type_id => $canto_subset_term->cvterm_id(),
     });
 
+  my $guard = $schema->txn_scope_guard();
+
   $prop_rs->delete();
 
   my $subset_ids = $subsets{$db_accession};
@@ -190,4 +192,6 @@ while (defined (my $cvterm = $cvterm_rs->next())) {
       });
     }
   }
+
+  $guard->commit();
 }
