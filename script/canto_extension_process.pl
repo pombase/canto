@@ -23,6 +23,7 @@ use lib qw(lib);
 use Canto::Config;
 use Canto::TrackDB;
 use Canto::Meta::Util;
+use Canto::Config::ExtensionConf;
 
 my $app_name = Canto::Config::get_application_name();
 
@@ -61,39 +62,10 @@ if (!@filenames) {
 my $config = Canto::Config::get_config();
 my $schema = Canto::TrackDB->new(config => $config);
 
-sub parse_conf
-{
-  my $conf_fh = shift;
-
-  my @res = ();
-
-  while (defined (my $line = <$conf_fh>)) {
-    chomp $line;
-
-    my ($domain, $domain_name, $subset_rel, $allowed_extension, $range, $display_text) =
-      split (/\t/, $line);
-
-    if (!defined $display_text) {
-      die "config line has too few fields: $line\n";
-    }
-
-    push @res, {
-      domain => $domain,
-      domain_name => $domain_name,
-      subset_rel => $subset_rel,
-      allowed_extension => $allowed_extension,
-      range => $range,
-      display_text => $display_text,
-    };
-  }
-
-  return @res;
-}
-
 open my $conf_fh, '<', $extension_conf_file
   or die "can't open $extension_conf_file: $!\n";
 
-my @conf = parse_conf($conf_fh);
+my @conf = Canto::Config::ExtensionConf::parse($conf_fh);
 
 close $conf_fh or die "$!\n";
 
