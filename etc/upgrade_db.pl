@@ -129,6 +129,8 @@ if ($current_version + 1 != $new_version) {
 
 my $dbh = $track_schema->storage()->dbh();
 
+my $load_util = Canto::Track::LoadUtil->new(schema => $track_schema);
+
 my $comma_substitute = "<<COMMA>>";
 
 sub _replace_commas
@@ -576,6 +578,20 @@ CREATE TABLE allele_genotype (
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
+  }
+  when (10) {
+    $dbh->do("
+CREATE TABLE extension_configuration (
+       extension_configuration_id integer NOT NULL PRIMARY KEY,
+       domain text NOT NULL,
+       extension_relation text NOT NULL,
+       range text NOT NULL,
+       display_text text NOT NULL
+)
+");
+    $load_util->get_cvterm(cv_name => 'cvterm_property_type',
+                           term_name => 'canto_subset',
+                           ontologyid => 'Canto:canto_subset');
   }
   default {
     die "don't know how to upgrade to version $new_version";
