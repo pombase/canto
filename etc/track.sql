@@ -201,14 +201,6 @@ CREATE TABLE metadata (
        value text NOT NULL
 );
 
-CREATE TABLE extension_configuration (
-       extension_configuration_id integer NOT NULL PRIMARY KEY,
-       domain text NOT NULL,
-       extension_relation text NOT NULL,
-       range text NOT NULL,
-       display_text text NOT NULL
-);
-
 -- web sessions
 CREATE TABLE sessions (
        id text PRIMARY KEY,

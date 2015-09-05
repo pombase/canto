@@ -97,20 +97,6 @@ my @conf = parse_conf($conf_fh);
 
 close $conf_fh or die "$!\n";
 
-my $extension_conf_rs =
-  $schema->resultset('ExtensionConfiguration');
-
-$extension_conf_rs->delete();
-
-for my $conf (@conf) {
-  $extension_conf_rs->create({
-    domain => $conf->{domain},
-    extension_relation => $conf->{allowed_extension},
-    range => $conf->{range},
-    display_text => $conf->{display_text},
-  });
-}
-
 my %subsets = ();
 
 for my $filename (@filenames) {
