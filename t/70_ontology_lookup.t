@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 62;
+use Test::More tests => 63;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -232,6 +232,12 @@ ok(!defined $cached_value);
 
 my $fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000114',
                                       include_definition => 1);
+cmp_deeply($fypo_term, $expected_fypo_term);
+
+$fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000114',
+                                   include_definition => 1,
+                                   include_subset_ids => 1);
+# same result
 cmp_deeply($fypo_term, $expected_fypo_term);
 
 # check that value was cached

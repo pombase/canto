@@ -95,6 +95,19 @@ sub _get_synonyms
   ];
 }
 
+sub _get_subset_ids
+{
+  my $cvterm = shift;
+
+  my $prop_rs =
+    $cvterm->cvtermprop_cvterms()->search({'type.name' => 'canto_subset',},
+                                          { join => 'type' });
+
+  return map {
+    $_->value();
+  } $prop_rs->all();
+}
+
 sub _make_term_hash
 {
   my $self = shift;
@@ -104,6 +117,7 @@ sub _make_term_hash
   my $include_children = shift;
   my $include_exact_synonyms = shift;
   my $matching_synonym = shift;
+  my $include_subset_ids = shift;
 
   my $inverse_relationships = $self->inverse_relationships();
   my $follow_inverse_cv_names = $self->follow_inverse_cv_names();
@@ -170,6 +184,10 @@ sub _make_term_hash
 
   if ($include_exact_synonyms) {
     $term_hash{synonyms} = _get_synonyms($cvterm, 'exact');
+  }
+
+  if ($include_subset_ids) {
+    $term_hash{subset_ids} = [_get_subset_ids($cvterm)];
   }
 
   return %term_hash;
@@ -403,6 +421,7 @@ sub lookup_by_id
   my $include_definition = $args{include_definition} // 0;
   my $include_children = $args{include_children} // 0;
   my $include_exact_synonyms = $args{include_exact_synonyms} // 0;
+  my $include_subset_ids = $args{include_subset_ids} // 0;
 
   my $term_id = $args{id};
   if (!defined $term_id) {
@@ -458,7 +477,7 @@ sub lookup_by_id
   my $ret_val = { $self->_make_term_hash($cvterm, $cvterm->cv()->name(),
                            $include_definition, $include_children,
                            $include_exact_synonyms, undef,
-                           $self->inverse_relationships()) };
+                           $include_subset_ids) };
 
   $cache->set($cache_key, $ret_val, $self->config()->{cache}->{default_timeout});
 

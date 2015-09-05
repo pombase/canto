@@ -88,6 +88,7 @@ sub _ontology_results
   my $include_definition = $c->req()->param('def');
   my $include_children = $c->req()->param('children');
   my $include_exact_synonyms = $c->req()->param('exact_synonyms');
+  my $include_subset_ids = $c->req()->param('subset_ids');
 
   if (defined $component_name) {
     my $results =
@@ -96,7 +97,8 @@ sub _ontology_results
                       max_results => $max_results,
                       include_definition => $include_definition,
                       include_children => $include_children,
-                      include_exact_synonyms => $include_exact_synonyms);
+                      include_exact_synonyms => $include_exact_synonyms,
+                      include_subset_ids => $include_subset_ids);
 
     map { $_->{value} = $_->{name} } @$results;
 
@@ -106,7 +108,8 @@ sub _ontology_results
       $lookup->lookup_by_id(id => $search_string,
                             include_definition => $include_definition,
                             include_children => $include_children,
-                            include_exact_synonyms => $include_exact_synonyms);
+                            include_exact_synonyms => $include_exact_synonyms,
+                            include_subset_ids => $include_subset_ids);
 
     return $result;
   }

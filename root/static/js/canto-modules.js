@@ -622,6 +622,7 @@ var cursStateService =
                                           def: 1,
                                           children: 1,
                                           exact_synonyms: 1,
+                                          subset_ids: 1
                                         });
 
       lookupPromise.success(function(data) {
