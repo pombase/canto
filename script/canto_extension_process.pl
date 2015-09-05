@@ -165,8 +165,6 @@ my $canto_subset_term =
                                      { join => 'cv' });
 
 while (defined (my $cvterm = $cvterm_rs->next())) {
-  print $cvterm->name(), " ", $cvterm->db_accession(), "\n";
-
   my $db_accession = $cvterm->db_accession();
 
   my $prop_rs =
@@ -174,10 +172,6 @@ while (defined (my $cvterm = $cvterm_rs->next())) {
     ->search({
       type_id => $canto_subset_term->cvterm_id(),
     });
-
-  while (defined (my $prop = $prop_rs->next())) {
-    print "  ", $prop->type()->name(), " ", $prop->value(), "\n";
-  }
 
   $prop_rs->delete();
 
