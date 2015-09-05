@@ -1214,6 +1214,10 @@ var extensionBuilder =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_builder.html',
       controller: function($scope) {
+        CantoConfig.get('extension_configuration').success(function(results) {
+          $scope.extensionConfiguration = results;
+        });
+
         AnnotationTypeConfig.getByName($scope.annotationTypeName)
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
