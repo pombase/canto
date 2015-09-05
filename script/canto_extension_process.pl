@@ -1,9 +1,38 @@
 #!/usr/bin/env perl
 
-use perl5i::2;
-use Moose;
+use strict;
+use warnings;
+use Carp;
+use feature ':5.10';
 
 use File::Temp qw/ tempfile /;
+use File::Basename;
+
+BEGIN {
+  my $script_name = basename $0;
+
+  if (-f $script_name && -d "../etc") {
+    # we're in the scripts directory - go up
+    chdir "..";
+  }
+};
+
+use lib qw(lib);
+
+use Canto::Config;
+use Canto::TrackDB;
+use Canto::Meta::Util;
+
+my $app_name = Canto::Config::get_application_name();
+
+$ENV{CANTO_CONFIG_LOCAL_SUFFIX} ||= 'deploy';
+
+my $suffix = $ENV{CANTO_CONFIG_LOCAL_SUFFIX};
+
+if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
+  die "The application is not yet initialised, try running the canto_start " .
+    "script\n";
+}
 
 sub usage
 {
@@ -37,7 +66,7 @@ sub parse_conf
   while (defined (my $line = <$conf_fh>)) {
     chomp $line;
 
-    my ($domain, $domain_name, $allowed_extension, $range, $display_text) =
+    my ($domain, $domain_name, $subset_rel, $allowed_extension, $range, $display_text) =
       split (/\t/, $line);
 
     if (!defined $display_text) {
@@ -46,6 +75,7 @@ sub parse_conf
 
     $res{$domain} = {
       domain_name => $domain_name,
+      subset_rel => $subset_rel,
       allowed_extension => $allowed_extension,
       range => $range,
       display_text => $display_text,
@@ -61,6 +91,8 @@ open my $conf_fh, '<', $extension_conf_file
 my %conf = parse_conf($conf_fh);
 
 close $conf_fh or die "$!\n";
+
+my %subsets = ();
 
 for my $filename (@filenames) {
   my ($temp_fh, $temp_filename) = tempfile();
@@ -78,10 +110,21 @@ for my $filename (@filenames) {
 
     die $line unless $rel_type;
 
-    next unless $rel_type eq 'is_a' or $rel_type eq 'OBO_REL:is_a';
+    $rel_type =~ s/^OBO_REL://;
 
     if ($conf{$object}) {
-      print "$line\n";
+      if ($conf{$object}->{subset_rel} eq $rel_type) {
+        $subsets{$subject}{$object} = 1;
+      }
     }
   }
+}
+
+my $config = Canto::Config::get_config();
+my $schema = Canto::TrackDB->new(config => $config);
+
+my $cvterm_rs = $schema->resultset('Cvterm');
+
+while (defined (my $cvterm = $cvterm_rs->next())) {
+  print $cvterm->name(), "\n";
 }
