@@ -7,6 +7,7 @@ use feature ':5.10';
 
 use File::Temp qw/ tempfile /;
 use File::Basename;
+use List::MoreUtils qw(uniq);
 
 BEGIN {
   my $script_name = basename $0;
@@ -57,11 +58,14 @@ if (!@filenames) {
   usage "missing OBO file name argument(s)";
 }
 
+my $config = Canto::Config::get_config();
+my $schema = Canto::TrackDB->new(config => $config);
+
 sub parse_conf
 {
   my $conf_fh = shift;
 
-  my %res = ();
+  my @res = ();
 
   while (defined (my $line = <$conf_fh>)) {
     chomp $line;
@@ -73,7 +77,8 @@ sub parse_conf
       die "config line has too few fields: $line\n";
     }
 
-    $res{$domain} = {
+    push @res, {
+      domain => $domain,
       domain_name => $domain_name,
       subset_rel => $subset_rel,
       allowed_extension => $allowed_extension,
@@ -82,15 +87,29 @@ sub parse_conf
     };
   }
 
-  return %res;
+  return @res;
 }
 
 open my $conf_fh, '<', $extension_conf_file
   or die "can't open $extension_conf_file: $!\n";
 
-my %conf = parse_conf($conf_fh);
+my @conf = parse_conf($conf_fh);
 
 close $conf_fh or die "$!\n";
+
+my $extension_conf_rs =
+  $schema->resultset('ExtensionConfiguration');
+
+$extension_conf_rs->delete();
+
+for my $conf (@conf) {
+  $extension_conf_rs->create({
+    domain => $conf->{domain},
+    extension_relation => $conf->{allowed_extension},
+    range => $conf->{range},
+    display_text => $conf->{display_text},
+  });
+}
 
 my %subsets = ();
 
@@ -112,16 +131,15 @@ for my $filename (@filenames) {
 
     $rel_type =~ s/^OBO_REL://;
 
-    if ($conf{$object}) {
-      if ($conf{$object}->{subset_rel} eq $rel_type) {
+    for my $conf (@conf) {
+      if ($conf->{domain} eq $object && $conf->{subset_rel} eq $rel_type) {
         $subsets{$subject}{$object} = 1;
       }
     }
   }
 }
 
-my $config = Canto::Config::get_config();
-my $schema = Canto::TrackDB->new(config => $config);
+my @domains = uniq map { $_->{domain}; } @conf;
 
 my %db_names = ();
 
@@ -150,13 +168,6 @@ while (defined (my $cvterm = $cvterm_rs->next())) {
   print $cvterm->name(), " ", $cvterm->db_accession(), "\n";
 
   my $db_accession = $cvterm->db_accession();
-
-  if ($conf{$db_accession}) {
-    if ($conf{$db_accession}->{domain_name} ne $cvterm->name()) {
-      warn "domain ID and name don't match: ",
-        $conf{$db_accession}->{domain_name}, ' <> ', $cvterm->name(), "\n";
-    }
-  }
 
   my $prop_rs =
     $cvterm->cvtermprop_cvterms()
