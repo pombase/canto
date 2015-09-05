@@ -52,6 +52,7 @@ use Hash::Merge;
 
 use Canto::DBUtil;
 use Canto::TrackDB;
+use Canto::Config::ExtensionConf;
 
 use v5.005;
 
@@ -146,6 +147,12 @@ sub merge_config
 sub setup
 {
   my $self = shift;
+
+  if ($self->{extension_conf_file}) {
+    my @ext_conf = Canto::Config::ExtensionConf::parse($self->{extension_conf_file});
+
+    $self->{extension_configuration} = \@ext_conf;
+  }
 
   # make the field_infos available as a hash in the config and make
   # the config inheritable using "extends"

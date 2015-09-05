@@ -62,12 +62,13 @@ if (!@filenames) {
 my $config = Canto::Config::get_config();
 my $schema = Canto::TrackDB->new(config => $config);
 
-open my $conf_fh, '<', $extension_conf_file
-  or die "can't open $extension_conf_file: $!\n";
+my $ext_conf = $config->{extension_configuration};
 
-my @conf = Canto::Config::ExtensionConf::parse($conf_fh);
+if (!$ext_conf) {
+  die "no extension configuration file set - exiting\n";
+}
 
-close $conf_fh or die "$!\n";
+my @conf = @{$ext_conf};
 
 my %subsets = ();
 

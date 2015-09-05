@@ -53,7 +53,10 @@ use warnings;
 
 sub parse
 {
-  my $conf_fh = shift;
+  my $extension_conf_file = shift;
+
+  open my $conf_fh, '<', $extension_conf_file
+    or die "can't open $extension_conf_file: $!\n";
 
   my @res = ();
 
@@ -76,6 +79,8 @@ sub parse
       display_text => $display_text,
     };
   }
+
+  close $conf_fh or die "can't close $extension_conf_file: $!\n";
 
   return @res;
 }
