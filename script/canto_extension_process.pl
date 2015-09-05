@@ -23,7 +23,6 @@ use lib qw(lib);
 use Canto::Config;
 use Canto::TrackDB;
 use Canto::Meta::Util;
-use Canto::Config::ExtensionConf;
 
 my $app_name = Canto::Config::get_application_name();
 
