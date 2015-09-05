@@ -65,7 +65,7 @@ is(@loaded_cvterms, 114);
 
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 
-is(@cvterm_relationships, 34);
+is(@cvterm_relationships, 35);
 
 ok((grep {
   $_->name() eq 'regulation of transmembrane transport'
