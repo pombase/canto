@@ -123,8 +123,57 @@ for my $filename (@filenames) {
 my $config = Canto::Config::get_config();
 my $schema = Canto::TrackDB->new(config => $config);
 
-my $cvterm_rs = $schema->resultset('Cvterm');
+my %db_names = ();
+
+map {
+  if (/(\w+):/) {
+    $db_names{$1} = 1;
+  }
+} keys %subsets;
+
+my @db_names = keys %db_names;
+
+my $cvterm_rs =
+  $schema->resultset('Cvterm')->search({
+    'db.name' => { -in => \@db_names },
+  }, {
+    join => { dbxref => 'db' },
+    prefetch => { dbxref => 'db' }
+  });
+
+my $canto_subset_term =
+  $schema->resultset('Cvterm')->find({ name => 'canto_subset',
+                                       'cv.name' => 'cvterm_property_type' },
+                                     { join => 'cv' });
 
 while (defined (my $cvterm = $cvterm_rs->next())) {
-  print $cvterm->name(), "\n";
+  print $cvterm->name(), " ", $cvterm->db_accession(), "\n";
+
+  my $prop_rs =
+    $cvterm->cvtermprop_cvterms()
+    ->search({
+      type_id => $canto_subset_term->cvterm_id(),
+    });
+
+  while (defined (my $prop = $prop_rs->next())) {
+    print "  ", $prop->type()->name(), " ", $prop->value(), "\n";
+  }
+
+  $prop_rs->delete();
+
+  my $subset_ids = $subsets{$cvterm->db_accession()};
+
+  if ($subset_ids) {
+    my @subset_ids = keys %{$subset_ids};
+
+    for (my $rank = 0; $rank < @subset_ids; $rank++) {
+      my $subset_id = $subset_ids[$rank];
+      $schema->resultset('Cvtermprop')->create({
+        cvterm_id => $cvterm->cvterm_id(),
+        type_id => $canto_subset_term->cvterm_id(),
+        value => $subset_id,
+        rank => $rank,
+      });
+    }
+  }
 }

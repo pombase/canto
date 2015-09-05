@@ -118,8 +118,16 @@ db_initial_data:
               db:
                 name: Canto
           - name: Canto numeric priority
+            definition: Cvterprop type for numeric versions of annotation priorities
             dbxref:
               accession: numeric_priority
+              db:
+                name: Canto
+          - name: canto_subset
+            definition: >
+              Used to store the ID of a ontology subset that this cvterm is part of.
+            dbxref:
+              accession: canto_subset
               db:
                 name: Canto
       - name: synonym_type
