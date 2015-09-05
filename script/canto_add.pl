@@ -32,7 +32,7 @@ my $add_session = 0;
 my $dry_run = 0;
 my $do_help = 0;
 
-if (!@ARGV) {
+if (!@ARGV || $ARGV[0] eq '-h' || $ARGV[0] eq '--help') {
   usage();
 }
 
