@@ -38,6 +38,7 @@ the Free Software Foundation, either version 3 of the License, or
 =cut
 
 use strict;
+use warnings;
 
 use Params::Validate qw(:all);
 use Config::Any;
