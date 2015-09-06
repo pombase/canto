@@ -914,6 +914,20 @@ function featureChooserControlHelper($scope, $modal, CursGeneList,
       getGenesFromServer();
     });
   };
+
+  if ($scope.chosenFeatureUniquename !== undefined) {
+    $scope.$watch('chosenFeatureId',
+                  function(newFeatureId) {
+                    if (newFeatureId && $scope.features) {
+                      $.map($scope.features,
+                            function(feature) {
+                              if (feature.feature_id === newFeatureId) {
+                                $scope.chosenFeatureUniquename = feature.primary_identifier;
+                              }
+                            });
+                    }
+                  });
+  }
 }
 
 
@@ -959,6 +973,7 @@ var featureChooser =
       scope: {
         featureType: '@',
         chosenFeatureId: '=',
+        chosenFeatureUniquename: '=',
       },
       restrict: 'E',
       replace: true,
@@ -1220,11 +1235,10 @@ canto.directive('ontologyTermCommentTransfer',
 
 
 var extensionBuilder =
-  function(AnnotationTypeConfig, CursStateService, CantoConfig, toaster, $http) {
+  function(CantoConfig, $http) {
     return {
       scope: {
         extension: '=',
-        annotationTypeName: '@',
         termDetails: '=',
       },
       restrict: 'E',
@@ -1232,11 +1246,17 @@ var extensionBuilder =
       templateUrl: app_static_path + 'ng_templates/extension_builder.html',
       controller: function($scope) {
         $scope.matchingConfigurations = [];
-
         $scope.extensionConfigurationPromise = CantoConfig.get('extension_configuration');
 
         $scope.asString = function() {
-          return $scope.matchingConfigurations;
+          if ($scope.extension) {
+            return $.map($scope.extension,
+                         function(part) {
+                           return part.relation + '(' + part.rangeValue + ')';
+                         }).join(",");
+          }
+
+          return '';
         };
 
         $scope.$watch('termDetails.id',
@@ -1258,21 +1278,13 @@ var extensionBuilder =
                                             }
                                             range = 'ONTOLOGY';
                                           }
-                                          var data = {
-                                            extension: conf.allowed_extension,
+                                          return {
+                                            displayText: conf.display_text,
+                                            relation: conf.allowed_relation,
                                             range: range,
                                             rangeValue: null,
                                             rangeNamespace: rangeNamespace,
                                           };
-
-                                          var callback =
-                                            function(termId) {
-                                              data.rangeValue = termId;
-                                            };
-
-                                          data.termFoundCallback = callback;
-
-                                          return data;
                                         }
                                       });
                             });
@@ -1280,27 +1292,91 @@ var extensionBuilder =
                           $scope.matchingConfigurations = [];
                         }
                       });
+
+        $scope.startAddPart = function(extConf) {
+          $scope.inProgressConf = extConf;
+          $scope.editExtensionPart = { relation: extConf.relation };
+        };
+
+        $scope.cancelAddPart = function() {
+          $scope.inProgressConf = null;
+          $scope.editExtensionPart = null;
+        };
+
+        $scope.finishPart = function() {
+          $scope.extension.push($scope.editExtensionPart);
+          $scope.inProgressConf = null;
+          $scope.editExtensionPart = null;
+        };
+
+        $scope.partIsValid = function() {
+          return !!$scope.editExtensionPart.rangeValue;
+        };
       },
-      link: function($scope) {
-        AnnotationTypeConfig.getByName($scope.annotationTypeName)
-          .then(function(annotationType) {
-            $scope.annotationType = annotationType;
-            console.log($scope.annotationType);
-          });
-      }
     };
   };
 
 canto.directive('extensionBuilder',
-                ['AnnotationTypeConfig', 'CursStateService', 'CantoConfig', 'toaster', '$http',
+                ['CantoConfig', '$http',
                  extensionBuilder]);
 
+var extensionPartAdd =
+  function(CantoService, CursGeneList, toaster) {
+    return {
+      scope: {
+        extensionPart: '=',
+        extensionConf: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/extension_part_add.html',
+      controller: function($scope) {
+        $scope.rangeTermName = '';
+        $scope.rangeGeneId = '';
+
+        $scope.termFoundCallback = function(termId, termName) {
+          $scope.extensionPart.rangeValue = termId;
+          $scope.rangeTermName = termName;
+        };
+
+        if ($scope.extensionConf.range == 'GENE') {
+          if ($scope.extensionPart.rangeValue) {
+            // editing exisiting part
+            CursGeneList.geneList().then(function(results) {
+              //
+            }).catch(function() {
+              toaster.pop('note', "couldn't read the gene list from the server");
+            });
+          } else {
+            $scope.extensionPart.rangeValue = '';
+          }
+        }
+
+        $scope.$watch('rangeGeneId',
+                      function() {
+                        console.log('');
+                      });
+
+       if ($scope.extensionConf.range == 'ONTOLOGY' &&
+            $scope.extensionPart.rangeValue) {
+          // editing existing extension part
+          CantoService.lookup('ontology', [$scope.extensionPart.rangeValue], {})
+            .success(function(data) {
+              $scope.rangeTermName = data.name;
+            });
+        }
+      }
+    };
+  };
+
+canto.directive('extensionPartAdd',
+                ['CantoService', 'CursGeneList', 'toaster', extensionPartAdd]);
 
 
 var ontologyWorkflowCtrl =
   function($scope, AnnotationTypeConfig, CursStateService, $attrs) {
     $scope.termDetails = '';
-    $scope.extension = {};
+    $scope.extension = [];
 
     $scope.annotationTypeName = $attrs.annotationTypeName;
 

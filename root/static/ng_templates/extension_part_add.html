@@ -1,0 +1,14 @@
+<div>
+  {{extensionConf.extension}}
+  <span ng-if="extensionConf.range == 'GENE'">
+    <feature-chooser feature-type="gene" chosen-feature-uniquename="extensionPart.rangeValue"
+                     chosen-feature-id="rangeGeneId"></feature-chooser>
+  </span>
+  <span ng-if="extensionConf.range == 'ONTOLOGY'">
+    <term-name-complete current-term-name="{{rangeTermName}}"
+                        found-callback="termFoundCallback(termId)"
+                        annotation-type-name="{{extensionConf.rangeNamespace}}"></term-name-complete>
+  </span>
+
+
+</div>

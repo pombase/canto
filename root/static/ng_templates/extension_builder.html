@@ -1,16 +1,18 @@
 <div class="curs-extension-builder">
-  <div>{{asString()}}</div>
-  <ul>
+  EXT: <div>{{asString()}}</div>
+  <ul ng-hide="inProgressConf">
     <li ng-repeat="extConf in matchingConfigurations">
-      {{extConf.extension}}
-      <span ng-if="extConf.range == 'GENE'">
-        <feature-chooser feature-type="gene" chosen-feature-id="extConf.rangeValue"></feature-chooser>
-      </span>
-      <span ng-if="extConf.range == 'ONTOLOGY'">
-        <term-name-complete current-term-name=""
-                            found-callback="extConf.termFoundCallback(termId)"
-                            annotation-type-name="{{extConf.rangeNamespace}}"></term-name-complete>
-      </span>
+      <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
     </li>
   </ul>
+  <div ng-if="inProgressConf">
+    <extension-rel-add extension-part="editExtensionPart"
+                       extension-conf="inProgressConf"></extension-rel-add>
+
+    <button type="submit" class="btn btn-primary curs-finish-button"
+            title="Finish extension part"
+            ng-click="finishPart()" ng-disabled="!partIsValid()">Finish</button>
+    <button type="submit" class="btn btn-warning curs-finish-button"
+            ng-click="cancelAddPart()">Cancel</button>
+  </div>
 </div>

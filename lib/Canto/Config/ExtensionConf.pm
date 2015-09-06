@@ -46,7 +46,7 @@ use warnings;
  Args    : $file_name
  Return  : Returns a list of hashes like:
            [ { domain => 'GO:0004672', domain_name => 'protein kinase activity',
-               subset_rel => 'is_a', allowed_extension => 'has_substrate',
+               subset_rel => 'is_a', allowed_relation => 'has_substrate',
                range => 'GO:0005575' }, ... ]
            The range can be a term ID or "GENE"
 =cut
@@ -63,7 +63,7 @@ sub parse
   while (defined (my $line = <$conf_fh>)) {
     chomp $line;
 
-    my ($domain, $domain_name, $subset_rel, $allowed_extension, $range, $display_text) =
+    my ($domain, $domain_name, $subset_rel, $allowed_relation, $range, $display_text) =
       split (/\t/, $line);
 
     if (!defined $display_text) {
@@ -74,7 +74,7 @@ sub parse
       domain => $domain,
       domain_name => $domain_name,
       subset_rel => $subset_rel,
-      allowed_extension => $allowed_extension,
+      allowed_relation => $allowed_relation,
       range => $range,
       display_text => $display_text,
     };

@@ -17,11 +17,15 @@ $pub
   <ontology-term-evidence-select ng-if="getState() == 'selectingEvidence'"
                                  annotation-type="annotationType"
                                  feature-display-name="<% $feature->display_name() %>"></ontology-term-evidence-select>
-  <div ng-if="getState() == 'buildExtension' && termDetails && annotationType">
-    You have annotated <% $feature->display_name() %> to {{termDetails.id}}. Can you specify the
-    extensions based on the experiments in this paper?
-    <extension-builder extension="data.extension" term-details="termDetails"
+  <div class="curs-box" ng-if="getState() == 'buildExtension' && termDetails && annotationType">
+    <div class="curs-box-title">
+You have annotated <% $feature->display_name() %> to {{termDetails.id}}. Can you specify the
+extensions based on the experiments in this paper?
+    </div>
+    <div class="curs-box-body">
+    <extension-builder extension="extension" term-details="termDetails"
                        annotation-type-name="{{annotationType.name}}"></extension-builder>
+    </div>
   </div>
   <ontology-term-comment-transfer ng-if="getState() == 'commenting'"
                                   feature-type="<% $feature_type %>"
