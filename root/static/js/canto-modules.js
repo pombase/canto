@@ -1240,6 +1240,7 @@ var extensionBuilder =
       scope: {
         extension: '=',
         termDetails: '=',
+        featureDisplayName: '@',
       },
       restrict: 'E',
       replace: true,

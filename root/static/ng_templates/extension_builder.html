@@ -1,22 +1,33 @@
 <div class="curs-extension-builder">
   <span style="float:right">{{asString()}}</span>
-  <ul ng-hide="inProgressConf">
+  <div ng-hide="inProgressConf">
+    <div ng-show="termDetails.id" style="padding: 0 0 5px 0">
+You have annotated {{featureDisplayName}} to {{termDetails.id}}. Can you specify the
+extensions based on the experiments in this paper?
+    </div>
+    <div style="padding: 0 0 15px 0">
+These are the possible extension types for {{termDetails.id}}, please add as many as are appropriate:
+    </div>
+
+    <ul>
     <li ng-repeat="extConf in matchingConfigurations">
       <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
     </li>
-  </ul>
+    </ul>
+  </div>
   <div ng-if="inProgressConf">
     <extension-part-edit extension-part="editExtensionPart"
                          extension-conf="inProgressConf"></extension-part-edit>
 
-    <button type="submit" class="btn btn-primary curs-finish-button"
+    <button type="submit" class="btn btn-warning"
+            ng-click="cancelAddPart()">Cancel</button>
+    <button type="submit" class="btn btn-primary"
             title="Finish extension part"
             ng-click="finishPart()" ng-disabled="!partIsValid()">Finish</button>
-    <button type="submit" class="btn btn-warning curs-finish-button"
-            ng-click="cancelAddPart()">Cancel</button>
   </div>
 
-  <div ng-if="extension.length > 0">
+  <div ng-if="!inProgressConf && extension.length > 0" style="padding-top: 10px">
+    Extensions added so far:
     <extension-display extension="extension"></extension-display>
   </div>
 </div>

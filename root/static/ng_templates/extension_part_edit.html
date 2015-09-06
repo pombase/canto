@@ -1,5 +1,5 @@
-<div>
-  <span>{{extensionConf.relation}}</span>
+<div ng-show="extensionConf.displayText" style="padding-bottom: 10px">
+  <span>{{extensionConf.displayText}}</span>
   <span ng-if="extensionConf.range == 'GENE'">
     <feature-chooser feature-type="gene" chosen-feature-uniquename="extensionPart.rangeValue"
                      chosen-feature-id="rangeGeneId"></feature-chooser>
@@ -9,6 +9,4 @@
                         found-callback="termFoundCallback(termId)"
                         annotation-type-name="{{extensionConf.rangeNamespace}}"></term-name-complete>
   </span>
-
-
 </div>
