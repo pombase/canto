@@ -940,14 +940,7 @@ span.canto-select-buttons {
   margin: 5px 10px 5px 5px;
 }
 
-.curs-finish-buttons {
-  float: right;
-  margin: 5px;
-  margin-top: 10px;
-  margin-left: 8px;
-}
-
-.curs-finish-button {
+.curs-finish-buttons, .curs-finish-button {
   float: right;
   margin: 5px;
   margin-top: 10px;
