@@ -1,4 +1,16 @@
-<div>
-You have annotated {{featureDisplayName}} to {{termName}}. Can you specify the
-[[$extension]] based on the experiments in this paper?"
+<div class="curs-extension-builder">
+  <div>{{asString()}}</div>
+  <ul>
+    <li ng-repeat="extConf in matchingConfigurations">
+      {{extConf.extension}}
+      <span ng-if="extConf.range == 'GENE'">
+        <feature-chooser feature-type="gene" chosen-feature-id="extConf.rangeValue"></feature-chooser>
+      </span>
+      <span ng-if="extConf.range == 'ONTOLOGY'">
+        <term-name-complete current-term-name=""
+                            found-callback="extConf.termFoundCallback(termId)"
+                            annotation-type-name="{{extConf.rangeNamespace}}"></term-name-complete>
+      </span>
+    </li>
+  </ul>
 </div>

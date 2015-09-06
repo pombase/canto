@@ -9,8 +9,6 @@ $pub
 <div ng-controller="OntologyWorkflowCtrl"
      annotation-type-name="<% $annotation_type_name %>"
      ng-show="annotationType">
-  <extension-builder ng-if="false && annotationType" extension="extension" annotation-type-name="{{annotationType.name}}"></extension-builder>
-
   <ontology-term-select ng-show="getState() == 'searching'"
                         annotation-type="annotationType"></ontology-term-select>
   <ontology-term-confirm ng-show="getState() == 'confirmingTerm'"
@@ -19,6 +17,12 @@ $pub
   <ontology-term-evidence-select ng-if="getState() == 'selectingEvidence'"
                                  annotation-type="annotationType"
                                  feature-display-name="<% $feature->display_name() %>"></ontology-term-evidence-select>
+  <div ng-if="getState() == 'buildExtension' && termDetails && annotationType">
+    You have annotated <% $feature->display_name() %> to {{termDetails.id}}. Can you specify the
+    extensions based on the experiments in this paper?
+    <extension-builder extension="data.extension" term-details="termDetails"
+                       annotation-type-name="{{annotationType.name}}"></extension-builder>
+  </div>
   <ontology-term-comment-transfer ng-if="getState() == 'commenting'"
                                   feature-type="<% $feature_type %>"
                                   feature-display-name="<% $feature->display_name() %>"

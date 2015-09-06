@@ -686,9 +686,24 @@ var cursStateService =
       return this.data.evidence;
     };
 
+    this.extensionFinished = function() {
+      return this.data.extensionFinished;
+    };
+
+    this.finishExtension = function() {
+      this.data.extensionFinished = true;
+    };
+
+    this.unfinishExtension = function() {
+      this.data.extensionFinished = false;
+    };
+
     this.getState = function() {
-      if (this.currentTerm() && this.termConfirmed() && this.evidence()) {
-        return 'commenting';
+      if (this.extensionFinished()) {
+        return "commenting";
+      }
+      if (this.evidence()) {
+        return 'buildExtension';
       }
       if (this.currentTerm() && this.termConfirmed()) {
         return 'selectingEvidence';
@@ -1210,20 +1225,69 @@ var extensionBuilder =
       scope: {
         extension: '=',
         annotationTypeName: '@',
+        termDetails: '=',
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_builder.html',
       controller: function($scope) {
-        CantoConfig.get('extension_configuration').success(function(results) {
-          $scope.extensionConfiguration = results;
-        });
+        $scope.matchingConfigurations = [];
 
+        $scope.extensionConfigurationPromise = CantoConfig.get('extension_configuration');
+
+        $scope.asString = function() {
+          return $scope.matchingConfigurations;
+        };
+
+        $scope.$watch('termDetails.id',
+                      function() {
+                        var subset_ids = $scope.termDetails.subset_ids;
+
+                        if (subset_ids && subset_ids.length > 0) {
+                          $scope.extensionConfigurationPromise
+                            .success(function(results) {
+                              $scope.matchingConfigurations =
+                                $.map(results,
+                                      function(conf) {
+                                        if ($.inArray(conf.domain, subset_ids) != -1) {
+                                          var range = conf.range;
+                                          var rangeNamespace = null;
+                                          if (range.match(/\w+:\d+/)) {
+                                            if (range == 'GO:0005575') {
+                                              rangeNamespace = 'cellular_component';
+                                            }
+                                            range = 'ONTOLOGY';
+                                          }
+                                          var data = {
+                                            extension: conf.allowed_extension,
+                                            range: range,
+                                            rangeValue: null,
+                                            rangeNamespace: rangeNamespace,
+                                          };
+
+                                          var callback =
+                                            function(termId) {
+                                              data.rangeValue = termId;
+                                            };
+
+                                          data.termFoundCallback = callback;
+
+                                          return data;
+                                        }
+                                      });
+                            });
+                        } else {
+                          $scope.matchingConfigurations = [];
+                        }
+                      });
+      },
+      link: function($scope) {
         AnnotationTypeConfig.getByName($scope.annotationTypeName)
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
+            console.log($scope.annotationType);
           });
-      },
+      }
     };
   };
 
@@ -1235,11 +1299,26 @@ canto.directive('extensionBuilder',
 
 var ontologyWorkflowCtrl =
   function($scope, AnnotationTypeConfig, CursStateService, $attrs) {
+    $scope.termDetails = '';
+    $scope.extension = {};
+
     $scope.annotationTypeName = $attrs.annotationTypeName;
 
     $scope.getState = function() {
       return CursStateService.getState();
     };
+
+    $scope.getCurrentTermId = function() {
+      return CursStateService.currentTerm();
+    };
+
+    $scope.$watch('getCurrentTermId()',
+                  function() {
+                    CursStateService.currentTermDetails()
+                      .then(function(newDetails) {
+                        $scope.termDetails = newDetails;
+                      });
+                  });
 
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
       .then(function(annotationType) {

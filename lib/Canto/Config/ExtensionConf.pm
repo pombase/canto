@@ -47,7 +47,7 @@ use warnings;
  Return  : Returns a list of hashes like:
            [ { domain => 'GO:0004672', domain_name => 'protein kinase activity',
                subset_rel => 'is_a', allowed_extension => 'has_substrate',
-               range => 'GO:0008372' }, ... ]
+               range => 'GO:0005575' }, ... ]
            The range can be a term ID or "GENE"
 =cut
 
