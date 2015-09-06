@@ -1,18 +1,22 @@
 <div class="curs-extension-builder">
-  EXT: <div>{{asString()}}</div>
+  <span style="float:right">{{asString()}}</span>
   <ul ng-hide="inProgressConf">
     <li ng-repeat="extConf in matchingConfigurations">
       <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
     </li>
   </ul>
   <div ng-if="inProgressConf">
-    <extension-rel-add extension-part="editExtensionPart"
-                       extension-conf="inProgressConf"></extension-rel-add>
+    <extension-part-edit extension-part="editExtensionPart"
+                         extension-conf="inProgressConf"></extension-part-edit>
 
     <button type="submit" class="btn btn-primary curs-finish-button"
             title="Finish extension part"
             ng-click="finishPart()" ng-disabled="!partIsValid()">Finish</button>
     <button type="submit" class="btn btn-warning curs-finish-button"
             ng-click="cancelAddPart()">Cancel</button>
+  </div>
+
+  <div ng-if="extension.length > 0">
+    <extension-display extension="extension"></extension-display>
   </div>
 </div>

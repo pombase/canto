@@ -1320,7 +1320,8 @@ canto.directive('extensionBuilder',
                 ['CantoConfig', '$http',
                  extensionBuilder]);
 
-var extensionPartAdd =
+
+var extensionPartEdit =
   function(CantoService, CursGeneList, toaster) {
     return {
       scope: {
@@ -1329,7 +1330,7 @@ var extensionPartAdd =
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/extension_part_add.html',
+      templateUrl: app_static_path + 'ng_templates/extension_part_edit.html',
       controller: function($scope) {
         $scope.rangeTermName = '';
         $scope.rangeGeneId = '';
@@ -1369,8 +1370,23 @@ var extensionPartAdd =
     };
   };
 
-canto.directive('extensionPartAdd',
-                ['CantoService', 'CursGeneList', 'toaster', extensionPartAdd]);
+canto.directive('extensionPartEdit',
+                ['CantoService', 'CursGeneList', 'toaster', extensionPartEdit]);
+
+
+var extensionDisplay =
+  function() {
+    return {
+      scope: {
+        extension: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/extension_display.html',
+    };
+  };
+
+canto.directive('extensionDisplay', [extensionDisplay]);
 
 
 var ontologyWorkflowCtrl =
