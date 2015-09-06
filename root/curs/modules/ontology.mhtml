@@ -23,8 +23,7 @@ Annotation extensions
     </div>
     <div class="curs-box-body">
     <extension-builder extension="extension" feature-display-name="<% $feature->display_name() %>"
-                       term-details="termDetails"
-                       annotation-type-name="{{annotationType.name}}"></extension-builder>
+                       term-details="termDetails"></extension-builder>
     </div>
   </div>
   <ontology-term-comment-transfer ng-if="getState() == 'commenting'"
