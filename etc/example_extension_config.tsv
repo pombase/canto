@@ -1,3 +1,3 @@
-GO:0016023	cytoplasmic membrane-bounded vesicle	is_a	has_substrate	GENE	kinase substrate
-GO:0016023	transmembrane transporter activity	is_a	happens_during	GO:0005575	Something that happens during
-GO:0022857	transmembrane transporter activity	is_a	localizes	GENE	more test text
+GO:0016023	is_a	has_substrate	GENE	kinase substrate
+GO:0016023	is_a	happens_during	GO:0005575	Something that happens during
+GO:0022857	is_a	localizes	GENE	more test text
