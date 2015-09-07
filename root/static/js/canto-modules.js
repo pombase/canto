@@ -1384,11 +1384,6 @@ var extensionPartEdit =
           }
         }
 
-        $scope.$watch('rangeGeneId',
-                      function() {
-                        console.log('');
-                      });
-
        if ($scope.extensionConf.range == 'ONTOLOGY' &&
             $scope.extensionPart.rangeValue) {
           // editing existing extension part
