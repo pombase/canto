@@ -10,23 +10,30 @@ $pub
      annotation-type-name="<% $annotation_type_name %>"
      ng-show="annotationType">
   <ontology-term-select ng-show="getState() == 'searching'"
-                        annotation-type="annotationType"></ontology-term-select>
+                        annotation-type="annotationType"
+                        term-found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)">
+  </ontology-term-select>
   <ontology-term-confirm ng-show="getState() == 'confirmingTerm'"
                          annotation-type="annotationType"
+                         term-id="{{currentTermId()}}"
+                         goto-child-callback="gotoChild(childId)"
+                         unset-term-callback="unsetTerm()"
+                         suggest-term-callback="suggestTerm(termSuggestion)"
+                         confirm-term-callback="confirmTerm()"
                          feature-display-name="<% $feature->display_name() %>"></ontology-term-confirm>
-  <ontology-term-evidence-select ng-if="getState() == 'selectingEvidence'"
+  <ontology-term-evidence-select ng-show="getState() == 'selectingEvidence'"
                                  annotation-type="annotationType"
                                  feature-display-name="<% $feature->display_name() %>"></ontology-term-evidence-select>
-  <div class="curs-box" ng-if="getState() == 'buildExtension' && termDetails && annotationType">
+  <div class="curs-box" ng-show="getState() == 'buildExtension'">
     <div class="curs-box-title">
 Annotation extensions
     </div>
     <div class="curs-box-body">
     <extension-builder extension="extension" feature-display-name="<% $feature->display_name() %>"
-                       term-details="termDetails"></extension-builder>
+                       term-id="{{currentTermId()}}"></extension-builder>
     </div>
   </div>
-  <ontology-term-comment-transfer ng-if="getState() == 'commenting'"
+  <ontology-term-comment-transfer ng-show="getState() == 'commenting'"
                                   feature-type="<% $feature_type %>"
                                   feature-display-name="<% $feature->display_name() %>"
                                   annotation-type="annotationType"></ontology-comment-transfer>
