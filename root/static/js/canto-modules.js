@@ -1005,19 +1005,6 @@ var ontologyTermSelect =
 
         $('#ferret-term-input').attr('disabled', false);
 
-        $('.canto-more-button').each(function (index, element) {
-          var this_id = $(element).attr('id');
-          var target = $('#' + this_id + '-target');
-          $(element).click(
-            function () {
-              target.show();
-              $(element).hide();
-              return false;
-            }
-          );
-          $(element).show();
-        });
-
         $scope.termFoundCallback =
           function(termId, termName, searchString, matchingSynonym) {
             CursStateService.setSearchString(searchString);

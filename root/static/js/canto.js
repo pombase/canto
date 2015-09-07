@@ -363,6 +363,19 @@ $(document).ready(function() {
   $('button.curs-person-picker-add').click(function() {
     person_picker_add_person(this);
   });
+
+  $('.canto-more-button').each(function (index, element) {
+    var this_id = $(element).attr('id');
+    var target = $('#' + this_id + '-target');
+    $(element).click(
+      function () {
+        target.show();
+        $(element).hide();
+        return false;
+      }
+    );
+    $(element).show();
+  });
 });
 
 $(document).ready(function() {
