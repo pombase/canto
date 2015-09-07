@@ -428,7 +428,8 @@ sub lookup_by_id
     croak "no id passed to OntologyLookup::lookup_by_id()";
   }
 
-  my @key_bits = ($term_id, $include_definition, $include_children, $include_exact_synonyms);
+  my @key_bits = ($term_id, $include_definition, $include_children, $include_exact_synonyms,
+                  $include_subset_ids);
   my $cache_key = join '#@%', @key_bits;
 
   my $cache = $self->cache();
