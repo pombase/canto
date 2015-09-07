@@ -1032,6 +1032,78 @@ var ontologyTermConfirm =
       },
       restrict: 'E',
       replace: true,
+var externalTermLinks =
+  function(CursStateService) {
+    return {
+      scope: {
+        termId: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/external_term_links.html',
+      controller: function($scope) {
+        $scope.$watch('termId',
+                      function(newTermId) {
+                        if (!newTermId) {
+                          return;
+                        }
+
+                      CursStateService.currentTermDetails()
+                        .then(function(details) {
+                          $scope.termDetails = details;
+
+                          return CantoConfig.get('ontology_external_links');
+                        })
+                        .then(function(results) {
+                          var ontology_external_links = results.data;
+
+                          var link_confs = ontology_external_links[$scope.termDetails.annotation_namespace];
+                          if (link_confs) {
+                            var html = '';
+                            $.each(link_confs, function(idx, link_conf) {
+                              var url = link_conf.url;
+                              // hacky: allow a substitution like WebUtil::substitute_paths()
+                              var re = new RegExp("@@term_ont_id(?::s/(.+)/(.*)/r)?@@");
+                              url = url.replace(re,
+                                                function(match_str, p1, p2) {
+                                                  if (!p1 || p1.length == 0) {
+                                                    return newTermId;
+                                                  }
+                                                  return newTermId.replace(new RegExp(p1), p2);
+                                                });
+                              var img_src =
+                                  application_root + 'static/images/logos/' +
+                                  link_conf.icon;
+                              var title = 'View in: ' + link_conf.name;
+                              html += '<div class="curs-external-link"><a target="_blank" href="' +
+                                url + '" title="' + title + '">';
+                              if (img_src) {
+                                html += '<img alt="' + title + '" src="' + img_src + '"/></a>';
+                              } else {
+                                html += title;
+                              }
+                              var link_img_src = application_root + 'static/images/ext_link.png';
+                              html += '<img src="' + link_img_src + '"/></div>';
+                            });
+                            var $linkouts = $('#ferret-linkouts');
+                            if (html.length > 0) {
+                              $linkouts.find('.links-container').html(html);
+                              $linkouts.show();
+                            } else {
+                              $linkouts.hide();
+                            }
+                          }
+                        });
+                    });
+
+      },
+    };
+  };
+
+canto.directive('externalTermLinks',
+                ['CursStateService', externalTermLinks]);
+
+
       templateUrl: app_static_path + 'ng_templates/ontology_term_confirm.html',
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
@@ -1043,60 +1115,6 @@ var ontologyTermConfirm =
         $scope.currentTerm = function() {
           return CursStateService.currentTerm();
         };
-
-        $scope.$watch('currentTerm()',
-                      function(newTermId) {
-                        if (!newTermId) {
-                          return;
-                        }
-
-                        CursStateService.currentTermDetails()
-                          .then(function(details) {
-                            $scope.termDetails = details;
-
-                            return CantoConfig.get('ontology_external_links');
-                          })
-                          .then(function(results) {
-                            var ontology_external_links = results.data;
-
-                            var link_confs = ontology_external_links[$scope.termDetails.annotation_namespace];
-                            if (link_confs) {
-                              var html = '';
-                              $.each(link_confs, function(idx, link_conf) {
-                                var url = link_conf.url;
-                                // hacky: allow a substitution like WebUtil::substitute_paths()
-                                var re = new RegExp("@@term_ont_id(?::s/(.+)/(.*)/r)?@@");
-                                url = url.replace(re,
-                                                  function(match_str, p1, p2) {
-                                                    if (!p1 || p1.length == 0) {
-                                                      return newTermId;
-                                                    }
-                                                    return newTermId.replace(new RegExp(p1), p2);
-                                                  });
-                                var img_src =
-                                    application_root + 'static/images/logos/' +
-                                    link_conf.icon;
-                                var title = 'View in: ' + link_conf.name;
-                                html += '<div class="curs-external-link"><a target="_blank" href="' +
-                                  url + '" title="' + title + '">';
-                                if (img_src) {
-                                  html += '<img alt="' + title + '" src="' + img_src + '"/></a>';
-                                } else {
-                                  html += title;
-                                }
-                                var link_img_src = application_root + 'static/images/ext_link.png';
-                                html += '<img src="' + link_img_src + '"/></div>';
-                              });
-                              var $linkouts = $('#ferret-linkouts');
-                              if (html.length > 0) {
-                                $linkouts.find('.links-container').html(html);
-                                $linkouts.show();
-                              } else {
-                                $linkouts.hide();
-                              }
-                            }
-                          });
-                      });
 
         $scope.openTermSuggestDialog =
           function(featureDisplayName) {
