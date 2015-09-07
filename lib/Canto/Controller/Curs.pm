@@ -230,6 +230,15 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if ($state eq APPROVAL_IN_PROGRESS) {
     if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
       # fall through, use dispatch table
+      my $unused_genotype_count = _unused_genotype_count($c);
+
+      if ($unused_genotype_count > 0) {
+        if ($unused_genotype_count == 1) {
+          push @{$st->{message}}, "Warning: there is an unused genotype in this session";
+        } else {
+          push @{$st->{message}}, "Warning: there are $unused_genotype_count unused genotypes in this session";
+        }
+      }
     } else {
       if ($path !~ m!/ro/?$|ws/\w+/list!) {
         $c->detach('finished_publication');
@@ -272,6 +281,18 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $c->detach($dispatch_dest);
     }
   }
+}
+
+sub _unused_genotype_count
+{
+  my $c = shift;
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $genotype_rs = $schema->resultset('Genotype')
+    ->search({}, { where => \"genotype_id NOT IN (SELECT genotype FROM genotype_annotation)" });
+
+  return $genotype_rs->count();
 }
 
 sub _set_genes_in_session
