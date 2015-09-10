@@ -4,8 +4,9 @@ use Test::More tests => 63;
 use Test::Deep;
 
 use Canto::TestUtil;
-
 use Canto::Track;
+
+use Clone qw(clone);
 
 my $test_util = Canto::TestUtil->new();
 $test_util->init_test();
@@ -157,7 +158,7 @@ ok(grep { $_->{id} eq 'GO:0005487' &&
           $_->{id} eq 'GO:0022857' &&
           $_->{name} eq 'transmembrane transporter activity' } @children);
 
-my $cache_key = "FYPO:0000114#@%1#@%0#@%0";
+my $cache_key = "FYPO:0000114#@%1#@%0#@%0#@%0";
 my $cached_value = $lookup->cache()->get($cache_key);
 ok(!defined $cached_value);
 
@@ -237,8 +238,13 @@ cmp_deeply($fypo_term, $expected_fypo_term);
 $fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000114',
                                    include_definition => 1,
                                    include_subset_ids => 1);
+
+my $expected_term_with_subset_ids = clone $expected_fypo_term;
+
+$expected_term_with_subset_ids->{subset_ids} = [];
+
 # same result
-cmp_deeply($fypo_term, $expected_fypo_term);
+cmp_deeply($fypo_term, $expected_term_with_subset_ids);
 
 # check that value was cached
 $cached_value = $lookup->cache()->get($cache_key);
