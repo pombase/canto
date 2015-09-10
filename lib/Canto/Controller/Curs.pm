@@ -233,6 +233,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       my $unused_genotype_count = _unused_genotype_count($c);
 
       if ($unused_genotype_count > 0) {
+        if ($st->{message} && !ref $st->{message}) {
+          $st->{message} = [$st->{message}];
+        }
+
         if ($unused_genotype_count == 1) {
           push @{$st->{message}}, "Warning: there is an unused genotype in this session";
         } else {
