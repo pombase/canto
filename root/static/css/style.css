@@ -968,6 +968,10 @@ span.canto-select-buttons {
   margin-top: 1.5em;
 }
 
+.curs-extension-relation {
+  font-weight: bold;
+}
+
 .curs-external-links {
   float: right;
   display: inline;

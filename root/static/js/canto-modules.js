@@ -915,14 +915,20 @@ function featureChooserControlHelper($scope, $modal, CursGeneList,
     });
   };
 
-  if ($scope.chosenFeatureUniquename !== undefined) {
+  if ($scope.chosenFeatureUniquename !== undefined ||
+      $scope.chosenFeatureDisplayName !== undefined) {
     $scope.$watch('chosenFeatureId',
                   function(newFeatureId) {
                     if (newFeatureId && $scope.features) {
                       $.map($scope.features,
                             function(feature) {
                               if (feature.feature_id === newFeatureId) {
-                                $scope.chosenFeatureUniquename = feature.primary_identifier;
+                                if ($scope.chosenFeatureUniquename !== undefined) {
+                                  $scope.chosenFeatureUniquename = feature.primary_identifier;
+                                }
+                                if ($scope.chosenFeatureDisplayName !== undefined) {
+                                  $scope.chosenFeatureDisplayName = feature.display_name;
+                                }
                               }
                             });
                     }
@@ -974,6 +980,7 @@ var featureChooser =
         featureType: '@',
         chosenFeatureId: '=',
         chosenFeatureUniquename: '=',
+        chosenFeatureDisplayName: '=',
       },
       restrict: 'E',
       replace: true,
@@ -1363,12 +1370,11 @@ var extensionPartEdit =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_part_edit.html',
       controller: function($scope) {
-        $scope.rangeTermName = '';
         $scope.rangeGeneId = '';
 
         $scope.termFoundCallback = function(termId, termName) {
           $scope.extensionPart.rangeValue = termId;
-          $scope.rangeTermName = termName;
+          $scope.extensionPart.rangeDisplayName = termName;
         };
 
         if ($scope.extensionConf.range == 'GENE') {
@@ -1389,7 +1395,7 @@ var extensionPartEdit =
           // editing existing extension part
           CantoService.lookup('ontology', [$scope.extensionPart.rangeValue], {})
             .success(function(data) {
-              $scope.rangeTermName = data.name;
+              $scope.extensionPart.rangeTermName = data.name;
             });
         }
       }
