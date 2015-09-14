@@ -43,7 +43,7 @@ use warnings;
 
  Usage   : my $conf = Canto::Config::ExtensionConf::parse($file_name);
  Function: Read the extension configuration table
- Args    : $file_name
+ Args    : @conf_file_names
  Return  : Returns a list of hashes like:
            [ { domain => 'GO:0004672',
                subset_rel => 'is_a', allowed_relation => 'has_substrate',
@@ -53,12 +53,13 @@ use warnings;
 
 sub parse
 {
-  my $extension_conf_file = shift;
-
-  open my $conf_fh, '<', $extension_conf_file
-    or die "can't open $extension_conf_file: $!\n";
+  my @extension_conf_files = @_;
 
   my @res = ();
+
+  for my $extension_conf_file (@extension_conf_files) {
+  open my $conf_fh, '<', $extension_conf_file
+    or die "can't open $extension_conf_file: $!\n";
 
   while (defined (my $line = <$conf_fh>)) {
     chomp $line;
@@ -80,6 +81,7 @@ sub parse
   }
 
   close $conf_fh or die "can't close $extension_conf_file: $!\n";
+  }
 
   return @res;
 }

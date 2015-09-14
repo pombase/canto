@@ -148,8 +148,8 @@ sub setup
 {
   my $self = shift;
 
-  if ($self->{extension_conf_file}) {
-    my @ext_conf = Canto::Config::ExtensionConf::parse($self->{extension_conf_file});
+  if ($self->{extension_conf_files}) {
+    my @ext_conf = Canto::Config::ExtensionConf::parse(@{$self->{extension_conf_files}});
 
     $self->{extension_configuration} = \@ext_conf;
   }
