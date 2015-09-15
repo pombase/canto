@@ -62,6 +62,7 @@ No genotypes in this session.  Try adding one.
  <button type="button" id="curs-finish-genotype" class="btn btn-primary curs-back-button"><% $finish_text %></button>
     </div>
   </div>
+  </div>
   <div ng-show="data.genotypeSearching" class="curs-box ng-cloak">
     <div class="curs-box-title">
 Genotype search
