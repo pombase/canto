@@ -1335,7 +1335,10 @@ var extensionBuilder =
 
         $scope.startAddPart = function(extConf) {
           $scope.inProgressConf = extConf;
-          $scope.editExtensionPart = { relation: extConf.relation };
+          $scope.editExtensionPart = {
+            relation: extConf.relation,
+            rangeDisplayName: '',
+          };
         };
 
         $scope.cancelAddPart = function() {
