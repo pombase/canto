@@ -1,0 +1,4 @@
+GO:0016023	is_a	has_substrate	GENE	kinase substrate	0,1
+GO:0016023	is_a	happens_during	GO:0005575	Something that happens during
+GO:0022857	is_a	localizes	GENE	localizes	0,1
+FYPO:0000002	is_a	assayed_using	GENE	assayed using	0,2

@@ -30,7 +30,7 @@ front_page_template: local/pombase_front.mhtml
 default_local_page: pombase_front
 
 extension_conf_files:
-  - etc/example_extension_config.tsv
+  - t/data/extension_config.tsv
 
 # restrict the list of annotation types
 #enabled_annotation_type_list:

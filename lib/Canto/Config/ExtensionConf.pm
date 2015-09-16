@@ -64,11 +64,18 @@ sub parse
   while (defined (my $line = <$conf_fh>)) {
     chomp $line;
 
-    my ($domain, $subset_rel, $allowed_relation, $range, $display_text) =
+    my ($domain, $subset_rel, $allowed_relation, $range, $display_text,
+        $cardinality) =
       split (/\t/, $line);
 
     if (!defined $display_text) {
       die "config line has too few fields: $line\n";
+    }
+
+    my @cardinality = ('*');
+
+    if (defined $cardinality) {
+      @cardinality = grep { length $_ > 0 } map { s/^\s+//; s/\s+$//; $_;} split /,/, $cardinality;
     }
 
     push @res, {
@@ -77,6 +84,7 @@ sub parse
       allowed_relation => $allowed_relation,
       range => $range,
       display_text => $display_text,
+      cardinality => \@cardinality,
     };
   }
 
