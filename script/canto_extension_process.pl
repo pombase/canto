@@ -110,6 +110,11 @@ for my $filename (@filenames) {
   }
 }
 
+# the configuration applies to the domain term ID, not just its descendants
+for my $conf (@conf) {
+  $subsets{$conf->{domain}}{$conf->{domain}} = 1;
+}
+
 my @domains = uniq map { $_->{domain}; } @conf;
 
 my %db_names = ();
