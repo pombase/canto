@@ -52,7 +52,7 @@ if (!@ARGV || $ARGV[0] eq '-h' || $ARGV[0] eq '--help') {
   usage();
 }
 
-my ($extension_conf_file, @filenames) = @ARGV;
+my (@filenames) = @ARGV;
 
 if (!@filenames) {
   usage "missing OBO file name argument(s)";
