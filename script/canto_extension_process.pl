@@ -43,9 +43,22 @@ sub usage
     warn "$message\n";
   }
 
-  die "usage:
-  $0 extension_conf_file <OBO file names>
-";
+  die qq|usage:
+  $0 <OBO file names>
+
+This script reads the given OBO files and processes them with owltools.
+The "--save-closure-for-chado" option is used to calculate the full
+transitive closure of the ontologies.
+
+The owltools output is compared to the annotation extension configuration
+(see https://github.com/pombase/canto/wiki/AnnotationExtensionConfig).
+
+The configuration for each extension contains a "domain term ID".  A
+cvtermprop named "canto_subset" is added to that term in the Canto database
+and to all descendant terms.  The value of the property is the domain term
+ID.  This allows us look at any term used in an annotation and find the
+sub-ontologies (sub-sets) that it's a member of.
+|;
 }
 
 if (!@ARGV || $ARGV[0] eq '-h' || $ARGV[0] eq '--help') {
