@@ -1844,3 +1844,9 @@ cache:
 # the default DB name to use when loading ontologies in the case where the
 # termid doesn't have a DB name prefix
 default_db_name: "CONFIGURE_IN_CANTO_DEPLOY.YAML"
+
+### configuration for annotation extensions in the user interface
+### See: https://github.com/pombase/canto/wiki/AnnotationExtensionConfig
+# extension_conf_files:
+#   - file_one.tsv
+#   - file_two.tsv
