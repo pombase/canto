@@ -687,15 +687,15 @@ var cursStateService =
     };
 
     this.extensionFinished = function() {
-      return this.data.extensionFinished;
+      return this.data.extension != null;
     };
 
-    this.finishExtension = function() {
-      this.data.extensionFinished = true;
+    this.setExtension = function(extension) {
+      this.data.extension = extension;
     };
 
-    this.unfinishExtension = function() {
-      this.data.extensionFinished = false;
+    this.unsetExtension = function() {
+      this.data.extension = null;
     };
 
     this.getState = function() {
@@ -1235,8 +1235,8 @@ var ontologyTermCommentTransfer =
           $scope.canSetComment = true;
         });
 
-        $scope.unsetEvidence = function() {
-          CursStateService.unsetEvidence();
+        $scope.unsetExtension = function() {
+          CursStateService.unsetExtension();
         };
 
         $scope.setComment = function() {
@@ -1255,7 +1255,7 @@ canto.directive('ontologyTermCommentTransfer',
 
 
 var extensionBuilder =
-  function(CantoConfig, CantoService) {
+  function(CantoConfig, CantoService, CursStateService) {
     return {
       scope: {
         extension: '=',
@@ -1355,11 +1355,23 @@ var extensionBuilder =
         $scope.partIsValid = function() {
           return !!$scope.editExtensionPart.rangeValue;
         };
+  
+        $scope.backToEvidence = function() {
+          CursStateService.unsetEvidence();
+          $scope.inProgressConf = null;
+          $scope.editExtensionPart = null;
+          $scope.extension = [];
+        };
+
+        $scope.setExtension = function() {
+          CursStateService.setExtension($scope.extension);
+        };
+
       },
     };
   };
 
-canto.directive('extensionBuilder', ['CantoConfig', 'CantoService', extensionBuilder]);
+canto.directive('extensionBuilder', ['CantoConfig', 'CantoService', 'CursStateService', extensionBuilder]);
 
 
 var extensionPartEdit =
