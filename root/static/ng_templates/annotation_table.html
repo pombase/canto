@@ -32,7 +32,9 @@
               <th ng-if="annotationType.feature_type == 'genotype'">Genes</th>
               <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">Background</th>
               <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">Genotype name</th>
-              <th ng-if="annotationType.feature_type == 'genotype' || !featureIdFilter">{{displayAnnotationFeatureType}}</th>
+              <th ng-if="annotationType.feature_type == 'genotype' || !featureIdFilter">{{displayAnnotationFeatureType}}
+                <span ng-if="annotationType.feature_type == 'genotype'">(allele and expression)</span>
+              </th>
               <th>Term ID</th>
               <th>Term name</th>
               <th>Evidence code</th>
