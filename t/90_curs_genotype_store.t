@@ -132,7 +132,7 @@ test_psgi $app, sub {
     $curs_schema->resultset('Genotype')
       ->find({ name => 'h+ xyz-aa-1' });
 
-  # genotype not create because it's a dulpicate
+  # genotype not created because it's a duplicate
   ok(!defined $new_genotype);
 
   # add an extra allele and try again
