@@ -1500,7 +1500,8 @@ canto.controller('TermSuggestDialogCtrl',
                  termSuggestDialogCtrl]);
 
 
-function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
+function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles,
+                       followLocation) {
   var url = curs_root_uri + '/feature/genotype';
 
   if (genotype_id) {
@@ -1509,10 +1510,28 @@ function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_back
     url += '/store';
   }
 
-  return simpleHttpPost(toaster, $http, url,
-                        { genotype_name: genotype_name,
-                          genotype_background: genotype_background,
-                          alleles: alleles });
+  var data = {
+    genotype_name: genotype_name,
+    genotype_background: genotype_background,
+    alleles: alleles,
+  };
+
+  var result = $http.post(url, data);
+
+  if (followLocation) {
+    result.success(function(data) {
+      if (data.status == "success" || data.status == "existing") {
+        window.location.href = data.location;
+      } else {
+        toaster.pop('error', data.message);
+      }
+    }).
+    error(function(data, status){
+      toaster.pop('error', "Accessing server failed: " + (data || status) );
+    });
+  } else {
+    return result;
+  }
 }
 
 function makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed)
@@ -1546,7 +1565,7 @@ var genePageCtrl =
                                                 });
 
       editInstance.result.then(function (alleleData) {
-        storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData]);
+        storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], true);
       });
     };
   };
@@ -1646,11 +1665,6 @@ canto.controller('SingleGeneAddDialogCtrl',
 
 var multiAlleleCtrl =
   function($scope, $http, $modal, CantoConfig, Curs, toaster) {
-  $scope.alleles = [
-  ];
-  $scope.genes = [
-  ];
-
   $scope.getGenesFromServer = function() {
     Curs.list('gene').success(function(results) {
       $scope.genes = results;
@@ -1664,12 +1678,23 @@ var multiAlleleCtrl =
     });
   };
 
-  $scope.getGenesFromServer();
+  $scope.genes = [
+  ];
 
-  $scope.data = {
-    genotype_long_name: '',
-    genotype_name: ''
+  $scope.reset = function() {
+    $scope.alleles = [
+    ];
+
+    $scope.getGenesFromServer();
+
+    $scope.data = {
+      genotype_long_name: '',
+      genotype_name: '',
+      addAnother: false,
+    };
   };
+
+  $scope.reset();
 
   $scope.env = {
     curs_config_promise: CantoConfig.get('curs_config')
@@ -1716,9 +1741,27 @@ var multiAlleleCtrl =
                 true);
 
   $scope.store = function() {
-    storeGenotype(toaster, $http, $scope.data.genotype_id,
-                  $scope.data.genotype_name, $scope.data.genotype_background,
-                  $scope.alleles);
+    var result =
+      storeGenotype(toaster, $http, $scope.data.genotype_id,
+                    $scope.data.genotype_name, $scope.data.genotype_background,
+                    $scope.alleles, !$scope.data.addAnother);
+
+    result.success(function(data) {
+      if (data.status === "success") {
+        toaster.pop('info', "Created new genotype: " + data.genotype_display_name);
+        $scope.reset();
+      } else {
+        if (data.status === "existing") {
+          toaster.pop('info', "Using existing genotype: " + data.genotype_display_name);
+          $scope.reset();
+        } else {
+          toaster.pop('error', data.message);
+        }
+      }
+    }).
+    error(function(data, status){
+      toaster.pop('error', "Accessing server failed: " + (data || status) );
+    });
   };
 
   $scope.removeAllele = function (allele) {

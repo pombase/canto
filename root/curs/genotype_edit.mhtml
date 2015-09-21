@@ -120,9 +120,13 @@ The alleles of this genotype:
       <button type="submit" class="btn btn-warning curs-finish-button"
               ng-click="cancel()">Cancel</button>
       <div class="upload-genes-link">
-        <a ng-click="openSingleGeneAddDialog()">Add another gene ...</a>
+        <a ng-click="openSingleGeneAddDialog()">Add another gene from the paper ...</a>
       </div>
-      
+      <div class="clearall"></div>
+      <label class="curs-finish-checkbox"
+             title="If selected you can immediately add another genotype. Otherwise, go to genotype details page">
+        <input type="checkbox" ng-model="data.addAnother">Add another genotype
+      </label>
   </div>
 </div>
 
