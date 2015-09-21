@@ -1516,7 +1516,11 @@ function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_back
     alleles: alleles,
   };
 
+  loadingStart();
+
   var result = $http.post(url, data);
+
+  result.finally(loadingEnd);
 
   if (followLocation) {
     result.success(function(data) {
