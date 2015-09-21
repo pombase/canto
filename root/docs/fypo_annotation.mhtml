@@ -71,8 +71,13 @@ allele details:
   <li>
     <b>Expression level</b>: You will be prompted to define the
     expression level relative to wild-type (deletion mutants are
-    automatically set to null). If a wild-type allele was investigated
-    then an altered expression level must be set.
+    automatically set to null). Note that "expression" refers to the
+    amount of gene product present in the assayed cells. If the
+    product level was not measured (e.g. by Western blot for a
+    protein), choose "Not assayed", even if a construct such as an
+    inducible promoter was used to try to alter expression. If a
+    wild-type allele was investigated in the absence of any other
+    changes, then an altered expression level must be set.
   </li>
 </ol>
 
