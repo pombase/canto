@@ -1717,6 +1717,9 @@ var multiAlleleCtrl =
     if (genotype_id) {
       if (edit_or_duplicate === 'edit') {
         $scope.data.genotype_id = genotype_id;
+        $scope.isEditing = true;
+      } else {
+        $scope.isEditing = false;
       }
       $scope.init_from(genotype_id);
     }

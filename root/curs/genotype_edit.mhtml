@@ -14,8 +14,13 @@ $edit_or_duplicate
      ng-init="init('<% $edit_or_duplicate %>', '<% $genotype_id %>')";
      class="curs-box ng-cloak">
     <div class="curs-box-title">
-Add alleles from the genes below, and/or edit or delete existing alleles,
-until the new genotype is fully specified.
+      <span ng-if="isEditing">
+Add, edit, or delete alleles of genes from the list until the genotype is
+correctly described.
+      </span>
+      <span ng-if="!isEditing">
+Specify alleles of genes from the list, until the new genotype is complete.
+      </span>
     </div>
     <div class="curs-box-body">
 
