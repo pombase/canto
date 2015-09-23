@@ -272,6 +272,7 @@ sub _genotype_details_hash
     allele_string => $genotype->allele_string(),
     display_name => $genotype->display_name(),
     genotype_id => $genotype->genotype_id(),
+    annotation_count => $genotype->annotations()->count(),
   );
 
   if ($include_allele) {
