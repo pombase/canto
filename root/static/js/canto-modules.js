@@ -650,6 +650,31 @@ var cursSettingsService =
 canto.service('CursSettings', ['$http', '$timeout', '$q', cursSettingsService]);
 
 
+var helpIcon = function(CantoGlobals, CantoConfig) {
+  return {
+    scope: {
+      key: '@',
+    },
+    restrict: 'E',
+    replace: true,
+    templateUrl: app_static_path + 'ng_templates/help_icon.html',
+    controller: function($scope) {
+      $scope.helpText = null;
+
+      $scope.app_static_path = CantoGlobals.app_static_path;
+
+      CantoConfig.get('help_text').success(function(results) {
+        if (results[$scope.key] && results[$scope.key].inline) {
+          $scope.helpText = results[$scope.key].inline;
+        }
+      });
+    },
+  };
+};
+
+canto.directive('helpIcon', ['CantoGlobals', 'CantoConfig', helpIcon]);
+
+
 var advancedModeToggle =
   function(CursSettings) {
     return {

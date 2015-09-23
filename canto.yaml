@@ -1720,6 +1720,7 @@ config_service:
     evidence_types: 1
     ontology_external_links: 1
     instance_organism: 1
+    help_text: 1
 
 curs_settings_service:
   allowed_keys:
