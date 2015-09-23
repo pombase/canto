@@ -237,8 +237,10 @@ canto.service('CursGenotypeList', function($q, Curs) {
     this.cursGenotypesPromise.success(function(genotypes) {
       add_id_or_identifier(genotypes);
       q.resolve(genotypes);
-    }).error(function() {
-      q.reject();
+    }).error(function(data, status) {
+      if (status) {
+        q.reject();
+      } // otherwise the request was cancelled
     });
 
     return q.promise;
@@ -256,8 +258,10 @@ canto.service('CursGenotypeList', function($q, Curs) {
     filteredCursPromise.success(function(genotypes) {
       add_id_or_identifier(genotypes);
       q.resolve(genotypes);
-    }).error(function() {
-      q.reject();
+    }).error(function(data, status) {
+      if (status) {
+        q.reject();
+      } // otherwise the request was cancelled
     });
 
     return q.promise;
@@ -380,8 +384,10 @@ var annotationProxy =
           q.resolve(annotations);
         });
 
-        cursQ.error(function() {
-          q.reject();
+        cursQ.error(function(data, status) {
+          if (status) {
+            q.reject();
+          } // otherwise the request was cancelled
         });
       }
 
@@ -2236,8 +2242,10 @@ canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
       } else {
         q.resolve(undefined);
       }
-    }).error(function() {
-      q.reject();
+    }).error(function(data, status) {
+      if (status) {
+        q.reject();
+      } // otherwise the request was cancelled
     });
 
     return q.promise;
@@ -2814,8 +2822,10 @@ var annotationTableList =
                         "couldn't read annotations from the server - please contact the curators";
                     });
                 });
-        }).catch(function() {
-          $scope.data.serverError = "couldn't read annotation types from the server";
+        }).catch(function(data, status) {
+          if (status) {
+            $scope.data.serverError = "couldn't read annotation types from the server ";
+          } // otherwise the request was cancelled
         });
       },
     };
