@@ -19,7 +19,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v890
+app_version: v896
 
 schema_version: 10
 
@@ -1644,6 +1644,13 @@ help_text:
       in a single box. For conditions tested one at a time (e.g. separate
       experiments at high and low temperature, or separate cultures with high and
       low glucose levels), list each condition separately.
+  genotype_edit_name_input:
+    inline: >
+      Provide a short name for this genotype (optional)
+  genotype_edit_background_input:
+    inline: >
+      List alleles that form the genotype background, i.e. alleles that are
+      present but do not affect the phenotype (optional)
   genetic_interaction_evidence:
     url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions"
   physical_interaction_evidence:
@@ -1728,7 +1735,11 @@ config_service:
     evidence_types: 1
     ontology_external_links: 1
     instance_organism: 1
+<<<<<<< HEAD
     extension_configuration: 1
+=======
+    help_text: 1
+>>>>>>> master
 
 curs_settings_service:
   allowed_keys:

@@ -14,8 +14,13 @@ $edit_or_duplicate
      ng-init="init('<% $edit_or_duplicate %>', '<% $genotype_id %>')";
      class="curs-box ng-cloak">
     <div class="curs-box-title">
-Add alleles from the genes below, and/or edit or delete existing alleles,
-until the new genotype is fully specified.
+      <span ng-if="isEditing">
+Add, edit, or delete alleles of genes from the list until the genotype is
+correctly described.
+      </span>
+      <span ng-if="!isEditing">
+Specify alleles of genes from the list, until the new genotype is complete.
+      </span>
     </div>
     <div class="curs-box-body">
 
@@ -26,12 +31,14 @@ until the new genotype is fully specified.
              placeholder="short genotype name (optional) ..."
              size="50"
              ng-model="data.genotype_name" />
+            <help-icon key="genotype_edit_name_input"></help-icon>
           </div>
           <div>
       Background: <input type="text" title="Click to edit (options) genotype background" href="#"
              placeholder="genotype background (optional) ..."
              size="50"
              ng-model="data.genotype_background" />
+            <help-icon key="genotype_edit_background_input"></help-icon>
           </div>
         </div>
         <div class="col-sm-6 col-md-6">
@@ -120,9 +127,13 @@ The alleles of this genotype:
       <button type="submit" class="btn btn-warning curs-finish-button"
               ng-click="cancel()">Cancel</button>
       <div class="upload-genes-link">
-        <a ng-click="openSingleGeneAddDialog()">Add another gene ...</a>
+        <a ng-click="openSingleGeneAddDialog()">Add another gene from the paper ...</a>
       </div>
-      
+      <div class="clearall"></div>
+      <label class="curs-finish-checkbox"
+             title="If selected you can immediately add another genotype. Otherwise, go to genotype details page">
+        <input type="checkbox" ng-model="data.addAnother">Add another genotype
+      </label>
   </div>
 </div>
 

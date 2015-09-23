@@ -239,8 +239,10 @@ canto.service('CursGenotypeList', function($q, Curs) {
     this.cursGenotypesPromise.success(function(genotypes) {
       add_id_or_identifier(genotypes);
       q.resolve(genotypes);
-    }).error(function() {
-      q.reject();
+    }).error(function(data, status) {
+      if (status) {
+        q.reject();
+      } // otherwise the request was cancelled
     });
 
     return q.promise;
@@ -258,8 +260,10 @@ canto.service('CursGenotypeList', function($q, Curs) {
     filteredCursPromise.success(function(genotypes) {
       add_id_or_identifier(genotypes);
       q.resolve(genotypes);
-    }).error(function() {
-      q.reject();
+    }).error(function(data, status) {
+      if (status) {
+        q.reject();
+      } // otherwise the request was cancelled
     });
 
     return q.promise;
@@ -382,8 +386,10 @@ var annotationProxy =
           q.resolve(annotations);
         });
 
-        cursQ.error(function() {
-          q.reject();
+        cursQ.error(function(data, status) {
+          if (status) {
+            q.reject();
+          } // otherwise the request was cancelled
         });
       }
 
@@ -781,6 +787,31 @@ var cursSettingsService =
   };
 
 canto.service('CursSettings', ['$http', '$timeout', '$q', cursSettingsService]);
+
+
+var helpIcon = function(CantoGlobals, CantoConfig) {
+  return {
+    scope: {
+      key: '@',
+    },
+    restrict: 'E',
+    replace: true,
+    templateUrl: app_static_path + 'ng_templates/help_icon.html',
+    controller: function($scope) {
+      $scope.helpText = null;
+
+      $scope.app_static_path = CantoGlobals.app_static_path;
+
+      CantoConfig.get('help_text').success(function(results) {
+        if (results[$scope.key] && results[$scope.key].inline) {
+          $scope.helpText = results[$scope.key].inline;
+        }
+      });
+    },
+  };
+};
+
+canto.directive('helpIcon', ['CantoGlobals', 'CantoConfig', helpIcon]);
 
 
 var advancedModeToggle =
@@ -1932,7 +1963,8 @@ canto.controller('TermSuggestDialogCtrl',
                  termSuggestDialogCtrl]);
 
 
-function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
+function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles,
+                       followLocation) {
   var url = curs_root_uri + '/feature/genotype';
 
   if (genotype_id) {
@@ -1941,10 +1973,32 @@ function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_back
     url += '/store';
   }
 
-  return simpleHttpPost(toaster, $http, url,
-                        { genotype_name: genotype_name,
-                          genotype_background: genotype_background,
-                          alleles: alleles });
+  var data = {
+    genotype_name: genotype_name,
+    genotype_background: genotype_background,
+    alleles: alleles,
+  };
+
+  loadingStart();
+
+  var result = $http.post(url, data);
+
+  result.finally(loadingEnd);
+
+  if (followLocation) {
+    result.success(function(data) {
+      if (data.status == "success" || data.status == "existing") {
+        window.location.href = data.location;
+      } else {
+        toaster.pop('error', data.message);
+      }
+    }).
+    error(function(data, status){
+      toaster.pop('error', "Accessing server failed: " + (data || status) );
+    });
+  } else {
+    return result;
+  }
 }
 
 function makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed)
@@ -1978,7 +2032,7 @@ var genePageCtrl =
                                                 });
 
       editInstance.result.then(function (alleleData) {
-        storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData]);
+        storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], true);
       });
     };
   };
@@ -2078,11 +2132,6 @@ canto.controller('SingleGeneAddDialogCtrl',
 
 var multiAlleleCtrl =
   function($scope, $http, $modal, CantoConfig, Curs, toaster) {
-  $scope.alleles = [
-  ];
-  $scope.genes = [
-  ];
-
   $scope.getGenesFromServer = function() {
     Curs.list('gene').success(function(results) {
       $scope.genes = results;
@@ -2096,12 +2145,23 @@ var multiAlleleCtrl =
     });
   };
 
-  $scope.getGenesFromServer();
+  $scope.genes = [
+  ];
 
-  $scope.data = {
-    genotype_long_name: '',
-    genotype_name: ''
+  $scope.reset = function() {
+    $scope.alleles = [
+    ];
+
+    $scope.getGenesFromServer();
+
+    $scope.data = {
+      genotype_long_name: '',
+      genotype_name: '',
+      addAnother: false,
+    };
   };
+
+  $scope.reset();
 
   $scope.env = {
     curs_config_promise: CantoConfig.get('curs_config')
@@ -2120,6 +2180,9 @@ var multiAlleleCtrl =
     if (genotype_id) {
       if (edit_or_duplicate === 'edit') {
         $scope.data.genotype_id = genotype_id;
+        $scope.isEditing = true;
+      } else {
+        $scope.isEditing = false;
       }
       $scope.init_from(genotype_id);
     }
@@ -2148,9 +2211,27 @@ var multiAlleleCtrl =
                 true);
 
   $scope.store = function() {
-    storeGenotype(toaster, $http, $scope.data.genotype_id,
-                  $scope.data.genotype_name, $scope.data.genotype_background,
-                  $scope.alleles);
+    var result =
+      storeGenotype(toaster, $http, $scope.data.genotype_id,
+                    $scope.data.genotype_name, $scope.data.genotype_background,
+                    $scope.alleles, !$scope.data.addAnother);
+
+    result.success(function(data) {
+      if (data.status === "success") {
+        toaster.pop('info', "Created new genotype: " + data.genotype_display_name);
+        $scope.reset();
+      } else {
+        if (data.status === "existing") {
+          toaster.pop('info', "Using existing genotype: " + data.genotype_display_name);
+          $scope.reset();
+        } else {
+          toaster.pop('error', data.message);
+        }
+      }
+    }).
+    error(function(data, status){
+      toaster.pop('error', "Accessing server failed: " + (data || status) );
+    });
   };
 
   $scope.removeAllele = function (allele) {
@@ -2594,8 +2675,10 @@ canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
       } else {
         q.resolve(undefined);
       }
-    }).error(function() {
-      q.reject();
+    }).error(function(data, status) {
+      if (status) {
+        q.reject();
+      } // otherwise the request was cancelled
     });
 
     return q.promise;
@@ -3173,8 +3256,10 @@ var annotationTableList =
                         "couldn't read annotations from the server - please contact the curators";
                     });
                 });
-        }).catch(function() {
-          $scope.data.serverError = "couldn't read annotation types from the server";
+        }).catch(function(data, status) {
+          if (status) {
+            $scope.data.serverError = "couldn't read annotation types from the server ";
+          } // otherwise the request was cancelled
         });
       },
     };

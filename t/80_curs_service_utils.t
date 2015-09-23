@@ -37,6 +37,7 @@ cmp_deeply($res,
               display_name => 'SPCC63.05delta ssm4KE',
               genotype_id => 1,
               allele_string => 'ssm4delta SPCC63.05delta',
+              annotation_count => 1,
             },
             {
               'identifier' => 'aaaa0007-genotype-test-2',
@@ -45,6 +46,7 @@ cmp_deeply($res,
               display_name => 'ssm4-D4(del_100-200)[Knockdown]',
               genotype_id => 2,
               allele_string => 'ssm4-D4(del_100-200)[Knockdown]',
+              annotation_count => 1,
             }
           ]);
 
@@ -72,6 +74,7 @@ cmp_deeply($res,
               display_name => 'SPCC63.05delta ssm4KE',
               genotype_id => 1,
               allele_string => 'ssm4delta SPCC63.05delta',
+              annotation_count => 1,
             },
           ]);
 
@@ -94,6 +97,7 @@ cmp_deeply($res,
               'allele_string' => 'cdc11-33 wtf22-a1',
               'display_name' => 'cdc11-33 wtf22-a1',
               'allele_identifiers' => ['SPCC1739.11c:allele-1','SPCC576.16c:allele-1'],
+              annotation_count => 0,
             },
           ]);
 
@@ -116,7 +120,8 @@ cmp_deeply($res,
               'allele_string' => 'ssm4delta SPCC63.05delta',
               'genotype_id' => 1,
               'display_name' => 'SPCC63.05delta ssm4KE',
-              'identifier' => 'aaaa0007-genotype-test-1'
+              'identifier' => 'aaaa0007-genotype-test-1',
+              annotation_count => 1,
             },
             {
               'name' => undef,
@@ -124,7 +129,8 @@ cmp_deeply($res,
               'allele_string' => 'ssm4-D4(del_100-200)[Knockdown]',
               'display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
               'genotype_id' => 2,
-              'identifier' => 'aaaa0007-genotype-test-2'
+              'identifier' => 'aaaa0007-genotype-test-2',
+              annotation_count => 1,
             },
             {
               'name' => 'cdc11-33 ssm4delta',
@@ -135,6 +141,7 @@ cmp_deeply($res,
                                         'SPCC1739.11c:allele-1',
                                         'SPAC27D7.13c:allele-1'
                                       ],
+              annotation_count => 1,
             }
           ]);
 
@@ -161,7 +168,8 @@ cmp_deeply($res,
               'name' => 'cdc11-33 ssm4delta',
               'allele_string' => 'cdc11-33 ssm4delta',
               'identifier' => 'aaaa0007-test-genotype-3',
-              'display_name' => 'cdc11-33 ssm4delta'
+              'display_name' => 'cdc11-33 ssm4delta',
+              annotation_count => 1,
             }
           ]);
 
@@ -920,6 +928,7 @@ my $expected_genotype_detail_res =
         'gene_display_name' => 'SPCC63.05',
       },
     ],
+    annotation_count => 1,
   };
 
 my $genotype_detail_res =

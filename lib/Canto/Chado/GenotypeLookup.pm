@@ -139,6 +139,7 @@ sub _genotype_details
       allele_identifiers => [
         map { $_->uniquename(); } @alleles
       ],
+      annotation_count => $genotype->feature_cvterms()->count(),
     };
 
   $cache->set($cache_key, $ret_val, $self->config()->{cache}->{default_timeout});

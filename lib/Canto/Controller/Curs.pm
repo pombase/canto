@@ -1586,15 +1586,20 @@ sub genotype_store : Chained('feature') PathPart('store')
       my $existing_genotype = $genotype_manager->find_with_alleles(\@alleles);
 
       if ($existing_genotype) {
+        my $alleles_string = "allele";
+        if (@alleles > 1) {
+          $alleles_string = "alleles";
+        }
         if (defined $existing_genotype->name()) {
-          $c->flash()->{message} = 'Using existing genotype with the same alleles: ' .
+          $c->flash()->{message} = "Using existing genotype with the same $alleles_string: " .
             $existing_genotype->name();
         } else {
-          $c->flash()->{message} = 'Using existing genotype with the same alleles';
+          $c->flash()->{message} = "Using existing genotype with the same $alleles_string";
         }
 
         $c->stash->{json_data} = {
-          status => "success",
+          status => "existing",
+          genotype_display_name => $existing_genotype->display_name(),
           location => $st->{curs_root_uri} . "/feature/genotype/view/" . $existing_genotype->genotype_id(),
         };
       } else {
@@ -1609,6 +1614,7 @@ sub genotype_store : Chained('feature') PathPart('store')
 
         $c->stash->{json_data} = {
           status => "success",
+          genotype_display_name => $genotype->display_name(),
           location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
         };
       }

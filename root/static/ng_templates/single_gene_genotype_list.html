@@ -9,17 +9,17 @@
 
   <div ng-if="!data.waitingForServer">
     <div ng-show="data.filteredGenotypes.length > 0">
+      <div>
+        This session has
+        <span ng-show="data.filteredGenotypes.length > 1">{{data.filteredGenotypes.length}} genotypes that include this gene. </span>
+        <span ng-show="data.filteredGenotypes.length == 1">a genotype that includes this gene.</span>
+      </div>
       <div ng-show="shouldShowAll()">
         <genotype-list-view genotype-list="data.filteredGenotypes"></genotype-list-view>
         <a ng-show="data.filteredGenotypes.length > 1" ng-click="hideAll()"
            style="font-size: 80%; ">Hide list</a>
       </div>
       <div ng-hide="shouldShowAll()">
-        <div>
-          This session has
-<span ng-show="data.filteredGenotypes.length > 1">{{data.filteredGenotypes.length}} genotypes that include this gene. </span>
-<span ng-show="data.filteredGenotypes.length == 1">a genotype that includes this gene.</span>
-        </div>
         <div>
           <a ng-click="showAll()">View list</a>
         </div>

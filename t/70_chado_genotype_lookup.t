@@ -26,9 +26,10 @@ cmp_deeply($res,
                  name => 'cdc11-33 wtf22-a1',
                  allele_identifiers => [
                    'SPCC1739.11c:allele-1', 'SPCC576.16c:allele-1',
-                 ]
+                 ],
+                 annotation_count => 0,
                },
-      ]
+             ]
            });
 
 
@@ -45,6 +46,7 @@ cmp_deeply($res,
                              allele_identifiers => [
                                'SPCC1739.11c:allele-1', 'SPCC576.16c:allele-1',
                              ],
+                             annotation_count => 0,
                            }
                          ]
            });
@@ -62,7 +64,8 @@ cmp_deeply($res,
                              'allele_identifiers' => [
                                                        'SPCC1739.11c:allele-1'
                                                      ],
-                             'name' => 'cdc11-33'
+                             'name' => 'cdc11-33',
+                             annotation_count => 0,
                            },
                            {
                              'allele_string' => 'cdc11-33 wtf22-a1',
@@ -72,7 +75,8 @@ cmp_deeply($res,
                                                        'SPCC576.16c:allele-1'
                                                      ],
                              'name' => 'cdc11-33 wtf22-a1',
-                             'display_name' => 'cdc11-33 wtf22-a1'
+                             'display_name' => 'cdc11-33 wtf22-a1',
+                             annotation_count => 0,
                            },
                            {
                              'allele_string' => 'cdc11-33 ssm4delta',
@@ -82,7 +86,8 @@ cmp_deeply($res,
                                                        'SPAC27D7.13c:allele-1'
                                                      ],
                              'name' => 'cdc11-33 ssm4delta',
-                             'display_name' => 'cdc11-33 ssm4delta'
+                             'display_name' => 'cdc11-33 ssm4delta',
+                             annotation_count => 1,
                            }
                          ]
            });
@@ -97,5 +102,6 @@ cmp_deeply($res,
              'identifier' => 'aaaa0007-test-genotype-1',
              allele_identifiers => [
                'SPCC1739.11c:allele-1',
-             ]
+             ],
+             annotation_count => 0,
            });

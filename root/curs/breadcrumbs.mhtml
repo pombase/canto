@@ -11,7 +11,7 @@
 % if (defined $feature_url) {
     <div id="breadcrumbs-gene-link" class="breadcrumbs-link">
       <a href="<% $feature_url %>" title="<% $display_name %>">
-        <% ucfirst $feature_type %>: <% $display_name %>
+        <% ucfirst $feature_type %> details
       </a>
       <breadcrumbs></breadcrumbs>
     </div>

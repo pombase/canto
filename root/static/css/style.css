@@ -87,10 +87,6 @@ button, input[type=submit] {
 
 img {
   border-width: 0px;
-  /* fix bootstrap style which makes images small in tables: */
-  max-width: 999px;
-  /* fix bootstrap vertical-align: middle */
-  vertical-align: bottom;
 }
 
 #heading {
@@ -947,6 +943,12 @@ span.canto-select-buttons {
   margin-left: 8px;
 }
 
+.curs-finish-checkbox {
+  float: right;
+  font-size: 90%;
+  font-weight: normal;
+}
+
 .curs-back-button {
   float: left;
   margin-top: 10px;
@@ -1185,6 +1187,10 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   padding-left: 10px;
   font-size: 80%;
   opacity: 0.5;
+}
+
+.curs-inline-help-icon {
+  padding: 4px;
 }
 
 .curs-annotation-quick-add {
