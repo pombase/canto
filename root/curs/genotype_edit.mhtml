@@ -31,12 +31,14 @@ Specify alleles of genes from the list, until the new genotype is complete.
              placeholder="short genotype name (optional) ..."
              size="50"
              ng-model="data.genotype_name" />
+            <help-icon key="genotype_edit_name_input"></help-icon>
           </div>
           <div>
       Background: <input type="text" title="Click to edit (options) genotype background" href="#"
              placeholder="genotype background (optional) ..."
              size="50"
              ng-model="data.genotype_background" />
+            <help-icon key="genotype_edit_background_input"></help-icon>
           </div>
         </div>
         <div class="col-sm-6 col-md-6">

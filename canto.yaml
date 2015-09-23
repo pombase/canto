@@ -1636,6 +1636,12 @@ help_text:
       in a single box. For conditions tested one at a time (e.g. separate
       experiments at high and low temperature, or separate cultures with high and
       low glucose levels), list each condition separately.
+  genotype_edit_name_input:
+    inline: >
+      The genotype name ...
+  genotype_edit_background_input:
+    inline: >
+      The genotype background ...
   genetic_interaction_evidence:
     url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions"
   physical_interaction_evidence:
