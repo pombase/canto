@@ -1638,10 +1638,10 @@ help_text:
       low glucose levels), list each condition separately.
   genotype_edit_name_input:
     inline: >
-      The genotype name ...
+      Provide a short name for this genotype (optional)
   genotype_edit_background_input:
     inline: >
-      The genotype background ...
+      List alleles that form the genotype background, i.e. alleles that are present but do not affect the phenotype (optinal0
   genetic_interaction_evidence:
     url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions"
   physical_interaction_evidence:
