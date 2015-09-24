@@ -847,7 +847,7 @@ canto.directive('advancedModeToggle', ['CursSettings', advancedModeToggle]);
 
 
 var breadcrumbsDirective =
-  function($q, $compile, CursStateService) {
+  function($compile, CursStateService) {
     return {
       scope: {
       },
@@ -903,7 +903,7 @@ var breadcrumbsDirective =
     };
   };
 
-canto.directive('breadcrumbs', ['$q', '$compile', 'CursStateService',
+canto.directive('breadcrumbs', ['$compile', 'CursStateService',
                                 breadcrumbsDirective]);
 
 
