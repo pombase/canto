@@ -11,7 +11,7 @@ The following software is needed for the installation:
 
 - Perl
 - Git
-- GCC (for compiling part of the Perl libraries)
+- GCC and G++ (for compiling part of the Perl libraries)
 - Make
 - CLucene v0.9.*
 - Module::Install and Module::Install::Catalyst
@@ -43,7 +43,6 @@ before proceeding:
       libxml-simple-perl libtext-csv-perl libtest-deep-perl \
       libtext-markdown-perl libchi-driver-memcached-perl libchi-perl \
       libcache-memcached-perl libcache-perl libfile-touch-perl \
-      libcatalyst-engine-psgi-perl \
       liblwp-protocol-psgi-perl libweb-scraper-perl \
       libdbd-pg-perl libdata-javascript-anon-perl starman libnet-server-perl \
       libautobox-list-util-perl libwant-perl libautobox-core-perl
