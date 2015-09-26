@@ -274,7 +274,7 @@ sub canto_config : Local
       # we can have a far future expiry date
       $c->cache_page(600) unless $ENV{CANTO_DEBUG};
     } else {
-      $c->stash->{json_data} = undef;
+      $c->stash->{json_data} = {};
     }
   } else {
     $c->stash->{json_data} = {
