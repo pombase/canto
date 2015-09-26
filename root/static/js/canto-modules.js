@@ -2214,9 +2214,19 @@ var EditDialog = function($) {
 }($);
 
 canto.service('CantoConfig', function($http) {
+  this.promises = {};
+
   this.get = function(key) {
-    return $http({method: 'GET',
-                  url: canto_root_uri + 'ws/canto_config/' + key});
+    if (this.promises[key]) {
+      return this.promises[key];
+    }
+    var promise =
+      $http({method: 'GET',
+             url: canto_root_uri + 'ws/canto_config/' + key});
+
+    this.promises[key] = promise;
+
+    return promise;
   };
 });
 
