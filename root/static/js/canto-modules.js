@@ -515,7 +515,6 @@ var cursStateService =
 
     this.searchString = null;
     this.termHistory = [];
-    this.evidence = null;
     this.extension = null;
     this.comment = null;
     this.state = 'searching';
@@ -1120,24 +1119,22 @@ canto.directive('ontologyTermConfirm',
 
 
 var ontologyTermCommentTransfer =
-  function(CursStateService, toaster, $http) {
+  function(CantoService) {
     return {
       scope: {
         annotationType: '=',
         featureType: '@',
         featureDisplayName: '@',
+        annotationDetails: '=',
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/ontology_term_comment_transfer.html',
-      controller: function($scope) {
-      },
     };
   };
 
 canto.directive('ontologyTermCommentTransfer',
-                ['CursStateService', 'toaster', '$http',
-                 ontologyTermCommentTransfer]);
+                ['CantoService', ontologyTermCommentTransfer]);
 
 
 var extensionBuilder =
@@ -1329,6 +1326,7 @@ var ontologyWorkflowCtrl =
     CursStateService.setState($scope.states[0]);
 
     $scope.extension = [];
+    $scope.annotationForServer = null;
 
     $scope.data = {
       evidence_code: null,
@@ -1378,7 +1376,7 @@ var ontologyWorkflowCtrl =
       return $scope.states[index - 1];
     };
 
-    $scope.nextState = function(state) {
+    $scope.nextState = function() {
       var index = $scope.states.indexOf($scope.getState());
 
       if (index == $scope.states.length - 1) {
@@ -1387,6 +1385,22 @@ var ontologyWorkflowCtrl =
 
       return $scope.states[index + 1];
     };
+
+    $scope.$watch('getState()',
+                  function(newState, oldState) {
+                    if (newState == 'commenting') {
+                      $scope.annotationForServer =
+                        CursStateService.asAnnotationDetails();
+                    } else {
+                      $scope.annotationForServer = {};
+                    }
+
+                    if (oldState == 'selectingEvidence') {
+                      CursStateService.evidence_code = $scope.data.evidence_code;
+                      CursStateService.with_gene_id = $scope.data.with_gene_id;
+                      CursStateService.conditions = $scope.data.conditions;
+                    }
+                  });
 
     $scope.currentTerm = function() {
       return CursStateService.currentTerm();
@@ -3294,7 +3308,7 @@ canto.directive('annotationTableRow',
 
 
 var annotationSingleRow =
- function(AnnotationTypeConfig, CantoConfig, Curs) {
+  function(AnnotationTypeConfig, CantoConfig, CantoService, Curs) {
     return {
       restrict: 'E',
       scope: {
@@ -3320,6 +3334,20 @@ var annotationSingleRow =
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
           });
+
+        $scope.$watch('annotationDetails.term_ontid',
+                      function(newId) {
+                        CantoService.lookup('ontology', [newId],
+                                            {
+                                              def: 1,
+                                              children: 1,
+                                              exact_synonyms: 1,
+                                              subset_ids: 1,
+                                            })
+                          .then(function(response) {
+                            $scope.termDetails = response.data;
+                          });
+                      });
 
         $scope.$watch('annotationDetails.conditions',
                       function(newConditions) {
@@ -3366,7 +3394,7 @@ var annotationSingleRow =
   };
 
 canto.directive('annotationSingleRow',
-                ['AnnotationTypeConfig', 'CantoConfig', 'Curs',
+                ['AnnotationTypeConfig', 'CantoConfig', 'CantoService', 'Curs',
                  annotationSingleRow]);
 
 

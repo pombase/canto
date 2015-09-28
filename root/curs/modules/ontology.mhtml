@@ -51,6 +51,7 @@ Annotation extensions
   <ontology-term-comment-transfer ng-if="getState() == 'commenting'"
                                   feature-type="<% $feature_type %>"
                                   feature-display-name="<% $feature->display_name() %>"
+                                  annotation-details="annotationForServer"
                                   annotation-type="annotationType"></ontology-term-comment-transfer>
 
   <div ng-show="currentTerm()">
