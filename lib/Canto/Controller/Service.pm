@@ -277,11 +277,7 @@ sub canto_config : Local
       # we can have a far future expiry date
       $c->cache_page(600) unless $ENV{CANTO_DEBUG};
     } else {
-      $c->stash->{json_data} = {
-        status => 'error',
-        message => qq(no config for key "$config_key")
-      };
-      $c->response->status(400);
+      $c->stash->{json_data} = {};
     }
   } else {
     $c->stash->{json_data} = {

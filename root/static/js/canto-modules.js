@@ -2643,13 +2643,15 @@ var EditDialog = function($) {
 }($);
 
 canto.service('CantoConfig', function($http) {
-  var promises = {};
+  this.promises = {};
+
   this.get = function(key) {
-    if (!promises[key]) {
-      promises[key] = $http({method: 'GET',
-                       url: canto_root_uri + 'ws/canto_config/' + key});
+    if (!this.promises[key]) {
+      this.promises[key] =
+        $http({method: 'GET',
+               url: canto_root_uri + 'ws/canto_config/' + key});
     }
-    return promises[key];
+    return this.promises[key];
   };
 });
 
@@ -3145,7 +3147,7 @@ var annotationTableCtrl =
           });
 
         CantoConfig.get('instance_organism').success(function(results) {
-          if (!results) {
+          if (!results.taxonid) {
             $scope.multiOrganismMode = true;
           }
         });
