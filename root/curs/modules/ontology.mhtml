@@ -52,15 +52,16 @@ Annotation extensions
                                   feature-type="<% $feature_type %>"
                                   feature-display-name="<% $feature->display_name() %>"
                                   annotation-details="annotationForServer"
+                                  comment="data.comment"
                                   annotation-type="annotationType"></ontology-term-comment-transfer>
 
   <div ng-show="currentTerm()">
     <button type="submit" class="btn btn-primary curs-back-button"
             title="&lt;- Back"
-            ng-click="gotoPrevState()">&lt;- Back</button>
-    <button type="submit" class="btn btn-primary curs-finish-button"
+            ng-click="back()">&lt;- Back</button>
+    <button type="submit" class_ss="btn btn-primary curs-finish-button"
             ng-disabled="!isValid()"
-            ng-click="gotoNextState()" >Proceed -&gt;</button>
+            ng-click="proceed()" >Proceed -&gt;</button>
   </div>
 
   <a ng-if="!prevState() && !currentTerm()"

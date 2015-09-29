@@ -1126,6 +1126,7 @@ var ontologyTermCommentTransfer =
         featureType: '@',
         featureDisplayName: '@',
         annotationDetails: '=',
+        comment: '=',
       },
       restrict: 'E',
       replace: true,
@@ -1333,6 +1334,7 @@ var ontologyWorkflowCtrl =
       conditions: [],
       with_gene_id: null,
       validEvidence: false,
+      comment: null,
     };
 
     $scope.annotationTypeName = $attrs.annotationTypeName;
@@ -1353,17 +1355,37 @@ var ontologyWorkflowCtrl =
       return CursStateService.getState();
     };
 
-    $scope.gotoPrevState = function() {
-      if ($scope.getState() == 'searching') {
-        CursStateService.clearTerm();
-        return;
-      }
+    $scope.suggestTerm = function(suggestion) {
+      CursStateService.termSuggestion = suggestion;
 
+      $scope.gotoNextState();
+    };
+
+    $scope.gotoPrevState = function() {
       CursStateService.setState($scope.prevState());
     };
 
     $scope.gotoNextState = function() {
       CursStateService.setState($scope.nextState());
+    };
+
+    $scope.back = function() {
+      if ($scope.getState() == 'searching') {
+        CursStateService.clearTerm();
+        return;
+      }
+
+      $scope.gotoPrevState();
+    };
+
+    $scope.proceed = function() {
+      if ($scope.getState() == 'commenting') {
+        CursStateService.comment = $scope.data.comment;
+        $scope.storeAnnotation();
+        return;
+      }
+
+      $scope.gotoNextState();
     };
 
     $scope.prevState = function() {
@@ -1414,10 +1436,10 @@ var ontologyWorkflowCtrl =
       return true;
     };
 
-    $scope.setComment = function() {
+    $scope.storeAnnotation = function() {
       simpleHttpPost(toaster, $http,
                      '../set_term/' + $scope.annotationType.name,
-                     $scope.annotationDetails);
+                     CursStateService.asAnnotationDetails());
       toaster.pop('info', 'Creating annotation ...');
     };
 
