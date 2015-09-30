@@ -1140,6 +1140,42 @@ canto.directive('ontologyTermCommentTransfer',
                 ['CantoService', ontologyTermCommentTransfer]);
 
 
+// filter the extension_configuration results from the server and return
+// only those where there "domain" term ID in the configuration matches one of
+// subsetIds
+function extensionConfFilter(allConfigs, subsetIds) {
+  return $.map(allConfigs,
+               function(conf) {
+                 if ($.inArray(conf.domain, subsetIds) != -1) {
+                   var range = conf.range;
+                   var rangeNamespace = null;
+                   if (range.match(/\w+:\d+/)) {
+                     if (range == 'GO:0005575') {
+                       rangeNamespace = 'cellular_component';
+                     } else {
+                       if (range == 'GO:0003674') {
+                         rangeNamespace = 'molecular_function';
+                       } else {
+                         if (range == 'GO:0008150') {
+                           rangeNamespace = 'biological_process';
+                         } else {
+                           rangeNamespace = 'UNKNOWN';
+                         }
+                       }
+                     }
+                     range = 'ONTOLOGY';
+                   }
+                   return {
+                     displayText: conf.display_text,
+                     relation: conf.allowed_relation,
+                     range: range,
+                     rangeValue: null,
+                     rangeNamespace: rangeNamespace,
+                   };
+                 }
+               });
+}
+
 var extensionBuilder =
   function(CantoConfig, CantoService, CursStateService) {
     return {
@@ -1193,36 +1229,7 @@ var extensionBuilder =
                           $scope.extensionConfigurationPromise
                             .success(function(results) {
                               $scope.matchingConfigurations =
-                                $.map(results,
-                                      function(conf) {
-                                        if ($.inArray(conf.domain, subset_ids) != -1) {
-                                          var range = conf.range;
-                                          var rangeNamespace = null;
-                                          if (range.match(/\w+:\d+/)) {
-                                            if (range == 'GO:0005575') {
-                                              rangeNamespace = 'cellular_component';
-                                            } else {
-                                              if (range == 'GO:0003674') {
-                                                rangeNamespace = 'molecular_function';
-                                              } else {
-                                                if (range == 'GO:0008150') {
-                                                  rangeNamespace = 'biological_process';
-                                                } else {
-                                                  rangeNamespace = 'UNKNOWN';
-                                                }
-                                              }
-                                            }
-                                            range = 'ONTOLOGY';
-                                          }
-                                          return {
-                                            displayText: conf.display_text,
-                                            relation: conf.allowed_relation,
-                                            range: range,
-                                            rangeValue: null,
-                                            rangeNamespace: rangeNamespace,
-                                          };
-                                        }
-                                      });
+                                extensionConfFilter(results, subset_ids);
                             });
                         } else {
                           $scope.matchingConfigurations = [];
