@@ -3358,8 +3358,6 @@ var annotationSingleRow =
       controller: function($scope) {
         $scope.displayFeatureType = capitalizeFirstLetter($scope.featureType);
 
-        var annotationDetails = $scope.annotationDetails;
-
         $scope.displayEvidence = '';
         $scope.conditionsString = '';
         $scope.withGeneDisplayName = '';
@@ -3393,14 +3391,13 @@ var annotationSingleRow =
                       true);
 
         $scope.$watch('annotationDetails.evidence_code',
-                      function(newVal) {
-                        $scope.displayEvidence = newVal;
+                      function(newCode) {
+                        $scope.displayEvidence = newCode;
 
-                        if (newVal) {
+                        if (newCode) {
                           CantoConfig.get('evidence_types').success(function(results) {
                             $scope.evidenceTypes = results;
-                            $scope.displayEvidence =
-                              results[annotationDetails.evidence_code].name;
+                            $scope.displayEvidence = results[newCode].name;
                           });
                         }
                       });
