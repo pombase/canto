@@ -1199,6 +1199,16 @@ var extensionBuilder =
                                           if (range.match(/\w+:\d+/)) {
                                             if (range == 'GO:0005575') {
                                               rangeNamespace = 'cellular_component';
+                                            } else {
+                                              if (range == 'GO:0003674') {
+                                                rangeNamespace = 'molecular_function';
+                                              } else {
+                                                if (range == 'GO:0008150') {
+                                                  rangeNamespace = 'biological_process';
+                                                } else {
+                                                  rangeNamespace = 'UNKNOWN';
+                                                }
+                                              }
                                             }
                                             range = 'ONTOLOGY';
                                           }
