@@ -4,7 +4,7 @@
             ng-model="evidenceCode">
       <option value="">Choose an evidence code ...</option>
       <option ng-repeat="code in evidenceCodes"
-              ng-selected="{{evidenceCode === code}}" value="{{code}}" title="{{getDefinition(code)}}">{{getDisplayCode(code)}}</option>
+              ng-selected="{{evidenceCode == code}}" value="{{code}}" title="{{getDefinition(code)}}">{{getDisplayCode(code)}}</option>
     </select>
   </div>
 

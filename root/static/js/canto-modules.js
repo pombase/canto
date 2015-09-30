@@ -1340,7 +1340,7 @@ var ontologyWorkflowCtrl =
     $scope.annotationForServer = null;
 
     $scope.data = {
-      evidence_code: null,
+      evidence_code: '',
       conditions: [],
       with_gene_id: null,
       validEvidence: false,
