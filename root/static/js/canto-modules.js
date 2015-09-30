@@ -73,6 +73,7 @@ function copyIfChanged(origObj, changedObj, dest) {
 }
 
 function simpleHttpPost(toaster, $http, url, data) {
+  loadingStart();
   $http.post(url, data).
     success(function(data) {
       if (data.status === "success") {
@@ -82,6 +83,7 @@ function simpleHttpPost(toaster, $http, url, data) {
       }
     }).
     error(function(data, status){
+      loadingEnd();
       toaster.pop('error', "Accessing server failed: " + (data || status) );
     });
 }
