@@ -9,24 +9,24 @@ $pub
 <div ng-controller="OntologyWorkflowCtrl"
      annotation-type-name="<% $annotation_type_name %>">
   <div ng-if="getState() == 'searching'">
-  <ontology-term-select ng-hide="currentTerm()"
-                        annotation-type="annotationType"
-                        term-found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)">
-  </ontology-term-select>
-  <ontology-term-confirm ng-show="currentTerm()"
-                         annotation-type="annotationType"
-                         term-id="{{currentTerm()}}"
-                         goto-child-callback="gotoChild(childId)"
-                         unset-term-callback="unsetTerm()"
-                         suggest-term-callback="suggestTerm(termSuggestion)"
-                         confirm-term-callback="confirmTerm()"
-                         feature-display-name="<% $feature->display_name() %>"></ontology-term-confirm>
+    <ontology-term-select ng-hide="currentTerm()"
+                          annotation-type="annotationType"
+                          term-found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)">
+    </ontology-term-select>
+    <ontology-term-confirm ng-show="currentTerm()"
+                           annotation-type="annotationType"
+                           term-id="{{currentTerm()}}"
+                           goto-child-callback="gotoChild(childId)"
+                           unset-term-callback="unsetTerm()"
+                           suggest-term-callback="suggestTerm(termSuggestion)"
+                           confirm-term-callback="confirmTerm()"
+                           feature-display-name="<% $feature->display_name() %>"></ontology-term-confirm>
   </div>
 
   <div ng-if="getState() == 'selectingEvidence'">
     <div class="curs-box-title">
-      Choose evidence <span ng-show="annotationType.can_have_conditions">and conditions</span>
-      for annotating <% $feature->display_name() %> with {{data.term_ontid}}
+Choose evidence <span ng-show="annotationType.can_have_conditions">and conditions</span>
+for annotating <% $feature->display_name() %> with {{data.term_ontid}}
     </div>
     <div class="curs-box-body">
       <annotation-evidence evidence-code="data.evidence_code"
@@ -42,9 +42,9 @@ $pub
 Annotation extensions
     </div>
     <div class="curs-box-body">
-    <extension-builder extension="extension"
-                       feature-display-name='<% $feature->display_name() %>'
-                       term-id="{{currentTerm()}}"></extension-builder>
+      <extension-builder extension="extension"
+                         feature-display-name='<% $feature->display_name() %>'
+        term-id="{{currentTerm()}}"></extension-builder>
     </div>
   </div>
 
