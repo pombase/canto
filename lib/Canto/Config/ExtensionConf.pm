@@ -68,6 +68,11 @@ sub parse
         $cardinality) =
       split (/\t/, $line);
 
+    if ($domain =~ /^\s*domain/i) {
+      # header
+      next;
+    }
+
     if (!defined $display_text) {
       die "config line has too few fields: $line\n";
     }
