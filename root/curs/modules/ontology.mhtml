@@ -8,7 +8,7 @@ $pub
 
 <div ng-controller="OntologyWorkflowCtrl"
      annotation-type-name="<% $annotation_type_name %>">
-  <div ng-if="getState() == 'searching'">
+  <div ng-show="getState() == 'searching'" class="ng-cloak">
     <ontology-term-select ng-hide="currentTerm()"
                           annotation-type="annotationType"
                           term-found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)">
@@ -23,7 +23,7 @@ $pub
                            feature-display-name="<% $feature->display_name() %>"></ontology-term-confirm>
   </div>
 
-  <div ng-if="getState() == 'selectingEvidence'">
+  <div ng-show="getState() == 'selectingEvidence'" class="ng-cloak">
     <div class="curs-box-title">
 Choose evidence <span ng-show="annotationType.can_have_conditions">and conditions</span>
 for annotating <% $feature->display_name() %> with {{data.term_ontid}}
@@ -37,7 +37,7 @@ for annotating <% $feature->display_name() %> with {{data.term_ontid}}
     </div>
   </div>
 
-  <div class="curs-box" ng-if="getState() == 'buildExtension'">
+  <div class="curs-box" ng-show="getState() == 'buildExtension'" class="ng-cloak">
     <div class="curs-box-title">
 Annotation extensions
     </div>
@@ -48,14 +48,16 @@ Annotation extensions
     </div>
   </div>
 
-  <ontology-term-comment-transfer ng-if="getState() == 'commenting'"
+  <div class="ng-cloak">
+  <ontology-term-comment-transfer ng-show="getState() == 'commenting'"
                                   feature-type="<% $feature_type %>"
                                   feature-display-name="<% $feature->display_name() %>"
                                   annotation-details="annotationForServer"
                                   comment="data.comment"
                                   annotation-type="annotationType"></ontology-term-comment-transfer>
+  </div>
 
-  <div ng-show="currentTerm()">
+  <div ng-show="currentTerm()" class="ng-cloak">
     <button type="submit" class="btn btn-primary curs-back-button"
             title="&lt;- Back"
             ng-click="back()">&lt;- Back</button>
@@ -64,7 +66,7 @@ Annotation extensions
             ng-click="proceed()" >Proceed -&gt;</button>
   </div>
 
-  <a ng-if="!prevState() && !currentTerm()"
+  <a ng-show="!prevState() && !currentTerm()"
      href="<% $curs_root_uri %>/feature/<% $feature_type %>/view/<% $feature->feature_id() %>"
      class="btn btn-primary curs-back-button">&lt;- Back</a>
 </div>
