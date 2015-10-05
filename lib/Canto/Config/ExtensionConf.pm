@@ -48,7 +48,10 @@ use warnings;
            [ { domain => 'GO:0004672',
                subset_rel => 'is_a', allowed_relation => 'has_substrate',
                range => 'GO:0005575' }, ... ]
-           The range can be a term ID or "GENE"
+           The range can be a term ID, or one of the following strings:
+             "FeatureID" - the ID of any annotatable feature is allowed
+             "TranscriptID" - only transcript IDs are allowed in the range
+             "ProteinID" - only protein IDs are allowed
 =cut
 
 sub parse
