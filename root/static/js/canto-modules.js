@@ -517,9 +517,14 @@ var cursStateService =
 
     this.searchString = null;
     this.termHistory = [];
-    this.extension = null;
+    this.extension = [];
     this.comment = null;
     this.state = 'searching';
+    this.evidence_code = '';
+    this.conditions = [];
+    this.with_gene_id = null;
+    this.validEvidence = false;
+    this.comment = null;
 
     // return the data in a obj with keys keys suitable for sending to the
     // server
@@ -1373,18 +1378,8 @@ var ontologyWorkflowCtrl =
     $scope.states = ['searching', 'selectingEvidence', 'buildExtension', 'commenting'];
 
     CursStateService.setState($scope.states[0]);
-
-    $scope.extension = [];
     $scope.annotationForServer = null;
-
-    $scope.data = {
-      evidence_code: '',
-      conditions: [],
-      with_gene_id: null,
-      validEvidence: false,
-      comment: null,
-    };
-
+    $scope.data = CursStateService;
     $scope.annotationTypeName = $attrs.annotationTypeName;
 
     $scope.termFoundCallback =
