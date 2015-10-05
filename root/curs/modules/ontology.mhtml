@@ -42,7 +42,7 @@ for annotating <% $feature->display_name() %> with {{data.term_ontid}}
 Annotation extensions
     </div>
     <div class="curs-box-body">
-      <extension-builder extension="extension"
+      <extension-builder extension="data.extension"
                          feature-display-name='<% $feature->display_name() %>'
                          term-id="{{currentTerm()}}"></extension-builder>
     </div>

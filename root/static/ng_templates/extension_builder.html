@@ -15,16 +15,6 @@ These are the possible extension types for {{termDetails.id}}, please add as man
     </li>
     </ul>
   </div>
-  <div ng-if="inProgressConf">
-    <extension-part-edit extension-part="editExtensionPart"
-                         extension-conf="inProgressConf"></extension-part-edit>
-
-    <button type="submit" class="btn btn-warning"
-            ng-click="cancelAddPart()">Cancel</button>
-    <button type="submit" class="btn btn-primary"
-            title="Finish extension part"
-            ng-click="finishPart()" ng-disabled="!partIsValid()">Finish</button>
-  </div>
 
   <div ng-if="!inProgressConf && extension.length > 0" style="padding-top: 10px">
     Extensions added so far:

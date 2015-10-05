@@ -20,6 +20,9 @@
       <th ng-if="annotationType.can_have_conditions && annotationDetails.conditions.length > 0">
         Conditions
       </th>
+      <th ng-if="annotationDetails.extension">
+        Extension
+      </th>
       <th ng-if="annotationDetails.term_suggestion_name || annotationDetails.term_suggestion_definition">
         Term suggestion
       </th>
@@ -44,6 +47,9 @@
     </td>
     <td ng-if="annotationType.can_have_conditions && annotationDetails.conditions.length > 0">
       {{conditionsString}}
+    </td>
+    <td ng-id="annotationDetails.extension">
+      <extension-display extension="annotationDetails.extension"></extension-display>
     </td>
     <td ng-if="annotationDetails.term_suggestion_name || annotationDetails.term_suggestion_definition">
       <div>

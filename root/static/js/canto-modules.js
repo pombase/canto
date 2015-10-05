@@ -1140,6 +1140,25 @@ canto.directive('ontologyTermCommentTransfer',
                 ['CantoService', ontologyTermCommentTransfer]);
 
 
+function openExtensionPartDialog($modal, extensionPart, relationConfig) {
+  return $modal.open({
+    templateUrl: app_static_path + 'ng_templates/extension_part_dialog.html',
+    controller: 'ExtensionPartDialogCtrl',
+    title: 'Edit extension relation',
+    animate: false,
+    windowClass: "modal",
+    resolve: {
+      args: function() {
+        return {
+          extensionPart: extensionPart,
+          relationConfig: relationConfig,
+        }
+      },
+    },
+  }).result;
+}
+
+
 // filter the extension_configuration results from the server and return
 // only those where there "domain" term ID in the configuration matches one of
 // subsetIds
@@ -1177,7 +1196,7 @@ function extensionConfFilter(allConfigs, subsetIds) {
 }
 
 var extensionBuilder =
-  function(CantoConfig, CantoService, CursStateService) {
+  function($modal, CantoConfig, CantoService, CursStateService) {
     return {
       scope: {
         extension: '=',
@@ -1236,45 +1255,55 @@ var extensionBuilder =
                         }
                       });
 
-        $scope.startAddPart = function(extConf) {
-          $scope.inProgressConf = extConf;
-          $scope.editExtensionPart = {
-            relation: extConf.relation,
+        $scope.startAddPart = function(extensionConfig) {
+          var editExtensionPart = {
+            relation: extensionConfig.relation,
             rangeDisplayName: '',
           };
+
+          var editPromise =
+            openExtensionPartDialog($modal, editExtensionPart, extensionConfig);
+
+          editPromise.then(function(result) {
+            $scope.extension.push(result.extensionPart);
+          });
         };
 
-        $scope.cancelAddPart = function() {
-          $scope.inProgressConf = null;
-          $scope.editExtensionPart = null;
-        };
-
-        $scope.finishPart = function() {
-          $scope.extension.push($scope.editExtensionPart);
-          $scope.inProgressConf = null;
-          $scope.editExtensionPart = null;
-        };
-
-        $scope.partIsValid = function() {
-          return !!$scope.editExtensionPart.rangeValue;
-        };
-  
         $scope.backToEvidence = function() {
           CursStateService.unsetEvidence();
-          $scope.inProgressConf = null;
-          $scope.editExtensionPart = null;
           $scope.extension = [];
         };
-
-        $scope.setExtension = function() {
-          CursStateService.setExtension($scope.extension);
-        };
-
       },
     };
   };
 
-canto.directive('extensionBuilder', ['CantoConfig', 'CantoService', 'CursStateService', extensionBuilder]);
+canto.directive('extensionBuilder',
+                ['$modal', 'CantoConfig', 'CantoService', 'CursStateService',
+                 extensionBuilder]);
+
+
+var extensionPartDialogCtrl =
+  function($scope, $modalInstance, args) {
+    $scope.data = args;
+
+    $scope.isValid = function() {
+      return !!$scope.data.extensionPart.rangeValue;
+    };
+
+    $scope.ok = function () {
+      $modalInstance.close({
+        extensionPart: $scope.data.extensionPart,
+      });
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('ExtensionPartDialogCtrl',
+                 ['$scope', '$modalInstance', 'args',
+                 extensionPartDialogCtrl]);
 
 
 var extensionPartEdit =
@@ -1282,7 +1311,7 @@ var extensionPartEdit =
     return {
       scope: {
         extensionPart: '=',
-        extensionConf: '=',
+        relationConfig: '=',
       },
       restrict: 'E',
       replace: true,
@@ -1294,8 +1323,8 @@ var extensionPartEdit =
           $scope.extensionPart.rangeValue = termId;
           $scope.extensionPart.rangeDisplayName = termName;
         };
-
-        if ($scope.extensionConf.range == 'ProteinID') {
+ 
+        if ($scope.relationConfig.range == 'ProteinID') {
           if ($scope.extensionPart.rangeValue) {
             // editing exisiting part
             CursGeneList.geneList().then(function(results) {
@@ -1308,7 +1337,7 @@ var extensionPartEdit =
           }
         }
 
-       if ($scope.extensionConf.range == 'ONTOLOGY' &&
+       if ($scope.relationConfig.range == 'ONTOLOGY' &&
             $scope.extensionPart.rangeValue) {
           // editing existing extension part
           CantoService.lookup('ontology', [$scope.extensionPart.rangeValue], {})

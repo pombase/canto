@@ -1,0 +1,15 @@
+<div class="curs-extension-part-dialog modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      Add a relation:
+    </h4>
+  </div>
+  <div class="modal-body">
+    <extension-part-edit extension-part="data.extensionPart"
+                         relation-config="data.relationConfig"></extension-part-edit>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok()" ng-disabled="!isValid()">OK</button>
+  </div>
+</div>
