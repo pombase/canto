@@ -48,7 +48,7 @@
     <td ng-if="annotationType.can_have_conditions && annotationDetails.conditions.length > 0">
       {{conditionsString}}
     </td>
-    <td ng-id="annotationDetails.extension">
+    <td ng-if="annotationDetails.extension && annotationDetails.extension.length > 0">
       <extension-display extension="annotationDetails.extension"></extension-display>
     </td>
     <td ng-if="annotationDetails.term_suggestion_name || annotationDetails.term_suggestion_definition">
