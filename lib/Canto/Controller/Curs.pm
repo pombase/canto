@@ -1126,6 +1126,7 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
 
   my $term_ontid = $body_data->{term_ontid};
   my $evidence_code = $body_data->{evidence_code};
+  my $extension = $body_data->{extension} || [];
 
   my @conditions = ();
 
@@ -1155,6 +1156,7 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
   my %annotation_data = (term_ontid => $term_ontid,
                          evidence_code => $evidence_code,
                          conditions => \@conditions,
+                         extension => $extension,
                        );
 
   my $suggested_name = trim($body_data->{term_suggestion_name});

@@ -537,7 +537,8 @@ var cursStateService =
         conditions: this.conditions,
         term_suggestion_name: null,
         term_suggestion_definition: null,
-        comment: this.comment,
+        extension: this.extension,
+        submitter_comment: this.comment,
       };
 
       if (this.termSuggestion) {
