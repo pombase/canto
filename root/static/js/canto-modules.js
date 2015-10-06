@@ -1202,7 +1202,7 @@ function extensionConfFilter(allConfigs, subsetIds) {
 }
 
 var extensionBuilder =
-  function($modal, CantoConfig, CantoService, CursStateService) {
+  function($modal, CantoConfig, CantoService) {
     return {
       scope: {
         extension: '=',
@@ -1274,18 +1274,12 @@ var extensionBuilder =
             $scope.extension.push(result.extensionPart);
           });
         };
-
-        $scope.backToEvidence = function() {
-          CursStateService.unsetEvidence();
-          $scope.extension = [];
-        };
       },
     };
   };
 
 canto.directive('extensionBuilder',
-                ['$modal', 'CantoConfig', 'CantoService', 'CursStateService',
-                 extensionBuilder]);
+                ['$modal', 'CantoConfig', 'CantoService', extensionBuilder]);
 
 
 var extensionPartDialogCtrl =
