@@ -245,7 +245,7 @@ sub make_ontology_annotation
     with_gene_id => $with_gene_id,
     taxonid => $taxonid,
     completed => $completed,
-    annotation_extension => $data->{annotation_extension} // '',
+    extension => $data->{extension} || [],
     is_obsolete_term => $is_obsolete_term,
     curator => $curator,
     status => $annotation->status(),
