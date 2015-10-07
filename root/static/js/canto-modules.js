@@ -1210,6 +1210,47 @@ function extensionConfFilter(allConfigs, subsetIds) {
                });
 }
 
+
+var extensionBuilderDialogCtrl =
+  function($scope, $modalInstance, args) {
+    $scope.data = args;
+
+    $scope.ok = function () {
+      $modalInstance.close({
+        extension: $scope.data.extension,
+      });
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('ExtensionBuilderDialogCtrl',
+                 ['$scope', '$modalInstance', 'args',
+                 extensionBuilderDialogCtrl]);
+
+
+function openExtensionBuilderDialog($modal, extension, termId, featureDisplayName) {
+  return $modal.open({
+    templateUrl: app_static_path + 'ng_templates/extension_builder_dialog.html',
+    controller: 'ExtensionBuilderDialogCtrl',
+    title: 'Edit extension',
+    animate: false,
+    windowClass: "modal",
+    resolve: {
+      args: function() {
+        return {
+          extension: angular.copy(extension),
+          termId: termId,
+          featureDisplayName: featureDisplayName,
+        };
+      },
+    },
+  }).result;
+}
+
+
 var extensionBuilder =
   function($modal, CantoConfig, CantoService) {
     return {
@@ -2899,6 +2940,17 @@ var annotationEditDialogCtrl =
           });
         } // else: user pasted a term ID or user quoted the search - skip confirmation
       };
+
+    $scope.editExtension = function() {
+      var editPromise =
+        openExtensionBuilderDialog($modal, $scope.annotation.extension,
+                                   $scope.annotation.term_ontid,
+                                   $scope.currentFeatureDisplayName);
+
+      editPromise.then(function(result) {
+        angular.copy(result.extension, $scope.annotation.extension);
+      });
+    };
 
     $scope.ok = function() {
       var q = AnnotationProxy.storeChanges(args.annotation,
