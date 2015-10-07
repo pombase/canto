@@ -526,6 +526,15 @@ var cursStateService =
     this.validEvidence = false;
     this.comment = null;
 
+    var cleanExtensions =
+      $.map(this.extension,
+            function(part) {
+              return {
+                rangeValue: part.rangeValue,
+                relation: part.relation,
+              };
+            });
+
     // return the data in a obj with keys keys suitable for sending to the
     // server
     this.asAnnotationDetails = function() {
@@ -537,7 +546,7 @@ var cursStateService =
         conditions: this.conditions,
         term_suggestion_name: null,
         term_suggestion_definition: null,
-        extension: this.extension,
+        extension: cleanExtensions,
         submitter_comment: this.comment,
       };
 
