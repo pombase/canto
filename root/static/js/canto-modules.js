@@ -540,7 +540,6 @@ var cursStateService =
     this.asAnnotationDetails = function() {
       var retVal = {
         term_ontid: this.currentTerm(),
-        annotation_extension: this.extension,
         evidence_code: this.evidence_code,
         with_gene_id: this.with_gene_id,
         conditions: this.conditions,
