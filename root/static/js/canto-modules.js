@@ -3159,7 +3159,7 @@ var annotationTableCtrl =
           with_or_from_identifier: true,  // set to false when a row has a non empty element
           qualifiers: true,
           submitter_comment: true,
-          annotation_extension: true,
+          extension: true,
           curator: true,
           genotype_name: true,
           genotype_background: true,
