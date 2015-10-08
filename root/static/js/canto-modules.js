@@ -2960,13 +2960,17 @@ var annotationEditDialogCtrl =
     $scope.ok = function() {
       var q = AnnotationProxy.storeChanges(args.annotation,
                                            $scope.annotation, args.newlyAdded);
-      toaster.pop('info', 'Creating annotation ...');
+      loadingStart();
+      toaster.pop('info', 'Storing annotation ...');
       q.then(function(annotation) {
         $modalInstance.close(annotation);
       })
       .catch(function(message) {
         toaster.pop('error', message);
         $modalInstance.dismiss();
+      })
+      .finally(function() {
+        loadingEnd();
       });
     };
 
