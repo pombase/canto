@@ -17,7 +17,7 @@
         <td class="title">
           {{displayAnnotationFeatureType}}
         </td>
-        <td>
+        <td colspan="2">
           <div ng-if="!featureEditable">
             {{currentFeatureDisplayName}}
           </div>
@@ -35,7 +35,7 @@
         <td class="title">
           {{displayAnnotationFeatureType}}
         </td>
-        <td>
+        <td colspan="2">
           <div ng-if="!featureEditable">
             {{currentFeatureDisplayName}}
           </div>
@@ -50,7 +50,7 @@
 
       <tr ng-class="{ 'has-error': !isValidTerm() }">
         <td class="title">Term name</td>
-        <td>
+        <td colspan="2">
           <div>
             <term-name-complete current-term-name="{{annotation.term_name}}"
                                 found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
@@ -67,7 +67,7 @@
 
       <tr>
         <td class="title">Evidence code</td>
-        <td>
+        <td colspan="2">
           <annotation-evidence evidence-code="annotation.evidence_code"
                                conditions="annotation.conditions"
                                with-gene-id="annotation.with_gene_id"
@@ -78,7 +78,7 @@
 
       <tr>
         <td class="title" rowspan="2">Term suggestion</td>
-        <td>
+        <td colspan="2">
           <input class="form-control"
                  type="text" placeholder="Name ..." size="60"
                  ng-model="annotation.term_suggestion_name"/>
@@ -86,7 +86,7 @@
       </tr>
 
       <tr>
-        <td>
+        <td colspan="2">
           <textarea class="form-control"
                     placeholder="Definition ..." cols="60"
                     ng-model="annotation.term_suggestion_definition"/>
@@ -95,7 +95,7 @@
 
       <tr>
         <td class="title">Comment</td>
-        <td>
+        <td colspan="2">
           <input class="form-control"
                  type="text" size="60"
                  ng-model="annotation.submitter_comment"/>
@@ -106,13 +106,15 @@
         <td class="title">Annotation extension</td>
         <td>
           <extension-display extension="annotation.extension"></extension-display>
-          <button ng-click="editExtension(annotation.term_ontid, annotation.feature_display_name)">Edit ...</button>
+        </td>
+        <td>
+          <button class="btn btn-default btn-xs" ng-click="editExtension(annotation.term_ontid, annotation.feature_display_name)">Change ...</button>
         </td>
       </tr>
 
       <tr>
         <td class="title">Curator</td>
-        <td>{{annotation.curator}}</td>
+        <td colspan="2">{{annotation.curator}}</td>
       </tr>
 
     </table>
