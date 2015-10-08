@@ -143,7 +143,32 @@ my $full_expected_curation_session =
           community_curated => JSON::XS::false,
         },
         with_gene => "SPCC576.16c",
-        annotation_extension => 'annotation_extension=exists_during(GO:0051329),annotation_extension=has_substrate(PomBase:SPBC1105.11c),annotation_extension=requires_feature(Pfam:PF00564),residue=T31,residue=T586(T586,X123),qualifier=NOT,condition=PECO:0000012,allele=SPAC9.02cdelta(deletion)|annotation_extension=exists_during(GO:0051329),has_substrate(PomBase:SPBC1105.11c)',
+        extension => [
+          [
+            {
+              relation => 'exists_during',
+              rangeValue => 'GO:0051329',
+            },
+            {
+              relation => 'has_substrate',
+              rangeValue => 'PomBase:SPBC1105.11c',
+            },
+            {
+              relation => 'requires_feature',
+              rangeValue => 'Pfam:PF00564',
+            },
+          ],
+          [
+            {
+              relation => 'exists_during',
+              rangeValue => 'GO:0051329',
+            },
+            {
+              relation => 'has_substrate',
+              rangeValue => 'PomBase:SPBC1105.11c',
+            }
+          ],
+        ],
         gene => 'Schizosaccharomyces pombe SPBC14F5.07',
       },
       {

@@ -40,6 +40,8 @@ the Free Software Foundation, either version 3 of the License, or
 use Moose::Role;
 use Archive::Zip qw(:CONSTANTS :ERROR_CODES);
 
+use Canto::Curs::ExtensionData;
+
 =head2 get_all_curs_annotation_zip
 
  Usage   : my $annotations = $self->get_all_curs_annotation_zip(...)
@@ -164,14 +166,14 @@ sub get_annotation_table_tsv
        evidence_code with_or_from_identifier
        annotation_type_abbreviation
        gene_product gene_synonyms_string db_object_type taxonid
-       creation_date_short assigned_by annotation_extension);
+       creation_date_short assigned_by extension);
 
   my @phenotype_column_names =
     qw(db genotype_identifier
        term_ontid publication_uniquename
        evidence_code
        db_object_type
-       creation_date_short assigned_by annotation_extension);
+       creation_date_short assigned_by extension);
 
   my @interaction_column_names =
     qw(gene_identifier interacting_gene_identifier
@@ -221,6 +223,15 @@ sub get_annotation_table_tsv
       if ($column_name eq 'qualifiers') {
         if (defined $val) {
           $val = join(",", @$val);
+        } else {
+          $val = '';
+        }
+      }
+
+      if ($column_name eq 'extension') {
+        if (defined $val) {
+          my $extension_obj = Canto::Curs::ExtensionData->new(structure => $val);
+          $val = $extension_obj->as_string();
         } else {
           $val = '';
         }

@@ -77,7 +77,7 @@ sub check_new_annotations
              [
                {
                  'genotype_id' => 1,
-                 'annotation_extension' => '',
+                 'extension' => [],
                  'status' => 'new',
                  'term_suggestion_name' => undef,
                  'term_suggestion_definition' => undef,
@@ -171,7 +171,7 @@ sub check_new_annotations
                  'annotation_id' => 7,
                  'annotation_type' => 'phenotype',
                  'genotype_id' => 2,
-                 'annotation_extension' => '',
+                 'extension' => [],
                  'status' => 'new',
                  'term_suggestion_name' => undef,
                  'term_suggestion_definition' => undef,
