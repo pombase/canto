@@ -354,7 +354,7 @@ canto.service('CantoService', function($http) {
 });
 
 var keysForServer = {
-  annotation_extension: true,
+  extension: true,
   annotation_type: true,
   evidence_code: true,
   conditions: true,
