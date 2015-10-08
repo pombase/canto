@@ -1412,6 +1412,11 @@ var extensionDisplay =
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_display.html',
+      controller: function($scope) {
+        $scope.delete = function(part) {
+          arrayRemoveOne($scope.extension, part);
+        };
+      },
     };
   };
 
