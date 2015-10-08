@@ -759,7 +759,7 @@ sub _ontology_change_keys
       return 1;
     },
     submitter_comment => 1,
-    annotation_extension => 1,
+    extension => 1,
     with_gene_id => sub {
       my $gene_id = shift;
 
