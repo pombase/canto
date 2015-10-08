@@ -1407,13 +1407,16 @@ var extensionDisplay =
     return {
       scope: {
         extension: '=',
+        showDelete: '@',
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_display.html',
       controller: function($scope) {
         $scope.delete = function(part) {
-          arrayRemoveOne($scope.extension, part);
+          if ($scope.showDelete()) {
+            arrayRemoveOne($scope.extension, part);
+          }
         };
       },
     };
