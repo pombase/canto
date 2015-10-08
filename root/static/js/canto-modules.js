@@ -526,18 +526,18 @@ var cursStateService =
     this.validEvidence = false;
     this.comment = null;
 
-    var cleanExtensions =
-      $.map(this.extension,
-            function(part) {
-              return {
-                rangeValue: part.rangeValue,
-                relation: part.relation,
-              };
-            });
-
     // return the data in a obj with keys keys suitable for sending to the
     // server
     this.asAnnotationDetails = function() {
+      var cleanExtensions =
+        $.map(this.extension,
+              function(part) {
+                return {
+                  rangeValue: part.rangeValue,
+                  relation: part.relation,
+                };
+              });
+
       var retVal = {
         term_ontid: this.currentTerm(),
         evidence_code: this.evidence_code,
