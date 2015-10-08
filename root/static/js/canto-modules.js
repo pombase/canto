@@ -2032,9 +2032,9 @@ function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_back
     error(function(data, status){
       toaster.pop('error', "Accessing server failed: " + (data || status) );
     });
-  } else {
-    return result;
   }
+
+  return result;
 }
 
 function makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed)
