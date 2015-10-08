@@ -30,7 +30,7 @@
 <script src="<% $c->uri_for('/static/js/jquery.placeholder.min.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.jtruncate.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/tag-it.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/bootbox.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/angular-confirm-1.1.0.js') %>"></script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/canto.js') %>"></script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/canto-modules.js') %>"></script>
 <script type="text/javascript" src="<% $c->uri_for('/static/js/jquery.form.2.47.js') %>"></script>

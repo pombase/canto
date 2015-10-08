@@ -25,7 +25,8 @@ Use this genotype ...
       <a href="{{curs_root_uri + '/feature/genotype/duplicate/' + genotype.genotype_id}}">Duplicate ...</a>
     </div>
     <div ng-if="genotype.genotype_id">
-      <a href="#" ng-click="deleteGenotype()">Delete ...</a>
+      <a confirm="Are you sure you want to delete this genotype?"
+         ng-click="deleteGenotype()">Delete ...</a>
     </div>
   </td>
 </tr>

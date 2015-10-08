@@ -91,7 +91,9 @@ Description
     </div>
 % if (!$read_only_curs) {
     <div>
-      <a ng-click="checkEditIsSensible($event)" href="<% $start_path . '/feature/genotype/edit/' . $genotype->genotype_id() %>">Edit ...</a>
+      <a confirm="This genotype has existing annotations.  Really edit?"
+         confirm-if="annotationCount > 0"
+         href="<% $start_path . '/feature/genotype/edit/' . $genotype->genotype_id() %>">Edit ...</a>
     </div>
     <div>
       <a href="<% $start_path . '/feature/genotype/duplicate/' . $genotype->genotype_id() %>">Duplicate ...</a>

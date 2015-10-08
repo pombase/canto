@@ -1,10 +1,10 @@
 "use strict";
 
 /*global history,curs_root_uri,angular,$,make_ontology_complete_url,
-  ferret_choose,application_root,window,canto_root_uri,curs_key,bootbox,
+  ferret_choose,application_root,window,canto_root_uri,curs_key,
   app_static_path,ontology_external_links,loadingStart,loadingEnd,alert */
 
-var canto = angular.module('cantoApp', ['ui.bootstrap', 'toaster']);
+var canto = angular.module('cantoApp', ['ui.bootstrap', 'angular-confirm', 'toaster']);
 
 function capitalizeFirstLetter(text) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -2329,19 +2329,6 @@ var genotypeViewCtrl =
     $scope.init = function(annotationCount) {
       $scope.annotationCount = annotationCount;
     };
-
-    $scope.checkEditIsSensible = function($event) {
-      if ($scope.annotationCount > 0) {
-        $event.preventDefault();
-        bootbox.confirm("This genotype has existing annotations.  Really edit?",
-                        function(confirmed) {
-                          if (confirmed) {
-                            var targetUrl = $($event.currentTarget).attr("href");
-                            window.location.href = targetUrl;
-                          }
-                        });
-      }
-    };
   };
 
 canto.controller('GenotypeViewCtrl',
@@ -2512,30 +2499,25 @@ var genotypeListRowCtrl =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
 
         $scope.deleteGenotype = function() {
-          bootbox.confirm("Are you sure you want to delete this genotype?",
-                          function(confirmed) {
-            if (confirmed) {
-              loadingStart();
+          loadingStart();
 
-              // using $parent is brittle
-              var q = CursGenotypeList.deleteGenotype($scope.$parent.genotypeList, $scope.genotype);
+          // using $parent is brittle
+          var q = CursGenotypeList.deleteGenotype($scope.$parent.genotypeList, $scope.genotype);
 
-              q.then(function() {
-                toaster.pop('success', 'Genotype deleted');
-              });
+          q.then(function() {
+            toaster.pop('success', 'Genotype deleted');
+          });
 
-              q.catch(function(message) {
-                if (message.match('genotype .* has annotations')) {
-                  toaster.pop('warning', "couldn't delete the genotype: delete the annotations that use it first");
-                } else {
-                  toaster.pop('error', "couldn't delete the genotype: " + message);
-                }
-              });
-
-              q.finally(function() {
-                loadingEnd();
-              });
+          q.catch(function(message) {
+            if (message.match('genotype .* has annotations')) {
+              toaster.pop('warning', "couldn't delete the genotype: delete the annotations that use it first");
+            } else {
+              toaster.pop('error', "couldn't delete the genotype: " + message);
             }
+          });
+
+          q.finally(function() {
+            loadingEnd();
           });
         };
       },
@@ -3409,22 +3391,18 @@ var annotationTableRow =
                        true, true);
         };
 
-        $scope.delete = function() {
-          bootbox.confirm("Are you sure you want to delete this annotation?", function(confirmed) {
-            if (confirmed) {
-              loadingStart();
-              AnnotationProxy.deleteAnnotation(annotation)
-                .then(function() {
-                  toaster.pop('success', 'Annotation deleted');
-                })
-                .catch(function(message) {
-                  toaster.pop('note', "Couldn't delete the annotation: " + message);
-                })
-                .finally(function() {
-                  loadingEnd();
-                });
-            }
-          });
+        $scope.deleteAnnotation = function() {
+          loadingStart();
+          AnnotationProxy.deleteAnnotation(annotation)
+            .then(function() {
+              toaster.pop('success', 'Annotation deleted');
+            })
+            .catch(function(message) {
+              toaster.pop('note', "Couldn't delete the annotation: " + message);
+            })
+            .finally(function() {
+              loadingEnd();
+            });
         };
       },
     };
