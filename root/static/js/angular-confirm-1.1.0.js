@@ -4,6 +4,8 @@
  * Version: 1.1.0 - 2015-14-07
  * License: Apache
  */
+/*global angular,window */
+
 angular.module('angular-confirm', ['ui.bootstrap'])
   .controller('ConfirmModalController', ['$scope', '$modalInstance', 'data', function ($scope, $modalInstance, data) {
     $scope.data = angular.copy(data);
@@ -65,6 +67,13 @@ angular.module('angular-confirm', ['ui.bootstrap'])
       },
       link: function (scope, element, attrs) {
 
+        function click() {
+          if (element.attr('href')) {
+            window.location.href = element.attr("href");
+          } else {
+            scope.ngClick();
+          }
+        }
 
         element.unbind("click").bind("click", function ($event) {
 
@@ -82,10 +91,13 @@ angular.module('angular-confirm', ['ui.bootstrap'])
             if (scope.confirmCancel) {
               data.cancel = scope.confirmCancel;
             }
-            $confirm(data, scope.confirmSettings || {}).then(scope.ngClick);
+            $confirm(data, scope.confirmSettings || {}).then(function() {
+              click();
+            });
           } else {
-
-            scope.$apply(scope.ngClick);
+            scope.$apply(function() {
+              click($event);
+            });
           }
         });
 
