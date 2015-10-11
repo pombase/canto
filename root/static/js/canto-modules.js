@@ -2887,7 +2887,7 @@ var annotationTableRow =
           });
 
         CantoConfig.get('instance_organism').success(function(results) {
-          if (!results) {
+          if (!results.taxonid) {
             $scope.multiOrganismMode = true;
           }
         });
