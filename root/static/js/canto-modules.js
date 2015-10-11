@@ -2892,13 +2892,20 @@ var annotationTableRow =
           }
         });
 
-        CantoConfig.get('evidence_types').success(function(results) {
-          $scope.evidenceTypes = results;
+        $scope.$watch('annotation.evidence_code',
+                      function(newEvidenceCode) {
+                        if (newEvidenceCode) {
+                          CantoConfig.get('evidence_types').success(function(results) {
+                            $scope.evidenceTypes = results;
 
-          annotationTypePromise.then(function() {
-            $scope.displayEvidence = results[annotation.evidence_code].name;
-          });
-        });
+                            annotationTypePromise.then(function() {
+                              $scope.displayEvidence = results[newEvidenceCode].name;
+                            });
+                          });
+                        } else {
+                          $scope.displayEvidence = '';
+                        }
+                      });
 
         $scope.edit = function() {
           // FIXME: featureFilterDisplayName is from the parent scope
