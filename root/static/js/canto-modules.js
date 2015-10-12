@@ -3349,18 +3349,25 @@ var annotationTableRow =
           });
 
         CantoConfig.get('instance_organism').success(function(results) {
-          if (!results) {
+          if (!results.taxonid) {
             $scope.multiOrganismMode = true;
           }
         });
 
-        CantoConfig.get('evidence_types').success(function(results) {
-          $scope.evidenceTypes = results;
+        $scope.$watch('annotation.evidence_code',
+                      function(newEvidenceCode) {
+                        if (newEvidenceCode) {
+                          CantoConfig.get('evidence_types').success(function(results) {
+                            $scope.evidenceTypes = results;
 
-          annotationTypePromise.then(function() {
-            $scope.displayEvidence = results[annotation.evidence_code].name;
-          });
-        });
+                            annotationTypePromise.then(function() {
+                              $scope.displayEvidence = results[newEvidenceCode].name;
+                            });
+                          });
+                        } else {
+                          $scope.displayEvidence = '';
+                        }
+                      });
 
         $scope.addLinks = function() {
           return true;
