@@ -1414,7 +1414,7 @@ var extensionDisplay =
       templateUrl: app_static_path + 'ng_templates/extension_display.html',
       controller: function($scope) {
         $scope.delete = function(part) {
-          if ($scope.showDelete()) {
+          if ($scope.showDelete) {
             arrayRemoveOne($scope.extension, part);
           }
         };
