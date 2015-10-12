@@ -607,7 +607,7 @@ var cursSettingsService =
     };
 
     this.getAll = function() {
-      if (!curs_root_uri) {
+      if (typeof(curs_root_uri) == 'undefined') {
         return {
           then: function (successCallback, errorCallback) {
             errorCallback();
