@@ -1550,9 +1550,9 @@ canto.controller('OntologyWorkflowCtrl',
 
 
 var interactionWizardCtrl =
-  function($scope, $http, toaster, CantoGlobals) {
+  function($scope, $http, toaster, $attrs) {
 
-    $scope.annotationTypeName = CantoGlobals.ferret_choose.annotation_type_name;
+    $scope.annotationTypeName = $attrs.annotationTypeName;
 
     $scope.data = {
       validEvidence: false,
@@ -1593,7 +1593,7 @@ var interactionWizardCtrl =
   };
 
 canto.controller('InteractionWizardCtrl',
-                 ['$scope', '$http', 'toaster', 'CantoGlobals',
+                 ['$scope', '$http', 'toaster', '$attrs',
                   interactionWizardCtrl]);
 
 

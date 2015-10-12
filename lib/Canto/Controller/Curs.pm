@@ -930,15 +930,13 @@ sub annotation_interaction_edit
   my $st = $c->stash();
   my $schema = $st->{schema};
 
-  my $module_display_name = $annotation_config->{display_name};
   my $annotation_type_name = $annotation_config->{name};
 
-  my $module_category = $annotation_config->{category};
+  my $category = $annotation_config->{category};
 
   # don't set stash title - use default
-  $st->{current_component} = $annotation_type_name;
-  $st->{current_component_display_name} = $annotation_config->{display_name};
-  $st->{template} = "curs/modules/$module_category.mhtml";
+  $st->{annotation_type_name} = $annotation_type_name;
+  $st->{template} = "curs/modules/$category.mhtml";
 }
 
 sub _get_gene_proxy
