@@ -46,8 +46,9 @@ sub usage
   die qq|usage:
   $0 <OBO file names>
 
-This script reads the given OBO files and processes them with owltools.
-The "--save-closure-for-chado" option is used to calculate the full
+This script reads the given OBO files and processes them with the "owltools"
+command from the OWLTools package: https://github.com/owlcollab/owltools
+The owltools "--save-closure-for-chado" option is used to calculate the full
 transitive closure of the ontologies.
 
 The owltools output is compared to the annotation extension configuration
