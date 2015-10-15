@@ -77,7 +77,7 @@ sub parse
     }
 
     if (!defined $display_text) {
-      die "config line has too few fields: $line\n";
+      die "config line $. in $extension_conf_file has too few fields: $line\n";
     }
 
     my @cardinality = ('*');
