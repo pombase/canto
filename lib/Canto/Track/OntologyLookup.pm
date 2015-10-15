@@ -302,8 +302,7 @@ sub lookup
         $self->_make_term_hash($cvterm,
                                $ontology_name,
                                $include_definition, $include_children,
-                               $include_exact_synonyms, undef,
-                               $matching_synonym);
+                               $include_exact_synonyms, $matching_synonym);
 
       push @ret_list, \%term_hash;
     }
