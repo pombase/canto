@@ -987,10 +987,8 @@ var externalTermLinks =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/external_term_links.html',
       controller: function($scope) {
-        $scope.processExternalLinks = function(results) {
-          var ontology_external_links = results.data;
-
-          var link_confs = ontology_external_links[$scope.termDetails.annotation_namespace];
+        $scope.processExternalLinks = function(linkConfig, newTermId) {
+          var link_confs = linkConfig[$scope.termDetails.annotation_namespace];
           if (link_confs) {
             var html = '';
             $.each(link_confs, function(idx, link_conf) {
@@ -1018,9 +1016,9 @@ var externalTermLinks =
               var link_img_src = application_root + 'static/images/ext_link.png';
               html += '<img src="' + link_img_src + '"/></div>';
             });
-            var $linkouts = $('#ferret-linkouts');
+            var $linkouts = $('.curs-term-linkouts');
             if (html.length > 0) {
-              $linkouts.find('.links-container').html(html);
+              $linkouts.find('.curs-term-linkout-target').html(html);
               $linkouts.show();
             } else {
               $linkouts.hide();
@@ -1042,12 +1040,12 @@ var externalTermLinks =
                                               subset_ids: 1
                                             })
                           .then(function(details) {
-                            $scope.termDetails = details;
+                            $scope.termDetails = details.data;
 
                             return CantoConfig.get('ontology_external_links');
                           })
                           .then(function(results) {
-                            $scope.processExternalLinks(results, newTermId);
+                            $scope.processExternalLinks(results.data, newTermId);
                           });
                     });
 

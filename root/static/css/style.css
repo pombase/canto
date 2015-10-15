@@ -711,6 +711,10 @@ div.clearall {
   margin: 10px;
 }
 
+.curs-term-linkouts {
+  float: right;
+}
+
 .curs-definition-table tbody {
   font-size: 90%;
 }
