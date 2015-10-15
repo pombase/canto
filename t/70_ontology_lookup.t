@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 62;
+use Test::More tests => 64;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -81,6 +81,9 @@ my $ont_name = 'molecular_function';
   ok(defined $results);
 
   is(scalar(@$results), 2);
+
+  is($results->[0]->{matching_synonym}, 'protein tagging activity');
+  is($results->[1]->{matching_synonym}, 'protein tagging activity');
 
   ok(grep {
     $_->{id} eq 'GO:0031386' && $_->{name} eq 'protein tag'
