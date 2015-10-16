@@ -189,7 +189,7 @@ sub _make_term_hash
     $term_hash{children} = \@child_hashes;
   }
 
-  if ($include_synonyms) {
+  if ($include_synonyms && @$include_synonyms) {
     $term_hash{synonyms} = _get_synonyms($cvterm, $include_synonyms);
   }
 
