@@ -30,7 +30,7 @@
       <td class="title">Comment</td>
       <td class="term-comment">{{termDetails.comment}}</td>
     </tr>
-    <tr ng-if="false && termDetails.synonyms">
+    <tr ng-if="termDetails.synonyms">
       <td class="title">Synonym<span ng-show="termDetails.synonyms.length != 1">s</span> </td>
       <td>
         <div ng-repeat="synonym in termDetails.synonyms">

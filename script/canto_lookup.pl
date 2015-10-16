@@ -25,8 +25,10 @@ use Canto::Meta::Util;
 my $do_help = 0;
 my $lookup_type = undef;
 my $ontology_name = undef;
+my $verbose = 0;
 
 my $result = GetOptions ("help|h" => \$do_help,
+                         "verbose|v" => \$verbose,
                          "lookup-type|t:s" => \$lookup_type,
                          "ontology-name|n:s" => \$ontology_name);
 
@@ -54,8 +56,11 @@ Search for full term name or synonym:
    $0 -t ontology -n fission_yeast_phenotype 'long cells'
 Search for word prefix:
    $0 -t ontology -n biological_process 'transpo'
+Show more detail
+   $0 -v -t ontology -n biological_process 'transpo'
 Search for term ID - ontology-name isn't needed
    $0 -t ontology 'FYPO:0000114'
+   $0 -v -t ontology 'FYPO:0000114'
 Search for gene name or systematic ID
    $0 -t gene 'cdc11'
 |;
@@ -123,9 +128,16 @@ if ($lookup_type eq 'gene') {
       usage("no ontology name argument");
     }
 
-    my $res = $lookup->lookup(ontology_name => $ontology_name,
-                              search_string => $search_string,
-                              max_results => 20);
+    my @lookup_args = (ontology_name => $ontology_name,
+                       search_string => $search_string,
+                       max_results => 20);
+
+    if ($verbose) {
+      push @lookup_args, include_children => 1,
+        include_synonyms => ['exact', 'broad', 'related'],
+    }
+
+    my $res = $lookup->lookup(@lookup_args);
 
     for my $hit (@$res) {
       my $synonym_text = '';
@@ -134,6 +146,17 @@ if ($lookup_type eq 'gene') {
           q{ (matching synonym: "} . $hit->{matching_synonym} . q{")};
       }
       print $hit->{id}, " - ", $hit->{name}, "$synonym_text\n";
+
+      if ($verbose) {
+        print "  synonyms:\n";
+        for my $synonym (@{$hit->{synonyms}}) {
+          print "    ", $synonym->{name}, " [", $synonym->{type}, "]\n";
+        }
+        print "  child terms:\n";
+        for my $child (@{$hit->{children}}) {
+          print "    ", $child->{name}, " (", $child->{id}, ")\n";
+        }
+      }
     }
   }
 }

@@ -749,9 +749,6 @@ var breadcrumbsDirective =
           return CantoService.lookup('ontology', [termId],
                                      {
                                        def: 1,
-                                       children: 1,
-                                       exact_synonyms: 1,
-                                       subset_ids: 1
                                      });
         };
 
@@ -1035,9 +1032,6 @@ var externalTermLinks =
                         CantoService.lookup('ontology', [newTermId],
                                             {
                                               def: 1,
-                                              children: 1,
-                                              exact_synonyms: 1,
-                                              subset_ids: 1
                                             })
                           .then(function(details) {
                             $scope.termDetails = details.data;
@@ -1073,20 +1067,33 @@ var ontologyTermConfirm =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/ontology_term_confirm.html',
       controller: function($scope) {
+        $scope.synonymTypes = [];
+
+        $scope.$watch('annotationType.name',
+                      function(typeName) {
+                        if (typeName) {
+                          $scope.synonymTypes = $scope.annotationType.synonyms_to_display;
+                        }
+                      });
+
         $scope.app_static_path = CantoGlobals.app_static_path;
 
         $scope.$watch('termId',
                       function(newTermId) {
-                        CantoService.lookup('ontology', [newTermId],
-                                            {
-                                              def: 1,
-                                              children: 1,
-                                              exact_synonyms: 1,
-                                            })
-                          .then(function(response) {
-                            $scope.termDetails = response.data;
-                          });
-                  });
+                        if (newTermId) {
+                          CantoService.lookup('ontology', [newTermId],
+                                              {
+                                                def: 1,
+                                                children: 1,
+                                                synonyms: $scope.synonymTypes,
+                                              })
+                            .then(function(response) {
+                              $scope.termDetails = response.data;
+                            });
+                        } else {
+                          $scope.termDetails = null;
+                        }
+                      });
 
         $scope.gotoChild = function(childId) {
           $scope.gotoChildCallback({ childId: childId });
@@ -1281,7 +1288,6 @@ var extensionBuilder =
                                             {
                                               def: 1,
                                               children: 1,
-                                              exact_synonyms: 1,
                                               subset_ids: 1,
                                             })
                           .then(function(response) {
@@ -2769,7 +2775,6 @@ var termConfirmDialogCtrl =
                                         {
                                           def: 1,
                                           children: 1,
-                                          exact_synonyms: 1,
                                         });
 
       promise.success(function(termDetails) {

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 65;
+use Test::More tests => 71;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -104,15 +104,14 @@ is($id_result->[0]->{id}, 'GO:0006810');
 is($id_result->[0]->{name}, 'transport');
 is($id_result->[0]->{annotation_namespace}, 'biological_process');
 like($id_result->[0]->{definition}, qr/^The directed movement of substances/);
-is($id_result->[0]->{exact_synonyms}, undef);
+is($id_result->[0]->{synonyms}, undef);
 
 
-# test getting exact synonyms
-my $exact_synonyms_result = $lookup->lookup(search_string => 'GO:0016023',
-                                            include_definition => 1,
-                                            include_exact_synonyms => 1);
+my $synonyms_result = $lookup->lookup(search_string => 'GO:0016023',
+                                      include_definition => 1,
+                                      include_synonyms => ['exact']);
 
-my @synonyms = @{$exact_synonyms_result->[0]->{synonyms}};
+my @synonyms = @{$synonyms_result->[0]->{synonyms}};
 
 is(@synonyms, 2);
 
@@ -120,6 +119,50 @@ cmp_deeply(\@synonyms,
            [ { name => "cytoplasmic membrane bounded vesicle",
                type => 'exact' },
              { name => "cytoplasmic membrane-enclosed vesicle",
+               type => 'exact' },
+            ]);
+
+# test synonyms again
+$synonyms_result = $lookup->lookup(search_string => 'GO:0034763',
+                                      include_definition => 1,
+                                      include_synonyms => ['exact']);
+
+@synonyms = @{$synonyms_result->[0]->{synonyms}};
+
+is(@synonyms, 1);
+
+cmp_deeply(\@synonyms,
+           [ { name => "down regulation of transmembrane transport",
+               type => 'exact' },
+            ]);
+
+# test getting two types of synonyms
+$synonyms_result = $lookup->lookup(search_string => 'GO:0034763',
+                                      include_definition => 1,
+                                      include_synonyms => ['exact', 'narrow']);
+
+@synonyms = @{$synonyms_result->[0]->{synonyms}};
+
+is(@synonyms, 2);
+
+cmp_deeply(\@synonyms,
+           [ { name => "down regulation of transmembrane transport",
+               type => "exact" },
+             { name => "inhibition of transmembrane transport",
+               type => "narrow",},
+            ]);
+
+# test synonyms again
+$synonyms_result = $lookup->lookup(search_string => 'GO:0034763',
+                                      include_definition => 1,
+                                      include_synonyms => ['exact']);
+
+@synonyms = @{$synonyms_result->[0]->{synonyms}};
+
+is(@synonyms, 1);
+
+cmp_deeply(\@synonyms,
+           [ { name => "down regulation of transmembrane transport",
                type => 'exact' },
             ]);
 
@@ -161,7 +204,7 @@ ok(grep { $_->{id} eq 'GO:0005487' &&
           $_->{id} eq 'GO:0022857' &&
           $_->{name} eq 'transmembrane transporter activity' } @children);
 
-my $cache_key = "FYPO:0000114#@%1#@%0#@%0#@%0";
+my $cache_key = "FYPO:0000114#@%1#@%0#@%#@%0";
 my $cached_value = $lookup->cache()->get($cache_key);
 ok(!defined $cached_value);
 
