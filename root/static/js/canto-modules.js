@@ -529,15 +529,6 @@ var cursStateService =
     // return the data in a obj with keys keys suitable for sending to the
     // server
     this.asAnnotationDetails = function() {
-      var cleanExtensions =
-        $.map(this.extension,
-              function(part) {
-                return {
-                  rangeValue: part.rangeValue,
-                  relation: part.relation,
-                };
-              });
-
       var retVal = {
         term_ontid: this.currentTerm(),
         evidence_code: this.evidence_code,
@@ -545,7 +536,7 @@ var cursStateService =
         conditions: this.conditions,
         term_suggestion_name: null,
         term_suggestion_definition: null,
-        extension: cleanExtensions,
+        extension: this.extension,
         submitter_comment: this.comment,
       };
 
