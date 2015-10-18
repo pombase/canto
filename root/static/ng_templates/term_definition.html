@@ -2,7 +2,7 @@
   <table class="curs-definition-table">
     <tr>
       <td class="title">ID</td>
-      <td class="term-id ferret-term-id-display">
+      <td class="term-id">
         {{termDetails.id}}
       </td>
     </tr>
@@ -12,14 +12,14 @@
     </tr>
     <tr>
       <td class="title">Term name</td>
-      <td class="term-name ferret-term-name">
+      <td class="term-name">
         {{termDetails.name}}
       </td>
     </tr>
-    <tr ng-if="termDetails.matchingSynonym">
+    <tr ng-if="matchingSynonym">
       <td class="title">Matching synonym</td>
-      <td class="ferret-matching-synonym">
-        {{termDetails.matchingSynonym}}
+      <td>
+        {{matchingSynonym}}
       </td>
     </tr>
     <tr>

@@ -16,6 +16,7 @@ $pub
     <ontology-term-confirm ng-show="currentTerm()"
                            annotation-type="annotationType"
                            term-id="{{currentTerm()}}"
+                           matching-synonym="{{matchingSynonym()}}"
                            goto-child-callback="gotoChild(childId)"
                            unset-term-callback="unsetTerm()"
                            suggest-term-callback="suggestTerm(termSuggestion)"

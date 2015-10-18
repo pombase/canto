@@ -1058,6 +1058,7 @@ var ontologyTermConfirm =
         annotationType: '=',
         featureDisplayName: '@',
         termId: '@',
+        matchingSynonym: '@',
         gotoChildCallback: '&',
         unsetTermCallback: '&',
         suggestTermCallback: '&',
@@ -1448,6 +1449,10 @@ var ontologyWorkflowCtrl =
 
     $scope.gotoChild = function(termId) {
       CursStateService.addTerm(termId);
+    };
+
+    $scope.matchingSynonym = function () {
+      return CursStateService.matchingSynonym;
     };
 
     $scope.getState = function() {
@@ -2845,6 +2850,7 @@ var termDefinitionDisplayCtrl =
     return {
       scope: {
         termDetails: '=',
+        matchingSynonym: '=',
       },
       restrict: 'E',
       replace: true,
