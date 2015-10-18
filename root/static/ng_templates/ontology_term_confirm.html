@@ -45,15 +45,13 @@ Loading details ...
           <div>
             You may need a new term if the biology you are describing is not defined
             by existing terms in a way that will distinguish it from related
-            <% $current_component_very_short_display_name %> terms. Sometimes this will be
-            a novel <% $current_component_short_display_name %> which has not been
+            {{annotationType.very_short_display_name}} terms. Sometimes this will be
+            a novel {{annotationType.short_display_name}} which has not been
             previously described, and so is not yet included in the ontology.
           </div>
-          % if (defined $current_component_suggest_term_help) {
-          <div>
-            <% $current_component_suggest_term_help %>
+          <div ng-show="annotationType.suggest_term_help_text">
+            {{annotationType.suggest_term_help_text}}
           </div>
-          % }
         </div>
       </div>
       <div id="ferret-suggest-link-leaf" class="curs-box-body">
