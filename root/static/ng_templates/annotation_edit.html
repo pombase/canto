@@ -104,11 +104,14 @@
 
       <tr>
         <td class="title">Annotation extension</td>
-        <td>
+        <td ng-if="annotation.extension.length > 0">
           <extension-display extension="annotation.extension"></extension-display>
         </td>
         <td>
-          <button class="btn btn-default btn-xs" ng-click="editExtension(annotation.term_ontid, annotation.feature_display_name)">Change ...</button>
+          <button class="btn btn-default btn-xs" ng-click="editExtension(annotation.term_ontid, annotation.feature_display_name)">
+            <span ng-show="annotation.extension.length == 0">Add</span>
+            <span ng-show="annotation.extension.length > 0">Edit</span> ...
+          </button>
         </td>
       </tr>
 

@@ -1409,7 +1409,7 @@ var extensionDisplay =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_display.html',
       controller: function($scope) {
-        $scope.delete = function(part) {
+        $scope.deletePart = function(part) {
           if ($scope.showDelete) {
             arrayRemoveOne($scope.extension, part);
           }

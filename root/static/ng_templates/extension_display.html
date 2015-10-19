@@ -2,6 +2,6 @@
   <div ng-repeat="part in extension">
     <span class="curs-extension-relation">{{part.relation}}</span>
     <span>{{part.rangeDisplayName}}</span>
-    <a ng-if="showDelete" confirm="Really delete?" href="#" ng-click="delete(part)">Delete ...</a>
+    <a ng-if="showDelete" confirm="Really delete?" href="" ng-click="deletePart(part)">Delete ...</a>
   </div>
 </div>
