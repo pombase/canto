@@ -2,13 +2,14 @@
   <span style="display: none; float:right">{{asString()}}</span>
   <div ng-hide="inProgressConf">
     <div ng-show="termDetails.id" style="padding: 0 0 5px 0">
-You have annotated {{featureDisplayName}} to {{termDetails.id}}. Can you specify the
-extensions based on the experiments in this paper?
+You have annotated {{featureDisplayName}} to {{termDetails.name}} ({{termDetails.id}}).
+Can you extend this annotation
+by providing additional details (still based on the experiments in this paper)?
     </div>
     <div style="padding: 0 0 15px 0">
-Please add as many as are appropriate to make a compound annotation (all occur
-simultaneously).  You will be given the option to make additional independent
-extensions.
+These extension types are allowed for {{termDetails.id}}. You can use more
+than one of these types in one extension, if all that you choose apply to the
+annotation at once (this creates a "compound" annotation extension).
     </div>
 
     <ul>
