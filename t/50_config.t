@@ -1,6 +1,8 @@
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 25;
+
+use Test::Deep;
 
 use Canto::Config;
 use Canto::TestUtil;
@@ -70,6 +72,57 @@ ok(defined $config_with_suffix->{"Model::TrackModel"});
 ok(defined $config_with_suffix->model_connect_string('Track'));
 
 is($config_with_suffix->{extra_css}, '/static/css/test_style.css');
+
+
+# check extension configuration
+ok ($config_with_suffix->{extension_configuration});
+
+cmp_deeply($config_with_suffix->{extension_configuration},
+          [
+            {
+              'display_text' => 'kinase substrate',
+              'allowed_relation' => 'has_substrate',
+              'subset_rel' => 'is_a',
+              'cardinality' => [
+                                 '0',
+                                 '1'
+                               ],
+              'domain' => 'GO:0016023',
+              'range' => 'GENE'
+            },
+            {
+              'display_text' => 'Something that happens during',
+              'subset_rel' => 'is_a',
+              'allowed_relation' => 'happens_during',
+              'cardinality' => [
+                                 '*'
+                               ],
+              'range' => 'GO:0005575',
+              'domain' => 'GO:0016023'
+            },
+            {
+              'subset_rel' => 'is_a',
+              'display_text' => 'localizes',
+              'allowed_relation' => 'localizes',
+              'cardinality' => [
+                                 '0',
+                                 '1'
+                               ],
+              'range' => 'GENE',
+              'domain' => 'GO:0022857'
+            },
+            {
+              'display_text' => 'assayed using',
+              'allowed_relation' => 'assayed_using',
+              'subset_rel' => 'is_a',
+              'cardinality' => [
+                                 '0',
+                                 '2'
+                               ],
+              'domain' => 'FYPO:0000002',
+              'range' => 'GENE'
+            }
+          ]);
 
 
 use JSON;
