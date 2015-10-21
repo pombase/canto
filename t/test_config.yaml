@@ -269,3 +269,6 @@ chado_feature_implementation_classes:
   allele_adaptor: 'Canto::Chado::AlleleLookup'
   gene_adaptor: 'Canto::Chado::GeneLookup'
   genotype_adaptor: 'Canto::Chado::GenotypeLookup'
+
+extension_conf_files:
+  - t/data/extension_config.tsv
