@@ -17,47 +17,10 @@ my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
 is (@loaded_cvterms, 73);
 
-my $test_go_file =
-  $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
-my $test_fypo_file =
-  $test_util->root_dir() . '/' . $config->{test_config}->{test_phenotype_obo_file};
-my $test_relationship_ontology_file =
-  $test_util->root_dir() . '/' . $config->{relationship_ontology_path};
-my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
-
-my $synonym_types = $config->{load}->{ontology}->{synonym_types};
-
-sub load_all {
-  my $ontology_index = shift;
-  my $include_ro = shift;
-  my $include_fypo = shift;
-
-  my @relationships_to_load = @{$config->{load}->{ontology}->{relationships_to_load}};
-
-  my $ontology_load =
-    Canto::Track::OntologyLoad->new(schema => $schema,
-                                    relationships_to_load => \@relationships_to_load,
-                                    default_db_name => 'Canto');
-
-  $ontology_index->initialise_index();
-
-  if ($include_ro) {
-    $ontology_load->load($test_relationship_ontology_file, undef, $synonym_types);
-  }
-  $ontology_load->load($test_go_file, $ontology_index, $synonym_types);
-  if ($include_fypo) {
-    $ontology_load->load($test_fypo_file, $ontology_index, $synonym_types);
-  }
-  $ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
-
-  $ontology_load->finalise();
-  $ontology_index->finish_index();
-}
-
 my $index_path = $config->data_dir_path('ontology_index_dir');
 my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
-load_all($ontology_index, 1);
+$test_util->load_test_ontologies($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
@@ -159,7 +122,7 @@ undef $ontology_index;
 $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
 # try re-loading
-load_all($ontology_index);
+$test_util->load_test_ontologies($ontology_index);
 is($cvterm_dbxref_rs->count(), 34);
 
 undef $ontology_index;
@@ -167,7 +130,7 @@ undef $ontology_index;
 $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
 # test that obsolete terms are loaded but aren't indexed by Lucene
-load_all($ontology_index, 1, 1);
+$test_util->load_test_ontologies($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
 is(@loaded_cvterms, 134);

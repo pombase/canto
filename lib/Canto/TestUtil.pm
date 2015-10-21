@@ -1199,5 +1199,59 @@ sub get_a_person
 }
 
 
+=head2 load_test_ontologies
+
+ Usage   : $test_util->load_test_ontologies($ontology_index, $include_ro,
+                                            $include_fypo);
+ Function: Load the test ontologies configured in test_config.yaml
+ Args    : $ontology_index - an OntologyIndex object
+           $include_ro - if true, load RO too
+           $include_fypo - load FYPO if true
+ Return  :
+
+=cut
+
+
+sub load_test_ontologies
+{
+  my $self = shift;
+
+  my $ontology_index = shift;
+  my $include_ro = shift;
+  my $include_fypo = shift;
+
+  my $config = $self->config();
+  my $load_config = $self->config()->{load};
+
+  my $synonym_types = $load_config->{ontology}->{synonym_types};
+  my $test_go_file =
+    $self->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
+  my $test_fypo_file =
+    $self->root_dir() . '/' . $config->{test_config}->{test_phenotype_obo_file};
+  my $test_relationship_ontology_file =
+    $self->root_dir() . '/' . $config->{relationship_ontology_path};
+  my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
+
+  my @relationships_to_load = @{$load_config->{ontology}->{relationships_to_load}};
+
+  my $ontology_load =
+    Canto::Track::OntologyLoad->new(schema => $self->track_schema(),
+                                    relationships_to_load => \@relationships_to_load,
+                                    default_db_name => 'Canto');
+
+  $ontology_index->initialise_index();
+
+  if ($include_ro) {
+    $ontology_load->load($test_relationship_ontology_file, undef, $synonym_types);
+  }
+  $ontology_load->load($test_go_file, $ontology_index, $synonym_types);
+  if ($include_fypo) {
+    $ontology_load->load($test_fypo_file, $ontology_index, $synonym_types);
+  }
+  $ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
+
+  $ontology_load->finalise();
+  $ontology_index->finish_index();
+}
 
 1;
