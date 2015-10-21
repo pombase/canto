@@ -68,7 +68,7 @@ sub parse
     chomp $line;
 
     my ($domain, $subset_rel, $allowed_relation, $range, $display_text,
-        $cardinality) =
+        $cardinality, $role) =
       split (/\t/, $line);
 
     if ($domain =~ /^\s*domain/i) {
@@ -93,6 +93,7 @@ sub parse
       range => $range,
       display_text => $display_text,
       cardinality => \@cardinality,
+      role => $role,
     };
   }
 
