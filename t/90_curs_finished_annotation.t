@@ -5,7 +5,6 @@ use Test::More tests => 33;
 use Plack::Test;
 use Plack::Util;
 use HTTP::Request::Common;
-use Test::MockObject;
 
 use Canto::TestUtil;
 use Canto::Track::StatusStorage;

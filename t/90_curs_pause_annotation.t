@@ -6,7 +6,6 @@ use Plack::Test;
 use Plack::Util;
 use HTTP::Cookies;
 use HTTP::Request::Common;
-use Test::MockObject;
 
 use Canto::TestUtil;
 use Canto::Track::StatusStorage;
