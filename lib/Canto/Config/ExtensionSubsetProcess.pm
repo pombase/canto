@@ -41,8 +41,6 @@ use Moose;
 
 has config => (is => 'ro', isa => 'Canto::Config',
                required => 1);
-has track_schema => (is => 'ro', isa => 'Canto::TrackDB',
-                     required => 1);
 
 use File::Temp qw/ tempfile /;
 use List::MoreUtils qw(uniq);
@@ -67,11 +65,12 @@ sub get_owltools_results
 
  Usage   : $extension_subset_process->process();
  Function: Read the domains and ranges from extension_configuration config,
-           then use owtools to find the child terms in the given OBO file.
+           then use owtools to find the child terms in the given OBO files.
            Each cvterm gets a canto_subset cvtermprop for each config file
            term it's a child of.  For more details see:
            https://github.com/pombase/canto/wiki/AnnotationExtensionConfig
- Args    : OBO filenames
+ Args    : $track_schema - the database to load
+           @obo_filenames - the OBO files to process
  Return  : None - dies on failure
 
 =cut
@@ -79,10 +78,10 @@ sub get_owltools_results
 sub process
 {
   my $self = shift;
+  my $schema = shift;
   my @obo_file_names = @_;
 
   my $config = $self->config();
-  my $schema = $self->track_schema();
 
   my $ext_conf = $config->{extension_configuration};
 

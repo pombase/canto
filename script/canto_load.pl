@@ -28,11 +28,13 @@ use Canto::Track::OntologyIndex;
 use Canto::Track::LoadUtil;
 use Canto::Track::PubmedUtil;
 use Canto::Curs::TermUpdate;
+use Canto::Config::ExtensionSubsetProcess;
 
 my $do_genes = 0;
 my $do_pubmed_xml = 0;
 my $for_taxon = 0;
 my @ontology_args = ();
+my $do_process_extension_config = 0;
 my $do_organism = 0;
 my $dry_run = 0;
 my $verbose = 0;
@@ -44,6 +46,7 @@ if (@ARGV == 0) {
 
 my $result = GetOptions ("genes=s" => \$do_genes,
                          "ontology=s" => \@ontology_args,
+                         "process-extension-config" => \$do_process_extension_config,
                          "organism=s" => \$do_organism,
                          "pubmed-xml=s" => \$do_pubmed_xml,
                          "for-taxon=i" => \$for_taxon,
@@ -65,7 +68,9 @@ sub usage
   $0 --genes genes_file --for-taxon=<taxon_id>
 or:
   $0 --ontology ontology_file.obo
+  $0 --ontology ontology_file.obo --ontology another_ontology.obo
   $0 --ontology http://some_host.org/file.obo
+  $0 --process-extension-config --ontology ontology_file.obo --ontology another_ontology.obo
 or:
   $0 --pubmed-xml pubmed_entries.xml
 or:
@@ -96,7 +101,29 @@ The genes file should have 4 columns, separated by tabs:
   synonyms - comma separated
   product
 
-The ontology file should be in OBO format
+The ontology files should be in OBO format
+
+
+Extension config processing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With the --process-extension-config flag, this script processes the
+OBO files with the "owltools" command from the OWLTools package:
+https://github.com/owlcollab/owltools
+
+The owltools "--save-closure-for-chado" option is used to calculate
+the full transitive closure of the ontologies.
+
+The domain and range IDs for each relation annotation extension
+configuration are compared to the owltools output.  A cvtermprop named
+"canto_subset" is added to that term in the Canto database and to all
+descendant/child terms.  The value of the property is the domain or
+range term ID.  This allows us look at any term used in an annotation
+and find the sub-ontologies (sub-sets) that it's involved in.
+
+See https://github.com/pombase/canto/wiki/AnnotationExtensionConfig
+for more.
+
 |;
 }
 
@@ -163,7 +190,16 @@ if (@ontology_args) {
 
   for my $ontology_source (@ontology_args) {
     print "loading $ontology_source\n" if $verbose;
-    $ontology_load->load($ontology_source, $index, $synonym_types);
+
+    my $extension_subset_process = undef;
+
+    if ($do_process_extension_config) {
+      $extension_subset_process =
+        Canto::Config::ExtensionSubsetProcess->new(config => $config);
+    }
+
+    $ontology_load->load($ontology_source, $index, $synonym_types,
+                         $extension_subset_process);
   }
 
   if (!$dry_run) {

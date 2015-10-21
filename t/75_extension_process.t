@@ -26,8 +26,7 @@ my $test_go_obo_file =
 my $mock_request = Test::MockObject->new();
 $mock_request->mock('param', sub { return 'track' });
 
-my $processor = Canto::Config::ExtensionSubsetProcess->new(config => $config,
-                                                           track_schema => $track_schema);
+my $processor = Canto::Config::ExtensionSubsetProcess->new(config => $config);
 
 $processor = Test::MockObject::Extends->new($processor);
 $processor->mock('get_owltools_results',
@@ -39,7 +38,7 @@ $processor->mock('get_owltools_results',
 my $cvtermprop_rs = $track_schema->resultset('Cvtermprop');
 my $cvtermprop_count = $cvtermprop_rs->count();
 
-$processor->process($test_go_obo_file);
+$processor->process($track_schema, $test_go_obo_file);
 
 my $after_cvtermprop_count = $cvtermprop_rs->count();
 
