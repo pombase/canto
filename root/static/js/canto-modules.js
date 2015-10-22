@@ -1253,7 +1253,7 @@ function openExtensionBuilderDialog($modal, extension, termId, featureDisplayNam
 
 
 var extensionBuilder =
-  function($modal, CantoConfig, CantoService) {
+  function($modal, CantoConfig, CantoService, CursSessionDetails) {
     return {
       scope: {
         extension: '=',
@@ -1292,24 +1292,26 @@ var extensionBuilder =
                           });
                       });
 
-        $scope.$watch('termDetails.id',
-                      function() {
-                        if (!$scope.termDetails.id) {
-                          return;
-                        }
+        $scope.updateMatchingConfigs = function() {
+          if (!$scope.termDetails.id) {
+            $scope.matchingConfigurations = [];
+            return;
+          }
 
-                        var subset_ids = $scope.termDetails.subset_ids;
+          var subset_ids = $scope.termDetails.subset_ids;
 
-                        if (subset_ids && subset_ids.length > 0) {
-                          $scope.extensionConfigurationPromise
-                            .success(function(results) {
-                              $scope.matchingConfigurations =
-                                extensionConfFilter(results, subset_ids);
-                            });
-                        } else {
-                          $scope.matchingConfigurations = [];
-                        }
-                      });
+          if (subset_ids && subset_ids.length > 0) {
+            $scope.extensionConfigurationPromise
+              .success(function(results) {
+                $scope.matchingConfigurations =
+                  extensionConfFilter(results, subset_ids);
+              });
+          } else {
+            $scope.matchingConfigurations = [];
+          }
+        };
+
+        $scope.$watch('termDetails.id', $scope.updateMatchingConfigs);
 
         $scope.startAddPart = function(extensionConfig) {
           var editExtensionPart = {
@@ -1329,7 +1331,8 @@ var extensionBuilder =
   };
 
 canto.directive('extensionBuilder',
-                ['$modal', 'CantoConfig', 'CantoService', extensionBuilder]);
+                ['$modal', 'CantoConfig', 'CantoService', 'CursSessionDetails',
+                 extensionBuilder]);
 
 
 var extensionPartDialogCtrl =
