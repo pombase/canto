@@ -64,6 +64,8 @@ sub parse
   open my $conf_fh, '<', $extension_conf_file
     or die "can't open $extension_conf_file: $!\n";
 
+  my $index = 0;
+
   while (defined (my $line = <$conf_fh>)) {
     chomp $line;
 
@@ -94,6 +96,7 @@ sub parse
       display_text => $display_text,
       cardinality => \@cardinality,
       role => $role,
+      index => $index++,
     };
   }
 
