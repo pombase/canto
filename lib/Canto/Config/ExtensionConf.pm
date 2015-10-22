@@ -55,55 +55,59 @@ use warnings;
 =cut
 
 sub parse
-{
-  my @extension_conf_files = @_;
+  {
+    my @extension_conf_files = @_;
 
-  my @res = ();
+    my @res = ();
 
-  for my $extension_conf_file (@extension_conf_files) {
-  open my $conf_fh, '<', $extension_conf_file
-    or die "can't open $extension_conf_file: $!\n";
+    for my $extension_conf_file (@extension_conf_files) {
+      open my $conf_fh, '<', $extension_conf_file
+        or die "can't open $extension_conf_file: $!\n";
 
-  my $index = 0;
+      my $index = 0;
 
-  while (defined (my $line = <$conf_fh>)) {
-    chomp $line;
+      while (defined (my $line = <$conf_fh>)) {
+        chomp $line;
 
-    my ($domain, $subset_rel, $allowed_relation, $range, $display_text,
-        $cardinality, $role) =
-      split (/\t/, $line);
+        my ($domain, $subset_rel, $allowed_relation, $range, $display_text,
+            $cardinality, $role) =
+              split (/\t/, $line);
 
-    if ($domain =~ /^\s*domain/i) {
-      # header
-      next;
+        if ($domain =~ /^\s*domain/i) {
+          # header
+          next;
+        }
+
+        if (!defined $display_text) {
+          die "config line $. in $extension_conf_file has too few fields: $line\n";
+        }
+
+        my @cardinality = ('*');
+
+        if (defined $cardinality) {
+          @cardinality = grep {
+            length $_ > 0;
+          } map {
+            s/^\s+//; s/\s+$//; $_;
+          } split /,/, $cardinality;
+        }
+
+        push @res, {
+          domain => $domain,
+          subset_rel => $subset_rel,
+          allowed_relation => $allowed_relation,
+          range => $range,
+          display_text => $display_text,
+          cardinality => \@cardinality,
+          role => $role,
+          index => $index++,
+        };
+      }
+
+      close $conf_fh or die "can't close $extension_conf_file: $!\n";
     }
 
-    if (!defined $display_text) {
-      die "config line $. in $extension_conf_file has too few fields: $line\n";
-    }
-
-    my @cardinality = ('*');
-
-    if (defined $cardinality) {
-      @cardinality = grep { length $_ > 0 } map { s/^\s+//; s/\s+$//; $_;} split /,/, $cardinality;
-    }
-
-    push @res, {
-      domain => $domain,
-      subset_rel => $subset_rel,
-      allowed_relation => $allowed_relation,
-      range => $range,
-      display_text => $display_text,
-      cardinality => \@cardinality,
-      role => $role,
-      index => $index++,
-    };
+    return @res;
   }
-
-  close $conf_fh or die "can't close $extension_conf_file: $!\n";
-  }
-
-  return @res;
-}
 
 1;
