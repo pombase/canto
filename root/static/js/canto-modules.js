@@ -1170,12 +1170,17 @@ function openExtensionPartDialog($modal, extensionPart, relationConfig) {
 }
 
 
-// filter the extension_configuration results from the server and return
-// only those where there "domain" term ID in the configuration matches one of
-// subsetIds
-function extensionConfFilter(allConfigs, subsetIds) {
+// Filter the extension_configuration results from the server and return
+// only those where the "domain" term ID in the configuration matches one of
+// subsetIds.  Also ignore any configs where the "role" is "admin" and the
+// current, logged in user isn't an admin.
+function extensionConfFilter(allConfigs, subsetIds, role) {
   return $.map(allConfigs,
                function(conf) {
+                 if (conf.role == 'admin' &&
+                     role != 'admin') {
+                   return;
+                 }
                  if ($.inArray(conf.domain, subsetIds) != -1) {
                    var range = conf.range;
                    var rangeNamespace = null;
