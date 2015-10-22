@@ -88,7 +88,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                                  '1'
                                ],
               'domain' => 'GO:0016023',
-              'range' => 'GENE'
+              'range' => 'GENE',
+              'role' => 'user',
             },
             {
               'display_text' => 'Something that happens during',
@@ -98,7 +99,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                                  '*'
                                ],
               'range' => 'GO:0005575',
-              'domain' => 'GO:0016023'
+              'domain' => 'GO:0016023',
+              'role' => 'user',
             },
             {
               'subset_rel' => 'is_a',
@@ -109,7 +111,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                                  '1'
                                ],
               'range' => 'GENE',
-              'domain' => 'GO:0022857'
+              'domain' => 'GO:0022857',
+              'role' => 'user',
             },
             {
               'display_text' => 'assayed using',
@@ -120,7 +123,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                                  '2'
                                ],
               'domain' => 'FYPO:0000002',
-              'range' => 'GENE'
+              'range' => 'GENE',
+              'role' => 'user',
             }
           ]);
 
