@@ -37,7 +37,7 @@ if (!@ARGV) {
 
 my $result = GetOptions ("person=s" => \$remove_person,
                          "lab=s" => \$remove_lab,
-                         "curs=s" => \$remove_curs,
+                         "curs" => \$remove_curs,
                          "dry-run|T" => \$dry_run,
                          "help|h" => \$do_help);
 
@@ -131,7 +131,10 @@ Delete the lab first with:
     }
   }
   if (defined $remove_curs) {
-    Canto::Track::delete_curs($config, $schema, $remove_curs);
+    for my $curs_key (@ARGV) {
+      warn "removing: $curs_key\n";
+      Canto::Track::delete_curs($config, $schema, $curs_key);
+    }
     $exit_flag = 0;
   }
 };
