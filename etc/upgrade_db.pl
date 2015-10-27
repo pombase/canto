@@ -28,6 +28,7 @@ use Canto::CursDB;
 use Canto::DBUtil;
 use Canto::Curs::Utils;
 use Canto::Curs::GenotypeManager;
+use Canto::DBUpgrade;
 
 if (@ARGV != 1) {
   die "$0: needs one argument - the version to upgrade to\n";
@@ -130,6 +131,8 @@ if ($current_version + 1 != $new_version) {
 my $dbh = $track_schema->storage()->dbh();
 
 my $load_util = Canto::Track::LoadUtil->new(schema => $track_schema);
+
+my $db_upgrade = Canto::DBUpgrade->new(config => $config);
 
 my $comma_substitute = "<<COMMA>>";
 
@@ -579,13 +582,8 @@ CREATE TABLE allele_genotype (
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   }
-  when (10) {
-    $load_util->get_cvterm(cv_name => 'cvterm_property_type',
-                           term_name => 'canto_subset',
-                           ontologyid => 'Canto:canto_subset');
-  }
   default {
-    die "don't know how to upgrade to version $new_version";
+    $db_upgrade->upgrade_to($new_version);
   }
 }
 
