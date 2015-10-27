@@ -508,39 +508,6 @@ sub store_all_statuses : Local Args(0) {
   $c->detach();
 }
 
-sub ann_ex_locations : Local Args(0) {
-  my ($self, $c) = @_;
-
-  my $st = $c->stash();
-
-  my $track_schema = $c->schema('track');
-  my $config = $c->config();
-
-  my %anexs = ();
-
-  my $iter = Canto::Track::curs_iterator($config, $track_schema);
-  while (my ($curs, $cursdb) = $iter->()) {
-    my $curs_key = $curs->curs_key();
-    for my $gene ($cursdb->resultset('Gene')->all()) {
-      for my $annotation ($gene->direct_annotations()) {
-        next if $annotation->status() eq 'deleted';
-        if (defined $annotation->data()->{annotation_extension}) {
-          push @{$anexs{$annotation->data()->{annotation_extension}}->{$curs_key}}, {
-            primary_identifier => $gene->primary_identifier(),
-            gene_id => $gene->gene_id(),
-          };
-        }
-      }
-    }
-  }
-
-  $st->{extension_data} = \%anexs;
-
-  $st->{title} = 'Locations of annotation extension strings';
-  $st->{show_title} = 0;
-  $st->{template} = 'tools/ann_ex_locations.mhtml';
-}
-
 sub sessions_with_type : Local Args(1) {
   my ($self, $c, $annotation_type) = @_;
 
