@@ -2,7 +2,6 @@ format-version: 1.2
 date: 28:03:2011 13:47
 saved-by: mah79
 auto-generated-by: OBO-Edit 2.1-beta10
-subsetdef: PSI-MOD slim "subset of protein modifications"
 synonymtypedef: DeltaMass-label "Label from MS DeltaMass" EXACT
 synonymtypedef: OMSSA-label "Short label from OMSSA" EXACT
 synonymtypedef: PSI-MOD-alternate "Alternate name curated by PSI-MOD" EXACT
@@ -24,14 +23,12 @@ remark: remark: $Revision: 1.64 $  See PMID:15693950, PMID:12799354, PMID:201231
 id: MOD:00000
 name: protein modification
 def: "Covalent modification of, or a change resulting in an alteration of the measured molecular mass of, a peptide or protein amino acid residue." [PubMed:18688235]
-subset: PSI-MOD slim
 synonym: "ModRes" EXACT PSI-MOD-label []
 
 [Term]
 id: MOD:00431
 name: modified residue with a secondary neutral loss
 def: "Covalent modification of, or a change resulting in an alteration of the measured molecular mass of, a peptide or protein amino acid residue with a secondary loss of a neutral molecular fragment." [PubMed:18688235]
-subset: PSI-MOD slim
 synonym: "NLModRes" EXACT PSI-MOD-label []
 is_a: MOD:01157 ! protein modification categorized by amino acid modified
 
@@ -39,7 +36,6 @@ is_a: MOD:01157 ! protein modification categorized by amino acid modified
 id: MOD:00432
 name: modified residue with neutral loss of phosphate
 def: "Covalent modification of, or a change resulting in an alteration of the measured molecular mass of, a peptide or protein amino acid residue with a secondary loss of a neutral trihydrogen phosphate molecular fragment." [PubMed:18688235]
-subset: PSI-MOD slim
 synonym: "dPhosModRes" EXACT PSI-MOD-label []
 is_a: MOD:00431 ! modified residue with a secondary neutral loss
 
@@ -47,14 +43,12 @@ is_a: MOD:00431 ! modified residue with a secondary neutral loss
 id: MOD:00859
 name: modified residue that can arise from different natural residues
 def: "A protein modification that can be derived from different natural residues by different chemical processes." [PubMed:18688235]
-subset: PSI-MOD slim
 is_a: MOD:01157 ! protein modification categorized by amino acid modified
 
 [Term]
 id: MOD:00901
 name: modified L-alanine residue
 def: "A protein modification that modifies an L-alanine." [PubMed:18688235]
-subset: PSI-MOD slim
 synonym: "Alanine derivative" EXACT UniProt-feature []
 synonym: "ModAla" EXACT PSI-MOD-label []
 xref: Origin: "A"
@@ -64,7 +58,6 @@ is_a: MOD:01157 ! protein modification categorized by amino acid modified
 id: MOD:00902
 name: modified L-arginine residue
 def: "A protein modification that modifies an L-arginine residue." [PubMed:18688235]
-subset: PSI-MOD slim
 synonym: "Arginine derivative" EXACT UniProt-feature []
 synonym: "ModArg" EXACT PSI-MOD-label []
 xref: Origin: "R"
@@ -74,7 +67,6 @@ is_a: MOD:01157 ! protein modification categorized by amino acid modified
 id: MOD:00903
 name: modified L-asparagine residue
 def: "A protein modification that modifies an L-asparagine residue." [PubMed:18688235]
-subset: PSI-MOD slim
 synonym: "ModAsn" EXACT PSI-MOD-label []
 xref: Origin: "N"
 is_a: MOD:01157 ! protein modification categorized by amino acid modified
@@ -83,7 +75,6 @@ is_a: MOD:01157 ! protein modification categorized by amino acid modified
 id: MOD:00904
 name: modified L-aspartic acid residue
 def: "A protein modification that modifies an L-aspartic acid residue." [PubMed:18688235]
-subset: PSI-MOD slim
 synonym: "ModAsp" EXACT PSI-MOD-label []
 xref: Origin: "D"
 is_a: MOD:01157 ! protein modification categorized by amino acid modified
@@ -92,7 +83,6 @@ is_a: MOD:01157 ! protein modification categorized by amino acid modified
 id: MOD:00905
 name: modified L-cysteine residue
 def: "A protein modification that modifies an L-cysteine residue." [PubMed:18688235]
-subset: PSI-MOD slim
 synonym: "Cysteine derivative" EXACT UniProt-feature []
 synonym: "ModCys" EXACT PSI-MOD-label []
 xref: Origin: "C"
@@ -102,7 +92,6 @@ is_a: MOD:01157 ! protein modification categorized by amino acid modified
 id: MOD:00906
 name: modified L-glutamic acid residue
 def: "A protein modification that modifies an L-glutamic acid residue." [PubMed:18688235]
-subset: PSI-MOD slim
 synonym: "ModGlu" EXACT PSI-MOD-label []
 xref: Origin: "E"
 is_a: MOD:01157 ! protein modification categorized by amino acid modified
@@ -119,7 +108,6 @@ is_a: MOD:00431 ! modified residue with a secondary neutral loss
 id: MOD:01158
 name: modified L-selenocysteine residue
 def: "A protein modification that modifies an L-selenocysteine residue." [PubMed:18688235]
-subset: PSI-MOD slim
 xref: Origin: "U"
 is_a: MOD:01157 ! protein modification categorized by amino acid modified
 relationship: derives_from MOD:00904
@@ -137,14 +125,12 @@ relationship: has_functional_part MOD:00904
 id: MOD:01156
 name: protein modification categorized by chemical process
 def: "Modified amino acid residue derived from a natural amino acid by a real or hypothetical chemical process." [PubMed:18688235]
-subset: PSI-MOD slim
 is_a: MOD:00000 ! protein modification
 
 [Term]
 id: MOD:01157
 name: protein modification categorized by amino acid modified
 def: "A protein modification considered either as modified amino acid residues derived from natural amino acids, as a replacement by another natural amino acid, or as a replacement by an unnatural amino acid." [PubMed:18688235]
-subset: PSI-MOD slim
 is_a: MOD:00000 ! protein modification
 
 [Typedef]
