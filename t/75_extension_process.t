@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 6;
 use Test::Deep;
 use Test::MockObject::Extends;
 
@@ -35,39 +35,43 @@ $processor->mock('get_owltools_results',
                    return $fh;
                  });
 
-my $cvtermprop_rs = $track_schema->resultset('Cvtermprop');
-my $cvtermprop_count = $cvtermprop_rs->count();
+my $prop_rs = $track_schema->resultset('Cvtermprop');
+my $cvtermprop_count = $prop_rs->count();
+my $subset_prop_rs = $prop_rs
+  ->search({ 'type.name' => 'canto_subset' },
+           { join => 'type', prefetch => 'cvterm' });
+
+is ($subset_prop_rs->count(), 0);
 
 $processor->process($track_schema, $test_go_obo_file);
 
-my $after_cvtermprop_count = $cvtermprop_rs->count();
+my $after_cvtermprop_count = $prop_rs->count();
 
 is ($cvtermprop_count + 5, $after_cvtermprop_count);
 
-my $prop_rs = $track_schema->resultset('Cvtermprop');
 
-my @new_cvtermprops = ();
-
-while (defined (my $prop = $prop_rs->next())) {
-  if ($prop->type()->name() eq 'canto_subset') {
-    push @new_cvtermprops,
-      [$prop->cvterm()->name(), $prop->value()];
-  };
+sub get_subset_props
+{
+  return
+    sort {
+      $a->[0] cmp $b->[0]
+        ||
+      $a->[1] cmp $b->[1];
+    } map {
+      [$_->cvterm()->name(), $_->value()];
+    } $subset_prop_rs->all();
 }
 
-@new_cvtermprops =
-  sort {
-   $a->[0] cmp $b->[1];
-  } @new_cvtermprops;
+my @subset_cvtermprops = get_subset_props();
 
-cmp_deeply(\@new_cvtermprops,
+cmp_deeply(\@subset_cvtermprops,
            [
              [
                'cell phenotype',
                'FYPO:0000002'
              ],
              [
-               'transport vesicle',
+               'cytoplasmic membrane-bounded vesicle',
                'GO:0016023'
              ],
              [
@@ -75,11 +79,19 @@ cmp_deeply(\@new_cvtermprops,
                'GO:0016023'
              ],
              [
-               'cytoplasmic membrane-bounded vesicle',
-               'GO:0016023'
-             ],
-             [
                'transmembrane transporter activity',
                'GO:0022857'
-             ]
+             ],
+             [
+               'transport vesicle',
+               'GO:0016023'
+             ],
            ]);
+
+is ($subset_prop_rs->count(), 5);
+
+# run again to make sure it's repeatable
+$processor->process($track_schema, $test_go_obo_file);
+
+is ($prop_rs->count(), $cvtermprop_count + scalar(@subset_cvtermprops));
+is ($subset_prop_rs->count(), 5);
