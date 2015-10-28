@@ -132,16 +132,20 @@ sub _delete_term_by_cv
 
   for my $related (qw(cvtermprop_cvterms cvtermsynonym_cvterms
                       cvterm_relationship_objects cvterm_relationship_subjects
-                      cvterm_relationship_types)) {
+                      cvterm_relationship_types cvterm_dbxrefs)) {
     $cv_cvterms->search_related($related)->delete();
   }
 
-  $cv_cvterms->search_related('cvterm_dbxrefs')->delete();
   $cv_cvterms->delete();
 
   my $dbxref_where = \"dbxref_id NOT IN (SELECT dbxref_id FROM cvterm) AND dbxref_id NOT IN (SELECT dbxref_id FROM cvterm_dbxref)";
-
   $schema->resultset('Dbxref')->search({ }, { where => $dbxref_where })->delete();
+
+  my $cvtermprop_where = \"cvterm_id NOT IN (SELECT cvterm_id FROM cvterm)";
+  $schema->resultset('Cvtermprop')->search({ }, { where => $cvtermprop_where })->delete();
+
+  my $cvtermsynonym_where = \"cvterm_id NOT IN (SELECT cvterm_id FROM cvterm)";
+  $schema->resultset('Cvtermsynonym')->search({ }, { where => $cvtermsynonym_where })->delete();
 }
 
 =head2 load
@@ -446,11 +450,11 @@ sub finalise
       qw(db dbxref cv cvterm cvterm_dbxref cvtermsynonym cvterm_relationship cvtermprop);
 
     for my $table_name (reverse @table_names) {
-      $dest_dbh->do("DELETE FROM main.$table_name WHERE main.$table_name.${table_name}_id NOT IN (SELECT ${table_name}_id FROM load_db.$table_name)");
+      $dest_dbh->do("DELETE FROM main.$table_name WHERE main.$table_name.${table_name}_id");
     }
 
     for my $table_name (@table_names) {
-      $dest_dbh->do("INSERT INTO main.$table_name SELECT * FROM load_db.$table_name WHERE load_db.$table_name.${table_name}_id NOT IN (SELECT ${table_name}_id FROM main.$table_name)");
+      $dest_dbh->do("INSERT INTO main.$table_name SELECT * FROM load_db.$table_name");
     }
 
     $dest_dbh->commit();
