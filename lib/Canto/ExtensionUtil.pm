@@ -35,6 +35,7 @@ under the same terms as Perl itself.
 
 =cut
 
+use charnames ":full";
 use Moose::Role;
 
 my $comma_substitute = "<<:COMMA:>>";
