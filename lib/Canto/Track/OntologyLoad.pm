@@ -153,9 +153,6 @@ sub _delete_term_by_cv
            $index - the index to add the terms to (optional)
            $synonym_types_ref - a array ref of synonym types that should be
                                 added to the index
-         : $extension_subset_process - A ExtensionSubsetProcess object.  If set
-                                       call its process() method after loading
-                                       all ontology terms
  Returns : Nothing
 
 =cut
@@ -166,7 +163,6 @@ sub load
   my $source = shift;
   my $index = shift;
   my $synonym_types_ref = shift;
-  my $extension_subset_process = shift;
 
   if (!defined $source) {
     croak "no source passed to OntologyLoad::load()";
@@ -411,10 +407,6 @@ sub load
                                 object => $object_cvterm,
                                 type => $rel_type_cvterm
                               });
-  }
-
-  if ($extension_subset_process) {
-    $extension_subset_process->process($schema, $file_name);
   }
 
   $guard->commit();
