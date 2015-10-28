@@ -153,8 +153,6 @@ sub process
         type_id => $canto_subset_term->cvterm_id(),
       });
 
-    my $guard = $schema->txn_scope_guard();
-
     $prop_rs->delete();
 
     my $subset_ids = $subsets{$db_accession};
@@ -172,8 +170,6 @@ sub process
         });
       }
     }
-
-    $guard->commit();
   }
 }
 
