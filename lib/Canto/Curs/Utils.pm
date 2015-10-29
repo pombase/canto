@@ -360,7 +360,7 @@ sub make_interaction_annotation
       interacting_gene_id => $interacting_gene_proxy->gene_id(),
       score => '',  # for biogrid format output
       phenotypes => '',
-      submitter_comment => '',
+      submitter_comment => $data->{submitter_comment} // '',
       completed => 1,
       annotation_id => $annotation->annotation_id(),
       annotation_type => $annotation_type,
