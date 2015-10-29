@@ -878,8 +878,8 @@ sub _interaction_change_keys
         die "no interacting_gene_id passed to service\n";
       }
     },
-    submitter_comment => 0,
-);
+    submitter_comment => 1,
+  );
 }
 
 sub _store_change_hash
