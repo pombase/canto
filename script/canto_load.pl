@@ -197,7 +197,7 @@ if (@ontology_args) {
   if ($do_process_extension_config) {
     my $extension_subset_process =
       Canto::Config::ExtensionSubsetProcess->new(config => $config);
-    $extension_subset_process->process($schema, @ontology_args);
+    $extension_subset_process->process($ontology_load->load_schema(), @ontology_args);
   }
 
   if (!$dry_run) {
