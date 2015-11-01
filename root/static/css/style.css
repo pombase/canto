@@ -1305,6 +1305,10 @@ a:not([href]) {
   color: grey;
 }
 
+.curs-extension-already-used {
+  color: grey;
+}
+
 .voffset1 { margin-top: 5px; }
 .voffset2 { margin-top: 10px; }
 

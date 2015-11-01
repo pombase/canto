@@ -1264,8 +1264,7 @@ var extensionBuilder =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_builder.html',
       controller: function($scope) {
-        $scope.matchingConfigurations = [];
-        $scope.extensionConfigurationPromise = CantoConfig.get('extension_configuration');
+        $scope.extensionConfiguration = [];
         $scope.termDetails = { id: null };
 
         $scope.asString = function() {
@@ -1279,39 +1278,59 @@ var extensionBuilder =
           return '';
         };
 
-        $scope.$watch('termId',
-                      function(newTermId) {
-                        CantoService.lookup('ontology', [newTermId],
-                                            {
-                                              def: 1,
-                                              children: 1,
-                                              subset_ids: 1,
-                                            })
-                          .then(function(response) {
-                            $scope.termDetails = response.data;
-                          });
-                      });
+        $scope.updateMatchingConfig = function() {
+          var subset_ids = $scope.termDetails.subset_ids;
 
-        $scope.updateMatchingConfigs = function() {
-          if (!$scope.termDetails.id) {
-            $scope.matchingConfigurations = [];
+          if ($scope.extensionConfiguration.length > 0 &&
+              subset_ids && subset_ids.length > 0) {
+            $scope.matchingConfigurations = 
+              extensionConfFilter($scope.extensionConfiguration, subset_ids);
             return;
           }
 
-          var subset_ids = $scope.termDetails.subset_ids;
-
-          if (subset_ids && subset_ids.length > 0) {
-            $scope.extensionConfigurationPromise
-              .success(function(results) {
-                $scope.matchingConfigurations =
-                  extensionConfFilter(results, subset_ids);
-              });
-          } else {
-            $scope.matchingConfigurations = [];
-          }
+          $scope.matchingConfigurations = [];
         };
 
-        $scope.$watch('termDetails.id', $scope.updateMatchingConfigs);
+        // return the number of uses of each extension config - used to
+        // implement the cardinality constraints
+        $scope.extensionPartCount = function() {
+          var counts = {};
+
+          $.map($scope.extension,
+                function(extensionPart) {
+                  if (counts[extensionPart.relation]) {
+                    counts[extensionPart.relation]++;
+                  } else {
+                    counts[extensionPart.relation] = 1;
+                  }
+                });
+
+          return counts;
+        };
+
+        CantoConfig.get('extension_configuration')
+          .then(function(results) {
+            $scope.extensionConfiguration = results.data;
+
+            $scope.$watch('termId',
+                          function(newTermId) {
+                            CantoService.lookup('ontology', [newTermId],
+                                                {
+                                                  def: 1,
+                                                  children: 1,
+                                                  subset_ids: 1,
+                                                })
+                              .then(function(response) {
+                                $scope.termDetails = response.data;
+                                $scope.updateMatchingConfig();
+                              });
+                          });
+          });
+
+        $scope.$watch('extension',
+                      function() {
+                        $scope.counts = $scope.extensionPartCount();
+                      }, true);
 
         $scope.startAddPart = function(extensionConfig) {
           var editExtensionPart = {
