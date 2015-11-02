@@ -1310,19 +1310,23 @@ var extensionBuilder =
 
         $scope.$watch('termId',
                       function(newTermId) {
-                        CantoService.lookup('ontology', [newTermId],
-                                            {
-                                              subset_ids: 1,
-                                            })
-                          .then(function(response) {
-                            $scope.termDetails = response.data;
-                            CantoConfig.get('extension_configuration')
-                              .then(function(results) {
-                                $scope.extensionConfiguration = results.data;
-                                $scope.updateMatchingConfig();
-                              });
-                          });
-                      });
+                        if (newTermId) {
+                          CantoService.lookup('ontology', [newTermId],
+                                              {
+                                                subset_ids: 1,
+                                              })
+                            .then(function(response) {
+                              $scope.termDetails = response.data;
+                              CantoConfig.get('extension_configuration')
+                                .then(function(results) {
+                                  $scope.extensionConfiguration = results.data;
+                                  $scope.updateMatchingConfig();
+                                });
+                            });
+                          return;
+                        }
+                        $scope.termDetails = { id: null };
+                    });
 
         $scope.$watch('extension',
                       function() {
@@ -3528,16 +3532,20 @@ var annotationSingleRow =
 
         $scope.$watch('annotationDetails.term_ontid',
                       function(newId) {
-                        CantoService.lookup('ontology', [newId],
-                                            {
-                                              def: 1,
-                                              children: 1,
-                                              exact_synonyms: 1,
-                                              subset_ids: 1,
-                                            })
-                          .then(function(response) {
-                            $scope.termDetails = response.data;
-                          });
+                        if (newId) {
+                          CantoService.lookup('ontology', [newId],
+                                              {
+                                                def: 1,
+                                                children: 1,
+                                                exact_synonyms: 1,
+                                                subset_ids: 1,
+                                              })
+                            .then(function(response) {
+                              $scope.termDetails = response.data;
+                            });
+                        } else {
+                          $scope.termDetails = {};
+                        }
                       });
 
         $scope.$watch('annotationDetails.conditions',
