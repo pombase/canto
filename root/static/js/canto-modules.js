@@ -1400,9 +1400,11 @@ var extensionPartEdit =
           $scope.extensionPart.rangeDisplayName = termName;
         };
  
-        if ($scope.relationConfig.range == 'ProteinID') {
+        if ($scope.relationConfig.range == 'ProteinID' ||
+            $scope.relationConfig.range == 'tRNAID' ||
+            $scope.relationConfig.range == 'TranscriptID') {
           if ($scope.extensionPart.rangeValue) {
-            // editing exisiting part
+            // editing existing part
             CursGeneList.geneList().then(function(results) {
               //
             }).catch(function() {
