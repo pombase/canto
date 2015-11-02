@@ -1474,7 +1474,7 @@ var ontologyWorkflowCtrl =
         return;
       }
 
-      $scope.matchingConfigurations = [];
+      $scope.matchingExtensionConfigs = [];
     };
 
     $scope.termFoundCallback =
