@@ -1,5 +1,5 @@
 <div id="ferret">
-  <div id="ferret-term-entry" class="curs-box">
+  <div id="ferret-term-entry" class="curs-box" ng-if="annotationType.display_name">
     <div class="inline-help curs-box-title">
 Search for {{annotationType.display_name}} term
     </div>
@@ -13,6 +13,7 @@ Search for {{annotationType.display_name}} term
           <div id="ferret-term-entry-type-help-target" class="ferret-more-help">
 {{annotationType.more_help_text}}
           </div>
+        </div>
           <div>
 Start typing a {{annotationType.short_display_name}} in the search
 box. If you do not find the term you are looking for with your initial search,
@@ -37,7 +38,6 @@ Gene products may be annotated with multiple
                               current-term-name=""
                               found-callback="foundCallback(termId, termName, searchString, matchingSynonym)"
                               annotation-type-name="{{annotationType.name}}"></term-name-complete>
-        </div>
       </div>
     </div>
   </div>
