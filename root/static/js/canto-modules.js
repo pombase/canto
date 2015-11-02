@@ -1308,24 +1308,21 @@ var extensionBuilder =
           return counts;
         };
 
-        CantoConfig.get('extension_configuration')
-          .then(function(results) {
-            $scope.extensionConfiguration = results.data;
-
-            $scope.$watch('termId',
-                          function(newTermId) {
-                            CantoService.lookup('ontology', [newTermId],
-                                                {
-                                                  def: 1,
-                                                  children: 1,
-                                                  subset_ids: 1,
-                                                })
-                              .then(function(response) {
-                                $scope.termDetails = response.data;
+        $scope.$watch('termId',
+                      function(newTermId) {
+                        CantoService.lookup('ontology', [newTermId],
+                                            {
+                                              subset_ids: 1,
+                                            })
+                          .then(function(response) {
+                            $scope.termDetails = response.data;
+                            CantoConfig.get('extension_configuration')
+                              .then(function(results) {
+                                $scope.extensionConfiguration = results.data;
                                 $scope.updateMatchingConfig();
                               });
                           });
-          });
+                      });
 
         $scope.$watch('extension',
                       function() {
@@ -1449,7 +1446,8 @@ canto.directive('extensionDisplay', [extensionDisplay]);
 
 
 var ontologyWorkflowCtrl =
-  function($scope, toaster, $http, AnnotationTypeConfig, CursStateService, $attrs) {
+  function($scope, toaster, $http, AnnotationTypeConfig, CantoService,
+           CantoConfig, CursStateService, $attrs) {
     $scope.states = ['searching', 'selectingEvidence', 'buildExtension', 'commenting'];
 
     CursStateService.setState($scope.states[0]);
@@ -1457,12 +1455,42 @@ var ontologyWorkflowCtrl =
     $scope.data = CursStateService;
     $scope.annotationTypeName = $attrs.annotationTypeName;
 
+    $scope.extensionBuilderReady = false;
+    $scope.matchingExtensionConfigs = null;
+
+    $scope.updateMatchingConfig = function() {
+      var subset_ids = $scope.termDetails.subset_ids;
+
+      if (subset_ids && subset_ids.length > 0) {
+        $scope.matchingExtensionConfigs = 
+          extensionConfFilter($scope.extensionConfiguration, subset_ids);
+        return;
+      }
+
+      $scope.matchingConfigurations = [];
+    };
+
     $scope.termFoundCallback =
       function(termId, termName, searchString, matchingSynonym) {
         CursStateService.clearTerm();
         CursStateService.addTerm(termId);
         CursStateService.searchString = searchString;
         CursStateService.matchingSynonym = matchingSynonym;
+
+        $scope.matchingExtensionConfigs = null;
+
+        CantoService.lookup('ontology', [termId],
+                            {
+                              subset_ids: 1,
+                            })
+                          .then(function(response) {
+                            $scope.termDetails = response.data;
+                            CantoConfig.get('extension_configuration')
+                              .then(function(results) {
+                                $scope.extensionConfiguration = results.data;
+                                $scope.updateMatchingConfig();
+                              });
+                          });
       };
 
     $scope.gotoChild = function(termId) {
@@ -1494,7 +1522,16 @@ var ontologyWorkflowCtrl =
     $scope.back = function() {
       if ($scope.getState() == 'searching') {
         CursStateService.clearTerm();
+        $scope.extensionBuilderReady = false;
         return;
+      }
+
+      if ($scope.getState() == 'commenting') {
+        if ($scope.matchingExtensionConfigs &&
+            $scope.matchingExtensionConfigs.length == 0) {
+          CursStateService.setState('selectingEvidence');
+          return;
+        }
       }
 
       $scope.gotoPrevState();
@@ -1505,6 +1542,14 @@ var ontologyWorkflowCtrl =
         CursStateService.comment = $scope.data.comment;
         $scope.storeAnnotation();
         return;
+      }
+
+      if ($scope.getState() == 'selectingEvidence') {
+        if ($scope.matchingExtensionConfigs &&
+            $scope.matchingExtensionConfigs.length == 0) {
+          CursStateService.setState('commenting');
+          return;
+        }
       }
 
       $scope.gotoNextState();
@@ -1551,7 +1596,10 @@ var ontologyWorkflowCtrl =
     };
 
     $scope.isValid = function() {
-      if ($scope.getState() == 'evidence') {
+      if ($scope.getState() == 'selectingEvidence') {
+        if ($scope.matchingExtensionConfigs == null) {
+          return false;
+        }
         return $scope.data.validEvidence;
       }
 
@@ -1572,7 +1620,8 @@ var ontologyWorkflowCtrl =
   };
 
 canto.controller('OntologyWorkflowCtrl',
-                 ['$scope', 'toaster', '$http', 'AnnotationTypeConfig', 'CursStateService', '$attrs',
+                 ['$scope', 'toaster', '$http', 'AnnotationTypeConfig', 'CantoService',
+                  'CantoConfig', 'CursStateService', '$attrs',
                   ontologyWorkflowCtrl]);
 
 
