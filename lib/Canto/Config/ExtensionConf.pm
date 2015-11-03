@@ -91,6 +91,8 @@ sub parse {
           } split /,/, $cardinality;
         }
 
+        $range =~ s/\|.*//;
+
         push @res, {
           domain => $domain,
           subset_rel => $subset_rel,
