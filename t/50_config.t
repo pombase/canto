@@ -125,7 +125,16 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'domain' => 'FYPO:0000002',
               'range' => 'GENE',
               'role' => 'user',
-            }
+            },
+            {
+              'subset_rel' => 'is_a',
+              'cardinality' => ['0', '1'],
+              'range' => 'FYPO_EXT:1000000',
+              'domain' => 'FYPO:0000002',
+              'allowed_relation' => 'has_penetrance',
+              'role' => 'user',
+              'display_text' => 'penetrance'
+            },
           ]);
 
 
