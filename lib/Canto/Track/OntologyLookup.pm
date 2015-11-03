@@ -141,7 +141,8 @@ sub _make_term_hash
   my $annotation_namespace = $cvterm->cv()->name();
   $term_hash{annotation_namespace} = $annotation_namespace;
   $term_hash{annotation_type_name} =
-    $self->config()->{annotation_types_by_namespace}->{$annotation_namespace}->{name};
+    $self->config()->{annotation_types_by_namespace}->{$annotation_namespace}->{name} //
+    $annotation_namespace;
 
   if ($include_definition) {
     $term_hash{definition} = $cvterm->definition();

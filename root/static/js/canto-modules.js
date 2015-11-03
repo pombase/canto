@@ -1197,7 +1197,11 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
                          if (range == 'GO:0008150') {
                            rangeNamespace = 'biological_process';
                          } else {
-                           rangeNamespace = 'UNKNOWN';
+                           if (range == 'FYPO_EXT:1000000') {
+                             rangeNamespace = 'fypo_extensions';
+                           } else {
+                             rangeNamespace = 'UNKNOWN';
+                           }
                          }
                        }
                      }

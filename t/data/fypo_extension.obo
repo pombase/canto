@@ -1,0 +1,37 @@
+format-version: 1.2
+date: 13:08:2012 11:25
+saved-by: midori
+default-namespace: fypo_extensions
+ontology: fypo_extensions
+remark: collection (perhaps temporary) of terms allowed in FYPO annotation has_penetrance and has_expressivity extensions
+
+[Term]
+id: FYPO_EXT:0000001
+name: high
+def: "large fraction of cells (penetrance) or strong phenotype (expressivity)" [PomBase:curators]
+is_a: FYPO_EXT:1000000 ! FYPO extension
+
+[Term]
+id: FYPO_EXT:0000002
+name: medium
+def: "intermediate fraction of cells (penetrance) or moderate phenotype (expressivity)" [PomBase:curators]
+is_a: FYPO_EXT:1000000 ! FYPO extension
+
+[Term]
+id: FYPO_EXT:0000003
+name: low
+def: "small fraction of cells (penetrance) or weak phenotype (expressivity)" [PomBase:curators]
+is_a: FYPO_EXT:1000000 ! FYPO extension
+
+[Term]
+id: FYPO_EXT:0000004
+name: complete
+def: "all cells (penetrance)" [PomBase:curators]
+synonym: "100%" EXACT PomBase:curators]
+synonym: "full" EXACT PomBase:curators]
+is_a: FYPO_EXT:0000001 ! high
+
+[Term]
+id: FYPO_EXT:1000000
+name: FYPO extension
+def: "root of FYPO extension ontology" [PomBase:mah]
