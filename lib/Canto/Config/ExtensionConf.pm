@@ -66,6 +66,8 @@ sub parse {
       while (defined (my $line = <$conf_fh>)) {
         chomp $line;
 
+        next if $line =~ /^#/;
+
         my ($domain, $subset_rel, $allowed_relation, $range, $display_text,
             $cardinality, $role) =
               split (/\t/, $line);
