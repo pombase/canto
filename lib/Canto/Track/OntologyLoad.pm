@@ -395,7 +395,7 @@ sub load
     my $rel_type = $rel->type();
     my $rel_type_cvterm = $relationship_cvterms{$rel_type};
 
-    die "can't find relationship cvterm for: $rel_type"
+    die "can't find relationship cvterm for: $subject_term_acc <- $rel_type -> $object_term_acc"
       unless defined $rel_type_cvterm;
 
     # don't store relations between relation terms

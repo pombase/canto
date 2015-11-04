@@ -696,6 +696,7 @@ sub make_base_track_db
   my $phenotype_obo_file = $config->{test_config}->{test_phenotype_obo_file};
   my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
   my $pco_obo_file = $config->{test_config}->{test_peco_obo_file};
+  my $so_obo_file = $config->{test_config}->{test_so_obo_file};
   my $relationship_obo_file = $config->{relationship_ontology_path};
 
   my $track_db_template_file = $config->{track_db_template_file};
@@ -747,13 +748,12 @@ sub make_base_track_db
     close $genes_fh or die "can't close $genes_file_organism_2: $!";
 
     $ontology_load->load($relationship_obo_file, undef, $synonym_types);
-    $ontology_load->load($go_obo_file, $ontology_index, $synonym_types);
-    $ontology_load->load($phenotype_obo_file, $ontology_index,
-                         $synonym_types);
-    $ontology_load->load($psi_mod_obo_file, $ontology_index,
-                         $synonym_types);
-    $ontology_load->load($pco_obo_file, $ontology_index,
-                         $synonym_types);
+
+    for my $obo_file ($go_obo_file, $phenotype_obo_file, $psi_mod_obo_file,
+                      $pco_obo_file, $so_obo_file) {
+      warn "loading: $obo_file\n";
+      $ontology_load->load($obo_file, $ontology_index, $synonym_types);
+    }
 
     $ontology_load->finalise();
     $ontology_index->finish_index();

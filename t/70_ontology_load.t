@@ -133,7 +133,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 $test_util->load_test_ontologies($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 134);
+is(@loaded_cvterms, 133);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'

@@ -115,6 +115,30 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'role' => 'user',
             },
             {
+              'range' => 'SO:0001799',
+              'domain' => 'GO:0022857',
+              'allowed_relation' => 'occurs_at',
+              'role' => 'user',
+              'cardinality' => [
+                                 '0',
+                                 '1'
+                               ],
+              'subset_rel' => 'is_a',
+              'display_text' => 'occurs at'
+            },
+            {
+              'domain' => 'GO:0022857',
+              'range' => 'TEXT',
+              'role' => 'user',
+              'allowed_relation' => 'modifies_residue',
+              'display_text' => 'occurs at',
+              'subset_rel' => 'is_a',
+              'cardinality' => [
+                                 '0',
+                                 '1'
+                               ]
+            },
+            {
               'display_text' => 'assayed using',
               'allowed_relation' => 'assayed_using',
               'subset_rel' => 'is_a',
