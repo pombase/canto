@@ -1,6 +1,6 @@
 <div ng-show="relationConfig.displayText" style="padding-bottom: 10px">
   <span>{{relationConfig.displayText}}</span>
-  <span ng-if="relationConfig.range == 'ProteinID' || relationConfig.range == 'TranscriptID' || relationConfig.range == 'tRNAID'">
+  <span ng-if="relationConfig.range == 'GeneID' || relationConfig.range == 'ProteinID' || relationConfig.range == 'TranscriptID' || relationConfig.range == 'tRNAID'">
     <feature-chooser feature-type="gene" chosen-feature-uniquename="extensionPart.rangeValue"
                      chosen-feature-display-name="extensionPart.rangeDisplayName"
                      chosen-feature-id="rangeGeneId"></feature-chooser>

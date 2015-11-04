@@ -1408,7 +1408,8 @@ var extensionPartEdit =
           $scope.extensionPart.rangeDisplayName = termName;
         };
  
-        if ($scope.relationConfig.range == 'ProteinID' ||
+        if ($scope.relationConfig.range == 'GeneID' ||
+            $scope.relationConfig.range == 'ProteinID' ||
             $scope.relationConfig.range == 'tRNAID' ||
             $scope.relationConfig.range == 'TranscriptID') {
           if ($scope.extensionPart.rangeValue) {
