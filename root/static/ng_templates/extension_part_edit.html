@@ -10,4 +10,7 @@
                         found-callback="termFoundCallback(termId, termName)"
                         annotation-type-name="{{relationConfig.rangeNamespace}}"></term-name-complete>
   </span>
+  <span ng-if="relationConfig.range == 'TEXT'">
+    <input type="text" ng-model="extensionPart.rangeValue"/>
+  </span>
 </div>
