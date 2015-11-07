@@ -91,7 +91,14 @@ sub parse {
           } split /,/, $cardinality;
         }
 
-        $range =~ s/\|.*//;
+        my @range_bits = split /\|/, $range;
+
+        map {
+          s/^(GeneID|ProteinID|TranscriptID|tRNAID)$/GeneID/;
+        } @range_bits;
+
+        # hack: use only the first part of the range conf.
+        $range = $range_bits[0];
 
         push @res, {
           domain => $domain,

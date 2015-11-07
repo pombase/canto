@@ -1408,10 +1408,7 @@ var extensionPartEdit =
           $scope.extensionPart.rangeDisplayName = termName;
         };
  
-        if ($scope.relationConfig.range == 'GeneID' ||
-            $scope.relationConfig.range == 'ProteinID' ||
-            $scope.relationConfig.range == 'tRNAID' ||
-            $scope.relationConfig.range == 'TranscriptID') {
+        if ($scope.relationConfig.range == 'GeneID') {
           if ($scope.extensionPart.rangeValue) {
             // editing existing part
             CursGeneList.geneList().then(function(results) {
