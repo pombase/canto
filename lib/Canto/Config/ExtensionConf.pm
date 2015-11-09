@@ -93,8 +93,14 @@ sub parse {
 
         my @range_bits = split /\|/, $range;
 
+        # hack: treat everything as a gene (and normalise the case)
         map {
-          s/^(GeneID|ProteinID|TranscriptID|tRNAID)$/GeneID/;
+          s/^(Gene|FeatureId|GeneID|ProteinID|TranscriptID|tRNAID)$/GeneID/i;
+        } @range_bits;
+
+        # hack: treat numbers as free text for now
+        map {
+          s/^(number|text)$/Text/i;
         } @range_bits;
 
         # hack: use only the first part of the range conf.
