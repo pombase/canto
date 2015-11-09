@@ -106,7 +106,9 @@ sub process
       $rel_type =~ s/^OBO_REL://;
 
       for my $conf (@conf) {
-        if ($conf->{domain} eq $object && $conf->{subset_rel} eq $rel_type) {
+        if ($conf->{subset_rel} eq $rel_type &&
+            ($conf->{domain} eq $object ||
+             grep { $_ eq $object } @{$conf->{range}})) {
           $subsets{$subject}{$object} = 1;
         }
       }
@@ -116,9 +118,11 @@ sub process
   # the configuration applies to the domain term ID, not just its descendants
   for my $conf (@conf) {
     $subsets{$conf->{domain}}{$conf->{domain}} = 1;
+    map {
+      my $range = $_;
+      $subsets{$range}{$range} = 1;
+    } @{$conf->{range}};
   }
-
-  my @domains = uniq map { $_->{domain}; } @conf;
 
   my %db_names = ();
 
