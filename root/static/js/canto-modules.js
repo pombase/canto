@@ -1185,7 +1185,7 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
                    return;
                  }
                  if ($.inArray(conf.domain, subsetIds) != -1) {
-                   var range = conf.range;
+                   var range = conf.range[0];
                    var rangeNamespace = null;
                    if (range.match(/\w+:\d+/)) {
                      if (range == 'GO:0005575') {

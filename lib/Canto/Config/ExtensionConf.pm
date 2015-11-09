@@ -104,13 +104,13 @@ sub parse {
         } @range_bits;
 
         # hack: use only the first part of the range conf.
-        $range = $range_bits[0];
+        @range_bits = ($range_bits[0]);
 
         push @res, {
           domain => $domain,
           subset_rel => $subset_rel,
           allowed_relation => $allowed_relation,
-          range => $range,
+          range => \@range_bits,
           display_text => $display_text,
           cardinality => \@cardinality,
           role => $role,
