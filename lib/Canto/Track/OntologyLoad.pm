@@ -262,6 +262,10 @@ sub load
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema,
                                               default_db_name => $self->default_db_name(),
                                               preload_cache => 1);
+  my %relationships_to_load = ();
+
+  map { $relationships_to_load{$_} = 1; } @{$self->relationships_to_load()};
+
   my $store_term_handler =
     sub {
       my $ni = shift;
@@ -311,6 +315,12 @@ sub load
 
       if (!defined $term_name) {
         die "Term ", $term->acc(), " from $cv_name has no name - cannot continue\n";
+      }
+
+      if ($term->is_relationship_type() &&
+          !$relationships_to_load{$term->name()} &&
+          !$relationships_to_load{$term->name() =~ s/\s+/_/gr}) {
+        return;
       }
 
       my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
@@ -381,10 +391,6 @@ sub load
       ||
     $a->{acc2} cmp $b->{acc2};
   } @$rels;
-
-  my %relationships_to_load = ();
-
-  map { $relationships_to_load{$_} = 1; } @{$self->relationships_to_load()};
 
   for my $rel (@sorted_rels) {
     my $subject_term_acc = $rel->subject_acc();
