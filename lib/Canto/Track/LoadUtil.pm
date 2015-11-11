@@ -351,9 +351,14 @@ sub _preload_dbxref_cache
 
 =head2 get_dbxref_by_accession
 
- Usage   : my $dbxref = $load_util->get_dbxref($db, $dbxref_acc);
+ Usage   : my $dbxref = $load_util->get_dbxref($db, $dbxref_acc, $term_name,
+                                               $create_only);
  Function: Find or create, and then return the object matching the arguments
- Args    : $termid - the term ID in the form "DB:ACCESSION"
+ Args    : $dbxref_acc - the term ID eg. "GO:0055085"
+           $term_name - the term name, used as the accession if the $dbxref_acc
+                        is undef with "Canto" as the db name
+           $create_only - if true, don't try to find() the dbxref before
+                          creating, assume it's new
  Returns : The new dbxref object
 
 =cut
@@ -362,6 +367,7 @@ sub get_dbxref_by_accession
   my $self = shift;
   my $termid = shift;
   my $term_name = shift;
+  my $create_only = shift;
 
   my $db_name;
   my $accession;
@@ -385,23 +391,24 @@ sub get_dbxref_by_accession
 
   my $key = "$db_name:$accession";
 
-  if (exists $self->cache()->{dbxref}->{$key}) {
-    return $self->cache()->{dbxref}->{$key};
-  } else {
-    my $dbxref = undef;
+  if (!$create_only) {
+    if (exists $self->cache()->{dbxref}->{$key}) {
+      return $self->cache()->{dbxref}->{$key};
+    } else {
+      my $dbxref = undef;
 
-    try {
-      $dbxref = $self->find_dbxref($key);
-      $self->cache()->{dbxref}->{$key} = $dbxref;
-    } catch {
-      # fall through - dbxref not in DB
-    };
+      try {
+        $dbxref = $self->find_dbxref($key);
+        $self->cache()->{dbxref}->{$key} = $dbxref;
+      } catch {
+        # fall through - dbxref not in DB
+      };
 
-    if (defined $dbxref) {
-      return $dbxref;
+      if (defined $dbxref) {
+        return $dbxref;
+      }
     }
   }
-
   my $db = $self->get_db($db_name);
   my $dbxref = $self->_create_dbxref($db, $accession);
 
@@ -415,7 +422,8 @@ sub get_dbxref_by_accession
  Usage   : my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
                                                term_name => $term_name,
                                                ontologyid => $ontologyid,
-                                               definition => $definition);
+                                               definition => $definition,
+                                               create_only => $create_only);
  Function: Find or create, and then return the object matching the arguments.
            The result is cached using the cv_name and term_name.
  Args    : cv_name - the Cv name
@@ -424,6 +432,8 @@ sub get_dbxref_by_accession
            definition - the term definition
            alt_ids - an array ref of alternate ontology IDs for this
                      term
+           create_only - if true, don't try to find() the cvterm before
+                         creating, assume it's new
  Returns : The new cvterm object
 
 =cut
@@ -452,11 +462,9 @@ sub get_cvterm
   }
 
   my $ontologyid = $args{ontologyid};
-
+  my $create_only = $args{create_only} && $ontologyid;
   my $key = "$cv_name--$term_name";
-
   my $cvterm_cache = $self->cache()->{cvterm};
-
   my $cached_cvterm = $cvterm_cache->{$key};
 
   if (defined $cached_cvterm) {
@@ -467,7 +475,7 @@ sub get_cvterm
   my $is_relationshiptype = $args{is_relationshiptype} // 0;
   my $is_obsolete = $args{is_obsolete} // 0;
 
-  my $dbxref = $self->get_dbxref_by_accession($ontologyid, $term_name);
+  my $dbxref = $self->get_dbxref_by_accession($ontologyid, $term_name, $create_only);
 
   my $schema = $self->schema();
 
@@ -483,10 +491,17 @@ sub get_cvterm
     $create_args{definition} = $definition;
   }
 
-  my $cvterm =
-    $self->schema()->resultset('Cvterm')->find_or_create({
+  my $cvterm;
+
+  if ($create_only) {
+    $cvterm = $self->schema()->resultset('Cvterm')->create({
       %create_args
     });
+  } else {
+    $cvterm = $self->schema()->resultset('Cvterm')->find_or_create({
+      %create_args
+    });
+  }
 
   if (defined $args{alt_ids}) {
     for my $alt_id (@{$args{alt_ids}}) {
