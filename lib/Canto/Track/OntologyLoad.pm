@@ -452,11 +452,11 @@ sub finalise
       qw(db dbxref cv cvterm cvterm_dbxref cvtermsynonym cvterm_relationship cvtermprop);
 
     for my $table_name (reverse @table_names) {
-      $dest_dbh->do("DELETE FROM main.$table_name WHERE main.$table_name.${table_name}_id NOT IN (SELECT ${table_name}_id FROM load_db.$table_name)");
+      $dest_dbh->do("DELETE FROM main.$table_name WHERE main.$table_name.${table_name}_id");
     }
 
     for my $table_name (@table_names) {
-      $dest_dbh->do("INSERT INTO main.$table_name SELECT * FROM load_db.$table_name WHERE load_db.$table_name.${table_name}_id NOT IN (SELECT ${table_name}_id FROM main.$table_name)");
+      $dest_dbh->do("INSERT INTO main.$table_name SELECT * FROM load_db.$table_name WHERE load_db.$table_name.${table_name}_id");
     }
 
     $dest_dbh->commit();
