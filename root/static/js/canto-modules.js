@@ -1203,7 +1203,19 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
                              if (range.indexOf('SO:') == 0) {
                                rangeNamespace = 'sequence';
                              } else {
-                               rangeNamespace = 'UNKNOWN';
+                               if (range.indexOf('CHEBI:') == 0) {
+                                 rangeNamespace = 'chebi_ontology';
+                               } else {
+                                 if (range.indexOf('BTO:') == 0) {
+                                   rangeNamespace = 'BrendaTissueOBO';
+                                 } else {
+                                   if (range.indexOf('DOID:') == 0) {
+                                     rangeNamespace = 'disease_ontology';
+                                   } else {
+                                     rangeNamespace = 'UNKNOWN';
+                                   }
+                                 }
+                               }
                              }
                            }
                          }
