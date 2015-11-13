@@ -43,7 +43,8 @@ my $subset_prop_rs = $prop_rs
 
 is ($subset_prop_rs->count(), 0);
 
-$processor->process($track_schema, $test_go_obo_file);
+my $closure_data = $processor->get_closure_data($test_go_obo_file);
+$processor->process_closure($track_schema, $closure_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
@@ -111,7 +112,7 @@ cmp_deeply(\@subset_cvtermprops,
 is ($subset_prop_rs->count(), 10);
 
 # run again to make sure it's repeatable
-$processor->process($track_schema, $test_go_obo_file);
+$processor->process_closure($track_schema, $closure_data);
 
 is ($prop_rs->count(), $cvtermprop_count + scalar(@subset_cvtermprops));
 is ($subset_prop_rs->count(), 10);

@@ -61,37 +61,33 @@ sub get_owltools_results
   return $owltools_out;
 }
 
-=head2 process
+=head2 get_closure_data
 
- Usage   : $extension_subset_process->process();
+ Usage   : my $closure_data = $extension_subset_process->get_closure_data();
  Function: Read the domains and ranges from extension_configuration config,
            then use owtools to find the child terms in the given OBO files.
-           Each cvterm gets a canto_subset cvtermprop for each config file
-           term it's a child of.  For more details see:
-           https://github.com/pombase/canto/wiki/AnnotationExtensionConfig
- Args    : $track_schema - the database to load
-           @obo_filenames - the OBO files to process
- Return  : None - dies on failure
-
+ Args    : @obo_filenames - the OBO files to process
+ Return  : A reference to a map from subject ID to object ID to relation.  eg.:
+           {
+             "GO:0000010" => {
+               "GO:0000005" => "is_a",
+               "GO:0000006" => "is_a",
+             },
+             "GO:0000020" => {
+               "GO:0000007" => "is_a",
+             },
+           }
+           Here GO:0000010 and GO:0000020 are subject term IDs, GO:0000005,
+           GO:0000006 and GO:0000007 are the objects and is_a is the relation
+           that connects them
 =cut
 
-sub process
+sub get_closure_data
 {
   my $self = shift;
-  my $schema = shift;
   my @obo_file_names = @_;
 
-  my $config = $self->config();
-
-  my $ext_conf = $config->{extension_configuration};
-
-  if (!$ext_conf) {
-    die "no extension configuration file set\n";
-  }
-
-  my @conf = @{$ext_conf};
-
-  my %subsets = ();
+  my %closure = ();
 
   for my $obo_file_name (@obo_file_names) {
     my $pipe_from_owltools = $self->get_owltools_results($obo_file_name);
@@ -105,6 +101,47 @@ sub process
 
       $rel_type =~ s/^OBO_REL://;
 
+      $closure{$subject}{$object} = $rel_type;
+    }
+  }
+
+  return \%closure;
+}
+
+=head2 process_closure
+
+ Usage   : my $closure_data = $extension_subset_process->get_closure_data();
+           $extension_subset_process->process_closure($closure_data);
+ Function: Use the results of get_closure_data() to add a canto_subset
+           cvtermprop for each config file term it's a child of.  For
+           more details see:
+           https://github.com/pombase/canto/wiki/AnnotationExtensionConfig
+ Args    : $track_schema - the database to load
+           $closure_data - A map returned by get_closure_data()
+ Return  : None - dies on failure
+
+=cut
+
+sub process_closure
+{
+  my $self = shift;
+  my $schema = shift;
+  my $closure_data = shift;
+
+  my $config = $self->config();
+
+  my $ext_conf = $config->{extension_configuration};
+
+  if (!$ext_conf) {
+    die "no extension configuration file set\n";
+  }
+
+  my @conf = @{$ext_conf};
+
+  my %subsets = ();
+
+  for my $subject (%$closure_data) {
+    while (my ($object, $rel_type) = each %{$closure_data->{$subject}}) {
       for my $conf (@conf) {
         if ($conf->{subset_rel} eq $rel_type &&
             ($conf->{domain} eq $object ||
