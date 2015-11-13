@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 11;
 use Test::Deep;
 
 use Canto::TestUtil;
