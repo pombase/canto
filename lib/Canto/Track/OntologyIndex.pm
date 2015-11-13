@@ -124,6 +124,7 @@ my %boosts =
            $term_name - the cvterm name
            $cvterm_id - the database ID for the term
            $db_accession - the "DB_NAME:ACCESSION" string for this term
+           $subset_ids - a list of any subsets that contain this term
            $synonym_details - an array of the name and type of the synonyms
                               of $cvterm
                               eg. [{ name => '...', type => '...'}, {...}]
@@ -137,6 +138,7 @@ sub add_to_index
   my $term_name = shift;
   my $cvterm_id = shift;
   my $db_accession = shift;
+  my $subset_ids = shift;
   my $synonym_details = shift;
 
   $cv_name =~ s/-/_/g;

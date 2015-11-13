@@ -374,12 +374,14 @@ sub load
         }
       }
 
+      my @subset_ids = ();
+
       if (!$term->is_relationship_type()) {
         $cvterms{$term->acc()} = $cvterm;
 
         if (!$term->is_obsolete() && defined $index) {
           $index->add_to_index($cv_name, $term_name, $cvterm_id,
-                               $term->acc(), \@synonyms_for_index);
+                               $term->acc(), \@subset_ids, \@synonyms_for_index);
         }
       }
     };
