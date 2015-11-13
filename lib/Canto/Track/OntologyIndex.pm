@@ -157,6 +157,10 @@ sub add_to_index
       Lucene::Document::Field->Keyword('text_keyword', $text),
       Lucene::Document::Field->Keyword(ontid => $db_accession),
       Lucene::Document::Field->Keyword(cv_name => $cv_name),
+      (map {
+        my $id_for_lucene = lc s/:/_/gr;
+        Lucene::Document::Field->Keyword(subset_id => $id_for_lucene)
+      } @$subset_ids),
       Lucene::Document::Field->UnIndexed(cvterm_id => $cvterm_id),
       Lucene::Document::Field->UnIndexed(term_name => $term_name),
     );
@@ -211,7 +215,9 @@ sub _init_lookup
 
  Usage   : my $hits = $index->lookup("cellular_component", $search_string, 10);
  Function: Return the search results for the $search_string
- Args    : $ontology_name - the ontology to search
+ Args    : $search_scope - the ontology_name or subset IDs to restrict the the
+                           search to; the subset IDs should be passed as an
+                           array ref
            $search_string - the text to search for
            $max_results - the maximum number of results to return
  Returns : the Lucene hits object
@@ -220,17 +226,14 @@ sub _init_lookup
 sub lookup
 {
   my $self = shift;
-  my $ontology_name = shift;
+
+  my $search_scope = shift;
   my $search_string = shift;
   my $max_results = shift;
 
-  if (!defined $ontology_name || length $ontology_name == 0) {
-    croak "no ontology_name passed to lookup()";
+  if (!defined $search_scope) {
+    croak "no search scope passed to lookup()";
   }
-
-  # keyword search must be lower case
-  $ontology_name = lc $ontology_name;
-  $ontology_name =~ s/-/_/g;
 
   my $searcher;
   my $parser;
@@ -255,9 +258,24 @@ sub lookup
     $wildcard = " OR text:($search_string*)";
   }
 
-  my $query_string =
-    qq{cv_name:$ontology_name AND (} .
-    qq{text_keyword:$search_string OR } .
+  my $query_string = '';
+
+  if (ref $search_scope) {
+    $query_string .=
+      '(' . (join ' OR ', (map {
+        my $id_for_lucene = lc s/:/_/gr;
+        qq{subset_id:$id_for_lucene};
+      } @$search_scope)) . ')';
+    $query_string .= ' AND ';
+  } else {
+    my $ontology_name = $search_scope;
+    $ontology_name = lc $ontology_name;
+    $ontology_name =~ s/-/_/g;
+    $query_string .= qq{cv_name:$ontology_name AND };
+  }
+
+  $query_string .=
+    qq{(text_keyword:$search_string OR } .
     qq{text:($search_string)$wildcard)};
 
   my $query = $parser->parse($query_string);
