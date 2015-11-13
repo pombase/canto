@@ -51,12 +51,50 @@ has metadata_storer => (is => 'ro', init_arg => undef,
                         isa => 'Canto::Curs::MetadataStorer',
                         lazy_build => 1);
 
+has cache => (is => 'ro', init_arg => undef,
+              lazy_build => 1);
+
+has lookup => (is => 'ro', init_arg => undef,
+              lazy_build => 1);
+
 sub _build_metadata_storer
 {
   my $self = shift;
   my $storer = Canto::Curs::MetadataStorer->new(config => $self->config());
 
   return $storer;
+}
+
+sub _build_cache
+{
+  return {};
+}
+
+sub _build_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'ontology');
+}
+
+sub _cached_lookup_by_name
+{
+  my $self = shift;
+  my $ontology_name = shift;
+  my $term_name = shift;
+
+  my $lookup = $self->lookup();
+
+  if (exists $self->cache()->{$ontology_name}->{$term_name}) {
+    return $self->cache()->{$ontology_name}->{$term_name};
+  }
+
+  my $res = $lookup->lookup_by_name(ontology_name => $ontology_name,
+                                    term_name => $term_name);
+
+  $self->cache()->{$ontology_name}->{$term_name} = $res;
+
+  return $res;
 }
 
 =head2 update_curs_terms
@@ -76,7 +114,6 @@ sub update_curs_terms
   my ($self, $cursdb) = @_;
 
   my $config = $self->config();
-  my $lookup = Canto::Track::get_adaptor($config, 'ontology');
 
   my $annotation_rs = $cursdb->resultset('Annotation');
 
@@ -89,8 +126,7 @@ sub update_curs_terms
       # replace term names with the ID if we know it otherwise assume that the
       # user has made up a condition
       map { my $name = $_;
-            my $res = $lookup->lookup_by_name(ontology_name => 'phenotype_condition',
-                                              term_name => $name);
+            my $res = $self->_cached_lookup_by_name('phenotype_condition', $name);
             if (defined $res) {
               $_ = $res->{id};
               $changed = 1;

@@ -323,7 +323,11 @@ sub load
         return;
       }
 
-      my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
+      # special case for relations, which might be in several ontologies
+      my $create_only = !$term->is_relationship_type();
+
+      my $cvterm = $load_util->get_cvterm(create_only => $create_only,
+                                          cv_name => $cv_name,
                                           term_name => $term_name,
                                           ontologyid => $term->acc(),
                                           definition => $term->definition(),

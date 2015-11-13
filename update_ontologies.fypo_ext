@@ -1,0 +1,5 @@
+#!/bin/sh -
+
+./script/canto_load.pl \
+   --ontology /var/pomcur/sources/pombe-embl/mini-ontologies/fypo_extension.obo
+   #--ontology /var/pomcur/sources/pombase_fypo/fypo-simple.obo
