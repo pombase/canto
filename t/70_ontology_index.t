@@ -58,18 +58,23 @@ is(@results, 4);
 @results = $ontology_index->lookup(['GO:0003674'], 'activity', 100);
 is(@results, 4);
 
+sub check_subset_results
+{
+  my @results = @_;
+  cmp_deeply(
+    [
+      sort map {
+        $_->{term_name}
+      } @results
+    ],
+    ['nucleocytoplasmic transporter activity',
+     'transmembrane transporter activity']);
+}
+
 # a subset:
 @results = $ontology_index->lookup(['GO:0005215'], 'activity', 100);
 is(@results, 2);
-cmp_deeply(
-  [
-    sort map {
-      $_->{term_name}
-    } @results
-  ],
-  ['nucleocytoplasmic transporter activity',
-   'transmembrane transporter activity']);
-
+check_subset_results(@results);
 
 @results = $ontology_index->lookup(['GO:0003674','GO:1234567'], 'activity', 100);
 is(@results, 4);
