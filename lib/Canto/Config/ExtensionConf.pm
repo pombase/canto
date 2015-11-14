@@ -93,24 +93,49 @@ sub parse {
 
         my @range_bits = split /\|/, $range;
 
-        # hack: treat everything as a gene (and normalise the case)
+        my @new_range_bits = ();
+        my @new_ontology_range_scope = ();
+
         map {
-          s/^(Gene|FeatureId|GeneID|ProteinID|TranscriptID|tRNAID)$/GeneID/i;
+          if (/:/) {
+            push @new_ontology_range_scope, $_;
+          } else {
+            if (/^(number|text|\%)$/i) {
+              # hack: treat numbers as free text for now
+              if (!grep { $_->{type} eq 'Text'} @new_range_bits) {
+                push @new_range_bits, {
+                  type => 'Text',
+                  input_type => lc $_,
+                };
+              }
+            } else {
+              if (/^(Gene|FeatureID|GeneID|ProteinID|TranscriptID|tRNAID|SP.*)$/i) {
+                # hack: treat everything else as a gene (and normalise the case)
+                if (!grep { $_->{type} eq 'Gene'} @new_range_bits) {
+                  push @new_range_bits, {
+                    type => 'Gene',
+                  }
+                }
+              } else {
+                die "unsupported range part: $_\n";
+              }
+            }
+          }
         } @range_bits;
 
-        # hack: treat numbers as free text for now
-        map {
-          s/^(number|text)$/Text/i;
-        } @range_bits;
-
-        # hack: use only the first part of the range conf.
-        @range_bits = ($range_bits[0]);
+        if (@new_ontology_range_scope) {
+          unshift @new_range_bits,
+            {
+              type => 'Ontology',
+              scope => \@new_ontology_range_scope,
+            };
+        }
 
         push @res, {
           domain => $domain,
           subset_rel => $subset_rel,
           allowed_relation => $allowed_relation,
-          range => \@range_bits,
+          range => \@new_range_bits,
           display_text => $display_text,
           cardinality => \@cardinality,
           role => $role,

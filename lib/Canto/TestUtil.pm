@@ -24,6 +24,7 @@ use Plack::Test;
 use Plack::Util;
 use HTTP::Cookies;
 use HTTP::Request::Common;
+use Test::MockObject::Extends;
 
 use Canto::Config;
 use Canto::Meta::Util;
@@ -41,6 +42,7 @@ use Canto::Track::OntologyIndex;
 use Canto::Track::LoadUtil;
 use Canto::Track::PubmedUtil;
 use Canto::Track::CuratorManager;
+use Canto::Config::ExtensionSubsetProcess;
 use Canto::DBUtil;
 
 use Moose;
@@ -1207,6 +1209,8 @@ sub get_a_person
  Args    : $ontology_index - an OntologyIndex object
            $include_ro - if true, load RO too
            $include_fypo - load FYPO if true
+           $include_closure_subsets - load closure subsets from
+              ExtensionSubsetProcess::get_closure_data()
  Return  :
 
 =cut
@@ -1219,6 +1223,7 @@ sub load_test_ontologies
   my $ontology_index = shift;
   my $include_ro = shift;
   my $include_fypo = shift;
+  my $include_closure_subsets = shift;
 
   my $config = $self->config();
   my $load_config = $self->config()->{load};
@@ -1234,10 +1239,28 @@ sub load_test_ontologies
 
   my @relationships_to_load = @{$load_config->{ontology}->{relationships_to_load}};
 
+  my $extension_subset_process = undef;
+  my $closure_data = undef;
+
+  if ($include_closure_subsets) {
+    my @ontology_args = ($test_go_file, $test_fypo_file, $psi_mod_obo_file);
+    $extension_subset_process = Canto::Config::ExtensionSubsetProcess->new(config => $config);
+
+    $extension_subset_process = Test::MockObject::Extends->new($extension_subset_process);
+    $extension_subset_process->mock('get_owltools_results',
+                                    sub {
+                                      open my $fh, '<', $self->root_dir() . '/t/data/owltools_out.txt';
+                                      return $fh;
+                                    });
+
+    $closure_data = $extension_subset_process->get_closure_data(@ontology_args);
+  }
+
   my $ontology_load =
     Canto::Track::OntologyLoad->new(schema => $self->track_schema(),
                                     relationships_to_load => \@relationships_to_load,
-                                    default_db_name => 'Canto');
+                                    default_db_name => 'Canto',
+                                    closure_data => $closure_data);
 
   $ontology_index->initialise_index();
 
@@ -1249,6 +1272,11 @@ sub load_test_ontologies
     $ontology_load->load($test_fypo_file, $ontology_index, $synonym_types);
   }
   $ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
+
+  if ($include_closure_subsets) {
+    $extension_subset_process->process_closure($ontology_load->load_schema(),
+                                               $closure_data);
+  }
 
   $ontology_load->finalise();
   $ontology_index->finish_index();

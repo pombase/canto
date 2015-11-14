@@ -67,7 +67,7 @@ sub get_owltools_results
  Function: Read the domains and ranges from extension_configuration config,
            then use owtools to find the child terms in the given OBO files.
  Args    : @obo_filenames - the OBO files to process
- Return  : A reference to a map from object ID to subject ID to relation.  eg.:
+ Return  : A reference to a map from subject ID to object ID to relation.  eg.:
            {
              "GO:0000010" => {
                "GO:0000005" => "is_a",
@@ -77,9 +77,10 @@ sub get_owltools_results
                "GO:0000007" => "is_a",
              },
            }
-           Here GO:0000010 and GO:0000020 are object term IDs, GO:0000005,
-           GO:0000006 and GO:0000007 are the subjects and is_a is the relation
+           Here GO:0000010 and GO:0000020 are subject term IDs, GO:0000005,
+           GO:0000006 and GO:0000007 are the objects and is_a is the relation
            that connects them
+
 =cut
 
 sub get_closure_data
@@ -101,7 +102,7 @@ sub get_closure_data
 
       $rel_type =~ s/^OBO_REL://;
 
-      $closure{$object}{$subject} = $rel_type;
+      $closure{$subject}{$object} = $rel_type;
     }
   }
 
@@ -111,7 +112,7 @@ sub get_closure_data
 =head2 process_closure
 
  Usage   : my $closure_data = $extension_subset_process->get_closure_data();
-           $extension_subset_process->process_closure($closure_data);
+           $extension_subset_process->process_closure($track_schema, $closure_data);
  Function: Use the results of get_closure_data() to add a canto_subset
            cvtermprop for each config file term it's a child of.  For
            more details see:
@@ -140,8 +141,8 @@ sub process_closure
 
   my %subsets = ();
 
-  for my $object (%$closure_data) {
-    while (my ($subject, $rel_type) = each %{$closure_data->{$object}}) {
+  for my $subject (%$closure_data) {
+    while (my ($object, $rel_type) = each %{$closure_data->{$subject}}) {
       for my $conf (@conf) {
         if ($conf->{subset_rel} eq $rel_type &&
             ($conf->{domain} eq $object ||

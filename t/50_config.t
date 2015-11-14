@@ -81,84 +81,129 @@ cmp_deeply($config_with_suffix->{extension_configuration},
           [
             {
               'display_text' => 'kinase substrate',
-              'allowed_relation' => 'has_substrate',
-              'subset_rel' => 'is_a',
               'cardinality' => [
-                                 '0',
-                                 '1'
-                               ],
+                '0',
+                '1'
+              ],
               'domain' => 'GO:0016023',
-              'range' => ['GeneID'],
+              'subset_rel' => 'is_a',
               'role' => 'user',
+              'range' => [
+                {
+                  'type' => 'Gene'
+                }
+              ],
+              'allowed_relation' => 'has_substrate'
             },
             {
-              'display_text' => 'Something that happens during',
+              'cardinality' => [
+                '*'
+              ],
+              'domain' => 'GO:0016023',
+              'role' => 'user',
+              'range' => [
+                {
+                  'type' => 'Ontology',
+                  'scope' => [
+                    'GO:0005215'
+                  ]
+                }
+              ],
               'subset_rel' => 'is_a',
               'allowed_relation' => 'happens_during',
-              'cardinality' => [
-                                 '*'
-                               ],
-              'range' => ['GO:0005575'],
-              'domain' => 'GO:0016023',
-              'role' => 'user',
+              'display_text' => 'Something that happens during'
             },
             {
-              'subset_rel' => 'is_a',
               'display_text' => 'localizes',
-              'allowed_relation' => 'localizes',
-              'cardinality' => [
-                                 '0',
-                                 '1'
-                               ],
-              'range' => ['GeneID'],
               'domain' => 'GO:0022857',
               'role' => 'user',
+              'range' => [
+                {
+                  'type' => 'Gene'
+                }
+              ],
+              'allowed_relation' => 'localizes',
+              'subset_rel' => 'is_a',
+              'cardinality' => [
+                '0',
+                '1'
+              ]
             },
             {
-              'range' => ['SO:0001799'],
-              'domain' => 'GO:0022857',
               'allowed_relation' => 'occurs_at',
               'role' => 'user',
-              'cardinality' => [
-                                 '0',
-                                 '1'
-                               ],
+              'range' => [
+                {
+                  'type' => 'Ontology',
+                  'scope' => [
+                    'SO:0001799'
+                  ]
+                }
+              ],
               'subset_rel' => 'is_a',
+              'domain' => 'GO:0022857',
+              'cardinality' => [
+                '0',
+                '1'
+              ],
               'display_text' => 'occurs at'
             },
             {
-              'domain' => 'GO:0022857',
-              'range' => ['Text'],
               'role' => 'user',
               'allowed_relation' => 'modifies_residue',
-              'display_text' => 'occurs at',
+              'range' => [
+                {
+                  'input_type' => 'text',
+                  'type' => 'Text'
+                }
+              ],
               'subset_rel' => 'is_a',
+              'domain' => 'GO:0022857',
               'cardinality' => [
-                                 '0',
-                                 '1'
-                               ]
+                '0',
+                '1'
+              ],
+              'display_text' => 'occurs at'
             },
             {
               'display_text' => 'assayed using',
-              'allowed_relation' => 'assayed_using',
-              'subset_rel' => 'is_a',
               'cardinality' => [
-                                 '0',
-                                 '2'
-                               ],
-              'domain' => 'FYPO:0000002',
-              'range' => ['GeneID'],
+                '0',
+                '2'
+              ],
+              'allowed_relation' => 'assayed_using',
               'role' => 'user',
+              'range' => [
+                {
+                  'type' => 'Gene'
+                }
+              ],
+              'subset_rel' => 'is_a',
+              'domain' => 'FYPO:0000002'
             },
             {
-              'subset_rel' => 'is_a',
-              'cardinality' => ['0', '1'],
-              'range' => ['FYPO_EXT:1000000'],
-              'domain' => 'FYPO:0000002',
               'allowed_relation' => 'has_penetrance',
               'role' => 'user',
+              'range' => [
+                {
+                  'scope' => [
+                    'FYPO_EXT:1000000'
+                  ],
+                  'type' => 'Ontology'
+                },
+                {
+                  'type' => 'Text',
+                  'input_type' => '%'
+                }
+              ],
+              'subset_rel' => 'is_a',
+              'domain' => 'FYPO:0000002',
+              'cardinality' => [
+                '0',
+                '1'
+              ],
               'display_text' => 'penetrance'
-            },
+            }
           ]);
 
 

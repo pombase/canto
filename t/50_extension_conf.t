@@ -16,7 +16,7 @@ cmp_deeply($conf[0],
            {
              'domain' => 'GO:0016023',
              'subset_rel' => 'is_a',
-             'range' => ['GeneID'],
+             'range' => [{ type => 'Gene' }],
              'display_text' => 'kinase substrate',
              'cardinality' => [0,1],
              'allowed_relation' => 'has_substrate',

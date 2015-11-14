@@ -87,6 +87,11 @@ has 'relationships_to_load' => (
   isa => 'ArrayRef[Str]',
 );
 
+has 'closure_data' => (
+  is => 'ro',
+  required => 0,
+);
+
 sub BUILD
 {
   my $self = shift;
@@ -375,6 +380,16 @@ sub load
       }
 
       my @subset_ids = ();
+
+      my $closure_data = $self->closure_data();
+
+      if ($closure_data) {
+        my $subjects = $closure_data->{$term->acc()};
+
+        if ($subjects) {
+          push @subset_ids, (keys %$subjects), $term->acc();
+        }
+      }
 
       if (!$term->is_relationship_type()) {
         $cvterms{$term->acc()} = $cvterm;

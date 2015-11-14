@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 71;
+use Test::More tests => 74;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -326,3 +326,46 @@ my $children = $elongated_cell_results->{children};
 
 is (@$children, 1);
 is ($children->[0]->{id}, 'FYPO:0000133');
+
+
+# test querying a subset
+
+my $index_path = $config->data_dir_path('ontology_index_dir');
+my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+$test_util->load_test_ontologies($ontology_index, 1, 1, 1);
+
+{
+  my $results = $lookup->lookup(ontology_name => '[GO:0005215]',
+                                search_string => 'activity',
+                                max_results => 10);
+
+  ok(defined $results);
+
+  is(scalar(@$results), 3);
+
+  cmp_deeply($results,
+             [
+               {
+                 'id' => 'GO:0005215',
+                 'annotation_type_name' => 'molecular_function',
+                 'annotation_namespace' => 'molecular_function',
+                 'name' => 'transporter activity',
+                 'is_obsolete' => 0
+               },
+               {
+                 'name' => 'transmembrane transporter activity',
+                 'is_obsolete' => 0,
+                 'id' => 'GO:0022857',
+                 'annotation_type_name' => 'molecular_function',
+                 'annotation_namespace' => 'molecular_function'
+               },
+               {
+                 'name' => 'nucleocytoplasmic transporter activity',
+                 'is_obsolete' => 0,
+                 'id' => 'GO:0005487',
+                 'annotation_namespace' => 'molecular_function',
+                 'annotation_type_name' => 'molecular_function'
+               }
+             ]);
+}
+

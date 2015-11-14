@@ -183,9 +183,20 @@ if (@ontology_args) {
   my $index = Canto::Track::OntologyIndex->new(index_path => $index_path);
   $index->initialise_index();
   my @relationships_to_load = @{$config->{load}->{ontology}->{relationships_to_load}};
+
+  my $extension_subset_process = undef;
+  my $closure_data = undef;
+
+  if ($do_process_extension_config) {
+    $extension_subset_process =
+      Canto::Config::ExtensionSubsetProcess->new(config => $config);
+    $closure_data = $extension_subset_process->get_closure_data(@ontology_args);
+  }
+
   my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema,
                                                       relationships_to_load => \@relationships_to_load,
-                                                      default_db_name => $config->{default_db_name});
+                                                      default_db_name => $config->{default_db_name},
+                                                      closure_data => $closure_data);
   my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
   for my $ontology_source (@ontology_args) {
@@ -194,10 +205,9 @@ if (@ontology_args) {
     $ontology_load->load($ontology_source, $index, $synonym_types);
   }
 
-  if ($do_process_extension_config) {
-    my $extension_subset_process =
-      Canto::Config::ExtensionSubsetProcess->new(config => $config);
-    $extension_subset_process->process($ontology_load->load_schema(), @ontology_args);
+  if ($closure_data) {
+    $extension_subset_process->process_closure($ontology_load->load_schema(),
+                                               $closure_data);
   }
 
   if (!$dry_run) {

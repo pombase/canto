@@ -48,7 +48,7 @@ $processor->process_closure($track_schema, $closure_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($cvtermprop_count + 10, $after_cvtermprop_count);
+is ($cvtermprop_count + 5, $after_cvtermprop_count);
 
 
 sub get_subset_props
@@ -72,24 +72,8 @@ cmp_deeply(\@subset_cvtermprops,
                'FYPO:0000002'
              ],
              [
-               'cellular_component',
-               'GO:0005575'
-             ],
-             [
-               'cytoplasmic membrane-bounded vesicle',
-               'GO:0005575'
-             ],
-             [
                'cytoplasmic membrane-bounded vesicle',
                'GO:0016023'
-             ],
-             [
-               'regional_centromere_outer_repeat_region',
-               'SO:0001799'
-             ],
-             [
-               'stored secretory granule',
-               'GO:0005575'
              ],
              [
                'stored secretory granule',
@@ -101,18 +85,14 @@ cmp_deeply(\@subset_cvtermprops,
              ],
              [
                'transport vesicle',
-               'GO:0005575'
-             ],
-             [
-               'transport vesicle',
                'GO:0016023'
-             ]
+             ],
            ]);
 
-is ($subset_prop_rs->count(), 10);
+is ($subset_prop_rs->count(), 5);
 
 # run again to make sure it's repeatable
 $processor->process_closure($track_schema, $closure_data);
 
 is ($prop_rs->count(), $cvtermprop_count + scalar(@subset_cvtermprops));
-is ($subset_prop_rs->count(), 10);
+is ($subset_prop_rs->count(), 5);

@@ -1185,50 +1185,11 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
                    return;
                  }
                  if ($.inArray(conf.domain, subsetIds) != -1) {
-                   var range = conf.range[0];
-                   var rangeNamespace = null;
-                   if (range.match(/\w+:\d+/)) {
-                     if (range == 'GO:0005575') {
-                       rangeNamespace = 'cellular_component';
-                     } else {
-                       if (range == 'GO:0003674') {
-                         rangeNamespace = 'molecular_function';
-                       } else {
-                         if (range == 'GO:0008150') {
-                           rangeNamespace = 'biological_process';
-                         } else {
-                           if (range.indexOf('FYPO_EXT:') == 0) {
-                             rangeNamespace = 'fypo_extensions';
-                           } else {
-                             if (range.indexOf('SO:') == 0) {
-                               rangeNamespace = 'sequence';
-                             } else {
-                               if (range.indexOf('CHEBI:') == 0) {
-                                 rangeNamespace = 'chebi_ontology';
-                               } else {
-                                 if (range.indexOf('BTO:') == 0) {
-                                   rangeNamespace = 'BrendaTissueOBO';
-                                 } else {
-                                   if (range.indexOf('DOID:') == 0) {
-                                     rangeNamespace = 'disease_ontology';
-                                   } else {
-                                     rangeNamespace = 'UNKNOWN';
-                                   }
-                                 }
-                               }
-                             }
-                           }
-                         }
-                       }
-                     }
-                     range = 'ONTOLOGY';
-                   }
                    return {
                      displayText: conf.display_text,
                      relation: conf.allowed_relation,
-                     range: range,
-                     rangeValue: null,
-                     rangeNamespace: rangeNamespace,
+                     range: conf.range,
+                     rangeValue: null
                    };
                  }
                });
@@ -1415,12 +1376,14 @@ var extensionPartEdit =
       controller: function($scope) {
         $scope.rangeGeneId = '';
 
+        $scope.rangeType = $scope.relationConfig.range[0].type;
+
         $scope.termFoundCallback = function(termId, termName) {
           $scope.extensionPart.rangeValue = termId;
           $scope.extensionPart.rangeDisplayName = termName;
         };
  
-        if ($scope.relationConfig.range == 'GeneID') {
+        if ($scope.rangeType == 'Gene') {
           if ($scope.extensionPart.rangeValue) {
             // editing existing part
             CursGeneList.geneList().then(function(results) {
@@ -1433,13 +1396,22 @@ var extensionPartEdit =
           }
         }
 
-       if ($scope.relationConfig.range == 'ONTOLOGY' &&
-            $scope.extensionPart.rangeValue) {
+        if ($scope.rangeType == 'Ontology') {
+          var rangeScope = $scope.relationConfig.range[0].scope;
+          if ($.isArray(rangeScope)) {
+            $scope.rangeOntologyScope = '[' + rangeScope.join('|') + ']';
+          } else {
+            // special case for using the ontology namescape instead of
+            // restricting to a subset using a term or terms
+            $scope.rangeOntologyScope = rangeScope;
+          }
+          if ($scope.extensionPart.rangeValue) {
           // editing existing extension part
           CantoService.lookup('ontology', [$scope.extensionPart.rangeValue], {})
             .success(function(data) {
               $scope.extensionPart.rangeTermName = data.name;
             });
+          }
         }
       }
     };

@@ -1,16 +1,17 @@
 <div ng-show="relationConfig.displayText" style="padding-bottom: 10px">
   <span>{{relationConfig.displayText}}</span>
-  <span ng-if="relationConfig.range == 'GeneID'">
+  <span ng-if="rangeType == 'Gene'">
     <feature-chooser feature-type="gene" chosen-feature-uniquename="extensionPart.rangeValue"
                      chosen-feature-display-name="extensionPart.rangeDisplayName"
                      chosen-feature-id="rangeGeneId"></feature-chooser>
   </span>
-  <span ng-if="relationConfig.range == 'ONTOLOGY'">
+  <span ng-if="rangeType == 'Ontology'">
+    rangeOntologyScope: {{rangeOntologyScope}}
     <term-name-complete current-term-name="{{rangeTermName}}"
                         found-callback="termFoundCallback(termId, termName)"
-                        annotation-type-name="{{relationConfig.rangeNamespace}}"></term-name-complete>
+                        annotation-type-name="{{rangeOntologyScope}}"></term-name-complete>
   </span>
-  <span ng-if="relationConfig.range == 'Text'">
+  <span ng-if="rangeType == 'Text'">
     <input type="text" ng-model="extensionPart.rangeValue"/>
   </span>
 </div>

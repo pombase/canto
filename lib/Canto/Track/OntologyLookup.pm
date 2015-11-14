@@ -275,7 +275,17 @@ sub lookup
       croak "no ontology_name passed to lookup()";
     }
 
-    @results = $ontology_index->lookup($ontology_name, _clean_string($search_string),
+    my $search_scope = undef;
+
+    if ($ontology_name =~ /^\[(.*)\]$/) {
+      my $id_string = $1;
+      my @ids = split /\|/, $id_string;
+      $search_scope = \@ids;
+    } else {
+      $search_scope = $ontology_name;
+    }
+
+    @results = $ontology_index->lookup($search_scope, _clean_string($search_string),
                                        $max_results);
 
     my $schema = $self->schema();
