@@ -194,6 +194,7 @@ my $proc = sub {
 
   if ($add_session) {
     my $pubmedid = shift @ARGV;
+    # use the Person added by the add_person code
     my $email_address = shift @ARGV;
 
     my ($curs, $cursdb, $curator) =
