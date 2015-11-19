@@ -87,7 +87,7 @@ has 'relationships_to_load' => (
   isa => 'ArrayRef[Str]',
 );
 
-has 'closure_data' => (
+has 'subset_data' => (
   is => 'ro',
   required => 0,
 );
@@ -381,13 +381,13 @@ sub load
 
       my @subset_ids = ();
 
-      my $closure_data = $self->closure_data();
+      my $subset_data = $self->subset_data();
 
-      if ($closure_data) {
-        my $subjects = $closure_data->{$term->acc()};
+      if ($subset_data) {
+        my $objects = $subset_data->{$term->acc()};
 
-        if ($subjects) {
-          push @subset_ids, (keys %$subjects), $term->acc();
+        if ($objects) {
+          push @subset_ids, (keys %$objects), $term->acc();
         }
       }
 

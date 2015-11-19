@@ -48,11 +48,11 @@ use List::MoreUtils qw(uniq);
 sub get_owltools_results
 {
   my $self = shift;
-  my $obo_file_name = shift;
+  my @obo_file_names = @_;
 
   my ($temp_fh, $temp_filename) = tempfile();
 
-  system ("owltools $obo_file_name --save-closure-for-chado $temp_filename") == 0
+  system ("owltools @obo_file_names --save-closure-for-chado $temp_filename") == 0
     or die "can't open pipe from owltools: $?";
 
   open my $owltools_out, '<', $temp_filename
@@ -61,12 +61,12 @@ sub get_owltools_results
   return $owltools_out;
 }
 
-=head2 get_closure_data
+=head2 get_subset_data
 
- Usage   : my $closure_data = $extension_subset_process->get_closure_data();
- Function: Read the domains and ranges from extension_configuration config,
-           then use owtools to find the child terms in the given OBO files.
- Args    : @obo_filenames - the OBO files to process
+ Usage   : my %subset_data = $self->get_subset_data(@obo_file_names);
+ Function: Read the domain and range ontology terms from extension_configuration
+           config, then use owtools to find the child terms.
+ Args    : @obo_file_names - the OBO files to process with OWLtools
  Return  : A reference to a map from subject ID to object ID to relation.  eg.:
            {
              "GO:0000010" => {
@@ -79,55 +79,15 @@ sub get_owltools_results
            }
            Here GO:0000010 and GO:0000020 are subject term IDs, GO:0000005,
            GO:0000006 and GO:0000007 are the objects and is_a is the relation
-           that connects them
+           that connects them.  All the objects are terms IDs mentioned as
+           domain or range constraints in the extension config.
 
 =cut
 
-sub get_closure_data
+sub get_subset_data
 {
   my $self = shift;
   my @obo_file_names = @_;
-
-  my %closure = ();
-
-  for my $obo_file_name (@obo_file_names) {
-    my $pipe_from_owltools = $self->get_owltools_results($obo_file_name);
-
-    while (defined (my $line = <$pipe_from_owltools>)) {
-      chomp $line;
-      my ($subject, $rel_type, $depth, $object) =
-        split (/\t/, $line);
-
-      die $line unless $rel_type;
-
-      $rel_type =~ s/^OBO_REL://;
-
-      $closure{$subject}{$object} = $rel_type;
-    }
-  }
-
-  return \%closure;
-}
-
-=head2 process_closure
-
- Usage   : my $closure_data = $extension_subset_process->get_closure_data();
-           $extension_subset_process->process_closure($track_schema, $closure_data);
- Function: Use the results of get_closure_data() to add a canto_subset
-           cvtermprop for each config file term it's a child of.  For
-           more details see:
-           https://github.com/pombase/canto/wiki/AnnotationExtensionConfig
- Args    : $track_schema - the database to load
-           $closure_data - A map returned by get_closure_data()
- Return  : None - dies on failure
-
-=cut
-
-sub process_closure
-{
-  my $self = shift;
-  my $schema = shift;
-  my $closure_data = shift;
 
   my $config = $self->config();
 
@@ -139,28 +99,67 @@ sub process_closure
 
   my @conf = @{$ext_conf};
 
-  my %subsets = ();
+  my %domain_subsets_to_store = ();
+  my %range_subsets_to_store = ();
 
-  for my $subject (%$closure_data) {
-    while (my ($object, $rel_type) = each %{$closure_data->{$subject}}) {
-      for my $conf (@conf) {
-        if ($conf->{subset_rel} eq $rel_type &&
-            ($conf->{domain} eq $object ||
-             grep { $_ eq $object } @{$conf->{range}})) {
-          $subsets{$subject}{$object} = 1;
-        }
+  for my $conf (@conf) {
+    $domain_subsets_to_store{$conf->{domain}} = $conf->{subset_rel};
+    map {
+      my $range = $_;
+
+      if ($range->{type} eq 'Ontology') {
+        map {
+          $range_subsets_to_store{$_} = 1;
+        } @{$range->{scope}};
       }
+    } @{$conf->{range}};
+  }
+
+  my %subsets = map {
+    ($_, { $_ => 1 })
+  } (keys %domain_subsets_to_store, keys %range_subsets_to_store);
+
+  my $pipe_from_owltools = $self->get_owltools_results(@obo_file_names);
+
+  while (defined (my $line = <$pipe_from_owltools>)) {
+    chomp $line;
+    my ($subject, $rel_type, $depth, $object) =
+      split (/\t/, $line);
+
+    $rel_type =~ s/^OBO_REL://;
+
+    if ($domain_subsets_to_store{$object} &&
+        $domain_subsets_to_store{$object} eq $rel_type) {
+      $subsets{$subject}{$object} = 1;
+    }
+
+    if ($range_subsets_to_store{$object}) {
+      $subsets{$subject}{$object} = 1;
     }
   }
 
-  # the configuration applies to the domain term ID, not just its descendants
-  for my $conf (@conf) {
-    $subsets{$conf->{domain}}{$conf->{domain}} = 1;
-    map {
-      my $range = $_;
-      $subsets{$range}{$range} = 1;
-    } @{$conf->{range}};
-  }
+  return \%subsets;
+}
+
+=head2 process_subset_data
+
+ Usage   : my $subset_data = $extension_subset_process->get_subset_data();
+           $extension_subset_process->process_subset_data($track_schema, $subset_data);
+ Function: Use the results of get_subset_data() to add a canto_subset
+           cvtermprop for each config file term it's a child of.  For
+           more details see:
+           https://github.com/pombase/canto/wiki/AnnotationExtensionConfig
+ Args    : $track_schema - the database to load
+           $subset_data - A map returned by subset_data()
+ Return  : None - dies on failure
+
+=cut
+
+sub process_subset_data
+{
+  my $self = shift;
+  my $schema = shift;
+  my $subset_data = shift;
 
   my %db_names = ();
 
@@ -168,7 +167,7 @@ sub process_closure
     if (/(\w+):/) {
       $db_names{$1} = 1;
     }
-  } keys %subsets;
+  } keys %$subset_data;
 
   my @db_names = keys %db_names;
 
@@ -197,7 +196,7 @@ sub process_closure
 
     $prop_rs->delete();
 
-    my $subset_ids = $subsets{$db_accession};
+    my $subset_ids = $subset_data->{$db_accession};
 
     if ($subset_ids) {
       my @subset_ids = keys %{$subset_ids};

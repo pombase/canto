@@ -43,12 +43,12 @@ my $subset_prop_rs = $prop_rs
 
 is ($subset_prop_rs->count(), 0);
 
-my $closure_data = $processor->get_closure_data($test_go_obo_file);
-$processor->process_closure($track_schema, $closure_data);
+my $subset_data = $processor->get_subset_data($test_go_obo_file);
+$processor->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($cvtermprop_count + 5, $after_cvtermprop_count);
+is ($cvtermprop_count + 9, $after_cvtermprop_count);
 
 
 sub get_subset_props
@@ -76,8 +76,20 @@ cmp_deeply(\@subset_cvtermprops,
                'GO:0016023'
              ],
              [
+               'nucleocytoplasmic transporter activity',
+               'GO:0005215'
+             ],
+             [
+               'regional_centromere_outer_repeat_region',
+               'SO:0001799'
+             ],
+             [
                'stored secretory granule',
                'GO:0016023'
+             ],
+             [
+               'transmembrane transporter activity',
+               'GO:0005215'
              ],
              [
                'transmembrane transporter activity',
@@ -87,12 +99,17 @@ cmp_deeply(\@subset_cvtermprops,
                'transport vesicle',
                'GO:0016023'
              ],
-           ]);
+             [
+               'transporter activity',
+               'GO:0005215'
+             ]
+           ]
+         );
 
-is ($subset_prop_rs->count(), 5);
+is ($subset_prop_rs->count(), 9);
 
 # run again to make sure it's repeatable
-$processor->process_closure($track_schema, $closure_data);
+$processor->process_subset_data($track_schema, $subset_data);
 
 is ($prop_rs->count(), $cvtermprop_count + scalar(@subset_cvtermprops));
-is ($subset_prop_rs->count(), 5);
+is ($subset_prop_rs->count(), 9);
