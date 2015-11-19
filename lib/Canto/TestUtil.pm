@@ -1200,6 +1200,37 @@ sub get_a_person
   return $admin_person_rs->first();
 }
 
+=head2
+
+ Usage   :
+ Function:
+ Args    :
+ Return  :
+
+=cut
+
+sub get_mock_subset_processor
+{
+  my $self = shift;
+  my $config = $self->config();
+  my $extension_subset_process = Canto::Config::ExtensionSubsetProcess->new(config => $config);
+
+  $extension_subset_process = Test::MockObject::Extends->new($extension_subset_process);
+  my $get_owltools_results = sub {
+    my @results = ();
+    open my $fh, '<', $self->root_dir() . '/t/data/owltools_out.txt';
+    while (defined (my $line = <$fh>)) {
+      chomp $line;
+      push @results, [split /\t/, $line];
+    }
+    close $fh;
+    return @results;
+  };
+  $extension_subset_process->mock('get_owltools_results', $get_owltools_results);
+
+  return $extension_subset_process;
+}
+
 
 =head2 load_test_ontologies
 
@@ -1244,14 +1275,7 @@ sub load_test_ontologies
 
   if ($include_closure_subsets) {
     my @ontology_args = ($test_go_file, $test_fypo_file, $psi_mod_obo_file);
-    $extension_subset_process = Canto::Config::ExtensionSubsetProcess->new(config => $config);
-
-    $extension_subset_process = Test::MockObject::Extends->new($extension_subset_process);
-    $extension_subset_process->mock('get_owltools_results',
-                                    sub {
-                                      open my $fh, '<', $self->root_dir() . '/t/data/owltools_out.txt';
-                                      return $fh;
-                                    });
+    $extension_subset_process = $self->get_mock_subset_processor();
 
     $subset_data = $extension_subset_process->get_subset_data(@ontology_args);
   }

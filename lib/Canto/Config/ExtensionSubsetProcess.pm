@@ -50,15 +50,26 @@ sub get_owltools_results
   my $self = shift;
   my @obo_file_names = @_;
 
+  my @results = ();
+
   my ($temp_fh, $temp_filename) = tempfile();
 
-  system ("owltools @obo_file_names --save-closure-for-chado $temp_filename") == 0
-    or die "can't open pipe from owltools: $?";
+  for my $filename (@obo_file_names) {
+    warn "RUNNING: owltools $filename --save-closure-for-chado $temp_filename\n";
 
-  open my $owltools_out, '<', $temp_filename
-    or die "can't open owltools output from $temp_filename: $!\n";
+    system ("owltools $filename --save-closure-for-chado $temp_filename") == 0
+      or die "can't open pipe from owltools: $?";
 
-  return $owltools_out;
+    open my $owltools_out, '<', $temp_filename
+      or die "can't open owltools output from $temp_filename: $!\n";
+
+    while (defined (my $line = <$owltools_out>)) {
+      chomp $line;
+      push @results, [split (/\t/, $line)];
+    }
+  }
+
+  return @results;
 }
 
 =head2 get_subset_data
@@ -119,12 +130,10 @@ sub get_subset_data
     ($_, { $_ => 1 })
   } (keys %domain_subsets_to_store, keys %range_subsets_to_store);
 
-  my $pipe_from_owltools = $self->get_owltools_results(@obo_file_names);
+  my @owltools_results = $self->get_owltools_results(@obo_file_names);
 
-  while (defined (my $line = <$pipe_from_owltools>)) {
-    chomp $line;
-    my ($subject, $rel_type, $depth, $object) =
-      split (/\t/, $line);
+  for my $result (@owltools_results) {
+    my ($subject, $rel_type, $depth, $object) = @$result;
 
     $rel_type =~ s/^OBO_REL://;
 
