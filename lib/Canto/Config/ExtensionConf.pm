@@ -77,6 +77,10 @@ sub parse {
           next;
         }
 
+        if ($subset_rel !~ /^\w+$/) {
+          die qq("$subset_rel" does not look like a relation on line: $line\n");
+        }
+
         if (!defined $display_text) {
           die "config line $. in $extension_conf_file has too few fields: $line\n";
         }
