@@ -3612,7 +3612,8 @@ var termNameComplete =
               match_name = item.name;
             }
             var warning = '';
-            if (searchAnnotationTypeName !== item.annotation_type_name) {
+            if (searchAnnotationTypeName.indexOf('[') != 0 &&
+                searchAnnotationTypeName !== item.annotation_type_name) {
               warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
                 item.annotation_type_name + ' term but<br/>you are browsing ' +
                 searchAnnotationTypeName + ' terms</span>';
