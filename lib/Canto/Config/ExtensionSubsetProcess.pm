@@ -55,8 +55,6 @@ sub get_owltools_results
   my ($temp_fh, $temp_filename) = tempfile();
 
   for my $filename (@obo_file_names) {
-    warn "RUNNING: owltools $filename --save-closure-for-chado $temp_filename\n";
-
     system ("owltools $filename --save-closure-for-chado $temp_filename") == 0
       or die "can't open pipe from owltools: $?";
 
