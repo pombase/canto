@@ -65,6 +65,8 @@ sub get_owltools_results
       chomp $line;
       push @results, [split (/\t/, $line)];
     }
+
+    close $owltools_out;
   }
 
   return @results;
