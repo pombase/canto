@@ -104,7 +104,14 @@ sub parse {
           if (/:/) {
             push @new_ontology_range_scope, $_;
           } else {
-            if (/^(number|text|\%)$/i) {
+            if (lc $_ eq 'number') {
+              if (!grep { $_->{type} eq 'Number'} @new_range_bits) {
+                push @new_range_bits, {
+                  type => 'Number',
+                };
+              }
+            } else {
+            if (/^(text|\%)$/i) {
               # hack: treat numbers as free text for now
               if (!grep { $_->{type} eq 'Text'} @new_range_bits) {
                 push @new_range_bits, {
@@ -123,6 +130,7 @@ sub parse {
               } else {
                 die "unsupported range part: $_\n";
               }
+            }
             }
           }
         } @range_bits;

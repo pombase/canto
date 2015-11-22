@@ -12,6 +12,9 @@
                         annotation-type-name="{{rangeOntologyScope}}"></term-name-complete>
   </span>
   <span ng-if="rangeType == 'Text'">
-    <input type="text" ng-model="extensionPart.rangeValue"/>
+    <input type="text" required ng-model="extensionPart.rangeValue"/>
+  </span>
+  <span ng-if="rangeType == 'Number'">
+    <input type="number" required ng-model="extensionPart.rangeValue"/>
   </span>
 </div>
