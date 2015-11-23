@@ -55,108 +55,108 @@ use warnings;
 =cut
 
 sub parse {
-    my @extension_conf_files = @_;
+  my @extension_conf_files = @_;
 
-    my @res = ();
+  my @res = ();
 
-    for my $extension_conf_file (@extension_conf_files) {
-      open my $conf_fh, '<', $extension_conf_file
-        or die "can't open $extension_conf_file: $!\n";
+  for my $extension_conf_file (@extension_conf_files) {
+    open my $conf_fh, '<', $extension_conf_file
+      or die "can't open $extension_conf_file: $!\n";
 
-      while (defined (my $line = <$conf_fh>)) {
-        chomp $line;
+    while (defined (my $line = <$conf_fh>)) {
+      chomp $line;
 
-        next if $line =~ /^#/;
+      next if $line =~ /^#/;
 
-        my ($domain, $subset_rel, $allowed_relation, $range, $display_text,
-            $cardinality, $role) =
-              split (/\t/, $line);
+      my ($domain, $subset_rel, $allowed_relation, $range, $display_text,
+          $cardinality, $role) =
+            split (/\t/, $line);
 
-        if ($domain =~ /^\s*domain/i) {
-          # header
-          next;
-        }
+      if ($domain =~ /^\s*domain/i) {
+        # header
+        next;
+      }
 
-        if ($subset_rel !~ /^\w+$/) {
-          die qq("$subset_rel" does not look like a relation on line: $line\n");
-        }
+      if ($subset_rel !~ /^\w+$/) {
+        die qq("$subset_rel" does not look like a relation on line: $line\n");
+      }
 
-        if (!defined $display_text) {
-          die "config line $. in $extension_conf_file has too few fields: $line\n";
-        }
+      if (!defined $display_text) {
+        die "config line $. in $extension_conf_file has too few fields: $line\n";
+      }
 
-        my @cardinality = ('*');
+      my @cardinality = ('*');
 
-        if (defined $cardinality) {
-          @cardinality = grep {
-            length $_ > 0;
-          } map {
-            s/^\s+//; s/\s+$//; $_;
-          } split /,/, $cardinality;
-        }
+      if (defined $cardinality) {
+        @cardinality = grep {
+          length $_ > 0;
+        } map {
+          s/^\s+//; s/\s+$//; $_;
+        } split /,/, $cardinality;
+      }
 
-        my @range_bits = split /\|/, $range;
+      my @range_bits = split /\|/, $range;
 
-        my @new_range_bits = ();
-        my @new_ontology_range_scope = ();
+      my @new_range_bits = ();
+      my @new_ontology_range_scope = ();
 
-        map {
-          if (/:/) {
-            push @new_ontology_range_scope, $_;
+      map {
+        if (/:/) {
+          push @new_ontology_range_scope, $_;
+        } else {
+          if (lc $_ eq 'number') {
+            if (!grep { $_->{type} eq 'Number'} @new_range_bits) {
+              push @new_range_bits, {
+                type => 'Number',
+              };
+            }
           } else {
-            if (lc $_ eq 'number') {
-              if (!grep { $_->{type} eq 'Number'} @new_range_bits) {
+            if (/^(text|\%)$/i) {
+              if (!grep { $_->{type} eq 'Text'} @new_range_bits) {
                 push @new_range_bits, {
-                  type => 'Number',
+                  type => 'Text',
+                  input_type => lc $_,
                 };
               }
             } else {
-              if (/^(text|\%)$/i) {
-                if (!grep { $_->{type} eq 'Text'} @new_range_bits) {
+              if (/^(Gene|FeatureID|GeneID|ProteinID|TranscriptID|tRNAID|SP.*)$/i) {
+                # hack: treat everything else as a gene (and normalise the case)
+                if (!grep { $_->{type} eq 'Gene'} @new_range_bits) {
                   push @new_range_bits, {
-                    type => 'Text',
-                    input_type => lc $_,
-                  };
+                    type => 'Gene',
+                  }
                 }
               } else {
-                if (/^(Gene|FeatureID|GeneID|ProteinID|TranscriptID|tRNAID|SP.*)$/i) {
-                  # hack: treat everything else as a gene (and normalise the case)
-                  if (!grep { $_->{type} eq 'Gene'} @new_range_bits) {
-                    push @new_range_bits, {
-                      type => 'Gene',
-                    }
-                  }
-                } else {
-                  die "unsupported range part: $_\n";
-                }
+                die "unsupported range part: $_\n";
               }
             }
           }
-        } @range_bits;
-
-        if (@new_ontology_range_scope) {
-          unshift @new_range_bits,
-            {
-              type => 'Ontology',
-              scope => \@new_ontology_range_scope,
-            };
         }
+      } @range_bits;
 
-        push @res, {
-          domain => $domain,
-          subset_rel => $subset_rel,
-          allowed_relation => $allowed_relation,
-          range => \@new_range_bits,
-          display_text => $display_text,
-          cardinality => \@cardinality,
-          role => $role,
-        };
+      if (@new_ontology_range_scope) {
+        unshift @new_range_bits,
+          {
+            type => 'Ontology',
+            scope => \@new_ontology_range_scope,
+          };
       }
 
-      close $conf_fh or die "can't close $extension_conf_file: $!\n";
+      push @res, {
+        domain => $domain,
+        subset_rel => $subset_rel,
+        allowed_relation => $allowed_relation,
+        range => \@new_range_bits,
+        display_text => $display_text,
+        cardinality => \@cardinality,
+        role => $role,
+      };
     }
 
-    return @res;
+    close $conf_fh or die "can't close $extension_conf_file: $!\n";
   }
+
+  return @res;
+}
 
 1;
