@@ -50,6 +50,13 @@ CREATE TABLE cv (
        definition text
 );
 
+CREATE TABLE cvprop (
+       cvprop_id INTEGER PRIMARY KEY NOT NULL,
+       cv_id integer NOT NULL,
+       type_id integer NOT NULL,
+       value text,
+       rank integer NOT NULL DEFAULT 0
+);
 
 CREATE TABLE db (
        db_id integer NOT NULL PRIMARY KEY,
