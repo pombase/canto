@@ -1376,6 +1376,7 @@ var extensionPartEdit =
       controller: function($scope) {
         $scope.rangeGeneId = '';
 
+        // use just the first configured range type for now
         $scope.rangeType = $scope.relationConfig.range[0].type;
 
         $scope.termFoundCallback = function(termId, termName) {
@@ -1401,7 +1402,7 @@ var extensionPartEdit =
           if ($.isArray(rangeScope)) {
             $scope.rangeOntologyScope = '[' + rangeScope.join('|') + ']';
           } else {
-            // special case for using the ontology namescape instead of
+            // special case for using the ontology namespace instead of
             // restricting to a subset using a term or terms
             $scope.rangeOntologyScope = rangeScope;
           }
