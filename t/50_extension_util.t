@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Deep;
 
 use Try::Tiny;
@@ -29,10 +29,25 @@ cmp_deeply([@res],
              ]
            ]);
 
+@res = Canto::ExtensionUtil::parse_extension("rel1(range1),residue=10");
+cmp_deeply([@res],
+           [
+             [
+               {
+                 'relation' => 'rel1',
+                 'rangeValue' => 'range1'
+               },
+               {
+                 'rangeValue' => '10',
+                 'relation' => 'residue'
+               }
+             ]
+           ]);
+
 try {
-  @res = Canto::ExtensionUtil::parse_extension("rel1(range1),residue=10");
+  @res = Canto::ExtensionUtil::parse_extension("rel1(range1),qualifier=NOT");
   fail("parse should fail");
 } catch {
-  is($_, "upgrade script can't handle: residue=10\n");
+  is($_, "upgrade script can't handle: qualifier=NOT\n");
 };
 
