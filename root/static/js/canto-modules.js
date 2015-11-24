@@ -1423,7 +1423,7 @@ canto.directive('extensionPartEdit',
 
 
 var extensionDisplay =
-  function() {
+  function(CantoGlobals) {
     return {
       scope: {
         extension: '=',
@@ -1433,6 +1433,7 @@ var extensionDisplay =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_display.html',
       controller: function($scope) {
+        $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.deletePart = function(part) {
           if ($scope.showDelete) {
             arrayRemoveOne($scope.extension, part);
@@ -1442,7 +1443,7 @@ var extensionDisplay =
     };
   };
 
-canto.directive('extensionDisplay', [extensionDisplay]);
+canto.directive('extensionDisplay', ['CantoGlobals', extensionDisplay]);
 
 
 var ontologyWorkflowCtrl =
