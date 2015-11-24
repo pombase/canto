@@ -419,6 +419,26 @@ sub load
                               });
   }
 
+  my $cv_date_type =
+    $load_util->find_cvterm(cv_name => 'cvprop_type',
+                           name => 'cv_date');
+
+  for my $cv_name (keys %cvs) {
+    my $cv = $load_util->find_or_create_cv($cv_name);
+
+    my $cv_date_prop =
+      $schema->resultset('Cvprop')->find({ cv_id => $cv->cv_id(),
+                                           type_id => cv_date_prop->cvterm_id() });
+
+    my $date = HOW DO WE GET THE DATE FROM THE OBO FILE?
+
+    if (!defined $cv_date_prop) {
+      $schema->resultset('Cvprop')->create({ cv_id => $cv->cv_id(),
+                                             type_id => cv_date_prop->cvterm_id(),
+                                             value => $date});
+    }
+  }
+
   $guard->commit();
 }
 
