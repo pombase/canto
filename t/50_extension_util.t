@@ -29,7 +29,7 @@ cmp_deeply([@res],
              ]
            ]);
 
-@res = Canto::ExtensionUtil::parse_extension("rel1(range1),residue=10");
+@res = Canto::ExtensionUtil::parse_extension("rel1(range1),residue=10,col17=PR:000123");
 cmp_deeply([@res],
            [
              [
@@ -40,6 +40,10 @@ cmp_deeply([@res],
                {
                  'rangeValue' => '10',
                  'relation' => 'modifies_residue'
+               },
+               {
+                 'rangeValue' => 'PR:000123',
+                 'relation' => 'column_17'
                }
              ]
            ]);
