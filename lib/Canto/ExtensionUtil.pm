@@ -130,7 +130,7 @@ sub parse_extension
 
       $bit =~ s/annotation_extension=//;
 
-      $bit =~ s/residue=(.*)/modifies_residue($1)/;
+      $bit =~ s/residue=(.*)/residue($1)/;
       $bit =~ s/(?:column_17|col17)=(.*)/column_17($1)/;
 
       if ($bit =~ /^\s*(\S+)=\s*(.+)\s*$/) {
