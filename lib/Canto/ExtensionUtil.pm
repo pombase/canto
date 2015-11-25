@@ -130,7 +130,7 @@ sub parse_extension
 
       $bit =~ s/annotation_extension=//;
 
-      $bit =~ s/residue=(.*)/residue($1)/;
+      $bit =~ s/residue=(.*)/modifies_residue($1)/;
 
       if ($bit =~ /^\s*(\S+)=\s*(.+)\s*$/) {
         if ($1 eq 'allele') {
