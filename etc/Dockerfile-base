@@ -1,45 +1,40 @@
-FROM debian:wheezy
+FROM debian:stretch
 MAINTAINER Kim Rutherford <kim@pombase.org>
-RUN apt-get update && apt-get install -y libmodule-install-perl libemail-sender-perl \
-  libtest-output-perl libcatalyst-devel-perl ntpdate sqlite3 make \
-  git-core libhash-merge-perl libplack-perl libdbix-class-perl \
-  perl wget gcc g++ tar gzip bzip2 libjson-xs-perl libdbd-sqlite3-perl \
-  libdbix-class-schema-loader-perl libio-all-lwp-perl libwww-perl \
-  libio-all-perl libio-string-perl libmemoize-expirelru-perl \
-  libtry-tiny-perl libarchive-zip-perl libtext-csv-xs-perl \
-  liblingua-en-inflect-number-perl libcatalyst-modules-perl libmoose-perl \
-  libdata-compare-perl libmoosex-role-parameterized-perl \
-  libfile-copy-recursive-perl libfile-touch-perl libxml-simple-perl \
-  libtext-csv-perl libtest-deep-perl libextutils-depends-perl libchi-perl \
-  libweb-scraper-perl liblwp-protocol-psgi-perl libdata-javascript-anon-perl \
-  libcatalyst-engine-psgi-perl libcache-perl libcache-memcached-perl \
-  libchi-driver-memcached-perl libpq5 libdbd-pg-perl \
-  libtext-microtemplate-perl libdata-dump-streamer-perl liblist-moreutils-perl \
-  libclucene-dev libclucene0ldbl && \
-  (echo o conf prerequisites_policy follow; echo o conf build_requires_install_policy no; echo o conf commit) | cpan && cpan -i Module::Install Module::Install::Catalyst
+RUN apt-get update
+
+RUN apt-get install -y ntpdate sqlite3 make tar gzip bzip2 whiptail gcc g++ wget
+
+RUN apt-get install -y perl-base git-core libxml2-dev zlib1g-dev libssl-dev \
+  libexpat1-dev libpq-dev
+
+RUN (echo o conf prerequisites_policy follow; echo o conf build_requires_install_policy no; echo o conf commit) | cpan
+
+RUN echo installing lib lucene && (cd /tmp/; \
+  wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2+b1_amd64.deb && \
+  wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2+b1_amd64.deb && \
+  dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb)
 
 RUN cpan -i Lucene
 
-RUN cpan -i \
-    DBIx::Class::ResultSet::Data::Pageset Data::Rmap GO::Parser
+RUN cpan -i DBIx::Class::ResultSet::Data::Pageset Data::Rmap GO::Parser
 
-RUN cpan -i \
-    Role::Tiny HTML::HTML5::Builder HTML::Mason
+RUN cpan -i XML::LibXML HTML::HTML5::Writer HTML::HTML5::Builder HTML::Mason
 
-RUN cpan -i \
-    MooseX::Test::Role Package::Alias
+RUN cpan -i Moose MooseX::Test::Role Package::Alias
 
-RUN cpan -i \
-    String::Similarity Text::MultiMarkdown
+RUN cpan -i String::Similarity Text::MultiMarkdown
 
 RUN cpan -i \
     Plack::Middleware::Debug Plack::Middleware::Expires \
-    Plack::Middleware::InteractiveDebugger Starman Net::Server::SS::PreFork \
-    Server::Starter
+    Plack::Middleware::InteractiveDebugger
+
+RUN cpan -i Starman Net::Server::SS::PreFork Server::Starter
 
 RUN cpan -i \
     Catalyst::Plugin::PageCache Catalyst::Plugin::Session::PerUser \
     Catalyst::TraitFor::Request::ProxyBase CatalystX::RoleApplicator
+
+RUN cpan -i XML::Simple Template Module::Install Module::Install::Catalyst
 
 COPY . /tmp/canto/
 RUN (cd /tmp/canto; perl Makefile.PL && make installdeps); rm -rf /tmp/canto
