@@ -154,7 +154,6 @@ sub add_to_index
 
     my @fields = (
       Lucene::Document::Field->Text('text', $text),
-      Lucene::Document::Field->Keyword('text_keyword', $text),
       Lucene::Document::Field->Keyword(ontid => $db_accession),
       Lucene::Document::Field->Keyword(cv_name => $cv_name),
       (map {
@@ -275,8 +274,7 @@ sub lookup
   }
 
   $query_string .=
-    qq{(text_keyword:$search_string OR } .
-    qq{text:($search_string)$wildcard)};
+    qq{text:($search_string)$wildcard};
 
   my $query = $parser->parse($query_string);
 
