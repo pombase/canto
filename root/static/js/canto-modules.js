@@ -1614,7 +1614,7 @@ var ontologyWorkflowCtrl =
       simpleHttpPost(toaster, $http,
                      '../set_term/' + $scope.annotationType.name,
                      CursStateService.asAnnotationDetails());
-      toaster.pop('info', 'Creating annotation ...');
+      toaster.pop('info', 'Storing annotation ...');
     };
 
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
