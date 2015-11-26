@@ -1,10 +1,6 @@
 <div>
   <span ng-repeat="part in extension">
     <span class="curs-extension-relation">{{part.relation}}</span>
-    <span>{{part.rangeDisplayName || part.rangeValue}}</span>
-    <a ng-if="showDelete" confirm="Really delete?" href="" ng-click="deletePart(part)">
-      <img ng-src="{{app_static_path + '/images/delete_icon.png'}}" />
-    </a>
-    <span ng-show="!$last">,&nbsp;&nbsp;</span>
+    <span>{{part.rangeDisplayName || part.rangeValue}}</span><a ng-if="showDelete" confirm="Really delete?" href="" ng-click="deletePart(part)"><img ng-src="{{app_static_path + '/images/delete_icon.png'}}" /></a><span ng-show="!$last">, <span ng-if="showDelete">&nbsp;</span></span>
   </span>
 </div>
