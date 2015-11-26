@@ -334,6 +334,7 @@ canto.service('CantoGlobals', function($window) {
   this.curs_root_uri = $window.curs_root_uri;
   this.ferret_choose = $window.ferret_choose;
   this.read_only_curs = $window.read_only_curs;
+  this.is_admin_session = $window.is_admin_session;
 });
 
 canto.service('CantoService', function($http) {
@@ -1237,7 +1238,7 @@ function openExtensionBuilderDialog($modal, extension, termId, featureDisplayNam
 
 
 var extensionBuilder =
-  function($modal, CantoConfig, CantoService, CursSessionDetails) {
+  function($modal, CantoGlobals, CantoConfig, CantoService, CursSessionDetails) {
     return {
       scope: {
         extension: '=',
@@ -1268,7 +1269,8 @@ var extensionBuilder =
           if ($scope.extensionConfiguration.length > 0 &&
               subset_ids && subset_ids.length > 0) {
             $scope.matchingConfigurations = 
-              extensionConfFilter($scope.extensionConfiguration, subset_ids);
+              extensionConfFilter($scope.extensionConfiguration, subset_ids,
+                                  CantoGlobals.is_admin_session ? 'admin' : 'user');
             return;
           }
 
@@ -1335,7 +1337,7 @@ var extensionBuilder =
   };
 
 canto.directive('extensionBuilder',
-                ['$modal', 'CantoConfig', 'CantoService', 'CursSessionDetails',
+                ['$modal', 'CantoGlobals', 'CantoConfig', 'CantoService', 'CursSessionDetails',
                  extensionBuilder]);
 
 
@@ -1447,7 +1449,7 @@ canto.directive('extensionDisplay', ['CantoGlobals', extensionDisplay]);
 
 
 var ontologyWorkflowCtrl =
-  function($scope, toaster, $http, AnnotationTypeConfig, CantoService,
+  function($scope, toaster, $http, CantoGlobals, AnnotationTypeConfig, CantoService,
            CantoConfig, CursStateService, $attrs) {
     $scope.states = ['searching', 'selectingEvidence', 'buildExtension', 'commenting'];
 
@@ -1464,7 +1466,8 @@ var ontologyWorkflowCtrl =
 
       if (subset_ids && subset_ids.length > 0) {
         $scope.matchingExtensionConfigs = 
-          extensionConfFilter($scope.extensionConfiguration, subset_ids);
+          extensionConfFilter($scope.extensionConfiguration, subset_ids,
+                              CantoGlobals.is_admin_session ? 'admin' : 'user');
         return;
       }
 
@@ -1621,7 +1624,8 @@ var ontologyWorkflowCtrl =
   };
 
 canto.controller('OntologyWorkflowCtrl',
-                 ['$scope', 'toaster', '$http', 'AnnotationTypeConfig', 'CantoService',
+                 ['$scope', 'toaster', '$http', 'CantoGlobals',
+                  'AnnotationTypeConfig', 'CantoService',
                   'CantoConfig', 'CursStateService', '$attrs',
                   ontologyWorkflowCtrl]);
 

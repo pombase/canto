@@ -1,11 +1,13 @@
 <%args>
 $curs_root_uri
+$is_admin_session
 </%args>
 
 <script language="javascript" type="text/javascript">
 var canto_root_uri = '<% $c->uri_for('/') %>';
 var curs_root_uri = '<% $curs_root_uri %>';
 var read_only_curs = <% $read_only_curs ? 'true' : 'false' %>;
+var is_admin_session = <% $is_admin_session ? 'true' : 'false' %>;
 var curs_key = '<% $curs_key %>';
 var annotation_id = <% $annotation_id %>;
 var with_gene_evidence_codes = <% $with_gene_evidence_codes_js |n %>;
