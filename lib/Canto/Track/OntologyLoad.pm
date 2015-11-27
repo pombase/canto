@@ -58,6 +58,7 @@ use LWP::Simple;
 use File::Temp qw(tempfile);
 
 use Canto::Track::LoadUtil;
+use Canto::Curs::Utils;
 
 has 'schema' => (
   is => 'ro',
@@ -421,20 +422,20 @@ sub load
 
   my $cv_date_type =
     $load_util->find_cvterm(cv_name => 'cvprop_type',
-                           name => 'cv_date');
+                            name => 'cv_date');
 
   for my $cv_name (keys %cvs) {
     my $cv = $load_util->find_or_create_cv($cv_name);
 
     my $cv_date_prop =
       $schema->resultset('Cvprop')->find({ cv_id => $cv->cv_id(),
-                                           type_id => cv_date_prop->cvterm_id() });
+                                           type_id => $cv_date_type->cvterm_id() });
 
-    my $date = HOW DO WE GET THE DATE FROM THE OBO FILE?
+    my $date = Canto::Curs::Utils::get_iso_date();
 
     if (!defined $cv_date_prop) {
       $schema->resultset('Cvprop')->create({ cv_id => $cv->cv_id(),
-                                             type_id => cv_date_prop->cvterm_id(),
+                                             type_id => $cv_date_type->cvterm_id(),
                                              value => $date});
     }
   }

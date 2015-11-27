@@ -113,7 +113,7 @@ db_initial_data:
       - name: cvprop_type
         cvterms:
           - name: cv_date
-            definition: 'the "date:" field from the header of the OBO file'
+            definition: 'The date the CV was last loaded'
             dbxref:
               accession: cv_date
               db:
