@@ -35,11 +35,13 @@ __PACKAGE__->table("cvprop");
 =head2 cv_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 type_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 value
@@ -59,9 +61,9 @@ __PACKAGE__->add_columns(
   "cvprop_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "cv_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "type_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "value",
   { data_type => "text", is_nullable => 1 },
   "rank",
@@ -80,9 +82,41 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("cvprop_id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-11-23 17:08:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Zu+szcgxp4pBF6An1E5R2Q
+=head2 cv
+
+Type: belongs_to
+
+Related object: L<Canto::TrackDB::Cv>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "cv",
+  "Canto::TrackDB::Cv",
+  { cv_id => "cv_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+=head2 type
+
+Type: belongs_to
+
+Related object: L<Canto::TrackDB::Cvterm>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "type",
+  "Canto::TrackDB::Cvterm",
+  { cvterm_id => "type_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-11-30 16:50:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9Czv4yWxH9UGMlJkXJi/wQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

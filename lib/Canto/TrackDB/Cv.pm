@@ -67,6 +67,21 @@ __PACKAGE__->set_primary_key("cv_id");
 
 =head1 RELATIONS
 
+=head2 cvprops
+
+Type: has_many
+
+Related object: L<Canto::TrackDB::Cvprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvprops",
+  "Canto::TrackDB::Cvprop",
+  { "foreign.cv_id" => "self.cv_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 cvterms
 
 Type: has_many
@@ -83,8 +98,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:greknT9yQgCBmIG8PPnhLw
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-11-30 16:50:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:susHifJxhgzexa0Dhh72ig
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

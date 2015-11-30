@@ -52,8 +52,8 @@ CREATE TABLE cv (
 
 CREATE TABLE cvprop (
        cvprop_id INTEGER PRIMARY KEY NOT NULL,
-       cv_id integer NOT NULL,
-       type_id integer NOT NULL,
+       cv_id integer NOT NULL references cv (cv_id),
+       type_id integer NOT NULL references cvterm (cvterm_id),
        value text,
        rank integer NOT NULL DEFAULT 0
 );

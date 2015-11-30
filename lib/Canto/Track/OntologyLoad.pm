@@ -145,6 +145,33 @@ sub _delete_term_by_cv
   $schema->resultset('Dbxref')->search({ }, { where => $dbxref_where })->delete();
 }
 
+sub _store_cv_prop
+{
+  my $schema = shift;
+  my $load_util = shift;
+
+  my $cv = shift;
+  my $prop_name = shift;
+  my $value = shift;
+
+  my $prop_type_term =
+    $load_util->find_cvterm(cv_name => 'cvprop_type',
+                            name => $prop_name);
+
+  my $prop_term =
+    $schema->resultset('Cvprop')->find({ cv_id => $cv->cv_id(),
+                                         type_id => $prop_type_term->cvterm_id() });
+
+  if (defined $prop_term) {
+    $prop_term->value($value);
+    $prop_term->update();
+  } else {
+    $schema->resultset('Cvprop')->create({ cv_id => $cv->cv_id(),
+                                           type_id => $prop_type_term->cvterm_id(),
+                                           value => $value});
+  }
+}
+
 =head2 load
 
  Usage   : my $ont_load = Canto::Track::OntologyLoad->new(schema => $schema);
@@ -264,6 +291,8 @@ sub load
                               name => $synonym_type)->cvterm_id();
   }
 
+  my %term_counts = ();
+
   my $store_term_handler =
     sub {
       my $ni = shift;
@@ -379,6 +408,8 @@ sub load
           $index->add_to_index($cv_name, $term_name, $cvterm_id,
                                $term->acc(), \@synonyms_for_index);
         }
+
+        $term_counts{$cv_name}++;
       }
     };
 
@@ -421,25 +452,15 @@ sub load
                               });
   }
 
-  my $cv_date_type =
-    $load_util->find_cvterm(cv_name => 'cvprop_type',
-                            name => 'cv_date');
-
   for my $cv_name (keys %cvs) {
     my $cv = $load_util->find_or_create_cv($cv_name);
 
-    my $cv_date_prop =
-      $schema->resultset('Cvprop')->find({ cv_id => $cv->cv_id(),
-                                           type_id => $cv_date_type->cvterm_id() });
-
     my $date = Canto::Curs::Utils::get_iso_date();
+    _store_cv_prop($schema, $load_util, $cv, 'cv_date', $date);
 
-    if (!defined $cv_date_prop) {
-      $schema->resultset('Cvprop')->create({ cv_id => $cv->cv_id(),
-                                             type_id => $cv_date_type->cvterm_id(),
-                                             value => $date});
-    }
-  }
+    _store_cv_prop($schema, $load_util, $cv, 'cv_term_count',
+                   $term_counts{$cv_name} // 0);
+ }
 
   $guard->commit();
 }
@@ -475,7 +496,7 @@ sub finalise
     $dest_dbh->begin_work();
 
     my @table_names =
-      qw(db dbxref cv cvterm cvterm_dbxref cvtermsynonym cvterm_relationship cvtermprop);
+      qw(db dbxref cv cvprop cvterm cvterm_dbxref cvtermsynonym cvterm_relationship cvtermprop);
 
     for my $table_name (reverse @table_names) {
       $dest_dbh->do("DELETE FROM main.$table_name WHERE main.$table_name.${table_name}_id");
