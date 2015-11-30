@@ -308,6 +308,11 @@ db_initial_data:
               accession: phenotype_screen
               db:
                 name: Canto
+          - name: Structure
+            dbxref:
+              accession: structure
+              db:
+                name: Canto
           - name: Other
             definition: >
                 Triage status for a publication that will not be curated for

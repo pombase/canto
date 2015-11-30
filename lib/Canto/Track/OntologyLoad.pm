@@ -199,14 +199,6 @@ sub load
   my $graph = $parser->handler->graph;
   my %cvterms = ();
 
-  my @synonym_types_to_load = @$synonym_types_ref;
-  my %synonym_type_ids = ();
-
-  for my $synonym_type (@synonym_types_to_load) {
-    $synonym_type_ids{$synonym_type} =
-      $schema->find_with_type('Cvterm', { name => $synonym_type })->cvterm_id();
-  }
-
   my %relationship_cvterms = ();
 
   my $relationship_cv =
@@ -262,6 +254,15 @@ sub load
   my %relationships_to_load = ();
 
   map { $relationships_to_load{$_} = 1; } @{$self->relationships_to_load()};
+
+  my @synonym_types_to_load = @$synonym_types_ref;
+  my %synonym_type_ids = ();
+
+  for my $synonym_type (@synonym_types_to_load) {
+    $synonym_type_ids{$synonym_type} =
+      $load_util->find_cvterm(cv_name => 'synonym_type',
+                              name => $synonym_type)->cvterm_id();
+  }
 
   my $store_term_handler =
     sub {
