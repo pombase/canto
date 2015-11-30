@@ -470,6 +470,18 @@ class_info:
         - name: "term count"
           source:
             sql: 'select count(*) from cvterm where cvterm.cv_id = me.cv_id'
+        - name: "load date"
+          source:
+            sql: "select value from cvprop p join cvterm pt on p.type_id = pt.cvterm_id where p.cv_id = me.cv_id and pt.name = 'cv_date'"
+    cvprop:
+      class_display_name: controlled vocabulary properties
+      display_field: value
+      field_info_list:
+        - name: type
+          source: type_id
+          referenced_class: Cvterm
+        - name: value
+          editable: 1
     cvterm:
       class_display_name: controlled vocabulary term
       editable: 1
