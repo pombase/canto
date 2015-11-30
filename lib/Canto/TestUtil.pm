@@ -759,6 +759,16 @@ sub make_base_track_db
     $ontology_index->finish_index();
   }
 
+  my $cv_date_prop_rs =
+    $schema->resultset('Cvprop')->search({ 'type.name' => 'cv_date' },
+                                         { join => 'type' });
+
+  while (defined (my $prop = $cv_date_prop_rs->next())) {
+    # normalise the dates in the test db to reduce unnecessary diffs
+    $prop->value('2015-11-29');
+    $prop->update();
+  }
+
   $schema->storage()->disconnect();
 }
 

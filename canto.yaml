@@ -110,6 +110,20 @@ db_initial_data:
               accession: taxonId
               db:
                 name: Canto
+      - name: cvprop_type
+        cvterms:
+          - name: cv_date
+            definition: 'The date the CV was last loaded'
+            dbxref:
+              accession: cv_date
+              db:
+                name: Canto
+          - name: cv_term_count
+            definition: 'The number of non-obsolete, non-relation terms in the CV'
+            dbxref:
+              accession: cv_term_count
+              db:
+                name: Canto
       - name: cvterm_property_type
         cvterms:
           - name: comment
