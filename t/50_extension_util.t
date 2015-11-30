@@ -39,7 +39,7 @@ cmp_deeply([@res],
                },
                {
                  'rangeValue' => '10',
-                 'relation' => 'modifies_residue'
+                 'relation' => 'residue'
                },
                {
                  'rangeValue' => 'PR:000123',
