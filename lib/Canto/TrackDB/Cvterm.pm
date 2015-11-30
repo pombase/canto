@@ -145,6 +145,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 cvprops
+
+Type: has_many
+
+Related object: L<Canto::TrackDB::Cvprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvprops",
+  "Canto::TrackDB::Cvprop",
+  { "foreign.type_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 cvterm_dbxrefs
 
 Type: has_many
@@ -431,8 +446,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-04-25 15:38:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z1o9WRlCof5hFB5/S0SNKQ
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-11-30 16:50:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AS+F87KHKbpUC6F4NDfgBg
 
 =head2 db_accession
 

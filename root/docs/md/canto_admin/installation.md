@@ -27,7 +27,8 @@ On Debian and Ubuntu, the software requirements can be installed using the
 package manager:
 
     sudo apt-get install perl gcc g++ tar gzip bzip2 make git-core wget \
-      libmodule-install-perl libcatalyst-devel-perl liblocal-lib-perl
+      libmodule-install-perl libcatalyst-devel-perl liblocal-lib-perl \
+      libpq-dev libxml2-dev zlib1g-dev libssl-dev libexpat1-dev
 
 Optional: to improve the installation speed, these Perl packages can be installed
 before proceeding:
