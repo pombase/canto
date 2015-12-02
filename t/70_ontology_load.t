@@ -15,7 +15,7 @@ my $schema = Canto::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is (@loaded_cvterms, 54);
+is (@loaded_cvterms, 55);
 
 my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
@@ -34,7 +34,7 @@ $test_util->load_test_ontologies($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 93);
+is(@loaded_cvterms, 94);
 
 my $cvprop_rs = $schema->resultset('Cvprop');
 
