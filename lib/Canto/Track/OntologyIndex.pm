@@ -274,7 +274,7 @@ sub lookup
   }
 
   $query_string .=
-    qq{text:($search_string)$wildcard};
+    qq{(text:($search_string)$wildcard)};
 
   my $query = $parser->parse($query_string);
 
