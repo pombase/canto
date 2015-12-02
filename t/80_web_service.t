@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 27;
+use Test::More tests => 32;
 
 use Canto::TestUtil;
 
@@ -76,6 +76,27 @@ test_psgi $app, sub {
     }
 
     is (@$obj, 2);
+    ok(grep { $_->{id} =~ /PECO:0000137/ } @$obj);
+    ok(grep { $_->{name} =~ /glucose rich medium/ } @$obj);
+    ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
+  }
+
+  # test getting all "phenotype_condition" terms
+  {
+    my $search_term = 'gl';
+    my $url = "http://localhost:5000/ws/lookup/ontology/phenotype_condition/?term=ALLTERMS";
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my $obj;
+    eval { $obj = decode_json($res->content()); };
+    if ($@) {
+      die "$@\n", $res->content();
+    }
+
+    is (@$obj, 10);
     ok(grep { $_->{id} =~ /PECO:0000137/ } @$obj);
     ok(grep { $_->{name} =~ /glucose rich medium/ } @$obj);
     ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);

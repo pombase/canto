@@ -539,6 +539,7 @@ sub get_all
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
   my $include_synonyms = $args{include_synonyms};
+  my $include_subset_ids = $args{include_subset_ids};
 
   my $schema = $self->schema();
   my @ret_list = ();
@@ -550,7 +551,7 @@ sub get_all
     my %term_hash =
       $self->_make_term_hash($cvterm, $ontology_name,
                              $include_definition, $include_children,
-                             $include_synonyms, undef);
+                             $include_synonyms, undef, $include_subset_ids);
 
     push @ret_list, \%term_hash;
   }

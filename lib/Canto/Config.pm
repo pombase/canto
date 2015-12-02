@@ -515,7 +515,7 @@ sub class_info
   return $self->{class_info}->{$model_name};
 }
 
-my @boolean_field_names = qw|description_required allele_name_required allow_expression_change can_have_conditions|;
+my @boolean_field_names = qw|description_required allele_name_required allow_expression_change can_have_conditions use_select_element|;
 
 sub for_json
 {

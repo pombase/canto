@@ -3598,7 +3598,7 @@ canto.directive('annotationSingleRow',
 
 
 var termNameComplete =
-  function($timeout) {
+  function(CantoGlobals, AnnotationTypeConfig, CantoService, $timeout) {
     return {
       scope: {
         annotationTypeName: '@',
@@ -3606,6 +3606,22 @@ var termNameComplete =
         foundCallback: '&',
       },
       controller: function($scope) {
+        $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.allTerms = [];
+        $scope.chosenTermId = null;
+
+        AnnotationTypeConfig.getByName($scope.annotationTypeName)
+          .then(function(annotationType) {
+            $scope.annotationType = annotationType;
+            if (annotationType.use_select_element) {
+              CantoService.lookup('ontology', [$scope.annotationTypeName,
+                                               'ALLTERMS'], {})
+                .then(function(results) {
+                  $scope.allTerms = results.data;
+                });
+            }
+          })
+
         $scope.render_term_item =
           function(ul, item, search_string) {
             var searchAnnotationTypeName = $scope.annotationTypeName;
@@ -3653,16 +3669,17 @@ var termNameComplete =
       },
       replace: true,
       restrict: 'E',
-      template: '<input size="40" type="text" class="form-control" autofocus value="{{currentTermName}}"/>',
+      templateUrl: app_static_path + 'ng_templates/term_name_complete.html',
       link: function(scope, elem) {
         var valBeforeComplete = null;
-        elem.autocomplete({
+        var input = $(elem).find('input');
+        input.autocomplete({
           minLength: 2,
           source: make_ontology_complete_url(scope.annotationTypeName),
           cacheLength: 100,
           focus: ferret_choose.show_autocomplete_def,
           open: function(ev) {
-            valBeforeComplete = elem.val();
+            valBeforeComplete = input.val();
           },
           close: ferret_choose.hide_autocomplete_def,
           select: function(event, ui) {
@@ -3680,38 +3697,51 @@ var termNameComplete =
             valBeforeComplete = null;
           },
         }).data("autocomplete")._renderItem = function( ul, item ) {
-          var search_string = elem.val();
+          var search_string = input.val();
           return scope.render_term_item(ul, item, search_string);
         };
-        elem.attr('disabled', false);
+        input.attr('disabled', false);
 
         function do_autocomplete (){
-          elem.focus();
+          input.focus();
           scope.$apply(function() {
-            elem.autocomplete('search');
+            input.autocomplete('search');
           });
         }
 
-        elem.bind('paste', function() {
+        input.bind('paste', function() {
           setTimeout(do_autocomplete, 10);
         });
 
-        elem.bind('click', function() {
+        input.bind('click', function() {
           setTimeout(do_autocomplete, 10);
         });
 
-        elem.keypress(function(event) {
+        input.keypress(function(event) {
           if (event.which == 13) {
             // return should autocomplete not submit the form
             event.preventDefault();
             do_autocomplete();
           }
         });
+
+        var select = $(elem).find('select');
+
+        select.change(function() {
+          scope.foundCallback({
+            termId: scope.chosenTerm.id,
+            termName: scope.chosenTerm.name,
+            searchString: null,
+            matchingSynonym: null,
+          });
+        });
       }
     };
   };
 
-canto.directive('termNameComplete', ['$timeout', termNameComplete]);
+canto.directive('termNameComplete',
+                ['CantoGlobals', 'AnnotationTypeConfig', 'CantoService', '$timeout',
+                 termNameComplete]);
 
 
 var termChildrenQuery =

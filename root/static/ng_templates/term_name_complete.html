@@ -1,0 +1,18 @@
+<span>
+  <span ng-hide="annotationType">
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img> Loading ...
+  </span>
+  <span ng-show="annotationType">
+    <span ng-hide="annotationType.use_select_element">
+      <input size="40" type="text" class="form-control" autofocus value="{{currentTermName}}"/>
+    </span>
+    <span ng-show="annotationType.use_select_element">
+      <span ng-show="allTerms.length > 0">
+        <select class="form-control" ng-model="chosenTerm"
+                ng-options="term.name for term in allTerms">
+          <option value="">Choose a term ...</option>
+        </select>
+      </span>
+    </span>
+  </span>
+</span>
