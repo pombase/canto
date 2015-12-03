@@ -250,7 +250,7 @@ sub initialise_core_data
                                                         default_db_name => $config->{default_db_name});
     my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
-    $ontology_load->load($config->{relationship_ontology_path}, $index, $synonym_types);
+    $ontology_load->load([$config->{relationship_ontology_path}], $index, $synonym_types);
 
     $ontology_load->finalise();
     $index->finish_index();

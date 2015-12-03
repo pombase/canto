@@ -160,11 +160,11 @@ sub _delete_term_by_cv
 sub load
 {
   my $self = shift;
-  my $source = shift;
+  my $sources = shift;
   my $index = shift;
   my $synonym_types_ref = shift;
 
-  if (!defined $source) {
+  if (!defined $sources) {
     croak "no source passed to OntologyLoad::load()";
   }
 
@@ -182,18 +182,20 @@ sub load
   my $file_name;
   my $fh;
 
-  if ($source =~ m|http://|) {
-    ($fh, $file_name) = tempfile('/tmp/downloaded_ontology_file_XXXXX',
-                                 SUFFIX => '.obo');
-    my $rc = getstore($source, $file_name);
-    if (is_error($rc)) {
-      die "failed to download source OBO file: $rc\n";
+  for my $source (@$sources) {
+    if ($source =~ m|http://|) {
+      ($fh, $file_name) = tempfile('/tmp/downloaded_ontology_file_XXXXX',
+                                   SUFFIX => '.obo');
+      my $rc = getstore($source, $file_name);
+      if (is_error($rc)) {
+        die "failed to download source OBO file: $rc\n";
+      }
+    } else {
+      $file_name = $source;
     }
-  } else {
-    $file_name = $source;
-  }
 
-  $parser->parse($file_name);
+    $parser->parse($file_name);
+  }
 
   my $graph = $parser->handler->graph;
   my %cvterms = ();
@@ -214,7 +216,7 @@ sub load
 
   my %cvs = ();
 
-  my $collect_cvs_handler =
+  my $collect_cvs =
     sub {
       my $ni = shift;
       my $term = $ni->term;
@@ -222,14 +224,13 @@ sub load
       my $cv_name = $term->namespace();
 
       if (!defined $cv_name) {
-        die "no namespace in $source";
+        die "missing namespace";
       }
 
       $cvs{$cv_name} = 1;
     };
 
-  $graph->iterate($collect_cvs_handler);
-
+  $graph->iterate($collect_cvs);
 
    # delete existing terms
    map {
@@ -271,7 +272,7 @@ sub load
       my $cv_name = $term->namespace();
 
       if (!defined $cv_name) {
-        die "no namespace in $source";
+        die "missing namespace";
       }
 
       my $comment = $term->comment();

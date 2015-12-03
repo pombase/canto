@@ -746,14 +746,10 @@ sub make_base_track_db
     $gene_load_organism_2->load($genes_fh);
     close $genes_fh or die "can't close $genes_file_organism_2: $!";
 
-    $ontology_load->load($relationship_obo_file, undef, $synonym_types);
-    $ontology_load->load($go_obo_file, $ontology_index, $synonym_types);
-    $ontology_load->load($phenotype_obo_file, $ontology_index,
-                         $synonym_types);
-    $ontology_load->load($psi_mod_obo_file, $ontology_index,
-                         $synonym_types);
-    $ontology_load->load($pco_obo_file, $ontology_index,
-                         $synonym_types);
+    my @sources = ($relationship_obo_file, $go_obo_file,
+                   $phenotype_obo_file, $psi_mod_obo_file, $pco_obo_file);
+
+    $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 
     $ontology_load->finalise();
     $ontology_index->finish_index();
