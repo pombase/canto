@@ -144,6 +144,29 @@ sub _delete_term_by_cv
   $schema->resultset('Dbxref')->search({ }, { where => $dbxref_where })->delete();
 }
 
+sub _parse_source
+{
+  my $self = shift;
+  my $parser = shift;
+  my $source = shift;
+
+  my $file_name;
+  my $fh;
+
+  if ($source =~ m|http://|) {
+    ($fh, $file_name) = tempfile('/tmp/downloaded_ontology_file_XXXXX',
+                                 SUFFIX => '.obo');
+    my $rc = getstore($source, $file_name);
+    if (is_error($rc)) {
+      die "failed to download source OBO file: $rc\n";
+    }
+  } else {
+    $file_name = $source;
+  }
+
+  $parser->parse($file_name);
+}
+
 =head2 load
 
  Usage   : my $ont_load = Canto::Track::OntologyLoad->new(schema => $schema);
@@ -179,22 +202,8 @@ sub load
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
   my $parser = GO::Parser->new({ handler=>'obj' });
 
-  my $file_name;
-  my $fh;
-
   for my $source (@$sources) {
-    if ($source =~ m|http://|) {
-      ($fh, $file_name) = tempfile('/tmp/downloaded_ontology_file_XXXXX',
-                                   SUFFIX => '.obo');
-      my $rc = getstore($source, $file_name);
-      if (is_error($rc)) {
-        die "failed to download source OBO file: $rc\n";
-      }
-    } else {
-      $file_name = $source;
-    }
-
-    $parser->parse($file_name);
+    $self->_parse_source($parser, $source);
   }
 
   my $graph = $parser->handler->graph;
