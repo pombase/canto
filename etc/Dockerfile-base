@@ -1,10 +1,8 @@
 FROM debian:stretch
 MAINTAINER Kim Rutherford <kim@pombase.org>
-RUN apt-get update
-
-RUN apt-get install -y ntpdate sqlite3 make tar gzip bzip2 whiptail gcc g++ wget
-
-RUN apt-get install -y perl-base git-core libxml2-dev zlib1g-dev libssl-dev \
+RUN apt-get update; \
+  apt-get install -y ntpdate sqlite3 make tar gzip bzip2 whiptail gcc g++ wget \
+  perl-base git-core libxml2-dev zlib1g-dev libssl-dev \
   libexpat1-dev libpq-dev
 
 RUN (echo o conf prerequisites_policy follow; echo o conf build_requires_install_policy no; echo o conf commit) | cpan
@@ -12,29 +10,19 @@ RUN (echo o conf prerequisites_policy follow; echo o conf build_requires_install
 RUN echo installing lib lucene && (cd /tmp/; \
   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2+b1_amd64.deb && \
   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2+b1_amd64.deb && \
-  dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb)
+  dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb); \
+  cpan -i Lucene
 
-RUN cpan -i Lucene
-
-RUN cpan -i DBIx::Class::ResultSet::Data::Pageset Data::Rmap GO::Parser
-
-RUN cpan -i XML::LibXML HTML::HTML5::Writer HTML::HTML5::Builder HTML::Mason
-
-RUN cpan -i Moose MooseX::Test::Role Package::Alias
-
-RUN cpan -i String::Similarity Text::MultiMarkdown
-
-RUN cpan -i \
+RUN cpan -i DBIx::Class::ResultSet::Data::Pageset Data::Rmap GO::Parser \
+    XML::LibXML HTML::HTML5::Writer HTML::HTML5::Builder HTML::Mason \
+    Moose MooseX::Test::Role Package::Alias \
+    String::Similarity Text::MultiMarkdown \
     Plack::Middleware::Debug Plack::Middleware::Expires \
-    Plack::Middleware::InteractiveDebugger
-
-RUN cpan -i Starman Net::Server::SS::PreFork Server::Starter
-
-RUN cpan -i \
+    Plack::Middleware::InteractiveDebugger \
+    Starman Net::Server::SS::PreFork Server::Starter \
     Catalyst::Plugin::PageCache Catalyst::Plugin::Session::PerUser \
-    Catalyst::TraitFor::Request::ProxyBase CatalystX::RoleApplicator
-
-RUN cpan -i XML::Simple Template Module::Install Module::Install::Catalyst
+    Catalyst::TraitFor::Request::ProxyBase CatalystX::RoleApplicator \
+    XML::Simple Template Module::Install Module::Install::Catalyst
 
 COPY . /tmp/canto/
 RUN (cd /tmp/canto; perl Makefile.PL && make installdeps); rm -rf /tmp/canto
