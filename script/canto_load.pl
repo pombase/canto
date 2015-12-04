@@ -163,7 +163,7 @@ if (@ontology_args) {
 
   for my $ontology_source (@ontology_args) {
     print "loading $ontology_source\n" if $verbose;
-    $ontology_load->load($ontology_source, $index, $synonym_types);
+    $ontology_load->load([$ontology_source], $index, $synonym_types);
   }
 
   if (!$dry_run) {

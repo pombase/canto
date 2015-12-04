@@ -144,40 +144,11 @@ sub _delete_term_by_cv
   $schema->resultset('Dbxref')->search({ }, { where => $dbxref_where })->delete();
 }
 
-=head2 load
-
- Usage   : my $ont_load = Canto::Track::OntologyLoad->new(schema => $schema);
-           $ont_load->load($file_name, $index, [qw(exact related)]);
- Function: Load the contents an OBO file into the schema
- Args    : $source - the file name or URL of an obo format file
-           $index - the index to add the terms to (optional)
-           $synonym_types_ref - a array ref of synonym types that should be added
-                                to the index
- Returns : Nothing
-
-=cut
-
-sub load
+sub _parse_source
 {
   my $self = shift;
+  my $parser = shift;
   my $source = shift;
-  my $index = shift;
-  my $synonym_types_ref = shift;
-
-  if (!defined $source) {
-    croak "no source passed to OntologyLoad::load()";
-  }
-
-  if (!defined $synonym_types_ref) {
-    croak "no synonym_types passed to OntologyLoad::load()";
-  }
-
-  my $schema = $self->load_schema();
-
-  my $guard = $schema->txn_scope_guard;
-
-  my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
-  my $parser = GO::Parser->new({ handler=>'obj' });
 
   my $file_name;
   my $fh;
@@ -194,17 +165,49 @@ sub load
   }
 
   $parser->parse($file_name);
+}
+
+=head2 load
+
+ Usage   : my $ont_load = Canto::Track::OntologyLoad->new(schema => $schema);
+           $ont_load->load($file_name, $index, [qw(exact related)]);
+ Function: Load the contents an OBO file into the schema
+ Args    : $source - the file name or URL of an obo format file
+           $index - the index to add the terms to (optional)
+           $synonym_types_ref - a array ref of synonym types that should be added
+                                to the index
+ Returns : Nothing
+
+=cut
+
+sub load
+{
+  my $self = shift;
+  my $sources = shift;
+  my $index = shift;
+  my $synonym_types_ref = shift;
+
+  if (!defined $sources) {
+    croak "no source passed to OntologyLoad::load()";
+  }
+
+  if (!defined $synonym_types_ref) {
+    croak "no synonym_types passed to OntologyLoad::load()";
+  }
+
+  my $schema = $self->load_schema();
+
+  my $guard = $schema->txn_scope_guard;
+
+  my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
+  my $parser = GO::Parser->new({ handler=>'obj' });
+
+  for my $source (@$sources) {
+    $self->_parse_source($parser, $source);
+  }
 
   my $graph = $parser->handler->graph;
   my %cvterms = ();
-
-  my @synonym_types_to_load = @$synonym_types_ref;
-  my %synonym_type_ids = ();
-
-  for my $synonym_type (@synonym_types_to_load) {
-    $synonym_type_ids{$synonym_type} =
-      $schema->find_with_type('Cvterm', { name => $synonym_type })->cvterm_id();
-  }
 
   my %relationship_cvterms = ();
 
@@ -222,7 +225,7 @@ sub load
 
   my %cvs = ();
 
-  my $collect_cvs_handler =
+  my $collect_cvs =
     sub {
       my $ni = shift;
       my $term = $ni->term;
@@ -230,14 +233,13 @@ sub load
       my $cv_name = $term->namespace();
 
       if (!defined $cv_name) {
-        die "no namespace in $source";
+        die "missing namespace";
       }
 
       $cvs{$cv_name} = 1;
     };
 
-  $graph->iterate($collect_cvs_handler);
-
+  $graph->iterate($collect_cvs);
 
    # delete existing terms
    map {
@@ -262,6 +264,15 @@ sub load
 
   map { $relationships_to_load{$_} = 1; } @{$self->relationships_to_load()};
 
+  my @synonym_types_to_load = @$synonym_types_ref;
+  my %synonym_type_ids = ();
+
+  for my $synonym_type (@synonym_types_to_load) {
+    $synonym_type_ids{$synonym_type} =
+      $load_util->find_cvterm(cv_name => 'synonym_type',
+                              name => $synonym_type)->cvterm_id();
+  }
+
   my $store_term_handler =
     sub {
       my $ni = shift;
@@ -270,7 +281,7 @@ sub load
       my $cv_name = $term->namespace();
 
       if (!defined $cv_name) {
-        die "no namespace in $source";
+        die "missing namespace";
       }
 
       my $comment = $term->comment();

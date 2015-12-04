@@ -15,7 +15,7 @@ my $schema = Canto::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is (@loaded_cvterms, 51);
+is (@loaded_cvterms, 52);
 
 my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
@@ -41,14 +41,18 @@ sub load_all {
 
   $ontology_index->initialise_index();
 
+  my @sources = ();
+
   if ($include_ro) {
-    $ontology_load->load($test_relationship_ontology_file, undef, $synonym_types);
+    push @sources, $test_relationship_ontology_file;
   }
-  $ontology_load->load($test_go_file, $ontology_index, $synonym_types);
+  push @sources, $test_go_file;
   if ($include_fypo) {
-    $ontology_load->load($test_fypo_file, $ontology_index, $synonym_types);
+    push @sources, $test_fypo_file;
   }
-  $ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
+  push @sources, $psi_mod_obo_file;
+
+  $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 
   $ontology_load->finalise();
   $ontology_index->finish_index();
@@ -61,7 +65,7 @@ load_all($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 90);
+is(@loaded_cvterms, 91);
 
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 
@@ -170,7 +174,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 load_all($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 106);
+is(@loaded_cvterms, 107);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'
