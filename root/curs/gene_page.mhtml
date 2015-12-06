@@ -25,11 +25,11 @@ Choose curation type for <% $gene->display_name() %>:
 %     "start/$annotation_type_name";
 %   my $title = $annotation_type->{help_text} // '';
 %   my $type_display_name = $annotation_type->{display_name};
-    <li>
+    <li class="annotation-type">
 %   if (!$annotation_type->{disabled}) {
       <a title="<% $title %>" href="<% $action_path %>">
 %   }
-      <span class="annotation-type">
+      <span>
 <% ucfirst $type_display_name %>
       </span>
 %   if (!$annotation_type->{disabled}) {
