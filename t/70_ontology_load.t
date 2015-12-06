@@ -65,7 +65,7 @@ load_all($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 91);
+is(@loaded_cvterms, 92);
 
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 

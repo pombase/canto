@@ -333,10 +333,12 @@ sub load
       # special case for relations, which might be in several ontologies
       my $create_only = !$term->is_relationship_type();
 
+      (my $term_acc = $term->acc()) =~ s/OBO_REL://;
+
       my $cvterm = $load_util->get_cvterm(create_only => $create_only,
                                           cv_name => $cv_name,
                                           term_name => $term_name,
-                                          ontologyid => $term->acc(),
+                                          ontologyid => $term_acc,
                                           definition => $term->definition(),
                                           alt_ids => $term->alt_id_list(),
                                           is_obsolete => $term->is_obsolete(),
@@ -344,7 +346,6 @@ sub load
                                             $term->is_relationship_type());
 
       if ($term->is_relationship_type()) {
-        (my $term_acc = $term->acc()) =~ s/OBO_REL://;
         $relationship_cvterms{$term_acc} = $cvterm;
       }
 
