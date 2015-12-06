@@ -1493,60 +1493,6 @@ available_annotation_type_list:
       i) Any other protein, substance or modification required for this localisation
       ii) The period or phase (e.g. during S phase; during sporulation) when the localisation is observed
       The curators will record this additional information in PomBase.
-  - name: phenotype
-    category: ontology
-    namespace: fission_yeast_phenotype
-    very_short_display_name: 'phenotype'
-    short_display_name: 'phenotype'
-    display_name: 'phenotype'
-    show_synonyms: always
-    feature_type: 'genotype'
-    can_have_conditions: 1
-    evidence_codes:
-      - Cell growth assay
-      - Chromatin immunoprecipitation experiment
-      - Chromatography evidence
-      - Co-immunoprecipitation experiment
-      - Competitive growth assay evidence
-      - Electrophoretic mobility shift assay data
-      - Enzyme assay data
-      - Epitope-tagged protein immunolocalization experiment data
-      - Flow cytometry data
-      - Gel electrophoresis evidence
-      - Immunolocalization experiment data
-      - Microscopy
-      - Other
-      - Particle size and count assay
-      - Plasmid maintenance assay evidence
-      - Quantitative PCR
-      - Reporter gene assay
-      - Substance quantification evidence
-      - Transcript expression level evidence
-      - Western blot assay
-    broad_term_suggestions: >
-      cell phenotype, multinucleate, abnormal spindle, inviable
-    specific_term_examples: >
-      growth auxotrophic for arginine, abnormal cytokinetic cell separation
-    help_text: >
-      Annotate normal or abnormal phenotypes, and the associated alleles.
-      A phenotype is any observable characteristic or trait of an organism; 
-      examples include multinucleate, abnormal spindle, inviable.
-    more_help_text: >
-      Observable characteristics include morphology, development, biochemical or
-      physiological properties, behaviour, and products of behaviour of the
-      organism.
-      Phenotypes result from the expression of the genes of an organism as well
-      as the influence of environmental factors and the interactions between
-      the two.
-    extra_help_text: >
-      Alleles may be annotated with multiple phenotype terms,
-      including both normal and abnormal phenotypes for one allele.
-    detailed_help_path: /docs/fypo_annotation
-    annotation_comment_help_text: |
-      Please provide any additional details you have, such as:
-      i) Genes or proteins used in the assay (especially for phenotypes that affect protein or RNA level, or protein localization)
-      ii) Penetrance or severity of the phenotype
-      The curators will record this additional information in PomBase.
   - name: post_translational_modification
     category: ontology
     namespace: PSI-MOD
@@ -1608,6 +1554,60 @@ available_annotation_type_list:
       - Reconstituted Complex
       - Two-hybrid
     detailed_help_path: /docs/physical_interaction_annotation
+  - name: phenotype
+    category: ontology
+    namespace: fission_yeast_phenotype
+    very_short_display_name: 'phenotype'
+    short_display_name: 'phenotype'
+    display_name: 'phenotype'
+    show_synonyms: always
+    feature_type: 'genotype'
+    can_have_conditions: 1
+    evidence_codes:
+      - Cell growth assay
+      - Chromatin immunoprecipitation experiment
+      - Chromatography evidence
+      - Co-immunoprecipitation experiment
+      - Competitive growth assay evidence
+      - Electrophoretic mobility shift assay data
+      - Enzyme assay data
+      - Epitope-tagged protein immunolocalization experiment data
+      - Flow cytometry data
+      - Gel electrophoresis evidence
+      - Immunolocalization experiment data
+      - Microscopy
+      - Other
+      - Particle size and count assay
+      - Plasmid maintenance assay evidence
+      - Quantitative PCR
+      - Reporter gene assay
+      - Substance quantification evidence
+      - Transcript expression level evidence
+      - Western blot assay
+    broad_term_suggestions: >
+      cell phenotype, multinucleate, abnormal spindle, inviable
+    specific_term_examples: >
+      growth auxotrophic for arginine, abnormal cytokinetic cell separation
+    help_text: >
+      Annotate normal or abnormal phenotypes, and the associated alleles.
+      A phenotype is any observable characteristic or trait of an organism; 
+      examples include multinucleate, abnormal spindle, inviable.
+    more_help_text: >
+      Observable characteristics include morphology, development, biochemical or
+      physiological properties, behaviour, and products of behaviour of the
+      organism.
+      Phenotypes result from the expression of the genes of an organism as well
+      as the influence of environmental factors and the interactions between
+      the two.
+    extra_help_text: >
+      Alleles may be annotated with multiple phenotype terms,
+      including both normal and abnormal phenotypes for one allele.
+    detailed_help_path: /docs/fypo_annotation
+    annotation_comment_help_text: |
+      Please provide any additional details you have, such as:
+      i) Genes or proteins used in the assay (especially for phenotypes that affect protein or RNA level, or protein localization)
+      ii) Penetrance or severity of the phenotype
+      The curators will record this additional information in PomBase.
 
 default_curation_priority_name: low
 

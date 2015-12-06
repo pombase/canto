@@ -40,8 +40,7 @@ Choose curation type for <% $gene->display_name() %>:
                             feature-display-name="<% $gene_proxy->display_name() %>">
       </annotation-quick-add>
     </li>
-%   }
-% }
+%   } else {
   <li class="annotation-type">
     <div>
       Phenotypes:
@@ -57,6 +56,9 @@ Choose curation type for <% $gene->display_name() %>:
         allele</a> <span style="color: #333; font-size: 95%">(specify a genotype, and then add a phenotype)</span>
       </li>
     </ul>
+  </li>
+%   }
+% }
   </ul>
   </div>
 </div>
