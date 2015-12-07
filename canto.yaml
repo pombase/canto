@@ -1841,7 +1841,7 @@ curs_config:
   genotype_config:
     default_strain_name: 'h+'
 
-demo_canto_url: "http://curation.pombase.org/demo"
+canto_demo_url: "http://curation.pombase.org/demo"
 
 cache:
   default_timeout: "2 hours"

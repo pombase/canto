@@ -92,5 +92,5 @@ if (defined $database_name) {
   $dest_db_link = qq| for $database_name|;
 }
 
-my $demo_url = $c->config()->{demo_canto_url};
+my $demo_url = $c->config()->{canto_demo_url};
 </%init>
