@@ -749,13 +749,11 @@ sub make_base_track_db
     $gene_load_organism_2->load($genes_fh);
     close $genes_fh or die "can't close $genes_file_organism_2: $!";
 
-    $ontology_load->load($relationship_obo_file, undef, $synonym_types);
+    my @sources = ($relationship_obo_file, $go_obo_file,
+                   $phenotype_obo_file, $psi_mod_obo_file, $pco_obo_file,
+                   $so_obo_file);
 
-    for my $obo_file ($go_obo_file, $phenotype_obo_file, $psi_mod_obo_file,
-                      $pco_obo_file, $so_obo_file) {
-      warn "loading: $obo_file\n";
-      $ontology_load->load($obo_file, $ontology_index, $synonym_types);
-    }
+    $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 
     $ontology_load->finalise();
     $ontology_index->finish_index();
@@ -784,25 +782,25 @@ sub make_base_track_db
 
 =cut
 sub add_test_organisms
-{
-  my $config = shift;
-  my $schema = shift;
+  {
+    my $config = shift;
+    my $schema = shift;
 
-  my @ret = ();
+    my @ret = ();
 
-  my $test_config = $config->{test_config};
-  my $load_util = Canto::Track::LoadUtil->new(schema => $schema,
-                                              default_db_name => $config->{default_db_name});
+    my $test_config = $config->{test_config};
+    my $load_util = Canto::Track::LoadUtil->new(schema => $schema,
+                                                default_db_name => $config->{default_db_name});
 
-  for my $org_conf (@{$test_config->{organisms}}) {
-    push @ret, $load_util->get_organism($org_conf->{genus},
-                                        $org_conf->{species},
-                                        $org_conf->{taxonid});
+    for my $org_conf (@{$test_config->{organisms}}) {
+      push @ret, $load_util->get_organism($org_conf->{genus},
+                                          $org_conf->{species},
+                                          $org_conf->{taxonid});
 
+    }
+
+    return @ret;
   }
-
-  return @ret;
-}
 
 =head2 curs_key_of_test_case
 
@@ -813,208 +811,211 @@ sub add_test_organisms
 
 =cut
 sub curs_key_of_test_case
-{
-  my $test_case_def = shift;
+  {
+    my $test_case_def = shift;
 
-  return $test_case_def->{curs_key};
-}
+    return $test_case_def->{curs_key};
+  }
 
 sub _get_curator_object
-{
-  my $schema = shift;
-  my $email_address = shift;
+  {
+    my $schema = shift;
+    my $email_address = shift;
 
-  return $schema->find_with_type('Person',
-                                 { email_address => $email_address });
-}
+    return $schema->find_with_type('Person',
+                                   {
+                                     email_address => $email_address });
+  }
 
 sub _get_pub_object
-{
-  my $schema = shift;
-  my $uniquename = shift;
+  {
+    my $schema = shift;
+    my $uniquename = shift;
 
-  return $schema->find_with_type('Pub', { uniquename => $uniquename });
-}
+    return $schema->find_with_type('Pub', { uniquename => $uniquename });
+  }
 
 sub _load_curs_db_data
-{
-  my $config = shift;
-  my $trackdb_schema = shift;
-  my $cursdb_schema = shift;
-  my $curs_config = shift;
+  {
+    my $config = shift;
+    my $trackdb_schema = shift;
+    my $cursdb_schema = shift;
+    my $curs_config = shift;
 
-  my $gene_lookup = Canto::Track::GeneLookup->new(config => $config,
-                                                   schema => $trackdb_schema);
+    my $gene_lookup = Canto::Track::GeneLookup->new(config => $config,
+                                                    schema => $trackdb_schema);
 
-  for my $gene_details (@{$curs_config->{genes}}) {
-    my @allele_detail_list = ();
-    my $gene_identifier;
-    if (ref($gene_details)) {
-      $gene_identifier = $gene_details->{primary_identifier};
-      if (defined $gene_details->{alleles}) {
-        @allele_detail_list = @{$gene_details->{alleles}};
+    for my $gene_details (@{$curs_config->{genes}}) {
+      my @allele_detail_list = ();
+      my $gene_identifier;
+      if (ref($gene_details)) {
+        $gene_identifier = $gene_details->{primary_identifier};
+        if (defined $gene_details->{alleles}) {
+          @allele_detail_list = @{$gene_details->{alleles}};
+        }
+      } else {
+        $gene_identifier = $gene_details;
       }
-    } else {
-      $gene_identifier = $gene_details;
-    }
-    my $result = $gene_lookup->lookup([$gene_identifier]);
-    my @found = @{$result->{found}};
-    if (@found != 1) {
-      die "Expected 1 result for $gene_identifier not ", scalar(@found)
-    }
+      my $result = $gene_lookup->lookup([$gene_identifier]);
+      my @found = @{$result->{found}};
+      if (@found != 1) {
+        die "Expected 1 result for $gene_identifier not ", scalar(@found)
+      }
 
-    my $gene_manager = Canto::Curs::GeneManager->new(config => $config,
-                                                     curs_schema => $cursdb_schema);
+      my $gene_manager = Canto::Curs::GeneManager->new(config => $config,
+                                                       curs_schema => $cursdb_schema);
 
-    my %new_genes = $gene_manager->create_genes_from_lookup($result);
+      my %new_genes = $gene_manager->create_genes_from_lookup($result);
 
-    if (keys %new_genes != 1) {
-      die "Expected only 1 gene to be created";
-    }
+      if (keys %new_genes != 1) {
+        die "Expected only 1 gene to be created";
+      }
 
-    my $new_gene = (values %new_genes)[0];
+      my $new_gene = (values %new_genes)[0];
 
-    for my $allele_details (@allele_detail_list) {
-      my $allele_primary_identifier = $allele_details->{primary_identifier};
-      my $allele_description = $allele_details->{description};
-      my $allele_name = $allele_details->{name};
-      my $allele_type = $allele_details->{type};
-      my $allele_expression = $allele_details->{expression};
+      for my $allele_details (@allele_detail_list) {
+        my $allele_primary_identifier = $allele_details->{primary_identifier};
+        my $allele_description = $allele_details->{description};
+        my $allele_name = $allele_details->{name};
+        my $allele_type = $allele_details->{type};
+        my $allele_expression = $allele_details->{expression};
 
-      my %create_args = (
-        primary_identifier => $allele_primary_identifier,
-        type => $allele_type,
-        description => $allele_description,
-        name => $allele_name,
-        gene => $new_gene->gene_id(),
-        expression => $allele_expression,
-      );
+        my %create_args = (
+          primary_identifier => $allele_primary_identifier,
+          type => $allele_type,
+          description => $allele_description,
+          name => $allele_name,
+          gene => $new_gene->gene_id(),
+          expression => $allele_expression,
+        );
 
-      my $allele = $cursdb_schema->create_with_type('Allele', \%create_args);
-    }
-  }
-
-  for my $genotype_details (@{$curs_config->{genotypes}}) {
-    my %create_args = %{_process_data($cursdb_schema, $genotype_details)};
-
-    # save the args that are arrays and set them after creation to cope with
-    # many-many relations
-    my %array_args = ();
-
-    for my $key (keys %create_args) {
-      if (ref $create_args{$key} eq 'ARRAY') {
-        $array_args{$key} = $create_args{$key};
-        delete $create_args{$key};
+        my $allele = $cursdb_schema->create_with_type('Allele', \%create_args);
       }
     }
 
-    my $new_genotype =
-      $cursdb_schema->create_with_type('Genotype', { %create_args });
+    for my $genotype_details (@{$curs_config->{genotypes}}) {
+      my %create_args = %{_process_data($cursdb_schema, $genotype_details)};
 
-   for my $key (keys %array_args) {
-      my $method = "set_$key";
-      $new_genotype->$method(@{$array_args{$key}});
-    }
-  }
+      # save the args that are arrays and set them after creation to cope with
+      # many-many relations
+      my %array_args = ();
 
-  for my $annotation (@{$curs_config->{annotations}}) {
-    my %create_args = %{_process_data($cursdb_schema, $annotation)};
-
-    $create_args{creation_date} = $test_date;
-
-    # save the args that are arrays and set them after creation to cope with
-    # many-many relations
-    my %array_args = ();
-
-    for my $key (keys %create_args) {
-      if (ref $create_args{$key} eq 'ARRAY') {
-        $array_args{$key} = $create_args{$key};
-        delete $create_args{$key};
-      }
-    }
-
-    my $new_annotation =
-      $cursdb_schema->create_with_type('Annotation', { %create_args });
-
-    for my $key (keys %array_args) {
-      my $method = "set_$key";
-      $new_annotation->$method(@{$array_args{$key}});
-    }
-  }
-
-  my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
-  $curator_manager->set_curator($curs_config->{curs_key}, $curs_config->{submitter_email},
-                                $curs_config->{submitter_name});
-  $curator_manager->accept_session($curs_config->{curs_key});
-
-  if (@{$curs_config->{genes}} > 0) {
-    my $state = Canto::Curs::State->new(config => $config);
-    $state->set_state($cursdb_schema, Canto::Curs::State::SESSION_ACCEPTED(),
-                      { force => Canto::Curs::State::CURATION_IN_PROGRESS() });
-    $state->set_state($cursdb_schema, Canto::Curs::State::CURATION_IN_PROGRESS(),
-                      { force => Canto::Curs::State::CURATION_IN_PROGRESS() });
-  }
-}
-
-sub _replace_object
-{
-  my $schema = shift;
-  my $class_name = shift;
-  my $lookup_field_name = shift;
-  my $value = shift;
-  my $return_object = shift;
-
-  my $object = $schema->find_with_type($class_name,
-                                       {
-                                         $lookup_field_name, $value
-                                       });
-
-  if ($return_object) {
-    return $object;
-  } else {
-    return Canto::DB::id_of_object($object);
-  }
-}
-
-sub _process_data
-{
-  my $cursdb_schema = shift;
-  my $config_data_ref = shift;
-
-  my $data = clone($config_data_ref);
-
-  my $field_name = $1;
-  my $class_name = $2;
-  my $lookup_field_name = $3;
-
-  rmap_to {
-    # change 'field_name(class_name:field_name)' => [value, value] to:
-    # 'field_name' => [object_id, object_id] by looking up the object
-    my %tmp_hash = %$_;
-    while (my ($key, $value) = each %tmp_hash) {
-      if ($key =~ /([^:]+)\((.*):(.*)\)/) {
-        my $field_name = $1;
-        my $class_name = $2;
-        my $lookup_field_name = $3;
-        delete $_->{$key};
-        my $type_name = Canto::DB::table_name_of_class($class_name);
-
-        if (ref $value eq 'ARRAY') {
-          $_->{$field_name} = [map {
-            _replace_object($cursdb_schema, $class_name,
-                            $lookup_field_name, $_, 1);
-          } @$value];
-        } else {
-          $_->{$field_name} =
-            _replace_object($cursdb_schema,
-                            $class_name, $lookup_field_name, $value);
+      for my $key (keys %create_args) {
+        if (ref $create_args{$key} eq 'ARRAY') {
+          $array_args{$key} = $create_args{$key};
+          delete $create_args{$key};
         }
       }
-    }
-  } HASH, $data;
 
-  return $data;
-}
+      my $new_genotype =
+        $cursdb_schema->create_with_type('Genotype', { %create_args });
+
+      for my $key (keys %array_args) {
+        my $method = "set_$key";
+        $new_genotype->$method(@{$array_args{$key}});
+      }
+    }
+
+    for my $annotation (@{$curs_config->{annotations}}) {
+      my %create_args = %{_process_data($cursdb_schema, $annotation)};
+
+      $create_args{creation_date} = $test_date;
+
+      # save the args that are arrays and set them after creation to cope with
+      # many-many relations
+      my %array_args = ();
+
+      for my $key (keys %create_args) {
+        if (ref $create_args{$key} eq 'ARRAY') {
+          $array_args{$key} = $create_args{$key};
+          delete $create_args{$key};
+        }
+      }
+
+      my $new_annotation =
+        $cursdb_schema->create_with_type('Annotation', { %create_args });
+
+      for my $key (keys %array_args) {
+        my $method = "set_$key";
+        $new_annotation->$method(@{$array_args{$key}});
+      }
+    }
+
+    my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
+    $curator_manager->set_curator($curs_config->{curs_key}, $curs_config->{submitter_email},
+                                  $curs_config->{submitter_name});
+    $curator_manager->accept_session($curs_config->{curs_key});
+
+    if (@{$curs_config->{genes}} > 0) {
+      my $state = Canto::Curs::State->new(config => $config);
+      $state->set_state($cursdb_schema, Canto::Curs::State::SESSION_ACCEPTED(),
+                        {
+                          force => Canto::Curs::State::CURATION_IN_PROGRESS() });
+      $state->set_state($cursdb_schema, Canto::Curs::State::CURATION_IN_PROGRESS(),
+                        {
+                          force => Canto::Curs::State::CURATION_IN_PROGRESS() });
+    }
+  }
+
+sub _replace_object
+  {
+    my $schema = shift;
+    my $class_name = shift;
+    my $lookup_field_name = shift;
+    my $value = shift;
+    my $return_object = shift;
+
+    my $object = $schema->find_with_type($class_name,
+                                         {
+                                           $lookup_field_name, $value
+                                         });
+
+    if ($return_object) {
+      return $object;
+    } else {
+      return Canto::DB::id_of_object($object);
+    }
+  }
+
+sub _process_data
+  {
+    my $cursdb_schema = shift;
+    my $config_data_ref = shift;
+
+    my $data = clone($config_data_ref);
+
+    my $field_name = $1;
+    my $class_name = $2;
+    my $lookup_field_name = $3;
+
+    rmap_to {
+      # change 'field_name(class_name:field_name)' => [value, value] to:
+      # 'field_name' => [object_id, object_id] by looking up the object
+      my %tmp_hash = %$_;
+      while (my ($key, $value) = each %tmp_hash) {
+        if ($key =~ /([^:]+)\((.*):(.*)\)/) {
+          my $field_name = $1;
+          my $class_name = $2;
+          my $lookup_field_name = $3;
+          delete $_->{$key};
+          my $type_name = Canto::DB::table_name_of_class($class_name);
+
+          if (ref $value eq 'ARRAY') {
+            $_->{$field_name} = [map {
+              _replace_object($cursdb_schema, $class_name,
+                              $lookup_field_name, $_, 1);
+            } @$value];
+          } else {
+            $_->{$field_name} =
+              _replace_object($cursdb_schema,
+                              $class_name, $lookup_field_name, $value);
+          }
+        }
+      }
+    } HASH, $data;
+
+    return $data;
+  }
 
 =head2 make_curs_db
 
@@ -1031,35 +1032,35 @@ sub _process_data
 
 =cut
 sub make_curs_db
-{
-  my $config = shift;
-  my $curs_config = shift;
-  my $trackdb_schema = shift;
-  my $load_util = shift;
+  {
+    my $config = shift;
+    my $curs_config = shift;
+    my $trackdb_schema = shift;
+    my $load_util = shift;
 
-  my $test_case_curs_key =
-    Canto::TestUtil::curs_key_of_test_case($curs_config);
+    my $test_case_curs_key =
+      Canto::TestUtil::curs_key_of_test_case($curs_config);
 
-  my $create_args = {
-    curs_key => $test_case_curs_key,
-    pub => _get_pub_object($trackdb_schema, $curs_config->{uniquename}),
-  };
+    my $create_args = {
+      curs_key => $test_case_curs_key,
+      pub => _get_pub_object($trackdb_schema, $curs_config->{uniquename}),
+    };
 
-  my $curs_object = $trackdb_schema->create_with_type('Curs', $create_args);
+    my $curs_object = $trackdb_schema->create_with_type('Curs', $create_args);
 
-  my $curs_file_name =
-    Canto::Curs::make_long_db_file_name($config, $test_case_curs_key);
-  unlink $curs_file_name;
+    my $curs_file_name =
+      Canto::Curs::make_long_db_file_name($config, $test_case_curs_key);
+    unlink $curs_file_name;
 
-  my ($cursdb_schema, $cursdb_file_name) =
-    Canto::Track::create_curs_db($config, $curs_object);
+    my ($cursdb_schema, $cursdb_file_name) =
+      Canto::Track::create_curs_db($config, $curs_object);
 
-  if (exists $curs_config->{submitter_email}) {
-    _load_curs_db_data($config, $trackdb_schema, $cursdb_schema, $curs_config);
+    if (exists $curs_config->{submitter_email}) {
+      _load_curs_db_data($config, $trackdb_schema, $cursdb_schema, $curs_config);
+    }
+
+    return ($cursdb_schema, $cursdb_file_name);
   }
-
-  return ($cursdb_schema, $cursdb_file_name);
-}
 
 =head2 publications_xml_file
 
@@ -1069,11 +1070,11 @@ sub make_curs_db
 
 =cut
 sub publications_xml_file
-{
-  my $self = shift;
+  {
+    my $self = shift;
 
-  return $self->root_dir() . '/t/data/entrez_pubmed.xml';
-}
+    return $self->root_dir() . '/t/data/entrez_pubmed.xml';
+  }
 
 =head2 cookie_jar
 
@@ -1082,14 +1083,14 @@ sub publications_xml_file
 
 =cut
 sub cookie_jar
-{
-  my $self = shift;
+  {
+    my $self = shift;
 
-  return HTTP::Cookies->new(
-    file => "/tmp/canto_web_test_$$.cookies",
-    autosave => 1,
-  );
-}
+    return HTTP::Cookies->new(
+      file => "/tmp/canto_web_test_$$.cookies",
+      autosave => 1,
+    );
+  }
 
 =head2 app_login
 
@@ -1101,79 +1102,79 @@ sub cookie_jar
 
 =cut
 sub app_login
-{
-  my $self = shift;
-  my $cookie_jar = shift;
-  my $cb = shift;
-  my $req_base = shift;
-  my $dest_redirect_url = shift // 'http://localhost:5000/';
+  {
+    my $self = shift;
+    my $cookie_jar = shift;
+    my $cb = shift;
+    my $req_base = shift;
+    my $dest_redirect_url = shift // 'http://localhost:5000/';
 
-  if (!defined $cookie_jar) {
-    croak "no cookie jar passed to app_login()";
+    if (!defined $cookie_jar) {
+      croak "no cookie jar passed to app_login()";
+    }
+
+    if (!defined $cb) {
+      croak "no callback passed to app_login()";
+    }
+
+    my $track_schema = $self->track_schema();
+
+    my $admin_role =
+      $track_schema->resultset('Cvterm')->find({ name => 'admin' });
+
+    my $admin_people =
+      $track_schema->resultset('Person')->
+      search({ role => $admin_role->cvterm_id() });
+
+    my $first_admin = $admin_people->first();
+    if (!defined $first_admin) {
+      croak "can't find an admin user";
+    }
+
+    # reset so that the database isn't open for reading, otherwise login
+    # will time out waiting for a write lock
+    $admin_people->reset();
+
+    my $first_admin_email_address = $first_admin->email_address();
+    my $first_admin_password = $first_admin->email_address();
+
+    my $uri = new URI("http://localhost:5000/login");
+    $uri->query_form(email_address => $first_admin_email_address,
+                     password => $first_admin_password,
+                     return_path => $dest_redirect_url,
+                     submit => 'login',
+                   );
+    my $req = GET $uri;
+    if (defined $req_base) {
+      $req->header('X-Request-Base', "$req_base");
+    }
+    $cookie_jar->add_cookie_header($req);
+
+    my $res = $cb->($req);
+    if ($res->code != 302) {
+      croak "couldn't login: " . $res->content();
+    }
+    $cookie_jar->extract_cookies($res);
+
+    my $redirect_url = $res->header('location');
+    if ($redirect_url ne $dest_redirect_url) {
+      croak "login didn't redirect to the front page";
+    }
+
+    my $redirect_req = GET $redirect_url;
+    if (defined $req_base) {
+      $redirect_req->header('X-Request-Base', "$req_base");
+    }
+    $cookie_jar->add_cookie_header($redirect_req);
+
+    my $redirect_res = $cb->($redirect_req);
+    my $login_text = "Login successful";
+    if ($redirect_res->content() !~ m/$login_text/) {
+      croak q(after login page doesn't contain "$login_text");
+    }
+
+    return $res;
   }
-
-  if (!defined $cb) {
-    croak "no callback passed to app_login()";
-  }
-
-  my $track_schema = $self->track_schema();
-
-  my $admin_role =
-    $track_schema->resultset('Cvterm')->find({ name => 'admin' });
-
-  my $admin_people =
-    $track_schema->resultset('Person')->
-    search({ role => $admin_role->cvterm_id() });
-
-  my $first_admin = $admin_people->first();
-  if (!defined $first_admin) {
-    croak "can't find an admin user";
-  }
-
-  # reset so that the database isn't open for reading, otherwise login
-  # will time out waiting for a write lock
-  $admin_people->reset();
-
-  my $first_admin_email_address = $first_admin->email_address();
-  my $first_admin_password = $first_admin->email_address();
-
-  my $uri = new URI("http://localhost:5000/login");
-  $uri->query_form(email_address => $first_admin_email_address,
-                   password => $first_admin_password,
-                   return_path => $dest_redirect_url,
-                   submit => 'login',
-                 );
-  my $req = GET $uri;
-  if (defined $req_base) {
-    $req->header('X-Request-Base', "$req_base");
-  }
-  $cookie_jar->add_cookie_header($req);
-
-  my $res = $cb->($req);
-  if ($res->code != 302) {
-    croak "couldn't login: " . $res->content();
-  }
-  $cookie_jar->extract_cookies($res);
-
-  my $redirect_url = $res->header('location');
-  if ($redirect_url ne $dest_redirect_url) {
-    croak "login didn't redirect to the front page";
-  }
-
-  my $redirect_req = GET $redirect_url;
-  if (defined $req_base) {
-    $redirect_req->header('X-Request-Base', "$req_base");
-  }
-  $cookie_jar->add_cookie_header($redirect_req);
-
-  my $redirect_res = $cb->($redirect_req);
-  my $login_text = "Login successful";
-  if ($redirect_res->content() !~ m/$login_text/) {
-    croak q(after login page doesn't contain "$login_text");
-  }
-
-  return $res;
-}
 
 =head2 enable_access_control
 
@@ -1184,9 +1185,9 @@ sub app_login
 
 =cut
 sub enable_access_control
-{
-  $Canto::access_control_enabled = 1;
-}
+  {
+    $Canto::access_control_enabled = 1;
+  }
 
 =head2 get_a_person
 
@@ -1198,17 +1199,18 @@ sub enable_access_control
 =cut
 
 sub get_a_person
-{
-  my $self = shift;
-  my $track_schema = shift;
-  my $role = shift;
+  {
+    my $self = shift;
+    my $track_schema = shift;
+    my $role = shift;
 
-  my $admin_person_rs =
-    $track_schema->resultset('Person')->search({ 'role.name' => $role,
-                                                 'cv.name' => 'Canto user types' },
-                                               { join => { role => 'cv' } });
-  return $admin_person_rs->first();
-}
+    my $admin_person_rs =
+      $track_schema->resultset('Person')->search({ 'role.name' => $role,
+                                                   'cv.name' => 'Canto user types' },
+                                                 {
+                                                   join => { role => 'cv' } });
+    return $admin_person_rs->first();
+  }
 
 =head2
 
@@ -1220,26 +1222,26 @@ sub get_a_person
 =cut
 
 sub get_mock_subset_processor
-{
-  my $self = shift;
-  my $config = $self->config();
-  my $extension_subset_process = Canto::Config::ExtensionSubsetProcess->new(config => $config);
+  {
+    my $self = shift;
+    my $config = $self->config();
+    my $extension_subset_process = Canto::Config::ExtensionSubsetProcess->new(config => $config);
 
-  $extension_subset_process = Test::MockObject::Extends->new($extension_subset_process);
-  my $get_owltools_results = sub {
-    my @results = ();
-    open my $fh, '<', $self->root_dir() . '/t/data/owltools_out.txt';
-    while (defined (my $line = <$fh>)) {
-      chomp $line;
-      push @results, [split /\t/, $line];
-    }
-    close $fh;
-    return @results;
-  };
-  $extension_subset_process->mock('get_owltools_results', $get_owltools_results);
+    $extension_subset_process = Test::MockObject::Extends->new($extension_subset_process);
+    my $get_owltools_results = sub {
+      my @results = ();
+      open my $fh, '<', $self->root_dir() . '/t/data/owltools_out.txt';
+      while (defined (my $line = <$fh>)) {
+        chomp $line;
+        push @results, [split /\t/, $line];
+      }
+      close $fh;
+      return @results;
+    };
+    $extension_subset_process->mock('get_owltools_results', $get_owltools_results);
 
-  return $extension_subset_process;
-}
+    return $extension_subset_process;
+  }
 
 
 =head2 load_test_ontologies
@@ -1298,14 +1300,18 @@ sub load_test_ontologies
 
   $ontology_index->initialise_index();
 
+  my @sources = ();
+
   if ($include_ro) {
-    $ontology_load->load($test_relationship_ontology_file, undef, $synonym_types);
+    push @sources, $test_relationship_ontology_file;
   }
-  $ontology_load->load($test_go_file, $ontology_index, $synonym_types);
+  push @sources, $test_go_file;
   if ($include_fypo) {
-    $ontology_load->load($test_fypo_file, $ontology_index, $synonym_types);
+    push @sources, $test_fypo_file;
   }
-  $ontology_load->load($psi_mod_obo_file, $ontology_index, $synonym_types);
+  push @sources, $psi_mod_obo_file;
+
+  $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 
   if ($include_closure_subsets) {
     $extension_subset_process->process_subset_data($ontology_load->load_schema(),

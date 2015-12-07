@@ -181,40 +181,11 @@ sub _store_cv_prop
   }
 }
 
-=head2 load
-
- Usage   : my $ont_load = Canto::Track::OntologyLoad->new(schema => $schema);
-           $ont_load->load($file_name, $index, [qw(exact related)]);
- Function: Load the contents an OBO file into the schema
- Args    : $source - the file name or URL of an obo format file
-           $index - the index to add the terms to (optional)
-           $synonym_types_ref - a array ref of synonym types that should be
-                                added to the index
- Returns : Nothing
-
-=cut
-
-sub load
+sub _parse_source
 {
   my $self = shift;
+  my $parser = shift;
   my $source = shift;
-  my $index = shift;
-  my $synonym_types_ref = shift;
-
-  if (!defined $source) {
-    croak "no source passed to OntologyLoad::load()";
-  }
-
-  if (!defined $synonym_types_ref) {
-    croak "no synonym_types passed to OntologyLoad::load()";
-  }
-
-  my $schema = $self->load_schema();
-
-  my $guard = $schema->txn_scope_guard;
-
-  my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
-  my $parser = GO::Parser->new({ handler=>'obj' });
 
   my $file_name;
   my $fh;
@@ -231,6 +202,46 @@ sub load
   }
 
   $parser->parse($file_name);
+}
+
+=head2 load
+
+ Usage   : my $ont_load = Canto::Track::OntologyLoad->new(schema => $schema);
+           $ont_load->load($file_name, $index, [qw(exact related)]);
+ Function: Load the contents an OBO file into the schema
+ Args    : $source - the file name or URL of an obo format file
+           $index - the index to add the terms to (optional)
+           $synonym_types_ref - a array ref of synonym types that should be
+                                added to the index
+ Returns : Nothing
+
+=cut
+
+sub load
+{
+  my $self = shift;
+  my $sources = shift;
+  my $index = shift;
+  my $synonym_types_ref = shift;
+
+  if (!defined $sources) {
+    croak "no source passed to OntologyLoad::load()";
+  }
+
+  if (!defined $synonym_types_ref) {
+    croak "no synonym_types passed to OntologyLoad::load()";
+  }
+
+  my $schema = $self->load_schema();
+
+  my $guard = $schema->txn_scope_guard;
+
+  my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
+  my $parser = GO::Parser->new({ handler=>'obj' });
+
+  for my $source (@$sources) {
+    $self->_parse_source($parser, $source);
+  }
 
   my $graph = $parser->handler->graph;
   my %cvterms = ();
@@ -251,7 +262,7 @@ sub load
 
   my %cvs = ();
 
-  my $collect_cvs_handler =
+  my $collect_cvs =
     sub {
       my $ni = shift;
       my $term = $ni->term;
@@ -259,14 +270,13 @@ sub load
       my $cv_name = $term->namespace();
 
       if (!defined $cv_name) {
-        die "no namespace in $source";
+        die "missing namespace";
       }
 
       $cvs{$cv_name} = 1;
     };
 
-  $graph->iterate($collect_cvs_handler);
-
+  $graph->iterate($collect_cvs);
 
    # delete existing terms
    map {
@@ -310,7 +320,7 @@ sub load
       my $cv_name = $term->namespace();
 
       if (!defined $cv_name) {
-        die "no namespace in $source";
+        die "missing namespace";
       }
 
       my $comment = $term->comment();
@@ -362,10 +372,12 @@ sub load
       # special case for relations, which might be in several ontologies
       my $create_only = !$term->is_relationship_type();
 
+      (my $term_acc = $term->acc()) =~ s/OBO_REL://;
+
       my $cvterm = $load_util->get_cvterm(create_only => $create_only,
                                           cv_name => $cv_name,
                                           term_name => $term_name,
-                                          ontologyid => $term->acc(),
+                                          ontologyid => $term_acc,
                                           definition => $term->definition(),
                                           alt_ids => $term->alt_id_list(),
                                           is_obsolete => $term->is_obsolete(),
@@ -373,7 +385,6 @@ sub load
                                             $term->is_relationship_type());
 
       if ($term->is_relationship_type()) {
-        (my $term_acc = $term->acc()) =~ s/OBO_REL://;
         $relationship_cvterms{$term_acc} = $cvterm;
       }
 

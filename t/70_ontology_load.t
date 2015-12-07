@@ -1,6 +1,7 @@
 use strict;
 use warnings;
-use Test::More tests => 45;
+use Test::More tests => 46;
+use Test::Deep;
 
 use Canto::TestUtil;
 use Canto::Track::OntologyLoad;
@@ -34,7 +35,7 @@ $test_util->load_test_ontologies($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 94);
+is(@loaded_cvterms, 95);
 
 my $cvprop_rs = $schema->resultset('Cvprop');
 
@@ -54,6 +55,9 @@ my %expected_cv_term_counts = (
   'relationship' => '0',
   'biological_process' => '8',
 );
+
+cmp_deeply(\%actual_cv_term_counts,
+           \%expected_cv_term_counts);
 
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 
@@ -162,7 +166,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 $test_util->load_test_ontologies($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 109);
+is(@loaded_cvterms, 110);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'

@@ -250,10 +250,16 @@ sub initialise_core_data
                                                         default_db_name => $config->{default_db_name});
     my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
-    $ontology_load->load($config->{relationship_ontology_path}, $index, $synonym_types);
+    $ontology_load->load([$config->{relationship_ontology_path}], $index, $synonym_types);
 
     $ontology_load->finalise();
     $index->finish_index();
+
+    # remove the dates in the template db to reduce unnecessary diffs
+    my $cv_date_prop_rs =
+      $schema->resultset('Cvprop')->search({ 'type.name' => 'cv_date' },
+                                           { join => 'type' });
+    $cv_date_prop_rs->delete();
   }
 }
 

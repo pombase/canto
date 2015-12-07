@@ -1,6 +1,7 @@
-FROM pombase/canto-base:v1
+FROM pombase/canto-base:v2
 MAINTAINER Kim Rutherford <kim@pombase.org>
 
 COPY . canto/
 
-EXPOSE 7000
+EXPOSE 5000
+
