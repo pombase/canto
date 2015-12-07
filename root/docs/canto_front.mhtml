@@ -56,12 +56,11 @@ databases.
 Instructions for using Canto are available from
 the <a href="<% $c->uri_for('/docs/index/') %>">documentation
 pages</a>, or via the "Help" link at the top right of every Canto instance.
-          <h3>Demo</h3>
-          <a href="http://curation.pombase.org/demo" class="btn btn-primary visit">Demo ...</a>
+        <h3>Demo</h3>
+          <a href="<% $demo_url %>" class="btn btn-primary visit">Demo ...</a>
         <p>
-  Try the <a href="http://curation.pombase.org/demo">demo</a>
-  version of Canto: curate GO, phenotypes,
-  interactions and protein modifications using <span class="organism-name">S. pombe</span> gene IDs.
+Try the <a href="<% $demo_url %>">demo</a>
+version of Canto: curate GO, phenotypes, interactions and protein modifications.
         </p>
 
       </div>
@@ -114,3 +113,8 @@ Bioinformatics Institute</a> and <a href="http://www.ucl.ac.uk/">University Coll
       <& ../sponsor_logos.mhtml &>
     </div>
   </div>
+
+
+<%init>
+my $demo_url = $c->config()->{canto_demo_url};
+</%init>

@@ -39,9 +39,9 @@ Find out about community curation and the types of data that can be curating
 by viewing our help pages:
 </p>
 % if (!$config->{demo_mode}) {
-<a href="http://curation.pombase.org/demo/" class="btn btn-primary visit">Demo ...</a>
+<a href="<% $demo_url %>" class="btn btn-primary visit">Demo ...</a>
 <p>
-  Or try the demo version of Canto: curate using <span class="organism-name">S. pombe</span> gene IDs.
+  Or try the demo version of Canto:
 </p>
 </div>
 % }
@@ -91,4 +91,6 @@ my $database_url = $c->config()->{database_url};
 if (defined $database_name) {
   $dest_db_link = qq| for $database_name|;
 }
+
+my $demo_url = $c->config()->{canto_demo_url};
 </%init>

@@ -19,7 +19,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v906
+app_version: v909
 
 schema_version: 10
 
@@ -1848,6 +1848,8 @@ curs_config:
 
   genotype_config:
     default_strain_name: 'h+'
+
+canto_demo_url: "http://curation.pombase.org/demo"
 
 cache:
   default_timeout: "2 hours"

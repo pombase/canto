@@ -356,7 +356,7 @@ sub make_interaction_annotation
         $interacting_gene_display_name,
       interacting_gene_taxonid =>
         $interacting_gene_info->{organism_taxon}
-          // $gene_proxy->taxonid(),
+          // $interacting_gene_proxy->taxonid(),
       interacting_gene_id => $interacting_gene_proxy->gene_id(),
       score => '',  # for biogrid format output
       phenotypes => '',
