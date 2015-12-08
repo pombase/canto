@@ -4,7 +4,7 @@ $pub
 $feature
 </%args>
 
-<div ng-controller="InteractionWizardCtrl" 
+<div ng-controller="InteractionWorkflowCtrl" 
      annotation-type-name="<% $annotation_type_name %>" id="curs-interaction">
   <div ng-show="!data.interactorsConfirmed"  class="curs-box">
     <div class="curs-box-title">

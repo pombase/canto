@@ -1630,7 +1630,7 @@ canto.controller('OntologyWorkflowCtrl',
                   ontologyWorkflowCtrl]);
 
 
-var interactionWizardCtrl =
+var interactionWorkflowCtrl =
   function($scope, $http, toaster, $attrs) {
 
     $scope.annotationTypeName = $attrs.annotationTypeName;
@@ -1673,9 +1673,9 @@ var interactionWizardCtrl =
     };
   };
 
-canto.controller('InteractionWizardCtrl',
+canto.controller('InteractionWorkflowCtrl',
                  ['$scope', '$http', 'toaster', '$attrs',
-                  interactionWizardCtrl]);
+                  interactionWorkflowCtrl]);
 
 
 var annotationEvidence =
