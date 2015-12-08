@@ -3610,17 +3610,17 @@ var termNameComplete =
         $scope.allTerms = [];
         $scope.chosenTermId = null;
 
-        AnnotationTypeConfig.getByName($scope.annotationTypeName)
-          .then(function(annotationType) {
-            $scope.annotationType = annotationType;
-            if (annotationType.use_select_element) {
-              CantoService.lookup('ontology', [$scope.annotationTypeName,
-                                               'ALLTERMS'], {})
-                .then(function(results) {
-                  $scope.allTerms = results.data;
-                });
-            }
-          })
+        // AnnotationTypeConfig.getByName($scope.annotationTypeName)
+        //   .then(function(annotationType) {
+        //     $scope.annotationType = annotationType;
+        //     if (annotationType.use_select_element) {
+        //       CantoService.lookup('ontology', [$scope.annotationTypeName,
+        //                                        'ALLTERMS'], {})
+        //         .then(function(results) {
+        //           $scope.allTerms = results.data;
+        //         });
+        //     }
+        //   })
 
         $scope.render_term_item =
           function(ul, item, search_string) {
