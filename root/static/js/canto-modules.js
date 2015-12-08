@@ -3598,7 +3598,7 @@ canto.directive('annotationSingleRow',
 
 
 var termNameComplete =
-  function(CantoGlobals, AnnotationTypeConfig, CantoService, $timeout) {
+  function(CantoGlobals, AnnotationTypeConfig, CantoService, $q, $timeout) {
     return {
       scope: {
         annotationTypeName: '@',
@@ -3621,6 +3621,26 @@ var termNameComplete =
         //         });
         //     }
         //   })
+
+        $scope.placeholder = '';
+
+        var re = new RegExp(/\[([^\[\]]+)\]/);
+        $scope.typeMatch = re.exec($scope.annotationTypeName);
+
+        if ($scope.typeMatch) {
+          var split = $scope.typeMatch[1].split(/\s*\|\s*/);
+          var promises =
+            $.map(split,
+                  function(termId) {
+                    return CantoService.lookup('ontology', [termId], {});
+                  });
+          $q.all(promises).then(function(results) {
+            $scope.placeholder =
+              $.map(results, function(result) {
+                return result.data.name;
+              }).join(" or ") + " ...";
+          });
+        };
 
         $scope.render_term_item =
           function(ul, item, search_string) {
@@ -3740,7 +3760,7 @@ var termNameComplete =
   };
 
 canto.directive('termNameComplete',
-                ['CantoGlobals', 'AnnotationTypeConfig', 'CantoService', '$timeout',
+                ['CantoGlobals', 'AnnotationTypeConfig', 'CantoService', '$q', '$timeout',
                  termNameComplete]);
 
 
