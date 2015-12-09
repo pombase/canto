@@ -472,7 +472,7 @@ sub lookup_by_id
                                             include_children => 1|0,
                                             include_definition => 1|0,
                                             include_exact_synonyms => 1|0);
- Function: Return all the terms from an ontology
+ Function: Return all the non-relation terms from an ontology
  Args    : ontology_name - the ontology to search
            include_children - include data about the child terms (default: 0)
            include_definition - include the definition for terms (default: 0)
@@ -500,7 +500,10 @@ sub get_all
   my @ret_list = ();
 
   my $cv = $self->_find_cv($ontology_name);
-  my $cvterm_rs = $schema->resultset('Cvterm')->search({ cv_id => $cv->cv_id() });
+  my $cvterm_rs = $schema->resultset('Cvterm')->search({
+    cv_id => $cv->cv_id(),
+    is_relationshiptype => 0,
+  });
 
   while (defined (my $cvterm = $cvterm_rs->next())) {
     my %term_hash =

@@ -15,7 +15,7 @@ my $schema = Canto::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is (@loaded_cvterms, 52);
+is (@loaded_cvterms, 119);
 
 my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
@@ -65,11 +65,11 @@ load_all($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 92);
+is(@loaded_cvterms, 158);
 
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 
-is(@cvterm_relationships, 35);
+is(@cvterm_relationships, 102);
 
 ok((grep {
   $_->name() eq 'regulation of transmembrane transport'
@@ -156,7 +156,7 @@ is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
 # check loading of alt_ids
 my $cvterm_dbxref_rs = $schema->resultset('CvtermDbxref');
-is($cvterm_dbxref_rs->count(), 14);
+is($cvterm_dbxref_rs->count(), 11);
 
 undef $ontology_index;
 
@@ -164,7 +164,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
 # try re-loading
 load_all($ontology_index);
-is($cvterm_dbxref_rs->count(), 14);
+is($cvterm_dbxref_rs->count(), 11);
 
 undef $ontology_index;
 
@@ -174,7 +174,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 load_all($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 107);
+is(@loaded_cvterms, 173);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'

@@ -103,6 +103,13 @@ email:
 db_initial_data:
   track:
     cv:
+      - name: canto_core
+        cvterms:
+          - name: is_a
+            dbxref:
+              accession: is_a
+              db:
+                name: Canto
       - name: organismprop_types
         cvterms:
           - name: taxon_id
