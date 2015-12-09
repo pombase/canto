@@ -49,6 +49,16 @@ my %procs = (
     my $track_schema = shift;
     my $load_util = shift;
 
+    my $cvprop_type_cv =
+      $load_util->find_or_create_cv('cvprop_type');
+
+    $load_util->get_cvterm(cv => $cvprop_type_cv,
+                           term_name => 'cv_date',
+                           ontologyid => 'Canto:cv_date');
+    $load_util->get_cvterm(cv => $cvprop_type_cv,
+                           term_name => 'cv_term_count',
+                           ontologyid => 'Canto:cv_term_count');
+
     $load_util->get_cvterm(cv_name => 'cvterm_property_type',
                            term_name => 'canto_subset',
                            ontologyid => 'Canto:canto_subset');
