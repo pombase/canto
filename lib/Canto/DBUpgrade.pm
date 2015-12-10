@@ -63,6 +63,8 @@ my %procs = (
                            term_name => 'canto_subset',
                            ontologyid => 'Canto:canto_subset');
 
+    my $dbh = $track_schema->storage()->dbh();
+    $dbh->do("CREATE INDEX cvtermprop_value_idx ON cvtermprop(value)");
 
     my $update_proc = sub {
       my $curs = shift;
