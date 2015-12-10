@@ -249,7 +249,7 @@ sub load
   my %relationship_cvterms = ();
 
   my $relationship_cv =
-    $schema->resultset('Cv')->find({ name => 'relationship' });
+    $schema->resultset('Cv')->find({ name => 'canto_core' });
   my $isa_cvterm = undef;
 
   if (defined $relationship_cv) {
@@ -267,11 +267,7 @@ sub load
       my $ni = shift;
       my $term = $ni->term;
 
-      my $cv_name = $term->namespace();
-
-      if (!defined $cv_name) {
-        die "missing namespace";
-      }
+      my $cv_name = $term->namespace() // 'external';
 
       $cvs{$cv_name} = 1;
     };
@@ -317,11 +313,7 @@ sub load
       my $ni = shift;
       my $term = $ni->term;
 
-      my $cv_name = $term->namespace();
-
-      if (!defined $cv_name) {
-        die "missing namespace";
-      }
+      my $cv_name = $term->namespace() // 'external';
 
       my $comment = $term->comment();
 

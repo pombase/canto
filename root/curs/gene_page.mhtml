@@ -19,12 +19,12 @@ Choose curation type for <% $gene->display_name() %>:
   <div class="curs-box-body">
   <ul class="annotation-start">
 % for my $annotation_type (@annotation_type_list) {
+%   my $type_display_name = $annotation_type->{display_name};
 %   if ($annotation_type->{feature_type} eq 'gene') {
 %     my $annotation_type_name = $annotation_type->{name};
 %     my $action_path = "$curs_root_uri/feature/gene/annotate/$gene_id/" .
 %       "start/$annotation_type_name";
 %     my $title = $annotation_type->{help_text} // '';
-%     my $type_display_name = $annotation_type->{display_name};
     <li class="annotation-type">
 %     if (!$annotation_type->{disabled}) {
       <a title="<% $title %>" href="<% $action_path %>">
@@ -43,7 +43,7 @@ Choose curation type for <% $gene->display_name() %>:
 %   } else {
   <li class="annotation-type">
     <div>
-      Phenotypes:
+<% ucfirst $type_display_name %>:
     </div>
     <ul style="padding-left: 10px; font-size: 95%; ">
       <li class="annotation-type">

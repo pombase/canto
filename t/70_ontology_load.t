@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 46;
+use Test::More tests => 47;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -16,7 +16,7 @@ my $schema = Canto::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is (@loaded_cvterms, 55);
+is (@loaded_cvterms, 122);
 
 my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
@@ -35,7 +35,7 @@ $test_util->load_test_ontologies($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 95);
+is(@loaded_cvterms, 161);
 
 my $cvprop_rs = $schema->resultset('Cvprop');
 
@@ -52,16 +52,18 @@ my %expected_cv_term_counts = (
   'PSI-MOD' => '15',
   'molecular_function' => '8',
   'cellular_component' => '4',
-  'relationship' => '0',
+  'relationship' => '62',
   'biological_process' => '8',
 );
 
 cmp_deeply(\%actual_cv_term_counts,
            \%expected_cv_term_counts);
 
+is(@loaded_cvterms, 161);
+
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 
-is(@cvterm_relationships, 35);
+is(@cvterm_relationships, 102);
 
 ok((grep {
   $_->name() eq 'regulation of transmembrane transport'
@@ -148,7 +150,7 @@ is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
 # check loading of alt_ids
 my $cvterm_dbxref_rs = $schema->resultset('CvtermDbxref');
-is($cvterm_dbxref_rs->count(), 14);
+is($cvterm_dbxref_rs->count(), 11);
 
 undef $ontology_index;
 
@@ -156,7 +158,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
 # try re-loading
 $test_util->load_test_ontologies($ontology_index);
-is($cvterm_dbxref_rs->count(), 14);
+is($cvterm_dbxref_rs->count(), 11);
 
 undef $ontology_index;
 
@@ -166,7 +168,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 $test_util->load_test_ontologies($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 110);
+is(@loaded_cvterms, 176);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'
