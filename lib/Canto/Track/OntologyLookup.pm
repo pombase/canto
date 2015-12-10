@@ -213,6 +213,20 @@ sub _clean_string
 }
 
 
+sub _parse_search_scope
+{
+  my $string = shift;
+
+  if ($string =~ /^\[(.*)\]$/) {
+    my $id_string = $1;
+    my @ids = split /\|/, $id_string;
+    return \@ids;
+  } else {
+    return $string;
+  }
+}
+
+
 =head2 lookup
 
  Usage   : my $lookup = Canto::Track::OntologyLookup->new(...);
@@ -275,15 +289,7 @@ sub lookup
       croak "no ontology_name passed to lookup()";
     }
 
-    my $search_scope = undef;
-
-    if ($ontology_name =~ /^\[(.*)\]$/) {
-      my $id_string = $1;
-      my @ids = split /\|/, $id_string;
-      $search_scope = \@ids;
-    } else {
-      $search_scope = $ontology_name;
-    }
+    my $search_scope = _parse_search_scope($ontology_name);
 
     @results = $ontology_index->lookup($search_scope, _clean_string($search_string),
                                        $max_results);
@@ -510,6 +516,41 @@ sub lookup_by_id
 }
 
 
+sub _get_all_count_rs
+{
+  my $self = shift;
+  my $schema = $self->schema();
+  my $search_scope = shift;
+
+  if (ref $search_scope) {
+    # we got eg. "[GO:000123,SO:000345]" from user so $search_scope is an array
+    # of IDs
+    my $subset_cvtermprop_rs =
+      $schema->resultset('Cvtermprop')
+      ->search(
+        {
+          value => { -in => $search_scope },
+          'type.name' => 'canto_subset',
+        },
+        {
+          join => 'type',
+        });
+
+    return $schema->resultset('Cvterm')->search({
+      cvterm_id => {
+        -in => $subset_cvtermprop_rs->get_column('cvterm_id')->as_query(),
+      }
+    });
+  } else {
+    my $cv = $self->_find_cv($search_scope);
+    return $schema->resultset('Cvterm')->search({
+      cv_id => $cv->cv_id(),
+      is_relationshiptype => 0,
+    });
+  }
+}
+
+
 =head2 get_all
 
  Usage   : my $lookup = Canto::Track::OntologyLookup->new(...);
@@ -517,8 +558,9 @@ sub lookup_by_id
                                             include_children => 1|0,
                                             include_definition => 1|0,
                                             include_exact_synonyms => 1|0);
- Function: Return all the non-relation terms from an ontology
- Args    : ontology_name - the ontology to search
+ Function: Return all the non-relation terms from an ontology or subset
+ Args    : ontology_name - the ontology or subset to search, subsets look like:
+                           "[GO:000123|SO:000345]"
            include_children - include data about the child terms (default: 0)
            include_definition - include the definition for terms (default: 0)
            include_synonyms - if defined this is a include all the synonyms in
@@ -545,11 +587,9 @@ sub get_all
   my $schema = $self->schema();
   my @ret_list = ();
 
-  my $cv = $self->_find_cv($ontology_name);
-  my $cvterm_rs = $schema->resultset('Cvterm')->search({
-    cv_id => $cv->cv_id(),
-    is_relationshiptype => 0,
-  });
+  my $search_scope = _parse_search_scope($ontology_name);
+
+  my $cvterm_rs = $self->_get_all_count_rs($search_scope);
 
   while (defined (my $cvterm = $cvterm_rs->next())) {
     my %term_hash =
@@ -561,6 +601,34 @@ sub get_all
   }
 
   return @ret_list;
+}
+
+
+=head2 get_column
+
+ Usage   : my $count = $lookup->get_count(ontology_name => $ontology_name);
+ Function: Return the count of the non-relation terms from an ontology or subset
+ Args    : ontology_name - the ontology or subset to search, subsets look like:
+                           "[GO:000123|SO:000345]"
+
+=cut
+
+sub get_count
+{
+  my $self = shift;
+  my %args = @_;
+
+  my $ontology_name = $args{ontology_name};
+  if (!defined $ontology_name) {
+    croak "no ontology_name passed to OntologyLookup::get_count()";
+  }
+
+  my $schema = $self->schema();
+
+  my $search_scope = _parse_search_scope($ontology_name);
+  my $cvterm_rs = $self->_get_all_count_rs($search_scope);
+
+  return $cvterm_rs->count();
 }
 
 1;

@@ -1,6 +1,7 @@
 use strict;
 use warnings;
-use Test::More tests => 32;
+use Test::More tests => 36;
+use Test::Deep;
 
 use Canto::TestUtil;
 
@@ -12,7 +13,7 @@ use JSON;
 use Canto::Track;
 
 my $test_util = Canto::TestUtil->new();
-$test_util->init_test('curs_annotations_1');
+$test_util->init_test();
 
 my $cookie_jar = $test_util->cookie_jar();
 
@@ -83,8 +84,7 @@ test_psgi $app, sub {
 
   # test getting all "phenotype_condition" terms
   {
-    my $search_term = 'gl';
-    my $url = "http://localhost:5000/ws/lookup/ontology/phenotype_condition/?term=ALLTERMS";
+    my $url = "http://localhost:5000/ws/lookup/ontology/phenotype_condition/?term=:ALL:";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
@@ -100,6 +100,82 @@ test_psgi $app, sub {
     ok(grep { $_->{id} =~ /PECO:0000137/ } @$obj);
     ok(grep { $_->{name} =~ /glucose rich medium/ } @$obj);
     ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
+  }
+
+  # add the closure subsets: cvtermprops with type 'canto_subset'
+  my $index_path = $test_util->config()->data_dir_path('ontology_index_dir');
+  my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+  $test_util->load_test_ontologies($ontology_index, 1, 1, 1);
+
+  my $two_term_subset = '[GO:0005215|GO:0016023]';
+
+  # test getting a subset
+  {
+    my $url = "http://localhost:5000/ws/lookup/ontology/$two_term_subset/?term=:ALL:";
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my $obj;
+    eval { $obj = decode_json($res->content()); };
+    if ($@) {
+      die "$@\n", $res->content();
+    }
+
+    my @res = sort {
+      $a->{name} cmp $b->{name};
+    } map {
+      {
+        name => $_->{name},
+        id => $_->{id},
+      }
+    } @$obj;
+
+    cmp_deeply(\@res,
+               [
+                 {
+                   'id' => 'GO:0016023',
+                   'name' => 'cytoplasmic membrane-bounded vesicle'
+                 },
+                 {
+                   'name' => 'nucleocytoplasmic transporter activity',
+                   'id' => 'GO:0005487'
+                 },
+                 {
+                   'id' => 'GO:0030141',
+                   'name' => 'stored secretory granule'
+                 },
+                 {
+                   'name' => 'transmembrane transporter activity',
+                   'id' => 'GO:0022857'
+                 },
+                 {
+                   'name' => 'transport vesicle',
+                   'id' => 'GO:0030133'
+                 },
+                 {
+                   'id' => 'GO:0005215',
+                   'name' => 'transporter activity'
+                 }
+               ]);
+  }
+
+  # test counting a subset
+  {
+    my $url = "http://localhost:5000/ws/lookup/ontology/$two_term_subset/?term=:COUNT:";
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my $obj;
+    eval { $obj = decode_json($res->content()); };
+    if ($@) {
+      die "$@\n", $res->content();
+    }
+
+    is ($obj->{count}, 6);
   }
 
   # try lookup_by_id()
