@@ -285,7 +285,13 @@ sub canto_config : Local
   if ($allowed_keys->{$config_key}) {
     my $key_config = $config->for_json($config_key);
     if (defined $key_config) {
-      $c->stash->{json_data} = $key_config;
+      if (ref $key_config) {
+        $c->stash->{json_data} = $key_config;
+      } else {
+        $c->stash->{json_data} = {
+          value => $key_config,
+        };
+      }
 
       # FIXME - the URL for canto_config should have a version number so
       # we can have a far future expiry date

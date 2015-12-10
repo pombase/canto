@@ -1747,7 +1747,10 @@ config_service:
     ontology_external_links: 1
     instance_organism: 1
     extension_configuration: 1
+    max_term_name_select_count: 1
     help_text: 1
+
+max_term_name_select_count: 20
 
 curs_settings_service:
   allowed_keys:

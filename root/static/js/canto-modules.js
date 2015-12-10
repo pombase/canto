@@ -3598,7 +3598,7 @@ canto.directive('annotationSingleRow',
 
 
 var termNameComplete =
-  function(CantoGlobals, AnnotationTypeConfig, CantoService, $q, $timeout) {
+  function(CantoGlobals, CantoConfig, AnnotationTypeConfig, CantoService, $q, $timeout) {
     return {
       scope: {
         annotationTypeName: '@',
@@ -3607,20 +3607,28 @@ var termNameComplete =
       },
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.termCount = null;
         $scope.allTerms = [];
         $scope.chosenTermId = null;
 
-        // AnnotationTypeConfig.getByName($scope.annotationTypeName)
-        //   .then(function(annotationType) {
-        //     $scope.annotationType = annotationType;
-        //     if (annotationType.use_select_element) {
-        //       CantoService.lookup('ontology', [$scope.annotationTypeName,
-        //                                        'ALLTERMS'], {})
-        //         .then(function(results) {
-        //           $scope.allTerms = results.data;
-        //         });
-        //     }
-        //   })
+        CantoConfig.get('max_term_name_select_count').success(function(results) {
+          var maxCount = results.value;
+          CantoService.lookup('ontology', [$scope.annotationTypeName,
+                                           ':COUNT:'], {})
+            .then(function(result) {
+              if (result.status == 200) {
+                $scope.termCount = result.data.count;
+                if ($scope.termCount <= maxCount) {
+                  CantoService.lookup('ontology',
+                                      [$scope.annotationTypeName, ':ALL:'], {})
+                    .then(function(results) {
+                      // this triggers using a dropdown instead of autocomplete
+                      $scope.allTerms = results.data;
+                    });
+                }
+              }
+            });
+        });
 
         $scope.placeholder = '';
 
@@ -3760,7 +3768,8 @@ var termNameComplete =
   };
 
 canto.directive('termNameComplete',
-                ['CantoGlobals', 'AnnotationTypeConfig', 'CantoService', '$q', '$timeout',
+                ['CantoGlobals', 'CantoConfig', 'AnnotationTypeConfig',
+                 'CantoService', '$q', '$timeout',
                  termNameComplete]);
 
 
