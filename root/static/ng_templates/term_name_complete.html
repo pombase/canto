@@ -3,15 +3,20 @@
     <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img> Loading ...
   </span>
   <span ng-hide="termCount == null">
-    <span ng-hide="allTerms.length > 0">
-      <input placeholder="{{placeholder}}" size="40" type="text"
-             class="form-control" autofocus value="{{currentTermName}}"/>
+    <span ng-show="termCount == 0" style="font-weight: bold">
+      Configuration problem - no terms in the database for {{annotationTypeName}}
     </span>
-    <span ng-show="allTerms.length > 0">
-      <select class="form-control" ng-model="chosenTerm"
-              ng-options="term.name for term in allTerms">
-        <option value="">Choose a term ...</option>
-      </select>
+    <span ng-show="termCount != 0">
+      <span ng-hide="allTerms.length > 0">
+        <input placeholder="{{placeholder}}" size="40" type="text"
+               class="form-control" autofocus value="{{currentTermName}}"/>
+      </span>
+      <span ng-show="allTerms.length > 0">
+        <select class="form-control" ng-model="chosenTerm"
+                ng-options="term.name for term in allTerms">
+          <option value="">Choose a term ...</option>
+        </select>
+      </span>
     </span>
   </span>
 </span>
