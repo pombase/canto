@@ -66,6 +66,12 @@ my %procs = (
     my $dbh = $track_schema->storage()->dbh();
     $dbh->do("CREATE INDEX cvtermprop_value_idx ON cvtermprop(value)");
 
+    $dbh->do("insert into cv(name) values('canto_core')");
+
+    $load_util->get_term(cv_name => 'canto_core',
+                         term_name => 'is_a',
+                         ontologyid => 'Canto:is_a');
+
     my $update_proc = sub {
       my $curs = shift;
       my $curs_key = $curs->curs_key();
