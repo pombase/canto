@@ -110,6 +110,11 @@ db_initial_data:
               accession: is_a
               db:
                 name: Canto
+          - name: has_qualifier
+            dbxref:
+              accession: has_qualifier
+              db:
+                name: Canto
       - name: organismprop_types
         cvterms:
           - name: taxon_id
