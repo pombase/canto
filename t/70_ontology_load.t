@@ -16,7 +16,7 @@ my $schema = Canto::TrackDB->new(config => $config);
 
 my @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is (@loaded_cvterms, 122);
+is (@loaded_cvterms, 123);
 
 my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
@@ -35,7 +35,7 @@ $test_util->load_test_ontologies($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 161);
+is(@loaded_cvterms, 162);
 
 my $cvprop_rs = $schema->resultset('Cvprop');
 
@@ -59,7 +59,7 @@ my %expected_cv_term_counts = (
 cmp_deeply(\%actual_cv_term_counts,
            \%expected_cv_term_counts);
 
-is(@loaded_cvterms, 161);
+is(@loaded_cvterms, 162);
 
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 
@@ -168,7 +168,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 $test_util->load_test_ontologies($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 176);
+is(@loaded_cvterms, 177);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'
