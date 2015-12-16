@@ -1258,7 +1258,6 @@ sub get_mock_subset_processor
 
 =cut
 
-
 sub load_test_ontologies
 {
   my $self = shift;
@@ -1279,6 +1278,7 @@ sub load_test_ontologies
   my $test_relationship_ontology_file =
     $self->root_dir() . '/' . $config->{relationship_ontology_path};
   my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
+  my $so_obo_file = $config->{test_config}->{test_so_obo_file};
 
   my @relationships_to_load = @{$load_config->{ontology}->{relationships_to_load}};
 
@@ -1286,7 +1286,8 @@ sub load_test_ontologies
   my $subset_data = undef;
 
   if ($include_closure_subsets) {
-    my @ontology_args = ($test_go_file, $test_fypo_file, $psi_mod_obo_file);
+    my @ontology_args = ($test_go_file, $test_fypo_file, $psi_mod_obo_file,
+                         $so_obo_file);
     $extension_subset_process = $self->get_mock_subset_processor();
 
     $subset_data = $extension_subset_process->get_subset_data(@ontology_args);
@@ -1310,6 +1311,7 @@ sub load_test_ontologies
     push @sources, $test_fypo_file;
   }
   push @sources, $psi_mod_obo_file;
+  push @sources, $so_obo_file;
 
   $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 

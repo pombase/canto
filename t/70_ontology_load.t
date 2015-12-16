@@ -35,7 +35,7 @@ $test_util->load_test_ontologies($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 162);
+is(@loaded_cvterms, 182);
 
 my $cvprop_rs = $schema->resultset('Cvprop');
 
@@ -54,16 +54,17 @@ my %expected_cv_term_counts = (
   'cellular_component' => '4',
   'relationship' => '62',
   'biological_process' => '8',
+  'sequence' => 20,
 );
 
 cmp_deeply(\%actual_cv_term_counts,
            \%expected_cv_term_counts);
 
-is(@loaded_cvterms, 162);
+is(@loaded_cvterms, 182);
 
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')->all();
 
-is(@cvterm_relationships, 102);
+is(@cvterm_relationships, 124);
 
 ok((grep {
   $_->name() eq 'regulation of transmembrane transport'
@@ -168,7 +169,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 $test_util->load_test_ontologies($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 177);
+is(@loaded_cvterms, 197);
 
 ok((grep {
   $_->name() eq 'viable elongated vegetative cell population'

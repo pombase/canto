@@ -31,7 +31,145 @@ def: "A sequence_feature with an extent greater than zero. A nucleotide region i
 subset: SOFA
 synonym: "sequence" EXACT []
 is_a: SO:0000110 ! sequence_feature
-disjoint_from: SO:0000699 ! junction
+
+[Term]
+id: SO:0000035
+name: riboswitch
+def: "A riboswitch is a part of an mRNA that can act as a direct sensor of small molecules to control their own expression. A riboswitch is a cis element in the 5' end of an mRNA, that acts as a direct sensor of metabolites." [PMID:2820954]
+synonym: "riboswitch RNA" EXACT []
+xref: http://en.wikipedia.org/wiki/Riboswitch "wiki"
+is_a: SO:0000836 ! mRNA_region
+relationship: part_of SO:0000234 ! mRNA
+
+[Term]
+id: SO:0000110
+name: sequence_feature
+def: "Any extent of continuous biological sequence." [LAMHDI:mb, SO:ke]
+subset: SOFA
+synonym: "located sequence feature" RELATED []
+synonym: "located_sequence_feature" EXACT []
+synonym: "sequence feature" EXACT []
+
+[Term]
+id: SO:0000120
+name: protein_coding_primary_transcript
+def: "A primary transcript that, at least in part, encodes one or more proteins." [SO:ke]
+comment: May contain introns.
+subset: SOFA
+synonym: "pre mRNA" RELATED []
+synonym: "protein coding primary transcript" EXACT []
+is_a: SO:0000185 ! primary_transcript
+
+[Term]
+id: SO:0000185
+name: primary_transcript
+def: "A transcript that in its initial state requires modification to be functional." [SO:ma]
+subset: SOFA
+synonym: "precursor RNA" EXACT []
+synonym: "primary transcript" EXACT []
+xref: http://en.wikipedia.org/wiki/Primary_transcript "wiki"
+is_a: SO:0000673 ! transcript
+
+[Term]
+id: SO:0000233
+name: mature_transcript
+def: "A transcript which has undergone the necessary modifications, if any, for its function. In eukaryotes this includes, for example, processing of introns, cleavage, base modification, and modifications to the 5' and/or the 3' ends, other than addition of bases. In bacteria functional mRNAs are usually not modified." [SO:ke]
+comment: A processed transcript cannot contain introns.
+subset: SOFA
+synonym: "mature transcript" EXACT []
+xref: http://en.wikipedia.org/wiki/Mature_transcript "wiki"
+is_a: SO:0000673 ! transcript
+relationship: derives_from SO:0000185 ! primary_transcript
+
+[Term]
+id: SO:0000234
+name: mRNA
+def: "Messenger RNA is the intermediate molecule between DNA and protein. It includes UTR and coding sequences. It does not contain introns." [SO:ma]
+comment: An mRNA does not contain introns as it is a processed_transcript. The equivalent kind of primary_transcript is protein_coding_primary_transcript (SO:0000120) which may contain introns. This term is mapped to MGED. Do not obsolete without consulting MGED ontology.
+subset: SOFA
+synonym: "messenger RNA" EXACT []
+xref: http://en.wikipedia.org/wiki/MRNA "wiki"
+is_a: SO:0000233 ! mature_transcript
+
+[Term]
+id: SO:0000673
+name: transcript
+def: "An RNA synthesized on a DNA or RNA template by an RNA polymerase." [SO:ma]
+subset: SOFA
+xref: http://en.wikipedia.org/wiki/RNA "wiki"
+is_a: SO:0000831 ! gene_member_region
+
+[Term]
+id: SO:0000704
+name: gene
+def: "A region (or regions) that includes all of the sequence elements necessary to encode a functional transcript. A gene may include regulatory regions, transcribed regions and/or other functional sequence regions." [SO:immuno_workshop]
+comment: This term is mapped to MGED. Do not obsolete without consulting MGED ontology. A gene may be considered as a unit of inheritance.
+subset: SOFA
+xref: http://en.wikipedia.org/wiki/Gene "wiki"
+is_a: SO:0001411 ! biological_region
+relationship: member_of SO:0005855 ! gene_group
+
+[Term]
+id: SO:0000831
+name: gene_member_region
+def: "A region of a gene." [SO:ke]
+comment: A manufactured term used to allow the parts of a gene to have an is_a path to the root.
+subset: SOFA
+synonym: "gene member region" EXACT []
+is_a: SO:0001411 ! biological_region
+relationship: member_of SO:0000704 ! gene
+
+[Term]
+id: SO:0000833
+name: transcript_region
+def: "A region of a transcript." [SO:ke]
+comment: This term was added to provide a grouping term for the region parts of transcript, thus giving them an is_a path back to the root.
+subset: SOFA
+synonym: "transcript region" EXACT []
+is_a: SO:0001411 ! biological_region
+relationship: part_of SO:0000673 ! transcript
+
+[Term]
+id: SO:0000834
+name: mature_transcript_region
+def: "A region of a mature transcript." [SO:ke]
+comment: A manufactured term to collect together the parts of a mature transcript and give them an is_a path to the root.
+subset: SOFA
+synonym: "mature transcript region" EXACT []
+is_a: SO:0000833 ! transcript_region
+
+[Term]
+id: SO:0000836
+name: mRNA_region
+def: "A region of an mRNA." [SO:cb]
+comment: This term was added to provide a grouping term for the region parts of mRNA, thus giving them an is_a path back to the root.
+subset: SOFA
+synonym: "mRNA region" EXACT []
+is_a: SO:0000834 ! mature_transcript_region
+relationship: part_of SO:0000234 ! mRNA
+
+[Term]
+id: SO:0000873
+name: edited_transcript
+def: "A transcript that is edited." [SO:ke]
+synonym: "edited transcript" EXACT []
+is_a: SO:0000673 ! transcript
+relationship: has_part SO:0000977 ! anchor_binding_site
+
+[Term]
+id: SO:0000977
+name: anchor_binding_site
+comment: Part of an edited transcript only.
+synonym: "anchor binding site" EXACT []
+is_a: SO:0000833 ! transcript_region
+
+[Term]
+id: SO:0001411
+name: biological_region
+def: "A region defined by its disposition to be involved in a biological process." [SO:cb]
+subset: SOFA
+synonym: "biological region" EXACT []
+is_a: SO:0000001 ! region
 
 [Term]
 id: SO:0001797
@@ -51,6 +189,14 @@ is_a: SO:0001797 ! centromeric_repeat
 created_by: kareneilbeck
 creation_date: 2011-05-31T01:03:23Z
 
+[Term]
+id: SO:0005855
+name: gene_group
+def: "A collection of related genes." [SO:ma]
+subset: SOFA
+synonym: "gene group" EXACT []
+is_a: SO:0001411 ! biological_region
+
 [Typedef]
 id: part_of
 name: part_of
@@ -58,3 +204,9 @@ def: "X part_of Y if X is a subregion of Y." [http://precedings.nature.com/docum
 comment: Example: amino_acid part_of polypeptide.
 subset: SOFA
 is_transitive: true
+
+[Typedef]
+id: has_part
+name: has_part
+def: "Inverse of part_of." [http://precedings.nature.com/documents/3495/version/1]
+comment: Example: operon has_part gene.
