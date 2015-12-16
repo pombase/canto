@@ -146,7 +146,7 @@ sub parse_extension
           }
         }
 
-        die "upgrade script can't handle: $bit\n";
+        die "can't parse '$bit', in: $extension_string\n";
       } else {
         $bit =~ s/^\s+//;
         $bit =~ s/\s+$//;
