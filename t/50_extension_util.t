@@ -49,9 +49,9 @@ cmp_deeply([@res],
            ]);
 
 try {
-  @res = Canto::ExtensionUtil::parse_extension("rel1(range1),qualifier=NOT");
+  @res = Canto::ExtensionUtil::parse_extension("rel1(range1),qualifier=unknown");
   fail("parse should fail");
 } catch {
-  is($_, "upgrade script can't handle: qualifier=NOT\n");
+  is($_, "failed to store qualifier with value 'unknown' in: rel1(range1),qualifier=unknown\n");
 };
 
