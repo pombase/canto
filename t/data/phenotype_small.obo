@@ -199,5 +199,10 @@ xref: OBO_REL:towards
 [Typedef]
 id: has_part
 name: has_part
-xref: OBO_REL:has_part
+namespace: sequence
+def: "Inverse of part_of." [http://precedings.nature.com/documents/3495/version/1]
+comment: Example: operon has_part gene.
+xref: BFO:0000051
+property_value: IAO:0000412 http://purl.obolibrary.org/obo/so-xp.obo.owl
+property_value: usage "Used in FYPO to link phenotypes that are collections of features to phenotypes representing the features." xsd:string
 is_transitive: true
