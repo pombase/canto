@@ -142,26 +142,36 @@ sub parse_extension
           } else {
             if ($1 eq 'condition') {
               die "shouldn't have 'conditions=' in extension string\n";
+            } else {
+              if ($1 eq "qualifier") {
+                if ($2 eq "NOT" ||
+                    $2 eq "colocalizes_with" ||
+                    $2 eq "contributes_to") {
+                  $bit = "has_qualifier($2)";
+                } else {
+                  die "failed to store qualifier with value '$2' in: $extension_string\n";
+                }
+              } else {
+                die "can't parse '$bit', in: $extension_string\n";
+              }
             }
           }
         }
+      }
 
-        die "can't parse '$bit', in: $extension_string\n";
-      } else {
-        $bit =~ s/^\s+//;
-        $bit =~ s/\s+$//;
+      $bit =~ s/^\s+//;
+      $bit =~ s/\s+$//;
 
-        if ($bit) {
-          if ($bit =~ /^(\S+)\s*\(\s*([^\)]+?\s*)\)$/) {
-            # a "relation(id)" without "extension="
-            push @extension_part,
-              {
-                relation => $1,
-                rangeValue => $2,
-              };
-          } else {
-            die "can't parse '$bit', in: $extension_string\n";
-          }
+      if ($bit) {
+        if ($bit =~ /^(\S+)\s*\(\s*([^\)]+?\s*)\)$/) {
+          # a "relation(id)" without "extension="
+          push @extension_part,
+            {
+              relation => $1,
+              rangeValue => $2,
+            };
+        } else {
+          die "can't parse '$bit', in: $extension_string\n";
         }
       }
     }
