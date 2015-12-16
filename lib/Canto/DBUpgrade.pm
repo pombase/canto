@@ -68,9 +68,9 @@ my %procs = (
 
     $dbh->do("insert into cv(name) values('canto_core')");
 
-    $load_util->get_term(cv_name => 'canto_core',
-                         term_name => 'is_a',
-                         ontologyid => 'Canto:is_a');
+    $load_util->get_cvterm(cv_name => 'canto_core',
+                           term_name => 'is_a',
+                           ontologyid => 'Canto:is_a');
 
     my $update_proc = sub {
       my $curs = shift;
