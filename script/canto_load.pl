@@ -199,10 +199,7 @@ if (@ontology_args) {
                                                       subset_data => $subset_data);
   my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
-  for my $ontology_source (@ontology_args) {
-    print "loading $ontology_source\n" if $verbose;
-    $ontology_load->load([$ontology_source], $index, $synonym_types);
-  }
+  $ontology_load->load([@ontology_args], $index, $synonym_types);
 
   if ($subset_data) {
     $extension_subset_process->process_subset_data($ontology_load->load_schema(),
