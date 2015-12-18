@@ -1249,6 +1249,12 @@ var extensionBuilder =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_builder.html',
       controller: function($scope) {
+        if ($scope.extension && Object.keys($scope.extension).length > 0) {
+          $scope.isNewExtension = false;
+        } else {
+          $scope.isNewExtension = true;
+        }
+
         $scope.extensionConfiguration = [];
         $scope.termDetails = { id: null };
 

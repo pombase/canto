@@ -3,8 +3,9 @@
   <div ng-hide="inProgressConf">
     <div ng-show="termDetails.id" style="padding: 0 0 5px 0">
 You have annotated {{featureDisplayName}} to {{termDetails.name}} ({{termDetails.id}}).
-Can you extend this annotation by providing additional details based on the
-experiments in this paper? These extension types are allowed for {{termDetails.id}}:
+<span ng-if="isNewExtension">Can you extend this annotation by providing
+additional details based on the experiments in this paper?</span>
+These extension types are allowed for {{termDetails.id}}:
     </div>
     <ul>
     <li ng-repeat="extConf in matchingConfigurations">
