@@ -1155,7 +1155,7 @@ canto.directive('ontologyTermCommentTransfer',
                 ['CantoService', ontologyTermCommentTransfer]);
 
 
-function openExtensionPartDialog($modal, extensionPart, relationConfig) {
+function openExtensionPartDialog($modal, extensionPart, extensionConfig) {
   return $modal.open({
     templateUrl: app_static_path + 'ng_templates/extension_part_dialog.html',
     controller: 'ExtensionPartDialogCtrl',
@@ -1166,7 +1166,7 @@ function openExtensionPartDialog($modal, extensionPart, relationConfig) {
       args: function() {
         return {
           extensionPart: extensionPart,
-          relationConfig: relationConfig,
+          extensionConfig: extensionConfig,
         }
       },
     },
@@ -1376,7 +1376,7 @@ var extensionPartEdit =
     return {
       scope: {
         extensionPart: '=',
-        relationConfig: '=',
+        extensionConfig: '=',
       },
       restrict: 'E',
       replace: true,
