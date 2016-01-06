@@ -1,0 +1,19 @@
+<span style="padding-bottom: 10px">
+  <span>{{relationConfig.displayText}}</span>
+  <span ng-if="rangeConfig.type == 'Gene'">
+    <feature-chooser feature-type="gene" chosen-feature-uniquename="extensionRelation.rangeValue"
+                     chosen-feature-display-name="extensionRelation.rangeDisplayName"
+                     chosen-feature-id="rangeGeneId"></feature-chooser>
+  </span>
+  <span ng-if="rangeConfig.type == 'Ontology'">
+    <term-name-complete current-term-name="{{rangeTermName}}"
+                        found-callback="termFoundCallback(termId, termName)"
+                        annotation-type-name="{{rangeOntologyScope}}"></term-name-complete>
+  </span>
+  <span ng-if="rangeConfig.type == 'Text'">
+    <input type="text" required ng-model="extensionRelation.rangeValue"/>
+  </span>
+  <span ng-if="rangeConfig.type == 'Number'">
+    <input type="number" required ng-model="extensionRelation.rangeValue"/>
+  </span>
+</span>

@@ -1,0 +1,26 @@
+<div class="modal-content">
+  <div class="modal-body">
+    <div ng-if="relationConfig.range.length == 1">
+      <extension-relation-edit extension-relation="extensionRelation"
+                               relation-config="relationConfig"
+                               range-config="relationConfig.range[0]"
+                               disabled="false"></extension-relation-edit>
+
+    </div>
+    <div ng-if="relationConfig.range.length > 1">
+      <div ng-repeat="rangeConfig in relationConfig.range">
+        <label><input type="radio" ng-model="selected.rangeType"
+                      value="{{rangeConfig.type}}">
+        </label>
+        <extension-relation-edit extension-relation="extensionRelation"
+                                 relation-config="relationConfig"
+                                 range-config="rangeConfig"
+                                 disabled="rangeConfig.type != selected.rangeType"></extension-relation-edit>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok()" ng-disabled="!isValid()">OK</button>
+  </div>
+</div>

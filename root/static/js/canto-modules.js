@@ -1155,18 +1155,18 @@ canto.directive('ontologyTermCommentTransfer',
                 ['CantoService', ontologyTermCommentTransfer]);
 
 
-function openExtensionPartDialog($modal, extensionPart, extensionConfig) {
+function openExtensionRelationDialog($modal, extensionRelation, relationConfig) {
   return $modal.open({
-    templateUrl: app_static_path + 'ng_templates/extension_part_dialog.html',
-    controller: 'ExtensionPartDialogCtrl',
+    templateUrl: app_static_path + 'ng_templates/extension_relation_dialog.html',
+    controller: 'ExtensionRelationDialogCtrl',
     title: 'Edit extension relation',
     animate: false,
     windowClass: "modal",
     resolve: {
       args: function() {
         return {
-          extensionPart: extensionPart,
-          extensionConfig: extensionConfig,
+          extensionRelation: extensionRelation,
+          relationConfig: relationConfig,
         }
       },
     },
@@ -1325,17 +1325,17 @@ var extensionBuilder =
                         $scope.counts = $scope.extensionPartCount();
                       }, true);
 
-        $scope.startAddPart = function(extensionConfig) {
-          var editExtensionPart = {
-            relation: extensionConfig.relation,
+        $scope.startAddPart = function(relationConfig) {
+          var editExtensionRelation = {
+            relation: relationConfig.relation,
             rangeDisplayName: '',
           };
 
           var editPromise =
-            openExtensionPartDialog($modal, editExtensionPart, extensionConfig);
+            openExtensionRelationDialog($modal, editExtensionRelation, relationConfig);
 
           editPromise.then(function(result) {
-            $scope.extension.push(result.extensionPart);
+            $scope.extension.push(result.extensionRelation);
           });
         };
       },
@@ -1347,17 +1347,22 @@ canto.directive('extensionBuilder',
                  extensionBuilder]);
 
 
-var extensionPartDialogCtrl =
+var extensionRelationDialogCtrl =
   function($scope, $modalInstance, args) {
     $scope.data = args;
+    $scope.extensionRelation = args.extensionRelation;
+    $scope.relationConfig = args.relationConfig;
+    $scope.selected = {
+      rangeType: $scope.relationConfig.range[0].type,
+    };
 
     $scope.isValid = function() {
-      return !!$scope.data.extensionPart.rangeValue;
+      return !!$scope.data.extensionRelation.rangeValue;
     };
 
     $scope.ok = function () {
       $modalInstance.close({
-        extensionPart: $scope.data.extensionPart,
+        extensionRelation: $scope.extensionRelation,
       });
     };
 
@@ -1366,34 +1371,38 @@ var extensionPartDialogCtrl =
     };
   };
 
-canto.controller('ExtensionPartDialogCtrl',
+canto.controller('ExtensionRelationDialogCtrl',
                  ['$scope', '$modalInstance', 'args',
-                 extensionPartDialogCtrl]);
+                 extensionRelationDialogCtrl]);
 
 
-var extensionPartEdit =
+var extensionRelationEdit =
   function(CantoService, CursGeneList, toaster) {
     return {
       scope: {
-        extensionPart: '=',
-        extensionConfig: '=',
+        extensionRelation: '=',
+        relationConfig: '=',
+        rangeConfig: '=',
+        disabled: '=',
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/extension_part_edit.html',
+      templateUrl: app_static_path + 'ng_templates/extension_relation_edit.html',
       controller: function($scope) {
         $scope.rangeGeneId = '';
 
-        // use just the first configured range type for now
-        $scope.rangeType = $scope.relationConfig.range[0].type;
+        $scope.disableAll = function(element, disabled) {
+          $(element).find('input').attr('disabled', disabled);
+          $(element).find('select').attr('disabled', disabled);
+        };
 
         $scope.termFoundCallback = function(termId, termName) {
-          $scope.extensionPart.rangeValue = termId;
-          $scope.extensionPart.rangeDisplayName = termName;
+          $scope.extensionRelation.rangeValue = termId;
+          $scope.extensionRelation.rangeDisplayName = termName;
         };
  
-        if ($scope.rangeType == 'Gene') {
-          if ($scope.extensionPart.rangeValue) {
+        if ($scope.rangeConfig.type == 'Gene') {
+          if ($scope.extensionRelation.rangeValue) {
             // editing existing part
             CursGeneList.geneList().then(function(results) {
               //
@@ -1401,12 +1410,12 @@ var extensionPartEdit =
               toaster.pop('note', "couldn't read the gene list from the server");
             });
           } else {
-            $scope.extensionPart.rangeValue = '';
+            $scope.extensionRelation.rangeValue = '';
           }
         }
 
-        if ($scope.rangeType == 'Ontology') {
-          var rangeScope = $scope.relationConfig.range[0].scope;
+        if ($scope.rangeConfig.type == 'Ontology') {
+          var rangeScope = $scope.rangeConfig.scope;
           if ($.isArray(rangeScope)) {
             $scope.rangeOntologyScope = '[' + rangeScope.join('|') + ']';
           } else {
@@ -1414,20 +1423,28 @@ var extensionPartEdit =
             // restricting to a subset using a term or terms
             $scope.rangeOntologyScope = rangeScope;
           }
-          if ($scope.extensionPart.rangeValue) {
+          if ($scope.extensionRelation.rangeValue) {
           // editing existing extension part
-          CantoService.lookup('ontology', [$scope.extensionPart.rangeValue], {})
+          CantoService.lookup('ontology', [$scope.extensionRelation.rangeValue], {})
             .success(function(data) {
-              $scope.extensionPart.rangeTermName = data.name;
+              $scope.extensionRelation.rangeTermName = data.name;
             });
           }
         }
+      },
+      link: function($scope, elem) {
+        $scope.$watch('disabled',
+                      function() {
+                        $scope.disableAll(elem, $scope.disabled);
+                      }
+              );
       }
     };
   };
 
-canto.directive('extensionPartEdit',
-                ['CantoService', 'CursGeneList', 'toaster', extensionPartEdit]);
+canto.directive('extensionRelationEdit',
+                ['CantoService', 'CursGeneList', 'toaster',
+                 extensionRelationEdit]);
 
 
 var extensionDisplay =
