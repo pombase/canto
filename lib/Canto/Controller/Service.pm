@@ -224,7 +224,13 @@ sub lookup : Local
     $results = { error => "unknown lookup type: $type_name" };
   }
 
-  $c->stash->{json_data} = $results;
+  if (defined $results) {
+    $c->stash->{json_data} = $results;
+  } else {
+    $c->stash->{json_data} = {
+      error => 'No results',
+    };
+  }
 
   # FIXME - this is a bit dodgy
   $c->cache_page(100) unless $ENV{CANTO_DEBUG};
