@@ -102,6 +102,9 @@ sub _ontology_results
 
     return $results;
   } else {
+    $search_string =~ s/^\s+//;
+    $search_string =~ s/\s+$//;
+
     my $result =
       $lookup->lookup_by_id(id => $search_string,
                             include_definition => $include_definition,
