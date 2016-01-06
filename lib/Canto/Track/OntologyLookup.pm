@@ -275,7 +275,7 @@ sub lookup
   my @results;
 
   if ($search_string =~ /^\s*([a-zA-Z_]+:\d+)\s*$/) {
-    my $res = $self->lookup_by_id(id => $search_string,
+    my $res = $self->lookup_by_id(id => $1,
                                   include_definition => $include_definition,
                                   include_children => $include_children,
                                   include_synonyms => $include_synonyms);
