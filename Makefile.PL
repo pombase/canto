@@ -106,6 +106,7 @@ requires 'Starman';
 requires 'Net::Server::SS::PreFork';
 requires 'Server::Starter';
 requires 'Capture::Tiny';
+requires 'Carp::Always';
 
 test_requires 'LWP::Protocol::PSGI';
 test_requires 'LWP::Protocol::https';
