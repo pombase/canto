@@ -1803,7 +1803,6 @@ curs_config:
   # Possible reasons for a paper to have no annotation in the case
   # where genes are mentioned - so no annotation of gene functions etc.
   no_annotation_reasons:
-    - Double mutant phenotypes only
     - Experimental data, not of available types
     - Method
     - Opinion or Comment
