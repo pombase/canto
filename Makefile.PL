@@ -44,7 +44,7 @@ requires 'Exception::Class';
 requires 'Class::Container';
 requires 'Config::Any';
 requires 'DBD::Pg';
-requires 'DBD::SQLite' => '1.40';
+requires 'DBD::SQLite' => '1.48';
 requires 'DBIx::Class';
 requires 'DBIx::Class::ResultClass::HashRefInflator';
 requires 'DBIx::Class::ResultSet::Data::Pageset';
