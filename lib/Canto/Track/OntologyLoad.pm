@@ -376,14 +376,15 @@ sub load
 
     (my $term_acc = $term->acc()) =~ s/OBO_REL://;
 
-    my $cvterm = $load_util->get_cvterm(create_only => $create_only,
-                                        cv_name => $cv_name,
-                                        term_name => $term_name,
-                                        ontologyid => $term_acc,
-                                        alt_ids => $term->alt_id_list(),
-                                        is_obsolete => $term->is_obsolete(),
-                                        is_relationshiptype =>
-                                          $term->is_relationship_type());
+      my $cvterm = $load_util->get_cvterm(create_only => $create_only,
+                                          cv_name => $cv_name,
+                                          term_name => $term_name,
+                                          ontologyid => $term_acc,
+                                          definition => $term->definition(),
+                                          alt_ids => $term->alt_id_list(),
+                                          is_obsolete => $term->is_obsolete(),
+                                          is_relationshiptype =>
+                                            $term->is_relationship_type());
 
     if ($term->is_relationship_type()) {
       $relationship_cvterms{$term_acc} = $cvterm;

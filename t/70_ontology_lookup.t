@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 75;
+use Test::More tests => 78;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -17,6 +17,7 @@ my $lookup = Canto::Track::get_adaptor($config, 'ontology');
 my $search_string = 'transporter';
 my $transport_id = 'GO:0005215';
 my $transport_name = 'transporter activity';
+my $transport_definition = 'Enables the directed movement of substances (such as macromolecules, small molecules, ions) into, out of or within a cell, or between cells.';
 
 my $ont_name = 'molecular_function';
 
@@ -50,6 +51,7 @@ my $ont_name = 'molecular_function';
 
   is($results->[0]->{name}, $ont_name);
   is($results->[0]->{id}, 'GO:0003674');
+  like($results->[0]->{definition}, qr/Elemental activities/);
 }
 
 {
@@ -63,7 +65,8 @@ my $ont_name = 'molecular_function';
   is(scalar(@$results), 3);
 
   ok(grep { $_->{id} eq $transport_id &&
-            $_->{name} eq $transport_name
+            $_->{name} eq $transport_name &&
+            $_->{definition} eq $transport_definition
           } @$results);
 
   is(scalar(map { $_->{name} =~ /^$search_string/ } @$results), 1);
@@ -100,6 +103,7 @@ is(scalar(@$id_result), 1);
 is($id_result->[0]->{id}, 'GO:0006810');
 is($id_result->[0]->{name}, 'transport');
 is($id_result->[0]->{annotation_namespace}, 'biological_process');
+like($id_result->[0]->{definition}, qr/^The directed movement of substances/);
 is($id_result->[0]->{synonyms}, undef);
 
 
@@ -173,6 +177,7 @@ is(scalar(@$id_result), 1);
 is($id_result->[0]->{id}, 'GO:0030133');
 is($id_result->[0]->{name}, 'transport vesicle');
 is($id_result->[0]->{annotation_namespace}, 'cellular_component');
+like($id_result->[0]->{definition}, qr/^Any of the vesicles of the constitutive/);
 
 my $child_results =
   $lookup->lookup(ontology_name => $ont_name,
@@ -216,7 +221,7 @@ my $expected_fypo_term = {
   name => 'cellular process phenotype',
   annotation_namespace => 'fission_yeast_phenotype',
   annotation_type_name => 'phenotype',
-  definition => undef,
+  definition => 'A phenotype that affects a cellular process.',
   is_obsolete => 0,
 };
 
@@ -246,7 +251,7 @@ my $expected_fypo_obsolete_term = {
   name => 'viable elongated vegetative cell population',
   annotation_namespace => 'fission_yeast_phenotype',
   annotation_type_name => 'phenotype',
-  definition => undef,
+  definition => 'A cell population phenotype in which all cells in the population are viable but longer than normal in the vegetative growth phase of the life cycle.',
   is_obsolete => 1,
   comment => 'This term was made obsolete because it is redundant with annotating to the equivalent cell phenotype plus a full-penetrance extension.',
 };
