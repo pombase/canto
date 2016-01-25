@@ -19,7 +19,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v913
+app_version: v914
 
 schema_version: 10
 
@@ -1819,7 +1819,6 @@ curs_config:
   # Possible reasons for a paper to have no annotation in the case
   # where genes are mentioned - so no annotation of gene functions etc.
   no_annotation_reasons:
-    - Double mutant phenotypes only
     - Experimental data, not of available types
     - Method
     - Opinion or Comment
