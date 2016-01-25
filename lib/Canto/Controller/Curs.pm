@@ -211,7 +211,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
           ["Review only - this session has been submitted for approval so no changes are possible"];
       } else {
         $st->{message} =
-          ["Review only - this session can be viewed but not edited"];
+          ["Review only - this session can be viewed but not edited. Click 'finish reviewing' to see more options."];
       }
     }
   }
