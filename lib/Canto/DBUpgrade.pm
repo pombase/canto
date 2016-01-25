@@ -66,7 +66,9 @@ my %procs = (
     my $dbh = $track_schema->storage()->dbh();
     $dbh->do("CREATE INDEX cvtermprop_value_idx ON cvtermprop(value)");
 
-    $dbh->do("insert into cv(name) values('canto_core')");
+    if ($track_schema->resultset('Cv')->search({ name => 'canto_core' })->count() == 0) {
+      $dbh->do("insert into cv(name) values('canto_core')");
+    }
 
     $load_util->get_cvterm(cv_name => 'canto_core',
                            term_name => 'is_a',
