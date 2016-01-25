@@ -3641,7 +3641,6 @@ var termNameComplete =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.termCount = null;
         $scope.allTerms = [];
-        $scope.chosenTermId = null;
 
         CantoConfig.get('max_term_name_select_count').success(function(results) {
           var maxCount = results.value;
