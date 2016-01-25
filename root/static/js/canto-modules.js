@@ -1427,7 +1427,7 @@ var extensionRelationEdit =
           // editing existing extension part
           CantoService.lookup('ontology', [$scope.extensionRelation.rangeValue], {})
             .success(function(data) {
-              $scope.extensionRelation.rangeTermName = data.name;
+              $scope.extensionRelation.rangeDisplayName = data.name;
             });
           }
         }
