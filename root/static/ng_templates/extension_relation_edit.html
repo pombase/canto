@@ -6,7 +6,7 @@
                      chosen-feature-id="rangeGeneId"></feature-chooser>
   </span>
   <span ng-if="rangeConfig.type == 'Ontology'">
-    <term-name-complete current-term-name="{{rangeDisplayName}}"
+    <term-name-complete current-term-name="{{extensionRelation.rangeDisplayName}}"
                         found-callback="termFoundCallback(termId, termName, searchString)"
                         annotation-type-name="{{rangeOntologyScope}}"></term-name-complete>
   </span>

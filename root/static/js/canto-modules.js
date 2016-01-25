@@ -1375,9 +1375,29 @@ canto.controller('ExtensionRelationDialogCtrl',
                  ['$scope', '$modalInstance', 'args',
                  extensionRelationDialogCtrl]);
 
+function openTermConfirmDialog($modal, termId, initialState)
+{
+  return $modal.open({
+    templateUrl: app_static_path + 'ng_templates/term_confirm.html',
+    controller: 'TermConfirmDialogCtrl',
+    title: 'Confirm term',
+    animate: false,
+    windowClass: "modal",
+    size: 'lg',
+    resolve: {
+      args: function() {
+        return {
+          termId: termId,
+          initialState: initialState,
+        };
+      }
+    },
+  });
+}
+
 
 var extensionRelationEdit =
-  function(CantoService, CursGeneList, toaster) {
+  function(CantoService, CursGeneList, toaster, $modal) {
     return {
       scope: {
         extensionRelation: '=',
@@ -1396,9 +1416,18 @@ var extensionRelationEdit =
           $(element).find('select').attr('disabled', disabled);
         };
 
-        $scope.termFoundCallback = function(termId, termName) {
+        $scope.termFoundCallback = function(termId, termName, searchString) {
           $scope.extensionRelation.rangeValue = termId;
           $scope.extensionRelation.rangeDisplayName = termName;
+
+          if (!searchString.match(/^".*"$/) && searchString !== termId) {
+            var termConfirm = openTermConfirmDialog($modal, termId);
+
+            termConfirm.result.then(function(result) {
+              $scope.extensionRelation.rangeValue = result.newTermId;
+              $scope.extensionRelation.rangeDisplayName = result.newTermName;
+            });
+          } // else: user pasted a term ID or user quoted the search - skip confirmation
         };
  
         if ($scope.rangeConfig.type == 'Gene') {
@@ -1443,7 +1472,7 @@ var extensionRelationEdit =
   };
 
 canto.directive('extensionRelationEdit',
-                ['CantoService', 'CursGeneList', 'toaster',
+                ['CantoService', 'CursGeneList', 'toaster', '$modal',
                  extensionRelationEdit]);
 
 
@@ -2918,26 +2947,6 @@ canto.controller('TermConfirmDialogCtrl',
                  ['$scope', '$modalInstance', 'CantoService', 'CantoGlobals', 'args',
                   termConfirmDialogCtrl]);
 
-
-function openTermConfirmDialog($modal, termId, initialState)
-{
-  return $modal.open({
-    templateUrl: app_static_path + 'ng_templates/term_confirm.html',
-    controller: 'TermConfirmDialogCtrl',
-    title: 'Confirm term',
-    animate: false,
-    windowClass: "modal",
-    size: 'lg',
-    resolve: {
-      args: function() {
-        return {
-          termId: termId,
-          initialState: initialState,
-        };
-      }
-    },
-  });
-}
 
 
 var termDefinitionDisplayCtrl =
