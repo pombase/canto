@@ -8,9 +8,9 @@ association.
 </p>
 <p>
 Each GO term represents an activity, process, or location in the cell of a
-gene product, and has a name (called the GO Term name), a numerical identifier
+gene product, and has a name (called the GO term name), a numerical identifier
 (called the GO ID), and a text definition. The first part of the annotation
-involves selecting the "GO term" (see choosing the correct GO term)
+involves selecting GO term (see choosing the correct GO term).
 </p>
 
 <h2>Choosing the correct GO term (general)</h2>
@@ -38,6 +38,12 @@ on <a href="http://geneontology.org/GO.contents.doc.shtml#ontology">GO
 organisation</a> is available on the GO web site.)
 </p>
 <p>
+See the "Specific branches of GO" sections below for more advice on
+choosing terms from each ontology aspect (cellular component,
+biological process, molecular function).
+</p>
+
+<p>
 You will have the opportunity to request a new term if the most specific term
 available does not describe your gene product adequately.
 </p>
@@ -59,10 +65,6 @@ describes your experiment.
 "With" field: IGI or IPI evidence requires that you indicate the interacting
 gene product. Choose the appropriate gene from the list you initially entered
 (or add genes to the list if necessary).
-</p>
-<p>
-See the ontology aspect (cellular component, biological process, molecular
-function) specific sections below for more detailed trouble shooting.
 </p>
 
 
@@ -130,12 +132,13 @@ or nucleic acids.
 
 <h3><a name="function"></a>Molecular Function</h3>
 <p>
-A molecular function is an activity, such as a catalytic or binding activity,
-that occurs at the molecular level. GO molecular function terms represent
-activities that perform the actions (protein serine/threonine kinase activity,
-pyruvate carboxylase activity), rather than the entities (gene products or
-complexes). As a general rule, molecular functions correspond to single step
-activities performed by individual gene products.
+A molecular function is an activity, such as a catalytic or binding
+activity, that occurs at the molecular level. GO molecular function
+terms represent activities (protein serine/threonine kinase activity,
+pyruvate carboxylase activity), rather than the entities (gene
+products or complexes) that perform the actions. As a general rule,
+molecular functions correspond to single step activities performed by
+individual gene products.
 </p>
 <ul>
   <li>Suggested broad terms to start searching
@@ -160,23 +163,25 @@ to make an annotation to the Biological Process term ‘transcription, DNA
 dependent’ or to one of its child terms.
 </p>
 <p>
-Ensure that the experiment supports annotating to the GO term definition. For
-example, if a paper states in the introduction that a gene product is a
-transcription factor but provides results only showing DNA binding, then this
-paper should not be used to annotate to 'sequence-specific DNA binding RNA
-polymerase II transcription factor activity'. The appropriate term would be
-‘sequence specific DNA binding’ or one of its child terms. In another
-situation, if the author states that a protein is a serine/threonine/tyrosine
-kinase, but only shows experimental evidence for serine and threonine, the
-curator can only annotate to 'protein serine/threonine kinase activity'.
+Some annotations require careful consideration to ensure that what the
+experiment shown truly matches the GO term definition. For example, if
+a paper states in the introduction that a gene product is a
+transcription factor but provides results only showing DNA binding,
+this paper should not be used to annotate to 'sequence-specific
+DNA binding RNA polymerase II transcription factor activity'. The
+appropriate term would be 'sequence specific DNA binding' or one of
+its child terms. In another situation, if the author states that a
+protein is a serine/threonine/tyrosine kinase, but only shows
+experimental evidence for serine and threonine, the curator can only
+annotate to 'protein serine/threonine kinase activity'.
 </p>
 <p>
-Annotating to 'protein binding' (GO:0005515), has to be done with caution as
-most proteins within the cell bind to other proteins at one time or another.
-Keep in mind is whether the gene product being annotated is accomplishing a
-biological purpose by binding to another protein: if so, protein binding is
-its function. Only annotate direct protein binding using the GO term "protein
-binding".
+Annotating to 'protein binding' (GO:0005515) has to be done with
+caution as most proteins within the cell bind to other proteins at one
+time or another.  Keep in mind whether the gene product being
+annotated causes a biologically relevant effect by binding to another
+protein: if so, protein binding is its function. Only annotate direct
+protein binding using the GO term "protein binding".
 </p>
 
 <h3><a name="process"></a>Biological Process</h3>
