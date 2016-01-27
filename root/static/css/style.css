@@ -1126,7 +1126,6 @@ tr.curs-allele-expression td {
   font-size: 90%;
   color: #666;
   font-style: italic;
-  white-space: nowrap;
 }
 
 form label.error {
