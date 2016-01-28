@@ -1267,7 +1267,7 @@ function parseExtensionString(extensionString, matchingConfigurations) {
       });
     } else {
       return {
-        error: "can't parse: " + part,
+        error: 'String "' + part + '" cannot be parsed',
         extension: null,
       };
     }
@@ -1299,13 +1299,13 @@ var extensionManualEdit =
                           $scope.error = result.error;
                           $scope.parsedExtension = null;
                         } else {
-                          $scope.error = null;
+                          $scope.error = "";
                           $scope.parsedExtension = result.extension;
                         }
                       });
 
         $scope.isValid = function() {
-          return $scope.error == null;
+          return $scope.error.length == 0;
         };
 
         $scope.cancel = function() {
@@ -1324,7 +1324,7 @@ var extensionManualEdit =
         };
       },
       link: function($scope) {
-        $scope.error = null;
+        $scope.error = "";
         $scope.text = extensionAsString($scope.extension);
       },
     };
