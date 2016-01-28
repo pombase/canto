@@ -335,6 +335,7 @@ canto.service('CantoGlobals', function($window) {
   this.ferret_choose = $window.ferret_choose;
   this.read_only_curs = $window.read_only_curs;
   this.is_admin_session = $window.is_admin_session;
+  this.current_user_is_admin = $window.current_user_is_admin;
 });
 
 canto.service('CantoService', function($http) {
@@ -1237,6 +1238,95 @@ function openExtensionBuilderDialog($modal, extension, termId, featureDisplayNam
 }
 
 
+function extensionAsString(extension) {
+  return $.map(extension,
+               function(part) {
+                 return part.relation + '(' + part.rangeValue + ')';
+               }).join(', ');
+}
+
+function parseExtensionString(extensionString, matchingConfigurations) {
+  var split = extensionString.split(/,/);
+  var i, part, matchResult;
+  var extension = [];
+  for (i = 0; i < split.length; i++) {
+    part = split[i];
+    matchResult = part.match(/^\s*(\S+?)\s*\(\s*([^\)]+?)\s*\)/);
+    if (matchResult && matchResult.length == 3) {
+      extension.push({
+        relation: matchResult[1],
+        rangeValue: matchResult[2],
+        rangeDisplayName: matchResult[2],
+      });
+    } else {
+      return {
+        error: "can't parse: " + part,
+        extension: null,
+      };
+    }
+  }
+
+  return {
+    error: null,
+    extension: extension,
+  };
+}
+
+var extensionManualEdit =
+  function() {
+    return {
+      scope: {
+        extension: '=',
+        matchingConfigurations: '=',
+        doneCallback: '&',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/extension_manual_edit.html',
+      controller: function($scope) {
+        $scope.$watch('text',
+                      function() {
+                        var result = parseExtensionString($scope.text);
+
+                        if (result.error) {
+                          $scope.error = result.error;
+                          $scope.parsedExtension = null;
+                        } else {
+                          $scope.error = null;
+                          $scope.parsedExtension = result.extension;
+                        }
+                      });
+
+        $scope.isValid = function() {
+          return $scope.error == null;
+        };
+
+        $scope.cancel = function() {
+          $scope.doneCallback();
+        };
+
+        $scope.ok = function() {
+          if ($scope.parsedExtension) {
+            $scope.extension.length = 0;
+            $.map($scope.parsedExtension,
+                  function(part) {
+                    $scope.extension.push(part);
+                  });
+          }
+          $scope.doneCallback();
+        };
+      },
+      link: function($scope) {
+        $scope.error = null;
+        $scope.text = extensionAsString($scope.extension);
+      },
+    };
+  };
+
+canto.directive('extensionManualEdit',
+                [extensionManualEdit]);
+
+
 var extensionBuilder =
   function($modal, CantoGlobals, CantoConfig, CantoService, CursSessionDetails) {
     return {
@@ -1249,6 +1339,8 @@ var extensionBuilder =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_builder.html',
       controller: function($scope) {
+        $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
+        $scope.manualEditMode = false;
         if ($scope.extension && Object.keys($scope.extension).length > 0) {
           $scope.isNewExtension = false;
         } else {
@@ -1337,6 +1429,14 @@ var extensionBuilder =
           editPromise.then(function(result) {
             $scope.extension.push(result.extensionRelation);
           });
+        };
+
+        $scope.manualEdit = function() {
+          $scope.manualEditMode = true;
+        };
+
+        $scope.manualEditDone = function() {
+          $scope.manualEditMode = false;
         };
       },
     };

@@ -5,8 +5,11 @@
 You have annotated {{featureDisplayName}} to {{termDetails.name}} ({{termDetails.id}}).
 <span ng-if="isNewExtension">Can you extend this annotation by providing
 additional details based on the experiments in this paper?</span>
+<span ng-if="!manualEditMode">
 These extension types are allowed for {{termDetails.id}}:
+</span>
     </div>
+    <div ng-if="!manualEditMode">
     <ul>
     <li ng-repeat="extConf in matchingConfigurations">
       <span class="curs-extension-already-used" ng-show="counts[extConf.relation]"
@@ -24,8 +27,16 @@ You can use more than one of these types in one extension (this creates a
 "compound" annotation extension and implies that the extensions occur
 together).
     </div>
+    </div>
+
+    <div ng-if="currentUserIsAdmin">
+      <a ng-if="!manualEditMode" href="#" ng-click="manualEdit()">Edit as string (admin only) ...</a>
+      <extension-manual-edit ng-if="manualEditMode" extension="extension"
+                             match-configurations="matchingConfigurations" done-callback="manualEditDone()"></extension-manual-edit>
+    </div>
   </div>
 
+  <div ng-if="!manualEditMode">
   <div ng-if="!inProgressConf && extension.length > 0" style="padding-top: 10px">
     Extension added so far:
     <extension-display extension="extension" show-delete="true"></extension-display>
@@ -35,5 +46,6 @@ together).
 If you want to create another independent extension for this annotation,
 finish the annotation, and then use the "Duplicate" feature, where you can
 edit any field, including the extension.
+  </div>
   </div>
 </div>
