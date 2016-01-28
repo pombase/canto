@@ -1279,53 +1279,84 @@ function parseExtensionString(extensionString, matchingConfigurations) {
   };
 }
 
+
+var extensionManualEditDialogCtrl =
+  function($scope, $modalInstance, args) {
+    $scope.currentError = "";
+
+    $scope.editExtension =
+      $.map(args.extension,
+            function(part) {
+              var newPart = {};
+              copyObject(part, newPart);
+              return newPart;
+            });
+
+    $scope.isValid = function() {
+      return $scope.currentError.length == 0;
+    };
+
+    $scope.ok = function () {
+      $modalInstance.close({
+        extension: $scope.editExtension,
+      });
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('ExtensionManualEditDialogCtrl',
+                 ['$scope', '$modalInstance', 'args',
+                  extensionManualEditDialogCtrl]);
+
+
+function openExtensionManualEditDialog($modal, extension, matchingConfigurations) {
+  return $modal.open({
+    templateUrl: app_static_path + 'ng_templates/extension_manual_edit_dialog.html',
+    controller: 'ExtensionManualEditDialogCtrl',
+    title: 'Edit extension as text',
+    animate: false,
+    windowClass: "modal",
+    resolve: {
+      args: function() {
+        return {
+          extension: extension,
+          matchingConfigurations: matchingConfigurations,
+        }
+      },
+    },
+  }).result;
+}
+
+
 var extensionManualEdit =
   function() {
     return {
       scope: {
         extension: '=',
+        currentError: '=',
         matchingConfigurations: '=',
-        doneCallback: '&',
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/extension_manual_edit.html',
-      controller: function($scope) {
+      template: '<div> <textarea ng-model="text" rows="4" cols="65"></textarea> </div>',
+      link: function($scope) {
+        $scope.currentError = "";
+        $scope.text = extensionAsString($scope.extension);
+
         $scope.$watch('text',
                       function() {
                         var result = parseExtensionString($scope.text);
 
                         if (result.error) {
-                          $scope.error = result.error;
-                          $scope.parsedExtension = null;
+                          $scope.currentError = result.error;
                         } else {
-                          $scope.error = "";
-                          $scope.parsedExtension = result.extension;
+                          $scope.currentError = "";
+                          $scope.extension = result.extension;
                         }
                       });
-
-        $scope.isValid = function() {
-          return $scope.error.length == 0;
-        };
-
-        $scope.cancel = function() {
-          $scope.doneCallback();
-        };
-
-        $scope.ok = function() {
-          if ($scope.parsedExtension) {
-            $scope.extension.length = 0;
-            $.map($scope.parsedExtension,
-                  function(part) {
-                    $scope.extension.push(part);
-                  });
-          }
-          $scope.doneCallback();
-        };
-      },
-      link: function($scope) {
-        $scope.error = "";
-        $scope.text = extensionAsString($scope.extension);
       },
     };
   };
@@ -1439,11 +1470,12 @@ var extensionBuilder =
         };
 
         $scope.manualEdit = function() {
-          $scope.manualEditMode = true;
-        };
+          var editPromise =
+            openExtensionManualEditDialog($modal, $scope.extension, $scope.matchingConfigurations);
 
-        $scope.manualEditDone = function() {
-          $scope.manualEditMode = false;
+          editPromise.then(function(result) {
+            $scope.extension = result.extension;
+          });
         };
       },
     };
@@ -3099,7 +3131,7 @@ canto.directive('termChildrenDisplay',
 var annotationEditDialogCtrl =
   function($scope, $modal, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
            CursSessionDetails, CantoService, toaster, args) {
-    $scope.annotation = { conditions: [] };
+    $scope.annotation = { conditions: [], extension: [] };
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
@@ -3109,6 +3141,10 @@ var annotationEditDialogCtrl =
     };
 
     copyObject(args.annotation, $scope.annotation);
+
+    if (!$scope.annotation.extension) {
+      $scope.annotation.extension = [];
+    }
 
     $scope.isValidFeature = function() {
       return $scope.annotation.feature_id;
