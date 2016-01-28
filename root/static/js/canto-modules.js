@@ -1246,6 +1246,13 @@ function extensionAsString(extension) {
 }
 
 function parseExtensionString(extensionString, matchingConfigurations) {
+  extensionString = extensionString.trim();
+  if (extensionString.length == 0) {
+    return {
+      error: null,
+      extension: {},
+    };
+  }
   var split = extensionString.split(/,/);
   var i, part, matchResult;
   var extension = [];
