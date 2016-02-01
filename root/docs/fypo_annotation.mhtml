@@ -44,7 +44,7 @@ allele details:
 </p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/fypo_allele.png') %>" alt="add allele details"/>
+  <img src="<% $c->uri_for('/static/images/docs/fypo_allele_small.png') %>" alt="add allele details"/>
 </div>
 
 <ol>
