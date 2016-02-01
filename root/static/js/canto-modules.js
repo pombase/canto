@@ -1406,7 +1406,7 @@ var extensionBuilder =
               subset_ids && subset_ids.length > 0) {
             $scope.matchingConfigurations = 
               extensionConfFilter($scope.extensionConfiguration, subset_ids,
-                                  CantoGlobals.is_admin_session ? 'admin' : 'user');
+                                  CantoGlobals.current_user_is_admin ? 'admin' : 'user');
             return;
           }
 
@@ -1658,7 +1658,7 @@ var ontologyWorkflowCtrl =
       if (subset_ids && subset_ids.length > 0) {
         $scope.matchingExtensionConfigs = 
           extensionConfFilter($scope.extensionConfiguration, subset_ids,
-                              CantoGlobals.is_admin_session ? 'admin' : 'user');
+                              CantoGlobals.current_user_is_admin ? 'admin' : 'user');
         return;
       }
 
