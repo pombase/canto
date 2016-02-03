@@ -11,11 +11,11 @@ These extension types are allowed for {{termDetails.id}}:
     </div>
     <ul>
     <li ng-repeat="extConf in matchingConfigurations">
-      <span class="curs-extension-already-used" ng-show="counts[extConf.relation]"
+      <span class="curs-extension-already-used" ng-show="getCardinalityCount(extConf) > 0"
             tooltip="This extension relation can only be added once per annotation">
         {{extConf.displayText}}
       </span>
-      <span ng-hide="counts[extConf.relation]">
+      <span ng-show="getCardinalityCount(extConf) == 0">
         <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
       </span>
     </li>

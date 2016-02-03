@@ -138,6 +138,15 @@ canto.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });
 
+function makeRangeScopeForRequest(rangeScope) {
+  if ($.isArray(rangeScope)) {
+    return '[' + rangeScope.join('|') + ']';
+  }
+  // special case for using the ontology namespace instead of
+  // restricting to a subset using a term or terms
+  return rangeScope;
+}
+
 canto.service('Curs', function($http, $q) {
   this.list = function(key, args) {
     var data = null;
@@ -1366,7 +1375,7 @@ canto.directive('extensionManualEdit',
 
 
 var extensionBuilder =
-  function($modal, CantoGlobals, CantoConfig, CantoService, CursSessionDetails) {
+  function($modal, $q, AnnotationTypeConfig, CantoGlobals, CantoConfig, CantoService) {
     return {
       scope: {
         extension: '=',
@@ -1384,6 +1393,97 @@ var extensionBuilder =
         } else {
           $scope.isNewExtension = true;
         }
+
+        // the current counts of relations, used to test the cardinality
+        // constraints
+        $scope.cardinalityCounts = null;
+
+        $scope.makeCountKey = function(extensionRelConf) {
+          return extensionRelConf.relation + '-' +
+            $.map(extensionRelConf.range,
+                  function(part) {
+                    var ret = part.type;
+                    if (part.type == 'Ontology') {
+                      ret += '-' + part.scope.join(';');
+                    }
+                    return ret;
+                  }).join('|');
+        };
+
+        $scope.checkCardinality = function(matchingConfigurations) {
+          var newCounts = {};
+          var promises = [];
+
+          $scope.cardinalityCounts = null;
+
+          if (!matchingConfigurations) {
+            return;
+          }
+
+          $.map(matchingConfigurations,
+                function(relConf) {
+                  var incrementNewCounts =
+                    function() {
+                      var key = $scope.makeCountKey(relConf);
+                      if (newCounts[key]) {
+                        newCounts[key]++;
+                      } else {
+                        newCounts[key] = 1;
+                      }
+                    };
+                  $.map($scope.extension,
+                        function(part) {
+                          var matchingRangeConf = null;
+                          $.map(relConf.range,
+                                function(rangeConf) {
+                                  if (rangeConf.type == part.rangeType) {
+                                    matchingRangeConf = rangeConf;
+                                  }
+                                });
+
+                          if (!matchingRangeConf) {
+                            return;
+                          }
+
+                          if (part.relation == relConf.relation) {
+                            if (matchingRangeConf.type == 'Ontology') {
+                              var promise =
+                                CantoService.lookup('ontology', [part.rangeValue],
+                                                    {
+                                                      subset_ids: 1,
+                                                    })
+                                  .then(function(response) {
+                                    var isInSubset = false;
+                                    response.data.subset_ids.filter(function(subset_id) {
+                                      if (matchingRangeConf.scope.indexOf(subset_id) != -1) {
+                                        isInSubset = true;
+                                      }
+                                    });
+                                    if (isInSubset) {
+                                      incrementNewCounts(relConf);
+                                    }
+                                  });
+
+                              promises.push(promise);
+                            } else {
+                              incrementNewCounts(relConf);
+                            }
+                          }
+                        });
+                });
+
+          $q.all(promises).then(function() {
+            $scope.cardinalityCounts = newCounts;
+          });
+        };
+
+        $scope.getCardinalityCount = function(extensionRelConf) {
+          if ($scope.cardinalityCounts) {
+            return $scope.cardinalityCounts[$scope.makeCountKey(extensionRelConf)] || 0;
+          }
+
+          return 0;
+        };
 
         $scope.extensionConfiguration = [];
         $scope.termDetails = { id: null };
@@ -1453,6 +1553,7 @@ var extensionBuilder =
         $scope.$watch('extension',
                       function() {
                         $scope.counts = $scope.extensionPartCount();
+                        $scope.checkCardinality($scope.matchingConfigurations);
                       }, true);
 
         $scope.startAddPart = function(relationConfig) {
@@ -1482,7 +1583,7 @@ var extensionBuilder =
   };
 
 canto.directive('extensionBuilder',
-                ['$modal', 'CantoGlobals', 'CantoConfig', 'CantoService', 'CursSessionDetails',
+                ['$modal', '$q', 'AnnotationTypeConfig', 'CantoGlobals', 'CantoConfig', 'CantoService',
                  extensionBuilder]);
 
 
@@ -1494,10 +1595,16 @@ var extensionRelationDialogCtrl =
     $scope.selected = {
       rangeType: $scope.relationConfig.range[0].type,
     };
+    $scope.extensionRelation.rangeType = $scope.selected.rangeType;
 
     $scope.isValid = function() {
       return !!$scope.data.extensionRelation.rangeValue;
     };
+
+    $scope.$watch('selected',
+                  function() {
+                    $scope.extensionRelation.rangeType = $scope.selected.rangeType;
+                  }, true);
 
     $scope.ok = function () {
       $modalInstance.close({
@@ -1584,13 +1691,9 @@ var extensionRelationEdit =
 
         if ($scope.rangeConfig.type == 'Ontology') {
           var rangeScope = $scope.rangeConfig.scope;
-          if ($.isArray(rangeScope)) {
-            $scope.rangeOntologyScope = '[' + rangeScope.join('|') + ']';
-          } else {
-            // special case for using the ontology namespace instead of
-            // restricting to a subset using a term or terms
-            $scope.rangeOntologyScope = rangeScope;
-          }
+          $scope.rangeOntologyScope =
+            makeRangeScopeForRequest(rangeScope);
+
           if ($scope.extensionRelation.rangeValue) {
           // editing existing extension part
           CantoService.lookup('ontology', [$scope.extensionRelation.rangeValue], {})
