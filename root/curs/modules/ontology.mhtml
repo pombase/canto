@@ -45,7 +45,8 @@ Annotation extensions
     <div class="curs-box-body">
       <extension-builder extension="data.extension"
                          feature-display-name='<% $feature->display_name() %>'
-                         term-id="{{currentTerm()}}"></extension-builder>
+                         term-id="{{currentTerm()}}"
+                         is-valid="extensionBuilderIsValid"></extension-builder>
     </div>
   </div>
 

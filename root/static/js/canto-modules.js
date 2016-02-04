@@ -1382,11 +1382,13 @@ var extensionBuilder =
         extension: '=',
         termId: '@',
         featureDisplayName: '@',
+        isValid: '=',
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/extension_builder.html',
       controller: function($scope) {
+        $scope.isValid = true;
         $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
         $scope.manualEditMode = false;
         if ($scope.extension && Object.keys($scope.extension).length > 0) {
@@ -1518,6 +1520,19 @@ var extensionBuilder =
           return 'MORE_POSSIBLE';
         };
 
+        $scope.setIsValid = function() {
+          $scope.isValid = true;
+
+          if ($scope.matchingConfigurations) {
+            $.map($scope.matchingConfigurations,
+                  function(relConf) {
+                    if ($scope.cardinalityStatus(relConf) == 'MORE_REQUIRED') {
+                      $scope.isValid = false;
+                    }
+                  });
+          }
+        };
+
         $scope.extensionConfiguration = [];
         $scope.termDetails = { id: null };
 
@@ -1540,6 +1555,7 @@ var extensionBuilder =
             $scope.matchingConfigurations = 
               extensionConfFilter($scope.extensionConfiguration, subset_ids,
                                   CantoGlobals.current_user_is_admin ? 'admin' : 'user');
+            $scope.checkCardinality($scope.matchingConfigurations);
             return;
           }
 
@@ -1587,6 +1603,11 @@ var extensionBuilder =
                       function() {
                         $scope.counts = $scope.extensionPartCount();
                         $scope.checkCardinality($scope.matchingConfigurations);
+                      }, true);
+
+        $scope.$watch('cardinalityCounts',
+                      function() {
+                        $scope.setIsValid();
                       }, true);
 
         $scope.startAddPart = function(relationConfig) {
@@ -1788,6 +1809,8 @@ var ontologyWorkflowCtrl =
     $scope.extensionBuilderReady = false;
     $scope.matchingExtensionConfigs = null;
 
+    $scope.extensionBuilderIsValid = true;
+
     $scope.updateMatchingConfig = function() {
       var subset_ids = $scope.termDetails.subset_ids;
 
@@ -1932,6 +1955,11 @@ var ontologyWorkflowCtrl =
           return false;
         }
         return $scope.data.validEvidence;
+      }
+
+      if ($scope.getState() == 'buildExtension' &&
+          !$scope.extensionBuilderIsValid) {
+        return false;
       }
 
       return true;
