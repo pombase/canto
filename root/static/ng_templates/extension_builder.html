@@ -11,12 +11,16 @@ These extension types are allowed for {{termDetails.id}}:
     </div>
     <ul>
     <li ng-repeat="extConf in matchingConfigurations">
-      <span class="curs-extension-already-used" ng-show="getCardinalityCount(extConf) > 0"
-            tooltip="This extension relation can only be added once per annotation">
+      <span class="curs-extension-already-used" ng-show="cardinalityStatus(extConf) == 'MAX_REACHED'"
+            tooltip="This extension relation type cannot be added more times for this annotation">
         {{extConf.displayText}}
       </span>
-      <span ng-show="getCardinalityCount(extConf) == 0">
+      <span ng-show="cardinalityStatus(extConf) == 'MORE_POSSIBLE'">
         <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
+      </span>
+      <span ng-show="cardinalityStatus(extConf) == 'MORE_REQUIRED'">
+        <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
+        <span style="color: red;">required</span>
       </span>
     </li>
     </ul>
