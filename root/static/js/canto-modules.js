@@ -1376,7 +1376,7 @@ canto.directive('extensionManualEdit',
 
 
 var extensionBuilder =
-  function($modal, $q, AnnotationTypeConfig, CantoGlobals, CantoConfig, CantoService) {
+  function($modal, $q, CantoGlobals, CantoConfig, CantoService) {
     return {
       scope: {
         extension: '=',
@@ -1616,7 +1616,7 @@ var extensionBuilder =
   };
 
 canto.directive('extensionBuilder',
-                ['$modal', '$q', 'AnnotationTypeConfig', 'CantoGlobals', 'CantoConfig', 'CantoService',
+                ['$modal', '$q', 'CantoGlobals', 'CantoConfig', 'CantoService',
                  extensionBuilder]);
 
 
