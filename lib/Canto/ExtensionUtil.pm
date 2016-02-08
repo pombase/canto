@@ -84,6 +84,8 @@ sub parse_extension
 {
   my $extension_string = shift;
 
+  return () unless defined $extension_string;
+
   # remove some crud
   $extension_string =~ s/[\s\N{ZERO WIDTH SPACE}]/ /g;
   $extension_string =~ s/
@@ -104,6 +106,8 @@ sub parse_extension
   chomp $extension_string;
 
   $extension_string =~ s/\|\s*$//;
+
+  return () unless length $extension_string > 0;
 
   my @parts = split /\|/, $extension_string;
 

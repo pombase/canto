@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 6;
 use Test::Deep;
 
 use Try::Tiny;
@@ -55,3 +55,15 @@ try {
   is($_, "failed to store qualifier with value 'unknown' in: rel1(range1),qualifier=unknown\n");
 };
 
+
+@res = Canto::ExtensionUtil::parse_extension("");
+cmp_deeply([@res],
+           []);
+
+@res = Canto::ExtensionUtil::parse_extension("    ");
+cmp_deeply([@res],
+           [[]]);
+
+@res = Canto::ExtensionUtil::parse_extension();
+cmp_deeply([@res],
+           []);
