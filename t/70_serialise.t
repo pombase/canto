@@ -144,30 +144,43 @@ my $full_expected_curation_session =
         },
         with_gene => "SPCC576.16c",
         extension => [
-          [
-            {
-              relation => 'exists_during',
-              rangeValue => 'GO:0051329',
-            },
-            {
-              relation => 'has_substrate',
-              rangeValue => 'PomBase:SPBC1105.11c',
-            },
-            {
-              relation => 'requires_feature',
-              rangeValue => 'Pfam:PF00564',
-            },
-          ],
-          [
-            {
-              relation => 'exists_during',
-              rangeValue => 'GO:0051329',
-            },
-            {
-              relation => 'has_substrate',
-              rangeValue => 'PomBase:SPBC1105.11c',
-            }
-          ],
+          {
+            relation => 'exists_during',
+            rangeValue => 'GO:0051329',
+          },
+          {
+            relation => 'has_substrate',
+            rangeValue => 'PomBase:SPBC1105.11c',
+          },
+          {
+            relation => 'requires_feature',
+            rangeValue => 'Pfam:PF00564',
+          },
+        ],
+        gene => 'Schizosaccharomyces pombe SPBC14F5.07',
+      },
+      {
+        evidence_code => "IPI",
+        creation_date => "2010-01-02",
+        term => "GO:0034763",
+        status => "new",
+        type => "biological_process",
+        publication => 'PMID:19756689',
+        curator => {
+          name => 'Some Testperson',
+          email => 'some.testperson@pombase.org',
+          community_curated => JSON::XS::false,
+        },
+        with_gene => "SPCC576.16c",
+        extension => [
+          {
+            relation => 'exists_during',
+            rangeValue => 'GO:0051329',
+          },
+          {
+            relation => 'has_substrate',
+            rangeValue => 'PomBase:SPBC1105.11c',
+          }
         ],
         gene => 'Schizosaccharomyces pombe SPBC14F5.07',
       },

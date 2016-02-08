@@ -158,7 +158,7 @@ sub _get_annotations
     my $gene = _get_annotation_gene($schema, $annotation);
     my $genotype = _get_annotation_genotype($schema, $annotation);
 
-   if ($gene) {
+    if ($gene) {
       $data{gene} = $gene;
     }
     if ($genotype) {
@@ -183,7 +183,19 @@ sub _get_annotations
       }
     } %data;
 
-    push @ret, \%data;
+    if (!$data{extension} || @{$data{extension}} == 0) {
+      push @ret, \%data;
+    } else {
+      my $extension = delete $data{extension};
+
+      map {
+        my $extension_part = $_;
+        my $data_clone = clone \%data;
+        $data_clone->{extension} = $extension_part;
+
+        push @ret, $data_clone
+      } @$extension;
+    }
   }
 
   return \@ret;
