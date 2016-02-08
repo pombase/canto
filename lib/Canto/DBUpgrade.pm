@@ -88,8 +88,8 @@ my %procs = (
 
         try {
           if ($extension_string) {
-            my $extension = Canto::ExtensionUtil::parse_extension($extension_string);
-            $data->{extension} = $extension;
+            my @extension = Canto::ExtensionUtil::parse_extension($extension_string);
+            $data->{extension} = \@extension;
             $an->data($data);
             $an->update();
           }
