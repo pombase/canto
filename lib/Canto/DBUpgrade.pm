@@ -86,16 +86,17 @@ my %procs = (
 
         my $extension_string = delete $data->{annotation_extension};
 
-        try {
-          if ($extension_string) {
+        if ($extension_string) {
+          try {
             my @extension = Canto::ExtensionUtil::parse_extension($extension_string);
             $data->{extension} = \@extension;
-            $an->data($data);
-            $an->update();
-          }
-        } catch {
-          warn qq(failed to store extension in $curs_key: $_);
-        };
+          } catch {
+            warn qq(failed to store extension in $curs_key: $_);
+          };
+        }
+
+        $an->data($data);
+        $an->update();
       }
     };
 
