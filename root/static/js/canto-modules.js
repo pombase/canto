@@ -1211,6 +1211,7 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
 var extensionBuilderDialogCtrl =
   function($scope, $modalInstance, args) {
     $scope.data = args;
+    $scope.extensionBuilderIsValid = false;
 
     $scope.ok = function () {
       $modalInstance.close({

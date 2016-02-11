@@ -6,10 +6,11 @@
   </div>
   <div class="modal-body">
     <extension-builder extension="data.extension" term-id="{{data.termId}}"
-                       feature-display-name="{{data.featureDisplayName}}"></extension-builder>
+                       feature-display-name="{{data.featureDisplayName}}"
+                       is-valid="extensionBuilderIsValid"></extension-builder>
   </div>
   <div class="modal-footer">
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-primary" ng-disabled="!extensionBuilderIsValid" ng-click="ok()">OK</button>
   </div>
 </div>
