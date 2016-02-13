@@ -120,7 +120,7 @@ print "pushing to Bitbucket\n";
 system "git push --tags bitb master";
 
 print "pushing to GitLab\n";
-system "git push --tags GitLab master";
+system "git push --tags gitlab master";
 
 END {
   if ($stashed) {
