@@ -52,8 +52,8 @@ my %expected_cv_term_counts = (
   'PSI-MOD' => '15',
   'molecular_function' => '8',
   'cellular_component' => '4',
-  'relationship' => '62',
-  'biological_process' => '8',
+  'relationship' => '61',
+  'biological_process' => '9',
   'sequence' => 20,
 );
 
@@ -65,7 +65,7 @@ is(@loaded_cvterms, 182);
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')
   ->search({}, { join => { subject => 'cv', type => 'cv' } })->all();
 
-is(@cvterm_relationships, 124);
+is(@cvterm_relationships, 125);
 
 
 ok((grep {
@@ -153,7 +153,7 @@ is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
 # check loading of alt_ids
 my $cvterm_dbxref_rs = $schema->resultset('CvtermDbxref');
-is($cvterm_dbxref_rs->count(), 11);
+is($cvterm_dbxref_rs->count(), 13);
 
 undef $ontology_index;
 
@@ -161,7 +161,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
 
 # try re-loading
 $test_util->load_test_ontologies($ontology_index);
-is($cvterm_dbxref_rs->count(), 11);
+is($cvterm_dbxref_rs->count(), 13);
 
 undef $ontology_index;
 

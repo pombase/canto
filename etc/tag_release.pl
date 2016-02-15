@@ -119,6 +119,9 @@ system "git push --tags github master";
 print "pushing to Bitbucket\n";
 system "git push --tags bitb master";
 
+print "pushing to GitLab\n";
+system "git push --tags gitlab master";
+
 END {
   if ($stashed) {
     system "git stash pop";
