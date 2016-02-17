@@ -212,11 +212,15 @@ sub _init_lookup
 
 =head2 lookup
 
- Usage   : my $hits = $index->lookup("cellular_component", $search_string, 10);
+ Usage   : my $hits = $index->lookup("cellular_component", \@exclude_subsets,
+                                     $search_string, 10);
  Function: Return the search results for the $search_string
  Args    : $search_scope - the ontology_name or subset IDs to restrict the the
                            search to; the subset IDs should be passed as an
                            array ref
+           $search_exclude - a list of subsets to exclude ie. ignore a result if
+                             any of these subset names is a subset_id of a
+                             document
            $search_string - the text to search for
            $max_results - the maximum number of results to return
  Returns : the Lucene hits object
@@ -227,6 +231,7 @@ sub lookup
   my $self = shift;
 
   my $search_scope = shift;
+  my $search_exclude = shift;
   my $search_string = shift;
   my $max_results = shift;
 
@@ -275,6 +280,12 @@ sub lookup
 
   $query_string .=
     qq{(text:($search_string)$wildcard)};
+
+  if ($search_exclude && @$search_exclude > 0) {
+    map {
+      $query_string .= " AND NOT (subset_id:$_)";
+    } @$search_exclude;
+  }
 
   my $query = $parser->parse($query_string);
 

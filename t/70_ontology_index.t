@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 14;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -28,7 +28,7 @@ $ontology_index->initialise_index();
 my $dihydropteroate_name = 'dihydropteroate synthase activity';
 
 my @data = (
-  ['molecular_function', 'molecular_function', 120000, 'GO:0003674', ['GO:0003674'], []],
+  ['molecular_function', 'molecular_function', 120000, 'GO:0003674', ['GO:0003674', 'canto_root_subset'], []],
   ['molecular_function', $dihydropteroate_name, 123000, 'GO:0004156', ['GO:0003674'], []],
   ['molecular_function', 'transporter activity', 123001, 'GO:0005215', ['GO:0003674'], []],
   ['molecular_function', 'transmembrane transporter activity', 123002, 'GO:0022857', ['GO:0003674', 'GO:0005215'], []],
@@ -41,21 +41,27 @@ map {
 
 $ontology_index->finish_index();
 
-my @results = $ontology_index->lookup('molecular_function', 'dihydropteroate', 100);
+my @results = $ontology_index->lookup('molecular_function', [], 'dihydropteroate', 100);
 is(@results, 1);
 
 is($results[0]->{term_name}, $dihydropteroate_name);
 
-@results = $ontology_index->lookup('molecular_function', 'molecular_function', 100);
+@results = $ontology_index->lookup('molecular_function', [], 'molecular_function', 100);
 is(@results, 1);
 
-@results = $ontology_index->lookup('molecular_function', 'activity', 100);
+@results = $ontology_index->lookup('molecular_function', ['canto_root_subset'], 'molecular_function', 100);
+is(@results, 0);
+
+@results = $ontology_index->lookup('molecular_function', [], 'activity', 100);
 is(@results, 4);
 
-@results = $ontology_index->lookup('molecular_function', 'act', 100);
+@results = $ontology_index->lookup('molecular_function', ['canto_root_subset'], 'activity', 100);
 is(@results, 4);
 
-@results = $ontology_index->lookup(['GO:0003674'], 'activity', 100);
+@results = $ontology_index->lookup('molecular_function', [], 'act', 100);
+is(@results, 4);
+
+@results = $ontology_index->lookup(['GO:0003674'], [], 'activity', 100);
 is(@results, 4);
 
 sub check_subset_results
@@ -72,15 +78,18 @@ sub check_subset_results
 }
 
 # a subset:
-@results = $ontology_index->lookup(['GO:0005215'], 'activity', 100);
+@results = $ontology_index->lookup(['GO:0005215'], [], 'activity', 100);
 is(@results, 2);
 check_subset_results(@results);
 
-@results = $ontology_index->lookup(['GO:0003674','GO:1234567'], 'activity', 100);
+@results = $ontology_index->lookup(['GO:0003674','GO:1234567'], [], 'activity', 100);
 is(@results, 4);
 
-@results = $ontology_index->lookup(['GO:0003674'], 'molecular_function', 100);
+@results = $ontology_index->lookup(['GO:0003674'], [], 'molecular_function', 100);
 is(@results, 1);
+
+@results = $ontology_index->lookup(['GO:0003674'], ['canto_root_subset'], 'molecular_function', 100);
+is(@results, 0);
 
 
 undef $ontology_index;

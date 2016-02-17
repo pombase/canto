@@ -83,7 +83,7 @@ ok(grep {
 
 # test lookup in biological_process
 my @results =
-  $ontology_index->lookup('biological_process', 'transmembrane transport', 100);
+  $ontology_index->lookup('biological_process', [], 'transmembrane transport', 100);
 
 for my $result (@results) {
   my $doc = $result->{doc};
@@ -112,7 +112,7 @@ for (my $i = 0; $i < @expected_transport; $i++) {
 
 
 # look for root term
-@results = $ontology_index->lookup('biological_process', 'biological_process', 100);
+@results = $ontology_index->lookup('biological_process', [], 'biological_process', 100);
 
 is (@results, 1);
 my $biological_process_doc = $results[0]->{doc};
@@ -120,7 +120,7 @@ is ($biological_process_doc->get('subset_id'), 'canto_root_subset');
 
 
 # psi-mod
-@results = $ontology_index->lookup('psi-mod', 'secondary neutral', 100);
+@results = $ontology_index->lookup('psi-mod', [], 'secondary neutral', 100);
 
 is(@results, 3);
 
@@ -136,7 +136,7 @@ is($results[0]->{doc}->get('term_name'), 'modified residue with a secondary neut
 
 # molecular_function with synonym
 my $long_ugly_synonym_query = 'aminobenzoate methenyltransferase activity';
-@results = $ontology_index->lookup('molecular_function', $long_ugly_synonym_query, 100);
+@results = $ontology_index->lookup('molecular_function', [], $long_ugly_synonym_query, 100);
 
 is(@results, 6);
 
@@ -150,7 +150,7 @@ for my $result (@results) {
 is($results[0]->{doc}->get('text'), '2-amino-4-hydroxy-6-hydroxymethyl-7,8-dihydropteridine-diphosphate:4-aminobenzoate 2-amino-4-hydroxydihydropteridine-6-methenyltransferase activity');
 is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
-@results = $ontology_index->lookup('molecular_function',
+@results = $ontology_index->lookup('molecular_function', [],
                                    'dihydropteroate synthetase activity', 100);
 
 is(@results, 6);
@@ -187,7 +187,7 @@ ok((grep {
 
 # test that non-obsolete term is indexed
 my $viable = 'viable vegetative cell population';
-@results = $ontology_index->lookup('fission_yeast_phenotype', $viable, 100);
+@results = $ontology_index->lookup('fission_yeast_phenotype', [], $viable, 100);
 is(@results, 7);
 
 ok((grep {
@@ -197,7 +197,7 @@ ok((grep {
 
 # test that obsolete terms aren't indexed
 my $viable_elongated = 'viable elongated vegetative cell population';
-@results = $ontology_index->lookup('fission_yeast_phenotype', $viable_elongated, 100);
+@results = $ontology_index->lookup('fission_yeast_phenotype', [], $viable_elongated, 100);
 is(@results, 7);
 
 ok(!(grep {

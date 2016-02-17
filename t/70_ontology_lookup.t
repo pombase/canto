@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 78;
+use Test::More tests => 75;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -47,11 +47,8 @@ my $ont_name = 'molecular_function';
 
   ok(defined $results);
 
-  is(scalar(@$results), 1);
-
-  is($results->[0]->{name}, $ont_name);
-  is($results->[0]->{id}, 'GO:0003674');
-  like($results->[0]->{definition}, qr/Elemental activities/);
+  # root terms shouldn't be returned because of the subsets_to_ignore
+  is(scalar(@$results), 0);
 }
 
 {

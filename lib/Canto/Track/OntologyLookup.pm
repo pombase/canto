@@ -291,7 +291,18 @@ sub lookup
 
     my $search_scope = _parse_search_scope($ontology_name);
 
-    @results = $ontology_index->lookup($search_scope, _clean_string($search_string),
+    my @exclude_subsets = ();
+
+    my $config_subsets_to_ignore =
+      $config->{ontology_namespace_config}{subsets_to_ignore};
+
+    if ($config_subsets_to_ignore) {
+      push @exclude_subsets, @$config_subsets_to_ignore;
+    }
+
+    @results = $ontology_index->lookup($search_scope,
+                                       \@exclude_subsets,
+                                       _clean_string($search_string),
                                        $max_results);
 
     my $schema = $self->schema();
