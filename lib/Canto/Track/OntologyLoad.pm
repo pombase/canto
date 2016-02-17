@@ -213,7 +213,7 @@ sub _parse_source
            $index - the index to add the terms to (optional)
            $synonym_types_ref - a array ref of synonym types that should be
                                 added to the index
- Returns : Nothing
+ Returns : a list of the IDs of the root terms of the ontologies just loaded
 
 =cut
 
@@ -341,6 +341,7 @@ sub load
     $a->{acc2} cmp $b->{acc2};
   } @$rels;
 
+  my @root_term_ids = ();
   my %term_parents = ();
 
   for my $rel (@sorted_rels) {
@@ -468,6 +469,7 @@ sub load
     }
 
     if (!defined $term_parents{$term->acc()}) {
+      push @root_term_ids, $term->acc();
       push @subset_ids, 'canto_root_subset';
     }
 
@@ -521,6 +523,8 @@ sub load
  }
 
   $guard->commit();
+
+  return \@root_term_ids;
 }
 
 =head2 finalise

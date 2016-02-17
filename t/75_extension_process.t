@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Test::Deep;
 use Test::MockObject::Extends;
 
@@ -37,11 +37,15 @@ my $subset_prop_rs = $prop_rs
 is ($subset_prop_rs->count(), 0);
 
 my $subset_data = $processor->get_subset_data($test_go_obo_file);
+
+$processor->add_to_subset_data($subset_data, 'canto_root_subset',
+                               ['GO:0003674', 'GO:0005575', 'GO:0008150']);
+is ($subset_data->{'GO:0005575'}{canto_root_subset}, 1);
 $processor->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($cvtermprop_count + 9, $after_cvtermprop_count);
+is ($cvtermprop_count + 12, $after_cvtermprop_count);
 
 
 sub get_subset_props
@@ -61,12 +65,24 @@ my @subset_cvtermprops = get_subset_props();
 cmp_deeply(\@subset_cvtermprops,
            [
              [
+               'biological_process',
+               'canto_root_subset'
+             ],
+             [
                'cell phenotype',
                'FYPO:0000002'
              ],
              [
+               'cellular_component',
+               'canto_root_subset'
+             ],
+             [
                'cytoplasmic membrane-bounded vesicle',
                'GO:0016023'
+             ],
+             [
+               'molecular_function',
+               'canto_root_subset'
              ],
              [
                'nucleocytoplasmic transporter activity',
@@ -99,10 +115,10 @@ cmp_deeply(\@subset_cvtermprops,
            ]
          );
 
-is ($subset_prop_rs->count(), 9);
+is ($subset_prop_rs->count(), 12);
 
 # run again to make sure it's repeatable
 $processor->process_subset_data($track_schema, $subset_data);
 
 is ($prop_rs->count(), $cvtermprop_count + scalar(@subset_cvtermprops));
-is ($subset_prop_rs->count(), 9);
+is ($subset_prop_rs->count(), 12);

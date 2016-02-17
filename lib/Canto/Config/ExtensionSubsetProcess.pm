@@ -150,6 +150,32 @@ sub get_subset_data
   return \%subsets;
 }
 
+
+=head2 add_to_subset_data
+
+ Usage   : $self->add_to_subset_data($subset_data, 'subset_name', \@subset_ids);
+ Function: Add a new subset to $subset_data
+ Args    : $subset_data - returned by get_subset_data()
+           $subset_name
+           $subset_ids - a array ref
+ Return  : None
+
+=cut
+
+sub add_to_subset_data
+{
+  my $self = shift;
+
+  my $subset_data = shift;
+  my $subset_name = shift;
+  my $subset_ids = shift;
+
+  for my $subset_id (@$subset_ids) {
+    $subset_data->{$subset_id}{$subset_name} = 1;
+  }
+}
+
+
 =head2 process_subset_data
 
  Usage   : my $subset_data = $extension_subset_process->get_subset_data();
