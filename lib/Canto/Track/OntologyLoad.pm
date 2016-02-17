@@ -320,13 +320,45 @@ sub load
 
   $graph->iterate($store_term_handler);
 
+  my @sorted_terms_to_store = sort { $a->acc() cmp $b->acc() } @terms_to_store;
 
-  for my $term (sort { $a->acc() cmp $b->acc() } @terms_to_store) {
+  my %term_details = ();
 
+  for my $term (@sorted_terms_to_store) {
     my $cv_name = $term->namespace() // 'external';
+    my $term_acc = $term->acc();
 
+    $term_details{$term_acc} = { namespace => $cv_name };
+  }
+
+  my $rels = $graph->get_all_relationships();
+
+  my @sorted_rels = sort {
+    $a->{type} cmp $b->{type}
+      ||
+    $a->{acc1} cmp $b->{acc1}
+      ||
+    $a->{acc2} cmp $b->{acc2};
+  } @$rels;
+
+  my %term_parents = ();
+
+  for my $rel (@sorted_rels) {
+    my $subject_term_acc = $rel->subject_acc();
+    my $object_term_acc = $rel->object_acc();
+
+    next unless defined $term_details{$subject_term_acc};
+    next unless defined $term_details{$object_term_acc};
+
+    if ($term_details{$subject_term_acc}->{namespace} eq
+        $term_details{$object_term_acc}->{namespace}) {
+      push @{$term_parents{$subject_term_acc}}, $object_term_acc;
+    }
+  }
+
+  for my $term (@sorted_terms_to_store) {
+    my $cv_name = $term->namespace() // 'external';
     my $comment = $term->comment();
-
     my $xrefs = $term->dbxref_list();
 
     for my $xref (@$xrefs) {
@@ -435,6 +467,10 @@ sub load
       }
     }
 
+    if (!defined $term_parents{$term->acc()}) {
+      push @subset_ids, 'canto_root_subset';
+    }
+
     if (!$term->is_relationship_type()) {
       $cvterms{$term->acc()} = $cvterm;
 
@@ -445,18 +481,7 @@ sub load
 
       $term_counts{$cv_name}++;
     }
-
   }
-
-  my $rels = $graph->get_all_relationships();
-
-  my @sorted_rels = sort {
-    $a->{type} cmp $b->{type}
-      ||
-    $a->{acc1} cmp $b->{acc1}
-      ||
-    $a->{acc2} cmp $b->{acc2};
-  } @$rels;
 
   for my $rel (@sorted_rels) {
     my $subject_term_acc = $rel->subject_acc();

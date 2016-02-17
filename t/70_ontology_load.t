@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 50;
+use Test::More tests => 52;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -81,7 +81,7 @@ ok(grep {
 } @loaded_cvterms);
 
 
-# biological_process
+# test lookup in biological_process
 my @results =
   $ontology_index->lookup('biological_process', 'transmembrane transport', 100);
 
@@ -109,6 +109,14 @@ my @expected_transport = (
 for (my $i = 0; $i < @expected_transport; $i++) {
   is($results[$i]->{doc}->get('term_name'), $expected_transport[$i]);
 }
+
+
+# look for root term
+@results = $ontology_index->lookup('biological_process', 'biological_process', 100);
+
+is (@results, 1);
+my $biological_process_doc = $results[0]->{doc};
+is ($biological_process_doc->get('subset_id'), 'canto_root_subset');
 
 
 # psi-mod

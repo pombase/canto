@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 36;
+use Test::More tests => 33;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -55,9 +55,9 @@ test_psgi $app, sub {
 
     is (@$obj, 1);
 
-    ok(grep { $_->{id} =~ /GO:0003674/ } @$obj);
-    ok(grep { $_->{name} =~ /molecular_function/ } @$obj);
-    ok(grep { $_->{comment} =~ /Note that, in addition to forming the root/ } @$obj);
+    is ($obj->[0]->{id}, 'GO:0003674');
+    is ($obj->[0]->{name}, 'molecular_function');
+    like ($obj->[0]->{comment}, qr/Note that, in addition to forming the root/);
   }
 
   # test "phenotype_condition" which is an ontology but not an
