@@ -65,7 +65,7 @@ is(@loaded_cvterms, 122);
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')
   ->search({}, { join => { subject => 'cv', type => 'cv' } })->all();
 
-is(@cvterm_relationships, 58);
+is(@cvterm_relationships, 59);
 
 
 ok((grep {

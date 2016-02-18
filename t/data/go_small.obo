@@ -59,6 +59,7 @@ alt_id: GO:0008151
 alt_id: GO:0050875
 def: "Any process that is carried out at the cellular level, but not necessarily restricted to a single cell. For example, cell communication occurs among more than one cell, but occurs at the cellular level." [GOC:go_curators, GOC:isa_complete]
 synonym: "cell growth and/or maintenance" NARROW []
+is_a: GO:0008150 ! biological_process
 
 [Term]
 id: GO:0071806
