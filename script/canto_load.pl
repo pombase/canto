@@ -202,10 +202,9 @@ if (@ontology_args) {
   my ($root_terms) = $ontology_load->load([@ontology_args], $index, $synonym_types);
 
   if ($subset_data) {
-    $extension_process->add_to_subset_data($subset_data, 'canto_root_subset',
-                                           $root_terms);
     # add canto_subset cvtermprop to the terms in subsets
     my $subset_process = Canto::Chado::SubsetProcess->new();
+    $subset_process->add_to_subset_data($subset_data, 'canto_root_subset', $root_terms);
     $subset_process->process_subset_data($ontology_load->load_schema(), $subset_data);
   }
 
