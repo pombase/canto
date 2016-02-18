@@ -468,7 +468,7 @@ sub load
       }
     }
 
-    if (!defined $term_parents{$term->acc()}) {
+    if (!defined $term_parents{$term->acc()} && !$term->is_obsolete()) {
       push @root_term_ids, $term->acc();
       push @subset_ids, 'canto_root_subset';
     }
