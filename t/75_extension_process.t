@@ -35,7 +35,7 @@ my $subset_prop_rs = $prop_rs
            { join => 'type', prefetch => 'cvterm' });
 
 # these are the subsets for the root terms: canto_root_subset
-is ($subset_prop_rs->count(), 8);
+is ($subset_prop_rs->count(), 7);
 
 my $canto_root_subset_count = $subset_prop_rs->count();
 
@@ -50,7 +50,7 @@ $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($cvtermprop_count + 6, $after_cvtermprop_count);
+is ($cvtermprop_count + 7, $after_cvtermprop_count);
 
 
 sub get_subset_props
