@@ -533,6 +533,8 @@ sub _get_all_count_rs
   my $schema = $self->schema();
   my $search_scope = shift;
 
+  my $rs = undef;
+
   if (ref $search_scope) {
     # we got eg. "[GO:000123,SO:000345]" from user so $search_scope is an array
     # of IDs
@@ -547,18 +549,41 @@ sub _get_all_count_rs
           join => 'type',
         });
 
-    return $schema->resultset('Cvterm')->search({
+    $rs = $schema->resultset('Cvterm')->search({
       cvterm_id => {
         -in => $subset_cvtermprop_rs->get_column('cvterm_id')->as_query(),
       }
     });
   } else {
     my $cv = $self->_find_cv($search_scope);
-    return $schema->resultset('Cvterm')->search({
+    $rs = $schema->resultset('Cvterm')->search({
       cv_id => $cv->cv_id(),
       is_relationshiptype => 0,
     });
   }
+
+  my $subsets_to_ignore = $self->config()->{ontology_namespace_config}{subsets_to_ignore};
+
+  if ($subsets_to_ignore) {
+    my $subset_cvtermprop_rs =
+      $schema->resultset('Cvtermprop')
+        ->search(
+          {
+            value => { -in => $subsets_to_ignore },
+            'type.name' => 'canto_subset',
+          },
+          {
+            join => 'type',
+          });
+
+    $rs = $rs->search({
+      cvterm_id => {
+        -not_in => $subset_cvtermprop_rs->get_column('cvterm_id')->as_query(),
+      }
+    });
+  }
+
+  return $rs;
 }
 
 
