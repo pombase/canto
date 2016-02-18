@@ -1280,6 +1280,7 @@ sub load_test_ontologies
     $self->root_dir() . '/' . $config->{relationship_ontology_path};
   my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
   my $so_obo_file = $config->{test_config}->{test_so_obo_file};
+  my $peco_obo_file = $config->{test_config}->{test_peco_obo_file};
 
   my @relationships_to_load = @{$load_config->{ontology}->{relationships_to_load}};
 
@@ -1311,6 +1312,7 @@ sub load_test_ontologies
   push @sources, $test_go_file;
   if ($include_fypo) {
     push @sources, $test_fypo_file;
+    push @sources, $peco_obo_file;
   }
   push @sources, $psi_mod_obo_file;
   push @sources, $so_obo_file;

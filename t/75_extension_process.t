@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::More tests => 6;
 use Test::Deep;
 use Test::MockObject::Extends;
 
@@ -35,7 +35,7 @@ my $subset_prop_rs = $prop_rs
            { join => 'type', prefetch => 'cvterm' });
 
 # these are the subsets for the root terms: canto_root_subset
-is ($subset_prop_rs->count(), 7);
+is ($subset_prop_rs->count(), 8);
 
 my $canto_root_subset_count = $subset_prop_rs->count();
 
@@ -67,68 +67,71 @@ sub get_subset_props
 
 my @subset_cvtermprops = get_subset_props();
 
-cmp_deeply(\@subset_cvtermprops,
-           [
-             [
-               'biological_process',
-               'canto_root_subset'
-             ],
-             [
-               'cell phenotype',
-               'FYPO:0000002'
-             ],
-             [
-               'cellular_component',
-               'canto_root_subset'
-             ],
-             [
-               'cytoplasmic membrane-bounded vesicle',
-               'GO:0016023'
-             ],
-             [
-               'molecular_function',
-               'canto_root_subset'
-             ],
-             [
-               'nucleocytoplasmic transporter activity',
-               'GO:0005215'
-             ],
-             [
-               'protein modification',
-               'canto_root_subset'
-             ],
-             [
-               'regional_centromere_outer_repeat_region',
-               'SO:0001799'
-             ],
-             [
-               'stored secretory granule',
-               'GO:0016023'
-             ],
-             [
-               'transmembrane transporter activity',
-               'GO:0005215'
-             ],
-             [
-               'transmembrane transporter activity',
-               'GO:0022857'
-             ],
-             [
-               'transport vesicle',
-               'GO:0016023'
-             ],
-             [
-               'transporter activity',
-               'GO:0005215'
-             ]
-           ]
-         );
+my @expected_subset_props =
+  (
+    [
+      'biological_process',
+      'canto_root_subset'
+    ],
+    [
+      'cell phenotype',
+      'FYPO:0000002'
+    ],
+    [
+      'cellular_component',
+      'canto_root_subset'
+    ],
+    [
+      'cytoplasmic membrane-bounded vesicle',
+      'GO:0016023'
+    ],
+    [
+      'molecular_function',
+      'canto_root_subset'
+    ],
+    [
+      'nucleocytoplasmic transporter activity',
+      'GO:0005215'
+    ],
+    [
+      'phenotype condition',
+      'canto_root_subset'
+    ],
+    [
+      'protein modification',
+      'canto_root_subset'
+    ],
+    [
+      'regional_centromere_outer_repeat_region',
+      'SO:0001799'
+    ],
+    [
+      'stored secretory granule',
+      'GO:0016023'
+    ],
+    [
+      'transmembrane transporter activity',
+      'GO:0005215'
+    ],
+    [
+      'transmembrane transporter activity',
+      'GO:0022857'
+    ],
+    [
+      'transport vesicle',
+      'GO:0016023'
+    ],
+    [
+      'transporter activity',
+      'GO:0005215'
+    ]
+  );
 
-is ($subset_prop_rs->count(), 13);
+cmp_deeply(\@subset_cvtermprops, \@expected_subset_props);
 
 # run again to make sure it's repeatable
 $subset_process->process_subset_data($track_schema, $subset_data);
 
 is ($prop_rs->count() + $canto_root_subset_count,
     $cvtermprop_count + scalar(@subset_cvtermprops));
-is ($subset_prop_rs->count(), 13);
+is ($subset_prop_rs->count(), scalar(@expected_subset_props));
