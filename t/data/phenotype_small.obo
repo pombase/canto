@@ -171,6 +171,7 @@ comment: This term was made obsolete because it is redundant with annotating to 
 synonym: "population of viable long cells" EXACT [PomBase:vw]
 synonym: "viable long vegetative cell population" EXACT [PomBase:mah]
 synonym: "viable population of elongated vegetative cells" EXACT [PomBase:vw]
+is_a: FYPO:0000001 ! phenotype
 is_obsolete: true
 replaced_by: FYPO:0002060
 created_by: midori

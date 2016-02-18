@@ -224,7 +224,7 @@ for my $rel (@cvterm_relationships) {
 
 cmp_deeply($rel_type_cv_counts{fission_yeast_phenotype},
            {
-             'is_a' => 14,
+             'is_a' => 15,
              'has_part' => 2
            });
 cmp_deeply($rel_type_cv_counts{sequence},
