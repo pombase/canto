@@ -62,6 +62,20 @@ sub add_to_subset_data
 }
 
 
+=head2 get_empty_subset_data
+
+ Usage   : $subset_process->process_subset_data($track_schema, $subset_data);
+ Function: Return an empty $subset_data structure
+
+=cut
+
+sub get_empty_subset_data
+{
+  return {};
+}
+
+
+
 =head2 process_subset_data
 
  Usage   : my $subset_data = $extension_process->get_subset_data();
