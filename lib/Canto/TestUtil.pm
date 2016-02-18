@@ -42,8 +42,9 @@ use Canto::Track::OntologyIndex;
 use Canto::Track::LoadUtil;
 use Canto::Track::PubmedUtil;
 use Canto::Track::CuratorManager;
-use Canto::Config::ExtensionSubsetProcess;
+use Canto::Config::ExtensionProcess;
 use Canto::DBUtil;
+use Canto::Chado::SubsetProcess;
 
 use Moose;
 
@@ -1225,9 +1226,9 @@ sub get_mock_subset_processor
   {
     my $self = shift;
     my $config = $self->config();
-    my $extension_subset_process = Canto::Config::ExtensionSubsetProcess->new(config => $config);
+    my $extension_process = Canto::Config::ExtensionProcess->new(config => $config);
 
-    $extension_subset_process = Test::MockObject::Extends->new($extension_subset_process);
+    $extension_process = Test::MockObject::Extends->new($extension_process);
     my $get_owltools_results = sub {
       my @results = ();
       open my $fh, '<', $self->root_dir() . '/t/data/owltools_out.txt';
@@ -1238,9 +1239,9 @@ sub get_mock_subset_processor
       close $fh;
       return @results;
     };
-    $extension_subset_process->mock('get_owltools_results', $get_owltools_results);
+    $extension_process->mock('get_owltools_results', $get_owltools_results);
 
-    return $extension_subset_process;
+    return $extension_process;
   }
 
 
@@ -1253,7 +1254,7 @@ sub get_mock_subset_processor
            $include_ro - if true, load RO too
            $include_fypo - load FYPO if true
            $include_closure_subsets - load closure subsets from
-              ExtensionSubsetProcess::get_subset_data()
+              ExtensionProcess::get_subset_data()
  Return  :
 
 =cut
@@ -1282,15 +1283,15 @@ sub load_test_ontologies
 
   my @relationships_to_load = @{$load_config->{ontology}->{relationships_to_load}};
 
-  my $extension_subset_process = undef;
+  my $extension_process = undef;
   my $subset_data = undef;
 
   if ($include_closure_subsets) {
     my @ontology_args = ($test_go_file, $test_fypo_file, $psi_mod_obo_file,
                          $so_obo_file);
-    $extension_subset_process = $self->get_mock_subset_processor();
+    $extension_process = $self->get_mock_subset_processor();
 
-    $subset_data = $extension_subset_process->get_subset_data(@ontology_args);
+    $subset_data = $extension_process->get_subset_data(@ontology_args);
   }
 
   my $ontology_load =
@@ -1316,8 +1317,9 @@ sub load_test_ontologies
   $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 
   if ($include_closure_subsets) {
-    $extension_subset_process->process_subset_data($ontology_load->load_schema(),
-                                                   $subset_data);
+    my $subset_process = Canto::Chado::SubsetProcess->new();
+    $subset_process->process_subset_data($ontology_load->load_schema(),
+                                         $subset_data);
   }
 
   $ontology_load->finalise();

@@ -1,10 +1,9 @@
-package Canto::Config::ExtensionSubsetProcess;
+package Canto::Config::ExtensionProcess;
 
 =head1 NAME
 
-Canto::Config::ExtensionSubsetProcess - Read the domains and ranges from the
-  extension configuration and use owltools to find the child terms.  Store
-  canto_subset cvtermprops to record this.
+Canto::Config::ExtensionProcess - Read the domains and ranges from the
+  extension configuration and use owltools to find the child terms.
 
 =head1 SYNOPSIS
 
@@ -20,7 +19,7 @@ Please report any bugs or feature requests to C<kmr44@cam.ac.uk>.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Canto::Config::ExtensionSubsetProcess
+    perldoc Canto::Config::ExtensionProcess
 
 =over 4
 
@@ -75,6 +74,8 @@ sub get_owltools_results
 =head2 get_subset_data
 
  Usage   : my %subset_data = $self->get_subset_data(@obo_file_names);
+           my $subset_process = Canto::Chado::SubsetProcess->new();
+           $subset_process->process_subset_data($track_schema, $subset_data);
  Function: Read the domain and range ontology terms from extension_configuration
            config, then use owtools to find the child terms.
  Args    : @obo_file_names - the OBO files to process with OWLtools
@@ -150,103 +151,5 @@ sub get_subset_data
   return \%subsets;
 }
 
-
-=head2 add_to_subset_data
-
- Usage   : $self->add_to_subset_data($subset_data, 'subset_name', \@subset_ids);
- Function: Add a new subset to $subset_data
- Args    : $subset_data - returned by get_subset_data()
-           $subset_name
-           $subset_ids - a array ref
- Return  : None
-
-=cut
-
-sub add_to_subset_data
-{
-  my $self = shift;
-
-  my $subset_data = shift;
-  my $subset_name = shift;
-  my $subset_ids = shift;
-
-  for my $subset_id (@$subset_ids) {
-    $subset_data->{$subset_id}{$subset_name} = 1;
-  }
-}
-
-
-=head2 process_subset_data
-
- Usage   : my $subset_data = $extension_subset_process->get_subset_data();
-           $extension_subset_process->process_subset_data($track_schema, $subset_data);
- Function: Use the results of get_subset_data() to add a canto_subset
-           cvtermprop for each config file term it's a child of.  For
-           more details see:
-           https://github.com/pombase/canto/wiki/AnnotationExtensionConfig
- Args    : $track_schema - the database to load
-           $subset_data - A map returned by subset_data()
- Return  : None - dies on failure
-
-=cut
-
-sub process_subset_data
-{
-  my $self = shift;
-  my $schema = shift;
-  my $subset_data = shift;
-
-  my %db_names = ();
-
-  map {
-    if (/(\w+):/) {
-      $db_names{$1} = 1;
-    }
-  } keys %$subset_data;
-
-  my @db_names = keys %db_names;
-
-  my $cvterm_rs =
-    $schema->resultset('Cvterm')->search({
-      'db.name' => { -in => \@db_names },
-    }, {
-      join => { dbxref => 'db' },
-      prefetch => { dbxref => 'db' }
-    });
-
-  my $canto_subset_term =
-    $schema->resultset('Cvterm')->find({ name => 'canto_subset',
-                                         'cv.name' => 'cvterm_property_type' },
-                                       {
-                                         join => 'cv' });
-
-  while (defined (my $cvterm = $cvterm_rs->next())) {
-    my $db_accession = $cvterm->db_accession();
-
-    my $prop_rs =
-      $cvterm->cvtermprop_cvterms()
-      ->search({
-        type_id => $canto_subset_term->cvterm_id(),
-      });
-
-    $prop_rs->delete();
-
-    my $subset_ids = $subset_data->{$db_accession};
-
-    if ($subset_ids) {
-      my @subset_ids = keys %{$subset_ids};
-
-      for (my $rank = 0; $rank < @subset_ids; $rank++) {
-        my $subset_id = $subset_ids[$rank];
-        $schema->resultset('Cvtermprop')->create({
-          cvterm_id => $cvterm->cvterm_id(),
-          type_id => $canto_subset_term->cvterm_id(),
-          value => $subset_id,
-          rank => $rank,
-        });
-      }
-    }
-  }
-}
 
 1;

@@ -28,7 +28,7 @@ use Canto::Track::OntologyIndex;
 use Canto::Track::LoadUtil;
 use Canto::Track::PubmedUtil;
 use Canto::Curs::TermUpdate;
-use Canto::Config::ExtensionSubsetProcess;
+use Canto::Config::ExtensionProcess;
 
 my $do_genes = 0;
 my $do_pubmed_xml = 0;
@@ -184,13 +184,13 @@ if (@ontology_args) {
   $index->initialise_index();
   my @relationships_to_load = @{$config->{load}->{ontology}->{relationships_to_load}};
 
-  my $extension_subset_process = undef;
+  my $extension_process = undef;
   my $subset_data = undef;
 
   if ($do_process_extension_config) {
-    $extension_subset_process =
-      Canto::Config::ExtensionSubsetProcess->new(config => $config);
-    $subset_data = $extension_subset_process->get_subset_data(@ontology_args);
+    $extension_process =
+      Canto::Config::ExtensionProcess->new(config => $config);
+    $subset_data = $extension_process->get_subset_data(@ontology_args);
   }
 
   my $ontology_load = Canto::Track::OntologyLoad->new(schema => $schema,
@@ -202,11 +202,11 @@ if (@ontology_args) {
   my ($root_terms) = $ontology_load->load([@ontology_args], $index, $synonym_types);
 
   if ($subset_data) {
-    $extension_subset_process->add_to_subset_data($subset_data, 'canto_root_subset',
-                                                  $root_terms);
+    $extension_process->add_to_subset_data($subset_data, 'canto_root_subset',
+                                           $root_terms);
     # add canto_subset cvtermprop to the terms in subsets
-    $extension_subset_process->process_subset_data($ontology_load->load_schema(),
-                                                   $subset_data);
+    my $subset_process = Canto::Chado::SubsetProcess->new();
+    $subset_process->process_subset_data($ontology_load->load_schema(), $subset_data);
   }
 
   if (!$dry_run) {
