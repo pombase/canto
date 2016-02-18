@@ -29,6 +29,7 @@ use Canto::Track::LoadUtil;
 use Canto::Track::PubmedUtil;
 use Canto::Curs::TermUpdate;
 use Canto::Config::ExtensionProcess;
+use Canto::Chado::SubsetProcess;
 
 my $do_genes = 0;
 my $do_pubmed_xml = 0;
