@@ -1284,7 +1284,8 @@ sub load_test_ontologies
   my @relationships_to_load = @{$load_config->{ontology}->{relationships_to_load}};
 
   my $extension_process = undef;
-  my $subset_data = undef;
+  my $subset_process = Canto::Chado::SubsetProcess->new();
+  my $subset_data = $subset_process->get_empty_subset_data();
 
   if ($include_closure_subsets) {
     my @ontology_args = ($test_go_file, $test_fypo_file, $psi_mod_obo_file,
@@ -1314,13 +1315,12 @@ sub load_test_ontologies
   push @sources, $psi_mod_obo_file;
   push @sources, $so_obo_file;
 
-  $ontology_load->load(\@sources, $ontology_index, $synonym_types);
+  my ($root_terms) = $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 
-  if ($include_closure_subsets) {
-    my $subset_process = Canto::Chado::SubsetProcess->new();
-    $subset_process->process_subset_data($ontology_load->load_schema(),
-                                         $subset_data);
-  }
+  $subset_process->add_to_subset_data($subset_data, 'canto_root_subset',
+                                      $root_terms);
+  $subset_process->process_subset_data($ontology_load->load_schema(),
+                                       $subset_data);
 
   $ontology_load->finalise();
   $ontology_index->finish_index();

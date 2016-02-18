@@ -34,7 +34,10 @@ my $subset_prop_rs = $prop_rs
   ->search({ 'type.name' => 'canto_subset' },
            { join => 'type', prefetch => 'cvterm' });
 
-is ($subset_prop_rs->count(), 0);
+# these are the subsets for the root terms: canto_root_subset
+is ($subset_prop_rs->count(), 8);
+
+my $canto_root_subset_count = $subset_prop_rs->count();
 
 my $subset_data = $extension_processor->get_subset_data($test_go_obo_file);
 my $subset_process = Canto::Chado::SubsetProcess->new();
@@ -47,7 +50,7 @@ $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($cvtermprop_count + 12, $after_cvtermprop_count);
+is ($cvtermprop_count + 5, $after_cvtermprop_count);
 
 
 sub get_subset_props
@@ -91,6 +94,10 @@ cmp_deeply(\@subset_cvtermprops,
                'GO:0005215'
              ],
              [
+               'protein modification',
+               'canto_root_subset'
+             ],
+             [
                'regional_centromere_outer_repeat_region',
                'SO:0001799'
              ],
@@ -117,10 +124,11 @@ cmp_deeply(\@subset_cvtermprops,
            ]
          );
 
-is ($subset_prop_rs->count(), 12);
+is ($subset_prop_rs->count(), 13);
 
 # run again to make sure it's repeatable
 $subset_process->process_subset_data($track_schema, $subset_data);
 
-is ($prop_rs->count(), $cvtermprop_count + scalar(@subset_cvtermprops));
-is ($subset_prop_rs->count(), 12);
+is ($prop_rs->count() + $canto_root_subset_count,
+    $cvtermprop_count + scalar(@subset_cvtermprops));
+is ($subset_prop_rs->count(), 13);
