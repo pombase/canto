@@ -1881,6 +1881,17 @@ cache:
 # termid doesn't have a DB name prefix
 default_db_name: "CONFIGURE_IN_CANTO_DEPLOY.YAML"
 
+## example subset configuration
+## the "canto_root_subset" is created automatically and the other are subsets
+## defined in OBO files
+#
+# ontology_namespace_config:
+#   subsets_to_ignore:
+#     - canto_root_subset
+#     - qc_do_not_annotate
+#     - gocheck_do_not_annotate
+#     - gocheck_do_not_manually_annotate
+
 ### configuration for annotation extensions in the user interface
 ### See: https://github.com/pombase/canto/wiki/AnnotationExtensionConfig
 # extension_conf_files:
