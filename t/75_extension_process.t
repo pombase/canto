@@ -23,26 +23,24 @@ $test_util->load_test_ontologies($ontology_index, 1, 1);
 my $test_go_obo_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};
 
-my $mock_request = Test::MockObject->new();
-$mock_request->mock('param', sub { return 'track' });
 
-my $extension_processor = $test_util->get_mock_subset_processor();
+my $extension_process = $test_util->get_mock_extension_process();
 
 my $prop_rs = $track_schema->resultset('Cvtermprop');
 my $cvtermprop_count = $prop_rs->count();
 my $subset_prop_rs = $prop_rs
   ->search({ 'type.name' => 'canto_subset' },
-           { join => 'type', prefetch => 'cvterm' });
+           { join => 'type', prefetch => 'cvterm', order_by => [ 'type.name', 'value' ] });
 
-# these are the subsets for the root terms: canto_root_subset
-is ($subset_prop_rs->count(), 7);
+is ($subset_prop_rs->count(), 12);
+
 
 my $canto_root_subset_count = $subset_prop_rs->count();
 
-my $subset_data = $extension_processor->get_subset_data($test_go_obo_file);
+my $subset_data = $extension_process->get_subset_data($test_go_obo_file);
 my $subset_process = Canto::Chado::SubsetProcess->new();
 
-$subset_process->add_to_subset_data($subset_data, 'canto_root_subset',
+$subset_process->add_to_subset($subset_data, 'canto_root_subset',
                                ['GO:0003674', 'GO:0005575', 'GO:0008150']);
 is ($subset_data->{'GO:0005575'}{canto_root_subset}, 1);
 
@@ -50,7 +48,7 @@ $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($cvtermprop_count + 7, $after_cvtermprop_count);
+is ($after_cvtermprop_count, 37);
 
 
 sub get_subset_props

@@ -37,9 +37,9 @@ under the same terms as Perl itself.
 
 use Moose;
 
-=head2 add_to_subset_data
+=head2 add_to_subset
 
- Usage   : $self->add_to_subset_data($subset_data, 'subset_name', \@subset_ids);
+ Usage   : $self->add_to_subset($subset_data, 'subset_name', \@subset_ids);
  Function: Add a new subset to $subset_data
  Args    : $subset_data - returned by get_subset_data()
            $subset_name
@@ -48,7 +48,7 @@ use Moose;
 
 =cut
 
-sub add_to_subset_data
+sub add_to_subset
 {
   my $self = shift;
 
@@ -75,6 +75,23 @@ sub get_empty_subset_data
 }
 
 
+=head2 add_terms_from_config
+
+ Usage   : $subset_process->add_terms_from_config($config, $subset_data);
+ Function: Add subsets from the config file(s), like subsets_to_ignore
+ Return  : None
+
+=cut
+
+
+sub add_terms_from_config
+{
+  my $self = shift;
+  my $config = shift;
+  my $subset_data = shift;
+
+  # "Unplemented: add_terms_from_config()\n";
+}
 
 =head2 process_subset_data
 

@@ -732,7 +732,7 @@ sub make_base_track_db
     my @relationships_to_load = @{$config->{load}->{ontology}->{relationships_to_load}};
 
     my $ontology_load =
-      Canto::Track::OntologyLoad->new(default_db_name => $config->{default_db_name},
+      Canto::Track::OntologyLoad->new(config => $config,
                                       relationships_to_load => \@relationships_to_load,
                                       schema => $schema);
 
@@ -1213,16 +1213,14 @@ sub get_a_person
     return $admin_person_rs->first();
   }
 
-=head2
+=head2 get_mock_extension_process
 
- Usage   :
- Function:
- Args    :
- Return  :
+ Function: return a Mock ExtensionProcess object that doesn't need to
+           run owltools
 
 =cut
 
-sub get_mock_subset_processor
+sub get_mock_extension_process
   {
     my $self = shift;
     my $config = $self->config();
@@ -1285,22 +1283,18 @@ sub load_test_ontologies
   my @relationships_to_load = @{$load_config->{ontology}->{relationships_to_load}};
 
   my $extension_process = undef;
-  my $subset_process = Canto::Chado::SubsetProcess->new();
-  my $subset_data = $subset_process->get_empty_subset_data();
 
   if ($include_closure_subsets) {
     my @ontology_args = ($test_go_file, $test_fypo_file, $psi_mod_obo_file,
                          $so_obo_file);
-    $extension_process = $self->get_mock_subset_processor();
-
-    $subset_data = $extension_process->get_subset_data(@ontology_args);
+    $extension_process = $self->get_mock_extension_process();
   }
 
   my $ontology_load =
     Canto::Track::OntologyLoad->new(schema => $self->track_schema(),
                                     relationships_to_load => \@relationships_to_load,
-                                    default_db_name => 'Canto',
-                                    subset_data => $subset_data);
+                                    extension_process => $extension_process,
+                                    config => $self->config());
 
   $ontology_index->initialise_index();
 
@@ -1317,12 +1311,7 @@ sub load_test_ontologies
   push @sources, $psi_mod_obo_file;
   push @sources, $so_obo_file;
 
-  my ($root_terms) = $ontology_load->load(\@sources, $ontology_index, $synonym_types);
-
-  $subset_process->add_to_subset_data($subset_data, 'canto_root_subset',
-                                      $root_terms);
-  $subset_process->process_subset_data($ontology_load->load_schema(),
-                                       $subset_data);
+  $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 
   $ontology_load->finalise();
   $ontology_index->finish_index();

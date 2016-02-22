@@ -8,7 +8,8 @@ Canto::Track::OntologyLoad - Code for loading ontology information into a
 =head1 SYNOPSIS
 
 my $loader = Canto::Track::OntologyLoad->new(schema => $schema,
-                                             default_db_name => 'PomBase');
+                                             config => $config,
+                                             relationships_to_load => ['is_a']);
 
 my $index = Canto::Track::OntologyIndex->new(...);
 
@@ -59,6 +60,10 @@ use File::Temp qw(tempfile);
 
 use Canto::Track::LoadUtil;
 use Canto::Curs::Utils;
+use Canto::Config::ExtensionProcess;
+use Canto::Chado::SubsetProcess;
+
+with 'Canto::Role::Configurable';
 
 has 'schema' => (
   is => 'ro',
@@ -72,11 +77,6 @@ has 'load_schema' => (
   isa => 'Maybe[Canto::TrackDB]',
 );
 
-has 'default_db_name' => (
-  is => 'ro',
-  required => 1,
-);
-
 has 'temp_file_name' => (
   is => 'rw',
   init_arg => undef
@@ -88,9 +88,9 @@ has 'relationships_to_load' => (
   isa => 'ArrayRef[Str]',
 );
 
-has 'subset_data' => (
+has 'extension_process' => (
   is => 'ro',
-  required => 0,
+  default => undef,
 );
 
 sub BUILD
@@ -206,14 +206,15 @@ sub _parse_source
 
 =head2 load
 
- Usage   : my $ont_load = Canto::Track::OntologyLoad->new(schema => $schema);
+ Usage   : my $ont_load = Canto::Track::OntologyLoad->new(schema => $schema,
+                                                          config => $config,
+                                                          relationships_to_load => ['is_a']);
            $ont_load->load($file_name, $index, [qw(exact related)]);
  Function: Load the contents an OBO file into the schema
  Args    : $source - the file name or URL of an obo format file
            $index - the index to add the terms to (optional)
            $synonym_types_ref - a array ref of synonym types that should be
                                 added to the index
- Returns : a list of the IDs of the root terms of the ontologies just loaded
 
 =cut
 
@@ -231,6 +232,20 @@ sub load
   if (!defined $synonym_types_ref) {
     croak "no synonym_types passed to OntologyLoad::load()";
   }
+
+  my $config_subsets_to_ignore =
+    $self->config()->{ontology_namespace_config}{subsets_to_ignore};
+
+  my $subset_process = Canto::Chado::SubsetProcess->new();
+  my $subset_data;
+
+  if ($self->extension_process()) {
+    $subset_data = $self->extension_process()->get_subset_data(@$sources);
+  } else {
+    $subset_data = $subset_process->get_empty_subset_data();
+  }
+
+  $subset_process->add_terms_from_config($self->config(), $subset_data);
 
   my $schema = $self->load_schema();
 
@@ -291,7 +306,7 @@ sub load
   # create this object after deleting as LoadUtil has a dbxref cache (that
   # is a bit ugly ...)
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema,
-                                              default_db_name => $self->default_db_name(),
+                                              default_db_name => $self->config()->{default_db_name},
                                               preload_cache => 1);
   my %relationships_to_load = ();
 
@@ -341,7 +356,6 @@ sub load
     $a->{acc2} cmp $b->{acc2};
   } @$rels;
 
-  my @root_term_ids = ();
   my %term_parents = ();
 
   for my $rel (@sorted_rels) {
@@ -458,27 +472,33 @@ sub load
 
     my @subset_ids = ();
 
-    my $subset_data = $self->subset_data();
+    my $objects = $subset_data->{$term->acc()};
 
-    if ($subset_data) {
-      my $objects = $subset_data->{$term->acc()};
-
-      if ($objects) {
-        push @subset_ids, (keys %$objects), $term->acc();
-      }
-    }
-
-    if (!defined $term_parents{$term->acc()} && !$term->is_obsolete()) {
-      push @root_term_ids, $term->acc();
-      push @subset_ids, 'canto_root_subset';
+    if ($objects) {
+      push @subset_ids, (keys %$objects), $term->acc();
     }
 
     if (!$term->is_relationship_type()) {
       $cvterms{$term->acc()} = $cvterm;
 
-      if (!$term->is_obsolete() && defined $index) {
-        $index->add_to_index($cv_name, $term_name, $cvterm_id,
-                             $term->acc(), \@subset_ids, \@synonyms_for_index);
+      if (!$term->is_obsolete()) {
+        if (!defined $term_parents{$term->acc()}) {
+          push @subset_ids, 'canto_root_subset';
+          $subset_process->add_to_subset($subset_data, 'canto_root_subset', [$term->acc()]);
+        }
+
+        if ($config_subsets_to_ignore) {
+          for my $subset_id (@$config_subsets_to_ignore) {
+            if ($term->in_subset($subset_id)) {
+              push @subset_ids, $subset_id;
+              $subset_process->add_to_subset($subset_data, $subset_id, [$term->acc()]);
+            }
+          }
+        }
+        if (defined $index) {
+          $index->add_to_index($cv_name, $term_name, $cvterm_id,
+                               $term->acc(), \@subset_ids, \@synonyms_for_index);
+        }
       }
 
       $term_counts{$cv_name}++;
@@ -522,9 +542,11 @@ sub load
                    $term_counts{$cv_name} // 0);
  }
 
-  $guard->commit();
 
-  return \@root_term_ids;
+  # add canto_subset cvtermprop to the terms in subsets
+  $subset_process->process_subset_data($self->load_schema(), $subset_data);
+
+  $guard->commit();
 }
 
 =head2 finalise

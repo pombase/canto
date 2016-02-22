@@ -93,7 +93,8 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    is (@$obj, 10);
+    is (@$obj, 9);
+
     ok(grep { $_->{id} =~ /PECO:0000137/ } @$obj);
     ok(grep { $_->{name} =~ /glucose rich medium/ } @$obj);
     ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
@@ -132,10 +133,6 @@ test_psgi $app, sub {
     cmp_deeply(\@res,
                [
                  {
-                   'id' => 'GO:0016023',
-                   'name' => 'cytoplasmic membrane-bounded vesicle'
-                 },
-                 {
                    'name' => 'nucleocytoplasmic transporter activity',
                    'id' => 'GO:0005487'
                  },
@@ -172,7 +169,7 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    is ($obj->{count}, 6);
+    is ($obj->{count}, 5);
   }
 
   # try lookup_by_id()

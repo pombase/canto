@@ -148,11 +148,13 @@ sub setup
 {
   my $self = shift;
 
-  if ($self->{extension_conf_files}) {
-    my @ext_conf = Canto::Config::ExtensionConf::parse(@{$self->{extension_conf_files}});
+  my @ext_conf = ();
 
-    $self->{extension_configuration} = \@ext_conf;
+  if ($self->{extension_conf_files}) {
+    @ext_conf = Canto::Config::ExtensionConf::parse(@{$self->{extension_conf_files}});
   }
+
+  $self->{extension_configuration} = \@ext_conf;
 
   # make the field_infos available as a hash in the config and make
   # the config inheritable using "extends"

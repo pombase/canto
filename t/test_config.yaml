@@ -271,5 +271,12 @@ chado_feature_implementation_classes:
   gene_adaptor: 'Canto::Chado::GeneLookup'
   genotype_adaptor: 'Canto::Chado::GenotypeLookup'
 
+# add a subset from the GO OBO file for testing
+ontology_namespace_config:
+  subsets_to_ignore:
+    - canto_root_subset
+    - gosubset_prok
+    - qc_do_not_annotate
+
 extension_conf_files:
   - t/data/extension_config.tsv

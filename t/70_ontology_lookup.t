@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 75;
+use Test::More tests => 78;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -391,9 +391,56 @@ my @all_subset_2_terms =
       id => $_->{id},
     }
   } $lookup->get_all(ontology_name => $two_term_subset);
-is (@all_subset_2_terms, 6);
+is (@all_subset_2_terms, 5);
 
 cmp_deeply(\@all_subset_2_terms,
+           [
+             {
+               'id' => 'GO:0005487',
+               'name' => 'nucleocytoplasmic transporter activity'
+             },
+             {
+               'id' => 'GO:0030141',
+               'name' => 'stored secretory granule'
+             },
+             {
+               'id' => 'GO:0022857',
+               'name' => 'transmembrane transporter activity'
+             },
+             {
+               'id' => 'GO:0030133',
+               'name' => 'transport vesicle'
+             },
+             {
+               'name' => 'transporter activity',
+               'id' => 'GO:0005215'
+             }]);
+
+
+my $subset_2_count =
+  $lookup->get_count(ontology_name => $two_term_subset);
+
+is($subset_2_count, scalar(@all_subset_2_terms));
+
+
+
+# test get_all() but remove gosubset_prok from the ignored subsets
+
+$config->{ontology_namespace_config}{subsets_to_ignore} =
+  [grep { $_ ne 'gosubset_prok' } @{$config->{ontology_namespace_config}{subsets_to_ignore}}];
+
+my @all_subset_2_terms_with_ignored_subset =
+  sort {
+    $a->{name} cmp $b->{name};
+  } map {
+    {
+      name => $_->{name},
+      id => $_->{id},
+    }
+  } $lookup->get_all(ontology_name => $two_term_subset);
+is (@all_subset_2_terms_with_ignored_subset, 6);
+
+cmp_deeply(\@all_subset_2_terms_with_ignored_subset,
            [
              {
                'name' => 'cytoplasmic membrane-bounded vesicle',
@@ -421,7 +468,7 @@ cmp_deeply(\@all_subset_2_terms,
              }]);
 
 
-my $subset_2_count =
+my $subset_2_count_with_ignored_subset =
   $lookup->get_count(ontology_name => $two_term_subset);
 
-is($subset_2_count, scalar(@all_subset_2_terms));
+is($subset_2_count_with_ignored_subset, scalar(@all_subset_2_terms_with_ignored_subset));
