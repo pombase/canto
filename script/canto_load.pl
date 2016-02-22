@@ -197,7 +197,7 @@ if (@ontology_args) {
                                                       relationships_to_load => \@relationships_to_load);
   my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
-  $ontology_load->load([@ontology_args], $index, $synonym_types, $subset_data);
+  $ontology_load->load([@ontology_args], $index, $synonym_types);
 
   if (!$dry_run) {
     $ontology_load->finalise();
