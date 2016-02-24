@@ -152,7 +152,7 @@ sub process_subset_data
     my $subset_ids = $subset_data->{$db_accession};
 
     if ($subset_ids) {
-      my @subset_ids = keys %{$subset_ids};
+      my @subset_ids = sort keys %{$subset_ids};
 
       for (my $rank = 0; $rank < @subset_ids; $rank++) {
         my $subset_id = $subset_ids[$rank];
