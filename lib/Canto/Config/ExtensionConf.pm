@@ -46,7 +46,7 @@ use warnings;
  Args    : @conf_file_names
  Return  : Returns a list of hashes like:
            [ { domain => 'GO:0004672',
-               subset_rel => 'is_a', allowed_relation => 'has_substrate',
+               subset_rel => ['is_a'], allowed_relation => 'has_substrate',
                range => 'GO:0005575' }, ... ]
            The range can be a term ID, or one of the following strings:
              "FeatureID" - the ID of any annotatable feature is allowed
@@ -77,9 +77,10 @@ sub parse {
         next;
       }
 
-      if ($subset_rel !~ /^\w+$/) {
-        die qq("$subset_rel" does not look like a relation on line: $line\n");
-      }
+      my @subset_rel_split =
+        grep { length $_ > 0 }
+        map { s/^\s+//; s/\s+$//; $_; }
+        split /\|/, $subset_rel;
 
       if (!defined $display_text) {
         die "config line $. in $extension_conf_file has too few fields: $line\n";
@@ -144,7 +145,7 @@ sub parse {
 
       push @res, {
         domain => $domain,
-        subset_rel => $subset_rel,
+        subset_rel => \@subset_rel_split,
         allowed_relation => $allowed_relation,
         range => \@new_range_bits,
         display_text => $display_text,

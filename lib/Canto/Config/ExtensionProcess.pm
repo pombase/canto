@@ -139,7 +139,7 @@ sub get_subset_data
     $rel_type =~ s/^OBO_REL://;
 
     if ($domain_subsets_to_store{$object} &&
-        $domain_subsets_to_store{$object} eq $rel_type) {
+        grep { $_ eq $rel_type } @{$domain_subsets_to_store{$object}}) {
       $subsets{$subject}{$object} = 1;
     }
 

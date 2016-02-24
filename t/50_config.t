@@ -86,7 +86,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                 '1'
               ],
               'domain' => 'GO:0016023',
-              'subset_rel' => 'is_a',
+              'subset_rel' => ['is_a'],
               'role' => 'user',
               'range' => [
                 {
@@ -109,7 +109,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                   ]
                 }
               ],
-              'subset_rel' => 'is_a',
+              'subset_rel' => ['is_a'],
               'allowed_relation' => 'happens_during',
               'display_text' => 'Something that happens during'
             },
@@ -123,7 +123,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                 }
               ],
               'allowed_relation' => 'localizes',
-              'subset_rel' => 'is_a',
+              'subset_rel' => ['is_a'],
               'cardinality' => [
                 '0',
                 '1'
@@ -140,7 +140,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                   ]
                 }
               ],
-              'subset_rel' => 'is_a',
+              'subset_rel' => ['is_a'],
               'domain' => 'GO:0022857',
               'cardinality' => [
                 '0',
@@ -157,7 +157,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                   'type' => 'Text'
                 }
               ],
-              'subset_rel' => 'is_a',
+              'subset_rel' => ['is_a'],
               'domain' => 'GO:0022857',
               'cardinality' => [
                 '0',
@@ -178,7 +178,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                   'type' => 'Gene'
                 }
               ],
-              'subset_rel' => 'is_a',
+              'subset_rel' => ['is_a'],
               'domain' => 'FYPO:0000002'
             },
             {
@@ -196,7 +196,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                   'input_type' => '%'
                 }
               ],
-              'subset_rel' => 'is_a',
+              'subset_rel' => ['is_a'],
               'domain' => 'FYPO:0000002',
               'cardinality' => [
                 '0',
