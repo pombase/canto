@@ -1563,23 +1563,6 @@ var extensionBuilder =
           $scope.matchingConfigurations = [];
         };
 
-        // return the number of uses of each extension config - used to
-        // implement the cardinality constraints
-        $scope.extensionPartCount = function() {
-          var counts = {};
-
-          $.map($scope.extension,
-                function(extensionPart) {
-                  if (counts[extensionPart.relation]) {
-                    counts[extensionPart.relation]++;
-                  } else {
-                    counts[extensionPart.relation] = 1;
-                  }
-                });
-
-          return counts;
-        };
-
         $scope.$watch('termId',
                       function(newTermId) {
                         if (newTermId) {
@@ -1602,7 +1585,6 @@ var extensionBuilder =
 
         $scope.$watch('extension',
                       function() {
-                        $scope.counts = $scope.extensionPartCount();
                         $scope.checkCardinality($scope.matchingConfigurations);
                       }, true);
 
