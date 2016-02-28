@@ -2,7 +2,7 @@
 
 /*global history,curs_root_uri,angular,$,make_ontology_complete_url,
   ferret_choose,application_root,window,canto_root_uri,curs_key,
-  app_static_path,ontology_external_links,loadingStart,loadingEnd,alert */
+  app_static_path,loadingStart,loadingEnd,alert,trim */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'angular-confirm', 'toaster']);
 
@@ -1146,7 +1146,7 @@ canto.directive('ontologyTermConfirm',
 
 
 var ontologyTermCommentTransfer =
-  function(CantoService) {
+  function() {
     return {
       scope: {
         annotationType: '=',
@@ -1177,7 +1177,7 @@ function openExtensionRelationDialog($modal, extensionRelation, relationConfig) 
         return {
           extensionRelation: extensionRelation,
           relationConfig: relationConfig,
-        }
+        };
       },
     },
   }).result;
@@ -1256,7 +1256,7 @@ function extensionAsString(extension) {
                }).join(', ');
 }
 
-function parseExtensionString(extensionString, matchingConfigurations) {
+function parseExtensionString(extensionString) {
   extensionString = extensionString.trim();
   if (extensionString.length == 0) {
     return {
@@ -1335,7 +1335,7 @@ function openExtensionManualEditDialog($modal, extension, matchingConfigurations
         return {
           extension: extension,
           matchingConfigurations: matchingConfigurations,
-        }
+        };
       },
     },
   }).result;
@@ -3018,70 +3018,6 @@ canto.directive('singleGeneGenotypeList',
                 ['CursGenotypeList', 'CantoGlobals', singleGeneGenotypeList]);
 
 
-var EditDialog = function($) {
-  function confirm($dialog) {
-    var $form = $('#curs-edit-dialog form');
-    $dialog.dialog('close');
-    $('#loading').unbind('ajaxStop.canto');
-    $form.ajaxSubmit({
-          dataType: 'json',
-          success: function() {
-            $dialog.dialog("destroy");
-            var $dialog_div = $('#curs-edit-dialog');
-            $dialog_div.remove();
-            window.location.reload(false);
-          }
-        });
-  }
-
-  function cancel() {
-    $(this).dialog("destroy");
-    var $dialog_div = $('#curs-edit-dialog');
-    $dialog_div.remove();
-  }
-
-  function create(title, current_comment, form_url) {
-    var $dialog_div = $('#curs-edit-dialog');
-    if ($dialog_div.length) {
-      $dialog_div.remove();
-    }
-
-    var dialog_html =
-      '<div id="curs-edit-dialog" style="display: none">' +
-      '<form action="' + form_url + '" method="post">' +
-      '<textarea rows="8" cols="70" name="curs-edit-dialog-text">' + current_comment +
-      '</textarea></form></div>';
-
-    $dialog_div = $(dialog_html);
-
-    var $dialog = $dialog_div.dialog({
-      modal: true,
-      autoOpen: true,
-      height: 'auto',
-      width: 600,
-      title: title,
-      buttons : [
-                 {
-                   text: "Cancel",
-                   click: cancel,
-                 },
-                 {
-                   text: "Edit",
-                   click: function() {
-                     confirm($dialog);
-                   },
-                 },
-                ]
-    });
-
-    return $dialog;
-  }
-
-  return {
-    create: create
-  };
-}($);
-
 canto.service('CantoConfig', function($http) {
   this.promises = {};
 
@@ -3838,7 +3774,7 @@ var annotationSingleRow =
         annotationDetails: '=',
       },
       replace: true,
-      templateUrl: function(elem,attrs) {
+      templateUrl: function() {
         return app_static_path + 'ng_templates/annotation_single_row.html';
       },
       controller: function($scope) {
@@ -3969,7 +3905,7 @@ var termNameComplete =
                 return result.data.name;
               }).join(" or ") + " ...";
           });
-        };
+        }
 
         $scope.render_term_item =
           function(ul, item, search_string) {
@@ -4005,8 +3941,8 @@ var termNameComplete =
             for (var i = 0; i < search_bits.length; i++) {
               var bit = search_bits[i];
               if (bit.length > 1) {
-                var re = new RegExp('(\\b' + bit + ')', "gi");
-                match_name = match_name.replace(re,'<b>$1</b>');
+                var boldRE = new RegExp('(\\b' + bit + ')', "gi");
+                match_name = match_name.replace(boldRE,'<b>$1</b>');
               }
             }
             return $( "<li></li>" )
@@ -4027,7 +3963,7 @@ var termNameComplete =
           source: make_ontology_complete_url(scope.annotationTypeName),
           cacheLength: 100,
           focus: ferret_choose.show_autocomplete_def,
-          open: function(ev) {
+          open: function() {
             valBeforeComplete = input.val();
           },
           close: ferret_choose.hide_autocomplete_def,
