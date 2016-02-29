@@ -30,7 +30,7 @@ $is_admin_user
   <button type="button" class="btn btn-primary" id="curs-pub-assign-popup-dialog">Set corresponding author ...</button>
 </div>
 %   }
-%   if ($not_exported_curs_rs->count() == 0) {
+%   if ($pub_curs_rs->count() == 0) {
 <div id="curs-pub-create-session-dialog" style="display: none">
   <form id="curs-pub-create-session-form" method="put"
         action="<% $c->uri_for('/tools/create_session') %>">
@@ -96,7 +96,7 @@ Send session to curator ...\
 <div class="clearall"/>
 
 % if (defined $curs_key) {
-%   if ($not_exported_curs_rs->count() == 1) {
+%   if ($pub_curs_rs->count() == 1) {
 <div class="curs-pub-go-to-curs-actions">
   <div class="object_sub_action">
     <a href="<% $c->uri_for('/curs/' . $curs_key) %>">
@@ -138,9 +138,9 @@ while (defined (my $person = $person_rs->next())) {
 }
 
 my $curs_key = undef;
-my $not_exported_curs_rs = $object->not_exported_curs();
+my $pub_curs_rs = $object->curs();
 
-my $curs = $not_exported_curs_rs->first();
+my $curs = $pub_curs_rs->first();
 
 my $session_sent = 0;
 
