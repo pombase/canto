@@ -10,6 +10,11 @@ use Canto::Config;
 my $app = Canto::Config::get_application_name();
 my $inst_name = Canto::Config::get_instance_name();
 
+# add job name from Jenkins
+if ($ENV{JOB_NAME}) {
+  $inst_name .= '_' . $ENV{JOB_NAME};
+}
+
 __PACKAGE__->config(use_match => 0);
 __PACKAGE__->config(escape_flags => {
   html => \&HTML::Mason::Escapes::basic_html_escape,
