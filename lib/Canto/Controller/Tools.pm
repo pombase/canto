@@ -724,7 +724,7 @@ sub create_session : Local Args(0)
 
   my $pub = $track_schema->find_with_type('Pub', { pub_id => $pub_id });
 
-  if ($pub->not_exported_curs()->count() == 0) {
+  if ($pub->curs()->count() == 0) {
     my $admin_session = 0;
     if ($person->role()->name() eq 'admin') {
       $admin_session = 1;
