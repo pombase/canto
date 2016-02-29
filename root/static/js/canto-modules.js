@@ -599,10 +599,12 @@ var cursSettingsService =
     };
 
     this.getAll = function() {
-      if (!curs_root_uri) {
+      if (typeof(curs_root_uri) == 'undefined') {
         return {
           then: function (successCallback, errorCallback) {
-            errorCallback();
+            if (typeof(errorCallback) != 'undefined') {
+              errorCallback();
+            }
           },
         };
       }
@@ -630,9 +632,9 @@ var cursSettingsService =
       return q.promise;
     };
 
-    service.getAll().success(function(data) {
+    service.getAll().then(function(data) {
       $timeout(function() {
-              service.data.annotation_mode = data.annotation_mode;
+        service.data.annotation_mode = data.annotation_mode;
       });
     });
 
