@@ -103,6 +103,66 @@ any other gene in the gene list, by changing the top pulldown:
   <img src="<% $c->uri_for('/static/images/docs/go_dup_summary.png') %>" alt="GO duplication on summary page"/>
 </div>
 
+<h2>Annotation extensions</h2>
+
+<p>
+You can add annotation extensions to provide additional specificity
+for GO annotations. (See the <a
+href="http://www.pombase.org/documentation/gene-page-gene-ontology">PomBase
+documentation</a> (and linked GO documentation) for more information
+on annotation extensions.) After you have selected an ontology term
+and evidence, the Canto interface will display any available extension
+types. Click the link to choose an extension type and bring up a
+pop-up in which you specify the required details for the
+extension. For example, an annotation to "protein kinase activity" can
+have any of these extensions:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/go_ext_options.png') %>" alt="GO annotation extension options"/>
+</div>
+
+<p>
+More details on annotation extension options are available in the
+sections below on specific branches of GO.
+</p>
+
+<p>
+If more than one type is offered, you can add one of each type, but if
+you add them at the same time they will be interpreted as going
+together to form a compound annotation in which all of the parts apply
+at once. To create independent annotations (i.e. where one or another
+may apply, but not necessarily all at once), finish the annotation
+with one extension (or set of extensions), and then use the
+"duplicate" feature to create another annotation where you can edit
+the extension(s).
+</p>
+
+<p>
+In all cases, the actual relation name used by the database will
+appear when you have finished the annotation plus extensions.
+</p>
+g
+<p>
+When you edit or duplicate an annotation, extensions can also be
+added, amended or deleted. An "Edit" button in the pop-up launches the
+annotation extension addition steps.
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/ext_edit_button.png') %>" alt="button to edit annotation extensions"/>
+</div>
+
+<p>
+To change an existing extension, first delete it and then add a new
+one. Editing interface ("protein mislocalized to nucleus" example from
+FYPO):
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/edit_ext.png') %>" alt="Annotation extension editing interface"/>
+</div>
+
 <h2>Specific branches of GO</h2>
 <h3><a name="component"></a>Cellular Component</h3>
 <p>
@@ -129,6 +189,28 @@ or nucleic acids.
     annotated to an appropriate complex term in the Cellular Component ontology
     (example, GO:0005681, 'spliceosomal complex' or GO:0000786, 'nucleosome').</li>
 </ul>
+
+<h4>Annotation extensions</h4>
+<p>
+Any GO cellular component annotation can have extensions indicating
+when (i.e. in which cell cycle phase or during which biological
+process, usually a response to stress or another stimulus) a gene
+product is observed in the given location. For these, type text into
+the ontology-search autocomplete box, choose from the suggestions, and
+drill down to more specific terms as usual.
+</p>
+
+<p>
+Annotations to "chromatin" or "chromosomal region" terms may also have
+extensions to specify which regions of a chromosome a gene product is
+found at. First, use the radio buttons to select a region descriptor
+(from the Sequence Ontology (SO)) or a gene. For descriptions, type
+text into the ontology-search autocomplete box, choose from the
+suggestions, and drill down to more specific terms as usual. Or,
+choose a gene from the pulldown menu (you can enter new genes at this
+point if necessary).
+</p>
+
 
 <h3><a name="function"></a>Molecular Function</h3>
 <p>
@@ -182,6 +264,30 @@ time or another.  Keep in mind whether the gene product being
 annotated causes a biologically relevant effect by binding to another
 protein: if so, protein binding is its function. Only annotate direct
 protein binding using the GO term "protein binding".
+</p>
+
+<h4>Annotation extensions</h4>
+<p>
+Annotations to terms representing catalytic activities that act on
+protein substrates (e.g. protein kinases or protein transporters) can
+have extensions that indicate which substrate(s) were used in your
+experiments. Choose a gene from the pulldown menu (you can enter new
+genes at this point if necessary).
+</p>
+
+<p>
+Use "has function during" to specify a cell cycle phase or another
+process (usually a response to a stress or another stimulus) in which
+the activity is observed. When you select it, the ontology-search
+autocomplete box appears. Type text, choose from the suggestions, and
+drill down to more specific terms as usual.
+</p>
+
+<p>
+For DNA binding terms, "binds region" indicates where the annotated
+gene product binds. The ontology-search autocomplete box appears, and
+searches the Sequence Ontology (SO). Type text, choose from the
+suggestions, and drill down to more specific terms as usual.
 </p>
 
 <h3><a name="process"></a>Biological Process</h3>
@@ -241,3 +347,31 @@ process? Note that a gene product may be involved *both* directly in a
 process, and in its regulation (for example enzymes in a pathway which
 regulate the pathway via a feedback loop).
 </p>
+
+<h4>Annotation extensions</h4>
+
+<p>
+Extensions allowed for GO biological process terms fall into a few
+broad categories:
+</p>
+
+<ul>
+<li> Genes/gene products, such as proteins affected by localization or
+ modification processes, or targets of regulatory processes: Choose a
+ gene from the pulldown menu (you can enter new genes at this point if
+ necessary).
+</li>
+<li> Locations where a process takes place. Most are regions where
+ DNA- or chromatin-based processes occur, and use Sequence Ontology
+ (SO) terms, although a few are locations within the cell, using GO
+ cellular component terms. For these, type text into the
+ ontology-search autocomplete box, choose from the suggestions, and
+ drill down to more specific terms as usual.
+</li>
+<li> A cell cycle phase or other process (usually a response to stress
+ or another stimulus) during which the annotated gene product
+ participates in the process. For these, type text into the
+ ontology-search autocomplete box, choose from the suggestions, and
+ drill down to more specific terms as usual.
+</li>
+</ul>

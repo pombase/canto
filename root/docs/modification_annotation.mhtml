@@ -83,3 +83,79 @@ shown on the MOD:00693 page (e.g. "N-glycosylated residue" (MOD:00006),
 "O-glycosylated residue" (MOD:00396)) will suffice for most protein
 modification annotation in Canto.</li>
 </ul>
+
+<h4>Annotation extensions</h4>
+
+<p>
+You can add annotation extensions to provide additional specificity
+for protein modification annotations. (See the <a
+href="http://www.pombase.org/documentation/gene-page-modifications">PomBase
+documentation</a> for more information on annotation extensions.)
+After you have selected an ontology term and evidence, the Canto
+interface will display any available extension types. Click the link
+to choose an extension type and bring up a pop-up in which you specify
+the required details for the extension. For example, an annotation to
+"O-phospho-L-threonine" can have any of these extensions:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/mod_ext_options.png') %>" alt="Modification annotation extension options"/>
+</div>
+
+<p>
+Several annotation extension types are allowed for protein
+modifications, falling into a few categories:
+</p>
+
+<ul>
+<li> for "added by" or "removed by", choose a gene from the pulldown
+ menu (you can enter new genes at this point if necessary)
+</li>
+<li> for "proportion of proteins with modification", enter a percent
+ value (e.g. 55%) in the text box
+</li>
+<li> for "position(s) modified", enter one or more residue
+ designations, using the single-letter amino acid code and a number
+ for the position (e.g. S77)
+</li>
+<li> for all other extension types, the ontology-search autocomplete
+ box appears. Type text, choose from the suggestions, and drill down
+ to more specific terms as usual
+</li>
+</ul>
+
+<p>
+In all cases, the actual relation name used by the database will
+appear when you have finished the annotation plus extensions.
+</p>
+
+<p>
+You can add one of each type, but if you add them at the same time
+they will be interpreted as going together to form a compound
+annotation in which all of the parts apply at once. To create
+independent annotations (i.e. where one or another may apply, but not
+necessarily all at once), finish the annotation with one extension (or
+set of extensions), and then use the "duplicate" feature to create
+another annotation where you can edit the extension(s).
+</p>
+
+<p>
+When you edit or duplicate an annotation, extensions can also be
+added, amended or deleted. An "Edit" button in the pop-up launches the
+annotation extension addition steps.
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/ext_edit_button.png') %>" alt="button to edit annotation extensions"/>
+</div>
+
+<p>
+To change an existing extension, first delete it and then add a new
+one. Editing interface ("protein mislocalized to nucleus" example from
+FYPO):
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/edit_ext.png') %>" alt="Annotation extension editing interface"/>
+</div>
+

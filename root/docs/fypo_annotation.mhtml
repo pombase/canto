@@ -257,6 +257,95 @@ any other genotype in the genotype list, by changing the top pulldown:
   <img src="<% $c->uri_for('/static/images/docs/fypo_dup_summary.png') %>" alt="phenotype duplication on summary page"/>
 </div>
 
+<h3>Annotation extensions</h3>
+
+<p>
+You can add annotation extensions to provide additional specificity
+for FYPO annotations. (See the <a
+href="http://www.pombase.org/documentation/gene-page-phenotypes">PomBase
+documentation</a> for more information on annotation extensions.)
+After you have selected an ontology term and evidence, the Canto
+interface will display any available extension types. Click the link
+to choose an extension type and bring up a pop-up in which you specify
+the required details for the extension. For example, an annotation to
+"protein mislocalized to nucleus" can have any of these extensions:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/fypo_ext_options.png') %>" alt="FYPO annotation extension options"/>
+</div>
+
+<p>
+If more than one type is offered, you can add one of each type, but if
+you add them at the same time they will be interpreted as going
+together to form a compound annotation in which all of the parts apply
+at once. To create independent annotations (i.e. where one or another
+may apply, but not necessarily all at once), finish the annotation
+with one extension (or set of extensions), and then use the
+"duplicate" feature to create another annotation where you can edit
+the extension(s).
+</p>
+
+<p>
+In all cases, the actual relation name used by the database will
+appear when you have finished the annotation plus extensions.
+</p>
+
+<p>
+When you edit or duplicate an annotation, extensions can also be
+added, amended or deleted. An "Edit" button in the pop-up launches the
+annotation extension addition steps.
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/ext_edit_button.png') %>" alt="button to edit annotation extensions"/>
+</div>
+
+<p>
+To change an existing extension, first delete it and then add a new
+one. Editing interface ("protein mislocalized to nucleus" example):
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/edit_ext.png') %>" alt="Annotation extension editing interface"/>
+</div>
+
+
+<p>
+Phenotype annotation extensions can be used to indicate:
+</p>
+
+<ul>
+<li>
+ Penetrance: the proportion of a population that shows the
+ phenotype. The penetrance measurement can be qualitative or
+ quantitative. The pulldown menu for qualitative options is selected
+ by default. For a quantitative value, switch the radio button and
+ enter a percentage (e.g. 38%) in the text box.
+</li>
+<li>
+ Expressivity: the extent to which a phenotype is expressed; usually
+ used to capture information about phenotype severity. Only
+ qualitative values are supported; choose from the pulldown menu.
+</li>
+<li>
+ A specific gene, RNA or protein, used in an assay (see "Targets of
+ mutated genes" and "Localization phenotypes" below). The pulldown
+ menu is populated with genes from the list you entered for the
+ paper. You can add another gene at this point if necessary. For some
+ phenotypes, a Sequence Ontology (SO) term can be selected to describe
+ a more general sequence region or class of transcripts. In these
+ cases, the ontology-search autocomplete box appears, and searches
+ SO. Type text, choose from the suggestions, and drill down to more
+ specific terms as usual.
+</li>
+</ul>
+
+<p>
+More details on annotation extension options are available in the
+"phenotype tips" sections below.
+</p>
+
 <h2><a name="gentips">General phenotype tips</a></h2>
 
 <h3>Phenotype vs. GO annotations</h3>
@@ -315,18 +404,19 @@ normal, only those that are unexpected or otherwise interesting.
 <p>
 For any phenotype where an effect on the amount, stability,
 localization, etc. of a specific gene or gene product (protein or RNA)
-was measured, a comment should be included to identify the genes,
+was measured, an extension should be included to identify the genes,
 RNAs, or proteins used in the experiment. The reasons are that the
 measured product may be that of a gene that was not mutated, and that
 the mutation may affect different gene products differently. For
 example, deletion of gene A may result in an increased amount of RNA
 transcribed from gene B; or a point mutation in A may cause decreased
 phosphorylation of protein B but not protein C. In these cases the
-annotation should be made to gene A, and a comment should be included
-that gene B is affected (and that C is not affected, in the second
-example). Sometimes it may be necessary to specify two targets. For
-instance, if a mutation in gene A cause "decreased binding" between
-protein B and protein C, include both B and C in the comment.
+annotation should be made to gene A, and an extension should be
+included that gene B is affected (and that C is not affected, in the
+second example). Sometimes it may be necessary to specify two
+targets. For instance, if a mutation in gene A cause "decreased
+binding" between protein B and protein C, include both B and C in the
+comment.
 </p>
 
 <h3>Localization phenotypes</h3>
@@ -334,12 +424,12 @@ protein B and protein C, include both B and C in the comment.
 If the localization of a protein or RNA is altered in a mutant
 compared to wild type, this should be annotated as a phenotype of the
 mutated gene (which may be different from the gene encoding the
-mislocalized product). Include a comment to identify the mislocalized
-protein/RNA, as described above. For example, if deletion of gene A
-causes gene B to localize to the cytoplasm instead of the nucleus,
-annotate A to an "abnormal protein localization" term (such as
-"abolished protein localization to nucleus, with protein mislocalized
-to cytoplasm"), and mention B in a comment.
+mislocalized product). Include an extension to identify the
+mislocalized protein/RNA, as described above. For example, if deletion
+of gene A causes gene B to localize to the cytoplasm instead of the
+nucleus, annotate A to an "abnormal protein localization" term (such
+as "abolished protein localization to nucleus, with protein
+mislocalized to cytoplasm"), and mention B in an extension.
 </p>
 
 <h3>Phenotypes of wild-type cells</h3>
@@ -374,37 +464,38 @@ wide selection of "viable cell" and "inviable cell" terms that also
 specify other features such as shape, presence and number of nuclei or
 septa, etc. If one mutation gives rise to a mixed population, more
 than one term may be used for the same allele, including both "viable"
-and "inviable" terms; see the <a
+and "inviable" terms, and extensions should be used to indicate
+penetrance. See the <a
 href="http://www.pombase.org/faqs/why-are-some-genes-annotated-both-viable-and-inviable-phenotypes">relevant
 FAQ</a> for more information.
 </p>
 
-    <h3>Cell growth vs. cell population growth</h3>
-    <p>
-    Most experiments that measure "growth" observe a population of
-    cells, such as a culture in liquid medium or a colony on a
-    plate. For these experimens, use one or more of the "cell
-    population growth" terms. In contrast, terms such as "normal cell
-    growth" refer specifically to growth in the sense of an increase
-    in cell size. Also see "Slow growth, decreased cell density and
-    decreased growth" below.
-    </p>
+<h3>Cell growth vs. cell population growth</h3>
+<p>
+Most experiments that measure "growth" observe a population of
+cells, such as a culture in liquid medium or a colony on a
+plate. For these experimens, use one or more of the "cell
+population growth" terms. In contrast, terms such as "normal cell
+growth" refer specifically to growth in the sense of an increase
+in cell size. Also see "Slow growth, decreased cell density and
+decreased growth" below.
+</p>
 
-    <h3>Slow growth, decreased cell density and decreased growth</h3>
-    <p>
-    "Slow cell population growth" refers specifically to when the rate
-    of growth (slope) of a cell population is decreased. "Decreased
-    cell density in stationary phase" refers to when a population
-    reaches stationary phase at, and maintains, a lower cell density
-    than wild type (the rate of growth may still be the same as
-    wild-type). An allele may be annotated to both terms. If you do
-    not know which of these is decreased (typically if cells are grown
-    on agar plates for a number of days and then observed) use
-    "decreased cell population growth".
-    </p>
+<h3>Slow growth, decreased cell density and decreased growth</h3>
+<p>
+"Slow cell population growth" refers specifically to when the rate
+of growth (slope) of a cell population is decreased. "Decreased
+cell density in stationary phase" refers to when a population
+reaches stationary phase at, and maintains, a lower cell density
+than wild type (the rate of growth may still be the same as
+wild-type). An allele may be annotated to both terms. If you do
+not know which of these is decreased (typically if cells are grown
+on agar plates for a number of days and then observed) use
+"decreased cell population growth".
+</p>
 
-    <h3>Cellular structures vs. processes affecting cellular structures</h3>
-    <p>
+<h3>Cellular structures vs. processes affecting cellular structures</h3>
+<p>
 FYPO includes many pairs of terms that refer to the same cellular or
 subcellular structure, where one describes the structure (as normal,
 abnormal, etc.) and the other describes a process affecting the
@@ -416,34 +507,36 @@ terms will often be linked by a has_output relation. For example,
 term "kinetochore" (GO:0000776), and "abnormal kinetochore
 organization" (FYPO:0000807) refers to the GO BP term "kinetochore
 organization" (GO:0051383).
-    </p>
+</p>
 
-    <p>
+<p>
 Use the process phenotype term to annotate experiments in which the
 assay can monitor the process as it occurs (e.g. if you have movies,
 kymographs, a reconstituted system, or even a sufficiently detailed
 series of still pictures). Otherwise, use the structure or morphology
 phenotype terms (e.g. when you have only one or a few still pictures).
-    </p>
+</p>
 
-    <h3>Translation vs. protein level</h3>
-    <p>
-      Typically, assays such as western blots do not distinguish
-      between increased translation or decreased degradation. If these
-      cannot be distinguished between then the correct terms to use
-      are increased, decreased, or normal protein level. If the assay
-      is specific enough, then the translation or degradation terms
-      may be used (e.g. "decreased translation" or "increased protein
-      degradation").
-    </p>
+<h3>Translation vs. protein level</h3>
+<p>
+  Typically, assays such as western blots do not distinguish between
+  increased translation or decreased degradation. If these cannot be
+  distinguished between then the correct terms to use are increased,
+  decreased, or normal protein level. If the assay is specific enough,
+  then the translation or degradation terms may be used
+  (e.g. "decreased translation" or "increased protein
+  degradation"). In either case, the specific protein(s) assayed can
+  be put in annotation extensions.
+</p>
 
-    <h3>Transcription vs. RNA level</h3>
-    <p>
-      Typically, assays such as northern blots do not distinguish
-      between increased transcription or decreased degradation. If
-      these cannot be distinguished between then the correct terms to
-      use are increased, decreased, or normal RNA level. If the assay
-      is specific enough, then the transcription or degradation terms
-      may be used (e.g. a run-on assay can support annotation to
-      "decreased transcription").
-    </p>
+<h3>Transcription vs. RNA level</h3>
+<p>
+  Typically, assays such as northern blots do not distinguish between
+  increased transcription or decreased degradation. If these cannot be
+  distinguished between then the correct terms to use are increased,
+  decreased, or normal RNA level. If the assay is specific enough,
+  then the transcription or degradation terms may be used (e.g. a
+  run-on assay can support annotation to "decreased
+  transcription"). In either case, the specific gene(s) assayed can be
+  put in annotation extensions.
+</p>
