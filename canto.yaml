@@ -1853,13 +1853,9 @@ curs_config:
       <p>
         Examples include:
         <ul>
-        <li> substrates of gene products (e.g. protein substrates of kinases or protein transporters)
-        <li> "targets" of localization dependencies (e.g. gene A localizes gene B) 
-        <li> cell cycle phases when a process occurs (during)
-        <li> specific residues modified in annotated protein modifications (e.g. phosphorylated on residue S45)
         <li> protein domain data or other protein sequence features
         <li> missing gene names (synonyms)
-        <li> transcriptional regulation (of the WT allele - transcriptional changes due to mutations can be captured in the tool)
+        <li> transcriptional regulation (of the wild-type allele - transcriptional changes due to mutations can be captured in Canto)
         <li> complementation data (whether the pombe gene complements a homologue in a different organism or vice versa; complementation may be full, partial or absent)
         <li> gene product name updates
         <li> human or budding yeast orthologs
