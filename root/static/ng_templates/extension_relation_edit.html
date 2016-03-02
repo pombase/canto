@@ -13,8 +13,9 @@
     <input type="text" required ng-model="extensionRelation.rangeValue"/>
   </span>
   <span ng-if="rangeConfig.type == '%'">
+    <span>Quantitative value (e.g. 45%)</span>
     <input type="text" required ng-model="extensionRelation.rangeValue"
-           placeholder="enter a % value"/>
+           size="6" placeholder=""/>
     <span ng-show="!valueIsValid()"
           class="help-block">{{percentParseMessage()}}</span>
   </span>
