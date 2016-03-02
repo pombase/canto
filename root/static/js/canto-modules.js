@@ -1759,7 +1759,7 @@ var extensionRelationEdit =
             var rangeValue = $scope.extensionRelation.rangeValue;
 
             if (typeof(rangeValue) == 'undefined' || trim(rangeValue).length == 0) {
-              return "Value required";
+              return "Required";
             }
 
             var re = new RegExp(/^\s*(\d+|\d+\.\d*|\d*\.\d+)\s*\%?$/);
