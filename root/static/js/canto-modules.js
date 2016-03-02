@@ -1785,6 +1785,7 @@ var extensionRelationEdit =
         $scope.$watch('disabled',
                       function() {
                         $scope.disableAll(elem, $scope.disabled);
+                        $scope.extensionRelation.rangeValue = '';
                       }
               );
       }
