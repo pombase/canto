@@ -112,7 +112,7 @@ sub parse {
               };
             }
           } else {
-            if (/^(text|\%)$/i) {
+            if (/^text$/i) {
               if (!grep { $_->{type} eq 'Text'} @new_range_bits) {
                 push @new_range_bits, {
                   type => 'Text',
@@ -128,7 +128,15 @@ sub parse {
                   }
                 }
               } else {
-                die "unsupported range part: $_\n";
+                if ($_ eq '%') {
+                  if (!grep { $_->{type} eq '%'} @new_range_bits) {
+                    push @new_range_bits, {
+                      type => '%',
+                    };
+                  }
+                } else {
+                  die "unsupported range part: $_\n";
+                }
               }
             }
           }

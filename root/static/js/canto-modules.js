@@ -1741,6 +1741,41 @@ var extensionRelationEdit =
             });
           }
         }
+
+        $scope.valueIsValid = function() {
+          if ($scope.rangeConfig.type == '%') {
+            return $scope.percentParseMessage().length == 0;
+          } else {
+            return true;
+          }
+        }
+
+        $scope.percentParseMessage = function() {
+          if ($scope.rangeConfig.type == '%') {
+            var rangeValue = $scope.extensionRelation.rangeValue;
+
+            if (typeof(rangeValue) == 'undefined' || trim(rangeValue).length == 0) {
+              return "Value required";
+            }
+
+            var re = new RegExp(/^\s*(\d+|\d+\.\d*|\d*\.\d+)\s*\%?$/);
+            var result = re.exec($scope.extensionRelation.rangeValue);
+
+            if (result) {
+              var pc = result[1];
+
+              if (pc > 100) {
+                return 'Value must be <= 100';
+              } else {
+                return '';
+              }
+            } else {
+              return 'Value must be a percentage';
+            }
+          } else {
+            return '';
+          }
+        };
       },
       link: function($scope, elem) {
         $scope.$watch('disabled',

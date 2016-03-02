@@ -13,6 +13,12 @@
   <span ng-if="rangeConfig.type == 'Text'">
     <input type="text" required ng-model="extensionRelation.rangeValue"/>
   </span>
+  <span ng-if="rangeConfig.type == '%'">
+    <input type="text" required ng-model="extensionRelation.rangeValue"
+           placeholder="enter a % value"/>
+    <span ng-show="!valueIsValid()"
+          class="help-block">{{percentParseMessage()}}</span>
+  </span>
   <span ng-if="rangeConfig.type == 'Number'">
     <input type="number" required ng-model="extensionRelation.rangeValue"/>
   </span>
