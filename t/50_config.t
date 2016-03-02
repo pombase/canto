@@ -192,8 +192,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                   'type' => 'Ontology'
                 },
                 {
-                  'type' => 'Text',
-                  'input_type' => '%'
+                  'type' => '%',
                 }
               ],
               'subset_rel' => ['is_a'],
