@@ -1751,6 +1751,10 @@ var extensionRelationEdit =
         }
 
         $scope.percentParseMessage = function() {
+          if ($scope.disabled) {
+            return '';
+          }
+
           if ($scope.rangeConfig.type == '%') {
             var rangeValue = $scope.extensionRelation.rangeValue;
 
