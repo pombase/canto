@@ -1774,7 +1774,7 @@ var extensionRelationEdit =
                 return '';
               }
             } else {
-              return 'Value must be a percentage';
+              return 'Value must be a percentage, e.g. 45%';
             }
           } else {
             return '';
