@@ -1,25 +1,35 @@
 <span style="padding-bottom: 10px">
   <span ng-if="rangeConfig.type == 'Gene'">
-    <feature-chooser feature-type="gene" chosen-feature-uniquename="extensionRelation.rangeValue"
+    <span ng-if="disabled">Gene</span>
+    <feature-chooser ng-if="!disabled"
+                     feature-type="gene" chosen-feature-uniquename="extensionRelation.rangeValue"
                      chosen-feature-display-name="extensionRelation.rangeDisplayName"
                      chosen-feature-id="rangeGeneId"></feature-chooser>
   </span>
   <span ng-if="rangeConfig.type == 'Ontology'">
-    <term-name-complete current-term-name="{{extensionRelation.rangeDisplayName}}"
+    <span ng-if="disabled">Term name</span>
+    <term-name-complete ng-if="!disabled"
+                        current-term-name="{{extensionRelation.rangeDisplayName}}"
                         found-callback="termFoundCallback(termId, termName, searchString)"
                         annotation-type-name="{{rangeOntologyScope}}"></term-name-complete>
   </span>
   <span ng-if="rangeConfig.type == 'Text'">
-    <input type="text" required ng-model="extensionRelation.rangeValue"/>
+    <span ng-if="disabled">Value</span>
+    <input ng-if="!disabled"
+           type="text" required ng-model="extensionRelation.rangeValue"/>
   </span>
   <span ng-if="rangeConfig.type == '%'">
-    <span>Quantitative value (e.g. 45%)</span>
-    <input type="text" required ng-model="extensionRelation.rangeValue"
-           size="6" placeholder=""/>
-    <span ng-show="!valueIsValid()"
-          class="help-block">{{percentParseMessage()}}</span>
+    <span ng-if="disabled">Quantitative value (e.g. 45%):</span>
+    <span ng-if="!disabled">
+      <input type="text" required ng-model="extensionRelation.rangeValue"
+             size="30" placeholder="Quantitative value (e.g. 45%)"/>
+      <span ng-show="!valueIsValid()"
+            class="help-block">{{percentParseMessage()}}</span>
+    </span>
   </span>
   <span ng-if="rangeConfig.type == 'Number'">
-    <input type="number" required ng-model="extensionRelation.rangeValue"/>
+    <span ng-if="disabled">Value</span>
+    <input ng-if="!disabled"
+           type="number" required ng-model="extensionRelation.rangeValue"/>
   </span>
 </span>
