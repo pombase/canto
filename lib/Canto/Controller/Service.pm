@@ -98,14 +98,16 @@ sub _ontology_results
   }
 
 
+  my $config_subsets_to_ignore =
+    $config->{ontology_namespace_config}{subsets_to_ignore};
+
   my @exclude_subsets = ();
 
-  if (!$extension_lookup) {
-    my $config_subsets_to_ignore =
-      $config->{ontology_namespace_config}{subsets_to_ignore};
-
-    if ($config_subsets_to_ignore) {
-      push @exclude_subsets, @$config_subsets_to_ignore;
+  if ($config_subsets_to_ignore) {
+    if ($extension_lookup) {
+      push @exclude_subsets, @{$config_subsets_to_ignore->{extension}};
+    } else {
+      push @exclude_subsets, @{$config_subsets_to_ignore->{primary}};
     }
   }
 

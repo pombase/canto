@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 33;
+use Test::More tests => 35;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -170,6 +170,25 @@ test_psgi $app, sub {
     }
 
     is ($obj->{count}, 5);
+  }
+
+  # test counting a subset, in extension_lookup mode - uses subsets to ignore
+  # from $config->{ontology_namespace_config}{subsets_to_ignore}{extension}
+  # instead of ...{primary}
+  {
+    my $url = "http://localhost:5000/ws/lookup/ontology/$two_term_subset/?term=:COUNT:&extension_lookup=1";
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my $obj;
+    eval { $obj = decode_json($res->content()); };
+    if ($@) {
+      die "$@\n", $res->content();
+    }
+
+    is ($obj->{count}, 6);
   }
 
   # try lookup_by_id()

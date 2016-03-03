@@ -236,6 +236,19 @@ sub load
   my $config_subsets_to_ignore =
     $self->config()->{ontology_namespace_config}{subsets_to_ignore};
 
+  my @subsets_to_ignore = ();
+
+  if ($config_subsets_to_ignore) {
+    for my $key (keys %{$config_subsets_to_ignore}) {
+      my @this_subset = @{$config_subsets_to_ignore->{$key}};
+      for my $subset_id (@this_subset) {
+        if (!grep { $subset_id eq $_ } @subsets_to_ignore) {
+          push @subsets_to_ignore, $subset_id
+        }
+      }
+    }
+  }
+
   my $subset_process = Canto::Chado::SubsetProcess->new();
   my $subset_data;
 
@@ -487,12 +500,10 @@ sub load
           $subset_process->add_to_subset($subset_data, 'canto_root_subset', [$term->acc()]);
         }
 
-        if ($config_subsets_to_ignore) {
-          for my $subset_id (@$config_subsets_to_ignore) {
-            if ($term->in_subset($subset_id)) {
-              push @subset_ids, $subset_id;
-              $subset_process->add_to_subset($subset_data, $subset_id, [$term->acc()]);
-            }
+        for my $subset_id (@subsets_to_ignore) {
+          if ($term->in_subset($subset_id)) {
+            push @subset_ids, $subset_id;
+            $subset_process->add_to_subset($subset_data, $subset_id, [$term->acc()]);
           }
         }
         if (defined $index) {
