@@ -1860,7 +1860,7 @@ curs_config:
         <li> gene product name updates
         <li> human or budding yeast orthologs
         </ul>
-        Most of these annotation-types will be handled in future releases of the
+        Most of these annotation types will be handled in future releases of the
         curation tool.
       </p>
 
