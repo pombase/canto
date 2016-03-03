@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 78;
+use Test::More tests => 80;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -44,6 +44,23 @@ my $ont_name = 'molecular_function';
                                 search_string => $ont_name,
                                 max_results => 10,
                                 include_definition => 1);
+
+  ok(defined $results);
+
+  is(scalar(@$results), 1);
+}
+
+my $config_subsets_to_ignore =
+  $config->{ontology_namespace_config}{subsets_to_ignore};
+
+my @exclude_subsets = @$config_subsets_to_ignore;
+
+{
+  my $results = $lookup->lookup(ontology_name => $ont_name,
+                                search_string => $ont_name,
+                                max_results => 10,
+                                include_definition => 1,
+                                exclude_subsets => \@exclude_subsets);
 
   ok(defined $results);
 
@@ -363,7 +380,8 @@ $test_util->load_test_ontologies($ontology_index, 1, 1, 1);
 
 
 # test get_all()
-my @all_pco_terms = $lookup->get_all(ontology_name => 'phenotype_condition');
+my @all_pco_terms = $lookup->get_all(ontology_name => 'phenotype_condition',
+                                     exclude_subsets => \@exclude_subsets);
 is (@all_pco_terms, 9);
 
 # test get_all() for a subset
@@ -390,7 +408,8 @@ my @all_subset_2_terms =
       name => $_->{name},
       id => $_->{id},
     }
-  } $lookup->get_all(ontology_name => $two_term_subset);
+  } $lookup->get_all(ontology_name => $two_term_subset,
+                     exclude_subsets => \@exclude_subsets);
 is (@all_subset_2_terms, 5);
 
 cmp_deeply(\@all_subset_2_terms,
@@ -418,7 +437,8 @@ cmp_deeply(\@all_subset_2_terms,
 
 
 my $subset_2_count =
-  $lookup->get_count(ontology_name => $two_term_subset);
+  $lookup->get_count(ontology_name => $two_term_subset,
+                     exclude_subsets => \@exclude_subsets);
 
 is($subset_2_count, scalar(@all_subset_2_terms));
 

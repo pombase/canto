@@ -242,6 +242,8 @@ sub _parse_search_scope
            include_definition - include the definition for terms (default: 0)
            include_synonyms - if defined this is a include all the synonyms in
                               the result (default: [])
+           exclude_subsets - exclude from the results any terms that are in the
+                             listed subsets (default: [])
  Returns : [ { id => '...', name => '...', definition => '...',
                matching_synonym => '...',  # set only if a synonym matched
                synonyms => [     # set only if include_synonyms is set
@@ -267,6 +269,7 @@ sub lookup
   my $include_definition = $args{include_definition};
   my $include_children = $args{include_children};
   my $include_synonyms = $args{include_synonyms};
+  my $exclude_subsets = $args{exclude_subsets} // [];
 
   my $config = $self->config();
   my $index_path = $config->data_dir_path('ontology_index_dir');
@@ -291,17 +294,8 @@ sub lookup
 
     my $search_scope = _parse_search_scope($ontology_name);
 
-    my @exclude_subsets = ();
-
-    my $config_subsets_to_ignore =
-      $config->{ontology_namespace_config}{subsets_to_ignore};
-
-    if ($config_subsets_to_ignore) {
-      push @exclude_subsets, @$config_subsets_to_ignore;
-    }
-
     @results = $ontology_index->lookup($search_scope,
-                                       \@exclude_subsets,
+                                       $exclude_subsets,
                                        _clean_string($search_string),
                                        $max_results);
 
@@ -532,6 +526,7 @@ sub _get_all_count_rs
   my $self = shift;
   my $schema = $self->schema();
   my $search_scope = shift;
+  my $exclude_subsets = shift;
 
   my $rs = undef;
 
@@ -562,14 +557,12 @@ sub _get_all_count_rs
     });
   }
 
-  my $subsets_to_ignore = $self->config()->{ontology_namespace_config}{subsets_to_ignore};
-
-  if ($subsets_to_ignore) {
+  if (@$exclude_subsets) {
     my $subset_cvtermprop_rs =
       $schema->resultset('Cvtermprop')
         ->search(
           {
-            value => { -in => $subsets_to_ignore },
+            value => { -in => $exclude_subsets },
             'type.name' => 'canto_subset',
           },
           {
@@ -601,6 +594,8 @@ sub _get_all_count_rs
            include_definition - include the definition for terms (default: 0)
            include_synonyms - if defined this is a include all the synonyms in
                               the result (default: [])
+           exclude_subsets - exclude from the results any terms that are in the
+                             listed subsets (default: [])
  Returns : returns an array of hashes in the same format as lookup()
            but with no matching_synonym keys
 
@@ -619,13 +614,14 @@ sub get_all
   my $include_children = $args{include_children};
   my $include_synonyms = $args{include_synonyms};
   my $include_subset_ids = $args{include_subset_ids};
+  my $exclude_subsets = $args{exclude_subsets} // [];
 
   my $schema = $self->schema();
   my @ret_list = ();
 
   my $search_scope = _parse_search_scope($ontology_name);
 
-  my $cvterm_rs = $self->_get_all_count_rs($search_scope);
+  my $cvterm_rs = $self->_get_all_count_rs($search_scope, $exclude_subsets);
 
   while (defined (my $cvterm = $cvterm_rs->next())) {
     my %term_hash =
@@ -646,6 +642,8 @@ sub get_all
  Function: Return the count of the non-relation terms from an ontology or subset
  Args    : ontology_name - the ontology or subset to search, subsets look like:
                            "[GO:000123|SO:000345]"
+           exclude_subsets - exclude from the results any terms that are in the
+                             listed subsets (default: [])
 
 =cut
 
@@ -659,10 +657,12 @@ sub get_count
     croak "no ontology_name passed to OntologyLookup::get_count()";
   }
 
+  my $exclude_subsets = $args{exclude_subsets} // [];
+
   my $schema = $self->schema();
 
   my $search_scope = _parse_search_scope($ontology_name);
-  my $cvterm_rs = $self->_get_all_count_rs($search_scope);
+  my $cvterm_rs = $self->_get_all_count_rs($search_scope, $exclude_subsets);
 
   return $cvterm_rs->count();
 }

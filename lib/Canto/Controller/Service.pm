@@ -90,9 +90,29 @@ sub _ontology_results
   my @include_synonyms = $c->req()->param('synonyms');
   my $include_subset_ids = $c->req()->param('subset_ids');
 
+  # we're looking up the range of an extension
+  my $extension_lookup = $c->req()->param('extension_lookup') // '';
+
+  if ($extension_lookup ne '') {
+    $extension_lookup = 1;
+  }
+
+
+  my @exclude_subsets = ();
+
+  if (!$extension_lookup) {
+    my $config_subsets_to_ignore =
+      $config->{ontology_namespace_config}{subsets_to_ignore};
+
+    if ($config_subsets_to_ignore) {
+      push @exclude_subsets, @$config_subsets_to_ignore;
+    }
+  }
+
   if (defined $component_name) {
     if ($search_string eq ':COUNT:') {
-      return { count => $lookup->get_count(ontology_name => $ontology_name) };
+      return { count => $lookup->get_count(ontology_name => $ontology_name,
+                                           exclude_subsets => \@exclude_subsets) };
     } else {
       my @results;
       if ($search_string eq ':ALL:') {
@@ -101,7 +121,8 @@ sub _ontology_results
                            include_definition => $include_definition,
                            include_children => $include_children,
                            include_synonyms => \@include_synonyms,
-                           include_subset_ids => $include_subset_ids);
+                           include_subset_ids => $include_subset_ids,
+                           exclude_subsets => \@exclude_subsets);
       } else {
         @results =
           @{$lookup->lookup(ontology_name => $ontology_name,
@@ -110,7 +131,8 @@ sub _ontology_results
                             include_definition => $include_definition,
                             include_children => $include_children,
                             include_synonyms => \@include_synonyms,
-                            include_subset_ids => $include_subset_ids)};
+                            include_subset_ids => $include_subset_ids,
+                            exclude_subsets => \@exclude_subsets)};
       }
 
       map { $_->{value} = $_->{name} } @results;
