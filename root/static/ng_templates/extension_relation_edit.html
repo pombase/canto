@@ -11,6 +11,7 @@
     <term-name-complete ng-if="!disabled"
                         current-term-name="{{extensionRelation.rangeDisplayName}}"
                         found-callback="termFoundCallback(termId, termName, searchString)"
+                        mode="extension"
                         annotation-type-name="{{rangeOntologyScope}}"></term-name-complete>
   </span>
   <span ng-if="rangeConfig.type == 'Text'">

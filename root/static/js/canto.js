@@ -53,8 +53,12 @@ $(document).ready(function() {
   });
 });
 
-function make_ontology_complete_url(annotation_type) {
-  return application_root + 'ws/lookup/ontology/' + annotation_type + '?def=1';
+function make_ontology_complete_url(annotation_type, extensionLookup) {
+  var url = application_root + 'ws/lookup/ontology/' + annotation_type + '?def=1';
+  if (extensionLookup) {
+    url += '&extension_lookup=' + extensionLookup;
+  }
+  return url;
 }
 
 function make_confirm_dialog(link, prompt, confirm_button_label, cancel_button_label) {

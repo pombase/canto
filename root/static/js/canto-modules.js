@@ -3904,22 +3904,29 @@ var termNameComplete =
         annotationTypeName: '@',
         currentTermName: '@',
         foundCallback: '&',
+        mode: '@',
       },
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.termCount = null;
         $scope.allTerms = [];
 
+        $scope.extensionLookup = ($scope.mode && $scope.mode == 'extension' ? 1 : 0);
+
         CantoConfig.get('max_term_name_select_count').success(function(results) {
           var maxCount = results.value;
           CantoService.lookup('ontology', [$scope.annotationTypeName,
-                                           ':COUNT:'], {})
+                                           ':COUNT:'], {
+                                             extension_lookup: $scope.extensionLookup
+                                           })
             .then(function(result) {
               if (result.status == 200) {
                 $scope.termCount = result.data.count;
                 if ($scope.termCount <= maxCount) {
                   CantoService.lookup('ontology',
-                                      [$scope.annotationTypeName, ':ALL:'], {})
+                                      [$scope.annotationTypeName, ':ALL:'], {
+                                        extension_lookup: $scope.extensionLookup
+                                      })
                     .then(function(results) {
                       // this triggers using a dropdown instead of autocomplete
                       $scope.allTerms = results.data;
@@ -4002,7 +4009,7 @@ var termNameComplete =
         var input = $(elem).find('input');
         input.autocomplete({
           minLength: 2,
-          source: make_ontology_complete_url(scope.annotationTypeName),
+          source: make_ontology_complete_url(scope.annotationTypeName, scope.extensionLookup),
           cacheLength: 100,
           focus: ferret_choose.show_autocomplete_def,
           open: function() {
