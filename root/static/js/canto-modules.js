@@ -632,14 +632,14 @@ var cursSettingsService =
       return q.promise;
     };
 
-    service.getAll().then(function(data) {
+    service.getAll().then(function(response) {
       $timeout(function() {
-        service.data.annotation_mode = data.annotation_mode;
+        service.data.annotation_mode = response.data.annotation_mode;
       });
     });
 
     this.getAnnotationMode = function() {
-      return this.data.annotation_mode;
+      return service.data.annotation_mode;
     };
 
     this.setAnnotationMode = function(mode) {
