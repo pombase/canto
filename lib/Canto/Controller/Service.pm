@@ -91,12 +91,7 @@ sub _ontology_results
   my $include_subset_ids = $c->req()->param('subset_ids');
 
   # we're looking up the range of an extension
-  my $extension_lookup = $c->req()->param('extension_lookup') // '';
-
-  if ($extension_lookup ne '') {
-    $extension_lookup = 1;
-  }
-
+  my $extension_lookup = $c->req()->param('extension_lookup') // 0;
 
   my $config_subsets_to_ignore =
     $config->{ontology_namespace_config}{subsets_to_ignore};
