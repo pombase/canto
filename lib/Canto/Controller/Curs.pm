@@ -264,7 +264,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
 
-  if ($state eq CURATION_PAUSED && $path =~ m:/(restart_curation|ro):) {
+  if ($state eq CURATION_PAUSED && $path =~ m:/(ws/.*/list|restart_curation|ro):) {
     $use_dispatch = 0;
   }
 
