@@ -17,6 +17,7 @@ requires 'CHI::Driver::Memcached';
 requires 'Cache';
 requires 'Cache::Memcached';
 requires 'HTML::FormFu' => '2.00';
+requires 'Catalyst::Utils';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Authentication::Store::DBIx::Class';
 requires 'Catalyst::Controller::HTML::FormFu' => '1.00';
