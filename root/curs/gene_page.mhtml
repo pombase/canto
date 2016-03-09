@@ -103,7 +103,7 @@ Gene details
 
 <div id="curs-gene-details" class="curs-box curs-half-width-section">
   <div class="curs-box-title">
-Genotypes for this gene
+Genotypes for <% $gene->display_name() %> in this session
   </div>
   <div class="curs-box-body">
     <single-gene-genotype-list gene-primary-identifier="'<% $gene->primary_identifier() %>'"></single-gene-genotype-list>
