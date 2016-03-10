@@ -64,7 +64,7 @@ Annotation extensions
             title="&lt;- Back"
             ng-click="back()">&lt;- Back</button>
     <button type="submit" class="btn btn-primary curs-finish-button"
-            ng-disabled="!isValid()"
+            ng-disabled="!isValid() || postInProgress"
             ng-click="proceed()" >Proceed -&gt;</button>
   </div>
 

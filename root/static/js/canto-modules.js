@@ -1991,10 +1991,11 @@ var ontologyWorkflowCtrl =
     };
 
     $scope.storeAnnotation = function() {
+      $scope.postInProgress = true;
+      toaster.pop('info', 'Storing annotation ...');
       simpleHttpPost(toaster, $http,
                      '../set_term/' + $scope.annotationType.name,
                      CursStateService.asAnnotationDetails());
-      toaster.pop('info', 'Storing annotation ...');
     };
 
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
