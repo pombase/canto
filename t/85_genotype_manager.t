@@ -51,7 +51,7 @@ is ($curs_schema->resultset('Genotype')->find({ identifier => $created_genotype_
 
 
 
-# test find_with_alleles()
+# test find_with_bg_and_alleles()
 my $cdc11_allele =
   $curs_schema->resultset('Allele')->find({ name => 'cdc11-33' });
 ok($cdc11_allele);
@@ -60,15 +60,19 @@ my $ssm4_allele =
   $curs_schema->resultset('Allele')->find({ name => 'ssm4delta' });
 ok ($ssm4_allele);
 
-my $found_genotype = $genotype_manager->find_with_alleles([$cdc11_allele]);
+my $found_genotype = $genotype_manager->find_with_bg_and_alleles(undef, [$cdc11_allele]);
 ok(!defined $found_genotype);
 
-$found_genotype = $genotype_manager->find_with_alleles([$ssm4_allele]);
+$found_genotype = $genotype_manager->find_with_bg_and_alleles(undef, [$ssm4_allele]);
 ok(!defined $found_genotype);
 
-$found_genotype = $genotype_manager->find_with_alleles([$ssm4_allele, $cdc11_allele]);
+$found_genotype = $genotype_manager->find_with_bg_and_alleles(undef, [$ssm4_allele, $cdc11_allele]);
 ok(defined $found_genotype);
 is($found_genotype->name(), $genotype_name);
+
+$found_genotype = $genotype_manager->find_with_bg_and_alleles('new-background-name',
+                                                              [$ssm4_allele, $cdc11_allele]);
+ok(!defined $found_genotype);
 
 
 #test delete_genotype()

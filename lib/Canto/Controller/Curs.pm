@@ -270,7 +270,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
 
-  if ($state eq CURATION_PAUSED && $path =~ m:/(restart_curation|ro):) {
+  if ($state eq CURATION_PAUSED && $path =~ m:/(ws/.*/list|restart_curation|ro):) {
     $use_dispatch = 0;
   }
 
@@ -1589,7 +1589,8 @@ sub genotype_store : Chained('feature') PathPart('store')
         Canto::Curs::GenotypeManager->new(config => $c->config(),
                                           curs_schema => $schema);
 
-      my $existing_genotype = $genotype_manager->find_with_alleles(\@alleles);
+      my $existing_genotype =
+        $genotype_manager->find_with_bg_and_alleles($genotype_background, \@alleles);
 
       if ($existing_genotype) {
         my $alleles_string = "allele";
@@ -1597,10 +1598,14 @@ sub genotype_store : Chained('feature') PathPart('store')
           $alleles_string = "alleles";
         }
         if (defined $existing_genotype->name()) {
-          $c->flash()->{message} = "Using existing genotype with the same $alleles_string: " .
-            $existing_genotype->name();
+          $c->flash()->{message} = qq(Using existing genotype with the same $alleles_string: ") .
+            $existing_genotype->name() . '"'
         } else {
           $c->flash()->{message} = "Using existing genotype with the same $alleles_string";
+        }
+
+        if ($genotype_background) {
+          $c->flash()->{message} .= " and background";
         }
 
         $c->stash->{json_data} = {

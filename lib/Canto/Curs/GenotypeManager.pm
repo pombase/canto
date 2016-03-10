@@ -62,20 +62,31 @@ sub _string_or_undef
   return $string // '<__UNDEF__>';
 }
 
-=head2 find_with_alleles
+=head2 find_with_bg_and_alleles
 
- Usage   : my $existing = $manager->find_with_alleles(\@alleles);
- Function: Return any existing genotype with exactly the given alleles.
+ Usage   : my $existing = $manager->find_with_bg_and_alleles(\@alleles);
+ Function: Return any existing genotype the same background and alleles as
+           the argument.
            We should have at most one in the CursDB.
+ Args    : - $background the
+           - \@alleles
  Return  : the found Genotype or undef if there is no Genotype with those
            alleles
 
 =cut
 
-sub find_with_alleles
+sub find_with_bg_and_alleles
 {
   my $self = shift;
+  my $new_background = shift;
   my $search_alleles = shift;
+
+  if (defined $new_background) {
+    $new_background =~ s/^\s+//;
+    $new_background =~ s/\s+$//;
+
+    $new_background = undef if length $new_background == 0;
+  }
 
   my @sorted_search_allele_ids =
     sort {
@@ -91,6 +102,16 @@ sub find_with_alleles
   my $genotype_rs = $schema->resultset('Genotype');
 
   while (defined (my $genotype = $genotype_rs->next())) {
+    if ($genotype->background() && $new_background &&
+        $genotype->background() ne $new_background) {
+      next;
+    }
+
+    if (!$genotype->background() && $new_background ||
+        $genotype->background() && !$new_background) {
+      next;
+    }
+
     my @alleles = $genotype->alleles();
 
     next if scalar(@alleles) != scalar(@$search_alleles);

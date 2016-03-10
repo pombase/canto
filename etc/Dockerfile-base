@@ -20,6 +20,7 @@ RUN cpan -i DBIx::Class::ResultSet::Data::Pageset Data::Rmap GO::Parser \
     Plack::Middleware::Debug Plack::Middleware::Expires \
     Plack::Middleware::InteractiveDebugger \
     Starman Net::Server::SS::PreFork Server::Starter \
+    Catalyst Catalyst::Runtime Catalyst::Utils \
     Catalyst::Plugin::PageCache Catalyst::Plugin::Session::PerUser \
     Catalyst::TraitFor::Request::ProxyBase CatalystX::RoleApplicator \
     XML::Simple Template Module::Install Module::Install::Catalyst
