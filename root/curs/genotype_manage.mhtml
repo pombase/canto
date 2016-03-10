@@ -19,9 +19,6 @@ Actions
       </div>
       <div class="curs-box-body">
         <div class="feature-list-action">
-          <a ng-click="startSearch()" href="#">Find an existing genotype ...</a>
-        </div>
-        <div class="feature-list-action">
           <a href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
         </div>
       </div>
