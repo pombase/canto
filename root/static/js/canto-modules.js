@@ -3906,6 +3906,7 @@ var termNameComplete =
         currentTermName: '@',
         foundCallback: '&',
         mode: '@',
+        size: '@',
       },
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
@@ -4006,6 +4007,10 @@ var termNameComplete =
       restrict: 'E',
       templateUrl: app_static_path + 'ng_templates/term_name_complete.html',
       link: function(scope, elem) {
+        if (!scope.size) {
+          scope.size = 40;
+        }
+
         var valBeforeComplete = null;
         var input = $(elem).find('input');
         input.autocomplete({
