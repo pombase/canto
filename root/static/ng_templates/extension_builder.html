@@ -6,7 +6,12 @@ You have annotated {{featureDisplayName}} to {{termDetails.name}} ({{termDetails
 <span ng-if="isNewExtension">Can you extend this annotation by providing
 additional details based on the experiments in this paper?</span>
 <span ng-if="!manualEditMode">
+  <span ng-if="matchingConfigurations.length == 1">
+This extension type are allowed for {{termDetails.id}}:
+  </span>
+  <span ng-if="matchingConfigurations.length > 1">
 These extension types are allowed for {{termDetails.id}}:
+  </span>
 </span>
     </div>
     <ul>
@@ -25,7 +30,7 @@ These extension types are allowed for {{termDetails.id}}:
     </li>
     </ul>
 
-    <div style="padding: 0 0 15px 0">
+    <div ng-if="matchingConfigurations.length > 1" style="padding: 0 0 15px 0">
 You can use more than one of these types in one extension (this creates a
 "compound" annotation extension and implies that the extensions occur
 together).
