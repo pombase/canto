@@ -108,7 +108,11 @@ The alleles of this genotype:
                 <td>{{allele.description}}</td>
                 <td>{{allele.expression}}</td>
                 <td class="curs-table-row-remove">
-                  <div>
+                  <div ng-if="allele.primary_identifier">
+                    <span title="This is a pre-existing allele that can't be edited.  If this isn't the allele you need, please remove it from the genotype and add another"
+                          class="curs-genotype-edit-existing-allele-edit">Edit</span>
+                  </div>
+                  <div ng-if="!allele.primary_identifier">
                     <a href="#" style="white-space: nowrap;" ng-click="openAlleleEditDialog(allele)">Edit</a>
                   </div>
                   <div>
