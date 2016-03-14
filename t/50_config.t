@@ -81,6 +81,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
           [
             {
               'display_text' => 'kinase substrate',
+              'help_text' => '',
               'cardinality' => [
                 '0',
                 '1'
@@ -96,6 +97,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'allowed_relation' => 'has_substrate'
             },
             {
+              'help_text' => '',
               'cardinality' => [
                 '*'
               ],
@@ -115,6 +117,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
             },
             {
               'display_text' => 'localizes',
+              'help_text' => '',
               'domain' => 'GO:0022857',
               'role' => 'user',
               'range' => [
@@ -130,6 +133,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               ]
             },
             {
+              'help_text' => '',
               'allowed_relation' => 'occurs_at',
               'role' => 'user',
               'range' => [
@@ -149,6 +153,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'display_text' => 'occurs at'
             },
             {
+              'help_text' => '',
               'role' => 'user',
               'allowed_relation' => 'modifies_residue',
               'range' => [
@@ -166,6 +171,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'display_text' => 'occurs at'
             },
             {
+              'help_text' => '',
               'display_text' => 'assayed using',
               'cardinality' => [
                 '0',
@@ -182,6 +188,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'domain' => 'FYPO:0000002'
             },
             {
+              'help_text' => '',
               'allowed_relation' => 'has_penetrance',
               'role' => 'user',
               'range' => [
