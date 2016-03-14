@@ -167,7 +167,7 @@ sub allele_from_json
 
   my %search_args = (
     type => $allele_type,
-    description => $description,
+    description => $description || undef,
     name => $name,
     gene => $gene_id,
   );
