@@ -68,7 +68,7 @@ sub parse {
 
       next if $line =~ /^#/;
 
-      my ($domain, $subset_rel, $allowed_relation, $range, $display_text,
+      my ($domain, $subset_rel, $allowed_relation, $range, $display_text, $help_text,
           $cardinality, $role) =
             split (/\t/, $line);
 
@@ -157,6 +157,7 @@ sub parse {
         allowed_relation => $allowed_relation,
         range => \@new_range_bits,
         display_text => $display_text,
+        help_text => $help_text,
         cardinality => \@cardinality,
         role => $role,
       };
