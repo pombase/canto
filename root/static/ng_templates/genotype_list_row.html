@@ -6,7 +6,9 @@
     </span>
   </td>
   <td>
-    <span style="font-weight: bold"  ng-bind-html="genotype.background | wrapAtSpaces | toTrusted"></span>
+    <span ng-bind-html="genotype.background | wrapAtSpaces | toTrusted"></span>
+  </td>
+  <td>
     <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
   <td>
