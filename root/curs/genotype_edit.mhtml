@@ -112,7 +112,8 @@ The alleles of this genotype:
                     <a href="#" style="white-space: nowrap;" ng-click="openAlleleEditDialog(allele)">Edit</a>
                   </div>
                   <div>
-                    <a href="#" style="white-space: nowrap;" ng-click="removeAllele(allele)">Delete</a>
+                    <a href="#" style="white-space: nowrap;" ng-click="removeAllele(allele)"
+                       title="Remove this allele from the genotype">Remove</a>
                   </div>
                 </td>
             </tbody>
