@@ -2051,7 +2051,7 @@ var genotypeListRowCtrl =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
 
         $scope.deleteGenotype = function() {
-          bootbox.confirm("Are you sure you want to delete this genotype?",
+          bootbox.confirm("Are you sure you want to remove this genotype from your session?",
                           function(confirmed) {
             if (confirmed) {
               loadingStart();
