@@ -2082,12 +2082,16 @@ var annotationEvidence =
           });
 
         $scope.isValidEvidenceCode = function() {
-          return !!$scope.evidenceCode;
+          return $scope.evidenceCode && $scope.evidenceCode.length > 0 &&
+            typeof($scope.evidenceTypes) != 'undefined' &&
+            $scope.evidenceTypes[$scope.evidenceCode];
         };
 
         $scope.isValidWithGene = function() {
           return $scope.evidenceTypes && $scope.evidenceCode &&
-            (!$scope.evidenceTypes[$scope.evidenceCode].with_gene || !!$scope.withGeneId);
+            ($scope.evidenceTypes[$scope.evidenceCode] &&
+             !$scope.evidenceTypes[$scope.evidenceCode].with_gene ||
+             $scope.withGeneId);
         };
 
         $scope.showWith = function() {
@@ -3744,7 +3748,11 @@ var annotationTableRow =
                             $scope.evidenceTypes = results;
 
                             annotationTypePromise.then(function() {
-                              $scope.displayEvidence = results[newEvidenceCode].name;
+                              if (results[newEvidenceCode]) {
+                                $scope.displayEvidence = results[newEvidenceCode].name;
+                              } else {
+                                $scope.displayEvidence = newEvidenceCode;
+                              }
                             });
                           });
                         } else {

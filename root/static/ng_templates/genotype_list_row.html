@@ -6,7 +6,9 @@
     </span>
   </td>
   <td>
-    <span style="font-weight: bold"  ng-bind-html="genotype.background | wrapAtSpaces | toTrusted"></span>
+    <span ng-bind-html="genotype.background | wrapAtSpaces | toTrusted"></span>
+  </td>
+  <td>
     <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
   <td>
@@ -25,7 +27,7 @@ Use this genotype ...
       <a href="{{curs_root_uri + '/feature/genotype/duplicate/' + genotype.genotype_id}}">Duplicate ...</a>
     </div>
     <div ng-if="genotype.genotype_id">
-      <a confirm="Are you sure you want to delete this genotype?"
+      <a confirm="Are you sure you want to remove this genotype from your session?"
          ng-click="deleteGenotype()">Delete ...</a>
     </div>
   </td>

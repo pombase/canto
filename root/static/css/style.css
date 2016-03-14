@@ -611,6 +611,10 @@ div.clearall {
   margin-top: 20px;
 }
 
+.curs-genotype-edit-existing-allele-edit {
+  color: grey;
+}
+
 .feature-list-action {
   font-size: 90%;
   margin: 12px 2px 0px 2px;
