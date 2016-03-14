@@ -2242,10 +2242,11 @@ var alleleNameComplete =
         alleleDescription: '=',
         alleleType: '=',
         geneIdentifier: '@',
+        placeholder: '@'
       },
       restrict: 'E',
       replace: true,
-      template: '<span><input ng-model="alleleName" type="text" class="curs-allele-name aform-control" value=""/></span>',
+      template: '<span><input ng-model="alleleName" placeholder="{{placeholder}}" type="text" class="curs-allele-name aform-control" value=""/></span>',
       controller: function ($scope) {
         $scope.clicked = function () {
           $scope.merge = $scope.alleleDescription + ' ' + $scope.allelePrimaryIdentifier;

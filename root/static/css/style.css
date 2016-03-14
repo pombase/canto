@@ -1101,6 +1101,10 @@ input[readonly="1"] {
   padding-right: 1em;
 }
 
+.curs-allele-edit td {
+  padding-bottom: 0.25em;
+}
+
 .curs-allele-evidence-select {
   width: 22em;
 }
@@ -1132,7 +1136,7 @@ tr.curs-allele-expression td {
   padding-top: 15px;
 }
 
-#curs-allele-description-example {
+.curs-allele-description-example,.curs-allele-name-example {
   font-size: 90%;
   color: #666;
   font-style: italic;
