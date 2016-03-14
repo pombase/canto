@@ -1,3 +1,4 @@
+<div class="curs-allele-edit">
   <form name="cursAlleleEdit" class="curs-allele-edit-dialog modal-content">
     <div class="modal-header">
       <h4 class="modal-title">
@@ -18,6 +19,7 @@
                                   allele-name="alleleData.name"
                                   allele-description="alleleData.description"
                                   allele-type="alleleData.type"
+                                  placeholder="{{current_type_config.name_hint}}"
                                   gene-identifier="{{alleleData.gene_systematic_id}}">
             </allele-name-complete>
             <span ng-show="!isValidName()"
@@ -57,7 +59,7 @@
         <tr class="ng-cloak" ng-show="!!alleleData.type">
           <td>
           </td>
-          <td id="curs-allele-description-example">
+          <td class="curs-allele-description-example">
             {{ current_type_config.placeholder }}
           </td>
         </tr>
@@ -143,3 +145,4 @@
       </div>
     </div>
   </form>
+</div>

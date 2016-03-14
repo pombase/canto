@@ -1120,6 +1120,7 @@ allele_type_list:
     allow_expression_change: false
     autopopulate_name: '@@gene_display_name@@delta'
   - name: disruption
+    name_hint: "e.g. pom1::ura4+"
     export_type: disruption
     description_required: false
     allele_name_required: true
@@ -1190,7 +1191,7 @@ allele_type_list:
     allow_expression_change: true
     expression_required: true
     allele_name_required: false
-    placeholder: 'AA123->stop, AA1299->amber'
+    placeholder: 'e.g. AA123->stop, AA1299->amber'
   - name: other
     export_type: other
     description_required: true
