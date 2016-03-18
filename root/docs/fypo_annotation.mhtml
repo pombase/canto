@@ -38,9 +38,13 @@ definition.
 
 <h3>Single-allele phenotypes</h3>
 <p>
-To annotate the phenotype of a single mutation, click "Single allele"
-in the list of curation types. A box will pop up where you can add
-allele details:
+A single allele is a mutation, or set of mutations, in one copy of a
+gene at one locus (which may be the endogenous locus or a different
+locus, such as a plasmid or an insertion at a non-native
+position). You can also annotate under- or overexpression of the wild
+type allele as a single "mutation". To annotate the phenotype of a
+single allele, click "Single allele" in the list of curation types. A
+box will pop up where you can add allele details:
 </p>
 
 <div>
@@ -160,17 +164,19 @@ specifies one or more alleles.
 <h3>Multiple-allele phenotypes and genotypes</h3>
 
 <p>
-To annotate the phenotype of a double mutant, triple mutant, or any
-strain in which more than one gene has its sequence or expression
-altered, you must enter details of all relevant alleles in the
-genotype (background details such as mating type and markers are
-optional). There are two routes to do this: select the "Multiple
-allele" phenotype option in the curation types list on a gene-specific
-page, or follow the "Genotype management" link on the paper summary
-page. Either link takes you to the Genotypes page, which displays
-genotypes added or selected for the paper on the right-hand side of
-the page. On the left you can search for a genotype in the Canto
-database or enter a new genotype.
+Use the multi-allele phenotype option to annotate of a double mutant,
+triple mutant, or any strain in which more than one gene has its
+sequence or expression altered, including any case where you have more
+than one allele of the same gene present (e.g. one on the chromosome,
+and another on a plasmid). To do so, you must enter details of all
+relevant alleles in the genotype (background details such as mating
+type and markers are optional). There are two routes to do this:
+select the "Multiple allele" phenotype option in the curation types
+list on a gene-specific page, or follow the "Genotype management" link
+on the paper summary page. Either link takes you to the Genotypes
+page, which displays genotypes added or selected for the paper on the
+right-hand side of the page. On the left you can search for a genotype
+in the Canto database or enter a new genotype.
 </p>
 
 <p>
