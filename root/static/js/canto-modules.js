@@ -1605,7 +1605,14 @@ var extensionBuilder =
             openExtensionRelationDialog($modal, editExtensionRelation, relationConfig);
 
           editPromise.then(function(result) {
-            $scope.extension.push(result.extensionRelation);
+            var andPart;
+            if ($scope.extension.length == 0) {
+              andPart = [];
+              $scope.extension.push(andPart);
+            } else {
+              andPart = $scope.extension[0];
+            }
+            andPart.push(result.extensionRelation);
           });
         };
 
