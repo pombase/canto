@@ -1,0 +1,10 @@
+<span>
+  <span ng-repeat="andPart in orPart">
+    <span class="curs-extension-relation">{{andPart.relation}}</span>
+    <span>{{andPart.rangeDisplayName || andPart.rangeValue}}</span><span ng-if="andPart.rangeType == '%'">%</span>
+    <a ng-if="showDelete" confirm="Really delete?" href="" ng-click="deleteAndPart(andPart)">
+      <img title="Remove this relation" ng-src="{{app_static_path + '/images/delete_icon.png'}}" />
+    </a>
+    <span ng-show="!$last">, <span ng-if="showDelete">&nbsp;</span></span>
+  </span>
+</span>

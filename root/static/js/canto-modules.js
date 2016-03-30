@@ -1252,7 +1252,7 @@ function openExtensionBuilderDialog($modal, extension, termId, featureDisplayNam
 
 
 function extensionAsString(extension) {
-  return $.map(extension,
+  return $.map(extension[0],
                function(part) {
                  return part.relation + '(' + part.rangeValue + ')';
                }).join(', ');
@@ -1809,16 +1809,39 @@ var extensionDisplay =
       templateUrl: app_static_path + 'ng_templates/extension_display.html',
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
-        $scope.deletePart = function(part) {
+      },
+    };
+  };
+
+canto.directive('extensionDisplay', ['CantoGlobals', extensionDisplay]);
+
+
+var extensionOrPartDisplay =
+  function(CantoGlobals) {
+    return {
+      scope: {
+        extension: '=',
+        orPart: '=',
+        showDelete: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/extension_or_part_display.html',
+      controller: function($scope) {
+        $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.deleteAndPart = function(andPart) {
           if ($scope.showDelete) {
-            arrayRemoveOne($scope.extension, part);
+            arrayRemoveOne($scope.orPart, andPart);
+            if ($scope.orPart.length == 0) {
+              arrayRemoveOne($scope.extension, $scope.orPart);
+            }
           }
         };
       },
     };
   };
 
-canto.directive('extensionDisplay', ['CantoGlobals', extensionDisplay]);
+canto.directive('extensionOrPartDisplay', ['CantoGlobals', extensionOrPartDisplay]);
 
 
 var ontologyWorkflowCtrl =
