@@ -1252,28 +1252,31 @@ function openExtensionBuilderDialog($modal, extension, termId, featureDisplayNam
 
 
 function extensionAsString(extension) {
-  return $.map(extension[0],
-               function(part) {
-                 return part.relation + '(' + part.rangeValue + ')';
-               }).join(', ');
+  return $.map(extension,
+               function(orPart) {
+                 return $.map(orPart,
+                              function (andPart) {
+                                return andPart.relation + '(' + andPart.rangeValue + ')';
+                              }).join(', ');
+               }).join('| ');
 }
 
-function parseExtensionString(extensionString) {
-  extensionString = extensionString.trim();
-  if (extensionString.length == 0) {
+function parseExtensionAndPart(orPart) {
+  orPart = orPart.trim();
+  if (orPart.length == 0) {
     return {
       error: null,
-      extension: {},
+      parsedPart: [],
     };
   }
-  var split = extensionString.split(/,/);
+  var split = orPart.split(/,/);
   var i, part, matchResult;
-  var extension = [];
+  var parsedPart = [];
   for (i = 0; i < split.length; i++) {
     part = split[i];
     matchResult = part.match(/^\s*(\S+?)\s*\(\s*([^\)]+?)\s*\)/);
     if (matchResult && matchResult.length == 3) {
-      extension.push({
+      parsedPart.push({
         relation: matchResult[1],
         rangeValue: matchResult[2],
         rangeDisplayName: matchResult[2],
@@ -1281,9 +1284,37 @@ function parseExtensionString(extensionString) {
     } else {
       return {
         error: 'String "' + part + '" cannot be parsed',
-        extension: null,
+        parsedPart: null,
       };
     }
+  }
+
+  return {
+    error: null,
+    parsedPart: parsedPart,
+  };
+}
+
+
+function parseExtensionString(extensionString) {
+  extensionString = extensionString.trim();
+  if (extensionString.length == 0) {
+    return {
+      error: null,
+      extension: [],
+    };
+  }
+  var orParts = extensionString.split(/\|/);
+  var i;
+  var extension = [];
+  for (i = 0; i < orParts.length; i++) {
+    var result = parseExtensionAndPart(orParts[i]);
+
+    if (result.error) {
+      return result;
+    }
+
+    extension.push(result.parsedPart);
   }
 
   return {
@@ -1291,7 +1322,6 @@ function parseExtensionString(extensionString) {
     extension: extension,
   };
 }
-
 
 var extensionManualEditDialogCtrl =
   function($scope, $modalInstance, args) {
