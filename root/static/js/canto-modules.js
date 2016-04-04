@@ -1467,7 +1467,8 @@ var extensionBuilder =
                         newCounts[key] = 1;
                       }
                     };
-                  $.map($scope.extension,
+                  if ($scope.extension.length > 0) {
+                  $.map($scope.extension[0],
                         function(part) {
                           var matchingRangeConf = null;
                           $.map(relConf.range,
@@ -1506,6 +1507,7 @@ var extensionBuilder =
                             }
                           }
                         });
+                  }
                 });
 
           $q.all(promises).then(function() {
