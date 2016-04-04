@@ -89,6 +89,24 @@ my %procs = (
         if ($extension_string) {
           try {
             my @extension = Canto::ExtensionUtil::parse_extension($extension_string);
+
+            map {
+              my $orPart = $_;
+              map {
+                my $andPart = $_;
+                my $range_value = $andPart->{rangeValue};
+                if ($range_value =~ /^(?:GO|FYPO):\d+/) {
+                  my @dbxrefs = $load_util->find_dbxref($range_value);
+                  if (@dbxrefs == 1) {
+                    my @cvterms = $dbxrefs[0]->cvterms();
+                    if (@cvterms == 1) {
+                      $andPart->{rangeDisplayName} = $cvterms[0]->name();
+                    }
+                  }
+                }
+              } @$orPart;
+            } @extension;
+
             $data->{extension} = \@extension;
           } catch {
             warn qq(failed to store extension in $curs_key: $_);
