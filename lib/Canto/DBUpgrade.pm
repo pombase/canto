@@ -40,6 +40,7 @@ use Try::Tiny;
 
 use Canto::Track;
 use Canto::ExtensionUtil;
+use Canto::Track;
 
 has config => (is => 'ro', required => 1);
 
@@ -48,6 +49,8 @@ my %procs = (
     my $config = shift;
     my $track_schema = shift;
     my $load_util = shift;
+
+    my $adaptor = Canto::Track::get_adaptor($config, 'gene');
 
     my $cvprop_type_cv =
       $load_util->find_or_create_cv('cvprop_type');
@@ -95,13 +98,27 @@ my %procs = (
               map {
                 my $andPart = $_;
                 my $range_value = $andPart->{rangeValue};
-                if ($range_value =~ /^(?:GO|FYPO):\d+/) {
+                if ($range_value =~ /^(?:GO|FYPO|SO|FYPO_EXT|PATO|PBHQ):\d+/) {
                   my @dbxrefs = $load_util->find_dbxref($range_value);
                   if (@dbxrefs == 1) {
                     my @cvterms = $dbxrefs[0]->cvterms();
                     if (@cvterms == 1) {
                       $andPart->{rangeDisplayName} = $cvterms[0]->name();
+                      $andPart->{rangeType} = 'Ontology';
                     }
+                  }
+                } else {
+                  if ($range_value =~ /^PomBase:(\S+)/) {
+                    my $result = $adaptor->lookup([$1]);
+                    my $found = $result->{found};
+
+                    if ($found && @$found == 1 && $found->[0]->{primary_name}) {
+                      $andPart->{rangeDisplayName} = $found->[0]->{primary_name};
+                    }
+
+                    $andPart->{rangeType} = 'Gene';
+                  } else {
+                    $andPart->{rangeType} = 'Text';
                   }
                 }
               } @$orPart;
