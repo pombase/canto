@@ -107,7 +107,7 @@ if ($lookup_type eq 'gene') {
       print
         ($gene->{primary_identifier}, "\t",
          $gene->{primary_name} // '', "\t",
-         $gene->{product}, "\t",
+         $gene->{product} // '', "\t",
          (join ",", @{$gene->{synonyms}}), "\t",
          $gene->{organism_full_name}, "\t",
          $gene->{organism_taxonid}, "\n");
