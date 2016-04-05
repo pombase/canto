@@ -763,8 +763,6 @@ sub reassign_session : Local Args(0)
   my $curator_manager =
     Canto::Track::CuratorManager->new(config => $c->config());
 
-  warn "----current_curator():\n";
-
   my ($current_submitter_email, $current_submitter_name) =
     $curator_manager->current_curator($curs_key);
 
