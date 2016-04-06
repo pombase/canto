@@ -1685,6 +1685,10 @@ var extensionRelationDialogCtrl =
                   }, true);
 
     $scope.ok = function () {
+      if ($scope.extensionRelation.rangeType == '%') {
+        $scope.extensionRelation.rangeValue =
+          $scope.extensionRelation.rangeValue.replace(/%\s*$/, '');
+      }
       $modalInstance.close({
         extensionRelation: $scope.extensionRelation,
       });
