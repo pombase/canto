@@ -1434,7 +1434,10 @@ evidence_types:
 # Note: all terms with no parent are tagged with "canto_root_subset" on load
 ontology_namespace_config:
   subsets_to_ignore:
-    - canto_root_subset
+    primary:
+      - canto_root_subset
+    extension:
+      - canto_root_subset
 
 available_annotation_type_list:
   - name: molecular_function
