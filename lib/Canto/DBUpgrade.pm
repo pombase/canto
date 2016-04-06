@@ -118,7 +118,12 @@ my %procs = (
 
                     $andPart->{rangeType} = 'Gene';
                   } else {
-                    $andPart->{rangeType} = 'Text';
+                    if ($andPart->{relation} eq 'has_penetrance') {
+                      $andPart->{rangeType} = '%';
+                      $andPart->{rangeValue} =~ s/\s*\%\s*$//;
+                    } else {
+                      $andPart->{rangeType} = 'Text';
+                    }
                   }
                 }
               } @$orPart;
