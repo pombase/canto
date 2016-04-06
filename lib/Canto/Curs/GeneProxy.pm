@@ -100,7 +100,9 @@ sub _build_gene_data
       "using $gene_lookup";
   }
 
-  my @found_genes = @{$found};
+  my @found_genes = grep {
+    $_->{primary_identifier} eq $primary_identifier;
+  } @{$found};
 
   if (@found_genes > 1) {
     croak "internal error: lookup returned more than one gene for " .

@@ -174,10 +174,32 @@ sub find_and_create_genes
       my $identifier = $_;
       $identifiers_matching_more_than_once{$identifier}->{$primary_identifier} = 1;
       $genes_matched_more_than_once{$primary_identifier}->{$identifier} = 1;
-    } (@{$match->{match_types}->{synonym} // []},
-       $match->{match_types}->{primary_identifier} // (),
+    } ($match->{match_types}->{primary_identifier} // (),
        $match->{match_types}->{primary_name} // ());
   } @{$result->{found}};
+
+  my @matches_to_remove = ();
+
+  map {
+    my $match = $_;
+    my $primary_identifier = $match->{primary_identifier};
+    map {
+      my $identifier = $_;
+      if (exists $genes_matched_more_than_once{$identifier}) {
+        # synonym is the primary_identifier of some other match
+        push @matches_to_remove, $match;
+      } else {
+        $identifiers_matching_more_than_once{$identifier}->{$primary_identifier} = 1;
+        $genes_matched_more_than_once{$primary_identifier}->{$identifier} = 1;
+      }
+    } @{$match->{match_types}->{synonym} // []},
+  } @{$result->{found}};
+
+  @{$result->{found}} =
+    grep {
+      my $match = $_;
+      !grep { $match == $_ } @matches_to_remove;
+    } @{$result->{found}};
 
   sub _remove_single_matches {
     my $hash = shift;

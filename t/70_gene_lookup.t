@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 42;
+use Test::More tests => 44;
 
 use Try::Tiny;
 
@@ -33,8 +33,13 @@ is(@{$result->{found}}, 0, 'look up with no results - found count');
 is(@{$result->{missing}}, 3, 'look up with no results - missing count');
 
 $result = $lookup->lookup([qw(SPCC1739.10 SPNCRNA.119 missing1 missing2 missing3)]);
-is(@{$result->{found}}, 2, 'look up two genes by identifier - found count');
+is(@{$result->{found}}, 3, 'look up two genes by identifier - found count');
 is(@{$result->{missing}}, 3, 'look up two genes by identifier - missing count');
+
+# check an identifier that is a primary_identifier and a synonym
+$result = $lookup->lookup([qw(SPCC1739.10)]);
+is(@{$result->{found}}, 2, 'look up two genes by identifier - found count');
+is(@{$result->{missing}}, 0, 'look up two genes by identifier - missing count');
 
 $result = $lookup->lookup([qw(wtf22 cdc11 missing1 missing2 missing3)]);
 is(@{$result->{found}}, 2, 'look up two genes by name - found count');

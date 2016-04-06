@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 use Canto::TestUtil;
 use Canto::Curs::Utils;
@@ -28,3 +28,13 @@ is($doa10_proxy->product(), 'ER-localized ubiquitin ligase Doa10 (predicted)');
 is($doa10_proxy->taxonid(), '4896');
 
 is($doa10_proxy->feature_id(), $doa10->gene_id());
+
+
+# test identifiers that are primary_identifiers as well as synonyms:
+my $SPCC1739_10 = $curs_schema->resultset('Gene')->create({
+  primary_identifier => 'SPCC1739.10', organism => $doa10->organism()->organism_id(),
+});
+my $SPCC1739_10_proxy = Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $SPCC1739_10);
+
+is ($SPCC1739_10_proxy->display_name(), 'SPCC1739.10');
+is ($SPCC1739_10_proxy->product(), 'conserved fungal protein');

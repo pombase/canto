@@ -858,7 +858,13 @@ sub _load_curs_db_data
         $gene_identifier = $gene_details;
       }
       my $result = $gene_lookup->lookup([$gene_identifier]);
-      my @found = @{$result->{found}};
+      # might return a matching synonym
+      my @found = grep {
+        $_->{primary_identifier} eq $gene_identifier
+          ||
+        $_->{primary_name} eq $gene_identifier;
+      } @{$result->{found}};
+
       if (@found != 1) {
         die "Expected 1 result for $gene_identifier not ", scalar(@found)
       }

@@ -1,5 +1,5 @@
 SPCC1739.10			"conserved fungal protein"
-SPCC1739.11c	cdc11		"SIN component scaffold protein, centriolin ortholog Cdc11"
+SPCC1739.11c	cdc11	SPCC1739.10	"SIN component scaffold protein, centriolin ortholog Cdc11"
 SPCTRNASER.13			"tRNA Serine"
 SPCC576.19c			dubious
 SPCC576.03c			
