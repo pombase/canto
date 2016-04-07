@@ -77,7 +77,7 @@
     {{annotation.curator}}
   </td>
   <td class="table-row-actions">
-    <div ng-if="annotationType && addLinks()">
+    <div ng-if="annotationType && addLinks() && !read_only_curs">
       <div>
         <a ng-click="edit()">Edit</a>
       </div>
