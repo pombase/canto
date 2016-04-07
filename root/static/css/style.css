@@ -794,6 +794,7 @@ div.clearall {
   -moz-border-radius: 4px;
   border-radius: 4px;
   background-color: white;
+  margin: 5px;
 }
 
 .curs-box-title {

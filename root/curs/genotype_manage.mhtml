@@ -12,7 +12,7 @@ $read_only_curs => 0
     <div class="curs-top-help">
 Search, view, and edit genotypes for phenotype annotation in this session
     </div>
-    <div class="col-sm-5 col-md-5">
+    <div class="col-sm-6 col-md-6">
     <div class="curs-box">
       <div class="curs-box-title">
 Actions
@@ -23,9 +23,7 @@ Actions
         </div>
       </div>
     </div>
-    </div>
 % }
-    <div class="col-sm-7 col-md-7">
     <div class="curs-box">
       <div class="curs-box-title">
         <div>
@@ -43,7 +41,9 @@ Genotypes used in this session
 Click a description to view <% !$read_only_curs ? 'and edit' : '' %> genotype details
           </div>
 
-          <genotype-list-view genotype-list="data.genotypes"></genotype-list-view>
+          <genotype-list-view genotype-list="data.genotypes"
+                              select-callback="selectGenotype(genotype)"
+                              div-selectable="true"></genotype-list-view>
         </div>
         <div ng-show="data.genotypes.length == 0">
 No genotypes in this session.  Try adding one.
