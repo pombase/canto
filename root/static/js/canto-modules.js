@@ -839,6 +839,7 @@ function openSingleGeneAddDialog($modal)
     title: 'Add a new gene by name or identifier',
     animate: false,
     windowClass: "modal",
+    backdrop: 'static',
   });
 }
 
@@ -1125,6 +1126,7 @@ var ontologyTermConfirm =
               title: 'Suggest a new term for ' + featureDisplayName,
               animate: false,
               windowClass: "modal",
+              backdrop: 'static',
             });
 
             suggestInstance.result.then(function (termSuggestion) {
@@ -1182,6 +1184,7 @@ function openExtensionRelationDialog($modal, extensionRelation, relationConfig) 
         };
       },
     },
+    backdrop: 'static',
   }).result;
 }
 
@@ -1247,6 +1250,7 @@ function openExtensionBuilderDialog($modal, extension, termId, featureDisplayNam
         };
       },
     },
+    backdrop: 'static',
   }).result;
 }
 
@@ -1370,6 +1374,7 @@ function openExtensionManualEditDialog($modal, extension, matchingConfigurations
         };
       },
     },
+    backdrop: 'static',
   }).result;
 }
 
@@ -1720,6 +1725,7 @@ function openTermConfirmDialog($modal, termId, initialState)
         };
       }
     },
+    backdrop: 'static',
   });
 }
 
@@ -2588,7 +2594,8 @@ function makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed)
           allele: allele,
         };
       }
-    }
+    },
+    backdrop: 'static',
   });
 }
 
@@ -3464,7 +3471,8 @@ function startEditing($modal, annotationTypeName, annotation,
           featureEditable: featureEditable,
        };
       }
-    }
+    },
+    backdrop: 'static',
   });
 
   return editInstance.result;
