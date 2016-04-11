@@ -1754,7 +1754,7 @@ var extensionRelationEdit =
           $scope.extensionRelation.rangeValue = termId;
           $scope.extensionRelation.rangeDisplayName = termName;
 
-          if (!searchString.match(/^".*"$/) && searchString !== termId) {
+          if (searchString && !searchString.match(/^".*"$/) && searchString !== termId) {
             var termConfirm = openTermConfirmDialog($modal, termId);
 
             termConfirm.result.then(function(result) {
