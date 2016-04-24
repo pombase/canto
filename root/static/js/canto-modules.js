@@ -3835,7 +3835,9 @@ var annotationTableRow =
                       });
 
         $scope.addLinks = function() {
-          return true;
+          return typeof($scope.annotationType) !== 'undefined' &&
+            !CantoGlobals.read_only_curs &&
+            $scope.featureStatusFilter == 'new'
         };
 
         $scope.featureLink = function(featureType, featureId) {
