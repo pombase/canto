@@ -3041,6 +3041,9 @@ var genotypeListRowCtrl =
   function(toaster, CantoGlobals, CursGenotypeList) {
     return {
       restrict: 'A',
+      scope: {
+        genotype: '=',
+      },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row.html',
       controller: function($scope) {
