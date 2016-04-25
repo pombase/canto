@@ -323,7 +323,7 @@ sub canto_config : Local
 
       # FIXME - the URL for canto_config should have a version number so
       # we can have a far future expiry date
-      $c->cache_page(600) unless $ENV{CANTO_DEBUG};
+      $c->cache_page(120) unless $ENV{CANTO_DEBUG};
     } else {
       $c->stash->{json_data} = {};
     }

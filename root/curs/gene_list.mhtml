@@ -29,7 +29,7 @@ Click on a gene name to start entering data
 %       my $gene = $gene_hashes[$index];
 %       if (defined $gene) {
       <td>
-        <a href="<% $start_path . '/feature/gene/view/' . $gene->{gene_id} . ($read_only_curs ? '/ro' : '') %>"
+        <a href="<% $start_path . '/feature/gene/view/' . $gene->{gene_id} . ($read_only_curs ? '/ro' : '') %>">
           <span>
             <% $gene->{identifier} %>
           </span>

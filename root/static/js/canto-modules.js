@@ -1699,6 +1699,10 @@ var extensionRelationDialogCtrl =
       });
     };
 
+    $scope.finishedCallback = function() {
+      $scope.ok();
+    }
+
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
@@ -1738,6 +1742,7 @@ var extensionRelationEdit =
         relationConfig: '=',
         rangeConfig: '=',
         disabled: '=',
+        finishedCallback: '&',
       },
       restrict: 'E',
       replace: true,
@@ -1754,12 +1759,13 @@ var extensionRelationEdit =
           $scope.extensionRelation.rangeValue = termId;
           $scope.extensionRelation.rangeDisplayName = termName;
 
-          if (!searchString.match(/^".*"$/) && searchString !== termId) {
+          if (searchString && !searchString.match(/^".*"$/) && searchString !== termId) {
             var termConfirm = openTermConfirmDialog($modal, termId);
 
             termConfirm.result.then(function(result) {
               $scope.extensionRelation.rangeValue = result.newTermId;
               $scope.extensionRelation.rangeDisplayName = result.newTermName;
+              $scope.finishedCallback();
             });
           } // else: user pasted a term ID or user quoted the search - skip confirmation
         };
@@ -3333,13 +3339,15 @@ canto.directive('termChildrenDisplay',
 
 
 var annotationEditDialogCtrl =
-  function($scope, $modal, $modalInstance, AnnotationProxy, AnnotationTypeConfig,
-           CursSessionDetails, CantoService, toaster, args) {
+  function($scope, $modal, $q, $modalInstance, AnnotationProxy,
+           AnnotationTypeConfig, CantoConfig,
+           CursSessionDetails, CantoService, CantoGlobals, toaster, args) {
     $scope.annotation = { conditions: [], extension: [] };
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
     $scope.featureEditable = args.featureEditable;
+    $scope.matchingConfigurations = [];
     $scope.status = {
       validEvidence: false
     };
@@ -3365,6 +3373,34 @@ var annotationEditDialogCtrl =
     $scope.isValidEvidence = function() {
       return $scope.status.validEvidence;
     };
+
+    $scope.extConfigPromise = CantoConfig.get('extension_configuration');
+
+    $scope.$watch('annotation.term_ontid',
+                  function() {
+                    var ontLookupPromise =
+                        CantoService.lookup('ontology', [$scope.annotation.term_ontid],
+                                            {
+                                              subset_ids: 1,
+                                            });
+
+                    $q.all([$scope.extConfigPromise, ontLookupPromise])
+                      .then(function(results) {
+                        var extensionConfiguration = results[0].data;
+                        var termDetails = results[1].data;
+
+                        var subset_ids = termDetails.subset_ids;
+
+                        if (extensionConfiguration.length > 0 &&
+                            subset_ids && subset_ids.length > 0) {
+                          $scope.matchingConfigurations =
+                            extensionConfFilter(extensionConfiguration, subset_ids,
+                                                CantoGlobals.current_user_is_admin ? 'admin' : 'user');
+                        } else {
+                          $scope.matchingConfigurations = [];
+                        }
+                      });
+                  });
 
     $scope.isValid = function() {
       if ($scope.annotationType.category === 'ontology') {
@@ -3446,9 +3482,10 @@ var annotationEditDialogCtrl =
 
 
 canto.controller('AnnotationEditDialogCtrl',
-                 ['$scope', '$modal', '$modalInstance', 'AnnotationProxy',
-                  'AnnotationTypeConfig', 'CursSessionDetails', 'CantoService',
-                  'toaster', 'args',
+                 ['$scope', '$modal', '$q', '$modalInstance', 'AnnotationProxy',
+                  'AnnotationTypeConfig', 'CantoConfig',
+                  'CursSessionDetails', 'CantoService',
+                  'CantoGlobals', 'toaster', 'args',
                   annotationEditDialogCtrl]);
 
 
@@ -3835,7 +3872,9 @@ var annotationTableRow =
                       });
 
         $scope.addLinks = function() {
-          return true;
+          return typeof($scope.annotationType) !== 'undefined' &&
+            !CantoGlobals.read_only_curs &&
+            $scope.featureStatusFilter == 'new'
         };
 
         $scope.featureLink = function(featureType, featureId) {

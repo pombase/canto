@@ -115,9 +115,9 @@
                      type="radio" value="Overexpression" />
             </div>
             <div ng-show="alleleData.type !== 'wild type' || config.endogenousWildtypeAllowed">
-              <label>Endogenous</label>
+              <label>Wild Type product level</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression"
-                     type="radio" value="Endogenous" />
+                     type="radio" value="Wild Type product level" />
             </div>
             <div>
               <label>Knockdown</label>
@@ -130,9 +130,9 @@
                      type="radio" value="Null" />
             </div>
             <div ng-show="alleleData.type !== 'wild type'">
-              <label>Not specified</label>
+              <label>Not assayed</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression"
-                     type="radio" value="Not specified" />
+                     type="radio" value="Not assayed" />
             </div>
           </td>
         </tr>
