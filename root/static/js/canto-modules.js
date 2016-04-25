@@ -1699,6 +1699,10 @@ var extensionRelationDialogCtrl =
       });
     };
 
+    $scope.finishedCallback = function() {
+      $scope.ok();
+    }
+
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
@@ -1738,6 +1742,7 @@ var extensionRelationEdit =
         relationConfig: '=',
         rangeConfig: '=',
         disabled: '=',
+        finishedCallback: '&',
       },
       restrict: 'E',
       replace: true,
@@ -1760,6 +1765,7 @@ var extensionRelationEdit =
             termConfirm.result.then(function(result) {
               $scope.extensionRelation.rangeValue = result.newTermId;
               $scope.extensionRelation.rangeDisplayName = result.newTermName;
+              $scope.finishedCallback();
             });
           } // else: user pasted a term ID or user quoted the search - skip confirmation
         };

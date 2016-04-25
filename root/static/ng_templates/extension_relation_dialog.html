@@ -5,7 +5,8 @@
       <extension-relation-edit extension-relation="extensionRelation"
                                relation-config="relationConfig"
                                range-config="relationConfig.range[0]"
-                               disabled="false"></extension-relation-edit>
+                               disabled="false"
+                               finished-callback="finishedCallback()"></extension-relation-edit>
 
     </div>
     <div ng-if="relationConfig.range.length > 1">
@@ -16,7 +17,8 @@
         <extension-relation-edit extension-relation="extensionRelation"
                                  relation-config="relationConfig"
                                  range-config="rangeConfig"
-                                 disabled="rangeConfig.type != selected.rangeType"></extension-relation-edit>
+                                 disabled="rangeConfig.type != selected.rangeType"
+                                 finished-callback="finishedCallback()"></extension-relation-edit>
         <div ng-if="!$last">OR</div>
       </div>
     </div>
