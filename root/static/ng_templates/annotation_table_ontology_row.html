@@ -15,7 +15,7 @@
        href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">
       {{annotation.gene_name_or_identifier}}
     </a>
-    <span ng-if="annotation.status === 'existing'">
+    <span ng-if="annotation.status === 'existing' || !addLinks()">
       {{annotation.gene_name_or_identifier}}
     </span>
   </td>
