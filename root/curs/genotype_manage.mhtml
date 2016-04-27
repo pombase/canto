@@ -60,17 +60,6 @@ No genotypes in this session.  Try adding one.
     </div>
   </div>
   </div>
-  <div ng-show="data.genotypeSearching" class="curs-box ng-cloak">
-    <div class="curs-box-title">
-Genotype search
-    </div>
-    <div class="curs-box-body">
-      <genotype-search></genotype-search>
-
-      <button type="button" ng-click="cancelSearch()"
-              class="btn btn-primary curs-back-button">&lt;- Back</button>
-    </div>
-  </div>
 </div>
 
 
