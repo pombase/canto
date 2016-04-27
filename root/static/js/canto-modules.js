@@ -283,17 +283,22 @@ canto.service('CursGenotypeList', function($q, Curs) {
     return q.promise;
   };
 
-  this.deleteGenotype = function(genotypeList, genotype) {
+  this.deleteGenotype = function(genotypeList, genotypeId) {
     var q = $q.defer();
 
-    Curs.delete('genotype', genotype.genotype_id)
-    .then(function() {
-      arrayRemoveOne(genotypeList, genotype);
-      q.resolve();
-    })
-    .catch(function(message) {
-      q.reject(message);
-    });
+    Curs.delete('genotype', genotypeId)
+      .then(function() {
+        for (var i = 0; i < genotypeList.length; i++) {
+          if (genotypeList[i].genotype_id == genotypeId) {
+            genotypeList.splice(i, 1);
+            break;
+          }
+        }
+        q.resolve();
+      })
+      .catch(function(message) {
+        q.reject(message);
+      });
 
     return q.promise;
   };
@@ -2909,6 +2914,28 @@ var GenotypeManageCtrl =
       toaster.pop('error', "couldn't read the genotype list from the server");
       $scope.data.waitingForServer = false;
     });
+
+    $scope.deleteGenotype = function(genotypeId) {
+      loadingStart();
+
+      var q = CursGenotypeList.deleteGenotype($scope.data.genotypes, genotypeId);
+
+      q.then(function() {
+        toaster.pop('success', 'Genotype deleted');
+      });
+
+      q.catch(function(message) {
+        if (message.match('genotype .* has annotations')) {
+          toaster.pop('warning', "couldn't delete the genotype: delete the annotations that use it first");
+        } else {
+          toaster.pop('error', "couldn't delete the genotype: " + message);
+        }
+      });
+
+      q.finally(function() {
+        loadingEnd();
+      });
+    };
   };
 
 canto.controller('GenotypeManageCtrl',
@@ -3050,29 +3077,6 @@ var genotypeListRowCtrl =
       controller: function($scope) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
-
-        $scope.deleteGenotype = function() {
-          loadingStart();
-
-          // using $parent is brittle
-          var q = CursGenotypeList.deleteGenotype($scope.$parent.genotypeList, $scope.genotype);
-
-          q.then(function() {
-            toaster.pop('success', 'Genotype deleted');
-          });
-
-          q.catch(function(message) {
-            if (message.match('genotype .* has annotations')) {
-              toaster.pop('warning', "couldn't delete the genotype: delete the annotations that use it first");
-            } else {
-              toaster.pop('error', "couldn't delete the genotype: " + message);
-            }
-          });
-
-          q.finally(function() {
-            loadingEnd();
-          });
-        };
       },
     };
   };

@@ -1,59 +1,48 @@
 <div>
-  <div class="curs-box">
-    <div class="curs-box-title">
-Genotype details
-    </div>
-    <div class="curs-spinner" ng-if="!genotype">
-      <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img> Loading ...
-    </div>
-    <div ng-if="genotype" class="curs-box-body">
-      <table class="curs-definition-table">
-        <tbody>
-          <tr>
-            <td class="title">
-Name
-            </td>
-            <td>
-              <span ng-bind-html="genotype.name | encodeAlleleSymbols | toTrusted"></span>
-            </td>
-          </tr>
-          <tr>
-            <td class="title">
-Background
-            </td>
-            <td>
-{{genotype.background}}
-            </td>
-          </tr>
-          <tr>
-            <td class="title">
-Description
-            </td>
-            <td>
-              <span ng-bind-html="genotype.allele_string | encodeAlleleSymbols | toTrusted"></span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="curs-spinner" ng-if="!genotype">
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img> Loading ...
+  </div>
 
-      <div>
-        <ul>
-          <li ng-repeat="allele in genotype.alleles">
-            <span ng-bind-html="allele.display_name | encodeAlleleSymbols | toTrusted"></span>
-            <span ng-if="allele.expression">- {{allele.expression}}</span>
-              <a href="{{curs_root_uri + '/feature/gene/view/' + allele.gene_id + (read_only_curs ? '/ro' : '')}}">{{allele.gene_display_name}}</a>
+  <div ng-if="genotype">
 
-          </li>
-        </ul>
-      </div>
-      <div>
-        <a ng-if="!read_only_curs"
-           href="{{curs_root_uri + '/feature/genotype/edit/' + genotypeId}}">Edit details ...</a>
-      </div>
-      <div>
-        <a ng-if="!read_only_curs"
-           href="{{curs_root_uri + '/feature/genotype/duplicate/' + genotypeId}}">Duplicate ...</a>
-      </div>
+    <table class="curs-definition-table">
+      <tbody>
+        <tr>
+          <td class="title">
+            Name
+          </td>
+          <td>
+            <span ng-bind-html="genotype.name | encodeAlleleSymbols | toTrusted"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="title">
+            Background
+          </td>
+          <td>
+            {{genotype.background}}
+          </td>
+        </tr>
+        <tr>
+          <td class="title">
+            Description
+          </td>
+          <td>
+            <span ng-bind-html="genotype.allele_string | encodeAlleleSymbols | toTrusted"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div>
+      <ul>
+        <li ng-repeat="allele in genotype.alleles">
+          <span ng-bind-html="allele.display_name | encodeAlleleSymbols | toTrusted"></span>
+          <span ng-if="allele.expression">- {{allele.expression}}</span>
+          <a href="{{curs_root_uri + '/feature/gene/view/' + allele.gene_id + (read_only_curs ? '/ro' : '')}}">{{allele.gene_display_name}}</a>
+
+        </li>
+      </ul>
     </div>
   </div>
 </div>
