@@ -1611,7 +1611,7 @@ sub genotype_store : Chained('feature') PathPart('store')
         $c->stash->{json_data} = {
           status => "existing",
           genotype_display_name => $existing_genotype->display_name(),
-          location => $st->{curs_root_uri} . "/feature/genotype/view/" . $existing_genotype->genotype_id(),
+          location => $st->{curs_root_uri} . "/genotype_manage#/select/" . $existing_genotype->genotype_id(),
         };
       } else {
         my $guard = $schema->txn_scope_guard();
@@ -1626,7 +1626,7 @@ sub genotype_store : Chained('feature') PathPart('store')
         $c->stash->{json_data} = {
           status => "success",
           genotype_display_name => $genotype->display_name(),
-          location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
+          location => $st->{curs_root_uri} . "/genotype_manage#/select/" . $genotype->genotype_id(),
         };
       }
     } catch {
