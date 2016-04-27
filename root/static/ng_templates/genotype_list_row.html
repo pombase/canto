@@ -1,6 +1,7 @@
 <tr ng-class="{ selected: selectedGenotypeId == genotype.genotype_id }">
   <td>
-    <a href="#" ng-click="" ng-bind-html="genotype.allele_string | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></p>
+    <a href="{{detailsUrl}}" ng-click=""
+       ng-bind-html="genotype.allele_string | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></p>
   </td>
   <td>
     <span ng-bind-html="genotype.background | wrapAtSpaces | toTrusted"></span>
@@ -11,8 +12,8 @@
   <td>
     {{genotype.annotation_count}}
   </td>
-  <td ng-if="!read_only_curs && navigateOnClick" class="table-row-actions">
-    <a href="{{curs_root_uri + '/genotype_manage#/select/' + genotype.id_or_identifier}}">
+  <td ng-if="navigateOnClick" class="table-row-actions">
+    <a href="{{detailsUrl}}">
       <span style="white-space: nowrap">Details ...</span>
     </a>
   </td>

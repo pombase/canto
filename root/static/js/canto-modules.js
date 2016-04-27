@@ -3080,6 +3080,16 @@ var genotypeListRowCtrl =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
       },
+      link: function($scope) {
+        if ($scope.navigateOnClick) {
+          $scope.detailsUrl =
+            CantoGlobals.curs_root_uri + '/genotype_manage' +
+            (CantoGlobals.read_only_curs ? '/ro' : '') + '#/select/' +
+            $scope.genotype.id_or_identifier;
+        } else {
+          $scope.detailsUrl = '#';
+        }
+      },
     };
   };
 
