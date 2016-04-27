@@ -1,4 +1,4 @@
-<tr ng-class="{ selected: selectedGenotypeId === genotype.genotype_id }">
+<tr ng-class="{ selected: selectedGenotypeId == genotype.genotype_id }">
   <td>
     <p ng-bind-html="genotype.allele_string | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></p>
   </td>

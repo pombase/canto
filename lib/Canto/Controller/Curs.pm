@@ -1476,7 +1476,7 @@ sub _feature_edit_helper
 
         $c->stash->{json_data} = {
           status => "success",
-          location => $st->{curs_root_uri} . "/feature/genotype/view/" . $genotype->genotype_id(),
+          location => $st->{curs_root_uri} . "/genotype_manage#/select/" . $genotype->genotype_id(),
         };
       } catch {
         $c->stash->{json_data} = {

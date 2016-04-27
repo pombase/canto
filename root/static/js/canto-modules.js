@@ -2886,7 +2886,7 @@ canto.controller('GenotypeViewCtrl',
 
 
 var GenotypeManageCtrl =
-  function($scope, CursGenotypeList, CantoGlobals, toaster) {
+  function($scope, $location, CursGenotypeList, CantoGlobals, toaster) {
     $scope.app_static_path = CantoGlobals.app_static_path;
 
     $scope.data = {
@@ -2894,6 +2894,13 @@ var GenotypeManageCtrl =
       waitingForServer: true,
       selectedGenotypeId: null,
     };
+
+    $scope.data.path = $location.path();
+
+    if ($scope.data.path) {
+      var res = /^\/select\/(\d+)$/.exec($scope.data.path);
+      $scope.data.selectedGenotypeId = res[1];
+    }
 
     CursGenotypeList.cursGenotypeList().then(function(results) {
       $scope.data.genotypes = results;
@@ -2905,7 +2912,7 @@ var GenotypeManageCtrl =
   };
 
 canto.controller('GenotypeManageCtrl',
-                 ['$scope', 'CursGenotypeList', 'CantoGlobals', 'toaster',
+                 ['$scope', '$location', 'CursGenotypeList', 'CantoGlobals', 'toaster',
                  GenotypeManageCtrl]);
 
 var geneSelectorCtrl =
