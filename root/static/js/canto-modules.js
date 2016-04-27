@@ -3937,9 +3937,15 @@ var annotationTableRow =
         };
 
         $scope.featureLink = function(featureType, featureId) {
-          return $scope.curs_root_uri + '/feature/' +
-            featureType + '/view/' +
-            featureId + ($scope.read_only_curs ? '/ro' : '');
+          if (featureType == 'genotype') {
+            return $scope.curs_root_uri + '/genotype_manage' +
+              ($scope.read_only_curs ? '/ro' : '') + '#/select/' +
+              featureId;
+          } else {
+            return $scope.curs_root_uri + '/feature/' +
+              featureType + '/view/' +
+              featureId + ($scope.read_only_curs ? '/ro' : '');
+          }
         };
 
         $scope.edit = function() {
