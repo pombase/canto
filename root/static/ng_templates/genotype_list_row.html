@@ -11,4 +11,9 @@
   <td>
     {{genotype.annotation_count}}
   </td>
+  <td ng-if="!read_only_curs && navigateOnClick" class="table-row-actions">
+    <a href="{{curs_root_uri + '/genotype_manage#/select/' + genotype.id_or_identifier}}">
+      <span style="white-space: nowrap">Details ...</span>
+    </a>
+  </td>
 </tr>

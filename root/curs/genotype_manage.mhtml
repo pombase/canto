@@ -42,8 +42,8 @@ Click a description to view <% !$read_only_curs ? 'and edit' : '' %> genotype de
           </div>
 
           <genotype-list-view genotype-list="data.genotypes"
-                              selected-genotype-id="data.selectedGenotypeId"
-                              div-selectable="true"></genotype-list-view>
+                              selected-genotype-id="data.selectedGenotypeId">
+          </genotype-list-view>
         </div>
         <div ng-show="data.genotypes.length == 0">
 No genotypes in this session.  Try adding one.

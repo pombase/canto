@@ -3043,6 +3043,7 @@ var genotypeListRowCtrl =
       scope: {
         genotype: '=',
         selectedGenotypeId: '=',
+        navigateOnClick: '=',
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row.html',
@@ -3091,11 +3092,21 @@ var genotypeListViewCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function($scope) {
+        $scope.navigateOnClick = false;
         $scope.setSelected = function(genotypeId) {
-          $scope.selectedGenotypeId = genotypeId;
+          if (!$scope.navigateOnClick) {
+            $scope.selectedGenotypeId = genotypeId;
+          }
         };
       },
-    };
+      link: function($scope, element, attrs) {
+        if ("selectedGenotypeId" in attrs) {
+          $scope.navigateOnClick = false;
+        } else {
+          $scope.navigateOnClick = true;
+        }
+      },
+   };
   };
 
 canto.directive('genotypeListView',
