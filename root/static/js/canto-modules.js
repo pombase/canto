@@ -2890,18 +2890,9 @@ var GenotypeManageCtrl =
     $scope.app_static_path = CantoGlobals.app_static_path;
 
     $scope.data = {
-      genotypeSearching: false,
       genotypes: [],
       waitingForServer: true,
       selectedGenotypeId: null,
-    };
-
-    $scope.startSearch = function() {
-      $scope.data.genotypeSearching = true;
-    };
-
-    $scope.cancelSearch = function() {
-      $scope.data.genotypeSearching = false;
     };
 
     CursGenotypeList.cursGenotypeList().then(function(results) {
