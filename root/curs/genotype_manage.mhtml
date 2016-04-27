@@ -61,17 +61,19 @@ No genotypes in this session.  Try adding one.
         <div class="curs-box-body">
           <genotype-details genotype-id="data.selectedGenotypeId"></genotype-details>
 
-          <div>
-            <a ng-if="!read_only_curs"
-               href="{{curs_root_uri + '/feature/genotype/edit/' + data.selectedGenotypeId}}">Edit details ...</a>
-          </div>
-          <div>
-            <a ng-if="!read_only_curs"
-               href="{{curs_root_uri + '/feature/genotype/duplicate/' + data.selectedGenotypeId}}">Duplicate ...</a>
-          </div>
-          <div>
-            <a confirm="Are you sure you want to remove this genotype from your session?"
-               ng-click="deleteGenotype(data.selectedGenotypeId)">Delete ...</a>
+          <div ng-if="!read_only_curs">
+            <div>
+              <a ng-if="!read_only_curs"
+                 href="{{curs_root_uri + '/feature/genotype/edit/' + data.selectedGenotypeId}}">Edit details ...</a>
+            </div>
+            <div>
+              <a ng-if="!read_only_curs"
+                 href="{{curs_root_uri + '/feature/genotype/duplicate/' + data.selectedGenotypeId}}">Duplicate ...</a>
+            </div>
+            <div>
+              <a confirm="Are you sure you want to remove this genotype from your session?"
+                 ng-click="deleteGenotype(data.selectedGenotypeId)">Delete ...</a>
+            </div>
           </div>
         </div>
       </div>
