@@ -42,7 +42,7 @@ Click a description to view <% !$read_only_curs ? 'and edit' : '' %> genotype de
           </div>
 
           <genotype-list-view genotype-list="data.genotypes"
-                              select-callback="selectGenotype(genotype)"
+                              selected-genotype-id="data.selectedGenotypeId"
                               div-selectable="true"></genotype-list-view>
         </div>
         <div ng-show="data.genotypes.length == 0">
@@ -52,6 +52,9 @@ No genotypes in this session.  Try adding one.
         </div>
       </div>
     </div>
+    </div>
+    <div ng-if="data.selectedGenotypeId" class="col-sm-6 col-md-6">
+      <genotype-details genotype-id="data.selectedGenotypeId"></genotype-details>
     </div>
   </div>
   <div class="row">

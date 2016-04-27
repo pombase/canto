@@ -1,4 +1,4 @@
-<div ng-show="genotypeList.length > 0">
+<div class="curs-genotype-list" ng-show="genotypeList.length > 0">
   <table class="list">
     <thead>
       <tr>
@@ -17,8 +17,10 @@ Annotations
       </tr>
     </thead>
     <tbody>
-      <tr genotype-list-row ng-repeat="currentGenotype in genotypeList" genotype="currentGenotype"
->
+      <tr genotype-list-row ng-repeat="currentGenotype in genotypeList"
+          ng-click="setSelected(currentGenotype.genotype_id)"
+          selected-genotype-id="selectedGenotypeId"
+          genotype="currentGenotype">
       </tr>
     </tbody>
   </table>

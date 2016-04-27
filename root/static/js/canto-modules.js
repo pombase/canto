@@ -2893,6 +2893,7 @@ var GenotypeManageCtrl =
       genotypeSearching: false,
       genotypes: [],
       waitingForServer: true,
+      selectedGenotypeId: null,
     };
 
     $scope.startSearch = function() {
@@ -3043,6 +3044,7 @@ var genotypeListRowCtrl =
       restrict: 'A',
       scope: {
         genotype: '=',
+        selectedGenotypeId: '=',
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row.html',
@@ -3085,10 +3087,16 @@ var genotypeListViewCtrl =
     return {
       scope: {
         genotypeList: '=',
+        selectedGenotypeId: '=?',
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
+      controller: function($scope) {
+        $scope.setSelected = function(genotypeId) {
+          $scope.selectedGenotypeId = genotypeId;
+        };
+      },
     };
   };
 
@@ -3146,6 +3154,41 @@ var singleGeneGenotypeList =
 
 canto.directive('singleGeneGenotypeList',
                 ['CursGenotypeList', 'CantoGlobals', singleGeneGenotypeList]);
+
+
+var genotypeDetails =
+  function(CantoGlobals, Curs) {
+    return {
+      scope: {
+        genotypeId: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/genotype_details.html',
+      controller: function($scope) {
+        $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.read_only_curs = CantoGlobals.read_only_curs;
+        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+
+        $scope.genotype = null;
+
+        $scope.$watch('genotypeId',
+                      function() {
+                        $scope.genotype = null;
+                        if ($scope.genotypeId) {
+                          Curs.details('genotype', ['by_id', $scope.genotypeId])
+                            .success(function(genotypeDetails) {
+                              $scope.genotype = genotypeDetails;
+                            });
+                        }
+                      });
+      }
+    };
+  };
+
+
+canto.directive('genotypeDetails',
+                ['CantoGlobals', 'Curs', genotypeDetails]);
 
 
 canto.service('CantoConfig', function($http) {

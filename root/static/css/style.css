@@ -615,6 +615,11 @@ div.clearall {
   color: grey;
 }
 
+.curs-genotype-list .selected {
+  background-color: #da6 !important;
+  border: 1.8px solid #666;
+}
+
 .feature-list-action {
   font-size: 90%;
   margin: 12px 2px 0px 2px;
@@ -943,7 +948,7 @@ span.canto-select-buttons {
   margin: 10px;
 }
 
-#curs-gene-list, #curs-genotype-list, #curs-front-page .pub-title, .curs-half-width-section {
+#curs-gene-list, #curs-front-page .pub-title, .curs-half-width-section {
   font-size: 90%;
   float: left;
   width: 45%;
@@ -1056,6 +1061,10 @@ input[readonly="1"] {
   padding-bottom: -10px;
   margin-left: 15px;
   display: none;
+}
+
+.curs-spinner {
+  margin: 20px;
 }
 
 .curs-box:after {
