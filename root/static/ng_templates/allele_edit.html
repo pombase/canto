@@ -104,7 +104,8 @@
       <table ng-show="!!alleleData.type && current_type_config != undefined && current_type_config.allow_expression_change">
         <tr class="curs-allele-expression ng-cloak">
           <td valign="top">
-            Expression
+            Expression <help-icon key="allele_expression_choose"></help-icon>
+
           </td>
           <td ng-class="{ 'has-error': !isValidExpression() }">
             <div ng-show="!isValidExpression()"
