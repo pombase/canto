@@ -2486,9 +2486,10 @@ var alleleEditDialogCtrl =
     };
 
     $scope.isValid = function() {
-      return $scope.isExistingAllele() ||
-        ($scope.isValidType() && $scope.isValidName() &&
-         $scope.isValidDescription() && $scope.isValidExpression());
+      return $scope.isValidExpression() &&
+        ($scope.isExistingAllele() ||
+         $scope.isValidType() && $scope.isValidName() &&
+         $scope.isValidDescription());
     };
 
     $scope.ok = function () {
