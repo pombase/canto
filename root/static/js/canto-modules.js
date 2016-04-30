@@ -2936,6 +2936,7 @@ var GenotypeManageCtrl =
       var q = CursGenotypeList.deleteGenotype($scope.data.genotypes, genotypeId);
 
       q.then(function() {
+        $scope.data.selectedGenotypeId = null;
         toaster.pop('success', 'Genotype deleted');
       });
 
