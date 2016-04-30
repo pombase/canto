@@ -161,7 +161,24 @@ my %procs = (
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 
+  12 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+    my $load_util = shift;
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_key = $curs->curs_key();
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("update allele set expression = 'Wild type product level' where expression = 'Wild Type product level';");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
 );
 
