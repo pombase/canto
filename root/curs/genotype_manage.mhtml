@@ -73,6 +73,12 @@ No genotypes in this session.  Try adding one.
           <div ng-if="!read_only_curs">
             <div>
               <a ng-if="!read_only_curs"
+                 href="{{curs_root_uri + '/feature/genotype/annotate/' + data.selectedGenotypeId + '/start/phenotype/'}}">
+                Annotate a phenotype for this genotype ...
+              </a>
+            </div>
+            <div>
+              <a ng-if="!read_only_curs"
                  href="{{curs_root_uri + '/feature/genotype/edit/' + data.selectedGenotypeId}}">Edit details ...</a>
             </div>
             <div>
