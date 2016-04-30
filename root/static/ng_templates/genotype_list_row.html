@@ -1,7 +1,6 @@
 <tr ng-class="{ selected: selectedGenotypeId == genotype.genotype_id }">
   <td>
-    <a href="{{detailsUrl}}" ng-click=""
-       ng-bind-html="genotype.allele_string | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></p>
+    <a ng-bind-html="genotype.allele_string | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></p>
   </td>
   <td>
     <span ng-bind-html="genotype.background | wrapAtSpaces | toTrusted"></span>

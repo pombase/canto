@@ -2918,6 +2918,18 @@ var GenotypeManageCtrl =
       $scope.data.waitingForServer = false;
     });
 
+    $scope.$watch('data.selectedGenotypeId',
+                  function(newSelectedGenotypeId) {
+                    if (newSelectedGenotypeId) {
+                      $location.path('/select/' + newSelectedGenotypeId);
+                    } else {
+                      $location.path('');
+                    }
+
+                    // don't add to history:
+                    $location.replace();
+                  });
+
     $scope.deleteGenotype = function(genotypeId) {
       loadingStart();
 
