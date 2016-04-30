@@ -2901,13 +2901,16 @@ var GenotypeManageCtrl =
       genotypes: [],
       waitingForServer: true,
       selectedGenotypeId: null,
+      selectedGenotype: null,
     };
 
     $scope.data.path = $location.path();
 
     if ($scope.data.path) {
       var res = /^\/select\/(\d+)$/.exec($scope.data.path);
-      $scope.data.selectedGenotypeId = res[1];
+      if (res) {
+        $scope.data.selectedGenotypeId = res[1];
+      }
     }
 
     CursGenotypeList.cursGenotypeList().then(function(results) {
