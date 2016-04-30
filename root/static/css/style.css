@@ -619,7 +619,7 @@ div.clearall {
   color: grey;
 }
 
-.curs-genotype-list .selected {
+.curs-genotype-list .selected, .curs-genotype-details .selected {
   background-color: #eee !important;
   border: 2.5px solid #888;
 }

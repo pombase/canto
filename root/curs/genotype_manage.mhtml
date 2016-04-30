@@ -62,8 +62,8 @@ No genotypes in this session.  Try adding one.
       </div>
     </div>
     </div>
-    <div ng-if="data.selectedGenotypeId" class="col-sm-6 col-md-6">
-      <div class="curs-box">
+    <div ng-if="data.selectedGenotypeId" class="curs-genotype-details ng-cloak col-sm-6 col-md-6">
+      <div class="curs-box selected">
         <div class="curs-box-title">
           Genotype details
         </div>
