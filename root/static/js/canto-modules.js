@@ -2892,7 +2892,7 @@ canto.controller('GenotypeViewCtrl',
 
 
 var GenotypeManageCtrl =
-  function($scope, $location, CursGenotypeList, CantoGlobals, toaster) {
+  function($scope, $location, Curs, CursGenotypeList, CantoGlobals, toaster) {
     $scope.app_static_path = CantoGlobals.app_static_path;
     $scope.read_only_curs = CantoGlobals.read_only_curs;
     $scope.curs_root_uri = CantoGlobals.curs_root_uri;
@@ -2920,6 +2920,15 @@ var GenotypeManageCtrl =
 
     $scope.$watch('data.selectedGenotypeId',
                   function(newSelectedGenotypeId) {
+                    $scope.data.selectedGenotype = null;
+
+                    if (newSelectedGenotypeId) {
+                      Curs.details('genotype', ['by_id', newSelectedGenotypeId])
+                        .success(function(genotypeDetails) {
+                          $scope.data.selectedGenotype = genotypeDetails;
+                        });
+                    }
+
                     if (newSelectedGenotypeId) {
                       $location.path('/select/' + newSelectedGenotypeId);
                     } else {
@@ -2955,7 +2964,7 @@ var GenotypeManageCtrl =
   };
 
 canto.controller('GenotypeManageCtrl',
-                 ['$scope', '$location', 'CursGenotypeList', 'CantoGlobals', 'toaster',
+                 ['$scope', '$location', 'Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster',
                  GenotypeManageCtrl]);
 
 var geneSelectorCtrl =
@@ -3196,10 +3205,10 @@ canto.directive('singleGeneGenotypeList',
 
 
 var genotypeDetails =
-  function(CantoGlobals, Curs) {
+  function(CantoGlobals) {
     return {
       scope: {
-        genotypeId: '=',
+        genotype: '=',
       },
       restrict: 'E',
       replace: true,
@@ -3208,26 +3217,13 @@ var genotypeDetails =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
-
-        $scope.genotype = null;
-
-        $scope.$watch('genotypeId',
-                      function() {
-                        $scope.genotype = null;
-                        if ($scope.genotypeId) {
-                          Curs.details('genotype', ['by_id', $scope.genotypeId])
-                            .success(function(genotypeDetails) {
-                              $scope.genotype = genotypeDetails;
-                            });
-                        }
-                      });
       }
     };
   };
 
 
 canto.directive('genotypeDetails',
-                ['CantoGlobals', 'Curs', genotypeDetails]);
+                ['CantoGlobals', genotypeDetails]);
 
 
 canto.service('CantoConfig', function($http) {

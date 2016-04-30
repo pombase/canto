@@ -16,6 +16,10 @@ a:visited { text-decoration:none }
 a:link:hover { text-decoration:underline }
 a:visited:hover { text-decoration:underline }
 a:link:active { text-decoration:none }
+a.disabled {
+  pointer-events: none;
+  color:#c0c0c0 !important;
+}
 
 #heading a { color: black; }
 
