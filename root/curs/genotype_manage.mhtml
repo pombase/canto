@@ -23,9 +23,11 @@ Actions
         </div>
       </div>
     </div>
-% } else {
-    <div class="col-sm-6 col-md-6">
+    </div>
+  </div>
 % }
+  <div class="row">
+    <div class="col-sm-6 col-md-6">
     <div class="curs-box">
       <div class="curs-box-title">
         <div>
@@ -52,6 +54,11 @@ No genotypes in this session.  Try adding one.
 
         </div>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-5 col-md-5">
+        <button type="button" id="curs-finish-genotype" class="btn btn-primary curs-back-button"><% $finish_text %></button>
       </div>
     </div>
     </div>
@@ -81,10 +88,6 @@ No genotypes in this session.  Try adding one.
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-5 col-md-5">
- <button type="button" id="curs-finish-genotype" class="btn btn-primary curs-back-button"><% $finish_text %></button>
-    </div>
   </div>
   </div>
 </div>
