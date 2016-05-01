@@ -792,6 +792,7 @@ div.clearall {
 .curs-box {
   border: 1px solid #ddd;
   background-color: white;
+  margin: 5px;
 }
 
 .curs-box-title {
