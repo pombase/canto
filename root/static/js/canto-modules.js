@@ -3647,11 +3647,6 @@ var annotationTableCtrl =
                       },
                       true);
 
-        $scope.addLinks = function() {
-          return typeof(!CantoGlobals.read_only_curs &&
-                        $scope.featureStatusFilter == 'new');
-        };
-
         var initialHideColumns = {      // columns to hide because they're empty
           with_or_from_identifier: true,  // set to false when a row has a non empty element
           qualifiers: true,
@@ -3843,7 +3838,7 @@ var annotationTableRow =
         return app_static_path + 'ng_templates/annotation_table_' +
           attrs.annotationTypeName + '_row.html';
       },
-      controller: function($scope) {
+      controller: function($scope, $element, $attrs) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.multiOrganismMode = false;
@@ -3900,6 +3895,11 @@ var annotationTableRow =
                           $scope.displayEvidence = '';
                         }
                       });
+
+        $scope.addLinks = function() {
+          return !CantoGlobals.read_only_curs &&
+            $attrs.featureStatusFilter == 'new';
+        };
 
         $scope.featureLink = function(featureType, featureId) {
           return $scope.curs_root_uri + '/feature/' +
