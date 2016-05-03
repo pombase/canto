@@ -6,6 +6,10 @@
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'angular-confirm', 'toaster']);
 
+canto.config(['$compileProvider', function ($compileProvider) {
+  $compileProvider.debugInfoEnabled(false);
+}]);
+
 function capitalizeFirstLetter(text) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
