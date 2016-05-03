@@ -1,5 +1,5 @@
 <div>
-  <div ng-show="!data.serverError && data.filteredAnnotations.length > 0">
+  <div ng-show="annotations.length > 0">
     <span ng-if="featureStatusFilter === 'new'" class="title sect-title">
       <span ng-if="!alleleCountFilter">
         New annotations from this session
@@ -14,7 +14,7 @@
         for {{data.publicationUniquename}}
       </span>
     </span>
-    <span ng-if="featureStatusFilter === 'existing' && data.annotations !== null && data.annotations.length > 0"
+    <span ng-if="featureStatusFilter === 'existing' && annotations !== null && annotations.length > 0"
           class="title sect-title">
       Existing annotations
       <span ng-show="featureFilterDisplayName">
@@ -48,8 +48,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr annotation-table-row annotation-type-name="ontology"
-                ng-repeat="annotation in data.filteredAnnotations">
+            <tr annotation-table-row add-links="addLinks()"
+                annotation-type-name="ontology"
+                ng-repeat="annotation in annotations">
             </tr>
           </tbody>
         </table>
@@ -67,7 +68,7 @@
           </thead>
           <tbody>
             <tr annotation-table-row annotation-type-name="interaction"
-                ng-repeat="annotation in data.filteredAnnotations">
+                ng-repeat="annotation in annotations">
             </tr>
           </tbody>
         </table>

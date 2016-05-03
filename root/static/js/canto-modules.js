@@ -3698,16 +3698,14 @@ function filterAnnotations(annotations, params) {
 
 
 var annotationTableCtrl =
-  function(CantoGlobals, AnnotationProxy, AnnotationTypeConfig, CursGenotypeList,
+  function(CantoGlobals, AnnotationTypeConfig, CursGenotypeList,
            CursSessionDetails, CantoConfig) {
     return {
       scope: {
-        featureIdFilter: '@',
-        featureTypeFilter: '@',
-        featureStatusFilter: '@',
-        featureFilterDisplayName: '@',
-        alleleCountFilter: '@',
         annotationTypeName: '@',
+        annotations: '=',
+        featureStatusFilter: '@',
+        alleleCountFilter: '@',
       },
       restrict: 'E',
       replace: true,
@@ -3718,27 +3716,20 @@ var annotationTableCtrl =
 
         $scope.multiOrganismMode = false;
 
-        $scope.filterParams = {
-          annotationTypeName: $scope.annotationTypeName,
-          featureId: $scope.featureIdFilter,
-          featureStatus: $scope.featureStatusFilter,
-          featureType: $scope.featureTypeFilter,
-          alleleCount: $scope.alleleCountFilter,
-        };
-
         $scope.data = {};
 
-        $scope.$watch('data.annotations',
-                      function(newAnnotations) {
-                        if (newAnnotations) {
-                          $scope.data.filteredAnnotations =
-                            filterAnnotations(newAnnotations, $scope.filterParams);
+        $scope.$watch('annotations',
+                      function() {
+                        if ($scope.annotations) {
                           $scope.updateColumns();
-                        } else {
-                          $scope.data.filteredAnnotations = [];
                         }
                       },
                       true);
+
+        $scope.addLinks = function() {
+          return typeof(!CantoGlobals.read_only_curs &&
+                        $scope.featureStatusFilter == 'new');
+        };
 
         var initialHideColumns = {      // columns to hide because they're empty
           with_or_from_identifier: true,  // set to false when a row has a non empty element
@@ -3756,7 +3747,6 @@ var annotationTableCtrl =
           annotations: null,
           hideColumns: {},
           publicationUniquename: null,
-          filteredAnnotations: [],
         };
 
         CursSessionDetails.get()
@@ -3773,9 +3763,9 @@ var annotationTableCtrl =
         copyObject(initialHideColumns, $scope.data.hideColumns);
 
         $scope.updateColumns = function() {
-          if ($scope.data.filteredAnnotations) {
+          if ($scope.annotations) {
             copyObject(initialHideColumns, $scope.data.hideColumns);
-            $.map($scope.data.annotations,
+            $.map($scope.annotations,
                   function(annotation) {
                     $.map(initialHideColumns,
                           function(prop, key) {
@@ -3796,36 +3786,31 @@ var annotationTableCtrl =
           }
         };
       },
-      link: function(scope) {
-        scope.data.annotations = null;
-        AnnotationProxy.getAnnotation(scope.annotationTypeName)
-          .then(function(annotations) {
-            scope.data.annotations = annotations;
-          }).catch(function() {
-            scope.data.serverError = "couldn't read annotations from the server";
-          });
+      link: function($scope) {
+        $scope.$watch('annotations.length',
+                      function() {
+                        AnnotationTypeConfig.getByName($scope.annotationTypeName).then(function(annotationType) {
+                          $scope.annotationType = annotationType;
+                          $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
 
-        AnnotationTypeConfig.getByName(scope.annotationTypeName).then(function(annotationType) {
-          scope.annotationType = annotationType;
-          scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
-
-          if (annotationType.feature_type === 'genotype') {
-            CursGenotypeList.cursGenotypeList().then(function(results) {
-              scope.data.hasFeatures = (results.length > 0);
-            }).catch(function() {
-              scope.data.serverError = "couldn't read the genotype list from the server";
-            });
-          } else {
-            // if we're here the user has some genes in their list
-            scope.data.hasFeatures = true;
-          }
-        });
+                          if (annotationType.feature_type === 'genotype') {
+                            CursGenotypeList.cursGenotypeList().then(function(results) {
+                              $scope.data.hasFeatures = (results.length > 0);
+                            }).catch(function() {
+                              $scope.data.serverError = "couldn't read the genotype list from the server";
+                            });
+                          } else {
+                            // if we're here the user has some genes in their list
+                            $scope.data.hasFeatures = true;
+                          }
+                        });
+                      });
       }
     };
   };
 
 canto.directive('annotationTable',
-                ['CantoGlobals', 'AnnotationProxy',
+                ['CantoGlobals',
                  'AnnotationTypeConfig', 'CursGenotypeList', 'CursSessionDetails', 'CantoConfig',
                  annotationTableCtrl]);
 
@@ -3842,12 +3827,57 @@ var annotationTableList =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/annotation_table_list.html',
       controller: function($scope) {
+        $scope.countKeys = countKeys;
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.annotationTypes = [];
         $scope.annotationsByType = {};
         $scope.serverErrorsByType = {};
+        $scope.byTypeSplit = {};
 
         $scope.data = {};
+
+        $scope.watchAndFilter =
+          function(annotations, annotationType) {
+            function doFilter(annotations, featureStatusFilter, alleleCountFilter) {
+              var params = {
+                featureId: $scope.featureIdFilter,
+                featureType: $scope.featureTypeFilter,
+                featureStatus: featureStatusFilter,
+                alleleCount: alleleCountFilter,
+              };
+              var key = featureStatusFilter;
+              var filteredAnnotations = filterAnnotations(annotations, params);
+              if (filteredAnnotations.length > 0) {
+                if (typeof(alleleCountFilter) != 'undefined') {
+                  if (typeof($scope.byTypeSplit[annotationType.name][key]) == 'undefined') {
+                    $scope.byTypeSplit[annotationType.name][key] = {};
+                  }
+                  $scope.byTypeSplit[annotationType.name][key][alleleCountFilter] =
+                    filteredAnnotations;
+                } else {
+                  $scope.byTypeSplit[annotationType.name][key] =
+                    filteredAnnotations;
+                }
+              }
+            }
+
+            $scope.$watch('annotationsByType.' + annotationType.name,
+                          function(annotations) {
+
+                            $scope.byTypeSplit[annotationType.name] = {};
+
+                            if (annotationType.feature_type == 'genotype') {
+                              doFilter(annotations, 'new', 'single');
+                              doFilter(annotations, 'new', 'multi');
+                              doFilter(annotations, 'existing', 'single');
+                              doFilter(annotations, 'existing', 'multi');
+                            } else {
+                              doFilter(annotations, 'new');
+                              doFilter(annotations, 'existing');
+                            }
+                          },
+                          true);
+          };
 
         AnnotationTypeConfig.getAll().then(function(response) {
           $scope.annotationTypes =
@@ -3864,13 +3894,8 @@ var annotationTableList =
                 function(annotationType) {
                   AnnotationProxy.getAnnotation(annotationType.name)
                     .then(function(annotations) {
-
-                      var params = {
-                        featureId: $scope.featureIdFilter,
-                        featureType: $scope.featureTypeFilter,
-                      };
-                      $scope.annotationsByType[annotationType.name] =
-                        filterAnnotations(annotations, params);
+                      $scope.annotationsByType[annotationType.name] = annotations;
+                      $scope.watchAndFilter(annotations, annotationType);
                     }).catch(function() {
                       $scope.serverErrorsByType[annotationType.name] =
                         "couldn't read annotations from the server - please contact the curators";
@@ -3954,12 +3979,6 @@ var annotationTableRow =
                           $scope.displayEvidence = '';
                         }
                       });
-
-        $scope.addLinks = function() {
-          return typeof($scope.annotationType) !== 'undefined' &&
-            !CantoGlobals.read_only_curs &&
-            $scope.featureStatusFilter == 'new'
-        };
 
         $scope.featureLink = function(featureType, featureId) {
           if (featureType == 'genotype') {

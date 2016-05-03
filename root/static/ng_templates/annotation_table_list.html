@@ -6,11 +6,11 @@ Annotation loading ...
   <div class="error_message" ng-show="data.serverError">
     Error: {{data.serverError}}
   </div>
-  <div ng-show="!data.serverError && annotationTypes.length"
-       id="curs-annotation-tables" class="sect">
+  <div ng-show="!data.serverError && annotationTypes.length > 0"
+       id="curs-annotation-tables" class="ng-cloak sect">
     <div ng-repeat="annotationType in annotationTypes">
       <div class="curs-box"
-           ng-show="serverErrorsByType[annotationType.name] || annotationsByType[annotationType.name] && annotationsByType[annotationType.name].length > 0">
+           ng-show="serverErrorsByType[annotationType.name] || byTypeSplit[annotationType.name] && countKeys(byTypeSplit[annotationType.name])">
         <div class="curs-box-title">
           {{annotationType.display_name}}
         </div>
@@ -21,39 +21,33 @@ Annotation loading ...
         </div>
         <div class="curs-box-body">
           <div ng-if="annotationType.feature_type != 'genotype'">
-      <annotation-table annotation-type-name="{{annotationType.name}}"
-                        feature-id-filter="{{featureIdFilter}}"
-                        feature-type-filter="{{featureTypeFilter}}"
-                        feature-status-filter="new"
-                        feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
-      <annotation-table annotation-type-name="{{annotationType.name}}"
-                        feature-id-filter="{{featureIdFilter}}"
-                        feature-type-filter="{{featureTypeFilter}}"
-                        feature-status-filter="existing"
-                        feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+            <annotation-table annotation-type-name="{{annotationType.name}}"
+                              annotations="byTypeSplit[annotationType.name].new"
+                              feature-status-filter="new"
+                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+            <annotation-table annotation-type-name="{{annotationType.name}}"
+                              annotations="byTypeSplit[annotationType.name].existing"
+                              feature-status-filter="existing"
+                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
           </div>
           <div ng-if="annotationType.feature_type == 'genotype'">
             <annotation-table annotation-type-name="{{annotationType.name}}"
-                              feature-id-filter="{{featureIdFilter}}"
-                              feature-type-filter="{{featureTypeFilter}}"
+                              annotations="byTypeSplit[annotationType.name].new.single"
                               feature-status-filter="new"
                               allele-count-filter="single"
                               feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
             <annotation-table annotation-type-name="{{annotationType.name}}"
-                              feature-id-filter="{{featureIdFilter}}"
-                              feature-type-filter="{{featureTypeFilter}}"
+                              annotations="byTypeSplit[annotationType.name].new.multi"
                               feature-status-filter="new"
                               allele-count-filter="multi"
                               feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
             <annotation-table annotation-type-name="{{annotationType.name}}"
-                              feature-id-filter="{{featureIdFilter}}"
-                              feature-type-filter="{{featureTypeFilter}}"
+                              annotations="byTypeSplit[annotationType.name].existing.single"
                               feature-status-filter="existing"
                               allele-count-filter="single"
                               feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
             <annotation-table annotation-type-name="{{annotationType.name}}"
-                              feature-id-filter="{{featureIdFilter}}"
-                              feature-type-filter="{{featureTypeFilter}}"
+                              annotations="byTypeSplit[annotationType.name].existing.multi"
                               feature-status-filter="existing"
                               allele-count-filter="multi"
                               feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
