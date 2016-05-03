@@ -569,7 +569,8 @@ sub gene_upload : Chained('top') Args(0) Form
     @no_genes_elements = (
       {
         name => 'no-genes', type => 'Checkbox',
-        label => 'This paper does not contain any gene-specific information',
+        label => 'If this paper does not mention any genes individually, ' .
+          'check this box and select a reason from the pulldown menu that will appear:',
         label_tag => 'formfu-label',
         default_empty_value => 1,
         attributes => { 'ng-model' => 'data.noAnnotation',

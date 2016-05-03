@@ -50,6 +50,7 @@
           <tbody>
             <tr annotation-table-row add-links="addLinks()"
                 annotation-type-name="ontology"
+                feature-status-filter="{{featureStatusFilter}}"
                 ng-repeat="annotation in annotations">
             </tr>
           </tbody>
@@ -68,6 +69,7 @@
           </thead>
           <tbody>
             <tr annotation-table-row annotation-type-name="interaction"
+                feature-status-filter="{{featureStatusFilter}}"
                 ng-repeat="annotation in annotations">
             </tr>
           </tbody>
