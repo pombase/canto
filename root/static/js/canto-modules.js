@@ -1821,15 +1821,23 @@ var extensionRelationEdit =
               return "Required";
             }
 
-            var re = new RegExp(/^\s*(\d+|\d+\.\d*|\d*\.\d+)\s*\%?$/);
+            var re = new RegExp(/^\s*(\d+|\d+\.\d*|\d*\.\d+)(?:-(\d+|\d+\.\d*|\d*\.\d+))?\s*\%?$/);
             var result = re.exec($scope.extensionRelation.rangeValue);
 
             if (result) {
-              var pc = result[1];
+              var pcStart = result[1];
 
-              if (pc > 100) {
+              if (pcStart > 100) {
                 return 'Value must be <= 100';
-              } else {
+              }
+
+              if (result.length > 2) {
+                var pcEnd = result[2];
+                if (+pcEnd < +pcStart) {
+                  return "start of range greater than end: " +
+                    pcStart + ">" + pcEnd;
+                }
+
                 return '';
               }
             } else {
