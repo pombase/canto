@@ -2088,6 +2088,16 @@ var ontologyWorkflowCtrl =
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
       .then(function(annotationType) {
         $scope.annotationType = annotationType;
+
+        if (annotationType.feature_type == 'genotype') {
+          $scope.backToFeatureUrl =
+            CantoGlobals.curs_root_uri + '/genotype_manage' + 
+            '#/select/' + $attrs.featureId;
+        } else {
+          $scope.backToFeatureUrl =
+            CantoGlobals.curs_root_uri + '/feature/' + annotationType.feature_type +
+            '/view/' + $attrs.featureId;
+        }
       });
   };
 
