@@ -78,8 +78,8 @@ function copyIfChanged(origObj, changedObj, dest) {
 
 function simpleHttpPost(toaster, $http, url, data) {
   loadingStart();
-  $http.post(url, data).
-    success(function(data) {
+  var promise = $http.post(url, data);
+  promise.success(function(data) {
       if (data.status === "success") {
         window.location.href = data.location;
       } else {
@@ -88,8 +88,16 @@ function simpleHttpPost(toaster, $http, url, data) {
     }).
     error(function(data, status){
       loadingEnd();
-      toaster.pop('error', "Accessing server failed: " + (data || status) );
+      var message;
+      if (status == 404) {
+        message = "Internal error: " + status;
+      } else {
+        "Accessing server failed: " + (data || status)
+      }
+      toaster.pop('error', message);
     });
+
+  return promise;
 }
 
 function conditionsToString(conditions) {
@@ -2080,9 +2088,14 @@ var ontologyWorkflowCtrl =
     $scope.storeAnnotation = function() {
       $scope.postInProgress = true;
       toaster.pop('info', 'Storing annotation ...');
-      simpleHttpPost(toaster, $http,
+      var promise =
+        simpleHttpPost(toaster, $http,
                      '../set_term/' + $scope.annotationType.name,
                      CursStateService.asAnnotationDetails());
+
+      promise.catch(function() {
+        $scope.postInProgress = false;
+      });
     };
 
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
