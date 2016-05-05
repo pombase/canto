@@ -12,7 +12,7 @@ $title
 % if ($c->debug()) {
 <link href="<% $c->uri_for('/static/css/jquery-ui-1.9.2.custom.css') %>" type="text/css" rel="stylesheet" />
 <link href="<% $c->uri_for('/static/css/bootstrap-3.1.0.css') %>" type="text/css" rel="stylesheet" />
-<link href="<% $c->uri_for('/static/css/toaster-0.4.4.css') %>" type="text/css" rel="stylesheet" />
+<link href="<% $c->uri_for('/static/css/toaster-2.0.0.css') %>" type="text/css" rel="stylesheet" />
 % } else {
 <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" 
       type="text/css" rel="stylesheet"/>
