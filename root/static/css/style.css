@@ -353,7 +353,6 @@ table.list tr td, #curs-genotype-list-row-actions {
 
 #curs-genotype-list-row-actions {
   font-size: 90%;
-//  width: 30em;
   min-height: 5em;
   z-index: 999999;
   position: absolute;
