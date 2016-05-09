@@ -62,38 +62,6 @@ No genotypes in this session.  Try adding one.
       </div>
     </div>
     </div>
-    <div ng-if="data.selectedGenotypeId" class="curs-genotype-details ng-cloak col-sm-6 col-md-6">
-      <div class="curs-box selected">
-        <div class="curs-box-title">
-          Genotype details
-        </div>
-        <div class="curs-box-body">
-          <genotype-details genotype="data.selectedGenotype"></genotype-details>
-
-          <div ng-if="!read_only_curs">
-            <div>
-              <a ng-class="{disabled: data.selectedGenotype == null }" ng-if="!read_only_curs"
-                 href="{{curs_root_uri + '/feature/genotype/annotate/' + data.selectedGenotypeId + '/start/phenotype/'}}">
-                Annotate a phenotype for this genotype ...
-              </a>
-            </div>
-            <div>
-              <a ng-class="{disabled: data.selectedGenotype == null }" ng-if="!read_only_curs"
-                 href="{{curs_root_uri + '/feature/genotype/edit/' + data.selectedGenotypeId}}">Edit details ...</a>
-            </div>
-            <div>
-              <a ng-class="{disabled: data.selectedGenotype == null }" ng-if="!read_only_curs"
-                 href="{{curs_root_uri + '/feature/genotype/duplicate/' + data.selectedGenotypeId}}">Duplicate ...</a>
-            </div>
-            <div>
-              <a ng-class="{disabled: data.selectedGenotype == null }"
-                 confirm="Are you sure you want to remove this genotype from your session?"
-                 ng-click="deleteGenotype(data.selectedGenotypeId)">Delete ...</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
   </div>
   </div>

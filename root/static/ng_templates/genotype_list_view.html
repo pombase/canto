@@ -18,9 +18,10 @@ Annotations
     </thead>
     <tbody>
       <tr genotype-list-row ng-repeat="currentGenotype in genotypeList"
-          ng-click="setSelected(currentGenotype.genotype_id)"
+          ng-mouseover="setSelected($event, currentGenotype.genotype_id)"
           selected-genotype-id="selectedGenotypeId"
           navigate-on-click="navigateOnClick"
+          genotypes="genotypeList"
           genotype="currentGenotype">
       </tr>
     </tbody>

@@ -1,0 +1,10 @@
+<div class="genotype-alleles">
+  <ul>
+    <li ng-repeat="allele in genotype.alleles">
+      <span ng-bind-html="allele.display_name | encodeAlleleSymbols | toTrusted"></span>
+      <span ng-if="allele.expression">- {{allele.expression}}</span>
+      <a href="{{curs_root_uri + '/feature/gene/view/' + allele.gene_id + (read_only_curs ? '/ro' : '')}}">{{allele.gene_display_name}}</a>
+
+    </li>
+  </ul>
+</div>

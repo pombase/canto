@@ -256,11 +256,11 @@ canto.service('CursGenotypeList', function($q, Curs) {
     });
   }
 
-  this.cursGenotypeList = function() {
+  this.cursGenotypeList = function(options) {
     var q = $q.defer();
 
     if (this.cursGenotypesPromise == null) {
-      this.cursGenotypesPromise = Curs.list('genotype', ['curs_only']);
+      this.cursGenotypesPromise = Curs.list('genotype', ['curs_only', options ]);
     }
     this.cursGenotypesPromise.success(function(genotypes) {
       add_id_or_identifier(genotypes);
@@ -2929,7 +2929,6 @@ var GenotypeManageCtrl =
       genotypes: [],
       waitingForServer: true,
       selectedGenotypeId: null,
-      selectedGenotype: null,
     };
 
     $scope.data.path = $location.path();
@@ -2941,7 +2940,7 @@ var GenotypeManageCtrl =
       }
     }
 
-    CursGenotypeList.cursGenotypeList().then(function(results) {
+    CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
       $scope.data.genotypes = results;
       $scope.data.waitingForServer = false;
     }).catch(function() {
@@ -2951,15 +2950,6 @@ var GenotypeManageCtrl =
 
     $scope.$watch('data.selectedGenotypeId',
                   function(newSelectedGenotypeId) {
-                    $scope.data.selectedGenotype = null;
-
-                    if (newSelectedGenotypeId) {
-                      Curs.details('genotype', ['by_id', newSelectedGenotypeId])
-                        .success(function(genotypeDetails) {
-                          $scope.data.selectedGenotype = genotypeDetails;
-                        });
-                    }
-
                     if (newSelectedGenotypeId) {
                       $location.path('/select/' + newSelectedGenotypeId);
                     } else {
@@ -2969,29 +2959,6 @@ var GenotypeManageCtrl =
                     // don't add to history:
                     $location.replace();
                   });
-
-    $scope.deleteGenotype = function(genotypeId) {
-      loadingStart();
-
-      var q = CursGenotypeList.deleteGenotype($scope.data.genotypes, genotypeId);
-
-      q.then(function() {
-        $scope.data.selectedGenotypeId = null;
-        toaster.pop('success', 'Genotype deleted');
-      });
-
-      q.catch(function(message) {
-        if (message.match('genotype .* has annotations')) {
-          toaster.pop('warning', "couldn't delete the genotype: delete the annotations that use it first");
-        } else {
-          toaster.pop('error', "couldn't delete the genotype: " + message);
-        }
-      });
-
-      q.finally(function() {
-        loadingEnd();
-      });
-    };
   };
 
 canto.controller('GenotypeManageCtrl',
@@ -3119,11 +3086,66 @@ canto.directive('genotypeSearch',
                  ['CursGenotypeList', 'CantoGlobals',
                   genotypeSearchCtrl]);
 
-var genotypeListRowCtrl =
+var genotypeListRowLinksCtrl =
   function(toaster, CantoGlobals, CursGenotypeList) {
+    return {
+      restrict: 'E',
+      scope: {
+        genotypes: '=',
+        selectedGenotypeId: '=?',
+      },
+      replace: true,
+      templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row_links.html',
+      controller: function($scope) {
+        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+        $scope.read_only_curs = CantoGlobals.read_only_curs;
+
+        $scope.deleteGenotype = function(genotypeId) {
+          loadingStart();
+
+          var q = CursGenotypeList.deleteGenotype($scope.genotypes, genotypeId);
+
+          q.then(function() {
+            $scope.selectedGenotypeId = null;
+            toaster.pop('success', 'Genotype deleted');
+          });
+
+          q.catch(function(message) {
+            if (message.match('genotype .* has annotations')) {
+              toaster.pop('warning', "couldn't delete the genotype: delete the annotations that use it first");
+            } else {
+              toaster.pop('error', "couldn't delete the genotype: " + message);
+            }
+          });
+
+          q.finally(function() {
+            loadingEnd();
+          });
+        };
+      },
+      link: function($scope) {
+        if ($scope.navigateOnClick) {
+          $scope.detailsUrl =
+            CantoGlobals.curs_root_uri + '/genotype_manage' +
+            (CantoGlobals.read_only_curs ? '/ro' : '') + '#/select/' +
+            $scope.genotype.id_or_identifier;
+        } else {
+          $scope.detailsUrl = '#';
+        }
+      },
+    };
+  };
+
+canto.directive('genotypeListRowLinks',
+                ['toaster', 'CantoGlobals', 'CursGenotypeList',
+                 genotypeListRowLinksCtrl]);
+
+var genotypeListRowCtrl =
+  function(toaster, CantoGlobals) {
     return {
       restrict: 'A',
       scope: {
+        genotypes: '=',
         genotype: '=',
         selectedGenotypeId: '=',
         navigateOnClick: '=',
@@ -3133,6 +3155,36 @@ var genotypeListRowCtrl =
       controller: function($scope) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+
+        $scope.genotypesMap = {};
+        $scope.selectedGenotype = null;
+
+        $scope.update = function() {
+          $scope.genotypesMap = {};
+          $scope.selectedGenotype = null;
+
+          if ($scope.selectedGenotypeId && $scope.genotypes.length > 0) {
+            $.map($scope.genotypes,
+                  function(genotype) {
+                    $scope.genotypesMap[genotype.genotype_id] = genotype;
+                  });
+
+            if ($scope.selectedGenotypeId) {
+              $scope.selectedGenotype =
+                $scope.genotypesMap[$scope.selectedGenotypeId];
+            }
+          }
+        };
+
+        $scope.$watch('genotypes.length',
+                      function() {
+                        $scope.update();
+                      });
+
+        $scope.$watch('selectedGenotypeId',
+                      function() {
+                        $scope.update();
+                      });
       },
       link: function($scope) {
         if ($scope.navigateOnClick) {
@@ -3152,7 +3204,7 @@ canto.directive('genotypeListRow',
 
 
 var genotypeListViewCtrl =
-  function() {
+  function($compile) {
     return {
       scope: {
         genotypeList: '=',
@@ -3163,9 +3215,31 @@ var genotypeListViewCtrl =
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function($scope) {
         $scope.navigateOnClick = false;
-        $scope.setSelected = function(genotypeId) {
+        $scope.setSelected = function($event, genotypeId) {
           if (!$scope.navigateOnClick) {
             $scope.selectedGenotypeId = genotypeId;
+
+            $.map($scope.genotypeList,
+                  function(genotype) {
+                    if (genotype.genotype_id == genotypeId) {
+                      $scope.selectedGenotype = genotype;
+                    }
+                  });
+            var links = $('#curs-genotype-list-row-actions');
+            if (links.size() == 0) {
+              links =
+                angular.element('<div id="curs-genotype-list-row-actions">' +
+                                '<genotype-list-row-links selected-genotype-id="selectedGenotypeId"></genotype-list-row-links>' +
+                                '<genotype-alleles genotype="selectedGenotype"></genotype-alleles></div>');
+              $('#curs-content').append(links);
+              $compile(links)($scope);
+            }
+
+            links.position({
+              my: 'left top',
+              at: 'right top',
+              of: $event.currentTarget,
+            });
           }
         };
       },
@@ -3180,7 +3254,7 @@ var genotypeListViewCtrl =
   };
 
 canto.directive('genotypeListView',
-                 [genotypeListViewCtrl]);
+                ['$compile', genotypeListViewCtrl]);
 
 
 var singleGeneGenotypeList =
@@ -3234,6 +3308,26 @@ var singleGeneGenotypeList =
 canto.directive('singleGeneGenotypeList',
                 ['CursGenotypeList', 'CantoGlobals', singleGeneGenotypeList]);
 
+
+var genotypeAlleles =
+  function(CantoGlobals) {
+    return {
+      scope: {
+        genotype: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/genotype_alleles.html',
+      controller: function($scope) {
+        $scope.read_only_curs = CantoGlobals.read_only_curs;
+        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+      }
+    };
+  };
+
+
+canto.directive('genotypeAlleles',
+                ['CantoGlobals', genotypeAlleles]);
 
 var genotypeDetails =
   function(CantoGlobals) {

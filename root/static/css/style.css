@@ -344,11 +344,27 @@ table.list td {
   vertical-align: top;
 }
 
-table.list tr td {
+table.list tr td, #curs-genotype-list-row-actions {
   border-width: 1px;
   padding: 3px;
   border-style: solid;
   border-color: #bbb;
+}
+
+#curs-genotype-list-row-actions {
+  font-size: 90%;
+//  width: 30em;
+  min-height: 5em;
+  z-index: 999999;
+  position: absolute;
+  overflow: auto;
+  background-color: white;
+  display: inline-block;
+}
+
+#curs-genotype-list-row-actions .genotype-alleles, #curs-genotype-list-row-actions .genotype-list-row-links {
+  display: inline-block;
+  vertical-align: top;
 }
 
 table.list thead {
