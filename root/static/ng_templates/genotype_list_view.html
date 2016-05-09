@@ -5,11 +5,11 @@
         <th>
 Description
         </th>
-        <th>
+        <th ng-hide="columnsToHide.background">
 Background
         </th>
-        <th>
-Name (optional)
+        <th ng-hide="columnsToHide.name">
+Name
         </th>
         <th>
 Annotations
@@ -21,6 +21,7 @@ Annotations
           ng-mouseover="setSelected($event, currentGenotype.genotype_id)"
           selected-genotype-id="selectedGenotypeId"
           navigate-on-click="navigateOnClick"
+          columns-to-hide="columnsToHide"
           genotypes="genotypeList"
           genotype="currentGenotype">
       </tr>
