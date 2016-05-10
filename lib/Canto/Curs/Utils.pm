@@ -946,12 +946,13 @@ sub make_allele_display_name
   my $description = shift;
   my $type = shift;
 
-  $description ||= $type || 'unknown';
-
-  if ($type && ($type eq 'deletion' || $type =~ /^wild[\s_]?type$/)
-      && $name ne 'noname') {
+  if ($type && $name ne 'noname' &&
+      ($type eq 'deletion' || ($type =~ /^wild[\s_]?type$/)) &&
+      $description && $description ne $type) {
     return $name;
   }
+
+  $description ||= $type || 'unknown';
 
   return "$name($description)";
 }
