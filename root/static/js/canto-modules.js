@@ -3246,8 +3246,7 @@ var genotypeListViewCtrl =
             if (links.size() == 0) {
               links =
                 angular.element('<div id="curs-genotype-list-row-actions">' +
-                                '<genotype-list-row-links selected-genotype="selectedGenotype"></genotype-list-row-links>' +
-                                '<genotype-alleles genotype="selectedGenotype"></genotype-alleles></div>');
+                                '<genotype-list-row-links selected-genotype="selectedGenotype"></genotype-list-row-links></div>');
               $('#curs-content').append(links);
               $compile(links)($scope);
             }
