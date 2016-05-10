@@ -3092,7 +3092,7 @@ var genotypeListRowLinksCtrl =
       restrict: 'E',
       scope: {
         genotypes: '=',
-        selectedGenotypeId: '=?',
+        selectedGenotype: '=?',
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row_links.html',
@@ -3106,7 +3106,7 @@ var genotypeListRowLinksCtrl =
           var q = CursGenotypeList.deleteGenotype($scope.genotypes, genotypeId);
 
           q.then(function() {
-            $scope.selectedGenotypeId = null;
+            $scope.selectedGenotype = null;
             toaster.pop('success', 'Genotype deleted');
           });
 
@@ -3246,7 +3246,7 @@ var genotypeListViewCtrl =
             if (links.size() == 0) {
               links =
                 angular.element('<div id="curs-genotype-list-row-actions">' +
-                                '<genotype-list-row-links selected-genotype-id="selectedGenotypeId"></genotype-list-row-links>' +
+                                '<genotype-list-row-links selected-genotype="selectedGenotype"></genotype-list-row-links>' +
                                 '<genotype-alleles genotype="selectedGenotype"></genotype-alleles></div>');
               $('#curs-content').append(links);
               $compile(links)($scope);

@@ -1,21 +1,27 @@
 <div class="genotype-list-row-links">
   <div>
-    <a ng-class="{disabled: selectedGenotypeId == null }" ng-if="!read_only_curs"
-       href="{{curs_root_uri + '/feature/genotype/annotate/' + selectedGenotypeId + '/start/phenotype/'}}">
+    <a ng-class="{disabled: selectedGenotype.genotype_id == null }" ng-if="!read_only_curs"
+       href="{{curs_root_uri + '/feature/genotype/annotate/' + selectedGenotype.genotype_id + '/start/phenotype/'}}">
       Annotate a phenotype for this genotype ...
     </a>
   </div>
   <div>
-    <a ng-class="{disabled: selectedGenotypeId == null }" ng-if="!read_only_curs"
-       href="{{curs_root_uri + '/feature/genotype/edit/' + selectedGenotypeId}}">Edit details ...</a>
+    <a ng-class="{disabled: selectedGenotype.genotype_id == null }"
+       href="{{curs_root_uri + '/feature/genotype/view/' + selectedGenotype.genotype_id}}">
+      Annotations for this genotype ...
+    </a>
   </div>
   <div>
-    <a ng-class="{disabled: selectedGenotypeId == null }" ng-if="!read_only_curs"
-       href="{{curs_root_uri + '/feature/genotype/duplicate/' + selectedGenotypeId}}">Duplicate ...</a>
+    <a ng-class="{disabled: selectedGenotype.genotype_id == null }" ng-if="!read_only_curs"
+       href="{{curs_root_uri + '/feature/genotype/edit/' + selectedGenotype.genotype_id}}">Edit details ...</a>
   </div>
   <div>
-    <a ng-class="{disabled: selectedGenotypeId == null }"
+    <a ng-class="{disabled: selectedGenotype.genotype_id == null }" ng-if="!read_only_curs"
+       href="{{curs_root_uri + '/feature/genotype/duplicate/' + selectedGenotype.genotype_id}}">Duplicate ...</a>
+  </div>
+  <div>
+    <a ng-class="{disabled: selectedGenotype.genotype_id == null }"
        confirm="Are you sure you want to remove this genotype from your session?"
-       ng-click="deleteGenotype(selectedGenotypeId)">Delete ...</a>
+       ng-click="deleteGenotype(selectedGenotype.genotype_id)">Delete ...</a>
   </div>
 </div>
