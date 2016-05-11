@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 117;
+use Test::More tests => 126;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -13,6 +13,25 @@ my $config = $test_util->config();
 my $schema = $test_util->track_schema();
 
 my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
+
+is(Canto::Curs::Utils::make_allele_display_name('test-1', 'some_desc', 'some_type'),
+   'test-1(some_desc)');
+is(Canto::Curs::Utils::make_allele_display_name('testdelta', 'deletion', 'deletion'),
+   'testdelta');
+is(Canto::Curs::Utils::make_allele_display_name('testdelta', undef, 'deletion'),
+   'testdelta');
+is(Canto::Curs::Utils::make_allele_display_name('testdelta', 'deletion', 'deletion'),
+   'testdelta');
+is(Canto::Curs::Utils::make_allele_display_name('testdelta', 'deletion', 'wild_type'),
+   'testdelta(deletion)');
+is(Canto::Curs::Utils::make_allele_display_name('test+', '', 'wild type'),
+   'test+');
+is(Canto::Curs::Utils::make_allele_display_name('test+', 'wildtype', 'wild_type'),
+   'test+');
+is(Canto::Curs::Utils::make_allele_display_name('test+', 'deletion', 'wild_type'),
+   'test+(deletion)');
+is(Canto::Curs::Utils::make_allele_display_name('test+', undef, 'deletion'),
+   'test+(deletion)');
 
 sub check_new_annotations
 {

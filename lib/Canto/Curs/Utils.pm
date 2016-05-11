@@ -930,7 +930,7 @@ sub canto_allele_type
 
 =head2 make_allele_display_name
 
- Usage   : $dis_name = make_allele_display_name($name, $description);
+ Usage   : $dis_name = make_allele_display_name($name, $description, $type);
  Function: make an allele display name from a name and description
  Args    : $name - the allele name (can be undef)
            $description - the allele description (can be undef)
@@ -946,10 +946,14 @@ sub make_allele_display_name
   my $description = shift;
   my $type = shift;
 
-  if ($type && $name ne 'noname' &&
-      ($type eq 'deletion' || ($type =~ /^wild[\s_]?type$/)) &&
-      $description && $description ne $type) {
-    return $name;
+  if ($type eq 'deletion' && $name =~ /delta$/ ||
+      $type =~ /^wild[\s_]?type$/ && $name =~ /\+$/) {
+    if ($description &&
+        $description =~ s/[\s_]+//gr ne $type =~ s/[\s_]+//gr) {
+      return "$name($description)";
+    } else {
+      return $name;
+    }
   }
 
   $description ||= $type || 'unknown';

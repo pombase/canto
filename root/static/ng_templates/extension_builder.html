@@ -2,16 +2,16 @@
   <span style="display: none; float:right">{{asString()}}</span>
   <div ng-hide="inProgressConf">
     <div ng-show="termDetails.id" style="padding: 0 0 5px 0">
-You have annotated {{featureDisplayName}} to {{termDetails.name}} ({{termDetails.id}}).
-<span ng-if="isNewExtension">Can you extend this annotation by providing
-additional details based on the experiments in this paper?</span>
+      <span ng-if="isNewExtension">Can you extend this annotation by providing
+        additional details based on the experiments in this paper?</span>
 <span ng-if="!manualEditMode">
   <span ng-if="matchingConfigurations.length == 1">
-This extension type are allowed for {{termDetails.id}}:
+      This extension type is
   </span>
   <span ng-if="matchingConfigurations.length > 1">
-These extension types are allowed for {{termDetails.id}}:
+      These extension types are
   </span>
+available for <i>{{termDetails.name}}</i> ({{termDetails.id}}):
 </span>
     </div>
     <ul>
@@ -33,9 +33,7 @@ These extension types are allowed for {{termDetails.id}}:
     </ul>
 
     <div ng-if="matchingConfigurations.length > 1" style="padding: 0 0 15px 0">
-You can use more than one of these types in one extension (this creates a
-"compound" annotation extension and implies that the extensions occur
-together).
+Use as many extension types as apply to this annotation.
     </div>
 
     <div ng-if="currentUserIsAdmin">
@@ -46,11 +44,5 @@ together).
   <div ng-if="!inProgressConf && extension.length > 0" style="padding-top: 10px">
     Extension added so far:
     <extension-display extension="extension" show-delete="true"></extension-display>
-  </div>
-
-  <div style="padding: 1em 0 0 0">
-If you want to create another independent extension for this annotation,
-finish the annotation, and then use the "Duplicate" feature, where you can
-edit any field, including the extension.
   </div>
 </div>
