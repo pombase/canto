@@ -4413,6 +4413,7 @@ var termNameComplete =
                                   });
             }, 1);
             valBeforeComplete = null;
+            ferret_choose.hide_autocomplete_def();
           },
         }).data("autocomplete")._renderItem = function( ul, item ) {
           var search_string = input.val();

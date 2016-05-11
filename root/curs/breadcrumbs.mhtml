@@ -11,7 +11,7 @@
 % if (defined $feature_url) {
     <div id="breadcrumbs-gene-link" class="breadcrumbs-link">
       <a href="<% $feature_url %>" title="<% $display_name %>">
-        <% ucfirst $feature_type %> details
+        <% $feature_crumb_text %>
       </a>
       <breadcrumbs></breadcrumbs>
     </div>
@@ -57,8 +57,13 @@ if (defined $config->{database_name}) {
 }
 my $instance_top_uri = $c->uri_for('/');
 my $feature_url;
+my $feature_crumb_text;
 
 if (defined $feature_id) {
+  $feature_crumb_text = ucfirst $feature_type . " details";
+  if ($feature_type eq 'gene') {
+    $feature_crumb_text = "$display_name";
+  }
   $feature_url = "$curs_root_uri/feature/$feature_type/view/$feature_id";
 }
 </%init>
