@@ -361,6 +361,11 @@ table.list tr td, #curs-genotype-list-row-actions {
   display: inline-block;
 }
 
+/* override Bootstrap */
+.genotype-alleles ul {
+  padding: 2px;
+}
+
 #curs-genotype-list-row-actions .genotype-alleles, #curs-genotype-list-row-actions .genotype-list-row-links {
   display: inline-block;
   vertical-align: top;
