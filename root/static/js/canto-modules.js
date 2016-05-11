@@ -2098,7 +2098,8 @@ var ontologyWorkflowCtrl =
       toaster.pop('info', 'Storing annotation ...');
       var promise =
         simpleHttpPost(toaster, $http,
-                       CantoGlobals.curs_root_uri + '/feature/genotype/annotate/' +
+                       CantoGlobals.curs_root_uri + '/feature/' +
+                       $scope.annotationType.feature_type + '/annotate/' +
                        $attrs.featureId + '/set_term/' + $scope.annotationType.name,
                      CursStateService.asAnnotationDetails());
 
