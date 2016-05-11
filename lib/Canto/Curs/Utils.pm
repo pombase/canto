@@ -930,7 +930,7 @@ sub canto_allele_type
 
 =head2 make_allele_display_name
 
- Usage   : $dis_name = make_allele_display_name($name, $description);
+ Usage   : $dis_name = make_allele_display_name($name, $description, $type);
  Function: make an allele display name from a name and description
  Args    : $name - the allele name (can be undef)
            $description - the allele description (can be undef)
