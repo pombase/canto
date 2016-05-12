@@ -114,7 +114,7 @@ sub lookup
            ->search({ 'object.uniquename' => $gene_primary_identifier },
                     { join => 'object' });
 
-  my @search_args = ('lower(features.name)', { -like => lc $search_string . '%' });
+  my @search_args = ('lower(features.name)', { -like => '%' . lc $search_string . '%' });
 
   my $rs = $schema->resultset('Cv')
     ->search({ 'me.name' => 'sequence' })
