@@ -1924,6 +1924,8 @@ var ontologyWorkflowCtrl =
     $scope.extensionBuilderReady = false;
     $scope.matchingExtensionConfigs = null;
 
+    $scope.showConditions = false;
+
     $scope.extensionBuilderIsValid = true;
 
     $scope.updateMatchingConfig = function() {
@@ -2154,14 +2156,14 @@ var annotationEvidence =
     var directive = {
       scope: {
         evidenceCode: '=',
-        conditions: '=',
+        showConditions: '=?',
         withGeneId: '=',
         validEvidence: '=', // true when evidence and with_gene_id are valid
         annotationTypeName: '@',
       },
       restrict: 'E',
       replace: true,
-      controller: function($scope) {
+      controller: function($scope, $element, $attrs) {
         $scope.annotationType = null;
         $scope.evidenceCodes = [];
 
@@ -2187,11 +2189,6 @@ var annotationEvidence =
         $scope.showWith = function() {
           return $scope.evidenceTypes && $scope.isValidEvidenceCode() &&
             $scope.evidenceTypes[$scope.evidenceCode].with_gene;
-        };
-
-        $scope.showConditions = function() {
-          return $scope.isValidEvidenceCode() &&
-            $scope.annotationType && $scope.annotationType.can_have_conditions;
         };
 
         $scope.isValidCodeAndWith = function() {
@@ -2236,6 +2233,12 @@ var annotationEvidence =
                           }
 
                           $scope.validEvidence = $scope.isValidCodeAndWith();
+
+                          if ("showConditions" in $attrs) {
+                            $scope.showConditions =
+                              $scope.isValidEvidenceCode() &&
+                              $scope.annotationType && $scope.annotationType.can_have_conditions;
+                          }
                         });
 
           $scope.validEvidence = $scope.isValidCodeAndWith();
@@ -3363,7 +3366,8 @@ var annotationEditDialogCtrl =
     $scope.featureEditable = args.featureEditable;
     $scope.matchingConfigurations = [];
     $scope.status = {
-      validEvidence: false
+      validEvidence: false,
+      showConditions: false,
     };
 
     copyObject(args.annotation, $scope.annotation);
