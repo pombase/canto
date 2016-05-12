@@ -728,6 +728,11 @@ div.clearall {
   padding: 2px 5px 2px 5px;
 }
 
+.curs-annotation-edit .curs-definition-table td {
+  vertical-align: top;
+  padding: 5px;
+}
+
 .curs-definition-table td.title {
   white-space: nowrap;
   border-right: 2px solid black;
