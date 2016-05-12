@@ -7,9 +7,9 @@
 
   <div class="modal-body">
     <input autofocus ng-model="gene.searchIdentifier">
-    <span ng-show="gene.searchIdentifier.length > 1 && gene.message != null">
+    <div ng-show="gene.searchIdentifier.length > 1 && gene.message != null">
       {{gene.message}}
-    </span>
+    </div>
 
     <div class="modal-footer">
       <button class="btn btn-warning" ng-click="cancel()">Cancel</button>

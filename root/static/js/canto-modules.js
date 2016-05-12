@@ -2675,7 +2675,8 @@ var singleGeneAddDialogCtrl =
                         } else {
                           if (data.found.length > 1) {
                             $scope.gene.message =
-                              'There is more than one gene matching gene: ' +
+                              'There is more than one gene matching gene, try a ' +
+                              'systematic ID instead: ' +
                               $.map(data.found,
                                     function(gene) {
                                       return gene.primary_identifier || gene.primary_name;
