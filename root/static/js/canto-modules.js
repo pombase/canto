@@ -138,6 +138,19 @@ canto.filter('encodeAlleleSymbols', function () {
   };
 });
 
+canto.filter('featureChooserFilter', function () {
+  return function (feature) {
+    var ret = feature.display_name;
+    if (feature.background) {
+      ret += " " + feature.background.substr(0, 10);
+      if (feature.background.length > 10) {
+        ret += " ...";
+      }
+    }
+    return ret;
+  };
+});
+
 canto.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });
