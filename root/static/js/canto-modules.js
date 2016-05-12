@@ -1937,6 +1937,8 @@ var ontologyWorkflowCtrl =
     $scope.extensionBuilderReady = false;
     $scope.matchingExtensionConfigs = null;
 
+    $scope.showConditions = false;
+
     $scope.extensionBuilderIsValid = true;
 
     $scope.updateMatchingConfig = function() {
@@ -2184,14 +2186,14 @@ var annotationEvidence =
     var directive = {
       scope: {
         evidenceCode: '=',
-        conditions: '=',
+        showConditions: '=?',
         withGeneId: '=',
         validEvidence: '=', // true when evidence and with_gene_id are valid
         annotationTypeName: '@',
       },
       restrict: 'E',
       replace: true,
-      controller: function($scope) {
+      controller: function($scope, $element, $attrs) {
         $scope.annotationType = null;
         $scope.evidenceCodes = [];
 
@@ -2217,11 +2219,6 @@ var annotationEvidence =
         $scope.showWith = function() {
           return $scope.evidenceTypes && $scope.isValidEvidenceCode() &&
             $scope.evidenceTypes[$scope.evidenceCode].with_gene;
-        };
-
-        $scope.showConditions = function() {
-          return $scope.isValidEvidenceCode() &&
-            $scope.annotationType && $scope.annotationType.can_have_conditions;
         };
 
         $scope.isValidCodeAndWith = function() {
@@ -2266,6 +2263,12 @@ var annotationEvidence =
                           }
 
                           $scope.validEvidence = $scope.isValidCodeAndWith();
+
+                          if ("showConditions" in $attrs) {
+                            $scope.showConditions =
+                              $scope.isValidEvidenceCode() &&
+                              $scope.annotationType && $scope.annotationType.can_have_conditions;
+                          }
                         });
 
           $scope.validEvidence = $scope.isValidCodeAndWith();
@@ -2705,7 +2708,8 @@ var singleGeneAddDialogCtrl =
                         } else {
                           if (data.found.length > 1) {
                             $scope.gene.message =
-                              'There is more than one gene matching gene: ' +
+                              'There is more than one gene matching gene, try a ' +
+                              'systematic ID instead: ' +
                               $.map(data.found,
                                     function(gene) {
                                       return gene.primary_identifier || gene.primary_name;
@@ -3580,7 +3584,8 @@ var annotationEditDialogCtrl =
     $scope.featureEditable = args.featureEditable;
     $scope.matchingConfigurations = [];
     $scope.status = {
-      validEvidence: false
+      validEvidence: false,
+      showConditions: false,
     };
 
     copyObject(args.annotation, $scope.annotation);
@@ -3609,28 +3614,32 @@ var annotationEditDialogCtrl =
 
     $scope.$watch('annotation.term_ontid',
                   function() {
-                    var ontLookupPromise =
-                        CantoService.lookup('ontology', [$scope.annotation.term_ontid],
-                                            {
-                                              subset_ids: 1,
-                                            });
+                    $scope.matchingConfigurations = [];
 
-                    $q.all([$scope.extConfigPromise, ontLookupPromise])
-                      .then(function(results) {
-                        var extensionConfiguration = results[0].data;
-                        var termDetails = results[1].data;
+                    if ($scope.annotation.term_ontid) {
+                      var ontLookupPromise =
+                          CantoService.lookup('ontology', [$scope.annotation.term_ontid],
+                                              {
+                                                subset_ids: 1,
+                                              });
 
-                        var subset_ids = termDetails.subset_ids;
+                      $q.all([$scope.extConfigPromise, ontLookupPromise])
+                        .then(function(results) {
+                          var extensionConfiguration = results[0].data;
+                          var termDetails = results[1].data;
 
-                        if (extensionConfiguration.length > 0 &&
-                            subset_ids && subset_ids.length > 0) {
-                          $scope.matchingConfigurations =
-                            extensionConfFilter(extensionConfiguration, subset_ids,
-                                                CantoGlobals.current_user_is_admin ? 'admin' : 'user');
-                        } else {
-                          $scope.matchingConfigurations = [];
-                        }
-                      });
+                          var subset_ids = termDetails.subset_ids;
+
+                          if (extensionConfiguration.length > 0 &&
+                              subset_ids && subset_ids.length > 0) {
+                            $scope.matchingConfigurations =
+                              extensionConfFilter(extensionConfiguration, subset_ids,
+                                                  CantoGlobals.current_user_is_admin ? 'admin' : 'user');
+                          } else {
+                            $scope.matchingConfigurations = [];
+                          }
+                        });
+                    }
                   });
 
     $scope.isValid = function() {

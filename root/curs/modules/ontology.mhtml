@@ -32,10 +32,17 @@ for annotating <% $feature->display_name() %> with {{data.term_ontid}}
     </div>
     <div class="curs-box-body">
       <annotation-evidence evidence-code="data.evidence_code"
-                           conditions="data.conditions"
+                           show-conditions="showConditions"
                            with-gene-id="data.with_gene_id"
                            valid-evidence="data.validEvidence"
                            annotation-type-name="<% $annotation_type_name %>"></annotation-evidence>
+
+      <div ng-if="showConditions" class="curs-evidence-conditions">
+        Please add experimental conditions.  Conditions are the aspects of the
+        experimental setup that are independent of what cells (strain, genotype,
+        constructs, etc.) are used.
+        <condition-picker conditions="data.conditions"></condition-picker>
+      </div>
     </div>
   </div>
 
