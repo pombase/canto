@@ -62,7 +62,7 @@ Name
 Background
           </td>
           <td>
-<% $genotype->background() || '' %>
+<% $_unicode_allele_symbol->($genotype->background() || '') |n %>
           </td>
         </tr>
         <tr>

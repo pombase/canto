@@ -20,7 +20,7 @@
             Background
           </td>
           <td>
-            {{genotype.background}}
+            <span ng-bind-html="genotype.background | encodeAlleleSymbols | toTrusted"></span>
           </td>
         </tr>
         <tr>

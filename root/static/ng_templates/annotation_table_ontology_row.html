@@ -5,7 +5,7 @@
     </div>
   </td>
   <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">
-    {{annotation.genotype_background}}
+    <span ng-bind-html="annotation.genotype_background | encodeAlleleSymbols | toTrusted"></span>
   </td>
   <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
     <span ng-bind-html="annotation.genotype_name | encodeAlleleSymbols | toTrusted"></span>
