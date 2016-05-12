@@ -146,6 +146,19 @@ canto.filter('encodeAlleleSymbols', function () {
   };
 });
 
+canto.filter('featureChooserFilter', function () {
+  return function (feature) {
+    var ret = feature.display_name;
+    if (feature.background) {
+      ret += " " + feature.background.substr(0, 10);
+      if (feature.background.length > 10) {
+        ret += " ...";
+      }
+    }
+    return ret;
+  };
+});
+
 canto.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });
@@ -2850,7 +2863,11 @@ var multiAlleleCtrl =
 
     result.success(function(data) {
       if (data.status === "success") {
-        toaster.pop('info', "Created new genotype: " + data.genotype_display_name);
+        if ($scope.data.genotype_id) {
+          toaster.pop('info', "Successfully stored changes");
+        } else {
+          toaster.pop('info', "Created new genotype: " + data.genotype_display_name);
+        }
         $scope.reset();
       } else {
         if (data.status === "existing") {
