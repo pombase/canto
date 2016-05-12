@@ -3392,28 +3392,32 @@ var annotationEditDialogCtrl =
 
     $scope.$watch('annotation.term_ontid',
                   function() {
-                    var ontLookupPromise =
-                        CantoService.lookup('ontology', [$scope.annotation.term_ontid],
-                                            {
-                                              subset_ids: 1,
-                                            });
+                    $scope.matchingConfigurations = [];
 
-                    $q.all([$scope.extConfigPromise, ontLookupPromise])
-                      .then(function(results) {
-                        var extensionConfiguration = results[0].data;
-                        var termDetails = results[1].data;
+                    if ($scope.annotation.term_ontid) {
+                      var ontLookupPromise =
+                          CantoService.lookup('ontology', [$scope.annotation.term_ontid],
+                                              {
+                                                subset_ids: 1,
+                                              });
 
-                        var subset_ids = termDetails.subset_ids;
+                      $q.all([$scope.extConfigPromise, ontLookupPromise])
+                        .then(function(results) {
+                          var extensionConfiguration = results[0].data;
+                          var termDetails = results[1].data;
 
-                        if (extensionConfiguration.length > 0 &&
-                            subset_ids && subset_ids.length > 0) {
-                          $scope.matchingConfigurations =
-                            extensionConfFilter(extensionConfiguration, subset_ids,
-                                                CantoGlobals.current_user_is_admin ? 'admin' : 'user');
-                        } else {
-                          $scope.matchingConfigurations = [];
-                        }
-                      });
+                          var subset_ids = termDetails.subset_ids;
+
+                          if (extensionConfiguration.length > 0 &&
+                              subset_ids && subset_ids.length > 0) {
+                            $scope.matchingConfigurations =
+                              extensionConfFilter(extensionConfiguration, subset_ids,
+                                                  CantoGlobals.current_user_is_admin ? 'admin' : 'user');
+                          } else {
+                            $scope.matchingConfigurations = [];
+                          }
+                        });
+                    }
                   });
 
     $scope.isValid = function() {
