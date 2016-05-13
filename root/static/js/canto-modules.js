@@ -3510,11 +3510,13 @@ var annotationEditDialogCtrl =
         $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
         $scope.annotation.feature_type = annotationType.feature_type;
 
-        if (annotationType.can_have_conditions) {
+        if (annotationType.can_have_conditions &&
+           !$scope.annotation['conditions']) {
           $scope.annotation.conditions = [];
         }
 
-        if (annotationType.category == 'ontology') {
+        if (annotationType.category == 'ontology' &&
+            !$scope.annotation['extension']) {
           $scope.annotation.extension = [];
         }
       });
