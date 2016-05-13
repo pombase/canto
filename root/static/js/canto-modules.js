@@ -142,10 +142,11 @@ canto.filter('featureChooserFilter', function () {
   return function (feature) {
     var ret = feature.display_name;
     if (feature.background) {
-      ret += " " + feature.background.substr(0, 10);
+      ret += " (" + feature.background.substr(0, 10);
       if (feature.background.length > 10) {
         ret += " ...";
       }
+      ret += ")"
     }
     return ret;
   };
