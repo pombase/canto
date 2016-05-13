@@ -906,7 +906,7 @@ sub _store_change_hash
     my $conf = $valid_change_keys{$key};
 
     if (!defined $conf) {
-      die "no such annotation field type: $key\n";
+      die "No such annotation field type: $key\n";
     }
 
     my $value = $changes->{$key};

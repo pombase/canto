@@ -26,9 +26,7 @@
 % }
       </ul>
     </span>
-    <button class="btn btn-default">
-      <a href="<% $c->uri_for($c->config()->{help_path}) %>">Help</a>
-    </button>
+    <a class="btn btn-default" href="<% $c->uri_for($c->config()->{help_path}) %>">Help</a>
   </span>
 </div>
 

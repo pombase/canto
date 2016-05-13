@@ -150,10 +150,11 @@ canto.filter('featureChooserFilter', function () {
   return function (feature) {
     var ret = feature.display_name;
     if (feature.background) {
-      ret += " " + feature.background.substr(0, 10);
+      ret += " (" + feature.background.substr(0, 10);
       if (feature.background.length > 10) {
         ret += " ...";
       }
+      ret += ")"
     }
     return ret;
   };
@@ -3594,7 +3595,7 @@ var annotationEditDialogCtrl =
   function($scope, $modal, $q, $modalInstance, AnnotationProxy,
            AnnotationTypeConfig, CantoConfig,
            CursSessionDetails, CantoService, CantoGlobals, toaster, args) {
-    $scope.annotation = { conditions: [], extension: [] };
+    $scope.annotation = { };
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
@@ -3606,10 +3607,6 @@ var annotationEditDialogCtrl =
     };
 
     copyObject(args.annotation, $scope.annotation);
-
-    if (!$scope.annotation.extension) {
-      $scope.annotation.extension = [];
-    }
 
     $scope.isValidFeature = function() {
       return $scope.annotation.feature_id;
@@ -3731,8 +3728,12 @@ var annotationEditDialogCtrl =
         $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
         $scope.annotation.feature_type = annotationType.feature_type;
 
-        if (! annotationType.can_have_conditions) {
-          delete $scope.annotation.conditions;
+        if (annotationType.can_have_conditions) {
+          $scope.annotation.conditions = [];
+        }
+
+        if (annotationType.category == 'ontology') {
+          $scope.annotation.extension = [];
         }
       });
   };
