@@ -3562,6 +3562,7 @@ var annotationEditDialogCtrl =
   function($scope, $modal, $q, $modalInstance, AnnotationProxy,
            AnnotationTypeConfig, CantoConfig,
            CursSessionDetails, CantoService, CantoGlobals, toaster, args) {
+    $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.annotation = { };
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
@@ -3655,6 +3656,15 @@ var annotationEditDialogCtrl =
 
       editPromise.then(function(result) {
         angular.copy(result.extension, $scope.annotation.extension);
+      });
+    };
+
+    $scope.manualEdit = function() {
+      var editPromise =
+        openExtensionManualEditDialog($modal, $scope.annotation.extension, $scope.matchingConfigurations);
+
+      editPromise.then(function(result) {
+        $scope.annotation.extension = result.extension;
       });
     };
 
