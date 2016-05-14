@@ -46,7 +46,8 @@ Click a description to view <% !$read_only_curs ? 'and edit' : '' %> genotype de
           </div>
 
           <genotype-list-view genotype-list="data.genotypes"
-                              selected-genotype-id="data.selectedGenotypeId">
+                              navigate-on-click="false"
+                              initial-selected-genotype-id="data.selectedGenotypeIdFromPath">
           </genotype-list-view>
         </div>
         <div ng-show="data.genotypes.length == 0">

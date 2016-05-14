@@ -2959,37 +2959,25 @@ var GenotypeManageCtrl =
     $scope.data = {
       genotypes: [],
       waitingForServer: true,
-      selectedGenotypeId: null,
+      selectedGenotypeIdFromPath: null,
     };
-
-    $scope.data.path = $location.path();
-
-    if ($scope.data.path) {
-      var res = /^\/select\/(\d+)$/.exec($scope.data.path);
-      if (res) {
-        $scope.data.selectedGenotypeId = res[1];
-      }
-    }
 
     CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
       $scope.data.genotypes = results;
       $scope.data.waitingForServer = false;
+
+      $scope.data.path = $location.path();
+
+      if ($scope.data.path) {
+        var res = /^\/select\/(\d+)$/.exec($scope.data.path);
+        if (res) {
+          $scope.data.selectedGenotypeIdFromPath = res[1];
+        }
+      }
     }).catch(function() {
       toaster.pop('error', "couldn't read the genotype list from the server");
       $scope.data.waitingForServer = false;
     });
-
-    $scope.$watch('data.selectedGenotypeId',
-                  function(newSelectedGenotypeId) {
-                    if (newSelectedGenotypeId) {
-                      $location.path('/select/' + newSelectedGenotypeId);
-                    } else {
-                      $location.path('');
-                    }
-
-                    // don't add to history:
-                    $location.replace();
-                  });
   };
 
 canto.controller('GenotypeManageCtrl',
@@ -3123,7 +3111,7 @@ var genotypeListRowLinksCtrl =
       restrict: 'E',
       scope: {
         genotypes: '=',
-        selectedGenotype: '=?',
+        selectedGenotypeId: '=',
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row_links.html',
@@ -3137,7 +3125,7 @@ var genotypeListRowLinksCtrl =
           var q = CursGenotypeList.deleteGenotype($scope.genotypes, genotypeId);
 
           q.then(function() {
-            $scope.selectedGenotype = null;
+            $scope.selectedGenotypeId = null;
             toaster.pop('success', 'Genotype deleted');
           });
 
@@ -3172,14 +3160,14 @@ canto.directive('genotypeListRowLinks',
                  genotypeListRowLinksCtrl]);
 
 var genotypeListRowCtrl =
-  function(toaster, CantoGlobals) {
+    function($compile, toaster, CantoGlobals) {
     return {
       restrict: 'A',
       scope: {
         genotypes: '=',
         genotype: '=',
         selectedGenotypeId: '=',
-        navigateOnClick: '=',
+        navigateOnClick: '@',
         columnsToHide: '=',
       },
       replace: true,
@@ -3188,35 +3176,26 @@ var genotypeListRowCtrl =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
 
-        $scope.genotypesMap = {};
-        $scope.selectedGenotype = null;
+        $scope.setSelected = function($event) {
+          if ($scope.navigateOnClick != 'true') {
+            $scope.selectedGenotypeId = $scope.genotype.genotype_id;
 
-        $scope.update = function() {
-          $scope.genotypesMap = {};
-          $scope.selectedGenotype = null;
-
-          if ($scope.selectedGenotypeId && $scope.genotypes.length > 0) {
-            $.map($scope.genotypes,
-                  function(genotype) {
-                    $scope.genotypesMap[genotype.genotype_id] = genotype;
-                  });
-
-            if ($scope.selectedGenotypeId) {
-              $scope.selectedGenotype =
-                $scope.genotypesMap[$scope.selectedGenotypeId];
+            var links = $('#curs-genotype-list-row-actions');
+            if (links.size() == 0) {
+              links =
+                angular.element('<div id="curs-genotype-list-row-actions">' +
+                                '<genotype-list-row-links selected-genotype-id="selectedGenotypeId"></genotype-list-row-links></div>');
+              $('#curs-content').append(links);
+              $compile(links)($scope);
             }
+
+            links.position({
+              my: 'left top',
+              at: 'right top',
+              of: $event.currentTarget,
+            });
           }
         };
-
-        $scope.$watch('genotypes.length',
-                      function() {
-                        $scope.update();
-                      });
-
-        $scope.$watch('selectedGenotypeId',
-                      function() {
-                        $scope.update();
-                      });
       },
       link: function($scope) {
         if ($scope.navigateOnClick) {
@@ -3232,23 +3211,27 @@ var genotypeListRowCtrl =
   };
 
 canto.directive('genotypeListRow',
-                ['toaster', 'CantoGlobals', 'CursGenotypeList', genotypeListRowCtrl]);
+                ['$compile', 'toaster', 'CantoGlobals', 'CursGenotypeList', genotypeListRowCtrl]);
 
 
 var genotypeListViewCtrl =
-  function($compile) {
+  function() {
     return {
       scope: {
         genotypeList: '=',
-        selectedGenotypeId: '=?',
+        initialSelectedGenotypeId: '@',
+        navigateOnClick: '@'
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function($scope) {
-        $scope.navigateOnClick = false;
         $scope.columnsToHide = { background: true,
                                  name: true, };
+
+        $scope.data = {
+          selectedGenotypeId: $scope.initialSelectedGenotypeId
+        };
 
         $scope.$watch('genotypeList',
                       function() {
@@ -3262,40 +3245,6 @@ var genotypeListViewCtrl =
                                 }
                               });
                       }, true);
-
-        $scope.setSelected = function($event, genotypeId) {
-          if (!$scope.navigateOnClick) {
-            $scope.selectedGenotypeId = genotypeId;
-
-            $.map($scope.genotypeList,
-                  function(genotype) {
-                    if (genotype.genotype_id == genotypeId) {
-                      $scope.selectedGenotype = genotype;
-                    }
-                  });
-            var links = $('#curs-genotype-list-row-actions');
-            if (links.size() == 0) {
-              links =
-                angular.element('<div id="curs-genotype-list-row-actions">' +
-                                '<genotype-list-row-links selected-genotype="selectedGenotype"></genotype-list-row-links></div>');
-              $('#curs-content').append(links);
-              $compile(links)($scope);
-            }
-
-            links.position({
-              my: 'left top',
-              at: 'right top',
-              of: $event.currentTarget,
-            });
-          }
-        };
-      },
-      link: function($scope, element, attrs) {
-        if ("selectedGenotypeId" in attrs) {
-          $scope.navigateOnClick = false;
-        } else {
-          $scope.navigateOnClick = true;
-        }
       },
    };
   };
