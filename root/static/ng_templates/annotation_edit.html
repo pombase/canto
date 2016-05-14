@@ -123,6 +123,9 @@
               <span ng-show="annotation.extension.length > 0">Edit</span> ...
             </button>
           </span>
+          <div ng-if="currentUserIsAdmin">
+            <a href="#" ng-click="manualEdit()">Edit as string (admin only) ...</a>
+          </div>
         </td>
       </tr>
 
