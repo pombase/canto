@@ -1,5 +1,4 @@
 <div class="genotype-alleles">
-  {{log()}}
   <ul>
     <li ng-repeat="allele in genotype.alleles">
       <span ng-bind-html="allele.display_name | encodeAlleleSymbols | toTrusted"></span>
