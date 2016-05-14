@@ -3205,13 +3205,6 @@ var genotypeListRowCtrl =
             });
           }
         };
-
-        if ($scope.selectedGenotypeId &&
-            $scope.selectedGenotypeId == $scope.genotype.genotype_id) {
-          $timeout(function() {
-            $scope.setSelected();
-          }, 0.2);
-        }
       },
       link: function($scope) {
         if ($scope.navigateOnClick) {
@@ -3221,6 +3214,13 @@ var genotypeListRowCtrl =
             (CantoGlobals.read_only_curs ? '/ro' : '');
         } else {
           $scope.detailsUrl = '#';
+        }
+
+        if ($scope.selectedGenotypeId &&
+            $scope.selectedGenotypeId == $scope.genotype.genotype_id) {
+          $timeout(function() {
+            $scope.setSelected();
+          }, 0.0);
         }
       },
     };
