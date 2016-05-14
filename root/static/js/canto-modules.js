@@ -3126,6 +3126,7 @@ var genotypeListRowLinksCtrl =
 
           q.then(function() {
             $scope.selectedGenotypeId = null;
+            $('#curs-genotype-list-row-actions').remove();
             toaster.pop('success', 'Genotype deleted');
           });
 
