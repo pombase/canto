@@ -1186,15 +1186,8 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
     $self->_create_annotation($c, $annotation_type_name,
                                   $feature_type, [$feature], \%annotation_data);
 
-  my $location;
-
-  if ($feature_type eq 'genotype') {
-    $location = $st->{curs_root_uri} . "/genotype_manage#/select/" .
-      $feature->feature_id();
-  } else {
-    $location = $st->{curs_root_uri} . "/feature/$feature_type/view/" .
-      $feature->feature_id();
-  }
+  my $location = $st->{curs_root_uri} . "/feature/$feature_type/view/" .
+    $feature->feature_id();
 
   $c->stash->{json_data} = {
     status => "success",
