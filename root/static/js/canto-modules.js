@@ -3194,7 +3194,7 @@ var genotypeListRowCtrl =
                                 '<img ng-src="' + $scope.app_static_path +
                                 '/images/down_triangle.png"></img>' +
 
-                                '<genotype-list-row-links selected-genotype-id="selectedGenotypeId"></genotype-list-row-links></div>');
+                                '<genotype-list-row-links genotypes="genotypes" selected-genotype-id="selectedGenotypeId"></genotype-list-row-links></div>');
               $('#curs-content').append(links);
               $compile(links)($scope);
             }
