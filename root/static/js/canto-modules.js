@@ -3221,9 +3221,9 @@ var genotypeListRowCtrl =
       link: function($scope) {
         if ($scope.navigateOnClick) {
           $scope.detailsUrl =
-            CantoGlobals.curs_root_uri + '/genotype_manage' +
-            (CantoGlobals.read_only_curs ? '/ro' : '') + '#/select/' +
-            $scope.genotype.id_or_identifier;
+            CantoGlobals.curs_root_uri + '/feature/genotype/view/' +
+            $scope.genotype.id_or_identifier +
+            (CantoGlobals.read_only_curs ? '/ro' : '');
         } else {
           $scope.detailsUrl = '#';
         }
