@@ -1,5 +1,5 @@
 <tr ng-mouseover="setSelected($event)"
-    ng-class="{ selected: selectedGenotypeId == genotype.genotype_id }">
+    ng-class="{ selected: isSelected() }">
   <td>
     <genotype-alleles genotype="genotype"></genotype-alleles>
   </td>
@@ -16,5 +16,8 @@
     <a href="{{detailsUrl}}">
       <span style="white-space: nowrap">Details ...</span>
     </a>
+  </td>
+  <td ng-if="navigateOnClick == 'false'" class="table-row-actions">
+    <img ng-show="!isSelected()" ng-src="{{app_static_path + '/images/right_triangle.png'}}"></img>
   </td>
 </tr>

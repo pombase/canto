@@ -3160,7 +3160,7 @@ canto.directive('genotypeListRowLinks',
                  genotypeListRowLinksCtrl]);
 
 var genotypeListRowCtrl =
-    function($compile, toaster, CantoGlobals) {
+  function($compile, $timeout, CantoGlobals) {
     return {
       restrict: 'A',
       scope: {
@@ -3172,11 +3172,17 @@ var genotypeListRowCtrl =
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row.html',
-      controller: function($scope) {
+      controller: function($scope, $element) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+        $scope.app_static_path = CantoGlobals.app_static_path;
 
-        $scope.setSelected = function($event) {
+        $scope.isSelected = function() {
+          return $scope.selectedGenotypeId &&
+            $scope.selectedGenotypeId == $scope.genotype.genotype_id;
+        }
+
+        $scope.setSelected = function() {
           if ($scope.navigateOnClick != 'true') {
             $scope.selectedGenotypeId = $scope.genotype.genotype_id;
 
@@ -3184,6 +3190,9 @@ var genotypeListRowCtrl =
             if (links.size() == 0) {
               links =
                 angular.element('<div id="curs-genotype-list-row-actions">' +
+                                '<img ng-src="' + $scope.app_static_path +
+                                '/images/down_triangle.png"></img>' +
+
                                 '<genotype-list-row-links selected-genotype-id="selectedGenotypeId"></genotype-list-row-links></div>');
               $('#curs-content').append(links);
               $compile(links)($scope);
@@ -3191,11 +3200,18 @@ var genotypeListRowCtrl =
 
             links.position({
               my: 'left top',
-              at: 'right top',
-              of: $event.currentTarget,
+              at: 'left top-2',
+              of: $element.closest('tr').children('td').last(),
             });
           }
         };
+
+        if ($scope.selectedGenotypeId &&
+            $scope.selectedGenotypeId == $scope.genotype.genotype_id) {
+          $timeout(function() {
+            $scope.setSelected();
+          }, 0.2);
+        }
       },
       link: function($scope) {
         if ($scope.navigateOnClick) {
@@ -3211,7 +3227,8 @@ var genotypeListRowCtrl =
   };
 
 canto.directive('genotypeListRow',
-                ['$compile', 'toaster', 'CantoGlobals', 'CursGenotypeList', genotypeListRowCtrl]);
+                ['$compile', '$timeout', 'CantoGlobals', 'CursGenotypeList',
+                 genotypeListRowCtrl]);
 
 
 var genotypeListViewCtrl =

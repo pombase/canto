@@ -344,7 +344,7 @@ table.list td {
   vertical-align: top;
 }
 
-table.list tr td, #curs-genotype-list-row-actions {
+table.list tr td {
   border-width: 1px;
   padding: 3px;
   border-style: solid;
@@ -352,13 +352,13 @@ table.list tr td, #curs-genotype-list-row-actions {
 }
 
 #curs-genotype-list-row-actions {
+  border: 1px solid #bbb;
+  padding: 3px;
   font-size: 90%;
-  min-height: 5em;
   z-index: 999999;
   position: absolute;
   overflow: auto;
   background-color: white;
-  display: inline-block;
 }
 
 /* override Bootstrap */
