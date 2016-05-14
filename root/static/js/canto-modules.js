@@ -3221,7 +3221,7 @@ var genotypeListRowCtrl =
             $scope.selectedGenotypeId == $scope.genotype.genotype_id) {
           $timeout(function() {
             $scope.setSelected();
-          }, 200);
+          }, 900);
         }
       },
     };
