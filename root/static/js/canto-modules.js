@@ -3219,6 +3219,7 @@ var genotypeListRowCtrl =
         if ($scope.selectedGenotypeId &&
             $scope.selectedGenotypeId == $scope.genotype.genotype_id) {
           $timeout(function() {
+            console.log("about to call setSelected()");
             $scope.setSelected();
           }, 0.0);
         }
@@ -3334,6 +3335,11 @@ var genotypeAlleles =
       controller: function($scope) {
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+
+        $scope.log = function() {
+          console.log("in genotypeAlleles.log()");
+        };
+
       }
     };
   };
