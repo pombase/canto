@@ -329,7 +329,7 @@ $stderr = capture_stderr {
                                            });
 };
 is ($res->{status}, 'error');
-my $illegal_field_message = 'no such annotation field type: illegal';
+my $illegal_field_message = 'No such annotation field type: illegal';
 is ($res->{message}, $illegal_field_message);
 
 
@@ -437,7 +437,7 @@ $stderr = capture_stderr {
                                            });
 };
 is ($res->{status}, 'error');
-my $illegal_field_type_message = 'no such annotation field type: illegal';
+my $illegal_field_type_message = 'No such annotation field type: illegal';
 is ($res->{message}, $illegal_field_type_message);
 
 

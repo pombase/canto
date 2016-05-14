@@ -5,6 +5,9 @@
       <span ng-if="isNewExtension">Can you extend this annotation by providing
         additional details based on the experiments in this paper?</span>
 <span ng-if="!manualEditMode">
+  <span ng-if="matchingConfigurations.length == 0">
+      No extension types are
+  </span>
   <span ng-if="matchingConfigurations.length == 1">
       This extension type is
   </span>

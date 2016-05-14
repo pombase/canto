@@ -281,8 +281,7 @@ sub login : Global {
 
   if ($c->authenticate({email_address => $email_address,
                         password => $password})) {
-    $c->flash->{message} =
-      { title => "Login successful" };
+    $c->flash->{message} = "Login successful";
 
     if ($return_path =~ m/logout|login/) {
       $c->forward($c->config()->{instance_front_path});
