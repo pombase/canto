@@ -3222,7 +3222,7 @@ var genotypeListRowCtrl =
           $timeout(function() {
             console.log("about to call setSelected()");
             $scope.setSelected();
-          }, 0.0);
+          }, 200);
         }
       },
     };
