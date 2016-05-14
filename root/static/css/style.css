@@ -361,6 +361,10 @@ table.list tr td {
   background-color: white;
 }
 
+#curs-genotype-list-row-actions .genotype-list-row-links {
+  margin-left: 5px;
+}
+
 /* override Bootstrap */
 .genotype-alleles ul {
   padding: 2px;
