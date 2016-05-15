@@ -29,6 +29,7 @@ my $add_person = 0;
 my $add_by_pubmed_id = 0;
 my $add_by_pubmed_query = 0;
 my $add_session = 0;
+my $add_organism = 0;
 my $dry_run = 0;
 my $do_help = 0;
 
@@ -64,6 +65,9 @@ my %dispatch = (
   '--dry-run' => sub {
     $dry_run = 1;
   },
+  '--organism' => sub {
+    $add_organism = 1;
+  },
 );
 
 my $dispatch_sub = $dispatch{$opt};
@@ -94,6 +98,8 @@ or:
   $0 --pubmed-by-query <query>
 or:
   $0 --session <pubmed_id> <user_email_address>
+or:
+  $0 --organism <genus> <species> <taxon_id>
 
 Options:
   --cvterm  - add a cvterm to the database
@@ -128,6 +134,10 @@ if ($add_person && (@ARGV < 3 || @ARGV > 4)) {
 
 if ($add_session && @ARGV != 2) {
   usage("--session needs 2 or 3 arguments");
+}
+
+if ($add_organism && @ARGV != 3) {
+  usage("--organism needs 3 arguments");
 }
 
 if (@ARGV == 0) {
@@ -208,6 +218,17 @@ my $proc = sub {
     }
 
     print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(), " for: $email_address\n";
+  }
+
+  if ($add_organism) {
+    my $genus = shift @ARGV;
+    my $species = shift @ARGV;
+    my $taxon_id = shift @ARGV;
+
+    my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
+    my $guard = $schema->txn_scope_guard;
+    $load_util->get_organism($genus, $species, $taxon_id);
+    $guard->commit unless $dry_run;
   }
 };
 
