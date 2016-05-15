@@ -104,6 +104,17 @@ function conditionsToString(conditions) {
   return $.map(conditions, function(el) { return el.name; }).join (", ");
 }
 
+function conditionsToStringHighlightNew(conditions) {
+  return $.map(conditions, function(el) {
+    if (el.term_id) {
+      return el.name;
+    } else {
+      return '<span style="color: red;">' + el.name + '</span>';
+    }
+  }).join (", ");
+}
+
+
 canto.filter('breakExtensions', function() {
   return function(text) {
     if (text) {
@@ -4081,7 +4092,7 @@ var annotationTableRow =
 
         if (typeof($scope.annotation.conditions) !== 'undefined') {
           $scope.annotation.conditionsString =
-            conditionsToString($scope.annotation.conditions);
+            conditionsToStringHighlightNew($scope.annotation.conditions);
         }
 
         var qualifiersList = [];
