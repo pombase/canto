@@ -52,7 +52,7 @@
     </span>
   </td>
   <td ng-if="annotationType.can_have_conditions">
-    {{annotation.conditionsString}}
+    <span ng-bind-html="annotation.conditionsString | toTrusted"></span>
   </td>
   <td ng-if="!data.hideColumns.qualifiers">
     {{annotation.qualifiersString}}
