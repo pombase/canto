@@ -3872,7 +3872,7 @@ var annotationTableList =
                       $scope.watchAndFilter(annotations, annotationType);
                     }).catch(function() {
                       $scope.serverErrorsByType[annotationType.name] =
-                        "couldn't read annotations from the server - please contact the curators";
+                        "couldn't read annotations from the server - please try reloading";
                     });
                 });
         }).catch(function(data, status) {
