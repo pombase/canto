@@ -153,8 +153,8 @@ canto.filter('featureChooserFilter', function () {
   return function (feature) {
     var ret = feature.display_name;
     if (feature.background) {
-      ret += " (" + feature.background.substr(0, 10);
-      if (feature.background.length > 10) {
+      ret += "  (bkg: " + feature.background.substr(0, 15);
+      if (feature.background.length > 15) {
         ret += " ...";
       }
       ret += ")"
