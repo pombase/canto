@@ -371,7 +371,11 @@ sub _get_genotypes
     }
   }
 
-  return @res;
+  return sort {
+    ($a->{display_name} // $a->{genotype_id})
+      cmp
+    ($b->{display_name} // $b->{genotype_id});
+  } @res;
 }
 
 sub _allele_details_hash
