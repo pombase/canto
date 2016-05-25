@@ -70,8 +70,18 @@ function copyObject(src, dest, keysFilter) {
 // for each property in changedObj, copy to dest when it's different to origObj
 function copyIfChanged(origObj, changedObj, dest) {
   Object.getOwnPropertyNames(changedObj).forEach(function(key) {
+    if ((typeof(changedObj[key]) == 'undefined' || changedObj[key] == null) &&
+        (typeof(origObj[key]) == 'undefined' || origObj[key] == null)) {
+      return;
+    }
+
     if (changedObj[key] !== origObj[key]) {
-      dest[key] = changedObj[key];
+      if (origObj[key] instanceof Array && changedObj[key] instanceof Array &&
+          angular.equals(origObj[key], changedObj[key])) {
+        // same
+      } else {
+        dest[key] = changedObj[key];
+      }
     }
   });
 }
@@ -161,8 +171,8 @@ canto.filter('featureChooserFilter', function () {
   return function (feature) {
     var ret = feature.display_name;
     if (feature.background) {
-      ret += " (" + feature.background.substr(0, 10);
-      if (feature.background.length > 10) {
+      ret += "  (bkg: " + feature.background.substr(0, 15);
+      if (feature.background.length > 15) {
         ret += " ...";
       }
       ret += ")"
@@ -3603,6 +3613,37 @@ var annotationEditDialogCtrl =
       return $scope.status.validEvidence;
     };
 
+    $scope.annotationChanged = function() {
+      var changesToStore = {};
+
+      if ($scope.annotation.term_suggestion_name == '') {
+        $scope.annotation.term_suggestion_name = null;
+      }
+      if ($scope.annotation.term_suggestion_definition == '') {
+        $scope.annotation.term_suggestion_definition = null;
+      }
+      if ($scope.annotation.submitter_comment == '') {
+        $scope.annotation.submitter_comment = null;
+      }
+
+      copyIfChanged(args.annotation, $scope.annotation, changesToStore);
+      delete changesToStore.feature_type;
+
+      return countKeys(changesToStore) > 0;
+    };
+
+    $scope.okButtonTitleMessage = function() {
+      if ($scope.isValid()) {
+        if ($scope.annotationChanged()) {
+          return 'Finish editing';
+        } else {
+          return 'Make some changes or click "Cancel"';
+        }
+      } else {
+        return 'Annotation is incomplete - please edit the fields marked in red';
+      }
+    };
+
     $scope.extConfigPromise = CantoConfig.get('extension_configuration');
 
     $scope.$watch('annotation.term_ontid',
@@ -4057,7 +4098,7 @@ var annotationTableList =
                       $scope.watchAndFilter(annotations, annotationType);
                     }).catch(function() {
                       $scope.serverErrorsByType[annotationType.name] =
-                        "couldn't read annotations from the server - please contact the curators";
+                        "couldn't read annotations from the server - please try reloading";
                     });
                 });
         }).catch(function(data, status) {

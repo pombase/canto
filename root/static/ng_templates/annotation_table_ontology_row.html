@@ -20,13 +20,20 @@
     </span>
   </td>
   <td ng-if="annotationType.feature_type != 'gene'">
-    <a ng-if="annotation.status === 'new' && addLinks()"
-       href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">
-      <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-        <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
-      </div>
-    </a>
-    <span ng-if="annotation.status === 'existing' || !addLinks()">
+    <span ng-if="annotation.status === 'new'">
+      <a ng-if="addLinks()"
+         href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">
+        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
+          <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+        </div>
+      </a>
+      <span ng-if="!addLinks()">
+        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
+          <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+        </div>
+      </span>
+    </span>
+    <span ng-if="annotation.status === 'existing'">
       <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
         <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
       </div>
