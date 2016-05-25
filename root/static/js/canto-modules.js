@@ -312,6 +312,7 @@ canto.service('CursGenotypeList', function($q, Curs) {
   this.filteredGenotypeList = function(cursOrAll, filter) {
     var options = {
       filter: filter,
+      include_allele: 1,
     };
     var filteredCursPromise =
       Curs.list('genotype', [cursOrAll, options]);
