@@ -3131,6 +3131,7 @@ var genotypeListRowLinksCtrl =
       scope: {
         genotypes: '=',
         selectedGenotypeId: '=',
+        annotationCount: '@',
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row_links.html',
@@ -3205,18 +3206,19 @@ var genotypeListRowCtrl =
         $scope.setSelected = function() {
           if ($scope.navigateOnClick != 'true') {
             $scope.selectedGenotypeId = $scope.genotype.genotype_id;
+            $scope.annotation_count = $scope.genotype.annotation_count;
 
             var links = $('#curs-genotype-list-row-actions');
-            if (links.size() == 0) {
-              links =
-                angular.element('<div id="curs-genotype-list-row-actions">' +
-                                '<img ng-src="' + $scope.app_static_path +
-                                '/images/down_triangle.png"></img>' +
+            links.remove();
 
-                                '<genotype-list-row-links genotypes="genotypes" selected-genotype-id="selectedGenotypeId"></genotype-list-row-links></div>');
-              $('#curs-content').append(links);
-              $compile(links)($scope);
-            }
+            links =
+              angular.element('<div id="curs-genotype-list-row-actions">' +
+                              '<img ng-src="' + $scope.app_static_path +
+                              '/images/down_triangle.png"></img>' +
+                              '<genotype-list-row-links genotypes="genotypes" selected-genotype-id="selectedGenotypeId" annotation-count="{{annotation_count}}">' +
+                              '</genotype-list-row-links></div>');
+            $('#curs-content').append(links);
+            $compile(links)($scope);
 
             links.position({
               my: 'left top',
