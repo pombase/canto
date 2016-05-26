@@ -282,8 +282,6 @@ canto.service('CursGeneList', function($q, Curs) {
 });
 
 canto.service('CursGenotypeList', function($q, Curs) {
-  this.cursGenotypesPromise = null;
-
   function add_id_or_identifier(genotypes) {
     $.map(genotypes, function(genotype) {
       genotype.id_or_identifier = genotype.genotype_id || genotype.identifier;
@@ -294,10 +292,9 @@ canto.service('CursGenotypeList', function($q, Curs) {
   this.cursGenotypeList = function(options) {
     var q = $q.defer();
 
-    if (this.cursGenotypesPromise == null) {
-      this.cursGenotypesPromise = Curs.list('genotype', ['curs_only', options ]);
-    }
-    this.cursGenotypesPromise.success(function(genotypes) {
+    var cursGenotypesPromise = Curs.list('genotype', ['curs_only', options ]);
+
+    cursGenotypesPromise.success(function(genotypes) {
       add_id_or_identifier(genotypes);
       q.resolve(genotypes);
     }).error(function(data, status) {
