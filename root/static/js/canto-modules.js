@@ -3943,7 +3943,6 @@ var annotationTableCtrl =
         };
 
         $scope.data = {
-          hasFeatures: false, // set to true if there are feature of type featureTypeFilter
           annotations: null,
           hideColumns: {},
           publicationUniquename: null,
@@ -3992,17 +3991,6 @@ var annotationTableCtrl =
                         AnnotationTypeConfig.getByName($scope.annotationTypeName).then(function(annotationType) {
                           $scope.annotationType = annotationType;
                           $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
-
-                          if (annotationType.feature_type === 'genotype') {
-                            CursGenotypeList.cursGenotypeList().then(function(results) {
-                              $scope.data.hasFeatures = (results.length > 0);
-                            }).catch(function() {
-                              $scope.data.serverError = "couldn't read the genotype list from the server";
-                            });
-                          } else {
-                            // if we're here the user has some genes in their list
-                            $scope.data.hasFeatures = true;
-                          }
                         });
                       });
       }
