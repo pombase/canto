@@ -7,7 +7,8 @@ $pub
 </%args>
 
 <div ng-controller="OntologyWorkflowCtrl"
-     annotation-type-name="<% $annotation_type_name %>">
+     annotation-type-name="<% $annotation_type_name %>"
+     feature-id="<% $feature->feature_id %>">
   <div ng-show="getState() == 'searching'" class="ng-cloak">
     <ontology-term-select ng-hide="currentTerm()"
                           annotation-type="annotationType"
@@ -75,7 +76,7 @@ Annotation extensions
             ng-click="proceed()" >Proceed -&gt;</button>
   </div>
 
-  <a ng-show="!prevState() && !currentTerm()"
-     href="<% $curs_root_uri %>/feature/<% $feature_type %>/view/<% $feature->feature_id() %>"
+  <a ng-show="!prevState() && !currentTerm() && backToFeatureUrl"
+     href="{{backToFeatureUrl}}"
      class="btn btn-primary curs-back-button">&lt;- Back</a>
 </div>

@@ -16,6 +16,10 @@ a:visited { text-decoration:none }
 a:link:hover { text-decoration:underline }
 a:visited:hover { text-decoration:underline }
 a:link:active { text-decoration:none }
+a.disabled {
+  pointer-events: none;
+  color:#c0c0c0 !important;
+}
 
 #heading a { color: black; }
 
@@ -347,6 +351,30 @@ table.list tr td {
   border-color: #bbb;
 }
 
+#curs-genotype-list-row-actions {
+  border: 1px solid #bbb;
+  padding: 3px;
+  font-size: 90%;
+  z-index: 999999;
+  position: absolute;
+  overflow: auto;
+  background-color: white;
+}
+
+#curs-genotype-list-row-actions .genotype-list-row-links {
+  margin-left: 5px;
+}
+
+/* override Bootstrap */
+.genotype-alleles ul {
+  padding: 2px;
+}
+
+#curs-genotype-list-row-actions .genotype-alleles, #curs-genotype-list-row-actions .genotype-list-row-links {
+  display: inline-block;
+  vertical-align: top;
+}
+
 table.list thead {
   font-weight: bold;
 }
@@ -541,7 +569,7 @@ div.clearall {
   clear: both;
 }
 
-.curs-content {
+#curs-content {
   margin-top: 1em;
 }
 
@@ -584,7 +612,7 @@ div.clearall {
 .gene-list table {
   font-size: 95%;
   border-width: 0px;
-  margin: 4px;
+  margin: 10px 10px 15px 15px
 }
 .gene-list td {
   border-width: 0px;
@@ -615,9 +643,14 @@ div.clearall {
   color: grey;
 }
 
+.curs-genotype-list .selected, .curs-genotype-details .selected {
+  background-color: #eee !important;
+  border: 2.5px solid #888;
+}
+
 .feature-list-action {
   font-size: 90%;
-  margin: 12px 2px 0px 2px;
+  margin: 5px;
 }
 
 .gene-list .annotation-count {
@@ -798,6 +831,7 @@ div.clearall {
   border: 1px solid #ddd;
   background-color: white;
   margin: 5px;
+  margin-bottom: 15px;
 }
 
 .curs-box-title {
@@ -941,7 +975,7 @@ span.canto-select-buttons {
   margin: 10px;
 }
 
-#curs-gene-list, #curs-genotype-list, #curs-front-page .pub-title, .curs-half-width-section {
+#curs-gene-list, #curs-front-page .pub-title, .curs-half-width-section {
   font-size: 90%;
   float: left;
   width: 45%;
@@ -1054,6 +1088,10 @@ input[readonly="1"] {
   padding-bottom: -10px;
   margin-left: 15px;
   display: none;
+}
+
+.curs-spinner {
+  margin: 20px;
 }
 
 .curs-box:after {
@@ -1333,10 +1371,8 @@ a:not([href]) {
 }
 
 .curs-right-info-message {
-  color: #722;
-  background-color: #bbf;
-  border: 1px solid #aae;
-  padding: 2px;
+  border: 2px solid #f00;
+  padding: 6px;
   margin: 6px;
   margin-bottom: 12px;
 }

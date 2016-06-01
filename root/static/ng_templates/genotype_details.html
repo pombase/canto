@@ -1,0 +1,39 @@
+<div>
+  <div class="curs-spinner" ng-if="!genotype">
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img> Loading ...
+  </div>
+
+  <div ng-if="genotype">
+
+    <table class="curs-definition-table">
+      <tbody>
+        <tr>
+          <td class="title">
+            Name
+          </td>
+          <td>
+            <span ng-bind-html="genotype.name | encodeAlleleSymbols | toTrusted"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="title">
+            Background
+          </td>
+          <td>
+            <span ng-bind-html="genotype.background | encodeAlleleSymbols | toTrusted"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="title">
+            Description
+          </td>
+          <td>
+            <span ng-bind-html="genotype.allele_string | encodeAlleleSymbols | toTrusted"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <genotype-alleles genotype="genotype"></genotype-alleles>
+  </div>
+</div>

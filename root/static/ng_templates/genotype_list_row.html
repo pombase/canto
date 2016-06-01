@@ -1,34 +1,23 @@
-<tr>
+<tr ng-mouseover="setSelected($event)"
+    ng-class="{ selected: isSelected() }">
   <td>
-    <span>
-      <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier + (read_only_curs ? '/ro' : '')}}">
-        <p ng-bind-html="genotype.allele_string | wrapAtSpaces | toTrusted"></p></a>
-    </span>
+    <genotype-alleles genotype="genotype"></genotype-alleles>
   </td>
-  <td>
-    <span ng-bind-html="genotype.background | wrapAtSpaces | toTrusted"></span>
+  <td ng-hide="columnsToHide.background">
+    <span ng-bind-html="genotype.background | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
-  <td>
+  <td ng-hide="columnsToHide.name">
     <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
   <td>
     {{genotype.annotation_count}}
   </td>
-  <td ng-if="!read_only_curs" class="table-row-actions">
-    <div ng-if="!genotype.genotype_id">
-      <a href="{{curs_root_uri + '/feature/genotype/view/' + genotype.id_or_identifier}}">
-Use this genotype ...
-      </a>
-    </div>
-    <div ng-if="genotype.genotype_id">
-      <a href="{{curs_root_uri + '/feature/genotype/annotate/' + genotype.genotype_id + '/start/phenotype'}}">Add phenotype ...</a>
-    </div>
-    <div ng-if="genotype.genotype_id">
-      <a href="{{curs_root_uri + '/feature/genotype/duplicate/' + genotype.genotype_id}}">Duplicate ...</a>
-    </div>
-    <div ng-if="genotype.genotype_id">
-      <a confirm="Are you sure you want to remove this genotype from your session?"
-         ng-click="deleteGenotype()">Delete ...</a>
-    </div>
+  <td ng-if="navigateOnClick == 'true'" class="table-row-actions">
+    <a href="{{detailsUrl}}">
+      <span style="white-space: nowrap">Details ...</span>
+    </a>
+  </td>
+  <td ng-if="navigateOnClick == 'false'" class="table-row-actions">
+    <img ng-show="!isSelected()" ng-src="{{app_static_path + '/images/right_triangle.png'}}"></img>
   </td>
 </tr>

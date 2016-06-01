@@ -6,13 +6,13 @@ $read_only_curs => 0
 
 <div ng-controller="GenotypeManageCtrl"
      id="curs-genotype-manage" class="genotype-list">
-  <div ng-hide="data.genotypeSearching">
+  <div>
   <div class="row">
 % if (!$read_only_curs) {
     <div class="curs-top-help">
 Search, view, and edit genotypes for phenotype annotation in this session
     </div>
-    <div class="col-sm-5 col-md-5">
+    <div class="col-sm-6 col-md-6">
     <div class="curs-box">
       <div class="curs-box-title">
 Actions
@@ -24,8 +24,10 @@ Actions
       </div>
     </div>
     </div>
+  </div>
 % }
-    <div class="col-sm-7 col-md-7">
+  <div class="row">
+    <div class="col-sm-12 col-md-12">
     <div class="curs-box">
       <div class="curs-box-title">
         <div>
@@ -38,12 +40,15 @@ Genotypes used in this session
         </div>
 
         <div ng-hide="data.waitingForServer">
-        <div ng-show="data.genotypes.length != 0">
+        <div ng-if="data.genotypes.length != 0">
           <div class="curs-genotype-list-instructions">
 Click a description to view <% !$read_only_curs ? 'and edit' : '' %> genotype details
           </div>
 
-          <genotype-list-view genotype-list="data.genotypes"></genotype-list-view>
+          <genotype-list-view genotype-list="data.genotypes"
+                              navigate-on-click="false"
+                              initial-selected-genotype-id="{{data.selectedGenotypeIdFromPath}}">
+          </genotype-list-view>
         </div>
         <div ng-show="data.genotypes.length == 0">
 No genotypes in this session.  Try adding one.
@@ -52,24 +57,14 @@ No genotypes in this session.  Try adding one.
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-sm-5 col-md-5">
+        <button type="button" id="curs-finish-genotype" class="btn btn-primary curs-back-button"><% $finish_text %></button>
+      </div>
+    </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-5 col-md-5">
- <button type="button" id="curs-finish-genotype" class="btn btn-primary curs-back-button"><% $finish_text %></button>
-    </div>
   </div>
-  </div>
-  <div ng-show="data.genotypeSearching" class="curs-box ng-cloak">
-    <div class="curs-box-title">
-Genotype search
-    </div>
-    <div class="curs-box-body">
-      <genotype-search></genotype-search>
-
-      <button type="button" ng-click="cancelSearch()"
-              class="btn btn-primary curs-back-button">&lt;- Back</button>
-    </div>
   </div>
 </div>
 

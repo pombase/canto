@@ -1,15 +1,16 @@
-<div ng-show="genotypeList.length > 0">
+<div class="curs-genotype-list" >
+  <div ng-if="genotypeList.length > 0">
   <table class="list">
     <thead>
       <tr>
         <th>
 Description
         </th>
-        <th>
+        <th ng-hide="columnsToHide.background">
 Background
         </th>
-        <th>
-Name (optional)
+        <th ng-hide="columnsToHide.name">
+Name
         </th>
         <th>
 Annotations
@@ -17,8 +18,14 @@ Annotations
       </tr>
     </thead>
     <tbody>
-      <tr genotype-list-row ng-repeat="genotype in genotypeList">
+      <tr genotype-list-row ng-repeat="currentGenotype in genotypeList"
+          selected-genotype-id="data.selectedGenotypeId"
+          navigate-on-click="{{navigateOnClick}}"
+          columns-to-hide="columnsToHide"
+          genotypes="genotypeList"
+          genotype="currentGenotype">
       </tr>
     </tbody>
   </table>
+  </div>
 </div>

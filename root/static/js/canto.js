@@ -368,7 +368,7 @@ $(document).ready(function() {
     person_picker_add_person(this);
   });
 
-  $('.curs-content').on('click', '.canto-more-button',
+  $('#curs-content').on('click', '.canto-more-button',
                         function(event) {
                           var this_id = $(event.currentTarget).attr('id');
                           var target = $('#' + this_id + '-target');

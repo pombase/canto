@@ -16,11 +16,11 @@ Select one or more genes to find matching genotypes:
           <div ng-show="filteredGenotypeCount() > 0">
             <div ng-show="data.filteredCursGenotypes.length > 0">
 Matching genotypes from this session:
-              <genotype-list-view genotype-list="data.filteredCursGenotypes"></genotype-list-view>
+              <genotype-list-view navigate-on-click="true" genotype-list="data.filteredCursGenotypes"></genotype-list-view>
             </div>
             <div ng-show="data.filteredExternalGenotypes.length > 0">
 Matches from the database:
-              <genotype-list-view genotype-list="data.filteredExternalGenotypes"></genotype-list-view>
+              <genotype-list-view navigate-on-click="true" genotype-list="data.filteredExternalGenotypes"></genotype-list-view>
             </div>
           </div>
           <div ng-show="filteredGenotypeCount() == 0">
