@@ -8,7 +8,7 @@
   <div>
     <a ng-class="{disabled: selectedGenotypeId == null }"
        href="{{curs_root_uri + '/feature/genotype/view/' + selectedGenotypeId}}">
-      Annotations for this genotype ...
+      View phenotype annotations ...
     </a>
   </div>
   <div>
@@ -17,7 +17,7 @@
   </div>
   <div>
     <a ng-class="{disabled: selectedGenotypeId == null }" ng-if="!read_only_curs"
-       href="{{curs_root_uri + '/feature/genotype/duplicate/' + selectedGenotypeId}}">Duplicate ...</a>
+       href="{{curs_root_uri + '/feature/genotype/duplicate/' + selectedGenotypeId}}">Copy and edit ...</a>
   </div>
   <div title="{{annotationCount > 0 ? 'Genotypes with more than one annotation cannot be deleted - delete the annotations first' : ''}}">
     <a ng-class="{disabled: selectedGenotypeId == null || annotationCount > 0}"
