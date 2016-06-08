@@ -124,6 +124,15 @@ cmp_deeply($res,
               annotation_count => 1,
             },
             {
+              'name' => undef,
+              background => undef,
+              'allele_string' => 'ssm4-D4(del_100-200)[Knockdown]',
+              'display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
+              'genotype_id' => 2,
+              'identifier' => 'aaaa0007-genotype-test-2',
+              annotation_count => 1,
+            },
+            {
               'name' => 'cdc11-33 ssm4delta',
               'display_name' => 'cdc11-33 ssm4delta',
               'identifier' => 'aaaa0007-test-genotype-3',
@@ -133,16 +142,7 @@ cmp_deeply($res,
                                         'SPAC27D7.13c:allele-1'
                                       ],
               annotation_count => 1,
-            },
-            {
-              'name' => undef,
-              background => undef,
-              'allele_string' => 'ssm4-D4(del_100-200)[Knockdown]',
-              'display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
-              'genotype_id' => 2,
-              'identifier' => 'aaaa0007-genotype-test-2',
-              annotation_count => 1,
-            },
+            }
           ]);
 
 
