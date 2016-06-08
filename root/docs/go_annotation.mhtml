@@ -84,7 +84,7 @@ table. In the pop-up edit the appropriate fields, then click "OK".
 <strong>Delete:</strong> The "Delete" link will ask you to confirm
 that you want to remove an annotation, and then delete it.
 </p>
-<p> <strong>Duplicate:</strong> The "Duplicate" link in the table on a
+<p> <strong>Copy and edit:</strong> The "Copy and edit" link in the table on a
 gene page allows you to make another annotation to the same gene. For
 example, you may want to indicate that genetic interactions with two
 different genes both support annotation to the same GO term. The
@@ -94,7 +94,7 @@ without changes.
 </p>
 
 <p>
-On the paper summary page, the "Duplicate" link adds one more feature:
+On the paper summary page, the "Copy and edit" link adds one more feature:
 the annotation can be transferred, with or without other changes, to
 any other gene in the gene list, by changing the top pulldown:
 </p>
@@ -134,7 +134,7 @@ together to form a compound annotation in which all of the parts apply
 at once. To create independent annotations (i.e. where one or another
 may apply, but not necessarily all at once), finish the annotation
 with one extension (or set of extensions), and then use the
-"duplicate" feature to create another annotation where you can edit
+"Copy and edit" feature to create another annotation where you can edit
 the extension(s).
 </p>
 

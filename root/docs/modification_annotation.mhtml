@@ -135,7 +135,7 @@ they will be interpreted as going together to form a compound
 annotation in which all of the parts apply at once. To create
 independent annotations (i.e. where one or another may apply, but not
 necessarily all at once), finish the annotation with one extension (or
-set of extensions), and then use the "duplicate" feature to create
+set of extensions), and then use the "Copy and edit" feature to create
 another annotation where you can edit the extension(s).
 </p>
 

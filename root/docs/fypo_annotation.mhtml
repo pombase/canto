@@ -244,7 +244,7 @@ that you want to remove an annotation, and then delete it.
 </p>
 
 <p>
-<strong>Duplicate:</strong> The "Duplicate" link in the table on the
+<strong>Copy and edit:</strong> The "Copy and edit" link in the table on the
 gene page allows you to make a new annotation to the same allele or
 genotype. For example, you may want to indicate that you have observed
 a phenotype under more than one set of conditions, e.g. at both
@@ -254,7 +254,7 @@ and the old annotation is retained without changes.
 </p>
 
 <p>
-On the paper summary page, the "Duplicate" link adds one more feature:
+On the paper summary page, the "Copy and edit" link adds one more feature:
 the annotation can be transferred, with or without other changes, to
 any other genotype in the genotype list, by changing the top pulldown:
 </p>
@@ -288,7 +288,7 @@ together to form a compound annotation in which all of the parts apply
 at once. To create independent annotations (i.e. where one or another
 may apply, but not necessarily all at once), finish the annotation
 with one extension (or set of extensions), and then use the
-"duplicate" feature to create another annotation where you can edit
+"Copy and edit" feature to create another annotation where you can edit
 the extension(s).
 </p>
 
