@@ -135,6 +135,7 @@ sub add_to_index
   my $synonym_details = shift;
 
   my %synonym_boosts = %{$self->config()->{load}->{ontology}->{synonym_boosts}};
+  my %term_boosts = %{$self->config()->{load}->{ontology}->{term_boosts} // {}};
 
   $cv_name =~ s/-/_/g;
 
@@ -161,6 +162,10 @@ sub add_to_index
 
     if (exists $synonym_boosts{$type}) {
       map { $_->setBoost($synonym_boosts{$type}); } @fields;
+    }
+
+    if (exists $term_boosts{$db_accession}) {
+      map { $_->setBoost($term_boosts{$db_accession}); } @fields;
     }
 
     map { $doc->add($_) } @fields;

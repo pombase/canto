@@ -1116,6 +1116,9 @@ load:
       exact: 1.1
       broad: 0.2
       related: 0.2
+    term_boosts: ~
+# artificially boost these terms in the results:
+#      "GO:0000982": 2.0
     synonym_types:
       - exact
       - narrow
