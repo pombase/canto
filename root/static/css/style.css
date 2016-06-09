@@ -635,7 +635,7 @@ div.clearall {
   margin-bottom: 10px;
 }
 
-.curs-genotype-edit-gene-list {
+.curs-genotype-edit-gene-list, .curs-genotype-edit-allele-list {
   margin-top: 20px;
 }
 

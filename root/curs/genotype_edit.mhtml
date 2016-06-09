@@ -82,10 +82,8 @@ Specify alleles of genes from the list, until the new genotype is complete.
           </div>
         </div>
         <div class="col-sm-6 col-md-6">
-          <div ng-show="alleles.length == 0">
-          </div>
-
-          <div id="multi-allele-genotype" class="ng-cloak" ng-show="alleles.length">
+          <div class="curs-genotype-edit-allele-list"
+               id="multi-allele-genotype" class="ng-cloak" ng-show="alleles.length">
 
             <div>
 The alleles of this genotype:
