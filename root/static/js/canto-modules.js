@@ -2813,7 +2813,7 @@ var multiAlleleCtrl =
               gene.display_name = gene.primary_name || gene.primary_identifier;
             });
     }).error(function() {
-      toaster.pop('failed to get gene list from server');
+      toaster.pop('error', 'failed to get gene list from server');
     });
   };
 
