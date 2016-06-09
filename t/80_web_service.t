@@ -102,7 +102,7 @@ test_psgi $app, sub {
 
   # add the closure subsets: cvtermprops with type 'canto_subset'
   my $index_path = $test_util->config()->data_dir_path('ontology_index_dir');
-  my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+  my $ontology_index = Canto::Track::OntologyIndex->new(config => $config, index_path => $index_path);
   $test_util->load_test_ontologies($ontology_index, 1, 1, 1);
 
   my $two_term_subset = '[GO:0005215|GO:0016023]';

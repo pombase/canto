@@ -16,7 +16,7 @@ my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
 
 my $index_path = $config->data_dir_path('ontology_index_dir');
-my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+my $ontology_index = Canto::Track::OntologyIndex->new(config => $config, index_path => $index_path);
 
 $test_util->load_test_ontologies($ontology_index, 1, 1);
 

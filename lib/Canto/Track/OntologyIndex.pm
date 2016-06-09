@@ -45,6 +45,7 @@ use File::Path qw(remove_tree);
 use Lucene;
 
 has index_path => (is => 'rw', required => 1);
+has config => (is => 'ro', required => 1);
 
 =head2 initialise_index
 
@@ -108,14 +109,6 @@ sub _get_all_names
           } @$synonym_details);
 }
 
-my %boosts =
-  (
-    name => 1.1,
-    exact => 1.1,
-    broad => 0.2,
-    related => 0.2,
-  );
-
 =head2 add_to_index
 
  Usage   : $ont_index->add_to_index($cvterm, \@cvterm_synonyms);
@@ -141,6 +134,8 @@ sub add_to_index
   my $subset_ids = shift;
   my $synonym_details = shift;
 
+  my %synonym_boosts = %{$self->config()->{load}->{ontology}->{synonym_boosts}};
+
   $cv_name =~ s/-/_/g;
 
   my $writer = $self->{_index};
@@ -164,8 +159,8 @@ sub add_to_index
       Lucene::Document::Field->UnIndexed(term_name => $term_name),
     );
 
-    if (exists $boosts{$type}) {
-      map { $_->setBoost($boosts{$type}); } @fields;
+    if (exists $synonym_boosts{$type}) {
+      map { $_->setBoost($synonym_boosts{$type}); } @fields;
     }
 
     map { $doc->add($_) } @fields;

@@ -342,7 +342,7 @@ is ($children->[0]->{id}, 'FYPO:0000133');
 # test querying a subset
 
 my $index_path = $config->data_dir_path('ontology_index_dir');
-my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+my $ontology_index = Canto::Track::OntologyIndex->new(config => $config, index_path => $index_path);
 $test_util->load_test_ontologies($ontology_index, 1, 1, 1);
 
 {

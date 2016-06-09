@@ -726,7 +726,7 @@ sub make_base_track_db
 
     my $index_path = $config->data_dir_path('ontology_index_dir');
 
-    my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+    my $ontology_index = Canto::Track::OntologyIndex->new(config => $config, index_path => $index_path);
     $ontology_index->initialise_index();
 
     my @relationships_to_load = @{$config->{load}->{ontology}->{relationships_to_load}};

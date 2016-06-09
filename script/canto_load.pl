@@ -173,7 +173,7 @@ if ($do_genes) {
 if (@ontology_args) {
   my $index_path = $config->data_dir_path('ontology_index_dir');
 
-  my $index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+  my $index = Canto::Track::OntologyIndex->new(config => $config, index_path => $index_path);
   $index->initialise_index();
   my @relationships_to_load = @{$config->{load}->{ontology}->{relationships_to_load}};
 

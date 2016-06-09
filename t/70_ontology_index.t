@@ -22,7 +22,7 @@ my $test_go_file =
 my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 my $index_path = $config->data_dir_path('ontology_index_dir');
 
-my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+my $ontology_index = Canto::Track::OntologyIndex->new(config => $config, index_path => $index_path);
 $ontology_index->initialise_index();
 
 my $dihydropteroate_name = 'dihydropteroate synthase activity';

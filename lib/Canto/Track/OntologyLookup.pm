@@ -273,7 +273,7 @@ sub lookup
 
   my $config = $self->config();
   my $index_path = $config->data_dir_path('ontology_index_dir');
-  my $ontology_index = Canto::Track::OntologyIndex->new(index_path => $index_path);
+  my $ontology_index = Canto::Track::OntologyIndex->new(config => $config, index_path => $index_path);
 
   my @results;
 
