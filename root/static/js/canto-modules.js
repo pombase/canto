@@ -2914,6 +2914,27 @@ var multiAlleleCtrl =
     $scope.alleles.splice($scope.alleles.indexOf(allele), 1);
   };
 
+  $scope.allelesEqual = function(allele1, allele2) {
+    return angular.equals(allele1, allele2);
+  };
+
+  $scope.findExistingAlleleIdx = function(allele) {
+    var index = $scope.alleles.indexOf(allele);
+
+    if (index >= 0) {
+      return index;
+    }
+
+    $.map($scope.alleles,
+          function(existingAllele, mapIndex) {
+            if ($scope.allelesEqual(existingAllele, allele)) {
+              index = mapIndex;
+            }
+          });
+
+    return index;
+  };
+
   $scope.openAlleleEditDialog =
     function(allele) {
       var endogenousWildtypeAllowed = false;
@@ -2938,8 +2959,10 @@ var multiAlleleCtrl =
         makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed);
 
       editInstance.result.then(function (editedAllele) {
-        if ($scope.alleles.indexOf(editedAllele) < 0) {
+        if ($scope.findExistingAlleleIdx(editedAllele) < 0) {
           $scope.alleles.push(editedAllele);
+        } else {
+          toaster.pop('info', 'Not adding duplicate allele');
         }
       });
     };
