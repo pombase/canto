@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -30,7 +30,14 @@ my $dihydropteroate_name = 'dihydropteroate synthase activity';
 my @data = (
   ['molecular_function', 'molecular_function', 120000, 'GO:0003674', ['GO:0003674', 'canto_root_subset'], []],
   ['molecular_function', $dihydropteroate_name, 123000, 'GO:0004156', ['GO:0003674'], []],
-  ['molecular_function', 'transporter activity', 123001, 'GO:0005215', ['GO:0003674'], []],
+  ['molecular_function', 'transporter activity', 123001, 'GO:0005215', ['GO:0003674'],
+   [
+     {
+       synonym => "small-molecule carrier or transporter",
+       type => 'exact'
+     },
+   ]
+ ],
   ['molecular_function', 'transmembrane transporter activity', 123002, 'GO:0022857', ['GO:0003674', 'GO:0005215'], []],
   ['molecular_function', 'nucleocytoplasmic transporter activity', 123003, 'GO:0005215', ['GO:0003674', 'GO:0005215'], []],
   );
@@ -47,6 +54,9 @@ is(@results, 1);
 is($results[0]->{term_name}, $dihydropteroate_name);
 
 @results = $ontology_index->lookup('molecular_function', [], 'molecular_function', 100);
+is(@results, 1);
+
+@results = $ontology_index->lookup('molecular_function', [], 'small molecule', 100);
 is(@results, 1);
 
 @results = $ontology_index->lookup('molecular_function', ['canto_root_subset'], 'molecular_function', 100);
