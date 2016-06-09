@@ -352,7 +352,7 @@ table.list tr td {
 }
 
 #curs-genotype-list-row-actions {
-  border: 1px solid #bbb;
+  border: 2px solid #bbb;
   padding: 3px;
   font-size: 90%;
   z-index: 999999;
