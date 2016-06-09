@@ -97,7 +97,6 @@ function simpleHttpPost(toaster, $http, url, data) {
       }
     }).
     error(function(data, status){
-      loadingEnd();
       var message;
       if (status == 404) {
         message = "Internal error: " + status;
@@ -105,6 +104,9 @@ function simpleHttpPost(toaster, $http, url, data) {
         "Accessing server failed: " + (data || status)
       }
       toaster.pop('error', message);
+    }).
+    finally(function() {
+      loadingEnd();
     });
 
   return promise;
@@ -2129,8 +2131,13 @@ var ontologyWorkflowCtrl =
     };
 
     $scope.storeAnnotation = function() {
-      $scope.postInProgress = true;
-      toaster.pop('info', 'Storing annotation ...');
+      var storePop = toaster.pop({
+        type: 'info',
+        title: 'Storing annotation ...',
+        timeout: 0, // last until page reload
+        showCloseButton: false
+      });
+
       var promise =
         simpleHttpPost(toaster, $http,
                        CantoGlobals.curs_root_uri + '/feature/' +
@@ -2138,8 +2145,8 @@ var ontologyWorkflowCtrl =
                        $attrs.featureId + '/set_term/' + $scope.annotationType.name,
                      CursStateService.asAnnotationDetails());
 
-      promise.catch(function() {
-        $scope.postInProgress = false;
+      promise.finally(function() {
+        toaster.clear(storePop);
       });
     };
 
@@ -3724,16 +3731,21 @@ var annotationEditDialogCtrl =
       var q = AnnotationProxy.storeChanges(args.annotation,
                                            $scope.annotation, args.newlyAdded);
       loadingStart();
-      toaster.pop('info', 'Storing annotation ...');
+      var storePop = toaster.pop({
+        type: 'info',
+        title: 'Storing annotation ...',
+        timeout: 0, // last until the finally()
+        showCloseButton: false
+      });
       q.then(function(annotation) {
         $modalInstance.close(annotation);
       })
       .catch(function(message) {
         toaster.pop('error', message);
-        $modalInstance.dismiss();
       })
       .finally(function() {
         loadingEnd();
+        toaster.clear(storePop);
       });
     };
 
