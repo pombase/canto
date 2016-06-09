@@ -15,6 +15,7 @@ use Canto::Track;
 my $test_util = Canto::TestUtil->new();
 $test_util->init_test();
 
+my $config = $test_util->config();
 my $cookie_jar = $test_util->cookie_jar();
 
 my $app = $test_util->plack_app()->{app};
