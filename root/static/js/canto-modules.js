@@ -3227,11 +3227,18 @@ var genotypeListRowCtrl =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
 
         $scope.isSelected = function() {
           return $scope.selectedGenotypeId &&
             $scope.selectedGenotypeId == $scope.genotype.genotype_id;
         }
+
+        $scope.closeLinks = function() {
+          $scope.selectedGenotypeId = null;
+          var links = $('#curs-genotype-list-row-actions');
+          links.remove();
+        };
 
         $scope.setSelected = function() {
           if ($scope.navigateOnClick != 'true') {
@@ -3246,7 +3253,8 @@ var genotypeListRowCtrl =
                               '<img ng-src="' + $scope.app_static_path +
                               '/images/down_triangle.png"></img>' +
                               '<genotype-list-row-links genotypes="genotypes" selected-genotype-id="selectedGenotypeId" annotation-count="{{annotation_count}}">' +
-                              '</genotype-list-row-links></div>');
+                              '</genotype-list-row-links>' +
+                              '<img style="padding: 4px; padding-left: 10px;" ng-click="closeLinks()" ng-src="{{closeIconPath}}"></img></div>');
             $('#curs-content').append(links);
             $compile(links)($scope);
 
