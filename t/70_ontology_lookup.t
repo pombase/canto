@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 77;
+use Test::More tests => 79;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -37,6 +37,16 @@ my $ont_name = 'molecular_function';
           } @$results);
 
   is(scalar(map { $_->{name} =~ /^$search_string/ } @$results), 1);
+}
+
+{
+  my $results = $lookup->lookup(ontology_name => "biological_process",
+                                search_string => "transport",
+                                max_results => 10);
+
+  ok(defined $results);
+
+  is(scalar(@$results), 7);
 }
 
 {
