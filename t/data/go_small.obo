@@ -25,7 +25,6 @@ id: GO:0034762
 name: regulation of transmembrane transport
 namespace: biological_process
 def: "Any process that modulates the frequency, rate or extent of the directed movement of a solute from one side of a membrane to the other." [GOC:mah]
-intersection_of: GO:0065007 ! biological regulation
 intersection_of: regulates GO:0055085 ! transmembrane transport
 relationship: regulates GO:0055085 ! transmembrane transport
 
@@ -37,7 +36,6 @@ def: "Any process that stops, prevents, or reduces the frequency, rate or extent
 synonym: "down regulation of transmembrane transport" EXACT []
 synonym: "inhibition of transmembrane transport" NARROW []
 is_a: GO:0034762 ! regulation of transmembrane transport
-intersection_of: GO:0065007 ! biological regulation
 intersection_of: negatively_regulates GO:0055085 ! transmembrane transport
 relationship: negatively_regulates GO:0055085 ! transmembrane transport
 
@@ -47,7 +45,6 @@ name: positive regulation of transmembrane transport
 namespace: biological_process
 def: "Any process that activates or increases the frequency, rate or extent of the directed movement of a solute from one side of a membrane to the other." [GOC:mah]
 is_a: GO:0034762 ! regulation of transmembrane transport
-intersection_of: GO:0065007 ! biological regulation
 intersection_of: positively_regulates GO:0055085 ! transmembrane transport
 relationship: positively_regulates GO:0055085 ! transmembrane transport
 
@@ -151,11 +148,6 @@ namespace: cellular_component
 alt_id: GO:0008372
 def: "The part of a cell or its extracellular environment in which a gene product is located. A gene product may be located in one or more parts of a cell and its location may be as specific as a particular macromolecular complex, that is, a stable, persistent association of macromolecules that function together." [GOC:go_curators]
 comment: Note that, in addition to forming the root of the cellular component ontology, this term is recommended for use for the annotation of gene products whose cellular component is unknown. Note that when this term is used for annotation, it indicates that no information was available about the cellular component of the gene product annotated as of the date the annotation was made; the evidence code ND, no data, is used to indicate this.
-subset: goslim_candida
-subset: goslim_generic
-subset: goslim_goa
-subset: goslim_pir
-subset: goslim_plant
 subset: goslim_yeast
 subset: gosubset_prok
 synonym: "cellular component" EXACT []
@@ -168,8 +160,6 @@ id: GO:0016023
 name: cytoplasmic membrane-bounded vesicle
 namespace: cellular_component
 def: "A membrane-bounded vesicle found in the cytoplasm of the cell." [GOC:ai, GOC:mah]
-subset: goslim_candida
-subset: goslim_generic
 subset: goslim_yeast
 subset: gosubset_prok
 synonym: "cytoplasmic membrane bounded vesicle" EXACT []
@@ -202,7 +192,6 @@ id: GO:0031386
 name: protein tag
 namespace: molecular_function
 def: "Acting as an indicator or marker to facilitate recognition by other molecules in the cell. Recognition of the tag, which can be covalently attached to the target molecule, may result in modification, sequestration, transport or degradation of the molecule in question." [GOC:go_curators]
-subset: goslim_pir
 synonym: "covalent modifier" RELATED [GOC:vw]
 synonym: "protein tagging activity" RELATED []
 synonym: "ubiquitin" RELATED []
@@ -228,8 +217,6 @@ name: binding
 namespace: molecular_function
 def: "The selective, non-covalent, often stoichiometric, interaction of a molecule with one or more specific sites on another molecule." [GOC:ceb, GOC:mah, ISBN:0198506732 "Oxford Dictionary of Biochemistry and Molecular Biology"]
 comment: For ligands that bind to signal transducing receptors, consider the molecular function term 'receptor binding ; GO:0005102' and its children.
-subset: goslim_pir
-subset: goslim_plant
 subset: gosubset_prok
 synonym: "ligand" NARROW []
 xref: Wikipedia:Binding_(molecular)
