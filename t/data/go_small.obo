@@ -4,6 +4,7 @@ saved-by: dph
 auto-generated-by: OBO-Edit 2.0
 subsetdef: goslim_pombe "Fission yeast GO slim"
 subsetdef: goslim_yeast "Yeast GO slim"
+subsetdef: gosubset_prok "Prokaryotic GO subset"
 synonymtypedef: systematic_synonym "Systematic synonym" EXACT
 default-namespace: gene_ontology
 remark: cvs version: $Revision: 1.1536 $
