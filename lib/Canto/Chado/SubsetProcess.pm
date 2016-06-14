@@ -75,24 +75,6 @@ sub get_empty_subset_data
 }
 
 
-=head2 add_terms_from_config
-
- Usage   : $subset_process->add_terms_from_config($config, $subset_data);
- Function: Add subsets from the config file(s), like subsets_to_ignore
- Return  : None
-
-=cut
-
-
-sub add_terms_from_config
-{
-  my $self = shift;
-  my $config = shift;
-  my $subset_data = shift;
-
-  # "Unplemented: add_terms_from_config()\n";
-}
-
 =head2 process_subset_data
 
  Usage   : my $subset_data = $extension_process->get_subset_data();

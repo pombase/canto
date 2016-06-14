@@ -258,8 +258,6 @@ sub load
     $subset_data = $subset_process->get_empty_subset_data();
   }
 
-  $subset_process->add_terms_from_config($self->config(), $subset_data);
-
   my $schema = $self->load_schema();
 
   my $guard = $schema->txn_scope_guard;
