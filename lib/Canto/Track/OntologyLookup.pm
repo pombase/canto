@@ -531,24 +531,56 @@ sub _get_all_count_rs
   my $rs = undef;
 
   if (ref $search_scope) {
-    # we got eg. "[GO:000123,SO:000345]" from user so $search_scope is an array
-    # of IDs
-    my $subset_cvtermprop_rs =
-      $schema->resultset('Cvtermprop')
-      ->search(
-        {
-          value => { -in => $search_scope },
-          'type.name' => 'canto_subset',
-        },
-        {
-          join => 'type',
-        });
+    # we got eg. "[GO:000123|SO:000345]" of "[GO:0008150-GO:0000770|GO:0000123]"
+    # from the user so $search_scope is an array of IDs and strings like
+    # GO:0008150-GO:0000770 (meaning exclude a term and children)
+    my $place_holder_count = 0;
 
-    $rs = $schema->resultset('Cvterm')->search({
-      cvterm_id => {
-        -in => $subset_cvtermprop_rs->get_column('cvterm_id')->as_query(),
+    my @ids =
+      map {
+        if (/(.*)-(.*)/) {
+          $place_holder_count += 2;
+          [$1, $2];
+        } else {
+          $place_holder_count++;
+          $_;
+        }
+      } @$search_scope;
+
+    my $where =
+      join ' OR ', map {
+        my $where_bit = <<"END";
+cvterm_id in
+  (SELECT p.cvterm_id FROM cvtermprop p
+     JOIN cvterm pt ON p.type_id = pt.cvterm_id
+    WHERE pt.name = 'canto_subset' AND value = ?)
+END
+
+        if (ref $_) {
+          $where_bit .= <<"END";
+AND cvterm_id NOT IN
+  (SELECT p.cvterm_id FROM cvtermprop p
+     JOIN cvterm pt ON p.type_id = pt.cvterm_id
+    WHERE pt.name = 'canto_subset' AND value = ?)
+END
+        }
+
+        $where_bit;
+      } @ids;
+
+    my @flat_ids = map {
+      if (ref $_) {
+        @$_;
+      } else {
+        $_;
       }
-    });
+    } @ids;
+
+    my @bind_params = map {
+      ['value', $_];
+    } @flat_ids;
+
+    $rs = $schema->resultset('Cvterm')->search(\[$where, @bind_params]);
   } else {
     my $cv = $self->_find_cv($search_scope);
     $rs = $schema->resultset('Cvterm')->search({
