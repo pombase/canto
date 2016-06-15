@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 79;
+use Test::More tests => 82;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -454,3 +454,41 @@ my $subset_2_count =
 
 is($subset_2_count, scalar(@all_subset_2_terms));
 
+
+# test excluding a sub-ontology
+
+my $exclude_test_query = '[GO:0055085-GO:0034762]';
+
+# test get_all() for a subset defined by two IDs
+my @all_exclude_test_terms =
+  sort {
+    $a->{name} cmp $b->{name};
+  } map {
+    {
+      name => $_->{name},
+      id => $_->{id},
+    }
+  } $lookup->get_all(ontology_name => $exclude_test_query);
+is (@all_exclude_test_terms, 3);
+
+cmp_deeply(\@all_exclude_test_terms,
+           [
+             {
+               'name' => 'hydrogen peroxide transmembrane transport',
+               'id' => 'GO:0080170'
+             },
+             {
+               'name' => 'protein transmembrane transport',
+               'id' => 'GO:0071806'
+             },
+             {
+               'id' => 'GO:0055085',
+               'name' => 'transmembrane transport'
+             }
+           ]);
+
+
+my $exclude_test_count =
+  $lookup->get_count(ontology_name => $exclude_test_query);
+
+is($exclude_test_count, scalar(@all_exclude_test_terms));
