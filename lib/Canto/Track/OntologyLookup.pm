@@ -220,6 +220,18 @@ sub _parse_search_scope
   if ($string =~ /^\[(.*)\]$/) {
     my $id_string = $1;
     my @ids = split /\|/, $id_string;
+
+    @ids = map {
+      if (/(\w+:\d+)-(\w+:\d+)/) {
+        {
+          include => $1,
+          exclude => $2,
+        };
+      } else {
+        $_;
+      }
+    } @ids;
+
     return \@ids;
   } else {
     return $string;
@@ -532,20 +544,10 @@ sub _get_all_count_rs
 
   if (ref $search_scope) {
     # we got eg. "[GO:000123|SO:000345]" of "[GO:0008150-GO:0000770|GO:0000123]"
-    # from the user so $search_scope is an array of IDs and strings like
-    # GO:0008150-GO:0000770 (meaning exclude a term and children)
+    # from the user so $search_scope is an array of IDs or hashes like
+    # { include => 'GO:0008150', exclude => 'GO:0000770' }
+    # (meaning exclude a term and children)
     my $place_holder_count = 0;
-
-    my @ids =
-      map {
-        if (/(.*)-(.*)/) {
-          $place_holder_count += 2;
-          [$1, $2];
-        } else {
-          $place_holder_count++;
-          $_;
-        }
-      } @$search_scope;
 
     my $where =
       join ' OR ', map {
@@ -563,18 +565,21 @@ AND cvterm_id NOT IN
      JOIN cvterm pt ON p.type_id = pt.cvterm_id
     WHERE pt.name = 'canto_subset' AND value = ?)
 END
+          $place_holder_count += 2;
+        } else {
+          $place_holder_count++;
         }
 
         $where_bit;
-      } @ids;
+      } @$search_scope;
 
     my @flat_ids = map {
       if (ref $_) {
-        @$_;
+        ($_->{include}, $_->{exclude});
       } else {
         $_;
       }
-    } @ids;
+    } @$search_scope;
 
     my @bind_params = map {
       ['value', $_];

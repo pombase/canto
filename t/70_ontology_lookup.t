@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 82;
+use Test::More tests => 85;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -20,6 +20,19 @@ my $transport_name = 'transporter activity';
 my $transport_definition = 'Enables the directed movement of substances (such as macromolecules, small molecules, ions) into, out of or within a cell, or between cells.';
 
 my $ont_name = 'molecular_function';
+
+my $parse_search_scope_simple_res =
+  Canto::Track::OntologyLookup::_parse_search_scope("molecular_function");
+is ($parse_search_scope_simple_res, "molecular_function");
+
+my $parse_search_scope_two_res =
+  Canto::Track::OntologyLookup::_parse_search_scope("[GO:0055085|GO:0034762]");
+cmp_deeply($parse_search_scope_two_res, ['GO:0055085', 'GO:0034762']);
+
+my $parse_search_scope_subset_res =
+  Canto::Track::OntologyLookup::_parse_search_scope("[GO:0055085-GO:0034762]");
+cmp_deeply($parse_search_scope_subset_res, [{ include => 'GO:0055085',
+                                              exclude => 'GO:0034762' }]);
 
 {
   my $results = $lookup->lookup(ontology_name => $ont_name,
