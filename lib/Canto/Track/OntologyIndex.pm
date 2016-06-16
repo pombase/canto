@@ -216,8 +216,10 @@ sub _init_lookup
                                      $search_string, 10);
  Function: Return the search results for the $search_string
  Args    : $search_scope - the ontology_name or subset IDs to restrict the the
-                           search to; the subset IDs should be passed as an
-                           array ref
+                           search to; the subset IDs should be passed as a
+                           reference to an array eg.
+                           ['GO:0016023',
+                           { include => 'GO:0055085', exclude => 'GO:0034762' }]
            $search_exclude - a list of subsets to exclude ie. ignore a result if
                              any of these subset names is a subset_id of a
                              document
@@ -267,8 +269,15 @@ sub lookup
   if (ref $search_scope) {
     $query_string .=
       '(' . (join ' OR ', (map {
-        my $id_for_lucene = lc s/:/_/gr;
-        qq{subset_id:$id_for_lucene};
+        if (ref $_) {
+          my $include_id_for_lucene = lc $_->{include} =~ s/:/_/gr;
+          my $exclude_id_for_lucene = lc $_->{exclude} =~ s/:/_/gr;
+
+          "(subset_id:$include_id_for_lucene AND NOT subset_id:$exclude_id_for_lucene)";
+        } else {
+          my $id_for_lucene = lc s/:/_/gr;
+          "subset_id:$id_for_lucene";
+        }
       } @$search_scope)) . ')';
     $query_string .= ' AND ';
   } else {

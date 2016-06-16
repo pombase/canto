@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 22;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -42,6 +42,9 @@ sub _make_index
    ],
     ['molecular_function', 'transmembrane transporter activity', 123002, 'GO:0022857', ['GO:0003674', 'GO:0005215'], []],
     ['molecular_function', 'nucleocytoplasmic transporter activity', 123003, 'GO:0005215', ['GO:0003674', 'GO:0005215'], []],
+    ['biological_process', 'transport', 123004, 'GO:0006810', ['GO:0006810'], []],
+    ['biological_process', 'transmembrane transport', 123005, 'GO:0055085', ['GO:0006810', 'GO:0055085'], []],
+    ['biological_process', 'transporter activity', 123006, 'GO:0005215', ['GO:0055085'], []],
   );
 
   map {
@@ -114,6 +117,16 @@ check_subset_results(@results);
 
 @results = $ontology_index->lookup(['GO:0003674','GO:1234567'], [], 'activity', 100);
 is(@results, 4);
+
+@results = $ontology_index->lookup('biological_process', [], 'transport*', 100);
+is(@results, 3);
+
+@results = $ontology_index->lookup(['GO:0006810'], [], 'transport', 100);
+is(@results, 2);
+
+@results = $ontology_index->lookup([{include => 'GO:0006810', exclude => 'GO:0055085'}], [],
+                                   'transport', 100);
+is(@results, 1);
 
 @results = $ontology_index->lookup(['GO:0003674'], [], 'molecular_function', 100);
 is(@results, 1);
