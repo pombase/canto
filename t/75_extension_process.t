@@ -48,7 +48,7 @@ $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($after_cvtermprop_count, 43);
+is ($after_cvtermprop_count, 51);
 
 
 sub get_subset_props
@@ -85,6 +85,10 @@ my @expected_subset_props =
     ],
     [
       'hydrogen peroxide transmembrane transport',
+      'GO:0006810'
+    ],
+    [
+      'hydrogen peroxide transmembrane transport',
       'GO:0055085'
     ],
     [
@@ -94,6 +98,10 @@ my @expected_subset_props =
     [
       'negative regulation of transmembrane transport',
       'GO:0034762'
+    ],
+    [
+      'negative regulation of transmembrane transport',
+      'GO:0055085'
     ],
     [
       'nucleocytoplasmic transporter activity',
@@ -108,8 +116,16 @@ my @expected_subset_props =
       'GO:0034762'
     ],
     [
+      'positive regulation of transmembrane transport',
+      'GO:0055085'
+    ],
+    [
       'protein modification',
       'canto_root_subset'
+    ],
+    [
+      'protein transmembrane transport',
+      'GO:0006810'
     ],
     [
       'protein transmembrane transport',
@@ -124,8 +140,16 @@ my @expected_subset_props =
       'GO:0034762'
     ],
     [
+      'regulation of transmembrane transport',
+      'GO:0055085'
+    ],
+    [
       'stored secretory granule',
       'GO:0016023'
+    ],
+    [
+      'transmembrane transport',
+      'GO:0006810'
     ],
     [
       'transmembrane transport',
@@ -138,6 +162,14 @@ my @expected_subset_props =
     [
       'transmembrane transporter activity',
       'GO:0022857'
+    ],
+    [
+      'transmembrane transporter activity',
+      'GO:0055085'
+    ],
+    [
+      'transport',
+      'GO:0006810'
     ],
     [
       'transport vesicle',
