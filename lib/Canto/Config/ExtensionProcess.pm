@@ -113,9 +113,15 @@ sub get_subset_data
 
   my %domain_subsets_to_store = ();
   my %range_subsets_to_store = ();
+  my %exclude_subsets_to_store = ();
 
   for my $conf (@conf) {
     $domain_subsets_to_store{$conf->{domain}} = $conf->{subset_rel};
+
+    if ($conf->{exclude_subset_id}) {
+      $exclude_subsets_to_store{$conf->{exclude_subset_id}} = 1;
+    }
+
     map {
       my $range = $_;
 
@@ -129,7 +135,8 @@ sub get_subset_data
 
   my %subsets = map {
     ($_, { $_ => 1 })
-  } (keys %domain_subsets_to_store, keys %range_subsets_to_store);
+  } (keys %domain_subsets_to_store, keys %range_subsets_to_store,
+     keys %exclude_subsets_to_store);
 
   my @owltools_results = $self->get_owltools_results(@obo_file_names);
 
@@ -144,6 +151,10 @@ sub get_subset_data
     }
 
     if ($range_subsets_to_store{$object}) {
+      $subsets{$subject}{$object} = 1;
+    }
+
+    if ($exclude_subsets_to_store{$object}) {
       $subsets{$subject}{$object} = 1;
     }
   }

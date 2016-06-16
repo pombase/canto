@@ -151,8 +151,7 @@ sub parse {
           };
       }
 
-      push @res, {
-        domain => $domain,
+      my %conf = (
         subset_rel => \@subset_rel_split,
         allowed_relation => $allowed_relation,
         range => \@new_range_bits,
@@ -160,7 +159,16 @@ sub parse {
         help_text => $help_text,
         cardinality => \@cardinality,
         role => $role,
-      };
+      );
+
+      if ($domain =~ /(\S+)-(\S+)/) {
+        $conf{domain} = $1;
+        $conf{exclude_subset_id} = $2;
+      } else {
+        $conf{domain} = $domain;
+      }
+
+      push @res, \%conf;
     }
 
     close $conf_fh or die "can't close $extension_conf_file: $!\n";

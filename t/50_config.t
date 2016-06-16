@@ -182,23 +182,24 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                               ]
             },
             {
+              'exclude_subset_id' => 'GO:0055085',
+              'domain' => 'GO:0006810',
+              'role' => 'user',
+              'allowed_relation' => 'localizes',
               'subset_rel' => [
                                 'is_a'
                               ],
-              'role' => 'user',
+              'help_text' => '',
+              'cardinality' => [
+                                 '0',
+                                 '1'
+                               ],
               'range' => [
                            {
                              'type' => 'Gene'
                            }
                          ],
-              'help_text' => '',
-              'domain' => 'GO:0055085',
-              'display_text' => 'occurs at',
-              'allowed_relation' => 'occurs_at',
-              'cardinality' => [
-                                 '0',
-                                 '1'
-                               ]
+              'display_text' => 'localizes'
             },
             {
               'help_text' => '',

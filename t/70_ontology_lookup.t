@@ -375,6 +375,10 @@ $test_util->load_test_ontologies($ontology_index, 1, 1, 1);
 
   ok(defined $results);
 
+  @$results = sort {
+    $a->{id} cmp $b->{id};
+  } @$results;
+
   is(scalar(@$results), 3);
 
   cmp_deeply($results,
@@ -387,19 +391,19 @@ $test_util->load_test_ontologies($ontology_index, 1, 1, 1);
                  'is_obsolete' => 0
                },
                {
+                 'name' => 'nucleocytoplasmic transporter activity',
+                 'is_obsolete' => 0,
+                 'id' => 'GO:0005487',
+                 'annotation_namespace' => 'molecular_function',
+                 'annotation_type_name' => 'molecular_function'
+               },
+               {
                  'name' => 'transmembrane transporter activity',
                  'is_obsolete' => 0,
                  'id' => 'GO:0022857',
                  'annotation_type_name' => 'molecular_function',
                  'annotation_namespace' => 'molecular_function'
                },
-               {
-                 'name' => 'nucleocytoplasmic transporter activity',
-                 'is_obsolete' => 0,
-                 'id' => 'GO:0005487',
-                 'annotation_namespace' => 'molecular_function',
-                 'annotation_type_name' => 'molecular_function'
-               }
              ]);
 }
 
@@ -470,7 +474,7 @@ is($subset_2_count, scalar(@all_subset_2_terms));
 
 # test excluding a sub-ontology
 
-my $exclude_test_query = '[GO:0055085-GO:0034762]';
+my $exclude_test_query = '[GO:0006810-GO:0055085]';
 
 # test get_all() for a subset defined by two IDs
 my @all_exclude_test_terms =
@@ -482,21 +486,13 @@ my @all_exclude_test_terms =
       id => $_->{id},
     }
   } $lookup->get_all(ontology_name => $exclude_test_query);
-is (@all_exclude_test_terms, 3);
+is (@all_exclude_test_terms, 1);
 
 cmp_deeply(\@all_exclude_test_terms,
            [
              {
-               'name' => 'hydrogen peroxide transmembrane transport',
-               'id' => 'GO:0080170'
-             },
-             {
-               'name' => 'protein transmembrane transport',
-               'id' => 'GO:0071806'
-             },
-             {
-               'id' => 'GO:0055085',
-               'name' => 'transmembrane transport'
+               'id' => 'GO:0006810',
+               'name' => 'transport'
              }
            ]);
 
