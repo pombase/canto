@@ -1254,7 +1254,7 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
                  }
                  if ($.inArray(conf.domain, subsetIds) != -1) {
                    if (!conf.exclude_subset_id ||
-                       !$.inArray(conf.exclude_subset_id, subsetIds) != -1) {
+                       $.inArray(conf.exclude_subset_id, subsetIds) == -1) {
                      return {
                        displayText: conf.display_text,
                        relation: conf.allowed_relation,
