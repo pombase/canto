@@ -1258,6 +1258,8 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
                      return {
                        displayText: conf.display_text,
                        relation: conf.allowed_relation,
+                       domain: conf.domain,
+                       role: conf.role,
                        range: conf.range,
                        rangeValue: null,
                        cardinality: conf.cardinality,
@@ -1715,6 +1717,15 @@ var extensionBuilder =
           editPromise.then(function(result) {
             $scope.extension = result.extension;
           });
+        };
+
+        $scope.debugConfText = function(conf) {
+          if ($scope.currentUserIsAdmin) {
+            return "domain: " + conf.domain + "\nrole: " + conf.role +
+              "\nrange: " + JSON.stringify(conf.range, null, 2);
+          } else {
+            return "";
+          }
         };
       },
     };

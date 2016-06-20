@@ -24,10 +24,10 @@ available for <i>{{termDetails.name}}</i> ({{termDetails.id}}):
             tooltip="This extension relation type cannot be added more times for this annotation">
         {{extConf.displayText}}
       </span>
-      <span ng-switch-when="MORE_POSSIBLE">
+      <span ng-switch-when="MORE_POSSIBLE" tooltip="{{debugConfText(extConf)}}">
         <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
       </span>
-      <span ng-switch-when="MORE_REQUIRED">
+      <span ng-switch-when="MORE_REQUIRED" tooltip="{{debugConfText(extConf)}}">
         <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
         <span style="color: red;">required</span>
       </span>
