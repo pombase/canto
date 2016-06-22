@@ -81,6 +81,10 @@ if (defined $feature) {
     $feature_id = $feature->genotype_id();
     $feature_crumb_text = ucfirst $feature_type . " details";
 
+    if (defined $feature->name()) {
+      $feature_crumb_text .= " - " . $feature->name();
+    }
+
     @feature_genes = map {
       $_->gene();
     } $feature->alleles();
