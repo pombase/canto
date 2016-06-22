@@ -27,7 +27,14 @@
       <breadcrumbs></breadcrumbs>
     </div>
 % } else {
-    <breadcrumbs></breadcrumbs>
+%   if ($current_path =~ /genotype_manage/) {
+      <div class="breadcrumbs-link">
+        <a id="breadcrumbs-genotype-management-link"
+           href="<% $current_path %>" title="Genotype management">
+           Genotype management
+        </a>
+      </div>
+%   }
 % }
   </div>
 </div>
@@ -45,6 +52,7 @@ my $display_name;
 
 my $pub = $st->{pub};
 my $curs_root_uri = $st->{curs_root_uri};
+my $current_path = $c->req()->path();
 
 my $read_only_curs = $st->{read_only_curs} // 0;
 
