@@ -13,6 +13,17 @@
       <a href="<% $feature_url %>" title="<% $display_name %>">
         <% $feature_crumb_text %>
       </a>
+% if (@feature_genes) {
+(
+%   for my $gene (@feature_genes) {
+%     my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
+%                                                  cursdb_gene => $gene);
+        <a href="<% $curs_root_uri %>/feature/gene/view/<% $gene_proxy->feature_id() %>"
+           title="<% $gene_proxy->display_name() %>"><% $gene_proxy->display_name() %></a>
+%   }
+)
+% }
+
       <breadcrumbs></breadcrumbs>
     </div>
 % } else {
@@ -23,22 +34,14 @@
 </div>
 
 <%init>
+use Canto::Curs::GeneProxy;
+
 my $config = $c->config();
 my $feature_id = undef;
 my $st = $c->stash();
 my $feature = $st->{feature};
 my $feature_type = $st->{feature_type};
 my $display_name;
-
-if (defined $feature) {
-  if ($feature_type eq 'gene') {
-    $feature_id = $feature->gene_id();
-  } else {
-    $feature_id = $feature->genotype_id();
-  }
-
-  $display_name = $feature->display_name();
-}
 
 my $pub = $st->{pub};
 my $curs_root_uri = $st->{curs_root_uri};
@@ -58,12 +61,23 @@ if (defined $config->{database_name}) {
 my $instance_top_uri = $c->uri_for('/');
 my $feature_url;
 my $feature_crumb_text;
+my @feature_genes = ();
 
-if (defined $feature_id) {
-  $feature_crumb_text = ucfirst $feature_type . " details";
+if (defined $feature) {
+  $display_name = $feature->display_name();
+
   if ($feature_type eq 'gene') {
+    $feature_id = $feature->gene_id();
     $feature_crumb_text = "$display_name";
+  } else {
+    $feature_id = $feature->genotype_id();
+    $feature_crumb_text = ucfirst $feature_type . " details";
+
+    @feature_genes = map {
+      $_->gene();
+    } $feature->alleles();
   }
+
   $feature_url = "$curs_root_uri/feature/$feature_type/view/$feature_id";
 }
 </%init>
