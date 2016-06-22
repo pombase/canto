@@ -72,13 +72,16 @@ There is a small example file in the test directory:
 
 OBO format ontology data can be imported or updated with:
 
-    ./script/canto_load.pl --ontology ontology_file.obo
+    ./script/canto_load.pl --ontology file_1.obo [--ontology file_2.obo ...]
 
 If you need to import multiple ontology files, they all must be included in
 the same command line:
 
     ./script/canto_load.pl --ontology ontology_file.obo \
        --ontology another_ontology_file.obo
+
+When updating existing ontologies in Canto, all ontologies must be updated
+with the same `canto_load.pl` command.
 
 The OBO file can also be given by URL.  eg.
 
