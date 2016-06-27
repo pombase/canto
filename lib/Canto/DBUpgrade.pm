@@ -180,6 +180,39 @@ my %procs = (
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
+
+  13 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    $dbh->do("PRAGMA foreign_keys = OFF");
+
+    $dbh->do(<<"EOF");
+CREATE TABLE person_temp (
+  person_id integer NOT NULL PRIMARY KEY,
+  name text NOT NULL,
+  email_address text NOT NULL UNIQUE,
+  orcid text UNIQUE,
+  role integer REFERENCES cvterm(cvterm_id) NOT NULL,
+  lab INTEGER REFERENCES lab (lab_id),
+  session_data text,
+  password text,
+  added_date timestamp,
+  known_as TEXT);
+EOF
+
+    $dbh->do("INSERT INTO person_temp(person_id, name, email_address, known_as, role, lab, session_data, password, added_date) " .
+             "SELECT person_id, name, email_address, known_as, role, lab, session_data, password, added_date FROM person");
+
+    $dbh->do("DROP TABLE person");
+    $dbh->do("ALTER TABLE person_temp RENAME TO person");
+
+    $dbh->do("CREATE INDEX person_role_idx ON person(role)");
+
+    $dbh->do("PRAGMA foreign_keys = ON");
+  }
 );
 
 sub upgrade_to
