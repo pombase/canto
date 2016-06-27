@@ -543,7 +543,7 @@ sub _get_all_count_rs
   my $rs = undef;
 
   if (ref $search_scope) {
-    # we got eg. "[GO:000123|SO:000345]" of "[GO:0008150-GO:0000770|GO:0000123]"
+    # we got eg. "[GO:000123|SO:000345]" or "[GO:0008150-GO:0000770|GO:0000123]"
     # from the user so $search_scope is an array of IDs or hashes like
     # { include => 'GO:0008150', exclude => 'GO:0000770' }
     # (meaning exclude a term and children)
