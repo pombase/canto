@@ -1164,7 +1164,7 @@ var ontologyTermConfirm =
           $scope.unsetTermCallback();
         };
         $scope.suggestTerm = function(termSuggestion) {
-          $scope.suggestTermCallback(termSuggestion);
+          $scope.suggestTermCallback({termSuggestion: termSuggestion});
         };
         $scope.confirmTerm = function() {
           $scope.confirmTermCallback();
