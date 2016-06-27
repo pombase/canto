@@ -163,7 +163,8 @@ sub parse {
 
       if ($domain =~ /(\S+)-(\S+)/) {
         $conf{domain} = $1;
-        $conf{exclude_subset_id} = $2;
+        my $exclude_id_str = $2;
+        $conf{exclude_subset_ids} = [split /&/, $exclude_id_str];
       } else {
         $conf{domain} = $domain;
       }

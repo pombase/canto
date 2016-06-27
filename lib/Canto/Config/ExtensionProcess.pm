@@ -118,8 +118,10 @@ sub get_subset_data
   for my $conf (@conf) {
     $domain_subsets_to_store{$conf->{domain}} = $conf->{subset_rel};
 
-    if ($conf->{exclude_subset_id}) {
-      $exclude_subsets_to_store{$conf->{exclude_subset_id}} = 1;
+    if ($conf->{exclude_subset_ids}) {
+      map {
+        $exclude_subsets_to_store{$_} = 1;
+      } @{$conf->{exclude_subset_ids}};
     }
 
     map {

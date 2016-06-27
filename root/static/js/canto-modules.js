@@ -1240,6 +1240,19 @@ function openExtensionRelationDialog($modal, extensionRelation, relationConfig) 
   }).result;
 }
 
+function arrayIntersection(arr1, arr2) {
+  var intersect = [];
+ 
+  $.map(arr1,
+        function(el) {
+          if ($.inArray(el, arr2) != -1) {
+            intersect.push(el);
+          }
+        });
+
+  return intersect;
+}
+
 
 // Filter the extension_configuration results from the server and return
 // only those where the "domain" term ID in the configuration matches one of
@@ -1253,8 +1266,9 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
                    return;
                  }
                  if ($.inArray(conf.domain, subsetIds) != -1) {
-                   if (!conf.exclude_subset_id ||
-                       $.inArray(conf.exclude_subset_id, subsetIds) == -1) {
+                   if (!conf.exclude_subset_ids ||
+                       arrayIntersection(conf.exclude_subset_ids,
+                                         subsetIds).length == 0) {
                      return {
                        displayText: conf.display_text,
                        relation: conf.allowed_relation,
