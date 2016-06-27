@@ -1436,7 +1436,7 @@ evidence_types:
   'Gel electrophoresis evidence': ~
   'Plasmid maintenance assay evidence': ~
 
-# Configuration the applies to an ontology namespace.  An ontology can
+# Configuration that applies to an ontology namespace.  An ontology can
 # be used by more than one annotation_type.  Some (like FYPO_EXT) are
 # only used in extensions.
 # Note: all terms with no parent are tagged with "canto_root_subset" on load
