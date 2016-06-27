@@ -163,6 +163,7 @@ CREATE TABLE person (
        name text NOT NULL,
        known_as text,
        email_address text NOT NULL UNIQUE,
+       orcid text UNIQUE,
        role integer REFERENCES cvterm(cvterm_id) DEFERRABLE INITIALLY DEFERRED  NOT NULL,
        lab INTEGER REFERENCES lab (lab_id),
        session_data text,
