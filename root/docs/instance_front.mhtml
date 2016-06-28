@@ -16,19 +16,6 @@ colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help 
 </p>
 </div>
 
-<div class="col-sm-6 col-md-6">
-
-% if (@sessions) {
-  <h3>Your curation sessions</h3>
-  <ul>
-%   for my $session (@sessions) {
-%     my $curs_key = $session->{key};
-%     my $pubid = $session->{pubid};
-<li><a href='<% $c->uri_for("/curs/$curs_key") %>'><% $pubid %></a></li>
-%   }
-  </ul>
-% }
-</div>
 % }
 
 <div class="col-sm-6 col-md-6">
@@ -59,16 +46,6 @@ my $st = $c->stash();
 
 my $tool_name = $config->{name};
 
-my @sessions = ();
-
-my $all_sessions = $c->session()->{all_sessions};
-
-if (defined $all_sessions) {
-  @sessions = sort {
-    $a->{pubid} cmp $b->{pubid};
-  } values %$all_sessions;
-}
-
 my $current_user = $c->user();
 my $is_admin_user = 0;
 if (defined $current_user && $current_user->is_admin()) {
@@ -77,9 +54,11 @@ if (defined $current_user && $current_user->is_admin()) {
 
 my $canto_offline = $config->{canto_offline};
 
+my $last_submitter_email = $c->session->{last_submitter_email};
+
 my $docs_header;
 
-if (@sessions) {
+if ($last_submitter_email) {
   $docs_header = "Documentation";
 } else {
   $docs_header = "First time curator?";
