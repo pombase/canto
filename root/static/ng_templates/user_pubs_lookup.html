@@ -3,7 +3,8 @@
   <div ng-hide="searching">
     <form ng-hide="searching || pubResults && pubResults.length > 0"
           name="cursUserPaperLookupEmail">
-      <input ng-model="emailAddress" name="email" type="email">
+      <input ng-model="emailAddress" name="email" type="email" size="30"
+             placeholder="Type an email address ...">
       <span class="error" ng-show="cursUserPaperLookupEmail.email.$error.email">
         Not valid email</span>
 
