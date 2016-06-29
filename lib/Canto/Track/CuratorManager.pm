@@ -54,7 +54,13 @@ sub _curs_curator_rs
   my $curs_key = shift;
 
   my $schema = $self->schema();
-  my $curs_rs = $schema->resultset('Curs')->search({ curs_key => $curs_key });
+  my %args = (
+  );
+  if (defined $curs_key) {
+    $args{curs_key} = $curs_key;
+  }
+
+  my $curs_rs = $schema->resultset('Curs')->search(\%args);
 
   return
     $schema->resultset('CursCurator')
@@ -65,7 +71,7 @@ sub _curs_curator_rs
       });
 }
 
-sub _get_current_curator_row
+sub _get_current_curator_row_rs
 {
   my $self = shift;
   my $curs_key = shift;
@@ -79,7 +85,15 @@ sub _get_current_curator_row
                     where => \$where,
                   });
 
-  return $curs_curator_rs->first();
+  return $curs_curator_rs;
+}
+
+sub _get_current_curator_row
+{
+  my $self = shift;
+  my $curs_key = shift;
+
+  return $self->_get_current_curator_row_rs($curs_key)->first();
 }
 
 sub _format_curs_curator_row
@@ -221,6 +235,31 @@ sub set_curator
       curator => $curator->person_id(),
     }
   );
+}
+
+=head2 sessions_by_curator_email
+
+ Usage   : $curator_manager->sessions_by_curator_email($email_address);
+ Function: Return a ResultSet of Curs objects that have the curator with
+           the given email address as the current curator
+
+=cut
+
+sub sessions_by_curator_email
+{
+  my $self = shift;
+  my $curator_email = shift;
+
+  my $schema = $self->schema();
+  my $curator_rs = $schema->resultset('Person');
+  my $curs_curator_rs =
+    $self->_get_current_curator_row_rs()->search({ 'lower(curator.email_address)' => lc $curator_email },
+                                                 {
+                                                   join => 'curator',
+                                                   prefetch => { curs => 'pub' },
+                                                 });
+
+  return $curs_curator_rs->search_related('curs');
 }
 
 =head2 accept_session

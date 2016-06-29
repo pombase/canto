@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More tests => 21;
 
 use Canto::TestUtil;
 use Canto::TrackDB;
@@ -64,3 +64,12 @@ my @all_curators = $curator_manager->session_curators('aaaa0007');
 
 is($all_curators[0]->[0], 'some.testperson@pombase.org');
 is($all_curators[1]->[0], 'val@sanger.ac.uk');
+
+
+my $sessions_by_curator_email_rs =
+  $curator_manager->sessions_by_curator_email('val@sanger.ac.uk');
+
+is($sessions_by_curator_email_rs->count(), 1);
+my $curs_by_email = $sessions_by_curator_email_rs->first();
+is($curs_by_email->curs_key(), 'aaaa0007');
+is($curs_by_email->pub()->uniquename(), 'PMID:19756689');
