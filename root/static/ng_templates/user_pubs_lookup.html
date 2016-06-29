@@ -1,0 +1,30 @@
+<div id="curs-user-paper-lookup">
+  <img ng-show="searching" ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+  <div ng-hide="searching">
+    <form ng-hide="searching || pubResults && pubResults.length > 0"
+          name="cursUserPaperLookupEmail">
+      <input ng-model="emailAddress" name="email" type="email">
+      <span class="error" ng-show="cursUserPaperLookupEmail.email.$error.email">
+        Not valid email</span>
+
+      <button type="button" ng-show="!cursUserPaperLookupEmail.email.$error.email"
+              class="btn btn-default" aria-label="Search" ng-click="search()">
+        <span class=" glyphicon glyphicon-search" aria-hidden="true"></span>
+      </button>
+    </form>
+
+    <div ng-show="pubResults">
+      <div ng-show="pubResults.length == 0">
+        No publications found
+      </div>
+      <div ng-show="pubResults.length > 0">
+        Publications curated by {{emailAddress}}:
+        <pubs-list-view rows="pubResults"></pubs-list-view>
+        <div ng-show="pubResults.length < count">
+          (Only showing the first {{pubResults.length}} publications)
+        </div>
+        <a href="#" ng-click="reset()"><span style="font-size: 90%">Search again</span></a>
+      </div>
+    </div>
+  </div>
+</div>

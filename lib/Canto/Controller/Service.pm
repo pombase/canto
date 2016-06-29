@@ -233,7 +233,7 @@ sub _pubs_results
     my $data = $lookup->lookup_by_curator_email($search_string);
 
     return {
-      results => $data->{results},
+      pub_results => $data->{results},
       count => $data->{count},
       status => 'success',
     };

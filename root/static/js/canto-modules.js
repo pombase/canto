@@ -4660,3 +4660,72 @@ var initiallyHiddenText =
 
 canto.directive('initiallyHiddenText', [initiallyHiddenText]);
 
+
+var userPubsLookupCtrl =
+  function(CantoGlobals, CantoService) {
+    return {
+      scope: {
+        initialEmailAddress: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/user_pubs_lookup.html',
+      controller: function($scope) {
+        $scope.emailAddress = $scope.initialEmailAddress;
+
+        $scope.app_static_path = CantoGlobals.app_static_path;
+
+        $scope.searching = false;
+
+        $scope.search = function() {
+          $scope.pubResults = null;
+          if ($scope.emailAddress) {
+            $scope.searching = true;
+            var pathParts = ['by_curator_email', $scope.emailAddress];
+            var promise =
+                CantoService.lookup('pubs', pathParts, {});
+
+            promise.success(function(data) {
+              if (data.status == 'success') {
+                $scope.pubResults = data.pub_results;
+                $scope.count = data.count;
+              }
+            });
+
+            promise.finally(function() {
+              $scope.searching = false;
+            });
+          }
+        };
+
+        $scope.reset = function() {
+          $scope.pubResults = null;
+          $scope.count = -1;
+        };
+
+        $scope.reset();
+      },
+    };
+  };
+
+canto.directive('userPubsLookup',
+                ['CantoGlobals', 'CantoService', userPubsLookupCtrl]);
+
+
+var pubsListViewCtrl =
+  function(CantoGlobals) {
+    return {
+      scope: {
+        rows: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/pubs_list_view.html',
+      controller: function($scope) {
+        $scope.CantoGlobals = CantoGlobals;
+        $scope.application_root = CantoGlobals.application_root;
+      },
+    };
+  };
+
+canto.directive('pubsListView', ['CantoGlobals', pubsListViewCtrl]);
