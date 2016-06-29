@@ -14,7 +14,7 @@
     </form>
 
     <div ng-show="pubResults">
-      <div ng-show="pubResults.length == 0">
+      <div ng-show="pubResults.length == 0 && emailAddress.length > 0">
         No publications found
       </div>
       <div ng-show="pubResults.length > 0">
