@@ -1151,6 +1151,7 @@ implementation_classes:
   ontology_adaptor: Canto::Track::OntologyLookup
   status_adaptor: Canto::Track::StatusStorage
   person_adaptor: Canto::Track::PersonLookup
+  pubs_adaptor: Canto::Track::PubsLookup
 
 allele_type_list:
   - name: wild type
