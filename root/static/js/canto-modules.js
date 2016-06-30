@@ -4661,6 +4661,9 @@ var initiallyHiddenText =
 canto.directive('initiallyHiddenText', [initiallyHiddenText]);
 
 
+var activeSessionStatuses =
+    ['SESSION_CREATED', 'SESSION_ACCEPTED', 'CURATION_IN_PROGRESS', 'CURATION_PAUSED']
+
 var userPubsLookupCtrl =
   function(CantoGlobals, CantoService) {
     return {
@@ -4688,6 +4691,16 @@ var userPubsLookupCtrl =
             promise.success(function(data) {
               if (data.status == 'success') {
                 $scope.pubResults = data.pub_results;
+                $scope.activeList = [];
+                $scope.completedList = [];
+                $.map(data.pub_results,
+                      function(row) {
+                        if ($.inArray(row.status, activeSessionStatuses) >= 0) {
+                          $scope.activeList.push(row);
+                        } else {
+                          $scope.completedList.push(row);
+                        }
+                      });
                 $scope.count = data.count;
               }
             });
@@ -4700,6 +4713,8 @@ var userPubsLookupCtrl =
 
         $scope.reset = function() {
           $scope.pubResults = null;
+          $scope.activeList = null;
+          $scope.completedList = null;
           $scope.count = -1;
         };
 

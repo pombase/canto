@@ -19,8 +19,15 @@
         No publications found
       </div>
       <div ng-show="pubResults.length > 0">
-        Publications curated by {{emailAddress}}:
-        <pubs-list-view rows="pubResults"></pubs-list-view>
+        Publications with active sessions curated by {{emailAddress}}:
+        <pubs-list-view ng-hide="activeList.length == 0" rows="activeList"></pubs-list-view>
+        <div ng-show="activeList.length == 0">
+          [none]
+        </div>
+        <div ng-show="completedList.length > 0">
+          Publications with completed annotation sessions:
+          <pubs-list-view rows="completedList"></pubs-list-view>
+        </div>
         <div ng-show="pubResults.length < count">
           (Only showing the first {{pubResults.length}} publications)
         </div>
