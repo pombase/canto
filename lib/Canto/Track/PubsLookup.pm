@@ -64,6 +64,10 @@ sub lookup_by_curator_email
 
   my $rs = $curator_manager->sessions_by_curator_email($email_address);
 
+  $rs = $rs->search({ 'type.name' => 'annotation_status' },
+                    { join => { cursprops => 'type' },
+                      '+columns' => ['cursprops.value'] });
+
   my $count = $rs->count();
 
   return
@@ -73,6 +77,7 @@ sub lookup_by_curator_email
           {
             curs_key => $_->curs_key(),
             pub_uniquename => $_->pub()->uniquename(),
+            status => $_->cursprops()->first()->value(),
           };
         } $rs->search({}, { rows => 100 })->all()
       ],
