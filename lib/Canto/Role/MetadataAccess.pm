@@ -52,7 +52,8 @@ use Moose::Role;
  Returns : nothing
 
 =cut
-sub set_metadata
+sub
+  set_metadata
 {
   my $self = shift;
 
@@ -64,7 +65,6 @@ sub set_metadata
   my $key = shift;
   my $value = shift;
 
-  die if $key eq 'submitter_email';  # temporary hack to catch old code
   if (defined $value) {
     $schema->resultset('Metadata')->update_or_create({ key => $key,
                                                        value => $value });
