@@ -2661,8 +2661,7 @@ canto.controller('TermSuggestDialogCtrl',
                  termSuggestDialogCtrl]);
 
 
-function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles,
-                       followLocation) {
+function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
   var url = curs_root_uri + '/feature/genotype';
 
   if (genotype_id) {
@@ -2682,19 +2681,6 @@ function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_back
   var result = $http.post(url, data);
 
   result.finally(loadingEnd);
-
-  if (followLocation) {
-    result.success(function(data) {
-      if (data.status == "success" || data.status == "existing") {
-        window.location.href = data.location;
-      } else {
-        toaster.pop('error', data.message);
-      }
-    }).
-    error(function(data, status){
-      toaster.pop('error', "Accessing server failed: " + (data || status) );
-    });
-  }
 
   return result;
 }
@@ -2830,189 +2816,205 @@ canto.controller('SingleGeneAddDialogCtrl',
                  ['$scope', '$modalInstance', '$q', 'toaster', 'CantoService', 'Curs',
                  singleGeneAddDialogCtrl]);
 
-var multiAlleleCtrl =
-  function($scope, $http, $modal, CantoConfig, Curs, toaster) {
-  $scope.getGenesFromServer = function() {
-    Curs.list('gene').success(function(results) {
-      $scope.genes = results;
+var genotypeEdit =
+  function($http, $modal, CantoConfig, Curs, toaster) {
+    return {
+      scope: {
+        editOrDuplicate: '@',
+        genotypeId: '@',
+        storedCallback: '&',
+        cancelCallback: '&',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/genotype_edit.html',
+      controller: function($scope) {
+        $scope.data = {
+          annotationCount: 0,
+          genotypeName: null,
+          genotypeBackground: null,
+        };
 
-      $.map($scope.genes,
-            function(gene) {
-              gene.display_name = gene.primary_name || gene.primary_identifier;
+        $scope.genes = [
+        ];
+
+        if ($scope.genotypeId) {
+          if (editOrDuplicate == 'edit') {
+            $scope.data.genotype_id = $scope.genotypeId;
+            $scope.isEditing = true;
+          } else {
+            $scope.isEditing = false;
+          }
+          Curs.details('genotype', ['by_id', $scope.genotypeId])
+            .success(function(genotypeDetails) {
+              $scope.alleles = genotypeDetails.alleles;
+              $scope.data.genotypeName = genotypeDetails.name;
+              $scope.data.genotypeBackground = genotypeDetails.background;
+              $scope.data.annotationCount = genotypeDetails.annotation_count;
             });
-    }).error(function() {
-      toaster.pop('error', 'failed to get gene list from server');
-    });
-  };
+        }
 
-  $scope.genes = [
-  ];
+        $scope.getGenesFromServer = function() {
+          Curs.list('gene').success(function(results) {
+            $scope.genes = results;
 
-  $scope.reset = function() {
-    $scope.alleles = [
-    ];
-
-    $scope.getGenesFromServer();
-
-    $scope.data = {
-      genotype_long_name: '',
-      genotype_name: '',
-      addAnother: false,
-    };
-  };
-
-  $scope.reset();
-
-  $scope.env = {
-    curs_config_promise: CantoConfig.get('curs_config')
-  };
-
-  $scope.init_from = function(genotype_id) {
-    Curs.details('genotype', ['by_id', genotype_id])
-      .success(function(genotype_details) {
-        $scope.alleles = genotype_details.alleles;
-        $scope.data.genotype_name = genotype_details.name;
-        $scope.data.genotype_background = genotype_details.background;
-      });
-  };
-
-  $scope.init = function(edit_or_duplicate, genotype_id) {
-    if (genotype_id) {
-      if (edit_or_duplicate === 'edit') {
-        $scope.data.genotype_id = genotype_id;
-        $scope.isEditing = true;
-      } else {
-        $scope.isEditing = false;
-      }
-      $scope.init_from(genotype_id);
-    }
-  };
-
-  $scope.$watch('alleles',
-                function() {
-                  $scope.env.curs_config_promise.then(function(response) {
-                    $scope.data.genotype_long_name =
-                      response.data.genotype_config.default_strain_name +
-                      " " +
-                      $.map($scope.alleles, function(val) {
-                        var newName = val.name || 'no_name';
-                        if (val.description === '') {
-                          newName += "(" + val.type + ")";
-                        } else {
-                          newName += "(" + val.description + ")";
-                        }
-                        if (val.expression !== '') {
-                          newName += "[" + val.expression + "]";
-                        }
-                        return newName;
-                      }).join(" ");
+            $.map($scope.genes,
+                  function(gene) {
+                    gene.display_name = gene.primary_name || gene.primary_identifier;
                   });
-                },
-                true);
-
-  $scope.store = function() {
-    var result =
-      storeGenotype(toaster, $http, $scope.data.genotype_id,
-                    $scope.data.genotype_name, $scope.data.genotype_background,
-                    $scope.alleles, !$scope.data.addAnother);
-
-    result.success(function(data) {
-      if (data.status === "success") {
-        if ($scope.data.genotype_id) {
-          toaster.pop('info', "Successfully stored changes");
-        } else {
-          toaster.pop('info', "Created new genotype: " + data.genotype_display_name);
-        }
-        $scope.reset();
-      } else {
-        if (data.status === "existing") {
-          toaster.pop('info', "Using existing genotype: " + data.genotype_display_name);
-          $scope.reset();
-        } else {
-          toaster.pop('error', data.message);
-        }
-      }
-    }).
-    error(function(data, status){
-      toaster.pop('error', "Accessing server failed: " + (data || status) );
-    });
-  };
-
-  $scope.removeAllele = function (allele) {
-    $scope.alleles.splice($scope.alleles.indexOf(allele), 1);
-  };
-
-  $scope.allelesEqual = function(allele1, allele2) {
-    return angular.equals(allele1, allele2);
-  };
-
-  $scope.findExistingAlleleIdx = function(allele) {
-    var index = $scope.alleles.indexOf(allele);
-
-    if (index >= 0) {
-      return index;
-    }
-
-    $.map($scope.alleles,
-          function(existingAllele, mapIndex) {
-            if ($scope.allelesEqual(existingAllele, allele)) {
-              index = mapIndex;
-            }
+          }).error(function() {
+            toaster.pop('error', 'failed to get gene list from server');
           });
+        };
 
-    return index;
-  };
+        $scope.reset = function() {
+          $scope.alleles = [
+          ];
 
-  $scope.openAlleleEditDialog =
-    function(allele) {
-      var endogenousWildtypeAllowed = false;
+          $scope.getGenesFromServer();
 
-      if (allele.gene) {
-        allele.gene_display_name = allele.gene.display_name;
-        allele.gene_systematic_id = allele.gene.primary_identifier;
-        allele.gene_id = allele.gene.gene_id;
-        delete allele.gene;
-      }
+          $scope.data = {
+            genotype_long_name: '',
+            genotype_name: '',
+          };
+        };
 
-      // see: https://sourceforge.net/p/pombase/curation-tool/782/
-      // and: https://sourceforge.net/p/pombase/curation-tool/576/
-      $.map($scope.alleles,
-            function(existingAllele) {
-              if (existingAllele.gene_id == allele.gene_id) {
-                endogenousWildtypeAllowed = true;
+        $scope.reset();
+
+        $scope.env = {
+          curs_config_promise: CantoConfig.get('curs_config')
+        };
+
+        $scope.$watch('alleles',
+                      function() {
+                        $scope.env.curs_config_promise.then(function(response) {
+                          $scope.data.genotype_long_name =
+                            response.data.genotype_config.default_strain_name +
+                            " " +
+                            $.map($scope.alleles, function(val) {
+                              var newName = val.name || 'no_name';
+                              if (val.description === '') {
+                                newName += "(" + val.type + ")";
+                              } else {
+                                newName += "(" + val.description + ")";
+                              }
+                              if (val.expression !== '') {
+                                newName += "[" + val.expression + "]";
+                              }
+                              return newName;
+                            }).join(" ");
+                        });
+                      },
+                      true);
+
+        $scope.store = function() {
+          var result =
+              storeGenotype(toaster, $http, $scope.data.genotype_id,
+                            $scope.data.genotypeName, $scope.data.genotypeBackground,
+                            $scope.alleles);
+
+          result.success(function(data) {
+            if (data.status === "success") {
+              if ($scope.data.genotype_id) {
+                toaster.pop('info', "Successfully stored changes");
+              } else {
+                toaster.pop('info', "Created new genotype: " + data.genotype_display_name);
+              }
+              $scope.storedCallback({genotypeId: data.genotype_id});
+              $scope.reset();
+            } else {
+              if (data.status === "existing") {
+                toaster.pop('info', "Using existing genotype: " + data.genotype_display_name);
+                $scope.storedCallback({genotypeId: data.genotype_id});
+                $scope.reset();
+              } else {
+                toaster.pop('error', data.message);
+              }
+            }
+          }).
+          error(function(data, status){
+            toaster.pop('error', "Accessing server failed: " + (data || status) );
+          });
+        };
+
+        $scope.removeAllele = function (allele) {
+          $scope.alleles.splice($scope.alleles.indexOf(allele), 1);
+        };
+
+        $scope.allelesEqual = function(allele1, allele2) {
+          return angular.equals(allele1, allele2);
+        };
+
+        $scope.findExistingAlleleIdx = function(allele) {
+          var index = $scope.alleles.indexOf(allele);
+
+          if (index >= 0) {
+            return index;
+          }
+
+          $.map($scope.alleles,
+                function(existingAllele, mapIndex) {
+                  if ($scope.allelesEqual(existingAllele, allele)) {
+                    index = mapIndex;
+                  }
+                });
+
+          return index;
+        };
+
+        $scope.openAlleleEditDialog =
+          function(allele) {
+            var endogenousWildtypeAllowed = false;
+
+            if (allele.gene) {
+              allele.gene_display_name = allele.gene.display_name;
+              allele.gene_systematic_id = allele.gene.primary_identifier;
+              allele.gene_id = allele.gene.gene_id;
+              delete allele.gene;
+            }
+
+            // see: https://sourceforge.net/p/pombase/curation-tool/782/
+            // and: https://sourceforge.net/p/pombase/curation-tool/576/
+            $.map($scope.alleles,
+                  function(existingAllele) {
+                    if (existingAllele.gene_id == allele.gene_id) {
+                      endogenousWildtypeAllowed = true;
+                    }
+                  });
+
+            var editInstance =
+                makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed);
+
+            editInstance.result.then(function (editedAllele) {
+              if ($scope.findExistingAlleleIdx(editedAllele) < 0) {
+                $scope.alleles.push(editedAllele);
+              } else {
+                toaster.pop('info', 'Not adding duplicate allele');
               }
             });
+          };
 
-      var editInstance =
-        makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed);
+        $scope.openSingleGeneAddDialog = function() {
+          var modal = openSingleGeneAddDialog($modal);
+          modal.result.then(function () {
+            $scope.getGenesFromServer();
+          });
+        };
 
-      editInstance.result.then(function (editedAllele) {
-        if ($scope.findExistingAlleleIdx(editedAllele) < 0) {
-          $scope.alleles.push(editedAllele);
-        } else {
-          toaster.pop('info', 'Not adding duplicate allele');
-        }
-      });
-    };
+        $scope.cancel = function() {
+          $scope.cancelCallback();
+        };
 
-  $scope.openSingleGeneAddDialog = function() {
-    var modal = openSingleGeneAddDialog($modal);
-    modal.result.then(function () {
-      $scope.getGenesFromServer();
-    });
+        $scope.isValid = function() {
+          return $scope.alleles.length > 0;
+        };
+      }
+    }
   };
 
-  $scope.cancel = function() {
-    window.location.href = curs_root_uri + '/genotype_manage';
-  };
-
-  $scope.isValid = function() {
-    return $scope.alleles.length > 0;
-  };
-};
-
-canto.controller('MultiAlleleCtrl', ['$scope', '$http', '$modal', 'CantoConfig', 'Curs', 'toaster',
-                                     multiAlleleCtrl]);
+canto.directive('genotypeEdit',
+                ['$http', '$modal', 'CantoConfig', 'Curs', 'toaster',
+                 genotypeEdit]);
 
 
 var genotypeViewCtrl =
@@ -3037,24 +3039,42 @@ var GenotypeManageCtrl =
       genotypes: [],
       waitingForServer: true,
       selectedGenotypeIdFromPath: null,
+      editingGenotype: false,
     };
 
-    CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
-      $scope.data.genotypes = results;
-      $scope.data.waitingForServer = false;
+    $scope.addGenotype = function() {
+      $scope.data.editingGenotype = true;
+    };
 
-      $scope.data.path = $location.path();
+    $scope.cancelEdit = function() {
+      $scope.data.editingGenotype = false;
+    };
 
-      if ($scope.data.path) {
-        var res = /^\/select\/(\d+)$/.exec($scope.data.path);
-        if (res) {
-          $scope.data.selectedGenotypeIdFromPath = res[1];
+    $scope.storedCallback = function(genotypeId) {
+      $scope.data.editingGenotype = false;
+      $scope.readGenotypes();
+    };
+
+    $scope.readGenotypes = function() {
+      CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
+        $scope.data.genotypes = results;
+        $scope.data.waitingForServer = false;
+
+        $scope.data.path = $location.path();
+
+        if ($scope.data.path) {
+          var res = /^\/select\/(\d+)$/.exec($scope.data.path);
+          if (res) {
+            $scope.data.selectedGenotypeIdFromPath = res[1];
+          }
         }
-      }
-    }).catch(function() {
-      toaster.pop('error', "couldn't read the genotype list from the server");
-      $scope.data.waitingForServer = false;
-    });
+      }).catch(function() {
+        toaster.pop('error', "couldn't read the genotype list from the server");
+        $scope.data.waitingForServer = false;
+      });
+    };
+
+    $scope.readGenotypes();
   };
 
 canto.controller('GenotypeManageCtrl',
