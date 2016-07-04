@@ -4558,12 +4558,20 @@ var termNameComplete =
         var select = $(elem).find('select');
 
         select.change(function() {
-          scope.foundCallback({
-            termId: scope.chosenTerm.id,
-            termName: scope.chosenTerm.name,
-            searchString: null,
-            matchingSynonym: null,
-          });
+          $timeout(function() {
+            var termId = null;
+            var termName = null;
+            if (scope.chosenTerm) {
+              termId = scope.chosenTerm.id;
+              termName = scope.chosenTerm.name;
+            }
+            scope.foundCallback({
+              termId: termId,
+              termName: termName,
+              searchString: null,
+              matchingSynonym: null,
+            });
+          }, 1);
         });
       }
     };
