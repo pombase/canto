@@ -8,13 +8,13 @@
   </span>
   <span ng-if="rangeConfig.type == 'Ontology'">
     <span ng-if="disabled">Term name</span>
-    <div ng-if="!disabled">
+    <span ng-if="!disabled">
       <term-name-complete current-term-name="{{extensionRelation.rangeDisplayName}}"
                           found-callback="termFoundCallback(termId, termName, searchString)"
                           mode="extension" size="60"
                           annotation-type-name="{{rangeOntologyScope}}"></term-name-complete>
       <span class="curs-extension-name-complete-hint">(Start typing a description)</span>
-    </div>
+    </span>
   </span>
   <span ng-if="rangeConfig.type == 'Text'">
     <span ng-if="disabled">Value</span>
