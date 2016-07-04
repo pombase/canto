@@ -30,7 +30,7 @@
     <div class="row">
       <div class="col-sm-6 col-md-6">
         <div ng-hide="genes.length">
-          <img src="<% $c->uri_for('/static/images/spinner.gif') %>"/>
+          <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
           Loading genes ...
         </div>
         <div class="curs-genotype-edit-gene-list" ng-show="genes.length">

@@ -2817,7 +2817,7 @@ canto.controller('SingleGeneAddDialogCtrl',
                  singleGeneAddDialogCtrl]);
 
 var genotypeEdit =
-  function($http, $modal, CantoConfig, Curs, toaster) {
+  function($http, $modal, CantoConfig, CantoGlobals, Curs, toaster) {
     return {
       scope: {
         editOrDuplicate: '@',
@@ -2829,6 +2829,8 @@ var genotypeEdit =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_edit.html',
       controller: function($scope) {
+        $scope.app_static_path = CantoGlobals.app_static_path;
+
         $scope.data = {
           annotationCount: 0,
           genotypeName: null,
@@ -3013,7 +3015,7 @@ var genotypeEdit =
   };
 
 canto.directive('genotypeEdit',
-                ['$http', '$modal', 'CantoConfig', 'Curs', 'toaster',
+                ['$http', '$modal', 'CantoConfig', 'CantoGlobals', 'Curs', 'toaster',
                  genotypeEdit]);
 
 
