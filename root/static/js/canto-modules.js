@@ -1703,7 +1703,7 @@ var extensionBuilder =
                         $scope.setIsValid();
                       }, true);
 
-        $scope.startAddPart = function(relationConfig) {
+        $scope.startAddRelation = function(relationConfig) {
           var editExtensionRelation = {
             relation: relationConfig.relation,
             rangeDisplayName: '',
