@@ -1,5 +1,4 @@
 <div class="curs-extension-builder">
-  <div>
     <div style="padding: 0 0 5px 0">
       <span ng-if="isNewExtension">Can you extend this annotation by providing
         additional details based on the experiments in this paper?</span>
@@ -21,15 +20,21 @@
                                   is-valid="andExtIsValid"></extension-builder>
     </div>
 
-    <div ng-if="currentUserIsAdmin">
-      <a href="#" ng-click="manualEdit()">Edit as string (admin only) ...</a>
-    </div>
-  </div>
-
-  <div ng-if="extension.length > 0" style="padding-top: 10px">
+  <div ng-if="extension.length > 1 || extension[0].length > 0" style="padding-top: 10px">
     <div>Extension added so far:</div>
     <div>
       <extension-display extension="extension" show-delete="true"></extension-display>
+    </div>
+  </div>
+
+  <div ng-if="currentUserIsAdmin" style="padding-top: 15px; font-size: 95%;">
+     Admin only:
+    <div style="padding: 5px; font-size: 95%" ng-show="extension[extension.length - 1].length != 0">
+      <a href="#" ng-click="addOrGroup()">Add another group ...</a>
+    </div>
+
+    <div style="padding: 5px; font-size: 95%">
+      <a href="#" ng-click="manualEdit()">Edit as text ...</a>
     </div>
   </div>
 </div>

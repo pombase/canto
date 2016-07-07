@@ -1749,6 +1749,12 @@ var extensionBuilder =
                         $scope.termDetails = { id: null };
                     });
 
+        $scope.addOrGroup = function() {
+          if ($scope.extension[$scope.extension.length - 1].length != 0) {
+            $scope.extension.push([]);
+          }
+        };
+
         $scope.manualEdit = function() {
           var editPromise =
             openExtensionManualEditDialog($modal, $scope.extension, $scope.matchingConfigurations);
@@ -1984,24 +1990,26 @@ var extensionDisplay =
 canto.directive('extensionDisplay', ['CantoGlobals', extensionDisplay]);
 
 
-var extensionOrPartDisplay =
+var extensionOrGroupDisplay =
   function(CantoGlobals) {
     return {
       scope: {
         extension: '=',
-        orPart: '=',
+        orGroup: '=',
         showDelete: '@',
+        editable: '@',
+        isFirst: '@',
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/extension_or_part_display.html',
+      templateUrl: app_static_path + 'ng_templates/extension_or_group_display.html',
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
-        $scope.deleteAndPart = function(andPart) {
+        $scope.deleteAndGroup = function(andGroup) {
           if ($scope.showDelete) {
-            arrayRemoveOne($scope.orPart, andPart);
-            if ($scope.orPart.length == 0) {
-              arrayRemoveOne($scope.extension, $scope.orPart);
+            arrayRemoveOne($scope.orGroup, andGroup);
+            if ($scope.orGroup.length == 0 && $scope.extension.length > 1) {
+              arrayRemoveOne($scope.extension, $scope.orGroup);
             }
           }
         };
@@ -2009,7 +2017,7 @@ var extensionOrPartDisplay =
     };
   };
 
-canto.directive('extensionOrPartDisplay', ['CantoGlobals', extensionOrPartDisplay]);
+canto.directive('extensionOrGroupDisplay', ['CantoGlobals', extensionOrGroupDisplay]);
 
 
 var ontologyWorkflowCtrl =
