@@ -1484,27 +1484,21 @@ canto.directive('extensionManualEdit',
                 [extensionManualEdit]);
 
 
-var extensionBuilder =
+var extensionOrGroupBuilder =
   function($modal, $q, CantoGlobals, CantoConfig, CantoService) {
     return {
       scope: {
-        extension: '=',
-        termId: '@',
-        featureDisplayName: '@',
+        orGroup: '=',
+        matchingConfigurations: '=',
         isValid: '=',
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/extension_builder.html',
+      templateUrl: app_static_path + 'ng_templates/extension_or_group_builder.html',
       controller: function($scope) {
         $scope.isValid = true;
         $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
         $scope.manualEditMode = false;
-        if ($scope.extension && Object.keys($scope.extension).length > 0) {
-          $scope.isNewExtension = false;
-        } else {
-          $scope.isNewExtension = true;
-        }
 
         // the current counts of relations, used to test the cardinality
         // constraints
@@ -1543,8 +1537,8 @@ var extensionBuilder =
                         newCounts[key] = 1;
                       }
                     };
-                  if ($scope.extension.length > 0) {
-                  $.map($scope.extension[0],
+                  if ($scope.orGroup.length > 0) {
+                  $.map($scope.orGroup[0],
                         function(part) {
                           var matchingRangeConf = null;
                           $.map(relConf.range,
@@ -1644,29 +1638,91 @@ var extensionBuilder =
           }
         };
 
+        $scope.$watch('extension',
+                      function() {
+                        $scope.checkCardinality($scope.matchingConfigurations);
+                      }, true);
+
+        $scope.$watch('matchingConfigurations',
+                      function() {
+                        $scope.checkCardinality($scope.matchingConfigurations);
+                      }, true);
+
+        $scope.$watch('cardinalityCounts',
+                      function() {
+                        $scope.setIsValid();
+                      }, true);
+
+        $scope.startAddRelation = function(relationConfig) {
+          var editExtensionRelation = {
+            relation: relationConfig.relation,
+            rangeDisplayName: '',
+          };
+
+          var editPromise =
+            openExtensionRelationDialog($modal, editExtensionRelation, relationConfig);
+
+          editPromise.then(function(result) {
+            $scope.orGroup.push(result.extensionRelation);
+          });
+        };
+      },
+    };
+  };
+
+canto.directive('extensionOrGroupBuilder',
+                ['$modal', '$q', 'CantoGlobals', 'CantoConfig', 'CantoService',
+                 extensionOrGroupBuilder]);
+
+function extensionIsEmpty(extension) {
+  if (extension) {
+    if (extension.length == 0 ||
+        extension.length == 1 && extension[0].length == 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
+var extensionBuilder =
+  function($modal, $q, CantoGlobals, CantoConfig, CantoService) {
+    return {
+      scope: {
+        extension: '=',
+        termId: '@',
+        featureDisplayName: '@',
+        isValid: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/extension_builder.html',
+      controller: function($scope) {
+        $scope.isValid = true;
+        $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
+        $scope.manualEditMode = false;
+        $scope.matchingConfigurations = [];
+
+        if (!$scope.extension || $scope.extension.length == 0) {
+          $scope.extension = [[]];
+        }
+
+        $scope.isNewExtension = extensionIsEmpty($scope.extension);
+
         $scope.extensionConfiguration = [];
         $scope.termDetails = { id: null };
-
-        $scope.asString = function() {
-          if ($scope.extension) {
-            return $.map($scope.extension,
-                         function(part) {
-                           return part.relation + '(' + part.rangeValue + ')';
-                         }).join(",");
-          }
-
-          return '';
-        };
 
         $scope.updateMatchingConfig = function() {
           var subset_ids = $scope.termDetails.subset_ids;
 
           if ($scope.extensionConfiguration.length > 0 &&
               subset_ids && subset_ids.length > 0) {
-            $scope.matchingConfigurations = 
+            var newConf =
               extensionConfFilter($scope.extensionConfiguration, subset_ids,
                                   CantoGlobals.current_user_is_admin ? 'admin' : 'user');
-            $scope.checkCardinality($scope.matchingConfigurations);
+            copyObject(newConf, $scope.matchingConfigurations);
             return;
           }
 
@@ -1692,37 +1748,6 @@ var extensionBuilder =
                         }
                         $scope.termDetails = { id: null };
                     });
-
-        $scope.$watch('extension',
-                      function() {
-                        $scope.checkCardinality($scope.matchingConfigurations);
-                      }, true);
-
-        $scope.$watch('cardinalityCounts',
-                      function() {
-                        $scope.setIsValid();
-                      }, true);
-
-        $scope.startAddRelation = function(relationConfig) {
-          var editExtensionRelation = {
-            relation: relationConfig.relation,
-            rangeDisplayName: '',
-          };
-
-          var editPromise =
-            openExtensionRelationDialog($modal, editExtensionRelation, relationConfig);
-
-          editPromise.then(function(result) {
-            var andPart;
-            if ($scope.extension.length == 0) {
-              andPart = [];
-              $scope.extension.push(andPart);
-            } else {
-              andPart = $scope.extension[0];
-            }
-            andPart.push(result.extensionRelation);
-          });
-        };
 
         $scope.manualEdit = function() {
           var editPromise =
