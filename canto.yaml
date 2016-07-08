@@ -552,6 +552,9 @@ class_info:
       editable: 1
       display_field: name
       order_by: name
+      search_fields:
+        - email_address
+        - name
       field_info_list:
         - name: name
           source: name
