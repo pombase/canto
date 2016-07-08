@@ -396,6 +396,7 @@ canto.service('CantoGlobals', function($window) {
   this.ferret_choose = $window.ferret_choose;
   this.read_only_curs = $window.read_only_curs;
   this.is_admin_session = $window.is_admin_session;
+  this.is_admin_user = $window.is_admin_user;
   this.current_user_is_admin = $window.current_user_is_admin;
 });
 
@@ -4685,6 +4686,8 @@ var userPubsLookupCtrl =
         $scope.emailAddress = $scope.initialEmailAddress;
 
         $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.is_admin_user = CantoGlobals.is_admin_user;
+        $scope.application_root = CantoGlobals.application_root;
 
         $scope.searching = false;
 
