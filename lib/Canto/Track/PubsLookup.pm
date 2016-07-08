@@ -79,7 +79,11 @@ sub lookup_by_curator_email
             pub_uniquename => $_->pub()->uniquename(),
             status => $_->cursprops()->first()->value(),
           };
-        } $rs->search({}, { rows => 100 })->all()
+        } $rs->search({},
+                      {
+                        rows => 100,
+                        order_by => { -desc => ['pub_id'] },
+                      })->all()
       ],
       count => $count,
     };
