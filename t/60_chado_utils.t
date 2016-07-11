@@ -16,15 +16,18 @@ my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
 my $chado_schema = $test_util->chado_schema();
 
-my %curation_stats = Canto::Chado::Utils::curation_stats($chado_schema, $track_schema);
+my @stats_table = Canto::Chado::Utils::curation_stats_table($chado_schema, $track_schema);
 
-cmp_deeply(\%curation_stats,
-           {
-             'annual_community_annotation_counts' => {
-               '2015' => 2
-             },
-             'annual_curator_annotation_counts' => {
-               '2016' => 1,
-               '2015' => 1
-             }
-           });
+cmp_deeply(\@stats_table,
+           [
+             [
+               2015,
+               1,
+               2
+             ],
+             [
+               2016,
+               1,
+               0
+             ]
+           ]);

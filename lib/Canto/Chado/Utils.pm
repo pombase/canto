@@ -38,7 +38,7 @@ under the same terms as Perl itself.
 use warnings;
 use strict;
 
-sub curation_stats
+sub curation_stats_table
 {
   my $chado_schema = shift;
   my $track_schema = shift;
@@ -84,10 +84,24 @@ EOF
     }
   }
 
-  return (
-    annual_community_annotation_counts => \%annual_community_annotation_counts,
-    annual_curator_annotation_counts => \%annual_curator_annotation_counts,
-  );
+  my $first_year = 9999;
+
+  map {
+    $first_year = $_ if $_ < $first_year
+  } (keys %annual_community_annotation_counts,
+     keys %annual_curator_annotation_counts);
+
+  my @rows = ();
+
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+  my $current_year = $year + 1900;
+
+  for (my $year = $first_year; $year <= $current_year; $year++) {
+    push @rows, [$year, $annual_curator_annotation_counts{$year} // 0,
+                 $annual_community_annotation_counts{$year} // 0];
+  }
+
+  return @rows;
 }
 
 
