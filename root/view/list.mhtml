@@ -22,7 +22,7 @@ $order_by => undef
 %     my $column_name = $col_conf->{name};
 %     my $column_heading = ucfirst $column_name;
 %     $column_heading =~ s/_/ /g;
-        <th><span class="field-label">
+        <th><span>
 %     if ($is_inline) {
           <% $column_heading %>
 %     } else {

@@ -337,6 +337,12 @@ table.list tr.even, table.list tr:nth-child(even) {
 table.list tr.odd, table.list tr:nth-child(odd) {
   background-color: white;
 }
+.list_page th {
+  white-space: normal !important;
+}
+.list_page table {
+  font-size: 85%;
+}
 .list th a:link {
   color: #226
 }
