@@ -72,8 +72,6 @@ EOF
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
   while (my ($email_address, $approval_date) = $sth->fetchrow_array()) {
-    warn "$email_address  $approval_date\n";
-
     if ($approval_date =~ /^(\d\d\d\d)-\d\d-\d\d/) {
       my $year = $1;
       if ($curator_emails->{$email_address}) {
