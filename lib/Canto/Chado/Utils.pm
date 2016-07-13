@@ -38,7 +38,7 @@ under the same terms as Perl itself.
 use warnings;
 use strict;
 
-sub curation_stats_table
+sub annotation_stats_table
 {
   my $chado_schema = shift;
   my $track_schema = shift;

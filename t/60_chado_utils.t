@@ -16,7 +16,7 @@ my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
 my $chado_schema = $test_util->chado_schema();
 
-my @stats_table = Canto::Chado::Utils::curation_stats_table($chado_schema, $track_schema);
+my @stats_table = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
 
 cmp_deeply(\@stats_table,
            [

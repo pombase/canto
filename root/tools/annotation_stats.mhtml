@@ -1,0 +1,34 @@
+<%args>
+@stats_table
+</%args>
+
+<div>
+  Stats:
+  <table class="list">
+    <thead>
+      <tr>
+        <th rowspan="2">
+          Year
+        </th>
+        <th style="text-align: center" colspan="2">
+          Annotations
+        </th>
+      </tr>
+      <tr>
+        <th>
+          Curator annotations
+        </th>
+        <th>
+          Community annotations
+        </th>
+      </tr>
+    </thead>
+% for my $row (@stats_table) {
+    <tr>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
