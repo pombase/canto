@@ -1,7 +1,9 @@
 <%args>
 @stats_table
+@per_pub_stats_table
 </%args>
 
+<h2>Curator statistics</h2>
 <div>
   <table class="list">
     <thead>
@@ -42,6 +44,32 @@
       <td>
         <% $row->[0] + $row->[1] %>
       </td>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+
+<h2>Annotations/genes per publication per year</h2>
+<div>
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Avg. genes per pub.
+        </th>
+        <th>
+          Avg. annotations per pub.
+        </th>
+      </tr>
+    </thead>
+% for my $row (@per_pub_stats_table) {
+    <tr>
 %   for my $column (@$row) {
       <td><% $column %></td>
 %   }

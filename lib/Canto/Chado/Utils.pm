@@ -38,6 +38,97 @@ under the same terms as Perl itself.
 use warnings;
 use strict;
 
+sub per_publication_stats
+{
+  my $chado_schema = shift;
+  my $track_schema = shift;
+
+  my $track_dbh = $track_schema->storage()->dbh();
+  my $pub_date_query = 'select uniquename, publication_date from pub;';
+
+  my $chado_dbh = $chado_schema->storage()->dbh();
+  $chado_dbh->prepare('create temp table pub_dates(uniquename text, pub_date text)')->execute();
+
+  my $track_sth = $track_dbh->prepare($pub_date_query);
+  $track_sth->execute() or die "Couldn't execute: " . $track_sth->errstr;
+
+  my $chado_sth =
+    $chado_dbh->prepare('insert into pub_dates(uniquename, pub_date) values (?, ?)');
+
+  while (my ($pub_uniquename, $publication_date) = $track_sth->fetchrow_array()) {
+    if ($publication_date =~ /((19|20)\d\d)$/) {
+      my $publication_year = $1;
+
+      $chado_sth->execute($pub_uniquename, $publication_year)
+        or die "Couldn't execute: " . $chado_sth->errstr;
+    }
+  }
+
+  my $annotation_query = <<'EOF';
+ WITH counts AS
+  (SELECT substring(pub_date FROM '^(\d\d\d\d)') AS year, pmid, count(id)
+   FROM pombase_genes_annotations_dates
+   JOIN pub_dates ON uniquename = pmid
+   GROUP BY pub_date, pmid
+   ORDER BY pub_date)
+ SELECT year, round(avg(COUNT),2)
+ FROM counts
+ GROUP BY year
+ ORDER BY year;
+EOF
+
+  my $annotation_sth = $chado_dbh->prepare($annotation_query);
+  $annotation_sth->execute() or die "Couldn't execute: " . $annotation_sth->errstr;
+
+  my %publication_stats = ();
+
+  while (my ($pub_date, $avg_count) = $annotation_sth->fetchrow_array()) {
+    $publication_stats{$pub_date}->{annotation} = $avg_count;
+  }
+
+  my $gene_query = <<'EOF';
+ WITH counts AS
+  (SELECT substring(pub_date FROM '^(\d\d\d\d)') AS year, pmid, count(gene_uniquename)
+   FROM pombase_annotated_gene_features_per_publication
+   JOIN pub_dates ON uniquename = pmid
+   GROUP BY pub_date, pmid
+   ORDER BY pub_date)
+ SELECT year, round(avg(COUNT),2)
+ FROM counts
+ GROUP BY year
+ ORDER BY year;
+EOF
+
+  my $gene_sth = $chado_dbh->prepare($gene_query);
+  $gene_sth->execute() or die "Couldn't execute: " . $gene_sth->errstr;
+
+  while (my ($pub_date, $avg_count) = $gene_sth->fetchrow_array()) {
+    $publication_stats{$pub_date}->{gene} = $avg_count;
+  }
+
+  my $first_year = 9999;
+
+  map {
+    $first_year = $_ if $_ < $first_year
+  } keys %publication_stats;
+
+  my @rows = ();
+
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+  my $current_year = $year + 1900;
+
+  for (my $year = $first_year; $year <= $current_year; $year++) {
+    my $year_stats = $publication_stats{$year};
+    if (defined $year_stats) {
+      push @rows, [$year, $year_stats->{gene} // 0, $year_stats->{annotation} // 0];
+    } else {
+      push @rows, [$year, 0, 0];
+    }
+  }
+
+  return @rows;
+}
+
 sub _annotator_pub_counts
 {
   my $track_schema = shift;
