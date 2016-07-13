@@ -3,14 +3,13 @@
 </%args>
 
 <div>
-  Stats:
   <table class="list">
     <thead>
       <tr>
         <th rowspan="2">
           Year
         </th>
-        <th style="text-align: center" colspan="2">
+        <th style="text-align: center" colspan="3">
           Publications curated
         </th>
         <th style="text-align: center" colspan="2">
@@ -19,21 +18,30 @@
       </tr>
       <tr>
         <th>
-          Curator annotations
+          Total
         </th>
         <th>
-          Community annotations
+          Curator
         </th>
         <th>
-          Curator annotations
+          Community
         </th>
         <th>
-          Community annotations
+          Curator
+        </th>
+        <th>
+          Community
         </th>
       </tr>
     </thead>
 % for my $row (@stats_table) {
     <tr>
+      <td>
+        <% shift @$row %>
+      </td>
+      <td>
+        <% $row->[0] + $row->[1] %>
+      </td>
 %   for my $column (@$row) {
       <td><% $column %></td>
 %   }
