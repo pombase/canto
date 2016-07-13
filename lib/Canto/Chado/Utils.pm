@@ -38,7 +38,7 @@ under the same terms as Perl itself.
 use warnings;
 use strict;
 
-sub _pub_counts
+sub _annotator_pub_counts
 {
   my $track_schema = shift;
   my $curator_emails = shift;
@@ -85,7 +85,7 @@ EOF
   return (\%annual_community_pub_counts, \%annual_curator_pub_counts);
 }
 
-sub _annotation_counts
+sub _annotator_annotation_counts
 {
   my $chado_schema = shift;
   my $curator_emails = shift;
@@ -141,11 +141,11 @@ sub annotation_stats_table
   }
 
   my ($annual_community_pub_counts, $annual_curator_pub_counts) =
-    _pub_counts($track_schema, \%curator_emails);
+    _annotator_pub_counts($track_schema, \%curator_emails);
 
   my ($annual_community_annotation_counts,
       $annual_curator_annotation_counts) =
-    _annotation_counts($chado_schema, \%curator_emails);
+    _annotator_annotation_counts($chado_schema, \%curator_emails);
 
   my $first_year = 9999;
 
