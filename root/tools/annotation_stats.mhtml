@@ -11,10 +11,19 @@
           Year
         </th>
         <th style="text-align: center" colspan="2">
+          Publications curated
+        </th>
+        <th style="text-align: center" colspan="2">
           Annotations
         </th>
       </tr>
       <tr>
+        <th>
+          Curator annotations
+        </th>
+        <th>
+          Community annotations
+        </th>
         <th>
           Curator annotations
         </th>
