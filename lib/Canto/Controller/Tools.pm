@@ -576,30 +576,6 @@ sub sessions_with_type_list : Local Args(0) {
 }
 
 
-=head2 /tools/annotation_stats
-
- Function: Make a table of annotation statistics from Chado
-
-=cut
-
-sub annotation_stats : Local {
-  my ($self, $c) = @_;
-
-  my $st = $c->stash();
-  my $config = $c->config();
-  my $chado_schema = Canto::ChadoDB->new(config => $config);
-
-  my $track_schema = $c->schema('track');
-
-  my @stats = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
-
-  $st->{stats_table} = \@stats;
-
-  $st->{title} = "Annotation statistics";
-  $st->{template} = 'tools/annotation_stats.mhtml';
-}
-
-
 =head2 add_person
 
  Function: Called with ajax by the person_picker_add template to add a person
