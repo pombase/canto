@@ -1,6 +1,7 @@
 <%args>
 @stats_table
 @per_pub_stats_table
+@per_pub_5_year_stats
 </%args>
 
 <div class="curs-box">
@@ -72,10 +73,11 @@ and publications curated.
 </div>
 </div>
 
-<div class="curs-box">
-  <div class="curs-box-title">Annotations/genes per publication per year</div>
 <div class="row">
-<div class="col-sm-6 col-md-6">
+  <div class="col-sm-5 col-md-5">
+    <div class="curs-box">
+  <div class="curs-box-title">Annotations/genes per publication per year</div>
+  <div class="curs-box-body">
   <table class="list">
     <thead>
       <tr>
@@ -99,8 +101,34 @@ and publications curated.
 % }
   </table>
 </div>
-<div class="col-sm-6 col-md-6">
+  </div>
+</div>
 
+<div class="col-sm-5 col-md-5">
+<div class="curs-box">
+  <div class="curs-box-title">Annotations/genes per publication in 5 year interval</div>
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Avg. genes per pub.
+        </th>
+        <th>
+          Avg. annotations per pub.
+        </th>
+      </tr>
+    </thead>
+% for my $row (@per_pub_5_year_stats) {
+    <tr>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
 </div>
 </div>
 </div>

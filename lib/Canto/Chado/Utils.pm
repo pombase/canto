@@ -42,12 +42,13 @@ sub per_publication_stats
 {
   my $chado_schema = shift;
   my $track_schema = shift;
+  my $use_5_year_bins = shift // 0;
 
   my $track_dbh = $track_schema->storage()->dbh();
-  my $pub_date_query = 'select uniquename, publication_date from pub;';
+  my $pub_date_query = 'SELECT uniquename, publication_date FROM pub;';
 
   my $chado_dbh = $chado_schema->storage()->dbh();
-  $chado_dbh->prepare('create temp table pub_dates(uniquename text, pub_date text)')->execute();
+  $chado_dbh->prepare('CREATE TEMP TABLE pub_dates(uniquename TEXT, pub_date TEXT)')->execute();
 
   my $track_sth = $track_dbh->prepare($pub_date_query);
   $track_sth->execute() or die "Couldn't execute: " . $track_sth->errstr;
@@ -64,17 +65,32 @@ sub per_publication_stats
     }
   }
 
-  my $annotation_query = <<'EOF';
+  my $select_sql;
+
+if ($use_5_year_bins) {
+  $select_sql = <<'EOF';
+SELECT floor((year::float - 1)/5)::int * 5 + 1, round(avg(COUNT),2)
+FROM counts
+GROUP BY floor((year::float - 1)/5)::int * 5 + 1
+ORDER BY floor((year::float - 1)/5)::int * 5 + 1;
+EOF
+  } else {
+  $select_sql = <<'EOF';
+ SELECT year, round(avg(COUNT),2)
+ FROM counts
+ GROUP BY year
+ ORDER BY year
+EOF
+  }
+
+  my $annotation_query = <<"EOF";
  WITH counts AS
-  (SELECT substring(pub_date FROM '^(\d\d\d\d)') AS year, pmid, count(id)
+  (SELECT substring(pub_date FROM '^(\\d\\d\\d\\d)') AS year, pmid, count(id)
    FROM pombase_genes_annotations_dates
    JOIN pub_dates ON uniquename = pmid
    GROUP BY pub_date, pmid
    ORDER BY pub_date)
- SELECT year, round(avg(COUNT),2)
- FROM counts
- GROUP BY year
- ORDER BY year;
+$select_sql;
 EOF
 
   my $annotation_sth = $chado_dbh->prepare($annotation_query);
@@ -86,17 +102,14 @@ EOF
     $publication_stats{$pub_date}->{annotation} = $avg_count;
   }
 
-  my $gene_query = <<'EOF';
+  my $gene_query = <<"EOF";
  WITH counts AS
-  (SELECT substring(pub_date FROM '^(\d\d\d\d)') AS year, pmid, count(gene_uniquename)
+  (SELECT substring(pub_date FROM '^(\\d\\d\\d\\d)') AS year, pmid, count(gene_uniquename)
    FROM pombase_annotated_gene_features_per_publication
    JOIN pub_dates ON uniquename = pmid
    GROUP BY pub_date, pmid
    ORDER BY pub_date)
- SELECT year, round(avg(COUNT),2)
- FROM counts
- GROUP BY year
- ORDER BY year;
+$select_sql;
 EOF
 
   my $gene_sth = $chado_dbh->prepare($gene_query);
@@ -106,23 +119,37 @@ EOF
     $publication_stats{$pub_date}->{gene} = $avg_count;
   }
 
-  my $first_year = 9999;
-
-  map {
-    $first_year = $_ if $_ < $first_year
-  } keys %publication_stats;
+  $chado_dbh->prepare('drop table pub_dates')->execute();
 
   my @rows = ();
 
-  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
-  my $current_year = $year + 1900;
+  if ($use_5_year_bins) {
+    my @bins = sort {
+      $a <=> $b;
+    } keys %publication_stats;
 
-  for (my $year = $first_year; $year <= $current_year; $year++) {
-    my $year_stats = $publication_stats{$year};
-    if (defined $year_stats) {
-      push @rows, [$year, $year_stats->{gene} // 0, $year_stats->{annotation} // 0];
-    } else {
-      push @rows, [$year, 0, 0];
+    for my $bin (@bins) {
+      my $bin_stats = $publication_stats{$bin};
+
+      push @rows, [$bin, $bin_stats->{gene} // 0, $bin_stats->{annotation} // 0];
+    }
+  } else {
+    my $first_year = 9999;
+
+    map {
+      $first_year = $_ if $_ < $first_year
+    } keys %publication_stats;
+
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+    my $current_year = $year + 1900;
+
+    for (my $year = $first_year; $year <= $current_year; $year++) {
+      my $year_stats = $publication_stats{$year};
+      if (defined $year_stats) {
+        push @rows, [$year, $year_stats->{gene} // 0, $year_stats->{annotation} // 0];
+      } else {
+        push @rows, [$year, 0, 0];
+      }
     }
   }
 
