@@ -106,7 +106,7 @@ and publications curated.
 
 <div class="col-sm-5 col-md-5">
 <div class="curs-box">
-  <div class="curs-box-title">Annotations/genes per publication in 5 year interval</div>
+  <div class="curs-box-title">Annotations/genes per publication in 5 year intervals</div>
   <table class="list">
     <thead>
       <tr>
@@ -123,6 +123,18 @@ and publications curated.
     </thead>
 % for my $row (@per_pub_5_year_stats) {
     <tr>
+% my $range_start = shift @$row;
+% my $range_end = $range_start + 4;
+% $range_end = $current_year if $current_year < $range_end;
+% my $year_range;
+% if ($range_start eq $range_end) {
+%   $year_range = $range_start;
+% } else {
+%   $year_range = "$range_start-$range_end";
+% }
+      <td>
+        <% $year_range %>
+      </td>
 %   for my $column (@$row) {
       <td><% $column %></td>
 %   }
@@ -132,3 +144,9 @@ and publications curated.
 </div>
 </div>
 </div>
+</div>
+
+<%init>
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+my $current_year = $year + 1900;
+</%init>
