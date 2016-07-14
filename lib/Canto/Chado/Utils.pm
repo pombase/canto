@@ -88,6 +88,7 @@ EOF
   (SELECT substring(pub_date FROM '^(\\d\\d\\d\\d)') AS year, pmid, count(id)
    FROM pombase_genes_annotations_dates
    JOIN pub_dates ON uniquename = pmid
+  WHERE session IS NOT NULL
    GROUP BY pub_date, pmid
    ORDER BY pub_date)
 $select_sql;
@@ -107,6 +108,7 @@ EOF
   (SELECT substring(pub_date FROM '^(\\d\\d\\d\\d)') AS year, pmid, count(gene_uniquename)
    FROM pombase_annotated_gene_features_per_publication
    JOIN pub_dates ON uniquename = pmid
+  WHERE session IS NOT NULL
    GROUP BY pub_date, pmid
    ORDER BY pub_date)
 $select_sql;
