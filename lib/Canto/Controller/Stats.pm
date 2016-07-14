@@ -62,7 +62,7 @@ sub annotation : Local {
   my @stats = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
   $st->{stats_table} = \@stats;
 
-  $st->{title} = "Annotation statistics";
+  $st->{title} = "Canto statistics";
   $st->{template} = 'stats/annotation.mhtml';
 }
 
