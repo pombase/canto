@@ -44,6 +44,7 @@ use Carp;
 use JSON;
 
 use Canto::Curs::Serialise;
+use Canto::Track::CuratorManager;
 
 sub _get_cursprops
 {
@@ -67,6 +68,9 @@ sub _get_curation_sessions
   my $config = shift;
   my $schema = shift;
   my $options = shift;
+
+  my $curator_manager =
+    Canto::Track::CuratorManager->new(config => $config);
 
   my %ret_map = ();
 
@@ -103,6 +107,12 @@ sub _get_curation_sessions
         }
       }
     }
+
+    my ($current_submitter_email, $current_submitter_name) =
+      $curator_manager->current_curator($curs_key);
+
+    $data->{metadata}->{curator_name} = $current_submitter_name;
+    $data->{metadata}->{curator_email} = $current_submitter_email;
 
     $ret_map{$curs_key} = $data;
   }
