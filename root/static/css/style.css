@@ -357,6 +357,10 @@ table.list tr td {
   border-color: #bbb;
 }
 
+.annotation-stats table.list tr th {
+  white-space: normal !important;
+}
+
 #curs-genotype-list-row-actions {
   border: 2px solid #bbb;
   padding: 3px;

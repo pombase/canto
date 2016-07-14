@@ -4,6 +4,7 @@
 @per_pub_5_year_stats
 </%args>
 
+<div class="annotation-stats">
 <div class="curs-box">
   <div class="curs-box-title">Curator statistics</div>
 <div class="curs-box-body row">
