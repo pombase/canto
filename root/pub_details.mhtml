@@ -2,7 +2,7 @@
 $pub
 </%args>
 
-<div class="pub-title curs-box">
+<div class="curs-box">
   <div class="curs-box-title">
 Publication details
   </div>

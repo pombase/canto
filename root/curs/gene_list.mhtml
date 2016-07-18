@@ -3,7 +3,7 @@ $title => 'Genes'
 $pub
 </%args>
 
-<div class="gene-list curs-box">
+<div class="curs-box">
   <div class="curs-box-title">
     <div>
 % if ($read_only_curs) {
@@ -53,7 +53,6 @@ Click on a gene name to start entering data
 % }
   <div class="feature-list-action">
     <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes ...' : 'Genotype management ...' %></a>
-  </div>
   </div>
 </div>
 </div>

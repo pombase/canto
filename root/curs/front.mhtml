@@ -12,12 +12,15 @@ $total_annotation_count
 
 <div id="curs-front-page">
 <div>
-<div id="curs-gene-list">
+  <div class="row">
+    <div class="col-sm-6 col-md-6">
 <& /curs/gene_list.mhtml, pub => $pub &>
-</div>
+    </div>
 
+    <div class="col-sm-6 col-md-6">
 <& /pub_details.mhtml, pub => $pub &>
-
+   </div>
+  </div>
 <div class="clearall"/>
 
 % if ($read_only_curs) {

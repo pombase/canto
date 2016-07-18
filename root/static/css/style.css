@@ -985,7 +985,7 @@ span.canto-select-buttons {
   margin: 10px;
 }
 
-#curs-gene-list, #curs-front-page .pub-title, .curs-half-width-section {
+.curs-half-width-section {
   font-size: 90%;
   float: left;
   width: 45%;
