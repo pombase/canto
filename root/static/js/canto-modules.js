@@ -1538,8 +1538,7 @@ var extensionOrGroupBuilder =
                         newCounts[key] = 1;
                       }
                     };
-                  if ($scope.orGroup.length > 0) {
-                  $.map($scope.orGroup[0],
+                  $.map($scope.orGroup,
                         function(part) {
                           var matchingRangeConf = null;
                           $.map(relConf.range,
@@ -1578,7 +1577,6 @@ var extensionOrGroupBuilder =
                             }
                           }
                         });
-                  }
                 });
 
           $q.all(promises).then(function() {
@@ -1639,7 +1637,7 @@ var extensionOrGroupBuilder =
           }
         };
 
-        $scope.$watch('extension',
+        $scope.$watch('orGroup',
                       function() {
                         $scope.checkCardinality($scope.matchingConfigurations);
                       }, true);
