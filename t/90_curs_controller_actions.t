@@ -243,8 +243,8 @@ test_psgi $app, sub {
     my $redirect_res = $cb->($redirect_req);
 
     my $page_scrape = scraper {
-      process ".gene-list", "gene_list" => 'TEXT';
-      process ".pub-title", "pub_title" => 'TEXT';
+      process ".curs-front-gene-list", "gene_list" => 'TEXT';
+      process ".curs-front-pub-details", "pub_title" => 'TEXT';
       result 'gene_list', 'pub_title';
     };
 
