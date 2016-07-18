@@ -56,20 +56,27 @@
   </table>
 </div>
 <div class="col-sm-6 col-md-6">
-Number of papers annotated by curator (professional vs. community), by year,
-and number of annotations. An annotation is either i) and assignment of a gene
-product to a term in and ontology, or a genetic or physical interaction
-between two gene products. Annotations to the same ontology term with
-different annotation extensions are classed as independent annotations.
-Any paper which is fully or partially curated by a community curator is
-classed as a 'community curated' publication. Prior to 2013, any annotation in
-a community curated session were assigned to the community curator. However,
-since the end of 2012 subsequent annotation made by professional curators are
-attributed to the curator who made the annotation.
-Annotations are date stamped with the 'annotation creation date'. Publications
-are date stamped with the date that the curation session for the publication
-was approved. This accounts for apparent discrepancy between annotations made
-and publications curated.
+<p>
+Number of papers curated by professional and community curators, and total
+number of annotations created, per year. An annotation is either an assignment
+of a gene product to a term in an ontology, or a genetic or physical
+interaction. Each unique combination of an ontology term and an extension is
+counted as a separate annotation. Any paper which is fully or partially
+curated by a community curator is classified as a community curated
+publication.
+</p>
+<p>
+Each annotation is individually date-stamped upon creation, whereas the
+curation date for a publication reflects the date on which the entire curation
+session was approved for inclusion in PomBase (this accounts for discrepancies
+such as the annotations, but no publications, attributed to 2011).
+</p>
+<p>
+Note: The breakdown of annotations between professional and community curators
+is only accurate from 2013 onwards. Until the end of 2012, all annotations
+from a community curated paper were attributed to the community curator, even
+those added by a professional curator during the approval procedure.
+</p>
 </div>
 </div>
 </div>
