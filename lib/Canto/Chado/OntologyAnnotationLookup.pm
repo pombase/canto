@@ -63,7 +63,7 @@ sub _gene_of_feature
 
   if ($feature->type_id() == $mrna_cvterm->cvterm_id()) {
     my $gene_cvterm = $self->schema()->get_cvterm('sequence', 'gene');
-    my $part_of_cvterm = $self->schema()->get_cvterm('relationship', 'part_of');
+    my $part_of_cvterm = $self->schema()->get_cvterm('relations', 'part_of');
 
     return $feature->feature_relationship_subjects()
                    ->search({ 'me.type_id' => $part_of_cvterm->cvterm_id() })

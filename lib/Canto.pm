@@ -97,6 +97,7 @@ __PACKAGE__->allow_access('/tools/pubmed_id_lookup');
 __PACKAGE__->allow_access('/tools/start');
 __PACKAGE__->allow_access('/local');
 __PACKAGE__->allow_access('/docs');
+__PACKAGE__->allow_access('/stats');
 
 my $config = __PACKAGE__->config();
 

@@ -15,6 +15,10 @@
     </form>
 
     <div ng-show="pubResults">
+      <a ng-if="emailAddress.length > 0 && is_admin_user"
+         href="{{application_root}}/view/object/person/{{emailAddress}}?model=track">
+        Person page (admin only) ...
+      </a>
       <div ng-show="pubResults.length == 0 && emailAddress.length > 0">
         No publications found
       </div>

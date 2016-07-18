@@ -15,6 +15,8 @@ use Canto::Export::CantoJSON;
 use Canto::Export::TabZip;
 use Canto::Util qw(trim);
 use Canto::Track::CuratorManager;
+use Canto::ChadoDB;
+use Canto::Chado::Utils;
 
 use Moose;
 
@@ -572,6 +574,7 @@ sub sessions_with_type_list : Local Args(0) {
   $st->{title} = "Sessions listed by type";
   $st->{template} = 'tools/sessions_with_type_list.mhtml';
 }
+
 
 =head2 add_person
 

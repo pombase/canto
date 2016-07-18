@@ -1,0 +1,173 @@
+<%args>
+@stats_table
+@per_pub_stats_table
+@per_pub_5_year_stats
+</%args>
+
+<div class="annotation-stats">
+<div class="curs-box">
+  <div class="curs-box-title">Curator statistics</div>
+<div class="curs-box-body row">
+<div class="col-sm-6 col-md-6">
+  <table class="list">
+    <thead>
+      <tr>
+        <th rowspan="2">
+          Year
+        </th>
+        <th style="text-align: center" colspan="3">
+          Publications curated
+        </th>
+        <th style="text-align: center" colspan="2">
+          Annotations
+        </th>
+      </tr>
+      <tr>
+        <th>
+          Total
+        </th>
+        <th>
+          Curator
+        </th>
+        <th>
+          Community
+        </th>
+        <th>
+          Curator
+        </th>
+        <th>
+          Community
+        </th>
+      </tr>
+    </thead>
+% for my $row (@stats_table) {
+    <tr>
+      <td>
+        <% shift @$row %>
+      </td>
+      <td>
+        <% $row->[0] + $row->[1] %>
+      </td>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+<div class="col-sm-6 col-md-6">
+<p>
+Number of papers curated by professional and community curators, and total
+number of annotations created, per year. An annotation is either an assignment
+of a gene product to a term in an ontology, or a genetic or physical
+interaction. Each unique combination of an ontology term and an extension is
+counted as a separate annotation. Any paper which is fully or partially
+curated by a community curator is classified as a community curated
+publication.
+</p>
+<p>
+Each annotation is individually date-stamped upon creation, whereas the
+curation date for a publication reflects the date on which the entire curation
+session was approved for inclusion in PomBase (this accounts for discrepancies
+such as the annotations, but no publications, attributed to 2011).
+</p>
+<p>
+Note: The breakdown of annotations between professional and community curators
+is only accurate from 2013 onwards. Until the end of 2012, all annotations
+from a community curated paper were attributed to the community curator, even
+those added by a professional curator during the approval procedure.
+</p>
+</div>
+</div>
+</div>
+
+<div class="curs-box">
+  <div class="curs-box-title">Annotations/genes per publication per year</div>
+  <div class="curs-box-body">
+<div class="row">
+  <div class="col-sm-6 col-md-6">
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Avg. genes per pub.
+        </th>
+        <th>
+          Avg. annotations per pub.
+        </th>
+      </tr>
+    </thead>
+% for my $row (@per_pub_stats_table) {
+    <tr>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+  <div class="col-sm-6 col-md-6">
+    Mean number of manually curated annotations and genes annotated in PomBase
+    per peer-reviewed paper per year. Counts exclude high-throughput
+    experiments and use the same criteria for all years
+  </div>
+  </div>
+</div>
+</div>
+
+
+<div class="curs-box">
+  <div class="curs-box-title">Annotations/genes per publication in 5 year intervals</div>
+<div class="row">
+<div class="col-sm-6 col-md-6">
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Avg. genes per pub.
+        </th>
+        <th>
+          Avg. annotations per pub.
+        </th>
+      </tr>
+    </thead>
+% for my $row (@per_pub_5_year_stats) {
+    <tr>
+% my $range_start = shift @$row;
+% my $range_end = $range_start + 4;
+% $range_end = $current_year if $current_year < $range_end;
+% my $year_range;
+% if ($range_start eq $range_end) {
+%   $year_range = $range_start;
+% } else {
+%   $year_range = "$range_start-$range_end";
+% }
+      <td>
+        <% $year_range %>
+      </td>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+  <div class="col-sm-6 col-md-6">
+    Mean number of manually curated annotations and genes annotated in PomBase
+    per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
+    experiments and use the same criteria for all years
+  </div>
+</div>
+</div>
+</div>
+
+<%init>
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+my $current_year = $year + 1900;
+</%init>

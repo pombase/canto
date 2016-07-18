@@ -2,7 +2,7 @@
   <span ng-repeat="andGroup in orGroup">
     <span class="curs-extension-relation">{{andGroup.relation}}</span>
     <span>{{andGroup.rangeDisplayName || andGroup.rangeValue}}</span><span ng-if="andGroup.rangeType == '%'">%</span>
-    <a ng-if="showDelete" confirm="Really delete?" href="" ng-click="deleteAndGroup(andGroup)">
+    <a ng-if="showDelete" href="" ng-click="deleteAndGroup(andGroup)">
       <img title="Remove this relation" ng-src="{{app_static_path + '/images/delete_icon.png'}}" />
     </a>
     <span ng-show="!$last">, <span ng-if="showDelete">&nbsp;</span></span>
