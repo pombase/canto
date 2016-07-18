@@ -619,28 +619,28 @@ div.clearall {
   float: left;
 }
 
-.gene-list table {
+.curs-front-gene-list table {
   font-size: 95%;
   border-width: 0px;
   margin: 10px 10px 15px 15px
 }
-.gene-list td {
+.curs-front-gene-list td {
   border-width: 0px;
   font-size: 95%;
 }
 
-.gene-list td {
+.curs-front-gene-list td {
   padding-right: 30px;
   width: 150px;
   white-space: nowrap;
 }
 
-.gene-list .no-genes-message {
+.curs-front-gene-list .no-genes-message {
   font-size: 95%;
   margin: 10px;
 }
 
-.gene-list .gene-list-instructions, .genotype-list .curs-genotype-list-instructions {
+.curs-front-gene-list .gene-list-instructions, .genotype-list .curs-genotype-list-instructions {
   font-size: 95%;
   margin-bottom: 10px;
 }
@@ -663,7 +663,7 @@ div.clearall {
   margin: 5px;
 }
 
-.gene-list .annotation-count {
+.curs-front-gene-list .annotation-count {
   color: green;
   font-size: 80%;
 }
