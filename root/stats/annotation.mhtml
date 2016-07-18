@@ -81,11 +81,11 @@ those added by a professional curator during the approval procedure.
 </div>
 </div>
 
-<div class="row">
-  <div class="col-sm-5 col-md-5">
-    <div class="curs-box">
+<div class="curs-box">
   <div class="curs-box-title">Annotations/genes per publication per year</div>
   <div class="curs-box-body">
+<div class="row">
+  <div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
       <tr>
@@ -109,12 +109,20 @@ those added by a professional curator during the approval procedure.
 % }
   </table>
 </div>
+  <div class="col-sm-6 col-md-6">
+    Mean number of manually curated annotations and genes annotated in PomBase
+    per peer-reviewed paper per year. Counts exclude high-throughput
+    experiments and use the same criteria for all years
+  </div>
   </div>
 </div>
+</div>
 
-<div class="col-sm-5 col-md-5">
+
 <div class="curs-box">
   <div class="curs-box-title">Annotations/genes per publication in 5 year intervals</div>
+<div class="row">
+<div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
       <tr>
@@ -150,6 +158,11 @@ those added by a professional curator during the approval procedure.
 % }
   </table>
 </div>
+  <div class="col-sm-6 col-md-6">
+    Mean number of manually curated annotations and genes annotated in PomBase
+    per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
+    experiments and use the same criteria for all years
+  </div>
 </div>
 </div>
 </div>
