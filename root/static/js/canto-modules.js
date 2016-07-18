@@ -1485,27 +1485,21 @@ canto.directive('extensionManualEdit',
                 [extensionManualEdit]);
 
 
-var extensionBuilder =
+var extensionOrGroupBuilder =
   function($modal, $q, CantoGlobals, CantoConfig, CantoService) {
     return {
       scope: {
-        extension: '=',
-        termId: '@',
-        featureDisplayName: '@',
+        orGroup: '=',
+        matchingConfigurations: '=',
         isValid: '=',
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/extension_builder.html',
+      templateUrl: app_static_path + 'ng_templates/extension_or_group_builder.html',
       controller: function($scope) {
         $scope.isValid = true;
         $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
         $scope.manualEditMode = false;
-        if ($scope.extension && Object.keys($scope.extension).length > 0) {
-          $scope.isNewExtension = false;
-        } else {
-          $scope.isNewExtension = true;
-        }
 
         // the current counts of relations, used to test the cardinality
         // constraints
@@ -1544,8 +1538,7 @@ var extensionBuilder =
                         newCounts[key] = 1;
                       }
                     };
-                  if ($scope.extension.length > 0) {
-                  $.map($scope.extension[0],
+                  $.map($scope.orGroup,
                         function(part) {
                           var matchingRangeConf = null;
                           $.map(relConf.range,
@@ -1584,7 +1577,6 @@ var extensionBuilder =
                             }
                           }
                         });
-                  }
                 });
 
           $q.all(promises).then(function() {
@@ -1645,29 +1637,91 @@ var extensionBuilder =
           }
         };
 
+        $scope.$watch('orGroup',
+                      function() {
+                        $scope.checkCardinality($scope.matchingConfigurations);
+                      }, true);
+
+        $scope.$watch('matchingConfigurations',
+                      function() {
+                        $scope.checkCardinality($scope.matchingConfigurations);
+                      }, true);
+
+        $scope.$watch('cardinalityCounts',
+                      function() {
+                        $scope.setIsValid();
+                      }, true);
+
+        $scope.startAddRelation = function(relationConfig) {
+          var editExtensionRelation = {
+            relation: relationConfig.relation,
+            rangeDisplayName: '',
+          };
+
+          var editPromise =
+            openExtensionRelationDialog($modal, editExtensionRelation, relationConfig);
+
+          editPromise.then(function(result) {
+            $scope.orGroup.push(result.extensionRelation);
+          });
+        };
+      },
+    };
+  };
+
+canto.directive('extensionOrGroupBuilder',
+                ['$modal', '$q', 'CantoGlobals', 'CantoConfig', 'CantoService',
+                 extensionOrGroupBuilder]);
+
+function extensionIsEmpty(extension) {
+  if (extension) {
+    if (extension.length == 0 ||
+        extension.length == 1 && extension[0].length == 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
+var extensionBuilder =
+  function($modal, $q, CantoGlobals, CantoConfig, CantoService) {
+    return {
+      scope: {
+        extension: '=',
+        termId: '@',
+        featureDisplayName: '@',
+        isValid: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/extension_builder.html',
+      controller: function($scope) {
+        $scope.isValid = true;
+        $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
+        $scope.manualEditMode = false;
+        $scope.matchingConfigurations = [];
+
+        if (!$scope.extension || $scope.extension.length == 0) {
+          $scope.extension = [[]];
+        }
+
+        $scope.isNewExtension = extensionIsEmpty($scope.extension);
+
         $scope.extensionConfiguration = [];
         $scope.termDetails = { id: null };
-
-        $scope.asString = function() {
-          if ($scope.extension) {
-            return $.map($scope.extension,
-                         function(part) {
-                           return part.relation + '(' + part.rangeValue + ')';
-                         }).join(",");
-          }
-
-          return '';
-        };
 
         $scope.updateMatchingConfig = function() {
           var subset_ids = $scope.termDetails.subset_ids;
 
           if ($scope.extensionConfiguration.length > 0 &&
               subset_ids && subset_ids.length > 0) {
-            $scope.matchingConfigurations = 
+            var newConf =
               extensionConfFilter($scope.extensionConfiguration, subset_ids,
                                   CantoGlobals.current_user_is_admin ? 'admin' : 'user');
-            $scope.checkCardinality($scope.matchingConfigurations);
+            copyObject(newConf, $scope.matchingConfigurations);
             return;
           }
 
@@ -1694,35 +1748,10 @@ var extensionBuilder =
                         $scope.termDetails = { id: null };
                     });
 
-        $scope.$watch('extension',
-                      function() {
-                        $scope.checkCardinality($scope.matchingConfigurations);
-                      }, true);
-
-        $scope.$watch('cardinalityCounts',
-                      function() {
-                        $scope.setIsValid();
-                      }, true);
-
-        $scope.startAddPart = function(relationConfig) {
-          var editExtensionRelation = {
-            relation: relationConfig.relation,
-            rangeDisplayName: '',
-          };
-
-          var editPromise =
-            openExtensionRelationDialog($modal, editExtensionRelation, relationConfig);
-
-          editPromise.then(function(result) {
-            var andPart;
-            if ($scope.extension.length == 0) {
-              andPart = [];
-              $scope.extension.push(andPart);
-            } else {
-              andPart = $scope.extension[0];
-            }
-            andPart.push(result.extensionRelation);
-          });
+        $scope.addOrGroup = function() {
+          if ($scope.extension[$scope.extension.length - 1].length != 0) {
+            $scope.extension.push([]);
+          }
         };
 
         $scope.manualEdit = function() {
@@ -1960,24 +1989,26 @@ var extensionDisplay =
 canto.directive('extensionDisplay', ['CantoGlobals', extensionDisplay]);
 
 
-var extensionOrPartDisplay =
+var extensionOrGroupDisplay =
   function(CantoGlobals) {
     return {
       scope: {
         extension: '=',
-        orPart: '=',
+        orGroup: '=',
         showDelete: '@',
+        editable: '@',
+        isFirst: '@',
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/extension_or_part_display.html',
+      templateUrl: app_static_path + 'ng_templates/extension_or_group_display.html',
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
-        $scope.deleteAndPart = function(andPart) {
+        $scope.deleteAndGroup = function(andGroup) {
           if ($scope.showDelete) {
-            arrayRemoveOne($scope.orPart, andPart);
-            if ($scope.orPart.length == 0) {
-              arrayRemoveOne($scope.extension, $scope.orPart);
+            arrayRemoveOne($scope.orGroup, andGroup);
+            if ($scope.orGroup.length == 0 && $scope.extension.length > 1) {
+              arrayRemoveOne($scope.extension, $scope.orGroup);
             }
           }
         };
@@ -1985,7 +2016,7 @@ var extensionOrPartDisplay =
     };
   };
 
-canto.directive('extensionOrPartDisplay', ['CantoGlobals', extensionOrPartDisplay]);
+canto.directive('extensionOrGroupDisplay', ['CantoGlobals', extensionOrGroupDisplay]);
 
 
 var ontologyWorkflowCtrl =
