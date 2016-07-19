@@ -414,13 +414,12 @@ table.list thead img.sort-direction-icon {
 }
 
 .sect .sect-title {
-  background-color: #ddd;
-  color: #227;
   font-weight: bold;
   margin-bottom: 10px;
+  border-bottom: 2px solid grey;
   padding: 1px 5px 1px 5px;
   margin: 3px;
-  display: inline
+  display: inline;
 }
 
 .undisclosed-title {
@@ -838,7 +837,6 @@ div.clearall {
 }
 
 .curs-box {
-  border: 1px solid #ddd;
   background-color: white;
   margin: 5px;
   margin-bottom: 15px;
@@ -846,10 +844,10 @@ div.clearall {
 
 .curs-box-title {
   margin-left: 0%;
-  background-color: #dbf0f7;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 2px solid #888;
   padding: 5px;
   font-weight: 700;
+  display: inline-block;
 }
 
 .curs-box-title .curs-inline-help-icon {
