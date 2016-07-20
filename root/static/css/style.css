@@ -112,7 +112,8 @@ img {
 }
 #logo-and-caption {
   float: left;
-  line-height: 1.5ex;
+  line-height: 1.2ex;
+  font-size: 120%;
 }
 #logo {
   padding: 5px;
@@ -983,7 +984,6 @@ span.canto-select-buttons {
 }
 
 .curs-half-width-section {
-  font-size: 90%;
   float: left;
   width: 45%;
   margin: 5px 10px 5px 5px;
