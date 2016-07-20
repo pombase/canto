@@ -169,6 +169,16 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       grep { $config->{evidence_types}->{$_}->{with_gene} } keys %{$config->{evidence_types}} };
   $st->{with_gene_evidence_codes} = $with_gene_evidence_codes;
 
+  my $genotype_annotation_configured = 0;
+
+  map {
+    if ($_->{feature_type} eq 'genotype') {
+      $genotype_annotation_configured = 1;
+    }
+  } @{$config->{annotation_type_list}};
+
+  $st->{genotype_annotation_configured} = $genotype_annotation_configured;
+
   # curation_pub_id will be set if we are annotating a particular publication,
   # rather than annotating genes without a publication
   my $pub_id = $self->get_metadata($schema, 'curation_pub_id');
