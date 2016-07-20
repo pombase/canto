@@ -314,7 +314,7 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
 }
 
 table.list {
-  margin: 10px;
+  margin: 10px 0 10px 0;
   border-width: 0px;
   border-spacing: 5px;
   border-style: solid;
@@ -417,7 +417,6 @@ table.list thead img.sort-direction-icon {
 .sect .sect-title {
   font-weight: bold;
   margin-bottom: 10px;
-  border-bottom: 2px solid grey;
   padding: 1px 5px 1px 5px;
   margin: 3px;
   display: inline;
@@ -846,18 +845,15 @@ div.clearall {
 .curs-box-title {
   margin-left: 0%;
   border-bottom: 2px solid #888;
-  padding: 5px;
+  padding: 3px;
   font-weight: 700;
   display: inline-block;
-}
-
-.curs-box-title .curs-inline-help-icon {
-  float: right;
 }
 
 .curs-box-body {
   margin: 0px;
   padding: 5px;
+  padding-top: 10px;
 }
 
 #ferret-accept-term-details {
@@ -963,6 +959,15 @@ fieldset.curs-genes span {
   clear: both;
   padding-top: 25px;
   font-size: 95%;
+}
+
+.curs-annotation-sub-heading {
+  margin-top: 5px;
+  margin-left: 10px;
+  font-size: 95%;
+}
+.curs-annotation-table {
+  margin-left: 10px;
 }
 
 .curs-annotation-incomplete-message {
