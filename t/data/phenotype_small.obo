@@ -159,7 +159,6 @@ name: viable vegetative cell population
 def: "A cell population phenotype in which cells in the population are viable in the vegetative growth phase of the life cycle." [PomBase:mah]
 synonym: "viable cell population during vegetative growth" EXACT [PomBase:mah]
 is_a: FYPO:0000001 ! phenotype
-relationship: includes_cells_with_phenotype FYPO:0001491 ! viable vegetative cell
 created_by: midori
 creation_date: 2013-04-04T14:14:35Z
 namespace: fission_yeast_phenotype

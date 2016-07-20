@@ -155,11 +155,12 @@ my @synonyms = @{$synonyms_result->[0]->{synonyms}};
 is(@synonyms, 2);
 
 cmp_deeply(\@synonyms,
-           [ { name => "cytoplasmic membrane bounded vesicle",
-               type => 'exact' },
+           [
              { name => "cytoplasmic membrane-enclosed vesicle",
                type => 'exact' },
-            ]);
+             { name => "cytoplasmic membrane bounded vesicle",
+               type => 'exact' },
+           ]);
 
 # test synonyms again
 $synonyms_result = $lookup->lookup(search_string => 'GO:0034763',
