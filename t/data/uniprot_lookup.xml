@@ -1460,8 +1460,8 @@
       <property type="term" value="F:protein binding"/>
       <property type="evidence" value="IPI:GeneDB_Spombe"/>
     </dbReference>
-    <dbReference type="GO" id="GO:0005198" key="41">
-      <property type="term" value="F:structural molecule activity"/>
+    <dbReference type="GO" id="GO:0034762" key="41">
+      <property type="term" value="B:negative regulation of transmembrane transport"/>
       <property type="evidence" value="TAS:GeneDB_Spombe"/>
     </dbReference>
     <dbReference type="GO" id="GO:0071937" key="42">
