@@ -46,11 +46,7 @@ Click on a gene name to start entering data
   </div>
 % }
 
-  <div class="sect">
-    <div class="sect-title">
-Actions:
-    </div>
-    <div class="sect-content">
+  <div style="margin-top: 20px;">
 % if (!$read_only_curs) {
   <div class="feature-list-action">
     <a href="<% $edit_path %>">Edit gene list ...</a>
@@ -58,7 +54,6 @@ Actions:
 % }
   <div class="feature-list-action">
     <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes ...' : 'Genotype management ...' %></a>
-  </div>
   </div>
   </div>
 </div>
