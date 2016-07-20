@@ -17,7 +17,7 @@ Genes and genotypes
   <div class="curs-box-body">
 % if (!$read_only_curs) {
    <div class="gene-list-instructions">
-Click on a gene name to start entering data
+Add gene specific data
    </div>
 % }
 % if (@gene_hashes) {
