@@ -75,7 +75,8 @@
     </div>
   </td>
   <td ng-if="!data.hideColumns.submitter_comment">
-    <initially-hidden-text text="{{annotation.submitter_comment}}" link-label="View comment..."></initially-hidden-text>
+    <initially-hidden-text text="{{annotation.submitter_comment}}" preview-char-count="80"
+                           link-label=" [more...]"></initially-hidden-text>
   </td>
   <td ng-if="!data.hideColumns.extension">
     <extension-display extension="annotation.extension"></extension-display>

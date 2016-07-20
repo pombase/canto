@@ -4672,29 +4672,38 @@ var initiallyHiddenText =
       scope: {
         text: '@',
         linkLabel: '@',
+        previewCharCount: '@'
       },
       restrict: 'E',
       replace: true,
       link: function($scope, elem) {
-        var $view = $(elem).find('a');
-        var $element = $(elem).find('span');
-        $view.on('click',
-                 function () {
-                   $view.hide();
-                   $element.show();
-                 });
+        $scope.previewChars = '';
+        $scope.hidden = true;
+
+        $scope.show = function() {
+          $scope.hidden = false;
+        };
 
         $scope.$watch('text',
                       function() {
-                        if ($.trim($scope.text).length > 0) {
-                          $element.hide();
-                          $view.show();
-                        } else {
-                          $view.hide();
+                        $scope.trimmedText = $.trim($scope.text);
+
+                        if ($scope.previewCharCount && $scope.previewCharCount > 0) {
+                          if ($scope.previewCharCount < $scope.trimmedText.length) {
+                            $scope.previewChars = $scope.text.substr(0, $scope.previewCharCount);
+                          } else {
+                            $scope.hidden = false;
+                          }
                         }
+
                       });
       },
-      template: '<span><span title="{{text}}">{{text}}</span><a class="ng-cloak" title="{{text}}" tooltip="{{text}}" >{{linkLabel}}</a></span>',
+      template: '<span ng-show="trimmedText.length > 0">' +
+        '<span ng-hide="hidden">{{trimmedText}}</span>' +
+        '<span ng-show="hidden">' +
+        '<span href="#" ng-show="previewChars.length > 0">{{previewChars}}...</span>' +
+        '<a ng-click="show()" tooltip="{{trimmedText}}">' +
+        '&nbsp;<span style="font-weight: bold">{{linkLabel}}</span></a></span></span>',
     };
   };
 
