@@ -30,7 +30,8 @@ $feature
 
     <div class="curs-box evidence-select">
       <div class="curs-box-title">
-        Choose evidence <span ng-show="annotationType.can_have_conditions">and conditions</span> for annotating <% $feature_display_name %> with {{data.term_ontid}}
+        Choose evidence for annotating
+        interaction<span ng-show="selectedFeatureIds.length > 1">s</span> of <% $feature_display_name %>
       </div>
       <div class="curs-box-body">
 Some experiments have an inherent directionality. For these experiments, the
