@@ -6,10 +6,13 @@ $pub
 <div class="curs-box">
   <div class="curs-box-title">
     <div>
+% my $and_genotypes = '';
+% $and_genotypes = ' and genotypes' if $genotype_annotation_configured;
+
 % if ($read_only_curs) {
-Genes from this publication
+Genes<% $and_genotypes %> from this publication
 % } else {
-Genes and genotypes
+Genes<% $and_genotypes %>
 % }
     <& /curs/inline_help.mhtml, key => 'choose_gene' &>
     </div>
