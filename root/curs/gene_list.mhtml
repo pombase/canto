@@ -7,19 +7,14 @@ $pub
   <div class="curs-box-title">
     <div>
 % if ($read_only_curs) {
-Genes from this publication
+Genes and genotypes from this publication
 % } else {
-Genes and genotypes
+Annotate genes and genotypes
 % }
     <& /curs/inline_help.mhtml, key => 'choose_gene' &>
     </div>
   </div>
   <div class="curs-box-body">
-% if (!$read_only_curs) {
-   <div class="gene-list-instructions">
-Add gene specific data
-   </div>
-% }
 % if (@gene_hashes) {
   <table>
 %   for (my $y = 0; $y < $row_max; $y++) {
