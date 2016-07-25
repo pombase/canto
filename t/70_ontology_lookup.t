@@ -154,11 +154,11 @@ my @synonyms = @{$synonyms_result->[0]->{synonyms}};
 
 is(@synonyms, 2);
 
-cmp_deeply(\@synonyms,
+cmp_deeply([sort { $a->{name} cmp $b->{name} } @synonyms],
            [
-             { name => "cytoplasmic membrane-enclosed vesicle",
-               type => 'exact' },
              { name => "cytoplasmic membrane bounded vesicle",
+               type => 'exact' },
+             { name => "cytoplasmic membrane-enclosed vesicle",
                type => 'exact' },
            ]);
 

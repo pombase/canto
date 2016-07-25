@@ -2240,21 +2240,21 @@ var interactionWorkflowCtrl =
 
     $scope.data = {
       validEvidence: false,
-      interactorsConfirmed: false,
+      evidenceConfirmed: false,
     };
 
     $scope.selectedFeatureIds = [];
 
-    $scope.confirmSelection = function() {
-      $scope.data.interactorsConfirmed = true;
-    };
-
-    $scope.unconfirmSelection = function() {
-      $scope.data.interactorsConfirmed = false;
-    };
-
     $scope.someFeaturesSelected = function() {
       return $scope.selectedFeatureIds.length > 0;
+    };
+
+    $scope.confirmEvidence = function() {
+      $scope.data.evidenceConfirmed = true;
+    };
+
+    $scope.unconfirmEvidence = function() {
+      $scope.data.evidenceConfirmed = false;
     };
 
     $scope.isValidEvidence = function() {
@@ -3261,7 +3261,12 @@ var genotypeListRowLinksCtrl =
             $scope.genotype.id_or_identifier;
         } else {
           $scope.detailsUrl = '#';
-        }
+          $scope.viewAnnotationUri =
+            CantoGlobals.curs_root_uri + '/feature/genotype/view/' + $scope.selectedGenotypeId;
+          if (CantoGlobals.read_only_curs) {
+            $scope.viewAnnotationUri += '/ro';
+          }
+       }
       },
     };
   };

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 20;
+use Test::More tests => 19;
 
 use Plack::Test;
 use Plack::Util;
@@ -39,7 +39,6 @@ test_psgi $app, sub {
   my $gene_display_name = $gene_proxy->display_name();
 
   like ($res->content(), qr/Choose curation type for $gene_display_name/);
-  like ($res->content(), qr/Epitope-tagged protein immunolocalization experiment data/);
   like ($res->content(), qr/Gene: $gene_display_name/);
 };
 
