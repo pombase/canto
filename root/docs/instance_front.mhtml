@@ -71,7 +71,7 @@ if ($last_submitter_email) {
 
 my $dest_db_link = '';
 my $database_name = $c->config()->{database_name};
-my $database_url = $c->config()->{database_url};
+
 if (defined $database_name) {
   $dest_db_link = qq| for $database_name|;
 }
