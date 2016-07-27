@@ -500,6 +500,7 @@ sub _process_existing_db_ontology
   my $ontology_term = $row->{ontology_term};
   my $publication = $row->{publication};
   my $evidence_code = $row->{evidence_code};
+  my $gene_product_form_id = $row->{gene_product_form_id};
   my $ontology_name = $ontology_term->{ontology_name};
 
   my $term_name =
@@ -587,6 +588,7 @@ sub _process_existing_db_ontology
     $ret{with_or_from_identifier} = $with_or_from_identifier;
     $ret{with_or_from_display_name} = $with_or_from_identifier;
     $ret{with_gene_id} = $with_gene_id;
+    $ret{gene_product_form_id} = $gene_product_form_id;
   } else {
     $ret{genotype_identifier} = $genotype->{identifier};
     $ret{genotype_name} = $genotype->{name} || '';

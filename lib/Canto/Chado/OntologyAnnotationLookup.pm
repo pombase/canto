@@ -184,7 +184,7 @@ sub lookup
   if (defined $pub) {
     my $prop_type_cv =
       $schema->find_with_type('Cv', name => 'feature_cvtermprop_type');
-    my @prop_type_names = qw[evidence with from condition qualifier];
+    my @prop_type_names = qw[evidence with from condition qualifier gene_product_form_id];
     my %prop_cvterm_ids = ();
     for my $prop_type_name (@prop_type_names) {
       $prop_cvterm_ids{$prop_type_name} =
@@ -267,6 +267,7 @@ sub lookup
       my %prop_type_values = (evidence => 'Unknown',
                               with => undef,
                               from => undef,
+                              gene_product_form_id => undef,
                               qualifier => [],
                               condition => [],
                               );
@@ -320,6 +321,7 @@ sub lookup
           is_not => $row->is_not(),
           with => $prop_type_values{with},
           from => $prop_type_values{from},
+          gene_product_form_id => $prop_type_values{gene_product_form_id},
           publication => {
             uniquename => $pub_uniquename,
           },

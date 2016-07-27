@@ -40,6 +40,7 @@ sub check_res {
                evidence_code => 'IMP',
                with => 'PomBase:SPBC2G2.01c',
                from => undef,
+               gene_product_form_id => 'PR:000027576',
                is_not => 0,
                conditions => [],
                qualifiers => [],
@@ -144,7 +145,8 @@ cmp_deeply($res->[0],
                'uniquename' => 'PMID:19756689'
              },
              'is_not' => 1,
-             'with' => undef
+             'with' => undef,
+             'gene_product_form_id' => undef,
            });
 
 
@@ -163,6 +165,7 @@ my $cycloheximide_annotation_res = $Canto::TestUtil::shared_test_results{cyclohe
 cmp_deeply($res->[0],
            {
              'with' => undef,
+             'gene_product_form_id' => undef,
              'qualifiers' => [],
              'is_not' => 'false',
              'conditions' => [],
