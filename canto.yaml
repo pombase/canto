@@ -1583,18 +1583,16 @@ available_annotation_type_list:
       - Transcript expression level evidence
       - Western blot assay
     broad_term_suggestions: >
-      cell phenotype, multinucleate, abnormal spindle, inviable
+      multinucleate, abnormal spindle, inviable
     specific_term_examples: >
       growth auxotrophic for arginine, abnormal cytokinetic cell separation
     help_text: >
-      Annotate normal or abnormal phenotypes, and the associated alleles.
-      A phenotype is any observable characteristic or trait of an organism; 
-      examples include multinucleate, abnormal spindle, inviable.
+      Annotate normal or abnormal phenotypes of cells with this genotype.
     more_help_text: >
-      Observable characteristics include morphology, development, biochemical or
+      A phenotype is any observable characteristic or trait of an organism;
+      observable characteristics include morphology, development, biochemical or
       physiological properties, behaviour, and products of behaviour of the
-      organism.
-      Phenotypes result from the expression of the genes of an organism as well
+      organism. Phenotypes result from the expression of the genes of an organism as well
       as the influence of environmental factors and the interactions between
       the two.
     extra_help_text: >
