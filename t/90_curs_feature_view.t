@@ -54,7 +54,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr|Genotype: SPCC63.05delta ssm4KE</title|);
-    like ($res->content(), qr/Annotate normal or abnormal phenotypes, and the associated alleles/);
+    like ($res->content(), qr/Annotate normal or abnormal phenotypes of cells/);
   }
 
   {
@@ -76,7 +76,7 @@ test_psgi $app, sub {
     like ($res->content(), qr/cdc11-33 wtf22-a1/);
     like ($res->content(), qr/cdc11-33\(unknown\)/);
     like ($res->content(), qr/wtf22-a1\(T11C\)/);
-    like ($res->content(), qr/Annotate normal or abnormal phenotypes, and the associated alleles/);
+    like ($res->content(), qr/Annotate normal or abnormal phenotypes of cells/);
 
     # re-fetch
     $cdc11_33 = $curs_schema->resultset('Allele')
