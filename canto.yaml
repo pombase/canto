@@ -2,6 +2,10 @@
 name: Canto
 long_name: Community curation application
 
+# the name of the organisation running this Canto - shown in various places
+# in the user interface
+database_name: CONFIGURE_IN_CANTO_DEPLOY.YAML
+
 # The name of the destination database for the annotations from this instance.
 # eg. "PomBase".
 # If not set a generic text will be used instead.
