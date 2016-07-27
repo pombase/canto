@@ -4048,6 +4048,7 @@ var annotationTableCtrl =
           genotype_name: true,
           genotype_background: true,
           term_suggestion: true,
+          gene_product_form_id: true,
         };
 
         $scope.data = {
