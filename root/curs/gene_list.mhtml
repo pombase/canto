@@ -57,6 +57,7 @@ Annotate genes<% $and_genotypes %>
 % }
 </div>
 </div>
+</div>
 
 <%init>
 use Canto::Curs;
