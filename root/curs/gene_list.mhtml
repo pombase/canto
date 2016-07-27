@@ -12,7 +12,7 @@ $pub
 % if ($read_only_curs) {
 Genes<% $and_genotypes %> from this publication
 % } else {
-Annotation genes<% $and_genotypes %>
+Annotate genes<% $and_genotypes %>
 % }
     <& /curs/inline_help.mhtml, key => 'choose_gene' &>
     </div>
