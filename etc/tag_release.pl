@@ -121,11 +121,13 @@ tag_version($new_version);
 print "pushing to GitHub\n";
 system "git push --tags github master";
 
-print "pushing to Bitbucket\n";
-system "git push --tags bitb master";
+if (@ARGV > 0 && $ARGV[0] eq '-a') {
+  print "pushing to Bitbucket\n";
+  system "git push --tags bitb master";
 
-print "pushing to GitLab\n";
-system "git push --tags gitlab master";
+  print "pushing to GitLab\n";
+  system "git push --tags gitlab master";
+}
 
 END {
   if ($stashed) {
