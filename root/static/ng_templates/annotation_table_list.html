@@ -9,7 +9,7 @@ Annotation loading ...
   <div ng-show="!data.serverError && annotationTypes.length > 0"
        id="curs-annotation-tables" class="ng-cloak sect">
     <div ng-repeat="annotationType in annotationTypes">
-      <div class="curs-box"
+      <div class="curs-annotation-table-group curs-box"
            ng-show="serverErrorsByType[annotationType.name] || byTypeSplit[annotationType.name] && countKeys(byTypeSplit[annotationType.name])">
         <div class="curs-box-title">
           {{annotationType.display_name}}

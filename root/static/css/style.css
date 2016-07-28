@@ -840,8 +840,6 @@ div.clearall {
 .curs-box {
   border: 1px solid #ddd;
   background-color: white;
-  margin: 5px;
-  margin-bottom: 15px;
 }
 
 .curs-box-title {
@@ -964,6 +962,10 @@ fieldset.curs-genes span {
   clear: both;
   padding-top: 25px;
   font-size: 95%;
+}
+
+.curs-annotation-table-group {
+  margin-bottom: 15px;
 }
 
 .curs-annotation-incomplete-message {
