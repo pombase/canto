@@ -8,12 +8,15 @@ use strict;
 use warnings;
 use Carp;
 
-my $version_prefix = "v";
+my $current_branch = `git rev-parse --abbrev-ref HEAD`;
+chomp $current_branch;
 
-sub move_to_master
-{
-  system "git checkout master";
+if ($current_branch ne 'master') {
+  warn "not on master branch - exiting\n";
+  exit 1;
 }
+
+my $version_prefix = "v";
 
 sub get_current_version
 {
@@ -102,7 +105,6 @@ sub stash
   return $stashed;
 }
 
-move_to_master();
 print 'current version: ', `git describe --always`, "\n";
 
 my $stashed = stash();
