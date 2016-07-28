@@ -755,7 +755,7 @@ div.clearall {
 .curs-definition-table, .curs-allele-list {
   table-layout: fixed;
   border-collapse: collapse;
-  margin: 10px;
+  margin: 5px;
 }
 
 .curs-term-linkouts {
@@ -855,7 +855,7 @@ div.clearall {
 }
 
 .curs-box-body {
-  margin: 0px;
+  margin: 5px;
   padding: 5px;
 }
 
