@@ -109,6 +109,9 @@ print 'current version: ', `git describe --always`, "\n";
 
 my $stashed = stash();
 
+print "pulling from GitHub\n";
+system "git pull";
+
 my $new_version = get_new_version();
 print 'new version: ', $new_version, "\n";
 tag_version($new_version);
