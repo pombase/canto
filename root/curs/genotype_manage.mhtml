@@ -13,16 +13,9 @@ $read_only_curs => 0
 Search, view, and edit genotypes for phenotype annotation in this session
     </div>
     <div class="col-sm-6 col-md-6">
-    <div class="curs-box">
-      <div class="curs-box-title">
-Actions
-      </div>
-      <div class="curs-box-body">
         <div class="feature-list-action">
-          <a href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
+          <a class="btn btn-primary" href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
         </div>
-      </div>
-    </div>
     </div>
   </div>
 % }
