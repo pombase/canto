@@ -10,7 +10,7 @@ $read_only_curs => 0
   <div class="row">
 % if (!$read_only_curs) {
     <div class="curs-top-help">
-Search, view, and edit genotypes for phenotype annotation in this session
+Add view and edit genotypes
     </div>
     <div class="col-sm-6 col-md-6">
         <div class="feature-list-action">
@@ -21,13 +21,7 @@ Search, view, and edit genotypes for phenotype annotation in this session
 % }
   <div class="row">
     <div class="col-sm-12 col-md-12">
-    <div class="curs-box">
-      <div class="curs-box-title">
-        <div>
-Genotypes used in this session
-        </div>
-      </div>
-      <div class="curs-box-body ng-cloak">
+      <div class="ng-cloak">
         <div ng-show="data.waitingForServer">
           <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
         </div>
@@ -46,7 +40,6 @@ Mouse over genotypes for more actions
         <div ng-show="data.genotypes.length == 0">
 No genotypes in this session.  Try adding one.
 
-        </div>
         </div>
       </div>
     </div>
