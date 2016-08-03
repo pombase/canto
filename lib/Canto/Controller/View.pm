@@ -86,7 +86,8 @@ sub get_object_by_id_or_name
     Canto::WebUtil::get_column_confs($c, $rs, $class_info);
 
   $rs = Canto::WebUtil::process_rs_options($rs, $c->config(),
-                                           $class_info, [@column_confs]);
+                                           $class_info, [@column_confs],
+                                           $model_name);
 
   return $rs->first();
 }
