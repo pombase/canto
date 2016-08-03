@@ -205,6 +205,9 @@ sub object : Local
     if (defined $@ && length $@ > 0) {
       $error .= " - $@";
     }
+
+    warn $error;
+
     $c->stash->{error} = $error;
     $c->forward('/front');
   }
