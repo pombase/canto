@@ -38,11 +38,10 @@ under the same terms as Perl itself.
 use warnings;
 use strict;
 
-sub per_publication_stats
+sub stats_init
 {
   my $chado_schema = shift;
   my $track_schema = shift;
-  my $use_5_year_bins = shift // 0;
 
   my $track_dbh = $track_schema->storage()->dbh();
   my $pub_date_query = 'SELECT uniquename, publication_date FROM pub;';
@@ -64,6 +63,16 @@ sub per_publication_stats
         or die "Couldn't execute: " . $chado_sth->errstr;
     }
   }
+}
+
+
+sub per_publication_stats
+{
+  my $chado_schema = shift;
+  my $track_schema = shift;
+  my $use_5_year_bins = shift // 0;
+
+  my $chado_dbh = $chado_schema->storage()->dbh();
 
   my $select_sql;
 
@@ -89,8 +98,8 @@ EOF
    FROM pombase_genes_annotations_dates
    JOIN pub_dates ON uniquename = pmid
   WHERE session IS NOT NULL
-   GROUP BY pub_date, pmid
-   ORDER BY pub_date)
+   GROUP BY year, pmid
+   ORDER BY year)
 $select_sql;
 EOF
 
@@ -109,8 +118,8 @@ EOF
    FROM pombase_annotated_gene_features_per_publication
    JOIN pub_dates ON uniquename = pmid
   WHERE session IS NOT NULL
-   GROUP BY pub_date, pmid
-   ORDER BY pub_date)
+   GROUP BY year, pmid
+   ORDER BY year)
 $select_sql;
 EOF
 
@@ -120,8 +129,6 @@ EOF
   while (my ($pub_date, $avg_count) = $gene_sth->fetchrow_array()) {
     $publication_stats{$pub_date}->{gene} = $avg_count;
   }
-
-  $chado_dbh->prepare('drop table pub_dates')->execute();
 
   my @rows = ();
 
@@ -291,5 +298,15 @@ sub annotation_stats_table
   return @rows;
 }
 
+sub stats_finish
+{
+  my $chado_schema = shift;
+  my $track_schema = shift;
+
+  my $chado_dbh = $chado_schema->storage()->dbh();
+
+  $chado_dbh->prepare('drop table pub_dates')->execute();
+  $chado_dbh->prepare('drop table pub_canto_curator_roles')->execute();
+}
 
 1;
