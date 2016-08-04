@@ -1,5 +1,5 @@
 <%args>
-@stats_table
+@annotation_stats
 @per_pub_stats_table
 @per_pub_5_year_stats
 </%args>
@@ -40,7 +40,7 @@
         </th>
       </tr>
     </thead>
-% for my $row (@stats_table) {
+% for my $row (@annotation_stats) {
     <tr>
       <td>
         <% shift @$row %>

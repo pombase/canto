@@ -66,8 +66,8 @@ sub annotation : Local {
     Canto::Chado::Utils::per_publication_stats($chado_schema, $track_schema, 1);
   $st->{per_pub_5_year_stats} = \@per_pub_5_year_stats;
 
-  my @stats = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
-  $st->{stats_table} = \@stats;
+  my @annotation_stats = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
+  $st->{annotation_stats} = \@annotation_stats;
 
   Canto::Chado::Utils::stats_finish($chado_schema, $track_schema);
 
