@@ -2,6 +2,7 @@
 @annotation_stats
 @per_pub_stats_table
 @per_pub_5_year_stats
+@curated_stats
 </%args>
 
 <div class="annotation-stats">
@@ -80,6 +81,57 @@ those added by a professional curator during the approval procedure.
 </div>
 </div>
 </div>
+
+<div class="curs-box">
+  <div class="curs-box-title">Curated vs uncurated by publication date</div>
+  <div class="curs-box-body">
+<div class="row">
+  <div class="col-sm-6 col-md-6">
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Total curatable
+        </th>
+        <th>
+          Uncurated
+        </th>
+        <th>
+          Community curated
+        </th>
+        <th>
+          Admin curated
+        </th>
+      </tr>
+    </thead>
+% for my $row (@curated_stats) {
+    <tr>
+      <td>
+        <% $row->[0] %>
+      </td>
+      <td>
+        <% $row->[1] + $row->[2] + $row->[3] %>
+      </td>
+%   for (my $i = 1; $i < @$row; $i++) {
+%     my $column = $row->[$i];
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+  <div class="col-sm-6 col-md-6">
+    Counts of curatable publications that aren't yet curated, have been
+    community curated and curated by a <% $c->config()->{database_name} %>
+    curator.
+  </div>
+  </div>
+</div>
+</div>
+
 
 <div class="curs-box">
   <div class="curs-box-title">Annotations/genes per publication per year</div>

@@ -69,6 +69,9 @@ sub annotation : Local {
   my @annotation_stats = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
   $st->{annotation_stats} = \@annotation_stats;
 
+  my @curated_stats = Canto::Chado::Utils::curated_stats($chado_schema, $track_schema);
+  $st->{curated_stats} = \@curated_stats;
+
   Canto::Chado::Utils::stats_finish($chado_schema, $track_schema);
 
   $st->{title} = "Canto statistics";

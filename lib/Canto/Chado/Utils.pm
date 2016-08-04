@@ -63,8 +63,89 @@ sub stats_init
         or die "Couldn't execute: " . $chado_sth->errstr;
     }
   }
+
+  $chado_dbh->prepare(<<'EOF')->execute();
+CREATE TEMP TABLE pub_canto_curator_roles AS
+  SELECT pub.uniquename, pp.value AS status
+    FROM pub
+    LEFT OUTER JOIN pubprop pp
+                 ON pp.pub_id = pub.pub_id AND pp.type_id IN
+                   (SELECT cvterm_id FROM cvterm WHERE name = 'canto_curator_role')
+WHERE pub.pub_id IN
+    (SELECT pub_id FROM pubprop pp
+       JOIN cvterm pt ON pt.cvterm_id = pp.type_id
+        AND pt.name = 'canto_triage_status'
+        AND (pp.value LIKE 'Curatable%' OR pp.value LIKE 'curatable%'));
+EOF
 }
 
+=head2 curated_stats
+
+ Function: Return a table of counts of uncurated (but curatable), admin curated
+           and community curated publications per year
+
+=cut
+
+sub curated_stats
+{
+  my $chado_schema = shift;
+
+  my $chado_dbh = $chado_schema->storage()->dbh();
+
+  my %stats = ();
+
+  for my $curation_status ('uncurated', 'community', 'admin') {
+    my $where;
+
+    if ($curation_status eq 'uncurated') {
+      $where = 'status is null';
+    } else {
+      if ($curation_status eq 'community') {
+        $where = q|status = 'community'|;
+      } else {
+        $where = q|status IS NOT NULL and status <> 'community'|;
+      }
+    }
+
+    my $query = <<"EOF";
+SELECT substring(pub_date FROM '^(\\d\\d\\d\\d)') AS year, count(roles.uniquename)
+   FROM pub_canto_curator_roles roles
+   JOIN pub_dates ON pub_dates.uniquename = roles.uniquename
+  WHERE $where
+   GROUP BY year
+EOF
+
+    my $sth = $chado_dbh->prepare($query);
+    $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+    while (my ($year, $count) = $sth->fetchrow_array()) {
+      $stats{$year}->{$curation_status} = $count;
+    }
+  }
+
+  my @rows = ();
+
+  my $first_year = 9999;
+
+  map {
+    $first_year = $_ if $_ < $first_year
+  } keys %stats;
+
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+  my $current_year = $year + 1900;
+
+  for (my $year = $first_year; $year <= $current_year; $year++) {
+    my $year_stats = $stats{$year};
+    if (defined $year_stats) {
+      push @rows, [$year, $year_stats->{uncurated} // 0,
+                   $year_stats->{admin} // 0, $year_stats->{community} //0];
+    } else {
+      push @rows, [$year, 0, 0, 0];
+    }
+  }
+
+  return @rows;
+}
 
 sub per_publication_stats
 {
