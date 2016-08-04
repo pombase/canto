@@ -90,7 +90,6 @@ my $max_inline_results_length =
 
 my $model_name = $c->req()->param('model');
 my $class_info = $c->config()->class_info($model_name)->{$config_name};
-my $table = $class_info->{source};
 
 my $context;
 
