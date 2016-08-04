@@ -395,7 +395,7 @@ sub list : Local
     $st->{order_by} = $parsed_order_by;
 
     $st->{page} = $c->req->param('page') || 1;
-    $st->{numrows} = $c->req->param('numrows') || 20;
+    $st->{numrows} = $c->req->param('numrows') || 100;
   };
   if ($@) {
     $c->stash->{error} = qq(No objects with type: $config_name - $@);
