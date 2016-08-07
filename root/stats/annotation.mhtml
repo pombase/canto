@@ -3,6 +3,7 @@
 @per_pub_stats_table
 @per_pub_5_year_stats
 @curated_stats
+$db_creation_datetime
 </%args>
 
 <div class="annotation-stats">
@@ -124,9 +125,10 @@ those added by a professional curator during the approval procedure.
   </table>
 </div>
   <div class="col-sm-6 col-md-6">
-    Counts of curatable publications that aren't yet curated, have been
-    community curated and curated by a <% $c->config()->{database_name} %>
-    curator.
+Publications containing gene-specific data per year, with curation status as
+of <% $db_creation_datetime %>. Admin curated: papers curated exclusively
+by <% $c->config()->{database_name} %> staff; Community curated: papers with
+annotations contributed by authors.
   </div>
   </div>
 </div>

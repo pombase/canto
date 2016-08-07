@@ -56,6 +56,15 @@ sub annotation : Local {
 
   my $track_schema = $c->schema('track');
 
+  my $db_creation_datetime =
+    $chado_schema->resultset('Chadoprop')
+    ->search({ 'type.name' => 'db_creation_datetime' },
+             { join => 'type' })->first()->value();
+
+  chomp $db_creation_datetime;
+  $db_creation_datetime =~ s/(\d\d\d\d-\d\d-\d\d).*/$1/;
+  $st->{db_creation_datetime} = $db_creation_datetime;
+
   Canto::Chado::Utils::stats_init($chado_schema, $track_schema);
 
   my @per_pub_stats =
