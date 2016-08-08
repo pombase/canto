@@ -4826,10 +4826,12 @@ var stackedGraph =
         replace: true,
         template: '<div><canvas class="chart chart-bar" chart-data="chartData" ' +
           'chart-labels="chartLabels" chart-options="options" ' +
+          'chart-colors="colours" ' +
           'chart-series="series"></canvas></div>',
         controller: function ($scope) {
           $scope.type = 'StackedBar';
           $scope.series = ['Uncurated', 'Admin curated', 'Community curated'];
+          $scope.colours = ['#808080','#b04040','#3030b0'];
           $scope.options = {
             scales: {
               xAxes: [{
