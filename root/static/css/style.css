@@ -361,6 +361,10 @@ table.list tr td {
   white-space: normal !important;
 }
 
+.annotation-stats-table-totals {
+  font-weight: bold;
+}
+
 #curs-genotype-list-row-actions {
   border: 2px solid #bbb;
   padding: 3px;

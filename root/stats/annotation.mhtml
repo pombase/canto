@@ -108,7 +108,9 @@ those added by a professional curator during the approval procedure.
         </th>
       </tr>
     </thead>
+% my @totals = (0,0,0,0,0);
 % for my $row (@curated_stats) {
+%   pairwise { $a += $b } @totals, @$row;
     <tr>
       <td>
         <% $row->[0] %>
@@ -122,6 +124,13 @@ those added by a professional curator during the approval procedure.
 %   }
     </tr>
 % }
+    <tr class="annotation-stats-table-totals">
+      <td>Totals:</td>
+      <td><% $totals[1] + $totals[2] + $totals[3] %></td>
+      <td><% $totals[1] %></td>
+      <td><% $totals[2] %></td>
+      <td><% $totals[3] %></td>
+    </tr>
   </table>
 </div>
   <div class="col-sm-6 col-md-6">
@@ -222,6 +231,8 @@ annotations contributed by authors.
 </div>
 
 <%init>
+use List::MoreUtils 'pairwise';
+
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $current_year = $year + 1900;
 </%init>
