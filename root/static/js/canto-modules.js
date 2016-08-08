@@ -4833,6 +4833,7 @@ var stackedGraph =
           $scope.series = ['Uncurated', 'Admin curated', 'Community curated'];
           $scope.colours = ['#808080','#b04040','#3030b0'];
           $scope.options = {
+            legend: { display: true },
             scales: {
               xAxes: [{
                 stacked: true,
