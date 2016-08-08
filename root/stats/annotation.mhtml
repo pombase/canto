@@ -8,7 +8,7 @@ $db_creation_datetime
 
 <div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
 <div class="curs-box">
-  <div class="curs-box-title">Curator statistics</div>
+  <div class="curs-box-title">Curator summary</div>
 <div class="curs-box-body row">
 <div class="col-sm-6 col-md-6">
   <table class="list">
