@@ -6,7 +6,7 @@
 $db_creation_datetime
 </%args>
 
-<div class="annotation-stats">
+<div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
 <div class="curs-box">
   <div class="curs-box-title">Curator statistics</div>
 <div class="curs-box-body row">
@@ -88,6 +88,10 @@ those added by a professional curator during the approval procedure.
   <div class="curs-box-body">
 <div class="row">
   <div class="col-sm-6 col-md-6">
+    <script language="javascript" type="text/javascript">
+      var curationStatusData = <% $curation_status_js |n %>;
+    </script>
+
   <table class="list">
     <thead>
       <tr>
@@ -134,12 +138,17 @@ those added by a professional curator during the approval procedure.
   </table>
 </div>
   <div class="col-sm-6 col-md-6">
+    <div>
 Publications containing gene-specific data per year, with curation status as
 of <% $db_creation_datetime %>. Admin curated: papers curated exclusively
 by <% $c->config()->{database_name} %> staff; Community curated: papers with
 annotations contributed by authors.
+    </div>
   </div>
-  </div>
+</div>
+<div>
+  <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData">
+  </stacked-graph>
 </div>
 </div>
 
@@ -232,7 +241,28 @@ annotations contributed by authors.
 
 <%init>
 use List::MoreUtils 'pairwise';
+use Data::JavaScript::Anon;
 
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $current_year = $year + 1900;
+
+my @transposed_curated_stats = ();
+
+map {
+  my @row = @$_;
+
+  for (my $i = 0; $i < scalar(@row); $i++) {
+    push @{$transposed_curated_stats[$i]}, $row[$i];
+  }
+} @curated_stats;
+
+for (my $i = 0; $i < scalar(@{$transposed_curated_stats[0]}); $i++) {
+  if ($i % 2 == 0) {
+    # remove some labels
+#    $transposed_curated_stats[0][$i] = '';
+  }
+}
+
+my $curation_status_js = Data::JavaScript::Anon->anon_dump(\@transposed_curated_stats);
+
 </%init>

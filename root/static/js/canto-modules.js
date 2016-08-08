@@ -4,7 +4,8 @@
   ferret_choose,application_root,window,canto_root_uri,curs_key,
   app_static_path,loadingStart,loadingEnd,alert,trim */
 
-var canto = angular.module('cantoApp', ['ui.bootstrap', 'angular-confirm', 'toaster']);
+var canto = angular.module('cantoApp', ['ui.bootstrap', 'angular-confirm', 'toaster',
+                                        'chart.js']);
 
 canto.config(['$compileProvider', function ($compileProvider) {
   $compileProvider.debugInfoEnabled(false);
@@ -398,6 +399,7 @@ canto.service('CantoGlobals', function($window) {
   this.is_admin_session = $window.is_admin_session;
   this.is_admin_user = $window.is_admin_user;
   this.current_user_is_admin = $window.current_user_is_admin;
+  this.curationStatusData = $window.curationStatusData;
 });
 
 canto.service('CantoService', function($http) {
@@ -4801,3 +4803,45 @@ var pubsListViewCtrl =
   };
 
 canto.directive('pubsListView', ['CantoGlobals', pubsListViewCtrl]);
+
+
+var AnnotationStatsCtrl =
+  function($scope, CantoGlobals) {
+    $scope.curationStatusLabels = CantoGlobals.curationStatusData[0];
+    $scope.curationStatusData = CantoGlobals.curationStatusData.slice(1);
+  };
+
+canto.controller('AnnotationStatsCtrl',
+                 ['$scope', 'CantoGlobals', AnnotationStatsCtrl]);
+
+
+var stackedGraph =
+    function() {
+      return {
+        scope: {
+          chartLabels: '=',
+          chartData: '=',
+        },
+        restrict: 'E',
+        replace: true,
+        template: '<div><canvas class="chart chart-bar" chart-data="chartData" ' +
+          'chart-labels="chartLabels" chart-options="options" ' +
+          'chart-series="series"></canvas></div>',
+        controller: function ($scope) {
+          $scope.type = 'StackedBar';
+          $scope.series = ['Uncurated', 'Admin curated', 'Community curated'];
+          $scope.options = {
+            scales: {
+              xAxes: [{
+                stacked: true,
+              }],
+              yAxes: [{
+                stacked: true,
+              }]
+            }
+          };
+      }
+    }
+  };
+
+canto.directive('stackedGraph', [stackedGraph]);
