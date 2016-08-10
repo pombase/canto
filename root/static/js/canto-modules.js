@@ -1824,7 +1824,7 @@ canto.controller('ExtensionRelationDialogCtrl',
                  ['$scope', '$modalInstance', 'args',
                  extensionRelationDialogCtrl]);
 
-function openTermConfirmDialog($modal, termId, initialState)
+function openTermConfirmDialog($modal, termId, initialState, featureType)
 {
   return $modal.open({
     templateUrl: app_static_path + 'ng_templates/term_confirm.html',
@@ -1838,6 +1838,7 @@ function openTermConfirmDialog($modal, termId, initialState)
         return {
           termId: termId,
           initialState: initialState,
+          featureType: featureType,
         };
       }
     },
@@ -3590,6 +3591,7 @@ var termConfirmDialogCtrl =
 
     $scope.data = {
       initialTermId: args.termId,
+      featureType: args.featureType,
       state: 'definition',
       termDetails: null,
     };
@@ -3796,7 +3798,8 @@ var annotationEditDialogCtrl =
         $scope.annotation.term_name = termName;
 
         if (!searchString.match(/^".*"$/) && searchString !== termId) {
-          var termConfirm = openTermConfirmDialog($modal, termId);
+          var termConfirm = openTermConfirmDialog($modal, termId, 'definition',
+                                                  $scope.annotationType.feature_type);
 
           termConfirm.result.then(function(result) {
             $scope.annotation.term_ontid = result.newTermId;
