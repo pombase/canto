@@ -3040,9 +3040,24 @@ var GenotypeManageCtrl =
     $scope.data = {
       genotypes: [],
       waitingForServer: true,
-      selectedGenotypeIdFromPath: null,
+      selectedGenotypeId: null,
       editingGenotype: false,
     };
+
+
+    function hashChangedHandler() {
+      var path = $location.path();
+
+      if (path) {
+        var res = /^\/select\/(\d+)$/.exec(path);
+        if (res) {
+          $scope.data.selectedGenotypeId = res[1];
+        }
+      }
+    }
+
+    window.addEventListener('load', hashChangedHandler);
+    window.addEventListener('hashchange', hashChangedHandler);
 
     $scope.addGenotype = function() {
       $scope.data.editingGenotype = true;
@@ -3061,15 +3076,6 @@ var GenotypeManageCtrl =
       CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
         $scope.data.genotypes = results;
         $scope.data.waitingForServer = false;
-
-        $scope.data.path = $location.path();
-
-        if ($scope.data.path) {
-          var res = /^\/select\/(\d+)$/.exec($scope.data.path);
-          if (res) {
-            $scope.data.selectedGenotypeIdFromPath = res[1];
-          }
-        }
       }).catch(function() {
         toaster.pop('error', "couldn't read the genotype list from the server");
         $scope.data.waitingForServer = false;
@@ -3267,7 +3273,8 @@ var genotypeListRowCtrl =
       scope: {
         genotypes: '=',
         genotype: '=',
-        selectedGenotypeId: '=',
+        selectedGenotypeId: '@',
+        setSelectedGenotypeId: '&',
         navigateOnClick: '@',
         columnsToHide: '=',
       },
@@ -3282,39 +3289,61 @@ var genotypeListRowCtrl =
         $scope.isSelected = function() {
           return $scope.selectedGenotypeId &&
             $scope.selectedGenotypeId == $scope.genotype.genotype_id;
-        }
+        };
 
-        $scope.closeLinks = function() {
-          $scope.selectedGenotypeId = null;
+        $scope.clearSelection = function() {
+          $scope.setSelectedGenotypeId({ genotypeId: null });
           var links = $('#curs-genotype-list-row-actions');
           links.remove();
         };
 
-        $scope.setSelected = function() {
+        $scope.mouseOver = function() {
           if ($scope.navigateOnClick != 'true') {
-            $scope.selectedGenotypeId = $scope.genotype.genotype_id;
-            $scope.annotation_count = $scope.genotype.annotation_count;
-
-            var links = $('#curs-genotype-list-row-actions');
-            links.remove();
-
-            links =
-              angular.element('<div id="curs-genotype-list-row-actions">' +
-                              '<img ng-src="' + $scope.app_static_path +
-                              '/images/down_triangle.png"></img>' +
-                              '<genotype-list-row-links genotypes="genotypes" selected-genotype-id="selectedGenotypeId" annotation-count="{{annotation_count}}">' +
-                              '</genotype-list-row-links>' +
-                              '<img style="padding: 4px; padding-left: 10px;" ng-click="closeLinks()" ng-src="{{closeIconPath}}"></img></div>');
-            $('#curs-content').append(links);
-            $compile(links)($scope);
-
-            links.position({
-              my: 'left top',
-              at: 'left top-2',
-              of: $element.closest('tr').children('td').last(),
-            });
+            $scope.setSelectedGenotypeId({ genotypeId: $scope.genotype.genotype_id });
           }
         };
+
+        $scope.$watch('selectedGenotypeId',
+                      function(newSelectedGenotypeId, oldSelectedGenotypeId) {
+                        if ($scope.isSelected()) {
+                          $scope.annotation_count = $scope.genotype.annotation_count;
+
+                          var links = $('#curs-genotype-list-row-actions');
+                          links.remove();
+
+                          links =
+                            angular.element('<div id="curs-genotype-list-row-actions">' +
+                                            '<img ng-src="' + $scope.app_static_path +
+                                            '/images/down_triangle.png"></img>' +
+                                            '<genotype-list-row-links genotypes="genotypes" selected-genotype-id="selectedGenotypeId" annotation-count="{{annotation_count}}">' +
+                                            '</genotype-list-row-links>' +
+                                            '<img style="padding: 4px; padding-left: 10px;" ng-click="clearSelection()" ng-src="{{closeIconPath}}"></img></div>');
+                          $('#curs-content').append(links);
+                          $compile(links)($scope);
+                          links.hide();
+
+                          var lastTD = $element.closest('tr').children('td').last();
+                          var showLinks = function() {
+                            links.position({
+                              my: 'left top',
+                              at: 'left top-2',
+                              of: lastTD,
+                            });
+                            links.show();
+                          };
+
+                          if (oldSelectedGenotypeId) {
+                            $scope.$evalAsync(function() {
+                              showLinks();
+                            });
+                          } else {
+                            // delay a bit to wait for the table to render
+                            $timeout(function() {
+                              showLinks();
+                            }, 1500);
+                          }
+                        }
+                      });
       },
       link: function($scope) {
         if ($scope.navigateOnClick) {
@@ -3324,13 +3353,6 @@ var genotypeListRowCtrl =
             (CantoGlobals.read_only_curs ? '/ro' : '');
         } else {
           $scope.detailsUrl = '#';
-        }
-
-        if ($scope.selectedGenotypeId &&
-            $scope.selectedGenotypeId == $scope.genotype.genotype_id) {
-          $timeout(function() {
-            $scope.setSelected();
-          }, 900);
         }
       },
     };
@@ -3346,7 +3368,7 @@ var genotypeListViewCtrl =
     return {
       scope: {
         genotypeList: '=',
-        initialSelectedGenotypeId: '@',
+        selectedGenotypeId: '=',
         navigateOnClick: '@'
       },
       restrict: 'E',
@@ -3356,9 +3378,9 @@ var genotypeListViewCtrl =
         $scope.columnsToHide = { background: true,
                                  name: true, };
 
-        $scope.data = {
-          selectedGenotypeId: $scope.initialSelectedGenotypeId
-        };
+        $scope.setSelectedGenotypeId = function(genotypeId) {
+          $scope.selectedGenotypeId = genotypeId;
+        }
 
         $scope.$watch('genotypeList',
                       function() {

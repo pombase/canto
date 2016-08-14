@@ -19,7 +19,8 @@ Annotations
     </thead>
     <tbody>
       <tr genotype-list-row ng-repeat="currentGenotype in genotypeList"
-          selected-genotype-id="data.selectedGenotypeId"
+          set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
+          selected-genotype-id="{{selectedGenotypeId}}"
           navigate-on-click="{{navigateOnClick}}"
           columns-to-hide="columnsToHide"
           genotypes="genotypeList"

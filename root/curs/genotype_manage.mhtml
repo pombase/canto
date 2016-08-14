@@ -60,7 +60,7 @@ Mouse over genotypes for more actions
 
           <genotype-list-view genotype-list="data.genotypes"
                               navigate-on-click="false"
-                              initial-selected-genotype-id="{{data.selectedGenotypeIdFromPath}}">
+                              selected-genotype-id="data.selectedGenotypeId">
           </genotype-list-view>
         </div>
         <div ng-show="data.genotypes.length == 0">
