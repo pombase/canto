@@ -3061,6 +3061,7 @@ var GenotypeManageCtrl =
 
     $scope.addGenotype = function() {
       $scope.data.editingGenotype = true;
+      $scope.data.selectedGenotypeId = null;
     };
 
     $scope.cancelEdit = function() {
@@ -3216,7 +3217,7 @@ var genotypeListRowLinksCtrl =
       restrict: 'E',
       scope: {
         genotypes: '=',
-        selectedGenotypeId: '=',
+        genotypeId: '=',
         annotationCount: '@',
       },
       replace: true,
@@ -3231,8 +3232,6 @@ var genotypeListRowLinksCtrl =
           var q = CursGenotypeList.deleteGenotype($scope.genotypes, genotypeId);
 
           q.then(function() {
-            $scope.selectedGenotypeId = null;
-            $('#curs-genotype-list-row-actions').remove();
             toaster.pop('success', 'Genotype deleted');
           });
 
@@ -3302,48 +3301,6 @@ var genotypeListRowCtrl =
             $scope.setSelectedGenotypeId({ genotypeId: $scope.genotype.genotype_id });
           }
         };
-
-        $scope.$watch('selectedGenotypeId',
-                      function(newSelectedGenotypeId, oldSelectedGenotypeId) {
-                        if ($scope.isSelected()) {
-                          $scope.annotation_count = $scope.genotype.annotation_count;
-
-                          var links = $('#curs-genotype-list-row-actions');
-                          links.remove();
-
-                          links =
-                            angular.element('<div id="curs-genotype-list-row-actions">' +
-                                            '<img ng-src="' + $scope.app_static_path +
-                                            '/images/down_triangle.png"></img>' +
-                                            '<genotype-list-row-links genotypes="genotypes" selected-genotype-id="selectedGenotypeId" annotation-count="{{annotation_count}}">' +
-                                            '</genotype-list-row-links>' +
-                                            '<img style="padding: 4px; padding-left: 10px;" ng-click="clearSelection()" ng-src="{{closeIconPath}}"></img></div>');
-                          $('#curs-content').append(links);
-                          $compile(links)($scope);
-                          links.hide();
-
-                          var lastTD = $element.closest('tr').children('td').last();
-                          var showLinks = function() {
-                            links.position({
-                              my: 'left top',
-                              at: 'left top-2',
-                              of: lastTD,
-                            });
-                            links.show();
-                          };
-
-                          if (oldSelectedGenotypeId) {
-                            $scope.$evalAsync(function() {
-                              showLinks();
-                            });
-                          } else {
-                            // delay a bit to wait for the table to render
-                            $timeout(function() {
-                              showLinks();
-                            }, 1500);
-                          }
-                        }
-                      });
       },
       link: function($scope) {
         if ($scope.navigateOnClick) {
