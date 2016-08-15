@@ -2831,31 +2831,6 @@ var genotypeEdit =
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
 
-        $scope.data = {
-          annotationCount: 0,
-          genotypeName: null,
-          genotypeBackground: null,
-        };
-
-        $scope.genes = [
-        ];
-
-        if ($scope.genotypeId) {
-          if (editOrDuplicate == 'edit') {
-            $scope.data.genotype_id = $scope.genotypeId;
-            $scope.isEditing = true;
-          } else {
-            $scope.isEditing = false;
-          }
-          Curs.details('genotype', ['by_id', $scope.genotypeId])
-            .success(function(genotypeDetails) {
-              $scope.alleles = genotypeDetails.alleles;
-              $scope.data.genotypeName = genotypeDetails.name;
-              $scope.data.genotypeBackground = genotypeDetails.background;
-              $scope.data.annotationCount = genotypeDetails.annotation_count;
-            });
-        }
-
         $scope.getGenesFromServer = function() {
           Curs.list('gene').success(function(results) {
             $scope.genes = results;
@@ -2873,15 +2848,32 @@ var genotypeEdit =
           $scope.alleles = [
           ];
 
+          $scope.genes = [
+          ];
+
           $scope.getGenesFromServer();
 
           $scope.data = {
-            genotype_long_name: '',
-            genotype_name: '',
+            annotationCount: 0,
+            genotypeName: null,
+            genotypeBackground: null,
           };
         };
 
         $scope.reset();
+
+        if ($scope.genotypeId) {
+          if ($scope.editOrDuplicate == 'edit') {
+            $scope.data.genotype_id = $scope.genotypeId;
+          }
+          Curs.details('genotype', ['by_id', $scope.genotypeId])
+            .success(function(genotypeDetails) {
+              $scope.alleles = genotypeDetails.alleles;
+              $scope.data.genotypeName = genotypeDetails.name;
+              $scope.data.genotypeBackground = genotypeDetails.background;
+              $scope.data.annotationCount = genotypeDetails.annotation_count;
+            });
+        }
 
         $scope.env = {
           curs_config_promise: CantoConfig.get('curs_config')
@@ -3042,16 +3034,24 @@ var GenotypeManageCtrl =
       waitingForServer: true,
       selectedGenotypeId: null,
       editingGenotype: false,
+      editGenotypeId: null,
     };
-
 
     function hashChangedHandler() {
       var path = $location.path();
 
       if (path) {
-        var res = /^\/select\/(\d+)$/.exec(path);
+        var res = /^\/(select|edit|duplicate)\/(\d+)$/.exec(path);
         if (res) {
-          $scope.data.selectedGenotypeId = res[1];
+          if (res[1] == 'select') {
+            $scope.data.selectedGenotypeId = res[2];
+          } else {
+            if (res[1] == 'edit' || res[1] == 'duplicate') {
+              $scope.data.editOrDuplicate = res[1];
+              $scope.data.editGenotypeId = res[2];
+              $scope.data.editingGenotype = true;
+            }
+          }
         }
       }
     }
@@ -3066,10 +3066,16 @@ var GenotypeManageCtrl =
 
     $scope.cancelEdit = function() {
       $scope.data.editingGenotype = false;
+      $location.path('/select/' + $scope.data.editGenotypeId);
+      $scope.data.editGenotypeId = null;
     };
 
     $scope.storedCallback = function(genotypeId) {
+      if ($scope.data.editGenotypeId) {
+        $location.path('/select/' + $scope.data.editGenotypeId);
+      }
       $scope.data.editingGenotype = false;
+      $scope.data.editGenotypeId = null;
       $scope.readGenotypes();
     };
 
