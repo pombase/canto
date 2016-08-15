@@ -3262,6 +3262,11 @@ var genotypeListRowLinksCtrl =
             $scope.genotype.id_or_identifier;
         } else {
           $scope.detailsUrl = '#';
+          $scope.viewAnnotationUri =
+            CantoGlobals.curs_root_uri + '/feature/genotype/view/' + $scope.genotypeId;
+          if (CantoGlobals.read_only_curs) {
+            $scope.viewAnnotationUri += '/ro';
+          }
         }
       },
     };
