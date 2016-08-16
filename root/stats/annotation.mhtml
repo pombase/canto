@@ -266,13 +266,6 @@ map {
   }
 } @curated_stats;
 
-for (my $i = 0; $i < scalar(@{$transposed_curated_stats[0]}); $i++) {
-  if ($i % 2 == 0) {
-    # remove some labels
-#    $transposed_curated_stats[0][$i] = '';
-  }
-}
-
 my $curation_status_js = Data::JavaScript::Anon->anon_dump(\@transposed_curated_stats);
 
 </%init>
