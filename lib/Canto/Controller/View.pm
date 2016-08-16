@@ -85,7 +85,9 @@ sub get_object_by_id_or_name
   my @column_confs =
     Canto::WebUtil::get_column_confs($c, $rs, $class_info);
 
-  $rs = Canto::WebUtil::process_rs_options($rs, [@column_confs]);
+  $rs = Canto::WebUtil::process_rs_options($rs, $c->config(),
+                                           $class_info, [@column_confs],
+                                           $model_name);
 
   return $rs->first();
 }
@@ -204,6 +206,9 @@ sub object : Local
     if (defined $@ && length $@ > 0) {
       $error .= " - $@";
     }
+
+    warn $error;
+
     $c->stash->{error} = $error;
     $c->forward('/front');
   }
@@ -244,7 +249,7 @@ sub _parse_order_by
  Usage   : order_list_rs($c, $rs, $class_info, $model_name);
  Function: add an appropriate order_by option to a ResultSet, based on the
            configuration, or using the $order_by arg
- Args    : $c - the Catalyst object
+ Args    : $config - the Config object
            $rs - the ResultSet
            $class_info - the class information from the config file for this
                          ResultSet
@@ -257,8 +262,8 @@ sub _parse_order_by
 =cut
 sub order_list_rs
 {
-  my $c = shift;
   my $rs = shift;
+  my $config = shift;
   my $class_info = shift;
   my $model_name = shift;
   my $order_by = shift;
@@ -289,7 +294,7 @@ sub order_list_rs
   my $table = $class_info->{source};
   my $params = {
     order_by =>
-      $formatted_order_by // _get_order_by_field($c->config(),
+      $formatted_order_by // _get_order_by_field($config,
                                                  $model_name, $table),
   };
 
@@ -337,7 +342,7 @@ sub get_list_rs
 
   my $rs = $schema->resultset($class_name)->search($search);
 
-  return order_list_rs($c, $rs, $class_info, $model, $order_by);
+  return order_list_rs($rs, $c->config(), $class_info, $model, $order_by);
 }
 
 =head2 list
@@ -390,7 +395,7 @@ sub list : Local
     $st->{order_by} = $parsed_order_by;
 
     $st->{page} = $c->req->param('page') || 1;
-    $st->{numrows} = $c->req->param('numrows') || 20;
+    $st->{numrows} = $c->req->param('numrows') || 100;
   };
   if ($@) {
     $c->stash->{error} = qq(No objects with type: $config_name - $@);

@@ -223,6 +223,26 @@ sub _person_results
   }
 }
 
+sub _pubs_results
+{
+  my ($c, $search_type, $search_string) = @_;
+
+  my $lookup = Canto::Track::get_adaptor($c->config(), 'pubs');
+
+  if ($search_type eq 'by_curator_email') {
+    my $data = $lookup->lookup_by_curator_email($search_string);
+
+    return {
+      pub_results => $data->{results},
+      count => $data->{count},
+      status => 'success',
+    };
+  } else {
+    return { message => "Unknown search type: $search_type",
+             status => 'error' };
+  }
+}
+
 sub lookup : Local
 {
   my $self = shift;
@@ -236,6 +256,7 @@ sub lookup : Local
     allele => \&_allele_results,
     ontology => \&_ontology_results,
     person => \&_person_results,
+    pubs => \&_pubs_results,
   );
 
   my $res_sub = $dispatch{$type_name};

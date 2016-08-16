@@ -6,7 +6,7 @@
 !Filtering parameters selected to generate file: GAnnotation?ref=11676915&count=25&select=normal&advanced=null&termUse=ancestor&slimTypes=IP%3D
 UniProtKB	O60187	sid4		GO:0005515	PMID:11676915	IPI	PomBase:SPCC1739.11c	F	Septation initiation protein sid4	SID4_SCHPO|sid4|SPBC244.01c	protein	taxon:284812	20041018	PomBase		
 UniProtKB	O60187	sid4		GO:0034613	PMID:11676915	IGI	PomBase:SPCC1739.11c	P	Septation initiation protein sid4	SID4_SCHPO|sid4|SPBC244.01c	protein	taxon:284812	20050613	PomBase		
-UniProtKB	O74473	cdc11		GO:0005198	PMID:11676915	TAS		F	Septation initiation network scaffold protein cdc11	CDC11_SCHPO|cdc11|SPCC1739.11c	protein	taxon:284812	20040917	PomBase		
+UniProtKB	O74473	cdc11		GO:0022857	PMID:11676915	TAS		F	Septation initiation network scaffold protein cdc11	CDC11_SCHPO|cdc11|SPCC1739.11c	protein	taxon:284812	20040917	PomBase		
 UniProtKB	O74473	cdc11		GO:0005515	PMID:11676915	IPI	PomBase:SPBC244.01c	F	Septation initiation network scaffold protein cdc11	CDC11_SCHPO|cdc11|SPCC1739.11c	protein	taxon:284812	20041018	PomBase		
 UniProtKB	O74473	cdc11		GO:0005816	PMID:11676915	IDA		C	Septation initiation network scaffold protein cdc11	CDC11_SCHPO|cdc11|SPCC1739.11c	protein	taxon:284812	20040510	PomBase		
 UniProtKB	O74473	cdc11		GO:0031028	PMID:11676915	IMP		P	Septation initiation network scaffold protein cdc11	CDC11_SCHPO|cdc11|SPCC1739.11c	protein	taxon:284812	20050610	PomBase		

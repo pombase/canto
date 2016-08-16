@@ -6,7 +6,7 @@ $feature
 
 <div ng-controller="InteractionWorkflowCtrl" 
      annotation-type-name="<% $annotation_type_name %>" id="curs-interaction">
-  <div ng-show="!data.interactorsConfirmed"  class="curs-box">
+  <div ng-show="data.evidenceConfirmed" class="curs-box">
     <div class="curs-box-title">
       Select the gene or genes that interact with <% $feature_display_name %> ...
 <& /curs/inline_help.mhtml, key => "${annotation_type_name}_select_gene" &>
@@ -17,20 +17,21 @@ $feature
 
       <button type="submit" class="btn btn-primary curs-back-button"
               title="Back to previous page"
-              ng-click="backToGene()">&lt;- Back</button>
+              ng-click="unconfirmEvidence()">&lt;- Back</button>
 
       <button type="submit" class="btn btn-primary curs-finish-button"
-              title="{{someFeaturesSelected() ? 'Confirm' : 'Select some genes to continue'}}"
+              title="{{someFeaturesSelected() ? 'Confirm' : 'Select some genes to confirm this interaction'}}"
               ng-disabled="!someFeaturesSelected()"
-              ng-click="confirmSelection()">Confirm -&gt;</button>
+              ng-click="addInteractionAndEvidence()">Confirm -&gt;</button>
     </div>
   </div>
 
-  <div ng-show="data.interactorsConfirmed" class="ng-cloak">
+  <div ng-hide="data.evidenceConfirmed" class="ng-cloak">
 
     <div class="curs-box evidence-select">
       <div class="curs-box-title">
-        Choose evidence <span ng-show="annotationType.can_have_conditions">and conditions</span> for annotating <% $feature_display_name %> with {{data.term_ontid}}
+        Choose evidence for annotating
+        interaction<span ng-show='selectedFeatureIds.length > 1'>s</span> of <% $feature_display_name %>
       </div>
       <div class="curs-box-body">
 Some experiments have an inherent directionality. For these experiments, the
@@ -49,10 +50,10 @@ the interaction once.
 
     <button type="submit" class="btn btn-primary curs-back-button"
             title="&lt;- Back"
-            ng-click="unconfirmSelection()">&lt;- Back</button>
+            ng-click="backToGene()">&lt;- Back</button>
     <button type="submit" class="btn btn-primary curs-finish-button"
             ng-disabled="!isValidEvidence() || postInProgress"
-            ng-click="addInteractionAndEvidence()" >Proceed -&gt;</button>
+            ng-click="confirmEvidence()" >Proceed -&gt;</button>
 
   </div>
 </div>

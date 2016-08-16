@@ -8,12 +8,15 @@ use strict;
 use warnings;
 use Carp;
 
-my $version_prefix = "v";
+my $current_branch = `git rev-parse --abbrev-ref HEAD`;
+chomp $current_branch;
 
-sub move_to_master
-{
-  system "git checkout master";
+if ($current_branch ne 'master') {
+  warn "not on master branch - exiting\n";
+  exit 1;
 }
+
+my $version_prefix = "v";
 
 sub get_current_version
 {
@@ -102,10 +105,12 @@ sub stash
   return $stashed;
 }
 
-move_to_master();
 print 'current version: ', `git describe --always`, "\n";
 
 my $stashed = stash();
+
+print "pulling from GitHub\n";
+system "git pull";
 
 my $new_version = get_new_version();
 print 'new version: ', $new_version, "\n";
@@ -115,12 +120,17 @@ tag_version($new_version);
 
 print "pushing to GitHub\n";
 system "git push --tags github master";
+print "done\n\n";
 
-print "pushing to Bitbucket\n";
-system "git push --tags bitb master";
+if (@ARGV > 0 && $ARGV[0] eq '-a') {
+  print "pushing to Bitbucket\n";
+  system "git push --tags bitb master";
+  print "done\n\n";
 
-print "pushing to GitLab\n";
-system "git push --tags gitlab master";
+  print "pushing to GitLab\n";
+  system "git push --tags gitlab master";
+  print "done\n\n";
+}
 
 END {
   if ($stashed) {

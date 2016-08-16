@@ -13,7 +13,7 @@ $hide_header => 0
   <head>
     <& head.mhtml, title => $title &>
   </head>
-  <body>
+  <body ng-app="cantoApp">
 % if (!$hide_header) {
 % # hide the head on the Canto front page
     <& header.mhtml &>

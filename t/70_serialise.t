@@ -291,6 +291,10 @@ my $full_expected_curation_session =
       accepted_timestamp => '2012-02-15 13:45:00',
       curation_in_progress_timestamp => '2012-02-15 13:45:00',
       session_created_timestamp => '2012-02-15 13:45:00',
+      curator_email => 'some.testperson@pombase.org',
+      curator_name => 'Some Testperson',
+      curator_role => 'community',
+      curation_accepted_date => '2012-02-15 13:45:00',
       %extra_curs_statuses,
     },
     organisms => {

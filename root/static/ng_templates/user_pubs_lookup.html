@@ -1,0 +1,42 @@
+<div id="curs-user-paper-lookup">
+  <img ng-show="searching" ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+  <div ng-hide="searching">
+    <form ng-hide="searching || pubResults && pubResults.length > 0"
+          name="cursUserPaperLookupEmail">
+      <input ng-model="emailAddress" name="email" type="email" size="30"
+             placeholder="Type an email address ...">
+      <span class="error" ng-show="cursUserPaperLookupEmail.email.$error.email">
+        Not valid email</span>
+
+      <button type="button" ng-show="!cursUserPaperLookupEmail.email.$error.email"
+              class="btn btn-default" aria-label="Search" ng-click="search()">
+        <span class=" glyphicon glyphicon-search" aria-hidden="true"></span>
+      </button>
+    </form>
+
+    <div ng-show="pubResults">
+      <a ng-if="emailAddress.length > 0 && is_admin_user"
+         href="{{application_root}}/view/object/person/{{emailAddress}}?model=track">
+        Person page (admin only) ...
+      </a>
+      <div ng-show="pubResults.length == 0 && emailAddress.length > 0">
+        No publications found
+      </div>
+      <div ng-show="pubResults.length > 0">
+        Publications with active sessions curated by {{emailAddress}}:
+        <pubs-list-view ng-hide="activeList.length == 0" rows="activeList"></pubs-list-view>
+        <div ng-show="activeList.length == 0">
+          [none]
+        </div>
+        <div ng-show="completedList.length > 0">
+          Publications with completed annotation sessions:
+          <pubs-list-view rows="completedList"></pubs-list-view>
+        </div>
+        <div ng-show="pubResults.length < count">
+          (Only showing the first {{pubResults.length}} publications)
+        </div>
+        <a href="#" ng-click="reset()"><span style="font-size: 90%">Search again</span></a>
+      </div>
+    </div>
+  </div>
+</div>

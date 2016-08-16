@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 13;
 
 use Canto::Track::PersonLookup;
 use Canto::TestUtil;
@@ -29,6 +29,17 @@ my $schema = $lookup->schema();
 
 my $other_test_user =
   $schema->resultset('Person')->find({ email_address => 'other.tester@pombase.org' });
+
+
+$other_test_user->name('Test Other');
+$other_test_user->update();
+
+my @test_user_details_by_name_wildcard = $lookup->lookup('name', 'Test*');
+
+is(scalar(@test_user_details_by_name_wildcard), 2);
+is($test_user_details_by_name_wildcard[0]->{email}, 'other.tester@pombase.org');
+is($test_user_details_by_name_wildcard[1]->{email}, 'test.user@pombase.org');
+
 
 $other_test_user->name('Test User');
 $other_test_user->update();

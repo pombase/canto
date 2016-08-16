@@ -4,7 +4,8 @@
   ferret_choose,application_root,window,canto_root_uri,curs_key,
   app_static_path,loadingStart,loadingEnd,alert,trim */
 
-var canto = angular.module('cantoApp', ['ui.bootstrap', 'angular-confirm', 'toaster']);
+var canto = angular.module('cantoApp', ['ui.bootstrap', 'angular-confirm', 'toaster',
+                                        'chart.js']);
 
 canto.config(['$compileProvider', function ($compileProvider) {
   $compileProvider.debugInfoEnabled(false);
@@ -396,7 +397,9 @@ canto.service('CantoGlobals', function($window) {
   this.ferret_choose = $window.ferret_choose;
   this.read_only_curs = $window.read_only_curs;
   this.is_admin_session = $window.is_admin_session;
+  this.is_admin_user = $window.is_admin_user;
   this.current_user_is_admin = $window.current_user_is_admin;
+  this.curationStatusData = $window.curationStatusData;
 });
 
 canto.service('CantoService', function($http) {
@@ -1164,7 +1167,7 @@ var ontologyTermConfirm =
           $scope.unsetTermCallback();
         };
         $scope.suggestTerm = function(termSuggestion) {
-          $scope.suggestTermCallback(termSuggestion);
+          $scope.suggestTermCallback({termSuggestion: termSuggestion});
         };
         $scope.confirmTerm = function() {
           $scope.confirmTermCallback();
@@ -1484,27 +1487,21 @@ canto.directive('extensionManualEdit',
                 [extensionManualEdit]);
 
 
-var extensionBuilder =
+var extensionOrGroupBuilder =
   function($modal, $q, CantoGlobals, CantoConfig, CantoService) {
     return {
       scope: {
-        extension: '=',
-        termId: '@',
-        featureDisplayName: '@',
+        orGroup: '=',
+        matchingConfigurations: '=',
         isValid: '=',
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/extension_builder.html',
+      templateUrl: app_static_path + 'ng_templates/extension_or_group_builder.html',
       controller: function($scope) {
         $scope.isValid = true;
         $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
         $scope.manualEditMode = false;
-        if ($scope.extension && Object.keys($scope.extension).length > 0) {
-          $scope.isNewExtension = false;
-        } else {
-          $scope.isNewExtension = true;
-        }
 
         // the current counts of relations, used to test the cardinality
         // constraints
@@ -1543,8 +1540,7 @@ var extensionBuilder =
                         newCounts[key] = 1;
                       }
                     };
-                  if ($scope.extension.length > 0) {
-                  $.map($scope.extension[0],
+                  $.map($scope.orGroup,
                         function(part) {
                           var matchingRangeConf = null;
                           $.map(relConf.range,
@@ -1583,7 +1579,6 @@ var extensionBuilder =
                             }
                           }
                         });
-                  }
                 });
 
           $q.all(promises).then(function() {
@@ -1644,29 +1639,91 @@ var extensionBuilder =
           }
         };
 
+        $scope.$watch('orGroup',
+                      function() {
+                        $scope.checkCardinality($scope.matchingConfigurations);
+                      }, true);
+
+        $scope.$watch('matchingConfigurations',
+                      function() {
+                        $scope.checkCardinality($scope.matchingConfigurations);
+                      }, true);
+
+        $scope.$watch('cardinalityCounts',
+                      function() {
+                        $scope.setIsValid();
+                      }, true);
+
+        $scope.startAddRelation = function(relationConfig) {
+          var editExtensionRelation = {
+            relation: relationConfig.relation,
+            rangeDisplayName: '',
+          };
+
+          var editPromise =
+            openExtensionRelationDialog($modal, editExtensionRelation, relationConfig);
+
+          editPromise.then(function(result) {
+            $scope.orGroup.push(result.extensionRelation);
+          });
+        };
+      },
+    };
+  };
+
+canto.directive('extensionOrGroupBuilder',
+                ['$modal', '$q', 'CantoGlobals', 'CantoConfig', 'CantoService',
+                 extensionOrGroupBuilder]);
+
+function extensionIsEmpty(extension) {
+  if (extension) {
+    if (extension.length == 0 ||
+        extension.length == 1 && extension[0].length == 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
+var extensionBuilder =
+  function($modal, $q, CantoGlobals, CantoConfig, CantoService) {
+    return {
+      scope: {
+        extension: '=',
+        termId: '@',
+        featureDisplayName: '@',
+        isValid: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/extension_builder.html',
+      controller: function($scope) {
+        $scope.isValid = true;
+        $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
+        $scope.manualEditMode = false;
+        $scope.matchingConfigurations = [];
+
+        if (!$scope.extension || $scope.extension.length == 0) {
+          $scope.extension = [[]];
+        }
+
+        $scope.isNewExtension = extensionIsEmpty($scope.extension);
+
         $scope.extensionConfiguration = [];
         $scope.termDetails = { id: null };
-
-        $scope.asString = function() {
-          if ($scope.extension) {
-            return $.map($scope.extension,
-                         function(part) {
-                           return part.relation + '(' + part.rangeValue + ')';
-                         }).join(",");
-          }
-
-          return '';
-        };
 
         $scope.updateMatchingConfig = function() {
           var subset_ids = $scope.termDetails.subset_ids;
 
           if ($scope.extensionConfiguration.length > 0 &&
               subset_ids && subset_ids.length > 0) {
-            $scope.matchingConfigurations = 
+            var newConf =
               extensionConfFilter($scope.extensionConfiguration, subset_ids,
                                   CantoGlobals.current_user_is_admin ? 'admin' : 'user');
-            $scope.checkCardinality($scope.matchingConfigurations);
+            copyObject(newConf, $scope.matchingConfigurations);
             return;
           }
 
@@ -1693,35 +1750,10 @@ var extensionBuilder =
                         $scope.termDetails = { id: null };
                     });
 
-        $scope.$watch('extension',
-                      function() {
-                        $scope.checkCardinality($scope.matchingConfigurations);
-                      }, true);
-
-        $scope.$watch('cardinalityCounts',
-                      function() {
-                        $scope.setIsValid();
-                      }, true);
-
-        $scope.startAddPart = function(relationConfig) {
-          var editExtensionRelation = {
-            relation: relationConfig.relation,
-            rangeDisplayName: '',
-          };
-
-          var editPromise =
-            openExtensionRelationDialog($modal, editExtensionRelation, relationConfig);
-
-          editPromise.then(function(result) {
-            var andPart;
-            if ($scope.extension.length == 0) {
-              andPart = [];
-              $scope.extension.push(andPart);
-            } else {
-              andPart = $scope.extension[0];
-            }
-            andPart.push(result.extensionRelation);
-          });
+        $scope.addOrGroup = function() {
+          if ($scope.extension[$scope.extension.length - 1].length != 0) {
+            $scope.extension.push([]);
+          }
         };
 
         $scope.manualEdit = function() {
@@ -1792,7 +1824,7 @@ canto.controller('ExtensionRelationDialogCtrl',
                  ['$scope', '$modalInstance', 'args',
                  extensionRelationDialogCtrl]);
 
-function openTermConfirmDialog($modal, termId, initialState)
+function openTermConfirmDialog($modal, termId, initialState, featureType)
 {
   return $modal.open({
     templateUrl: app_static_path + 'ng_templates/term_confirm.html',
@@ -1806,6 +1838,7 @@ function openTermConfirmDialog($modal, termId, initialState)
         return {
           termId: termId,
           initialState: initialState,
+          featureType: featureType,
         };
       }
     },
@@ -1959,24 +1992,26 @@ var extensionDisplay =
 canto.directive('extensionDisplay', ['CantoGlobals', extensionDisplay]);
 
 
-var extensionOrPartDisplay =
+var extensionOrGroupDisplay =
   function(CantoGlobals) {
     return {
       scope: {
         extension: '=',
-        orPart: '=',
+        orGroup: '=',
         showDelete: '@',
+        editable: '@',
+        isFirst: '@',
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/extension_or_part_display.html',
+      templateUrl: app_static_path + 'ng_templates/extension_or_group_display.html',
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
-        $scope.deleteAndPart = function(andPart) {
+        $scope.deleteAndGroup = function(andGroup) {
           if ($scope.showDelete) {
-            arrayRemoveOne($scope.orPart, andPart);
-            if ($scope.orPart.length == 0) {
-              arrayRemoveOne($scope.extension, $scope.orPart);
+            arrayRemoveOne($scope.orGroup, andGroup);
+            if ($scope.orGroup.length == 0 && $scope.extension.length > 1) {
+              arrayRemoveOne($scope.extension, $scope.orGroup);
             }
           }
         };
@@ -1984,7 +2019,7 @@ var extensionOrPartDisplay =
     };
   };
 
-canto.directive('extensionOrPartDisplay', ['CantoGlobals', extensionOrPartDisplay]);
+canto.directive('extensionOrGroupDisplay', ['CantoGlobals', extensionOrGroupDisplay]);
 
 
 var ontologyWorkflowCtrl =
@@ -2208,21 +2243,21 @@ var interactionWorkflowCtrl =
 
     $scope.data = {
       validEvidence: false,
-      interactorsConfirmed: false,
+      evidenceConfirmed: false,
     };
 
     $scope.selectedFeatureIds = [];
 
-    $scope.confirmSelection = function() {
-      $scope.data.interactorsConfirmed = true;
-    };
-
-    $scope.unconfirmSelection = function() {
-      $scope.data.interactorsConfirmed = false;
-    };
-
     $scope.someFeaturesSelected = function() {
       return $scope.selectedFeatureIds.length > 0;
+    };
+
+    $scope.confirmEvidence = function() {
+      $scope.data.evidenceConfirmed = true;
+    };
+
+    $scope.unconfirmEvidence = function() {
+      $scope.data.evidenceConfirmed = false;
     };
 
     $scope.isValidEvidence = function() {
@@ -3229,7 +3264,12 @@ var genotypeListRowLinksCtrl =
             $scope.genotype.id_or_identifier;
         } else {
           $scope.detailsUrl = '#';
-        }
+          $scope.viewAnnotationUri =
+            CantoGlobals.curs_root_uri + '/feature/genotype/view/' + $scope.selectedGenotypeId;
+          if (CantoGlobals.read_only_curs) {
+            $scope.viewAnnotationUri += '/ro';
+          }
+       }
       },
     };
   };
@@ -3551,6 +3591,7 @@ var termConfirmDialogCtrl =
 
     $scope.data = {
       initialTermId: args.termId,
+      featureType: args.featureType,
       state: 'definition',
       termDetails: null,
     };
@@ -3757,7 +3798,8 @@ var annotationEditDialogCtrl =
         $scope.annotation.term_name = termName;
 
         if (!searchString.match(/^".*"$/) && searchString !== termId) {
-          var termConfirm = openTermConfirmDialog($modal, termId);
+          var termConfirm = openTermConfirmDialog($modal, termId, 'definition',
+                                                  $scope.annotationType.feature_type);
 
           termConfirm.result.then(function(result) {
             $scope.annotation.term_ontid = result.newTermId;
@@ -4011,6 +4053,7 @@ var annotationTableCtrl =
           genotype_name: true,
           genotype_background: true,
           term_suggestion: true,
+          gene_product_form_id: true,
         };
 
         $scope.data = {
@@ -4558,12 +4601,20 @@ var termNameComplete =
         var select = $(elem).find('select');
 
         select.change(function() {
-          scope.foundCallback({
-            termId: scope.chosenTerm.id,
-            termName: scope.chosenTerm.name,
-            searchString: null,
-            matchingSynonym: null,
-          });
+          $timeout(function() {
+            var termId = null;
+            var termName = null;
+            if (scope.chosenTerm) {
+              termId = scope.chosenTerm.id;
+              termName = scope.chosenTerm.name;
+            }
+            scope.foundCallback({
+              termId: termId,
+              termName: termName,
+              searchString: null,
+              matchingSynonym: null,
+            });
+          }, 1);
         });
       }
     };
@@ -4632,31 +4683,171 @@ var initiallyHiddenText =
       scope: {
         text: '@',
         linkLabel: '@',
+        previewCharCount: '@'
       },
       restrict: 'E',
       replace: true,
       link: function($scope, elem) {
-        var $view = $(elem).find('a');
-        var $element = $(elem).find('span');
-        $view.on('click',
-                 function () {
-                   $view.hide();
-                   $element.show();
-                 });
+        $scope.previewChars = '';
+        $scope.hidden = true;
+
+        $scope.show = function() {
+          $scope.hidden = false;
+        };
 
         $scope.$watch('text',
                       function() {
-                        if ($.trim($scope.text).length > 0) {
-                          $element.hide();
-                          $view.show();
-                        } else {
-                          $view.hide();
+                        $scope.trimmedText = $.trim($scope.text);
+
+                        if ($scope.previewCharCount && $scope.previewCharCount > 0) {
+                          if ($scope.previewCharCount < $scope.trimmedText.length) {
+                            $scope.previewChars = $scope.text.substr(0, $scope.previewCharCount);
+                          } else {
+                            $scope.hidden = false;
+                          }
                         }
+
                       });
       },
-      template: '<span><span title="{{text}}">{{text}}</span><a class="ng-cloak" title="{{text}}" tooltip="{{text}}" >{{linkLabel}}</a></span>',
+      template: '<span ng-show="trimmedText.length > 0">' +
+        '<span ng-hide="hidden">{{trimmedText}}</span>' +
+        '<span ng-show="hidden">' +
+        '<span href="#" ng-show="previewChars.length > 0">{{previewChars}}...</span>' +
+        '<a ng-click="show()" tooltip="{{trimmedText}}">' +
+        '&nbsp;<span style="font-weight: bold">{{linkLabel}}</span></a></span></span>',
     };
   };
 
 canto.directive('initiallyHiddenText', [initiallyHiddenText]);
 
+
+var activeSessionStatuses =
+    ['SESSION_CREATED', 'SESSION_ACCEPTED', 'CURATION_IN_PROGRESS', 'CURATION_PAUSED']
+
+var userPubsLookupCtrl =
+  function(CantoGlobals, CantoService) {
+    return {
+      scope: {
+        initialEmailAddress: '@',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/user_pubs_lookup.html',
+      controller: function($scope) {
+        $scope.emailAddress = $scope.initialEmailAddress;
+
+        $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.is_admin_user = CantoGlobals.is_admin_user;
+        $scope.application_root = CantoGlobals.application_root;
+
+        $scope.searching = false;
+
+        $scope.search = function() {
+          $scope.pubResults = null;
+          if ($scope.emailAddress) {
+            $scope.searching = true;
+            var pathParts = ['by_curator_email', $scope.emailAddress];
+            var promise =
+                CantoService.lookup('pubs', pathParts, {});
+
+            promise.success(function(data) {
+              if (data.status == 'success') {
+                $scope.pubResults = data.pub_results;
+                $scope.activeList = [];
+                $scope.completedList = [];
+                $.map(data.pub_results,
+                      function(row) {
+                        if ($.inArray(row.status, activeSessionStatuses) >= 0) {
+                          $scope.activeList.push(row);
+                        } else {
+                          $scope.completedList.push(row);
+                        }
+                      });
+                $scope.count = data.count;
+              }
+            });
+
+            promise.finally(function() {
+              $scope.searching = false;
+            });
+          }
+        };
+
+        $scope.reset = function() {
+          $scope.pubResults = null;
+          $scope.activeList = null;
+          $scope.completedList = null;
+          $scope.count = -1;
+        };
+
+        $scope.reset();
+      },
+    };
+  };
+
+canto.directive('userPubsLookup',
+                ['CantoGlobals', 'CantoService', userPubsLookupCtrl]);
+
+
+var pubsListViewCtrl =
+  function(CantoGlobals) {
+    return {
+      scope: {
+        rows: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/pubs_list_view.html',
+      controller: function($scope) {
+        $scope.CantoGlobals = CantoGlobals;
+        $scope.application_root = CantoGlobals.application_root;
+      },
+    };
+  };
+
+canto.directive('pubsListView', ['CantoGlobals', pubsListViewCtrl]);
+
+
+var AnnotationStatsCtrl =
+  function($scope, CantoGlobals) {
+    $scope.curationStatusLabels = CantoGlobals.curationStatusData[0];
+    $scope.curationStatusData = CantoGlobals.curationStatusData.slice(1);
+  };
+
+canto.controller('AnnotationStatsCtrl',
+                 ['$scope', 'CantoGlobals', AnnotationStatsCtrl]);
+
+
+var stackedGraph =
+    function() {
+      return {
+        scope: {
+          chartLabels: '=',
+          chartData: '=',
+        },
+        restrict: 'E',
+        replace: true,
+        template: '<div><canvas class="chart chart-bar" chart-data="chartData" ' +
+          'chart-labels="chartLabels" chart-options="options" ' +
+          'chart-colors="colours" ' +
+          'chart-series="series"></canvas></div>',
+        controller: function ($scope) {
+          $scope.type = 'StackedBar';
+          $scope.series = ['Uncurated', 'Admin curated', 'Community curated'];
+          $scope.colours = ['#808080','#b04040','#3030b0'];
+          $scope.options = {
+            legend: { display: true },
+            scales: {
+              xAxes: [{
+                stacked: true,
+              }],
+              yAxes: [{
+                stacked: true,
+              }]
+            }
+          };
+      }
+    }
+  };
+
+canto.directive('stackedGraph', [stackedGraph]);

@@ -337,6 +337,12 @@ table.list tr.even, table.list tr:nth-child(even) {
 table.list tr.odd, table.list tr:nth-child(odd) {
   background-color: white;
 }
+.list_page th {
+  white-space: normal !important;
+}
+.list_page table {
+  font-size: 85%;
+}
 .list th a:link {
   color: #226
 }
@@ -351,11 +357,19 @@ table.list tr td {
   border-color: #bbb;
 }
 
+.annotation-stats table.list tr th {
+  white-space: normal !important;
+}
+
+.annotation-stats-table-totals {
+  font-weight: bold;
+}
+
 #curs-genotype-list-row-actions {
   border: 2px solid #bbb;
   padding: 3px;
   font-size: 90%;
-  z-index: 999999;
+  z-index: 100;
   position: absolute;
   overflow: auto;
   background-color: white;
@@ -609,28 +623,28 @@ div.clearall {
   float: left;
 }
 
-.gene-list table {
+.curs-front-gene-list table {
   font-size: 95%;
   border-width: 0px;
   margin: 10px 10px 15px 15px
 }
-.gene-list td {
+.curs-front-gene-list td {
   border-width: 0px;
   font-size: 95%;
 }
 
-.gene-list td {
+.curs-front-gene-list td {
   padding-right: 30px;
   width: 150px;
   white-space: nowrap;
 }
 
-.gene-list .no-genes-message {
+.curs-front-gene-list .no-genes-message {
   font-size: 95%;
   margin: 10px;
 }
 
-.gene-list .gene-list-instructions, .genotype-list .curs-genotype-list-instructions {
+.curs-front-gene-list .gene-list-instructions, .genotype-list .curs-genotype-list-instructions {
   font-size: 95%;
   margin-bottom: 10px;
 }
@@ -650,10 +664,10 @@ div.clearall {
 
 .feature-list-action {
   font-size: 90%;
-  margin: 5px;
+  margin: 20px 0 25px 5px;
 }
 
-.gene-list .annotation-count {
+.curs-front-gene-list .annotation-count {
   color: green;
   font-size: 80%;
 }
@@ -745,7 +759,7 @@ div.clearall {
 .curs-definition-table, .curs-allele-list {
   table-layout: fixed;
   border-collapse: collapse;
-  margin: 10px;
+  margin: 5px;
 }
 
 .curs-term-linkouts {
@@ -830,8 +844,6 @@ div.clearall {
 .curs-box {
   border: 1px solid #ddd;
   background-color: white;
-  margin: 5px;
-  margin-bottom: 15px;
 }
 
 .curs-box-title {
@@ -847,7 +859,7 @@ div.clearall {
 }
 
 .curs-box-body {
-  margin: 0px;
+  margin: 5px;
   padding: 5px;
 }
 
@@ -952,9 +964,12 @@ fieldset.curs-genes span {
 
 #curs-annotation-tables {
   clear: both;
-  padding-top: 15px;
-  width: 90%;
+  padding-top: 25px;
   font-size: 95%;
+}
+
+.curs-annotation-table-group {
+  margin-bottom: 15px;
 }
 
 .curs-annotation-incomplete-message {
@@ -975,7 +990,7 @@ span.canto-select-buttons {
   margin: 10px;
 }
 
-#curs-gene-list, #curs-front-page .pub-title, .curs-half-width-section {
+.curs-half-width-section {
   font-size: 90%;
   float: left;
   width: 45%;

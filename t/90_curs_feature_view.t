@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 20;
+use Test::More tests => 19;
 
 use Plack::Test;
 use Plack::Util;
@@ -39,7 +39,6 @@ test_psgi $app, sub {
   my $gene_display_name = $gene_proxy->display_name();
 
   like ($res->content(), qr/Choose curation type for $gene_display_name/);
-  like ($res->content(), qr/Epitope-tagged protein immunolocalization experiment data/);
   like ($res->content(), qr/Gene: $gene_display_name/);
 };
 
@@ -55,7 +54,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr|Genotype: SPCC63.05delta ssm4KE</title|);
-    like ($res->content(), qr/Annotate normal or abnormal phenotypes, and the associated alleles/);
+    like ($res->content(), qr/Annotate normal or abnormal phenotypes of cells/);
   }
 
   {
@@ -77,7 +76,7 @@ test_psgi $app, sub {
     like ($res->content(), qr/cdc11-33 wtf22-a1/);
     like ($res->content(), qr/cdc11-33\(unknown\)/);
     like ($res->content(), qr/wtf22-a1\(T11C\)/);
-    like ($res->content(), qr/Annotate normal or abnormal phenotypes, and the associated alleles/);
+    like ($res->content(), qr/Annotate normal or abnormal phenotypes of cells/);
 
     # re-fetch
     $cdc11_33 = $curs_schema->resultset('Allele')

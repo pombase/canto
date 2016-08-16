@@ -118,8 +118,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   my $st = $c->stash();
 
-  my $all_sessions = $c->session()->{all_sessions} //= {};
-
   $st->{curs_key} = $curs_key;
   my $schema = Canto::Curs::get_schema($c);
 
@@ -171,19 +169,20 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       grep { $config->{evidence_types}->{$_}->{with_gene} } keys %{$config->{evidence_types}} };
   $st->{with_gene_evidence_codes} = $with_gene_evidence_codes;
 
-  my $evidence_by_annotation_type =
-    { map { ($_->{name}, $_->{evidence_codes}); } @{$config->{annotation_type_list}} };
-  $st->{evidence_by_annotation_type} = $evidence_by_annotation_type;
+  my $genotype_annotation_configured = 0;
+
+  map {
+    if ($_->{feature_type} eq 'genotype') {
+      $genotype_annotation_configured = 1;
+    }
+  } @{$config->{annotation_type_list}};
+
+  $st->{genotype_annotation_configured} = $genotype_annotation_configured;
 
   # curation_pub_id will be set if we are annotating a particular publication,
   # rather than annotating genes without a publication
   my $pub_id = $self->get_metadata($schema, 'curation_pub_id');
   $st->{pub} = $schema->find_with_type('Pub', $pub_id);
-
-  $all_sessions->{$curs_key} = {
-    key => $curs_key,
-    pubid => $st->{pub}->uniquename(),
-  };
 
   die "internal error, can't find Pub for pub_id $pub_id"
     if not defined $st->{pub};
@@ -222,6 +221,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   if (defined $current_user && $current_user->is_admin()) {
     $st->{current_user_is_admin} = 1;
+
+    my $annotation_mode = $self->get_metadata($schema, 'annotation_mode');
+
+    if (!defined $annotation_mode) {
+      $self->set_metadata($schema, 'annotation_mode', 'advanced');
+    }
   } else {
     $st->{current_user_is_admin} = 0;
   }
@@ -2025,6 +2030,8 @@ sub _assign_session :Private
       }
       if (!$reassign) {
         $curator_manager->accept_session($curs_key);
+
+        $c->session()->{last_submitter_email} = $submitter_email;
       }
     };
 
@@ -2048,9 +2055,6 @@ sub _assign_session :Private
                                          reassigner_email => $reassigner_email } );
 
       $c->flash()->{message} = "Session has been reassigned to: $submitter_email";
-
-      my $all_sessions = $c->session()->{all_sessions} //= {};
-      delete $all_sessions->{$curs_key};
 
       _redirect_to_top_and_detach($c);
     } else {

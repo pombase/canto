@@ -2,6 +2,10 @@
 name: Canto
 long_name: Community curation application
 
+# the name of the organisation running this Canto - shown in various places
+# in the user interface
+database_name: CONFIGURE_IN_CANTO_DEPLOY.YAML
+
 # The name of the destination database for the annotations from this instance.
 # eg. "PomBase".
 # If not set a generic text will be used instead.
@@ -19,7 +23,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v994
+app_version: v1053
 
 schema_version: 13
 
@@ -552,6 +556,9 @@ class_info:
       editable: 1
       display_field: name
       order_by: name
+      search_fields:
+        - email_address
+        - name
       field_info_list:
         - name: name
           source: name
@@ -835,9 +842,13 @@ class_info:
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Other')"
     triage_phenotype_screen_publications:
-      class_display_name: Phenotype screen
+      class_display_name: Phenotype screen publications
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Phenotype screen')"
+    triage_structure_publications:
+      class_display_name: Structure publications
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Structure')"
     triage_review_or_comment_publications:
       class_display_name: Review or comment
       extends: pub
@@ -903,16 +914,16 @@ class_info:
       constraint: "corresponding_author is null"
     sessions_needing_approval:
       extends: curs
-      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS'))"
+      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS'))"
     sessions_with_term_requests:
       extends: curs
-      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'CURATION_IN_PROGRESS' or p.value = 'CURATION_PAUSED' or p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS') and cast((select value from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_term_suggestions_count') as int) > 0)"
+      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'CURATION_IN_PROGRESS' or p.value = 'CURATION_PAUSED' or p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS') and cast((select value from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_term_suggestions_count') as int) > 0)"
     reactivated_sessions:
       extends: curs
-      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'CURATION_IN_PROGRESS')) and me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'session_reactivated_timestamp')"
+      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'CURATION_IN_PROGRESS')) and me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_reactivated_timestamp')"
     approved_sessions:
       extends: curs
-      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where me.curs_id = p.curs and t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')"
+      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')"
     all_sessions:
       extends: curs
   chado:
@@ -1075,6 +1086,8 @@ reports:
                    - report: publications_with_multiple_sessions
                 - report: curatable_publications_without_sessions
                 - report: curatable_publications_with_no_annotatable_genes
+                - report: triage_structure_publications
+                - report: triage_phenotype_screen_publications
             - report: curatable_low_priority_publications
             - report: community_curatable_publications
             - report: uncuratable_publications
@@ -1091,7 +1104,6 @@ reports:
                 - report: triage_phylogeny_paper_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
-                - report: triage_phenotype_screen_publications
         - report: publications_without_corresponding_author
     - report: all_sessions
       children:
@@ -1151,6 +1163,7 @@ implementation_classes:
   ontology_adaptor: Canto::Track::OntologyLookup
   status_adaptor: Canto::Track::StatusStorage
   person_adaptor: Canto::Track::PersonLookup
+  pubs_adaptor: Canto::Track::PubsLookup
 
 allele_type_list:
   - name: wild type
@@ -1497,22 +1510,21 @@ available_annotation_type_list:
       pyrimidine metabolic process or alpha-glucoside transport
     help_text: >
       A biological process is series of events accomplished by one or more
-      ordered assemblies of molecular functions, such as cell cycle, 
-      transport, or signal transduction.
+      ordered assemblies of molecular functions, such as cell cycle regulation, 
+      ion transport, or signal transduction.
     more_help_text: >
       It can be difficult to distinguish between a biological process
       and a molecular function, but the general rule is that a process must
-      have more than one distinct steps (eg. cell cycle, transport, signal
-      transduction).
+      have more than one distinct step.
     suggest_term_help_text: >
       A new term should be differentiated from the parent as a "sub term"  by
       the mechanism of action, or the genes which are required to perform the
       action. It should not be differentiated only by its target gene
       products. For example, histone H2A-S121 phosphorylation
       is a valid term request because it is performed by a set of genes
-      specific for this process, translation of histone H2a is not a valid
+      specific for this process, translation of histone H2A is not a valid
       term request because there is no translation machinery specifically for
-      histone H2a.
+      histone H2A.
     detailed_help_path: /docs/go_annotation
   - name: cellular_component
     category: ontology
@@ -1575,18 +1587,16 @@ available_annotation_type_list:
       - Transcript expression level evidence
       - Western blot assay
     broad_term_suggestions: >
-      cell phenotype, multinucleate, abnormal spindle, inviable
+      multinucleate, abnormal spindle, inviable
     specific_term_examples: >
       growth auxotrophic for arginine, abnormal cytokinetic cell separation
     help_text: >
-      Annotate normal or abnormal phenotypes, and the associated alleles.
-      A phenotype is any observable characteristic or trait of an organism; 
-      examples include multinucleate, abnormal spindle, inviable.
+      Annotate normal or abnormal phenotypes of cells with this genotype.
     more_help_text: >
-      Observable characteristics include morphology, development, biochemical or
+      A phenotype is any observable characteristic or trait of an organism;
+      observable characteristics include morphology, development, biochemical or
       physiological properties, behaviour, and products of behaviour of the
-      organism.
-      Phenotypes result from the expression of the genes of an organism as well
+      organism. Phenotypes result from the expression of the genes of an organism as well
       as the influence of environmental factors and the interactions between
       the two.
     extra_help_text: >

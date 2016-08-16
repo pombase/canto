@@ -1,11 +1,9 @@
-<div>
+<div class="curs-box">
   <div class="inline-help curs-box-title">
-    If possible, please refine your term selection. Clicking on a child term
-    from the list below selects it and shows its definition (and children,
-    if any):
+    Can you use a more specific available term?
   </div>
 
-  <div>
+  <div class="curs-box-body">
     <ul>
       <li ng-repeat="child in termDetails.children">
         <a href="#" ng-click="gotoChild(child.id)">{{child.name}}

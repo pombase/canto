@@ -74,6 +74,8 @@ sub lookup
     };
   }
 
+  $search_string =~ s/\*\s*$/\%/;
+
   my $schema = $self->schema();
 
   my $person_rs =
@@ -83,7 +85,7 @@ sub lookup
     return map {
       { name => $_->name(), email => $_->email_address(),
         role => $_->role()->name(), id => $_->person_id(), };
-    } $person_rs->search({ 'me.name' => $search_string })->all();
+    } $person_rs->search({ 'me.name' => {  -like => $search_string } })->all();
   } else {
     if ($lookup_type eq 'email') {
       my $person =

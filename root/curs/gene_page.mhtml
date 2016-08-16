@@ -101,6 +101,7 @@ Gene details
   </div>
 </div>
 
+% if ($genotype_annotation_configured) {
 <div id="curs-gene-details" class="curs-box curs-half-width-section">
   <div class="curs-box-title">
 Genotypes for <% $gene->display_name() %> in this session
@@ -109,6 +110,7 @@ Genotypes for <% $gene->display_name() %> in this session
     <single-gene-genotype-list gene-primary-identifier="'<% $gene->primary_identifier() %>'"></single-gene-genotype-list>
   </div>
 </div>
+% }
 
 <div class="clearall"/>
 
@@ -145,6 +147,7 @@ my $finish_text = '<- Back to summary';
 my $read_only_curs = $st->{read_only_curs};
 
 my $is_admin = $st->{is_admin_user};
+my $genotype_annotation_configured = $st->{genotype_annotation_configured};
 
 my $genes_in_session = $st->{genes_in_session};
 my $genes_in_session_js = Data::JavaScript::Anon->anon_dump($genes_in_session);

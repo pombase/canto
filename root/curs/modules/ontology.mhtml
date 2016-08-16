@@ -25,10 +25,10 @@ $pub
                            feature-display-name="<% $feature->display_name() %>"></ontology-term-confirm>
   </div>
 
-  <div ng-show="getState() == 'selectingEvidence'" class="ng-cloak">
+  <div ng-show="getState() == 'selectingEvidence'" class="ng-cloak curs-box">
     <div class="curs-box-title">
 Choose evidence <span ng-show="annotationType.can_have_conditions">and conditions</span>
-for annotating <% $feature->display_name() %> with {{data.term_ontid}}
+for annotating <% $feature->display_name() %> with {{termDetails.id}}
     </div>
     <div class="curs-box-body">
       <annotation-evidence evidence-code="data.evidence_code"

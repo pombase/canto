@@ -57,6 +57,8 @@ my @interesting_types =
      label => "Sessions where curation started on $summary_date" },
    { state => NEEDS_APPROVAL,
      label => "Sessions needing approval from $summary_date" },
+   { state => APPROVAL_IN_PROGRESS,
+     label => "Approval started on $summary_date" },
    { state => APPROVED, label => "Sessions approved on $summary_date" },
    );
 

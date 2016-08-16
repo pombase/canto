@@ -30,7 +30,7 @@
 %   if ($current_path =~ /genotype_manage/) {
       <div class="breadcrumbs-link">
         <a id="breadcrumbs-genotype-management-link"
-           href="<% $current_path %>" title="Genotype management">
+           href="<% $st->{curs_root_uri} . '/genotype_manage' %>" title="Genotype management">
            Genotype management
         </a>
       </div>

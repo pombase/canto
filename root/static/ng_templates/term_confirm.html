@@ -13,8 +13,13 @@ Confirm term
     <div ng-if="data.termDetails">
       <div ng-if="data.state === 'definition'" class="curs-box-body">
         <div class="inline-help curs-box-title">
-          Please read the definition of the currently selected term to ensure that
-          it accurately describes your gene:
+          <div ng-if="featureType">
+          Please read the term definition to ensure that it accurately
+          describes your {{featureType}}
+          </div>
+          <div ng-if="!featureType">
+          Please read the definition to ensure the term is applicable
+          </div>
         </div>
         <term-definition-display term-details="data.termDetails"></term-definition-display>
       </div>

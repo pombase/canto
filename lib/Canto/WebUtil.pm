@@ -299,7 +299,11 @@ sub get_field_value
 sub process_rs_options
 {
   my $rs = shift;
+  my $config = shift;
+  my $class_info = shift;
   my $column_confs = shift;
+  my $model_name = shift;
+  my $order_by = shift;
 
   my @column_options = ();
 
@@ -314,7 +318,18 @@ sub process_rs_options
     push @column_options, { $conf->{name}, \(qq|($source->{sql}) as "$field_name"|) };
   }
 
-  return $rs->search(undef, { '+columns' => [@column_options] });
+  my $table_name = $class_info->{source};
+  my $table_id_col_name = $table_name . '_id';
+
+  my $result_source = $rs->result_source();
+
+  # sort and limit in the sub-query and then add expensive extra columns
+  my $return_rs = $result_source->resultset()
+    ->search({ $table_id_col_name => { -in => $rs->get_column($table_id_col_name)->as_query(), } },
+             { '+columns' => [@column_options] });
+
+  return Canto::Controller::View::order_list_rs($return_rs, $config, $class_info,
+                                                $model_name, $order_by);
 }
 
 =head2

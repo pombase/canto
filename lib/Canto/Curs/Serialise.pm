@@ -45,6 +45,8 @@ use JSON;
 use Clone qw(clone);
 use Data::Rmap ':all';
 
+use Canto::Track::CuratorManager;
+
 sub _get_metadata_value
 {
   my $schema = shift;
@@ -60,6 +62,7 @@ sub _get_metadata_value
 
 sub _get_metadata
 {
+  my $config = shift;
   my $track_schema = shift;
   my $curs_schema = shift;
 
@@ -81,6 +84,18 @@ sub _get_metadata
   while (defined (my $prop = $cursprops_rs->next())) {
     $ret{$prop->type()->name()} = $prop->value();
   }
+
+  my $curator_manager =
+    Canto::Track::CuratorManager->new(config => $config);
+
+  my ($current_submitter_email, $current_submitter_name,
+      $known_as, $accepted_date, $community_curated) =
+    $curator_manager->current_curator($ret{canto_session});
+
+  $ret{curator_name} = $current_submitter_name;
+  $ret{curator_email} = $current_submitter_email;
+  $ret{curator_role} = $community_curated ? 'community' : $config->{database_name};
+  $ret{curation_accepted_date} = $accepted_date;
 
   return \%ret;
 }
@@ -456,7 +471,7 @@ sub perl
                                     });
 
   my %ret = (
-    metadata => _get_metadata($track_schema, $curs_schema),
+    metadata => _get_metadata($config, $track_schema, $curs_schema),
     annotations => _get_annotations($config, $track_schema, $curs_schema),
     organisms => _get_organisms($curs_schema, $options),
     publications => _get_pubs($curs_schema, $options)

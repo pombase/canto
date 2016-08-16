@@ -30,6 +30,9 @@ If you wish to modify an annotation you have made, please contact
 the curators.
 </p>
 
+<p>Return to the <a href="<% $c->uri_for('/') %>">PomBase Canto home page</a> to
+find more of your publications</p> 
+
 <& no_annotation_message.mhtml,
    no_annotation_reason => $no_annotation_reason &>
 

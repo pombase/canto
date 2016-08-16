@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 13;
 
 use Clone qw(clone);
 use JSON;
@@ -54,6 +54,9 @@ sub _get_data
 
   my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
   is ($aaaa0007->{metadata}->{annotation_status}, "APPROVAL_IN_PROGRESS");
+  is ($aaaa0007->{metadata}->{canto_session}, "aaaa0007");
+  is ($aaaa0007->{metadata}->{curator_name}, "Some Testperson");
+  is ($aaaa0007->{metadata}->{curator_email}, 'some.testperson@pombase.org');
 
   is (keys (%{$ref->{curation_sessions}}), 2);
 }
