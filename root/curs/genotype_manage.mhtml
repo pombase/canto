@@ -5,7 +5,7 @@ $read_only_curs => 0
 </%args>
 
 <div ng-controller="GenotypeManageCtrl"
-     id="curs-genotype-manage" class="genotype-list">
+     id="curs-genotype-manage" class="genotype-list ng-cloak">
   <div>
 % if (!$read_only_curs) {
   <div class="curs-top-help">
@@ -45,7 +45,7 @@ Specify alleles of genes from the list, until the new genotype is complete
     </div>
   </div>
 % }
-  <div class="row">
+  <div ng-if="!data.editingGenotype" class="ng-cloak row">
     <div class="col-sm-12 col-md-12">
     <div class="curs-box">
       <div class="curs-box-title">
