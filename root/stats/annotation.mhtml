@@ -26,7 +26,7 @@ $db_creation_datetime
       </tr>
       <tr>
         <th>
-          Total
+          All
         </th>
         <th>
           Curator
@@ -42,7 +42,9 @@ $db_creation_datetime
         </th>
       </tr>
     </thead>
+% my @curator_summ_totals = (0,0,0,0,0,0);
 % for my $row (@annotation_stats) {
+%   pairwise { $a += $b } @curator_summ_totals, @$row;
     <tr>
       <td>
         <% shift @$row %>
@@ -55,6 +57,14 @@ $db_creation_datetime
 %   }
     </tr>
 % }
+    <tr class="annotation-stats-table-totals">
+      <td>Totals:</td>
+      <td><% $curator_summ_totals[0] %></td>
+      <td><% $curator_summ_totals[1] %></td>
+      <td><% $curator_summ_totals[2] %></td>
+      <td><% $curator_summ_totals[3] %></td>
+      <td><% $curator_summ_totals[4] %></td>
+    </tr>
   </table>
 </div>
 <div class="col-sm-6 col-md-6">
