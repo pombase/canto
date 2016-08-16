@@ -9,7 +9,7 @@ $read_only_curs => 0
   <div>
 % if (!$read_only_curs) {
   <div class="curs-top-help">
-Search, view, and edit genotypes for phenotype annotation in this session
+Add, view and edit genotypes
   </div>
 % }
   <div class="row">
