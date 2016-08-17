@@ -4813,7 +4813,7 @@ var AnnotationStatsCtrl =
   function($scope, CantoGlobals) {
     $scope.curationStatusLabels = CantoGlobals.curationStatusData[0];
     $scope.curationStatusData = CantoGlobals.curationStatusData.slice(1);
-    var currentYear = new Date()).getFullYear();
+    var currentYear = (new Date()).getFullYear();
     $scope.perPub5YearStatsLabels =
       $.map(CantoGlobals.perPub5YearStatsData[0],
             function(year) {
