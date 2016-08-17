@@ -400,6 +400,7 @@ canto.service('CantoGlobals', function($window) {
   this.is_admin_user = $window.is_admin_user;
   this.current_user_is_admin = $window.current_user_is_admin;
   this.curationStatusData = $window.curationStatusData;
+  this.perPub5YearStatsData = $window.perPub5YearStatsData;
 });
 
 canto.service('CantoService', function($http) {
@@ -4812,6 +4813,21 @@ var AnnotationStatsCtrl =
   function($scope, CantoGlobals) {
     $scope.curationStatusLabels = CantoGlobals.curationStatusData[0];
     $scope.curationStatusData = CantoGlobals.curationStatusData.slice(1);
+    var currentYear = new Date()).getFullYear();
+    $scope.perPub5YearStatsLabels =
+      $.map(CantoGlobals.perPub5YearStatsData[0],
+            function(year) {
+              if (year == currentYear) {
+                return year;
+              } else {
+                var rangeEnd = (year + 4);
+                if (rangeEnd > currentYear) {
+                  rangeEnd = currentYear;
+                }
+                return year + "-" + rangeEnd;
+              }
+            });
+    $scope.perPub5YearStatsData = CantoGlobals.perPub5YearStatsData.slice(1);
   };
 
 canto.controller('AnnotationStatsCtrl',
@@ -4824,6 +4840,7 @@ var stackedGraph =
         scope: {
           chartLabels: '=',
           chartData: '=',
+          chartSeries: '@',
         },
         restrict: 'E',
         replace: true,
@@ -4833,7 +4850,7 @@ var stackedGraph =
           'chart-series="series"></canvas></div>',
         controller: function ($scope) {
           $scope.type = 'StackedBar';
-          $scope.series = ['Uncurated', 'Admin curated', 'Community curated'];
+          $scope.series = $scope.chartSeries.split('|');
           $scope.colours = ['#808080','#b04040','#3030b0'];
           $scope.options = {
             legend: { display: true },
@@ -4851,3 +4868,26 @@ var stackedGraph =
   };
 
 canto.directive('stackedGraph', [stackedGraph]);
+
+
+var barChart =
+  function() {
+    return {
+      scope: {
+        chartLabels: '=',
+        chartData: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      template: '<div><canvas class="chart chart-bar" chart-data="[chartData]" ' +
+        'chart-labels="chartLabels" chart-options="options"></canvas></div>',
+      controller: function ($scope) {
+        $scope.type = 'Bar';
+        $scope.options = {
+          legend: { display: false },
+        };
+    }
+  }
+};
+
+canto.directive('barChart', [barChart]);
