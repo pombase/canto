@@ -1077,6 +1077,11 @@ span.canto-select-buttons {
   width: 70%;
 }
 
+.pub-lookup-title {
+  color: #666;
+  font-size: 90%;
+}
+
 #curs-submitter-update .pub-details {
   padding: 5px 70px 10px 40px;
 }
