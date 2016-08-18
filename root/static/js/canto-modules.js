@@ -754,7 +754,7 @@ var helpIcon = function($modal, CantoGlobals, CantoConfig) {
           if (results[$scope.key].inline) {
             $scope.helpText = results[$scope.key].inline;
             if ($scope.url) {
-              $scope.helpText += "(Click to visit documentation)";
+              $scope.helpText += " (Click to visit documentation)";
             }
           }
         }

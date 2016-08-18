@@ -1684,7 +1684,7 @@ help_text:
     docs_path: "fypo_annotation#single-allele-phenotypes"
   gene_page_multi_allele:
     inline: >
-      Changes in sequence or expression at two or more loci
+      Changes in sequence or expression at two or more loci.
     docs_path: "fypo_annotation#multi-allele-phenotypes"
   allele_choose_conditions:
     inline: >
