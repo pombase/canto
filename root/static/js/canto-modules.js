@@ -727,7 +727,7 @@ var cursSettingsService =
 canto.service('CursSettings', ['$http', '$timeout', '$q', cursSettingsService]);
 
 
-var helpIcon = function(CantoGlobals, CantoConfig) {
+var helpIcon = function($modal, CantoGlobals, CantoConfig) {
   return {
     scope: {
       key: '@',
@@ -740,16 +740,30 @@ var helpIcon = function(CantoGlobals, CantoConfig) {
 
       $scope.app_static_path = CantoGlobals.app_static_path;
 
+      $scope.click = function() {
+        if ($scope.url) {
+          window.open($scope.url, '_blank');
+        }
+      };
+
       CantoConfig.get('help_text').success(function(results) {
-        if (results[$scope.key] && results[$scope.key].inline) {
-          $scope.helpText = results[$scope.key].inline;
+        if (results[$scope.key]) {
+          if (results[$scope.key].docs_path) {
+            $scope.url = CantoGlobals.application_root + '/docs/' + results[$scope.key].docs_path;
+          }
+          if (results[$scope.key].inline) {
+            $scope.helpText = results[$scope.key].inline;
+            if ($scope.url) {
+              $scope.helpText += "(Click to visit documentation)";
+            }
+          }
         }
       });
     },
   };
 };
 
-canto.directive('helpIcon', ['CantoGlobals', 'CantoConfig', helpIcon]);
+canto.directive('helpIcon', ['$modal', 'CantoGlobals', 'CantoConfig', helpIcon]);
 
 
 var advancedModeToggle =

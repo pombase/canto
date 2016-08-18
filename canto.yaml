@@ -1678,6 +1678,14 @@ help_text:
   gene_page_choose_curation_type:
     inline: >
       These are the types of data you can annotate. Follow one of the links for more detailed instructions.
+  gene_page_single_allele:
+    inline: >
+      One or more mutations, or an expression change, in one copy of a gene at one locus.
+    docs_path: "fypo_annotation#single-allele-phenotypes"
+  gene_page_multi_allele:
+    inline: >
+      Changes in sequence or expression at two or more loci
+    docs_path: "fypo_annotation#multi-allele-phenotypes"
   allele_choose_conditions:
     inline: >
       Please describe any experimental conditions relevant to this

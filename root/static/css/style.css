@@ -1256,7 +1256,7 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   opacity: 1.0;
 }
 
-.curs-annotation-quick-add a, .annotation-start .curs-inline-help-icon {
+.curs-annotation-quick-add a {
   padding-left: 10px;
   font-size: 80%;
   opacity: 0.5;

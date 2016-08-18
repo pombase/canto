@@ -36,7 +36,7 @@ definition.
 
 <h2><a name="interface">Using the interface</a></h2>
 
-<h3>Single-allele phenotypes</h3>
+<h3><a name="single-allele-phenotypes">Single-allele phenotypes</a></h3>
 <p>
 A single allele is a mutation, or set of mutations, in one copy of a
 gene at one locus (which may be the endogenous locus or a different
@@ -161,7 +161,7 @@ specifies one or more alleles.
 </p>
 
 
-<h3>Multiple-allele phenotypes and genotypes</h3>
+<h3><a name="multi-allele-phenotypes">Multiple-allele phenotypes and genotypes</a></h3>
 
 <p>
 Use the multi-allele phenotype option to annotate of a double mutant,
