@@ -790,12 +790,8 @@ var simpleDialogCtrl =
   function($scope, $modalInstance, args) {
     $scope.message = args.message;
 
-    $scope.ok = function () {
-      $modalInstance.dismiss('ok');
-    };
-
-    $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+    $scope.close = function () {
+      $modalInstance.dismiss('close');
     };
   };
 
