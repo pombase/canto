@@ -766,6 +766,43 @@ var helpIcon = function($modal, CantoGlobals, CantoConfig) {
 canto.directive('helpIcon', ['$modal', 'CantoGlobals', 'CantoConfig', helpIcon]);
 
 
+function openSimpleDialog($modal, title, heading, message)
+{
+  return $modal.open({
+    templateUrl: app_static_path + 'ng_templates/simple_dialog.html',
+    controller: 'SimpleDialogCtrl',
+    title: title,
+    resolve: {
+      args: function() {
+        return {
+          heading: heading,
+          message: message,
+        };
+      },
+    },
+    animate: false,
+    windowClass: "modal",
+    backdrop: 'static',
+  });
+}
+
+var simpleDialogCtrl =
+  function($scope, $modalInstance, args) {
+    $scope.message = args.message;
+
+    $scope.ok = function () {
+      $modalInstance.dismiss('ok');
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('SimpleDialogCtrl',
+                 ['$scope', '$modalInstance', 'args', simpleDialogCtrl]);
+
+
 var advancedModeToggle =
   function(CursSettings) {
     return {
