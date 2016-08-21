@@ -25,7 +25,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v1059
 
-schema_version: 12
+schema_version: 13
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## all gene lookups with match genes from any organism (and will return the
@@ -237,6 +237,11 @@ db_initial_data:
           - name: session_reactivated_timestamp
             dbxref:
               accession: session_reactivated_timestamp
+              db:
+                name: Canto
+          - name: needs_approval_timestamp
+            dbxref:
+              accession: needs_approval_timestamp
               db:
                 name: Canto
       - name: Canto publication triage status

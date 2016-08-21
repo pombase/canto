@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 21;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -11,10 +11,6 @@ $test_util->init_test('empty_db', { copy_ontology_index => 0 });
 
 my $config = $test_util->config();
 my $schema = Canto::TrackDB->new(config => $config);
-
-my @loaded_cvterms = $schema->resultset('Cvterm')->all();
-
-is (@loaded_cvterms, 61);
 
 my $test_go_file =
   $test_util->root_dir() . '/' . $config->{test_config}->{test_go_obo_file};

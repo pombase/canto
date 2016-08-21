@@ -180,6 +180,12 @@ my %procs = (
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
+
+  13 => sub {
+    my $config = shift;
+
+    Canto::Track::update_all_statuses($config);
+  },
 );
 
 sub upgrade_to

@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# fix curs metadata that's missing
+# Fix Curs metadata that's missing in the Track DB
 
 use strict;
 use warnings;
@@ -39,5 +39,4 @@ if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
 
 my $config = Canto::Config::get_config();
 
-Canto::Track::update_metadata($config);
-
+Canto::Track::update_all_statuses($config);
