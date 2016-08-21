@@ -41,28 +41,19 @@ use strict;
 sub stats_init
 {
   my $chado_schema = shift;
-  my $track_schema = shift;
-
-  my $track_dbh = $track_schema->storage()->dbh();
-  my $pub_date_query = 'SELECT uniquename, publication_date FROM pub;';
 
   my $chado_dbh = $chado_schema->storage()->dbh();
-  $chado_dbh->prepare('CREATE TEMP TABLE pub_dates(uniquename TEXT, pub_date TEXT)')->execute();
-
-  my $track_sth = $track_dbh->prepare($pub_date_query);
-  $track_sth->execute() or die "Couldn't execute: " . $track_sth->errstr;
-
-  my $chado_sth =
-    $chado_dbh->prepare('insert into pub_dates(uniquename, pub_date) values (?, ?)');
-
-  while (my ($pub_uniquename, $publication_date) = $track_sth->fetchrow_array()) {
-    if ($publication_date =~ /((19|20)\d\d)$/) {
-      my $publication_year = $1;
-
-      $chado_sth->execute($pub_uniquename, $publication_year)
-        or die "Couldn't execute: " . $chado_sth->errstr;
-    }
-  }
+  $chado_dbh->prepare(<<'EOF')->execute();
+CREATE TEMP TABLE pub_dates AS
+SELECT uniquename,
+       regexp_replace(value, '(?:^|.*\s)(\d\d\d\d)', '\1') AS pub_date
+FROM pubprop pp
+JOIN pub ON pub.pub_id = pp.pub_id
+WHERE pp.type_id IN
+    (SELECT cvterm_id
+     FROM cvterm
+     WHERE name = 'pubmed_publication_date')
+EOF
 
   $chado_dbh->prepare(<<'EOF')->execute();
 CREATE TEMP TABLE pub_canto_curator_roles AS
@@ -150,7 +141,6 @@ EOF
 sub per_publication_stats
 {
   my $chado_schema = shift;
-  my $track_schema = shift;
   my $use_5_year_bins = shift // 0;
 
   my $chado_dbh = $chado_schema->storage()->dbh();
@@ -382,7 +372,6 @@ sub annotation_stats_table
 sub stats_finish
 {
   my $chado_schema = shift;
-  my $track_schema = shift;
 
   my $chado_dbh = $chado_schema->storage()->dbh();
 
