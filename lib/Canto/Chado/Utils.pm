@@ -293,16 +293,25 @@ sub _annotator_annotation_counts
 
   my $dbh = $chado_schema->storage()->dbh();
   my $query = <<"EOF";
-SELECT fc.feature_cvterm_id, emailprop.value, dateprop.value
-  FROM feature_cvterm fc
-  JOIN feature_cvtermprop emailprop
-    ON fc.feature_cvterm_id = emailprop.feature_cvterm_id
-  JOIN feature_cvtermprop dateprop
-    ON fc.feature_cvterm_id = dateprop.feature_cvterm_id
- WHERE emailprop.type_id
-       IN (SELECT cvterm_id FROM cvterm WHERE name = 'curator_email')
-   AND dateprop.type_id
-       IN (SELECT cvterm_id FROM cvterm WHERE name = 'date')
+CREATE TEMP TABLE session_submitted_dates AS
+SELECT pub.pub_id, pp.value AS submitted_date
+FROM pub
+JOIN pubprop pp ON pub.pub_id = pp.pub_id
+JOIN cvterm ppt ON ppt.cvterm_id = pp.type_id
+JOIN cv ON ppt.cv_id = cv.cv_id
+WHERE ppt.name = 'canto_session_submitted_date'
+  AND cv.name = 'pubprop_type';
+
+CREATE INDEX session_submitted_dates_idx ON session_submitted_dates (pub_id);
+
+SELECT fc.feature_cvterm_id, emailprop.value, ssd.submitted_date
+FROM feature_cvterm fc
+JOIN feature_cvtermprop emailprop ON fc.feature_cvterm_id = emailprop.feature_cvterm_id
+JOIN session_submitted_dates ssd ON ssd.pub_id = fc.pub_id
+WHERE emailprop.type_id IN
+    (SELECT cvterm_id
+     FROM cvterm
+     WHERE name = 'curator_email');
 EOF
 
   my $sth = $dbh->prepare($query);
