@@ -23,7 +23,7 @@ is(@curs_objects, 1);
 
 my $curs_key = $curs_objects[0]->curs_key();
 
-my @known_genes = qw(SPCC1739.10 wtf22 SPNCRNA.119);
+my @known_genes = qw(SPCC1739.10 mot1 SPNCRNA.119);
 my @id_matching_two_genes = qw(ssm4);
 my @two_ids_matching_one_gene = qw(ste20 ste16);
 my @unknown_genes = qw(dummy SPCC999999.99);
@@ -67,7 +67,7 @@ sub check_result
   ok(Compare(\@res_missing, \@unknown_genes));
   is(@res_found, $found_count);
 
-  ok(grep { $_->{primary_identifier} eq 'SPCC576.16c' } @res_found);
+  ok(grep { $_->{primary_identifier} eq 'SPBC1826.01c' } @res_found);
 
   is($curs_schema->resultset('Gene')->count(), $gene_count);
 }

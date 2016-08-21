@@ -52,25 +52,25 @@ my $pombe_taxon = $chado_feature_cache->get_cached_taxonid($pombe_org->organism_
 is ($pombe_taxon, 4896);
 
 
-my $allele = $chado_schema->resultset('Feature')->find({ name => 'wtf22-a1' });
+my $allele = $chado_schema->resultset('Feature')->find({ name => 'mot1-a1' });
 my $allele_details = $chado_feature_cache->get_cached_allele_details($allele);
 
-my $expected_wtf22_details =
+my $expected_mot1_details =
   {
-    'name' => 'wtf22-a1',
+    'name' => 'mot1-a1',
     'description' => 'T11C',
     'taxonid' => '4896',
     'type' => 'amino_acid_mutation',
-    'primary_identifier' => 'SPCC576.16c:allele-1',
-    'gene_display_name' => 'wtf22',
+    'primary_identifier' => 'SPBC1826.01c:allele-1',
+    'gene_display_name' => 'mot1',
     'gene_id' => 13,
   };
 
 cmp_deeply($allele_details,
-           $expected_wtf22_details);
+           $expected_mot1_details);
 
 
-my $genotype = $chado_schema->resultset('Feature')->find({ name => 'cdc11-33 wtf22-a1' });
+my $genotype = $chado_schema->resultset('Feature')->find({ name => 'cdc11-33 mot1-a1' });
 my $genotype_details = $chado_feature_cache->get_cached_genotype_details($genotype);
 
 
@@ -88,11 +88,11 @@ cmp_deeply($genotype_details,
                  expression => undef,
                },
                {
-                 %{$expected_wtf22_details},
+                 %{$expected_mot1_details},
                  expression => undef,
                },
              ],
-             'name' => 'cdc11-33 wtf22-a1',
+             'name' => 'cdc11-33 mot1-a1',
              'identifier' => 'aaaa0007-test-genotype-2'
            }
          );

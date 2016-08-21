@@ -31,7 +31,7 @@ my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
 my $root_url = "http://localhost:5000/curs/$curs_key";
 my $uniquename = "PMID:19664060";
-my @gene_identifiers = qw(cdc11 wtf22 SPNCRNA.119 klp1);
+my @gene_identifiers = qw(cdc11 mot1 SPNCRNA.119 klp1);
 
 # test submitting a list of genes
 sub upload_genes

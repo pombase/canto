@@ -4,7 +4,7 @@ SPCTRNASER.13			"tRNA Serine"
 SPCC576.19c			dubious
 SPCC576.03c			
 SPNCRNA.119			"non-coding RNA (predicted)"
-SPCC576.16c	wtf22		"wtf element Wtf22"
+SPBC1826.01c	mot1		"TATA-binding protein associated factor Mot1 (predicted)"
 SPAC3A11.14c	pkl1	klp1,SPAC3H5.03c	"kinesin-like protein Pkl1"
 SPBC12C2.11		SPBC21D10.02	"glutamine-fructose-6-phosphate transaminase (predicted)"
 SPCC63.05			"TAP42 family protein involved in TOR signalling (predicted)"

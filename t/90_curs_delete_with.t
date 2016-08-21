@@ -28,7 +28,7 @@ test_psgi $app, sub {
   my $cb = shift;
 
   my $with_gene = $curs_schema->find_with_type('Gene',
-                                               primary_identifier => 'SPCC576.16c');
+                                               primary_identifier => 'SPBC1826.01c');
 
   ok (defined $with_gene);
 
@@ -39,7 +39,7 @@ test_psgi $app, sub {
   while (defined (my $annotation = $annotation_with_with_gene_rs->next())) {
     my $with_gene = $annotation->data()->{with_gene};
 
-    if (defined $with_gene && $with_gene eq 'SPCC576.16c') {
+    if (defined $with_gene && $with_gene eq 'SPBC1826.01c') {
       $with_gene_annotation = $annotation;
       last;
     }

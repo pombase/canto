@@ -53,7 +53,7 @@ test_psgi $app, sub {
                         'GO:0034763',
                         'PMID:19756689',
                         'IPI',
-                        'PomBase:SPCC576.16c',
+                        'PomBase:SPBC1826.01c',
                         'P',
                         'ER-localized ubiquitin ligase Doa10 (predicted)',
                         'ssm4',

@@ -128,8 +128,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I6/rCQDKf0kw6LxxvOgunA
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-08-21 19:35:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mSb5pklq73hNN6yuNUz9kg
 
 =head2 feature_id
 

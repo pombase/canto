@@ -84,7 +84,7 @@ $res = $service_utils->list_for_service('genotype', 'all',
                                           filter =>
                                             { gene_identifiers =>
                                                 [
-                                                  'SPCC576.16c', 'SPCC1739.11c'
+                                                  'SPBC1826.01c', 'SPCC1739.11c'
                                                 ]
                                               }
                                           });
@@ -92,11 +92,11 @@ $res = $service_utils->list_for_service('genotype', 'all',
 cmp_deeply($res,
            [
              {
-              'name' => 'cdc11-33 wtf22-a1',
+              'name' => 'cdc11-33 mot1-a1',
               'identifier' => 'aaaa0007-test-genotype-2',
-              'allele_string' => 'cdc11-33 wtf22-a1',
-              'display_name' => 'cdc11-33 wtf22-a1',
-              'allele_identifiers' => ['SPCC1739.11c:allele-1','SPCC576.16c:allele-1'],
+              'allele_string' => 'cdc11-33 mot1-a1',
+              'display_name' => 'cdc11-33 mot1-a1',
+              'allele_identifiers' => ['SPCC1739.11c:allele-1','SPBC1826.01c:allele-1'],
               annotation_count => 0,
             },
           ]);
@@ -188,16 +188,16 @@ cmp_deeply($res,
                gene_id => 3,
             },
             {
+              'primary_identifier' => 'SPBC1826.01c',
+              'primary_name' => 'mot1',
+              display_name => 'mot1',
+               gene_id => 1,
+            },
+            {
               'primary_name' => 'ssm4',
               'primary_identifier' => 'SPAC27D7.13c',
               display_name => 'ssm4',
                gene_id => 2,
-            },
-            {
-              'primary_identifier' => 'SPCC576.16c',
-              'primary_name' => 'wtf22',
-              display_name => 'wtf22',
-               gene_id => 1,
             },
             {
               'primary_identifier' => 'SPCC63.05',

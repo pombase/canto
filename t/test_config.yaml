@@ -84,14 +84,14 @@ test_config:
          uniquename: PMID:18426916
          submitter_email: "other.tester@pombase.org"
          submitter_name: "Other Tester"
-         current_gene: "SPCC576.16c"
+         current_gene: "SPBC1826.01c"
          genes:
-           - "SPCC576.16c"
+           - "SPBC1826.01c"
          annotations:
            - type: biological_process
              status: new
              genes(Gene:primary_identifier):
-               - SPCC576.16c
+               - SPBC1826.01c
              pub(Pub:uniquename): PMID:18426916
              data:
                evidence_code: IMP
@@ -104,9 +104,9 @@ test_config:
          uniquename: PMID:19756689
          submitter_email: "some.testperson@pombase.org"
          submitter_name: "Some Testperson"
-         current_gene: "SPCC576.16c"
+         current_gene: "SPBC1826.01c"
          genes:
-           - "SPCC576.16c"
+           - "SPBC1826.01c"
            - primary_identifier: "SPAC27D7.13c"
              alleles:
                - primary_identifier: 'SPAC27D7.13c:aaaa0007-1'
@@ -166,7 +166,7 @@ test_config:
              data:
                evidence_code: IPI
                term_ontid: GO:0034763
-               with_gene: SPCC576.16c
+               with_gene: SPBC1826.01c
                extension:
                  -
                    - relation: 'exists_during'
