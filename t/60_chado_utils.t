@@ -16,8 +16,6 @@ my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
 my $chado_schema = $test_util->chado_schema();
 
-Canto::Chado::Utils::stats_init($chado_schema, $track_schema);
-
 my $annotation_status_term =
   $track_schema->resultset('Cvterm')->find({ name => 'annotation_status' });
 my $annotation_status_datestamp_term =
@@ -43,5 +41,3 @@ cmp_deeply(\@stats_table,
              [2015, 0, 0, 1, 2],
              [2016, 0, 0, 1, 0]
            ]);
-
-Canto::Chado::Utils::stats_finish($chado_schema, $track_schema);
