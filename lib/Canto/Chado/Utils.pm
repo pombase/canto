@@ -301,9 +301,17 @@ JOIN cvterm ppt ON ppt.cvterm_id = pp.type_id
 JOIN cv ON ppt.cv_id = cv.cv_id
 WHERE ppt.name = 'canto_session_submitted_date'
   AND cv.name = 'pubprop_type';
+EOF
+  my $sth = $dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
+  $query = <<"EOF";
 CREATE INDEX session_submitted_dates_idx ON session_submitted_dates (pub_id);
+EOF
+  $sth = $dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
+  $query = <<"EOF";
 SELECT fc.feature_cvterm_id, emailprop.value, ssd.submitted_date
 FROM feature_cvterm fc
 JOIN feature_cvtermprop emailprop ON fc.feature_cvterm_id = emailprop.feature_cvterm_id
@@ -314,7 +322,7 @@ WHERE emailprop.type_id IN
      WHERE name = 'curator_email');
 EOF
 
-  my $sth = $dbh->prepare($query);
+  $sth = $dbh->prepare($query);
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
   while (my ($id, $email, $date) = $sth->fetchrow_array()) {
