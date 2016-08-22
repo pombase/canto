@@ -3345,6 +3345,9 @@ var genotypeListRowCtrl =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
 
+        $scope.firstAllele = $scope.genotype.alleles[0];
+        $scope.otherAlleles = $scope.genotype.alleles.slice(1);
+
         $scope.isSelected = function() {
           return $scope.selectedGenotypeId &&
             $scope.selectedGenotypeId == $scope.genotype.genotype_id;
@@ -3376,8 +3379,8 @@ var genotypeListRowCtrl =
 
             links.position({
               my: 'left top',
-              at: 'left top-2',
-              of: $element.closest('tr').children('td').last(),
+              at: 'right top-2',
+              of: $element.closest('tbody'),
             });
           }
         };
