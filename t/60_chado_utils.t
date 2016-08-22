@@ -36,8 +36,6 @@ my @stats_table = Canto::Chado::Utils::annotation_stats_table($chado_schema, $tr
 
 cmp_deeply(\@stats_table,
            [
-             [2013, 0, 1, 0, 0],
-             [2014, 0, 0, 0, 0],
              [2015, 0, 0, 2, 2],
              [2016, 0, 0, 0, 0]
            ]);
