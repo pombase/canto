@@ -257,7 +257,7 @@ WHERE (curs_curator_id =
          (SELECT max(curs_curator_id)
           FROM curs_curator
           WHERE curs = me.curs))
-  AND pt.name = 'annotation_status_datestamp'
+  AND pt.name = 'needs_approval_timestamp'
   AND curs.curs_id IN
     (SELECT curs
      FROM cursprop p2
