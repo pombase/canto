@@ -34,6 +34,7 @@ Choose curation type for <% $gene->display_name() %>:
       </span>
 %     if (!$annotation_type->{disabled}) {
       </a>
+      <help-icon key="<% $annotation_type->{name} . '_definition' %>"></help-icon>
 %     }
       <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
                             feature-type="gene" feature-id="<% $gene->gene_id() %>"
