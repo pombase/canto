@@ -334,9 +334,17 @@ WHERE fr.type_id IN
      WHERE name = 'interacts_genetically'
        OR name = 'interacts_physically')
   AND emailprop.type_id IN
-    ( SELECT cvterm_id
+    (SELECT cvterm_id
      FROM cvterm
-     WHERE name = 'curator_email');
+     WHERE name = 'curator_email')
+  AND fr.feature_relationship_id IN
+    (SELECT inferredprop.feature_relationship_id
+     FROM feature_relationshipprop inferredprop
+     WHERE inferredprop.type_id IN
+         (SELECT cvterm_id
+          FROM cvterm
+          WHERE name = 'is_inferred')
+       AND value = 'no');
 EOF
 
   $sth = $dbh->prepare($query);
