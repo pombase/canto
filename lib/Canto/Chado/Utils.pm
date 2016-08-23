@@ -312,12 +312,29 @@ EOF
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
   $query = <<"EOF";
-SELECT fc.feature_cvterm_id, emailprop.value, ssd.submitted_date
+SELECT emailprop.value,
+       ssd.submitted_date
 FROM feature_cvterm fc
 JOIN feature_cvtermprop emailprop ON fc.feature_cvterm_id = emailprop.feature_cvterm_id
 JOIN session_submitted_dates ssd ON ssd.pub_id = fc.pub_id
 WHERE emailprop.type_id IN
     (SELECT cvterm_id
+     FROM cvterm
+     WHERE name = 'curator_email')
+UNION ALL
+SELECT emailprop.value,
+       ssd.submitted_date
+FROM feature_relationship fr
+JOIN feature_relationship_pub frpub ON frpub.feature_relationship_id = fr.feature_relationship_id
+JOIN feature_relationshipprop emailprop ON emailprop.feature_relationship_id = fr.feature_relationship_id
+JOIN session_submitted_dates ssd ON ssd.pub_id = frpub.pub_id
+WHERE fr.type_id IN
+    (SELECT cvterm_id
+     FROM cvterm
+     WHERE name = 'interacts_genetically'
+       OR name = 'interacts_physically')
+  AND emailprop.type_id IN
+    ( SELECT cvterm_id
      FROM cvterm
      WHERE name = 'curator_email');
 EOF
@@ -325,7 +342,7 @@ EOF
   $sth = $dbh->prepare($query);
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
-  while (my ($id, $email, $date) = $sth->fetchrow_array()) {
+  while (my ($email, $date) = $sth->fetchrow_array()) {
     if ($date =~ /(\d\d\d\d)-?(\d\d)-?(\d\d)/) {
       my $year = $1;
       if ($curator_emails->{$email}) {
