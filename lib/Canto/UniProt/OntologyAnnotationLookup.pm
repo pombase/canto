@@ -51,6 +51,8 @@ use IO::String;
 use Memoize;
 use Memoize::Expire;
 
+use Canto::Track;
+
 tie my %cache => 'Memoize::Expire', LIFETIME => 60*60*2;
 
 # this might help a little bit, but as there is more than one server,
@@ -63,6 +65,8 @@ sub _cached_lookup
   my $pub_uniquename = shift;
   my $gene_identifier = shift;
   my $wanted_ontology_name = shift;
+
+  my $ontology_lookup = Canto::Track::get_adaptor($config, 'ontology');
 
   my $url =
     $config->{webservices}->{quickgo_annotation_lookup_url} . $pub_uniquename;
@@ -124,6 +128,14 @@ sub _cached_lookup
 
     (my $taxonid = $prodtaxa) =~ s/taxon://;
 
+    my $term_name = '';
+
+    my $result = $ontology_lookup->lookup_by_id(id => $termacc);
+
+    if (defined $result) {
+      $term_name = $result->{name};
+    }
+
     push @ret, {
       gene => {
         identifier => $prodacc,
@@ -132,6 +144,7 @@ sub _cached_lookup
       },
       ontology_term => {
         ontology_name => $returned_ontology_name,
+        term_name => $term_name,
         ontid => $termacc,
       },
       publication => $pub_uniquename,

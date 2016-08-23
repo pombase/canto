@@ -17,15 +17,15 @@ my $lookup = Canto::Track::GeneLookup->new(config => $test_util->config());
 ok(defined $lookup->schema());
 
 # test weird case
-my $result = $lookup->lookup([qw(SPCc576.16c)]);
+my $result = $lookup->lookup([qw(SPbC1826.01c)]);
 
 is(@{$result->{found}}, 1, 'look up one gene - found count');
 is(@{$result->{missing}}, 0, 'look up one gene - missing count');
 
 my $found_gene = $result->{found}->[0];
-is($found_gene->{primary_identifier}, 'SPCC576.16c');
-is($found_gene->{primary_name}, 'wtf22');
-is($found_gene->{product}, 'wtf element Wtf22');
+is($found_gene->{primary_identifier}, 'SPBC1826.01c');
+is($found_gene->{primary_name}, 'mot1');
+is($found_gene->{product}, 'TATA-binding protein associated factor Mot1 (predicted)');
 is($found_gene->{organism_full_name}, 'Schizosaccharomyces pombe');
 
 $result = $lookup->lookup([qw(missing1 missing2 missing3)]);
@@ -41,15 +41,15 @@ $result = $lookup->lookup([qw(SPCC1739.10)]);
 is(@{$result->{found}}, 2, 'look up two genes by identifier - found count');
 is(@{$result->{missing}}, 0, 'look up two genes by identifier - missing count');
 
-$result = $lookup->lookup([qw(wtf22 cdc11 missing1 missing2 missing3)]);
+$result = $lookup->lookup([qw(mot1 cdc11 missing1 missing2 missing3)]);
 is(@{$result->{found}}, 2, 'look up two genes by name - found count');
 is(@{$result->{missing}}, 3, 'look up two genes by name - missing count');
 
-$result = $lookup->lookup([qw(SPCC576.16c wtf22 cdc11 missing1)]);
+$result = $lookup->lookup([qw(SPBC1826.01c mot1 cdc11 missing1)]);
 is(@{$result->{found}}, 2, 'look up two genes using name and identifier - found count');
 is(@{$result->{missing}}, 1, 'look up two genes using name and identifier - missing count');
 
-$result = $lookup->lookup([qw(SPCC1739.10 wtf22 cdc11 missing1 missing2 missing3)]);
+$result = $lookup->lookup([qw(SPCC1739.10 mot1 cdc11 missing1 missing2 missing3)]);
 is(@{$result->{found}}, 3, 'look up two genes by name and identifier - found count');
 is(@{$result->{missing}}, 3, 'look up two genes by name and identifier - missing count');
 
@@ -121,7 +121,7 @@ $result = $lookup->lookup(
       species => 'pombe',
     },
   },
-  [qw(wtf22)]);
+  [qw(mot1)]);
 is(@{$result->{found}}, 1);
 
 

@@ -3,10 +3,11 @@
     <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
 Loading details ...
   </div>
-  <div ng-show="termDetails" id="ferret-term-details" class="curs-box ng-cloak">
+  <div ng-show="termDetails" id="ferret-term-details" class="ng-cloak">
+    <div class="curs-box">
     <div id="ferret-help-step-1" class="inline-help curs-box-title">
-      Please read the definition of the currently selected term to ensure that
-      it accurately describes your gene:
+      Please read the term definition to ensure that it accurately describes
+      your {{annotationType.feature_type || 'feature'}}
     </div>
     <div class="curs-box-body">
       <external-term-links term-id="termDetails.id"></external-term-links>
@@ -14,10 +15,12 @@ Loading details ...
       <term-definition-display term-details="termDetails"
                                matching-synonym="matchingSynonym"></term-definition-display>
     </div>
+    </div>
 
     <div ng-show="termDetails && termDetails.children.length > 0" id="ferret-term-children">
       <term-children-display term-details="termDetails" goto-child-callback="gotoChild(childId)"></term-children-display>
 
+      <div class="curs-box">
       <div class="inline-help curs-box-title">
         If you need a more specific term to describe the experiment you are
         annotating, and if none of terms above is appropriate, you can
@@ -32,9 +35,10 @@ Loading details ...
           </li>
         </ul>
       </div>
+      </div>
     </div>
 
-    <div class="ng-cloak" ng-hide="termDetails.children && termDetails.children.length > 0" id="ferret-leaf">
+    <div class="ng-cloak curs-box" ng-hide="termDetails.children && termDetails.children.length > 0" id="ferret-leaf">
       <div id="ferret-help-step-2-suggest" class="inline-help curs-box-title">
         The currently selected term has no children. If you need a more specific
         term to describe the experiment you are annotating, please follow the
@@ -48,9 +52,6 @@ Loading details ...
             {{annotationType.very_short_display_name}} terms. Sometimes this will be
             a novel {{annotationType.short_display_name}} which has not been
             previously described, and so is not yet included in the ontology.
-          </div>
-          <div ng-show="annotationType.suggest_term_help_text">
-            {{annotationType.suggest_term_help_text}}
           </div>
         </div>
       </div>

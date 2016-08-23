@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use LWP::Protocol::PSGI;
 use YAML qw(Load Dump);
@@ -38,7 +38,8 @@ sub _check_res
 
   my @res = @$res;
 
-  is ($res[0]->{ontology_term}->{ontid}, 'GO:0005198');
+  is ($res[0]->{ontology_term}->{ontid}, 'GO:0022857');
+  is ($res[0]->{ontology_term}->{term_name}, 'transmembrane transporter activity');
   is ($res[0]->{ontology_term}->{ontology_name}, 'molecular_function');
   is ($res[1]->{gene}->{identifier}, 'O74473');
   is ($res[1]->{gene}->{name}, 'CDC11_SCHPO');

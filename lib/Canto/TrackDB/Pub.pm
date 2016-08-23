@@ -345,8 +345,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-03-12 15:01:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ST957xEdZFbfrB72vHpzXA
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-08-21 19:47:59
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FCs8HJ6IYxNI0CrBiDP+aw
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 

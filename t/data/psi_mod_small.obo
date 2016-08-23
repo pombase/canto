@@ -156,5 +156,5 @@ is_transitive: true
 [Typedef]
 id: part_of
 name: part of
-def: "'Entity A' part_of 'Entity B' implies that 'Entity A' is a part of the structure of 'Entity B'." [PubMed:18688235]
+def: "X part_of Y if X is a subregion of Y." [PubMed:18688235]
 is_transitive: true

@@ -22,7 +22,7 @@ $order_by => undef
 %     my $column_name = $col_conf->{name};
 %     my $column_heading = ucfirst $column_name;
 %     $column_heading =~ s/_/ /g;
-        <th><span class="field-label">
+        <th><span>
 %     if ($is_inline) {
           <% $column_heading %>
 %     } else {
@@ -90,7 +90,6 @@ my $max_inline_results_length =
 
 my $model_name = $c->req()->param('model');
 my $class_info = $c->config()->class_info($model_name)->{$config_name};
-my $table = $class_info->{source};
 
 my $context;
 
@@ -103,7 +102,8 @@ if ($is_inline) {
 my @column_confs =
   Canto::WebUtil::get_column_confs($c, $rs, $class_info, $context);
 
-$rs = Canto::WebUtil::process_rs_options($rs, [@column_confs]);
+$rs = Canto::WebUtil::process_rs_options($rs, $c->config(), $class_info, [@column_confs],
+                                         $model_name, $order_by);
 
 $st->{column_confs} = [@column_confs];
 

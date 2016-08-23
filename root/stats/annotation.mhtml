@@ -1,0 +1,306 @@
+<%args>
+@annotation_stats
+@per_pub_stats_table
+@per_pub_5_year_stats
+@curated_stats
+$db_creation_datetime
+</%args>
+
+<div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
+<div class="curs-box">
+  <div class="curs-box-title">Curator summary</div>
+<div class="curs-box-body row">
+<div class="col-sm-6 col-md-6">
+  <table class="list">
+    <thead>
+      <tr>
+        <th rowspan="2">
+          Year
+        </th>
+        <th style="text-align: center" colspan="3">
+          Publications curated
+        </th>
+        <th style="text-align: center" colspan="2">
+          Annotations
+        </th>
+      </tr>
+      <tr>
+        <th>
+          All
+        </th>
+        <th>
+          Curator
+        </th>
+        <th>
+          Community
+        </th>
+        <th>
+          Curator
+        </th>
+        <th>
+          Community
+        </th>
+      </tr>
+    </thead>
+% my @curator_summ_totals = (0,0,0,0,0,0);
+% for my $row (@annotation_stats) {
+%   pairwise { $a += $b } @curator_summ_totals, @$row;
+    <tr>
+      <td>
+        <% shift @$row %>
+      </td>
+      <td>
+        <% $row->[0] + $row->[1] %>
+      </td>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+    <tr class="annotation-stats-table-totals">
+      <td>Totals:</td>
+      <td><% $curator_summ_totals[0] %></td>
+      <td><% $curator_summ_totals[1] %></td>
+      <td><% $curator_summ_totals[2] %></td>
+      <td><% $curator_summ_totals[3] %></td>
+      <td><% $curator_summ_totals[4] %></td>
+    </tr>
+  </table>
+</div>
+<div class="col-sm-6 col-md-6">
+<p>
+Number of papers curated by professional and community curators, and total
+number of annotations created, per year. An annotation is either an assignment
+of a gene product to a term in an ontology, or a genetic or physical
+interaction. Each unique combination of an ontology term and an extension is
+counted as a separate annotation. Any paper which is fully or partially
+curated by a community curator is classified as a community curated
+publication.
+</p>
+<p>
+Each annotation is individually date-stamped upon creation, whereas the
+curation date for a publication reflects the date on which the entire curation
+session was approved for inclusion in PomBase (this accounts for discrepancies
+such as the annotations, but no publications, attributed to 2011).
+</p>
+<p>
+Note: The breakdown of annotations between professional and community curators
+is only accurate from 2013 onwards. Until the end of 2012, all annotations
+from a community curated paper were attributed to the community curator, even
+those added by a professional curator during the approval procedure.
+</p>
+</div>
+</div>
+</div>
+
+<div class="curs-box">
+  <div class="curs-box-title">Curated vs uncurated by publication date</div>
+  <div class="curs-box-body">
+<div class="row">
+  <div class="col-sm-6 col-md-6">
+    <script language="javascript" type="text/javascript">
+      var curationStatusData = <% $curation_status_js |n %>;
+    </script>
+
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Total curatable
+        </th>
+        <th>
+          Uncurated
+        </th>
+        <th>
+          Admin curated
+        </th>
+        <th>
+          Community curated
+        </th>
+      </tr>
+    </thead>
+% my @totals = (0,0,0,0,0);
+% for my $row (@curated_stats) {
+%   pairwise { $a += $b } @totals, @$row;
+    <tr>
+      <td>
+        <% $row->[0] %>
+      </td>
+      <td>
+        <% $row->[1] + $row->[2] + $row->[3] %>
+      </td>
+%   for (my $i = 1; $i < @$row; $i++) {
+%     my $column = $row->[$i];
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+    <tr class="annotation-stats-table-totals">
+      <td>Totals:</td>
+      <td><% $totals[1] + $totals[2] + $totals[3] %></td>
+      <td><% $totals[1] %></td>
+      <td><% $totals[2] %></td>
+      <td><% $totals[3] %></td>
+    </tr>
+  </table>
+</div>
+  <div class="col-sm-6 col-md-6">
+    <div>
+Publications containing gene-specific data per year, with curation status as
+of <% $db_creation_datetime %>. Admin curated: papers curated exclusively
+by <% $c->config()->{database_name} %> staff; Community curated: papers with
+annotations contributed by authors.
+    </div>
+  </div>
+</div>
+<div>
+  <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData"
+                 chart-series="Uncurated|Admin curated|Community curated">
+  </stacked-graph>
+</div>
+</div>
+
+
+<div class="curs-box">
+  <div class="curs-box-title">Annotations/genes per publication per year</div>
+  <div class="curs-box-body">
+<div class="row">
+  <div class="col-sm-6 col-md-6">
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Avg. genes per pub.
+        </th>
+        <th>
+          Avg. annotations per pub.
+        </th>
+      </tr>
+    </thead>
+% for my $row (@per_pub_stats_table) {
+    <tr>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+  <div class="col-sm-6 col-md-6">
+    Mean number of manually curated annotations and genes annotated in PomBase
+    per peer-reviewed paper per year. Counts exclude high-throughput
+    experiments and use the same criteria for all years
+  </div>
+  </div>
+</div>
+</div>
+
+
+<div class="curs-box">
+  <div class="curs-box-title">Annotations/genes per publication in 5 year intervals</div>
+<div class="row">
+<div class="col-sm-6 col-md-6">
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Avg. genes per pub.
+        </th>
+        <th>
+          Avg. annotations per pub.
+        </th>
+      </tr>
+    </thead>
+% for my $row (@per_pub_5_year_stats) {
+    <tr>
+% my $range_start = shift @$row;
+% my $range_end = $range_start + 4;
+% $range_end = $current_year if $current_year < $range_end;
+% my $year_range;
+% if ($range_start eq $range_end) {
+%   $year_range = $range_start;
+% } else {
+%   $year_range = "$range_start-$range_end";
+% }
+      <td>
+        <% $year_range %>
+      </td>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+<div class="col-sm-6 col-md-6">
+    Mean number of manually curated annotations and genes annotated in PomBase
+    per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
+    experiments and use the same criteria for all years
+</div>
+</div>
+<div class="row">
+  <script language="javascript" type="text/javascript">
+    var perPub5YearStatsData = <% $per_pub_5_year_stats_js |n %>;
+  </script>
+  <div class="col-sm-6 col-md-6">
+    <div>
+      Average genes per publication:
+    </div>
+    <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[0]"
+               chart-series="Avg. genes per pub">
+    </bar-chart>
+  </div>
+  <div class="col-sm-6 col-md-6">
+    <div>
+      Average annotations per publication:
+    </div>
+    <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[1]"
+               chart-series="Avg. annotations per pub">
+    </bar-chart>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<%init>
+use List::MoreUtils 'pairwise';
+use Data::JavaScript::Anon;
+
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+my $current_year = $year + 1900;
+
+my @transposed_curated_stats = ();
+
+map {
+  my @row = @$_;
+
+  for (my $i = 0; $i < scalar(@row); $i++) {
+    push @{$transposed_curated_stats[$i]}, $row[$i];
+  }
+} @curated_stats;
+
+my $curation_status_js = Data::JavaScript::Anon->anon_dump(\@transposed_curated_stats);
+
+my @transposed_per_pub_5_year_stats = ();
+
+map {
+  my @row = @$_;
+
+  for (my $i = 0; $i < scalar(@row); $i++) {
+    push @{$transposed_per_pub_5_year_stats[$i]}, $row[$i];
+  }
+} @per_pub_5_year_stats;
+
+my $per_pub_5_year_stats_js = Data::JavaScript::Anon->anon_dump(\@transposed_per_pub_5_year_stats);
+
+</%init>

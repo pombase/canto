@@ -312,7 +312,7 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
   padding: 10px;
 }
 
-table.list {
+table.list, table.curs-genotype-list {
   margin: 10px;
   border-width: 0px;
   border-spacing: 5px;
@@ -321,34 +321,52 @@ table.list {
   border-collapse: collapse;
   font-size: 90%;
 }
-table.list th {
+table.list th, table.curs-genotype-list th {
   padding: 3px;
   background-color: #d0d0c0;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #bbb;
   font-weight: bold;
   text-align: left;
+  vertical-align: top;
   white-space: nowrap;
 }
-table.list tr.even, table.list tr:nth-child(even) {
+table.curs-genotype-list th {
+  text-align: center;
+}
+
+table.list tr.even, table.list tr:nth-child(even),
+table.curs-genotype-list tbody.even, table.curs-genotype-list tbody:nth-child(even) {
   background-color: #eed;
 }
-table.list tr.odd, table.list tr:nth-child(odd) {
+table.list tr.odd, table.list tr:nth-child(odd),
+table.curs-genotype-list tbody.odd, table.curs-genotype-list tbody:nth-child(odd){
   background-color: white;
+}
+.list_page th {
+  white-space: normal !important;
+}
+.list_page table {
+  font-size: 85%;
 }
 .list th a:link {
   color: #226
 }
-table.list td {
+table.list td, table.curs-genotype-list td {
   vertical-align: top;
 }
 
-table.list tr td {
+table.list tr td, table.curs-genotype-list td {
   border-width: 1px;
   padding: 3px;
   border-style: solid;
   border-color: #bbb;
+}
+
+.annotation-stats table.list tr th {
+  white-space: normal !important;
+}
+
+.annotation-stats-table-totals {
+  font-weight: bold;
 }
 
 .curs-genotype-list-row-actions {
@@ -375,7 +393,7 @@ table.list tr td {
   vertical-align: top;
 }
 
-table.list thead {
+table.list thead, table.curs-genotype-list thead {
   font-weight: bold;
 }
 
@@ -609,28 +627,28 @@ div.clearall {
   float: left;
 }
 
-.gene-list table {
+.curs-front-gene-list table {
   font-size: 95%;
   border-width: 0px;
   margin: 10px 10px 15px 15px
 }
-.gene-list td {
+.curs-front-gene-list td {
   border-width: 0px;
   font-size: 95%;
 }
 
-.gene-list td {
+.curs-front-gene-list td {
   padding-right: 30px;
   width: 150px;
   white-space: nowrap;
 }
 
-.gene-list .no-genes-message {
+.curs-front-gene-list .no-genes-message {
   font-size: 95%;
   margin: 10px;
 }
 
-.gene-list .gene-list-instructions, .genotype-list .curs-genotype-list-instructions {
+.curs-front-gene-list .gene-list-instructions, .genotype-list .curs-genotype-list-instructions {
   font-size: 95%;
   margin-bottom: 10px;
 }
@@ -650,10 +668,10 @@ div.clearall {
 
 .feature-list-action {
   font-size: 90%;
-  margin: 5px;
+  margin: 20px 0 25px 5px;
 }
 
-.gene-list .annotation-count {
+.curs-front-gene-list .annotation-count {
   color: green;
   font-size: 80%;
 }
@@ -745,7 +763,7 @@ div.clearall {
 .curs-definition-table, .curs-allele-list {
   table-layout: fixed;
   border-collapse: collapse;
-  margin: 10px;
+  margin: 5px;
 }
 
 .curs-term-linkouts {
@@ -830,8 +848,6 @@ div.clearall {
 .curs-box {
   border: 1px solid #ddd;
   background-color: white;
-  margin: 5px;
-  margin-bottom: 15px;
 }
 
 .curs-box-title {
@@ -847,7 +863,7 @@ div.clearall {
 }
 
 .curs-box-body {
-  margin: 0px;
+  margin: 5px;
   padding: 5px;
 }
 
@@ -952,9 +968,12 @@ fieldset.curs-genes span {
 
 #curs-annotation-tables {
   clear: both;
-  padding-top: 15px;
-  width: 90%;
+  padding-top: 25px;
   font-size: 95%;
+}
+
+.curs-annotation-table-group {
+  margin-bottom: 15px;
 }
 
 .curs-annotation-incomplete-message {
@@ -975,7 +994,7 @@ span.canto-select-buttons {
   margin: 10px;
 }
 
-#curs-gene-list, #curs-front-page .pub-title, .curs-half-width-section {
+.curs-half-width-section {
   font-size: 90%;
   float: left;
   width: 45%;
@@ -1060,6 +1079,11 @@ span.canto-select-buttons {
 #pubmed-id-lookup-results, #curs-assign-session, #curs-gene-update,
 #curs-gene-list-edit {
   width: 70%;
+}
+
+.pub-lookup-title {
+  color: #666;
+  font-size: 90%;
 }
 
 #curs-submitter-update .pub-details {
@@ -1236,7 +1260,7 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   opacity: 1.0;
 }
 
-.curs-annotation-quick-add a, .annotation-start .curs-inline-help-icon {
+.curs-annotation-quick-add a {
   padding-left: 10px;
   font-size: 80%;
   opacity: 0.5;

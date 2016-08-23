@@ -1,53 +1,40 @@
 <div class="curs-extension-builder">
-  <span style="display: none; float:right">{{asString()}}</span>
-  <div ng-hide="inProgressConf">
-    <div ng-show="termDetails.id" style="padding: 0 0 5px 0">
+    <div style="padding: 0 0 5px 0">
       <span ng-if="isNewExtension">Can you extend this annotation by providing
         additional details based on the experiments in this paper?</span>
-<span ng-if="!manualEditMode">
-  <span ng-if="matchingConfigurations.length == 0">
-      No extension types are
-  </span>
-  <span ng-if="matchingConfigurations.length == 1">
-      This extension type is
-  </span>
-  <span ng-if="matchingConfigurations.length > 1">
-      These extension types are
-  </span>
-available for <i>{{termDetails.name}}</i> ({{termDetails.id}}):
-</span>
-    </div>
-    <ul>
-    <li ng-repeat="extConf in matchingConfigurations">
-      <span ng-switch="cardinalityStatus(extConf)">
-      <span class="curs-extension-already-used" ng-switch-when="MAX_REACHED"
-            tooltip="This extension relation type cannot be added more times for this annotation">
-        {{extConf.displayText}}
+      <span ng-if="matchingConfigurations.length == 0">
+        No extension types are
       </span>
-      <span ng-switch-when="MORE_POSSIBLE" tooltip="{{debugConfText(extConf)}}">
-        <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
+      <span ng-if="matchingConfigurations.length == 1">
+        This extension type is
       </span>
-      <span ng-switch-when="MORE_REQUIRED" tooltip="{{debugConfText(extConf)}}">
-        <a href="#" ng-click="startAddPart(extConf)">{{extConf.displayText}} ...</a>
-        <span style="color: red;">required</span>
+      <span ng-if="matchingConfigurations.length > 1">
+        These extension types are
       </span>
+      <span>
+        available for <i>{{termDetails.name}}</i> ({{termDetails.id}}):
       </span>
-    </li>
-    </ul>
 
-    <div ng-if="matchingConfigurations.length > 1" style="padding: 0 0 15px 0">
-Use as many extension types as apply to this annotation.
+      <extension-or-group-builder or-group="extension[extension.length - 1]"
+                                  matching-configurations="matchingConfigurations"
+                                  is-valid="andExtIsValid"></extension-builder>
     </div>
 
-    <div ng-if="currentUserIsAdmin">
-      <a href="#" ng-click="manualEdit()">Edit as string (admin only) ...</a>
-    </div>
-  </div>
-
-  <div ng-if="!inProgressConf && extension.length > 0" style="padding-top: 10px">
+  <div ng-if="extension.length > 1 || extension[0].length > 0" style="padding-top: 10px">
     <div>Extension added so far:</div>
     <div>
       <extension-display extension="extension" show-delete="true"></extension-display>
+    </div>
+  </div>
+
+  <div ng-if="currentUserIsAdmin" style="padding-top: 15px; font-size: 95%;">
+     Admin only:
+    <div style="padding: 5px; font-size: 95%" ng-show="extension[extension.length - 1].length != 0">
+      <a href="#" ng-click="addOrGroup()">Add independent extension ...</a>
+    </div>
+
+    <div style="padding: 5px; font-size: 95%">
+      <a href="#" ng-click="manualEdit()">Edit as text ...</a>
     </div>
   </div>
 </div>

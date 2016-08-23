@@ -141,8 +141,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-09-22 16:57:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iDIJM2amH5SeS7cGqF331w
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-08-21 19:35:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yoNuind8vIy8fIACFy4lCw
 
 __PACKAGE__->many_to_many('genotypes' => 'allele_genotypes',
                           'genotype');

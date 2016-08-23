@@ -47,8 +47,8 @@ my $full_expected_curation_session =
         uniquename => 'SPCC63.05',
         organism => 'Schizosaccharomyces pombe',
       },
-      'Schizosaccharomyces pombe SPCC576.16c' => {
-        uniquename => 'SPCC576.16c',
+      'Schizosaccharomyces pombe SPBC1826.01c' => {
+        uniquename => 'SPBC1826.01c',
         organism => 'Schizosaccharomyces pombe',
       }
     },
@@ -142,7 +142,7 @@ my $full_expected_curation_session =
           email => 'some.testperson@pombase.org',
           community_curated => JSON::XS::false,
         },
-        with_gene => "SPCC576.16c",
+        with_gene => "SPBC1826.01c",
         extension => [
           {
             relation => 'exists_during',
@@ -171,7 +171,7 @@ my $full_expected_curation_session =
           email => 'some.testperson@pombase.org',
           community_curated => JSON::XS::false,
         },
-        with_gene => "SPCC576.16c",
+        with_gene => "SPBC1826.01c",
         extension => [
           {
             relation => 'exists_during',
@@ -291,6 +291,10 @@ my $full_expected_curation_session =
       accepted_timestamp => '2012-02-15 13:45:00',
       curation_in_progress_timestamp => '2012-02-15 13:45:00',
       session_created_timestamp => '2012-02-15 13:45:00',
+      curator_email => 'some.testperson@pombase.org',
+      curator_name => 'Some Testperson',
+      curator_role => 'community',
+      curation_accepted_date => '2012-02-15 13:45:00',
       %extra_curs_statuses,
     },
     organisms => {

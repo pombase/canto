@@ -87,11 +87,11 @@ $res_pub->update();
 
 my $new_res_pub = $schema->find_with_type('Pub', { uniquename => 12345678 });
 
-my $spcc576_16c = $schema->find_with_type('Gene',
-                                          { primary_identifier => 'SPCC576.16c' });
-is ($spcc576_16c->direct_annotations()->count(), 0);
-is ($spcc576_16c->indirect_annotations()->count(), 1);
-is ($spcc576_16c->all_annotations(include_with => 1)->count(), 1);
+my $spbc1826_01c = $schema->find_with_type('Gene',
+                                          { primary_identifier => 'SPBC1826.01c' });
+is ($spbc1826_01c->direct_annotations()->count(), 0);
+is ($spbc1826_01c->indirect_annotations()->count(), 1);
+is ($spbc1826_01c->all_annotations(include_with => 1)->count(), 1);
 
 my $spcc63_05 = $schema->find_with_type('Gene',
                                { primary_identifier => 'SPCC63.05' });

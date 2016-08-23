@@ -457,29 +457,25 @@ sub validate_curs
   return @res;
 }
 
-=head2 update_metadata
+=head2 update_all_statuses
 
- Usage   : Canto::Track::update_metadata($config);
- Function: Set missing or out of date curs metadata.  Currently sets the
-           session_created_timestamp
+ Usage   : Canto::Track::update_all_statuses($config);
+ Function: Update statuses for all sessions via the status adaptor
  Args    : $config - the Canto::Config object
  Return  : Nothing
 
 =cut
 
-sub update_metadata
+sub update_all_statuses
 {
   my $config = shift;
 
   my $state = Canto::Curs::State->new(config => $config);
-
   my $track_schema = Canto::TrackDB->new(config => $config);
 
   my $iter = Canto::Track::curs_iterator($config, $track_schema);
 
   while (my ($curs, $cursdb) = $iter->()) {
-    $state->set_metadata($cursdb, Canto::Curs::State::SESSION_CREATED_TIMESTAMP_KEY(),
-                         $curs->creation_date());
     $state->store_statuses($cursdb);
   }
 }

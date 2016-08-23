@@ -1,7 +1,7 @@
 <%args>
 $rs
 $config_name
-$numrows => 20
+$numrows => 100
 $page => 1
 @column_confs => ();
 $order_by => undef

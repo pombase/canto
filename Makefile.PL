@@ -61,7 +61,7 @@ requires 'Email::Simple';
 requires 'File::Basename';
 requires 'File::Copy::Recursive';
 requires 'File::Touch';
-requires 'GO::Parser';
+requires 'PomBase::Chobo' => '0.010';
 requires 'Getopt::Long';
 requires 'HTML::HTML5::Builder';
 requires 'HTML::Mason';
