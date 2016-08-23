@@ -167,8 +167,6 @@ sub allele_from_json
 
   my %search_args = (
     type => $allele_type,
-    description => $description || undef,
-    name => $name,
     gene => $gene_id,
   );
 
@@ -176,7 +174,9 @@ sub allele_from_json
     ->search({ %search_args });
 
   while (defined (my $allele = $allele_rs->next())) {
-    if (($allele->expression() // '') eq ($expression // '')) {
+    if (($allele->name() // '') eq ($name // '') &&
+        ($allele->description() // '') eq ($description // '') &&
+        ($allele->expression() // '') eq ($expression // '')) {
       return $allele;
     }
   }
@@ -195,7 +195,9 @@ sub allele_from_json
   my %create_args = (
     primary_identifier => $new_primary_identifier,
     %search_args,
-    expression => $expression,
+    name => $name || undef,
+    description => $description || undef,
+    expression => $expression || undef,
   );
 
   if ($allele_type =~ /_/) {

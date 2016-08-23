@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 9;
 
 use Canto::TestUtil;
 use Canto::Curs::AlleleManager;
@@ -51,3 +51,28 @@ my $existing_allele = $allele_manager->allele_from_json(
 
 is ($existing_allele->primary_identifier(), $existing_allele_identifier);
 
+
+my $no_name_allele = $allele_manager->allele_from_json(
+  {
+    type => 'partial deletion, amino acid',
+    name => '',
+    description => '',
+    expression => '',
+    gene_id => $SPBC1826_01c->gene_id()
+  },
+  'aaaa0007');
+
+ok (!defined $no_name_allele->name());
+ok (!defined $no_name_allele->description());
+ok (!defined $no_name_allele->expression());
+
+# check that undef and '' and both stored and compared as undef
+my $no_name_allele_check = $allele_manager->allele_from_json(
+  {
+    type => 'partial deletion, amino acid',
+    gene_id => $SPBC1826_01c->gene_id()
+  },
+  'aaaa0007');
+
+ok ($no_name_allele_check->allele_id() > 0);
+is ($no_name_allele_check->allele_id(), $no_name_allele->allele_id());
