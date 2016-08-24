@@ -1,4 +1,4 @@
-<tbody ng-mouseover="setSelected($event)"
+<tbody ng-mouseover="mouseOver($event)"
     ng-class="{ selected: isSelected() }">
   <tr>
   <td>
@@ -28,6 +28,19 @@
     <a href="{{detailsUrl}}">
       <span style="white-space: nowrap">Details ...</span>
     </a>
+  </td>
+  <td style="border: 0px; background-color: white;">
+    <div ng-if="navigateOnClick == 'false'">
+      <img ng-show="!isSelected()" ng-src="{{app_static_path + '/images/right_triangle.png'}}"></img>
+    </div>
+    <div ng-if="isSelected()" class="curs-genotype-list-row-actions">
+      <img style="position: absolute; right: -20px; padding: 4px; padding-left: 10px;"
+           ng-click="clearSelection()" ng-src="{{closeIconPath}}"></img>
+      <genotype-list-row-links genotypes="genotypes" genotype-id="genotype.genotype_id" annotation-count="{{annotation_count}}">
+      </genotype-list-row-links>
+    </div>
+  </td>
+  </tr>
   </tr>
   <tr ng-repeat="currentAllele in otherAlleles">
     <td>

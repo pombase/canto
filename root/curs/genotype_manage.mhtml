@@ -5,21 +5,38 @@ $read_only_curs => 0
 </%args>
 
 <div ng-controller="GenotypeManageCtrl"
-     id="curs-genotype-manage" class="genotype-list">
+     id="curs-genotype-manage" class="genotype-list ng-cloak">
   <div>
   <div class="row">
 % if (!$read_only_curs) {
+    <div ng-if="!data.editingGenotype" class="col-sm-6 col-md-6">
     <div class="curs-top-help">
-Add view and edit genotypes
+Add, view and edit genotypes
     </div>
-    <div class="col-sm-6 col-md-6">
         <div class="feature-list-action">
-          <a class="btn btn-primary" href="<% $start_path . '/feature/genotype/add' %>">Add a genotype ...</a>
+          <a class="btn btn-primary" ng-click="addGenotype()" href="#">Add a genotype ...</a>
         </div>
+    </div>
+    <div ng-if="data.editingGenotype" class="col-sm-12 col-md-12">
+      <div class="curs-box">
+        <div class="curs-box-title">
+Specify alleles of genes from the list, until the new genotype is complete
+        </div>
+        <div class="curs-box-body">
+          <genotype-edit ng-if="data.editGenotypeId == null"
+                         cancel-callback="cancelEdit()" stored-callback="storedCallback(genotypeId)">
+          </genotype-edit>
+          <genotype-edit ng-if="data.editGenotypeId != null"
+                         edit-or-duplicate="{{data.editOrDuplicate}}"
+                         genotype-id="{{data.editGenotypeId}}"
+                         cancel-callback="cancelEdit()" stored-callback="storedCallback(genotypeId)">
+          </genotype-edit>
+        </div>
+      </div>
     </div>
   </div>
 % }
-  <div class="row">
+  <div ng-if="!data.editingGenotype" class="ng-cloak row">
     <div class="col-sm-12 col-md-12">
       <div class="ng-cloak">
         <div ng-show="data.waitingForServer">
@@ -34,7 +51,7 @@ Mouse over genotypes for more actions
 
           <genotype-list-view genotype-list="data.genotypes"
                               navigate-on-click="false"
-                              initial-selected-genotype-id="{{data.selectedGenotypeIdFromPath}}">
+                              selected-genotype-id="data.selectedGenotypeId">
           </genotype-list-view>
         </div>
         <div ng-show="data.genotypes.length == 0">
@@ -49,8 +66,6 @@ No genotypes in this session.  Try adding one.
       </div>
     </div>
     </div>
-  </div>
-  </div>
   </div>
 </div>
 

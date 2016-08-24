@@ -369,17 +369,17 @@ table.list tr td, table.curs-genotype-list td {
   font-weight: bold;
 }
 
-#curs-genotype-list-row-actions {
+.curs-genotype-list-row-actions {
   border: 2px solid #bbb;
   padding: 3px;
   font-size: 90%;
   z-index: 100;
   position: absolute;
-  overflow: auto;
+  overflow: visible;
   background-color: white;
 }
 
-#curs-genotype-list-row-actions .genotype-list-row-links {
+.curs-genotype-list-row-actions .genotype-list-row-links {
   margin-left: 5px;
 }
 
@@ -388,7 +388,7 @@ table.list tr td, table.curs-genotype-list td {
   padding: 2px;
 }
 
-#curs-genotype-list-row-actions .genotype-alleles, #curs-genotype-list-row-actions .genotype-list-row-links {
+.curs-genotype-list-row-actions .genotype-alleles, #curs-genotype-list-row-actions .genotype-list-row-links {
   display: inline-block;
   vertical-align: top;
 }

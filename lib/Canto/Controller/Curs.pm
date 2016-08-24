@@ -1409,28 +1409,6 @@ sub feature_view : Chained('feature') PathPart('view')
   $st->{template} = "curs/${feature_type}_page.mhtml";
 }
 
-sub feature_add : Chained('feature') PathPart('add')
-{
-  my ($self, $c) = @_;
-
-  my $st = $c->stash();
-
-  $st->{show_title} = 1;
-
-  my $feature_type = $st->{feature_type};
-
-  if ($feature_type eq 'genotype') {
-    _set_allele_select_stash($c);
-  }
-
-  $st->{annotation_count} = 0;
-
-  $st->{edit_or_duplicate} = 'edit';
-
-  $st->{title} = "Add a $feature_type";
-  $st->{template} = "curs/${feature_type}_edit.mhtml";
-}
-
 sub _feature_edit_helper
 {
   my ($self, $c, $edit_or_duplicate, $genotype_id) = @_;
@@ -1619,7 +1597,7 @@ sub genotype_store : Chained('feature') PathPart('store')
         $c->stash->{json_data} = {
           status => "existing",
           genotype_display_name => $existing_genotype->display_name(),
-          location => $st->{curs_root_uri} . "/genotype_manage#/select/" . $existing_genotype->genotype_id(),
+          genotype_id => $existing_genotype->genotype_id(),
         };
       } else {
         my $guard = $schema->txn_scope_guard();
@@ -1634,7 +1612,7 @@ sub genotype_store : Chained('feature') PathPart('store')
         $c->stash->{json_data} = {
           status => "success",
           genotype_display_name => $genotype->display_name(),
-          location => $st->{curs_root_uri} . "/genotype_manage#/select/" . $genotype->genotype_id(),
+          genotype_id => $genotype->genotype_id(),
         };
       }
     } catch {
