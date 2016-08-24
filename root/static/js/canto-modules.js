@@ -2941,6 +2941,8 @@ var genotypeEdit =
             genotypeName: null,
             genotypeBackground: null,
           };
+
+          $scope.wildTypeCheckPasses = true;
         };
 
         $scope.reset();
@@ -2981,8 +2983,49 @@ var genotypeEdit =
                               return newName;
                             }).join(" ");
                         });
+
+                        $scope.wildTypeCheckPasses = $scope.checkWildtypeExpression();
                       },
                       true);
+
+        // check for endogenous wild types allele where there isn't a
+        // non-endogenous wild type allele of the same gene
+        // See: https://github.com/pombase/canto/issues/797
+        $scope.checkWildtypeExpression = function() {
+          var wildTypeStates = {};
+
+          $.map($scope.alleles,
+                function(allele) {
+                  if (allele.type != 'wild type') {
+                    return;
+                  }
+                  var currentState = wildTypeStates[allele.gene_id];
+
+                  if (currentState == 'seen_non_wt_product_level') {
+                    return;
+                  }
+
+                  if (allele.expression != 'Wild type product level')  {
+                    wildTypeStates[allele.gene_id] = 'seen_non_wt_product_level';
+                    return;
+                  }
+
+                  if (allele.expression == 'Wild type product level') {
+                    wildTypeStates[allele.gene_id] = 'seen_wt_product_level';
+                  }
+                });
+
+          var wildTypeCheckPasses = true;
+
+          $.each(wildTypeStates,
+                 function(idx, state) {
+                   if (state == 'seen_wt_product_level') {
+                     wildTypeCheckPasses = false;
+                   }
+                 });
+
+          return wildTypeCheckPasses;
+        };
 
         $scope.store = function() {
           var result =
@@ -3083,7 +3126,7 @@ var genotypeEdit =
         };
 
         $scope.isValid = function() {
-          return $scope.alleles.length > 0;
+          return $scope.alleles.length > 0 && $scope.wildTypeCheckPasses;
         };
       }
     }

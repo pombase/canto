@@ -25,6 +25,11 @@
             Note: this genotype has {{data.annotationCount}} existing annotations
           </div>
         </div>
+        <div ng-hide="wildTypeCheckPasses" class="curs-right-info-message">
+          A wild type allele with wild type product level is only valid in a
+          genotype that has a wild type allele of the same gene with non
+          wild type product level (eg. Overexpression or Knockdown)
+        </div>
       </div>
     </div>
     <div class="row">
@@ -98,7 +103,7 @@
       </div>
     </div>
     <button type="submit" class="btn btn-primary curs-finish-button"
-            title="{{ isValid() ? 'Add genotype' : 'At least one allele for each gene is required' }}"
+            title="{{ isValid() ? 'Store changes ' : (wildTypeCheckPasses ? 'At least one allele for each gene is required' : 'Wild type allele needs a non wild type product level') }}"
             ng-click="store()" ng-disabled="!isValid()">Finish</button>
     <button type="submit" class="btn btn-warning curs-finish-button"
             ng-click="cancel()">Cancel</button>
