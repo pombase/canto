@@ -354,11 +354,21 @@ table.list td, table.curs-genotype-list td {
   vertical-align: top;
 }
 
-table.list tr td, table.curs-genotype-list td {
+table.list tr td {
   border-width: 1px;
   padding: 3px;
   border-style: solid;
   border-color: #bbb;
+}
+table.curs-genotype-list td {
+  border-right: 1px solid #bbb;
+  padding: 3px;
+}
+table.curs-genotype-list tbody {
+  border-bottom: 1px solid #bbb;
+  border-left: 1px solid #bbb;
+  border-top: 1px solid #bbb;
+  padding: 3px;
 }
 
 .annotation-stats table.list tr th {
