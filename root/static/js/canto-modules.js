@@ -2790,7 +2790,7 @@ function makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed)
 
 
 var genePageCtrl =
-  function($scope, $modal, toaster, $http) {
+  function($scope, $modal, toaster, $http, CantoGlobals) {
     $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {
       var editInstance = makeAlleleEditInstance($modal,
                                                 {
@@ -2800,12 +2800,19 @@ var genePageCtrl =
                                                 });
 
       editInstance.result.then(function (alleleData) {
-        storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], true);
+        var storePromise =
+          storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], true);
+
+        storePromise.then(function(result) {
+          window.location.href =
+            CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+        });
       });
     };
   };
 
-canto.controller('GenePageCtrl', ['$scope', '$modal', 'toaster', '$http', genePageCtrl]);
+canto.controller('GenePageCtrl', ['$scope', '$modal', 'toaster', '$http', 'CantoGlobals',
+                                  genePageCtrl]);
 
 
 var singleGeneAddDialogCtrl =
