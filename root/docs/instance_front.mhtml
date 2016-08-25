@@ -39,10 +39,13 @@ by viewing our help pages:
 </div>
 % }
 
-% if (defined $config->{instance_front_mhtml}) {
-<& $config->{instance_front_mhtml} &>
-% }
 </div>
+
+% if (defined $config->{instance_front_mhtml}) {
+<div class="clearall">
+<& $config->{instance_front_mhtml} &>
+</div>
+% }
 
 <%init>
 my $config = $c->config();
