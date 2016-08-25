@@ -231,7 +231,7 @@ sub store_genotype_changes
   my $schema = $self->curs_schema();
 
   # store undef not ""
-  $name = undef if $name =~ /^\s*$/;
+  $name = undef if defined $name && $name =~ /^\s*$/;
 
   $genotype->name($name);
   $genotype->background($background);
