@@ -1,18 +1,17 @@
-<div class="row-fluid">
-  <div class="span11">
+<div>
     <h3>
-More about community curation
+About community curation
     </h3>
     <p>
-By curating your papers here, you will make your work more visible to the
-community. Your data will be available in PomBase and shared with
-other public databases. Read more about the motivation, background, and
-progress of the Fission Yeast Community Curation project at the
-<a href="<% $c->config()->{database_url} %>">PomBase web site</a>.
+Canto curation makes your work visible in PomBase and many other
+databases. Find out more on the Fission Yeast Community Curation page at
+<a href="http://www.pombase.org/community/fission-yeast-community-curation-project">PomBase</a>.
     </p>
-    <p>
-      <a href="<% $c->config()->{database_url} %>">PomBase</a> community
-      curation uses <a href="<% $c->config()->{canto_url} %>">Canto</a>
-    </p>
-  </div>
+    <a href="http://www.pombase.org/community/fission-yeast-community-curation-project">About</a>
+    |
+    <a href="http://curation.pombase.org/stats/annotation">Canto curator statistics</a> 
+    |
+    <a href="http://localhost:2080/demo/docs/index">Documentation</a>
+    |
+    <& /contact.mhtml, link_text => "Contact" &>
 </div>
