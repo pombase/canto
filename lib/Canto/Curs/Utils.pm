@@ -960,6 +960,16 @@ sub make_allele_display_name
 
   $description ||= $type || 'unknown';
 
+  if ($type =~ /^mutation/) {
+    if ($type =~ /amino acid/) {
+      $description =~ s/(^|,\s*)/${1}aa/g;
+    } else {
+      if ($type =~ /nucleotide/) {
+        $description =~ s/(^|,\s*)/${1}nt/g;
+      }
+    }
+  }
+
   return "$name($description)";
 }
 
