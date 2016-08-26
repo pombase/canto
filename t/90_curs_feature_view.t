@@ -75,7 +75,7 @@ test_psgi $app, sub {
 
     like ($res->content(), qr/cdc11-33 mot1-a1/);
     like ($res->content(), qr/cdc11-33\(unknown\)/);
-    like ($res->content(), qr/mot1-a1\(T11C\)/);
+    like ($res->content(), qr/mot1-a1\(aaT11C\)/);
     like ($res->content(), qr/Annotate normal or abnormal phenotypes of cells/);
 
     # re-fetch
