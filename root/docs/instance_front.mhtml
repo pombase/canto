@@ -1,5 +1,5 @@
 <!-- PAGE_TITLE: @@long_name@@ -->
-<!-- PAGE_SUBTITLE: Curate genetic and molecular data from your publications -->
+<!-- PAGE_SUBTITLE: Add your work to PomBase -->
 <!-- FLAGS: use_bootstrap -->
 
 <div class="row" style="padding-top: 20px">
@@ -42,10 +42,13 @@ by viewing our help pages:
 </div>
 
 </div>
+</div>
 
 % if (defined $config->{instance_front_mhtml}) {
-<div class="clearall">
+<div class="row"/>
+  <div class="col-sm-10 col-md-10">
 <& $config->{instance_front_mhtml} &>
+  </div>
 </div>
 % }
 
