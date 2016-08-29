@@ -302,7 +302,8 @@ check_new_annotations($dummy_alt_id);
                'with_or_from_display_name' => 'PomBase:SPBC2G2.01c',
                'with_or_from_identifier' => 'PomBase:SPBC2G2.01c',
                'with_gene_id' => undef,
-             });
+               'extension' => undef,
+            });
 }
 
 {
@@ -318,7 +319,7 @@ check_new_annotations($dummy_alt_id);
                'taxonid' => '4896',
                'annotation_type' => 'biological_process',
                'term_ontid' => 'GO:0006810',
-               'term_name' => 'transport [requires_direct_regulator] SPCC1739.11c',
+               'term_name' => 'transport',
                'with_or_from_identifier' => undef,
                'gene_identifier' => 'SPBC12C2.02c',
                'gene_name_or_identifier' => 'ste20',
@@ -338,6 +339,15 @@ check_new_annotations($dummy_alt_id);
                'with_or_from_display_name' => undef,
                'with_or_from_identifier' => undef,
                'with_gene_id' => undef,
+               'extension' =>
+                 [
+                   [
+                     {
+                       'relation' => 'requires_direct_regulator',
+                       'rangeValue' => 'CONFIGURE_IN_CANTO_DEPLOY.YAML:cdc11'
+                     }
+                   ]
+                 ],
            });
 }
 
@@ -392,7 +402,8 @@ check_new_annotations($dummy_alt_id);
                'genotype_id' => undef,
                'evidence_code' => 'UNK',
                'genotype_name_or_identifier' => 'cdc11-33 ssm4delta',
-               'annotation_type' => 'phenotype'
+               'annotation_type' => 'phenotype',
+               'extension' => undef,
              });
 }
 

@@ -637,7 +637,7 @@ cmp_deeply($annotation_res,
               'conditions' => [],
               'gene_identifier' => 'SPBC12C2.02c',
               'gene_product_form_id' => undef,
-              'term_name' => 'transport [requires_direct_regulator] SPCC1739.11c',
+              'term_name' => 'transport',
               'term_ontid' => 'GO:0006810',
               'annotation_id' => 2,
               'annotation_type' => 'biological_process',
@@ -650,6 +650,15 @@ cmp_deeply($annotation_res,
               'with_gene_id' => undef,
               'taxonid' => '4896',
               'is_not' => JSON::true,
+              'extension' =>
+                [
+                  [
+                    {
+                      'relation' => 'requires_direct_regulator',
+                      'rangeValue' => 'CONFIGURE_IN_CANTO_DEPLOY.YAML:cdc11'
+                    }
+                  ]
+                ],
             },
             {
               'evidence_code' => 'IMP',
@@ -673,7 +682,8 @@ cmp_deeply($annotation_res,
               'is_not' => JSON::false,
               'with_or_from_identifier' => 'PomBase:SPBC2G2.01c',
               'with_gene_id' => undef,
-              'taxonid' => '4896'
+              'taxonid' => '4896',
+              'extension' => undef,
             },
             {
               'term_ontid' => 'FYPO:0000133',
