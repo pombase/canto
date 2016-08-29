@@ -4849,6 +4849,8 @@ var userPubsLookupCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/user_pubs_lookup.html',
       controller: function($scope) {
+        var maxPubs = 10;
+
         $scope.emailAddress = $scope.initialEmailAddress;
 
         $scope.app_static_path = CantoGlobals.app_static_path;
@@ -4856,6 +4858,37 @@ var userPubsLookupCtrl =
         $scope.application_root = CantoGlobals.application_root;
 
         $scope.searching = false;
+        $scope.truncatedList = true;
+
+        $scope.updateLists = function() {
+          $scope.activeList = [];
+          $scope.completedList = [];
+
+          for (var i = 0; i < $scope.pubResults.length; i++) {
+            var pub = $scope.pubResults[i]
+            if ($.inArray(pub.status, activeSessionStatuses) >= 0) {
+              if (!$scope.truncatedList || $scope.activeList.length < maxPubs) {
+                $scope.activeList.push(pub);
+              }
+            } else {
+              if (!$scope.truncatedList || $scope.completedList.length < maxPubs) {
+                $scope.completedList.push(pub);
+              }
+            }
+
+            if ($scope.truncatedList) {
+              if ($scope.activeList.length == maxPubs &&
+                  $scope.completedList.length == maxPubs) {
+                break;
+              }
+            }
+          }
+        };
+
+        $scope.showAll = function() {
+          $scope.truncatedList = false;
+          $scope.updateLists();
+        };
 
         $scope.search = function() {
           $scope.pubResults = null;
@@ -4868,17 +4901,9 @@ var userPubsLookupCtrl =
             promise.success(function(data) {
               if (data.status == 'success') {
                 $scope.pubResults = data.pub_results;
-                $scope.activeList = [];
-                $scope.completedList = [];
-                $.map(data.pub_results,
-                      function(row) {
-                        if ($.inArray(row.status, activeSessionStatuses) >= 0) {
-                          $scope.activeList.push(row);
-                        } else {
-                          $scope.completedList.push(row);
-                        }
-                      });
-                $scope.count = data.count;
+                $scope.updateLists();
+                $scope.truncatedList =
+                  $scope.activeList.length + $scope.completedList.length < $scope.pubResults.length;
               }
             });
 
