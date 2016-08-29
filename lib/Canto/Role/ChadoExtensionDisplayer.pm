@@ -41,6 +41,41 @@ use Carp;
 use Moose::Role;
 
 requires 'schema';
+requires 'gene_lookup';
+
+sub _systematic_id_to_name
+{
+  my $self = shift;
+  my $systematic_id = shift;
+
+  if (!defined $systematic_id) {
+    return "UNKNOWN";
+  }
+
+  my $res = $self->gene_lookup()->lookup([$systematic_id]);
+
+  my $found = $res->{found};
+
+  if (!defined $found) {
+    warn "internal error: can't find gene for $systematic_id using gene_lookup";
+    return "UNKNOWN";
+  }
+
+  my @found_genes = grep {
+    $_->{primary_identifier} eq $systematic_id;
+  } @{$found};
+
+  if (@found_genes > 1) {
+    warn "internal error: lookup returned more than one gene for $systematic_id";
+  }
+
+  if (@found_genes == 0) {
+    warn "lookup failed for gene: $systematic_id using gene_lookup";
+    return "UNKNOWN";
+  }
+
+  return $found_genes[0]->{primary_name} || $systematic_id;
+}
 
 sub _id_of_cvterm
 {
@@ -110,6 +145,7 @@ sub make_gaf_extension
       my $rel_name = $1;
       if ($identifier !~ /:/) {
         # hopefully it's a gene name, or at least some sort of PomBase ID
+        $identifier = $self->_systematic_id_to_name($identifier);
         $identifier = "$db_name:$identifier";
       }
       push @parents, { rel_type_name => $rel_name,

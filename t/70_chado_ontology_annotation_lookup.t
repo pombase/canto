@@ -152,7 +152,7 @@ cmp_deeply($res->[0],
                [
                  [
                    {
-                     'rangeValue' => 'PomBaseTest:SPCC1739.11c',
+                     'rangeValue' => 'PomBaseTest:cdc11',
                      'relation' => 'requires_direct_regulator'
                    }
                  ]

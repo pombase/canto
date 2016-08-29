@@ -47,11 +47,23 @@ use feature "state";
 
 use Canto::Cache;
 
+has gene_lookup => (
+  is => 'ro',
+  lazy_build => 1
+);
+
 with 'Canto::Role::Configurable';
 with 'Canto::Chado::ChadoLookup';
 with 'Canto::Role::SimpleCache';
 with 'Canto::Role::ChadoFeatureCache';
 with 'Canto::Role::ChadoExtensionDisplayer';
+
+sub _build_gene_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'gene');
+}
 
 # if the $feature is an mRNA, return it's gene feature, otherwise return
 # the $feature
