@@ -57,6 +57,11 @@ sub lookup_by_curator_email
   my $self = shift;
 
   my $email_address = trim(shift);
+  my $max_results = shift;
+
+  if (!defined $max_results || $max_results == 0) {
+    $max_results = 100;
+  }
 
   my $config = $self->config();
 
@@ -70,6 +75,14 @@ sub lookup_by_curator_email
 
   my $count = $rs->count();
 
+  my %search_args = (
+    order_by => { -desc => ['pub_id'] },
+  );
+
+  if ($max_results > 0) {
+    $search_args{rows} = $max_results;
+  }
+
   return
     {
       results => [
@@ -81,10 +94,7 @@ sub lookup_by_curator_email
             status => $_->cursprops()->first()->value(),
           };
         } $rs->search({},
-                      {
-                        rows => 100,
-                        order_by => { -desc => ['pub_id'] },
-                      })->all()
+                      \%search_args)->all()
       ],
       count => $count,
     };

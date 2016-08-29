@@ -230,7 +230,7 @@ sub _pubs_results
   my $lookup = Canto::Track::get_adaptor($c->config(), 'pubs');
 
   if ($search_type eq 'by_curator_email') {
-    my $data = $lookup->lookup_by_curator_email($search_string);
+    my $data = $lookup->lookup_by_curator_email($search_string, -1);
 
     return {
       pub_results => $data->{results},
