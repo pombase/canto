@@ -13,7 +13,12 @@
     </span>
     <span ng-if="featureStatusFilter === 'existing' && annotations !== null && annotations.length > 0"
           class="title sect-title">
-      Existing annotations
+      <span ng-if="!alleleCountFilter">
+        Existing annotations
+      </span>
+      <span ng-if="alleleCountFilter">
+        Existing {{alleleCountFilter}} allele annotations
+      </span>
       <span ng-show="featureFilterDisplayName">
         for {{featureFilterDisplayName}}
       </span>
