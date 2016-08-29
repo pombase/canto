@@ -503,8 +503,7 @@ sub _process_existing_db_ontology
   my $gene_product_form_id = $row->{gene_product_form_id};
   my $ontology_name = $ontology_term->{ontology_name};
 
-  my $term_name =
-    $row->{ontology_term}->{extension_term_name} // $row->{ontology_term}->{term_name};;
+  my $term_name = $row->{ontology_term}->{term_name};;
 
   my $term_ontid = $ontology_term->{ontid};
 
@@ -576,6 +575,7 @@ sub _process_existing_db_ontology
     evidence_code => $evidence_code,
     status => 'existing',
     is_not => $is_not,
+    extension => $row->{extension},
   );
 
   if ($gene) {

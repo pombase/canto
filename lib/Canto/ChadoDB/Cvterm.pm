@@ -1643,6 +1643,21 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-04 16:45:42
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:u/RKQVQ6aNHYtPmTlLOh3g
 
+=head2 cvtermprops
+
+Type: has_many
+
+Related object: L<Bio::Chado::Schema::Result::Cv::Cvtermprop>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cvtermprops",
+  "Canto::ChadoDB::Cvtermprop",
+  { "foreign.cvterm_id" => "self.cvterm_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 
 =head2 db_accession
 

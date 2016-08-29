@@ -124,9 +124,18 @@ sub make_gaf_extension
              ||
            $a->{detail} cmp $b->{detail} } @parents;
 
+  my $extension_parts =
+    [
+      map {
+        {
+          relation => $_->{rel_type_name},
+          rangeValue => $_->{detail},
+        };
+      } @parents
+    ];
   my $extension_text = join ",", map { $_->{rel_type_name} . "(" . $_->{detail} . ")" } @parents;
 
-  return ($extension_text, $isa_parent_term);
+  return ([$extension_parts], $extension_text, $isa_parent_term);
 }
 
 1;
