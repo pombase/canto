@@ -4804,18 +4804,12 @@ var initiallyHiddenText =
         text: '@',
         linkLabel: '@',
         previewCharCount: '@',
-        dots: '@?',
       },
       restrict: 'E',
       replace: true,
       link: function($scope, elem) {
         $scope.previewChars = '';
         $scope.hidden = true;
-        if (typeof($scope.dots) == 'undefined') {
-          $scope.dots = '...';
-        } else {
-          $scope.dots = '';
-        }
 
         $scope.show = function() {
           $scope.hidden = false;
@@ -4832,16 +4826,14 @@ var initiallyHiddenText =
                             $scope.hidden = false;
                           }
                         }
-
                       });
       },
       template: '<span ng-show="trimmedText.length > 0">' +
         '<span ng-hide="hidden">{{trimmedText}}</span>' +
-        '<span ng-show="hidden">' +
-        '<span href="#" ng-show="previewChars.length > 0">{{previewChars}}' +
-        '<span ng-show="showDots">...</span></span>' +
-        '<a ng-click="show()" tooltip="{{trimmedText}}">' +
-        '&nbsp;<span style="font-weight: bold">{{linkLabel}}</span></a></span></span>',
+        '<span ng-show="hidden" tooltip="{{trimmedText}}">' +
+        '  <span ng-show="previewChars.length > 0">{{previewChars}}</span>' +
+        '  <a ng-click="show()">&nbsp;<span style="font-weight: bold">{{linkLabel}}</span></a>' +
+        '</span></span>',
     };
   };
 
