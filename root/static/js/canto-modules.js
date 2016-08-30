@@ -2041,7 +2041,7 @@ canto.directive('extensionDisplay', ['CantoGlobals', extensionDisplay]);
 
 
 var extensionOrGroupDisplay =
-  function(CantoGlobals) {
+  function(CantoGlobals, CantoService) {
     return {
       scope: {
         extension: '=',
@@ -2055,6 +2055,17 @@ var extensionOrGroupDisplay =
       templateUrl: app_static_path + 'ng_templates/extension_or_group_display.html',
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
+
+        $.map($scope.orGroup,
+              function(andGroup) {
+                if (andGroup.rangeType == 'Ontology') {
+                  CantoService.lookup('ontology', [andGroup.rangeValue], {})
+                    .then(function(result) {
+                      andGroup.rangeDisplayName = result.data.name;
+                    });
+                }
+              });
+
         $scope.deleteAndGroup = function(andGroup) {
           if ($scope.showDelete) {
             arrayRemoveOne($scope.orGroup, andGroup);
@@ -2067,7 +2078,8 @@ var extensionOrGroupDisplay =
     };
   };
 
-canto.directive('extensionOrGroupDisplay', ['CantoGlobals', extensionOrGroupDisplay]);
+canto.directive('extensionOrGroupDisplay',
+                ['CantoGlobals', 'CantoService', extensionOrGroupDisplay]);
 
 
 var ontologyWorkflowCtrl =
