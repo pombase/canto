@@ -883,7 +883,7 @@ var breadcrumbsDirective =
         $scope.render = function() {
           var html = '';
 
-          var i, termId, termDetails, makeLink, termDescription;
+          var i, termId, termDetails, makeLink, termText;
           var termHistory = CursStateService.termHistory;
           for (i = 0; i < termHistory.length; i++) {
             termId = termHistory[i];
@@ -893,9 +893,9 @@ var breadcrumbsDirective =
 
             termDetails = $scope.termDetails[termId];
             if (termDetails) {
-              termDescription = termDetails.name;
+              termText = termId + ' - ' + termDetails.name;
             } else {
-              termDescription = termId;
+              termText = termId;
             }
 
             if (makeLink) {
@@ -903,7 +903,8 @@ var breadcrumbsDirective =
                 "gotoTerm('" + termId + "'" + ')">';
             }
 
-            html += '<span title="' + termDescription + '">' + termId + '</span>';
+            html += '<initially-hidden-text text="' + termText + 
+              '" link-label="..." preview-char-count="40"></initially-hidden-text>';
 
             if (makeLink) {
               html += '</a>';
