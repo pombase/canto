@@ -28,7 +28,7 @@ Find out about community curation and the types of data that can be curated
 by viewing our help pages:
 </div>
 % if (!$config->{demo_mode}) {
-<div>
+<div style="padding: 10px 0 20px 0">
 <a href="<% $demo_url %>" class="btn btn-primary visit">Demo ...</a>
 <p>
   Or try the demo version of Canto:
