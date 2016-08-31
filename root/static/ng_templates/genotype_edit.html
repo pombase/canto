@@ -17,7 +17,8 @@
         </div>
       </div>
       <div class="col-sm-5 col-md-5">
-        <div ng-show="data.annotationCount > 0" class="curs-right-info-message">
+        <div ng-show="editOrDuplicate == 'edit' && data.annotationCount > 0"
+             class="curs-right-info-message">
           <div ng-show="data.annotationCount == 1">
             Note: this genotype has an existing annotation
           </div>
