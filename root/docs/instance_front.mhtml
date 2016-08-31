@@ -24,7 +24,7 @@ colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help 
 <a href="<% $c->uri_for('/docs/') %>" class="btn btn-primary visit">Visit ...</a>
 </div>
 <div>
-Find out about community curation and the types of data that can be curating
+Find out about community curation and the types of data that can be curated
 by viewing our help pages:
 </div>
 % if (!$config->{demo_mode}) {
