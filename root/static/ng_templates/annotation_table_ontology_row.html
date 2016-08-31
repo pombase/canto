@@ -90,13 +90,15 @@
   <td class="table-row-actions">
     <div ng-if="addLinks()">
       <div>
-        <a ng-click="edit()">Edit</a>
+        <a title="Edit this annotation" ng-click="edit()">Edit</a>
       </div>
       <div>
-        <a ng-click="duplicate()">Copy and edit</a>
+        <a title="Make copy of this annotation and then edit the details"
+           ng-click="duplicate()">Copy and edit</a>
       </div>
       <div>
-        <a confirm="Are you sure you want to delete this annotation?"
+        <a title="Delete this annotation"
+           confirm="Are you sure you want to delete this annotation?"
            ng-click="deleteAnnotation()">Delete</a>
       </div>
     </div>
