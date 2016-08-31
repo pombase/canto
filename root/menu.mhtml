@@ -6,13 +6,13 @@
      </div>
 % }
   </span>
-  <span class="btn-group" role="group">
-    <span class="dropdown">
-      <button class="btn btn-default dropdown-toggle" type="button"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+  <span class="btn-group">
+    <span uib-dropdown is-open="status.isopen">
+      <button id="canto-admin-menu" class="btn btn-default" uib-dropdown-toggle type="button">
         <span><span class="glyphicon glyphicon-cog"></span><span class="caret"></span> </span>
       </button>
-      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+      <ul class="dropdown-menu" uib-dropdown-menu role="menu"
+          aria-labelledby="canto-admin-menu">
         <li><a href="<% $c->uri_for('/track') %>">Admin pages</a></li>
         <li><a href="#"><advanced-mode-toggle></advanced-mode-toggle></a></li>
 % if ($c->user_exists()) {

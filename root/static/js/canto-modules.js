@@ -727,7 +727,7 @@ var cursSettingsService =
 canto.service('CursSettings', ['$http', '$timeout', '$q', cursSettingsService]);
 
 
-var helpIcon = function($modal, CantoGlobals, CantoConfig) {
+var helpIcon = function(CantoGlobals, CantoConfig) {
   return {
     scope: {
       key: '@',
@@ -763,12 +763,12 @@ var helpIcon = function($modal, CantoGlobals, CantoConfig) {
   };
 };
 
-canto.directive('helpIcon', ['$modal', 'CantoGlobals', 'CantoConfig', helpIcon]);
+canto.directive('helpIcon', ['CantoGlobals', 'CantoConfig', helpIcon]);
 
 
-function openSimpleDialog($modal, title, heading, message)
+function openSimpleDialog($uibModal, title, heading, message)
 {
-  return $modal.open({
+  return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/simple_dialog.html',
     controller: 'SimpleDialogCtrl',
     title: title,
@@ -787,16 +787,16 @@ function openSimpleDialog($modal, title, heading, message)
 }
 
 var simpleDialogCtrl =
-  function($scope, $modalInstance, args) {
+  function($scope, $uibModalInstance, args) {
     $scope.message = args.message;
 
     $scope.close = function () {
-      $modalInstance.dismiss('close');
+      $uibModalInstance.dismiss('close');
     };
   };
 
 canto.controller('SimpleDialogCtrl',
-                 ['$scope', '$modalInstance', 'args', simpleDialogCtrl]);
+                 ['$scope', '$uibModalInstance', 'args', simpleDialogCtrl]);
 
 
 var advancedModeToggle =
@@ -941,9 +941,9 @@ canto.directive('breadcrumbs', ['$compile', 'CursStateService', 'CantoService',
                                 breadcrumbsDirective]);
 
 
-function openSingleGeneAddDialog($modal)
+function openSingleGeneAddDialog($uibModal)
 {
-  return $modal.open({
+  return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/single_gene_add.html',
     controller: 'SingleGeneAddDialogCtrl',
     title: 'Add a new gene by name or identifier',
@@ -954,7 +954,7 @@ function openSingleGeneAddDialog($modal)
 }
 
 
-function featureChooserControlHelper($scope, $modal, CursGeneList,
+function featureChooserControlHelper($scope, $uibModal, CursGeneList,
                                      CursGenotypeList, toaster) {
   function getGenesFromServer() {
     CursGeneList.geneList().then(function(results) {
@@ -975,7 +975,7 @@ function featureChooserControlHelper($scope, $modal, CursGeneList,
   }
 
   $scope.openSingleGeneAddDialog = function() {
-    var modal = openSingleGeneAddDialog($modal);
+    var modal = openSingleGeneAddDialog($uibModal);
     modal.result.then(function () {
       getGenesFromServer();
     });
@@ -1004,7 +1004,7 @@ function featureChooserControlHelper($scope, $modal, CursGeneList,
 
 
 var multiFeatureChooser =
-  function($modal, CursGeneList, CursGenotypeList, toaster) {
+  function($uibModal, CursGeneList, CursGenotypeList, toaster) {
     return {
       scope: {
         featureType: '@',
@@ -1013,7 +1013,7 @@ var multiFeatureChooser =
       restrict: 'E',
       replace: true,
       controller: function($scope) {
-        featureChooserControlHelper($scope, $modal, CursGeneList,
+        featureChooserControlHelper($scope, $uibModal, CursGeneList,
                                     CursGenotypeList, toaster);
 
         $scope.toggleSelection = function toggleSelection(featureId) {
@@ -1035,12 +1035,12 @@ var multiFeatureChooser =
   };
 
 canto.directive('multiFeatureChooser',
-                ['$modal', 'CursGeneList', 'CursGenotypeList', 'toaster',
+                ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'toaster',
                  multiFeatureChooser]);
 
 
 var featureChooser =
-  function($modal, CursGeneList, CursGenotypeList, toaster) {
+  function($uibModal, CursGeneList, CursGenotypeList, toaster) {
     return {
       scope: {
         featureType: '@',
@@ -1051,7 +1051,7 @@ var featureChooser =
       restrict: 'E',
       replace: true,
       controller: function($scope) {
-        featureChooserControlHelper($scope, $modal, CursGeneList, CursGenotypeList,
+        featureChooserControlHelper($scope, $uibModal, CursGeneList, CursGenotypeList,
                                     toaster);
       },
       templateUrl: app_static_path + 'ng_templates/feature_chooser.html',
@@ -1059,7 +1059,7 @@ var featureChooser =
   };
 
 canto.directive('featureChooser',
-                ['$modal', 'CursGeneList', 'CursGenotypeList', 'toaster',
+                ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'toaster',
                  featureChooser]);
 
 
@@ -1170,7 +1170,7 @@ canto.directive('externalTermLinks',
 
 
 var ontologyTermConfirm =
-  function($modal, toaster, CantoService, CantoConfig, CantoGlobals) {
+  function($uibModal, toaster, CantoService, CantoConfig, CantoGlobals) {
     return {
       scope: {
         annotationType: '=',
@@ -1230,7 +1230,7 @@ var ontologyTermConfirm =
 
         $scope.openTermSuggestDialog =
           function(featureDisplayName) {
-            var suggestInstance = $modal.open({
+            var suggestInstance = $uibModal.open({
               templateUrl: app_static_path + 'ng_templates/term_suggest.html',
               controller: 'TermSuggestDialogCtrl',
               title: 'Suggest a new term for ' + featureDisplayName,
@@ -1255,7 +1255,7 @@ var ontologyTermConfirm =
 
 
 canto.directive('ontologyTermConfirm',
-                ['$modal', 'toaster', 'CantoService', 'CantoConfig', 'CantoGlobals',
+                ['$uibModal', 'toaster', 'CantoService', 'CantoConfig', 'CantoGlobals',
                  ontologyTermConfirm]);
 
 
@@ -1279,8 +1279,8 @@ canto.directive('ontologyTermCommentTransfer',
                 ['CantoService', ontologyTermCommentTransfer]);
 
 
-function openExtensionRelationDialog($modal, extensionRelation, relationConfig) {
-  return $modal.open({
+function openExtensionRelationDialog($uibModal, extensionRelation, relationConfig) {
+  return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/extension_relation_dialog.html',
     controller: 'ExtensionRelationDialogCtrl',
     title: 'Edit extension relation',
@@ -1343,28 +1343,28 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
 
 
 var extensionBuilderDialogCtrl =
-  function($scope, $modalInstance, args) {
+  function($scope, $uibModalInstance, args) {
     $scope.data = args;
     $scope.extensionBuilderIsValid = false;
 
     $scope.ok = function () {
-      $modalInstance.close({
+      $uibModalInstance.close({
         extension: $scope.data.extension,
       });
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   };
 
 canto.controller('ExtensionBuilderDialogCtrl',
-                 ['$scope', '$modalInstance', 'args',
+                 ['$scope', '$uibModalInstance', 'args',
                  extensionBuilderDialogCtrl]);
 
 
-function openExtensionBuilderDialog($modal, extension, termId, featureDisplayName) {
-  return $modal.open({
+function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplayName) {
+  return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/extension_builder_dialog.html',
     controller: 'ExtensionBuilderDialogCtrl',
     title: 'Edit extension',
@@ -1457,7 +1457,7 @@ function parseExtensionString(extensionString) {
 }
 
 var extensionManualEditDialogCtrl =
-  function($scope, $modalInstance, args) {
+  function($scope, $uibModalInstance, args) {
     $scope.currentError = "";
 
     $scope.editExtension =
@@ -1473,23 +1473,23 @@ var extensionManualEditDialogCtrl =
     };
 
     $scope.ok = function () {
-      $modalInstance.close({
+      $uibModalInstance.close({
         extension: $scope.editExtension,
       });
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   };
 
 canto.controller('ExtensionManualEditDialogCtrl',
-                 ['$scope', '$modalInstance', 'args',
+                 ['$scope', '$uibModalInstance', 'args',
                   extensionManualEditDialogCtrl]);
 
 
-function openExtensionManualEditDialog($modal, extension, matchingConfigurations) {
-  return $modal.open({
+function openExtensionManualEditDialog($uibModal, extension, matchingConfigurations) {
+  return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/extension_manual_edit_dialog.html',
     controller: 'ExtensionManualEditDialogCtrl',
     title: 'Edit extension as text',
@@ -1543,7 +1543,7 @@ canto.directive('extensionManualEdit',
 
 
 var extensionOrGroupBuilder =
-  function($modal, $q, CantoGlobals, CantoConfig, CantoService) {
+  function($uibModal, $q, CantoGlobals, CantoConfig, CantoService) {
     return {
       scope: {
         orGroup: '=',
@@ -1716,7 +1716,7 @@ var extensionOrGroupBuilder =
           };
 
           var editPromise =
-            openExtensionRelationDialog($modal, editExtensionRelation, relationConfig);
+            openExtensionRelationDialog($uibModal, editExtensionRelation, relationConfig);
 
           editPromise.then(function(result) {
             $scope.orGroup.push(result.extensionRelation);
@@ -1727,7 +1727,7 @@ var extensionOrGroupBuilder =
   };
 
 canto.directive('extensionOrGroupBuilder',
-                ['$modal', '$q', 'CantoGlobals', 'CantoConfig', 'CantoService',
+                ['$uibModal', '$q', 'CantoGlobals', 'CantoConfig', 'CantoService',
                  extensionOrGroupBuilder]);
 
 function extensionIsEmpty(extension) {
@@ -1744,7 +1744,7 @@ function extensionIsEmpty(extension) {
 }
 
 var extensionBuilder =
-  function($modal, $q, CantoGlobals, CantoConfig, CantoService) {
+  function($uibModal, $q, CantoGlobals, CantoConfig, CantoService) {
     return {
       scope: {
         extension: '=',
@@ -1813,7 +1813,7 @@ var extensionBuilder =
 
         $scope.manualEdit = function() {
           var editPromise =
-            openExtensionManualEditDialog($modal, $scope.extension, $scope.matchingConfigurations);
+            openExtensionManualEditDialog($uibModal, $scope.extension, $scope.matchingConfigurations);
 
           editPromise.then(function(result) {
             $scope.extension = result.extension;
@@ -1833,12 +1833,12 @@ var extensionBuilder =
   };
 
 canto.directive('extensionBuilder',
-                ['$modal', '$q', 'CantoGlobals', 'CantoConfig', 'CantoService',
+                ['$uibModal', '$q', 'CantoGlobals', 'CantoConfig', 'CantoService',
                  extensionBuilder]);
 
 
 var extensionRelationDialogCtrl =
-  function($scope, $modalInstance, args) {
+  function($scope, $uibModalInstance, args) {
     $scope.data = args;
     $scope.extensionRelation = args.extensionRelation;
     $scope.relationConfig = args.relationConfig;
@@ -1861,7 +1861,7 @@ var extensionRelationDialogCtrl =
         $scope.extensionRelation.rangeValue =
           $scope.extensionRelation.rangeValue.replace(/%\s*$/, '');
       }
-      $modalInstance.close({
+      $uibModalInstance.close({
         extensionRelation: $scope.extensionRelation,
       });
     };
@@ -1871,17 +1871,17 @@ var extensionRelationDialogCtrl =
     }
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   };
 
 canto.controller('ExtensionRelationDialogCtrl',
-                 ['$scope', '$modalInstance', 'args',
+                 ['$scope', '$uibModalInstance', 'args',
                  extensionRelationDialogCtrl]);
 
-function openTermConfirmDialog($modal, termId, initialState, featureType)
+function openTermConfirmDialog($uibModal, termId, initialState, featureType)
 {
-  return $modal.open({
+  return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/term_confirm.html',
     controller: 'TermConfirmDialogCtrl',
     title: 'Confirm term',
@@ -1903,7 +1903,7 @@ function openTermConfirmDialog($modal, termId, initialState, featureType)
 
 
 var extensionRelationEdit =
-  function(CantoService, CursGeneList, toaster, $modal) {
+  function(CantoService, CursGeneList, toaster, $uibModal) {
     return {
       scope: {
         extensionRelation: '=',
@@ -1928,7 +1928,7 @@ var extensionRelationEdit =
           $scope.extensionRelation.rangeDisplayName = termName;
 
           if (searchString && !searchString.match(/^".*"$/) && searchString !== termId) {
-            var termConfirm = openTermConfirmDialog($modal, termId);
+            var termConfirm = openTermConfirmDialog($uibModal, termId);
 
             termConfirm.result.then(function(result) {
               $scope.extensionRelation.rangeValue = result.newTermId;
@@ -2024,7 +2024,7 @@ var extensionRelationEdit =
   };
 
 canto.directive('extensionRelationEdit',
-                ['CantoService', 'CursGeneList', 'toaster', '$modal',
+                ['CantoService', 'CursGeneList', 'toaster', '$uibModal',
                  extensionRelationEdit]);
 
 
@@ -2609,7 +2609,7 @@ canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameCo
 
 
 var alleleEditDialogCtrl =
-  function($scope, $modalInstance, CantoConfig, args) {
+  function($scope, $uibModalInstance, CantoConfig, args) {
     $scope.config = {
       endogenousWildtypeAllowed: args.endogenousWildtypeAllowed,
     };
@@ -2709,21 +2709,21 @@ var alleleEditDialogCtrl =
 
     $scope.ok = function () {
       copyObject($scope.alleleData, args.allele);
-      $modalInstance.close(args.allele);
+      $uibModalInstance.close(args.allele);
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$modalInstance',
+                 ['$scope', '$uibModalInstance',
                   'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
 
 var termSuggestDialogCtrl =
-  function($scope, $modalInstance) {
+  function($scope, $uibModalInstance) {
     $scope.suggestion = {
       name: '',
       definition: '',
@@ -2750,16 +2750,16 @@ var termSuggestDialogCtrl =
     };
 
     $scope.ok = function () {
-      $modalInstance.close($scope.dialogToData($scope));
+      $uibModalInstance.close($scope.dialogToData($scope));
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   };
 
 canto.controller('TermSuggestDialogCtrl',
-                 ['$scope', '$modalInstance',
+                 ['$scope', '$uibModalInstance',
                  termSuggestDialogCtrl]);
 
 
@@ -2787,9 +2787,9 @@ function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_back
   return result;
 }
 
-function makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed)
+function makeAlleleEditInstance($uibModal, allele, endogenousWildtypeAllowed)
 {
-  return $modal.open({
+  return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/allele_edit.html',
     controller: 'AlleleEditDialogCtrl',
     title: 'Add an allele for this phenotype',
@@ -2809,9 +2809,9 @@ function makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed)
 
 
 var genePageCtrl =
-  function($scope, $modal, toaster, $http, CantoGlobals) {
+  function($scope, $uibModal, toaster, $http, CantoGlobals) {
     $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {
-      var editInstance = makeAlleleEditInstance($modal,
+      var editInstance = makeAlleleEditInstance($uibModal,
                                                 {
                                                   gene_display_name: gene_display_name,
                                                   gene_systematic_id: gene_systematic_id,
@@ -2830,12 +2830,12 @@ var genePageCtrl =
     };
   };
 
-canto.controller('GenePageCtrl', ['$scope', '$modal', 'toaster', '$http', 'CantoGlobals',
+canto.controller('GenePageCtrl', ['$scope', '$uibModal', 'toaster', '$http', 'CantoGlobals',
                                   genePageCtrl]);
 
 
 var singleGeneAddDialogCtrl =
-  function($scope, $modalInstance, $q, toaster, CantoService, Curs) {
+  function($scope, $uibModalInstance, $q, toaster, CantoService, Curs) {
     $scope.gene = {
       searchIdentifier: '',
       message: null,
@@ -2906,7 +2906,7 @@ var singleGeneAddDialogCtrl =
             toaster.pop('info', $scope.gene.primaryIdentifier +
                         ' is already added to this session');
           }
-          $modalInstance.close({
+          $uibModalInstance.close({
             new_gene_id: data.gene_id,
           });
         }
@@ -2917,16 +2917,16 @@ var singleGeneAddDialogCtrl =
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   };
 
 canto.controller('SingleGeneAddDialogCtrl',
-                 ['$scope', '$modalInstance', '$q', 'toaster', 'CantoService', 'Curs',
+                 ['$scope', '$uibModalInstance', '$q', 'toaster', 'CantoService', 'Curs',
                  singleGeneAddDialogCtrl]);
 
 var genotypeEdit =
-  function($http, $modal, CantoConfig, CantoGlobals, Curs, toaster) {
+  function($http, $uibModal, CantoConfig, CantoGlobals, Curs, toaster) {
     return {
       scope: {
         editOrDuplicate: '@',
@@ -3129,7 +3129,7 @@ var genotypeEdit =
                   });
 
             var editInstance =
-                makeAlleleEditInstance($modal, allele, endogenousWildtypeAllowed);
+                makeAlleleEditInstance($uibModal, allele, endogenousWildtypeAllowed);
 
             editInstance.result.then(function (editedAllele) {
               if ($scope.findExistingAlleleIdx(editedAllele) < 0) {
@@ -3141,7 +3141,7 @@ var genotypeEdit =
           };
 
         $scope.openSingleGeneAddDialog = function() {
-          var modal = openSingleGeneAddDialog($modal);
+          var modal = openSingleGeneAddDialog($uibModal);
           modal.result.then(function () {
             $scope.getGenesFromServer();
           });
@@ -3159,7 +3159,7 @@ var genotypeEdit =
   };
 
 canto.directive('genotypeEdit',
-                ['$http', '$modal', 'CantoConfig', 'CantoGlobals', 'Curs', 'toaster',
+                ['$http', '$uibModal', 'CantoConfig', 'CantoGlobals', 'Curs', 'toaster',
                  genotypeEdit]);
 
 
@@ -3249,7 +3249,7 @@ canto.controller('GenotypeManageCtrl',
                  GenotypeManageCtrl]);
 
 var geneSelectorCtrl =
-  function(CursGeneList, $modal, toaster) {
+  function(CursGeneList, $uibModal, toaster) {
     return {
       scope: {
         selectedGenes: '=',
@@ -3273,7 +3273,7 @@ var geneSelectorCtrl =
         getGenesFromServer();
 
         $scope.addAnotherGene = function() {
-          var modal = openSingleGeneAddDialog($modal);
+          var modal = openSingleGeneAddDialog($uibModal);
           modal.result.then(function () {
             getGenesFromServer();
           });
@@ -3291,7 +3291,7 @@ var geneSelectorCtrl =
   };
 
 canto.directive('geneSelector',
-                ['CursGeneList', '$modal', 'toaster',
+                ['CursGeneList', '$uibModal', 'toaster',
                   geneSelectorCtrl]);
 
 var genotypeSearchCtrl =
@@ -3713,7 +3713,7 @@ function SubmitToCuratorsCtrl($scope) {
 canto.controller('SubmitToCuratorsCtrl', SubmitToCuratorsCtrl);
 
 var termConfirmDialogCtrl =
-  function($scope, $modalInstance, CantoService, CantoGlobals, args) {
+  function($scope, $uibModalInstance, CantoService, CantoGlobals, args) {
     $scope.app_static_path = CantoGlobals.app_static_path;
 
     $scope.data = {
@@ -3757,18 +3757,18 @@ var termConfirmDialogCtrl =
     };
 
     $scope.finish = function() {
-      $modalInstance.close({ newTermId: $scope.data.termDetails.id,
+      $uibModalInstance.close({ newTermId: $scope.data.termDetails.id,
                              newTermName: $scope.data.termDetails.name });
     };
 
     $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   };
 
 
 canto.controller('TermConfirmDialogCtrl',
-                 ['$scope', '$modalInstance', 'CantoService', 'CantoGlobals', 'args',
+                 ['$scope', '$uibModalInstance', 'CantoService', 'CantoGlobals', 'args',
                   termConfirmDialogCtrl]);
 
 
@@ -3814,7 +3814,7 @@ canto.directive('termChildrenDisplay',
 
 
 var annotationEditDialogCtrl =
-  function($scope, $modal, $q, $modalInstance, AnnotationProxy,
+  function($scope, $uibModal, $q, $uibModalInstance, AnnotationProxy,
            AnnotationTypeConfig, CantoConfig,
            CursSessionDetails, CantoService, CantoGlobals, toaster, args) {
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
@@ -3925,7 +3925,7 @@ var annotationEditDialogCtrl =
         $scope.annotation.term_name = termName;
 
         if (!searchString.match(/^".*"$/) && searchString !== termId) {
-          var termConfirm = openTermConfirmDialog($modal, termId, 'definition',
+          var termConfirm = openTermConfirmDialog($uibModal, termId, 'definition',
                                                   $scope.annotationType.feature_type);
 
           termConfirm.result.then(function(result) {
@@ -3937,7 +3937,7 @@ var annotationEditDialogCtrl =
 
     $scope.editExtension = function() {
       var editPromise =
-        openExtensionBuilderDialog($modal, $scope.annotation.extension,
+        openExtensionBuilderDialog($uibModal, $scope.annotation.extension,
                                    $scope.annotation.term_ontid,
                                    $scope.currentFeatureDisplayName);
 
@@ -3948,7 +3948,7 @@ var annotationEditDialogCtrl =
 
     $scope.manualEdit = function() {
       var editPromise =
-        openExtensionManualEditDialog($modal, $scope.annotation.extension, $scope.matchingConfigurations);
+        openExtensionManualEditDialog($uibModal, $scope.annotation.extension, $scope.matchingConfigurations);
 
       editPromise.then(function(result) {
         $scope.annotation.extension = result.extension;
@@ -3966,7 +3966,7 @@ var annotationEditDialogCtrl =
         showCloseButton: false
       });
       q.then(function(annotation) {
-        $modalInstance.close(annotation);
+        $uibModalInstance.close(annotation);
       })
       .catch(function(message) {
         toaster.pop('error', message);
@@ -3978,7 +3978,7 @@ var annotationEditDialogCtrl =
     };
 
     $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
 
     CursSessionDetails.get()
@@ -4011,7 +4011,7 @@ var annotationEditDialogCtrl =
 
 
 canto.controller('AnnotationEditDialogCtrl',
-                 ['$scope', '$modal', '$q', '$modalInstance', 'AnnotationProxy',
+                 ['$scope', '$uibModal', '$q', '$uibModalInstance', 'AnnotationProxy',
                   'AnnotationTypeConfig', 'CantoConfig',
                   'CursSessionDetails', 'CantoService',
                   'CantoGlobals', 'toaster', 'args',
@@ -4019,9 +4019,9 @@ canto.controller('AnnotationEditDialogCtrl',
 
 
 
-function startEditing($modal, annotationTypeName, annotation,
+function startEditing($uibModal, annotationTypeName, annotation,
                       currentFeatureDisplayName, newlyAdded, featureEditable) {
-  var editInstance = $modal.open({
+  var editInstance = $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/annotation_edit.html',
     controller: 'AnnotationEditDialogCtrl',
     title: 'Edit this annotation',
@@ -4053,7 +4053,7 @@ function makeNewAnnotation(template) {
 }
 
 
-function addAnnotation($modal, annotationTypeName, featureType, featureId,
+function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
                        featureDisplayName) {
   var template = {
     annotation_type: annotationTypeName,
@@ -4064,12 +4064,12 @@ function addAnnotation($modal, annotationTypeName, featureType, featureId,
   }
   var featureEditable = !featureId;
   var newAnnotation = makeNewAnnotation(template);
-  startEditing($modal, annotationTypeName, newAnnotation,
+  startEditing($uibModal, annotationTypeName, newAnnotation,
                featureDisplayName, true, featureEditable);
 }
 
 var annotationQuickAdd =
-  function($modal, CursSettings, CantoGlobals) {
+  function($uibModal, CursSettings, CantoGlobals) {
     return {
       scope: {
         annotationTypeName: '@',
@@ -4088,14 +4088,14 @@ var annotationQuickAdd =
         };
 
         $scope.add = function() {
-          addAnnotation($modal, $scope.annotationTypeName, $scope.featureType,
+          addAnnotation($uibModal, $scope.annotationTypeName, $scope.featureType,
                         $scope.featureId, $scope.featureDisplayName);
         };
       },
     };
   };
 
-canto.directive('annotationQuickAdd', ['$modal', 'CursSettings', 'CantoGlobals', annotationQuickAdd]);
+canto.directive('annotationQuickAdd', ['$uibModal', 'CursSettings', 'CantoGlobals', annotationQuickAdd]);
 
 
 function filterAnnotations(annotations, params) {
@@ -4343,7 +4343,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function($modal, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, CantoConfig, toaster) {
+  function($uibModal, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, CantoConfig, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -4423,7 +4423,7 @@ var annotationTableRow =
         $scope.edit = function() {
           // FIXME: featureFilterDisplayName is from the parent scope
           var editPromise =
-            startEditing($modal, annotation.annotation_type, $scope.annotation,
+            startEditing($uibModal, annotation.annotation_type, $scope.annotation,
                          $scope.featureFilterDisplayName, false, true);
 
           editPromise.then(function(editedAnnotation) {
@@ -4437,7 +4437,7 @@ var annotationTableRow =
 
         $scope.duplicate = function() {
           var newAnnotation = makeNewAnnotation($scope.annotation);
-          startEditing($modal, annotation.annotation_type,
+          startEditing($uibModal, annotation.annotation_type,
                        newAnnotation, $scope.featureFilterDisplayName,
                        true, true);
         };
@@ -4460,7 +4460,7 @@ var annotationTableRow =
   };
 
 canto.directive('annotationTableRow',
-                ['$modal', 'AnnotationProxy', 'AnnotationTypeConfig',
+                ['$uibModal', 'AnnotationProxy', 'AnnotationTypeConfig',
                  'CantoGlobals', 'CantoConfig', 'toaster',
                  annotationTableRow]);
 
@@ -4754,7 +4754,7 @@ canto.directive('termNameComplete',
 
 
 var termChildrenQuery =
-  function($modal, CantoService) {
+  function($uibModal, CantoService) {
     return {
       scope: {
         termId: '=',
@@ -4764,7 +4764,7 @@ var termChildrenQuery =
         $scope.data = { children: [] };
 
         $scope.confirmTerm = function() {
-          var termConfirm = openTermConfirmDialog($modal, $scope.termId, 'children');
+          var termConfirm = openTermConfirmDialog($uibModal, $scope.termId, 'children');
 
           termConfirm.result.then(function(result) {
             $scope.termId = result.newTermId;
@@ -4801,7 +4801,7 @@ var termChildrenQuery =
     };
   };
 
-canto.directive('termChildrenQuery', ['$modal', 'CantoService', termChildrenQuery]);
+canto.directive('termChildrenQuery', ['$uibModal', 'CantoService', termChildrenQuery]);
 
 
 var initiallyHiddenText =
@@ -4817,6 +4817,8 @@ var initiallyHiddenText =
       link: function($scope, elem) {
         $scope.previewChars = '';
         $scope.hidden = true;
+
+        $scope.trimmedText = $.trim($scope.text);
 
         $scope.show = function() {
           $scope.hidden = false;
@@ -4837,7 +4839,7 @@ var initiallyHiddenText =
       },
       template: '<span ng-show="trimmedText.length > 0">' +
         '<span ng-hide="hidden">{{trimmedText}}</span>' +
-        '<span ng-show="hidden" tooltip="{{trimmedText}}">' +
+        '<span ng-show="hidden" uib-tooltip="{{trimmedText}}">' +
         '  <span ng-show="previewChars.length > 0">{{previewChars}}</span>' +
         '  <a ng-click="show()">&nbsp;<span style="font-weight: bold">{{linkLabel}}</span></a>' +
         '</span></span>',
