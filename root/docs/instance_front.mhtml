@@ -38,6 +38,9 @@ by viewing our help pages:
 
 <div>
 <h3>Paper lookup</h3>
+<p>
+Search for papers you have previously curated:
+</p>
 <user-pubs-lookup initial-email-address="<% $last_submitter_email %>"></user-pubs-lookup>
 </div>
 
