@@ -875,7 +875,7 @@ var breadcrumbsDirective =
                                   });
           }
 
-          $scope.termDetails[data.term_ontid] = data;
+          $scope.termDetails[data.id] = data;
 
           $scope.render();
         };
@@ -883,7 +883,7 @@ var breadcrumbsDirective =
         $scope.render = function() {
           var html = '';
 
-          var i, termId, termDetails, makeLink;
+          var i, termId, termDetails, makeLink, termDescription;
           var termHistory = CursStateService.termHistory;
           for (i = 0; i < termHistory.length; i++) {
             termId = termHistory[i];
@@ -891,17 +891,19 @@ var breadcrumbsDirective =
 
             html += '<div class="breadcrumbs-link">';
 
+            termDetails = $scope.termDetails[termId];
+            if (termDetails) {
+              termDescription = termDetails.name;
+            } else {
+              termDescription = termId;
+            }
+
             if (makeLink) {
               html += '<a href="#" ng-click="' +
                 "gotoTerm('" + termId + "'" + ')">';
             }
 
-            termDetails = $scope.termDetails[termId];
-            if (termDetails) {
-              html += termDetails.name;
-            } else {
-              html += termId;
-            }
+            html += '<span title="' + termDescription + '">' + termId + '</span>';
 
             if (makeLink) {
               html += '</a>';
@@ -920,9 +922,13 @@ var breadcrumbsDirective =
                       function(newTermId) {
                         if (newTermId) {
                           if (!$scope.termDetails[newTermId]) {
-                            $scope.lookupPromise(newTermId).then($scope.lookupProcess);
+                            $scope.lookupPromise(newTermId).then(function(result) {
+                              $scope.lookupProcess(result.data);
+                            });
                           }
                         }
+
+                        $scope.render();
                       });
 
       },
