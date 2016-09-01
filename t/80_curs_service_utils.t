@@ -474,6 +474,7 @@ cmp_deeply ($res->{annotation},
               'phenotypes' => '',
               'annotation_type' => 'genetic_interaction',
               'annotation_type_display_name' => 'genetic interaction',
+              'checked' => 'no',
             }
           );
 

@@ -368,6 +368,7 @@ sub make_interaction_annotation
       status => $annotation->status(),
       curator => $curator,
       is_inferred_annotation => $is_inferred_annotation,
+      checked => $data->{checked} || 'no',
     };
 
   return $entry;
