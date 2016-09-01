@@ -491,8 +491,18 @@ my $annotation_res = $service_utils->list_for_service('annotation');
 my $cycloheximide_annotation_res = $Canto::TestUtil::shared_test_results{cycloheximide_annotation};
 my $post_translational_modification_res = $Canto::TestUtil::shared_test_results{post_translational_modification};
 
+sub clean_results
+{
+  my $annotation_res = shift;
+  map {
+    delete $_->{checked};
+  } @$annotation_res;
+}
+
+clean_results($annotation_res);
+
 cmp_deeply($annotation_res,
-           [
+         [
             {
               'annotation_id' => 2,
               'extension' => [
@@ -552,7 +562,7 @@ cmp_deeply($annotation_res,
               'with_or_from_display_name' => 'ssm4',
               'gene_name' => 'doa10',
               'gene_identifier' => 'SPBC14F5.07',
-              'with_gene_id' => 2
+              'with_gene_id' => 2,
             },
             {
               'evidence_code' => 'IDA',
@@ -625,7 +635,7 @@ cmp_deeply($annotation_res,
               'status' => 'new',
               'annotation_id' => 1,
               'feature_id' => 2,
-              'publication_uniquename' => 'PMID:19756689'
+              'publication_uniquename' => 'PMID:19756689',
             },
             {
               'evidence_code' => 'UNK',
@@ -887,6 +897,8 @@ cmp_deeply($annotation_res,
 
 $annotation_res = $service_utils->list_for_service('annotation', 'post_translational_modification');
 
+clean_results($annotation_res);
+
 cmp_deeply($annotation_res,
            [
              $post_translational_modification_res,
@@ -1069,6 +1081,7 @@ cmp_deeply($session_detail_res,
                'curator_known_as' => undef,
                'curator_email' => 'some.testperson@pombase.org',
                'community_curated' => JSON::true,
-               'accepted_date' => '2012-02-15 13:45:00'
-             }
+               'accepted_date' => '2012-02-15 13:45:00',
+             },
+             'state' => 'CURATION_IN_PROGRESS',
            });

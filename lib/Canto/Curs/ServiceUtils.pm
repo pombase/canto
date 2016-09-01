@@ -537,10 +537,12 @@ sub _get_session_details
 
   my $pub_id = $self->get_metadata($self->curs_schema(), 'curation_pub_id');
   my $pub = $curs_schema->find_with_type('Pub', $pub_id);
+  my ($state) = $self->state()->get_state($curs_schema);
 
   return {
     publication_uniquename => $pub->uniquename(),
     curator => $self->_get_curator_details(),
+    state => $state,
   };
 }
 

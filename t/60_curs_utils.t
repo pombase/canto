@@ -161,6 +161,7 @@ sub check_new_annotations
                      'gene_display_name' => 'SPCC63.05',
                    }
                  ],
+                 checked => 'no',
                },
                {
                  'publication_uniquename' => 'PMID:19756689',
@@ -210,6 +211,7 @@ sub check_new_annotations
                      'gene_display_name' => 'ssm4',
                    }
                  ],
+                 checked => 'no',
                }
              ]);
   }

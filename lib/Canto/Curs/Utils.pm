@@ -250,6 +250,7 @@ sub make_ontology_annotation
     curator => $curator,
     status => $annotation->status(),
     is_not => JSON::false,
+    checked => $data->{checked} || 'no',
   };
 
   return $ret;

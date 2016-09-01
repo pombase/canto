@@ -727,6 +727,21 @@ var cursSettingsService =
 canto.service('CursSettings', ['$http', '$timeout', '$q', cursSettingsService]);
 
 
+var cursAnnotationDataService =
+  function($http) {
+    var service = this;
+
+    service.set = function(annotationId, key, value) {
+      var unique = '?u=' + (new Date()).getTime();
+      var url = curs_root_uri + '/ws/annotation/data/set/' + annotationId + '/' +
+          key + '/' + value + unique;
+      return $http.get(url);
+    };
+  };
+
+canto.service('CursAnnotationDataService', ['$http', cursAnnotationDataService]);
+
+
 var helpIcon = function(CantoGlobals, CantoConfig) {
   return {
     scope: {
@@ -4344,7 +4359,7 @@ canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig
 
 
 var annotationTableRow =
-  function($uibModal, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, CantoConfig, toaster) {
+  function($uibModal, CursSessionDetails, CursAnnotationDataService, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, CantoConfig, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -4356,8 +4371,34 @@ var annotationTableRow =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.multiOrganismMode = false;
+        $scope.sessionState = 'UNKNOWN';
+
+        CursSessionDetails.get()
+          .success(function(sessionDetails) {
+            $scope.sessionState = sessionDetails.state;
+          });
 
         var annotation = $scope.annotation;
+
+        $scope.checked = annotation['checked'] || 'no';
+
+        $scope.setChecked = function($event) {
+          CursAnnotationDataService.set(annotation.annotation_id,
+                                        'checked', 'yes')
+            .success(function() {
+              $scope.checked = 'yes';
+            });
+          $event.preventDefault();
+        };
+
+        $scope.clearChecked = function($event) {
+          CursAnnotationDataService.set(annotation.annotation_id,
+                                        'checked', 'no')
+            .success(function() {
+              $scope.checked = 'no';
+            });
+          $event.preventDefault();
+        }
 
         $scope.displayEvidence = annotation.evidence_code;
 
@@ -4461,7 +4502,8 @@ var annotationTableRow =
   };
 
 canto.directive('annotationTableRow',
-                ['$uibModal', 'AnnotationProxy', 'AnnotationTypeConfig',
+                ['$uibModal', 'CursSessionDetails', 'CursAnnotationDataService',
+                 'AnnotationProxy', 'AnnotationTypeConfig',
                  'CantoGlobals', 'CantoConfig', 'toaster',
                  annotationTableRow]);
 

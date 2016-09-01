@@ -2396,7 +2396,7 @@ sub _set_annotation_data
   $annotation->update();
 }
 
-sub ws_annotation_flag : Chained('top') PathPart('ws/annotation/data/set') Args(3)
+sub ws_annotation_data_set : Chained('top') PathPart('ws/annotation/data/set') Args(3)
 {
   my ($self, $c, $annotation_id, $key, $value) = @_;
 
