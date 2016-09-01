@@ -2378,6 +2378,72 @@ sub ws_change_annotation : Chained('ws_annotation') PathPart('change')
   $c->forward('View::JSON');
 }
 
+sub _set_annotation_data
+{
+  my $annotation = shift;
+  my $key = shift;
+  my $value = shift;
+
+  my $data = $annotation->data();
+
+  if ($value) {
+    $data->{$key} = $value;
+  } else {
+    delete $data->{$key};
+  }
+
+  $annotation->data($data);
+  $annotation->update();
+}
+
+sub ws_annotation_flag : Chained('top') PathPart('ws/annotation/data/set') Args(3)
+{
+  my ($self, $c, $annotation_id, $key, $value) = @_;
+
+  my $st = $c->stash();
+
+  my $schema = $st->{schema};
+
+  my $allowed_keys = $c->config()->{curs_settings_service}->{allowed_data_keys};
+
+  if (!$allowed_keys->{$key}) {
+    $st->{json_data} = {
+      status => 'error',
+      message => qq(setting with key "$key" not allowed),
+    };
+    $c->forward('View::JSON');
+    return;
+  }
+
+  $st->{json_data} = {
+    status => 'success',
+  };
+
+  $schema->txn_begin();
+
+  if ($annotation_id =~ /^\d+$/) {
+    my $annotation = $schema->resultset('Annotation')->find($annotation_id);
+    _set_annotation_data($annotation, $key, $value);
+  } else {
+    if ($annotation_id eq 'all') {
+      my @annotations = $schema->resultset('Annotation')->all();
+
+      map {
+        _set_annotation_data($_, $key, $value);
+      } @annotations;
+    } else {
+      $st->{json_data} = {
+        status => 'error',
+        message => qq(no annotation with id "$annotation_id"),
+      };
+    }
+  }
+
+  $schema->txn_commit();
+
+  $c->forward('View::JSON');
+}
+
 sub ws_annotation_create : Chained('top') PathPart('ws/annotation/create')
 {
   my ($self, $c) = @_;
