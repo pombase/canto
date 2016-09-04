@@ -93,7 +93,7 @@ Description
     <div>
       <a confirm="This genotype has existing annotations.  Really edit?"
          confirm-if="annotationCount > 0"
-         href="<% $start_path . '/genotype_manage#/edit/' . $genotype->genotype_id() %>">Edit ...</a>
+         ng-click="editGenotype(<% $genotype->genotype_id() %>)">Edit ...</a>
     </div>
     <div>
       <a href="<% $start_path . '/genotype_manage#/duplicate/' . $genotype->genotype_id() %>">Duplicate ...</a>

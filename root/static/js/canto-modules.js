@@ -3180,15 +3180,19 @@ canto.directive('genotypeEdit',
 
 
 var genotypeViewCtrl =
-  function($scope) {
+  function($scope, CantoGlobals) {
     $scope.init = function(annotationCount) {
       $scope.annotationCount = annotationCount;
+    };
+
+    $scope.editGenotype = function(genotypeId) {
+      window.location.href =
+        CantoGlobals.curs_root_uri + '/genotype_manage#/edit/' + genotypeId;
     };
   };
 
 canto.controller('GenotypeViewCtrl',
-                 ['$scope',
-                 genotypeViewCtrl]);
+                 ['$scope', 'CantoGlobals', genotypeViewCtrl]);
 
 
 var GenotypeManageCtrl =
