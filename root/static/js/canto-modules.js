@@ -3404,6 +3404,11 @@ var genotypeListRowLinksCtrl =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
 
+        $scope.editGenotype = function(genotypeId) {
+          window.location.href =
+            CantoGlobals.curs_root_uri + '/genotype_manage#/edit/' + genotypeId;
+        };
+
         $scope.deleteGenotype = function(genotypeId) {
           loadingStart();
 

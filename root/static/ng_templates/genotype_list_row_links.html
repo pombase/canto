@@ -11,8 +11,10 @@
     </a>
   </div>
   <div>
-    <a ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
-       href="{{curs_root_uri + '/genotype_manage#/edit/' + genotypeId}}">Edit details ...</a>
+    <a confirm="This genotype has existing annotations.  Really edit?"
+       confirm-if="annotationCount > 0"
+       ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
+       ng-click="editGenotype(genotypeId)">Edit details ...</a>
   </div>
   <div>
     <a ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
