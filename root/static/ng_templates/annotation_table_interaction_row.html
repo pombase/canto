@@ -1,4 +1,4 @@
-<tr ng-class="{ 'curs-row-checked' : checked == 'yes' }">
+<tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
   <td>
     <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id + (read_only_curs ? '/ro' : '')}}">
       {{annotation.gene_display_name}}

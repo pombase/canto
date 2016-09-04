@@ -1,4 +1,4 @@
-<tr ng-class="{ 'curs-row-checked' : checked == 'yes' }">
+<tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
   <td ng-if="annotationType.feature_type == 'genotype'">
     <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
       {{allele.gene_display_name}}
