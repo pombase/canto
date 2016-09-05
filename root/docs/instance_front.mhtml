@@ -8,7 +8,9 @@
 % } else {
 <div class="col-sm-6 col-md-6">
 <h3>Curate a paper<% $dest_db_link |n%></h3>
-<& /tools/pubmed_id_start.mhtml, title => 'Start curating using a PubMed ID:' &>
+<div style="margin-bottom: 5px">
+  <pubmed-id-start></pubmed-id-start>
+</div>
 <p>
  Once you have found your paper, you can curate GO, phenotypes,
 interactions and protein modifications -- or reassign the paper to a

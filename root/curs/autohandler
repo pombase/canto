@@ -5,7 +5,7 @@ $current_user_is_admin
 </%args>
 
 <script language="javascript" type="text/javascript">
-var canto_root_uri = '<% $c->uri_for('/') %>';
+var canto_root_uri = application_root;
 var curs_root_uri = '<% $curs_root_uri %>';
 var read_only_curs = <% $read_only_curs ? 'true' : 'false' %>;
 var is_admin_session = <% $is_admin_session ? 'true' : 'false' %>;

@@ -834,6 +834,80 @@ canto.controller('SimpleDialogCtrl',
                  ['$scope', '$uibModalInstance', 'args', simpleDialogCtrl]);
 
 
+var pubmedIdStart =
+  function($http, toaster, CantoGlobals, CantoConfig) {
+    return {
+      scope: {
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/pubmed_id_start.html',
+      controller: function($scope) {
+        $scope.data = {
+          searchId: null,
+          results: null,
+        };
+        $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
+        CantoConfig.get('public_mode')
+          .then(function(results) {
+            $scope.publicMode = results.data.value != "0";
+          });
+
+        $scope.search = function() {
+          loadingStart();
+          var url =
+            CantoGlobals.application_root +
+              'tools/pubmed_id_lookup?pubmed-id-lookup-input=' + $scope.data.searchId;
+          var promise = $http.post(url);
+          promise.
+            success(function(results) {
+              if (results.message) {
+                toaster.pop('error', results.message);
+              } else {
+                $scope.data.results = results;
+              }
+            }).
+            error(function(data, status){
+              var message;
+              if (status == 404) {
+                message = "Internal error: " + status;
+              } else {
+                message = "Accessing server failed: " + (data || status);
+              }
+              toaster.pop('error', message);
+            }).
+            finally(function() {
+              loadingEnd();
+            });
+        };
+ 
+        $scope.findAnother = function() {
+          $scope.data.results = null;
+        };
+
+        $scope.startCuration = function() {
+          loadingStart();
+          if ($scope.data.results.sessions.length > 0) {
+            if ($scope.publicMode) {
+              window.location.href =
+                CantoGlobals.application_root + 'curs/' + $scope.data.results.sessions[0];
+            } else {
+              window.location.href =
+                CantoGlobals.application_root + 'curs/' + $scope.data.results.sessions[0] + '/ro';
+            }
+          } else {
+            window.location.href =
+              CantoGlobals.application_root + 'tools/start/' + $scope.data.results.pub.uniquename;
+          }
+        };
+     }
+    };
+  };
+
+canto.directive('pubmedIdStart',
+                ['$http', 'toaster', 'CantoGlobals', 'CantoConfig', pubmedIdStart]);
+
+
 var advancedModeToggle =
   function(CursSettings) {
     return {
@@ -3671,7 +3745,7 @@ canto.service('CantoConfig', function($http) {
     if (!this.promises[key]) {
       this.promises[key] =
         $http({method: 'GET',
-               url: canto_root_uri + 'ws/canto_config/' + key});
+               url: application_root + 'ws/canto_config/' + key});
     }
     return this.promises[key];
   };
