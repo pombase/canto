@@ -10,7 +10,7 @@ $message_to_curators
 $total_annotation_count
 </%args>
 
-<div id="curs-front-page">
+<div ng-controller="CursFrontPageCtrl" id="curs-front-page">
 <div>
   <div class="row">
     <div class="curs-front-gene-list col-sm-6 col-md-6">
@@ -21,7 +21,7 @@ $total_annotation_count
 <& /pub_details.mhtml, pub => $pub &>
    </div>
   </div>
-<div class="clearall"/>
+  <div class="clearall"></div>
 
 % if ($read_only_curs) {
 %   if ($state ne Canto::Controller::Curs::CURATION_IN_PROGRESS) {
@@ -70,8 +70,25 @@ $total_annotation_count
 %     }
 </div>
 % } else {
+
+<div class="row">
+  <div class="col-sm-6 col-md-6">
+    <div class="curs-session-checking ng-cloak curs-box">
+      <div class="curs-box-title">
+        Session checking
+      </div>
+      <div>
+        <button class="btn btn-primary" confirm="Really check all?"
+                ng-click="checkAll()">Check all</button>
+        <button class="btn btn-primary" confirm="Really clear all?"
+                ng-click="clearAll()">Clear all</button>
+      </div>
+    </div>
+  </div>
+
 <button type="button" id="curs-check-completed" class="btn btn-primary curs-finish-button">Approve session</button>
 <button type="button" id="curs-cancel-approval" class="btn btn-primary curs-finish-button">Cancel approval</button>
+</div>
 % }
 %   if (defined $message_to_curators) {
 <div class="curs-inline-message-to-curators">

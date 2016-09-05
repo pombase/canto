@@ -47,6 +47,14 @@ a.disabled {
   font-size: 0.8em;
   line-height: 2.2ex;
 }
+
+#curs-front-page .curs-session-checking {
+  margin-top: 10px;
+}
+#curs-front-page .curs-session-checking button {
+  margin: 5px;
+}
+
 .docs, #content {
   margin: 0 8px 0 8px;
 }

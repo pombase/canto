@@ -801,6 +801,26 @@ function openSimpleDialog($uibModal, title, heading, message)
   });
 }
 
+var cursFrontPageCtrl =
+  function($scope, CursAnnotationDataService) {
+    $scope.checkAll = function() {
+      CursAnnotationDataService.set('all', 'checked', 'yes').
+        success(function() {
+          window.location.reload(false);
+        });
+    };
+    $scope.clearAll = function() {
+      CursAnnotationDataService.set('all', 'checked', 'no').
+        success(function() {
+          window.location.reload(false);
+        });
+    };
+  };
+
+canto.controller('CursFrontPageCtrl',
+                 ['$scope', 'CursAnnotationDataService', cursFrontPageCtrl]);
+
+
 var simpleDialogCtrl =
   function($scope, $uibModalInstance, args) {
     $scope.message = args.message;
