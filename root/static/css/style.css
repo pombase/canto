@@ -322,7 +322,7 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
 }
 
 table.list, table.curs-genotype-list {
-  margin: 10px;
+  margin: 5px 0 5px 0;
   border-width: 0px;
   border-spacing: 5px;
   border-style: solid;
@@ -987,11 +987,10 @@ fieldset.curs-genes span {
 
 .curs-annotation-sub-heading {
   margin-top: 5px;
-  margin-left: 10px;
   font-size: 95%;
 }
 .curs-annotation-table {
-  margin-left: 10px;
+  
 }
 
 .curs-annotation-incomplete-message {
