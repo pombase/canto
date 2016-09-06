@@ -59,7 +59,7 @@ $db_creation_datetime
 % }
     <tr class="annotation-stats-table-totals">
       <td>Totals:</td>
-      <td><% $curator_summ_totals[0] %></td>
+      <td><% $curator_summ_totals[1] + $curator_summ_totals[2] %></td>
       <td><% $curator_summ_totals[1] %></td>
       <td><% $curator_summ_totals[2] %></td>
       <td><% $curator_summ_totals[3] %></td>
