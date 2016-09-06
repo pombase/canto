@@ -12,7 +12,7 @@ Annotation loading ...
       <div class="curs-annotation-table-group curs-box"
            ng-show="serverErrorsByType[annotationType.name] || byTypeSplit[annotationType.name] && countKeys(byTypeSplit[annotationType.name])">
         <div class="curs-box-title">
-          {{annotationType.display_name}}
+          {{capitalizeFirstLetter(annotationType.display_name)}}
         </div>
         <div class="curs-box-body" ng-show="serverErrorsByType[annotationType.name]">
           <div class="error_message" >

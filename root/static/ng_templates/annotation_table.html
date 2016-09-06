@@ -1,6 +1,6 @@
 <div>
   <div ng-show="annotations.length > 0">
-    <span ng-if="featureStatusFilter === 'new'" class="title sect-title">
+    <span ng-if="featureStatusFilter === 'new'" class="curs-annotation-sub-heading">
       <span ng-if="!alleleCountFilter">
         New annotations from this session
       </span>
@@ -12,7 +12,7 @@
       </span>
     </span>
     <span ng-if="featureStatusFilter === 'existing' && annotations !== null && annotations.length > 0"
-          class="title sect-title">
+          class="curs-annotation-sub-heading">
       <span ng-if="!alleleCountFilter">
         Existing annotations
       </span>
@@ -23,7 +23,7 @@
         for {{featureFilterDisplayName}}
       </span>
     </span>
-    <div class="annotation-table sect-content">
+    <div class="curs-annotation-table">
       <div class="list" ng-switch="annotationType.category">
         <table ng-switch-when="ontology" class="list">
           <thead>

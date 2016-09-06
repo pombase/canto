@@ -4382,6 +4382,7 @@ var annotationTableList =
         $scope.serverErrorsByType = {};
         $scope.byTypeSplit = {};
 
+        $scope.capitalizeFirstLetter = capitalizeFirstLetter;
         $scope.data = {};
 
         $scope.watchAndFilter =

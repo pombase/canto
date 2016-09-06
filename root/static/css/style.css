@@ -120,7 +120,8 @@ img {
 }
 #logo-and-caption {
   float: left;
-  line-height: 1.5ex;
+  line-height: 1.2ex;
+  font-size: 120%;
 }
 #logo {
   padding: 5px;
@@ -440,13 +441,11 @@ table.list thead img.sort-direction-icon {
 }
 
 .sect .sect-title {
-  background-color: #ddd;
-  color: #227;
   font-weight: bold;
   margin-bottom: 10px;
   padding: 1px 5px 1px 5px;
   margin: 3px;
-  display: inline
+  display: inline;
 }
 
 .undisclosed-title {
@@ -617,7 +616,7 @@ div.clearall {
 }
 
 .annotation-start {
-  margin-left: 30px;
+  margin-left: 10px;
   padding: 5px;
 }
 
@@ -864,25 +863,21 @@ div.clearall {
 }
 
 .curs-box {
-  border: 1px solid #ddd;
   background-color: white;
 }
 
 .curs-box-title {
   margin-left: 0%;
-  background-color: #dbf0f7;
-  border-bottom: 1px solid #ddd;
-  padding: 5px;
+  border-bottom: 2px solid #888;
+  padding: 3px;
   font-weight: 700;
-}
-
-.curs-box-title .curs-inline-help-icon {
-  float: right;
+  display: inline-block;
 }
 
 .curs-box-body {
   margin: 5px;
   padding: 5px;
+  padding-top: 10px;
 }
 
 #ferret-accept-term-details {
@@ -990,8 +985,13 @@ fieldset.curs-genes span {
   font-size: 95%;
 }
 
-.curs-annotation-table-group {
-  margin-bottom: 15px;
+.curs-annotation-sub-heading {
+  margin-top: 5px;
+  margin-left: 10px;
+  font-size: 95%;
+}
+.curs-annotation-table {
+  margin-left: 10px;
 }
 
 .curs-annotation-incomplete-message {
@@ -1017,7 +1017,6 @@ span.canto-select-buttons {
 }
 
 .curs-half-width-section {
-  font-size: 90%;
   float: left;
   width: 45%;
   margin: 5px 10px 5px 5px;
