@@ -1,9 +1,9 @@
 <div class="curs-pubmed-id-lookup">
-  <div ng-if="!data.results" class="curs-box">
-    <div class="curs-box-title">
+  <div ng-if="!data.results">
+    <div>
       Start curating using a PubMed ID:
     </div>
-    <div class="curs-box-body">
+    <div>
       <input type="text" ng-model="data.searchId"/>
       <button class="btn btn-primary" ng-click="search()">Find ...</button>
     </div>
