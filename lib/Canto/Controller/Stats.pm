@@ -72,11 +72,11 @@ sub annotation : Local {
   $st->{annotation_types_by_year} = \@annotation_types_by_year;
 
   my @per_pub_stats =
-    Canto::Chado::Utils::per_publication_stats($chado_schema, $track_schema, 0);
+    Canto::Chado::Utils::per_publication_stats($chado_schema, 0);
   $st->{per_pub_stats_table} = \@per_pub_stats;
 
   my @per_pub_5_year_stats =
-    Canto::Chado::Utils::per_publication_stats($chado_schema, $track_schema, 1);
+    Canto::Chado::Utils::per_publication_stats($chado_schema, 1);
   $st->{per_pub_5_year_stats} = \@per_pub_5_year_stats;
 
   my @annotation_stats = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
