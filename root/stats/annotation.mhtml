@@ -66,7 +66,7 @@ $db_creation_datetime
 </div>
 
 <div class="curs-box">
-  <div class="curs-box-title">Curator summary</div>
+  <div class="curs-box-title">Canto curator summary</div>
 <div class="curs-box-body row">
 <div class="col-sm-5 col-md-5">
   <table style="font-size: 105%" class="list">
