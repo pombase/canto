@@ -10,53 +10,6 @@ $db_creation_datetime
 <div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
 
 <div class="curs-box">
-  <div class="curs-box-title">Annotations by type and year</div>
-<div class="curs-box-body row">
-<div class="col-sm-7 col-md-7">
-  <table class="list">
-    <thead>
-      <tr>
-        <th>
-          Publication year
-        </th>
-        <th>
-          GO annotations
-        </th>
-        <th>
-          Phenotypes
-        </th>
-        <th>
-          Modifications
-        </th>
-        <th>
-          Genetic interactions
-        </th>
-        <th>
-          Physical interactions
-        </th>
-        <th>
-          Other
-        </th>
-      </tr>
-    </thead>
-% for my $row (@tidy_annotation_types_by_year) {
-    <tr>
-%   for my $elem (@$row) {
-      <td>
-        <% $elem %>
-      </td>
-%   }
-    </tr>
-% }
-  </table>
-</div>
-<div class="col-sm-5 col-md-5">
-  PomBase annotations by type and year.
-</div>
-</div>
-</div>
-
-<div class="curs-box">
   <div class="curs-box-title">Cumulative annotations by type and year</div>
 <div class="curs-box-body row">
 <div class="col-sm-7 col-md-7">
@@ -378,7 +331,6 @@ use Data::JavaScript::Anon;
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $current_year = $year + 1900;
 
-my @tidy_annotation_types_by_year = ();
 my @cumulative_annotation_types_by_year = ();
 my @cumulative_annotation_type_counts = (0,0,0,0,0,0);
 
@@ -402,9 +354,6 @@ for my $row (@annotation_types_by_year) {
   } values %data;
   my $other_count = $total - $go_count - $phenotype_count - $modification_count -
     $genetic_interactions_count - $physical_interactions_count;
-  push @tidy_annotation_types_by_year,
-    [$year, $go_count, $phenotype_count, $modification_count,
-     $genetic_interactions_count, $physical_interactions_count, $other_count];
 
   $cumulative_annotation_type_counts[0] += $go_count;
   $cumulative_annotation_type_counts[1] += $phenotype_count;
