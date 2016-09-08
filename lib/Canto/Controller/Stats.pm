@@ -91,6 +91,10 @@ sub annotation : Local {
 
   $st->{title} = "PomBase annotation statistics";
   $st->{template} = 'stats/annotation.mhtml';
+
+  if (!$ENV{CANTO_DEBUG}) {
+    $c->cache_page(60);
+  }
 }
 
 1;
