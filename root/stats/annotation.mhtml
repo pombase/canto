@@ -7,6 +7,8 @@
 $db_creation_datetime
 </%args>
 
+<div style="float: left"><img src="<% $c->uri_for('/static/images/logos/pombase_logo_large.png') %>"/></div>
+
 <div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
 
 <div class="curs-box">

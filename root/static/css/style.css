@@ -381,6 +381,7 @@ table.curs-genotype-list tbody {
 }
 
 .annotation-stats {
+  clear: both;
   padding-top: 30px;
 }
 
@@ -868,6 +869,7 @@ div.clearall {
 
 .curs-box {
   background-color: white;
+  margin: 5px 0 5px 0;
 }
 
 .curs-box-title {

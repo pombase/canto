@@ -87,7 +87,9 @@ sub annotation : Local {
 
   Canto::Chado::Utils::stats_finish($chado_schema, $track_schema);
 
-  $st->{title} = "Canto statistics";
+  $st->{hide_breadcrumbs} = 1;
+
+  $st->{title} = "PomBase annotation statistics";
   $st->{template} = 'stats/annotation.mhtml';
 }
 
