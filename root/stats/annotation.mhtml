@@ -94,6 +94,14 @@ $db_creation_datetime
 <div class="col-sm-5 col-md-5">
   Cumulative PomBase annotations by type and year.
 </div>
+<div>
+  <script language="javascript" type="text/javascript">
+    var cumulativeAnnotationTypeCounts = <% $cumulative_annotation_type_counts_js |n %>;
+  </script>
+  <stacked-graph chart-labels="cumulativeAnnotationTypeCountsLabels" chart-data="cumulativeAnnotationTypeCountsData"
+                 chart-series="GO|Phenotype|Modification|Genetic interaction|Physical interaction">
+  </stacked-graph>
+</div>
 </div>
 </div>
 
@@ -395,6 +403,18 @@ for my $row (@annotation_types_by_year) {
   push @cumulative_annotation_types_by_year,
     [$year, @cumulative_annotation_type_counts];
 }
+
+my @transposed_cumulative_annotation_types_by_year = ();
+
+map {
+  my @row = @$_;
+
+  for (my $i = 0; $i < scalar(@row); $i++) {
+    push @{$transposed_cumulative_annotation_types_by_year[$i]}, $row[$i];
+  }
+} @cumulative_annotation_types_by_year;
+
+my $cumulative_annotation_type_counts_js = Data::JavaScript::Anon->anon_dump(\@transposed_cumulative_annotation_types_by_year);
 
 my @transposed_curated_stats = ();
 

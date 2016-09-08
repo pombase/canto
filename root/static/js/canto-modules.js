@@ -400,6 +400,7 @@ canto.service('CantoGlobals', function($window) {
   this.is_admin_user = $window.is_admin_user;
   this.current_user_is_admin = $window.current_user_is_admin;
   this.curationStatusData = $window.curationStatusData;
+  this.cumulativeAnnotationTypeCounts = $window.cumulativeAnnotationTypeCounts;
   this.perPub5YearStatsData = $window.perPub5YearStatsData;
 });
 
@@ -5112,6 +5113,8 @@ var AnnotationStatsCtrl =
   function($scope, CantoGlobals) {
     $scope.curationStatusLabels = CantoGlobals.curationStatusData[0];
     $scope.curationStatusData = CantoGlobals.curationStatusData.slice(1);
+    $scope.cumulativeAnnotationTypeCountsLabels = CantoGlobals.cumulativeAnnotationTypeCounts[0];
+    $scope.cumulativeAnnotationTypeCountsData = CantoGlobals.cumulativeAnnotationTypeCounts.slice(1);
     var currentYear = (new Date()).getFullYear();
     $scope.perPub5YearStatsLabels =
       $.map(CantoGlobals.perPub5YearStatsData[0],
