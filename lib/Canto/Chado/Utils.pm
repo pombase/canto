@@ -68,6 +68,10 @@ WHERE pub.pub_id IN
         AND pt.name = 'canto_triage_status'
         AND (pp.value LIKE 'Curatable%' OR pp.value LIKE 'curatable%'));
 EOF
+
+  $chado_dbh->prepare(<<'EOF')->execute();
+CREATE INDEX pub_dates_uniquename_index ON pub_dates(uniquename);
+EOF
 }
 
 =head2 curated_stats
