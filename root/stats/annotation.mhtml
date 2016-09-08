@@ -11,7 +11,7 @@ $db_creation_datetime
 
 <div class="curs-box">
   <div class="curs-box-title">Annotations by type and year</div>
-<div class="row">
+<div class="curs-box-body row">
 <div class="col-sm-7 col-md-7">
   <table class="list">
     <thead>
@@ -58,7 +58,7 @@ $db_creation_datetime
 
 <div class="curs-box">
   <div class="curs-box-title">Cumulative annotations by type and year</div>
-<div class="row">
+<div class="curs-box-body row">
 <div class="col-sm-7 col-md-7">
   <table class="list">
     <thead>
@@ -308,7 +308,7 @@ annotations contributed by authors.
 
 <div class="curs-box">
   <div class="curs-box-title">Annotations/genes per publication in 5 year intervals</div>
-<div class="row">
+<div class="curs-box-body row">
 <div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
