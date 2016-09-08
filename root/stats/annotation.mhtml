@@ -12,7 +12,7 @@ $db_creation_datetime
 <div class="curs-box">
   <div class="curs-box-title">Cumulative annotations by type and year</div>
 <div class="curs-box-body row">
-<div class="col-sm-7 col-md-7">
+<div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
       <tr>
@@ -50,9 +50,7 @@ $db_creation_datetime
 % }
   </table>
 </div>
-<div class="col-sm-5 col-md-5">
-  Cumulative PomBase annotations by type and year.
-</div>
+<div class="col-sm-6 col-md-6">
 <div>
   <script language="javascript" type="text/javascript">
     var cumulativeAnnotationTypeCounts = <% $cumulative_annotation_type_counts_js |n %>;
@@ -60,6 +58,7 @@ $db_creation_datetime
   <stacked-graph chart-labels="cumulativeAnnotationTypeCountsLabels" chart-data="cumulativeAnnotationTypeCountsData"
                  chart-series="GO|Phenotype|Modification|Genetic interaction|Physical interaction|Other">
   </stacked-graph>
+</div>
 </div>
 </div>
 </div>
