@@ -86,7 +86,7 @@ sub annotation_types_by_year
 SELECT annotation_year, annotation_type, count(id)
 FROM pombase_genes_annotations_dates
 WHERE (evidence_code IS NULL OR evidence_code <> 'Inferred from Electronic Annotation')
-  AND annotation_source <> 'BIOGRID'
+  AND (annotation_source IS NULL OR annotation_source <> 'BIOGRID')
   AND annotation_year::integer >= 0
 GROUP BY annotation_type, annotation_year;
 EOF
