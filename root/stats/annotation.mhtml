@@ -199,8 +199,7 @@ those added by a professional curator during the approval procedure.
 
 <div class="curs-box">
   <div class="curs-box-title">Curated vs uncurated by publication date</div>
-  <div class="curs-box-body">
-<div class="row">
+  <div class="curs-box-body row">
   <div class="col-sm-6 col-md-6">
     <script language="javascript" type="text/javascript">
       var curationStatusData = <% $curation_status_js |n %>;
@@ -267,11 +266,9 @@ annotations contributed by authors.
 </div>
 </div>
 
-
 <div class="curs-box">
   <div class="curs-box-title">Annotations/genes per publication per year</div>
-  <div class="curs-box-body">
-<div class="row">
+  <div class="curs-box-body row">
   <div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
@@ -302,7 +299,6 @@ annotations contributed by authors.
     experiments and use the same criteria for all years
   </div>
   </div>
-</div>
 </div>
 
 
@@ -371,7 +367,6 @@ annotations contributed by authors.
                chart-series="Avg. annotations per pub">
     </bar-chart>
   </div>
-</div>
 </div>
 </div>
 </div>
