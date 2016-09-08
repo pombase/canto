@@ -366,6 +366,10 @@ for my $row (@annotation_types_by_year) {
     [$year, @cumulative_annotation_type_counts];
 }
 
+@cumulative_annotation_types_by_year = grep {
+  $_->[0] >= 2010;
+} @cumulative_annotation_types_by_year;
+
 my @transposed_cumulative_annotation_types_by_year = ();
 
 map {
