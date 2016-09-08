@@ -380,6 +380,10 @@ table.curs-genotype-list tbody {
   padding: 3px;
 }
 
+.annotation-stats {
+  padding-top: 30px;
+}
+
 .annotation-stats table.list tr th {
   white-space: normal !important;
 }
