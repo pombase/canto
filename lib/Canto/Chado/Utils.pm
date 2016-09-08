@@ -74,6 +74,50 @@ CREATE INDEX pub_dates_uniquename_index ON pub_dates(uniquename);
 EOF
 }
 
+sub annotation_types_by_year
+{
+  my $chado_schema = shift;
+
+  my $chado_dbh = $chado_schema->storage()->dbh();
+
+  my %stats = ();
+
+  my $query = <<"EOF";
+SELECT annotation_year, annotation_type, count(id)
+FROM pombase_genes_annotations_dates
+WHERE (evidence_code IS NULL OR evidence_code <> 'Inferred from Electronic Annotation')
+  AND annotation_source <> 'BIOGRID'
+  AND annotation_year::integer >= 0
+GROUP BY annotation_type, annotation_year;
+EOF
+
+  my $sth = $chado_dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+  while (my ($year, $type, $count) = $sth->fetchrow_array()) {
+    $stats{$year}->{$type} = $count;
+  }
+
+  my @rows = ();
+
+  my $first_year = 9999;
+
+  map {
+    $first_year = $_ if $_ < $first_year
+  } keys %stats;
+
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+  my $current_year = $year + 1900;
+
+  for (my $year = $first_year; $year <= $current_year; $year++) {
+    my $year_stats = $stats{$year};
+    push @rows, [$year, $year_stats];
+  }
+
+  return @rows;
+}
+
+
 =head2 curated_stats
 
  Function: Return a table of counts of uncurated (but curatable), admin curated

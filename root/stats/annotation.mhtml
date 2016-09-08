@@ -1,4 +1,5 @@
 <%args>
+@annotation_types_by_year
 @annotation_stats
 @per_pub_stats_table
 @per_pub_5_year_stats
@@ -7,6 +8,95 @@ $db_creation_datetime
 </%args>
 
 <div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
+
+<div class="curs-box">
+  <div class="curs-box-title">Annotations by type and year</div>
+<div class="row">
+<div class="col-sm-7 col-md-7">
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          GO annotations
+        </th>
+        <th>
+          Phenotypes
+        </th>
+        <th>
+          Modifications
+        </th>
+        <th>
+          Genetic interactions
+        </th>
+        <th>
+          Physical interactions
+        </th>
+      </tr>
+    </thead>
+% for my $row (@tidy_annotation_types_by_year) {
+    <tr>
+%   for my $elem (@$row) {
+      <td>
+        <% $elem %>
+      </td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+<div class="col-sm-5 col-md-5">
+  PomBase annotations by type and year.
+</div>
+</div>
+</div>
+
+<div class="curs-box">
+  <div class="curs-box-title">Cumulative annotations by type and year</div>
+<div class="row">
+<div class="col-sm-7 col-md-7">
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          GO annotations
+        </th>
+        <th>
+          Phenotypes
+        </th>
+        <th>
+          Modifications
+        </th>
+        <th>
+          Genetic interactions
+        </th>
+        <th>
+          Physical interactions
+        </th>
+      </tr>
+    </thead>
+% for my $row (@cumulative_annotation_types_by_year) {
+    <tr>
+%   for my $elem (@$row) {
+      <td>
+        <% $elem %>
+      </td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+<div class="col-sm-5 col-md-5">
+  Cumulative PomBase annotations by type and year.
+</div>
+</div>
+</div>
+
 <div class="curs-box">
   <div class="curs-box-title">Curator summary</div>
 <div class="curs-box-body row">
@@ -278,6 +368,33 @@ use Data::JavaScript::Anon;
 
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $current_year = $year + 1900;
+
+my @tidy_annotation_types_by_year = ();
+my @cumulative_annotation_types_by_year = ();
+my @cumulative_annotation_type_counts = (0,0,0,0,0);
+
+for my $row (@annotation_types_by_year) {
+  my $year = shift @$row;
+  my %data = %{$row->[0]};
+  my $go_count = ($data{molecular_function} // 0) +
+    ($data{biological_process} // 0) + ($data{cellular_component} // 0);
+  my $phenotype_count = $data{fission_yeast_phenotype} // 0;
+  my $modification_count = $data{'PSI-MOD'} // 0;
+  my $genetic_interactions_count = $data{'interacts_genetically'} // 0;
+  my $physical_interactions_count = $data{'interacts_physically'} // 0;
+  push @tidy_annotation_types_by_year,
+    [$year, $go_count, $phenotype_count, $modification_count,
+     $genetic_interactions_count, $physical_interactions_count];
+
+  $cumulative_annotation_type_counts[0] += $go_count;
+  $cumulative_annotation_type_counts[1] += $phenotype_count;
+  $cumulative_annotation_type_counts[2] += $modification_count;
+  $cumulative_annotation_type_counts[3] += $genetic_interactions_count;
+  $cumulative_annotation_type_counts[4] += $physical_interactions_count;
+
+  push @cumulative_annotation_types_by_year,
+    [$year, @cumulative_annotation_type_counts];
+}
 
 my @transposed_curated_stats = ();
 

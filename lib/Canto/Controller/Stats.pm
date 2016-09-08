@@ -67,6 +67,10 @@ sub annotation : Local {
 
   Canto::Chado::Utils::stats_init($chado_schema, $track_schema);
 
+  my @annotation_types_by_year =
+    Canto::Chado::Utils::annotation_types_by_year($chado_schema);
+  $st->{annotation_types_by_year} = \@annotation_types_by_year;
+
   my @per_pub_stats =
     Canto::Chado::Utils::per_publication_stats($chado_schema, $track_schema, 0);
   $st->{per_pub_stats_table} = \@per_pub_stats;
