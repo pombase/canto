@@ -334,11 +334,6 @@ my $current_year = $year + 1900;
 my @cumulative_annotation_types_by_year = ();
 my @cumulative_annotation_type_counts = (0,0,0,0,0,0);
 
-use Data::Dumper;
-$Data::Dumper::Maxdepth = 3;
-warn Dumper([@annotation_types_by_year]);
-
-
 for my $row (@annotation_types_by_year) {
   my $year = shift @$row;
   my %data = %{$row->[0]};
