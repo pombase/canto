@@ -66,7 +66,7 @@ $db_creation_datetime
 <div class="curs-box">
   <div class="curs-box-title">Curator summary</div>
 <div class="curs-box-body row">
-<div class="col-sm-6 col-md-6">
+<div class="col-sm-5 col-md-5">
   <table class="list">
     <thead>
       <tr>
@@ -123,7 +123,7 @@ $db_creation_datetime
     </tr>
   </table>
 </div>
-<div class="col-sm-6 col-md-6">
+<div class="col-sm-7 col-md-7">
 <p>
 Number of papers curated by professional and community curators, and total
 number of annotations created, per year. An annotation is either an assignment
