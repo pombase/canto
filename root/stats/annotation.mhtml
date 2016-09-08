@@ -53,6 +53,8 @@ $db_creation_datetime
   </table>
 </div>
 <div class="col-sm-6 col-md-6">
+</div>
+</div>
 <div>
   <script language="javascript" type="text/javascript">
     var cumulativeAnnotationTypeCounts = <% $cumulative_annotation_type_counts_js |n %>;
@@ -62,14 +64,12 @@ $db_creation_datetime
   </stacked-graph>
 </div>
 </div>
-</div>
-</div>
 
 <div class="curs-box">
   <div class="curs-box-title">Curator summary</div>
 <div class="curs-box-body row">
 <div class="col-sm-5 col-md-5">
-  <table class="list">
+  <table style="font-size: 105%" class="list">
     <thead>
       <tr>
         <th rowspan="2">
