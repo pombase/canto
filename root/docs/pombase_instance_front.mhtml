@@ -12,9 +12,9 @@ Find out more on the Fission Yeast Community Curation page at
     <div style="text-align: center; padding-top: 40px; font-size: 110%;">
     <a href="http://www.pombase.org/community/fission-yeast-community-curation-project">About</a>
     |
-    <a href="stats/annotation">Curation statistics</a> 
+    <a href="http://curation.pombase.org/pombe/stats/annotation">Curation statistics</a> 
     |
-    <a href="docs/index">Documentation</a>
+    <a href="http://curation.pombase.org/pombe/docs/index">Documentation</a>
     |
     <& /contact.mhtml, link_text => "Contact" &>
     </div>
