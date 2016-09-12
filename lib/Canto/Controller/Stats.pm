@@ -89,7 +89,7 @@ sub annotation : Local {
 
   $st->{hide_breadcrumbs} = 1;
 
-  $st->{title} = "PomBase literature curation statistics";
+  $st->{title} = "PomBase literature curation statistics - $db_creation_datetime";
   $st->{template} = 'stats/annotation.mhtml';
 
   if (!$ENV{CANTO_DEBUG}) {
