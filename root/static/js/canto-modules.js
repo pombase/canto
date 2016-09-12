@@ -4220,12 +4220,17 @@ var annotationQuickAdd =
         featureType: '@',
         featureId: '@',
         featureDisplayName: '@',
+        linkLabel: '@?'
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/annotation_quick_add.html',
       controller: function($scope) {
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+
+        if (!$scope.linkLabel) {
+          $scope.linkLabel = 'Quick add ...';
+        }
 
         $scope.enabled = function() {
           return CursSettings.getAnnotationMode() == 'advanced';
