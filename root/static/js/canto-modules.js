@@ -4137,6 +4137,30 @@ canto.controller('AnnotationEditDialogCtrl',
                   'CantoGlobals', 'toaster', 'args',
                   annotationEditDialogCtrl]);
 
+angular.module('cantoApp')
+  .directive('ngAltEnter', function($document) {
+    return {
+      scope: {
+        ngAltEnter: "&"
+      },
+      link: function(scope) {
+        var enterWatcher = function(event) {
+          if (event.altKey && event.key == "Enter") {
+            scope.ngAltEnter();
+            scope.$apply();
+            event.preventDefault();
+          }
+        };
+
+        $document.bind("keydown keypress", enterWatcher);
+
+        scope.$on("$destroy",
+                  function handleDestroyEvent() {
+                    $document.unbind("keydown keypress", enterWatcher);
+                  });
+      }
+    }
+  });
 
 
 function startEditing($uibModal, annotationTypeName, annotation,
