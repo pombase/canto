@@ -187,14 +187,6 @@ sub triage :Local {
 
     $pub_just_triaged->curation_priority($priority_cvterm);
 
-    my $community_curatable = $c->req()->param('community-curatable');
-
-    if (defined $community_curatable) {
-      $pub_just_triaged->community_curatable(1);
-    } else {
-      $pub_just_triaged->community_curatable(0);
-    }
-
     my $triage_comment = $c->req()->param('triage-comment');
     my $triage_comment_cvterm =
       $schema->resultset('Cvterm')->find({ name => "triage_comment" });

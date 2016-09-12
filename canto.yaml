@@ -629,8 +629,6 @@ class_info:
             - inline_list
         - name: corresponding_author
           editable: 1
-        - name: community_curatable
-          editable: 1
         - name: current_curator
           referenced_class: Person
           source:
@@ -822,7 +820,7 @@ class_info:
       constraint: "curation_priority_id in (select cvterm_id from cvterm where name = 'high')"
     community_curatable_publications:
       extends: pub
-      constraint: "pub_id in (select pub_id from pub where community_curatable)"
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and pub_id in (select pub from curs_curator cc join curs on curs_id = cc.curs join person on person.person_id = cc.curator join cvterm role on person.role = role.cvterm_id and role.name <> 'admin')"
     curatable_low_priority_publications:
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable, low priority')"
@@ -908,9 +906,6 @@ class_info:
     publications_with_approved_session:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
-    community_curatable_publications_with_approved_session:
-      extends: pub
-      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and pub_id in (select pub_id from pub where community_curatable)"
     curatable_publications_with_no_annotatable_genes:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_genes_count' and p.value = 0)) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -1086,8 +1081,6 @@ reports:
                    - report: publications_with_active_sessions
                    - report: publications_with_session_needing_approval
                    - report: publications_with_approved_session
-                     children:
-                      - report: community_curatable_publications_with_approved_session
                    - report: publications_with_multiple_sessions
                 - report: curatable_publications_without_sessions
                 - report: curatable_publications_with_no_annotatable_genes
@@ -1827,7 +1820,9 @@ chado:
 curator_manager:
   accept_hooks:
 # call with args: $config, $track_schema, $curs
-    - set_pub_community_curatable
+#
+#   UNUSED, see: https://github.com/pombase/canto/issues/1222
+#    - set_pub_community_curatable
 
 # if set to "yes", always prompt for an annotation extension on the
 # annotation transfer page
