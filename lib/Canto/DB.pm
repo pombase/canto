@@ -137,6 +137,7 @@ sub cached_connect
   my $dbh = $schema->storage()->dbh();
 
   if ($is_sqlite_db) {
+    $dbh->{sqlite_unicode} = 1;
     if (!$options->{disable_foreign_keys}) {
       $dbh->do("PRAGMA foreign_keys = ON");
     }
