@@ -1217,7 +1217,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: "Please specify deleted residues - eg. 100-200"
+    placeholder: "Please specify deleted residues - eg. 100-200 OR 10-20,40-50"
   - name: partial deletion, nucleotide
     export_type: partial_nucleotide_deletion
     description_required: true
