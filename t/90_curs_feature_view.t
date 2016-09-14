@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 18;
 
 use Plack::Test;
 use Plack::Util;
@@ -53,7 +53,6 @@ test_psgi $app, sub {
     my $res = $cb->($req);
     is $res->code, 200;
 
-    like ($res->content(), qr|Genotype: SPCC63.05delta ssm4KE</title|);
     like ($res->content(), qr/Annotate normal or abnormal phenotypes of cells/);
   }
 
