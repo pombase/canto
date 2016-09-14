@@ -62,17 +62,10 @@ No genotypes in this session.  Try adding one.
     </div>
     <div class="row">
       <div class="col-sm-5 col-md-5">
-        <button type="button" id="curs-finish-genotype" class="btn btn-primary curs-back-button"><% $finish_text %></button>
+        <button ng-click="backToSummary()" type="button" class="btn btn-primary curs-back-button">&lt;- Back to summary</button>
       </div>
     </div>
     </div>
   </div>
 </div>
-
-
-<%init>
-my $start_path = $c->stash()->{curs_root_uri};
-
-my $finish_text = '<- Back to summary';
-</%init>
 </div>

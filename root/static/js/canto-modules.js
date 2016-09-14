@@ -3288,6 +3288,11 @@ var genotypeViewCtrl =
       window.location.href =
         CantoGlobals.curs_root_uri + '/genotype_manage#/edit/' + genotypeId;
     };
+
+    $scope.backToGenotypes = function() {
+      window.location.href = CantoGlobals.curs_root_uri +
+        '/genotype_manage' + (CantoGlobals.read_only_curs ? '/ro' : '');
+    };
   };
 
 canto.controller('GenotypeViewCtrl',
@@ -3358,6 +3363,11 @@ var GenotypeManageCtrl =
         toaster.pop('error', "couldn't read the genotype list from the server");
         $scope.data.waitingForServer = false;
       });
+    };
+
+    $scope.backToSummary = function() {
+      window.location.href = CantoGlobals.curs_root_uri +
+        (CantoGlobals.read_only_curs ? '/ro' : '');
     };
 
     $scope.readGenotypes();
