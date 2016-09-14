@@ -4,6 +4,7 @@ use Test::More tests => 13;
 
 use Clone qw(clone);
 use JSON;
+use Encode;
 
 use Canto::Curs::State qw/:all/;
 
@@ -44,7 +45,7 @@ sub _get_data
   }
 
   my $json = $dump_export->export();
-  return decode_json($json);
+  return decode_json(encode("utf8", $json));
 }
 
 # dump all
