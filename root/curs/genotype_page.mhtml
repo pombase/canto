@@ -43,7 +43,7 @@ Add a new <% $type_display_name %> for this genotype ...
 
 <div id="curs-genotype-details" class="curs-box curs-half-width-section">
   <div class="curs-box-title">
-Genotype details
+Details
   </div>
   <div class="curs-box-body">
     <div class="curs-allele-list">

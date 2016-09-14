@@ -1356,6 +1356,9 @@ sub feature_view : Chained('feature') PathPart('view')
   my @ids = split /,/, $ids;
 
   if ($feature_type eq 'gene') {
+    my $display_name = $st->{feature}->display_name();
+    $st->{title} = "Gene: $display_name";
+
     my @gene_proxies = map {
       my $gene = $schema->find_with_type('Gene', $_);
       _get_gene_proxy($config, $gene);
@@ -1385,7 +1388,6 @@ sub feature_view : Chained('feature') PathPart('view')
           Canto::Curs::GenotypeManager->new(config => $c->config(),
                                             curs_schema => $schema);
 
-
         # pull from Chado and store in CursDB, $genotype_id is an
         # identifier/uniquename
         $genotype =
@@ -1397,14 +1399,13 @@ sub feature_view : Chained('feature') PathPart('view')
 
       $st->{feature} = $genotype;
       $st->{features} = [$genotype];
+
+      $st->{title} = 'Genotype';
     } else {
       die "no such feature type: $feature_type\n";
     }
   }
 
-  my $display_name = $st->{feature}->display_name();
-
-  $st->{title} = ucfirst $feature_type . ": $display_name";
   $st->{template} = "curs/${feature_type}_page.mhtml";
 }
 
