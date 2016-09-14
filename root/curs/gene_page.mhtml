@@ -111,7 +111,7 @@ Genotypes for <% $gene->display_name() %> in this session
 
 <div class="clearall"/>
 
-<button type="button" id="curs-finish-gene" class="btn btn-primary curs-back-button"><% $finish_text %></button>
+<a href="<% $summary_url %>" type="button" class="btn btn-primary curs-back-button"><% $finish_text %></a>
 
 <annotation-table-list feature-type-filter="gene" feature-id-filter="<% $gene_id %>"
                        feature-filter-display-name="<% $gene->display_name() %>"></annotation-table-list>
@@ -153,4 +153,6 @@ use Canto::Curs::GeneProxy;
 
 my $gene_proxy =
   Canto::Curs::GeneProxy->new(config => $c->config(), cursdb_gene => $gene);
+
+my $summary_url = $curs_root_uri . ($read_only_curs ? '/ro' : '');
 </%init>
