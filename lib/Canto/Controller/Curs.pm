@@ -1356,9 +1356,6 @@ sub feature_view : Chained('feature') PathPart('view')
   my @ids = split /,/, $ids;
 
   if ($feature_type eq 'gene') {
-    my $display_name = $st->{feature}->display_name();
-    $st->{title} = "Gene: $display_name";
-
     my @gene_proxies = map {
       my $gene = $schema->find_with_type('Gene', $_);
       _get_gene_proxy($config, $gene);
@@ -1373,6 +1370,9 @@ sub feature_view : Chained('feature') PathPart('view')
 
     $st->{feature} = $st->{gene};
     $st->{features} = $st->{genes};
+
+    my $display_name = $st->{feature}->display_name();
+    $st->{title} = "Gene: $display_name";
  } else {
     if ($feature_type eq 'genotype') {
       my $genotype;
