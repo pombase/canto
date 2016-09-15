@@ -5154,6 +5154,7 @@ canto.directive('pubsListView', ['CantoGlobals', pubsListViewCtrl]);
 
 var AnnotationStatsCtrl =
   function($scope, CantoGlobals) {
+    $scope.visibleMap = {};
     $scope.curationStatusLabels = CantoGlobals.curationStatusData[0];
     $scope.curationStatusData = CantoGlobals.curationStatusData.slice(1);
     $scope.cumulativeAnnotationTypeCountsLabels = CantoGlobals.cumulativeAnnotationTypeCounts[0];
@@ -5173,6 +5174,15 @@ var AnnotationStatsCtrl =
               }
             });
     $scope.perPub5YearStatsData = CantoGlobals.perPub5YearStatsData.slice(1);
+
+    $scope.show = function($event, key) {
+      $scope.visibleMap[key] = true;
+      $event.preventDefault();
+    };
+
+    $scope.isVisible = function(key) {
+      return $scope.visibleMap[key] || false;
+    };
   };
 
 canto.controller('AnnotationStatsCtrl',

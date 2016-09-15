@@ -155,6 +155,10 @@ annotations contributed by authors.
     </div>
   </div>
   <div class="col-sm-6 col-md-6">
+    <div ng-if="!isVisible('curated-vs-uncurated-by-pub-date')">
+      <a href="#" ng-click="show($event, 'curated-vs-uncurated-by-pub-date')">View data table ...</a>
+    </div>
+    <div ng-if="isVisible('curated-vs-uncurated-by-pub-date')">
     <script language="javascript" type="text/javascript">
       var curationStatusData = <% $curation_status_js |n %>;
     </script>
@@ -203,6 +207,7 @@ annotations contributed by authors.
       <td><% $totals[3] %></td>
     </tr>
   </table>
+  </div>
 </div>
 
 </div>
