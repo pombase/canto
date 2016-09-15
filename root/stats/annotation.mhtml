@@ -126,27 +126,19 @@ $db_creation_datetime
   </table>
 </div>
 <div class="col-sm-7 col-md-7">
-<p>
-Number of papers curated by professional and community curators, and total
-number of annotations created, per year. An annotation is either an assignment
-of a gene product to a term in an ontology, or a genetic or physical
-interaction. Each unique combination of an ontology term and an extension is
-counted as a separate annotation. Any paper which is fully or partially
-curated by a community curator is classified as a community curated
-publication.
-</p>
-<p>
-Each annotation is individually date-stamped upon creation, whereas the
-curation date for a publication reflects the date on which the entire curation
-session was approved for inclusion in PomBase (this accounts for discrepancies
-such as the annotations, but no publications, attributed to 2011).
-</p>
-<p>
-Note: The breakdown of annotations between professional and community curators
-is only accurate from 2013 onwards. Until the end of 2012, all annotations
-from a community curated paper were attributed to the community curator, even
-those added by a professional curator during the approval procedure.
-</p>
+  <p>
+    Number of papers curated by professional and community curators, and total
+    number of annotations created, per year. Any paper which is fully or
+    partially curated by a community curator is classified as a community
+    curated publication.
+  </p>
+  <p>
+    Note: The breakdown of annotations between professional and community
+    curators is only accurate from 2013 onwards. Until the end of 2012, all
+    annotations from a community curated paper were attributed to the
+    community curator, even those added by a professional curator during the
+    approval procedure.
+  </p>
 </div>
 </div>
 </div>
