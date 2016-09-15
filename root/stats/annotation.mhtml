@@ -68,6 +68,21 @@ $db_creation_datetime
 <div class="curs-box">
   <div class="curs-box-title">Canto curator summary</div>
 <div class="curs-box-body row">
+<div class="col-sm-7 col-md-7">
+  <p>
+    Number of papers curated by professional and community curators, and total
+    number of annotations created, per year. Any paper which is fully or
+    partially curated by a community curator is classified as a community
+    curated publication.
+  </p>
+  <p>
+    Note: The breakdown of annotations between professional and community
+    curators is only accurate from 2013 onwards. Until the end of 2012, all
+    annotations from a community curated paper were attributed to the
+    community curator, even those added by a professional curator during the
+    approval procedure.
+  </p>
+</div>
 <div class="col-sm-5 col-md-5">
   <table style="font-size: 105%" class="list">
     <thead>
@@ -124,21 +139,6 @@ $db_creation_datetime
       <td><% $curator_summ_totals[4] %></td>
     </tr>
   </table>
-</div>
-<div class="col-sm-7 col-md-7">
-  <p>
-    Number of papers curated by professional and community curators, and total
-    number of annotations created, per year. Any paper which is fully or
-    partially curated by a community curator is classified as a community
-    curated publication.
-  </p>
-  <p>
-    Note: The breakdown of annotations between professional and community
-    curators is only accurate from 2013 onwards. Until the end of 2012, all
-    annotations from a community curated paper were attributed to the
-    community curator, even those added by a professional curator during the
-    approval procedure.
-  </p>
 </div>
 </div>
 </div>
