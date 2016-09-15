@@ -11,6 +11,9 @@ $db_creation_datetime
 
 <div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
 
+<div>
+</div>
+
 <div class="curs-box">
   <div class="curs-box-title">Cumulative annotations by type and year</div>
 <div class="curs-box-body row">
