@@ -147,6 +147,14 @@ $db_creation_datetime
   <div class="curs-box-title">Curated vs uncurated by publication date</div>
   <div class="curs-box-body row">
   <div class="col-sm-6 col-md-6">
+    <div>
+Publications containing gene-specific data per year, with curation status as
+of <% $db_creation_datetime %>. Admin curated: papers curated exclusively
+by <% $c->config()->{database_name} %> staff; Community curated: papers with
+annotations contributed by authors.
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-6">
     <script language="javascript" type="text/javascript">
       var curationStatusData = <% $curation_status_js |n %>;
     </script>
@@ -196,14 +204,7 @@ $db_creation_datetime
     </tr>
   </table>
 </div>
-  <div class="col-sm-6 col-md-6">
-    <div>
-Publications containing gene-specific data per year, with curation status as
-of <% $db_creation_datetime %>. Admin curated: papers curated exclusively
-by <% $c->config()->{database_name} %> staff; Community curated: papers with
-annotations contributed by authors.
-    </div>
-  </div>
+
 </div>
 <div>
   <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData"
@@ -215,6 +216,11 @@ annotations contributed by authors.
 <div class="curs-box">
   <div class="curs-box-title">Annotations/genes per publication per year</div>
   <div class="curs-box-body row">
+  <div class="col-sm-6 col-md-6">
+    Mean number of manually curated annotations and genes annotated in PomBase
+    per peer-reviewed paper per year. Counts exclude high-throughput
+    experiments and use the same criteria for all years
+  </div>
   <div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
@@ -239,11 +245,6 @@ annotations contributed by authors.
 % }
   </table>
 </div>
-  <div class="col-sm-6 col-md-6">
-    Mean number of manually curated annotations and genes annotated in PomBase
-    per peer-reviewed paper per year. Counts exclude high-throughput
-    experiments and use the same criteria for all years
-  </div>
   </div>
 </div>
 
@@ -251,6 +252,11 @@ annotations contributed by authors.
 <div class="curs-box">
   <div class="curs-box-title">Annotations/genes per publication in 5 year intervals</div>
 <div class="curs-box-body row">
+<div class="col-sm-6 col-md-6">
+    Mean number of manually curated annotations and genes annotated in PomBase
+    per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
+    experiments and use the same criteria for all years
+</div>
 <div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
@@ -286,11 +292,6 @@ annotations contributed by authors.
     </tr>
 % }
   </table>
-</div>
-<div class="col-sm-6 col-md-6">
-    Mean number of manually curated annotations and genes annotated in PomBase
-    per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
-    experiments and use the same criteria for all years
 </div>
 </div>
 <div class="row">
