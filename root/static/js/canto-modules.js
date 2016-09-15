@@ -2724,7 +2724,7 @@ canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameCo
 
 
 var alleleEditDialogCtrl =
-  function($scope, $uibModalInstance, CantoConfig, args) {
+  function($scope, $uibModalInstance, toaster, CantoConfig, args) {
     $scope.config = {
       endogenousWildtypeAllowed: args.endogenousWildtypeAllowed,
     };
@@ -2823,8 +2823,12 @@ var alleleEditDialogCtrl =
     };
 
     $scope.ok = function () {
-      copyObject($scope.alleleData, args.allele);
-      $uibModalInstance.close(args.allele);
+      if ($scope.isValid()) {
+        copyObject($scope.alleleData, args.allele);
+        $uibModalInstance.close(args.allele);
+      } else {
+        toaster.pop('error', "No changes have been made");
+      }
     };
 
     $scope.cancel = function () {
@@ -2833,8 +2837,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$uibModalInstance',
-                  'CantoConfig', 'args',
+                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args',
                  alleleEditDialogCtrl]);
 
 var termSuggestDialogCtrl =
