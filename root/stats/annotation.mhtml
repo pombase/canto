@@ -70,6 +70,8 @@ $db_creation_datetime
     href="http://www.pombase.org/documentation">PomBase
     documentation</a>.
   </p>
+</div>
+<div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
       <tr>
@@ -106,8 +108,6 @@ $db_creation_datetime
     </tr>
 % }
   </table>
-</div>
-<div class="col-sm-6 col-md-6">
 </div>
 </div>
 <div>
