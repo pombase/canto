@@ -18,6 +18,18 @@ $db_creation_datetime
   <div class="curs-box-title">Cumulative annotations by type and year</div>
 <div class="curs-box-body row">
 <div class="col-sm-6 col-md-6">
+  <p>
+    Cumulative totals of manually curated annotations over
+    time. Includes annotations made by PomBase curators and community
+    contributors; excludes interaction annotations imported from
+    BioGRID and GO annotations based on computational methods (IEA
+    evidence). "Other" includes orthology, taxon distribution,
+    complementation, DNA and protein sequence features, genome
+    organization, and miscellaneous data types. All annotation types
+    are described in the <a
+    href="http://www.pombase.org/documentation">PomBase
+    documentation</a>.
+  </p>
   <table class="list">
     <thead>
       <tr>
