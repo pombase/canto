@@ -12,10 +12,50 @@ $db_creation_datetime
 <div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
 
 <div>
+
+  <p>
+    This page provides a set of metrics reflecting the current state
+    of literature curation in PomBase.
+  </p>
+
+  <p>
+    In these metrics, an annotation is an assignment of a gene product
+    to a term in an ontology, a genetic or physical interaction, or
+    another curated statement about a gene or its product. For
+    ontologies that support annotation extensions, each unique
+    combination of an ontology term and an extension is counted as a
+    separate annotation.
+  </p>
+
+  <p>
+    All of the Canto-specific annotation metrics exclude
+    high-throughput datasets.
+  </p>
+
+  <p>
+    Available reports:
+  </p>
+
+  <ul>
+    <li><a href="#cumulative">All manual curation <a/></li>
+    <li>Canto curation:
+      <ul>
+        <li><a href="#cursum">Curator summary (publications)<a/></li>
+        <li><a href="#pubs">Curated and uncurated publications over time<a/></li>
+        <li>Genes and annotations per publication over time
+          <ul>
+            <li><a href="#gppannual">Annual<a/></li>
+            <li><a href="#gpp5year">5-year intervals<a/></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
 </div>
 
 <div class="curs-box">
-  <div class="curs-box-title">Cumulative annotations by type and year</div>
+  <div class="curs-box-title" id="cumulative">Cumulative annotations by type and year</div>
 <div class="curs-box-body row">
 <div class="col-sm-6 col-md-6">
   <p>
@@ -81,7 +121,7 @@ $db_creation_datetime
 </div>
 
 <div class="curs-box">
-  <div class="curs-box-title">Canto curator summary</div>
+  <div class="curs-box-title" id="cursum">Canto curator summary</div>
 <div class="curs-box-body row">
 <div class="col-sm-7 col-md-7">
   <p>
@@ -159,7 +199,7 @@ $db_creation_datetime
 </div>
 
 <div class="curs-box">
-  <div class="curs-box-title">Curated vs uncurated by publication date</div>
+  <div class="curs-box-title" id="pubs">Curated vs. uncurated by publication date</div>
   <div class="curs-box-body row">
   <div class="col-sm-6 col-md-6">
     <div>
@@ -234,7 +274,7 @@ annotations contributed by authors.
 </div>
 
 <div class="curs-box">
-  <div class="curs-box-title">Annotations/genes per publication per year</div>
+  <div class="curs-box-title" id="gppannual">Annotations/genes per publication per year</div>
   <div class="curs-box-body row">
   <div class="col-sm-6 col-md-6">
     Mean number of manually curated annotations and genes annotated in PomBase
@@ -270,7 +310,7 @@ annotations contributed by authors.
 
 
 <div class="curs-box">
-  <div class="curs-box-title">Annotations/genes per publication in 5 year intervals</div>
+  <div class="curs-box-title" id="gpp5year">Annotations/genes per publication in 5-year intervals</div>
 <div class="curs-box-body row">
 <div class="col-sm-6 col-md-6">
     Mean number of manually curated annotations and genes annotated in PomBase
