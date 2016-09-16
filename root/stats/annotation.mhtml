@@ -37,15 +37,15 @@ $db_creation_datetime
   </p>
 
   <ul>
-    <li><a href="#cumulative">All manual curation <a/></li>
+    <li><a href="#cumulative">All manual curation </a></li>
     <li>Canto curation:
       <ul>
-        <li><a href="#cursum">Curator summary (publications)<a/></li>
-        <li><a href="#pubs">Curated and uncurated publications over time<a/></li>
+        <li><a href="#cursum">Curator summary (publications)</a></li>
+        <li><a href="#pubs">Curated and uncurated publications over time</a></li>
         <li>Genes and annotations per publication over time
           <ul>
-            <li><a href="#gppannual">Annual<a/></li>
-            <li><a href="#gpp5year">5-year intervals<a/></li>
+            <li><a href="#gppannual">Annual</a></li>
+            <li><a href="#gpp5year">5-year intervals</a></li>
           </ul>
         </li>
       </ul>
