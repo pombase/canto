@@ -36,18 +36,13 @@ $db_creation_datetime
     Available reports:
   </p>
 
-  <ul>
+  <ul style="list-style-type: disc;">
     <li><a href="#cumulative">All manual curation </a></li>
     <li>Canto curation:
       <ul>
         <li><a href="#cursum">Curator summary (publications)</a></li>
         <li><a href="#pubs">Curated and uncurated publications over time</a></li>
-        <li>Genes and annotations per publication over time
-          <ul>
-            <li><a href="#gppannual">Annual</a></li>
-            <li><a href="#gpp5year">5-year intervals</a></li>
-          </ul>
-        </li>
+        <li><a href="#gpp5year">Genes and annotations per publication in 5-year intervals</a></li>
       </ul>
     </li>
   </ul>
@@ -277,44 +272,9 @@ annotations contributed by authors.
 </div>
 
 <div class="curs-box">
-  <div class="curs-box-title" id="gppannual">Annotations/genes per publication per year</div>
-  <div class="curs-box-body row">
-  <div class="col-sm-6 col-md-6">
-    Mean number of manually curated annotations and genes annotated in PomBase
-    per peer-reviewed paper per year. Counts exclude high-throughput
-    experiments and use the same criteria for all years
-  </div>
-  <div class="col-sm-6 col-md-6">
-  <table class="list">
-    <thead>
-      <tr>
-        <th>
-          Publication year
-        </th>
-        <th>
-          Avg. genes per pub.
-        </th>
-        <th>
-          Avg. annotations per pub.
-        </th>
-      </tr>
-    </thead>
-% for my $row (@per_pub_stats_table) {
-    <tr>
-%   for my $column (@$row) {
-      <td><% $column %></td>
-%   }
-    </tr>
-% }
-  </table>
-</div>
-  </div>
-</div>
-
-
-<div class="curs-box">
   <div class="curs-box-title" id="gpp5year">Annotations/genes per publication in 5-year intervals</div>
-<div class="curs-box-body row">
+  <div class="curs-box-body">
+    <div clas="row">
 <div class="col-sm-6 col-md-6">
     Mean number of manually curated annotations and genes annotated in PomBase
     per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
@@ -377,6 +337,46 @@ annotations contributed by authors.
                chart-series="Avg. annotations per pub">
     </bar-chart>
   </div>
+</div>
+<div class="row">
+    <div ng-if="!isVisible('annotation+genes-per-pub-per-year')">
+      <a href="#" ng-click="show($event, 'annotation+genes-per-pub-per-year')">View raw data table ...</a>
+    </div>
+<div class="curs-box" ng-if="isVisible('annotation+genes-per-pub-per-year')">
+  <div class="curs-box-title" id="gppannual">Annotations/genes per publication per year</div>
+  <div class="curs-box-body row">
+  <div class="col-sm-6 col-md-6">
+    Mean number of manually curated annotations and genes annotated in PomBase
+    per peer-reviewed paper per year. Counts exclude high-throughput
+    experiments and use the same criteria for all years
+  </div>
+  <div class="col-sm-6 col-md-6">
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Avg. genes per pub.
+        </th>
+        <th>
+          Avg. annotations per pub.
+        </th>
+      </tr>
+    </thead>
+% for my $row (@per_pub_stats_table) {
+    <tr>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+  </div>
+</div>
+</div>
 </div>
 </div>
 </div>
