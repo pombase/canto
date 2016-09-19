@@ -426,12 +426,14 @@ sub _get_alleles
 
   my $allele_lookup = $self->allele_lookup();
 
-  if (@res < 10 && $allele_lookup) {
+  my $max_results = 15;
+
+  if (@res < $max_results && $allele_lookup) {
     my $lookup_res = $allele_lookup->lookup(gene_primary_identifier =>
                                               $gene_primary_identifier,
                                             search_string => $search_string);
 
-    while (@res < 10 && @$lookup_res > 0) {
+    while (@res < $max_results && @$lookup_res > 0) {
       my $new_res = shift @$lookup_res;
       # add if there are no alleles with that name
       if (!grep {
