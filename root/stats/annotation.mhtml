@@ -88,6 +88,9 @@ $db_creation_datetime
           Protein modifications
         </th>
         <th>
+          Gene expression
+        </th>
+        <th>
           Genetic interactions
         </th>
         <th>
@@ -115,7 +118,7 @@ $db_creation_datetime
     var cumulativeAnnotationTypeCounts = <% $cumulative_annotation_type_counts_js |n %>;
   </script>
   <stacked-graph chart-labels="cumulativeAnnotationTypeCountsLabels" chart-data="cumulativeAnnotationTypeCountsData"
-                 chart-series="GO|Phenotype|Modification|Genetic interaction|Physical interaction|Other">
+                 chart-series="GO|Phenotype|Modification|Gene Expression|Genetic interaction|Physical interaction|Other">
   </stacked-graph>
 </div>
 </div>
@@ -386,7 +389,7 @@ my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $current_year = $year + 1900;
 
 my @cumulative_annotation_types_by_year = ();
-my @cumulative_annotation_type_counts = (0,0,0,0,0,0);
+my @cumulative_annotation_type_counts = (0,0,0,0,0,0,0);
 
 for my $row (@annotation_types_by_year) {
   my $year = shift @$row;
@@ -395,6 +398,7 @@ for my $row (@annotation_types_by_year) {
     ($data{biological_process} // 0) + ($data{cellular_component} // 0);
   my $phenotype_count = $data{fission_yeast_phenotype} // 0;
   my $modification_count = $data{'PSI-MOD'} // 0;
+  my $gene_ex_count = $data{gene_ex} // 0;
   my $genetic_interactions_count = $data{'interacts_genetically'} // 0;
   my $physical_interactions_count = $data{'interacts_physically'} // 0;
   my $total = 0;
@@ -402,14 +406,15 @@ for my $row (@annotation_types_by_year) {
     $total += $_ if defined $_;
   } values %data;
   my $other_count = $total - $go_count - $phenotype_count - $modification_count -
-    $genetic_interactions_count - $physical_interactions_count;
+    - $gene_ex_count - $genetic_interactions_count - $physical_interactions_count;
 
   $cumulative_annotation_type_counts[0] += $go_count;
   $cumulative_annotation_type_counts[1] += $phenotype_count;
   $cumulative_annotation_type_counts[2] += $modification_count;
-  $cumulative_annotation_type_counts[3] += $genetic_interactions_count;
-  $cumulative_annotation_type_counts[4] += $physical_interactions_count;
-  $cumulative_annotation_type_counts[5] += $other_count;
+  $cumulative_annotation_type_counts[3] += $gene_ex_count;
+  $cumulative_annotation_type_counts[4] += $genetic_interactions_count;
+  $cumulative_annotation_type_counts[5] += $physical_interactions_count;
+  $cumulative_annotation_type_counts[6] += $other_count;
 
   push @cumulative_annotation_types_by_year,
     [$year, @cumulative_annotation_type_counts];
