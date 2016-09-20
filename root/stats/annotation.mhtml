@@ -406,7 +406,7 @@ for my $row (@annotation_types_by_year) {
     $total += $_ if defined $_;
   } values %data;
   my $other_count = $total - $go_count - $phenotype_count - $modification_count -
-    - $gene_ex_count - $genetic_interactions_count - $physical_interactions_count;
+    $gene_ex_count - $genetic_interactions_count - $physical_interactions_count;
 
   $cumulative_annotation_type_counts[0] += $go_count;
   $cumulative_annotation_type_counts[1] += $phenotype_count;
