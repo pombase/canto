@@ -66,6 +66,10 @@ $db_creation_datetime
     documentation</a>.
   </p>
 </div>
+<div class="ng-cloak" ng-if="!isVisible('cumulative-annotations-by-type-and-year')">
+  <a href="#" ng-click="show($event, 'cumulative-annotations-by-type-and-year')">View data table ...</a>
+</div>
+<div class="ng-cloak" ng-if="isVisible('cumulative-annotations-by-type-and-year')">
 <div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
@@ -106,6 +110,7 @@ $db_creation_datetime
     </tr>
 % }
   </table>
+</div>
 </div>
 </div>
 <div>
@@ -208,10 +213,10 @@ annotations contributed by authors.
     </div>
   </div>
   <div class="col-sm-6 col-md-6">
-    <div ng-if="!isVisible('curated-vs-uncurated-by-pub-date')">
+    <div class="ng-cloak" ng-if="!isVisible('curated-vs-uncurated-by-pub-date')">
       <a href="#" ng-click="show($event, 'curated-vs-uncurated-by-pub-date')">View data table ...</a>
     </div>
-    <div ng-if="isVisible('curated-vs-uncurated-by-pub-date')">
+    <div class="ng-cloak" ng-if="isVisible('curated-vs-uncurated-by-pub-date')">
     <script language="javascript" type="text/javascript">
       var curationStatusData = <% $curation_status_js |n %>;
     </script>
@@ -274,12 +279,17 @@ annotations contributed by authors.
 <div class="curs-box">
   <div class="curs-box-title" id="gpp5year">Annotations/genes per publication in 5-year intervals</div>
   <div class="curs-box-body">
-    <div clas="row">
+    <div class="row">
 <div class="col-sm-6 col-md-6">
     Mean number of manually curated annotations and genes annotated in PomBase
     per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
     experiments and use the same criteria for all years
 </div>
+<div class="ng-cloak" ng-if="!isVisible('annotations+genes-per-publication-in-5-year-intervals')">
+  <a href="#" ng-click="show($event, 'annotations+genes-per-publication-in-5-year-intervals')">View data table ...</a>
+</div>
+<div ng-if="isVisible('annotations+genes-per-publication-in-5-year-intervals')">
+
 <div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
@@ -317,6 +327,7 @@ annotations contributed by authors.
   </table>
 </div>
 </div>
+</div>
 <div class="row">
   <script language="javascript" type="text/javascript">
     var perPub5YearStatsData = <% $per_pub_5_year_stats_js |n %>;
@@ -339,10 +350,10 @@ annotations contributed by authors.
   </div>
 </div>
 <div class="row">
-    <div ng-if="!isVisible('annotation+genes-per-pub-per-year')">
-      <a href="#" ng-click="show($event, 'annotation+genes-per-pub-per-year')">View raw data table ...</a>
-    </div>
-<div class="curs-box" ng-if="isVisible('annotation+genes-per-pub-per-year')">
+  <div class="ng-cloak" ng-if="!isVisible('annotation+genes-per-pub-per-year')">
+    <a href="#" ng-click="show($event, 'annotation+genes-per-pub-per-year')">View annotation per publication data ...</a>
+  </div>
+<div class="ng-cloak curs-box" ng-if="isVisible('annotation+genes-per-pub-per-year')">
   <div class="curs-box-title" id="gppannual">Annotations/genes per publication per year</div>
   <div class="curs-box-body row">
   <div class="col-sm-6 col-md-6">
