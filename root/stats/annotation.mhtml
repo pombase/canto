@@ -55,10 +55,11 @@ $db_creation_datetime
 <div class="col-sm-6 col-md-6">
   <p>
     Cumulative totals of manually curated annotations over
-    time. Includes annotations made by PomBase curators and community
-    contributors; excludes interaction annotations imported from
-    BioGRID and GO annotations based on computational methods (IEA
-    evidence). "Other" includes orthology, taxon distribution,
+    time. Totals include annotations made by PomBase curators and
+    community contributors in Canto and via batch phenotype and
+    modification data submission, but exclude interaction annotations
+    imported from BioGRID and GO annotations based on computational
+    methods (IEA evidence). "Other" includes taxon distribution,
     complementation, DNA and protein sequence features, genome
     organization, and miscellaneous data types. All annotation types
     are described in the <a
@@ -132,6 +133,11 @@ $db_creation_datetime
     number of annotations created, per year. Any paper which is fully or
     partially curated by a community curator is classified as a community
     curated publication.
+  </p>
+  <p>
+    In this table, papers are counted towards the year in which they
+    are curated (as opposed to publication date). Annotations are also
+    individually date-stamped.
   </p>
   <p>
     Note: The breakdown of annotations between professional and community
