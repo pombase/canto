@@ -575,9 +575,9 @@ END
 
     my @flat_ids = map {
       if (ref $_) {
-        ($_->{include}, $_->{exclude});
+        ('is_a(' . $_->{include} . ')', 'is_a(' . $_->{exclude} . ')');
       } else {
-        $_;
+        "is_a($_)";
       }
     } @$search_scope;
 
@@ -595,11 +595,15 @@ END
   }
 
   if (@$exclude_subsets) {
+    my @isa_exclude_subsets = map {
+      "is_a($_)";
+    } @$exclude_subsets;
+
     my $subset_cvtermprop_rs =
       $schema->resultset('Cvtermprop')
         ->search(
           {
-            value => { -in => $exclude_subsets },
+            value => { -in => \@isa_exclude_subsets },
             'type.name' => 'canto_subset',
           },
           {

@@ -136,7 +136,7 @@ sub get_subset_data
   }
 
   my %subsets = map {
-    ($_, { $_ => 1 })
+    ($_, { $_ => { is_a => 1 } })
   } (keys %domain_subsets_to_store, keys %range_subsets_to_store,
      keys %exclude_subsets_to_store);
 
@@ -149,15 +149,15 @@ sub get_subset_data
 
     if ($domain_subsets_to_store{$object} &&
         grep { $_ eq $rel_type } @{$domain_subsets_to_store{$object}}) {
-      $subsets{$subject}{$object} = 1;
+      $subsets{$subject}{$object}{$rel_type} = 1;
     }
 
     if ($range_subsets_to_store{$object}) {
-      $subsets{$subject}{$object} = 1;
+      $subsets{$subject}{$object}{$rel_type} = 1;
     }
 
     if ($exclude_subsets_to_store{$object}) {
-      $subsets{$subject}{$object} = 1;
+      $subsets{$subject}{$object}{$rel_type} = 1;
     }
   }
 

@@ -1441,7 +1441,12 @@ function extensionConfFilter(allConfigs, subsetIds, role) {
                      role != 'admin') {
                    return;
                  }
-                 if ($.inArray(conf.domain, subsetIds) != -1) {
+                 var matched =
+                   $.grep(conf.subset_rel,
+                          function(rel) {
+                            return $.inArray(rel + "(" + conf.domain + ")", subsetIds) != -1;
+                          }).length > 0;
+                 if (matched) {
                    if (!conf.exclude_subset_ids ||
                        arrayIntersection(conf.exclude_subset_ids,
                                          subsetIds).length == 0) {
