@@ -11,6 +11,10 @@ canto.config(['$compileProvider', function ($compileProvider) {
   $compileProvider.debugInfoEnabled(false);
 }]);
 
+canto.config(['ChartJsProvider', function (ChartJsProvider) {
+  ChartJsProvider.setOptions({ colors : [ '#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#8DFF5C', '#949FB1', '#4D5360'] });
+}]);
+
 function capitalizeFirstLetter(text) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
@@ -5209,7 +5213,6 @@ var stackedGraph =
         controller: function ($scope) {
           $scope.type = 'StackedBar';
           $scope.series = $scope.chartSeries.split('|');
-          $scope.colours = ['#808080','#b04040','#3030b0'];
           $scope.options = {
             legend: { display: true },
             scales: {
