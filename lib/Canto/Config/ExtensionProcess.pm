@@ -55,7 +55,7 @@ sub get_owltools_results
 
   for my $filename (@obo_file_names) {
     system ("owltools $filename --save-closure-for-chado $temp_filename") == 0
-      or die "can't open pipe from owltools: $?";
+      or die "can't open pipe from owltools: $!";
 
     open my $owltools_out, '<', $temp_filename
       or die "can't open owltools output from $temp_filename: $!\n";
