@@ -116,7 +116,7 @@ for (my $i = 0; $i < @expected_transport; $i++) {
 
 is (@results, 1);
 my $biological_process_doc = $results[0]->{doc};
-is ($biological_process_doc->get('subset_id'), 'canto_root_subset');
+is ($biological_process_doc->get('subset_id'), 'is_a__canto_root_subset');
 
 # psi-mod
 @results = $ontology_index->lookup('psi-mod', [], 'secondary neutral', 100);

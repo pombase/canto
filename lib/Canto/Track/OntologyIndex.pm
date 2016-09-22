@@ -109,6 +109,14 @@ sub _get_all_names
           } @$synonym_details);
 }
 
+sub _id_for_lucene
+{
+  my $id = lc shift;
+  $id =~ s/:/_/g;
+  $id =~ s/(.*)\((.*)\)/$1__$2/;
+  return $id;
+}
+
 =head2 add_to_index
 
  Usage   : $ont_index->add_to_index($cvterm, \@cvterm_synonyms);
@@ -153,7 +161,8 @@ sub add_to_index
       Lucene::Document::Field->Keyword(ontid => $db_accession),
       Lucene::Document::Field->Keyword(cv_name => $cv_name),
       (map {
-        my $id_for_lucene = lc s/:/_/gr;
+        # change "is_a(GO:0005215)" to "is_a__GO_0005215"
+        my $id_for_lucene = _id_for_lucene($_);
         Lucene::Document::Field->Keyword(subset_id => $id_for_lucene)
       } @$subset_ids),
       Lucene::Document::Field->UnIndexed(cvterm_id => $cvterm_id),
@@ -270,12 +279,13 @@ sub lookup
     $query_string .=
       '(' . (join ' OR ', (map {
         if (ref $_) {
-          my $include_id_for_lucene = lc $_->{include} =~ s/:/_/gr;
-          my $exclude_id_for_lucene = lc $_->{exclude} =~ s/:/_/gr;
+          # change "is_a(GO:0005215)" to "is_a__GO_0005215"
+          my $include_id_for_lucene = _id_for_lucene($_->{include});
+          my $exclude_id_for_lucene = _id_for_lucene($_->{exclude});
 
           "(subset_id:$include_id_for_lucene AND NOT subset_id:$exclude_id_for_lucene)";
         } else {
-          my $id_for_lucene = lc s/:/_/gr;
+          my $id_for_lucene = _id_for_lucene($_);
           "subset_id:$id_for_lucene";
         }
       } @$search_scope)) . ')';
@@ -292,7 +302,8 @@ sub lookup
 
   if ($search_exclude && @$search_exclude > 0) {
     map {
-      $query_string .= " AND NOT (subset_id:$_)";
+      my $id_for_lucene = _id_for_lucene($_);
+      $query_string .= " AND NOT (subset_id:$id_for_lucene)";
     } @$search_exclude;
   }
 

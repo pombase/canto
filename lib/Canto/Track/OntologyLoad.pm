@@ -426,7 +426,7 @@ sub load
     my $objects = $subset_data->{$term->id()};
 
     if ($objects) {
-      push @subset_ids, (keys %$objects), $term->id();
+      push @subset_ids, map { "is_a($_)" } (keys %$objects, $term->id());
     }
 
     if (!$term->is_relationshiptype()) {
@@ -434,15 +434,16 @@ sub load
 
       if (!$term->is_obsolete()) {
         if (!defined $term_parents{$term->id()}) {
-          push @subset_ids, 'canto_root_subset';
+          push @subset_ids, 'is_a(canto_root_subset)';
           $subset_process->add_to_subset($subset_data, 'canto_root_subset',
                                          'is_a', [$term->id()]);
         }
 
         for my $subset_id (@subsets_to_ignore) {
-          if (grep { $_ eq $subset_id } $term->subsets()) {
+          if (grep { "is_a($_)" eq $subset_id } $term->subsets()) {
             push @subset_ids, $subset_id;
-            $subset_process->add_to_subset($subset_data, $subset_id, 'is_a',
+            my $subset_id_term_only = $subset_id =~ s/^\s*.*\((.*)\)\s*$/$1/r;
+            $subset_process->add_to_subset($subset_data, $subset_id_term_only,'is_a',
                                            [$term->id()]);
           }
         }
@@ -491,8 +492,7 @@ sub load
 
     _store_cv_prop($schema, $load_util, $cv, 'cv_term_count',
                    $term_counts{$cv_name} // 0);
- }
-
+  }
 
   # add canto_subset cvtermprop to the terms in subsets
   $subset_process->process_subset_data($self->load_schema(), $subset_data);

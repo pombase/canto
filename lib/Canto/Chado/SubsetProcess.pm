@@ -40,7 +40,7 @@ use Carp;
 
 =head2 add_to_subset
 
- Usage   : $self->add_to_subset($subset_data, 'subset_name', \@subset_ids);
+ Usage   : $self->add_to_subset($subset_data, 'subset_name', 'is_a', \@subset_ids);
  Function: Add a new subset to $subset_data
  Args    : $subset_data - returned by get_subset_data()
            $subset_name

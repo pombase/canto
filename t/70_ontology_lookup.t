@@ -27,12 +27,12 @@ is ($parse_search_scope_simple_res, "molecular_function");
 
 my $parse_search_scope_two_res =
   Canto::Track::OntologyLookup::_parse_search_scope("[GO:0055085|GO:0034762]");
-cmp_deeply($parse_search_scope_two_res, ['GO:0055085', 'GO:0034762']);
+cmp_deeply($parse_search_scope_two_res, ['is_a(GO:0055085)', 'is_a(GO:0034762)']);
 
 my $parse_search_scope_subset_res =
   Canto::Track::OntologyLookup::_parse_search_scope("[GO:0055085-GO:0034762]");
-cmp_deeply($parse_search_scope_subset_res, [{ include => 'GO:0055085',
-                                              exclude => 'GO:0034762' }]);
+cmp_deeply($parse_search_scope_subset_res, [{ include => 'is_a(GO:0055085)',
+                                              exclude => 'is_a(GO:0034762)' }]);
 
 {
   my $results = $lookup->lookup(ontology_name => $ont_name,

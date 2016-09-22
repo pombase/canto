@@ -1454,9 +1454,9 @@ evidence_types:
 ontology_namespace_config:
   subsets_to_ignore:
     primary:
-      - canto_root_subset
+      - "is_a(canto_root_subset)"
     extension:
-      - canto_root_subset
+      - "is_a(canto_root_subset)"
 
 available_annotation_type_list:
   - name: molecular_function
@@ -1897,12 +1897,12 @@ default_db_name: "CONFIGURE_IN_CANTO_DEPLOY.YAML"
 # ontology_namespace_config:
 #   subsets_to_ignore:
 #     primary:
-#       - canto_root_subset
-#       - qc_do_not_annotate
-#       - gocheck_do_not_annotate
-#       - gocheck_do_not_manually_annotate
+#       - is_a(canto_root_subset)
+#       - is_a(qc_do_not_annotate)
+#       - is_a(gocheck_do_not_annotate)
+#       - is_a(gocheck_do_not_manually_annotate)
 #     extension:
-#       - canto_root_subset
+#       - is_a(canto_root_subset)
 
 ### configuration for annotation extensions in the user interface
 ### See: https://github.com/pombase/canto/wiki/AnnotationExtensionConfig

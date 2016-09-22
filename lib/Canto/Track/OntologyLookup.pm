@@ -224,11 +224,11 @@ sub _parse_search_scope
     @ids = map {
       if (/(\w+:\d+)-(\w+:\d+)/) {
         {
-          include => $1,
-          exclude => $2,
+          include => "is_a($1)",
+          exclude => "is_a($2)",
         };
       } else {
-        $_;
+        "is_a($_)";
       }
     } @ids;
 
@@ -575,9 +575,9 @@ END
 
     my @flat_ids = map {
       if (ref $_) {
-        ('is_a(' . $_->{include} . ')', 'is_a(' . $_->{exclude} . ')');
+        ($_->{include}, $_->{exclude});
       } else {
-        "is_a($_)";
+        $_;
       }
     } @$search_scope;
 
@@ -595,15 +595,11 @@ END
   }
 
   if (@$exclude_subsets) {
-    my @isa_exclude_subsets = map {
-      "is_a($_)";
-    } @$exclude_subsets;
-
     my $subset_cvtermprop_rs =
       $schema->resultset('Cvtermprop')
         ->search(
           {
-            value => { -in => \@isa_exclude_subsets },
+            value => { -in => $exclude_subsets },
             'type.name' => 'canto_subset',
           },
           {

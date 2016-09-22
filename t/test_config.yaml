@@ -275,11 +275,11 @@ chado_feature_implementation_classes:
 ontology_namespace_config:
   subsets_to_ignore:
     primary:
-      - canto_root_subset
-      - gosubset_prok
-      - qc_do_not_annotate
+      - "is_a(canto_root_subset)"
+      - "is_a(gosubset_prok)"
+      - "is_a(qc_do_not_annotate)"
     extension:
-      - canto_root_subset
+      - "is_a(canto_root_subset)"
 
 extension_conf_files:
   - t/data/extension_config.tsv
