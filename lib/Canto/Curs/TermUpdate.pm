@@ -40,6 +40,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 use Moose;
 use Try::Tiny;
+use Carp;
 
 use Canto::Curs::MetadataStorer;
 
