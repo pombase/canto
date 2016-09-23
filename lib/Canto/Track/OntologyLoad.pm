@@ -405,7 +405,8 @@ sub load
     my @synonyms = $term->synonyms();
 
     for my $synonym_type (@synonym_types_to_load) {
-      for my $synonym (@synonyms) {
+      for my $synonym (sort { $a->{synonym} cmp $b->{synonym} } @synonyms) {
+        warn "$synonym->{synonym}\n";
         if (lc $synonym->{scope} eq lc $synonym_type) {
           my $type_id = $synonym_type_ids{$synonym_type};
 
