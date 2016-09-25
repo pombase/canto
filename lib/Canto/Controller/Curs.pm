@@ -1432,6 +1432,23 @@ sub _feature_edit_helper
       my $genotype_name = $body_data->{genotype_name};
       my $genotype_background = $body_data->{genotype_background};
 
+      if (defined $genotype_name && length $genotype_name > 0) {
+        my $trimmed_name = $genotype_name =~ s/^\s*(.*?)\s*$/$1/r;
+        my $existing_genotype =
+          $schema->resultset('Genotype')->find({ name => $genotype_name }) //
+          $schema->resultset('Genotype')->find({ name => $trimmed_name });
+
+        if ($existing_genotype && $existing_genotype->genotype_id() != $genotype_id) {
+          $c->stash->{json_data} = {
+            status => "error",
+            message => "Storing changes to genotype failed: a genotype with " .
+              "that name already exists",
+          };
+          $c->forward('View::JSON');
+          return;
+        }
+      }
+
       try {
         my $guard = $schema->txn_scope_guard();
 
