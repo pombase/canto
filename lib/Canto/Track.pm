@@ -337,6 +337,52 @@ sub delete_curs
 
 =head2
 
+ Usage   : Canto::Track::delete_pub($config, $schema, $pub_uniquename);
+ Function: Try delete the Pub with the given uniquename/pubmed_id
+ Args    : $config - the Canto::Config object
+           $schema - a TrackDB object
+           $pub_uniquename - the uniquename/PMID
+ Returns : 1 on success
+           0 on failure, if there is Pub with the given uniquename or if there
+             are existing sessions for this Pub
+
+=cut
+sub delete_pub
+{
+  my $config = shift;
+  my $track_schema = shift;
+  my $pub_uniquename = shift;
+
+  my $pub =
+    $track_schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
+
+  if (!defined $pub) {
+    warn "Can't find Pub to delete: $pub_uniquename\n";
+    return 0;
+  }
+
+  if ($pub->curs()->count() > 0) {
+    warn "$pub_uniquename has existing sessions which must be deleted first:\n";
+    map {
+      warn "  ", $_->curs_key(), "\n";
+    } $pub->curs()->all();
+    return 0;
+}
+
+  my $guard = $track_schema->txn_scope_guard;
+
+  $pub->pub_curation_statuses()->delete();
+  $pub->pub_organisms()->delete();
+
+  $pub->delete();
+
+  $guard->commit();
+
+  return 1;
+}
+
+=head2
+
  Usage   : Canto::Track::tidy_curs($config, $curs_schema);
  Function: Tidy the curs databases by fixing problems caused by code
            changes.
