@@ -1,4 +1,4 @@
-<tr>
+<tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
   <td ng-if="annotationType.feature_type == 'genotype'">
     <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
       {{allele.gene_display_name}}
@@ -90,14 +90,23 @@
   <td class="table-row-actions">
     <div ng-if="addLinks()">
       <div>
-        <a ng-click="edit()">Edit</a>
+        <a title="Edit this annotation" ng-click="edit()">Edit</a>
       </div>
       <div>
-        <a ng-click="duplicate()">Copy and edit</a>
+        <a title="Make copy of this annotation and then edit the details"
+           ng-click="duplicate()">Copy and edit</a>
       </div>
       <div>
-        <a confirm="Are you sure you want to delete this annotation?"
+        <a title="Delete this annotation"
+           confirm="Are you sure you want to delete this annotation?"
            ng-click="deleteAnnotation()">Delete</a>
+      </div>
+      <div ng-if="sessionState == 'APPROVAL_IN_PROGRESS'">
+        <a ng-if="checked == 'no'" href="#" ng-click="setChecked($event)">Checked</a>
+        <span ng-if="checked == 'yes'">
+          <span style="color: green" class="glyphicon glyphicon-ok"></span>
+          <a href="#" ng-click="clearChecked($event)">Clear</a>
+        </span>
       </div>
     </div>
   </td>

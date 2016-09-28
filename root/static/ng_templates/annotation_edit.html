@@ -199,9 +199,10 @@
 
   <div class="modal-footer">
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    <button class="btn btn-primary" ng-click="ok()"
+    <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
             title="{{ okButtonTitleMessage() }}"
             ng-disabled="!isValid() || !annotationChanged()">OK</button>
   </div>
 
+</div>
 </div>

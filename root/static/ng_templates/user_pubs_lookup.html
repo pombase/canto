@@ -32,10 +32,11 @@
           Publications with completed annotation sessions:
           <pubs-list-view rows="completedList"></pubs-list-view>
         </div>
-        <div ng-show="pubResults.length < count">
-          (Only showing the first {{pubResults.length}} publications)
-        </div>
         <a href="#" ng-click="reset()"><span style="font-size: 90%">Search again</span></a>
+      </div>
+      <div ng-show="truncatedList">
+        Showing only the first 20 publications -
+        <a href="#" ng-click="showAll()"><span style="font-size: 90%">show all</span></a>
       </div>
     </div>
   </div>

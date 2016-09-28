@@ -1,0 +1,114 @@
+<div class="curs-genotype-edit">
+    <div class="row">
+      <div class="col-sm-7 col-md-7">
+        <div>
+          Name: <input type="text" title="Click to edit (optional) genotype name" href="#"
+                       placeholder="short genotype name (optional) ..."
+                       size="50"
+                       ng-model="data.genotypeName" />
+          <help-icon key="genotype_edit_name_input"></help-icon>
+        </div>
+        <div>
+          Background: <input type="text" title="Click to edit (options) genotype background" href="#"
+                             placeholder="genotype background (optional) ..."
+                             size="50"
+                             ng-model="data.genotypeBackground" />
+          <help-icon key="genotype_edit_background_input"></help-icon>
+        </div>
+      </div>
+      <div class="col-sm-5 col-md-5">
+        <div ng-show="editOrDuplicate == 'edit' && data.annotationCount > 0"
+             class="curs-right-info-message">
+          <div ng-show="data.annotationCount == 1">
+            Note: this genotype has an existing annotation
+          </div>
+          <div ng-show="data.annotationCount > 1">
+            Note: this genotype has {{data.annotationCount}} existing annotations
+          </div>
+        </div>
+        <div ng-hide="wildTypeCheckPasses" class="curs-right-info-message">
+          A wild type allele with wild type product level is only valid in a
+          genotype that has a wild type allele of the same gene with non
+          wild type product level (eg. Overexpression or Knockdown)
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 col-md-6">
+        <div ng-hide="genes.length">
+          <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+          Loading genes ...
+        </div>
+        <div class="curs-genotype-edit-gene-list" ng-show="genes.length">
+          <table class="list">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Identifier</th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="gene in genes">
+                <td>{{gene.primary_name}}</td>
+                <td>{{gene.primary_identifier}}</td>
+                <td>
+                  <button class="btn btn-primary btn-xs"
+                          ng-click="openAlleleEditDialog({gene: gene})">Add allele ..</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-6">
+        <div class="curs-genotype-edit-allele-list"
+             id="multi-allele-genotype" class="ng-cloak" ng-show="alleles.length">
+
+          <div>
+            The alleles of this genotype:
+          </div>
+
+          <table class="list">
+            <thead>
+              <tr>
+                <th>Gene</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Expression</th>
+              </tr>
+            </thead>
+            <tbody ng-repeat="allele in alleles">
+              <td>{{allele.gene_display_name}}</td>
+              <td>{{allele.name}}</td>
+              <td>{{allele.type}}</td>
+              <td>{{allele.description}}</td>
+              <td>{{allele.expression}}</td>
+              <td class="curs-table-row-remove">
+                <div ng-if="allele.primary_identifier">
+                  <span title="This is a pre-existing allele that can't be edited.  If this isn't the allele you need, please remove it from the genotype and add another"
+                        class="curs-genotype-edit-existing-allele-edit">Edit</span>
+                </div>
+                <div ng-if="!allele.primary_identifier">
+                  <a href="#" style="white-space: nowrap;" ng-click="openAlleleEditDialog(allele)">Edit</a>
+                </div>
+                <div>
+                  <a href="#" style="white-space: nowrap;" ng-click="removeAllele(allele)"
+                     title="Remove this allele from the genotype">Remove</a>
+                </div>
+              </td>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary curs-finish-button"
+            title="{{ isValid() ? 'Store changes ' : (wildTypeCheckPasses ? 'At least one allele for each gene is required' : 'Wild type allele needs a non wild type product level') }}"
+            ng-click="store()" ng-disabled="!isValid()">Finish</button>
+    <button type="submit" class="btn btn-warning curs-finish-button"
+            ng-click="cancel()">Cancel</button>
+    <div class="upload-genes-link">
+      <a ng-click="openSingleGeneAddDialog()">Add another gene from the paper ...</a>
+    </div>
+</div>

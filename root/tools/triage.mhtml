@@ -61,18 +61,6 @@ $return_pub_id
           <% $pub->affiliation() || '[no affiliation]' %>
         </div>
       </div>
-      <div class="sect triage-flags">
-        <span class="sect-title">
-          Triage flags
-        </span>
-        <div class="sect-content">
-          <input type="checkbox"
-% if ($form_values{community_curatable}) {
-                 checked="checked"
-% }
-                 name="community-curatable">Community curatable<br>
-        </div>
-      </div>
       <div class="sect triage-assigned-curator">
         <span class="sect-title">
           Corresponding author:
@@ -134,7 +122,7 @@ $return_pub_id
     <div class="status-settings">
       <div class="sect status-choice">
         <span class="sect-title">
-          <a href="#">Actions ...</a>
+          <a href="#">Actions</a>
         </span>
         <div class="sect-content">
           <ul>
@@ -199,8 +187,6 @@ while (defined (my $prop = $pub_props_rs->next())) {
     }
   }
 }
-
-$form_values{community_curatable} = $pub->community_curatable();
 
 my @experiment_type_cvterms =
   $schema->resultset('Cvterm')->search({ cv_id => $experiment_type_cv->cv_id() });

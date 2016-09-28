@@ -11,6 +11,7 @@ my $test_util = Canto::TestUtil->new();
 $test_util->init_test();
 
 my $config = $test_util->config();
+$config->{database_name} = "PomBaseTest";
 
 my $lookup =
   Canto::Chado::OntologyAnnotationLookup->new(config => $test_util->config());
@@ -147,6 +148,15 @@ cmp_deeply($res->[0],
              'is_not' => 1,
              'with' => undef,
              'gene_product_form_id' => undef,
+             'extension' =>
+               [
+                 [
+                   {
+                     'rangeValue' => 'PomBaseTest:cdc11',
+                     'relation' => 'requires_direct_regulator'
+                   }
+                 ]
+               ],
            });
 
 

@@ -224,11 +224,11 @@ sub _parse_search_scope
     @ids = map {
       if (/(\w+:\d+)-(\w+:\d+)/) {
         {
-          include => $1,
-          exclude => $2,
+          include => "is_a($1)",
+          exclude => "is_a($2)",
         };
       } else {
-        $_;
+        "is_a($_)";
       }
     } @ids;
 

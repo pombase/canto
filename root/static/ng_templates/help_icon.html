@@ -1,5 +1,5 @@
 <span class="curs-inline-help-icon">
   <img ng-src="{{app_static_path + '/images/help.png'}}"
-       ng-alt="{{helpText}}"
-       popover="{{helpText}}" popover-trigger="mouseenter" popover-placement="right"/>
+       ng-alt="{{helpText}}" ng-click="click()"
+       uib-tooltip="{{helpText}}"/>
 </span>

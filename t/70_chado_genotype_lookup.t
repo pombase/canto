@@ -14,18 +14,18 @@ $test_util->init_test();
 
 my $lookup = Canto::Chado::GenotypeLookup->new(config => $test_util->config());
 
-my $res = $lookup->lookup(gene_primary_identifiers => ['SPCC576.16c']);
+my $res = $lookup->lookup(gene_primary_identifiers => ['SPBC1826.01c']);
 
 cmp_deeply($res,
            {
              results => [
                {
                  identifier => 'aaaa0007-test-genotype-2',
-                 display_name => 'cdc11-33 wtf22-a1',
-                 allele_string => 'cdc11-33 wtf22-a1',
-                 name => 'cdc11-33 wtf22-a1',
+                 display_name => 'cdc11-33 mot1-a1',
+                 allele_string => 'cdc11-33 mot1-a1',
+                 name => 'cdc11-33 mot1-a1',
                  allele_identifiers => [
-                   'SPCC1739.11c:allele-1', 'SPCC576.16c:allele-1',
+                   'SPCC1739.11c:allele-1', 'SPBC1826.01c:allele-1',
                  ],
                  annotation_count => 0,
                },
@@ -33,18 +33,18 @@ cmp_deeply($res,
            });
 
 
-$res = $lookup->lookup(gene_primary_identifiers => ['SPCC576.16c', 'SPCC1739.11c']);
+$res = $lookup->lookup(gene_primary_identifiers => ['SPBC1826.01c', 'SPCC1739.11c']);
 
 cmp_deeply($res,
            {
              results => [
                            {
                              'identifier' => 'aaaa0007-test-genotype-2',
-                             'allele_string' => 'cdc11-33 wtf22-a1',
-                             'name' => 'cdc11-33 wtf22-a1',
-                             'display_name' => 'cdc11-33 wtf22-a1',
+                             'allele_string' => 'cdc11-33 mot1-a1',
+                             'name' => 'cdc11-33 mot1-a1',
+                             'display_name' => 'cdc11-33 mot1-a1',
                              allele_identifiers => [
-                               'SPCC1739.11c:allele-1', 'SPCC576.16c:allele-1',
+                               'SPCC1739.11c:allele-1', 'SPBC1826.01c:allele-1',
                              ],
                              annotation_count => 0,
                            }
@@ -68,14 +68,14 @@ cmp_deeply($res,
                              annotation_count => 0,
                            },
                            {
-                             'allele_string' => 'cdc11-33 wtf22-a1',
+                             'allele_string' => 'cdc11-33 mot1-a1',
                              'identifier' => 'aaaa0007-test-genotype-2',
                              'allele_identifiers' => [
                                                        'SPCC1739.11c:allele-1',
-                                                       'SPCC576.16c:allele-1'
+                                                       'SPBC1826.01c:allele-1'
                                                      ],
-                             'name' => 'cdc11-33 wtf22-a1',
-                             'display_name' => 'cdc11-33 wtf22-a1',
+                             'name' => 'cdc11-33 mot1-a1',
+                             'display_name' => 'cdc11-33 mot1-a1',
                              annotation_count => 0,
                            },
                            {

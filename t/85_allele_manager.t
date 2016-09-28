@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 9;
 
 use Canto::TestUtil;
 use Canto::Curs::AlleleManager;
@@ -26,22 +26,22 @@ my $curs_schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 my $allele_manager = Canto::Curs::AlleleManager->new(config => $config,
                                                      curs_schema => $curs_schema);
 
-my $SPCC576_16c = $curs_schema->resultset('Gene')->find({
-  primary_identifier => 'SPCC576.16c',
+my $SPBC1826_01c = $curs_schema->resultset('Gene')->find({
+  primary_identifier => 'SPBC1826.01c',
 });
 
-is ($SPCC576_16c->primary_identifier(), 'SPCC576.16c');
+is ($SPBC1826_01c->primary_identifier(), 'SPBC1826.01c');
 
 my $new_allele = $allele_manager->allele_from_json(
   {
     type => 'partial deletion, amino acid',
     description => '100-200',
-    name => 'SPCC576.16c-c1',
-    gene_id => $SPCC576_16c->gene_id()
+    name => 'SPBC1826.01c-c1',
+    gene_id => $SPBC1826_01c->gene_id()
   },
   'aaaa0007');
 
-is ($new_allele->primary_identifier(), 'SPCC576.16c:aaaa0007-1');
+is ($new_allele->primary_identifier(), 'SPBC1826.01c:aaaa0007-1');
 
 my $existing_allele_identifier = 'SPAC27D7.13c:aaaa0007-4';
 my $existing_allele = $allele_manager->allele_from_json(
@@ -51,3 +51,28 @@ my $existing_allele = $allele_manager->allele_from_json(
 
 is ($existing_allele->primary_identifier(), $existing_allele_identifier);
 
+
+my $no_name_allele = $allele_manager->allele_from_json(
+  {
+    type => 'partial deletion, amino acid',
+    name => '',
+    description => '',
+    expression => '',
+    gene_id => $SPBC1826_01c->gene_id()
+  },
+  'aaaa0007');
+
+ok (!defined $no_name_allele->name());
+ok (!defined $no_name_allele->description());
+ok (!defined $no_name_allele->expression());
+
+# check that undef and '' and both stored and compared as undef
+my $no_name_allele_check = $allele_manager->allele_from_json(
+  {
+    type => 'partial deletion, amino acid',
+    gene_id => $SPBC1826_01c->gene_id()
+  },
+  'aaaa0007');
+
+ok ($no_name_allele_check->allele_id() > 0);
+is ($no_name_allele_check->allele_id(), $no_name_allele->allele_id());

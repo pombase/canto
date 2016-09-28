@@ -1,4 +1,5 @@
 <%args>
+@annotation_types_by_year
 @annotation_stats
 @per_pub_stats_table
 @per_pub_5_year_stats
@@ -6,12 +7,148 @@
 $db_creation_datetime
 </%args>
 
+<div style="float: left"><img src="<% $c->uri_for('/static/images/logos/pombase_logo_large.png') %>"/></div>
+
 <div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
+
+<div>
+
+  <p>
+    This page provides a set of metrics reflecting the current state
+    of literature curation in PomBase.
+  </p>
+
+  <p>
+    In these metrics, an annotation is an assignment of a gene product
+    to a term in an ontology, a genetic or physical interaction, or
+    another curated statement about a gene or its product. For
+    ontologies that support annotation extensions, each unique
+    combination of an ontology term and an extension is counted as a
+    separate annotation.
+  </p>
+
+  <p>
+    All of the Canto-specific annotation metrics exclude
+    high-throughput datasets.
+  </p>
+
+  <p>
+    Available reports:
+  </p>
+
+  <ul style="list-style-type: disc;">
+    <li><a href="#cumulative">All manual curation </a></li>
+    <li>Canto curation:
+      <ul>
+        <li><a href="#cursum">Curator summary (publications)</a></li>
+        <li><a href="#pubs">Curated and uncurated publications over time</a></li>
+        <li><a href="#gpp5year">Genes and annotations per publication in 5-year intervals</a></li>
+      </ul>
+    </li>
+  </ul>
+
+</div>
+
 <div class="curs-box">
-  <div class="curs-box-title">Curator summary</div>
+  <div class="curs-box-title" id="cumulative">Cumulative annotations by type and year</div>
 <div class="curs-box-body row">
 <div class="col-sm-6 col-md-6">
+  <p>
+    Cumulative totals of manually curated annotations over
+    time. Totals include annotations made by PomBase curators and
+    community contributors in Canto and via batch phenotype and
+    modification data submission, but exclude interaction annotations
+    imported from BioGRID and GO annotations based on computational
+    methods (IEA evidence). "Other" includes taxon distribution,
+    complementation, DNA and protein sequence features, genome
+    organization, and miscellaneous data types. All annotation types
+    are described in the <a
+    href="http://www.pombase.org/documentation">PomBase
+    documentation</a>.
+  </p>
+</div>
+<div class="ng-cloak" ng-if="!isVisible('cumulative-annotations-by-type-and-year')">
+  <a href="#" ng-click="show($event, 'cumulative-annotations-by-type-and-year')">View data table ...</a>
+</div>
+<div class="ng-cloak" ng-if="isVisible('cumulative-annotations-by-type-and-year')">
+<div class="col-sm-6 col-md-6">
   <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          GO annotations
+        </th>
+        <th>
+          Phenotypes
+        </th>
+        <th>
+          Protein modifications
+        </th>
+        <th>
+          Gene expression
+        </th>
+        <th>
+          Genetic interactions
+        </th>
+        <th>
+          Physical interactions
+        </th>
+        <th>
+          Other
+        </th>
+      </tr>
+    </thead>
+% for my $row (@cumulative_annotation_types_by_year) {
+    <tr>
+%   for my $elem (@$row) {
+      <td>
+        <% $elem %>
+      </td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+</div>
+</div>
+<div>
+  <script language="javascript" type="text/javascript">
+    var cumulativeAnnotationTypeCounts = <% $cumulative_annotation_type_counts_js |n %>;
+  </script>
+  <stacked-graph chart-labels="cumulativeAnnotationTypeCountsLabels" chart-data="cumulativeAnnotationTypeCountsData"
+                 chart-series="GO|Phenotype|Modification|Gene Expression|Genetic interaction|Physical interaction|Other">
+  </stacked-graph>
+</div>
+</div>
+
+<div class="curs-box">
+  <div class="curs-box-title" id="cursum">Canto curator summary</div>
+<div class="curs-box-body row">
+<div class="col-sm-7 col-md-7">
+  <p>
+    Number of papers curated by professional and community curators, and total
+    number of annotations created, per year. Any paper which is fully or
+    partially curated by a community curator is classified as a community
+    curated publication.
+  </p>
+  <p>
+    In this table, papers are counted towards the year in which they
+    are curated (as opposed to publication date). Annotations are also
+    individually date-stamped.
+  </p>
+  <p>
+    Note: The breakdown of annotations between professional and community
+    curators is only accurate from 2013 onwards. Until the end of 2012, all
+    annotations from a community curated paper were attributed to the
+    community curator, even those added by a professional curator during the
+    approval procedure.
+  </p>
+</div>
+<div class="col-sm-5 col-md-5">
+  <table style="font-size: 105%" class="list">
     <thead>
       <tr>
         <th rowspan="2">
@@ -26,7 +163,7 @@ $db_creation_datetime
       </tr>
       <tr>
         <th>
-          Total
+          All
         </th>
         <th>
           Curator
@@ -42,7 +179,9 @@ $db_creation_datetime
         </th>
       </tr>
     </thead>
+% my @curator_summ_totals = (0,0,0,0,0,0);
 % for my $row (@annotation_stats) {
+%   pairwise { $a += $b } @curator_summ_totals, @$row;
     <tr>
       <td>
         <% shift @$row %>
@@ -55,39 +194,35 @@ $db_creation_datetime
 %   }
     </tr>
 % }
+    <tr class="annotation-stats-table-totals">
+      <td>Totals:</td>
+      <td><% $curator_summ_totals[1] + $curator_summ_totals[2] %></td>
+      <td><% $curator_summ_totals[1] %></td>
+      <td><% $curator_summ_totals[2] %></td>
+      <td><% $curator_summ_totals[3] %></td>
+      <td><% $curator_summ_totals[4] %></td>
+    </tr>
   </table>
-</div>
-<div class="col-sm-6 col-md-6">
-<p>
-Number of papers curated by professional and community curators, and total
-number of annotations created, per year. An annotation is either an assignment
-of a gene product to a term in an ontology, or a genetic or physical
-interaction. Each unique combination of an ontology term and an extension is
-counted as a separate annotation. Any paper which is fully or partially
-curated by a community curator is classified as a community curated
-publication.
-</p>
-<p>
-Each annotation is individually date-stamped upon creation, whereas the
-curation date for a publication reflects the date on which the entire curation
-session was approved for inclusion in PomBase (this accounts for discrepancies
-such as the annotations, but no publications, attributed to 2011).
-</p>
-<p>
-Note: The breakdown of annotations between professional and community curators
-is only accurate from 2013 onwards. Until the end of 2012, all annotations
-from a community curated paper were attributed to the community curator, even
-those added by a professional curator during the approval procedure.
-</p>
 </div>
 </div>
 </div>
 
 <div class="curs-box">
-  <div class="curs-box-title">Curated vs uncurated by publication date</div>
-  <div class="curs-box-body">
-<div class="row">
+  <div class="curs-box-title" id="pubs">Curated vs. uncurated by publication date</div>
+  <div class="curs-box-body row">
   <div class="col-sm-6 col-md-6">
+    <div>
+Publications containing gene-specific data per year, with curation status as
+of <% $db_creation_datetime %>. Admin curated: papers curated exclusively
+by <% $c->config()->{database_name} %> staff; Community curated: papers with
+annotations contributed by authors.
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-6">
+    <div class="ng-cloak" ng-if="!isVisible('curated-vs-uncurated-by-pub-date')">
+      <a href="#" ng-click="show($event, 'curated-vs-uncurated-by-pub-date')">View data table ...</a>
+    </div>
+    <div class="ng-cloak" ng-if="isVisible('curated-vs-uncurated-by-pub-date')">
     <script language="javascript" type="text/javascript">
       var curationStatusData = <% $curation_status_js |n %>;
     </script>
@@ -136,64 +271,31 @@ those added by a professional curator during the approval procedure.
       <td><% $totals[3] %></td>
     </tr>
   </table>
-</div>
-  <div class="col-sm-6 col-md-6">
-    <div>
-Publications containing gene-specific data per year, with curation status as
-of <% $db_creation_datetime %>. Admin curated: papers curated exclusively
-by <% $c->config()->{database_name} %> staff; Community curated: papers with
-annotations contributed by authors.
-    </div>
   </div>
 </div>
+
+</div>
 <div>
-  <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData">
+  <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData"
+                 chart-series="Uncurated|Admin curated|Community curated">
   </stacked-graph>
 </div>
 </div>
 
-
 <div class="curs-box">
-  <div class="curs-box-title">Annotations/genes per publication per year</div>
+  <div class="curs-box-title" id="gpp5year">Annotations/genes per publication in 5-year intervals</div>
   <div class="curs-box-body">
-<div class="row">
-  <div class="col-sm-6 col-md-6">
-  <table class="list">
-    <thead>
-      <tr>
-        <th>
-          Publication year
-        </th>
-        <th>
-          Avg. genes per pub.
-        </th>
-        <th>
-          Avg. annotations per pub.
-        </th>
-      </tr>
-    </thead>
-% for my $row (@per_pub_stats_table) {
-    <tr>
-%   for my $column (@$row) {
-      <td><% $column %></td>
-%   }
-    </tr>
-% }
-  </table>
-</div>
-  <div class="col-sm-6 col-md-6">
+    <div class="row">
+<div class="col-sm-6 col-md-6">
     Mean number of manually curated annotations and genes annotated in PomBase
-    per peer-reviewed paper per year. Counts exclude high-throughput
+    per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
     experiments and use the same criteria for all years
-  </div>
-  </div>
 </div>
+<div class="ng-cloak" ng-if="!isVisible('annotations+genes-per-publication-in-5-year-intervals')">
+  <a href="#" ng-click="show($event, 'annotations+genes-per-publication-in-5-year-intervals')">View data table ...</a>
 </div>
+<div ng-if="isVisible('annotations+genes-per-publication-in-5-year-intervals')">
 
-
-<div class="curs-box">
-  <div class="curs-box-title">Annotations/genes per publication in 5 year intervals</div>
-<div class="row">
 <div class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
@@ -230,11 +332,68 @@ annotations contributed by authors.
 % }
   </table>
 </div>
+</div>
+</div>
+<div class="row">
+  <script language="javascript" type="text/javascript">
+    var perPub5YearStatsData = <% $per_pub_5_year_stats_js |n %>;
+  </script>
+  <div class="col-sm-6 col-md-6">
+    <div>
+      Average genes per publication:
+    </div>
+    <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[0]"
+               chart-series="Avg. genes per pub">
+    </bar-chart>
+  </div>
+  <div class="col-sm-6 col-md-6">
+    <div>
+      Average annotations per publication:
+    </div>
+    <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[1]"
+               chart-series="Avg. annotations per pub">
+    </bar-chart>
+  </div>
+</div>
+<div class="row">
+  <div class="ng-cloak" ng-if="!isVisible('annotation+genes-per-pub-per-year')">
+    <a href="#" ng-click="show($event, 'annotation+genes-per-pub-per-year')">View annotation per publication data ...</a>
+  </div>
+<div class="ng-cloak curs-box" ng-if="isVisible('annotation+genes-per-pub-per-year')">
+  <div class="curs-box-title" id="gppannual">Annotations/genes per publication per year</div>
+  <div class="curs-box-body row">
   <div class="col-sm-6 col-md-6">
     Mean number of manually curated annotations and genes annotated in PomBase
-    per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
+    per peer-reviewed paper per year. Counts exclude high-throughput
     experiments and use the same criteria for all years
   </div>
+  <div class="col-sm-6 col-md-6">
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Publication year
+        </th>
+        <th>
+          Avg. genes per pub.
+        </th>
+        <th>
+          Avg. annotations per pub.
+        </th>
+      </tr>
+    </thead>
+% for my $row (@per_pub_stats_table) {
+    <tr>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+  </table>
+</div>
+  </div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -246,6 +405,50 @@ use Data::JavaScript::Anon;
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $current_year = $year + 1900;
 
+my @cumulative_annotation_types_by_year = ();
+my @cumulative_annotation_type_counts = (0,0,0,0,0,0,0);
+
+for my $row (@annotation_types_by_year) {
+  my $year = shift @$row;
+  my %data = %{$row->[0]};
+  my $go_count = ($data{molecular_function} // 0) +
+    ($data{biological_process} // 0) + ($data{cellular_component} // 0);
+  my $phenotype_count = $data{fission_yeast_phenotype} // 0;
+  my $modification_count = $data{'PSI-MOD'} // 0;
+  my $gene_ex_count = $data{gene_ex} // 0;
+  my $genetic_interactions_count = $data{'interacts_genetically'} // 0;
+  my $physical_interactions_count = $data{'interacts_physically'} // 0;
+  my $total = 0;
+  map {
+    $total += $_ if defined $_;
+  } values %data;
+  my $other_count = $total - $go_count - $phenotype_count - $modification_count -
+    $gene_ex_count - $genetic_interactions_count - $physical_interactions_count;
+
+  $cumulative_annotation_type_counts[0] += $go_count;
+  $cumulative_annotation_type_counts[1] += $phenotype_count;
+  $cumulative_annotation_type_counts[2] += $modification_count;
+  $cumulative_annotation_type_counts[3] += $gene_ex_count;
+  $cumulative_annotation_type_counts[4] += $genetic_interactions_count;
+  $cumulative_annotation_type_counts[5] += $physical_interactions_count;
+  $cumulative_annotation_type_counts[6] += $other_count;
+
+  push @cumulative_annotation_types_by_year,
+    [$year, @cumulative_annotation_type_counts];
+}
+
+my @transposed_cumulative_annotation_types_by_year = ();
+
+map {
+  my @row = @$_;
+
+  for (my $i = 0; $i < scalar(@row); $i++) {
+    push @{$transposed_cumulative_annotation_types_by_year[$i]}, $row[$i];
+  }
+} @cumulative_annotation_types_by_year;
+
+my $cumulative_annotation_type_counts_js = Data::JavaScript::Anon->anon_dump(\@transposed_cumulative_annotation_types_by_year);
+
 my @transposed_curated_stats = ();
 
 map {
@@ -256,13 +459,18 @@ map {
   }
 } @curated_stats;
 
-for (my $i = 0; $i < scalar(@{$transposed_curated_stats[0]}); $i++) {
-  if ($i % 2 == 0) {
-    # remove some labels
-#    $transposed_curated_stats[0][$i] = '';
-  }
-}
-
 my $curation_status_js = Data::JavaScript::Anon->anon_dump(\@transposed_curated_stats);
+
+my @transposed_per_pub_5_year_stats = ();
+
+map {
+  my @row = @$_;
+
+  for (my $i = 0; $i < scalar(@row); $i++) {
+    push @{$transposed_per_pub_5_year_stats[$i]}, $row[$i];
+  }
+} @per_pub_5_year_stats;
+
+my $per_pub_5_year_stats_js = Data::JavaScript::Anon->anon_dump(\@transposed_per_pub_5_year_stats);
 
 </%init>

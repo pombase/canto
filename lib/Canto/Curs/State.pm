@@ -92,6 +92,7 @@ use constant {
   APPROVER_EMAIL_KEY => 'approver_email',
   NO_ANNOTATION_REASON_KEY => 'no_annotation_reason',
   REACTIVATED_TIMESTAMP_KEY => 'reactivated_timestamp',
+  SESSION_SUBMITTED_TIMESTAMP_KEY => 'session_submitted_timestamp',
   ANNOTATION_MODE_KEY => 'annotation_mode',
 };
 
@@ -282,6 +283,14 @@ sub store_statuses
   if (defined $reactivated_timestamp_row) {
     $self->status_adaptor()->store($curs_key, 'session_reactivated_timestamp',
                                    $reactivated_timestamp_row->value());
+  }
+
+  my $needs_approval_timestamp_row =
+    $metadata_rs->search({ key => NEEDS_APPROVAL_TIMESTAMP_KEY })->first();
+
+  if (defined $needs_approval_timestamp_row) {
+    $self->status_adaptor()->store($curs_key, 'needs_approval_timestamp',
+                                   $needs_approval_timestamp_row->value());
   }
 
   my $approver_name_row = $metadata_rs->find({ key => 'approver_name' });

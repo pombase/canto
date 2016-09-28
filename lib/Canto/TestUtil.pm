@@ -126,8 +126,8 @@ our %shared_test_results = (
     'genotype_id' => undef,
     'evidence_code' => 'UNK',
     'genotype_name_or_identifier' => 'cdc11-33 ssm4delta',
-    'annotation_type' => 'phenotype'
-
+    'annotation_type' => 'phenotype',
+    'extension' => undef,
   },
   post_translational_modification => {
     'evidence_code' => 'ISS',

@@ -187,14 +187,6 @@ sub triage :Local {
 
     $pub_just_triaged->curation_priority($priority_cvterm);
 
-    my $community_curatable = $c->req()->param('community-curatable');
-
-    if (defined $community_curatable) {
-      $pub_just_triaged->community_curatable(1);
-    } else {
-      $pub_just_triaged->community_curatable(0);
-    }
-
     my $triage_comment = $c->req()->param('triage-comment');
     my $triage_comment_cvterm =
       $schema->resultset('Cvterm')->find({ name => "triage_comment" });
@@ -327,7 +319,8 @@ sub pubmed_id_lookup : Local Form {
           authors => $pub->authors(),
           abstract => $pub->abstract(),
           pub_id => $pub->pub_id(),
-        }
+        },
+        sessions => [],
       };
 
       my $sessions_rs = $pub->curs();
@@ -337,10 +330,7 @@ sub pubmed_id_lookup : Local Form {
         my $curator_manager = Canto::Track::CuratorManager->new(config => $c->config());
 
         if (defined $curator_manager->current_curator($first_session->curs_key())) {
-          my $uniquename = $pub->uniquename();
-          $result->{message} = "Sorry, $uniquename is currently being curated by someone " .
-            "else.  Please contact the curation team for more information.";
-          $result->{curation_sessions} = [ map { $_->curs_key(); } $sessions_rs->all() ],
+          $result->{sessions} = [ map { $_->curs_key(); } $sessions_rs->all() ],
         }
       }
     } else {
@@ -353,26 +343,6 @@ sub pubmed_id_lookup : Local Form {
   $c->stash->{json_data} = $result;
   $c->forward('View::JSON');
 
-}
-
-sub pubmed_id_start : Local {
-  my ($self, $c) = @_;
-
-  my $st = $c->stash();
-
-  $st->{title} = 'Find a publication to curate using a PubMed ID';
-  $st->{show_title} = 0;
-  $st->{template} = 'tools/pubmed_id_start.mhtml';
-}
-
-sub pmid_search : Local {
-  my ($self, $c) = @_;
-
-  my $st = $c->stash();
-
-  $st->{title} = 'Find a publication to curate using a PubMed ID';
-  $st->{show_title} = 0;
-  $st->{template} = 'tools/pmid_search.mhtml';
 }
 
 =head2 start

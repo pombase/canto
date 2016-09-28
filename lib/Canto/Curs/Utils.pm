@@ -250,6 +250,7 @@ sub make_ontology_annotation
     curator => $curator,
     status => $annotation->status(),
     is_not => JSON::false,
+    checked => $data->{checked} || 'no',
   };
 
   return $ret;
@@ -367,6 +368,7 @@ sub make_interaction_annotation
       status => $annotation->status(),
       curator => $curator,
       is_inferred_annotation => $is_inferred_annotation,
+      checked => $data->{checked} || 'no',
     };
 
   return $entry;
@@ -503,8 +505,7 @@ sub _process_existing_db_ontology
   my $gene_product_form_id = $row->{gene_product_form_id};
   my $ontology_name = $ontology_term->{ontology_name};
 
-  my $term_name =
-    $row->{ontology_term}->{extension_term_name} // $row->{ontology_term}->{term_name};;
+  my $term_name = $row->{ontology_term}->{term_name};;
 
   my $term_ontid = $ontology_term->{ontid};
 
@@ -576,6 +577,7 @@ sub _process_existing_db_ontology
     evidence_code => $evidence_code,
     status => 'existing',
     is_not => $is_not,
+    extension => $row->{extension},
   );
 
   if ($gene) {
@@ -959,6 +961,16 @@ sub make_allele_display_name
   }
 
   $description ||= $type || 'unknown';
+
+  if ($type =~ /^mutation/) {
+    if ($type =~ /amino acid/) {
+      $description =~ s/(^|,\s*)/${1}aa/g;
+    } else {
+      if ($type =~ /nucleotide/) {
+        $description =~ s/(^|,\s*)/${1}nt/g;
+      }
+    }
+  }
 
   return "$name($description)";
 }

@@ -1,7 +1,14 @@
 <span>
   <span ng-repeat="andGroup in orGroup">
     <span class="curs-extension-relation">{{andGroup.relation}}</span>
-    <span>{{andGroup.rangeDisplayName || andGroup.rangeValue}}</span><span ng-if="andGroup.rangeType == '%'">%</span>
+    <span ng-if="andGroup.rangeType == '%'">
+      <span>{{andGroup.rangeDisplayName || andGroup.rangeValue}}</span>%
+    </span>
+    <span ng-if="andGroup.rangeType != '%'">
+      <initially-hidden-text text="{{andGroup.rangeDisplayName || andGroup.rangeValue}}"
+                             link-label="..."
+                             preview-char-count="60"></initially-hidden-text>
+    </span>
     <a ng-if="showDelete" href="" ng-click="deleteAndGroup(andGroup)">
       <img title="Remove this relation" ng-src="{{app_static_path + '/images/delete_icon.png'}}" />
     </a>

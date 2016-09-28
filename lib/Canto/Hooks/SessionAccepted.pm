@@ -52,6 +52,8 @@ use Carp;
 
 =cut
 
+# UNUSED - see https://github.com/pombase/canto/issues/1222
+
 sub set_pub_community_curatable
 {
   my $config = shift;
@@ -62,8 +64,8 @@ sub set_pub_community_curatable
   my $role = $curator->role();
 
   if (!defined $role || $role->name() ne 'admin') {
-    $curs->pub()->community_curatable(1);
-    $curs->pub()->update();
+#    $curs->pub()->community_curatable(1);
+#    $curs->pub()->update();
   }
 }
 

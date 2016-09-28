@@ -183,6 +183,12 @@ my %procs = (
 
   13 => sub {
     my $config = shift;
+
+    Canto::Track::update_all_statuses($config);
+  },
+
+  14 => sub {
+    my $config = shift;
     my $track_schema = shift;
 
     my $dbh = $track_schema->storage()->dbh();
@@ -212,7 +218,7 @@ EOF
     $dbh->do("CREATE INDEX person_role_idx ON person(role)");
 
     $dbh->do("PRAGMA foreign_keys = ON");
-  }
+  },
 );
 
 sub upgrade_to

@@ -84,7 +84,7 @@ $res = $service_utils->list_for_service('genotype', 'all',
                                           filter =>
                                             { gene_identifiers =>
                                                 [
-                                                  'SPCC576.16c', 'SPCC1739.11c'
+                                                  'SPBC1826.01c', 'SPCC1739.11c'
                                                 ]
                                               }
                                           });
@@ -92,11 +92,11 @@ $res = $service_utils->list_for_service('genotype', 'all',
 cmp_deeply($res,
            [
              {
-              'name' => 'cdc11-33 wtf22-a1',
+              'name' => 'cdc11-33 mot1-a1',
               'identifier' => 'aaaa0007-test-genotype-2',
-              'allele_string' => 'cdc11-33 wtf22-a1',
-              'display_name' => 'cdc11-33 wtf22-a1',
-              'allele_identifiers' => ['SPCC1739.11c:allele-1','SPCC576.16c:allele-1'],
+              'allele_string' => 'cdc11-33 mot1-a1',
+              'display_name' => 'cdc11-33 mot1-a1',
+              'allele_identifiers' => ['SPCC1739.11c:allele-1','SPBC1826.01c:allele-1'],
               annotation_count => 0,
             },
           ]);
@@ -188,16 +188,16 @@ cmp_deeply($res,
                gene_id => 3,
             },
             {
+              'primary_identifier' => 'SPBC1826.01c',
+              'primary_name' => 'mot1',
+              display_name => 'mot1',
+               gene_id => 1,
+            },
+            {
               'primary_name' => 'ssm4',
               'primary_identifier' => 'SPAC27D7.13c',
               display_name => 'ssm4',
                gene_id => 2,
-            },
-            {
-              'primary_identifier' => 'SPCC576.16c',
-              'primary_name' => 'wtf22',
-              display_name => 'wtf22',
-               gene_id => 1,
             },
             {
               'primary_identifier' => 'SPCC63.05',
@@ -474,6 +474,7 @@ cmp_deeply ($res->{annotation},
               'phenotypes' => '',
               'annotation_type' => 'genetic_interaction',
               'annotation_type_display_name' => 'genetic interaction',
+              'checked' => 'no',
             }
           );
 
@@ -491,8 +492,18 @@ my $annotation_res = $service_utils->list_for_service('annotation');
 my $cycloheximide_annotation_res = $Canto::TestUtil::shared_test_results{cycloheximide_annotation};
 my $post_translational_modification_res = $Canto::TestUtil::shared_test_results{post_translational_modification};
 
+sub clean_results
+{
+  my $annotation_res = shift;
+  map {
+    delete $_->{checked};
+  } @$annotation_res;
+}
+
+clean_results($annotation_res);
+
 cmp_deeply($annotation_res,
-           [
+         [
             {
               'annotation_id' => 2,
               'extension' => [
@@ -552,7 +563,7 @@ cmp_deeply($annotation_res,
               'with_or_from_display_name' => 'ssm4',
               'gene_name' => 'doa10',
               'gene_identifier' => 'SPBC14F5.07',
-              'with_gene_id' => 2
+              'with_gene_id' => 2,
             },
             {
               'evidence_code' => 'IDA',
@@ -625,7 +636,7 @@ cmp_deeply($annotation_res,
               'status' => 'new',
               'annotation_id' => 1,
               'feature_id' => 2,
-              'publication_uniquename' => 'PMID:19756689'
+              'publication_uniquename' => 'PMID:19756689',
             },
             {
               'evidence_code' => 'UNK',
@@ -637,7 +648,7 @@ cmp_deeply($annotation_res,
               'conditions' => [],
               'gene_identifier' => 'SPBC12C2.02c',
               'gene_product_form_id' => undef,
-              'term_name' => 'transport [requires_direct_regulator] SPCC1739.11c',
+              'term_name' => 'transport',
               'term_ontid' => 'GO:0006810',
               'annotation_id' => 2,
               'annotation_type' => 'biological_process',
@@ -650,6 +661,15 @@ cmp_deeply($annotation_res,
               'with_gene_id' => undef,
               'taxonid' => '4896',
               'is_not' => JSON::true,
+              'extension' =>
+                [
+                  [
+                    {
+                      'relation' => 'requires_direct_regulator',
+                      'rangeValue' => 'CONFIGURE_IN_CANTO_DEPLOY.YAML:cdc11'
+                    }
+                  ]
+                ],
             },
             {
               'evidence_code' => 'IMP',
@@ -673,7 +693,8 @@ cmp_deeply($annotation_res,
               'is_not' => JSON::false,
               'with_or_from_identifier' => 'PomBase:SPBC2G2.01c',
               'with_gene_id' => undef,
-              'taxonid' => '4896'
+              'taxonid' => '4896',
+              'extension' => undef,
             },
             {
               'term_ontid' => 'FYPO:0000133',
@@ -877,6 +898,8 @@ cmp_deeply($annotation_res,
 
 $annotation_res = $service_utils->list_for_service('annotation', 'post_translational_modification');
 
+clean_results($annotation_res);
+
 cmp_deeply($annotation_res,
            [
              $post_translational_modification_res,
@@ -1059,6 +1082,7 @@ cmp_deeply($session_detail_res,
                'curator_known_as' => undef,
                'curator_email' => 'some.testperson@pombase.org',
                'community_curated' => JSON::true,
-               'accepted_date' => '2012-02-15 13:45:00'
-             }
+               'accepted_date' => '2012-02-15 13:45:00',
+             },
+             'state' => 'CURATION_IN_PROGRESS',
            });

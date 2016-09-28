@@ -177,19 +177,6 @@ $(document).ready(function() {
     window.location.href = curs_root_uri + '/';
   });
 
-  $('#curs-finish-gene,#curs-finish-genotype').on('click',
-                                                  function () {
-                                                    window.location.href = curs_root_uri +
-                                                      (read_only_curs ? '/ro' : '');
-                                                  });
-
-  $('#curs-genotype-page-back').on('click',
-                                   function () {
-                                     window.location.href = curs_root_uri +
-                                       '/genotype_manage' +
-                                       (read_only_curs ? '/ro' : '');
-                                   });
-
   $('#curs-pub-assign-popup-dialog').click(function () {
     $('#curs-pub-assign-dialog').dialog({ modal: true,
                                           title: 'Set the corresponding author ...',
@@ -256,58 +243,6 @@ $(document).ready(function() {
     
     $dialog.dialog('close');
     return true;
-  });
-
-  $('#pubmed-id-lookup-form').ajaxForm({
-    dataType: 'json',
-    success: function(data) {
-      $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
-      $('#pubmed-id-existing-sessions').hide();
-      $('#pubmed-id-lookup-message').hide();
-      if (data.pub) {
-        $('#pub-details-uniquename').data('pubmedid', data.pub.uniquename);
-        $('#pub-details-uniquename').data('pub_id', data.pub.pub_id);
-        if ("curation_sessions" in data) {
-          $('#pubmed-id-existing-sessions').show();
-          $('#pubmed-id-existing-sessions span:first').html(data.message);
-          var $link = $('#pubmed-id-pub-link a');
-          if ($link.size()) {
-            var href = $link.attr('href');
-            href = href.replace(new RegExp("(.*)/(.*)%3F(.*)"), "$1/" + data.pub.pub_id + "?$3");
-            $link.attr('href', href);
-          }
-        } else {
-          $('#pub-details-uniquename').html(data.pub.uniquename);
-          $('#pub-details-title').html(data.pub.title);
-          $('#pub-details-authors').html(data.pub.authors);
-          var $abstract_details = $('#pub-details-abstract');
-          $abstract_details.html(data.pub.abstract);
-          add_jTruncate($abstract_details);
-          $('#pubmed-id-lookup').hide();
-          $('#pubmed-id-lookup-pub-results').show();
-        }
-      } else {
-        $('#pubmed-id-lookup-message').show();
-        $('#pubmed-id-lookup-message span').html(data.message);
-      }
-    }
-  });
-
-  $('#pubmed-id-lookup-reset').click(function () {
-    $('#pubmed-id-lookup-waiting .ajax-spinner').hide();
-    $('#pubmed-id-lookup-pub-results').hide();
-    $('#pubmed-id-lookup-input').val('');
-    $('#pubmed-id-lookup').show();
-  });
-
-  $('#pubmed-id-lookup-curate').click(function () {
-    var pubmedid = $('#pub-details-uniquename').data('pubmedid');
-    window.location.href = application_root + '/tools/start/' + pubmedid;
-  });
-
-  $('#pubmed-id-lookup-goto-pub-session').click(function () {
-    var pub_id = $('#pub-details-uniquename').data('pub_id');
-    window.location.href = application_root + '/tools/pub_session/' + pub_id;
   });
 
   function add_jTruncate($element) {

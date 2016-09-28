@@ -12,17 +12,12 @@ $pub
 % if ($read_only_curs) {
 Genes<% $and_genotypes %> from this publication
 % } else {
-Genes<% $and_genotypes %>
+Annotate genes<% $and_genotypes %>
 % }
     <& /curs/inline_help.mhtml, key => 'choose_gene' &>
     </div>
   </div>
   <div class="curs-box-body">
-% if (!$read_only_curs) {
-   <div class="gene-list-instructions">
-Click on a gene name to start entering data
-   </div>
-% }
 % if (@gene_hashes) {
   <table>
 %   for (my $y = 0; $y < $row_max; $y++) {
@@ -49,6 +44,7 @@ Click on a gene name to start entering data
   </div>
 % }
 
+  <div style="margin-top: 20px;">
 % if (!$read_only_curs) {
   <div class="feature-list-action">
     <a href="<% $edit_path %>">Edit gene list ...</a>
@@ -59,6 +55,7 @@ Click on a gene name to start entering data
     <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes ...' : 'Genotype management ...' %></a>
   </div>
 % }
+</div>
 </div>
 </div>
 

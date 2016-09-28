@@ -1,0 +1,64 @@
+<div class="curs-pubmed-id-lookup">
+  <div ng-if="!data.results">
+    <div>
+      Start curating using a PubMed ID:
+    </div>
+    <div>
+      <input type="text" ng-model="data.searchId"/>
+      <button class="btn btn-primary" ng-click="search()">Find ...</button>
+    </div>
+  </div>
+  <div ng-if="data.results">
+    <div ng-if="data.results.sessions.length > 0">
+      <div>
+        {{data.results.pub.uniquename}} is currently being curated by someone
+        else.  <span ng-if="!publicMode"> You can view the curation session.
+        Please contact the curation team to suggest changes to the
+        annotation.</span>
+      </div>
+      <span ng-if="userIsAdmin">
+        Admin only: <a href="......">publication page</a>.
+      </span>
+      <div ng-if="publicMode">
+        In this demo version, you can visit the existing curation session
+        and make changes:
+      </div>
+    </div>
+    <div ng-if="data.results.sessions.length == 0">
+      <div class="pub-title curs-box">
+        <div class="curs-box-title">
+          Publication details
+        </div>
+        <div class="curs-box-body">
+          <table class="curs-definition-table">
+            <tr>
+              <td class="title">ID</td>
+              <td>{{data.results.pub.uniquename}}</td>
+            </tr>
+            <tr>
+              <td class="title">Title</td>
+              <td>{{data.results.pub.title}}</td>
+            </tr>
+            <tr>
+              <td class="title">Authors</td>
+              <td>{{data.results.pub.authors}}</td>
+            </tr>
+            <tr>
+              <td class="title">Abstract</td>
+              <td>{{data.results.pub.abstract}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="pubmed-id-lookup-buttons">
+      <button type="button" class="btn btn-primary" ng-click="findAnother()">Find another</button>
+      <button type="button" class="btn btn-primary" ng-click="startCuration()">
+        <span ng-if="data.results.sessions.length > 0 && !publicMode">View session</span>
+        <span ng-if="data.results.sessions.length == 0">Continue</span>
+      </button>
+    </div>
+  </div>
+</div>

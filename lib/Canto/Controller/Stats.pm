@@ -67,12 +67,16 @@ sub annotation : Local {
 
   Canto::Chado::Utils::stats_init($chado_schema, $track_schema);
 
+  my @annotation_types_by_year =
+    Canto::Chado::Utils::annotation_types_by_year($chado_schema);
+  $st->{annotation_types_by_year} = \@annotation_types_by_year;
+
   my @per_pub_stats =
-    Canto::Chado::Utils::per_publication_stats($chado_schema, $track_schema, 0);
+    Canto::Chado::Utils::per_publication_stats($chado_schema, 0);
   $st->{per_pub_stats_table} = \@per_pub_stats;
 
   my @per_pub_5_year_stats =
-    Canto::Chado::Utils::per_publication_stats($chado_schema, $track_schema, 1);
+    Canto::Chado::Utils::per_publication_stats($chado_schema, 1);
   $st->{per_pub_5_year_stats} = \@per_pub_5_year_stats;
 
   my @annotation_stats = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
@@ -83,8 +87,14 @@ sub annotation : Local {
 
   Canto::Chado::Utils::stats_finish($chado_schema, $track_schema);
 
-  $st->{title} = "Canto statistics";
+  $st->{hide_breadcrumbs} = 1;
+
+  $st->{title} = "PomBase literature curation statistics - $db_creation_datetime";
   $st->{template} = 'stats/annotation.mhtml';
+
+  if (!$ENV{CANTO_DEBUG}) {
+    $c->cache_page(600);
+  }
 }
 
 1;

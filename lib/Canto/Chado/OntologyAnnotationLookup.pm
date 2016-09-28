@@ -47,10 +47,23 @@ use feature "state";
 
 use Canto::Cache;
 
+has gene_lookup => (
+  is => 'ro',
+  lazy_build => 1
+);
+
 with 'Canto::Role::Configurable';
 with 'Canto::Chado::ChadoLookup';
 with 'Canto::Role::SimpleCache';
 with 'Canto::Role::ChadoFeatureCache';
+with 'Canto::Role::ChadoExtensionDisplayer';
+
+sub _build_gene_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'gene');
+}
 
 # if the $feature is an mRNA, return it's gene feature, otherwise return
 # the $feature
@@ -299,16 +312,12 @@ sub lookup
         next;
       }
 
-      my $real_cvterm;
+      my ($extension_object, $extension_text, $parent_term) = $self->make_gaf_extension($row);
 
-      if ($cvterm->cv_id() == $ext_cv->cv_id()) {
-        $real_cvterm =
-          $cvterm->cvterm_relationship_subjects()
-                 ->search({ type_id => $is_a_term->cvterm_id() })
-                 ->first()
-                 ->object();
-      } else {
-        $real_cvterm = $cvterm;
+      my $real_cvterm = $cvterm;
+
+      if ($parent_term) {
+        $real_cvterm = $parent_term;
       }
 
       my $new_res =
@@ -330,6 +339,10 @@ sub lookup
           qualifiers => $prop_type_values{qualifier},
           annotation_id => $row->feature_cvterm_id(),
         };
+
+      if ($extension_object) {
+        $new_res->{extension} = $extension_object;
+      }
 
       if ($feature->type()->name() eq 'genotype') {
         $new_res->{genotype} = $self->get_cached_genotype_details($feature);

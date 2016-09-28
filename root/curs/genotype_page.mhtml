@@ -10,7 +10,7 @@ $annotation_count
 % if (!$read_only_curs) {
 <div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
-Actions ...
+Actions
   </div>
   <div class="curs-box-body">
   <ul class="annotation-start">
@@ -43,7 +43,7 @@ Add a new <% $type_display_name %> for this genotype ...
 
 <div id="curs-genotype-details" class="curs-box curs-half-width-section">
   <div class="curs-box-title">
-Genotype details
+Details
   </div>
   <div class="curs-box-body">
     <div class="curs-allele-list">
@@ -93,10 +93,10 @@ Description
     <div>
       <a confirm="This genotype has existing annotations.  Really edit?"
          confirm-if="annotationCount > 0"
-         href="<% $start_path . '/feature/genotype/edit/' . $genotype->genotype_id() %>">Edit ...</a>
+         ng-click="editGenotype(<% $genotype->genotype_id() %>)">Edit ...</a>
     </div>
     <div>
-      <a href="<% $start_path . '/feature/genotype/duplicate/' . $genotype->genotype_id() %>">Duplicate ...</a>
+      <a href="<% $start_path . '/genotype_manage#/duplicate/' . $genotype->genotype_id() %>">Duplicate ...</a>
     </div>
 % }
   </div>
@@ -104,11 +104,13 @@ Description
 
 <div class="clearall"/>
 
-<button type="button" id="curs-genotype-page-back"
+<button type="button" ng-click="backToGenotypes()"
         class="btn btn-primary curs-back-button">&lt;- Back to genotypes</button>
 
 <annotation-table-list feature-type-filter="genotype" feature-id-filter="<% $genotype_id %>"
                        feature-filter-display-name="<% $genotype->display_name() %>"></annotation-table-list>
+
+</div>
 
 <%init>
 my $genotype_id = $genotype->genotype_id();

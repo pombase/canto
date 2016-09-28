@@ -139,8 +139,6 @@ sub create_curs_db
 
   if (defined $current_user && $current_user->is_admin()) {
     __PACKAGE__->set_metadata($curs_schema, 'admin_session', 1);
-  } else {
-    $pub->community_curatable(1);
   }
 
   # the calling function will wrap this in a transaction if necessary
@@ -339,6 +337,52 @@ sub delete_curs
 
 =head2
 
+ Usage   : Canto::Track::delete_pub($config, $schema, $pub_uniquename);
+ Function: Try delete the Pub with the given uniquename/pubmed_id
+ Args    : $config - the Canto::Config object
+           $schema - a TrackDB object
+           $pub_uniquename - the uniquename/PMID
+ Returns : 1 on success
+           0 on failure, if there is Pub with the given uniquename or if there
+             are existing sessions for this Pub
+
+=cut
+sub delete_pub
+{
+  my $config = shift;
+  my $track_schema = shift;
+  my $pub_uniquename = shift;
+
+  my $pub =
+    $track_schema->resultset('Pub')->find({ uniquename => $pub_uniquename });
+
+  if (!defined $pub) {
+    warn "Can't find Pub to delete: $pub_uniquename\n";
+    return 0;
+  }
+
+  if ($pub->curs()->count() > 0) {
+    warn "$pub_uniquename has existing sessions which must be deleted first:\n";
+    map {
+      warn "  ", $_->curs_key(), "\n";
+    } $pub->curs()->all();
+    return 0;
+}
+
+  my $guard = $track_schema->txn_scope_guard;
+
+  $pub->pub_curation_statuses()->delete();
+  $pub->pub_organisms()->delete();
+
+  $pub->delete();
+
+  $guard->commit();
+
+  return 1;
+}
+
+=head2
+
  Usage   : Canto::Track::tidy_curs($config, $curs_schema);
  Function: Tidy the curs databases by fixing problems caused by code
            changes.
@@ -457,29 +501,25 @@ sub validate_curs
   return @res;
 }
 
-=head2 update_metadata
+=head2 update_all_statuses
 
- Usage   : Canto::Track::update_metadata($config);
- Function: Set missing or out of date curs metadata.  Currently sets the
-           session_created_timestamp
+ Usage   : Canto::Track::update_all_statuses($config);
+ Function: Update statuses for all sessions via the status adaptor
  Args    : $config - the Canto::Config object
  Return  : Nothing
 
 =cut
 
-sub update_metadata
+sub update_all_statuses
 {
   my $config = shift;
 
   my $state = Canto::Curs::State->new(config => $config);
-
   my $track_schema = Canto::TrackDB->new(config => $config);
 
   my $iter = Canto::Track::curs_iterator($config, $track_schema);
 
   while (my ($curs, $cursdb) = $iter->()) {
-    $state->set_metadata($cursdb, Canto::Curs::State::SESSION_CREATED_TIMESTAMP_KEY(),
-                         $curs->creation_date());
     $state->store_statuses($cursdb);
   }
 }

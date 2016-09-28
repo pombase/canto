@@ -39,6 +39,8 @@ the Free Software Foundation, either version 3 of the License, or
 =cut
 
 use Moose;
+use Try::Tiny;
+use Carp;
 
 use Canto::Curs::MetadataStorer;
 
@@ -118,7 +120,13 @@ sub update_curs_terms
   my $annotation_rs = $cursdb->resultset('Annotation');
 
   while (defined (my $annotation = $annotation_rs->next())) {
-    my $data = $annotation->data();
+    my $data;
+
+    try {
+      $data = $annotation->data();
+    } catch {
+      croak "failed to inflate data column: $_\n";
+    };
 
     if (defined $data->{conditions}) {
       my $changed = 0;

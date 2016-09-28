@@ -1,0 +1,19 @@
+<%args>
+@annotation_type_list
+</%args>
+
+<div class="curs-box">
+  <div class="curs-box-title">
+    Quick links
+  </div>
+  <div class="curs-box-body">
+% for my $annotation_type (@annotation_type_list) {
+    <div>
+      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
+                            link-label="<% $annotation_type->{display_name} %> ..."
+                            feature-type="<% $annotation_type->{feature_type} %>">
+      </annotation-quick-add>
+    </div>
+% }
+  </div>
+</div>

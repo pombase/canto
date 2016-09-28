@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 18;
 
 use Plack::Test;
 use Plack::Util;
@@ -53,7 +53,6 @@ test_psgi $app, sub {
     my $res = $cb->($req);
     is $res->code, 200;
 
-    like ($res->content(), qr|Genotype: SPCC63.05delta ssm4KE</title|);
     like ($res->content(), qr/Annotate normal or abnormal phenotypes of cells/);
   }
 
@@ -73,9 +72,9 @@ test_psgi $app, sub {
     my $res = $cb->($req);
     is $res->code, 200;
 
-    like ($res->content(), qr/cdc11-33 wtf22-a1/);
+    like ($res->content(), qr/cdc11-33 mot1-a1/);
     like ($res->content(), qr/cdc11-33\(unknown\)/);
-    like ($res->content(), qr/wtf22-a1\(T11C\)/);
+    like ($res->content(), qr/mot1-a1\(aaT11C\)/);
     like ($res->content(), qr/Annotate normal or abnormal phenotypes of cells/);
 
     # re-fetch
@@ -91,7 +90,7 @@ test_psgi $app, sub {
         identifier => 'aaaa0007-test-genotype-2',
       });
 
-    is ($new_genotype->name(), 'cdc11-33 wtf22-a1');
+    is ($new_genotype->name(), 'cdc11-33 mot1-a1');
 
     is ($new_genotype->alleles(), 2);
 
@@ -100,9 +99,9 @@ test_psgi $app, sub {
         is ($_->primary_identifier(), 'SPCC1739.11c:aaaa0007-1');
         is ($_->gene()->primary_identifier(), 'SPCC1739.11c');
       } else {
-        if ($_->name() eq 'wtf22-a1') {
-          is ($_->primary_identifier(), 'SPCC576.16c:aaaa0007-1');
-          is ($_->gene()->primary_identifier(), 'SPCC576.16c');
+        if ($_->name() eq 'mot1-a1') {
+          is ($_->primary_identifier(), 'SPBC1826.01c:aaaa0007-1');
+          is ($_->gene()->primary_identifier(), 'SPBC1826.01c');
         } else {
           fail "unknown allele: ", $_->name();
         }

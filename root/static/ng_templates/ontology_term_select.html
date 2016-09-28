@@ -26,7 +26,7 @@ More specific terms will be suggested allowing you to refine your search
 iteratively before making your final selection (examples of more specific
 terms are: {{annotationType.specific_term_examples}}).
             </div>
-            <div>
+            <div ng-if="annotationType.feature_type == 'gene'">
 Gene products may be annotated with multiple
 {{annotationType.short_display_name}} terms.
             </div>

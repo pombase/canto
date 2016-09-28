@@ -34,6 +34,7 @@ Choose curation type for <% $gene->display_name() %>:
       </span>
 %     if (!$annotation_type->{disabled}) {
       </a>
+      <help-icon key="<% $annotation_type->{name} . '_definition' %>"></help-icon>
 %     }
       <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
                             feature-type="gene" feature-id="<% $gene->gene_id() %>"
@@ -42,20 +43,16 @@ Choose curation type for <% $gene->display_name() %>:
     </li>
 %   } else {
   <li class="annotation-type">
-    <div>
-<% ucfirst $type_display_name %>:
-    </div>
-    <ul style="padding-left: 10px; font-size: 95%; ">
-      <li class="annotation-type">
-        <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n
-        %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id()
-        |n%>)">Single allele</a> <span style="color: #333; font-size: 95%">(add allele details and phenotype)</span>
-      </li>
-      <li class="annotation-type">
-        <a href='<% "$curs_root_uri/genotype_manage" %>'>Multiple
-        allele</a> <span style="color: #333; font-size: 95%">(specify a genotype, and then add a phenotype)</span>
-      </li>
-    </ul>
+    <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id() |n%>)">
+      Single allele <% ucfirst $type_display_name %>
+    </a>
+    <help-icon key="gene_page_single_allele"></help-icon>
+  </li>
+  <li class="annotation-type">
+    <a href='<% "$curs_root_uri/genotype_manage" %>'>
+      Multiple allele <% ucfirst $type_display_name %>
+    </a>
+    <help-icon key="gene_page_multi_allele"></help-icon>
   </li>
 %   }
 % }
@@ -114,7 +111,7 @@ Genotypes for <% $gene->display_name() %> in this session
 
 <div class="clearall"/>
 
-<button type="button" id="curs-finish-gene" class="btn btn-primary curs-back-button"><% $finish_text %></button>
+<a href="<% $summary_url %>" type="button" class="btn btn-primary curs-back-button"><% $finish_text %></a>
 
 <annotation-table-list feature-type-filter="gene" feature-id-filter="<% $gene_id %>"
                        feature-filter-display-name="<% $gene->display_name() %>"></annotation-table-list>
@@ -156,4 +153,6 @@ use Canto::Curs::GeneProxy;
 
 my $gene_proxy =
   Canto::Curs::GeneProxy->new(config => $c->config(), cursdb_gene => $gene);
+
+my $summary_url = $curs_root_uri . ($read_only_curs ? '/ro' : '');
 </%init>

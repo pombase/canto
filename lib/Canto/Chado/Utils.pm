@@ -41,28 +41,19 @@ use strict;
 sub stats_init
 {
   my $chado_schema = shift;
-  my $track_schema = shift;
-
-  my $track_dbh = $track_schema->storage()->dbh();
-  my $pub_date_query = 'SELECT uniquename, publication_date FROM pub;';
 
   my $chado_dbh = $chado_schema->storage()->dbh();
-  $chado_dbh->prepare('CREATE TEMP TABLE pub_dates(uniquename TEXT, pub_date TEXT)')->execute();
-
-  my $track_sth = $track_dbh->prepare($pub_date_query);
-  $track_sth->execute() or die "Couldn't execute: " . $track_sth->errstr;
-
-  my $chado_sth =
-    $chado_dbh->prepare('insert into pub_dates(uniquename, pub_date) values (?, ?)');
-
-  while (my ($pub_uniquename, $publication_date) = $track_sth->fetchrow_array()) {
-    if ($publication_date =~ /((19|20)\d\d)$/) {
-      my $publication_year = $1;
-
-      $chado_sth->execute($pub_uniquename, $publication_year)
-        or die "Couldn't execute: " . $chado_sth->errstr;
-    }
-  }
+  $chado_dbh->prepare(<<'EOF')->execute();
+CREATE TEMP TABLE pub_dates AS
+SELECT uniquename,
+       regexp_replace(value, '(?:^|.*\s)(\d\d\d\d)', '\1') AS pub_date
+FROM pubprop pp
+JOIN pub ON pub.pub_id = pp.pub_id
+WHERE pp.type_id IN
+    (SELECT cvterm_id
+     FROM cvterm
+     WHERE name = 'pubmed_publication_date')
+EOF
 
   $chado_dbh->prepare(<<'EOF')->execute();
 CREATE TEMP TABLE pub_canto_curator_roles AS
@@ -77,7 +68,55 @@ WHERE pub.pub_id IN
         AND pt.name = 'canto_triage_status'
         AND (pp.value LIKE 'Curatable%' OR pp.value LIKE 'curatable%'));
 EOF
+
+  $chado_dbh->prepare(<<'EOF')->execute();
+CREATE INDEX pub_dates_uniquename_index ON pub_dates(uniquename);
+EOF
 }
+
+sub annotation_types_by_year
+{
+  my $chado_schema = shift;
+
+  my $chado_dbh = $chado_schema->storage()->dbh();
+
+  my %stats = ();
+
+  my $query = <<"EOF";
+SELECT annotation_year, annotation_type, count(id)
+FROM pombase_genes_annotations_dates
+WHERE (evidence_code IS NULL OR evidence_code <> 'Inferred from Electronic Annotation')
+  AND (annotation_source IS NULL OR annotation_source <> 'BIOGRID')
+  AND annotation_year::integer >= 0
+GROUP BY annotation_type, annotation_year;
+EOF
+
+  my $sth = $chado_dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+  while (my ($year, $type, $count) = $sth->fetchrow_array()) {
+    $stats{$year}->{$type} = $count;
+  }
+
+  my @rows = ();
+
+  my $first_year = 9999;
+
+  map {
+    $first_year = $_ if $_ < $first_year
+  } keys %stats;
+
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+  my $current_year = $year + 1900;
+
+  for (my $year = $first_year; $year <= $current_year; $year++) {
+    my $year_stats = $stats{$year};
+    push @rows, [$year, $year_stats];
+  }
+
+  return @rows;
+}
+
 
 =head2 curated_stats
 
@@ -150,7 +189,6 @@ EOF
 sub per_publication_stats
 {
   my $chado_schema = shift;
-  my $track_schema = shift;
   my $use_5_year_bins = shift // 0;
 
   my $chado_dbh = $chado_schema->storage()->dbh();
@@ -267,7 +305,7 @@ WHERE (curs_curator_id =
          (SELECT max(curs_curator_id)
           FROM curs_curator
           WHERE curs = me.curs))
-  AND pt.name = 'annotation_status_datestamp'
+  AND pt.name = 'needs_approval_timestamp'
   AND curs.curs_id IN
     (SELECT curs
      FROM cursprop p2
@@ -303,22 +341,64 @@ sub _annotator_annotation_counts
 
   my $dbh = $chado_schema->storage()->dbh();
   my $query = <<"EOF";
-SELECT fc.feature_cvterm_id, emailprop.value, dateprop.value
-  FROM feature_cvterm fc
-  JOIN feature_cvtermprop emailprop
-    ON fc.feature_cvterm_id = emailprop.feature_cvterm_id
-  JOIN feature_cvtermprop dateprop
-    ON fc.feature_cvterm_id = dateprop.feature_cvterm_id
- WHERE emailprop.type_id
-       IN (SELECT cvterm_id FROM cvterm WHERE name = 'curator_email')
-   AND dateprop.type_id
-       IN (SELECT cvterm_id FROM cvterm WHERE name = 'date')
+CREATE TEMP TABLE session_submitted_dates AS
+SELECT pub.pub_id, pp.value AS submitted_date
+FROM pub
+JOIN pubprop pp ON pub.pub_id = pp.pub_id
+JOIN cvterm ppt ON ppt.cvterm_id = pp.type_id
+JOIN cv ON ppt.cv_id = cv.cv_id
+WHERE ppt.name = 'canto_session_submitted_date'
+  AND cv.name = 'pubprop_type';
 EOF
-
   my $sth = $dbh->prepare($query);
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
-  while (my ($id, $email, $date) = $sth->fetchrow_array()) {
+  $query = <<"EOF";
+CREATE INDEX session_submitted_dates_idx ON session_submitted_dates (pub_id);
+EOF
+  $sth = $dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+  $query = <<"EOF";
+SELECT emailprop.value,
+       ssd.submitted_date
+FROM feature_cvterm fc
+JOIN feature_cvtermprop emailprop ON fc.feature_cvterm_id = emailprop.feature_cvterm_id
+JOIN session_submitted_dates ssd ON ssd.pub_id = fc.pub_id
+WHERE emailprop.type_id IN
+    (SELECT cvterm_id
+     FROM cvterm
+     WHERE name = 'curator_email')
+UNION ALL
+SELECT emailprop.value,
+       ssd.submitted_date
+FROM feature_relationship fr
+JOIN feature_relationship_pub frpub ON frpub.feature_relationship_id = fr.feature_relationship_id
+JOIN feature_relationshipprop emailprop ON emailprop.feature_relationship_id = fr.feature_relationship_id
+JOIN session_submitted_dates ssd ON ssd.pub_id = frpub.pub_id
+WHERE fr.type_id IN
+    (SELECT cvterm_id
+     FROM cvterm
+     WHERE name = 'interacts_genetically'
+       OR name = 'interacts_physically')
+  AND emailprop.type_id IN
+    (SELECT cvterm_id
+     FROM cvterm
+     WHERE name = 'curator_email')
+  AND fr.feature_relationship_id IN
+    (SELECT inferredprop.feature_relationship_id
+     FROM feature_relationshipprop inferredprop
+     WHERE inferredprop.type_id IN
+         (SELECT cvterm_id
+          FROM cvterm
+          WHERE name = 'is_inferred')
+       AND value = 'no');
+EOF
+
+  $sth = $dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+  while (my ($email, $date) = $sth->fetchrow_array()) {
     if ($date =~ /(\d\d\d\d)-?(\d\d)-?(\d\d)/) {
       my $year = $1;
       if ($curator_emails->{$email}) {
@@ -382,7 +462,6 @@ sub annotation_stats_table
 sub stats_finish
 {
   my $chado_schema = shift;
-  my $track_schema = shift;
 
   my $chado_dbh = $chado_schema->storage()->dbh();
 

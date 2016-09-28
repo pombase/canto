@@ -6,8 +6,8 @@ use Test::More tests => 6;
 
 use Clone qw(clone);
 use JSON;
-
 use utf8;
+use Encode;
 
 use Digest::SHA qw(sha1_base64);
 
@@ -47,8 +47,8 @@ my $full_expected_curation_session =
         uniquename => 'SPCC63.05',
         organism => 'Schizosaccharomyces pombe',
       },
-      'Schizosaccharomyces pombe SPCC576.16c' => {
-        uniquename => 'SPCC576.16c',
+      'Schizosaccharomyces pombe SPBC1826.01c' => {
+        uniquename => 'SPBC1826.01c',
         organism => 'Schizosaccharomyces pombe',
       }
     },
@@ -142,7 +142,7 @@ my $full_expected_curation_session =
           email => 'some.testperson@pombase.org',
           community_curated => JSON::XS::false,
         },
-        with_gene => "SPCC576.16c",
+        with_gene => "SPBC1826.01c",
         extension => [
           {
             relation => 'exists_during',
@@ -171,7 +171,7 @@ my $full_expected_curation_session =
           email => 'some.testperson@pombase.org',
           community_curated => JSON::XS::false,
         },
-        with_gene => "SPCC576.16c",
+        with_gene => "SPBC1826.01c",
         extension => [
           {
             relation => 'exists_during',
@@ -542,7 +542,8 @@ my $small_expected_track_data =
 sub check_track {
   my $options = shift;
   my ($count, $track_json) = Canto::Track::Serialise::json($config, $track_schema, $options);
-  my $track_ref = decode_json($track_json);
+
+  my $track_ref = decode_json(encode("utf8", $track_json));
 
   cmp_deeply($track_ref, $full_expected_track_data);
 

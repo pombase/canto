@@ -23,9 +23,9 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v1053
+app_version: v1119
 
-schema_version: 13
+schema_version: 14
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## all gene lookups with match genes from any organism (and will return the
@@ -237,6 +237,11 @@ db_initial_data:
           - name: session_reactivated_timestamp
             dbxref:
               accession: session_reactivated_timestamp
+              db:
+                name: Canto
+          - name: needs_approval_timestamp
+            dbxref:
+              accession: needs_approval_timestamp
               db:
                 name: Canto
       - name: Canto publication triage status
@@ -624,8 +629,6 @@ class_info:
             - inline_list
         - name: corresponding_author
           editable: 1
-        - name: community_curatable
-          editable: 1
         - name: current_curator
           referenced_class: Person
           source:
@@ -817,7 +820,7 @@ class_info:
       constraint: "curation_priority_id in (select cvterm_id from cvterm where name = 'high')"
     community_curatable_publications:
       extends: pub
-      constraint: "pub_id in (select pub_id from pub where community_curatable)"
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and pub_id in (select pub from curs_curator cc join curs on curs_id = cc.curs join person on person.person_id = cc.curator join cvterm role on person.role = role.cvterm_id and role.name <> 'admin')"
     curatable_low_priority_publications:
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable, low priority')"
@@ -903,9 +906,6 @@ class_info:
     publications_with_approved_session:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
-    community_curatable_publications_with_approved_session:
-      extends: pub
-      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and pub_id in (select pub_id from pub where community_curatable)"
     curatable_publications_with_no_annotatable_genes:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_genes_count' and p.value = 0)) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -917,7 +917,7 @@ class_info:
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS'))"
     sessions_with_term_requests:
       extends: curs
-      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'CURATION_IN_PROGRESS' or p.value = 'CURATION_PAUSED' or p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS') and cast((select value from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_term_suggestions_count') as int) > 0)"
+      constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'CURATION_IN_PROGRESS' or p.value = 'CURATION_PAUSED' or p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_term_suggestions_count' and value > 0)"
     reactivated_sessions:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'CURATION_IN_PROGRESS')) and me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_reactivated_timestamp')"
@@ -1081,8 +1081,6 @@ reports:
                    - report: publications_with_active_sessions
                    - report: publications_with_session_needing_approval
                    - report: publications_with_approved_session
-                     children:
-                      - report: community_curatable_publications_with_approved_session
                    - report: publications_with_multiple_sessions
                 - report: curatable_publications_without_sessions
                 - report: curatable_publications_with_no_annotatable_genes
@@ -1219,7 +1217,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: "Please specify deleted residues - eg. 100-200"
+    placeholder: "Please specify deleted residues - eg. 100-200 OR 10-20,40-50"
   - name: partial deletion, nucleotide
     export_type: partial_nucleotide_deletion
     description_required: true
@@ -1456,9 +1454,9 @@ evidence_types:
 ontology_namespace_config:
   subsets_to_ignore:
     primary:
-      - canto_root_subset
+      - "is_a(canto_root_subset)"
     extension:
-      - canto_root_subset
+      - "is_a(canto_root_subset)"
 
 available_annotation_type_list:
   - name: molecular_function
@@ -1678,6 +1676,14 @@ help_text:
   gene_page_choose_curation_type:
     inline: >
       These are the types of data you can annotate. Follow one of the links for more detailed instructions.
+  gene_page_single_allele:
+    inline: >
+      One or more mutations, or an expression change, in one copy of a gene at one locus.
+    docs_path: "fypo_annotation#single-allele-phenotypes"
+  gene_page_multi_allele:
+    inline: >
+      Changes in sequence or expression at two or more loci.
+    docs_path: "fypo_annotation#multi-allele-phenotypes"
   allele_choose_conditions:
     inline: >
       Please describe any experimental conditions relevant to this
@@ -1707,46 +1713,22 @@ help_text:
     url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#physical_interactions"
   biological_process_definition:
     inline: Click for help on biological process
-    url: "@@instance_top_uri@@/docs/go_annotation#process"
+    docs_path: "go_annotation#process"
   cellular_component_definition:
     inline: Click for help on cellular component
-    url: "@@instance_top_uri@@/docs/go_annotation#component"
+    docs_path: "go_annotation#component"
   molecular_function_definition:
     inline: Click for help on molecular function
-    url: "@@instance_top_uri@@/docs/go_annotation#function"
-  phenotype_definition:
-    inline: Click for help on phenotype annotation
-    url: "@@instance_top_uri@@/docs/fypo_annotation"
+    docs_path: "go_annotation#function"
   post_translational_modification_definition:
     inline: Click for help on modification annotation
-    url: "@@instance_top_uri@@/docs/modification_annotation"
-  physical_interaction_select_gene:
+    docs_path: "modification_annotation"
+  physical_interaction_definition:
     inline: Click for help on physical interaction annotation
-    url: "@@instance_top_uri@@/docs/physical_interaction_annotation"
-  genetic_interaction_select_gene:
+    docs_path: "physical_interaction_annotation"
+  genetic_interaction_definition:
     inline: Click for help on genetic interaction annotation
-    url: "@@instance_top_uri@@/docs/genetic_interaction_annotation"
-  biological_process_gene_page:
-    inline: Click for help on biological process
-    url: "@@instance_top_uri@@/docs/go_annotation#process"
-  cellular_component_gene_page:
-    inline: Click for help on cellular component
-    url: "@@instance_top_uri@@/docs/go_annotation#component"
-  molecular_function_gene_page:
-    inline: Click for help on molecular function
-    url: "@@instance_top_uri@@/docs/go_annotation#function"
-  phenotype_gene_page:
-    inline: Click for help on phenotype annotation
-    url: "@@instance_top_uri@@/docs/fypo_annotation"
-  post_translational_modification_gene_page:
-    inline: Click for help on modification annotation
-    url: "@@instance_top_uri@@/docs/modification_annotation"
-  physical_interaction_gene_page:
-    inline: Click for help on physical interaction annotation
-    url: "@@instance_top_uri@@/docs/physical_interaction_annotation"
-  genetic_interaction_gene_page:
-    inline: Click for help on genetic interaction annotation
-    url: "@@instance_top_uri@@/docs/genetic_interaction_annotation"
+    docs_path: "genetic_interaction_annotation"
 
 contact_email:
   address: "set_me@localhost"
@@ -1788,12 +1770,15 @@ config_service:
     extension_configuration: 1
     max_term_name_select_count: 1
     help_text: 1
+    public_mode: 1
 
 max_term_name_select_count: 20
 
 curs_settings_service:
   allowed_keys:
     annotation_mode: 1
+  allowed_data_keys:
+    checked: 1
 
 ontology_external_links:
   cellular_component:
@@ -1835,7 +1820,9 @@ chado:
 curator_manager:
   accept_hooks:
 # call with args: $config, $track_schema, $curs
-    - set_pub_community_curatable
+#
+#   UNUSED, see: https://github.com/pombase/canto/issues/1222
+#    - set_pub_community_curatable
 
 # if set to "yes", always prompt for an annotation extension on the
 # annotation transfer page
@@ -1910,12 +1897,12 @@ default_db_name: "CONFIGURE_IN_CANTO_DEPLOY.YAML"
 # ontology_namespace_config:
 #   subsets_to_ignore:
 #     primary:
-#       - canto_root_subset
-#       - qc_do_not_annotate
-#       - gocheck_do_not_annotate
-#       - gocheck_do_not_manually_annotate
+#       - is_a(canto_root_subset)
+#       - is_a(qc_do_not_annotate)
+#       - is_a(gocheck_do_not_annotate)
+#       - is_a(gocheck_do_not_manually_annotate)
 #     extension:
-#       - canto_root_subset
+#       - is_a(canto_root_subset)
 
 ### configuration for annotation extensions in the user interface
 ### See: https://github.com/pombase/canto/wiki/AnnotationExtensionConfig

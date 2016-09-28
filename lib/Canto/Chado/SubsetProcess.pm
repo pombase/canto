@@ -36,13 +36,15 @@ under the same terms as Perl itself.
 =cut
 
 use Moose;
+use Carp;
 
 =head2 add_to_subset
 
- Usage   : $self->add_to_subset($subset_data, 'subset_name', \@subset_ids);
+ Usage   : $self->add_to_subset($subset_data, 'subset_name', 'is_a', \@subset_ids);
  Function: Add a new subset to $subset_data
  Args    : $subset_data - returned by get_subset_data()
            $subset_name
+           $subset_relation - the relation the connects the subset
            $subset_ids - a array ref
  Return  : None
 
@@ -54,10 +56,15 @@ sub add_to_subset
 
   my $subset_data = shift;
   my $subset_name = shift;
+  my $subset_relation = shift;
   my $subset_ids = shift;
 
+  if (!defined $subset_ids) {
+    croak "no subset_ids passed to add_to_subset()";
+  }
+
   for my $subset_id (@$subset_ids) {
-    $subset_data->{$subset_id}{$subset_name} = 1;
+    $subset_data->{$subset_id}{$subset_name}{$subset_relation} = 1;
   }
 }
 
@@ -134,16 +141,25 @@ sub process_subset_data
     my $subset_ids = $subset_data->{$db_accession};
 
     if ($subset_ids) {
-      my @subset_ids = sort keys %{$subset_ids};
+      my @subset_ids_to_store = sort keys %{$subset_ids};
 
-      for (my $rank = 0; $rank < @subset_ids; $rank++) {
-        my $subset_id = $subset_ids[$rank];
-        $schema->resultset('Cvtermprop')->create({
-          cvterm_id => $cvterm->cvterm_id(),
-          type_id => $canto_subset_term->cvterm_id(),
-          value => $subset_id,
-          rank => $rank,
-        });
+      my $rank = 0;
+
+      while (@subset_ids_to_store) {
+        my $subset_id = shift @subset_ids_to_store;
+
+        my @rels = keys %{$subset_ids->{$subset_id}};
+
+        for my $rel (@rels) {
+          $schema->resultset('Cvtermprop')->create({
+            cvterm_id => $cvterm->cvterm_id(),
+            type_id => $canto_subset_term->cvterm_id(),
+            value => "$rel($subset_id)",
+            rank => $rank,
+          });
+
+          $rank++;
+        }
       }
     }
   }

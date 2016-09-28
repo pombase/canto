@@ -54,7 +54,6 @@ use Carp;
 
 use Try::Tiny;
 
-use GO::Parser;
 use LWP::Simple;
 use File::Temp qw(tempfile);
 
@@ -62,6 +61,9 @@ use Canto::Track::LoadUtil;
 use Canto::Curs::Utils;
 use Canto::Config::ExtensionProcess;
 use Canto::Chado::SubsetProcess;
+
+use PomBase::Chobo::ParseOBO;
+use PomBase::Chobo::OntologyData;
 
 with 'Canto::Role::Configurable';
 
@@ -185,6 +187,7 @@ sub _parse_source
 {
   my $self = shift;
   my $parser = shift;
+  my $ontology_data = shift;
   my $source = shift;
 
   my $file_name;
@@ -201,7 +204,7 @@ sub _parse_source
     $file_name = $source;
   }
 
-  $parser->parse($file_name);
+  $parser->parse(filename => $file_name, ontology_data => $ontology_data);
 }
 
 =head2 load
@@ -263,13 +266,13 @@ sub load
   my $guard = $schema->txn_scope_guard;
 
   my $comment_cvterm = $schema->find_with_type('Cvterm', { name => 'comment' });
-  my $parser = GO::Parser->new({ handler=>'obj' });
+  my $parser = PomBase::Chobo::ParseOBO->new();
+  my $ontology_data = PomBase::Chobo::OntologyData->new();
 
   for my $source (@$sources) {
-    $self->_parse_source($parser, $source);
+    $self->_parse_source($parser, $ontology_data,  $source);
   }
 
-  my $graph = $parser->handler->graph;
   my %cvterms = ();
 
   my %relationship_cvterms = ();
@@ -287,21 +290,12 @@ sub load
   }
 
   my %cvs = ();
+  map {
+    $cvs{$_} = 1;
+  } $ontology_data->get_cv_names();
 
-  my $collect_cvs =
-    sub {
-      my $ni = shift;
-      my $term = $ni->term;
-
-      my $cv_name = $term->namespace() // 'external';
-
-      $cvs{$cv_name} = 1;
-    };
-
-  $graph->iterate($collect_cvs);
-
-   # delete existing terms
-   map {
+  # delete existing terms
+  map {
      _delete_term_by_cv($schema, $_, 0);
   } keys %cvs;
 
@@ -309,10 +303,6 @@ sub load
   map {
     _delete_term_by_cv($schema, $_, 1);
   } keys %cvs;
-
-  my $db_rs = $schema->resultset('Db');
-
-  my %db_ids = map { ($_->name(), $_->db_id()) } $db_rs->all();
 
   # create this object after deleting as LoadUtil has a dbxref cache (that
   # is a bit ugly ...)
@@ -334,118 +324,66 @@ sub load
 
   my %term_counts = ();
 
-  my @terms_to_store = ();
+  my @sorted_terms_to_store = sort { $a->id() cmp $b->id() } $ontology_data->get_terms();
 
-  my $store_term_handler =
-    sub {
-      my $ni = shift;
-      my $term = $ni->term;
-
-      push @terms_to_store, $term;
-    };
-
-  $graph->iterate($store_term_handler);
-
-  my @sorted_terms_to_store = sort { $a->acc() cmp $b->acc() } @terms_to_store;
-
-  my %term_details = ();
+  my %term_namespace = ();
 
   for my $term (@sorted_terms_to_store) {
     my $cv_name = $term->namespace() // 'external';
-    my $term_acc = $term->acc();
+    my $term_acc = $term->id();
 
-    $term_details{$term_acc} = { namespace => $cv_name };
+    $term_namespace{$term_acc} = $cv_name;
   }
 
-  my $rels = $graph->get_all_relationships();
-
-  my @sorted_rels = sort {
-    $a->{type} cmp $b->{type}
+  my @sorted_cvterm_rels = sort {
+    $a->[1] cmp $b->[1]  # type
       ||
-    $a->{acc1} cmp $b->{acc1}
+    $a->[0] cmp $b->[0]  # subject
       ||
-    $a->{acc2} cmp $b->{acc2};
-  } @$rels;
+    $a->[2] cmp $b->[2]; # object
+  } $ontology_data->relationships();
 
   my %term_parents = ();
 
-  for my $rel (@sorted_rels) {
-    my $subject_term_acc = $rel->subject_acc();
-    my $object_term_acc = $rel->object_acc();
+  for my $rel (@sorted_cvterm_rels) {
+    my $subject_term_id = $rel->[0];
+    my $object_term_id = $rel->[2];
 
-    next unless defined $term_details{$subject_term_acc};
-    next unless defined $term_details{$object_term_acc};
+    next unless defined $term_namespace{$subject_term_id};
+    next unless defined $term_namespace{$object_term_id};
 
-    if ($term_details{$subject_term_acc}->{namespace} eq
-        $term_details{$object_term_acc}->{namespace}) {
-      push @{$term_parents{$subject_term_acc}}, $object_term_acc;
+    if ($term_namespace{$subject_term_id} eq $term_namespace{$object_term_id}) {
+      push @{$term_parents{$subject_term_id}}, $object_term_id;
     }
   }
 
   for my $term (@sorted_terms_to_store) {
     my $cv_name = $term->namespace() // 'external';
     my $comment = $term->comment();
-    my $xrefs = $term->dbxref_list();
-
-    for my $xref (@$xrefs) {
-      my $x_db_name = $xref->xref_dbname();
-      my $x_acc = $xref->xref_key();
-
-      my $x_db_id = $db_ids{$x_db_name};
-
-      if (defined $x_db_id) {
-        my $x_dbxref = undef;
-
-        try {
-          $x_dbxref = $load_util->find_dbxref("OBO_REL:$x_acc");
-        } catch {
-          # dbxref not found
-        };
-
-        if (defined $x_dbxref) {
-          # no need to add it as it's already there, loaded from another
-          # ontology
-          if ($term->is_relationship_type()) {
-            my $x_dbxref_id = $x_dbxref->dbxref_id();
-            my $cvterm_rs = $schema->resultset('Cvterm');
-            my ($cvterm) = $cvterm_rs->search({dbxref_id => $x_dbxref_id});
-            $relationship_cvterms{$term->name()} = $cvterm;
-          }
-
-          next;
-        }
-      }
-    }
 
     my $term_name = $term->name();
 
     if (!defined $term_name) {
-      die "Term ", $term->acc(), " from $cv_name has no name - cannot continue\n";
+      die "Term ", $term->id(), " from $cv_name has no name - cannot continue\n";
     }
 
-    if ($term->is_relationship_type() &&
-          !$relationships_to_load{$term->name()} &&
-          !$relationships_to_load{$term->name() =~ s/\s+/_/gr}) {
+    if ($term->is_relationshiptype() &&
+        !$relationships_to_load{$term->name()} &&
+        !$relationships_to_load{$term->name() =~ s/\s+/_/gr}) {
       next;
     }
 
-    # special case for relations, which might be in several ontologies
-    my $create_only = !$term->is_relationship_type();
-
-    (my $term_acc = $term->acc()) =~ s/OBO_REL://;
-
-      my $cvterm = $load_util->get_cvterm(create_only => $create_only,
-                                          cv_name => $cv_name,
+      my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
                                           term_name => $term_name,
-                                          ontologyid => $term_acc,
-                                          definition => $term->definition(),
-                                          alt_ids => $term->alt_id_list(),
+                                          ontologyid => $term->id(),
+                                          definition => $term->def(),
+                                          alt_ids => $term->alt_id(),
                                           is_obsolete => $term->is_obsolete(),
                                           is_relationshiptype =>
-                                            $term->is_relationship_type());
+                                            $term->is_relationshiptype());
 
-    if ($term->is_relationship_type()) {
-      $relationship_cvterms{$term_acc} = $cvterm;
+    if ($term->is_relationshiptype()) {
+      $relationship_cvterms{$term_name} = $cvterm;
     }
 
     my $cvterm_id = $cvterm->cvterm_id();
@@ -464,49 +402,54 @@ sub load
 
     my @synonyms_for_index = ();
 
+    my @synonyms = $term->synonyms();
+
     for my $synonym_type (@synonym_types_to_load) {
-      my $synonyms = $term->synonyms_by_type($synonym_type);
+      for my $synonym (sort { $a->{synonym} cmp $b->{synonym} } @synonyms) {
+        if (lc $synonym->{scope} eq lc $synonym_type) {
+          my $type_id = $synonym_type_ids{$synonym_type};
 
-      my $type_id = $synonym_type_ids{$synonym_type};
+          $schema->create_with_type('Cvtermsynonym',
+                                    {
+                                      cvterm_id => $cvterm_id,
+                                      synonym => $synonym->{synonym},
+                                      type_id => $type_id,
+                                    });
 
-      for my $synonym (@$synonyms) {
-        $schema->create_with_type('Cvtermsynonym',
-                                  {
-                                    cvterm_id => $cvterm_id,
-                                    synonym => $synonym,
-                                    type_id => $type_id,
-                                  });
-
-        push @synonyms_for_index, { synonym => $synonym, type => $synonym_type };
+          push @synonyms_for_index, { synonym => $synonym->{synonym}, type => $synonym_type };
+        }
       }
     }
 
     my @subset_ids = ();
 
-    my $objects = $subset_data->{$term->acc()};
+    my $objects = $subset_data->{$term->id()};
 
     if ($objects) {
-      push @subset_ids, (keys %$objects), $term->acc();
+      push @subset_ids, map { "is_a($_)" } (keys %$objects, $term->id());
     }
 
-    if (!$term->is_relationship_type()) {
-      $cvterms{$term->acc()} = $cvterm;
+    if (!$term->is_relationshiptype()) {
+      $cvterms{$term->id()} = $cvterm;
 
       if (!$term->is_obsolete()) {
-        if (!defined $term_parents{$term->acc()}) {
-          push @subset_ids, 'canto_root_subset';
-          $subset_process->add_to_subset($subset_data, 'canto_root_subset', [$term->acc()]);
+        if (!defined $term_parents{$term->id()}) {
+          push @subset_ids, 'is_a(canto_root_subset)';
+          $subset_process->add_to_subset($subset_data, 'canto_root_subset',
+                                         'is_a', [$term->id()]);
         }
 
         for my $subset_id (@subsets_to_ignore) {
-          if ($term->in_subset($subset_id)) {
+          if (grep { "is_a($_)" eq $subset_id } $term->subsets()) {
             push @subset_ids, $subset_id;
-            $subset_process->add_to_subset($subset_data, $subset_id, [$term->acc()]);
+            my $subset_id_term_only = $subset_id =~ s/^\s*.*\((.*)\)\s*$/$1/r;
+            $subset_process->add_to_subset($subset_data, $subset_id_term_only,'is_a',
+                                           [$term->id()]);
           }
         }
         if (defined $index) {
           $index->add_to_index($cv_name, $term_name, $cvterm_id,
-                               $term->acc(), \@subset_ids, \@synonyms_for_index);
+                               $term->id(), \@subset_ids, \@synonyms_for_index);
         }
       }
 
@@ -514,23 +457,23 @@ sub load
     }
   }
 
-  for my $rel (@sorted_rels) {
-    my $subject_term_acc = $rel->subject_acc();
-    my $object_term_acc = $rel->object_acc();
+  for my $rel (@sorted_cvterm_rels) {
+    my $subject_term_id = $rel->[0];
+    my $object_term_id = $rel->[2];
 
-    next unless $relationships_to_load{$rel->type()};
+    my $rel_type = $rel->[1];
+    next unless $relationships_to_load{$rel_type};
 
-    my $rel_type = $rel->type();
     my $rel_type_cvterm = $relationship_cvterms{$rel_type};
 
-    die "can't find relationship cvterm for: $subject_term_acc <- $rel_type -> $object_term_acc"
+    die "can't find relationship cvterm for: $subject_term_id <- $rel_type -> $object_term_id"
       unless defined $rel_type_cvterm;
 
     # don't store relations between relation terms
-    my $subject_cvterm = $cvterms{$subject_term_acc};
+    my $subject_cvterm = $cvterms{$subject_term_id};
     next unless defined $subject_cvterm;
 
-    my $object_cvterm = $cvterms{$object_term_acc};
+    my $object_cvterm = $cvterms{$object_term_id};
     next unless defined $object_cvterm;
 
     $schema->create_with_type('CvtermRelationship',
@@ -549,8 +492,7 @@ sub load
 
     _store_cv_prop($schema, $load_util, $cv, 'cv_term_count',
                    $term_counts{$cv_name} // 0);
- }
-
+  }
 
   # add canto_subset cvtermprop to the terms in subsets
   $subset_process->process_subset_data($self->load_schema(), $subset_data);

@@ -40,15 +40,15 @@ my $canto_root_subset_count = $subset_prop_rs->count();
 my $subset_data = $extension_process->get_subset_data($test_go_obo_file);
 my $subset_process = Canto::Chado::SubsetProcess->new();
 
-$subset_process->add_to_subset($subset_data, 'canto_root_subset',
+$subset_process->add_to_subset($subset_data, 'canto_root_subset', 'is_a',
                                ['GO:0003674', 'GO:0005575', 'GO:0008150']);
-is ($subset_data->{'GO:0005575'}{canto_root_subset}, 1);
+is ($subset_data->{'GO:0005575'}{canto_root_subset}{is_a}, 1);
 
 $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($after_cvtermprop_count, 51);
+is ($after_cvtermprop_count, 53);
 
 
 sub get_subset_props
@@ -69,115 +69,123 @@ my @expected_subset_props =
   (
     [
       'biological_process',
-      'canto_root_subset'
+      'is_a(canto_root_subset)'
     ],
     [
       'cell phenotype',
-      'FYPO:0000002'
+      'is_a(FYPO:0000002)'
     ],
     [
       'cellular_component',
-      'canto_root_subset'
+      'is_a(canto_root_subset)'
     ],
     [
       'cytoplasmic membrane-bounded vesicle',
-      'GO:0016023'
+      'is_a(GO:0016023)'
     ],
     [
       'hydrogen peroxide transmembrane transport',
-      'GO:0006810'
+      'is_a(GO:0006810)'
     ],
     [
       'hydrogen peroxide transmembrane transport',
-      'GO:0055085'
+      'is_a(GO:0055085)'
     ],
     [
       'molecular_function',
-      'canto_root_subset'
+      'is_a(canto_root_subset)'
     ],
     [
       'negative regulation of transmembrane transport',
-      'GO:0034762'
+      'is_a(GO:0034762)'
     ],
     [
       'negative regulation of transmembrane transport',
-      'GO:0055085'
+      'negatively_regulates(GO:0055085)'
+    ],
+    [
+      'negative regulation of transmembrane transport',
+      'regulates(GO:0055085)'
     ],
     [
       'nucleocytoplasmic transporter activity',
-      'GO:0005215'
+      'is_a(GO:0005215)'
     ],
     [
       'phenotype condition',
-      'canto_root_subset'
+      'is_a(canto_root_subset)'
     ],
     [
       'positive regulation of transmembrane transport',
-      'GO:0034762'
+      'is_a(GO:0034762)'
     ],
     [
       'positive regulation of transmembrane transport',
-      'GO:0055085'
+      'positively_regulates(GO:0055085)'
+    ],
+    [
+      'positive regulation of transmembrane transport',
+      'regulates(GO:0055085)'
     ],
     [
       'protein modification',
-      'canto_root_subset'
+      'is_a(canto_root_subset)'
     ],
     [
       'protein transmembrane transport',
-      'GO:0006810'
+      'is_a(GO:0006810)'
     ],
     [
       'protein transmembrane transport',
-      'GO:0055085'
+      'is_a(GO:0055085)'
     ],
     [
       'regional_centromere_outer_repeat_region',
-      'SO:0001799'
+      'is_a(SO:0001799)'
     ],
     [
       'regulation of transmembrane transport',
-      'GO:0034762'
+      'is_a(GO:0034762)'
     ],
     [
       'regulation of transmembrane transport',
-      'GO:0055085'
+      'regulates(GO:0055085)'
     ],
     [
       'stored secretory granule',
-      'GO:0016023'
+      'is_a(GO:0016023)'
     ],
     [
       'transmembrane transport',
-      'GO:0006810'
+      'is_a(GO:0006810)'
     ],
     [
       'transmembrane transport',
-      'GO:0055085'
+      'is_a(GO:0055085)'
     ],
     [
       'transmembrane transporter activity',
-      'GO:0005215'
+      'is_a(GO:0005215)'
     ],
     [
       'transmembrane transporter activity',
-      'GO:0022857'
+      'is_a(GO:0022857)'
     ],
     [
       'transmembrane transporter activity',
-      'GO:0055085'
+      'part_of(GO:0055085)'
     ],
     [
       'transport',
-      'GO:0006810'
+      'is_a(GO:0006810)'
     ],
     [
       'transport vesicle',
-      'GO:0016023'
+      'is_a(GO:0016023)'
     ],
     [
       'transporter activity',
-      'GO:0005215'
+      'is_a(GO:0005215)'
     ]
   );
 
