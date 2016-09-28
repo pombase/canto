@@ -101,6 +101,8 @@ my $guard = $schema->txn_scope_guard();
 
 print "\nMerging ...\n" if @people_to_merge > 0;
 
+my %email_map = ();
+
 for my $person (@people_to_merge) {
   print "  ", $person->email_address(), "\n";
   print "    ", scalar($person->pubs()), " pubs\n";
@@ -127,8 +129,34 @@ for my $person (@people_to_merge) {
     $lab->update();
   }
 
+  $email_map{$person->email_address()} = $email_match_person->email_address();
+
   $person->delete();
 }
 
+if (!$dry_run) {
+  my $trackdb = Canto::TrackDB->new(config => $config);
+  my $iter = Canto::Track::curs_iterator($config, $trackdb);
+
+  while (my ($curs, $cursdb) = $iter->()) {
+    my $rs = $cursdb->resultset("Annotation");
+    while (defined (my $a = $rs->next())) {
+      my $data = $a->data();
+      my $current_email = $data->{curator}->{email};
+
+      if ($current_email && exists $email_map{$current_email}) {
+        $data->{curator}->{email} = $email_map{$current_email};
+
+        print " ", $curs->curs_key(), ": updating $current_email to ",
+          $email_map{$current_email}, "\n";
+
+        $a->data($data);
+        $a->update();
+      }
+    }
+
+    $cursdb->disconnect();
+  }
+}
 
 $guard->commit() unless $dry_run;
