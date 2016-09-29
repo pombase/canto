@@ -47,6 +47,11 @@ __PACKAGE__->table("person");
   data_type: 'text'
   is_nullable: 0
 
+=head2 orcid
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 role
 
   data_type: 'integer'
@@ -85,6 +90,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "email_address",
   { data_type => "text", is_nullable => 0 },
+  "orcid",
+  { data_type => "text", is_nullable => 1 },
   "role",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "lab",
@@ -122,6 +129,18 @@ __PACKAGE__->set_primary_key("person_id");
 =cut
 
 __PACKAGE__->add_unique_constraint("email_address_unique", ["email_address"]);
+
+=head2 C<orcid_unique>
+
+=over 4
+
+=item * L</orcid>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("orcid_unique", ["orcid"]);
 
 =head1 RELATIONS
 
@@ -206,8 +225,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bqiCdMLMiWvUcgJbkRRz/Q
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-06-27 16:00:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:08WxCZlCYxpS2EaiuDBEtQ
 
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);

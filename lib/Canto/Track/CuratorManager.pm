@@ -171,10 +171,12 @@ sub session_curators
 
 =head2 set_curator
 
- Usage   : $curator_manager->set_curator($curs_key, $email);
+ Usage   : $curator_manager->set_curator($curs_key, $email, $name, $orcid);
  Function: set the curator of a curation session
  Args    : $curs_key - the curs_key for the session
            $email - the email address of the curator
+           $name - the curator name
+           $orcid - ORCID (optional)
  Return  : nothing
 
 =cut
@@ -194,6 +196,7 @@ sub set_curator
   $curs_curator_email =~ s/(.*)\@(.*)/$1\@\L$2/;
 
   my $curs_curator_name = shift;
+  my $curs_curator_orcid = shift;
 
   my $schema = $self->schema();
 
@@ -212,11 +215,17 @@ sub set_curator
       $curator->name($curs_curator_name);
       $curator->update();
     }
+
+    if (defined $curs_curator_orcid && length $curs_curator_orcid > 0) {
+      $curator->orcid($curs_curator_orcid);
+      $curator->update();
+    }
   } else {
     my $user_role_id =
       $schema->find_with_type('Cvterm', { name => 'user' })->cvterm_id();
     $curator = $curator_rs->create({ name => $curs_curator_name,
                                      email_address => $curs_curator_email,
+                                     orcid => $curs_curator_orcid,
                                      role => $user_role_id,
                                    });
   }

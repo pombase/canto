@@ -25,7 +25,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v1119
 
-schema_version: 13
+schema_version: 14
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## all gene lookups with match genes from any organism (and will return the
@@ -564,14 +564,16 @@ class_info:
       search_fields:
         - email_address
         - name
+        - orcid
       field_info_list:
         - name: name
           source: name
           editable: 1
+        - name: orcid
+          editable: 1
         - name: known_as
           editable: 1
-        - name: Email address
-          source: email_address
+        - name: email_address
           editable: 1
         - name: role
           default_value: "'user'"
