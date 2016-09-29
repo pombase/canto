@@ -1964,11 +1964,27 @@ sub _assign_session :Private
         constraints => [ { type => 'Length',  min => 1 }, 'Required', 'Email' ],
         default => $default_submitter_email,
      },
-      {
-        name => 'submit', type => 'Submit', value => 'Continue',
-        attributes => { class => 'btn btn-primary curs-finish-button', },
-      },
     );
+
+  if (!$reassign) {
+    push @all_elements,
+      {
+        type => 'Block', tag => 'p',
+        attributes => { style => 'margin-top: 15px', },
+        content_xml => 'Your <a href="http://www.orcid.org">ORCID</a> (optional but recommended):'
+      },
+      {
+        name => 'submitter_orcid',
+        label_tag => 'formfu-label',
+        type => 'Text', size => 40,
+      };
+  }
+
+  push @all_elements,
+    {
+      name => 'submit', type => 'Submit', value => 'Continue',
+      attributes => { class => 'btn btn-primary curs-finish-button', },
+    };
 
   $form->elements([@all_elements]);
 
@@ -1998,6 +2014,7 @@ sub _assign_session :Private
 
     my $submitter_name = trim($form->param_value('submitter_name'));
     my $submitter_email = trim($form->param_value('submitter_email'));
+    my $submitter_orcid = trim($form->param_value('submitter_orcid'));
 
     if ($submitter_name =~ /\@/) {
       $c->stash()->{message} =
@@ -2021,7 +2038,7 @@ sub _assign_session :Private
           $submitter_email ne $current_submitter_email ||
           $submitter_name ne $current_submitter_name) {
         $curator_manager->set_curator($curs_key, $submitter_email,
-                                      $submitter_name);
+                                      $submitter_name, $submitter_orcid);
       }
       if (!$reassign) {
         $curator_manager->accept_session($curs_key);

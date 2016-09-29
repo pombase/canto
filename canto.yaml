@@ -564,9 +564,12 @@ class_info:
       search_fields:
         - email_address
         - name
+        - orcid
       field_info_list:
         - name: name
           source: name
+          editable: 1
+        - name: orcid
           editable: 1
         - name: known_as
           editable: 1
