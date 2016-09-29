@@ -573,8 +573,7 @@ class_info:
           editable: 1
         - name: known_as
           editable: 1
-        - name: Email address
-          source: email_address
+        - name: email_address
           editable: 1
         - name: role
           default_value: "'user'"
