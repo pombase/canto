@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 85;
+use Test::More tests => 86;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -349,6 +349,11 @@ is($cached_value->{name}, 'aardvark');
 $fypo_term = $lookup->lookup_by_id(id => 'FYPO:0000028',
                                    include_definition => 1);
 cmp_deeply($fypo_term, $expected_fypo_term);
+
+
+# non-existent ID
+$fypo_term = $lookup->lookup_by_id(id => 'FYPO:99999999');
+ok(!defined($fypo_term));
 
 
 # test that we follow has_part
