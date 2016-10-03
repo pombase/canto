@@ -1012,7 +1012,7 @@ fieldset.curs-genes span {
   font-size: 90%;
 }
 
-.annotation-table .curs-row-checked {
+.curs-annotation-table .curs-row-checked {
   background-color: #afa !important;
 }
 
