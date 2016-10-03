@@ -144,9 +144,15 @@ sub make_gaf_extension
       my $identifier = $prop->value();
       my $rel_name = $1;
       if ($identifier !~ /:/) {
-        # hopefully it's a gene name, or at least some sort of PomBase ID
-        $identifier = $self->_systematic_id_to_name($identifier);
-        $identifier = "$db_name:$identifier";
+        if ($identifier =~ /^(\d+)\%?$/ &&
+            ($rel_name eq 'has_penetrance' || $rel_name eq 'has_expressivity')) {
+          # a penetrance or expressivity
+          $identifier = "$1\%";
+        } else {
+          # hopefully it's a gene name, or at least some sort of PomBase ID
+          $identifier = $self->_systematic_id_to_name($identifier);
+          $identifier = "$db_name:$identifier";
+        }
       }
       push @parents, { rel_type_name => $rel_name,
                        detail => $identifier, };
