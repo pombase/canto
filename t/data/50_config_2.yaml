@@ -1,1 +1,4 @@
 some_key_for_overriding: overidden_value
+key_for_merging:
+  key1: new_value1
+  key3: value3
