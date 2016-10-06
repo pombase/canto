@@ -356,6 +356,12 @@ sub oauth :Global
     $c->detach();
   }
 
+  my $return_uri = $c->req()->params()->{return_path};
+
+  if ($return_uri) {
+    $c->flash()->{oauth_return_uri} = $return_uri;
+  }
+
   my $sha1 = undef;
   if (exists $c->request->params->{state}) {
     $sha1 = $c->request->params->{state};
@@ -375,8 +381,12 @@ sub oauth :Global
   })) {
     $c->log->debug("Authenticated!");
 
-    # Redirect to a page that requires authentication - such as an account page
-    $c->response->redirect($c->uri_for("/"));
+    my $return_uri = $c->stash()->{oauth_return_uri};
+    if ($return_uri) {
+      $c->response->redirect($return_uri);
+    } else {
+      $c->response->redirect($c->uri_for("/"));
+    }
     $c->detach();
   } elsif (exists $c->req->params->{ code }) {
     # If the code parameter isn't present, we've not yet redirected to the
