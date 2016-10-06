@@ -326,19 +326,12 @@ sub authenticate
       scope => $scope,
     };
     $uri->query_form($query);
-    use Data::Dumper;
-    warn Dumper([$uri]);
-
     $c->response->redirect($uri);
 
     return;
   } else {
     my $token =
       $self->request_access_token($c, $callback_uri, $code, $auth_info);
-
-    use Data::Dumper;
-warn Dumper([$token]);
-
 
     die 'Error validating verification code' unless $token;
 
@@ -375,18 +368,6 @@ sub oauth :Global
     $sha1 = substr($sha1, 4, 16);
     $c->session(oauth_state => $sha1);
   }
-
-# https://accounts.google.com/o/oauth2/auth?client_id=701928355724-sabh5s9kg2op2vm49sqtadjv3d0h2n9a.apps.googleusercontent.com&
-#  redirect_uri=https%3A%2F%2Fcuration.pombase.org%2Fdev%2Foauth&
-#  response_type=code&
-#  scope=profile+email&
-#  state=e5b4addb75c047ef
-
-# --->
-
-# https://curation.pombase.org/dev/oauth?state=e5b4addb75c047ef&
-#   code=4/psvLXvVUW0qAZld3QTaMePs0uO_veKi-wiHlv-F-a-g#
-
 
   if ($self->authenticate($c, {
     state => $sha1,
