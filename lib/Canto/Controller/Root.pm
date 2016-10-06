@@ -351,6 +351,7 @@ sub oauth :Global
 
   if (exists $c->request->params->{error}) {
     $c->stash(template => "err_mess_notice.mhtml");
+    $c->stash(title => "OAuth error");
     $c->stash(error => "OAuth2 login failed: " . $c->request->params->{error});
     $c->detach();
   }
