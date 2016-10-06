@@ -410,8 +410,8 @@ sub logout : Global {
 
   $c->logout();
 
-  $c->stash()->{message} = "You have been logged out";
-  $c->forward('front');
+  $c->flash()->{message} = "You have been logged out";
+  $c->response->redirect($c->uri_for("/"));
 }
 
 =head2 access_denied
