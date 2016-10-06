@@ -7,9 +7,23 @@ After the software is [installed](installation) some configuration is needed.
 To manage sessions and users from the web interface there needs to be at least
 one "admin" user.  Users can be added with the `canto_add.pl` script:
 
-    ./script/canto_add.pl --person "Kim Rutherford" kim@pombase.org secret_password admin
+    ./script/canto_add.pl --person "Kim Rutherford" kim@pombase.org admin
 
-The `secret_password` is stored as a SHA1 hash.
+## Configuring ORCID for logins
+
+Canto uses ORCID for authentication.
+
+Follow the steps in the
+[ORCID documentation](http://members.orcid.org/api/accessing-public-api) to
+get a client ID and secret for your installation of Canto.
+
+Add these lines to your `canto_deploy.yaml` and add your client ID and client
+secret:
+
+    authentication:
+      orcid:
+        client_id: ...
+        client_secret: ...
 
 ## Loading data
 

@@ -1,0 +1,7 @@
+<div>
+  You need to log in as an admin to access <% $current_uri %>
+</div>
+
+<%init>
+my $current_uri = $c->req()->uri();
+</%init>
