@@ -381,12 +381,7 @@ sub oauth :Global
     }
     $c->detach();
   } elsif (exists $c->req->params->{ code }) {
-    # If the code parameter isn't present, we've not yet redirected to the
-    # login server for authentication so a redirect is likely already present.
-    $c->log->debug("Not authenticated");
-    # Here we would need to redirect or something..
-
-    $c->stash()->{error} = "Login failed";
+    $c->stash()->{error} = "Login failed - no such user";
     $c->forward('front');
   }
 }
