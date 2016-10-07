@@ -341,10 +341,11 @@ sub oauth :Global
   my ($self, $c) = @_;
 
   if (exists $c->request->params->{error}) {
-    $c->stash(template => "err_mess_notice.mhtml");
-    $c->stash(title => "OAuth error");
-    $c->stash(error => "OAuth2 login failed: " . $c->request->params->{error});
+    $c->stash(template => "login_failed.mhtml");
+    $c->stash(title => "Failed to authenticate using " . $c->config()->{oauth}->{authenticator});
+    $c->stash()->{oauth_error} = $c->request->params->{error_description};
     $c->detach();
+    return;
   }
 
   my $return_uri = $c->req()->params()->{return_path};

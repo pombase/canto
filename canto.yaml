@@ -69,6 +69,7 @@ authentication:
         id_field: orcid
 
 oauth:
+  authenticator: ORCID
   grant_uri: 'https://orcid.org/oauth/authorize'
   token_uri: 'https://orcid.org/oauth/token'
   client_id: 'CONFIGURE_IN_CANTO_DEPLOY.YAML'

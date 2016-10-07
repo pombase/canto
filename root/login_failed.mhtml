@@ -1,0 +1,13 @@
+<%args>
+$oauth_error
+$oauth_return_uri => undef
+</%args>
+
+<div>
+  <h3>
+    Authentication failed, server returned: <% $oauth_error %>
+  </h3>
+% if ($oauth_return_uri) {
+  Return to <a href="<% $oauth_return_uri |n %>">previous page</a>.
+% }
+</div>
