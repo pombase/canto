@@ -326,7 +326,9 @@ sub authenticate
 
     die 'Error validating verification code' unless $token;
 
-    $c->authenticate({orcid => $token->{orcid}});
+    if (length $token->{orcid}) {
+      $c->authenticate({orcid => $token->{orcid}});
+    }
   }
 }
 
