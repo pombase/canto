@@ -169,6 +169,13 @@ sub session_curators
   } $self->_curs_curator_rs($curs_key)->search({}, { order_by => 'curs_curator_id' })->all();
 }
 
+sub _orcid_is_valid
+{
+  my $orcid = shift;
+
+  return $orcid =~ /^\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]/;
+}
+
 =head2 set_curator
 
  Usage   : $curator_manager->set_curator($curs_key, $email, $name, $orcid);
@@ -216,7 +223,8 @@ sub set_curator
       $curator->update();
     }
 
-    if (defined $curs_curator_orcid && length $curs_curator_orcid > 0) {
+    if (defined $curs_curator_orcid && length $curs_curator_orcid > 0 &&
+        !defined $curator->orcid() && _orcid_is_valid($curs_curator_orcid)) {
       $curator->orcid($curs_curator_orcid);
       $curator->update();
     }
