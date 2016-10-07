@@ -285,16 +285,7 @@ sub request_access_token
     grant_type => 'authorization_code'
   };
 
-  use Data::Dumper;
-warn Dumper([$uri, $query]);
-
-
   my $response = LWP::UserAgent->new()->post($uri, $query);
-
-use Data::Dumper;
-$Data::Dumper::Maxdepth = 3;
-warn Dumper([$response]);
-
 
   return unless $response->is_success;
   return $json->jsonToObj($response->decoded_content());
