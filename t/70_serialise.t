@@ -311,107 +311,128 @@ my %expected_people = (
   'dom@genetics.med.harvard.edu' => {
     'lab' => 'Winston Lab',
     'name' => 'Dom Helmlinger',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'Pascale.Beauregard@umontreal.ca' => {
     'lab' => 'Rokeach Lab',
     'name' => 'Pascale Beauregard',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'peter.espenshade@jhmi.edu' => {
     'lab' => 'Espenshade Lab',
     'name' => 'Peter Espenshade',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'kevin.hardwick@ed.ac.uk' => {
     'lab' => 'Hardwick Lab',
     'name' => 'Kevin Hardwick',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'hoffmacs@bc.edu' => {
     'lab' => 'Hoffman Lab',
     'name' => 'Charles Hoffman',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'fred.winston@genetics.med.harvard.edu' => {
     'lab' => 'Winston Lab',
     'name' => 'Fred Winston',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'h.yamano@mcri.ac.uk' => {
     'lab' => 'Yamano Lab',
     'name' => 'Hiro Yamano',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'test.user@pombase.org' => {
     'lab' => 'User Lab',
     'name' => 'Test User',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'Mary.Porter-Goff@umassmed.edu' => {
     'lab' => 'Rhind Lab',
     'name' => 'Mary Porter-Goff',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'some.testperson@pombase.org' => {
     'lab' => 'Testperson Lab',
     'name' => 'Some Testperson',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'val@sanger.ac.uk' => {
     'lab' => undef,
     'name' => 'Val Wood',
-    'role' => 'admin'
+    'role' => 'admin',
+    'orcid' => undef,
   },
   'mah79@cam.ac.uk' => {
     'lab' => undef,
     'name' => 'Midori Harris',
-    'role' => 'admin'
+    'role' => 'admin',
+    'orcid' => undef,
   },
   'other.tester@pombase.org' => {
     'lab' => 'Tester Lab',
     'name' => 'Other Tester',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'iwasaki@tsurumi.yokohama-cu.ac.jp' => {
     'lab' => '岩崎ひろし Lab',
     'name' => '岩崎ひろし',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'Nicholas.Willis@umassmed.edu' => {
     'lab' => 'Rhind Lab',
     'name' => 'Nicholas Willis',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'stuart.macneill@st-andrews.ac.uk' => {
     'lab' => 'Macneill Lab',
     'name' => 'Stuart Macneill',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'nick.rhind@umassmed.edu' => {
     'lab' => 'Rhind Lab',
     'name' => 'Nick Rhind',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'Luis.Rokeach@umontreal.ca' => {
     'lab' => 'Rokeach Lab',
     'name' => 'Luis Rokeach',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'wahlswaynep@uams.edu' => {
     'lab' => 'Wahls Lab',
     'name' => 'Wayne Wahls',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'John.Burg@jhmi.edu' => {
     'lab' => 'Espenshade Lab',
     'name' => 'John Burg',
-    'role' => 'user'
+    'role' => 'user',
+    'orcid' => undef,
   },
   'a.nilsson@warwick.ac.uk' => {
     'lab' => undef,
     'name' => 'Antonia Nilsson',
     'role' => 'admin',
+    'orcid' => undef,
   },
 );
 

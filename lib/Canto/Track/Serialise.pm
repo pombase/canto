@@ -198,7 +198,7 @@ sub _get_people
       name => $person->name(),
       role => $person->role()->name(),
       lab => defined $person->lab() ? $person->lab()->name() : undef,
-      password => $person->password(),
+      orcid => $person->orcid(),
     };
   }
 
