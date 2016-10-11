@@ -1,5 +1,5 @@
 <div>
-  You need to log in as an admin to access <% $current_uri %>
+  You need to log in as an admin to access <a href="<% $current_uri %>"><% $current_uri %></a>.
 </div>
 
 <%init>

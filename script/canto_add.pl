@@ -91,7 +91,7 @@ sub usage
   die qq|${message}usage:
   $0 --cvterm cv_name term_name [db_name:accession [definition]]
 or:
-  $0 --person "name" email_address [user_type]
+  $0 --person "name" email_address [ORCID [user_type]]
 or:
   $0 --pubmed-by-id <pubmed_id> [pubmed_id ...]
 or:
@@ -194,11 +194,12 @@ my $proc = sub {
   if ($add_person) {
     my $name = shift @ARGV;
     my $email_address = shift @ARGV;
+    my $orcid = shift @ARGV;
     my $role_name = shift @ARGV // "user";
 
     my $role = $load_util->find_cvterm(cv_name => 'Canto user types',
                                        name => $role_name);
-    $load_util->get_person($name, $email_address, $role);
+    $load_util->get_person($name, $email_address, $orcid, $role);
   }
 
   if ($add_session) {

@@ -100,15 +100,13 @@ sub _process_row
   my $uniquename = $Canto::Track::PubmedUtil::PUBMED_PREFIX . ":$pubmed_id";
   my $pub = $self->load_util()->get_pub($uniquename, 'admin_load');
   my $lab_head = $self->load_util()->get_person($lab_head_name,
-                                                $lab_head_email, $user_cvterm,
-                                                $lab_head_email);
+                                                $lab_head_email, undef, $user_cvterm);
   my $lab = $self->load_util()->get_lab($lab_head);
   my $submitter = undef;
 
   if ($submitter_email) {
     $submitter = $self->load_util()->get_person($submitter_name,
-                                                $submitter_email, $user_cvterm,
-                                                $submitter_email);
+                                                $submitter_email, undef, $user_cvterm);
   }
 
   if (!defined ($submitter)) {
@@ -146,15 +144,15 @@ sub load
 
   # get_person() creates the person if not found
   $self->load_util()->get_person('Val Wood', 'val@sanger.ac.uk',
-                                 $admin_cvterm, 'val@sanger.ac.uk');
+                                 '0000-0000-0000-123X', $admin_cvterm);
   my $dr_harris =
     $self->load_util()->get_person('Midori Harris', 'mah79@cam.ac.uk',
-                                   $admin_cvterm, 'mah79@cam.ac.uk');
+                                   '0000-0000-0000-200X', $admin_cvterm);
   $dr_harris->known_as("Dr Harris");
   $dr_harris->update();
 
   $self->load_util()->get_person('Antonia Nilsson', 'a.nilsson@warwick.ac.uk',
-                                 $admin_cvterm, 'a.nilsson@warwick.ac.uk');
+                                 '0000-0000-0000-300X', $admin_cvterm);
 
   my $csv = Text::CSV->new({binary => 1});
   open my $curation_io, '<', $curation_file or die;

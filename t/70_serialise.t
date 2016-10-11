@@ -372,7 +372,7 @@ my %expected_people = (
     'lab' => undef,
     'name' => 'Val Wood',
     'role' => 'admin',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0000-123X',
   },
   'mah79@cam.ac.uk' => {
     'lab' => undef,
