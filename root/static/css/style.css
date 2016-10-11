@@ -1003,6 +1003,11 @@ fieldset.curs-genes span {
   
 }
 
+.curs-annotation-table .term-warning {
+  color: #f00;
+  font-weight: bold;
+}
+
 .curs-annotation-incomplete-message {
   padding-left: 10px;
   font-size: 85%;
