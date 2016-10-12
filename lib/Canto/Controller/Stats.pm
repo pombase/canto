@@ -85,6 +85,9 @@ sub annotation : Local {
   my @curated_stats = Canto::Chado::Utils::curated_stats($chado_schema, $track_schema);
   $st->{curated_stats} = \@curated_stats;
 
+  my @new_curator_stats = Canto::Chado::Utils::new_curators_per_year($chado_schema);
+  $st->{new_curator_stats} = \@new_curator_stats;
+
   Canto::Chado::Utils::stats_finish($chado_schema, $track_schema);
 
   $st->{hide_breadcrumbs} = 1;
