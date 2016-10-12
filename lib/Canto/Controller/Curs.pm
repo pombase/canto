@@ -1400,7 +1400,8 @@ sub feature_view : Chained('feature') PathPart('view')
       $st->{feature} = $genotype;
       $st->{features} = [$genotype];
 
-      $st->{title} = 'Genotype';
+      my $display_name = $st->{feature}->display_name();
+      $st->{title} = "Genotype: $display_name";
     } else {
       die "no such feature type: $feature_type\n";
     }
