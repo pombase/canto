@@ -33,9 +33,6 @@ $model
         </h3>
         <div>
           <ul>
-            <li>
-              <a href="<% $c->uri_for('/tools/pubmed_id_start') %>">By PubMed ID</a>
-            </li>
 %  if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
             <li>
               <a href="<% $c->uri_for('/object/new/person', { model => 'track'} ) %>">Person</a>
