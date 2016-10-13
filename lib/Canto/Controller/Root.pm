@@ -411,8 +411,6 @@ sub oauth :Global
   if ($self->authenticate($c, {
     state => $sha1,
   })) {
-    $c->log->debug("Authenticated!");
-
     my $return_uri = $c->stash()->{oauth_return_uri};
     if ($return_uri) {
       $c->response->redirect($return_uri);
