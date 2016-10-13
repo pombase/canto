@@ -83,10 +83,12 @@ __PACKAGE__->deny_access_unless(
   sub {
     my ($c, $action) = @_;
 
-    return $c->user_exists() || $c->config()->{public_mode} ||
-      !$access_control_enabled || $action eq 'front' || $action eq 'begin';
+    return $c->user_exists() && $c->user()->is_admin() || $c->config()->{public_mode} ||
+      !$access_control_enabled;
   },
 );
+__PACKAGE__->allow_access('/begin');
+__PACKAGE__->allow_access('/front');
 __PACKAGE__->allow_access('/default');
 __PACKAGE__->allow_access('/end');
 __PACKAGE__->allow_access('/oauth');
