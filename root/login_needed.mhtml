@@ -1,7 +1,8 @@
-<div>
-  You need to log in as an admin to access <a href="<% $current_uri %>"><% $current_uri %></a>.
+<div style="margin-top: 20px">
+  You need to <a href="<% $login_uri %>">log in as an admin</a> to access <a href="<% $current_uri %>"><% $current_uri %></a>.
 </div>
 
 <%init>
 my $current_uri = $c->req()->uri();
+my $login_uri = $c->uri_for('/oauth', { return_path => $current_uri });
 </%init>
