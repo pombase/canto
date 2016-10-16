@@ -173,7 +173,7 @@ sub _orcid_is_valid
 {
   my $orcid = shift;
 
-  return $orcid =~ /^\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]/;
+  return $orcid =~ /^\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$/;
 }
 
 =head2 set_curator
@@ -223,8 +223,11 @@ sub set_curator
       $curator->update();
     }
 
+    warn "$curs_curator_orcid ", length $curs_curator_orcid, " ",
+      $curator->orcid(), " ", _orcid_is_valid($curs_curator_orcid), "\n";
+
     if (defined $curs_curator_orcid && length $curs_curator_orcid > 0 &&
-        !defined $curator->orcid() && _orcid_is_valid($curs_curator_orcid)) {
+        !$curator->orcid() && _orcid_is_valid($curs_curator_orcid)) {
       $curator->orcid($curs_curator_orcid);
       $curator->update();
     }
