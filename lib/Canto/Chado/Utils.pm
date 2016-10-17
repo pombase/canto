@@ -74,6 +74,51 @@ CREATE INDEX pub_dates_uniquename_index ON pub_dates(uniquename);
 EOF
 }
 
+# returns the number of completed (but not necessarily approved) sessions and the number of
+# sessions with a community curator
+sub curation_response_rate
+{
+  my $track_schema = shift;
+
+  my $dbh = $track_schema->storage()->dbh();
+  my $query = <<"EOF";
+
+  SELECT count(distinct(curs_id))
+FROM curs
+JOIN curs_curator cc ON cc.curs = curs_id
+JOIN person p ON p.person_id = cc.curator
+JOIN cvterm ROLE ON p.ROLE = ROLE.cvterm_id
+WHERE ROLE.name = 'user' AND curs_id IN
+    (SELECT curs
+     FROM cursprop p, cvterm t
+     WHERE t.cvterm_id = p.type
+       AND t.name = 'annotation_status'
+       AND (p.value = 'NEEDS_APPROVAL' OR p.value = 'APPROVAL_IN_PROGRESS' OR p.value = 'APPROVED'));
+EOF
+
+  my $sth = $dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+  my ($completed_community_session_count) = $sth->fetchrow_array();
+
+  $query = <<"EOF";
+SELECT count(distinct(curs_id))
+FROM cursprop cp
+JOIN curs ON curs.curs_id = cp.curs
+JOIN curs_curator cc ON cc.curs = cp.curs
+JOIN person p ON p.person_id = cc.curator
+JOIN cvterm ROLE ON p.ROLE = ROLE.cvterm_id
+WHERE ROLE.name = 'user';
+EOF
+
+  $sth = $dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+  my ($total_community_session_count) = $sth->fetchrow_array();
+
+  return ($completed_community_session_count, $total_community_session_count);
+}
+
 sub new_curators_per_year
 {
   my $chado_schema = shift;

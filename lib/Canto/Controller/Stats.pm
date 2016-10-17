@@ -71,6 +71,10 @@ sub annotation : Local {
     Canto::Chado::Utils::annotation_types_by_year($chado_schema);
   $st->{annotation_types_by_year} = \@annotation_types_by_year;
 
+  my @curation_response_rate =
+    Canto::Chado::Utils::curation_response_rate($track_schema);
+  $st->{curation_response_rate} = \@curation_response_rate;
+
   my @per_pub_stats =
     Canto::Chado::Utils::per_publication_stats($chado_schema, 0);
   $st->{per_pub_stats_table} = \@per_pub_stats;
@@ -91,6 +95,8 @@ sub annotation : Local {
   Canto::Chado::Utils::stats_finish($chado_schema, $track_schema);
 
   $st->{hide_breadcrumbs} = 1;
+
+  $st->{db_creation_datetime} = $db_creation_datetime;
 
   $st->{title} = "PomBase literature curation statistics - $db_creation_datetime";
   $st->{template} = 'stats/annotation.mhtml';
