@@ -12,7 +12,15 @@ canto.config(['$compileProvider', function ($compileProvider) {
 }]);
 
 canto.config(['ChartJsProvider', function (ChartJsProvider) {
-  ChartJsProvider.setOptions({ colors : [ '#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#8DFF5C', '#949FB1', '#4D5360'] });
+  ChartJsProvider.setOptions({ chartColors : [
+      '#DCDCDC', // light grey
+      '#90A0CD', // blue
+      '#F7464A', // red
+      '#46BFBD', // green
+      '#FDB45C', // yellow
+      '#949FB1', // grey
+      '#4D5360'  // dark grey
+  ]});
 }]);
 
 function capitalizeFirstLetter(text) {
