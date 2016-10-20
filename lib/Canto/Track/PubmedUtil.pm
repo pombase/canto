@@ -64,7 +64,7 @@ sub _get_url
 
   if ($res->is_success) {
     if ($res->content()) {
-      return $res->content();
+      return $res->decoded_content();
     } else {
       die "query returned no content: $url";
     }
