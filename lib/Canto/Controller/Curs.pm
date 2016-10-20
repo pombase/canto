@@ -1888,10 +1888,13 @@ sub _assign_session :Private
 
   my $curator_manager = $self->curator_manager();
 
-  my ($current_submitter_email, $current_submitter_name) =
-    $curator_manager->current_curator($st->{curs_key});
+  my ($current_submitter_email, $current_submitter_name, $known_as,
+      $accepted_date, $community_curated, $row_creation_date,
+      $curs_curator_id, $current_submitter_orcid) =
+        $curator_manager->current_curator($st->{curs_key});
 
   $st->{current_submitter_email} = $current_submitter_email;
+  $st->{current_submitter_orcid} = $current_submitter_orcid;
 
   my $form = $self->form();
   $form->attributes({ autocomplete => 'on', action => '?' });
@@ -1902,6 +1905,7 @@ sub _assign_session :Private
   # out by the curators
   my $default_submitter_name = ($reassign ? undef : $current_submitter_name);
   my $default_submitter_email = ($reassign ? undef : $current_submitter_email);
+  my $default_submitter_orcid = ($reassign ? undef : $current_submitter_orcid);;
 
   my $demo_user_name = $config->{curs_config}->{demo_user_name};
   my $demo_user_email_address = $config->{curs_config}->{demo_user_email_address};
@@ -1978,6 +1982,7 @@ sub _assign_session :Private
         name => 'submitter_orcid',
         label_tag => 'formfu-label',
         type => 'Text', size => 40,
+        default => $default_submitter_orcid
       };
   }
 
