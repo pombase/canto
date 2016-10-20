@@ -311,10 +311,15 @@ sub delete_curs
   my $track_schema = shift;
   my $curs_key = shift;
 
-  my $guard = $track_schema->txn_scope_guard;
-
   my $curs =
     $track_schema->resultset('Curs') ->find({ curs_key => $curs_key });
+
+  if (!defined $curs) {
+    warn "No curation session found for: $curs_key\n";
+    return;
+  }
+
+  my $guard = $track_schema->txn_scope_guard;
 
   $track_schema->resultset('Cursprop')
     ->search({ curs => $curs->curs_id() })->delete();
