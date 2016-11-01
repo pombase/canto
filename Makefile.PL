@@ -71,6 +71,7 @@ requires 'IO::All' => 0.86;
 requires 'IO::String' => 1.08;
 requires 'JSON' => 2.90;
 requires 'JSON::Any' => 1.39;
+requires 'JSON::XS' => 3.02;
 requires 'LWP' => 6.15;
 requires 'LWP::Simple' => 6.15;
 requires 'Lingua::EN::Inflect::Number' => 1.12;
