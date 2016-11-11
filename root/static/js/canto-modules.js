@@ -24,7 +24,7 @@ canto.config(['ChartJsProvider', function (ChartJsProvider) {
 }]);
 
 function capitalizeFirstLetter(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 function countKeys(o) {
