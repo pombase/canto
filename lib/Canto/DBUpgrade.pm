@@ -191,6 +191,7 @@ my %procs = (
   14 => sub {
     my $config = shift;
     my $track_schema = shift;
+    my $load_util = shift;
 
     my $dbh = $track_schema->storage()->dbh();
 
@@ -219,6 +220,10 @@ EOF
     $dbh->do("CREATE INDEX person_role_idx ON person(role)");
 
     $dbh->do("PRAGMA foreign_keys = ON");
+
+    $load_util->get_cvterm(cv_name => 'Canto cursprop types',
+                           term_name => 'needs_approval_timestamp',
+                           ontologyid => 'Canto:needs_approval_timestamp');
 
     Canto::Track::update_all_statuses($config);
   },
