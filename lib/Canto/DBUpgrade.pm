@@ -184,7 +184,8 @@ my %procs = (
   13 => sub {
     my $config = shift;
 
-    Canto::Track::update_all_statuses($config);
+    # code removed due the person table not having an orcid coulm
+    #Canto::Track::update_all_statuses($config);
   },
 
   14 => sub {
@@ -218,6 +219,8 @@ EOF
     $dbh->do("CREATE INDEX person_role_idx ON person(role)");
 
     $dbh->do("PRAGMA foreign_keys = ON");
+
+    Canto::Track::update_all_statuses($config);
   },
 );
 
