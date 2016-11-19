@@ -2742,9 +2742,6 @@ canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameCo
 
 var alleleEditDialogCtrl =
   function($scope, $uibModalInstance, toaster, CantoConfig, args) {
-    $scope.config = {
-      endogenousWildtypeAllowed: args.endogenousWildtypeAllowed,
-    };
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
@@ -2933,7 +2930,6 @@ function makeAlleleEditInstance($uibModal, allele, endogenousWildtypeAllowed)
     resolve: {
       args: function() {
         return {
-          endogenousWildtypeAllowed: endogenousWildtypeAllowed,
           allele: allele,
         };
       }
@@ -3150,28 +3146,24 @@ var genotypeEdit =
                       true);
 
         // check for endogenous wild types allele where there isn't a
-        // non-endogenous wild type allele of the same gene
+        // allele of the same gene
         // See: https://github.com/pombase/canto/issues/797
         $scope.checkWildtypeExpression = function() {
           var wildTypeStates = {};
 
           $.map($scope.alleles,
                 function(allele) {
-                  if (allele.type != 'wild type') {
-                    return;
-                  }
                   var currentState = wildTypeStates[allele.gene_id];
 
-                  if (currentState == 'seen_non_wt_product_level') {
+                  if (currentState == 'seen_non_wt_product_level_wt') {
                     return;
                   }
 
-                  if (allele.expression != 'Wild type product level')  {
-                    wildTypeStates[allele.gene_id] = 'seen_non_wt_product_level';
+                  if (allele.type != 'wild type' ||
+                      allele.expression != 'Wild type product level')  {
+                    wildTypeStates[allele.gene_id] = 'seen_non_wt_product_level_wt';
                     return;
-                  }
-
-                  if (allele.expression == 'Wild type product level') {
+                  } else {
                     wildTypeStates[allele.gene_id] = 'seen_wt_product_level';
                   }
                 });
@@ -3245,8 +3237,6 @@ var genotypeEdit =
 
         $scope.openAlleleEditDialog =
           function(allele) {
-            var endogenousWildtypeAllowed = false;
-
             if (allele.gene) {
               allele.gene_display_name = allele.gene.display_name;
               allele.gene_systematic_id = allele.gene.primary_identifier;
@@ -3254,17 +3244,8 @@ var genotypeEdit =
               delete allele.gene;
             }
 
-            // see: https://sourceforge.net/p/pombase/curation-tool/782/
-            // and: https://sourceforge.net/p/pombase/curation-tool/576/
-            $.map($scope.alleles,
-                  function(existingAllele) {
-                    if (existingAllele.gene_id == allele.gene_id) {
-                      endogenousWildtypeAllowed = true;
-                    }
-                  });
-
             var editInstance =
-                makeAlleleEditInstance($uibModal, allele, endogenousWildtypeAllowed);
+                makeAlleleEditInstance($uibModal, allele);
 
             editInstance.result.then(function (editedAllele) {
               if ($scope.findExistingAlleleIdx(editedAllele) < 0) {
