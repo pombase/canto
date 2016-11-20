@@ -637,7 +637,7 @@ sub _update_object {
                                     ($value eq 1 || lc $value eq 'on' ||
                                      lc $value eq 'yes'));
         } else {
-          $object->$field_db_column($value);
+          $object->$field_db_column($value || undef);
         }
       } else {
         # can't set computed columns
