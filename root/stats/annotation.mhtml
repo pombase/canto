@@ -459,6 +459,11 @@ my @cumulative_annotation_type_counts = (0,0,0,0,0,0,0);
 
 for my $row (@annotation_types_by_year) {
   my $year = shift @$row;
+  if (!defined $row->[0]) {
+    # no data for that year
+    push @cumulative_annotation_types_by_year, [$year, 0];
+    next;
+  }
   my %data = %{$row->[0]};
   my $go_count = ($data{molecular_function} // 0) +
     ($data{biological_process} // 0) + ($data{cellular_component} // 0);
