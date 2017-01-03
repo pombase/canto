@@ -34,7 +34,7 @@ $track_schema->resultset('Cursprop')
 
 my @stats_table = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
 
-cmp_deeply(\@stats_table,
+cmp_deeply([@stats_table[0..1]],
            [
              [2015, 0, 0, 2, 2],
              [2016, 0, 0, 0, 0]
