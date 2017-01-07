@@ -1181,6 +1181,7 @@ implementation_classes:
 allele_type_list:
   - name: wild type
     export_type: wild_type
+    show_description: false
     description_required: false
     allele_name_required: true
     allow_expression_change: true
@@ -1188,6 +1189,7 @@ allele_type_list:
     autopopulate_name: '@@gene_display_name@@+'
   - name: deletion
     export_type: deletion
+    show_description: false
     description_required: false
     allele_name_required: true
     allow_expression_change: false
@@ -1195,11 +1197,13 @@ allele_type_list:
   - name: disruption
     name_hint: "e.g. pom1::ura4+"
     export_type: disruption
+    show_description: true
     description_required: false
     allele_name_required: true
     allow_expression_change: true
   - name: unknown
     export_type: unknown
+    show_description: false
     description_required: false
     allele_name_required: true
     allow_expression_change: true
@@ -1210,6 +1214,7 @@ allele_type_list:
     # we use this to undo that mapping - if the RE matches the description
     # from Chado then we use this allele type
     export_type_reverse_map_re: "^[^,]+$"
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
@@ -1221,6 +1226,7 @@ allele_type_list:
     # we use this to undo that mapping - if the RE matches the description
     # from Chado then we use this allele type
     export_type_reverse_map_re: ","
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
@@ -1228,6 +1234,7 @@ allele_type_list:
     placeholder: eg. K132A,K144A
   - name: partial deletion, amino acid
     export_type: partial_amino_acid_deletion
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
@@ -1235,6 +1242,7 @@ allele_type_list:
     placeholder: "Please specify deleted residues - eg. 100-200 OR 10-20,40-50"
   - name: partial deletion, nucleotide
     export_type: partial_nucleotide_deletion
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
@@ -1244,6 +1252,7 @@ allele_type_list:
     export_type: nucleotide_mutation
     # see comment above:
     export_type_reverse_map_re: "^[^,]+$"
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
@@ -1253,6 +1262,7 @@ allele_type_list:
     export_type: nucleotide_mutation
     # see comment above:
     export_type_reverse_map_re: ","
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
@@ -1260,6 +1270,7 @@ allele_type_list:
     placeholder: eg. A25G,T40G
   - name: nonsense mutation
     export_type: nonsense_mutation
+    show_description: true
     description_required: true
     allow_expression_change: true
     expression_required: true
@@ -1267,6 +1278,7 @@ allele_type_list:
     placeholder: 'e.g. AA123->stop, AA1299->amber'
   - name: other
     export_type: other
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
