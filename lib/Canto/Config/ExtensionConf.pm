@@ -96,6 +96,13 @@ sub parse {
         } split /,/, $cardinality;
       }
 
+      map {
+        if ($_ ne '*' && !/^\d+$/) {
+          die qq|cardinality must be "*" or comma separated integers not "$_" \n| .
+            "at config line $. in $extension_conf_file has : $line\n";
+        }
+      } @cardinality;
+
       my @range_bits = split /\|/, $range;
 
       my @new_range_bits = ();
