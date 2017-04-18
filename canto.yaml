@@ -941,6 +941,16 @@ class_info:
     all_sessions:
       extends: curs
   chado:
+    chadoprop:
+      class_display_name: chado properties
+      editable: 0
+      display_field: value
+      field_info_list:
+        - name: type
+          source: type_id
+          referenced_class: Cvterm
+        - name: value
+          editable: 0
     cv:
       class_display_name: controlled vocabulary
       editable: 1
