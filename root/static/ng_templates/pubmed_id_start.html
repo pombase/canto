@@ -56,7 +56,7 @@
     <div id="pubmed-id-lookup-buttons">
       <button type="button" class="btn btn-primary" ng-click="findAnother()">Find another</button>
       <button type="button" class="btn btn-primary" ng-click="startCuration()">
-        <span ng-if="data.results.sessions.length > 0 && !publicMode">View session</span>
+        <span ng-if="data.results.sessions.length > 0">View session</span>
         <span ng-if="data.results.sessions.length == 0">Continue</span>
       </button>
     </div>
