@@ -197,6 +197,7 @@ sub _get_people
     $ret{$person->email_address()} = {
       name => $person->name(),
       role => $person->role()->name(),
+      orcid => $person->orcid(),
       lab => defined $person->lab() ? $person->lab()->name() : undef,
       password => $person->password(),
     };
