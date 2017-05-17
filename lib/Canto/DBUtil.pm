@@ -199,22 +199,4 @@ sub check_schema_version
   }
 }
 
-=head2 copy_sqlite_database
-
- Usage   : Canto::DBUtil::copy_sqlite_database($old_db, $new_db);
- Function: Copy all tables and data from $old_db to $new_db.  Both args
-           must be DBI::db objects and $old_db must be an on-disk DB.
- Return  : Nothing, dies on failure
-
-=cut
-sub copy_sqlite_database
-{
-  my $old_dbh = shift;
-  my $new_dbh = shift;
-
-  my $old_db_file_name = $old_dbh->sqlite_db_filename();
-  $new_dbh->sqlite_backup_from_file($old_db_file_name);
-  $new_dbh->do("ANALYZE");
-}
-
 1;
