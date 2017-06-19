@@ -319,10 +319,10 @@ This table shows the number of first time community curators per year.
 % for my $row (@new_curator_stats) {
     <tr>
       <td>
-        <% $row->[0] %>
+        <% $row->[1] %>
       </td>
       <td>
-        <% $row->[1] %>
+        <% $row->[0] %>
       </td>
     </tr>
 % }
