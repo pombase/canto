@@ -129,7 +129,11 @@ sub get_subset_data
 
       if ($range->{type} eq 'Ontology') {
         map {
-          $range_subsets_to_store{$_} = 1;
+          my $scope = $_;
+          my @bits = split('-', $scope);
+          map {
+            $range_subsets_to_store{$_} = 1;
+          } @bits;
         } @{$range->{scope}};
       }
     } @{$conf->{range}};
