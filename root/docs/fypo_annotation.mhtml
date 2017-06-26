@@ -28,7 +28,12 @@ definition.
 
 <p>
 <ul>
-  <li><a href=#interface>Using the interface</a></li>
+  <li><a href=#interface>Using the interface</a>
+    <ul>
+    <li><a href=#single-allele-phenotypes>Single-allele phenotypes</a>  </li>
+    <li><a href=#multi-allele-phenotypes>Multi-allele phenotypes</a>  </li>
+    </ul>
+  </li>
   <li><a href=#gentips>General phenotype tips</a></li>
   <li><a href=#sptips>Specific phenotype tips</a></li>
 </ul>
