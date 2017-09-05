@@ -1,13 +1,61 @@
 # Canto installation
 ## Requirements
-- Linux, BSD or UNIX
-- Perl, CLucene library
+- Linux
+- Docker (preferred)
 
-## Manual installation
+## Installing with Docker
 
-### Software requirements
+The recommended installation for Canto method is
+[Docker](https://www.docker.com/what-docker).
 
-The following software is needed for the installation:
+The following commands will install and initialise a Canto instance.
+They get the Canto code, start a temporary Docker container and then
+initialise Canto.
+
+    # this can be anywhere are have any name
+    mkdir canto-space
+    cd canto-space
+    mkdir data
+
+    git clone https://github.com/pombase/canto.git
+
+    CANTO_DOCKER_RUN_ARGS='--rm -d -ti --publish 5000:5000 --name canto-init \
+        --mount type=bind,source=$(pwd)/data,target=/data \
+        --mount type=bind,source=$(pwd)/canto,target=/canto pombase/canto-base:v1'
+
+    # run a container using the pombase/canto-base as a starting point
+    # the canto and data direcoties are mounted in the container and
+    # port 500 is exposed
+    # this command should be run after each reboot or "docker kill"
+    docker run $CANTO_DOCKER_RUN_ARGS
+
+    # initialise the data directory - this should be run once per
+    # Canto installation
+    docker exec -i canto-init \
+        bash -c "cd /canto && ./script/canto_start --initialise /data"
+
+    docker kill canto-init
+
+At this point the `data` directory is initialised and the
+`canto/canto_deploy.yaml`
+[Configuration file](canto_admin/configuration_file) has been created
+for this Canto instance.
+
+This command will start Canto:
+
+    docker run $CANTO_DOCKER_RUN_ARGS bash -c "cd /canto && ./script/canto_start"
+
+Use control-C to stop.
+
+## Manual installation on Debian or Ubuntu
+
+If Docker isn't an option for you, it's possible to install and run
+Canto on a Linux system.  The instructions below are for Debian and
+Ubuntu based systems.
+
+### Software requirements for manual installation
+
+The following software is needed:
 
 - Perl
 - Git
@@ -88,18 +136,6 @@ The CLucene libraries must be manually installed for Debian v8 with:
     wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2+b1_amd64.deb
     sudo dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb
 
-### Installing prerequisites on Centos/Red Hat
-
-If you have added
-[RPMforge](http://wiki.centos.org/AdditionalResources/Repositories/RPMForge)
-as an extra [Centos](http://www.centos.org/) package repository many of the
-required Perl libraries can be installed with `yum`.
-
-These are suggested packages to install:
-
-    sudo yum groupinstall "Development Tools"
-    sudo yum install perl cpan git perl-Module-Install
-
 ### Getting the Canto source code
 Currently the easiest way to get the code is via GitHub. Run this command
 to get a copy:
@@ -129,6 +165,10 @@ installation. Start it with:
 
     cpan
 
+At this prompt choose 'sudo':
+
+    What approach do you want?  (Choose 'local::lib', 'sudo' or --> 'manual')
+
 When started, cpan will attempt to configure itself. Usually the default
 answer at each prompt will work.
 
@@ -139,8 +179,7 @@ installing modules later.
     o conf build_requires_install_policy no
     o conf commit
 
-Confirm that `Module::Install` and co are installed with (at the `cpan`
-prompt):
+Install the `Module::Install::Catalyst` module (at the `cpan` prompt):
 
     install Module::Install
     install Module::Install::Catalyst
@@ -218,8 +257,9 @@ From that shell, the Canto server can be started with:
 Once started the server can be accessed on port 5500 of the host:
 http://localhost:5500/
 
-## Testing the installation
-To try the Canto server:
+## Testing the manual installation
+
+To try the Canto server after a non-Docker installation:
 
 ### Initialise a test data directory
 Make a data directory somewhere:
