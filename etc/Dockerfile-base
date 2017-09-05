@@ -1,29 +1,35 @@
-FROM debian:stretch
+# run with: docker build -f etc/Dockerfile-base -t=pombase/canto-base:v1 .
+
+FROM debian:jessie
 MAINTAINER Kim Rutherford <kim@pombase.org>
 RUN apt-get update; \
   apt-get install -y ntpdate sqlite3 make tar gzip bzip2 whiptail gcc g++ wget \
-  perl-base git-core libxml2-dev zlib1g-dev libssl-dev \
-  libexpat1-dev libpq-dev
+  perl git-core libxml2-dev zlib1g-dev libssl-dev \
+  libexpat1-dev libpq-dev curl libcatalyst-perl libhash-merge-perl \
+  libhtml-mason-perl libplack-perl libdbix-class-perl \
+  libdbix-class-schema-loader-perl libcatalyst-modules-perl libio-all-lwp-perl \
+  libwww-perl libjson-xs-perl libio-all-perl \
+  libio-string-perl libmemoize-expirelru-perl libtry-tiny-perl \
+  libarchive-zip-perl libtext-csv-xs-perl liblingua-en-inflect-number-perl \
+  libcatalyst-modules-perl libmoose-perl libdata-compare-perl \
+  libmoosex-role-parameterized-perl libfile-copy-recursive-perl \
+  libxml-simple-perl libtext-csv-perl libtest-deep-perl \
+  libtext-markdown-perl libchi-driver-memcached-perl libchi-perl \
+  libcache-memcached-perl libcache-perl libfile-touch-perl \
+  liblwp-protocol-psgi-perl libweb-scraper-perl \
+  libdbd-pg-perl libdata-javascript-anon-perl starman libnet-server-perl \
+  libautobox-list-util-perl libwant-perl libautobox-core-perl \
+  libmodule-install-perl libcatalyst-devel-perl liblocal-lib-perl \
+  libpq-dev libxml2-dev zlib1g-dev libssl-dev libexpat1-dev
 
-RUN (echo o conf prerequisites_policy follow; echo o conf build_requires_install_policy no; echo o conf commit) | cpan
+RUN curl -L http://cpanmin.us | perl - --self-upgrade
 
 RUN echo installing lib lucene && (cd /tmp/; \
   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2+b1_amd64.deb && \
   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2+b1_amd64.deb && \
   dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb); \
-  cpan -i Lucene
+  cpanm Lucene
 
-RUN cpan -i DBIx::Class::ResultSet::Data::Pageset Data::Rmap GO::Parser \
-    XML::LibXML HTML::HTML5::Writer HTML::HTML5::Builder HTML::Mason \
-    Moose MooseX::Test::Role Package::Alias \
-    String::Similarity Text::MultiMarkdown \
-    Plack::Middleware::Debug Plack::Middleware::Expires \
-    Plack::Middleware::InteractiveDebugger \
-    Starman Net::Server::SS::PreFork Server::Starter \
-    Catalyst Catalyst::Runtime Catalyst::Utils \
-    Catalyst::Plugin::PageCache Catalyst::Plugin::Session::PerUser \
-    Catalyst::TraitFor::Request::ProxyBase CatalystX::RoleApplicator \
-    XML::Simple Template Module::Install Module::Install::Catalyst
-
+RUN mkdir /tmp/canto
 COPY . /tmp/canto/
 RUN (cd /tmp/canto; perl Makefile.PL && make installdeps); rm -rf /tmp/canto
