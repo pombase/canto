@@ -16,34 +16,38 @@ initialise Canto.
     mkdir canto-space
     cd canto-space
     mkdir data
+    mkdir input_data
 
     git clone https://github.com/pombase/canto.git
 
-    CANTO_DOCKER_RUN_ARGS='--rm -d -ti --publish 5000:5000 --name canto-init \
+    # options to run a container using the pombase/canto-base as a
+    # starting point the canto and data direcoties are mounted in the
+    # container and port 500 is exposed
+    CANTO_DOCKER_RUN_ARGS='--rm -ti --publish 5000:5000 --name canto-container \
         --mount type=bind,source=$(pwd)/data,target=/data \
-        --mount type=bind,source=$(pwd)/canto,target=/canto pombase/canto-base:v1'
+        --mount type=bind,source=$(pwd)/input_data,target=/input_data \
+        --mount type=bind,source=$(pwd)/canto,target=/canto \
+        -w=/canto pombase/canto-base:v1'
 
-    # run a container using the pombase/canto-base as a starting point
-    # the canto and data direcoties are mounted in the container and
-    # port 500 is exposed
-    # this command should be run after each reboot or "docker kill"
-    eval docker run $CANTO_DOCKER_RUN_ARGS
+    # define a shell for running commands in a Canto Docker container
+    dcanto() { eval docker run -it $CANTO_DOCKER_RUN_ARGS "$@" }
 
     # initialise the data directory - this should be run once per
     # Canto installation
-    docker exec -i canto-init \
-        bash -c "cd /canto && ./script/canto_start --initialise /data"
-
-    docker kill canto-init
+    dcanto ./script/canto_start --initialise /data
 
 At this point the `data` directory is initialised and the
 `canto/canto_deploy.yaml`
 [Configuration file](canto_admin/configuration_file) has been created
 for this Canto instance.
 
-This command will start Canto:
+At this point the new Canto instance has no data.  To test that the
+installation and initialisation succeeded, use this command to start
+Canto:
 
-    docker run $CANTO_DOCKER_RUN_ARGS bash -c "cd /canto && ./script/canto_start"
+    dcanto ./script/canto_start
+
+Go to `http://localhost:5000/` to check that Canto is running.
 
 Use control-C to stop.
 

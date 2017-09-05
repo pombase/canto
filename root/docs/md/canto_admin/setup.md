@@ -2,6 +2,19 @@
 
 After the software is [installed](installation) some configuration is needed.
 
+If you chose the recommended Docker installation precedure then the
+commands below will need to be run inside the Canto container.  One
+way to do that is to use the "dcanto" shell function defined in the
+[installation](installation) section.
+
+eg. instead of:
+
+    ./script/canto_load.pl --genes genes_file.tsv --for-taxon 4896
+
+run:
+
+    dcanto ./script/canto_load.pl --genes genes_file.tsv --for-taxon 4896
+
 ## Creating users
 
 To manage sessions and users from the web interface there needs to be at least
