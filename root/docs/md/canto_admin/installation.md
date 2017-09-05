@@ -27,7 +27,7 @@ initialise Canto.
     # the canto and data direcoties are mounted in the container and
     # port 500 is exposed
     # this command should be run after each reboot or "docker kill"
-    docker run $CANTO_DOCKER_RUN_ARGS
+    eval docker run $CANTO_DOCKER_RUN_ARGS
 
     # initialise the data directory - this should be run once per
     # Canto installation
