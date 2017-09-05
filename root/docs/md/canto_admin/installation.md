@@ -16,7 +16,7 @@ initialise Canto.
     mkdir canto-space
     cd canto-space
     mkdir data
-    mkdir input_data
+    mkdir import_export
 
     git clone https://github.com/pombase/canto.git
 
@@ -25,11 +25,11 @@ initialise Canto.
     # container and port 500 is exposed
     CANTO_DOCKER_RUN_ARGS='--rm -ti --publish 5000:5000 --name canto-container \
         --mount type=bind,source=$(pwd)/data,target=/data \
-        --mount type=bind,source=$(pwd)/input_data,target=/input_data \
+        --mount type=bind,source=$(pwd)/import_export,target=/import_export \
         --mount type=bind,source=$(pwd)/canto,target=/canto \
         -w=/canto pombase/canto-base:v1'
 
-    # define a shell for running commands in a Canto Docker container
+    # define a shell function for running commands in a Canto Docker container
     dcanto() { eval docker run -it $CANTO_DOCKER_RUN_ARGS "$@" }
 
     # initialise the data directory - this should be run once per
@@ -41,15 +41,14 @@ At this point the `data` directory is initialised and the
 [Configuration file](canto_admin/configuration_file) has been created
 for this Canto instance.
 
-At this point the new Canto instance has no data.  To test that the
-installation and initialisation succeeded, use this command to start
-Canto:
+To test that the installation and initialisation succeeded, use this
+command to start Canto:
 
     dcanto ./script/canto_start
 
-Go to `http://localhost:5000/` to check that Canto is running.
+then go to `http://localhost:5000/` to check that Canto is running.
 
-Use control-C to stop.
+Use `docker stop canto-container` in another terminal to stop the server.
 
 ## Manual installation on Debian or Ubuntu
 
