@@ -1,4 +1,4 @@
-# run with: docker build -f etc/Dockerfile-base -t=pombase/canto-base:v1 .
+# run with: docker build -f etc/Dockerfile-base -t=pombase/canto-base:v2 .
 
 FROM debian:jessie
 MAINTAINER Kim Rutherford <kim@pombase.org>
@@ -20,14 +20,15 @@ RUN apt-get update; \
   libdbd-pg-perl libdata-javascript-anon-perl starman libnet-server-perl \
   libautobox-list-util-perl libwant-perl libautobox-core-perl \
   libmodule-install-perl libcatalyst-devel-perl liblocal-lib-perl \
-  libpq-dev libxml2-dev zlib1g-dev libssl-dev libexpat1-dev
+  libpq-dev libxml2-dev zlib1g-dev libssl-dev libexpat1-dev && apt-get clean
 
 RUN curl -L http://cpanmin.us | perl - --self-upgrade
 
 RUN echo installing lib lucene && (cd /tmp/; \
   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2+b1_amd64.deb && \
   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2+b1_amd64.deb && \
-  dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb); \
+  dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb && \
+  rm libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb); \
   cpanm Lucene
 
 RUN mkdir /tmp/canto
