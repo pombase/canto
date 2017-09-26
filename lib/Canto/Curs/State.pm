@@ -420,8 +420,10 @@ sub set_state
         carp "must be in state ", APPROVAL_IN_PROGRESS,
           " (not $current_state) to change to state ", APPROVED;
       }
-      $self->set_metadata($schema, FIRST_APPROVED_TIMESTAMP_KEY,
-                          Canto::Util::get_current_datetime());
+      if (!$self->get_metadata($schema, FIRST_APPROVED_TIMESTAMP_KEY)) {
+        $self->set_metadata($schema, FIRST_APPROVED_TIMESTAMP_KEY,
+                            Canto::Util::get_current_datetime());
+      }
       $self->set_metadata($schema, APPROVED_TIMESTAMP_KEY,
                           Canto::Util::get_current_datetime());
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
