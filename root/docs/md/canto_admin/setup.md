@@ -7,17 +7,18 @@ commands below will need to be run inside the Canto container.  One
 way to do that is to use the "dcanto" shell function defined in the
 [installation](installation) section.  Only three host directories
 (`canto`, `data` and `import_export`) are visible inside the container
-so reading and writing of files should be via that directory.
+so reading and writing of files should be via those directories.  In
+particular, datasets for loading should be added to your
+`import_export` as created in the [installation](installation) step.
 
-eg. instead of:
+So for example to load a genes file when Canto is running via a Docker
+container, instead of:
 
     ./script/canto_load.pl --genes genes_file.tsv --for-taxon 4896
 
-run:
+use this command:
 
     dcanto ./script/canto_load.pl --genes /import_export/genes_file.tsv --for-taxon 4896
-
-
 
 ## Creating users
 

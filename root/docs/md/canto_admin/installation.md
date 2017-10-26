@@ -50,13 +50,13 @@ then go to `http://localhost:5000/` to check that Canto is running.
 
 Use `docker stop canto-container` in another terminal to stop the server.
 
-If that work the next step is to [configure Canto](setup).
+If that works the next step is to [configure Canto](setup).
 
 ## Manual installation on Debian or Ubuntu
 
 If Docker isn't an option for you, it's possible to install and run
-Canto on a Linux system.  The instructions below are for Debian and
-Ubuntu based systems.
+Canto on a Debian Linux based system.  The instructions below should
+work on both Debian and Ubuntu based systems.
 
 ### Software requirements for manual installation
 
