@@ -27,7 +27,7 @@ initialise Canto.
         --mount type=bind,source=$(pwd)/data,target=/data \
         --mount type=bind,source=$(pwd)/import_export,target=/import_export \
         --mount type=bind,source=$(pwd)/canto,target=/canto \
-        -w=/canto pombase/canto-base:v2'
+        -w=/canto pombase/canto-base:v3'
 
     # define a shell function for running commands in a Canto Docker container
     dcanto() { eval docker run -it $CANTO_DOCKER_RUN_ARGS "$@" }
