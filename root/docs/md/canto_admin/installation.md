@@ -22,7 +22,7 @@ initialise Canto.
 
     # options to run a container using the pombase/canto-base as a
     # starting point the canto and data direcoties are mounted in the
-    # container and port 500 is exposed
+    # container and port 5000 is exposed
     CANTO_DOCKER_RUN_ARGS='--rm -ti --publish 5000:5000 --name canto-container \
         --mount type=bind,source=$(pwd)/data,target=/data \
         --mount type=bind,source=$(pwd)/import_export,target=/import_export \
@@ -30,7 +30,7 @@ initialise Canto.
         -w=/canto pombase/canto-base:v3'
 
     # define a shell function for running commands in a Canto Docker container
-    dcanto() { eval docker run -it $CANTO_DOCKER_RUN_ARGS "$@" }
+    dcanto() { eval docker run -it $CANTO_DOCKER_RUN_ARGS "$@"; }
 
     # initialise the data directory - this should be run once per
     # Canto installation
