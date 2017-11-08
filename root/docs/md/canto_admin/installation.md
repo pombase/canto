@@ -5,36 +5,25 @@
 
 ## Installing with Docker
 
-The recommended installation for Canto method is
+The recommended method for installating and running Canto to use
 [Docker](https://www.docker.com/what-docker).
 
 The following commands will install and initialise a Canto instance.
-They get the Canto code, start a temporary Docker container and then
-initialise Canto.
+The commands retrieve the Canto code, start a temporary Docker
+container and then initialise Canto.
 
-    # this can be anywhere are have any name
+    # this directory can be anywhere and have any name
     mkdir canto-space
+
     cd canto-space
+
     mkdir data
     mkdir import_export
 
     git clone https://github.com/pombase/canto.git
 
-    # options to run a container using the pombase/canto-base as a
-    # starting point the canto and data direcoties are mounted in the
-    # container and port 5000 is exposed
-    CANTO_DOCKER_RUN_ARGS='--rm -ti --publish 5000:5000 --name canto-container \
-        --mount type=bind,source=$(pwd)/data,target=/data \
-        --mount type=bind,source=$(pwd)/import_export,target=/import_export \
-        --mount type=bind,source=$(pwd)/canto,target=/canto \
-        -w=/canto pombase/canto-base:v3'
-
-    # define a shell function for running commands in a Canto Docker container
-    dcanto() { eval docker run -it $CANTO_DOCKER_RUN_ARGS "$@"; }
-
-    # initialise the data directory - this should be run once per
-    # Canto installation
-    dcanto ./script/canto_start --initialise /data
+    # initialise the data directory 
+    ./canto/script/canto_start_docker --initialise /data
 
 At this point the `data` directory is initialised and the
 `canto/canto_deploy.yaml`
@@ -44,7 +33,7 @@ for this Canto instance.
 To test that the installation and initialisation succeeded, use this
 command to start Canto:
 
-    dcanto ./script/canto_start
+    ./canto/script/canto_start_docker
 
 then go to `http://localhost:5000/` to check that Canto is running.
 
