@@ -178,7 +178,7 @@ canto.filter('encodeAlleleSymbols', function () {
     if (item == null) {
       return null;
     }
-    return item.replace(/(delta)\b/g, '&Delta;');
+    return item.replace(/delta/g, '&Delta;');
   };
 });
 

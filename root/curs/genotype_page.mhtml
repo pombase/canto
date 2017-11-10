@@ -138,7 +138,7 @@ $nowrap_allele_string = Canto::WebUtil::nowrap_words($nowrap_allele_string);
 
 my $_unicode_allele_symbol = sub {
   my $text = shift;
-  $text =~ s/(delta)\b/&Delta;/gr;
+  $text =~ s/delta/&Delta;/gr;
 };
 
 my $gene_view_url = $start_path . '/feature/gene/view/';
