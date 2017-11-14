@@ -3,22 +3,28 @@
 After the software is [installed](installation) some configuration is needed.
 
 If you chose the recommended Docker installation precedure then the
-commands below will need to be run inside the Canto container.  One
-way to do that is to use the "dcanto" shell function defined in the
-[installation](installation) section.  Only three host directories
-(`canto`, `data` and `import_export`) are visible inside the container
-so reading and writing of files should be via those directories.  In
-particular, datasets for loading should be added to your
-`import_export` as created in the [installation](installation) step.
+commands below will need to be run inside the Canto container.  The
+suggested way to do that to use the `canto_docker` script as a prefix
+to the commands below.
 
 So for example to load a genes file when Canto is running via a Docker
 container, instead of:
 
     ./script/canto_load.pl --genes genes_file.tsv --for-taxon 4896
 
-use this command:
+from instead your `canto` git check out, add your `genes_file.tsv` to
+the `import_export` directory and the run this command in the
+`canto-space` directory created in the [installed](installation)
+section:
 
-    dcanto ./script/canto_load.pl --genes /import_export/genes_file.tsv --for-taxon 4896
+    ./canto/script/canto_docker ./script/canto_load.pl --genes \
+        /import_export/genes_file.tsv --for-taxon 4896
+
+Only three host directories (`canto`, `data` and `import_export`) are
+visible inside the container so reading and writing of files should be
+via those directories.  In particular, as in the example above,
+datasets for loading should be added to your `import_export` directory
+as created in the [installation](installation) step.
 
 ## Creating users
 
@@ -91,6 +97,11 @@ There is a small example file in the test directory:
 OBO format ontology data can be imported or updated with:
 
     ./script/canto_load.pl --ontology file_1.obo [--ontology file_2.obo ...]
+
+Or if you have a dockerised Canto:
+
+    ./canto/script/canto_docker ./script/canto_load.pl \
+       --ontology file_1.obo [--ontology file_2.obo ...]
 
 If you need to import multiple ontology files, they all must be included in
 the same command line:
