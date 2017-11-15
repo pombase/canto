@@ -50,6 +50,7 @@ CREATE TABLE genotype (
        genotype_id integer PRIMARY KEY AUTOINCREMENT,
        identifier text UNIQUE NOT NULL,
        background text,
+       strain text,
        name text UNIQUE
 );
 

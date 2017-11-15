@@ -227,6 +227,11 @@ EOF
 
     Canto::Track::update_all_statuses($config);
   },
+
+  15 => sub {                                                                                                                                                                                
+    $dbh->do("ALTER TABLE genotype ADD COLUMN strain TEXT;");                                                                                                                                
+  },
+
 );
 
 sub upgrade_to
