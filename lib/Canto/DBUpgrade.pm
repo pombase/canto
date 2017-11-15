@@ -228,8 +228,24 @@ EOF
     Canto::Track::update_all_statuses($config);
   },
 
-  15 => sub {                                                                                                                                                                                
-    $dbh->do("ALTER TABLE genotype ADD COLUMN strain TEXT;");                                                                                                                                
+  15 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+    my $load_util = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("ALTER TABLE genotype ADD COLUMN strain TEXT;");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+
   },
 
 );
