@@ -18,7 +18,7 @@ then
    exit 1
 fi
 
-CANTO_DOCKER_RUN_ARGS="--rm -ti --publish 5000:5000 --name canto-container --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v3"
+CANTO_DOCKER_RUN_ARGS="--rm -ti --publish 5000:5000 --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v3"
 
 cd canto
 
