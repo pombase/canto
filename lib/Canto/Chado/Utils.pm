@@ -147,7 +147,7 @@ WITH pub_curator_roles AS
                      FROM pubprop
                      JOIN cvterm ppt ON ppt.cvterm_id = pubprop.type_id
                      WHERE pubprop.pub_id = pub.pub_id
-                       AND ppt.name = 'canto_approved_date')::TIMESTAMP) AS approved_year
+                       AND ppt.name = 'canto_session_submitted_date')::TIMESTAMP) AS approved_year
    FROM pub),
    curator_first_year AS
   (SELECT DISTINCT curator, min(approved_year) AS first_year
