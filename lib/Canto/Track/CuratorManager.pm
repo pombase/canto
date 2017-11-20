@@ -207,6 +207,8 @@ sub set_curator
   my $curs_curator_name = shift;
   my $curs_curator_orcid = shift;
 
+  Canto::Util::trim($curs_curator_orcid);
+
   my $schema = $self->schema();
 
   my $curator_rs = $schema->resultset('Person');
@@ -233,11 +235,16 @@ sub set_curator
   } else {
     my $user_role_id =
       $schema->find_with_type('Cvterm', { name => 'user' })->cvterm_id();
-    $curator = $curator_rs->create({ name => $curs_curator_name,
-                                     email_address => $curs_curator_email,
-                                     orcid => $curs_curator_orcid,
-                                     role => $user_role_id,
-                                   });
+    my %args = (
+      name => $curs_curator_name,
+      email_address => $curs_curator_email,
+      role => $user_role_id,
+    );
+    if ($curs_curator_orcid) {
+      $args{orcid} = $curs_curator_orcid;
+    }
+
+    $curator = $curator_rs->create();
   }
 
   my $curs_rs = $schema->resultset('Curs')->search({ curs_key => $curs_key });
