@@ -639,6 +639,7 @@ sub get_person
   );
 
   if ($orcid) {
+    $orcid =~ s|(?:(?:https?://)orcid.org/)||;
     $args{orcid} = $orcid;
   }
 
