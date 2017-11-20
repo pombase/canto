@@ -29,11 +29,17 @@ as created in the [installation](installation) step.
 ## Creating users
 
 To manage sessions and users from the web interface there needs to be at least
-one "admin" user.  Users can be added with the `canto_add.pl` script:
+one "admin" user.  Users can be added with the `canto_add.pl` script.  For
+example:
 
-    ./script/canto_add.pl --person "Kim Rutherford" kim@pombase.org secret_password admin
+    ./script/canto_add.pl --person "Susan Testuser" testuser@pombase.org secret_password 0000-0001-5000-0007 admin
 
-The `secret_password` is stored as a SHA1 hash.
+The `secret_password` is stored as a SHA1 hash in the database rather
+than as plain text.
+
+For more information on ORCIDs visit https://orcid.org/
+
+Run `canto_add.pl` with no arguments for a longer description.
 
 ## Loading data
 
