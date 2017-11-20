@@ -244,7 +244,7 @@ sub set_curator
       $args{orcid} = $curs_curator_orcid;
     }
 
-    $curator = $curator_rs->create();
+    $curator = $curator_rs->create(\%args);
   }
 
   my $curs_rs = $schema->resultset('Curs')->search({ curs_key => $curs_key });
