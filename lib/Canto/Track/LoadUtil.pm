@@ -606,6 +606,7 @@ sub get_person
   my $email_address = shift;
   my $role_cvterm = shift;
   my $password = shift;
+  my $orcid = shift;
 
   my $schema = $self->schema();
 
@@ -624,13 +625,18 @@ sub get_person
 
   my $hashed_password = sha1_base64($password);
 
-  return $schema->resultset('Person')->find_or_create(
-      {
-        name => $name,
-        email_address => $email_address,
-        password => $hashed_password,
-        role => $role_cvterm,
-      });
+  my %args = (
+    name => $name,
+    email_address => $email_address,
+    password => $hashed_password,
+    role => $role_cvterm,
+  );
+
+  if ($orcid) {
+    $args{orcid} = $orcid;
+  }
+
+  return $schema->resultset('Person')->find_or_create(\%args);
 }
 
 =head2 create_user_session
