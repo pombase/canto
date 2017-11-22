@@ -1262,66 +1262,78 @@ allele_type_list:
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
-  - name: mutation of single amino acid residue
+  - name: amino acid insertion
     export_type: amino_acid_mutation
-    # all multi and single mutations map to "amino_acid_mutation" in Chado so
-    # we use this to undo that mapping - if the RE matches the description
-    # from Chado then we use this allele type
-    export_type_reverse_map_re: "^[^,]+$"
+    show_description: true
+    description_required: true
+    allele_name_required: false
+    allow_expression_change: true
+    expression_required: true
+    placeholder: e.g. 858-MKGYP
+  - name: "amino acid substitution(s)"
+    export_type: amino_acid_mutation
     show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
     placeholder: eg. K132A
-  - name: mutation of multiple amino acid residues
+  - name: amino acid insertion and amino acid change
     export_type: amino_acid_mutation
-    # all multi and single mutations map to "amino_acid_mutation" in Chado so
-    # we use this to undo that mapping - if the RE matches the description
-    # from Chado then we use this allele type
-    export_type_reverse_map_re: ","
     show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: eg. K132A,K144A
+    placeholder: e.g. 858-MKGYP,F124D
+  - name: amino acid insertion and deletion
+    export_type: amino_acid_mutation
+    show_description: true
+    description_required: true
+    allele_name_required: false
+    allow_expression_change: true
+    expression_required: true
+    placeholder: e.g. 858-MKGYP,100-200
+  - name: partial deletion and amino acid change
+    export_type: amino_acid_insertion
+    show_description: true
+    description_required: true
+    allele_name_required: false
+    allow_expression_change: true
+    expression_required: true
+    placeholder: e.g. 100-200,F124D
   - name: partial deletion, amino acid
-    export_type: partial_amino_acid_deletion
+    export_type: amino_acid_mutation
     show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
     placeholder: "Please specify deleted residues - eg. 100-200 OR 10-20,40-50"
-  - name: partial deletion, nucleotide
-    export_type: partial_nucleotide_deletion
+  - name: nucleotide insertion
+    export_type: nucleotide_insertion
     show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: "Please specify deleted residues - eg. 100-200 OR -20--30 (for promoter region)"
-  - name: mutation of a single nucleotide
+    placeholder: e.g. 132-AATTT
+  - name: "nucleotide substitution(s)"
     export_type: nucleotide_mutation
-    # see comment above:
-    export_type_reverse_map_re: "^[^,]+$"
     show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
     placeholder: eg. A25G, OR A-25G (for promoter region)
-  - name: mutation of multiple nucleotides
+  - name: partial deletion, nucleotide
     export_type: nucleotide_mutation
-    # see comment above:
-    export_type_reverse_map_re: ","
     show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: eg. A25G,T40G
+    placeholder: "Please specify deleted residues - eg. 100-200 OR -20--30 (for promoter region)"
   - name: nonsense mutation
     export_type: nonsense_mutation
     show_description: true
