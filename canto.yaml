@@ -348,6 +348,16 @@ db_initial_data:
               accession: structure
               db:
                 name: Canto
+          - name: Retracted
+            dbxref:
+              accession: retracted
+              db:
+                name: Canto
+          - name: Models
+            dbxref:
+              accession: models
+              db:
+                name: Canto
           - name: Other
             definition: >
                 Triage status for a publication that will not be curated for
