@@ -1153,6 +1153,7 @@ reports:
                 - report: triage_phylogeny_paper_publications
                 - report: triage_retracted_publications
                 - report: triage_modelling_publications
+                - report: triage_biotech_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
             - report: curated_publications
