@@ -353,9 +353,14 @@ db_initial_data:
               accession: retracted
               db:
                 name: Canto
-          - name: Models
+          - name: Modelling
             dbxref:
-              accession: models
+              accession: modelling
+              db:
+                name: Canto
+          - name: Biotech
+            dbxref:
+              accession: biotech
               db:
                 name: Canto
           - name: Other
@@ -897,6 +902,18 @@ class_info:
       class_display_name: Phylogeny and evolutionary studies
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Phylogeny and evolutionary studies')"
+    triage_retracted_publications:
+      class_display_name: Retracted
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Retracted')"
+    triage_modelling_publications:
+      class_display_name: Modelling
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Modelling')"
+    triage_biotech_publications:
+      class_display_name: Biotech
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Biotech')"
     triage_loaded_in_error_publications:
       class_display_name: Loaded in error
       extends: pub
@@ -1134,6 +1151,8 @@ reports:
                 - report: triage_not_physically_mapped_publications
                 - report: triage_cell_composition_or_wt_feature_publications
                 - report: triage_phylogeny_paper_publications
+                - report: triage_retracted_publications
+                - report: triage_modelling_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
             - report: curated_publications
