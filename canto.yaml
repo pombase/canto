@@ -363,6 +363,11 @@ db_initial_data:
               accession: biotech
               db:
                 name: Canto
+          - name: Database
+            dbxref:
+              accession: database
+              db:
+                name: Canto
           - name: Other
             definition: >
                 Triage status for a publication that will not be curated for
@@ -914,6 +919,10 @@ class_info:
       class_display_name: Biotech
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Biotech')"
+    triage_database_publications:
+      class_display_name: Database
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Database')"
     triage_loaded_in_error_publications:
       class_display_name: Loaded in error
       extends: pub
@@ -1154,6 +1163,7 @@ reports:
                 - report: triage_retracted_publications
                 - report: triage_modelling_publications
                 - report: triage_biotech_publications
+                - report: triage_database_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
             - report: curated_publications
