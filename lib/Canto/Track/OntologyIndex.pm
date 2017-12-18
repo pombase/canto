@@ -42,7 +42,18 @@ use Moose;
 
 use File::Path qw(remove_tree);
 
-use Lucene;
+use Lucy::Index::Indexer;
+use Lucy::Plan::Schema;
+use Lucy::Analysis::EasyAnalyzer;
+use Lucy::Plan::FullTextType;
+use Lucy::Plan::StringType;
+use Lucy::Search::IndexSearcher;
+use Lucy::Analysis::PolyAnalyzer;
+use Lucy::Search::QueryParser;
+use Lucy::Search::ORQuery;
+use Lucy::Search::ANDQuery;
+use Lucy::Search::NOTQuery;
+use LucyX::Search::WildcardQuery;
 
 has index_path => (is => 'rw', required => 1);
 has config => (is => 'ro', required => 1);
@@ -61,17 +72,47 @@ sub initialise_index
 
   $self->_remove_dir($self->_temp_index_path());
 
-  my $init_analyzer = new Lucene::Analysis::Standard::StandardAnalyzer();
-  my $store = Lucene::Store::FSDirectory->getDirectory($self->_temp_index_path(), 1);
+  my $schema = Lucy::Plan::Schema->new();
+  my $easyanalyzer = Lucy::Analysis::EasyAnalyzer->new(
+    language => 'en',
+  );
+  my $full_text_type = Lucy::Plan::FullTextType->new(
+    analyzer => $easyanalyzer,
+  );
 
-  my $tmp_writer = new Lucene::Index::IndexWriter($store, $init_analyzer, 1);
-  $tmp_writer->close;
-  undef $tmp_writer;
+  my $whitespace_tokenizer
+    = Lucy::Analysis::RegexTokenizer->new( pattern => '\S+' );
 
-  my $analyzer = new Lucene::Analysis::Standard::StandardAnalyzer();
-  my $writer = new Lucene::Index::IndexWriter($store, $analyzer, 0);
+  my $ws_polyanalyzer = Lucy::Analysis::PolyAnalyzer->new(
+    analyzers => [ $whitespace_tokenizer ],
+  );
 
-  $self->{_index} = $writer;
+  my $keyword_type = Lucy::Plan::FullTextType->new(
+    analyzer => $ws_polyanalyzer,
+  );
+
+  my $string_type = Lucy::Plan::StringType->new();
+  my $unindexed_string_type = Lucy::Plan::StringType->new(indexed => 0);
+
+  $schema->spec_field(name => 'text', type => $full_text_type);
+  $schema->spec_field(name => 'ontid', type => $string_type);
+  $schema->spec_field(name => 'cv_name', type => $string_type);
+  $schema->spec_field(name => 'cvterm_id', type => $string_type);
+  $schema->spec_field(name => 'term_name', type => $string_type);
+
+  for (my $i = 0; $i < 10; $i++) {
+    $schema->spec_field(name => "subset_${i}_id", type => $keyword_type);
+  }
+
+  # Create the index and add documents.
+  my $indexer = Lucy::Index::Indexer->new(
+    schema => $schema,
+    index  => $self->_temp_index_path(),
+    create => 1,
+  );
+
+  $self->{_index} = $indexer;
+  $self->{_schema} = $schema;;
 }
 
 sub _remove_dir
@@ -147,39 +188,40 @@ sub add_to_index
 
   $cv_name =~ s/-/_/g;
 
-  my $writer = $self->{_index};
+  my $indexer = $self->{_index};
 
   # $text can be the name or a synonym
   for my $details (_get_all_names($term_name, $synonym_details)) {
-    my $doc = Lucene::Document->new();
-
     my $type = $details->[0];
     my $text = $details->[1];
 
-    my @fields = (
-      Lucene::Document::Field->Text('text', $text),
-      Lucene::Document::Field->Keyword(ontid => $db_accession),
-      Lucene::Document::Field->Keyword(cv_name => $cv_name),
+    my @subset_ids =
       (map {
         # change "is_a(GO:0005215)" to "is_a__GO_0005215"
-        my $id_for_lucene = _id_for_lucene($_);
-        Lucene::Document::Field->Keyword(subset_id => $id_for_lucene)
-      } @$subset_ids),
-      Lucene::Document::Field->UnIndexed(cvterm_id => $cvterm_id),
-      Lucene::Document::Field->UnIndexed(term_name => $term_name),
+        _id_for_lucene($_);
+      } @$subset_ids);
+
+    my %doc = (
+      text => $text,
+      ontid => $db_accession,
+      cv_name => $cv_name,
+      cvterm_id => $cvterm_id,
+      term_name => $term_name,
     );
 
-    if (exists $synonym_boosts{$type}) {
-      map { $_->setBoost($synonym_boosts{$type}); } @fields;
+    for (my $i = 0; $i < @subset_ids; $i++) {
+      $doc{"subset_${i}_id"} = $subset_ids[$i];
     }
 
-    if (exists $term_boosts{$db_accession}) {
-      map { $_->setBoost($term_boosts{$db_accession}); } @fields;
-    }
+    $indexer->add_doc(\%doc)
 
-    map { $doc->add($_) } @fields;
-
-    $writer->addDocument($doc);
+#    if (exists $synonym_boosts{$type}) {
+#      map { $_->setBoost($synonym_boosts{$type}); } @fields;
+#    }
+#
+#    if (exists $term_boosts{$db_accession}) {
+#      map { $_->setBoost($term_boosts{$db_accession}); } @fields;
+#    }
   }
 }
 
@@ -195,9 +237,9 @@ sub finish_index
 {
   my $self = shift;
 
-  $self->{_index}->optimize();
-  $self->{_index}->close();
-  $self->{_index} = undef;
+  my $indexer = $self->{_index};
+
+  $indexer->commit();
 
   $self->_remove_dir($self->index_path());
 
@@ -208,15 +250,9 @@ sub _init_lookup
 {
   my $self = shift;
 
-  my $analyzer = new Lucene::Analysis::Standard::StandardAnalyzer();
-  my $store = Lucene::Store::FSDirectory->getDirectory($self->index_path(), 0);
-  my $searcher = new Lucene::Search::IndexSearcher($store);
-  my $parser = new Lucene::QueryParser("name", $analyzer);
+  my $searcher = Lucy::Search::IndexSearcher->new(index => $self->index_path());
 
-  $self->{analyzer} = $analyzer;
-  $self->{store} = $store;
   $self->{searcher} = $searcher;
-  $self->{parser} = $parser;
 }
 
 =head2 lookup
@@ -251,32 +287,59 @@ sub lookup
   }
 
   my $searcher;
-  my $parser;
 
   if (!defined $self->{searcher}) {
     $self->_init_lookup();
   }
 
   $searcher = $self->{searcher};
-  $parser = $self->{parser};
 
-  my $wildcard;
+  my $indexer = $self->{_index};
 
   $search_string =~ s/\b(or|and)\b/ /gi;
   $search_string =~ s/\s+$//;
 
-  if ($search_string =~ /^(.*?)\W+\w$/) {
-    # avoid a single character followed by a wildcard as it triggers
-    # a "Too Many Clauses" exception
-    $wildcard = " OR text:($1*)";
-  } else {
-    $wildcard = " OR text:($search_string*)";
+  warn "search_string: $search_string";
+use Data::Dumper;
+$Data::Dumper::Maxdepth = 3;
+warn 'scope: ', Dumper([$search_scope]);
+use Data::Dumper;
+$Data::Dumper::Maxdepth = 3;
+warn 'exclude: ', Dumper([$search_exclude]);
+
+  my @search_parts = split /\s+/, $search_string;
+
+  if (@search_parts == 0 ||
+      @search_parts == 1 && length $search_parts[0] <=2) {
+    return ();
   }
 
-  my $query_string = '';
+  my $query_parser = Lucy::Search::QueryParser->new(
+    schema => $searcher->get_schema(),
+  );
+  $query_parser->set_heed_colons(1);
+
+  warn "@search_parts";
+
+  my @or_parts = map {
+    (LucyX::Search::WildcardQuery->new(
+      term    => "$_*",
+      field   => 'text',
+    ),
+     $query_parser->parse("text:$_"),
+   )
+  } @search_parts;
+
+  my $text_query =
+    Lucy::Search::ORQuery->new(children => \@or_parts);
+
+  my @and_parts = ();
+
+
+  my $scope_query_string = '';
 
   if (ref $search_scope) {
-    $query_string .=
+    $scope_query_string .=
       '(' . (join ' OR ', (map {
         if (ref $_) {
           # change "is_a(GO:0005215)" to "is_a__GO_0005215"
@@ -289,49 +352,80 @@ sub lookup
           "subset_id:$id_for_lucene";
         }
       } @$search_scope)) . ')';
-    $query_string .= ' AND ';
   } else {
     my $ontology_name = $search_scope;
     $ontology_name = lc $ontology_name;
     $ontology_name =~ s/-/_/g;
-    $query_string .= qq{cv_name:$ontology_name AND };
+    $scope_query_string .="cv_name:$ontology_name";
   }
 
-  $query_string .=
-    qq{(text:($search_string)$wildcard)};
+warn "scope_query_string: $scope_query_string";
+
+  my $parsed_scope_query = $query_parser->parse($scope_query_string);
+
+  push @and_parts, $parsed_scope_query, $text_query;
 
   if ($search_exclude && @$search_exclude > 0) {
     map {
       my $id_for_lucene = _id_for_lucene($_);
-      $query_string .= " AND NOT (subset_id:$id_for_lucene)";
+      push @and_parts,
+        Lucy::Search::NOTQuery->new(negated_query =>
+                                    $query_parser->parse("subset_id:$id_for_lucene"));
     } @$search_exclude;
   }
 
-  my $query = $parser->parse($query_string);
+#  my $schema = $self->{_schema};
+#
+#  my %fields;
+#  for my $field_name ( @{ $schema->all_fields() } ) {
+#    $fields{$field_name} = {
+#      type     => $schema->fetch_type($field_name),
+#      analyzer => $schema->fetch_analyzer($field_name),
+#    };
+#  }
+#
+#  my $query_parser = Search::Query->parser(
+#     dialect        => 'Lucy',
+#     fuzzify        => 1,
+#     croak_on_error => 1,
+#     default_field  => 'text',  # applied to "bare" terms with no field
+#     fields         => \%fields,
+# );
+#
 
-  my $hits = $searcher->search($query);
+# my $lucy_query   = $parsed_query->as_lucy_query();
+
+#warn "stringify: ", $parsed_query->stringify();
+
+  my $and_query = Lucy::Search::ANDQuery->new(children => \@and_parts);
+
+  use Data::Dumper;
+  warn Dumper([$and_query->to_string()]);
+
+
+
+  my $hits =
+    $searcher->hits(query => $text_query,
+                    num_wanted => $max_results * 2);
 
   my @ret_list = ();
   my %seen_terms = ();
-  my $num_hits = $hits->length();
 
-  for (my $i = 0; $i < $num_hits; $i++) {
-    my $doc = $hits->doc($i);
-    my $cvterm_id = $doc->get('cvterm_id');
+  while (my $hit = $hits->next()) {
+
+    my $cvterm_id = $hit->{'cvterm_id'};
 
     if (!exists $seen_terms{$cvterm_id}) {
       # slightly hacky as we're ignoring some docs
-      push @ret_list, { doc => $doc,
-                        term_name => $doc->get('term_name'),
-                        score => $hits->score($i), };
+      push @ret_list,
+        {
+          doc => $hit->get_fields(),
+          term_name => $hit->{term_name},
+          score => $hit->get_score()
+        };
 
       $seen_terms{$cvterm_id} = 1;
     }
-
-    # include extra hits in the sort / truncate steps below to
-    # decrease the chance that we may a good hit if more than
-    # $max_results hits have the same scores
-    last if @ret_list >= $max_results * 2;
   }
 
   # make sure short hits with short term names come first
@@ -347,13 +441,6 @@ sub lookup
   }
 
   return @sorted_results;
-}
-
-sub DESTROY
-{
-  my $self = shift;
-
-  $self->{_index}->close() if defined $self->{_index};
 }
 
 1;

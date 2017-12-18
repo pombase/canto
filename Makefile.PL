@@ -109,6 +109,8 @@ requires 'Net::Server::SS::PreFork' => 0.05;
 requires 'Server::Starter' => 0.32;
 requires 'Capture::Tiny' => 0.44;
 requires 'Carp::Always' => 0.13;
+requires 'Lucy' => 0.6;
+requires 'LucyX::Search::WildcardQuery' => 0.6;
 
 test_requires 'LWP::Protocol::PSGI';
 test_requires 'LWP::Protocol::https';

@@ -59,6 +59,11 @@ is(@results, 1);
 
 is($results[0]->{term_name}, $dihydropteroate_name);
 
+@results = $ontology_index->lookup('molecular_function', [], 'dihydrop', 100);
+is(@results, 1);
+
+is($results[0]->{term_name}, $dihydropteroate_name);
+
 @results = $ontology_index->lookup('molecular_function', [], 'molecular_function', 100);
 is(@results, 1);
 
@@ -80,6 +85,11 @@ cmp_deeply(
 
 @results = $ontology_index->lookup('molecular_function', ['canto_root_subset'], 'molecular_function', 100);
 is(@results, 0);
+
+use Data::Dumper;
+$Data::Dumper::Maxdepth = 3;
+warn Dumper([@results]);
+
 
 @results = $ontology_index->lookup('molecular_function', [], 'activity', 100);
 is(@results, 4);
@@ -148,8 +158,8 @@ cmp_deeply(
       map {
         $_->{term_name}
       } @results
-    ], ['transmembrane transporter activity',
-        'transporter activity',
+    ], ['transporter activity',
+        'transmembrane transporter activity',
         'nucleocytoplasmic transporter activity',
         'dihydropteroate synthase activity']);
 
