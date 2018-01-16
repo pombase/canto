@@ -49,8 +49,8 @@ with 'Canto::Track::TrackAdaptor';
  Args    : $organism_taxonid - The NCBI taxon ID of the organism to retrieve the
                                strains for
  Return  : A list of strains in the format:
-           ( { name => 'string name one, },
-             { name => 'string name two, }, )
+           ( { name => 'strain name one, },
+             { name => 'strain name two, }, )
 
 =cut
 
@@ -59,7 +59,7 @@ sub lookup
   my $self = shift;
   my $taxonid = shift;
 
-  return ();
+  return ({ name => 'strain one', }, { name => 'strain two', });
 }
 
 1;
