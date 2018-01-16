@@ -2,7 +2,8 @@ package Canto::Track::StrainLookup;
 
 =head1 NAME
 
-Canto::Track::StrainLookup -
+Canto::Track::StrainLookup - an adaptor for looking up the possible
+                             strains for an organism
 
 =head1 SYNOPSIS
 
