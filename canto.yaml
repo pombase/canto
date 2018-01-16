@@ -1230,6 +1230,7 @@ implementation_classes:
   status_adaptor: Canto::Track::StatusStorage
   person_adaptor: Canto::Track::PersonLookup
   pubs_adaptor: Canto::Track::PubsLookup
+  strain_adaptor: Canto::Track::StrainLookup
 
 allele_type_list:
   - name: wild type
