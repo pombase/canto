@@ -248,6 +248,17 @@ EOF
 
   },
 
+  16 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+    my $load_util = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    $dbh->do("CREATE TABLE strains (
+       organism_id integer NOT NULL REFERENCES organism (organism_id),
+       strain_name text NOT NULL);");
+  },
 );
 
 sub upgrade_to
