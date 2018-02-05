@@ -27,3 +27,8 @@ pombe_data
 *.sqlite3-wal
 .vagrant
 
+FYPO_A_E_config
+GO_BP_A_E_config
+GO_CC_A_E_config
+GO_MF_A_E_config
+PSI-MOD_A_E_config
