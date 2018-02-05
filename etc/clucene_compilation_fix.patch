@@ -1,0 +1,15 @@
+This patch prevent a compiltation error when installing the Lucene Perl module
+on Debian Scratch systems.
+
+
+--- /usr/include/CLucene/store/FSDirectory.h.orig	2018-02-05 08:13:43.769565157 +0000
++++ /usr/include/CLucene/store/FSDirectory.h	2018-02-05 08:13:51.681562493 +0000
+@@ -89,7 +89,7 @@
+     			DEFINE_MUTEX(*THIS_LOCK)
+     			char path[CL_MAX_DIR]; //todo: this is only used for cloning, better to get information from the fhandle
+     			SharedHandle();
+-				~SharedHandle() throw(CLuceneError&);
++				~SharedHandle() throw();
+ 			};
+ 			SharedHandle* handle;
+ 			int64_t _pos;
