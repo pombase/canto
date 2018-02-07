@@ -74,6 +74,7 @@ requires 'JSON::Any' => 1.39;
 requires 'JSON::XS' => 3.02;
 requires 'LWP' => 6.15;
 requires 'LWP::Simple' => 6.15;
+requires 'LWP::Protocol::https' => 6.06;
 requires 'Lingua::EN::Inflect::Number' => 1.12;
 requires 'List::MoreUtils' => 0.416;
 requires 'Lucene' => 0.18;
