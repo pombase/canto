@@ -190,7 +190,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                               ]
             },
             {
-              'exclude_subset_ids' => ['GO:0055085'],
+              'exclude_subset_ids' => ['is_a(GO:0055085)'],
               'domain' => 'GO:0006810',
               'role' => 'user',
               'allowed_relation' => 'localizes',
