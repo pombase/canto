@@ -1263,7 +1263,7 @@ allele_type_list:
     allow_expression_change: true
     expression_required: true
   - name: amino acid insertion
-    export_type: amino_acid_mutation
+    export_type: amino_acid_insertion
     show_description: true
     description_required: true
     allele_name_required: false
@@ -1279,7 +1279,7 @@ allele_type_list:
     expression_required: true
     placeholder: eg. K132A
   - name: amino acid insertion and amino acid change
-    export_type: amino_acid_mutation
+    export_type: amino_acid_insertion_and_mutation
     show_description: true
     description_required: true
     allele_name_required: false
@@ -1287,7 +1287,7 @@ allele_type_list:
     expression_required: true
     placeholder: e.g. 858-MKGYP,F124D
   - name: amino acid insertion and deletion
-    export_type: amino_acid_mutation
+    export_type: amino_acid_insertion_and_deletion
     show_description: true
     description_required: true
     allele_name_required: false
@@ -1295,7 +1295,7 @@ allele_type_list:
     expression_required: true
     placeholder: e.g. 858-MKGYP,100-200
   - name: partial deletion and amino acid change
-    export_type: amino_acid_insertion
+    export_type: amino_acid_deletion_and_mutation
     show_description: true
     description_required: true
     allele_name_required: false
@@ -1303,7 +1303,7 @@ allele_type_list:
     expression_required: true
     placeholder: e.g. 100-200,F124D
   - name: partial deletion, amino acid
-    export_type: amino_acid_mutation
+    export_type: partial_amino_acid_deletion
     show_description: true
     description_required: true
     allele_name_required: false
@@ -1327,7 +1327,7 @@ allele_type_list:
     expression_required: true
     placeholder: eg. A25G, OR A-25G (for promoter region)
   - name: partial deletion, nucleotide
-    export_type: nucleotide_mutation
+    export_type: partial_nucleotide_deletion
     show_description: true
     description_required: true
     allele_name_required: false
