@@ -1278,7 +1278,7 @@ allele_type_list:
     allow_expression_change: true
     expression_required: true
     placeholder: eg. K132A
-  - name: amino acid insertion and amino acid change
+  - name: amino acid insertion and substitution
     export_type: amino_acid_insertion_and_mutation
     show_description: true
     description_required: true
