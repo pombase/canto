@@ -1341,7 +1341,7 @@ allele_type_list:
     allow_expression_change: true
     expression_required: true
     allele_name_required: false
-    placeholder: 'e.g. AA123->stop, AA1299->amber'
+    placeholder: 'e.g. aa123->stop, aa1299->amber'
   - name: other
     export_type: other
     show_description: true
