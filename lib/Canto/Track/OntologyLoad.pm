@@ -370,14 +370,21 @@ sub load
       next;
     }
 
-      my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
-                                          term_name => $term_name,
-                                          ontologyid => $term->id(),
-                                          definition => $term->def()->{definition},
-                                          alt_ids => $term->alt_id(),
-                                          is_obsolete => $term->is_obsolete(),
-                                          is_relationshiptype =>
-                                            $term->is_relationshiptype());
+    my %args = (
+      cv_name => $cv_name,
+      term_name => $term_name,
+      ontologyid => $term->id(),
+      alt_ids => $term->alt_id(),
+      is_obsolete => $term->is_obsolete(),
+      is_relationshiptype =>
+        $term->is_relationshiptype(),
+    );
+
+    if ($term->def()) {
+      $args{definition} = $term->def()->{definition};
+    }
+
+    my $cvterm = $load_util->get_cvterm(%args);
 
     if ($term->is_relationshiptype()) {
       $relationship_cvterms{$term_name} = $cvterm;

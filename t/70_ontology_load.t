@@ -181,7 +181,7 @@ $test_util->load_test_ontologies($ontology_index, 1, 1);
 is(@loaded_cvterms, 152);
 
 ok((grep {
-  $_->name() eq 'viable elongated vegetative cell population'
+  $_->name() eq 'OBSOLETE FYPO:0002233 viable elongated vegetative cell population'
 } @loaded_cvterms), '"viable elongated vegetative cell population" missing');
 
 # test that non-obsolete term is indexed
