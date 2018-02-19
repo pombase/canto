@@ -373,7 +373,7 @@ sub load
       my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
                                           term_name => $term_name,
                                           ontologyid => $term->id(),
-                                          definition => $term->def(),
+                                          definition => $term->def()->{definition},
                                           alt_ids => $term->alt_id(),
                                           is_obsolete => $term->is_obsolete(),
                                           is_relationshiptype =>
