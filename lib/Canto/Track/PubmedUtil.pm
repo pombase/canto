@@ -421,6 +421,19 @@ sub load_by_query
 
   my @ids = @{$res_hash->{IdList}->{Id}};
 
+  my %db_ids = ();
+
+  map {
+    my $uniquename = $_->uniquename();
+    if ($uniquename =~ /^$PUBMED_PREFIX:(\d+)$/) {
+      $db_ids{$1} = 1;
+    }
+  } $schema->resultset('Pub')->search({}, { columns => ['uniquename'] })->all();
+
+  @ids = grep {
+    !$db_ids{$_};
+  } @ids;
+
   while (@ids) {
     my @process_ids = splice(@ids, 0, $max_batch_size);
 
