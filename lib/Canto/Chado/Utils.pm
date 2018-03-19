@@ -83,12 +83,17 @@ sub curation_response_rate
   my $dbh = $track_schema->storage()->dbh();
   my $query = <<"EOF";
 
-  SELECT count(distinct(curs_id))
-FROM curs
+  SELECT count(distinct(outer_curs.curs_id))
+FROM curs outer_curs
 JOIN curs_curator cc ON cc.curs = curs_id
 JOIN person p ON p.person_id = cc.curator
 JOIN cvterm ROLE ON p.ROLE = ROLE.cvterm_id
-WHERE ROLE.name = 'user' AND curs_id IN
+WHERE ROLE.name = 'user'
+  AND (curs_curator_id =
+         (SELECT max(curs_curator_id)
+          FROM curs_curator
+          WHERE curs = outer_curs.curs_id))
+  AND curs_id IN
     (SELECT curs
      FROM cursprop p, cvterm t
      WHERE t.cvterm_id = p.type
@@ -102,13 +107,17 @@ EOF
   my ($completed_community_session_count) = $sth->fetchrow_array();
 
   $query = <<"EOF";
-SELECT count(distinct(curs_id))
+SELECT count(distinct(outer_curs.curs_id))
 FROM cursprop cp
-JOIN curs ON curs.curs_id = cp.curs
+JOIN curs outer_curs ON outer_curs.curs_id = cp.curs
 JOIN curs_curator cc ON cc.curs = cp.curs
 JOIN person p ON p.person_id = cc.curator
 JOIN cvterm ROLE ON p.ROLE = ROLE.cvterm_id
-WHERE ROLE.name = 'user';
+WHERE ROLE.name = 'user'
+  AND (curs_curator_id =
+         (SELECT max(curs_curator_id)
+          FROM curs_curator
+          WHERE curs = outer_curs.curs_id));
 EOF
 
   $sth = $dbh->prepare($query);
