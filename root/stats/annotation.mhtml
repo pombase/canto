@@ -505,7 +505,7 @@ my @transposed_cumulative_annotation_types_by_year = ();
 map {
   my @row = @$_;
 
-  for (my $i = 0; $i < scalar(@row); $i++) {
+  for (my $i = 0; $i < scalar(@row) - 1; $i++) {
     push @{$transposed_cumulative_annotation_types_by_year[$i]}, $row[$i];
   }
 } @cumulative_annotation_types_by_year;
