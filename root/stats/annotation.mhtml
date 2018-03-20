@@ -101,12 +101,20 @@ $db_creation_datetime
         <th>
           Other
         </th>
+        <th style="font-weight: bold">
+          Total
+        </th>
       </tr>
     </thead>
 % for my $row (@cumulative_annotation_types_by_year) {
     <tr>
-%   for my $elem (@$row) {
+%   for (my $i = 0; $i < @$row; $i++) {
+%     my $elem = $row->[$i];
+%     if ($i + 1 == scalar(@$row)) {
+      <td style="font-weight: bold">
+%     } else {
       <td>
+%     }
         <% $elem %>
       </td>
 %   }
@@ -455,7 +463,7 @@ my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $current_year = $year + 1900;
 
 my @cumulative_annotation_types_by_year = ();
-my @cumulative_annotation_type_counts = (0,0,0,0,0,0,0);
+my @cumulative_annotation_type_counts = (0,0,0,0,0,0,0,0);
 
 for my $row (@annotation_types_by_year) {
   my $year = shift @$row;
@@ -486,6 +494,7 @@ for my $row (@annotation_types_by_year) {
   $cumulative_annotation_type_counts[4] += $genetic_interactions_count;
   $cumulative_annotation_type_counts[5] += $physical_interactions_count;
   $cumulative_annotation_type_counts[6] += $other_count;
+  $cumulative_annotation_type_counts[7] += $total;
 
   push @cumulative_annotation_types_by_year,
     [$year, @cumulative_annotation_type_counts];
