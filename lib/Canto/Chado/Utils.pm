@@ -239,7 +239,7 @@ sub curated_stats
 
   my %stats = ();
 
-  for my $curation_status ('uncurated', 'community', 'admin') {
+  for my $curation_status ('admin', 'community', 'uncurated') {
     my $where;
 
     if ($curation_status eq 'uncurated') {
@@ -282,8 +282,8 @@ EOF
   for (my $year = $first_year; $year <= $current_year; $year++) {
     my $year_stats = $stats{$year};
     if (defined $year_stats) {
-      push @rows, [$year, $year_stats->{uncurated} // 0,
-                   $year_stats->{admin} // 0, $year_stats->{community} //0];
+      push @rows, [$year, $year_stats->{admin} // 0, $year_stats->{community} //0,
+                   $year_stats->{uncurated} // 0];
     } else {
       push @rows, [$year, 0, 0, 0];
     }

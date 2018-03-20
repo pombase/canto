@@ -299,7 +299,7 @@ annotations contributed by authors.
 </div>
 <div>
   <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData"
-                 chart-series="Uncurated|Admin curated|Community curated">
+                 chart-series="Admin curated|Community curated|Uncurated">
   </stacked-graph>
 </div>
 </div>
@@ -511,6 +511,7 @@ map {
 } @cumulative_annotation_types_by_year;
 
 my $cumulative_annotation_type_counts_js = Data::JavaScript::Anon->anon_dump(\@transposed_cumulative_annotation_types_by_year);
+
 
 my @transposed_curated_stats = ();
 
