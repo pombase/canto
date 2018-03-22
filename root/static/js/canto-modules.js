@@ -5207,7 +5207,25 @@ var stackedGraph =
         controller: function ($scope) {
           $scope.type = 'StackedBar';
           $scope.series = $scope.chartSeries.split('|');
+
+
+          var afterBodyCallback = function(items, data) {
+            var total = 0;
+            $.map(items, function(el) {
+              var i = parseInt(el['yLabel']);
+              if (!isNaN(i)) {
+                total += i;
+              }
+            });
+            return 'Total: ' + total;
+          }
+
           $scope.options = {
+            tooltips: {
+              callbacks: {
+                afterBody: afterBodyCallback
+              }
+            },
             legend: { display: true },
             scales: {
               xAxes: [{
