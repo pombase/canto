@@ -5217,7 +5217,7 @@ var stackedGraph =
                 total += i;
               }
             });
-            return 'Total: ' + total;
+            return ['', 'Total: ' + total];
           }
 
           $scope.options = {
