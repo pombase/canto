@@ -348,12 +348,11 @@ This table shows the number of first time community curators per year.
     per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
     experiments and use the same criteria for all years
 </div>
-<div class="ng-cloak" ng-if="!isVisible('annotations+genes-per-publication-in-5-year-intervals')">
+<div class="ng-cloak col-sm-6 col-md-6" ng-if="!isVisible('annotations+genes-per-publication-in-5-year-intervals')">
   <a href="#" ng-click="show($event, 'annotations+genes-per-publication-in-5-year-intervals')">View data table ...</a>
 </div>
-<div ng-if="isVisible('annotations+genes-per-publication-in-5-year-intervals')">
-
-<div class="col-sm-6 col-md-6">
+  <div ng-if="isVisible('annotations+genes-per-publication-in-5-year-intervals')"
+       class="col-sm-6 col-md-6">
   <table class="list">
     <thead>
       <tr>
@@ -390,8 +389,8 @@ This table shows the number of first time community curators per year.
   </table>
 </div>
 </div>
-</div>
-<div class="row">
+
+<div  style="margin-top: 1em" class="row">
   <script language="javascript" type="text/javascript">
     var perPub5YearStatsData = <% $per_pub_5_year_stats_js |n %>;
   </script>
@@ -449,7 +448,6 @@ This table shows the number of first time community curators per year.
   </table>
 </div>
   </div>
-</div>
 </div>
 </div>
 </div>
