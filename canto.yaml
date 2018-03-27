@@ -602,10 +602,10 @@ class_info:
           admin_only: 1
         - name: Sessions
           source:
-            sql: "select count(curs) from curs_curator cc1 where cc1.curator = person_id and curs_curator_id = (select max(curs_curator_id) from curs_curator cc2 where cc2.curator = person_id and cc2.curs = cc1.curs)"
+            sql: "select count(curs) from curs_curator cc1 where cc1.curator = person_id and curs_curator_id = (select max(curs_curator_id) from curs_curator cc2 where cc2.curs = cc1.curs)"
         - name: Approved sessions
           source:
-            sql: "select count(curs) from curs_curator cc1 where cc1.curator = person_id and curs_curator_id = (select max(curs_curator_id) from curs_curator cc2 where cc2.curator = person_id and cc2.curs = cc1.curs) and cc1.curs in (select curs_id from curs where curs_id in (select curs from cursprop p join cvterm t on p.type = t.cvterm_id where t.name = 'annotation_status' and p.value = 'APPROVED'))"
+            sql: "select count(curs) from curs_curator cc1 where cc1.curator = person_id and curs_curator_id = (select max(curs_curator_id) from curs_curator cc2 where cc2.curs = cc1.curs) and cc1.curs in (select curs_id from curs where curs_id in (select curs from cursprop p join cvterm t on p.type = t.cvterm_id where t.name = 'annotation_status' and p.value = 'APPROVED'))"
         - name: password
           editable: 1
           admin_only: 1
