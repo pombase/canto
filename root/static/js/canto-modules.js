@@ -139,6 +139,13 @@ function conditionsToStringHighlightNew(conditions) {
   }).join (", ");
 }
 
+function isSingleAlleleGenotype(genotype) {
+  return genotype.alleles.length === 1;
+}
+
+function isMultiAlleleGenotype(genotype) {
+  return !isSingleAlleleGenotype(genotype);
+}
 
 canto.filter('breakExtensions', function() {
   return function(text) {
@@ -3308,11 +3315,29 @@ var GenotypeManageCtrl =
 
     $scope.data = {
       genotypes: [],
+      singleAlleleGenotypes: [],
+      multiAlleleGenotypes: [],
       waitingForServer: true,
       selectedGenotypeId: null,
       editingGenotype: false,
       editGenotypeId: null,
+      genes: [],
     };
+
+    $scope.getGenesFromServer = function() {
+      Curs.list('gene').success(function(results) {
+        $scope.data.genes = results;
+
+        $.map($scope.data.genes,
+              function(gene) {
+                gene.display_name = gene.primary_name || gene.primary_identifier;
+              });
+      }).error(function() {
+        toaster.pop('error', 'failed to get gene list from server');
+      });
+    };
+
+    $scope.getGenesFromServer();
 
     function hashChangedHandler() {
       var path = $location.path();
@@ -3359,6 +3384,8 @@ var GenotypeManageCtrl =
     $scope.readGenotypes = function() {
       CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
         $scope.data.genotypes = results;
+        $scope.data.singleAlleleGenotypes = $.grep(results, isSingleAlleleGenotype);
+        $scope.data.multiAlleleGenotypes = $.grep(results, isMultiAlleleGenotype);
         $scope.data.waitingForServer = false;
       }).catch(function() {
         toaster.pop('error', "couldn't read the genotype list from the server");

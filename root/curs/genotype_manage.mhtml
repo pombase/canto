@@ -13,9 +13,6 @@ $read_only_curs => 0
     <div class="curs-top-help">
 Add, view and edit genotypes
     </div>
-        <div class="feature-list-action">
-          <a class="btn btn-primary" ng-click="addGenotype()" href="#">Add a genotype ...</a>
-        </div>
     </div>
     <div ng-if="data.editingGenotype" class="col-sm-12 col-md-12">
       <div class="curs-box">
@@ -37,19 +34,57 @@ Specify alleles of genes from the list, until the new genotype is complete
   </div>
 % }
   <div ng-if="!data.editingGenotype" class="ng-cloak row">
-    <div class="col-sm-12 col-md-12">
+    <div class="col-sm-5 col-md-5">
+      <div ng-hide="data.genes.length != 0">
+        <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+        Loading genes ...
+      </div>
+      <div class="curs-genotype-edit-gene-list" ng-show="data.genes.length">
+        <table class="list">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Identifier</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="gene in data.genes">
+              <td>{{gene.primary_name}}</td>
+              <td>{{gene.primary_identifier}}</td>
+              <td>
+                <button class="btn btn-primary btn-xs"
+                        ng-click="openAlleleEditDialog({gene: gene})">Add allele ..</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-sm-7 col-md-7">
       <div class="ng-cloak">
         <div ng-show="data.waitingForServer">
           <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
         </div>
 
         <div ng-hide="data.waitingForServer">
-        <div ng-if="data.genotypes.length != 0">
+        <div ng-if="data.singleAlleleGenotypes.length != 0">
           <div class="curs-genotype-list-instructions">
-Mouse over genotypes for more actions
+            <div>Single allele genotypes</div>
+            (Mouse over genotypes for more actions)
           </div>
 
-          <genotype-list-view genotype-list="data.genotypes"
+          <genotype-list-view genotype-list="data.singleAlleleGenotypes"
+                              navigate-on-click="false"
+                              selected-genotype-id="data.selectedGenotypeId">
+          </genotype-list-view>
+        </div>
+        <div ng-if="data.multiAlleleGenotypes.length != 0">
+          <div class="curs-genotype-list-instructions">
+            <div>Multi allele genotypes</div>
+          </div>
+
+          <genotype-list-view genotype-list="data.multiAlleleGenotypes"
                               navigate-on-click="false"
                               selected-genotype-id="data.selectedGenotypeId">
           </genotype-list-view>

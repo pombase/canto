@@ -680,6 +680,10 @@ div.clearall {
   margin-bottom: 10px;
 }
 
+.curs-genotype-list-instructions div {
+  font-weight: bold;
+}
+
 .curs-genotype-edit-gene-list, .curs-genotype-edit-allele-list {
   margin-top: 20px;
 }
