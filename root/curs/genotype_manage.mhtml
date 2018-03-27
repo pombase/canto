@@ -45,7 +45,8 @@ Specify alleles of genes from the list, until the new genotype is complete
             <tr>
               <th>Name</th>
               <th>Identifier</th>
-              <th>&nbsp;</th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -54,7 +55,12 @@ Specify alleles of genes from the list, until the new genotype is complete
               <td>{{gene.primary_identifier}}</td>
               <td>
                 <button class="btn btn-primary btn-xs"
-                        ng-click="openAlleleEditDialog({gene: gene})">Add allele ..</button>
+                        ng-click="openAlleleEditDialog({gene:
+                        gene})">Deletion ...</button>
+              </td>
+              <td>
+                <button class="btn btn-primary btn-xs"
+                        ng-click="openAlleleEditDialog({gene: gene})">Other allele ...</button>
               </td>
             </tr>
           </tbody>
