@@ -3308,10 +3308,12 @@ canto.controller('GenotypeViewCtrl',
 
 
 var GenotypeManageCtrl =
-  function($scope, $location, Curs, CursGenotypeList, CantoGlobals, toaster) {
+  function($scope, $uibModal, $location, $http, Curs, CursGenotypeList, CantoGlobals, toaster) {
     $scope.app_static_path = CantoGlobals.app_static_path;
     $scope.read_only_curs = CantoGlobals.read_only_curs;
     $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+
+    $scope.hasDeletionHash = {};
 
     $scope.data = {
       genotypes: [],
@@ -3361,6 +3363,56 @@ var GenotypeManageCtrl =
     window.addEventListener('load', hashChangedHandler);
     window.addEventListener('hashchange', hashChangedHandler);
 
+    $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {
+      var editInstance = makeAlleleEditInstance($uibModal,
+                                                {
+                                                  gene_display_name: gene_display_name,
+                                                  gene_systematic_id: gene_systematic_id,
+                                                  gene_id: gene_id,
+                                                });
+
+      editInstance.result.then(function (alleleData) {
+        var storePromise =
+          storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], true);
+
+        storePromise.then(function(result) {
+          $scope.readGenotypes();
+          window.location.href =
+            CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+        });
+      });
+    };
+
+    $scope.makeDeletionAllele = function(gene_id) {
+      var gene = ($.grep($scope.data.genes, function(gene) { return gene.gene_id == gene_id; }))[0];
+      var displayName = gene.primary_name || gene.primary_identifier;
+
+      for (var i = 0; i < $scope.data.singleAlleleGenotypes.length; i++) {
+        var genotype = $scope.data.singleAlleleGenotypes[i];
+        console.log(genotype);
+      }
+
+      var deletionAllele = {
+        description: "",
+        expression: "",
+        gene_display_name: displayName,
+        gene_id: gene_id,
+        gene_systematic_id: gene.primary_identifier,
+        name: displayName + "delta",
+        primary_identifier: "",
+        type: "deletion",
+      };
+
+      var storePromise =
+        storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele], true);
+
+      storePromise.then(function(result) {
+        $scope.readGenotypes();
+        window.location.href =
+          CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+      });
+    }
+
     $scope.addGenotype = function() {
       $scope.data.editingGenotype = true;
       $scope.data.selectedGenotypeId = null;
@@ -3381,10 +3433,26 @@ var GenotypeManageCtrl =
       $scope.readGenotypes();
     };
 
+    $scope.hasDeletionGenotype = function(gene_id) {
+      return !!$scope.hasDeletionHash[gene_id];
+    }
+
+    $scope.makeHasDeletionHash = function() {
+      $scope.hasDeletionHash = {};
+      $.map($scope.data.singleAlleleGenotypes,
+            function(genotype) {
+              var allele = genotype.alleles[0];
+              if (allele.type === 'deletion') {
+                $scope.hasDeletionHash[allele.gene_id] = true;
+              }
+            });
+    }
+
     $scope.readGenotypes = function() {
       CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
         $scope.data.genotypes = results;
         $scope.data.singleAlleleGenotypes = $.grep(results, isSingleAlleleGenotype);
+        $scope.hasDeletion = $scope.makeHasDeletionHash();
         $scope.data.multiAlleleGenotypes = $.grep(results, isMultiAlleleGenotype);
         $scope.data.waitingForServer = false;
       }).catch(function() {
@@ -3402,7 +3470,7 @@ var GenotypeManageCtrl =
   };
 
 canto.controller('GenotypeManageCtrl',
-                 ['$scope', '$location', 'Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster',
+                 ['$scope', '$uibModal', '$location', '$http', 'Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster',
                  GenotypeManageCtrl]);
 
 var geneSelectorCtrl =

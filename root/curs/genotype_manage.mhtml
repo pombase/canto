@@ -54,12 +54,12 @@ Specify alleles of genes from the list, until the new genotype is complete
               <td ng-if="!gene.primary_name" title="{{gene.primary_identifier}}">{{gene.primary_identifier}}</td>
               <td>
                 <button class="btn btn-primary btn-xs"
-                        ng-click="openAlleleEditDialog({gene:
-                        gene})">Deletion ...</button>
+                        ng-disabled="false && hasDeletionGenotype(gene.gene_id)"
+                        ng-click="makeDeletionAllele(gene.gene_id)">Deletion</button>
               </td>
               <td>
                 <button class="btn btn-primary btn-xs"
-                        ng-click="openAlleleEditDialog({gene: gene})">Other allele ...</button>
+                        ng-click="singleAlleleQuick(gene.primary_name || gene.primary_identifier, gene.primary_identifier, gene.gene_id)">Other genotype ...</button>
               </td>
             </tr>
           </tbody>
