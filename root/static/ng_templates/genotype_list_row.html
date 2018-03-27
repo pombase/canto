@@ -10,12 +10,6 @@
   <td>
     <span>{{firstAllele.expression}}</span>
   </td>
-  <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.background">
-    <span ng-bind-html="genotype.background | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
-  </td>
-  <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.name">
-    <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
-  </td>
   <td rowspan="{{genotype.alleles.length}}">
     {{genotype.annotation_count}}
     <div ng-if="navigateOnClick == 'false'" class="table-row-actions"
