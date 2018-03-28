@@ -3450,6 +3450,14 @@ var GenotypeManageCtrl =
       return !!$scope.hasDeletionHash[gene_id];
     }
 
+    $scope.deletionButtonTitle = function(gene_id) {
+      if ($scope.hasDeletionHash[gene_id]) {
+        return 'A deletion genotype already exists for this gene';
+      } else {
+        return 'Add a deletion genotype for this gene';
+      }
+    }
+
     $scope.makeHasDeletionHash = function() {
       $scope.hasDeletionHash = {};
       $.map($scope.data.singleAlleleGenotypes,

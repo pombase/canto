@@ -54,6 +54,7 @@ Specify alleles of genes from the list, until the new genotype is complete
               <td ng-if="!gene.primary_name" title="{{gene.primary_identifier}}">{{gene.primary_identifier}}</td>
               <td>
                 <button class="btn btn-primary btn-xs"
+                        title="{{deletionButtonTitle(gene.gene_id)}}"
                         ng-disabled="hasDeletionGenotype(gene.gene_id)"
                         ng-click="makeDeletionAllele(gene.gene_id)">Deletion</button>
               </td>
