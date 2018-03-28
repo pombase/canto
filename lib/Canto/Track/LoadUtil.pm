@@ -602,8 +602,6 @@ sub get_lab
 =cut
 sub get_person
 {
-  warn "@_";
-
   my $self = shift;
   my $name = shift;
   my $email_address = shift;
