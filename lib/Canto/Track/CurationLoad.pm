@@ -85,6 +85,8 @@ sub _fix_lab
   }
 }
 
+my $suffix = "0001";
+
 sub _process_row
 {
   my $self = shift;
@@ -101,14 +103,17 @@ sub _process_row
   my $pub = $self->load_util()->get_pub($uniquename, 'admin_load');
   my $lab_head = $self->load_util()->get_person($lab_head_name, $lab_head_email,
                                                 $user_cvterm, $lab_head_email,
-                                                "0000-0000-0001-0001");
+                                                "0000-0000-0001-$suffix");
   my $lab = $self->load_util()->get_lab($lab_head);
   my $submitter = undef;
+
+  $suffix++;
 
   if ($submitter_email) {
     $submitter = $self->load_util()->get_person($submitter_name, $submitter_email,
                                                 $user_cvterm, $submitter_email,
-                                                "0000-0000-0002-0002");
+                                                "0000-0000-0001-$suffix");
+    $suffix++;
   }
 
   if (!defined ($submitter)) {
