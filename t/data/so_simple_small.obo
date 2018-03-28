@@ -200,7 +200,7 @@ is_a: SO:0001411 ! biological_region
 [Typedef]
 id: part_of
 name: part_of
-def: "X part_of Y if X is a subregion of Y." [http://precedings.nature.com/documents/3495/version/1]
+def: "X part_of Y if X is a subregion of Y." [PubMed:18688235]
 comment: Example: amino_acid part_of polypeptide.
 subset: SOFA
 is_transitive: true
