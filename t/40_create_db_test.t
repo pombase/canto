@@ -14,4 +14,4 @@ my $schema = $test_util->track_schema();
 # make sure the database has something in it
 my $person_count = $schema->resultset('Person')->count();
 
-ok($person_count > 10);
+is($person_count, 5);
