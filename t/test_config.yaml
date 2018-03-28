@@ -116,7 +116,7 @@ test_config:
                - primary_identifier: 'SPAC27D7.13c:aaaa0007-2'
                  name: ssm4KE
                  description: G40A,K43E
-                 type: 'mutation of single amino acid residue'
+                 type: 'amino acid substitution(s)'
                - primary_identifier: 'SPAC27D7.13c:aaaa0007-3'
                  name: ssm4-D4
                  description: 'del_100-200'

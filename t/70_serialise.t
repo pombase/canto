@@ -309,130 +309,151 @@ $small_expected_curation_session->{publications}->{'PMID:19756689'} = {};
 
 my %expected_people = (
   'dom@genetics.med.harvard.edu' => {
+    'password' => sha1_base64('dom@genetics.med.harvard.edu'),
     'lab' => 'Winston Lab',
     'name' => 'Dom Helmlinger',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'Pascale.Beauregard@umontreal.ca' => {
+    'password' => sha1_base64('Pascale.Beauregard@umontreal.ca'),
     'lab' => 'Rokeach Lab',
     'name' => 'Pascale Beauregard',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'peter.espenshade@jhmi.edu' => {
+    'password' => sha1_base64('peter.espenshade@jhmi.edu'),
     'lab' => 'Espenshade Lab',
     'name' => 'Peter Espenshade',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'kevin.hardwick@ed.ac.uk' => {
+    'password' => sha1_base64('kevin.hardwick@ed.ac.uk'),
     'lab' => 'Hardwick Lab',
     'name' => 'Kevin Hardwick',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'hoffmacs@bc.edu' => {
+    'password' => sha1_base64('hoffmacs@bc.edu'),
     'lab' => 'Hoffman Lab',
     'name' => 'Charles Hoffman',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'fred.winston@genetics.med.harvard.edu' => {
+    'password' => sha1_base64('fred.winston@genetics.med.harvard.edu'),
     'lab' => 'Winston Lab',
     'name' => 'Fred Winston',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'h.yamano@mcri.ac.uk' => {
+    'password' => sha1_base64('h.yamano@mcri.ac.uk'),
     'lab' => 'Yamano Lab',
     'name' => 'Hiro Yamano',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'test.user@pombase.org' => {
+    'password' => sha1_base64('test.user@pombase.org'),
     'lab' => 'User Lab',
     'name' => 'Test User',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'Mary.Porter-Goff@umassmed.edu' => {
+    'password' => sha1_base64('Mary.Porter-Goff@umassmed.edu'),
     'lab' => 'Rhind Lab',
     'name' => 'Mary Porter-Goff',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'some.testperson@pombase.org' => {
+    'password' => sha1_base64('some.testperson@pombase.org'),
     'lab' => 'Testperson Lab',
     'name' => 'Some Testperson',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'val@sanger.ac.uk' => {
+    'password' => sha1_base64('val@sanger.ac.uk'),
     'lab' => undef,
     'name' => 'Val Wood',
-    'role' => 'admin',
-    'orcid' => '0000-0000-0000-123X',
+    'orcid' => undef,
+    'role' => 'admin'
   },
   'mah79@cam.ac.uk' => {
+    'password' => sha1_base64('mah79@cam.ac.uk'),
     'lab' => undef,
     'name' => 'Midori Harris',
-    'role' => 'admin',
     'orcid' => undef,
+    'role' => 'admin'
   },
   'other.tester@pombase.org' => {
+    'password' => sha1_base64('other.tester@pombase.org'),
     'lab' => 'Tester Lab',
     'name' => 'Other Tester',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'iwasaki@tsurumi.yokohama-cu.ac.jp' => {
+    'password' => sha1_base64('iwasaki@tsurumi.yokohama-cu.ac.jp'),
     'lab' => '岩崎ひろし Lab',
     'name' => '岩崎ひろし',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'Nicholas.Willis@umassmed.edu' => {
+    'password' => sha1_base64('Nicholas.Willis@umassmed.edu'),
     'lab' => 'Rhind Lab',
     'name' => 'Nicholas Willis',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'stuart.macneill@st-andrews.ac.uk' => {
+    'password' => sha1_base64('stuart.macneill@st-andrews.ac.uk'),
     'lab' => 'Macneill Lab',
     'name' => 'Stuart Macneill',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'nick.rhind@umassmed.edu' => {
+    'password' => sha1_base64('nick.rhind@umassmed.edu'),
     'lab' => 'Rhind Lab',
     'name' => 'Nick Rhind',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'Luis.Rokeach@umontreal.ca' => {
+    'password' => sha1_base64('Luis.Rokeach@umontreal.ca'),
     'lab' => 'Rokeach Lab',
     'name' => 'Luis Rokeach',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'wahlswaynep@uams.edu' => {
+    'password' => sha1_base64('wahlswaynep@uams.edu'),
     'lab' => 'Wahls Lab',
     'name' => 'Wayne Wahls',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'John.Burg@jhmi.edu' => {
+    'password' => sha1_base64('John.Burg@jhmi.edu'),
     'lab' => 'Espenshade Lab',
     'name' => 'John Burg',
-    'role' => 'user',
     'orcid' => undef,
+    'role' => 'user'
   },
   'a.nilsson@warwick.ac.uk' => {
+    'password' => sha1_base64('a.nilsson@warwick.ac.uk'),
     'lab' => undef,
     'name' => 'Antonia Nilsson',
-    'role' => 'admin',
     'orcid' => undef,
+    'role' => 'admin',
   },
 );
 

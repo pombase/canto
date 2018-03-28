@@ -27,6 +27,9 @@
             <li>
               <a href="<% $c->uri_for('/view/list/dbxref', { model => 'chado'}) %>">Database cross references</a>
             </li>
+            <li>
+              <a href="<% $c->uri_for('/view/list/chadoprop', { model => 'chado'}) %>">Chado DB properties</a>
+            </li>
           </ul>
         </div>
       </div>

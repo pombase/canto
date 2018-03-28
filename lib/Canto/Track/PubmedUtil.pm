@@ -64,7 +64,7 @@ sub _get_url
 
   if ($res->is_success) {
     if ($res->content()) {
-      return $res->content();
+      return $res->decoded_content();
     } else {
       die "query returned no content: $url";
     }
@@ -123,6 +123,12 @@ sub get_pubmed_ids_by_query
 
 our $PUBMED_PREFIX = "PMID";
 
+sub _remove_tag {
+  my $text = shift;
+  $text =~ s/<[^>]+>/ /g;
+  return $text;
+}
+
 =head2 load_pubmed_xml
 
  Usage   : my $count = Canto::Track::PubmedUtil::load_pubmed_xml($schema, $xml);
@@ -135,6 +141,7 @@ our $PUBMED_PREFIX = "PMID";
  Returns : the count of number of publications loaded
 
 =cut
+
 sub load_pubmed_xml
 {
   my $schema = shift;
@@ -143,6 +150,13 @@ sub load_pubmed_xml
 
   if (!defined $load_type) {
     croak("no load_type passed to load_pubmed_xml()");
+  }
+
+  # Awful hack to remove italics and other tags in titles and abstracts.
+  # This prevents parsing problems, see:
+  # https://github.com/pombase/pombase-chado/issues/663
+  for my $tag_name ('ArticleTitle', 'AbstractText') {
+    $content =~ s|<$tag_name>(.+?)</$tag_name>|"<$tag_name>" . _remove_tag($1) . "</$tag_name>"|egs;
   }
 
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
@@ -406,6 +420,19 @@ sub load_by_query
   }
 
   my @ids = @{$res_hash->{IdList}->{Id}};
+
+  my %db_ids = ();
+
+  map {
+    my $uniquename = $_->uniquename();
+    if ($uniquename =~ /^$PUBMED_PREFIX:(\d+)$/) {
+      $db_ids{$1} = 1;
+    }
+  } $schema->resultset('Pub')->search({}, { columns => ['uniquename'] })->all();
+
+  @ids = grep {
+    !$db_ids{$_};
+  } @ids;
 
   while (@ids) {
     my @process_ids = splice(@ids, 0, $max_batch_size);

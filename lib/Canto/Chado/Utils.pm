@@ -74,6 +74,112 @@ CREATE INDEX pub_dates_uniquename_index ON pub_dates(uniquename);
 EOF
 }
 
+# returns the number of completed (but not necessarily approved) sessions and the number of
+# sessions with a community curator
+sub curation_response_rate
+{
+  my $track_schema = shift;
+
+  my $dbh = $track_schema->storage()->dbh();
+  my $query = <<"EOF";
+
+  SELECT count(distinct(outer_curs.curs_id))
+FROM curs outer_curs
+JOIN curs_curator cc ON cc.curs = curs_id
+JOIN person p ON p.person_id = cc.curator
+JOIN cvterm ROLE ON p.ROLE = ROLE.cvterm_id
+WHERE ROLE.name = 'user'
+  AND (curs_curator_id =
+         (SELECT max(curs_curator_id)
+          FROM curs_curator
+          WHERE curs = outer_curs.curs_id))
+  AND curs_id IN
+    (SELECT curs
+     FROM cursprop p, cvterm t
+     WHERE t.cvterm_id = p.type
+       AND t.name = 'annotation_status'
+       AND (p.value = 'NEEDS_APPROVAL' OR p.value = 'APPROVAL_IN_PROGRESS' OR p.value = 'APPROVED'));
+EOF
+
+  my $sth = $dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+  my ($completed_community_session_count) = $sth->fetchrow_array();
+
+  $query = <<"EOF";
+SELECT count(distinct(outer_curs.curs_id))
+FROM cursprop cp
+JOIN curs outer_curs ON outer_curs.curs_id = cp.curs
+JOIN curs_curator cc ON cc.curs = cp.curs
+JOIN person p ON p.person_id = cc.curator
+JOIN cvterm ROLE ON p.ROLE = ROLE.cvterm_id
+WHERE ROLE.name = 'user'
+  AND (curs_curator_id =
+         (SELECT max(curs_curator_id)
+          FROM curs_curator
+          WHERE curs = outer_curs.curs_id));
+EOF
+
+  $sth = $dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+  my ($total_community_session_count) = $sth->fetchrow_array();
+
+  return ($completed_community_session_count, $total_community_session_count);
+}
+
+sub new_curators_per_year
+{
+  my $chado_schema = shift;
+
+  my $chado_dbh = $chado_schema->storage()->dbh();
+
+  my %stats = ();
+
+  my $query = <<'EOF';
+WITH pub_curator_roles AS
+  (SELECT uniquename,
+     (SELECT value
+      FROM pubprop
+      JOIN cvterm ppt ON ppt.cvterm_id = pubprop.type_id
+      WHERE pubprop.pub_id = pub.pub_id
+        AND ppt.name = 'canto_curator_role') AS ROLE,
+
+     (SELECT value
+      FROM pubprop
+      JOIN cvterm ppt ON ppt.cvterm_id = pubprop.type_id
+      WHERE pubprop.pub_id = pub.pub_id
+        AND ppt.name = 'canto_curator_email') AS curator,
+          extract(YEAR
+                  FROM
+                    (SELECT value
+                     FROM pubprop
+                     JOIN cvterm ppt ON ppt.cvterm_id = pubprop.type_id
+                     WHERE pubprop.pub_id = pub.pub_id
+                       AND ppt.name = 'canto_session_submitted_date')::TIMESTAMP) AS approved_year
+   FROM pub),
+   curator_first_year AS
+  (SELECT DISTINCT curator, min(approved_year) AS first_year
+   FROM pub_curator_roles
+   WHERE ROLE = 'community' AND approved_year IS NOT NULL
+   GROUP BY curator)
+SELECT count(curator), first_year
+FROM curator_first_year
+GROUP BY first_year
+ORDER BY first_year;
+EOF
+  my $sth = $chado_dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+  my @rows = ();
+
+  while (my ($year, $count) = $sth->fetchrow_array()) {
+    push @rows, [$year, $count];
+  }
+
+  return @rows;
+}
+
 sub annotation_types_by_year
 {
   my $chado_schema = shift;
@@ -133,7 +239,7 @@ sub curated_stats
 
   my %stats = ();
 
-  for my $curation_status ('uncurated', 'community', 'admin') {
+  for my $curation_status ('admin', 'community', 'uncurated') {
     my $where;
 
     if ($curation_status eq 'uncurated') {
@@ -176,8 +282,8 @@ EOF
   for (my $year = $first_year; $year <= $current_year; $year++) {
     my $year_stats = $stats{$year};
     if (defined $year_stats) {
-      push @rows, [$year, $year_stats->{uncurated} // 0,
-                   $year_stats->{admin} // 0, $year_stats->{community} //0];
+      push @rows, [$year, $year_stats->{admin} // 0, $year_stats->{community} //0,
+                   $year_stats->{uncurated} // 0];
     } else {
       push @rows, [$year, 0, 0, 0];
     }

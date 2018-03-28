@@ -43,7 +43,7 @@
         </tr>
 
         <tr class="curs-allele-type-description ng-cloak"
-            ng-show="!!alleleData.type && current_type_config.description_required">
+            ng-show="!!alleleData.type && current_type_config.show_description">
           <td>
             Allele description
           </td>
@@ -115,7 +115,7 @@
               <input ng-model="alleleData.expression" name="curs-allele-expression"
                      type="radio" value="Overexpression" />
             </div>
-            <div ng-show="alleleData.type !== 'wild type' || config.endogenousWildtypeAllowed">
+            <div>
               <label>Wild type product level</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression"
                      type="radio" value="Wild type product level" />
@@ -125,7 +125,7 @@
               <input ng-model="alleleData.expression" name="curs-allele-expression"
                      type="radio" value="Knockdown" />
             </div>
-            <div ng-show="alleleData.type !== 'wild type'">
+            <div ng-show="alleleData.type">
               <label>Null</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression"
                      type="radio" value="Null" />

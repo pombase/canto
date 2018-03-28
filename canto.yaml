@@ -23,9 +23,9 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v1123
+app_version: v1190
 
-schema_version: 14
+schema_version: 16
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## all gene lookups with match genes from any organism (and will return the
@@ -354,6 +354,26 @@ db_initial_data:
               accession: structure
               db:
                 name: Canto
+          - name: Retracted
+            dbxref:
+              accession: retracted
+              db:
+                name: Canto
+          - name: Modelling
+            dbxref:
+              accession: modelling
+              db:
+                name: Canto
+          - name: Biotech
+            dbxref:
+              accession: biotech
+              db:
+                name: Canto
+          - name: Database
+            dbxref:
+              accession: database
+              db:
+                name: Canto
           - name: Other
             definition: >
                 Triage status for a publication that will not be curated for
@@ -586,9 +606,15 @@ class_info:
           values_constraint: 'where me.cv_id = (SELECT cv_id FROM cv where cv.name = "Canto user types")'
           editable: 1
           admin_only: 1
-        - name: Number of sessions
+        - name: Sessions
           source:
-            sql: "select count(curs) from curs_curator cc1 where cc1.curator = person_id and curs_curator_id = (select max(curs_curator_id) from curs_curator cc2 where cc2.curator = person_id and cc2.curs = cc1.curs)"
+            sql: "select count(curs) from curs_curator cc1 where cc1.curator = person_id and curs_curator_id = (select max(curs_curator_id) from curs_curator cc2 where cc2.curs = cc1.curs)"
+        - name: Approved sessions
+          source:
+            sql: "select count(curs) from curs_curator cc1 where cc1.curator = person_id and curs_curator_id = (select max(curs_curator_id) from curs_curator cc2 where cc2.curs = cc1.curs) and cc1.curs in (select curs_id from curs where curs_id in (select curs from cursprop p join cvterm t on p.type = t.cvterm_id where t.name = 'annotation_status' and p.value = 'APPROVED'))"
+        - name: password
+          editable: 1
+          admin_only: 1
     lab:
       editable: 1
       display_field: name
@@ -831,7 +857,7 @@ class_info:
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS' or p.value ='APPROVED')))"
     community_curated_publications:
       extends: pub
-      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and pub_id in (select pub from curs_curator cc join curs on curs_id = cc.curs join person on person.person_id = cc.curator join cvterm role on person.role = role.cvterm_id and role.name <> 'admin') and pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS' or p.value ='APPROVED')))"
+      constraint: "pub_id in (select pub from curs_curator cc join curs on curs_id = cc.curs join person on person.person_id = cc.curator join cvterm role on person.role = role.cvterm_id and role.name <> 'admin') and pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS' or p.value ='APPROVED')))"
     curatable_low_priority_publications:
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable, low priority')"
@@ -887,6 +913,22 @@ class_info:
       class_display_name: Phylogeny and evolutionary studies
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Phylogeny and evolutionary studies')"
+    triage_retracted_publications:
+      class_display_name: Retracted
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Retracted')"
+    triage_modelling_publications:
+      class_display_name: Modelling
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Modelling')"
+    triage_biotech_publications:
+      class_display_name: Biotech
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Biotech')"
+    triage_database_publications:
+      class_display_name: Database
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Database')"
     triage_loaded_in_error_publications:
       class_display_name: Loaded in error
       extends: pub
@@ -916,7 +958,7 @@ class_info:
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')))"
     publications_with_approved_session:
       extends: pub
-      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
+      constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'APPROVED'))"
     curatable_publications_with_no_annotatable_genes:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_genes_count' and p.value = 0)) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -926,6 +968,9 @@ class_info:
     sessions_needing_approval:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS'))"
+    sessions_without_a_curator:
+      extends: curs
+      constraint: "me.curs_id not in (select curs from curs_curator)"
     sessions_with_term_requests:
       extends: curs
       constraint: "me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'CURATION_IN_PROGRESS' or p.value = 'CURATION_PAUSED' or p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS')) and me.curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'session_term_suggestions_count' and value > 0)"
@@ -938,6 +983,16 @@ class_info:
     all_sessions:
       extends: curs
   chado:
+    chadoprop:
+      class_display_name: chado properties
+      editable: 0
+      display_field: value
+      field_info_list:
+        - name: type
+          source: type_id
+          referenced_class: Cvterm
+        - name: value
+          editable: 0
     cv:
       class_display_name: controlled vocabulary
       editable: 1
@@ -1111,6 +1166,10 @@ reports:
                 - report: triage_not_physically_mapped_publications
                 - report: triage_cell_composition_or_wt_feature_publications
                 - report: triage_phylogeny_paper_publications
+                - report: triage_retracted_publications
+                - report: triage_modelling_publications
+                - report: triage_biotech_publications
+                - report: triage_database_publications
                 - report: triage_loaded_in_error_publications
                 - report: triage_other_publications
             - report: curated_publications
@@ -1122,6 +1181,7 @@ reports:
         - report: approved_sessions
         - report: sessions_with_term_requests
         - report: reactivated_sessions
+        - report: sessions_without_a_curator
 #        - report: sessions_needing_approval
 #    - report: named_genes
   chado:
@@ -1176,10 +1236,12 @@ implementation_classes:
   status_adaptor: Canto::Track::StatusStorage
   person_adaptor: Canto::Track::PersonLookup
   pubs_adaptor: Canto::Track::PubsLookup
+  strain_adaptor: Canto::Track::StrainLookup
 
 allele_type_list:
   - name: wild type
     export_type: wild_type
+    show_description: false
     description_required: false
     allele_name_required: true
     allow_expression_change: true
@@ -1187,6 +1249,7 @@ allele_type_list:
     autopopulate_name: '@@gene_display_name@@+'
   - name: deletion
     export_type: deletion
+    show_description: false
     description_required: false
     allele_name_required: true
     allow_expression_change: false
@@ -1194,78 +1257,100 @@ allele_type_list:
   - name: disruption
     name_hint: "e.g. pom1::ura4+"
     export_type: disruption
+    show_description: true
     description_required: false
     allele_name_required: true
     allow_expression_change: true
   - name: unknown
     export_type: unknown
+    show_description: false
     description_required: false
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
-  - name: mutation of single amino acid residue
+  - name: amino acid insertion
+    export_type: amino_acid_insertion
+    show_description: true
+    description_required: true
+    allele_name_required: false
+    allow_expression_change: true
+    expression_required: true
+    placeholder: e.g. 858-MKGYP
+  - name: "amino acid substitution(s)"
     export_type: amino_acid_mutation
-    # all multi and single mutations map to "amino_acid_mutation" in Chado so
-    # we use this to undo that mapping - if the RE matches the description
-    # from Chado then we use this allele type
-    export_type_reverse_map_re: "^[^,]+$"
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
     placeholder: eg. K132A
-  - name: mutation of multiple amino acid residues
-    export_type: amino_acid_mutation
-    # all multi and single mutations map to "amino_acid_mutation" in Chado so
-    # we use this to undo that mapping - if the RE matches the description
-    # from Chado then we use this allele type
-    export_type_reverse_map_re: ","
+  - name: amino acid insertion and substitution
+    export_type: amino_acid_insertion_and_mutation
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: eg. K132A,K144A
+    placeholder: e.g. 858-MKGYP,F124D
+  - name: amino acid insertion and deletion
+    export_type: amino_acid_insertion_and_deletion
+    show_description: true
+    description_required: true
+    allele_name_required: false
+    allow_expression_change: true
+    expression_required: true
+    placeholder: e.g. 858-MKGYP,100-200
+  - name: partial deletion and amino acid change
+    export_type: amino_acid_deletion_and_mutation
+    show_description: true
+    description_required: true
+    allele_name_required: false
+    allow_expression_change: true
+    expression_required: true
+    placeholder: e.g. 100-200,F124D
   - name: partial deletion, amino acid
     export_type: partial_amino_acid_deletion
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
     placeholder: "Please specify deleted residues - eg. 100-200 OR 10-20,40-50"
-  - name: partial deletion, nucleotide
-    export_type: partial_nucleotide_deletion
+  - name: nucleotide insertion
+    export_type: nucleotide_insertion
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: "Please specify deleted residues - eg. 100-200 OR -20--30 (for promoter region)"
-  - name: mutation of a single nucleotide
+    placeholder: e.g. 132-AATTT
+  - name: "nucleotide substitution(s)"
     export_type: nucleotide_mutation
-    # see comment above:
-    export_type_reverse_map_re: "^[^,]+$"
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
     placeholder: eg. A25G, OR A-25G (for promoter region)
-  - name: mutation of multiple nucleotides
-    export_type: nucleotide_mutation
-    # see comment above:
-    export_type_reverse_map_re: ","
+  - name: partial deletion, nucleotide
+    export_type: partial_nucleotide_deletion
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: eg. A25G,T40G
+    placeholder: "Please specify deleted residues - eg. 100-200 OR -20--30 (for promoter region)"
   - name: nonsense mutation
     export_type: nonsense_mutation
+    show_description: true
     description_required: true
     allow_expression_change: true
     expression_required: true
     allele_name_required: false
-    placeholder: 'e.g. AA123->stop, AA1299->amber'
+    placeholder: 'e.g. aa123->stop, aa1299->amber'
   - name: other
     export_type: other
+    show_description: true
     description_required: true
     allele_name_required: false
     allow_expression_change: true

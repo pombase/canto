@@ -21,6 +21,8 @@ use warnings::register;
 
 package main;
 
+$SIG{INT} = sub { die "Caught SIGINT - exiting\n" };
+
 BEGIN {
   my $script_name = basename $0;
 

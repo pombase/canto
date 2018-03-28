@@ -190,7 +190,7 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                               ]
             },
             {
-              'exclude_subset_ids' => ['GO:0055085'],
+              'exclude_subset_ids' => ['is_a(GO:0055085)'],
               'domain' => 'GO:0006810',
               'role' => 'user',
               'allowed_relation' => 'localizes',
@@ -280,9 +280,9 @@ use JSON;
 my $config_for_json = $config_with_suffix->for_json('allele_types');
 
 my $description_required =
-  $config_for_json->{'mutation of a single nucleotide'}->{description_required};
+  $config_for_json->{'nucleotide substitution(s)'}->{description_required};
 my $allele_name_required =
-  $config_for_json->{'mutation of a single nucleotide'}->{allele_name_required};
+  $config_for_json->{'nucleotide substitution(s)'}->{allele_name_required};
 
 ok ($description_required);
 ok (!$allele_name_required);

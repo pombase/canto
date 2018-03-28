@@ -179,6 +179,7 @@ sub _get_pubs
       $pub_hash{authors} = $pub->authors();
       $pub_hash{publication_date} = $pub->publication_date();
       $pub_hash{citation} = $pub->citation();
+      $pub_hash{added_date} = $pub->added_date();
     }
     $ret{$pub->uniquename()} = { %pub_hash };
   }
@@ -197,6 +198,7 @@ sub _get_people
     $ret{$person->email_address()} = {
       name => $person->name(),
       role => $person->role()->name(),
+      orcid => $person->orcid(),
       lab => defined $person->lab() ? $person->lab()->name() : undef,
       orcid => $person->orcid(),
     };

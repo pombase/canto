@@ -65,7 +65,7 @@ test_psgi $app, sub {
               # new allele
               name => "ssm4-h1",
               description => "K10G",
-              type => "mutation of single amino acid residue",
+              type => "amino acid substitution(s)",
               expression => "knockdown",
               gene_id => 2,
             },

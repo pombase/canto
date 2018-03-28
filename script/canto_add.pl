@@ -91,7 +91,7 @@ sub usage
   die qq|${message}usage:
   $0 --cvterm cv_name term_name [db_name:accession [definition]]
 or:
-  $0 --person "name" email_address [ORCID [user_type]]
+  $0 --person "name" email_address password ORCID [user_type]
 or:
   $0 --pubmed-by-id <pubmed_id> [pubmed_id ...]
 or:
@@ -112,6 +112,9 @@ Options:
        db_name is the "name" from the canto.yaml file)
   --person  - add a person to the database, the user_type can be "user"
               or "admin" with the default being "user"
+              The ORCID can't be blank.  If the user has no ORCID, use a
+              unique string such as the email address.
+              For information of ORCID, see: https://orcid.org/about
   --pubmed-by-id  - add publications by PubMed IDs
       The details will be fetched from PubMed.
   --pubmed-by-query  - add publications by querying PubMed
@@ -128,8 +131,8 @@ if ($add_cvterm && (@ARGV < 2 || @ARGV > 4)) {
   usage("--cvterm needs 2, 3 or 4 arguments");
 }
 
-if ($add_person && (@ARGV < 3 || @ARGV > 4)) {
-  usage("--person needs 1 or 2 arguments");
+if ($add_person && (@ARGV < 4 || @ARGV > 5)) {
+  usage("--person needs 4 or 5 arguments not " . scalar(@ARGV));
 }
 
 if ($add_session && @ARGV != 2) {
@@ -194,12 +197,13 @@ my $proc = sub {
   if ($add_person) {
     my $name = shift @ARGV;
     my $email_address = shift @ARGV;
+    my $password = shift @ARGV;
     my $orcid = shift @ARGV;
     my $role_name = shift @ARGV // "user";
 
     my $role = $load_util->find_cvterm(cv_name => 'Canto user types',
                                        name => $role_name);
-    $load_util->get_person($name, $email_address, $orcid, $role);
+    $load_util->get_person($name, $email_address, $role, $password, $orcid);
   }
 
   if ($add_session) {

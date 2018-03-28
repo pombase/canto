@@ -1,4 +1,10 @@
 # Exporting data from Canto
+
+## Note for Docker users
+
+The export commands will need to run inside the container, perhaps
+with the `dcanto` shell function.
+
 ## Exporting to JSON
 The curation data can be exported in [JSON](http://en.wikipedia.org/wiki/JSON)
 format with the `canto_export.pl` script from the `script` directory. This

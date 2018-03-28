@@ -68,14 +68,14 @@ our %shared_test_results = (
           'description' => 'K132A',
           'display_name' => 'ste20-c1(K132A)',
           'name' => 'ste20-c1',
-          'type' => 'mutation of single amino acid residue',
+          'type' => 'amino acid substitution(s)',
           'uniquename' => 'SPBC12C2.02c:allele-2',
         },
         {
           'description' => 'K132A,K144A',
           'display_name' => 'ste20-c2(K132A,K144A)',
           'name' => 'ste20-c2',
-          'type' => 'mutation of multiple amino acid residues',
+          'type' => 'amino acid substitution(s)',
           'uniquename' => 'SPBC12C2.02c:allele-3',
         },
         {

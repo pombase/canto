@@ -31,7 +31,7 @@ cmp_deeply($id_res,
 {
             'display_name' => 'ste20-c2(K132A,K144A)',
             'description' => 'K132A,K144A',
-            'type' => 'mutation of multiple amino acid residues',
+            'type' => 'amino acid substitution(s)',
             'name' => 'ste20-c2',
             'uniquename' => 'SPBC12C2.02c:allele-3',
             'gene_uniquename' => 'SPBC12C2.02c',

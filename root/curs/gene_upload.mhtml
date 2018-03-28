@@ -12,7 +12,10 @@ $title
   <div class="curs-box-body" ng-controller='UploadGenesCtrl' ng-init='data.geneIdentifiers="<% $search_terms_text %>"'>
 <div>
 Please list the genes studied in this paper using the <% $systematic_identifier_desc |n %>
-(eg. <% $example_identifier %>) or <% $primary_name_desc |n %> (eg. <% $example_name %>)
+(eg. <% $example_identifier %>)
+% if ($primary_name_desc && $example_name) {
+or <% $primary_name_desc |n %> (eg. <% $example_name %>)
+% }
 separated by commas, spaces, tabs or one per line.
 </div>
 <div style="margin: 5px 0 5px 0">

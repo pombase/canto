@@ -1,0 +1,25 @@
+#!/bin/bash -
+
+if [ ! -d data ]
+then
+   echo 'missing "data" directory - exiting'
+   exit 1
+fi
+
+if [ ! -d canto ]
+then
+   echo 'missing "canto" directory - exiting'
+   exit 1
+fi
+
+if [ ! -d import_export ]
+then
+   echo 'missing "import_export" directory - exiting'
+   exit 1
+fi
+
+CANTO_DOCKER_RUN_ARGS="--rm -ti --publish 5000:5000 --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v3"
+
+cd canto
+
+exec docker run -it $CANTO_DOCKER_RUN_ARGS ./script/canto_start "$@"

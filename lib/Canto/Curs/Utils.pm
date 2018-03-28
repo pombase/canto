@@ -183,7 +183,11 @@ sub make_ontology_annotation
   my $term_lookup_result = $ontology_lookup->lookup_by_id(id => $term_ontid);
 
   if (! defined $term_lookup_result) {
-    die qq(internal error: cannot find details for "$term_ontid" in "$annotation_type");
+    warn qq(internal error: cannot find details for "$term_ontid" in "$annotation_type");
+    $term_lookup_result = {
+      name => "[UNKNOWN TERM]",
+      is_obsolete => 1,
+    };
   }
 
   my $term_name = $term_lookup_result->{name};
@@ -962,7 +966,7 @@ sub make_allele_display_name
 
   $description ||= $type || 'unknown';
 
-  if ($type =~ /^mutation/) {
+  if ($type =~ /^mutation|substitution/) {
     if ($type =~ /amino acid/) {
       $description =~ s/(^|,\s*)/${1}aa/g;
     } else {

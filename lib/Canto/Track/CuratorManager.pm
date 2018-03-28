@@ -108,7 +108,8 @@ sub _format_curs_curator_row
             $row->accepted_date(),
             defined $current_curator->role() && $current_curator->role()->name() ne 'admin',
             $row->creation_date(),
-            $row->curs_curator_id());
+            $row->curs_curator_id(),
+            $current_curator->orcid());
   } else {
     return $current_curator->email_address();
   }
@@ -120,7 +121,8 @@ sub _format_curs_curator_row
  Function: Get the current curator of a curation session.  ie the curator of the
            curs_curator row with the highest curs_curator_id - the most recent.
  Args    : $curs_key - the curs_key for the session
- Return  : ($email, $name, $known_as, $accepted_date, $community_curated)
+ Return  : ($email, $name, $known_as, $accepted_date, $community_curated,
+            $row_creation_date, $curs_curator_id, $orcid)
               - in an array context
            $email - in a scalar context
          note: the $accepted_date will be undef if the session hasn't been
@@ -205,6 +207,8 @@ sub set_curator
   my $curs_curator_name = shift;
   my $curs_curator_orcid = shift;
 
+  Canto::Util::trim($curs_curator_orcid);
+
   my $schema = $self->schema();
 
   my $curator_rs = $schema->resultset('Person');
@@ -234,11 +238,16 @@ sub set_curator
   } else {
     my $user_role_id =
       $schema->find_with_type('Cvterm', { name => 'user' })->cvterm_id();
-    $curator = $curator_rs->create({ name => $curs_curator_name,
-                                     email_address => $curs_curator_email,
-                                     orcid => $curs_curator_orcid,
-                                     role => $user_role_id,
-                                   });
+    my %args = (
+      name => $curs_curator_name,
+      email_address => $curs_curator_email,
+      role => $user_role_id,
+    );
+    if ($curs_curator_orcid) {
+      $args{orcid} = $curs_curator_orcid;
+    }
+
+    $curator = $curator_rs->create(\%args);
   }
 
   my $curs_rs = $schema->resultset('Curs')->search({ curs_key => $curs_key });

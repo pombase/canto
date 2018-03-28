@@ -137,9 +137,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 strains
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wk36EYv283I8VuQo781Otg
+Type: has_many
+
+Related object: L<Canto::TrackDB::Strain>
+
+=cut
+
+__PACKAGE__->has_many(
+  "strains",
+  "Canto::TrackDB::Strain",
+  { "foreign.organism_id" => "self.organism_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2018-01-22 23:13:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IS3w7vLOiXb7l2ho0U3j/g
 
 use Carp;
 

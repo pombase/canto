@@ -144,7 +144,7 @@ sub make_gaf_extension
       my $identifier = $prop->value();
       my $rel_name = $1;
       if ($identifier !~ /:/) {
-        if ($identifier =~ /^(\d+)\%?$/ &&
+        if ($identifier =~ /^([><]?\d+(?:\.\d+)?)\%?$/ &&
             ($rel_name eq 'has_penetrance' || $rel_name eq 'has_expressivity')) {
           # a penetrance or expressivity
           $identifier = "$1\%";

@@ -82,7 +82,9 @@ use constant {
   CURATION_PAUSED_TIMESTAMP_KEY => 'curation_paused_timestamp',
   CURATION_IN_PROGRESS_TIMESTAMP_KEY => 'curation_in_progress_timestamp',
   NEEDS_APPROVAL_TIMESTAMP_KEY => 'needs_approval_timestamp',
+  FIRST_APPROVED_TIMESTAMP_KEY => 'first_approved_timestamp',
   APPROVED_TIMESTAMP_KEY => 'approved_timestamp',
+  PREVIOUS_APPROVED_TIMESTAMP_KEY => 'previous_approved_timestamp',
   ACCEPTED_TIMESTAMP_KEY => 'accepted_timestamp',
   APPROVAL_IN_PROGRESS_TIMESTAMP_KEY => 'approval_in_progress_timestamp',
   EXPORTED_TIMESTAMP_KEY => 'exported_timestamp',
@@ -408,6 +410,12 @@ sub set_state
 
       $self->set_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY,
                           Canto::Util::get_current_datetime());
+      my $prev_approved_timestamp =
+        $self->get_metadata($schema, APPROVED_TIMESTAMP_KEY);
+      if ($prev_approved_timestamp) {
+        $self->set_metadata($schema, PREVIOUS_APPROVED_TIMESTAMP_KEY,
+                            $prev_approved_timestamp);
+      }
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
     },
@@ -418,6 +426,12 @@ sub set_state
       if ($current_state ne APPROVAL_IN_PROGRESS && !$force) {
         carp "must be in state ", APPROVAL_IN_PROGRESS,
           " (not $current_state) to change to state ", APPROVED;
+      }
+      # see: https://github.com/pombase/website/issues/592#issuecomment-341689763
+      if (!$self->get_metadata($schema, FIRST_APPROVED_TIMESTAMP_KEY) &&
+          !$self->get_metadata($schema, PREVIOUS_APPROVED_TIMESTAMP_KEY)) {
+        $self->set_metadata($schema, FIRST_APPROVED_TIMESTAMP_KEY,
+                            Canto::Util::get_current_datetime());
       }
       $self->set_metadata($schema, APPROVED_TIMESTAMP_KEY,
                           Canto::Util::get_current_datetime());

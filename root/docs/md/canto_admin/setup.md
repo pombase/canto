@@ -2,10 +2,40 @@
 
 After the software is [installed](installation) some configuration is needed.
 
+If you chose the recommended Docker installation precedure then the
+commands below will need to be run inside the Canto container.  The
+suggested way to do that to use the `canto_docker` script as a prefix
+to the commands below.
+
+So for example to load a genes file when Canto is running via a Docker
+container, instead of:
+
+    ./script/canto_load.pl --genes genes_file.tsv --for-taxon 4896
+
+from instead your `canto` git check out, add your `genes_file.tsv` to
+the `import_export` directory and the run this command in the
+`canto-space` directory created in the [installed](installation)
+section:
+
+    ./canto/script/canto_docker ./script/canto_load.pl --genes \
+        /import_export/genes_file.tsv --for-taxon 4896
+
+Only three host directories (`canto`, `data` and `import_export`) are
+visible inside the container so reading and writing of files should be
+via those directories.  In particular, as in the example above,
+datasets for loading should be added to your `import_export` directory
+as created in the [installation](installation) step.
+
 ## Creating users
 
 To manage sessions and users from the web interface there needs to be at least
-one "admin" user.  Users can be added with the `canto_add.pl` script:
+one "admin" user.  Users can be added with the `canto_add.pl` script.  For
+example:
+
+    ./script/canto_add.pl --person "Susan Testuser" testuser@pombase.org secret_password 0000-0001-5000-0007 admin
+
+The `secret_password` is stored as a SHA1 hash in the database rather
+than as plain text.
 
     ./script/canto_add.pl --person "Kim Rutherford" kim@pombase.org admin
 
@@ -53,7 +83,7 @@ or more ontologies before using Canto.
 
 Add an organism using this command in the `canto` directory:
 
-    ./script/canto_load.pl --organism "<genus> <species> <taxon_id>"
+    ./script/canto_add.pl --organism <genus> <species> <taxon_id>
 
 At least one organism is needed in the Canto database before genes can be
 loaded.
@@ -87,6 +117,11 @@ There is a small example file in the test directory:
 OBO format ontology data can be imported or updated with:
 
     ./script/canto_load.pl --ontology file_1.obo [--ontology file_2.obo ...]
+
+Or if you have a dockerised Canto:
+
+    ./canto/script/canto_docker ./script/canto_load.pl \
+       --ontology file_1.obo [--ontology file_2.obo ...]
 
 If you need to import multiple ontology files, they all must be included in
 the same command line:

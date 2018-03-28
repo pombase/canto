@@ -211,13 +211,14 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
 #page-description, #curs-page-description {
   display: block;
   text-align: center;
-  width: 55%;
+  width: 50%;
   top: 0px;
   margin: auto;
   margin-top: 0px;
   font-size: 1.5em;
   font-weight: bold;
   line-height: 1em;
+  word-wrap: break-word;
 }
 #title-nav {
   position: relative;
@@ -1001,6 +1002,11 @@ fieldset.curs-genes span {
 }
 .curs-annotation-table {
   
+}
+
+.curs-annotation-table .term-warning {
+  color: #f00;
+  font-weight: bold;
 }
 
 .curs-annotation-incomplete-message {

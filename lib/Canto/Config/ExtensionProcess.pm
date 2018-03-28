@@ -120,7 +120,14 @@ sub get_subset_data
 
     if ($conf->{exclude_subset_ids}) {
       map {
-        $exclude_subsets_to_store{$_} = 1;
+        my $subset_rel_and_id = $_;
+        if ($subset_rel_and_id =~ /^(?:\w+)\((\S+)\)$/) {
+          my $subset_id = $1;
+          $exclude_subsets_to_store{$subset_id} = 1;
+        } else {
+          die qq[subset term ID "$subset_rel_and_id" must include a relation name, \n
+eg. "is_a(GO:0055085)"];
+        }
       } @{$conf->{exclude_subset_ids}};
     }
 
@@ -129,7 +136,11 @@ sub get_subset_data
 
       if ($range->{type} eq 'Ontology') {
         map {
-          $range_subsets_to_store{$_} = 1;
+          my $scope = $_;
+          my @bits = split('-', $scope);
+          map {
+            $range_subsets_to_store{$_} = 1;
+          } @bits;
         } @{$range->{scope}};
       }
     } @{$conf->{range}};

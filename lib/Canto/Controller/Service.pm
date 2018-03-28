@@ -243,6 +243,15 @@ sub _pubs_results
   }
 }
 
+sub _strain_lookup
+{
+  my ($c, $taxonid) = @_;
+
+  my $strain_lookup = Canto::Track::get_adaptor($c->config(), 'strain');
+
+  return [$strain_lookup->lookup($taxonid)];
+}
+
 sub lookup : Local
 {
   my $self = shift;
@@ -257,6 +266,7 @@ sub lookup : Local
     ontology => \&_ontology_results,
     person => \&_person_results,
     pubs => \&_pubs_results,
+    strains => \&_strain_lookup,
   );
 
   my $res_sub = $dispatch{$type_name};

@@ -104,16 +104,13 @@ sub BUILD
 
   $self->temp_file_name($temp_file_name);
 
+  my $orig_dbh = $self->schema->storage()->dbh();
+  $orig_dbh->sqlite_backup_to_file($temp_file_name);
+
   my $dbi_connect_string =
     Canto::DBUtil::connect_string_for_file_name($temp_file_name);
-
   my $load_schema =
     Canto::TrackDB->cached_connect($dbi_connect_string, undef, undef, {});
-
-  my $orig_dbh = $self->schema->storage()->dbh();
-  my $load_dbh = $load_schema->storage()->dbh();
-
-  Canto::DBUtil::copy_sqlite_database($orig_dbh, $load_dbh);
 
   $self->load_schema($load_schema);
 }
@@ -373,14 +370,21 @@ sub load
       next;
     }
 
-      my $cvterm = $load_util->get_cvterm(cv_name => $cv_name,
-                                          term_name => $term_name,
-                                          ontologyid => $term->id(),
-                                          definition => $term->def(),
-                                          alt_ids => $term->alt_id(),
-                                          is_obsolete => $term->is_obsolete(),
-                                          is_relationshiptype =>
-                                            $term->is_relationshiptype());
+    my %args = (
+      cv_name => $cv_name,
+      term_name => $term_name,
+      ontologyid => $term->id(),
+      alt_ids => $term->alt_id(),
+      is_obsolete => $term->is_obsolete(),
+      is_relationshiptype =>
+        $term->is_relationshiptype(),
+    );
+
+    if ($term->def()) {
+      $args{definition} = $term->def()->{definition};
+    }
+
+    my $cvterm = $load_util->get_cvterm(%args);
 
     if ($term->is_relationshiptype()) {
       $relationship_cvterms{$term_name} = $cvterm;

@@ -1,29 +1,29 @@
-FROM debian:stretch
+# run with: docker build -f etc/Dockerfile-base -t=pombase/canto-base:v4 .
+
+FROM debian:jessie
 MAINTAINER Kim Rutherford <kim@pombase.org>
 RUN apt-get update; \
-  apt-get install -y ntpdate sqlite3 make tar gzip bzip2 whiptail gcc g++ wget \
-  perl-base git-core libxml2-dev zlib1g-dev libssl-dev \
-  libexpat1-dev libpq-dev
+  apt-get install -y ntpdate sqlite3 make tar gzip whiptail gcc g++ wget \
+    perl git-core libxml2-dev zlib1g-dev libssl-dev \
+    libexpat1-dev libpq-dev curl sendmail \
+    libpq-dev libxml2-dev zlib1g-dev libssl-dev libexpat1-dev && apt-get clean
 
-RUN (echo o conf prerequisites_policy follow; echo o conf build_requires_install_policy no; echo o conf commit) | cpan
+RUN apt-get update; \
+  apt-get install -y libcatalyst-perl libcatalyst-modules-perl \
+    libserver-starter-perl \
+    libmodule-install-perl libcatalyst-devel-perl liblocal-lib-perl && \
+   apt-get clean
+
+RUN curl -L http://cpanmin.us | perl - --self-upgrade
 
 RUN echo installing lib lucene && (cd /tmp/; \
   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2+b1_amd64.deb && \
   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2+b1_amd64.deb && \
-  dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb); \
-  cpan -i Lucene
+  dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb && \
+  rm libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb)
 
-RUN cpan -i DBIx::Class::ResultSet::Data::Pageset Data::Rmap GO::Parser \
-    XML::LibXML HTML::HTML5::Writer HTML::HTML5::Builder HTML::Mason \
-    Moose MooseX::Test::Role Package::Alias \
-    String::Similarity Text::MultiMarkdown \
-    Plack::Middleware::Debug Plack::Middleware::Expires \
-    Plack::Middleware::InteractiveDebugger \
-    Starman Net::Server::SS::PreFork Server::Starter \
-    Catalyst Catalyst::Runtime Catalyst::Utils \
-    Catalyst::Plugin::PageCache Catalyst::Plugin::Session::PerUser \
-    Catalyst::TraitFor::Request::ProxyBase CatalystX::RoleApplicator \
-    XML::Simple Template Module::Install Module::Install::Catalyst
+RUN cpanm Lucene
 
+RUN mkdir /tmp/canto
 COPY . /tmp/canto/
 RUN (cd /tmp/canto; perl Makefile.PL && make installdeps); rm -rf /tmp/canto
