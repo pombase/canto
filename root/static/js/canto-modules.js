@@ -311,6 +311,14 @@ canto.service('CursGenotypeList', function($q, Curs) {
     });
   }
 
+  var service = this;
+
+  this.changeListeners = [];
+
+  this.onListChange = function(callback) {
+    this.changeListeners.push(callback);
+  }
+
   this.cursGenotypeList = function(options) {
     var q = $q.defer();
 
@@ -361,6 +369,11 @@ canto.service('CursGenotypeList', function($q, Curs) {
             break;
           }
         }
+        $.map(service.changeListeners,
+              function(callback) {
+                callback();
+              });
+        service.changeListeners = [];
         q.resolve();
       })
       .catch(function(message) {
@@ -3448,6 +3461,10 @@ var GenotypeManageCtrl =
             });
     }
 
+    $scope.readGenotypeCallbank = function() {
+      $scope.readGenotypes();
+    }
+
     $scope.readGenotypes = function() {
       CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
         $scope.data.genotypes = results;
@@ -3455,6 +3472,7 @@ var GenotypeManageCtrl =
         $scope.hasDeletion = $scope.makeHasDeletionHash();
         $scope.data.multiAlleleGenotypes = $.grep(results, isMultiAlleleGenotype);
         $scope.data.waitingForServer = false;
+        CursGenotypeList.onListChange($scope.readGenotypeCallbank);
       }).catch(function() {
         toaster.pop('error', "couldn't read the genotype list from the server");
         $scope.data.waitingForServer = false;
