@@ -50,7 +50,7 @@ Specify alleles of genes from the list, until the new genotype is complete
           </thead>
           <tbody>
             <tr ng-repeat="gene in data.genes">
-              <td ng-if="gene.primary_name" title="{{gene.primary_name}} ({{gene.primary_identifier}})"</td>{{gene.primary_name}}</td>
+              <td ng-if="gene.primary_name" title="{{gene.primary_name}} ({{gene.primary_identifier}})">{{gene.primary_name}}</td>
               <td ng-if="!gene.primary_name" title="{{gene.primary_identifier}}">{{gene.primary_identifier}}</td>
               <td>
                 <button class="btn btn-primary btn-xs"
@@ -101,12 +101,12 @@ No genotypes in this session.  Try adding one.
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-5 col-md-5">
-        <button ng-click="backToSummary()" type="button" class="btn btn-primary curs-back-button">&lt;- Back to summary</button>
-      </div>
-    </div>
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-5 col-md-5">
+      <button ng-click="backToSummary()" type="button" class="btn btn-primary curs-back-button">&lt;- Back to summary</button>
     </div>
   </div>
-</div>
+  </div>
 </div>
