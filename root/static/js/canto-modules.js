@@ -334,6 +334,8 @@ canto.service('CursGenotypeList', function($q, Curs) {
       promise.then(function() {
         service.sendChangeEvent();
       });
+
+      return promise;
     };
 
   this.cursGenotypeList = function(options) {
