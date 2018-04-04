@@ -82,6 +82,7 @@ Specify alleles of genes from the list, until the new genotype is complete
 
           <genotype-list-view genotype-list="data.singleAlleleGenotypes"
                               navigate-on-click="false"
+                              show-check-box-actions="true"
                               selected-genotype-id="data.selectedGenotypeId">
           </genotype-list-view>
         </div>
@@ -92,6 +93,7 @@ Specify alleles of genes from the list, until the new genotype is complete
 
           <genotype-list-view genotype-list="data.multiAlleleGenotypes"
                               navigate-on-click="false"
+                              show-check-box-actions="false"
                               selected-genotype-id="data.selectedGenotypeId">
           </genotype-list-view>
         </div>

@@ -319,6 +319,23 @@ canto.service('CursGenotypeList', function($q, Curs) {
     this.changeListeners.push(callback);
   }
 
+  this.sendChangeEvent = function() {
+    $.map(service.changeListeners,
+          function(callback) {
+            callback();
+          });
+    service.changeListeners = [];
+  };
+
+  this.storeGenotype =
+    function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
+      var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles);
+
+      promise.then(function() {
+        service.sendChangeEvent();
+      });
+    };
+
   this.cursGenotypeList = function(options) {
     var q = $q.defer();
 
@@ -369,11 +386,7 @@ canto.service('CursGenotypeList', function($q, Curs) {
             break;
           }
         }
-        $.map(service.changeListeners,
-              function(callback) {
-                callback();
-              });
-        service.changeListeners = [];
+        service.sendChangeEvent();
         q.resolve();
       })
       .catch(function(message) {
@@ -2915,7 +2928,7 @@ canto.controller('TermSuggestDialogCtrl',
                  termSuggestDialogCtrl]);
 
 
-function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
+function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
   var url = curs_root_uri + '/feature/genotype';
 
   if (genotype_id) {
@@ -2971,7 +2984,7 @@ var genePageCtrl =
 
       editInstance.result.then(function (alleleData) {
         var storePromise =
-          storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], true);
+          storeGenotypeHelper(toaster, $http, undefined, undefined, undefined, [alleleData], true);
 
         storePromise.then(function(result) {
           window.location.href =
@@ -3202,7 +3215,7 @@ var genotypeEdit =
 
         $scope.store = function() {
           var result =
-              storeGenotype(toaster, $http, $scope.data.genotype_id,
+            storeGenotypeHelper(toaster, $http, $scope.data.genotype_id,
                             $scope.data.genotypeName, $scope.data.genotypeBackground,
                             $scope.alleles);
 
@@ -3386,7 +3399,7 @@ var GenotypeManageCtrl =
 
       editInstance.result.then(function (alleleData) {
         var storePromise =
-          storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], true);
+          storeGenotypeHelper(toaster, $http, undefined, undefined, undefined, [alleleData], true);
 
         storePromise.then(function(result) {
           $scope.readGenotypes();
@@ -3417,7 +3430,7 @@ var GenotypeManageCtrl =
       };
 
       var storePromise =
-        storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele], true);
+        storeGenotypeHelper(toaster, $http, undefined, undefined, undefined, [deletionAllele], true);
 
       storePromise.then(function(result) {
         $scope.readGenotypes();
@@ -3469,7 +3482,7 @@ var GenotypeManageCtrl =
             });
     }
 
-    $scope.readGenotypeCallbank = function() {
+    $scope.readGenotypesCallbank = function() {
       $scope.readGenotypes();
     }
 
@@ -3480,7 +3493,7 @@ var GenotypeManageCtrl =
         $scope.hasDeletion = $scope.makeHasDeletionHash();
         $scope.data.multiAlleleGenotypes = $.grep(results, isMultiAlleleGenotype);
         $scope.data.waitingForServer = false;
-        CursGenotypeList.onListChange($scope.readGenotypeCallbank);
+        CursGenotypeList.onListChange($scope.readGenotypesCallbank);
       }).catch(function() {
         toaster.pop('error', "couldn't read the genotype list from the server");
         $scope.data.waitingForServer = false;
@@ -3691,6 +3704,9 @@ var genotypeListRowCtrl =
       scope: {
         genotypes: '=',
         genotype: '=',
+        checkBoxIsChecked: '=',
+        showCheckBoxActions: '=',
+        checkBoxChange: '&',
         selectedGenotypeId: '@',
         setSelectedGenotypeId: '&',
         navigateOnClick: '@',
@@ -3743,19 +3759,56 @@ canto.directive('genotypeListRow',
 
 
 var genotypeListViewCtrl =
-  function() {
+  function($compile, $http, toaster, CursGenotypeList, CantoGlobals) {
     return {
       scope: {
         genotypeList: '=',
         selectedGenotypeId: '=',
+        showCheckBoxActions: '=',
         navigateOnClick: '@'
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function($scope) {
+        $scope.checkBoxChecked = {};
+
         $scope.columnsToHide = { background: true,
                                  name: true, };
+
+        $scope.checkedGenotypeIds = function() {
+          var retVal = [];
+          $.map($scope.genotypeList, function(genotype) {
+            if ($scope.checkBoxChecked[genotype.genotype_id]) {
+              retVal.push(genotype);
+            }
+          });
+          return retVal;
+        };
+
+        $scope.checkedGenotypeCount = function() {
+          return $scope.checkedGenotypeIds().length;
+        };
+
+        $scope.combineGenotypes = function() {
+          var checkedGenotypes =
+            $.grep($scope.genotypeList, function(genotype) {
+              return !!$scope.checkBoxChecked[genotype.genotype_id];
+            });
+
+          var allelesForGenotype =
+            $.map(checkedGenotypes, function(genotype) {
+              return genotype.alleles[0];
+            });
+
+          var storePromise =
+            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, allelesForGenotype);
+
+          storePromise.then(function(result) {
+            window.location.href =
+              CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+          });
+        };
 
         $scope.setSelectedGenotypeId = function(genotypeId) {
           $scope.selectedGenotypeId = genotypeId;
@@ -3778,7 +3831,8 @@ var genotypeListViewCtrl =
   };
 
 canto.directive('genotypeListView',
-                ['$compile', genotypeListViewCtrl]);
+                ['$compile', '$http', 'toaster', 'CursGenotypeList', 'CantoGlobals',
+                 genotypeListViewCtrl]);
 
 
 var singleGeneGenotypeList =

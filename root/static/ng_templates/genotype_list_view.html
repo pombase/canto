@@ -6,7 +6,7 @@
         <th style="border-bottom: 1px solid grey" colspan="3">
 Genotype
         </th>
-        <th rowspan="2">
+        <th rowspan="2" colspan="2">
 Annotations
         </th>
       </tr>
@@ -25,11 +25,20 @@ Annotations
     <tbody genotype-list-row ng-repeat="currentGenotype in genotypeList"
            set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
            selected-genotype-id="{{selectedGenotypeId}}"
+           show-check-box-actions="showCheckBoxActions"
+           check-box-is-checked="checkBoxChecked[currentGenotype.genotype_id]"
           navigate-on-click="{{navigateOnClick}}"
           columns-to-hide="columnsToHide"
           genotypes="genotypeList"
           genotype="currentGenotype">
     </tbody>
   </table>
+
+  <div ng-if="showCheckBoxActions">
+    Action: <button class="btn btn-primary btn-xs"
+                    ng-disabled="checkedGenotypeCount() < 2"
+                    ng-click="combineGenotypes()">Combine selected genotypes</button>
+  </div>
+
   </div>
 </div>
