@@ -3413,11 +3413,6 @@ var GenotypeManageCtrl =
       var gene = ($.grep($scope.data.genes, function(gene) { return gene.gene_id == gene_id; }))[0];
       var displayName = gene.primary_name || gene.primary_identifier;
 
-      for (var i = 0; i < $scope.data.singleAlleleGenotypes.length; i++) {
-        var genotype = $scope.data.singleAlleleGenotypes[i];
-        console.log(genotype);
-      }
-
       var deletionAllele = {
         description: "",
         expression: "",
