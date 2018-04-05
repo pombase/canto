@@ -2949,6 +2949,15 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
 
   var result = $http.post(url, data);
 
+  result.catch(function(data) {
+    if (data.message) {
+      toaster.error("Storing genotype failed, message from server: " + data.message);
+    } else {
+      toaster.error("Storing genotype failed, please reload and try again.  If that fails " +
+                    "please contact the curators.");
+    }
+  })
+
   result.finally(loadingEnd);
 
   return result;
