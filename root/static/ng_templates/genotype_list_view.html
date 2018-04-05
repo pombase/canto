@@ -37,6 +37,7 @@ Annotations
   <div ng-if="showCheckBoxActions">
     Action: <button class="btn btn-primary btn-xs"
                     ng-disabled="checkedGenotypeCount() < 2"
+                    title="{{checkedGenotypeCount() < 2 ? 'Select two or more genotypes' : 'Combine the selected genotypes'}}"
                     ng-click="combineGenotypes()">Combine selected genotypes</button>
   </div>
 
