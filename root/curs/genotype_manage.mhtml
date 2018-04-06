@@ -7,13 +7,8 @@ $read_only_curs => 0
 <div ng-controller="GenotypeManageCtrl"
      id="curs-genotype-manage" class="genotype-list ng-cloak">
   <div>
-  <div class="row">
 % if (!$read_only_curs) {
-    <div ng-if="!data.editingGenotype" class="col-sm-6 col-md-6">
-    <div class="curs-top-help">
-Add, view and edit genotypes
-    </div>
-    </div>
+  <div class="row">
     <div ng-if="data.editingGenotype" class="col-sm-12 col-md-12">
       <div class="curs-box">
         <div class="curs-box-title">
@@ -33,8 +28,13 @@ Specify alleles of genes from the list, until the new genotype is complete
     </div>
   </div>
 % }
-  <div ng-if="!data.editingGenotype" class="ng-cloak row">
-    <div class="col-sm-5 col-md-5">
+  <div ng-if="!data.editingGenotype" class="ng-cloak curs-box">
+    <div class="curs-box-title">
+Add, view and edit genotypes
+    </div>
+    <div class="curs-box-body">
+  <div class="row">
+    <div class="col-sm-4 col-md-4">
       <div ng-hide="data.genes.length != 0">
         <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
         Loading genes ...
@@ -67,7 +67,7 @@ Specify alleles of genes from the list, until the new genotype is complete
         </table>
       </div>
     </div>
-    <div class="col-sm-7 col-md-7">
+    <div class="col-sm-8 col-md-8">
       <div class="ng-cloak">
         <div ng-show="data.waitingForServer">
           <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
@@ -104,6 +104,8 @@ No genotypes in this session.  Try adding one.
       </div>
     </div>
   </div>
+  </div>
+    </div>
   </div>
   <div class="row">
     <div class="col-sm-5 col-md-5">
