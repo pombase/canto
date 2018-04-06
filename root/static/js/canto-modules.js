@@ -3813,6 +3813,7 @@ var genotypeListViewCtrl =
           storePromise.then(function(result) {
             window.location.href =
               CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+            $scope.checkBoxChecked = {};
           });
         };
 
