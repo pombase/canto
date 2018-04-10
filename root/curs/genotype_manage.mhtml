@@ -34,6 +34,7 @@ Add, view and edit genotypes
     </div>
     <div class="curs-box-body">
   <div class="row">
+% if (!$read_only_curs) {
     <div class="col-sm-4 col-md-4">
       <div ng-hide="data.genes.length != 0">
         <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
@@ -66,6 +67,7 @@ Add, view and edit genotypes
         </table>
       </div>
     </div>
+% }
     <div class="col-sm-8 col-md-8">
       <div class="ng-cloak">
         <div ng-show="data.waitingForServer">
@@ -81,7 +83,11 @@ Add, view and edit genotypes
 
           <genotype-list-view genotype-list="data.singleAlleleGenotypes"
                               navigate-on-click="false"
+% if (!$read_only_curs) {
                               show-check-box-actions="true"
+% } else {
+                              show-check-box-actions="false"
+% }
                               selected-genotype-id="data.selectedGenotypeId">
           </genotype-list-view>
         </div>
@@ -96,10 +102,12 @@ Add, view and edit genotypes
                               selected-genotype-id="data.selectedGenotypeId">
           </genotype-list-view>
         </div>
+% if (!$read_only_curs) {
         <div ng-show="data.genotypes.length == 0">
 No genotypes in this session.  Try adding one.
 
         </div>
+% }
       </div>
     </div>
   </div>
