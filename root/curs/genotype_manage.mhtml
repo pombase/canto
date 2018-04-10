@@ -43,9 +43,8 @@ Add, view and edit genotypes
         <table class="list">
           <thead>
             <tr>
-              <th>Name</th>
-              <th></th>
-              <th></th>
+              <th>Gene</th>
+              <th colspan="2">Actions</th>
             </tr>
           </thead>
           <tbody>
