@@ -3361,7 +3361,7 @@ var GenotypeManageCtrl =
       selectedGenotypeId: null,
       editingGenotype: false,
       editGenotypeId: null,
-      genes: [],
+      allGenes: [],
       selectedOrganism: null,
       organismsOfGenes: [],
       multiOrganismMode: false,
@@ -3373,10 +3373,25 @@ var GenotypeManageCtrl =
       }
     });
 
+    $scope.selectedOrganismGenes = function() {
+      if ($scope.data.selectedOrganism) {
+        return $.grep($scope.data.allGenes,
+                      function(gene) {
+                        return gene.organism.taxonid === $scope.data.selectedOrganism.taxonid;
+                      });
+      } else {
+        if ($scope.data.organismsOfGenes.length == 1) {
+          return $scope.allGenes;
+        } else {
+          return [];
+        }
+      }
+    };
+
     $scope.setOrganismsOfGenes = function() {
       var organisms = {};
 
-      $.map($scope.data.genes, function(gene) {
+      $.map($scope.data.allGenes, function(gene) {
         organisms[gene.organism.taxonid] = gene.organism;
       });
 
@@ -3391,9 +3406,9 @@ var GenotypeManageCtrl =
 
     $scope.getGenesFromServer = function() {
       Curs.list('gene').success(function(results) {
-        $scope.data.genes = results;
+        $scope.data.allGenes = results;
 
-        $.map($scope.data.genes,
+        $.map($scope.data.allGenes,
               function(gene) {
                 gene.display_name = gene.primary_name || gene.primary_identifier;
               });
@@ -3453,7 +3468,9 @@ var GenotypeManageCtrl =
     };
 
     $scope.makeDeletionAllele = function(gene_id) {
-      var gene = ($.grep($scope.data.genes, function(gene) { return gene.gene_id == gene_id; }))[0];
+      var gene = ($.grep($scope.data.allGenes, function(gene) {
+        return gene.gene_id == gene_id;
+      }))[0];
       var displayName = gene.primary_name || gene.primary_identifier;
 
       var deletionAllele = {

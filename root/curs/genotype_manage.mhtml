@@ -35,14 +35,30 @@ Specify alleles of genes from the list, until the new genotype is complete
 Add, view and edit genotypes
     </div>
     <div class="curs-box-body">
-      <div ng-hide="data.genes.length != 0">
+  <div class="row">
+% if (!$read_only_curs) {
+    <div class="col-sm-4 col-md-4">
+      <div ng-hide="data.allGenes.length">
         <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
         Loading genes ...
       </div>
-  <div class="row" ng-show="data.genes.length">
-% if (!$read_only_curs) {
-    <div class="col-sm-4 col-md-4">
-      <div class="curs-genotype-edit-gene-list">
+      <div ng-show="data.allGenes.length && !data.selectedOrganism">
+        <select name="select-organism" ng-model="data.selectedOrganism"
+                ng-options="o as o.full_name for o in data.organismsOfGenes">
+          <option value="">Select an organism ...</option>
+        </select>
+      </div>
+      <div class="curs-genotype-edit-gene-list"
+           ng-if="data.allGenes.length && data.selectedOrganism">
+        <span ng-show="data.multiOrganismMode">
+          <span style="font-size: 90%; font-weight: bold;">
+            {{data.selectedOrganism.full_name}} genes
+          </span>
+          <span ng-show="data.organismsOfGenes.length != 1">
+            (<a ng-click="data.selectedOrganism = null">change ...</a>)
+          </span>
+        </span>
+
         <table class="list">
           <thead>
             <tr>
@@ -51,7 +67,7 @@ Add, view and edit genotypes
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="gene in data.genes">
+            <tr ng-repeat="gene in selectedOrganismGenes()">
               <td ng-if="gene.primary_name" title="{{gene.primary_name}} ({{gene.primary_identifier}})">{{gene.primary_name}}</td>
               <td ng-if="!gene.primary_name" title="{{gene.primary_identifier}}">{{gene.primary_identifier}}</td>
               <td>
