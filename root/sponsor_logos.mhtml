@@ -1,3 +1,10 @@
+% for my $sponsor (@extra_sponsors) {
+<div class="sponsor">
+  <a href="<% $sponsor->{link_url} %>">
+    <img src="<% $sponsor->{logo_url} %>"/>
+  </a>
+</div>
+% }
 <div class="sponsor">
   <a href="http://www.wellcome.ac.uk">
     <img src="<% $c->uri_for('/static/images/wt_logo.png') %>"/>
@@ -8,3 +15,7 @@
     <img src="<% $c->uri_for('/static/images/uni_of_cam.png') %>"/>
   </a>
 </div>
+
+<%init>
+my @extra_sponsors = @{$c->config()->{extra_sponsors} || []};
+</%init>

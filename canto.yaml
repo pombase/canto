@@ -1975,6 +1975,8 @@ curs_config:
 
 canto_demo_url: "http://curation.pombase.org/demo"
 
+extra_sponsors: []
+
 cache:
   default_timeout: "2 hours"
   chado_gene_timeout: "24 hours"
