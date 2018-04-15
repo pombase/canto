@@ -288,7 +288,7 @@ cmp_deeply($fypo_cpp, $expected_fypo_term);
 
 my $expected_fypo_obsolete_term = {
   id => 'FYPO:0002233',
-  name => 'viable elongated vegetative cell population',
+  name => 'OBSOLETE FYPO:0002233 viable elongated vegetative cell population',
   annotation_namespace => 'fission_yeast_phenotype',
   annotation_type_name => 'phenotype',
   definition => 'A cell population phenotype in which all cells in the population are viable but longer than normal in the vegetative growth phase of the life cycle.',

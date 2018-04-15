@@ -190,7 +190,7 @@ sub _parse_source
   my $file_name;
   my $fh;
 
-  if ($source =~ m|http://|) {
+  if ($source =~ m|https?://|) {
     ($fh, $file_name) = tempfile('/tmp/downloaded_ontology_file_XXXXX',
                                  SUFFIX => '.obo');
     my $rc = getstore($source, $file_name);
