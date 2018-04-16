@@ -367,6 +367,8 @@ sub setup
 
   $self->{multi_organism_mode} = !$instance_organism;
 
+  $self->{pathogen_host_mode} = 0;
+
   my $connect_string = $self->model_connect_string('Track');
 
   # we need to check that the track db exists in case we're using this
