@@ -266,7 +266,7 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    ok(!defined $obj->{value});
+    ok(!$obj->{value});
   }
 };
 
