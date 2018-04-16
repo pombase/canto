@@ -1862,6 +1862,7 @@ config_service:
     instance_organism: 1
     extension_configuration: 1
     max_term_name_select_count: 1
+    pathogen_host_mode: 1
     help_text: 1
     public_mode: 1
 
@@ -1976,6 +1977,15 @@ curs_config:
 canto_demo_url: "http://curation.pombase.org/demo"
 
 extra_sponsors: []
+
+
+# A list of organisms that are treated as host species in Pathogen-Host mode.
+# The organisms need to be in the organism table.
+# If this list has any elements, the pathogen_host_mode config item is
+# automatically set to 1 and host_organisms will be set to a list the Organism
+# objects.  multi_organism_mode is also set to 1/true.
+host_organism_taxonids: []
+
 
 cache:
   default_timeout: "2 hours"

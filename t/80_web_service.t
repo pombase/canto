@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 35;
+use Test::More tests => 37;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -251,6 +251,22 @@ test_psgi $app, sub {
     is ($obj->{status}, 'success');
     is ($obj->{details}->{email}, 'val@sanger.ac.uk');
     is ($obj->{details}->{is_admin}, JSON::true);
+  }
+
+  {
+    my $url = "http://localhost:5000/ws/canto_config/pathogen_host_mode";
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $cb->($req);
+
+    is $res->code, 200;
+
+    my $obj;
+    eval { $obj = decode_json($res->content()); };
+    if ($@) {
+      die "$@\n", $res->content();
+    }
+
+    ok(!defined $obj->{value});
   }
 };
 

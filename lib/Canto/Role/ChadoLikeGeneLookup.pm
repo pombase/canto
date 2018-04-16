@@ -45,6 +45,7 @@ requires 'feature_class';
 requires 'lookup_by_synonym_rs';
 requires 'schema';
 requires 'taxon_id_lookup';
+requires 'config';
 
 sub build_gene_constraint
 {
@@ -113,15 +114,26 @@ sub _read_genes
       }
     }
 
-    push @found_genes, {
+    my $taxonid = $self->taxon_id_lookup($found_gene->organism());
+
+    my $result_gene = {
       primary_identifier => $found_gene->$uniquename_column(),
       primary_name => $found_gene->$name_column(),
       product => $self->gene_product($found_gene),
       synonyms => [@synonym_identifiers],
       organism_full_name => $found_gene->organism()->full_name(),
-      organism_taxonid => $self->taxon_id_lookup($found_gene->organism()),
+      organism_taxonid => $taxonid,
       match_types => \%match_types,
+    };
+
+    my $host_organism_taxonids = $self->config()->{host_organism_taxonids};
+
+    if ($host_organism_taxonids &&
+          grep { $_ eq $taxonid } @$host_organism_taxonids) {
+      $result_gene->{is_host_gene} = 1;
     }
+
+    push @found_genes, $result_gene;
   }
 
   return (\@found_genes, \%gene_ids, \%terms_found);
