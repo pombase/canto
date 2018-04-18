@@ -138,6 +138,35 @@ sub merge_config
   $self->setup();
 }
 
+sub _set_host_organisms
+{
+  my $self = shift;
+  my $track_schema = shift;
+
+  $self->{host_organisms} = [];
+
+  my $host_organism_taxonids = $self->{host_organism_taxonids};
+
+  if ($host_organism_taxonids && @$host_organism_taxonids > 0) {
+    $self->{pathogen_host_mode} = 1;
+
+    for my $taxonid (@{$self->{host_organism_taxonids}}) {
+      my $rs = $track_schema->resultset('Organismprop')
+        ->search({ value => $taxonid,
+                   'type.name' => 'taxon_id' },
+                 {
+                   join => 'type', prefetch => 'organism' });
+      if ($rs->count() == 0) {
+        die qq|can't find Organism in database for taxon ID "$taxonid"|;
+      }
+
+      push @{$self->{host_organisms}}, $rs->first()->organism();
+    }
+
+    $self->{multi_organism_mode} = 1;
+  }
+}
+
 =head2 setup
 
  Usage   : $config->setup();
@@ -336,39 +365,51 @@ sub setup
 
   my $instance_organism = $self->{instance_organism};
 
+  $self->{multi_organism_mode} = !$instance_organism;
+
+  $self->{pathogen_host_mode} = 0;
+
   my $connect_string = $self->model_connect_string('Track');
 
   # we need to check that the track db exists in case we're using this
   # Config before a track db is made
-  if (defined $instance_organism && defined $connect_string &&
-      -f Canto::DBUtil::connect_string_file_name($connect_string)) {
+  if (defined $connect_string &&
+        -f Canto::DBUtil::connect_string_file_name($connect_string)) {
+
     my $track_schema = Canto::TrackDB->new(config => $self);
 
-    my $taxonid = $instance_organism->{taxonid};
+    if (defined $instance_organism) {
+      my $taxonid = $instance_organism->{taxonid};
 
-    if (!defined $taxonid) {
-      die "instance_organism configuration has no taxonid field";
+      if (!defined $taxonid) {
+        die "instance_organism configuration has no taxonid field";
+      }
+
+      my $rs = $track_schema->resultset('Organismprop')
+        ->search({ value => $taxonid,
+                   'type.name' => 'taxon_id' },
+                 {
+                   join => 'type' });
+      if ($rs->count() > 1) {
+        die "matched multiple organismprops with taxonid: $taxonid";
+      }
+
+      if ($rs->count() == 0) {
+        warn qq(can't find an organism in the DB using taxonid "$taxonid" from ) .
+          qq("instance_organism" configuration so this Canto will run in ) .
+          qq(multi-organism mode);
+        delete $self->{instance_organism};
+      } else {
+        my $organism = $rs->first()->organism();
+
+        $instance_organism->{organism_id} = $organism->organism_id();
+        $instance_organism->{species} = $organism->species();
+        $instance_organism->{genus} = $organism->genus();
+      }
     }
 
-    my $rs = $track_schema->resultset('Organismprop')
-      ->search({ value => $taxonid,
-                 'type.name' => 'taxon_id' },
-               { join => 'type' });
-    if ($rs->count() > 1) {
-      die "matched multiple organismprops with taxonid: $taxonid";
-    }
-
-    if ($rs->count() == 0) {
-      warn qq(can't find an organism in the DB using taxonid "$taxonid" from ) .
-        qq("instance_organism" configuration so this Canto will run in ) .
-        qq(multi-organism mode);
-      delete $self->{instance_organism};
-    } else {
-      my $organism = $rs->first()->organism();
-
-      $instance_organism->{organism_id} = $organism->organism_id();
-      $instance_organism->{species} = $organism->species();
-      $instance_organism->{genus} = $organism->genus();
+    if ($self->{host_organism_taxonids}) {
+      $self->_set_host_organisms($track_schema);
     }
   }
 }

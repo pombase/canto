@@ -99,9 +99,19 @@ sub create_genes_from_lookup
         for my $gene (@genes) {
           my $org_full_name = $gene->{organism_full_name};
           my $org_taxonid = $gene->{organism_taxonid};
+          my $pathogen_or_host = 'unknown';
+
+          if ($self->config()->{pathogen_host_mode}) {
+            $pathogen_or_host = 'pathogen';
+            for my $host_taxonid (@{$self->config()->{host_organism_taxonids}}) {
+              if ($org_taxonid eq $host_taxonid) {
+                $pathogen_or_host = 'host';
+              }
+            }
+          }
           my $curs_org =
             Canto::CursDB::Organism::get_organism($schema, $org_full_name,
-                                                   $org_taxonid);
+                                                  $org_taxonid, $pathogen_or_host);
 
           my $primary_identifier = $gene->{primary_identifier};
 

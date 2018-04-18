@@ -259,6 +259,24 @@ EOF
        organism_id integer NOT NULL REFERENCES organism (organism_id),
        strain_name text NOT NULL);");
   },
+
+  17 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("ALTER TABLE organism ADD COLUMN pathogen_or_host TEXT default 'unknown' NOT NULL;");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 );
 
 sub upgrade_to

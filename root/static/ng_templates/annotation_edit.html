@@ -155,6 +155,16 @@
         </td>
       </tr>
 
+      <tr>
+        <td class="title">Evidence code</td>
+        <td>
+          <annotation-evidence evidence-code="annotation.evidence_code"
+                               with-gene-id="annotation.with_gene_id"
+                               valid-evidence="status.validEvidence"
+                               annotation-type-name="{{annotationType.name}}"></annotation-evidence
+        </td>
+      </tr>
+
       <tr ng-class="{ 'has-error': !isValidInteractingGene() }">
         <td class="title">
           Interacting gene
@@ -166,16 +176,6 @@
           </div>
           <span ng-show="isValidFeature() && !isValidInteractingGene()"
                 class="help-block">Please select an interacting gene</span>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="title">Evidence code</td>
-        <td>
-          <annotation-evidence evidence-code="annotation.evidence_code"
-                               with-gene-id="annotation.with_gene_id"
-                               valid-evidence="status.validEvidence"
-                               annotation-type-name="{{annotationType.name}}"></annotation-evidence
         </td>
       </tr>
 
