@@ -11,6 +11,7 @@ SCRIPT
 
 $ontology_loading_script = <<-SCRIPT
   # Load ontologies from Gene Ontology, FYPO, and PSI-MOD
+  cd /home/canto/canto-master
   ./script/canto_load.pl \
     --ontology http://snapshot.geneontology.org/ontology/go-basic.obo \
     --ontology http://curation.pombase.org/ontologies/fypo/latest/fypo-simple.obo \
