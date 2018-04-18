@@ -1,0 +1,29 @@
+{
+  "name": "canto",
+  "version": "1.0.0",
+  "description": "Canto: The PomBase community curation tool ===================================",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pombase/canto.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pombase/canto/issues"
+  },
+  "homepage": "https://github.com/pombase/canto#readme",
+  "devDependencies": {
+    "jasmine-core": "^3.1.0",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.1",
+    "karma-qunit": "^2.0.1",
+    "qunit": "^2.6.0"
+  }
+}
