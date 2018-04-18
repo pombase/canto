@@ -315,6 +315,7 @@ sub _get_genes
       organism => {
         full_name => $organism->full_name(),
         taxonid => $organism->taxonid(),
+        pathogen_or_host => $organism->pathogen_or_host(),
       },
     }
   } $gene_rs->all();

@@ -179,6 +179,12 @@ cmp_deeply($res,
 
 $res = $service_utils->list_for_service('gene');
 
+my $expected_organism = {
+  full_name => 'Schizosaccharomyces pombe',
+  taxonid => 4896,
+  pathogen_or_host => 'unknown',
+};
+
 cmp_deeply($res,
            [
             {
@@ -186,24 +192,28 @@ cmp_deeply($res,
               'primary_identifier' => 'SPBC14F5.07',
               display_name => 'doa10',
                gene_id => 3,
+              organism => $expected_organism,
             },
             {
               'primary_identifier' => 'SPBC1826.01c',
               'primary_name' => 'mot1',
               display_name => 'mot1',
                gene_id => 1,
+              organism => $expected_organism,
             },
             {
               'primary_name' => 'ssm4',
               'primary_identifier' => 'SPAC27D7.13c',
               display_name => 'ssm4',
                gene_id => 2,
+              organism => $expected_organism,
             },
             {
               'primary_identifier' => 'SPCC63.05',
               'primary_name' => undef,
               display_name => 'SPCC63.05',
                gene_id => 4,
+              organism => $expected_organism,
             },
           ]);
 
