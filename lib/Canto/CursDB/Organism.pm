@@ -42,6 +42,11 @@ __PACKAGE__->table("organism");
   data_type: 'integer'
   is_nullable: 0
 
+=head2 pathogen_or_host
+
+  data_type: 'text'
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -51,6 +56,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "taxonid",
   { data_type => "integer", is_nullable => 0 },
+  "pathogen_or_host",
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -97,8 +104,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-10-13 23:27:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Db8WF7vVIEMMwsYfBTXb1A
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-04-18 11:44:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mogWDM2QGzK8HuWS4uvbgg
 
 
 use Carp;
@@ -108,12 +115,19 @@ sub get_organism
   my $schema = shift;
   my $name = shift;
   my $taxonid = shift;
+  my $pathogen_or_host = shift;
+
+  if (!defined $pathogen_or_host) {
+    croak 'no $pathogen_or_host passed to get_organism()';
+  }
 
   croak "taxonid argument undefined" unless defined $taxonid;
 
   return $schema->find_or_create_with_type('Organism',
                                            { full_name => $name,
-                                             taxonid => $taxonid });
+                                             taxonid => $taxonid,
+                                             pathogen_or_host => $pathogen_or_host,
+                                           });
 }
 
 

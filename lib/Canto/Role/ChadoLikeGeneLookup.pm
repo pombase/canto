@@ -126,13 +126,6 @@ sub _read_genes
       match_types => \%match_types,
     };
 
-    my $host_organism_taxonids = $self->config()->{host_organism_taxonids};
-
-    if ($host_organism_taxonids &&
-          grep { $_ eq $taxonid } @$host_organism_taxonids) {
-      $result_gene->{is_host_gene} = 1;
-    }
-
     push @found_genes, $result_gene;
   }
 
