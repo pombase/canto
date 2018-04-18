@@ -45,6 +45,7 @@ __PACKAGE__->table("organism");
 =head2 pathogen_or_host
 
   data_type: 'text'
+  default_value: 'unknown'
   is_nullable: 0
 
 =cut
@@ -57,7 +58,7 @@ __PACKAGE__->add_columns(
   "taxonid",
   { data_type => "integer", is_nullable => 0 },
   "pathogen_or_host",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "text", default_value => "unknown", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -104,8 +105,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-04-18 11:44:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mogWDM2QGzK8HuWS4uvbgg
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-04-18 14:06:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bgul2UsrdOuMmSvnK/gJZw
 
 
 use Carp;
