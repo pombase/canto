@@ -1,0 +1,13 @@
+---
+# COPY AND RENAME THIS FILE to 'vagrant_config.yaml' if you want to customise
+# certain settings in the Vagrantfile. You should only edit this file if you
+# need to add new configuration options.
+
+# Specify the path to the Vagrant box (default name 'package.box') as a URL,
+# e.g. "file:///path/to/package.box"
+box_url: ""
+
+# Choose whether to load ontologies when provisioning the Vagrant box.
+# Loading ontologies can take a long time, so you may set this to 'false' if
+# you need to bring vagrant up quickly.
+load_ontologies: true
