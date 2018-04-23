@@ -18,7 +18,7 @@ href="https://orcid.org/">ORCID site</a>.
 When you provide your ORCID identifier, the Canto database can
 associate every annotation you curate with your ID as well as with the
 paper it comes from. At present these connections are stored for
-future use; we plan to updae Canto to provide a view of what any
+future use; we plan to update Canto to provide a view of what any
 individual curator has annotated for a given publication.
 </p>
 
