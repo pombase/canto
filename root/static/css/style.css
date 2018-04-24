@@ -371,13 +371,10 @@ table.list tr td {
   border-color: #bbb;
 }
 table.curs-genotype-list td {
-  border-right: 1px solid #bbb;
+  border: 1px solid #bbb;
   padding: 3px;
 }
 table.curs-genotype-list tbody {
-  border-bottom: 1px solid #bbb;
-  border-left: 1px solid #bbb;
-  border-top: 1px solid #bbb;
   padding: 3px;
 }
 
@@ -682,6 +679,16 @@ div.clearall {
 
 .curs-genotype-list-view {
   margin-bottom: 1.3em;
+}
+
+.curs-genotype-list-view-no-checkbox {
+  margin-left: 1em;
+}
+
+table th.curs-genotype-checkbox-column,
+table td.curs-genotype-checkbox-column {
+  border: 0px solid #bbb;
+  background-color: white;
 }
 
 .curs-genotype-list-instructions span {

@@ -3,11 +3,14 @@
   <table class="curs-genotype-list">
     <thead>
       <tr>
+        <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">
+          &nbsp;
+        </th>
         <th style="border-bottom: 1px solid grey"
             colspan="{{columnsToHide.background ? 3 : 4}}">
 Genotype
         </th>
-        <th rowspan="2" colspan="2">
+        <th rowspan="2">
 Annotations
         </th>
       </tr>
@@ -38,7 +41,7 @@ Annotations
     </tbody>
   </table>
 
-  <div ng-if="showCheckBoxActions">
+  <div class="curs-genotype-list-view-no-checkbox" ng-if="showCheckBoxActions">
     Action: <button class="btn btn-primary btn-xs"
                     ng-disabled="checkedGenotypeCount() < 2"
                     title="{{checkedGenotypeCount() < 2 ? 'Select two or more genotypes' : 'Combine the selected genotypes'}}"

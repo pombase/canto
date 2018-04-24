@@ -1,6 +1,10 @@
 <tbody ng-mouseover="mouseOver($event)"
     ng-class="{ selected: isSelected() }">
   <tr>
+  <td ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column"
+      rowspan="{{genotype.alleles.length}}">
+    <input ng-show="showCheckBoxActions" name="select-annotation" type="Checkbox" ng-model="$parent.checkBoxIsChecked"/>
+  </td>
   <td>
     <a href="{{curs_root_uri + '/feature/gene/view/' + firstAllele.gene_id + (read_only_curs ? '/ro' : '')}}">{{firstAllele.gene_display_name}}</a>
   </td>
@@ -15,9 +19,6 @@
   </td>
   <td style="width: 4em;" rowspan="{{genotype.alleles.length}}">
     {{genotype.annotation_count}}
-  </td>
-  <td rowspan="{{genotype.alleles.length}}">
-    <input ng-if="showCheckBoxActions" name="select-annotation" type="Checkbox" ng-model="$parent.checkBoxIsChecked"/>
     <div ng-if="navigateOnClick == 'false'" class="table-row-actions"
          style="float: right; position: relative; right: -20px">
       <img ng-show="!isSelected()" ng-src="{{app_static_path + '/images/right_triangle.png'}}"></img>
