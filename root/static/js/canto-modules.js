@@ -338,6 +338,29 @@ canto.service('CursGenotypeList', function($q, Curs) {
       return promise;
     };
 
+  this.getGenotypeById = function(genotypeId) {
+    var genotypesPromise = this.cursGenotypeList({
+      include_allele: 1,
+    });
+    return genotypesPromise.then(function(genotypes) {
+      var returnGenotypeList =
+        $.grep(genotypes, function(genotype) {
+          return genotype.genotype_id === genotypeId;
+        });
+
+      if (returnGenotypeList.length != 1) {
+        return null;
+      } else {
+        return returnGenotypeList[0];
+      }
+    });
+  };
+
+  this.setGenotypeBackground = function(toaster, $http, genotype, newBackground) {
+    return this.storeGenotype(toaster, $http, genotype.genotype_id,genotype.genotype_name,
+                              newBackground, genotype.alleles);
+  };
+
   this.cursGenotypeList = function(options) {
     var q = $q.defer();
 
@@ -3685,12 +3708,64 @@ var genotypeSearchCtrl =
     };
   };
 
+
+var genotypeBackgroundEditDialogCtrl =
+  function($scope, $uibModalInstance, $http, toaster, CursGenotypeList, args) {
+    $scope.data = {
+      background: args.genotype.background
+    };
+
+    $scope.finish = function() {
+      if ($scope.data.background === args.genotype.background) {
+        $uibModalInstance.close();
+      } else {
+        var storePromise =
+          CursGenotypeList.setGenotypeBackground(toaster, $http, args.genotype,
+                                                 $scope.data.background);
+        storePromise.then(function() {
+          $uibModalInstance.close();
+        });
+      }
+    };
+
+    $scope.cancel = function() {
+      $uibModalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('GenotypeBackgroundEditDialogCtrl',
+                 ['$scope', '$uibModalInstance', '$http', 'toaster', 'CursGenotypeList',
+                  'args',
+                 genotypeBackgroundEditDialogCtrl]);
+
+
+function editBackgroundDialog($uibModal, genotype) {
+  var editInstance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/genotype_background_edit.html',
+    controller: 'GenotypeBackgroundEditDialogCtrl',
+    title: 'Edit genotype background',
+    animate: false,
+//    size: 'lg',
+    resolve: {
+      args: function() {
+        return {
+          genotype: genotype,
+       };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return editInstance.result;
+}
+
+
 canto.directive('genotypeSearch',
                  ['CursGenotypeList', 'CantoGlobals',
                   genotypeSearchCtrl]);
 
 var genotypeListRowLinksCtrl =
-  function(toaster, CantoGlobals, CursGenotypeList) {
+  function($uibModal, toaster, CantoGlobals, CursGenotypeList) {
     return {
       restrict: 'E',
       scope: {
@@ -3730,6 +3805,14 @@ var genotypeListRowLinksCtrl =
             loadingEnd();
           });
         };
+
+        $scope.editBackground = function(genotypeId) {
+          var genotypePromise = CursGenotypeList.getGenotypeById(genotypeId);
+
+          genotypePromise.then(function(genotype) {
+            editBackgroundDialog($uibModal, genotype);
+          });
+        };
       },
       link: function($scope) {
         if ($scope.navigateOnClick) {
@@ -3750,7 +3833,7 @@ var genotypeListRowLinksCtrl =
   };
 
 canto.directive('genotypeListRowLinks',
-                ['toaster', 'CantoGlobals', 'CursGenotypeList',
+                ['$uibModal', 'toaster', 'CantoGlobals', 'CursGenotypeList',
                  genotypeListRowLinksCtrl]);
 
 var genotypeListRowCtrl =
