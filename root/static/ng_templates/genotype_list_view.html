@@ -3,7 +3,8 @@
   <table class="curs-genotype-list">
     <thead>
       <tr>
-        <th style="border-bottom: 1px solid grey" colspan="3">
+        <th style="border-bottom: 1px solid grey"
+            colspan="{{columnsToHide.background ? 3 : 4}}">
 Genotype
         </th>
         <th rowspan="2" colspan="2">
@@ -19,6 +20,9 @@ Annotations
         </th>
         <th>
           Expression
+        </th>
+        <th rowspan="2" ng-hide="columnsToHide.background">
+          Background
         </th>
       </tr>
     </thead>

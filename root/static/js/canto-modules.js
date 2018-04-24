@@ -3956,6 +3956,10 @@ var genotypeListViewCtrl =
 
         $scope.$watch('genotypeList',
                       function() {
+                        $scope.columnsToHide = {
+                          background: true,
+                          name: true,
+                        };
                         $.map($scope.genotypeList,
                               function(genotype) {
                                 if (genotype.background) {
