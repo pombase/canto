@@ -95,7 +95,7 @@ Add, view and edit genotypes
         <div ng-hide="data.waitingForServer">
         <div ng-if="data.singleAlleleGenotypes.length != 0">
           <div class="curs-genotype-list-instructions">
-            <div>Single allele genotypes</div>
+            <span>Single allele genotypes</span>
             (Mouse over genotypes for more actions)
           </div>
 
