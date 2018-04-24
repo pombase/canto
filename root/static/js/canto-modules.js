@@ -3944,7 +3944,12 @@ var genotypeListViewCtrl =
 
           $.map(checkedGenotypes, function(genotype) {
             if (genotype.background) {
-              newBackgroundParts.push(genotype.background);
+              if ($.grep(newBackgroundParts,
+                         function(background) {
+                           return background === genotype.background
+                         }).length === 0) {
+                newBackgroundParts.push(genotype.background);
+              }
             }
           });
 
