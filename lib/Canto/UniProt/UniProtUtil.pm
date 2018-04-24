@@ -74,7 +74,15 @@ sub _parse_results
     my @synonyms = ();
 
     if (defined $entry->{gene}->[0]->{name}) {
-      push @synonyms, map { _content($_) } @{$entry->{gene}->[0]->{name}};
+      for my $synonym (@{$entry->{gene}->[0]->{name}}) {
+        my $synonym_content = _content($synonym);
+
+        if ($synonym->{type} eq 'primary') {
+          $name = $synonym_content;
+        } else {
+          push @synonyms, $synonym_content;
+        }
+      }
     }
 
     my $accession = _content($entry->{accession}->[0]);
