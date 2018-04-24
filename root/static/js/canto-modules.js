@@ -3940,8 +3940,22 @@ var genotypeListViewCtrl =
               return genotype.alleles[0];
             });
 
+          var newBackgroundParts = [];
+
+          $.map(checkedGenotypes, function(genotype) {
+            if (genotype.background) {
+              newBackgroundParts.push(genotype.background);
+            }
+          });
+
+          var newBackground = undefined;
+
+          if (newBackgroundParts.length > 0) {
+            newBackground = newBackgroundParts.join(' ');
+          }
+
           var storePromise =
-            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, allelesForGenotype);
+            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype);
 
           storePromise.then(function(result) {
             window.location.href =
