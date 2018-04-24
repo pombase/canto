@@ -680,6 +680,10 @@ div.clearall {
   margin-bottom: 10px;
 }
 
+.curs-genotype-list-view {
+  margin-bottom: 1.3em;
+}
+
 .curs-genotype-list-instructions span {
   font-weight: bold;
   margin-right: 0.4em;

@@ -111,7 +111,7 @@ Add, view and edit genotypes
         </div>
         <div ng-if="data.multiAlleleGenotypes.length != 0">
           <div class="curs-genotype-list-instructions">
-            <div>Multi allele genotypes</div>
+            <span>Multi allele genotypes</span>
           </div>
 
           <genotype-list-view genotype-list="data.multiAlleleGenotypes"
