@@ -1,0 +1,31 @@
+<!-- PAGE_TITLE: ORCID and Canto curation -->
+<!-- FLAGS: use_bootstrap -->
+
+<h3>What is ORCID?</h3>
+
+<p>
+ORCID provides every researcher with a stable, unique identifier that
+can be connected with publications and other outputs.
+</p>
+
+<p>
+Learn more, and register for an identifier, on the <a
+href="https://orcid.org/">ORCID site</a>.
+</p>
+
+<h3>How does Canto use ORCID?</h3>
+<p>
+When you provide your ORCID identifier, the Canto database can
+associate every annotation you curate with your ID as well as with the
+paper it comes from. At present these connections are stored for
+future use; we plan to update Canto to provide a view of what any
+individual curator has annotated for a given publication.
+</p>
+
+<p>
+PomBase curators are also exploring options for propagating links
+between ORCID-identified individuals and their annotations beyond
+Canto, so that researchers can reliably cite their contributions to
+PomBase, e.g. to meet data dissemination requirements for grants.
+</p>
+
