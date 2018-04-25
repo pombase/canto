@@ -180,6 +180,19 @@ canto.filter('wrapAtSpaces', function () {
   };
 });
 
+canto.filter('formatExpression', function () {
+  return function (item) {
+    if (item == null) {
+      return null;
+    }
+    if (item.toLowerCase().indexOf('wild type') >= 0) {
+      return 'Wild type level';
+    } else {
+      return item;
+    }
+  };
+});
+
 canto.filter('encodeAlleleSymbols', function () {
   return function (item) {
     if (item == null) {
