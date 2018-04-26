@@ -20,6 +20,10 @@
     <a ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
        href="{{curs_root_uri + '/genotype_manage#/duplicate/' + genotypeId}}">Copy and edit ...</a>
   </div>
+  <div ng-if="!read_only_curs">
+    <a ng-class="{disabled: genotypeId == null }"
+       ng-click="editBackground(genotypeId)">Add/edit background ...</a>
+  </div>
   <div title="{{annotationCount > 0 ? 'Genotypes with more than one annotation cannot be deleted - delete the annotations first' : ''}}">
     <a ng-class="{disabled: genotypeId == null || annotationCount > 0}"
        ng-if="!read_only_curs"

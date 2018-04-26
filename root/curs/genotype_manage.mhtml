@@ -7,16 +7,9 @@ $read_only_curs => 0
 <div ng-controller="GenotypeManageCtrl"
      id="curs-genotype-manage" class="genotype-list ng-cloak">
   <div>
-  <div class="row">
+
 % if (!$read_only_curs) {
-    <div ng-if="!data.editingGenotype" class="col-sm-6 col-md-6">
-    <div class="curs-top-help">
-Add, view and edit genotypes
-    </div>
-        <div class="feature-list-action">
-          <a class="btn btn-primary" ng-click="addGenotype()" href="#">Add a genotype ...</a>
-        </div>
-    </div>
+  <div class="row">
     <div ng-if="data.editingGenotype" class="col-sm-12 col-md-12">
       <div class="curs-box">
         <div class="curs-box-title">
@@ -36,36 +29,113 @@ Specify alleles of genes from the list, until the new genotype is complete
     </div>
   </div>
 % }
-  <div ng-if="!data.editingGenotype" class="ng-cloak row">
-    <div class="col-sm-12 col-md-12">
+
+  <div ng-if="!data.editingGenotype" class="ng-cloak curs-box">
+    <div class="curs-box-title">
+Add, view and edit genotypes
+    </div>
+    <div class="curs-box-body">
+  <div class="row">
+% if (!$read_only_curs) {
+    <div class="col-sm-4 col-md-4">
+      <div ng-hide="data.allGenes.length">
+        <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+        Loading genes ...
+      </div>
+      <div ng-show="data.allGenes.length && !data.selectedOrganism">
+        <select name="select-organism" ng-model="data.selectedOrganism"
+                ng-options="o as o.full_name for o in data.organismsOfGenes">
+          <option value="">Select an organism ...</option>
+        </select>
+      </div>
+      <div class="curs-genotype-edit-gene-list"
+           ng-if="data.allGenes.length && data.selectedOrganism">
+        <span ng-show="data.multiOrganismMode">
+          <span style="font-size: 90%; font-weight: bold;">
+            {{data.selectedOrganism.full_name}} genes
+          </span>
+          <span ng-show="data.organismsOfGenes.length != 1">
+            (<a ng-click="data.selectedOrganism = null">change ...</a>)
+          </span>
+        </span>
+
+        <table class="list">
+          <thead>
+            <tr>
+              <th>Gene</th>
+              <th colspan="2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="gene in selectedOrganismGenes()">
+              <td ng-if="gene.primary_name" title="{{gene.primary_name}} ({{gene.primary_identifier}})">{{gene.primary_name}}</td>
+              <td ng-if="!gene.primary_name" title="{{gene.primary_identifier}}">{{gene.primary_identifier}}</td>
+              <td>
+                <button class="btn btn-primary btn-xs"
+                        title="{{deletionButtonTitle(gene.gene_id)}}"
+                        ng-disabled="hasDeletionGenotype(gene.gene_id)"
+                        ng-click="makeDeletionAllele(gene.gene_id)">Deletion</button>
+              </td>
+              <td>
+                <button class="btn btn-primary btn-xs"
+                        ng-click="singleAlleleQuick(gene.primary_name || gene.primary_identifier, gene.primary_identifier, gene.gene_id)">Other genotype ...</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+% }
+    <div class="col-sm-8 col-md-8">
       <div class="ng-cloak">
         <div ng-show="data.waitingForServer">
           <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
         </div>
 
         <div ng-hide="data.waitingForServer">
-        <div ng-if="data.genotypes.length != 0">
-          <div class="curs-genotype-list-instructions">
-Mouse over genotypes for more actions
+        <div ng-if="data.singleAlleleGenotypes.length != 0">
+          <div class="curs-genotype-list-instructions curs-genotype-list-view-no-checkbox">
+            <span>Single allele genotypes</span>
+            (Mouse over genotypes for more actions)
           </div>
 
-          <genotype-list-view genotype-list="data.genotypes"
+          <genotype-list-view genotype-list="data.singleAlleleGenotypes"
                               navigate-on-click="false"
+% if (!$read_only_curs) {
+                              show-check-box-actions="true"
+% } else {
+                              show-check-box-actions="false"
+% }
                               selected-genotype-id="data.selectedGenotypeId">
           </genotype-list-view>
         </div>
+        <div class="curs-genotype-list-view-no-checkbox" ng-if="data.multiAlleleGenotypes.length != 0">
+          <div class="curs-genotype-list-instructions">
+            <span>Multi allele genotypes</span>
+          </div>
+
+          <genotype-list-view genotype-list="data.multiAlleleGenotypes"
+                              navigate-on-click="false"
+                              show-check-box-actions="false"
+                              selected-genotype-id="data.selectedGenotypeId">
+          </genotype-list-view>
+        </div>
+% if (!$read_only_curs) {
         <div ng-show="data.genotypes.length == 0">
 No genotypes in this session.  Try adding one.
 
         </div>
+% }
       </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-5 col-md-5">
-        <button ng-click="backToSummary()" type="button" class="btn btn-primary curs-back-button">&lt;- Back to summary</button>
-      </div>
-    </div>
     </div>
   </div>
-</div>
+  </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-5 col-md-5">
+      <button ng-click="backToSummary()" type="button" class="btn btn-primary curs-back-button">&lt;- Back to summary</button>
+    </div>
+  </div>
+  </div>
 </div>

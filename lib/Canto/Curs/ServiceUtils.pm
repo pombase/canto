@@ -305,11 +305,18 @@ sub _get_genes
     my $proxy =
       Canto::Curs::GeneProxy->new(config => $self->config(),
                                   cursdb_gene => $_);
+    my $organism = $proxy->organism();
+
     {
       primary_identifier => $proxy->primary_identifier(),
       primary_name => $proxy->primary_name(),
       display_name => $proxy->display_name(),
       gene_id => $proxy->gene_id(),
+      organism => {
+        full_name => $organism->full_name(),
+        taxonid => $organism->taxonid(),
+        pathogen_or_host => $organism->pathogen_or_host(),
+      },
     }
   } $gene_rs->all();
 }
