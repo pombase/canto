@@ -1,6 +1,6 @@
 <tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
   <td ng-if="annotationType.feature_type == 'genotype'">
-    <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
+    <div ng-repeat="allele in annotation.alleles">
       {{allele.gene_display_name}}
     </div>
   </td>
@@ -23,19 +23,19 @@
     <span ng-if="annotation.status === 'new'">
       <a ng-if="addLinks()"
          href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">
-        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-          <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+        <div ng-repeat="allele in annotation.alleles">
+          <span ng-bind-html="allele.long_display_name | addZeroWidthSpace | encodeAlleleSymbols | toTrusted"></span>
         </div>
       </a>
       <span ng-if="!addLinks()">
-        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-          <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+        <div ng-repeat="allele in annotation.alleles">
+          <span ng-bind-html="allele.long_display_name | addZeroWidthSpace | encodeAlleleSymbols | toTrusted"></span>
         </div>
       </span>
     </span>
     <span ng-if="annotation.status === 'existing'">
-      <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-        <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+      <div ng-repeat="allele in annotation.alleles">
+        <span ng-bind-html="allele.long_display_name | addZeroWidthSpace | encodeAlleleSymbols | toTrusted"></span>
       </div>
     </span>
   </td>
