@@ -61,7 +61,7 @@
   <td ng-if="!data.hideColumns.gene_product_form_id">
     {{annotation.gene_product_form_id || ''}}
   </td>
-  <td ng-if="annotationType.can_have_conditions">
+  <td ng-if="annotationType.can_have_conditions && !data.hideColumns.conditions">
     <span ng-bind-html="annotation.conditionsString | toTrusted"></span>
   </td>
   <td ng-if="!data.hideColumns.qualifiers">

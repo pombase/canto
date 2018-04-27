@@ -4692,6 +4692,7 @@ var annotationTableCtrl =
           submitter_comment: true,
           extension: true,
           curator: true,
+          conditions: true,
           genotype_name: true,
           genotype_background: true,
           term_suggestion: true,
