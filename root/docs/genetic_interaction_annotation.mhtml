@@ -1,4 +1,4 @@
-<!-- PAGE_TITLE: Curating Genetic Interactions -->
+g<!-- PAGE_TITLE: Curating Genetic Interactions -->
 <!-- FLAGS: use_bootstrap -->
 
 <p>
@@ -6,41 +6,42 @@ If you have genetic interactions to curate, please read the
 Directionality section carefully.
 </p>
 <p>
-When you choose 'Genetic interaction', you go to a page that lists all
-of the genes you have entered for the paper. Select one or more genes,
-then click 'Proceed' to go to the evidence selection page.
+When you choose 'Genetic interaction', a popup appears with two
+pulldown menus and a text field for optional comments.
 </p>
 <p>
-Note that only pairwise genetic interactions can be annotated in
-Canto. Thus, if you choose more than one interacting gene, you will
-create two or more separate interaction annotations, with the same
-evidence.
-</p>
-<p>
-On the evidence selection page, choose from the pulldown menu. Some
+Choose an evidence type from the first pulldown menu. Some
 evidence types have a brief description that indicates the
 directionality. Further information on evidence supporting genetic
 interactions is available an the <a
 href="http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions">BioGRID
-help wiki</a> and in the Directionality section below. Click 'Proceed'
-to finish the annotation and return to the paper summary page.
+help wiki</a> and in the Directionality section below.
+</p>
+<p>
+Choose the interacting gene from the second pulldown menu. Click 'OK'
+to finish the annotation and close the popup.
+</p>
+<p>
+Note that only pairwise genetic interactions can be annotated in
+Canto. 
 </p>
 
-<h2>Directionality</h2>
+<h3>Directionality</h3>
 <p>
-Some genetic interactions have an inherent
-directionality. For example, overexpression of one gene (A) may
-suppress the phenotype of a mutation in a second gene (B), but
-overexpressing gene B may have no effect on a mutant gene A phenotype.
+Some genetic interactions have an inherent directionality. For
+example, overexpression of one gene (A) may suppress the phenotype of
+a mutation in a second gene (B), but overexpressing gene B may have no
+effect on a mutant gene A phenotype.
 </p>
+
 <p>
 For such "asymmetric" interactions, Canto allows you to curate in only
 one direction starting from the gene you have selected, as indicated
 in the evidence selector. If the evidence description looks the wrong
-way around, you will have to change genes and start again. (You can
-finish and then delete an interaction annotation if you find that you
-have started with the wrong gene.)
+way around, you can finish and then edit the annotation, or change
+genes and start again.
 </p>
+
 <p>
 In Canto, genetic interactions follow BioGRID conventions, in which
 the starting gene is known as "interactor A" or the "bait". The second

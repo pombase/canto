@@ -5,28 +5,29 @@
 If you have physical interactions to curate, please read the
 Directionality section carefully.
 </p>
+
 <p>
-When you choose 'Physical interaction', you go to a page that lists
-all of the genes you have entered for the paper. Select one or more
-genes, then click 'Proceed' to go to the evidence selection page.
+When you choose 'Physical interaction', a popup appears with two
+pulldown menus and a text field for optional comments.
 </p>
 <p>
-Note that only pairwise physical interactions can be annotated in
-Canto. Thus, if you choose more than one interacting gene, you will
-create two or more separate interaction annotations, with the same
-evidence.
-</p>
-<p>
-On the evidence selection page, choose from the pulldown menu. Some
+Choose an evidence type from the first pulldown menu. Some
 evidence types have a brief description that indicates the
-directionality. Further information on evidence supporting physical
+directionality. Further information on evidence supporting genetic
 interactions is available an the <a
-href="http://wiki.thebiogrid.org/doku.php/experimental_systems#physical_interactions">BioGRID
-help wiki</a> and in the Directionality section below. Click 'Proceed'
-to finish the annotation and return to the paper summary page.
+href="http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions">BioGRID
+help wiki</a> and in the Directionality section below.
+</p>
+<p>
+Choose the interacting gene from the second pulldown menu. Click 'OK'
+to finish the annotation and close the popup.
+</p>
+<p>
+Note that only pairwise genetic interactions can be annotated in
+Canto. 
 </p>
 
-<h2>Directionality</h2>
+<h3>Directionality</h3>
 <p>
 Some experiments that detect physical interactions
 have an inherent directionality. For example, in a typical two-hybrid
