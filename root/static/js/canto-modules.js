@@ -3020,29 +3020,13 @@ function makeAlleleEditInstance($uibModal, allele, endogenousWildtypeAllowed)
 
 
 var genePageCtrl =
-  function($scope, $uibModal, toaster, $http, CantoGlobals) {
-    $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {
-      var editInstance = makeAlleleEditInstance($uibModal,
-                                                {
-                                                  gene_display_name: gene_display_name,
-                                                  gene_systematic_id: gene_systematic_id,
-                                                  gene_id: gene_id,
-                                                });
-
-      editInstance.result.then(function (alleleData) {
-        var storePromise =
-          storeGenotypeHelper(toaster, $http, undefined, undefined, undefined, [alleleData], true);
-
-        storePromise.then(function(result) {
-          window.location.href =
-            CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
-        });
-      });
+  function($scope, CursSettings) {
+    $scope.advancedMode = function() {
+      return CursSettings.getAnnotationMode() == 'advanced';
     };
   };
 
-canto.controller('GenePageCtrl', ['$scope', '$uibModal', 'toaster', '$http', 'CantoGlobals',
-                                  genePageCtrl]);
+canto.controller('GenePageCtrl', ['$scope', 'CursSettings', genePageCtrl]);
 
 
 var singleGeneAddDialogCtrl =
@@ -4579,7 +4563,7 @@ function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
 }
 
 var annotationQuickAdd =
-  function($uibModal, CursSettings, CantoGlobals) {
+  function($uibModal, CantoGlobals) {
     return {
       scope: {
         annotationTypeName: '@',
@@ -4598,10 +4582,6 @@ var annotationQuickAdd =
           $scope.linkLabel = 'Quick add ...';
         }
 
-        $scope.enabled = function() {
-          return CursSettings.getAnnotationMode() == 'advanced';
-        };
-
         $scope.add = function() {
           addAnnotation($uibModal, $scope.annotationTypeName, $scope.featureType,
                         $scope.featureId, $scope.featureDisplayName);
@@ -4610,7 +4590,7 @@ var annotationQuickAdd =
     };
   };
 
-canto.directive('annotationQuickAdd', ['$uibModal', 'CursSettings', 'CantoGlobals', annotationQuickAdd]);
+canto.directive('annotationQuickAdd', ['$uibModal', 'CantoGlobals', annotationQuickAdd]);
 
 
 function filterAnnotations(annotations, params) {

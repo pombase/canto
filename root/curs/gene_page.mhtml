@@ -48,7 +48,7 @@ Choose curation type for <% $gene->display_name() %>:
 %     }
 % 
 %     if ($annotation_type->{category} eq 'ontology') {
-    <span class="curs-annotation-quick-add">
+    <span class="curs-annotation-quick-add" ng-show="advancedMode()">
       <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
                             feature-type="gene" feature-id="<% $gene->gene_id() %>"
                             feature-display-name="<% $gene_proxy->display_name() %>">
