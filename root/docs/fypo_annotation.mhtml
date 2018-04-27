@@ -42,6 +42,7 @@ definition.
 <h2><a name="interface">Using the interface</a></h2>
 
 <h3><a name="single-allele-phenotypes">Single-allele phenotypes</a></h3>
+
 <p>
 A single allele is a mutation, or set of mutations, in one copy of a
 gene at one locus (which may be the endogenous locus or a different
@@ -59,10 +60,18 @@ box will pop up where you can add allele details:
 <ol>
   <li>
     <b>Allele name</b>: this field is optional. Fill this in if the
-    allele is named, e.g. "cdc25-22". For the "wild type" and
+    allele is named, e.g. "hsk1-89". For the "wild type" and
     "deletion" types, a default name will be assigned. For other
     types, the allele will be denoted "unnamed" if no name is filled
     in.
+  </li>
+  <li>
+    <b>Allele type</b>: As you type the allele name, an autocomplete
+    pulldown may appear if there are matches to any alleles already in
+    Canto's database. If your allele name appears, you can select it,
+    and its type and description will be filled in. You will only have
+    to choose the expression level. Otherwise, proceed to add allele
+    details:
   </li>
   <li>
     <b>Allele type</b>: choose an allele type in the dropdown
@@ -87,6 +96,14 @@ box will pop up where you can add allele details:
     inducible promoter was used to try to alter expression. If a
     wild-type allele was investigated in the absence of any other
     changes, then an altered expression level must be set.
+  </li>
+  <li>
+    <b>Descriptions for "unknown" alleles</b>: If you know the
+    description for any allele that is listed as "unknown" in Canto,
+    please enter it. To do so, type in the allele name, but <b>do
+    not</b> select it from the autocomplete options. Instead, proceed
+    as if no match had been found, and you will be able to choose a
+    type and enter a description.
   </li>
 </ol>
 
@@ -179,56 +196,137 @@ type and markers are optional). There are two routes to do this:
 select the "Multiple allele" phenotype option in the curation types
 list on a gene-specific page, or follow the "Genotype management" link
 on the paper summary page. Either link takes you to the Genotypes
-page, which displays genotypes added or selected for the paper on the
-right-hand side of the page. On the left you can search for a genotype
-in the Canto database or enter a new genotype.
+page, which displays genes and genotypes added for the paper. 
 </p>
 
 <p>
-To search, click "Find an existing genotype...", then select the
-relevant genes from the list. Any matches will appear on the right,
-and you can click the link to use one.
-</p>
-
-<p>
-If the genotype you need isn't available, go back to the Genotypes
-page, and click "Add a genotype..." The allele curation interface is
-the same as for single alleles, as described above. Simply add one or
-more allele(s) for each gene using the "Add allele..." button, and
-click "Finish" when you have finished entering all genotype
-details.
+On the left-hand side of the page is a table of genes. For each gene,
+you can use the "Deletion" button to add a deletion as a single-allele
+genotype with one click, or click "Other genotype" to bring up the
+allele details popup (described above).
 </p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/add_genotype.png') %>" alt="adding a genotype"/>
+  <img src="<% $c->uri_for('/static/images/docs/genotype_genes.png') %>" alt="genotype page gene table"/>
 </div>
 
 <p>
-<strong>Using wild-type alleles in genotypes:</strong> For
-single-allele phenotypes, the wild-type allele must be expressed at a
-higher (overexpression) or lower (knockdown) level than normal to
-create a genotype and use it for FYPO annotations; wild type at its
-normal (endogenous) expression level should not have phenotypes
-annotated in Canto. Similarly, in a multi-allele genotype, the
-wild-type allele of any gene must be over- or underexpressed if it is
-the only allele of the gene present. If both wild-type and mutant
-alleles of the same gene are present (usually done to test whether the
-mutation is dominant over wild type), the wild-type allele can have
-endogenous expression specified. In the genotype addition interface,
-select the gene and enter details for the mutant allele first. You can
-then select the same gene, choose "wild type", and "endogenous" will
-be offered as one of the expression level options.
+As you add alleles, they will appear in a table on the right (any
+single alleles added via the "single allele phenotype" gene page
+option will also appear):
+</p>
+
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/one_genotype_table.png') %>" alt="single-allele genotype table"/>
+</div>
+
+<p>
+To create a multi-allele genotype, first add all of the constituent
+single alleles to the single-allele table. Then select two or more
+alleles by ticking the boxes at the left side of the table. The
+"Combine selected genotypes" button becomes enabled:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/single_allele_table_selections.png') %>" alt="single allele genotype table with selections"/>
+</div>
+
+<p>
+Click the button to add the new genotype to the table of multi-allele
+genotypes:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/two_genotype_tables.png') %>" alt="single- and multi-allele genotype tables"/>
+</div>
+
+<p>
+<strong>Using wild-type alleles in genotypes:</strong> A wild type
+gene at its normal (endogenous) expression level should not have
+phenotypes annotated in Canto. Single wild-type alleles should only
+have phenotypes if the gene is expressed at a higher (overexpression)
+or lower (knockdown) level than normal. Similarly, in a multi-allele
+genotype, the wild-type allele is the only allele of the gene present,
+it should only be included if it is over- or underexpressed. Although
+it is possible to add a wild type as a single allele with wild type
+expression, this is intended only for use in cases where both
+wild-type and mutant alleles of the same gene are present (usually
+done to test whether the mutation is dominant over wild type). In
+these multi-allele genotypes the wild-type allele can have wild type
+expression specified.
+</p>
+
+<h4>Using, editing, deleting and duplicating genotypes</h>
+
+<p>
+<strong>Mouseover options:</strong> When you mouse over any genotype
+in either table, a set of options appears in a popup:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/genotype_options.png') %>" alt=""/>
+</div>
+
+<p>
+<strong>Annotate a phenotype for this genotype:</strong> The phenotype
+annotation procedure is identical to the single-allele curation
+interface -- find a suitable FYPO term, enter evidence and conditions,
+and finish the annotation all as described above. You can return to
+the Genotypes page at any time to select a genotype and add a
+phenotype for it, or to add or edit genotypes.
 </p>
 
 <p>
-You can edit or delete a genotype that you have entered for the paper
-you are curating (but you cannot change an existing genotype that you
-have found and used). Thereafter, the rest of the phenotype annotation
-procedure is identical to the single-allele curation interface -- find
-a suitable FYPO term, enter evidence and conditions, and finish the
-annotation all as described above. You can return to the Genotypes
-page at any time to select a genotype and add a phenotype for it, or
-to find, add or edit genotypes.
+<strong>View phenotype annotations:</strong> This links to a page that
+lists the genotype details, a table of phenotypes annotated for the
+genotype, and an additional link to the phenotype annotation
+interface.
+</p>
+
+<p>
+<strong>Edit details:</strong> On the genotype editing page, you can
+edit the details (name, description, expression) of alleles in the
+genotype, remove alleles, or add text describing the background. You
+can also add alleles using the gene table on the left, but this will
+usually be slower than combining single alleles on the genotype
+management page. Note that changes will apply to any phenotypes
+already annotated to the genotype.
+</p>
+
+<p>
+<strong>Copy and edit:</strong> This links to the genotype editing
+page as described above, but creates a new genotype with the amended
+details (and no annotations).
+</p>
+
+
+<p>
+<strong>Add/edit background:</strong> This link pops up a text box
+where you can enter background alleles (we plan to add more
+sophisticated allele lookup later). If any background details are
+included, they appear in a column in the genotype table:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/genotype_background.png') %>" alt=""/>
+</div>
+
+<p>
+Note:If a single allele has a background, the background will be
+included with any multi-allele genotype that uses the allele. If two
+or more alleles have backgrounds, the backgrounds will be combined in
+the multi-allele genotype (duplicate alleles will only be included
+once). To change the background, use the one of the "Add/edit
+background", "Edit details", or "Copy and edit" options.
+</p>
+
+<p>
+<strong>Delete:</strong> The "Delete" link will ask you to confirm
+that you want to remove a genotype, and then delete it. The link is
+disabled for any genotype that has phenotype annotations. To delete a
+genotype with annotations, first delete the annotations (use the "view
+annotations" link or return to the paper summary page).
 </p>
 
 <h3>Editing, deleting and duplicating phenotypes</h3>
