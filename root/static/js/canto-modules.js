@@ -174,7 +174,7 @@ canto.filter('addZeroWidthSpace', function () {
     if (item == null) {
       return null;
     }
-    return item.replace(/,/g, ',&#8203;');
+    return item.replace(/,/g, ',&#8203;').replace(/\)\[/, ')&#8203;[');
   };
 });
 
