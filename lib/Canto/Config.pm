@@ -413,7 +413,8 @@ sub setup
       }
     }
 
-    if ($self->{host_organism_taxonids}) {
+    if ($self->{host_organism_taxonids} &&
+          @{$self->{host_organism_taxonids}} > 0) {
       $self->_set_host_organisms($track_schema);
     }
   }
