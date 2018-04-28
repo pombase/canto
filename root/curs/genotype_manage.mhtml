@@ -38,52 +38,9 @@ Add, view and edit genotypes
   <div class="row">
 % if (!$read_only_curs) {
     <div class="col-sm-4 col-md-4">
-      <div ng-hide="data.allGenes.length">
-        <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
-        Loading genes ...
-      </div>
-      <div ng-show="data.allGenes.length && !data.selectedOrganism">
-        <select name="select-organism" ng-model="data.selectedOrganism"
-                ng-options="o as o.full_name for o in data.organismsOfGenes">
-          <option value="">Select an organism ...</option>
-        </select>
-      </div>
-      <div class="curs-genotype-edit-gene-list"
-           ng-if="data.allGenes.length && data.selectedOrganism">
-        <span ng-show="data.multiOrganismMode">
-          <span style="font-size: 90%; font-weight: bold;">
-            {{data.selectedOrganism.full_name}} genes
-          </span>
-          <span ng-show="data.organismsOfGenes.length != 1">
-            (<a ng-click="data.selectedOrganism = null">change ...</a>)
-          </span>
-        </span>
-
-        <table class="list">
-          <thead>
-            <tr>
-              <th>Gene</th>
-              <th colspan="2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="gene in selectedOrganismGenes()">
-              <td ng-if="gene.primary_name" title="{{gene.primary_name}} ({{gene.primary_identifier}})">{{gene.primary_name}}</td>
-              <td ng-if="!gene.primary_name" title="{{gene.primary_identifier}}">{{gene.primary_identifier}}</td>
-              <td>
-                <button class="btn btn-primary btn-xs"
-                        title="{{deletionButtonTitle(gene.gene_id)}}"
-                        ng-disabled="hasDeletionGenotype(gene.gene_id)"
-                        ng-click="makeDeletionAllele(gene.gene_id)">Deletion</button>
-              </td>
-              <td>
-                <button class="btn btn-primary btn-xs"
-                        ng-click="singleAlleleQuick(gene.primary_name || gene.primary_identifier, gene.primary_identifier, gene.gene_id)">Other genotype ...</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <genotype-genes-panel genotypes="data.genotypes"
+                            multi-organism-mode="{{data.multiOrganismMode}}">
+      </genotype-genes-panel>
     </div>
 % }
     <div class="col-sm-8 col-md-8">
