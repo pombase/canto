@@ -35,7 +35,7 @@
                 <span ng-if="annotationType.feature_type == 'genotype'">(allele and expression)</span>
               </th>
               <th>Term and extension</th>
-              <th>Evidence code</th>
+              <th>Evidence</th>
               <th ng-if="annotationType.can_have_with && !data.hideColumns.with_or_from_identifier">With</th>
               <th ng-if="!data.hideColumns.gene_product_form_id">Gene product form ID</th>
               <th ng-if="annotationType.can_have_conditions && !data.hideColumns.conditions">Conditions</th>
@@ -58,7 +58,7 @@
             <tr>
               <th>Interactor A</th>
               <th ng-if="multiOrganismMode">Taxon Id A</th>
-              <th>Evidence code</th>
+              <th>Evidence</th>
               <th>Interactor B</th>
               <th ng-if="multiOrganismMode">Taxon Id B</th>
               <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
