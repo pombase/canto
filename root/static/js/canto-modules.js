@@ -3028,13 +3028,34 @@ function makeAlleleEditInstance($uibModal, allele, endogenousWildtypeAllowed)
 
 
 var genePageCtrl =
-  function($scope, CursSettings) {
+  function($scope, $uibModal, toaster, $http, CantoGlobals, CursGenotypeList, CursSettings) {
     $scope.advancedMode = function() {
       return CursSettings.getAnnotationMode() == 'advanced';
     };
+
+    $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {
+      var editInstance = makeAlleleEditInstance($uibModal,
+                                                {
+                                                  gene_display_name: gene_display_name,
+                                                  gene_systematic_id: gene_systematic_id,
+                                                  gene_id: gene_id,
+                                                });
+
+      editInstance.result.then(function (alleleData) {
+        var storePromise =
+          CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], true);
+
+        storePromise.then(function(result) {
+          window.location.href =
+            CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+        });
+      });
+    };
   };
 
-canto.controller('GenePageCtrl', ['$scope', 'CursSettings', genePageCtrl]);
+canto.controller('GenePageCtrl', ['$scope', '$uibModal', 'toaster', '$http', 'CantoGlobals',
+                                  'CursGenotypeList', 'CursSettings',
+                                  genePageCtrl]);
 
 
 var singleGeneAddDialogCtrl =
