@@ -23,6 +23,13 @@ canto.config(['ChartJsProvider', function (ChartJsProvider) {
   ]});
 }]);
 
+var activeSessionStatuses =
+    ['SESSION_CREATED', 'SESSION_ACCEPTED', 'CURATION_IN_PROGRESS', 'CURATION_PAUSED']
+
+function isActiveSession(state) {
+  return $.inArray(state, activeSessionStatuses) >= 0;
+}
+
 function capitalizeFirstLetter(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
@@ -479,6 +486,7 @@ canto.service('CantoGlobals', function($window) {
   this.curs_root_uri = $window.curs_root_uri;
   this.ferret_choose = $window.ferret_choose;
   this.read_only_curs = $window.read_only_curs;
+  this.curs_session_state = $window.curs_session_state;
   this.is_admin_session = $window.is_admin_session;
   this.is_admin_user = $window.is_admin_user;
   this.current_user_is_admin = $window.current_user_is_admin;
@@ -4653,6 +4661,9 @@ var annotationTableCtrl =
       controller: function($scope) {
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.curs_session_state = CantoGlobals.curs_session_state;
+
+        $scope.isActiveSession = isActiveSession($scope.curs_session_state);
 
         $scope.multiOrganismMode = false;
 
@@ -4719,6 +4730,11 @@ var annotationTableCtrl =
                             }
                           });
                   });
+          }
+
+          // special case for curator column
+          if ($scope.isActiveSession) {
+            $scope.data.hideColumns['curator'] = true;
           }
         };
       },
@@ -5372,9 +5388,6 @@ var initiallyHiddenText =
 
 canto.directive('initiallyHiddenText', [initiallyHiddenText]);
 
-
-var activeSessionStatuses =
-    ['SESSION_CREATED', 'SESSION_ACCEPTED', 'CURATION_IN_PROGRESS', 'CURATION_PAUSED']
 
 var userPubsLookupCtrl =
   function(CantoGlobals, CantoService) {
