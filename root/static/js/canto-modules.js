@@ -3400,7 +3400,7 @@ var GenotypeGeneListCtrl =
       scope: {
         genotypes: '=',
         genes: '=',
-        multiOrganismMode: '@',
+        multiOrganismMode: '=',
         label: '@'
       },
       restrict: 'E',
@@ -3549,7 +3549,7 @@ var genotypeGenesPanelCtrl =
     return {
       scope: {
         genotypes: '=',
-        multiOrganismMode: '@',
+        multiOrganismMode: '=',
       },
       restrict: 'E',
       replace: true,

@@ -6,19 +6,19 @@
   <div ng-if="data.allGenes">
     <div ng-if="data.unknownGenes.length != 0">
       <genotype-gene-list genotypes="genotypes" genes="data.unknownGenes"
-                          multi-organism-mode="{{multiOrganismMode}}">
+                          multi-organism-mode="multiOrganismMode">
       </genotype-gene-list>
     </div>
     <div ng-if="data.pathogenGenes.length != 0">
       <genotype-gene-list genotypes="genotypes" genes="data.pathogenGenes"
                           label="Pathogen: "
-                          multi-organism-mode="{{multiOrganismMode}}">
+                          multi-organism-mode="multiOrganismMode">
       </genotype-gene-list>
     </div>
     <div ng-if="data.hostGenes.length != 0">
       <genotype-gene-list genotypes="genotypes" genes="data.hostGenes"
                           label="Host: "
-                          multi-organism-mode="{{multiOrganismMode}}">
+                          multi-organism-mode="multiOrganismMode">
       </genotype-gene-list>
     </div>
   </div>

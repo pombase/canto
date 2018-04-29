@@ -39,7 +39,7 @@ Add, view and edit genotypes
 % if (!$read_only_curs) {
     <div class="col-sm-4 col-md-4">
       <genotype-genes-panel genotypes="data.genotypes"
-                            multi-organism-mode="{{data.multiOrganismMode}}">
+                            multi-organism-mode="data.multiOrganismMode">
       </genotype-genes-panel>
     </div>
 % }
