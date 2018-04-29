@@ -3600,6 +3600,13 @@ var genotypeGenesPanelCtrl =
         };
 
         $scope.getGenesFromServer();
+
+        $scope.openSingleGeneAddDialog = function() {
+          var modal = openSingleGeneAddDialog($uibModal);
+          modal.result.then(function () {
+            $scope.getGenesFromServer();
+          });
+        };
       }
     };
   };
