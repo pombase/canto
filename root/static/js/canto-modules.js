@@ -3033,7 +3033,9 @@ var genePageCtrl =
       return CursSettings.getAnnotationMode() == 'advanced';
     };
 
-    $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {
+    $scope.singleAlleleQuick =
+      function(gene_display_name, gene_systematic_id, gene_id, annotationTypeName) {
+
       var editInstance = makeAlleleEditInstance($uibModal,
                                                 {
                                                   gene_display_name: gene_display_name,
@@ -3047,7 +3049,8 @@ var genePageCtrl =
 
         storePromise.then(function(result) {
           window.location.href =
-            CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+            CantoGlobals.curs_root_uri + '/feature/genotype/annotate/' + result.data.genotype_id +
+            '/start/' + annotationTypeName;
         });
       });
     };
