@@ -1625,7 +1625,7 @@ sub genotype_store : Chained('feature') PathPart('store')
 
         $guard->commit();
 
-        $c->flash()->{message} = 'Created new genotype';
+        $c->flash()->{message} = 'Created new genotype: ' . $genotype->display_name();
 
         $c->stash->{json_data} = {
           status => "success",
