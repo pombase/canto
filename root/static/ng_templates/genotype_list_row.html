@@ -34,7 +34,9 @@
     <div ng-if="isSelected()" class="curs-genotype-list-row-actions">
       <img style="position: absolute; right: -20px; padding: 4px; padding-left: 10px;"
            ng-click="clearSelection()" ng-src="{{closeIconPath}}"></img>
-      <genotype-list-row-links genotypes="genotypes" genotype-id="genotype.genotype_id" annotation-count="{{genotype.annotation_count}}">
+      <genotype-list-row-links genotypes="genotypes" genotype-id="genotype.genotype_id"
+                               allele-count="{{genotype.alleles.length}}"
+                               annotation-count="{{genotype.annotation_count}}">
       </genotype-list-row-links>
     </div>
   </td>

@@ -16,9 +16,13 @@
        ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
        ng-click="editGenotype(genotypeId)">Edit details ...</a>
   </div>
-  <div>
-    <a ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
-       href="{{curs_root_uri + '/genotype_manage#/duplicate/' + genotypeId}}">Copy and edit ...</a>
+  <div ng-if="!read_only_curs">
+    <a ng-show="alleleCount == 1"
+      ng-class="{disabled: genotypeId == null }"
+      ng-click="editAllele(genotypeId)">Copy and edit ...</a>
+    <a ng-show="alleleCount != 1"
+      ng-class="{disabled: genotypeId == null }"
+      href="{{curs_root_uri + '/genotype_manage#/duplicate/' + genotypeId}}">Copy and edit ...</a>
   </div>
   <div ng-if="!read_only_curs">
     <a ng-class="{disabled: genotypeId == null }"

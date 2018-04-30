@@ -3885,12 +3885,13 @@ canto.directive('genotypeSearch',
                   genotypeSearchCtrl]);
 
 var genotypeListRowLinksCtrl =
-  function($uibModal, toaster, CantoGlobals, CursGenotypeList) {
+  function($uibModal, $http, toaster, CantoGlobals, CursGenotypeList) {
     return {
       restrict: 'E',
       scope: {
         genotypes: '=',
         genotypeId: '=',
+        alleleCount: '@',
         annotationCount: '@',
       },
       replace: true,
@@ -3902,6 +3903,35 @@ var genotypeListRowLinksCtrl =
         $scope.editGenotype = function(genotypeId) {
           window.location.href =
             CantoGlobals.curs_root_uri + '/genotype_manage#/edit/' + genotypeId;
+        };
+
+        $scope.editAllele = function(genotypeId) {
+          var genotypePromise = CursGenotypeList.getGenotypeById(genotypeId);
+
+          genotypePromise.then(function(genotype) {
+            var allele = genotype.alleles[0];
+
+            if (allele.gene) {
+              allele.gene_display_name = allele.gene.display_name;
+              allele.gene_systematic_id = allele.gene.primary_identifier;
+              allele.gene_id = allele.gene.gene_id;
+              delete allele.gene;
+            }
+
+            var editInstance =
+              makeAlleleEditInstance($uibModal, allele);
+
+            editInstance.result.then(function (editedAllele) {
+              var storePromise =
+                CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined,
+                                               undefined, [editedAllele]);
+
+              storePromise.then(function(result) {
+                window.location.href =
+                  CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+              });
+            });
+          });
         };
 
         $scope.deleteGenotype = function(genotypeId) {
@@ -3953,7 +3983,7 @@ var genotypeListRowLinksCtrl =
   };
 
 canto.directive('genotypeListRowLinks',
-                ['$uibModal', 'toaster', 'CantoGlobals', 'CursGenotypeList',
+                ['$uibModal', '$http', 'toaster', 'CantoGlobals', 'CursGenotypeList',
                  genotypeListRowLinksCtrl]);
 
 var genotypeListRowCtrl =
