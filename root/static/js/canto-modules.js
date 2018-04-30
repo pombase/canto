@@ -3542,7 +3542,7 @@ canto.directive('genotypeGeneList',
                  GenotypeGeneListCtrl]);
 
 
-var genotypeGenesPanelCtrl =
+var GenotypeGenesPanelCtrl =
   function($uibModal, $http, Curs, CantoGlobals,
            CantoConfig, toaster) {
 
@@ -3614,7 +3614,7 @@ var genotypeGenesPanelCtrl =
 canto.directive('genotypeGenesPanel',
                  ['$uibModal', '$http', 'Curs',
                   'CantoGlobals', 'CantoConfig', 'toaster',
-                  genotypeGenesPanelCtrl]);
+                  GenotypeGenesPanelCtrl]);
 
 
 var GenotypeManageCtrl =
