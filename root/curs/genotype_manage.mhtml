@@ -37,13 +37,13 @@ Add, view and edit genotypes
     <div class="curs-box-body">
   <div class="row">
 % if (!$read_only_curs) {
-    <div class="col-sm-4 col-md-4">
+    <div class="col-sm-3 col-md-3">
       <genotype-genes-panel genotypes="data.genotypes"
                             multi-organism-mode="data.multiOrganismMode">
       </genotype-genes-panel>
     </div>
 % }
-    <div class="col-sm-8 col-md-8">
+    <div class="col-sm-9 col-md-9">
       <div class="ng-cloak">
         <div ng-show="data.waitingForServer">
           <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
