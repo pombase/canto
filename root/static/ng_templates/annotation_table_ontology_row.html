@@ -40,10 +40,10 @@
     </span>
   </td>
   <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
-    <div>{{annotation.term_name}}&nbsp;-&nbsp;{{annotation.term_ontid}}</div>
-    <div ng-if="!data.hideColumns.extension">
-      <extension-display extension="annotation.extension"></extension-display>
-    </div>
+    {{annotation.term_ontid}}
+  </td>
+  <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
+    {{annotation.term_name}}
   </td>
   <td>
     {{annotation.evidence_code}}
@@ -80,6 +80,9 @@
   <td ng-if="!data.hideColumns.submitter_comment">
     <initially-hidden-text text="{{annotation.submitter_comment}}" preview-char-count="80"
                            link-label=" [more...]"></initially-hidden-text>
+  </td>
+  <td ng-if="!data.hideColumns.extension">
+    <extension-display extension="annotation.extension"></extension-display>
   </td>
   <td ng-if="!data.hideColumns.curator">
     {{annotation.curator}}
