@@ -39,7 +39,10 @@ is ($curs_schema->resultset('Gene')->count(), 3);
 
 my $first = $curs_schema->resultset('Gene')->first();
 
-is ($first->organism()->pathogen_or_host(), 'unknown');
+my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+my $lookup_organism = $organism_lookup->lookup_by_taxonid($first->organism()->taxonid());
+
+is ($lookup_organism->{pathogen_or_host}, 'unknown');
 
 
 ##########################################
@@ -61,7 +64,10 @@ is ($curs_schema->resultset('Gene')->count(), 3);
 
 my $first_host_gene = $curs_schema->resultset('Gene')->first();
 
-is ($first_host_gene->organism()->pathogen_or_host(), 'host');
+my $lookup_host_organism =
+  $organism_lookup->lookup_by_taxonid($first_host_gene->organism()->taxonid());
+
+is ($lookup_host_organism->{pathogen_or_host}, 'host');
 
 
 ##########################################
@@ -82,5 +88,8 @@ is ($curs_schema->resultset('Gene')->count(), 3);
 
 my $first_pathogen_gene = $curs_schema->resultset('Gene')->first();
 
-is ($first_pathogen_gene->organism()->pathogen_or_host(), 'pathogen');
+my $pathogen_lookup_organism =
+  $organism_lookup->lookup_by_taxonid($first_pathogen_gene->organism()->taxonid());
+
+is ($pathogen_lookup_organism->{pathogen_or_host}, 'pathogen');
 

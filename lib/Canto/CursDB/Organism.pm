@@ -32,20 +32,9 @@ __PACKAGE__->table("organism");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 full_name
-
-  data_type: 'text'
-  is_nullable: 0
-
 =head2 taxonid
 
   data_type: 'integer'
-  is_nullable: 0
-
-=head2 pathogen_or_host
-
-  data_type: 'text'
-  default_value: 'unknown'
   is_nullable: 0
 
 =cut
@@ -53,12 +42,8 @@ __PACKAGE__->table("organism");
 __PACKAGE__->add_columns(
   "organism_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "full_name",
-  { data_type => "text", is_nullable => 0 },
   "taxonid",
   { data_type => "integer", is_nullable => 0 },
-  "pathogen_or_host",
-  { data_type => "text", default_value => "unknown", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -72,20 +57,6 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("organism_id");
-
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<full_name_unique>
-
-=over 4
-
-=item * L</full_name>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint("full_name_unique", ["full_name"]);
 
 =head1 RELATIONS
 
@@ -105,8 +76,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-04-18 14:06:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bgul2UsrdOuMmSvnK/gJZw
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-05-02 10:30:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xW7sXMVYipd94hpgxYq3/A
 
 
 use Carp;
@@ -114,20 +85,13 @@ use Carp;
 sub get_organism
 {
   my $schema = shift;
-  my $name = shift;
   my $taxonid = shift;
   my $pathogen_or_host = shift;
-
-  if (!defined $pathogen_or_host) {
-    croak 'no $pathogen_or_host passed to get_organism()';
-  }
 
   croak "taxonid argument undefined" unless defined $taxonid;
 
   return $schema->find_or_create_with_type('Organism',
-                                           { full_name => $name,
-                                             taxonid => $taxonid,
-                                             pathogen_or_host => $pathogen_or_host,
+                                           { taxonid => $taxonid,
                                            });
 }
 

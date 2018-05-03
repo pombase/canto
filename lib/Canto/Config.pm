@@ -144,6 +144,7 @@ sub _set_host_organisms
   my $track_schema = shift;
 
   $self->{host_organisms} = [];
+  $self->{pathogen_host_mode} = 0;
 
   my $host_organism_taxonids = $self->{host_organism_taxonids};
 

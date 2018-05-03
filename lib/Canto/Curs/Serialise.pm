@@ -46,6 +46,7 @@ use Clone qw(clone);
 use Data::Rmap ':all';
 
 use Canto::Track::CuratorManager;
+use Canto::Track;
 
 sub _get_metadata_value
 {
@@ -108,6 +109,8 @@ sub _get_annotations
 
   die "no schema" unless $schema;
 
+  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+
   my $rs = $schema->resultset('Annotation');
 
   my @ret = ();
@@ -124,8 +127,12 @@ sub _get_annotations
                 primary_identifier => $_->{primary_identifier},
               });
 
-            $interacting_gene->organism()->full_name() . ' ' .
-              $_->{primary_identifier};
+            my $interacting_taxonid = $interacting_gene->organism()->taxonid();
+            my $organism_details =
+              $organism_lookup->lookup_by_taxonid($interacting_taxonid);
+            my $full_name = $organism_details->{full_name};
+
+            $full_name . ' ' . $_->{primary_identifier};
           } @{$extra_data{interacting_genes}}
         ]
     }
@@ -170,7 +177,7 @@ sub _get_annotations
         $metadata->{curs_key};
     }
 
-    my $gene = _get_annotation_gene($schema, $annotation);
+    my $gene = _get_annotation_gene($organism_lookup, $schema, $annotation);
     my $genotype = _get_annotation_genotype($schema, $annotation);
 
     if ($gene) {
@@ -218,6 +225,7 @@ sub _get_annotations
 
 sub _get_annotation_gene
 {
+  my $organism_lookup = shift;
   my $schema = shift;
   my $annotation = shift;
 
@@ -225,7 +233,10 @@ sub _get_annotation_gene
   my @ret = ();
 
   while (defined (my $gene = $rs->next())) {
-    my $organism_full_name = $gene->organism()->full_name();
+    my $taxonid = $gene->organism()->taxonid();
+    my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
+    my $organism_full_name = $organism_details->{full_name};
+
     push @ret, $organism_full_name . ' ' . $gene->primary_identifier();
   }
 
@@ -240,13 +251,17 @@ sub _get_annotation_gene
 
 sub _get_genes
 {
+  my $organism_lookup = shift;
   my $schema = shift;
 
   my $rs = $schema->resultset('Gene');
   my %ret = ();
 
   while (defined (my $gene = $rs->next())) {
-    my $organism_full_name = $gene->organism()->full_name();
+    my $taxonid = $gene->organism()->taxonid();
+    my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
+    my $organism_full_name = $organism_details->{full_name};
+
     my %gene_data = (
       organism => $organism_full_name,
       uniquename => $gene->primary_identifier(),
@@ -265,13 +280,18 @@ sub _get_genotype_alleles
   my $schema = shift;
   my $genotype = shift;
 
+  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+
   my $rs = $genotype->alleles();
 
   my @ret = ();
 
   while (defined (my $allele = $rs->next())) {
     my $gene = $allele->gene();
-    my $organism_full_name = $gene->organism()->full_name();
+
+    my $taxonid = $gene->organism()->taxonid();
+    my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
+    my $organism_full_name = $organism_details->{full_name};
 
     if (!defined $allele->primary_identifier()) {
       warn "undefined primary_identifier: ", $allele->name(), "\n";
@@ -296,13 +316,18 @@ sub _get_alleles
   my $config = shift;
   my $schema = shift;
 
+  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+
   my $rs = $schema->resultset('Allele');
 
   my %ret = ();
 
   while (defined (my $allele = $rs->next())) {
     my $gene = $allele->gene();
-    my $organism_full_name = $gene->organism()->full_name();
+
+    my $taxonid = $gene->organism()->taxonid();
+    my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
+    my $organism_full_name = $organism_details->{full_name};
 
     if (!$allele->primary_identifier()) {
       die 'no primary_identifier for allele with ID: ', $allele->allele_id();
@@ -384,13 +409,18 @@ sub _get_genotypes
 
 sub _get_organisms
 {
+  my $config = shift;
   my $schema = shift;
+
+  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
 
   my $rs = $schema->resultset('Organism');
   my %ret = ();
 
   while (defined (my $organism= $rs->next())) {
-    $ret{$organism->taxonid()} = { full_name => $organism->full_name() };
+    my $organism_details = $organism_lookup->lookup_by_taxonid($organism->taxonid());
+    my $full_name = $organism_details->{full_name};
+    $ret{$organism->taxonid()} = { full_name => $full_name };
   }
 
   return \%ret;
@@ -473,11 +503,13 @@ sub perl
   my %ret = (
     metadata => _get_metadata($config, $track_schema, $curs_schema),
     annotations => _get_annotations($config, $track_schema, $curs_schema),
-    organisms => _get_organisms($curs_schema, $options),
+    organisms => _get_organisms($config, $curs_schema, $options),
     publications => _get_pubs($curs_schema, $options)
   );
 
-  my %genes = _get_genes($curs_schema);
+  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+
+  my %genes = _get_genes($organism_lookup, $curs_schema);
   if (keys %genes) {
     $ret{genes} = \%genes;
   }

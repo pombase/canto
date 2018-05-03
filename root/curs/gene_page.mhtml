@@ -107,7 +107,7 @@ Gene details
 % if ($st->{multi_organism_mode}) {
       <tr>
         <td class="title">Organism</td>
-        <td><% $gene->organism()->full_name() %></td>
+        <td><% $gene->organism_details()->{full_name} %></td>
       </tr>
 % } 
     </table>
@@ -138,7 +138,7 @@ Genotypes for <% $gene->display_name() %> in this session
 my $gene_id = $gene->gene_id();
 my $gene_name = $gene->{primary_name} // '';
 
-my $gene_org_name = $gene->organism()->full_name();
+my $gene_org_name = $gene->organism_details()->{full_name};
 
 my $sysid_url = undef;
 my $sysid_url_title = undef;

@@ -97,7 +97,6 @@ sub create_genes_from_lookup
         @genes = $self->_filter_existing_genes(@genes);
 
         for my $gene (@genes) {
-          my $org_full_name = $gene->{organism_full_name};
           my $org_taxonid = $gene->{organism_taxonid};
           my $pathogen_or_host = 'unknown';
 
@@ -109,9 +108,9 @@ sub create_genes_from_lookup
               }
             }
           }
+
           my $curs_org =
-            Canto::CursDB::Organism::get_organism($schema, $org_full_name,
-                                                  $org_taxonid, $pathogen_or_host);
+            Canto::CursDB::Organism::get_organism($schema, $org_taxonid);
 
           my $primary_identifier = $gene->{primary_identifier};
 

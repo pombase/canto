@@ -15,18 +15,20 @@ my @orgs = $lookup->lookup_by_type('host');
 
 my $expected_org_4896 = {
   'pathogen_or_host' => 'unknown',
-  'taxon_id' => 4896,
+  'taxonid' => 4896,
   'species' => 'pombe',
-  'genus' => 'Schizosaccharomyces'
+  'genus' => 'Schizosaccharomyces',
+  'full_name' => 'Schizosaccharomyces pombe',
 };
 
 cmp_deeply(\@orgs, [
   $expected_org_4896,
   {
     'species' => 'cerevisiae',
-    'taxon_id' => 4932,
+    'taxonid' => 4932,
     'pathogen_or_host' => 'unknown',
-    'genus' => 'Saccharomyces'
+    'genus' => 'Saccharomyces',
+    'full_name' => 'Saccharomyces cerevisiae',
   }
 ]);
 
@@ -44,16 +46,18 @@ $test_util->config()->_set_host_organisms($test_util->track_schema());
 
 my $expected_path_org_4896 = {
   'pathogen_or_host' => 'pathogen',
-  'taxon_id' => 4896,
+  'taxonid' => 4896,
   'species' => 'pombe',
-  'genus' => 'Schizosaccharomyces'
+  'genus' => 'Schizosaccharomyces',
+  'full_name' => 'Schizosaccharomyces pombe',
 };
 
 my $expected_host_org_4932 = {
   'species' => 'cerevisiae',
-  'taxon_id' => 4932,
+  'taxonid' => 4932,
   'pathogen_or_host' => 'host',
-  'genus' => 'Saccharomyces'
+  'genus' => 'Saccharomyces',
+  'full_name' => 'Saccharomyces cerevisiae',
 };
 
 cmp_deeply(\@orgs, [
