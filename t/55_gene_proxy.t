@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 use Canto::TestUtil;
 use Canto::Curs::Utils;
@@ -26,6 +26,7 @@ is($doa10_proxy->display_name(), 'doa10');
 is($doa10_proxy->product(), 'ER-localized ubiquitin ligase Doa10 (predicted)');
 
 is($doa10_proxy->taxonid(), '4896');
+is($doa10_proxy->organism_details()->{full_name}, 'Schizosaccharomyces pombe');
 
 is($doa10_proxy->feature_id(), $doa10->gene_id());
 

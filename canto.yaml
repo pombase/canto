@@ -25,7 +25,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v1211
 
-schema_version: 17
+schema_version: 18
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## all gene lookups with match genes from any organism (and will return the
@@ -1230,6 +1230,7 @@ implementation_classes:
   status_adaptor: Canto::Track::StatusStorage
   person_adaptor: Canto::Track::PersonLookup
   pubs_adaptor: Canto::Track::PubsLookup
+  organism_adaptor: Canto::Track::OrganismLookup
   strain_adaptor: Canto::Track::StrainLookup
 
 allele_type_list:

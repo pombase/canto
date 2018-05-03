@@ -104,7 +104,7 @@ my @gene_hashes = map {
        gene_id => $gene_proxy->gene_id(),
      };
      if ($multi_organism_mode) {
-       $hash->{Organism} = $gene_proxy->organism()->full_name();
+       $hash->{Organism} = $gene_proxy->organism_details()->{full_name};
      }
      $hash
    } @gene_list;

@@ -46,14 +46,14 @@ sub _make_organism_hash
   my $config = shift;
   my $organism = shift;
 
-  my $taxon_id = undef;
+  my $taxonid = undef;
 
   my @props = grep {
     $_->type()->name() eq 'taxon_id';
   } $organism->organismprops()->all();
 
   if (@props) {
-    $taxon_id = $props[0]->value();
+    $taxonid = $props[0]->value();
   }
 
   my $pathogen_or_host = 'unknown';
@@ -61,7 +61,7 @@ sub _make_organism_hash
   if ($config->{pathogen_host_mode}) {
     $pathogen_or_host = 'pathogen';
 
-    if (grep { $_ eq $taxon_id } @{$config->{host_organism_taxonids}}) {
+    if (grep { $_ eq $taxonid } @{$config->{host_organism_taxonids}}) {
       $pathogen_or_host = 'host';
     }
   }
@@ -69,7 +69,8 @@ sub _make_organism_hash
   return {
     genus => $organism->genus(),
     species => $organism->species(),
-    taxon_id => $taxon_id,
+    full_name => $organism->genus() . ' ' . $organism->species(),
+    taxonid => $taxonid,
     pathogen_or_host => $pathogen_or_host,
   }
 }
