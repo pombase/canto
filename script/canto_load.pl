@@ -32,6 +32,7 @@ use Canto::Config::ExtensionProcess;
 
 my $do_genes = 0;
 my $do_pubmed_xml = 0;
+my $do_organisms = 0;
 my $for_taxon = 0;
 my @ontology_args = ();
 my $do_process_extension_config = 0;
@@ -45,6 +46,7 @@ if (@ARGV == 0) {
 
 my $result = GetOptions ("genes=s" => \$do_genes,
                          "ontology=s" => \@ontology_args,
+                         "organisms=s" => \$do_organisms,
                          "process-extension-config" => \$do_process_extension_config,
                          "pubmed-xml=s" => \$do_pubmed_xml,
                          "for-taxon=i" => \$for_taxon,
@@ -64,6 +66,8 @@ sub usage
 
   die qq|${message}usage:
   $0 --genes genes_file --for-taxon=<taxon_id>
+or:
+  $0 --organisms organisms_file.tsv
 or:
   $0 --ontology ontology_file.obo
   $0 --ontology ontology_file.obo --ontology another_ontology.obo
@@ -85,6 +89,7 @@ Options:
 Any combination of options is valid (eg. genes and ontologies can be
 loaded at once) but at most one "--genes" option is allowed.
 
+
 File formats
 ~~~~~~~~~~~~
 
@@ -95,6 +100,11 @@ The genes file should have 4 columns, separated by tabs:
   product
 
 The ontology files should be in OBO format
+
+The organisms file have 3 columns, separated by tabs:
+  genus
+  species
+  taxon ID
 
 
 Extension config processing
@@ -166,6 +176,24 @@ if ($do_genes) {
   open my $fh, '<', $do_genes or die "can't open $do_genes: $!";
   $gene_load->load($fh);
   close $fh or die "can't close $do_genes: $!";
+
+  $guard->commit unless $dry_run;
+}
+
+if ($do_organisms) {
+  my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
+  my $guard = $schema->txn_scope_guard;
+
+  open my $fh, '<', $do_organisms or die "can't open $do_genes: $!";
+
+  while (defined (my $line = <$fh>)) {
+    chomp $line;
+    next if $line =~ /^\s*$/;
+
+    my ($genus, $species, $taxonid, $common_name) = split (/,/, $line);
+
+    $load_util->get_organism($genus, $species, $taxonid, $common_name);
+  }
 
   $guard->commit unless $dry_run;
 }

@@ -86,7 +86,8 @@ sub _build_cache
 
 =head2 get_organism
 
- Usage   : my $organism = $load_util->get_organism($genus, $species);
+ Usage   : my $organism = $load_util->get_organism($genus, $species, $taxonid);
+       OR: my $organism = $load_util->get_organism($genus, $species, $taxonid, $common_name);
  Function: Find or create, and then return the organism matching the arguments
  Args    : the genus and species of the new organism
  Returns : The found or new organism
@@ -99,6 +100,7 @@ sub get_organism
   my $genus = shift;
   my $species = shift;
   my $taxonid = shift;
+  my $common_name = shift;
 
   croak "no taxon id supplied" unless $taxonid;
 
@@ -108,6 +110,7 @@ sub get_organism
       {
         genus => $genus,
         species => $species,
+        common_name => $common_name,
         organismprops => [ { value => $taxonid,
                              type => { name => 'taxon_id' },
                              rank => 0 } ]
