@@ -13,7 +13,7 @@ all_from 'lib/Canto.pm';
 
 requires 'Archive::Zip' => 1.59;
 requires 'CHI' => 0.60;
-requires 'CHI::Driver::Memcached' => 0.16;
+requires 'CHI::Driver::Memcached' => 0.15;
 requires 'Cache' => 2.11;
 requires 'Cache::Memcached' => 1.30;
 requires 'HTML::FormFu' => 2.01;
