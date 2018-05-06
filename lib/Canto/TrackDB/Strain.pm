@@ -18,11 +18,11 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 TABLE: C<strains>
+=head1 TABLE: C<strain>
 
 =cut
 
-__PACKAGE__->table("strains");
+__PACKAGE__->table("strain");
 
 =head1 ACCESSORS
 
@@ -64,8 +64,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-03-28 16:49:42
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dVXPAXss8aqHGWyj2clzrQ
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-05-07 10:55:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Je1m/tO8ybYQMUSfX0DycA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

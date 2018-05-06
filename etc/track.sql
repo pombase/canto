@@ -140,7 +140,7 @@ CREATE TABLE organism (
 
 CREATE INDEX organism_idx1 ON organism (organism_id);
 
-CREATE TABLE strains (
+CREATE TABLE strain (
        organism_id integer NOT NULL REFERENCES organism (organism_id),
        strain_name text NOT NULL
 );
