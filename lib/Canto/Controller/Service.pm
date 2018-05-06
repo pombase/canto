@@ -266,7 +266,7 @@ sub lookup : Local
     ontology => \&_ontology_results,
     person => \&_person_results,
     pubs => \&_pubs_results,
-    strain => \&_strain_lookup,
+    strains => \&_strain_lookup,
   );
 
   my $res_sub = $dispatch{$type_name};
