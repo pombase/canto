@@ -321,7 +321,31 @@ EOF
        strain_name text NOT NULL);
       ");
     };
-  }
+  },
+
+  20 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+      my $curs_key = $curs->curs_key();
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("PRAGMA foreign_keys = OFF");
+      $curs_dbh->do("CREATE TABLE organism_temp(organism_id INTEGER PRIMARY KEY, taxonid INTEGER NOT NULL)");
+      $curs_dbh->do("INSERT INTO organism_temp SELECT organism_id, taxonid FROM organism");
+      $curs_dbh->do("DROP TABLE organism");
+      $curs_dbh->do("ALTER TABLE organism_temp RENAME TO organism");
+      $curs_dbh->do("PRAGMA foreign_keys = ON");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 );
 
 sub upgrade_to
