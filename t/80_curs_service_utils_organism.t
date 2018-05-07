@@ -26,6 +26,3 @@ my $res = $service_utils->list_for_service('organism');
 is (@$res, 1);
 is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
 is ($res->[0]->{gene_count}, 4);
-
-
-$service_utils->
