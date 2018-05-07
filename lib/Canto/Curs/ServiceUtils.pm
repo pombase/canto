@@ -57,6 +57,7 @@ has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 has ontology_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has allele_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has genotype_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
+has organism_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 has state => (is => 'rw', init_arg => undef,
               isa => 'Canto::Curs::State', lazy_build => 1);
@@ -104,6 +105,13 @@ sub _build_genotype_lookup
   return Canto::Track::get_adaptor($self->config(), 'genotype');
 }
 
+sub _build_organism_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'organism');
+}
+
 sub _build_curator_manager
 {
   my $self = shift;
@@ -138,6 +146,30 @@ sub _get_conditions
   }
 
   return map { $conds{$_}; } sort keys %conds;
+}
+
+sub _get_organisms
+{
+  my $self = shift;
+
+  my $curs_schema = $self->curs_schema();
+  my $organism_lookup = $self->organism_lookup();
+
+  my %conds = ();
+
+  my $rs = $curs_schema->resultset('Organism');
+
+  my @return_list = ();
+
+  while (defined (my $org = $rs->next())) {
+    my $organism_details = $organism_lookup->lookup_by_taxonid($org->taxonid());
+
+    $organism_details->{gene_count} = $org->genes()->count();
+
+    push @return_list, $organism_details;
+  }
+
+  return @return_list;
 }
 
 sub _get_annotation_by_type
