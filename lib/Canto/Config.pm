@@ -407,7 +407,7 @@ sub setup
         $instance_organism->{species} = $organism->species();
         $instance_organism->{genus} = $organism->genus();
 
-        if ($self->{host_organism_taxonids}) {
+        if ($self->{host_organism_taxonids} && @{$self->{host_organism_taxonids}} > 0) {
           warn "warning: it doesn't make sense to set both " .
             "host_organism_taxonids and instance_organism";
         }
