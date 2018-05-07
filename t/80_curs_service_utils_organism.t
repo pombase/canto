@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 8;
 use Test::Deep;
 use JSON;
 
@@ -26,3 +26,15 @@ my $res = $service_utils->list_for_service('organism');
 is (@$res, 1);
 is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
 is ($res->[0]->{gene_count}, 4);
+
+
+# add an organism
+$service_utils->add_organism_by_taxonid(4932);
+
+$res = $service_utils->list_for_service('organism');
+
+is (@$res, 2);
+is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
+is ($res->[0]->{gene_count}, 4);
+is ($res->[1]->{full_name}, "Saccharomyces cerevisiae");
+is ($res->[1]->{gene_count}, 0);

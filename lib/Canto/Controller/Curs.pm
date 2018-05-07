@@ -2554,6 +2554,22 @@ sub ws_add_gene : Chained('top') PathPart('ws/gene/add')
   $c->forward('View::JSON');
 }
 
+sub ws_add_organism : Chained('top') PathPart('ws/organism/add')
+{
+  my ($self, $c, $taxonid) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  $st->{json_data} = $service_utils->add_organism_by_taxonid($taxonid);
+
+  $c->forward('View::JSON');
+}
+
 sub ws_settings_get_all : Chained('top') PathPart('ws/settings/get_all')
 {
   my ($self, $c) = @_;
