@@ -68,4 +68,27 @@ sub add_organism_by_taxonid
   }
 }
 
+sub delete_organism_by_taxonid
+{
+  my $self = shift;
+
+  my $taxonid = shift;
+
+  my $organism_rs = $self->curs_schema()->resultset('Organism');
+
+  my $organism = $organism_rs->find({ taxonid => $taxonid });
+
+  if ($organism) {
+    if ($organism->genes()->count() > 0) {
+      die "can't delete organism with taxonid $taxonid as there are genes " .
+        "from that organism in the session\n";
+    } else {
+      $organism_rs->search({ taxonid => $taxonid })->delete();
+      return $organism;
+    }
+  } else {
+    die "can't find organism with taxonid $taxonid\n"
+  }
+}
+
 1;

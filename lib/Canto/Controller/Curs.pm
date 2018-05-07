@@ -2570,6 +2570,22 @@ sub ws_add_organism : Chained('top') PathPart('ws/organism/add')
   $c->forward('View::JSON');
 }
 
+sub ws_delete_organism : Chained('top') PathPart('ws/organism/delete')
+{
+  my ($self, $c, $taxonid) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  $st->{json_data} = $service_utils->delete_organism_by_taxonid($taxonid);
+
+  $c->forward('View::JSON');
+}
+
 sub ws_settings_get_all : Chained('top') PathPart('ws/settings/get_all')
 {
   my ($self, $c) = @_;

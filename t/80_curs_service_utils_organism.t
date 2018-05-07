@@ -1,10 +1,11 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 15;
 use Test::Deep;
 use JSON;
 
 use Capture::Tiny 'capture_stderr';
+use Try::Tiny;
 
 use Canto::TestUtil;
 use Canto::Track;
@@ -38,3 +39,25 @@ is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
 is ($res->[0]->{gene_count}, 4);
 is ($res->[1]->{full_name}, "Saccharomyces cerevisiae");
 is ($res->[1]->{gene_count}, 0);
+
+
+# delete an organism
+my $delete_res = $service_utils->delete_organism_by_taxonid(4932);
+
+is ($delete_res->{status}, "success");
+
+$res = $service_utils->list_for_service('organism');
+
+is (@$res, 1);
+is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
+is ($res->[0]->{gene_count}, 4);
+
+
+$delete_res = $service_utils->delete_organism_by_taxonid(4896);
+
+is ($delete_res->{status}, "error");
+ok ($delete_res->{message} =~ /genes/);
+
+$res = $service_utils->list_for_service('organism');
+
+is (@$res, 1);

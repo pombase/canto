@@ -1360,4 +1360,49 @@ sub add_organism_by_taxonid
   }
 }
 
+
+=head2 delete_organism_by_taxonid
+
+ Usage   : $service_utils->delete_organism_by_taxonid($taxonid);
+ Function: Remove the given organism from the session.  Returns an error if
+           there are genes from that organism in the session.
+ Args    : $taxonid
+ Return  : a hash, with keys:
+              status - "success" or "error"
+              message - on error, the error message
+
+=cut
+
+sub delete_organism_by_taxonid
+{
+  my $self = shift;
+  my $taxonid = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $organism_manager = $self->organism_manager();
+
+  try {
+    $curs_schema->txn_begin();
+
+    my $organism = $organism_manager->delete_organism_by_taxonid($taxonid);
+
+    if ($organism) {
+      $curs_schema->txn_commit();
+      return {
+        status => 'success',
+      };
+    } else {
+      return {
+        status => 'error',
+        message => "organism with taxonid $taxonid not found",
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
 1;
