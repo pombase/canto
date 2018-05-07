@@ -493,6 +493,7 @@ my %list_for_service_subs =
     allele => \&_get_alleles,
     annotation => \&_get_annotation,
     condition => \&_get_conditions,
+    organism => \&_get_organisms,
   );
 
 =head2 list_for_service
