@@ -6,6 +6,7 @@ $pub
 @highlight_terms => ()
 $curs_root_uri
 $multi_organism_mode
+$pathogen_host_mode
 </%args>
 
 <div id="curs-gene-list-edit" class="curs-box">
@@ -13,39 +14,21 @@ $multi_organism_mode
 <% $title %>
   </div>
   <div class="curs-box-body">
-  
+
   <form name="gene-edit" method="get" action="<% $edit_path %>">
-% if (@gene_hashes) {
-  <table class="list">
-
-    <thead>
-      <tr>
-%     for my $col_name (@col_names) {
-        <th>
-          <% $col_name %>
-        </th>
-%     }
-        <th>
-          &nbsp;
-        </th>
-      </tr>
-    </thead>
-
-%   for my $gene (@gene_hashes) {
-    <tr>
-%     for my $col_name (@col_names) {
-      <td>
-        <% $gene->{$col_name} |n %>
-      </td>
-%     }
-      <td>
-        <input type="checkbox"
-               name="gene-select"
-               value='<% $gene->{gene_id} %>' />
-      </td>
-    </tr>
+% if (@table_1_hashes) {
+%   if ($table_1_header) {
+      <div class="curs-gene-list-edit-table-header"><% $table_1_header %></div>
 %   }
-  </table>
+  <& /curs/gene_list_edit_table.mhtml, col_names => \@col_names, gene_hashes => \@table_1_hashes &>
+
+%   if (@table_2_hashes) {
+%     if ($table_2_header) {
+        <div class="curs-gene-list-edit-table-header"><% $table_2_header %></div>
+%     }
+  <& /curs/gene_list_edit_table.mhtml, col_names => \@col_names, gene_hashes => \@table_2_hashes &>
+%   }
+
   <div class="submit">
     <input type="submit" class="btn btn-primary" name="continue" value="Continue"/>
   </div>
@@ -105,9 +88,31 @@ my @gene_hashes = map {
      };
      if ($multi_organism_mode) {
        $hash->{Organism} = $gene_proxy->organism_details()->{full_name};
+       if ($pathogen_host_mode) {
+         $hash->{pathogen_or_host} = $gene_proxy->organism_details()->{pathogen_or_host};
+       }
      }
      $hash
    } @gene_list;
+
+my @table_1_hashes = ();
+my $table_1_header = undef;
+my @table_2_hashes = ();
+my $table_2_header = undef;
+
+if ($pathogen_host_mode){
+  $table_1_header = 'Pathogen genes:';
+  $table_2_header = 'Host genes:';
+  map {
+    if ($_->{pathogen_or_host} eq 'host') {
+      push @table_2_hashes, $_;
+    } else {
+      push @table_1_hashes, $_;
+    }
+  } @gene_hashes;
+} else {
+  @table_1_hashes = @gene_hashes;
+}
 
 my @col_names = ("Systematic identifier", "Name", "Synonyms", "Product");
 

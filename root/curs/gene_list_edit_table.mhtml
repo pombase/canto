@@ -1,0 +1,34 @@
+<%args>
+@col_names
+@gene_hashes
+</%args>
+  <table class="list">
+
+    <thead>
+      <tr>
+%     for my $col_name (@col_names) {
+        <th>
+          <% $col_name %>
+        </th>
+%     }
+        <th>
+          &nbsp;
+        </th>
+      </tr>
+    </thead>
+
+%   for my $gene (@gene_hashes) {
+    <tr>
+%     for my $col_name (@col_names) {
+      <td>
+        <% $gene->{$col_name} |n %>
+      </td>
+%     }
+      <td>
+        <input type="checkbox"
+               name="gene-select"
+               value='<% $gene->{gene_id} %>' />
+      </td>
+    </tr>
+%   }
+  </table>
