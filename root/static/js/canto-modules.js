@@ -3583,11 +3583,11 @@ var GenotypeGenesPanelCtrl =
 
             $.map($scope.data.allGenes,
                   function(gene) {
-                    if ($scope.multiOrganismMode === 'true' &&
+                    if ($scope.multiOrganismMode &&
                         gene.organism.pathogen_or_host === 'pathogen') {
                       $scope.data.pathogenGenes.push(gene);
                     } else {
-                      if ($scope.multiOrganismMode === 'true' &&
+                      if ($scope.multiOrganismMode &&
                           gene.organism.pathogen_or_host === 'host') {
                         $scope.data.hostGenes.push(gene);
                       } else {
