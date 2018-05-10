@@ -15,12 +15,27 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'angular-1.5.3.js',
+      'angular-mocks-1.5.3.js',
+      'mocks/*.js',
+      'canto-modules.js',
       '*.Spec.js'
     ],
 
 
     // list of files / patterns to exclude
     exclude: [
+      'angular-animate*',
+      'angular-chart*',
+      'angular-confirm*',
+      'angular-placeholder**',
+      'bootstrap*',
+      'canto.js',
+      'Chart*',
+      'jquery*',
+      'tag-it*',
+      'toaster*',
+      'ui-bootstrap*'
     ],
 
 
