@@ -1,4 +1,4 @@
-This patch prevent a compiltation error when installing the Lucene Perl module
+This patch prevent a compilation error when installing the Lucene Perl module
 on Debian Scratch systems.
 
 
