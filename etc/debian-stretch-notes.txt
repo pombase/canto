@@ -1,0 +1,37 @@
+# Below are the steps needed to insatll all Canto dependencies on a
+# Debian Stretch (9.4) server
+
+sudo apt-get update
+
+sudo apt-get install -y ntpdate sqlite3 tar gzip whiptail perl git-core \
+    make gcc g++ \
+    libxml2-dev zlib1g-dev libssl-dev libexpat1-dev libpq-dev curl \
+    libpq-dev libxml2-dev zlib1g-dev libssl-dev libexpat1-dev apt libdb-dev
+
+(cd /tmp/; \
+   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene-dev_0.9.21b-2+b1_amd64.deb && \
+   wget http://ftp.debian.org/debian/pool/main/c/clucene-core/libclucene0ldbl_0.9.21b-2+b1_amd64.deb && \
+   sudo dpkg -i libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb && \
+   rm libclucene0ldbl_0.9.21b-2+b1_amd64.deb libclucene-dev_0.9.21b-2+b1_amd64.deb)
+
+(echo 'Package: libclucene-dev'; echo 'Pin: version 0.9.21b-2+b1'; echo 'Pin-Priority: 1000') | sudo tee /etc/apt/preferences.d/libclucene-dev
+
+sudo git clone https://github.com/pombase/canto.git /tmp/canto
+
+(cd /usr/include/CLucene/store; sudo patch -p 5 < /tmp/canto/etc/clucene_compilation_fix.patch)
+
+curl -L http://cpanmin.us | sudo perl - --self-upgrade
+
+sudo cpanm Lucene
+sudo cpanm Module::Install
+sudo cpanm Module::Install::Catalyst
+sudo cpanm --notest Catalyst::View::Mason
+
+cd /tmp/canto
+
+echo yes | sudo cpan
+yes | sudo perl Makefile.PL
+
+sudo make installdeps
+
+sudo make test
