@@ -14,7 +14,7 @@ my $config = $test_util->config();
 my $xml_filename = $config->{test_config}->{test_uniprot_entries};
 my $xml_file_full_path = $test_util->test_data_dir_full_path($xml_filename);
 
-my @results = Canto::UniProt::UniProtUtil::_parse_results($xml_file_full_path);
+my @results = Canto::UniProt::UniProtUtil::parse_results($xml_file_full_path);
 
 is ($results[0]->{primary_name}, 'POL3');
 is ($results[0]->{primary_identifier}, 'P15436');

@@ -55,7 +55,14 @@ sub _content
   }
 }
 
-sub _parse_results
+=head2 parse_results
+
+ Usage   : my @res = Canto::UniProt::UniProtUtil::parse_results($xml);
+ Function: Parse UniProt XML entries and return an array of the results
+
+=cut
+
+sub parse_results
 {
   my $xml = shift;
 
@@ -157,7 +164,7 @@ sub retrieve_entries
 
   if ($response->is_success) {
     my $xml = $response->content();
-    return _parse_results($xml);
+    return parse_results($xml);
   } else {
     if ($response->status_line() =~ /^400 /) {
       # illegal identifier like "cdc11"

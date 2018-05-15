@@ -54,6 +54,45 @@ has 'schema' => (
   required => 1,
 );
 
+
+=head2 create_gene
+
+ Usage   : $gene_load->create_gene($primary_identifier, $name, $synonyms, $product);
+ Function: Store a new gene
+ Args    : $primary_identifier
+           $name
+           $synonyms - an array ref of synonyms for this gene
+           product
+ Returns : Nothing
+
+=cut
+
+sub create_gene
+{
+  my $self = shift;
+  my $primary_identifier = shift;
+  my $name = shift;
+  my $synonyms = shift;
+  my $product = shift;
+
+  my @synonym_hashes = map {
+    {
+      identifier => $_,
+    }
+  } @$synonyms;
+
+  my $organism = $self->organism();
+
+  $self->schema()->resultset('Gene')->create(
+    {
+      primary_identifier => $primary_identifier,
+      product => $product,
+      primary_name => $name,
+      organism => $organism,
+      genesynonyms => [ @synonym_hashes ],
+    });
+}
+
 sub _process_gene_row
 {
   my $self = shift;
@@ -63,27 +102,16 @@ sub _process_gene_row
   my $columns_ref = shift;
   my ($primary_identifier, $name, $synonyms, $product) = @{$columns_ref};
 
-  my @synonym_hashes = ();
+  my @synonyms = ();
 
   if (defined $synonyms) {
-    @synonym_hashes = map {
+    @synonyms = map {
       s/^\s+//; s/\s+$//;
-      {
-        identifier => $_,
-      }
+      $_,
     } split /,/, $synonyms;
   }
 
-  my $organism = $self->organism();
-
-  $schema->resultset('Gene')->create(
-    {
-      primary_identifier => $primary_identifier,
-      product => $product,
-      primary_name => $name,
-      organism => $organism,
-      genesynonyms => [ @synonym_hashes ],
-    });
+  $self->create_gene($primary_identifier, $name, \@synonyms, $product);
 }
 
 =head2 load

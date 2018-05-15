@@ -41,11 +41,25 @@ the Free Software Foundation, either version 3 of the License, or
 use Carp;
 use Moose;
 
+use Canto::Track::GeneLookup;
+
+has schema => (is => 'ro', isa => 'Canto::TrackDB');
+
 with 'Canto::Role::Configurable';
+with 'Canto::Role::TrackGeneLookupCache';
 with 'Canto::Role::GeneLookupCache';
 
 use Package::Alias UniProtUtil => 'Canto::UniProt::UniProtUtil';
 use Clone qw(clone);
+
+sub _get_results
+{
+  my $self = shift;
+  my $search_terms_ref = shift;
+
+  return UniProtUtil::retrieve_entries($self->config(), $search_terms_ref);
+}
+
 
 =head2 lookup
 
@@ -73,6 +87,7 @@ use Clone qw(clone);
 sub lookup
 {
   my $self = shift;
+
   my $options = {};
   if (@_ == 2) {
     $options = shift;
@@ -85,8 +100,7 @@ sub lookup
 
   my $search_terms_ref = shift;
 
-  my @results = UniProtUtil::retrieve_entries($self->config(),
-                                              $search_terms_ref);
+  my @results = $self->_get_results($search_terms_ref);
 
   my %missing_search_terms = ();
   @missing_search_terms{@$search_terms_ref} = @$search_terms_ref;
