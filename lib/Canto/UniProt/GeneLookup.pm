@@ -43,7 +43,7 @@ use Moose;
 
 use Canto::Track::GeneLookup;
 
-has schema => (is => 'ro', isa => 'Canto::TrackDB');
+has schema => (is => 'rw', init_arg => undef, lazy_build => 1);
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::TrackGeneLookupCache';
@@ -60,6 +60,14 @@ sub _get_results
   return UniProtUtil::retrieve_entries($self->config(), $search_terms_ref);
 }
 
+sub _build_schema
+{
+  my $self = shift;
+
+  my $config = $self->config();
+
+  return Canto::TrackDB->new(config => $config);
+}
 
 =head2 lookup
 
