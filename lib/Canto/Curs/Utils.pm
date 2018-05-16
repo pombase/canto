@@ -968,10 +968,10 @@ sub make_allele_display_name
 
   if ($type =~ /^mutation|substitution/) {
     if ($type =~ /amino acid/) {
-      $description =~ s/(^|,\s*)/${1}aa/g;
+      $description =~ s/^/aa/g;
     } else {
       if ($type =~ /nucleotide/) {
-        $description =~ s/(^|,\s*)/${1}nt/g;
+        $description =~ s/^/nt/g;
       }
     }
   }
