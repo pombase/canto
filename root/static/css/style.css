@@ -1020,8 +1020,8 @@ fieldset.curs-genes span {
   margin-top: 5px;
   font-size: 95%;
 }
-.curs-annotation-table {
-  
+.curs-annotation-table hr {
+  margin: 0.3em;
 }
 
 .curs-annotation-table .term-warning {

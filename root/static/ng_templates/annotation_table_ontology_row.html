@@ -25,17 +25,20 @@
          href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">
         <div ng-repeat="allele in annotation.alleles">
           <span ng-bind-html="allele.long_display_name | addZeroWidthSpace | encodeAlleleSymbols | toTrusted"></span>
+          <hr ng-show="!$last"/>
         </div>
       </a>
       <span ng-if="!addLinks()">
         <div ng-repeat="allele in annotation.alleles">
           <span ng-bind-html="allele.long_display_name | addZeroWidthSpace | encodeAlleleSymbols | toTrusted"></span>
+          <hr ng-show="!$last"/>
         </div>
       </span>
     </span>
     <span ng-if="annotation.status === 'existing'">
       <div ng-repeat="allele in annotation.alleles">
         <span ng-bind-html="allele.long_display_name | addZeroWidthSpace | encodeAlleleSymbols | toTrusted"></span>
+        <hr ng-show="!$last"/>
       </div>
     </span>
   </td>
