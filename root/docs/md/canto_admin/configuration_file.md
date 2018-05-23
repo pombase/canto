@@ -256,3 +256,16 @@ help about this type of annotation.
 ### annotation_comment_help_text
 Help text to show once the user finishes annotating a paper, after "Submit to
 curators".  (Optional)
+
+### host_organism_taxonids
+A list of taxon IDs for the organisms that are treated as host species
+in pathogen-host mode.  All the list taxon IDs need to match organisms
+in the organism table.  The organisms are loaded using
+using `canto_add.pl --organism`.  See the [Canto setup documentation](setup#organisms)
+for details.
+
+If this list has any elements, Canto will start in pathogen-host
+mode and the internal config setting `pathogen_host_mode` will be
+automatically set to 1.  Also `host_organisms` will be set to
+a list the Organism objects.  `multi_organism_mode` is also set to
+1/true.
