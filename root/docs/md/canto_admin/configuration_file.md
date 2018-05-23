@@ -269,3 +269,5 @@ mode and the internal config setting `pathogen_host_mode` will be
 automatically set to 1.  Also `host_organisms` will be set to
 a list the Organism objects.  `multi_organism_mode` is also set to
 1/true.
+
+Note that when `pathogen_host_mode` is enabled, every organism that is in the organism table but _not_ in `host_organism_taxonids` will be assumed to be a pathogen organism.
