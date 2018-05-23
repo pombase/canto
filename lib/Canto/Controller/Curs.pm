@@ -608,24 +608,37 @@ sub gene_upload : Chained('top') Args(0) Form
         constraints => [ { type => 'Length',  min => 1 },
                          { type => 'Required', @required_when },
                        ],
-      },
-      { name => 'return_path_input', type => 'Hidden',
-        value => $return_path // '' },
-      (map {
-          my $ret = {
-            name => $_, type => 'Submit', value => $_,
-            attributes => {
-              class => 'btn btn-primary curs-finish-button button',
-              title => "{{ isValid() ? '' : '$not_valid_message' }}",
-            },
-          };
-          if ($_ eq 'Continue') {
-            $ret->{attributes}->{'ng-disabled'} = '!isValid()';
-          }
-          $ret;
-        } @submit_buttons),
-      @no_genes_elements,
+      }
     );
+
+  if ($c->config()->{pathogen_host_mode}) {
+    push @all_elements,
+      {
+        type => 'Block', tag => 'p',
+        content => 'Host taxon Ids:'
+      },
+      { name => 'host_organism_taxon_ids', type => 'Text', size => 80, };
+  }
+
+  push @all_elements,
+    { name => 'return_path_input', type => 'Hidden',
+      value => $return_path // '',
+    },
+      (map {
+        my $ret = {
+          name => $_, type => 'Submit', value => $_,
+          attributes => {
+            class => 'btn btn-primary curs-finish-button button',
+            title => "{{ isValid() ? '' : '$not_valid_message' }}",
+          },
+        };
+        if ($_ eq 'Continue') {
+          $ret->{attributes}->{'ng-disabled'} = '!isValid()';
+        }
+        $ret;
+      } @submit_buttons),
+        @no_genes_elements;
+
 
   $form->elements([@all_elements]);
 
@@ -745,6 +758,18 @@ sub gene_upload : Chained('top') Args(0) Form
       $message .= 's' if ($matched_count > 1);
 
       $c->flash()->{message} = $message;
+
+      if ($c->config()->{pathogen_host_mode}) {
+        my $taxon_ids_text = $form->param_value('host_organism_taxon_ids');
+        my @taxon_ids = grep { length $_ > 0 && /^\d+$/ } split /[\s,]+/, $taxon_ids_text;
+
+        my $organism_manager =
+          Canto::Curs::OrganismManager->new(config => $c->config(), curs_schema => $schema);
+
+        map {
+          $organism_manager->add_organism_by_taxonid($_);
+        } @taxon_ids;
+      }
 
       if (!defined $self->get_metadata($schema, Canto::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY())) {
         $self->set_metadata($schema, Canto::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY(),
