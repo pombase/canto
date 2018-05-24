@@ -117,6 +117,63 @@ sub get_organism
       });
 }
 
+=head2 find_organism_by_taxonid
+
+ Usage   : my $organism = $load_util->find_organism_by_taxonid($taxonid);
+ Function: Find and return the organism with the given taxonid
+ Returns : the organism object or undef
+
+=cut
+sub find_organism_by_taxonid
+{
+  my $self = shift;
+
+  my $taxonid = shift;
+
+  croak "no taxon id supplied" unless $taxonid;
+
+  if ($taxonid !~ /^\d+$/) {
+    die qq(taxon ID "$taxonid" isn't numeric\n);
+  }
+
+  my $schema = $self->schema();
+
+  my $organismprop_rs = $schema->resultset('Organismprop')->search();
+
+  while (defined (my $prop = $organismprop_rs->next())) {
+    if ($prop->type()->name() eq 'taxon_id' &&
+        $prop->value() == $taxonid) {
+      return $prop->organism();
+    }
+  }
+
+  return undef;
+}
+
+=head2 get_strain
+
+ Usage   : my $strain = $load_util->get_strain($organism_obj, $strain);
+ Function: Find or create, and then return a new strain object
+ Args    : a organism object and the strain description
+
+=cut
+sub get_strain
+{
+  my $self = shift;
+  my $organism = shift;
+  my $strain = shift;
+
+  croak "no strain supplied" unless $strain;
+
+  my $schema = $self->schema();
+
+  return $schema->resultset('Strain')->find_or_create(
+      {
+        organism_id => $organism->organism_id(),
+        strain_name => $strain,
+      });
+}
+
 =head2 find_cv
 
  Usage   : my $cv = $load_util->find_cv($cv_name);

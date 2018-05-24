@@ -33,6 +33,7 @@ use Canto::Config::ExtensionProcess;
 my $do_genes = 0;
 my $do_pubmed_xml = 0;
 my $do_organisms = 0;
+my $do_strains = 0;
 my $for_taxon = 0;
 my @ontology_args = ();
 my $do_process_extension_config = 0;
@@ -47,6 +48,7 @@ if (@ARGV == 0) {
 my $result = GetOptions ("genes=s" => \$do_genes,
                          "ontology=s" => \@ontology_args,
                          "organisms=s" => \$do_organisms,
+                         "strains=s" => \$do_strains,
                          "process-extension-config" => \$do_process_extension_config,
                          "pubmed-xml=s" => \$do_pubmed_xml,
                          "for-taxon=i" => \$for_taxon,
@@ -68,6 +70,8 @@ sub usage
   $0 --genes genes_file --for-taxon=<taxon_id>
 or:
   $0 --organisms organisms_file.tsv
+or:
+  $0 --strains strains_files.tsv
 or:
   $0 --ontology ontology_file.obo
   $0 --ontology ontology_file.obo --ontology another_ontology.obo
@@ -187,6 +191,8 @@ if ($do_organisms) {
   open my $fh, '<', $do_organisms or die "can't open $do_genes: $!";
 
   while (defined (my $line = <$fh>)) {
+    next if $line =~ /Genus/ && $. == 1;
+
     chomp $line;
     next if $line =~ /^\s*$/;
 
@@ -196,6 +202,37 @@ if ($do_organisms) {
   }
 
   $guard->commit unless $dry_run;
+}
+
+if ($do_strains) {
+  my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
+  my $guard = $schema->txn_scope_guard;
+
+  open my $fh, '<', $do_strains or die "can't open $do_strains: $!";
+
+  while (defined (my $line = <$fh>)) {
+    chomp $line;
+
+    next if $line =~ /strain/i && $. == 1;
+
+    next if $line =~ /^\s*$/;
+
+    my ($taxonid, $common_name, $strain_description) = split (/,/, $line);
+
+    $strain_description =~ s/^\s+//;
+    $strain_description =~ s/\s+$//;
+
+    my $organism = $load_util->find_organism_by_taxonid($taxonid);
+
+    if (!$organism) {
+      die qq(No organism with taxon ID "$taxonid" found in the database\n);
+    }
+
+    $load_util->get_strain($organism, $strain_description);
+  }
+
+  $guard->commit unless $dry_run;
+
 }
 
 if (@ontology_args) {
