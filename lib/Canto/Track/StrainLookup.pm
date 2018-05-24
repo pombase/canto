@@ -58,7 +58,23 @@ sub lookup
   my $self = shift;
   my $taxonid = shift;
 
-  return ('strain one', 'strain two');
+  if ($taxonid !~ /^\d+$/) {
+    die qq(taxon ID "$taxonid" isn't numeric\n);
+  }
+
+  my $schema = $self->schema();
+
+  my $rs = $schema->resultset('Organismprop')
+    ->search({'type.name' => 'taxon_id', value => $taxonid}, {join => 'type'})
+    ->search_related('organism', {}, { join => 'strains' });
+
+  my %strains = ();
+
+  while (defined (my $organism = $rs->next())) {
+    map { $strains{$_->strain_name()} = 1; } $organism->strains()->all();
+  }
+
+  return sort keys %strains;
 }
 
 1;
