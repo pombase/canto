@@ -1,6 +1,6 @@
-NcbiTaxSpeciesId,Genus,Species
-3702,Arabidopsis,thaliana
-4513,Hordeum,vulgare
-4565,Triticum,aestivum
-9606,Homo,sapiens
-10090,Mus,musculus 
+Genus,Species,NcbiTaxSpeciesId
+Arabidopsis,thaliana,3702
+Hordeum,vulgare,4513
+Triticum,aestivum,4565
+Homo,sapiens,9606
+Mus,musculus,10090

@@ -1,5 +1,5 @@
-NcbiTaxSpeciesId,Genus,Species
-5207,Cryptococcus,neoformans
-5476,Candida,albicans
-5518,Fusarium,graminearum
-746128,Aspergillus,fumigatus   
+Genus,Species,NcbiTaxSpeciesId
+Cryptococcus,neoformans,5207
+Candida,albicans,5476
+Fusarium,graminearum,5518
+Aspergillus,fumigatus,746128
