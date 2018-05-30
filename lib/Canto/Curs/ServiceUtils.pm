@@ -52,6 +52,7 @@ use Canto::Curs::Utils;
 use Canto::Curs::ConditionUtil;
 use Canto::Curs::MetadataStorer;
 use Canto::Curs::OrganismManager;
+use Canto::Curs::GeneProxy;
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 
@@ -174,7 +175,17 @@ sub _get_organisms
   while (defined (my $org = $rs->next())) {
     my $organism_details = $organism_lookup->lookup_by_taxonid($org->taxonid());
 
-    $organism_details->{gene_count} = $org->genes()->count();
+    $organism_details->{genes} =
+      [map {
+        my $gene_proxy =
+          Canto::Curs::GeneProxy->new(config => $self->config(), cursdb_gene => $_);
+        {
+          primary_identifier => $gene_proxy->primary_identifier(),
+          primary_name => $gene_proxy->primary_name(),
+          display_name => $gene_proxy->display_name(),
+          gene_id => $_->gene_id(),
+        }
+      } $org->genes()->all()];
 
     push @return_list, $organism_details;
   }

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 16;
 use Test::Deep;
 use JSON;
 
@@ -26,8 +26,37 @@ my $res = $service_utils->list_for_service('organism');
 
 is (@$res, 1);
 is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
-is ($res->[0]->{gene_count}, 4);
 
+my @res_genes = @{$res->[0]->{genes}};
+is (scalar(@res_genes), 4);
+
+cmp_deeply(\@res_genes,
+           [
+                       {
+            'gene_id' => 1,
+            'display_name' => 'mot1',
+            'primary_identifier' => 'SPBC1826.01c',
+            'primary_name' => 'mot1'
+          },
+          {
+            'primary_name' => 'ssm4',
+            'primary_identifier' => 'SPAC27D7.13c',
+            'display_name' => 'ssm4',
+            'gene_id' => 2
+          },
+          {
+            'primary_name' => 'doa10',
+            'primary_identifier' => 'SPBC14F5.07',
+            'gene_id' => 3,
+            'display_name' => 'doa10'
+          },
+          {
+            'primary_identifier' => 'SPCC63.05',
+            'primary_name' => undef,
+            'gene_id' => 4,
+            'display_name' => 'SPCC63.05'
+          }
+        ]);
 
 # add an organism
 $service_utils->add_organism_by_taxonid(4932);
@@ -36,9 +65,9 @@ $res = $service_utils->list_for_service('organism');
 
 is (@$res, 2);
 is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
-is ($res->[0]->{gene_count}, 4);
+is (scalar(@{$res->[0]->{genes}}), 4);
 is ($res->[1]->{full_name}, "Saccharomyces cerevisiae");
-is ($res->[1]->{gene_count}, 0);
+is (scalar(@{$res->[1]->{genes}}), 0);
 
 
 # delete an organism
@@ -50,7 +79,7 @@ $res = $service_utils->list_for_service('organism');
 
 is (@$res, 1);
 is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
-is ($res->[0]->{gene_count}, 4);
+is (scalar(@{$res->[0]->{genes}}), 4);
 
 
 $delete_res = $service_utils->delete_organism_by_taxonid(4896);
