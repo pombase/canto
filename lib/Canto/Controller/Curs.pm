@@ -617,7 +617,8 @@ sub gene_upload : Chained('top') Args(0) Form
         type => 'Block', tag => 'p',
         content => 'Host taxon Ids:'
       },
-      { name => 'host_organism_taxon_ids', type => 'Text', size => 80, };
+      { name => 'host_organism_taxon_ids', type => 'Text', size => 80,
+        attributes => { 'ng-model' => 'data.hostTaxonIds' } };
   }
 
   push @all_elements,
