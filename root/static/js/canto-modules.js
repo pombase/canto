@@ -1845,6 +1845,14 @@ var extensionOrGroupBuilder =
                                     response.data.subset_ids.filter(function(subset_id) {
                                       if (matchingRangeConf.scope.indexOf(subset_id) != -1) {
                                         isInSubset = true;
+                                      } else {
+                                        var matchResult = subset_id.match(/is_a\((.*)\)/);
+                                        if (matchResult) {
+                                          // check for subset_id without the "is_a(" too
+                                          if (matchingRangeConf.scope.indexOf(matchResult[1]) != -1) {
+                                            isInSubset = true;
+                                          }
+                                        }
                                       }
                                     });
                                     if (isInSubset) {
