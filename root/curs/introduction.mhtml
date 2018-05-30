@@ -19,7 +19,7 @@ this paper yourself, or send it to a member of your lab to curate.
 
 Please annotate only the data that you have determined directly in the
 experiments described in this paper. If you have any questions, help is
-available on many pages, or you can contact the PomBase staff for
+available on many pages, or you can contact the <% $c->config()->{database_name} %> staff for
 assistance at any time.
     </p>
 
