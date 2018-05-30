@@ -4320,13 +4320,15 @@ canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
 function UploadGenesCtrl($scope) {
   $scope.data = {
     geneIdentifiers: '',
+    hostTaxonIds: '',
     noAnnotation: false,
     noAnnotationReason: '',
     otherText: '',
     geneList: '',
   };
   $scope.isValid = function() {
-    return $scope.data.geneIdentifiers.length > 0 ||
+    return ($scope.data.geneIdentifiers.length > 0
+      || $scope.data.hostTaxonIds.length > 0) ||
       ($scope.data.noAnnotation &&
        $scope.data.noAnnotationReason.length > 0 &&
        ($scope.data.noAnnotationReason !== "Other" ||
