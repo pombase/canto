@@ -259,13 +259,13 @@ annotations contributed by authors.
           Total curatable
         </th>
         <th>
-          Uncurated
-        </th>
-        <th>
           Admin curated
         </th>
         <th>
           Community curated
+        </th>
+        <th>
+          Uncurated
         </th>
       </tr>
     </thead>
