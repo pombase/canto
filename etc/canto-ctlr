@@ -12,15 +12,18 @@ cd $CANTO/apps/$app
 # Carry out specific functions when asked to by the system
 case "$2" in
   start)
-    (date; PLACK_ENV=test /usr/local/bin/start_server --pid-file=$CANTO/run/$app --port $port -- ./script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman --preload) 2>&1 | tee -a $CANTO/logs/$app.log &
+
+    echo "Starting Canto for $app with $WORKERS workers"
+
+    (date; DBIC_TRACE=0 start_server --pid-file=$CANTO/run/$app --port $port -- ./script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman --preload) 2>&1 | tee -a $CANTO/logs/$app.log &
     ;;
   stop)
-    pid=`cat $CANTO/run/$app`
+    pid=`/bin/cat $CANTO/run/$app`
     echo stopping $pid
     kill -TERM $pid
     ;;
   restart)
-    pid=`cat $CANTO/run/$app`
+    pid=`/bin/cat $CANTO/run/$app`
     echo restarting $pid
     kill -HUP $pid
     ;;
