@@ -1382,8 +1382,11 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   filter: alpha(opacity=50);
 }
 
-.form-control, .help-block {
+help-block {
   width: auto;
+}
+
+.form-control, .help-block {
   display: inline;
 }
 
