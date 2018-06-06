@@ -3549,36 +3549,41 @@ var GenotypeGenesPanelCtrl =
         $scope.app_static_path = CantoGlobals.app_static_path;
 
         $scope.data = {
-          allGenes: null,
-          hostGenes: [],
-          pathogenGenes: [],
-          unknownGenes: [], // not host and not pathogen
+          allOrganisms: null,
+          hostOrganisms: [],
+          pathogenOrganisms: [],
+          unknownOrganisms: [], // not host and not pathogen
         };
 
-        $scope.getGenesFromServer = function() {
-          Curs.list('gene').success(function(results) {
-            $scope.data.allGenes = results;
+        $scope.getOrganismsFromServer = function() {
+          Curs.list('organism').success(function(results) {
+            $scope.data.allOrganisms = results;
 
+			// TODO: fix name mapping so that it works with organisms
+			/*
             $.map($scope.data.allGenes,
                   function(gene) {
                     gene.display_name = gene.primary_name || gene.primary_identifier;
                   });
+			*/
 
-            $scope.data.hostGenes = [];
-            $scope.data.pathogenGenes = [];
-            $scope.data.unknownGenes = [];
+            $scope.data.hostOrganisms = [];
+            $scope.data.pathogenOrganisms = [];
+            $scope.data.unknownOrganisms = [];
+			
+			console.log($scope.data.allOrganisms);
 
-            $.map($scope.data.allGenes,
-                  function(gene) {
+            $.map($scope.data.allOrganisms,
+                  function(organism) {
                     if ($scope.multiOrganismMode &&
-                        gene.organism.pathogen_or_host === 'pathogen') {
-                      $scope.data.pathogenGenes.push(gene);
+                        organism.pathogen_or_host === 'pathogen') {
+                      $scope.data.pathogenOrganisms.push(organism);
                     } else {
                       if ($scope.multiOrganismMode &&
-                          gene.organism.pathogen_or_host === 'host') {
-                        $scope.data.hostGenes.push(gene);
+                          organism.pathogen_or_host === 'host') {
+                        $scope.data.hostOrganisms.push(organism);
                       } else {
-                        $scope.data.unknownGenes.push(gene);
+                        $scope.data.unknownOrganisms.push(organism);
                       }
                     }
                   });
@@ -3589,8 +3594,9 @@ var GenotypeGenesPanelCtrl =
           });
         };
 
-        $scope.getGenesFromServer();
+        $scope.getOrganismsFromServer();
 
+		// TODO: Find a new way to support this, now that we don't fetch genes
         $scope.openSingleGeneAddDialog = function() {
           var modal = openSingleGeneAddDialog($uibModal);
           modal.result.then(function () {
