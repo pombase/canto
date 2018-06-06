@@ -2,7 +2,7 @@
   <div ng-show="!data.selectedOrganism">
     <span ng-show="label">{{label}}</span>
     <select name="select-organism" ng-model="data.selectedOrganism"
-            ng-options="o as o.full_name for o in data.organismsOfGenes">
+            ng-options="o as o.full_name for o in organisms">
       <option value="">Select an organism ...</option>
     </select>
   </div>
@@ -13,11 +13,11 @@
       <span style="font-size: 90%; font-weight: bold;">
         {{data.selectedOrganism.full_name}} genes
       </span>
-      <span ng-show="data.organismsOfGenes.length != 1">
+      <span ng-show="organisms.length != 1">
         (<a ng-click="data.selectedOrganism = null">change ...</a>)
       </span>
     </span>
-
+    // TODO: enclose table in ng-if there are no genes on the organism.
     <table class="list">
       <thead>
         <tr>
