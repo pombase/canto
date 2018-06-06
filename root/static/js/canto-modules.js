@@ -3424,7 +3424,7 @@ var GenotypeGeneListCtrl =
     return {
       scope: {
         genotypes: '=',
-        genes: '=',
+        organisms: '=',
         multiOrganismMode: '=',
         label: '@'
       },
@@ -3438,6 +3438,9 @@ var GenotypeGeneListCtrl =
           selectedOrganism: null,
           organismsOfGenes: [],
         };
+
+        /* TODO: if $scope.organisms.length == 1,
+         * $.scope.data.selectedOrganism = $scope.organisms[0] */
 
         $scope.$watch('genotypes',
                      function() {
@@ -3462,46 +3465,8 @@ var GenotypeGeneListCtrl =
         }
 
         $scope.selectedOrganismGenes = function() {
-          if ($scope.data.selectedOrganism) {
-            return $.grep($scope.genes,
-                          function(gene) {
-                            return gene.organism.taxonid === $scope.data.selectedOrganism.taxonid;
-                          });
-          } else {
-            if ($scope.data.organismsOfGenes.length == 1) {
-              return $scope.genes;
-            } else {
-              return [];
-            }
-          }
+          return $scope.data.selectedOrganism.genes;
         };
-
-        $scope.setOrganismsOfGenes = function() {
-          var organisms = {};
-
-          $.map($scope.genes, function(gene) {
-            organisms[gene.organism.taxonid] = gene.organism;
-          });
-
-          var retList = [];
-
-          $.map(Object.keys(organisms), function(taxonid) {
-            retList.push(organisms[taxonid]);
-          });
-
-          return retList;
-        }
-
-        $scope.$watch('genes',
-                      function() {
-                        if ($scope.genes && $scope.genes.length > 0) {
-                          $scope.data.organismsOfGenes = $scope.setOrganismsOfGenes();
-
-                          if ($scope.data.organismsOfGenes.length === 1) {
-                            $scope.data.selectedOrganism = $scope.data.organismsOfGenes[0];
-                          }
-                        }
-                      });
 
         $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {
           var editInstance = makeAlleleEditInstance($uibModal,
