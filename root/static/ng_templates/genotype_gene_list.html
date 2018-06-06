@@ -1,8 +1,8 @@
-<div class="curs-genotype-gene-list" ng-show="genes">
+<div class="curs-genotype-gene-list" ng-show="organisms">
   <div ng-show="!data.selectedOrganism">
     <span ng-show="label">{{label}}</span>
     <select name="select-organism" ng-model="data.selectedOrganism"
-            ng-options="o as o.full_name for o in data.organismsOfGenes">
+            ng-options="o as o.full_name for o in organisms">
       <option value="">Select an organism ...</option>
     </select>
   </div>
@@ -13,12 +13,11 @@
       <span style="font-size: 90%; font-weight: bold;">
         {{data.selectedOrganism.full_name}} genes
       </span>
-      <span ng-show="data.organismsOfGenes.length != 1">
+      <span ng-show="organisms.length != 1">
         (<a ng-click="data.selectedOrganism = null">change ...</a>)
       </span>
     </span>
-
-    <table class="list">
+    <table class="list" ng-if="selectedOrganismGenes().length > 0">
       <thead>
         <tr>
           <th>Gene</th>
@@ -42,5 +41,9 @@
         </tr>
       </tbody>
     </table>
+    <p class="curs-genotype-no-gene-notice"
+       ng-if="selectedOrganismGenes().length === 0">
+      No genes have been added for this organism.
+    </p>
   </div>
 </div>
