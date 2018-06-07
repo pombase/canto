@@ -17,8 +17,7 @@
         (<a ng-click="data.selectedOrganism = null">change ...</a>)
       </span>
     </span>
-    <!--TODO: enclose table in ng-if there are no genes on the organism. -->
-    <table class="list">
+    <table class="list" ng-if="selectedOrganismGenes().length > 0">
       <thead>
         <tr>
           <th>Gene</th>
@@ -42,5 +41,9 @@
         </tr>
       </tbody>
     </table>
+    <p class="curs-genotype-no-gene-notice"
+       ng-if="selectedOrganismGenes().length === 0">
+      No genes have been added for this organism.
+    </p>
   </div>
 </div>
