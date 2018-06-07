@@ -3559,13 +3559,13 @@ var GenotypeGenesPanelCtrl =
           Curs.list('organism').success(function(results) {
             $scope.data.allOrganisms = results;
 
-			// TODO: fix name mapping so that it works with organisms
-			/*
+            // TODO: fix name mapping so that it works with organisms
+            /*
             $.map($scope.data.allGenes,
                   function(gene) {
                     gene.display_name = gene.primary_name || gene.primary_identifier;
                   });
-			*/
+            */
 
             $scope.data.hostOrganisms = [];
             $scope.data.pathogenOrganisms = [];
@@ -3594,7 +3594,7 @@ var GenotypeGenesPanelCtrl =
 
         $scope.getOrganismsFromServer();
 
-		// TODO: Find a new way to support this, now that we don't fetch genes
+        // TODO: Find a new way to support this, now that we don't fetch genes
         $scope.openSingleGeneAddDialog = function() {
           var modal = openSingleGeneAddDialog($uibModal);
           modal.result.then(function () {
