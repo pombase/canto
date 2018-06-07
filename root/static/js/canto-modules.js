@@ -3435,8 +3435,7 @@ var GenotypeGeneListCtrl =
         $scope.hasDeletionHash = {};
 
         $scope.data = {
-          selectedOrganism: null,
-          organismsOfGenes: [],
+          selectedOrganism: null
         };
 
         if ($scope.organisms.length == 1) {
