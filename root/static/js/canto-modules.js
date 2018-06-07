@@ -3559,12 +3559,6 @@ var GenotypeGenesPanelCtrl =
           Curs.list('organism').success(function(results) {
             $scope.data.allOrganisms = results;
 
-            $.map($scope.data.allOrganisms, function(organism) {
-              $.map(organism.genes, function(gene) {
-                gene.display_name = gene.primary_name || gene.primary_identifier;
-              });
-            });
-
             $scope.data.hostOrganisms = [];
             $scope.data.pathogenOrganisms = [];
             $scope.data.unknownOrganisms = [];
