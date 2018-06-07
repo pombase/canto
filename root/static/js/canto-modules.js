@@ -3570,8 +3570,6 @@ var GenotypeGenesPanelCtrl =
             $scope.data.hostOrganisms = [];
             $scope.data.pathogenOrganisms = [];
             $scope.data.unknownOrganisms = [];
-			
-			console.log($scope.data.allOrganisms);
 
             $.map($scope.data.allOrganisms,
                   function(organism) {
