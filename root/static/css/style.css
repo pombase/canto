@@ -1456,3 +1456,7 @@ a:not([href]) {
   margin: 6px;
   margin-bottom: 12px;
 }
+
+.curs-genotype-no-gene-notice {
+  margin-top: 10px;
+}
