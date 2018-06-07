@@ -3592,11 +3592,10 @@ var GenotypeGenesPanelCtrl =
 
         $scope.getOrganismsFromServer();
 
-        // TODO: Find a new way to support this, now that we don't fetch genes
         $scope.openSingleGeneAddDialog = function() {
           var modal = openSingleGeneAddDialog($uibModal);
           modal.result.then(function () {
-            $scope.getGenesFromServer();
+            $scope.getOrganismsFromServer();
           });
         };
       }
