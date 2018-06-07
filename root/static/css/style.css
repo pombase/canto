@@ -1399,6 +1399,11 @@ help-block {
   max-width: 600px;
 }
 
+.curs-feature-chooser select,
+.curs-evidence-directive select {
+  width: auto;
+}
+
 table tr td.curs-table-row-remove {
   border-style: none;
 }
