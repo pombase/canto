@@ -3439,8 +3439,9 @@ var GenotypeGeneListCtrl =
           organismsOfGenes: [],
         };
 
-        /* TODO: if $scope.organisms.length == 1,
-         * $.scope.data.selectedOrganism = $scope.organisms[0] */
+        if ($scope.organisms.length == 1) {
+          $.scope.data.selectedOrganism = $scope.organisms[0];
+        }
 
         $scope.$watch('genotypes',
                      function() {
