@@ -3439,7 +3439,7 @@ var GenotypeGeneListCtrl =
         };
 
         if ($scope.organisms.length == 1) {
-          $.scope.data.selectedOrganism = $scope.organisms[0];
+          $scope.data.selectedOrganism = $scope.organisms[0];
         }
 
         $scope.$watch('genotypes',
