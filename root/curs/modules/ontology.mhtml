@@ -18,6 +18,7 @@ $pub
                            annotation-type="annotationType"
                            term-id="{{currentTerm()}}"
                            matching-synonym="{{matchingSynonym()}}"
+                           do-not-annotate-current-Term="doNotAnnotateCurrentTerm"
                            goto-child-callback="gotoChild(childId)"
                            unset-term-callback="unsetTerm()"
                            suggest-term-callback="suggestTerm(termSuggestion)"
@@ -67,11 +68,12 @@ Annotation extensions
                                   annotation-type="annotationType"></ontology-term-comment-transfer>
   </div>
 
-  <div ng-show="currentTerm()" class="ng-cloak">
+  <div ng-show="currentTerm()" class="ng-cloak curs-ontology-workflow-buttons">
     <button type="submit" class="btn btn-primary curs-back-button"
             title="&lt;- Back"
             ng-click="back()">&lt;- Back</button>
-    <button type="submit" class="btn btn-primary curs-finish-button"
+    <button type="submit" class="btn btn-primary curs-finish-button" 
+            title="{{doNotAnnotateCurrentTerm ? 'This term should not be used for direct annotations, please select a more specific term' : 'Proceed -&gt;'}}"
             ng-disabled="!isValid() || postInProgress"
             ng-click="proceed()" >Proceed -&gt;</button>
   </div>

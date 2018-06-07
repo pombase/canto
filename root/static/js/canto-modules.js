@@ -1400,6 +1400,7 @@ var ontologyTermConfirm =
         unsetTermCallback: '&',
         suggestTermCallback: '&',
         confirmTermCallback: '&',
+        doNotAnnotateCurrentTerm: '=',
       },
       restrict: 'E',
       replace: true,
@@ -1416,6 +1417,12 @@ var ontologyTermConfirm =
 
         $scope.app_static_path = CantoGlobals.app_static_path;
 
+        $scope.checkDoNotAnnotate = function(configDoNotAnnotateSubsets) {
+          $scope.doNotAnnotateCurrentTerm =
+            arrayIntersection(configDoNotAnnotateSubsets,
+                              $scope.termDetails.subset_ids).length > 0;
+        };
+
         $scope.$watch('termId',
                       function(newTermId) {
                         if (newTermId) {
@@ -1424,9 +1431,21 @@ var ontologyTermConfirm =
                                                 def: 1,
                                                 children: 1,
                                                 synonyms: $scope.synonymTypes,
+                                                subset_ids: 1,
                                               })
                             .then(function(response) {
                               $scope.termDetails = response.data;
+
+                              $scope.doNotAnnotateCurrentTerm = false;
+
+                              CantoConfig.get('ontology_namespace_config')
+                                .then(function(results) {
+                                  $scope.ontology_namespace_config = results.data;
+                                  var doNotAnnotateSubsets =
+                                      results.data['do_not_annotate_subsets'] || [];
+
+                                  $scope.checkDoNotAnnotate(doNotAnnotateSubsets);
+                                });
                             });
                         } else {
                           $scope.termDetails = null;
@@ -2339,6 +2358,8 @@ var ontologyWorkflowCtrl =
 
     $scope.extensionBuilderIsValid = true;
 
+    $scope.doNotAnnotateCurrentTerm = false;
+
     $scope.updateMatchingConfig = function() {
       var subset_ids = $scope.termDetails.subset_ids;
 
@@ -2478,6 +2499,10 @@ var ontologyWorkflowCtrl =
     };
 
     $scope.isValid = function() {
+      if ($scope.getState() == 'searching' && $scope.doNotAnnotateCurrentTerm) {
+        return false;
+      }
+
       if ($scope.getState() == 'selectingEvidence') {
         if ($scope.matchingExtensionConfigs == null) {
           return false;

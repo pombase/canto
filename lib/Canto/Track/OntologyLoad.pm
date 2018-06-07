@@ -236,6 +236,9 @@ sub load
   my $config_subsets_to_ignore =
     $self->config()->{ontology_namespace_config}{subsets_to_ignore};
 
+  my $do_not_annotate_subsets =
+    $self->config()->{ontology_namespace_config}{do_not_annotate_subsets} || [];
+
   my @subsets_to_ignore = ();
 
   if ($config_subsets_to_ignore) {
@@ -246,6 +249,12 @@ sub load
           push @subsets_to_ignore, $subset_id
         }
       }
+    }
+  }
+
+  for my $subset_id (@$do_not_annotate_subsets) {
+    if (!grep { $subset_id eq $_ } @subsets_to_ignore) {
+      push @subsets_to_ignore, $subset_id;
     }
   }
 

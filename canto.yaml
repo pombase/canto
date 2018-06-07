@@ -1867,6 +1867,7 @@ config_service:
     multi_organism_mode: 1
     help_text: 1
     public_mode: 1
+    ontology_namespace_config: 1
 
 max_term_name_select_count: 20
 
