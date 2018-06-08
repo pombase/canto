@@ -3424,7 +3424,7 @@ var GenotypeGeneListCtrl =
     return {
       scope: {
         genotypes: '=',
-        genes: '=',
+        organisms: '=',
         multiOrganismMode: '=',
         label: '@'
       },
@@ -3435,9 +3435,12 @@ var GenotypeGeneListCtrl =
         $scope.hasDeletionHash = {};
 
         $scope.data = {
-          selectedOrganism: null,
-          organismsOfGenes: [],
+          selectedOrganism: null
         };
+
+        if ($scope.organisms.length == 1) {
+          $scope.data.selectedOrganism = $scope.organisms[0];
+        }
 
         $scope.$watch('genotypes',
                      function() {
@@ -3462,46 +3465,8 @@ var GenotypeGeneListCtrl =
         }
 
         $scope.selectedOrganismGenes = function() {
-          if ($scope.data.selectedOrganism) {
-            return $.grep($scope.genes,
-                          function(gene) {
-                            return gene.organism.taxonid === $scope.data.selectedOrganism.taxonid;
-                          });
-          } else {
-            if ($scope.data.organismsOfGenes.length == 1) {
-              return $scope.genes;
-            } else {
-              return [];
-            }
-          }
+          return $scope.data.selectedOrganism.genes;
         };
-
-        $scope.setOrganismsOfGenes = function() {
-          var organisms = {};
-
-          $.map($scope.genes, function(gene) {
-            organisms[gene.organism.taxonid] = gene.organism;
-          });
-
-          var retList = [];
-
-          $.map(Object.keys(organisms), function(taxonid) {
-            retList.push(organisms[taxonid]);
-          });
-
-          return retList;
-        }
-
-        $scope.$watch('genes',
-                      function() {
-                        if ($scope.genes && $scope.genes.length > 0) {
-                          $scope.data.organismsOfGenes = $scope.setOrganismsOfGenes();
-
-                          if ($scope.data.organismsOfGenes.length === 1) {
-                            $scope.data.selectedOrganism = $scope.data.organismsOfGenes[0];
-                          }
-                        }
-                      });
 
         $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {
           var editInstance = makeAlleleEditInstance($uibModal,
@@ -3584,36 +3549,31 @@ var GenotypeGenesPanelCtrl =
         $scope.app_static_path = CantoGlobals.app_static_path;
 
         $scope.data = {
-          allGenes: null,
-          hostGenes: [],
-          pathogenGenes: [],
-          unknownGenes: [], // not host and not pathogen
+          allOrganisms: null,
+          hostOrganisms: [],
+          pathogenOrganisms: [],
+          unknownOrganisms: [], // not host and not pathogen
         };
 
-        $scope.getGenesFromServer = function() {
-          Curs.list('gene').success(function(results) {
-            $scope.data.allGenes = results;
+        $scope.getOrganismsFromServer = function() {
+          Curs.list('organism').success(function(results) {
+            $scope.data.allOrganisms = results;
 
-            $.map($scope.data.allGenes,
-                  function(gene) {
-                    gene.display_name = gene.primary_name || gene.primary_identifier;
-                  });
+            $scope.data.hostOrganisms = [];
+            $scope.data.pathogenOrganisms = [];
+            $scope.data.unknownOrganisms = [];
 
-            $scope.data.hostGenes = [];
-            $scope.data.pathogenGenes = [];
-            $scope.data.unknownGenes = [];
-
-            $.map($scope.data.allGenes,
-                  function(gene) {
+            $.map($scope.data.allOrganisms,
+                  function(organism) {
                     if ($scope.multiOrganismMode &&
-                        gene.organism.pathogen_or_host === 'pathogen') {
-                      $scope.data.pathogenGenes.push(gene);
+                        organism.pathogen_or_host === 'pathogen') {
+                      $scope.data.pathogenOrganisms.push(organism);
                     } else {
                       if ($scope.multiOrganismMode &&
-                          gene.organism.pathogen_or_host === 'host') {
-                        $scope.data.hostGenes.push(gene);
+                          organism.pathogen_or_host === 'host') {
+                        $scope.data.hostOrganisms.push(organism);
                       } else {
-                        $scope.data.unknownGenes.push(gene);
+                        $scope.data.unknownOrganisms.push(organism);
                       }
                     }
                   });
@@ -3624,12 +3584,12 @@ var GenotypeGenesPanelCtrl =
           });
         };
 
-        $scope.getGenesFromServer();
+        $scope.getOrganismsFromServer();
 
         $scope.openSingleGeneAddDialog = function() {
           var modal = openSingleGeneAddDialog($uibModal);
           modal.result.then(function () {
-            $scope.getGenesFromServer();
+            $scope.getOrganismsFromServer();
           });
         };
       }
