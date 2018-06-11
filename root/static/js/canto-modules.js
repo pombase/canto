@@ -3513,7 +3513,13 @@ var GenotypeGeneListCtrl =
         };
 
         $scope.makeDeletionAllele = function(gene_id) {
-          var gene = ($.grep($scope.genes, function(gene) {
+          if (!$scope.data.selectedOrganism) {
+            return;
+          }
+
+          var genes = $scope.selectedOrganismGenes();
+
+          var gene = ($.grep(genes, function(gene) {
             // find gene by ID
             return gene.gene_id == gene_id;
           }))[0];
