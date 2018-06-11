@@ -7,6 +7,13 @@ Directionality section carefully.
 </p>
 
 <p>
+We recommend that you only annotate interactions that you think are
+biologically meaningful. For example, don't include known or suspected
+contaminants from mass spectrometry results (e.g. ribosomal proteins,
+translation factors, 'sticky' proteins).
+</p>
+
+<p>
 When you choose 'Physical interaction', a popup appears with two
 pulldown menus and a text field for optional comments.
 </p>
