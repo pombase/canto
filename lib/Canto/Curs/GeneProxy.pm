@@ -163,7 +163,13 @@ sub _build_organism_details
 {
   my $self = shift;
 
-  return $self->organism_lookup()->lookup_by_taxonid($self->taxonid());
+  my $details = $self->organism_lookup()->lookup_by_taxonid($self->taxonid());
+
+  if (defined $details) {
+    return $details;
+  } else {
+    die "can't find organism details for: ", $self->taxonid();
+  }
 }
 
 1;
