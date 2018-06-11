@@ -105,6 +105,14 @@ sub lookup_by_type
   while (defined (my $organism = $organism_rs->next())) {
     my $organism_hash = _make_organism_hash($config, $organism);
 
+    if ($lookup_type) {
+      if ($organism_hash->{pathogen_or_host}) {
+        next unless $lookup_type eq $organism_hash->{pathogen_or_host};
+      } else {
+        next;
+      }
+    }
+
     push @result_organisms, $organism_hash;
   }
 

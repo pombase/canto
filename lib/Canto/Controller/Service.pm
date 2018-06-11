@@ -267,6 +267,7 @@ sub lookup : Local
     person => \&_person_results,
     pubs => \&_pubs_results,
     strains => \&_strain_lookup,
+    organisms => \&_organism_lookup,
   );
 
   my $res_sub = $dispatch{$type_name};
@@ -289,6 +290,15 @@ sub lookup : Local
   $c->cache_page(100) unless $ENV{CANTO_DEBUG};
 
   $c->forward('View::JSON');
+}
+
+sub _organism_lookup
+{
+  my ($c, $type) = @_;
+
+  my $organism_lookup = Canto::Track::get_adaptor($c->config(), 'organism');
+
+  return [$organism_lookup->lookup_by_type($type)];
 }
 
 sub details : Local
