@@ -510,9 +510,17 @@ canto.service('CantoGlobals', function($window) {
 });
 
 canto.service('CantoService', function($http) {
-  this.lookup = function(key, path_parts, params, timeout) {
+  this.lookup = function(key, pathParts, params, timeout) {
+    if (!pathParts) {
+      pathParts = [];
+    }
+
+    if (!params) {
+      params = {};
+    }
+
     return $http.get(application_root + '/ws/lookup/' + key + '/' +
-                     path_parts.join('/'),
+                     pathParts.join('/'),
                      {
                        params: params,
                        timeout: timeout
@@ -520,6 +528,10 @@ canto.service('CantoService', function($http) {
   };
 
   this.details = function(key, params, timeout) {
+    if (!params) {
+      params = {};
+    }
+
     return $http.get(application_root + '/ws/details/' + key,
                      {
                        params: params,
