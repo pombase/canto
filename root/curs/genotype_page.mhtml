@@ -30,10 +30,12 @@ Add a new <% $type_display_name %> for this genotype ...
 %   if (!$annotation_type->{disabled}) {
       </a>
 %   }
+    <span class="curs-annotation-quick-add" ng-show="advancedMode()">
       <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
                             feature-type="genotype" feature-id="<% $genotype->genotype_id() %>"
                             feature-display-name="<% $genotype->display_name() %>">
       </annotation-quick-add>
+    </span>
     </li>
 % }
   </ul>

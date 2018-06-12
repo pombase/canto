@@ -3423,9 +3423,13 @@ canto.directive('genotypeEdit',
 
 
 var genotypeViewCtrl =
-  function($scope, CantoGlobals) {
+  function($scope, CantoGlobals, CursSettings) {
     $scope.init = function(annotationCount) {
       $scope.annotationCount = annotationCount;
+    };
+
+    $scope.advancedMode = function() {
+      return CursSettings.getAnnotationMode() == 'advanced';
     };
 
     $scope.editGenotype = function(genotypeId) {
@@ -3440,7 +3444,7 @@ var genotypeViewCtrl =
   };
 
 canto.controller('GenotypeViewCtrl',
-                 ['$scope', 'CantoGlobals', genotypeViewCtrl]);
+                 ['$scope', 'CantoGlobals', 'CursSettings', genotypeViewCtrl]);
 
 
 var GenotypeGeneListCtrl =
