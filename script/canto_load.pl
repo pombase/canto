@@ -200,6 +200,14 @@ if ($do_organisms) {
 
     my ($genus, $species, $taxonid, $common_name) = split (/,/, $line);
 
+    $species =~ s/^\s+//;
+    $species =~ s/\s+$//;
+
+    if (length $species == 0) {
+      warn "no species on this line, skipping:\n$line\n";
+      next;
+    }
+
     if ($taxonid !~ /^\d+$/) {
       $guard->{inactivated} = 1;
       die qq(load failed - Taxon ID in third column of line $. isn't an integer: $taxonid\n);
