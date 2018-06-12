@@ -198,6 +198,10 @@ if ($do_organisms) {
 
     my ($genus, $species, $taxonid, $common_name) = split (/,/, $line);
 
+    if ($taxonid !~ /^\d+$/) {
+      die qq(Taxon ID in third column of line $. isn't an integer: $taxonid\n);
+    }
+
     $load_util->get_organism($genus, $species, $taxonid, $common_name);
   }
 
@@ -218,6 +222,10 @@ if ($do_strains) {
     next if $line =~ /^\s*$/;
 
     my ($taxonid, $common_name, $strain_description) = split (/,/, $line);
+
+    if ($taxonid !~ /^\d+$/) {
+      die qq(Taxon ID in first column of line $. isn't an integer: $taxonid\n);
+    }
 
     $strain_description =~ s/^\s+//;
     $strain_description =~ s/\s+$//;
