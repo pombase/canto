@@ -9,7 +9,7 @@
   </div>
 
   <div class="modal-body">
-    <div ng-switch="annotationType.category">
+    <div class="curs-dialog-body-contents" ng-switch="annotationType.category">
     <table ng-switch-when="ontology" class="curs-definition-table">
 
       <tr ng-if="annotationType.feature_type === 'gene'"
@@ -106,7 +106,7 @@
       <tr>
         <td class="title" rowspan="2">Term suggestion</td>
         <td colspan="2">
-          <input class="form-control"
+          <input class="form-control curs-edit-wide-field"
                  type="text" placeholder="Name ..." size="60"
                  ng-model="annotation.term_suggestion_name"/>
         </td>
@@ -114,7 +114,7 @@
 
       <tr>
         <td colspan="2">
-          <textarea class="form-control"
+          <textarea class="form-control curs-edit-wide-field"
                     placeholder="Definition ..." cols="60"
                     ng-model="annotation.term_suggestion_definition"/>
         </td>
@@ -123,7 +123,7 @@
       <tr>
         <td class="title">Comment</td>
         <td colspan="2">
-          <input class="form-control"
+          <input class="form-control curs-edit-wide-field"
                  type="text" size="60"
                  ng-model="annotation.submitter_comment"/>
         </td>

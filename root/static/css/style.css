@@ -1396,6 +1396,14 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   display: inline;
 }
 
+.curs-annotation-edit .curs-edit-wide-field {
+  width: 100%;
+}
+
+.curs-annotation-edit .curs-dialog-body-contents {
+  overflow: hidden;
+}
+
 .modal-dialog {
 /*  margin-top: 5%;*/
 }
