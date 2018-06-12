@@ -1057,11 +1057,15 @@ span.canto-select-buttons {
   margin: 5px 10px 5px 5px;
 }
 
-.curs-finish-buttons, .curs-finish-button {
+.curs-finish-buttons, .curs-finish-button, .curs-do-not-annotate {
   float: right;
   margin: 5px;
   margin-top: 10px;
   margin-left: 8px;
+}
+
+.curs-do-not-annotate {
+  font-weight: bold;
 }
 
 .curs-finish-checkbox {
