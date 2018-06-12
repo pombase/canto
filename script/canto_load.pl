@@ -190,6 +190,8 @@ if ($do_organisms) {
 
   open my $fh, '<', $do_organisms or die "can't open $do_genes: $!";
 
+  my %seen_organisms = ();
+
   while (defined (my $line = <$fh>)) {
     next if $line =~ /Genus/ && $. == 1;
 
@@ -199,7 +201,20 @@ if ($do_organisms) {
     my ($genus, $species, $taxonid, $common_name) = split (/,/, $line);
 
     if ($taxonid !~ /^\d+$/) {
-      die qq(Taxon ID in third column of line $. isn't an integer: $taxonid\n);
+      die qq(load failed - Taxon ID in third column of line $. isn't an integer: $taxonid\n);
+    }
+
+    if (exists $seen_organisms{"$genus $species"}) {
+      my ($previous_taxonid, $previous_line) = @{$seen_organisms{"$genus $species"}};
+      if ($previous_taxonid == $taxonid) {
+        die "load failed - duplicate genus, species and taxon ID at input lines: "
+          . "$. and $previous_line\n";
+      } else {
+        die "load failed - same genus and species with different taxon ID at lines: "
+          . "$. and $previous_line\n";
+      }
+    } else {
+      $seen_organisms{"$genus $species"} = [$taxonid, $.];
     }
 
     $load_util->get_organism($genus, $species, $taxonid, $common_name);
