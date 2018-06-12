@@ -175,7 +175,7 @@ test_psgi $app, sub {
 
   # test counting a subset, in extension_lookup mode - uses subsets to ignore
   # from $config->{ontology_namespace_config}{subsets_to_ignore}{extension}
-  # instead of ...{primary}
+  # instead of ...{primary_autocomplete}
   {
     my $url = "http://localhost:5000/ws/lookup/ontology/$two_term_subset/?term=:COUNT:&extension_lookup=1";
     my $req = HTTP::Request->new(GET => $url);

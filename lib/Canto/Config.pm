@@ -343,6 +343,10 @@ sub setup
         $annotation_type->{evidence_codes} = $configured_type->{evidence_codes};
       }
 
+      if (!defined $annotation_type->{ontology_size}) {
+        $annotation_type->{ontology_size} = 'large';
+      }
+
       if (!defined $annotation_type->{short_display_name}) {
         $annotation_type->{short_display_name} = $annotation_type->{display_name};
       }

@@ -274,7 +274,7 @@ chado_feature_implementation_classes:
 # add a subset from the GO OBO file for testing
 ontology_namespace_config:
   subsets_to_ignore:
-    primary:
+    primary_autocomplete:
       - "is_a(canto_root_subset)"
       - "is_a(gosubset_prok)"
       - "is_a(qc_do_not_annotate)"

@@ -1547,10 +1547,17 @@ evidence_types:
 # Note: all terms with no parent are tagged with "canto_root_subset" on load
 ontology_namespace_config:
   subsets_to_ignore:
-    primary:
-      - "is_a(canto_root_subset)"
+    primary_autocomplete:
+      - "is_a(Grouping_terms)"
+    primary_select:
+      - "is_a(Grouping_terms)"
+      - "is_a(qc_do_not_annotate)"
     extension:
       - "is_a(canto_root_subset)"
+      - "is_a(qc_do_not_annotate)"
+  do_not_annotate_subsets:
+    - "is_a(canto_root_subset)"
+    - "is_a(qc_do_not_annotate)"
 
 available_annotation_type_list:
   - name: molecular_function
@@ -2004,7 +2011,7 @@ default_db_name: "CONFIGURE_IN_CANTO_DEPLOY.YAML"
 #
 # ontology_namespace_config:
 #   subsets_to_ignore:
-#     primary:
+#     primary_autocomplete:
 #       - is_a(canto_root_subset)
 #       - is_a(qc_do_not_annotate)
 #       - is_a(gocheck_do_not_annotate)

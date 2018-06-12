@@ -76,7 +76,7 @@ cmp_deeply($parse_search_scope_subset_res, [{ include => 'is_a(GO:0055085)',
 my $config_subsets_to_ignore =
   $config->{ontology_namespace_config}{subsets_to_ignore};
 
-my @primary_exclude_subsets = @{$config_subsets_to_ignore->{primary}};
+my @primary_exclude_subsets = @{$config_subsets_to_ignore->{primary_autocomplete}};
 my @extension_exclude_subsets = @{$config_subsets_to_ignore->{extension}};
 
 

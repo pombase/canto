@@ -102,7 +102,12 @@ sub _ontology_results
     if ($extension_lookup) {
       push @exclude_subsets, @{$config_subsets_to_ignore->{extension}};
     } else {
-      push @exclude_subsets, @{$config_subsets_to_ignore->{primary}};
+
+      if ($search_string eq ':ALL:') {
+        push @exclude_subsets, @{$config_subsets_to_ignore->{primary_select}};
+      } else {
+        push @exclude_subsets, @{$config_subsets_to_ignore->{primary_autocomplete}};
+      }
     }
   }
 
