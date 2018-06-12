@@ -15,8 +15,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'angular-1.5.3.js',
-      'angular-mocks-1.5.3.js',
+      'angular-v1.5.11.min.js',
+      'angular-mocks-v1.5.11.js',
       'mocks/*.js',
       'canto-modules.js',
       '*.Spec.js'

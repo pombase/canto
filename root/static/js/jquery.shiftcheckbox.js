@@ -1,2 +1,0 @@
-(function(c){function h(f){var d=this.value,b=this.checked;if(f.shiftKey){if(prevChecked!="null"){var a=0,e;e=g(d);a=0;e<prevChecked?c(selectorStr).each(function(){if(a>=e&&a<=prevChecked)this.checked=b;a++}):c(selectorStr).each(function(){if(a>=prevChecked&&a<=e)this.checked=b;a++});prevChecked=e}}else b&&(prevChecked=g(d))}function g(f){var d=0,b=0,a;c(selectorStr).each(function(){f==this.value&&b!=1&&(a=d,b=1);d++});return a}c.fn.shiftcheckbox=function(){selectorStr=this;c(selectorStr).bind("click",
-h)}})(jQuery);
