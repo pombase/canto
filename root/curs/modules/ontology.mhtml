@@ -72,11 +72,11 @@ Annotation extensions
     <button type="submit" class="btn btn-primary curs-back-button"
             title="&lt;- Back"
             ng-click="back()">&lt;- Back</button>
-    <div ng-if="doNotAnnotateCurrentTerm" class="curs-do-not-annotate">
+    <div ng-if="getState() == 'searching' && doNotAnnotateCurrentTerm" class="curs-do-not-annotate">
       This term should not be used for direct annotations. Please
       select a more specific term.
     </div>
-    <button ng-if="!doNotAnnotateCurrentTerm"
+    <button ng-if="getState() != 'searching' || !doNotAnnotateCurrentTerm"
             type="submit" class="btn btn-primary curs-finish-button"
             title="Proceed -&gt;"
             ng-disabled="!isValid() || postInProgress"
