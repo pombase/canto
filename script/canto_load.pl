@@ -201,10 +201,12 @@ if ($do_organisms) {
     my ($genus, $species, $taxonid, $common_name) = split (/,/, $line);
 
     if ($taxonid !~ /^\d+$/) {
+      $guard->{inactivated} = 1;
       die qq(load failed - Taxon ID in third column of line $. isn't an integer: $taxonid\n);
     }
 
     if (exists $seen_organisms{"$genus $species"}) {
+      $guard->{inactivated} = 1;
       my ($previous_taxonid, $previous_line) = @{$seen_organisms{"$genus $species"}};
       if ($previous_taxonid == $taxonid) {
         die "load failed - duplicate genus, species and taxon ID at input lines: "
@@ -239,7 +241,8 @@ if ($do_strains) {
     my ($taxonid, $common_name, $strain_description) = split (/,/, $line);
 
     if ($taxonid !~ /^\d+$/) {
-      die qq(Taxon ID in first column of line $. isn't an integer: $taxonid\n);
+      $guard->{inactivated} = 1;
+      die qq(load failed - taxon ID in first column of line $. isn't an integer: $taxonid\n);
     }
 
     $strain_description =~ s/^\s+//;
@@ -248,7 +251,8 @@ if ($do_strains) {
     my $organism = $load_util->find_organism_by_taxonid($taxonid);
 
     if (!$organism) {
-      die qq(No organism with taxon ID "$taxonid" found in the database\n);
+      $guard->{inactivated} = 1;
+      die qq(load failed - no organism with taxon ID "$taxonid" found in the database\n);
     }
 
     $load_util->get_strain($organism, $strain_description);
