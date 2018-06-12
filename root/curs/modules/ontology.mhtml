@@ -74,7 +74,7 @@ Annotation extensions
             ng-click="back()">&lt;- Back</button>
     <div ng-if="getState() == 'searching' && doNotAnnotateCurrentTerm" class="curs-do-not-annotate">
       This term should not be used for direct annotations. Please
-      select a more specific term.
+      select a more specific term, or suggest a new descendant term.
     </div>
     <button ng-if="getState() != 'searching' || !doNotAnnotateCurrentTerm"
             type="submit" class="btn btn-primary curs-finish-button"
