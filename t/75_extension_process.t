@@ -32,7 +32,7 @@ my $subset_prop_rs = $prop_rs
   ->search({ 'type.name' => 'canto_subset' },
            { join => 'type', prefetch => 'cvterm', order_by => [ 'type.name', 'value' ] });
 
-is ($subset_prop_rs->count(), 12);
+is ($subset_prop_rs->count(), 16);
 
 
 my $canto_root_subset_count = $subset_prop_rs->count();
@@ -48,7 +48,7 @@ $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($after_cvtermprop_count, 53);
+is ($after_cvtermprop_count, 57);
 
 
 sub get_subset_props
@@ -84,12 +84,24 @@ my @expected_subset_props =
       'is_a(GO:0016023)'
     ],
     [
+      'glucose rich medium',
+      'is_a(Grouping_terms)'
+    ],
+    [
+      'growth medium',
+      'is_a(Grouping_terms)'
+    ],
+    [
       'hydrogen peroxide transmembrane transport',
       'is_a(GO:0006810)'
     ],
     [
       'hydrogen peroxide transmembrane transport',
       'is_a(GO:0055085)'
+    ],
+    [
+      'medium components',
+      'is_a(Grouping_terms)'
     ],
     [
       'molecular_function',
@@ -152,6 +164,10 @@ my @expected_subset_props =
       'regulates(GO:0055085)'
     ],
     [
+      'rich medium',
+      'is_a(Grouping_terms)'
+    ],
+    [
       'stored secretory granule',
       'is_a(GO:0016023)'
     ],
@@ -187,7 +203,7 @@ my @expected_subset_props =
       'transporter activity',
       'is_a(GO:0005215)'
     ]
-  );
+);
 
 cmp_deeply(\@subset_cvtermprops, \@expected_subset_props);
 

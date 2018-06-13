@@ -94,7 +94,7 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    is (@$obj, 9);
+    is (@$obj, 10);
 
     ok(grep { $_->{id} =~ /PECO:0000137/ } @$obj);
     ok(grep { $_->{name} =~ /glucose rich medium/ } @$obj);
@@ -133,6 +133,10 @@ test_psgi $app, sub {
 
     cmp_deeply(\@res,
                [
+                 {
+                   'name' => 'cytoplasmic membrane-bounded vesicle',
+                   'id' => 'GO:0016023',
+                 },
                  {
                    'name' => 'nucleocytoplasmic transporter activity',
                    'id' => 'GO:0005487'

@@ -417,7 +417,7 @@ $test_util->load_test_ontologies($ontology_index, 1, 1, 1);
 # test get_all()
 my @all_pco_terms = $lookup->get_all(ontology_name => 'phenotype_condition',
                                      exclude_subsets => \@primary_exclude_subsets);
-is (@all_pco_terms, 9);
+is (@all_pco_terms, 5);
 
 # test get_all() for a subset
 my @all_subset_1_terms =

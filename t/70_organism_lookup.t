@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 5;
 use Test::Deep;
 
 use Canto::Track::OrganismLookup;
@@ -11,7 +11,7 @@ $test_util->init_test('curs_annotations_2');
 
 my $lookup = Canto::Track::OrganismLookup->new(config => $test_util->config());
 
-my @orgs = $lookup->lookup_by_type('host');
+my @orgs = $lookup->lookup_by_type();
 
 my $expected_org_4896 = {
   'pathogen_or_host' => 'unknown',
@@ -44,14 +44,6 @@ $test_util->config()->_set_host_organisms($test_util->track_schema());
 
 @orgs = $lookup->lookup_by_type('host');
 
-my $expected_path_org_4896 = {
-  'pathogen_or_host' => 'pathogen',
-  'taxonid' => 4896,
-  'species' => 'pombe',
-  'genus' => 'Schizosaccharomyces',
-  'full_name' => 'Schizosaccharomyces pombe',
-};
-
 my $expected_host_org_4932 = {
   'species' => 'cerevisiae',
   'taxonid' => 4932,
@@ -61,12 +53,8 @@ my $expected_host_org_4932 = {
 };
 
 cmp_deeply(\@orgs, [
-  $expected_path_org_4896,
   $expected_host_org_4932,
 ]);
-
-my $result_org_4896 = $lookup->lookup_by_taxonid(4896);
-cmp_deeply($result_org_4896, $expected_path_org_4896);
 
 my $result_org_4932 = $lookup->lookup_by_taxonid(4932);
 cmp_deeply($result_org_4932, $expected_host_org_4932);
