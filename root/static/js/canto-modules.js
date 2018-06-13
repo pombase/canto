@@ -4379,7 +4379,7 @@ function SubmitToCuratorsCtrl($scope) {
 canto.controller('SubmitToCuratorsCtrl', SubmitToCuratorsCtrl);
 
 var termConfirmDialogCtrl =
-  function($scope, $uibModalInstance, CantoService, CantoGlobals, args) {
+  function($scope, $uibModalInstance, CantoService, CantoGlobals, CantoConfig, args) {
     $scope.app_static_path = CantoGlobals.app_static_path;
 
     $scope.data = {
@@ -4387,6 +4387,13 @@ var termConfirmDialogCtrl =
       featureType: args.featureType,
       state: 'definition',
       termDetails: null,
+      doNotAnnotateCurrentTerm: false,
+    };
+
+    $scope.checkDoNotAnnotate = function(configDoNotAnnotateSubsets) {
+      $scope.data.doNotAnnotateCurrentTerm =
+        arrayIntersection(configDoNotAnnotateSubsets,
+                          $scope.data.termDetails.subset_ids).length > 0;
     };
 
     $scope.setTerm = function(termId) {
@@ -4394,10 +4401,22 @@ var termConfirmDialogCtrl =
                                         {
                                           def: 1,
                                           children: 1,
+                                          subset_ids: 1,
                                         });
 
       promise.success(function(termDetails) {
         $scope.data.termDetails = termDetails;
+
+        $scope.doNotAnnotateCurrentTerm = false;
+
+        CantoConfig.get('ontology_namespace_config')
+          .then(function(results) {
+            $scope.ontology_namespace_config = results.data;
+            var doNotAnnotateSubsets =
+                results.data['do_not_annotate_subsets'] || [];
+
+            $scope.checkDoNotAnnotate(doNotAnnotateSubsets);
+          });
 
         if (args.initialState) {
           $scope.data.state = args.initialState;
@@ -4434,7 +4453,8 @@ var termConfirmDialogCtrl =
 
 
 canto.controller('TermConfirmDialogCtrl',
-                 ['$scope', '$uibModalInstance', 'CantoService', 'CantoGlobals', 'args',
+                 ['$scope', '$uibModalInstance', 'CantoService', 'CantoGlobals',
+                  'CantoConfig', 'args',
                   termConfirmDialogCtrl]);
 
 
@@ -4461,6 +4481,7 @@ var termChildrenDisplayCtrl =
       scope: {
         termDetails: '=',
         gotoChildCallback: '&',
+        doNotAnnotateCurrentTerm: '=',
       },
       restrict: 'E',
       replace: true,

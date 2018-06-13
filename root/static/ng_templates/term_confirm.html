@@ -29,7 +29,10 @@ Confirm term
           choose the current term.
         </div>
         <div ng-if="data.termDetails.children.length != 0">
-          <term-children-display term-details="data.termDetails" goto-child-callback="gotoChild(childId)"></term-children-display>
+          <term-children-display
+            term-details="data.termDetails"
+            do-not-annotate-current-term="data.doNotAnnotateCurrentTerm"
+            goto-child-callback="gotoChild(childId)"></term-children-display>
         </div>
       </div>
     </div>
@@ -42,7 +45,8 @@ Confirm term
     </div>
     <div ng-if="data.state == 'children'">
       <button class="btn btn-warning" ng-click="back()">&lt;- Back</button>
-      <button class="btn btn-primary" ng-click="finish()">Finish</button>
+      <button ng-if="!data.doNotAnnotateCurrentTerm"
+              class="btn btn-primary" ng-click="finish()">Finish</button>
     </div>
   </div>
 </div>

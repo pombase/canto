@@ -1,5 +1,10 @@
 <div class="curs-box">
-  <div class="inline-help curs-box-title">
+  <div ng-if="doNotAnnotateCurrentTerm" class="inline-help curs-box-title">
+    This term should not be used for direct annotations. Please
+    select a more specific term:
+  </div>
+
+  <div ng-if="!doNotAnnotateCurrentTerm" class="inline-help curs-box-title">
     Can you use a more specific available term?
   </div>
 
