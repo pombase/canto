@@ -3488,6 +3488,18 @@ var GenotypeGeneListCtrl =
                        $scope.makeHasDeletionHash();
                      }, true);
 
+        $scope.getSelectedOrganism = function() {
+          if ($scope.data.selectedOrganism) {
+            return $scope.data.selectedOrganism;
+          } else {
+            if ($scope.organisms.length == 1) {
+              return $scope.organisms[0];
+            } else {
+              return null;
+            }
+          }
+        }
+
         $scope.hasDeletionGenotype = function(gene_id) {
           return !!$scope.hasDeletionHash[gene_id];
         }
@@ -3506,7 +3518,7 @@ var GenotypeGeneListCtrl =
         }
 
         $scope.selectedOrganismGenes = function() {
-          return $scope.data.selectedOrganism.genes;
+          return $scope.getSelectedOrganism().genes;
         };
 
         $scope.singleAlleleQuick = function(gene_display_name, gene_systematic_id, gene_id) {

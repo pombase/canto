@@ -1,5 +1,5 @@
 <div class="curs-genotype-gene-list" ng-show="organisms">
-  <div ng-show="!data.selectedOrganism">
+  <div ng-show="!getSelectedOrganism()">
     <span ng-show="label">{{label}}</span>
     <select name="select-organism" ng-model="data.selectedOrganism"
             ng-options="o as o.full_name for o in organisms">
@@ -7,11 +7,11 @@
     </select>
   </div>
   <div class="curs-genotype-edit-gene-list"
-       ng-if="data.selectedOrganism">
+       ng-if="getSelectedOrganism()">
     <span ng-show="multiOrganismMode">
       <span ng-show="label">{{label}}</span>
       <span style="font-size: 90%; font-weight: bold;">
-        {{data.selectedOrganism.full_name}}
+        {{getSelectedOrganism().full_name}}
       </span>
       <span ng-show="organisms.length != 1">
         (<a ng-click="data.selectedOrganism = null">change ...</a>)
