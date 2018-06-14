@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 37;
+use Test::More tests => 38;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -54,8 +54,8 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    # root terms aren't returned
-    is (@$obj, 0);
+    is (@$obj, 1);
+    ok(grep { $_->{id} =~ /GO:0003674/ } @$obj);
   }
 
   # test "phenotype_condition" which is an ontology but not an
@@ -74,9 +74,10 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    is (@$obj, 2);
-    ok(grep { $_->{id} =~ /PECO:0000137/ } @$obj);
-    ok(grep { $_->{name} =~ /glucose rich medium/ } @$obj);
+    is (@$obj, 1);
+
+    ok(grep { $_->{id} =~ /PECO:0000012/ } @$obj);
+    ok(grep { $_->{name} =~ /standard glucose rich medium/ } @$obj);
     ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
   }
 
@@ -94,10 +95,10 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    is (@$obj, 10);
+    is (@$obj, 6);
 
-    ok(grep { $_->{id} =~ /PECO:0000137/ } @$obj);
-    ok(grep { $_->{name} =~ /glucose rich medium/ } @$obj);
+    ok(grep { $_->{id} =~ /PECO:0000012/ } @$obj);
+    ok(grep { $_->{name} =~ /standard glucose rich medium/ } @$obj);
     ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
   }
 
@@ -174,7 +175,7 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    is ($obj->{count}, 5);
+    is ($obj->{count}, 6);
   }
 
   # test counting a subset, in extension_lookup mode - uses subsets to ignore

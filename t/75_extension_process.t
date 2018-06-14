@@ -32,7 +32,7 @@ my $subset_prop_rs = $prop_rs
   ->search({ 'type.name' => 'canto_subset' },
            { join => 'type', prefetch => 'cvterm', order_by => [ 'type.name', 'value' ] });
 
-is ($subset_prop_rs->count(), 16);
+is ($subset_prop_rs->count(), 12);
 
 
 my $canto_root_subset_count = $subset_prop_rs->count();

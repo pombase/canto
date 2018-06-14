@@ -275,11 +275,17 @@ chado_feature_implementation_classes:
 ontology_namespace_config:
   subsets_to_ignore:
     primary_autocomplete:
-      - "is_a(canto_root_subset)"
-      - "is_a(gosubset_prok)"
+      - "is_a(Grouping_terms)"
+    primary_select:
+      - "is_a(Grouping_terms)"
       - "is_a(qc_do_not_annotate)"
     extension:
       - "is_a(canto_root_subset)"
+  do_not_annotate_subsets:
+    - "is_a(canto_root_subset)"
+    - "is_a(qc_do_not_annotate)"
+    - "is_a(gocheck_do_not_annotate)"
+    - "is_a(gocheck_do_not_manually_annotate)"
 
 extension_conf_files:
   - t/data/extension_config.tsv
