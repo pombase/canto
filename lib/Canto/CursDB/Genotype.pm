@@ -137,9 +137,39 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 metagenotype_part_genotypes
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-11-14 03:13:31
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ViYH+gD4+7pR25zm8NN51Q
+Type: has_many
+
+Related object: L<Canto::CursDB::MetagenotypePart>
+
+=cut
+
+__PACKAGE__->has_many(
+  "metagenotype_part_genotypes",
+  "Canto::CursDB::MetagenotypePart",
+  { "foreign.genotype_id" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 metagenotype_part_metagenotypes
+
+Type: has_many
+
+Related object: L<Canto::CursDB::MetagenotypePart>
+
+=cut
+
+__PACKAGE__->has_many(
+  "metagenotype_part_metagenotypes",
+  "Canto::CursDB::MetagenotypePart",
+  { "foreign.metagenotype_id" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-14 19:41:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xty1x6zBdAcKgtc99pNuVQ
 
 =head2 annotations
 
@@ -209,6 +239,37 @@ sub display_name
 
 __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
                           'allele');
+
+# returns either the meta-genotype that this genotype is part of or undef if
+# this object IS the meta-genotype
+sub metagenotype
+{
+  my $self = shift;
+
+  my @parts = $self->metagenotype_part_genotypes()->search({}, { prefetch => 'metagenotype' });
+
+  if (@parts) {
+    return $parts[0]->metagenotype();
+  } else {
+    return undef;
+  }
+}
+
+sub metagenotype_parts
+{
+  my $self = shift;
+
+  my $options = { prefetch => 'metagenotype' };
+
+  my $parts_rs = $self->metagenotype_part_genotypes()->search({}, $options);
+
+  if ($parts_rs->count() == 0) {
+    $parts_rs = $self->metagenotype_part_metagenotypes()->search({}, $options);
+  }
+
+  return $parts_rs;
+}
+
 
 sub delete
 {

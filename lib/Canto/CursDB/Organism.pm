@@ -75,9 +75,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 metagenotype_parts
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-05-02 10:30:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xW7sXMVYipd94hpgxYq3/A
+Type: has_many
+
+Related object: L<Canto::CursDB::MetagenotypePart>
+
+=cut
+
+__PACKAGE__->has_many(
+  "metagenotype_parts",
+  "Canto::CursDB::MetagenotypePart",
+  { "foreign.organism_id" => "self.organism_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-14 19:41:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1Of8jHpGpTLYywVvXEmcIA
 
 
 use Carp;
