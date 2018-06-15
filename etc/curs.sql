@@ -50,16 +50,14 @@ CREATE TABLE genotype (
        identifier text UNIQUE NOT NULL,
        background text,
        strain text,
+       organism_id integer REFERENCES organism(organism_id),
        name text UNIQUE
 );
 
 CREATE TABLE metagenotype_part (
        metagenotype_part_id integer PRIMARY KEY,
-       metagenotype_id integer REFERENCES genotype(genotype_id),
-       is_host_part boolean NOT NULL,
-       organism_id integer NOT NULL REFERENCES organism(organism_id),
-       -- can be NULL if is_host_part is true:
-       genotype_id integer REFERENCES genotype(genotype_id)
+       metagenotype_id integer NOT NULL REFERENCES genotype(genotype_id),
+       genotype_id integer NOT NULL REFERENCES genotype(genotype_id)
 );
 
 CREATE TABLE allele_genotype (

@@ -1462,6 +1462,7 @@ sub _feature_edit_helper
       my @alleles_data = @{$body_data->{alleles}};
       my $genotype_name = $body_data->{genotype_name};
       my $genotype_background = $body_data->{genotype_background};
+      my $genotype_taxonid = $body_data->{genotype_taxonid};
 
       if (defined $genotype_name && length $genotype_name > 0) {
         my $trimmed_name = $genotype_name =~ s/^\s*(.*?)\s*$/$1/r;
@@ -1504,7 +1505,7 @@ sub _feature_edit_helper
 
         $genotype_manager->store_genotype_changes($curs_key, $genotype,
                                                   $genotype_name, $genotype_background,
-                                                  \@alleles);
+                                                  $genotype_taxonid, \@alleles);
 
         $guard->commit();
 
@@ -1650,8 +1651,11 @@ sub genotype_store : Chained('feature') PathPart('store')
       } else {
         my $guard = $schema->txn_scope_guard();
 
-        my $genotype = $genotype_manager->make_genotype($curs_key,
-                                                        $genotype_name, $genotype_background, \@alleles);
+        my $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
+
+        my $genotype =
+          $genotype_manager->make_genotype($curs_key, $genotype_name, $genotype_background,
+                                           \@alleles, $genotype_taxonid);
 
         $guard->commit();
 

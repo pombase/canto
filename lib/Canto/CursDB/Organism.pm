@@ -75,24 +75,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 metagenotype_parts
+=head2 genotypes
 
 Type: has_many
 
-Related object: L<Canto::CursDB::MetagenotypePart>
+Related object: L<Canto::CursDB::Genotype>
 
 =cut
 
 __PACKAGE__->has_many(
-  "metagenotype_parts",
-  "Canto::CursDB::MetagenotypePart",
+  "genotypes",
+  "Canto::CursDB::Genotype",
   { "foreign.organism_id" => "self.organism_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-14 19:41:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1Of8jHpGpTLYywVvXEmcIA
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-17 18:32:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RHaWgnovAkaQi17LC7Xcow
 
 
 use Carp;

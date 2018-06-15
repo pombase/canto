@@ -36,24 +36,13 @@ __PACKAGE__->table("metagenotype_part");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
-
-=head2 is_host_part
-
-  data_type: 'boolean'
-  is_nullable: 0
-
-=head2 organism_id
-
-  data_type: 'integer'
-  is_foreign_key: 1
   is_nullable: 0
 
 =head2 genotype_id
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =cut
 
@@ -61,13 +50,9 @@ __PACKAGE__->add_columns(
   "metagenotype_part_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "metagenotype_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "is_host_part",
-  { data_type => "boolean", is_nullable => 0 },
-  "organism_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "genotype_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -96,12 +81,7 @@ __PACKAGE__->belongs_to(
   "genotype",
   "Canto::CursDB::Genotype",
   { genotype_id => "genotype_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 metagenotype
@@ -116,32 +96,12 @@ __PACKAGE__->belongs_to(
   "metagenotype",
   "Canto::CursDB::Genotype",
   { genotype_id => "metagenotype_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
-);
-
-=head2 organism
-
-Type: belongs_to
-
-Related object: L<Canto::CursDB::Organism>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "organism",
-  "Canto::CursDB::Organism",
-  { organism_id => "organism_id" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-15 13:48:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OTKGUxQ+VspHO04PLrZJMA
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-18 16:58:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sjkgPQmM/ApmJMrFHcfHDg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

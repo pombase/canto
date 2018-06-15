@@ -47,6 +47,12 @@ __PACKAGE__->table("genotype");
   data_type: 'text'
   is_nullable: 1
 
+=head2 organism_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =head2 name
 
   data_type: 'text'
@@ -63,6 +69,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "strain",
   { data_type => "text", is_nullable => 1 },
+  "organism_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "name",
   { data_type => "text", is_nullable => 1 },
 );
@@ -167,9 +175,29 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 organism
 
-# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-14 19:41:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xty1x6zBdAcKgtc99pNuVQ
+Type: belongs_to
+
+Related object: L<Canto::CursDB::Organism>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "organism",
+  "Canto::CursDB::Organism",
+  { organism_id => "organism_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-18 16:58:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kOdEeMmcCgqqdts3LFUokw
 
 =head2 annotations
 
@@ -240,18 +268,18 @@ sub display_name
 __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
                           'allele');
 
-# returns either the meta-genotype that this genotype is part of or undef if
-# this object IS the meta-genotype
-sub metagenotype
+# returns either the meta-genotype(s) that this genotype is part of or empty list
+# this object IS a meta-genotype
+sub metagenotypes
 {
   my $self = shift;
 
-  my @parts = $self->metagenotype_part_genotypes()->search({}, { prefetch => 'metagenotype' });
+  my $parts_rs = $self->metagenotype_part_genotypes()->search({}, { prefetch => 'metagenotype' });
 
-  if (@parts) {
-    return $parts[0]->metagenotype();
+  if ($parts_rs->count() > 0) {
+    return $parts_rs->search_related('metagenotype')->all();
   } else {
-    return undef;
+    return [];
   }
 }
 
@@ -270,6 +298,34 @@ sub metagenotype_parts
   return $parts_rs;
 }
 
+
+=head2
+
+ Usage   : my $type = $genotype->genotype_type();
+ Args    : $config - the Config object
+ Returns : "normal", "host", "pathogen" or "pathogen-host"
+
+=cut
+
+
+sub genotype_type
+{
+  my $self = shift;
+  my $config = shift;
+
+  return "metagenotype" if !defined $self->organism_id();
+
+  my $genotype_organism = $self->organism();
+
+  my $org_lookup = Canto::Track::get_adaptor($config, 'organism');
+  my $organism_details = $org_lookup->lookup_by_taxonid($genotype_organism->taxonid());
+
+  if ($organism_details->{pathogen_or_host} eq 'unknown') {
+    return "normal"
+  } else {
+    return $organism_details->{pathogen_or_host};
+  }
+}
 
 sub delete
 {

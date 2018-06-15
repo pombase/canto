@@ -136,10 +136,14 @@ test_config:
            - identifier: "aaaa0007-genotype-test-1"
              name: "SPCC63.05delta ssm4KE"
              background: "h+"
+             organism:
+               taxonid: 4896
              alleles(Allele:primary_identifier):
                - 'SPAC27D7.13c:aaaa0007-1'
                - 'SPCC63.05:aaaa0007-1'
            - identifier: "aaaa0007-genotype-test-2"
+             organism:
+               taxonid: 4896
              alleles(Allele:primary_identifier):
                - "SPAC27D7.13c:aaaa0007-3"
          annotations:

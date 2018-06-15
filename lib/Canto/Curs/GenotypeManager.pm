@@ -38,11 +38,14 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
+use Canto::Track;
 use Canto::Curs::AlleleManager;
 
 has curs_schema => (is => 'rw', isa => 'Canto::CursDB', required => 1);
 has allele_manager => (is => 'rw', isa => 'Canto::Curs::AlleleManager',
                        lazy_build => 1);
+has organism_manager => (is => 'rw', isa => 'Canto::Curs::OrganismManager',
+                         lazy_build => 1);
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::MetadataAccess';
@@ -53,6 +56,14 @@ sub _build_allele_manager
 
   return Canto::Curs::AlleleManager->new(config => $self->config(),
                                          curs_schema => $self->curs_schema());
+}
+
+sub _build_organism_manager
+{
+  my $self = shift;
+
+  return Canto::Curs::OrganismManager->new(config => $self->config(),
+                                           curs_schema => $self->curs_schema());
 }
 
 sub _string_or_undef
@@ -157,6 +168,7 @@ sub _remove_unused_alleles
                          for Genotypes created in this session.  If not defined
                          a new unique identifier will be created based on the
                          $curs_key
+           $genotype_taxonid - the organism of this genotype
  Return  : the new Genotype
 
 =cut
@@ -168,7 +180,12 @@ sub make_genotype
   my $name = shift;
   my $background = shift;
   my $alleles = shift;
+  my $genotype_taxonid = shift;
   my $identifier = shift;  # defined if this genotype is from Chado
+
+  if (!defined $genotype_taxonid) {
+    croak "no taxon ID passed to GenotypeManager::make_genotype()\n";
+  }
 
   my $schema = $self->curs_schema();
 
@@ -180,12 +197,15 @@ sub make_genotype
     $new_identifier = 'canto-genotype-temp-' . int(rand 10000000);
   }
 
+  my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
+
   my $genotype =
     $schema->create_with_type('Genotype',
                               {
                                 identifier => $new_identifier,
                                 name => $name || undef,
                                 background => $background || undef,
+                                organism_id => $organism->organism_id(),
                               });
 
   if (!defined $identifier) {
@@ -203,6 +223,87 @@ sub make_genotype
 }
 
 
+sub _get_metagenotype_identifier
+{
+  my $self = shift;
+
+  my $rs = $self->curs_schema()->resultset('Genotype');
+
+  my $id = 0;
+
+  while(defined (my $genotype)) {
+    my $identifier = $genotype->identifier();
+
+    if ($identifier =~ /^metagenotype-(\d+)/) {
+      if ($1 > $id) {
+        $id = $1;
+      }
+    }
+  }
+
+  return 'metagenotype-' . ($id + 1);
+}
+
+
+=head2 make_metagenotype
+
+ Usage   : my $metagenotype =
+             $genotype_manager->make_metagenotype(host_genotype => $host_genotype,
+                                                  pathogen_genotype => $pathogen_genotype);
+ Function: Create a meta-genotype from it's parts
+
+=cut
+
+sub make_metagenotype
+{
+  my $self = shift;
+
+  my %args = @_;
+
+  my $organism_lookup = Canto::Track::get_adaptor($self->config(), 'organism');
+
+  my $host_genotype = $args{host_genotype};
+  my $host_details =
+    $organism_lookup->lookup_by_taxonid($host_genotype->organism()->taxonid());
+
+  if ($host_details->{pathogen_or_host} ne 'host') {
+    die "organism of genotype passed with the 'host' arg isn't a host: " .
+      $host_details->{pathogen_or_host};
+  }
+
+  my $pathogen_genotype = $args{pathogen_genotype};
+  my $pathogen_details =
+    $organism_lookup->lookup_by_taxonid($pathogen_genotype->organism()->taxonid());
+
+  if ($pathogen_details->{pathogen_or_host} ne 'pathogen') {
+    die "organism of genotype passed with the 'pathogen' arg isn't a pathogen: " .
+      $pathogen_details->{pathogen_or_host};
+  }
+
+  my $schema = $self->curs_schema();
+
+  my $metagenotype_identifier = $self->_get_metagenotype_identifier();
+
+  my $metagenotype =
+    $schema->create_with_type('Genotype',
+                              {
+                                identifier => $metagenotype_identifier,
+                              });
+  $schema->create_with_type('MetagenotypePart',
+                            {
+                              metagenotype_id => $metagenotype->genotype_id(),
+                              genotype_id => $pathogen_genotype->genotype_id(),
+                            });
+  $schema->create_with_type('MetagenotypePart',
+                            {
+                              metagenotype_id => $metagenotype->genotype_id(),
+                              genotype_id => $host_genotype->genotype_id(),
+                            });
+
+  return $metagenotype;
+}
+
+
 =head2 store_genotype_changes
 
  Usage   : $genotype_manager->store_genotype_changes($curs_key, $genotype,
@@ -213,6 +314,7 @@ sub make_genotype
            $name - new name for the genotype, note: if undef the name will be
                    set to undef rather than keeping the old version (optional)
            $background - the genotype background (optional)
+           $genotype_taxonid - the organism of this genotype
            \@allele_objects - a list of Allele objects to attach to the new
                               Genotype
  Return  : nothing, dies on error
@@ -226,6 +328,7 @@ sub store_genotype_changes
   my $genotype = shift;
   my $name = shift;
   my $background = shift;
+  my $genotype_taxonid = shift;
   my $alleles = shift;
 
   my $schema = $self->curs_schema();
@@ -235,6 +338,9 @@ sub store_genotype_changes
 
   $genotype->name($name);
   $genotype->background($background);
+
+  my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
+  $genotype->organism_id($organism->organism_id());
   $genotype->set_alleles($alleles);
 
   $self->_remove_unused_alleles();
@@ -272,7 +378,9 @@ sub _store_chado_genotype
   my $background = $chado_genotype_details->{background};
   my $identifier = $chado_genotype_details->{identifier};
 
-  return $self->make_genotype($curs_key, $name, $background, \@alleles, $identifier);
+  return $self->make_genotype($curs_key, $name, $background, \@alleles,
+                              $alleles[0]->gene()->organism()->taxonid(),
+                              $identifier);
 }
 
 =head2 find_and_create_genotype
@@ -298,7 +406,6 @@ sub find_and_create_genotype
 
   if (!$lookup) {
     die 'NO genotype adaptor configured';
-
   }
 
   my $chado_genotype_details = $lookup->lookup(identifier => $genotype_identifier);
