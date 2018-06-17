@@ -12,6 +12,7 @@ use HTTP::Request;
 use Canto::TestUtil;
 use Canto::Controller::Curs;
 use Canto::Curs::Utils;
+use Canto::Track::OrganismLookup;
 
 my $test_util = Canto::TestUtil->new();
 $test_util->init_test('1_curs');
@@ -56,7 +57,7 @@ is ($curs_schema->resultset('Gene')->count(), 0);
 # set pombe as a host organism in pathogen_host_mode
 $config->{host_organism_taxonids} = [4896];
 $config->_set_host_organisms($track_schema);
-
+$Canto::Track::OrganismLookup::cache = {};
 
 ($result) = $gene_manager->find_and_create_genes(\@search_genes);
 
@@ -79,7 +80,7 @@ $curs_schema->resultset('Organism')->delete();
 $config->{host_organism_taxonids} = [];
 $config->{host_organisms} = [];
 $config->{pathogen_host_mode} = 1;
-
+$Canto::Track::OrganismLookup::cache = {};
 
 
 ($result) = $gene_manager->find_and_create_genes(\@search_genes);

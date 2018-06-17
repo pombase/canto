@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 7;
 use Test::Deep;
 
 use Canto::Track::OrganismLookup;
@@ -33,9 +33,20 @@ cmp_deeply(\@orgs, [
 ]);
 
 
-my $org_4896 = $lookup->lookup_by_taxonid(4896);
+# check for unknown taxon ID:
+ok (!defined $lookup->lookup_by_taxonid(54321));
 
+
+my $org_4896 = $lookup->lookup_by_taxonid(4896);
 cmp_deeply($org_4896, $expected_org_4896);
+
+# look up again to check caching code:
+my $saved_schema = $lookup->{schema};
+$lookup->{schema} = undef;
+$org_4896 = $lookup->lookup_by_taxonid(4896);
+cmp_deeply($org_4896, $expected_org_4896);
+
+$lookup->{schema} = $saved_schema;
 
 
 $test_util->config()->{host_organism_taxonids} = [4932];

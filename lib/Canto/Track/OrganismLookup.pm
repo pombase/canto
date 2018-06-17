@@ -41,6 +41,8 @@ use Moose;
 with 'Canto::Role::Configurable';
 with 'Canto::Track::TrackAdaptor';
 
+our $cache = {};
+
 sub _make_organism_hash
 {
   my $config = shift;
@@ -125,6 +127,10 @@ sub lookup_by_taxonid
   my $self = shift;
   my $taxon_id = shift;
 
+  if (exists $cache->{$taxon_id}) {
+    return $cache->{$taxon_id};
+  }
+
   my $schema = $self->schema();
   my $config = $self->config();
 
@@ -133,7 +139,8 @@ sub lookup_by_taxonid
   while (defined (my $prop = $organismprop_rs->next())) {
     if ($prop->type()->name() eq 'taxon_id' &&
         $prop->value() == $taxon_id) {
-      return _make_organism_hash($config, $prop->organism());
+      $cache->{$taxon_id} = _make_organism_hash($config, $prop->organism());
+      return $cache->{$taxon_id};
     }
   }
 
