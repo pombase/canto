@@ -614,11 +614,9 @@ sub gene_upload : Chained('top') Args(0) Form
   if ($c->config()->{pathogen_host_mode}) {
     push @all_elements,
       {
-        type => 'Block', tag => 'p',
-        content => 'Host taxon Ids:'
-      },
-      { name => 'host_organism_taxon_ids', type => 'Text', size => 80,
-        attributes => { 'ng-model' => 'data.hostTaxonIds' } };
+        type => 'Block', tag => 'organism-picker',
+        content => ''
+      };
   }
 
   push @all_elements,
