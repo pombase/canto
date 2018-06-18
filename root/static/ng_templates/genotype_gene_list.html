@@ -26,8 +26,12 @@
       </thead>
       <tbody>
         <tr ng-repeat="gene in selectedOrganismGenes()">
-          <td ng-if="gene.primary_name" title="{{gene.primary_name}} ({{gene.primary_identifier}})">{{gene.primary_name}}</td>
-          <td ng-if="!gene.primary_name" title="{{gene.primary_identifier}}">{{gene.primary_identifier}}</td>
+          <td ng-if="gene.primary_name" title="{{gene.primary_name}} ({{gene.primary_identifier}})">
+            <a href="{{curs_root_uri + '/feature/gene/view/' + gene.gene_id + (read_only_curs ? '/ro' : '')}}">{{gene.primary_name}}</a>
+          </td>
+          <td ng-if="!gene.primary_name" title="{{gene.primary_identifier}}">
+            <a href="{{curs_root_uri + '/feature/gene/view/' + gene.gene_id + (read_only_curs ? '/ro' : '')}}">{{gene.primary_identifier}}</a>
+          </td>
           <td>
             <button class="btn btn-primary btn-xs"
                     title="{{deletionButtonTitle(gene.gene_id)}}"
