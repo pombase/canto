@@ -37,6 +37,7 @@ under the same terms as Perl itself.
 =cut
 
 use Moose;
+use Carp;
 
 with 'Canto::Role::Configurable';
 with 'Canto::Track::TrackAdaptor';
@@ -80,7 +81,7 @@ sub _make_organism_hash
 =head2 lookup_by_type()
 
  Usage   : my $lookup = Canto::Track::get_adaptor($config, 'organism');
-           my @organisms = $strain_lookup->lookup_by_type('host');
+           my @organisms = $lookup->lookup_by_type('host');
  Function: Retrieve organisms from the TrackDB
  Args    : $lookup_type - can only be "host" at the moment
  Return  : A list of organisms in the format:
@@ -121,11 +122,24 @@ sub lookup_by_type
   return @result_organisms;
 }
 
+=head2 lookup_by_type()
 
+ Usage   : my $lookup = Canto::Track::get_adaptor($config, 'organism');
+           my $organism = $lookup->lookup_by_taxonid(4896);
+ Function: Retrieve an organism by taxon id from the TrackDB
+ Return  : A hash of organism details in the format:
+           { genus => '...', species => '...', taxon_id => '...',
+             pathogen_or_host => 'host' }
+
+=cut
 sub lookup_by_taxonid
 {
   my $self = shift;
   my $taxon_id = shift;
+
+  if (!defined $taxon_id) {
+    croak "no taxon ID passed to OrganismLookup::lookup_by_taxonid()\n";
+  }
 
   if (exists $cache->{$taxon_id}) {
     return $cache->{$taxon_id};
