@@ -5,16 +5,16 @@
 % }
 
 % if ($c->debug()) {
-<script src="<% $c->uri_for('/static/js/jquery-v1.9.1.min.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/jquery-ui-1.12.1.custom.min.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/jquery.validate-1.17.0.min.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/angular-v1.5.11.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery-v1.9.1.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery-ui-v1.12.1.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery.validate-v1.17.0.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/angular-v1.5.11.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/bootstrap-3.3.7.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/angular-animate-v1.5.11.min.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/toaster-2.2.0.min.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/ui-bootstrap-tpls-2.5.0.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/angular-animate-v1.5.11.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/toaster-2.2.0.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/ui-bootstrap-tpls-2.5.0.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/Chart-v2.7.2.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/angular-chart-v1.1.1.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/angular-chart-v1.1.1.js') %>"></script>
 % } else {
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
