@@ -6,7 +6,7 @@ $canto_setup_script = <<-SCRIPT
   cd /home/canto/canto-master
 
   # Initialise the test data directory
-  ./script/canto_start --initialise /home/canto/canto_data
+  ./script/canto_start --initialise /var/canto-data
 SCRIPT
 
 $ontology_loading_script = <<-SCRIPT
