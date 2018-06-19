@@ -1391,8 +1391,11 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   filter: alpha(opacity=50);
 }
 
-.form-control, .help-block {
+help-block {
   width: auto;
+}
+
+.form-control, .help-block {
   display: inline;
 }
 
@@ -1411,6 +1414,11 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
 .modal-dialog select {
   text-overflow: ellipsis;
   max-width: 600px;
+}
+
+.curs-feature-chooser select,
+.curs-evidence-directive select {
+  width: auto;
 }
 
 table tr td.curs-table-row-remove {
