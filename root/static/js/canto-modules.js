@@ -5821,3 +5821,80 @@ var barChart =
 };
 
 canto.directive('barChart', [barChart]);
+
+canto.service('OrganismList', function($q, $http) {
+  this.getOrganismList = function() {
+      var defer = $q.defer();
+      $http({
+          method: 'GET',
+          url: '/ws/lookup/organisms/host',
+          cache: 'true'
+      })
+      .then(function(data) {
+          defer.resolve(data);
+      });
+
+      return defer.promise;
+  };
+});
+
+var organismPicker = function($http, OrganismList) {
+  return {
+    scope: {},
+    restrict: 'E',
+    replace: true,
+    templateUrl: app_static_path + 'ng_templates/oganismPicker.html',
+    controller: function($scope) {
+      $scope.app_static_path = app_static_path;
+      $scope.getOrganismsFromServer = getOrganismsFromServer;
+      $scope.organisms = [];
+      $scope.organismsCount = null;
+      $scope.selectedOrganisms = [];
+      $scope.selected = '';
+      $scope.taxon_ids = '';
+      $scope.onSelect = onSelect;
+      $scope.updateTaxonIds = updateTaxonIds;
+      $scope.removeOrganism = removeOrganism;
+
+      getOrganismsFromServer();
+
+      function getOrganismsFromServer() {
+        OrganismList.getOrganismList().then(function(results) {
+          if (results.status == 200) {
+            for (var organism of results.data) {
+              organism.display = organism.full_name + " (" + organism.taxonid + ")";
+              $scope.organisms.push(organism);
+            }
+            $scope.organismsCount = $scope.organisms.length;
+          }
+        });
+      }
+
+      function onSelect(organism) {
+        if ($scope.selectedOrganisms.indexOf(organism) === -1) {
+            $scope.selectedOrganisms.push(organism);
+        }
+        $scope.selected = '';
+        $scope.updateTaxonIds();
+      }
+
+      function updateTaxonIds() {
+        var taxonIds = [];
+        angular.forEach($scope.selectedOrganisms, function(organism) {
+            taxonIds.push(organism.taxonid);
+        });
+        $scope.taxon_ids = taxonIds.join(" ");
+      }
+
+      function removeOrganism(organism, $event) {
+        var id;
+        if ((id = $scope.selectedOrganisms.indexOf(organism)) > -1) {
+            $scope.selectedOrganisms.splice(id, 1);
+        }
+        $scope.updateTaxonIds();
+      }
+    },
+  };
+};
+
+canto.directive('organismPicker', ['$http', 'OrganismList', organismPicker]);

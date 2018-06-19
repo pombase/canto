@@ -1,0 +1,37 @@
+<div class="container">
+    <span ng-show="organismsCount == null">
+        <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img> Loading ...
+    </span>
+    <span ng-hide="organismsCount == null" class="">
+        <span ng-show="organismsCount == 0" style="font-weight: bold" class="ng-hide">
+          Configuration problem - no organisms in the database
+        </span>
+        <span ng-show="organismsCount != 0">
+            <span ng-show="organisms.length > 0" style="display: block">
+                <input
+                    type="text"
+                    ng-model="selected"
+                    uib-typeahead="organism as organism.display for organism in organisms | filter:$viewValue | limitTo:8"
+                    typeahead-on-select="onSelect($item)"
+                    placeholder=""
+                    size="40"
+                    class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                <div ng-hide="(selectedOrganisms.length == 0)">
+                    <table class="list">
+                        <tr>
+                            <th>Species</th>
+                            <th>Taxon Id</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="(key, organism) in selectedOrganisms">
+                            <td>{{organism.full_name}}</td>
+                            <td>{{organism.taxonid}}</td>
+                            <td><button type='button' class="btn btn-xs btn-danger" ng-click="removeOrganism(organism)">X</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </span>
+        </span>
+    </span>
+    <input name="host_organism_taxon_ids" ng-model="taxon_ids" type="hidden" size="80">
+</div>
