@@ -4339,18 +4339,25 @@ canto.service('AnnotationTypeConfig', function(CantoConfig, $q) {
 });
 
 
-function UploadGenesCtrl($scope) {
+var uploadGenesCtrl = function($scope, Curs) {
   $scope.data = {
     geneIdentifiers: '',
-    hostTaxonIds: '',
+    selectedHostOrganisms: [],
     noAnnotation: false,
     noAnnotationReason: '',
     otherText: '',
-    geneList: '',
+    serverGeneList: null,
   };
+
+  Curs.list('gene').success(function(results) {
+    $scope.data.serverGeneList = results;
+  });
+
   $scope.isValid = function() {
     return ($scope.data.geneIdentifiers.length > 0
-      || $scope.data.hostTaxonIds.length > 0) ||
+            || ($scope.data.selectedHostOrganisms.length > 0 &&
+                $scope.data.serverGeneList &&
+                $scope.data.serverGeneList.length > 0)) ||
       ($scope.data.noAnnotation &&
        $scope.data.noAnnotationReason.length > 0 &&
        ($scope.data.noAnnotationReason !== "Other" ||
@@ -4358,7 +4365,7 @@ function UploadGenesCtrl($scope) {
   };
 }
 
-canto.controller('UploadGenesCtrl', UploadGenesCtrl);
+canto.controller('UploadGenesCtrl', ['$scope', 'Curs', uploadGenesCtrl]);
 
 
 function SubmitToCuratorsCtrl($scope) {
@@ -5840,7 +5847,9 @@ canto.service('OrganismList', function($q, $http) {
 
 var organismPicker = function($http, OrganismList) {
   return {
-    scope: {},
+    scope: {
+      selectedOrganisms: '=',
+     },
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/oganismPicker.html',
@@ -5849,7 +5858,6 @@ var organismPicker = function($http, OrganismList) {
       $scope.getOrganismsFromServer = getOrganismsFromServer;
       $scope.organisms = [];
       $scope.organismsCount = null;
-      $scope.selectedOrganisms = [];
       $scope.selected = '';
       $scope.taxon_ids = '';
       $scope.onSelect = onSelect;

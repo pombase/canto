@@ -615,7 +615,10 @@ sub gene_upload : Chained('top') Args(0) Form
     push @all_elements,
       {
         type => 'Block', tag => 'organism-picker',
-        content => ''
+        content => '',
+        attributes => {
+          'selected-organisms' => "data.selectedHostOrganisms",
+        }
       };
   }
 
