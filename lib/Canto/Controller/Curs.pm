@@ -612,6 +612,7 @@ sub gene_upload : Chained('top') Args(0) Form
         type => 'Block', tag => 'organism-picker',
         content => '',
         attributes => {
+          'disabled' => 'data.noAnnotation',
           'selected-organisms' => "data.selectedHostOrganisms",
         }
       };

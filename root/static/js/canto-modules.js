@@ -5849,6 +5849,7 @@ var organismPicker = function($http, OrganismList) {
   return {
     scope: {
       selectedOrganisms: '=',
+      disabled: '=',
      },
     restrict: 'E',
     replace: true,

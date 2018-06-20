@@ -9,6 +9,7 @@
         <span ng-show="organismsCount != 0">
             <span ng-show="organisms.length > 0" style="display: block">
                 <input
+                    ng-disabled="disabled"
                     type="text"
                     ng-model="selected"
                     uib-typeahead="organism as organism.display for organism in organisms | filter:$viewValue | limitTo:8"
