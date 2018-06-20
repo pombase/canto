@@ -566,7 +566,6 @@ sub gene_upload : Chained('top') Args(0) Form
   my @no_genes_reasons =
     ( [ '', 'Please choose a reason ...' ],
       map { [ $_, $_ ] } @{$c->config()->{curs_config}->{no_genes_reasons}} );
-  my @required_when = ();
 
   if ($st->{gene_count} > 0) {
     push @submit_buttons, "Back";
@@ -594,7 +593,6 @@ sub gene_upload : Chained('top') Args(0) Form
                         placeholder => 'Please specify' },
       },
     );
-    @required_when = (when => { field => 'no-genes', not => 1, value => 1 });
   }
 
   my $not_valid_message = "Please enter some gene identifiers or choose a " .
@@ -605,9 +603,6 @@ sub gene_upload : Chained('top') Args(0) Form
         attributes => { 'ng-model' => 'data.geneIdentifiers',
                         'ng-disabled' => 'data.noAnnotation',
                         placeholder => "{{ data.noAnnotation ? 'No genes in this publication ' : '' }}" },
-        constraints => [ { type => 'Length',  min => 1 },
-                         { type => 'Required', @required_when },
-                       ],
       }
     );
 
@@ -691,7 +686,25 @@ sub gene_upload : Chained('top') Args(0) Form
       Canto::Curs::GeneManager->new(config => $c->config(),
                                     curs_schema => $schema);
 
-    my @res_list = $gene_manager->find_and_create_genes(\@search_terms);
+    my @res_list = ();
+
+    my @host_taxon_ids = ();
+
+    if ($c->config()->{pathogen_host_mode}) {
+      my $taxon_ids_text = $c->req->param('host_organism_taxon_ids');
+      @host_taxon_ids = grep { length $_ > 0 && /^\d+$/ } split /[\s,]+/, $taxon_ids_text;
+
+      my $organism_manager =
+        Canto::Curs::OrganismManager->new(config => $c->config(), curs_schema => $schema);
+
+      map {
+        $organism_manager->add_organism_by_taxonid($_);
+      } @host_taxon_ids
+    }
+
+    if (!@host_taxon_ids || @search_terms) {
+      @res_list = $gene_manager->find_and_create_genes(\@search_terms);
+    }
 
     if (@res_list > 1) {
       # there was a problem
@@ -760,18 +773,6 @@ sub gene_upload : Chained('top') Args(0) Form
       $message .= 's' if ($matched_count > 1);
 
       $c->flash()->{message} = $message;
-
-      if ($c->config()->{pathogen_host_mode}) {
-        my $taxon_ids_text = $form->param_value('host_organism_taxon_ids');
-        my @taxon_ids = grep { length $_ > 0 && /^\d+$/ } split /[\s,]+/, $taxon_ids_text;
-
-        my $organism_manager =
-          Canto::Curs::OrganismManager->new(config => $c->config(), curs_schema => $schema);
-
-        map {
-          $organism_manager->add_organism_by_taxonid($_);
-        } @taxon_ids;
-      }
 
       if (!defined $self->get_metadata($schema, Canto::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY())) {
         $self->set_metadata($schema, Canto::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY(),
