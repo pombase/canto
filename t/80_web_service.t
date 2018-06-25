@@ -61,7 +61,7 @@ test_psgi $app, sub {
   # test "phenotype_condition" which is an ontology but not an
   # annotation type
   {
-    my $search_term = 'gl';
+    my $search_term = 'glu';
     my $url = "http://localhost:5000/ws/lookup/ontology/phenotype_condition/?term=$search_term";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
