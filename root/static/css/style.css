@@ -330,6 +330,7 @@ table.list, table.curs-genotype-list {
   border-color: gray;
   border-collapse: collapse;
   font-size: 90%;
+  max-width: 80%;
 }
 table.list th, table.curs-genotype-list th {
   padding: 3px;
@@ -403,6 +404,7 @@ table.curs-genotype-list tbody {
   position: absolute;
   overflow: visible;
   background-color: white;
+  min-width: 10em;
 }
 
 .curs-genotype-list-row-actions .genotype-list-row-links {
