@@ -266,7 +266,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if ($state eq SESSION_ACCEPTED &&
-      $path =~ m:/(gene_upload|edit_genes|genotype_manage|confirm_genes|finish_form):) {
+      $path =~ m:/(gene_upload|edit_genes|genotype_manage|confirm_genes|finish_form|ws):) {
     $use_dispatch = 0;
   }
 
