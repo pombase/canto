@@ -2142,7 +2142,7 @@ canto.controller('ExtensionRelationDialogCtrl',
                  ['$scope', '$uibModalInstance', 'args',
                  extensionRelationDialogCtrl]);
 
-function openTermConfirmDialog($uibModal, termId, initialState, featureType)
+function openTermConfirmDialog($uibModal, termId, initialState, featureType, isExtensionTerm)
 {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/term_confirm.html',
@@ -2157,6 +2157,7 @@ function openTermConfirmDialog($uibModal, termId, initialState, featureType)
           termId: termId,
           initialState: initialState,
           featureType: featureType,
+          isExtensionTerm: isExtensionTerm,
         };
       }
     },
@@ -2191,7 +2192,8 @@ var extensionRelationEdit =
           $scope.extensionRelation.rangeDisplayName = termName;
 
           if (searchString && !searchString.match(/^".*"$/) && searchString !== termId) {
-            var termConfirm = openTermConfirmDialog($uibModal, termId);
+            var termConfirm =
+                openTermConfirmDialog($uibModal, termId, null, null, true);
 
             termConfirm.result.then(function(result) {
               $scope.extensionRelation.rangeValue = result.newTermId;
@@ -4395,6 +4397,7 @@ var termConfirmDialogCtrl =
     $scope.data = {
       initialTermId: args.termId,
       featureType: args.featureType,
+      isExtensionTerm: args.isExtensionTerm,
       state: 'definition',
       termDetails: null,
       doNotAnnotateCurrentTerm: false,
@@ -4419,6 +4422,8 @@ var termConfirmDialogCtrl =
 
         $scope.doNotAnnotateCurrentTerm = false;
 
+        // See: https://github.com/pombase/canto/issues/1517
+        if (!$scope.data.isExtensionTerm) {
         CantoConfig.get('ontology_namespace_config')
           .then(function(results) {
             $scope.ontology_namespace_config = results.data;
@@ -4427,6 +4432,7 @@ var termConfirmDialogCtrl =
 
             $scope.checkDoNotAnnotate(doNotAnnotateSubsets);
           });
+        }
 
         if (args.initialState) {
           $scope.data.state = args.initialState;
