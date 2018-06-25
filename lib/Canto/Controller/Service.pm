@@ -126,6 +126,10 @@ sub _ontology_results
                            include_subset_ids => $include_subset_ids,
                            exclude_subsets => \@exclude_subsets);
       } else {
+        if (length ($search_string =~ s/^\s+//r =~ s/\s+$//r) <= 2) {
+          return [];
+        }
+
         @results =
           @{$lookup->lookup(ontology_name => $ontology_name,
                             search_string => $search_string,
