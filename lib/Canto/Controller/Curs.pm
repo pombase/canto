@@ -1582,9 +1582,31 @@ sub _decode_json_content
   return decode_json($json_content);
 }
 
-sub genotype_store : Chained('feature') PathPart('store')
+sub feature_store : Chained('feature') PathPart('store')
 {
+  my ($self, $c) = @_;
 
+  my $st = $c->stash();
+  my $feature_type = $st->{feature_type};
+
+  if ($feature_type eq 'genotype') {
+    $self->_genotype_store($c);
+  } else {
+    if ($feature_type eq 'metagenotype') {
+      $self->_metagenotype_store($c);
+    } else {
+      $c->stash->{json_data} = {
+        status => "error",
+        message => "can't store feature of type: $feature_type",
+      };
+      warn $_;
+      $c->forward('View::JSON');
+    };
+  }
+}
+
+sub _genotype_store
+{
   my ($self, $c) = @_;
   my $st = $c->stash();
   my $schema = $st->{schema};
@@ -1680,6 +1702,71 @@ sub genotype_store : Chained('feature') PathPart('store')
   $c->forward('View::JSON');
 }
 
+sub _metagenotype_store
+{
+  my ($self, $c) = @_;
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $config = $c->config();
+
+  my $body_data = _decode_json_content($c);
+
+  my $pathogen_genotype_id = $body_data->{pathogen_genotype_id};
+  my $host_genotype_id = $body_data->{host_genotype_id};
+
+  my @alleles = ();
+
+  try {
+    my $pathogen_genotype = $schema->find_with_type('Genotype', $pathogen_genotype_id);
+    my $host_genotype = $schema->find_with_type('Genotype', $host_genotype_id);
+
+    my $curs_key = $st->{curs_key};
+
+    my $genotype_manager =
+      Canto::Curs::GenotypeManager->new(config => $c->config(),
+                                        curs_schema => $schema);
+
+    my $existing_metagenotype =
+      $genotype_manager->find_metagenotype(pathogen_genotype => $pathogen_genotype,
+                                           host_genotype => $host_genotype);
+
+    if ($existing_metagenotype) {
+      $c->flash()->{message} = qq(Using existing meta-genotype with the same pathogen and host genotype");
+
+        $c->stash->{json_data} = {
+          status => "existing",
+          metagenotype_display_name => $existing_metagenotype->display_name(),
+          metagenotype_id => $existing_metagenotype->metagenotype_id(),
+        };
+    } else {
+      my $guard = $schema->txn_scope_guard();
+
+      my $metagenotype =
+        $genotype_manager->make_metagenotype(pathogen_genotype => $pathogen_genotype,
+                                             host_genotype => $host_genotype);
+
+      $guard->commit();
+
+      $c->flash()->{message} = 'Created new meta-genotype: ' . $metagenotype->display_name();
+
+      $c->stash->{json_data} = {
+        status => "success",
+        metagenotype_display_name => $metagenotype->display_name(),
+        metagenotype_id => $metagenotype->metagenotype_id(),
+      };
+    }
+  } catch {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "Storing new meta-genotype failed: internal error - " .
+        "please report this to the Canto developers",
+    };
+    warn $_;
+  };
+
+  $c->forward('View::JSON');
+}
 
 sub annotation_export : Chained('top') PathPart('annotation_export') Args(1)
 {

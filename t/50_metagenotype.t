@@ -1,12 +1,9 @@
-
 use strict;
 use warnings;
-use Test::More tests => 4;
-
+use Test::More tests => 7;
 
 use Canto::TestUtil;
 use Canto::Track::OrganismLookup;
-
 
 my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
@@ -41,4 +38,16 @@ is ($metagenotype->metagenotype_id(),
     ($cerevisiae_genotype->metagenotypes())[0]->metagenotype_id());
 
 is ($metagenotype->metagenotype_id(),
+    ($existing_pombe_genotype->metagenotypes())[0]->metagenotype_id());
+
+my $lookup_metagenotype =
+  $genotype_manager->find_metagenotype(pathogen_genotype => $existing_pombe_genotype,
+                                       host_genotype => $cerevisiae_genotype);
+
+is ($lookup_metagenotype->identifier(), 'aaaa0007-metagenotype-1');
+
+is ($lookup_metagenotype->metagenotype_id(),
+    ($cerevisiae_genotype->metagenotypes())[0]->metagenotype_id());
+
+is ($lookup_metagenotype->metagenotype_id(),
     ($existing_pombe_genotype->metagenotypes())[0]->metagenotype_id());

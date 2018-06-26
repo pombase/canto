@@ -413,6 +413,31 @@ sub find_and_create_genotype
   return $self->_store_chado_genotype($chado_genotype_details);
 }
 
+=head2 find_metagenotype
+
+ Usage   : $genotype_manager->find_metagenotype(pathogen_genotype => $pathogen_genotype,
+                                                host_genotype => $host_genotype);
+ Function: Find the meta-genotype composed of the given pathogen and host genotypes
+ Return  : the Metagenotype object from the CursDB or undef
+
+=cut
+
+sub find_metagenotype
+{
+  my $self = shift;
+
+  my %args = @_;
+
+  my $schema = $self->curs_schema();
+
+  my %search_args = (
+    pathogen_genotype_id => $args{pathogen_genotype}->genotype_id(),
+    host_genotype_id => $args{host_genotype}->genotype_id(),
+  );
+
+  return $schema->resultset('Metagenotype')->find(\%search_args);
+}
+
 =head2 delete_genotype
 
  Usage   : $utils->delete_genotype($genotype_identifier);

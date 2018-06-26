@@ -165,6 +165,14 @@ sub all_annotations
   return $self->annotations();
 }
 
+sub display_name
+{
+  my $self = shift;
+
+  return 'pathogen: ' .$self->pathogen_genotype->display_name() . ' host: ' .
+    $self->host_genotype->display_name();
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;
