@@ -1853,7 +1853,7 @@ external_links:
       url: 'http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&dopt=Abstract&list_uids=@@uniquename@@'
 
 webservices:
-  uniprot_batch_lookup_url: 'http://www.uniprot.org/batch/'
+  uniprot_batch_lookup_url: 'https://www.uniprot.org/uniprot/?format=xml&query='
   quickgo_annotation_lookup_url: 'http://www.ebi.ac.uk/QuickGO/GAnnotation?format=gaf&ref='
 
 config_service:

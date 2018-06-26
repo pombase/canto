@@ -145,16 +145,9 @@ sub retrieve_entries
   my $agent = LWP::UserAgent->new;
   push @{$agent->requests_redirectable}, 'POST';
 
-  my $response = $agent->post($batch_service_url,
-                              [
-                                'file' => [
-                                  undef, 'upload.xml',
-                                  Content_Type => 'text/plain',
-                                  Content => "@identifiers"
-                               ],
-                               'format' => 'xml',
-                               ],
-                               'Content_Type' => 'form-data');
+  my $url = $batch_service_url . join (' OR ', @identifiers);
+
+  my $response = $agent->get($url, 'Accept-Encoding' => 'gzip, x-gzip, deflate');
 
   while (my $wait = $response->header('Retry-After')) {
     print STDERR "Waiting ($wait)...\n";
