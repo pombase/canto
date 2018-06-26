@@ -145,33 +145,33 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 metagenotype_part_genotypes
+=head2 metagenotype_host_genotypes
 
 Type: has_many
 
-Related object: L<Canto::CursDB::MetagenotypePart>
+Related object: L<Canto::CursDB::Metagenotype>
 
 =cut
 
 __PACKAGE__->has_many(
-  "metagenotype_part_genotypes",
-  "Canto::CursDB::MetagenotypePart",
-  { "foreign.genotype_id" => "self.genotype_id" },
+  "metagenotype_host_genotypes",
+  "Canto::CursDB::Metagenotype",
+  { "foreign.host_genotype_id" => "self.genotype_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 metagenotype_part_metagenotypes
+=head2 metagenotype_pathogen_genotypes
 
 Type: has_many
 
-Related object: L<Canto::CursDB::MetagenotypePart>
+Related object: L<Canto::CursDB::Metagenotype>
 
 =cut
 
 __PACKAGE__->has_many(
-  "metagenotype_part_metagenotypes",
-  "Canto::CursDB::MetagenotypePart",
-  { "foreign.metagenotype_id" => "self.genotype_id" },
+  "metagenotype_pathogen_genotypes",
+  "Canto::CursDB::Metagenotype",
+  { "foreign.pathogen_genotype_id" => "self.genotype_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -196,8 +196,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-18 16:58:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kOdEeMmcCgqqdts3LFUokw
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-26 15:24:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N+yZI2wo/YL3GJG4/35PEw
 
 =head2 annotations
 
@@ -268,34 +268,18 @@ sub display_name
 __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
                           'allele');
 
-# returns either the meta-genotype(s) that this genotype is part of or empty list
-# this object IS a meta-genotype
+
+# returns either the meta-genotype(s) that this genotype is part of or
+# empty list
 sub metagenotypes
 {
   my $self = shift;
 
-  my $parts_rs = $self->metagenotype_part_genotypes()->search({}, { prefetch => 'metagenotype' });
+  my @metagenotypes = $self->metagenotype_host_genotypes()->all();
 
-  if ($parts_rs->count() > 0) {
-    return $parts_rs->search_related('metagenotype')->all();
-  } else {
-    return [];
-  }
-}
+  return @metagenotypes if scalar(@metagenotypes) > 0;
 
-sub metagenotype_parts
-{
-  my $self = shift;
-
-  my $options = { prefetch => 'metagenotype' };
-
-  my $parts_rs = $self->metagenotype_part_genotypes()->search({}, $options);
-
-  if ($parts_rs->count() == 0) {
-    $parts_rs = $self->metagenotype_part_metagenotypes()->search({}, $options);
-  }
-
-  return $parts_rs;
+  return $self->metagenotype_pathogen_genotypes()->all();
 }
 
 
@@ -303,7 +287,7 @@ sub metagenotype_parts
 
  Usage   : my $type = $genotype->genotype_type();
  Args    : $config - the Config object
- Returns : "normal", "host", "pathogen" or "pathogen-host"
+ Returns : "normal", "host" or "pathogen"
 
 =cut
 
@@ -312,8 +296,6 @@ sub genotype_type
 {
   my $self = shift;
   my $config = shift;
-
-  return "metagenotype" if !defined $self->organism_id();
 
   my $genotype_organism = $self->organism();
 

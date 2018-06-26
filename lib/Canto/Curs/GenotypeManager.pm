@@ -41,7 +41,8 @@ use Moose;
 use Canto::Track;
 use Canto::Curs::AlleleManager;
 
-has curs_schema => (is => 'rw', isa => 'Canto::CursDB', required => 1);
+has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
+has curs_key => (is => 'rw', lazy_build => 1);
 has allele_manager => (is => 'rw', isa => 'Canto::Curs::AlleleManager',
                        lazy_build => 1);
 has organism_manager => (is => 'rw', isa => 'Canto::Curs::OrganismManager',
@@ -49,6 +50,14 @@ has organism_manager => (is => 'rw', isa => 'Canto::Curs::OrganismManager',
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::MetadataAccess';
+
+sub _build_curs_key
+{
+  my $self = shift;
+  my $schema = $self->curs_schema();
+
+  return $self->get_metadata($schema, 'curs_key');
+}
 
 sub _build_allele_manager
 {
@@ -156,18 +165,17 @@ sub _remove_unused_alleles
 
 =head2 make_genotype
 
- Usage   : $genotype_manager->make_genotype($curs_key, $name, $background, \@allele_objects,
+ Usage   : $genotype_manager->make_genotype($name, $background, \@allele_objects,
                                             $identifier);
  Function: Create a Genotype object in the CursDB
- Args    : $curs_key - the key for this session
-           $name - the name for the new object (required)
+ Args    : $name - the name for the new object (required)
            \@allele_objects - a list of Allele objects to attach to the new
                               Genotype
            $identifier - the identifier of the new object if the Genotype
                          details are from an external source (Chado) or undef
                          for Genotypes created in this session.  If not defined
                          a new unique identifier will be created based on the
-                         $curs_key
+                         session curs_key
            $genotype_taxonid - the organism of this genotype
  Return  : the new Genotype
 
@@ -176,7 +184,6 @@ sub _remove_unused_alleles
 sub make_genotype
 {
   my $self = shift;
-  my $curs_key = shift;
   my $name = shift;
   my $background = shift;
   my $alleles = shift;
@@ -188,6 +195,8 @@ sub make_genotype
   }
 
   my $schema = $self->curs_schema();
+
+  my $curs_key = $self->curs_key();
 
   my $new_identifier;
 
@@ -227,21 +236,23 @@ sub _get_metagenotype_identifier
 {
   my $self = shift;
 
-  my $rs = $self->curs_schema()->resultset('Genotype');
+  my $curs_key = $self->curs_key();
+
+  my $rs = $self->curs_schema()->resultset('Metagenotype');
 
   my $id = 0;
 
   while(defined (my $genotype)) {
     my $identifier = $genotype->identifier();
 
-    if ($identifier =~ /^metagenotype-(\d+)/) {
+    if ($identifier =~ /^$curs_key-metagenotype-(\d+)/) {
       if ($1 > $id) {
         $id = $1;
       }
     }
   }
 
-  return 'metagenotype-' . ($id + 1);
+  return "$curs_key-metagenotype-" . ($id + 1);
 }
 
 
@@ -285,32 +296,22 @@ sub make_metagenotype
   my $metagenotype_identifier = $self->_get_metagenotype_identifier();
 
   my $metagenotype =
-    $schema->create_with_type('Genotype',
+    $schema->create_with_type('Metagenotype',
                               {
                                 identifier => $metagenotype_identifier,
+                                pathogen_genotype_id => $pathogen_genotype->genotype_id(),
+                                host_genotype_id => $host_genotype->genotype_id(),
                               });
-  $schema->create_with_type('MetagenotypePart',
-                            {
-                              metagenotype_id => $metagenotype->genotype_id(),
-                              genotype_id => $pathogen_genotype->genotype_id(),
-                            });
-  $schema->create_with_type('MetagenotypePart',
-                            {
-                              metagenotype_id => $metagenotype->genotype_id(),
-                              genotype_id => $host_genotype->genotype_id(),
-                            });
-
   return $metagenotype;
 }
 
 
 =head2 store_genotype_changes
 
- Usage   : $genotype_manager->store_genotype_changes($curs_key, $genotype,
+ Usage   : $genotype_manager->store_genotype_changes($genotype,
                                                      $name, $background, \@allele_objects);
  Function: Store changes to a Genotype object in the CursDB
- Args    : $curs_key - the key for this session
-           $genotype_id - the Genotype's ID in the CursDB
+ Args    : $genotype_id - the Genotype's ID in the CursDB
            $name - new name for the genotype, note: if undef the name will be
                    set to undef rather than keeping the old version (optional)
            $background - the genotype background (optional)
@@ -324,7 +325,6 @@ sub make_metagenotype
 sub store_genotype_changes
 {
   my $self = shift;
-  my $curs_key = shift;
   my $genotype = shift;
   my $name = shift;
   my $background = shift;
@@ -352,8 +352,9 @@ sub store_genotype_changes
 sub _store_chado_genotype
 {
   my $self = shift;
-  my $curs_key = shift;
   my $chado_genotype_details = shift;
+
+  my $curs_key = $self->curs_key();
 
   my $schema = $self->curs_schema();
 
@@ -378,7 +379,7 @@ sub _store_chado_genotype
   my $background = $chado_genotype_details->{background};
   my $identifier = $chado_genotype_details->{identifier};
 
-  return $self->make_genotype($curs_key, $name, $background, \@alleles,
+  return $self->make_genotype($name, $background, \@alleles,
                               $alleles[0]->gene()->organism()->taxonid(),
                               $identifier);
 }
@@ -398,7 +399,6 @@ sub find_and_create_genotype
   my $self = shift;
 
   my $schema = $self->curs_schema();
-  my $curs_key = $self->get_metadata($schema, 'curs_key');
 
   my $genotype_identifier = shift;
 
@@ -410,7 +410,7 @@ sub find_and_create_genotype
 
   my $chado_genotype_details = $lookup->lookup(identifier => $genotype_identifier);
 
-  return $self->_store_chado_genotype($curs_key, $chado_genotype_details);
+  return $self->_store_chado_genotype($chado_genotype_details);
 }
 
 =head2 delete_genotype

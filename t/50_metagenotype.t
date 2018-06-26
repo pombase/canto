@@ -1,3 +1,4 @@
+
 use strict;
 use warnings;
 use Test::More tests => 4;
@@ -28,16 +29,16 @@ ok ($existing_pombe_genotype);
 my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
                                                          curs_schema => $curs_schema);
 my $cerevisiae_genotype =
-  $genotype_manager->make_genotype($curs_schema, undef, undef, [], 4932);
+  $genotype_manager->make_genotype(undef, undef, [], 4932);
 
 my $metagenotype =
   $genotype_manager->make_metagenotype(pathogen_genotype => $existing_pombe_genotype,
                                        host_genotype => $cerevisiae_genotype);
 
-is ($metagenotype->identifier(), 'metagenotype-1');
+is ($metagenotype->identifier(), 'aaaa0007-metagenotype-1');
 
-is ($metagenotype->genotype_id(),
-    ($cerevisiae_genotype->metagenotypes())[0]->genotype_id());
+is ($metagenotype->metagenotype_id(),
+    ($cerevisiae_genotype->metagenotypes())[0]->metagenotype_id());
 
-is ($metagenotype->genotype_id(),
-    ($existing_pombe_genotype->metagenotypes())[0]->genotype_id());
+is ($metagenotype->metagenotype_id(),
+    ($existing_pombe_genotype->metagenotypes())[0]->metagenotype_id());

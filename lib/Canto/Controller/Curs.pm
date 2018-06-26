@@ -1654,7 +1654,7 @@ sub genotype_store : Chained('feature') PathPart('store')
         my $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
 
         my $genotype =
-          $genotype_manager->make_genotype($curs_key, $genotype_name, $genotype_background,
+          $genotype_manager->make_genotype($genotype_name, $genotype_background,
                                            \@alleles, $genotype_taxonid);
 
         $guard->commit();
