@@ -5877,7 +5877,8 @@ var organismPicker = function($http, OrganismList) {
         OrganismList.getOrganismList().then(function(results) {
           if (results.status == 200) {
             for (var organism of results.data) {
-              organism.display = organism.full_name + " (" + organism.taxonid + ")";
+              var commonName = (organism.common_name.length > 0) ? " (" + organism.common_name + ")" : "";
+              organism.display = "[" + organism.taxonid + "] " + organism.full_name + commonName;
               $scope.organisms.push(organism);
             }
             $scope.organismsCount = $scope.organisms.length;

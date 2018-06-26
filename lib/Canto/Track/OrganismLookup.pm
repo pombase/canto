@@ -73,6 +73,7 @@ sub _make_organism_hash
     genus => $organism->genus(),
     species => $organism->species(),
     full_name => $organism->genus() . ' ' . $organism->species(),
+    common_name => $organism->common_name(),
     taxonid => $taxonid,
     pathogen_or_host => $pathogen_or_host,
   }

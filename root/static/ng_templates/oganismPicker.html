@@ -20,13 +20,15 @@
                 <div ng-hide="(selectedOrganisms.length == 0)">
                     <table class="list">
                         <tr>
+                            <th>NCBI Taxon Id</th>
                             <th>Species</th>
-                            <th>Taxon Id</th>
+                            <th>Common name (where available)</th>
                             <th></th>
                         </tr>
                         <tr ng-repeat="(key, organism) in selectedOrganisms">
-                            <td>{{organism.full_name}}</td>
                             <td>{{organism.taxonid}}</td>
+                            <td>{{organism.full_name}}</td>
+                            <td>{{organism.common_name}}</td>
                             <td><button type='button' class="btn btn-xs btn-danger" ng-click="removeOrganism(organism)">X</button></td>
                         </tr>
                     </table>
