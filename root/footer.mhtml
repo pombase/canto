@@ -6,7 +6,7 @@
 
 % if ($c->debug()) {
 <script src="<% $c->uri_for('/static/js/jquery-v1.9.1.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/jquery-ui-v1.12.1.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery-ui-v1.9.2.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.validate-v1.17.0.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/angular-v1.5.11.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/bootstrap-3.3.7.js') %>"></script>
@@ -17,7 +17,7 @@
 <script src="<% $c->uri_for('/static/js/angular-chart-v1.1.1.js') %>"></script>
 % } else {
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script src="//ajax.microsoft.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
