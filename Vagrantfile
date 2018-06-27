@@ -5,7 +5,7 @@ $canto_setup_script = <<-SCRIPT
   # Go to the Canto source directory
   cd /home/canto/canto-master
 
-  # Initialise the test data directory
+  # Initialise the Canto data directory
   ./script/canto_start --initialise /var/canto-data
   
   # Canto won't start unless the user running the script has permissions on
