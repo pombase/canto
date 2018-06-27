@@ -7,6 +7,10 @@ $canto_setup_script = <<-SCRIPT
 
   # Initialise the test data directory
   ./script/canto_start --initialise /var/canto-data
+  
+  # Canto won't start unless the user running the script has permissions on
+  # the database.
+  chown -R canto:canto /var/canto-data
 SCRIPT
 
 $ontology_loading_script = <<-SCRIPT
@@ -35,10 +39,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "canto",
     type: "shell",
-    inline: $canto_setup_script,
-    # Don't run this script as a privileged user, since it causes permissions
-    # issues on the database that Canto creates.
-    privileged: false
+    inline: $canto_setup_script
 
   config.vm.provision "ontologies",
     type: "shell",
