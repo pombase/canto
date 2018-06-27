@@ -19,6 +19,7 @@ my $expected_org_4896 = {
   'species' => 'pombe',
   'genus' => 'Schizosaccharomyces',
   'full_name' => 'Schizosaccharomyces pombe',
+  'common_name' => undef
 };
 
 cmp_deeply(\@orgs, [
@@ -29,6 +30,7 @@ cmp_deeply(\@orgs, [
     'pathogen_or_host' => 'unknown',
     'genus' => 'Saccharomyces',
     'full_name' => 'Saccharomyces cerevisiae',
+    'common_name' => undef
   }
 ]);
 
@@ -61,6 +63,7 @@ my $expected_host_org_4932 = {
   'pathogen_or_host' => 'host',
   'genus' => 'Saccharomyces',
   'full_name' => 'Saccharomyces cerevisiae',
+  'common_name' => undef
 };
 
 cmp_deeply(\@orgs, [
