@@ -143,6 +143,7 @@ sub retrieve_entries
 
   # copied from http://www.uniprot.org/faq/28#batch_retrieval_of_entries
   my $agent = LWP::UserAgent->new;
+  push @{$agent->requests_redirectable}, 'POST';
 
   my $response = $agent->post($batch_service_url,
                               [
