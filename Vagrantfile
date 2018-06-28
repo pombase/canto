@@ -2,15 +2,19 @@ require 'yaml'
 settings = YAML.load_file './vagrant_config.yaml'
 
 $canto_setup_script = <<-SCRIPT
-  # Go to the Canto source directory
+  # Go to the Canto source directory.
   cd /home/canto/canto-master
 
-  # Initialise the test data directory
+  # Initialise the Canto data directory.
   ./script/canto_start --initialise /var/canto-data
+  
+  # Canto won't start unless the user running the script has permissions on
+  # the database.
+  chown -R canto:canto /var/canto-data
 SCRIPT
 
 $ontology_loading_script = <<-SCRIPT
-  # Load ontologies from Gene Ontology, FYPO, and PSI-MOD
+  # Load ontologies from Gene Ontology, FYPO, and PSI-MOD.
   cd /home/canto/canto-master
   ./script/canto_load.pl \
     --ontology http://snapshot.geneontology.org/ontology/go-basic.obo \
@@ -35,10 +39,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "canto",
     type: "shell",
-    inline: $canto_setup_script,
-    # Don't run this script as a privileged user, since it causes permissions
-    # issues on the database that Canto creates.
-    privileged: false
+    inline: $canto_setup_script
 
   config.vm.provision "ontologies",
     type: "shell",
