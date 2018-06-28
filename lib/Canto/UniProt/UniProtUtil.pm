@@ -144,9 +144,16 @@ sub retrieve_entries
   # copied from http://www.uniprot.org/faq/28#batch_retrieval_of_entries
   my $agent = LWP::UserAgent->new;
 
-  my $url = $batch_service_url . join (' OR ', @identifiers);
-
-  my $response = $agent->get($url, 'Accept-Encoding' => 'gzip, x-gzip, deflate');
+  my $response = $agent->post($batch_service_url,
+                              [
+                                'file' => [
+                                  undef, 'upload.xml',
+                                  Content_Type => 'text/plain',
+                                  Content => "@identifiers"
+                               ],
+                               'format' => 'xml',
+                               ],
+                               'Content_Type' => 'form-data');
 
   while (my $wait = $response->header('Retry-After')) {
     print STDERR "Waiting ($wait)...\n";
