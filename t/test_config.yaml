@@ -6,6 +6,7 @@ test_config:
     - genus: Schizosaccharomyces
       species: pombe
       taxonid: 4896
+      common_name: "fission yeast"
     - genus: Saccharomyces
       species: cerevisiae
       taxonid: 4932

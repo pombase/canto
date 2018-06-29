@@ -19,7 +19,7 @@ my $expected_org_4896 = {
   'species' => 'pombe',
   'genus' => 'Schizosaccharomyces',
   'full_name' => 'Schizosaccharomyces pombe',
-  'common_name' => undef
+  'common_name' => 'fission yeast',
 };
 
 cmp_deeply(\@orgs, [

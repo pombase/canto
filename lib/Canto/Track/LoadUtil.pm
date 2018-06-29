@@ -106,15 +106,22 @@ sub get_organism
 
   my $schema = $self->schema();
 
-  return $schema->resultset('Organism')->find_or_create(
+  my $new_org =
+    $schema->resultset('Organism')->find_or_create(
       {
         genus => $genus,
         species => $species,
-        common_name => $common_name,
         organismprops => [ { value => $taxonid,
                              type => { name => 'taxon_id' },
                              rank => 0 } ]
       });
+
+  if ($common_name && !defined $new_org->common_name()) {
+    $new_org->common_name($common_name);
+    $new_org->update();
+  }
+
+  return $new_org;
 }
 
 =head2 find_organism_by_taxonid

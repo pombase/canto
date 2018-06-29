@@ -796,7 +796,8 @@ sub add_test_organisms
     for my $org_conf (@{$test_config->{organisms}}) {
       push @ret, $load_util->get_organism($org_conf->{genus},
                                           $org_conf->{species},
-                                          $org_conf->{taxonid});
+                                          $org_conf->{taxonid},
+                                          $org_conf->{common_name});
 
     }
 
