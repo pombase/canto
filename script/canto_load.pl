@@ -205,6 +205,11 @@ if ($do_organisms) {
 
     my ($genus, $species, $taxonid, $common_name) = split (/,/, $line);
 
+    if (!defined $taxonid) {
+      warn "not enough fields in line: $line\n";
+      next;
+    }
+
     $species =~ s/^\s+//;
     $species =~ s/\s+$//;
 
