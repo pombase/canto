@@ -26,7 +26,7 @@ You can find documentation for this module with the perldoc command.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2013 Kim Rutherford, all rights reserved.
+Copyright 2018 Kim Rutherford, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
