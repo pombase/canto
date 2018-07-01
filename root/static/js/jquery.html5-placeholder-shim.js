@@ -53,20 +53,23 @@
             possible_line_height = { lineHeight: $this.css('height'), whiteSpace: 'nowrap' };
           }
 
+          var isBorderBox = ($this.css('box-sizing') === 'border-box');
+          var isTextarea = $this.is('textarea');
+
           var ol = $('<label />')
             .text($this.attr('placeholder'))
             .addClass(config.cls)
             .css($.extend({
               position:'absolute',
               display: 'inline',
-              float:'none',
+              'float':'none',
               overflow:'hidden',
               textAlign: 'left',
               color: config.color,
               cursor: 'text',
-              paddingTop: $this.css('padding-top'),
+              paddingTop: !isTextarea && isBorderBox ? '0' : $this.css('padding-top'),
               paddingRight: $this.css('padding-right'),
-              paddingBottom: $this.css('padding-bottom'),
+              paddingBottom: !isTextarea && isBorderBox ? '0' : $this.css('padding-bottom'),
               paddingLeft: $this.css('padding-left'),
               fontSize: $this.css('font-size'),
               fontFamily: $this.css('font-family'),
@@ -80,17 +83,20 @@
             .attr('for', this.id)
             .data('target',$this)
             .click(function(){
-              $(this).data('target').focus();
+                if (!$(this).data('target').is(':disabled')) {
+                    $(this).data('target').focus();
+                }
             })
             .insertBefore(this);
-          $this
-            .data('placeholder',ol)
-						.keydown(function(){
-							ol.hide();
-						})
-						.blur(function() {
-              ol[$this.val().length ? 'hide' : 'show']();
-            }).triggerHandler('blur');
+            $this
+                .data('placeholder', ol)
+                .on('keydown', function () {
+                    ol.hide();
+                })
+                .on('blur change', function () {
+                    ol[$this.val().length ? 'hide' : 'show']();
+                })
+                .triggerHandler('blur');
           $(window).one("resize", function () { adjustToResizing(ol); });
         }
       });
