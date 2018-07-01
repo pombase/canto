@@ -78,8 +78,6 @@ $curs_schema->resultset('Organism')->delete();
 
 # fake pathogen_host_mode with no host so pombe will be a "pathogen"
 $config->{host_organism_taxonids} = [];
-$config->{host_organisms} = [];
-$config->{pathogen_host_mode} = 1;
 $Canto::Track::OrganismLookup::cache = {};
 
 

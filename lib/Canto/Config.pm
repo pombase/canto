@@ -141,15 +141,16 @@ sub merge_config
 sub _set_host_organisms
 {
   my $self = shift;
-  my $track_schema = shift;
+
+  my $track_schema = Canto::TrackDB->new(config => $self);
 
   $self->{host_organisms} = [];
-  $self->{pathogen_host_mode} = 0;
 
   my $host_organism_taxonids = $self->{host_organism_taxonids};
 
   if ($host_organism_taxonids && @$host_organism_taxonids > 0) {
     $self->{pathogen_host_mode} = 1;
+    $self->{multi_organism_mode} = 1;
 
     for my $taxonid (@{$self->{host_organism_taxonids}}) {
       my $rs = $track_schema->resultset('Organismprop')
@@ -163,9 +164,18 @@ sub _set_host_organisms
 
       push @{$self->{host_organisms}}, $rs->first()->organism();
     }
-
-    $self->{multi_organism_mode} = 1;
   }
+}
+
+sub host_organisms
+{
+  my $self = shift;
+
+  if (!$self->{host_organisms}) {
+    $self->_set_host_organisms()
+  }
+
+  return $self->{host_organisms};
 }
 
 =head2 setup
@@ -372,7 +382,14 @@ sub setup
 
   $self->{multi_organism_mode} = !$instance_organism;
 
-  $self->{pathogen_host_mode} = 0;
+  $self->{host_organism_taxonids} //= [];
+
+  if (@{$self->{host_organism_taxonids}} > 0) {
+    $self->{pathogen_host_mode} = 1;
+    $self->{multi_organism_mode} = 1;
+  } else {
+    $self->{pathogen_host_mode} = 0;
+  }
 
   my $connect_string = $self->model_connect_string('Track');
 
@@ -416,11 +433,6 @@ sub setup
             "host_organism_taxonids and instance_organism";
         }
       }
-    }
-
-    if ($self->{host_organism_taxonids} &&
-          @{$self->{host_organism_taxonids}} > 0) {
-      $self->_set_host_organisms($track_schema);
     }
   }
 }
