@@ -95,11 +95,14 @@ sub parse_results
     my $accession = _content($entry->{accession}->[0]);
 
     my $organism_full_name = 'Unknown unknown';
+    my $organism_common_name = undef;
 
     for my $org_details (@{$entry->{organism}->[0]->{name}}) {
       if ($org_details->{type} eq 'scientific') {
         $organism_full_name = _content($org_details);
-        last;
+      }
+      if ($org_details->{type} eq 'common') {
+        $organism_common_name = _content($org_details);
       }
     }
 
@@ -117,6 +120,7 @@ sub parse_results
       product => $full_name,
       synonyms => [@synonyms],
       organism_full_name => $organism_full_name,
+      organism_common_name => $organism_common_name,
       organism_taxonid => $taxonid,
     };
   }

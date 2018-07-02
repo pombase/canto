@@ -84,9 +84,12 @@ around 'lookup' => sub {
       $species = "unknown";
     }
 
+    my $organism_common_name = $_->{organism_common_name};
+
     my $taxonid = $_->{organism_taxonid};
 
-    my $organism = $load_util->get_organism($genus, $species, $taxonid);
+    my $organism = $load_util->get_organism($genus, $species, $taxonid,
+                                            $organism_common_name);
 
     my $gene_load = Canto::Track::GeneLoad->new(organism => $organism, schema => $schema);
 
