@@ -16,13 +16,15 @@ $pathogen_host_mode
   <div class="curs-box-body">
 
   <form name="gene-edit" method="get" action="<% $edit_path %>">
-% if (@table_1_hashes) {
+% if (scalar(@table_1_hashes) > 0 || scalar(@table_2_hashes) > 0) {
+%   if (scalar(@table_1_hashes) > 0) {
 %   if ($table_1_header) {
       <div class="curs-gene-list-edit-table-header"><% $table_1_header %></div>
 %   }
   <& /curs/gene_list_edit_table.mhtml, col_names => \@col_names, gene_hashes => \@table_1_hashes &>
+%   }
 
-%   if (@table_2_hashes) {
+%   if (scalar(@table_2_hashes) > 0) {
 %     if ($table_2_header) {
         <div class="curs-gene-list-edit-table-header"><% $table_2_header %></div>
 %     }
