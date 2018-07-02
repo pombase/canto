@@ -693,14 +693,19 @@ sub gene_upload : Chained('top') Args(0) Form
 
     if ($c->config()->{pathogen_host_mode}) {
       my $taxon_ids_text = $c->req->param('host_organism_taxon_ids');
-      @host_taxon_ids = grep { length $_ > 0 && /^\d+$/ } split /[\s,]+/, $taxon_ids_text;
 
-      my $organism_manager =
-        Canto::Curs::OrganismManager->new(config => $c->config(), curs_schema => $schema);
+      # will be undefined if the form is submitted before the organism picker
+      # has finished initialising (ie. the spinner is still spinning)
+      if (defined $taxon_ids_text) {
+        @host_taxon_ids = grep { length $_ > 0 && /^\d+$/ } split /[\s,]+/, $taxon_ids_text;
 
-      map {
-        $organism_manager->add_organism_by_taxonid($_);
-      } @host_taxon_ids
+        my $organism_manager =
+          Canto::Curs::OrganismManager->new(config => $c->config(), curs_schema => $schema);
+
+        map {
+          $organism_manager->add_organism_by_taxonid($_);
+        } @host_taxon_ids
+      }
     }
 
     if (!@host_taxon_ids || @search_terms) {
