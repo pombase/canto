@@ -5576,6 +5576,7 @@ var initiallyHiddenText =
         text: '@',
         linkLabel: '@',
         previewCharCount: '@',
+        breakOnComma: '@',
       },
       restrict: 'E',
       replace: true,
@@ -5592,6 +5593,10 @@ var initiallyHiddenText =
         $scope.$watch('text',
                       function() {
                         $scope.trimmedText = $.trim($scope.text);
+
+                        if ($scope.breakOnComma) {
+                          $scope.trimmedText = $scope.trimmedText.replace(/,/g, ', ');
+                        }
 
                         if ($scope.previewCharCount && $scope.previewCharCount > 0) {
                           if ($scope.previewCharCount < $scope.trimmedText.length) {
