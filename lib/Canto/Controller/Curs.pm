@@ -607,7 +607,13 @@ sub gene_upload : Chained('top') Args(0) Form
     );
 
   if ($c->config()->{pathogen_host_mode}) {
+    my $pub_uniquename = $st->{pub}->uniquename();
+
     push @all_elements,
+      {
+        type => 'Block', tag => 'div',
+        content => "Create host organism list (where there are no specified host genes) for $pub_uniquename:",
+      },
       {
         type => 'Block', tag => 'organism-picker',
         content => '',
