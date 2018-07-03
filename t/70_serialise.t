@@ -120,7 +120,7 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@pombase.org',
+          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         term_suggestion => {
@@ -139,7 +139,7 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@pombase.org',
+          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         with_gene => "SPBC1826.01c",
@@ -168,7 +168,7 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@pombase.org',
+          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         with_gene => "SPBC1826.01c",
@@ -192,7 +192,7 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@pombase.org',
+          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         term => 'GO:0022857',
@@ -203,7 +203,7 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@pombase.org',
+          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         status => 'new',
@@ -219,7 +219,7 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@pombase.org',
+          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         status => 'new',
@@ -238,7 +238,7 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@pombase.org',
+          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         type => 'phenotype',
@@ -257,7 +257,7 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@pombase.org',
+          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         term => 'FYPO:0000017'
@@ -270,7 +270,7 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Another Testperson',
-          email => 'a.n.other.testperson@pombase.org',
+          email => 'a.n.other.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::true,
         },
         term => 'MOD:01157',
@@ -291,7 +291,7 @@ my $full_expected_curation_session =
       accepted_timestamp => '2012-02-15 13:45:00',
       curation_in_progress_timestamp => '2012-02-15 13:45:00',
       session_created_timestamp => '2012-02-15 13:45:00',
-      curator_email => 'some.testperson@pombase.org',
+      curator_email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
       curator_name => 'Some Testperson',
       curator_role => 'community',
       curation_accepted_date => '2012-02-15 13:45:00',
@@ -308,148 +308,148 @@ my $small_expected_curation_session = clone $full_expected_curation_session;
 $small_expected_curation_session->{publications}->{'PMID:19756689'} = {};
 
 my %expected_people = (
-  'dom@genetics.med.harvard.edu' => {
-    'password' => sha1_base64('dom@genetics.med.harvard.edu'),
+  'dom@40f92df84557e35aa67918b1912c3beeb02112ab.med.harvard.edu' => {
+    'password' => sha1_base64('dom@40f92df84557e35aa67918b1912c3beeb02112ab.med.harvard.edu'),
     'lab' => 'Winston Lab',
     'name' => 'Dom Helmlinger',
     'orcid' => undef,
     'role' => 'user'
   },
-  'Pascale.Beauregard@umontreal.ca' => {
-    'password' => sha1_base64('Pascale.Beauregard@umontreal.ca'),
+  'Pascale.Beauregard@5b066279c6c138f5b3b17bfa37986c8cfad042c4.ca' => {
+    'password' => sha1_base64('Pascale.Beauregard@5b066279c6c138f5b3b17bfa37986c8cfad042c4.ca'),
     'lab' => 'Rokeach Lab',
     'name' => 'Pascale Beauregard',
     'orcid' => undef,
     'role' => 'user'
   },
-  'peter.espenshade@jhmi.edu' => {
-    'password' => sha1_base64('peter.espenshade@jhmi.edu'),
+  'peter.espenshade@38f4cb0f29557aca4b0422facb7de6f798ad031a.edu' => {
+    'password' => sha1_base64('peter.espenshade@38f4cb0f29557aca4b0422facb7de6f798ad031a.edu'),
     'lab' => 'Espenshade Lab',
     'name' => 'Peter Espenshade',
     'orcid' => undef,
     'role' => 'user'
   },
-  'kevin.hardwick@ed.ac.uk' => {
-    'password' => sha1_base64('kevin.hardwick@ed.ac.uk'),
+  'kevin.hardwick@0b7c25eb5467e87b3655607c1aaf61d1f4d491b6.ac.uk' => {
+    'password' => sha1_base64('kevin.hardwick@0b7c25eb5467e87b3655607c1aaf61d1f4d491b6.ac.uk'),
     'lab' => 'Hardwick Lab',
     'name' => 'Kevin Hardwick',
     'orcid' => undef,
     'role' => 'user'
   },
-  'hoffmacs@bc.edu' => {
-    'password' => sha1_base64('hoffmacs@bc.edu'),
+  'hoffmacs@4a222e72ead35220fce2a43b70b158fc2fbb035a.edu' => {
+    'password' => sha1_base64('hoffmacs@4a222e72ead35220fce2a43b70b158fc2fbb035a.edu'),
     'lab' => 'Hoffman Lab',
     'name' => 'Charles Hoffman',
     'orcid' => undef,
     'role' => 'user'
   },
-  'fred.winston@genetics.med.harvard.edu' => {
-    'password' => sha1_base64('fred.winston@genetics.med.harvard.edu'),
+  'fred.winston@40f92df84557e35aa67918b1912c3beeb02112ab.med.harvard.edu' => {
+    'password' => sha1_base64('fred.winston@40f92df84557e35aa67918b1912c3beeb02112ab.med.harvard.edu'),
     'lab' => 'Winston Lab',
     'name' => 'Fred Winston',
     'orcid' => undef,
     'role' => 'user'
   },
-  'h.yamano@mcri.ac.uk' => {
-    'password' => sha1_base64('h.yamano@mcri.ac.uk'),
+  'h.yamano@0e028b17263bde65a25de03c75f849251ade2fab.ac.uk' => {
+    'password' => sha1_base64('h.yamano@0e028b17263bde65a25de03c75f849251ade2fab.ac.uk'),
     'lab' => 'Yamano Lab',
     'name' => 'Hiro Yamano',
     'orcid' => undef,
     'role' => 'user'
   },
-  'test.user@pombase.org' => {
-    'password' => sha1_base64('test.user@pombase.org'),
+  'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org' => {
+    'password' => sha1_base64('test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org'),
     'lab' => 'User Lab',
     'name' => 'Test User',
     'orcid' => undef,
     'role' => 'user'
   },
-  'Mary.Porter-Goff@umassmed.edu' => {
-    'password' => sha1_base64('Mary.Porter-Goff@umassmed.edu'),
+  'Mary.Porter-Goff@2c0e6282230890808f2298475c741b2d2f44de03.edu' => {
+    'password' => sha1_base64('Mary.Porter-Goff@2c0e6282230890808f2298475c741b2d2f44de03.edu'),
     'lab' => 'Rhind Lab',
     'name' => 'Mary Porter-Goff',
     'orcid' => undef,
     'role' => 'user'
   },
-  'some.testperson@pombase.org' => {
-    'password' => sha1_base64('some.testperson@pombase.org'),
+  'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org' => {
+    'password' => sha1_base64('some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org'),
     'lab' => 'Testperson Lab',
     'name' => 'Some Testperson',
     'orcid' => undef,
     'role' => 'user'
   },
-  'val@sanger.ac.uk' => {
-    'password' => sha1_base64('val@sanger.ac.uk'),
+  'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk' => {
+    'password' => sha1_base64('val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk'),
     'lab' => undef,
     'name' => 'Val Wood',
     'orcid' => undef,
     'role' => 'admin'
   },
-  'mah79@cam.ac.uk' => {
-    'password' => sha1_base64('mah79@cam.ac.uk'),
+  'mah79@2b996589fd60a6e63d154d6d33fe9da221aa88e9.ac.uk' => {
+    'password' => sha1_base64('mah79@2b996589fd60a6e63d154d6d33fe9da221aa88e9.ac.uk'),
     'lab' => undef,
     'name' => 'Midori Harris',
     'orcid' => undef,
     'role' => 'admin'
   },
-  'other.tester@pombase.org' => {
-    'password' => sha1_base64('other.tester@pombase.org'),
+  'other.tester@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org' => {
+    'password' => sha1_base64('other.tester@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org'),
     'lab' => 'Tester Lab',
     'name' => 'Other Tester',
     'orcid' => undef,
     'role' => 'user'
   },
-  'iwasaki@tsurumi.yokohama-cu.ac.jp' => {
-    'password' => sha1_base64('iwasaki@tsurumi.yokohama-cu.ac.jp'),
+  'iwasaki@5dc5820a3f5d0bc801f1b5cb0a918486b43aa25a.yokohama-cu.ac.jp' => {
+    'password' => sha1_base64('iwasaki@5dc5820a3f5d0bc801f1b5cb0a918486b43aa25a.yokohama-cu.ac.jp'),
     'lab' => '岩崎ひろし Lab',
     'name' => '岩崎ひろし',
     'orcid' => undef,
     'role' => 'user'
   },
-  'Nicholas.Willis@umassmed.edu' => {
-    'password' => sha1_base64('Nicholas.Willis@umassmed.edu'),
+  'Nicholas.Willis@2c0e6282230890808f2298475c741b2d2f44de03.edu' => {
+    'password' => sha1_base64('Nicholas.Willis@2c0e6282230890808f2298475c741b2d2f44de03.edu'),
     'lab' => 'Rhind Lab',
     'name' => 'Nicholas Willis',
     'orcid' => undef,
     'role' => 'user'
   },
-  'stuart.macneill@st-andrews.ac.uk' => {
-    'password' => sha1_base64('stuart.macneill@st-andrews.ac.uk'),
+  'stuart.macneill@5d99f83194201e89dc3a1241ff1fb7381be5a4be.ac.uk' => {
+    'password' => sha1_base64('stuart.macneill@5d99f83194201e89dc3a1241ff1fb7381be5a4be.ac.uk'),
     'lab' => 'Macneill Lab',
     'name' => 'Stuart Macneill',
     'orcid' => undef,
     'role' => 'user'
   },
-  'nick.rhind@umassmed.edu' => {
-    'password' => sha1_base64('nick.rhind@umassmed.edu'),
+  'nick.rhind@2c0e6282230890808f2298475c741b2d2f44de03.edu' => {
+    'password' => sha1_base64('nick.rhind@2c0e6282230890808f2298475c741b2d2f44de03.edu'),
     'lab' => 'Rhind Lab',
     'name' => 'Nick Rhind',
     'orcid' => undef,
     'role' => 'user'
   },
-  'Luis.Rokeach@umontreal.ca' => {
-    'password' => sha1_base64('Luis.Rokeach@umontreal.ca'),
+  'Luis.Rokeach@5b066279c6c138f5b3b17bfa37986c8cfad042c4.ca' => {
+    'password' => sha1_base64('Luis.Rokeach@5b066279c6c138f5b3b17bfa37986c8cfad042c4.ca'),
     'lab' => 'Rokeach Lab',
     'name' => 'Luis Rokeach',
     'orcid' => undef,
     'role' => 'user'
   },
-  'wahlswaynep@uams.edu' => {
-    'password' => sha1_base64('wahlswaynep@uams.edu'),
+  'wahlswaynep@2c2aecc4ae15f550b3602b69113f1dedb9337ab1.edu' => {
+    'password' => sha1_base64('wahlswaynep@2c2aecc4ae15f550b3602b69113f1dedb9337ab1.edu'),
     'lab' => 'Wahls Lab',
     'name' => 'Wayne Wahls',
     'orcid' => undef,
     'role' => 'user'
   },
-  'John.Burg@jhmi.edu' => {
-    'password' => sha1_base64('John.Burg@jhmi.edu'),
+  'John.Burg@38f4cb0f29557aca4b0422facb7de6f798ad031a.edu' => {
+    'password' => sha1_base64('John.Burg@38f4cb0f29557aca4b0422facb7de6f798ad031a.edu'),
     'lab' => 'Espenshade Lab',
     'name' => 'John Burg',
     'orcid' => undef,
     'role' => 'user'
   },
-  'a.nilsson@warwick.ac.uk' => {
-    'password' => sha1_base64('a.nilsson@warwick.ac.uk'),
+  'a.nilsson@3416497253c29354cb08ec29abe683fc296c35b3.ac.uk' => {
+    'password' => sha1_base64('a.nilsson@3416497253c29354cb08ec29abe683fc296c35b3.ac.uk'),
     'lab' => undef,
     'name' => 'Antonia Nilsson',
     'orcid' => undef,

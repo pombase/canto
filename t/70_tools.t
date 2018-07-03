@@ -135,7 +135,7 @@ like($daily_summary_text, qr/activity for $test_date/);
 like($daily_summary_text, qr|Sessions created on \d+-\d+-\d+ with no curator\s+$app_prefix/curs/$new_curs_key\s+$pmid\s+"SUMOylation is required for normal|);
 
 my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
-$curator_manager->set_curator('aaaa0007', 'val@sanger.ac.uk');
+$curator_manager->set_curator('aaaa0007', 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk');
 $curator_manager->accept_session('aaaa0007');
 
 $daily_summary_text =

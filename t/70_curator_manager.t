@@ -26,11 +26,11 @@ sub _get_test_row
 
 my $session_aaaa0007_row = _get_test_row();
 
-is ($session_aaaa0007_row->curator()->email_address(), 'some.testperson@pombase.org');
+is ($session_aaaa0007_row->curator()->email_address(), 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org');
 
 my ($email, $name, $known_as, $accepted_date, $community_curated, $creation_date) =
   $curator_manager->current_curator('aaaa0007');
-is ($email, 'some.testperson@pombase.org');
+is ($email, 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org');
 is ($name, 'Some Testperson');
 ok (defined $accepted_date);
 ok ($community_curated);
@@ -40,15 +40,15 @@ $session_aaaa0007_row->accepted_date(undef);
 $session_aaaa0007_row->update();
 
 ($email, $name, $known_as, $accepted_date) = $curator_manager->current_curator('aaaa0007');
-is ($email, 'some.testperson@pombase.org');
+is ($email, 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org');
 is ($name, 'Some Testperson');
 ok (!defined $accepted_date);
 
-$curator_manager->set_curator('aaaa0007', 'val@sanger.ac.uk');
+$curator_manager->set_curator('aaaa0007', 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk');
 is($curs_curator_rs->count(), 3);
 
 $session_aaaa0007_row = _get_test_row();
-is ($session_aaaa0007_row->curator()->email_address(), 'val@sanger.ac.uk');
+is ($session_aaaa0007_row->curator()->email_address(), 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk');
 
 $session_aaaa0007_row = _get_test_row();
 ok (!defined $session_aaaa0007_row->accepted_date());
@@ -62,12 +62,12 @@ is($curs_curator_rs->count(), 3);
 
 my @all_curators = $curator_manager->session_curators('aaaa0007');
 
-is($all_curators[0]->[0], 'some.testperson@pombase.org');
-is($all_curators[1]->[0], 'val@sanger.ac.uk');
+is($all_curators[0]->[0], 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org');
+is($all_curators[1]->[0], 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk');
 
 
 my $sessions_by_curator_email_rs =
-  $curator_manager->sessions_by_curator_email('val@sanger.ac.uk');
+  $curator_manager->sessions_by_curator_email('val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk');
 
 is($sessions_by_curator_email_rs->count(), 1);
 my $curs_by_email = $sessions_by_curator_email_rs->first();

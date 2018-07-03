@@ -136,7 +136,7 @@ sub track_init
                                            });
   $track_schema->create_with_type('Person',
                                   {
-                                    email_address => 'kevin.hardwick@ed.ac.uk',
+                                    email_address => 'kevin.hardwick@0b7c25eb5467e87b3655607c1aaf61d1f4d491b6.ac.uk',
                                     name => 'Kevin Hardwick',
                                     role => $role,
                                   });

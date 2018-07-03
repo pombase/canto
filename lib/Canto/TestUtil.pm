@@ -162,7 +162,7 @@ our %shared_test_results = (
     'feature_id' => 4,
     'publication_uniquename' => 'PMID:19756689',
     'with_or_from_identifier' => undef,
-    'curator' => 'Another Testperson <a.n.other.testperson@pombase.org>',
+    'curator' => 'Another Testperson <a.n.other.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
     'qualifiers' => [],
   },
 );
@@ -380,7 +380,7 @@ sub plack_app
       my $cb = shift;
 
       my $uri = new URI('http://localhost:5000/login');
-      my $val_email = 'val@sanger.ac.uk';
+      my $val_email = 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk';
       my $return_path = $args{login};
 
       $uri->query_form(email_address => $val_email,
@@ -409,7 +409,7 @@ sub plack_app
   return {
     app => $app,
     cookie_jar => $cookie_jar,
-    test_user_email => 'val@sanger.ac.uk',
+    test_user_email => 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk',
   };
 }
 

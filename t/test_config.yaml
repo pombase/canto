@@ -34,11 +34,11 @@ test_config:
          uniquename: PMID:19686603
        - curs_key: aaaa0003
          uniquename: PMID:19436749
-         submitter_email: "kevin.hardwick@ed.ac.uk"
+         submitter_email: "kevin.hardwick@0b7c25eb5467e87b3655607c1aaf61d1f4d491b6.ac.uk"
          submitter_name: "Foo Bar"
        - curs_key: aaaa0004
          uniquename: PMID:18426916
-         submitter_email: "fred.smith@ed.ac.uk"
+         submitter_email: "fred.smith@0b7c25eb5467e87b3655607c1aaf61d1f4d491b6.ac.uk"
          submitter_name: "Fred Smith"
          current_gene: "SPCC1739.10"
          genes:
@@ -47,7 +47,7 @@ test_config:
     curs_annotations_1:
        - curs_key: aaaa0005
          uniquename: PMID:18426916
-         submitter_email: "fred.smith@ed.ac.uk"
+         submitter_email: "fred.smith@0b7c25eb5467e87b3655607c1aaf61d1f4d491b6.ac.uk"
          submitter_name: "Fred Smith"
          current_gene: "SPCC1739.10"
          genes:
@@ -64,7 +64,7 @@ test_config:
                evidence_code: IMP
                term_ontid: GO:0055085
                curator:
-                 email: kevin.hardwick@ed.ac.uk
+                 email: kevin.hardwick@0b7c25eb5467e87b3655607c1aaf61d1f4d491b6.ac.uk
                  name: Kevin Hardwick
                  community_curated: 0
            - type: cellular_component
@@ -77,13 +77,13 @@ test_config:
                term_ontid: GO:0030133
                with_gene: SPCC1739.10
                curator:
-                 email: fred.smith@ed.ac.uk
+                 email: fred.smith@0b7c25eb5467e87b3655607c1aaf61d1f4d491b6.ac.uk
                  name: Fred Smith
                  community_curated: 0
     curs_annotations_2:
        - curs_key: aaaa0006
          uniquename: PMID:18426916
-         submitter_email: "other.tester@pombase.org"
+         submitter_email: "other.tester@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
          submitter_name: "Other Tester"
          current_gene: "SPBC1826.01c"
          genes:
@@ -98,12 +98,12 @@ test_config:
                evidence_code: IMP
                term_ontid: GO:0055085
                curator:
-                 email: other.tester@pombase.org
+                 email: other.tester@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org
                  name: Other Tester
                  community_curated: 0
        - curs_key: aaaa0007
          uniquename: PMID:19756689
-         submitter_email: "some.testperson@pombase.org"
+         submitter_email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
          submitter_name: "Some Testperson"
          current_gene: "SPBC1826.01c"
          genes:
@@ -156,7 +156,7 @@ test_config:
                  name: miscellaneous transmembrane transport
                  definition: The process in which miscellaneous stuff is transported from one side of a membrane to the other.
                curator:
-                 email: "some.testperson@pombase.org"
+                 email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Some Testperson"
                  community_curated: 0
            - type: biological_process
@@ -182,7 +182,7 @@ test_config:
                    - relation: 'has_substrate'
                      rangeValue: 'PomBase:SPBC1105.11c'
                curator:
-                 email: "some.testperson@pombase.org"
+                 email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Some Testperson"
                  community_curated: 0
            - type: molecular_function
@@ -194,7 +194,7 @@ test_config:
                evidence_code: IDA
                term_ontid: GO:0022857
                curator:
-                 email: "some.testperson@pombase.org"
+                 email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Some Testperson"
                  community_curated: 0
            - type: genetic_interaction
@@ -207,7 +207,7 @@ test_config:
                interacting_genes:
                  - primary_identifier: SPBC14F5.07
                curator:
-                 email: "some.testperson@pombase.org"
+                 email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Some Testperson"
                  community_curated: 0
            - type: genetic_interaction
@@ -220,7 +220,7 @@ test_config:
                interacting_genes:
                  - primary_identifier: SPAC27D7.13c
                curator:
-                 email: "some.testperson@pombase.org"
+                 email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Some Testperson"
                  community_curated: 0
            - type: phenotype
@@ -235,7 +235,7 @@ test_config:
                  - 'PECO:0000137'
                  - 'rich medium'
                curator:
-                 email: "some.testperson@pombase.org"
+                 email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Some Testperson"
                  community_curated: 0
            - type: phenotype
@@ -247,7 +247,7 @@ test_config:
                evidence_code: Co-immunoprecipitation experiment
                term_ontid: FYPO:0000017
                curator:
-                 email: "some.testperson@pombase.org"
+                 email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Some Testperson"
                  community_curated: 0
            - type: post_translational_modification
@@ -259,7 +259,7 @@ test_config:
                evidence_code: ISS
                term_ontid: MOD:01157
                curator:
-                 email: "a.n.other.testperson@pombase.org"
+                 email: "a.n.other.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Another Testperson"
                  community_curated: 1
 implementation_classes:

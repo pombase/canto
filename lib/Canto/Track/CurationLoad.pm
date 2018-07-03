@@ -145,16 +145,16 @@ sub load
                                                     term_name => 'admin');
 
   # get_person() creates the person if not found
-  $self->load_util()->get_person('Val Wood', 'val@sanger.ac.uk',
-                                 $admin_cvterm, 'val@sanger.ac.uk');
+  $self->load_util()->get_person('Val Wood', 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk',
+                                 $admin_cvterm, 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk');
   my $dr_harris =
-    $self->load_util()->get_person('Midori Harris', 'mah79@cam.ac.uk',
-                                   $admin_cvterm, 'mah79@cam.ac.uk');
+    $self->load_util()->get_person('Midori Harris', 'mah79@2b996589fd60a6e63d154d6d33fe9da221aa88e9.ac.uk',
+                                   $admin_cvterm, 'mah79@2b996589fd60a6e63d154d6d33fe9da221aa88e9.ac.uk');
   $dr_harris->known_as("Dr Harris");
   $dr_harris->update();
 
-  $self->load_util()->get_person('Antonia Nilsson', 'a.nilsson@warwick.ac.uk',
-                                 $admin_cvterm, 'a.nilsson@warwick.ac.uk');
+  $self->load_util()->get_person('Antonia Nilsson', 'a.nilsson@3416497253c29354cb08ec29abe683fc296c35b3.ac.uk',
+                                 $admin_cvterm, 'a.nilsson@3416497253c29354cb08ec29abe683fc296c35b3.ac.uk');
 
   my $csv = Text::CSV->new({binary => 1});
   open my $curation_io, '<', $curation_file or die;

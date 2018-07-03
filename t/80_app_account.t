@@ -38,8 +38,8 @@ test_psgi $app, sub {
   # test login
   {
     my $uri = new URI('http://localhost:5000/login');
-    $uri->query_form(email_address => 'nick.rhind@umassmed.edu',
-                     password => 'nick.rhind@umassmed.edu',
+    $uri->query_form(email_address => 'nick.rhind@2c0e6282230890808f2298475c741b2d2f44de03.edu',
+                     password => 'nick.rhind@2c0e6282230890808f2298475c741b2d2f44de03.edu',
                      return_path => $return_path);
 
     my $res = $cb->(GET $uri);

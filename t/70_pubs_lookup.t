@@ -12,7 +12,7 @@ my $lookup = Canto::Track::PubsLookup->new(config => $test_util->config());
 
 ok(defined $lookup->schema());
 
-my $session_data = $lookup->lookup_by_curator_email('some.testperson@pombase.org');
+my $session_data = $lookup->lookup_by_curator_email('some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org');
 
 is(scalar(@{$session_data->{results}}), 1);
 

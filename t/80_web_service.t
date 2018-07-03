@@ -254,7 +254,7 @@ test_psgi $app, sub {
     }
 
     is ($obj->{status}, 'success');
-    is ($obj->{details}->{email}, 'val@sanger.ac.uk');
+    is ($obj->{details}->{email}, 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk');
     is ($obj->{details}->{is_admin}, JSON::true);
   }
 

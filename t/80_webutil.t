@@ -32,7 +32,7 @@ $mock_c->mock('request', sub { return $mock_request; });
 
 package main;
 
-my $person_email = 'Nicholas.Willis@umassmed.edu';
+my $person_email = 'Nicholas.Willis@2c0e6282230890808f2298475c741b2d2f44de03.edu';
 
 my $person = $schema->find_with_type('Person',
                                      {
