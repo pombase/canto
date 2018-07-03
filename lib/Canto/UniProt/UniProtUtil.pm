@@ -130,9 +130,23 @@ sub parse_results
 
 =head2 retrieve_entries
 
- Usage   : my $xml =
+ Usage   : my @results =
              Canto::UniProt::UniProtUtil::retrieve_entries($config, [@ids]);
- Function: Return the XML entries from UniProt for the given ids
+ Function: Return a list of the details from matching entries in this format:
+           [ {
+                primary_name => "..."
+                primary_identifier => "...",  # the UniProt accession
+                product => "..."
+                synonyms => ["synonym1", ...],
+                organism_full_name => "Genus species"
+                organism_common_name => "..."
+                organism_taxonid => 1234,
+             },
+             {
+                ...
+             },
+             ...
+           ]
  Args    : $config - the Canto::Config object
 
 =cut
