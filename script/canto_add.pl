@@ -99,7 +99,7 @@ or:
 or:
   $0 --session <pubmed_id> <user_email_address>
 or:
-  $0 --organism <genus> <species> <taxon_id>
+  $0 --organism <genus> <species> <taxon_id> [<common_name>]
 
 Options:
   --cvterm  - add a cvterm to the database
@@ -139,8 +139,8 @@ if ($add_session && @ARGV != 2) {
   usage("--session needs 2 or 3 arguments");
 }
 
-if ($add_organism && @ARGV != 3) {
-  usage("--organism needs 3 arguments");
+if ($add_organism && (@ARGV < 3 || @ARGV > 4)) {
+  usage("--organism needs 3 or 4 arguments");
 }
 
 if (@ARGV == 0) {
@@ -228,10 +228,11 @@ my $proc = sub {
     my $genus = shift @ARGV;
     my $species = shift @ARGV;
     my $taxon_id = shift @ARGV;
+    my $common_name = shift @ARGV;
 
     my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
     my $guard = $schema->txn_scope_guard;
-    $load_util->get_organism($genus, $species, $taxon_id);
+    $load_util->get_organism($genus, $species, $taxon_id, $common_name);
     $guard->commit unless $dry_run;
   }
 };
