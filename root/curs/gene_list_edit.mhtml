@@ -82,7 +82,7 @@ $pathogen_host_mode
 </div>
 
 <div class="upload-genes-link">
-  <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
+  <a href="<% $upload_path %>"><% $add_more_genes_message %></a>
 </div>
 </form>
 </div>
@@ -162,4 +162,15 @@ if ($multi_organism_mode) {
 
 my $upload_path = "$curs_root_uri/gene_upload";
 my $edit_path = "$curs_root_uri/edit_genes";
+
+my $add_more_genes_message;
+
+if ($c->config()->{pathogen_host_mode}) {
+  $add_more_genes_message =
+   'Add more genes and host organisms from ' . $pub->uniquename() . ' ...';
+} else {
+  $add_more_genes_message =
+    'Add more genes from ' . $pub->uniquename() . ' ...';
+}
+
 </%init>

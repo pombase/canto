@@ -473,7 +473,9 @@ sub _edit_genes_helper
 
   $form->process();
 
-  if ($c->config()->{pathogen_host_mode}) {
+  my $pathogen_host_mode = $c->config()->{pathogen_host_mode};
+
+  if ($pathogen_host_mode) {
     my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
 
     my @curs_host_organism_details =
@@ -541,9 +543,17 @@ sub _edit_genes_helper
   }
 
   if ($confirm_genes) {
-    $st->{title} = 'Confirm gene list for ' . $st->{pub}->uniquename();
+    $st->{title} = 'Confirm gene ';
+    if ($pathogen_host_mode) {
+      $st->{title} .= 'and host organism ';
+    }
+    $st->{title} .= 'list for ' . $st->{pub}->uniquename();
   } else {
-    $st->{title} = 'Gene list for ' . $st->{pub}->uniquename();
+    $st->{title} = 'Gene ';
+    if ($pathogen_host_mode) {
+      $st->{title} .= 'and host organism ';
+    }
+    $st->{title} .= 'list for ' . $st->{pub}->uniquename();
   }
   $st->{show_title} = 0;
   $st->{template} = 'curs/gene_list_edit.mhtml';
