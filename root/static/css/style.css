@@ -1148,6 +1148,14 @@ span.canto-select-buttons {
   width: 70%;
 }
 
+#pubmed-id-lookup-results, #curs-assign-session, #curs-gene-update {
+  width: 70%;
+}
+
+#curs-gene-list-edit {
+  width: 90%;
+}
+
 .pub-lookup-title {
   color: #666;
   font-size: 90%;
