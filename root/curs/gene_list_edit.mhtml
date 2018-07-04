@@ -37,10 +37,10 @@ $pathogen_host_mode
   </div>
 % }
 
-% if ($pathogen_host_mode) {
+% if ($pathogen_host_mode && @hosts_with_no_genes) {
 <div style="clear: both"></div>
 <div class="gene-list-edit-no-gene-hosts">
-  Host organisms that have no genes in this curation session:
+  Host organisms in this session that have no genes:
   <table class="list">
     <thead>
       <tr>
