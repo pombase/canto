@@ -27,19 +27,25 @@
           <initially-hidden-text text="{{allele.long_display_name | encodeAlleleSymbols | toTrusted}}"
                                  preview-char-count="50"
                                  break-on-comma="true"
-                                 link-label=" ..."></initially-hidden-text>
+                                 link-label="..."></initially-hidden-text>
 
         </div>
       </a>
       <span ng-if="!addLinks()">
-        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-          <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles"> 
+          <initially-hidden-text text="{{allele.long_display_name | encodeAlleleSymbols | toTrusted}}"
+                                 preview-char-count="50"
+                                 break-on-comma="true"
+                                 link-label="..."></initially-hidden-text>
         </div>
       </span>
     </span>
     <span ng-if="annotation.status === 'existing'">
       <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-        <span ng-bind-html="allele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+        <initially-hidden-text text="{{allele.long_display_name | encodeAlleleSymbols | toTrusted}}"
+                               preview-char-count="50"
+                               break-on-comma="true"
+                               link-label="..."></initially-hidden-text>
       </div>
     </span>
   </td>
