@@ -45,13 +45,13 @@ $pathogen_host_mode
     <thead>
       <tr>
         <th>
+          Taxon ID
+        </th>
+        <th>
           Host organism
         </th>
         <th>
           Common name
-        </th>
-        <th>
-          Taxon ID
         </th>
       </tr>
     </thead>
@@ -59,13 +59,13 @@ $pathogen_host_mode
 %   for my $host_org (@hosts_with_no_genes) {
       <tr>
         <td>
+<% $host_org->{taxonid} %>
+        </td>
+        <td>
 <% $host_org->{full_name} %>
         </td>
         <td>
 <% $host_org->{common_name} %>
-        </td>
-        <td>
-<% $host_org->{taxonid} %>
         </td>
       </tr>
 %   }
