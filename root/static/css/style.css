@@ -55,9 +55,6 @@ a.disabled {
   margin: 5px;
 }
 
-.docs, #content {
-  margin: 0 8px 0 8px;
-}
 .docs .row-fluid div {
   clear: right;
 }
@@ -201,7 +198,7 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
 }
 
 #content {
-  padding: 15px;
+  padding: 15px 5px 15px 5px;
   clear: both;
 /*  -moz-box-shadow: 0px 4px 3px #666;
   -webkit-box-shadow: 0px 4px 3px #666;
