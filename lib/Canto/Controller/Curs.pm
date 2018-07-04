@@ -473,6 +473,33 @@ sub _edit_genes_helper
 
   $form->process();
 
+  if ($c->config()->{pathogen_host_mode}) {
+    my @host_organisms_from_genes = ();
+
+    my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+
+    for my $gene ($self->get_ordered_gene_rs($schema)->all()) {
+      my $this_gene_taxonid = $gene->organism()->taxonid();
+      my $organism_details = $organism_lookup->lookup_by_taxonid($this_gene_taxonid);
+      if ($organism_details->{pathogen_or_host} eq 'host') {
+        if (!grep { $_->{taxonid} == $this_gene_taxonid } @host_organisms_from_genes) {
+          push @host_organisms_from_genes, $organism_details;
+        }
+      }
+    }
+
+    my @no_gene_host_organisms =
+      grep {
+        my $host_organism = $_;
+
+        !grep {
+          $host_organism->{taxonid} == $_->{taxonid};
+        } @host_organisms_from_genes;
+      } $organism_lookup->lookup_by_type('host');
+
+    $st->{hosts_with_no_genes} = \@no_gene_host_organisms;
+  }
+
   if (defined $c->req->param('continue')) {
     _redirect_and_detach($c);
   }

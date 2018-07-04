@@ -7,6 +7,7 @@ $pub
 $curs_root_uri
 $multi_organism_mode
 $pathogen_host_mode
+@hosts_with_no_genes => ()
 </%args>
 
 <div id="curs-gene-list-edit" class="curs-box">
@@ -30,18 +31,55 @@ $pathogen_host_mode
 %     }
   <& /curs/gene_list_edit_table.mhtml, col_names => \@col_names, gene_hashes => \@table_2_hashes &>
 %   }
-
-  <div class="submit">
-    <input type="submit" class="btn btn-primary" name="continue" value="Continue"/>
-  </div>
-  <div class="submit">
-    <input type="submit" class="btn btn-primary" name="submit" value="Remove selected"/>
-  </div>
 % } else {
   <div class="no-genes-message">
     [No genes]
   </div>
 % }
+
+% if ($pathogen_host_mode) {
+<div style="clear: both"></div>
+<div class="gene-list-edit-no-gene-hosts">
+  Host organisms that have no genes in this curation session:
+  <table class="list">
+    <thead>
+      <tr>
+        <th>
+          Host organism
+        </th>
+        <th>
+          Common name
+        </th>
+        <th>
+          Taxon ID
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+%   for my $host_org (@hosts_with_no_genes) {
+      <tr>
+        <td>
+<% $host_org->{full_name} %>
+        </td>
+        <td>
+<% $host_org->{common_name} %>
+        </td>
+        <td>
+<% $host_org->{taxonid} %>
+        </td>
+      </tr>
+%   }
+    </tbody>
+  </table>
+</div>
+% }
+
+<div class="submit">
+  <input type="submit" class="btn btn-primary" name="continue" value="Continue"/>
+</div>
+<div class="submit">
+  <input type="submit" class="btn btn-primary" name="submit" value="Remove selected"/>
+</div>
 
 <div class="upload-genes-link">
   <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
