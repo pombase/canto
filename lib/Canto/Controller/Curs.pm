@@ -466,6 +466,11 @@ sub _edit_genes_helper
         label_tag => 'formfu-label',
         type => 'Checkbox', default_empty_value => 1
       },
+      {
+        name => 'host-org-select', label => 'host-org-select',
+        label_tag => 'formfu-label',
+        type => 'Checkbox', default_empty_value => 1
+      },
     );
 
 
@@ -475,55 +480,35 @@ sub _edit_genes_helper
 
   my $pathogen_host_mode = $c->config()->{pathogen_host_mode};
 
-  if ($pathogen_host_mode) {
-    my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
-
-    my @curs_host_organism_details =
-      grep {
-        $_->{pathogen_or_host} eq 'host';
-      }
-      map {
-        my $curs_organism = $_;
-
-        $organism_lookup->lookup_by_taxonid($curs_organism->taxonid());
-      } $schema->resultset('Organism')->all();
-
-    my @host_organisms_from_genes = ();
-
-    for my $gene ($self->get_ordered_gene_rs($schema)->all()) {
-      my $this_gene_taxonid = $gene->organism()->taxonid();
-      my $organism_details = $organism_lookup->lookup_by_taxonid($this_gene_taxonid);
-      if ($organism_details->{pathogen_or_host} eq 'host') {
-        if (!grep { $_->{taxonid} == $this_gene_taxonid } @host_organisms_from_genes) {
-          push @host_organisms_from_genes, $organism_details;
-        }
-      }
-    }
-
-    my @no_gene_host_organisms =
-      grep {
-        my $host_org = $_;
-        !grep { $_->{taxonid} == $host_org->{taxonid} } @host_organisms_from_genes;
-      } @curs_host_organism_details;
-
-    $st->{hosts_with_no_genes} = \@no_gene_host_organisms;
-  }
-
   if (defined $c->req->param('continue')) {
     _redirect_and_detach($c);
   }
 
   if (defined $c->req->param('submit')) {
     if ($c->req()->param('submit')) {
-      my @gene_ids = @{$form->param_array('gene-select')};
+      my @gene_ids = grep {
+        length $_ > 0;
+      } @{$form->param_array('gene-select')};
+      my @host_org_taxonids = grep {
+        length $_ > 0;
+      } @{$form->param_array('host-org-select')};
 
-      if (@gene_ids == 0) {
-        $st->{message} = 'No genes selected for deletion';
+      if (@gene_ids == 0 &&
+          (!$pathogen_host_mode || $pathogen_host_mode && @host_org_taxonids == 0)) {
+        if ($pathogen_host_mode) {
+          $st->{message} = 'No genes or hosts selected for deletion';
+        } else {
+          $st->{message} = 'No genes selected for deletion';
+        }
       } else {
         my $delete_sub = sub {
           for my $gene_id (@gene_ids) {
             my $gene = $schema->find_with_type('Gene', $gene_id);
             $gene->delete();
+          }
+          for my $host_org_taxonid (@host_org_taxonids) {
+            my $org = $schema->find_with_type('Organism', { taxonid => $host_org_taxonid });
+            $org->delete();
           }
         };
         $schema->txn_do($delete_sub);
@@ -535,8 +520,12 @@ sub _edit_genes_helper
           $c->flash()->{message} = 'All genes removed from the list';
           _redirect_and_detach($c, 'gene_upload');
         } else {
-          my $plu = scalar(@gene_ids) > 1 ? 's' : '';
+          my $plu = scalar(@gene_ids) != 1 ? 's' : '';
           $st->{message} = 'Removed ' . scalar(@gene_ids) . " gene$plu from list";
+          if (@host_org_taxonids) {
+            $st->{message} .= ', removed ' . scalar(@host_org_taxonids) . ' host' .
+              (scalar(@host_org_taxonids) != 1 ? 's' : '');
+          }
         }
       }
     }
@@ -826,7 +815,12 @@ sub gene_upload : Chained('top') Args(0) Form
       my $matched_count = scalar(keys %$result);
 
       my $message = "Added $matched_count gene";
-      $message .= 's' if ($matched_count > 1);
+      $message .= 's' if ($matched_count != 1);
+
+      if (@host_taxon_ids > 0) {
+        $message .= ', added ' . scalar(@host_taxon_ids) .
+          ' host organism' . (@host_taxon_ids != 1 ? 's' : '');
+      }
 
       $c->flash()->{message} = $message;
 

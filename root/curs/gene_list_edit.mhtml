@@ -7,7 +7,6 @@ $pub
 $curs_root_uri
 $multi_organism_mode
 $pathogen_host_mode
-@hosts_with_no_genes => ()
 </%args>
 
 <div id="curs-gene-list-edit" class="curs-box">
@@ -53,6 +52,9 @@ $pathogen_host_mode
         <th>
           Common name
         </th>
+        <th>
+          &nbsp;
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -66,6 +68,11 @@ $pathogen_host_mode
         </td>
         <td>
 <% $host_org->{common_name} %>
+        </td>
+        <td>
+          <input type="checkbox"
+                 name="host-org-select"
+                 value='<% $host_org->{taxonid} %>' />
         </td>
       </tr>
 %   }
@@ -171,6 +178,43 @@ if ($c->config()->{pathogen_host_mode}) {
 } else {
   $add_more_genes_message =
     'Add more genes from ' . $pub->uniquename() . ' ...';
+}
+
+my @hosts_with_no_genes = ();
+
+if ($pathogen_host_mode) {
+  use Canto::Track;
+  my $organism_lookup = Canto::Track::get_adaptor($c->config(), 'organism');
+
+  my @curs_host_organism_details =
+    grep {
+      $_->{pathogen_or_host} eq 'host';
+    }
+    map {
+      my $curs_organism = $_;
+
+      $organism_lookup->lookup_by_taxonid($curs_organism->taxonid());
+    } $schema->resultset('Organism')->all();
+
+  my @host_organisms_from_genes = ();
+
+  for my $gene ($schema->resultset('Gene')->all()) {
+    my $this_gene_taxonid = $gene->organism()->taxonid();
+    my $organism_details = $organism_lookup->lookup_by_taxonid($this_gene_taxonid);
+    if ($organism_details->{pathogen_or_host} eq 'host') {
+      if (!grep { $_->{taxonid} == $this_gene_taxonid } @host_organisms_from_genes) {
+        push @host_organisms_from_genes, $organism_details;
+      }
+    }
+  }
+
+  my @no_gene_host_organisms =
+    grep {
+      my $host_org = $_;
+      !grep { $_->{taxonid} == $host_org->{taxonid} } @host_organisms_from_genes;
+    } @curs_host_organism_details;
+
+  @hosts_with_no_genes = @no_gene_host_organisms;
 }
 
 </%init>
