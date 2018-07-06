@@ -487,6 +487,7 @@ td.table-row-actions div {
 }
 .curs-evidence-conditions .tagit {
   font-size: 80%;
+  max-width: 50em;
 }
 .curs-evidence-conditions-help {
   color: #111;
