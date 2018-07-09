@@ -50,7 +50,21 @@ CREATE TABLE genotype (
        identifier text UNIQUE NOT NULL,
        background text,
        strain text,
+       organism_id integer REFERENCES organism(organism_id),
        name text UNIQUE
+);
+
+CREATE TABLE metagenotype (
+       metagenotype_id integer PRIMARY KEY AUTOINCREMENT,
+       identifier text UNIQUE NOT NULL,
+       pathogen_genotype_id integer NOT NULL REFERENCES genotype(genotype_id),
+       host_genotype_id integer NOT NULL REFERENCES genotype(genotype_id)
+);
+
+CREATE TABLE metagenotype_annotation (
+       metagenotype_annotation_id integer PRIMARY KEY,
+       metagenotype integer REFERENCES metagenotype(metagenotype_id),
+       annotation integer REFERENCES annotation(annotation_id)
 );
 
 CREATE TABLE allele_genotype (

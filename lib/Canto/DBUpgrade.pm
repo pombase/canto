@@ -346,6 +346,51 @@ EOF
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
+
+  21 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+      my $curs_key = $curs->curs_key();
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("
+CREATE TABLE metagenotype (
+       metagenotype_id integer PRIMARY KEY AUTOINCREMENT,
+       identifier text UNIQUE NOT NULL,
+       pathogen_genotype_id integer NOT NULL REFERENCES genotype(genotype_id),
+       host_genotype_id integer NOT NULL REFERENCES genotype(genotype_id)
+);");
+
+      $curs_dbh->do("
+CREATE TABLE metagenotype_annotation (
+       metagenotype_annotation_id integer PRIMARY KEY,
+       metagenotype integer REFERENCES metagenotype(metagenotype_id),
+       annotation integer REFERENCES annotation(annotation_id)
+);
+");
+
+      $curs_dbh->do("
+ALTER TABLE genotype ADD COLUMN organism_id integer REFERENCES organism(organism_id);");
+
+      $curs_dbh->do("
+UPDATE genotype SET organism_id =
+   (SELECT gene.organism FROM gene
+      JOIN allele ON allele.gene = gene.gene_id
+      JOIN allele_genotype on allele.allele_id = allele_genotype.allele
+     WHERE allele_genotype.genotype = genotype.genotype_id limit 1);
+")
+    };
+
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 );
 
 sub upgrade_to

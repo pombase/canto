@@ -362,8 +362,19 @@ canto.service('CursGenotypeList', function($q, Curs) {
   };
 
   this.storeGenotype =
-    function storeGenotype(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
+    function(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
       var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles);
+
+      promise.then(function() {
+        service.sendChangeEvent();
+      });
+
+      return promise;
+    };
+
+  this.storeMetagenotype =
+    function(toaster, $http, pathogenGenotypeId, hostGenotypeId) {
+      var promise = storeMetagenotypeHelper(toaster, $http, pathogenGenotypeId, hostGenotypeId);
 
       promise.then(function() {
         service.sendChangeEvent();
@@ -3059,6 +3070,32 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
       toaster.error("Storing genotype failed, message from server: " + data.message);
     } else {
       toaster.error("Storing genotype failed, please reload and try again.  If that fails " +
+                    "please contact the curators.");
+    }
+  })
+
+  result.finally(loadingEnd);
+
+  return result;
+}
+
+function storeMetagenotypeHelper(toaster, $http, pathogenGenotypeId, hostGenotypeId) {
+  var url = curs_root_uri + '/feature/metagenotype/store';
+
+  var data = {
+    pathogen_genotype_id: pathogenGenotypeId,
+    host_genotype_id: hostGenotypeId,
+  };
+
+  loadingStart();
+
+  var result = $http.post(url, data);
+
+  result.catch(function(data) {
+    if (data.message) {
+      toaster.error("Storing metagenotype failed, message from server: " + data.message);
+    } else {
+      toaster.error("Storing metagenotype failed, please reload and try again.  If that fails " +
                     "please contact the curators.");
     }
   })

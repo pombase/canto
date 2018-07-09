@@ -59,6 +59,10 @@ sub add_organism_by_taxonid
 
   my $taxonid = shift;
 
+  if (!defined $taxonid) {
+    croak "no taxon ID passed to OrganismManager::add_organism_by_taxonid()\n";
+  }
+
   my $organism_details = $self->organism_lookup->lookup_by_taxonid($taxonid);
 
   if ($organism_details) {

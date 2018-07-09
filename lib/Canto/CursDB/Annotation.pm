@@ -140,6 +140,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 metagenotype_annotations
+
+Type: has_many
+
+Related object: L<Canto::CursDB::MetagenotypeAnnotation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "metagenotype_annotations",
+  "Canto::CursDB::MetagenotypeAnnotation",
+  { "foreign.annotation" => "self.annotation_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 pub
 
 Type: belongs_to
@@ -161,8 +176,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-08-21 19:35:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/vxhnVlecrTYZd6nGXvv4g
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-26 15:30:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Zk79YeQGrCiXRJi6uEWPcg
 
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');

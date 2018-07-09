@@ -47,6 +47,12 @@ __PACKAGE__->table("genotype");
   data_type: 'text'
   is_nullable: 1
 
+=head2 organism_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =head2 name
 
   data_type: 'text'
@@ -63,6 +69,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "strain",
   { data_type => "text", is_nullable => 1 },
+  "organism_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "name",
   { data_type => "text", is_nullable => 1 },
 );
@@ -137,9 +145,59 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 metagenotype_host_genotypes
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-11-14 03:13:31
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ViYH+gD4+7pR25zm8NN51Q
+Type: has_many
+
+Related object: L<Canto::CursDB::Metagenotype>
+
+=cut
+
+__PACKAGE__->has_many(
+  "metagenotype_host_genotypes",
+  "Canto::CursDB::Metagenotype",
+  { "foreign.host_genotype_id" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 metagenotype_pathogen_genotypes
+
+Type: has_many
+
+Related object: L<Canto::CursDB::Metagenotype>
+
+=cut
+
+__PACKAGE__->has_many(
+  "metagenotype_pathogen_genotypes",
+  "Canto::CursDB::Metagenotype",
+  { "foreign.pathogen_genotype_id" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 organism
+
+Type: belongs_to
+
+Related object: L<Canto::CursDB::Organism>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "organism",
+  "Canto::CursDB::Organism",
+  { organism_id => "organism_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-26 15:24:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N+yZI2wo/YL3GJG4/35PEw
 
 =head2 annotations
 
@@ -209,6 +267,47 @@ sub display_name
 
 __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
                           'allele');
+
+
+# returns either the meta-genotype(s) that this genotype is part of or
+# empty list
+sub metagenotypes
+{
+  my $self = shift;
+
+  my @metagenotypes = $self->metagenotype_host_genotypes()->all();
+
+  return @metagenotypes if scalar(@metagenotypes) > 0;
+
+  return $self->metagenotype_pathogen_genotypes()->all();
+}
+
+
+=head2
+
+ Usage   : my $type = $genotype->genotype_type();
+ Args    : $config - the Config object
+ Returns : "normal", "host" or "pathogen"
+
+=cut
+
+
+sub genotype_type
+{
+  my $self = shift;
+  my $config = shift;
+
+  my $genotype_organism = $self->organism();
+
+  my $org_lookup = Canto::Track::get_adaptor($config, 'organism');
+  my $organism_details = $org_lookup->lookup_by_taxonid($genotype_organism->taxonid());
+
+  if ($organism_details->{pathogen_or_host} eq 'unknown') {
+    return "normal"
+  } else {
+    return $organism_details->{pathogen_or_host};
+  }
+}
 
 sub delete
 {

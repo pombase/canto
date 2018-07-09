@@ -75,9 +75,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 genotypes
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-05-02 10:30:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xW7sXMVYipd94hpgxYq3/A
+Type: has_many
+
+Related object: L<Canto::CursDB::Genotype>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotypes",
+  "Canto::CursDB::Genotype",
+  { "foreign.organism_id" => "self.organism_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-17 18:32:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RHaWgnovAkaQi17LC7Xcow
 
 
 use Carp;

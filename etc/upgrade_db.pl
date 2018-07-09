@@ -560,7 +560,7 @@ CREATE TABLE allele_genotype (
 
           my $background = '';
 
-          $annotation_genotype = $genotype_manager->make_genotype($curs_key, $genotype_name, $background,
+          $annotation_genotype = $genotype_manager->make_genotype($genotype_name, $background,
                                                         [$annotation_allele]);
 
           $seen_genotype_names{$genotype_name} = 1;
