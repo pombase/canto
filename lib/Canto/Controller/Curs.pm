@@ -856,7 +856,7 @@ sub genotype_manage : Chained('top')
   }
 
   $st->{title} = 'Genotypes for: ' . $st->{pub}->uniquename();
-  $st->{template} = 'curs/genotype_manage.mhtml';
+  $st->{template} = 'curs/genotype_switch.mhtml';
 }
 
 sub _delete_annotation : Private

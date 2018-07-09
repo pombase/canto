@@ -5959,3 +5959,41 @@ var organismPicker = function($http, OrganismList) {
 };
 
 canto.directive('organismPicker', ['$http', 'OrganismList', organismPicker]);
+
+var genotypeOptions = function() {
+  return {
+    replace: true,
+    template: `
+    <div>
+      <ul>
+        <li><button ng-click="selection = 'geno'">Genotype Management</button></li>
+        <li><button ng-click="selection = 'mega'">MegaGenome Management</button></li>
+      </ul>
+      <div ng-switch on="selection">
+        <div ng-switch-when="geno"><genotype-manage /></div>
+        <div ng-switch-when="mega"><mega-geno-type-manage /></div>
+      </div>
+    </div>`,
+  };
+};
+
+canto.directive('genotypeOptions', [genotypeOptions]);
+
+var genotypeManage = function() {
+  return {
+    replace: true,
+    templateUrl: app_static_path + 'ng_templates/genotype_manage.html',
+  };
+};
+
+canto.directive('genotypeManage', [genotypeManage]);
+
+var megaGenoTypeManage = function() {
+  return {
+    replace: true,
+    template: `<p>Mega Mega!!!</p>`,
+  };
+};
+
+canto.directive('megaGenoTypeManage', [megaGenoTypeManage]);
+
