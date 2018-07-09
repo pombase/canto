@@ -1548,11 +1548,16 @@ sub _feature_edit_helper
           push @alleles, $allele;
         }
 
+        if (!$genotype_taxonid) {
+          # FIXME - we should get the organism from the client
+          $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
+        }
+
         my $genotype_manager =
           Canto::Curs::GenotypeManager->new(config => $c->config(),
                                             curs_schema => $schema);
 
-        $genotype_manager->store_genotype_changes($curs_key, $genotype,
+        $genotype_manager->store_genotype_changes($genotype,
                                                   $genotype_name, $genotype_background,
                                                   $genotype_taxonid, \@alleles);
 
