@@ -748,6 +748,14 @@ cmp_deeply($annotation_res,
               'term_suggestion_definition' => undef,
               'is_obsolete_term' => 0,
               'genotype_identifier' => 'aaaa0007-genotype-test-1',
+              'organism' => {
+                'pathogen_or_host' => 'unknown',
+                'common_name' => 'fission yeast',
+                'genus' => 'Schizosaccharomyces',
+                'full_name' => 'Schizosaccharomyces pombe',
+                'taxonid' => '4896',
+                'species' => 'pombe'
+              },
               'annotation_type_abbreviation' => '',
               'alleles' => [
                 {
@@ -794,6 +802,14 @@ cmp_deeply($annotation_res,
               'annotation_type_display_name' => 'phenotype',
               'needs_with' => undef,
               'genotype_identifier' => 'aaaa0007-genotype-test-2',
+              'organism' => {
+                'pathogen_or_host' => 'unknown',
+                'common_name' => 'fission yeast',
+                'genus' => 'Schizosaccharomyces',
+                'full_name' => 'Schizosaccharomyces pombe',
+                'taxonid' => '4896',
+                'species' => 'pombe'
+              },
               'annotation_type_abbreviation' => '',
               'genotype_name' => undef,
               'genotype_background' => undef,

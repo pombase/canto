@@ -182,6 +182,7 @@ __PACKAGE__->belongs_to(
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');
 __PACKAGE__->many_to_many('genotypes' => 'genotype_annotations', 'genotype');
+__PACKAGE__->many_to_many('metagenotypes' => 'metagenotype_annotations', 'metagenotype');
 
 use YAML qw(Load Dump);
 
@@ -206,6 +207,7 @@ sub delete
 
   $self->gene_annotations()->delete();
   $self->genotype_annotations()->delete();
+  $self->metagenotype_annotations()->delete();
   $self->SUPER::delete();
 }
 

@@ -983,7 +983,15 @@ sub _create_annotation
 
     $annotation->set_genes(@genes);
   } else {
-    $annotation->set_genotypes(@$features);
+    if ($feature_type eq 'genotype') {
+      $annotation->set_genotypes(@$features);
+    } else {
+      if ($feature_type eq 'metagenotype') {
+        $annotation->set_metagenotypes(@$features);
+      } else {
+        die "unknown feature type: ", $feature_type;
+      }
+    }
   }
 
   $self->set_annotation_curator($annotation);

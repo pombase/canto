@@ -104,6 +104,14 @@ sub check_new_annotations
                  'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
                  'genotype_identifier' => 'aaaa0007-genotype-test-1',
                  'taxonid' => undef,
+                 'organism' => {
+                   'pathogen_or_host' => 'unknown',
+                   'taxonid' => '4896',
+                   'full_name' => 'Schizosaccharomyces pombe',
+                   'species' => 'pombe',
+                   'common_name' => 'fission yeast',
+                   'genus' => 'Schizosaccharomyces'
+                 },
                  'conditions' => [
                    {
                      'term_id' => 'PECO:0000137',
@@ -173,6 +181,14 @@ sub check_new_annotations
                  'evidence_code' => 'Co-immunoprecipitation experiment',
                  'annotation_type_abbreviation' => '',
                  'annotation_type_display_name' => 'phenotype',
+                 'organism' => {
+                   'pathogen_or_host' => 'unknown',
+                   'taxonid' => '4896',
+                   'full_name' => 'Schizosaccharomyces pombe',
+                   'species' => 'pombe',
+                   'common_name' => 'fission yeast',
+                   'genus' => 'Schizosaccharomyces'
+                 },
                  'genotype_name' => undef,
                  'genotype_background' => undef,
                  'is_obsolete_term' => 0,

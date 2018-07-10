@@ -818,10 +818,21 @@ sub _ontology_change_keys
         $annotation->gene_annotations()->delete();
         $annotation->set_genes($gene);
       } else {
-        my $genotype =
-          $self->curs_schema()->find_with_type('Genotype', { genotype_id => $feature_id });
-        $annotation->genotype_annotations()->delete();
-        $annotation->set_genotypes($genotype);
+        if ($changes->{feature_type} eq 'genotype') {
+          my $genotype =
+            $self->curs_schema()->find_with_type('Genotype', { genotype_id => $feature_id });
+          $annotation->genotype_annotations()->delete();
+          $annotation->set_genotypes($genotype);
+        } else {
+          if ($changes->{feature_type} eq 'metagenotype') {
+            my $metagenotype =
+              $self->curs_schema()->find_with_type('Metagenotype', { metagenotype_id => $feature_id });
+            $annotation->metagenotype_annotations()->delete();
+            $annotation->set_metagenotypes($metagenotype);
+          } else {
+            die "unknown feature type: ", $changes->{feature_type};
+          }
+        }
       }
       return 1;
     },
