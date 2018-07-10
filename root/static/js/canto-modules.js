@@ -5963,15 +5963,14 @@ canto.directive('organismPicker', ['$http', 'OrganismList', organismPicker]);
 var genotypeOptions = function() {
   return {
     replace: true,
+    scope: {
+      genotypeSwitchSelect: '@',
+    },
     template: `
     <div>
-      <ul>
-        <li><button ng-click="selection = 'geno'">Genotype management</button></li>
-        <li><button ng-click="selection = 'meta'">Metagenotype management</button></li>
-      </ul>
-      <div ng-switch on="selection">
-        <div ng-switch-when="geno"><genotype-manage /></div>
-        <div ng-switch-when="mega"><metagenotype-manage /></div>
+      <div ng-switch on="genotypeSwitchSelect">
+        <div ng-switch-when="genotype"><genotype-manage /></div>
+        <div ng-switch-when="metagenotype"><metagenotype-manage /></div>
       </div>
     </div>`,
   };
