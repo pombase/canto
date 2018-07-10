@@ -3650,36 +3650,12 @@ var GenotypeGenesPanelCtrl =
         $scope.app_static_path = CantoGlobals.app_static_path;
 
         $scope.data = {
-          allOrganisms: null,
-          hostOrganisms: [],
-          pathogenOrganisms: [],
-          unknownOrganisms: [], // not host and not pathogen
+          organisms: null,
         };
 
         $scope.getOrganismsFromServer = function() {
           Curs.list('organism').success(function(results) {
-            $scope.data.allOrganisms = results;
-
-            $scope.data.hostOrganisms = [];
-            $scope.data.pathogenOrganisms = [];
-            $scope.data.unknownOrganisms = [];
-
-            $.map($scope.data.allOrganisms,
-                  function(organism) {
-                    if ($scope.multiOrganismMode &&
-                        organism.pathogen_or_host === 'pathogen') {
-                      $scope.data.pathogenOrganisms.push(organism);
-                    } else {
-                      if ($scope.multiOrganismMode &&
-                          organism.pathogen_or_host === 'host') {
-                        $scope.data.hostOrganisms.push(organism);
-                      } else {
-                        $scope.data.unknownOrganisms.push(organism);
-                      }
-                    }
-                  });
-
-
+            $scope.data.organisms = results;
           }).error(function() {
             toaster.pop('error', 'failed to get gene list from server');
           });
