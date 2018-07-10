@@ -5,9 +5,9 @@ database_url: 'http://www.pombase.org/'
 Model::TrackModel:
   schema_class: 'Canto::TrackDB'
   connect_info:
-     - "dbi:SQLite:dbname=local/track.sqlite3"
+     - "dbi:SQLite:dbname=t/data/track_curs_annotations_2_test_template.sqlite3"
 
-data_directory: "local"
+data_directory: "t/data"
 
 Model::ChadoModel:
   schema_class: 'Canto::ChadoDB'
