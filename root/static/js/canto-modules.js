@@ -5966,12 +5966,12 @@ var genotypeOptions = function() {
     template: `
     <div>
       <ul>
-        <li><button ng-click="selection = 'geno'">Genotype Management</button></li>
-        <li><button ng-click="selection = 'mega'">MegaGenome Management</button></li>
+        <li><button ng-click="selection = 'geno'">Genotype management</button></li>
+        <li><button ng-click="selection = 'meta'">Metagenotype management</button></li>
       </ul>
       <div ng-switch on="selection">
         <div ng-switch-when="geno"><genotype-manage /></div>
-        <div ng-switch-when="mega"><mega-geno-type-manage /></div>
+        <div ng-switch-when="mega"><metagenotype-manage /></div>
       </div>
     </div>`,
   };
@@ -5988,12 +5988,12 @@ var genotypeManage = function() {
 
 canto.directive('genotypeManage', [genotypeManage]);
 
-var megaGenoTypeManage = function() {
+var metagenotypeManage = function() {
   return {
     replace: true,
-    template: `<p>Mega Mega!!!</p>`,
+    template: `<p>Metagenotype</p>`,
   };
 };
 
-canto.directive('megaGenoTypeManage', [megaGenoTypeManage]);
+canto.directive('metagenotypeManage', [metagenotypeManage]);
 
