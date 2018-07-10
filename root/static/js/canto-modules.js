@@ -3653,9 +3653,16 @@ var GenotypeGenesPanelCtrl =
           organisms: null,
         };
 
+        function removeNoGeneHosts(organisms) {
+          function hasGenes(organism) {
+            return organism.genes.length > 0;
+          }
+          return organisms.filter(hasGenes)
+        }
+        
         $scope.getOrganismsFromServer = function() {
           Curs.list('organism').success(function(results) {
-            $scope.data.organisms = results;
+            $scope.data.organisms = removeNoGeneHosts(results);
           }).error(function() {
             toaster.pop('error', 'failed to get gene list from server');
           });
