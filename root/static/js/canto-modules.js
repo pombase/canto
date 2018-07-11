@@ -3781,7 +3781,7 @@ var genotypeManageCtrl =
       $scope.readGenotypes();
     };
 
-    $scope.readGenotypesCallbank = function() {
+    $scope.readGenotypesCallback = function() {
       $scope.readGenotypes();
     }
 
@@ -3791,7 +3791,7 @@ var genotypeManageCtrl =
         $scope.data.singleAlleleGenotypes = $.grep(results, isSingleAlleleGenotype);
         $scope.data.multiAlleleGenotypes = $.grep(results, isMultiAlleleGenotype);
         $scope.data.waitingForServer = false;
-        CursGenotypeList.onListChange($scope.readGenotypesCallbank);
+        CursGenotypeList.onListChange($scope.readGenotypesCallback);
       }).catch(function() {
         toaster.pop('error', "couldn't read the genotype list from the server");
         $scope.data.waitingForServer = false;
