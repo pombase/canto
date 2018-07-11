@@ -5988,3 +5988,40 @@ var organismPicker = function($http, OrganismList) {
 };
 
 canto.directive('organismPicker', ['$http', 'OrganismList', organismPicker]);
+
+var genotypeOptions = function() {
+  return {
+    replace: true,
+    scope: {
+      genotypeSwitchSelect: '@',
+    },
+    template: `
+    <div>
+      <div ng-switch on="genotypeSwitchSelect">
+        <div ng-switch-when="genotype"><genotype-manage /></div>
+        <div ng-switch-when="metagenotype"><metagenotype-manage /></div>
+      </div>
+    </div>`,
+  };
+};
+
+canto.directive('genotypeOptions', [genotypeOptions]);
+
+var genotypeManage = function() {
+  return {
+    replace: true,
+    templateUrl: app_static_path + 'ng_templates/genotype_manage.html',
+  };
+};
+
+canto.directive('genotypeManage', [genotypeManage]);
+
+var metagenotypeManage = function() {
+  return {
+    replace: true,
+    template: `<p>Metagenotype</p>`,
+  };
+};
+
+canto.directive('metagenotypeManage', [metagenotypeManage]);
+

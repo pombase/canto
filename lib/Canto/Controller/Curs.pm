@@ -266,7 +266,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if ($state eq SESSION_ACCEPTED &&
-      $path =~ m:/(gene_upload|edit_genes|genotype_manage|confirm_genes|finish_form|ws):) {
+      $path =~ m:/(gene_upload|edit_genes|genotype_manage|metagenotype_manage|confirm_genes|finish_form|ws):) {
     $use_dispatch = 0;
   }
 
@@ -856,7 +856,23 @@ sub genotype_manage : Chained('top')
   }
 
   $st->{title} = 'Genotypes for: ' . $st->{pub}->uniquename();
-  $st->{template} = 'curs/genotype_manage.mhtml';
+  $st->{genotype_switch_select} = 'genotype';
+  $st->{template} = 'curs/genotype_switch.mhtml';
+}
+
+sub metagenotype_manage : Chained('top')
+{
+  my ($self, $c, $flag) = @_;
+
+  my $st = $c->stash();
+
+  if (defined $flag && $flag eq 'ro') {
+    $st->{read_only_curs} = 1;
+  }
+
+  $st->{title} = 'Metagenotypes for: ' . $st->{pub}->uniquename();
+  $st->{genotype_switch_select} = 'metagenotype';
+  $st->{template} = 'curs/genotype_switch.mhtml';
 }
 
 sub _delete_annotation : Private
