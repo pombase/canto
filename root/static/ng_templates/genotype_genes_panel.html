@@ -1,27 +1,14 @@
 <div>
-  <div ng-if="!data.allOrganisms">
+  <div ng-if="!data.organisms">
     <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
     loading genes ...
   </div>
-  <div ng-if="data.allOrganisms">
-    <div ng-if="data.unknownOrganisms.length != 0">
-      <genotype-gene-list genotypes="genotypes" organisms="data.unknownOrganisms"
+  <div ng-if="data.organisms">
+    <div ng-if="data.organisms.length != 0">
+      <genotype-gene-list genotypes="genotypes" organisms="data.organisms"
                           multi-organism-mode="multiOrganismMode">
       </genotype-gene-list>
     </div>
-    <div ng-if="data.pathogenOrganisms.length != 0">
-      <genotype-gene-list genotypes="genotypes" organisms="data.pathogenOrganisms"
-                          label="Pathogen: "
-                          multi-organism-mode="multiOrganismMode">
-      </genotype-gene-list>
-    </div>
-    <div ng-if="data.hostOrganisms.length != 0">
-      <genotype-gene-list genotypes="genotypes" organisms="data.hostOrganisms"
-                          label="Host: "
-                          multi-organism-mode="multiOrganismMode">
-      </genotype-gene-list>
-    </div>
-
     <a ng-click="openSingleGeneAddDialog()">Add another gene ...</a>
   </div>
 </div>
