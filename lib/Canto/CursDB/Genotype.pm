@@ -229,7 +229,7 @@ sub feature_id
 
 =head2 feature_type
 
- Usage   : $gene->feature_type();
+ Usage   : $genotype->feature_type();
  Function: Return 'genotype'.  This exists to make gene and genotype handling
            easier.
 

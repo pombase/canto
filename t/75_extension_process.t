@@ -32,7 +32,7 @@ my $subset_prop_rs = $prop_rs
   ->search({ 'type.name' => 'canto_subset' },
            { join => 'type', prefetch => 'cvterm', order_by => [ 'type.name', 'value' ] });
 
-is ($subset_prop_rs->count(), 12);
+is ($subset_prop_rs->count(), 14);
 
 
 my $canto_root_subset_count = $subset_prop_rs->count();
@@ -48,7 +48,7 @@ $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($after_cvtermprop_count, 57);
+is ($after_cvtermprop_count, 60);
 
 
 sub get_subset_props
@@ -82,6 +82,14 @@ my @expected_subset_props =
     [
       'cytoplasmic membrane-bounded vesicle',
       'is_a(GO:0016023)'
+    ],
+    [
+      'disease formation phenotype',
+      'is_a(canto_root_subset)'
+    ],
+    [
+      'disease formation phenotype',
+      'is_a(qc_do_not_annotate)'
     ],
     [
       'glucose rich medium',

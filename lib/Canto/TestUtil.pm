@@ -697,6 +697,7 @@ sub make_base_track_db
     $config->{test_config}->{test_genes_file_organism_2};
   my $go_obo_file = $config->{test_config}->{test_go_obo_file};
   my $phenotype_obo_file = $config->{test_config}->{test_phenotype_obo_file};
+  my $phipo_obo_file = $config->{test_config}->{test_phipo_obo_file};
   my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
   my $pco_obo_file = $config->{test_config}->{test_peco_obo_file};
   my $so_obo_file = $config->{test_config}->{test_so_obo_file};
@@ -752,7 +753,7 @@ sub make_base_track_db
 
     my @sources = ($relationship_obo_file, $go_obo_file,
                    $phenotype_obo_file, $psi_mod_obo_file, $pco_obo_file,
-                   $so_obo_file);
+                   $phipo_obo_file, $so_obo_file);
 
     $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 
@@ -1292,8 +1293,6 @@ sub load_test_ontologies
   my $extension_process = undef;
 
   if ($include_closure_subsets) {
-    my @ontology_args = ($test_go_file, $test_fypo_file, $psi_mod_obo_file,
-                         $so_obo_file);
     $extension_process = $self->get_mock_extension_process();
   }
 

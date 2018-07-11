@@ -27,13 +27,22 @@
       <breadcrumbs></breadcrumbs>
     </div>
 % } else {
-%   if ($current_path =~ /genotype_manage/) {
+%   if ($current_path =~ /metagenotype_manage/) {
+      <div class="breadcrumbs-link">
+        <a id="breadcrumbs-metagenotype-management-link"
+           href="<% $st->{curs_root_uri} . '/metagenotype_manage' %>" title="Meta-genotype management">
+           Meta-genotype management
+        </a>
+      </div>
+%   } else {
+%     if (0 && $current_path =~ /genotype_manage/) {
       <div class="breadcrumbs-link">
         <a id="breadcrumbs-genotype-management-link"
            href="<% $st->{curs_root_uri} . '/genotype_manage' %>" title="Genotype management">
            Genotype management
         </a>
       </div>
+%     }
 %   }
 % }
   </div>
@@ -74,20 +83,16 @@ my @feature_genes = ();
 if (defined $feature) {
   $display_name = $feature->display_name();
 
+  $feature_id = $feature->feature_id();
+
   if ($feature_type eq 'gene') {
-    $feature_id = $feature->gene_id();
-    $feature_crumb_text = "$display_name";
+    $feature_crumb_text = $display_name;
   } else {
-    $feature_id = $feature->genotype_id();
     $feature_crumb_text = ucfirst $feature_type . " details";
 
-    if (defined $feature->name()) {
+    if ($feature_type eq 'genotype' && defined $feature->name()) {
       $feature_crumb_text .= " - " . $feature->name();
     }
-
-    @feature_genes = map {
-      $_->gene();
-    } $feature->alleles();
   }
 
   $feature_url = "$curs_root_uri/feature/$feature_type/view/$feature_id";
