@@ -3710,10 +3710,19 @@ canto.directive('genotypeGenesPanel',
                   'CantoGlobals', 'CantoConfig', 'toaster',
                   GenotypeGenesPanelCtrl]);
 
-
-var GenotypeManageCtrl =
-  function($scope, $uibModal, $location, $http, Curs, CursGenotypeList, CantoGlobals,
+var genotypeManageCtrl =
+  function($uibModal, $location, $http, Curs, CursGenotypeList, CantoGlobals,
            CantoConfig, toaster) {
+  return {
+    scope: {
+      genotypeType: '@',
+    },
+    replace: true,
+    restrict: 'E',
+    templateUrl: app_static_path + 'ng_templates/genotype_manage.html',
+    controller: function($scope) {
+
+
     $scope.app_static_path = CantoGlobals.app_static_path;
     $scope.read_only_curs = CantoGlobals.read_only_curs;
     $scope.curs_root_uri = CantoGlobals.curs_root_uri;
@@ -3795,12 +3804,17 @@ var GenotypeManageCtrl =
     };
 
     $scope.readGenotypes();
+  
+    },
   };
+};
 
-canto.controller('GenotypeManageCtrl',
-                 ['$scope', '$uibModal', '$location', '$http', 'Curs', 'CursGenotypeList',
+
+canto.directive('genotypeManage',
+                 ['$uibModal', '$location', '$http', 'Curs', 'CursGenotypeList',
                   'CantoGlobals', 'CantoConfig', 'toaster',
-                 GenotypeManageCtrl]);
+                 genotypeManageCtrl]);
+
 
 var geneSelectorCtrl =
   function(CursGeneList, $uibModal, toaster) {
@@ -5992,21 +6006,6 @@ var genotypeOptions = function() {
 
 canto.directive('genotypeOptions', [genotypeOptions]);
 
-var genotypeManage = function() {
-  return {
-    scope: {
-      genotypeType: '@',
-    },
-    replace: true,
-    restrict: 'E',
-    templateUrl: app_static_path + 'ng_templates/genotype_manage.html',
-    controller: function($scope) {
-
-    },
-  };
-};
-
-canto.directive('genotypeManage', [genotypeManage]);
 
 var metagenotypeManage = function() {
   return {
