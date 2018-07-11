@@ -1485,3 +1485,8 @@ a:not([href]) {
 .curs-genotype-no-gene-notice {
   margin-top: 10px;
 }
+
+.curs-metagenotype-manage-pathogen, .curs-metagenotype-manage-host {
+  width: 49%;
+  float: left;
+}

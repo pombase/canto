@@ -6018,8 +6018,11 @@ canto.directive('genotypeManage', [genotypeManage]);
 
 var metagenotypeManage = function() {
   return {
+    scope: {
+    },
+    restrict: 'E',
     replace: true,
-    template: `<p>Metagenotype</p>`,
+    templateUrl: app_static_path + 'ng_templates/metagenotype_manage.html',
   };
 };
 
