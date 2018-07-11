@@ -135,6 +135,10 @@ sub _make_metagenotype_details
     pathogen_genotype => \%pathogen_genotype_details,
     host_genotype => \%host_genotype_details,
     metagenotype_display_name => $metagenotype_display_name,
+    metagenotype_id => $metagenotype->metagenotype_id(),
+    feature_type => 'metagenotype',
+    feature_display_name => $metagenotype_display_name,
+    feature_id => $metagenotype->metagenotype_id(),
   );
 }
 

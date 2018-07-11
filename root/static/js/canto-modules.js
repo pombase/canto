@@ -4925,6 +4925,10 @@ function filterAnnotations(annotations, params) {
             annotation.genotype_id == params.featureId) {
           return true;
         }
+        if (params.featureType === 'metagenotype' &&
+            annotation.metagenotype_id == params.featureId) {
+          return true;
+        }
       }
     }
     return false;

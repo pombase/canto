@@ -62,7 +62,8 @@ Description
 
 <div class="clearall"/>
 
-(TO DO: Show <% $annotation_count %> meta-genotype annotations here)
+<annotation-table-list feature-type-filter="metagenotype" feature-id-filter="<% $metagenotype_id %>"
+                       feature-filter-display-name="<% $metagenotype->display_name() %>"></annotation-table-list>
 
 <div class="clearall"/>
 
