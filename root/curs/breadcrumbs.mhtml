@@ -92,8 +92,6 @@ if (defined $feature) {
 
     if ($feature_type eq 'genotype' && defined $feature->name()) {
       $feature_crumb_text .= " - " . $feature->name();
-    } else {
-      $feature_crumb_text .= " - " . $feature->display_name();
     }
   }
 
