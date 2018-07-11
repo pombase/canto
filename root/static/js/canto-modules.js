@@ -5981,7 +5981,9 @@ var genotypeOptions = function() {
     template: `
     <div>
       <div ng-switch on="genotypeSwitchSelect">
-        <div ng-switch-when="genotype"><genotype-manage /></div>
+        <div ng-switch-when="genotype"><genotype-manage genotype-type='normal' /></div>
+        <div ng-switch-when="host-genotype"><genotype-manage genotype-type='host' /></div>
+        <div ng-switch-when="pathogen-genotype"><genotype-manage genotype-type='pathogen' /></div>
         <div ng-switch-when="metagenotype"><metagenotype-manage /></div>
       </div>
     </div>`,
@@ -5992,8 +5994,15 @@ canto.directive('genotypeOptions', [genotypeOptions]);
 
 var genotypeManage = function() {
   return {
+    scope: {
+      genotypeType: '@',
+    },
     replace: true,
+    restrict: 'E',
     templateUrl: app_static_path + 'ng_templates/genotype_manage.html',
+    controller: function($scope) {
+
+    },
   };
 };
 

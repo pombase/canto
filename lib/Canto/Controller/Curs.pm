@@ -845,9 +845,9 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 }
 
-sub genotype_manage : Chained('top')
+sub _genotype_manage_helper
 {
-  my ($self, $c, $flag) = @_;
+  my ($self, $c, $flag, $genotype_type) = @_;
 
   my $st = $c->stash();
 
@@ -856,8 +856,29 @@ sub genotype_manage : Chained('top')
   }
 
   $st->{title} = 'Genotypes for: ' . $st->{pub}->uniquename();
-  $st->{genotype_switch_select} = 'genotype';
+  $st->{genotype_switch_select} = $genotype_type;
   $st->{template} = 'curs/genotype_switch.mhtml';
+}
+
+sub genotype_manage : Chained('top')
+{
+  my ($self, $c, $flag) = @_;
+
+  $self->_genotype_manage_helper($c, $flag, 'genotype');
+}
+
+sub pathogen_genotype_manage : Chained('top')
+{
+  my ($self, $c, $flag) = @_;
+
+  $self->_genotype_manage_helper($c, $flag, 'pathogen-genotype');
+}
+
+sub genotype_manage : Chained('top')
+{
+  my ($self, $c, $flag) = @_;
+
+  $self->_genotype_manage_helper($c, $flag, 'host-genotype');
 }
 
 sub metagenotype_manage : Chained('top')
