@@ -4,7 +4,7 @@
     loading genes ...
   </div>
   <div ng-if="data.organisms">
-    <div ng-if="data.unknownOrganisms.length != 0">
+    <div ng-if="data.organisms.length != 0">
       <genotype-gene-list genotypes="genotypes" organisms="data.organisms"
                           multi-organism-mode="multiOrganismMode">
       </genotype-gene-list>
