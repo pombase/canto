@@ -874,7 +874,7 @@ sub pathogen_genotype_manage : Chained('top')
   $self->_genotype_manage_helper($c, $flag, 'pathogen-genotype');
 }
 
-sub genotype_manage : Chained('top')
+sub host_genotype_manage : Chained('top')
 {
   my ($self, $c, $flag) = @_;
 
