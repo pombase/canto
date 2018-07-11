@@ -149,8 +149,31 @@ __PACKAGE__->belongs_to(
 
 =cut
 
-__PACKAGE__->many_to_many('annotations' => 'genotype_annotations',
+__PACKAGE__->many_to_many('annotations' => 'metagenotype_annotations',
                           'annotation');
+
+=head2 feature_id
+
+ Usage   : $metagenotype->feature_id()
+ Function: Return the metagenotype_id of this genotype.  This is an alias for
+           metagenotype_id() that exists to make gene and genotype handling easier.
+
+=cut
+
+sub feature_id
+{
+  my $self = shift;
+
+  return $self->metagenotype_id();
+}
+
+=head2 feature_type
+
+ Usage   : $metagenotype->feature_type();
+ Function: Return 'metagenotype'.  This exists to make gene and genotype handling
+           easier.
+
+=cut
 
 sub feature_type
 {
@@ -169,7 +192,7 @@ sub display_name
 {
   my $self = shift;
 
-  return 'pathogen: ' .$self->pathogen_genotype->display_name() . ' host: ' .
+  return 'pathogen: ' .$self->pathogen_genotype->display_name() . ' / host: ' .
     $self->host_genotype->display_name();
 }
 

@@ -1490,7 +1490,23 @@ sub feature_view : Chained('feature') PathPart('view')
       my $display_name = $st->{feature}->display_name();
       $st->{title} = "Genotype: $display_name";
     } else {
-      die "no such feature type: $feature_type\n";
+      if ($feature_type eq 'metagenotype') {
+        my $metagenotype_id = $ids[0];
+
+        my $metagenotype = $schema->find_with_type('Metagenotype', $metagenotype_id);
+
+        $st->{metagenotype} = $metagenotype;
+        $st->{annotation_count} = $metagenotype->annotations()->count();
+
+        $st->{feature} = $metagenotype;
+        $st->{features} = [$metagenotype];
+
+        my $display_name = $st->{feature}->display_name();
+        $st->{title} = "Metagenotype: $display_name";
+
+      } else {
+        die "no such feature type: $feature_type\n";
+      }
     }
   }
 

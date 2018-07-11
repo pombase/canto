@@ -1,0 +1,90 @@
+<%args>
+$curs_root_uri
+$pub
+$metagenotype
+$annotation_count
+@annotation_type_list
+</%args>
+
+<div ng-controller="MetagenotypeViewCtrl" ng-init="init(<% $annotation_count %>)">
+% if (!$read_only_curs) {
+<div class="curs-box curs-half-width-section">
+  <div class="curs-box-title">
+Actions
+  </div>
+  <div class="curs-box-body">
+  <ul class="annotation-start">
+% for my $annotation_type (@types_to_show) {
+%   my $annotation_type_name = $annotation_type->{name};
+%   my $title = $annotation_type->{help_text} // '';
+%   my $action_path = $curs_root_uri . '/feature/metagenotype/annotate/' . $metagenotype_id;
+%     $action_path .= "/start/$annotation_type_name";
+%   my $type_display_name = $annotation_type->{display_name};
+    <li>
+%   if (!$annotation_type->{disabled}) {
+      <a title="<% $title %>" href="<% $action_path %>">
+%   }
+      <span class="annotation-type">
+Add a new <% $type_display_name %> for this genotype ...
+      </span>
+%   if (!$annotation_type->{disabled}) {
+      </a>
+%   }
+    </li>
+% }
+  </ul>
+  </div>
+</div>
+% }
+
+<div id="curs-genotype-details" class="curs-box curs-half-width-section">
+  <div class="curs-box-title">
+Details
+  </div>
+  <div class="curs-box-body">
+    <div class="curs-allele-list">
+    <table class="curs-definition-table">
+      <tbody>
+        <tr>
+          <td class="title">
+Description
+          </td>
+          <td>
+<% $_unicode_allele_symbol->($metagenotype->display_name()) |n %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    </div>
+  </div>
+</div>
+
+<div class="clearall"/>
+
+(TO DO: Show <% $annotation_count %> meta-genotype annotations here)
+
+<div class="clearall"/>
+
+<button type="button" ng-click="backToMetagenotypes()"
+        class="btn btn-primary curs-back-button">&lt;- Back</button>
+
+</div>
+
+<%init>
+my $metagenotype_id = $metagenotype->metagenotype_id();
+
+my $st = $c->stash();
+
+my @types_to_show = grep {
+  $_->{feature_type} eq 'metagenotype'
+} @annotation_type_list;
+
+my $start_path = $c->stash()->{curs_root_uri};
+my $read_only_curs = $c->stash()->{read_only_curs};
+
+my $_unicode_allele_symbol = sub {
+  my $text = shift;
+  $text =~ s/delta/&Delta;/gr;
+};
+</%init>

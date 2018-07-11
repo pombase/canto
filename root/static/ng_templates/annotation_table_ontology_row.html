@@ -4,6 +4,9 @@
       {{allele.gene_display_name}}
     </div>
   </td>
+  <td ng-if="annotationType.feature_type == 'metagenotype'">
+    <span ng-bind-html="annotation.metagenotype_display_name | encodeAlleleSymbols | toTrusted"></span>
+  </td>
   <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">
     <span ng-bind-html="annotation.genotype_background | encodeAlleleSymbols | toTrusted"></span>
   </td>
@@ -19,7 +22,7 @@
       {{annotation.gene_name_or_identifier}}
     </span>
   </td>
-  <td ng-if="annotationType.feature_type != 'gene'">
+  <td ng-if="annotationType.feature_type == 'genotype'">
     <span ng-if="annotation.status === 'new'">
       <a ng-if="addLinks()"
          href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">

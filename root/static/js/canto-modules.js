@@ -3498,6 +3498,31 @@ canto.controller('GenotypeViewCtrl',
                  ['$scope', 'CantoGlobals', 'CursSettings', genotypeViewCtrl]);
 
 
+var metagenotypeViewCtrl =
+  function($scope, CantoGlobals, CursSettings) {
+    $scope.init = function(annotationCount) {
+      $scope.annotationCount = annotationCount;
+    };
+
+    $scope.advancedMode = function() {
+      return CursSettings.getAnnotationMode() == 'advanced';
+    };
+
+    $scope.editMetagenotype = function(metagenotypeId) {
+      window.location.href =
+        CantoGlobals.curs_root_uri + '/metagenotype_manage#/edit/' + metagenotypeId;
+    };
+
+    $scope.backToMetagenotypes = function() {
+      window.location.href = CantoGlobals.curs_root_uri +
+        '/metagenotype_manage' + (CantoGlobals.read_only_curs ? '/ro' : '');
+    };
+  };
+
+canto.controller('MetagenotypeViewCtrl',
+                 ['$scope', 'CantoGlobals', 'CursSettings', metagenotypeViewCtrl]);
+
+
 var GenotypeGeneListCtrl =
   function($uibModal, $http, Curs, CursGenotypeList, CantoGlobals,
            CantoConfig, toaster) {
@@ -5065,7 +5090,7 @@ var annotationTableList =
               }
             }
 
-            $scope.$watch('annotationsByType.' + annotationType.name,
+            $scope.$watch('annotationsByType["' + annotationType.name + '"]',
                           function(annotations) {
 
                             $scope.byTypeSplit[annotationType.name] = {};
