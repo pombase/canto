@@ -3570,7 +3570,7 @@ var organismSelectorCtrl = function ($scope) {
   };
   
   var setSelectedOrganism = function () {
-    if ($scope.organisms.length == 1) {
+    if ($scope.data.organisms.length == 1) {
       $scope.data.selectedOrganism = $scope.organisms[0];
     }
   };
