@@ -3537,6 +3537,8 @@ var organismSelector = function (Curs, toaster, CantoGlobals, CantoConfig) {
 
 var organismSelectorCtrl = function ($scope) {
   
+  $scope.app_static_path = CantoGlobals.app_static_path;
+  
   $scope.data = {
     organisms: null,
   };
