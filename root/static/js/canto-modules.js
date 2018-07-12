@@ -3581,7 +3581,7 @@ var organismSelectorCtrl = function ($scope, Curs) {
   
   $scope.reloadOrganisms = function () {
     setOrganisms(getOrganismsFromServer(), $scope.genotypeType);
-    $scope.setSelectedOrganism();
+    setSelectedOrganism();
   };
   
   $scope.reloadOrganisms();
