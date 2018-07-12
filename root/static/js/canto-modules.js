@@ -3535,7 +3535,7 @@ var organismSelector = function ($http, Curs, toaster, CantoGlobals, CantoConfig
   };
 };
 
-var organismSelectorCtrl = function ($scope) {
+var organismSelectorCtrl = function ($scope, Curs) {
   
   $scope.app_static_path = CantoGlobals.app_static_path;
   
