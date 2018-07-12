@@ -3740,27 +3740,6 @@ var GenotypeGenesPanelCtrl =
 
         $scope.app_static_path = CantoGlobals.app_static_path;
 
-        $scope.data = {
-          organisms: null,
-        };
-
-        function removeNoGeneHosts(organisms) {
-          function hasGenes(organism) {
-            return organism.genes.length > 0;
-          }
-          return organisms.filter(hasGenes)
-        }
-        
-        $scope.getOrganismsFromServer = function() {
-          Curs.list('organism').success(function(results) {
-            $scope.data.organisms = removeNoGeneHosts(results);
-          }).error(function() {
-            toaster.pop('error', 'failed to get gene list from server');
-          });
-        };
-
-        $scope.getOrganismsFromServer();
-
         $scope.openSingleGeneAddDialog = function() {
           var modal = openSingleGeneAddDialog($uibModal);
           modal.result.then(function () {
