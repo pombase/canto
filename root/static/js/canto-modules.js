@@ -3522,6 +3522,72 @@ var metagenotypeViewCtrl =
 canto.controller('MetagenotypeViewCtrl',
                  ['$scope', 'CantoGlobals', 'CursSettings', metagenotypeViewCtrl]);
 
+var organismSelector = function (Curs, toaster, CantoGlobals, CantoConfig) {
+  return {
+    scope: {
+      selectedOrganism: '=',
+      genotypeType: '<',
+      label: '@',
+    },
+    restrict: 'E',
+    templateUrl: app_static_path + 'ng_templates/organism_selector.html',
+    controller: organismSelectorCtrl,
+  };
+};
+
+var organismSelectorCtrl = function ($scope) {
+  
+  $scope.data = {
+    organisms: null,
+  };
+
+  var filterOrganisms = function (organisms, genotypeType) {
+    var buildOrganismFilter = function (type) {
+      return function (organism) {
+        return organism['pathogen_or_host'] === type;
+      };
+    };
+    var byOrganismType = buildOrganismFilter(genotypeType);
+    return organisms.filter(byOrganismType);
+  };
+  
+  var getOrganismsFromServer = function () {
+    Curs.list('organism').success(function(organisms) {
+      return organisms;
+    }).error(function() {
+      toaster.pop('error', 'failed to get organism list from server');
+    });
+  };
+  
+  var setOrganisms = function (organisms, genotypeType) {
+    if (genotypeType === 'host' || genotypeType === 'pathogen') {
+      $scope.data.organisms = filterOrganisms(organisms, genotypeType);
+    } else {
+      $scope.data.organisms = organisms;
+    }
+  };
+  
+  var setSelectedOrganism = function () {
+    if ($scope.organisms.length == 1) {
+      $scope.data.selectedOrganism = $scope.organisms[0];
+    }
+  };
+  
+  var getSelectedOrganism = function () {
+    return $scope.selectedOrganism;
+  };
+  
+  $scope.reloadOrganisms = function () {
+    setOrganisms(getOrganismsFromServer(), $scope.genotypeType);
+    $scope.setSelectedOrganism();
+  };
+  
+  $scope.reloadOrganisms();
+};
+
+canto.directive('organismSelector', [
+  'Curs', 'toaster', 'CantoGlobals', 'CantoConfig', organismSelector
+]);
 
 var GenotypeGeneListCtrl =
   function($uibModal, $http, Curs, CursGenotypeList, CantoGlobals,

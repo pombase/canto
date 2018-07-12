@@ -1,0 +1,9 @@
+<div class="curs-organism-selector">
+  <span ng-show="label">{{label}}</span>
+  <select
+      name="select-organism"
+      ng-model="selectedOrganism"
+      ng-options="o as o.full_name for o in organisms">
+    <option value="">Select an organism...</option>
+  </select>
+</div>
