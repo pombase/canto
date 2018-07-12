@@ -1,10 +1,6 @@
 <div class="curs-genotype-gene-list" ng-show="organisms">
   <div ng-show="!getSelectedOrganism()">
-    <span ng-show="label">{{label}}</span>
-    <select name="select-organism" ng-model="data.selectedOrganism"
-            ng-options="o as o.full_name for o in organisms">
-      <option value="">Select an organism ...</option>
-    </select>
+    <organism-selector></organism-selector>
   </div>
   <div class="curs-genotype-edit-gene-list"
        ng-if="getSelectedOrganism()">
