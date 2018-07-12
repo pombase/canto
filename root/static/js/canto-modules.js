@@ -3535,7 +3535,7 @@ var organismSelector = function ($http, Curs, toaster, CantoGlobals, CantoConfig
   };
 };
 
-var organismSelectorCtrl = function ($scope, Curs) {
+var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   
   $scope.app_static_path = CantoGlobals.app_static_path;
   
@@ -3554,8 +3554,8 @@ var organismSelectorCtrl = function ($scope, Curs) {
   };
   
   var getOrganismsFromServer = function () {
-    Curs.list('organism').success(function(organisms) {
-      return organisms;
+    Curs.list('organism').success(function(response) {
+      return response.data;
     }).error(function() {
       toaster.pop('error', 'failed to get organism list from server');
     });
