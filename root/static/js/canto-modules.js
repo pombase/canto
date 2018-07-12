@@ -3599,7 +3599,8 @@ var GenotypeGeneListCtrl =
         genotypes: '=',
         organisms: '=',
         multiOrganismMode: '=',
-        label: '@'
+        label: '@',
+        selectedOrganism: '=',
       },
       restrict: 'E',
       replace: true,
@@ -3610,29 +3611,13 @@ var GenotypeGeneListCtrl =
 
         $scope.hasDeletionHash = {};
 
-        $scope.data = {
-          selectedOrganism: null
-        };
-
-        if ($scope.organisms.length == 1) {
-          $scope.data.selectedOrganism = $scope.organisms[0];
-        }
-
         $scope.$watch('genotypes',
                      function() {
                        $scope.makeHasDeletionHash();
                      }, true);
 
         $scope.getSelectedOrganism = function() {
-          if ($scope.data.selectedOrganism) {
-            return $scope.data.selectedOrganism;
-          } else {
-            if ($scope.organisms.length == 1) {
-              return $scope.organisms[0];
-            } else {
-              return null;
-            }
-          }
+          return $scope.selectedOrganism;
         }
 
         $scope.hasDeletionGenotype = function(gene_id) {
@@ -3676,7 +3661,7 @@ var GenotypeGeneListCtrl =
         };
 
         $scope.makeDeletionAllele = function(gene_id) {
-          if (!$scope.data.selectedOrganism) {
+          if (!$scope.getSelectedOrganism()) {
             return;
           }
 
