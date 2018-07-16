@@ -1,0 +1,29 @@
+<div class="curs-genotype-list-view">
+  <div ng-if="genotypeList.length > 0">
+    <table class="curs-genotype-list">
+      <thead>
+        <tr>
+          <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">&nbsp;</th>
+          <th style="border-bottom: 1px solid grey" colspan="{{columnsToHide.background ? 3 : 4}}">Genotype</th>
+        </tr>
+        <tr>
+          <th>Genes</th>
+          <th>Alleles</th>
+          <th>Expression</th>
+        </tr>
+      </thead>
+      <tbody
+        genotype-simple-list-row
+        ng-repeat="currentGenotype in genotypeList"
+        set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
+        selected-genotype-id="{{selectedGenotypeId}}"
+        show-check-box-actions="showCheckBoxActions"
+        check-box-is-checked="checkBoxChecked[currentGenotype.genotype_id]"
+        navigate-on-click="{{navigateOnClick}}"
+        columns-to-hide="columnsToHide"
+        genotypes="genotypeList"
+        genotype="currentGenotype"
+      />
+    </table>
+  </div>
+</div>
