@@ -1,6 +1,9 @@
 <div class="curs-genotype-gene-list">
+  SELECTED_ORGANISM: {{data.selectedOrganism}}
+
   <organism-selector
     label="Organism"
+    selected-organism="data.selectedOrganism"
     genotype-type="genotypeType" />
   <div class="curs-genotype-edit-gene-list"
        ng-if="getSelectedOrganism()">

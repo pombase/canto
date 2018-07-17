@@ -3540,6 +3540,11 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   
   $scope.data = {
     organisms: null,
+    selected: null,
+  };
+
+  $scope.selectionChanged = function() {
+    $scope.selectedOrganism = $scope.data.selected;
   };
   
   var setLabelText = function (genotypeType) {
@@ -3590,7 +3595,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   var setSelectedOrganism = function () {
     if ($scope.data.organisms.length === 1) {
-      $scope.data.selectedOrganism = $scope.data.organisms[0];
+      $scope.selectedOrganism = $scope.data.organisms[0];
     }
   };
   
@@ -3615,13 +3620,16 @@ var GenotypeGeneListCtrl =
         organisms: '=',
         multiOrganismMode: '=',
         label: '@',
-        selectedOrganism: '=',
         genotypeType: '<'
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_gene_list.html',
       controller: function($scope) {
+        $scope.data = {
+          selectedOrganism: {}
+        };
+
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
 
