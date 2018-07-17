@@ -3577,7 +3577,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     return $scope.selectedOrganism;
   };
   
-  $scope.getOrganismsFromServer();
+  $scope.getOrganismsFromServer($scope.genotypeType);
 };
 
 canto.directive('organismSelector', [
@@ -3594,6 +3594,7 @@ var GenotypeGeneListCtrl =
         multiOrganismMode: '=',
         label: '@',
         selectedOrganism: '=',
+        genotypeType: '<'
       },
       restrict: 'E',
       replace: true,
@@ -3712,6 +3713,7 @@ var GenotypeGenesPanelCtrl =
       scope: {
         genotypes: '=',
         multiOrganismMode: '=',
+        genotypeType: '<',
       },
       restrict: 'E',
       replace: true,
