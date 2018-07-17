@@ -3526,8 +3526,7 @@ var organismSelector = function ($http, Curs, toaster, CantoGlobals, CantoConfig
   return {
     scope: {
       selectedOrganism: '=',
-      genotypeType: '<',
-      label: '@',
+      genotypeType: '<'
     },
     restrict: 'E',
     templateUrl: app_static_path + 'ng_templates/organism_selector.html',
@@ -3541,6 +3540,15 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   
   $scope.data = {
     organisms: null,
+  };
+  
+  var setLabelText = function (genotypeType) {
+    var calculateLabelText = function (genotypeType) {
+      return genotypeType === 'host' || genotypeType === 'pathogen'
+        ? capitalizeFirstLetter(genotypeType)
+        : 'Organism';
+    };
+    $scope.label = calculateLabelText(genotypeType);
   };
 
   var filterOrganisms = function (organisms, genotypeType) {
@@ -3578,6 +3586,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   };
   
   $scope.getOrganismsFromServer($scope.genotypeType);
+  setLabelText($scope.genotypeType);
 };
 
 canto.directive('organismSelector', [
