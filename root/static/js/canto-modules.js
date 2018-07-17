@@ -3570,14 +3570,27 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
           genotypeType
         );
       }
+      setSelectedOrganism();
     }).error(function() {
       toaster.pop('error', 'failed to get organism list from server');
     });
   };
+  
+  $scope.getSelectedOrganism = function () {
+    if ($scope.data.selectedOrganism) {
+      return $scope.data.selectedOrganism;
+    } else {
+      if ($scope.organisms.length === 1) {
+        return $scope.organisms[0];
+      } else {
+        return null;
+      }
+    }
+  };
 
   var setSelectedOrganism = function () {
     if ($scope.data.organisms.length === 1) {
-      $scope.data.selectedOrganism = $scope.organisms[0];
+      $scope.data.selectedOrganism = $scope.data.organisms[0];
     }
   };
   
