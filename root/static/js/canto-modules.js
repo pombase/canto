@@ -3553,22 +3553,20 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     return organisms.filter(byOrganismType);
   };
   
-  var getOrganismsFromServer = function () {
+  $scope.getOrganismsFromServer = function (genotypeType) {
     Curs.list('organism').success(function(response) {
-      return response.data;
+      $scope.data.organisms = response;
+      if (genotypeType === 'host' || genotypeType === 'pathogen') {
+        $scope.data.organisms = filterOrganisms(
+          $scope.data.organisms,
+          genotypeType
+        );
+      }
     }).error(function() {
       toaster.pop('error', 'failed to get organism list from server');
     });
   };
-  
-  var setOrganisms = function (organisms, genotypeType) {
-    if (genotypeType === 'host' || genotypeType === 'pathogen') {
-      $scope.data.organisms = filterOrganisms(organisms, genotypeType);
-    } else {
-      $scope.data.organisms = organisms;
-    }
-  };
-  
+
   var setSelectedOrganism = function () {
     if ($scope.data.organisms.length === 1) {
       $scope.data.selectedOrganism = $scope.organisms[0];
@@ -3579,12 +3577,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     return $scope.selectedOrganism;
   };
   
-  $scope.reloadOrganisms = function () {
-    setOrganisms(getOrganismsFromServer(), $scope.genotypeType);
-    setSelectedOrganism();
-  };
-  
-  $scope.reloadOrganisms();
+  $scope.getOrganismsFromServer();
 };
 
 canto.directive('organismSelector', [
