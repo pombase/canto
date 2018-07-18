@@ -3546,10 +3546,6 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   $scope.organismChanged = function (organism) {
     $scope.organismSelected({organism: this.selectedOrganism});
   };
-
-  $scope.selectionChanged = function() {
-    $scope.selectedOrganism = $scope.data.selected;
-  };
   
   var setLabelText = function (genotypeType) {
     var calculateLabelText = function (genotypeType) {
@@ -3584,27 +3580,11 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
       toaster.pop('error', 'failed to get organism list from server');
     });
   };
-  
-  $scope.getSelectedOrganism = function () {
-    if ($scope.data.selectedOrganism) {
-      return $scope.data.selectedOrganism;
-    } else {
-      if ($scope.organisms.length === 1) {
-        return $scope.organisms[0];
-      } else {
-        return null;
-      }
-    }
-  };
 
   var setSelectedOrganism = function () {
     if ($scope.data.organisms.length === 1) {
       $scope.selectedOrganism = $scope.data.organisms[0];
     }
-  };
-  
-  var getSelectedOrganism = function () {
-    return $scope.selectedOrganism;
   };
   
   $scope.getOrganismsFromServer($scope.genotypeType);
