@@ -3541,6 +3541,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   
   $scope.data = {
     organisms: null,
+    defaultOrganism: null
   };
   
   $scope.organismChanged = function (organism) {
@@ -3582,11 +3583,14 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   };
 
   var setSelectedOrganism = function () {
+    var organismToSet;
     if ($scope.data.organisms.length === 1) {
-      var defaultOrganism = $scope.data.organisms[0];
-      $scope.selectedOrganism = defaultOrganism;
-      $scope.organismSelected({organism: defaultOrganism});
+      $scope.data.defaultOrganism = $scope.data.organisms[0];
+      organismToSet = $scope.data.defaultOrganism;
+    } else {
+      organismToSet = $scope.selectedOrganism;
     }
+    $scope.organismSelected({organism: organismToSet});
   };
   
   $scope.getOrganismsFromServer($scope.genotypeType);

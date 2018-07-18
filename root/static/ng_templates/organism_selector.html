@@ -11,5 +11,5 @@
       ng-options="o as o.full_name for o in data.organisms">
     <option value="">Select an organism...</option>
   </select>
-  <p ng-if="data.organisms.length === 1">{{selectedOrganism.full_name}}</p>
+  <span ng-if="data.organisms.length === 1">{{data.defaultOrganism.full_name}}</span>
 </div>
