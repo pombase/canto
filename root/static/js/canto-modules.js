@@ -3607,6 +3607,7 @@ var GenotypeGeneListCtrl =
     return {
       scope: {
         genotypes: '=',
+        organisms: '=',
         multiOrganismMode: '=',
         label: '@',
         genotypeType: '<'
