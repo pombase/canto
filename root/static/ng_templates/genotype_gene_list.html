@@ -5,15 +5,6 @@
     genotype-type="genotypeType"></organism-selector>
   <div class="curs-genotype-edit-gene-list"
        ng-if="getSelectedOrganism()">
-    <span ng-show="multiOrganismMode">
-      <span ng-show="label">{{label}}</span>
-      <span style="font-size: 90%; font-weight: bold;">
-        {{getSelectedOrganism().full_name}}
-      </span>
-      <span ng-show="organisms.length != 1">
-        (<a ng-click="data.selectedOrganism = null">change ...</a>)
-      </span>
-    </span>
     <table class="list" ng-if="selectedOrganismGenes().length > 0">
       <thead>
         <tr>
