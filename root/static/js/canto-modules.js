@@ -3526,6 +3526,7 @@ var organismSelector = function ($http, Curs, toaster, CantoGlobals, CantoConfig
   return {
     scope: {
       selectedOrganism: '=',
+      organismSelected: '&',
       genotypeType: '<'
     },
     restrict: 'E',
@@ -3540,7 +3541,10 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   
   $scope.data = {
     organisms: null,
-    selected: null,
+  };
+  
+  $scope.organismChanged = function (organism) {
+    $scope.organismSelected({organism: this.selectedOrganism});
   };
 
   $scope.selectionChanged = function() {
@@ -3640,9 +3644,13 @@ var GenotypeGeneListCtrl =
                        $scope.makeHasDeletionHash();
                      }, true);
 
+        $scope.organismSelected = function (organism) {
+          $scope.data.selectedOrganism = organism;
+        };
+                     
         $scope.getSelectedOrganism = function() {
-          return $scope.selectedOrganism;
-        }
+          return $scope.data.selectedOrganism;
+        };
 
         $scope.hasDeletionGenotype = function(gene_id) {
           return !!$scope.hasDeletionHash[gene_id];
