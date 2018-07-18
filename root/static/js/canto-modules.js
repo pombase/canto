@@ -5993,6 +5993,7 @@ var genotypeSimpleListRowCtrl =
         setSelectedGenotypeId: '&',
         navigateOnClick: '@',
         columnsToHide: '=',
+        isPathogen: '=',
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_simple_list_row.html',
@@ -6001,6 +6002,7 @@ var genotypeSimpleListRowCtrl =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
+        $scope.radioVal = false;
 
         $scope.firstAllele = $scope.genotype.alleles[0];
         $scope.otherAlleles = $scope.genotype.alleles.slice(1);
@@ -6015,6 +6017,8 @@ var genotypeSimpleListRowCtrl =
           var links = $('#curs-genotype-list-row-actions');
           links.remove();
         };
+
+        $scope.radioLabel = ($scope.isPathogen) ? 'path' : 'host';
       },
       link: function($scope) {
         if ($scope.navigateOnClick) {
@@ -6042,14 +6046,13 @@ var genotypeSimpleListViewCtrl =
         selectedGenotypeId: '=',
         showCheckBoxActions: '=',
         navigateOnClick: '@',
-        isPathogen: '@',
+        isPathogen: '=',
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_simple_list_view.html',
       controller: function($scope) {
         $scope.checkBoxChecked = {};
-        $scope.radio_name = 'select-host';
 
         $scope.columnsToHide = {
           background: true,
@@ -6070,53 +6073,8 @@ var genotypeSimpleListViewCtrl =
           return $scope.checkedGenotypeIds().length;
         };
 
-        $scope.combineGenotypes = function() {
-          var checkedGenotypes =
-            $.grep($scope.genotypeList, function(genotype) {
-              return !!$scope.checkBoxChecked[genotype.genotype_id];
-            });
-
-          var allelesForGenotype =
-            $.map(checkedGenotypes, function(genotype) {
-              return genotype.alleles[0];
-            });
-
-          var newBackgroundParts = [];
-
-          $.map(checkedGenotypes, function(genotype) {
-            if (genotype.background) {
-              if ($.grep(newBackgroundParts,
-                         function(background) {
-                           return background === genotype.background
-                         }).length === 0) {
-                newBackgroundParts.push(genotype.background);
-              }
-            }
-          });
-
-          var newBackground = undefined;
-
-          if (newBackgroundParts.length > 0) {
-            newBackground = newBackgroundParts.join(' ');
-          }
-
-          var storePromise =
-            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype);
-
-          storePromise.then(function(result) {
-            window.location.href =
-              CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
-            $scope.checkBoxChecked = {};
-          });
-        };
-
         $scope.setSelectedGenotypeId = function(genotypeId) {
           $scope.selectedGenotypeId = genotypeId;
-        }
-
-        console.log($scope.isPathogen);
-        if ($scope.isPathogen) {
-          $scope.radio_name = 'select-pathogen';
         }
       },
    };
@@ -6238,8 +6196,6 @@ var metagenotypeOrganismPicker =
 
           if ($scope.isPathogen) {
             $scope.data.typeLabel = 'Pathogen';
-          } else {
-            $scope.isPathogen = false;
           }
 
           $scope.getOrganismsFromServer();
