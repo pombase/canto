@@ -3641,7 +3641,7 @@ var GenotypeGeneListCtrl =
                      }, true);
 
         $scope.getSelectedOrganism = function() {
-          return $scope.selectedOrganism;
+          return $scope.data.selectedOrganism;
         }
 
         $scope.hasDeletionGenotype = function(gene_id) {
