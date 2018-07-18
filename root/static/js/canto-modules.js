@@ -3583,7 +3583,9 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   var setSelectedOrganism = function () {
     if ($scope.data.organisms.length === 1) {
-      $scope.selectedOrganism = $scope.data.organisms[0];
+      var defaultOrganism = $scope.data.organisms[0];
+      $scope.selectedOrganism = defaultOrganism;
+      $scope.organismSelected({organism: defaultOrganism});
     }
   };
   
