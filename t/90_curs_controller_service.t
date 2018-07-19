@@ -104,6 +104,14 @@ test_psgi $app, sub {
                'name' => 'SPCC63.05delta ssm4KE',
                annotation_count => 1,
                background => 'h+',
+               organism => {
+                 species => 'pombe',
+                 genus => 'Schizosaccharomyces',
+                 taxonid => '4896',
+                 pathogen_or_host => 'unknown',
+                 full_name => 'Schizosaccharomyces pombe',
+                 common_name => 'fission yeast'
+               },
              });
 };
 

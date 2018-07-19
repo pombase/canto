@@ -246,5 +246,19 @@ sub full_name {
   return $self->genus() . ' ' . $self->species();
 }
 
+sub taxonid {
+  my $self = shift;
+
+  my @props = $self->organismprops({}, { prefetch => 'type' })->all();
+
+  for my $prop (@props) {
+    if ($prop->type()->name() eq 'taxon_id') {
+      return $prop->value();
+    }
+  }
+
+  return undef;
+}
+
 __PACKAGE__->meta->make_immutable;
 1;

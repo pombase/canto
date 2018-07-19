@@ -318,6 +318,9 @@ sub _genotype_details_hash
   my $genotype = shift;
   my $include_allele = shift;
 
+  my $organism_lookup = $self->organism_lookup();
+  my $organism_details = $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
+
   my %ret = (
     identifier => $genotype->identifier(),
     name => $genotype->name(),
@@ -326,6 +329,7 @@ sub _genotype_details_hash
     display_name => $genotype->display_name(),
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),
+    organism => $organism_details,
   );
 
   if ($include_allele) {
@@ -452,6 +456,45 @@ sub _get_genotypes
   return @res;
 }
 
+sub _get_metagenotypes
+{
+  my $self = shift;
+  my $options = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $prefetch_options =
+    [{ pathogen_genotype => 'organism'}, {host_genotype => 'organism' }];
+  my $metagenotype_rs =
+    $curs_schema->resultset('Metagenotype', { prefetch => $prefetch_options });
+
+  my @res = ();
+
+  while (defined (my $metagenotype = $metagenotype_rs->next())) {
+    if ($options->{pathogen_taxonid} &&
+        $metagenotype->pathogen_genotype()->organism()->taxonid() != $options->{pathogen_taxonid}) {
+      next;
+    }
+    if ($options->{host_taxonid} &&
+        $metagenotype->host_genotype()->organism()->taxonid() != $options->{host_taxonid}) {
+      next;
+    }
+
+    my $pathogen_genotype_hash =
+      $self->_genotype_details_hash($metagenotype->pathogen_genotype(), 0);
+    my $host_genotype_hash =
+      $self->_genotype_details_hash($metagenotype->host_genotype(), 0);
+
+    push @res, {
+      metagenotype_id => $metagenotype->metagenotype_id(),
+      pathogen_genotype => $pathogen_genotype_hash,
+      host_genotype => $host_genotype_hash,
+    };
+  }
+
+  return @res;
+}
+
 sub _allele_details_hash
 {
   my $self = shift;
@@ -529,6 +572,7 @@ my %list_for_service_subs =
   (
     gene => \&_get_genes,
     genotype => \&_get_genotypes,
+    metagenotype => \&_get_metagenotypes,
     allele => \&_get_alleles,
     annotation => \&_get_annotation,
     condition => \&_get_conditions,

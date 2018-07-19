@@ -111,6 +111,20 @@ sub _get_alleles
 
 }
 
+sub _make_organism_hash
+{
+  my $organism = shift;
+
+  return {
+    pathogen_or_host => 'unknown',
+    common_name => $organism->common_name(),
+    genus => $organism->genus(),
+    species => $organism->species(),
+    taxonid => $organism->taxonid(),
+    full_name => $organism->full_name(),
+  };
+}
+
 sub _genotype_details
 {
   my $self = shift;
@@ -140,6 +154,7 @@ sub _genotype_details
         map { $_->uniquename(); } @alleles
       ],
       annotation_count => $genotype->feature_cvterms()->count(),
+      organism => _make_organism_hash($genotype->organism()),
     };
 
   $cache->set($cache_key, $ret_val, $self->config()->{cache}->{default_timeout});
@@ -203,7 +218,8 @@ sub _lookup_with_gene_filter
                                  }
                                ]
                              }
-                         ]
+                         ],
+                 prefetch => 'organism',
                });
     {
       'me.feature_id' =>
