@@ -5993,7 +5993,8 @@ var genotypeSimpleListRowCtrl =
         setSelectedGenotypeId: '&',
         navigateOnClick: '@',
         columnsToHide: '=',
-        isPathogen: '=',
+        genotypeModel: '=',
+        selected: '='
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_simple_list_row.html',
@@ -6007,18 +6008,10 @@ var genotypeSimpleListRowCtrl =
         $scope.firstAllele = $scope.genotype.alleles[0];
         $scope.otherAlleles = $scope.genotype.alleles.slice(1);
 
-        $scope.isSelected = function() {
-          return $scope.selectedGenotypeId &&
-            $scope.selectedGenotypeId == $scope.genotype.genotype_id;
+        $scope.isSelected = function(selectedGenotype) {
+          $scope.selected(selectedGenotype);
         };
 
-        $scope.clearSelection = function() {
-          $scope.setSelectedGenotypeId({ genotypeId: null });
-          var links = $('#curs-genotype-list-row-actions');
-          links.remove();
-        };
-
-        $scope.radioLabel = ($scope.isPathogen) ? 'path' : 'host';
       },
       link: function($scope) {
         if ($scope.navigateOnClick) {
@@ -6046,7 +6039,8 @@ var genotypeSimpleListViewCtrl =
         selectedGenotypeId: '=',
         showCheckBoxActions: '=',
         navigateOnClick: '@',
-        isPathogen: '=',
+        genotypeModel: '=',
+        selected: '='
       },
       restrict: 'E',
       replace: true,
@@ -6090,6 +6084,7 @@ var metagenotypeOrganismPicker =
     return {
       scope: {
         isPathogen: '=',
+        selected: '='
       },
       restrict: 'E',
       replace: true,
@@ -6098,6 +6093,7 @@ var metagenotypeOrganismPicker =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+        $scope.genotypeModel = 7;
 
         $scope.data = {
           allOrganisms: null,
@@ -6212,6 +6208,19 @@ var metagenotypeManage = function() {
   return {
     replace: true,
     templateUrl: app_static_path + 'ng_templates/metagenotype_manage.html',
+    controller: function($scope) {
+      $scope.selectedPathogen = '';
+      $scope.selectedHost = '';
+
+      $scope.pathogenSelected = function(selectedPathogen) {
+        $scope.selectedPathogen = selectedPathogen;
+      }
+
+      $scope.hostSelected = function(selectedHost) {
+        $scope.selectedHost = selectedHost;
+      }
+
+    }
   };
 };
 
