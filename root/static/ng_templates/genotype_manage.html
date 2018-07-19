@@ -32,7 +32,10 @@
             <div class="row">
                 <div ng-if="!read_only_curs">
                     <div class="col-sm-3 col-md-3">
-                        <genotype-genes-panel genotypes="data.genotypes" multi-organism-mode="data.multiOrganismMode" />
+                        <genotype-genes-panel
+                          genotypes="data.genotypes"
+                          multi-organism-mode="data.multiOrganismMode"
+                          genotype-type="genotypeType" />
                     </div>
                 </div>
 
