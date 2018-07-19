@@ -1,0 +1,15 @@
+<div ng-if="!data.organisms">
+  <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+  Loading organisms...
+</div>
+<div class="curs-organism-selector" ng-if="data.organisms">
+  <p class="curs-organism-selector-label"><b>{{label}}</b></p>
+  <select ng-if="data.organisms.length > 1"
+      name="select-organism"
+      ng-model="selectedOrganism"
+      ng-change="organismChanged()"
+      ng-options="o as o.full_name for o in data.organisms">
+    <option value="">Select an organism...</option>
+  </select>
+  <span ng-if="data.organisms.length === 1">{{data.defaultOrganism.full_name}}</span>
+</div>
