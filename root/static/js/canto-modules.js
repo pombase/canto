@@ -5987,7 +5987,6 @@ var genotypeSimpleListRowCtrl =
       scope: {
         genotypes: '=',
         genotype: '=',
-        checkBoxIsChecked: '=',
         checkBoxChange: '&',
         selectedGenotypeId: '@',
         setSelectedGenotypeId: '&',
@@ -6048,25 +6047,9 @@ var genotypeSimpleListViewCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_simple_list_view.html',
       controller: function($scope) {
-        $scope.checkBoxChecked = {};
-
         $scope.columnsToHide = {
           background: true,
           name: true,
-        };
-
-        $scope.checkedGenotypeIds = function() {
-          var retVal = [];
-          $.map($scope.genotypeList, function(genotype) {
-            if ($scope.checkBoxChecked[genotype.genotype_id]) {
-              retVal.push(genotype);
-            }
-          });
-          return retVal;
-        };
-
-        $scope.checkedGenotypeCount = function() {
-          return $scope.checkedGenotypeIds().length;
         };
 
         $scope.setSelectedGenotypeId = function(genotypeId) {
@@ -6102,12 +6085,12 @@ var metagenotypeOrganismPicker =
           hostOrganisms: [],
           pathogenOrganisms: [],
           unknownOrganisms: [], // not host and not pathogen
-          selectedOrganism: null, // move this to anther directive!!!!!!!!!
+          selectedOrganism: null,
           genotypes: null,
-          singleAlleleGenotypes: [], // move this to anther directive!!!!!!!!!
+          singleAlleleGenotypes: [],
           filteredSingleAllele: [],
-          multiAlleleGenotypes: [], // move this to anther directive!!!!!!!!!
-          filteredMultiAllele: [], // move this to anther directive!!!!!!!!!
+          multiAlleleGenotypes: [],
+          filteredMultiAllele: [],
           typeLabel: 'Host',
         };
 
@@ -6139,7 +6122,6 @@ var metagenotypeOrganismPicker =
               $scope.data.genotypes = results;
               $scope.data.singleAlleleGenotypes = $.grep(results, isSingleAlleleGenotype);
               $scope.data.multiAlleleGenotypes = $.grep(results, isMultiAlleleGenotype);
-              // $scope.data.waitingForServer = false;
             }).catch(function() {
               toaster.pop('error', "couldn't read the genotype list from the server");
               $scope.data.waitingForServer = false;
@@ -6211,8 +6193,9 @@ var metagenotypeManage = function() {
     replace: true,
     templateUrl: app_static_path + 'ng_templates/metagenotype_manage.html',
     controller: function($scope) {
-      $scope.pathogenModel = 7;
-      $scope.hostModel = 9;
+      $scope.pathogenModel = null;
+      $scope.hostModel = null;
+
       $scope.pathogenCallback = function(selectedPathogen) {
         $scope.pathogenModel = selectedPathogen;
       }
@@ -6220,7 +6203,6 @@ var metagenotypeManage = function() {
       $scope.hostCallback = function(selectedHost) {
         $scope.hostModel = selectedHost;
       }
-
     }
   };
 };
