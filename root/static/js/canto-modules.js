@@ -5994,7 +5994,8 @@ var genotypeSimpleListRowCtrl =
         navigateOnClick: '@',
         columnsToHide: '=',
         genotypeModel: '=',
-        selected: '='
+        callback: '=',
+        radioName: '@'
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_simple_list_row.html',
@@ -6009,7 +6010,7 @@ var genotypeSimpleListRowCtrl =
         $scope.otherAlleles = $scope.genotype.alleles.slice(1);
 
         $scope.isSelected = function(selectedGenotype) {
-          $scope.selected(selectedGenotype);
+          $scope.callback(selectedGenotype);
         };
 
       },
@@ -6040,7 +6041,8 @@ var genotypeSimpleListViewCtrl =
         showCheckBoxActions: '=',
         navigateOnClick: '@',
         genotypeModel: '=',
-        selected: '='
+        callback: '=',
+        radioName: '@'
       },
       restrict: 'E',
       replace: true,
@@ -6084,7 +6086,8 @@ var metagenotypeOrganismPicker =
     return {
       scope: {
         isPathogen: '=',
-        selected: '='
+        genotypeModel: '=',
+        callback: '=',
       },
       restrict: 'E',
       replace: true,
@@ -6093,7 +6096,6 @@ var metagenotypeOrganismPicker =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
-        $scope.genotypeModel = 7;
 
         $scope.data = {
           allOrganisms: null,
@@ -6209,15 +6211,14 @@ var metagenotypeManage = function() {
     replace: true,
     templateUrl: app_static_path + 'ng_templates/metagenotype_manage.html',
     controller: function($scope) {
-      $scope.selectedPathogen = '';
-      $scope.selectedHost = '';
-
-      $scope.pathogenSelected = function(selectedPathogen) {
-        $scope.selectedPathogen = selectedPathogen;
+      $scope.pathogenModel = 7;
+      $scope.hostModel = 9;
+      $scope.pathogenCallback = function(selectedPathogen) {
+        $scope.pathogenModel = selectedPathogen;
       }
 
-      $scope.hostSelected = function(selectedHost) {
-        $scope.selectedHost = selectedHost;
+      $scope.hostCallback = function(selectedHost) {
+        $scope.hostModel = selectedHost;
       }
 
     }

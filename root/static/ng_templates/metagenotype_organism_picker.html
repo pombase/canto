@@ -12,8 +12,7 @@
                     name="select-organism"
                     ng-model="data.selectedOrganism"
                     ng-options="o as o.full_name for o in data.pathogenOrganisms"
-                    ng-change="setFilters()"
-                >
+                    ng-change="setFilters()">
                     <option value="">Select an organism ...</option>
                 </select>
                 <div ng-if="data.selectedOrganism">
@@ -27,7 +26,8 @@
                             show-check-box-actions="true"
                             selected-genotype-id="data.selectedOrganism"
                             genotype-model="genotypeModel"
-                            selected="selected">
+                            callback="callback"
+                            radio-name="{{data.typeLabel}}">
                         </genotype-simple-list-view>
                     </div>
 
@@ -41,7 +41,8 @@
                             show-check-box-actions="true"
                             selected-genotype-id="data.selectedOrganism"
                             genotype-model="genotypeModel"
-                            selected="selected">
+                            callback="callback"
+                            radio-name="{{data.typeLabel}}">
                         </genotype-simple-list-view>
                     </div>
                 </div>
