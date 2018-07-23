@@ -1,8 +1,12 @@
-<div id="curs-metagenotype-manage" class="ng-cloak">
-  <div class="curs-metagenotype-manage-host">
-    <div>Host:</div>
-  </div>
-  <div class="curs-metagenotype-manage-pathogen">
-    <div>Pathogen:</div>
-  </div>
+<div id="curs-genotype-manage" class="genotype-list ng-cloak container">
+    <div class="row">
+        <div class="col-md-6">
+            <metagenotype-organism-picker is-pathogen="true" genotype-model="pathogenModel" callback="pathogenCallback"></metagenotype-organism-picker>
+            <p>selected pathogen genotype: {{pathogenModel}}</p>
+        </div>
+        <div class="col-md-6">
+            <metagenotype-organism-picker is-pathogen="false" genotype-model="hostModel" callback="hostCallback"></metagenotype-organism-picker>
+            <p>selected host genotype: {{hostModel}}</p>
+        </div>
+    </div>
 </div>
