@@ -6288,13 +6288,3 @@ var metagenotypeManage = function() {
 };
 
 canto.directive('metagenotypeManage', [metagenotypeManage]);
-
-
-var genotypeManage = function() {
-  return {
-    replace: true,
-    templateUrl: app_static_path + 'ng_templates/genotype_manage.html',
-  };
-};
-
-canto.directive('genotypeManage', [genotypeManage]);
