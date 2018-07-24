@@ -3777,6 +3777,7 @@ var genotypeManageCtrl =
     $scope.app_static_path = CantoGlobals.app_static_path;
     $scope.read_only_curs = CantoGlobals.read_only_curs;
     $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+    $scope.metagenotypeUrl = CantoGlobals.curs_root_uri + '/metagenotype_manage';
 
     $scope.data = {
       genotypes: [],
@@ -3851,6 +3852,11 @@ var genotypeManageCtrl =
 
     $scope.backToSummary = function() {
       window.location.href = CantoGlobals.curs_root_uri +
+        (CantoGlobals.read_only_curs ? '/ro' : '');
+    };
+
+    $scope.toMetagenotype = function() {
+      window.location.href = $scope.metagenotypeUrl +
         (CantoGlobals.read_only_curs ? '/ro' : '');
     };
 
