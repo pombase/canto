@@ -24,7 +24,7 @@ canto.config(['ChartJsProvider', function (ChartJsProvider) {
 }]);
 
 var activeSessionStatuses =
-    ['SESSION_CREATED', 'SESSION_ACCEPTED', 'CURATION_IN_PROGRESS', 'CURATION_PAUSED']
+    ['SESSION_CREATED', 'SESSION_ACCEPTED', 'CURATION_IN_PROGRESS', 'CURATION_PAUSED'];
 
 function isActiveSession(state) {
   return $.inArray(state, activeSessionStatuses) >= 0;
@@ -121,7 +121,7 @@ function simpleHttpPost(toaster, $http, url, data) {
       if (status == 404) {
         message = "Internal error: " + status;
       } else {
-        "Accessing server failed: " + (data || status)
+        "Accessing server failed: " + (data || status);
       }
       toaster.pop('error', message);
     }).
@@ -217,7 +217,7 @@ canto.filter('featureChooserFilter', function () {
       if (feature.background.length > 15) {
         ret += " ...";
       }
-      ret += ")"
+      ret += ")";
     }
     return ret;
   };
@@ -351,7 +351,7 @@ canto.service('CursGenotypeList', function($q, Curs) {
 
   this.onListChange = function(callback) {
     this.changeListeners.push(callback);
-  }
+  };
 
   this.sendChangeEvent = function() {
     $.map(service.changeListeners,
@@ -1013,7 +1013,7 @@ var pubmedIdStart =
               loadingEnd();
             });
         };
- 
+
         $scope.findAnother = function() {
           $scope.data.results = null;
         };
@@ -1145,7 +1145,7 @@ var breadcrumbsDirective =
                 "gotoTerm('" + termId + "'" + ')">';
             }
 
-            html += '<initially-hidden-text text="' + termText + 
+            html += '<initially-hidden-text text="' + termText +
               '" link-label="..." preview-char-count="40"></initially-hidden-text>';
 
             if (makeLink) {
@@ -1561,7 +1561,7 @@ function openExtensionRelationDialog($uibModal, extensionRelation, relationConfi
 
 function arrayIntersection(arr1, arr2) {
   var intersect = [];
- 
+
   $.map(arr1,
         function(el) {
           if ($.inArray(el, arr2) != -1) {
@@ -1898,13 +1898,13 @@ var extensionOrGroupBuilder =
                                       }
                                     });
                                     if (isInSubset) {
-                                      incrementNewCounts(relConf);
+                                      incrementNewCounts();
                                     }
                                   });
 
                               promises.push(promise);
                             } else {
-                              incrementNewCounts(relConf);
+                              incrementNewCounts();
                             }
                           }
                         });
@@ -2213,7 +2213,7 @@ var extensionRelationEdit =
             });
           } // else: user pasted a term ID or user quoted the search - skip confirmation
         };
- 
+
         if ($scope.rangeConfig.type == 'Gene') {
           if ($scope.extensionRelation.rangeValue) {
             // editing existing part
@@ -2389,7 +2389,7 @@ var ontologyWorkflowCtrl =
       var subset_ids = $scope.termDetails.subset_ids;
 
       if (subset_ids && subset_ids.length > 0) {
-        $scope.matchingExtensionConfigs = 
+        $scope.matchingExtensionConfigs =
           extensionConfFilter($scope.extensionConfiguration, subset_ids,
                               CantoGlobals.current_user_is_admin ? 'admin' : 'user');
         return;
@@ -2569,7 +2569,7 @@ var ontologyWorkflowCtrl =
 
         if (annotationType.feature_type == 'genotype') {
           $scope.backToFeatureUrl =
-            CantoGlobals.curs_root_uri + '/genotype_manage' + 
+            CantoGlobals.curs_root_uri + '/genotype_manage' +
             '#/select/' + $attrs.featureId;
         } else {
           $scope.backToFeatureUrl =
@@ -3105,7 +3105,7 @@ function storeMetagenotypeHelper(toaster, $http, pathogenGenotypeId, hostGenotyp
   return result;
 }
 
-function makeAlleleEditInstance($uibModal, allele, endogenousWildtypeAllowed)
+function makeAlleleEditInstance($uibModal, allele)
 {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/allele_edit.html',
@@ -4666,7 +4666,7 @@ var annotationEditDialogCtrl =
 
         if (!searchString.match(/^".*"$/) && searchString !== termId) {
           var termConfirm = openTermConfirmDialog($uibModal, termId, 'definition',
-                                                  $scope.annotationType.feature_type);
+                                                  $scope.annotationType.feature_type, false);
 
           termConfirm.result.then(function(result) {
             $scope.annotation.term_ontid = result.newTermId;
