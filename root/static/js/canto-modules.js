@@ -6272,7 +6272,7 @@ canto.directive('metagenotypeOrganismPicker',
   ['Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster', metagenotypeOrganismPicker]);
 
 
-var metagenotypeManage = function() {
+var metagenotypeManage = function(CantoGlobals) {
   return {
     scope: {},
     restrict: 'E',
@@ -6281,6 +6281,7 @@ var metagenotypeManage = function() {
     controller: function($scope) {
       $scope.pathogenModel = null;
       $scope.hostModel = null;
+      $scope.genotypeUrl = CantoGlobals.curs_root_uri + '/genotype_manage';
 
       $scope.pathogenCallback = function(selectedPathogen) {
         $scope.pathogenModel = selectedPathogen;
@@ -6289,8 +6290,13 @@ var metagenotypeManage = function() {
       $scope.hostCallback = function(selectedHost) {
         $scope.hostModel = selectedHost;
       }
+
+      $scope.toGenotype = function() {
+        window.location.href = $scope.genotypeUrl +
+          (CantoGlobals.read_only_curs ? '/ro' : '');
+      };
     }
   };
 };
 
-canto.directive('metagenotypeManage', [metagenotypeManage]);
+canto.directive('metagenotypeManage', ['CantoGlobals', metagenotypeManage]);
