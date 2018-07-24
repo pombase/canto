@@ -1,7 +1,7 @@
 <tbody ng-class="{ selected: radioVal }">
     <tr>
         <td class="curs-genotype-checkbox-column" rowspan="{{genotype.alleles.length}}">
-            <input type="radio" ng-model="genotypeModel" ng-change="isSelected(genotypeModel)" value="{{genotype.genotype_id}}" />
+            <input type="radio" ng-model="genotypeModel" ng-change="isSelected()" value="{{genotype.genotype_id}}" />
         </td>
         <td>
             <a href="{{curs_root_uri + '/feature/gene/view/' + firstAllele.gene_id + (read_only_curs ? '/ro' : '')}}">{{firstAllele.gene_display_name}}</a>

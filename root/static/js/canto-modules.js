@@ -6092,8 +6092,8 @@ var genotypeSimpleListRowCtrl =
         $scope.firstAllele = $scope.genotype.alleles[0];
         $scope.otherAlleles = $scope.genotype.alleles.slice(1);
 
-        $scope.isSelected = function(selectedGenotype) {
-          $scope.callback(selectedGenotype);
+        $scope.isSelected = function() {
+          $scope.callback($scope.genotype);
         };
 
       },
@@ -6272,7 +6272,7 @@ canto.directive('metagenotypeOrganismPicker',
   ['Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster', metagenotypeOrganismPicker]);
 
 
-var metagenotypeManage = function(CantoGlobals) {
+var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster, $http) {
   return {
     scope: {},
     restrict: 'E',
@@ -6280,23 +6280,48 @@ var metagenotypeManage = function(CantoGlobals) {
     templateUrl: app_static_path + 'ng_templates/metagenotype_manage.html',
     controller: function($scope) {
       $scope.pathogenModel = null;
+      $scope.selectedPathogen = null;
       $scope.hostModel = null;
+      $scope.selectedHost = null;
       $scope.genotypeUrl = CantoGlobals.curs_root_uri + '/genotype_manage';
+      $scope.metagenotypes = null;
 
       $scope.pathogenCallback = function(selectedPathogen) {
-        $scope.pathogenModel = selectedPathogen;
+        $scope.pathogenModel = selectedPathogen.genotype_id;
+        $scope.selectedPathogen = selectedPathogen;
       }
 
       $scope.hostCallback = function(selectedHost) {
-        $scope.hostModel = selectedHost;
+        $scope.hostModel = selectedHost.genotype_id;
+        $scope.selectedHost = selectedHost;
       }
 
       $scope.toGenotype = function() {
         window.location.href = $scope.genotypeUrl +
           (CantoGlobals.read_only_curs ? '/ro' : '');
       };
+
+      $scope.createMetaGenotype = function() {
+        var storePromise =
+          CursGenotypeList.storeMetagenotype(toaster, $http, $scope.pathogenModel, $scope.hostModel);
+
+        storePromise.then(function(result) {
+          // reset interface
+        });
+      };
+
+      $scope.listMetaGenotypes = function () {
+        Curs.list('metagenotype', [ ] )
+          .then(function(res) {
+            $scope.metagenotypes = res.data;
+            // console.log(res.data);
+          });
+      };
+
+      $scope.listMetaGenotypes();
+
     }
   };
 };
 
-canto.directive('metagenotypeManage', ['CantoGlobals', metagenotypeManage]);
+canto.directive('metagenotypeManage', ['CantoGlobals', 'Curs', 'CursGenotypeList', 'toaster', '$http', metagenotypeManage]);

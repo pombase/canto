@@ -13,5 +13,12 @@
         <button ng-click="toGenotype()" type="button" class="btn btn-primary curs-back-button">
             -&gt; Edit Genotypes
         </button>
+        <button ng-click="createMetaGenotype()" type="button" class="btn btn-primary curs-back-button">
+            Make it
+        </button>
+    </div>
+    <div ng-if="metagenotypes.length">
+        <h4>Meta-Genotypes</h4>
+        {{metagenotypes}}
     </div>
 </div>
