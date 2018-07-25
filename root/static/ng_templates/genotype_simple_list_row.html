@@ -1,6 +1,6 @@
 <tbody ng-class="{ selected: radioVal }">
     <tr>
-        <td class="curs-genotype-checkbox-column" rowspan="{{genotype.alleles.length}}">
+        <td ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="{{genotype.alleles.length}}">
             <input type="radio" ng-model="genotypeModel" ng-change="isSelected()" value="{{genotype.genotype_id}}" />
         </td>
         <td>

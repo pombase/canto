@@ -6071,6 +6071,7 @@ var genotypeSimpleListRowCtrl =
       scope: {
         genotypes: '=',
         genotype: '=',
+        showCheckBoxActions: '=',
         checkBoxChange: '&',
         selectedGenotypeId: '@',
         setSelectedGenotypeId: '&',
@@ -6089,6 +6090,7 @@ var genotypeSimpleListRowCtrl =
         $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
         $scope.radioVal = false;
 
+        $scope.genotype.alleles = $scope.genotype.alleles || [];
         $scope.firstAllele = $scope.genotype.alleles[0];
         $scope.otherAlleles = $scope.genotype.alleles.slice(1);
 
@@ -6325,3 +6327,37 @@ var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster,
 };
 
 canto.directive('metagenotypeManage', ['CantoGlobals', 'Curs', 'CursGenotypeList', 'toaster', '$http', metagenotypeManage]);
+
+var metagenotypeSummaryItem =
+  function($compile, $http, toaster, CursGenotypeList, CantoGlobals) {
+    return {
+      scope: {
+        type: '@',
+        genotype: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/metagenotype_summary_item.html',
+      controller: function($scope) {
+        $scope.getName = function () {
+          name = $scope.genotype.organism.full_name || '';
+          var pos = name.indexOf('(');
+          if (pos !== -1) {
+            name = name.substring(0, pos);
+          }
+          return name;
+        };
+
+        $scope.getScope = function () {
+          name = $scope.genotype.organism.full_name || '';
+          var pos = name.indexOf('(');
+          if (pos !== -1) {
+            return name.substring(++pos, (name.length -1));
+          }
+          return '-';
+        }
+      },
+   };
+  };
+
+canto.directive('metagenotypeSummaryItem', [metagenotypeSummaryItem]);
