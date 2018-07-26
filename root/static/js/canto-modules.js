@@ -3527,7 +3527,8 @@ var organismSelector = function ($http, Curs, toaster, CantoGlobals, CantoConfig
     scope: {
       selectedOrganism: '=',
       organismSelected: '&',
-      genotypeType: '<'
+      genotypeType: '<',
+      lastAddedGene: '<'
     },
     restrict: 'E',
     templateUrl: app_static_path + 'ng_templates/organism_selector.html',
@@ -3543,6 +3544,12 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     organisms: null,
     defaultOrganism: null
   };
+
+  $scope.$watch('lastAddedGene', function () {
+    if ($scope.lastAddedGene) {
+      $scope.getOrganismsFromServer($scope.genotypeType);
+    }
+  });
 
   $scope.organismChanged = function (organism) {
     $scope.organismSelected({organism: this.selectedOrganism});
@@ -3610,7 +3617,8 @@ var GenotypeGeneListCtrl =
         organisms: '=',
         multiOrganismMode: '=',
         label: '@',
-        genotypeType: '<'
+        genotypeType: '<',
+        lastAddedGene: '<'
       },
       restrict: 'E',
       replace: true,
@@ -3738,6 +3746,7 @@ var GenotypeGenesPanelCtrl =
         genotypes: '=',
         multiOrganismMode: '=',
         genotypeType: '<',
+        lastAddedGene: '<'
       },
       restrict: 'E',
       replace: true,
@@ -3748,8 +3757,8 @@ var GenotypeGenesPanelCtrl =
 
         $scope.openSingleGeneAddDialog = function() {
           var modal = openSingleGeneAddDialog($uibModal);
-          modal.result.then(function () {
-            $scope.getOrganismsFromServer();
+          modal.result.then(function (geneObj) {
+            $scope.lastAddedGene = geneObj.new_gene_id;
           });
         };
       }
