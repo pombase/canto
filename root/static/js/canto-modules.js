@@ -3528,7 +3528,8 @@ var organismSelector = function ($http, Curs, toaster, CantoGlobals, CantoConfig
       selectedOrganism: '=',
       organismSelected: '&',
       genotypeType: '<',
-      lastAddedGene: '<'
+      lastAddedGene: '<',
+      hideLabel: '=',
     },
     restrict: 'E',
     templateUrl: app_static_path + 'ng_templates/organism_selector.html',
@@ -3599,6 +3600,8 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     }
     $scope.organismSelected({organism: organismToSet});
   };
+
+  $scope.data.hideLabel = $scope.hideLabel || false;
 
   $scope.getOrganismsFromServer($scope.genotypeType);
   setLabelText($scope.genotypeType);
@@ -6187,6 +6190,7 @@ var metagenotypeOrganismPicker =
           multiAlleleGenotypes: [],
           filteredMultiAllele: [],
           typeLabel: 'Host',
+          genotypeType: 'host',
         };
 
         $scope.getOrganismsFromServer = function() {
@@ -6211,6 +6215,11 @@ var metagenotypeOrganismPicker =
               toaster.pop('error', 'failed to get gene list from server');
             });
           };
+
+          $scope.organismSelected = function (organism) {
+            $scope.data.selectedOrganism = organism;
+            $scope.setFilters();
+          }
 
           $scope.readGenotypes = function() {
             CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
@@ -6271,6 +6280,7 @@ var metagenotypeOrganismPicker =
 
           if ($scope.isPathogen) {
             $scope.data.typeLabel = 'Pathogen';
+            $scope.data.genotypeType = 'pathogen';
           }
 
           $scope.getOrganismsFromServer();
@@ -6317,15 +6327,32 @@ var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster,
           CursGenotypeList.storeMetagenotype(toaster, $http, $scope.pathogenModel, $scope.hostModel);
 
         storePromise.then(function(result) {
-          // reset interface
+          switch (result.data.status) {
+            case 'error':
+            toaster.pop('error', result.data.message);
+            break;
+
+            case 'existing':
+            toaster.pop('info', 'This genotype has already been created');
+            break;
+
+            case 'success':
+            toaster.pop('success', 'This genotype has been created');
+            break;
+          }
+
         });
       };
 
       $scope.listMetaGenotypes = function () {
-        Curs.list('metagenotype', [ ] )
+
+        var options = {
+          include_allele: 1,
+        };
+
+        Curs.list('metagenotype', [options] )
           .then(function(res) {
             $scope.metagenotypes = res.data;
-            // console.log(res.data);
           });
       };
 
