@@ -2,19 +2,21 @@
     <div class="row">
         <div class="col-md-6">
             <metagenotype-organism-picker is-pathogen="true" genotype-model="pathogenModel" callback="pathogenCallback"></metagenotype-organism-picker>
-            <p>selected pathogen genotype: {{pathogenModel}}</p>
         </div>
         <div class="col-md-6">
             <metagenotype-organism-picker is-pathogen="false" genotype-model="hostModel" callback="hostCallback"></metagenotype-organism-picker>
-            <p>selected host genotype: {{hostModel}}</p>
         </div>
     </div>
     <div class="row">
         <button ng-click="toGenotype()" type="button" class="btn btn-primary curs-back-button">
-            -&gt; Edit Genotypes
+            &lt;-- Return to edit Genotypes
         </button>
-        <button ng-click="createMetaGenotype()" type="button" class="btn btn-primary curs-back-button">
-            Make it
+        <button
+            ng-click="createMetaGenotype()"
+            type="button"
+            class="btn btn-primary curs-back-button"
+            ng-disabled="makeInvalid">
+            Make it --&gt;
         </button>
     </div>
     <div ng-if="metagenotypes.length">

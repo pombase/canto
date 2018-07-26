@@ -3800,6 +3800,7 @@ var genotypeManageCtrl =
       editingGenotype: false,
       editGenotypeId: null,
       multiOrganismMode: false,
+      metagenotypeDissabled: true,
     };
 
     CantoConfig.get('instance_organism').success(function(results) {
@@ -3855,6 +3856,7 @@ var genotypeManageCtrl =
         $scope.data.singleAlleleGenotypes = $.grep(results, isSingleAlleleGenotype);
         $scope.data.multiAlleleGenotypes = $.grep(results, isMultiAlleleGenotype);
         $scope.data.waitingForServer = false;
+        $scope.data.metagenotypeDissabled = ($scope.data.genotypes.length < 1);
         CursGenotypeList.onListChange($scope.readGenotypesCallback);
       }).catch(function() {
         toaster.pop('error', "couldn't read the genotype list from the server");
@@ -6306,15 +6308,22 @@ var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster,
       $scope.selectedHost = null;
       $scope.genotypeUrl = CantoGlobals.curs_root_uri + '/genotype_manage';
       $scope.metagenotypes = null;
+      $scope.makeInvalid = true;
 
       $scope.pathogenCallback = function(selectedPathogen) {
         $scope.pathogenModel = selectedPathogen.genotype_id;
         $scope.selectedPathogen = selectedPathogen;
+        $scope.checkMakeValid();
       }
 
       $scope.hostCallback = function(selectedHost) {
         $scope.hostModel = selectedHost.genotype_id;
         $scope.selectedHost = selectedHost;
+        $scope.checkMakeValid();
+      }
+
+      $scope.checkMakeValid = function () {
+        $scope.makeInvalid = !($scope.selectedPathogen && $scope.selectedHost);
       }
 
       $scope.toGenotype = function() {
@@ -6357,12 +6366,12 @@ var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster,
       };
 
       $scope.listMetaGenotypes();
-
     }
   };
 };
 
 canto.directive('metagenotypeManage', ['CantoGlobals', 'Curs', 'CursGenotypeList', 'toaster', '$http', metagenotypeManage]);
+
 
 var metagenotypeSummaryItem =
   function($compile, $http, toaster, CursGenotypeList, CantoGlobals) {

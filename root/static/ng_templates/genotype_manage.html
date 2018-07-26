@@ -84,10 +84,10 @@
     <div class="row">
         <div class="col-sm-5 col-md-5">
             <button ng-click="backToSummary()" type="button" class="btn btn-primary curs-back-button">
-                &lt;- Back to summary
+                &lt;-- Back to summary
             </button>
-            <button ng-click="toMetagenotype()" type="button" class="btn btn-primary curs-back-button">
-                -&gt; Edit MetaGenotype
+            <button ng-click="toMetagenotype()" type="button" class="btn btn-primary curs-back-button" ng-disabled="data.metagenotypeDissabled">
+                Edit MetaGenotypes --&gt;
             </button>
         </div>
     </div>
