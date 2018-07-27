@@ -1847,8 +1847,6 @@ sub _metagenotype_store
                                            host_genotype => $host_genotype);
 
     if ($existing_metagenotype) {
-      $c->flash()->{message} = qq(Using existing meta-genotype with the same pathogen and host genotype");
-
         $c->stash->{json_data} = {
           status => "existing",
           metagenotype_display_name => $existing_metagenotype->display_name(),
@@ -1862,8 +1860,6 @@ sub _metagenotype_store
                                              host_genotype => $host_genotype);
 
       $guard->commit();
-
-      $c->flash()->{message} = 'Created new meta-genotype: ' . $metagenotype->display_name();
 
       $c->stash->{json_data} = {
         status => "success",
