@@ -242,8 +242,8 @@ sub _get_metagenotype_identifier
 
   my $id = 0;
 
-  while(defined (my $genotype)) {
-    my $identifier = $genotype->identifier();
+  while(defined (my $metagenotype = $rs->next())) {
+    my $identifier = $metagenotype->identifier();
 
     if ($identifier =~ /^$curs_key-metagenotype-(\d+)/) {
       if ($1 > $id) {
