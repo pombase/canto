@@ -3527,7 +3527,9 @@ var organismSelector = function ($http, Curs, toaster, CantoGlobals, CantoConfig
     scope: {
       selectedOrganism: '=',
       organismSelected: '&',
-      genotypeType: '<'
+      genotypeType: '<',
+      lastAddedGene: '<',
+      hideLabel: '=',
     },
     restrict: 'E',
     templateUrl: app_static_path + 'ng_templates/organism_selector.html',
@@ -3543,6 +3545,12 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     organisms: null,
     defaultOrganism: null
   };
+
+  $scope.$watch('lastAddedGene', function () {
+    if ($scope.lastAddedGene) {
+      $scope.getOrganismsFromServer($scope.genotypeType);
+    }
+  });
 
   $scope.organismChanged = function (organism) {
     $scope.organismSelected({organism: this.selectedOrganism});
@@ -3593,6 +3601,8 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     $scope.organismSelected({organism: organismToSet});
   };
 
+  $scope.data.hideLabel = $scope.hideLabel || false;
+
   $scope.getOrganismsFromServer($scope.genotypeType);
   setLabelText($scope.genotypeType);
 };
@@ -3610,7 +3620,8 @@ var GenotypeGeneListCtrl =
         organisms: '=',
         multiOrganismMode: '=',
         label: '@',
-        genotypeType: '<'
+        genotypeType: '<',
+        lastAddedGene: '<'
       },
       restrict: 'E',
       replace: true,
@@ -3738,6 +3749,7 @@ var GenotypeGenesPanelCtrl =
         genotypes: '=',
         multiOrganismMode: '=',
         genotypeType: '<',
+        lastAddedGene: '<'
       },
       restrict: 'E',
       replace: true,
@@ -3748,8 +3760,8 @@ var GenotypeGenesPanelCtrl =
 
         $scope.openSingleGeneAddDialog = function() {
           var modal = openSingleGeneAddDialog($uibModal);
-          modal.result.then(function () {
-            $scope.getOrganismsFromServer();
+          modal.result.then(function (geneObj) {
+            $scope.lastAddedGene = geneObj.new_gene_id;
           });
         };
       }
@@ -3777,6 +3789,7 @@ var genotypeManageCtrl =
     $scope.app_static_path = CantoGlobals.app_static_path;
     $scope.read_only_curs = CantoGlobals.read_only_curs;
     $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+    $scope.metagenotypeUrl = CantoGlobals.curs_root_uri + '/metagenotype_manage';
 
     $scope.data = {
       genotypes: [],
@@ -3787,6 +3800,7 @@ var genotypeManageCtrl =
       editingGenotype: false,
       editGenotypeId: null,
       multiOrganismMode: false,
+      metagenotypeDissabled: true,
     };
 
     CantoConfig.get('instance_organism').success(function(results) {
@@ -3842,6 +3856,7 @@ var genotypeManageCtrl =
         $scope.data.singleAlleleGenotypes = $.grep(results, isSingleAlleleGenotype);
         $scope.data.multiAlleleGenotypes = $.grep(results, isMultiAlleleGenotype);
         $scope.data.waitingForServer = false;
+        $scope.data.metagenotypeDissabled = ($scope.data.genotypes.length < 1);
         CursGenotypeList.onListChange($scope.readGenotypesCallback);
       }).catch(function() {
         toaster.pop('error', "couldn't read the genotype list from the server");
@@ -3851,6 +3866,11 @@ var genotypeManageCtrl =
 
     $scope.backToSummary = function() {
       window.location.href = CantoGlobals.curs_root_uri +
+        (CantoGlobals.read_only_curs ? '/ro' : '');
+    };
+
+    $scope.toMetagenotype = function() {
+      window.location.href = $scope.metagenotypeUrl +
         (CantoGlobals.read_only_curs ? '/ro' : '');
     };
 
@@ -6065,6 +6085,7 @@ var genotypeSimpleListRowCtrl =
       scope: {
         genotypes: '=',
         genotype: '=',
+        showCheckBoxActions: '=',
         checkBoxChange: '&',
         selectedGenotypeId: '@',
         setSelectedGenotypeId: '&',
@@ -6083,11 +6104,12 @@ var genotypeSimpleListRowCtrl =
         $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
         $scope.radioVal = false;
 
+        $scope.genotype.alleles = $scope.genotype.alleles || [];
         $scope.firstAllele = $scope.genotype.alleles[0];
         $scope.otherAlleles = $scope.genotype.alleles.slice(1);
 
-        $scope.isSelected = function(selectedGenotype) {
-          $scope.callback(selectedGenotype);
+        $scope.isSelected = function() {
+          $scope.callback($scope.genotype);
         };
 
       },
@@ -6170,6 +6192,7 @@ var metagenotypeOrganismPicker =
           multiAlleleGenotypes: [],
           filteredMultiAllele: [],
           typeLabel: 'Host',
+          genotypeType: 'host',
         };
 
         $scope.getOrganismsFromServer = function() {
@@ -6194,6 +6217,11 @@ var metagenotypeOrganismPicker =
               toaster.pop('error', 'failed to get gene list from server');
             });
           };
+
+          $scope.organismSelected = function (organism) {
+            $scope.data.selectedOrganism = organism;
+            $scope.setFilters();
+          }
 
           $scope.readGenotypes = function() {
             CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
@@ -6254,6 +6282,7 @@ var metagenotypeOrganismPicker =
 
           if ($scope.isPathogen) {
             $scope.data.typeLabel = 'Pathogen';
+            $scope.data.genotypeType = 'pathogen';
           }
 
           $scope.getOrganismsFromServer();
@@ -6266,7 +6295,7 @@ canto.directive('metagenotypeOrganismPicker',
   ['Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster', metagenotypeOrganismPicker]);
 
 
-var metagenotypeManage = function() {
+var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster, $http) {
   return {
     scope: {},
     restrict: 'E',
@@ -6274,27 +6303,106 @@ var metagenotypeManage = function() {
     templateUrl: app_static_path + 'ng_templates/metagenotype_manage.html',
     controller: function($scope) {
       $scope.pathogenModel = null;
+      $scope.selectedPathogen = null;
       $scope.hostModel = null;
+      $scope.selectedHost = null;
+      $scope.genotypeUrl = CantoGlobals.curs_root_uri + '/genotype_manage';
+      $scope.metagenotypes = null;
+      $scope.makeInvalid = true;
 
       $scope.pathogenCallback = function(selectedPathogen) {
-        $scope.pathogenModel = selectedPathogen;
+        $scope.pathogenModel = selectedPathogen.genotype_id;
+        $scope.selectedPathogen = selectedPathogen;
+        $scope.checkMakeValid();
       }
 
       $scope.hostCallback = function(selectedHost) {
-        $scope.hostModel = selectedHost;
+        $scope.hostModel = selectedHost.genotype_id;
+        $scope.selectedHost = selectedHost;
+        $scope.checkMakeValid();
       }
+
+      $scope.checkMakeValid = function () {
+        $scope.makeInvalid = !($scope.selectedPathogen && $scope.selectedHost);
+      }
+
+      $scope.toGenotype = function() {
+        window.location.href = $scope.genotypeUrl +
+          (CantoGlobals.read_only_curs ? '/ro' : '');
+      };
+
+      $scope.createMetaGenotype = function() {
+        var storePromise =
+          CursGenotypeList.storeMetagenotype(toaster, $http, $scope.pathogenModel, $scope.hostModel);
+
+        storePromise.then(function(result) {
+          switch (result.data.status) {
+            case 'error':
+            toaster.pop('error', result.data.message);
+            break;
+
+            case 'existing':
+            toaster.pop('info', 'This genotype has already been created');
+            break;
+
+            case 'success':
+            toaster.pop('success', 'This genotype has been created');
+            break;
+          }
+
+        });
+      };
+
+      $scope.listMetaGenotypes = function () {
+
+        var options = {
+          include_allele: 1,
+        };
+
+        Curs.list('metagenotype', [options] )
+          .then(function(res) {
+            $scope.metagenotypes = res.data;
+          });
+      };
+
+      $scope.listMetaGenotypes();
     }
   };
 };
 
-canto.directive('metagenotypeManage', [metagenotypeManage]);
+canto.directive('metagenotypeManage', ['CantoGlobals', 'Curs', 'CursGenotypeList', 'toaster', '$http', metagenotypeManage]);
 
 
-var genotypeManage = function() {
-  return {
-    replace: true,
-    templateUrl: app_static_path + 'ng_templates/genotype_manage.html',
+var metagenotypeSummaryItem =
+  function($compile, $http, toaster, CursGenotypeList, CantoGlobals) {
+    return {
+      scope: {
+        type: '@',
+        genotype: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/metagenotype_summary_item.html',
+      controller: function($scope) {
+        $scope.getName = function () {
+          name = $scope.genotype.organism.full_name || '';
+          var pos = name.indexOf('(');
+          if (pos !== -1) {
+            name = name.substring(0, pos);
+          }
+          return name;
+        };
+
+        $scope.getScope = function () {
+          name = $scope.genotype.organism.full_name || '';
+          var pos = name.indexOf('(');
+          if (pos !== -1) {
+            return name.substring(++pos, (name.length -1));
+          }
+          return '-';
+        }
+      },
+   };
   };
-};
 
-canto.directive('genotypeManage', [genotypeManage]);
+canto.directive('metagenotypeSummaryItem', [metagenotypeSummaryItem]);
