@@ -470,6 +470,8 @@ sub _get_metagenotypes
 
   my @res = ();
 
+  my $include_allele = $options->{include_allele} // 0;
+
   while (defined (my $metagenotype = $metagenotype_rs->next())) {
     if ($options->{pathogen_taxonid} &&
         $metagenotype->pathogen_genotype()->organism()->taxonid() != $options->{pathogen_taxonid}) {
@@ -481,9 +483,9 @@ sub _get_metagenotypes
     }
 
     my $pathogen_genotype_hash =
-      $self->_genotype_details_hash($metagenotype->pathogen_genotype(), 0);
+      $self->_genotype_details_hash($metagenotype->pathogen_genotype(), $include_allele);
     my $host_genotype_hash =
-      $self->_genotype_details_hash($metagenotype->host_genotype(), 0);
+      $self->_genotype_details_hash($metagenotype->host_genotype(), $include_allele);
 
     push @res, {
       metagenotype_id => $metagenotype->metagenotype_id(),
