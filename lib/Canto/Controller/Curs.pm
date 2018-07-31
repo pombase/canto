@@ -1119,6 +1119,11 @@ sub start_annotation : Chained('annotate') PathPart('start') Args(1)
   my @features = @{$st->{features}};
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  if (!defined $annotation_config) {
+    die "no configuration for $annotation_type_name";
+  }
+
   $st->{annotation_type_config} = $annotation_config;
   $st->{annotation_type_name} = $annotation_type_name;
 
