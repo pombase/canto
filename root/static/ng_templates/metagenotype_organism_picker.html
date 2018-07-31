@@ -38,6 +38,14 @@
                             radio-name="{{data.typeLabel}}">
                         </genotype-simple-list-view>
                     </div>
+
+                    <div class="curs-box-title">Wildtype genotype</div>
+                        <wild-genotype-view
+                            genotype="data.wildTypeGenotype"
+                            genotype-model="genotypeModel"
+                            callback="callback">
+                        </wild-genotype-view>
+                    </div>
                 </div>
             </div>
         </div>

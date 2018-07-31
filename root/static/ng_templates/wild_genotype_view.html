@@ -1,0 +1,20 @@
+<div class="curs-genotype-list-view">
+    <table class="curs-genotype-list">
+        <thead>
+            <tr>
+                <th class="curs-genotype-checkbox-column" rowspan="2">&nbsp;</th>
+                <th style="border-bottom: 1px solid grey; min-width: 175px;" colspan="3">Genotype</th>
+            </tr>
+        </thead>
+        <tbody ng-class="{ selected: radioVal }">
+            <tr>
+                <td class="curs-genotype-checkbox-column">
+                    <input type="radio" ng-model="genotypeModel" ng-change="isSelected()" value="{{genotype.genotype_id}}" />
+                </td>
+                <td>
+                    Wildtype
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
