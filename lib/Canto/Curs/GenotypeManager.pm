@@ -166,17 +166,17 @@ sub _remove_unused_alleles
 =head2 make_genotype
 
  Usage   : $genotype_manager->make_genotype($name, $background, \@allele_objects,
-                                            $identifier);
+                                            $genotype_taxonid, $identifier);
  Function: Create a Genotype object in the CursDB
- Args    : $name - the name for the new object (required)
+ Args    : $name - the name for the new object
            \@allele_objects - a list of Allele objects to attach to the new
                               Genotype
+           $genotype_taxonid - the organism of this genotype
            $identifier - the identifier of the new object if the Genotype
                          details are from an external source (Chado) or undef
                          for Genotypes created in this session.  If not defined
                          a new unique identifier will be created based on the
                          session curs_key
-           $genotype_taxonid - the organism of this genotype
  Return  : the new Genotype
 
 =cut
@@ -231,6 +231,45 @@ sub make_genotype
   return $genotype;
 }
 
+=head2 get_wildtype_genotype
+
+ Usage   : $genotype_manager->get_wildtype_genotype($host_taxonid);
+ Function: Create a wild-type Genotype object in the CursDB - the genotype will have
+           no alleles
+ Args    : $genotype_taxonid - the organism of this genotype
+ Return  : the new Genotype
+
+=cut
+
+sub get_wildtype_genotype
+{
+  my $self = shift;
+  my $genotype_taxonid = shift;
+
+  if (!defined $genotype_taxonid) {
+    croak "no taxon ID passed to GenotypeManager::make_genotype()\n";
+  }
+
+  my $schema = $self->curs_schema();
+
+  my $rs = $schema->resultset('Genotype')
+    ->search({ 'organism.taxonid' => $genotype_taxonid }, { join => 'organism' });
+
+  while (defined (my $genotype = $rs->next())) {
+    if ($genotype->alleles()->count() == 0) {
+      return $genotype;
+    }
+  }
+
+  my $organism_lookup = Canto::Track::get_adaptor($self->config(), 'organism');
+
+  my $host_details =
+    $organism_lookup->lookup_by_taxonid($genotype_taxonid);
+
+  my $identifier = $host_details->{genus} . '-' . $host_details->{special} . '-wild-type-genotype';
+
+  return $self->make_genotype(undef, undef, [], $genotype_taxonid, $identifier);
+}
 
 sub _get_metagenotype_identifier
 {

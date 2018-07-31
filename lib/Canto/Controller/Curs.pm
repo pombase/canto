@@ -1834,18 +1834,47 @@ sub _metagenotype_store
 
   my $pathogen_genotype_id = $body_data->{pathogen_genotype_id};
   my $host_genotype_id = $body_data->{host_genotype_id};
+  my $host_taxonid = $body_data->{host_taxonid};
+
+  if (!$host_genotype_id && !$host_taxonid) {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "Storing new meta-genotype failed: internal error - " .
+        "metagenotype call much have 'host_genotype_id' or 'host_taxonid' param",
+    };
+
+    $c->forward('View::JSON');
+
+    return;
+  }
+
+  if ($host_genotype_id && $host_taxonid) {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "Storing new meta-genotype failed: internal error - " .
+        "metagenotype call has both 'host_genotype_id' and 'host_taxonid' params",
+    };
+
+    $c->forward('View::JSON');
+
+    return;
+  }
 
   my @alleles = ();
 
   try {
     my $pathogen_genotype = $schema->find_with_type('Genotype', $pathogen_genotype_id);
-    my $host_genotype = $schema->find_with_type('Genotype', $host_genotype_id);
-
-    my $curs_key = $st->{curs_key};
 
     my $genotype_manager =
-      Canto::Curs::GenotypeManager->new(config => $c->config(),
-                                        curs_schema => $schema);
+      Canto::Curs::GenotypeManager->new(config => $c->config(), curs_schema => $schema);
+
+    my $host_genotype;
+
+    if ($host_genotype_id) {
+      $host_genotype = $schema->find_with_type('Genotype', $host_genotype_id);
+    } else {
+      $host_genotype = $genotype_manager->get_wildtype_genotype($host_taxonid);
+    }
 
     my $existing_metagenotype =
       $genotype_manager->find_metagenotype(pathogen_genotype => $pathogen_genotype,
