@@ -373,8 +373,8 @@ canto.service('CursGenotypeList', function($q, Curs) {
     };
 
   this.storeMetagenotype =
-    function(toaster, $http, pathogenGenotypeId, hostGenotypeId) {
-      var promise = storeMetagenotypeHelper(toaster, $http, pathogenGenotypeId, hostGenotypeId);
+    function(toaster, $http, options) {
+      var promise = storeMetagenotypeHelper(toaster, $http, options);
 
       promise.then(function() {
         service.sendChangeEvent();
@@ -3100,12 +3100,13 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
   return result;
 }
 
-function storeMetagenotypeHelper(toaster, $http, pathogenGenotypeId, hostGenotypeId) {
+function storeMetagenotypeHelper(toaster, $http, options) {
   var url = curs_root_uri + '/feature/metagenotype/store';
 
   var data = {
-    pathogen_genotype_id: pathogenGenotypeId,
-    host_genotype_id: hostGenotypeId,
+    pathogen_genotype_id: options['pathogenGenotypeId'],
+    host_genotype_id: options['hostGenotypeId'],
+    host_taxonid: options['hostTaxonid'],
   };
 
   loadingStart();
@@ -6355,7 +6356,11 @@ var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster,
 
       $scope.createMetaGenotype = function() {
         var storePromise =
-          CursGenotypeList.storeMetagenotype(toaster, $http, $scope.pathogenModel, $scope.hostModel);
+            CursGenotypeList.storeMetagenotype(toaster, $http,
+                                               {
+                                                 pathogenGenotypeId: $scope.pathogenModel,
+                                                 hostGenotypeId: $scope.hostModel,
+                                               });
 
         storePromise.then(function(result) {
           switch (result.data.status) {
