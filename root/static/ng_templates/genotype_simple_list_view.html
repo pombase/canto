@@ -14,7 +14,7 @@
       </thead>
       <tbody
         genotype-simple-list-row
-        ng-repeat="currentGenotype in genotypeList"
+        ng-repeat="currentGenotype in genotypeList track by $index"
         set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
         show-check-box-actions="showCheckBoxActions"
         selected-genotype-id="{{selectedGenotypeId}}"
