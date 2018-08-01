@@ -419,17 +419,23 @@ sub _get_genotypes
         $self->_genotype_details_hash($genotype, $include_allele);
       }
       grep {
-        if ($pathogen_or_host) {
-          my $genotype = $_;
+        my $genotype = $_;
 
-          my $organism_details =
-            $self->organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
-
-          $pathogen_or_host eq $organism_details->{pathogen_or_host};
+        if ($genotype->alleles()->count() == 0) {
+          # wild type genotype
+          0;
         } else {
-          1;
+          if ($pathogen_or_host) {
+            my $organism_details =
+              $self->organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
+
+            $pathogen_or_host eq $organism_details->{pathogen_or_host};
+          } else {
+            1;
+          }
         }
-      } $genotype_rs->all();
+      }
+      $genotype_rs->all();
   }
 
   if ($arg eq 'external_only' || $arg eq 'all') {
