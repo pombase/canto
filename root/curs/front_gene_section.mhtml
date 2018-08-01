@@ -22,7 +22,8 @@ Annotate genes<% $and_genotypes %>
 %   my @gene_hashes = @{$org_and_gene_hashes->{gene_hashes}};
 
 %   if ($multi_organism_mode) {
-  <div class="curs-front-page-gene-org-name">
+  <div title="NCBI taxon ID: <% $org_and_gene_hashes->{organism}->{taxonid} %>"
+       class="curs-front-page-gene-org-name">
 %   if ($org_and_gene_hashes->{organism}->{common_name}) {
   <% $org_and_gene_hashes->{organism}->{common_name} %>
 %   } else {
