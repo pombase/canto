@@ -14,7 +14,7 @@ $total_annotation_count
 <div>
   <div class="row">
     <div class="curs-front-gene-list {{getAnnotationMode() == 'advanced' ? 'col-sm-4 col-md-4' : 'col-sm-6 col-md-6'}}">
-<& /curs/gene_list.mhtml, pub => $pub &>
+<& /curs/front_gene_section.mhtml, pub => $pub &>
     </div>
     <div ng-if="getAnnotationMode() == 'advanced'" class="col-sm-3 col-md-3 ng-cloak">
 <& /curs/front_page_quick_links.mhtml, annotation_type_list => \@annotation_type_list &>

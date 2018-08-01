@@ -19,25 +19,7 @@ Annotate genes<% $and_genotypes %>
   </div>
   <div class="curs-box-body">
 % if (@gene_hashes) {
-  <table>
-%   for (my $y = 0; $y < $row_max; $y++) {
-    <tr>
-%     for (my $x = 0; $x < $col_count; $x++) {
-%       my $index = $y + $x * $row_max;
-%       my $gene = $gene_hashes[$index];
-%       if (defined $gene) {
-      <td>
-        <a href="<% $start_path . '/feature/gene/view/' . $gene->{gene_id} . ($read_only_curs ? '/ro' : '') %>">
-          <span>
-            <% $gene->{identifier} %>
-          </span>
-        </a>
-</td>
-%       }
-%     }
-    </tr>
-%   }
-  </table>
+<& /curs/front_gene_table.mhtml, gene_hashes => \@gene_hashes &>
 % } else {
   <div class="no-genes-message">
     [No genes]
@@ -96,8 +78,4 @@ my $genotype_manage_url = "$start_path/genotype_manage";
 if ($read_only_curs) {
   $genotype_manage_url .= '/ro';
 }
-
-my $row_max = int((@gene_hashes + 1) / 2);
-my $col_count = 2;
-
 </%init>
