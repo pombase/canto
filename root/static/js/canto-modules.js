@@ -3917,9 +3917,7 @@ var genotypeManageCtrl =
     $scope.metagenotypeUrl = CantoGlobals.curs_root_uri + '/metagenotype_manage';
 
     $scope.data = {
-      genotypes: [],
-      singleAlleleGenotypes: [],
-      multiAlleleGenotypes: [],
+      genotypeMap: {},
       waitingForServer: true,
       selectedGenotypeId: null,
       editingGenotype: false,
