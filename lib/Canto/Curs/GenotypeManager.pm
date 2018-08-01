@@ -266,7 +266,7 @@ sub get_wildtype_genotype
   my $host_details =
     $organism_lookup->lookup_by_taxonid($genotype_taxonid);
 
-  my $identifier = $host_details->{genus} . '-' . $host_details->{special} . '-wild-type-genotype';
+  my $identifier = $host_details->{genus} . '-' . $host_details->{species} . '-wild-type-genotype';
 
   return $self->make_genotype(undef, undef, [], $genotype_taxonid, $identifier);
 }
