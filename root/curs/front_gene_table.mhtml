@@ -23,12 +23,14 @@
 </table>
 
 <%init>
-my $st = $c->stash();
-
 use Canto::Curs;
 
+my $st = $c->stash();
+
+my $multi_organism_mode = $st->{multi_organism_mode};
+
 # pad so we don't get two columns if there are only a few genes
-if (@gene_hashes <= 5) {
+if (!$multi_organism_mode && @gene_hashes <= 5) {
   push @gene_hashes, (undef) x @gene_hashes;
 }
 
