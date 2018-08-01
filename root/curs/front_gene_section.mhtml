@@ -18,18 +18,37 @@ Annotate genes<% $and_genotypes %>
     </div>
   </div>
   <div class="curs-box-body">
-% if (@gene_hashes) {
+% for my $org_and_gene_hashes (@gene_hashes_by_organism) {
+%   my @gene_hashes = @{$org_and_gene_hashes->{gene_hashes}};
+
+%   if ($multi_organism_mode) {
+  <div class="curs-front-page-gene-org-name">
+%   if ($org_and_gene_hashes->{organism}->{common_name}) {
+  <% $org_and_gene_hashes->{organism}->{common_name} %>
+%   } else {
+  <% $org_and_gene_hashes->{organism}->{full_name} %>
+%   }
+  </div>
+%   }
+
+%   if (@gene_hashes) {
 <& /curs/front_gene_table.mhtml, gene_hashes => \@gene_hashes &>
-% } else {
+%   } else {
   <div class="no-genes-message">
     [No genes]
   </div>
+%   }
 % }
-
   <div style="margin-top: 20px;">
 % if (!$read_only_curs) {
   <div class="feature-list-action">
-    <a href="<% $edit_path %>">Edit gene list ...</a>
+    <a href="<% $edit_path %>">
+%   if ($multi_organism_mode) {
+Edit genes and organisms ...
+%   } else {
+Edit gene list ...
+%   }
+    </a>
   </div>
 % }
 % if ($genotype_annotation_configured) {
@@ -44,29 +63,30 @@ Annotate genes<% $and_genotypes %>
 <%init>
 use Canto::Curs;
 use Canto::Curs::GeneProxy;
+use Canto::Curs::ServiceUtils;
 
 my $st = $c->stash();
 my $schema = $st->{schema};
 my $config = $c->config();
 
-my @all_genes = map {
-  Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $_);
-} Canto::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all();
+my $multi_organism_mode = $st->{multi_organism_mode};
 
-my @gene_hashes = sort {
-     $a->{identifier} cmp $b->{identifier};
-   } map {
-     my $extra_text = '';
-     {
-       identifier => $_->primary_name() || $_->primary_identifier(),
-       gene_id => $_->gene_id(),
-     }
-   } @all_genes;
+my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema, config => $config);
 
-# pad so we don't get two columns if there are only a few genes
-if (@gene_hashes <= 5) {
-  push @gene_hashes, (undef) x @gene_hashes;
-}
+my @organisms_and_genes = @{$service_utils->list_for_service('organism')};
+
+my @gene_hashes_by_organism =
+  map {
+    my $organism = $_;
+    my @gene_hashes = sort {
+      $a->{display_name} cmp $b->{display_name};
+    } @{$organism->{genes}};
+
+    {
+      organism => $organism,
+      gene_hashes => [@gene_hashes],
+    }
+  } @organisms_and_genes;
 
 my $read_only_curs = $st->{read_only_curs};
 my $genotype_annotation_configured = $st->{genotype_annotation_configured};
@@ -78,4 +98,5 @@ my $genotype_manage_url = "$start_path/genotype_manage";
 if ($read_only_curs) {
   $genotype_manage_url .= '/ro';
 }
+
 </%init>

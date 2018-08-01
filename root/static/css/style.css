@@ -55,6 +55,10 @@ a.disabled {
   margin: 5px;
 }
 
+.curs-front-page-gene-org-name {
+  font-weight: bold;
+}
+
 .docs .row-fluid div {
   clear: right;
 }
@@ -654,7 +658,7 @@ div.clearall {
 .curs-front-gene-list table {
   font-size: 95%;
   border-width: 0px;
-  margin: 10px 10px 15px 15px
+  margin: 5px 0 8px 10px
 }
 .curs-front-gene-list td {
   border-width: 0px;
