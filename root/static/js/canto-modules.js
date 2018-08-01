@@ -3999,6 +3999,29 @@ var genotypeManageCtrl =
         (CantoGlobals.read_only_curs ? '/ro' : '');
     };
 
+    var mapGenotypes = function (genotypes) {
+      var genotypeMap = {};
+      var taxonId = "";
+      $.each(genotypes, function (index, genotype) {
+        taxonId = genotype.organism.taxonid;
+        if ( ! (taxonId in genotypeMap)) {
+          genotypeMap[taxonId] = {};
+        }
+        if (isSingleAlleleGenotype(genotype)) {
+          if ( ! ('singleAlleleGenotypes' in genotypeMap[taxonId])) {
+            genotypeMap[taxonId]['singleAlleleGenotypes'] = [];
+          }
+          genotypeMap[taxonId]['singleAlleleGenotypes'].push(genotype);
+        } else {
+          if ( ! ('multiAlleleGenotypes' in genotypeMap[taxonId])) {
+            genotypeMap[taxonId]['multiAlleleGenotypes'] = [];
+          }
+          genotypeMap[taxonId]['multiAlleleGenotypes'].push(genotype);
+        }
+      });
+      return genotypeMap;
+    };
+
     $scope.readGenotypes();
 
     },
