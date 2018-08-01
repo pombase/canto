@@ -6232,6 +6232,7 @@ var metagenotypeOrganismPicker =
           wildTypeGenotype: { "genotype_id": -1 } ,
           typeLabel: 'Host',
           genotypeType: 'host',
+          isHost: false,
         };
 
         $scope.getOrganismsFromServer = function() {
@@ -6328,6 +6329,8 @@ var metagenotypeOrganismPicker =
             $scope.data.typeLabel = 'Pathogen';
             $scope.data.genotypeType = 'pathogen';
           }
+
+          $scope.data.isHost = !$scope.isPathogen;
 
           $scope.getOrganismsFromServer();
           $scope.readGenotypes();
