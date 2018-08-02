@@ -6427,8 +6427,25 @@ var metagenotypeListRowLinksCtrl =
 
         $scope.deleteMetagenotype = function(metagenotypeId) {
           loadingStart();
-          CursGenotypeList.deleteMetaGenotype($scope.metagenotypes, $scope.metagenotypeId);
-          loadingEnd();
+
+          var q = CursGenotypeList.deleteMetaGenotype($scope.metagenotypes, $scope.metagenotypeId);
+
+          q.then(function() {
+            toaster.pop('success', 'Meta-genotype deleted');
+          });
+
+          q.catch(function(message) {
+            if (message.match('genotype .* has annotations')) {
+              toaster.pop('warning', "couldn't delete the metagenotype: " +
+                          "delete the annotations that use it first");
+            } else {
+              toaster.pop('error', "couldn't delete the metagenotype: " + message);
+            }
+          });
+
+          q.finally(function() {
+            loadingEnd();
+          });
         };
 
       },
