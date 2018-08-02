@@ -6242,15 +6242,29 @@ var metagenotypeGenotypePicker =
           };
 
           $scope.setSingleAllele = function () {
-            $scope.data.singleAllele =  $scope.data.genotypes.filter(function (e) {
-              return ((e.organism.taxonid === $scope.data.selectedOrganism.taxonid) && (e.alleles.length === 1));
-            });
+            if ($scope.data.selectedOrganism == null) {
+              $scope.data.singleAllele = [];
+            } else {
+              $scope.data.singleAllele =  $scope.data.genotypes.filter(function (e) {
+                return (
+                  (e.organism.taxonid === $scope.data.selectedOrganism.taxonid)
+                  && (e.alleles.length === 1)
+                );
+              });
+            }
           }
 
           $scope.setMultiAllele = function () {
+            if ($scope.data.selectedOrganism == null) {
+              $scope.data.multiAllele = [];
+            } else {
               $scope.data.multiAllele = $scope.data.genotypes.filter(function (e) {
-              return ((e.organism.taxonid === $scope.data.selectedOrganism.taxonid) && (e.alleles.length > 1));
-            });
+                return (
+                  (e.organism.taxonid === $scope.data.selectedOrganism.taxonid)
+                  && (e.alleles.length > 1)
+                );
+              });
+            }
           }
 
           $scope.setWildtypeOrganism = function () {
