@@ -6435,13 +6435,13 @@ var metagenotypeListRowLinksCtrl =
       link: function($scope) {
         if ($scope.navigateOnClick) {
           $scope.detailsUrl =
-            CantoGlobals.curs_root_uri + '/genotype_manage' +
+            CantoGlobals.curs_root_uri + '/metagenotype_manage' +
             (CantoGlobals.read_only_curs ? '/ro' : '') + '#/select/' +
             $scope.genotype.id_or_identifier;
         } else {
           $scope.detailsUrl = '#';
           $scope.viewAnnotationUri =
-            CantoGlobals.curs_root_uri + '/feature/genotype/view/' + $scope.metagenotypeId;
+            CantoGlobals.curs_root_uri + '/feature/metagenotype/view/' + $scope.metagenotypeId;
           if (CantoGlobals.read_only_curs) {
             $scope.viewAnnotationUri += '/ro';
           }
