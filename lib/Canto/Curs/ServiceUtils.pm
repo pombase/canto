@@ -1312,12 +1312,12 @@ sub delete_annotation
 
 =head2 delete_genotype
 
- Usage   : $utils->delete_genotype($details);
+ Usage   : $utils->delete_genotype($genotype_id, $details);
  Function: Remove a genotype from the CursDB if it has no annotations.
            Any alleles not referenced by another Genotype will be removed too.
- Args    : $details - annotation details:
+ Args    : $genotype_id
+           $details - annotation details containing:
              - key: the curs key
-             - genotype_identifier: ID of the annotation to delete
  Return  : { status: 'success' }
          or:
            { status: 'error', message: '...' }
@@ -1341,6 +1341,59 @@ sub delete_genotype
                                         curs_schema => $self->curs_schema());
 
     my $ret = $genotype_manager->delete_genotype($genotype_id);
+
+    $self->metadata_storer()->store_counts($curs_schema);
+
+    $curs_schema->txn_commit();
+
+    if ($ret) {
+      return {
+        status => 'error',
+        message => $ret,
+      };
+    } else {
+      return {
+        status => 'success',
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
+=head2 delete_metagenotype
+
+ Usage   : $utils->delete_metagenotype($metagenotype_id, $details);
+ Function: Remove a metagenotype from the CursDB if it has no annotations.
+ Args    : $metagenotype_id
+           $details - annotation details containing
+             - key: the curs key
+ Return  : { status: 'success' }
+         or:
+           { status: 'error', message: '...' }
+
+=cut
+
+sub delete_metagenotype
+{
+  my $self = shift;
+  my $metagenotype_id = shift;
+  my $details = shift;
+
+  my $curs_schema = $self->curs_schema();
+  $curs_schema->txn_begin();
+
+  try {
+    $self->_check_curs_key($details);
+
+    my $genotype_manager =
+      Canto::Curs::GenotypeManager->new(config => $self->config(),
+                                        curs_schema => $self->curs_schema());
+
+    my $ret = $genotype_manager->delete_metagenotype($metagenotype_id);
 
     $self->metadata_storer()->store_counts($curs_schema);
 

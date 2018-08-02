@@ -479,11 +479,12 @@ sub find_metagenotype
 
 =head2 delete_genotype
 
- Usage   : $utils->delete_genotype($genotype_identifier);
+ Usage   : $utils->delete_genotype($genotype_id);
  Function: Remove a genotype from the CursDB if it has no annotations.
            Any alleles not referenced by another Genotype will be removed too.
  Args    : $genotype_id
- Return  : Nothing - dies on error or if the genotype has some annotations
+ Return  :     0 if all is OK
+           or: a string error if the genotype has annotations
 
 =cut
 
@@ -503,6 +504,34 @@ sub delete_genotype
   $genotype->delete();
 
   $self->_remove_unused_alleles();
+
+  return 0;
+}
+
+=head2 delete_metagenotype
+
+ Usage   : $utils->delete_metagenotype($genotype_id);
+ Function: Remove a metagenotype from the CursDB if it has no annotations.
+ Args    : $metagenotype_id
+ Return  :     0 if all is OK
+           or: a string error if the genotype has annotations
+
+=cut
+
+sub delete_metagenotype
+{
+  my $self = shift;
+  my $metagenotype_id = shift;
+
+  my $schema = $self->curs_schema();
+
+  my $metagenotype = $schema->resultset('Metagenotype')->find($metagenotype_id);
+
+  if ($metagenotype->annotations()->count() > 0) {
+    return "metagenotype $metagenotype_id has annotations - delete failed";
+  }
+
+  $metagenotype->delete();
 
   return 0;
 }

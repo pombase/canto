@@ -2805,6 +2805,27 @@ sub ws_genotype_delete : Chained('top') PathPart('ws/genotype/delete')
   $c->forward('View::JSON');
 }
 
+sub ws_metagenotype_delete : Chained('top') PathPart('ws/metagenotype/delete')
+{
+  my ($self, $c, $feature_id) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  my $json_data = $c->req()->body_data();
+
+  my $guard = $schema->txn_scope_guard();
+
+  $c->stash->{json_data} = $service_utils->delete_metagenotype($feature_id, $json_data);
+
+  $guard->commit();
+
+  $c->forward('View::JSON');
+}
+
 sub ws_add_gene : Chained('top') PathPart('ws/gene/add')
 {
   my ($self, $c, $gene_identifier) = @_;
