@@ -19,7 +19,7 @@
         </td>
         <td style="width: 0; border: 0px; padding: 0; margin: 0; background-color: white;"></td>
     </tr>
-    <tr ng-repeat="currentAllele in otherAlleles">
+    <tr ng-repeat="currentAllele in otherAlleles track by $index">
         <td>
             <a href="{{curs_root_uri + '/feature/gene/view/' + currentAllele.gene_id + (read_only_curs ? '/ro' : '')}}">{{currentAllele.gene_display_name}}</a>
         </td>

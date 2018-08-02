@@ -1834,7 +1834,7 @@ sub _metagenotype_store
 
   my $pathogen_genotype_id = $body_data->{pathogen_genotype_id};
   my $host_genotype_id = $body_data->{host_genotype_id};
-  my $host_taxonid = $body_data->{host_taxonid};
+  my $host_taxonid = $body_data->{host_taxon_id};
 
   if (!$host_genotype_id && !$host_taxonid) {
     $c->stash->{json_data} = {
