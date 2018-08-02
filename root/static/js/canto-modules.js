@@ -466,24 +466,25 @@ canto.service('CursGenotypeList', function($q, Curs) {
   };
 
   this.deleteMetaGenotype = function(metagenotypeList, metagenotypeId) {
-    // var q = $q.defer();
+    var q = $q.defer();
 
-    // Curs.delete('metagenotypeId', metagenotypeId)
-    //   .then(function() {
+    Curs.delete('metagenotype', metagenotypeId)
+      .then(function() {
         for (var i = 0; i < metagenotypeList.length; i++) {
-          if (metagenotypeList[i].genotype_id == metagenotypeId) {
+          if (metagenotypeList[i].metagenotype_id == metagenotypeId) {
             metagenotypeList.splice(i, 1);
             break;
           }
         }
-    //     service.sendChangeEvent();
-    //     q.resolve();
-    //   })
-    //   .catch(function(message) {
-    //     q.reject(message);
-    //   });
 
-    // return q.promise;
+        service.sendChangeEvent();
+        q.resolve();
+      })
+      .catch(function(message) {
+        q.reject(message);
+      });
+
+    return q.promise;
   };
 });
 
