@@ -6292,7 +6292,7 @@ canto.directive('metagenotypeGenotypePicker',
   ['Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster', metagenotypeGenotypePicker]);
 
 
-var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster, $http) {
+var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster, $http, AnnotationProxy) {
   return {
     scope: {},
     restrict: 'E',
@@ -6305,7 +6305,9 @@ var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster,
       $scope.selectedHost = null;
       $scope.genotypeUrl = CantoGlobals.curs_root_uri + '/genotype_manage';
       $scope.metagenotypes = null;
+      $scope.annotations = [];
       $scope.makeInvalid = true;
+      $scope.isCollapsed = true;
 
       $scope.pathogenCallback = function(selectedPathogen) {
         $scope.pathogenModel = selectedPathogen.genotype_id;
@@ -6359,7 +6361,6 @@ var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster,
             $scope.listMetaGenotypes();
             break;
           }
-
         });
       };
 
@@ -6375,16 +6376,33 @@ var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster,
           });
       };
 
+      $scope.loadAnnotations = function() {
+        AnnotationProxy.getAnnotation('disease_formation_phenotype')
+        .then(function(annotations) {
+          $scope.annotations = annotations;
+        }).catch(function() {
+          var message = 'Couldn\'t read annotations from the server - please try reloading';
+          service.error(message);
+        });
+      }
+
+      $scope.getAnnotationsById = function(id) {
+        return $scope.annotations.filter(function (e) {
+          return (e.metagenotype_id === id);
+        });
+      }
+
+      $scope.loadAnnotations();
       $scope.listMetaGenotypes();
     }
   };
 };
 
-canto.directive('metagenotypeManage', ['CantoGlobals', 'Curs', 'CursGenotypeList', 'toaster', '$http', metagenotypeManage]);
+canto.directive('metagenotypeManage', ['CantoGlobals', 'Curs', 'CursGenotypeList', 'toaster', '$http', 'AnnotationProxy', metagenotypeManage]);
 
 
 var metagenotypeSummaryItem =
-  function($compile, $http, toaster, CursGenotypeList, CantoGlobals) {
+  function() {
     return {
       scope: {
         type: '@',
