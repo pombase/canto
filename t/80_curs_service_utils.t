@@ -1196,8 +1196,8 @@ $config->_set_host_organisms($track_schema);
 $Canto::Track::OrganismLookup::cache = {};
 
 my $phi_phenotype_config = clone $config->{annotation_types}->{phenotype};
-$phi_phenotype_config->{name} = 'disease formation phenotype';
-$phi_phenotype_config->{namespace} = 'disease formation phenotype';
+$phi_phenotype_config->{name} = 'disease_formation_phenotype';
+$phi_phenotype_config->{namespace} = 'disease_formation_phenotype';
 $phi_phenotype_config->{feature_type} = 'metagenotype';
 
 push @{$config->{available_annotation_type_list}}, $phi_phenotype_config;

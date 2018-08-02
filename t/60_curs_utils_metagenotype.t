@@ -22,8 +22,8 @@ $Canto::Track::OrganismLookup::cache = {};
 my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 
 my $phi_phenotype_config = clone $config->{annotation_types}->{phenotype};
-$phi_phenotype_config->{name} = 'disease formation phenotype';
-$phi_phenotype_config->{namespace} = 'disease formation phenotype';
+$phi_phenotype_config->{name} = 'disease_formation_phenotype';
+$phi_phenotype_config->{namespace} = 'disease_formation_phenotype';
 $phi_phenotype_config->{feature_type} = 'metagenotype';
 
 push @{$config->{available_annotation_type_list}}, $phi_phenotype_config;
@@ -56,7 +56,7 @@ my $annotation_json = {
   'term_ontid' => 'PHIPO:0000006',
   'term_suggestion_name' => undef,
   'feature_id' => $metagenotype->metagenotype_id(),
-  'annotation_type' => 'disease formation phenotype',
+  'annotation_type' => 'disease_formation_phenotype',
   'key' => 'aaaa0007',
   'submitter_comment' => 'Figure 5',
 };
@@ -64,7 +64,7 @@ my $annotation_json = {
 my $result = $service_utils->create_annotation($annotation_json);
 
 my ($completed_count, $annotations_ref) =
-  Canto::Curs::Utils::get_annotation_table($config, $curs_schema, 'disease formation phenotype');
+  Canto::Curs::Utils::get_annotation_table($config, $curs_schema, 'disease_formation_phenotype');
 
 is (@$annotations_ref, 1);
 is ($annotations_ref->[0]->{term_name}, 'pathogenicity phenotype');
