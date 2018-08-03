@@ -10,12 +10,6 @@
       View phenotype annotations ...
     </a>
   </div>
-  <div>
-    <a confirm="This genotype has existing annotations.  Really edit?"
-       confirm-if="annotationCount > 0"
-       ng-class="{disabled: metagenotypeId == null }" ng-if="!read_only_curs"
-       ng-click="editGenotype(metagenotypeId)">Edit details ...</a>
-  </div>
   <div title="{{annotationCount > 0 ? 'MetaGenotypes with more than one annotation cannot be deleted - delete the annotations first' : ''}}">
     <a ng-class="{disabled: metagenotypeId == null || annotationCount > 0}"
        ng-if="!read_only_curs"
