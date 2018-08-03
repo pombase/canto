@@ -1,5 +1,5 @@
 <div id="curs-genotype-manage" class="genotype-list ng-cloak container">
-    <div class="row">
+    <div class="row" ng-if="display">
         <div class="col-md-6">
             <metagenotype-genotype-picker is-pathogen="true" genotype-model="pathogenModel" callback="pathogenCallback"></metagenotype-organism-picker>
         </div>
@@ -9,13 +9,14 @@
     </div>
     <div class="row">
         <button ng-click="toGenotype()" type="button" class="btn btn-primary curs-back-button">
-            &lt;-- Return to edit Genotypes
+            &lt;-- Back to Genotypes
         </button>
         <button
             ng-click="createMetaGenotype()"
             type="button"
             class="btn btn-primary curs-back-button"
-            ng-disabled="makeInvalid">
+            ng-disabled="makeInvalid"
+            ng-if="display">
             Make it --&gt;
         </button>
     </div>

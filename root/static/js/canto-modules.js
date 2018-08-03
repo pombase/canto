@@ -6308,6 +6308,7 @@ var metagenotypeManage = function(CantoGlobals, Curs, CursGenotypeList, toaster,
       $scope.annotations = [];
       $scope.makeInvalid = true;
       $scope.isCollapsed = true;
+      $scope.display = (!CantoGlobals.read_only_curs);
 
       $scope.pathogenCallback = function(selectedPathogen) {
         $scope.pathogenModel = selectedPathogen.genotype_id;
