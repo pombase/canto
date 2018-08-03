@@ -6,12 +6,12 @@
                 <th style="border-bottom: 1px solid grey; min-width: 175px;" colspan="3">Genotype</th>
             </tr>
         </thead>
-        <tbody ng-class="{ selected: radioVal }">
+        <tbody ng-class="{ selected: (genotypeModel === genotype.genotype_id) }">
             <tr>
                 <td class="curs-genotype-checkbox-column">
                     <input type="radio" ng-model="genotypeModel" ng-change="isSelected()" value="{{genotype.genotype_id}}" />
                 </td>
-                <td>
+                <td colspan="3">
                     Wildtype
                 </td>
             </tr>
