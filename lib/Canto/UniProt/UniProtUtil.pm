@@ -75,8 +75,14 @@ sub parse_results
 
   for my $entry (@{$res_hash->{entry}}) {
     my $name = _content($entry->{name}->[0]);
-    my $full_name =
-      _content($entry->{protein}->[0]->{recommendedName}->[0]->{fullName}->[0]);
+    my $full_name_parent_element;
+    if ($entry->{protein}->[0]->{recommendedName}) {
+      $full_name_parent_element = $entry->{protein}->[0]->{recommendedName};
+    } else {
+      $full_name_parent_element = $entry->{protein}->[0]->{submittedName};
+    }
+
+    my $full_name = _content($full_name_parent_element->[0]->{fullName}->[0]);
 
     my @synonyms = ();
 
