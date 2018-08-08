@@ -53,6 +53,7 @@ __PACKAGE__->config(name => 'Canto',
                       disable_index => 1,
                     },
                     using_frontend_proxy => 1,
+                    encoding => 'utf8',
                    );
 
 
