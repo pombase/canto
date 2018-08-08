@@ -7,14 +7,14 @@ Canto curation makes your work visible in PomBase and many other databases.
     </p>
     <p>
 Find out more on the Fission Yeast Community Curation page at
-<a href="http://www.pombase.org/community/fission-yeast-community-curation-project">PomBase</a>.
+<a href="https://www.pombase.org/community/fission-yeast-community-curation-project">PomBase</a>.
     </p>
     <div style="text-align: center; padding-top: 40px; font-size: 110%;">
-    <a href="http://www.pombase.org/community/fission-yeast-community-curation-project">About</a>
+    <a href="https://www.pombase.org/community/fission-yeast-community-curation-project">About</a>
     |
-    <a href="http://curation.pombase.org/pombe/stats/annotation">Curation statistics</a> 
+    <a href="https://curation.pombase.org/pombe/stats/annotation">Curation statistics</a> 
     |
-    <a href="http://curation.pombase.org/pombe/docs/index">Documentation</a>
+    <a href="https://curation.pombase.org/pombe/docs/index">Documentation</a>
     |
     <& /contact.mhtml, link_text => "Contact" &>
     </div>
