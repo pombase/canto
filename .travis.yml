@@ -11,4 +11,6 @@ branches:
     - master
     - metagenotype-dev
 
+# this runs "make test" inside a Docker container using the
+# pombase/canto-base:v6 image
 script: ./etc/docker-run-tests.sh
