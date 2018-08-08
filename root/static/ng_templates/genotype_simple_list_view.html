@@ -4,7 +4,7 @@
       <thead>
         <tr>
           <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">&nbsp;</th>
-          <th style="border-bottom: 1px solid grey" colspan="{{columnsToHide.background ? 3 : 4}}">Genotype</th>
+          <th style="border-bottom: 1px solid grey" colspan="3">Genotype</th>
         </tr>
         <tr>
           <th>Genes</th>
@@ -15,16 +15,10 @@
       <tbody
         genotype-simple-list-row
         ng-repeat="currentGenotype in genotypeList track by $index"
-        set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
         show-check-box-actions="showCheckBoxActions"
-        selected-genotype-id="{{selectedGenotypeId}}"
-        navigate-on-click="{{navigateOnClick}}"
-        columns-to-hide="columnsToHide"
-        genotypes="genotypeList"
         genotype="currentGenotype"
         genotype-model="genotypeModel"
-        callback="callback"
-        radio-name="{{radioName}}">
+        callback="callback">
       </tbody>
     </table>
   </div>
