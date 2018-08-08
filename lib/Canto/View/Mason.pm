@@ -26,6 +26,15 @@ __PACKAGE__->config->{data_dir} =
     sprintf('%s_%d_%s_mason_data_dir', $app, $<, $inst_name)
   );
 
+use Moose;
+
+around 'new' => sub {
+    my ($orig, $self, $app, @args) = @_;
+    $self = $self->$orig($app, @args);
+    $self->template->compiler->{preamble} = 'use utf8;';
+    return $self;
+};
+
 =head1 NAME
 
 Canto::View::Mason - Mason View Component
