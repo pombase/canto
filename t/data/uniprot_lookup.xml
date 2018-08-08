@@ -1716,9 +1716,9 @@
     <accession>Q06Y82</accession>
     <name>Q06Y82_SCHPM</name>
     <protein>
-      <recommendedName>
+      <submittedName>
         <fullName evidence="EA9">Cytochrome c oxidase subunit 2</fullName>
-      </recommendedName>
+      </submittedName>
     </protein>
     <gene>
       <name type="primary" evidence="EI1">COXII</name>

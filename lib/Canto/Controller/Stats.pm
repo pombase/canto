@@ -102,7 +102,7 @@ sub annotation : Local {
   $st->{template} = 'stats/annotation.mhtml';
 
   if (!$ENV{CANTO_DEBUG}) {
-    $c->cache_page(600);
+    $c->cache_page(60*60*3-30);  # just under 3 hours
   }
 }
 
