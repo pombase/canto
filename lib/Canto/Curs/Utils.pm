@@ -124,12 +124,10 @@ sub _make_metagenotype_details
     _make_genotype_details($host_genotype, $config, $ontology_lookup, $organism_lookup);
 
   my $metagenotype_display_name =
-    ($pathogen_genotype_details{organism}->{common_name} //
-     $pathogen_genotype_details{organism}->{full_name}) . ' ' .
-     $pathogen_genotype_details{genotype_display_name} . ' / ' .
-    ($host_genotype_details{organism}->{common_name} //
-     $host_genotype_details{organism}->{full_name}) . ' ' .
-     $host_genotype_details{genotype_display_name};
+    $pathogen_genotype_details{organism}->{full_name} . ' ' .
+    $pathogen_genotype_details{genotype_display_name} . ' / ' .
+    $host_genotype_details{organism}->{full_name} . ' ' .
+    $host_genotype_details{genotype_display_name};
 
   return (
     pathogen_genotype => \%pathogen_genotype_details,
