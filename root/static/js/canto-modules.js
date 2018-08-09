@@ -3609,7 +3609,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
         );
         $scope.organismSelected({organism: $scope.data.selectedOrganism});
       }
-      // setSelectedOrganism();
+      setDefaultOrganism();
     }).error(function() {
       toaster.pop('error', 'failed to get organism list from server');
     });
@@ -3629,15 +3629,12 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     return newSelectedOrganism;
   };
 
-  var setSelectedOrganism = function () {
-    var organismToSet;
+  var setDefaultOrganism = function () {
     if ($scope.data.organisms.length === 1) {
-      $scope.data.defaultOrganism = $scope.data.organisms[0];
-      organismToSet = $scope.data.defaultOrganism;
-    } else {
-      organismToSet = $scope.data.selectedOrganism;
+      var defaultOrganism = $scope.data.organisms[0];
+      $scope.data.defaultOrganism = defaultOrganism
+      $scope.organismSelected({organism: defaultOrganism});
     }
-    $scope.organismSelected({organism: organismToSet});
   };
 
   $scope.data.hideLabel = $scope.hideLabel || false;
