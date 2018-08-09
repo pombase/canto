@@ -3608,6 +3608,20 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     });
   };
 
+  var getNewSelectedOrganism = function (previousOrganism, organisms) {
+    var finder = function(key, value) {
+      return function (obj) {
+        return obj[key] === value;
+      };
+    };
+    var previousTaxonId = previousOrganism.taxonid;
+    var newSelectedOrganism = $.grep(
+      organisms,
+      finder('taxonid', previousTaxonId)
+    );
+    return newSelectedOrganism;
+  };
+
   var setSelectedOrganism = function () {
     var organismToSet;
     if ($scope.data.organisms.length === 1) {
