@@ -3602,7 +3602,14 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
           genotypeType
         );
       }
-      setSelectedOrganism();
+      if ($scope.data.selectedOrganism) {
+        $scope.data.selectedOrganism = getNewSelectedOrganism(
+          $scope.data.selectedOrganism,
+          $scope.data.organisms
+        );
+        $scope.organismSelected({organism: $scope.data.selectedOrganism});
+      }
+      // setSelectedOrganism();
     }).error(function() {
       toaster.pop('error', 'failed to get organism list from server');
     });
@@ -3618,7 +3625,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     var newSelectedOrganism = $.grep(
       organisms,
       finder('taxonid', previousTaxonId)
-    );
+    )[0];
     return newSelectedOrganism;
   };
 
