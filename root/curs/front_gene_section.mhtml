@@ -1,5 +1,4 @@
 <%args>
-$title => 'Genes'
 $pub
 </%args>
 
@@ -22,12 +21,16 @@ Annotate genes<% $and_genotypes %>
 %   my @gene_hashes = @{$org_and_gene_hashes->{gene_hashes}};
 
 %   if ($multi_organism_mode) {
+  <div class="curs-front-page-gene-path-or-host">
+    <% $org_and_gene_hashes->{header} %>
+  </div>
   <div title="NCBI taxon ID: <% $org_and_gene_hashes->{organism}->{taxonid} %>"
        class="curs-front-page-gene-org-name">
   <% $org_and_gene_hashes->{organism}->{full_name} %>
   </div>
 %   }
 
+<div class="curs-front-page-gene-table">
 %   if (@gene_hashes) {
 <& /curs/front_gene_table.mhtml, gene_hashes => \@gene_hashes &>
 %   } else {
@@ -35,6 +38,8 @@ Annotate genes<% $and_genotypes %>
     [No genes]
   </div>
 %   }
+</div>
+
 % }
   <div style="margin-top: 20px;">
 % if (!$read_only_curs) {
@@ -73,6 +78,15 @@ my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema, confi
 my @organisms_and_genes = @{$service_utils->list_for_service('organism')};
 
 my @gene_hashes_by_organism =
+  sort {
+    if ($a->{organism}->{pathogen_or_host} && $b->{organism}->{pathogen_or_host}) {
+      $a->{organism}->{pathogen_or_host} cmp $b->{organism}->{pathogen_or_host}
+        ||
+      $a->{organism}->{full_name} cmp $b->{organism}->{full_name};
+    } else {
+      $a->{organism}->{full_name} cmp $b->{organism}->{full_name};
+    }
+  }
   map {
     my $organism = $_;
     my @gene_hashes = sort {
@@ -84,6 +98,18 @@ my @gene_hashes_by_organism =
       gene_hashes => [@gene_hashes],
     }
   } @organisms_and_genes;
+
+my %seen_headers = ();
+
+map {
+  if ($multi_organism_mode) {
+    if (!$seen_headers{$_->{organism}->{pathogen_or_host}}) {
+      $seen_headers{$_->{organism}->{pathogen_or_host}} = 1;
+      my $header = ucfirst $_->{organism}->{pathogen_or_host} . 's';
+      $_->{header} = $header;
+    }
+  }
+} @gene_hashes_by_organism;
 
 my $read_only_curs = $st->{read_only_curs};
 my $genotype_annotation_configured = $st->{genotype_annotation_configured};

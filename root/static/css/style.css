@@ -55,8 +55,16 @@ a.disabled {
   margin: 5px;
 }
 
-.curs-front-page-gene-org-name {
+.curs-front-page-gene-path-or-host {
   font-weight: bold;
+}
+
+.curs-front-page-gene-org-name {
+  margin-left: 0.5em;
+}
+
+.curs-front-page-gene-table {
+  margin-left: 1em;
 }
 
 .docs .row-fluid div {
@@ -673,7 +681,7 @@ div.clearall {
 
 .curs-front-gene-list .no-genes-message {
   font-size: 95%;
-  margin: 10px;
+  margin: 0.5em 0.5em 0.7em 0.5em;
 }
 
 .curs-front-gene-list .gene-list-instructions, .genotype-list .curs-genotype-list-instructions {
