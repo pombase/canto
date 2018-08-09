@@ -3541,7 +3541,6 @@ canto.controller('MetagenotypeViewCtrl',
 var organismSelector = function ($http, Curs, toaster, CantoGlobals, CantoConfig) {
   return {
     scope: {
-      selectedOrganism: '=',
       organismSelected: '&',
       genotypeType: '<',
       lastAddedGene: '<',
@@ -3558,6 +3557,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   $scope.app_static_path = CantoGlobals.app_static_path;
 
   $scope.data = {
+    selectedOrganism: null,
     organisms: null,
     defaultOrganism: null
   };
@@ -3569,7 +3569,9 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   });
 
   $scope.organismChanged = function (organism) {
-    $scope.organismSelected({organism: this.selectedOrganism});
+    $scope.organismSelected({
+      organism: $scope.data.selectedOrganism
+    });
   };
 
   var setLabelText = function (genotypeType) {
@@ -3612,7 +3614,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
       $scope.data.defaultOrganism = $scope.data.organisms[0];
       organismToSet = $scope.data.defaultOrganism;
     } else {
-      organismToSet = $scope.selectedOrganism;
+      organismToSet = $scope.data.selectedOrganism;
     }
     $scope.organismSelected({organism: organismToSet});
   };
