@@ -1,4 +1,4 @@
-# build with: docker build --squash -f etc/Dockerfile-base -t=pombase/canto-base:v6 .
+# build with: docker build --squash -f etc/Dockerfile-base -t=pombase/canto-base:v8 .
 
 FROM bitnami/minideb:jessie
 MAINTAINER Kim Rutherford <kim@pombase.org>
@@ -11,7 +11,7 @@ RUN apt-get update; \
 
 RUN apt-get update; \
   apt-get install -y libcatalyst-perl libcatalyst-modules-perl \
-    libserver-starter-perl \
+    libserver-starter-perl starman \
     libmodule-install-perl libcatalyst-devel-perl liblocal-lib-perl && \
    apt-get clean
 
@@ -31,4 +31,4 @@ RUN (cd /tmp/canto; perl Makefile.PL && make installdeps); rm -rf /tmp/canto
 
 RUN rm -rf /root/.local /root/.cpan*
 
-RUN apt-get remove -y wget git-core tar gcc g++; apt-get autoremove -y
+RUN apt-get remove -y wget tar gcc g++ libx11-data libx11-6 x11-common; apt-get autoremove -y
