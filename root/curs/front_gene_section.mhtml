@@ -24,11 +24,7 @@ Annotate genes<% $and_genotypes %>
 %   if ($multi_organism_mode) {
   <div title="NCBI taxon ID: <% $org_and_gene_hashes->{organism}->{taxonid} %>"
        class="curs-front-page-gene-org-name">
-%   if ($org_and_gene_hashes->{organism}->{common_name}) {
-  <% $org_and_gene_hashes->{organism}->{common_name} %>
-%   } else {
   <% $org_and_gene_hashes->{organism}->{full_name} %>
-%   }
   </div>
 %   }
 
