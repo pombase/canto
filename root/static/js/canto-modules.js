@@ -3610,17 +3610,20 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     $scope.data.organisms = organisms;
   };
 
+  var reloadSelectedOrganism = function (previousOrganism, organisms) {
+    if (! previousOrganism) {
+      return;
+    }
+    var newOrganism = getNewSelectedOrganism(previousOrganism, organisms);
+    $scope.data.selectedOrganism = newOrganism;
+    $scope.organismSelected({organism: $scope.data.selectedOrganism});
+  };
+
   var reloadOrganisms = function (genotypeType) {
     getOrganisms().success(function (organisms) {
       var filteredOrganisms = filterOrganisms(organisms, genotypeType)
       setOrganisms(filteredOrganisms);
-      if ($scope.data.selectedOrganism) {
-        $scope.data.selectedOrganism = getNewSelectedOrganism(
-          $scope.data.selectedOrganism,
-          $scope.data.organisms
-        );
-        $scope.organismSelected({organism: $scope.data.selectedOrganism});
-      }
+      reloadSelectedOrganism(previousOrganism, filteredOrganisms);
       setDefaultOrganism();
     }).error(function() {
       toaster.pop('error', 'failed to get organism list from server');
