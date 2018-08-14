@@ -3590,6 +3590,9 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   };
 
   var filterOrganisms = function (organisms, genotypeType) {
+    if (genotypeType !== 'host' && genotypeType !== 'pathogen') {
+      return organisms;
+    }
     var buildOrganismFilter = function (type) {
       return function (organism) {
         return organism['pathogen_or_host'] === type;
@@ -3610,12 +3613,10 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   var reloadOrganisms = function (genotypeType) {
     getOrganisms().success(function (organisms) {
       setOrganisms(organisms);
-      if (genotypeType === 'host' || genotypeType === 'pathogen') {
-        $scope.data.organisms = filterOrganisms(
-          $scope.data.organisms,
-          genotypeType
-        );
-      }
+      $scope.data.organisms = filterOrganisms(
+        $scope.data.organisms,
+        genotypeType
+      );
       if ($scope.data.selectedOrganism) {
         $scope.data.selectedOrganism = getNewSelectedOrganism(
           $scope.data.selectedOrganism,
