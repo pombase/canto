@@ -26,6 +26,9 @@ running on a Plack server.
 
 ## Developing Canto
 ### Running tests
+The environment needs to be initialised with `perl Makefile.PL`.  This
+command creates the Makefile and only needs to be run once.
+
 In general the tests can be run with: `make test` in the main canto
 directory. If the schema or test genes or ontologies are is changed the
 test data will need to be re-initialised.
