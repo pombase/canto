@@ -3622,9 +3622,10 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   var reloadOrganisms = function (selectedOrganism, genotypeType) {
     getOrganisms().success(function (organisms) {
       var filteredOrganisms = filterOrganisms(organisms, genotypeType);
+      var defaultOrganism = getDefaultOrganism(filteredOrganisms);
       setOrganisms(filteredOrganisms);
       reloadSelectedOrganism(selectedOrganism, filteredOrganisms);
-      setDefaultOrganism();
+      setDefaultOrganism(defaultOrganism);
     }).error(function() {
       toaster.pop('error', 'failed to get organism list from server');
     });
@@ -3644,10 +3645,14 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     return newSelectedOrganism;
   };
 
-  var setDefaultOrganism = function () {
-    if ($scope.data.organisms.length === 1) {
-      var defaultOrganism = $scope.data.organisms[0];
-      $scope.data.defaultOrganism = defaultOrganism
+  var getDefaultOrganism = function (organisms) {
+    return organisms.length === 1 ? organisms[0] : null;
+  };
+
+  var setDefaultOrganism = function (defaultOrganism) {
+    $scope.data.defaultOrganism = defaultOrganism;
+    // we must check for null, or the default organism will always be set
+    if (defaultOrganism) {
       $scope.organismSelected({organism: defaultOrganism});
     }
   };
