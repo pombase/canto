@@ -3564,7 +3564,11 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   $scope.$watch('lastAddedGene', function () {
     if ($scope.lastAddedGene) {
-      reloadOrganisms($scope.data.selectedOrganism, $scope.genotypeType);
+      reloadOrganisms(
+        $scope.data.selectedOrganism,
+        $scope.genotypeType,
+        $scope.lastAddedGene
+      );
     }
   });
 
@@ -3576,7 +3580,11 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   var onInit = function () {
     $scope.data.hideLabel = $scope.hideLabel || false;
-    reloadOrganisms($scope.data.selectedOrganism, $scope.genotypeType);
+    reloadOrganisms(
+      $scope.data.selectedOrganism,
+      $scope.genotypeType,
+      $scope.lastAddedGene
+    );
     setLabelText($scope.genotypeType);
   };
 
@@ -3610,39 +3618,68 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     $scope.data.organisms = organisms;
   };
 
-  var reloadSelectedOrganism = function (previousOrganism, organisms) {
+  var reloadSelectedOrganism = function (previousOrganism, organisms, lastAddedGene) {
     if (! previousOrganism) {
       return;
     }
-    var newOrganism = getNewSelectedOrganism(previousOrganism, organisms);
+    var newOrganism = getNewSelectedOrganism(
+      previousOrganism, organisms, lastAddedGene
+    );
     $scope.data.selectedOrganism = newOrganism;
     $scope.organismSelected({organism: $scope.data.selectedOrganism});
   };
 
-  var reloadOrganisms = function (selectedOrganism, genotypeType) {
+  var reloadOrganisms = function (selectedOrganism, genotypeType, lastAddedGene) {
     getOrganisms().success(function (organisms) {
       var filteredOrganisms = filterOrganisms(organisms, genotypeType);
       var defaultOrganism = getDefaultOrganism(filteredOrganisms);
       setOrganisms(filteredOrganisms);
-      reloadSelectedOrganism(selectedOrganism, filteredOrganisms);
+      reloadSelectedOrganism(selectedOrganism, filteredOrganisms, lastAddedGene);
       setDefaultOrganism(defaultOrganism);
     }).error(function () {
       toaster.pop('error', 'failed to get organism list from server');
     });
   };
 
-  var getNewSelectedOrganism = function (previousOrganism, organisms) {
-    var finder = function(key, value) {
-      return function (obj) {
-        return obj[key] === value;
+  var getNewSelectedOrganism = function (previousOrganism, organisms, lastAddedGene) {
+
+    var findOrganismWithLastAddedGene = function (organisms, geneId) {
+      var i, j, organism, genes, gene;
+      // simple 'for' loops are helpful here, since we should break out of the
+      // loop as soon as the gene is found.
+      for (i = 0; i < organisms.length; i += 1) {
+        organism = organisms[i];
+        genes = organism.genes;
+        for (j = 0; j < genes.length; j += 1) {
+          gene = genes[j];
+          if (gene.gene_id === geneId) {
+            return organism;
+          }
+        }
+      }
+      return null;
+    };
+
+    var excluding = function (previousOrganism) {
+      return function (organism) {
+        return organism.taxonid !== previousOrganism.taxonid;
       };
     };
-    var previousTaxonId = previousOrganism.taxonid;
-    var newSelectedOrganism = $.grep(
-      organisms,
-      finder('taxonid', previousTaxonId)
-    )[0];
-    return newSelectedOrganism;
+
+    // check the previously selected organism first, assuming the user is more
+    // likely to add genes for the selected organism.
+    var newOrganism = findOrganismWithLastAddedGene(
+      [previousOrganism],
+      lastAddedGene
+    );
+    if (! newOrganism) {
+      var remainingOrganisms = organisms.filter(excluding(previousOrganism));
+      newOrganism = findOrganismWithLastAddedGene(
+        remainingOrganisms,
+        lastAddedGene
+      );
+    }
+    return newOrganism;
   };
 
   var getDefaultOrganism = function (organisms) {
