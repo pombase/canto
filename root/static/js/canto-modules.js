@@ -3564,7 +3564,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   $scope.$watch('lastAddedGene', function () {
     if ($scope.lastAddedGene) {
-      $scope.getOrganismsFromServer($scope.genotypeType);
+      reloadOrganisms($scope.genotypeType);
     }
   });
 
@@ -3576,7 +3576,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   var onInit = function () {
     $scope.data.hideLabel = $scope.hideLabel || false;
-    $scope.getOrganismsFromServer($scope.genotypeType);
+    reloadOrganisms($scope.genotypeType);
     setLabelText($scope.genotypeType);
   };
 
@@ -3599,7 +3599,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     return organisms.filter(byOrganismType);
   };
 
-  $scope.getOrganismsFromServer = function (genotypeType) {
+  var reloadOrganisms = function (genotypeType) {
     Curs.list('organism').success(function(response) {
       $scope.data.organisms = response;
       if (genotypeType === 'host' || genotypeType === 'pathogen') {
