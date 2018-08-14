@@ -3621,6 +3621,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   var reloadOrganisms = function (genotypeType) {
     getOrganisms().success(function (organisms) {
+      var previousOrganism = angular.copy($scope.data.selectedOrganism);
       var filteredOrganisms = filterOrganisms(organisms, genotypeType)
       setOrganisms(filteredOrganisms);
       reloadSelectedOrganism(previousOrganism, filteredOrganisms);
