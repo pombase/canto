@@ -3599,8 +3599,12 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     return organisms.filter(byOrganismType);
   };
 
+  var getOrganisms = function () {
+    return Curs.list('organism');
+  };
+
   var reloadOrganisms = function (genotypeType) {
-    Curs.list('organism').success(function(response) {
+    getOrganisms().success(function(response) {
       $scope.data.organisms = response;
       if (genotypeType === 'host' || genotypeType === 'pathogen') {
         $scope.data.organisms = filterOrganisms(
