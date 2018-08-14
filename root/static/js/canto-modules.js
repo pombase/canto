@@ -3612,11 +3612,8 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   var reloadOrganisms = function (genotypeType) {
     getOrganisms().success(function (organisms) {
-      setOrganisms(organisms);
-      $scope.data.organisms = filterOrganisms(
-        $scope.data.organisms,
-        genotypeType
-      );
+      var filteredOrganisms = filterOrganisms(organisms, genotypeType)
+      setOrganisms(filteredOrganisms);
       if ($scope.data.selectedOrganism) {
         $scope.data.selectedOrganism = getNewSelectedOrganism(
           $scope.data.selectedOrganism,
