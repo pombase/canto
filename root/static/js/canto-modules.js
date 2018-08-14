@@ -3564,7 +3564,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   $scope.$watch('lastAddedGene', function () {
     if ($scope.lastAddedGene) {
-      reloadOrganisms($scope.genotypeType);
+      reloadOrganisms($scope.data.selectedOrganism, $scope.genotypeType);
     }
   });
 
@@ -3576,7 +3576,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
 
   var onInit = function () {
     $scope.data.hideLabel = $scope.hideLabel || false;
-    reloadOrganisms($scope.genotypeType);
+    reloadOrganisms($scope.data.selectedOrganism, $scope.genotypeType);
     setLabelText($scope.genotypeType);
   };
 
@@ -3619,12 +3619,11 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     $scope.organismSelected({organism: $scope.data.selectedOrganism});
   };
 
-  var reloadOrganisms = function (genotypeType) {
+  var reloadOrganisms = function (selectedOrganism, genotypeType) {
     getOrganisms().success(function (organisms) {
-      var previousOrganism = angular.copy($scope.data.selectedOrganism);
-      var filteredOrganisms = filterOrganisms(organisms, genotypeType)
+      var filteredOrganisms = filterOrganisms(organisms, genotypeType);
       setOrganisms(filteredOrganisms);
-      reloadSelectedOrganism(previousOrganism, filteredOrganisms);
+      reloadSelectedOrganism(selectedOrganism, filteredOrganisms);
       setDefaultOrganism();
     }).error(function() {
       toaster.pop('error', 'failed to get organism list from server');
