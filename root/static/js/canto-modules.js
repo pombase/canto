@@ -3626,7 +3626,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
       setOrganisms(filteredOrganisms);
       reloadSelectedOrganism(selectedOrganism, filteredOrganisms);
       setDefaultOrganism(defaultOrganism);
-    }).error(function() {
+    }).error(function () {
       toaster.pop('error', 'failed to get organism list from server');
     });
   };
