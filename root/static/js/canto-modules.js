@@ -3574,6 +3574,12 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     });
   };
 
+  var onInit = function () {
+    $scope.data.hideLabel = $scope.hideLabel || false;
+    $scope.getOrganismsFromServer($scope.genotypeType);
+    setLabelText($scope.genotypeType);
+  };
+
   var setLabelText = function (genotypeType) {
     var calculateLabelText = function (genotypeType) {
       return genotypeType === 'host' || genotypeType === 'pathogen'
@@ -3637,10 +3643,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     }
   };
 
-  $scope.data.hideLabel = $scope.hideLabel || false;
-
-  $scope.getOrganismsFromServer($scope.genotypeType);
-  setLabelText($scope.genotypeType);
+  onInit();
 };
 
 canto.directive('organismSelector', [
