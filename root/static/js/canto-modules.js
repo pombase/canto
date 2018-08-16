@@ -3619,13 +3619,17 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   };
 
   var reloadSelectedOrganism = function (previousOrganism, organisms, lastAddedGene) {
-    if (! previousOrganism) {
-      return;
+    var selectedOrganism;
+    // if lastAddedGene is undefined, then the page has just been loaded,
+    // so no organism should be selected.
+    if (lastAddedGene === undefined) {
+      selectedOrganism = null;
+    } else {
+      selectedOrganism = getNewSelectedOrganism(
+        previousOrganism, organisms, lastAddedGene
+      );
     }
-    var newOrganism = getNewSelectedOrganism(
-      previousOrganism, organisms, lastAddedGene
-    );
-    $scope.data.selectedOrganism = newOrganism;
+    $scope.data.selectedOrganism = selectedOrganism;
     $scope.organismSelected({organism: $scope.data.selectedOrganism});
   };
 
@@ -3642,9 +3646,11 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   };
 
   var getNewSelectedOrganism = function (previousOrganism, organisms, lastAddedGene) {
+    var newOrganism = null;
 
     var findOrganismWithLastAddedGene = function (organisms, geneId) {
       var i, j, organism, genes, gene;
+
       // simple 'for' loops are helpful here, since we should break out of the
       // loop as soon as the gene is found.
       for (i = 0; i < organisms.length; i += 1) {
@@ -3666,14 +3672,18 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
       };
     };
 
-    // check the previously selected organism first, assuming the user is more
-    // likely to add genes for the selected organism.
-    var newOrganism = findOrganismWithLastAddedGene(
-      [previousOrganism],
-      lastAddedGene
-    );
+    if (previousOrganism) {
+      // check the previously selected organism first, assuming the user is
+      // more likely to add genes for the selected organism.
+      newOrganism = findOrganismWithLastAddedGene(
+        [previousOrganism],
+        lastAddedGene
+      );
+    }
     if (! newOrganism) {
-      var remainingOrganisms = organisms.filter(excluding(previousOrganism));
+      var remainingOrganisms = previousOrganism
+        ? organisms.filter(excluding(previousOrganism))
+        : organisms;
       newOrganism = findOrganismWithLastAddedGene(
         remainingOrganisms,
         lastAddedGene
