@@ -3746,7 +3746,8 @@ var GenotypeGeneListCtrl =
         multiOrganismMode: '=',
         label: '@',
         genotypeType: '<',
-        lastAddedGene: '<'
+        lastAddedGene: '<',
+        onOrganismSelect: '&'
       },
       restrict: 'E',
       replace: true,
@@ -3766,8 +3767,9 @@ var GenotypeGeneListCtrl =
                        $scope.makeHasDeletionHash();
                      }, true);
 
-        $scope.organismSelected = function (organism) {
+        $scope.organismUpdated = function (organism) {
           $scope.data.selectedOrganism = organism;
+          $scope.onOrganismSelect({organism: organism});
         };
 
         $scope.getSelectedOrganism = function() {
@@ -3874,7 +3876,8 @@ var GenotypeGenesPanelCtrl =
         genotypes: '=',
         multiOrganismMode: '=',
         genotypeType: '<',
-        lastAddedGene: '<'
+        lastAddedGene: '<',
+        onOrganismSelect: '&',
       },
       restrict: 'E',
       replace: true,
@@ -3888,6 +3891,10 @@ var GenotypeGenesPanelCtrl =
           modal.result.then(function (geneObj) {
             $scope.lastAddedGene = geneObj.new_gene_id;
           });
+        };
+
+        var organismUpdated = function (organism) {
+          $scope.onOrganismSelect({organism: organism});
         };
       }
     };
@@ -3919,6 +3926,7 @@ var genotypeManageCtrl =
     $scope.data = {
       genotypeMap: {},
       waitingForServer: true,
+      selectedOrganism: null,
       selectedGenotypeId: null,
       editingGenotype: false,
       editGenotypeId: null,
@@ -3931,6 +3939,13 @@ var genotypeManageCtrl =
         $scope.data.multiOrganismMode = true;
       }
     });
+
+    $scope.organismUpdated = function (organism) {
+      $scope.data.selectedOrganism = organism;
+      console.log(
+        'genotypeManageCtrl selectedOrganism = ' + $scope.data.selectedOrganism
+      );
+    };
 
     function hashChangedHandler() {
       var path = $location.path();
