@@ -3658,8 +3658,8 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     var findOrganismWithLastAddedGene = function (organisms, geneId) {
       var i, j, organism, genes, gene;
 
-      // simple 'for' loops are helpful here, since we should break out of the
-      // loop as soon as the gene is found.
+      // simple 'for' loops are helpful here: we can break out of the
+      // loop as soon as the gene is found, since the gene ID is unique.
       for (i = 0; i < organisms.length; i += 1) {
         organism = organisms[i];
         genes = organism.genes;
