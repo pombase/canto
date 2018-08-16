@@ -3633,7 +3633,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     $scope.organismSelected({organism: $scope.data.selectedOrganism});
   };
 
-  var reloadOrganisms = function (selectedOrganism, genotypeType, lastAddedGene) {
+  var reloadOrganisms = function (oldSelectedOrganism, genotypeType, lastAddedGene) {
     getOrganisms().success(function (organisms) {
       var filteredOrganisms = filterOrganisms(organisms, genotypeType);
       var defaultOrganism = getDefaultOrganism(filteredOrganisms);
@@ -3642,7 +3642,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
         setDefaultOrganism(defaultOrganism);
       } else {
         reloadSelectedOrganism(
-          selectedOrganism,
+          oldSelectedOrganism,
           filteredOrganisms,
           lastAddedGene
         );
