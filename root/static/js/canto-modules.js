@@ -4003,7 +4003,8 @@ var genotypeManageCtrl =
     var updateGenotypeLists = function () {
 
       var _getOrganismGenotypes = function (type) {
-        if ($scope.data.selectedOrganism === null) {
+        if ($scope.data.selectedOrganism === null
+            || $scope.data.selectedOrganism === undefined) {
           return [];
         }
         var currentTaxonId = $scope.data.selectedOrganism.taxonid;
