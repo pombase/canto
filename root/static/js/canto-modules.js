@@ -3925,6 +3925,8 @@ var genotypeManageCtrl =
 
     $scope.data = {
       genotypeMap: {},
+      singleAlleleGenotypes: [],
+      multiAlleleGenotypes: [],
       waitingForServer: true,
       selectedOrganism: null,
       selectedGenotypeId: null,
@@ -3942,9 +3944,7 @@ var genotypeManageCtrl =
 
     $scope.organismUpdated = function (organism) {
       $scope.data.selectedOrganism = organism;
-      console.log(
-        'genotypeManageCtrl selectedOrganism = ' + $scope.data.selectedOrganism
-      );
+      updateGenotypeLists();
     };
 
     function hashChangedHandler() {
@@ -3998,6 +3998,26 @@ var genotypeManageCtrl =
         toaster.pop('error', "couldn't read the genotype list from the server");
         $scope.data.waitingForServer = false;
       });
+    };
+
+    var updateGenotypeLists = function () {
+
+      var _getOrganismGenotypes = function (type) {
+        if ($scope.data.selectedOrganism === null) {
+          return [];
+        }
+        var currentTaxonId = $scope.data.selectedOrganism.taxonid;
+        var currentOrganismGenotypes = $scope.data.genotypeMap[currentTaxonId];
+        return currentOrganismGenotypes[type];
+      };
+
+      $scope.data.singleAlleleGenotypes = _getOrganismGenotypes(
+        'singleAlleleGenotypes'
+      );
+      $scope.data.multiAlleleGenotypes = _getOrganismGenotypes(
+        'multiAlleleGenotypes'
+      );
+
     };
 
     $scope.backToSummary = function() {
