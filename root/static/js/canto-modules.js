@@ -3893,7 +3893,7 @@ var GenotypeGenesPanelCtrl =
           });
         };
 
-        var organismUpdated = function (organism) {
+        $scope.organismUpdated = function (organism) {
           $scope.onOrganismSelect({organism: organism});
         };
       }
