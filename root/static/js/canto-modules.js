@@ -3655,6 +3655,20 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
   var getNewSelectedOrganism = function (previousOrganism, organisms, lastAddedGene) {
     var newOrganism = null;
 
+    var refreshPreviousOrganism = function (previousOrganism, organisms) {
+      var finder = function(key, value) {
+        return function (obj) {
+          return obj[key] === value;
+        };
+      };
+      var previousTaxonId = previousOrganism.taxonid;
+      var newSelectedOrganism = $.grep(
+        organisms,
+        finder('taxonid', previousTaxonId)
+      )[0];
+      return newSelectedOrganism;
+    };
+
     var findOrganismWithLastAddedGene = function (organisms, geneId) {
       var i, j, organism, genes, gene;
 
@@ -3682,8 +3696,12 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     if (previousOrganism) {
       // check the previously selected organism first, assuming the user is
       // more likely to add genes for the selected organism.
+      var newPreviousOrganism = refreshPreviousOrganism(
+        previousOrganism,
+        organisms
+      );
       newOrganism = findOrganismWithLastAddedGene(
-        [previousOrganism],
+        [newPreviousOrganism],
         lastAddedGene
       );
     }
