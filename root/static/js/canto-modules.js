@@ -3977,7 +3977,7 @@ var genotypeManageCtrl =
       CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
         $scope.data.genotypeMap = mapGenotypes(results);
         $scope.data.waitingForServer = false;
-        $scope.data.metagenotypeDissabled = ($scope.data.genotypes.length < 1);
+        $scope.data.metagenotypeDissabled = ($scope.data.genotypeMap.length < 1);
         CursGenotypeList.onListChange($scope.readGenotypesCallback);
       }).catch(function() {
         toaster.pop('error', "couldn't read the genotype list from the server");
