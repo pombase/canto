@@ -3991,6 +3991,7 @@ var genotypeManageCtrl =
     $scope.readGenotypes = function() {
       CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
         $scope.data.genotypeMap = mapGenotypes(results);
+        updateGenotypeLists();
         $scope.data.waitingForServer = false;
         $scope.data.metagenotypeDissabled = ($scope.data.genotypeMap.length < 1);
         CursGenotypeList.onListChange($scope.readGenotypesCallback);
