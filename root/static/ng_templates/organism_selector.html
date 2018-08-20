@@ -6,9 +6,9 @@
   <p ng-hide="data.hideLabel" class="curs-organism-selector-label"><b>{{label}}</b></p>
   <select ng-if="data.organisms.length > 1"
       name="select-organism"
-      ng-model="selectedOrganism"
+      ng-model="data.selectedOrganism"
       ng-change="organismChanged()"
-      ng-options="o as o.full_name for o in data.organisms">
+      ng-options="o as o.full_name for o in data.organisms track by o.taxonid">
     <option value="">Select an organism...</option>
   </select>
   <span ng-if="data.organisms.length === 1">{{data.defaultOrganism.full_name}}</span>
