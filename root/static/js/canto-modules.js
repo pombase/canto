@@ -3990,8 +3990,7 @@ var genotypeManageCtrl =
 
     $scope.readGenotypes = function() {
       CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
-        $scope.data.genotypeMap = mapGenotypes(results);
-        updateGenotypeLists();
+        setGenotypes(results);
         $scope.data.waitingForServer = false;
         $scope.data.metagenotypeDissabled = ($scope.data.genotypeMap.length < 1);
         CursGenotypeList.onListChange($scope.readGenotypesCallback);
@@ -4001,25 +4000,12 @@ var genotypeManageCtrl =
       });
     };
 
-    var updateGenotypeLists = function () {
-
-      var _getOrganismGenotypes = function (type) {
-        if ($scope.data.selectedOrganism === null
-            || $scope.data.selectedOrganism === undefined) {
-          return [];
-        }
-        var currentTaxonId = $scope.data.selectedOrganism.taxonid;
-        var currentOrganismGenotypes = $scope.data.genotypeMap[currentTaxonId];
-        return currentOrganismGenotypes[type];
-      };
-
-      $scope.data.singleAlleleGenotypes = _getOrganismGenotypes(
-        'singleAlleleGenotypes'
-      );
-      $scope.data.multiAlleleGenotypes = _getOrganismGenotypes(
-        'multiAlleleGenotypes'
-      );
-
+    var setGenotypes = function (genotypes) {
+      $scope.data.genotypeMap = mapGenotypes(genotypes);
+      var selectedOrganismId = $scope.data.selectedOrganism.taxonid;
+      var currentGenotypes = $scope.data.genotypeMap[selectedOrganismId];
+      $scope.data.singleAlleleGenotypes = currentGenotypes['singleAlleleGenotypes'];
+      $scope.data.multiAlleleGenotypes = currentGenotypes['multiAlleleGenotypes'];
     };
 
     $scope.backToSummary = function() {
