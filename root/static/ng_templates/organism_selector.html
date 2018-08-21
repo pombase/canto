@@ -9,7 +9,7 @@
       ng-model="data.selectedOrganism"
       ng-change="organismChanged()"
       ng-options="o as o.full_name for o in data.organisms track by o.taxonid">
-    <option value="">Select an organism...</option>
+    <option value="" disabled>Select an organism...</option>
   </select>
   <span ng-if="data.organisms.length === 1">{{data.defaultOrganism.full_name}}</span>
 </div>
