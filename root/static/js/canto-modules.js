@@ -3576,6 +3576,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     $scope.organismSelected({
       organism: $scope.data.selectedOrganism
     });
+    $scope.$emit('organism-selector', $scope.data.selectedOrganism);
   };
 
   var onInit = function () {
