@@ -3572,7 +3572,7 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     }
   });
 
-  $scope.organismChanged = function (organism) {
+  $scope.organismChanged = function () {
     $scope.organismSelected({
       organism: $scope.data.selectedOrganism
     });
