@@ -4038,9 +4038,8 @@ var genotypeManageCtrl =
 
     var mapGenotypes = function (genotypes) {
       var genotypeMap = {};
-      var taxonId = "";
-      $.each(genotypes, function (index, genotype) {
-        taxonId = genotype.organism.taxonid;
+      var addToGenotypeMap = function (index, genotype) {
+        var taxonId = genotype.organism.taxonid;
         if ( ! (taxonId in genotypeMap)) {
           genotypeMap[taxonId] = {};
         }
@@ -4055,7 +4054,8 @@ var genotypeManageCtrl =
           }
           genotypeMap[taxonId]['multiAlleleGenotypes'].push(genotype);
         }
-      });
+      };
+      $.each(genotypes, addToGenotypeMap);
       return genotypeMap;
     };
 
