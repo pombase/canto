@@ -3934,6 +3934,7 @@ var genotypeManageCtrl =
       editGenotypeId: null,
       multiOrganismMode: false,
       metagenotypeDissabled: true,
+      showNoGenotypeNotice: true
     };
 
     CantoConfig.get('instance_organism').success(function(results) {
@@ -4024,6 +4025,17 @@ var genotypeManageCtrl =
           $scope.data.multiAlleleGenotypes = currentGenotypes['multiAlleleGenotypes'];
         }
       }
+      updateNoGenotypeNotice();
+    };
+
+    var updateNoGenotypeNotice = function () {
+      $scope.data.showNoGenotypeNotice = (
+        $scope.data.selectedOrganism
+        && (
+          $scope.data.singleAlleleGenotypes.length === 0
+          && $scope.data.multiAlleleGenotypes.length === 0
+        )
+      );
     };
 
     $scope.backToSummary = function() {
