@@ -4041,19 +4041,15 @@ var genotypeManageCtrl =
       var addToGenotypeMap = function (index, genotype) {
         var taxonId = genotype.organism.taxonid;
         if ( ! (taxonId in genotypeMap)) {
-          genotypeMap[taxonId] = {};
+          genotypeMap[taxonId] = {
+            singleAlleGenotypes: [],
+            multiAlleleGenotypes: []
+          };
         }
-        if (isSingleAlleleGenotype(genotype)) {
-          if ( ! ('singleAlleleGenotypes' in genotypeMap[taxonId])) {
-            genotypeMap[taxonId]['singleAlleleGenotypes'] = [];
-          }
-          genotypeMap[taxonId]['singleAlleleGenotypes'].push(genotype);
-        } else {
-          if ( ! ('multiAlleleGenotypes' in genotypeMap[taxonId])) {
-            genotypeMap[taxonId]['multiAlleleGenotypes'] = [];
-          }
-          genotypeMap[taxonId]['multiAlleleGenotypes'].push(genotype);
-        }
+        var genotypeType = isSingleAlleleGenotype(genotype)
+          ? 'singleAlleleGenotypes'
+          : 'multiAlleleGenotypes';
+        genotypeMap[taxonId][genotypeType].push(genotype);
       };
       $.each(genotypes, addToGenotypeMap);
       return genotypeMap;
