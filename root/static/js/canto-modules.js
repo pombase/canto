@@ -4042,7 +4042,7 @@ var genotypeManageCtrl =
         var taxonId = genotype.organism.taxonid;
         if ( ! (taxonId in genotypeMap)) {
           genotypeMap[taxonId] = {
-            singleAlleGenotypes: [],
+            singleAlleleGenotypes: [],
             multiAlleleGenotypes: []
           };
         }
