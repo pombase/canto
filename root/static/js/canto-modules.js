@@ -4002,10 +4002,20 @@ var genotypeManageCtrl =
 
     var setGenotypes = function (genotypes) {
       $scope.data.genotypeMap = mapGenotypes(genotypes);
-      var selectedOrganismId = $scope.data.selectedOrganism.taxonid;
-      var currentGenotypes = $scope.data.genotypeMap[selectedOrganismId];
-      $scope.data.singleAlleleGenotypes = currentGenotypes['singleAlleleGenotypes'];
-      $scope.data.multiAlleleGenotypes = currentGenotypes['multiAlleleGenotypes'];
+      updateGenotypeLists();
+    };
+
+    var updateGenotypeLists = function () {
+      var selectedOrganism = $scope.data.selectedOrganism;
+      if (!selectedOrganism) {
+        $scope.data.singleAlleleGenotypes = [];
+        $scope.data.multiAlleleGenotypes = [];
+      } else {
+        var selectedOrganismId = $scope.data.selectedOrganism.taxonid;
+        var currentGenotypes = $scope.data.genotypeMap[selectedOrganismId];
+        $scope.data.singleAlleleGenotypes = currentGenotypes['singleAlleleGenotypes'];
+        $scope.data.multiAlleleGenotypes = currentGenotypes['multiAlleleGenotypes'];
+      }
     };
 
     $scope.backToSummary = function() {
