@@ -4006,15 +4006,23 @@ var genotypeManageCtrl =
     };
 
     var updateGenotypeLists = function () {
+      var organismHasNoGenotypes = function (taxonId) {
+        return ! $scope.data.genotypeMap.hasOwnProperty(taxonId);
+      };
       var selectedOrganism = $scope.data.selectedOrganism;
       if (!selectedOrganism) {
         $scope.data.singleAlleleGenotypes = [];
         $scope.data.multiAlleleGenotypes = [];
       } else {
         var selectedOrganismId = $scope.data.selectedOrganism.taxonid;
-        var currentGenotypes = $scope.data.genotypeMap[selectedOrganismId];
-        $scope.data.singleAlleleGenotypes = currentGenotypes['singleAlleleGenotypes'];
-        $scope.data.multiAlleleGenotypes = currentGenotypes['multiAlleleGenotypes'];
+        if (organismHasNoGenotypes(selectedOrganismId)) {
+          $scope.data.singleAlleleGenotypes = [];
+          $scope.data.multiAlleleGenotypes = [];
+        } else {
+          var currentGenotypes = $scope.data.genotypeMap[selectedOrganismId];
+          $scope.data.singleAlleleGenotypes = currentGenotypes['singleAlleleGenotypes'];
+          $scope.data.multiAlleleGenotypes = currentGenotypes['multiAlleleGenotypes'];
+        }
       }
     };
 
