@@ -61,6 +61,9 @@ Edit gene list ...
   <div class="feature-list-action">
     <a href="<% $host_genotype_manage_url %>"><% $read_only_curs ? 'View host genotypes ...' : 'Host genotype management ...' %></a>
   </div>
+  <div class="feature-list-action">
+    <a href="<% $metagenotype_manage_url %>"><% $read_only_curs ? 'View meta-genotypes ...' : 'Meta-genotype management ...' %></a>
+  </div>
 %   } else {
   <div class="feature-list-action">
     <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes ...' : 'Genotype management ...' %></a>
@@ -129,11 +132,13 @@ my $edit_path = "$start_path/edit_genes";
 my $genotype_manage_url = "$start_path/genotype_manage";
 my $pathogen_genotype_manage_url = "$start_path/pathogen_genotype_manage";
 my $host_genotype_manage_url = "$start_path/host_genotype_manage";
+my $metagenotype_manage_url = "$start_path/metagenotype_manage";
 
 if ($read_only_curs) {
   $genotype_manage_url .= '/ro';
   $pathogen_genotype_manage_url .= '/ro';
   $host_genotype_manage_url .= '/ro';
+  $metagenotype_manage_url .= '/ro';
 }
 
 </%init>
