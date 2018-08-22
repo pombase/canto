@@ -33,7 +33,8 @@
                 <div ng-if="!read_only_curs">
                     <div class="col-sm-3 col-md-3">
                         <genotype-genes-panel
-                          genotypes="data.genotypes"
+                          on-organism-select="organismUpdated(organism)"
+                          genotypes="data.singleAlleleGenotypes"
                           multi-organism-mode="data.multiOrganismMode"
                           genotype-type="genotypeType" />
                     </div>
@@ -72,7 +73,7 @@
                                 />
                             </div>
 
-                            <div ng-if="!readOnlyCurs" ng-show="data.genotypes.length == 0">
+                            <div ng-if="!readOnlyCurs" ng-show="data.showNoGenotypeNotice">
                                 No genotypes in this session.  Try adding one.
                             </div>
                         </div>

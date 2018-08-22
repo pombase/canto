@@ -3746,7 +3746,8 @@ var GenotypeGeneListCtrl =
         multiOrganismMode: '=',
         label: '@',
         genotypeType: '<',
-        lastAddedGene: '<'
+        lastAddedGene: '<',
+        onOrganismSelect: '&'
       },
       restrict: 'E',
       replace: true,
@@ -3766,8 +3767,9 @@ var GenotypeGeneListCtrl =
                        $scope.makeHasDeletionHash();
                      }, true);
 
-        $scope.organismSelected = function (organism) {
+        $scope.organismUpdated = function (organism) {
           $scope.data.selectedOrganism = organism;
+          $scope.onOrganismSelect({organism: organism});
         };
 
         $scope.getSelectedOrganism = function() {
@@ -3874,7 +3876,8 @@ var GenotypeGenesPanelCtrl =
         genotypes: '=',
         multiOrganismMode: '=',
         genotypeType: '<',
-        lastAddedGene: '<'
+        lastAddedGene: '<',
+        onOrganismSelect: '&',
       },
       restrict: 'E',
       replace: true,
@@ -3888,6 +3891,10 @@ var GenotypeGenesPanelCtrl =
           modal.result.then(function (geneObj) {
             $scope.lastAddedGene = geneObj.new_gene_id;
           });
+        };
+
+        $scope.organismUpdated = function (organism) {
+          $scope.onOrganismSelect({organism: organism});
         };
       }
     };
@@ -3917,15 +3924,17 @@ var genotypeManageCtrl =
     $scope.metagenotypeUrl = CantoGlobals.curs_root_uri + '/metagenotype_manage';
 
     $scope.data = {
-      genotypes: [],
+      genotypeMap: {},
       singleAlleleGenotypes: [],
       multiAlleleGenotypes: [],
       waitingForServer: true,
+      selectedOrganism: null,
       selectedGenotypeId: null,
       editingGenotype: false,
       editGenotypeId: null,
       multiOrganismMode: false,
       metagenotypeDissabled: true,
+      showNoGenotypeNotice: true
     };
 
     CantoConfig.get('instance_organism').success(function(results) {
@@ -3933,6 +3942,11 @@ var genotypeManageCtrl =
         $scope.data.multiOrganismMode = true;
       }
     });
+
+    $scope.organismUpdated = function (organism) {
+      $scope.data.selectedOrganism = organism;
+      updateGenotypeLists();
+    };
 
     function hashChangedHandler() {
       var path = $location.path();
@@ -3977,16 +3991,51 @@ var genotypeManageCtrl =
 
     $scope.readGenotypes = function() {
       CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
-        $scope.data.genotypes = results;
-        $scope.data.singleAlleleGenotypes = $.grep(results, isSingleAlleleGenotype);
-        $scope.data.multiAlleleGenotypes = $.grep(results, isMultiAlleleGenotype);
+        setGenotypes(results);
         $scope.data.waitingForServer = false;
-        $scope.data.metagenotypeDissabled = ($scope.data.genotypes.length < 1);
+        $scope.data.metagenotypeDissabled = ($scope.data.genotypeMap.length < 1);
         CursGenotypeList.onListChange($scope.readGenotypesCallback);
       }).catch(function() {
         toaster.pop('error', "couldn't read the genotype list from the server");
         $scope.data.waitingForServer = false;
       });
+    };
+
+    var setGenotypes = function (genotypes) {
+      $scope.data.genotypeMap = mapGenotypes(genotypes);
+      updateGenotypeLists();
+    };
+
+    var updateGenotypeLists = function () {
+      var organismHasNoGenotypes = function (taxonId) {
+        return ! $scope.data.genotypeMap.hasOwnProperty(taxonId);
+      };
+      var selectedOrganism = $scope.data.selectedOrganism;
+      if (!selectedOrganism) {
+        $scope.data.singleAlleleGenotypes = [];
+        $scope.data.multiAlleleGenotypes = [];
+      } else {
+        var selectedOrganismId = $scope.data.selectedOrganism.taxonid;
+        if (organismHasNoGenotypes(selectedOrganismId)) {
+          $scope.data.singleAlleleGenotypes = [];
+          $scope.data.multiAlleleGenotypes = [];
+        } else {
+          var currentGenotypes = $scope.data.genotypeMap[selectedOrganismId];
+          $scope.data.singleAlleleGenotypes = currentGenotypes['singleAlleleGenotypes'];
+          $scope.data.multiAlleleGenotypes = currentGenotypes['multiAlleleGenotypes'];
+        }
+      }
+      updateNoGenotypeNotice();
+    };
+
+    var updateNoGenotypeNotice = function () {
+      $scope.data.showNoGenotypeNotice = (
+        $scope.data.selectedOrganism
+        && (
+          $scope.data.singleAlleleGenotypes.length === 0
+          && $scope.data.multiAlleleGenotypes.length === 0
+        )
+      );
     };
 
     $scope.backToSummary = function() {
@@ -3997,6 +4046,25 @@ var genotypeManageCtrl =
     $scope.toMetagenotype = function() {
       window.location.href = $scope.metagenotypeUrl +
         (CantoGlobals.read_only_curs ? '/ro' : '');
+    };
+
+    var mapGenotypes = function (genotypes) {
+      var genotypeMap = {};
+      var addToGenotypeMap = function (index, genotype) {
+        var taxonId = genotype.organism.taxonid;
+        if ( ! (taxonId in genotypeMap)) {
+          genotypeMap[taxonId] = {
+            singleAlleleGenotypes: [],
+            multiAlleleGenotypes: []
+          };
+        }
+        var genotypeType = isSingleAlleleGenotype(genotype)
+          ? 'singleAlleleGenotypes'
+          : 'multiAlleleGenotypes';
+        genotypeMap[taxonId][genotypeType].push(genotype);
+      };
+      $.each(genotypes, addToGenotypeMap);
+      return genotypeMap;
     };
 
     $scope.readGenotypes();
