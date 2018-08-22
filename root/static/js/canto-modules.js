@@ -6552,7 +6552,7 @@ canto.directive('metagenotypeSummaryItem', [metagenotypeSummaryItem]);
 
 
 var metagenotypeListRowLinksCtrl =
-  function($uibModal, $http, toaster, CantoGlobals, CursGenotypeList) {
+  function($uibModal, $http, toaster, CantoGlobals, CursGenotypeList, AnnotationTypeConfig) {
     return {
       restrict: 'E',
       scope: {
@@ -6566,6 +6566,18 @@ var metagenotypeListRowLinksCtrl =
       controller: function($scope) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+
+        $scope.annotationTypes = [];
+
+        AnnotationTypeConfig.getAll().then(function(response) {
+          $scope.annotationTypes =
+            $.grep(response.data,
+                   function(annotationType) {
+                     if (annotationType.feature_type === 'metagenotype') {
+                       return annotationType;
+                     }
+                   });
+        });
 
         $scope.editMetagenotype = function(metagenotypeId) {
           window.location.href =
@@ -6616,4 +6628,5 @@ var metagenotypeListRowLinksCtrl =
 
 canto.directive('metagenotypeListRowLinks',
                 ['$uibModal', '$http', 'toaster', 'CantoGlobals', 'CursGenotypeList',
+                 'AnnotationTypeConfig',
                  metagenotypeListRowLinksCtrl]);

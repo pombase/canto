@@ -1,8 +1,8 @@
 <div class="genotype-list-row-links">
-  <div>
+  <div ng-repeat="annotationType in annotationTypes">
     <a ng-class="{disabled: metagenotypeId == null }" ng-if="!read_only_curs"
-       href="{{curs_root_uri + '/feature/metagenotype/annotate/' + metagenotypeId + '/start/disease_formation_phenotype/'}}">
-      Annotate a phenotype for this metagenotype ...
+       href="{{curs_root_uri + '/feature/metagenotype/annotate/' + metagenotypeId + '/start/' + annotationType.name + '/'}}">
+      Start a {{ annotationType.display_name }} annotation ...
     </a>
   </div>
   <div>
