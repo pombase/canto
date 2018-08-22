@@ -3,7 +3,6 @@
     <div>
         <organism-selector
             hide-label="true"
-            organism-selected="organismSelected(organism)"
             genotype-type="data.genotypeType">
         </organism-selector>
         <div ng-if="data.selectedOrganism">
@@ -15,8 +14,7 @@
                 <genotype-simple-list-view
                     genotype-list="data.singleAllele"
                     show-check-box-actions="true"
-                    genotype-model="genotypeModel"
-                    callback="callback">
+                    genotype-model="genotypeModel">
                 </genotype-simple-list-view>
             </div>
 
@@ -28,8 +26,7 @@
                 <genotype-simple-list-view
                     genotype-list="data.multiAllele"
                     show-check-box-actions="true"
-                    genotype-model="genotypeModel"
-                    callback="callback">
+                    genotype-model="genotypeModel">
                 </genotype-simple-list-view>
             </div>
 
@@ -37,8 +34,7 @@
                 <div class="curs-box-title">Wildtype genotype</div>
                 <wild-genotype-view
                     genotype="data.wildType"
-                    genotype-model="genotypeModel"
-                    callback="callback">
+                    genotype-model="genotypeModel">
                 </wild-genotype-view>
             </div>
         </div>
