@@ -54,9 +54,18 @@ Edit gene list ...
   </div>
 % }
 % if ($genotype_annotation_configured) {
+%   if ($pathogen_host_mode) {
+  <div class="feature-list-action">
+    <a href="<% $pathogen_genotype_manage_url %>"><% $read_only_curs ? 'View pathogen genotypes ...' : 'Pathogen genotype management ...' %></a>
+  </div>
+  <div class="feature-list-action">
+    <a href="<% $host_genotype_manage_url %>"><% $read_only_curs ? 'View host genotypes ...' : 'Host genotype management ...' %></a>
+  </div>
+%   } else {
   <div class="feature-list-action">
     <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes ...' : 'Genotype management ...' %></a>
   </div>
+%   }
 % }
 </div>
 </div>
@@ -72,6 +81,7 @@ my $schema = $st->{schema};
 my $config = $c->config();
 
 my $multi_organism_mode = $st->{multi_organism_mode};
+my $pathogen_host_mode = $st->{pathogen_host_mode};
 
 my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema, config => $config);
 
@@ -117,9 +127,13 @@ my $genotype_annotation_configured = $st->{genotype_annotation_configured};
 my $start_path = $st->{curs_root_uri};
 my $edit_path = "$start_path/edit_genes";
 my $genotype_manage_url = "$start_path/genotype_manage";
+my $pathogen_genotype_manage_url = "$start_path/pathogen_genotype_manage";
+my $host_genotype_manage_url = "$start_path/host_genotype_manage";
 
 if ($read_only_curs) {
   $genotype_manage_url .= '/ro';
+  $pathogen_genotype_manage_url .= '/ro';
+  $host_genotype_manage_url .= '/ro';
 }
 
 </%init>
