@@ -6204,7 +6204,7 @@ canto.directive('genotypeOptions', [genotypeOptions]);
 
 
 var genotypeSimpleListRowCtrl =
-  function($compile, $timeout, CantoGlobals) {
+  function(CantoGlobals) {
     return {
       restrict: 'A',
       scope: {
@@ -6230,9 +6230,7 @@ var genotypeSimpleListRowCtrl =
     };
   };
 
-canto.directive('genotypeSimpleListRow',
-                ['$compile', '$timeout', 'CantoGlobals', 'CursGenotypeList',
-                 genotypeSimpleListRowCtrl]);
+canto.directive('genotypeSimpleListRow', ['CantoGlobals', genotypeSimpleListRowCtrl]);
 
 
 var genotypeSimpleListViewCtrl =
