@@ -1108,7 +1108,7 @@ is ($genotype_delete_res->{message}, 'incorrect key');
 # fails because first_genotype has annotations
 $genotype_delete_res = $service_utils->delete_genotype($first_genotype->genotype_id(), { key => 'aaaa0007' });
 is ($genotype_delete_res->{status}, 'error');
-is ($genotype_delete_res->{message}, 'genotype 1 has annotations - delete failed');
+is ($genotype_delete_res->{message}, 'genotype has annotations - delete failed');
 
 my $second_genotype =
   $curs_schema->resultset('Genotype')->find({ identifier => 'aaaa0007-genotype-test-2' });
