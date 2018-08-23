@@ -179,12 +179,16 @@ sub _get_annotations
 
     my $gene = _get_annotation_gene($organism_lookup, $schema, $annotation);
     my $genotype = _get_annotation_genotype($schema, $annotation);
+    my $metagenotype = _get_annotation_metagenotype($schema, $annotation);
 
     if ($gene) {
       $data{gene} = $gene;
     }
     if ($genotype) {
       $data{genotype} = $genotype;
+    }
+    if ($metagenotype) {
+      $data{metagenotype} = $metagenotype;
     }
 
     rmap_hash {
@@ -383,6 +387,24 @@ sub _get_annotation_genotype
   }
 }
 
+sub _get_annotation_metagenotype
+{
+  my $schema = shift;
+  my $annotation = shift;
+
+  my @ret = map {
+    $_->identifier();
+  } $annotation->metagenotypes()->all();
+
+  if (@ret > 1) {
+    die "internal error during export: annotation ",
+      $annotation->annotation_id(),
+      " has more than one metagenotype";
+  } else {
+    return $ret[0];
+  }
+}
+
 sub _get_genotypes
 {
   my $config = shift;
@@ -392,16 +414,39 @@ sub _get_genotypes
   my %ret = ();
 
   while (defined (my $genotype = $rs->next())) {
-    $ret{$genotype->identifier()} = {
+    my $genotype_identifier = $genotype->identifier();
+
+    $ret{$genotype_identifier} = {
       alleles => [_get_genotype_alleles($config, $schema, $genotype)]
     };
 
+    $ret{$genotype_identifier}->{organism_taxonid} = $genotype->organism()->taxonid();
+
     if ($genotype->name()) {
-      $ret{$genotype->identifier()}->{name} = $genotype->name(),
+      $ret{$genotype_identifier}->{name} = $genotype->name(),
     }
     if ($genotype->background()) {
-      $ret{$genotype->identifier()}->{background} = $genotype->background(),
+      $ret{$genotype_identifier}->{background} = $genotype->background(),
     }
+  }
+
+  return %ret;
+}
+
+sub _get_metagenotypes
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my $rs = $schema->resultset('Metagenotype',
+                              { prefetch => ['pathogen_genotype', 'host_genotype'] });
+  my %ret = ();
+
+  while (defined (my $metagenotype = $rs->next())) {
+    $ret{$metagenotype->identifier()} = {
+      pathogen_genotype => $metagenotype->pathogen_genotype()->identifier(),
+      host_genotype => $metagenotype->host_genotype()->identifier(),
+    };
   }
 
   return %ret;
@@ -521,8 +566,14 @@ sub perl
 
   my %genotypes = _get_genotypes($config, $curs_schema);
 
-  if (%genotypes) {
+  if (keys %genotypes) {
     $ret{genotypes} = \%genotypes;
+  }
+
+  my %metagenotypes = _get_metagenotypes($config, $curs_schema);
+
+  if (keys %metagenotypes) {
+    $ret{metagenotypes} = \%metagenotypes;
   }
 
   $curs_schema->disconnect();

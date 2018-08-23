@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::Deep;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use Clone qw(clone);
 use JSON;
@@ -21,6 +21,25 @@ $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
+my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
+
+$test_util->add_metagenotype_config($config, $track_schema);
+
+
+my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
+                                                         curs_schema => $curs_schema);
+my $existing_pombe_genotype =
+  $curs_schema->find_with_type('Genotype', { identifier => 'aaaa0007-genotype-test-1' });
+
+ok ($existing_pombe_genotype);
+
+my $cerevisiae_genotype =
+  $genotype_manager->make_genotype(undef, undef, [], 4932);
+
+my $metagenotype =
+  $genotype_manager->make_metagenotype(pathogen_genotype => $existing_pombe_genotype,
+                                       host_genotype => $cerevisiae_genotype);
+
 
 my %extra_curs_statuses = (
         annotation_status => Canto::Controller::Curs::CURATION_IN_PROGRESS,
@@ -52,63 +71,62 @@ my $full_expected_curation_session =
         organism => 'Schizosaccharomyces pombe',
       }
     },
-    alleles => {
-      'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1' => {
-        primary_identifier => 'SPAC27D7.13c:aaaa0007-1',
-        name => 'ssm4delta',
-        description => 'deletion',
-        allele_type => 'deletion',
-        gene => 'Schizosaccharomyces pombe SPAC27D7.13c'
-      },
-      'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-2' => {
-        description => 'G40A,K43E',
-        allele_type => 'amino_acid_mutation',
-        gene => 'Schizosaccharomyces pombe SPAC27D7.13c',
-        primary_identifier => 'SPAC27D7.13c:aaaa0007-2',
-        name => 'ssm4KE'
-      },
-      'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3' => {
-        description => 'del_100-200',
-        gene => 'Schizosaccharomyces pombe SPAC27D7.13c',
-        allele_type => 'partial_nucleotide_deletion',
-        primary_identifier => 'SPAC27D7.13c:aaaa0007-3',
-        name => 'ssm4-D4'
-      },
-      'Schizosaccharomyces pombe SPCC63.05:aaaa0007-1' => {
-        gene => 'Schizosaccharomyces pombe SPCC63.05',
-        allele_type => 'deletion',
-        description => 'deletion',
-        name => 'SPCC63.05delta',
-        primary_identifier => 'SPCC63.05:aaaa0007-1'
-      },
-      'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-4' => {
-        description => 'del_200-300',
-        gene => 'Schizosaccharomyces pombe SPAC27D7.13c',
-        allele_type => 'partial_nucleotide_deletion',
-        primary_identifier => 'SPAC27D7.13c:aaaa0007-4'
-      }
-    },
-    genotypes => {
+    'genotypes' => {
       'aaaa0007-genotype-test-1' => {
         'name' => 'SPCC63.05delta ssm4KE',
         'background' => 'h+',
-        alleles => [
+        'organism_taxonid' => 4896,
+        'alleles' => [
           {
-            id => 'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1',
+            'id' => 'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1'
           },
           {
-            id => 'Schizosaccharomyces pombe SPCC63.05:aaaa0007-1',
-          },
-        ],
+            'id' => 'Schizosaccharomyces pombe SPCC63.05:aaaa0007-1'
+          }
+        ]
+      },
+      'aaaa0007-genotype-3' => {
+        'organism_taxonid' => 4932,
+        'alleles' => []
       },
       'aaaa0007-genotype-test-2' => {
-        alleles => [
+        'organism_taxonid' => 4896,
+        'alleles' => [
           {
-            id => 'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3',
-            expression => 'Knockdown',
-         },
-        ],
+            'expression' => 'Knockdown',
+            'id' => 'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3'
+          }
+        ]
+      }
+    },
+    'alleles' => {
+      'Schizosaccharomyces pombe SPCC63.05:aaaa0007-1' => {
+        'primary_identifier' => 'SPCC63.05:aaaa0007-1',
+        'gene' => 'Schizosaccharomyces pombe SPCC63.05',
+        'description' => 'deletion',
+        'name' => 'SPCC63.05delta',
+        'allele_type' => 'deletion'
       },
+      'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1' => {
+        'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
+        'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
+        'description' => 'deletion',
+        'name' => 'ssm4delta',
+        'allele_type' => 'deletion'
+      },
+      'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3' => {
+        'description' => 'del_100-200',
+        'allele_type' => 'partial_nucleotide_deletion',
+        'name' => 'ssm4-D4',
+        'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
+        'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3'
+      }
+    },
+    metagenotypes => {
+      "aaaa0007-metagenotype-1" => {
+        pathogen_genotype => "aaaa0007-genotype-test-1",
+        host_genotype => "aaaa0007-genotype-3",
+      }
     },
     annotations => [
       {
@@ -300,6 +318,9 @@ my $full_expected_curation_session =
     organisms => {
       4896 => {
         full_name => 'Schizosaccharomyces pombe',
+      },
+      4932 => {
+        full_name => 'Saccharomyces cerevisiae',
       },
     },
   };

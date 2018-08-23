@@ -1323,4 +1323,35 @@ sub load_test_ontologies
   $ontology_index->finish_index();
 }
 
+
+=head2 add_metagenotype_config
+
+ Usage   : $test_util->add_metagenotype_config($config);
+ Function: Add metagenotype / disease_formation_phenotype to the Config
+ Args    : $config
+           $track_schema
+ Return  : nothing
+
+=cut
+
+sub add_metagenotype_config
+{
+  my $self = shift;
+  my $config = shift;
+  my $track_schema = shift;
+
+  # set pombe as a host organism in pathogen_host_mode
+  $config->{host_organism_taxonids} = [4932];
+  $config->_set_host_organisms($track_schema);
+  $Canto::Track::OrganismLookup::cache = {};
+
+  my $phi_phenotype_config = clone $config->{annotation_types}->{phenotype};
+  $phi_phenotype_config->{name} = 'disease_formation_phenotype';
+  $phi_phenotype_config->{namespace} = 'disease_formation_phenotype';
+  $phi_phenotype_config->{feature_type} = 'metagenotype';
+
+  push @{$config->{available_annotation_type_list}}, $phi_phenotype_config;
+  $config->{annotation_types}->{$phi_phenotype_config->{name}} = $phi_phenotype_config;
+}
+
 1;
