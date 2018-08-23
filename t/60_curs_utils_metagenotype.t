@@ -14,20 +14,10 @@ $test_util->init_test('curs_annotations_2');
 my $config = $test_util->config();
 my $track_schema = $test_util->track_schema();
 
-# set pombe as a host organism in pathogen_host_mode
-$config->{host_organism_taxonids} = [4932];
-$config->_set_host_organisms($track_schema);
-$Canto::Track::OrganismLookup::cache = {};
 
 my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 
-my $phi_phenotype_config = clone $config->{annotation_types}->{phenotype};
-$phi_phenotype_config->{name} = 'disease_formation_phenotype';
-$phi_phenotype_config->{namespace} = 'disease_formation_phenotype';
-$phi_phenotype_config->{feature_type} = 'metagenotype';
-
-push @{$config->{available_annotation_type_list}}, $phi_phenotype_config;
-$config->{annotation_types}->{$phi_phenotype_config->{name}} = $phi_phenotype_config;
+$test_util->add_metagenotype_config($config, $track_schema);
 
 
 my $existing_pombe_genotype =
