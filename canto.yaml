@@ -1654,6 +1654,104 @@ available_annotation_type_list:
       proteins or nucleic acids. Cellular component also does not include
       multicellular anatomical terms.
     detailed_help_path: /docs/go_annotation
+  - name: host_phenotype
+    category: ontology
+    namespace: 'host_phenotype'
+    very_short_display_name: 'host phenotype'
+    short_display_name: 'host phenotype'
+    display_name: 'host phenotype'
+    synonyms_to_display:
+      - exact
+    feature_type: 'genotype'
+    feature_subtype: 'host'
+    can_have_conditions: 1
+    evidence_codes:
+      - Cell growth assay
+      - Enzyme assay data
+      - Epitope-tagged protein immunolocalization experiment data
+      - Flow cytometry data
+      - Gel electrophoresis evidence
+      - Immunolocalization experiment data
+      - Microscopy (cellular)
+      - Other
+      - Particle size and count assay
+      - Quantitative PCR
+      - Reporter gene assay
+      - Substance quantification evidence
+      - Transcript expression level evidence
+      - Western blot assay
+      - Macroscopic observation (qualitative observation)
+      - Macroscopic observation (quantitative observation)
+      - Microscopy (subcellular)
+      - Electrophysiology assay
+    broad_term_suggestions: >
+      multinucleate, abnormal spindle, inviable
+    specific_term_examples: >
+      growth auxotrophic for arginine, abnormal cytokinetic cell separation
+    help_text: >
+      Annotate normal or abnormal phenotypes of cells with this genotype.
+    more_help_text: >
+      A phenotype is any observable characteristic or trait of an organism;
+      observable characteristics include morphology, development, biochemical or
+      physiological properties, behaviour, and products of behaviour of the
+      organism. Phenotypes result from the expression of the genes of an organism as well
+      as the influence of environmental factors and the interactions between
+      the two.
+    extra_help_text: >
+      Alleles may be annotated with multiple phenotype terms,
+      including both normal and abnormal phenotypes for one allele.
+    detailed_help_path: /docs/fypo_annotation
+  - name: pathogen_phenotype
+    category: ontology
+    namespace: 'pathogen_phenotype'
+    very_short_display_name: 'pathogen phenotype'
+    short_display_name: 'pathogen phenotype'
+    display_name: 'pathogen phenotype'
+    synonyms_to_display:
+      - exact
+    feature_type: 'genotype'
+    feature_subtype: 'pathogen'
+    can_have_conditions: 1
+    evidence_codes:
+      - Cell growth assay
+      - Competitive growth assay evidence
+      - Enzyme assay data
+      - Epitope-tagged protein immunolocalization experiment data
+      - Flow cytometry data
+      - Gel electrophoresis evidence
+      - Immunolocalization experiment data
+      - Microscopy (cellular)
+      - Other
+      - Particle size and count assay
+      - Quantitative PCR
+      - Reporter gene assay
+      - Substance quantification evidence
+      - Transcript expression level evidence
+      - Western blot assay
+      - Penetration assay
+      - Asexual sporulation assay
+      - Sexual sporulation assay
+      - Macroscopic observation (qualitative observation)
+      - Macroscopic observation (quantitative observation)
+      - Microscopy (subcellular)
+      - Electrophysiology assay
+    broad_term_suggestions: >
+      multinucleate, abnormal spindle, inviable
+    specific_term_examples: >
+      growth auxotrophic for arginine, abnormal cytokinetic cell separation
+    help_text: >
+      Annotate normal or abnormal phenotypes of cells with this genotype.
+    more_help_text: >
+      A phenotype is any observable characteristic or trait of an organism;
+      observable characteristics include morphology, development, biochemical or
+      physiological properties, behaviour, and products of behaviour of the
+      organism. Phenotypes result from the expression of the genes of an organism as well
+      as the influence of environmental factors and the interactions between
+      the two.
+    extra_help_text: >
+      Alleles may be annotated with multiple phenotype terms,
+      including both normal and abnormal phenotypes for one allele.
+    detailed_help_path: /docs/fypo_annotation
   - name: disease_formation_phenotype
     category: ontology
     namespace: disease_formation_phenotype
@@ -1668,7 +1766,6 @@ available_annotation_type_list:
       - Cell growth assay
       - Chromatin immunoprecipitation experiment
       - Chromatography evidence
-      - Co-immunoprecipitation experiment
       - Competitive growth assay evidence
       - Electrophoretic mobility shift assay data
       - Enzyme assay data
@@ -1676,15 +1773,22 @@ available_annotation_type_list:
       - Flow cytometry data
       - Gel electrophoresis evidence
       - Immunolocalization experiment data
-      - Microscopy
+      - Microscopy (cellular)
       - Other
       - Particle size and count assay
-      - Plasmid maintenance assay evidence
       - Quantitative PCR
       - Reporter gene assay
       - Substance quantification evidence
       - Transcript expression level evidence
       - Western blot assay
+      - Functional test in host
+      - Penetration assay
+      - Asexual sporulation assay
+      - Sexual sporulation assay
+      - Macroscopic observation (qualitative observation)
+      - Macroscopic observation (quantitative observation)
+      - Microscopy (subcellular)
+      - Electrophysiology assay
     broad_term_suggestions: >
       multinucleate, abnormal spindle, inviable
     specific_term_examples: >
@@ -1804,6 +1908,16 @@ available_annotation_type_list:
       - Reconstituted Complex
       - Two-hybrid
     detailed_help_path: /docs/physical_interaction_annotation
+
+# restrict the list of annotation types
+enabled_annotation_type_list:
+  - molecular_function
+  - biological_process
+  - cellular_component
+  - phenotype
+  - post_translational_modification
+  - genetic_interaction
+  - physical_interaction
 
 default_curation_priority_name: low
 
