@@ -282,6 +282,17 @@ sub metagenotypes
   return $self->metagenotype_pathogen_genotypes()->all();
 }
 
+# return true if this genotype is part of a metagenotype
+sub is_part_of_metagenotype
+{
+  my $self = shift;
+
+  if ($self->metagenotype_host_genotypes()->count() > 0) {
+    return 1;
+  }
+
+  return $self->metagenotype_pathogen_genotypes()->count > 0;
+}
 
 =head2
 

@@ -501,6 +501,10 @@ sub delete_genotype
     return "genotype $genotype_id has annotations - delete failed";
   }
 
+  if ($genotype->is_part_of_metagenotype()) {
+    return "genotype $genotype_id is part of a meta-genotype - delete failed";
+  }
+
   $genotype->delete();
 
   $self->_remove_unused_alleles();
