@@ -498,11 +498,11 @@ sub delete_genotype
   my $genotype = $schema->resultset('Genotype')->find($genotype_id);
 
   if ($genotype->annotations()->count() > 0) {
-    return "genotype $genotype_id has annotations - delete failed";
+    return "genotype has annotations - delete failed";
   }
 
   if ($genotype->is_part_of_metagenotype()) {
-    return "genotype $genotype_id is part of a meta-genotype - delete failed";
+    return "genotype is part of a meta-genotype - delete failed";
   }
 
   $genotype->delete();
