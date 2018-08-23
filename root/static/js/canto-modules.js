@@ -488,6 +488,60 @@ canto.service('CursGenotypeList', function($q, Curs) {
   };
 });
 
+
+canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
+
+  var vm = this;
+  vm.list = [];
+
+  vm.create = function (data) {
+    var storePromise = vm.store(data);
+
+    storePromise.then(function successCallback(response) {
+      switch (response.data.status) {
+        case 'error':
+        toaster.pop('error', response.data.message);
+        break;
+
+        case 'existing':
+        toaster.pop('info', 'This genotype has already been created');
+        break;
+
+        case 'success':
+        toaster.pop('success', 'This genotype has been created');
+        vm.load();
+        break;
+      }
+    }, function errorCallback(response) {
+      toaster.pop('error', 'Failed to add metageneotype, could not contact the Canto server');
+    });
+
+  };
+
+  vm.store = function (data) {
+    var url = curs_root_uri + '/feature/metagenotype/store';
+
+    return $http({
+      method: 'POST',
+      url: url,
+      data: data
+    });
+  };
+
+  vm.load = function () {
+    var options = {
+      include_allele: 1,
+    };
+
+    Curs.list('metagenotype', [options] )
+      .then(function(res) {
+        vm.list = res.data;
+        $rootScope.$broadcast('metagenotype:updated', vm.list);
+      });
+  };
+});
+
+
 canto.service('CursAlleleList', function($q, Curs) {
   this.alleleList = function(genePrimaryIdentifier, searchTerm) {
     var q = $q.defer();
@@ -6473,27 +6527,19 @@ canto.directive('metagenotypeGenotypePicker',
   ['Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster', metagenotypeGenotypePicker]);
 
 
-var metagenotypeList = function(Curs, AnnotationProxy) {
+var metagenotypeList = function(AnnotationProxy, Metagenotype) {
   return {
     scope: {},
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/metagenotype_list.html',
     controller: function($scope) {
-      $scope.metagenotypes = null;
+      $scope.metagenotypes = [];
+      $scope.$on('metagenotype:updated', function(event, data) {
+        $scope.metagenotypes = data;
+      });
       $scope.annotations = [];
       $scope.isCollapsed = true;
-
-      $scope.listMetaGenotypes = function () {
-        var options = {
-          include_allele: 1,
-        };
-
-        Curs.list('metagenotype', [options] )
-          .then(function(res) {
-            $scope.metagenotypes = res.data;
-          });
-      };
 
       $scope.loadAnnotations = function() {
         AnnotationProxy.getAnnotation('disease_formation_phenotype')
@@ -6512,19 +6558,19 @@ var metagenotypeList = function(Curs, AnnotationProxy) {
       }
 
       $scope.$on('metagenotype list changed', function(event) {
-        $scope.listMetaGenotypes();
+        Metagenotype.load();
       });
 
       $scope.loadAnnotations();
-      $scope.listMetaGenotypes();
+      Metagenotype.load();
     }
   };
 };
 
-canto.directive('metagenotypeList', ['Curs', 'AnnotationProxy', metagenotypeList]);
+canto.directive('metagenotypeList', ['AnnotationProxy', 'Metagenotype', metagenotypeList]);
 
 
-var metagenotypeManage = function(CantoGlobals, CursGenotypeList, toaster, $http) {
+var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype) {
   return {
     scope: {},
     restrict: 'E',
@@ -6584,31 +6630,13 @@ var metagenotypeManage = function(CantoGlobals, CursGenotypeList, toaster, $http
         } else {
           data.host_genotype_id = $scope.hostModel;
         }
-
-        var storePromise = CursGenotypeList.storeMetagenotype(toaster, $http, data);
-
-        storePromise.then(function(result) {
-          switch (result.data.status) {
-            case 'error':
-            toaster.pop('error', result.data.message);
-            break;
-
-            case 'existing':
-            toaster.pop('info', 'This genotype has already been created');
-            break;
-
-            case 'success':
-            toaster.pop('success', 'This genotype has been created');
-            $scope.$broadcast('metagenotype list changed');
-            break;
-          }
-        });
+        Metagenotype.create(data);
       };
     }
   };
 };
 
-canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'toaster', '$http', metagenotypeManage]);
+canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'Metagenotype', metagenotypeManage]);
 
 
 var metagenotypeSummaryItem =
