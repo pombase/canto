@@ -502,10 +502,26 @@ sub _edit_genes_helper
         }
       } else {
         my $delete_sub = sub {
+          my %deleted_gene_organisms = ();
           for my $gene_id (@gene_ids) {
             my $gene = $schema->find_with_type('Gene', $gene_id);
+            $deleted_gene_organisms{$gene->organism()->taxonid()} = 1;
             $gene->delete();
           }
+
+          my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+          for my $taxonid (keys %deleted_gene_organisms) {
+            my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
+            if ($organism_details->{pathogen_or_host} &&
+                $organism_details->{pathogen_or_host} eq 'pathogen') {
+              my $organism = $schema->resultset("Organism")->find({ taxonid => $taxonid });
+              if ($organism->genes()->count() == 0 &&
+                  $organism->genotypes()->count() == 0) {
+                $organism->delete();
+              }
+            }
+          }
+
           for my $host_org_taxonid (@host_org_taxonids) {
             my $org = $schema->find_with_type('Organism', { taxonid => $host_org_taxonid });
             $org->delete();
