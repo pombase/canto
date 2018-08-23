@@ -66,7 +66,6 @@ my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
     'post_translational_modification.tsv' => 0,
     'physical_interaction.tsv' => 0,
     'genetic_interaction.tsv' => 2,
-    'disease_formation_phenotype.tsv' => 0,
   );
 
   my $member_count = 0;
@@ -96,5 +95,5 @@ my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
 
   is(keys %expected_filenames, 0);
 
-  is($member_count, 8);
+  is($member_count, 7);
 }
