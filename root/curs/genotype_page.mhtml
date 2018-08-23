@@ -119,8 +119,25 @@ my $genotype_id = $genotype->genotype_id();
 
 my $st = $c->stash();
 
+my $pathogen_host_mode = $st->{pathogen_host_mode};
+
+
+my $organism_lookup = Canto::Track::get_adaptor($c->config(), 'organism');
+
 my @types_to_show = grep {
-  $_->{feature_type} eq 'genotype'
+  my $annotation_type = $_;
+
+  if ($annotation_type->{feature_type} eq 'genotype') {
+    if ($pathogen_host_mode && $annotation_type->{feature_subtype}) {
+      my $org_details = $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
+
+      $annotation_type->{feature_subtype} eq $org_details->{pathogen_or_host};
+    } else {
+      1;
+    }
+  } else {
+    0;
+  }
 } @annotation_type_list;
 
 my $start_path = $c->stash()->{curs_root_uri};
