@@ -1,13 +1,13 @@
 <div class="genotype-list-row-links">
-  <div>
+  <div ng-repeat="annotationType in matchingAnnotationTypes">
     <a ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
-       href="{{curs_root_uri + '/feature/genotype/annotate/' + genotypeId + '/start/phenotype/'}}">
-      Annotate a phenotype for this genotype ...
+       href="{{curs_root_uri + '/feature/genotype/annotate/' + genotypeId + '/start/' + annotationType.name + '/'}}">
+      Start a {{ annotationType.display_name }} annotation ...
     </a>
   </div>
   <div>
     <a ng-class="{disabled: genotypeId == null }" href="{{viewAnnotationUri}}">
-      View phenotype annotations ...
+      View annotations ...
     </a>
   </div>
   <div>

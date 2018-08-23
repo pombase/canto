@@ -539,6 +539,8 @@ canto.service('CantoGlobals', function($window) {
   this.curationStatusData = $window.curationStatusData;
   this.cumulativeAnnotationTypeCounts = $window.cumulativeAnnotationTypeCounts;
   this.perPub5YearStatsData = $window.perPub5YearStatsData;
+  this.multi_organism_mode = $window.multi_organism_mode;
+  this.pathogen_host_mode = $window.pathogen_host_mode;
 });
 
 canto.service('CantoService', function($http) {
@@ -4254,7 +4256,7 @@ canto.directive('genotypeSearch',
                   genotypeSearchCtrl]);
 
 var genotypeListRowLinksCtrl =
-  function($uibModal, $http, toaster, CantoGlobals, CursGenotypeList) {
+  function($uibModal, $http, toaster, CantoGlobals, CursGenotypeList, AnnotationTypeConfig) {
     return {
       restrict: 'E',
       scope: {
@@ -4266,8 +4268,34 @@ var genotypeListRowLinksCtrl =
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row_links.html',
       controller: function($scope) {
+        var genotype =
+          $.grep($scope.genotypes, function(genotype) {
+            return genotype.genotype_id === $scope.genotypeId;
+          })[0];
+        var genotypePathogenOrHost = genotype.organism.pathogen_or_host;
+
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+        $scope.pathogen_host_mode = CantoGlobals.pathogen_host_mode;
+
+        $scope.matchingAnnotationTypes = [];
+
+        AnnotationTypeConfig.getAll().then(function(response) {
+          $scope.matchingAnnotationTypes =
+            $.grep(response.data,
+                   function(annotationType) {
+                     if (annotationType.feature_type !== 'genotype') {
+                       return false;
+                     }
+
+                     if ($scope.pathogen_host_mode &&
+                         genotypePathogenOrHost === annotationType.feature_subtype) {
+                       return false;
+                     }
+
+                     return true;
+                   });
+        });
 
         $scope.editGenotype = function(genotypeId) {
           window.location.href =
@@ -4353,6 +4381,7 @@ var genotypeListRowLinksCtrl =
 
 canto.directive('genotypeListRowLinks',
                 ['$uibModal', '$http', 'toaster', 'CantoGlobals', 'CursGenotypeList',
+                 'AnnotationTypeConfig',
                  genotypeListRowLinksCtrl]);
 
 var genotypeListRowCtrl =
