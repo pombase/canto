@@ -4289,7 +4289,7 @@ var genotypeListRowLinksCtrl =
                      }
 
                      if ($scope.pathogen_host_mode &&
-                         genotypePathogenOrHost === annotationType.feature_subtype) {
+                         genotypePathogenOrHost !== annotationType.feature_subtype) {
                        return false;
                      }
 
