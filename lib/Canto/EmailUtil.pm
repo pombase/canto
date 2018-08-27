@@ -109,12 +109,24 @@ sub make_email
   my $email_type = shift;
   my %args = @_;
 
-  my $root = File::Spec->rel2abs('root');
+  my $email_config = $self->config()->{email};
+
+  my $template_root = $email_config->{template_root};
+
+  my $comp_root;
+
+  if (defined $template_root) {
+    $comp_root = $template_root;
+  } else {
+    my $mason_root = File::Spec->rel2abs('root');
+    $comp_root = $mason_root;
+  }
+
   my $interp =
-    HTML::Mason::Interp->new(comp_root => $root,
+    HTML::Mason::Interp->new(comp_root => $comp_root,
                              default_escape_flags => 'n');
 
-  my $type_config = $self->config()->{email}->{templates}->{$email_type};
+  my $type_config = $email_config->{templates}->{$email_type};
 
   my $subject_component_path = $type_config->{subject};
   if (!defined $subject_component_path) {
