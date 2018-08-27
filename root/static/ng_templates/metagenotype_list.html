@@ -1,9 +1,9 @@
 <div>
-    <div ng-if="metagenotypes.length">
+    <div ng-if="metagenotypes.length > 0">
         <div class="row">
             <div class="col-md-12">
                 <h3>Meta-Genotypes</h3>
-                <div class="jumbotron" ng-repeat="meta in metagenotypes">
+                <div class="jumbotron" ng-repeat="meta in metagenotypes track by meta.metagenotype_id">
                     <div class="row">
                         <metagenotype-summary-item type="Pathogen" genotype="meta.pathogen_genotype"></metagenotype-summary-item>
                         <metagenotype-summary-item type="Host" genotype="meta.host_genotype"></metagenotype-summary-item>

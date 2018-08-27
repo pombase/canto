@@ -464,29 +464,81 @@ canto.service('CursGenotypeList', function($q, Curs) {
 
     return q.promise;
   };
+});
 
-  this.deleteMetaGenotype = function(metagenotypeList, metagenotypeId) {
-    var q = $q.defer();
 
-    Curs.delete('metagenotype', metagenotypeId)
+canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
+
+  var vm = this;
+  vm.list = [];
+
+  vm.create = function (data) {
+    var storePromise = vm.store(data);
+
+    storePromise.then(function successCallback(response) {
+      switch (response.data.status) {
+        case 'error':
+        toaster.pop('error', response.data.message);
+        break;
+
+        case 'existing':
+        toaster.pop('info', 'This metagenotype has already been created');
+        break;
+
+        case 'success':
+        toaster.pop('success', 'This metagenotype has been created');
+        vm.load();
+        break;
+      }
+    }, function errorCallback(response) {
+      toaster.pop('error', 'Failed to add metageneotype, could not contact the Canto server');
+    });
+
+  };
+
+  vm.store = function (data) {
+    var url = curs_root_uri + '/feature/metagenotype/store';
+
+    return $http({
+      method: 'POST',
+      url: url,
+      data: data
+    });
+  };
+
+  vm.delete = function (id) {
+    loadingStart();
+
+    Curs.delete('metagenotype', id)
       .then(function() {
-        for (var i = 0; i < metagenotypeList.length; i++) {
-          if (metagenotypeList[i].metagenotype_id == metagenotypeId) {
-            metagenotypeList.splice(i, 1);
-            break;
-          }
-        }
+        toaster.pop('success', 'The metagenotype has been deleted');
+        vm.load();
 
-        service.sendChangeEvent();
-        q.resolve();
-      })
-      .catch(function(message) {
-        q.reject(message);
+    }).catch(function(message) {
+      if (message.match('metagenotype .* has annotations')) {
+        toaster.pop('warning', "couldn't delete the metagenotype: " +
+                    "delete the annotations that use it first");
+      } else {
+        toaster.pop('error', "couldn't delete the metagenotype: " + message);
+      }
+    }).finally(function() {
+      loadingEnd();
+    });
+  };
+
+  vm.load = function () {
+    var options = {
+      include_allele: 1,
+    };
+
+    Curs.list('metagenotype', [options] )
+      .then(function(res) {
+        vm.list = res.data;
+        $rootScope.$broadcast('metagenotype:updated', vm.list);
       });
-
-    return q.promise;
   };
 });
+
 
 canto.service('CursAlleleList', function($q, Curs) {
   this.alleleList = function(genePrimaryIdentifier, searchTerm) {
@@ -6473,27 +6525,19 @@ canto.directive('metagenotypeGenotypePicker',
   ['Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster', metagenotypeGenotypePicker]);
 
 
-var metagenotypeList = function(Curs, AnnotationProxy) {
+var metagenotypeList = function(AnnotationProxy, Metagenotype) {
   return {
     scope: {},
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/metagenotype_list.html',
     controller: function($scope) {
-      $scope.metagenotypes = null;
+      $scope.metagenotypes = [];
+      $scope.$on('metagenotype:updated', function(event, data) {
+        $scope.metagenotypes = data;
+      });
       $scope.annotations = [];
       $scope.isCollapsed = true;
-
-      $scope.listMetaGenotypes = function () {
-        var options = {
-          include_allele: 1,
-        };
-
-        Curs.list('metagenotype', [options] )
-          .then(function(res) {
-            $scope.metagenotypes = res.data;
-          });
-      };
 
       $scope.loadAnnotations = function() {
         AnnotationProxy.getAnnotation('disease_formation_phenotype')
@@ -6512,19 +6556,19 @@ var metagenotypeList = function(Curs, AnnotationProxy) {
       }
 
       $scope.$on('metagenotype list changed', function(event) {
-        $scope.listMetaGenotypes();
+        Metagenotype.load();
       });
 
       $scope.loadAnnotations();
-      $scope.listMetaGenotypes();
+      Metagenotype.load();
     }
   };
 };
 
-canto.directive('metagenotypeList', ['Curs', 'AnnotationProxy', metagenotypeList]);
+canto.directive('metagenotypeList', ['AnnotationProxy', 'Metagenotype', metagenotypeList]);
 
 
-var metagenotypeManage = function(CantoGlobals, CursGenotypeList, toaster, $http) {
+var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype) {
   return {
     scope: {},
     restrict: 'E',
@@ -6584,31 +6628,13 @@ var metagenotypeManage = function(CantoGlobals, CursGenotypeList, toaster, $http
         } else {
           data.host_genotype_id = $scope.hostModel;
         }
-
-        var storePromise = CursGenotypeList.storeMetagenotype(toaster, $http, data);
-
-        storePromise.then(function(result) {
-          switch (result.data.status) {
-            case 'error':
-            toaster.pop('error', result.data.message);
-            break;
-
-            case 'existing':
-            toaster.pop('info', 'This genotype has already been created');
-            break;
-
-            case 'success':
-            toaster.pop('success', 'This genotype has been created');
-            $scope.$broadcast('metagenotype list changed');
-            break;
-          }
-        });
+        Metagenotype.create(data);
       };
     }
   };
 };
 
-canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'toaster', '$http', metagenotypeManage]);
+canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'Metagenotype', metagenotypeManage]);
 
 
 var metagenotypeSummaryItem =
@@ -6647,7 +6673,7 @@ canto.directive('metagenotypeSummaryItem', [metagenotypeSummaryItem]);
 
 
 var metagenotypeListRowLinksCtrl =
-  function($uibModal, $http, toaster, CantoGlobals, CursGenotypeList, AnnotationTypeConfig) {
+  function(CantoGlobals, AnnotationTypeConfig, Metagenotype) {
     return {
       restrict: 'E',
       scope: {
@@ -6680,26 +6706,7 @@ var metagenotypeListRowLinksCtrl =
         };
 
         $scope.deleteMetagenotype = function(metagenotypeId) {
-          loadingStart();
-
-          var q = CursGenotypeList.deleteMetaGenotype($scope.metagenotypes, $scope.metagenotypeId);
-
-          q.then(function() {
-            toaster.pop('success', 'Meta-genotype deleted');
-          });
-
-          q.catch(function(message) {
-            if (message.match('genotype .* has annotations')) {
-              toaster.pop('warning', "couldn't delete the metagenotype: " +
-                          "delete the annotations that use it first");
-            } else {
-              toaster.pop('error', "couldn't delete the metagenotype: " + message);
-            }
-          });
-
-          q.finally(function() {
-            loadingEnd();
-          });
+          Metagenotype.delete(metagenotypeId);
         };
 
       },
@@ -6722,6 +6729,4 @@ var metagenotypeListRowLinksCtrl =
   };
 
 canto.directive('metagenotypeListRowLinks',
-                ['$uibModal', '$http', 'toaster', 'CantoGlobals', 'CursGenotypeList',
-                 'AnnotationTypeConfig',
-                 metagenotypeListRowLinksCtrl]);
+  ['CantoGlobals', 'AnnotationTypeConfig', 'Metagenotype', metagenotypeListRowLinksCtrl]);
