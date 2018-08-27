@@ -1,3 +1,7 @@
+language: perl
+perl:
+  - "5.26"
+
 sudo: required
 
 services:
