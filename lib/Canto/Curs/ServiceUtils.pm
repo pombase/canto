@@ -329,6 +329,7 @@ sub _genotype_details_hash
     display_name => $genotype->display_name(),
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),
+    metagenotype_count => $genotype->metagenotype_count(),
     organism => $organism_details,
   );
 
