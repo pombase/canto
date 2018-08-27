@@ -391,6 +391,29 @@ UPDATE genotype SET organism_id =
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
+
+  22 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    $dbh->do("PRAGMA foreign_keys = OFF");
+    $dbh->do("ALTER TABLE organism RENAME TO organism_temp;");
+    $dbh->do("CREATE TABLE organism (
+       organism_id integer NOT NULL PRIMARY KEY,
+       abbreviation varchar(255) null,
+       scientific_name varchar(255) NOT NULL,
+       common_name varchar(255) null,
+       comment text null);
+    ");
+    $dbh->do(qq{
+       INSERT INTO organism(organism_id, abbreviation, scientific_name, common_name, comment)
+       SELECT organism_id, abbreviation, genus || " " || species, common_name, comment FROM organism_temp;
+    });
+    $dbh->do("DROP TABLE organism_temp;");
+    $dbh->do("PRAGMA foreign_keys = ON");
+  },
 );
 
 sub upgrade_to

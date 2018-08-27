@@ -106,8 +106,7 @@ test_psgi $app, sub {
                annotation_count => 1,
                background => 'h+',
                organism => {
-                 species => 'pombe',
-                 genus => 'Schizosaccharomyces',
+                 scientific_name => 'Schizosaccharomyces pombe',
                  taxonid => '4896',
                  pathogen_or_host => 'unknown',
                  full_name => 'Schizosaccharomyces pombe',

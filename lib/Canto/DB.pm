@@ -170,8 +170,8 @@ sub initialise {
 =head2 find_with_type
 
  Usage   : my $obj = $schema->find_with_type('Organism', 'abbreviation', 'SCHPO');
-       or: my $obj = $schema->find_with_type('Organism', { genus => 'Arabidopsis',
-                                                           species => 'thaliana' } );
+       or: my $obj = $schema->find_with_type('Organism',
+                                             { scientific_name => 'Arabidopsis thaliana' } );
  Function: Return the object of the given type that has the given key field with
            given value or croak if no object is found
  Args    : $type - an unqualified class name like 'Person'

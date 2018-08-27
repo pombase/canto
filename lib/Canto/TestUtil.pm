@@ -795,8 +795,7 @@ sub add_test_organisms
                                                 default_db_name => $config->{default_db_name});
 
     for my $org_conf (@{$test_config->{organisms}}) {
-      push @ret, $load_util->get_organism($org_conf->{genus},
-                                          $org_conf->{species},
+      push @ret, $load_util->get_organism($org_conf->{scientific_name},
                                           $org_conf->{taxonid},
                                           $org_conf->{common_name});
 

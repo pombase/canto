@@ -118,8 +118,7 @@ sub _make_organism_hash
   return {
     pathogen_or_host => 'unknown',
     common_name => $organism->common_name(),
-    genus => $organism->genus(),
-    species => $organism->species(),
+    scientific_name => $organism->full_name(),
     taxonid => $organism->taxonid(),
     full_name => $organism->full_name(),
   };

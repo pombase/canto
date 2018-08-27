@@ -25,7 +25,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v1250
 
-schema_version: 21
+schema_version: 22
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## all gene lookups with match genes from any organism (and will return the
@@ -37,8 +37,7 @@ schema_version: 21
 ## look for an Organismprop for the Organism with type "taxon_id" .
 ## see also: Canto::Role::TaxonIDLookup
 # organism_taxon_id:
-#   Schizosaccharomyces:
-#     pombe: 4896
+#   'Schizosaccharomyces pombe': 4896
 
 # the path that the home link goes to
 instance_front_path: /docs/instance_front
@@ -563,12 +562,9 @@ class_info:
       editable: 1
       display_field: full_name
       order_by:
-        - genus
-        - species
+        - scientific_name
       field_info_list:
-        - name: genus
-          editable: 1
-        - name: species
+        - name: scientific_name
           editable: 1
     organism_report:
       extends: organism

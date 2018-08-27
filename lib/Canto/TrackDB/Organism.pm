@@ -38,13 +38,7 @@ __PACKAGE__->table("organism");
   is_nullable: 1
   size: 255
 
-=head2 genus
-
-  data_type: 'varchar'
-  is_nullable: 0
-  size: 255
-
-=head2 species
+=head2 scientific_name
 
   data_type: 'varchar'
   is_nullable: 0
@@ -68,9 +62,7 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "abbreviation",
   { data_type => "varchar", is_nullable => 1, size => 255 },
-  "genus",
-  { data_type => "varchar", is_nullable => 0, size => 255 },
-  "species",
+  "scientific_name",
   { data_type => "varchar", is_nullable => 0, size => 255 },
   "common_name",
   { data_type => "varchar", is_nullable => 1, size => 255 },
@@ -153,8 +145,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2018-01-22 23:13:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IS3w7vLOiXb7l2ho0U3j/g
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-08-27 02:36:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TQ8JttP6mWZKK/Suo/7oAw
 
 use Carp;
 
@@ -162,7 +154,7 @@ use Carp;
 sub full_name {
   my $self = shift;
 
-  return $self->genus() . ' ' . $self->species();
+  return $self->scientific_name();
 }
 
 # You can replace this text with custom content, and it will be preserved on regeneration

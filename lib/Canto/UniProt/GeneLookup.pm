@@ -102,8 +102,7 @@ sub lookup
   }
   if (exists $options->{search_organism}) {
     croak qq(can't handle search_organism option "),
-      $options->{search_organism}->{genus}, " ",
-      $options->{search_organism}->{species}, qq(" for UniProt gene lookups);
+      $options->{search_organism}->{scientific_name}, qq(" for UniProt gene lookups);
   }
 
   my $search_terms_ref = shift;

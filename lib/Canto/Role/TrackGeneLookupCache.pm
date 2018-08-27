@@ -72,23 +72,10 @@ around 'lookup' => sub {
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
 
   map {
-    my $organism_full_name = $_->{organism_full_name};
-    my $genus;
-    my $species;
-
-    if ($organism_full_name =~ /^(\S+)\s+(.*)/) {
-      $genus = $1;
-      $species = $2;
-    } else {
-      $genus = $organism_full_name;
-      $species = "unknown";
-    }
-
+    my $scientific_name = $_->{organism_full_name};
     my $organism_common_name = $_->{organism_common_name};
-
     my $taxonid = $_->{organism_taxonid};
-
-    my $organism = $load_util->get_organism($genus, $species, $taxonid,
+    my $organism = $load_util->get_organism($scientific_name, $taxonid,
                                             $organism_common_name);
 
     my $gene_load = Canto::Track::GeneLoad->new(organism => $organism, schema => $schema);

@@ -69,7 +69,7 @@ or more ontologies before using Canto.
 
 Add an organism using this command in the `canto` directory:
 
-    ./script/canto_add.pl --organism <genus> <species> <taxon_id>
+    ./script/canto_add.pl --organism "<genus> <species>" <taxon_id>
 
 At least one organism is needed in the Canto database before genes can be
 loaded.

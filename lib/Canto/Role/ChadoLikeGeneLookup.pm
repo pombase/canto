@@ -46,6 +46,7 @@ requires 'lookup_by_synonym_rs';
 requires 'schema';
 requires 'taxon_id_lookup';
 requires 'config';
+requires 'get_organism_resultset';
 
 sub build_gene_constraint
 {
@@ -140,8 +141,7 @@ sub _read_genes
        or:
            my $results =
              $gene_lookup->lookup({ search_organism => {
-                                      genus => 'Schizosaccharomyces',
-                                      species => 'pombe',
+                                      scientific_name => 'Schizosaccharomyces pombe',
                                     }
                                   },
                                   [qw(cdc11 SPCTRNASER.13 test foo)]);
@@ -185,12 +185,9 @@ sub lookup
   my $org_constraint = undef;
 
   if (exists $options->{search_organism}) {
-    my $search_species = $options->{search_organism}->{species};
-    my $search_genus = $options->{search_organism}->{genus};
+    my $search_scientific_name = $options->{search_organism}->{scientific_name};
 
-    my $org_rs = $self->schema()->resultset('Organism')
-      ->search({ species => $search_species,
-                 genus => $search_genus });
+    my $org_rs = $self->get_organism_resultset($search_scientific_name);
 
     $org_constraint = {
       -in => $org_rs->get_column('organism_id')->as_query(),

@@ -105,6 +105,8 @@ sub get_organism
 
   croak "taxonid argument undefined" unless defined $taxonid;
 
+  croak "taxonid not a number: $taxonid" unless $taxonid =~ /^\d+$/;
+
   return $schema->find_or_create_with_type('Organism',
                                            { taxonid => $taxonid,
                                            });

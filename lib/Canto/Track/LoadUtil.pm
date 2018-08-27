@@ -86,10 +86,9 @@ sub _build_cache
 
 =head2 get_organism
 
- Usage   : my $organism = $load_util->get_organism($genus, $species, $taxonid);
-       OR: my $organism = $load_util->get_organism($genus, $species, $taxonid, $common_name);
+ Usage   : my $organism = $load_util->get_organism($scientific_name, $taxonid);
+       OR: my $organism = $load_util->get_organism($scientific_name, $taxonid, $common_name);
  Function: Find or create, and then return the organism matching the arguments
- Args    : the genus and species of the new organism
  Returns : The found or new organism
 
 =cut
@@ -97,20 +96,20 @@ sub get_organism
 {
   my $self = shift;
 
-  my $genus = shift;
-  my $species = shift;
+  my $scientific_name = shift;
   my $taxonid = shift;
   my $common_name = shift;
 
   croak "no taxon id supplied" unless $taxonid;
+
+  croak "taxon id not a number: $taxonid" unless $taxonid =~ /^\d+$/;
 
   my $schema = $self->schema();
 
   my $new_org =
     $schema->resultset('Organism')->find_or_create(
       {
-        genus => $genus,
-        species => $species,
+        scientific_name => $scientific_name,
         organismprops => [ { value => $taxonid,
                              type => { name => 'taxon_id' },
                              rank => 0 } ]

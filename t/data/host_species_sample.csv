@@ -1,6 +1,6 @@
-Genus,Species,NcbiTaxSpeciesId
-Arabidopsis,thaliana,3702
-Hordeum,vulgare,4513
-Triticum,aestivum,4565
-Homo,sapiens,9606
-Mus,musculus,10090
+ScientificName,NcbiTaxSpeciesId
+Arabidopsis thaliana,3702
+Hordeum vulgare,4513
+Triticum aestivum,4565
+Homo sapiens,9606
+Mus musculus,10090

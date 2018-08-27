@@ -108,9 +108,8 @@ sub check_new_annotations
                    'pathogen_or_host' => 'unknown',
                    'taxonid' => '4896',
                    'full_name' => 'Schizosaccharomyces pombe',
-                   'species' => 'pombe',
+                   scientific_name => 'Schizosaccharomyces pombe',
                    'common_name' => 'fission yeast',
-                   'genus' => 'Schizosaccharomyces'
                  },
                  'conditions' => [
                    {
@@ -185,9 +184,8 @@ sub check_new_annotations
                    'pathogen_or_host' => 'unknown',
                    'taxonid' => '4896',
                    'full_name' => 'Schizosaccharomyces pombe',
-                   'species' => 'pombe',
+                   scientific_name => 'Schizosaccharomyces pombe',
                    'common_name' => 'fission yeast',
-                   'genus' => 'Schizosaccharomyces'
                  },
                  'genotype_name' => undef,
                  'genotype_background' => undef,

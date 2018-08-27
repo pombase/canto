@@ -105,9 +105,8 @@ The genes file should have 4 columns, separated by tabs:
 
 The ontology files should be in OBO format
 
-The organisms file have 3 columns, separated by tabs:
-  genus
-  species
+The organisms file have 2 columns, separated by tabs:
+  scientific name (usually "Genus species")
   taxon ID
 
 
@@ -193,7 +192,7 @@ if ($do_organisms) {
   my %seen_organisms = ();
 
   while (defined (my $line = <$fh>)) {
-    next if $line =~ /Genus/ && $. == 1;
+    next if $line =~ /Genus|ScientificName/ && $. == 1;
 
     chomp $line;
     next if $line =~ /^\s*$/;
@@ -203,41 +202,37 @@ if ($do_organisms) {
       next;
     }
 
-    my ($genus, $species, $taxonid, $common_name) = split (/,/, $line);
+    my ($scientific_name, $taxonid, $common_name) = split (/,/, $line);
 
     if (!defined $taxonid) {
       warn "not enough fields in line: $line\n";
       next;
     }
 
-    $species =~ s/^\s+//;
-    $species =~ s/\s+$//;
-
-    if (length $species == 0) {
-      warn "no species on this line, skipping:\n$line\n";
-      next;
-    }
+    $scientific_name =~ s/^\s+//;
+    $scientific_name =~ s/\s+$//;
+    $scientific_name =~ s/\s+/ /;
 
     if ($taxonid !~ /^\d+$/) {
       $guard->{inactivated} = 1;
       die qq(load failed - Taxon ID in third column of line $. isn't an integer: $taxonid\n);
     }
 
-    if (exists $seen_organisms{"$genus $species"}) {
+    if (exists $seen_organisms{$scientific_name}) {
       $guard->{inactivated} = 1;
-      my ($previous_taxonid, $previous_line) = @{$seen_organisms{"$genus $species"}};
+      my ($previous_taxonid, $previous_line) = @{$seen_organisms{$scientific_name}};
       if ($previous_taxonid == $taxonid) {
-        die "load failed - duplicate genus, species and taxon ID at input lines: "
+        die "load failed - duplicate scientific name and taxon ID at input lines: "
           . "$. and $previous_line\n";
       } else {
-        die "load failed - same genus and species with different taxon ID at lines: "
+        die "load failed - same scientific name with different taxon ID at lines: "
           . "$. and $previous_line\n";
       }
     } else {
-      $seen_organisms{"$genus $species"} = [$taxonid, $.];
+      $seen_organisms{$scientific_name} = [$taxonid, $.];
     }
 
-    $load_util->get_organism($genus, $species, $taxonid, $common_name);
+    $load_util->get_organism($scientific_name, $taxonid, $common_name);
   }
 
   $guard->commit unless $dry_run;

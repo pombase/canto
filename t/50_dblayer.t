@@ -22,5 +22,5 @@ my $name_path = Canto::DBLayer::Path->new(path_string => 'primary_name');
 is ($name_path->resolve($gene), 'ste20');
 
 my $species_path =
-  Canto::DBLayer::Path->new(path_string => 'organism->species');
-is ($species_path->resolve($gene), 'pombe');
+  Canto::DBLayer::Path->new(path_string => 'organism->scientific_name');
+is ($species_path->resolve($gene), 'Schizosaccharomyces pombe');

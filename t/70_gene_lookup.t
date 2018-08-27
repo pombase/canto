@@ -107,8 +107,7 @@ is(@{$result->{found}}, 1);
 $result = $lookup->lookup(
   {
     search_organism => {
-      genus => 'Schizosaccharomyces',
-      species => 'pombe',
+      scientific_name => 'Schizosaccharomyces pombe',
     },
   },
   [qw(ssf1)]);
@@ -117,8 +116,7 @@ is(@{$result->{found}}, 0);
 $result = $lookup->lookup(
   {
     search_organism => {
-      genus => 'Schizosaccharomyces',
-      species => 'pombe',
+      scientific_name => 'Schizosaccharomyces pombe',
     },
   },
   [qw(mot1)]);
@@ -139,8 +137,7 @@ $lookup->cache()->clear();
 $result = $lookup->lookup(
   {
     search_organism => {
-      genus => 'Schizosaccharomyces',
-      species => 'pombe',
+      scientific_name => 'Schizosaccharomyces pombe',
     },
   },
   [qw(klp1)]);
@@ -154,8 +151,7 @@ try {
   $result = $lookup->lookup(
     {
       search_organism => {
-        genus => 'Schizosaccharomyces',
-        species => 'pombe',
+        scientific_name => 'Schizosaccharomyces pombe',
       },
     },
     [qw(klp1)]);
@@ -165,12 +161,11 @@ try {
 };
 
 # set the taxon config - needed when the taxon ID isn't in Chado
-$test_util->config()->{organism_taxon_id}->{Schizosaccharomyces}->{pombe} = 4896;
+$test_util->config()->{organism_taxon_id}->{'Schizosaccharomyces pombe'} = 4896;
 $result = $lookup->lookup(
   {
     search_organism => {
-      genus => 'Schizosaccharomyces',
-      species => 'pombe',
+      scientific_name => 'Schizosaccharomyces pombe',
     },
   },
   [qw(klp1)]);

@@ -425,8 +425,7 @@ sub setup
         my $organism = $rs->first()->organism();
 
         $instance_organism->{organism_id} = $organism->organism_id();
-        $instance_organism->{species} = $organism->species();
-        $instance_organism->{genus} = $organism->genus();
+        $instance_organism->{scientific_name} = $organism->scientific_name();
 
         if ($self->{host_organism_taxonids} && @{$self->{host_organism_taxonids}} > 0) {
           warn "warning: it doesn't make sense to set both " .

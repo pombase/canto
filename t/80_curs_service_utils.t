@@ -42,8 +42,7 @@ cmp_deeply($res,
               annotation_count => 1,
               metagenotype_count => 0,
               'organism' => {
-                              'species' => 'pombe',
-                              'genus' => 'Schizosaccharomyces',
+                              scientific_name => 'Schizosaccharomyces pombe',
                               'taxonid' => '4896',
                               'pathogen_or_host' => 'unknown',
                               'full_name' => 'Schizosaccharomyces pombe',
@@ -60,8 +59,7 @@ cmp_deeply($res,
               annotation_count => 1,
               metagenotype_count => 0,
               'organism' => {
-                              'species' => 'pombe',
-                              'genus' => 'Schizosaccharomyces',
+                              scientific_name => 'Schizosaccharomyces pombe',
                               'taxonid' => '4896',
                               'pathogen_or_host' => 'unknown',
                               'full_name' => 'Schizosaccharomyces pombe',
@@ -97,8 +95,7 @@ cmp_deeply($res,
               annotation_count => 1,
               metagenotype_count => 0,
               organism => {
-                species => 'pombe',
-                genus => 'Schizosaccharomyces',
+                scientific_name => 'Schizosaccharomyces pombe',
                 taxonid => '4896',
                 pathogen_or_host => 'unknown',
                 full_name => 'Schizosaccharomyces pombe',
@@ -128,8 +125,7 @@ cmp_deeply($res,
               'allele_identifiers' => ['SPCC1739.11c:allele-1','SPBC1826.01c:allele-1'],
               annotation_count => 0,
               organism => {
-                species => 'pombe',
-                genus => 'Schizosaccharomyces',
+                scientific_name => 'Schizosaccharomyces pombe',
                 taxonid => '4896',
                 pathogen_or_host => 'unknown',
                 full_name => 'Schizosaccharomyces pombe',
@@ -161,8 +157,7 @@ cmp_deeply($res,
               annotation_count => 1,
               metagenotype_count => 0,
               organism => {
-                species => 'pombe',
-                genus => 'Schizosaccharomyces',
+                scientific_name => 'Schizosaccharomyces pombe',
                 taxonid => '4896',
                 pathogen_or_host => 'unknown',
                 full_name => 'Schizosaccharomyces pombe',
@@ -179,8 +174,7 @@ cmp_deeply($res,
               annotation_count => 1,
               metagenotype_count => 0,
               organism => {
-                species => 'pombe',
-                genus => 'Schizosaccharomyces',
+                scientific_name => 'Schizosaccharomyces pombe',
                 taxonid => '4896',
                 pathogen_or_host => 'unknown',
                 full_name => 'Schizosaccharomyces pombe',
@@ -198,8 +192,7 @@ cmp_deeply($res,
                                       ],
               annotation_count => 1,
               organism => {
-                species => 'pombe',
-                genus => 'Schizosaccharomyces',
+                scientific_name => 'Schizosaccharomyces pombe',
                 taxonid => '4896',
                 pathogen_or_host => 'unknown',
                 full_name => 'Schizosaccharomyces pombe',
@@ -234,8 +227,7 @@ cmp_deeply($res,
               'display_name' => 'cdc11-33 ssm4delta',
               annotation_count => 1,
               organism => {
-                species => 'pombe',
-                genus => 'Schizosaccharomyces',
+                scientific_name => 'Schizosaccharomyces pombe',
                 taxonid => '4896',
                 pathogen_or_host => 'unknown',
                 full_name => 'Schizosaccharomyces pombe',
@@ -822,10 +814,9 @@ cmp_deeply($annotation_res,
               'organism' => {
                 'pathogen_or_host' => 'unknown',
                 'common_name' => 'fission yeast',
-                'genus' => 'Schizosaccharomyces',
+                'scientific_name' => 'Schizosaccharomyces pombe',
                 'full_name' => 'Schizosaccharomyces pombe',
                 'taxonid' => '4896',
-                'species' => 'pombe'
               },
               'annotation_type_abbreviation' => '',
               'alleles' => [
@@ -876,10 +867,9 @@ cmp_deeply($annotation_res,
               'organism' => {
                 'pathogen_or_host' => 'unknown',
                 'common_name' => 'fission yeast',
-                'genus' => 'Schizosaccharomyces',
+                'scientific_name' => 'Schizosaccharomyces pombe',
                 'full_name' => 'Schizosaccharomyces pombe',
                 'taxonid' => '4896',
-                'species' => 'pombe'
               },
               'annotation_type_abbreviation' => '',
               'genotype_name' => undef,
@@ -1080,8 +1070,7 @@ my $expected_genotype_detail_res =
     annotation_count => 1,
     metagenotype_count => 0,
     organism => {
-      species => 'pombe',
-      genus => 'Schizosaccharomyces',
+      scientific_name => 'Schizosaccharomyces pombe',
       taxonid => '4896',
       pathogen_or_host => 'unknown',
       full_name => 'Schizosaccharomyces pombe',
@@ -1231,10 +1220,12 @@ is (scalar(@{$metagenotypes_list_res}), 1);
 
 is ($metagenotypes_list_res->[0]->{host_genotype}->{identifier}, 'aaaa0007-genotype-3');
 is ($metagenotypes_list_res->[0]->{host_genotype}->{allele_string}, '');
-is ($metagenotypes_list_res->[0]->{host_genotype}->{organism}->{species}, 'cerevisiae');
+is ($metagenotypes_list_res->[0]->{host_genotype}->{organism}->{scientific_name},
+    'Saccharomyces cerevisiae');
 is ($metagenotypes_list_res->[0]->{pathogen_genotype}->{identifier}, 'aaaa0007-genotype-test-1');
 is ($metagenotypes_list_res->[0]->{pathogen_genotype}->{allele_string}, 'ssm4delta SPCC63.05delta');
-is ($metagenotypes_list_res->[0]->{pathogen_genotype}->{organism}->{species}, 'pombe');
+is ($metagenotypes_list_res->[0]->{pathogen_genotype}->{organism}->{scientific_name},
+    'Schizosaccharomyces pombe');
 
 
 $metagenotypes_list_res =
