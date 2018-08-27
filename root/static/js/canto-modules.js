@@ -4326,6 +4326,21 @@ var genotypeListRowLinksCtrl =
           })[0];
         var genotypePathogenOrHost = genotype.organism.pathogen_or_host;
 
+        $scope.canDelete = true;
+        $scope.deleteTitle = '';
+
+        if ($scope.annotationCount > 0) {
+          $scope.canDelete = false;
+          $scope.deleteTitle =
+            'Genotypes with more than one annotation cannot be deleted - delete the annotations first';
+        } else {
+          if (genotype.metagenotype_count) {
+            $scope.canDelete = false;
+            $scope.deleteTitle =
+              'This genotype is part of a meta-genotype - delete the meta-genotype first';
+          }
+        }
+
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.pathogen_host_mode = CantoGlobals.pathogen_host_mode;
