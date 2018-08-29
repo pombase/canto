@@ -472,6 +472,35 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
   var vm = this;
   vm.list = [];
 
+  vm.pickerSet = {
+    host: false,
+    pathogen: false,
+  };
+
+  vm.isPickerSet = function() {
+    return (vm.pickerSet.host && vm.pickerSet.pathogen);
+  };
+
+  vm.pickerOrganismCallbacks = {
+    host: null,
+    pathogen: null,
+  };
+
+  vm.pickerOrganismSelectors = {
+    host: function(organism) {
+			vm.pickerOrganismCallbacks.host(organism);
+			if (organism) {
+				vm.pickerSet.host = true;
+			}
+    },
+    pathogen: function(organism) {
+			vm.pickerOrganismCallbacks.pathogen(organism);
+			if (organism) {
+				vm.pickerSet.pathogen = true;
+			}
+    },
+  };
+
   vm.create = function (data) {
     var storePromise = vm.store(data);
 
@@ -3630,7 +3659,6 @@ var organismSelectorCtrl = function ($scope, Curs, CantoGlobals) {
     $scope.organismSelected({
       organism: $scope.data.selectedOrganism
     });
-    $scope.$emit('organism-selector', $scope.data.selectedOrganism);
   };
 
   var onInit = function () {
@@ -6438,7 +6466,7 @@ canto.directive('wildGenotypeView', [wildGenotypeView]);
 
 
 var metagenotypeGenotypePicker =
-  function(Curs, CursGenotypeList, CantoGlobals, toaster) {
+  function(CursGenotypeList, toaster, Metagenotype) {
     return {
       scope: {
         isPathogen: '=',
@@ -6523,13 +6551,13 @@ var metagenotypeGenotypePicker =
 
         $scope.data.isHost = !$scope.isPathogen;
 
-        $scope.$on ('organism-selector', function (event, organism) {
+        Metagenotype.pickerOrganismCallbacks[$scope.data.genotypeType] = function (organism) {
           $scope.data.selectedOrganism = organism;
           $scope.setFilters();
           $scope.setWildtypeOrganism();
+        };
 
-          $scope.$emit('organism picker set', $scope.data.genotypeType);
-        });
+        $scope.data.pickerCallback = Metagenotype.pickerOrganismSelectors[$scope.data.genotypeType];
 
         $scope.readGenotypes();
       },
@@ -6537,7 +6565,7 @@ var metagenotypeGenotypePicker =
 };
 
 canto.directive('metagenotypeGenotypePicker',
-  ['Curs', 'CursGenotypeList', 'CantoGlobals', 'toaster', metagenotypeGenotypePicker]);
+  ['CursGenotypeList', 'toaster', 'Metagenotype', metagenotypeGenotypePicker]);
 
 
 var metagenotypeList = function(AnnotationProxy, Metagenotype) {
@@ -6605,25 +6633,14 @@ var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype) 
       $scope.$on('pathogen selected', function(event, selectedPathogen) {
         $scope.pathogenModel = selectedPathogen.genotype_id;
         $scope.selectedPathogen = selectedPathogen;
-        $scope.checkMakeValid();
-      });
-
-      $scope.$on('organism picker set', function(event, organismType) {
-        $scope.organismPicker[organismType] = true;
-        $scope.checkMakeValid();
       });
 
       $scope.$on('host selected', function(event, selectedHost) {
         $scope.hostModel = selectedHost.genotype_id;
         $scope.selectedHost = selectedHost;
-        $scope.checkMakeValid();
       });
 
-      $scope.checkMakeValid = function () {
-        $scope.makeInvalid = !(
-          $scope.organismPicker.host && $scope.organismPicker.pathogen
-        );
-      }
+      $scope.isPickerSet = Metagenotype.isPickerSet;
 
       $scope.toGenotype = function() {
         window.location.href = $scope.genotypeUrl +
