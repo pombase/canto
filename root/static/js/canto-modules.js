@@ -372,16 +372,6 @@ canto.service('CursGenotypeList', function($q, Curs) {
       return promise;
     };
 
-  this.storeMetagenotype = function(toaster, $http, data) {
-      var promise = storeMetagenotypeHelper(toaster, $http, data);
-
-      promise.then(function() {
-        service.sendChangeEvent();
-      });
-
-      return promise;
-    };
-
   this.getGenotypeById = function(genotypeId) {
     var genotypesPromise = this.cursGenotypeList({
       include_allele: 1,
@@ -3174,27 +3164,6 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
       toaster.error("Storing genotype failed, message from server: " + data.message);
     } else {
       toaster.error("Storing genotype failed, please reload and try again.  If that fails " +
-                    "please contact the curators.");
-    }
-  })
-
-  result.finally(loadingEnd);
-
-  return result;
-}
-
-function storeMetagenotypeHelper(toaster, $http, dataPayload) {
-  var url = curs_root_uri + '/feature/metagenotype/store';
-
-  loadingStart();
-
-  var result = $http.post(url, dataPayload);
-
-  result.catch(function(result) {
-    if (data.message) {
-      toaster.error("Storing metagenotype failed, message from server: " + data.message);
-    } else {
-      toaster.error("Storing metagenotype failed, please reload and try again.  If that fails " +
                     "please contact the curators.");
     }
   })
