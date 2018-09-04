@@ -3,7 +3,8 @@
     <div>
         <organism-selector
             hide-label="true"
-            genotype-type="data.genotypeType">
+            genotype-type="data.genotypeType"
+            organism-selected="data.pickerCallback(organism)">
         </organism-selector>
         <div ng-if="data.selectedOrganism">
             <div class="curs-box-title">Single allele genotypes</div>

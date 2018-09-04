@@ -23,7 +23,7 @@
             ng-click="createMetaGenotype()"
             type="button"
             class="btn btn-primary curs-back-button"
-            ng-disabled="makeInvalid"
+            ng-disabled="isPickerSet() == false"
             ng-if="display">
             Make it --&gt;
         </button>
