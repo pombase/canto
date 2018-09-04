@@ -1,0 +1,31 @@
+<tbody>
+    <tr>
+        <td>
+            <p><strong>{{ getName('pathogen') }}</strong></p>
+            <p style="font-size: smaller;">{{ getScope('pathogen') }}</p>
+        </td>
+        <td>{{ metagenotype.pathogen_genotype.display_name }}</td>
+        <td>
+            <p><strong>{{ getName('host') }}</strong></p>
+            <p style="font-size: smaller;">{{ getScope('host') }}</p>
+        </td>
+        <td>{{ metagenotype.host_genotype.display_name }}</td>
+        <td>{{ metagenotype.annotation_count }}</td>
+        <td class="table-row-actions">
+            <a
+                ng-class="{disabled: metagenotype.metagenotype_id == null }"
+                ng-if="!read_only_curs"
+                href="{{createAnnotationUri}}">
+                    Start&nbsp;a&nbsp;disease&nbsp;formation&nbsp;phenotype&nbsp;annotation</a><br/>
+            <a
+                ng-class="{disabled: metagenotype.metagenotype_id == null }"
+                href="{{viewAnnotationUri}}">
+                    View&nbsp;phenotype&nbsp;annotations</a><br/>
+            <a
+                ng-class="{disabled: metagenotype.metagenotype_id == null || metagenotype.annotation_count > 0}"
+                ng-if="!read_only_curs"
+                confirm="Are you sure you want to remove this metagenotype from your session?"
+                ng-click="delete()">Delete</a>
+        </td>
+    </tr>
+</tbody>

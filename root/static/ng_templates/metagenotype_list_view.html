@@ -1,0 +1,30 @@
+<div>
+    <div ng-if="metagenotypes.length > 0">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Meta-Genotypes</h3>
+                <table class="curs-genotype-list">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Pathogen</th>
+                            <th colspan="2">Host</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>Organism</th>
+                            <th>Genotype</th>
+                            <th>Organism</th>
+                            <th>Genotype</th>
+                            <th>Annotations</th>
+                        </tr>
+                    </thead>
+                    <tbody
+                    metagenotype-list-row
+                    ng-repeat="meta in metagenotypes track by meta.metagenotype_id"
+                    metagenotype="meta">
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

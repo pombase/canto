@@ -6389,7 +6389,7 @@ var genotypeSimpleListRowCtrl =
         };
       },
     };
-  };
+};
 
 canto.directive('genotypeSimpleListRow', ['CantoGlobals', genotypeSimpleListRowCtrl]);
 
@@ -6406,7 +6406,7 @@ var genotypeSimpleListViewCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_simple_list_view.html',
    };
-  };
+};
 
 canto.directive('genotypeSimpleListView', [genotypeSimpleListViewCtrl]);
 
@@ -6429,7 +6429,7 @@ var wildGenotypeView =
         }
       },
    };
-  };
+};
 
 canto.directive('wildGenotypeView', [wildGenotypeView]);
 
@@ -6537,47 +6537,73 @@ canto.directive('metagenotypeGenotypePicker',
   ['CursGenotypeList', 'toaster', 'Metagenotype', metagenotypeGenotypePicker]);
 
 
-var metagenotypeList = function(AnnotationProxy, Metagenotype) {
+var metagenotypeListRow = function(CantoGlobals, Metagenotype) {
+    return {
+        scope: {
+            metagenotype: '=',
+        },
+        restrict: 'A',
+        replace: true,
+        templateUrl: app_static_path + 'ng_templates/metagenotype_list_row.html',
+        controller: function($scope) {
+            $scope.getName = function (type) {
+                name = $scope.metagenotype[type + '_genotype'].organism.full_name || '';
+                var pos = name.indexOf('(');
+                if (pos !== -1) {
+                name = name.substring(0, pos);
+                }
+                return name;
+            };
+
+            $scope.getScope = function (type) {
+                name = $scope.metagenotype[type + '_genotype'].organism.full_name || '';
+                var pos = name.indexOf('(');
+                if (pos !== -1) {
+                return name.substring(++pos, (name.length -1));
+                }
+                return '-';
+            }
+
+            $scope.read_only_curs = CantoGlobals.read_only_curs;
+            $scope.createAnnotationUri = CantoGlobals.curs_root_uri + '/feature/metagenotype/annotate/' + $scope.metagenotype.metagenotype_id
+                + '/start/disease_formation_phenotype/';
+            $scope.viewAnnotationUri = CantoGlobals.curs_root_uri + '/feature/metagenotype/view/' + $scope.metagenotype.metagenotype_id;
+            if (CantoGlobals.read_only_curs) {
+                $scope.viewAnnotationUri += '/ro';
+            }
+
+            $scope.delete = function () {
+                Metagenotype.delete($scope.metagenotype.metagenotype_id);
+            }
+        },
+    };
+};
+
+canto.directive('metagenotypeListRow', ['CantoGlobals', 'Metagenotype', metagenotypeListRow]);
+
+
+var metagenotypeListView = function(Metagenotype) {
   return {
     scope: {},
     restrict: 'E',
     replace: true,
-    templateUrl: app_static_path + 'ng_templates/metagenotype_list.html',
+    templateUrl: app_static_path + 'ng_templates/metagenotype_list_view.html',
     controller: function($scope) {
       $scope.metagenotypes = [];
       $scope.$on('metagenotype:updated', function(event, data) {
         $scope.metagenotypes = data;
       });
-      $scope.annotations = [];
-      $scope.isCollapsed = true;
-
-      $scope.loadAnnotations = function() {
-        AnnotationProxy.getAnnotation('disease_formation_phenotype')
-        .then(function(annotations) {
-          $scope.annotations = annotations;
-        }).catch(function() {
-          var message = 'Couldn\'t read annotations from the server - please try reloading';
-          service.error(message);
-        });
-      }
-
-      $scope.getAnnotationsById = function(id) {
-        return $scope.annotations.filter(function (e) {
-          return (e.metagenotype_id === id);
-        });
-      }
 
       $scope.$on('metagenotype list changed', function(event) {
         Metagenotype.load();
       });
 
-      $scope.loadAnnotations();
       Metagenotype.load();
     }
   };
 };
 
-canto.directive('metagenotypeList', ['AnnotationProxy', 'Metagenotype', metagenotypeList]);
+canto.directive('metagenotypeListView', ['Metagenotype', metagenotypeListView]);
 
 
 var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype) {
@@ -6638,96 +6664,3 @@ var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype) 
 canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'Metagenotype', metagenotypeManage]);
 
 
-var metagenotypeSummaryItem =
-  function() {
-    return {
-      scope: {
-        type: '@',
-        genotype: '=',
-      },
-      restrict: 'E',
-      replace: true,
-      templateUrl: app_static_path + 'ng_templates/metagenotype_summary_item.html',
-      controller: function($scope) {
-        $scope.getName = function () {
-          name = $scope.genotype.organism.full_name || '';
-          var pos = name.indexOf('(');
-          if (pos !== -1) {
-            name = name.substring(0, pos);
-          }
-          return name;
-        };
-
-        $scope.getScope = function () {
-          name = $scope.genotype.organism.full_name || '';
-          var pos = name.indexOf('(');
-          if (pos !== -1) {
-            return name.substring(++pos, (name.length -1));
-          }
-          return '-';
-        }
-      },
-   };
-  };
-
-canto.directive('metagenotypeSummaryItem', [metagenotypeSummaryItem]);
-
-
-var metagenotypeListRowLinksCtrl =
-  function(CantoGlobals, AnnotationTypeConfig, Metagenotype) {
-    return {
-      restrict: 'E',
-      scope: {
-        metagenotypes: '=',
-        metagenotypeId: '=',
-        alleleCount: '@',
-        annotationCount: '@',
-      },
-      replace: true,
-      templateUrl: CantoGlobals.app_static_path + 'ng_templates/metagenotype_list_row_links.html',
-      controller: function($scope) {
-        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
-        $scope.read_only_curs = CantoGlobals.read_only_curs;
-
-        $scope.annotationTypes = [];
-
-        AnnotationTypeConfig.getAll().then(function(response) {
-          $scope.annotationTypes =
-            $.grep(response.data,
-                   function(annotationType) {
-                     if (annotationType.feature_type === 'metagenotype') {
-                       return annotationType;
-                     }
-                   });
-        });
-
-        $scope.editMetagenotype = function(metagenotypeId) {
-          window.location.href =
-            CantoGlobals.curs_root_uri + '/metagenotype_manage#/edit/' + metagenotypeId;
-        };
-
-        $scope.deleteMetagenotype = function(metagenotypeId) {
-          Metagenotype.delete(metagenotypeId);
-        };
-
-      },
-      link: function($scope) {
-        if ($scope.navigateOnClick) {
-          $scope.detailsUrl =
-            CantoGlobals.curs_root_uri + '/metagenotype_manage' +
-            (CantoGlobals.read_only_curs ? '/ro' : '') + '#/select/' +
-            $scope.genotype.id_or_identifier;
-        } else {
-          $scope.detailsUrl = '#';
-          $scope.viewAnnotationUri =
-            CantoGlobals.curs_root_uri + '/feature/metagenotype/view/' + $scope.metagenotypeId;
-          if (CantoGlobals.read_only_curs) {
-            $scope.viewAnnotationUri += '/ro';
-          }
-        }
-      },
-    };
-  };
-
-canto.directive('metagenotypeListRowLinks',
-  ['CantoGlobals', 'AnnotationTypeConfig', 'Metagenotype', metagenotypeListRowLinksCtrl]);
