@@ -6664,3 +6664,111 @@ var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype) 
 canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'Metagenotype', metagenotypeManage]);
 
 
+canto.service('Strains', function (CantoService) {
+
+    var vm = this;
+    vm.strains = {};
+    vm.selected = [];
+
+    vm.pickerData = {};
+
+    vm.init = function (sysId) {
+        if (typeof vm.pickerData[sysId] === 'undefined') {
+            vm.pickerData[sysId] = {
+                availableStrains: [],
+                selectedStrains: [],
+                addedStrains: []
+            };
+
+            vm.load(sysId);
+        }
+    }
+
+    vm.getStrains = function () {
+        return ['AC Karma', 'Agathe', 'April Bearded', 'Arthur71', 'Augusta', 'Biggar', 'Brevor', 'Camp Remy',
+        'Candeal', 'Cheyenne', 'Chinese Spring', 'Cranbrook', 'Darius', 'Embrapa', 'Falcon', 'Florida', 'Frederick',
+        'Halberd', 'Horoshirikomugi', 'Janz', 'Jasna', 'Kanzler', 'Manitou', 'Mardler', 'Maringa', 'Maris Huntsman',
+        'Mexicali', 'Mustang', 'Neepawa', 'Newton', 'Norstar', 'Oasis', 'Odeon', 'Pajero', 'Pastore', 'Penawawa',
+        'Renan', 'Rosella', 'Samantha', 'San Pastore', 'Senatore Capelli', 'Soissons', 'Spica', 'Star', 'Sunco',
+        'Taber', 'Thatcher', 'Turgidum', 'Victory', 'Warigal', 'Yamhill', 'Cadenza'];
+    };
+
+    vm.load = function (sysId) {
+        if (sysId === 'P11383') {
+            vm.pickerData[sysId].availableStrains = vm.getStrains();
+        }
+    }
+
+    vm.get = function (sysId) {
+        return vm.pickerData[sysId].availableStrains.sort();
+    };
+
+    vm.getSelected = function (sysId) {
+        return vm.pickerData[sysId].selectedStrains.sort();
+    };
+
+    vm.addStrain = function (sysId, strain) {
+        if (vm.getSelected(sysId).indexOf(strain) === -1) {
+            vm.pickerData[sysId].selectedStrains.push(strain);
+        }
+    };
+
+    vm.addTypedStrain = function (sysId, strain) {
+        if (vm.pickerData[sysId].addedStrains.indexOf(strain) === -1) {
+            vm.pickerData[sysId].addedStrains.push(strain);
+            vm.addStrain(sysId, strain);
+        }
+    };
+
+    vm.removeStrain = function (sysId, strain) {
+        var pos = vm.getSelected(sysId).indexOf(strain);
+
+        if (pos > -1) {
+            vm.pickerData[sysId].selectedStrains.splice(pos, 1);
+        }
+    };
+});
+
+
+var strainPicker = function() {
+    return {
+        scope: {
+            taxonId: '@',
+        },
+        restrict: 'E',
+        replace: true,
+        templateUrl: app_static_path + 'ng_templates/strainPicker.html',
+        controller: function($scope, Strains) {
+            Strains.init($scope.taxonId);
+            $scope.typeStrain = null;
+
+            $scope.data = {
+                strains: [],
+                strainSelector: 'Add strains for this organism'
+            }
+
+            $scope.data.strains = Strains.get($scope.taxonId);
+            $scope.data.selectedStrains = Strains.getSelected($scope.taxonId);
+
+            $scope.changed = function () {
+                if ($scope.data.strainSelector !== 'Type a new strain') {
+                    Strains.addStrain($scope.taxonId, $scope.data.strainSelector);
+                }
+            }
+
+            $scope.remove = function (strain) {
+                Strains.removeStrain($scope.taxonId, strain);
+            }
+
+            $scope.hideTypeStrain = function () {
+                return ($scope.data.strainSelector !== 'Type a new strain');
+            }
+
+            $scope.addStrain = function () {
+                Strains.addTypedStrain($scope.taxonId, $scope.typeStrain);
+            }
+        },
+    };
+  };
+
+  canto.directive('strainPicker', ['Strains', strainPicker]);
