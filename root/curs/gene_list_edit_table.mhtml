@@ -12,6 +12,9 @@
         </th>
 %     }
         <th>
+          Strains
+        </th>
+        <th>
           &nbsp;
         </th>
       </tr>
@@ -24,6 +27,7 @@
         <% $gene->{$col_name} |n %>
       </td>
 %     }
+      <td><strain-picker taxon-id="<% $gene->{'Systematic identifier'} %>"></strain-picker></td>
       <td>
         <input type="checkbox"
                name="gene-select"

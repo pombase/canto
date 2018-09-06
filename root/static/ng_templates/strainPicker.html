@@ -1,0 +1,27 @@
+<div>
+    <div>
+        <span ng-repeat="st in data.selectedStrains" class="btn-primary btn-xs" style="margin: 2px; float: left;">
+            <span ng-click="remove(st)">{{st}} <span style="color: red;">x</span></span>
+        </span>
+    </div>
+    <div style="width:280px;">
+        <select ng-model="data.strainSelector" ng-change="changed()">
+            <optgroup>
+                <option disabled>Add strains for this organism</option>
+            </optgroup>
+            <optgroup label="-----------------------------">
+                <option>Type a new strain</option>
+            </optgroup>
+            <optgroup label="-----------------------------">
+                <option>Unknown strain used</option>
+            </optgroup>
+            <optgroup label="-----------------------------">
+                <option ng-repeat="st in data.strains">{{st}}</option>
+            </optgroup>
+        </select>
+        <div ng-hide="hideTypeStrain()">
+                <input style="display: inline" ng-model="typeStrain" type="text" placeholder="Type strain name">
+                <button ng-click="addStrain()" style="display: inline" type="button" class="btn btn-success btn-xs">Add +</button>
+            </div>
+    </div>
+</div>
