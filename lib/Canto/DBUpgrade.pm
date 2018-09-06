@@ -414,6 +414,33 @@ UPDATE genotype SET organism_id =
     $dbh->do("DROP TABLE organism_temp;");
     $dbh->do("PRAGMA foreign_keys = ON");
   },
+
+  23 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+    my $load_util = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    $dbh->do("PRAGMA foreign_keys = OFF");
+    $dbh->do(<<"EOF");
+CREATE TABLE strain_temp (
+       strain_id integer NOT NULL PRIMARY KEY,
+       organism_id integer NOT NULL REFERENCES organism (organism_id),
+       strain_name text NOT NULL
+);
+EOF
+
+    $dbh->do("INSERT INTO strain_temp(organism_id, strain_name) " .
+             "SELECT organism_id, strain_name FROM strain");
+
+    $dbh->do("DROP TABLE strain");
+    $dbh->do("ALTER TABLE strain_temp RENAME TO strain");
+
+    $dbh->do("CREATE INDEX strain_organism_index_idx ON strain(organism_id)");
+
+    $dbh->do("PRAGMA foreign_keys = ON");
+  },
 );
 
 sub upgrade_to
