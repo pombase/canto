@@ -30,9 +30,45 @@
       <td><strain-picker taxon-id="<% $gene->{'Systematic identifier'} %>"></strain-picker></td>
       <td>
         <input type="checkbox"
+% if (_has_annotations($gene) || _has_genotypes($gene)) {
+               disabled
+% }
                name="gene-select"
+               title="<% _gene_title($gene) %>"
                value='<% $gene->{gene_id} %>' />
       </td>
     </tr>
 %   }
   </table>
+
+<%init>
+sub _has_annotations
+{
+  my $gene_hash = shift;
+
+  return $gene_hash->{annotation_count} > 0;
+}
+
+sub _has_genotypes
+{
+  my $gene_hash = shift;
+
+  return $gene_hash->{genotype_count} > 0;
+}
+
+sub _gene_title
+{
+  my $gene_hash = shift;
+
+  if (_has_annotations($gene_hash)) {
+    return "This gene can't be deleted because it has annotations";
+  } else {
+    if (_has_genotypes($gene_hash)) {
+      return "This gene can't be deleted because there are genotypes involving " .
+        "this gene";
+    } else {
+      return "Select for deletion";
+    }
+  }
+}
+</%init>

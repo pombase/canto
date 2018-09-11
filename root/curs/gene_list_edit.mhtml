@@ -132,7 +132,11 @@ my @gene_hashes = map {
        Product => $gene_proxy->product(),
        Synonyms => $synonyms_string,
        gene_id => $gene_proxy->gene_id(),
+       annotation_count => $gene_proxy->cursdb_gene()
+           ->all_annotations(include_with=>1)->count(),
+       genotype_count => $gene_proxy->cursdb_gene()->genotypes()->count(),
      };
+
      if ($multi_organism_mode) {
        $hash->{Organism} = $gene_proxy->organism_details()->{full_name};
        if ($pathogen_host_mode) {
