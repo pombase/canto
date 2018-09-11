@@ -27,7 +27,7 @@
         <% $gene->{$col_name} |n %>
       </td>
 %     }
-      <td><strain-picker taxon-id="<% $gene->{'Systematic identifier'} %>"></strain-picker></td>
+      <td><strain-picker taxon-id="<% $gene->{'taxonid'} %>"></strain-picker></td>
       <td>
         <input type="checkbox"
 % if (_has_annotations($gene) || _has_genotypes($gene)) {

@@ -53,6 +53,9 @@ $pathogen_host_mode
           Common name
         </th>
         <th>
+          Strains
+        </th>
+        <th>
           &nbsp;
         </th>
       </tr>
@@ -69,6 +72,7 @@ $pathogen_host_mode
         <td>
 <% $host_org->{common_name} %>
         </td>
+        <td><strain-picker taxon-id="<% $host_org->{'taxonid'} %>"></strain-picker></td>
         <td>
           <input type="checkbox"
                  name="host-org-select"
@@ -139,6 +143,7 @@ my @gene_hashes = map {
 
      if ($multi_organism_mode) {
        $hash->{Organism} = $gene_proxy->organism_details()->{full_name};
+       $hash->{taxonid} = $gene_proxy->organism_details()->{taxonid};
        if ($pathogen_host_mode) {
          $hash->{pathogen_or_host} = $gene_proxy->organism_details()->{pathogen_or_host};
        }

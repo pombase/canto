@@ -6672,59 +6672,51 @@ canto.service('Strains', function (CantoService) {
 
     vm.pickerData = {};
 
-    vm.init = function (sysId) {
-        if (typeof vm.pickerData[sysId] === 'undefined') {
-            vm.pickerData[sysId] = {
+    vm.init = function (taxonId) {
+        if (typeof vm.pickerData[taxonId] === 'undefined') {
+            vm.pickerData[taxonId] = {
                 availableStrains: [],
                 selectedStrains: [],
                 addedStrains: []
             };
 
-            vm.load(sysId);
+            vm.load(taxonId);
         }
     }
 
-    vm.getStrains = function () {
-        return ['AC Karma', 'Agathe', 'April Bearded', 'Arthur71', 'Augusta', 'Biggar', 'Brevor', 'Camp Remy',
-        'Candeal', 'Cheyenne', 'Chinese Spring', 'Cranbrook', 'Darius', 'Embrapa', 'Falcon', 'Florida', 'Frederick',
-        'Halberd', 'Horoshirikomugi', 'Janz', 'Jasna', 'Kanzler', 'Manitou', 'Mardler', 'Maringa', 'Maris Huntsman',
-        'Mexicali', 'Mustang', 'Neepawa', 'Newton', 'Norstar', 'Oasis', 'Odeon', 'Pajero', 'Pastore', 'Penawawa',
-        'Renan', 'Rosella', 'Samantha', 'San Pastore', 'Senatore Capelli', 'Soissons', 'Spica', 'Star', 'Sunco',
-        'Taber', 'Thatcher', 'Turgidum', 'Victory', 'Warigal', 'Yamhill', 'Cadenza'];
-    };
-
-    vm.load = function (sysId) {
-        if (sysId === 'P11383') {
-            vm.pickerData[sysId].availableStrains = vm.getStrains();
-        }
+    vm.load = function (taxonId) {
+        CantoService.lookup('strains', [taxonId])
+            .then(function(response) {
+            vm.pickerData[taxonId].availableStrains = response.data;
+        });
     }
 
-    vm.get = function (sysId) {
-        return vm.pickerData[sysId].availableStrains.sort();
+    vm.get = function (taxonId) {
+        return vm.pickerData[taxonId].availableStrains.sort();
     };
 
-    vm.getSelected = function (sysId) {
-        return vm.pickerData[sysId].selectedStrains.sort();
+    vm.getSelected = function (taxonId) {
+        return vm.pickerData[taxonId].selectedStrains.sort();
     };
 
-    vm.addStrain = function (sysId, strain) {
-        if (vm.getSelected(sysId).indexOf(strain) === -1) {
-            vm.pickerData[sysId].selectedStrains.push(strain);
+    vm.addStrain = function (taxonId, strain) {
+        if (vm.getSelected(taxonId).indexOf(strain) === -1) {
+            vm.pickerData[taxonId].selectedStrains.push(strain);
         }
     };
 
-    vm.addTypedStrain = function (sysId, strain) {
-        if (vm.pickerData[sysId].addedStrains.indexOf(strain) === -1) {
-            vm.pickerData[sysId].addedStrains.push(strain);
-            vm.addStrain(sysId, strain);
+    vm.addTypedStrain = function (taxonId, strain) {
+        if (vm.pickerData[taxonId].addedStrains.indexOf(strain) === -1) {
+            vm.pickerData[taxonId].addedStrains.push(strain);
+            vm.addStrain(taxonId, strain);
         }
     };
 
-    vm.removeStrain = function (sysId, strain) {
-        var pos = vm.getSelected(sysId).indexOf(strain);
+    vm.removeStrain = function (taxonId, strain) {
+        var pos = vm.getSelected(taxonId).indexOf(strain);
 
         if (pos > -1) {
-            vm.pickerData[sysId].selectedStrains.splice(pos, 1);
+            vm.pickerData[taxonId].selectedStrains.splice(pos, 1);
         }
     };
 });
@@ -6747,7 +6739,7 @@ var strainPicker = function() {
                 strainSelector: 'Add strains for this organism'
             }
 
-            $scope.data.strains = Strains.get($scope.taxonId);
+            $scope.strains = Strains.get;
             $scope.data.selectedStrains = Strains.getSelected($scope.taxonId);
 
             $scope.changed = function () {
@@ -6767,8 +6759,12 @@ var strainPicker = function() {
             $scope.addStrain = function () {
                 Strains.addTypedStrain($scope.taxonId, $scope.typeStrain);
             }
+
+            $scope.doIt = function () {
+                Strains.load($scope.taxonId);
+            }
         },
     };
-  };
+};
 
   canto.directive('strainPicker', ['Strains', strainPicker]);

@@ -16,7 +16,7 @@
                 <option>Unknown strain used</option>
             </optgroup>
             <optgroup label="-----------------------------">
-                <option ng-repeat="st in data.strains">{{st}}</option>
+                <option ng-repeat="st in strains(taxonId)">{{st}}</option>
             </optgroup>
         </select>
         <div ng-hide="hideTypeStrain()">
