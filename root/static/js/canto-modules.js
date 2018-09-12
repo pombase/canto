@@ -3867,6 +3867,16 @@ var GenotypeGeneListCtrl =
           });
         };
 
+        $scope.deleteSelectStrainPicker = function(gene_id) {
+          var taxonId = $scope.data.selectedOrganism.taxonid;
+          var deleteInstance = selectStrainPicker($uibModal, taxonId);
+
+          deleteInstance.result.then(function (strain) {
+              console.log("Save strain used in deletion: " + strain);
+              $scope.makeDeletionAllele(gene_id);
+          });
+        };
+
         $scope.makeDeletionAllele = function(gene_id) {
           if (!$scope.getSelectedOrganism()) {
             return;
@@ -6767,4 +6777,49 @@ var strainPicker = function() {
     };
 };
 
-  canto.directive('strainPicker', ['Strains', strainPicker]);
+canto.directive('strainPicker', ['Strains', strainPicker]);
+
+
+var strainPickerDialogCtrl =
+  function($scope, $uibModalInstance, Strains) {
+
+    $scope.taxonId = $scope.$resolve.args.taxonId;
+    $scope.strainData = {};
+
+    Strains.init($scope.taxonId);
+    $scope.strains = Strains.get;
+
+    $scope.isValid = function() {
+      return (typeof $scope.strainData.strain !== 'undefined');
+    };
+
+    $scope.ok = function () {
+        $uibModalInstance.close($scope.strainData);
+    };
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('strainPickerDialogCtrl', ['$scope', '$uibModalInstance', 'Strains', strainPickerDialogCtrl]);
+
+
+function selectStrainPicker($uibModal, taxonId)
+{
+  return $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/select_strain_picker.html',
+    controller: 'strainPickerDialogCtrl',
+    title: 'Select a strain',
+    animate: false,
+    windowClass: "modal",
+    resolve: {
+      args: function() {
+        return {
+            taxonId: taxonId,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+}
