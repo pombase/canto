@@ -100,13 +100,13 @@
             </tbody>
           </table>
         </div>
+        <button type="submit" class="btn btn-primary curs-finish-button"
+                title="{{ isValid() ? 'Store changes ' : (wildTypeCheckPasses ? 'At least one allele for each gene is required' : 'Wild type allele needs a non wild type product level') }}"
+                ng-click="store()" ng-disabled="!isValid()">Finish</button>
+        <button type="submit" class="btn btn-warning curs-finish-button"
+                ng-click="cancel()">Cancel</button>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary curs-finish-button"
-            title="{{ isValid() ? 'Store changes ' : (wildTypeCheckPasses ? 'At least one allele for each gene is required' : 'Wild type allele needs a non wild type product level') }}"
-            ng-click="store()" ng-disabled="!isValid()">Finish</button>
-    <button type="submit" class="btn btn-warning curs-finish-button"
-            ng-click="cancel()">Cancel</button>
     <div class="upload-genes-link">
       <a ng-click="openSingleGeneAddDialog()">Add another gene from the paper ...</a>
     </div>
