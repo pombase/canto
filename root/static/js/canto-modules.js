@@ -6557,7 +6557,7 @@ var metagenotypeListRow = function(CantoGlobals, Metagenotype) {
         templateUrl: app_static_path + 'ng_templates/metagenotype_list_row.html',
         controller: function($scope) {
             $scope.getName = function (type) {
-                name = $scope.metagenotype[type + '_genotype'].organism.full_name || '';
+                var name = $scope.metagenotype[type + '_genotype'].organism.full_name || '';
                 var pos = name.indexOf('(');
                 if (pos !== -1) {
                 name = name.substring(0, pos);
@@ -6566,7 +6566,7 @@ var metagenotypeListRow = function(CantoGlobals, Metagenotype) {
             };
 
             $scope.getScope = function (type) {
-                name = $scope.metagenotype[type + '_genotype'].organism.full_name || '';
+                var name = $scope.metagenotype[type + '_genotype'].organism.full_name || '';
                 var pos = name.indexOf('(');
                 if (pos !== -1) {
                 return name.substring(++pos, (name.length -1));
