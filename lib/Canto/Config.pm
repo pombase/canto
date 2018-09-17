@@ -64,7 +64,7 @@ my $app_config_file = "canto.yaml";
 
 =head2 new
 
- Usage   : my $config = Canto::Config->new($file_name, [$file_name_2, ...]);
+ Usage   : my $config = Canto::Config->new(\@file_names);
  Function: Create a new Config object from the given files.  If no files are
            given read from the default application configuration file.
 
@@ -72,7 +72,8 @@ my $app_config_file = "canto.yaml";
 sub new
 {
   my $class = shift;
-  my @config_file_names = @_;
+  my @config_file_names = @{shift // []};
+  my $upgrading = shift;
 
   if (@config_file_names == 0) {
     push @config_file_names, $app_config_file;
@@ -88,10 +89,10 @@ sub new
 
   for my $config_file_name (@config_file_names) {
     # merge new config
-    $self->merge_config($config_file_name);
+    $self->merge_config([$config_file_name], $upgrading);
   }
 
-  $self->setup();
+  $self->setup($upgrading);
 
   return $self;
 }
@@ -109,19 +110,20 @@ sub new_test_config
 
   my $config = get_config();
 
-  return $self->new($app_config_file, $config->{test_config_file});
+  return $self->new([$app_config_file, $config->{test_config_file}]);
 }
 
 =head2 merge_config
 
- Usage   : $config->merge_config($config_file_name, [...]);
+ Usage   : $config->merge_config(\@config_file_names);
  Function: merge the given config files into a Config object
 
 =cut
 sub merge_config
 {
   my $self = shift;
-  my @file_names = @_;
+  my @file_names = @{shift // []};
+  my $upgrading = shift;
 
   my $cfg = Config::Any->load_files({ files => \@file_names,
                                       use_ext => 1, });
@@ -135,7 +137,8 @@ sub merge_config
       # empty file returns undef
     }
   }
-  $self->setup();
+
+  $self->setup($upgrading);
 }
 
 sub _set_host_organisms
@@ -187,6 +190,7 @@ sub host_organisms
 sub setup
 {
   my $self = shift;
+  my $upgrading = shift;
 
   my @ext_conf = ();
 
@@ -396,7 +400,8 @@ sub setup
   # we need to check that the track db exists in case we're using this
   # Config before a track db is made
   if (defined $connect_string &&
-        -f Canto::DBUtil::connect_string_file_name($connect_string)) {
+        -f Canto::DBUtil::connect_string_file_name($connect_string) &&
+      !$upgrading) {
 
     my $track_schema = Canto::TrackDB->new(config => $self);
 
@@ -506,18 +511,21 @@ sub model_connect_string
 =cut
 sub get_config
 {
+  my %args = @_;
+  my $upgrading = $args{upgrading};
+
   my $lc_app_name = lc get_application_name();
   my $uc_app_name = uc $lc_app_name;
 
   my $suffix = $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"};
 
   my $file_name = "$lc_app_name.yaml";
-  my $config = __PACKAGE__->new($file_name);
+  my $config = __PACKAGE__->new([$file_name], $upgrading);
 
   if (defined $suffix) {
     my $local_file_name = "${lc_app_name}_$suffix.yaml";
 
-    $config->merge_config($local_file_name);
+    $config->merge_config([$local_file_name], $upgrading);
   }
 
   return $config;
