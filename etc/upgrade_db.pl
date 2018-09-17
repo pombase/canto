@@ -115,7 +115,7 @@ if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
 }
 
 
-my $config = Canto::Config::get_config();
+my $config = Canto::Config::get_config(upgrading => 1);
 my $track_schema = Canto::TrackDB->new(config => $config,
                                         disable_foreign_keys => 0);
 
