@@ -10,14 +10,14 @@
                         <genotype-edit
                             ng-if="data.editGenotypeId == null"
                             cancel-callback="cancelEdit()"
-                            stored-callback="storedCallback(genotypeId)"
-                        />
+                            stored-callback="storedCallback(genotypeId)">
+                        </genotype-edit>
                         <genotype-edit
                             ng-if="data.editGenotypeId != null"
                             edit-or-duplicate="{{data.editOrDuplicate}}"
                             genotype-id="{{data.editGenotypeId}}"
-                            cancel-callback="cancelEdit()" stored-callback="storedCallback(genotypeId)"
-                        />
+                            cancel-callback="cancelEdit()" stored-callback="storedCallback(genotypeId)">
+                        </genotype-edit>
                     </div>
                 </div>
             </div>
