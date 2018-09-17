@@ -12,7 +12,7 @@ my $test_util = Canto::TestUtil->new();
 my $config_yaml_1 = $test_util->root_dir() . '/t/data/50_config_1.yaml';
 my $config_yaml_2 = $test_util->root_dir() . '/t/data/50_config_2.yaml';
 
-my $config_single = Canto::Config->new($config_yaml_1);
+my $config_single = Canto::Config->new([$config_yaml_1]);
 
 is($config_single->{some_key}, 'some_value_1');
 
@@ -32,7 +32,7 @@ ok($lab_classinfo->{field_infos}->{people}->{is_collection});
 
 
 # test loading two config files
-my $config_two = Canto::Config->new($config_yaml_1, $config_yaml_2);
+my $config_two = Canto::Config->new([$config_yaml_1, $config_yaml_2]);
 
 is($config_two->{some_key}, 'some_value_1');
 is($config_two->{some_key_for_overriding}, 'overidden_value');
@@ -40,8 +40,8 @@ is(keys %{$config_two}, 14);
 
 
 # test loading then merging
-my $config_merge = Canto::Config->new($config_yaml_1);
-$config_merge->merge_config($config_yaml_2);
+my $config_merge = Canto::Config->new([$config_yaml_1]);
+$config_merge->merge_config([$config_yaml_2]);
 
 is($config_merge->{some_key}, 'some_value_1');
 is($config_merge->{some_key_for_overriding}, 'overidden_value');

@@ -44,7 +44,7 @@ use Canto::Track::LoadUtil;
   # test _process_data()
 
   my $config = Canto::Config::get_config();
-  $config->merge_config($config->{test_config_file});
+  $config->merge_config([$config->{test_config_file}]);
 
   my $annotations_conf =
     $config->{test_config}->{test_cases}->
@@ -221,7 +221,7 @@ sub track_init
   # test make_curs_db
 
   my $config = Canto::Config::get_config();
-  $config->merge_config($config->{test_config_file});
+  $config->merge_config([$config->{test_config_file}]);
 
   my $curs_config =
     $config->{test_config}->{test_cases}->{curs_annotations_1}->[0];

@@ -51,7 +51,7 @@ if ($local_suffix eq 'deploy') {
   GetOptions ("initialise=s" => \$init_dir);
 
   if ($init_dir) {
-    my $config = Canto::Config->new("${lc_app_name}.yaml");
+    my $config = Canto::Config->new(["${lc_app_name}.yaml"]);
     Canto::Meta::Util::initialise_app($config, $init_dir);
     print "Initialisation succesful, now run $0 without arguments\n";
     exit(0);
