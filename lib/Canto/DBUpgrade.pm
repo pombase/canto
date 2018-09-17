@@ -305,22 +305,16 @@ EOF
   19 => sub {
     my $config = shift;
     my $track_schema = shift;
+    my $load_util = shift;
 
     my $dbh = $track_schema->storage()->dbh();
 
-    my $update_proc = sub {
-      my $curs = shift;
-      my $curs_schema = shift;
-      my $curs_key = $curs->curs_key();
-
-      my $curs_dbh = $curs_schema->storage()->dbh();
-
-      $curs_dbh->do("DROP TABLE strains");
-      $curs_dbh->do("CREATE TABLE strain (
+    $dbh->do("PRAGMA foreign_keys = OFF");
+    $dbh->do("DROP TABLE strains");
+    $dbh->do("CREATE TABLE strain (
        organism_id integer NOT NULL REFERENCES organism (organism_id),
        strain_name text NOT NULL);
       ");
-    };
   },
 
   20 => sub {
