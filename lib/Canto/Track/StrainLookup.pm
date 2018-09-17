@@ -49,7 +49,8 @@ with 'Canto::Track::TrackAdaptor';
  Args    : $organism_taxonid - The NCBI taxon ID of the organism to retrieve the
                                strains for
  Return  : A list of strains in the format:
-           ( 'strain name one', 'strain name two', ... )
+           ( { strain_id => 101, strain_name => 'strain name one' },
+             { strain_id => 102, strain_name => 'strain name two' }, ...  )
 
 =cut
 
@@ -66,15 +67,15 @@ sub lookup
 
   my $rs = $schema->resultset('Organismprop')
     ->search({'type.name' => 'taxon_id', value => $taxonid}, {join => 'type'})
-    ->search_related('organism', {}, { join => 'strains' });
+    ->search_related('organism')
+    ->search_related('strains');
 
-  my %strains = ();
-
-  while (defined (my $organism = $rs->next())) {
-    map { $strains{$_->strain_name()} = 1; } $organism->strains()->all();
-  }
-
-  return sort keys %strains;
+  return map {
+    {
+      strain_id => $_->strain_id(),
+      strain_name => $_->strain_name(),
+    };
+  } $rs->all()
 }
 
 1;

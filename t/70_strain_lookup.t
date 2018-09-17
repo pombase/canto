@@ -25,5 +25,6 @@ my $strain_lookup = Canto::Track::StrainLookup->new(config => $test_util->config
 
 my @result_strains = $strain_lookup->lookup(4932);
 
-cmp_deeply(\@result_strains, ['strain 1', 'strain 2']);
+cmp_deeply(\@result_strains, [{ strain_id => 1, strain_name => 'strain 1' },
+                              { strain_id => 2, strain_name => 'strain 2' }]);
 
