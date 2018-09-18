@@ -14,6 +14,7 @@ $confirm_genes
 var confirmGenes = <% $confirm_genes ? 'true' : 'false' %>;
 var highlightTerms = [<% map { "'" . $_ . "'" } @highlight_terms %>];
 var geneListData = <% $gene_list_data_js |n %>;
+var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
 </script>
 
 <div id="curs-gene-list-edit" class="curs-box">
@@ -279,6 +280,10 @@ if ($pathogen_host_mode) {
   @hosts_with_no_genes = @no_gene_host_organisms;
 }
 
+map {
+  $_->{strains} = [$strain_lookup->lookup($_->{taxonid})];
+} @hosts_with_no_genes;
 
 my $gene_list_data_js = Data::JavaScript::Anon->anon_dump(\%all_data);
+my $hosts_with_no_genes_js = Data::JavaScript::Anon->anon_dump(\@hosts_with_no_genes);
 </%init>
