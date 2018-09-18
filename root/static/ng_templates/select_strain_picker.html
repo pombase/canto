@@ -15,7 +15,7 @@
                                     class="form-control"
                                     ng-model="strainData.strain"
                                     name="curs-allele-type"
-                                    ng-options="name for name in strains(taxonId)">
+                                    ng-options="st.strain_name for st in strains(taxonId) track by st.strain_id">
                                     <option selected="selected" value="">Choose a strain ...</option>
                                 </select>
                             </td>
