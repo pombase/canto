@@ -23,6 +23,8 @@ var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
   </div>
   <div class="curs-box-body">
 
+<gene-list-edit></gene-list-edit>
+
   <form name="gene-edit" method="get" action="<% $edit_path %>">
 % if (scalar(@table_1_hashes) > 0 || scalar(@table_2_hashes) > 0) {
 %   if (scalar(@table_1_hashes) > 0) {
