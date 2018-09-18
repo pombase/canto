@@ -479,6 +479,7 @@ sub _edit_genes_helper
   $form->process();
 
   my $pathogen_host_mode = $c->config()->{pathogen_host_mode};
+  $st->{pathogen_host_mode} = $pathogen_host_mode;
 
   if (defined $c->req->param('continue')) {
     _redirect_and_detach($c);
