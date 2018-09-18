@@ -287,7 +287,7 @@ if ($pathogen_host_mode) {
 } keys %all_data;
 
 map {
-  $_->{strains} = [$strain_lookup->lookup($_->{taxonid})];
+  $_->{available_strains} = [$strain_lookup->lookup($_->{taxonid})];
 } @hosts_with_no_genes;
 
 my $gene_list_data_js = Data::JavaScript::Anon->anon_dump(\%all_data);
