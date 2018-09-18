@@ -141,7 +141,6 @@ my %all_data = (
 if ($pathogen_host_mode) {
   $all_data{pathogen} = {};
   $all_data{host} = {};
-  $all_data{host_no_genes} = {};
 }
 
 my $strain_lookup = Canto::Track::StrainLookup->new(config => $c->config());
