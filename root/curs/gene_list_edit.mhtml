@@ -282,6 +282,10 @@ if ($pathogen_host_mode) {
   @hosts_with_no_genes = @no_gene_host_organisms;
 }
 
+%all_data = map {
+  ($_, [values %{$all_data{$_}}])
+} keys %all_data;
+
 map {
   $_->{strains} = [$strain_lookup->lookup($_->{taxonid})];
 } @hosts_with_no_genes;
