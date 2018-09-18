@@ -168,7 +168,8 @@ my @gene_hashes = map {
      my $taxonid = $organism_details->{taxonid};
 
      my %org_data;
-     my $org_type = $organism_details->{pathogen_host_mode};
+     my $org_type = $organism_details->{pathogen_or_host};
+
      if ($org_type ne 'pathogen' && $org_type ne 'host') {
        $org_type = 'default_organism';
      }
