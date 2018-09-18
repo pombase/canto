@@ -547,6 +547,8 @@ sub _edit_genes_helper
     }
   }
 
+  $st->{confirm_genes} = $confirm_genes;
+
   if ($confirm_genes) {
     $st->{title} = 'Confirm gene ';
     if ($pathogen_host_mode) {

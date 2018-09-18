@@ -7,7 +7,14 @@ $pub
 $curs_root_uri
 $multi_organism_mode
 $pathogen_host_mode
+$confirm_genes
 </%args>
+
+<script language="javascript" type="text/javascript">
+var confirmGenes = <% $confirm_genes ? 'true' : 'false' %>;
+var highlightTerms = [<% map { "'" . $_ . "'" } @highlight_terms %>];
+var geneListData = <% $gene_list_data_js |n %>;
+</script>
 
 <div id="curs-gene-list-edit" class="curs-box">
   <div class="curs-box-title">
@@ -103,6 +110,7 @@ $pathogen_host_mode
 use Canto::Curs;
 use Canto::Track;
 use Canto::Curs::GeneProxy;
+use Canto::Track::StrainLookup;
 
 my %highlight_terms = ();
 @highlight_terms{@highlight_terms} = @highlight_terms;
@@ -123,6 +131,18 @@ sub _search_highlight
   }
 }
 
+my %all_data = (
+  default_organism => {},
+);
+
+if ($pathogen_host_mode) {
+  $all_data{pathogen} = {};
+  $all_data{host} = {};
+  $all_data{host_no_genes} = {};
+}
+
+my $strain_lookup = Canto::Track::StrainLookup->new(config => $c->config());
+
 my @gene_hashes = map {
      my $gene = $_;
      my $gene_proxy =
@@ -141,11 +161,44 @@ my @gene_hashes = map {
        genotype_count => $gene_proxy->cursdb_gene()->genotypes()->count(),
      };
 
+     my $organism_details = $gene_proxy->organism_details();
+
+     my $taxonid = $organism_details->{taxonid};
+
+     my %org_data;
+     my $org_type = $organism_details->{pathogen_host_mode};
+     if ($org_type ne 'pathogen' && $org_type ne 'host') {
+       $org_type = 'default_organism';
+     }
+
+     if (exists $all_data{$org_type}->{$taxonid}) {
+       %org_data = %{$all_data{$org_type}->{$taxonid}};
+     } else {
+       %org_data = %$organism_details;
+       delete $org_data{full_name};
+       $org_data{genes} = [];
+       $org_data{selected_strains} = [];
+       $org_data{available_strains} = [$strain_lookup->lookup($taxonid)];
+
+       $all_data{$org_type}->{$taxonid} = \%org_data;
+     }
+
+     push @{$org_data{genes}}, {
+       systematic_identifier => $gene_proxy->primary_identifier(),
+       name => $gene_proxy->primary_name(),
+       product => $gene_proxy->product(),
+       synonyms => [$gene_proxy->synonyms()],
+       gene_id => $gene_proxy->gene_id(),
+       annotation_count => $gene_proxy->cursdb_gene()
+           ->all_annotations(include_with=>1)->count(),
+       genotype_count => $gene_proxy->cursdb_gene()->genotypes()->count(),
+     };
+
      if ($multi_organism_mode) {
-       $hash->{Organism} = $gene_proxy->organism_details()->{full_name};
-       $hash->{taxonid} = $gene_proxy->organism_details()->{taxonid};
+       $hash->{Organism} = $organism_details->{full_name};
+       $hash->{taxonid} = $organism_details->{taxonid};
        if ($pathogen_host_mode) {
-         $hash->{pathogen_or_host} = $gene_proxy->organism_details()->{pathogen_or_host};
+         $hash->{pathogen_or_host} = $organism_details->{pathogen_or_host};
        }
      }
      $hash
@@ -226,4 +279,6 @@ if ($pathogen_host_mode) {
   @hosts_with_no_genes = @no_gene_host_organisms;
 }
 
+
+my $gene_list_data_js = Data::JavaScript::Anon->anon_dump(\%all_data);
 </%init>
