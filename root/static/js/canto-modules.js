@@ -3813,6 +3813,13 @@ var GenotypeGeneListCtrl =
 
         $scope.hasDeletionHash = {};
 
+        if (!$scope.multiOrganismMode) {
+          Curs.list('organism')
+            .then(function(organisms) {
+              $scope.organismUpdated(organisms.data[0]);
+            });
+        }
+
         $scope.$watch('genotypes',
                      function() {
                        $scope.makeHasDeletionHash();
