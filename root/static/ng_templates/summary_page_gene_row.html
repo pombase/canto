@@ -1,0 +1,4 @@
+<tr>
+    <td title="NCBI taxon ID: {{ organism.taxonid }}">{{ tidyName(organism.full_name) }}</td>
+    <td ng-repeat="gene in organism.genes"><a href="{{ curs_root_uri }}/feature/gene/view/{{ gene.gene_id }}{{ readOnly }}">{{ gene.display_name }}</a></td>
+</tr>
