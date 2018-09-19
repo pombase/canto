@@ -2,6 +2,10 @@
 $pub
 </%args>
 
+<script language="javascript" type="text/javascript">
+var geneHashesByOrganism = <% $gene_hashes_by_organism_js |n %>;
+</script>
+
 <div class="curs-box">
   <div class="curs-box-title">
     <div>
@@ -90,6 +94,8 @@ my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema, confi
 
 my @organisms_and_genes = @{$service_utils->list_for_service('organism')};
 
+use Clone qw(clone);
+
 my @gene_hashes_by_organism =
   sort {
     if ($a->{organism}->{pathogen_or_host} && $b->{organism}->{pathogen_or_host}) {
@@ -101,10 +107,12 @@ my @gene_hashes_by_organism =
     }
   }
   map {
-    my $organism = $_;
+    my $organism = clone $_;
     my @gene_hashes = sort {
       $a->{display_name} cmp $b->{display_name};
     } @{$organism->{genes}};
+
+    delete $organism->{genes};
 
     {
       organism => $organism,
@@ -140,5 +148,11 @@ if ($read_only_curs) {
   $host_genotype_manage_url .= '/ro';
   $metagenotype_manage_url .= '/ro';
 }
+
+my $gene_hashes_by_organism_js = Data::JavaScript::Anon->anon_dump(\@gene_hashes_by_organism);
+
+use Data::Dumper;
+warn Dumper([\@gene_hashes_by_organism]);
+
 
 </%init>
