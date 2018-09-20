@@ -151,8 +151,4 @@ if ($read_only_curs) {
 
 my $gene_hashes_by_organism_js = Data::JavaScript::Anon->anon_dump(\@gene_hashes_by_organism);
 
-use Data::Dumper;
-warn Dumper([\@gene_hashes_by_organism]);
-
-
 </%init>
