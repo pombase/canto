@@ -162,6 +162,14 @@ sub _get_conditions
 sub _get_organisms
 {
   my $self = shift;
+  my $args = shift;
+
+  my %options = ();
+  if ($args) {
+    %options = %$args;
+  }
+
+  my $include_counts = $options{include_counts};
 
   my $curs_schema = $self->curs_schema();
   my $organism_lookup = $self->organism_lookup();
@@ -179,12 +187,20 @@ sub _get_organisms
       [map {
         my $gene_proxy =
           Canto::Curs::GeneProxy->new(config => $self->config(), cursdb_gene => $_);
-        {
+        my $gene_details = {
           primary_identifier => $gene_proxy->primary_identifier(),
           primary_name => $gene_proxy->primary_name(),
           display_name => $gene_proxy->display_name(),
           gene_id => $_->gene_id(),
+        };
+
+        if ($include_counts) {
+          $gene_details->{annotation_count} = $gene_proxy->cursdb_gene()
+            ->all_annotations(include_with=>1)->count();
+          $gene_details->{genotype_count} = $gene_proxy->cursdb_gene()->genotypes()->count();
         }
+
+        $gene_details;
       } $org->genes()->all()];
 
     push @return_list, $organism_details;

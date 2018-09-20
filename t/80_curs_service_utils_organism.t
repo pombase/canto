@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 21;
 use Test::Deep;
 use JSON;
 
@@ -90,3 +90,19 @@ ok ($delete_res->{message} =~ /genes/);
 $res = $service_utils->list_for_service('organism');
 
 is (@$res, 1);
+
+
+# test getting counts
+
+$res = $service_utils->list_for_service('organism', { include_counts => 1 });
+
+is (@$res, 1);
+is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
+
+@res_genes = @{$res->[0]->{genes}};
+is (scalar(@res_genes), 4);
+
+is ($res_genes[0]->{annotation_count}, 1);
+
+is ($res_genes[1]->{genotype_count}, 2);
+
