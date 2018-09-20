@@ -20,19 +20,12 @@ Annotate genes<% $and_genotypes %>
     <& /curs/inline_help.mhtml, key => 'choose_gene' &>
     </div>
   </div>
+% if ($multi_organism_mode) {
+  <summary-page-gene-list organism-data="<% $gene_hashes_by_organism_js %>"></summary-page-gene-list>
+% } else {
   <div class="curs-box-body">
 % for my $org_and_gene_hashes (@gene_hashes_by_organism) {
 %   my @gene_hashes = @{$org_and_gene_hashes->{gene_hashes}};
-
-%   if ($multi_organism_mode) {
-  <div class="curs-front-page-gene-path-or-host">
-    <% $org_and_gene_hashes->{header} %>
-  </div>
-  <div title="NCBI taxon ID: <% $org_and_gene_hashes->{organism}->{taxonid} %>"
-       class="curs-front-page-gene-org-name">
-  <% $org_and_gene_hashes->{organism}->{full_name} %>
-  </div>
-%   }
 
 <div class="curs-front-page-gene-table">
 %   if (@gene_hashes) {
@@ -43,6 +36,7 @@ Annotate genes<% $and_genotypes %>
   </div>
 %   }
 </div>
+% }
 
 % }
   <div style="margin-top: 20px;">
@@ -151,4 +145,11 @@ if ($read_only_curs) {
 
 my $gene_hashes_by_organism_js = Data::JavaScript::Anon->anon_dump(\@gene_hashes_by_organism);
 
+<<<<<<< HEAD
+=======
+use Data::Dumper;
+# warn Dumper([\@gene_hashes_by_organism]);
+
+
+>>>>>>> b08ec5a05c590f01803be33a05315490256362b6
 </%init>
