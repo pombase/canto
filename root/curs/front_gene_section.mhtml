@@ -3,7 +3,7 @@ $pub
 </%args>
 
 <script language="javascript" type="text/javascript">
-var geneHashesByOrganism = <% $gene_hashes_by_organism_js |n %>;
+var organismsAndGenes = <% $organisms_and_genes_js |n %>;
 </script>
 
 <div class="curs-box">
@@ -21,7 +21,7 @@ Annotate genes<% $and_genotypes %>
     </div>
   </div>
 % if ($multi_organism_mode) {
-  <summary-page-gene-list organism-data="<% $gene_hashes_by_organism_js %>"></summary-page-gene-list>
+  <summary-page-gene-list> </summary-page-gene-list>
 % } else {
   <div class="curs-box-body">
 % for my $org_and_gene_hashes (@gene_hashes_by_organism) {
@@ -143,5 +143,5 @@ if ($read_only_curs) {
   $metagenotype_manage_url .= '/ro';
 }
 
-my $gene_hashes_by_organism_js = Data::JavaScript::Anon->anon_dump(\@gene_hashes_by_organism);
+my $organisms_and_genes_js = Data::JavaScript::Anon->anon_dump(\@organisms_and_genes);
 </%init>
