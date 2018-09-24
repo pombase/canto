@@ -42,9 +42,10 @@ __PACKAGE__->table("genotype");
   data_type: 'text'
   is_nullable: 1
 
-=head2 strain
+=head2 strain_id
 
-  data_type: 'text'
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =head2 organism_id
@@ -67,8 +68,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "background",
   { data_type => "text", is_nullable => 1 },
-  "strain",
-  { data_type => "text", is_nullable => 1 },
+  "strain_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "organism_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "name",
@@ -195,9 +196,29 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 strain
 
-# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-26 15:24:36
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N+yZI2wo/YL3GJG4/35PEw
+Type: belongs_to
+
+Related object: L<Canto::CursDB::Strain>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "strain",
+  "Canto::CursDB::Strain",
+  { strain_id => "strain_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-09-24 17:18:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EqS8KuQ6wSBg7B49r5s+Vw
 
 =head2 annotations
 
