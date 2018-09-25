@@ -78,4 +78,65 @@ sub lookup
   } $rs->all()
 }
 
+=head2 lookup_by_strain_id
+
+ Usage   : my $strain_lookup = Canto::Track::get_adaptor($config, 'strain');
+           my $strain_details = $strain_lookup->lookup_by_strain_id($strain_id);
+ Function:
+ Return  : An object in the format:
+             { strain_id => 101, strain_name => 'some strain name' }
+           or undef if there is no strain with the ID
+
+=cut
+
+sub lookup_by_strain_id
+{
+  my $self = shift;
+  my $strain_id = shift;
+
+  my $schema = $self->schema();
+
+  my $strain = $schema->resultset('Strain')->find({ strain_id => $strain_id });
+
+  if ($strain) {
+    return {
+      strain_id => $strain->strain_id(),
+      strain_name => $strain->strain_name(),
+    };
+  } else {
+    return undef;
+  }
+}
+
+
+=head2 lookup_by_strain_name
+
+ Usage   : my $strain_lookup = Canto::Track::get_adaptor($config, 'strain');
+           my $strain_details = $strain_lookup->lookup_by_strain_name($strain_name);
+ Function:
+ Return  : An object in the format:
+             { strain_id => 101, strain_name => 'some strain name' }
+           or undef if there is no strain with the name
+
+=cut
+
+sub lookup_by_strain_name
+{
+  my $self = shift;
+  my $strain_name = shift;
+
+  my $schema = $self->schema();
+
+  my $strain = $schema->resultset('Strain')->find({ strain_name => $strain_name });
+
+  if ($strain) {
+    return {
+      strain_id => $strain->strain_id(),
+      strain_name => $strain->strain_name(),
+    };
+  } else {
+    return undef;
+  }
+}
+
 1;

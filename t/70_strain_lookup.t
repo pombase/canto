@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 4;
 use Test::Deep;
 
 use Canto::Track::StrainLookup;
@@ -28,3 +28,15 @@ my @result_strains = $strain_lookup->lookup(4932);
 cmp_deeply(\@result_strains, [{ strain_id => 1, strain_name => 'strain 1' },
                               { strain_id => 2, strain_name => 'strain 2' }]);
 
+
+my $strain_by_id_result = $strain_lookup->lookup_by_strain_id(2);
+cmp_deeply($strain_by_id_result, { strain_id => 2, strain_name => 'strain 2' });
+
+my $unknown_by_id = $strain_lookup->lookup_by_strain_id(876543);
+ok(!defined $unknown_by_id);
+
+my $strain_by_name_result = $strain_lookup->lookup_by_strain_name('strain 2');
+cmp_deeply($strain_by_name_result, { strain_id => 2, strain_name => 'strain 2' });
+
+my $unknown_by_name = $strain_lookup->lookup_by_strain_name("UNKNOWN_STRAIN_NAME_");
+ok(!defined $unknown_by_name);
