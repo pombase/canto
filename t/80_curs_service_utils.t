@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 87;
+use Test::More tests => 89;
 use Test::Deep;
 use JSON;
 
@@ -1252,3 +1252,37 @@ $metagenotypes_list_res =
   $service_utils->list_for_service('metagenotype', { host_taxonid => 4932, pathogen_taxonid => 4896 });
 
 is (scalar(@{$metagenotypes_list_res}), 1);
+
+
+# strain lookup
+
+$track_schema = $test_util->track_schema();
+my $track_organism = $track_schema->resultset('Organism')->first();
+$track_schema->resultset('Strain')
+  ->create({ strain_name => 'track strain name 1', strain_id => 1001,
+             organism_id => $track_organism->organism_id() });
+
+my $curs_organism = $track_schema->resultset('Organism')->first();
+$curs_schema->resultset('Strain')
+  ->create({ strain_name => 'curs strain',
+             organism_id => $curs_organism->organism_id() });
+$curs_schema->resultset('Strain')
+  ->create({ track_strain_id => 1001,
+             organism_id => $curs_organism->organism_id() });
+
+my $strain_res = $service_utils->list_for_service('strain');
+
+is(@$strain_res, 2);
+
+cmp_deeply($strain_res,
+           [
+             {
+               'organism_taxon_id' => 4896,
+               'strain_name' => 'curs strain'
+             },
+             {
+               'strain_id' => 1001,
+               'organism_taxon_id' => 4896,
+               'strain_name' => 'track strain name 1'
+             }
+           ]);

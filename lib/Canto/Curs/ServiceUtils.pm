@@ -60,7 +60,9 @@ has ontology_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has allele_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has genotype_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has organism_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
+has strain_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has organism_manager => (is => 'ro', init_arg => undef, lazy_build => 1);
+has strain_manager => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 has state => (is => 'rw', init_arg => undef,
               isa => 'Canto::Curs::State', lazy_build => 1);
@@ -115,12 +117,28 @@ sub _build_organism_lookup
   return Canto::Track::get_adaptor($self->config(), 'organism');
 }
 
+sub _build_strain_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'strain');
+}
+
 sub _build_organism_manager
 {
   my $self = shift;
 
   return Canto::Curs::OrganismManager->new(config => $self->config(),
                                            curs_schema => $self->curs_schema());
+}
+
+sub _build_strain_manager
+{
+  my $self = shift;
+
+  return Canto::Curs::StrainManager->new(config => $self->config(),
+                                         curs_schema => $self->curs_schema(),
+                                         organism_lookup => $self->organism_lookup());
 }
 
 sub _build_curator_manager
@@ -205,6 +223,57 @@ sub _get_organisms
 
     push @return_list, $organism_details;
   }
+
+  return @return_list;
+}
+
+sub _get_strains
+{
+  my $self = shift;
+  my $args = shift;
+
+  my %options = ();
+  if ($args) {
+    %options = %$args;
+  }
+
+  my $include_counts = $options{include_counts};
+
+  my $curs_schema = $self->curs_schema();
+  my $strain_lookup = $self->strain_lookup();
+
+  my %conds = ();
+
+  my $rs = $curs_schema->resultset('Strain');
+
+  my @return_list = ();
+
+  my %results_by_strain_id = ();
+
+  my @track_strain_ids = ();
+
+  while (defined (my $curs_strain = $rs->next())) {
+    my $strain_res = {
+      organism_taxon_id => $curs_strain->organism()->taxonid(),
+    };
+
+    my $track_strain_id = $curs_strain->track_strain_id();
+
+    if ($track_strain_id) {
+      $strain_res->{strain_id} = $track_strain_id;
+      $results_by_strain_id{$track_strain_id} = $strain_res;
+    } else {
+      $strain_res->{strain_name} = $curs_strain->strain_name();
+      push @return_list, $strain_res;
+    }
+  }
+
+  map {
+    my $strain_details = $_;
+    my $strain_res = $results_by_strain_id{$_->{strain_id}};
+    $strain_res->{strain_name} = $strain_details->{strain_name};
+    push @return_list, $strain_res;
+  } $strain_lookup->lookup_by_strain_ids(keys %results_by_strain_id);
 
   return @return_list;
 }
@@ -603,6 +672,7 @@ my %list_for_service_subs =
     annotation => \&_get_annotation,
     condition => \&_get_conditions,
     organism => \&_get_organisms,
+    strain => \&_get_strains,
   );
 
 =head2 list_for_service
