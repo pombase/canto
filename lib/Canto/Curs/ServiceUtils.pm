@@ -255,7 +255,7 @@ sub _get_strains
 
   while (defined (my $curs_strain = $rs->next())) {
     my $strain_res = {
-      organism_taxon_id => $curs_strain->organism()->taxonid(),
+      taxon_id => $curs_strain->organism()->taxonid(),
     };
 
     my $track_strain_id = $curs_strain->track_strain_id();

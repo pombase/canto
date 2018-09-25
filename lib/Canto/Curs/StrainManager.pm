@@ -87,7 +87,7 @@ sub add_strain_by_id
     my @track_strain_details =
       $self->strain_lookup()->lookup_by_strain_ids($track_strain_id);
 
-    my $taxon_id = $track_strain_details[0]->{organism_taxon_id};
+    my $taxon_id = $track_strain_details[0]->{taxon_id};
 
     my $organism = $self->organism_manager()->add_organism_by_taxonid($taxon_id);
 

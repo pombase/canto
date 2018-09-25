@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Try::Tiny;
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -62,12 +62,12 @@ is(@$strain_res, 2);
 cmp_deeply($strain_res,
            [
              {
-               'organism_taxon_id' => 4896,
+               'taxon_id' => 4896,
                'strain_name' => 'curs strain'
              },
              {
                'strain_id' => 1001,
-               'organism_taxon_id' => 4896,
+               'taxon_id' => 4896,
                'strain_name' => 'track strain name 1'
              }
            ]);
@@ -82,7 +82,7 @@ is(@$strain_res, 1);
 cmp_deeply($strain_res,
            [
              {
-               'organism_taxon_id' => 4896,
+               'taxon_id' => 4896,
                'strain_name' => 'curs strain'
              },
            ]);
@@ -103,7 +103,7 @@ cmp_deeply($strain_res,
            [
              {
                'strain_id' => 1001,
-               'organism_taxon_id' => 4896,
+               'taxon_id' => 4896,
                'strain_name' => 'track strain name 1',
              },
            ]);

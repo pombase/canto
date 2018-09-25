@@ -1277,12 +1277,12 @@ is(@$strain_res, 2);
 cmp_deeply($strain_res,
            [
              {
-               'organism_taxon_id' => 4896,
+               'taxon_id' => 4896,
                'strain_name' => 'curs strain'
              },
              {
                'strain_id' => 1001,
-               'organism_taxon_id' => 4896,
+               'taxon_id' => 4896,
                'strain_name' => 'track strain name 1'
              }
            ]);
@@ -1298,7 +1298,7 @@ is(@$strain_res, 1);
 cmp_deeply($strain_res,
            [
              {
-               'organism_taxon_id' => 4896,
+               'taxon_id' => 4896,
                'strain_name' => 'curs strain'
              },
            ]);

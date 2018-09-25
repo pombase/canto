@@ -74,7 +74,7 @@ sub lookup
     {
       strain_id => $_->strain_id(),
       strain_name => $_->strain_name(),
-      organism_taxon_id => $taxonid,
+      taxon_id => $taxonid,
     };
   } $rs->all()
 }
@@ -126,7 +126,7 @@ sub lookup_by_strain_ids
     {
       strain_id => $_->strain_id(),
       strain_name => $_->strain_name(),
-      organism_taxon_id => $taxon_id,
+      taxon_id => $taxon_id,
     }
   } $strains_rs->all();
 }
@@ -159,7 +159,7 @@ sub lookup_by_strain_name
     return {
       strain_id => $strain->strain_id(),
       strain_name => $strain->strain_name(),
-      organism_taxon_id => $taxon_id,
+      taxon_id => $taxon_id,
     };
   } else {
     return undef;
