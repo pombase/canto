@@ -617,6 +617,7 @@ canto.service('CantoGlobals', function($window) {
   this.perPub5YearStatsData = $window.perPub5YearStatsData;
   this.multi_organism_mode = $window.multi_organism_mode;
   this.pathogen_host_mode = $window.pathogen_host_mode;
+  this.organismsAndGenes = $window.organismsAndGenes;
 });
 
 canto.service('CantoService', function($http) {
@@ -6836,65 +6837,29 @@ function selectStrainPicker($uibModal, taxonId)
   });
 }
 
-canto.service('CurzOrgList', function($q, Curs) {
-    var service = {
-        organisms: [],
-        getOrganisms: getOrganisms,
-        load: load,
-        setOrganisms: setOrganisms
-    }
-
-    return service;
-
-    function getOrganisms(orgType) {
-
-        if (typeof orgType === 'undefined') {
-            return service.organisms;
-        }
-
-        return service.organisms.filter(function (e) {
-            return (e.pathogen_or_host === orgType);
-        });
-    };
-
-    function load() {
-        var q = $q.defer();
-
-        Curs.list('organism').success(function(organisms) {
-            service.organisms = organisms;
-            console.log(organisms);
-            q.resolve(organisms);
-        }).error(function() {
-            q.reject();
-        });
-
-        return q.promise;
-    };
-
-    function setOrganisms(organismData) {
-        organismData = organismData.replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": ');
-        organismData = organismData.replace(/undefined/g, '""');
-        service.organisms = JSON.parse(organismData);
-    };
-});
-
-var summaryPageGeneList = function() {
+var summaryPageGeneList = function(CantoGlobals) {
     return {
         scope: {
-            organismData: '@',
         },
         restrict: 'E',
         replace: true,
         templateUrl: app_static_path + 'ng_templates/summary_page_gene_list.html',
-        controller: function($scope, CurzOrgList) {
-            $scope.organisms = CurzOrgList.getOrganisms;
-            // CurzOrgList.setOrganisms($scope.organismData);
-            CurzOrgList.load();
+        controller: function($scope) {
+          $scope.organismData = CantoGlobals.organismsAndGenes;
+          $scope.organisms = function(orgType) {
+            if (typeof orgType === 'undefined') {
+              return $scope.organismData;
+            }
+
+            return $scope.organismData.filter(function (e) {
+              return (e.pathogen_or_host === orgType);
+            });
+          };
         },
     };
 };
 
-canto.directive('summaryPageGeneList', ['CurzOrgList', summaryPageGeneList]);
+canto.directive('summaryPageGeneList', ['CantoGlobals', summaryPageGeneList]);
 
 var summaryPageGeneRow = function() {
     return {
