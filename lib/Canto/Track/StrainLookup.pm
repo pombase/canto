@@ -74,8 +74,24 @@ sub lookup
     {
       strain_id => $_->strain_id(),
       strain_name => $_->strain_name(),
+      organism_taxon_id => $taxonid,
     };
   } $rs->all()
+}
+
+sub _get_taxon_id
+{
+  my $organism = shift;
+
+  my $taxon_id = undef;
+
+  map {
+    if ($_->type()->name() eq 'taxon_id') {
+      $taxon_id = $_->value();
+    }
+  } $organism->organismprops()->search({}, { prefetch => 'type' })->all();
+
+  return $taxon_id;
 }
 
 =head2 lookup_by_strain_ids
@@ -100,12 +116,17 @@ sub lookup_by_strain_ids
     strain_id => {
       -in => \@strain_ids,
     }
-  });
+  }, { prefetch => 'organism' });
 
   return map {
+    my $organism = $_->organism();
+
+    my $taxon_id = _get_taxon_id($organism);
+
     {
       strain_id => $_->strain_id(),
       strain_name => $_->strain_name(),
+      organism_taxon_id => $taxon_id,
     }
   } $strains_rs->all();
 }
@@ -129,12 +150,16 @@ sub lookup_by_strain_name
 
   my $schema = $self->schema();
 
-  my $strain = $schema->resultset('Strain')->find({ strain_name => $strain_name });
+  my $strain = $schema->resultset('Strain')->find({ strain_name => $strain_name },
+                                                  { prefetch => 'organism' });
 
   if ($strain) {
+    my $taxon_id = _get_taxon_id($strain->organism());
+
     return {
       strain_id => $strain->strain_id(),
       strain_name => $strain->strain_name(),
+      organism_taxon_id => $taxon_id,
     };
   } else {
     return undef;
