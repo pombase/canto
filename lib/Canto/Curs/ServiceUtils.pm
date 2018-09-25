@@ -1594,6 +1594,46 @@ sub add_organism_by_taxonid
   }
 }
 
+=head2 add_strain_by_id
+
+ Usage   : $service_utils->add_strain_by_id($track_strain_id);
+ Function: Add the strain with the given ID to the session
+ Args    : $track_strain_id
+
+=cut
+
+sub add_strain_by_id
+{
+  my $self = shift;
+  my $track_strain_id = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $strain_manager = $self->strain_manager();
+
+  try {
+    $curs_schema->txn_begin();
+
+    my $strain = $strain_manager->add_strain_by_id($track_strain_id);
+
+    if ($strain) {
+      $curs_schema->txn_commit();
+      return {
+        status => 'success',
+      };
+    } else {
+      return {
+        status => 'error',
+        message => "strain with ID $track_strain_id not found",
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
 
 =head2 delete_organism_by_taxonid
 

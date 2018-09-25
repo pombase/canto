@@ -43,6 +43,7 @@ use Canto::CursDB::Organism;
 
 has curs_schema => (is => 'rw', isa => 'Canto::CursDB', required => 1);
 has strain_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
+has organism_manager => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 with 'Canto::Role::Configurable';
 
@@ -53,6 +54,13 @@ sub _build_strain_lookup
   return Canto::Track::get_adaptor($self->config(), 'strain');
 }
 
+sub _build_organism_manager
+{
+  my $self = shift;
+
+  return Canto::Curs::OrganismManager->new(config => $self->config(),
+                                           curs_schema => $self->curs_schema());
+}
 
 =head2 add_strain_by_id
 
@@ -73,18 +81,21 @@ sub add_strain_by_id
 
   my $strain = $strain_rs->find({ track_strain_id => $track_strain_id });
 
-  if (!$strain) {
+  if ($strain) {
+    return $strain;
+  } else {
     my @track_strain_details =
       $self->strain_lookup()->lookup_by_strain_ids($track_strain_id);
 
-    my $organism = $self->curs_schema()->resultset('Organism')
-      ->find({ taxonid => $track_strain_details[0]->{organism_taxon_id} });
+    my $taxon_id = $track_strain_details[0]->{organism_taxon_id};
 
-    $curs_schema->create_with_type('Strain',
-                                   {
-                                     track_strain_id => $track_strain_id,
-                                     organism_id => $organism->organism_id(),
-                                   });
+    my $organism = $self->organism_manager()->add_organism_by_taxonid($taxon_id);
+
+    return $curs_schema->create_with_type('Strain',
+                                          {
+                                            track_strain_id => $track_strain_id,
+                                            organism_id => $organism->organism_id(),
+                                          });
   }
 }
 

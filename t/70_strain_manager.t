@@ -93,7 +93,9 @@ $strain_res = $service_utils->list_for_service('strain');
 is(@$strain_res, 0);
 
 
-$strain_manager->add_strain_by_id(1001);
+my $added_strain = $strain_manager->add_strain_by_id(1001);
+
+is ($added_strain->track_strain_id(), 1001);
 
 $strain_res = $service_utils->list_for_service('strain');
 is(@$strain_res, 1);

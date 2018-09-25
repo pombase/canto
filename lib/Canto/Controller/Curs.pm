@@ -2876,6 +2876,21 @@ sub ws_add_organism : Chained('top') PathPart('ws/organism/add')
   $c->forward('View::JSON');
 }
 
+sub ws_add_strain_by_id : Chained('top') PathPart('ws/strain/add_by_id')
+{
+  my ($self, $c, $track_strain_id) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  $st->{json_data} = $service_utils->add_strain_by_id($track_strain_id);
+
+  $c->forward('View::JSON');
+}
+
 sub ws_delete_organism : Chained('top') PathPart('ws/organism/delete')
 {
   my ($self, $c, $taxonid) = @_;
@@ -2888,6 +2903,22 @@ sub ws_delete_organism : Chained('top') PathPart('ws/organism/delete')
                                                      config => $c->config());
 
   $st->{json_data} = $service_utils->delete_organism_by_taxonid($taxonid);
+
+  $c->forward('View::JSON');
+}
+
+sub ws_delete_strain_by_id : Chained('top') PathPart('ws/strain/delete_by_id')
+{
+  my ($self, $c, $track_strain_id) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  $st->{json_data} = $service_utils->delete_strain_by_id($track_strain_id);
 
   $c->forward('View::JSON');
 }
