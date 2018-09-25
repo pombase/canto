@@ -78,34 +78,36 @@ sub lookup
   } $rs->all()
 }
 
-=head2 lookup_by_strain_id
+=head2 lookup_by_strain_ids
 
  Usage   : my $strain_lookup = Canto::Track::get_adaptor($config, 'strain');
-           my $strain_details = $strain_lookup->lookup_by_strain_id($strain_id);
+           my $strain_details = $strain_lookup->lookup_by_strain_ids(@strain_ids);
  Function:
- Return  : An object in the format:
-             { strain_id => 101, strain_name => 'some strain name' }
-           or undef if there is no strain with the ID
+ Return  : A list of strains in the format:
+            [ { strain_id => 101, strain_name => 'some strain name' }, ... ]
+           known IDs are ignored
 
 =cut
 
-sub lookup_by_strain_id
+sub lookup_by_strain_ids
 {
   my $self = shift;
-  my $strain_id = shift;
+  my @strain_ids = @_;
 
   my $schema = $self->schema();
 
-  my $strain = $schema->resultset('Strain')->find({ strain_id => $strain_id });
+  my $strains_rs = $schema->resultset('Strain')->search({
+    strain_id => {
+      -in => \@strain_ids,
+    }
+  });
 
-  if ($strain) {
-    return {
-      strain_id => $strain->strain_id(),
-      strain_name => $strain->strain_name(),
-    };
-  } else {
-    return undef;
-  }
+  return map {
+    {
+      strain_id => $_->strain_id(),
+      strain_name => $_->strain_name(),
+    }
+  } $strains_rs->all();
 }
 
 
