@@ -6845,7 +6845,16 @@ var summaryPageGeneList = function(CantoGlobals) {
         replace: true,
         templateUrl: app_static_path + 'ng_templates/summary_page_gene_list.html',
         controller: function($scope) {
-          $scope.organismData = CantoGlobals.organismsAndGenes;
+          $scope.organismData = CantoGlobals.organismsAndGenes.sort((a,b) => a.full_name > b.full_name);
+          $scope.maxCols = function () {
+            var maxCols = 0;
+            angular.forEach($scope.organismData, function(value) {
+              if (value.genes.length > maxCols) {
+                maxCols = value.genes.length;
+              }
+            }, maxCols);
+            return maxCols;
+          };
           $scope.organisms = function(orgType) {
             if (typeof orgType === 'undefined') {
               return $scope.organismData;
@@ -6855,6 +6864,10 @@ var summaryPageGeneList = function(CantoGlobals) {
               return (e.pathogen_or_host === orgType);
             });
           };
+          $scope.getPadding = function () {
+            var padLength = $scope.maxCols() - 1;
+            return new Array(padLength);
+          }
         },
     };
 };
@@ -6865,6 +6878,7 @@ var summaryPageGeneRow = function() {
     return {
         scope: {
             organism: '=',
+            maxCols: '=',
         },
         restrict: 'A',
         replace: true,
@@ -6879,9 +6893,13 @@ var summaryPageGeneRow = function() {
                 }
                 return name;
             }
-            console.log($scope.organism);
-        },
-    };
+            $scope.genes = $scope.organism.genes.sort((a,b) => a.display_name > b.display_name);
+            $scope.getPadding = function () {
+              var padLength = $scope.maxCols() - $scope.genes.length;
+              return new Array(padLength);
+            }
+        }
+    }
 };
 
 canto.directive('summaryPageGeneRow', [summaryPageGeneRow]);

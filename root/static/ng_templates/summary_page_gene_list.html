@@ -1,17 +1,19 @@
 <div class="curs-box-body">
-    <table>
-        <tr>
-            <th>Pathogen Organisms</td>
-            <th>Genes</td>
-        </tr>
-        <tr summary-page-gene-row ng-repeat="org in organisms('pathogen')" organism="org"></tr>
-        <tr>
-            <td colspan="2"><br></td>
-        </tr>
-        <tr>
-            <th>Host Organisms</th>
-            <th>Genes</th>
-        </tr>
-        <tr summary-page-gene-row ng-repeat="org in organisms('host')" organism="org"></tr>
+  <table class="table">
+    <tr>
+      <th>Pathogen Organisms</td>
+      <th>Genes</td>
+      <td ng-repeat="pad in getPadding() track by $index"></td>
+    </tr>
+    <tr summary-page-gene-row ng-repeat="org in organisms('pathogen')" organism="org" max-cols="maxCols"></tr>
+  </table>
+  <br>
+   <table class="table">
+      <tr>
+        <th>Host Organisms</th>
+        <th>Genes</th>
+        <td ng-repeat="pad in getPadding() track by $index"></td>
+      </tr>
+      <tr summary-page-gene-row ng-repeat="org in organisms('host')" organism="org" max-cols="maxCols"></tr>
     </table>
 </div>
