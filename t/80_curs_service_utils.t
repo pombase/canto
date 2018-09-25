@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 89;
+use Test::More tests => 91;
 use Test::Deep;
 use JSON;
 
@@ -1286,3 +1286,20 @@ cmp_deeply($strain_res,
                'strain_name' => 'track strain name 1'
              }
            ]);
+
+
+$service_utils->delete_strain_by_id(1001);
+
+
+$strain_res = $service_utils->list_for_service('strain');
+
+is(@$strain_res, 1);
+
+cmp_deeply($strain_res,
+           [
+             {
+               'organism_taxon_id' => 4896,
+               'strain_name' => 'curs strain'
+             },
+           ]);
+

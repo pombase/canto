@@ -52,6 +52,7 @@ use Canto::Curs::Utils;
 use Canto::Curs::ConditionUtil;
 use Canto::Curs::MetadataStorer;
 use Canto::Curs::OrganismManager;
+use Canto::Curs::StrainManager;
 use Canto::Curs::GeneProxy;
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
@@ -1598,7 +1599,7 @@ sub add_organism_by_taxonid
 
  Usage   : $service_utils->delete_organism_by_taxonid($taxonid);
  Function: Remove the given organism from the session.  Returns an error if
-           there are genes from that organism in the session.
+           there are genes or strains from that organism in the session.
  Args    : $taxonid
  Return  : a hash, with keys:
               status - "success" or "error"
@@ -1629,6 +1630,51 @@ sub delete_organism_by_taxonid
       return {
         status => 'error',
         message => "organism with taxonid $taxonid not found",
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
+
+=head2 delete_strain_by_id
+
+ Usage   : $service_utils->delete_strain_by_id($track_strain_id);
+ Function: Remove the given strain from the session.  Returns an error if
+           there are genotypes that reference the strain
+ Args    : $taxonid
+ Return  : a hash, with keys:
+              status - "success" or "error"
+              message - on error, the error message
+
+=cut
+
+sub delete_strain_by_id
+{
+  my $self = shift;
+  my $track_strain_id = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $strain_manager = $self->strain_manager();
+
+  try {
+    $curs_schema->txn_begin();
+
+    my $strain = $strain_manager->delete_strain_by_id($track_strain_id);
+
+    if ($strain) {
+      $curs_schema->txn_commit();
+      return {
+        status => 'success',
+      };
+    } else {
+      return {
+        status => 'error',
+        message => "strain with ID $track_strain_id not found",
       };
     }
   } catch {
