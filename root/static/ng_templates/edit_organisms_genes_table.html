@@ -1,0 +1,11 @@
+<div>
+  <table>
+    <tr ng-repeat="gene in genes track by gene.gene_id">
+      <td width="80">{{ gene.systematic_identifier }}</td>
+      <td width="100">{{ gene.name }}</td>
+      <td width="150">{{ gene.synonyms.join(', ') }}</td>
+      <td width="200">{{ gene.product }}</td>
+      <td width="20"><button>X</button></td>
+    </tr>
+  </table>
+</div>

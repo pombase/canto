@@ -618,6 +618,10 @@ canto.service('CantoGlobals', function($window) {
   this.multi_organism_mode = $window.multi_organism_mode;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.organismsAndGenes = $window.organismsAndGenes;
+  this.confirmGenes = $window.confirmGenes;
+  this.highlightTerms = $window.highlightTerms;
+  this.geneListData = $window.geneListData;
+  this.hostsWithNoGenes = $window.hostsWithNoGenes;
 });
 
 canto.service('CantoService', function($http) {
@@ -6903,3 +6907,67 @@ var summaryPageGeneRow = function() {
 };
 
 canto.directive('summaryPageGeneRow', [summaryPageGeneRow]);
+
+
+var editOrganismsGenesTable = function() {
+  return {
+      scope: {
+        genes: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/edit_organisms_genes_table.html',
+      controller: function($scope) {
+        console.log($scope.genes);
+      }
+  }
+};
+
+canto.directive('editOrganismsGenesTable', [editOrganismsGenesTable]);
+
+
+var editOrganismsTable = function() {
+  return {
+      scope: {
+        title: '@',
+        organisms: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/edit_organisms_table.html',
+      controller: function($scope) {
+        // $scope.getGeneCount = function () {
+        //   return $scope.organisms.length;
+        // }
+      }
+  }
+};
+
+canto.directive('editOrganismsTable', [editOrganismsTable]);
+
+
+var editOrganisms = function(CantoGlobals) {
+  return {
+      scope: { },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/edit_organisms.html',
+      controller: function($scope) {
+          // console.log(CantoGlobals.confirmGenes);
+          // console.log(CantoGlobals.highlightTerms);
+          console.log(CantoGlobals.geneListData);
+          // console.log(CantoGlobals.hostsWithNoGenes);
+        $scope.getPathogens = function () {
+          return CantoGlobals.geneListData.pathogen;
+        };
+        $scope.getHosts = function () {
+          return CantoGlobals.geneListData.host;
+        };
+        $scope.getHostsNoGenes = function () {
+          return CantoGlobals.hostsWithNoGenes;
+        };
+      }
+  }
+};
+
+canto.directive('editOrganisms', ['CantoGlobals', editOrganisms]);

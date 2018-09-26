@@ -1,0 +1,28 @@
+<div>
+  <div class="curs-box-title">{{ title }}</div>
+  <table class="list">
+    <tr>
+      <th width="60">Taxon ID</th>
+      <th width="210">Organism</th>
+      <th width="100">Common name</th>
+      <th width="250">Strains</th>
+      <th colspan="5">Genes</th>
+    </tr>
+    <tr>
+      <th colspan="4">&nbsp;</th>
+      <th width="80">ID</th>
+      <th width="100">Name</th>
+      <th width="150">Synonyms</th>
+      <th width="200">Product</th>
+      <th width="20">&nbsp;</th>
+    </tr>
+    <tr ng-repeat="org in organisms() track by org.taxonid">
+      <td>{{ org.taxonid }}</td>
+      <td>{{ org.scientific_name }}</td>
+      <td>{{ org.common_name }}</td>
+      <td><strain-picker taxon-id="{{ org.taxonid }}"></strain-picker></td>
+      <td colspan="5"><edit-organisms-genes-table genes="org.genes"></edit-organisms-genes-table></td>
+    </tr>
+  </table>
+  <br>
+</div>
