@@ -6949,7 +6949,6 @@ var editOrganismsGenesTable = function() {
       replace: true,
       templateUrl: app_static_path + 'ng_templates/edit_organisms_genes_table.html',
       controller: function($scope) {
-        // console.log($scope.genes);
       }
   }
 };
@@ -6967,9 +6966,29 @@ var editOrganismsTable = function() {
       replace: true,
       templateUrl: app_static_path + 'ng_templates/edit_organisms_table.html',
       controller: function($scope) {
-        // $scope.getGeneCount = function () {
-        //   return $scope.organisms.length;
-        // }
+        $scope.firstGene = function(genes) {
+          if (genes.length > 0) {
+            return genes[0];
+          }
+
+          return {
+            taxonid: "",
+            name: "",
+            synonyms: "",
+            product: "",
+          }
+        }
+
+        $scope.otherGenes = function(genes) {
+          return genes.filter((gene, index) => index > 0);
+        }
+
+        $scope.getOrganisms = function() {
+          return $scope.organisms().map((o, id) => {
+            o.row = id;
+            return o;
+          });
+        }
       }
   }
 };

@@ -1,28 +1,59 @@
 <div>
   <div class="curs-box-title">{{ title }}</div>
-  <table class="list">
-    <tr>
-      <th width="60">Taxon ID</th>
-      <th width="210">Organism</th>
-      <th width="100">Common name</th>
-      <th width="250">Strains</th>
-      <th colspan="5">Genes</th>
-    </tr>
-    <tr>
-      <th colspan="4">&nbsp;</th>
-      <th width="80">ID</th>
-      <th width="100">Name</th>
-      <th width="150">Synonyms</th>
-      <th width="200">Product</th>
-      <th width="20">&nbsp;</th>
-    </tr>
-    <tr ng-repeat="org in organisms() track by org.taxonid">
-      <td>{{ org.taxonid }}</td>
-      <td>{{ org.scientific_name }}</td>
-      <td>{{ org.common_name }}</td>
-      <td><strain-picker taxon-id="{{ org.taxonid }}"></strain-picker></td>
-      <td colspan="5"><edit-organisms-genes-table genes="org.genes"></edit-organisms-genes-table></td>
-    </tr>
-  </table>
-  <br>
+  <div class="curs-box-body">
+    <table class="table table-bordered">
+      <thead>
+        <tr class="info">
+          <th>Organisms</th>
+          <th colspan="5">Genes</th>
+        </tr>
+        <tr class="info">
+            <th></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Synonyms</th>
+            <th>Product</th>
+            <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody ng-repeat-start="o in getOrganisms() track by o.taxonid">
+        <tr ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
+          <td rowspan="{{ o.genes.length }}">
+            <table>
+              <tr>
+                <th width="150">Taxon ID:</th>
+                <td>{{ o.taxonid }}</td>
+              </tr>
+              <tr>
+                <th>Organism:</th>
+                <td>{{ o.scientific_name }}</td>
+              </tr>
+              <tr>
+                <th>Common name:</th>
+                <td>{{ o.common_name }}</td>
+              </tr>
+              <tr><td>&nbsp;</td></tr>
+              <tr>
+                <td colspan="2"><strain-picker taxon-id="{{ o.taxonid }}"></strain-picker></td>
+              </tr>
+            </table></td>
+          <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).systematic_identifier }}</td>
+          <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).name }}</td>
+          <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).synonyms.join(', ') }}</td>
+          <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).product }}</td>
+          <td ng-if="o.genes.length > 0" style="vertical-align: middle;"><button>X</button></td>
+          <td ng-if="o.genes.length == 0" colspan="5" rowspan="2">No genes for this organism</td>
+        </tr>
+        <tr ng-if="o.genes.length > 0" ng-repeat="g in otherGenes(o.genes) track by g.systematic_identifier"  ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
+          <td>{{ g.systematic_identifier }}</td>
+          <td>{{ g.name }}</td>
+          <td>{{ g.synonyms.join(', ') }}</td>
+          <td>{{ g.product }}</td>
+          <td style="vertical-align: middle;"><button>X</button></td>
+        </tr>
+      </tbody>
+      <tbody ng-repeat-end></tbody>
+    </table>
+    <br>
+  </div>
 </div>

@@ -23,8 +23,9 @@ var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
   </div>
   <div class="curs-box-body">
 
+% if ($pathogen_host_mode) {
 <edit-organisms></edit-organisms>
-
+% } else {
   <form name="gene-edit" method="get" action="<% $edit_path %>">
 % if (scalar(@table_1_hashes) > 0 || scalar(@table_2_hashes) > 0) {
 %   if (scalar(@table_1_hashes) > 0) {
@@ -46,53 +47,6 @@ var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
   </div>
 % }
 
-% if ($pathogen_host_mode && @hosts_with_no_genes) {
-<div style="clear: both"></div>
-<div class="gene-list-edit-no-gene-hosts">
-  Host organisms in this session that have no genes:
-  <table class="list">
-    <thead>
-      <tr>
-        <th>
-          Taxon ID
-        </th>
-        <th>
-          Host organism
-        </th>
-        <th>
-          Common name
-        </th>
-        <th>
-          Strains
-        </th>
-        <th>
-          &nbsp;
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-%   for my $host_org (@hosts_with_no_genes) {
-      <tr>
-        <td>
-<% $host_org->{taxonid} %>
-        </td>
-        <td>
-<% $host_org->{full_name} %>
-        </td>
-        <td>
-<% $host_org->{common_name} %>
-        </td>
-        <td><strain-picker taxon-id="<% $host_org->{'taxonid'} %>"></strain-picker></td>
-        <td>
-          <input type="checkbox"
-                 name="host-org-select"
-                 value='<% $host_org->{taxonid} %>' />
-        </td>
-      </tr>
-%   }
-    </tbody>
-  </table>
-</div>
 % }
 
 <div class="submit">
