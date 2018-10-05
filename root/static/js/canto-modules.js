@@ -618,6 +618,10 @@ canto.service('CantoGlobals', function($window) {
   this.multi_organism_mode = $window.multi_organism_mode;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.organismsAndGenes = $window.organismsAndGenes;
+  this.confirmGenes = $window.confirmGenes;
+  this.highlightTerms = $window.highlightTerms;
+  this.geneListData = $window.geneListData;
+  this.hostsWithNoGenes = $window.hostsWithNoGenes;
 });
 
 canto.service('CantoService', function($http) {
@@ -6687,11 +6691,11 @@ var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype) 
 canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'Metagenotype', metagenotypeManage]);
 
 
-canto.service('Strains', function (CantoService) {
+canto.service('Strains', function (CantoService, Curs, $q) {
 
     var vm = this;
     vm.strains = {};
-    vm.selected = [];
+    vm.existing = null;
 
     vm.pickerData = {};
 
@@ -6708,10 +6712,33 @@ canto.service('Strains', function (CantoService) {
     }
 
     vm.load = function (taxonId) {
-        CantoService.lookup('strains', [taxonId])
-            .then(function(response) {
-            vm.pickerData[taxonId].availableStrains = response.data;
+      CantoService.lookup('strains', [taxonId])
+        .then(function(response) {
+          vm.pickerData[taxonId].availableStrains = response.data;
+      }).then(function(){
+        vm.getExisting().then(function(existing){
+          var available = vm.pickerData[taxonId].availableStrains.map(s => s.strain_name);
+          existing.forEach(s => {
+            if (available.indexOf(s.strain_name) !== -1) {
+              vm.pickerData[taxonId].selectedStrains.push(s.strain_name);
+            }
+          });
         });
+      });
+    }
+
+    vm.getExisting = function () {
+      var deferred = $q.defer();
+      if(vm.existing) {
+        deferred.resolve(vm.existing);
+      }
+      else {
+        Curs.list('strain').then(function(res) {
+          vm.existing = res.data;
+          deferred.resolve(vm.existing);
+        });
+      }
+      return deferred.promise;
     }
 
     vm.get = function (taxonId) {
@@ -6722,10 +6749,14 @@ canto.service('Strains', function (CantoService) {
         return vm.pickerData[taxonId].selectedStrains.sort();
     };
 
-    vm.addStrain = function (taxonId, strain) {
-        if (vm.getSelected(taxonId).indexOf(strain) === -1) {
-            vm.pickerData[taxonId].selectedStrains.push(strain);
-        }
+    vm.addStrain = function (taxonId, strain_id) {
+      var strains = vm.pickerData[taxonId].availableStrains.filter(availableStrain => availableStrain.strain_id == strain_id);
+      var strain = strains[0];
+      if (vm.getSelected(taxonId).indexOf(strain.strain_name) === -1) {
+        Curs.add('strain_by_id', [strain.strain_id]).then(function(){
+          vm.pickerData[taxonId].selectedStrains.push(strain.strain_name);
+        });
+      }
     };
 
     vm.addTypedStrain = function (taxonId, strain) {
@@ -6735,12 +6766,16 @@ canto.service('Strains', function (CantoService) {
         }
     };
 
-    vm.removeStrain = function (taxonId, strain) {
-        var pos = vm.getSelected(taxonId).indexOf(strain);
+    vm.removeStrain = function (taxonId, strainName) {
+      var strains = vm.pickerData[taxonId].availableStrains.filter(s => s.strain_name == strainName);
+      var strain = strains[0];
+      var pos = vm.getSelected(taxonId).indexOf(strain.strain_name);
 
-        if (pos > -1) {
-            vm.pickerData[taxonId].selectedStrains.splice(pos, 1);
-        }
+      if (pos > -1) {
+        Curs.delete('strain_by_id', [strain.strain_id]).then(function(){
+          vm.pickerData[taxonId].selectedStrains.splice(pos, 1);
+        });
+      }
     };
 });
 
@@ -6845,7 +6880,16 @@ var summaryPageGeneList = function(CantoGlobals) {
         replace: true,
         templateUrl: app_static_path + 'ng_templates/summary_page_gene_list.html',
         controller: function($scope) {
-          $scope.organismData = CantoGlobals.organismsAndGenes;
+          $scope.organismData = CantoGlobals.organismsAndGenes.sort((a,b) => a.full_name > b.full_name);
+          $scope.maxCols = function () {
+            var maxCols = 0;
+            angular.forEach($scope.organismData, function(value) {
+              if (value.genes.length > maxCols) {
+                maxCols = value.genes.length;
+              }
+            }, maxCols);
+            return maxCols;
+          };
           $scope.organisms = function(orgType) {
             if (typeof orgType === 'undefined') {
               return $scope.organismData;
@@ -6855,6 +6899,10 @@ var summaryPageGeneList = function(CantoGlobals) {
               return (e.pathogen_or_host === orgType);
             });
           };
+          $scope.getPadding = function () {
+            var padLength = $scope.maxCols() - 1;
+            return new Array(padLength);
+          }
         },
     };
 };
@@ -6865,6 +6913,7 @@ var summaryPageGeneRow = function() {
     return {
         scope: {
             organism: '=',
+            maxCols: '=',
         },
         restrict: 'A',
         replace: true,
@@ -6879,9 +6928,96 @@ var summaryPageGeneRow = function() {
                 }
                 return name;
             }
-            console.log($scope.organism);
-        },
-    };
+            $scope.genes = $scope.organism.genes.sort((a,b) => a.display_name > b.display_name);
+            $scope.getPadding = function () {
+              var padLength = $scope.maxCols() - $scope.genes.length;
+              return new Array(padLength);
+            }
+        }
+    }
 };
 
 canto.directive('summaryPageGeneRow', [summaryPageGeneRow]);
+
+
+var editOrganismsGenesTable = function() {
+  return {
+      scope: {
+        genes: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/edit_organisms_genes_table.html',
+      controller: function($scope) {
+      }
+  }
+};
+
+canto.directive('editOrganismsGenesTable', [editOrganismsGenesTable]);
+
+
+var editOrganismsTable = function() {
+  return {
+      scope: {
+        title: '@',
+        organisms: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/edit_organisms_table.html',
+      controller: function($scope) {
+        $scope.firstGene = function(genes) {
+          if (genes.length > 0) {
+            return genes[0];
+          }
+
+          return {
+            taxonid: "",
+            name: "",
+            synonyms: "",
+            product: "",
+          }
+        }
+
+        $scope.otherGenes = function(genes) {
+          return genes.filter((gene, index) => index > 0);
+        }
+
+        $scope.getOrganisms = function() {
+          return $scope.organisms().map((o, id) => {
+            o.row = id;
+            return o;
+          });
+        }
+      }
+  }
+};
+
+canto.directive('editOrganismsTable', [editOrganismsTable]);
+
+
+var editOrganisms = function(CantoGlobals) {
+  return {
+      scope: { },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/edit_organisms.html',
+      controller: function($scope) {
+          // console.log(CantoGlobals.confirmGenes);
+          // console.log(CantoGlobals.highlightTerms);
+          // console.log(CantoGlobals.geneListData);
+          // console.log(CantoGlobals.hostsWithNoGenes);
+        $scope.getPathogens = function () {
+          return CantoGlobals.geneListData.pathogen;
+        };
+        $scope.getHosts = function () {
+          return CantoGlobals.geneListData.host;
+        };
+        $scope.getHostsNoGenes = function () {
+          return CantoGlobals.hostsWithNoGenes;
+        };
+      }
+  }
+};
+
+canto.directive('editOrganisms', ['CantoGlobals', editOrganisms]);

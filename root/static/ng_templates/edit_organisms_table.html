@@ -1,0 +1,59 @@
+<div>
+  <div class="curs-box-title">{{ title }}</div>
+  <div class="curs-box-body">
+    <table class="table table-bordered">
+      <thead>
+        <tr class="info">
+          <th>Organisms</th>
+          <th colspan="5">Genes</th>
+        </tr>
+        <tr class="info">
+            <th></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Synonyms</th>
+            <th>Product</th>
+            <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody ng-repeat-start="o in getOrganisms() track by o.taxonid">
+        <tr ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
+          <td rowspan="{{ o.genes.length }}">
+            <table>
+              <tr>
+                <th width="150">Taxon ID:</th>
+                <td>{{ o.taxonid }}</td>
+              </tr>
+              <tr>
+                <th>Organism:</th>
+                <td>{{ o.scientific_name }}</td>
+              </tr>
+              <tr>
+                <th>Common name:</th>
+                <td>{{ o.common_name }}</td>
+              </tr>
+              <tr><td>&nbsp;</td></tr>
+              <tr>
+                <td colspan="2"><strain-picker taxon-id="{{ o.taxonid }}"></strain-picker></td>
+              </tr>
+            </table></td>
+          <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).systematic_identifier }}</td>
+          <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).name }}</td>
+          <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).synonyms.join(', ') }}</td>
+          <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).product }}</td>
+          <td ng-if="o.genes.length > 0" style="vertical-align: middle;"><button>X</button></td>
+          <td ng-if="o.genes.length == 0" colspan="5" rowspan="2">No genes for this organism</td>
+        </tr>
+        <tr ng-if="o.genes.length > 0" ng-repeat="g in otherGenes(o.genes) track by g.systematic_identifier"  ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
+          <td>{{ g.systematic_identifier }}</td>
+          <td>{{ g.name }}</td>
+          <td>{{ g.synonyms.join(', ') }}</td>
+          <td>{{ g.product }}</td>
+          <td style="vertical-align: middle;"><button>X</button></td>
+        </tr>
+      </tbody>
+      <tbody ng-repeat-end></tbody>
+    </table>
+    <br>
+  </div>
+</div>

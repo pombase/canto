@@ -1,7 +1,7 @@
 <div>
     <div>
         <span ng-repeat="st in data.selectedStrains" class="btn-primary btn-xs" style="margin: 2px; float: left;">
-            <span ng-click="remove(st)">{{st}} <span style="color: red;">x</span></span>
+            <span style="cursor: pointer;" ng-click="remove(st)">{{st}} <span style="color: red;">x</span></span>
         </span>
     </div>
     <div style="width:280px;">
@@ -13,10 +13,10 @@
                 <option>Type a new strain</option>
             </optgroup>
             <optgroup label="-----------------------------">
-                <option>Unknown strain used</option>
+                <option value="-1">Unknown strain used</option>
             </optgroup>
             <optgroup label="-----------------------------">
-                <option ng-repeat="st in strains(taxonId) track by st.strain_id">{{st.strain_name}}</option>
+                <option ng-value="{{ st.strain_id }}" ng-repeat="st in strains(taxonId) track by st.strain_id">{{st.strain_name}}</option>
             </optgroup>
         </select>
         <div ng-hide="hideTypeStrain()">
