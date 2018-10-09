@@ -1,10 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# require 'yaml'
-
-# settings = YAML.load_file './config.yaml'
-
 setup_docker_folders = <<-SCRIPT
   cd /home/vagrant
   if [ ! -d canto-docker ]
