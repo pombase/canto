@@ -6788,11 +6788,10 @@ var strainPickerDialogCtrl =
     $scope.taxonId = $scope.$resolve.args.taxonId;
     $scope.strainData = {};
 
-    Strains.init($scope.taxonId);
-    $scope.strains = Strains.get;
+    $scope.strains = Strains.getSessionStrains;
 
     $scope.isValid = function() {
-      return (typeof $scope.strainData.strain !== 'undefined');
+      return ($scope.strainData.strain !== 'choose a strain ...');
     };
 
     $scope.ok = function () {
