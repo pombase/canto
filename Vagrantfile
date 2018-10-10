@@ -7,9 +7,11 @@ setup_docker_folders = <<-SCRIPT
   then
     mkdir canto-docker
   fi
+  chown vagrant:vagrant canto-docker
   cd canto-docker
   mkdir data
   mkdir import_export
+  chown vagrant:vagrant data import_export
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -35,7 +37,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "setup_docker_folders",
     type: "shell",
-    inline: setup_docker_folders,
-    privileged: false
+    inline: setup_docker_folders
 
 end
