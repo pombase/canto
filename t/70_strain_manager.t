@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Try::Tiny;
-use Test::More tests => 20;
+use Test::More tests => 23;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -87,7 +87,7 @@ cmp_deeply($strain_res,
              },
            ]);
 
-$deleted_strain = $strain_manager->delete_strain_by_name('curs strain');
+$deleted_strain = $strain_manager->delete_strain_by_name(4896, 'curs strain');
 
 $strain_res = $service_utils->list_for_service('strain');
 is(@$strain_res, 0);
@@ -156,3 +156,19 @@ cmp_deeply($strain_res,
              },
            ]);
 
+
+$deleted_strain = $strain_manager->delete_strain_by_name(4896, 'other strain name 1');
+
+is ($deleted_strain->strain_name(), 'other strain name 1');
+
+$strain_res = $service_utils->list_for_service('strain');
+is(@$strain_res, 1);
+
+cmp_deeply($strain_res,
+           [
+             {
+               'strain_id' => 1001,
+               'taxon_id' => 4896,
+               'strain_name' => 'track strain name 1',
+             },
+           ]);

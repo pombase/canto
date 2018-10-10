@@ -181,7 +181,7 @@ sub delete_strain_by_id
 
 =head2 delete_strain_by_name
 
- Usage   : $strain_manager->delete_strain_by_name($strain_name);
+ Usage   : $strain_manager->delete_strain_by_name($taxon_id, $strain_name);
  Function: Delete a strain using its strain ID from the TrackDB
  Returns : The deleted strain but dies if the strain is referenced by any
            genotypes
@@ -192,19 +192,28 @@ sub delete_strain_by_name
 {
   my $self = shift;
 
+  my $taxon_id = shift;
   my $strain_name = shift;
+
+  die "no strain_name passed to delete_strain_by_name()\n"
+    unless defined $strain_name;
 
   my $strain_rs = $self->curs_schema()->resultset('Strain');
 
-  my $strain = $strain_rs->find({ strain_name => $strain_name });
+  my $strain = $strain_rs->find({
+    strain_name => $strain_name,
+    'organism.taxonid' => $taxon_id,
+  }, {
+    join => 'organism',
+  });
 
   if (!$strain) {
     my $track_strain_details =
-      $self->strain_lookup()->lookup_by_strain_name($strain_name);
+      $self->strain_lookup()->lookup_by_strain_name($taxon_id, $strain_name);
 
     if ($track_strain_details) {
       $strain = $strain_rs->find({
-        strain_name => $track_strain_details->{strain_name},
+        track_strain_id => $track_strain_details->{strain_id},
       });
     }
   }
@@ -218,7 +227,7 @@ sub delete_strain_by_name
       return $strain;
     }
   } else {
-    die "can't find strain with name $strain_name\n"
+    die "can't find strain with name $strain_name for taxon ID $taxon_id\n"
   }
 }
 
