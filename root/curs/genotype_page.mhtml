@@ -98,7 +98,7 @@ Description
          ng-click="editGenotype(<% $genotype->genotype_id() %>)">Edit ...</a>
     </div>
     <div>
-      <a href="<% $start_path . '/genotype_manage#/duplicate/' . $genotype->genotype_id() %>">Duplicate ...</a>
+      <a href="<% $duplicate_url %>">Duplicate ...</a>
     </div>
 % }
   </div>
@@ -121,16 +121,20 @@ my $st = $c->stash();
 
 my $pathogen_host_mode = $st->{pathogen_host_mode};
 
-
 my $organism_lookup = Canto::Track::get_adaptor($c->config(), 'organism');
+
+my $org_details = $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
+
+use Data::Dumper;
+$Data::Dumper::Maxdepth = 3;
+warn Dumper([$org_details]);
+
 
 my @types_to_show = grep {
   my $annotation_type = $_;
 
   if ($annotation_type->{feature_type} eq 'genotype') {
     if ($pathogen_host_mode && $annotation_type->{feature_subtype}) {
-      my $org_details = $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
-
       $annotation_type->{feature_subtype} eq $org_details->{pathogen_or_host};
     } else {
       1;
@@ -142,6 +146,20 @@ my @types_to_show = grep {
 
 my $start_path = $c->stash()->{curs_root_uri};
 my $read_only_curs = $c->stash()->{read_only_curs};
+
+my $manage_path = 'genotype_manage';
+
+if ($org_details->{pathogen_or_host}) {
+  if ($org_details->{pathogen_or_host} eq 'host') {
+    $manage_path = "host_$manage_path";
+  } else {
+    if ($org_details->{pathogen_or_host} eq 'pathogen') {
+      $manage_path = "pathogen_$manage_path";
+    }
+  }
+}
+
+my $duplicate_url = $start_path . "/$manage_path#/duplicate/" . $genotype->genotype_id();
 
 my $_proxy_gene = sub {
   return Canto::Curs::GeneProxy->new(config => $c->config(),
