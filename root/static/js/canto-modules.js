@@ -3891,7 +3891,10 @@ var GenotypeGeneListCtrl =
 
             storePromise.then(function(result) {
               window.location.href =
-                CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+                CantoGlobals.curs_root_uri +
+                  '/' + getGenotypeManagePath($scope.genotypeType) +
+                  '#/select/' +
+                  result.data.genotype_id;
             });
           });
         };
@@ -3936,7 +3939,10 @@ var GenotypeGeneListCtrl =
 
           storePromise.then(function(result) {
             window.location.href =
-              CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+              CantoGlobals.curs_root_uri +
+                '/' + getGenotypeManagePath($scope.genotypeType) +
+                '#/select/' +
+                result.data.genotype_id;
           });
         };
 
