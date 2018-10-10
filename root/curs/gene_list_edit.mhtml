@@ -49,6 +49,7 @@ var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
 
 % }
 
+% if (!$pathogen_host_mode) {
 <div class="submit">
   <input type="submit" class="btn btn-primary" name="continue" value="Continue"/>
 </div>
@@ -60,6 +61,7 @@ var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
   <a href="<% $upload_path %>"><% $add_more_genes_message %></a>
 </div>
 </form>
+%}
 </div>
 </div>
 

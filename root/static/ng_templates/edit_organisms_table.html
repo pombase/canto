@@ -16,7 +16,12 @@
             <th>&nbsp;</th>
         </tr>
       </thead>
-      <tbody ng-repeat-start="o in getOrganisms() track by o.taxonid">
+      <tbody ng-show="organisms().length == 0">
+        <tr>
+          <td colspan = 11>No genes have been added.</td>
+        </tr>
+      </tbody>
+      <tbody ng-show="organisms().length > 0" ng-repeat-start="o in organisms() track by o.taxonid">
         <tr ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
           <td rowspan="{{ o.genes.length }}">
             <table>
@@ -41,15 +46,25 @@
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).name }}</td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).synonyms.join(', ') }}</td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).product }}</td>
-          <td ng-if="o.genes.length > 0" style="vertical-align: middle;"><button>X</button></td>
+          <td ng-if="o.genes.length > 0" style="vertical-align: top;"><button
+            ng-disabled="firstGene(o.genes).disabled"
+            ng-class="{'btn-danger': (!firstGene(o.genes).disabled)}"
+            title="{{ firstGene(o.genes).title }}"
+            ng-click="removeGene(firstGene(o.genes).gene_id)">X</button></td>
           <td ng-if="o.genes.length == 0" colspan="5" rowspan="2">No genes for this organism</td>
         </tr>
-        <tr ng-if="o.genes.length > 0" ng-repeat="g in otherGenes(o.genes) track by g.systematic_identifier"  ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
+        <tr ng-if="o.genes.length > 0"
+          ng-repeat="g in otherGenes(o.genes) track by g.systematic_identifier"
+          ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
           <td>{{ g.systematic_identifier }}</td>
           <td>{{ g.name }}</td>
           <td>{{ g.synonyms.join(', ') }}</td>
           <td>{{ g.product }}</td>
-          <td style="vertical-align: middle;"><button>X</button></td>
+          <td style="vertical-align: middle;"><button
+            ng-disabled="g.disabled"
+            ng-class="{'btn-danger': (!g.disabled)}"
+            title="{{ g.title }}"
+            ng-click="removeGene(g.gene_id)">X</button></td>
         </tr>
       </tbody>
       <tbody ng-repeat-end></tbody>

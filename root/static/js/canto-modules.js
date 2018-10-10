@@ -6940,6 +6940,70 @@ var summaryPageGeneRow = function() {
 canto.directive('summaryPageGeneRow', [summaryPageGeneRow]);
 
 
+canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
+
+  var vm = this;
+
+  vm.pathogenOrganisms = null;
+  vm.hostOrganisms = null;
+
+  vm.getPathogenOrganisms = function () {
+    if (!vm.pathogenOrganisms) {
+      var organisms = CantoGlobals.geneListData.pathogen.sort((a,b) => a.scientific_name > b.scientific_name);
+      vm.setPathogenOrganisms(organisms);
+    }
+
+    return vm.pathogenOrganisms;
+  };
+
+  vm.getHostOrganisms = function () {
+    if (!vm.hostOrganisms) {
+      var organisms = [...CantoGlobals.geneListData.host, ...CantoGlobals.hostsWithNoGenes].sort((a,b) => a.scientific_name > b.scientific_name);
+      vm.setHostOrganisms(organisms);
+    }
+
+    return vm.hostOrganisms;
+  };
+
+  vm.setPathogenOrganisms = function (organisms) {
+    vm.pathogenOrganisms = organisms;
+  }
+
+  vm.setHostOrganisms = function (organisms) {
+    vm.hostOrganisms = organisms;
+  }
+
+  vm.removeGene = function (gene_id) {
+    var url = curs_root_uri + '/edit_genes?gene-select=' + gene_id + '&submit=Remove selected';
+
+
+    $http.get(url).then(function(response){
+
+      toaster.pop('success', 'The gene was deleted');
+
+      var organisms;
+      organisms = vm.unsetOrganismGene(vm.pathogenOrganisms, gene_id);
+      vm.setPathogenOrganisms(organisms);
+
+      organisms = vm.unsetOrganismGene(vm.hostOrganisms, gene_id);
+      vm.setHostOrganisms(organisms);
+
+    }, function(){
+      toaster.pop('error', 'There was a problem deleting the gene');
+    });
+  }
+
+  vm.unsetOrganismGene = function (organisms, gene_id) {
+    organisms = organisms.map(o => {
+      o.genes = o.genes.filter(g => g.gene_id !== gene_id);
+      return o;
+    });
+    organisms = organisms.filter(o => o.genes.length > 0);
+    return organisms;
+  }
+});
+
+
 var editOrganismsGenesTable = function() {
   return {
       scope: {
@@ -6965,10 +7029,10 @@ var editOrganismsTable = function() {
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/edit_organisms_table.html',
-      controller: function($scope) {
+      controller: function($scope, EditOrganismsSvc) {
         $scope.firstGene = function(genes) {
           if (genes.length > 0) {
-            return genes[0];
+            return $scope.geneAttributes(genes[0]);
           }
 
           return {
@@ -6980,44 +7044,50 @@ var editOrganismsTable = function() {
         }
 
         $scope.otherGenes = function(genes) {
-          return genes.filter((gene, index) => index > 0);
+          return genes.filter((gene, index) => index > 0).map(gene => {
+            return $scope.geneAttributes(gene);
+          });
         }
 
-        $scope.getOrganisms = function() {
-          return $scope.organisms().map((o, id) => {
-            o.row = id;
-            return o;
-          });
+        $scope.removeGene = function(gene_id) {
+          EditOrganismsSvc.removeGene(gene_id);
+        }
+
+        $scope.geneAttributes = function(gene) {
+          gene.disabled = false;
+          gene.title = "Delete this gene";
+
+          if (gene.annotation_count > 0) {
+            gene.disabled = true;
+            gene.title = "This gene can't be deleted because it has annotations";
+          } else if (gene.genotype_count > 0) {
+            gene.disabled = true;
+            gene.title = "This gene can't be deleted because there are genotypes involving this gene";
+          }
+
+          return gene;
         }
       }
   }
 };
 
-canto.directive('editOrganismsTable', [editOrganismsTable]);
+canto.directive('editOrganismsTable', ['EditOrganismsSvc', editOrganismsTable]);
 
 
-var editOrganisms = function(CantoGlobals) {
+var editOrganisms = function() {
   return {
       scope: { },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/edit_organisms.html',
-      controller: function($scope) {
-          // console.log(CantoGlobals.confirmGenes);
-          // console.log(CantoGlobals.highlightTerms);
-          // console.log(CantoGlobals.geneListData);
-          // console.log(CantoGlobals.hostsWithNoGenes);
-        $scope.getPathogens = function () {
-          return CantoGlobals.geneListData.pathogen;
-        };
-        $scope.getHosts = function () {
-          return CantoGlobals.geneListData.host;
-        };
-        $scope.getHostsNoGenes = function () {
-          return CantoGlobals.hostsWithNoGenes;
-        };
+      controller: function($scope, EditOrganismsSvc) {
+        $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
+        $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
+
+        $scope.continueUrl = curs_root_uri;
+        $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
       }
   }
 };
 
-canto.directive('editOrganisms', ['CantoGlobals', editOrganisms]);
+canto.directive('editOrganisms', ['EditOrganismsSvc', editOrganisms]);
