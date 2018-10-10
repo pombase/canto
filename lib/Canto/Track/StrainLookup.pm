@@ -159,8 +159,6 @@ sub lookup_by_strain_name
            { join => { organism => {organismprops => 'type'} } });
 
   if ($strain) {
-    my $taxon_id = _get_taxon_id($strain->organism());
-
     return {
       strain_id => $strain->strain_id(),
       strain_name => $strain->strain_name(),

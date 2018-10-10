@@ -1635,6 +1635,47 @@ sub add_strain_by_id
 }
 
 
+=head2 add_strain_by_name
+
+ Usage   : $service_utils->add_strain_by_name($taxon_id, $strain_name);
+ Function: Add the strain with the given taxon ID and name to the session
+
+=cut
+
+sub add_strain_by_name
+{
+  my $self = shift;
+  my $taxon_id = shift;
+  my $strain_name = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $strain_manager = $self->strain_manager();
+
+  try {
+    $curs_schema->txn_begin();
+
+    my $strain = $strain_manager->add_strain_by_name($taxon_id, $strain_name);
+
+    if ($strain) {
+      $curs_schema->txn_commit();
+      return {
+        status => 'success',
+      };
+    } else {
+      return {
+        status => 'error',
+        message => "failed to create strain",
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
+
 =head2 delete_organism_by_taxonid
 
  Usage   : $service_utils->delete_organism_by_taxonid($taxonid);
@@ -1685,7 +1726,7 @@ sub delete_organism_by_taxonid
  Usage   : $service_utils->delete_strain_by_id($track_strain_id);
  Function: Remove the given strain from the session.  Returns an error if
            there are genotypes that reference the strain
- Args    : $taxonid
+ Args    : $track_strain_id - the ID in the TrackDB
  Return  : a hash, with keys:
               status - "success" or "error"
               message - on error, the error message
@@ -1715,6 +1756,53 @@ sub delete_strain_by_id
       return {
         status => 'error',
         message => "strain with ID $track_strain_id not found",
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
+
+=head2 delete_strain_by_name
+
+ Usage   : $service_utils->delete_strain_by_name($taxon_id, $strain_name);
+ Function: Remove the given strain from the session.  Returns an error if
+           there are genotypes that reference the strain
+ Args    : $taxon_id
+           $strain_name
+ Return  : a hash, with keys:
+              status - "success" or "error"
+              message - on error, the error message
+
+=cut
+
+sub delete_strain_by_name
+{
+  my $self = shift;
+  my $taxon_id = shift;
+  my $strain_name = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $strain_manager = $self->strain_manager();
+
+  try {
+    $curs_schema->txn_begin();
+
+    my $strain = $strain_manager->delete_strain_by_name($taxon_id, $strain_name);
+
+    if ($strain) {
+      $curs_schema->txn_commit();
+      return {
+        status => 'success',
+      };
+    } else {
+      return {
+        status => 'error',
+        message => "failed to delete strain",
       };
     }
   } catch {
