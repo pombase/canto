@@ -6694,88 +6694,44 @@ canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'Meta
 canto.service('Strains', function (CantoService, Curs, $q) {
 
     var vm = this;
-    vm.strains = {};
-    vm.existing = null;
 
-    vm.pickerData = {};
+    vm.sessionStrains = null;
 
-    vm.init = function (taxonId) {
-        if (typeof vm.pickerData[taxonId] === 'undefined') {
-            vm.pickerData[taxonId] = {
-                availableStrains: [],
-                selectedStrains: [],
-                addedStrains: []
-            };
+    vm.getSessionStrains = function (taxonId) {
 
-            vm.load(taxonId);
-        }
+      if (!vm.sessionStrains) {
+        vm.sessionStrains = [];
+        vm.loadSessionStrains();
+      }
+
+      return vm.sessionStrains.filter(s => s.taxon_id == taxonId);
     }
 
-    vm.load = function (taxonId) {
-      CantoService.lookup('strains', [taxonId])
-        .then(function(response) {
-          vm.pickerData[taxonId].availableStrains = response.data;
-      }).then(function(){
-        vm.getExisting().then(function(existing){
-          var available = vm.pickerData[taxonId].availableStrains.map(s => s.strain_name);
-          existing.forEach(s => {
-            if (available.indexOf(s.strain_name) !== -1) {
-              vm.pickerData[taxonId].selectedStrains.push(s.strain_name);
-            }
-          });
-        });
+    vm.setSessionStrains = function (strains) {
+      vm.sessionStrains = strains;
+    }
+
+    vm.loadSessionStrains = function () {
+      Curs.list('strain').then(function(res) {
+        vm.setSessionStrains(res.data);
       });
     }
 
-    vm.getExisting = function () {
-      var deferred = $q.defer();
-      if(vm.existing) {
-        deferred.resolve(vm.existing);
-      }
-      else {
-        Curs.list('strain').then(function(res) {
-          vm.existing = res.data;
-          deferred.resolve(vm.existing);
-        });
-      }
-      return deferred.promise;
-    }
-
-    vm.get = function (taxonId) {
-        return vm.pickerData[taxonId].availableStrains.sort();
-    };
-
-    vm.getSelected = function (taxonId) {
-        return vm.pickerData[taxonId].selectedStrains.sort();
-    };
-
-    vm.addStrain = function (taxonId, strain_id) {
-      var strains = vm.pickerData[taxonId].availableStrains.filter(availableStrain => availableStrain.strain_id == strain_id);
-      var strain = strains[0];
-      if (vm.getSelected(taxonId).indexOf(strain.strain_name) === -1) {
-        Curs.add('strain_by_id', [strain.strain_id]).then(function(){
-          vm.pickerData[taxonId].selectedStrains.push(strain.strain_name);
+    vm.addSessionStrain = function (taxonId, strain) {
+      if (vm.getSessionStrains(taxonId).filter(s => s.strain_name == strain).length === 0) {
+        Curs.add('strain_by_name', [taxonId, strain]).then(function(){
+          vm.sessionStrains.push({
+            taxon_id: taxonId,
+            strain_name: strain
+          });
         });
       }
     };
 
-    vm.addTypedStrain = function (taxonId, strain) {
-        if (vm.pickerData[taxonId].addedStrains.indexOf(strain) === -1) {
-            vm.pickerData[taxonId].addedStrains.push(strain);
-            vm.addStrain(taxonId, strain);
-        }
-    };
-
-    vm.removeStrain = function (taxonId, strainName) {
-      var strains = vm.pickerData[taxonId].availableStrains.filter(s => s.strain_name == strainName);
-      var strain = strains[0];
-      var pos = vm.getSelected(taxonId).indexOf(strain.strain_name);
-
-      if (pos > -1) {
-        Curs.delete('strain_by_id', [strain.strain_id]).then(function(){
-          vm.pickerData[taxonId].selectedStrains.splice(pos, 1);
-        });
-      }
+    vm.removeSessionStrain = function (taxonId, strain) {
+      Curs.delete('strain_by_name', taxonId + '/' + strain).then(function(){
+        vm.sessionStrains = vm.sessionStrains.filter(s => s.taxon_id !== taxonId && s.strain_name !== strain);
+      });
     };
 });
 
@@ -6788,8 +6744,7 @@ var strainPicker = function() {
         restrict: 'E',
         replace: true,
         templateUrl: app_static_path + 'ng_templates/strainPicker.html',
-        controller: function($scope, Strains) {
-            Strains.init($scope.taxonId);
+        controller: function($scope, Strains, CantoService) {
             $scope.typeStrain = null;
 
             $scope.data = {
@@ -6797,17 +6752,20 @@ var strainPicker = function() {
                 strainSelector: 'Add strains for this organism'
             }
 
-            $scope.strains = Strains.get;
-            $scope.data.selectedStrains = Strains.getSelected($scope.taxonId);
+            CantoService.lookup('strains', [$scope.taxonId]).then(function(strains) {
+              $scope.data.strains = strains.data;
+            });
+
+            $scope.sessionStrains = Strains.getSessionStrains;
 
             $scope.changed = function () {
-                if ($scope.data.strainSelector !== 'Type a new strain') {
-                    Strains.addStrain($scope.taxonId, $scope.data.strainSelector);
-                }
+              if ($scope.data.strainSelector !== 'Type a new strain') {
+                Strains.addSessionStrain($scope.taxonId, $scope.data.strainSelector);
+              }
             }
 
             $scope.remove = function (strain) {
-                Strains.removeStrain($scope.taxonId, strain);
+                Strains.removeSessionStrain($scope.taxonId, strain);
             }
 
             $scope.hideTypeStrain = function () {
@@ -6815,17 +6773,13 @@ var strainPicker = function() {
             }
 
             $scope.addStrain = function () {
-                Strains.addTypedStrain($scope.taxonId, $scope.typeStrain);
-            }
-
-            $scope.doIt = function () {
-                Strains.load($scope.taxonId);
+                Strains.addSessionStrain($scope.taxonId, $scope.typeStrain);
             }
         },
     };
 };
 
-canto.directive('strainPicker', ['Strains', strainPicker]);
+canto.directive('strainPicker', ['Strains', 'CantoService', strainPicker]);
 
 
 var strainPickerDialogCtrl =
