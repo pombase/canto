@@ -146,12 +146,17 @@ sub lookup_by_strain_ids
 sub lookup_by_strain_name
 {
   my $self = shift;
+
+  my $taxon_id = shift;
   my $strain_name = shift;
 
   my $schema = $self->schema();
 
-  my $strain = $schema->resultset('Strain')->find({ strain_name => $strain_name },
-                                                  { prefetch => 'organism' });
+  my $strain = $schema->resultset('Strain')
+    ->find({ strain_name => $strain_name, 'type.name' => 'taxon_id',
+             'organismprops.value' => $taxon_id,
+           },
+           { join => { organism => {organismprops => 'type'} } });
 
   if ($strain) {
     my $taxon_id = _get_taxon_id($strain->organism());

@@ -99,6 +99,52 @@ sub add_strain_by_id
   }
 }
 
+=head2 add_strain_by_name
+
+ Usage   : $strain_manager->add_strain_by_name($taxon_id, $strain_name);
+ Function: Adds the given strain to the current session
+ Returns : Nothing
+
+=cut
+
+sub add_strain_by_name
+{
+  my $self = shift;
+
+  my $taxon_id = shift;
+  my $strain_name = shift;
+
+  my $curs_schema = $self->curs_schema();
+  my $strain_rs = $curs_schema->resultset('Strain');
+
+  my $organism = $self->organism_manager()->add_organism_by_taxonid($taxon_id);
+
+  my $strain = $strain_rs->find({
+    strain_name => $strain_name,
+    organism_id => $organism->organism_id(),
+  });
+
+  if ($strain) {
+    return $strain;
+  }
+
+  my $track_strain_details =
+    $self->strain_lookup()->lookup_by_strain_name($taxon_id, $strain_name);
+
+  if ($track_strain_details) {
+    return $strain_rs ->find_or_create({
+      organism_id => $organism->organism_id(),
+      track_strain_id => $track_strain_details->{strain_id},
+    });
+  }
+
+  return $curs_schema->create_with_type('Strain',
+                                        {
+                                          organism_id => $organism->organism_id(),
+                                          strain_name => $strain_name,
+                                        });
+}
+
 
 =head2 delete_strain_by_id
 

@@ -39,7 +39,7 @@ cmp_deeply(\@strain_by_id_result, [{ strain_id => 1, strain_name => 'strain 1', 
 my @unknown_by_id_result = $strain_lookup->lookup_by_strain_ids(876543);
 ok(@unknown_by_id_result == 0);
 
-my $strain_by_name_result = $strain_lookup->lookup_by_strain_name('strain 2');
+my $strain_by_name_result = $strain_lookup->lookup_by_strain_name(4932, 'strain 2');
 cmp_deeply($strain_by_name_result, { strain_id => 2, strain_name => 'strain 2', taxon_id => 4932 });
 
 my $unknown_by_name = $strain_lookup->lookup_by_strain_name("UNKNOWN_STRAIN_NAME_");

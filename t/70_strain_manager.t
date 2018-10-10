@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Try::Tiny;
-use Test::More tests => 11;
+use Test::More tests => 20;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -107,3 +107,52 @@ cmp_deeply($strain_res,
                'strain_name' => 'track strain name 1',
              },
            ]);
+
+
+$strain_manager->delete_strain_by_id(1001);
+
+$strain_res = $service_utils->list_for_service('strain');
+is(@$strain_res, 0);
+cmp_deeply($strain_res, []);
+
+
+$added_strain = $strain_manager->add_strain_by_name(4896, 'track strain name 1');
+
+is ($added_strain->track_strain_id(), 1001);
+
+
+$strain_res = $service_utils->list_for_service('strain');
+is(@$strain_res, 1);
+cmp_deeply($strain_res,
+           [
+             {
+               'strain_id' => 1001,
+               'taxon_id' => 4896,
+               'strain_name' => 'track strain name 1',
+             },
+           ]);
+
+
+
+$added_strain = $strain_manager->add_strain_by_name(4896, 'other strain name 1');
+
+is ($added_strain->track_strain_id(), undef);
+is ($added_strain->strain_name(), 'other strain name 1');
+
+
+$strain_res = $service_utils->list_for_service('strain');
+is(@$strain_res, 2);
+
+cmp_deeply($strain_res,
+           [
+             {
+               'taxon_id' => 4896,
+               'strain_name' => 'other strain name 1',
+             },
+             {
+               'strain_id' => 1001,
+               'taxon_id' => 4896,
+               'strain_name' => 'track strain name 1',
+             },
+           ]);
+
