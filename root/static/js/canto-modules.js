@@ -6958,7 +6958,10 @@ canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
 
   vm.getHostOrganisms = function () {
     if (!vm.hostOrganisms) {
-      var organisms = [...CantoGlobals.geneListData.host, ...CantoGlobals.hostsWithNoGenes].sort((a,b) => a.scientific_name > b.scientific_name);
+      var organisms = [...CantoGlobals.geneListData.host, ...CantoGlobals.hostsWithNoGenes.map(o => {
+        o.genes = [];
+        return o;
+      })].sort((a,b) => a.scientific_name > b.scientific_name);
       vm.setHostOrganisms(organisms);
     }
 
