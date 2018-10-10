@@ -154,6 +154,18 @@ function isMultiAlleleGenotype(genotype) {
   return !isSingleAlleleGenotype(genotype);
 }
 
+function getGenotypeManagePath(organismMode) {
+  var paths = {
+    'normal': 'genotype_manage',
+    'pathogen': 'pathogen_genotype_manage',
+    'host': 'host_genotype_manage'
+  };
+  if (organismMode in paths) {
+    return paths[organismMode];
+  }
+  return paths.normal;
+}
+
 canto.filter('breakExtensions', function() {
   return function(text) {
     if (text) {
