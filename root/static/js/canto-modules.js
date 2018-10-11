@@ -4368,6 +4368,10 @@ var genotypeListRowLinksCtrl =
           })[0];
         var genotypePathogenOrHost = genotype.organism.pathogen_or_host;
 
+        $scope.genotypeManagePath = getGenotypeManagePath(
+          genotypePathogenOrHost
+        );
+
         $scope.canDelete = true;
         $scope.deleteTitle = '';
 
