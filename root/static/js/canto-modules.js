@@ -4408,7 +4408,9 @@ var genotypeListRowLinksCtrl =
 
         $scope.editGenotype = function(genotypeId) {
           window.location.href =
-            CantoGlobals.curs_root_uri + '/genotype_manage#/edit/' + genotypeId;
+            CantoGlobals.curs_root_uri +
+              '/' + getGenotypeManagePath(genotypePathogenOrHost) +
+              '#/edit/' + genotypeId;
         };
 
         $scope.editAllele = function(genotypeId) {
@@ -4434,7 +4436,9 @@ var genotypeListRowLinksCtrl =
 
               storePromise.then(function(result) {
                 window.location.href =
-                  CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+                  CantoGlobals.curs_root_uri +
+                    '/' + getGenotypeManagePath(genotypePathogenOrHost) +
+                    '#/select/' + result.data.genotype_id;
               });
             });
           });
