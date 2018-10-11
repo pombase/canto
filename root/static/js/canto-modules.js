@@ -4571,6 +4571,22 @@ var genotypeListViewCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function($scope) {
+
+        function getOrganismType(genotypes) {
+          if (CantoGlobals.pathogen_host_mode === "1") {
+            var genotype = genotypes[0];
+            if ('organism' in genotype) {
+              var organism = genotype.organism;
+              if ('pathogen_or_host' in organism) {
+                return organism.pathogen_or_host;
+              }
+            }
+          }
+          return 'normal';
+        }
+
+        $scope.organismType = getOrganismType($scope.genotypeList);
+
         $scope.checkBoxChecked = {};
 
         $scope.columnsToHide = { background: true,
@@ -4625,7 +4641,9 @@ var genotypeListViewCtrl =
 
           storePromise.then(function(result) {
             window.location.href =
-              CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+              CantoGlobals.curs_root_uri +
+                '/' + getGenotypeManagePath($scope.organismType) +
+                '#/select/' + result.data.genotype_id;
             $scope.checkBoxChecked = {};
           });
         };
