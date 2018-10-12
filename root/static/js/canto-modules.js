@@ -154,6 +154,18 @@ function isMultiAlleleGenotype(genotype) {
   return !isSingleAlleleGenotype(genotype);
 }
 
+function getGenotypeManagePath(organismMode) {
+  var paths = {
+    'normal': 'genotype_manage',
+    'pathogen': 'pathogen_genotype_manage',
+    'host': 'host_genotype_manage'
+  };
+  if (organismMode in paths) {
+    return paths[organismMode];
+  }
+  return paths.normal;
+}
+
 canto.filter('breakExtensions', function() {
   return function(text) {
     if (text) {
@@ -3879,7 +3891,10 @@ var GenotypeGeneListCtrl =
 
             storePromise.then(function(result) {
               window.location.href =
-                CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+                CantoGlobals.curs_root_uri +
+                  '/' + getGenotypeManagePath($scope.genotypeType) +
+                  '#/select/' +
+                  result.data.genotype_id;
             });
           });
         };
@@ -3924,7 +3939,10 @@ var GenotypeGeneListCtrl =
 
           storePromise.then(function(result) {
             window.location.href =
-              CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+              CantoGlobals.curs_root_uri +
+                '/' + getGenotypeManagePath($scope.genotypeType) +
+                '#/select/' +
+                result.data.genotype_id;
           });
         };
 
@@ -4350,6 +4368,10 @@ var genotypeListRowLinksCtrl =
           })[0];
         var genotypePathogenOrHost = genotype.organism.pathogen_or_host;
 
+        $scope.genotypeManagePath = getGenotypeManagePath(
+          genotypePathogenOrHost
+        );
+
         $scope.canDelete = true;
         $scope.deleteTitle = '';
 
@@ -4390,7 +4412,9 @@ var genotypeListRowLinksCtrl =
 
         $scope.editGenotype = function(genotypeId) {
           window.location.href =
-            CantoGlobals.curs_root_uri + '/genotype_manage#/edit/' + genotypeId;
+            CantoGlobals.curs_root_uri +
+              '/' + getGenotypeManagePath(genotypePathogenOrHost) +
+              '#/edit/' + genotypeId;
         };
 
         $scope.editAllele = function(genotypeId) {
@@ -4416,7 +4440,9 @@ var genotypeListRowLinksCtrl =
 
               storePromise.then(function(result) {
                 window.location.href =
-                  CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+                  CantoGlobals.curs_root_uri +
+                    '/' + getGenotypeManagePath(genotypePathogenOrHost) +
+                    '#/select/' + result.data.genotype_id;
               });
             });
           });
@@ -4453,18 +4479,11 @@ var genotypeListRowLinksCtrl =
         };
       },
       link: function($scope) {
-        if ($scope.navigateOnClick) {
-          $scope.detailsUrl =
-            CantoGlobals.curs_root_uri + '/genotype_manage' +
-            (CantoGlobals.read_only_curs ? '/ro' : '') + '#/select/' +
-            $scope.genotype.id_or_identifier;
-        } else {
-          $scope.detailsUrl = '#';
-          $scope.viewAnnotationUri =
-            CantoGlobals.curs_root_uri + '/feature/genotype/view/' + $scope.genotypeId;
-          if (CantoGlobals.read_only_curs) {
-            $scope.viewAnnotationUri += '/ro';
-          }
+        $scope.detailsUrl = '#';
+        $scope.viewAnnotationUri =
+          CantoGlobals.curs_root_uri + '/feature/genotype/view/' + $scope.genotypeId;
+        if (CantoGlobals.read_only_curs) {
+          $scope.viewAnnotationUri += '/ro';
         }
       },
     };
@@ -4549,6 +4568,22 @@ var genotypeListViewCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function($scope) {
+
+        function getOrganismType(genotypes) {
+          if (CantoGlobals.pathogen_host_mode === "1") {
+            var genotype = genotypes[0];
+            if ('organism' in genotype) {
+              var organism = genotype.organism;
+              if ('pathogen_or_host' in organism) {
+                return organism.pathogen_or_host;
+              }
+            }
+          }
+          return 'normal';
+        }
+
+        $scope.organismType = getOrganismType($scope.genotypeList);
+
         $scope.checkBoxChecked = {};
 
         $scope.columnsToHide = { background: true,
@@ -4603,7 +4638,9 @@ var genotypeListViewCtrl =
 
           storePromise.then(function(result) {
             window.location.href =
-              CantoGlobals.curs_root_uri + '/genotype_manage#/select/' + result.data.genotype_id;
+              CantoGlobals.curs_root_uri +
+                '/' + getGenotypeManagePath($scope.organismType) +
+                '#/select/' + result.data.genotype_id;
             $scope.checkBoxChecked = {};
           });
         };
