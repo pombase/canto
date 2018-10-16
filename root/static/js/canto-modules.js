@@ -2684,9 +2684,16 @@ var ontologyWorkflowCtrl =
         $scope.annotationType = annotationType;
 
         if (annotationType.feature_type == 'genotype') {
-          $scope.backToFeatureUrl =
-            CantoGlobals.curs_root_uri + '/genotype_manage' +
-            '#/select/' + $attrs.featureId;
+          CursGenotypeList.getGenotypeById(Number($attrs.featureId))
+            .then(function (genotype) {
+              var organismMode = genotype !== null
+                ? genotype.organism.pathogen_or_host
+                : 'normal';
+              $scope.backToFeatureUrl =
+                CantoGlobals.curs_root_uri +
+                '/' + getGenotypeManagePath(organismMode) +
+                '#/select/' + $attrs.featureId;
+            });
         } else {
           $scope.backToFeatureUrl =
             CantoGlobals.curs_root_uri + '/feature/' + annotationType.feature_type +
