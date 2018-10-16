@@ -3008,7 +3008,7 @@ canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameCo
 
 
 var alleleEditDialogCtrl =
-  function($scope, $uibModalInstance, toaster, CantoConfig, args, Strains) {
+  function($scope, $uibModalInstance, toaster, CantoConfig, args, Strains, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
@@ -3019,6 +3019,7 @@ var alleleEditDialogCtrl =
     $scope.alleleData.evidence = $scope.alleleData.evidence || '';
     $scope.alleleData.strains = Strains.getSessionStrains;
     $scope.alleleData.selectedStrain = null;
+    $scope.alleleData.showStrainPicker = CantoGlobals.multi_organism_mode;
 
     $scope.env = {
     };
@@ -3120,7 +3121,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'Strains',
+                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'Strains', 'CantoGlobals',
                  alleleEditDialogCtrl]);
 
 var termSuggestDialogCtrl =
