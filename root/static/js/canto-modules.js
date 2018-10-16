@@ -2679,6 +2679,13 @@ var ontologyWorkflowCtrl =
       });
     };
 
+    function getOrganismMode(genotype, pathogenHostMode) {
+      if (genotype !== null && pathogenHostMode) {
+        return genotype.organism.pathogen_or_host;
+      }
+      return 'normal';
+    }
+
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
       .then(function(annotationType) {
         $scope.annotationType = annotationType;
@@ -2686,9 +2693,10 @@ var ontologyWorkflowCtrl =
         if (annotationType.feature_type == 'genotype') {
           CursGenotypeList.getGenotypeById(Number($attrs.featureId))
             .then(function (genotype) {
-              var organismMode = genotype !== null
-                ? genotype.organism.pathogen_or_host
-                : 'normal';
+              var organismMode = getOrganismMode(
+                genotype,
+                CantoGlobals.pathogen_host_mode
+              );
               $scope.backToFeatureUrl =
                 CantoGlobals.curs_root_uri +
                 '/' + getGenotypeManagePath(organismMode) +
