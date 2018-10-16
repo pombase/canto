@@ -3008,7 +3008,7 @@ canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameCo
 
 
 var alleleEditDialogCtrl =
-  function($scope, $uibModalInstance, toaster, CantoConfig, args) {
+  function($scope, $uibModalInstance, toaster, CantoConfig, args, Strains) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
@@ -3017,6 +3017,8 @@ var alleleEditDialogCtrl =
     $scope.alleleData.type = $scope.alleleData.type || '';
     $scope.alleleData.expression = $scope.alleleData.expression || '';
     $scope.alleleData.evidence = $scope.alleleData.evidence || '';
+    $scope.alleleData.strains = Strains.getSessionStrains;
+    $scope.alleleData.selectedStrain = null;
 
     $scope.env = {
     };
@@ -3118,7 +3120,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args',
+                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'Strains',
                  alleleEditDialogCtrl]);
 
 var termSuggestDialogCtrl =
@@ -3528,6 +3530,8 @@ var genotypeEdit =
               delete allele.gene;
             }
 
+            allele.taxon_id = $scope.genes.filter(g => g.gene_id == allele.gene_id)[0].organism.taxonid;
+
             var editInstance =
                 makeAlleleEditInstance($uibModal, allele);
 
@@ -3883,6 +3887,7 @@ var GenotypeGeneListCtrl =
                                                       gene_display_name: gene_display_name,
                                                       gene_systematic_id: gene_systematic_id,
                                                       gene_id: gene_id,
+                                                      taxon_id: $scope.getSelectedOrganism().taxonid,
                                                     });
 
           editInstance.result.then(function (alleleData) {
@@ -4429,6 +4434,7 @@ var genotypeListRowLinksCtrl =
               allele.gene_id = allele.gene.gene_id;
               delete allele.gene;
             }
+            allele.taxon_id = genotype.organism.taxonid;
 
             var editInstance =
               makeAlleleEditInstance($uibModal, allele);
