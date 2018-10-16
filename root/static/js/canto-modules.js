@@ -2484,7 +2484,7 @@ canto.directive('extensionOrGroupDisplay',
 
 var ontologyWorkflowCtrl =
   function($scope, toaster, $http, CantoGlobals, AnnotationTypeConfig, CantoService,
-           CantoConfig, CursStateService, $attrs) {
+           CantoConfig, CursGenotypeList, CursStateService, $attrs) {
     $scope.states = ['searching', 'selectingEvidence', 'buildExtension', 'commenting'];
 
     CursStateService.setState($scope.states[0]);
@@ -2698,7 +2698,7 @@ var ontologyWorkflowCtrl =
 canto.controller('OntologyWorkflowCtrl',
                  ['$scope', 'toaster', '$http', 'CantoGlobals',
                   'AnnotationTypeConfig', 'CantoService',
-                  'CantoConfig', 'CursStateService', '$attrs',
+                  'CantoConfig', 'CursGenotypeList', 'CursStateService', '$attrs',
                   ontologyWorkflowCtrl]);
 
 
