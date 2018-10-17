@@ -156,6 +156,7 @@ function isMultiAlleleGenotype(genotype) {
 
 function getGenotypeManagePath(organismMode) {
   var paths = {
+    'unknown': 'genotype_manage',
     'normal': 'genotype_manage',
     'pathogen': 'pathogen_genotype_manage',
     'host': 'host_genotype_manage'
