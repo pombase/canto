@@ -2484,7 +2484,7 @@ canto.directive('extensionOrGroupDisplay',
 
 var ontologyWorkflowCtrl =
   function($scope, toaster, $http, CantoGlobals, AnnotationTypeConfig, CantoService,
-           CantoConfig, CursStateService, $attrs) {
+           CantoConfig, CursGenotypeList, CursStateService, $attrs) {
     $scope.states = ['searching', 'selectingEvidence', 'buildExtension', 'commenting'];
 
     CursStateService.setState($scope.states[0]);
@@ -2679,14 +2679,29 @@ var ontologyWorkflowCtrl =
       });
     };
 
+    function getOrganismMode(genotype, pathogenHostMode) {
+      if (genotype !== null && pathogenHostMode) {
+        return genotype.organism.pathogen_or_host;
+      }
+      return 'normal';
+    }
+
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
       .then(function(annotationType) {
         $scope.annotationType = annotationType;
 
         if (annotationType.feature_type == 'genotype') {
-          $scope.backToFeatureUrl =
-            CantoGlobals.curs_root_uri + '/genotype_manage' +
-            '#/select/' + $attrs.featureId;
+          CursGenotypeList.getGenotypeById(Number($attrs.featureId))
+            .then(function (genotype) {
+              var organismMode = getOrganismMode(
+                genotype,
+                CantoGlobals.pathogen_host_mode
+              );
+              $scope.backToFeatureUrl =
+                CantoGlobals.curs_root_uri +
+                '/' + getGenotypeManagePath(organismMode) +
+                '#/select/' + $attrs.featureId;
+            });
         } else {
           $scope.backToFeatureUrl =
             CantoGlobals.curs_root_uri + '/feature/' + annotationType.feature_type +
@@ -2698,7 +2713,7 @@ var ontologyWorkflowCtrl =
 canto.controller('OntologyWorkflowCtrl',
                  ['$scope', 'toaster', '$http', 'CantoGlobals',
                   'AnnotationTypeConfig', 'CantoService',
-                  'CantoConfig', 'CursStateService', '$attrs',
+                  'CantoConfig', 'CursGenotypeList', 'CursStateService', '$attrs',
                   ontologyWorkflowCtrl]);
 
 
