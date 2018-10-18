@@ -3591,6 +3591,7 @@ var genotypeViewCtrl =
     $scope.init = function(annotationCount, organismType) {
       $scope.annotationCount = annotationCount;
       ctrl.organismType = organismType;
+      ctrl.genotypeManagePath = getGenotypeManagePath(ctrl.organismType);
     };
 
     $scope.advancedMode = function() {
@@ -3599,12 +3600,14 @@ var genotypeViewCtrl =
 
     $scope.editGenotype = function(genotypeId) {
       window.location.href =
-        CantoGlobals.curs_root_uri + '/genotype_manage#/edit/' + genotypeId;
+        CantoGlobals.curs_root_uri +
+        '/' + ctrl.genotypeManagePath +
+        '#/edit/' + genotypeId;
     };
 
     $scope.backToGenotypes = function() {
       window.location.href = CantoGlobals.curs_root_uri +
-        '/' + getGenotypeManagePath(ctrl.organismType) +
+        '/' + ctrl.genotypeManagePath +
         (CantoGlobals.read_only_curs ? '/ro' : '');
     };
   };
