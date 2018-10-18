@@ -156,6 +156,7 @@ function isMultiAlleleGenotype(genotype) {
 
 function getGenotypeManagePath(organismMode) {
   var paths = {
+    'unknown': 'genotype_manage',
     'normal': 'genotype_manage',
     'pathogen': 'pathogen_genotype_manage',
     'host': 'host_genotype_manage'
@@ -3585,8 +3586,11 @@ canto.directive('genotypeEdit',
 
 var genotypeViewCtrl =
   function($scope, CantoGlobals, CursSettings) {
-    $scope.init = function(annotationCount) {
+    var ctrl = this;
+
+    $scope.init = function(annotationCount, organismType) {
       $scope.annotationCount = annotationCount;
+      ctrl.organismType = organismType;
     };
 
     $scope.advancedMode = function() {
@@ -3600,7 +3604,8 @@ var genotypeViewCtrl =
 
     $scope.backToGenotypes = function() {
       window.location.href = CantoGlobals.curs_root_uri +
-        '/genotype_manage' + (CantoGlobals.read_only_curs ? '/ro' : '');
+        '/' + getGenotypeManagePath(ctrl.organismType) +
+        (CantoGlobals.read_only_curs ? '/ro' : '');
     };
   };
 
