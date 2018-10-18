@@ -6657,7 +6657,7 @@ var metagenotypeListRow = function(CantoGlobals, Metagenotype) {
 
             $scope.read_only_curs = CantoGlobals.read_only_curs;
             $scope.createAnnotationUri = CantoGlobals.curs_root_uri + '/feature/metagenotype/annotate/' + $scope.metagenotype.metagenotype_id
-                + '/start/disease_formation_phenotype/';
+                + '/start/pathogen_host_interaction_phenotype/';
             $scope.viewAnnotationUri = CantoGlobals.curs_root_uri + '/feature/metagenotype/view/' + $scope.metagenotype.metagenotype_id;
             if (CantoGlobals.read_only_curs) {
                 $scope.viewAnnotationUri += '/ro';
