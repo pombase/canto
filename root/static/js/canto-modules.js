@@ -3024,7 +3024,7 @@ canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameCo
 
 
 var alleleEditDialogCtrl =
-  function($scope, $uibModalInstance, toaster, CantoConfig, args, Strains, CantoGlobals) {
+  function($scope, $uibModalInstance, toaster, CantoConfig, args, StrainsService, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
@@ -3033,7 +3033,7 @@ var alleleEditDialogCtrl =
     $scope.alleleData.type = $scope.alleleData.type || '';
     $scope.alleleData.expression = $scope.alleleData.expression || '';
     $scope.alleleData.evidence = $scope.alleleData.evidence || '';
-    $scope.alleleData.strains = Strains.getSessionStrains;
+    $scope.alleleData.strains = StrainsService.getSessionStrains;
     $scope.alleleData.selectedStrain = null;
     $scope.alleleData.showStrainPicker = CantoGlobals.multi_organism_mode;
 
@@ -3137,7 +3137,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'Strains', 'CantoGlobals',
+                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'StrainsService', 'CantoGlobals',
                  alleleEditDialogCtrl]);
 
 var termSuggestDialogCtrl =
@@ -6758,7 +6758,7 @@ var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype) 
 canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'Metagenotype', metagenotypeManage]);
 
 
-canto.service('Strains', function (CantoService, Curs, $q) {
+canto.service('StrainsService', function (CantoService, Curs, $q) {
 
     var vm = this;
 
@@ -6811,7 +6811,7 @@ var strainPicker = function() {
         restrict: 'E',
         replace: true,
         templateUrl: app_static_path + 'ng_templates/strainPicker.html',
-        controller: function($scope, Strains, CantoService) {
+        controller: function($scope, StrainsService, CantoService) {
             $scope.typeStrain = null;
 
             $scope.data = {
@@ -6823,16 +6823,16 @@ var strainPicker = function() {
               $scope.data.strains = strains.data;
             });
 
-            $scope.sessionStrains = Strains.getSessionStrains;
+            $scope.sessionStrains = StrainsService.getSessionStrains;
 
             $scope.changed = function () {
               if ($scope.data.strainSelector !== 'Type a new strain') {
-                Strains.addSessionStrain($scope.taxonId, $scope.data.strainSelector);
+                StrainsService.addSessionStrain($scope.taxonId, $scope.data.strainSelector);
               }
             }
 
             $scope.remove = function (strain) {
-                Strains.removeSessionStrain($scope.taxonId, strain);
+              StrainsService.removeSessionStrain($scope.taxonId, strain);
             }
 
             $scope.hideTypeStrain = function () {
@@ -6840,22 +6840,22 @@ var strainPicker = function() {
             }
 
             $scope.addStrain = function () {
-                Strains.addSessionStrain($scope.taxonId, $scope.typeStrain);
+              StrainsService.addSessionStrain($scope.taxonId, $scope.typeStrain);
             }
         },
     };
 };
 
-canto.directive('strainPicker', ['Strains', 'CantoService', strainPicker]);
+canto.directive('strainPicker', ['StrainsService', 'CantoService', strainPicker]);
 
 
 var strainPickerDialogCtrl =
-  function($scope, $uibModalInstance, Strains) {
+  function($scope, $uibModalInstance, StrainsService) {
 
     $scope.taxonId = $scope.$resolve.args.taxonId;
     $scope.strainData = {};
 
-    $scope.strains = Strains.getSessionStrains;
+    $scope.strains = StrainsService.getSessionStrains;
 
     $scope.isValid = function() {
       return ($scope.strainData.strain !== 'choose a strain ...');
@@ -6870,7 +6870,7 @@ var strainPickerDialogCtrl =
     };
   };
 
-canto.controller('strainPickerDialogCtrl', ['$scope', '$uibModalInstance', 'Strains', strainPickerDialogCtrl]);
+canto.controller('strainPickerDialogCtrl', ['$scope', '$uibModalInstance', 'StrainsService', strainPickerDialogCtrl]);
 
 
 function selectStrainPicker($uibModal, taxonId)
