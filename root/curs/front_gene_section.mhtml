@@ -52,7 +52,11 @@ Edit gene list ...
 % if ($genotype_annotation_configured) {
   <div class="curs-box-title">
     <div>
-      Annotate genotypes
+% if ($read_only_curs) {
+Genotypes from this publication
+% } else {
+Annotate genotypes
+% }
     </div>
   </div>
 %   if ($pathogen_host_mode) {
