@@ -25,7 +25,7 @@ then
     EXTRA_ARGS=--net=host
 fi
 
-CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm -ti --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v8"
+CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm -ti --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-run:v8"
 
 cd canto
 
