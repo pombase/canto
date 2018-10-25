@@ -39,7 +39,7 @@ Annotate genes
 % }
   <div style="margin-top: 20px;">
 % if (!$read_only_curs) {
-  <div class="feature-list-action">
+  <div class="feature-list-action" style="margin-bottom: 20px;">
     <a href="<% $edit_path %>">
 %   if ($multi_organism_mode) {
 Edit genes and organisms ...
