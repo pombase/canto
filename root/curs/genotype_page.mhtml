@@ -125,11 +125,6 @@ my $organism_lookup = Canto::Track::get_adaptor($c->config(), 'organism');
 
 my $org_details = $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
 
-use Data::Dumper;
-$Data::Dumper::Maxdepth = 3;
-warn Dumper([$org_details]);
-
-
 my @types_to_show = grep {
   my $annotation_type = $_;
 
