@@ -41,7 +41,7 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    like ($res->content(), qr/Annotate genes and genotypes/s);
+    like ($res->content(), qr/Annotate genes/s);
     like ($res->content(), qr/Publication details/s);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'),
@@ -129,7 +129,7 @@ test_psgi $app, sub {
 
     (my $content = $res->content()) =~ s/\s+/ /g;
 
-    like ($content, qr/Genes and genotypes from this publication/s);
+    like ($content, qr/Genes from this publication/s);
     like ($content, qr/Reviewing session for PMID:18426916/s);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
