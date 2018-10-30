@@ -6782,7 +6782,7 @@ canto.service('StrainsService', function (CantoService, Curs, $q) {
         vm.loadSessionStrains();
       }
 
-      return vm.sessionStrains.filter(s => s.taxon_id == taxonId);
+      return vm.sessionStrains.filter(s => s.taxon_id == taxonId).sort((a,b) => (a.strain_name > b.strain_name) ? 1 : -1);
     }
 
     vm.setSessionStrains = function (strains) {
