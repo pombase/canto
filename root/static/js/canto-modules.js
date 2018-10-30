@@ -380,8 +380,8 @@ canto.service('CursGenotypeList', function($q, Curs) {
   };
 
   this.storeGenotype =
-    function(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
-      var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles);
+    function(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name) {
+      var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name);
 
       promise.then(function() {
         service.sendChangeEvent();
@@ -628,7 +628,7 @@ canto.service('CantoGlobals', function($window) {
   this.curationStatusData = $window.curationStatusData;
   this.cumulativeAnnotationTypeCounts = $window.cumulativeAnnotationTypeCounts;
   this.perPub5YearStatsData = $window.perPub5YearStatsData;
-  this.multi_organism_mode = $window.multi_organism_mode;
+  this.multi_organism_mode = $window.multi_organism_mode == 1;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.organismsAndGenes = $window.organismsAndGenes;
   this.confirmGenes = $window.confirmGenes;
@@ -3027,15 +3027,16 @@ var alleleEditDialogCtrl =
   function($scope, $uibModalInstance, toaster, CantoConfig, args, StrainsService, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
+    $scope.taxonId = args.taxonId;
     $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
     $scope.alleleData.name = $scope.alleleData.name || '';
     $scope.alleleData.description = $scope.alleleData.description || '';
     $scope.alleleData.type = $scope.alleleData.type || '';
     $scope.alleleData.expression = $scope.alleleData.expression || '';
     $scope.alleleData.evidence = $scope.alleleData.evidence || '';
-    $scope.alleleData.strains = StrainsService.getSessionStrains;
-    $scope.alleleData.selectedStrain = null;
-    $scope.alleleData.showStrainPicker = CantoGlobals.multi_organism_mode;
+    $scope.strains = StrainsService.getSessionStrains;
+    $scope.selectedStrain = null;
+    $scope.showStrainPicker = CantoGlobals.multi_organism_mode && $scope.taxonId;
 
     $scope.env = {
     };
@@ -3125,7 +3126,11 @@ var alleleEditDialogCtrl =
     $scope.ok = function () {
       if ($scope.isValid()) {
         copyObject($scope.alleleData, args.allele);
-        $uibModalInstance.close(args.allele);
+        var strainName = null;
+        if ($scope.selectedStrain) {
+          strainName = $scope.selectedStrain.strain_name;
+        }
+        $uibModalInstance.close(args.allele, strainName);
       } else {
         toaster.pop('error', "No changes have been made");
       }
@@ -3181,7 +3186,7 @@ canto.controller('TermSuggestDialogCtrl',
                  termSuggestDialogCtrl]);
 
 
-function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles) {
+function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name) {
 
   var url = curs_root_uri + '/feature/genotype';
 
@@ -3195,6 +3200,8 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
     genotype_name: genotype_name,
     genotype_background: genotype_background,
     alleles: alleles,
+    taxonid: taxonid,
+    strain_name: strain_name,
   };
 
   loadingStart();
@@ -3215,7 +3222,7 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
   return result;
 }
 
-function makeAlleleEditInstance($uibModal, allele)
+function makeAlleleEditInstance($uibModal, allele, taxonId)
 {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/allele_edit.html',
@@ -3227,6 +3234,7 @@ function makeAlleleEditInstance($uibModal, allele)
       args: function() {
         return {
           allele: allele,
+          taxonId: taxonId,
         };
       }
     },
@@ -3242,21 +3250,19 @@ var genePageCtrl =
     };
 
     $scope.singleAlleleQuick =
-      function(gene_display_name, gene_systematic_id, gene_id, annotationTypeName) {
+      function(gene_display_name, gene_systematic_id, gene_id, annotationTypeName, taxonId) {
       var editInstance = makeAlleleEditInstance($uibModal,
                                                 {
                                                   gene_display_name: gene_display_name,
                                                   gene_systematic_id: gene_systematic_id,
                                                   gene_id: gene_id,
-                                                });
+                                                },
+                                                taxonId);
 
-      editInstance.result.then(function (alleleData) {
-        alleleData.strainData = {
-          taxonId: taxonId,
-          strainName: alleleData.selectedStrain.strain_name
-        };
+      editInstance.result.then(function (alleleData, strainName) {
         var storePromise =
-          CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData]);
+          CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
+                                         [alleleData], taxonId, strainName);
 
         storePromise.then(function(result) {
           window.location.href =
@@ -3421,6 +3427,7 @@ var genotypeEdit =
               $scope.data.genotypeName = genotypeDetails.name;
               $scope.data.genotypeBackground = genotypeDetails.background;
               $scope.data.annotationCount = genotypeDetails.annotation_count;
+              $scope.data.taxonId = genotypeDetails.organism.taxonid;
             });
         }
 
@@ -3551,15 +3558,10 @@ var genotypeEdit =
               delete allele.gene;
             }
 
-            allele.taxon_id = $scope.genes.filter(g => g.gene_id == allele.gene_id)[0].organism.taxonid;
             var editInstance =
-                makeAlleleEditInstance($uibModal, allele);
+              makeAlleleEditInstance($uibModal, allele);
 
             editInstance.result.then(function (editedAllele) {
-              editedAllele.strainData = {
-                taxonId: allele.taxon_id,
-                strainName: editedAllele.selectedStrain.strain_name
-              };
               if ($scope.findExistingAlleleIdx(editedAllele) < 0) {
                 $scope.alleles.push(editedAllele);
               } else {
@@ -3919,16 +3921,12 @@ var GenotypeGeneListCtrl =
                                                       gene_display_name: gene_display_name,
                                                       gene_systematic_id: gene_systematic_id,
                                                       gene_id: gene_id,
-                                                      taxon_id: taxonId,
-                                                    });
+                                                    },
+                                                    taxonId);
 
-          editInstance.result.then(function (alleleData) {
-            alleleData.strainData = {
-              taxonId: taxonId,
-              strainName: alleleData.selectedStrain.strain_name
-            };
+          editInstance.result.then(function (alleleData, strainName) {
             var storePromise =
-              CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData]);
+              CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], taxonId, strainName);
 
             storePromise.then(function(result) {
               window.location.href =
@@ -3976,13 +3974,9 @@ var GenotypeGeneListCtrl =
             type: "deletion",
           };
 
-          deletionAllele.strainData = {
-            taxonId: $scope.data.selectedOrganism.taxonid,
-            strainName: $scope.selectedStrain
-          };
-
           var storePromise =
-            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele]);
+            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele],
+                                           $scope.data.selectedOrganism.taxonid, $scope.selectedStrain);
 
           storePromise.then(function(result) {
             window.location.href =
@@ -4476,18 +4470,14 @@ var genotypeListRowLinksCtrl =
               allele.gene_id = allele.gene.gene_id;
               delete allele.gene;
             }
-            allele.taxon_id = genotype.organism.taxonid;
             var editInstance =
-              makeAlleleEditInstance($uibModal, allele);
+              makeAlleleEditInstance($uibModal, allele, genotype.organism.taxonid);
 
-            editInstance.result.then(function (editedAllele) {
-              editedAllele.strainData = {
-                taxonId: genotypeSimpleListRowCtrl.taxon_id,
-                strainName: editedAllele.selectedStrain.strain_name
-              };
+            editInstance.result.then(function (editedAllele, strainName) {
               var storePromise =
                 CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined,
-                                               undefined, [editedAllele]);
+                                               undefined, [editedAllele],
+                                               genotype.organism.taxonid, strainName);
 
               storePromise.then(function(result) {
                 window.location.href =
