@@ -27,7 +27,7 @@ if [[ "$1" == "--debug" ]]; then
     DEBUG="-e CANTO_DEBUG=TRUE"
 fi
 
-CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm -ti $DEBUG --net=host --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-run:v8"
+CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm -ti $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE  --net=host --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-run:v8"
 
 cd canto
 
