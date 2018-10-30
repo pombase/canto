@@ -51,7 +51,11 @@
             ng-class="{'btn-danger': (!firstGene(o.genes).disabled)}"
             title="{{ firstGene(o.genes).title }}"
             ng-click="removeGene(firstGene(o.genes).gene_id)">X</button></td>
-          <td ng-if="o.genes.length == 0" colspan="5" rowspan="2">No genes for this organism</td>
+          <td ng-if="o.genes.length == 0" colspan="4" rowspan="2">No genes for this organism</td>
+          <td ng-if="o.genes.length == 0" rowspan="2"><button
+            ng-class="{'btn-danger': (!g.disabled)}"
+            title="Remove host"
+            ng-click="removeHost(o.taxonid)">X</button></td>
         </tr>
         <tr ng-if="o.genes.length > 0"
           ng-repeat="g in otherGenes(o.genes) track by g.systematic_identifier"

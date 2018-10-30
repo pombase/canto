@@ -7020,7 +7020,6 @@ canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
   vm.removeGene = function (gene_id) {
     var url = curs_root_uri + '/edit_genes?gene-select=' + gene_id + '&submit=Remove selected';
 
-
     $http.get(url).then(function(response){
 
       toaster.pop('success', 'The gene was deleted');
@@ -7037,6 +7036,23 @@ canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
     });
   }
 
+  vm.removeHost = function (taxon_id) {
+    var url = curs_root_uri + '/edit_genes?host-org-select=' + taxon_id + '&submit=Remove selected';
+
+    $http.get(url).then(function(response){
+
+      toaster.pop('success', 'The host was deleted');
+
+      var organisms;
+      organisms = vm.unsetHostOrganism(vm.hostOrganisms, taxon_id);
+
+      vm.setHostOrganisms(organisms);
+
+    }, function(){
+      toaster.pop('error', 'There was a problem deleting the host');
+    });
+  }
+
   vm.unsetOrganismGene = function (organisms, gene_id) {
     organisms = organisms.map(o => {
       o.genes = o.genes.filter(g => g.gene_id !== gene_id);
@@ -7044,6 +7060,10 @@ canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
     });
     organisms = organisms.filter(o => o.genes.length > 0);
     return organisms;
+  }
+
+  vm.unsetHostOrganism = function (organisms, taxon_id) {
+    return organisms.filter(o => o.taxonid !== taxon_id);
   }
 });
 
@@ -7095,6 +7115,10 @@ var editOrganismsTable = function() {
 
         $scope.removeGene = function(gene_id) {
           EditOrganismsSvc.removeGene(gene_id);
+        }
+
+        $scope.removeHost = function(taxon_id) {
+          EditOrganismsSvc.removeHost(taxon_id);
         }
 
         $scope.geneAttributes = function(gene) {
