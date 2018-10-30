@@ -17,6 +17,7 @@
   <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.background">
     <span ng-bind-html="genotype.background | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
+  <td>{{ strain }}</td>
   <td style="width: 4em;" rowspan="{{genotype.alleles.length}}">
     {{genotype.annotation_count}}
     <div ng-if="navigateOnClick == 'false'" class="table-row-actions"

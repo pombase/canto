@@ -4572,6 +4572,8 @@ var genotypeListRowCtrl =
           links.remove();
         };
 
+        $scope.strain = $scope.genotype.strain_name;
+
         $scope.mouseOver = function() {
           if ($scope.navigateOnClick != 'true') {
             $scope.setSelectedGenotypeId({ genotypeId: $scope.genotype.genotype_id });
