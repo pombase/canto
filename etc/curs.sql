@@ -47,7 +47,7 @@ CREATE TABLE genotype_annotation (
 
 CREATE TABLE strain (
        strain_id integer PRIMARY KEY AUTOINCREMENT,
-       organism_id integer REFERENCES organism(organism_id),
+       organism_id integer NOT NULL REFERENCES organism(organism_id),
        -- ID of the strain in the TrackDB:
        track_strain_id integer UNIQUE,
        strain_name text
