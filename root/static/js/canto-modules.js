@@ -3647,7 +3647,7 @@ var metagenotypeViewCtrl =
 canto.controller('MetagenotypeViewCtrl',
                  ['$scope', 'CantoGlobals', 'CursSettings', metagenotypeViewCtrl]);
 
-var organismSelector = function ($http, Curs, toaster, CantoGlobals, CantoConfig) {
+var organismSelector = function (Curs, toaster, CantoGlobals) {
   return {
     scope: {
       organismSelected: '&',
@@ -3842,7 +3842,7 @@ var organismSelectorCtrl = function ($scope, Curs, toaster, CantoGlobals) {
 };
 
 canto.directive('organismSelector', [
-  '$http', 'Curs', 'toaster', 'CantoGlobals', 'CantoConfig', organismSelector
+  'Curs', 'toaster', 'CantoGlobals', organismSelector
 ]);
 
 var GenotypeGeneListCtrl =
