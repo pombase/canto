@@ -1759,6 +1759,8 @@ sub _genotype_store
   my @alleles_data = @{$body_data->{alleles}};
   my $genotype_name = $body_data->{genotype_name};
   my $genotype_background = $body_data->{genotype_background};
+  my $genotype_taxonid = $body_data->{taxonid};
+  my $strain_name = $body_data->{strain_name} || undef;
 
   my @alleles = ();
 
@@ -1810,15 +1812,20 @@ sub _genotype_store
           status => "existing",
           genotype_display_name => $existing_genotype->display_name(),
           genotype_id => $existing_genotype->genotype_id(),
+          taxonid => $existing_genotype->organism()->taxonid(),
+          strain_name => $strain_name,
         };
       } else {
         my $guard = $schema->txn_scope_guard();
 
-        my $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
+        if (!$genotype_taxonid) {
+          $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
+        }
 
         my $genotype =
           $genotype_manager->make_genotype($genotype_name, $genotype_background,
-                                           \@alleles, $genotype_taxonid);
+                                           \@alleles, $genotype_taxonid, undef,
+                                           $strain_name);
 
         $guard->commit();
 
@@ -1828,6 +1835,8 @@ sub _genotype_store
           status => "success",
           genotype_display_name => $genotype->display_name(),
           genotype_id => $genotype->genotype_id(),
+          taxonid => $genotype->organism()->taxonid(),
+          strain_name => $strain_name,
         };
       }
     } catch {

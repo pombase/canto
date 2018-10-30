@@ -189,6 +189,8 @@ sub _remove_unused_alleles
                          for Genotypes created in this session.  If not defined
                          a new unique identifier will be created based on the
                          session curs_key
+           $strain_name - the name of the strain of this genotype which must
+                          already be added to the session (optional)
  Return  : the new Genotype
 
 =cut
@@ -201,6 +203,7 @@ sub make_genotype
   my $alleles = shift;
   my $genotype_taxonid = shift;
   my $identifier = shift;  # defined if this genotype is from Chado
+  my $strain_name = shift;
 
   if (!defined $genotype_taxonid) {
     croak "no taxon ID passed to GenotypeManager::make_genotype()\n";
@@ -235,6 +238,11 @@ sub make_genotype
   }
 
   $genotype->set_alleles($alleles);
+
+  if ($strain_name) {
+    my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
+    $genotype->strain($strain);
+  }
 
   $genotype->update();
 
