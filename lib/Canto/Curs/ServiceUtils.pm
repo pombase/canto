@@ -407,6 +407,23 @@ sub _genotype_details_hash
   my $organism_lookup = $self->organism_lookup();
   my $organism_details = $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
 
+  my $strain_name = undef;
+
+  my $strain = $genotype->strain();
+
+  if ($strain) {
+    $strain_name = $strain->strain_name();
+
+    if (!$strain_name && $strain->track_strain_id()) {
+      my $strain_lookup = $self->strain_lookup();
+      my @strain_details =
+        $strain_lookup->lookup_by_strain_ids($strain->track_strain_id());
+      if (@strain_details) {
+        $strain_name = $strain_details[0]->{strain_name};
+      }
+    }
+  }
+
   my %ret = (
     identifier => $genotype->identifier(),
     name => $genotype->name(),
@@ -416,6 +433,7 @@ sub _genotype_details_hash
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),
     metagenotype_count => $genotype->metagenotype_count(),
+    strain_name => $strain_name,
     organism => $organism_details,
   );
 
