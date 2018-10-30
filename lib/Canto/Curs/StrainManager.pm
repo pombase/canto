@@ -66,7 +66,7 @@ sub _build_organism_manager
 
  Usage   : $strain_manager->add_strain_by_id($strain_id);
  Function: Adds the given strain to the current session
- Returns : Nothing
+ Returns : the new Strain object
 
 =cut
 
@@ -103,7 +103,7 @@ sub add_strain_by_id
 
  Usage   : $strain_manager->add_strain_by_name($taxon_id, $strain_name);
  Function: Adds the given strain to the current session
- Returns : Nothing
+ Returns : the new Strain object
 
 =cut
 
@@ -145,6 +145,52 @@ sub add_strain_by_name
                                         });
 }
 
+=head2 find_strain_by_name
+
+ Usage   : $strain_manager->find_strain_by_name($taxon_id, $strain_name);
+ Function: Return the strain with the given name.  The strain must be
+           in the session.
+ Returns : the strain or undef if not found
+
+=cut
+
+sub find_strain_by_name
+{
+  my $self = shift;
+
+  my $taxon_id = shift;
+  my $strain_name = shift;
+
+  if (!defined $strain_name) {
+    die "no strain name passed to find_strain_by_name()";
+  }
+
+  my $curs_schema = $self->curs_schema();
+  my $strain_rs = $curs_schema->resultset('Strain');
+
+  my $organism = $self->organism_manager()->add_organism_by_taxonid($taxon_id);
+
+  my $strain = $strain_rs->find({
+    strain_name => $strain_name,
+    organism_id => $organism->organism_id(),
+  });
+
+  if ($strain) {
+    return $strain;
+  }
+
+  my $track_strain_details =
+    $self->strain_lookup()->lookup_by_strain_name($taxon_id, $strain_name);
+
+  if ($track_strain_details) {
+    return $strain_rs->find({
+      organism_id => $organism->organism_id(),
+      track_strain_id => $track_strain_details->{strain_id},
+    });
+  }
+
+  return undef;
+}
 
 =head2 delete_strain_by_id
 

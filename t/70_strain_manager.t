@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Try::Tiny;
-use Test::More tests => 26;
+use Test::More tests => 29;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -155,6 +155,16 @@ cmp_deeply($strain_res,
                'strain_name' => 'track strain name 1',
              },
            ]);
+
+
+my $strain_by_name = $strain_manager->find_strain_by_name(4896, 'NO SUCH STRAIN');
+ok (!defined $strain_by_name);
+
+$strain_by_name = $strain_manager->find_strain_by_name(4896, 'other strain name 1');
+is ($strain_by_name->strain_name(), 'other strain name 1');
+
+$strain_by_name = $strain_manager->find_strain_by_name(4896, 'track strain name 1');
+is ($strain_by_name->strain_name(), undef);
 
 
 $deleted_strain = $strain_manager->delete_strain_by_name(4896, 'other strain name 1');

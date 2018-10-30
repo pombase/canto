@@ -1596,7 +1596,8 @@ sub _feature_edit_helper
       my @alleles_data = @{$body_data->{alleles}};
       my $genotype_name = $body_data->{genotype_name};
       my $genotype_background = $body_data->{genotype_background};
-      my $genotype_taxonid = $body_data->{genotype_taxonid};
+      my $genotype_taxonid = $body_data->{taxonid};
+      my $strain_name = $body_data->{strain_name} || undef;
 
       if (defined $genotype_name && length $genotype_name > 0) {
         my $trimmed_name = $genotype_name =~ s/^\s*(.*?)\s*$/$1/r;
@@ -1644,7 +1645,8 @@ sub _feature_edit_helper
 
         $genotype_manager->store_genotype_changes($genotype,
                                                   $genotype_name, $genotype_background,
-                                                  $genotype_taxonid, \@alleles);
+                                                  $genotype_taxonid, \@alleles,
+                                                  $strain_name);
 
         $guard->commit();
 

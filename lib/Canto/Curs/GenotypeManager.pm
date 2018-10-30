@@ -40,6 +40,7 @@ use Moose;
 
 use Canto::Track;
 use Canto::Curs::AlleleManager;
+use Canto::Curs::StrainManager;
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 has curs_key => (is => 'rw', lazy_build => 1);
@@ -47,6 +48,9 @@ has allele_manager => (is => 'rw', isa => 'Canto::Curs::AlleleManager',
                        lazy_build => 1);
 has organism_manager => (is => 'rw', isa => 'Canto::Curs::OrganismManager',
                          lazy_build => 1);
+
+has strain_manager => (is => 'rw', isa => 'Canto::Curs::StrainManager',
+                       lazy_build => 1);
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::MetadataAccess';
@@ -73,6 +77,14 @@ sub _build_organism_manager
 
   return Canto::Curs::OrganismManager->new(config => $self->config(),
                                            curs_schema => $self->curs_schema());
+}
+
+sub _build_strain_manager
+{
+  my $self = shift;
+
+  return Canto::Curs::StrainManager->new(config => $self->config(),
+                                         curs_schema => $self->curs_schema());
 }
 
 sub _string_or_undef
@@ -348,7 +360,8 @@ sub make_metagenotype
 =head2 store_genotype_changes
 
  Usage   : $genotype_manager->store_genotype_changes($genotype,
-                                                     $name, $background, \@allele_objects);
+                                                     $name, $background, \@allele_objects,
+                                                     $strain_name);
  Function: Store changes to a Genotype object in the CursDB
  Args    : $genotype_id - the Genotype's ID in the CursDB
            $name - new name for the genotype, note: if undef the name will be
@@ -357,6 +370,8 @@ sub make_metagenotype
            $genotype_taxonid - the organism of this genotype
            \@allele_objects - a list of Allele objects to attach to the new
                               Genotype
+           $strain_name - the name of the strain of this genotype which must
+                          already be added to the session (optional)
  Return  : nothing, dies on error
 
 =cut
@@ -369,6 +384,7 @@ sub store_genotype_changes
   my $background = shift;
   my $genotype_taxonid = shift;
   my $alleles = shift;
+  my $strain_name = shift;
 
   my $schema = $self->curs_schema();
 
@@ -381,6 +397,11 @@ sub store_genotype_changes
   my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
   $genotype->organism_id($organism->organism_id());
   $genotype->set_alleles($alleles);
+
+  if ($strain_name) {
+    my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
+    $genotype->strain($strain);
+  }
 
   $self->_remove_unused_alleles();
 
