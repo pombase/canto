@@ -231,5 +231,40 @@ sub delete_strain_by_name
   }
 }
 
+=head2 delete_strains_by_taxon_id
+
+ Usage   : $strain_manager->delete_strains_by_taxon_id($taxonid);
+ Function: Delete all the strains of the organism given by the argument
+ Returns : Nothing, but dies if any strain is referenced by a genotype
+
+=cut
+
+sub delete_strains_by_taxon_id
+{
+  my $self = shift;
+  my $taxon_id = shift;
+
+  die "no taxon_id passed to delete_strains_by_taxon_id()\n"
+    unless defined $taxon_id;
+
+  my @strains = $self->curs_schema()->resultset('Strain')
+    ->search({
+      'organism.taxonid' => $taxon_id,
+    }, {
+      join => 'organism',
+    })
+    ->all();
+
+  for my $strain (@strains) {
+    if ($strain->genotypes()->count() > 0) {
+      die "can't delete strain for taxon ID $taxon_id as there are genotypes " .
+        "in the session that reference that strain\n";
+    }
+  }
+
+  for my $strain (@strains) {
+    $strain->delete();
+  }
+}
 
 1;

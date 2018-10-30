@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Try::Tiny;
-use Test::More tests => 23;
+use Test::More tests => 26;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -172,3 +172,19 @@ cmp_deeply($strain_res,
                'strain_name' => 'track strain name 1',
              },
            ]);
+
+$strain_manager->add_strain_by_name(4896, 'other strain name 1');
+$strain_manager->add_strain_by_name(4932, 'cerevisiae strain 1');
+
+$strain_res = $service_utils->list_for_service('strain');
+is(@$strain_res, 3);
+
+$strain_manager->delete_strains_by_taxon_id(4896);
+
+$strain_res = $service_utils->list_for_service('strain');
+is(@$strain_res, 1);
+
+$strain_manager->delete_strains_by_taxon_id(4932);
+
+$strain_res = $service_utils->list_for_service('strain');
+is(@$strain_res, 0);

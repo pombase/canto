@@ -41,8 +41,11 @@ use Moose;
 use Canto::Track;
 use Canto::CursDB::Organism;
 
+use Canto::Curs::StrainManager;
+
 has curs_schema => (is => 'rw', isa => 'Canto::CursDB', required => 1);
 has organism_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
+has strain_manager => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 with 'Canto::Role::Configurable';
 
@@ -52,6 +55,24 @@ sub _build_organism_lookup
 
   return Canto::Track::get_adaptor($self->config(), 'organism');
 }
+
+sub _build_strain_manager
+{
+  my $self = shift;
+
+  return Canto::Curs::StrainManager->new(config => $self->config(),
+                                         curs_schema => $self->curs_schema());
+}
+
+=head2 add_organism_by_taxonid
+
+ Usage   : $organism_manager->add_organism_by_taxonid($taxonid);
+ Function: add the organism with the given taxon ID to the session
+ Returns : the new Organism in the CursDB or undef if the $taxonid is not in
+           the TrackDB
+
+=cut
+
 
 sub add_organism_by_taxonid
 {
@@ -87,6 +108,7 @@ sub delete_organism_by_taxonid
       die "can't delete organism with taxonid $taxonid as there are genes " .
         "from that organism in the session\n";
     } else {
+      $self->strain_manager()->delete_strains_by_taxon_id($taxonid);
       $organism_rs->search({ taxonid => $taxonid })->delete();
       return $organism;
     }
