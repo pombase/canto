@@ -50,12 +50,15 @@
             ng-disabled="firstGene(o.genes).disabled"
             ng-class="{'btn-danger': (!firstGene(o.genes).disabled)}"
             title="{{ firstGene(o.genes).title }}"
-            ng-click="removeGene(firstGene(o.genes).gene_id)">X</button></td>
+            ng-click="removeGene(firstGene(o.genes).gene_id)">
+              <span ng-class="{'gene-button-delete-text-disabled': firstGene(o.genes).disabled}">X</span></button>
+          </td>
           <td ng-if="o.genes.length == 0" colspan="4" rowspan="2">No genes for this organism</td>
           <td ng-if="o.genes.length == 0" rowspan="2"><button
             ng-class="{'btn-danger': (!g.disabled)}"
             title="Remove host"
-            ng-click="removeHost(o.taxonid)">X</button></td>
+            ng-click="removeHost(o.taxonid)">X</button>
+          </td>
         </tr>
         <tr ng-if="o.genes.length > 0"
           ng-repeat="g in otherGenes(o.genes) track by g.systematic_identifier"
@@ -68,7 +71,9 @@
             ng-disabled="g.disabled"
             ng-class="{'btn-danger': (!g.disabled)}"
             title="{{ g.title }}"
-            ng-click="removeGene(g.gene_id)">X</button></td>
+            ng-click="removeGene(g.gene_id)">
+            <span ng-class="{'gene-button-delete-text-disabled': g.disabled}">X</span></button>
+          </td>
         </tr>
       </tbody>
       <tbody ng-repeat-end></tbody>

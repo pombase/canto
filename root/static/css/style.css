@@ -1503,3 +1503,7 @@ a:not([href]) {
   width: 49%;
   float: left;
 }
+
+.gene-button-delete-text-disabled {
+  color: whitesmoke;
+}
