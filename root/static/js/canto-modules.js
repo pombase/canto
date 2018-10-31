@@ -3899,10 +3899,6 @@ var GenotypeGeneListCtrl =
           return $scope.data.selectedOrganism;
         };
 
-        $scope.hasDeletionGenotype = function(gene_id) {
-          return !!$scope.hasDeletionHash[gene_id];
-        }
-
         $scope.makeHasDeletionHash = function() {
           $scope.hasDeletionHash = {};
           $.map($scope.genotypes,
