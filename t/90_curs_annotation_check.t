@@ -39,6 +39,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr/Annotate genes/s);
+    like ($res->content(), qr/Annotate genotypes/s);
     like ($res->content(), qr/Publication details/s);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'),
