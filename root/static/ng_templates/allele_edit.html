@@ -27,14 +27,14 @@
           </td>
         </tr>
 
-        <tr ng-if="showStrainPicker" class="curs-allele-type-select">
+        <tr ng-if="strainData.showStrainPicker" class="curs-allele-type-select">
           <td>Strain used</td>
           <td>
               <select
                   class="form-control"
-                  ng-model="selectedStrain"
+                  ng-model="strainData.selectedStrain"
                   name="curs-allele-type"
-                  ng-options="st.strain_name for st in strains(taxonId) track by st.strain_name">
+                  ng-options="st.strain_name for st in strainData.getStrains(taxonId) track by st.strain_name">
                   <option value="">Choose a strain ...</option>
               </select>
           </td>
