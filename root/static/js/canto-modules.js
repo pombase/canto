@@ -6793,7 +6793,7 @@ var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype) 
 canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'Metagenotype', metagenotypeManage]);
 
 
-canto.service('StrainsService', function (CantoService, Curs, $q) {
+canto.service('StrainsService', function (CantoService, Curs, $q, toaster) {
 
     var vm = this;
 
@@ -6831,8 +6831,10 @@ canto.service('StrainsService', function (CantoService, Curs, $q) {
     };
 
     vm.removeSessionStrain = function (taxonId, strain) {
-      Curs.delete('strain_by_name', taxonId + '/' + strain).then(function(){
+      Curs.delete('strain_by_name', taxonId + '/' + strain).then(function(response){
         vm.sessionStrains = vm.sessionStrains.filter(s => s.taxon_id !== taxonId && s.strain_name !== strain);
+      }, function (error){
+        toaster.error('Failed to remove strain', error);
       });
     };
 });
