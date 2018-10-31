@@ -6923,7 +6923,7 @@ var summaryPageGeneList = function(CantoGlobals) {
         replace: true,
         templateUrl: app_static_path + 'ng_templates/summary_page_gene_list.html',
         controller: function($scope) {
-          $scope.organismData = CantoGlobals.organismsAndGenes.sort((a,b) => a.full_name > b.full_name);
+          $scope.organismData = CantoGlobals.organismsAndGenes.sort((a,b) => (a.full_name > b.full_name) ? 1 : -1);
           $scope.maxCols = function () {
             var maxCols = 0;
             angular.forEach($scope.organismData, function(value) {
@@ -6971,7 +6971,7 @@ var summaryPageGeneRow = function() {
                 }
                 return name;
             }
-            $scope.genes = $scope.organism.genes.sort((a,b) => a.display_name > b.display_name);
+            $scope.genes = $scope.organism.genes.sort((a,b) => (a.display_name > b.display_name) ? 1 : -1);
             $scope.getPadding = function () {
               var padLength = $scope.maxCols() - $scope.genes.length;
               return new Array(padLength);
@@ -6992,7 +6992,7 @@ canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
 
   vm.getPathogenOrganisms = function () {
     if (!vm.pathogenOrganisms) {
-      var organisms = CantoGlobals.geneListData.pathogen.sort((a,b) => a.scientific_name > b.scientific_name);
+      var organisms = CantoGlobals.geneListData.pathogen.sort((a,b) => (a.scientific_name > b.scientific_name) ? 1 : -1);
       vm.setPathogenOrganisms(organisms);
     }
 
@@ -7004,7 +7004,7 @@ canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
       var organisms = [...CantoGlobals.geneListData.host, ...CantoGlobals.hostsWithNoGenes.map(o => {
         o.genes = [];
         return o;
-      })].sort((a,b) => a.scientific_name > b.scientific_name);
+      })].sort((a,b) => (a.scientific_name > b.scientific_name) ? 1 : -1);
       vm.setHostOrganisms(organisms);
     }
 
