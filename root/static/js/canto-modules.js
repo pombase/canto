@@ -7162,14 +7162,41 @@ var editOrganisms = function() {
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/edit_organisms.html',
-      controller: function($scope, EditOrganismsSvc) {
+      controller: function($scope, EditOrganismsSvc, StrainsService) {
         $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
         $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
 
+        $scope.getContiueUrlDisabled = function () {
+          var disabled = false;
+
+
+          if ($scope.getPathogens().filter(p => {
+            return (StrainsService.getSessionStrains(p.taxonid).length == 0);
+          }).length > 0) {
+            disabled = true;
+          }
+
+          if ($scope.getHosts().filter(h => {
+            return (StrainsService.getSessionStrains(h.taxonid).length == 0);
+          }).length > 0) {
+            disabled = true;
+          }
+
+          return disabled;
+        }
+
         $scope.continueUrl = curs_root_uri;
         $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
+
+        $scope.getContinueButtonTitle = function () {
+          if ($scope.getContiueUrlDisabled()) {
+            return 'Please indicate what strains were used for all organisms!';
+          } else {
+            return 'Continue';
+          }
+        }
       }
   }
 };
 
-canto.directive('editOrganisms', ['EditOrganismsSvc', editOrganisms]);
+canto.directive('editOrganisms', ['EditOrganismsSvc', 'StrainsService', editOrganisms]);
