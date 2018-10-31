@@ -6654,7 +6654,7 @@ canto.directive('metagenotypeGenotypePicker',
   ['CursGenotypeList', 'toaster', 'Metagenotype', metagenotypeGenotypePicker]);
 
 
-var metagenotypeListRow = function(CantoGlobals, Metagenotype) {
+var metagenotypeListRow = function(CantoGlobals, Metagenotype, AnnotationTypeConfig) {
     return {
         scope: {
             metagenotype: '=',
@@ -6682,8 +6682,24 @@ var metagenotypeListRow = function(CantoGlobals, Metagenotype) {
             }
 
             $scope.read_only_curs = CantoGlobals.read_only_curs;
-            $scope.createAnnotationUri = CantoGlobals.curs_root_uri + '/feature/metagenotype/annotate/' + $scope.metagenotype.metagenotype_id
-                + '/start/pathogen_host_interaction_phenotype/';
+
+            $scope.matchingAnnotationTypes = [];
+
+            AnnotationTypeConfig.getAll().then(function(response) {
+              $scope.matchingAnnotationTypes =
+                $.grep(response.data, function(annotationType) {
+                  if (annotationType.feature_type !== 'metagenotype') {
+                    return false;
+                  }
+
+                  if ($scope.pathogen_host_mode && genotypePathogenOrHost !== annotationType.feature_subtype) {
+                    return false;
+                  }
+
+                  return true;
+                });
+            });
+
             $scope.viewAnnotationUri = CantoGlobals.curs_root_uri + '/feature/metagenotype/view/' + $scope.metagenotype.metagenotype_id;
             if (CantoGlobals.read_only_curs) {
                 $scope.viewAnnotationUri += '/ro';
@@ -6696,7 +6712,7 @@ var metagenotypeListRow = function(CantoGlobals, Metagenotype) {
     };
 };
 
-canto.directive('metagenotypeListRow', ['CantoGlobals', 'Metagenotype', metagenotypeListRow]);
+canto.directive('metagenotypeListRow', ['CantoGlobals', 'Metagenotype', 'AnnotationTypeConfig', metagenotypeListRow]);
 
 
 var metagenotypeListView = function(Metagenotype) {
