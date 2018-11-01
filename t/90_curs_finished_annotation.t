@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 35;
+use Test::More tests => 34;
 
 use Plack::Test;
 use Plack::Util;
