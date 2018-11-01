@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 27;
+use Test::More tests => 28;
 
 use Plack::Test;
 use Plack::Util;
@@ -38,7 +38,8 @@ test_psgi $app, sub {
     my $res = $cb->(GET "$root_url/");
     is $res->code, 200;
 
-    like ($res->content(), qr/Annotate genes and genotypes/s);
+    like ($res->content(), qr/Annotate genes/s);
+    like ($res->content(), qr/Annotate genotypes/s);
     like ($res->content(), qr/Publication details/s);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'),

@@ -9,13 +9,11 @@ var organismsAndGenes = <% $organisms_and_genes_js |n %>;
 <div class="curs-box">
   <div class="curs-box-title">
     <div>
-% my $and_genotypes = '';
-% $and_genotypes = ' and genotypes' if $genotype_annotation_configured;
 
 % if ($read_only_curs) {
-Genes<% $and_genotypes %> from this publication
+Genes from this publication
 % } else {
-Annotate genes<% $and_genotypes %>
+Annotate genes
 % }
     <& /curs/inline_help.mhtml, key => 'choose_gene' &>
     </div>
@@ -41,7 +39,7 @@ Annotate genes<% $and_genotypes %>
 % }
   <div style="margin-top: 20px;">
 % if (!$read_only_curs) {
-  <div class="feature-list-action">
+  <div class="feature-list-action" style="margin-bottom: 20px;">
     <a href="<% $edit_path %>">
 %   if ($multi_organism_mode) {
 Delete or Edit genes and organisms list ...
@@ -52,6 +50,15 @@ Edit gene list ...
   </div>
 % }
 % if ($genotype_annotation_configured) {
+  <div class="curs-box-title">
+    <div>
+% if ($read_only_curs) {
+Genotypes from this publication
+% } else {
+Annotate genotypes
+% }
+    </div>
+  </div>
 %   if ($pathogen_host_mode) {
   <div class="feature-list-action">
     <a href="<% $pathogen_genotype_manage_url %>"><% $read_only_curs ? 'View pathogen genotypes ...' : 'Pathogen genotype management ...' %></a>
