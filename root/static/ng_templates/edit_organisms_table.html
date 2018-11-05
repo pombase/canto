@@ -1,6 +1,9 @@
 <div>
   <div class="curs-box-title">{{ title }}</div>
-  <div class="curs-box-body">
+  <div ng-show="organisms().length == 0">
+    <p>No genes have been added.</p>
+  </div>
+  <div ng-show="organisms().length > 0" class="curs-box-body">
     <table class="table table-bordered">
       <thead>
         <tr class="info">
@@ -16,12 +19,7 @@
             <th>&nbsp;</th>
         </tr>
       </thead>
-      <tbody ng-show="organisms().length == 0">
-        <tr>
-          <td colspan = 11>No genes have been added.</td>
-        </tr>
-      </tbody>
-      <tbody ng-show="organisms().length > 0" ng-repeat-start="o in organisms() track by o.taxonid">
+      <tbody ng-repeat-start="o in organisms() track by o.taxonid">
         <tr ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
           <td rowspan="{{ o.genes.length }}">
             <table>
