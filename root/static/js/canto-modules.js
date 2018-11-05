@@ -6854,7 +6854,7 @@ var strainPicker = function() {
 
             $scope.data = {
                 strains: [],
-                strainSelector: 'Add strains for this organism'
+                strainSelector: 'Add experimental strains for this organism'
             }
 
             CantoService.lookup('strains', [$scope.taxonId]).then(function(strains) {
