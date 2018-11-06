@@ -511,6 +511,9 @@ sub _edit_genes_helper
           }
 
           my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+          my $organism_manager =
+            Canto::Curs::OrganismManager->new(config => $c->config(), curs_schema => $schema);
+
           for my $taxonid (keys %deleted_gene_organisms) {
             my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
             if ($organism_details->{pathogen_or_host} &&
@@ -518,14 +521,13 @@ sub _edit_genes_helper
               my $organism = $schema->resultset("Organism")->find({ taxonid => $taxonid });
               if ($organism->genes()->count() == 0 &&
                   $organism->genotypes()->count() == 0) {
-                $organism->delete();
+                $organism_manager->delete_organism_by_taxonid($taxonid);
               }
             }
           }
 
           for my $host_org_taxonid (@host_org_taxonids) {
-            my $org = $schema->find_with_type('Organism', { taxonid => $host_org_taxonid });
-            $org->delete();
+            $organism_manager->delete_organism_by_taxonid($host_org_taxonid);
           }
         };
         $schema->txn_do($delete_sub);
