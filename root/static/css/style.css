@@ -1507,3 +1507,7 @@ a:not([href]) {
 .gene-button-delete-text-disabled {
   color: whitesmoke;
 }
+
+.curs-organism-selector-select {
+  width: 100%;
+}
