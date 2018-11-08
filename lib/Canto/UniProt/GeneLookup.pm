@@ -49,6 +49,16 @@ with 'Canto::Role::Configurable';
 with 'Canto::Role::TrackGeneLookupCache';
 with 'Canto::Role::GeneLookupCache';
 
+has organism_lookup => (is => 'rw', isa => 'Canto::Track::OrganismLookup',
+                        lazy_build => 1);
+
+sub _build_organism_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'organism');
+}
+
 use Package::Alias UniProtUtil => 'Canto::UniProt::UniProtUtil';
 use Clone qw(clone);
 
@@ -57,7 +67,27 @@ sub _get_results
   my $self = shift;
   my $search_terms_ref = shift;
 
-  return UniProtUtil::retrieve_entries($self->config(), $search_terms_ref);
+  my @results = UniProtUtil::retrieve_entries($self->config(), $search_terms_ref);
+
+  map {
+    my $result = $_;
+
+    my $species_taxon_id =
+      $self->config()->get_species_taxon_of_strain_taxon($result->{organism_taxonid});
+    if ($species_taxon_id) {
+      # this gene is from a strain, swap in the species details
+      # See: https://github.com/pombase/canto/issues/1611
+      my $organism_lookup = $self->organism_lookup();
+
+      my $organism_details = $organism_lookup->lookup_by_taxonid($species_taxon_id);
+
+      $result->{organism_taxonid} = $species_taxon_id;
+      $result->{organism_full_name} = $organism_details->{scientific_name};
+      $result->{organism_common_name} = $organism_details->{common_name};
+    }
+  } @results;
+
+  return @results;
 }
 
 sub _build_schema
