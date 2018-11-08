@@ -395,6 +395,26 @@ sub setup
     $self->{pathogen_host_mode} = 0;
   }
 
+  $self->{_strain_species_taxon_map} = {};
+  $self->{_reference_strain_taxon_map} = {};
+
+  my %strain_species_map = ();
+  if ($self->{species_strain_map}) {
+    while (my ($species_taxon_id, $species_details) = each %{$self->{species_strain_map}}) {
+      if ($species_details->{reference_strain}) {
+        $self->{_reference_strain_taxon_map}->{$species_details->{reference_strain}} =
+          $species_taxon_id;
+      }
+      if ($species_details->{other_strains}) {
+        map {
+          my $strain_taxon_id = $_;
+          $strain_species_map{$strain_taxon_id} = $species_taxon_id;
+        } @{$species_details->{other_strains}};
+      }
+    }
+  }
+  $self->{_strain_species_taxon_map} = \%strain_species_map;
+
   my $connect_string = $self->model_connect_string('Track');
 
   # we need to check that the track db exists in case we're using this
@@ -610,6 +630,27 @@ sub for_json
   } HASH, $data;
 
   return $data;
+}
+
+=head2 get_species_taxon_of_strain_taxon
+
+ Usage   : my $org_taxon_id = $config->get_species_taxon_of_strain_taxon($strain_taxon_id);
+ Function: Given a taxon ID from a strain (eg. 4536 "Oryza sativa f. spontanea"), return
+           the taxon species ID of the species (eg. 4530 "Oryza sativa").  The mapping
+           is configured by "species_strain_map" in the config file
+ Returns : The species taxon ID or undef if the strain taxon ID isn't in the map.
+
+=cut
+
+
+sub get_species_taxon_of_strain_taxon
+{
+  my $self = shift;
+
+  my $strain_taxon_id = shift;
+
+  return $self->{_strain_species_taxon_map}->{$strain_taxon_id} //
+    $self->{_reference_strain_taxon_map}->{$strain_taxon_id};
 }
 
 1;

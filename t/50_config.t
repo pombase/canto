@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 26;
+use Test::More tests => 29;
 
 use Test::Deep;
 
@@ -16,7 +16,7 @@ my $config_single = Canto::Config->new([$config_yaml_1]);
 
 is($config_single->{some_key}, 'some_value_1');
 
-is(keys %{$config_single}, 14);
+is(keys %{$config_single}, 17);
 
 ok(!$config_single->{annotation_types}->{phenotype}->{needs_with_or_from});
 ok($config_single->{annotation_types}->{cellular_component}->{needs_with_or_from});
@@ -36,7 +36,7 @@ my $config_two = Canto::Config->new([$config_yaml_1, $config_yaml_2]);
 
 is($config_two->{some_key}, 'some_value_1');
 is($config_two->{some_key_for_overriding}, 'overidden_value');
-is(keys %{$config_two}, 14);
+is(keys %{$config_two}, 17);
 
 
 # test loading then merging
@@ -45,7 +45,7 @@ $config_merge->merge_config([$config_yaml_2]);
 
 is($config_merge->{some_key}, 'some_value_1');
 is($config_merge->{some_key_for_overriding}, 'overidden_value');
-is(keys %{$config_merge}, 14);
+is(keys %{$config_merge}, 17);
 
 cmp_deeply($config_merge->{key_for_merging},
            {
@@ -289,3 +289,9 @@ ok (!$allele_name_required);
 
 ok ($description_required == JSON::true);
 ok ($allele_name_required == JSON::false);
+
+# species taxon ID lookup
+is ($config_single->get_species_taxon_of_strain_taxon(1238467), 168172);
+is ($config_single->get_species_taxon_of_strain_taxon(231718), 4565);
+ok (!defined $config_single->get_species_taxon_of_strain_taxon(8765431));
+
