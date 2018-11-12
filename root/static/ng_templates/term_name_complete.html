@@ -9,7 +9,7 @@
     <span ng-show="termCount != 0">
       <span ng-hide="allTerms.length > 0">
         <input placeholder="{{placeholder}}" size="{{size}}" type="text"
-               class="form-control" autofocus value="{{currentTermName}}"/>
+               class="form-control" autofocus ng-model="currentTermName"/>
       </span>
       <span ng-show="allTerms.length > 0">
         <select class="form-control" ng-model="chosenTerm"
