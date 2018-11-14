@@ -5199,6 +5199,12 @@ var annotationEditDialogCtrl =
       });
       q.then(function(annotation) {
         $uibModalInstance.close(annotation);
+        toaster.pop({
+          type: 'success',
+          title: 'Annotation stored successfully.',
+          timeout: 5000,
+          showCloseButton: true
+        });
       })
       .catch(function(message) {
         toaster.pop('error', message);
