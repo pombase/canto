@@ -18,10 +18,10 @@ Annotate genes
     <& /curs/inline_help.mhtml, key => 'choose_gene' &>
     </div>
   </div>
+  <div class="curs-box-body">
 % if ($multi_organism_mode) {
   <summary-page-gene-list> </summary-page-gene-list>
 % } else {
-  <div class="curs-box-body">
 % for my $org_and_gene_hashes (@gene_hashes_by_organism) {
 %   my @gene_hashes = @{$org_and_gene_hashes->{gene_hashes}};
 
