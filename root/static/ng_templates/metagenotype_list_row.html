@@ -20,6 +20,7 @@
                   Start a {{ annotationType.display_name }} annotation ...
               </a>
               </div>
+            <div>
             <a
                 ng-class="{disabled: metagenotype.metagenotype_id == null }"
                 href="{{viewAnnotationUri}}">
@@ -29,6 +30,7 @@
                 ng-if="!read_only_curs"
                 confirm="Are you sure you want to remove this metagenotype from your session?"
                 ng-click="delete()">Delete</a>
+            </div>
         </td>
     </tr>
 </tbody>
