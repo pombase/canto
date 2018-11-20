@@ -94,23 +94,29 @@ sub _string_or_undef
   return $string // '<__UNDEF__>';
 }
 
-=head2 find_with_bg_and_alleles
+=head2 find_genotype
 
- Usage   : my $existing = $manager->find_with_bg_and_alleles(\@alleles);
+ Usage   : my $existing = $manager->find_genotype($taxon_id, $background,
+                                                  $strain_name, \@alleles);
  Function: Return any existing genotype the same background and alleles as
            the argument.
            We should have at most one in the CursDB.
- Args    : - $background the
+ Args    : - $taxon_id
+           - $background - can be undef
+           - $strain_name - can be undef
            - \@alleles
  Return  : the found Genotype or undef if there is no Genotype with those
            alleles
 
 =cut
 
-sub find_with_bg_and_alleles
+sub find_genotype
 {
   my $self = shift;
+
+  my $genotype_taxonid = shift;
   my $new_background = shift;
+  my $strain_name = shift;
   my $search_alleles = shift;
 
   if (defined $new_background) {
@@ -119,6 +125,16 @@ sub find_with_bg_and_alleles
 
     $new_background = undef if length $new_background == 0;
   }
+
+  my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
+
+  my $strain_id = undef;
+
+  if ($strain_name) {
+    my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
+    $strain_id = $strain->strain_id();
+  }
+
 
   my @sorted_search_allele_ids =
     sort {
@@ -132,6 +148,10 @@ sub find_with_bg_and_alleles
   my $schema = $self->curs_schema();
 
   my $genotype_rs = $schema->resultset('Genotype');
+
+  if ($strain_id) {
+    $genotype_rs = $genotype_rs->search({ strain_id => $strain_id });
+  }
 
   while (defined (my $genotype = $genotype_rs->next())) {
     if ($genotype->background() && $new_background &&

@@ -1762,6 +1762,7 @@ sub _genotype_store
   my $genotype_name = $body_data->{genotype_name};
   my $genotype_background = $body_data->{genotype_background};
   my $genotype_taxonid = $body_data->{taxonid};
+
   my $strain_name = $body_data->{strain_name} || undef;
 
   my @alleles = ();
@@ -1787,12 +1788,19 @@ sub _genotype_store
         push @alleles, $allele;
       }
 
+      if (!$genotype_taxonid) {
+        $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
+      }
+
+      die "no genotype taxonid" unless $genotype_taxonid;
+
       my $genotype_manager =
         Canto::Curs::GenotypeManager->new(config => $c->config(),
                                           curs_schema => $schema);
 
       my $existing_genotype =
-        $genotype_manager->find_with_bg_and_alleles($genotype_background, \@alleles);
+        $genotype_manager->find_genotype($genotype_taxonid, $genotype_background,
+                                         $strain_name, \@alleles);
 
       if ($existing_genotype) {
         my $alleles_string = "allele";
@@ -1820,10 +1828,6 @@ sub _genotype_store
       } else {
         my $guard = $schema->txn_scope_guard();
 
-        if (!$genotype_taxonid) {
-          $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
-        }
-
         my $genotype =
           $genotype_manager->make_genotype($genotype_name, $genotype_background,
                                            \@alleles, $genotype_taxonid, undef,
@@ -1847,6 +1851,7 @@ sub _genotype_store
         message => "Storing new genotype failed: internal error - " .
           "please report this to the Canto developers",
       };
+
       warn $_;
     };
   }
