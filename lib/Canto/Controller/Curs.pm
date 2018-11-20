@@ -1812,7 +1812,7 @@ sub _genotype_store
 
         $c->stash->{json_data} = {
           status => "existing",
-          genotype_display_name => $existing_genotype->display_name(),
+          genotype_display_name => $existing_genotype->display_name($strain_name),
           genotype_id => $existing_genotype->genotype_id(),
           taxonid => $existing_genotype->organism()->taxonid(),
           strain_name => $strain_name,

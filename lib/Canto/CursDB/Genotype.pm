@@ -283,7 +283,15 @@ sub display_name
 {
   my $self = shift;
 
-  return $self->name() || $self->allele_string() || 'wild type';
+  my $strain_name = shift;
+
+  my $display_name = $self->name() || $self->allele_string() || 'wild type';
+
+  if ($strain_name) {
+    $display_name .= " ($strain_name)";
+  }
+
+  return $display_name;
 }
 
 __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
