@@ -3983,11 +3983,15 @@ var GenotypeGeneListCtrl =
                                            $scope.data.selectedOrganism.taxonid, $scope.selectedStrain);
 
           storePromise.then(function(result) {
-            window.location.href =
-              CantoGlobals.curs_root_uri +
+            if (result.data.status === "existing") {
+              toaster.pop('info', "Using existing genotype: " + result.data.genotype_display_name);
+            } else {
+              window.location.href =
+                CantoGlobals.curs_root_uri +
                 '/' + getGenotypeManagePath($scope.genotypeType) +
                 '#/select/' +
                 result.data.genotype_id;
+            }
           });
         };
 
