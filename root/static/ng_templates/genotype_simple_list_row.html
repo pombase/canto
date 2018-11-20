@@ -12,6 +12,9 @@
         <td>
             <span ng-bind-html="firstAllele.expression | formatExpression | toTrusted"></span>
         </td>
+        <td>
+            <span ng-bind-html="genotype.strain_name | formatExpression | toTrusted"></span>
+        </td>
     </tr>
     <tr ng-repeat="currentAllele in otherAlleles track by $index">
         <td>
@@ -22,6 +25,9 @@
         </td>
         <td>
             <span ng-bind-html="currentAllele.expression | formatExpression | toTrusted"></span>
+        </td>
+        <td>
+            <span ng-bind-html="genotype.strain_name | formatExpression | toTrusted"></span>
         </td>
     </tr>
 </tbody>

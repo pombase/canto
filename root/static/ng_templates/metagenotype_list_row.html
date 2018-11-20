@@ -17,9 +17,10 @@
                 ng-class="{disabled: metagenotype.metagenotype_id == null }"
                 ng-if="!read_only_curs"
                 href="{{curs_root_uri + '/feature/metagenotype/annotate/' + metagenotype.metagenotype_id + '/start/' + annotationType.name + '/'}}">
-                  Start a {{ annotationType.display_name }} annotation ...
+                  Annotate {{ annotationType.display_name }} phenotype...
               </a>
               </div>
+            <div>
             <a
                 ng-class="{disabled: metagenotype.metagenotype_id == null }"
                 href="{{viewAnnotationUri}}">
@@ -29,6 +30,7 @@
                 ng-if="!read_only_curs"
                 confirm="Are you sure you want to remove this metagenotype from your session?"
                 ng-click="delete()">Delete</a>
+            </div>
         </td>
     </tr>
 </tbody>

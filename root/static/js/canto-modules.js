@@ -6670,12 +6670,10 @@ var metagenotypeListRow = function(CantoGlobals, Metagenotype, AnnotationTypeCon
         templateUrl: app_static_path + 'ng_templates/metagenotype_list_row.html',
         controller: function($scope) {
             $scope.getName = function (type) {
-                var name = $scope.metagenotype[type + '_genotype'].organism.full_name || '';
-                var pos = name.indexOf('(');
-                if (pos !== -1) {
-                name = name.substring(0, pos);
-                }
-                return name;
+                var metagenotype = $scope.metagenotype[type + '_genotype'];
+                var name = metagenotype.organism.full_name || '';
+                var strain = metagenotype.strain_name || 'Wild type';
+                return name + ' ( strain: ' + strain + ')';
             };
 
             $scope.getScope = function (type) {

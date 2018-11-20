@@ -1,0 +1,34 @@
+#!/bin/bash -
+
+if [ ! -d data ]
+then
+   echo 'missing "data" directory - exiting'
+   exit 1
+fi
+
+if [ ! -d canto ]
+then
+   echo 'missing "canto" directory - exiting'
+   exit 1
+fi
+
+if [ ! -d import_export ]
+then
+   echo 'missing "import_export" directory - exiting'
+   exit 1
+fi
+
+if [ $(uname) = Linux ]
+then
+    EXTRA_ARGS=--net=host
+fi
+
+if [[ "$1" == "--debug" ]]; then
+    DEBUG="-e CANTO_DEBUG=TRUE"
+fi
+
+CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE  --net=host --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-run:v8"
+
+cd canto
+
+exec docker run -i $CANTO_DOCKER_RUN_ARGS ./script/canto_start "$@"
