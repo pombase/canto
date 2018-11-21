@@ -189,7 +189,7 @@ sub annotation_types_by_year
   my %stats = ();
 
   my $query = <<"EOF";
-SELECT annotation_year, annotation_type, count(id)
+SELECT annotation_year, annotation_type, count(distinct id)
 FROM pombase_genes_annotations_dates
 WHERE (evidence_code IS NULL OR evidence_code <> 'Inferred from Electronic Annotation')
   AND (annotation_source IS NULL OR annotation_source <> 'BIOGRID')
@@ -319,7 +319,7 @@ EOF
 
   my $annotation_query = <<"EOF";
  WITH counts AS
-  (SELECT substring(pub_date FROM '^(\\d\\d\\d\\d)') AS year, pmid, count(id)
+  (SELECT substring(pub_date FROM '^(\\d\\d\\d\\d)') AS year, pmid, count(distinct id)
    FROM pombase_genes_annotations_dates
    JOIN pub_dates ON uniquename = pmid
   WHERE session IS NOT NULL
