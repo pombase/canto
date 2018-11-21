@@ -1,20 +1,21 @@
 <div class="curs-genotype-list-view">
+  <div ng-if="(wildType.length > 0)">
     <table class="curs-genotype-list">
-        <thead>
-            <tr>
-                <th class="curs-genotype-checkbox-column" rowspan="2">&nbsp;</th>
-                <th style="border-bottom: 1px solid grey; min-width: 175px;" colspan="3">Genotype</th>
-            </tr>
-        </thead>
-        <tbody ng-class="{ selected: (genotypeModel === genotype.genotype_id) }">
-            <tr>
-                <td class="curs-genotype-checkbox-column">
-                    <input type="radio" ng-model="genotypeModel" ng-change="isSelected()" value="{{genotype.genotype_id}}" />
-                </td>
-                <td colspan="3">
-                    Wildtype
-                </td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">&nbsp;</th>
+        </tr>
+        <tr>
+          <th>Strain used</th>
+        </tr>
+      </thead>
+      <tbody
+        wild-genotype-row
+        ng-repeat="strain in wildType track by strain.genotype_id"
+        show-check-box-actions="showCheckBoxActions"
+        strain="strain"
+        genotype-model="genotypeModel">
+      </tbody>
     </table>
+  </div>
 </div>
