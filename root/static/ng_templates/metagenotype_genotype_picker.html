@@ -6,6 +6,7 @@
             genotype-type="data.genotypeType"
             organism-selected="data.pickerCallback(organism)">
         </organism-selector>
+        <p><a href="{{data.genotypeShortcutUrl}}">Create a new {{data.genotypeType}} genotype...</a></p>
         <div ng-if="data.selectedOrganism">
             <div class="curs-box-title">Single allele genotypes</div>
             <div ng-show="data.singleAllele.length == 0">
