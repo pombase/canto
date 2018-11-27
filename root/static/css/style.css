@@ -1511,3 +1511,7 @@ a:not([href]) {
 .curs-organism-selector-select {
   width: 100%;
 }
+
+.metagenotype-genotype-shortcut {
+  padding-top: 20px;
+}
