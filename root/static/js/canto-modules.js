@@ -6575,7 +6575,7 @@ canto.directive('wildGenotypeView', [wildGenotypeView]);
 
 
 var metagenotypeGenotypePicker =
-  function(CursGenotypeList, toaster, Metagenotype, StrainsService) {
+  function(CantoGlobals, CursGenotypeList, toaster, Metagenotype, StrainsService) {
     return {
       scope: {
         isPathogen: '=',
@@ -6679,7 +6679,7 @@ var metagenotypeGenotypePicker =
 };
 
 canto.directive('metagenotypeGenotypePicker',
-  ['CursGenotypeList', 'toaster', 'Metagenotype', 'StrainsService', metagenotypeGenotypePicker]);
+  ['CantoGlobals', 'CursGenotypeList', 'toaster', 'Metagenotype', 'StrainsService', metagenotypeGenotypePicker]);
 
 
 var metagenotypeListRow = function(CantoGlobals, Metagenotype, AnnotationTypeConfig) {
