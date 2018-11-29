@@ -2539,6 +2539,13 @@ sub _send_email_from_template
 
   my ($subject, $body, $from) = $email_util->make_email($type, %args);
 
+  if (!$from || $from =~ /CONFIGURE_ME_IN_CANTO_DEPLOY/i) {
+    warn "config->{email}->{from_address} not configured - no email sent for:\n" .
+      "  $subject\n";
+
+    return;
+  }
+
   $self->_send_mail($c, subject => $subject, body => $body, to => $recipient_email,
                     from => $from);
 }
