@@ -4686,8 +4686,10 @@ var genotypeListViewCtrl =
             newBackground = newBackgroundParts.join(' ');
           }
 
+          var strain = $scope.genotypeList[0].strain_name;
+
           var storePromise =
-            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype);
+            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype, undefined, strain);
 
           storePromise.then(function(result) {
             window.location.href =
