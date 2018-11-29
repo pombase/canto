@@ -4622,6 +4622,14 @@ var genotypeListViewCtrl =
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function($scope) {
 
+        function hasDifferentStrains(genotypes) {
+          var firstStrain = genotypes[0].strain_name;
+          var strainsAreEqual = genotypes.every(function (genotype) {
+            return genotype.strain_name === firstStrain;
+          });
+          return ! strainsAreEqual;
+        }
+
         function getOrganismType(genotypes) {
           if (CantoGlobals.pathogen_host_mode === "1") {
             var genotype = genotypes[0];
