@@ -137,6 +137,8 @@ sub lookup
 
   my $search_terms_ref = shift;
 
+  @$search_terms_ref = map { uc } @$search_terms_ref;
+
   my @results = $self->_get_results($search_terms_ref);
 
   my %missing_search_terms = ();
