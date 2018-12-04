@@ -4703,9 +4703,10 @@ var genotypeListViewCtrl =
           }
 
           var strain = $scope.genotypeList[0].strain_name;
+          var taxonid = $scope.genotypeList[0].organism.taxonid;
 
           var storePromise =
-            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype, undefined, strain);
+            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype, taxonid, strain);
 
           storePromise.then(function(result) {
             window.location.href =
