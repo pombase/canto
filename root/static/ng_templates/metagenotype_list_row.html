@@ -2,12 +2,12 @@
     <tr>
         <td>
           <b>{{ getOrganismName('pathogen') }}</b>
-          <span>{{ getStrainName('pathogen') }}</span>
+          <span class="metagenotype-list-strain">{{ getStrainName('pathogen') }}</span>
         </td>
         <td>{{ metagenotype.pathogen_genotype.display_name }}</td>
         <td>
           <b>{{ getOrganismName('host') }}</b>
-          <span>{{ getStrainName('host') }}</span>
+          <span class="metagenotype-list-strain">{{ getStrainName('host') }}</span>
         </td>
         <td>{{ metagenotype.host_genotype.display_name }}</td>
         <td>{{ metagenotype.annotation_count }}</td>
