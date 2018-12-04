@@ -4670,6 +4670,14 @@ var genotypeListViewCtrl =
               return !!$scope.checkBoxChecked[genotype.genotype_id];
             });
 
+          if (hasDifferentStrains(checkedGenotypes)) {
+            toaster.pop(
+              'warning',
+              "Can't create a multi-allele genotype from different strains."
+            );
+            return;
+          }
+
           var allelesForGenotype =
             $.map(checkedGenotypes, function(genotype) {
               return genotype.alleles[0];
