@@ -6575,7 +6575,7 @@ canto.directive('wildGenotypeView', [wildGenotypeView]);
 
 
 var metagenotypeGenotypePicker =
-  function(CursGenotypeList, toaster, Metagenotype, StrainsService) {
+  function(CantoGlobals, CursGenotypeList, toaster, Metagenotype, StrainsService) {
     return {
       scope: {
         isPathogen: '=',
@@ -6594,7 +6594,14 @@ var metagenotypeGenotypePicker =
           typeLabel: 'Host',
           genotypeType: 'host',
           isHost: false,
+          genotypeShortcutUrl: null
         };
+
+        function setGenotypeShortcut(organismType) {
+          return CantoGlobals.curs_root_uri + '/' +
+            organismType.toLowerCase() +
+            '_genotype_manage'
+        }
 
         $scope.readGenotypes = function() {
           CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function(results) {
@@ -6663,6 +6670,8 @@ var metagenotypeGenotypePicker =
 
         $scope.data.isHost = !$scope.isPathogen;
 
+        $scope.data.genotypeShortcutUrl = setGenotypeShortcut($scope.data.genotypeType);
+
         Metagenotype.pickerOrganismCallbacks[$scope.data.genotypeType] = function (organism) {
           $scope.data.selectedOrganism = organism;
           $scope.setFilters();
@@ -6679,7 +6688,7 @@ var metagenotypeGenotypePicker =
 };
 
 canto.directive('metagenotypeGenotypePicker',
-  ['CursGenotypeList', 'toaster', 'Metagenotype', 'StrainsService', metagenotypeGenotypePicker]);
+  ['CantoGlobals', 'CursGenotypeList', 'toaster', 'Metagenotype', 'StrainsService', metagenotypeGenotypePicker]);
 
 
 var metagenotypeListRow = function(CantoGlobals, Metagenotype, AnnotationTypeConfig) {
