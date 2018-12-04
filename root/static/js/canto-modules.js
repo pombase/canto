@@ -4622,6 +4622,14 @@ var genotypeListViewCtrl =
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function($scope) {
 
+        function hasDifferentStrains(genotypes) {
+          var firstStrain = genotypes[0].strain_name;
+          var strainsAreEqual = genotypes.every(function (genotype) {
+            return genotype.strain_name === firstStrain;
+          });
+          return ! strainsAreEqual;
+        }
+
         function getOrganismType(genotypes) {
           if (CantoGlobals.pathogen_host_mode === "1") {
             var genotype = genotypes[0];
@@ -4662,6 +4670,14 @@ var genotypeListViewCtrl =
               return !!$scope.checkBoxChecked[genotype.genotype_id];
             });
 
+          if (hasDifferentStrains(checkedGenotypes)) {
+            toaster.pop(
+              'warning',
+              "Can't create a multi-allele genotype from different strains."
+            );
+            return;
+          }
+
           var allelesForGenotype =
             $.map(checkedGenotypes, function(genotype) {
               return genotype.alleles[0];
@@ -4686,8 +4702,11 @@ var genotypeListViewCtrl =
             newBackground = newBackgroundParts.join(' ');
           }
 
+          var strain = $scope.genotypeList[0].strain_name;
+          var taxonid = $scope.genotypeList[0].organism.taxonid;
+
           var storePromise =
-            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype);
+            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype, taxonid, strain);
 
           storePromise.then(function(result) {
             window.location.href =
