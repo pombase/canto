@@ -6723,7 +6723,7 @@ var metagenotypeListRow = function(CantoGlobals, Metagenotype, AnnotationTypeCon
                 var metagenotype = $scope.metagenotype[type + '_genotype'];
                 var name = metagenotype.organism.full_name || '';
                 var strain = metagenotype.strain_name || 'Wild type';
-                return name + ' ( strain: ' + strain + ')';
+                return name + ' (strain: ' + strain + ')';
             };
 
             $scope.getScope = function (type) {
