@@ -47,6 +47,7 @@ use JSON;
 use Canto::Curs::GeneProxy;
 use Canto::Curs::ConditionUtil;
 use Canto::Curs::MetadataStorer;
+use Canto::Track::StrainLookup;
 
 sub _make_genotype_details
 {
@@ -94,12 +95,22 @@ sub _make_genotype_details
     $a_gene cmp $b_gene;
   } @alleles;
 
+  my $strain_name = undef;
+
+  my $strain = $genotype->strain();
+  my $strain_lookup = Canto::Track::StrainLookup->new(config => $config);
+
+  if ($strain) {
+    $strain_name = $strain->lookup_strain_name($strain_lookup);
+  }
+
   return (
     genotype_id => $genotype->genotype_id(),
     genotype_identifier => $genotype->identifier(),
     genotype_name => $genotype->name(),
     genotype_background => $genotype->background(),
     genotype_display_name => $genotype->display_name(),
+    strain_name => $strain_name,
     organism => $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid()),
     feature_type => 'genotype',
     feature_display_name => $genotype->display_name(),

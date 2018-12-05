@@ -123,6 +123,34 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-10-30 16:19:43
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H0y/g/Vbk71Ign+T65RvwQ
 
+=head2 lookup_strain_name
+
+ Usage   : my $strain_lookup = Canto::Track::StrainLookup->new(config => $config);
+           $strain_name = $strain->lookup_strain_name($strain_lookup);
+ Function: If this Strain is new in this session, return the strain_name from
+           this Strain.  If this strain is from the Track database, lookup it
+           up there and return the Strain name from the TrackDB.
+ Args    : A StrainLookup object
+ Returns : the name of this strain
+
+=cut
+
+sub lookup_strain_name
+{
+  my $self = shift;
+  my $strain_lookup = shift;
+
+  if ($self->strain_name()) {
+    return $self->strain_name();
+  }
+
+  my @strain_details = $strain_lookup->lookup_by_strain_ids($self->track_strain_id());
+  if (@strain_details) {
+    return $strain_details[0]->{strain_name};
+  }
+
+  return undef;
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
