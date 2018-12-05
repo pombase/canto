@@ -293,3 +293,6 @@ ontology_namespace_config:
 
 extension_conf_files:
   - t/data/extension_config.tsv
+
+email:
+  from_address: DO_NOT_EMAIL

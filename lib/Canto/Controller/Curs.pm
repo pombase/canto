@@ -2546,6 +2546,10 @@ sub _send_email_from_template
     return;
   }
 
+  if ($from eq "DO_NOT_EMAIL") {
+    return;
+  }
+
   $self->_send_mail($c, subject => $subject, body => $body, to => $recipient_email,
                     from => $from);
 }
