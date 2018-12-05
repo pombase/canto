@@ -111,6 +111,7 @@ sub check_new_annotations
                    scientific_name => 'Schizosaccharomyces pombe',
                    'common_name' => 'fission yeast',
                  },
+                 'strain_name' => undef,
                  'conditions' => [
                    {
                      'term_id' => 'PECO:0000137',
@@ -187,6 +188,7 @@ sub check_new_annotations
                    scientific_name => 'Schizosaccharomyces pombe',
                    'common_name' => 'fission yeast',
                  },
+                 'strain_name' => undef,
                  'genotype_name' => undef,
                  'genotype_background' => undef,
                  'is_obsolete_term' => 0,
