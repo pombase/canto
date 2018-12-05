@@ -18,6 +18,8 @@ database_name: CONFIGURE_IN_CANTO_DEPLOY.YAML
 #
 # database_url: SET_ME
 
+instance_front_subtitle: Add your work
+
 header_image_url: '/'
 header_image: logos/curation_tool.png
 

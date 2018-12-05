@@ -22,6 +22,9 @@ destination of the annotations while curating.
 The URL of the database that this instance is installed for. e.g.
 `http://www.pombase.org/`
 
+### instance_front_subtitle
+The subtitle to use on the front greeting page.
+
 ### header_image
 A path (relative to `root/static`) of the logo to put in the header.
 
