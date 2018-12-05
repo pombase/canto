@@ -5,7 +5,18 @@
     </div>
   </td>
   <td ng-if="annotationType.feature_type == 'metagenotype'">
-    <span ng-bind-html="annotation.metagenotype_display_name | encodeAlleleSymbols | toTrusted"></span>
+    <div ng-bind-html="annotation.host_genotype.genotype_display_name | encodeAlleleSymbols | toTrusted"></div>
+    <div class="organism-and-strain">
+      <span class="organism-name">{{annotation.host_genotype.organism.scientific_name}}</span>
+      <span ng-if="annotation.host_genotype.strain_name">({{annotation.host_genotype.strain_name}})</span>
+    </div>
+  </td>
+  <td ng-if="annotationType.feature_type == 'metagenotype'">
+    <div ng-bind-html="annotation.pathogen_genotype.genotype_display_name | encodeAlleleSymbols | toTrusted"></div>
+    <div class="organism-and-strain">
+      <span class="organism-name">{{annotation.pathogen_genotype.organism.scientific_name}}</span>
+      <span ng-if="annotation.pathogen_genotype.strain_name">({{annotation.pathogen_genotype.strain_name}})</span>
+    </div>
   </td>
   <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">
     <span ng-bind-html="annotation.genotype_background | encodeAlleleSymbols | toTrusted"></span>
