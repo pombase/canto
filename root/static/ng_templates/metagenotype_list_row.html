@@ -1,13 +1,13 @@
 <tbody>
     <tr>
         <td>
-            <p><strong>{{ getName('pathogen') }}</strong></p>
-            <p style="font-size: smaller;">{{ getScope('pathogen') }}</p>
+          <b>{{ getOrganismName('pathogen') }}</b>
+          <span class="metagenotype-list-strain">{{ getStrainName('pathogen') }}</span>
         </td>
         <td>{{ metagenotype.pathogen_genotype.display_name }}</td>
         <td>
-            <p><strong>{{ getName('host') }}</strong></p>
-            <p style="font-size: smaller;">{{ getScope('host') }}</p>
+          <b>{{ getOrganismName('host') }}</b>
+          <span class="metagenotype-list-strain">{{ getStrainName('host') }}</span>
         </td>
         <td>{{ metagenotype.host_genotype.display_name }}</td>
         <td>{{ metagenotype.annotation_count }}</td>
