@@ -198,7 +198,7 @@ sub _remove_unused_alleles
 =head2 make_genotype
 
  Usage   : $genotype_manager->make_genotype($name, $background, \@allele_objects,
-                                            $genotype_taxonid, $identifier);
+                                            $genotype_taxonid, $identifier, $strain_name);
  Function: Create a Genotype object in the CursDB
  Args    : $name - the name for the new object
            \@allele_objects - a list of Allele objects to attach to the new
@@ -273,7 +273,7 @@ sub make_genotype
 
 =head2 get_wildtype_genotype
 
- Usage   : $genotype_manager->get_wildtype_genotype($host_taxonid);
+ Usage   : $genotype_manager->get_wildtype_genotype($taxonid, $strain_name);
  Function: Create a wild-type Genotype object in the CursDB - the genotype will have
            no alleles
  Args    : $genotype_taxonid - the organism of this genotype
@@ -285,6 +285,7 @@ sub get_wildtype_genotype
 {
   my $self = shift;
   my $genotype_taxonid = shift;
+  my $strain_name = shift;
 
   if (!defined $genotype_taxonid) {
     croak "no taxon ID passed to GenotypeManager::make_genotype()\n";
@@ -295,8 +296,16 @@ sub get_wildtype_genotype
   my $rs = $schema->resultset('Genotype')
     ->search({ 'organism.taxonid' => $genotype_taxonid }, { join => 'organism' });
 
+  my $strain = undef;
+
+  if ($strain_name) {
+    $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
+  }
+
   while (defined (my $genotype = $rs->next())) {
-    if ($genotype->alleles()->count() == 0) {
+    if ($genotype->alleles()->count() == 0 &&
+          (!$strain && !$genotype->strain_id() ||
+           $strain && $genotype->strain_id() && $genotype->strain_id() == $strain->strain_id())) {
       return $genotype;
     }
   }
@@ -308,7 +317,11 @@ sub get_wildtype_genotype
 
   my $identifier = $host_details->{scientific_name} =~ s/ /-/gr . '-wild-type-genotype';
 
-  return $self->make_genotype(undef, undef, [], $genotype_taxonid, $identifier);
+  if ($strain_name) {
+    $identifier .= $strain_name =~ s/ /-/gr;
+  }
+
+  return $self->make_genotype(undef, undef, [], $genotype_taxonid, $identifier, $strain_name);
 }
 
 sub _get_metagenotype_identifier

@@ -1872,6 +1872,7 @@ sub _metagenotype_store
   my $pathogen_genotype_id = $body_data->{pathogen_genotype_id};
   my $host_genotype_id = $body_data->{host_genotype_id};
   my $host_taxonid = $body_data->{host_taxon_id};
+  my $host_strain_name = $body_data->{host_strain_name};
 
   if (!$host_genotype_id && !$host_taxonid) {
     $c->stash->{json_data} = {
@@ -1910,7 +1911,7 @@ sub _metagenotype_store
     if ($host_genotype_id) {
       $host_genotype = $schema->find_with_type('Genotype', $host_genotype_id);
     } else {
-      $host_genotype = $genotype_manager->get_wildtype_genotype($host_taxonid);
+      $host_genotype = $genotype_manager->get_wildtype_genotype($host_taxonid, $host_strain_name);
     }
 
     my $existing_metagenotype =
