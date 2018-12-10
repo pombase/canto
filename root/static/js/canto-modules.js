@@ -3388,6 +3388,7 @@ var genotypeEdit =
       templateUrl: app_static_path + 'ng_templates/genotype_edit.html',
       controller: function($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
 
         $scope.getGenesFromServer = function() {
           Curs.list('gene').success(function(results) {
