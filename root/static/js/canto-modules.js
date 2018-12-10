@@ -6843,7 +6843,7 @@ var metagenotypeManage = function(CantoGlobals, CursGenotypeList, Metagenotype, 
           var strain_id = ($scope.hostModel * -1);
           var strain = StrainsService.getStrainById(strain_id);
           data.host_taxon_id = strain.taxon_id;
-          data.strain_name = strain.strain_name;
+          data.host_strain_name = strain.strain_name;
         } else {
           data.host_genotype_id = $scope.hostModel;
         }
