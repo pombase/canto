@@ -115,6 +115,8 @@ sub _read_genes
       }
     }
 
+    my $organism_full_name = $found_gene->organism()->full_name();
+
     my $taxonid = $self->taxon_id_lookup($found_gene->organism());
 
     my $result_gene = {
@@ -122,7 +124,7 @@ sub _read_genes
       primary_name => $found_gene->$name_column(),
       product => $self->gene_product($found_gene),
       synonyms => [@synonym_identifiers],
-      organism_full_name => $found_gene->organism()->full_name(),
+      organism_full_name => $organism_full_name,
       organism_taxonid => $taxonid,
       match_types => \%match_types,
     };
