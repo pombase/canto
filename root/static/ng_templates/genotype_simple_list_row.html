@@ -12,7 +12,7 @@
         <td>
             <span ng-bind-html="firstAllele.expression | formatExpression | toTrusted"></span>
         </td>
-        <td>
+        <td rowspan="{{genotype.alleles.length}}">
             <span ng-bind-html="genotype.strain_name | formatExpression | toTrusted"></span>
         </td>
     </tr>
@@ -25,9 +25,6 @@
         </td>
         <td>
             <span ng-bind-html="currentAllele.expression | formatExpression | toTrusted"></span>
-        </td>
-        <td>
-            <span ng-bind-html="genotype.strain_name | formatExpression | toTrusted"></span>
         </td>
     </tr>
 </tbody>
