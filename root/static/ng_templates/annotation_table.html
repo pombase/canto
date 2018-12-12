@@ -34,8 +34,8 @@
               <th ng-if="annotationType.feature_type == 'genotype' || !featureIdFilter && annotationType.feature_type != 'metagenotype'">{{displayAnnotationFeatureType}}
                 <span ng-if="annotationType.feature_type == 'genotype'">(allele and expression)</span>
               </th>
-              <th ng-if="annotationType.feature_type == 'metagenotype'">Host genotype</th>
               <th ng-if="annotationType.feature_type == 'metagenotype'">Pathogen genotype</th>
+              <th ng-if="annotationType.feature_type == 'metagenotype'">Host genotype</th>
               <th>Term ID</th>
               <th>Term name</th>
               <th>Evidence code</th>
