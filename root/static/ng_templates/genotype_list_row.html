@@ -14,10 +14,10 @@
   <td>
     <span ng-bind-html="firstAllele.expression | formatExpression | toTrusted"></span>
   </td>
+  <td rowspan="{{genotype.alleles.length}}" ng-show="multi_organism_mode">{{ strain }}</td>
   <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.background">
     <span ng-bind-html="genotype.background | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
-  <td rowspan="{{genotype.alleles.length}}">{{ strain }}</td>
   <td style="width: 4em;" rowspan="{{genotype.alleles.length}}">
     {{genotype.annotation_count}}
     <div ng-if="navigateOnClick == 'false'" class="table-row-actions"

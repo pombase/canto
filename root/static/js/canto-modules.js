@@ -4568,6 +4568,7 @@ var genotypeListRowCtrl =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
+        $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
 
         $scope.firstAllele = $scope.genotype.alleles[0];
         $scope.otherAlleles = $scope.genotype.alleles.slice(1);
@@ -4622,6 +4623,7 @@ var genotypeListViewCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function($scope) {
+        $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
 
         function hasDifferentStrains(genotypes) {
           var firstStrain = genotypes[0].strain_name;
