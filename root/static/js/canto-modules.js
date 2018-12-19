@@ -96,7 +96,7 @@ function copyIfChanged(origObj, changedObj, dest) {
     }
 
     if (changedObj[key] !== origObj[key]) {
-      if (origObj[key] instanceof Array && changedObj[key] instanceof Array &&
+      if (origObj[key] instanceof Object && changedObj[key] instanceof Object &&
           angular.equals(origObj[key], changedObj[key])) {
         // same
       } else {
