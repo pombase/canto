@@ -1,4 +1,10 @@
 <tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
+  <td ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
+    {{annotation.organism.scientific_name}}
+  </td>
+  <td ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
+    {{annotation.strain_name}}
+  </td>
   <td ng-if="annotationType.feature_type == 'genotype'">
     <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
       {{allele.gene_display_name}}
