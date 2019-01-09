@@ -11,13 +11,10 @@
                         <tr class="curs-allele-type-select">
                             <td>Available Strains for this curation</td>
                             <td>
-                                <select
-                                    class="form-control"
-                                    ng-model="strainData.strain"
-                                    name="curs-allele-type"
-                                    ng-options="st.strain_name for st in strains(taxonId) track by st.strain_name">
-                                    <option value="">Choose a strain ...</option>
-                                </select>
+                                <strain-selector
+                                    strains="strains"
+                                    strain-selected="strainSelected(strain)">
+                                </strain-selector>
                             </td>
                         </tr>
                     </table>
