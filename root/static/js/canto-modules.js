@@ -3390,6 +3390,8 @@ var genotypeEdit =
           $scope.genes = [
           ];
 
+          $scope.strains = [];
+
           $scope.getGenesFromServer();
 
           $scope.data = {
