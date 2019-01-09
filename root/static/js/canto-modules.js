@@ -3837,6 +3837,36 @@ canto.directive('organismSelector', [
   organismSelector
 ]);
 
+var strainSelector = function (CantoGlobals) {
+  return {
+    scope: {
+      strainNames: '<',
+      strainSelected: '&'
+    },
+    restrict: 'E',
+    templateUrl: app_static_path + 'ng_templates/strain_selector.html',
+    controller: strainSelectorCtrl
+  };
+};
+
+var strainSelectorCtrl = function ($scope, CantoGlobals) {
+
+  $scope.app_static_path = CantoGlobals.app_static_path;
+
+  $scope.data = {
+    selectedStrain: null
+  };
+
+  $scope.strainChanged = function () {
+    $scope.strainSelected({
+      strainName: $scope.data.selectedStrain
+    });
+  };
+
+};
+
+canto.directive('strainSelector', ['CantoGlobals', strainSelector]);
+
 var GenotypeGeneListCtrl =
   function($uibModal, $http, Curs, CursGenotypeList, CantoGlobals,
            CantoConfig, toaster) {

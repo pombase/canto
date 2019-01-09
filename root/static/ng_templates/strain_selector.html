@@ -1,0 +1,10 @@
+<div>
+  <select
+      class="form-control"
+      ng-model="data.selectedStrain"
+      ng-change="strainChanged()"
+      name="curs-allele-type"
+      ng-options="s for s in strainNames">
+    <option value="">Choose a strain ...</option>
+  </select>
+</div>
