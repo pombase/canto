@@ -3361,6 +3361,28 @@ var genotypeEdit =
           });
         };
 
+        function filterStrainsByTaxonId(strains, taxonId) {
+          return $.grep(strains, function (strain) {
+            return strain.taxon_id === taxonId;
+          });
+        }
+
+        function extractStrainNames(strains) {
+          return $.map(strains, function (strain) {
+            return strain.strain_name;
+          });
+        }
+
+        function getStrainNamesFromServer (taxonId) {
+          Curs.list('strain').success(function (strains) {
+            $scope.strains = extractStrainNames(
+              filterStrainsByTaxonId(strains, taxonId)
+            );
+          }).error(function() {
+            toaster.pop('error', 'failed to get strain list from server');
+          });
+        }
+
         $scope.reset = function() {
           $scope.alleles = [
           ];
