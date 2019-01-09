@@ -15,6 +15,12 @@
                              ng-model="data.genotypeBackground" />
           <help-icon key="genotype_edit_background_input"></help-icon>
         </div>
+        <div>
+          Strain: <strain-selector
+            strain-names="strains"
+            strain-selected="strainSelected(strainName)">
+          </strain-selector>
+        </div>
       </div>
       <div class="col-sm-5 col-md-5">
         <div ng-show="editOrDuplicate == 'edit' && data.annotationCount > 0"
