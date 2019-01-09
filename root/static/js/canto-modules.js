@@ -3348,8 +3348,10 @@ var genotypeEdit =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
 
-        $scope.strainSelected = function (strainName) {
-          $scope.data.selectedStrainName = strainName;
+        $scope.strainSelected = function (strain) {
+          $scope.data.selectedStrainName = strain
+            ? strain.strain_name
+            : null;
         };
 
         $scope.getGenesFromServer = function() {
@@ -3371,17 +3373,9 @@ var genotypeEdit =
           });
         }
 
-        function extractStrainNames(strains) {
-          return $.map(strains, function (strain) {
-            return strain.strain_name;
-          });
-        }
-
         function getStrainNamesFromServer (taxonId) {
           Curs.list('strain').success(function (strains) {
-            $scope.strains = extractStrainNames(
-              filterStrainsByTaxonId(strains, taxonId)
-            );
+            $scope.strains = filterStrainsByTaxonId(strains, taxonId);
           }).error(function() {
             toaster.pop('error', 'failed to get strain list from server');
           });
@@ -3845,7 +3839,7 @@ canto.directive('organismSelector', [
 var strainSelector = function (CantoGlobals) {
   return {
     scope: {
-      strainNames: '<',
+      strains: '<',
       strainSelected: '&'
     },
     restrict: 'E',
@@ -3864,7 +3858,7 @@ var strainSelectorCtrl = function ($scope, CantoGlobals) {
 
   $scope.strainChanged = function () {
     $scope.strainSelected({
-      strainName: $scope.data.selectedStrain
+      strain: $scope.data.selectedStrain
     });
   };
 

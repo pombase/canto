@@ -3,7 +3,7 @@
       ng-model="data.selectedStrain"
       ng-change="strainChanged()"
       name="curs-allele-type"
-      ng-options="s for s in strainNames">
+      ng-options="s.strain_name for s in strains track by s.strain_name">
     <option value="">Choose a strain ...</option>
   </select>
 </div>
