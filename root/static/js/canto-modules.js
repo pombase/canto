@@ -3348,6 +3348,10 @@ var genotypeEdit =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
 
+        $scope.strainSelected = function (strainName) {
+          $scope.data.selectedStrainName = strainName;
+        };
+
         $scope.getGenesFromServer = function() {
           Curs.list('gene').success(function(results) {
             $scope.genes = results;
@@ -3398,6 +3402,7 @@ var genotypeEdit =
             annotationCount: 0,
             genotypeName: null,
             genotypeBackground: null,
+            selectedStrainName: null
           };
 
           $scope.wildTypeCheckPasses = true;
