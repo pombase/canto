@@ -3391,6 +3391,7 @@ var genotypeEdit =
           $scope.strains = [];
 
           $scope.getGenesFromServer();
+          getStrainNamesFromServer(5518);
 
           $scope.data = {
             annotationCount: 0,
