@@ -6990,7 +6990,9 @@ var strainPickerDialogCtrl =
   function($scope, $uibModalInstance, StrainsService) {
 
     $scope.taxonId = $scope.$resolve.args.taxonId;
-    $scope.strainData = {};
+    $scope.strainData = {
+      strain: null
+    };
 
     $scope.strains = StrainsService.getSessionStrains($scope.taxonId);
 
