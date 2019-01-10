@@ -22,24 +22,8 @@
       <tbody ng-repeat-start="o in organisms() track by o.taxonid">
         <tr ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
           <td rowspan="{{ o.genes.length }}">
-            <table>
-              <tr>
-                <th width="150">Taxon ID:</th>
-                <td>{{ o.taxonid }}</td>
-              </tr>
-              <tr>
-                <th>Organism:</th>
-                <td>{{ o.scientific_name }}</td>
-              </tr>
-              <tr>
-                <th>Common name:</th>
-                <td>{{ o.common_name }}</td>
-              </tr>
-              <tr><td>&nbsp;</td></tr>
-              <tr>
-                <td colspan="2"><strain-picker taxon-id="{{ o.taxonid }}"></strain-picker></td>
-              </tr>
-            </table></td>
+            <i>{{ o.scientific_name }}</i> <span ng-if="o.common_name">({{ o.common_name }})</span> [{{ o.taxonid }}]
+          </td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).systematic_identifier }}</td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).name }}</td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).synonyms.join(', ') }}</td>
