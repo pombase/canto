@@ -6999,7 +6999,7 @@ var strainPickerDialogCtrl =
     };
 
     $scope.isValid = function() {
-      return ($scope.strainData.strain !== 'choose a strain ...');
+      return !! $scope.strainData.strain;
     };
 
     $scope.ok = function () {
