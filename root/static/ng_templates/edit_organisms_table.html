@@ -35,8 +35,8 @@
             ng-click="removeGene(firstGene(o.genes).gene_id)">
               <span ng-class="{'gene-button-delete-text-disabled': firstGene(o.genes).disabled}">X</span></button>
           </td>
-          <td ng-if="o.genes.length == 0" colspan="4" rowspan="2">No genes for this organism</td>
-          <td ng-if="o.genes.length == 0" rowspan="2"><button
+          <td ng-if="o.genes.length == 0" colspan="4">No genes for this organism</td>
+          <td ng-if="o.genes.length == 0"><button
             ng-class="{'btn-danger': (!g.disabled)}"
             title="Remove host"
             ng-click="removeHost(o.taxonid)">X</button>
