@@ -6,11 +6,11 @@
   <div ng-show="organisms().length > 0" class="curs-box-body">
     <table class="list">
       <thead>
-        <tr class="info">
+        <tr>
           <th>Organisms</th>
           <th colspan="5">Genes</th>
         </tr>
-        <tr class="info">
+        <tr>
             <th></th>
             <th>ID</th>
             <th>Name</th>
@@ -20,8 +20,8 @@
         </tr>
       </thead>
       <tbody ng-repeat-start="o in organisms() track by o.taxonid">
-        <tr ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
           <td rowspan="{{ o.genes.length }}">
+        <tr>
             <b>{{ o.scientific_name }}</b> <span ng-if="o.common_name">({{ o.common_name }})</span> [{{ o.taxonid }}]
           </td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).systematic_identifier }}</td>
@@ -43,8 +43,7 @@
           </td>
         </tr>
         <tr ng-if="o.genes.length > 0"
-          ng-repeat="g in otherGenes(o.genes) track by g.systematic_identifier"
-          ng-class="{'active': o.row % 2 == 0, 'success': o.row % 2 != 0}">
+          ng-repeat="g in otherGenes(o.genes) track by g.systematic_identifier">
           <td>{{ g.systematic_identifier }}</td>
           <td>{{ g.name }}</td>
           <td>{{ g.synonyms.join(', ') }}</td>
