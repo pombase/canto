@@ -371,6 +371,10 @@ table.curs-genotype-list tbody.odd, table.curs-genotype-list tbody:nth-child(odd
 .organism-table > tbody:nth-child(odd) {
   background-color: #EEEEDD;
 }
+.organism-table__no-gene-notice {
+  text-align: center;
+  color: #555;
+}
 .list_page th {
   white-space: normal !important;
 }

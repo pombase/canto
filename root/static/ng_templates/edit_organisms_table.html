@@ -4,7 +4,7 @@
     <p>No genes have been added.</p>
   </div>
   <div ng-show="organisms().length > 0" class="curs-box-body">
-    <table class="organism-table">
+    <table class="curs-genotype-list">
       <thead>
         <tr>
           <th>Organisms</th>
@@ -35,7 +35,7 @@
             ng-click="removeGene(firstGene(o.genes).gene_id)">
               <span ng-class="{'gene-button-delete-text-disabled': firstGene(o.genes).disabled}">X</span></button>
           </td>
-          <td ng-if="o.genes.length == 0" colspan="4">No genes for this organism</td>
+          <td ng-if="o.genes.length == 0" class="organism-table__no-gene-notice" colspan="4">(No genes for this organism)</td>
           <td ng-if="o.genes.length == 0"><button
             ng-class="{'btn-danger': (!g.disabled)}"
             title="Remove host"
