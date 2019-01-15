@@ -3434,6 +3434,7 @@ var genotypeEdit =
               $scope.data.genotypeBackground = genotypeDetails.background;
               $scope.data.annotationCount = genotypeDetails.annotation_count;
               $scope.data.taxonId = genotypeDetails.organism.taxonid;
+              $scope.data.strainName = genotypeDetails.strain_name;
             });
         }
 
