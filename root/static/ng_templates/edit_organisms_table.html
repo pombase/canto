@@ -19,7 +19,7 @@
             <th>&nbsp;</th>
         </tr>
       </thead>
-      <tbody ng-repeat-start="o in organisms() track by o.taxonid">
+      <tbody ng-repeat="o in organisms() track by o.taxonid">
         <tr>
           <td rowspan="{{ o.genes.length === 0 ? 1 : o.genes.length }}">
             <b>{{ o.scientific_name }}</b> <span ng-if="o.common_name">({{ o.common_name }})</span> [{{ o.taxonid }}]
@@ -58,7 +58,6 @@
         </tr>
         <tr><td colspan="6"><strain-picker taxon-id="{{ o.taxonid }}"></strain-picker></td></tr>
       </tbody>
-      <tbody ng-repeat-end></tbody>
     </table>
   </div>
 </div>
