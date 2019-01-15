@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v1253
+app_version: v1254
 
 schema_version: 24
 
@@ -858,6 +858,38 @@ class_info:
       class_display_name: Sequence feature or region
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Sequence feature or region')"
+    triage_browser_datasets_to_host:
+      class_display_name: Browser datasets, to host
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Browser datasets, to host')"
+    triage_browser_datasets_hosted:
+      class_display_name: Browser datasets, hosted
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Browser datasets, hosted')"
+    triage_dna_replication_related:
+      class_display_name: DNA replication related
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'DNA replication related')"
+    triage_dna_recombination_related:
+      class_display_name: DNA recombination related
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'DNA recombination related')"
+    triage_mitochondrial_sequence_related:
+      class_display_name: Mitochondrial sequence related
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Mitochondrial sequence related')"
+    triage_3d_genome_organization:
+      class_display_name: 3D genome organization
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = '3D genome organization')"
+    triage_transposon_related:
+      class_display_name: Transposon related
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Transposon related')"
+    triage_mating_type_related:
+      class_display_name: Mating-type related
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Mating-type related')"
     triage_not_english_publications:
       class_display_name: Not English
       extends: pub
@@ -1150,6 +1182,15 @@ reports:
             - report: uncuratable_publications
               children:
                 - report: triage_sequence_feature_or_region_publications
+                  children:
+                    - report: triage_browser_datasets_to_host
+                    - report: triage_browser_datasets_hosted
+                    - report: triage_dna_replication_related
+                    - report: triage_dna_recombination_related
+                    - report: triage_mitochondrial_sequence_related
+                    - report: triage_3d_genome_organization
+                    - report: triage_transposon_related
+                    - report: triage_mating_type_related
                 - report: triage_not_english_publications
                 - report: triage_method_or_reagent_publications
                 - report: triage_wrong_organism_publications
