@@ -6987,9 +6987,9 @@ canto.directive('strainPicker', ['StrainsService', 'CantoService', strainPicker]
 
 
 var strainPickerDialogCtrl =
-  function($scope, $uibModalInstance, StrainsService) {
+  function($scope, $uibModalInstance, args, StrainsService) {
 
-    $scope.taxonId = $scope.$resolve.args.taxonId;
+    $scope.taxonId = args.taxonId;
     $scope.strainData = {
       strain: null
     };
@@ -7013,7 +7013,7 @@ var strainPickerDialogCtrl =
     };
   };
 
-canto.controller('strainPickerDialogCtrl', ['$scope', '$uibModalInstance', 'StrainsService', strainPickerDialogCtrl]);
+canto.controller('strainPickerDialogCtrl', ['$scope', '$uibModalInstance', 'args', 'StrainsService', strainPickerDialogCtrl]);
 
 
 function selectStrainPicker($uibModal, taxonId)
