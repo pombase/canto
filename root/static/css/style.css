@@ -331,7 +331,9 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
   padding: 10px;
 }
 
-table.list, table.curs-genotype-list {
+table.list,
+table.curs-genotype-list,
+.organism-table {
   margin: 5px 0 5px 0;
   border-width: 0px;
   border-spacing: 5px;
@@ -341,7 +343,9 @@ table.list, table.curs-genotype-list {
   font-size: 90%;
   max-width: 80%;
 }
-table.list th, table.curs-genotype-list th {
+table.list th,
+table.curs-genotype-list th,
+.organism-table th {
   padding: 3px;
   background-color: #d0d0c0;
   font-weight: bold;
@@ -353,13 +357,23 @@ table.curs-genotype-list th {
   text-align: center;
 }
 
-table.list tr.even, table.list tr:nth-child(even),
-table.curs-genotype-list tbody.even, table.curs-genotype-list tbody:nth-child(even) {
+table.list tr.even,
+table.list tr:nth-child(even),
+table.curs-genotype-list tbody.even,
+table.curs-genotype-list tbody:nth-child(even),
+.organism-table > tbody:nth-child(odd) {
   background-color: #eed;
 }
-table.list tr.odd, table.list tr:nth-child(odd),
-table.curs-genotype-list tbody.odd, table.curs-genotype-list tbody:nth-child(odd){
+table.list tr.odd,
+table.list tr:nth-child(odd),
+table.curs-genotype-list tbody.odd,
+table.curs-genotype-list tbody:nth-child(odd),
+.organism-table > tbody:nth-child(even) {
   background-color: white;
+}
+.organism-table__no-gene-notice {
+  text-align: center;
+  color: #555;
 }
 .list_page th {
   white-space: normal !important;
@@ -374,7 +388,8 @@ table.list td, table.curs-genotype-list td {
   vertical-align: top;
 }
 
-table.list tr td {
+table.list tr td,
+.organism-table tr td {
   border-width: 1px;
   padding: 3px;
   border-style: solid;
