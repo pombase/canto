@@ -3005,6 +3005,10 @@ var alleleEditDialogCtrl =
       getStrains: StrainsService.getSessionStrains,
     };
 
+    $scope.strainSelected = function (strain) {
+      $scope.strainData.selectedStrain = strain;
+    };
+
     $scope.env = {
     };
 
