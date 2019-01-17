@@ -320,25 +320,6 @@ canto.service('Curs', function($http, $q) {
   };
 });
 
-canto.service('CursOrganismList', function($q, Curs) {
-  this.organisms = [];
-  this.organismList = function() {
-    var q = $q.defer();
-
-    Curs.list('organism').success(function(organisms) {
-        CursOrganismList.organisms = organisms;
-      q.resolve(organisms);
-    }).error(function() {
-      q.reject();
-    });
-
-    return q.promise;
-  };
-  this.getOrganisms = function () {
-      return CursOrganismList.organisms;
-  }
-});
-
 canto.service('CursGeneList', function($q, Curs) {
   this.geneList = function() {
     var q = $q.defer();
