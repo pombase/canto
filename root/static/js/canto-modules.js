@@ -2267,7 +2267,7 @@ var extensionRelationEdit =
             var result = re.exec($scope.extensionRelation.rangeValue);
 
             if (result) {
-              var pcStart = result[1];
+              var pcStart = Number(result[1]);
 
               if (pcStart > 100) {
                 return 'Value must be <= 100';
