@@ -2989,7 +2989,7 @@ canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameCo
 
 
 var alleleEditDialogCtrl =
-  function($scope, $uibModalInstance, toaster, CantoConfig, args, StrainsService, CantoGlobals) {
+  function($scope, $uibModalInstance, toaster, CantoConfig, args, Curs, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
@@ -3002,8 +3002,10 @@ var alleleEditDialogCtrl =
     $scope.strainData = {
       selectedStrain: null,
       showStrainPicker: CantoGlobals.multi_organism_mode && $scope.taxonId,
-      getStrains: StrainsService.getSessionStrains,
+      strains: null
     };
+
+    getStrainNamesFromServer($scope.taxonId);
 
     $scope.strainSelected = function (strain) {
       $scope.strainData.selectedStrain = strain;
@@ -3111,10 +3113,18 @@ var alleleEditDialogCtrl =
     $scope.cancel = function () {
       $uibModalInstance.dismiss('cancel');
     };
+
+    function getStrainNamesFromServer(taxonId) {
+      Curs.list('strain').success(function (strains) {
+        $scope.strainData.strains = filterStrainsByTaxonId(strains, taxonId);
+      }).error(function() {
+        toaster.pop('error', 'failed to get strain list from server');
+      });
+    }
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'StrainsService', 'CantoGlobals',
+                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'Curs', 'CantoGlobals',
                  alleleEditDialogCtrl]);
 
 var termSuggestDialogCtrl =
