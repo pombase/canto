@@ -15,7 +15,7 @@
                              ng-model="data.genotypeBackground" />
           <help-icon key="genotype_edit_background_input"></help-icon>
         </div>
-        <div>
+        <div ng-if="multi_organism_mode">
           Strain: <strain-selector
             strains="strains"
             strain-selected="strainSelected(strain)"
