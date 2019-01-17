@@ -3382,12 +3382,8 @@ var genotypeEdit =
         }
 
         $scope.reset = function() {
-          $scope.alleles = [
-          ];
-
-          $scope.genes = [
-          ];
-
+          $scope.alleles = [];
+          $scope.genes = [];
           $scope.strains = [];
 
           $scope.getGenesFromServer();
@@ -3397,7 +3393,9 @@ var genotypeEdit =
             annotationCount: 0,
             genotypeName: null,
             genotypeBackground: null,
-            selectedStrainName: null
+            selectedStrainName: null,
+            strainName: null,
+            taxonId: null
           };
 
           $scope.wildTypeCheckPasses = true;
