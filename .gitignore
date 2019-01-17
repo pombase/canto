@@ -8,6 +8,8 @@ pipeline.yaml
 pipeline-example-config.yaml
 t/scratch/
 canto_deploy.yaml
+canto_deploy.yaml.*
+
 canto_test.yaml
 local*
 nytprof*
@@ -34,3 +36,4 @@ GO_CC_A_E_config
 GO_MF_A_E_config
 PSI-MOD_A_E_config
 node_modules
+tsoutput

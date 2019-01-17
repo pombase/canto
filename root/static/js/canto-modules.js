@@ -1,3 +1,5 @@
+// @ts-check
+
 "use strict";
 
 /*global history,curs_root_uri,angular,$,make_ontology_complete_url,

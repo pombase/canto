@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "./tsoutput",
+    "allowJs": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "target": "es6",
+    "module": "commonjs",
+    "typeRoots": ["./root/static/js/"]
+  },
+  "include": [
+    "./root/static/js/canto-modules.js",
+    "./root/static/js/canto-modules.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
