@@ -3386,9 +3386,6 @@ var genotypeEdit =
           $scope.genes = [];
           $scope.strains = [];
 
-          $scope.getGenesFromServer();
-          getStrainNamesFromServer($scope.taxonId);
-
           $scope.data = {
             annotationCount: 0,
             genotypeName: null,
@@ -3402,20 +3399,27 @@ var genotypeEdit =
         };
 
         $scope.reset();
+        reload();
 
-        if ($scope.genotypeId) {
-          if ($scope.editOrDuplicate == 'edit') {
-            $scope.data.genotype_id = $scope.genotypeId;
+        function reload() {
+          $scope.getGenesFromServer();
+
+          if ($scope.genotypeId) {
+            if ($scope.editOrDuplicate == 'edit') {
+              $scope.data.genotype_id = $scope.genotypeId;
+            }
+            Curs.details('genotype', ['by_id', $scope.genotypeId])
+              .success(function(genotypeDetails) {
+                $scope.alleles = genotypeDetails.alleles;
+                $scope.data.genotypeName = genotypeDetails.name;
+                $scope.data.genotypeBackground = genotypeDetails.background;
+                $scope.data.annotationCount = genotypeDetails.annotation_count;
+                $scope.data.taxonId = genotypeDetails.organism.taxonid;
+                $scope.data.strainName = genotypeDetails.strain_name;
+
+                getStrainNamesFromServer($scope.data.taxonId);
+              });
           }
-          Curs.details('genotype', ['by_id', $scope.genotypeId])
-            .success(function(genotypeDetails) {
-              $scope.alleles = genotypeDetails.alleles;
-              $scope.data.genotypeName = genotypeDetails.name;
-              $scope.data.genotypeBackground = genotypeDetails.background;
-              $scope.data.annotationCount = genotypeDetails.annotation_count;
-              $scope.data.taxonId = genotypeDetails.organism.taxonid;
-              $scope.data.strainName = genotypeDetails.strain_name;
-            });
         }
 
         $scope.env = {
