@@ -3368,8 +3368,9 @@ var genotypeEdit =
         };
 
         function filterStrainsByTaxonId(strains, taxonId) {
+          var taxonIdNum = parseInt(taxonId, 10);
           return $.grep(strains, function (strain) {
-            return strain.taxon_id === taxonId;
+            return strain.taxon_id === taxonIdNum;
           });
         }
 
