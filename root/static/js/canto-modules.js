@@ -6996,14 +6996,14 @@ canto.directive('strainPicker', ['StrainsService', 'CantoService', strainPicker]
 
 
 var strainPickerDialogCtrl =
-  function($scope, $uibModalInstance, args, StrainsService) {
+  function($scope, $uibModalInstance, args, Curs) {
 
     $scope.taxonId = args.taxonId;
     $scope.strainData = {
       strain: null
     };
 
-    $scope.strains = StrainsService.getSessionStrains($scope.taxonId);
+    getStrainNamesFromServer($scope.taxonId);
 
     $scope.strainSelected = function (strain) {
       $scope.strainData.strain = strain;
@@ -7020,9 +7020,17 @@ var strainPickerDialogCtrl =
     $scope.cancel = function () {
       $uibModalInstance.dismiss('cancel');
     };
+
+    function getStrainNamesFromServer(taxonId) {
+      Curs.list('strain').success(function (strains) {
+        $scope.strains = filterStrainsByTaxonId(strains, taxonId);
+      }).error(function() {
+        toaster.pop('error', 'failed to get strain list from server');
+      });
+    }
   };
 
-canto.controller('strainPickerDialogCtrl', ['$scope', '$uibModalInstance', 'args', 'StrainsService', strainPickerDialogCtrl]);
+canto.controller('strainPickerDialogCtrl', ['$scope', '$uibModalInstance', 'args', 'Curs', strainPickerDialogCtrl]);
 
 
 function selectStrainPicker($uibModal, taxonId)
