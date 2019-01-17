@@ -3005,7 +3005,7 @@ var alleleEditDialogCtrl =
       strains: null
     };
 
-    getStrainNamesFromServer($scope.taxonId);
+    getStrainsFromServer($scope.taxonId);
 
     $scope.strainSelected = function (strain) {
       $scope.strainData.selectedStrain = strain;
@@ -3114,7 +3114,7 @@ var alleleEditDialogCtrl =
       $uibModalInstance.dismiss('cancel');
     };
 
-    function getStrainNamesFromServer(taxonId) {
+    function getStrainsFromServer(taxonId) {
       Curs.list('strain').success(function (strains) {
         $scope.strainData.strains = filterStrainsByTaxonId(strains, taxonId);
       }).error(function() {
@@ -3388,7 +3388,7 @@ var genotypeEdit =
           });
         };
 
-        function getStrainNamesFromServer (taxonId) {
+        function getStrainsFromServer(taxonId) {
           Curs.list('strain').success(function (strains) {
             $scope.strains = filterStrainsByTaxonId(strains, taxonId);
           }).error(function() {
@@ -3432,7 +3432,7 @@ var genotypeEdit =
                 $scope.data.taxonId = genotypeDetails.organism.taxonid;
                 $scope.data.strainName = genotypeDetails.strain_name;
 
-                getStrainNamesFromServer($scope.data.taxonId);
+                getStrainsFromServer($scope.data.taxonId);
               });
           }
         }
@@ -7017,7 +7017,7 @@ var strainPickerDialogCtrl =
       strain: null
     };
 
-    getStrainNamesFromServer($scope.taxonId);
+    getStrainsFromServer($scope.taxonId);
 
     $scope.strainSelected = function (strain) {
       $scope.strainData.strain = strain;
@@ -7035,7 +7035,7 @@ var strainPickerDialogCtrl =
       $uibModalInstance.dismiss('cancel');
     };
 
-    function getStrainNamesFromServer(taxonId) {
+    function getStrainsFromServer(taxonId) {
       Curs.list('strain').success(function (strains) {
         $scope.strains = filterStrainsByTaxonId(strains, taxonId);
       }).error(function() {
