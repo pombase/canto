@@ -165,6 +165,13 @@ function getGenotypeManagePath(organismMode) {
   return paths.normal;
 }
 
+function filterStrainsByTaxonId(strains, taxonId) {
+  var taxonIdNum = parseInt(taxonId, 10);
+  return $.grep(strains, function (strain) {
+    return strain.taxon_id === taxonIdNum;
+  });
+}
+
 canto.filter('breakExtensions', function() {
   return function(text) {
     if (text) {
@@ -3366,13 +3373,6 @@ var genotypeEdit =
             toaster.pop('error', 'failed to get gene list from server');
           });
         };
-
-        function filterStrainsByTaxonId(strains, taxonId) {
-          var taxonIdNum = parseInt(taxonId, 10);
-          return $.grep(strains, function (strain) {
-            return strain.taxon_id === taxonIdNum;
-          });
-        }
 
         function getStrainNamesFromServer (taxonId) {
           Curs.list('strain').success(function (strains) {
