@@ -1536,6 +1536,10 @@ a:not([href]) {
   display: inline-block;
 }
 
+.strain-selector__select--genotype-edit {
+  padding: 3.5px 0;
+}
+
 .metagenotype-genotype-shortcut {
   padding-top: 20px;
 }

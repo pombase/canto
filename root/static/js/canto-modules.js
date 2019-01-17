@@ -3864,7 +3864,8 @@ var strainSelector = function (CantoGlobals) {
   return {
     scope: {
       strains: '<',
-      strainSelected: '&'
+      strainSelected: '&',
+      styleClass: '@?'
     },
     restrict: 'E',
     templateUrl: app_static_path + 'ng_templates/strain_selector.html',
@@ -3877,7 +3878,8 @@ var strainSelectorCtrl = function ($scope, CantoGlobals) {
   $scope.app_static_path = CantoGlobals.app_static_path;
 
   $scope.data = {
-    selectedStrain: null
+    selectedStrain: null,
+    styleClass: computeStyleClass($scope.styleClass)
   };
 
   $scope.strainChanged = function () {
@@ -3885,6 +3887,10 @@ var strainSelectorCtrl = function ($scope, CantoGlobals) {
       strain: $scope.data.selectedStrain
     });
   };
+
+  function computeStyleClass(className) {
+    return className === undefined ? 'form-control' : className;
+  }
 
 };
 
