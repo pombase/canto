@@ -1532,6 +1532,10 @@ a:not([href]) {
   width: 100%;
 }
 
+.strain-selector__container {
+  display: inline-block;
+}
+
 .metagenotype-genotype-shortcut {
   padding-top: 20px;
 }
