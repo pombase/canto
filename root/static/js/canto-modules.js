@@ -3487,10 +3487,16 @@ var genotypeEdit =
         };
 
         $scope.store = function() {
-          var result =
-            storeGenotypeHelper(toaster, $http, $scope.data.genotype_id,
-                            $scope.data.genotypeName, $scope.data.genotypeBackground,
-                            $scope.alleles);
+          var result = storeGenotypeHelper(
+            toaster,
+            $http,
+            $scope.data.genotype_id,
+            $scope.data.genotypeName,
+            $scope.data.genotypeBackground,
+            $scope.alleles,
+            undefined,
+            $scope.data.selectedStrainName
+          );
 
           result.success(function(data) {
             if (data.status === "success") {
