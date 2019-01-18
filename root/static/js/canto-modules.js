@@ -165,6 +165,13 @@ function getGenotypeManagePath(organismMode) {
   return paths.normal;
 }
 
+function filterStrainsByTaxonId(strains, taxonId) {
+  var taxonIdNum = parseInt(taxonId, 10);
+  return $.grep(strains, function (strain) {
+    return strain.taxon_id === taxonIdNum;
+  });
+}
+
 canto.filter('breakExtensions', function() {
   return function(text) {
     if (text) {
@@ -2982,7 +2989,7 @@ canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameCo
 
 
 var alleleEditDialogCtrl =
-  function($scope, $uibModalInstance, toaster, CantoConfig, args, StrainsService, CantoGlobals) {
+  function($scope, $uibModalInstance, toaster, CantoConfig, args, Curs, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
@@ -2995,7 +3002,13 @@ var alleleEditDialogCtrl =
     $scope.strainData = {
       selectedStrain: null,
       showStrainPicker: CantoGlobals.multi_organism_mode && $scope.taxonId,
-      getStrains: StrainsService.getSessionStrains,
+      strains: null
+    };
+
+    getStrainsFromServer($scope.taxonId);
+
+    $scope.strainSelected = function (strain) {
+      $scope.strainData.selectedStrain = strain;
     };
 
     $scope.env = {
@@ -3100,10 +3113,18 @@ var alleleEditDialogCtrl =
     $scope.cancel = function () {
       $uibModalInstance.dismiss('cancel');
     };
+
+    function getStrainsFromServer(taxonId) {
+      Curs.list('strain').success(function (strains) {
+        $scope.strainData.strains = filterStrainsByTaxonId(strains, taxonId);
+      }).error(function() {
+        toaster.pop('error', 'failed to get strain list from server');
+      });
+    }
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'StrainsService', 'CantoGlobals',
+                 ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'Curs', 'CantoGlobals',
                  alleleEditDialogCtrl]);
 
 var termSuggestDialogCtrl =
@@ -3348,6 +3369,12 @@ var genotypeEdit =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
 
+        $scope.strainSelected = function (strain) {
+          $scope.data.selectedStrainName = strain
+            ? strain.strain_name
+            : null;
+        };
+
         $scope.getGenesFromServer = function() {
           Curs.list('gene').success(function(results) {
             $scope.genes = results;
@@ -3361,39 +3388,53 @@ var genotypeEdit =
           });
         };
 
+        function getStrainsFromServer(taxonId) {
+          Curs.list('strain').success(function (strains) {
+            $scope.strains = filterStrainsByTaxonId(strains, taxonId);
+          }).error(function() {
+            toaster.pop('error', 'failed to get strain list from server');
+          });
+        }
+
         $scope.reset = function() {
-          $scope.alleles = [
-          ];
-
-          $scope.genes = [
-          ];
-
-          $scope.getGenesFromServer();
+          $scope.alleles = [];
+          $scope.genes = [];
+          $scope.strains = [];
 
           $scope.data = {
             annotationCount: 0,
             genotypeName: null,
             genotypeBackground: null,
+            selectedStrainName: null,
+            strainName: null,
+            taxonId: null
           };
 
           $scope.wildTypeCheckPasses = true;
         };
 
         $scope.reset();
+        reload();
 
-        if ($scope.genotypeId) {
-          if ($scope.editOrDuplicate == 'edit') {
-            $scope.data.genotype_id = $scope.genotypeId;
+        function reload() {
+          $scope.getGenesFromServer();
+
+          if ($scope.genotypeId) {
+            if ($scope.editOrDuplicate == 'edit') {
+              $scope.data.genotype_id = $scope.genotypeId;
+            }
+            Curs.details('genotype', ['by_id', $scope.genotypeId])
+              .success(function(genotypeDetails) {
+                $scope.alleles = genotypeDetails.alleles;
+                $scope.data.genotypeName = genotypeDetails.name;
+                $scope.data.genotypeBackground = genotypeDetails.background;
+                $scope.data.annotationCount = genotypeDetails.annotation_count;
+                $scope.data.taxonId = genotypeDetails.organism.taxonid;
+                $scope.data.strainName = genotypeDetails.strain_name;
+
+                getStrainsFromServer($scope.data.taxonId);
+              });
           }
-          Curs.details('genotype', ['by_id', $scope.genotypeId])
-            .success(function(genotypeDetails) {
-              $scope.alleles = genotypeDetails.alleles;
-              $scope.data.genotypeName = genotypeDetails.name;
-              $scope.data.genotypeBackground = genotypeDetails.background;
-              $scope.data.annotationCount = genotypeDetails.annotation_count;
-              $scope.data.taxonId = genotypeDetails.organism.taxonid;
-              $scope.data.strainName = genotypeDetails.strain_name;
-            });
         }
 
         $scope.env = {
@@ -3460,10 +3501,16 @@ var genotypeEdit =
         };
 
         $scope.store = function() {
-          var result =
-            storeGenotypeHelper(toaster, $http, $scope.data.genotype_id,
-                            $scope.data.genotypeName, $scope.data.genotypeBackground,
-                            $scope.alleles);
+          var result = storeGenotypeHelper(
+            toaster,
+            $http,
+            $scope.data.genotype_id,
+            $scope.data.genotypeName,
+            $scope.data.genotypeBackground,
+            $scope.alleles,
+            undefined,
+            $scope.data.selectedStrainName
+          );
 
           result.success(function(data) {
             if (data.status === "success") {
@@ -3812,6 +3859,42 @@ var organismSelectorCtrl = function ($scope, Curs, toaster, CantoGlobals) {
 canto.directive('organismSelector', [
   organismSelector
 ]);
+
+var strainSelector = function (CantoGlobals) {
+  return {
+    scope: {
+      strains: '<',
+      strainSelected: '&',
+      styleClass: '@?'
+    },
+    restrict: 'E',
+    templateUrl: app_static_path + 'ng_templates/strain_selector.html',
+    controller: strainSelectorCtrl
+  };
+};
+
+var strainSelectorCtrl = function ($scope, CantoGlobals) {
+
+  $scope.app_static_path = CantoGlobals.app_static_path;
+
+  $scope.data = {
+    selectedStrain: null,
+    styleClass: computeStyleClass($scope.styleClass)
+  };
+
+  $scope.strainChanged = function () {
+    $scope.strainSelected({
+      strain: $scope.data.selectedStrain
+    });
+  };
+
+  function computeStyleClass(className) {
+    return className === undefined ? 'form-control' : className;
+  }
+
+};
+
+canto.directive('strainSelector', ['CantoGlobals', strainSelector]);
 
 var GenotypeGeneListCtrl =
   function($uibModal, $http, Curs, CursGenotypeList, CantoGlobals,
@@ -6933,15 +7016,21 @@ canto.directive('strainPicker', ['StrainsService', 'CantoService', strainPicker]
 
 
 var strainPickerDialogCtrl =
-  function($scope, $uibModalInstance, StrainsService) {
+  function($scope, $uibModalInstance, args, Curs) {
 
-    $scope.taxonId = $scope.$resolve.args.taxonId;
-    $scope.strainData = {};
+    $scope.taxonId = args.taxonId;
+    $scope.strainData = {
+      strain: null
+    };
 
-    $scope.strains = StrainsService.getSessionStrains;
+    getStrainsFromServer($scope.taxonId);
+
+    $scope.strainSelected = function (strain) {
+      $scope.strainData.strain = strain;
+    };
 
     $scope.isValid = function() {
-      return ($scope.strainData.strain !== 'choose a strain ...');
+      return !! $scope.strainData.strain;
     };
 
     $scope.ok = function () {
@@ -6951,9 +7040,17 @@ var strainPickerDialogCtrl =
     $scope.cancel = function () {
       $uibModalInstance.dismiss('cancel');
     };
+
+    function getStrainsFromServer(taxonId) {
+      Curs.list('strain').success(function (strains) {
+        $scope.strains = filterStrainsByTaxonId(strains, taxonId);
+      }).error(function() {
+        toaster.pop('error', 'failed to get strain list from server');
+      });
+    }
   };
 
-canto.controller('strainPickerDialogCtrl', ['$scope', '$uibModalInstance', 'StrainsService', strainPickerDialogCtrl]);
+canto.controller('strainPickerDialogCtrl', ['$scope', '$uibModalInstance', 'args', 'Curs', strainPickerDialogCtrl]);
 
 
 function selectStrainPicker($uibModal, taxonId)
