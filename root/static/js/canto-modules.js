@@ -6905,63 +6905,59 @@ canto.service('StrainsService', function (CantoService, Curs, $q, toaster) {
 
     var vm = this;
 
-    vm.sessionStrains = null;
+    vm.strainPromise = null;
+
+    vm.getStrainPromise = function() {
+      if (!vm.strainPromise) {
+        vm.strainPromise = Curs.list('strain').then(function(res) {
+          return vm.setSessionStrains(res.data);
+        });
+      }
+      return vm.strainPromise;
+    };
+
+    vm.getStrainPromise();
 
     vm.getSessionStrains = function (taxonId) {
-
-      if (!vm.sessionStrains) {
-        vm.sessionStrains = [];
-        vm.loadSessionStrains();
-      }
-
-      return vm.sessionStrains.filter(function(s) {
-        return s.taxon_id == taxonId;
-      }).sort(function(a,b) { return (a.strain_name > b.strain_name) ? 1 : -1; });
+      return vm.getStrainPromise()
+        .then(function(sessionStrains) {
+          return sessionStrains.filter(function(s) {
+            return s.taxon_id == taxonId;
+          }).sort(function(a,b) {
+            return (a.strain_name > b.strain_name) ? 1 : -1;
+          });
+        });
     };
 
     vm.getAllSessionStrains = function () {
-
-      if (!vm.sessionStrains) {
-        vm.sessionStrains = [];
-        vm.loadSessionStrains();
-      }
-
-      return vm.sessionStrains;
+      return vm.getStrainPromise();
     };
 
     vm.getStrainById = function (id) {
-      var strains = vm.getAllSessionStrains();
-      return strains.filter(function(strain) { return strain.strain_id == id; })[0];
-    };
-
-    vm.setSessionStrains = function (strains) {
-      vm.sessionStrains = strains;
-    };
-
-    vm.loadSessionStrains = function () {
-      Curs.list('strain').then(function(res) {
-        vm.setSessionStrains(res.data);
-      });
+      return vm.getStrainPromise()
+        .then(function(sessionStrains) {
+          return sessionStrains.filter(function(strain) { return strain.strain_id == id; })[0];
+        });
     };
 
     vm.addSessionStrain = function (taxonId, strain) {
-      if (vm.getSessionStrains(taxonId).filter(function (s) {
-        return s.strain_name == strain;
-      }).length === 0) {
-        Curs.add('strain_by_name', [taxonId, strain]).then(function(){
-          vm.sessionStrains.push({
-            taxon_id: taxonId,
-            strain_name: strain
-          });
+      vm.getSessionStrains(taxonId)
+        .then(function(sessionStrains) {
+          if (sessionStrains.filter(function (s) {
+            return s.strain_name == strain;
+          }).length === 0) {
+            Curs.add('strain_by_name', [taxonId, strain]).then(function(){
+              // reset so that strains are re-fetched
+              vm.strainPromise = null;
+            });
+          }
         });
-      }
     };
 
     vm.removeSessionStrain = function (taxonId, strain) {
       Curs.delete('strain_by_name', taxonId + '/' + strain).then(function(){
-        vm.sessionStrains = vm.sessionStrains.filter(function (s) {
-          return s.taxon_id !== taxonId && s.strain_name !== strain;
-        });
+        // reset so that strains are re-fetched
+        vm.strainPromise = null;
       }, function (error){
         toaster.error('Failed to remove strain', error);
       });
