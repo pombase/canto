@@ -2,7 +2,7 @@
   <td ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
     {{annotation.organism.scientific_name}}
   </td>
-  <td ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
+  <td ng-if="multiOrganismMode && annotationType.feature_type === 'genotype'">
     {{annotation.strain_name}}
   </td>
   <td ng-if="annotationType.feature_type == 'genotype'">
@@ -52,7 +52,7 @@
         </div>
       </a>
       <span ng-if="!addLinks()">
-        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles"> 
+        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
           <initially-hidden-text text="{{allele.long_display_name | encodeAlleleSymbols | toTrusted}}"
                                  preview-char-count="50"
                                  break-on-comma="true"
@@ -141,4 +141,3 @@
     </div>
   </td>
 </tr>
-
