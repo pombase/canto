@@ -259,6 +259,7 @@ sub make_ontology_annotation
       gene_name_or_identifier => $gene_name_or_identifier,
       gene_product => $gene_product,
       gene_synonyms_string => $gene_synonyms_string,
+      organism => $organism_lookup->lookup_by_taxonid($gene->organism()->taxonid()),
       feature_type => 'gene',
       feature_display_name => $gene_name_or_identifier,
       feature_id => $gene->gene_id(),
