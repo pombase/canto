@@ -6,6 +6,8 @@ use strict;
 use warnings;
 use Carp;
 
+use utf8;
+
 use Text::CSV;
 use File::Copy qw(copy);
 use File::Temp qw(tempfile);

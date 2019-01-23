@@ -587,7 +587,7 @@ sub create_pubmed_test_xml
 {
   my $self = shift;
 
-  my $config = Canto::Config->get_config();
+  my $config = Canto::Config::get_config();
 
   my $xml = Canto::Track::PubmedUtil::get_pubmed_xml_by_ids($config,
                                                              @test_pub_ids);
@@ -648,6 +648,7 @@ sub _add_pub_details
 
   my $full_file_name = $data_dir . '/'. $xml_file_name;
   my $xml = IO::All->new($full_file_name)->slurp();
+
   Canto::Track::PubmedUtil::load_pubmed_xml($schema, $xml, 'admin_load');
 
   my $curatable_term = $schema->resultset('Cvterm')->find({ name => 'Curatable' });

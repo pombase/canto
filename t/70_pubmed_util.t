@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 66;
+use Test::More tests => 64;
 
 use Canto::TestUtil;
 use Canto::Track::PubmedUtil;
@@ -50,9 +50,8 @@ sub _check_embo_pub
 
   is ($embo_pub->title(), "Fission yeast Swi5/Sfr1 and Rhp55/Rhp57 differentially regulate Rhp51-dependent recombination outcomes.");
   like ($embo_pub->abstract(), qr/Several accessory proteins referred to as mediators are required/);
-  is ($embo_pub->citation(), "EMBO J. 2007 Mar 7;26(5):1352-62");
-  is ($embo_pub->publication_date(), "7 Mar 2007");
-  is ($embo_pub->affiliation(), "International Graduate School of Arts and Sciences, Yokohama City University, Yokohama, Kanagawa, Japan.");
+  is ($embo_pub->citation(), "EMBO J. 2007 Mar 07;26(5):1352-62");
+  is ($embo_pub->publication_date(), "07 Mar 2007");
   is ($embo_pub->authors(), "Akamatsu Y, Tsutsui Y, Morishita T, Siddique MS, Kurokawa Y, Ikeguchi M, Yamao F, Arcangioli B, Iwasaki H");
 }
 
