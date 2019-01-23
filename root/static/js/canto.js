@@ -2,6 +2,11 @@
 
 /*global $,document,application_root,window,curs_root_uri,curs_people_autocomplete_list */
 
+// eslint-disable-next-line no-unused-vars
+function trim(a) {
+  a=a.replace(/^\s+/,''); return a.replace(/\s+$/,'');
+}
+
 var loadingDiv = $('<div id="loading"><img src="' + application_root +
                    '/static/images/spinner.gif"/></div>');
 
