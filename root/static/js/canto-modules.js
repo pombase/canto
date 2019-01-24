@@ -6910,7 +6910,7 @@ canto.service('StrainsService', function (CantoService, Curs, $q, toaster) {
     vm.getStrainPromise = function() {
       if (!vm.strainPromise) {
         vm.strainPromise = Curs.list('strain').then(function(res) {
-          return vm.setSessionStrains(res.data);
+          return res.data;
         });
       }
       return vm.strainPromise;
