@@ -6977,7 +6977,8 @@ var strainPicker = function() {
             $scope.typeStrain = null;
 
             $scope.data = {
-                strains: [],
+                strains: null,
+                sessionStrains: null,
                 strainSelector: 'Add experimental strains for this organism'
             };
 
@@ -6985,7 +6986,11 @@ var strainPicker = function() {
               $scope.data.strains = strains.data;
             });
 
-            $scope.sessionStrains = StrainsService.getSessionStrains;
+
+            StrainsService.getSessionStrains()
+              .then(function(sessionStrains) {
+                $scope.data.sessionStrains = sessionStrains;
+              });
 
             $scope.changed = function () {
               if ($scope.data.strainSelector !== 'Type a new strain') {
