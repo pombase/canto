@@ -144,6 +144,13 @@ our %shared_test_results = (
     'term_ontid' => 'MOD:01157',
     'gene_id' => 4,
     'taxonid' => 4896,
+    'organism' => {
+      full_name => 'Schizosaccharomyces pombe',
+      common_name => 'fission yeast',
+      pathogen_or_host => 'unknown',
+      taxonid => '4896',
+      scientific_name => 'Schizosaccharomyces pombe',
+    },
     'creation_date_short' => '20100102',
     'completed' => '',
     'is_not' => JSON::false,

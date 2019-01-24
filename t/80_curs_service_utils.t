@@ -580,6 +580,14 @@ sub clean_results
 
 clean_results($annotation_res);
 
+my $annotation_expected_organism = {
+  full_name => 'Schizosaccharomyces pombe',
+  common_name => 'fission yeast',
+  pathogen_or_host => 'unknown',
+  taxonid => '4896',
+  scientific_name => 'Schizosaccharomyces pombe'
+};
+
 cmp_deeply($annotation_res,
          [
             {
@@ -634,6 +642,7 @@ cmp_deeply($annotation_res,
               'creation_date_short' => '20100102',
               'completed' => 1,
               'taxonid' => 4896,
+              'organism' => $annotation_expected_organism,
               'is_not' => JSON::false,
               'creation_date' => '2010-01-02',
               'evidence_code' => 'IPI',
@@ -659,6 +668,7 @@ cmp_deeply($annotation_res,
               'term_name' => 'transmembrane transporter activity',
               'is_not' => JSON::false,
               'taxonid' => 4896,
+              'organism' => $annotation_expected_organism,
               'creation_date_short' => '20100102',
               'completed' => 1,
               'annotation_type_display_name' => 'GO molecular function',
@@ -690,6 +700,7 @@ cmp_deeply($annotation_res,
               'evidence_code' => 'IMP',
               'annotation_type_display_name' => 'GO biological process',
               'taxonid' => 4896,
+              'organism' => $annotation_expected_organism,
               'completed' => 1,
               'creation_date_short' => '20100102',
               'is_not' => JSON::false,
