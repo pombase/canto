@@ -6701,10 +6701,14 @@ var metagenotypeGenotypePicker =
         };
 
         $scope.setWildtypeOrganism = function () {
-          $scope.data.wildType = StrainsService.getSessionStrains($scope.data.selectedOrganism.taxonid)
-            .map(function(strain) {
-              strain.genotype_id = (0 - strain.strain_id);
-              return strain;
+          StrainsService.getSessionStrains($scope.data.selectedOrganism.taxonid)
+            .then(function(strains) {
+              $scope.data.wildType = null;
+
+              strains.map(function(strain) {
+                strain.genotype_id = (0 - strain.strain_id);
+                $scope.data.wildType = strain;
+              });
             });
         };
 
