@@ -7330,23 +7330,37 @@ var editOrganisms = function() {
         $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
         $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
 
+        $scope.allSessionStrains = null;
+
+        StrainsService.getAllSessionStrains()
+          .then(function(allSessionStrains) {
+            $scope.allSessionStrains = allSessionStrains;
+          });
+
         $scope.getContiueUrlDisabled = function () {
-          var disabled = false;
-
-
-          if ($scope.getPathogens().filter(function(p) {
-            return (StrainsService.getSessionStrains(p.taxonid).length == 0);
-          }).length > 0) {
-            disabled = true;
+          if (!$scope.allSessionStrains) {
+            return true;
           }
 
-          if ($scope.getHosts().filter(function(h) {
-            return (StrainsService.getSessionStrains(h.taxonid).length == 0);
-          }).length > 0) {
-            disabled = true;
+          var i;
+
+          for (i = 0; i < $scope.getPathogens().length; i++) {
+            var pathogen = $scope.getPathogens()[i];
+            var pathogenSessStrains = $scope.allSessionStrains[pathogen.taxonid];
+            if (!pathogenSessStrains || pathogenSessStrains.length == 0) {
+              return true;
+            }
           }
 
-          return disabled;
+          for (i = 0; i < $scope.getHosts().length; i++) {
+            var host = $scope.getHosts()[i];
+            var hostSessStrains = $scope.allSessionStrains[host.taxonid];
+            if (!hostSessStrains || hostSessStrains.length == 0) {
+              return true;
+            }
+          }
+
+          return false;
         };
 
         $scope.continueUrl = curs_root_uri;
