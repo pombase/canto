@@ -1,7 +1,9 @@
-<div ng-if="data.sessionStrains && data.strains">
+<div>
+  <div ng-if="data.sessionStrains && data.strains">
     <div>
-        <span ng-repeat="st in data.sessionStrains[taxonId] track by $index" class="btn-primary btn-xs" style="margin: 2px; float: left;">
-            <span style="cursor: pointer;" ng-click="remove(st.strain_name)">{{st.strain_name}} <span style="color: red;">x</span></span>
+        <span ng-repeat="st in data.sessionStrains track by $index" class="btn-primary btn-xs" style="margin: 2px; float: left;">
+            <span style="cursor: pointer;"
+            ng-click="remove(st.strain_name)">{{st.strain_name}} <span style="color: red;">x</span></span>
         </span>
     </div>
     <div style="width:280px;">
@@ -20,8 +22,9 @@
             </optgroup>
         </select>
         <div ng-hide="hideTypeStrain()">
-                <input style="display: inline" ng-model="typeStrain" type="text" placeholder="Type strain name">
+                <input style="display: inline" ng-model="data.newStrain" type="text" placeholder="Type strain name">
                 <button ng-click="addStrain()" style="display: inline" type="button" class="btn btn-success btn-xs">Add +</button>
             </div>
     </div>
+  </div>
 </div>

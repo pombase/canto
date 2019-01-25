@@ -6945,21 +6945,15 @@ canto.service('StrainsService', function (CantoService, Curs, $q, toaster) {
     };
 
     vm.addSessionStrain = function (taxonId, strain) {
-      vm.getSessionStrains(taxonId)
-        .then(function(sessionStrains) {
-          if (sessionStrains.filter(function (s) {
-            return s.strain_name == strain;
-          }).length === 0) {
-            Curs.add('strain_by_name', [taxonId, strain]).then(function(){
-              // reset so that strains are re-fetched
-              vm.strainPromise = null;
-            });
-          }
-        });
+      return Curs.add('strain_by_name', [taxonId, strain]).then(function(result) {
+        // reset so that strains are re-fetched
+        vm.strainPromise = null;
+        return result.data.status;
+      });
     };
 
     vm.removeSessionStrain = function (taxonId, strain) {
-      Curs.delete('strain_by_name', taxonId + '/' + strain).then(function(){
+      return Curs.delete('strain_by_name', taxonId + '/' + strain).then(function(){
         // reset so that strains are re-fetched
         vm.strainPromise = null;
       }, function (error){
@@ -6981,6 +6975,7 @@ var strainPicker = function() {
             $scope.typeStrain = null;
 
             $scope.data = {
+                newStrain: '',
                 strains: null,
                 sessionStrains: null,
                 strainSelector: 'Add experimental strains for this organism'
@@ -6991,19 +6986,25 @@ var strainPicker = function() {
             });
 
 
-            StrainsService.getSessionStrains()
-              .then(function(sessionStrains) {
-                $scope.data.sessionStrains = sessionStrains;
-              });
+            $scope.getSessionStrains = function() {
+              StrainsService.getAllSessionStrains()
+                .then(function(sessionStrains) {
+                  $scope.data.sessionStrains = sessionStrains;
+                });
+            };
+
+            $scope.getSessionStrains();
 
             $scope.changed = function () {
               if ($scope.data.strainSelector !== 'Type a new strain') {
-                StrainsService.addSessionStrain($scope.taxonId, $scope.data.strainSelector);
+                StrainsService.addSessionStrain($scope.taxonId, $scope.data.strainSelector)
+                  .then($scope.getSessionStrains);
               }
             };
 
             $scope.remove = function (strain) {
-              StrainsService.removeSessionStrain($scope.taxonId, strain);
+              StrainsService.removeSessionStrain($scope.taxonId, strain)
+                .then($scope.getSessionStrains);
             };
 
             $scope.hideTypeStrain = function () {
@@ -7011,7 +7012,8 @@ var strainPicker = function() {
             };
 
             $scope.addStrain = function () {
-              StrainsService.addSessionStrain($scope.taxonId, $scope.typeStrain);
+              StrainsService.addSessionStrain($scope.taxonId, $scope.data.newStrain)
+                .then($scope.getSessionStrains);
             };
         },
     };
