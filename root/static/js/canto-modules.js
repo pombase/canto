@@ -6910,11 +6910,14 @@ canto.service('StrainsService', function (CantoService, Curs, $q, toaster) {
     var vm = this;
 
     vm.strainPromise = null;
+    vm.sessionStrains = [];
 
     vm.getStrainPromise = function() {
       if (!vm.strainPromise) {
         vm.strainPromise = Curs.list('strain').then(function(res) {
-          return res.data;
+          vm.sessionStrains.length = 0;
+          vm.sessionStrains.push.apply(vm.sessionStrains, res.data);
+          return vm.sessionStrains;
         });
       }
       return vm.strainPromise;
@@ -7336,15 +7339,13 @@ var editOrganisms = function() {
         $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
         $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
 
-        $scope.allSessionStrains = null;
-
-        StrainsService.getAllSessionStrains()
-          .then(function(allSessionStrains) {
-            $scope.allSessionStrains = allSessionStrains;
-          });
-
         $scope.getContiueUrlDisabled = function () {
-          if (!$scope.allSessionStrains) {
+          if ($scope.getPathogens().length == 0 &&
+              $scope.getHosts().length == 0) {
+            return true;
+          }
+
+          if (StrainsService.sessionStrains.length == 0) {
             return true;
           }
 
@@ -7352,16 +7353,22 @@ var editOrganisms = function() {
 
           for (i = 0; i < $scope.getPathogens().length; i++) {
             var pathogen = $scope.getPathogens()[i];
-            var pathogenSessStrains = $scope.allSessionStrains[pathogen.taxonid];
-            if (!pathogenSessStrains || pathogenSessStrains.length == 0) {
+            var pathogenSessStrains = StrainsService.sessionStrains
+                .filter(function(strain) {
+                  return strain.taxon_id == pathogen.taxonid;
+                });
+            if (pathogenSessStrains.length == 0) {
               return true;
             }
           }
 
           for (i = 0; i < $scope.getHosts().length; i++) {
             var host = $scope.getHosts()[i];
-            var hostSessStrains = $scope.allSessionStrains[host.taxonid];
-            if (!hostSessStrains || hostSessStrains.length == 0) {
+            var hostSessStrains = StrainsService.sessionStrains
+                .filter(function(strain) {
+                  return strain.taxon_id == host.taxonid;
+                });
+            if (hostSessStrains.length == 0) {
               return true;
             }
           }
