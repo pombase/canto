@@ -3456,6 +3456,7 @@ var genotypeEdit =
                 $scope.data.annotationCount = genotypeDetails.annotation_count;
                 $scope.data.taxonId = genotypeDetails.organism.taxonid;
                 $scope.data.strainName = genotypeDetails.strain_name;
+                $scope.data.organismName = genotypeDetails.organism.scientific_name;
 
                 getStrainsFromServer($scope.data.taxonId);
               });
