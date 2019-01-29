@@ -736,6 +736,10 @@ table td.curs-genotype-checkbox-column {
   color: grey;
 }
 
+.curs-genotype-edit__organism-label {
+  padding: 3px 0;
+}
+
 .curs-genotype-list .selected, .curs-genotype-details .selected {
   background-color: #eee !important;
   border: 2.5px solid #888;
