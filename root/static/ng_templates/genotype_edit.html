@@ -15,6 +15,10 @@
                              ng-model="data.genotypeBackground" />
           <help-icon key="genotype_edit_background_input"></help-icon>
         </div>
+        <div ng-if="multi_organism_mode"
+             class="curs-genotype-edit__organism-label">
+          Organism: {{ data.organismName }}
+        </div>
         <div ng-if="multi_organism_mode">
           Strain: <strain-selector
             strains="strains"
