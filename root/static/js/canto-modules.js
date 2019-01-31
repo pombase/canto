@@ -3402,12 +3402,10 @@ var genotypeEdit =
 
         $scope.getGenesFromServer = function () {
           Curs.list('gene').success(function (results) {
-            $scope.genes = results;
+            var genes = results;
+            genes = setGeneNames(genes);
 
-            $.map($scope.genes,
-              function (gene) {
-                gene.display_name = gene.primary_name || gene.primary_identifier;
-              });
+            $scope.genes = genes;
           }).error(function () {
             toaster.pop('error', 'failed to get gene list from server');
           });
@@ -3425,6 +3423,13 @@ var genotypeEdit =
           return $.grep(genes, function (gene) {
             return gene.organism.taxonid == taxonId;
           });
+        }
+
+        function setGeneNames(genes) {
+          $.map(genes, function (gene) {
+            gene.display_name = gene.primary_name || gene.primary_identifier;
+          });
+          return genes;
         }
 
         $scope.reset = function () {
