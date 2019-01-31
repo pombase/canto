@@ -3402,12 +3402,14 @@ var genotypeEdit =
 
         $scope.getGenesFromServer = function () {
           Curs.list('gene').success(function (results) {
-            $scope.genes = results;
+            var genes = results;
+            genes = setGeneNames(genes);
 
-            $.map($scope.genes,
-              function (gene) {
-                gene.display_name = gene.primary_name || gene.primary_identifier;
-              });
+            var currentTaxonId = $scope.data.taxonId;
+            if (currentTaxonId) {
+              genes = filterGenesByOrganism(genes, currentTaxonId);
+            }
+            $scope.genes = genes;
           }).error(function () {
             toaster.pop('error', 'failed to get gene list from server');
           });
@@ -3419,6 +3421,19 @@ var genotypeEdit =
           }).error(function () {
             toaster.pop('error', 'failed to get strain list from server');
           });
+        }
+
+        function filterGenesByOrganism(genes, taxonId) {
+          return $.grep(genes, function (gene) {
+            return gene.organism.taxonid == taxonId;
+          });
+        }
+
+        function setGeneNames(genes) {
+          $.map(genes, function (gene) {
+            gene.display_name = gene.primary_name || gene.primary_identifier;
+          });
+          return genes;
         }
 
         $scope.reset = function () {
@@ -3442,7 +3457,6 @@ var genotypeEdit =
         reload();
 
         function reload() {
-          $scope.getGenesFromServer();
 
           if ($scope.genotypeId) {
             if ($scope.editOrDuplicate == 'edit') {
@@ -3458,8 +3472,11 @@ var genotypeEdit =
                 $scope.data.strainName = genotypeDetails.strain_name;
                 $scope.data.organismName = genotypeDetails.organism.scientific_name;
 
+                $scope.getGenesFromServer();
                 getStrainsFromServer($scope.data.taxonId);
               });
+          } else {
+            $scope.getGenesFromServer();
           }
         }
 
