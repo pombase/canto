@@ -3472,11 +3472,12 @@ var genotypeEdit =
                 $scope.data.strainName = genotypeDetails.strain_name;
                 $scope.data.organismName = genotypeDetails.organism.scientific_name;
 
+                $scope.getGenesFromServer();
                 getStrainsFromServer($scope.data.taxonId);
               });
+          } else {
+            $scope.getGenesFromServer();
           }
-
-          $scope.getGenesFromServer();
         }
 
         $scope.env = {
