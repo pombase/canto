@@ -3405,6 +3405,10 @@ var genotypeEdit =
             var genes = results;
             genes = setGeneNames(genes);
 
+            var currentTaxonId = $scope.data.taxonId;
+            if (currentTaxonId) {
+              genes = filterGenesByOrganism(genes, currentTaxonId);
+            }
             $scope.genes = genes;
           }).error(function () {
             toaster.pop('error', 'failed to get gene list from server');
@@ -3453,7 +3457,6 @@ var genotypeEdit =
         reload();
 
         function reload() {
-          $scope.getGenesFromServer();
 
           if ($scope.genotypeId) {
             if ($scope.editOrDuplicate == 'edit') {
@@ -3472,6 +3475,8 @@ var genotypeEdit =
                 getStrainsFromServer($scope.data.taxonId);
               });
           }
+
+          $scope.getGenesFromServer();
         }
 
         $scope.env = {
