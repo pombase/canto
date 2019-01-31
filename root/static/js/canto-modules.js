@@ -7065,7 +7065,7 @@ var strainPicker = function () {
 
 
       $scope.getSessionStrains = function () {
-        StrainsService.getAllSessionStrains()
+        StrainsService.getSessionStrains($scope.taxonId)
           .then(function (sessionStrains) {
             $scope.data.sessionStrains = sessionStrains;
           });
