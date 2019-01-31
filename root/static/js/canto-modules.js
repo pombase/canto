@@ -3421,6 +3421,12 @@ var genotypeEdit =
           });
         }
 
+        function filterGenesByOrganism(genes, taxonId) {
+          return $.grep(genes, function (gene) {
+            return gene.organism.taxonid == taxonId;
+          });
+        }
+
         $scope.reset = function () {
           $scope.alleles = [];
           $scope.genes = [];
