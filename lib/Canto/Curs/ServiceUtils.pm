@@ -600,6 +600,7 @@ sub _get_metagenotypes
 
     push @res, {
       metagenotype_id => $metagenotype->metagenotype_id(),
+      feature_id => $metagenotype->metagenotype_id(),
       pathogen_genotype => $pathogen_genotype_hash,
       host_genotype => $host_genotype_hash,
       display_name => $pathogen_genotype_hash->{display_name} . ' / '. $host_genotype_hash->{display_name},
