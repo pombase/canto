@@ -4755,6 +4755,18 @@ var genotypeListViewCtrl =
           return 'normal';
         }
 
+        function getHiddenColumnsCount() {
+          var key;
+          var count = 0;
+          for (key in $scope.columnsToHide) {
+            if ($scope.columnsToHide.hasOwnProperty(key)
+                && $scope.columnsToHide[key] === true) {
+              count += 1;
+            }
+          }
+          return count;
+        }
+
         $scope.organismType = getOrganismType($scope.genotypeList);
 
         $scope.checkBoxChecked = {};
