@@ -4776,6 +4776,8 @@ var genotypeListViewCtrl =
           name: true,
         };
 
+        $scope.hiddenColumnsCount = Object.keys($scope.columnsToHide).length;
+
         $scope.checkedGenotypeIds = function () {
           var retVal = [];
           $.map($scope.genotypeList, function (genotype) {
@@ -4862,6 +4864,7 @@ var genotypeListViewCtrl =
                   $scope.columnsToHide.name = false;
                 }
               });
+            $scope.hiddenColumnsCount = getHiddenColumnsCount();
           }, true);
       },
     };
