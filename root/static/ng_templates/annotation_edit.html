@@ -30,7 +30,7 @@
         </td>
       </tr>
 
-      <tr ng-if="annotationType.feature_type === 'genotype'"
+      <tr ng-if="annotationType.feature_type === 'genotype' || annotationType.feature_type === 'metagenotype'"
           ng-class="{ 'has-error': !isValidFeature() }">
         <td class="title">
           {{displayAnnotationFeatureType}}
@@ -43,7 +43,7 @@
             <feature-chooser feature-type="{{annotationType.feature_type}}"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
             <span ng-show="!isValidFeature()"
-                  class="help-block">Please select a genotype</span>
+                  class="help-block">Please select a {{annotationType.feature_type}}</span>
           </div>
         </td>
       </tr>

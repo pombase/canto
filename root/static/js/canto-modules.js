@@ -1284,7 +1284,7 @@ function openSingleGeneAddDialog($uibModal) {
 
 
 function featureChooserControlHelper($scope, $uibModal, CursGeneList,
-  CursGenotypeList, toaster) {
+  CursGenotypeList, Curs, toaster) {
   function getGenesFromServer() {
     CursGeneList.geneList().then(function (results) {
       $scope.features = results;
@@ -1296,11 +1296,17 @@ function featureChooserControlHelper($scope, $uibModal, CursGeneList,
   if ($scope.featureType === 'gene') {
     getGenesFromServer();
   } else {
-    CursGenotypeList.cursGenotypeList().then(function (results) {
-      $scope.features = results;
-    }).catch(function () {
-      toaster.pop('note', "couldn't read the genotype list from the server");
-    });
+    if ($scope.featureType === 'genotype') {
+      CursGenotypeList.cursGenotypeList().then(function (results) {
+        $scope.features = results;
+      }).catch(function () {
+        toaster.pop('note', "couldn't read the genotype list from the server");
+      });
+    } else {
+      Curs.list('metagenotype').then(function (res) {
+        $scope.features = res.data;
+      });
+    }
   }
 
   $scope.openSingleGeneAddDialog = function () {
@@ -1333,7 +1339,7 @@ function featureChooserControlHelper($scope, $uibModal, CursGeneList,
 
 
 var multiFeatureChooser =
-  function ($uibModal, CursGeneList, CursGenotypeList, toaster) {
+  function ($uibModal, CursGeneList, CursGenotypeList, Curs, toaster) {
     return {
       scope: {
         featureType: '@',
@@ -1343,7 +1349,7 @@ var multiFeatureChooser =
       replace: true,
       controller: function ($scope) {
         featureChooserControlHelper($scope, $uibModal, CursGeneList,
-          CursGenotypeList, toaster);
+          CursGenotypeList, Curs, toaster);
 
         $scope.toggleSelection = function toggleSelection(featureId) {
           var idx = $scope.selectedFeatureIds.indexOf(featureId);
@@ -1364,13 +1370,13 @@ var multiFeatureChooser =
   };
 
 canto.directive('multiFeatureChooser',
-  ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'toaster',
+  ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'Curs', 'toaster',
     multiFeatureChooser
   ]);
 
 
 var featureChooser =
-  function ($uibModal, CursGeneList, CursGenotypeList, toaster) {
+  function ($uibModal, CursGeneList, CursGenotypeList, Curs, toaster) {
     return {
       scope: {
         featureType: '@',
@@ -1382,14 +1388,14 @@ var featureChooser =
       replace: true,
       controller: function ($scope) {
         featureChooserControlHelper($scope, $uibModal, CursGeneList, CursGenotypeList,
-          toaster);
+          Curs, toaster);
       },
       templateUrl: app_static_path + 'ng_templates/feature_chooser.html',
     };
   };
 
 canto.directive('featureChooser',
-  ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'toaster',
+  ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'Curs', 'toaster',
     featureChooser
   ]);
 
