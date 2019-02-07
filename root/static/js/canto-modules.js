@@ -4774,6 +4774,7 @@ var genotypeListViewCtrl =
         $scope.columnsToHide = {
           background: true,
           name: true,
+          strain: true
         };
 
         $scope.hiddenColumnsCount = Object.keys($scope.columnsToHide).length;
@@ -4854,6 +4855,7 @@ var genotypeListViewCtrl =
             $scope.columnsToHide = {
               background: true,
               name: true,
+              strain: true,
             };
             $.map($scope.genotypeList,
               function (genotype) {
@@ -4862,6 +4864,9 @@ var genotypeListViewCtrl =
                 }
                 if (genotype.name) {
                   $scope.columnsToHide.name = false;
+                }
+                if (genotype.strain_name) {
+                  $scope.columnsToHide.strain = false;
                 }
               });
             $scope.hiddenColumnsCount = getHiddenColumnsCount();
