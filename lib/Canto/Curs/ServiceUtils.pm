@@ -602,6 +602,7 @@ sub _get_metagenotypes
       metagenotype_id => $metagenotype->metagenotype_id(),
       pathogen_genotype => $pathogen_genotype_hash,
       host_genotype => $host_genotype_hash,
+      display_name => $pathogen_genotype_hash->{display_name} . ' / '. $host_genotype_hash->{display_name},
       annotation_count => $metagenotype->annotations()->count(),
     };
   }
