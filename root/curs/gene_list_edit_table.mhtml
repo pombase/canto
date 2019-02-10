@@ -27,7 +27,11 @@
         <% $gene->{$col_name} |n %>
       </td>
 %     }
-      <td><strain-picker taxon-id="<% $gene->{'taxonid'} %>"></strain-picker></td>
+      <td>
+%     if ($multi_organism_mode) {
+        <strain-picker taxon-id="<% $gene->{'taxonid'} %>"></strain-picker>
+%     }
+      </td>
       <td>
         <input type="checkbox"
 % if (_has_annotations($gene) || _has_genotypes($gene)) {
@@ -42,6 +46,8 @@
   </table>
 
 <%init>
+my $multi_organism_mode = $c->stash()->{multi_organism_mode} || 0;
+
 sub _has_annotations
 {
   my $gene_hash = shift;
