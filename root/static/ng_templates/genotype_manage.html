@@ -87,9 +87,12 @@
             <button ng-click="backToSummary()" type="button" class="btn btn-primary curs-back-button">
                 &lt;-- Back to summary
             </button>
-            <button ng-click="toMetagenotype()" type="button" class="btn btn-primary curs-back-button" ng-disabled="data.metagenotypeDissabled">
-                Next: MetaGenotypes --&gt;
+            <span ng-if="pathogen_host_mode">
+            <button ng-click="toMetagenotype()" type="button" class="btn btn-primary curs-back-button"
+                    ng-disabled="!data.showMetagenotypeButton">
+                Meta-genotype management --&gt;
             </button>
+            </span>
         </div>
     </div>
 </div>

@@ -4165,6 +4165,7 @@ var genotypeManageCtrl =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+        $scope.pathogen_host_mode = CantoGlobals.pathogen_host_mode == "1";
         $scope.metagenotypeUrl = CantoGlobals.curs_root_uri + '/metagenotype_manage';
 
         $scope.data = {
@@ -4177,7 +4178,7 @@ var genotypeManageCtrl =
           editingGenotype: false,
           editGenotypeId: null,
           multiOrganismMode: false,
-          metagenotypeDissabled: true,
+          showMetagenotypeButton: true,
           showNoGenotypeNotice: true
         };
 
@@ -4239,7 +4240,7 @@ var genotypeManageCtrl =
           }).then(function (results) {
             setGenotypes(results);
             $scope.data.waitingForServer = false;
-            $scope.data.metagenotypeDissabled = ($scope.data.genotypeMap.length < 1);
+            $scope.data.showMetagenotypeButton = ($scope.data.genotypeMap.length >= 1);
             CursGenotypeList.onListChange($scope.readGenotypesCallback);
           }).catch(function () {
             toaster.pop('error', "couldn't read the genotype list from the server");
