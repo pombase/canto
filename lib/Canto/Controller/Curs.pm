@@ -2147,6 +2147,8 @@ sub _assign_session :Private
     );
 
   if (!$reassign) {
+    my $orcid_help_uri = $c->uri_for('/docs/orcid_canto');
+
     push @all_elements,
       {
         type => 'Block', tag => 'p',
@@ -2158,6 +2160,11 @@ sub _assign_session :Private
         label_tag => 'formfu-label',
         type => 'Text', size => 40,
         default => $default_submitter_orcid
+      },
+      {
+        type => 'Block', tag => 'p',
+        attributes => { style => 'margin: 5px', },
+        content_xml => '<a href="' . $orcid_help_uri . '">Why we collect ORCIDs</a>',
       };
   }
 
