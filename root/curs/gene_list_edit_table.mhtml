@@ -11,9 +11,11 @@
           <% $col_name %>
         </th>
 %     }
+%     if ($multi_organism_mode) {
         <th>
           Strains
         </th>
+%     }
         <th>
           &nbsp;
         </th>
@@ -27,11 +29,11 @@
         <% $gene->{$col_name} |n %>
       </td>
 %     }
-      <td>
 %     if ($multi_organism_mode) {
+      <td>
         <strain-picker taxon-id="<% $gene->{'taxonid'} %>"></strain-picker>
-%     }
       </td>
+%     }
       <td>
         <input type="checkbox"
 % if (_has_annotations($gene) || _has_genotypes($gene)) {
