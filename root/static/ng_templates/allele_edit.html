@@ -2,7 +2,12 @@
   <form name="cursAlleleEdit" class="curs-allele-edit-dialog modal-content">
     <div class="modal-header">
       <h4 class="modal-title">
-        Allele details for {{ alleleData.gene_display_name }}
+        <span ng-if="alleleData.display_name">
+          Editing {{alleleData.display_name}}
+        </span>
+        <span ng-if="!alleleData.display_name">
+          Adding allele for {{ alleleData.gene_display_name }}
+        </span>
       </h4>
     </div>
 
