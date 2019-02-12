@@ -4756,6 +4756,18 @@ var genotypeListViewCtrl =
           return 'normal';
         }
 
+        function getHiddenColumnsCount() {
+          var key;
+          var count = 0;
+          for (key in $scope.columnsToHide) {
+            if ($scope.columnsToHide.hasOwnProperty(key)
+                && $scope.columnsToHide[key] === true) {
+              count += 1;
+            }
+          }
+          return count;
+        }
+
         $scope.organismType = getOrganismType($scope.genotypeList);
 
         $scope.checkBoxChecked = {};
@@ -4763,7 +4775,10 @@ var genotypeListViewCtrl =
         $scope.columnsToHide = {
           background: true,
           name: true,
+          strain: true
         };
+
+        $scope.hiddenColumnsCount = Object.keys($scope.columnsToHide).length;
 
         $scope.checkedGenotypeIds = function () {
           var retVal = [];
@@ -4841,6 +4856,7 @@ var genotypeListViewCtrl =
             $scope.columnsToHide = {
               background: true,
               name: true,
+              strain: true,
             };
             $.map($scope.genotypeList,
               function (genotype) {
@@ -4850,7 +4866,11 @@ var genotypeListViewCtrl =
                 if (genotype.name) {
                   $scope.columnsToHide.name = false;
                 }
+                if (genotype.strain_name) {
+                  $scope.columnsToHide.strain = false;
+                }
               });
+            $scope.hiddenColumnsCount = getHiddenColumnsCount();
           }, true);
       },
     };
