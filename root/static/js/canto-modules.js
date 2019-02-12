@@ -4091,6 +4091,10 @@ var GenotypeGeneListCtrl =
           });
         };
 
+        $scope.quickDeletion = $scope.multiOrganismMode
+          ? $scope.deleteSelectStrainPicker
+          : $scope.makeDeletionAllele
+
         $scope.deletionButtonTitle = function (gene_id) {
           if ($scope.hasDeletionHash[gene_id]) {
             return 'A deletion genotype already exists for this gene';
