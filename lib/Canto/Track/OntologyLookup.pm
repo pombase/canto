@@ -157,6 +157,8 @@ sub _make_term_hash
   }
 
   if ($include_children) {
+    my %seen = ();
+
     @{$term_hash{children}} = ();
 
     my $search_details;
@@ -178,9 +180,12 @@ sub _make_term_hash
     my @child_hashes = ();
 
     for my $child_cvterm (@child_cvterms) {
-      push @child_hashes,
-        {$self->_make_term_hash($child_cvterm,
-                                $child_cvterm->cv()->name(), 0, 0, 0, undef)};
+      if (!$seen{$child_cvterm->cvterm_id()}) {
+        push @child_hashes,
+          {$self->_make_term_hash($child_cvterm,
+                                  $child_cvterm->cv()->name(), 0, 0, 0, undef)};
+        $seen{$child_cvterm->cvterm_id()} = 1;
+      }
     }
 
     @child_hashes = sort {
