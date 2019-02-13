@@ -1305,6 +1305,8 @@ function featureChooserControlHelper($scope, $uibModal, CursGeneList,
     } else {
       Curs.list('metagenotype').then(function (res) {
         $scope.features = res.data;
+      }).catch(function () {
+        toaster.pop('note', "couldn't read the metagenotype list from the server");
       });
     }
   }
