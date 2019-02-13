@@ -4555,7 +4555,7 @@ var genotypeListRowLinksCtrl =
 
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
-        $scope.pathogen_host_mode = CantoGlobals.pathogen_host_mode;
+        $scope.pathogen_host_mode = CantoGlobals.pathogen_host_mode !== "0";
 
         $scope.matchingAnnotationTypes = [];
 
