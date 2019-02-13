@@ -57,6 +57,19 @@ Choose curation type for <% $gene->display_name() %>:
 %     }
     </li>
 %    }
+%   } else {
+  <li class="annotation-type">
+    <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id() |n%>, '<%$annotation_type_name%>', <% $taxon_id %>)">
+      Single allele <% ucfirst $type_display_name %>
+    </a>
+    <help-icon key="gene_page_single_allele"></help-icon>
+  </li>
+  <li class="annotation-type">
+    <a href='<% "$curs_root_uri/genotype_manage" %>'>
+      Multiple allele <% ucfirst $type_display_name %>
+    </a>
+    <help-icon key="gene_page_multi_allele"></help-icon>
+  </li>
 %   }
 % }
   </ul>
