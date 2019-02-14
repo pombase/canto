@@ -104,7 +104,7 @@ sub get_metadata
   }
 }
 
-=head2 get_metadata
+=head2 unset_metadata
 
  Usage   : unset_metadata($schema, $key);
  Function: delete the row with the given key in the metadata table

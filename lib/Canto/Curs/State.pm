@@ -359,6 +359,17 @@ sub set_state
       $self->set_metadata($schema, CURATION_IN_PROGRESS_TIMESTAMP_KEY,
                           Canto::Util::get_current_datetime());
       $self->unset_metadata($schema, CURATION_PAUSED_TIMESTAMP_KEY);
+
+      if (!$self->get_metadata($schema, SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY)) {
+        my $last_needs_approval_timestamp = $self->get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
+        if ($last_needs_approval_timestamp) {
+          # we didn't store the first submitted timestamp previously so we
+          # do our best effort by using the existing needs_approval_timestamp
+          $self->set_metadata($schema, SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY,
+                              $last_needs_approval_timestamp);
+        }
+      }
+
       $self->unset_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
@@ -389,16 +400,8 @@ sub set_state
 
       # see: https://github.com/pombase/website/issues/1132
       if (!$self->get_metadata($schema, SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY)) {
-        my $last_timestamp = $self->get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
-        if ($last_timestamp) {
-          # we didn't store the first submitted timestamp previously so we
-          # do our best effort by using the existing NEEDS_APPROVAL_TIMESTAMP
-          $self->set_metadata($schema, SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY,
-                              $self->get_metadata($schema, $last_timestamp));
-        } else {
-          $self->set_metadata($schema, SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY,
-                              Canto::Util::get_current_datetime());
-        }
+        $self->set_metadata($schema, SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY,
+                            Canto::Util::get_current_datetime());
       }
 
       $self->set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY,
@@ -449,6 +452,11 @@ sub set_state
           !$self->get_metadata($schema, PREVIOUS_APPROVED_TIMESTAMP_KEY)) {
         $self->set_metadata($schema, FIRST_APPROVED_TIMESTAMP_KEY,
                             Canto::Util::get_current_datetime());
+      }
+      if (!$self->get_metadata($schema, FIRST_APPROVED_TIMESTAMP_KEY) &&
+          $self->get_metadata($schema, PREVIOUS_APPROVED_TIMESTAMP_KEY)) {
+        $self->set_metadata($schema, FIRST_APPROVED_TIMESTAMP_KEY,
+                            $self->get_metadata($schema, PREVIOUS_APPROVED_TIMESTAMP_KEY));
       }
       $self->set_metadata($schema, APPROVED_TIMESTAMP_KEY,
                           Canto::Util::get_current_datetime());
