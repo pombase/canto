@@ -246,6 +246,11 @@ db_initial_data:
               accession: needs_approval_timestamp
               db:
                 name: Canto
+          - name: session_first_submitted_timestamp
+            dbxref:
+              accession: session_first_submitted_timestamp
+              db:
+                name: Canto
       - name: Canto publication triage status
         cvterms:
           - name: New
