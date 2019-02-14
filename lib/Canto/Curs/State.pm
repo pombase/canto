@@ -81,6 +81,7 @@ use constant {
   SESSION_CREATED_TIMESTAMP_KEY => 'session_created_timestamp',
   CURATION_PAUSED_TIMESTAMP_KEY => 'curation_paused_timestamp',
   CURATION_IN_PROGRESS_TIMESTAMP_KEY => 'curation_in_progress_timestamp',
+  SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY => 'session_first_submitted_timestamp',
   NEEDS_APPROVAL_TIMESTAMP_KEY => 'needs_approval_timestamp',
   FIRST_APPROVED_TIMESTAMP_KEY => 'first_approved_timestamp',
   APPROVED_TIMESTAMP_KEY => 'approved_timestamp',
@@ -385,8 +386,24 @@ sub set_state
         carp "trying to start approving a session that isn't in the state ",
           CURATION_IN_PROGRESS, " it's currently: ", $current_state;
       }
+
+      # see: https://github.com/pombase/website/issues/1132
+      if (!$self->get_metadata($schema, SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY)) {
+        my $last_timestamp = $self->get_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY);
+        if ($last_timestamp) {
+          # we didn't store the first submitted timestamp previously so we
+          # do our best effort by using the existing NEEDS_APPROVAL_TIMESTAMP
+          $self->set_metadata($schema, SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY,
+                              $self->get_metadata($schema, $last_timestamp));
+        } else {
+          $self->set_metadata($schema, SESSION_FIRST_SUBMITTED_TIMESTAMP_KEY,
+                              Canto::Util::get_current_datetime());
+        }
+      }
+
       $self->set_metadata($schema, NEEDS_APPROVAL_TIMESTAMP_KEY,
                           Canto::Util::get_current_datetime());
+
       $self->unset_metadata($schema, APPROVAL_IN_PROGRESS_TIMESTAMP_KEY);
       $self->unset_metadata($schema, APPROVED_TIMESTAMP_KEY);
       $self->unset_metadata($schema, EXPORTED_TIMESTAMP_KEY);
