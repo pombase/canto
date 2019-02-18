@@ -49,6 +49,8 @@ use feature qw(state);
 
 use Package::Alias PubmedUtil => 'Canto::Track::PubmedUtil';
 
+use Canto::Curs::GeneManager;
+
 use Canto::Track;
 
 has 'schema' => (
@@ -826,6 +828,7 @@ sub create_sessions_from_json
    <$json_fh>
  };
 
+  my $gene_lookup = Canto::Track::get_adaptor($config, 'gene');
   my $sessions_data = decode_json($json_text);
 
   my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
@@ -850,6 +853,8 @@ sub create_sessions_from_json
     my ($curs, $cursdb) =
       Canto::Track::create_curs($config, $self->schema(), $pub);
 
+    my $gene_manager = Canto::Curs::GeneManager->new(config => $config,
+                                                     curs_schema => $cursdb);
 
     $curator_manager->set_curator($curs->curs_key(), $curator_email_address);
 
@@ -860,6 +865,11 @@ sub create_sessions_from_json
 
     print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
       " for: $curator_email_address\n";
+
+    for my $gene_uniquename (@{$session_data->{genes}}) {
+      my $lookup_result = $gene_lookup->lookup([$gene_uniquename]);
+      $gene_manager->create_genes_from_lookup($lookup_result);
+    }
   }
 
 
