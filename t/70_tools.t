@@ -11,17 +11,20 @@ use POSIX qw/strftime/;
 use Canto::TestUtil;
 use Canto::Curs::State qw/:all/;
 
+use Canto::Track::LoadUtil;
+
 my $test_util = Canto::TestUtil->new();
 $test_util->init_test('curs_annotations_2');
 
 my $track_schema = $test_util->track_schema();
+my $load_util = Canto::Track::LoadUtil->new(schema => $track_schema);
 my $config = $test_util->config();
 
 
 my $db_pubmedid = 'PMID:7518718';
 
 my ($pub, $message) =
-  Tools::_load_one_pub($config, $track_schema, $db_pubmedid);
+  $load_util->load_pub_from_pubmed($config, $db_pubmedid);
 
 # known - in the test database
 ok (defined $pub);
@@ -50,7 +53,7 @@ LWP::Protocol::PSGI->register($app);
 my $extern_pubmedid = 'PMID:18910671';
 
 ($pub, $message) =
-  Tools::_load_one_pub($config, $track_schema, $extern_pubmedid);
+  $load_util->load_pub_from_pubmed($config, $extern_pubmedid);
 
 # unknown - fetch from PubMed (or from a file in our case)
 ok (defined $pub);

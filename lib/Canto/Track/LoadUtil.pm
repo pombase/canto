@@ -43,8 +43,11 @@ use Carp;
 use Moose;
 use Digest::SHA qw(sha1_base64);
 use Try::Tiny;
+use JSON;
 
 use feature qw(state);
+
+use Package::Alias PubmedUtil => 'Canto::Track::PubmedUtil';
 
 use Canto::Track;
 
@@ -742,6 +745,125 @@ sub create_user_session
   $curator_manager->set_curator($curs->curs_key(), $email_address);
 
   return ($curs, $cursdb, $person);
+}
+
+=head2 load_pub_from_pubmed
+
+ Usage   : my ($pub, $err_message) = $load_util->load_pub_from_pubmed($config, $pubmed_id);
+ Function: Query PubMed for the details of the given publication and store
+           the results in the TrackDB
+ Args    : $config - a Config file
+           $pubmed_id - the ID
+ Returns : ($pub_object, undef) on success
+           (undef, "some error message") on failure
+
+=cut
+
+sub load_pub_from_pubmed
+{
+  my $self = shift;
+  my $config = shift;
+  my $pubmedid = shift;
+
+  my $raw_pubmedid;
+
+  $pubmedid =~ s/[^_\d\w:]+//g;
+
+  if ($pubmedid =~ /^\s*(?:pmid:|pubmed:)?(\d+)\s*$/i) {
+    $raw_pubmedid = $1;
+    $pubmedid = "PMID:$1";
+  } else {
+    my $message = 'You need to give the raw numeric ID, or the ID ' .
+      'prefixed by "PMID:" or "PubMed:"';
+    return (undef, $message);
+  }
+
+  my $pub = $self->schema()->resultset('Pub')->find({ uniquename => $pubmedid });
+
+  if (defined $pub) {
+    return ($pub, undef);
+  } else {
+    my $xml = PubmedUtil::get_pubmed_xml_by_ids($config, $raw_pubmedid);
+
+    my $count = PubmedUtil::load_pubmed_xml($self->schema(), $xml, 'user_load');
+
+    if ($count) {
+      $pub = $self->schema()->resultset('Pub')->find({ uniquename => $pubmedid });
+      return ($pub, undef);
+    } else {
+      (my $numericid = $pubmedid) =~ s/.*://;
+      my $message = "No publication found in PubMed with ID: $numericid";
+      return (undef, $message);
+    }
+  }
+}
+
+=head2 create_sessions_from_json
+
+ Usage   : my ($curs, $cursdb, $curator) =
+             $load_util->create_sessions_from_json($config, $file_name, $curator_email_address);
+ Function: Create sessions for the JSON data in the given file and set the curator.
+ Args    : $config - the Config object
+           $file_name - the JSON file,
+                        see: https://github.com/pombase/canto/wiki/JSON-Import-Format
+           $curator_email_address - the email address of the user to curate the session,
+                                    the user must exist in the database
+ Return  : The Curs object from the Track database, the CursDB object and the
+           Person object for the curator_email_address.
+
+=cut
+sub create_sessions_from_json
+{
+  my $self = shift;
+  my $config = shift;
+  my $file_name = shift;
+  my $curator_email_address = shift;
+
+  my $json_text = do {
+   open(my $json_fh, "<:encoding(UTF-8)", $file_name)
+      or die("Can't open \$filename\": $!\n");
+   local $/;
+   <$json_fh>
+ };
+
+  my $sessions_data = decode_json($json_text);
+
+  my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
+
+  my $curator = $self->schema()->resultset('Person')->find({
+    email_address => $curator_email_address,
+  });
+
+  if (!$curator) {
+    die qq|can't find user with email address "$curator_email_address" in the database\n|;
+  }
+
+  my @results = ();
+
+  while (my ($pub_uniquename, $session_data) = each %$sessions_data) {
+    my ($pub, $error_message) = $self->load_pub_from_pubmed($config, $pub_uniquename);
+
+    if (!$pub) {
+      die "can't get publication details for $pub_uniquename from PubMed:\n$error_message";
+    }
+
+    my ($curs, $cursdb) =
+      Canto::Track::create_curs($config, $self->schema(), $pub);
+
+
+    $curator_manager->set_curator($curs->curs_key(), $curator_email_address);
+
+    if (!$pub->corresponding_author()) {
+      $pub->corresponding_author($curator);
+      $pub->update();
+    }
+
+    print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
+      " for: $curator_email_address\n";
+  }
+
+
+  return @results;
 }
 
 1;

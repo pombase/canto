@@ -29,6 +29,7 @@ my $add_person = 0;
 my $add_by_pubmed_id = 0;
 my $add_by_pubmed_query = 0;
 my $add_session = 0;
+my $add_sessions_from_json = 0;
 my $add_organism = 0;
 my $dry_run = 0;
 my $do_help = 0;
@@ -58,6 +59,9 @@ my %dispatch = (
   },
   '--session' => sub {
     $add_session = 1;
+  },
+  '--sessions-from-json' => sub {
+    $add_sessions_from_json = 1;
   },
   '--help' => sub {
     $do_help = 1;
@@ -97,7 +101,9 @@ or:
 or:
   $0 --pubmed-by-query <query>
 or:
-  $0 --session <pubmed_id> <user_email_address>
+  $0 --session <pubmed_id> <curator_email_address>
+or:
+  $0 --sessions-from-json <json_file_name> <curator_email_address>
 or:
   $0 --organism <genus> <species> <taxon_id> [<common_name>]
 
@@ -120,7 +126,16 @@ Options:
   --pubmed-by-query  - add publications by querying PubMed
       eg. 'pombe OR "fission yeast"'
   --session - create a session for a publication
+  --sessions-from-json - create a session from a JSON file
+
+File formats
+~~~~~~~~~~~~
+
+--sessions-from-json:
+
+See: https://github.com/pombase/canto/wiki/JSONImportFormat
 |;
+
 }
 
 if ($do_help) {
@@ -137,6 +152,10 @@ if ($add_person && (@ARGV < 4 || @ARGV > 5)) {
 
 if ($add_session && @ARGV != 2) {
   usage("--session needs 2 or 3 arguments");
+}
+
+if ($add_sessions_from_json && @ARGV >= 2) {
+  usage("--sessions-from-json needs 0 or 1 arguments");
 }
 
 if ($add_organism && (@ARGV < 3 || @ARGV > 4)) {
@@ -222,6 +241,16 @@ my $proc = sub {
     }
 
     print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(), " for: $email_address\n";
+  }
+
+  if ($add_sessions_from_json) {
+    my $file_name = shift @ARGV;
+    # use the Person added by the add_person code
+    my $email_address = shift @ARGV;
+
+    my ($curs, $cursdb, $curator) =
+      $load_util->create_sessions_from_json($config, $file_name, $email_address);
+
   }
 
   if ($add_organism) {

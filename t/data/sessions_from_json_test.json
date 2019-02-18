@@ -1,0 +1,34 @@
+{
+  "PMID:2120045": {
+    "genes": [
+      "FBgn0004107", "FBgn0016131"
+    ],
+    "alleles": {
+      "FBal0119310": {
+        "gene": "FBgn0004107",
+        "allele_name": "...",
+        "allele_description": "..."
+      },
+      "FBal0119685": {
+        "gene": "FBgn0016131",
+        "allele_name": "...",
+        "allele_description": "..."
+      }
+    },
+    "genotypes": {
+      "FB<something>": {
+        "genotype_name": "...",
+        "background": "...",
+        "alleles": [
+          {
+            "allele": "FBgn0004107"
+          },
+          {
+            "allele": "FBgn0016131",
+            "expression": "overexpressed"
+          }
+        ]
+      }
+    }
+  }
+}

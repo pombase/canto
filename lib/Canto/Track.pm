@@ -60,8 +60,9 @@ use Canto::Curs::State qw/:all/;
            object.
  Args    : $config - the Config object
            $track_schema - the TrackDB schema object
-           $pub_uniquename - the uniquename (PMID) of a publication; the Pub
-                             object will be created if it doesn't exist
+           $pub - the uniquename (PMID) of a publication; the Pub object will be
+                  created if it doesn't exist
+                 OR: a Pub object to use
  Return  :
 
 =cut
@@ -70,9 +71,12 @@ sub create_curs
 {
   my $config = shift;
   my $track_schema = shift;
-  my $pub_uniquename = shift;
+  my $pub = shift;
 
-  my $pub = $track_schema->resultset('Pub')->find_or_create({ uniquename => $pub_uniquename });
+  if (!ref $pub) {
+    $pub = $track_schema->resultset('Pub')->find_or_create({ uniquename => $pub });
+  }
+
   my $curs_key = Canto::Curs::make_curs_key();
 
   my $curs = $track_schema->create_with_type('Curs',
