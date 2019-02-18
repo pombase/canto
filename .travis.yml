@@ -10,6 +10,7 @@ branches:
   only:
     - master
     - metagenotype-dev
+    - fly-canto-dev
 
 # this runs "make test" inside a Docker container
 script: ./etc/docker-run-tests.sh
