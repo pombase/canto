@@ -87,7 +87,7 @@ sub usage
   my $message= shift;
 
   if (defined $message) {
-    $message .= "\n";
+    $message = "Error: $message\n\n";
   } else {
     $message = '';
   }
@@ -154,8 +154,8 @@ if ($add_session && @ARGV != 2) {
   usage("--session needs 2 or 3 arguments");
 }
 
-if ($add_sessions_from_json && @ARGV >= 2) {
-  usage("--sessions-from-json needs 0 or 1 arguments");
+if ($add_sessions_from_json && @ARGV != 2) {
+  usage("--sessions-from-json needs 2 arguments");
 }
 
 if ($add_organism && (@ARGV < 3 || @ARGV > 4)) {
