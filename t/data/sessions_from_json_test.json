@@ -6,13 +6,15 @@
     "alleles": {
       "FBal0119310": {
         "gene": "FBgn0004107",
-        "allele_name": "...",
-        "allele_description": "..."
+        "allele_type": "other",
+        "allele_name": "Dmel\\Cdk2_UAS.Tag:MYC",
+        "allele_description": null
       },
-      "FBal0119685": {
+      "FBal0064432": {
         "gene": "FBgn0016131",
-        "allele_name": "...",
-        "allele_description": "..."
+        "allele_type": "other",
+        "allele_name": "Dmel\\Cdk4_k06503",
+        "allele_description": null
       }
     },
     "genotypes": {
@@ -21,11 +23,10 @@
         "background": "...",
         "alleles": [
           {
-            "allele": "FBgn0004107"
+            "allele_uniquename": "FBal0119310"
           },
           {
-            "allele": "FBgn0016131",
-            "expression": "overexpressed"
+            "allele_uniquename": "FBal0064432"
           }
         ]
       }
