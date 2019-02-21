@@ -846,6 +846,9 @@ sub create_sessions_from_json
 
   my @results = ();
 
+  # load the publication in batches in advance
+  PubmedUtil::load_by_ids($config, $self->schema(), [keys %$sessions_data], 'admin_load');
+
   while (my ($pub_uniquename, $session_data) = each %$sessions_data) {
     my ($pub, $error_message) = $self->load_pub_from_pubmed($config, $pub_uniquename);
 
