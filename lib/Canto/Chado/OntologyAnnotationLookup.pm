@@ -206,8 +206,9 @@ sub lookup
     my $cv = $schema->resultset('Cv')->find({ name => $db_ontology_name });
 
     if (!defined $cv) {
-      warn "no Cv found with name: $db_ontology_name\n";
-      return ();
+      $ret_val = [0, []];
+      $self->cache()->set($cache_key, $ret_val, "2 hours");
+      return $ret_val;
     }
 
     my $annotation_extension_cv_name = $chado_conf->{ontology_cv_names}->{annotation_extension};

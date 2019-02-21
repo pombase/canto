@@ -3,18 +3,17 @@ test_config:
   data_dir: "t/data"
   curation_spreadsheet: "t/data/community_curation_stats_small.txt"
   organisms:
-    - genus: Schizosaccharomyces
-      species: pombe
+    - scientific_name: Schizosaccharomyces pombe
       taxonid: 4896
       common_name: "fission yeast"
-    - genus: Saccharomyces
-      species: cerevisiae
+    - scientific_name: Saccharomyces cerevisiae
       taxonid: 4932
   test_chado_db: "chado_test_db.sqlite3"
   test_genes_file: "t/data/pombe_genes.txt"
   test_genes_file_organism_2: "t/data/cerevisiae_genes.txt"
   test_go_obo_file: "t/data/go_small.obo"
   test_phenotype_obo_file: "t/data/phenotype_small.obo"
+  test_phipo_obo_file: "t/data/phipo_small.obo"
   test_psi_mod_obo_file: "t/data/psi_mod_small.obo"
   test_peco_obo_file: "t/data/peco_small.obo"
   test_so_obo_file: "t/data/so_simple_small.obo"
@@ -294,3 +293,6 @@ ontology_namespace_config:
 
 extension_conf_files:
   - t/data/extension_config.tsv
+
+email:
+  from_address: DO_NOT_EMAIL

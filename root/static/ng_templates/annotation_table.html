@@ -28,12 +28,16 @@
         <table ng-switch-when="ontology" class="list">
           <thead>
             <tr>
+              <th ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">Organism</th>
+              <th ng-if="multiOrganismMode && annotationType.feature_type === 'genotype'">Strain</th>
               <th ng-if="annotationType.feature_type == 'genotype'">Genes</th>
               <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">Background</th>
               <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">Genotype name</th>
-              <th ng-if="annotationType.feature_type == 'genotype' || !featureIdFilter">{{displayAnnotationFeatureType}}
+              <th ng-if="annotationType.feature_type == 'genotype' || !featureIdFilter && annotationType.feature_type != 'metagenotype'">{{displayAnnotationFeatureType}}
                 <span ng-if="annotationType.feature_type == 'genotype'">(allele and expression)</span>
               </th>
+              <th ng-if="annotationType.feature_type == 'metagenotype'">Pathogen genotype</th>
+              <th ng-if="annotationType.feature_type == 'metagenotype'">Host genotype</th>
               <th>Term ID</th>
               <th>Term name</th>
               <th>Evidence code</th>

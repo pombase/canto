@@ -5,6 +5,9 @@
       rowspan="{{genotype.alleles.length}}">
     <input ng-show="showCheckBoxActions" name="select-annotation" type="Checkbox" ng-model="$parent.checkBoxIsChecked"/>
   </td>
+  <td ng-hide="columnsToHide.name">
+    <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
+  </td>
   <td>
     <a href="{{curs_root_uri + '/feature/gene/view/' + firstAllele.gene_id + (read_only_curs ? '/ro' : '')}}">{{firstAllele.gene_display_name}}</a>
   </td>
@@ -14,6 +17,7 @@
   <td>
     <span ng-bind-html="firstAllele.expression | formatExpression | toTrusted"></span>
   </td>
+  <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.strain">{{ strain }}</td>
   <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.background">
     <span ng-bind-html="genotype.background | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>

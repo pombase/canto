@@ -1,0 +1,34 @@
+<div class="curs-allele-edit">
+    <form name="cursAlleleEdit" class="curs-allele-edit-dialog modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Select a strain to use</h4>
+        </div>
+
+        <div class="modal-body">
+            <div ng-switch="!!alleleData.primary_identifier">
+                <div ng-switch-when="false">
+                    <table>
+                        <tr class="curs-allele-type-select">
+                            <td>Available Strains for this curation</td>
+                            <td>
+                                <strain-selector
+                                    strains="strains"
+                                    strain-selected="strainSelected(strain)">
+                                </strain-selector>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                <button
+                    class="btn btn-primary"
+                    ng-click="ok()"
+                    ng-alt-enter="ok()"
+                    ng-disabled="!isValid()">OK</button>
+            </div>
+        </div>
+    </form>
+</div>

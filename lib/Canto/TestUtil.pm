@@ -144,6 +144,13 @@ our %shared_test_results = (
     'term_ontid' => 'MOD:01157',
     'gene_id' => 4,
     'taxonid' => 4896,
+    'organism' => {
+      full_name => 'Schizosaccharomyces pombe',
+      common_name => 'fission yeast',
+      pathogen_or_host => 'unknown',
+      taxonid => '4896',
+      scientific_name => 'Schizosaccharomyces pombe',
+    },
     'creation_date_short' => '20100102',
     'completed' => '',
     'is_not' => JSON::false,
@@ -698,6 +705,7 @@ sub make_base_track_db
     $config->{test_config}->{test_genes_file_organism_2};
   my $go_obo_file = $config->{test_config}->{test_go_obo_file};
   my $phenotype_obo_file = $config->{test_config}->{test_phenotype_obo_file};
+  my $phipo_obo_file = $config->{test_config}->{test_phipo_obo_file};
   my $psi_mod_obo_file = $config->{test_config}->{test_psi_mod_obo_file};
   my $pco_obo_file = $config->{test_config}->{test_peco_obo_file};
   my $so_obo_file = $config->{test_config}->{test_so_obo_file};
@@ -753,7 +761,7 @@ sub make_base_track_db
 
     my @sources = ($relationship_obo_file, $go_obo_file,
                    $phenotype_obo_file, $psi_mod_obo_file, $pco_obo_file,
-                   $so_obo_file);
+                   $phipo_obo_file, $so_obo_file);
 
     $ontology_load->load(\@sources, $ontology_index, $synonym_types);
 
@@ -795,8 +803,7 @@ sub add_test_organisms
                                                 default_db_name => $config->{default_db_name});
 
     for my $org_conf (@{$test_config->{organisms}}) {
-      push @ret, $load_util->get_organism($org_conf->{genus},
-                                          $org_conf->{species},
+      push @ret, $load_util->get_organism($org_conf->{scientific_name},
                                           $org_conf->{taxonid},
                                           $org_conf->{common_name});
 
@@ -1293,8 +1300,6 @@ sub load_test_ontologies
   my $extension_process = undef;
 
   if ($include_closure_subsets) {
-    my @ontology_args = ($test_go_file, $test_fypo_file, $psi_mod_obo_file,
-                         $so_obo_file);
     $extension_process = $self->get_mock_extension_process();
   }
 
@@ -1323,6 +1328,37 @@ sub load_test_ontologies
 
   $ontology_load->finalise();
   $ontology_index->finish_index();
+}
+
+
+=head2 add_metagenotype_config
+
+ Usage   : $test_util->add_metagenotype_config($config);
+ Function: Add metagenotype / disease_formation_phenotype to the Config
+ Args    : $config
+           $track_schema
+ Return  : nothing
+
+=cut
+
+sub add_metagenotype_config
+{
+  my $self = shift;
+  my $config = shift;
+  my $track_schema = shift;
+
+  # set pombe as a host organism in pathogen_host_mode
+  $config->{host_organism_taxonids} = [4932];
+  $config->_set_host_organisms($track_schema);
+  $Canto::Track::OrganismLookup::cache = {};
+
+  my $phi_phenotype_config = clone $config->{annotation_types}->{phenotype};
+  $phi_phenotype_config->{name} = 'disease_formation_phenotype';
+  $phi_phenotype_config->{namespace} = 'disease_formation_phenotype';
+  $phi_phenotype_config->{feature_type} = 'metagenotype';
+
+  push @{$config->{available_annotation_type_list}}, $phi_phenotype_config;
+  $config->{annotation_types}->{$phi_phenotype_config->{name}} = $phi_phenotype_config;
 }
 
 1;

@@ -47,6 +47,109 @@ use JSON;
 use Canto::Curs::GeneProxy;
 use Canto::Curs::ConditionUtil;
 use Canto::Curs::MetadataStorer;
+use Canto::Track::StrainLookup;
+
+sub _make_genotype_details
+{
+  my $genotype = shift;
+  my $config = shift;
+  my $ontology_lookup = shift;
+  my $organism_lookup = shift;
+
+  if (!defined $ontology_lookup) {
+    die "internal error - no \$ontology_lookup passed to _make_genotype_details()";
+  }
+  if (!defined $organism_lookup) {
+    die "internal error - no \$organism_lookup passed to _make_genotype_details()";
+  }
+
+  my @alleles = map {
+    my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
+                                                 cursdb_gene => $_->gene());
+    {
+      allele_id => $_->allele_id(),
+        primary_identifier => $_->primary_identifier(),
+        type => $_->type(),
+        description => $_->description(),
+        expression => $_->expression(),
+        name => $_->name(),
+        gene_id => $_->gene()->gene_id(),
+        gene_display_name => $gene_proxy->display_name(),
+        long_display_name => $_->long_identifier(),
+      }
+    ;
+  } $genotype->alleles()->search({}, { prefetch => 'gene' });
+
+  @alleles = sort {
+    my $a_gene = $a->{gene_display_name};
+    my $b_gene = $b->{gene_display_name};
+
+    # sort upper case last
+    if ($a_gene =~ /[A-Z]/) {
+      $a_gene = '~' . $a_gene;
+    }
+    if ($b_gene =~ /[A-Z]/) {
+      $b_gene = '~' . $b_gene;
+    }
+
+    $a_gene cmp $b_gene;
+  } @alleles;
+
+  my $strain_name = undef;
+
+  my $strain = $genotype->strain();
+  my $strain_lookup = Canto::Track::StrainLookup->new(config => $config);
+
+  if ($strain) {
+    $strain_name = $strain->lookup_strain_name($strain_lookup);
+  }
+
+  return (
+    genotype_id => $genotype->genotype_id(),
+    genotype_identifier => $genotype->identifier(),
+    genotype_name => $genotype->name(),
+    genotype_background => $genotype->background(),
+    genotype_display_name => $genotype->display_name(),
+    strain_name => $strain_name,
+    organism => $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid()),
+    feature_type => 'genotype',
+    feature_display_name => $genotype->display_name(),
+    feature_id => $genotype->genotype_id(),
+    alleles => [@alleles],
+  );
+}
+
+sub _make_metagenotype_details
+{
+  my $metagenotype = shift;
+  my $config = shift;
+  my $ontology_lookup = shift;
+  my $organism_lookup = shift;
+
+  my $pathogen_genotype = $metagenotype->pathogen_genotype();
+  my $host_genotype = $metagenotype->host_genotype();
+
+  my %pathogen_genotype_details =
+    _make_genotype_details($pathogen_genotype, $config, $ontology_lookup, $organism_lookup);
+  my %host_genotype_details =
+    _make_genotype_details($host_genotype, $config, $ontology_lookup, $organism_lookup);
+
+  my $metagenotype_display_name =
+    $pathogen_genotype_details{organism}->{full_name} . ' ' .
+    $pathogen_genotype_details{genotype_display_name} . ' / ' .
+    $host_genotype_details{organism}->{full_name} . ' ' .
+    $host_genotype_details{genotype_display_name};
+
+  return (
+    pathogen_genotype => \%pathogen_genotype_details,
+    host_genotype => \%host_genotype_details,
+    metagenotype_display_name => $metagenotype_display_name,
+    metagenotype_id => $metagenotype->metagenotype_id(),
+    feature_type => 'metagenotype',
+    feature_display_name => $metagenotype_display_name,
+    feature_id => $metagenotype->metagenotype_id(),
+  );
+}
 
 =head2 make_ontology_annotation
 
@@ -66,6 +169,8 @@ sub make_ontology_annotation
   my $annotation = shift;
   my $ontology_lookup = shift //
     Canto::Track::get_adaptor($config, 'ontology');
+  my $organism_lookup = shift //
+    Canto::Track::get_adaptor($config, 'organism');
 
   my $data = $annotation->data();
   my $term_ontid = $data->{term_ontid};
@@ -81,14 +186,17 @@ sub make_ontology_annotation
   my $annotation_type_abbreviation = $annotation_type_config->{abbreviation};
   my $annotation_type_namespace = $annotation_type_config->{namespace};
 
+  my $feature_type = $annotation_type_config->{feature_type};
+
   my %evidence_types = %{$config->{evidence_types}};
 
   my $taxonid;
 
-  my %gene_details;
-  my %genotype_details;
+  my %gene_details = ();
+  my %genotype_details = ();
+  my %metagenotype_details = ();
 
-  if ($annotation_type_config->{feature_type} eq 'genotype') {
+  if ($feature_type eq 'genotype') {
     my @annotation_genotypes = $annotation->genotypes();
 
     if (@annotation_genotypes > 1) {
@@ -102,50 +210,29 @@ sub make_ontology_annotation
 
     my $genotype = $annotation_genotypes[0];
 
-    my @alleles = map {
-      my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
-                                                   cursdb_gene => $_->gene());
-      {
-        allele_id => $_->allele_id(),
-        primary_identifier => $_->primary_identifier(),
-        type => $_->type(),
-        description => $_->description(),
-        expression => $_->expression(),
-        name => $_->name(),
-        gene_id => $_->gene()->gene_id(),
-        gene_display_name => $gene_proxy->display_name(),
-        long_display_name => $_->long_identifier(),
-      };
-    } $genotype->alleles()->search({}, { prefetch => 'gene' });
+    %genotype_details = _make_genotype_details($genotype, $config,
+                                               $ontology_lookup, $organism_lookup);
+  }
 
-    @alleles = sort {
-      my $a_gene = $a->{gene_display_name};
-      my $b_gene = $b->{gene_display_name};
+  if ($feature_type eq 'metagenotype') {
+    my @annotation_metagenotypes = $annotation->metagenotypes();
 
-      # sort upper case last
-      if ($a_gene =~ /[A-Z]/) {
-        $a_gene = '~' . $a_gene;
-      }
-      if ($b_gene =~ /[A-Z]/) {
-        $b_gene = '~' . $b_gene;
-      }
+    if (@annotation_metagenotypes > 1) {
+      warn "internal error, more than one meta-genotype for annotation: ",
+        $annotation->annotation_id();
+    }
 
-      $a_gene cmp $b_gene;
-    } @alleles;
+    if (@annotation_metagenotypes == 0) {
+      die "no meta-genotype for annotation: ", $annotation->annotation_id();
+    }
 
-    %genotype_details = (
-      conditions => [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $data->{conditions})],
-      genotype_id => $genotype->genotype_id(),
-      genotype_identifier => $genotype->identifier(),
-      genotype_name => $genotype->name(),
-      genotype_background => $genotype->background(),
-      genotype_display_name => $genotype->display_name(),
-      feature_type => 'genotype',
-      feature_display_name => $genotype->display_name(),
-      feature_id => $genotype->genotype_id(),
-      alleles => [@alleles],
-    );
-  } else {
+    my $metagenotype = $annotation_metagenotypes[0];
+
+    %metagenotype_details = _make_metagenotype_details($metagenotype, $config,
+                                                       $ontology_lookup, $organism_lookup);
+  }
+
+  if ($feature_type eq 'gene') {
     my @annotation_genes = $annotation->genes();
 
     if (@annotation_genes > 1) {
@@ -172,6 +259,7 @@ sub make_ontology_annotation
       gene_name_or_identifier => $gene_name_or_identifier,
       gene_product => $gene_product,
       gene_synonyms_string => $gene_synonyms_string,
+      organism => $organism_lookup->lookup_by_taxonid($gene->organism()->taxonid()),
       feature_type => 'gene',
       feature_display_name => $gene_name_or_identifier,
       feature_id => $gene->gene_id(),
@@ -229,6 +317,8 @@ sub make_ontology_annotation
   my $ret = {
     %gene_details,
     %genotype_details,
+    %metagenotype_details,
+    feature_type => $feature_type,
     qualifiers => $data->{qualifiers} // [],
     annotation_type => $annotation_type,
     annotation_type_display_name => $annotation_type_display_name,
@@ -257,7 +347,12 @@ sub make_ontology_annotation
     checked => $data->{checked} || 'no',
   };
 
-  return $ret;
+  if ($feature_type ne 'gene') {
+    $ret->{conditions} =
+      [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $data->{conditions})];
+  }
+
+ return $ret;
 }
 
 =head2 make_interaction_annotation
@@ -442,6 +537,8 @@ sub get_annotation_table
 
   my $ontology_lookup =
     Canto::Track::get_adaptor($config, 'ontology');
+  my $organism_lookup =
+    Canto::Track::get_adaptor($config, 'organism');
 
   my $completed_count = 0;
 
@@ -469,7 +566,7 @@ sub get_annotation_table
     my @entries;
     if ($annotation_type_category eq 'ontology') {
       @entries = make_ontology_annotation($config, $schema, $annotation,
-                                          $ontology_lookup);
+                                          $ontology_lookup, $organism_lookup);
     } else {
       if ($annotation_type_category eq 'interaction') {
         @entries = make_interaction_annotation($config, $schema, $annotation, $constrain_gene);

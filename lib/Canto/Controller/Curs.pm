@@ -266,7 +266,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if ($state eq SESSION_ACCEPTED &&
-      $path =~ m:/(gene_upload|edit_genes|genotype_manage|confirm_genes|finish_form|ws):) {
+      $path =~ m:/(gene_upload|edit_genes|genotype_manage|metagenotype_manage|confirm_genes|finish_form|ws):) {
     $use_dispatch = 0;
   }
 
@@ -479,6 +479,7 @@ sub _edit_genes_helper
   $form->process();
 
   my $pathogen_host_mode = $c->config()->{pathogen_host_mode};
+  $st->{pathogen_host_mode} = $pathogen_host_mode;
 
   if (defined $c->req->param('continue')) {
     _redirect_and_detach($c);
@@ -502,13 +503,31 @@ sub _edit_genes_helper
         }
       } else {
         my $delete_sub = sub {
+          my %deleted_gene_organisms = ();
           for my $gene_id (@gene_ids) {
             my $gene = $schema->find_with_type('Gene', $gene_id);
+            $deleted_gene_organisms{$gene->organism()->taxonid()} = 1;
             $gene->delete();
           }
+
+          my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+          my $organism_manager =
+            Canto::Curs::OrganismManager->new(config => $c->config(), curs_schema => $schema);
+
+          for my $taxonid (keys %deleted_gene_organisms) {
+            my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
+            if ($organism_details->{pathogen_or_host} &&
+                $organism_details->{pathogen_or_host} eq 'pathogen') {
+              my $organism = $schema->resultset("Organism")->find({ taxonid => $taxonid });
+              if ($organism->genes()->count() == 0 &&
+                  $organism->genotypes()->count() == 0) {
+                $organism_manager->delete_organism_by_taxonid($taxonid);
+              }
+            }
+          }
+
           for my $host_org_taxonid (@host_org_taxonids) {
-            my $org = $schema->find_with_type('Organism', { taxonid => $host_org_taxonid });
-            $org->delete();
+            $organism_manager->delete_organism_by_taxonid($host_org_taxonid);
           }
         };
         $schema->txn_do($delete_sub);
@@ -530,6 +549,8 @@ sub _edit_genes_helper
       }
     }
   }
+
+  $st->{confirm_genes} = $confirm_genes;
 
   if ($confirm_genes) {
     $st->{title} = 'Confirm gene ';
@@ -845,7 +866,43 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 }
 
+sub _genotype_manage_helper
+{
+  my ($self, $c, $flag, $genotype_type) = @_;
+
+  my $st = $c->stash();
+
+  if (defined $flag && $flag eq 'ro') {
+    $st->{read_only_curs} = 1;
+  }
+
+  $st->{title} = 'Genotypes for: ' . $st->{pub}->uniquename();
+  $st->{genotype_switch_select} = $genotype_type;
+  $st->{template} = 'curs/genotype_switch.mhtml';
+}
+
 sub genotype_manage : Chained('top')
+{
+  my ($self, $c, $flag) = @_;
+
+  $self->_genotype_manage_helper($c, $flag, 'genotype');
+}
+
+sub pathogen_genotype_manage : Chained('top')
+{
+  my ($self, $c, $flag) = @_;
+
+  $self->_genotype_manage_helper($c, $flag, 'pathogen-genotype');
+}
+
+sub host_genotype_manage : Chained('top')
+{
+  my ($self, $c, $flag) = @_;
+
+  $self->_genotype_manage_helper($c, $flag, 'host-genotype');
+}
+
+sub metagenotype_manage : Chained('top')
 {
   my ($self, $c, $flag) = @_;
 
@@ -855,8 +912,9 @@ sub genotype_manage : Chained('top')
     $st->{read_only_curs} = 1;
   }
 
-  $st->{title} = 'Genotypes for: ' . $st->{pub}->uniquename();
-  $st->{template} = 'curs/genotype_manage.mhtml';
+  $st->{title} = 'Metagenotypes for: ' . $st->{pub}->uniquename();
+  $st->{genotype_switch_select} = 'metagenotype';
+  $st->{template} = 'curs/genotype_switch.mhtml';
 }
 
 sub _delete_annotation : Private
@@ -983,7 +1041,15 @@ sub _create_annotation
 
     $annotation->set_genes(@genes);
   } else {
-    $annotation->set_genotypes(@$features);
+    if ($feature_type eq 'genotype') {
+      $annotation->set_genotypes(@$features);
+    } else {
+      if ($feature_type eq 'metagenotype') {
+        $annotation->set_metagenotypes(@$features);
+      } else {
+        die "unknown feature type: ", $feature_type;
+      }
+    }
   }
 
   $self->set_annotation_curator($annotation);
@@ -1074,6 +1140,11 @@ sub start_annotation : Chained('annotate') PathPart('start') Args(1)
   my @features = @{$st->{features}};
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+
+  if (!defined $annotation_config) {
+    die "no configuration for $annotation_type_name";
+  }
+
   $st->{annotation_type_config} = $annotation_config;
   $st->{annotation_type_name} = $annotation_type_name;
 
@@ -1482,7 +1553,23 @@ sub feature_view : Chained('feature') PathPart('view')
       my $display_name = $st->{feature}->display_name();
       $st->{title} = "Genotype: $display_name";
     } else {
-      die "no such feature type: $feature_type\n";
+      if ($feature_type eq 'metagenotype') {
+        my $metagenotype_id = $ids[0];
+
+        my $metagenotype = $schema->find_with_type('Metagenotype', $metagenotype_id);
+
+        $st->{metagenotype} = $metagenotype;
+        $st->{annotation_count} = $metagenotype->annotations()->count();
+
+        $st->{feature} = $metagenotype;
+        $st->{features} = [$metagenotype];
+
+        my $display_name = $st->{feature}->display_name();
+        $st->{title} = "Metagenotype: $display_name";
+
+      } else {
+        die "no such feature type: $feature_type\n";
+      }
     }
   }
 
@@ -1511,7 +1598,8 @@ sub _feature_edit_helper
       my @alleles_data = @{$body_data->{alleles}};
       my $genotype_name = $body_data->{genotype_name};
       my $genotype_background = $body_data->{genotype_background};
-      my $genotype_taxonid = $body_data->{genotype_taxonid};
+      my $genotype_taxonid = $body_data->{taxonid};
+      my $strain_name = $body_data->{strain_name} || undef;
 
       if (defined $genotype_name && length $genotype_name > 0) {
         my $trimmed_name = $genotype_name =~ s/^\s*(.*?)\s*$/$1/r;
@@ -1559,7 +1647,8 @@ sub _feature_edit_helper
 
         $genotype_manager->store_genotype_changes($genotype,
                                                   $genotype_name, $genotype_background,
-                                                  $genotype_taxonid, \@alleles);
+                                                  $genotype_taxonid, \@alleles,
+                                                  $strain_name);
 
         $guard->commit();
 
@@ -1672,6 +1761,9 @@ sub _genotype_store
   my @alleles_data = @{$body_data->{alleles}};
   my $genotype_name = $body_data->{genotype_name};
   my $genotype_background = $body_data->{genotype_background};
+  my $genotype_taxonid = $body_data->{taxonid};
+
+  my $strain_name = $body_data->{strain_name} || undef;
 
   my @alleles = ();
 
@@ -1696,12 +1788,19 @@ sub _genotype_store
         push @alleles, $allele;
       }
 
+      if (!$genotype_taxonid) {
+        $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
+      }
+
+      die "no genotype taxonid" unless $genotype_taxonid;
+
       my $genotype_manager =
         Canto::Curs::GenotypeManager->new(config => $c->config(),
                                           curs_schema => $schema);
 
       my $existing_genotype =
-        $genotype_manager->find_with_bg_and_alleles($genotype_background, \@alleles);
+        $genotype_manager->find_genotype($genotype_taxonid, $genotype_background,
+                                         $strain_name, \@alleles);
 
       if ($existing_genotype) {
         my $alleles_string = "allele";
@@ -1721,17 +1820,18 @@ sub _genotype_store
 
         $c->stash->{json_data} = {
           status => "existing",
-          genotype_display_name => $existing_genotype->display_name(),
+          genotype_display_name => $existing_genotype->display_name($strain_name),
           genotype_id => $existing_genotype->genotype_id(),
+          taxonid => $existing_genotype->organism()->taxonid(),
+          strain_name => $strain_name,
         };
       } else {
         my $guard = $schema->txn_scope_guard();
 
-        my $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
-
         my $genotype =
           $genotype_manager->make_genotype($genotype_name, $genotype_background,
-                                           \@alleles, $genotype_taxonid);
+                                           \@alleles, $genotype_taxonid, undef,
+                                           $strain_name);
 
         $guard->commit();
 
@@ -1741,6 +1841,8 @@ sub _genotype_store
           status => "success",
           genotype_display_name => $genotype->display_name(),
           genotype_id => $genotype->genotype_id(),
+          taxonid => $genotype->organism()->taxonid(),
+          strain_name => $strain_name,
         };
       }
     } catch {
@@ -1749,6 +1851,7 @@ sub _genotype_store
         message => "Storing new genotype failed: internal error - " .
           "please report this to the Canto developers",
       };
+
       warn $_;
     };
   }
@@ -1768,26 +1871,54 @@ sub _metagenotype_store
 
   my $pathogen_genotype_id = $body_data->{pathogen_genotype_id};
   my $host_genotype_id = $body_data->{host_genotype_id};
+  my $host_taxonid = $body_data->{host_taxon_id};
+  my $host_strain_name = $body_data->{host_strain_name};
+
+  if (!$host_genotype_id && !$host_taxonid) {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "Storing new meta-genotype failed: internal error - " .
+        "metagenotype call much have 'host_genotype_id' or 'host_taxonid' param",
+    };
+
+    $c->forward('View::JSON');
+
+    return;
+  }
+
+  if ($host_genotype_id && $host_taxonid) {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "Storing new meta-genotype failed: internal error - " .
+        "metagenotype call has both 'host_genotype_id' and 'host_taxonid' params",
+    };
+
+    $c->forward('View::JSON');
+
+    return;
+  }
 
   my @alleles = ();
 
   try {
     my $pathogen_genotype = $schema->find_with_type('Genotype', $pathogen_genotype_id);
-    my $host_genotype = $schema->find_with_type('Genotype', $host_genotype_id);
-
-    my $curs_key = $st->{curs_key};
 
     my $genotype_manager =
-      Canto::Curs::GenotypeManager->new(config => $c->config(),
-                                        curs_schema => $schema);
+      Canto::Curs::GenotypeManager->new(config => $c->config(), curs_schema => $schema);
+
+    my $host_genotype;
+
+    if ($host_genotype_id) {
+      $host_genotype = $schema->find_with_type('Genotype', $host_genotype_id);
+    } else {
+      $host_genotype = $genotype_manager->get_wildtype_genotype($host_taxonid, $host_strain_name);
+    }
 
     my $existing_metagenotype =
       $genotype_manager->find_metagenotype(pathogen_genotype => $pathogen_genotype,
                                            host_genotype => $host_genotype);
 
     if ($existing_metagenotype) {
-      $c->flash()->{message} = qq(Using existing meta-genotype with the same pathogen and host genotype");
-
         $c->stash->{json_data} = {
           status => "existing",
           metagenotype_display_name => $existing_metagenotype->display_name(),
@@ -1801,8 +1932,6 @@ sub _metagenotype_store
                                              host_genotype => $host_genotype);
 
       $guard->commit();
-
-      $c->flash()->{message} = 'Created new meta-genotype: ' . $metagenotype->display_name();
 
       $c->stash->{json_data} = {
         status => "success",
@@ -2418,6 +2547,17 @@ sub _send_email_from_template
 
   my ($subject, $body, $from) = $email_util->make_email($type, %args);
 
+  if (!$from || $from =~ /CONFIGURE_ME_IN_CANTO_DEPLOY/i) {
+    warn "config->{email}->{from_address} not configured - no email sent for:\n" .
+      "  $subject\n";
+
+    return;
+  }
+
+  if ($from eq "DO_NOT_EMAIL") {
+    return;
+  }
+
   $self->_send_mail($c, subject => $subject, body => $body, to => $recipient_email,
                     from => $from);
 }
@@ -2721,6 +2861,27 @@ sub ws_genotype_delete : Chained('top') PathPart('ws/genotype/delete')
   $c->forward('View::JSON');
 }
 
+sub ws_metagenotype_delete : Chained('top') PathPart('ws/metagenotype/delete')
+{
+  my ($self, $c, $feature_id) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  my $json_data = $c->req()->body_data();
+
+  my $guard = $schema->txn_scope_guard();
+
+  $c->stash->{json_data} = $service_utils->delete_metagenotype($feature_id, $json_data);
+
+  $guard->commit();
+
+  $c->forward('View::JSON');
+}
+
 sub ws_add_gene : Chained('top') PathPart('ws/gene/add')
 {
   my ($self, $c, $gene_identifier) = @_;
@@ -2752,6 +2913,36 @@ sub ws_add_organism : Chained('top') PathPart('ws/organism/add')
   $c->forward('View::JSON');
 }
 
+sub ws_add_strain_by_id : Chained('top') PathPart('ws/strain_by_id/add')
+{
+  my ($self, $c, $track_strain_id) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  $st->{json_data} = $service_utils->add_strain_by_id($track_strain_id);
+
+  $c->forward('View::JSON');
+}
+
+sub ws_add_strain_by_name : Chained('top') PathPart('ws/strain_by_name/add')
+{
+  my ($self, $c, $taxon_id, $strain_name) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  $st->{json_data} = $service_utils->add_strain_by_name($taxon_id, $strain_name);
+
+  $c->forward('View::JSON');
+}
+
 sub ws_delete_organism : Chained('top') PathPart('ws/organism/delete')
 {
   my ($self, $c, $taxonid) = @_;
@@ -2764,6 +2955,37 @@ sub ws_delete_organism : Chained('top') PathPart('ws/organism/delete')
                                                      config => $c->config());
 
   $st->{json_data} = $service_utils->delete_organism_by_taxonid($taxonid);
+
+  $c->forward('View::JSON');
+}
+
+sub ws_delete_strain_by_id : Chained('top') PathPart('ws/strain_by_id/delete')
+{
+  my ($self, $c, $track_strain_id) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  $st->{json_data} = $service_utils->delete_strain_by_id($track_strain_id);
+
+  $c->forward('View::JSON');
+}
+
+sub ws_delete_strain_by_name : Chained('top') PathPart('ws/strain_by_name/delete')
+{
+  my ($self, $c, $taxon_id, $strain_name) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
+                                                     config => $c->config());
+
+  $st->{json_data} = $service_utils->delete_strain_by_name($taxon_id, $strain_name);
 
   $c->forward('View::JSON');
 }

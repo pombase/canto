@@ -132,8 +132,7 @@ CREATE INDEX cvterm_dbxref_idx2 ON cvterm_dbxref (dbxref_id);
 CREATE TABLE organism (
        organism_id integer NOT NULL PRIMARY KEY,
        abbreviation varchar(255) null,
-       genus varchar(255) NOT NULL,
-       species varchar(255) NOT NULL,
+       scientific_name varchar(255) NOT NULL,
        common_name varchar(255) null,
        comment text null
 );
@@ -141,6 +140,7 @@ CREATE TABLE organism (
 CREATE INDEX organism_idx1 ON organism (organism_id);
 
 CREATE TABLE strain (
+       strain_id integer NOT NULL PRIMARY KEY,
        organism_id integer NOT NULL REFERENCES organism (organism_id),
        strain_name text NOT NULL
 );

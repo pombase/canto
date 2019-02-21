@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 74;
+use Test::More tests => 91;
 use Test::Deep;
 use JSON;
 
@@ -9,8 +9,10 @@ use Capture::Tiny 'capture_stderr';
 use Canto::TestUtil;
 use Canto::Track;
 use Canto::Curs::ServiceUtils;
+use Canto::Track::OrganismLookup;
 
 my $test_util = Canto::TestUtil->new();
+my $track_schema = $test_util->track_schema();
 
 $test_util->init_test('curs_annotations_2');
 
@@ -38,6 +40,15 @@ cmp_deeply($res,
               genotype_id => 1,
               allele_string => 'ssm4delta SPCC63.05delta',
               annotation_count => 1,
+              metagenotype_count => 0,
+              strain_name => undef,
+              'organism' => {
+                              scientific_name => 'Schizosaccharomyces pombe',
+                              'taxonid' => '4896',
+                              'pathogen_or_host' => 'unknown',
+                              'full_name' => 'Schizosaccharomyces pombe',
+                              'common_name' => 'fission yeast'
+                            },
             },
             {
               'identifier' => 'aaaa0007-genotype-test-2',
@@ -47,6 +58,15 @@ cmp_deeply($res,
               genotype_id => 2,
               allele_string => 'ssm4-D4(del_100-200)[Knockdown]',
               annotation_count => 1,
+              metagenotype_count => 0,
+              strain_name => undef,
+              'organism' => {
+                              scientific_name => 'Schizosaccharomyces pombe',
+                              'taxonid' => '4896',
+                              'pathogen_or_host' => 'unknown',
+                              'full_name' => 'Schizosaccharomyces pombe',
+                              'common_name' => 'fission yeast'
+                            },
             }
           ]);
 
@@ -75,6 +95,15 @@ cmp_deeply($res,
               genotype_id => 1,
               allele_string => 'ssm4delta SPCC63.05delta',
               annotation_count => 1,
+              metagenotype_count => 0,
+              strain_name => undef,
+              organism => {
+                scientific_name => 'Schizosaccharomyces pombe',
+                taxonid => '4896',
+                pathogen_or_host => 'unknown',
+                full_name => 'Schizosaccharomyces pombe',
+                common_name => 'fission yeast'
+              },
             },
           ]);
 
@@ -98,6 +127,13 @@ cmp_deeply($res,
               'display_name' => 'cdc11-33 mot1-a1',
               'allele_identifiers' => ['SPCC1739.11c:allele-1','SPBC1826.01c:allele-1'],
               annotation_count => 0,
+              organism => {
+                scientific_name => 'Schizosaccharomyces pombe',
+                taxonid => '4896',
+                pathogen_or_host => 'unknown',
+                full_name => 'Schizosaccharomyces pombe',
+                common_name => 'pombe'
+              },
             },
           ]);
 
@@ -122,6 +158,15 @@ cmp_deeply($res,
               'display_name' => 'SPCC63.05delta ssm4KE',
               'identifier' => 'aaaa0007-genotype-test-1',
               annotation_count => 1,
+              metagenotype_count => 0,
+              strain_name => undef,
+              organism => {
+                scientific_name => 'Schizosaccharomyces pombe',
+                taxonid => '4896',
+                pathogen_or_host => 'unknown',
+                full_name => 'Schizosaccharomyces pombe',
+                common_name => 'fission yeast'
+              },
             },
             {
               'name' => undef,
@@ -131,6 +176,15 @@ cmp_deeply($res,
               'genotype_id' => 2,
               'identifier' => 'aaaa0007-genotype-test-2',
               annotation_count => 1,
+              metagenotype_count => 0,
+              strain_name => undef,
+              organism => {
+                scientific_name => 'Schizosaccharomyces pombe',
+                taxonid => '4896',
+                pathogen_or_host => 'unknown',
+                full_name => 'Schizosaccharomyces pombe',
+                common_name => 'fission yeast'
+              },
             },
             {
               'name' => 'cdc11-33 ssm4delta',
@@ -142,6 +196,13 @@ cmp_deeply($res,
                                         'SPAC27D7.13c:allele-1'
                                       ],
               annotation_count => 1,
+              organism => {
+                scientific_name => 'Schizosaccharomyces pombe',
+                taxonid => '4896',
+                pathogen_or_host => 'unknown',
+                full_name => 'Schizosaccharomyces pombe',
+                common_name => 'pombe'
+              },
             }
           ]);
 
@@ -170,6 +231,13 @@ cmp_deeply($res,
               'identifier' => 'aaaa0007-test-genotype-3',
               'display_name' => 'cdc11-33 ssm4delta',
               annotation_count => 1,
+              organism => {
+                scientific_name => 'Schizosaccharomyces pombe',
+                taxonid => '4896',
+                pathogen_or_host => 'unknown',
+                full_name => 'Schizosaccharomyces pombe',
+                common_name => 'pombe'
+              },
             }
           ]);
 
@@ -512,6 +580,14 @@ sub clean_results
 
 clean_results($annotation_res);
 
+my $annotation_expected_organism = {
+  full_name => 'Schizosaccharomyces pombe',
+  common_name => 'fission yeast',
+  pathogen_or_host => 'unknown',
+  taxonid => '4896',
+  scientific_name => 'Schizosaccharomyces pombe'
+};
+
 cmp_deeply($annotation_res,
          [
             {
@@ -566,6 +642,7 @@ cmp_deeply($annotation_res,
               'creation_date_short' => '20100102',
               'completed' => 1,
               'taxonid' => 4896,
+              'organism' => $annotation_expected_organism,
               'is_not' => JSON::false,
               'creation_date' => '2010-01-02',
               'evidence_code' => 'IPI',
@@ -591,6 +668,7 @@ cmp_deeply($annotation_res,
               'term_name' => 'transmembrane transporter activity',
               'is_not' => JSON::false,
               'taxonid' => 4896,
+              'organism' => $annotation_expected_organism,
               'creation_date_short' => '20100102',
               'completed' => 1,
               'annotation_type_display_name' => 'GO molecular function',
@@ -622,6 +700,7 @@ cmp_deeply($annotation_res,
               'evidence_code' => 'IMP',
               'annotation_type_display_name' => 'GO biological process',
               'taxonid' => 4896,
+              'organism' => $annotation_expected_organism,
               'completed' => 1,
               'creation_date_short' => '20100102',
               'is_not' => JSON::false,
@@ -748,6 +827,14 @@ cmp_deeply($annotation_res,
               'term_suggestion_definition' => undef,
               'is_obsolete_term' => 0,
               'genotype_identifier' => 'aaaa0007-genotype-test-1',
+              'organism' => {
+                'pathogen_or_host' => 'unknown',
+                'common_name' => 'fission yeast',
+                'scientific_name' => 'Schizosaccharomyces pombe',
+                'full_name' => 'Schizosaccharomyces pombe',
+                'taxonid' => '4896',
+              },
+              'strain_name' => undef,
               'annotation_type_abbreviation' => '',
               'alleles' => [
                 {
@@ -794,6 +881,14 @@ cmp_deeply($annotation_res,
               'annotation_type_display_name' => 'phenotype',
               'needs_with' => undef,
               'genotype_identifier' => 'aaaa0007-genotype-test-2',
+              'organism' => {
+                'pathogen_or_host' => 'unknown',
+                'common_name' => 'fission yeast',
+                'scientific_name' => 'Schizosaccharomyces pombe',
+                'full_name' => 'Schizosaccharomyces pombe',
+                'taxonid' => '4896',
+              },
+              'strain_name' => undef,
               'annotation_type_abbreviation' => '',
               'genotype_name' => undef,
               'genotype_background' => undef,
@@ -966,6 +1061,7 @@ my $expected_genotype_detail_res =
     'allele_string' => 'ssm4delta SPCC63.05delta',
     'genotype_id' => 1,
     'display_name' => 'SPCC63.05delta ssm4KE',
+    strain_name => undef,
     'alleles' => [
       {
         'allele_id' => 1,
@@ -991,6 +1087,14 @@ my $expected_genotype_detail_res =
       },
     ],
     annotation_count => 1,
+    metagenotype_count => 0,
+    organism => {
+      scientific_name => 'Schizosaccharomyces pombe',
+      taxonid => '4896',
+      pathogen_or_host => 'unknown',
+      full_name => 'Schizosaccharomyces pombe',
+      common_name => 'fission yeast'
+    },
   };
 
 my $genotype_detail_res =
@@ -1018,7 +1122,7 @@ is ($genotype_delete_res->{message}, 'incorrect key');
 # fails because first_genotype has annotations
 $genotype_delete_res = $service_utils->delete_genotype($first_genotype->genotype_id(), { key => 'aaaa0007' });
 is ($genotype_delete_res->{status}, 'error');
-is ($genotype_delete_res->{message}, 'genotype 1 has annotations - delete failed');
+is ($genotype_delete_res->{message}, 'genotype has annotations - delete failed');
 
 my $second_genotype =
   $curs_schema->resultset('Genotype')->find({ identifier => 'aaaa0007-genotype-test-2' });
@@ -1096,3 +1200,125 @@ cmp_deeply($session_detail_res,
              },
              'state' => 'CURATION_IN_PROGRESS',
            });
+
+
+# metagenotype list
+
+# set pombe as a host organism in pathogen_host_mode
+$config->{host_organism_taxonids} = [4932];
+$config->_set_host_organisms($track_schema);
+$Canto::Track::OrganismLookup::cache = {};
+
+my $phi_phenotype_config = clone $config->{annotation_types}->{phenotype};
+$phi_phenotype_config->{name} = 'disease_formation_phenotype';
+$phi_phenotype_config->{namespace} = 'disease_formation_phenotype';
+$phi_phenotype_config->{feature_type} = 'metagenotype';
+
+push @{$config->{available_annotation_type_list}}, $phi_phenotype_config;
+$config->{annotation_types}->{$phi_phenotype_config->{name}} = $phi_phenotype_config;
+
+
+my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
+                                                         curs_schema => $curs_schema);
+my $existing_pombe_genotype =
+  $curs_schema->find_with_type('Genotype', { identifier => 'aaaa0007-genotype-test-1' });
+
+ok ($existing_pombe_genotype);
+
+my $cerevisiae_genotype =
+  $genotype_manager->make_genotype(undef, undef, [], 4932);
+
+my $metagenotype =
+  $genotype_manager->make_metagenotype(pathogen_genotype => $existing_pombe_genotype,
+                                       host_genotype => $cerevisiae_genotype);
+
+my $metagenotypes_list_res =
+  $service_utils->list_for_service('metagenotype');
+
+is (scalar(@{$metagenotypes_list_res}), 1);
+
+is ($metagenotypes_list_res->[0]->{host_genotype}->{identifier}, 'aaaa0007-genotype-3');
+is ($metagenotypes_list_res->[0]->{host_genotype}->{allele_string}, '');
+is ($metagenotypes_list_res->[0]->{host_genotype}->{organism}->{scientific_name},
+    'Saccharomyces cerevisiae');
+is ($metagenotypes_list_res->[0]->{pathogen_genotype}->{identifier}, 'aaaa0007-genotype-test-1');
+is ($metagenotypes_list_res->[0]->{pathogen_genotype}->{allele_string}, 'ssm4delta SPCC63.05delta');
+is ($metagenotypes_list_res->[0]->{pathogen_genotype}->{organism}->{scientific_name},
+    'Schizosaccharomyces pombe');
+
+
+$metagenotypes_list_res =
+  $service_utils->list_for_service('metagenotype', { pathogen_taxonid => 9954321 });
+
+is (scalar(@{$metagenotypes_list_res}), 0);
+
+$metagenotypes_list_res =
+  $service_utils->list_for_service('metagenotype', { pathogen_taxonid => 4896 });
+
+is (scalar(@{$metagenotypes_list_res}), 1);
+
+$metagenotypes_list_res =
+  $service_utils->list_for_service('metagenotype', { host_taxonid => 9954321 });
+
+is (scalar(@{$metagenotypes_list_res}), 0);
+
+$metagenotypes_list_res =
+  $service_utils->list_for_service('metagenotype', { host_taxonid => 9954321, pathogen_taxonid => 4896 });
+
+is (scalar(@{$metagenotypes_list_res}), 0);
+
+$metagenotypes_list_res =
+  $service_utils->list_for_service('metagenotype', { host_taxonid => 4932, pathogen_taxonid => 4896 });
+
+is (scalar(@{$metagenotypes_list_res}), 1);
+
+
+# strain lookup
+
+$track_schema = $test_util->track_schema();
+my $track_organism = $track_schema->resultset('Organism')->first();
+$track_schema->resultset('Strain')
+  ->create({ strain_name => 'track strain name 1', strain_id => 1001,
+             organism_id => $track_organism->organism_id() });
+
+my $curs_organism = $track_schema->resultset('Organism')->first();
+$curs_schema->resultset('Strain')
+  ->create({ strain_name => 'curs strain',
+             organism_id => $curs_organism->organism_id() });
+$curs_schema->resultset('Strain')
+  ->create({ track_strain_id => 1001,
+             organism_id => $curs_organism->organism_id() });
+
+my $strain_res = $service_utils->list_for_service('strain');
+
+is(@$strain_res, 2);
+
+cmp_deeply($strain_res,
+           [
+             {
+               'taxon_id' => 4896,
+               'strain_name' => 'curs strain'
+             },
+             {
+               'strain_id' => 1001,
+               'taxon_id' => 4896,
+               'strain_name' => 'track strain name 1'
+             }
+           ]);
+
+
+$service_utils->delete_strain_by_id(1001);
+
+
+$strain_res = $service_utils->list_for_service('strain');
+
+is(@$strain_res, 1);
+
+cmp_deeply($strain_res,
+           [
+             {
+               'taxon_id' => 4896,
+               'strain_name' => 'curs strain'
+             },
+           ]);
+

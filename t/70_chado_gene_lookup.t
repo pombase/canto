@@ -53,8 +53,7 @@ $result =
   $lookup->lookup(
     {
       search_organism => {
-        genus => 'Schizosaccharomyces',
-        species => 'pombe',
+        scientific_name => 'Schizosaccharomyces pombe',
       },
     },
     [qw(cdc11)]);

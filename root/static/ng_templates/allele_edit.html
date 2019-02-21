@@ -32,6 +32,16 @@
           </td>
         </tr>
 
+        <tr ng-if="strainData.showStrainPicker" class="curs-allele-type-select">
+          <td>Strain used</td>
+          <td>
+              <strain-selector
+                strains="strainData.strains"
+                strain-selected="strainSelected(strain)">
+              </strain-selector>
+          </td>
+      </tr>
+
         <tr class="curs-allele-type-select">
           <td>
             Allele type

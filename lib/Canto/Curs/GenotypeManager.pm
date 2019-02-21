@@ -40,6 +40,7 @@ use Moose;
 
 use Canto::Track;
 use Canto::Curs::AlleleManager;
+use Canto::Curs::StrainManager;
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 has curs_key => (is => 'rw', lazy_build => 1);
@@ -47,6 +48,9 @@ has allele_manager => (is => 'rw', isa => 'Canto::Curs::AlleleManager',
                        lazy_build => 1);
 has organism_manager => (is => 'rw', isa => 'Canto::Curs::OrganismManager',
                          lazy_build => 1);
+
+has strain_manager => (is => 'rw', isa => 'Canto::Curs::StrainManager',
+                       lazy_build => 1);
 
 with 'Canto::Role::Configurable';
 with 'Canto::Role::MetadataAccess';
@@ -75,6 +79,14 @@ sub _build_organism_manager
                                            curs_schema => $self->curs_schema());
 }
 
+sub _build_strain_manager
+{
+  my $self = shift;
+
+  return Canto::Curs::StrainManager->new(config => $self->config(),
+                                         curs_schema => $self->curs_schema());
+}
+
 sub _string_or_undef
 {
   my $string = shift;
@@ -82,23 +94,29 @@ sub _string_or_undef
   return $string // '<__UNDEF__>';
 }
 
-=head2 find_with_bg_and_alleles
+=head2 find_genotype
 
- Usage   : my $existing = $manager->find_with_bg_and_alleles(\@alleles);
+ Usage   : my $existing = $manager->find_genotype($taxon_id, $background,
+                                                  $strain_name, \@alleles);
  Function: Return any existing genotype the same background and alleles as
            the argument.
            We should have at most one in the CursDB.
- Args    : - $background the
+ Args    : - $taxon_id
+           - $background - can be undef
+           - $strain_name - can be undef
            - \@alleles
  Return  : the found Genotype or undef if there is no Genotype with those
            alleles
 
 =cut
 
-sub find_with_bg_and_alleles
+sub find_genotype
 {
   my $self = shift;
+
+  my $genotype_taxonid = shift;
   my $new_background = shift;
+  my $strain_name = shift;
   my $search_alleles = shift;
 
   if (defined $new_background) {
@@ -107,6 +125,16 @@ sub find_with_bg_and_alleles
 
     $new_background = undef if length $new_background == 0;
   }
+
+  my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
+
+  my $strain_id = undef;
+
+  if ($strain_name) {
+    my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
+    $strain_id = $strain->strain_id();
+  }
+
 
   my @sorted_search_allele_ids =
     sort {
@@ -120,6 +148,10 @@ sub find_with_bg_and_alleles
   my $schema = $self->curs_schema();
 
   my $genotype_rs = $schema->resultset('Genotype');
+
+  if ($strain_id) {
+    $genotype_rs = $genotype_rs->search({ strain_id => $strain_id });
+  }
 
   while (defined (my $genotype = $genotype_rs->next())) {
     if ($genotype->background() && $new_background &&
@@ -166,17 +198,19 @@ sub _remove_unused_alleles
 =head2 make_genotype
 
  Usage   : $genotype_manager->make_genotype($name, $background, \@allele_objects,
-                                            $identifier);
+                                            $genotype_taxonid, $identifier, $strain_name);
  Function: Create a Genotype object in the CursDB
- Args    : $name - the name for the new object (required)
+ Args    : $name - the name for the new object
            \@allele_objects - a list of Allele objects to attach to the new
                               Genotype
+           $genotype_taxonid - the organism of this genotype
            $identifier - the identifier of the new object if the Genotype
                          details are from an external source (Chado) or undef
                          for Genotypes created in this session.  If not defined
                          a new unique identifier will be created based on the
                          session curs_key
-           $genotype_taxonid - the organism of this genotype
+           $strain_name - the name of the strain of this genotype which must
+                          already be added to the session (optional)
  Return  : the new Genotype
 
 =cut
@@ -189,6 +223,7 @@ sub make_genotype
   my $alleles = shift;
   my $genotype_taxonid = shift;
   my $identifier = shift;  # defined if this genotype is from Chado
+  my $strain_name = shift;
 
   if (!defined $genotype_taxonid) {
     croak "no taxon ID passed to GenotypeManager::make_genotype()\n";
@@ -224,6 +259,11 @@ sub make_genotype
 
   $genotype->set_alleles($alleles);
 
+  if ($strain_name) {
+    my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
+    $genotype->strain($strain);
+  }
+
   $genotype->update();
 
   $self->_remove_unused_alleles();
@@ -231,6 +271,58 @@ sub make_genotype
   return $genotype;
 }
 
+=head2 get_wildtype_genotype
+
+ Usage   : $genotype_manager->get_wildtype_genotype($taxonid, $strain_name);
+ Function: Create a wild-type Genotype object in the CursDB - the genotype will have
+           no alleles
+ Args    : $genotype_taxonid - the organism of this genotype
+ Return  : the new Genotype
+
+=cut
+
+sub get_wildtype_genotype
+{
+  my $self = shift;
+  my $genotype_taxonid = shift;
+  my $strain_name = shift;
+
+  if (!defined $genotype_taxonid) {
+    croak "no taxon ID passed to GenotypeManager::make_genotype()\n";
+  }
+
+  my $schema = $self->curs_schema();
+
+  my $rs = $schema->resultset('Genotype')
+    ->search({ 'organism.taxonid' => $genotype_taxonid }, { join => 'organism' });
+
+  my $strain = undef;
+
+  if ($strain_name) {
+    $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
+  }
+
+  while (defined (my $genotype = $rs->next())) {
+    if ($genotype->alleles()->count() == 0 &&
+          (!$strain && !$genotype->strain_id() ||
+           $strain && $genotype->strain_id() && $genotype->strain_id() == $strain->strain_id())) {
+      return $genotype;
+    }
+  }
+
+  my $organism_lookup = Canto::Track::get_adaptor($self->config(), 'organism');
+
+  my $host_details =
+    $organism_lookup->lookup_by_taxonid($genotype_taxonid);
+
+  my $identifier = $host_details->{scientific_name} =~ s/ /-/gr . '-wild-type-genotype';
+
+  if ($strain_name) {
+    $identifier .= $strain_name =~ s/ /-/gr;
+  }
+
+  return $self->make_genotype(undef, undef, [], $genotype_taxonid, $identifier, $strain_name);
+}
 
 sub _get_metagenotype_identifier
 {
@@ -242,8 +334,8 @@ sub _get_metagenotype_identifier
 
   my $id = 0;
 
-  while(defined (my $genotype)) {
-    my $identifier = $genotype->identifier();
+  while(defined (my $metagenotype = $rs->next())) {
+    my $identifier = $metagenotype->identifier();
 
     if ($identifier =~ /^$curs_key-metagenotype-(\d+)/) {
       if ($1 > $id) {
@@ -309,7 +401,8 @@ sub make_metagenotype
 =head2 store_genotype_changes
 
  Usage   : $genotype_manager->store_genotype_changes($genotype,
-                                                     $name, $background, \@allele_objects);
+                                                     $name, $background, \@allele_objects,
+                                                     $strain_name);
  Function: Store changes to a Genotype object in the CursDB
  Args    : $genotype_id - the Genotype's ID in the CursDB
            $name - new name for the genotype, note: if undef the name will be
@@ -318,6 +411,8 @@ sub make_metagenotype
            $genotype_taxonid - the organism of this genotype
            \@allele_objects - a list of Allele objects to attach to the new
                               Genotype
+           $strain_name - the name of the strain of this genotype which must
+                          already be added to the session (optional)
  Return  : nothing, dies on error
 
 =cut
@@ -330,6 +425,7 @@ sub store_genotype_changes
   my $background = shift;
   my $genotype_taxonid = shift;
   my $alleles = shift;
+  my $strain_name = shift;
 
   my $schema = $self->curs_schema();
 
@@ -342,6 +438,11 @@ sub store_genotype_changes
   my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
   $genotype->organism_id($organism->organism_id());
   $genotype->set_alleles($alleles);
+
+  if ($strain_name) {
+    my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
+    $genotype->strain($strain);
+  }
 
   $self->_remove_unused_alleles();
 
@@ -440,11 +541,12 @@ sub find_metagenotype
 
 =head2 delete_genotype
 
- Usage   : $utils->delete_genotype($genotype_identifier);
+ Usage   : $utils->delete_genotype($genotype_id);
  Function: Remove a genotype from the CursDB if it has no annotations.
            Any alleles not referenced by another Genotype will be removed too.
  Args    : $genotype_id
- Return  : Nothing - dies on error or if the genotype has some annotations
+ Return  :     0 if all is OK
+           or: a string error if the genotype has annotations
 
 =cut
 
@@ -458,12 +560,44 @@ sub delete_genotype
   my $genotype = $schema->resultset('Genotype')->find($genotype_id);
 
   if ($genotype->annotations()->count() > 0) {
-    return "genotype $genotype_id has annotations - delete failed";
+    return "genotype has annotations - delete failed";
+  }
+
+  if ($genotype->is_part_of_metagenotype()) {
+    return "genotype is part of a meta-genotype - delete failed";
   }
 
   $genotype->delete();
 
   $self->_remove_unused_alleles();
+
+  return 0;
+}
+
+=head2 delete_metagenotype
+
+ Usage   : $utils->delete_metagenotype($genotype_id);
+ Function: Remove a metagenotype from the CursDB if it has no annotations.
+ Args    : $metagenotype_id
+ Return  :     0 if all is OK
+           or: a string error if the genotype has annotations
+
+=cut
+
+sub delete_metagenotype
+{
+  my $self = shift;
+  my $metagenotype_id = shift;
+
+  my $schema = $self->curs_schema();
+
+  my $metagenotype = $schema->resultset('Metagenotype')->find($metagenotype_id);
+
+  if ($metagenotype->annotations()->count() > 0) {
+    return "metagenotype $metagenotype_id has annotations - delete failed";
+  }
+
+  $metagenotype->delete();
 
   return 0;
 }

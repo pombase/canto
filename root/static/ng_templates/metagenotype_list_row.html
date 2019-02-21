@@ -1,0 +1,36 @@
+<tbody>
+    <tr>
+        <td>
+          <b>{{ getOrganismName('pathogen') }}</b>
+          <span class="metagenotype-list-strain">{{ getStrainName('pathogen') }}</span>
+        </td>
+        <td>{{ metagenotype.pathogen_genotype.display_name }}</td>
+        <td>
+          <b>{{ getOrganismName('host') }}</b>
+          <span class="metagenotype-list-strain">{{ getStrainName('host') }}</span>
+        </td>
+        <td>{{ metagenotype.host_genotype.display_name }}</td>
+        <td>{{ metagenotype.annotation_count }}</td>
+        <td class="table-row-actions">
+            <div ng-repeat="annotationType in matchingAnnotationTypes">
+              <a
+                ng-class="{disabled: metagenotype.metagenotype_id == null }"
+                ng-if="!read_only_curs"
+                href="{{curs_root_uri + '/feature/metagenotype/annotate/' + metagenotype.metagenotype_id + '/start/' + annotationType.name + '/'}}">
+                  Annotate {{ annotationType.display_name }}...
+              </a>
+              </div>
+            <div>
+            <a
+                ng-class="{disabled: metagenotype.metagenotype_id == null }"
+                href="{{viewAnnotationUri}}">
+                    View&nbsp;phenotype&nbsp;annotations</a><br/>
+            <a
+                ng-class="{disabled: metagenotype.metagenotype_id == null || metagenotype.annotation_count > 0}"
+                ng-if="!read_only_curs"
+                confirm="Are you sure you want to remove this metagenotype from your session?"
+                ng-click="delete()">Delete</a>
+            </div>
+        </td>
+    </tr>
+</tbody>

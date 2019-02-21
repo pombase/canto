@@ -1,0 +1,154 @@
+<%args>
+$pub
+</%args>
+
+<script language="javascript" type="text/javascript">
+var organismsAndGenes = <% $organisms_and_genes_js |n %>;
+</script>
+
+<div class="curs-box">
+  <div class="curs-box-title">
+    <div>
+
+% if ($read_only_curs) {
+Genes from this publication
+% } else {
+Annotate genes
+% }
+    <& /curs/inline_help.mhtml, key => 'choose_gene' &>
+    </div>
+  </div>
+  <div class="curs-box-body">
+% if ($multi_organism_mode) {
+  <summary-page-gene-list> </summary-page-gene-list>
+% } else {
+% for my $org_and_gene_hashes (@gene_hashes_by_organism) {
+%   my @gene_hashes = @{$org_and_gene_hashes->{gene_hashes}};
+
+<div class="curs-front-page-gene-table">
+%   if (@gene_hashes) {
+<& /curs/front_gene_table.mhtml, gene_hashes => \@gene_hashes &>
+%   } else {
+  <div class="no-genes-message">
+    [No genes]
+  </div>
+%   }
+</div>
+% }
+
+% }
+  <div style="margin-top: 20px;">
+% if (!$read_only_curs) {
+  <div class="feature-list-action" style="margin-bottom: 20px;">
+    <a href="<% $edit_path %>">
+%   if ($multi_organism_mode) {
+Delete or Edit genes and organisms list ...
+%   } else {
+Edit gene list ...
+%   }
+    </a>
+  </div>
+% }
+% if ($genotype_annotation_configured) {
+  <div class="curs-box-title">
+    <div>
+% if ($read_only_curs) {
+Genotypes from this publication
+% } else {
+Annotate genotypes
+% }
+    </div>
+  </div>
+%   if ($pathogen_host_mode) {
+  <div class="feature-list-action">
+    <a href="<% $pathogen_genotype_manage_url %>"><% $read_only_curs ? 'View pathogen genotypes ...' : 'Pathogen genotype management ...' %></a>
+  </div>
+  <div class="feature-list-action">
+    <a href="<% $host_genotype_manage_url %>"><% $read_only_curs ? 'View host genotypes ...' : 'Host genotype management ...' %></a>
+  </div>
+  <div class="feature-list-action">
+    <a href="<% $metagenotype_manage_url %>"><% $read_only_curs ? 'View meta-genotypes ...' : 'Meta-genotype management ...' %></a>
+  </div>
+%   } else {
+  <div class="feature-list-action">
+    <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes ...' : 'Genotype management ...' %></a>
+  </div>
+%   }
+% }
+</div>
+</div>
+</div>
+
+<%init>
+use Canto::Curs;
+use Canto::Curs::GeneProxy;
+use Canto::Curs::ServiceUtils;
+
+my $st = $c->stash();
+my $schema = $st->{schema};
+my $config = $c->config();
+
+my $multi_organism_mode = $st->{multi_organism_mode};
+my $pathogen_host_mode = $st->{pathogen_host_mode};
+
+my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema, config => $config);
+
+my @organisms_and_genes = @{$service_utils->list_for_service('organism')};
+
+use Clone qw(clone);
+
+my @gene_hashes_by_organism =
+  sort {
+    if ($a->{organism}->{pathogen_or_host} && $b->{organism}->{pathogen_or_host}) {
+      $a->{organism}->{pathogen_or_host} cmp $b->{organism}->{pathogen_or_host}
+        ||
+      $a->{organism}->{full_name} cmp $b->{organism}->{full_name};
+    } else {
+      $a->{organism}->{full_name} cmp $b->{organism}->{full_name};
+    }
+  }
+  map {
+    my $organism = clone $_;
+    my @gene_hashes = sort {
+      $a->{display_name} cmp $b->{display_name};
+    } @{$organism->{genes}};
+
+    delete $organism->{genes};
+
+    {
+      organism => $organism,
+      gene_hashes => [@gene_hashes],
+    }
+  } @organisms_and_genes;
+
+my %seen_headers = ();
+
+map {
+  if ($multi_organism_mode) {
+    if (!$seen_headers{$_->{organism}->{pathogen_or_host}}) {
+      $seen_headers{$_->{organism}->{pathogen_or_host}} = 1;
+      my $header = ucfirst $_->{organism}->{pathogen_or_host} . 's';
+      $_->{header} = $header;
+    }
+  }
+} @gene_hashes_by_organism;
+
+my $read_only_curs = $st->{read_only_curs};
+my $genotype_annotation_configured = $st->{genotype_annotation_configured};
+
+my $start_path = $st->{curs_root_uri};
+my $edit_path = "$start_path/edit_genes";
+my $genotype_manage_url = "$start_path/genotype_manage";
+my $pathogen_genotype_manage_url = "$start_path/pathogen_genotype_manage";
+my $host_genotype_manage_url = "$start_path/host_genotype_manage";
+my $metagenotype_manage_url = "$start_path/metagenotype_manage";
+
+if ($read_only_curs) {
+  $genotype_manage_url .= '/ro';
+  $pathogen_genotype_manage_url .= '/ro';
+  $host_genotype_manage_url .= '/ro';
+  $metagenotype_manage_url .= '/ro';
+}
+
+my $organisms_and_genes_js = Data::JavaScript::Anon->anon_dump(\@organisms_and_genes);
+</%init>

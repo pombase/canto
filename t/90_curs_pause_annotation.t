@@ -43,7 +43,7 @@ test_psgi $app, sub {
 
     is $res->code, 200;
 
-    like ($res->content(), qr/Annotate genes and genotypes/s);
+    like ($res->content(), qr/Annotate genes/s);
     like ($res->content(), qr/Publication details/s);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'),
@@ -137,7 +137,7 @@ test_psgi $app, sub {
     unlike ($content, qr/$curation_paused_message/);
 
     like ($content, qr/Session has been restarted/);
-    like ($content, qr/Annotate genes and genotypes/);
+    like ($content, qr/Annotate genes/);
 
     is($status_storage->retrieve($curs_key, 'annotation_status'), "CURATION_IN_PROGRESS");
   }

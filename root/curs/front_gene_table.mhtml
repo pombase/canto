@@ -1,0 +1,45 @@
+<%args>
+@gene_hashes
+</%args>
+
+<table>
+%   for (my $y = 0; $y < $row_max; $y++) {
+  <tr>
+%     for (my $x = 0; $x < $col_count; $x++) {
+%       my $index = $y + $x * $row_max;
+%       my $gene = $gene_hashes[$index];
+%       if (defined $gene) {
+    <td>
+        <a href="<% $start_path . '/feature/gene/view/' . $gene->{gene_id} . ($read_only_curs ? '/ro' : '') %>">
+          <span>
+            <% $gene->{display_name} %>
+          </span>
+        </a>
+   </td>
+%       }
+%     }
+  </tr>
+%   }
+</table>
+
+<%init>
+use Canto::Curs;
+
+my $st = $c->stash();
+
+my $multi_organism_mode = $st->{multi_organism_mode};
+
+# pad so we don't get two columns if there are only a few genes
+if (!$multi_organism_mode && @gene_hashes <= 5) {
+  push @gene_hashes, (undef) x @gene_hashes;
+}
+
+my $read_only_curs = $st->{read_only_curs};
+
+my $start_path = $st->{curs_root_uri};
+my $edit_path = "$start_path/edit_genes";
+
+my $row_max = int((@gene_hashes + 1) / 2);
+my $col_count = 2;
+
+</%init>

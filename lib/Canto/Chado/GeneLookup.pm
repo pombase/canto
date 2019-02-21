@@ -118,6 +118,18 @@ sub lookup_by_synonym_rs
     ->search_related('feature', {}, { prefetch => 'organism' });
 }
 
+sub get_organism_resultset
+{
+  my $self = shift;
+  my $scientific_name = shift;
+
+  my ($genus, $species) = split / /, $scientific_name;
+
+  return $self->schema()->resultset('Organism')
+    ->search({ genus => $genus,
+               species => $species });
+}
+
 with 'Canto::Role::TaxonIDLookup';
 with 'Canto::Role::ChadoLikeGeneLookup';
 with 'Canto::Role::GeneLookupCache';

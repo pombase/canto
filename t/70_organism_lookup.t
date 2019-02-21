@@ -16,8 +16,7 @@ my @orgs = $lookup->lookup_by_type();
 my $expected_org_4896 = {
   'pathogen_or_host' => 'unknown',
   'taxonid' => 4896,
-  'species' => 'pombe',
-  'genus' => 'Schizosaccharomyces',
+  'scientific_name' => 'Schizosaccharomyces pombe',
   'full_name' => 'Schizosaccharomyces pombe',
   'common_name' => 'fission yeast',
 };
@@ -25,10 +24,9 @@ my $expected_org_4896 = {
 cmp_deeply(\@orgs, [
   $expected_org_4896,
   {
-    'species' => 'cerevisiae',
+    'scientific_name' => 'Saccharomyces cerevisiae',
     'taxonid' => 4932,
     'pathogen_or_host' => 'unknown',
-    'genus' => 'Saccharomyces',
     'full_name' => 'Saccharomyces cerevisiae',
     'common_name' => undef
   }
@@ -58,10 +56,9 @@ $test_util->config()->_set_host_organisms($test_util->track_schema());
 @orgs = $lookup->lookup_by_type('host');
 
 my $expected_host_org_4932 = {
-  'species' => 'cerevisiae',
+  'scientific_name' => 'Saccharomyces cerevisiae',
   'taxonid' => 4932,
   'pathogen_or_host' => 'host',
-  'genus' => 'Saccharomyces',
   'full_name' => 'Saccharomyces cerevisiae',
   'common_name' => undef
 };

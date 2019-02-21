@@ -65,3 +65,13 @@ available_annotation_type_list:
   - name: phenotype
     evidence_codes:
       - Cell growth assay
+
+species_strain_map:
+  4565:
+    reference_strain: 231718
+    other_strains:
+      - 425487
+  168172:
+    other_strains:
+      - 1238467
+  12345: ~

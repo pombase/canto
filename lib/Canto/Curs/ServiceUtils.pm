@@ -52,6 +52,7 @@ use Canto::Curs::Utils;
 use Canto::Curs::ConditionUtil;
 use Canto::Curs::MetadataStorer;
 use Canto::Curs::OrganismManager;
+use Canto::Curs::StrainManager;
 use Canto::Curs::GeneProxy;
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
@@ -60,7 +61,9 @@ has ontology_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has allele_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has genotype_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has organism_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
+has strain_lookup => (is => 'ro', init_arg => undef, lazy_build => 1);
 has organism_manager => (is => 'ro', init_arg => undef, lazy_build => 1);
+has strain_manager => (is => 'ro', init_arg => undef, lazy_build => 1);
 
 has state => (is => 'rw', init_arg => undef,
               isa => 'Canto::Curs::State', lazy_build => 1);
@@ -115,12 +118,28 @@ sub _build_organism_lookup
   return Canto::Track::get_adaptor($self->config(), 'organism');
 }
 
+sub _build_strain_lookup
+{
+  my $self = shift;
+
+  return Canto::Track::get_adaptor($self->config(), 'strain');
+}
+
 sub _build_organism_manager
 {
   my $self = shift;
 
   return Canto::Curs::OrganismManager->new(config => $self->config(),
                                            curs_schema => $self->curs_schema());
+}
+
+sub _build_strain_manager
+{
+  my $self = shift;
+
+  return Canto::Curs::StrainManager->new(config => $self->config(),
+                                         curs_schema => $self->curs_schema(),
+                                         organism_lookup => $self->organism_lookup());
 }
 
 sub _build_curator_manager
@@ -162,6 +181,14 @@ sub _get_conditions
 sub _get_organisms
 {
   my $self = shift;
+  my $args = shift;
+
+  my %options = ();
+  if ($args) {
+    %options = %$args;
+  }
+
+  my $include_counts = $options{include_counts};
 
   my $curs_schema = $self->curs_schema();
   my $organism_lookup = $self->organism_lookup();
@@ -179,16 +206,75 @@ sub _get_organisms
       [map {
         my $gene_proxy =
           Canto::Curs::GeneProxy->new(config => $self->config(), cursdb_gene => $_);
-        {
+        my $gene_details = {
           primary_identifier => $gene_proxy->primary_identifier(),
           primary_name => $gene_proxy->primary_name(),
           display_name => $gene_proxy->display_name(),
           gene_id => $_->gene_id(),
+        };
+
+        if ($include_counts) {
+          $gene_details->{annotation_count} = $gene_proxy->cursdb_gene()
+            ->all_annotations(include_with=>1)->count();
+          $gene_details->{genotype_count} = $gene_proxy->cursdb_gene()->genotypes()->count();
         }
+
+        $gene_details;
       } $org->genes()->all()];
 
     push @return_list, $organism_details;
   }
+
+  return @return_list;
+}
+
+sub _get_strains
+{
+  my $self = shift;
+  my $args = shift;
+
+  my %options = ();
+  if ($args) {
+    %options = %$args;
+  }
+
+  my $include_counts = $options{include_counts};
+
+  my $curs_schema = $self->curs_schema();
+  my $strain_lookup = $self->strain_lookup();
+
+  my %conds = ();
+
+  my $rs = $curs_schema->resultset('Strain');
+
+  my @return_list = ();
+
+  my %results_by_strain_id = ();
+
+  my @track_strain_ids = ();
+
+  while (defined (my $curs_strain = $rs->next())) {
+    my $strain_res = {
+      taxon_id => $curs_strain->organism()->taxonid(),
+    };
+
+    my $track_strain_id = $curs_strain->track_strain_id();
+
+    if ($track_strain_id) {
+      $strain_res->{strain_id} = $track_strain_id;
+      $results_by_strain_id{$track_strain_id} = $strain_res;
+    } else {
+      $strain_res->{strain_name} = $curs_strain->strain_name();
+      push @return_list, $strain_res;
+    }
+  }
+
+  map {
+    my $strain_details = $_;
+    my $strain_res = $results_by_strain_id{$_->{strain_id}};
+    $strain_res->{strain_name} = $strain_details->{strain_name};
+    push @return_list, $strain_res;
+  } $strain_lookup->lookup_by_strain_ids(keys %results_by_strain_id);
 
   return @return_list;
 }
@@ -318,6 +404,26 @@ sub _genotype_details_hash
   my $genotype = shift;
   my $include_allele = shift;
 
+  my $organism_lookup = $self->organism_lookup();
+  my $organism_details = $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
+
+  my $strain_name = undef;
+
+  my $strain = $genotype->strain();
+
+  if ($strain) {
+    $strain_name = $strain->strain_name();
+
+    if (!$strain_name && $strain->track_strain_id()) {
+      my $strain_lookup = $self->strain_lookup();
+      my @strain_details =
+        $strain_lookup->lookup_by_strain_ids($strain->track_strain_id());
+      if (@strain_details) {
+        $strain_name = $strain_details[0]->{strain_name};
+      }
+    }
+  }
+
   my %ret = (
     identifier => $genotype->identifier(),
     name => $genotype->name(),
@@ -326,6 +432,9 @@ sub _genotype_details_hash
     display_name => $genotype->display_name(),
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),
+    metagenotype_count => $genotype->metagenotype_count(),
+    strain_name => $strain_name,
+    organism => $organism_details,
   );
 
   if ($include_allele) {
@@ -415,17 +524,23 @@ sub _get_genotypes
         $self->_genotype_details_hash($genotype, $include_allele);
       }
       grep {
-        if ($pathogen_or_host) {
-          my $genotype = $_;
+        my $genotype = $_;
 
-          my $organism_details =
-            $self->organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
-
-          $pathogen_or_host eq $organism_details->{pathogen_or_host};
+        if ($genotype->alleles()->count() == 0) {
+          # wild type genotype
+          0;
         } else {
-          1;
+          if ($pathogen_or_host) {
+            my $organism_details =
+              $self->organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
+
+            $pathogen_or_host eq $organism_details->{pathogen_or_host};
+          } else {
+            1;
+          }
         }
-      } $genotype_rs->all();
+      }
+      $genotype_rs->all();
   }
 
   if ($arg eq 'external_only' || $arg eq 'all') {
@@ -447,6 +562,50 @@ sub _get_genotypes
           $self->_filter_lookup_genotypes($lookup_max);
       }
     }
+  }
+
+  return @res;
+}
+
+sub _get_metagenotypes
+{
+  my $self = shift;
+  my $options = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $prefetch_options =
+    [{ pathogen_genotype => 'organism'}, {host_genotype => 'organism' }];
+  my $metagenotype_rs =
+    $curs_schema->resultset('Metagenotype', { prefetch => $prefetch_options });
+
+  my @res = ();
+
+  my $include_allele = $options->{include_allele} // 0;
+
+  while (defined (my $metagenotype = $metagenotype_rs->next())) {
+    if ($options->{pathogen_taxonid} &&
+        $metagenotype->pathogen_genotype()->organism()->taxonid() != $options->{pathogen_taxonid}) {
+      next;
+    }
+    if ($options->{host_taxonid} &&
+        $metagenotype->host_genotype()->organism()->taxonid() != $options->{host_taxonid}) {
+      next;
+    }
+
+    my $pathogen_genotype_hash =
+      $self->_genotype_details_hash($metagenotype->pathogen_genotype(), $include_allele);
+    my $host_genotype_hash =
+      $self->_genotype_details_hash($metagenotype->host_genotype(), $include_allele);
+
+    push @res, {
+      metagenotype_id => $metagenotype->metagenotype_id(),
+      feature_id => $metagenotype->metagenotype_id(),
+      pathogen_genotype => $pathogen_genotype_hash,
+      host_genotype => $host_genotype_hash,
+      display_name => $pathogen_genotype_hash->{display_name} . ' / '. $host_genotype_hash->{display_name},
+      annotation_count => $metagenotype->annotations()->count(),
+    };
   }
 
   return @res;
@@ -529,10 +688,12 @@ my %list_for_service_subs =
   (
     gene => \&_get_genes,
     genotype => \&_get_genotypes,
+    metagenotype => \&_get_metagenotypes,
     allele => \&_get_alleles,
     annotation => \&_get_annotation,
     condition => \&_get_conditions,
     organism => \&_get_organisms,
+    strain => \&_get_strains,
   );
 
 =head2 list_for_service
@@ -836,15 +997,27 @@ sub _ontology_change_keys
         $annotation->gene_annotations()->delete();
         $annotation->set_genes($gene);
       } else {
-        my $genotype =
-          $self->curs_schema()->find_with_type('Genotype', { genotype_id => $feature_id });
-        $annotation->genotype_annotations()->delete();
-        $annotation->set_genotypes($genotype);
+        if ($changes->{feature_type} eq 'genotype') {
+          my $genotype =
+            $self->curs_schema()->find_with_type('Genotype', { genotype_id => $feature_id });
+          $annotation->genotype_annotations()->delete();
+          $annotation->set_genotypes($genotype);
+        } else {
+          if ($changes->{feature_type} eq 'metagenotype') {
+            my $metagenotype =
+              $self->curs_schema()->find_with_type('Metagenotype', { metagenotype_id => $feature_id });
+            $annotation->metagenotype_annotations()->delete();
+            $annotation->set_metagenotypes($metagenotype);
+          } else {
+            die "unknown feature type: ", $changes->{feature_type};
+          }
+        }
       }
       return 1;
     },
     submitter_comment => 1,
     extension => 1,
+    organism => 1,
     with_gene_id => sub {
       my $gene_id = shift;
 
@@ -1249,12 +1422,12 @@ sub delete_annotation
 
 =head2 delete_genotype
 
- Usage   : $utils->delete_genotype($details);
+ Usage   : $utils->delete_genotype($genotype_id, $details);
  Function: Remove a genotype from the CursDB if it has no annotations.
            Any alleles not referenced by another Genotype will be removed too.
- Args    : $details - annotation details:
+ Args    : $genotype_id
+           $details - annotation details containing:
              - key: the curs key
-             - genotype_identifier: ID of the annotation to delete
  Return  : { status: 'success' }
          or:
            { status: 'error', message: '...' }
@@ -1278,6 +1451,59 @@ sub delete_genotype
                                         curs_schema => $self->curs_schema());
 
     my $ret = $genotype_manager->delete_genotype($genotype_id);
+
+    $self->metadata_storer()->store_counts($curs_schema);
+
+    $curs_schema->txn_commit();
+
+    if ($ret) {
+      return {
+        status => 'error',
+        message => $ret,
+      };
+    } else {
+      return {
+        status => 'success',
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
+=head2 delete_metagenotype
+
+ Usage   : $utils->delete_metagenotype($metagenotype_id, $details);
+ Function: Remove a metagenotype from the CursDB if it has no annotations.
+ Args    : $metagenotype_id
+           $details - annotation details containing
+             - key: the curs key
+ Return  : { status: 'success' }
+         or:
+           { status: 'error', message: '...' }
+
+=cut
+
+sub delete_metagenotype
+{
+  my $self = shift;
+  my $metagenotype_id = shift;
+  my $details = shift;
+
+  my $curs_schema = $self->curs_schema();
+  $curs_schema->txn_begin();
+
+  try {
+    $self->_check_curs_key($details);
+
+    my $genotype_manager =
+      Canto::Curs::GenotypeManager->new(config => $self->config(),
+                                        curs_schema => $self->curs_schema());
+
+    my $ret = $genotype_manager->delete_metagenotype($metagenotype_id);
 
     $self->metadata_storer()->store_counts($curs_schema);
 
@@ -1389,12 +1615,93 @@ sub add_organism_by_taxonid
   }
 }
 
+=head2 add_strain_by_id
+
+ Usage   : $service_utils->add_strain_by_id($track_strain_id);
+ Function: Add the strain with the given ID to the session
+ Args    : $track_strain_id
+
+=cut
+
+sub add_strain_by_id
+{
+  my $self = shift;
+  my $track_strain_id = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $strain_manager = $self->strain_manager();
+
+  try {
+    $curs_schema->txn_begin();
+
+    my $strain = $strain_manager->add_strain_by_id($track_strain_id);
+
+    if ($strain) {
+      $curs_schema->txn_commit();
+      return {
+        status => 'success',
+      };
+    } else {
+      return {
+        status => 'error',
+        message => "strain with ID $track_strain_id not found",
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
+
+=head2 add_strain_by_name
+
+ Usage   : $service_utils->add_strain_by_name($taxon_id, $strain_name);
+ Function: Add the strain with the given taxon ID and name to the session
+
+=cut
+
+sub add_strain_by_name
+{
+  my $self = shift;
+  my $taxon_id = shift;
+  my $strain_name = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $strain_manager = $self->strain_manager();
+
+  try {
+    $curs_schema->txn_begin();
+
+    my $strain = $strain_manager->add_strain_by_name($taxon_id, $strain_name);
+
+    if ($strain) {
+      $curs_schema->txn_commit();
+      return {
+        status => 'success',
+      };
+    } else {
+      return {
+        status => 'error',
+        message => "failed to create strain",
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
 
 =head2 delete_organism_by_taxonid
 
  Usage   : $service_utils->delete_organism_by_taxonid($taxonid);
  Function: Remove the given organism from the session.  Returns an error if
-           there are genes from that organism in the session.
+           there are genes or strains from that organism in the session.
  Args    : $taxonid
  Return  : a hash, with keys:
               status - "success" or "error"
@@ -1425,6 +1732,98 @@ sub delete_organism_by_taxonid
       return {
         status => 'error',
         message => "organism with taxonid $taxonid not found",
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
+
+=head2 delete_strain_by_id
+
+ Usage   : $service_utils->delete_strain_by_id($track_strain_id);
+ Function: Remove the given strain from the session.  Returns an error if
+           there are genotypes that reference the strain
+ Args    : $track_strain_id - the ID in the TrackDB
+ Return  : a hash, with keys:
+              status - "success" or "error"
+              message - on error, the error message
+
+=cut
+
+sub delete_strain_by_id
+{
+  my $self = shift;
+  my $track_strain_id = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $strain_manager = $self->strain_manager();
+
+  try {
+    $curs_schema->txn_begin();
+
+    my $strain = $strain_manager->delete_strain_by_id($track_strain_id);
+
+    if ($strain) {
+      $curs_schema->txn_commit();
+      return {
+        status => 'success',
+      };
+    } else {
+      return {
+        status => 'error',
+        message => "strain with ID $track_strain_id not found",
+      };
+    }
+  } catch {
+    $curs_schema->txn_rollback();
+    chomp $_;
+    return _make_error($_);
+  }
+}
+
+
+=head2 delete_strain_by_name
+
+ Usage   : $service_utils->delete_strain_by_name($taxon_id, $strain_name);
+ Function: Remove the given strain from the session.  Returns an error if
+           there are genotypes that reference the strain
+ Args    : $taxon_id
+           $strain_name
+ Return  : a hash, with keys:
+              status - "success" or "error"
+              message - on error, the error message
+
+=cut
+
+sub delete_strain_by_name
+{
+  my $self = shift;
+  my $taxon_id = shift;
+  my $strain_name = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $strain_manager = $self->strain_manager();
+
+  try {
+    $curs_schema->txn_begin();
+
+    my $strain = $strain_manager->delete_strain_by_name($taxon_id, $strain_name);
+
+    if ($strain) {
+      $curs_schema->txn_commit();
+      return {
+        status => 'success',
+      };
+    } else {
+      return {
+        status => 'error',
+        message => "failed to delete strain",
       };
     }
   } catch {

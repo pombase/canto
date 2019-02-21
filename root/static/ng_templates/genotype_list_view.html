@@ -7,7 +7,7 @@
           &nbsp;
         </th>
         <th style="border-bottom: 1px solid grey"
-            colspan="{{columnsToHide.background ? 3 : 4}}">
+            colspan="{{6 - hiddenColumnsCount}}">
 Genotype
         </th>
         <th rowspan="2">
@@ -15,6 +15,9 @@ Annotations
         </th>
       </tr>
       <tr>
+        <th ng-hide="columnsToHide.name">
+          Name
+        </th>
         <th>
           Genes
         </th>
@@ -23,6 +26,9 @@ Annotations
         </th>
         <th>
           Expression
+        </th>
+        <th ng-hide="columnsToHide.strain">
+          Strain
         </th>
         <th rowspan="2" ng-hide="columnsToHide.background">
           Background

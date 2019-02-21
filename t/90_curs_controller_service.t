@@ -75,6 +75,8 @@ test_psgi $app, sub {
              {
                'allele_string' => 'ssm4delta SPCC63.05delta',
                'genotype_id' => 1,
+               'metagenotype_count' => 0,
+               strain_name => undef,
                'alleles' => [
                  {
                    'type' => 'deletion',
@@ -104,6 +106,13 @@ test_psgi $app, sub {
                'name' => 'SPCC63.05delta ssm4KE',
                annotation_count => 1,
                background => 'h+',
+               organism => {
+                 scientific_name => 'Schizosaccharomyces pombe',
+                 taxonid => '4896',
+                 pathogen_or_host => 'unknown',
+                 full_name => 'Schizosaccharomyces pombe',
+                 common_name => 'fission yeast'
+               },
              });
 };
 

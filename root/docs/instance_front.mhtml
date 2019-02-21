@@ -1,5 +1,5 @@
 <!-- PAGE_TITLE: @@long_name@@ -->
-<!-- PAGE_SUBTITLE: Add your work to @@database_name@@ -->
+<!-- PAGE_SUBTITLE: @@instance_front_subtitle@@ -->
 <!-- FLAGS: use_bootstrap -->
 
 <div class="row" style="padding-top: 20px">

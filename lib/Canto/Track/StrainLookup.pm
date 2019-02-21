@@ -49,7 +49,8 @@ with 'Canto::Track::TrackAdaptor';
  Args    : $organism_taxonid - The NCBI taxon ID of the organism to retrieve the
                                strains for
  Return  : A list of strains in the format:
-           ( 'strain name one', 'strain name two', ... )
+           ( { strain_id => 101, strain_name => 'strain name one' },
+             { strain_id => 102, strain_name => 'strain name two' }, ...  )
 
 =cut
 
@@ -66,15 +67,106 @@ sub lookup
 
   my $rs = $schema->resultset('Organismprop')
     ->search({'type.name' => 'taxon_id', value => $taxonid}, {join => 'type'})
-    ->search_related('organism', {}, { join => 'strains' });
+    ->search_related('organism')
+    ->search_related('strains');
 
-  my %strains = ();
+  return map {
+    {
+      strain_id => $_->strain_id(),
+      strain_name => $_->strain_name(),
+      taxon_id => $taxonid,
+    };
+  } $rs->all()
+}
 
-  while (defined (my $organism = $rs->next())) {
-    map { $strains{$_->strain_name()} = 1; } $organism->strains()->all();
+sub _get_taxon_id
+{
+  my $organism = shift;
+
+  my $taxon_id = undef;
+
+  map {
+    if ($_->type()->name() eq 'taxon_id') {
+      $taxon_id = $_->value();
+    }
+  } $organism->organismprops()->search({}, { prefetch => 'type' })->all();
+
+  return $taxon_id;
+}
+
+=head2 lookup_by_strain_ids
+
+ Usage   : my $strain_lookup = Canto::Track::get_adaptor($config, 'strain');
+           my $strain_details = $strain_lookup->lookup_by_strain_ids(@strain_ids);
+ Function:
+ Return  : A list of strains in the format:
+            [ { strain_id => 101, strain_name => 'some strain name' }, ... ]
+           known IDs are ignored
+
+=cut
+
+sub lookup_by_strain_ids
+{
+  my $self = shift;
+  my @strain_ids = @_;
+
+  my $schema = $self->schema();
+
+  my $strains_rs = $schema->resultset('Strain')->search({
+    strain_id => {
+      -in => \@strain_ids,
+    }
+  }, { prefetch => 'organism' });
+
+  return map {
+    my $organism = $_->organism();
+
+    my $taxon_id = _get_taxon_id($organism);
+
+    {
+      strain_id => $_->strain_id(),
+      strain_name => $_->strain_name(),
+      taxon_id => $taxon_id,
+    }
+  } $strains_rs->all();
+}
+
+
+=head2 lookup_by_strain_name
+
+ Usage   : my $strain_lookup = Canto::Track::get_adaptor($config, 'strain');
+           my $strain_details = $strain_lookup->lookup_by_strain_name($strain_name);
+ Function:
+ Return  : An object in the format:
+             { strain_id => 101, strain_name => 'some strain name' }
+           or undef if there is no strain with the name
+
+=cut
+
+sub lookup_by_strain_name
+{
+  my $self = shift;
+
+  my $taxon_id = shift;
+  my $strain_name = shift;
+
+  my $schema = $self->schema();
+
+  my $strain = $schema->resultset('Strain')
+    ->find({ strain_name => $strain_name, 'type.name' => 'taxon_id',
+             'organismprops.value' => $taxon_id,
+           },
+           { join => { organism => {organismprops => 'type'} } });
+
+  if ($strain) {
+    return {
+      strain_id => $strain->strain_id(),
+      strain_name => $strain->strain_name(),
+      taxon_id => $taxon_id,
+    };
+  } else {
+    return undef;
   }
-
-  return sort keys %strains;
 }
 
 1;

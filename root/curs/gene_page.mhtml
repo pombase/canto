@@ -59,7 +59,7 @@ Choose curation type for <% $gene->display_name() %>:
 %    }
 %   } else {
   <li class="annotation-type">
-    <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id() |n%>, '<%$annotation_type_name%>')">
+    <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id() |n%>, '<%$annotation_type_name%>', <% $taxon_id %>)">
       Single allele <% ucfirst $type_display_name %>
     </a>
     <help-icon key="gene_page_single_allele"></help-icon>
@@ -137,6 +137,7 @@ Genotypes for <% $gene->display_name() %> in this session
 <%init>
 my $gene_id = $gene->gene_id();
 my $gene_name = $gene->{primary_name} // '';
+my $taxon_id = $gene->taxonid();
 
 my $gene_org_name = $gene->organism_details()->{full_name};
 

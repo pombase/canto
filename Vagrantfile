@@ -23,6 +23,10 @@ Vagrant.configure("2") do |config|
   config.vm.define "canto-vm"
   config.vm.hostname = "canto-vm"
 
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 4096
+  end
+  
   config.vm.network "forwarded_port", guest: 5000, host: 5000
 
   config.vagrant.plugins = "vagrant-vbguest"

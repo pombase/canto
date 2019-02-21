@@ -182,7 +182,7 @@ sub track_init
                                                    }
                                                  },
                                   });
-  my $organism = $load_util->get_organism('Schizosaccharomyces', 'pombe', 4896);
+  my $organism = $load_util->get_organism('Schizosaccharomyces pombe', 4896);
 
   $track_schema->create_with_type('Gene',
                                   {

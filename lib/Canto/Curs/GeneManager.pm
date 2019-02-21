@@ -163,8 +163,7 @@ sub find_and_create_genes
     $result = $adaptor->lookup(
       {
         search_organism => {
-          genus => $config->{instance_organism}->{genus},
-          species => $config->{instance_organism}->{species},
+          scientific_name => $config->{instance_organism}->{scientific_name},
         }
       },
       [@search_terms]);

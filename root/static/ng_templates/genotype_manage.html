@@ -1,0 +1,98 @@
+<div id="curs-genotype-manage" class="genotype-list ng-cloak">
+   <div ng-if="!read_only_curs">
+        <div class="row">
+            <div ng-if="data.editingGenotype" class="col-sm-12 col-md-12">
+                <div class="curs-box">
+                    <div class="curs-box-title">
+                        Specify alleles of genes from the list, until the new genotype is complete
+                    </div>
+                    <div class="curs-box-body">
+                        <genotype-edit
+                            ng-if="data.editGenotypeId == null"
+                            cancel-callback="cancelEdit()"
+                            stored-callback="storedCallback(genotypeId)">
+                        </genotype-edit>
+                        <genotype-edit
+                            ng-if="data.editGenotypeId != null"
+                            edit-or-duplicate="{{data.editOrDuplicate}}"
+                            genotype-id="{{data.editGenotypeId}}"
+                            cancel-callback="cancelEdit()" stored-callback="storedCallback(genotypeId)">
+                        </genotype-edit>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="!data.editingGenotype" class="ng-cloak curs-box">
+        <div class="curs-box-title">
+            Add, view and edit genotypes
+        </div>
+        <div class="curs-box-body">
+            <div class="row">
+                <div ng-if="!read_only_curs">
+                    <div class="col-sm-3 col-md-3">
+                        <genotype-genes-panel
+                          on-organism-select="organismUpdated(organism)"
+                          genotypes="data.singleAlleleGenotypes"
+                          multi-organism-mode="data.multiOrganismMode"
+                          genotype-type="genotypeType" />
+                    </div>
+                </div>
+
+                <div class="col-sm-9 col-md-9">
+                    <div class="ng-cloak">
+                        <div ng-show="data.waitingForServer">
+                            <img ng-src="{{app_static_path + '/images/spinner.gif'}}" />
+                        </div>
+
+                        <div ng-hide="data.waitingForServer">
+                            <div ng-if="data.singleAlleleGenotypes.length != 0">
+                                <div class="curs-genotype-list-instructions curs-genotype-list-view-no-checkbox">
+                                    <span>Single allele genotypes</span>
+                                    (Mouse over genotypes for more actions)
+                                </div>
+
+                                <genotype-list-view
+                                    genotype-list="data.singleAlleleGenotypes"
+                                    navigate-on-click="false"
+                                    show-check-box-actions="!read_only_curs"
+                                    selected-genotype-id="data.selectedGenotypeId"
+                                />
+                            </div>
+                            <div class="curs-genotype-list-view-no-checkbox" ng-if="data.multiAlleleGenotypes.length != 0">
+                                <div class="curs-genotype-list-instructions">
+                                    <span>Multi allele genotypes</span>
+                                </div>
+
+                                <genotype-list-view
+                                    genotype-list="data.multiAlleleGenotypes"
+                                    navigate-on-click="false"
+                                    show-check-box-actions="false"
+                                    selected-genotype-id="data.selectedGenotypeId"
+                                />
+                            </div>
+
+                            <div ng-if="!readOnlyCurs" ng-show="data.showNoGenotypeNotice">
+                                No genotypes in this session.  Try adding one.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-5 col-md-5">
+            <button ng-click="backToSummary()" type="button" class="btn btn-primary curs-back-button">
+                &lt;-- Back to summary
+            </button>
+            <span ng-if="pathogen_host_mode">
+            <button ng-click="toMetagenotype()" type="button" class="btn btn-primary curs-back-button"
+                    ng-disabled="!data.showMetagenotypeButton">
+                Meta-genotype management --&gt;
+            </button>
+            </span>
+        </div>
+    </div>
+</div>

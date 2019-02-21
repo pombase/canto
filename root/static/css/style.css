@@ -55,6 +55,18 @@ a.disabled {
   margin: 5px;
 }
 
+.curs-front-page-gene-path-or-host {
+  font-weight: bold;
+}
+
+.curs-front-page-gene-org-name {
+  margin-left: 0.5em;
+}
+
+.curs-front-page-gene-table {
+  margin-left: 1em;
+}
+
 .docs .row-fluid div {
   clear: right;
 }
@@ -319,7 +331,9 @@ div#footer .sponsor, .canto-front-page .footer .sponsor {
   padding: 10px;
 }
 
-table.list, table.curs-genotype-list {
+table.list,
+table.curs-genotype-list,
+.organism-table {
   margin: 5px 0 5px 0;
   border-width: 0px;
   border-spacing: 5px;
@@ -329,7 +343,9 @@ table.list, table.curs-genotype-list {
   font-size: 90%;
   max-width: 80%;
 }
-table.list th, table.curs-genotype-list th {
+table.list th,
+table.curs-genotype-list th,
+.organism-table th {
   padding: 3px;
   background-color: #d0d0c0;
   font-weight: bold;
@@ -341,13 +357,23 @@ table.curs-genotype-list th {
   text-align: center;
 }
 
-table.list tr.even, table.list tr:nth-child(even),
-table.curs-genotype-list tbody.even, table.curs-genotype-list tbody:nth-child(even) {
+table.list tr.even,
+table.list tr:nth-child(even),
+table.curs-genotype-list tbody.even,
+table.curs-genotype-list tbody:nth-child(even),
+.organism-table > tbody:nth-child(odd) {
   background-color: #eed;
 }
-table.list tr.odd, table.list tr:nth-child(odd),
-table.curs-genotype-list tbody.odd, table.curs-genotype-list tbody:nth-child(odd){
+table.list tr.odd,
+table.list tr:nth-child(odd),
+table.curs-genotype-list tbody.odd,
+table.curs-genotype-list tbody:nth-child(odd),
+.organism-table > tbody:nth-child(even) {
   background-color: white;
+}
+.organism-table__no-gene-notice {
+  text-align: center;
+  color: #555;
 }
 .list_page th {
   white-space: normal !important;
@@ -362,7 +388,8 @@ table.list td, table.curs-genotype-list td {
   vertical-align: top;
 }
 
-table.list tr td {
+table.list tr td,
+.organism-table tr td {
   border-width: 1px;
   padding: 3px;
   border-style: solid;
@@ -654,7 +681,7 @@ div.clearall {
 .curs-front-gene-list table {
   font-size: 95%;
   border-width: 0px;
-  margin: 10px 10px 15px 15px
+  margin: 5px 0 8px 10px
 }
 .curs-front-gene-list td {
   border-width: 0px;
@@ -669,7 +696,7 @@ div.clearall {
 
 .curs-front-gene-list .no-genes-message {
   font-size: 95%;
-  margin: 10px;
+  margin: 0.5em 0.5em 0.7em 0.5em;
 }
 
 .curs-front-gene-list .gene-list-instructions, .genotype-list .curs-genotype-list-instructions {
@@ -709,6 +736,10 @@ table td.curs-genotype-checkbox-column {
   color: grey;
 }
 
+.curs-genotype-edit__organism-label {
+  padding: 3px 0;
+}
+
 .curs-genotype-list .selected, .curs-genotype-details .selected {
   background-color: #eee !important;
   border: 2.5px solid #888;
@@ -716,7 +747,7 @@ table td.curs-genotype-checkbox-column {
 
 .feature-list-action {
   font-size: 90%;
-  margin: 20px 0 25px 5px;
+  margin: 10px 0 0 5px;
 }
 
 .curs-front-gene-list .annotation-count {
@@ -1357,6 +1388,11 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   font-style: italic;
 }
 
+.curs-annotation-table .organism-and-strain {
+/*  white-space: nowrap; */
+  font-weight: bold;
+}
+
 .screenshot {
   border: 1px solid black;
 }
@@ -1485,4 +1521,32 @@ a:not([href]) {
 
 .curs-genotype-no-gene-notice {
   margin-top: 10px;
+}
+
+.curs-metagenotype-manage-pathogen, .curs-metagenotype-manage-host {
+  width: 49%;
+  float: left;
+}
+
+.gene-button-delete-text-disabled {
+  color: whitesmoke;
+}
+
+.curs-organism-selector-select {
+  width: 100%;
+}
+
+.strain-selector__container {
+  display: inline-block;
+}
+
+.strain-selector__select--genotype-edit {
+  padding: 3.5px 0;
+}
+
+.metagenotype-genotype-shortcut {
+  padding-top: 20px;
+}
+.metagenotype-list-strain {
+  display: inline-block;
 }

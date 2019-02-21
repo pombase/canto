@@ -49,8 +49,7 @@ requires 'config';
 
  If the organism_taxon_id configuration is set, that will be used.  Example:
  organism_taxon_id:
-   Schizosaccharomyces:
-     pombe: 4896
+   'Schizosaccharomyces pombe': 4896
 
  If organism_taxon_id is not set, look for the taxon ID as an organismprop
  with type "taxon_id".
@@ -68,9 +67,8 @@ sub taxon_id_lookup
   my $taxonid;
 
   if (exists $self->config()->{organism_taxon_id}) {
-    my $genus = $organism->genus();
-    my $species = $organism->species();
-    $taxonid = $self->config()->{organism_taxon_id}->{$genus}->{$species};
+    my $scientific_name = $organism->scientific_name();
+    $taxonid = $self->config()->{organism_taxon_id}->{$scientific_name};
 
     if (!defined $taxonid) {
       croak "no configuration in 'organism_taxon_id' for ",

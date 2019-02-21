@@ -1,11 +1,8 @@
 "use strict";
 
-/*global $,document,application_root,window,curs_root_uri,read_only_curs */
+/*global $,document,application_root,window,curs_root_uri,curs_people_autocomplete_list */
 
-function last(a) {
-  return a[a.length-1];
-}
-
+// eslint-disable-next-line no-unused-vars
 function trim(a) {
   a=a.replace(/^\s+/,''); return a.replace(/\s+$/,'');
 }
@@ -20,7 +17,7 @@ function loadingStart() {
 
 function loadingEnd() {
   loadingDiv.hide();
-  $('#ajax-loading-overlay').hide();  
+  $('#ajax-loading-overlay').hide();
 }
 
 $(document).ready(function() {
@@ -53,6 +50,7 @@ $(document).ready(function() {
   });
 });
 
+// eslint-disable-next-line no-unused-vars
 function make_ontology_complete_url(annotation_type, extensionLookup) {
   var url = application_root + 'ws/lookup/ontology/' + annotation_type + '?def=1';
   if (extensionLookup) {
@@ -94,6 +92,7 @@ function make_confirm_dialog(link, prompt, confirm_button_label, cancel_button_l
   confirmDialog.dialog("open");
 }
 
+// eslint-disable-next-line no-unused-vars
 var ferret_choose = {
   show_autocomplete_def: function(event, ui) {
     $('.curs-autocomplete-definition').remove();
@@ -122,9 +121,10 @@ var ferret_choose = {
   hide_autocomplete_def: function() {
     $('.curs-autocomplete-definition').remove();
   }
-}
+};
 
 
+// eslint-disable-next-line no-unused-vars
 var canto_util = {
   show_message : function(title, message) {
     var html = '<div>' + message + '</div>';
@@ -240,7 +240,7 @@ $(document).ready(function() {
       person_picker_add_person(this, new_person_name);
       return false;
     }
-    
+
     $dialog.dialog('close');
     return true;
   });

@@ -1,0 +1,21 @@
+format-version: 1.2
+ontology: http://www.purl.obolibrary.org/obo/phipo.owl
+
+[Term]
+id: PHIPO:0000001
+name: disease formation phenotype
+namespace: disease formation phenotype
+def: "TO UPDATE_Any of the set of observable characteristics of an organism resulting from the interaction of its genotype with the environment including any other organisms" []
+comment: This is a high-level term whose primary purpose is to organize terms beneath it in the ontology, and we expect that it will not be used for direct annotations. Please consider using a more specific term to annotate each phenotype.
+subset: qc_do_not_annotate
+subset: qc_do_not_manually_annotate
+created_by: alaynecuzick
+creation_date: 2018-05-02T11:20:17Z
+
+[Term]
+id: PHIPO:0000006
+name: pathogenicity phenotype
+namespace: disease formation phenotype
+is_a: PHIPO:0000001 ! disease formation phenotype
+created_by: alaynecuzick
+creation_date: 2018-05-04T12:39:55Z

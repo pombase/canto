@@ -1,22 +1,13 @@
-<div class="curs-genotype-gene-list" ng-show="organisms">
-  <div ng-show="!getSelectedOrganism()">
-    <span ng-show="label">{{label}}</span>
-    <select name="select-organism" ng-model="data.selectedOrganism"
-            ng-options="o as o.full_name for o in organisms">
-      <option value="">Select an organism ...</option>
-    </select>
-  </div>
+<div class="curs-genotype-gene-list">
+  <organism-selector
+    ng-if="multiOrganismMode"
+    label="Organism"
+    organism-selected="organismUpdated(organism)"
+    genotype-type="genotypeType"
+    last-added-gene="lastAddedGene">
+  </organism-selector>
   <div class="curs-genotype-edit-gene-list"
        ng-if="getSelectedOrganism()">
-    <span ng-show="multiOrganismMode">
-      <span ng-show="label">{{label}}</span>
-      <span style="font-size: 90%; font-weight: bold;">
-        {{getSelectedOrganism().full_name}}
-      </span>
-      <span ng-show="organisms.length != 1">
-        (<a ng-click="data.selectedOrganism = null">change ...</a>)
-      </span>
-    </span>
     <table class="list" ng-if="selectedOrganismGenes().length > 0">
       <thead>
         <tr>
@@ -35,8 +26,8 @@
           <td>
             <button class="btn btn-primary btn-xs"
                     title="{{deletionButtonTitle(gene.gene_id)}}"
-                    ng-disabled="hasDeletionGenotype(gene.gene_id)"
-                    ng-click="makeDeletionAllele(gene.gene_id)">Deletion</button>
+                    ng-click="quickDeletion(gene.gene_id)">
+                Deletion</button>
           </td>
           <td>
             <button class="btn btn-primary btn-xs"

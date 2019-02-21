@@ -28,6 +28,13 @@ cmp_deeply($res,
                    'SPCC1739.11c:allele-1', 'SPBC1826.01c:allele-1',
                  ],
                  annotation_count => 0,
+                 organism => {
+                   scientific_name => 'Schizosaccharomyces pombe',
+                   taxonid => '4896',
+                   pathogen_or_host => 'unknown',
+                   full_name => 'Schizosaccharomyces pombe',
+                   common_name => 'pombe'
+                 },
                },
              ]
            });
@@ -47,6 +54,13 @@ cmp_deeply($res,
                                'SPCC1739.11c:allele-1', 'SPBC1826.01c:allele-1',
                              ],
                              annotation_count => 0,
+                             organism => {
+                               scientific_name => 'Schizosaccharomyces pombe',
+                               taxonid => '4896',
+                               pathogen_or_host => 'unknown',
+                               full_name => 'Schizosaccharomyces pombe',
+                               common_name => 'pombe'
+                             },
                            }
                          ]
            });
@@ -66,6 +80,13 @@ cmp_deeply($res,
                                                      ],
                              'name' => 'cdc11-33',
                              annotation_count => 0,
+                             organism => {
+                               scientific_name => 'Schizosaccharomyces pombe',
+                               taxonid => '4896',
+                               pathogen_or_host => 'unknown',
+                               full_name => 'Schizosaccharomyces pombe',
+                               common_name => 'pombe'
+                             },
                            },
                            {
                              'allele_string' => 'cdc11-33 mot1-a1',
@@ -77,6 +98,13 @@ cmp_deeply($res,
                              'name' => 'cdc11-33 mot1-a1',
                              'display_name' => 'cdc11-33 mot1-a1',
                              annotation_count => 0,
+                             organism => {
+                               scientific_name => 'Schizosaccharomyces pombe',
+                               taxonid => '4896',
+                               pathogen_or_host => 'unknown',
+                               full_name => 'Schizosaccharomyces pombe',
+                               common_name => 'pombe'
+                             },
                            },
                            {
                              'allele_string' => 'cdc11-33 ssm4delta',
@@ -88,6 +116,13 @@ cmp_deeply($res,
                              'name' => 'cdc11-33 ssm4delta',
                              'display_name' => 'cdc11-33 ssm4delta',
                              annotation_count => 1,
+                             organism => {
+                               scientific_name => 'Schizosaccharomyces pombe',
+                               taxonid => '4896',
+                               pathogen_or_host => 'unknown',
+                               full_name => 'Schizosaccharomyces pombe',
+                               common_name => 'pombe'
+                             },
                            }
                          ]
            });
@@ -104,4 +139,11 @@ cmp_deeply($res,
                'SPCC1739.11c:allele-1',
              ],
              annotation_count => 0,
+             organism => {
+               scientific_name => 'Schizosaccharomyces pombe',
+               taxonid => '4896',
+               pathogen_or_host => 'unknown',
+               full_name => 'Schizosaccharomyces pombe',
+               common_name => 'pombe'
+             },
            });

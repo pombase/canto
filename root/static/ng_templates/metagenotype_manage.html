@@ -1,0 +1,32 @@
+<div id="curs-genotype-manage" class="genotype-list ng-cloak container">
+    <div class="row" ng-if="display">
+        <div class="col-md-6">
+            <metagenotype-genotype-picker
+                is-pathogen="true"
+                genotype-model="pathogenModel"
+                selected-organism="pathogenSelectedOrganism">
+            </metagenotype-genotype-picker>
+        </div>
+        <div class="col-md-6">
+            <metagenotype-genotype-picker
+                is-pathogen="false"
+                genotype-model="hostModel"
+                selected-organism="hostSelectedOrganism">
+            </metagenotype-genotype-picker>
+        </div>
+    </div>
+    <div class="row">
+        <button ng-click="toGenotype()" type="button" class="btn btn-primary curs-back-button">
+            &lt;-- Back to Summary
+        </button>
+        <button
+            ng-click="createMetaGenotype()"
+            type="button"
+            class="btn btn-primary curs-back-button"
+            ng-disabled="isPickerSet() == false"
+            ng-if="display">
+            Make meta-genotype --&gt;
+        </button>
+    </div>
+    <metagenotype-list-view></metagenotype-list-view>
+</div>

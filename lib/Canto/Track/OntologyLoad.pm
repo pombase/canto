@@ -297,6 +297,7 @@ sub load
 
   my %cvs = ();
   map {
+    s/ /_/g;
     $cvs{$_} = 1;
   } $ontology_data->get_cv_names();
 
@@ -335,7 +336,7 @@ sub load
   my %term_namespace = ();
 
   for my $term (@sorted_terms_to_store) {
-    my $cv_name = $term->namespace() // 'external';
+    my $cv_name = ($term->namespace() =~ s/ /_/gr) // 'external';
     my $term_acc = $term->id();
 
     $term_namespace{$term_acc} = $cv_name;
@@ -364,7 +365,7 @@ sub load
   }
 
   for my $term (@sorted_terms_to_store) {
-    my $cv_name = $term->namespace() // 'external';
+    my $cv_name = ($term->namespace() =~ s/ /_/gr) // 'external';
     my $comment = $term->comment();
 
     my $term_name = $term->name();
@@ -498,6 +499,7 @@ sub load
   }
 
   for my $cv_name (sort keys %cvs) {
+    $cv_name =~ s/ /_/g;
     my $cv = $load_util->find_or_create_cv($cv_name);
 
     my $date = Canto::Curs::Utils::get_iso_date();

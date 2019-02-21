@@ -274,6 +274,22 @@ sub all_annotations
   return $self->_get_indirect_annotations(1, 0, $include_with);
 }
 
+=head2 genotypes
+
+ Usage   : my $genotypes_rs = $self->genotypes();
+ Function:
+ Args    :
+ Returns :
+
+=cut
+sub genotypes
+{
+  my $self = shift;
+
+  return $self->search_related_rs('alleles')->search_related_rs('allele_genotypes')
+    ->search_related_rs('genotype');
+}
+
 sub delete
 {
   my $self = shift;

@@ -56,8 +56,7 @@ around 'lookup' => sub {
   } else {
     my $options = $_[0];
     if (exists $options->{search_organism}) {
-      $organism_name = $options->{search_organism}->{genus} . '_' .
-        $options->{search_organism}->{species};
+      $organism_name = $options->{search_organism}->{scientific_name} =~ s/ /_/gr;
     }
     @args = @{$_[1]};
   }

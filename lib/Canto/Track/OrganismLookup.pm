@@ -70,9 +70,8 @@ sub _make_organism_hash
   }
 
   return {
-    genus => $organism->genus(),
-    species => $organism->species(),
-    full_name => $organism->genus() . ' ' . $organism->species(),
+    scientific_name => $organism->scientific_name(),
+    full_name => $organism->scientific_name(),
     common_name => $organism->common_name(),
     taxonid => $taxonid,
     pathogen_or_host => $pathogen_or_host,
@@ -86,7 +85,7 @@ sub _make_organism_hash
  Function: Retrieve organisms from the TrackDB
  Args    : $lookup_type - can only be "host" at the moment
  Return  : A list of organisms in the format:
-           [ { genus => '...', species => '...', taxon_id => '...',
+           [ { scientific_name => '...', taxon_id => '...',
                pathogen_or_host => 'host' },
              { ... },
              ...
@@ -129,7 +128,7 @@ sub lookup_by_type
            my $organism = $lookup->lookup_by_taxonid(4896);
  Function: Retrieve an organism by taxon id from the TrackDB
  Return  : A hash of organism details in the format:
-           { genus => '...', species => '...', taxon_id => '...',
+           { scientific_name => '...', taxon_id => '...',
              pathogen_or_host => 'host' }
 
 =cut
