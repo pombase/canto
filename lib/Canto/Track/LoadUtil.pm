@@ -841,6 +841,9 @@ sub create_sessions_from_json
     die qq|can't find user with email address "$curator_email_address" in the database\n|;
   }
 
+  # disable connection caching so we don't run out of file descriptors
+  my $connect_options = { cache_connection => 0 };
+
   my @results = ();
 
   while (my ($pub_uniquename, $session_data) = each %$sessions_data) {
@@ -851,7 +854,7 @@ sub create_sessions_from_json
     }
 
     my ($curs, $cursdb) =
-      Canto::Track::create_curs($config, $self->schema(), $pub);
+      Canto::Track::create_curs($config, $self->schema(), $pub, $connect_options);
 
     my $gene_manager = Canto::Curs::GeneManager->new(config => $config,
                                                      curs_schema => $cursdb);

@@ -63,6 +63,7 @@ use Canto::Curs::State qw/:all/;
            $pub - the uniquename (PMID) of a publication; the Pub object will be
                   created if it doesn't exist
                  OR: a Pub object to use
+           $connect_options - options passed to cached_connect()
  Return  :
 
 =cut
@@ -72,6 +73,7 @@ sub create_curs
   my $config = shift;
   my $track_schema = shift;
   my $pub = shift;
+  my $connect_options = shift;
 
   if (!ref $pub) {
     $pub = $track_schema->resultset('Pub')->find_or_create({ uniquename => $pub });
@@ -85,20 +87,21 @@ sub create_curs
                                                curs_key => $curs_key,
                                              });
 
-  my $curs_db = Canto::Track::create_curs_db($config, $curs);
+  my $curs_db = Canto::Track::create_curs_db($config, $curs, undef, $connect_options);
 
   return ($curs, $curs_db);
 }
 
 =head2 create_curs_db
 
- Usage   : Canto::Track::create_curs_db($config, $curs_object);
+ Usage   : Canto::Track::create_curs_db($config, $curs_object, );
  Function: Create a database for a curs, using the curs_key field of the object
            to create the database (file)name.
  Args    : $config - the Config object
            $curs - the Curs object
            $current_user - the current logged in user (or undef if no one is
                            logged in)
+           $connect_options - options passed to cached_connect()
  Returns : ($curs_schema, $cursdb_file_name) - A CursDB object for the new db,
            and its file name - die()s on failure
 
@@ -108,6 +111,7 @@ sub create_curs_db
   my $config = shift;
   my $curs = shift;
   my $current_user = shift;
+  my $connect_options = shift;
 
   if (!defined $curs) {
     croak "No Curs object passed";
@@ -127,7 +131,8 @@ sub create_curs_db
   copy($curs_db_template_file, $db_file_name) or die "$!\n";
 
   my $connect_string = Canto::Curs::make_connect_string($config, $curs_key);
-  my $curs_schema = Canto::CursDB->cached_connect($connect_string);
+  my $curs_schema = Canto::CursDB->cached_connect($connect_string, undef, undef,
+                                                  $connect_options);
 
   my $track_db_pub = $curs->pub();
   my $curs_db_pub =
