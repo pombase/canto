@@ -58,6 +58,7 @@ Choose curation type for <% $gene->display_name() %>:
     </li>
 %    }
 %   } else {
+%     if (!$pathogen_host_mode) {
   <li class="annotation-type">
     <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id() |n%>, '<%$annotation_type_name%>', <% $taxon_id %>)">
       Single allele <% ucfirst $type_display_name %>
@@ -70,6 +71,7 @@ Choose curation type for <% $gene->display_name() %>:
     </a>
     <help-icon key="gene_page_multi_allele"></help-icon>
   </li>
+%     }
 %   }
 % }
   </ul>
@@ -159,6 +161,7 @@ my $st = $c->stash();
 my $gene_count = $st->{gene_count};
 my $finish_text = '<- Back to summary';
 my $read_only_curs = $st->{read_only_curs};
+my $pathogen_host_mode = $st->{pathogen_host_mode};
 
 my $is_admin = $st->{is_admin_user};
 my $genotype_annotation_configured = $st->{genotype_annotation_configured};
