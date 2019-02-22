@@ -4099,9 +4099,9 @@ var GenotypeGeneListCtrl =
           });
         };
 
-        $scope.quickDeletion = $scope.multiOrganismMode
-          ? $scope.deleteSelectStrainPicker
-          : $scope.makeDeletionAllele
+        $scope.quickDeletion = $scope.multiOrganismMode ?
+          $scope.deleteSelectStrainPicker :
+          $scope.makeDeletionAllele
 
         $scope.deletionButtonTitle = function (gene_id) {
           if ($scope.hasDeletionHash[gene_id]) {
@@ -4772,8 +4772,8 @@ var genotypeListViewCtrl =
           var key;
           var count = 0;
           for (key in $scope.columnsToHide) {
-            if ($scope.columnsToHide.hasOwnProperty(key)
-                && $scope.columnsToHide[key] === true) {
+            if ($scope.columnsToHide.hasOwnProperty(key) &&
+              $scope.columnsToHide[key] === true) {
               count += 1;
             }
           }
