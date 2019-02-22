@@ -26,7 +26,7 @@ throws_ok { $load_util->find_dbxref($no_such_id); } qr/no Dbxref found for $no_s
 
 
 # test adding sessions for a JSON file - mostly used by Fly-Canto
-my $fly = $load_util->get_organism('Drosophila', 'melanogaster', '7227', 'fruit fly');
+my $fly = $load_util->get_organism('Drosophila melanogaster', '7227', 'fruit fly');
 my $gene_load = Canto::Track::GeneLoad->new(organism => $fly, schema => $schema);
 $gene_load->create_gene('FBgn0004107', 'Dmel\Cdk2', [], 'Cyclin-dependent kinase 2');
 $gene_load->create_gene('FBgn0016131', 'Dmel\Cdk4', [], 'Cyclin-dependent kinase 4');
