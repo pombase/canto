@@ -9,7 +9,7 @@ before_install:
 branches:
   only:
     - master
-    - metagenotype-dev
+    - testing
     - fly-canto-dev
 
 # this runs "make test" inside a Docker container
