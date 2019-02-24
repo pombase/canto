@@ -50,6 +50,8 @@ use feature qw(state);
 use Package::Alias PubmedUtil => 'Canto::Track::PubmedUtil';
 
 use Canto::Curs::GeneManager;
+use Canto::Curs::AlleleManager;
+use Canto::Curs::GenotypeManager;
 
 use Canto::Track;
 
@@ -858,8 +860,14 @@ sub create_sessions_from_json
     my ($curs, $cursdb) =
       Canto::Track::create_curs($config, $self->schema(), $pub, $connect_options);
 
-    my $gene_manager = Canto::Curs::GeneManager->new(config => $config,
-                                                     curs_schema => $cursdb);
+    push @results, [$curs, $cursdb];
+
+    my $allele_manager =
+      Canto::Curs::AlleleManager->new(config => $config, curs_schema => $cursdb);
+    my $genotype_manager =
+      Canto::Curs::GenotypeManager->new(config => $config, curs_schema => $cursdb);
+    my $gene_manager =
+      Canto::Curs::GeneManager->new(config => $config, curs_schema => $cursdb);
 
     $curator_manager->set_curator($curs->curs_key(), $curator_email_address);
 
@@ -871,12 +879,43 @@ sub create_sessions_from_json
     print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
       " for: $curator_email_address\n";
 
+    my %db_genes = ();
+
     for my $gene_uniquename (@{$session_data->{genes}}) {
       my $lookup_result = $gene_lookup->lookup([$gene_uniquename]);
-      $gene_manager->create_genes_from_lookup($lookup_result);
+      my %result = $gene_manager->create_genes_from_lookup($lookup_result);
+      while (my ($result_uniquename, $result_gene) = each %result) {
+        $db_genes{$result_uniquename} = $result_gene;
+      }
+    }
+
+    my $alleles = $session_data->{alleles};
+
+    if ($alleles) {
+      while (my ($allele_uniquename, $allele_details) = each %$alleles) {
+        my $allele_gene_uniquename = $allele_details->{gene};
+        if (!defined $allele_gene_uniquename) {
+          die qq|no "gene" field in details for $allele_uniquename in $pub_uniquename|;
+        }
+        my $gene = $db_genes{$allele_gene_uniquename};
+        if (!defined $gene) {
+          die qq|no gene the session for $allele_uniquename in $pub_uniquename|;
+        }
+
+        my $type = $allele_details->{allele_type} || 'other';
+        my $name = $allele_details->{allele_name} || undef;
+        my $description = $allele_details->{allele_description} || undef;
+        my @args = ($allele_uniquename, $type, $name, $description, $gene);
+
+        my @alleles_for_make_genotype =
+          $allele_manager->create_simple_allele(@args);
+
+        $genotype_manager->make_genotype(undef, undef, \@alleles_for_make_genotype,
+                                         $gene->organism()->taxonid(),
+                                         "genotype-$allele_uniquename");
+      }
     }
   }
-
 
   return @results;
 }

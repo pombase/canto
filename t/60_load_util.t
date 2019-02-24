@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 10;
 use Test::Exception;
 
 use Canto::TestUtil;
@@ -31,6 +31,24 @@ my $gene_load = Canto::Track::GeneLoad->new(organism => $fly, schema => $schema)
 $gene_load->create_gene('FBgn0004107', 'Dmel\Cdk2', [], 'Cyclin-dependent kinase 2');
 $gene_load->create_gene('FBgn0016131', 'Dmel\Cdk4', [], 'Cyclin-dependent kinase 4');
 my $test_json_file = $test_util->root_dir() . '/t/data/sessions_from_json_test.json';
-my ($curs, $cursdb, $person) =
+my @created_sessions =
   $load_util->create_sessions_from_json($config, $test_json_file,
                                         'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org');
+
+is (@created_sessions, 1);
+
+my ($created_curs, $created_cursdb) = @{$created_sessions[0]};
+
+my $FBal0119310_allele =
+  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0119310" });
+
+ok (defined $FBal0119310_allele);
+
+is($FBal0119310_allele->type(), 'other');
+is($FBal0119310_allele->name(), 'Dmel\Cdk2_UAS.Tag:MYC');
+is($FBal0119310_allele->description(), 'description of FBal0119310');
+
+my $genotype_FBal0119310 =
+  $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBal0119310" });
+
+is(($genotype_FBal0119310->alleles()->all())[0]->name(), 'Dmel\Cdk2_UAS.Tag:MYC');

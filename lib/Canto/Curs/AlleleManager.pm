@@ -207,4 +207,39 @@ sub allele_from_json
   return $schema->create_with_type('Allele', \%create_args);
 }
 
+=head2 create_simple_allele
+
+ Usage   : my $allele = $allele_manager->create_simple_allele(...);
+ Function: Create an Allele object given some allele properties and a gene
+ Args    : $primary_identifier - the primary key in the database
+           $allele_type
+           $name
+           $description
+           $expression
+           $gene - a Gene object
+ Returns : the new Allele
+
+=cut
+
+sub create_simple_allele
+{
+  my $self = shift;
+
+  my $primary_identifier = shift;
+  my $allele_type = shift;
+  my $name = shift;
+  my $description = shift;
+  my $gene = shift;
+
+  my %create_args = (
+    primary_identifier => $primary_identifier,
+    type => $allele_type,
+    name => $name || undef,
+    description => $description || undef,
+    gene => $gene->gene_id(),
+  );
+
+  return $self->curs_schema()->create_with_type('Allele', \%create_args);
+}
+
 1;
