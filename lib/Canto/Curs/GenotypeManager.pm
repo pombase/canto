@@ -404,7 +404,7 @@ sub make_metagenotype
                                                      $name, $background, \@allele_objects,
                                                      $strain_name);
  Function: Store changes to a Genotype object in the CursDB
- Args    : $genotype_id - the Genotype's ID in the CursDB
+ Args    : $genotype - the Genotype object
            $name - new name for the genotype, note: if undef the name will be
                    set to undef rather than keeping the old version (optional)
            $background - the genotype background (optional)
