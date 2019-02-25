@@ -248,9 +248,10 @@ my $proc = sub {
     # use the Person added by the add_person code
     my $email_address = shift @ARGV;
 
-    my ($curs, $cursdb, $curator) =
+    my @new_sessions =
       $load_util->create_sessions_from_json($config, $file_name, $email_address);
 
+    print "created ", scalar(@new_sessions), " sessions\n";
   }
 
   if ($add_organism) {

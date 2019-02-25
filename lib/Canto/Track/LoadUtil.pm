@@ -850,6 +850,7 @@ sub create_sessions_from_json
   # load the publication in batches in advance
   PubmedUtil::load_by_ids($config, $self->schema(), [keys %$sessions_data], 'admin_load');
 
+ PUB:
   while (my ($pub_uniquename, $session_data) = each %$sessions_data) {
     my ($pub, $error_message) = $self->load_pub_from_pubmed($config, $pub_uniquename);
 
@@ -857,10 +858,19 @@ sub create_sessions_from_json
       die "can't get publication details for $pub_uniquename from PubMed:\n$error_message";
     }
 
+    for my $gene_uniquename (@{$session_data->{genes}}) {
+      my $lookup_result = $gene_lookup->lookup([$gene_uniquename]);
+
+      if (@{$lookup_result->{missing}} != 0) {
+        print "no gene found in the database for ID $gene_uniquename from $pub_uniquename\n";
+        next PUB;
+      }
+    }
+
     my ($curs, $cursdb) =
       Canto::Track::create_curs($config, $self->schema(), $pub, $connect_options);
 
-    push @results, [$curs, $cursdb];
+    push @results, $curs;
 
     my $allele_manager =
       Canto::Curs::AlleleManager->new(config => $config, curs_schema => $cursdb);
@@ -876,14 +886,12 @@ sub create_sessions_from_json
       $pub->update();
     }
 
-    print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
-      " for: $curator_email_address\n";
-
     my %db_genes = ();
 
     for my $gene_uniquename (@{$session_data->{genes}}) {
       my $lookup_result = $gene_lookup->lookup([$gene_uniquename]);
       my %result = $gene_manager->create_genes_from_lookup($lookup_result);
+
       while (my ($result_uniquename, $result_gene) = each %result) {
         $db_genes{$result_uniquename} = $result_gene;
       }
@@ -895,11 +903,13 @@ sub create_sessions_from_json
       while (my ($allele_uniquename, $allele_details) = each %$alleles) {
         my $allele_gene_uniquename = $allele_details->{gene};
         if (!defined $allele_gene_uniquename) {
-          die qq|no "gene" field in details for $allele_uniquename in $pub_uniquename|;
+          print qq|no "gene" field in details for $allele_uniquename in $pub_uniquename\n|;
+          next PUB;
         }
         my $gene = $db_genes{$allele_gene_uniquename};
         if (!defined $gene) {
-          die qq|no gene the session for $allele_uniquename in $pub_uniquename|;
+          print qq|gene $allele_gene_uniquename (from allele $allele_uniquename missing from data for $pub_uniquename\n|;
+          next PUB;
         }
 
         my $type = $allele_details->{allele_type} || 'other';
@@ -915,6 +925,9 @@ sub create_sessions_from_json
                                          "genotype-$allele_uniquename");
       }
     }
+
+    print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
+      " for: $curator_email_address\n";
   }
 
   return @results;

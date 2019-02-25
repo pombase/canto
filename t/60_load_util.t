@@ -37,7 +37,8 @@ my @created_sessions =
 
 is (@created_sessions, 1);
 
-my ($created_curs, $created_cursdb) = @{$created_sessions[0]};
+my $created_curs = $created_sessions[0];
+my $created_cursdb = Canto::Curs::get_schema_for_key($config, $created_curs->curs_key());
 
 my $FBal0119310_allele =
   $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0119310" });

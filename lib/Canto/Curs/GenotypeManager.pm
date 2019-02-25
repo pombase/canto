@@ -41,6 +41,7 @@ use Moose;
 use Canto::Track;
 use Canto::Curs::AlleleManager;
 use Canto::Curs::StrainManager;
+use Canto::Curs::OrganismManager;
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 has curs_key => (is => 'rw', lazy_build => 1);
