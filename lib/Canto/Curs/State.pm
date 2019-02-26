@@ -239,15 +239,16 @@ sub store_statuses
     croak "too many arguments for store_statuses()";
   }
 
-  my ($status, $submitter, $gene_count, $datestamp) = $self->get_state($schema);
-
   my $metadata_rs = $schema->resultset('Metadata');
   my $curs_key_row = $metadata_rs->find({ key => 'curs_key' });
 
   if (!defined $curs_key_row) {
-    warn 'failed to read curs_key from: ', $schema->storage()->connect_info();
+    warn 'failed to read curs_key from: ', $schema->storage()->connect_info()->[0];
     return;
   }
+
+  my ($status, $submitter, $gene_count, $datestamp) = $self->get_state($schema);
+
   my $curs_key = $curs_key_row->value();
 
   my $term_suggest_count_row =
