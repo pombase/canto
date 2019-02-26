@@ -598,12 +598,25 @@ sub _get_metagenotypes
     my $host_genotype_hash =
       $self->_genotype_details_hash($metagenotype->host_genotype(), $include_allele);
 
+    my $display_name =
+      $pathogen_genotype_hash->{display_name} . ' ' .
+      $pathogen_genotype_hash->{organism}->{scientific_name};
+    if ($pathogen_genotype_hash->{strain_name}) {
+      $display_name .= ' (' . $pathogen_genotype_hash->{strain_name} . ')';
+    }
+    $display_name .= ' / ' .
+      $host_genotype_hash->{display_name} . ' ' .
+      $host_genotype_hash->{organism}->{scientific_name};
+    if ($host_genotype_hash->{strain_name}) {
+      $display_name .= ' (' . $host_genotype_hash->{strain_name} . ')';
+    }
+
     push @res, {
       metagenotype_id => $metagenotype->metagenotype_id(),
       feature_id => $metagenotype->metagenotype_id(),
       pathogen_genotype => $pathogen_genotype_hash,
       host_genotype => $host_genotype_hash,
-      display_name => $pathogen_genotype_hash->{display_name} . ' / '. $host_genotype_hash->{display_name},
+      display_name => $display_name,
       annotation_count => $metagenotype->annotations()->count(),
     };
   }
