@@ -621,6 +621,7 @@ canto.service('CantoGlobals', function ($window) {
   this.curationStatusData = $window.curationStatusData;
   this.cumulativeAnnotationTypeCounts = $window.cumulativeAnnotationTypeCounts;
   this.perPub5YearStatsData = $window.perPub5YearStatsData;
+  this.htpPerPub5YearStatsData = $window.htpPerPub5YearStatsData;
   this.multi_organism_mode = $window.multi_organism_mode == 1;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.organismsAndGenes = $window.organismsAndGenes;
@@ -6473,6 +6474,21 @@ var AnnotationStatsCtrl =
           }
         });
     $scope.perPub5YearStatsData = CantoGlobals.perPub5YearStatsData.slice(1);
+
+    $scope.htpPerPub5YearStatsLabels =
+      $.map(CantoGlobals.htpPerPub5YearStatsData[0],
+        function (year) {
+          if (year == currentYear) {
+            return year;
+          } else {
+            var rangeEnd = (year + 4);
+            if (rangeEnd > currentYear) {
+              rangeEnd = currentYear;
+            }
+            return year + "-" + rangeEnd;
+          }
+        });
+    $scope.htpPerPub5YearStatsData = CantoGlobals.htpPerPub5YearStatsData.slice(1);
 
     $scope.show = function ($event, key) {
       $scope.visibleMap[key] = true;

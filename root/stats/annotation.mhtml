@@ -4,6 +4,8 @@
 @annotation_stats
 @per_pub_stats_table
 @per_pub_5_year_stats
+@htp_per_pub_stats_table
+@htp_per_pub_5_year_stats
 @curated_stats
 @new_curator_stats
 $db_creation_datetime
@@ -404,9 +406,22 @@ This table shows the number of first time community curators per year.
   </div>
   <div class="col-sm-6 col-md-6">
     <div>
-      Average annotations per publication:
+      Average LTP annotations per publication:
     </div>
     <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[1]"
+               chart-series="Avg. annotations per pub">
+    </bar-chart>
+  </div>
+</div>
+<div  style="margin-top: 1em" class="row">
+  <script language="javascript" type="text/javascript">
+    var htpPerPub5YearStatsData = <% $htp_per_pub_5_year_stats_js |n %>;
+  </script>
+  <div class="col-sm-6 col-md-6">
+    <div>
+      Average HTP annotations per publication:
+    </div>
+    <bar-chart chart-labels="htpPerPub5YearStatsLabels" chart-data="htpPerPub5YearStatsData[1]"
                chart-series="Avg. annotations per pub">
     </bar-chart>
   </div>
@@ -533,7 +548,18 @@ map {
   }
 } @per_pub_5_year_stats;
 
+my @transposed_htp_per_pub_5_year_stats = ();
+
+map {
+  my @row = @$_;
+
+  for (my $i = 0; $i < scalar(@row); $i++) {
+    push @{$transposed_htp_per_pub_5_year_stats[$i]}, $row[$i];
+  }
+} @htp_per_pub_5_year_stats;
+
 my $per_pub_5_year_stats_js = Data::JavaScript::Anon->anon_dump(\@transposed_per_pub_5_year_stats);
+my $htp_per_pub_5_year_stats_js = Data::JavaScript::Anon->anon_dump(\@transposed_htp_per_pub_5_year_stats);
 
 my ($accepted_sessions, $all_community_sessions) = @curation_response_rate;
 my $response_rate = int(1000.0 * $accepted_sessions / $all_community_sessions) / 10.0;

@@ -306,6 +306,7 @@ sub per_publication_stats
 {
   my $chado_schema = shift;
   my $use_5_year_bins = shift // 0;
+  my $throughput = shift;
 
   my $chado_dbh = $chado_schema->storage()->dbh();
 
@@ -327,11 +328,14 @@ EOF
 EOF
   }
 
+  my $throughput_constraint = "annotation_throughput_type = '$throughput throughput'";
+
   my $annotation_query = <<"EOF";
  WITH counts AS
   (SELECT publication_year as year, pmid, count(distinct id)
    FROM pombase_annotation_summary
   WHERE session IS NOT NULL AND publication_year IS NOT NULL
+   AND $throughput_constraint
    GROUP BY year, pmid
    ORDER BY year)
 $select_sql;
