@@ -329,10 +329,9 @@ EOF
 
   my $annotation_query = <<"EOF";
  WITH counts AS
-  (SELECT substring(pub_date FROM '^(\\d\\d\\d\\d)') AS year, pmid, count(distinct id)
-   FROM pombase_genes_annotations_dates
-   JOIN pub_dates ON uniquename = pmid
-  WHERE session IS NOT NULL
+  (SELECT publication_year as year, pmid, count(distinct id)
+   FROM pombase_annotation_summary
+  WHERE session IS NOT NULL AND publication_year IS NOT NULL
    GROUP BY year, pmid
    ORDER BY year)
 $select_sql;
