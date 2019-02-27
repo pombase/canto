@@ -200,7 +200,7 @@ EOF
   my $sth = $chado_dbh->prepare($query);
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
-  my $first_year = 2000;
+  my $first_year = 2004;
 
   while (my ($year, $type, $count) = $sth->fetchrow_array()) {
     if (!$year || $year < $first_year) {
