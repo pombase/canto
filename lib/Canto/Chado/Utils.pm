@@ -334,7 +334,7 @@ EOF
  WITH counts AS
   (SELECT publication_year as year, pmid, count(distinct id)
    FROM pombase_annotation_summary
-  WHERE session IS NOT NULL AND publication_year IS NOT NULL
+  WHERE publication_year IS NOT NULL
    AND $throughput_constraint
    GROUP BY year, pmid
    ORDER BY year)
