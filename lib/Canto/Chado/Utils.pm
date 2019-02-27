@@ -192,28 +192,38 @@ sub annotation_types_by_year
 SELECT annotation_year, annotation_type, count(distinct id)
 FROM pombase_genes_annotations_dates
 WHERE (evidence_code IS NULL OR evidence_code <> 'Inferred from Electronic Annotation')
+  AND (annotation_type NOT IN ('PomBase gene products'))
   AND (annotation_source IS NULL OR annotation_source <> 'BIOGRID')
-  AND annotation_year::integer >= 0
 GROUP BY annotation_type, annotation_year;
 EOF
 
   my $sth = $chado_dbh->prepare($query);
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
+  my $first_year = 2000;
+
   while (my ($year, $type, $count) = $sth->fetchrow_array()) {
-    $stats{$year}->{$type} = $count;
+    if (!$year || $year < $first_year) {
+      $year = "<$first_year";
+    }
+
+    if (!$stats{$year}) {
+      $stats{$year} = {};
+    }
+
+    if (defined $stats{$year}->{$type} && $year eq "<$first_year") {
+      $stats{$year}->{$type} += $count;
+    } else {
+      $stats{$year}->{$type} = $count;
+    }
   }
 
   my @rows = ();
 
-  my $first_year = 9999;
-
-  map {
-    $first_year = $_ if $_ < $first_year
-  } keys %stats;
-
   my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
   my $current_year = $year + 1900;
+
+  push @rows, ["<$first_year", $stats{"<$first_year"}];
 
   for (my $year = $first_year; $year <= $current_year; $year++) {
     my $year_stats = $stats{$year};
