@@ -347,8 +347,9 @@ This table shows the number of first time community curators per year.
     <div class="row">
 <div class="col-sm-6 col-md-6">
     Mean number of manually curated annotations and genes annotated in PomBase
-    per peer-reviewed paper in 5-year intervals. Counts exclude high-throughput
-    experiments and use the same criteria for all years
+    per peer-reviewed paper in 5-year intervals.  Annotations are split
+    into separate graphs for annotations from low-throughput
+    experiments and high-throughput experiments.
 </div>
 <div class="ng-cloak col-sm-6 col-md-6" ng-if="!isVisible('annotations+genes-per-publication-in-5-year-intervals')">
   <a href="#" ng-click="show($event, 'annotations+genes-per-publication-in-5-year-intervals')">View data table ...</a>
@@ -404,14 +405,6 @@ This table shows the number of first time community curators per year.
                chart-series="Avg. genes per pub">
     </bar-chart>
   </div>
-  <div class="col-sm-6 col-md-6">
-    <div>
-      Average LTP annotations per publication:
-    </div>
-    <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[1]"
-               chart-series="Avg. annotations per pub">
-    </bar-chart>
-  </div>
 </div>
 <div  style="margin-top: 1em" class="row">
   <script language="javascript" type="text/javascript">
@@ -419,7 +412,15 @@ This table shows the number of first time community curators per year.
   </script>
   <div class="col-sm-6 col-md-6">
     <div>
-      Average HTP annotations per publication:
+      Average low-throughput annotations per publication:
+    </div>
+    <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[1]"
+               chart-series="Avg. annotations per pub">
+    </bar-chart>
+  </div>
+  <div class="col-sm-6 col-md-6">
+    <div>
+      Average high-throughput annotations per publication:
     </div>
     <bar-chart chart-labels="htpPerPub5YearStatsLabels" chart-data="htpPerPub5YearStatsData[1]"
                chart-series="Avg. annotations per pub">
