@@ -83,7 +83,12 @@ sub _get_metadata
                  ->cursprops();
 
   while (defined (my $prop = $cursprops_rs->next())) {
-    $ret{$prop->type()->name()} = $prop->value();
+    my $prop_type_name = $prop->type()->name();
+    if ($prop_type_name eq 'link_sent_to_curator_date' &&
+          !defined $ret{first_sent_to_curator_date}) {
+      $ret{first_sent_to_curator_date} = $prop->value();
+    }
+    $ret{$prop_type_name} = $prop->value();
   }
 
   my $curator_manager =
