@@ -78,8 +78,18 @@ sub _get_curation_sessions
     if ($options->{stream_mode}) {
       $data = undef;
     } else {
-      $data = Canto::Curs::Serialise::perl($config, $schema, $curs_key, $options);
       my $props = _get_cursprops($curs);
+
+      my $curs_status = undef;
+
+      for my $prop (@$props) {
+        if ($prop->{type} eq 'annotation_status') {
+          $curs_status = $prop->{value};
+        }
+      }
+
+      $data = Canto::Curs::Serialise::perl($config, $schema, $curs_key, $options,
+                                           $curs_status);
 
       for my $prop_data (@$props) {
         my $prop_type = $prop_data->{type};

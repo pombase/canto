@@ -545,6 +545,7 @@ sub perl
   my $track_schema = shift;
   my $curs_key = shift;
   my $options = shift;
+  my $curs_status = shift;
 
   my $curs_schema =
     Canto::Curs::get_schema_for_key($config, $curs_key,
@@ -552,38 +553,46 @@ sub perl
                                       cache_connection => 0,
                                     });
 
+  # write the metadata for all sessions
   my %ret = (
     metadata => _get_metadata($config, $track_schema, $curs_schema),
-    annotations => _get_annotations($config, $track_schema, $curs_schema),
-    organisms => _get_organisms($config, $curs_schema, $options),
-    publications => _get_pubs($curs_schema, $options)
+    publications => _get_pubs($curs_schema, $options),
   );
 
-  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+  if ($curs_status && $curs_status eq 'APPROVED' &&
+      ($options->{dump_approved} || $options->{export_approved})) {
+    # only write the annotations if the session is approved
 
-  my %genes = _get_genes($organism_lookup, $curs_schema);
-  if (keys %genes) {
-    $ret{genes} = \%genes;
+    $ret{annotations} = _get_annotations($config, $track_schema, $curs_schema);
+    $ret{organisms} = _get_organisms($config, $curs_schema, $options);
+
+    my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+
+    my %genes = _get_genes($organism_lookup, $curs_schema);
+    if (keys %genes) {
+      $ret{genes} = \%genes;
+    }
+
+    my %alleles = _get_alleles($config, $curs_schema);
+    if (keys %alleles) {
+      $ret{alleles} = \%alleles;
+    }
+
+    my %genotypes = _get_genotypes($config, $curs_schema);
+
+    if (keys %genotypes) {
+      $ret{genotypes} = \%genotypes;
+    }
+
+    my %metagenotypes = _get_metagenotypes($config, $curs_schema);
+
+    if (keys %metagenotypes) {
+      $ret{metagenotypes} = \%metagenotypes;
+    }
+
   }
 
-  my %alleles = _get_alleles($config, $curs_schema);
-  if (keys %alleles) {
-    $ret{alleles} = \%alleles;
-  }
-
-  my %genotypes = _get_genotypes($config, $curs_schema);
-
-  if (keys %genotypes) {
-    $ret{genotypes} = \%genotypes;
-  }
-
-  my %metagenotypes = _get_metagenotypes($config, $curs_schema);
-
-  if (keys %metagenotypes) {
-    $ret{metagenotypes} = \%metagenotypes;
-  }
-
-  $curs_schema->disconnect();
+      $curs_schema->disconnect();
 
   return \%ret;
 }

@@ -56,8 +56,6 @@ has options => (is => 'ro', isa => 'ArrayRef', required => 1);
 =head2 parsed_options
  This attribute stores the parsed versions of the options attribute.
  Parsed options available are:
-  curs_resultset - a TrackDB ResultSet of 'Curs' objects - only these objects
-                   are exported
   all_data - return data from all the sessions and all data from the TrackDB,
              including publication and user information
 =cut
@@ -68,17 +66,6 @@ has track_schema => (is => 'rw', isa => 'Canto::TrackDB', init_arg => undef);
 has state_after_export => (is => 'rw', init_arg => undef);
 
 requires 'config';
-
-sub _curs_rs_by_type
-{
-  my $curs_rs = shift;
-  my $session_state = shift;
-
-  return $curs_rs->search({ 'type.name' => 'annotation_status',
-                            'cursprops.value' => $session_state,
-                            'cv.name' => 'Canto cursprop types', },
-                          { join => { cursprops => { type => 'cv' } } })
-}
 
 sub BUILD
 {
@@ -108,20 +95,6 @@ sub BUILD
 
   my $track_schema = Canto::TrackDB->new(config => $self->config());
   $self->track_schema($track_schema);
-
-  my $curs_rs = $track_schema->resultset('Curs');
-
-  if ($parsed_options{dump_approved} || $parsed_options{export_approved}) {
-    $curs_rs = _curs_rs_by_type($curs_rs, 'APPROVED');
-  } else {
-    if ($parsed_options{dump_exported}) {
-      $curs_rs = _curs_rs_by_type($curs_rs, 'EXPORTED');
-    } else {
-      # default is to export all
-    }
-  }
-
-  $parsed_options{curs_resultset} = $curs_rs;
 }
 
 after 'export' => sub {
@@ -130,8 +103,7 @@ after 'export' => sub {
   if (defined $self->state_after_export()) {
     my $track_schema = $self->track_schema();
 
-    my $curs_rs =
-      $self->parsed_options()->{curs_resultset} // $track_schema->resultset('Curs');
+    my $curs_rs = $track_schema->resultset('Curs');
     $curs_rs->reset();
 
     my @curs_to_update = ();
