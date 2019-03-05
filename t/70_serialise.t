@@ -562,6 +562,7 @@ my $small_expected_track_data =
                                                 'aaaa0007', { all_data => 1 });
   my $curs_ref = decode_json($curs_json);
 
+
   cmp_deeply($curs_ref, $full_expected_curation_session);
 }
 

@@ -559,9 +559,13 @@ sub perl
     publications => _get_pubs($curs_schema, $options),
   );
 
-  if ($curs_status && $curs_status eq 'APPROVED' &&
-      ($options->{dump_approved} || $options->{export_approved})) {
-    # only write the annotations if the session is approved
+  if (($curs_status &&
+         ($curs_status eq 'APPROVED' &&
+          ($options->{dump_approved} || $options->{export_approved})))
+        ||
+      (!$options->{dump_approved} && !$options->{export_approved})) {
+    # only write the annotations if the session is approved or we're writing
+    # everything
 
     $ret{annotations} = _get_annotations($config, $track_schema, $curs_schema);
     $ret{organisms} = _get_organisms($config, $curs_schema, $options);
@@ -592,7 +596,7 @@ sub perl
 
   }
 
-      $curs_schema->disconnect();
+  $curs_schema->disconnect();
 
   return \%ret;
 }

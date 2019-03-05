@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 5;
 
 use Clone qw(clone);
 use JSON;
@@ -61,55 +61,3 @@ sub _get_data
 
   is (keys (%{$ref->{curation_sessions}}), 2);
 }
-
-# no approved sessions yet
-{
-  my @options = qw(--dump-approved);
-  my $ref = _get_data(undef, \@options);
-
-  is (keys (%{$ref->{curation_sessions}}), 0);
-}
-
-# approve a session
-{
-  my @options = qw(--dump-approved);
-  my $ref = _get_data(APPROVED, \@options);
-
-  is (keys (%{$ref->{curation_sessions}}), 1);
-
-  my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
-  is ($aaaa0007->{metadata}->{annotation_status}, "APPROVED");
-}
-
-# export the sessions
-{
-  my @options = qw(--export-approved);
-  my $ref = _get_data(undef, \@options);
-
-  is (keys (%{$ref->{curation_sessions}}), 1);
-
-  my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
-  # an anomaly - we return the status before exporting:
-  is ($aaaa0007->{metadata}->{annotation_status}, "APPROVED");
-}
-
-# the previous call should have changed the session state to "EXPORTED", so
-# we won't get any sessions this time
-{
-  my @options = qw(--export-approved);
-  my $ref = _get_data(undef, \@options);
-
-  is (keys (%{$ref->{curation_sessions}}), 0);
-}
-
-# but dump all should still return them all
-{
-  my @options = qw(--all);
-  my $ref = _get_data(undef, \@options);
-
-  my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
-  is ($aaaa0007->{metadata}->{annotation_status}, "EXPORTED");
-
-  is (keys (%{$ref->{curation_sessions}}), 2);
-}
-

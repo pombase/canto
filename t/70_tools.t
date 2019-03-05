@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 13;
 use Package::Alias Tools => 'Canto::Controller::Tools';
 use LWP::Protocol::PSGI;
 use Plack::Test;
@@ -105,16 +105,10 @@ sub do_export_approved {
 
 my $content_1 = do_export_approved();
 my $content_1_parsed = decode_json($content_1);
-is (keys %{$content_1_parsed->{curation_sessions}}, 1);
+is (keys %{$content_1_parsed->{curation_sessions}}, 2);
 
 # slight anomaly, the status is the pre-export status
 is ($content_1_parsed->{curation_sessions}->{aaaa0007}->{metadata}->{annotation_status}, 'APPROVED');
-
-my $content_2 = do_export_approved();
-my $content_2_parsed = decode_json($content_2);
-# should be no results as the sessions are already exported
-is (keys %{$content_2_parsed->{curation_sessions}}, 0);
-
 
 
 my $aaaa0006_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0006');
