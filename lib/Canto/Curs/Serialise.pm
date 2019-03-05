@@ -425,7 +425,9 @@ sub _get_genotypes
       alleles => [_get_genotype_alleles($config, $schema, $genotype)]
     };
 
-    $ret{$genotype_identifier}->{organism_taxonid} = $genotype->organism()->taxonid();
+    if ($genotype->organism()) {
+      $ret{$genotype_identifier}->{organism_taxonid} = $genotype->organism()->taxonid();
+    }
 
     if ($genotype->name()) {
       $ret{$genotype_identifier}->{name} = $genotype->name(),
