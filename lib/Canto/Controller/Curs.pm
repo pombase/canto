@@ -2060,7 +2060,10 @@ sub finish_form : Chained('top') Args(0)
 
   my @all_elements = (
       {
-        name => $finish_textarea, type => 'Textarea', cols => 80, rows => 20,
+        name => $finish_textarea,
+        type => 'Textarea',
+        cols => 80,
+        rows => 3,
         default => $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY) // '',
       },
       map {
