@@ -2064,6 +2064,9 @@ sub finish_form : Chained('top') Args(0)
         type => 'Textarea',
         cols => 80,
         rows => 3,
+        attributes => {
+          class => 'curs-final-comments-field'
+        },
         default => $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY) // '',
       },
       map {
