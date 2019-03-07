@@ -70,24 +70,29 @@ sub _get_curation_sessions
 
   my %ret_map = ();
 
-  my $curs_rs = $options->{curs_resultset} // $schema->resultset('Curs');
+  my $curs_rs = $options->{curs_resultset} //
+    $schema->resultset('Curs')->search({}, { prefetch => { pub => 'triage_status' }});
 
   while (defined (my $curs = $curs_rs->next())) {
     my $curs_key = $curs->curs_key();
+
+    my $props = _get_cursprops($curs);
+
+    my $curs_status = undef;
+
+    for my $prop (@$props) {
+      if ($prop->{type} eq 'annotation_status') {
+        $curs_status = $prop->{value};
+      }
+    }
+
+    next unless $curs->pub()->triage_status()->name() eq 'Curatable' ||
+      $curs_status eq 'APPROVED';
+
     my $data;
     if ($options->{stream_mode}) {
       $data = undef;
     } else {
-      my $props = _get_cursprops($curs);
-
-      my $curs_status = undef;
-
-      for my $prop (@$props) {
-        if ($prop->{type} eq 'annotation_status') {
-          $curs_status = $prop->{value};
-        }
-      }
-
       $data = Canto::Curs::Serialise::perl($config, $schema, $curs_key, $options,
                                            $curs_status);
 
@@ -170,15 +175,34 @@ sub _get_pubs
   my $schema = shift;
   my $options = shift;
 
-  my $rs = $schema->resultset('Pub');
+  my $rs = $schema->resultset('Pub')->search({}, { prefetch => 'triage_status' });
   my %ret = ();
 
   while (defined (my $pub = $rs->next())) {
+    my $pubprops = _get_pubprops($pub);
+
+    my $curs_status = undef;
+
+  CURS:
+    for my $curs ($pub->curs()->all()) {
+      my $props = _get_cursprops($curs);
+
+      for my $prop (@$props) {
+        if ($prop->{type} eq 'annotation_status') {
+          $curs_status = $prop->{value};
+          last CURS;
+        }
+      }
+    }
+
+    next unless $pub->triage_status()->name() eq 'Curatable' ||
+      $curs_status && $curs_status eq 'APPROVED';
+
     my %pub_hash = (
       type => $pub->type()->name(),
       corresponding_author => _get_name($pub->corresponding_author()),
       triage_status => _get_name($pub->triage_status()),
-      properties => _get_pubprops($pub),
+      properties => $pubprops,
       curation_statuses => _get_pub_curation_statuses($pub),
     );
     if ($options->{all_data}) {
