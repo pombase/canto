@@ -1550,3 +1550,8 @@ a:not([href]) {
 .metagenotype-list-strain {
   display: inline-block;
 }
+
+.curs-final-comments-field {
+  resize: vertical;
+  min-height: 60px;
+}
