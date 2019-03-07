@@ -7473,7 +7473,7 @@ var editOrganisms = function () {
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/edit_organisms.html',
-    controller: function ($scope, EditOrganismsSvc, StrainsService) {
+    controller: function ($scope, $window, EditOrganismsSvc, StrainsService) {
       $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
       $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
       $scope.continueUrl = curs_root_uri;
@@ -7527,4 +7527,4 @@ var editOrganisms = function () {
   };
 };
 
-canto.directive('editOrganisms', ['EditOrganismsSvc', 'StrainsService', editOrganisms]);
+canto.directive('editOrganisms', ['$window', 'EditOrganismsSvc', 'StrainsService', editOrganisms]);
