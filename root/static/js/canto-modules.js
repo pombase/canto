@@ -7476,6 +7476,8 @@ var editOrganisms = function () {
     controller: function ($scope, EditOrganismsSvc, StrainsService) {
       $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
       $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
+      $scope.continueUrl = curs_root_uri;
+      $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
       $scope.isContinueUrlDisabled = function () {
         if ($scope.getPathogens().length == 0 &&
@@ -7513,9 +7515,6 @@ var editOrganisms = function () {
 
         return false;
       };
-
-      $scope.continueUrl = curs_root_uri;
-      $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
       $scope.getContinueButtonTitle = function () {
         if ($scope.isContinueUrlDisabled()) {
