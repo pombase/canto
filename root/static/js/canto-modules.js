@@ -7519,7 +7519,7 @@ var editOrganisms = function () {
 
       $scope.getContinueButtonTitle = function () {
         if ($scope.isContinueUrlDisabled()) {
-          return 'Please indicate what strains were used for all organisms!';
+          return 'Please specify which strains were used for all organisms.';
         } else {
           return 'Continue';
         }
