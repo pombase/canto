@@ -7523,6 +7523,10 @@ var editOrganisms = function () {
           return 'Continue';
         }
       };
+
+      $scope.goToSummaryPage = function () {
+        $window.location.href = $scope.continueUrl;
+      };
     }
   };
 };
