@@ -7477,7 +7477,7 @@ var editOrganisms = function () {
       $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
       $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
 
-      $scope.getContiueUrlDisabled = function () {
+      $scope.isContinueUrlDisabled = function () {
         if ($scope.getPathogens().length == 0 &&
           $scope.getHosts().length == 0) {
           return true;
@@ -7518,7 +7518,7 @@ var editOrganisms = function () {
       $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
       $scope.getContinueButtonTitle = function () {
-        if ($scope.getContiueUrlDisabled()) {
+        if ($scope.isContinueUrlDisabled()) {
           return 'Please indicate what strains were used for all organisms!';
         } else {
           return 'Continue';
