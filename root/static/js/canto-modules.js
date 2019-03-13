@@ -7473,11 +7473,13 @@ var editOrganisms = function () {
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/edit_organisms.html',
-    controller: function ($scope, EditOrganismsSvc, StrainsService) {
+    controller: function ($scope, $window, EditOrganismsSvc, StrainsService) {
       $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
       $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
+      $scope.continueUrl = curs_root_uri;
+      $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
-      $scope.getContiueUrlDisabled = function () {
+      $scope.isContinueUrlDisabled = function () {
         if ($scope.getPathogens().length == 0 &&
           $scope.getHosts().length == 0) {
           return true;
@@ -7514,18 +7516,19 @@ var editOrganisms = function () {
         return false;
       };
 
-      $scope.continueUrl = curs_root_uri;
-      $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
-
       $scope.getContinueButtonTitle = function () {
-        if ($scope.getContiueUrlDisabled()) {
-          return 'Please indicate what strains were used for all organisms!';
+        if ($scope.isContinueUrlDisabled()) {
+          return 'Please specify which strains were used for all organisms.';
         } else {
           return 'Continue';
         }
+      };
+
+      $scope.goToSummaryPage = function () {
+        $window.location.href = $scope.continueUrl;
       };
     }
   };
 };
 
-canto.directive('editOrganisms', ['EditOrganismsSvc', 'StrainsService', editOrganisms]);
+canto.directive('editOrganisms', ['$window', 'EditOrganismsSvc', 'StrainsService', editOrganisms]);

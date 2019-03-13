@@ -3,6 +3,6 @@
   <edit-organisms-table title="Host genes" organisms="getHosts"></edit-organisms-table>
   <div class="submit">
     <a href="{{addGenesUrl}}" class="btn btn-primary">Add more genes and organisms</a>&nbsp;
-    <a href="{{continueUrl}}" ng-disabled="getContiueUrlDisabled()" class="btn btn-primary" title="{{ getContinueButtonTitle() }}">Continue</a>
+    <button ng-click="goToSummaryPage()" ng-disabled="isContinueUrlDisabled()" class="btn btn-primary" title="{{ getContinueButtonTitle() }}">Continue</a>
   </div>
 </div>
