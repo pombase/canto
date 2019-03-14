@@ -9,7 +9,8 @@
     <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
   <td>
-    <a href="{{curs_root_uri + '/feature/gene/view/' + firstAllele.gene_id + (read_only_curs ? '/ro' : '')}}">{{firstAllele.gene_display_name}}</a>
+    <a ng-if="firstAllele.type != 'aberration'" href="{{curs_root_uri + '/feature/gene/view/' + firstAllele.gene_id + (read_only_curs ? '/ro' : '')}}">{{firstAllele.gene_display_name}}</a>
+    <span ng-if="firstAllele.type == 'aberration'">(aberration)</span>
   </td>
   <td>
     <span ng-bind-html="firstAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
@@ -47,7 +48,8 @@
   </tr>
   <tr ng-repeat="currentAllele in otherAlleles">
     <td>
-      <a href="{{curs_root_uri + '/feature/gene/view/' + currentAllele.gene_id + (read_only_curs ? '/ro' : '')}}">{{currentAllele.gene_display_name}}</a>
+      <a ng-if="currentAllele.type != 'aberration'" href="{{curs_root_uri + '/feature/gene/view/' + currentAllele.gene_id + (read_only_curs ? '/ro' : '')}}">{{currentAllele.gene_display_name}}</a>
+      <span ng-if="currentAllele.type == 'aberration'">(aberration)</span>
     </td>
     <td>
       <span ng-bind-html="currentAllele.display_name | encodeAlleleSymbols | toTrusted"></span>

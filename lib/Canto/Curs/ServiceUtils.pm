@@ -638,11 +638,7 @@ sub _allele_details_hash
                                                  $allele->description(),
                                                  $allele->type());
 
-  my $gene_proxy =
-    Canto::Curs::GeneProxy->new(config => $self->config(),
-                                cursdb_gene => $allele->gene());
-
-  return {
+  my %result = (
     uniquename => $allele->primary_identifier(),
     name => $allele->name(),
     description => $allele->description(),
@@ -650,9 +646,19 @@ sub _allele_details_hash
     expression => $allele->expression(),
     display_name => $display_name,
     allele_id => $allele->allele_id(),
-    gene_id => $allele->gene()->gene_id(),
-    gene_display_name => $gene_proxy->display_name(),
+  );
+
+  if ($allele->type() ne 'aberration') {
+    $result{gene_id} = $allele->gene()->gene_id();
+
+    my $gene_proxy =
+      Canto::Curs::GeneProxy->new(config => $self->config(),
+                                  cursdb_gene => $allele->gene());
+
+    $result{gene_display_name} = $gene_proxy->display_name();
   }
+
+  return \%result;
 }
 
 sub _get_alleles
