@@ -399,7 +399,7 @@ This table shows the number of first time community curators per year.
   </script>
   <div class="col-sm-6 col-md-6">
     <div>
-      Average genes per publication:
+      Average genes from low throughput experiments/per publication
     </div>
     <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[0]"
                chart-series="Avg. genes per pub">
