@@ -18,7 +18,7 @@ CREATE TABLE allele (
        description text,
        expression text,
        name text,
-       gene integer NOT NULL REFERENCES gene(gene_id)
+       gene integer REFERENCES gene(gene_id)
 );
 
 CREATE TABLE annotation (
