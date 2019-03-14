@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::More tests => 16;
 
 use Canto::TestUtil;
 use Canto::Curs::AlleleManager;
@@ -76,3 +76,29 @@ my $no_name_allele_check = $allele_manager->allele_from_json(
 
 ok ($no_name_allele_check->allele_id() > 0);
 is ($no_name_allele_check->allele_id(), $no_name_allele->allele_id());
+
+
+$allele_manager->create_simple_allele('test_uniquename', 'unknown', 'some_name',
+                                      'some_description', $SPBC1826_01c);
+
+my $new_simple_allele = $curs_schema->resultset('Allele')
+  ->find({ primary_identifier => 'test_uniquename' });
+
+ok (defined $new_simple_allele);
+
+is ($new_simple_allele->description(), 'some_description');
+is ($new_simple_allele->gene()->primary_identifier(), 'SPBC1826.01c');
+
+
+$allele_manager->create_simple_allele('test_aberration_uniquename', 'aberration',
+                                      'some_aberration_name',
+                                      'some_aberration_description', undef);
+
+my $new_aberration = $curs_schema->resultset('Allele')
+  ->find({ primary_identifier => 'test_aberration_uniquename' });
+
+ok (defined $new_aberration);
+
+is ($new_aberration->type(), 'aberration');
+is ($new_aberration->description(), 'some_aberration_description');
+ok (!defined($new_aberration->gene()));

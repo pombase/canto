@@ -63,10 +63,17 @@ sub _create_allele_uniquename
 
   my $prefix = "$gene_primary_identifier:$curs_key-";
 
-  my $rs = $schema->resultset('Allele')
-    ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
-               'me.primary_identifier' => { -like => "$prefix%" } },
-             { join => 'gene' });
+  my $rs;
+
+  if ($gene_primary_identifier eq 'aberration') {
+    $rs = $schema->resultset('Allele')
+      ->search({ 'me.primary_identifier' => { -like => "$prefix%" } });
+  } else {
+    $rs = $schema->resultset('Allele')
+      ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
+                 'me.primary_identifier' => { -like => "$prefix%" } },
+               { join => 'gene' });
+  }
 
   my $new_index = 1;
 
@@ -167,8 +174,11 @@ sub allele_from_json
 
   my %search_args = (
     type => $allele_type,
-    gene => $gene_id,
   );
+
+  if ($allele_type ne 'aberration') {
+    $search_args{gene} = $gene_id;
+  }
 
   my $allele_rs = $schema->resultset('Allele')
     ->search({ %search_args });
@@ -181,16 +191,22 @@ sub allele_from_json
     }
   }
 
-  if (!$gene_id) {
+  if (!$gene_id && $allele_type ne 'aberration') {
     use Data::Dumper;
     confess "internal error, no gene_id for: ", Dumper([$json_allele]);
   }
 
-  my $gene = $schema->find_with_type('Gene', $gene_id);
+  my $new_primary_identifier;
 
-  my $new_primary_identifier =
-    _create_allele_uniquename($gene->primary_identifier(),
-                              $schema, $curs_key);
+  if ($allele_type eq 'aberration') {
+    $new_primary_identifier =
+      _create_allele_uniquename('aberration', $schema, $curs_key);
+  } else {
+    my $gene = $schema->find_with_type('Gene', $gene_id);
+
+    $new_primary_identifier =
+      _create_allele_uniquename($gene->primary_identifier(), $schema, $curs_key);
+  }
 
   my %create_args = (
     primary_identifier => $new_primary_identifier,
@@ -236,8 +252,11 @@ sub create_simple_allele
     type => $allele_type,
     name => $name || undef,
     description => $description || undef,
-    gene => $gene->gene_id(),
   );
+
+  if ($allele_type ne 'aberration') {
+    $create_args{gene} = $gene->gene_id();
+  }
 
   return $self->curs_schema()->create_with_type('Allele', \%create_args);
 }
