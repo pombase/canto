@@ -6846,11 +6846,11 @@ var metagenotypeGenotypePicker =
         $scope.setWildtypeOrganism = function () {
           StrainsService.getSessionStrains($scope.data.selectedOrganism.taxonid)
             .then(function (strains) {
-              $scope.data.wildType = null;
+              $scope.data.wildType = [];
 
               strains.map(function (strain) {
                 strain.genotype_id = (0 - strain.strain_id);
-                $scope.data.wildType = strain;
+                $scope.data.wildType.push(strain);
               });
             });
         };
