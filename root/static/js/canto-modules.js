@@ -7031,13 +7031,16 @@ var metagenotypeManage = function (CantoGlobals, CursGenotypeList, Metagenotype,
         data.pathogen_genotype_id = $scope.pathogenModel;
         if ($scope.hostModel < 0) {
           var strain_id = ($scope.hostModel * -1);
-          var strain = StrainsService.getStrainById(strain_id);
-          data.host_taxon_id = strain.taxon_id;
-          data.host_strain_name = strain.strain_name;
+          var strainPromise = StrainsService.getStrainById(strain_id);
+          strainPromise.then(function(strain) {
+            data.host_taxon_id = strain.taxon_id;
+            data.host_strain_name = strain.strain_name;
+            Metagenotype.create(data);
+          });
         } else {
           data.host_genotype_id = $scope.hostModel;
+          Metagenotype.create(data);
         }
-        Metagenotype.create(data);
       };
 
       StrainsService.getAllSessionStrains();
