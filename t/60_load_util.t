@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Test::Exception;
 
 use Canto::TestUtil;
@@ -53,3 +53,8 @@ my $genotype_FBal0119310 =
   $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBal0119310" });
 
 is(($genotype_FBal0119310->alleles()->all())[0]->name(), 'Dmel\Cdk2_UAS.Tag:MYC');
+
+my $genotype_FBab0037918 =
+  $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBab0037918" });
+
+is(($genotype_FBab0037918->alleles()->all())[0]->name(), 'Df(2L)Exel7046');
