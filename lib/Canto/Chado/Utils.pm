@@ -332,12 +332,12 @@ EOF
 
   my $annotation_query = <<"EOF";
  WITH counts AS
-  (SELECT publication_year as year, pmid, count(distinct id)
-   FROM pombase_annotation_summary
-  WHERE publication_year IS NOT NULL
-   AND $throughput_constraint
-   GROUP BY year, pmid
-   ORDER BY year)
+  (SELECT pubmed_publication_year AS year, pub_summ.pmid, count(distinct id)
+    FROM pombase_annotation_summary ann_summ
+    JOIN pombase_publication_curation_summary pub_summ on ann_summ.pmid = pub_summ.pmid
+   WHERE pubmed_publication_year IS NOT NULL
+     AND $throughput_constraint
+   GROUP BY year, pub_summ.pmid ORDER BY year)
 $select_sql;
 EOF
 
