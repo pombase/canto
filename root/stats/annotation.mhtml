@@ -336,7 +336,7 @@ This table shows the number of first time community curators per year.
       </td>
     </tr>
 % }
-    <tr>
+    <tr class="annotation-stats-table-totals">
       <td>
         Total
       </td>
