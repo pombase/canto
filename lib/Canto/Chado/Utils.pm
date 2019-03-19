@@ -54,24 +54,6 @@ WHERE pp.type_id IN
      FROM cvterm
      WHERE name = 'pubmed_publication_date')
 EOF
-
-  $chado_dbh->prepare(<<'EOF')->execute();
-CREATE TEMP TABLE pub_canto_curator_roles AS
-  SELECT pub.uniquename, pp.value AS status
-    FROM pub
-    LEFT OUTER JOIN pubprop pp
-                 ON pp.pub_id = pub.pub_id AND pp.type_id IN
-                   (SELECT cvterm_id FROM cvterm WHERE name = 'canto_curator_role')
-WHERE pub.pub_id IN
-    (SELECT pub_id FROM pubprop pp
-       JOIN cvterm pt ON pt.cvterm_id = pp.type_id
-        AND pt.name = 'canto_triage_status'
-        AND (pp.value LIKE 'Curatable%' OR pp.value LIKE 'curatable%'));
-EOF
-
-  $chado_dbh->prepare(<<'EOF')->execute();
-CREATE INDEX pub_dates_uniquename_index ON pub_dates(uniquename);
-EOF
 }
 
 # returns the number of completed (but not necessarily approved) sessions and the number of
@@ -253,27 +235,29 @@ sub curated_stats
     my $where;
 
     if ($curation_status eq 'uncurated') {
-      $where = 'status is null';
+      $where = 'canto_curator_role IS NULL OR canto_approved_year IS NULL';
     } else {
       if ($curation_status eq 'community') {
-        $where = q|status = 'community'|;
+        $where = q|canto_curator_role = 'community' AND canto_approved_year IS NOT NULL|;
       } else {
-        $where = q|status IS NOT NULL and status <> 'community'|;
+        $where = q|canto_curator_role IS NOT NULL AND canto_curator_role <> 'community' AND canto_approved_year IS NOT NULL|;
       }
     }
 
     my $query = <<"EOF";
-SELECT substring(pub_date FROM '^(\\d\\d\\d\\d)') AS year, count(roles.uniquename)
-   FROM pub_canto_curator_roles roles
-   JOIN pub_dates ON pub_dates.uniquename = roles.uniquename
-  WHERE $where
-   GROUP BY year
+SELECT pubmed_publication_year AS year, count(pmid)
+  FROM pombase_publication_curation_summary
+ WHERE ($where) AND pubmed_publication_year IS NOT NULL
+ GROUP BY pubmed_publication_year;
 EOF
+
+warn $query;
 
     my $sth = $chado_dbh->prepare($query);
     $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
     while (my ($year, $count) = $sth->fetchrow_array()) {
+      warn $year, $count, "\n";
       $stats{$year}->{$curation_status} = $count;
     }
   }
@@ -585,7 +569,6 @@ sub stats_finish
   my $chado_dbh = $chado_schema->storage()->dbh();
 
   $chado_dbh->prepare('drop table pub_dates')->execute();
-  $chado_dbh->prepare('drop table pub_canto_curator_roles')->execute();
 }
 
 1;
