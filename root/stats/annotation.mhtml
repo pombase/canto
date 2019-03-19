@@ -336,6 +336,14 @@ This table shows the number of first time community curators per year.
       </td>
     </tr>
 % }
+    <tr>
+      <td>
+        Total
+      </td>
+      <td>
+        <% $new_curators_total %>
+      </td>
+    </tr>
   </table>
 </div>
 </div>
@@ -564,4 +572,9 @@ my $htp_per_pub_5_year_stats_js = Data::JavaScript::Anon->anon_dump(\@transposed
 
 my ($completed_sessions, $all_community_sessions) = @curation_response_rate;
 my $response_rate = int(1000.0 * $completed_sessions / $all_community_sessions) / 10.0;
+
+my $new_curators_total = 0;
+for my $row (@new_curator_stats) {
+  $new_curators_total += $row->[0];
+}
 </%init>
