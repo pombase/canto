@@ -40,6 +40,7 @@ use Carp;
 use Moose::Role;
 
 requires 'config';
+requires 'schema';
 
 =head2 taxon_id_lookup
 
@@ -75,21 +76,47 @@ sub taxon_id_lookup
         $organism->full_name(), "\n";
     }
   } else {
-    $taxonid = $self->{_taxonid_cache}->{$organism->full_name()};
-    if (!defined $taxonid) {
-      my $prop = $organism->organismprops()
-        ->search({ 'type.name' => 'taxon_id' }, { join => 'type' })->first();
-      if (!defined $prop) {
-        croak "no 'organism_taxon_id' configuration found and no 'taxon_id' ",
-          "organismprop found for ", $organism->full_name();
+    my $lookup_strategy = $self->config()->{chado}->{taxon_id_lookup_strategy} || 'organismprop';
+
+    if ($lookup_strategy eq 'organismprop') {
+      $taxonid = $self->{_taxonid_cache}->{$organism->full_name()};
+      if (!defined $taxonid) {
+        my $prop = $organism->organismprops()
+          ->search({ 'type.name' => 'taxon_id' }, { join => 'type' })->first();
+        if (!defined $prop) {
+          croak "no 'organism_taxon_id' configuration found and no 'taxon_id' ",
+            "organismprop found for ", $organism->full_name();
+        }
+        $taxonid = $prop->value();
+        $self->{_taxonid_cache}->{$organism->full_name()} = $taxonid;
       }
-      $taxonid = $prop->value();
-      $self->{_taxonid_cache}->{$organism->full_name()} = $taxonid;
+    } else {
+      if ($lookup_strategy eq 'dbxref') {
+
+        my $chado_dbh = $self->schema()->storage()->dbh();
+        my $sth = $chado_dbh->prepare(<<'EOF');
+SELECT dbxref.accession
+FROM organism_dbxref
+JOIN dbxref ON organism_dbxref.dbxref_id = dbxref.dbxref_id
+JOIN db ON dbxref.db_id = db.db_id
+WHERE organism_dbxref.is_current = 't'
+  AND db.name = 'NCBITaxon'
+  AND organism_dbxref.organism_id = ?;
+EOF
+
+        $sth->execute($organism->organism_id());
+
+        while (my ($taxon_accession) = $sth->fetchrow_array()) {
+          $taxonid = $taxon_accession;
+          last;
+        }
+      } else {
+        die "unknown taxon_id_lookup_strategy: $lookup_strategy";
+      }
     }
   }
 
   return $taxonid
 }
-
 
 1;
