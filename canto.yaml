@@ -2126,6 +2126,8 @@ ontology_external_links:
       url: 'http://bioportal.bioontology.org/ontologies/FYPO?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F@@term_ont_id:s/:/_/r@@#visualization'
 
 chado:
+  ignore_case_in_gene_query: 1
+
   ontology_cv_names:
     post_translational_modification: PSI-MOD
     phenotype: fission_yeast_phenotype
