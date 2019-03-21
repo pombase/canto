@@ -158,8 +158,8 @@ if ($add_sessions_from_json && @ARGV != 2) {
   usage("--sessions-from-json needs 2 arguments");
 }
 
-if ($add_organism && (@ARGV < 3 || @ARGV > 4)) {
-  usage("--organism needs 3 or 4 arguments");
+if ($add_organism && (@ARGV < 2 || @ARGV > 4)) {
+  usage("--organism needs 2 or 3 arguments");
 }
 
 if (@ARGV == 0) {
