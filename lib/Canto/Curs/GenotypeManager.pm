@@ -244,6 +244,10 @@ sub make_genotype
 
   my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
 
+  if (!defined $organism) {
+    die "can't find organism with taxon ID: $genotype_taxonid";
+  }
+
   my $genotype =
     $schema->create_with_type('Genotype',
                               {
