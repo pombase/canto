@@ -483,6 +483,44 @@ EOF
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
 
+  25 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("PRAGMA foreign_keys = OFF");
+
+      $curs_dbh->do("DROP TABLE if exists allele_temp");
+
+      $curs_dbh->do("CREATE TABLE allele_temp (
+       allele_id integer PRIMARY KEY,
+       primary_identifier text NOT NULL UNIQUE,
+       type text NOT NULL,  -- 'deletion', 'partial deletion, nucleotide' etc.
+       description text,
+       expression text,
+       name text,
+       gene integer REFERENCES gene(gene_id))");
+
+      $curs_dbh->do("INSERT INTO allele_temp
+         SELECT allele_id, primary_identifier, type, description,
+                expression, name, gene
+         FROM allele");
+
+      $curs_dbh->do("DROP TABLE allele");
+
+      $curs_dbh->do("ALTER TABLE allele_temp RENAME TO allele");
+
+      $curs_dbh->do("PRAGMA foreign_keys = ON");
+    };
+
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 );
 
 sub upgrade_to

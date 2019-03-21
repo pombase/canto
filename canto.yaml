@@ -27,7 +27,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v1270
 
-schema_version: 24
+schema_version: 25
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## all gene lookups with match genes from any organism (and will return the
@@ -1396,6 +1396,13 @@ allele_type_list:
     allow_expression_change: true
     expression_required: true
     placeholder: Please provide a description
+#  - name: aberration
+#    export_type: aberration
+#    show_description: true
+#    description_required: false
+#    allele_name_required: false
+#    allow_expression_change: false
+#    expression_required: false
 
 evidence_types:
   IMP:
@@ -2119,6 +2126,8 @@ ontology_external_links:
       url: 'http://bioportal.bioontology.org/ontologies/FYPO?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F@@term_ont_id:s/:/_/r@@#visualization'
 
 chado:
+  ignore_case_in_gene_query: 1
+
   ontology_cv_names:
     post_translational_modification: PSI-MOD
     phenotype: fission_yeast_phenotype

@@ -902,14 +902,29 @@ sub create_sessions_from_json
     if ($alleles) {
       while (my ($allele_uniquename, $allele_details) = each %$alleles) {
         my $allele_gene_uniquename = $allele_details->{gene};
-        if (!defined $allele_gene_uniquename) {
-          print qq|no "gene" field in details for $allele_uniquename in $pub_uniquename\n|;
-          next PUB;
-        }
-        my $gene = $db_genes{$allele_gene_uniquename};
-        if (!defined $gene) {
-          print qq|gene $allele_gene_uniquename (from allele $allele_uniquename missing from data for $pub_uniquename\n|;
-          next PUB;
+
+        my $gene = undef;
+        my $taxonid = undef;
+
+        if ($allele_details->{allele_type} eq 'aberration') {
+          $taxonid = $allele_details->{taxon_id};
+          if (!defined $taxonid) {
+            print qq|no "taxon_id" field in details for $allele_uniquename in $pub_uniquename\n|;
+            next PUB;
+          }
+        } else {
+          if (!defined $allele_gene_uniquename) {
+            print qq|no "gene" field in details for $allele_uniquename in $pub_uniquename\n|;
+            next PUB;
+          }
+
+          $gene = $db_genes{$allele_gene_uniquename};
+          if (!defined $gene) {
+            print qq|gene $allele_gene_uniquename (from allele $allele_uniquename missing from data for $pub_uniquename\n|;
+            next PUB;
+          }
+
+          $taxonid = $gene->organism()->taxonid();
         }
 
         my $type = $allele_details->{allele_type} || 'other';
@@ -921,8 +936,7 @@ sub create_sessions_from_json
           $allele_manager->create_simple_allele(@args);
 
         $genotype_manager->make_genotype(undef, undef, \@alleles_for_make_genotype,
-                                         $gene->organism()->taxonid(),
-                                         "genotype-$allele_uniquename");
+                                         $taxonid, "genotype-$allele_uniquename");
       }
     }
 

@@ -5,8 +5,11 @@
         <span ng-if="alleleData.display_name">
           Editing {{alleleData.display_name}}
         </span>
-        <span ng-if="!alleleData.display_name">
+        <span ng-if="!alleleData.display_name && alleleData.type != 'aberration'">
           Adding allele for {{ alleleData.gene_display_name }}
+        </span>
+        <span ng-if="!alleleData.display_name && alleleData.type == 'aberration'">
+          Adding aberration
         </span>
       </h4>
     </div>
@@ -20,13 +23,15 @@
             Allele name
           </td>
           <td ng-class="{ 'has-error': !isValidName() }">
-            <allele-name-complete allele-primary-identifier="alleleData.primary_identifier"
+            <allele-name-complete ng-if="alleleData.type != 'aberration'"
+                                  allele-primary-identifier="alleleData.primary_identifier"
                                   allele-name="alleleData.name"
                                   allele-description="alleleData.description"
                                   allele-type="alleleData.type"
                                   placeholder="{{current_type_config.name_hint}}"
                                   gene-identifier="{{alleleData.gene_systematic_id}}">
             </allele-name-complete>
+            <input ng-if="alleleData.type == 'aberration'" ng-model="alleleData.name"/>
             <span ng-show="!isValidName()"
                   class="help-block">required for this allele type</span>
           </td>
@@ -46,7 +51,11 @@
           <td>
             Allele type
           </td>
-          <td ng-class="{ 'has-error': !isValidType() }">
+          <td ng-if="alleleData.type == 'aberration'">
+            Aberration
+          </td>
+          <td ng-if="alleleData.type != 'aberration'"
+              ng-class="{ 'has-error': !isValidType() }">
             <select class="form-control"
                     ng-model="alleleData.type" name="curs-allele-type"
                     ng-options="name for name in env.allele_type_names">

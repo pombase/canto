@@ -112,8 +112,16 @@ sub lookup_by_synonym_rs
 
   my @lc_search_terms = map { lc } @{$search_terms_ref};
 
+  my @synonym_constraint;
+
+  if ($self->config()->{chado}->{ignore_case_in_gene_query}) {
+    @synonym_constraint = _build_synonym_constraint(@lc_search_terms);
+  } else {
+    @synonym_constraint = map { { 'me.name' => $_ } } @{$search_terms_ref};
+  }
+
   return $self->schema()->resultset('Synonym')
-    ->search([_build_synonym_constraint(@lc_search_terms)])
+    ->search([@synonym_constraint])
     ->search_related('feature_synonyms')
     ->search_related('feature', {}, { prefetch => 'organism' });
 }

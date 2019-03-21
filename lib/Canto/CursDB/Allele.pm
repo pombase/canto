@@ -61,7 +61,7 @@ __PACKAGE__->table("allele");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 0
+  is_nullable: 1
 
 =cut
 
@@ -79,7 +79,7 @@ __PACKAGE__->add_columns(
   "name",
   { data_type => "text", is_nullable => 1 },
   "gene",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -137,12 +137,17 @@ __PACKAGE__->belongs_to(
   "gene",
   "Canto::CursDB::Gene",
   { gene_id => "gene" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-08-21 19:35:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yoNuind8vIy8fIACFy4lCw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-03-14 17:06:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mKCGcWHcOCb+vkjns4MMPQ
 
 __PACKAGE__->many_to_many('genotypes' => 'allele_genotypes',
                           'genotype');

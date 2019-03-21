@@ -55,12 +55,23 @@ sub build_gene_constraint
   my $uniquename_column = $self->uniquename_column();
   my $name_column = $self->name_column();
 
+  my $uniquename_key;
+  my $name_key;
+
+  if ($self->config()->{chado}->{ignore_case_in_gene_query}) {
+    $uniquename_key = "lower($uniquename_column)";
+    $name_key = "lower($name_column)";
+  } else {
+    $uniquename_key = $uniquename_column;
+    $name_key = $name_column;
+  }
+
   return map {
     {
-      "lower($uniquename_column)" => $_
+      $uniquename_key => $_
     },
     {
-      "lower($name_column)" => $_
+      $name_key => $_
     }
   } @_;
 }
@@ -200,7 +211,13 @@ sub lookup
   @lc_search_terms{@lc_search_terms} = @lc_search_terms;
 
   my $gene_rs = $self->schema()->resultset($self->feature_class());
-  my $rs = $gene_rs->search([$self->build_gene_constraint(@lc_search_terms)],
+  my @rs_constraints;
+  if ($self->config()->{chado}->{ignore_case_in_gene_query}) {
+    @rs_constraints = $self->build_gene_constraint(@lc_search_terms)
+  } else {
+    @rs_constraints = $self->build_gene_constraint(@{$search_terms_ref})
+  }
+  my $rs = $gene_rs->search([@rs_constraints],
                             { $self->gene_search_options(feature_alias => 'me') });
   if (defined $org_constraint) {
     $rs = $rs->search({ 'me.' . $self->organism_id_column() => $org_constraint });
