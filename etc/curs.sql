@@ -57,6 +57,7 @@ CREATE TABLE genotype (
        genotype_id integer PRIMARY KEY AUTOINCREMENT,
        identifier text UNIQUE NOT NULL,
        background text,
+       comment text,
        strain_id integer REFERENCES strain(strain_id),
        organism_id integer REFERENCES organism(organism_id),
        name text UNIQUE

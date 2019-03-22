@@ -518,6 +518,42 @@ EOF
       $curs_dbh->do("PRAGMA foreign_keys = ON");
     };
 
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
+
+  26 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("PRAGMA foreign_keys = OFF");
+
+      $curs_dbh->do("DROP TABLE if exists genotype_temp");
+
+      $curs_dbh->do("CREATE TABLE genotype_temp (
+       genotype_id integer PRIMARY KEY AUTOINCREMENT,
+       identifier text UNIQUE NOT NULL,
+       background text,
+       comment text,
+       strain_id integer REFERENCES strain(strain_id),
+       organism_id integer REFERENCES organism(organism_id),
+       name text UNIQUE)");
+
+      $curs_dbh->do("INSERT INTO genotype_temp
+         SELECT genotype_id, identifier, background, null, strain_id, organism_id, name
+         FROM genotype");
+
+      $curs_dbh->do("DROP TABLE genotype");
+
+      $curs_dbh->do("ALTER TABLE genotype_temp RENAME TO genotype");
+
+      $curs_dbh->do("PRAGMA foreign_keys = ON");
+    };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },

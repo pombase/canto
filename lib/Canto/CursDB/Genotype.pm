@@ -42,6 +42,11 @@ __PACKAGE__->table("genotype");
   data_type: 'text'
   is_nullable: 1
 
+=head2 comment
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 strain_id
 
   data_type: 'integer'
@@ -67,6 +72,8 @@ __PACKAGE__->add_columns(
   "identifier",
   { data_type => "text", is_nullable => 0 },
   "background",
+  { data_type => "text", is_nullable => 1 },
+  "comment",
   { data_type => "text", is_nullable => 1 },
   "strain_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
@@ -217,8 +224,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-09-24 17:18:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EqS8KuQ6wSBg7B49r5s+Vw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-03-22 21:42:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xgCssye8nFTIDpe9u048nQ
 
 =head2 annotations
 
