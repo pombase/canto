@@ -435,6 +435,9 @@ sub _get_genotypes
     if ($genotype->background()) {
       $ret{$genotype_identifier}->{background} = $genotype->background(),
     }
+    if ($genotype->comment()) {
+      $ret{$genotype_identifier}->{comment} = $genotype->comment(),
+    }
   }
 
   return %ret;
