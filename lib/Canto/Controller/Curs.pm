@@ -1598,6 +1598,7 @@ sub _feature_edit_helper
       my @alleles_data = @{$body_data->{alleles}};
       my $genotype_name = $body_data->{genotype_name};
       my $genotype_background = $body_data->{genotype_background};
+      my $genotype_comment = $body_data->{genotype_comment};
       my $genotype_taxonid = $body_data->{taxonid};
       my $strain_name = $body_data->{strain_name} || undef;
 
@@ -1648,7 +1649,7 @@ sub _feature_edit_helper
         $genotype_manager->store_genotype_changes($genotype,
                                                   $genotype_name, $genotype_background,
                                                   $genotype_taxonid, \@alleles,
-                                                  $strain_name);
+                                                  $strain_name, $genotype_comment);
 
         $guard->commit();
 
@@ -1761,6 +1762,7 @@ sub _genotype_store
   my @alleles_data = @{$body_data->{alleles}};
   my $genotype_name = $body_data->{genotype_name};
   my $genotype_background = $body_data->{genotype_background};
+  my $genotype_comment = $body_data->{genotype_comment};
   my $genotype_taxonid = $body_data->{taxonid};
 
   my $strain_name = $body_data->{strain_name} || undef;
@@ -1823,6 +1825,7 @@ sub _genotype_store
           genotype_display_name => $existing_genotype->display_name($strain_name),
           genotype_id => $existing_genotype->genotype_id(),
           taxonid => $existing_genotype->organism()->taxonid(),
+          comment => $existing_genotype->comment(),
           strain_name => $strain_name,
         };
       } else {
@@ -1831,7 +1834,7 @@ sub _genotype_store
         my $genotype =
           $genotype_manager->make_genotype($genotype_name, $genotype_background,
                                            \@alleles, $genotype_taxonid, undef,
-                                           $strain_name);
+                                           $strain_name, $genotype_comment);
 
         $guard->commit();
 

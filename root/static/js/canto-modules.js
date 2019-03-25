@@ -373,8 +373,8 @@ canto.service('CursGenotypeList', function ($q, Curs) {
   };
 
   this.storeGenotype =
-    function (toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name) {
-      var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name);
+    function (toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment) {
+      var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment);
 
       promise.then(function () {
         service.sendChangeEvent();
@@ -403,7 +403,7 @@ canto.service('CursGenotypeList', function ($q, Curs) {
 
   this.setGenotypeBackground = function (toaster, $http, genotype, newBackground) {
     return this.storeGenotype(toaster, $http, genotype.genotype_id, genotype.genotype_name,
-      newBackground, genotype.alleles);
+                              newBackground, genotype.alleles, genotype.comment);
   };
 
   this.cursGenotypeList = function (options) {
@@ -3202,7 +3202,7 @@ canto.controller('TermSuggestDialogCtrl',
   ]);
 
 
-function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name) {
+function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment) {
 
   var url = curs_root_uri + '/feature/genotype';
 
@@ -3215,6 +3215,7 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
   var data = {
     genotype_name: genotype_name,
     genotype_background: genotype_background,
+    genotype_comment: comment,
     alleles: alleles,
     taxonid: taxonid,
     strain_name: strain_name,
@@ -3278,7 +3279,7 @@ var genePageCtrl =
           var strainName = editResults.strainName;
           var storePromise =
             CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
-              [alleleData], taxonId, strainName);
+                                           [alleleData], taxonId, strainName, undefined);
 
           storePromise.then(function (result) {
             window.location.href =
@@ -3454,6 +3455,7 @@ var genotypeEdit =
             annotationCount: 0,
             genotypeName: null,
             genotypeBackground: null,
+            genotypeComment: null,
             selectedStrainName: null,
             strainName: null,
             taxonId: null
@@ -3476,6 +3478,7 @@ var genotypeEdit =
                 $scope.alleles = genotypeDetails.alleles;
                 $scope.data.genotypeName = genotypeDetails.name;
                 $scope.data.genotypeBackground = genotypeDetails.background;
+                $scope.data.genotypeComment = genotypeDetails.comment;
                 $scope.data.annotationCount = genotypeDetails.annotation_count;
                 $scope.data.taxonId = genotypeDetails.organism.taxonid;
                 $scope.data.strainName = genotypeDetails.strain_name;
@@ -3561,8 +3564,9 @@ var genotypeEdit =
             $scope.data.genotypeBackground,
             $scope.alleles,
             undefined,
-            $scope.data.selectedStrainName
-          );
+            $scope.data.selectedStrainName,
+            $scope.data.genotypeComment,
+         );
 
           result.success(function (data) {
             if (data.status === "success") {
@@ -4039,7 +4043,7 @@ var GenotypeGeneListCtrl =
             var alleleData = editResults.alleleData;
             var strainName = editResults.strainName;
             var storePromise =
-              CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], taxonId, strainName);
+                CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], taxonId, strainName, undefined);
 
             storePromise.then(function (result) {
               window.location.href =
@@ -4089,7 +4093,7 @@ var GenotypeGeneListCtrl =
 
           var storePromise =
             CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele],
-              $scope.data.selectedOrganism.taxonid, $scope.selectedStrain);
+              $scope.data.selectedOrganism.taxonid, $scope.selectedStrain, undefined);
 
           storePromise.then(function (result) {
             if (result.data.status === "existing") {
@@ -4609,7 +4613,7 @@ var genotypeListRowLinksCtrl =
               var storePromise =
                 CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined,
                   undefined, [editedAllele],
-                  genotype.organism.taxonid, strainName);
+                  genotype.organism.taxonid, strainName, undefined);
 
               storePromise.then(function (result) {
                 window.location.href =
@@ -4852,8 +4856,20 @@ var genotypeListViewCtrl =
           var strain = $scope.genotypeList[0].strain_name;
           var taxonid = $scope.genotypeList[0].organism.taxonid;
 
+          var newComment = '';
+
+          $.map(checkedGenotypes,
+                function(genotype) {
+                  if (genotype.comment) {
+                    if (newComment) {
+                      newComment += ' ';
+                    }
+                    newComment += genotype.comment;
+                  }
+                });
+
           var storePromise =
-            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype, taxonid, strain);
+            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype, taxonid, strain, newComment);
 
           storePromise.then(function (result) {
             window.location.href =

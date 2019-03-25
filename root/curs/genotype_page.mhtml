@@ -69,6 +69,14 @@ Background
         </tr>
         <tr>
           <td class="title">
+Comment
+          </td>
+          <td>
+<% $genotype->comment() || '' |n %>
+          </td>
+        </tr>
+        <tr>
+          <td class="title">
 Description
           </td>
           <td>

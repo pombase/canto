@@ -428,6 +428,7 @@ sub _genotype_details_hash
     identifier => $genotype->identifier(),
     name => $genotype->name(),
     background => $genotype->background(),
+    comment => $genotype->comment(),
     allele_string => $genotype->allele_string(),
     display_name => $genotype->display_name(),
     genotype_id => $genotype->genotype_id(),

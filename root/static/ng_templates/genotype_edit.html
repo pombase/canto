@@ -15,6 +15,12 @@
                              ng-model="data.genotypeBackground" />
           <help-icon key="genotype_edit_background_input"></help-icon>
         </div>
+        <div>
+          Comment: <input type="text" title="(optional) genotype comment" href="#"
+                             placeholder="comment (optional) ..."
+                             size="50"
+                             ng-model="data.genotypeComment" />
+        </div>
         <div ng-if="multi_organism_mode"
              class="curs-genotype-edit__organism-label">
           Organism: {{ data.organismName }}

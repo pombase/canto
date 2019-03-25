@@ -106,6 +106,7 @@ test_psgi $app, sub {
                'name' => 'SPCC63.05delta ssm4KE',
                annotation_count => 1,
                background => 'h+',
+               comment => undef,
                organism => {
                  scientific_name => 'Schizosaccharomyces pombe',
                  taxonid => '4896',
