@@ -28,6 +28,10 @@
     <a ng-class="{disabled: genotypeId == null }"
        ng-click="editBackground(genotypeId)">Add/edit background ...</a>
   </div>
+  <div ng-if="!read_only_curs">
+    <a ng-class="{disabled: genotypeId == null }"
+       ng-click="editComment(genotypeId)">Add/edit comment...</a>
+  </div>
   <div title="{{deleteTitle}}">
     <a ng-class="{disabled: genotypeId == null || !canDelete}"
        ng-if="!read_only_curs"

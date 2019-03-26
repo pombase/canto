@@ -1,0 +1,16 @@
+<div class="curs-extension-builder-dialog modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      Edit genotype comment
+    </h4>
+  </div>
+  <div class="modal-body">
+    <input class="form-control"
+           type="text" placeholder="Comment ..." size="60"
+           ng-model="data.comment"/>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="finish()" ng-alt-enter="finish()">Finish</button>
+  </div>
+</div>

@@ -403,7 +403,15 @@ canto.service('CursGenotypeList', function ($q, Curs) {
 
   this.setGenotypeBackground = function (toaster, $http, genotype, newBackground) {
     return this.storeGenotype(toaster, $http, genotype.genotype_id, genotype.genotype_name,
-                              newBackground, genotype.alleles, genotype.comment);
+                              newBackground, genotype.alleles, genotype.organism.taxonid,
+                              genotype.strain_name, genotype.comment);
+  };
+
+  this.setGenotypeComment = function (toaster, $http, genotype, newComment) {
+    return this.storeGenotype(toaster, $http, genotype.genotype_id, genotype.genotype_name,
+                              genotype.background, genotype.alleles,
+                              genotype.organism.taxonid,
+                              genotype.strain_name, newComment);
   };
 
   this.cursGenotypeList = function (options) {
@@ -4519,6 +4527,57 @@ function editBackgroundDialog($uibModal, genotype) {
 }
 
 
+var genotypeCommentEditDialogCtrl =
+  function ($scope, $uibModalInstance, $http, toaster, CursGenotypeList, args) {
+    $scope.data = {
+      comment: args.genotype.comment
+    };
+
+    $scope.finish = function () {
+      if ($scope.data.comment === args.genotype.comment) {
+        $uibModalInstance.close();
+      } else {
+        var storePromise =
+          CursGenotypeList.setGenotypeComment(toaster, $http, args.genotype,
+            $scope.data.comment);
+        storePromise.then(function () {
+          $uibModalInstance.close();
+        });
+      }
+    };
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('GenotypeCommentEditDialogCtrl',
+  ['$scope', '$uibModalInstance', '$http', 'toaster', 'CursGenotypeList',
+    'args',
+    genotypeCommentEditDialogCtrl
+  ]);
+
+function editCommentDialog($uibModal, genotype) {
+  var editInstance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/genotype_comment_edit.html',
+    controller: 'GenotypeCommentEditDialogCtrl',
+    title: 'Edit genotype comment',
+    animate: false,
+    //    size: 'lg',
+    resolve: {
+      args: function () {
+        return {
+          genotype: genotype,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return editInstance.result;
+}
+
+
 canto.directive('genotypeSearch',
   ['CursGenotypeList', 'CantoGlobals',
     genotypeSearchCtrl
@@ -4652,6 +4711,14 @@ var genotypeListRowLinksCtrl =
 
           genotypePromise.then(function (genotype) {
             editBackgroundDialog($uibModal, genotype);
+          });
+        };
+
+        $scope.editComment = function (genotypeId) {
+          var genotypePromise = CursGenotypeList.getGenotypeById(genotypeId);
+
+          genotypePromise.then(function (genotype) {
+            editCommentDialog($uibModal, genotype);
           });
         };
       },
