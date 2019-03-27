@@ -3825,46 +3825,25 @@ var GenotypeGeneListCtrl =
     return {
       scope: {
         genotypes: '=',
-        multiOrganismMode: '=',
-        label: '@',
-        genotypeType: '<',
-        lastAddedGene: '<',
-        onOrganismSelect: '&'
+        selectedOrganism: '<'
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_gene_list.html',
       controller: function ($scope) {
-        $scope.data = {
-          selectedOrganism: {}
-        };
 
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
 
         $scope.hasDeletionHash = {};
 
-        if (!$scope.multiOrganismMode) {
-          Curs.list('organism')
-            .then(function (organisms) {
-              $scope.organismUpdated(organisms.data[0]);
-            });
-        }
-
         $scope.$watch('genotypes',
           function () {
             $scope.makeHasDeletionHash();
           }, true);
 
-        $scope.organismUpdated = function (organism) {
-          $scope.data.selectedOrganism = organism;
-          $scope.onOrganismSelect({
-            organism: organism
-          });
-        };
-
         $scope.getSelectedOrganism = function () {
-          return $scope.data.selectedOrganism;
+          return $scope.selectedOrganism;
         };
 
         $scope.hasDeletionGenotype = function(gene_id) {
