@@ -51,6 +51,16 @@ function countKeys(o) {
   return size;
 }
 
+function arrayContains(array, predicate) {
+  var i, len = array.length;
+  for (i = 0; i < len; i += 1) {
+    if (predicate(array[i]) === true) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function arrayRemoveOne(array, item) {
   var i = array.indexOf(item);
   if (i >= 0) {
