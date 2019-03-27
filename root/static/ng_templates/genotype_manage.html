@@ -38,10 +38,9 @@
                           organism-selected="organismUpdated(organism)">
                         </organism-selector>
                         <genotype-genes-panel
-                          on-organism-select="organismUpdated(organism)"
                           genotypes="data.singleAlleleGenotypes"
-                          multi-organism-mode="data.multiOrganismMode"
-                          genotype-type="genotypeType" />
+                          multi-organism-mode="data.multiOrganismMode">
+                        </genotype-genes-panel>
                     </div>
                 </div>
 

@@ -3995,9 +3995,7 @@ var GenotypeGenesPanelCtrl =
       scope: {
         genotypes: '=',
         multiOrganismMode: '=',
-        genotypeType: '<',
-        lastAddedGene: '<',
-        onOrganismSelect: '&',
+        lastAddedGene: '<'
       },
       restrict: 'E',
       replace: true,
@@ -4010,12 +4008,6 @@ var GenotypeGenesPanelCtrl =
           var modal = openSingleGeneAddDialog($uibModal);
           modal.result.then(function (geneObj) {
             $scope.lastAddedGene = geneObj.new_gene_id;
-          });
-        };
-
-        $scope.organismUpdated = function (organism) {
-          $scope.onOrganismSelect({
-            organism: organism
           });
         };
       }
