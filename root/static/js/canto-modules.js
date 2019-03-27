@@ -4048,6 +4048,7 @@ var genotypeManageCtrl =
         $scope.metagenotypeUrl = CantoGlobals.curs_root_uri + '/metagenotype_manage';
 
         $scope.data = {
+          organisms = [],
           genotypeMap: {},
           singleAlleleGenotypes: [],
           multiAlleleGenotypes: [],
@@ -4070,6 +4071,16 @@ var genotypeManageCtrl =
         $scope.organismUpdated = function (organism) {
           $scope.data.selectedOrganism = organism;
           updateGenotypeLists();
+        };
+
+        var readOrganisms = function () {
+          Curs.list('organism').then(function (response) {
+            var organisms = response.data;
+            $scope.data.organisms = organisms;
+          }).catch(function () {
+            toaster.pop('error', "couldn't read the organism list from the server");
+            $scope.data.waitingForServer = false;
+          });
         };
 
         function hashChangedHandler() {
@@ -4193,6 +4204,7 @@ var genotypeManageCtrl =
           return genotypeMap;
         };
 
+        $scope.readOrganisms();
         $scope.readGenotypes();
 
       },
