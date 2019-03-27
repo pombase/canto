@@ -4040,7 +4040,7 @@ var genotypeManageCtrl =
         $scope.metagenotypeUrl = CantoGlobals.curs_root_uri + '/metagenotype_manage';
 
         $scope.data = {
-          organisms = [],
+          organisms: [],
           genotypeMap: {},
           singleAlleleGenotypes: [],
           multiAlleleGenotypes: [],
@@ -4196,7 +4196,7 @@ var genotypeManageCtrl =
           return genotypeMap;
         };
 
-        $scope.readOrganisms();
+        readOrganisms();
         $scope.readGenotypes();
 
       },

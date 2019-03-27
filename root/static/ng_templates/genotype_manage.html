@@ -33,7 +33,7 @@
                 <div ng-if="!read_only_curs">
                     <div class="col-sm-3 col-md-3">
                         <organism-selector
-                          ng-if="multiOrganismMode"
+                          ng-if="data.multiOrganismMode"
                           organisms="data.organisms"
                           organism-selected="organismUpdated(organism)">
                         </organism-selector>
