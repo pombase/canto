@@ -251,13 +251,10 @@ SELECT pubmed_publication_year AS year, count(pmid)
  GROUP BY pubmed_publication_year;
 EOF
 
-warn $query;
-
     my $sth = $chado_dbh->prepare($query);
     $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
     while (my ($year, $count) = $sth->fetchrow_array()) {
-      warn $year, $count, "\n";
       $stats{$year}->{$curation_status} = $count;
     }
   }
