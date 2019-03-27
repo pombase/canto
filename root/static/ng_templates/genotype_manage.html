@@ -37,8 +37,11 @@
                           organisms="data.organisms"
                           organism-selected="organismUpdated(organism)">
                         </organism-selector>
+                        <genotype-gene-list
+                          genotypes="genotypes"
+                          selected-organism="data.selectedOrganism">
+                        </genotype-gene-list>
                         <genotype-genes-panel
-                          genotypes="data.singleAlleleGenotypes"
                           multi-organism-mode="data.multiOrganismMode">
                         </genotype-genes-panel>
                     </div>
