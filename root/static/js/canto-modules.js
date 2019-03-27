@@ -4034,6 +4034,7 @@ var genotypeManageCtrl =
           editingGenotype: false,
           editGenotypeId: null,
           multiOrganismMode: false,
+          hostOrganismExists: false,
           showMetagenotypeButton: true,
           showNoGenotypeNotice: true
         };
@@ -4052,6 +4053,9 @@ var genotypeManageCtrl =
         var readOrganisms = function () {
           Curs.list('organism').then(function (response) {
             var organisms = response.data;
+            $scope.data.hostOrganismExists = arrayContains(organisms, function (org) {
+              return org.pathogen_or_host === 'host';
+            });
             $scope.data.organisms = filterOrganisms(organisms, $scope.genotypeType);
           }).catch(function () {
             toaster.pop('error', "couldn't read the organism list from the server");
