@@ -231,6 +231,8 @@ sub curated_stats
 
   my %stats = ();
 
+  my $first_year = 1970;
+
   for my $curation_status ('admin', 'community', 'uncurated') {
     my $where;
 
@@ -255,28 +257,30 @@ EOF
     $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
     while (my ($year, $count) = $sth->fetchrow_array()) {
-      $stats{$year}->{$curation_status} = $count;
+      $year = $first_year - 1 unless $year >= $first_year;
+      $stats{$year}->{$curation_status} //= 0;
+      $stats{$year}->{$curation_status} += $count;
     }
   }
 
   my @rows = ();
 
-  my $first_year = 9999;
-
-  map {
-    $first_year = $_ if $_ < $first_year
-  } keys %stats;
-
   my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
   my $current_year = $year + 1900;
 
-  for (my $year = $first_year; $year <= $current_year; $year++) {
+  for (my $year = $first_year - 1; $year <= $current_year; $year++) {
     my $year_stats = $stats{$year};
+    my $fixed_year;
+    if ($year >= $first_year) {
+      $fixed_year = $year;
+    } else {
+      $fixed_year = "<$first_year";
+    }
     if (defined $year_stats) {
-      push @rows, [$year, $year_stats->{admin} // 0, $year_stats->{community} //0,
+      push @rows, [$fixed_year, $year_stats->{admin} // 0, $year_stats->{community} //0,
                    $year_stats->{uncurated} // 0];
     } else {
-      push @rows, [$year, 0, 0, 0];
+      push @rows, [$fixed_year, 0, 0, 0];
     }
   }
 
