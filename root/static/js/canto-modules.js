@@ -4052,7 +4052,7 @@ var genotypeManageCtrl =
         var readOrganisms = function () {
           Curs.list('organism').then(function (response) {
             var organisms = response.data;
-            $scope.data.organisms = organisms;
+            $scope.data.organisms = filterOrganisms(organisms, $scope.genotypeType);
           }).catch(function () {
             toaster.pop('error', "couldn't read the organism list from the server");
             $scope.data.waitingForServer = false;
@@ -4178,6 +4178,20 @@ var genotypeManageCtrl =
           };
           $.each(genotypes, addToGenotypeMap);
           return genotypeMap;
+        };
+
+        function filterOrganisms(organisms, genotypeType) {
+        	if (genotypeType !== 'host' && genotypeType !== 'pathogen') {
+        		return organisms;
+        	}
+        	var byOrganismType = buildOrganismFilter(genotypeType);
+        	return organisms.filter(byOrganismType);
+
+        	function buildOrganismFilter(type) {
+        		return function (organism) {
+        			return organism['pathogen_or_host'] === type;
+        		};
+        	};
         };
 
         readOrganisms();
