@@ -256,6 +256,15 @@ canto.filter('featureChooserFilter', function () {
   };
 });
 
+canto.filter('renameGenotypeType', function () {
+  return function (type) {
+    if (type === 'pathogen' || type === 'host') {
+      return capitalizeFirstLetter(type);
+    }
+    return 'Organism';
+  };
+});
+
 canto.config(function ($logProvider) {
   $logProvider.debugEnabled(true);
 });
