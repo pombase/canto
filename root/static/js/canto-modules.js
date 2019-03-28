@@ -3905,7 +3905,7 @@ var GenotypeGeneListCtrl =
         $scope.selectedStrain = '';
 
         $scope.deleteSelectStrainPicker = function (gene_id) {
-          var deleteInstance = selectStrainPicker($uibModal, $scope.data.selectedOrganism.taxonid);
+          var deleteInstance = selectStrainPicker($uibModal, $scope.getSelectedOrganism().taxonid);
 
           deleteInstance.result.then(function (strain) {
             $scope.selectedStrain = strain.strain.strain_name;
@@ -3939,8 +3939,8 @@ var GenotypeGeneListCtrl =
           };
 
           var storePromise =
-            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele],
-              $scope.data.selectedOrganism.taxonid, $scope.selectedStrain, undefined);
+          CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele],
+              $scope.getSelectedOrganism().taxonid, $scope.selectedStrain, undefined);
 
           storePromise.then(function (result) {
             if (result.data.status === "existing") {
