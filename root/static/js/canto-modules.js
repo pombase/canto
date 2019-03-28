@@ -3766,7 +3766,7 @@ var organismSelector = function () {
   };
 };
 
-var organismSelectorCtrl = function ($scope, Curs, toaster, CantoGlobals) {
+var organismSelectorCtrl = function ($scope, CantoGlobals) {
 
   $scope.app_static_path = CantoGlobals.app_static_path;
 
@@ -3781,9 +3781,7 @@ var organismSelectorCtrl = function ($scope, Curs, toaster, CantoGlobals) {
   };
 };
 
-canto.directive('organismSelector', [
-  organismSelector
-]);
+canto.directive('organismSelector', organismSelector);
 
 var strainSelector = function () {
   return {
