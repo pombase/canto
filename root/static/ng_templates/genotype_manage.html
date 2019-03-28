@@ -35,7 +35,8 @@
                         <organism-selector
                           ng-if="data.multiOrganismMode"
                           organisms="data.organisms"
-                          organism-selected="organismUpdated(organism)">
+                          organism-selected="organismUpdated(organism)"
+                          label="{{genotypeType | renameGenotypeType}}">
                         </organism-selector>
                         <genotype-gene-list
                           genotypes="data.singleAlleleGenotypes"

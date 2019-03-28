@@ -3,7 +3,7 @@
   Loading organisms...
 </div>
 <div class="curs-organism-selector" ng-if="organisms">
-  <p ng-hide="data.hideLabel" class="curs-organism-selector-label"><b>{{label}}</b></p>
+  <p ng-if="label" class="curs-organism-selector-label"><b>{{label}}</b></p>
   <select ng-if="organisms.length > 1"
       class="curs-organism-selector-select"
       name="select-organism"

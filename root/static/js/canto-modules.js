@@ -3758,7 +3758,7 @@ var organismSelector = function () {
     scope: {
       organismSelected: '&',
       organisms: '<',
-      hideLabel: '='
+      label: '@'
     },
     restrict: 'E',
     templateUrl: app_static_path + 'ng_templates/organism_selector.html',
@@ -3780,22 +3780,6 @@ var organismSelectorCtrl = function ($scope, Curs, toaster, CantoGlobals) {
       organism: $scope.data.selectedOrganism
     });
   };
-
-  var onInit = function () {
-    $scope.data.hideLabel = $scope.hideLabel || false;
-    setLabelText($scope.genotypeType);
-  };
-
-  var setLabelText = function (genotypeType) {
-    var calculateLabelText = function (genotypeType) {
-      return genotypeType === 'host' || genotypeType === 'pathogen' ?
-        capitalizeFirstLetter(genotypeType) :
-        'Organism';
-    };
-    $scope.label = calculateLabelText(genotypeType);
-  };
-
-  onInit();
 };
 
 canto.directive('organismSelector', [
