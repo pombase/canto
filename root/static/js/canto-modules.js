@@ -3835,7 +3835,8 @@ var GenotypeGeneListCtrl =
     return {
       scope: {
         genotypes: '=',
-        selectedOrganism: '<'
+        selectedOrganism: '<',
+        genotypeType: '<'
       },
       restrict: 'E',
       replace: true,
