@@ -180,6 +180,20 @@ function getGenotypeManagePath(organismMode) {
   return paths.normal;
 }
 
+function filterOrganisms(organisms, genotypeType) {
+  if (genotypeType !== 'host' && genotypeType !== 'pathogen') {
+    return organisms;
+  }
+  var byOrganismType = buildOrganismFilter(genotypeType);
+  return organisms.filter(byOrganismType);
+
+  function buildOrganismFilter(type) {
+    return function (organism) {
+      return organism.pathogen_or_host === type;
+    };
+  }
+}
+
 function filterStrainsByTaxonId(strains, taxonId) {
   var taxonIdNum = parseInt(taxonId, 10);
   return $.grep(strains, function (strain) {
@@ -4177,20 +4191,6 @@ var genotypeManageCtrl =
           $.each(genotypes, addToGenotypeMap);
           return genotypeMap;
         };
-
-        function filterOrganisms(organisms, genotypeType) {
-        	if (genotypeType !== 'host' && genotypeType !== 'pathogen') {
-        		return organisms;
-        	}
-        	var byOrganismType = buildOrganismFilter(genotypeType);
-        	return organisms.filter(byOrganismType);
-
-        	function buildOrganismFilter(type) {
-        		return function (organism) {
-        			return organism['pathogen_or_host'] === type;
-        		};
-        	};
-        }
 
         function findPathogenGenotype(genotypes) {
           return arrayContains(genotypes, function (g) {
