@@ -12,5 +12,5 @@
       ng-options="o as o.full_name for o in organisms track by o.taxonid">
     <option value="" disabled>Select an organism...</option>
   </select>
-  <span ng-if="organisms.length === 1">{{data.defaultOrganism.full_name}}</span>
+  <span ng-if="organisms.length === 1">{{organisms[0].full_name}}</span>
 </div>

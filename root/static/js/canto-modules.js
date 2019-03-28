@@ -3793,6 +3793,14 @@ var organismSelectorCtrl = function ($scope, CantoGlobals) {
       organism: $scope.data.selectedOrganism
     });
   };
+
+  $scope.$watch('organisms', function () {
+    if ($scope.organisms && $scope.organisms.length === 1) {
+      $scope.organismSelected({
+        organism: $scope.organisms[0]
+      });
+    }
+  });
 };
 
 canto.directive('organismSelector', organismSelector);
