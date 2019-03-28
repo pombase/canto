@@ -4035,7 +4035,7 @@ var genotypeManageCtrl =
           editGenotypeId: null,
           multiOrganismMode: false,
           hostOrganismExists: false,
-          showMetagenotypeButton: true,
+          isMetagenotypeLinkDisabled: true,
           showNoGenotypeNotice: true
         };
 
@@ -4110,7 +4110,7 @@ var genotypeManageCtrl =
           }).then(function (results) {
             setGenotypes(results);
             $scope.data.waitingForServer = false;
-            $scope.data.showMetagenotypeButton = ($scope.data.genotypeMap.length >= 1);
+            $scope.data.isMetagenotypeLinkDisabled = ($scope.data.genotypeMap.length === 0);
             CursGenotypeList.onListChange($scope.readGenotypesCallback);
           }).catch(function () {
             toaster.pop('error', "couldn't read the genotype list from the server");
