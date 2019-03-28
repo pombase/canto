@@ -3771,8 +3771,7 @@ var organismSelectorCtrl = function ($scope, Curs, toaster, CantoGlobals) {
   $scope.app_static_path = CantoGlobals.app_static_path;
 
   $scope.data = {
-    selectedOrganism: null,
-    defaultOrganism: null
+    selectedOrganism: null
   };
 
   $scope.organismChanged = function () {
