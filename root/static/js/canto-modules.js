@@ -3835,6 +3835,7 @@ var GenotypeGeneListCtrl =
 
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+        $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
 
         $scope.hasDeletionHash = {};
 
