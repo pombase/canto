@@ -7589,7 +7589,7 @@ var editOrganismsGenesTable = function () {
 canto.directive('editOrganismsGenesTable', [editOrganismsGenesTable]);
 
 
-var editOrganismsTable = function (CantoGlobals) {
+var editOrganismsTable = function (EditOrganismsSvc, CantoGlobals) {
   return {
     scope: {
       title: '@',
@@ -7651,16 +7651,16 @@ var editOrganismsTable = function (CantoGlobals) {
 };
 
 canto.directive('editOrganismsTable',
-                ['EditOrganismsSvc', editOrganismsTable, 'CantoGlobals']);
+                ['EditOrganismsSvc', 'CantoGlobals', editOrganismsTable]);
 
 
-var editOrganisms = function () {
+var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGlobals) {
   return {
     scope: {},
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/edit_organisms.html',
-    controller: function ($scope, $window, EditOrganismsSvc, StrainsService) {
+    controller: function ($scope) {
       $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
       $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
       $scope.continueUrl = curs_root_uri;
@@ -7670,6 +7670,10 @@ var editOrganisms = function () {
         if ($scope.getPathogens().length == 0 &&
           $scope.getHosts().length == 0) {
           return true;
+        }
+
+        if (!CantoGlobals.strains_mode) {
+          return false;
         }
 
         if (StrainsService.sessionStrains.length == 0) {
@@ -7718,4 +7722,4 @@ var editOrganisms = function () {
   };
 };
 
-canto.directive('editOrganisms', ['$window', 'EditOrganismsSvc', 'StrainsService', editOrganisms]);
+canto.directive('editOrganisms', ['$window', 'EditOrganismsSvc', 'StrainsService', 'CantoGlobals', editOrganisms]);
