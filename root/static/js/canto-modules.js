@@ -664,6 +664,7 @@ canto.service('CantoGlobals', function ($window) {
   this.perPub5YearStatsData = $window.perPub5YearStatsData;
   this.htpPerPub5YearStatsData = $window.htpPerPub5YearStatsData;
   this.multi_organism_mode = $window.multi_organism_mode == 1;
+  this.strains_mode = $window.strains_mode == 1;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.alleles_have_expression = $window.alleles_have_expression;
   this.organismsAndGenes = $window.organismsAndGenes;
@@ -3077,11 +3078,13 @@ var alleleEditDialogCtrl =
     $scope.alleleData.evidence = $scope.alleleData.evidence || '';
     $scope.strainData = {
       selectedStrain: null,
-      showStrainPicker: CantoGlobals.multi_organism_mode && $scope.taxonId,
+      showStrainPicker: CantoGlobals.strains_mode && $scope.taxonId,
       strains: null
     };
 
-    getStrainsFromServer($scope.taxonId);
+    if (CantoGlobals.strains_mode) {
+      getStrainsFromServer($scope.taxonId);
+    }
 
     $scope.showExpression = function () {
       return CantoGlobals.alleles_have_expression &&
@@ -3455,6 +3458,7 @@ var genotypeEdit =
       controller: function ($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
+        $scope.strains_mode = CantoGlobals.strains_mode;
 
         $scope.strainSelected = function (strain) {
           $scope.data.selectedStrainName = strain ?
@@ -4179,7 +4183,7 @@ var GenotypeGeneListCtrl =
           });
         };
 
-        $scope.quickDeletion = $scope.multiOrganismMode ?
+        $scope.quickDeletion = CantoGlobals.strains_mode ?
           $scope.deleteSelectStrainPicker :
           $scope.makeDeletionAllele;
 
@@ -7585,7 +7589,7 @@ var editOrganismsGenesTable = function () {
 canto.directive('editOrganismsGenesTable', [editOrganismsGenesTable]);
 
 
-var editOrganismsTable = function () {
+var editOrganismsTable = function (CantoGlobals) {
   return {
     scope: {
       title: '@',
@@ -7595,6 +7599,10 @@ var editOrganismsTable = function () {
     replace: true,
     templateUrl: app_static_path + 'ng_templates/edit_organisms_table.html',
     controller: function ($scope, EditOrganismsSvc) {
+      $scope.data = {
+        strainsMode: CantoGlobals.strains_mode,
+      };
+
       $scope.firstGene = function (genes) {
         if (genes.length > 0) {
           return $scope.geneAttributes(genes[0]);
@@ -7642,7 +7650,8 @@ var editOrganismsTable = function () {
   };
 };
 
-canto.directive('editOrganismsTable', ['EditOrganismsSvc', editOrganismsTable]);
+canto.directive('editOrganismsTable',
+                ['EditOrganismsSvc', editOrganismsTable, 'CantoGlobals']);
 
 
 var editOrganisms = function () {

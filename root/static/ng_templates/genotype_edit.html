@@ -25,7 +25,7 @@
              class="curs-genotype-edit__organism-label">
           Organism: {{ data.organismName }}
         </div>
-        <div ng-if="multi_organism_mode">
+        <div ng-if="strains_mode">
           Strain: <strain-selector
             strains="strains"
             strain-selected="strainSelected(strain)"
