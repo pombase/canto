@@ -137,8 +137,6 @@ sub merge_config
       # empty file returns undef
     }
   }
-
-  $self->setup($upgrading);
 }
 
 sub _set_host_organisms
@@ -191,6 +189,10 @@ sub setup
 {
   my $self = shift;
   my $upgrading = shift;
+
+  if ($self->{extra_config_files}) {
+    $self->merge_config($self->{extra_config_files}, $upgrading);
+  }
 
   my @ext_conf = ();
 
@@ -554,6 +556,7 @@ sub get_config
     my $local_file_name = "${lc_app_name}_$suffix.yaml";
 
     $config->merge_config([$local_file_name], $upgrading);
+    $config->setup();
   }
 
   return $config;

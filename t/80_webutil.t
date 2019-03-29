@@ -17,6 +17,7 @@ my $uc_app_name = uc $lc_app_name;
 
 my $config = $test_util->config();
 $config->merge_config([$test_util->root_dir() . '/t/data/50_config_1.yaml']);
+$config->setup();
 
 my $schema = Canto::TrackDB->new(config => $config);
 

@@ -42,6 +42,7 @@ is(keys %{$config_two}, 17);
 # test loading then merging
 my $config_merge = Canto::Config->new([$config_yaml_1]);
 $config_merge->merge_config([$config_yaml_2]);
+$config_merge->setup();
 
 is($config_merge->{some_key}, 'some_value_1');
 is($config_merge->{some_key_for_overriding}, 'overidden_value');
