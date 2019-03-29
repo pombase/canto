@@ -2531,6 +2531,9 @@ var ontologyWorkflowCtrl =
           })
           .then(function (response) {
             $scope.termDetails = response.data;
+            if (!$scope.termDetails.annotation_type_name) {
+              $scope.termDetails.annotation_type_name = $scope.annotationTypeName;
+            }
             CantoConfig.get('extension_configuration')
               .then(function (results) {
                 $scope.extensionConfiguration = results.data;
@@ -6202,7 +6205,8 @@ var termNameComplete =
             }
             var warning = '';
             if (searchAnnotationTypeName.indexOf('[') != 0 &&
-              searchAnnotationTypeName !== item.annotation_type_name) {
+                typeof item.annotation_type_name !== 'undefined' &&
+                searchAnnotationTypeName !== item.annotation_type_name) {
               warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
                 item.annotation_type_name + ' term but<br/>you are browsing ' +
                 searchAnnotationTypeName + ' terms</span>';

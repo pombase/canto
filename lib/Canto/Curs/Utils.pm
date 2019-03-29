@@ -619,7 +619,7 @@ sub _process_existing_db_ontology
   }
 
   my $annotation_type_config =
-    $config->{annotation_types_by_namespace}->{$ontology_name} //
+    $config->{annotation_types_by_namespace}->{$ontology_name}->[0] //
     $config->{annotation_types}->{$ontology_name};
 
   my $annotation_type = $annotation_type_config->{name};
